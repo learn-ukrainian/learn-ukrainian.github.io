@@ -13327,6 +13327,27 @@ def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
     return tuple(dict.fromkeys((*literal, *(paths or ()))))
 
 
+def _dispatch_review_target_bound(args: argparse.Namespace) -> bool:
+    """True when a review names a target: ``--branch``, ``--pr``, ``--pinned-head`` or a frozen attempt target.
+
+    A Ukrainian content attempt manifest (``kind``/``inputs``) carries no
+    ``target`` and stays a standalone language request. An unreadable or
+    non-mapping record counts as bound, so the collector refuses it.
+    """
+    if getattr(args, "branch", None) or getattr(args, "pr", None) is not None or getattr(args, "pinned_head", None):
+        return True
+    attempt = getattr(args, "review_attempt", None)
+    if not attempt:
+        return False
+    import yaml
+
+    try:
+        record = yaml.safe_load(Path(attempt).read_bytes())
+    except (OSError, ValueError, yaml.YAMLError):
+        return True
+    return not isinstance(record, dict) or "target" in record
+
+
 def _admit_dispatch_target(
     args: argparse.Namespace,
     *,
@@ -13360,10 +13381,19 @@ def _admit_dispatch_target(
     review_dispatch = _dispatch_is_review_typed(args)
 
     def collect_review_paths() -> tuple[str, ...]:
+        # Code and infra reviews always need a target; only a Ukrainian request without one is standalone.
+        content_profile = (getattr(args, "review_profile", None) or "code") not in {"code", "infra"}
+        if content_profile and not _dispatch_review_target_bound(args):
+            return ()
         try:
-            return _dispatch_review_changed_paths(args)
+            paths = _dispatch_review_changed_paths(args)
         except (TargetResolutionError, OSError, subprocess.TimeoutExpired) as exc:
             raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
+        if content_profile and not paths:
+            raise ReviewAdmissionRefused(
+                "REVIEW_TARGET_UNRESOLVED: the review target changes no paths to prove content"
+            )
+        return paths
 
     try:
         (target,) = resolve_and_admit(
@@ -13380,11 +13410,7 @@ def _admit_dispatch_target(
             review_attempt=bool(getattr(args, "review_attempt", None)),
             review_alias_model_resolver=_resolve_substitution_model,
             review_owned_paths=tuple(declared),
-            review_changed_paths=(
-                collect_review_paths
-                if review_dispatch and (getattr(args, "review_profile", None) or "code") in {"code", "infra"}
-                else ()
-            ),
+            review_changed_paths=collect_review_paths if review_dispatch else (),
             review_subject_seats=frozenset(flag_paths("subject_seat")),
             review_subject_families=frozenset(flag_paths("subject_family")),
             paths=owned,
@@ -14942,7 +14968,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Path to manifest YAML file for formal review attempt recording (#8517). "
             "Code/infra review admission requires the record's frozen target.changed_paths list; "
-            "Ukrainian content attempts do not require that target for the security floor. "
+            "a Ukrainian attempt whose record carries a target is admitted against those paths, "
+            "and a content manifest without one is a standalone language review. "
             "Used together with --review-id and --attempt-id to launch a per-attempt "
             "stdio sources MCP server with ledger receipts. Default: None. "
             "Example: --review-attempt batch_state/manifests/rev-1.yaml"

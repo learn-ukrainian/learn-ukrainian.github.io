@@ -19,7 +19,6 @@ from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
-from scripts.agent_runtime.bounded_advisory import _CODE_SUFFIXES
 from scripts.common.scratch import ensure_scratch_root
 
 from ._ask_contract import (
@@ -160,9 +159,10 @@ _CONTENT_PREFIXES = (
 _CONTENT_ARC_PATHS = frozenset(f"site/src/data/arc-{level}.json" for level in ("a1", "a2", "b1", "b2"))
 # Track roots whose top level also carries code-imported manifests/data.
 _CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
-# Program files are code wherever they live (the bounded-advisory code set);
-# databases are code-imported data.
-_CONTENT_CODE_SUFFIXES = _CODE_SUFFIXES | {".db", ".sqlite"}
+# The learner formats the content roots hold: the extensions of the
+# bounded-advisory content languages (markdown, mdx, yaml, json, text, csv,
+# tsv). Any other kind, known or not, is not content.
+_CONTENT_SUFFIXES = frozenset({".md", ".mdx", ".yaml", ".yml", ".json", ".txt", ".csv", ".tsv"})
 # Exact code-imported files inside the content roots.
 _CONTENT_CODE_PATHS = frozenset(
     {
@@ -183,9 +183,10 @@ def _is_code_load_bearing_content(path: str) -> bool:
     (direct-track build/validate, agent_router, audits);
     ``module-mapping.json`` (legacy TypeScript migrations);
     ``vocabulary.db`` (vocab, practice, audit checks, lexicon backfill). Any
-    program file (``*.js``, ``*.sh``, ``*.py``, ...), ``*.db`` or ``*.sqlite``
-    under the roots, in any letter case, and any ``*.json`` at a track root is
-    code/data surface by extension.
+    ``*.json`` at a track root is code/data surface by extension. Every file
+    under the roots whose extension, in any letter case, is not a learner
+    format (``_CONTENT_SUFFIXES``) is refused: program files of any language,
+    databases, lock files and files without an extension.
     """
     if path.startswith("curriculum/") and PurePosixPath(path).name == "curriculum.yaml":
         return True
@@ -193,7 +194,7 @@ def _is_code_load_bearing_content(path: str) -> bool:
         return True
     if not path.startswith(_CONTENT_PREFIXES):
         return False
-    if PurePosixPath(path).suffix.lower() in _CONTENT_CODE_SUFFIXES:
+    if PurePosixPath(path).suffix.lower() not in _CONTENT_SUFFIXES:
         return True
     return any(
         path.startswith(root) and "/" not in path[len(root) :] and path.endswith(".json")

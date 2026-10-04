@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import itertools
 import json
 import subprocess
 import sys
@@ -20,6 +21,9 @@ from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resol
 from scripts.review import reviewer_resolver
 from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 
+CONTENT_TARGET_PATH = "wiki/a1/lesson.md"
+CONTENT_ATTEMPT = f"review: test\ntarget:\n  changed_paths: [{CONTENT_TARGET_PATH}]\n"
+
 
 @pytest.fixture(scope="module")
 def ordinary_review_repo(tmp_path_factory):
@@ -34,8 +38,12 @@ def ordinary_review_repo(tmp_path_factory):
     _git(repo, "add", ".")
     _git(repo, "commit", "-qm", "base")
     _git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
+    base = _git(repo, "rev-parse", "HEAD")
     head = _change(repo, "ordinary.py")
     _git(repo, "update-ref", "refs/remotes/origin/ordinary-review", head)
+    # A Ukrainian review is admitted only for a content target.
+    _git(repo, "checkout", "-q", "--detach", base)
+    _git(repo, "update-ref", "refs/remotes/origin/content-review", _change(repo, CONTENT_TARGET_PATH))
     return repo
 
 
@@ -88,7 +96,7 @@ def test_review_dispatch_protects_preparation_then_publishes_or_releases(tmp_pat
     monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.verify_full_review_tree", lambda *_args: None)
     prompt_file = _rendered_attempt_prompt(main, tmp_path / "prompt.md", input_root=input_root)
     manifest = input_root / "review.yaml"
-    manifest.write_text("review: test\ntarget:\n  changed_paths: [ordinary.py]\n")
+    manifest.write_text(CONTENT_ATTEMPT)
     removals = []
 
     def remove():
@@ -108,7 +116,7 @@ def test_review_dispatch_protects_preparation_then_publishes_or_releases(tmp_pat
         with ThreadPoolExecutor(max_workers=1) as executor:
             removals.append(executor.submit(remove).result(timeout=5))
         assert removals[-1].reason == worktree_claims.LOCK_BUSY
-        assert manifest.read_text() == "review: test\ntarget:\n  changed_paths: [ordinary.py]\n"
+        assert manifest.read_text() == CONTENT_ATTEMPT
         if outcome == "refused":
             raise ValueError("fixture refusal")
         if outcome == "crashed":
@@ -199,7 +207,7 @@ def test_review_dispatch_protects_attempt_inputs_outside_the_input_root(tmp_path
     input_root = trees["render-inputs"] / "inputs"
     input_root.mkdir()
     manifest = trees["manifest-tree"] / "review.yaml"
-    manifest.write_text("review: test\ntarget:\n  changed_paths: [ordinary.py]\n")
+    manifest.write_text(CONTENT_ATTEMPT)
     _review_code(main)
     monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
     monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.verify_full_review_tree", lambda *_args: None)
@@ -305,7 +313,7 @@ def test_review_dispatch_freezes_the_manifest_target_before_preparation(tmp_path
     input_root = trees["render-inputs"] / "inputs"
     input_root.mkdir()
     target = input_root / "review.yaml"
-    target.write_text("review: test\ntarget:\n  changed_paths: [ordinary.py]\n")
+    target.write_text(CONTENT_ATTEMPT)
     # A tracked symlink keeps the link checkout clean, so the shared guard may remove it.
     link = trees["link-tree"] / "review.yaml"
     link.symlink_to(target)
@@ -331,7 +339,7 @@ def test_review_dispatch_freezes_the_manifest_target_before_preparation(tmp_path
                 reason="race probe",
             )
             removals.append(removal.result(timeout=5).action)
-        assert kwargs["manifest_path"].read_text() == "review: test\ntarget:\n  changed_paths: [ordinary.py]\n"
+        assert kwargs["manifest_path"].read_text() == CONTENT_ATTEMPT
         return SimpleNamespace(config_path=tmp_path / "config.json", manifest_sha256="a" * 64)
 
     monkeypatch.setattr("scripts.agent_runtime.review_mcp.prepare_review_attempt", prepare)
@@ -384,7 +392,7 @@ def test_review_dispatch_refuses_scratch_in_a_linked_checkout_before_reservation
     input_root = inputs / "inputs"
     input_root.mkdir()
     manifest = input_root / "review.yaml"
-    manifest.write_text("review: test\ntarget:\n  changed_paths: [ordinary.py]\n")
+    manifest.write_text(CONTENT_ATTEMPT)
     # An existing ignored-style directory, or a root dispatch would create later.
     scratch = inputs / "scratch" / ("not-yet" if nested else "")
     if not nested:
@@ -525,7 +533,7 @@ def test_review_input_lock_covers_extra_inputs_and_refuses_missing_one(tmp_path,
     (root_tree / "inputs").mkdir(parents=True)
     manifest_tree.mkdir()
     manifest = manifest_tree / "review.yaml"
-    manifest.write_text("review: test\ntarget:\n  changed_paths: [ordinary.py]\n")
+    manifest.write_text(CONTENT_ATTEMPT)
     wc = delegate._load_worktree_containment()
     monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path)
     monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [tmp_path, root_tree, manifest_tree])
@@ -700,7 +708,9 @@ def test_dispatch_refuses_missing_required_input_root_before_preparation(
     from tests.test_delegate import _write_args
 
     manifest = tmp_path / "manifest.yaml"
-    manifest.write_text("review_id: rev-test\nattempt_id: att-test\ntarget:\n  changed_paths: [ordinary.py]\n")
+    manifest.write_text(
+        f"review_id: rev-test\nattempt_id: att-test\ntarget:\n  changed_paths: [{CONTENT_TARGET_PATH}]\n"
+    )
     monkeypatch.setattr(delegate, "_review_attempt_prompt_admission", lambda *_args: (None, contract))
 
     def unexpected(**_kwargs):
@@ -709,6 +719,7 @@ def test_dispatch_refuses_missing_required_input_root_before_preparation(
     monkeypatch.setattr("scripts.agent_runtime.review_mcp.prepare_review_attempt", unexpected)
     args = _write_args(
         agent="claude",
+        model="claude-opus-5-5",
         mode="read-only",
         full_checkout=True,
         review_access=access,
@@ -718,6 +729,11 @@ def test_dispatch_refuses_missing_required_input_root_before_preparation(
     )
     assert delegate.cmd_dispatch(args) == 2
     assert "review_input_root_invalid" in capsys.readouterr().err
+
+
+def _review_branch(extra):
+    ukrainian = any(a == "--review-profile" and b == "ukrainian" for a, b in itertools.pairwise(extra))
+    return "content-review" if ukrainian else "ordinary-review"
 
 
 def _args(*extra, verdict=True):
@@ -735,7 +751,7 @@ def _args(*extra, verdict=True):
             *(("--require-review-verdict",) if verdict else ()),
             "--prompt",
             "Review the branch.",
-            *(("--branch", "ordinary-review") if "--pinned-head" not in extra else ()),
+            *(("--branch", _review_branch(extra)) if "--pinned-head" not in extra else ()),
             *extra,
         ]
     )
@@ -1948,6 +1964,17 @@ def test_delegate_ukrainian_dispatch_of_its_own_adapter_is_refused(monkeypatch):
     (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
     assert target is None
     assert "REVIEW_ROUTE_REFUSED:" in refusal and "subject seat codex" in refusal
+
+
+@pytest.mark.parametrize("seat,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol")])
+@pytest.mark.parametrize("ownership", [(), ("--owned-path", CONTENT_TARGET_PATH)])
+def test_delegate_ukrainian_dispatch_of_a_code_branch_is_refused(monkeypatch, seat, model, ownership):
+    args = _args(
+        "--agent", seat, "--model", model, "--review-profile", "ukrainian", *ownership, "--branch", "ordinary-review"
+    )  # fmt: skip
+    (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert target is None
+    assert "REVIEW_ROUTE_REFUSED:" in refusal and "first non-content path: ordinary.py" in refusal
 
 
 def test_delegate_ukrainian_dispatch_by_sonnet_is_refused(monkeypatch):

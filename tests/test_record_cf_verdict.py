@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shlex
 import subprocess
 import zlib
@@ -2877,6 +2878,34 @@ def test_a_ukrainian_verdict_never_clears_a_code_or_mixed_target(monkeypatch, tm
         monkeypatch, tmp_path, agent="claude", model="claude-opus-5-5", families={"openai"}, files=files
     )
     with pytest.raises(recorder.RecordError, match=rf"Ukrainian review covers Ukrainian content only.*{reason}"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        # The held-out review probes: each published a Gemini APPROVE and a success status.
+        "wiki/reviewer.zsh",
+        "wiki/reviewer.go",
+        "wiki/reviewer.rb",
+        "curriculum/l2-uk-en/a1/reviewer.PL",
+        "site/src/content/docs/a1/reviewer.php",
+        "wiki/a1/reviewer",
+        "curriculum/l2-uk-en/evidence/a1/_sense_bindings.yaml.lock",
+    ],
+)
+def test_a_gemini_ukrainian_verdict_on_an_unsupported_content_root_kind_publishes_nothing(monkeypatch, tmp_path, path):
+    tasks, comments, calls = record_ukrainian(
+        monkeypatch,
+        tmp_path,
+        agent="agy",
+        model="gemini-3.8-flash-high",
+        families={"anthropic"},
+        files=_files(LESSON, path),
+    )
+    with pytest.raises(recorder.RecordError, match=rf"first non-content path: {re.escape(path)}"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert comments == []
     assert calls == {"posts": 0, "statuses": 0}

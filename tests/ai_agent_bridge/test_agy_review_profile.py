@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import PurePosixPath
 from types import SimpleNamespace
 
 import pytest
@@ -86,6 +87,61 @@ def test_code_inside_content_roots_is_not_content(path: str) -> None:
     assert f"first non-content path: {path}" in message
 
 
+# Kinds outside every reused code-suffix list: program files of other languages,
+# executables, script-bearing markup, pipeline state and extensionless files.
+_UNSUPPORTED_CONTENT_ROOT_KINDS = (
+    "wiki/reviewer.zsh",
+    "wiki/reviewer.go",
+    "wiki/reviewer.rb",
+    "wiki/a1/reviewer.pl",
+    "wiki/a1/reviewer.php",
+    "wiki/a1/reviewer.rs",
+    "wiki/a1/reviewer.java",
+    "wiki/a1/reviewer.lua",
+    "wiki/a1/reviewer.ps1",
+    "wiki/a1/reviewer.bat",
+    "wiki/a1/reviewer.exe",
+    "wiki/a1/reviewer.wasm",
+    "wiki/a1/reviewer.svg",
+    "wiki/a1/reviewer.xhtml",
+    "wiki/a1/reviewer.GO",
+    "wiki/a1/lesson.md.rb",
+    "wiki/a1/Makefile",
+    "wiki/.gitignore",
+    "curriculum/l2-uk-en/plans/bio/plan.yaml.bak",
+    "curriculum/l2-uk-en/evidence/a1/_sense_bindings.yaml.lock",
+    "curriculum/l2-uk-en/evidence/a1/pack.sha256",
+    "site/src/content/docs/a1/reviewer.unknownkind",
+)
+
+
+@pytest.mark.parametrize("path", _UNSUPPORTED_CONTENT_ROOT_KINDS)
+def test_unsupported_kinds_inside_content_roots_are_not_content(path: str) -> None:
+    assert not is_content_class_path(path)
+    message = gemini_content_paths_error(["wiki/a1/lesson.md", path])
+    assert message is not None
+    assert "gemini_code_review_forbidden" in message
+    assert f"first non-content path: {path}" in message
+
+
+def test_content_formats_are_the_bounded_advisory_content_languages() -> None:
+    from scripts.agent_runtime.bounded_advisory import _CONTENT_LINGUIST_LANGUAGES
+    from scripts.ai_agent_bridge._agy import _CONTENT_ARC_PATHS, _CONTENT_SUFFIXES
+
+    extensions = {
+        "markdown": {".md"},
+        "mdx": {".mdx"},
+        "yaml": {".yaml", ".yml"},
+        "json": {".json"},
+        "text": {".txt"},
+        "csv": {".csv"},
+        "tsv": {".tsv"},
+    }
+    assert set(extensions) == _CONTENT_LINGUIST_LANGUAGES
+    assert set().union(*extensions.values()) == _CONTENT_SUFFIXES
+    assert {PurePosixPath(path).suffix for path in _CONTENT_ARC_PATHS} <= _CONTENT_SUFFIXES
+
+
 @pytest.mark.parametrize(
     "path",
     [
@@ -97,6 +153,10 @@ def test_code_inside_content_roots_is_not_content(path: str) -> None:
         "wiki/grammar/cases.md",
         "wiki/sources/notes.txt",
         "site/src/data/arc-b2.json",
+        "wiki/a1/glossary.yml",
+        "wiki/a1/frequency.csv",
+        "wiki/a1/frequency.tsv",
+        "wiki/a1/LESSON.MD",
     ],
 )
 def test_learner_content_formats_remain_content(path: str) -> None:
@@ -122,7 +182,7 @@ def test_code_imported_manifests_remain_non_content(path: str) -> None:
     assert f"first non-content path: {path}" in (gemini_content_paths_error([path]) or "")
 
 
-@pytest.mark.parametrize("path", _BYPASS_TARGETS)
+@pytest.mark.parametrize("path", [*_BYPASS_TARGETS, "wiki/reviewer.zsh", "wiki/reviewer.go", "wiki/reviewer.rb"])
 def test_publisher_refuses_a_gemini_ukrainian_verdict_on_content_root_code(path: str) -> None:
     from scripts.agent_runtime.target_admission import ukrainian_review_refusal
     from scripts.review import record_cf_verdict as recorder
@@ -486,6 +546,13 @@ def test_stale_local_content_branch_is_refused_when_remote_has_code(
         _handle_acp_compat(_review_args(branch="feature"), "agy")
 
 
+def _script_admission_target(monkeypatch: pytest.MonkeyPatch, *paths: str) -> None:
+    """Script admission's target read, so ``subprocess.run`` sees only the Gemini gate's git calls."""
+    from scripts import delegate
+
+    monkeypatch.setattr(delegate, "_dispatch_review_changed_paths", lambda _args: paths)
+
+
 def _dispatch_argv(*extra: str) -> list[str]:
     return [
         "dispatch",
@@ -525,6 +592,7 @@ def test_delegate_review_verdict_mixed_branch_names_the_path(
         "subprocess.run",
         _fake_branch_diff("feature", f"{_CONTENT_PATH}\n{_CODE_PATH}\n"),
     )
+    _script_admission_target(monkeypatch, _CONTENT_PATH, _CODE_PATH)
     args = delegate.build_parser().parse_args(
         _dispatch_argv("--require-review-verdict", "--review-profile", "ukrainian", "--branch", "feature")
     )
@@ -541,6 +609,7 @@ def test_delegate_review_verdict_file_listing_failure_is_refused(
 
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
     monkeypatch.setattr("subprocess.run", _fake_branch_diff("feature", "", fail="fetch"))
+    _script_admission_target(monkeypatch, _CONTENT_PATH)
     args = delegate.build_parser().parse_args(
         _dispatch_argv("--require-review-verdict", "--review-profile", "ukrainian", "--branch", "feature")
     )
@@ -561,6 +630,7 @@ def test_delegate_review_verdict_content_branch_passes_the_gate(
         return scripted(command, **kwargs)
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    _script_admission_target(monkeypatch, _CONTENT_PATH)
     args = delegate.build_parser().parse_args(
         [
             "dispatch",
@@ -1020,6 +1090,7 @@ def test_delegate_pr_gate_diffs_the_resolved_sha(
 
     monkeypatch.setattr("subprocess.run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    _script_admission_target(monkeypatch, _CONTENT_PATH)
     args = delegate.build_parser().parse_args(
         [
             "dispatch",

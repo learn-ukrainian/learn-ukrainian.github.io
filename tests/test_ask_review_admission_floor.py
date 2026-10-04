@@ -223,22 +223,228 @@ def test_ukrainian_review_never_collects_floor_paths(tmp_path, monkeypatch, atte
     assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
 
 
-def test_admission_does_not_call_a_ukrainian_path_collector():
+@pytest.mark.parametrize(
+    "paths,refused",
+    [
+        (("wiki/a1/lesson.md",), None),
+        (("wiki/a1/lesson.md", "scripts/delegate.py"), "first non-content path: scripts/delegate.py"),
+    ],
+)
+def test_admission_calls_a_ukrainian_target_collector_once(paths, refused):
+    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+
+    calls = []
+
+    def collect():
+        calls.append(1)
+        return paths
+
+    def admit():
+        return resolve_and_admit(
+            ("claude",),
+            model="claude-opus-5-5",
+            mode="read-only",
+            review_dispatch=True,
+            review_profile="ukrainian",
+            review_attempt=True,
+            review_changed_paths=collect,
+        )
+
+    if refused is None:
+        (target,) = admit()
+        assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    else:
+        with pytest.raises(ReviewAdmissionRefused, match=refused):
+            admit()
+    assert calls == [1]
+
+
+def test_standalone_ukrainian_admission_has_no_target():
     from scripts.agent_runtime.target_admission import resolve_and_admit
 
-    def unexpected_paths():
-        raise AssertionError("Ukrainian admission must not read code/infra scope")
-
     (target,) = resolve_and_admit(
-        ("claude",),
-        model="claude-opus-5-5",
-        mode="read-only",
-        review_dispatch=True,
-        review_profile="ukrainian",
-        review_attempt=True,
-        review_changed_paths=unexpected_paths,
+        ("claude",), model="claude-opus-5-5", mode="read-only", review_dispatch=True, review_profile="ukrainian"
     )
     assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+
+
+# --- #9714: a targeted Ukrainian review is admitted against its authoritative paths ---
+
+UK_REVIEWERS = [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol")]
+CONTENT_ONLY_OWNERSHIP = [pytest.param((), id="owned-omitted"), ("--owned-path", "wiki/a1/lesson.md")]
+
+
+def _count_collections(monkeypatch):
+    calls = []
+    real = delegate._dispatch_review_changed_paths
+
+    def counted(args):
+        calls.append(1)
+        return real(args)
+
+    monkeypatch.setattr(delegate, "_dispatch_review_changed_paths", counted)
+    return calls
+
+
+def _ukrainian(seat, model, *flags):
+    return _args("--agent", seat, "--review-profile", "ukrainian", *flags, model=model)
+
+
+@pytest.mark.parametrize("ownership", CONTENT_ONLY_OWNERSHIP)
+@pytest.mark.parametrize("seat,model", UK_REVIEWERS)
+@pytest.mark.parametrize(
+    "changed", [("scripts/agent_runtime/target_admission.py",), ("wiki/a1/lesson.md", "scripts/launchers/claude.sh")]
+)
+def test_ukrainian_branch_review_of_code_or_mixed_target_refuses(
+    review_repo, monkeypatch, seat, model, ownership, changed
+):
+    repo, _ = review_repo
+    for path in changed:
+        head = _change(repo, path)
+    calls = _count_collections(monkeypatch)
+    args = _ukrainian(seat, model, "--branch", "review-target", *ownership)
+    refusal, target = _admit(args)
+    assert target is None
+    assert "REVIEW_ROUTE_REFUSED" in refusal and f"first non-content path: {changed[-1]}" in refusal
+    assert calls == [1] and args.pinned_head == head
+
+
+@pytest.mark.parametrize("seat,model", [*UK_REVIEWERS, ("agy", "gemini-3.8-flash-high")])
+def test_ukrainian_branch_review_of_content_is_admitted_at_the_pinned_head(review_repo, monkeypatch, seat, model):
+    repo, _ = review_repo
+    head = _change(repo, "wiki/a1/lesson.md")
+    calls = _count_collections(monkeypatch)
+    args = _ukrainian(seat, model, "--branch", "review-target")
+    refusal, target = _admit(args)
+    assert refusal is None and (target.recipient, target.model) == (seat, model)
+    assert calls == [1] and args.pinned_head == head
+
+
+@pytest.mark.parametrize("path", ["wiki/reviewer.zsh", "wiki/reviewer.go", "wiki/reviewer.rb", "wiki/a1/reviewer"])
+def test_gemini_ukrainian_branch_review_of_an_unsupported_content_kind_refuses(review_repo, path):
+    repo, _ = review_repo
+    _change(repo, path)
+    refusal, target = _admit(_ukrainian("agy", "gemini-3.8-flash-high", "--branch", "review-target"))
+    assert target is None
+    assert "gemini_code_review_forbidden" in refusal and f"; first non-content path: {path})" in refusal
+
+
+@pytest.mark.parametrize("ownership", CONTENT_ONLY_OWNERSHIP)
+@pytest.mark.parametrize("seat,model", UK_REVIEWERS)
+def test_ukrainian_pr_review_of_code_refuses(review_repo, monkeypatch, seat, model, ownership):
+    from scripts.review.target_resolution import resolve_branch_target
+
+    repo, _ = review_repo
+    head = _change(repo, "scripts/review/record_cf_verdict.py")
+    resolved = resolve_branch_target(repo, head, "origin/main")
+    monkeypatch.setattr("scripts.review.target_resolution.resolve_pr_target", lambda *_args: resolved)
+    args = _ukrainian(seat, model, "--pr", "9714", *ownership)
+    refusal, target = _admit(args)
+    assert target is None and "first non-content path: scripts/review/record_cf_verdict.py" in refusal
+    assert args._review_admission_head == head
+
+
+@pytest.mark.parametrize("ownership", CONTENT_ONLY_OWNERSHIP)
+@pytest.mark.parametrize(
+    "changed,refused",
+    [
+        (["scripts/delegate.py"], "first non-content path: scripts/delegate.py"),
+        (["wiki/a1/lesson.md", "scripts/publish/github.py"], "first non-content path: scripts/publish/github.py"),
+        (["wiki/a1/lesson.md", "site/src/content/docs/a1/lesson.mdx"], None),
+    ],
+)
+def test_ukrainian_frozen_attempt_target_decides_admission(tmp_path, monkeypatch, ownership, changed, refused):
+    attempt = tmp_path / "attempt.json"
+    attempt.write_text(json.dumps({"target": {"changed_paths": changed}}))
+    calls = _count_collections(monkeypatch)
+    refusal, target = _admit(_ukrainian("claude", "claude-opus-5-5", "--review-attempt", str(attempt), *ownership))
+    assert calls == [1]
+    if refused is None:
+        assert refusal is None and (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    else:
+        assert target is None and refused in refusal
+
+
+@pytest.mark.parametrize(
+    "record", ["{}x: [", "- a list\n", json.dumps({"target": {}}), json.dumps({"target": {"changed_paths": []}})]
+)
+def test_ukrainian_attempt_with_an_unresolvable_target_refuses(tmp_path, record):
+    attempt = tmp_path / "attempt.yaml"
+    attempt.write_text(record)
+    refusal, target = _admit(_ukrainian("claude", "claude-opus-5-5", "--review-attempt", str(attempt)))
+    assert target is None and "REVIEW_TARGET_UNRESOLVED" in refusal
+
+
+def test_ukrainian_attempt_with_a_missing_record_refuses(tmp_path):
+    refusal, target = _admit(_ukrainian("claude", "claude-opus-5-5", "--review-attempt", str(tmp_path / "gone.yaml")))
+    assert target is None and "REVIEW_TARGET_UNRESOLVED" in refusal
+
+
+def test_standalone_ukrainian_request_reads_no_git_paths(monkeypatch):
+    from scripts.review import security_paths
+
+    def unexpected(*_args, **_kwargs):
+        pytest.fail("a standalone language request has no Git target to read")
+
+    monkeypatch.setattr(security_paths, "git_changed_paths", unexpected)
+    monkeypatch.setattr(delegate, "_dispatch_review_changed_paths", unexpected)
+    refusal, target = _admit(_ukrainian("codex", "gpt-6.1-sol"))
+    assert refusal is None and (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+
+
+CODEX_ADAPTER = "scripts/agent_runtime/adapters/codex.py"
+
+
+def _rename(repo, old, new):
+    _change(repo, old)
+    _git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
+    (repo / new).parent.mkdir(parents=True, exist_ok=True)
+    _git(repo, "mv", old, new)
+    _git(repo, "commit", "-qm", "rename")
+    head = _git(repo, "rev-parse", "HEAD")
+    _git(repo, "update-ref", "refs/remotes/origin/review-target", head)
+
+
+def _delete(repo, path):
+    _change(repo, path)
+    _git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
+    _git(repo, "rm", "-q", path)
+    _git(repo, "commit", "-qm", "delete")
+    _git(repo, "update-ref", "refs/remotes/origin/review-target", _git(repo, "rev-parse", "HEAD"))
+
+
+@pytest.mark.parametrize("profile", ["code", "infra", "ukrainian"])
+@pytest.mark.parametrize("shape", ["modified", "renamed-to-content", "deleted"])
+@pytest.mark.parametrize("ownership", CONTENT_ONLY_OWNERSHIP)
+def test_changed_paths_exclude_the_own_subject_seat(review_repo, profile, shape, ownership):
+    repo, _ = review_repo
+    if shape == "modified":
+        _change(repo, CODEX_ADAPTER)
+    elif shape == "renamed-to-content":
+        _rename(repo, CODEX_ADAPTER, "wiki/a1/codex.md")
+    else:
+        _delete(repo, CODEX_ADAPTER)
+    flags = ["--agent", "codex", "--review-profile", profile, "--branch", "review-target", *ownership]
+    refusal, target = _admit(_args(*flags, model="gpt-6.1-sol"))
+    assert target is None and "REVIEW_ROUTE_REFUSED" in refusal
+    if profile == "ukrainian":
+        assert "subject seat codex" in refusal and CODEX_ADAPTER in refusal
+
+
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_a_reviewer_outside_the_changed_subject_keeps_its_identity(review_repo, profile):
+    repo, _ = review_repo
+    _change(repo, CODEX_ADAPTER)
+    flags = ["--agent", "claude", "--review-profile", profile, "--branch", "review-target"]
+    refusal, target = _admit(_args(*flags, model="claude-opus-5-5"))
+    assert refusal is None and (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+
+
+def test_ukrainian_branch_review_of_an_empty_target_refuses(review_repo):
+    repo, base = review_repo
+    _git(repo, "update-ref", "refs/remotes/origin/review-target", base)
+    refusal, target = _admit(_ukrainian("claude", "claude-opus-5-5", "--branch", "review-target"))
+    assert target is None and "REVIEW_TARGET_UNRESOLVED" in refusal and "no paths" in refusal
 
 
 def test_ordinary_diff_keeps_sonnet(review_repo):

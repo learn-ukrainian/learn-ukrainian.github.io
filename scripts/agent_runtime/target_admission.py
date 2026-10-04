@@ -216,14 +216,14 @@ def resolve_and_admit(
     admitted identities. Budget substitutions require both ``review_author_model``
     and ``review_risk``; review attempts never change identity. Retired aliases
     use ``review_alias_model_resolver`` once before selection and carry that
-    model resolution into the launch route. Review owned paths and explicit
-    subject seats/families use the canonical resolver's exclusion semantics,
-    for every profile. For code/infra profiles, ``review_changed_paths`` may
-    collect paths lazily after original-request gates; its result is shared by
-    every subsequent reviewer evaluation. Ukrainian content review never invokes
-    the collector, and is admitted only for content owned or changed paths
-    (``ukrainian_review_refusal``); with neither it is a standalone language
-    request.
+    model resolution into the launch route. ``review_changed_paths`` is the
+    authoritative target (a branch, PR or frozen attempt) for every profile; a
+    callable collects it lazily after original-request gates, and its result is
+    shared by every subsequent reviewer evaluation. Only a standalone language
+    request has no target, and its caller passes none. Owned plus changed paths
+    and explicit subject seats/families use the canonical resolver's exclusion
+    semantics, for every profile. A Ukrainian review is admitted only when every
+    owned and changed path is content (``ukrainian_review_refusal``).
     """
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
@@ -235,11 +235,9 @@ def resolve_and_admit(
     if review_activity:
         _refuse_non_review_models(requested[1])
     # Target reads follow the original-request gates, but precede every
-    # candidate evaluation, route probe and substitution. A Ukrainian review
-    # never runs the code/infra collector: a standalone language request has
-    # no branch or PR to read.
+    # candidate evaluation, route probe and substitution.
     if callable(review_changed_paths):
-        review_changed_paths = review_changed_paths() if (review_profile or "code") in {"code", "infra"} else ()
+        review_changed_paths = review_changed_paths()
 
     fallbacks: Mapping[str, str] = {}
     if route is not None and fallbacks_path is not None:
@@ -404,9 +402,11 @@ def ukrainian_review_refusal(
             return reason
     paths = [str(path).strip().replace("\\", "/") for path in target_paths]
     if paths:
-        from scripts.ai_agent_bridge._agy import is_content_class_path
+        from scripts.ai_agent_bridge._agy import GEMINI_CODE_REVIEW_FORBIDDEN, is_content_class_path
 
         if outside := next((path for path in paths if not path or not is_content_class_path(path)), None):
+            if entry["family"] == "google":
+                return f"{GEMINI_CODE_REVIEW_FORBIDDEN}; first non-content path: {outside or '<empty>'}"
             return (
                 "a Ukrainian review covers Ukrainian content only; code, infra and mixed targets need "
                 f"--review-profile code; first non-content path: {outside or '<empty>'}"
@@ -483,7 +483,9 @@ def _resolve_review_target(
             )
         raise ReviewAdmissionRefused(f"REVIEW_ATTEMPT_IDENTITY_REFUSED: {detail} (#8517)")
     subject = prepare_subject_exclusion(
-        owned_paths=owned_paths, subject_seats=subject_seats, subject_families=subject_families
+        owned_paths=tuple(dict.fromkeys((*owned_paths, *changed_paths))),
+        subject_seats=subject_seats,
+        subject_families=subject_families,
     )
     if subject.fail_closed_reason:
         raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {subject.fail_closed_reason}")
