@@ -107,7 +107,7 @@ Specific API reads also have a shell interface,
 `python -m scripts.publish read <name> --repo <owner/repo> ...`.
 `gh pr checkout <N>` is permitted only inside a real dispatch worktree.
 Named `read()` operations include: identity, issue, comments,
-labels, timeline, reviews, commits, comment, checks, jobs, issues, runs,
+labels, timeline, reviews, commits, files, comment, checks, jobs, issues, runs,
 deployments and deployment-statuses. GraphQL helpers build their own read-only
 documents for issue-parent, membership, subissues, subissues-next,
 subissue-batch, membership-head, queue-snapshot, queue-status, budget,
