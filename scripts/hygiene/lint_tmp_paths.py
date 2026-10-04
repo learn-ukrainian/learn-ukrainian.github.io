@@ -115,6 +115,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "4186984cbd5c5a1c34a5eb0b9d9adf286883d0403855214161966ae7ecba21fb:1",
     ),
     (
+        "scripts/curriculum/evidence/sense_cli.py",
+        "Legacy literal/default/example; follow-up outside this bounded packet (#9702).",
+        "463896cf52010bb03278ce5931e7bc372678af953d9f2d42def060aed8fd0233:1",
+    ),
+    (
         "scripts/deploy/vendor_atlas_tree.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "683bc12f9222df18c0caf3302ebeff8f35778ff07374307eceedf5dad19e291a:1",
@@ -450,6 +455,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "fb64d2ca33729f53d2db0eb636cd1c691bc9489a67a80688547a67418430e29b:1",
     ),
     (
+        "tests/audit/test_check_mdx_source_parity.py",
+        "Existing test literal; migration outside this bounded packet (#9702).",
+        "e7cf38a7d98688f51c749993fcc205a4446d87368dbe464d8755f2a3915e4531:1",
+    ),
+    (
         "tests/audit/test_lint_agent_trailer.py",
         "Existing test literal; migration outside this bounded packet (#8755).",
         "0502ea1bf78419862de04f2126c265e5efe00419c66a68d2b87d0724e284f6f3:1 970a8f9e04f29e15a2aa2a7af69a39791cc89cdaa917bdd00b7b21ea757ce341:2",
@@ -468,6 +478,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "tests/build/test_fresh_cli.py",
         "Existing test literal; migration outside this bounded packet (#8755).",
         "4b1299fdc76adcba7dbf842ced2d5995f2055b74506448badc7f7711a15f0be5:1",
+    ),
+    (
+        "tests/build/test_fresh_path_guard.py",
+        "Existing test literal; migration outside this bounded packet (#9702).",
+        "e564f3201ef219053dd8b6b8c163c46042ab6e4dbe2484c131179c197568724b:1 7ba29ff00a51c6345994c175216930f1441a1f3e526e4cadbf7fd236db653329:1 974e64d68784c105870036fcbcc4a13cb95cbd594fcfc30968f85df59aa7f50b:1 987d5f2071ad8fee27ebb657646d6b2b250e6110f173b1f6ce7c6600671d6130:1 a8d7f83ee51e9f4c3c3e0163b4dbb8896611d082d76a387833ef20f292e81b58:1",
     ),
     (
         "tests/build/test_v7_build_resume.py",
@@ -823,15 +838,31 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Flag literal system-temp paths outside the exact-line allowlist.\nUse before review; worker scratch belongs under the managed TMPDIR lease.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths --repo .\nOutputs: source locations only; no writes or literal path contents.\nExit codes: 0 clean; 1 findings; 2 invalid arguments.\nRelated: #8755; workflow.md; scripts.hygiene.lint_raw_rm_rf.",
+        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths --repo .\nOutputs: source locations, counted fingerprints and remediation; no writes or literal path contents.\nExit codes: 0 clean; 1 findings; 2 invalid arguments.\nRelated: #8755; workflow.md; scripts.hygiene.lint_raw_rm_rf.",
     )
     parser.add_argument(
         "--repo", type=Path, default=REPO_ROOT, help="Repository to scan (default this checkout; example .)."
     )
     args = parser.parse_args(argv)
     findings = find_literal_tmp_paths(args.repo)
-    for path, number in findings:
-        print(f"{path}:{number}: literal system temp path; use the managed TMPDIR lease")
+    if findings:
+        fingerprints = {(path, number): line_digest(line) for path, number, line in scan_lines(args.repo)}
+        counts = Counter((path, digest) for (path, _), digest in fingerprints.items())
+        for path, number in findings:
+            digest = fingerprints[path, number]
+            print(
+                f"{path}:{number}: literal system temp path; "
+                f"counted fingerprint={digest}:{counts[path, digest]}"
+            )
+        print(
+            'Fix producers: use "$TMPDIR/..." in shell or '
+            "tempfile.TemporaryDirectory()/NamedTemporaryFile() in Python (honors TMPDIR). "
+            "For a fixture, path detector, or deferred legacy use, add/update ALLOWLIST in "
+            "scripts/hygiene/lint_tmp_paths.py: (repository-relative path, specific reason "
+            "citing a follow-up issue such as #9702, counted fingerprint shown above). "
+            "Merge the fingerprint into the file's existing entry; the number is the maximum "
+            "allowed count of that exact stripped line, never a whole-file exemption."
+        )
     print(f"literal_tmp_findings={len(findings)}")
     return 1 if findings else 0
 
