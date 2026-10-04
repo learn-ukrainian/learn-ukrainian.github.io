@@ -71,7 +71,7 @@
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
-        "sha256": "beb42751a66bea7c1c23f11f782a6001c91284e8c8a97da9cc063cd9276dab6c"
+        "sha256": "6ce1c30ab262f275c0ad864fa9d33e45b2281a81f74d7c90462487223df32c1a"
       },
       {
         "path": "scripts/lexicon/census_atlas_6371_textbook_leftover.py",
@@ -179,7 +179,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "1a901eb5193e6edba25f8526074f93892135b8d22165013f32416ec95220645f"
+        "sha256": "3e29193064f5aab0d61f1587da0753da373bfb270b9e957da739d0cf97ce27dd"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -239,7 +239,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "7545017afe532efaee4f64ea13385ea113188969920129ab03214502880de514"
+        "sha256": "7c5d5ebdba29102287fcfaa705590957606b0869673c9b508cbd2a90c4c7fd05"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",
