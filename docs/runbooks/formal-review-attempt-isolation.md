@@ -346,13 +346,15 @@ eligible cross-family review: changing that adapter excludes Claude reviewers
 because it governs their own boundary. A Claude Opus worker owns the follow-up
 PR, reviewed by `gpt-6.1-sol`.
 
-At high and critical risk the automatic bench (`scripts.review.bench_health`,
-#9394) accepts a single automatic cross-family reviewer for Anthropic-authored
-code (`openai_frontier`) and OpenAI-authored code (`claude-opus-5-5`) under
-#9423 AC-02. High is limited to Sol/Opus by #9538; critical by the catalog's
-`critical_review` role (#9583). OpenAI's single Opus seat also depends on
-Cursor-routed Claude staying unpinned (#9488). These rows display
-`[EXPECTED single seat]` and satisfy the bench minimum. Zero seats or any other
+At high and critical risk the automatic bench
+(`scripts.review.bench_health`, #9394) accepts a single automatic cross-family
+reviewer for Anthropic-authored and OpenAI-authored code under #9423 AC-02.
+High is limited to Sol/Opus by #9538; critical by the catalog's
+`critical_review` role (#9583). Anthropic authors have `openai_frontier` alone. OpenAI authors have native
+`claude-opus-5-5` plus the runtime-attested Cursor Opus 5.5 High seat
+(`claude-opus-5-5-cursor-fallback`, #9714) on its own Cursor health and quota,
+so their row meets the two-seat default. A row at its accepted single seat
+displays `[EXPECTED single seat]` and satisfies the bench minimum. Zero seats or any other
 shortfall below the default two-seat minimum still exits 1; explicit-pin
 reserves never count toward either minimum.
 

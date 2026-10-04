@@ -22,8 +22,12 @@ reasons on stderr. The default minimum is two seats. The documented
 `ACCEPTED_SINGLE_SEAT_BENCHES` constant accepts one seat for Anthropic and OpenAI
 authors at high/critical risk (#9423 AC-02). High is limited to Sol/Opus by #9538;
 critical by the catalog's `critical_review` role (#9583). OpenAI authors have
-Opus alone because Cursor-routed Claude stays unpinned (#9488). Such rows
-display `[EXPECTED single seat]`; zero seats always fails. The summaries are
+two seats: native Opus and the runtime-attested Cursor Opus 5.5 High seat
+(`claude-opus-5-5-cursor-fallback`, #9714), which carries its own Cursor
+health and quota. Anthropic authors keep one, because both Opus seats share
+their family, and the Cursor-Auto union exclusion keeps every Cursor seat off
+xAI- and Moonshot-authored rows. A row at its accepted single seat displays
+`[EXPECTED single seat]`; zero seats always fails. The summaries are
 `BENCH HEALTH PASS: All author families meet their required reviewer minimum.` or
 `BENCH HEALTH FAIL: At least one author family is below its required reviewer minimum.`
 This diagnostic exception changes neither eligibility nor routing policy.

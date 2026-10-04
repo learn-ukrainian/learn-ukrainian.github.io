@@ -1578,6 +1578,130 @@ def test_a_cursor_opus_verdict_on_an_anthropic_authored_change_is_refused(monkey
     assert comments == []
 
 
+def terminal_cursor_receipt(tasks, *, requested, attested, **updates):
+    """A finished Cursor task as delegate leaves it: ``model`` overwritten by the report."""
+    fields = {
+        "agent": "cursor",
+        "model": attested,
+        "resolved_model": attested,
+        "resolved_model_known": True,
+        "resolved_model_source": "cursor-stream-json",
+        "substitution": {
+            "requested_provider": "cursor",
+            "requested_model": requested,
+            "actual_provider": "cursor",
+            "actual_model": attested,
+            "actual_model_known": True,
+            "substituted": True,
+            "source": "cursor-stream-json",
+            "marker": None,
+        },
+    }
+    write_task(tasks, **{**fields, **updates})
+
+
+@pytest.mark.parametrize(
+    "requested,attested",
+    [
+        ("claude-opus-5-5-high", "Grok 4.7 256K High"),
+        ("grok-4.7-high", "Claude Opus 5.5 300K High"),
+    ],
+)
+def test_a_terminal_cursor_run_attesting_another_seat_than_requested_is_refused(
+    monkeypatch, tmp_path, requested, attested
+):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    terminal_cursor_receipt(tasks, requested=requested, attested=attested)
+    with pytest.raises(recorder.RecordError, match="Cursor reviewer model mismatch"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+@pytest.mark.parametrize(
+    "requested,attested,recorded",
+    [
+        ("claude-opus-5-5-high", "Claude Opus 5.5 300K High", "model=claude-opus-5-5 family=anthropic"),
+        ("grok-4.7-high", "Grok 4.7 256K High", "model=grok-4.7 family=xai"),
+    ],
+)
+def test_a_terminal_cursor_run_attesting_its_requested_seat_records(
+    monkeypatch, tmp_path, requested, attested, recorded
+):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    terminal_cursor_receipt(tasks, requested=requested, attested=attested)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["comment"] == "posted"
+    assert recorded in comments[0]["body"]
+
+
+def test_a_terminal_cursor_opus_verdict_on_an_anthropic_authored_change_is_refused(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
+    terminal_cursor_receipt(tasks, requested="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High")
+    with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+@pytest.mark.parametrize(
+    "substitution,reason",
+    [
+        ("claude-opus-5-5-high", "request metadata malformed"),
+        (["claude-opus-5-5-high"], "request metadata malformed"),
+        ({"requested_model": "claude-opus-5-5-high"}, "request metadata malformed"),
+        (
+            {"requested_provider": "claude", "requested_model": "claude-opus-5-5-high"},
+            "request metadata malformed",
+        ),
+        ({"requested_provider": "cursor"}, "request metadata malformed"),
+        ({"requested_provider": "cursor", "requested_model": None}, "request metadata malformed"),
+        ({"requested_provider": "cursor", "requested_model": ""}, "request metadata malformed"),
+        ({"requested_provider": "cursor", "requested_model": " grok-4.7-high"}, "request metadata malformed"),
+        ({"requested_provider": "cursor", "requested_model": ["grok-4.7-high"]}, "request metadata malformed"),
+        # The runtime's own report is not a request.
+        (
+            {"requested_provider": "cursor", "requested_model": "Claude Opus 5.5 300K High"},
+            "request unknown",
+        ),
+    ],
+)
+def test_terminal_cursor_request_metadata_that_names_no_cursor_pin_is_refused(
+    monkeypatch, tmp_path, substitution, reason
+):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    terminal_cursor_receipt(
+        tasks, requested="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High", substitution=substitution
+    )
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+def test_a_pinned_model_disagreeing_with_the_substitution_request_is_refused(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    terminal_cursor_receipt(
+        tasks, requested="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High", model="grok-4.7-high"
+    )
+    with pytest.raises(recorder.RecordError, match="Cursor reviewer request ambiguous"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+@pytest.mark.parametrize("attested", ["Claude Opus 5.5 300K High", "Grok 4.7 256K High"])
+def test_an_overwritten_model_without_request_metadata_is_refused(monkeypatch, tmp_path, attested):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    write_task(
+        tasks,
+        agent="cursor",
+        model=attested,
+        resolved_model=attested,
+        resolved_model_known=True,
+        resolved_model_source="cursor-stream-json",
+    )
+    with pytest.raises(recorder.RecordError, match="Cursor reviewer request unknown"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
 @pytest.fixture
 def real_recorder_matcher(monkeypatch):
     from scripts.opsec import prepublish as gate

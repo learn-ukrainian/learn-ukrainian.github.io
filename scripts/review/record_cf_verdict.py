@@ -448,6 +448,36 @@ def _pr(repository: str, branch: str, number: int | None) -> dict[str, Any]:
     return data
 
 
+def _cursor_requested_model(task: dict[str, Any], reported: object) -> object:
+    """Return the slug a Cursor review was dispatched with (#9714).
+
+    Once the runtime reports, delegate overwrites ``model`` with that report, so the
+    adapter's ``substitution`` request is the surviving pin; records without one
+    keep ``model``. Present request metadata must name a Cursor request and agree
+    with a still-pinned ``model``, and the runtime's own report never stands in
+    for the request.
+    """
+    substitution = task.get("substitution")
+    if substitution is None:
+        requested = task.get("model")
+    else:
+        requested = substitution.get("requested_model") if isinstance(substitution, dict) else None
+        if (
+            not isinstance(substitution, dict)
+            or substitution.get("requested_provider") != "cursor"
+            or not isinstance(requested, str)
+            or not requested
+            or requested != requested.strip()
+        ):
+            raise RecordError("Cursor reviewer request metadata malformed")
+        pinned = task.get("model")
+        if isinstance(pinned, str) and pinned in FORMAL_CURSOR_REVIEW_DISPATCH_MODELS and pinned != requested:
+            raise RecordError(f"Cursor reviewer request ambiguous: model {pinned!r}, substitution {requested!r}")
+    if isinstance(requested, str) and requested == reported:
+        raise RecordError("Cursor reviewer request unknown: only the runtime report survives")
+    return requested
+
+
 def _require_formal_reviewer(*, cursor: bool, requested: object, reported: object, model: str, family: str) -> None:
     """Refuse a verdict from an identity the reviewer resolver never selects (#9488).
 
@@ -503,7 +533,8 @@ def record(
     family = resolve_family(model)
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
-    _require_formal_reviewer(cursor=cursor, requested=task.get("model"), reported=reported, model=model, family=family)
+    requested = _cursor_requested_model(task, reported) if cursor else task.get("model")
+    _require_formal_reviewer(cursor=cursor, requested=requested, reported=reported, model=model, family=family)
     verdict = normalize_verdict(reply)
     started_dt = datetime.fromisoformat(str(task.get("started_at") or "").replace("Z", "+00:00"))
     if started_dt.tzinfo is None:
