@@ -11,10 +11,15 @@ SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 def public_diagnostic(message: str, repo_root: Path) -> str:
     """Keep repository-relative diagnostics; withhold external absolute paths."""
     root = str(repo_root.resolve())
-    message = re.sub(re.escape(root) + r"(?=/|$|[\s\"'<>()[\]{},;:])", ".", message)
-    # Exception messages may name files outside the repository (including home
-    # directories). Their locations are never useful in tracked build state.
-    return re.sub(r"(?<![\w./])/(?:[^\s\"'<>()[\]{},;]+)", "<external-path>", message)
+    # Preserve URL tokens before either path replacement, even when their URL
+    # path happens to contain the repository root.
+    parts = re.split(r"([A-Za-z][A-Za-z0-9+.-]*://[^\s\"'<>]+)", message)
+    for index in range(0, len(parts), 2):
+        part = re.sub(re.escape(root) + r"(?=/|$|[\s\"'<>()[\]{},;:])", ".", parts[index])
+        # Exception messages may name files outside the repository (including home
+        # directories). Their locations are never useful in tracked build state.
+        parts[index] = re.sub(r"(?<![\w./])/(?:[^\s\"'<>()[\]{},;]+)", "<external-path>", part)
+    return "".join(parts)
 
 
 def validate_module(level: str, slug: str) -> None:

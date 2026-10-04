@@ -15,7 +15,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator, ValidationError
 
-from scripts.build.fresh.path_guard import checked_existing_path
+from scripts.build.fresh.path_guard import checked_existing_path, public_diagnostic
 from scripts.curriculum.evidence import lock
 
 SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "fresh-regeneration-ledger-v1.schema.json"
@@ -135,7 +135,7 @@ def _record_harness_failure(
     if evidence["terminal_state"] is None:
         evidence["failures"].append(
             {
-                "reason": reason,
+                "reason": public_diagnostic(reason, SCHEMA.parents[1]),
                 "inputs": {key: inputs.get(key, "0" * 64) for key in INPUT_KEYS},
                 "at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             }
@@ -224,7 +224,7 @@ def record_failure(
             "attempt": len(previous) + 1,
             "failed_check": failure["check"],
             "code": failure.get("code", str(failure["check"])),
-            "reason": failure["reason"],
+            "reason": public_diagnostic(failure["reason"], SCHEMA.parents[1]),
             "at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             "inputs": {key: inputs.get(key, "0" * 64) for key in INPUT_KEYS},
         }
