@@ -17,7 +17,7 @@ hydrate, or re-load the diary. Restart only when FAIL-HANDOFF ends the seat
 | --- | --- |
 | Auto-compact | **Re-score** canary → on PASS **auto-hydrate + RE-GROUND** (not blind continue) |
 | Canary **PASS** | Durable **anchors** OK only — **not** proof mid-flight working memory survived |
-| Canary **&lt; 8/10** (`pass-ratio` 0.8) | **FAIL-HANDOFF** → auto **STATE AT HANDBACK** on diary + stream note → close stream → `/quit` |
+| Canary **&lt; 8/10** (`pass-ratio` 0.8) | **FAIL-HANDOFF** → auto **STATE AT HANDBACK** on diary + stream note → `/quit`; the launcher/supervisor disposes the lease (the driver never closes, releases or reopens the stream) |
 | Compact count / “compactions remaining” | **Not** an end criterion |
 | First compact | **Not** required before you may end; **not** a reason to delay a clean end |
 
@@ -53,7 +53,8 @@ The dual-write board under `.claude/<epic>-epic/*-DRIVER-HANDOFF.md` is a **diar
 | After each batch (merge, issue close, dispatch, advisor, block) | `stamp` |
 | After canary score PASS | auto stamp with `canary PASS … @ ~N tok` |
 | After canary FAIL or clean close | `handback` / auto FAIL template |
-| Cold-start | **Read diary + stream first**, then `mint` |
+| Cold-start | **Read diary + stream first**; no canary mint at ordinary cold start |
+| Entering rollover preparation (`thread-rollover`) | `mint`; `score` after compaction within the same procedure |
 
 ### Mintable sections (keep short)
 
@@ -106,7 +107,7 @@ Never put API keys, private teacher PII, or private-repo secrets in the diary.
 .venv/bin/python -m scripts.session_canary.grok_lane score \
   --epic harness --answers .claude/harness-epic/canary/answers.json \
   --context-tokens 250000 \
-  --next-drive "Load STATE AT HANDBACK; mint; resume B1" \
+  --next-drive "Load STATE AT HANDBACK; resume B1" \
   --open-prs "PR #N still open"
 ```
 
@@ -126,7 +127,7 @@ Operator 2026-09-21: keep the product default of 85%. Do not raise it.
 ## CLI (canary)
 
 ```bash
-# Cold-start (after stream open + diary load)
+# Within the thread-rollover procedure only (core rules: never an ordinary cold-start mint)
 .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas --stream epic:4387
 .venv/bin/python -m scripts.session_canary.grok_lane questions --epic atlas
 
@@ -147,11 +148,14 @@ Artifacts live under gitignored `.claude/<epic>-epic/canary/`.
 
 ```
 START  → start-grok-driver.sh --epic <name> claims stream lease via common supervisor
-         → load diary + stream → mint canary
+         → load diary + stream (no canary mint)
 DRIVE  → stamp diary after each batch
-         at ~60–70% context OR after auto-compact → score from memory
+         verified handoff signal → thread-rollover preparation → mint canary
+         after auto-compact → score from memory (same rollover procedure)
          PASS → auto-hydrate printed by score; continue (no operator prompt)
-         FAIL → STATE AT HANDBACK + close stream + quit
+         FAIL → STATE AT HANDBACK → end work through the handoff + quit;
+                lease disposition stays with the launcher/supervisor
+                (driver never closes, releases or reopens the stream)
 END    → handback while PASS (optional) before forced compact
 ```
 

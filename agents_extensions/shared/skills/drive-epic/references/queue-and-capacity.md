@@ -24,7 +24,8 @@ the epic's open issue set:
    - **in_flight** (named PR/task id + head),
    - **dispatch now** (ROUTING_CARD + `capacity_pick` / `/api/state/routing-budget` +
      `--check-budget`),
-   - **named hold** with one §2c hold code.
+   - **named hold** with one §2c hold code (an unchanged valid hold carries forward;
+     do not re-post it each cycle).
 3. **Silence is a defect** — an open epic issue with no disposition is a driver failure.
 4. **Closeout** — merge alone is not done; the post-merge issue disposition and cleanup
    are the core `SKILL.md` Definition of done.
@@ -79,15 +80,17 @@ dependency/critical-path → utilization. Later items never override earlier one
    no_ready_work`. Silence is not a disposition. A free lane with nothing compatible
    is `no_ready_work`; `dependency_blocked` names a real blocker, never a mismatch.
 3. **Pipeline with a depth limit.** While CF/CI runs on unit N, author N+1 only up to
-   the WIP/resource cap. Unit N **regains priority** the moment review feedback returns.
-   Never serialize implement → review → delta with idle gaps.
+   the WIP/resource cap. Unit N **regains priority** the moment review feedback, CI or a
+   merge returns: its fixes, landing, deployed proof and closeout outrank opening new
+   independent work. Never serialize implement → review → delta with idle gaps.
 4. **Ready-work forecast.** An unfinished epic needs a current ready-work forecast. An
    empty ready queue requires an explicit disposition, not silence. File banked
    follow-ups as GitHub issues when identified. Empty stream `/next` is a driver defect
    unless the epic is done or a disposition applies.
 5. **Anti-gaming.** No placeholder agents, artificial task splitting, premature PRs, or
    speculative work without an integration path. §2 still binds: never manufacture
-   busywork (quality > utilization). Disk wins every conflict (#M-14 — `df` + `du` of
+   busywork, tickets, sources, features or meta-work to fill a seat; admin activity is
+   not product progress (quality > utilization). Disk wins every conflict (#M-14 — `df` + `du` of
    `.worktrees` before fan-out; reap first).
 
 Mechanical reminder + disposition telemetry (#6976/#6998). At every

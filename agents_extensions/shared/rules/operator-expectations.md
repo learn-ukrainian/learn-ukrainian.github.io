@@ -36,14 +36,15 @@ tie-breakers.
    once required CI and independent cross-family exact-head review both pass, the orchestrator
    merges (or enqueues via `.venv/bin/python -m scripts.publish pr-merge --number <N>`). Never leave an approved, green PR unmerged.
    **After merge, cleanup is mandatory before the next large
-   dispatch** (operator 2026-08-07; ENOSPC is the known failure): (1) confirm MERGED,
-   (2) `git worktree remove --force` for that PR's dispatch worktree **before**
-   deleting the local branch, (3) delete local + remote branch + `git fetch --prune`
-   + `git worktree prune`, (4) bulk reap:
-   `.venv/bin/python scripts/orchestration/reap_worktrees.py --apply` (also sweeps
-   any leftover `$TMPDIR` / `shielded-reviews` temps from the retired formal path),
-   (5) prove with `df -h /` and `git worktree list` (no zombie path for that PR). A
-   squash-merge alone is not done. Full checklist: `drive-epic` skill §7a. **Do not
+   dispatch** (operator 2026-08-07; ENOSPC is the known failure): confirm MERGED, wait
+   for every process to leave that PR's worktrees, then run
+   `.venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply` until it exits 0
+   (worktrees reaped through the common reaper, remote and local branch gone). A non-zero
+   exit is a blocker, never permission for `--force`; the allowlisted manual fallback in
+   `docs/runbooks/worktree-cleanup.md` applies only when the common reaper cannot run.
+   Settled dispatches are reaped with the session reaper command in the `drive-epic`
+   skill's Definition of done. A squash-merge alone is not done. Full checklist:
+   `drive-epic` skill §7a. **Do not
    create sealed `lu-review-*` trees** — shielded formal CF is retired. Close issues
    when acceptance criteria are met, with tool-backed evidence. `X-Agent` trailer on
    every commit. Session start/end: sweep worktrees, branches, open PRs — a dangling
@@ -53,6 +54,12 @@ tie-breakers.
    or a handoff lists "Next: …". It is finished only when delivered **end-to-end**
    and hygiene is complete:
    - **User-visible outcome** verified against the stated denominator (tool-backed).
+   - **Terminal goal** matches the work: lifecycle goals are `merge`, `deploy` and
+     `certify`; an issue card's `decision-only` or `audit-only` goal ends at the delivered
+     decision or report. For a `deploy` outcome, a merge or a green workflow title is not
+     delivery: the deployed marker/version and any separately versioned data are
+     acceptance criteria due at `DEPLOYED`, verified by the driver (`drive-epic`
+     §7-rollout).
    - **Landing** (when code/docs changed): **CF review-fix before CI** (operator
      2026-09-18) — complete independent exact-head cross-family CF
      (APPROVE / fix / re-CF) on the branch **before opening any PR** (draft
@@ -155,7 +162,11 @@ tie-breakers.
     drive decided work to one complete, user-visible outcome. "One PR to one concern" is a
     scope-mixing guard, not license to pause mid-implementation and re-ask — files that
     outcome touches stay in the same PR; only a genuinely separate user-visible outcome goes
-    in a different PR. **Stop and get approval** for: the operator's accounts and credentials;
+    in a different PR. Additions outside the approved scope (suggestions, optional extras,
+    newly found sources) stay suggestions until authorized; source integration and routine
+    implementation already within approved scope proceed without reopening GO. An optional
+    addition becomes a release blocker only through an approved acceptance criterion.
+    **Stop and get approval** for: the operator's accounts and credentials;
     production, Pages, or public cutover; HA, Patroni, a new VPS, or a fenced cutover;
     deleting bulk corpus or Drive/SMB payloads; paid-plan changes; **and any
     NEW architecture, process, or working-model decision that has not already been ordered**
@@ -219,7 +230,9 @@ tie-breakers.
     `model-assignment.md` rules, never by permanent reviewer identity. Bind each review to the
     prompt SHA-256 and its explicit checklist verdict, findings, and author reconciliation;
     re-review after a material change to the outcome, scope, denominator, role map, acceptance
-    criteria, or independent evaluation. A non-goal that shrinks the actual mission needs
+    criteria, or independent evaluation. Reuse a review only while its bound prompt SHA-256
+    and acceptance-criteria ledger hash still match; a status question opens no new kickoff
+    packet. A non-goal that shrinks the actual mission needs
     operator/advisor approval. Prompt review improves dispatch quality only: it never replaces
     exact-head implementation review or the independent cross-family PR gate.
 15. **Simplest adequate solution — adjust the code to the data, not the data to the code.** Before

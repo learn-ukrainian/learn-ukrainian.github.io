@@ -49,6 +49,8 @@ Per PR, in this order:
       the merge that names exactly what remains and what it waits on** (a date, a run
       count, an event, or a work item).
 - [ ] A user-visible API or UI change has local proof (§7-rollout).
+- [ ] A `deploy`-goal outcome has its deployed marker/version and separately versioned
+      data verified (§7-rollout); a merge or a green workflow title is not delivery.
 
 Per turn and at session end:
 
@@ -97,11 +99,21 @@ not delivery proof for the live driver.
 4. **§1 Topology and metrics.** Query `fleet_comms metrics`, `backlog`, and
    `dead-letters`; never hold fleet state in context (orient.md).
 5. **§2 Pick the next action and dispose every open issue** (§2-epic): each one is in
-   flight, dispatched now, or on a named §2c hold. Silence is a defect. Before dispatching
-   for an issue, look for a sibling PR (`gh pr list --state all --search "<issue>"`). No
-   fabricated done (§2a); no idle paid lane while ready work exists (§2c). While CF or CI
-   runs, dispatch the next ready item or record a §2c code in the same turn:
-   [queue-and-capacity](references/queue-and-capacity.md).
+   flight, dispatched now, or on a named §2c hold. Silence is a defect. Pick the smallest
+   complete authorized user-visible outcome. **Product first:** before a material
+   diagnosis or dispatch, reconcile the target issue, sibling open and merged PRs
+   (`gh pr list --state all --search "<issue>"`), active task ownership and the current
+   `main` head. When the outcome has a runtime, deployed site or published dataset, also
+   bind the deployed code version, the separately pinned data version and a bounded live
+   reproduction; a missing probe stays unknown and is named. A bounded task gets no
+   repository-wide scan without evidence of a cross-repository fault. A status question
+   neither expands nor cancels authorization: an already authorized active task continues
+   unless explicitly stopped, and no separate fix, publication or fan-out is inferred from
+   it. Record target artifact, observable
+   acceptance, terminal goal and publication authority in the existing issue and
+   lifecycle fields. No fabricated done (§2a); no idle paid lane while ready work exists
+   (§2c). While CF or CI runs, dispatch the next ready item or record a §2c code in the
+   same turn: [queue-and-capacity](references/queue-and-capacity.md).
 6. **§3 Route** by model and harness fit from live capacity (`routing-budget`,
    `capacity_pick`, usage pace). Write a ROUTING_CARD_V1 before every implement dispatch;
    no card, no dispatch (§3-routing). Substantive phase or epic prompts first pass §3a
@@ -122,7 +134,13 @@ not delivery proof for the live driver.
 12. **§8a Inbox drain — before handoff.**
 13. **§8 Handoff.** The file handoff stays authoritative; add the Entire dual-write and
     fleet receipt; take every timestamp from `date -u`:
-    [handoff](references/handoff.md).
+    [handoff](references/handoff.md). Reports lead with the verified user-visible
+    outcome, then exact evidence, the residual with its owner, and the next executable
+    action. Evidence may link a durable receipt instead of pasting it when the receipt
+    keeps the command, cwd and raw result; material failed or unverified results are
+    stated plainly in the report itself. Core P0 tool-backed claim duties still apply.
+    Never invent an ETA: bind any estimate to the executable path, the remaining work and
+    its uncertainty, and name unresolved dependencies when they exist.
 
 Seat-specific adjustments for your model and for the seats you route to:
 [model-deltas](references/model-deltas.md).
@@ -145,6 +163,10 @@ it, and a proposal by any other agent needs both; if they disagree, the operator
 6. A **production, Pages, or public cutover** without a present-tense operator GO; HA,
    Patroni, new-VPS, or fenced cutovers; host access and security configuration
    (§7-rollout).
+
+A blocker report carries BLOCKED (verbatim command), ERROR (literal text), STILL WORKS
+(probe), ASK (narrowest grant) and OWNER. After a new error, re-check competing PRs and
+runs against the diagnosis before calling it a repo-wide outage.
 
 Enforce the risk floor on yourself, not only on the work you dispatch. Passing gates is
 necessary, not sufficient: verify the real artifact renders or runs before "ready".

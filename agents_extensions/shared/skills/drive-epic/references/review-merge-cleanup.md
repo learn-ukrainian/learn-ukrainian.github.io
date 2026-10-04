@@ -179,6 +179,22 @@ Missing local proof on a user-visible API/UI change is incomplete closeout. Issu
 never authorizes a production, Pages, or public cutover, or an HA, Patroni, new-VPS, or fenced
 cutover. Claiming prod HA without the operator or advisor GO is out of scope.
 
+**Deployed outcome proof (`deploy` goal).** The lifecycle validator counts any GitHub
+deployment in state `SUCCESS` on the merge or head SHA as deployed, and required checks
+count `SKIPPED` as passing; it does not check what the site serves. So state the site
+marker/version and any separately versioned data as acceptance criteria due at
+`DEPLOYED`, then verify them yourself: confirm the deployment job actually ran for the
+merged SHA, read the served marker/version and data version, and check browser or API
+behavior over the stated denominator. A skipped deployment, stale dataset or cached
+output is a named unresolved state, never success. Never delete historical receipts to
+close an issue.
+
+**Publication handoff.** When a public cutover needs a final operator GO, prepare the
+concrete release first (merged SHA, build artifact, marker and data versions, the
+verification commands and their results), match any existing GO to that named release
+and scope, and request only the missing GO. Continue independent authorized work while
+it is pending.
+
 ## §7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
 
 **A squash-merge is not done until cleanup proves free of that PR's residue.** Chat

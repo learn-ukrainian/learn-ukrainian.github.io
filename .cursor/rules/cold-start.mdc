@@ -1,9 +1,9 @@
 ---
-description: 200k-context cold start — Monitor API live state plus /api/rules
+description: Cursor cold start — Monitor API live state plus /api/rules
 alwaysApply: true
 ---
 
-# Cold start (Cursor · 200k)
+# Cold start (Cursor)
 
 **At session start, before other work:**
 
@@ -11,7 +11,7 @@ alwaysApply: true
 .venv/bin/python scripts/cursor_cold_start.py
 ```
 
-The script fetches `/api/rules`. Cursor already has `AGENTS.md` + `CLAUDE.md` as workspace rules (~50k tokens); those are digests, not a substitute for `/api/rules`.
+The script fetches `/api/rules`. Cursor already has `AGENTS.md` + `CLAUDE.md` as workspace rules; those are digests, not a substitute for `/api/rules`.
 
 ## Do not fetch at boot
 
@@ -23,12 +23,14 @@ The script fetches `/api/rules`. Cursor already has `AGENTS.md` + `CLAUDE.md` as
 
 | Need | Call |
 | --- | --- |
-| Canonical rules | `/api/rules?format=markdown` (script hits `/api/rules?format=json`) |
+| Rules hash and sources | `/api/rules?format=json` (the script) |
 
 ## Fetch on demand
 
 | Need | Call |
 | --- | --- |
+| Rules for a task or phase | `/api/rules?scope=task:<name>` (selector: `agents_extensions/shared/rules/task-scoped-reading.md`) |
+| Full ruleset | `/api/rules?format=markdown` — full policy audits, ambiguous cross-cutting tasks |
 | Fleet inbox | `/api/comms/inbox?agent=cursor` |
 | Dispatches | `/api/delegate/active` |
 | Track state | `/api/state/summary` |

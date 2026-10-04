@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Condensed Monitor API cold start for Cursor (200k context).
+"""Condensed Monitor API cold start for Cursor.
 
 Fetches /api/rules (canonical complete ruleset; AGENTS.md + CLAUDE.md are
-digests, not a substitute). Prints a compact markdown briefing (~3–5k
-tokens) for session orientation; does not reprint the rules blob.
+digests, not a substitute). Prints a compact markdown briefing for session
+orientation; does not reprint the rules blob.
 """
 
 from __future__ import annotations
@@ -123,11 +123,14 @@ def main() -> int:
         print("## Live state\n")
         print("- Monitor API down — run `git status --short --branch`\n")
 
-    print("## Context budget (200k)\n")
-    print("- Workspace rules: ~50k (AGENTS + CLAUDE digests, do not re-read)")
-    print("- Canonical rules: GET /api/rules?format=markdown before consequential work")
-    print("- This briefing: ~3–5k")
-    print("- Task budget: ~140k; fetch scoped endpoints only when needed")
+    print("## Rules loading\n")
+    print("- Workspace rules: AGENTS + CLAUDE digests (do not re-read)")
+    print(
+        "- Task/phase rules: GET /api/rules?scope=task:<name> "
+        "(selector: `agents_extensions/shared/rules/task-scoped-reading.md`)"
+    )
+    print("- Full ruleset: GET /api/rules?format=markdown for full policy audits or ambiguous cross-cutting tasks")
+    print("- Fetch other scoped endpoints only when needed")
     print("- Full protocol: `agents_extensions/cursor/rules/cold-start.md`")
     return 0
 

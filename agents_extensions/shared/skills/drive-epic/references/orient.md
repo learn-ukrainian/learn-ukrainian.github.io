@@ -19,11 +19,13 @@ never memory. Implemented plane modes are `off | shadow | dual_write | authority
 hard-code a mode in prose; always query it fresh.
 
 Know your `SESSION_EPIC`, your stream, and your handoff slot (the launcher already
-claimed the stream lease — do **not** open or resume it yourself). Establish your
-session-health signal **by seat**: **grok / gemini / kimi** have a canary lane —
-`.venv/bin/python -m scripts.session_canary.{grok,gemini,kimi}_lane mint --epic <epic>`;
-**Claude / Sonnet** have **no** canary lane and use the native SessionStart / PostCompact
-hook chain + thread-handoff instead (do not call a non-existent `<model>_lane`).
+claimed the stream lease — do **not** open or resume it yourself). Session health is
+**seat-specific** and is not an ordinary cold-start mint: only the Codex launcher mints
+its own startup canary; **grok / gemini / kimi** run
+`.venv/bin/python -m scripts.session_canary.{grok,gemini,kimi}_lane` mint/score only
+within the `thread-rollover` procedure; **Claude / Sonnet** have **no** canary lane and
+use the native SessionStart / PostCompact hook chain + thread-handoff instead (do not
+call a non-existent `<model>_lane`).
 
 **Work-board orientation surface:** `GET http://127.0.0.1:8765/api/work/v1/projection`
 returns the merged work board — issues, PRs, dispatch tasks, and reviews — with each item

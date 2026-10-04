@@ -6,7 +6,7 @@ use **advisor → cheap implement** even when a Sol advisory envelope would unlo
 or weaker models. Measured incident: atlas night drive 2026-08-06 used 2/9
 catalog seats with 33% dispatch `done` rate while free lanes sat idle.
 
-**Enforcement point:** Always-loaded `/api/rules` (this file) + `drive-epic` skill
+**Enforcement point:** `/api/rules` (this file; task scope `driver`) + `drive-epic` skill
 § routing card + mechanical breadth report script. Soft-hard: drivers must
 attach tool-backed breadth evidence on handoff; missing card is a process defect.
 
