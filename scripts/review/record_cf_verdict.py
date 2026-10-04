@@ -34,7 +34,13 @@ from scripts.orchestration.integration_sweep import (
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.publish.github import Request, request_run
-from scripts.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal
+from scripts.review.model_catalog import (
+    REVIEW_ACTIVITY,
+    VALID_CODEX_EFFORTS,
+    activity_role_refusal,
+    is_cursor_auto_selector,
+    model_aliases,
+)
 from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_UNION_FAMILY,
     FORMAL_CURSOR_REVIEW_DISPATCH_MODELS,
@@ -219,6 +225,53 @@ def _is_clean_base_merge(entry: dict[str, Any], base_sha: str) -> bool:
     return merged.stdout.strip() == tree
 
 
+def _names_catalog_model(text: str) -> bool:
+    """True when ``text`` is a catalog model identity, optionally with an effort suffix.
+
+    Unlike ``canonical_model_id`` this never reads a longer name such as a task
+    title (``gpt-6.1-sol-fix-thing``, ``9714-opus-finish``) as a model.
+    """
+    aliases = {alias.casefold() for alias in model_aliases()}
+    base, _, effort = text.casefold().rpartition("-")
+    return text.casefold() in aliases or (effort in VALID_CODEX_EFFORTS and base in aliases)
+
+
+def _author_task_family(harness: str, task_id: str, repository: str, task_root: Path) -> str | None:
+    """The family recorded by the task(s) a ``harness/task_id`` trailer names; None if no record exists.
+
+    Delegate strips the dispatching agent from the trailer, so ``cursor-9714-x``
+    and ``cursor/9714-x`` both sign ``cursor/9714-x``; a legacy unprefixed
+    ``9714-x`` record signs the same. Every record present must agree.
+    """
+    families = set()
+    for name in dict.fromkeys((f"{harness}-{task_id}", f"{harness}/{task_id}", task_id)):
+        if not TASK_ID.fullmatch(name):
+            continue
+        task_file = _hot_or_archived(task_root, f"{name}.json")
+        if not task_file.resolve().is_relative_to(task_root.resolve()):
+            raise RecordError("author task provenance unavailable")
+        if not task_file.exists():
+            continue
+        try:
+            author_task = json.loads(task_file.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            raise RecordError("author task provenance unavailable") from exc
+        if not isinstance(author_task, dict):
+            raise RecordError("author task provenance unavailable")
+        if author_task.get("repository") != repository or not str(author_task.get("agent") or "").startswith(harness):
+            raise RecordError("author task provenance conflicts with commit trailer")
+        if harness.startswith("cursor"):
+            if author_task.get("resolved_model_known") is not True:
+                raise RecordError("author family unknown")
+            author_model = author_task.get("resolved_model")
+        else:
+            author_model = author_task.get("model")
+        families.add(resolve_author_family(str(author_model or "")))
+    if len(families) > 1:
+        raise RecordError("author task provenance conflicts across task records")
+    return families.pop() if families else None
+
+
 def author_families(repository: str, pr_number: int, task_root: Path) -> set[str]:
     """Resolve authored commits; exempt only Git-proven clean base merges, fail closed."""
     commits = _pages(Request("read-commits", repo=repository, number=pr_number))
@@ -244,35 +297,15 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
         if len(trailers) != 1 or "/" not in trailers[0]:
             raise RecordError("author model unknown: missing explicit X-Agent model trailer")
         harness, model = trailers[0].split("/", 1)
-        if not harness or not model:
+        if not harness or not model or not TASK_ID.fullmatch(model):
             raise RecordError("author model unknown")
-        # Cursor has historically required harness-aware resolution; otherwise
-        # resolve the model itself before consulting task provenance.
-        family = resolve_author_family(f"{harness}:{model}" if harness == "cursor" else model)
-        if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
-            if not TASK_ID.fullmatch(model):
-                raise RecordError("author model unknown")
-            task_file = _hot_or_archived(task_root, f"{model}.json")
-            if not task_file.resolve().is_relative_to(task_root.resolve()):
-                raise RecordError("author task provenance unavailable")
-            if task_file.exists():
-                # The common X-Agent trailer names a task, not a model. Resolve
-                # that task's recorded model only after validating its provenance.
-                try:
-                    author_task = json.loads(task_file.read_text(encoding="utf-8"))
-                except (OSError, ValueError) as exc:
-                    raise RecordError("author task provenance unavailable") from exc
-                if author_task.get("repository") != repository or not str(author_task.get("agent") or "").startswith(
-                    harness
-                ):
-                    raise RecordError("author task provenance conflicts with commit trailer")
-                if harness.startswith("cursor"):
-                    if author_task.get("resolved_model_known") is not True:
-                        raise RecordError("author family unknown")
-                    author_model = author_task.get("resolved_model")
-                else:
-                    author_model = author_task.get("model")
-                family = resolve_author_family(str(author_model or ""))
+        # The common X-Agent trailer names a task, whose recorded model decides
+        # before any reading of the trailer text as a model name.
+        family = _author_task_family(harness, model, repository, task_root)
+        if family is None:
+            if _names_catalog_model(model) or is_cursor_auto_selector(model):
+                # Cursor has historically required harness-aware resolution.
+                family = resolve_author_family(f"{harness}:{model}" if harness == "cursor" else model)
             elif harness in SINGLE_FAMILY_HARNESSES:
                 family = SINGLE_FAMILY_HARNESSES[harness]
             else:
@@ -455,9 +488,25 @@ def _cursor_requested_model(task: dict[str, Any], reported: object) -> object:
     adapter's ``substitution`` request is the surviving pin; records without one
     keep ``model``. Present request metadata must name a Cursor request and agree
     with a still-pinned ``model``, and the runtime's own report never stands in
-    for the request.
+    for the request. A preflight agent substitution onto Cursor keeps its routing
+    record outermost and nests this run's adapter receipt under
+    ``runtime_attribution`` (``delegate._merge_agent_substitution``); the nested
+    receipt is the request, and must launch the routed slug and attest the report.
     """
     substitution = task.get("substitution")
+    if isinstance(substitution, dict) and substitution.get("kind") == "agent-substitution":
+        runtime = substitution.get("runtime_attribution")
+        if (
+            substitution.get("actual_agent") != "cursor"
+            or not isinstance(runtime, dict)
+            or runtime.get("kind") is not None
+            or runtime.get("actual_provider") != "cursor"
+            or runtime.get("requested_model") != substitution.get("actual_model")
+            or not isinstance(runtime.get("actual_model"), str)
+            or runtime["actual_model"].strip() != reported
+        ):
+            raise RecordError("Cursor reviewer request metadata malformed")
+        substitution = runtime
     if substitution is None:
         requested = task.get("model")
     else:

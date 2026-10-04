@@ -1702,6 +1702,233 @@ def test_an_overwritten_model_without_request_metadata_is_refused(monkeypatch, t
     assert comments == []
 
 
+def nested_cursor_substitution(*, routed, attested):
+    """Delegate's terminal record for a native request routed onto Cursor before spawn."""
+    from scripts.delegate import _merge_agent_substitution, _remember_agent_substitution
+
+    sink = {}
+    _remember_agent_substitution(
+        sink,
+        source="budget-guard",
+        requested_agent="claude",
+        requested_model="claude-opus-5-5",
+        actual_agent="cursor",
+        actual_model=routed,
+        how="mapped",
+    )
+    # The Cursor adapter's own receipt for this invocation (adapters/cursor.py ``parse``).
+    runtime = {
+        "requested_provider": "cursor",
+        "requested_model": routed,
+        "actual_provider": "cursor",
+        "actual_model": attested,
+        "actual_model_known": True,
+        "substituted": attested != routed,
+        "source": "cursor-stream-json",
+        "marker": None,
+    }
+    return _merge_agent_substitution(sink["record"], runtime)
+
+
+def nested_cursor_receipt(tasks, *, routed, attested, substitution=None):
+    write_task(
+        tasks,
+        agent="cursor",
+        model=attested,
+        resolved_model=attested,
+        resolved_model_known=True,
+        resolved_model_source="cursor-stream-json",
+        substitution=substitution or nested_cursor_substitution(routed=routed, attested=attested),
+    )
+
+
+@pytest.mark.parametrize(
+    "routed,attested,recorded",
+    [
+        ("claude-opus-5-5-high", "Claude Opus 5.5 300K High", "model=claude-opus-5-5 family=anthropic"),
+        ("grok-4.7-high", "Grok 4.7 256K High", "model=grok-4.7 family=xai"),
+    ],
+)
+def test_a_nested_cursor_receipt_attesting_its_routed_seat_records(monkeypatch, tmp_path, routed, attested, recorded):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    substitution = nested_cursor_substitution(routed=routed, attested=attested)
+    # The outer routing record names the native preference, not the Cursor pin.
+    assert (substitution["kind"], substitution["requested_model"]) == ("agent-substitution", "claude-opus-5-5")
+    nested_cursor_receipt(tasks, routed=routed, attested=attested, substitution=substitution)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["comment"] == "posted"
+    assert recorded in comments[0]["body"]
+
+
+def test_a_nested_cursor_opus_request_with_a_grok_report_is_refused(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    nested_cursor_receipt(tasks, routed="claude-opus-5-5-high", attested="Grok 4.7 256K High")
+    with pytest.raises(recorder.RecordError, match="Cursor reviewer model mismatch"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+def test_a_nested_cursor_opus_verdict_on_an_anthropic_authored_change_is_refused(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
+    nested_cursor_receipt(tasks, routed="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High")
+    with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+def _drop(key):
+    return lambda record: record.pop(key)
+
+
+def _set(key, value, *, nested=False):
+    return lambda record: (record["runtime_attribution"] if nested else record).__setitem__(key, value)
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        pytest.param(_drop("runtime_attribution"), id="routing-record-without-runtime-receipt"),
+        pytest.param(_set("runtime_attribution", "claude-opus-5-5-high"), id="runtime-receipt-not-a-record"),
+        pytest.param(_set("actual_agent", "claude"), id="routed-off-cursor"),
+        pytest.param(_set("actual_model", "grok-4.7-high"), id="routed-slug-contradicts-launch"),
+        pytest.param(_set("requested_model", "grok-4.7-high", nested=True), id="launch-contradicts-routed-slug"),
+        pytest.param(_set("requested_provider", "claude", nested=True), id="runtime-request-off-cursor"),
+        pytest.param(_set("actual_provider", "claude", nested=True), id="runtime-ran-off-cursor"),
+        pytest.param(_set("actual_model", "Grok 4.7 256K High", nested=True), id="receipt-contradicts-report"),
+        pytest.param(_set("actual_model", None, nested=True), id="receipt-without-report"),
+        pytest.param(_set("kind", "agent-substitution", nested=True), id="doubly-nested-routing-record"),
+    ],
+)
+def test_malformed_nested_cursor_request_metadata_is_refused(monkeypatch, tmp_path, mutate):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    substitution = nested_cursor_substitution(routed="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High")
+    mutate(substitution)
+    nested_cursor_receipt(
+        tasks, routed="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High", substitution=substitution
+    )
+    with pytest.raises(recorder.RecordError, match="Cursor reviewer request metadata malformed"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+# --- #9714: author provenance through delegate-normalized X-Agent trailers ------
+
+
+def producer_trailer_commit(agent, task_id):
+    from scripts.delegate import _x_agent_trailer
+
+    return {"commit": {"message": f"feat: work\n\n{_x_agent_trailer(agent, task_id)}"}}
+
+
+def cursor_author(tasks, task_id, resolved_model, *, archive=False, **updates):
+    fields = {
+        "agent": "cursor",
+        "model": resolved_model,
+        "resolved_model": resolved_model,
+        "resolved_model_known": True,
+        "resolved_model_source": "cursor-stream-json",
+    }
+    write_task(tasks / "archive" if archive else tasks, task_id=task_id, **{**fields, **updates})
+
+
+@pytest.mark.parametrize(
+    "agent,task_id,record,expected",
+    [
+        # Canonical agent-prefixed records signed with the stripped trailer.
+        ("cursor", "cursor-9714-opus-finish", {"resolved_model": "Claude Opus 5.5 300K High"}, {"anthropic"}),
+        ("cursor", "cursor-9714-live-shape", {"resolved_model": "Claude Opus 5.5 300K High"}, {"anthropic"}),
+        ("codex", "codex-9712-stream", {"model": "gpt-6.1-sol"}, {"openai"}),
+        ("cursor", "cursor/9714-nested", {"resolved_model": "Grok 4.7 256K High"}, {"xai"}),
+        # Legacy unprefixed records still resolve.
+        ("cursor", "9714-legacy", {"resolved_model": "Grok 4.7 256K High"}, {"xai"}),
+        ("codex", "impl-9712-legacy", {"model": "gpt-6.1-sol"}, {"openai"}),
+        # A model keyword in the title never decides the family; the run does.
+        ("cursor", "cursor-9714-opus-finish", {"resolved_model": "Grok 4.7 256K High"}, {"xai"}),
+        ("codex", "codex-9712-claude-stream", {"model": "gpt-6.1-sol"}, {"openai"}),
+        ("claude", "claude-9712-codex-sonnet", {"model": "claude-opus-5-5"}, {"anthropic"}),
+    ],
+)
+@pytest.mark.parametrize("archive", [False, True])
+def test_producer_normalized_trailer_resolves_the_recorded_run(
+    monkeypatch, tmp_path, agent, task_id, record, expected, archive
+):
+    tasks = tmp_path / "tasks"
+    if agent == "cursor":
+        cursor_author(tasks, task_id, record["resolved_model"], archive=archive)
+    else:
+        write_task(tasks / "archive" if archive else tasks, task_id=task_id, agent=agent, **record)
+    monkeypatch.setattr(recorder, "_pages", lambda args: [producer_trailer_commit(agent, task_id)])
+    assert recorder.author_families(REPOSITORY, 42, tasks) == expected
+
+
+@pytest.mark.parametrize(
+    "trailer",
+    ["cursor/9714-opus-finish", "codex/9712-claude-stream", "codex/gpt-6.1-sol-fix-thing", "claude/opus-review"],
+)
+def test_a_task_title_without_a_record_never_guesses_a_family(monkeypatch, tmp_path, trailer):
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    monkeypatch.setattr(recorder, "_pages", lambda args: [{"commit": {"message": f"feat: work\n\nX-Agent: {trailer}"}}])
+    with pytest.raises(recorder.RecordError, match="author task provenance unavailable"):
+        recorder.author_families(REPOSITORY, 42, tasks)
+
+
+@pytest.mark.parametrize(
+    "trailer,expected",
+    [
+        ("claude/claude-opus-5-5", {"anthropic"}),
+        ("codex/gpt-6.1-sol", {"openai"}),
+        ("cursor/grok-4.7-high", {"xai"}),
+        ("cursor/claude-opus-5-5-high", {"anthropic"}),
+        ("agy/gemini-3.8-flash-high", {"google"}),
+    ],
+)
+def test_a_legacy_concrete_model_trailer_without_a_record_still_resolves(monkeypatch, tmp_path, trailer, expected):
+    monkeypatch.setattr(recorder, "_pages", lambda args: [{"commit": {"message": f"feat: work\n\nX-Agent: {trailer}"}}])
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == expected
+
+
+def test_canonical_and_legacy_records_that_disagree_are_refused(monkeypatch, tmp_path):
+    tasks = tmp_path / "tasks"
+    cursor_author(tasks, "cursor-9714-dup", "Claude Opus 5.5 300K High")
+    cursor_author(tasks, "9714-dup", "Grok 4.7 256K High")
+    monkeypatch.setattr(recorder, "_pages", lambda args: [producer_trailer_commit("cursor", "cursor-9714-dup")])
+    with pytest.raises(recorder.RecordError, match="conflicts across task records"):
+        recorder.author_families(REPOSITORY, 42, tasks)
+
+
+@pytest.mark.parametrize(
+    "legacy",
+    [{"agent": "codex", "model": "gpt-6.1-sol"}, {"agent": "cursor", "repository": "other/repo"}],
+    ids=["foreign-agent", "foreign-repository"],
+)
+def test_a_foreign_record_behind_a_normalized_trailer_is_refused(monkeypatch, tmp_path, legacy):
+    tasks = tmp_path / "tasks"
+    cursor_author(tasks, "cursor-9714-foreign", "Grok 4.7 256K High")
+    write_task(tasks, task_id="9714-foreign", **{"resolved_model_known": True, **legacy})
+    monkeypatch.setattr(recorder, "_pages", lambda args: [producer_trailer_commit("cursor", "cursor-9714-foreign")])
+    with pytest.raises(recorder.RecordError, match="provenance conflicts with commit trailer"):
+        recorder.author_families(REPOSITORY, 42, tasks)
+
+
+@pytest.mark.parametrize(
+    "updates",
+    [
+        {"resolved_model_known": False, "resolved_model": "unattested-harness", "resolved_model_source": "pending"},
+        {"resolved_model": "auto"},
+    ],
+    ids=["unattested", "auto"],
+)
+def test_an_unattested_canonical_cursor_record_is_refused(monkeypatch, tmp_path, updates):
+    tasks = tmp_path / "tasks"
+    cursor_author(tasks, "cursor-9714-opus-unknown", **{"resolved_model": "Claude Opus 5.5 300K High", **updates})
+    monkeypatch.setattr(
+        recorder, "_pages", lambda args: [producer_trailer_commit("cursor", "cursor-9714-opus-unknown")]
+    )
+    with pytest.raises(recorder.RecordError, match="author family"):
+        recorder.author_families(REPOSITORY, 42, tasks)
+
+
 @pytest.fixture
 def real_recorder_matcher(monkeypatch):
     from scripts.opsec import prepublish as gate
