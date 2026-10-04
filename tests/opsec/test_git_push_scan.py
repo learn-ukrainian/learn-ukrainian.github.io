@@ -421,22 +421,61 @@ def test_continuation_unfolding_is_linear_in_the_header_size(size):
     assert work <= 8 * len(raw), f"unfolding copied {work} bytes for {len(raw)} input bytes"
 
 
-def test_linearity_counter_rejects_quadratic_unfolding(monkeypatch):
+def _unfold_cpu_seconds(size, repeats=3):
+    """Best thread CPU time on plain bytes, including copies invisible to the subclass counter."""
+    line = b" " + b"x" * 63
+    raw = b"tree 0\nmergetag object 0" + (b"\n" + line) * (size // 64) + b"\n\nclean\n"
+    expected = [(b"tree", b"0"), (b"mergetag", b"object 0" + (b"\n" + line[1:]) * (size // 64))]
+    best = float("inf")
+    for _ in range(repeats):
+        started = time.thread_time()
+        fields, message = git_push.split_object(raw, "commit[unit]")
+        best = min(best, time.thread_time() - started)
+        assert fields == expected and message == "clean\n"
+    return best
+
+
+def test_continuation_unfolding_has_linear_cpu_scaling():
+    """A 16x input increase allows 64x CPU work; quadratic unfolding needs about 256x."""
+    # Thread CPU time excludes descheduling and other threads' work. Best-of-three
+    # reduces transient noise; a 1 ms floor avoids ratios dominated by timer overhead.
+    # Short continuation lines make repeated full-prefix copies dominate loop overhead.
+    small, large = _unfold_cpu_seconds(128 << 10), _unfold_cpu_seconds(2 << 20)
+    assert large <= 64 * max(small, 0.001), f"unfolding CPU scaling: small={small:.6f}s large={large:.6f}s"
+
+
+@pytest.mark.parametrize(
+    ("combine", "counted"),
+    [
+        pytest.param(lambda value, part: value + b"\n" + part, True, id="concatenation"),
+        pytest.param(lambda value, part: b"\n".join([value, part]), False, id="join"),
+        pytest.param(lambda value, part: bytes(bytearray(value) + b"\n" + bytes(part)), False, id="bytearray"),
+        pytest.param(lambda value, part: b"%b\n%b" % (value, part), False, id="formatting"),
+    ],
+)
+def test_linearity_checks_reject_quadratic_unfolding(monkeypatch, combine, counted):
     def quadratic(raw, position):
         header, _, body = (b"\n" + raw).partition(b"\n\n")
         fields = []
         for line in header[1:].split(b"\n"):
             if line.startswith(b" "):
                 key, value = fields[-1]
-                fields[-1] = (key, value + b"\n" + line[1:])
+                fields[-1] = (key, combine(value, line[1:]))
             elif line:
                 key, _, value = line.partition(b" ")
                 fields.append((key, value))
         return fields, body.decode("utf-8", "replace")
 
     monkeypatch.setattr(git_push, "split_object", quadratic)
-    with pytest.raises(AssertionError, match="unfolding copied"):
+    if counted:
+        with pytest.raises(AssertionError, match="unfolding copied"):
+            test_continuation_unfolding_is_linear_in_the_header_size(32 << 10)
+    else:
+        # These regressions bypass the deterministic meter, so prove the CPU
+        # scaling check catches them even while the copy-counter check passes.
         test_continuation_unfolding_is_linear_in_the_header_size(32 << 10)
+    with pytest.raises(AssertionError, match="unfolding CPU scaling"):
+        test_continuation_unfolding_has_linear_cpu_scaling()
 
 
 # --- A clean push is ordinary: delivered unchanged, with Git's own bookkeeping ---
