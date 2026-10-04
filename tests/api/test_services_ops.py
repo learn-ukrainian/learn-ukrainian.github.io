@@ -678,8 +678,8 @@ def test_work_status_reports_ssh_tunnel_when_health_ok(tmp_path, mock_lsof_env) 
     reap_process_on_exit(tunnel)
     set_pids([tunnel.pid])
     try:
-        deadline = time.time() + 5
-        while time.time() < deadline:
+        deadline = time.monotonic() + 60
+        while time.monotonic() < deadline:
             if not is_port_free(port):
                 break
             time.sleep(0.05)
@@ -1170,8 +1170,8 @@ def test_fix_prints_ok_when_healthy(temp_services_sh, mock_lsof_env) -> None:
     )
     reap_process_on_exit(health)
     try:
-        deadline = time.time() + 5
-        while time.time() < deadline:
+        deadline = time.monotonic() + 60
+        while time.monotonic() < deadline:
             if not is_port_free(port):
                 break
             time.sleep(0.05)

@@ -14,6 +14,7 @@ concurrent V7 builds. If a caller passes ``effort`` and the readable top-level
 Hermes config disagrees, we log a warning and continue with the configured
 runtime behavior.
 """
+
 from __future__ import annotations
 
 import logging
@@ -35,6 +36,7 @@ from .hermes_common import (
 _logger = logging.getLogger(__name__)
 
 GROK_ALLOWED_MODELS: frozenset[str] = frozenset({"grok-4.5"})
+
 
 @dataclass(frozen=True)
 class HermesGrokParseResult(ParseResult):
@@ -75,8 +77,7 @@ class HermesGrokAdapter:
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
             _logger.warning(
-                "non-claude adapter %s ignoring max_budget_usd=%s; "
-                "use hard-timeout/silence-timeout instead",
+                "non-claude adapter %s ignoring max_budget_usd=%s; use hard-timeout/silence-timeout instead",
                 self.name,
                 max_budget_usd,
             )
@@ -84,8 +85,7 @@ class HermesGrokAdapter:
         requested_model = model or self.default_model
         if requested_model not in GROK_ALLOWED_MODELS:
             raise ValueError(
-                f"HermesGrokAdapter: unsupported Grok model {requested_model!r}; "
-                f"allowed: {sorted(GROK_ALLOWED_MODELS)}"
+                f"HermesGrokAdapter: unsupported Grok model {requested_model!r}; allowed: {sorted(GROK_ALLOWED_MODELS)}"
             )
         requested_provider, requested_model, provider_forced = resolve_hermes_requested_route(
             tool_config=tool_config,
@@ -164,6 +164,8 @@ class HermesGrokAdapter:
             response=fields.response,
             stderr_excerpt=fields.stderr_excerpt,
             rate_limited=fields.rate_limited,
+            failure_code=fields.failure_code,
+            provider_error_text=fields.provider_error_text,
             session_id=None,
             tokens=None,
             tool_calls=[],

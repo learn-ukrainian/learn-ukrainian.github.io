@@ -11,11 +11,13 @@ from pathlib import Path
 
 import pytest
 
+from tests.launcher_libraries import launcher_library_files
 from tests.rules_core_view import (
     install_loader_bypass,
     rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
 )
 from tests.test_launcher_contract import REPO, run_launcher
+from tests.test_launcher_driver_scope import install_scope_sandbox
 
 
 @pytest.fixture(autouse=True)
@@ -34,27 +36,33 @@ def _clean_environ() -> dict[str, str]:
     return {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
 
 
+def test_launcher_library_inventory_includes_new_tracked_files(tmp_path: Path) -> None:
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    library = tmp_path / "scripts/lib/new/nested-library.sh"
+    library.parent.mkdir(parents=True)
+    library.write_text("# Future launcher dependency\n")
+    library.with_name("untracked.sh").write_text("# Local scratch\n")
+    subprocess.run(["git", "add", "scripts/lib/new/nested-library.sh"], cwd=tmp_path, check=True, timeout=30)
+    assert launcher_library_files(tmp_path) == (Path("scripts/lib/new/nested-library.sh"),)
+    assert Path("scripts/lib/driver_scope.sh") in launcher_library_files(REPO)
+
+
 def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
     """Build the minimal shared-launcher surface with observable probe and CLI stubs."""
     root = tmp_path / "repo"
     for relative in (
         "start-codex-driver.sh",
         "scripts/config/context_profiles.yaml",
-        "scripts/lib/context_profiles.py",
-        "scripts/lib/deploy_extensions.sh",
-        "scripts/lib/project_interpreter.sh",
         "scripts/review/model_catalog.py",
         "scripts/config/model_catalog.yaml",
-        "scripts/lib/launcher_core.sh",
-        "scripts/lib/handoff_identity.sh",
         "scripts/config/launcher_stream_aliases.tsv",
-        "scripts/lib/profile_resolver.sh",
-        "scripts/lib/thread_rollover_link.sh",
         "scripts/launchers/codex.sh",
+        *launcher_library_files(REPO),
     ):
         target = root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, target)
+    install_scope_sandbox(root)
     install_loader_bypass(root)
 
     probe = root / ".venv" / "bin" / "python"
@@ -118,9 +126,7 @@ def _run_runtime_governor(
 
 
 def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> None:
-    result = run_launcher(
-        "start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6.1-sol"
-    )
+    result = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6.1-sol")
     assert result.returncode == 0, result.stderr
     assert "would probe" in result.stdout
     assert result.stdout.index("would probe") < result.stdout.index("would claim lease")
@@ -183,9 +189,7 @@ def test_codex_driver_rejects_unknown_selector_in_default_and_governor_modes(
 
 
 def test_default_driver_forwards_epic_binding_and_extra_provider_flags() -> None:
-    result = run_launcher(
-        "start-codex-driver.sh", "devops", "--model", "gpt-6.1-sol", "--verbose", "--foo=bar"
-    )
+    result = run_launcher("start-codex-driver.sh", "devops", "--model", "gpt-6.1-sol", "--verbose", "--foo=bar")
     assert result.returncode == 0, result.stderr
     assert "would claim lease" in result.stdout
     argv = _would_exec_argv(result)
@@ -229,19 +233,33 @@ def test_sustained_codex_driver_revalidates_certification() -> None:
 
 def test_model_guard_rejects_old_codex_model_in_claude_code_harness():
     result = subprocess.run(
-        ["bash", "-c", 'launcher_error() { echo "$*" >&2; }; source "$1"; LC_HARNESS=claude-code; LC_MODEL=gpt-5.6-sol; launcher_adapter_validate',
-         "test", str(REPO / "scripts/launchers/codex.sh")],
-        capture_output=True, text=True, check=False, timeout=30,
+        [
+            "bash",
+            "-c",
+            'launcher_error() { echo "$*" >&2; }; source "$1"; LC_HARNESS=claude-code; LC_MODEL=gpt-5.6-sol; launcher_adapter_validate',
+            "test",
+            str(REPO / "scripts/launchers/codex.sh"),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
     )
     assert result.returncode == 2
     assert "approved models are gpt-6-luna, gpt-6.1-sol" in result.stderr
 
 
 @pytest.mark.parametrize("harness", ["codex", "claude-code"])
-@pytest.mark.parametrize("forwarded", [
-    ["--model", "gpt-5.5"], ["--model=gpt-5.5"],
-    ["-m", "gpt-5.5"], ["-mgpt-5.5"], ["-m=gpt-5.5"],
-])
+@pytest.mark.parametrize(
+    "forwarded",
+    [
+        ["--model", "gpt-5.5"],
+        ["--model=gpt-5.5"],
+        ["-m", "gpt-5.5"],
+        ["-mgpt-5.5"],
+        ["-m=gpt-5.5"],
+    ],
+)
 def test_forwarded_model_overrides_rejected_before_preflight(harness, forwarded):
     result = run_launcher("start-codex.sh", "--harness", harness, "--", *forwarded)
     assert result.returncode == 2
@@ -259,12 +277,15 @@ def test_non_model_passthrough_remains_available(harness):
     assert "--verbose" in result.stdout
 
 
-@pytest.mark.parametrize("forwarded", [
-    ["--fallback-model", "claude-sonnet-5"],
-    ["--fallback-model=claude-sonnet-5"],
-    ["--agents", '{"reviewer":{"description":"Review","prompt":"Review","model":"sonnet"}}'],
-    ['--agents={"reviewer":{"description":"Review","prompt":"Review","model":"sonnet"}}'],
-])
+@pytest.mark.parametrize(
+    "forwarded",
+    [
+        ["--fallback-model", "claude-sonnet-5"],
+        ["--fallback-model=claude-sonnet-5"],
+        ["--agents", '{"reviewer":{"description":"Review","prompt":"Review","model":"sonnet"}}'],
+        ['--agents={"reviewer":{"description":"Review","prompt":"Review","model":"sonnet"}}'],
+    ],
+)
 def test_claude_code_forwarded_agent_and_fallback_models_rejected_before_preflight(forwarded):
     result = run_launcher("start-codex.sh", "--harness", "claude-code", "--", *forwarded)
     assert result.returncode == 2

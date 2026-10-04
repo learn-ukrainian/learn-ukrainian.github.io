@@ -37,7 +37,8 @@ def test_roster_slots_accepted_by_validation() -> None:
     assert "grok-infra" in all_valids
     assert "claude-atlas" in all_valids
     assert "codex-devops" in all_valids
-    assert "gemini-hramatka" in all_valids
+    assert "gemini-hramatka" not in all_valids
+    assert not any(agent.startswith("gemini-") for agent in all_valids)
     assert "claude-folk" in all_valids
     assert "codex-corpus" in all_valids
     assert "cursor-infra" in all_valids
@@ -53,31 +54,33 @@ def test_roster_slots_accepted_by_validation() -> None:
     _inbox._validate_agent("cursor-infra")
 
 
-def test_roster_slot_count_is_33() -> None:
-    """Verify 24 unchanged slots and nine Ukrainian content slots remain."""
+def test_roster_slot_count_is_26() -> None:
+    """Verify 20 infrastructure slots and six Ukrainian content slots remain."""
     text = _AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8")
     data = yaml.safe_load(text)
     slots = []
     for area_data in data["assignments"].values():
         if isinstance(area_data, dict):
             slots.extend(area_data.get("slots", []))
-    assert len(slots) == 33
+    assert len(slots) == 26
+    assert len(set(slots)) == 26
     assert "cursor-infra" in slots
     assert "cursor-devops" in slots
     assert "cursor-corpus" in slots
     assert "cursor-atlas" in slots
     assert "claude-folk" in slots
     assert "codex-bio" in slots
-    assert "gemini-hramatka" in slots
+    assert "gemini-hramatka" not in slots
+    assert not any(slot.startswith("gemini-") for slot in slots)
 
 
 def test_ukrainian_content_areas_have_only_approved_provider_slots() -> None:
-    """Seminars and hramatka must have only Claude, GPT, or Gemini identities."""
+    """Seminars and hramatka have only eligible Claude and GPT driver identities."""
     assignments = yaml.safe_load(_AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8"))["assignments"]
     for area in ("seminars", "hramatka"):
         slots = assignments[area]["slots"]
         assert slots, area
-        assert all(slot.split("-", 1)[0] in {"claude", "codex", "gemini"} for slot in slots), (area, slots)
+        assert all(slot.split("-", 1)[0] in {"claude", "codex"} for slot in slots), (area, slots)
 
 
 @pytest.mark.parametrize("provider", ("grok", "kimi", "cursor"))

@@ -33,6 +33,7 @@ from pathlib import Path
 import pytest
 
 from scripts.ingest import pohribnyi_pronunciation_ingest as pohribnyi
+from tests.pohribnyi_schema import open_schema_copy
 
 # ---------------------------------------------------------------------------
 # Fixtures — a 3-page synthetic fixture mirroring the real OCR layout
@@ -131,27 +132,8 @@ def test_page_render_preserves_internal_blanks(tmp_path: Path) -> None:
 
 
 def _make_textbooks_db(path: Path) -> sqlite3.Connection:
-    """Minimal schema: textbooks + textbook_sections + the
-    parent_section_id column. The ``_section_coverage`` helper provides
-    its own ``ensure_section_schema`` defensive layer, but we still
-    create the textbooks table because the helper does not."""
-    conn = sqlite3.connect(str(path))
-    conn.executescript(
-        """
-        CREATE TABLE textbooks (
-            id INTEGER PRIMARY KEY,
-            chunk_id TEXT NOT NULL DEFAULT '',
-            title TEXT NOT NULL DEFAULT '',
-            text TEXT NOT NULL DEFAULT '',
-            source_file TEXT NOT NULL DEFAULT '',
-            grade TEXT DEFAULT '',
-            author TEXT DEFAULT '',
-            author_uk TEXT DEFAULT '',
-            char_count INTEGER DEFAULT 0
-        );
-        """
-    )
-    return conn
+    """Live textbook/section DDL including FTS and its source insert trigger."""
+    return open_schema_copy(path)
 
 
 def test_ingest_pages_round_trip_with_section_coverage(tmp_path: Path) -> None:
@@ -283,3 +265,117 @@ def test_ingest_pages_force_clears_orphan_sections(tmp_path: Path) -> None:
     ).fetchone()[0]
     assert orphan_chunks == 0, "force must re-link sections, not leave orphans"
     conn.close()
+
+
+def _adjudicated_fixture(text="[а]", **metadata):
+    return {
+        "rows": [
+            {
+                "page": 1,
+                "paragraph": 1,
+                "text": text,
+                "underlining": [],
+                "status": "adjudicated",
+                "adjudicated_by": "fixture",
+                **metadata,
+            }
+        ],
+        "paragraph_counts": {"1": 1},
+    }
+
+
+def test_adjudicated_ingest_retains_layout_and_print_exceptions(tmp_path):
+    from scripts.ingest.pohribnyi_tooling import load_notation
+
+    conn = _make_textbooks_db(tmp_path / "copy.db")
+    pohribnyi.ingest_pages(conn, [pohribnyi.Page(number=1, body="synthetic OCR")])
+    data = _adjudicated_fixture(
+        "[а", printed_anomaly=True, line_breaks=[{"offset": 2, "printed_hyphen": True}], withheld=[]
+    )
+    assert pohribnyi.ingest_adjudicated(conn, data, load_notation(), census_counts={"1": 1}) == (1, 0)
+    assert pohribnyi.ingest_adjudicated(conn, data, load_notation(), census_counts={"1": 1}) == (0, 1)
+    stored = conn.execute(
+        "SELECT text, line_breaks_json, withheld_json, printed_anomaly FROM textbooks "
+        "WHERE transcription_status='adjudicated'"
+    ).fetchone()
+    assert stored == ("[а", '[{"offset": 2, "printed_hyphen": true}]', "[]", 1)
+    conn.close()
+
+
+def test_adjudicated_ingest_retains_withheld_reason_and_rejects_metadata_conflicts(tmp_path):
+    import copy
+    import json
+
+    from scripts.ingest.pohribnyi_tooling import load_notation
+
+    conn = _make_textbooks_db(tmp_path / "copy.db")
+    pohribnyi.ingest_pages(conn, [pohribnyi.Page(number=1, body="synthetic OCR")])
+    data = _adjudicated_fixture("[\ufffc]", withheld=[{"start": 1, "end": 2, "reason": "uncertain"}])
+    assert pohribnyi.ingest_adjudicated(conn, data, load_notation(), census_counts={"1": 1}) == (1, 0)
+    stored = conn.execute("SELECT withheld_json FROM textbooks WHERE transcription_status='adjudicated'").fetchone()
+    assert json.loads(stored[0]) == data["rows"][0]["withheld"]
+    for change in (
+        {"line_breaks": [{"offset": 2, "printed_hyphen": False}]},
+        {"printed_anomaly": True},
+        {"withheld": [{"start": 1, "end": 2, "reason": "different reason"}]},
+    ):
+        altered = copy.deepcopy(data)
+        altered["rows"][0].update(change)
+        with pytest.raises(ValueError, match="Conflicting"):
+            pohribnyi.ingest_adjudicated(conn, altered, load_notation(), census_counts={"1": 1})
+    assert conn.execute("SELECT COUNT(*) FROM textbooks WHERE transcription_status='adjudicated'").fetchone()[0] == 1
+    conn.close()
+
+
+def test_adjudicated_ingest_rejects_invalid_layout_before_mutation(tmp_path):
+    from scripts.ingest.pohribnyi_tooling import load_notation
+
+    conn = _make_textbooks_db(tmp_path / "copy.db")
+    before = conn.execute("SELECT sql FROM sqlite_master ORDER BY name").fetchall()
+    data = _adjudicated_fixture("[а‐б]", line_breaks=[{"offset": 3, "printed_hyphen": True}])
+    with pytest.raises(ValueError, match=r"U\+2010"):
+        pohribnyi.ingest_adjudicated(conn, data, load_notation(), census_counts={"1": 1})
+    assert conn.execute("SELECT sql FROM sqlite_master ORDER BY name").fetchall() == before
+    conn.close()
+
+
+def test_ingest_help_names_the_frozen_default(capsys):
+    with pytest.raises(SystemExit) as exc:
+        pohribnyi.main(["--help"])
+    assert exc.value.code == 0
+    help_text = capsys.readouterr().out
+    assert "bundled frozen table" in help_text
+    assert "bundled provisional" not in help_text
+
+
+def test_metadata_absent_in_legacy_adjudicated_row_remains_idempotent(tmp_path):
+    from scripts.ingest.pohribnyi_tooling import load_notation
+
+    conn = _make_textbooks_db(tmp_path / "copy.db")
+    pohribnyi.ingest_pages(conn, [pohribnyi.Page(number=1, body="synthetic OCR")])
+    data = _adjudicated_fixture()
+    table = load_notation()
+    assert pohribnyi.ingest_adjudicated(conn, data, table, census_counts={"1": 1}) == (1, 0)
+    # Model the NULL values introduced when adding columns to an older clean row.
+    conn.execute(
+        "UPDATE textbooks SET line_breaks_json=NULL, withheld_json=NULL, printed_anomaly=NULL "
+        "WHERE transcription_status='adjudicated'"
+    )
+    assert pohribnyi.ingest_adjudicated(conn, data, table, census_counts={"1": 1}) == (0, 1)
+    conn.close()
+
+
+def test_adjudicated_packet_adapts_page_format_before_census_checks():
+    from scripts.ingest.pohribnyi_tooling import load_notation
+
+    data = {"rows": {"page": 1, "seat": "fixture-seat", "paragraphs": [
+        {"n": 1, "text": "[а]", "underlines": [[1, 2]], "line_breaks": [], "withheld": [],
+         "status": "adjudicated", "adjudicated_by": "fixture"}
+    ]}, "paragraph_counts": {"1": 1}}
+    before = data["rows"]["paragraphs"][0].copy()
+    rows = pohribnyi.validate_adjudicated_packet(data, load_notation(), census_counts={"1": 1})
+    assert rows[0]["page"] == 1 and rows[0]["paragraph"] == 1
+    assert rows[0]["underlining"] == [{"start": 1, "end": 2}]
+    assert data["rows"]["paragraphs"][0] == before
+    with pytest.raises(ValueError, match="independent census"):
+        pohribnyi.validate_adjudicated_packet(data, load_notation(), census_counts={"1": 2})

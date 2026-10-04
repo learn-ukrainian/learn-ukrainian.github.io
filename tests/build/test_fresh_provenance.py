@@ -1280,7 +1280,7 @@ def test_live_runner_and_digest_two_spans_in_one_unit_and_gloss_reference(
 
     prose = _spans_by_unit(prov_doc)[("urok", "s1", None, None, 0)]
     assert [s["role"] for s in prose] == ["narration", "quoted_term", "narration", "gloss_ref"]
-    assert [s["text"] for s in prose] == ["сло́во " * 10, "сло́во", " ", "слово (term)"]
+    assert [s["text"] for s in prose] == ["сло́во " * 10, "сло́во", " ", "слово (word)"]
     assert [(s["start"], s["end"]) for s in prose] == [(0, 70), (70, 76), (76, 77), (77, 89)]
     gloss = prose[3]
     assert (gloss["source"], gloss["ref"], gloss["record_kind"]) == ("record", "W-1", "word")

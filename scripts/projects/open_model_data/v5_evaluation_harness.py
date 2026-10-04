@@ -33,6 +33,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 DEFAULT_HELDOUT_PATH = (
     REPO_ROOT
     / "data"
@@ -139,6 +141,11 @@ APPROVED_AUTHORITY_REGEXES = [
         re.IGNORECASE,
     ),
 ]
+
+
+def _read_jsonl_records(path: Path) -> list[dict[str, Any]]:
+    """Load physical JSONL records independently of model/corpus setup."""
+    return [json.loads(line) for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
 
 
 def is_approved_authority(name: str) -> bool:
@@ -1585,10 +1592,10 @@ def main() -> int:
             base_data, aligned_data, max_degradation_pct=args.max_degradation_pct
         )
 
-    eval_cases = [json.loads(line) for line in args.heldout.read_text(encoding="utf-8").splitlines() if line.strip()]
+    eval_cases = _read_jsonl_records(args.heldout)
 
     # Load predictions
-    preds_raw = [json.loads(line) for line in args.predictions.read_text(encoding="utf-8").splitlines() if line.strip()]
+    preds_raw = _read_jsonl_records(args.predictions)
     predictions = {p.get("eval_id") or p.get("id"): p.get("prediction") or p.get("output") or p.get("response") for p in preds_raw}
 
     summary = run_evaluation_suite(

@@ -14,6 +14,6 @@ only explicit Kimi credentials (`KIMICC_AUTH_TOKEN`, `MOONSHOT_API_KEY`, or
 `KIMI_API_KEY`) or Kimi OAuth; it never consumes an ambient
 `ANTHROPIC_AUTH_TOKEN`.
 
-Use a certified Claude, Codex, Gemini, or Grok driver for lease-bound
+Use a certified Claude, Codex, or Grok driver for lease-bound
 orchestration. If Kimi gains a T4-certified driver in the future, add its public
 entrypoint and lifecycle contract before documenting lane selection here.

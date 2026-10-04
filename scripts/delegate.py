@@ -56,6 +56,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "rules_core", "worktree", "lifecycle", "research"
         "review_attempt": {review_id, attempt_id, manifest_sha256} | absent,  # --review-attempt dispatches only (#9022)
         "review_contract": {render_checkout, server_checkout, server_interpreter, render_server_digest, server_digest, server_components, render_template_digest, template_digest, templates, prompt_sha256} | absent,  # (#9163)
+        "review_input_paths": [str] | absent,  # attempt reads outside input_root; claimed until terminal (#9597)
         "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
@@ -180,7 +181,8 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
-from scripts.api.subscription_usage import pace_is_deficit, pace_is_visible
+from scripts.api.subscription_usage import pace_is_visible
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.scratch import (
@@ -196,6 +198,7 @@ from scripts.config import (
     DELEGATE_WORKTREE_ADD_STALL_S,
     DELEGATE_WORKTREE_ADD_TIMEOUT_S,
 )
+from scripts.fleet import credit_lane
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
@@ -2748,7 +2751,7 @@ def _parse_delivery_declaration(response: str) -> dict[str, Any] | None:
     after the declaration does not void it while a mid-report example of the
     format is not mistaken for the worker's own declaration.
     """
-    lines = [line.strip() for line in response.splitlines() if line.strip()]
+    lines = [line.strip() for line in jsonl_lines(response) if line.strip()]
     line = next(
         (
             candidate
@@ -8178,7 +8181,7 @@ def _augment_prompt_with_worktree(
             "`git push -u origin HEAD`\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
             "Keep scratch git repositories and probes outside `batch_state/reports/` "
-            "(use a temp directory outside the worktree or clean them up before exit); "
+            "(use `$TMPDIR`, the managed lease, never a literal system temp path); "
             "`batch_state/` is reserved for report files and logs.\n"
             "Do not open or merge PRs unless the brief says so; "
             "report the pushed head SHA and clean status.\n"
@@ -10249,7 +10252,7 @@ def _review_attempt_prompt_admission(
         if isinstance(manifest, dict) and any(key in manifest for key in ("manifest_schema", "kind", "inputs")):
             contract = check_review_contract(prompt_file, prompt, review_id=review_id, attempt_id=attempt_id)
             try:
-                input_root = worktree_claims.review_contract_input_root(contract)
+                input_root = worktree_claims.required_review_input_root(contract)
             except ValueError as err:
                 return f"❌ review attempt refused: {err}", None
             checked = check_prompt(
@@ -10312,37 +10315,80 @@ def _lock_review_input_root(
     locks: contextlib.ExitStack,
     *,
     locked_worktree: Path | None = None,
-    review_access: str = "full",
+    inputs: Sequence[Path] = (),
 ) -> None:
-    """Protect input preparation until the task's persisted contract takes over (#9485).
+    """Protect input preparation until the task's persisted record takes over (#9485, #9597).
 
-    Use the containing registered checkout's removal lock, rather than an input
-    subdirectory's lock. The dispatch stack releases it on every early return or
-    exception, and the kernel releases it on process exit; no git lock leaks.
+    Lock the containing registered checkout of the input root and of every other
+    attempt input (``_review_attempt_input_paths``), rather than an input
+    subdirectory's lock. The dispatch stack releases them on every early return
+    or exception, and the kernel releases them on process exit; no git lock leaks.
     """
-    root = worktree_claims.review_contract_input_root(contract, review_access=review_access)
-    if root is None:
-        return
-    input_root = Path(root).resolve()
+    input_root = Path(worktree_claims.required_review_input_root(contract)).resolve()
     if not input_root.is_dir():
         raise ValueError("review input root disappeared before preparation")
+    paths = [input_root]
+    for path in inputs:
+        resolved = path.resolve()
+        if not resolved.exists():
+            raise ValueError("review attempt input disappeared before preparation")
+        paths.append(resolved)
     # Reuse eligibility excludes ACP runtime checkouts. Reading one still
-    # requires its removal lock, so consult registration directly here.
+    # requires its removal lock, so consult registration directly here: the
+    # primary's, exactly as the removal guard does, never a repository
+    # discovered from an input path.
     wc = _load_worktree_containment()
     try:
-        main_root = wc.resolve_main_root(input_root)
-    except wc.NotAGitRepositoryError:
-        return
-    registered = wc.registered_worktrees(main_root)
-    if not registered:
-        raise ValueError("review input worktree registration unavailable")
-    input_worktree = worktree_claims.review_input_worktree(input_root, main_root=main_root, registered=registered)
-    if input_worktree is None:
-        return
-    if locked_worktree is None or input_worktree != locked_worktree.resolve():
-        locks.enter_context(worktree_lock(input_worktree))
-    if not input_root.is_dir() or input_worktree not in wc.registered_worktrees(main_root):
+        main_root, registered = worktree_claims.repository_registration(_REPO_ROOT)
+    except ValueError as exc:
+        raise ValueError(f"review input {exc}") from exc
+    selected = {
+        tree
+        for path in paths
+        if (tree := worktree_claims.review_input_worktree(path, main_root=main_root, registered=registered)) is not None
+    }
+    for tree in sorted(selected):
+        if locked_worktree is None or tree != locked_worktree.resolve():
+            locks.enter_context(worktree_lock(tree))
+    current = wc.registered_worktrees(main_root)
+    if any(not path.exists() for path in paths) or any(tree not in current for tree in selected):
         raise ValueError("review input worktree disappeared while dispatch waited for its lock")
+
+
+def _review_attempt_input_paths(manifest: str) -> list[Path]:
+    """Paths a formal attempt reads after its id is reserved, besides its input root (#9597).
+
+    The worker re-reads the manifest (``attempt_boundary``) at the canonical path
+    dispatch froze at admission, and runs this checkout's code and its lazy
+    imports for the whole attempt. A formal attempt takes no output schema
+    (``attempt_output_schema_unsupported``). The receipts, the sources server and
+    its interpreter live in the primary checkout or this one; the runtime tmp root
+    is refused inside a removable checkout (``_refuse_review_scratch_in_worktree``).
+    """
+    return list(dict.fromkeys([Path(manifest).resolve(), _local_repo_root]))
+
+
+def _refuse_review_scratch_in_worktree() -> None:
+    """Refuse an attempt whose runtime scratch would sit in a removable checkout (#9597).
+
+    The worker's tmp lease lives under the fleet scratch root for the whole
+    attempt and no task record claims it, so a scratch root whose real path is
+    inside a registered linked checkout is refused before the attempt id is
+    reserved. The registration is the primary's, the removal guard's source;
+    discovering a repository from the scratch path would let a nested one mask
+    the checkout around it.
+    """
+    scratch = resolve_scratch_root().resolve()
+    try:
+        main_root, registered = worktree_claims.repository_registration(_REPO_ROOT)
+    except ValueError as exc:
+        raise ValueError(f"review_scratch_root_unverifiable: {exc}") from exc
+    tree = worktree_claims.review_input_worktree(scratch, main_root=main_root, registered=registered)
+    if tree is not None:
+        raise ValueError(
+            f"review_scratch_root_in_worktree: the fleet scratch root {scratch} lies in removable "
+            f"checkout {tree}; set LU_SCRATCH_ROOT outside every linked checkout"
+        )
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
@@ -10691,6 +10737,10 @@ def _dispatch(
         except GeminiChangedPathListError as exc:
             print(f"❌ could not resolve PR head: {exc}", file=sys.stderr)
             return 2
+        admitted_head = getattr(args, "_review_admission_head", None)
+        if admitted_head and admitted_head != resolved_head:
+            print("❌ REVIEW_TARGET_UNRESOLVED: PR head changed after review admission", file=sys.stderr)
+            return 2
         supplied_head = str(pinned_head).strip().lower() if pinned_head else ""
         if supplied_head and supplied_head != resolved_head:
             print(
@@ -10749,6 +10799,8 @@ def _dispatch(
     review_plan = None
     review_access = getattr(args, "review_access", "full")
     review_contract: dict[str, Any] | None = None
+    review_input_root: str | None = None
+    review_input_paths: list[Path] = []
     if review_attempt or review_id or attempt_id:
         if not (review_attempt and review_id and attempt_id):
             print(
@@ -10766,6 +10818,9 @@ def _dispatch(
         if not manifest_path.is_file():
             print(f"❌ review manifest file not found: {manifest_path}", file=sys.stderr)
             return 2
+        # Admission, preparation and the worker read one canonical manifest path (#9597):
+        # only the target's checkout is claimed, so a supplied symlink's checkout may go.
+        review_attempt = args.review_attempt = str(manifest_path.resolve())
 
         effective_harness = requested_harness or args.agent
         from scripts.agent_runtime.review_mcp import (
@@ -10791,7 +10846,8 @@ def _dispatch(
             print(review_refusal, file=sys.stderr)
             return 2
         try:
-            worktree_claims.review_contract_input_root(review_contract, review_access=review_access)
+            # A rootless contract is refused here, before the attempt id is reserved (#9597).
+            review_input_root = worktree_claims.required_review_input_root(review_contract)
         except ValueError as exc:
             print(f"❌ review attempt refused: {exc}", file=sys.stderr)
             return 2
@@ -11760,8 +11816,10 @@ def _dispatch(
         from scripts.review.isolation import ReviewIsolationError
 
         try:
+            _refuse_review_scratch_in_worktree()
+            review_input_paths = _review_attempt_input_paths(review_attempt)
             _lock_review_input_root(
-                review_contract, worktree_locks, locked_worktree=worktree_path, review_access=review_access
+                review_contract, worktree_locks, locked_worktree=worktree_path, inputs=review_input_paths
             )
             # A refused tree must not reserve the attempt id or create its ledger.
             if review_access == "full":
@@ -11954,6 +12012,7 @@ def _dispatch(
             }
             # The render-time and dispatch-time digests compared (#9163): what the review of record ran against.
             initial_state["review_contract"] = review_contract
+            initial_state["review_input_paths"] = [str(path) for path in review_input_paths]
             initial_state["review_access"] = review_access
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
@@ -12110,9 +12169,9 @@ def _dispatch(
                     str(review_plan.config_path),
                     "--strict-mcp-config",
                     "--review-manifest",
-                    str(Path(review_attempt).resolve()),
+                    review_attempt,
                     "--review-input-root",
-                    str(review_contract["input_root"]),
+                    str(review_input_root),
                 ]
             )
 
@@ -12152,16 +12211,24 @@ def _dispatch(
             # pid=None and no zombie detection could rescue it
             # (because zombie detection is gated on `pid and not alive`).
             # Codex 2026-04-10 audit finding.
-            # DispatchIsolationError means the scope may already have started
-            # the worker (late marker, or /proc could not prove it never
-            # exec'd). The task is failed and not relaunched.
+            # A fallback refusal starts no worker. Other isolation errors can
+            # mean a late marker or an unprovable exec; never relaunch those.
+            fallback_refused = isinstance(exc, dispatch_isolation.DispatchIsolationError) and str(exc).startswith(
+                "fallback-refused:"
+            )
             if isinstance(exc, dispatch_isolation.DispatchIsolationError):
                 spawn_error = f"dispatch isolation: {exc}"[:500]
-                returncode_reason = "scoped worker startup was ambiguous; not relaunched"
+                returncode_reason = (
+                    "worker process was not started"
+                    if fallback_refused
+                    else "scoped worker startup was ambiguous; not relaunched"
+                )
             else:
                 spawn_error = f"Popen failed: {type(exc).__name__}: {exc}"[:500]
                 returncode_reason = "worker process was not started"
             failed_state = _read_state(state_path) or initial_state
+            if fallback_refused:
+                failed_state["failure_reason"] = "dispatch_fallback_refused"
             failed_state.update(
                 {
                     "status": "failed",
@@ -12388,9 +12455,9 @@ def _budget_cooler_lanes(agents: dict[str, Any], *, exclude: str) -> list[str]:
         lane_l = str(lane).strip().lower()
         if lane_l == exclude:
             continue
-        status = _budget_lane_status(lane_l, info)
-        cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else None
-        if status in {"hot", "near_cap"} or pace_is_deficit(cb) is True:
+        deficit = credit_lane.pace_deficit_state(lane_l, info)
+        status = deficit["status"] or _budget_lane_status(lane_l, info)
+        if status in {"hot", "near_cap"} or deficit["uncovered"] is True:
             continue
         if status in {"cool", "warm"}:
             cool.append(lane_l)
@@ -12426,13 +12493,16 @@ def _budget_needs_hard_capacity_action(
     records_loaded: int,
     pace: dict[str, Any] | None = None,
     headroom_blocked: bool = False,
+    lane: str = "",
+    info: dict[str, Any] | None = None,
+    model: str | None = None,
 ) -> tuple[bool, str]:
     """Return (needs_action, reason) for near_cap / hot / a real pace deficit.
 
     ``near_cap`` is unchanged. ``status=hot`` still hard-acts, except when the
     hot label is the early-window or on-pace false positive: a pace reading is
-    present and :func:`pace_is_deficit` is not true, and runtime headroom did
-    not set the hot label. A bare ``will_last`` with no pace record still
+    present and the deficit is covered, hidden or within the on-pace band,
+    and runtime headroom did not set the hot label. A bare ``will_last`` with no pace record still
     counts only when no pace dict was supplied.
     """
     if is_stale:
@@ -12442,11 +12512,20 @@ def _budget_needs_hard_capacity_action(
         return True, "near_cap (>90% on FRESH snapshot)"
     if status == "hot" and headroom_blocked:
         return True, "status=hot"
-    deficit = pace_is_deficit(pace) if pace else None
+    decision = credit_lane.pace_deficit_state(
+        lane,
+        info,
+        pace=pace,
+        model=model if model is not None else (_lane_default_model(lane) or ""),
+        snapshot_stale=is_stale,
+    )
+    deficit = decision["uncovered"] if pace else None
+    if decision["covered_by"]:
+        print(f"⚠ lane {lane}: {decision['reason']}", file=sys.stderr)
     expected = _pace_expected_pct(pace)
     hidden = expected is not None and not pace_is_visible({"expected_pct": expected})
-    # Hot that the pace rule does not support is the freshly-reset / on-pace
-    # false positive. Runtime headroom hot was returned above.
+    # Clear a pace-only hot label when the deficit is covered or the pace is
+    # hidden/on pace. Runtime headroom hot was returned above.
     if status == "hot" and pace and deficit is not True and (deficit is False or hidden):
         return False, ""
     if deficit is True:
@@ -13184,6 +13263,58 @@ def _kimi_admission_refusal(
     return _admit_dispatch_target(args, agent=agent, trees=trees, repo_role=repo_role)[0]
 
 
+def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
+    """Resolve a review's exact scope before route selection, pinning branch heads.
+
+    Branch refs use the existing remote-tracking objects; a missing object
+    refuses and must be refreshed before retrying. PR resolution uses its
+    actual base. Attempt records supply their frozen target.changed_paths.
+    """
+    from scripts.review.security_paths import git_changed_paths
+    from scripts.review.target_resolution import TargetResolutionError, resolve_branch_target, resolve_pr_target
+
+    attempt = getattr(args, "review_attempt", None)
+    paths: tuple[str, ...] | None = None
+    if attempt:
+        import yaml
+
+        try:
+            record = yaml.safe_load(Path(attempt).read_bytes())
+        except (OSError, ValueError, yaml.YAMLError) as exc:
+            raise TargetResolutionError("review attempt target unreadable") from exc
+        target_record = record.get("target") if isinstance(record, dict) else None
+        changed = target_record.get("changed_paths") if isinstance(target_record, dict) else None
+        if not isinstance(changed, list) or not all(isinstance(path, str) and path for path in changed):
+            raise TargetResolutionError("review attempt target.changed_paths missing or invalid")
+        paths = tuple(changed)
+
+    branch = getattr(args, "branch", None)
+    pr = getattr(args, "pr", None)
+    pinned = getattr(args, "pinned_head", None)
+    if pinned and not (branch or pr):
+        raise TargetResolutionError("--pinned-head requires --branch or --pr")
+    if pr is not None:
+        target = resolve_pr_target(_local_repo_root, int(pr))
+        if pinned and pinned.lower() != target.head_sha:
+            raise TargetResolutionError("pinned head differs from PR head")
+        args._review_admission_head = target.head_sha
+    elif branch:
+        if pinned and not re.fullmatch(r"[0-9a-fA-F]{40}", pinned):
+            raise TargetResolutionError("pinned head must be a full commit SHA")
+        target = resolve_branch_target(
+            _local_repo_root,
+            pinned or _origin_base_ref(branch),
+            _origin_base_ref(getattr(args, "base", None) or "main"),
+        )
+        args.pinned_head = target.head_sha
+    elif paths is not None:
+        return paths
+    else:
+        raise TargetResolutionError("review target required: supply --branch, --pr or a resolved --review-attempt")
+    literal = git_changed_paths(_local_repo_root, target.base_sha, target.head_sha)
+    return tuple(dict.fromkeys((*literal, *(paths or ()))))
+
+
 def _admit_dispatch_target(
     args: argparse.Namespace,
     *,
@@ -13204,6 +13335,7 @@ def _admit_dispatch_target(
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+    from scripts.review.target_resolution import TargetResolutionError
 
     def flag_paths(attr: str) -> list[str]:
         value = getattr(args, attr, None) or []
@@ -13213,6 +13345,14 @@ def _admit_dispatch_target(
     # ``--research-owned-path`` is checked like one but never stands in for it.
     declared = flag_paths("owned_path")
     owned = declared + flag_paths("research_owned_path")
+    review_dispatch = _dispatch_is_review_typed(args)
+
+    def collect_review_paths() -> tuple[str, ...]:
+        try:
+            return _dispatch_review_changed_paths(args)
+        except (TargetResolutionError, OSError, subprocess.TimeoutExpired) as exc:
+            raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
+
     try:
         (target,) = resolve_and_admit(
             (agent,),
@@ -13221,19 +13361,24 @@ def _admit_dispatch_target(
             route=route,
             fallbacks_path=_FALLBACK_SUBS_PATH,
             # Every review-typed dispatch passes reviewer admission, not only verdict-gated ones (#9538).
-            review_dispatch=_dispatch_is_review_typed(args),
+            review_dispatch=review_dispatch,
             review_author_model=getattr(args, "review_author_model", None),
             review_risk=getattr(args, "review_risk", None),
             review_profile=getattr(args, "review_profile", None),
             review_attempt=bool(getattr(args, "review_attempt", None)),
             review_alias_model_resolver=_resolve_substitution_model,
             review_owned_paths=tuple(declared),
+            review_changed_paths=(
+                collect_review_paths
+                if review_dispatch and (getattr(args, "review_profile", None) or "code") in {"code", "infra"}
+                else ()
+            ),
             review_subject_seats=frozenset(flag_paths("subject_seat")),
             review_subject_families=frozenset(flag_paths("subject_family")),
             paths=owned,
             declared_paths=declared,
             repo=repo_role,
-            review=_dispatch_is_review_typed(args),
+            review=review_dispatch,
             language_lane=_dispatch_is_language_lane(args),
             research_track=getattr(args, "research_track", None),
             prompt_file=getattr(args, "prompt_file", None),
@@ -13620,6 +13765,9 @@ def _resolve_agent_with_budget_guard(
             records_loaded=records_loaded,
             pace=_budget_pace(agent_dict),
             headroom_blocked=_budget_headroom_blocked(agent_dict),
+            lane=requested,
+            info=agent_dict,
+            model=requested_model,
         )
     )
     if not needs_action:
@@ -13653,6 +13801,9 @@ def _resolve_agent_with_budget_guard(
             records_loaded=records_loaded,
             pace=_budget_pace(sub_dict),
             headroom_blocked=_budget_headroom_blocked(sub_dict),
+            lane=sub,
+            info=sub_dict,
+            model=chosen,
         )
         if sub_blocked:
             raise BudgetGuardRefuseError(
@@ -13766,6 +13917,9 @@ def _language_lane_substitute(
                 records_loaded=records_loaded,
                 pace=_budget_pace(info_dict),
                 headroom_blocked=_budget_headroom_blocked(info_dict),
+                lane=seat,
+                info=info_dict,
+                model=current_model,
             )
         )
         if not needs:
@@ -14721,10 +14875,10 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument(
         "--review-profile",
         default=None,
-        choices=("code", "ukrainian"),
+        choices=("code", "infra", "ukrainian"),
         help=(
             "Required with --require-review-verdict when --agent is agy or gemini. "
-            "code is refused (Gemini reviews Ukrainian only, never code — "
+            "code and infra are refused (Gemini reviews Ukrainian only, never code — "
             "operator 2026-09-25). Ukrainian content review must pass ukrainian."
         ),
     )
@@ -14775,6 +14929,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="MANIFEST",
         help=(
             "Path to manifest YAML file for formal review attempt recording (#8517). "
+            "Code/infra review admission requires the record's frozen target.changed_paths list; "
+            "Ukrainian content attempts do not require that target for the security floor. "
             "Used together with --review-id and --attempt-id to launch a per-attempt "
             "stdio sources MCP server with ledger receipts. Default: None. "
             "Example: --review-attempt batch_state/manifests/rev-1.yaml"

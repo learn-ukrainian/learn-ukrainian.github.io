@@ -1089,6 +1089,11 @@ def test_case(tmp_path: Path, case: Case) -> None:
     # Schema/load failures return before activity policy checks; every valid fixture
     # here retains at least one undeclared quiz, so PR1 adds its missing-options note.
     policy_notes = {codes.OPTIONS_MISSING} if report.activity_report.get("lessons") else set()
+    # Synthetic lemma-one/lemma-two are absent from the reference; empty/checkpoint
+    # fixtures introduce no words, so C29 must not note their recycled vocabulary.
+    no_introductions = {"valid_checkpoint", "lessons_empty", "checkpoint_lesson_with_recap_step"}
+    if "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml" in report.inputs and case.name not in no_introductions:
+        policy_notes.add(codes.A1_REFERENCE_WORD_MISSING)
     assert {o.code for o in report.notes} == set(case.notes) | policy_notes, report.render_text()
     assert {o.code for o in report.not_checked} == NOT_CHECKED
     assert report.ok == (not case.expected)
@@ -1189,6 +1194,9 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     from tests.curriculum.test_plan_validate_structured_activities import produced_structured_codes
 
     produced |= produced_structured_codes(tmp_path / "structured")
+    from tests.curriculum.test_plan_validate_a1_reference import produced_a1_reference_codes
+
+    produced |= produced_a1_reference_codes()
     assert produced == set(codes.DESCRIPTIONS)
 
 

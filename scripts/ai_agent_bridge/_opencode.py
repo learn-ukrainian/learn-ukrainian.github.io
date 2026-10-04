@@ -45,6 +45,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 from ._ask_contract import (
     requested_effort,
     resolve_model_selection,
@@ -260,7 +262,7 @@ def read_opencode_turn_status(
     if raw_stdout and not raw_stdout.startswith("{"):
         has_text = True
 
-    for raw_line in raw_stdout.splitlines():
+    for raw_line in split_jsonl_lines(raw_stdout):
         line = raw_line.strip()
         if not line.startswith("{"):
             continue
@@ -1416,7 +1418,7 @@ def _parse_opencode_stream(stdout: str) -> OpencodeStreamParse:
     current_turn: list[str] = []
     assistant_messages: list[str] = []
     deduped: dict[str, dict] = {}
-    for raw_line in stdout.splitlines():
+    for raw_line in split_jsonl_lines(stdout):
         line = raw_line.strip()
         if not line.startswith("{"):
             continue

@@ -14,6 +14,7 @@ import yaml
 from . import codes, lock
 
 ID_RE = re.compile(r"W-([0-9]+)\Z")
+FORMULA_FIELDS = {"id", "kind", "text", "parts", "entry", "allocated_at_build", "retired"}
 FIELDS = {"id", "lemma", "pos", "entry", "allocated_at_build", "retired"}
 
 
@@ -34,6 +35,42 @@ def validate(records: list[dict]) -> None:
     previous = 0
     identities = []
     for record in records:
+        if isinstance(record, dict) and record.get("kind") == "formula":
+            if (
+                set(record) - FORMULA_FIELDS
+                or FORMULA_FIELDS - {"retired"} - set(record)
+                or record["entry"] != {"source": "formula"}
+                or not isinstance(record["allocated_at_build"], str)
+                or not record["allocated_at_build"]
+                or ("retired" in record and record["retired"] is not True)
+            ):
+                _fail(record)
+            current = number(record["id"])
+            if current <= previous:
+                _fail(record)
+            previous = current
+            from .formulas import tokens
+
+            if (
+                not isinstance(record["text"], str)
+                or not record["text"]
+                or not isinstance(record["parts"], list)
+                or not record["parts"]
+                or any(not isinstance(p, dict) for p in record["parts"])
+            ):
+                _fail(record)
+            if [t.text for t in tokens(record["text"])] != [p.get("form") for p in record["parts"]]:
+                _fail(record)
+            for part in record["parts"]:
+                if set(part) != {"word", "form"}:
+                    _fail(record)
+                number(part["word"])
+            identity = ("formula", record["text"], record["parts"])
+            if not record.get("retired"):
+                if identity in identities:
+                    _fail(record)
+                identities.append(identity)
+            continue
         if not isinstance(record, dict) or set(record) - FIELDS or FIELDS - {"retired"} - set(record):
             _fail(record)
         current = number(record["id"])
@@ -78,7 +115,15 @@ def load(path: Path) -> list[dict]:
     return records
 
 
-def allocate(records: list[dict], *, lemma: str, pos: str, entry: dict | str, allocated_at_build: str) -> str:
+def allocate(
+    records: list[dict],
+    *,
+    lemma: str | None = None,
+    pos: str | None = None,
+    entry: dict | str | None = None,
+    allocated_at_build: str,
+    formula: dict | None = None,
+) -> str:
     """Append a new allocation; duplicate active identities require an explicit update."""
     validate(records)
     word_id = f"W-{max((number(row['id']) for row in records), default=0) + 1:03d}"
@@ -89,6 +134,15 @@ def allocate(records: list[dict], *, lemma: str, pos: str, entry: dict | str, al
         "entry": deepcopy(entry),
         "allocated_at_build": allocated_at_build,
     }
+    if formula is not None:
+        row = {
+            "id": word_id,
+            "kind": "formula",
+            "text": formula["text"],
+            "parts": deepcopy(formula["parts"]),
+            "entry": {"source": "formula"},
+            "allocated_at_build": allocated_at_build,
+        }
     validate([*records, row])
     records.append(row)
     return word_id
@@ -126,6 +180,10 @@ def check_store(records: list[dict], words: list[dict]) -> None:
         _fail([word["id"] for word in words])
     for word in words:
         original = active[word["id"]]
+        if word.get("kind") == "formula" or original.get("kind") == "formula":
+            if any(word.get(key) != original.get(key) for key in ("kind", "text", "parts", "entry")):
+                _fail(word)
+            continue
         if any(word.get(key) != original[key] for key in ("lemma", "pos")):
             _fail(word)
         if original["entry"] != "unresolved" and original["entry"] != word.get("entry"):

@@ -244,7 +244,7 @@ def test_advisory_lock_blocks_a_second_process_until_release(tmp_path: Path) -> 
             [str(project_python()), "-c", code, str(lock_path), str(ready_path), str(acquired_path)],
             cwd=repo_root,
         )
-        deadline = time.monotonic() + 5
+        deadline = time.monotonic() + 60
         while not ready_path.exists() and time.monotonic() < deadline:
             time.sleep(0.01)
         assert ready_path.exists()
@@ -265,7 +265,7 @@ def test_advisory_lock_honors_hook_deadline(tmp_path: Path, monkeypatch: pytest.
         "lock_path, ready_path = map(Path, sys.argv[1:])\n"
         "with advisory_lock(lock_path):\n"
         "    ready_path.write_text('ready', encoding='utf-8')\n"
-        "    time.sleep(5)\n"
+        "    sys.stdin.read()\n"
     )
     repo_root = Path(__file__).resolve().parents[3]
     environment = os.environ.copy()
@@ -274,20 +274,22 @@ def test_advisory_lock_honors_hook_deadline(tmp_path: Path, monkeypatch: pytest.
         [str(project_python()), "-c", code, str(lock_path), str(ready_path)],
         cwd=repo_root,
         env=environment,
+        stdin=subprocess.PIPE,
     )
-    deadline = time.monotonic() + 5
-    while not ready_path.exists() and time.monotonic() < deadline:
-        time.sleep(0.01)
-    assert ready_path.exists()
-    monkeypatch.setenv("LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS", "0.05")
-
     try:
+        deadline = time.monotonic() + 60
+        while not ready_path.exists() and time.monotonic() < deadline:
+            time.sleep(0.01)
+        assert ready_path.exists()
+        monkeypatch.setenv("LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS", "0.05")
+
         with pytest.raises(TimeoutError, match="waiting for local state lock"):
             with advisory_lock(lock_path):
                 pass
     finally:
         child.terminate()
         child.wait(timeout=5)
+        child.stdin.close()
 
 
 def test_advisory_lock_treats_malformed_hook_timeout_as_unbounded(

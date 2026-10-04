@@ -155,7 +155,7 @@
       },
       {
         "path": "scripts/lexicon/curated_seed_atlas_admission.py",
-        "sha256": "75e0b02d622eac0be42c42cd631555256dccbcde3b75008ce567762e495c3f17"
+        "sha256": "3160fc4c5b574ae4edb296462b025baae021f3844fae68049dfd9814a9b82b73"
       },
       {
         "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
@@ -299,7 +299,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_paired_headword_split.py",
-        "sha256": "c7cd19317b4158fab41f0e64ef82accd0894592bac302d72b84075f8a834778e"
+        "sha256": "1385357771b52c3819c7ee4de336e5209ba8055c1f598cbf7ea74b7953c7aed4"
       },
       {
         "path": "scripts/lexicon/ohoiko_quality_enrichment.py",

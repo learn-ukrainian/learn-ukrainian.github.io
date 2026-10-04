@@ -25,7 +25,7 @@ from scripts.build.fresh.closure import compute_closure
 from scripts.build.fresh.draft_schema import DraftValidationError
 from scripts.build.fresh.immersion import lesson_immersion_payload
 from scripts.build.fresh.manifest import unlink_current
-from scripts.build.fresh.path_guard import checked_existing_path
+from scripts.build.fresh.path_guard import checked_existing_path, public_diagnostic
 from scripts.build.fresh.preflight import preflight_lesson
 from scripts.build.fresh.prompt import (
     BAND_CARD_MAP,
@@ -214,7 +214,7 @@ def build_module(
                 last = ledger["attempts"][-1] if ledger["attempts"] else {}
                 result = _stop(
                     n,
-                    last.get("reason", "regeneration_terminal"),
+                    public_diagnostic(last.get("reason", "regeneration_terminal"), repo_root),
                     check=last.get("failed_check", 0),
                     layer=ledger["terminal_layer"],
                 )
@@ -271,22 +271,23 @@ def build_module(
                             repo_root=repo_root,
                         )
                     except (OSError, ValueError, KeyError, TypeError, WriterCallError) as err:
+                        error_reason = public_diagnostic(str(err), repo_root)
                         content_error = isinstance(err, (DraftValidationError, WriterCallError)) and not isinstance(
                             err, WriterHarnessError
                         )
                         if content_error:
                             ledger = record_failure(
-                                ledger_path, slug, n, {"check": 1, "layer": "writer", "reason": str(err)}, current
+                                ledger_path, slug, n, {"check": 1, "layer": "writer", "reason": error_reason}, current
                             )
                         else:
                             if not getattr(err, "harness_recorded", False) and getattr(err, "harness_chargeable", True):
-                                ledger = record_harness_failure(ledger_path, slug, n, str(err), current)
+                                ledger = record_harness_failure(ledger_path, slug, n, error_reason, current)
                             if load_harness(ledger_path, slug, n)["terminal_state"] is not None:
                                 ledger["terminal_layer"] = "driver"
                         reason = (
                             HARNESS_EXHAUSTED
                             if not content_error and ledger["terminal_layer"] == "driver"
-                            else str(err)
+                            else error_reason
                         )
                         stopped = _stop(n, reason, check=1, layer="writer" if content_error else "engine")
                         stopped.update(regenerations=ledger["regenerations"], terminal_layer=ledger["terminal_layer"])
@@ -333,7 +334,7 @@ def build_module(
                     break
                 bad = next((row for row in report.get("checks", []) if row["status"] == "failed"), None)
                 check = report.get("stopping_check") or (bad["check"] if bad else report.get("passed_through", 0))
-                reason = report.get("reason") or (bad["reason"] if bad else "build_failed")
+                reason = public_diagnostic(report.get("reason") or (bad["reason"] if bad else "build_failed"), repo_root)
                 layer = bad["layer"] if bad else (report.get("layer") or "engine")
                 if layer == "harness":
                     # The real runner records its failure. Report-only runners need
@@ -366,7 +367,7 @@ def build_module(
             if not results[-1]["passed"]:
                 break
         except (OSError, ValueError, KeyError, TypeError) as err:
-            reason = str(err)
+            reason = public_diagnostic(str(err), repo_root)
             stopped = _stop(n, "recap_inputs_not_built" if "recap_inputs_not_built" in reason else reason)
             ledger = load_ledger(state_dir / f"lesson-{n}.regeneration.yaml", slug, n)
             stopped.update(regenerations=ledger["regenerations"], terminal_layer=ledger["terminal_layer"])

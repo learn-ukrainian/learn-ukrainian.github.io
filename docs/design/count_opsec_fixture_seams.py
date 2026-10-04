@@ -1,134 +1,106 @@
-"""One-off reproducer for OPSEC seam counts in monitor-api-router-inventory.md.
+"""Record the seams the live OPSEC-sweep `isolated_fixture` installs (#9630).
 
-Run from repo root:
-  /path/to/.venv/bin/python docs/design/count_opsec_fixture_seams.py
+`docs/design/monitor-api-router-inventory.md` pins its seam tables to this output
+through `tests/api/test_router_inventory_seams.py`. Nothing here is copied from the
+fixture: the real fixture function runs against a recording `MonkeyPatch`.
+
+Run from the repo root, in a fresh interpreter (the loops inside the fixture walk
+`sys.modules`, so the result depends on what has been imported):
+
+  /path/to/.venv/bin/python docs/design/count_opsec_fixture_seams.py [--json]
 """
 
 from __future__ import annotations
 
-import importlib
+import argparse
+import json
 import os
-import socket
-import sqlite3
-import subprocess
 import sys
 import tempfile
+from collections import Counter
 from pathlib import Path
+from typing import Any
+
+import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.api import (
-    issues_router,
-)
-from scripts.orchestration import reap_worktrees
-
-GLOBAL_SEAMS = frozenset(
-    {
-        "subprocess.run",
-        "subprocess.Popen",
-        "socket.create_connection",
-        "sqlite3.connect",
-    }
-)
+KIND_ATTR = "setattr"
+KIND_ENV = "env"
 
 
-class _FixtureSessionStore:
-    def load_digest(self, *_args, **_kwargs):
-        return type("D", (), {"pinned": (), "recent": ()})()
+class RecordingMonkeyPatch(pytest.MonkeyPatch):
+    """A real `MonkeyPatch` that also records every attribute and environment seam."""
 
-
-class _FixtureHandoff:
-    def __init__(self, stream_id: str) -> None:
-        self.stream_id = stream_id
-
-
-class MonkeypatchRecorder:
     def __init__(self) -> None:
-        self.invocations: list[str] = []
-        self.unique: dict[str, bool] = {}
+        super().__init__()
+        self.calls: list[tuple[str, str, str]] = []
 
-    def setattr(self, target, name, value) -> None:
-        mod = target.__name__ if hasattr(target, "__name__") else type(target).__name__
-        key = f"{mod}.{name}"
-        self.invocations.append(key)
-        self.unique[key] = True
+    def setattr(self, target: Any, *args: Any, **kwargs: Any) -> None:
+        if isinstance(target, str):
+            raise TypeError("the fixture patches objects, not dotted-string targets")
+        owner = (
+            target.__name__
+            if isinstance(target, type(sys))
+            else f"{type(target).__module__}.{type(target).__qualname__}"
+        )
+        self.calls.append((KIND_ATTR, owner, args[0]))
+        super().setattr(target, *args, **kwargs)
 
-    def setenv(self, key: str, value: str) -> None:
-        os.environ[key] = value
+    def setitem(self, dic: Any, name: Any, value: Any) -> None:
+        # `setenv` and `delenv` route through here; os.environ is the only mapping the fixture edits.
+        if dic is not os.environ:
+            raise TypeError("the fixture is only expected to set environment variables through setitem")
+        self.calls.append((KIND_ENV, "os.environ", str(name)))
+        super().setitem(dic, name, value)
+
+    def delitem(self, dic: Any, name: Any, raising: bool = True) -> None:
+        raise TypeError("unrecorded seam kind: delitem")
+
+    def syspath_prepend(self, path: Any) -> None:
+        raise TypeError("unrecorded seam kind: syspath_prepend")
+
+    def chdir(self, path: Any) -> None:
+        raise TypeError("unrecorded seam kind: chdir")
 
 
-def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> None:
-    """Mirror isolated_fixture setattr side effects (no pytest tmp_path wrapper)."""
-    handoff_path = root / "batch_state" / "session-handoff.md"
-    handoff_path.write_text("fixture handoff\n", encoding="utf-8")
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "opsec-host-alias=opsec-host-id")
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "opsec-host-id")
-    monkeypatch.setenv("AGENT_NO_TELEMETRY_FOOTER", "1")
-    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(root / "batch_state" / "atlas-jobs"))
+def summarize(calls: list[tuple[str, str, str]]) -> list[dict[str, Any]]:
+    """Unique `(kind, owner, name)` targets with their invocation counts, sorted."""
+    counts = Counter(calls)
+    return [
+        {"kind": kind, "owner": owner, "name": name, "invocations": counts[(kind, owner, name)]}
+        for kind, owner, name in sorted(counts)
+    ]
 
-    monkeypatch.setattr(subprocess, "run", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(subprocess, "Popen", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(socket, "create_connection", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(
-        issues_router,
-        "_run_gh",
-        lambda *_args, **_kwargs: (127, "", "fixture gh unavailable"),
-    )
-    # NOTE (#7269 step 12c): collect_adr_governance short-circuits on fixture
-    # context; no sweep stub.
-    monkeypatch.setattr(reap_worktrees, "_run", lambda *_args, **_kwargs: (0, "", ""))
 
-    importlib.import_module("scripts.telemetry.legacy_bridge")
-    importlib.import_module("wiki.state")
-    for module_name, module in tuple(sys.modules.items()):
-        if module is None or not module_name.startswith(("scripts.telemetry", "wiki")):
-            continue
-        for name, value in tuple(vars(module).items()):
-            if not isinstance(value, Path) or not value.is_absolute():
-                continue
-            if not any(token in name.upper() for token in ("DB", "PROGRESS", "STATE")):
-                continue
-            replacement = root / "stores" / module_name.replace(".", "_") / name.lower()
-            replacement.parent.mkdir(parents=True, exist_ok=True)
-            if value.is_dir() or value.suffix == "":
-                replacement.mkdir(parents=True, exist_ok=True)
-            monkeypatch.setattr(module, name, replacement)
+def record_fixture_seams() -> list[dict[str, Any]]:
+    """Run the real `isolated_fixture` body against a recorder and return its seams."""
+    sys.path.insert(0, str(REPO_ROOT))
+    from tests.api.opsec_sweep import test_opsec_route_sweep as sweep
 
-    monkeypatch.setattr(sqlite3, "connect", lambda *args, **kwargs: sqlite3.connect(*args, **kwargs))
+    body = sweep.isolated_fixture.__wrapped__
+    recorder = RecordingMonkeyPatch()
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            body(recorder, Path(tmp))
+            calls = list(recorder.calls)
+    finally:
+        recorder.undo()
+    return summarize(calls)
 
-    isolated_plane_root = root / "stores" / "fleet-comms"
-    isolated_plane_root.mkdir(parents=True, exist_ok=True)
 
-    def isolated_plane_resolver(repo_root: Path | None = None) -> Path:
-        del repo_root
-        return isolated_plane_root
-
-    monkeypatch.setenv("FLEET_COMMS_ROOT", str(isolated_plane_root))
-    for module_name, module in tuple(sys.modules.items()):
-        if not module_name.startswith("scripts.api") or module is None:
-            continue
-        if "default_plane_root" in vars(module):
-            monkeypatch.setattr(module, "default_plane_root", isolated_plane_resolver)
+def render_markdown(seams: list[dict[str, Any]]) -> str:
+    lines = ["| Target | Kind | Invocations |", "| --- | --- | ---: |"]
+    lines += [f"| `{seam['owner']}.{seam['name']}` | {seam['kind']} | {seam['invocations']} |" for seam in seams]
+    return "\n".join(lines)
 
 
 def main() -> None:
-    mp = MonkeypatchRecorder()
-    root = Path(tempfile.mkdtemp())
-    (root / "batch_state").mkdir(parents=True)
-    (root / "stores").mkdir(parents=True)
-    replay_isolated_fixture(mp, root)
-
-    global_unique = sum(1 for key in mp.unique if key in GLOBAL_SEAMS)
-    router_unique = len(mp.unique) - global_unique
-    global_invocations = sum(1 for key in mp.invocations if key in GLOBAL_SEAMS)
-    router_invocations = len(mp.invocations) - global_invocations
-
-    print(f"unique_logical_seams: {len(mp.unique)}")
-    print(f"router_attributed_unique: {router_unique}")
-    print(f"global_backstops: {global_unique}")
-    print(f"setattr_invocations_total: {len(mp.invocations)}")
-    print(f"router_attributed_invocations: {router_invocations}")
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--json", action="store_true", help="print the raw seam list as JSON")
+    args = parser.parse_args()
+    seams = record_fixture_seams()
+    print(json.dumps(seams, indent=2) if args.json else render_markdown(seams))
 
 
 if __name__ == "__main__":

@@ -45,6 +45,8 @@ from scripts.review.receipts.ledger import REVIEW_TOOLS
 from tests import _worktree_artifact_links as worktree_artifact_links
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
+from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
+from tests.test_ask_review_admission_floor import write_code_review_manifest
 
 
 @pytest.fixture
@@ -1949,6 +1951,45 @@ def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_tasks_dir, capsys)
     assert state["returncode"] is None
     assert state["returncode_reason"] == "scoped worker startup was ambiguous; not relaunched"
     assert "will not be relaunched" in (state.get("stderr_excerpt") or "")
+    assert "failed to spawn" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "reason",
+    ["inside-driver-scope; systemd-run unavailable", "caller-cgroup-unavailable", "caller-cgroup-unverifiable"],
+)
+@pytest.mark.parametrize("review", [False, True])
+def test_dispatch_fallback_refusal_records_no_worker_started(tmp_tasks_dir, capsys, reason, review):
+    path = delegate._state_path("fallback-refusal")
+    args = _minimal_dispatch_args("fallback-refusal")
+    refusal = f"fallback-refused: {reason}"
+
+    def refuse(*_args, **_kwargs):
+        # Match the state of a formal review without invoking a provider.
+        if review:
+            spawning = delegate._read_state(path)
+            spawning["require_review_verdict"] = True
+            delegate._write_state_atomic(path, spawning)
+        raise delegate.dispatch_isolation.DispatchIsolationError(refusal)
+
+    with (
+        patch("delegate.dispatch_isolation.spawn_detached_worker", side_effect=refuse) as spawn,
+        patch("delegate.subprocess.Popen") as popen,
+    ):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 1
+    spawn.assert_called_once()
+    popen.assert_not_called()
+    state = delegate._read_state(path)
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["pid"] is None
+    assert state["returncode"] is None
+    assert state["returncode_reason"] == "worker process was not started"
+    assert state["failure_reason"] == "dispatch_fallback_refused"
+    assert refusal in state["stderr_excerpt"]
+    assert "ambiguous" not in state["returncode_reason"]
     assert "failed to spawn" in capsys.readouterr().err
 
 
@@ -7308,8 +7349,10 @@ def test_dispatch_admits_cursor_auto_for_a_green_dor_write_implementation(tmp_ta
     ],
 )
 def test_dispatch_refuses_cursor_auto_before_any_side_effect(
-    tmp_tasks_dir, tmp_path, monkeypatch, capsys, overrides, dor_record, refusal
+    ordinary_review_scope, tmp_tasks_dir, tmp_path, monkeypatch, capsys, overrides, dor_record, refusal
 ):
+    if overrides.get("require_review_verdict"):
+        overrides = {**overrides, "branch": "review-target"}
     rc, popen_calls = _cursor_dispatch(tmp_path, monkeypatch, dor_record=dor_record, **overrides)
     assert rc == 2
     assert popen_calls == []
@@ -10054,6 +10097,9 @@ def _write_args(**overrides):
         "allow_merge": False,
     }
     base.update(overrides)
+    if base.get("review_attempt"):
+        # These attempt fixtures render lesson-review prompts, like the content producer.
+        base.setdefault("review_profile", "ukrainian")
     return argparse.Namespace(**base)
 
 
@@ -15980,7 +16026,10 @@ def test_review_attempt_refuses_a_prompt_that_prints_no_ids(tmp_tasks_dir, tmp_p
 def test_review_attempt_refuses_vps_forward_before_transport(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(
         "scripts.agent_runtime.review_mcp.check_review_contract",
-        lambda _prompt_file, text, **_ids: {"prompt_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest()},
+        lambda _prompt_file, text, **_ids: {
+            "prompt_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+            "input_root": str(tmp_path),  # a real contract always names one (#9597)
+        },
     )
     manifest = tmp_path / "review.yaml"
     manifest.write_text("review: test\n", encoding="utf-8")
@@ -17815,7 +17864,10 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
         assert state["preserved_artifacts"]["count"] == 1
 
 
-def test_full_review_default_requires_full_checkout_before_provisioning(tmp_tasks_dir, tmp_path, capsys):
+def test_full_review_default_requires_full_checkout_before_provisioning(
+    ordinary_review_scope, tmp_tasks_dir, tmp_path, capsys
+):
+    manifest = write_code_review_manifest(ordinary_review_scope, tmp_path / "code-review.json")
     args = delegate.build_parser().parse_args(
         [
             "dispatch",
@@ -17830,7 +17882,7 @@ def test_full_review_default_requires_full_checkout_before_provisioning(tmp_task
             "--prompt",
             "review",
             "--review-attempt",
-            str(tmp_path / "missing"),
+            str(manifest),
             "--review-id",
             "full",
             "--attempt-id",
@@ -18063,3 +18115,10 @@ def test_full_claude_worker_keeps_normal_reviewer_profile(tmp_tasks_dir, tmp_pat
     assert tc["review_access"] == "full" and tc["review_cwd"] == str(tmp_path)
     assert tc["reviewer_tools"] is True and "allowed_tools" not in tc
     assert tc["strict_mcp_config"] is True
+
+
+@pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_delivery_declaration_preserves_unicode_separators(sep):
+    declaration = {"outcome": "no_change", "reason": f"a{sep}b"}
+    response = "Report\nDELIVERABLE: " + json.dumps(declaration, ensure_ascii=False) + "\n"
+    assert delegate._parse_delivery_declaration(response) == declaration

@@ -99,12 +99,25 @@ Optional checks:
 
 ## 3. Review Tools and Receipts
 
+### AGY tool use (full and isolated access)
+
+On AGY, use the built-in file-reading and search tools for permitted file
+context, and the listed Sources MCP tools for ledgered evidence. Do not invoke
+command execution for this review: no Git commands (`git diff`, `git log`,
+`git show`), directory or text commands (`ls`, `find`, `grep`, `rg`), shells,
+interpreters (`python`), or scripts. The manifest inputs are already supplied
+below. Git history is unavailable on AGY; if unavailable context is needed for
+a judgement, report an evidence gap instead of attempting a command. This
+guidance does not broaden isolated access beyond the manifest's permitted inputs.
+
 {% if review_access == "full" %}
 ### Full access and evidence duty
 
-You have read access to the repository checkout, its git history, the textbook
+You have read access to the repository checkout, the textbook
 corpus and the resource catalogue (`docs/resources/` and `search_resources`).
 Use them as context to check the plan or lesson.
+The checkout's git history is additional context only on harnesses that grant read-only Git
+access; AGY does not.
 
 Verify every Ukrainian word, form, stress, gloss and factual claim you rely on,
 including approval-critical checks: use `verify_words` (VESUM) for forms,
@@ -115,7 +128,7 @@ checks query both `search_style_guide` and `search_text` with
 rejecting an unfamiliar word. `check_russian_shadow` is suspicion only.
 
 Only ledgered sources receipts are citable evidence. Repository, corpus,
-catalogue and git reads provide context; confirm anything relied on through a
+catalogue and permitted git reads provide context; confirm anything relied on through a
 ledgered tool call. Cite the tool and resolvable locator in each finding's claim
 and its receipt in the existing evidence branch. For approval-critical clean
 checks, give the tool, locator and receipt in YAML comments beside the existing

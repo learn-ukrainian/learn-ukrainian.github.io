@@ -16,9 +16,9 @@ PYTHON_BIN = project_python()
 EMBED_SCRIPT = PROJECT_ROOT / "scripts" / "rag" / "benchmark_embeddings.py"
 
 
-def _wait_for_lock(lock_path: Path, timeout_s: float = 5.0):
-    deadline = time.time() + timeout_s
-    while time.time() < deadline:
+def _wait_for_lock(lock_path: Path, timeout_s: float = 60.0):
+    deadline = time.monotonic() + timeout_s
+    while time.monotonic() < deadline:
         if lock_path.exists() and lock_path.read_text().strip():
             return
         time.sleep(0.05)
@@ -28,7 +28,7 @@ def _wait_for_lock(lock_path: Path, timeout_s: float = 5.0):
 def test_lockfile_conflict_uses_clear_message(tmp_path):
     lock_path = tmp_path / "benchmark.lock"
     env = os.environ.copy()
-    env["BENCHMARK_DRY_RUN_HOLD_SECS"] = "2"
+    env["BENCHMARK_DRY_RUN_HOLD_SECS"] = "120"
 
     first = subprocess.Popen(
         [
@@ -68,6 +68,8 @@ def test_lockfile_conflict_uses_clear_message(tmp_path):
         assert "another embedder benchmark is running" in combined_output
         assert "Refusing to start" in combined_output
     finally:
+        if first.poll() is None:
+            first.terminate()
         first.wait(timeout=10)
 
 

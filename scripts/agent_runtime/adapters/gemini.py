@@ -32,6 +32,7 @@ Key differences from CodexAdapter:
 
 Issue: #1184
 """
+
 from __future__ import annotations
 
 import contextlib
@@ -43,8 +44,9 @@ import tempfile
 from collections.abc import Mapping
 from pathlib import Path
 
-from ai_llm.fallback import GEMINI_AUTH_ENV_VARS, is_gemini_rate_limited
+from ai_llm.fallback import GEMINI_AUTH_ENV_VARS
 
+from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from .base import InvocationPlan
@@ -70,8 +72,7 @@ _SESSION_ID_RE = re.compile(
 def _discussion_readonly_requested(tool_config: dict | None) -> bool:
     """Return True when the caller is an ab discuss read-only invocation."""
     return bool(
-        os.environ.get("AB_DISCUSS_READONLY") == "1"
-        or (tool_config or {}).get(_DISCUSS_READONLY_TOOL_CONFIG_KEY)
+        os.environ.get("AB_DISCUSS_READONLY") == "1" or (tool_config or {}).get(_DISCUSS_READONLY_TOOL_CONFIG_KEY)
     )
 
 
@@ -211,16 +212,14 @@ class GeminiAdapter:
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
             _logger.warning(
-                "non-claude adapter %s ignoring max_budget_usd=%s; "
-                "use hard-timeout/silence-timeout instead",
+                "non-claude adapter %s ignoring max_budget_usd=%s; use hard-timeout/silence-timeout instead",
                 self.name,
                 max_budget_usd,
             )
 
         if effort is not None:
             _logger.debug(
-                "gemini effort %r not yet wired through CLI — "
-                "using adapter default (#1396 follow-up)",
+                "gemini effort %r not yet wired through CLI — using adapter default (#1396 follow-up)",
                 effort,
             )
         self._reset_per_invocation_state(plan_cwd=cwd)
@@ -228,7 +227,8 @@ class GeminiAdapter:
 
         cmd: list[str] = [
             gemini_bin,
-            "-m", model or self.default_model,
+            "-m",
+            model or self.default_model,
         ]
 
         # Approval mode: discussion calls force Gemini's plan mode because
@@ -280,10 +280,7 @@ class GeminiAdapter:
         if auth_mode == "subscription":
             env_unsets = GEMINI_AUTH_ENV_VARS
         elif not _has_gemini_api_key(os.environ):
-            raise RuntimeError(
-                "GEMINI_AUTH_MODE=api selected but neither GEMINI_API_KEY nor "
-                "GOOGLE_API_KEY is set"
-            )
+            raise RuntimeError("GEMINI_AUTH_MODE=api selected but neither GEMINI_API_KEY nor GOOGLE_API_KEY is set")
 
         # Gemini CLI 0.40.1 yargs parser bug (#1730 root cause, 2026-05-06):
         # when the prompt content contains `-p` or `--prompt` substrings
@@ -358,7 +355,7 @@ class GeminiAdapter:
         """
         _ = output_file  # unused — Gemini doesn't use -o
 
-        hard_limit_hit = is_gemini_rate_limited(stderr)
+        provider_error = provider_stderr_error(stderr or "")
         transient_seen = bool(_TRANSIENT_ERROR_RE.search(f"{stdout}\n{stderr}"))
         session_trace = ""
         if plan is not None:
@@ -373,40 +370,15 @@ class GeminiAdapter:
             logger=_logger,
         )
         if session_trace:
-            trace_events.extend(
-                parse_json_events(session_trace, source="gemini-session", logger=_logger)
-            )
+            trace_events.extend(parse_json_events(session_trace, source="gemini-session", logger=_logger))
         tool_calls = normalize_tool_calls(trace_events)
 
         stdout_response = stdout.strip()
 
-        # Three outcomes to distinguish:
-        #
-        #   1. Fast path (success):
-        #        returncode == 0 AND stdout non-empty AND no rate-limit pattern
-        #      → use stdout directly, no disk scan
-        #
-        #   2. Recovery path (killed but answer on disk):
-        #        returncode != 0 (killed / failed) OR stdout empty
-        #      → try the session file. If it has content, THAT is the real
-        #        response and the call is a success despite the bad exit.
-        #
-        #   3. Hard failure:
-        #        no stdout, no session-file recovery → fail the call. If a
-        #        rate-limit pattern was present, classify as rate_limited.
-        #
-        # Note on the "Error: quota exceeded in stdout" case: Gemini CLI
-        # sometimes writes quota messages to stdout instead of stderr. When
-        # that happens, returncode is always non-zero, which routes us to
-        # the recovery path. The session file has nothing (Gemini never
-        # got past the quota error), so we end in the hard-failure branch
-        # and rate_limited is correctly set.
-
-        fast_path_ok = (
-            returncode == 0
-            and bool(stdout_response)
-            and not hard_limit_hit
-        )
+        # A completed reply survives retry diagnostics. Failed/empty calls
+        # retain the existing session recovery; only an unrecovered failure
+        # can use the isolated provider stderr diagnostic for classification.
+        fast_path_ok = returncode == 0 and bool(stdout_response)
 
         final_response = ""
         source_note: str | None = None
@@ -420,23 +392,19 @@ class GeminiAdapter:
             file_response = ""
             if plan is not None:
                 file_response = self._read_latest_session_response(
-                    plan, call_start_time=call_start_time,
+                    plan,
+                    call_start_time=call_start_time,
                 )
             if file_response:
                 final_response = file_response
-                reason = (
-                    "stdout empty" if not stdout_response
-                    else f"rc={returncode}"
-                )
-                source_note = (
-                    f"recovered {len(file_response)} chars from "
-                    f"~/.gemini/tmp/.../chats (reason: {reason})"
-                )
+                reason = "stdout empty" if not stdout_response else f"rc={returncode}"
+                source_note = f"recovered {len(file_response)} chars from ~/.gemini/tmp/.../chats (reason: {reason})"
 
         # Rate limit: pattern present AND we have no usable response
         # anywhere. If we recovered from the session file, it's not a
         # real rate-limit — the CLI survived whatever transient 429 it saw.
-        rate_limited = hard_limit_hit and not final_response
+        failure_code = provider_failure_code(provider_error) if not final_response else None
+        rate_limited = failure_code == "rate_limited"
 
         # Only trip the sticky cooldown when we were actually on the API
         # path. If the caller was already on subscription, a 429 there
@@ -448,6 +416,7 @@ class GeminiAdapter:
             # next auto-mode resolver flips to subscription for ~1h
             # without burning a probe call (#1384).
             from ai_llm.cooldown import set_api_cooldown
+
             set_api_cooldown()
 
         ok = bool(final_response) and not rate_limited
@@ -475,8 +444,10 @@ class GeminiAdapter:
             response=response,
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
+            failure_code=failure_code,
+            provider_error_text=provider_error,
             session_id=session_id,
-            tokens=None,      # Nor tokens.
+            tokens=None,  # Nor tokens.
             tool_calls=tool_calls,
         )
 
@@ -523,7 +494,8 @@ class GeminiAdapter:
         """
         try:
             session_file = self._select_session_for_plan(
-                plan, call_start_time=call_start_time,
+                plan,
+                call_start_time=call_start_time,
             )
             if session_file is None:
                 return ""
@@ -606,10 +578,7 @@ class GeminiAdapter:
 
         if call_start_time is not None:
             two_hours_ago = _time.time() - 2 * 3600
-            new_candidates = [
-                path for path in new_candidates
-                if self._mtime(path) >= two_hours_ago
-            ]
+            new_candidates = [path for path in new_candidates if self._mtime(path) >= two_hours_ago]
             if not new_candidates:
                 return None
 

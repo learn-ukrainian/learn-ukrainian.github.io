@@ -30,6 +30,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data.dialect_protection_invariants import (
     COMBINED_CP_FLOOR,
     DIALECT_CP_FLOOR,
@@ -46,6 +47,11 @@ DEFAULT_TEST_SUITE_PATH = (
     / "partitions"
     / "dialect_historical_protection_suite_600.jsonl"
 )
+
+
+def _read_jsonl_records(path: Path) -> list[dict[str, Any]]:
+    """Load physical JSONL records independently of model/corpus setup."""
+    return [json.loads(line) for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
 
 
 def exact_clopper_pearson_lower(successes: int, total: int, alpha: float = 0.05) -> float:
@@ -499,6 +505,19 @@ def generate_mock_predictions(cases: Sequence[dict[str, Any]], mode: str) -> lis
     return preds
 
 
+def _read_predictions(path: Path) -> list[str]:
+    """Read JSONL predictions, retaining the CLI plain-text fallback."""
+    pred_lines = [line.strip() for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
+    predictions = []
+    for line in pred_lines:
+        try:
+            obj = json.loads(line)
+            predictions.append(obj.get("prediction") or obj.get("output") or obj.get("response") or line)
+        except json.JSONDecodeError:
+            predictions.append(line)
+    return predictions
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Phase 5.2 Dialect & Historical Protection Evaluator")
     parser.add_argument("--test-suite", type=Path, default=DEFAULT_TEST_SUITE_PATH, help="Path to test suite JSONL")
@@ -518,7 +537,7 @@ def main() -> None:
     if not suite_path.exists():
         raise FileNotFoundError(f"Test suite not found at: {suite_path}")
 
-    cases = [json.loads(line) for line in suite_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    cases = _read_jsonl_records(suite_path)
     print(f"Loaded {len(cases)} test cases from {suite_path}")
 
     if args.demo_mode:
@@ -526,16 +545,7 @@ def main() -> None:
         predictions = generate_mock_predictions(cases, args.demo_mode)
     elif args.predictions:
         print(f"Loading predictions from: {args.predictions}")
-        pred_lines = [
-            line.strip() for line in args.predictions.read_text(encoding="utf-8").splitlines() if line.strip()
-        ]
-        predictions = []
-        for line in pred_lines:
-            try:
-                obj = json.loads(line)
-                predictions.append(obj.get("prediction") or obj.get("output") or obj.get("response") or line)
-            except json.JSONDecodeError:
-                predictions.append(line)
+        predictions = _read_predictions(args.predictions)
     else:
         print("No predictions or demo mode specified. Running default 'perfect' contract check.")
         predictions = generate_mock_predictions(cases, "perfect")

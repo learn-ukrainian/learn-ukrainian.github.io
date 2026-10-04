@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -128,6 +129,163 @@ def test_grok_hook_bridge_denies_unreadable_event() -> None:
         timeout=30,
     )
     assert result.returncode == 2
+
+
+_PINNED_GUARDS = ("guard-pr-merge.py", "guard-admin-merge.py", "guard-branch-switch-in-main.py")
+_HOOKS = ROOT / "agents_extensions/shared/hooks"
+
+
+def _pinned(name: str) -> str:
+    from scripts.agent_runtime.adapters.claude import _worker_guard_invocation
+
+    command = _worker_guard_invocation(
+        f'bash "$CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh" {name}', ROOT
+    )
+    assert command is not None
+    return command
+
+
+def _bridge(guard_command: str, shell_command: str) -> subprocess.CompletedProcess[str]:
+    event = {
+        "hook_event_name": "PreToolUse",
+        "toolName": "run_terminal_command",
+        "toolInput": {"command": shell_command},
+        "cwd": str(ROOT),
+    }
+    return subprocess.run(
+        [sys.executable, str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"), guard_command],
+        input=json.dumps(event),
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+
+def test_grok_bridge_guard_set_matches_the_claude_adapter() -> None:
+    from scripts.agent_runtime.adapters.claude import PROJECT_PYTHON_GUARDS as adapter_guards
+    from scripts.agent_runtime.grok_hook_bridge import PROJECT_PYTHON_GUARDS as bridge_guards
+
+    assert bridge_guards == adapter_guards == set(_PINNED_GUARDS)
+
+
+@pytest.mark.parametrize("name", _PINNED_GUARDS)
+def test_grok_bridge_runs_the_adapters_pinned_invocation(name: str) -> None:
+    from scripts.agent_runtime.grok_hook_bridge import guard_argv
+    from scripts.common.repo_root import project_interpreter
+
+    command = _pinned(name)
+    assert guard_argv(command) == [str(project_interpreter(ROOT)), str(_HOOKS / name)]
+    allowed = _bridge(command, "echo 'git checkout -b fixture; gh pr merge 5 --admin'")
+    assert allowed.returncode == 0, allowed.stderr
+
+
+def test_grok_bridge_pinned_guard_still_blocks() -> None:
+    result = _bridge(_pinned("guard-pr-merge.py"), "gh pr merge 5 --auto")
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize("name", ["guard-pr-merge.py", "guard-secret-print.py", "enforce-venv.sh"])
+def test_grok_bridge_keeps_the_plain_guard_path(name: str) -> None:
+    from scripts.agent_runtime.grok_hook_bridge import guard_argv
+
+    guard = str(_HOOKS / name)
+    assert guard_argv(guard) == [guard]
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "{python} '{hooks}/guard-pr-'merge.py",
+        '"{python}" "{hooks}/guard-pr-merge.py"',
+        "{python} {hooks}/guard\\-pr-merge.py",
+    ],
+)
+def test_grok_bridge_classifies_the_pinned_invocation_after_tokenization(command: str) -> None:
+    from scripts.agent_runtime.grok_hook_bridge import guard_argv
+    from scripts.common.repo_root import project_interpreter
+
+    python = project_interpreter(ROOT)
+    assert guard_argv(command.format(python=python, hooks=_HOOKS)) == [str(python), str(_HOOKS / "guard-pr-merge.py")]
+
+
+@pytest.mark.parametrize("command", ["'{hooks}/guard-secret-'print.py", "{hooks}/guard\\-secret-print.py"])
+def test_grok_bridge_classifies_the_plain_path_after_tokenization(command: str) -> None:
+    from scripts.agent_runtime.grok_hook_bridge import guard_argv
+
+    assert guard_argv(command.format(hooks=_HOOKS)) == [str(_HOOKS / "guard-secret-print.py")]
+
+
+@pytest.mark.parametrize(
+    ("command", "reason"),
+    [
+        # Extra arguments, behind split quoting and backslash spellings too.
+        ("{python} '{hooks}/guard-pr-'merge.py --extra", "pinned interpreter invocation required"),
+        ("{python} {hooks}/guard\\-pr-merge.py extra", "pinned interpreter invocation required"),
+        ("'{hooks}/guard-secret-'print.py --extra", "only tracked parser guards"),
+        # Missing arguments: the interpreter or nothing at all.
+        ("{python}", "only tracked fleet guards may run"),
+        ("'{python}'", "only tracked fleet guards may run"),
+        ("", "pinned interpreter invocation required"),
+        # The wrapper, an untracked path, or a tracked path in another spelling of the directory.
+        ("{hooks}/run-project-python-hook.sh", "only tracked fleet guards may run"),
+        ("{python} '{hooks}/run-project-python-'hook.sh", "only tracked parser guards"),
+        ("/bin/true", "only tracked fleet guards may run"),
+        ("{hooks}/../hooks/guard-secret-print.py", "only tracked fleet guards may run"),
+    ],
+)
+def test_grok_bridge_refuses_noncanonical_spellings(command: str, reason: str) -> None:
+    from scripts.agent_runtime.grok_hook_bridge import GuardInvocationError, guard_argv
+    from scripts.common.repo_root import project_interpreter
+
+    command = command.format(python=project_interpreter(ROOT), hooks=_HOOKS)
+    with pytest.raises(GuardInvocationError, match=reason):
+        guard_argv(command)
+    result = _bridge(command, "echo hello")
+    assert result.returncode == 2
+    assert reason in result.stderr
+
+
+@pytest.mark.parametrize(
+    ("argv", "reason"),
+    [
+        (["/usr/bin/python3", "{hooks}/guard-pr-merge.py"], "not the project interpreter"),
+        (["{python}", "{hooks}/guard-secret-print.py"], "only tracked parser guards"),
+        (["{python}", "/tmp/elsewhere/guard-pr-merge.py"], "only tracked parser guards"),
+        (["{python}", "{hooks}/guard-pr-merge.py", "--extra"], "pinned interpreter invocation required"),
+        (["{python}", "-I", "{hooks}/guard-pr-merge.py"], "pinned interpreter invocation required"),
+        (["/tmp/elsewhere/guard-pr-merge.py"], "only tracked fleet guards may run"),
+    ],
+)
+def test_grok_bridge_refuses_other_invocations(argv: list[str], reason: str) -> None:
+    from scripts.agent_runtime.grok_hook_bridge import GuardInvocationError, guard_argv
+    from scripts.common.repo_root import project_interpreter
+
+    command = shlex.join(arg.format(python=project_interpreter(ROOT), hooks=_HOOKS) for arg in argv)
+    with pytest.raises(GuardInvocationError, match=reason):
+        guard_argv(command)
+    result = _bridge(command, "echo hello")
+    assert result.returncode == 2
+    assert reason in result.stderr
+
+
+def test_grok_bridge_refuses_an_unreadable_invocation() -> None:
+    from scripts.agent_runtime.grok_hook_bridge import GuardInvocationError, guard_argv
+
+    with pytest.raises(GuardInvocationError, match="unreadable"):
+        guard_argv(f"python '{_HOOKS / 'guard-pr-merge.py'}")
+
+
+@pytest.mark.parametrize("pinned", [True, False])
+def test_grok_bridge_refuses_a_missing_guard(tmp_path: Path, monkeypatch, pinned: bool) -> None:
+    from scripts.agent_runtime import grok_hook_bridge
+
+    hooks = tmp_path / "agents_extensions/shared/hooks"
+    hooks.mkdir(parents=True)
+    monkeypatch.setattr(grok_hook_bridge, "__file__", str(tmp_path / "scripts/agent_runtime/grok_hook_bridge.py"))
+    guard = str(hooks / "guard-pr-merge.py")
+    command = shlex.join([sys.executable, guard] if pinned else [guard])
+    with pytest.raises(grok_hook_bridge.GuardInvocationError, match="fleet guard unavailable"):
+        grok_hook_bridge.guard_argv(command)
 
 
 _FLEET_GUARD_NAMES = (

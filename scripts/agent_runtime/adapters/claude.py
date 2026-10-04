@@ -35,11 +35,18 @@ Mode handling:
   (``review_mcp.isolated_sources_mcp_config``), so neither a branch's
   ``.mcp.json`` nor the environment its project settings set can add a
   server, point ``sources`` elsewhere, or run code in the server before it
-  starts. Each read-only ``sources`` tool is allowed by name; the tools
-  that persist a live fetch are denied. An ``mcp_config_path`` is accepted
-  only for a formal full-access attempt, whose harness-written config and
-  tool contract are unchanged. Explicit caller tool
-  lists pass through unchanged and do not receive reviewer-only restrictions.
+  starts. Each read-only ``sources`` tool is allowed by name. An
+  ``mcp_config_path`` is accepted only for a formal full-access attempt,
+  whose harness-written config and tool contract are unchanged. Explicit
+  caller tool lists pass through unchanged and do not receive reviewer-only
+  restrictions.
+  Every ``read-only`` invocation, whatever its profile (ordinary or formal
+  reviewer, explicit caller list, ``discussion_readonly``,
+  ``review_isolation``, or none), denies each ``sources`` tool that persists
+  a live fetch (``sources_read_only.sources_tool_sets``), as
+  ``mcp__sources__<tool>`` and as ``mcp__*__<tool>`` so a server registered
+  under another name is covered. Deny wins over any allow rule, including
+  ``mcp__<server>__*`` and the user's global settings.
   Prefix Bash denies are advisory; the repository PreToolUse guards are the
   primary-checkout write backstop. Claude's bubblewrap sandbox did not stop
   a primary-checkout write in a live probe, so it is not that backstop.
@@ -58,7 +65,8 @@ Mode handling:
   still runs hooks, but it approves every tool with no allow list.
   ``--dangerously-skip-permissions`` stays on the danger argv. ``--bare`` is
   what skips hooks. An allow glob ``mcp__*`` is ignored, so each configured
-  server is named. The reviewer deny list does not apply. An explicit
+  server is named. The reviewer and sources-writer deny lists do not apply
+  (builds and writers keep their cache access). An explicit
   ``allowed_tools`` value stays the sole allow list.
   Threat model: read-only is not a sandbox against the reviewed branch. The
   reviewer runs branch code through its own Bash tool (its tests, for
@@ -91,6 +99,7 @@ import json
 import logging
 import os
 import re
+import shlex
 import shutil
 import subprocess
 from functools import cache
@@ -99,6 +108,7 @@ from typing import Any
 
 from ..jsonl import jsonl_lines
 from ..result import ParseResult
+from ..sources_read_only import sources_tool_sets
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
@@ -151,65 +161,11 @@ _WORKSPACE_WRITE_TOOLS = (
 )
 _MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 
-# The sources MCP server's tools, split by their annotation in
-# .mcp/servers/sources/server.py. Tests keep both tuples equal to the server's
-# annotations, and the annotations equal to the writes each tool is observed
-# to attempt, so a new or write-capable tool fails CI before a reviewer can be
-# granted it.
+# Reader and writer tools come from the sources server's annotations
+# (``sources_read_only.sources_tool_sets``). tests/mcp/test_sources_tool_side_effects.py
+# ties the annotations to the writes each tool is observed to attempt, so a new
+# or write-capable tool is denied to read-only runs without editing a list here.
 SOURCES_MCP_SERVER = "sources"
-# readOnlyHint=True: lookups with no persistent write beyond the request log.
-SOURCES_READ_ONLY_TOOLS = (
-    "check_modern_form",
-    "check_russian_shadow",
-    "check_text",
-    "collection_stats",
-    "get_chunk_context",
-    "get_full_text",
-    "inspect_lemma",
-    "inspect_word",
-    "inspect_words",
-    "mcp_server_identity",
-    "query_cefr_level",
-    "query_e2u",
-    "query_grac",
-    "query_pravopys",
-    "query_r2u",
-    "query_slovnyk_me",
-    "query_sum20",
-    "query_ulif_records",
-    "search_definitions",
-    "search_esum",
-    "search_external",
-    "search_grinchenko_1907",
-    "search_heritage",
-    "search_idioms",
-    "search_literary",
-    "search_resources",
-    "search_slovnyk_me",
-    "search_sources",
-    "search_style_guide",
-    "search_synonyms",
-    "search_text",
-    "search_ua_gec_errors",
-    "translate_en_uk",
-    "verify_lemma",
-    "verify_quote",
-    "verify_source_attribution",
-    "verify_stress",
-    "verify_stresses",
-    "verify_word",
-    "verify_words",
-    "vet_vocabulary",
-)
-# readOnlyHint=False: query_wikipedia writes data/wiki_cache.db and the DictUA
-# tools store a cache miss in sources.db. Reviewers are denied these.
-SOURCES_PERSISTING_TOOLS = (
-    "query_ulif",
-    "query_ulif_antonyms",
-    "query_ulif_phraseology",
-    "query_ulif_synonyms",
-    "query_wikipedia",
-)
 
 # Ordinary Claude reviewers need a non-interactive shell. Claude Bash deny
 # patterns match prefixes only: git -C, wrappers, and interpreters can bypass
@@ -311,6 +267,21 @@ def _sources_rules(tools: tuple[str, ...]) -> list[str]:
     return [f"mcp__{SOURCES_MCP_SERVER}__{name}" for name in tools]
 
 
+def _sources_writer_denies(tools: tuple[str, ...]) -> list[str]:
+    """Deny each writer under every server name, not only the canonical ``sources``.
+
+    Claude matches MCP rules against the configured server name, so a config,
+    project ``.mcp.json``, user config, or plugin that registers the server as,
+    say, ``sources_alias`` would escape ``mcp__sources__<tool>``. Deny rules
+    accept a glob that must match the whole tool name: ``mcp__*__<tool>``
+    removes ``<tool>`` from every server and leaves longer reader names such as
+    ``query_ulif_records`` alone (live probe, Claude Code 2.1.288). A
+    same-named tool on another server is denied too, which fails closed. The
+    exact canonical rule stays first and does not depend on glob support.
+    """
+    return [*_sources_rules(tools), *(f"mcp__*__{name}" for name in tools)]
+
+
 def _reviewer_mcp_config() -> str:
     """The ordinary reviewer's only MCP configuration: the trusted stdio sources server.
 
@@ -323,29 +294,74 @@ def _reviewer_mcp_config() -> str:
     return json.dumps(isolated_sources_mcp_config(*sources_server_launch()), separators=(",", ":"))
 
 
+_DEPLOYED_HOOKS_PREFIX = "$CLAUDE_PROJECT_DIR/.claude/hooks/"
+_PROJECT_PYTHON_HOOK_WRAPPER = "run-project-python-hook.sh"
+# Guards that need the project interpreter (their parser dependency is not in
+# the system Python). Only these may appear in the wrapper form.
+PROJECT_PYTHON_GUARDS = frozenset({"guard-pr-merge.py", "guard-admin-merge.py", "guard-branch-switch-in-main.py"})
+# A command whose raw text or shell words contain any of these is a fleet guard
+# and must take one of the two supported forms.
+_FLEET_GUARD_MARKERS = (".claude/hooks/", _PROJECT_PYTHON_HOOK_WRAPPER, *sorted(PROJECT_PYTHON_GUARDS))
+
+
+def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
+    """Translate one deployed hook command into a tracked-source invocation.
+
+    The command is split into shell words first, so quoting and escaping never
+    change its classification; an unreadable command raises. The single word
+    ``$CLAUDE_PROJECT_DIR/.claude/hooks/<guard>`` becomes the tracked guard
+    path. The words ``bash $CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh
+    <guard>`` become the project interpreter plus the tracked guard, for the
+    guards in ``PROJECT_PYTHON_GUARDS`` only. Any other command naming the hooks
+    directory, the wrapper or one of those guards raises, so a guard is never
+    silently dropped. Commands naming none of them are not fleet guards and
+    return ``None``.
+    """
+    try:
+        argv = shlex.split(command)
+    except ValueError as exc:
+        raise RuntimeError(f"Claude worker hook command is unreadable: {command}") from exc
+    if not any(marker in text for text in (command, *argv) for marker in _FLEET_GUARD_MARKERS):
+        return None
+    hooks_dir = source_root / "agents_extensions/shared/hooks"
+    wrapper = _DEPLOYED_HOOKS_PREFIX + _PROJECT_PYTHON_HOOK_WRAPPER
+    if len(argv) == 3 and argv[:2] == ["bash", wrapper] and argv[2] in PROJECT_PYTHON_GUARDS:
+        tracked = hooks_dir / argv[2]
+        if not tracked.is_file():
+            raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
+        from scripts.common.repo_root import project_interpreter
+
+        return shlex.join([str(project_interpreter(source_root)), str(tracked)])
+    plain = len(argv) == 1 and argv[0].startswith(_DEPLOYED_HOOKS_PREFIX)
+    name = argv[0].removeprefix(_DEPLOYED_HOOKS_PREFIX) if plain else ""
+    if name not in {"", ".", "..", _PROJECT_PYTHON_HOOK_WRAPPER} and "/" not in name:
+        tracked = hooks_dir / name
+        if not tracked.is_file():
+            raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
+        return shlex.quote(str(tracked))
+    raise RuntimeError(f"Claude worker guard has an unsupported form: {command}")
+
+
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
     """Build hook settings from tracked sources in this checkout."""
     source_root = Path(__file__).resolve().parents[3]
     source = json.loads((source_root / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
     groups = []
-    prefix = "$CLAUDE_PROJECT_DIR/.claude/hooks/"
     for group in source["hooks"]["PreToolUse"]:
         hooks = []
         for hook in group["hooks"]:
-            command = hook.get("command", "")
-            if not command.startswith(prefix):
-                continue
-            tracked = source_root / "agents_extensions/shared/hooks" / command.removeprefix(prefix)
-            if not tracked.is_file():
-                raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
-            hooks.append({**hook, "command": str(tracked)})
+            invocation = _worker_guard_invocation(hook.get("command", ""), source_root)
+            if invocation is not None:
+                hooks.append({**hook, "command": invocation})
         if hooks:
             groups.append({"matcher": group["matcher"], "hooks": hooks})
     if publish_guard:
         guard = source_root / "agents_extensions/shared/hooks/guard-reviewer-publish.py"
         if not guard.is_file():
             raise RuntimeError(f"Claude reviewer publish guard unavailable: {guard}")
-        groups.append({"matcher": "Bash", "hooks": [{"type": "command", "command": str(guard), "timeout": 5}]})
+        groups.append(
+            {"matcher": "Bash", "hooks": [{"type": "command", "command": shlex.quote(str(guard)), "timeout": 5}]}
+        )
     if not groups:
         raise RuntimeError("Claude worker PreToolUse guards unavailable")
     return json.dumps({"hooks": {"PreToolUse": groups}}, separators=(",", ":"))
@@ -667,13 +683,19 @@ class ClaudeAdapter:
         # default (manual): nothing answers the prompt, so Bash, edits, web,
         # and MCP are denied. dontAsk runs the worker allow list and still
         # executes the --settings guards; --bare is what skips hooks.
+        # Every read-only run denies the sources writers under any server name:
+        # deny wins over the formal allow list, an explicit caller list,
+        # ``mcp__<server>__*``, and any allow rule in user or checkout
+        # settings, whatever name the server is registered under. An unreadable server
+        # declaration raises here rather than launching without the denies.
+        sources_readers, sources_writers = sources_tool_sets() if mode == "read-only" else ((), ())
         if mode == "danger":
             cmd.append("--dangerously-skip-permissions")
         elif ordinary_reviewer:
             profile = REVIEWER_PERMISSION_PROFILE
             cmd.extend(["--permission-mode", profile["mode"]])
             granted = [*profile["allow"]]
-            denied = [*profile["deny"]]
+            denied = [*profile["deny"], *_sources_writer_denies(sources_writers)]
             if tc.get("mcp_config_path") and tc.get("review_access") == "full":
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
@@ -685,11 +707,11 @@ class ClaudeAdapter:
                 )
             else:
                 cmd.extend(["--strict-mcp-config", "--mcp-config", _reviewer_mcp_config()])
-                granted.extend(_sources_rules(SOURCES_READ_ONLY_TOOLS))
-                # Deny wins over any allow rule the reviewed checkout's settings add.
-                denied.extend(_sources_rules(SOURCES_PERSISTING_TOOLS))
+                granted.extend(_sources_rules(sources_readers))
             cmd.extend(["--allowedTools", ",".join(dict.fromkeys(granted))])
             cmd.extend(["--disallowedTools", ",".join(denied)])
+        elif mode == "read-only" and sources_writers:
+            cmd.extend(["--disallowedTools", ",".join(_sources_writer_denies(sources_writers))])
         elif mode == "workspace-write" and not review_isolation:
             cmd.extend(["--permission-mode", WORKSPACE_WRITE_PERMISSION_MODE])
             if not explicit_allowed_tools:

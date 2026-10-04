@@ -22,6 +22,31 @@ def fake_catalog(monkeypatch):
     monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
 
 
+@pytest.mark.parametrize(
+    "value,host,expected",
+    [
+        ("unit/public", "github.com", "github.com/unit/public"),
+        ("Unit/Repo_Name.git", "GIT.Example.test", "git.example.test/unit/repo_name"),
+        (" git@GIT.Example.test:Unit/Repo_Name.git \n", "ignored.test", "git.example.test/unit/repo_name"),
+        ("https://GIT.Example.test/Unit/Repo_Name.git", "ignored.test", "git.example.test/unit/repo_name"),
+        ("http://GIT.Example.test/Unit/Repo_Name", "ignored.test", "git.example.test/unit/repo_name"),
+        ("GIT.Example.test/Unit/Repo_Name", "bad_host", "git.example.test/unit/repo_name"),
+        ("unit/public", "git_hub.com", "unknown"),
+        ("unit/public", "Kithub.com", "unknown"),
+        ("unit/public", "", "unknown"),
+        ("unit/public", "git.example.test\n", "unknown"),
+        ("unit/public", ".github.com", "unknown"),
+        ("https://git_hub.com/unit/public", "github.com", "unknown"),
+        ("git@github..com:unit/public.git", "github.com", "unknown"),
+        ("github.com/unit/bad name", "github.com", "unknown"),
+        ("github.com/unit/public/extra", "github.com", "unknown"),
+        ("unknown", "github.com", "unknown"),
+    ],
+)
+def test_repository_normalization_validates_host_at_resolution(value, host, expected):
+    assert gate.normalize_repository(value, host) == expected
+
+
 @pytest.mark.parametrize("level", range(1, 6))
 def test_classes_block_with_masked_diagnostics(synthetic_opsec, level):
     (synthetic_opsec / "rules.json").write_text(json.dumps(synthetic_rules(level=level)))
@@ -186,13 +211,60 @@ def test_real_matcher_budget_median_20_10kb_bodies():
     assert median < 200
 
 
-def test_private_write_consumes_inherited_override(tmp_path):
+def test_private_write_leaves_inherited_override_unclaimed(synthetic_opsec, tmp_path):
     reason = "synthetic private command"
-    log = tmp_path / "overrides.jsonl"
-    gate.check_texts("github.com/unit/private", [TOKEN], environment={"LU_OPSEC_OVERRIDE": reason}, log_path=log)
+    log = tmp_path / "state/overrides.jsonl"
+    for _ in range(2):
+        env = {"LU_OPSEC_OVERRIDE": reason}
+        gate.check_texts("github.com/unit/private", [TOKEN], environment=env, log_path=log)
+        assert "LU_OPSEC_OVERRIDE" not in env
+    assert not log.parent.exists()
+    gate.check_texts("github.com/unit/public", [TOKEN], environment={"LU_OPSEC_OVERRIDE": reason}, log_path=log)
+    assert len(log.read_text().splitlines()) == 1
+
+
+# A command may publish several texts under one parent-scoped reason (#9678).
+def test_override_then_clean_publish_both_succeed_with_one_log_entry(synthetic_opsec, tmp_path):
+    reason = "synthetic false positive"
+    log = tmp_path / "state/overrides.jsonl"
+    gate.check_texts("github.com/unit/public", [TOKEN], environment={"LU_OPSEC_OVERRIDE": reason}, log_path=log)
+    env = {"LU_OPSEC_OVERRIDE": reason}
+    gate.check_texts("github.com/unit/public", ["VERDICT: APPROVED unit review"], environment=env, log_path=log)
+    assert "LU_OPSEC_OVERRIDE" not in env
+    (row,) = [json.loads(line) for line in log.read_text().splitlines()]
+    assert row["rule_ids"] == ["synthetic-rule"] and row["reason"] == reason
+
+
+def test_override_covers_one_flagged_publish_across_clean_ones(synthetic_opsec, tmp_path):
+    reason = "synthetic false positive"
+    log = tmp_path / "state/overrides.jsonl"
+    for text in ("clean", TOKEN, "clean"):
+        gate.check_texts("github.com/unit/public", [text], environment={"LU_OPSEC_OVERRIDE": reason}, log_path=log)
     with pytest.raises(gate.PublishBlocked, match="already consumed"):
-        gate.check_texts("github.com/unit/private", [TOKEN], environment={"LU_OPSEC_OVERRIDE": reason}, log_path=log)
-    assert TOKEN not in log.read_text() and json.loads(log.read_text())["rule_ids"] == []
+        gate.check_texts("github.com/unit/public", [TOKEN], environment={"LU_OPSEC_OVERRIDE": reason}, log_path=log)
+    assert len(log.read_text().splitlines()) == 1
+
+
+def test_clean_publish_without_override_logs_nothing(synthetic_opsec, tmp_path):
+    log = tmp_path / "state/overrides.jsonl"
+    gate.check_texts("github.com/unit/public", ["clean"], environment={}, log_path=log)
+    assert not log.parent.exists()
+
+
+def test_clean_publish_with_override_neither_logs_nor_claims(synthetic_opsec, tmp_path, monkeypatch):
+    monkeypatch.setattr(gate, "_record_override", lambda *a, **k: pytest.fail("override claimed for clean text"))
+    log = tmp_path / "state/overrides.jsonl"
+    env = {"LU_OPSEC_OVERRIDE": "synthetic unused"}
+    gate.check_texts("github.com/unit/public", ["clean"], environment=env, log_path=log)
+    assert "LU_OPSEC_OVERRIDE" not in env and not log.parent.exists()
+
+
+def test_clean_publish_with_override_needs_no_log(synthetic_opsec, tmp_path):
+    target = tmp_path / "not-a-directory"
+    target.write_text("clean")
+    gate.check_texts(
+        "github.com/unit/public", ["clean"], environment={"LU_OPSEC_OVERRIDE": "reason"}, log_path=target / "log"
+    )
 
 
 def test_nondefault_public_catalog_entry_is_not_private(monkeypatch):
@@ -367,13 +439,12 @@ def test_hook_detects_wrapped_and_newline_gh(command, monkeypatch, capsys):
     assert "export PATH=" in json.loads(capsys.readouterr().out)["hookSpecificOutput"]["updatedInput"]["command"]
 
 
-def test_no_text_override_logs_without_loading_matcher(monkeypatch, tmp_path):
+def test_no_text_override_unclaimed_without_loading_matcher(monkeypatch, tmp_path):
     monkeypatch.setattr(gate, "private_tooling", lambda: pytest.fail("matcher for empty set"))
-    log = tmp_path / "override.jsonl"
-    gate.check_texts(
-        "github.com/unit/public", [], environment={"LU_OPSEC_OVERRIDE": "synthetic empty set"}, log_path=log
-    )
-    assert json.loads(log.read_text())["rule_ids"] == []
+    log = tmp_path / "state/override.jsonl"
+    env = {"LU_OPSEC_OVERRIDE": "synthetic empty set"}
+    gate.check_texts("github.com/unit/public", [], environment=env, log_path=log)
+    assert "LU_OPSEC_OVERRIDE" not in env and not log.parent.exists()
 
 
 # Earlier raw-public forms are now refused, including clean payloads.

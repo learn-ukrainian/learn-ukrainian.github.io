@@ -192,7 +192,7 @@ def test_preflight_quote_with_publish_allowed_true_still_produces_gap(clean_word
     [
         ("1-klas-bukvar-zaharijchuk-2025-1", "x" * 800, 39, None),
         ("1-klas-bukvar-zaharijchuk-2025-1", "x" * 801, 39, "publication_limit"),
-        ("ulp-1-00-lesson-notes", "Synthetic excerpt", 39, "publication_right"),
+        ("ulp-1-00-lesson-notes", "Synthetic excerpt", 39, "owned_quote_refused"),
         ("not-registered", "Synthetic excerpt", 39, "publication_right"),
         ("1-klas-bukvar-zaharijchuk-2025-1", "Synthetic excerpt", None, "publication_attribution"),
         ("1-klas-bukvar-zaharijchuk-2025-1", "Synthetic excerpt", 0, "publication_attribution"),

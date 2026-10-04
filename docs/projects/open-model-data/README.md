@@ -3,6 +3,17 @@
 > [!WARNING]
 > **Withdrawn 2026-09-25: this Hugging Face dataset is private. The pilot data failed the dataset acceptance check and must not be used (epic #6321).**
 
+> **Current plan:** [`PLAN.md`](PLAN.md) (v3.4.4, canonical plan for epic #6321).
+
+> [!CAUTION]
+> **Quarantined 2026-10-03 (#9607, plan v3.4.3 gate PA1).** Every old trainable artifact described below is sealed and kept:
+> `registry/projects/open_model_data/quarantine/inventory_v1.json` lists each one with its SHA-256 and reason, and the sealed
+> sets carry a `TOMBSTONE.md`. Every loader, packager and uploader refuses them through `refuse_quarantined` in
+> `scripts/projects/open_model_data/paths.py`; the Colab notebooks refuse to run and cannot push to a hub. The old-plan
+> generators are archived under `archive/code/open_model_data/`. The stray `data/ulif_dump.db` (one ULIF entry duplicating
+> the ULIF data in `data/sources.db`) is sealed in the same inventory and kept. Check the seal with
+> `.venv/bin/python scripts/projects/open_model_data/quarantine.py verify`.
+
 > **Parent Epics:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (ULDR Open Model Data) & [#7423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7423) (Human-Source Dataset Delivery)
 > **Stream Registry:** `open-model-data` (in `scripts/config/issue_streams.yaml`)
 > **Hub Dataset (withdrawn, private):** [`krisztiankoos/uldr-v0.1-pilot`](https://huggingface.co/datasets/krisztiankoos/uldr-v0.1-pilot) *(Exploratory Pilot Canary v0.1; v1.0 Production Release in Phase 5.5)*
@@ -91,7 +102,8 @@ flowchart LR
 ### Authoritative Plans & Architecture (Active)
 | Document | Purpose |
 | :--- | :--- |
-| [`ROADMAP_250K_SOVEREIGN_UKRAINIAN.md`](ROADMAP_250K_SOVEREIGN_UKRAINIAN.md) | Authoritative, source-honest roadmap for Epic #6321 (rewritten 2026-09-20). |
+| [`PLAN.md`](PLAN.md) | Canonical plan for Epic #6321 (v3.4.4). |
+| [`ROADMAP_250K_SOVEREIGN_UKRAINIAN.md`](ROADMAP_250K_SOVEREIGN_UKRAINIAN.md) | Withdrawn 2026-09-20 roadmap; now a pointer to `PLAN.md` (filename kept for old links). |
 | [`GRAMMAR_DATASET_SPEC_8342.md`](GRAMMAR_DATASET_SPEC_8342.md) | Grammar dataset redo specification, mixture ratios, and #8339/#8338 acceptance gates (#8342). |
 | [`CORPUS_GROUNDED_DECOLONIZATION_DATASET_PLAN.md`](CORPUS_GROUNDED_DECOLONIZATION_DATASET_PLAN.md) | Operational plan for the 6K SFT + 3K DPO production dataset and miner pipeline. |
 | [`DECOLONIZATION_EPIC_ARCHITECTURE.md`](DECOLONIZATION_EPIC_ARCHITECTURE.md) | Tri-family architectural agreement (Gemini, Claude, Codex) on production design. |

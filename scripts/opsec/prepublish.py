@@ -29,7 +29,12 @@ POLICY = Path(__file__).with_name("blocking.json")
 
 
 class PublishBlocked(RuntimeError):
-    """A safe diagnostic, with no source text or private exception detail."""
+    """A safe diagnostic, with no source text or private exception detail.
+
+    indices names the texts of a check_texts refusal that had a blocking finding.
+    """
+
+    indices: frozenset[int] = frozenset()
 
 
 def publication_boundary(error_type):
@@ -91,6 +96,15 @@ def catalog() -> dict:
         raise PublishBlocked("OPSEC: repository allowlist unavailable; write refused.") from None
 
 
+def normalize_hostname(value: str) -> str | None:
+    """Return a lowercase ASCII hostname, or None for malformed labels."""
+    # Check ASCII before lowercasing: Unicode look-alikes must not normalize in.
+    label = r"[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+    if value.isascii() and re.fullmatch(rf"{label}(?:\.{label})*", value.lower()):
+        return value.lower()
+    return None
+
+
 def normalize_repository(value: str, host: str = "github.com") -> str:
     """Return a canonical host/owner/name, or unknown (never private by default)."""
     value = value.strip().removesuffix(".git")
@@ -98,9 +112,12 @@ def normalize_repository(value: str, host: str = "github.com") -> str:
     value = re.sub(r"^https?://", "", value)
     parts = value.split("/")
     if len(parts) == 2:
-        parts.insert(0, host.lower())
-    if len(parts) == 3 and all(re.fullmatch(r"[A-Za-z0-9_.-]+", x) for x in parts[:3]):
-        return "/".join(parts[:3]).lower()
+        parts.insert(0, host)
+    if len(parts) != 3:
+        return "unknown"
+    hostname = normalize_hostname(parts[0])
+    if hostname is not None and all(re.fullmatch(r"[A-Za-z0-9_.-]+", part) for part in parts[1:]):
+        return "/".join([hostname, *parts[1:]]).lower()
     return "unknown"
 
 
@@ -281,26 +298,30 @@ def check_texts(
     tooling: Path | None = None,
     log_path: Path | None = None,
     field_names: list[str] | None = None,
+    claimant: int | None = None,
 ) -> None:
-    """Scan final fields; an override permits policy hits only after a durable log."""
+    """Scan final fields; an override permits policy hits only after a durable log.
+
+    The override is dropped from environment on every call but claimed and
+    logged only when a scan blocks, so a clean, empty or private publish
+    leaves it for the one flagged publish it was set for. claimant is the
+    process whose override is claimed once; by default the caller's parent
+    (the shell that set it).
+    """
     environment = os.environ if environment is None else environment
     reason = environment.pop("LU_OPSEC_OVERRIDE", "")
-    if not texts:
-        if reason.strip():
-            _record_override(destination, [], reason, log_path)
-        return
-    if is_private(destination):
-        if reason.strip():
-            _record_override(destination, [], reason, log_path)
+    if not texts or is_private(destination):
         return
     loaded = _load_matcher(tooling or private_tooling())
     blocks = []
     locations = []
+    blocked = set()
     for index, text in enumerate(texts):
         for finding in _scan(text, loaded):
             rule, level = finding["rule_id"], finding["class"]
             if level <= 5 or rule in loaded[2]:
                 blocks.append((rule, level))
+                blocked.add(index)
                 # Names come from option/JSON keys, never from field values.
                 name = field_names[index] if field_names and index < len(field_names) else f"text[{index + 1}]"
                 if not re.fullmatch(r"[A-Za-z0-9_.\[\]-]{1,80}", name):
@@ -309,18 +330,26 @@ def check_texts(
                 location = f"rule={rule} class={level} field={name} line={line}"
                 if location not in locations:
                     locations.append(location)
-    if reason.strip():
-        _record_override(destination, blocks, reason, log_path)
-        return
     if not blocks:
         return
-    raise PublishBlocked(
+    if reason.strip():
+        _record_override(destination, blocks, reason, log_path, claimant)
+        return
+    error = PublishBlocked(
         f"OPSEC blocked: {'; '.join(locations)}. Remove the flagged detail; for a false positive, "
         "set LU_OPSEC_OVERRIDE to a reason for this command only."
     )
+    error.indices = frozenset(blocked)
+    raise error
 
 
-def _record_override(destination: str, blocks: list[tuple[str, int]], reason: str, log_path: Path | None) -> None:
+def _record_override(
+    destination: str,
+    blocks: list[tuple[str, int]],
+    reason: str,
+    log_path: Path | None,
+    claimant: int | None = None,
+) -> None:
     """Claim one parent-shell override and durably log it before sending."""
     record = {
         "timestamp": datetime.now(UTC).isoformat(),
@@ -332,7 +361,7 @@ def _record_override(destination: str, blocks: list[tuple[str, int]], reason: st
     try:
         target = log_path or primary_root() / "batch_state/opsec/overrides.jsonl"
         target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        parent = os.getppid()
+        parent = os.getppid() if claimant is None else claimant
         started = subprocess.run(
             ["ps", "-o", "lstart=", "-p", str(parent)], capture_output=True, text=True, check=True, timeout=5
         ).stdout.strip()

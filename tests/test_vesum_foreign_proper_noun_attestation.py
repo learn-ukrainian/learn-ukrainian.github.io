@@ -357,3 +357,104 @@ def test_folk_vesum_gate_fixture_accepts_sentence_initial_hyphenated_compound(
         assert internal_capital["passed"] is False
         assert internal_capital["missing"] == ["кобзарсько-Лірницький"]
         assert internal_capital["heritage_attested_words"] == []
+
+
+def _write_fixture_foreign_attestations(path: Path) -> None:
+    path.write_text(
+        "attestations:\n"
+        "  - lemma: Йоль\n"
+        "    forms: [Йоль, Йолем]\n"
+        "    wikipedia_urls: ['https://uk.wikipedia.org/wiki/Йоль']\n",
+        encoding="utf-8",
+    )
+
+
+@contextmanager
+def _fixture_foreign_gate(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    heritage_lemma: str | None = None,
+) -> Iterator[Callable[..., dict[str, object]]]:
+    """Fixture VESUM, foreign attestations and heritage index; no local databases."""
+    foreign_index = tmp_path / "foreign.yaml"
+    _write_fixture_foreign_attestations(foreign_index)
+    monkeypatch.setattr(linear_pipeline, "FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH", foreign_index)
+    heritage_index = tmp_path / "heritage.yaml"
+    _write_fixture_heritage(heritage_index, heritage_lemma)
+    monkeypatch.setattr(linear_pipeline, "FOLK_HERITAGE_ATTESTATIONS_PATH", heritage_index)
+    with _fixture_vesum_gate(tmp_path, monkeypatch) as (_fixture, gate):
+        yield gate
+
+
+@pytest.mark.parametrize("level", ["folk", "bio", "hist"])
+@pytest.mark.parametrize(
+    ("text", "malformed"),
+    [
+        ("ЙОль Йоль", "ЙОль"),
+        ("Йоль ЙОль", "ЙОль"),
+        ("ЙОль **Йоль**", "ЙОль"),
+        ("ЙОЛЬ Йоль", "ЙОЛЬ"),
+        ("йоль Йоль", "йоль"),
+    ],
+)
+def test_foreign_attestation_does_not_excuse_sibling_with_other_casing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    level: str,
+    text: str,
+    malformed: str,
+) -> None:
+    """An attested «Йоль» must not carry «ЙОль» through the shared key (#9368).
+
+    The foreign path attests title-case surfaces only, so each surface is
+    judged on its own. «ЙОль» alone was already rejected; beside «Йоль» it
+    used to pass with both surfaces listed as attested.
+    """
+    with _fixture_foreign_gate(tmp_path, monkeypatch) as gate:
+        result = gate(text, level=level)
+
+    assert result["passed"] is False
+    assert result["missing"] == [malformed]
+    assert malformed not in result["foreign_proper_noun_attested_words"]
+    assert result["foreign_proper_noun_attested"] == 1
+    assert result["heritage_attested_words"] == []
+
+
+@pytest.mark.parametrize("level", ["folk", "bio", "hist"])
+def test_foreign_attestation_keeps_valid_forms_attested(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    level: str,
+) -> None:
+    with _fixture_foreign_gate(tmp_path, monkeypatch) as gate:
+        result = gate("Йоль **Йолем** Йолем дерево", level=level)
+
+    assert result["passed"] is True
+    assert result["missing"] == []
+    assert result["foreign_proper_noun_attested_words"] == ["**Йолем**", "Йоль"]
+    assert result["heritage_attested_words"] == []
+
+
+def test_foreign_attestation_leaves_unattested_sibling_to_later_fallbacks(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A sibling the foreign path does not attest keeps its key open (#9368).
+
+    With «йоль» in the heritage index, the lowercase surface is accepted by the
+    heritage fallback on its own merits, while «ЙОль» stays rejected on folk.
+    """
+    with _fixture_foreign_gate(tmp_path, monkeypatch, heritage_lemma="йоль") as gate:
+        lowercase = gate("йоль Йоль")
+        malformed = gate("йоль ЙОль Йоль")
+
+    assert lowercase["passed"] is True
+    assert lowercase["missing"] == []
+    assert lowercase["foreign_proper_noun_attested_words"] == ["Йоль"]
+    assert lowercase["heritage_attested_words"] == ["йоль"]
+
+    assert malformed["passed"] is False
+    assert malformed["missing"] == ["ЙОль"]
+    assert malformed["foreign_proper_noun_attested_words"] == ["Йоль"]
+    assert malformed["heritage_attested_words"] == ["йоль"]

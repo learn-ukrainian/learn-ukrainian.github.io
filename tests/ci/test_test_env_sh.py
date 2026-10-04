@@ -120,7 +120,10 @@ def test_marker_is_never_visible_while_its_write_is_in_flight(tmp_path: Path) ->
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     slow_mv = fake_bin / "mv"
-    slow_mv.write_text('#!/bin/sh\nsleep 5\nexec /bin/mv "$@"\n')
+    release = tmp_path / "release-mv"
+    slow_mv.write_text(
+        f'#!/bin/sh\nwhile [ ! -e "{release}" ]; do sleep 0.01; done\nexec /bin/mv "$@"\n'
+    )
     slow_mv.chmod(slow_mv.stat().st_mode | stat.S_IXUSR)
     env = {
         **os.environ,
@@ -138,12 +141,15 @@ def test_marker_is_never_visible_while_its_write_is_in_flight(tmp_path: Path) ->
     assert started.returncode == 0
     env_dir = tmp_path / "test-env"
     marker, temp = env_dir / "bogus.rc", env_dir / "bogus.rc.tmp"
-    deadline = time.monotonic() + 4
+    deadline = time.monotonic() + 60
     while not temp.exists() and time.monotonic() < deadline:
         time.sleep(0.05)
     # The writer is now stalled in `mv`: nothing may be published yet.
-    assert temp.exists(), "temp marker was never created"
-    assert not marker.exists(), "marker visible before it was published"
+    try:
+        assert temp.exists(), "temp marker was never created"
+        assert not marker.exists(), "marker visible before it was published"
+    finally:
+        release.touch()
     deadline = time.monotonic() + 30
     while not marker.exists() and time.monotonic() < deadline:
         time.sleep(0.1)

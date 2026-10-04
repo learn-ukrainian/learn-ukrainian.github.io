@@ -193,16 +193,10 @@ def test_kaikki_exact_readonly_and_alignment(synthetic_kaikki_side_db):
         assert result.raw["synthetic-absent"] is None
         with pytest.raises(sqlite3.OperationalError, match="readonly"):
             api._kaikki_conn.execute("DELETE FROM kaikki")
-    assert sources.aligned_kaikki_gloss(result.raw["вона"], "noun", True) == (
-        None,
-        codes.GLOSS_SENSE_UNRESOLVED,
-    )
-    # A mixed preposition cannot resolve without a corroborated primary
-    # dmklinger sense; the shared selector reports the record-level gap.
-    assert sources.aligned_kaikki_gloss(result.raw["після"], "prep", False) == (
-        None,
-        codes.GLOSS_SENSE_UNRESOLVED,
-    )
+    # A sole Kaikki source gives its first plain head, whatever the sense count.
+    assert sources.aligned_kaikki_gloss(result.raw["вона"], "noun", True) == ("she", None)
+    # A mixed-POS entry does not say which gloss is the preposition's.
+    assert sources.aligned_kaikki_gloss(result.raw["після"], "prep", False) == (None, "kaikki_multi_pos")
     assert sources.aligned_kaikki_gloss(result.raw["вона"], "verb", False) == (None, "kaikki_pos_mismatch")
     assert sources.aligned_kaikki_gloss(result.raw["synthetic-absent"], "noun", True) == (None, "kaikki_absent")
 
@@ -242,9 +236,8 @@ def test_kaikki_refuses_entire_entry_if_one_gloss_is_malformed():
     payload = {"pos": ["prep"], "glosses": ["under", "bad)"]}
     assert sources.aligned_kaikki_gloss(payload, "prep", False) == (None, "kaikki_malformed")
     payload["glosses"] = ["under (a roof)", 'beneath "something" [figurative]']
-    # A second sense, even restricted, prevents sole-source emission.
-    # Malformed siblings above still invalidate the whole source payload.
-    assert sources.aligned_kaikki_gloss(payload, "prep", False) == (None, codes.GLOSS_SENSE_UNRESOLVED)
+    # Well-formed siblings, even restricted ones, leave the first plain head.
+    assert sources.aligned_kaikki_gloss(payload, "prep", False) == ("under", None)
 
 
 def test_missing_kaikki_fails_closed_with_named_code(tmp_path):

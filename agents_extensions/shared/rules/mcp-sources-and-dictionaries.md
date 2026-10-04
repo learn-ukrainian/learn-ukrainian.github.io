@@ -24,7 +24,7 @@ paths:
 - `mcp__sources__search_text` — textbook content search (23K chunks, Grades 1-11)
 - `mcp__sources__search_images` — textbook image search (14K images)
 - `mcp__sources__search_literary` — primary literary sources (125K chunks — chronicles, poetry, legal texts)
-- `mcp__sources__query_pravopys` — Ukrainian orthography rules (Правопис 2019)
+- `mcp__sources__query_pravopys` — Ukrainian orthography rules (Правопис 2019, official authorized edition stored offline; answers by topic or § 1–168 with a page locator)
 - `mcp__sources__query_wikipedia` — Ukrainian Wikipedia
 - `mcp__sources__search_heritage` — **canonical heritage-defense lookup** for verifying potential archaisms, historisms, dialectisms, and inherited Ukrainian words against Russianism/surzhyk false positives. Merges Грінченко, ЕСУМ, slovnyk.me, and Антоненко-Давидович evidence.
 

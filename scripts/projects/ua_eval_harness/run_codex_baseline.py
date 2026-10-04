@@ -14,11 +14,17 @@ import hashlib
 import json
 import os
 import subprocess
+import sys
 import tempfile
 from collections.abc import Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_REQUESTS = ROOT / "data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl"
@@ -42,7 +48,7 @@ def _canonical_json(value: Any) -> str:
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
     except OSError as exc:
         raise RunnerError(f"cannot read requests {path}: {exc}") from exc
     for number, line in enumerate(lines, 1):

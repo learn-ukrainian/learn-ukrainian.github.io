@@ -22,6 +22,7 @@ from typing import Any
 
 import jsonschema
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 DEFAULT_CONFIG_PATH = Path("data/projects/open_model_data/language/v4_language_usage_config_v1.json")
@@ -306,6 +307,15 @@ def analyze_span_language_usage(
     }
 
 
+def _update_index_header(path: Path, header: dict[str, Any]) -> None:
+    """Replace the index header while preserving physical JSONL records."""
+    index_lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
+    if index_lines[-1] == "":
+        index_lines.pop()
+    index_lines[0] = canonical_json(header)
+    path.write_text("\n".join(index_lines) + "\n", encoding="utf-8")
+
+
 def build(
     config_path: Path = DEFAULT_CONFIG_PATH,
     input_root: Path | None = None,
@@ -474,10 +484,8 @@ def build(
                     }
                     out_f.write(canonical_json(lang_item) + "\n")
 
-        index_lines = out_index_path.read_text(encoding="utf-8").splitlines()
         header["records"] = total_spans
-        index_lines[0] = canonical_json(header)
-        out_index_path.write_text("\n".join(index_lines) + "\n", encoding="utf-8")
+        _update_index_header(out_index_path, header)
 
     finally:
         conn.close()

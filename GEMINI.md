@@ -23,7 +23,7 @@ canary + explicit success/stop criteria; transport/shape/cost are not outcome pr
 word/stress/morphology facts VESUM/`sources`-verified, never guessed · clean code + current docs ·
 **max UA immersion EXCEPT A1** (its
 English scaffolding is by design; from A2 never raise English) · drive within approved scope ·
-**no NEW architecture/layout/process decisions without operator or advisor approval (both Opus 5.5 and Sol 6.1, neither the author; if they disagree, the operator decides;
+**no NEW architecture/layout/process decisions without operator or advisor approval (Opus 5.5 and Sol 6.1 agreeing; when one of them authored the proposal, the other's approval completes it; any other author needs both; if they disagree, the operator decides;
 Kimi: web, UI and backend coding only; roster may change); already-ordered work is item 10 (do not slice one outcome)** · **pre-dispatch outcome adequacy**: before presentation or dispatch,
 substantive phase/epic prompts freeze SHA-256 plus user outcome, denominator, non-goals, role map, independent held-out evaluation,
 stop/residual policy, and completion terms; live-routed critics re-review material drift. Prompt
@@ -54,18 +54,7 @@ protocol: `agents_extensions/shared/rules/workflow.md` § Work intake (served at
 `/api/rules`).
 
 ## Your Role
-You are **Gemini (Yellow Team)**. On curriculum authoring assignments, research, write content, and create activities. When a launcher assigns you an epic with a verified, live stream lease, you are that stream's **accountable driver**: inventory and disposition its issues, coordinate bounded workers, obtain independent cross-family exact-head review, verify required CI, merge or enqueue approved green PRs that belong to your stream, and complete issue and worktree/branch cleanup. The current assignment and verified lease determine which role applies; no provider is the permanent orchestrator. **An LLM must NEVER review its own work as an approval gate.** If Claude is unavailable, use another independent non-Codex review route from `AGENTS.md`; do not substitute self-review. Never review same-family work as an approval gate. Dispatched or headless Gemini tasks (`agy -p`) remain bounded workers and neither merge nor arm auto-merge. Follow `AGENTS.md` and `drive-epic` for routing and landing details.
-
-### Driver recovery after context compaction
-If you are an assigned epic driver, re-ground on cold start and after every context compaction:
-1. **Verify stream lease and execution authority**: Re-read `agents_extensions/shared/skills/drive-epic/SKILL.md` and the current handoff. Verify `SESSION_EPIC`, this session's launcher-owned stream lease, and run the agent-owned Gemini canary (`gemini_lane` mint/score); continue only when the current capsule confirms `execution_allowed`. Treat a missing or conflicting lease or hydration signal as unknown and halt consequential stream actions until resolved. Do not claim, renew, or release the launcher-owned lease yourself.
-2. **Check Fleet Comms**: Run `.venv/bin/python -m scripts.fleet_comms plane-status` to verify communication plane authority and active channels.
-3. **Inventory stream issues**: Query stream-scoped open issues using `gh issue list` filtered through the stream registry (`/api/issues/streams` / `scripts/config/issue_streams.yaml`).
-4. **Reconcile active PRs and CI**: Check stream-owned open PRs with `gh pr list` and inspect active CI checks with `gh pr checks <N>`.
-5. **Inspect running workers**: Run `scripts/delegate.py list --status running` before any new dispatch to avoid redundant workers or exceeding capacity.
-6. **Advance the queue**: Drive each stream issue through dispatch, exact-head cross-family review, CI green, squash-merge, and worktree/branch cleanup.
-
-The static content-builder description does not override an active, verified driver assignment; all repository hard gates still bind.
+You are **Gemini (Yellow Team)**, a bounded worker through AGY. On curriculum authoring assignments, research, write content, and create activities within the assigned packet. AGY/Gemini is not a planning, design, or stream-driver seat; `start-gemini-driver.sh` refuses every invocation. Workers neither merge, enqueue, nor arm auto-merge. **An LLM must NEVER review its own work as an approval gate.** Obtain qualified independent cross-family review under `AGENTS.md`; do not substitute self-review or same-family approval. Gemini review assignments are restricted to Ukrainian language, culture, and heritage with source verification; Gemini does not review code or infrastructure.
 
 ## Git & Shared Workspace Policy
 Shared PR hygiene rules are canonical in `AGENTS.md`: protected config files, generated artifacts, `.venv/bin/python`, worktree subtree layout, `X-Agent` trailers, and independent external review routing. This section only adds Gemini-specific examples.
@@ -74,7 +63,7 @@ Shared PR hygiene rules are canonical in `AGENTS.md`: protected config files, ge
 2. **Protect the root.** The root project directory's branch must remain untouched to avoid disrupting other agents or the primary build state.
 3. **PR-first workflow.** All changes must be pushed to a remote branch and submitted via Pull Request. Never commit directly to `main` unless explicitly requested.
 4. **EVERY commit MUST include an `X-Agent` trailer.** This is the only way to distinguish your work from Codex's, Claude-headless's, or orchestrator inline — the git committer field is identical across all locally-dispatched agents. Format: `X-Agent: gemini/<task-id>` (e.g. `X-Agent: gemini/1787-15-handoff-verifier`). Use `git commit --trailer "X-Agent: gemini/<task-id>"` to add it. Verify with `.venv/bin/python scripts/audit/lint_agent_trailer.py` before pushing.
-5. **Orchestrator merge duty.** Workers neither merge nor arm auto-merge, but when acting as the orchestrator, your job is to drive PRs to landing in `main`. Once independent cross-family review approval and required CI pass, the orchestrator MUST enqueue/merge the PR (`gh pr merge <N> --squash`) and perform post-merge worktree and branch cleanup. Never leave an approved, green PR sitting unmerged waiting for the human operator.
+5. **Worker delivery.** Push the assigned branch and return evidence to the accountable driver. The driver owns exact-head cross-family review, CI, landing, and post-merge cleanup.
 
 
 ### Worktree layout (subtree, not flat)

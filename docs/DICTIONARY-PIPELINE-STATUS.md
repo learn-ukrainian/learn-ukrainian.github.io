@@ -55,6 +55,32 @@ driver activates and verifies the live database separately. See
 [corpus inventory](corpus-inventory.md#curated-listening-and-reading-catalogues-9409)
 for the denominator, access caveats and search interface.
 
+## Owned private references (#9581)
+
+| Ingestion tool | Enable / verify | Private artifacts | Corpus targets |
+| --- | --- | --- | --- |
+| `scripts.ingest.owned_books_ingest` | Explicit `--inventory`, `--out-dir`, `--db`; `--check` verifies installed state; `--force` replaces stale inputs | Per-work JSONL and digest receipts outside every checkout | `textbooks`, `textbooks_fts`, `textbook_sections` |
+
+The private inventory supplies every row and typed skip. Per-file/page accounting
+retains missing files, unreadable inputs and OCR gaps; available text does not hide
+partial rows. Garbled PDF pages are withheld and counted separately for OCR;
+clean pages remain ingestable. Directory inventories also support UTF-8 CSV
+reference text and account for JPEG pages as OCR residuals. Existing works keep their identities; ULP premium
+packs list the six already-ingested season identities, each validated against the
+corpus and rights record. No sentence-overlap deduplication is used.
+New works require matching inventory and registry rights before extraction or
+cached JSONL reuse. Exact normalised whole-file duplicates and text wholly
+contained in an earlier retained file are accounted as `duplicate_of` without
+new chunks. Files whose non-empty normalised units all match units in a single
+earlier retained file also add no chunks, regardless of unit order; one new unit
+keeps the entire file. Empty files and partial overlaps retain their existing
+accounting. Disk and archive metadata are ignored, and
+owner-only password PDFs are extracted with restriction accounting.
+`registry/sources/owned-rights.yaml` denies all owned quotes and denies citations
+of private-permission material. See the [private-reference regeneration
+recipe](corpus-inventory.md#private-reference-sources-textbooks). Apply to a local
+backup first; the accountable driver applies and verifies the live Sources corpus.
+
 ## Need ingestion
 
 | Dictionary | JSONL | Entries | Command |

@@ -6,6 +6,11 @@ string literal; the CLI's --help lists them all via help_text(). Every code
 here is produced by at least one test fixture.
 """
 
+A1_REFERENCE_WORD_MISSING = "a1_reference_word_missing"
+A1_REFERENCE_EXCEPTION_INVALID = "a1_reference_exception_invalid"
+A1_REFERENCE_INVALID = "a1_reference_invalid"
+A1_REFERENCE_CLOSED_CLASS_A1 = "closed_class_a1"
+
 # --- input and loader failures -------------------------------------------
 PLAN_NOT_FOUND = "plan_not_found"
 PLAN_YAML_INVALID = "plan_yaml_invalid"
@@ -222,6 +227,10 @@ LEARNER_READ_REF_NOT_PRINTABLE = "learner_read_ref_not_printable"
 LEARNER_READ_WORD_NOT_IN_PRINT = "learner_read_word_not_in_print"
 
 DESCRIPTIONS = {
+    A1_REFERENCE_WORD_MISSING: "C29 (#9582): A1 introduced vocabulary missing from the reference; advisory until #9541 PR2",
+    A1_REFERENCE_EXCEPTION_INVALID: "C29 (#9582): invalid typed reference exception; never exempts other gates",
+    A1_REFERENCE_INVALID: "C29 (#9582): invalid reference input or enforcement configuration (failure)",
+    A1_REFERENCE_CLOSED_CLASS_A1: "C29 (#9582): inventory-absent closed-class word has a class-specific A1 attestation (note)",
     PLAN_NOT_FOUND: "failure: the plan file does not exist",
     PLAN_YAML_INVALID: "failure: the plan file is not valid YAML",
     PLAN_OUTSIDE_LESSON_PLANS: "failure: plans live under curriculum/l2-uk-en/lesson-plans/<level>/, nowhere else",
@@ -389,6 +398,7 @@ DESCRIPTIONS = {
 
 NOTE_CODES = frozenset(
     {
+        A1_REFERENCE_CLOSED_CLASS_A1,
         OPTIONS_MISSING,
         OPTIONS_FORBIDDEN,
         CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW,

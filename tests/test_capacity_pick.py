@@ -111,6 +111,7 @@ def test_lane_rows_mark_avoid():
 
 
 def test_reset_reserve_relaxes_only_eligible_threatened_codex():
+    now = datetime.now(UTC)
     budget = _fixture_budget()
     budget["agents"]["codex"].update(
         {
@@ -118,6 +119,7 @@ def test_reset_reserve_relaxes_only_eligible_threatened_codex():
             "health": {"healthy": True},
             "freshness": "fresh",
             "age_s": 10,
+            "status_source": "weekly_pace",
             "reset_credits": {
                 "available_count": 2,
                 "expires_at": ["2099-01-01T00:00:00Z", "2099-02-01T00:00:00Z"],
@@ -127,6 +129,7 @@ def test_reset_reserve_relaxes_only_eligible_threatened_codex():
             "codexbar": {
                 **budget["agents"]["codex"]["codexbar"],
                 "weekly_used_pct": 72.0,
+                "weekly_resets_at": (now + timedelta(days=3.5)).isoformat(),
                 "windows": {"primary": {"remaining_pct": 12.0}},
             },
         }
@@ -140,7 +143,8 @@ def test_reset_reserve_relaxes_only_eligible_threatened_codex():
     }
     rows = {r["lane"]: r for r in capacity_pick.build_lane_rows(budget, reset_reserve=reserve)}
     assert rows["codex"]["avoid"] is False
-    assert rows["codex"]["status"] == "hot"
+    assert rows["codex"]["status"] == "cool"
+    assert rows["codex"]["pace_deficit"]["covered_by"] == ["free full reset"]
     assert rows["codex"]["will_last"] is False
     assert rows["codex"]["reset_reserve_eligible"] is True
     assert "reset reserve eligible (2 remaining)" in rows["codex"]["notes"]

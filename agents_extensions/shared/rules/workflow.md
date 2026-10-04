@@ -402,6 +402,14 @@ Every OPEN issue belongs to **exactly one stream epic**. The registry is
 
 ## Mandatory task workflow
 
+Disposable worker scratch uses `$TMPDIR`, the dispatch-managed lease, never a
+literal system temp path. This includes pytest `--basetemp`, `mktemp`, probe
+outputs and temporary Git checkouts. Dispatch owns exit/failure/interruption
+cleanup; standalone large runs use `scripts.tools.task_scratch run` so the
+existing lifecycle and recovery reaper retain ownership. Legacy unmanaged
+directories are inventoried with `scripts.hygiene.tmp_sweep` (dry-run by
+default); unknown attribution or liveness always preserves them.
+
 Every task follows this workflow. No exceptions for non-trivial changes.
 
 1. **Create GH issue** — describe the problem and link it to exactly one stream epic.

@@ -178,6 +178,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts import config
+from scripts.audit.check_no_internal_ids import DOCS_DIR, scan_text
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lesson_lock, lock, publication
 from scripts.curriculum.evidence.sources import Sources
@@ -187,6 +188,7 @@ from scripts.curriculum.resolver import codes as resolver_codes
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.stream import resolve
+from scripts.curriculum.resolver.tokenize import lookup_form, tokenize
 from scripts.generate_mdx.atlas_links import atlas_href_for
 from scripts.generate_mdx.converters import (
     DIALOGUE_BOX_CLOSING_LINE,
@@ -376,21 +378,19 @@ ENGLISH_CHANNELS = {
     "draft.dialogue.translation_en.*": "body_support",
     "draft.steps.*.blocks.*.en.*": "writer_bilingual",
     "words.words.*.gloss_en": "vocabulary_and_inline_support",
-    "words.words.*.sense_gloss": "vocabulary_and_inline_support",
 }
 
 
 # Resolver candidates are source metadata, never learner text.
-ENGLISH_METADATA_FIELDS = frozenset({"words.words.*.candidates.*.sense_gloss"})
+ENGLISH_METADATA_FIELDS = frozenset({"words.words.*.candidates.*.sense_gloss", "words.words.*.sense_gloss"})
+
 
 def plan_arc_position(plan: dict[str, Any]) -> int:
     """Read the schema's positive integer position, never coerce malformed plans."""
     arc_ref = plan.get("arc_ref")
     position = arc_ref.get("position") if isinstance(arc_ref, dict) else None
     if type(position) is not int or position < 1:
-        raise AssemblerError(
-            PLAN_ARC_REF_INVALID, "arc_ref.position must be a positive integer", layer="plan"
-        )
+        raise AssemblerError(PLAN_ARC_REF_INVALID, "arc_ref.position must be a positive integer", layer="plan")
     return position
 
 
@@ -448,8 +448,8 @@ def gloss_replacer(words_store: dict[str, Any], *, include_english: bool = True)
         wid = match.group(1)
         w_rec = words_by_id.get(wid)
         if w_rec:
-            lem = w_rec.get("lemma", "")
-            gl = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
+            lem = w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", "")
+            gl = w_rec.get("gloss_en") or ""
             return f"{lem} ({gl})" if gl and include_english else lem
         return wid
 
@@ -872,6 +872,58 @@ def _split_inline_spans(text: str, default_role: str) -> list[tuple[str, str]]:
     return spans
 
 
+def plan_quote_units(
+    expanded: ExpandedDocument,
+    provenance: dict[str, Any],
+    draft: dict[str, Any],
+    lesson: dict[str, Any],
+    pack: dict[str, Any],
+) -> frozenset[int]:
+    """Locate exact, plan-listed source quote occurrences for display only.
+
+    Use the existing quote block and record provenance, never punctuation or
+    a text search. A unit must cover the whole pack span with the assembler's
+    plain-text normalization; partial or rewritten quotes get no admission.
+    """
+    planned = {step["id"]: set(step.get("evidence") or []) for step in lesson.get("steps") or []}
+    blocks = {
+        (step["id"], index): block
+        for step in draft.get("steps") or []
+        for index, block in enumerate(step.get("blocks") or [])
+        if block.get("kind") == "quote"
+    }
+    texts = {record["id"]: record for record in pack.get("texts") or []}
+    spans = provenance.get("spans") or []
+    if len(spans) != len(expanded.units):
+        return frozenset()
+    admitted = set()
+    for unit, span in zip(expanded.units, spans, strict=True):
+        if (
+            unit.tab != "urok" or unit.role != "record_print"
+            or unit.activity is not None or unit.item is not None
+            or span.get("source") != "record" or span.get("record_kind") != "quote"
+            or span.get("role") != unit.role
+            or any(span.get(key) != value for key, value in unit.locator().items())
+        ):
+            continue
+        block = blocks.get((unit.step, unit.block), {})
+        ref = block.get("ref")
+        record = texts.get(ref)
+        if not record or ref != span.get("ref") or ref not in planned.get(unit.step, set()):
+            continue
+        quote = record.get("quote")
+        if not isinstance(quote, str):
+            continue
+        exact = strip_accents(page_text(quote))
+        if (
+            unit.text == exact and span.get("text") == exact
+            and span.get("start") == 0 and span.get("end") == len(exact)
+            and span.get("span") == 0
+        ):
+            admitted.add(unit.index)
+    return frozenset(admitted)
+
+
 def assemble_expanded_document(
     draft: dict[str, Any],
     plan: dict[str, Any],
@@ -900,6 +952,7 @@ def assemble_expanded_document(
     if not lesson_entry:
         raise AssemblerError("lesson_not_found", f"lesson {lesson_n} not found in plan")
 
+    literacy = bool((lesson_entry.get("inventory", {}).get("phonetics") or {}).get("letters"))
     include_english = body_english_support_allowed(level, plan_arc_position(plan))
 
     words_by_id: dict[str, dict[str, Any]] = {}
@@ -955,6 +1008,18 @@ def assemble_expanded_document(
         option_origin: str | None = None,
         is_key: bool | None = None,
     ) -> None:
+        if role == "quoted_term" and literacy:
+            # A letter, its bracketed sound, or a capital/small pair is a
+            # phonetics item. A multi-letter word keeps the ordinary word path.
+            letter_tokens = tokenize(text)
+            if letter_tokens and all(
+                token.kind == "cyrillic" and (
+                    len(token.lookup) == 1
+                    or (len(token.lookup) == 2 and token.lookup[0].casefold() == token.lookup[1].casefold())
+                )
+                for token in letter_tokens
+            ):
+                role = "phonetics"
         if role == "gloss_ref":
             # The page prints the word record's lemma and gloss here; the writer only typed the id.
             gloss_match = _GLOSS_MARKUP_RE.match(text)
@@ -962,7 +1027,8 @@ def assemble_expanded_document(
                 raise AssemblerError("gloss_ref_malformed", f"gloss reference {text!r} is not {{{{gloss:W-n}}}}")
             source = "record"
             ref = gloss_match.group(1)
-        clean = strip_accents(text) if source != "writer_prose" else text
+        exact_formula = source == "record" and words_by_id.get(ref, {}).get("kind") == "formula"
+        clean = strip_accents(text) if source != "writer_prose" and not exact_formula else text
         loc_key = (tab, step, activity, item, block)
         span_idx = block_span_counts.get(loc_key, 0)
         start_off = block_offsets.get(loc_key, 0)
@@ -1605,23 +1671,26 @@ def assemble_expanded_document(
     core_items = vocab_inv.get("core", [])
     incidental_items = vocab_inv.get("incidental", [])
 
+    seen_vocab: set[str] = set()
     for c in core_items:
         if isinstance(c, dict):
             wid = c.get("evidence")
-            if wid:
+            if wid and wid not in seen_vocab:
+                seen_vocab.add(wid)
                 w_rec = words_by_id.get(wid)
                 if not w_rec:
                     raise AssemblerError(WORD_NOT_FOUND, f"core word {wid} not found in words store")
-                lemma = str(w_rec.get("lemma", ""))
+                lemma = str(w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", ""))
                 add_unit("slovnyk", None, None, None, f"core_{wid}", "record_print", lemma, source="record", ref=wid)
 
     for inc in incidental_items:
         wid = inc.get("evidence") if isinstance(inc, dict) else inc
-        if isinstance(wid, str):
+        if isinstance(wid, str) and wid not in seen_vocab:
+            seen_vocab.add(wid)
             w_rec = words_by_id.get(wid)
             if not w_rec:
                 raise AssemblerError(WORD_NOT_FOUND, f"incidental word {wid} not found in words store")
-            lemma = str(w_rec.get("lemma", ""))
+            lemma = str(w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", ""))
             add_unit("slovnyk", None, None, None, f"inc_{wid}", "record_print", lemma, source="record", ref=wid)
 
     # 4. Tab: resursy (Resources) - CITED ids only
@@ -1823,6 +1892,14 @@ def check_5_assembly(
 
     for idx, u in enumerate(expanded_doc.get("units", [])):
         txt = u.get("text", "")
+        findings = scan_text(txt, DOCS_DIR / level / slug / f"{lesson_n}.mdx")
+        if findings:
+            finding = findings[0]
+            return CheckResult(
+                check=5, passed=False, layer="writer",
+                step=u.get("step"), activity=u.get("activity"), token=finding.value,
+                reason=f"internal_learner_term: {finding.kind}: {finding.value}",
+            )
         if "\u0300" in txt or "\u0301" in txt:
             return CheckResult(
                 check=5,
@@ -1878,7 +1955,16 @@ def apply_stress(expanded_doc: dict[str, Any], stream: Any) -> dict[str, Any]:
         txt = unit["text"]
         for start, length, stressed_val in reps:
             if start + length <= len(txt):
-                txt = txt[:start] + stressed_val + txt[start + length :]
+                original = txt[start : start + length]
+                plain = strip_accents(stressed_val)
+                if len(plain) != len(original) or lookup_form(plain).casefold() != lookup_form(original).casefold():
+                    raise AssemblerError("stress_surface_mismatch", "stress must preserve the token's characters", "engine")
+                # Records supply accents; the writer supplies the characters and case.
+                characters = iter(original)
+                replacement = "".join(
+                    ch if ch in ("\u0300", "\u0301") else next(characters) for ch in stressed_val
+                )
+                txt = txt[:start] + replacement + txt[start + length :]
         unit["text"] = txt
 
     return {
@@ -1921,17 +2007,22 @@ def build_slovnyk_entries(
                 rec = sel.get("record")
                 if rec and rec in words_by_id:
                     w_rec = words_by_id[rec]
-                    gloss = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
+                    gloss = w_rec.get("gloss_en") or ""
                     if gloss:
                         selected_senses[rec] = str(gloss)
 
     entries: list[tuple[str, dict[str, Any]]] = []
 
+    seen: set[str] = set()
+
     def process_item(wid: str, forms_list: list[str]) -> None:
+        if wid in seen:
+            return
+        seen.add(wid)
         if wid not in words_by_id:
             return
         w_rec = words_by_id[wid]
-        lemma = str(w_rec.get("lemma", ""))
+        lemma = str(w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", ""))
 
         # Lemma stress comes from the record's lemma form, never first learner form
         stressed_lemma = lemma
@@ -1947,9 +2038,13 @@ def build_slovnyk_entries(
             elif lemma_form.get("stressed"):
                 stressed_lemma = str(lemma_form["stressed"])
 
-        gloss = selected_senses.get(wid) or str(w_rec.get("sense_gloss") or w_rec.get("gloss_en") or "")
+        gloss = selected_senses.get(wid) or str(w_rec.get("gloss_en") or "")
         try:
-            atlas_href = atlas_href_for(lemma, translation=gloss, pos=str(w_rec.get("pos", "")))
+            atlas_href = (
+                None
+                if w_rec.get("kind") == "formula"
+                else atlas_href_for(lemma, translation=gloss, pos=str(w_rec.get("pos", "")))
+            )
         except Exception:
             atlas_href = None
 
@@ -1974,10 +2069,12 @@ def build_slovnyk_entries(
             item_entry["forms"] = taught_forms
         entries.append((wid, item_entry))
 
+    seen_vocab: set[str] = set()
     for c in core_items:
         if isinstance(c, dict):
             wid = c.get("evidence")
-            if wid:
+            if wid and wid not in seen_vocab:
+                seen_vocab.add(wid)
                 process_item(wid, c.get("forms", []))
 
     for inc in incidental_items:
@@ -2583,7 +2680,9 @@ def check_9_stress_and_render(
     try:
         stressed_doc = apply_stress(expanded_doc, stream)
     except Exception as exc:
-        return CheckResult(check=9, passed=False, reason=f"stress application raised: {exc}", layer="writer")
+        return CheckResult(
+            check=9, passed=False, reason=f"stress application raised: {exc}", layer=getattr(exc, "layer", "writer")
+        )
 
     tokens = getattr(stream, "tokens", None) or (stream.get("tokens") if isinstance(stream, dict) else [])
     for tok in tokens:
@@ -2752,9 +2851,7 @@ def check_9_stress_and_render(
             if field_name in reading:
                 reading[field_name] = mdx_safe_text(reading[field_name])
 
-    urok_md, unit_map = _render_urok_markdown(
-        draft, stressed_doc, pack, words_store, include_english=include_english
-    )
+    urok_md, unit_map = _render_urok_markdown(draft, stressed_doc, pack, words_store, include_english=include_english)
 
     plan_acts_by_id = {
         act["id"]: act for act in lesson_entry.get("activities", []) if isinstance(act, dict) and "id" in act
@@ -3056,7 +3153,12 @@ def assemble_lesson(
         sources = Sources()
     except Exception:
         sources = None
-    stream = resolve(ExpandedDocument.from_data(expanded_doc), allowlist, sources)
+    expanded_obj = ExpandedDocument.from_data(expanded_doc)
+    lesson = next(entry for entry in plan["lessons"] if entry["n"] == lesson_n)
+    stream = resolve(
+        expanded_obj, allowlist, sources,
+        source_quote_units=plan_quote_units(expanded_obj, c5.artifacts["provenance"], draft, lesson, pack),
+    )
 
     # Major 4: Check if stream has any failures or open tokens
     stream_failures = list(getattr(stream, "failures", []) or [])

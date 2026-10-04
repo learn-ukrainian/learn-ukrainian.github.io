@@ -33,6 +33,27 @@ BZYUK = record(
     ],
     gloss="synthetic-one",
 )
+
+
+@pytest.mark.parametrize("model", ["И, и", "Ии", "[и]"])
+def test_source_letter_models_are_not_words(model, sources):
+    doc = document(unit("бзюк " + model, "record_print"))
+    stream = resolve(doc, allowlist([BZYUK], letters={"И"}), sources)
+    assert not stream.failures
+    assert stream.tokens[0]["class"] == codes.RESOLVED
+    assert all(t["class"] == codes.LETTER_OR_SYLLABLE and not t["candidates"] for t in stream.tokens[1:])
+
+
+def test_source_letter_model_outside_state_fails(sources):
+    stream = resolve(document(unit("Н, н", "record_print")), allowlist([BZYUK], letters={"И"}), sources)
+    assert {f["code"] for f in stream.failures} == {codes.LETTER_OUTSIDE_STATE}
+
+
+def test_single_letter_word_in_source_sentence_still_resolves(sources):
+    a = record(9, "а", "conj", [form("а", "conj", "а", source="none")])
+    stream = resolve(document(unit("бзюк, а бзюк", "record_print")), allowlist([BZYUK, a], letters={"А"}), sources)
+    assert not stream.failures
+    assert all(t["class"] == codes.RESOLVED for t in stream.tokens)
 FRYAMBA_A = record(2, "фрямба", "noun", [form("фрямба", "noun:inanim:f:v_naz", stressed("фрямба", 2))], "synthetic-a")
 FRYAMBA_B = record(3, "фрямба", "noun", [form("фрямба", "noun:anim:f:v_naz", stressed("фрямба", 2))], "synthetic-b")
 KVETUR_A = record(4, "кветур", "noun", [form("кветур", "noun:inanim:m:v_naz", stressed("кветур", 2))])

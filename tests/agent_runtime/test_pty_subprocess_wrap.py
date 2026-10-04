@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import contextlib
 import os
+import select
 import subprocess
 import sys
 import threading
@@ -80,8 +81,10 @@ def test_pty_spawn_returns_valid_fds_and_master_reads_child_output(clean_env, tm
         assert os.fstat(stderr_fd).st_mode != 0
         # Read until EOF — child is `echo hi`.
         chunks = []
-        deadline = time.monotonic() + 5.0
+        deadline = time.monotonic() + 60.0
         while time.monotonic() < deadline:
+            if not select.select([stdout_fd], [], [], max(0, deadline - time.monotonic()))[0]:
+                break
             try:
                 chunk = os.read(stdout_fd, 4096)
             except OSError:  # Linux EIO on PTS close
@@ -123,7 +126,7 @@ def test_pty_spawn_sets_window_size_visible_to_child(clean_env, tmp_path):
         pty_window=(48, 132),
     )
     try:
-        data = _read_until_eof(stdout_fd, timeout_s=5.0)
+        data = _read_until_eof(stdout_fd, timeout_s=60.0)
         assert "48 132" in data, f"window not applied; got {data!r}"
     finally:
         _safe_close(stdout_fd)
@@ -150,9 +153,11 @@ def test_pty_master_read_returns_eof_or_eio_on_child_exit(clean_env, tmp_path):
         # pending bytes when the slave side closes, so we MUST read while
         # the child is still alive or right at the boundary.
         data = b""
-        deadline = time.monotonic() + 5.0
+        deadline = time.monotonic() + 60.0
         saw_eof = False
         while time.monotonic() < deadline:
+            if not select.select([stdout_fd], [], [], max(0, deadline - time.monotonic()))[0]:
+                break
             try:
                 chunk = os.read(stdout_fd, 4096)
             except OSError as exc:
@@ -612,6 +617,8 @@ def _read_until_eof(fd: int, *, timeout_s: float) -> str:
     chunks: list[bytes] = []
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
+        if not select.select([fd], [], [], max(0, deadline - time.monotonic()))[0]:
+            break
         try:
             chunk = os.read(fd, 4096)
         except OSError:
@@ -620,3 +627,12 @@ def _read_until_eof(fd: int, *, timeout_s: float) -> str:
             break
         chunks.append(chunk)
     return b"".join(chunks).decode("utf-8", errors="replace")
+
+
+def test_read_until_eof_bounds_a_silent_writer():
+    read_fd, write_fd = os.pipe()
+    try:
+        assert _read_until_eof(read_fd, timeout_s=0.05) == ""
+    finally:
+        os.close(read_fd)
+        os.close(write_fd)

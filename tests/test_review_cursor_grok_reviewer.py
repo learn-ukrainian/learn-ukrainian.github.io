@@ -136,7 +136,9 @@ def test_cursor_grok_seat_is_refused_at_high_by_eligibility_not_only_the_ladder(
     assert pinned.selected is None
     assert pinned.fail_closed_reason == f"explicit reviewer pin {GROK_SEAT!r} failed a hard eligibility gate"
     assert {entry.name: entry.reason for entry in pinned.trace}[GROK_SEAT] == HIGH_RISK_REFUSAL
-    custom = resolve_reviewer(replace(inputs, routing_snapshot=SOL_UNAVAILABLE), ladder=((REVIEW_CANDIDATES[GROK_SEAT],),))
+    custom = resolve_reviewer(
+        replace(inputs, routing_snapshot=SOL_UNAVAILABLE), ladder=((REVIEW_CANDIDATES[GROK_SEAT],),)
+    )
     assert custom.selected is None
     assert custom.trace[0].reason == HIGH_RISK_REFUSAL
 
@@ -198,6 +200,8 @@ def test_closeout_cli_selects_the_attested_cursor_grok_seat_when_sol_is_unavaila
             "claude-sonnet-5-5",
             "--review-profile",
             "code",
+            "--owned-path",
+            "site/src/app.ts",
             "--risk",
             "medium",
             "--routing-snapshot-file",
@@ -402,9 +406,7 @@ def test_a_grok_or_kimi_verdict_through_any_other_harness_is_refused(monkeypatch
 @pytest.mark.parametrize("model,family", [("gpt-6.1-sol", "openai"), ("claude-opus-5-5", "anthropic")])
 def test_native_primary_reviewers_are_still_recorded(monkeypatch, tmp_path, model, family):
     agent = "codex" if family == "openai" else "claude"
-    result, comments = _record(
-        monkeypatch, tmp_path, resolved_model=model, agent=agent, families=frozenset({"xai"})
-    )
+    result, comments = _record(monkeypatch, tmp_path, resolved_model=model, agent=agent, families=frozenset({"xai"}))
     assert result["comment"] == "posted"
     assert f"model={model} family={family}" in comments[0]["body"]
 
@@ -455,7 +457,10 @@ def test_a_requested_role_only_narrows_the_profile_risk_qualified_set(role):
 @pytest.mark.parametrize("profile", ["code", "infra"])
 def test_a_role_held_below_the_critical_floor_names_the_floor(profile):
     inputs = ResolverInputs(
-        author_model="claude-opus-5-5", review_profile=profile, domain=profile, risk="critical",
+        author_model="claude-opus-5-5",
+        review_profile=profile,
+        domain=profile,
+        risk="critical",
         requested_role="strong_review",
     )
     result = evaluate_candidate(REVIEW_CANDIDATES[GROK_SEAT], inputs)

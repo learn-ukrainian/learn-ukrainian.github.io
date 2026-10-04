@@ -1832,6 +1832,18 @@ def _normalize_text(text: str) -> str:
     return normalize_text(text)
 
 
+def _transcription_filter(
+    conn: sqlite3.Connection, table: str, *, alias: str = "s", include_superseded: bool = False
+) -> str:
+    """Exclude retained historical transcriptions on migrated schemas before SQL LIMIT."""
+    if include_superseded:
+        return ""
+    columns = {row[1] for row in conn.execute(f"PRAGMA table_info({table})")}
+    if "transcription_status" not in columns:
+        return ""
+    return f" AND COALESCE({alias}.transcription_status, '') != 'superseded'"
+
+
 def _search_sections_fts5(
     bucket_a_phrases: list[str],
     bucket_b_keywords: set[str],
@@ -1839,6 +1851,7 @@ def _search_sections_fts5(
     track: str,
     max_chunk_candidates: int = 100,
     max_sections: int = 30,
+    include_superseded: bool = False,
 ) -> list[dict]:
     """Return section and unsectioned chunk candidates from textbook FTS5 hits."""
     try:
@@ -1865,8 +1878,9 @@ def _search_sections_fts5(
     # diagnostic showing dense rerank cannot handle the topic.
     _ = track  # keep parameter live for downstream callers
 
+    status_filter = _transcription_filter(conn, "textbooks", include_superseded=include_superseded)
     rows = conn.execute(
-        """
+        f"""
         SELECT
             s.id,
             s.chunk_id,
@@ -1879,7 +1893,7 @@ def _search_sections_fts5(
             bm25(textbooks_fts, 5.0, 1.0) AS rank
         FROM textbooks_fts
         JOIN textbooks s ON s.id = textbooks_fts.rowid
-        WHERE textbooks_fts MATCH ?
+        WHERE textbooks_fts MATCH ? {status_filter}
         ORDER BY rank, s.id
         LIMIT ?
         """,
@@ -2000,6 +2014,7 @@ def _search_sections_fts5(
                 full_text
             FROM textbook_sections
             WHERE section_id IN ({placeholders})
+            {_transcription_filter(conn, "textbook_sections", alias="textbook_sections", include_superseded=include_superseded)}
             """,
             tuple(section_ids),
         ).fetchall()
@@ -2925,9 +2940,11 @@ def search_textbooks(
     track: str | None = None,
     subject: str | None = None,
     source_file: str | None = None,
+    include_superseded: bool = False,
 ) -> list[dict]:
     """Deprecated chunk-level FTS5 textbook search kept for backward compatibility.
 
+    `include_superseded=True` explicitly retrieves historical transcriptions.
     Filters out TOC pages and short noise chunks before returning.
     Requests extra rows from FTS5 to compensate for filtered-out noise.
 
@@ -2968,6 +2985,8 @@ def search_textbooks(
     elif source_filter_requested:
         extra_where = "AND s.source_file = ?"
         extra_params = (normalized_source_file,)
+    if not include_superseded and "transcription_status" in _table_columns("textbooks"):
+        extra_where += " AND COALESCE(s.transcription_status, '') != 'superseded'"
     # Request 2x to compensate for filtered TOC/noise chunks
     rows = _fts_search(
         "textbooks_fts", "textbooks", ukr_keywords, max_total * 2,

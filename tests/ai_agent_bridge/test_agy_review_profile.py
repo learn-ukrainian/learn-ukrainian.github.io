@@ -15,6 +15,7 @@ from scripts.ai_agent_bridge._agy import (
 from scripts.ai_agent_bridge._channels_cli import _gemini_review_request_error
 from scripts.ai_agent_bridge._cli import _handle_acp_compat
 from scripts.audit import llm_reviewer_dispatch
+from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 
 pytestmark = pytest.mark.reads_content
 
@@ -422,7 +423,7 @@ def _dispatch_argv(*extra: str) -> list[str]:
 
 
 def test_delegate_review_verdict_without_profile_is_refused(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    ordinary_review_scope, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     from scripts import delegate
 
@@ -430,7 +431,8 @@ def test_delegate_review_verdict_without_profile_is_refused(
         raise AssertionError("review-verdict without a profile must not spawn")
 
     monkeypatch.setattr(delegate.subprocess, "Popen", _unexpected_spawn)
-    args = delegate.build_parser().parse_args(_dispatch_argv("--require-review-verdict"))
+    monkeypatch.setattr(delegate, "_local_repo_root", ordinary_review_scope)
+    args = delegate.build_parser().parse_args(_dispatch_argv("--branch", "review-target", "--require-review-verdict"))
     assert delegate.cmd_dispatch(args) == 2
     assert "--review-profile" in capsys.readouterr().err
     assert delegate._read_state(delegate._state_path("agy-review-gate")) is None
@@ -848,13 +850,14 @@ def test_branch_changed_paths_ignore_hostile_git_dir(monkeypatch: pytest.MonkeyP
 
 
 def test_cursor_gemini_model_review_is_refused_including_after_substitution(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    ordinary_review_scope, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """A Gemini model on Cursor is a review gate, including the post-substitution model."""
     from scripts import delegate
     from scripts.ai_agent_bridge._agy import gemini_review_verdict_dispatch_error
 
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    monkeypatch.setattr(delegate, "_local_repo_root", ordinary_review_scope)
     args = delegate.build_parser().parse_args(
         [
             "dispatch",
@@ -867,6 +870,8 @@ def test_cursor_gemini_model_review_is_refused_including_after_substitution(
             "--prompt",
             "Review this change.",
             "--require-review-verdict",
+            "--branch",
+            "review-target",
         ]
     )
     assert delegate.cmd_dispatch(args) == 2

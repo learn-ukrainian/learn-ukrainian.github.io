@@ -32,6 +32,7 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from scripts.projects.open_model_data.paths import LOGICAL_OPEN_MODEL_PREFIX, refuse_quarantined
 from scripts.storage import paths as storage_paths
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -244,15 +245,22 @@ def build_unified_dataset(
     output_dir: Path,
     include_general_assistant: bool = True,
 ) -> dict[str, Any]:
-    """Assemble all releases into ONE master dataset."""
+    """Assemble all releases into ONE master dataset.
+
+    Every release set this packager reads is quarantined (#9607), so it refuses
+    before reading any input; the refusal names the sealed set.
+    """
     _check_external_output(output_dir)
-    inputs = ReleaseInputs(release_dir)
     required = (
         "uldr_v03_dialect/sft_dialect_protection_500.jsonl",
         "uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
         "uldr_v05_grammar_valency/sft/*.jsonl",
         "uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl",
     )
+    refuse_quarantined(release_dir, "ULDR packaging release directory")
+    for selector in required:
+        refuse_quarantined(f"{LOGICAL_OPEN_MODEL_PREFIX}/release/{selector}", "ULDR packaging input")
+    inputs = ReleaseInputs(release_dir)
     if inputs.members is not None:
         if any(name.startswith("uldr_v1_production/") for name in inputs.members):
             required += (
@@ -284,6 +292,9 @@ def build_unified_dataset(
         def append(pattern: str, output: Any, kind: str, domain: str = "", subject: str = "") -> int:
             count = 0
             for source in inputs.files(pattern):
+                refuse_quarantined(f"{LOGICAL_OPEN_MODEL_PREFIX}/release/{source}", "ULDR packaging input")
+                if inputs.directory is not None:
+                    refuse_quarantined(inputs.directory / source, "ULDR packaging input")
                 with inputs.open_text(source) as stream:
                     for line in stream:
                         if not line.strip():

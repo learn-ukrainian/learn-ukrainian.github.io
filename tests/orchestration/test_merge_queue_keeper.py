@@ -9,9 +9,11 @@ from typing import Any
 
 import pytest
 
+from scripts.opsec import prepublish as gate
 from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.orchestration.integration_sweep import Verdict
 from scripts.review.record_cf_verdict import build_comment
+from tests.opsec_fixtures import CATALOG, TOKEN
 
 HEAD_A = "a" * 40
 HEAD_B = "b" * 40
@@ -64,6 +66,11 @@ class FakeGitHub:
         self.run_rows: list[dict[str, Any]] = []
         self.job_rows: list[dict[str, Any]] = []
         self.issue_rows: list[dict[str, Any]] = []
+        self.squash: bool | None = False
+
+    def squash_blocked(self, number: int, head: str) -> bool | None:
+        self.actions.append(("squash-read", (number, head)))
+        return self.squash
 
     def branch_names(self) -> set[str]:
         return {self.row["baseRefName"]}
@@ -132,7 +139,7 @@ def run(
 
 
 def mutations(fake: FakeGitHub) -> list[str]:
-    return [kind for kind, _ in fake.actions]
+    return [kind for kind, _ in fake.actions if kind != "squash-read"]
 
 
 def recorded(verdict: str, started: str, head: str = HEAD_A) -> dict[str, Any]:
@@ -183,13 +190,9 @@ def test_queued_recorded_approval_then_hold_revokes(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("label", ["do-not-merge", "blocked"])
-def test_approved_green_hold_label_is_not_enqueued(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label: str
-) -> None:
+def test_approved_green_hold_label_is_not_enqueued(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label: str) -> None:
     labels = [{"name": label.upper()}]
-    fake = FakeGitHub(
-        pr(labels={"totalCount": 1, "pageInfo": {"hasNextPage": False}, "nodes": labels})
-    )
+    fake = FakeGitHub(pr(labels={"totalCount": 1, "pageInfo": {"hasNextPage": False}, "nodes": labels}))
     fake.fresh["labels"] = labels
     lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
     assert not failed
@@ -198,9 +201,7 @@ def test_approved_green_hold_label_is_not_enqueued(
 
 
 @pytest.mark.parametrize("label", ["do-not-merge", "blocked"])
-def test_queued_hold_label_is_revoked(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label: str
-) -> None:
+def test_queued_hold_label_is_revoked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label: str) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.fresh["labels"] = [{"name": label.upper()}]
     lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
@@ -565,3 +566,71 @@ def test_base_changed_before_mutation_cannot_merge_directly(tmp_path: Path, monk
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+# --- Queued squash text is re-read and scanned each run (#9339) ---
+
+
+@pytest.mark.parametrize(
+    "squash,dequeued,line",
+    [(True, True, "revoked: squash-text-blocked"), (None, False, "squash text unverified"), (False, False, None)],
+)
+def test_queued_squash_text_is_rescanned(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, squash, dequeued, line
+) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.squash = squash
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+    assert ("squash-read", (42, HEAD_A)) in fake.actions and not failed
+    assert (("dequeue", "PR_node_42") in fake.actions) is dequeued
+    assert line is None or any(line in item for item in lines), lines
+
+
+def test_squash_text_is_not_read_for_unqueued_or_stale_rows(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.fresh["headRefOid"] = HEAD_B
+    run(fake, tmp_path / "state.json", monkeypatch)
+    ready = FakeGitHub()
+    run(ready, tmp_path / "ready.json", monkeypatch)
+    assert not any(kind == "squash-read" for kind, _ in fake.actions + ready.actions)
+
+
+def _squash_reply(subject="clean (#42)", body="* clean", entry=None, head=HEAD_A):
+    pull = {
+        "headRefOid": head,
+        "viewerMergeHeadlineText": subject,
+        "viewerMergeBodyText": body,
+        "mergeQueueEntry": entry,
+    }
+    return {"data": {"repository": {"pullRequest": pull}}}
+
+
+@pytest.mark.parametrize(
+    "reply,expected",
+    [
+        (_squash_reply(), False),
+        (_squash_reply(entry={"headCommit": None}), False),
+        (_squash_reply(subject="edited " + TOKEN), True),
+        (_squash_reply(body="* " + TOKEN), True),
+        (_squash_reply(entry={"headCommit": {"oid": HEAD_B, "message": "queued " + TOKEN}}), True),
+        (_squash_reply(subject=TOKEN, head=HEAD_B), None),
+        ({"errors": [{"message": "x"}], **_squash_reply(subject=TOKEN)}, None),
+        ({"data": {"repository": {"pullRequest": None}}}, None),
+        ([], None),
+        (_squash_reply(body=None), None),
+    ],
+)
+def test_github_squash_blocked(reply, expected, monkeypatch: pytest.MonkeyPatch) -> None:
+    gh = keeper.GitHub(Path("."), "unit/public")
+    requests = []
+    monkeypatch.setattr(gh, "json", lambda request: requests.append(request) or reply)
+    assert gh.squash_blocked(42, HEAD_A) is expected
+    assert requests[0].verb == "read-squash-text" and requests[0].fields == {"repo": "unit/public", "number": 42}
+
+
+def test_github_squash_blocked_is_unverified_without_a_matcher(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
+    monkeypatch.setattr(gate, "private_tooling", lambda: tmp_path / "absent")
+    gh = keeper.GitHub(Path("."), "unit/public")
+    monkeypatch.setattr(gh, "json", lambda request: _squash_reply())
+    assert gh.squash_blocked(42, HEAD_A) is None

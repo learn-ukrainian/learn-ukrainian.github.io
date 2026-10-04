@@ -17,7 +17,7 @@ import subprocess
 import sys
 import threading
 import weakref
-from collections.abc import Collection, Generator
+from collections.abc import Callable, Collection, Generator
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -66,6 +66,9 @@ SESSION_IDENTITY_ENV_VARS = (
     # Launcher driver identity (scripts/lib/launcher_core.sh).
     "SESSION_EPIC",
     "SESSION_HANDOFF_AGENT",
+    # Verified driver scope re-entry identity (scripts/lib/driver_scope.sh).
+    "LU_DRIVER_SCOPE_UNIT",
+    "LU_DRIVER_SCOPE_PID",
     # Rules-core seat of the launched session (scripts/lib/rules_core.sh); its
     # delegate.py workers and ACP calls inherit it.
     "LU_RULES_SEAT",
@@ -181,6 +184,21 @@ def _resolve_real_gh_binary() -> str | None:
 
 _REAL_GH_BINARY = _resolve_real_gh_binary()
 _LIVE_GITHUB_ALLOWED = False
+
+
+@pytest.fixture(autouse=True)
+def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool]:
+    """Make fallback tests independent of the caller's cgroup (#9624).
+
+    Dispatch callers span several test modules. Default them to outside a
+    driver scope; detector tests restore the returned production function,
+    while refusal tests can replace the same seam with an inside result.
+    """
+    from scripts.orchestration import dispatch_isolation
+
+    detector = dispatch_isolation._caller_in_driver_scope
+    monkeypatch.setattr(dispatch_isolation, "_caller_in_driver_scope", lambda: False)
+    return detector
 
 
 @pytest.fixture(autouse=True)

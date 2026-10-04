@@ -27,10 +27,31 @@ def catalog(monkeypatch):
 
 def spy(calls):
     def send(args, **kwargs):
-        if args[:3] == ["gh", "pr", "view"] and "--json" in args and args[args.index("--json") + 1] == "number,isDraft,headRefOid":
-            return subprocess.CompletedProcess(args, 0, json.dumps({"number": int(args[3]), "isDraft": False, "headRefOid": "a" * 40}), "")
-        if args[:3] == ["gh", "pr", "checks"] and "--json" in args and args[args.index("--json") + 1] == "name,bucket,state":
+        if (
+            args[:3] == ["gh", "pr", "view"]
+            and "--json" in args
+            and args[args.index("--json") + 1] == "number,isDraft,headRefOid"
+        ):
+            return subprocess.CompletedProcess(
+                args, 0, json.dumps({"number": int(args[3]), "isDraft": False, "headRefOid": "a" * 40}), ""
+            )
+        if (
+            args[:3] == ["gh", "pr", "checks"]
+            and "--json" in args
+            and args[args.index("--json") + 1] == "name,bucket,state"
+        ):
             return subprocess.CompletedProcess(args, 0, "[]", "")
+        if (
+            args[:5] == ["gh", "api", "--method", "POST", "graphql"]
+            and "isMergeQueueEnabled viewerMergeHeadlineText" in Path(args[6]).read_text()
+        ):
+            pull = {
+                "headRefOid": "a" * 40,
+                "isMergeQueueEnabled": False,
+                "viewerMergeHeadlineText": "clean (#1)",
+                "viewerMergeBodyText": "* clean",
+            }
+            return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
         record = {"argv": args, "env": kwargs.get("env", {})}
         for flag in ("--body-file", "--notes-file", "--input"):
             if flag in args:
@@ -66,6 +87,7 @@ VERBS = [
     ("milestone-edit", {"number": 1, "title": "clean", "description": "clean"}),
     ("commit-status", {"sha": "a" * 40, "state": "success", "context": "unit", "description": "clean"}),
     ("issue-link", {"parent_id": "PARENT", "child_id": "CHILD"}),
+    ("issue-unlink", {"parent_id": "PARENT", "child_id": "CHILD"}),
 ]
 
 
@@ -191,7 +213,6 @@ def test_artifact_names_block_and_files_are_not_reread(synthetic_opsec, tmp_path
     "verb,fields",
     [
         ("issue-close", {"number": 1}),
-        ("pr-merge", {"number": 1}),
         ("pr-review", {"number": 1, "verdict": "approve"}),
         ("pr-disarm", {"number": 1}),
     ],
@@ -330,6 +351,8 @@ def test_private_destination_last_selector_and_resource_url(selectors, environme
         ("subissues-next", {"number": 1, "cursor": TOKEN}),
         ("queue-snapshot", {"branches": ['unit") { mutation {x} }']}),
         ("subissue-batch", {"cursors": {1: 'unit") { mutation {x} }'}, "body_roots": {1}}),
+        ("default-head", {}),
+        ("squash-text", {"number": 1}),
     ],
 )
 def test_specific_graphql_reads_keep_variables_as_data(operation, fields):
@@ -365,6 +388,8 @@ def test_specific_rest_reads_are_fixed_get_without_matcher(operation, fields, mo
         ("graphql", {"query": "mutation{x}"}),
         ("subissue-batch", {"cursors": {"unit": None}, "body_roots": set()}),
         ("membership", {"number": 1, "query": "mutation{x}"}),
+        ("default-head", {"number": 1}),
+        ("squash-text", {"number": 1, "query": "mutation{x}"}),
     ],
 )
 def test_typed_reads_refuse_arbitrary_documents_paths_and_fields(operation, fields):
@@ -375,7 +400,9 @@ def test_typed_reads_refuse_arbitrary_documents_paths_and_fields(operation, fiel
 def test_publisher_cli_closed_schema_and_stdin(synthetic_opsec, monkeypatch):
     calls = []
     monkeypatch.setattr(pub, "_run_transport", spy(calls))
-    assert pub.main(["issue-comment", "--repo", "unit/public", "--number", "1", "--body", "clean"], runner=spy(calls)) == 0
+    assert (
+        pub.main(["issue-comment", "--repo", "unit/public", "--number", "1", "--body", "clean"], runner=spy(calls)) == 0
+    )
     with pytest.raises(SystemExit) as exc:
         pub.main(["issue-comment", "--number", "1", "--raw-argv", "unit"])
     assert exc.value.code == 2
@@ -387,6 +414,62 @@ def test_publisher_cli_closed_schema_and_stdin(synthetic_opsec, monkeypatch):
 LINK_QUERY = "mutation($p:ID!,$c:ID!){addSubIssue(input:{issueId:$p,subIssueId:$c}){issue{number}}}"
 LINK_PAYLOAD = json.dumps({"query": LINK_QUERY, "variables": {"p": "PARENT", "c": "CHILD"}}).encode()
 LINK_ARGV = ["issue-link", "--repo", "unit/public", "--parent-id", "PARENT", "--child-id", "CHILD"]
+
+
+UNLINK_QUERY = "mutation($p:ID!,$c:ID!){removeSubIssue(input:{issueId:$p,subIssueId:$c}){issue{number}}}"
+UNLINK_PAYLOAD = json.dumps({"query": UNLINK_QUERY, "variables": {"p": "PARENT", "c": "CHILD"}}).encode()
+UNLINK_ARGV = ["issue-unlink", "--repo", "unit/public", "--parent-id", "PARENT", "--child-id", "CHILD"]
+
+
+def test_issue_unlink_cli_and_api_pin_argv_and_frozen_payload(synthetic_opsec):
+    calls = []
+    assert pub.main(UNLINK_ARGV, runner=spy(calls)) == 0
+    result = pub.publish("issue-unlink", repo="unit/public", parent_id="PARENT", child_id="CHILD", runner=spy(calls))
+    assert result.returncode == 0
+    assert len(calls) == 2
+    for call in calls:
+        frozen = Path(call["argv"][6])
+        assert call["argv"] == ["gh", "api", "--method", "POST", "graphql", "--input", str(frozen)]
+        assert frozen.name == "request.json"
+        assert call["--input"] == UNLINK_PAYLOAD
+        assert call["env"]["GH_HOST"] == "github.com"
+        assert not frozen.exists()
+
+
+@pytest.mark.parametrize("missing", ["parent_id", "child_id"])
+def test_issue_unlink_requires_both_node_ids(missing):
+    fields = {"parent_id": "PARENT", "child_id": "CHILD"}
+    fields.pop(missing)
+    with pytest.raises(gate.PublishBlocked, match="required publisher field missing"):
+        pub.publish("issue-unlink", repo="unit/public", runner=lambda *a, **k: pytest.fail("send"), **fields)
+
+
+@pytest.mark.parametrize("key", ["parent_id", "child_id"])
+@pytest.mark.parametrize("value", ["", None, 1, True, "NODE,replaceParent:true", "NODE}", "NODE\n", "NODE/other"])
+def test_issue_unlink_refuses_malformed_node_ids(key, value):
+    fields = {"parent_id": "PARENT", "child_id": "CHILD", key: value}
+    with pytest.raises(gate.PublishBlocked, match=f"invalid publisher field {key}"):
+        pub.publish("issue-unlink", repo="unit/public", runner=lambda *a, **k: pytest.fail("send"), **fields)
+
+
+@pytest.mark.parametrize("extra", [{"replace_parent": True}, {"query": "mutation{x}"}, {"body": "clean"}])
+def test_issue_unlink_refuses_extra_fields(extra):
+    with pytest.raises(gate.PublishBlocked, match="unknown publisher field"):
+        pub.publish(
+            "issue-unlink",
+            repo="unit/public",
+            parent_id="PARENT",
+            child_id="CHILD",
+            runner=lambda *a, **k: pytest.fail("send"),
+            **extra,
+        )
+
+
+@pytest.mark.parametrize("extra", [["--replace-parent"], ["--query", "mutation{x}"], ["--body", "clean"]])
+def test_issue_unlink_cli_refuses_unknown_options(extra):
+    with pytest.raises(SystemExit) as exc:
+        pub.main([*UNLINK_ARGV, *extra], runner=lambda *a, **k: pytest.fail("send"))
+    assert exc.value.code == 2
 
 
 def test_issue_link_replace_parent_sends_typed_boolean_variable(synthetic_opsec):
@@ -404,8 +487,9 @@ def test_issue_link_replace_parent_sends_typed_boolean_variable(synthetic_opsec)
 def test_issue_link_without_replace_parent_is_byte_identical(synthetic_opsec, flags):
     calls = []
     assert pub.main([*LINK_ARGV, *flags], runner=spy(calls)) == 0
-    pub.publish("issue-link", repo="unit/public", parent_id="PARENT", child_id="CHILD", replace_parent=False,
-                runner=spy(calls))
+    pub.publish(
+        "issue-link", repo="unit/public", parent_id="PARENT", child_id="CHILD", replace_parent=False, runner=spy(calls)
+    )
     assert [call["--input"] for call in calls] == [LINK_PAYLOAD, LINK_PAYLOAD]
 
 
@@ -419,15 +503,22 @@ def test_issue_link_without_replace_parent_is_byte_identical(synthetic_opsec, fl
 )
 def test_issue_link_replace_parent_keeps_node_validation(fields):
     with pytest.raises(gate.PublishBlocked, match=r"invalid publisher field (parent|child)_id"):
-        pub.publish("issue-link", repo="unit/public", replace_parent=True,
-                    runner=lambda *a, **k: pytest.fail("send"), **fields)
+        pub.publish(
+            "issue-link", repo="unit/public", replace_parent=True, runner=lambda *a, **k: pytest.fail("send"), **fields
+        )
 
 
 @pytest.mark.parametrize("value", ["true", 1, None, "replaceParent:true"])
 def test_issue_link_replace_parent_refuses_non_boolean_values(value):
     with pytest.raises(gate.PublishBlocked, match="invalid publisher field replace_parent"):
-        pub.publish("issue-link", repo="unit/public", parent_id="PARENT", child_id="CHILD", replace_parent=value,
-                    runner=lambda *a, **k: pytest.fail("send"))
+        pub.publish(
+            "issue-link",
+            repo="unit/public",
+            parent_id="PARENT",
+            child_id="CHILD",
+            replace_parent=value,
+            runner=lambda *a, **k: pytest.fail("send"),
+        )
 
 
 @pytest.mark.parametrize(
@@ -524,8 +615,13 @@ def test_production_transport_retains_worker_merge_approval_guard(synthetic_opse
     executable.chmod(0o755)
     if verb == "pr-merge":
         with pytest.raises(gate.PublishBlocked, match="AGENT_NO_MERGE"):
-            pub.publish(verb, repo="unit/public", env={"AGENT_NO_MERGE": "1"},
-                        runner=lambda *a, **k: pytest.fail("send"), **fields)
+            pub.publish(
+                verb,
+                repo="unit/public",
+                env={"AGENT_NO_MERGE": "1"},
+                runner=lambda *a, **k: pytest.fail("send"),
+                **fields,
+            )
         assert not output.exists()
         return
     result = pub.publish(

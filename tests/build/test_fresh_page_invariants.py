@@ -28,30 +28,41 @@ from tests.build.test_fresh_render_coverage import render_environment as render_
 # they grant no right to publish prose from sibling fields.
 LEARNER_TEXT_ALLOWLIST = assemble.LEARNER_TEXT_ALLOWLIST
 BINDING_ALLOWLIST = {
-    "plan.arc_ref.level", "plan.lessons.*.slug", "plan.lessons.*.kind",
-    "plan.lessons.*.activities.*.id", "plan.lessons.*.activities.*.type",
-    "plan.lessons.*.activities.*.placement", "plan.lessons.*.steps.*.id",
-    "plan.lessons.*.steps.*.kind", "plan.lessons.*.steps.*.practice.*",
-    "plan.lessons.*.steps.*.evidence.*", "plan.lessons.*.steps.*.explains.*",
-    "plan.lessons.*.steps.*.ref", "plan.lessons.*.steps.*.needs.*",
-    "plan.lessons.*.steps.*.paradigm.id", "plan.lessons.*.steps.*.paradigm.word",
+    "plan.arc_ref.level",
+    "plan.lessons.*.slug",
+    "plan.lessons.*.kind",
+    "plan.lessons.*.activities.*.id",
+    "plan.lessons.*.activities.*.type",
+    "plan.lessons.*.activities.*.placement",
+    "plan.lessons.*.steps.*.id",
+    "plan.lessons.*.steps.*.kind",
+    "plan.lessons.*.steps.*.practice.*",
+    "plan.lessons.*.steps.*.evidence.*",
+    "plan.lessons.*.steps.*.explains.*",
+    "plan.lessons.*.steps.*.ref",
+    "plan.lessons.*.steps.*.needs.*",
+    "plan.lessons.*.steps.*.paradigm.id",
+    "plan.lessons.*.steps.*.paradigm.word",
     "plan.lessons.*.steps.*.paradigm.forms.*",
     "plan.lessons.*.inventory.vocabulary.core.*.evidence",
     "plan.lessons.*.inventory.vocabulary.core.*.forms.*",
     "plan.lessons.*.inventory.vocabulary.incidental.*.evidence",
     "plan.lessons.*.inventory.vocabulary.incidental.*.forms.*",
-    "plan.lessons.*.videos.*.evidence", "plan.lessons.*.reading_passages.*.reading_slug",
-    "pack.texts.*.id", "pack.texts.*.source.file", "pack.texts.*.source.kind",
-    "pack.examples.*.id", "pack.videos.*.id", "pack.errors.*.id",
+    "plan.lessons.*.videos.*.evidence",
+    "plan.lessons.*.reading_passages.*.reading_slug",
+    "pack.texts.*.id",
+    "pack.texts.*.source.file",
+    "pack.texts.*.source.kind",
+    "pack.examples.*.id",
+    "pack.videos.*.id",
+    "pack.errors.*.id",
     "pack.standard.*.id",
 }
 
 
 def taint_author_strings(plan, pack, draft):
     """Visit every string leaf; new/unknown paths default to a unique sentinel."""
-    selected_quotes = {
-        block["ref"] for step in draft["steps"] for block in step["blocks"] if block["kind"] == "quote"
-    }
+    selected_quotes = {block["ref"] for step in draft["steps"] for block in step["blocks"] if block["kind"] == "quote"}
     sentinels = {}
 
     def visit(value, path):
@@ -65,7 +76,7 @@ def taint_author_strings(plan, pack, draft):
         allowed = pattern in LEARNER_TEXT_ALLOWLIST or pattern in BINDING_ALLOWLIST
         if pattern.startswith("pack.texts.") and pattern in LEARNER_TEXT_ALLOWLIST:
             record = pack["texts"][int(path[2])]
-            allowed = (pattern != "pack.texts.*.quote" or record["id"] in selected_quotes)
+            allowed = pattern != "pack.texts.*.quote" or record["id"] in selected_quotes
             if allowed:
                 allowed = assemble.learner_text_allowed(pattern, record)
         if allowed:
@@ -91,22 +102,37 @@ def test_no_nonlearner_string_reaches_any_page_or_payload(case, render_environme
     original = assemble.generate_mdx
 
     def capture(**kwargs):
-        payloads.append({key: kwargs[key] for key in ("meta_data", "vocab_items", "external_resources", "yaml_activities")})
+        payloads.append(
+            {key: kwargs[key] for key in ("meta_data", "vocab_items", "external_resources", "yaml_activities")}
+        )
         return original(**kwargs)
 
     monkeypatch.setattr(assemble, "generate_mdx", capture)
     lesson = plan["lessons"][0]
-    lesson["reading_passages"] = [{
-        "title": "Learner reading title", "genre": "Learner genre", "reading_slug": "fixture-reading",
-        "supports": "author reading support", "notes": "author reading notes",
-    }]
-    lesson.update({
-        "rationale": "author rationale", "objectives": ["objective"],
-        "connects_to": "connection", "prerequisites": ["prerequisite"],
-        "register": "register", "situation": "situation", "setting": "setting",
-        "target_grammar": "grammar", "role": "role", "point": "point",
-        "subtitle": "author subtitle",
-    })
+    lesson["reading_passages"] = [
+        {
+            "title": "Learner reading title",
+            "genre": "Learner genre",
+            "reading_slug": "fixture-reading",
+            "supports": "author reading support",
+            "notes": "author reading notes",
+        }
+    ]
+    lesson.update(
+        {
+            "rationale": "author rationale",
+            "objectives": ["objective"],
+            "connects_to": "connection",
+            "prerequisites": ["prerequisite"],
+            "register": "register",
+            "situation": "situation",
+            "setting": "setting",
+            "target_grammar": "grammar",
+            "role": "role",
+            "point": "point",
+            "subtitle": "author subtitle",
+        }
+    )
     plan["changelog"] = ["change"]
     for step in lesson["steps"]:
         step["teach"] = "teaching directive"
@@ -129,25 +155,37 @@ def test_no_nonlearner_string_reaches_any_page_or_payload(case, render_environme
 
 def render_activity_blocks(blocks, tmp_path):
     """Execute the page's actual JSX/JSON with the actual React components."""
-    jsx = [re.sub(r"client:only=['\"]react['\"]", "", re.sub(r"^### [^\n]*\n\n", "", block, flags=re.MULTILINE)) for block in blocks]
+    jsx = [
+        re.sub(r"client:only=['\"]react['\"]", "", re.sub(r"^### [^\n]*\n\n", "", block, flags=re.MULTILINE))
+        for block in blocks
+    ]
     names = set(re.findall(r"<([A-Z]\w*)", "\n".join(jsx)))
     imports = []
     for name in sorted(names):
         named = name in {"MarkTheWordsActivity", "ObserveActivity", "HighlightMorphemesActivity"}
         filename = name.removesuffix("Activity") if named else name
         target = ROOT / f"site/src/components/{filename}.tsx"
-        imports.append(f"import {'{'+name+'}' if named else name} from {json.dumps(str(target))};")
+        imports.append(f"import {'{' + name + '}' if named else name} from {json.dumps(str(target))};")
     source = "\n".join(imports) + '\nimport {renderToStaticMarkup} from "react-dom/server";\n'
     source += "console.log(JSON.stringify([" + ",".join(f"renderToStaticMarkup({s})" for s in jsx) + "]));"
     script = tmp_path / "render.tsx"
     output = tmp_path / "render.cjs"
     script.write_text(source)
     build = subprocess.run(
-        ["node", "--input-type=module", "-e",
-         "import {build} from 'esbuild'; await build({entryPoints:[process.argv[1]],"
-         "outfile:process.argv[2],bundle:true,platform:'node',format:'cjs',jsx:'automatic',"
-         "alias:{react:process.cwd()+'/node_modules/react'},loader:{'.css':'empty'},nodePaths:[process.cwd()+'/node_modules'],logLevel:'error'});",
-         str(script), str(output)], cwd=ROOT / "site", capture_output=True, text=True, timeout=60,
+        [
+            "node",
+            "--input-type=module",
+            "-e",
+            "import {build} from 'esbuild'; await build({entryPoints:[process.argv[1]],"
+            "outfile:process.argv[2],bundle:true,platform:'node',format:'cjs',jsx:'automatic',"
+            "alias:{react:process.cwd()+'/node_modules/react'},loader:{'.css':'empty'},nodePaths:[process.cwd()+'/node_modules'],logLevel:'error'});",
+            str(script),
+            str(output),
+        ],
+        cwd=ROOT / "site",
+        capture_output=True,
+        text=True,
+        timeout=60,
     )
     assert build.returncode == 0, build.stderr
     rendered = subprocess.run(["node", str(output)], capture_output=True, text=True, timeout=60)
@@ -161,7 +199,8 @@ def assert_unique_workbook_pointers(page):
     assert len(tabs) == 4
     pointers = re.findall(
         r"(?:^### [^\n]+\n\n)?^\*\((?:див\. |see lesson).*\)\*$",
-        html.unescape(tabs[2]), re.MULTILINE,
+        html.unescape(tabs[2]),
+        re.MULTILINE,
     )
     assert len(pointers) == len(set(pointers)), f"Repeated workbook pointers: {pointers}"
     return pointers
@@ -188,7 +227,12 @@ def english_input_fields(source):
         key = None
         if isinstance(node, ast.Subscript):
             key = node.slice
-        elif isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "get" and node.args:
+        elif (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr == "get"
+            and node.args
+        ):
             key = node.args[0]
         if isinstance(key, ast.Constant) and isinstance(key.value, str):
             name = key.value
@@ -206,7 +250,9 @@ def assert_english_channels_classified(source):
 def test_every_english_field_read_has_a_production_classification():
     assert_english_channels_classified(inspect.getsource(assemble))
     assert set(assemble.ENGLISH_CHANNELS.values()) == {
-        "body_support", "vocabulary_and_inline_support", "writer_bilingual",
+        "body_support",
+        "vocabulary_and_inline_support",
+        "writer_bilingual",
     }
 
 
@@ -220,6 +266,7 @@ def test_new_english_producer_fails_until_classified(monkeypatch):
 
 def plant_english_probe(inputs, path, probe):
     """Follow a registered path, including arrays; optional leaf fields are planted."""
+
     def visit(value, parts):
         head, *tail = parts
         if head == "*":
@@ -262,7 +309,12 @@ def test_assembler_added_english_obeys_the_page_immersion_band(level, module_num
         assert policy["advisory_pct_min"] >= 75
         body = "\n".join(tabs[i] for i in (0, 2, 3))
         assert "isUkrainian={false}" not in body, "A2+ widgets must use Ukrainian UI"
-        assert re.findall(r'<TabItem label="([^"]+)">', result.artifacts["mdx"]) == ["Урок", "Словник", "Вправи", "Ресурси"]
+        assert re.findall(r'<TabItem label="([^"]+)">', result.artifacts["mdx"]) == [
+            "Урок",
+            "Словник",
+            "Вправи",
+            "Ресурси",
+        ]
     classification = assemble.ENGLISH_CHANNELS[channel]
     if classification == "writer_bilingual":
         assert counts["urok"] > 0
@@ -349,21 +401,25 @@ def test_no_activity_type_id_is_visible_on_any_page(level, placement, render_env
     # engine ids inside JSX/JSON props are bindings, not visible prose.
     markdown = re.sub(r"<[A-Z]\w*\b[^>]*?/>", "", page).split("---", 2)[-1]
     markdown_lines = {re.sub(r"^#{1,6}\s+", "", line.strip()) for line in markdown.splitlines()}
-    visible_lines = {
-        line.strip()
-        for line in html.unescape(re.sub(r"<[^>]+>", "\n", "\n".join(rendered))).splitlines()
-    }
+    visible_lines = {line.strip() for line in html.unescape(re.sub(r"<[^>]+>", "\n", "\n".join(rendered))).splitlines()}
     leaks = visible_type_ids(markdown_lines | visible_lines, types)
-    assert not leaks, f"Visible activity type ids: {leaks}; lines: {[line for line in markdown_lines | visible_lines if visible_type_ids([line], leaks)]}"
+    assert not leaks, (
+        f"Visible activity type ids: {leaks}; lines: {[line for line in markdown_lines | visible_lines if visible_type_ids([line], leaks)]}"
+    )
 
 
 def test_attempt5_has_no_activity_type_heading(render_environment):
     page, _ = reassemble_attempt5()
-    assert assert_unique_workbook_pointers(page) == ['*(див. вкладку «Урок»)*']
-    types = set().union(*(
-        {name.removesuffix("-" + level) for name in json.loads((ROOT / f"schemas/activities-{level}.schema.json").read_text())["definitions"]}
-        for level in LEVELS
-    ))
+    assert assert_unique_workbook_pointers(page) == ["*(див. вкладку «Урок»)*"]
+    types = set().union(
+        *(
+            {
+                name.removesuffix("-" + level)
+                for name in json.loads((ROOT / f"schemas/activities-{level}.schema.json").read_text())["definitions"]
+            }
+            for level in LEVELS
+        )
+    )
     lines = {re.sub(r"^#{1,6}\s+", "", line.strip()) for line in html.unescape(page).splitlines()}
     # Preserve the whole-line guard everywhere. Broaden label surfaces with
     # word boundaries: ordinary A1 prose can legitimately say "reading" or
@@ -397,17 +453,16 @@ def test_headingless_pointers_are_unique_and_distinct_targets_stay(as_dict, ukra
 
     from scripts.generate_mdx.converters import yaml_activity_mdx_parts
 
-    fields = [
-        {"id": str(i), "type": "quiz", "title": "Learner title" if i >= 6 else ""}
-        for i in range(8)
-    ]
+    fields = [{"id": str(i), "type": "quiz", "title": "Learner title" if i >= 6 else ""} for i in range(8)]
     activities = fields if as_dict else [SimpleNamespace(**item) for item in fields]
     selectors = (
         {"inline_cross_ref_ids": {str(i) for i in range(8)}}
-        if selector == "ids" else {"inline_cross_ref_positions": set(range(8))}
+        if selector == "ids"
+        else {"inline_cross_ref_positions": set(range(8))}
     )
     parts = yaml_activity_mdx_parts(
-        activities, is_ukrainian_forced=ukrainian,
+        activities,
+        is_ukrainian_forced=ukrainian,
         inline_cross_ref_section_titles={"2": "One", "3": "One", "4": "Two", "5": "Two"},
         **selectors,
     )
@@ -424,7 +479,9 @@ def test_headingless_pointers_are_unique_and_distinct_targets_stay(as_dict, ukra
 @pytest.mark.parametrize("level", LEVELS)
 @pytest.mark.parametrize("title_mode", ["absent", "same", "distinct"])
 @pytest.mark.site_toolchain
-def test_every_activity_instruction_is_visible_exactly_once(level, title_mode, render_environment, tmp_path, monkeypatch):
+def test_every_activity_instruction_is_visible_exactly_once(
+    level, title_mode, render_environment, tmp_path, monkeypatch
+):
     inputs = maximal_draft(level)
     for i, activity in enumerate(inputs[0]["activities"]):
         activity["instruction"] = f"InstructionSentinel{level}{i}End"
@@ -476,16 +533,31 @@ def test_fresh_unknown_component_display_contract_fails_closed():
     from scripts.generate_mdx.converters import fresh_activity_mdx
 
     with pytest.raises(ValueError, match="no component display contract"):
-        fresh_activity_mdx(SimpleNamespace(title="Title", instruction="Read"), '### Read\n\n<Unknown />')
+        fresh_activity_mdx(SimpleNamespace(title="Title", instruction="Read"), "### Read\n\n<Unknown />")
 
 
-@pytest.mark.parametrize("arc_ref", [None, [], "arc", {}, {"position": None}, {"position": True},
-                                      {"position": 0}, {"position": -1}, {"position": "1"},
-                                      {"position": "invalid"}, {"position": 1.5}])
+@pytest.mark.parametrize(
+    "arc_ref",
+    [
+        None,
+        [],
+        "arc",
+        {},
+        {"position": None},
+        {"position": True},
+        {"position": 0},
+        {"position": -1},
+        {"position": "1"},
+        {"position": "invalid"},
+        {"position": 1.5},
+    ],
+)
 def test_malformed_arc_ref_fails_with_named_plan_error_before_use(arc_ref, monkeypatch):
     draft, plan, pack, words = maximal_draft("a1")
     plan["arc_ref"] = arc_ref
-    monkeypatch.setattr(assemble, "body_english_support_allowed", lambda *a, **k: pytest.fail("band read before validation"))
+    monkeypatch.setattr(
+        assemble, "body_english_support_allowed", lambda *a, **k: pytest.fail("band read before validation")
+    )
     with pytest.raises(assemble.AssemblerError) as caught:
         assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "fixture", 1)
     assert (caught.value.code, caught.value.layer) == (assemble.PLAN_ARC_REF_INVALID, "plan")
@@ -531,28 +603,36 @@ def test_sentinel_uses_the_production_learner_text_allowlist():
 
 
 @pytest.mark.parametrize("field", ["url", "episode_url"])
-@pytest.mark.parametrize("source_file,permitted", [("ulp-1-00-lesson-notes", True),
-                                                 ("not-registered", False),
-                                                 ("1-klas-bukvar-zaharijchuk-2025-1", False)])
+@pytest.mark.parametrize(
+    "source_file,permitted",
+    [("ulp-1-00-lesson-notes", True), ("not-registered", False), ("1-klas-bukvar-zaharijchuk-2025-1", False)],
+)
 def test_url_allowlist_uses_registry_permission_not_pack_claim(field, source_file, permitted):
     url = "https://www.ukrainianlessons.com/episode1/"
-    record = {"id": "T-1", field: url, "quote": "Synthetic excerpt",
-              "source": {"file": source_file, "kind": "textbook", "page": 12},
-              "publish": {"allowed": True}, "resource_credit": {"episode_links": True}}
+    record = {
+        "id": "T-1",
+        field: url,
+        "quote": "Synthetic excerpt",
+        "source": {"file": source_file, "kind": "textbook", "page": 12},
+        "publish": {"allowed": True},
+        "resource_credit": {"episode_links": True},
+    }
     path = f"pack.texts.*.{field}"
     assert assemble.learner_text_allowed(path, record) == permitted
     resources = assemble.build_resursy_tab({"steps": [{"explains": ["T-1"]}]}, {"texts": [record]})
     assert (url in json.dumps(resources)) == permitted
     if permitted:
-        with pytest.raises(assemble.AssemblerError, match="publication_right"):
+        with pytest.raises(assemble.AssemblerError, match="owned_quote_refused"):
             assemble.learner_text_allowed("pack.texts.*.quote", record)
 
 
 @pytest.mark.parametrize("field", ["url", "episode_url"])
 def test_url_sentinel_preserves_only_registry_permitted_leaf(field):
     draft, plan, pack, _ = maximal_draft("a1")
-    pack["texts"][0].update(source={"file": "ulp-1-00-lesson-notes", "kind": "textbook", "page": 12},
-                             **{field: "https://www.ukrainianlessons.com/episode1/"})
+    pack["texts"][0].update(
+        source={"file": "ulp-1-00-lesson-notes", "kind": "textbook", "page": 12},
+        **{field: "https://www.ukrainianlessons.com/episode1/"},
+    )
     # The no-copy source is grounding only. Only its registry-permitted link
     # survives; quote prose is tainted even if the pack claims publication.
     draft["steps"][0]["blocks"] = [b for b in draft["steps"][0]["blocks"] if b["kind"] != "quote"]
@@ -616,9 +696,11 @@ def english_schema_paths(node, document, path=(), *, schema_path=None, schemas_d
 @pytest.mark.parametrize("level", LEVELS)
 def test_every_english_schema_path_is_classified_in_production(level):
     paths = set()
-    for root, filename in (("draft", f"lesson-draft-{level}-v1.schema.json"),
-                           ("pack", "evidence-pack-v1.schema.json"),
-                           ("words", "evidence-words-v1.schema.json")):
+    for root, filename in (
+        ("draft", f"lesson-draft-{level}-v1.schema.json"),
+        ("pack", "evidence-pack-v1.schema.json"),
+        ("words", "evidence-words-v1.schema.json"),
+    ):
         schema_path = ROOT / "schemas" / filename
         schema = json.loads(schema_path.read_text())
         paths.update(english_schema_paths(schema, schema, (root,), schema_path=schema_path))
@@ -626,9 +708,14 @@ def test_every_english_schema_path_is_classified_in_production(level):
             # The validator binds these definitions by plan type, outside the
             # root schema's payload-key union. They share the activity path.
             for definition in schema["$defs"]["activity_types"].values():
-                paths.update(english_schema_paths(
-                    definition, schema, ("draft", "activities", "*"), schema_path=schema_path,
-                ))
+                paths.update(
+                    english_schema_paths(
+                        definition,
+                        schema,
+                        ("draft", "activities", "*"),
+                        schema_path=schema_path,
+                    )
+                )
     classified = set(assemble.ENGLISH_CHANNELS) | assemble.ENGLISH_METADATA_FIELDS
     assert paths == classified, f"Unclassified English schema paths: {sorted(paths - classified)}"
 
@@ -652,28 +739,37 @@ def test_new_activity_english_field_fails_production_classification(level, monke
 
 def test_schema_ref_cycles_preserve_each_sibling_path_and_target_document(tmp_path):
     schema_path = tmp_path / "first.schema.json"
-    schema = {"properties": {
-        key: {"$ref": "nested/second.schema.json"} for key in ("first", "second")
-    }, "allOf": [{"$ref": "#"}]}
-    other = {"properties": {
-        "hint_en": {"type": "string"},
-        "again": {"$ref": "../first.schema.json"},
-        "detail": {"$ref": "#/$defs/a~1b~0c"},
-    }, "$defs": {"a/b~c": {"properties": {"english_note": {"type": "array"}}}}}
+    schema = {
+        "properties": {key: {"$ref": "nested/second.schema.json"} for key in ("first", "second")},
+        "allOf": [{"$ref": "#"}],
+    }
+    other = {
+        "properties": {
+            "hint_en": {"type": "string"},
+            "again": {"$ref": "../first.schema.json"},
+            "detail": {"$ref": "#/$defs/a~1b~0c"},
+        },
+        "$defs": {"a/b~c": {"properties": {"english_note": {"type": "array"}}}},
+    }
     (tmp_path / "nested").mkdir()
     (tmp_path / "nested/second.schema.json").write_text(json.dumps(other))
     schema_path.write_text(json.dumps(schema))
     assert english_schema_paths(schema, schema, ("draft",), schema_path=schema_path, schemas_dir=tmp_path) == {
-        "draft.first.hint_en", "draft.second.hint_en",
-        "draft.first.detail.english_note.*", "draft.second.detail.english_note.*",
+        "draft.first.hint_en",
+        "draft.second.hint_en",
+        "draft.first.detail.english_note.*",
+        "draft.second.detail.english_note.*",
     }
 
 
-@pytest.mark.parametrize("ref,error", [
-    ("../outside.schema.json", "outside schemas/"),
-    ("https://example.com/schema.json", "Non-local schema ref"),
-    ("missing.schema.json", None),
-])
+@pytest.mark.parametrize(
+    "ref,error",
+    [
+        ("../outside.schema.json", "outside schemas/"),
+        ("https://example.com/schema.json", "Non-local schema ref"),
+        ("missing.schema.json", None),
+    ],
+)
 def test_schema_refs_cannot_silently_skip_unresolvable_targets(ref, error, tmp_path):
     schema = {"$ref": ref}
     with pytest.raises(AssertionError if error else FileNotFoundError, match=error):
@@ -681,9 +777,16 @@ def test_schema_refs_cannot_silently_skip_unresolvable_targets(ref, error, tmp_p
 
 
 def test_new_english_path_with_an_existing_field_name_requires_classification():
-    schema = {"properties": {"videos": {"type": "array", "items": {
-        "properties": {"translation_en": {"type": "string"}},
-    }}}}
+    schema = {
+        "properties": {
+            "videos": {
+                "type": "array",
+                "items": {
+                    "properties": {"translation_en": {"type": "string"}},
+                },
+            }
+        }
+    }
     paths = english_schema_paths(schema, schema, ("pack",))
     assert paths == {"pack.videos.*.translation_en"}
     assert paths - (set(assemble.ENGLISH_CHANNELS) | assemble.ENGLISH_METADATA_FIELDS) == paths

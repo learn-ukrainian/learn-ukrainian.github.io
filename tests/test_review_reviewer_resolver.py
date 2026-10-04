@@ -45,7 +45,9 @@ PRACTICAL_ASTRA = replace(
 
 
 # Deliberately forbidden candidates exercise custom-ladder admission, never fleet seats.
-DEEPSEEK_V4_PRO = replace(SONNET_5_5, name="deepseek-v4-pro", concrete_model="deepseek-v4-pro", family="deepseek", route="deepseek")
+DEEPSEEK_V4_PRO = replace(
+    SONNET_5_5, name="deepseek-v4-pro", concrete_model="deepseek-v4-pro", family="deepseek", route="deepseek"
+)
 DEEPSEEK_V4_1_FLASH = replace(DEEPSEEK_V4_PRO, name="deepseek-v4.1-flash", concrete_model="deepseek-v4.1-flash")
 
 
@@ -268,7 +270,10 @@ def test_high_risk_ladder_leaves_sonnet_out_so_opus_wins_the_openai_author_seat(
     assert opus.suitability_rank == 4
 
 
-@pytest.mark.parametrize("model", ["claude-fable-5", "cursor:CLAUDE-FABLE-5-thinking-high", "grok-4.6", "grok-4.6-high", "grok-4.6[context=500k]"])
+@pytest.mark.parametrize(
+    "model",
+    ["claude-fable-5", "cursor:CLAUDE-FABLE-5-thinking-high", "grok-4.6", "grok-4.6-high", "grok-4.6[context=500k]"],
+)
 def test_retired_model_is_excluded_before_quality_even_on_custom_ladder(model):
     candidate = replace(OPENAI_FRONTIER, name="retired-test", concrete_model=model, family="anthropic")
     resolution = resolve_reviewer(
@@ -283,8 +288,12 @@ def test_retired_model_is_excluded_before_quality_even_on_custom_ladder(model):
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-sonnet-5"])
 def test_critical_security_sonnet_pin_and_custom_ladder_fail_closed(model):
     resolution = resolve_reviewer(
-        ResolverInputs(author_model="gpt-6.1-sol", risk="critical", pinned_candidate=model,
-                       pressure_override_reason="test explicit pin")
+        ResolverInputs(
+            author_model="gpt-6.1-sol",
+            risk="critical",
+            pinned_candidate=model,
+            pressure_override_reason="test explicit pin",
+        )
     )
     assert resolution.selected is None
     if model == "claude-sonnet-5":
@@ -691,9 +700,7 @@ def test_qwen_is_excluded_from_automatic_routing():
 def test_required_capabilities_and_isolation_fail_closed():
     missing = evaluate_candidate(
         POOL,
-        ResolverInputs(
-            author_model="claude", required_capabilities=frozenset({"vesum_mcp"}), formal_review=False
-        ),
+        ResolverInputs(author_model="claude", required_capabilities=frozenset({"vesum_mcp"}), formal_review=False),
         author_family="anthropic",
     )
     assert missing.status == "excluded"
@@ -1336,9 +1343,7 @@ def test_resolve_reviewer_without_subject_information_matches_empty_subject_fiel
 
 def test_resolve_reviewer_unrelated_owned_path_does_not_change_selection():
     plain = resolve_reviewer(ResolverInputs(author_model="claude", risk="high"))
-    with_readme = resolve_reviewer(
-        ResolverInputs(author_model="claude", risk="high", owned_paths=("README.md",))
-    )
+    with_readme = resolve_reviewer(ResolverInputs(author_model="claude", risk="high", owned_paths=("README.md",)))
     assert with_readme == plain
     assert with_readme.selected is not None
     assert with_readme.selected.name == "openai_frontier"
@@ -1495,10 +1500,14 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
 
 
 _AUTHOR_MODELS = {
-    "openai": "gpt-6.1-sol", "anthropic": "claude-opus-5-5",
-    "google": "gemini-3.8-flash-high", "xai": "grok-4.7",
-    "moonshot": "composer-2.5", "zhipu": "glm-5.3",
-    "poolside": "poolside/laguna-s-2.1", "deepseek": "deepseek-v4.1-flash",
+    "openai": "gpt-6.1-sol",
+    "anthropic": "claude-opus-5-5",
+    "google": "gemini-3.8-flash-high",
+    "xai": "grok-4.7",
+    "moonshot": "composer-2.5",
+    "zhipu": "glm-5.3",
+    "poolside": "poolside/laguna-s-2.1",
+    "deepseek": "deepseek-v4.1-flash",
     "qwen": "qwen/qwen3.6-plus",
 }
 
@@ -1512,7 +1521,9 @@ def test_every_author_family_risk_profile_pick(family, author, risk, profile):
     elif risk == "high":
         # #9538: high holds only Sol and Opus; infra suitability puts Opus first
         # for every author family Sol is not barred from.
-        expected = "gpt-6.1-sol" if family == "anthropic" or (profile == "code" and family != "openai") else "claude-opus-5-5"
+        expected = (
+            "gpt-6.1-sol" if family == "anthropic" or (profile == "code" and family != "openai") else "claude-opus-5-5"
+        )
     else:
         expected = "gpt-6.1-sol" if family == "anthropic" or family != "openai" else "claude-sonnet-5-5"
     resolution = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, review_profile=profile))
@@ -1532,8 +1543,9 @@ def test_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
     resolution = resolve_reviewer(inputs, ladder=((fallback,), (first,)), runtime_state=snapshot)
     assert resolution.selected.name == primary
     # Only the first model is unhealthy; the shared provider remains available.
-    resolution = resolve_reviewer(replace(inputs, routing_snapshot={primary: "unhealthy"}),
-                                  ladder=((first,), (fallback,)))
+    resolution = resolve_reviewer(
+        replace(inputs, routing_snapshot={primary: "unhealthy"}), ladder=((first,), (fallback,))
+    )
     assert resolution.selected.name == fallback.name
     assert "last resort" in resolution.substitution_note
 
@@ -1548,9 +1560,14 @@ def test_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
 )
 @pytest.mark.parametrize("profile", ["code", "infra"])
 def test_grok_critical_review_forbidden_even_with_explicit_pin_and_custom_ladder(candidate, reason, profile):
-    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="critical", review_profile=profile,
-                            formal_review=False, pinned_candidate=candidate.name,
-                            pressure_override_reason="adversarial test")
+    inputs = ResolverInputs(
+        author_model="gpt-6.1-sol",
+        risk="critical",
+        review_profile=profile,
+        formal_review=False,
+        pinned_candidate=candidate.name,
+        pressure_override_reason="adversarial test",
+    )
     resolution = resolve_reviewer(inputs, ladder=((candidate,),))
     assert resolution.selected is None
     assert "hard eligibility gate" in resolution.fail_closed_reason
@@ -1644,8 +1661,12 @@ def test_high_risk_pin_and_custom_ladder_refuse_seats_outside_sol_and_opus(profi
 @pytest.mark.parametrize("profile", ["code", "infra"])
 def test_high_risk_opus_pin_is_still_admitted(profile):
     inputs = ResolverInputs(
-        author_model="gpt-6.1-sol", review_profile=profile, domain=profile, risk="high",
-        pinned_candidate="claude-opus-5-5", pressure_override_reason="pressure probe",
+        author_model="gpt-6.1-sol",
+        review_profile=profile,
+        domain=profile,
+        risk="high",
+        pinned_candidate="claude-opus-5-5",
+        pressure_override_reason="pressure probe",
     )
     assert resolve_reviewer(inputs).selected.name == "claude-opus-5-5"
 
@@ -1653,6 +1674,90 @@ def test_high_risk_opus_pin_is_still_admitted(profile):
 def test_advisory_resolution_is_outside_the_formal_high_risk_rule():
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="high", formal_review=False)
     assert not (evaluate_candidate(SONNET_5_5, inputs).reason or "").startswith(_HIGH_RISK_RULE)
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high"])
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_security_diff_has_critical_floor_before_ladder_selection(risk, profile):
+    inputs = ResolverInputs(
+        author_model="gpt-6.1-sol",
+        risk=risk,
+        review_profile=profile,
+        changed_paths=("scripts/delegate.py",),
+        owned_paths=("site/src/app.ts",),
+    )
+    result = resolve_reviewer(inputs)
+    assert result.resolved_risk == "critical"
+    assert result.selected.concrete_model == "claude-opus-5-5"
+    assert "critical_review" in REVIEW_CANDIDATES[result.selected.name].model_roles
+    assert {entry.name for entry in result.trace} == {
+        candidate.name for rung in REVIEW_LADDERS["critical"] for candidate in rung
+    }
+    assert inputs.risk == risk  # Caller input is immutable.
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high"])
+@pytest.mark.parametrize("candidate", [SONNET_5_5, GROK_4_7_CURSOR_FALLBACK])
+def test_security_floor_cannot_be_bypassed_by_pin_custom_ladder_or_direct_evaluation(risk, candidate):
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, changed_paths=("scripts/delegate.py",))
+    direct = evaluate_candidate(candidate, inputs)
+    assert direct.status == "excluded" and direct.reason
+    custom = resolve_reviewer(inputs, ladder=((candidate,),))
+    assert custom.resolved_risk == "critical"
+    assert custom.selected is None and custom.fail_closed_reason
+    assert custom.trace[0].reason
+    pinned = resolve_reviewer(replace(inputs, pinned_candidate=candidate.name, pressure_override_reason="bypass probe"))
+    assert pinned.resolved_risk == "critical"
+    assert pinned.selected is None and pinned.fail_closed_reason
+
+
+def test_security_owned_paths_only_add_coverage():
+    inputs = ResolverInputs(
+        author_model="gpt-6.1-sol", risk="low", changed_paths=("site/src/app.ts",), owned_paths=("scripts/delegate.py",)
+    )
+    assert resolve_reviewer(inputs).resolved_risk == "critical"
+
+
+def test_security_qualified_reviewer_unavailable_refuses_without_downgrade():
+    result = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-6.1-sol",
+            risk="low",
+            changed_paths=("scripts/delegate.py",),
+            routing_snapshot={"claude": "unhealthy", "cursor": "unhealthy"},
+        )
+    )
+    assert result.resolved_risk == "critical"
+    assert result.selected is None and result.fail_closed_reason
+    assert all(entry.reason for entry in result.trace)
+
+
+def test_security_subject_seat_exclusion_still_binds():
+    result = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-6.1-sol",
+            risk="low",
+            changed_paths=("scripts/delegate.py",),
+            subject_seats=frozenset({"claude"}),
+        )
+    )
+    assert result.resolved_risk == "critical"
+    assert result.selected is None and result.fail_closed_reason
+
+
+def test_security_infra_requires_critical_review_role_even_on_custom_candidate():
+    candidate = replace(OPENAI_FRONTIER, model_roles=frozenset({"security_review"}))
+    inputs = ResolverInputs(
+        author_model="claude-opus-5-5", risk="low", review_profile="infra", changed_paths=("scripts/delegate.py",)
+    )
+    result = evaluate_candidate(candidate, inputs)
+    assert result.status == "excluded" and "critical_review" in result.reason
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+def test_ordinary_paths_preserve_resolution(risk):
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk)
+    assert resolve_reviewer(inputs) == resolve_reviewer(replace(inputs, changed_paths=("site/src/app.ts",)))
 
 
 # --- #9517: near-cap lanes with a published credit balance -------------------

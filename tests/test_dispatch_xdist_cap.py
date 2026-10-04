@@ -17,6 +17,7 @@ from scripts.ci.pytest_dispatch_cap import (
     LOCK_ENV,
     LOCK_PATH,
     acquire_full_suite_lock,
+    collection_only,
     configured_lock_path,
     dispatch_marker_set,
     is_full_suite,
@@ -318,6 +319,26 @@ def test_full_suite_lock_fails_fast_and_targeted_paths_do_not(tmp_path: Path) ->
     assert FULL_SUITE_BUSY not in targeted.stderr + targeted.stdout
 
 
+@pytest.mark.parametrize("flag", ["--collect-only", "--co"])
+def test_collect_only_full_suite_runs_while_lock_held_and_executes_nothing(tmp_path: Path, flag: str) -> None:
+    """A collection-only run is exempt; the same run without the flag is still refused (#9434)."""
+    _write_probe(tmp_path)
+    ran = _arm_suite_sentinel(tmp_path)
+    env = _child_env(tmp_path, marker="impl-9434-d")
+    _hold_tmp_lock(tmp_path, env)
+    try:
+        collected = _run_pytest(tmp_path, ["-q", flag], env)
+        blocked = _run_pytest(tmp_path, ["-q"], env)
+    finally:
+        release_full_suite_lock()
+    combined = collected.stdout + collected.stderr
+    assert collected.returncode == 0, combined
+    assert "tests/test_sample.py::test_ok" in collected.stdout
+    assert FULL_SUITE_BUSY not in combined
+    assert not ran.is_file()
+    _assert_refused_before_tests(blocked, ran)
+
+
 def _run_repo(cwd: Path, args: list[str], env: dict[str, str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [_PYTEST, "-m", "pytest", *args],
@@ -439,6 +460,15 @@ def test_full_suite_classification(tmp_path: Path) -> None:
     elsewhere = _Args(source.ARGS, ["tests"], foreign)
     elsewhere.invocation_params = type("Inv", (), {"dir": foreign})()
     assert not is_full_suite(elsewhere)  # type: ignore[arg-type]
+
+
+def test_collection_only_reads_the_collect_only_option() -> None:
+    def config(**option: object) -> pytest.Config:
+        return type("Config", (), {"option": type("Option", (), option)()})()  # type: ignore[return-value]
+
+    assert collection_only(config(collectonly=True))
+    assert not collection_only(config(collectonly=False))
+    assert not collection_only(config())
 
 
 def test_lock_path_env_override(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

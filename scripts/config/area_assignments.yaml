@@ -2,8 +2,10 @@
 # Replaces .agent/lane-assignments.md as machine authority (in later step).
 # See #5281 / #5279 design decisions.
 #
-# Derivation rule: slots = provider identity functions × launcher_selector_resolve lanes;
-# see scripts/lib/handoff_identity.sh — do not add rows without a mintable selector.
+# Derivation rule: slots = eligible driver provider identity functions ×
+# launcher_selector_resolve lanes. Gemini's lookup function is retained for
+# compatibility, but Gemini is not a driver and has no roster slots (#9633).
+# See scripts/lib/handoff_identity.sh — do not add rows without a mintable selector.
 # Both directions are enforced by tests/test_handoff_slot_registry.py, and the launcher
 # refuses a selector whose <provider>-<lane> slot is not listed here (#8303).
 
@@ -14,7 +16,6 @@ assignments:
     slots:
       - claude-infra
       - codex-infra
-      - gemini-infra
       - grok-infra
       - kimi-infra
       - cursor-infra
@@ -23,7 +24,6 @@ assignments:
     slots:
       - claude-devops
       - codex-devops
-      - gemini-devops
       - grok-devops
       - kimi-devops
       - cursor-devops
@@ -37,7 +37,6 @@ assignments:
     slots:
       - claude-corpus
       - codex-corpus
-      - gemini-corpus
       - grok-corpus
       - kimi-corpus
       - cursor-corpus
@@ -49,7 +48,6 @@ assignments:
     slots:
       - claude-atlas
       - codex-atlas
-      - gemini-atlas
       - grok-atlas
       - kimi-atlas
       - cursor-atlas
@@ -75,14 +73,11 @@ assignments:
     slots:
       - claude-folk
       - codex-folk
-      - gemini-folk
       - claude-bio
       - codex-bio
-      - gemini-bio
   hramatka:
     driver_agent_type: curriculum-orchestrator
     # Same operator order applies to Ukrainian language content here.
     slots:
       - claude-hramatka
       - codex-hramatka
-      - gemini-hramatka

@@ -15,11 +15,63 @@ from pathlib import Path
 import pytest
 
 from scripts import delegate
-from scripts.maintenance.batch_state_retention import DEFAULT_MIN_AGE_DAYS, plan_retention
+from scripts.maintenance.batch_state_retention import DEFAULT_MIN_AGE_DAYS, DEFAULT_ONE_OFF_MIN_BYTES, plan_retention
+from scripts.maintenance.claude_session_scratch import sweep_sessions
 from scripts.orchestration import scheduled_worktree_cleanup, stale_task_records
 from scripts.orchestration.scheduled_worktree_cleanup import batch_state_retention_reports
 
 NOW = datetime(2026, 9, 25, 12, 0, tzinfo=UTC)
+
+
+@pytest.fixture(autouse=True)
+def _isolated_claude_scratch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Scheduled apply tests must never sweep host session scratch."""
+    monkeypatch.setattr(
+        scheduled_worktree_cleanup,
+        "sweep_sessions",
+        lambda **kwargs: sweep_sessions(tmp_path / f"claude-{os.getuid()}", **kwargs),
+    )
+
+
+def test_large_one_off_artifacts_report_size_age_without_deletion(tmp_path: Path) -> None:
+    root = _batch(tmp_path)
+    nested = root / "one-off-output"
+    nested.mkdir()
+    files = [root / "manifest_example.json", nested / "output.bin"]
+    for path in files:
+        with path.open("wb") as destination:
+            destination.truncate(DEFAULT_ONE_OFF_MIN_BYTES + 1)
+        timestamp = (NOW - timedelta(days=12)).timestamp()
+        os.utime(path, (timestamp, timestamp))
+    (root / "small.json").write_bytes(b"small")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "precious").write_bytes(b"untouched")
+    (root / "linked-output").symlink_to(outside, target_is_directory=True)
+    (root / "linked-manifest.json").symlink_to(files[0])
+    before = {path: (path.stat().st_size, path.stat().st_mtime_ns) for path in files}
+    for apply in (False, True):
+        report = plan_retention(root, apply=apply, now=NOW)
+        assert report["one_off_artifacts"] == [
+            {
+                "path": "manifest_example.json",
+                "bytes": DEFAULT_ONE_OFF_MIN_BYTES + 1,
+                "age_days": 12.0,
+                "action": "report_only",
+            },
+            {
+                "path": "one-off-output/output.bin",
+                "bytes": DEFAULT_ONE_OFF_MIN_BYTES + 1,
+                "age_days": 12.0,
+                "action": "report_only",
+            },
+        ]
+        assert {path: (path.stat().st_size, path.stat().st_mtime_ns) for path in files} == before
+        assert (root / "small.json").read_bytes() == b"small"
+        public = scheduled_worktree_cleanup.build_public_summary({"batch_state_retention": [{"dry_run": report}]})
+        assert public["batch_state_retention"][0]["one_off_artifacts"] == 2
+        assert public["batch_state_retention"][0]["one_off_bytes"] == 2 * (DEFAULT_ONE_OFF_MIN_BYTES + 1)
+        assert "manifest_example" not in json.dumps(public)
 
 
 def _batch(tmp_path: Path) -> Path:

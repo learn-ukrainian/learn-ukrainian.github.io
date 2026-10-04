@@ -86,18 +86,18 @@ def _delivery_status(db_path: Path, delivery_id: str) -> str:
         conn.close()
 
 
-def test_sweep_expires_stale_and_dead_lane_rows_in_the_routers_own_db(tmp_path):
+@pytest.mark.parametrize("default_db_exists", [False, True], ids=["absent-default", "existing-default"])
+def test_sweep_expires_stale_and_dead_lane_rows_in_the_routers_own_db(tmp_path, monkeypatch, default_db_exists):
     db_path = tmp_path / "messages.db"
     ids = _seed_channel_db(db_path)
-    # Snapshot the default-path state instead of asserting global absence:
-    # other tests on the same pytest-xdist worker may legitimately have
-    # created the (conftest-patched) default DB before this one runs — this
-    # test only has to prove the sweep does not CREATE or MODIFY that file.
-    # (The absence precondition flaked in CI run 29085878896, 2026-07-10.)
-    real_default_db_path = ab_config.DB_PATH
-    default_db_before = (
-        real_default_db_path.read_bytes() if real_default_db_path.exists() else None
-    )
+    # Use a distinct, test-owned default so unrelated writes to the shared
+    # bridge DB cannot affect either the absence or byte-preservation check.
+    default_db_path = tmp_path / "bridge-default.db"
+    default_db_before = b"untouched default DB"
+    if default_db_exists:
+        default_db_path.write_bytes(default_db_before)
+    monkeypatch.setattr(ab_config, "DB_PATH", default_db_path)
+    monkeypatch.setattr(ab_db, "DB_PATH", default_db_path)
 
     comms_router._maybe_run_delivery_expiry_sweep(_message_ctx(tmp_path, db_path))
     assert comms_router._expire_sweep_thread is not None
@@ -107,15 +107,13 @@ def test_sweep_expires_stale_and_dead_lane_rows_in_the_routers_own_db(tmp_path):
     assert _delivery_status(db_path, ids["stale_delivery_id"]) == "expired"
     assert _delivery_status(db_path, ids["dead_delivery_id"]) == "expired"
 
-    # The real ai_agent_bridge default DB path must remain untouched by the
-    # sweep — not created, not modified — and the module-level DB_PATH must
-    # be restored.
-    if default_db_before is None:
-        assert not real_default_db_path.exists()
+    # The sweep must leave the default untouched and restore its binding.
+    if default_db_exists:
+        assert default_db_path.read_bytes() == default_db_before
     else:
-        assert real_default_db_path.read_bytes() == default_db_before
-    assert real_default_db_path == ab_db.DB_PATH
-    assert real_default_db_path == ab_config.DB_PATH
+        assert not default_db_path.exists()
+    assert default_db_path == ab_db.DB_PATH
+    assert default_db_path == ab_config.DB_PATH
 
 
 def test_sweep_is_noop_when_message_db_missing(tmp_path):

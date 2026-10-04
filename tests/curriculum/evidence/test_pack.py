@@ -253,7 +253,7 @@ def _verify(synthetic_sources, synthetic_standard, evidence_dir, *, strict):
     [
         ("1-klas-bukvar-zaharijchuk-2025-1", True, False, None),
         ("1-klas-bukvar-zaharijchuk-2025-1", True, True, "publication_limit"),
-        ("ulp-1-00-lesson-notes", True, False, "publication_right"),
+        ("ulp-1-00-lesson-notes", True, False, "owned_quote_refused"),
         ("unregistered", True, False, "publication_right"),
         ("ulp-1-00-lesson-notes", False, False, None),
     ],
@@ -1252,7 +1252,7 @@ def test_publication_quote_and_listening_models_verify_and_assemble_together(
                 "steps": [{"id": "s1", "needs": ["quote"], "evidence": ["T-001", "V-001"]}],
                 "videos": [{"evidence": "V-001", "use": "Listen before choosing."}],
             }
-        ]
+        ],
     }
     plan_path = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/test-mod.yaml"
     plan_path.write_text(yaml.safe_dump(plan))

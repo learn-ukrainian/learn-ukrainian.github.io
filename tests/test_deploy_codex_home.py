@@ -64,8 +64,17 @@ def test_astra_seat_is_retired_and_advisor_states_the_approval_rule():
     assert "astra" not in (root / "AGENTS.md").read_text().lower()
     advisor = tomllib.loads((root / "agents/sol_advisor_high.toml").read_text())
     rule = advisor["developer_instructions"]
-    for phrase in ("Opus 5.5 and Sol 6.1", "approval needs both", "neither may be the author", "operator decides"):
+    for phrase in (
+        "Opus 5.5 and Sol 6.1 agreeing",
+        "when one of them authored the proposal, the other's approval completes it",
+        "a proposal by any other agent (Gemini, Grok, Kimi or another seat) needs both",
+        "operator decides",
+        "never approve work you authored",
+    ):
         assert phrase in rule
+    # #9616: the old wording left no path when Opus 5.5 or Sol 6.1 authored the proposal.
+    for stale in ("approval needs both", "neither may be the author"):
+        assert stale not in rule
 
 
 def test_preservation_idempotence_backups(source):

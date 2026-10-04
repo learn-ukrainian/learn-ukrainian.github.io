@@ -248,7 +248,9 @@ _EVENTS = {
 }
 
 
-def _simulate(github: dict[str, Any], *, reuse: str = "false") -> tuple[dict[str, str], dict[str, str]]:
+def _simulate(
+    github: dict[str, Any], *, reuse: str = "false", failures: set[str] | None = None
+) -> tuple[dict[str, str], dict[str, str]]:
     """Return (job id -> success|skipped, job id -> evaluated check name) for ci.yml.
 
     Follows GitHub's rule: a job whose `if` has no status function carries an
@@ -277,7 +279,7 @@ def _simulate(github: dict[str, Any], *, reuse: str = "false") -> tuple[dict[str
             ran = False
         else:
             ran = True if condition is None else _condition(condition, context)
-        results[job_id] = "success" if ran else "skipped"
+        results[job_id] = ("failure" if failures and job_id in failures else "success") if ran else "skipped"
         names[job_id] = _interpolate(job.get("name", job_id), context)
     return results, names
 
@@ -310,7 +312,7 @@ def test_every_event_runs_every_job(event: str) -> None:
 
 def test_merge_queue_reuse_skips_every_reused_job() -> None:
     results, _ = _simulate(_EVENTS["merge_group"], reuse="true")
-    reused = {"secret-scan", "checks", "frontend", "dependency-audit", "pytest", "pytest-report"}
+    reused = {"secret-scan", "checks", "freeze-durations", "frontend", "dependency-audit", "pytest", "pytest-report"}
     assert {job for job, result in results.items() if result != "success"} == reused
     # The queue commit's message, author and committer are scanned even on reuse.
     assert results["queue-metadata-scan"] == "success"
@@ -390,6 +392,7 @@ def test_ci_gate_runs_after_cancel() -> None:
 _GREEN = {
     "SECRET_SCAN": "success",
     "CHECKS": "success",
+    "FREEZE_DURATIONS": "success",
     "FRONTEND": "success",
     "DEPENDENCY_AUDIT": "success",
     "PYTEST": "success",
@@ -427,6 +430,7 @@ def test_gate_passes_a_green_pull_request_run() -> None:
 @pytest.mark.parametrize(
     "overrides",
     [
+        {"FREEZE_DURATIONS": "failure"},
         {"PYTEST": "failure"},
         {"PYTEST": "skipped"},
         {"PYTEST_REPORT": "skipped"},
@@ -456,7 +460,7 @@ _REUSED = {name: "skipped" for name in _GREEN}
 def test_gate_accepts_merge_queue_reuse_with_a_run_id() -> None:
     result = _run_gate("merge_group", REUSE_JOB="success", REUSE="true", REUSED_RUN="123", **_REUSED)
     assert result.returncode == 0, result.stdout
-    for job in ("secret-scan", "checks", "frontend", "dependency-audit", "pytest", "pytest-report"):
+    for job in ("secret-scan", "checks", "freeze-durations", "frontend", "dependency-audit", "pytest", "pytest-report"):
         assert f"{job} reused from run 123" in result.stdout
 
 
@@ -485,3 +489,10 @@ def test_gate_fails_closed_in_the_merge_queue(overrides: dict[str, str]) -> None
 def test_gate_passes_a_full_merge_queue_run() -> None:
     result = _run_gate("merge_group", REUSE_JOB="success", REUSE="false")
     assert result.returncode == 0, result.stdout
+
+
+@pytest.mark.parametrize("failed_job", ["checks", "freeze-durations"])
+def test_pytest_runs_after_lint_or_freeze_failure(failed_job: str) -> None:
+    results, _ = _simulate(_EVENTS["workflow_dispatch"], failures={failed_job})
+    assert results[failed_job] == "failure"
+    assert results["pytest"] == "success"

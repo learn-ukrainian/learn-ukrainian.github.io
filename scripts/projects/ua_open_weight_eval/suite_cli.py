@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.ua_eval_harness.evaluate_model import load_manifest
 
 RELEASE_ROOT = ROOT / "data/projects/ua_open_weight_eval/v0.1.0"
@@ -193,7 +194,7 @@ def read_json(path: Path) -> dict[str, Any]:
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
     except OSError as exc:
         raise SuiteError(f"cannot read JSONL {path}: {exc}") from exc
     rows: list[dict[str, Any]] = []
