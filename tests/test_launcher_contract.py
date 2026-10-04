@@ -23,11 +23,13 @@ from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.common.repo_root import project_interpreter
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
+from tests.launcher_libraries import launcher_library_files
 from tests.launcher_sandbox import copy_interactive_launcher_checkout, copy_slot_registry
 from tests.rules_core_view import (
     install_loader_bypass,
     rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
 )
+from tests.test_launcher_driver_scope import install_scope_sandbox
 
 REPO = Path(__file__).resolve().parents[1]
 # The checkout run_launcher starts launchers from; rules_core_absent tests get a
@@ -67,6 +69,8 @@ def run_launcher(
         with TemporaryDirectory(prefix="launcher-checkout-") as temporary:
             checkout = Path(temporary) / "checkout"
             copy_interactive_launcher_checkout(checkout)
+            if "-driver.sh" in name:
+                install_scope_sandbox(checkout)
             return run_launcher(name, *args, env=env, dry_run=False, root=checkout)
     launch_root = root if root is not None else LAUNCH_ROOT
     launch_env = os.environ.copy()
@@ -285,19 +289,14 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     root = tmp_path / "repo"
     for relative in (
         "start-claude-driver.sh",
-        "scripts/lib/handoff_identity.sh",
         "scripts/config/issue_streams.yaml",
         "scripts/config/launcher_stream_aliases.tsv",
-        "scripts/lib/launcher_core.sh",
-        "scripts/lib/session_supervisor.sh",
-        # The core's deploy staleness gate sources this; without package.json
-        # in the sandbox it warns and passes (#5958).
-        "scripts/lib/deploy_extensions.sh",
-        "scripts/lib/project_interpreter.sh",
+        *launcher_library_files(REPO),
     ):
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_scope_sandbox(root)
     install_loader_bypass(root)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir(parents=True)
@@ -443,17 +442,14 @@ def _core_driver_exit_fixture(
     root = tmp_path / "repo"
     for relative in (
         "start-claude-driver.sh",
-        "scripts/lib/handoff_identity.sh",
         "scripts/config/issue_streams.yaml",
         "scripts/config/launcher_stream_aliases.tsv",
-        "scripts/lib/launcher_core.sh",
-        "scripts/lib/session_supervisor.sh",
-        "scripts/lib/deploy_extensions.sh",
-        "scripts/lib/project_interpreter.sh",
+        *launcher_library_files(REPO),
     ):
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_scope_sandbox(root)
     install_loader_bypass(root)
     if forward_ready is not None:
         _append_forward_ready_hook(root / "scripts/lib/launcher_core.sh", forward_ready)
@@ -780,11 +776,7 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
     root = tmp_path / "repo"
     for relative in (
         "start-claude-driver.sh",
-        "scripts/lib/handoff_identity.sh",
-        "scripts/lib/launcher_core.sh",
-        "scripts/lib/session_supervisor.sh",
-        "scripts/lib/deploy_extensions.sh",
-        "scripts/lib/project_interpreter.sh",
+        *launcher_library_files(REPO),
         "scripts/review/model_catalog.py",
         "scripts/config/model_catalog.yaml",
         "scripts/config/issue_streams.yaml",
@@ -793,6 +785,7 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_scope_sandbox(root)
     install_loader_bypass(root)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir(parents=True)
@@ -1329,3 +1322,56 @@ def test_watcher_exit_recovery_preserves_provider_and_rejects_false_wakes(
     assert restarted.exists() is (watcher_exit == 76)
     assert completed.exists() is (watcher_exit == 76)
     assert closed.exists()
+
+
+def test_launcher_death_stops_renewal_with_live_provider(tmp_path: Path) -> None:
+    """SIGKILL cannot run cleanup; renewal must stop so normal TTL can expire."""
+    owner = tmp_path / "launcher-owner"
+    heartbeats = tmp_path / "heartbeats"
+    launcher, _, closed, _ = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body=f'printf "%s\\n" "$PPID" > {shlex.quote(str(owner))}\nwhile :; do sleep 0.1; done',
+    )
+    python_stub = launcher.parent / ".venv/bin/python"
+    body = python_stub.read_text()
+    first, rest = body.split("\n", 1)
+    python_stub.write_text(
+        first
+        + "\n"
+        + f"""
+if [[ "${{1:-}}" == -m && "${{2:-}}" == scripts.session_supervisor && "${{3:-}}" == heartbeat ]]; then
+  printf 'renew\\n' >> {shlex.quote(str(heartbeats))}
+  exit 0
+fi
+"""
+        + rest
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(SESSION_STREAM_RENEW_INTERVAL_SECONDS="1", SESSION_STREAM_RENEW_JITTER_SECONDS="0")
+    process = subprocess.Popen(
+        ["bash", str(launcher), "--epic", "devops"],
+        cwd=launcher.parent,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+    )
+    try:
+        deadline = time.monotonic() + 15
+        while not heartbeats.exists() and time.monotonic() < deadline:
+            assert process.poll() is None
+            time.sleep(0.05)
+        assert heartbeats.exists() and owner.exists()
+        os.kill(int(owner.read_text()), signal.SIGKILL)
+        assert process.wait(timeout=10) == 137
+        # Give an in-flight request time to finish, then observe two intervals.
+        time.sleep(0.3)
+        settled = heartbeats.read_text()
+        time.sleep(2.2)
+        assert heartbeats.read_text() == settled
+        assert not closed.exists()  # Recovery is the existing TTL, not cleanup.
+    finally:
+        with suppress(ProcessLookupError):
+            os.killpg(process.pid, signal.SIGKILL)
+        process.communicate(timeout=10)

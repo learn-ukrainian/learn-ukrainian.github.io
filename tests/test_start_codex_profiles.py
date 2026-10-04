@@ -10,8 +10,10 @@ from pathlib import Path
 
 import pytest
 
+from tests.launcher_libraries import launcher_library_files
 from tests.launcher_sandbox import copy_slot_registry
 from tests.rules_core_view import install_loader_bypass
+from tests.test_launcher_driver_scope import install_scope_sandbox
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 # Tests spawn the same prescribed project interpreter that is running pytest;
@@ -23,15 +25,6 @@ _LAUNCHER_FILES = (
     Path("scripts/config/context_profiles.yaml"),
     Path("scripts/config/issue_streams.yaml"),
     Path("scripts/config/launcher_stream_aliases.tsv"),
-    Path("scripts/lib/context_profiles.py"),
-    Path("scripts/lib/deploy_extensions.sh"),
-    Path("scripts/lib/project_interpreter.sh"),
-    Path("scripts/lib/fleet_comms_cold_start.sh"),
-    Path("scripts/lib/handoff_identity.sh"),
-    Path("scripts/lib/launcher_core.sh"),
-    Path("scripts/lib/profile_resolver.sh"),
-    Path("scripts/lib/session_supervisor.sh"),
-    Path("scripts/lib/thread_rollover_link.sh"),
     Path("scripts/launchers/codex.sh"),
     Path("scripts/orchestration/thread_handoff.py"),
 )
@@ -66,15 +59,14 @@ def _run(command: list[str], cwd: Path, *, env: dict[str, str] | None = None) ->
     )
 
 
-def _prepare_repo(
-    tmp_path: Path, *, separate_git_dir: bool = False
-) -> tuple[Path, Path]:
+def _prepare_repo(tmp_path: Path, *, separate_git_dir: bool = False) -> tuple[Path, Path]:
     primary = tmp_path / "repo"
     primary.mkdir()
-    for relative in _LAUNCHER_FILES:
+    for relative in (*_LAUNCHER_FILES, *launcher_library_files(_REPO_ROOT)):
         destination = primary / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / relative, destination)
+    install_scope_sandbox(primary)
     install_loader_bypass(primary)
     # Driver launches check their handoff slot against the real roster (#8303).
     copy_slot_registry(primary)
@@ -90,7 +82,7 @@ def _prepare_repo(
     venv_bin.mkdir(parents=True)
     _write_executable(
         venv_bin / "python",
-        f'''#!/usr/bin/env bash
+        f"""#!/usr/bin/env bash
 if [[ "${{1:-}}" == */scripts/orchestration/thread_handoff.py && "$*" == *" detect "* ]]; then
   if [[ -n "${{CODEX_LAUNCHER_TEST_ORDER:-}}" ]]; then
     printf '%s\n' 'prelease-scan' >> "$CODEX_LAUNCHER_TEST_ORDER"
@@ -146,14 +138,12 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_canary.codex_lane" ]]
   exit 0
 fi
 exec {os.fspath(_PROJECT_PYTHON)!r} "$@"
-''',
+""",
     )
 
     init_command = ["git", "init", "-b", "main"]
     if separate_git_dir:
-        init_command.extend(
-            ["--separate-git-dir", os.fspath(tmp_path / "separate-git-dir")]
-        )
+        init_command.extend(["--separate-git-dir", os.fspath(tmp_path / "separate-git-dir")])
     assert _run(init_command, primary).returncode == 0
     assert _run(["git", "add", "."], primary).returncode == 0
     commit = _run(
@@ -193,9 +183,7 @@ def _launch(
     primary, linked = _prepare_repo(tmp_path, separate_git_dir=separate_git_dir)
     if stale_native_profile:
         profile_path = primary / "scripts/config/context_profiles.yaml"
-        profile_path.write_text(
-            profile_path.read_text().replace("'^(gpt-6\\.1-sol|gpt-6-luna)$'", "'^gpt-stale$'")
-        )
+        profile_path.write_text(profile_path.read_text().replace("'^(gpt-6\\.1-sol|gpt-6-luna)$'", "'^gpt-stale$'"))
     home_bin = tmp_path / "home" / ".local" / "bin"
     capture = tmp_path / "capture.txt"
     _write_executable(
@@ -364,7 +352,10 @@ def test_launcher_binds_epic_when_no_codex_args_remain(tmp_path: Path) -> None:
     cd_index = forwarded.index("-C")
     assert forwarded[cd_index + 1] != values["canonical"]
     assert forwarded[cd_index + 2 : cd_index + 6] == [
-        "--model", "gpt-6.1-sol", "-c", "model_reasoning_effort=high",
+        "--model",
+        "gpt-6.1-sol",
+        "-c",
+        "model_reasoning_effort=high",
     ]
     assert any("already claimed the hramatka lease" in arg for arg in forwarded)
 
@@ -418,8 +409,11 @@ def test_launcher_rejects_missing_or_invalid_epic_before_codex_starts(
 def test_launcher_rejects_old_native_model_before_provider_or_lease(tmp_path: Path, model: str, driver: bool) -> None:
     order = tmp_path / "launcher-order.txt"
     _, _, result, _, linked = _launch(
-        tmp_path, (["--epic", "devops"] if driver else []) + ["--model", model], driver=driver,
-        order_capture=order, expect_success=False,
+        tmp_path,
+        (["--epic", "devops"] if driver else []) + ["--model", model],
+        driver=driver,
+        order_capture=order,
+        expect_success=False,
     )
     assert result.returncode == 2
     assert "is retired in the model catalog" in result.stderr
@@ -529,9 +523,7 @@ def test_fresh_exact_rollover_is_exported_to_new_codex_task(tmp_path: Path) -> N
 
 
 @pytest.mark.parametrize("rollover", ["ambiguous", "resumed"])
-def test_ambiguous_or_resumed_rollover_fails_before_lease_and_codex(
-    tmp_path: Path, rollover: str
-) -> None:
+def test_ambiguous_or_resumed_rollover_fails_before_lease_and_codex(tmp_path: Path, rollover: str) -> None:
     _, _, result, _, linked = _launch(
         tmp_path,
         ["--epic", "devops", "--model", "gpt-6.1-sol"],

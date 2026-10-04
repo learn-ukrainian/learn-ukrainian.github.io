@@ -1,0 +1,8 @@
+# User unit; install after review as documented in driver-memory-scope.md.
+# Per-session limits come from scripts/lib/driver_scope.sh, not this slice.
+# The shared lu.slice cap requires a separate operator decision (#9624).
+[Unit]
+Description=Learn Ukrainian driver sessions
+
+[Slice]
+MemoryAccounting=yes
