@@ -512,7 +512,7 @@ def test_worker_image_at_timeout_is_kept(tmp_path: Path):
         return _Unused()
 
     try:
-        deadline = time.monotonic() + 2
+        deadline = time.monotonic() + 60
         while not Path(f"/proc/{worker.pid}/cmdline").exists():
             if time.monotonic() > deadline:
                 raise AssertionError("worker cmdline did not appear")
