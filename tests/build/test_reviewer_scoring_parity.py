@@ -1,7 +1,8 @@
 """Replay recorded findings against #7810's frozen baseline and changed code.
 
 Run with ``pytest tests/build/test_reviewer_scoring_parity.py -q -s`` for raw
-before/after evidence. Requires the baseline Git object (CI fetches full history).
+before/after evidence. Expected outputs are committed fixtures, so shallow
+checkouts need no baseline Git objects.
 These are deterministic regression replays, not independent held-out evaluation.
 """
 
@@ -11,35 +12,21 @@ import ast
 import contextlib
 import copy
 import json
-import subprocess
-import sys
-import types
 from collections import Counter
 from pathlib import Path
 from types import SimpleNamespace
-
-import pytest
 
 from scripts.audit import llm_reviewer, qg_workflow
 from scripts.build import build_module_direct as direct
 from scripts.build import linear_pipeline as linear
 from tests.build.test_reviewer_schema_transport import direct_context, mechanical_payload
 
-BASELINE = "1fc2efe46f712a98ead2301e029f1c88227776fd"
 ROOT = Path(__file__).resolve().parents[2]
-
-
-def baseline_module(path: str, monkeypatch: pytest.MonkeyPatch):
-    source = subprocess.run(
-        ["git", "show", f"{BASELINE}:{path}"], cwd=ROOT, check=True,
-        capture_output=True, text=True, timeout=30,
-    ).stdout
-    name = "_qg7810_baseline_" + Path(path).stem
-    module = types.ModuleType(name)
-    module.__file__ = str(ROOT / path)
-    monkeypatch.setitem(sys.modules, name, module)
-    exec(compile(source, module.__file__, "exec"), module.__dict__)
-    return module
+FROZEN = json.loads((Path(__file__).parent / "fixtures/reviewer_scoring_baseline.json").read_text())
+# JSON arrays restore these baseline tuple fields; compare Python values exactly.
+for field in ("failing_dims", "rejected_dims", "warning_dims"):
+    FROZEN["aggregate_llm_review"]["aggregate"][field] = tuple(FROZEN["aggregate_llm_review"]["aggregate"][field])
+BASELINE = FROZEN["baseline_commit"]
 
 
 def constant_assignments(path: str) -> dict:
@@ -51,8 +38,7 @@ def constant_assignments(path: str) -> dict:
     return values
 
 
-def test_recorded_dimension_scoring_before_after(monkeypatch):
-    before = baseline_module("scripts/build/linear_pipeline.py", monkeypatch)
+def test_recorded_dimension_scoring_before_after():
     tree = ast.parse((ROOT / "tests/build/test_llm_qg_evidence_quotes.py").read_text())
     test = next(node for node in tree.body if isinstance(node, ast.FunctionDef)
                 and node.name == "test_evidence_quotes_array_satisfies_contract")
@@ -61,14 +47,12 @@ def test_recorded_dimension_scoring_before_after(monkeypatch):
     # The legacy record predates explicit empty transport fields. Extend both
     # sides identically; never change its recorded score, quotes or verdict.
     payload = {"findings": [], "flags": [], "issue_ids": [], "rubric_mapping": None, **recorded}
-    old_entry = before.parse_review_response(json.dumps(payload), "pedagogical")
+    old_entry = FROZEN["parse_review_response"]
     new_entry = linear.parse_review_response(copy.deepcopy(payload), "pedagogical")
     assert old_entry == new_entry
-    old_report = before._placeholder_review_report()
-    old_report["pedagogical"] = old_entry
     new_report = linear._placeholder_review_report()
     new_report["pedagogical"] = new_entry
-    old_result = before.aggregate_llm_review(old_report, "A1")
+    old_result = FROZEN["aggregate_llm_review"]
     new_result = linear.aggregate_llm_review(new_report, "A1")
     assert old_result == new_result
     for label, result in (("before", old_result), ("after", new_result)):
@@ -80,16 +64,14 @@ def test_recorded_dimension_scoring_before_after(monkeypatch):
     print("ASSERT recorded dimension findings, evidence and scoring identical: PASS")
 
 
-def test_recorded_audit_findings_scoring_before_after(monkeypatch):
-    before = baseline_module("scripts/audit/llm_reviewer.py", monkeypatch)
-    before_workflow = baseline_module("scripts/audit/qg_workflow.py", monkeypatch)
+def test_recorded_audit_findings_scoring_before_after():
     fixtures = constant_assignments("tests/audit/test_llm_reviewer.py")
     raw = fixtures["B1_27_BAD_LLM_RESPONSE"]
     content = fixtures["B1_27_BAD_TEXT"]
-    old_findings = before.parse_and_evaluate_llm_response(raw, content)
+    old_findings = FROZEN["parse_and_evaluate_llm_response"]
     new_findings = llm_reviewer.parse_and_evaluate_llm_response(raw, content)
     assert old_findings == new_findings
-    old_verdict = before_workflow._verdict_for_findings(old_findings)
+    old_verdict = FROZEN["_verdict_for_findings"]
     new_verdict = qg_workflow._verdict_for_findings(new_findings)
     assert old_verdict == new_verdict
     for label, findings, verdict in (("before", old_findings, old_verdict), ("after", new_findings, new_verdict)):
@@ -105,23 +87,17 @@ def test_direct_mechanical_record_verdict_before_after(tmp_path, monkeypatch, ca
     """Direct has no numeric score; compare phase decisions on identical data."""
     from scripts.agent_runtime import runner
 
-    before = baseline_module("scripts/build/build_module_direct.py", monkeypatch)
     payload = mechanical_payload("direct")
     raw = json.dumps(payload)
-    baseline_dir, head_dir = tmp_path / "baseline", tmp_path / "head"
-    baseline_dir.mkdir()
+    head_dir = tmp_path / "head"
     head_dir.mkdir()
-    old_ctx, new_ctx = direct_context(baseline_dir), direct_context(head_dir)
-    monkeypatch.setattr(before, "PROJECT_ROOT", baseline_dir)
+    new_ctx = direct_context(head_dir)
     monkeypatch.setattr(direct, "PROJECT_ROOT", head_dir)
-    with monkeypatch.context() as context:
-        context.setattr(before.subprocess, "run", lambda *a, **kw: SimpleNamespace(returncode=0, stdout=raw))
-        old_passed = before.phase_review(old_ctx)
     monkeypatch.setattr(runner, "invoke", lambda *a, **kw: SimpleNamespace(ok=True, response=raw))
     new_passed = direct.phase_review(new_ctx)
-    old_phase = old_ctx.status_data["phases"]["review"]
+    old_phase = FROZEN["phase_review"]
     new_phase = new_ctx.status_data["phases"]["review"]
-    assert old_passed == new_passed
+    assert new_passed is (old_phase["verdict"] == "PASS")
     assert old_phase["verdict"] == new_phase["verdict"]
     assert old_phase["issues"] == new_phase["issues"]
     capsys.readouterr()  # Print only counts/decisions, never raw content logs.

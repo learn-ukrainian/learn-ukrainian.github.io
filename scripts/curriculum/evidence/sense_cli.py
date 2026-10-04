@@ -462,7 +462,9 @@ def parser(command: str) -> argparse.ArgumentParser:
     if command == "select":
         p.add_argument("--private-input", required=True, type=Path, help="Private JSONL extraction outside Git")
         modes = p.add_mutually_exclusive_group()
-        modes.add_argument("--write", action="store_true", help="Update reference bindings and lock")
+        modes.add_argument(
+            "--write", action="store_true", help="Update bindings and lock; report and skip stale formula bindings"
+        )
         modes.add_argument("--check", action="store_true", help="Reselect, scan and verify/seal current head")
         p.add_argument("--key-file", type=Path, help="Host-local secret key, at least 32 bytes")
         p.add_argument("--key-id", help="Public non-secret key identifier")
@@ -597,11 +599,15 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                         selected[wid] = binding
                     elif binding["method"] == "formula_row.v1":
                         word = by_id.get(wid)
-                        if word is None or word.get("kind") != "formula":
-                            raise ValueError("formula_binding_invalid")
-                        validate_formula_record(word, store, evidence, api)
-                        if context.select(word, bindings.rows_for(word, api), None).gloss is None:
-                            raise ValueError("formula_binding_invalid")
+                        valid = word is not None and word.get("kind") == "formula"
+                        if valid:
+                            validate_formula_record(word, store, evidence, api)
+                            valid = context.select(word, bindings.rows_for(word, api), None).gloss is not None
+                        if not valid:
+                            selected.pop(wid, None)
+                            decisions = [d for d in decisions if d["word"] != wid]
+                            decisions.append({"word": wid, "reason": "formula_binding_invalid"})
+                            continue
                         selected[wid] = binding
                 bindings.write(path, args.level, selected)
             if args.check:

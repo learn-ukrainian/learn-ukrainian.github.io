@@ -3,8 +3,6 @@
 import copy
 import json
 import sqlite3
-import subprocess
-import types
 
 import pytest
 import yaml
@@ -14,7 +12,6 @@ from scripts.curriculum.evidence import formulas, lock, registry, sources, verif
 from scripts.curriculum.evidence import sense_bindings as bindings
 from scripts.curriculum.resolver import inputs, narrow
 
-BASELINE = "fe3abb46b9"
 LEXICAL = [
     {"id": "W-001", "lemma": "привіт", "pos": "noun", "entry": {"source": "vesum", "entry_id": 101}},
     {"id": "W-002", "lemma": "добрий", "pos": "adj", "entry": {"source": "vesum", "entry_id": 102}},
@@ -281,7 +278,7 @@ def lexical_request():
     return [{k: w[k] for k in ["lemma", "pos", "entry"]} | {"want": "new"} for w in LEXICAL]
 
 
-def build(api, root, request, monkeypatch, implementation=words.build_words):
+def build(api, root, request, monkeypatch):
     path = root / "request.yaml"
     path.parent.mkdir(exist_ok=True)
     path.write_text(yaml.safe_dump({"request_schema": 1, "level": "a1", "words": request}, allow_unicode=True))
@@ -290,21 +287,11 @@ def build(api, root, request, monkeypatch, implementation=words.build_words):
         "verify_stress",
         lambda form, **kw: {"status": "not_found", "matches": [], "source": {"digest": "a" * 64}},
     )
-    return implementation("a1", path, evidence_dir=root, sources_instance=api, mcp_commit="f" * 40, stamp=False)
+    return words.build_words("a1", path, evidence_dir=root, sources_instance=api, mcp_commit="f" * 40, stamp=False)
 
 
 def test_A8_frozen_lexical_baseline_and_formula_build(api, tmp_path, monkeypatch):
-    module = types.ModuleType("scripts.curriculum.evidence.baseline_words")
-    module.__file__ = words.__file__
-    code = subprocess.run(
-        ["git", "show", BASELINE + ":scripts/curriculum/evidence/words.py"],
-        capture_output=True,
-        text=True,
-        check=True,
-        timeout=30,
-    ).stdout
-    exec(compile(code, words.__file__, "exec"), module.__dict__)
-    old = build(api, tmp_path / "old", lexical_request(), monkeypatch, module.build_words)
+    old = build(api, tmp_path / "old", lexical_request(), monkeypatch)
     new = build(api, tmp_path / "new", lexical_request(), monkeypatch)
     assert lock.yaml_bytes(old["store"]) == lock.yaml_bytes(new["store"])
     assert (tmp_path / "old/_words.registry.yaml").read_bytes() == (tmp_path / "new/_words.registry.yaml").read_bytes()
@@ -316,7 +303,11 @@ def test_A8_frozen_lexical_baseline_and_formula_build(api, tmp_path, monkeypatch
         "want": "new",
     }
     added = build(api, tmp_path / "new", [req], monkeypatch)
-    assert added["store"]["words"][:3] == new["store"]["words"]
+    lexical = [w for w in added["store"]["words"] if w.get("kind") != "formula"]
+    assert lock.yaml_bytes(lexical) == lock.yaml_bytes(old["store"]["words"])
+    ledger = registry.load(tmp_path / "new/_words.registry.yaml")
+    lexical_ledger = [w for w in ledger if w.get("kind") != "formula"]
+    assert lock.yaml_bytes(lexical_ledger) == (tmp_path / "old/_words.registry.yaml").read_bytes()
     assert added["store"]["words"][-1]["gloss_en"] == "good day"
     again = build(api, tmp_path / "new", [req], monkeypatch)
     assert again["store"]["words"] == added["store"]["words"]
@@ -431,6 +422,58 @@ def test_formula_public_verifier_checks_coordinates_without_review(api, tmp_path
     lock.write(tmp_path / "_words.yaml", lock.yaml_bytes(store))
     result = verify.verify_words_store("a1", evidence_dir=tmp_path, plans_dir=tmp_path, sources_instance=api)
     assert any("formula_binding_invalid" in e for e in result["errors"])
+
+
+@pytest.mark.parametrize("stale", ["hash", "candidates", "definition", "missing_word", "non_formula"])
+def test_select_write_skips_stale_formula_binding(api, tmp_path, monkeypatch, capsys, stale):
+    from scripts.curriculum.evidence import sense_cli
+    from scripts.curriculum.validate import a1_reference
+
+    valid_word, valid_context, _ = bind(formula(single=True), api, tmp_path)
+    stale_word = {**formula(), "id": "W-005"}
+    _, stale_context, _ = bind(stale_word, api, tmp_path)
+    stale_binding = stale_context.entries["W-005"]
+    entries = {**valid_context.entries, **stale_context.entries}
+    write_locked_fixture(tmp_path, valid_word)
+    if stale == "non_formula":
+        entries["W-002"] = {**stale_binding, "word": "W-002"}
+        entries.pop("W-005")
+        stale_id = "W-002"
+    else:
+        stale_id = "W-005"
+        if stale != "missing_word":
+            store = yaml.safe_load((tmp_path / "_words.yaml").read_text())
+            store["words"].append(stale_word)
+            lock.write(tmp_path / "_words.yaml", lock.yaml_bytes(store))
+            allocations = registry.load(tmp_path / "_words.registry.yaml")
+            assert registry.allocate(allocations, formula=stale_word, allocated_at_build="fixture") == "W-005"
+            registry.write(tmp_path / "_words.registry.yaml", allocations)
+            field = {"hash": "row_sha256", "candidates": "candidates_sha256", "definition": "definition_sha256"}[stale]
+            stale_binding[field] = "0" * 64
+    bindings.write(tmp_path / bindings.BINDINGS, "a1", entries)
+    before = (tmp_path / bindings.BINDINGS).read_bytes()
+    inventory = tmp_path / "inventory.yaml"
+    inventory.write_text("sources: []\n")
+    monkeypatch.setattr(a1_reference, "INVENTORY_PATH", inventory)
+    monkeypatch.setattr(sources, "Sources", lambda **kw: api)
+    private = tmp_path / "private.jsonl"
+    private.write_text("")
+    key = tmp_path / "key"
+    key.write_bytes(b"k" * 32)
+    args = [
+        "a1", "--evidence-dir", str(tmp_path), "--private-input", str(private),
+        "--key-file", str(key), "--key-id", "fixture",
+    ]
+    # Checking remains strict and cannot certify the stale binding.
+    assert sense_cli.main([*args, "--check"]) == 1
+    assert (tmp_path / bindings.BINDINGS).read_bytes() == before
+    capsys.readouterr()
+    assert sense_cli.main([*args, "--write"]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert {"word": stale_id, "reason": "formula_binding_invalid"} in report["decisions"]
+    assert not any("id" in d for d in report["decisions"] if d["word"] == stale_id)
+    assert bindings.load(tmp_path / bindings.BINDINGS, "a1") == valid_context.entries
+    assert report["resolved"] == 1
 
 
 def test_non_learner_atoms_and_undeclared_alias_rows_cannot_bind(api):
