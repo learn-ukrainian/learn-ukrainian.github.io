@@ -166,7 +166,9 @@ def test_cursor_grok_seat_refuses_xai_and_moonshot_union_authors(author):
 
 
 def test_composer_stays_an_unattested_formal_identity():
-    result = evaluate_candidate(REVIEW_CANDIDATES["composer-2.5"], ResolverInputs(author_model="gpt-6.1-sol", risk="high"))
+    result = evaluate_candidate(
+        REVIEW_CANDIDATES["composer-2.5"], ResolverInputs(author_model="gpt-6.1-sol", risk="high")
+    )
     assert result.status == "excluded"
     assert "is not pinned for model" in result.reason
 
@@ -286,8 +288,27 @@ def _publishing(synthetic_opsec, publisher_transport, monkeypatch):
 
 
 def _record(monkeypatch, tmp_path, *, resolved_model, families=frozenset({"anthropic"}), **extra):
+    """Record a finished review task as delegate leaves it.
+
+    A Cursor run's ``model`` is overwritten by the runtime report, so its dispatch pin
+    survives only in the adapter's ``substitution`` receipt (``adapters/cursor.py``).
+    """
     tasks = tmp_path / "tasks"
     tasks.mkdir()
+    if extra.get("agent", "cursor") == "cursor":
+        extra.setdefault(
+            "substitution",
+            {
+                "requested_provider": "cursor",
+                "requested_model": GROK_PIN,
+                "actual_provider": "cursor",
+                "actual_model": resolved_model,
+                "actual_model_known": True,
+                "substituted": resolved_model != GROK_PIN,
+                "source": "cursor-stream-json",
+                "marker": None,
+            },
+        )
     task = {
         "repository": "owner/repo",
         "worktree_branch": "claude/42",
@@ -369,7 +390,6 @@ def test_a_grok_verdict_on_a_grok_authored_change_is_refused(monkeypatch, tmp_pa
         "grok-4.5",
         "xai",
         "grok-4.7",  # a bare slug names no variant; Cursor runs it as High Fast
-        "grok-4.7-high",  # the dispatch slug is not the runtime's report
         "composer-2.5",
         "Composer 2.5",
         "claude-opus-5-5",  # Cursor-routed Claude is not a pinned formal seat
@@ -380,6 +400,13 @@ def test_a_runtime_attested_cursor_identity_the_resolver_never_selects_is_refuse
 ):
     with pytest.raises(recorder.RecordError, match="reviewer model unknown"):
         _record(monkeypatch, tmp_path, resolved_model=resolved_model)
+
+
+@pytest.mark.usefixtures("_publishing")
+def test_a_cursor_report_that_only_echoes_the_dispatch_slug_is_refused(monkeypatch, tmp_path):
+    # The dispatch slug is not the runtime's report: no High display was attested.
+    with pytest.raises(recorder.RecordError, match="Cursor reviewer request unknown"):
+        _record(monkeypatch, tmp_path, resolved_model=GROK_PIN)
 
 
 @pytest.mark.usefixtures("_publishing")
