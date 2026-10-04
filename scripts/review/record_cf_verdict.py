@@ -48,7 +48,6 @@ from scripts.review.reviewer_resolver import (
     FORMAL_CURSOR_REVIEW_DISPATCH_MODELS,
     FORMAL_CURSOR_REVIEW_MODELS,
     REVIEW_CANDIDATES,
-    UNKNOWN_AUTHOR_FAMILY,
     UNRESOLVED_AUTHOR_FAMILIES,
     ResolverInputs,
     candidate_dispatch_model,
@@ -336,6 +335,31 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
     return families
 
 
+def target_changed_paths(repository: str, pr_number: int, sha: str) -> tuple[str, ...]:
+    """Every path the PR changes at the reviewed head, both names of a rename; fail closed.
+
+    GitHub lists at most 3000 files per PR, so the listing must match the PR's
+    changed-file count, read after the listing while the head is still ``sha``.
+    """
+    files = _pages(Request("read-files", repo=repository, number=pr_number))
+    paths = []
+    for entry in files:
+        names = [entry.get("filename")]
+        previous = entry.get("previous_filename")
+        if entry.get("status") == "renamed" or previous is not None:
+            names.append(previous)
+        if not isinstance(entry.get("status"), str) or not all(isinstance(name, str) and name for name in names):
+            raise RecordError("PR changed-path set malformed")
+        paths.extend(names)
+    pr = _run_json(["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "headRefOid,changedFiles"])
+    if not isinstance(pr, dict) or pr.get("headRefOid") != sha:
+        raise RecordError("PR head moved since review; re-run exact-head review")
+    count = pr.get("changedFiles")
+    if not files or type(count) is not int or count != len(files):
+        raise RecordError("PR changed-path set incomplete")
+    return tuple(dict.fromkeys(paths))
+
+
 def _repo_root() -> Path:
     try:
         result = subprocess.run(
@@ -576,9 +600,8 @@ def _require_formal_reviewer(
     Grok never judges and Kimi never reviews. The run must have been
     requested with a formal seat's exact dispatch slug, and the runtime must attest
     that same seat (#9714). On every harness the model must also hold a catalog
-    review role (#9583), so Fable and retired models never approve, and the
-    resolver must find the attested model eligible on its harness at the task's
-    persisted review profile and risk, so Cursor Grok never judges critical risk.
+    review role (#9583), so Fable and retired models never approve. Whether the
+    seat qualifies for this PR is :func:`_require_qualified_reviewer`'s question.
     """
     cursor = agent == "cursor"
     if cursor:
@@ -596,28 +619,68 @@ def _require_formal_reviewer(
     # #9583: a model the catalog gives no review role never approves, on any harness.
     if refusal := activity_role_refusal(model, REVIEW_ACTIVITY):
         raise RecordError(f"reviewer model refused: {refusal}")
-    profile, risk, owned = _review_qualification(task)
+    profile, _, _ = _review_qualification(task)
     if profile == "ukrainian":
         if agent not in UKRAINIAN_REVIEW_SEATS or family not in UKRAINIAN_REVIEW_FAMILIES:
             raise RecordError(f"reviewer model unqualified: {model!r} on {agent!r} is not a Ukrainian reviewer")
-        return
+    elif not _review_seats(agent=agent, requested=requested, model=model):
+        raise RecordError(f"reviewer model unqualified: no catalog review seat runs {model!r} on {agent!r}")
+
+
+def _review_seats(*, agent: object, requested: object, model: str) -> list[Any]:
+    """The catalog review candidates that are the attested seat at its dispatched pin."""
     concrete = model.split("[", 1)[0]
-    pin = requested if cursor else concrete
-    risk = effective_review_risk(risk, (), owned, profile=profile)
-    inputs = ResolverInputs(author_model="", review_profile=profile, domain=profile, risk=risk, owned_paths=owned)
-    # Independence is decided against the PR's authors below; this is the seat's own qualification.
-    results = [
-        evaluate_candidate(candidate, inputs, author_family=UNKNOWN_AUTHOR_FAMILY)
+    pin = requested if agent == "cursor" else concrete
+    return [
+        candidate
         for candidate in REVIEW_CANDIDATES.values()
         if candidate.route == agent
         and candidate.concrete_model == concrete
         and candidate_dispatch_model(candidate) == pin
     ]
-    if not results:
-        raise RecordError(f"reviewer model unqualified: no catalog review seat runs {model!r} on {agent!r}")
-    if not any(result.status == "eligible" for result in results):
-        reasons = "; ".join(sorted({str(result.reason) for result in results}))
-        raise RecordError(f"reviewer model unqualified at {profile}/{risk} review: {reasons}")
+
+
+def _require_qualified_reviewer(
+    task: dict[str, Any],
+    *,
+    agent: object,
+    requested: object,
+    model: str,
+    family: str,
+    author_families: set[str],
+    changed_paths: tuple[str, ...],
+) -> None:
+    """Refuse a seat the shared resolver would not admit for this exact PR (#9714).
+
+    The resolver decides at the target's effective risk, from every path the
+    reviewed head changes plus the persisted owned paths, against each actual
+    author family, so its union-transport exclusions (no Cursor reviewer for an
+    xAI or Moonshot author) bind here as they do at dispatch.
+    """
+    if not author_families:
+        raise RecordError("PR has no attributed author commits")
+    if family in author_families:
+        raise RecordError("reviewer family equals an author family")
+    profile, risk, owned = _review_qualification(task)
+    if profile == "ukrainian":
+        return
+    risk = effective_review_risk(risk, changed_paths, owned, profile=profile)
+    inputs = ResolverInputs(
+        author_model="",
+        review_profile=profile,
+        domain=profile,
+        risk=risk,
+        owned_paths=owned,
+        changed_paths=changed_paths,
+    )
+    seats = _review_seats(agent=agent, requested=requested, model=model)
+    for author_family in sorted(author_families):
+        results = [evaluate_candidate(candidate, inputs, author_family=author_family) for candidate in seats]
+        if not any(result.status == "eligible" for result in results):
+            reasons = "; ".join(sorted({str(result.reason) for result in results})) or "no catalog review seat"
+            raise RecordError(
+                f"reviewer model unqualified at {profile}/{risk} review against {author_family} authors: {reasons}"
+            )
 
 
 @publication_boundary(RecordError)
@@ -667,8 +730,15 @@ def record(
     if not isinstance(number, int) or number < 1:
         raise RecordError("PR number unavailable")
     families = author_families(repository, number, task_root)
-    if family in families:
-        raise RecordError("reviewer family equals an author family")
+    _require_qualified_reviewer(
+        task,
+        agent=task.get("agent"),
+        requested=requested,
+        model=model,
+        family=family,
+        author_families=families,
+        changed_paths=target_changed_paths(repository, number, sha),
+    )
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())

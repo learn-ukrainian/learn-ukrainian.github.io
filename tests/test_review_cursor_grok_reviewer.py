@@ -342,8 +342,16 @@ def _record(monkeypatch, tmp_path, *, resolved_model, families=frozenset({"anthr
             return item
         if isinstance(args, Request) and args.verb == "read-comment":
             return comments[-1]
+        if isinstance(args, Request) and args.verb == "read-files":
+            return [[{"filename": "docs/unit.md", "status": "modified"}]]
         if args[:3] == ["gh", "pr", "view"]:
-            return {"number": 42, "headRefOid": "a" * 40, "headRefName": "claude/42", "state": "OPEN"}
+            return {
+                "number": 42,
+                "headRefOid": "a" * 40,
+                "headRefName": "claude/42",
+                "state": "OPEN",
+                "changedFiles": 1,
+            }
         raise AssertionError(args)
 
     monkeypatch.setattr(recorder, "_run_json", fake_json)

@@ -144,21 +144,39 @@ def test_task_refusals_before_network(tmp_path, updates, reply, reason):
     "agent,model,family", [("claude", "claude-opus-5-5", "anthropic"), ("codex", "gpt-6.1-sol", "openai")]
 )
 def test_formal_reviewer_still_admits_opus_and_sol(agent, model, family, risk):
-    recorder._require_formal_reviewer(
-        {"review_risk": risk}, agent=agent, requested=model, reported=model, model=model, family=family
+    task = {"review_risk": risk}
+    recorder._require_formal_reviewer(task, agent=agent, requested=model, reported=model, model=model, family=family)
+    recorder._require_qualified_reviewer(
+        task,
+        agent=agent,
+        requested=model,
+        model=model,
+        family=family,
+        author_families={"google"},
+        changed_paths=("scripts/review/record_cf_verdict.py",),
     )
 
 
-def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=None, status_error=False):
+ORDINARY_FILES = [{"filename": "docs/unit.md", "status": "modified"}]
+
+
+def setup_record(
+    monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=None, status_error=False, files=None, changed=None
+):
     tasks = tmp_path / "tasks"
     write_task(tasks)
     comments = []
     calls = {"posts": 0, "statuses": 0}
+    files = ORDINARY_FILES if files is None else files
+    changed = len(files) if changed is None else changed
 
     def fake_json(args, *, input_text=None):
         from scripts.publish.github import Request
 
         if isinstance(args, Request):
+            if args.verb == "read-files":
+                assert args.fields == {"repo": REPOSITORY, "number": 42, "paginate": True, "slurp": True}
+                return [files]
             if args.verb == "issue-comment-json":
                 input_text = json.dumps({"body": args.fields["body"]})
                 args = ["gh", "api", "-X", "POST"]
@@ -167,7 +185,7 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
             else:
                 raise AssertionError(args.verb)
         if args[:3] == ["gh", "pr", "view"]:
-            return {"number": 42, "headRefOid": head, "headRefName": branch, "state": "OPEN"}
+            return {"number": 42, "headRefOid": head, "headRefName": branch, "state": "OPEN", "changedFiles": changed}
         if args[:3] == ["gh", "pr", "list"]:
             return [{"number": 42, "headRefOid": head, "headRefName": branch}]
         if args[:4] == ["gh", "api", "-X", "POST"]:
@@ -394,7 +412,10 @@ def real_commit_set(monkeypatch, tmp_path):
             }
             for sha in git("rev-list", "--reverse", f"{base}..{head}").stdout.splitlines()
         ]
-        monkeypatch.setattr(recorder, "_pages", lambda args: commits)
+        real_pages = recorder._pages
+        monkeypatch.setattr(
+            recorder, "_pages", lambda args: commits if args.verb == "read-commits" else real_pages(args)
+        )
 
         def base_lookup(args, **kwargs):
             assert args == ["gh", "pr", "view", "42", "--repo", REPOSITORY, "--json", "baseRefOid"]
@@ -1924,6 +1945,184 @@ def test_an_attested_cursor_opus_verdict_records_through_critical_risk(monkeypat
     assert calls == {"posts": 1, "statuses": 1}
 
 
+# --- #9714: qualification against the exact PR target and actual authors --------
+
+SECURITY_TARGETS = {
+    "modified": [{"filename": "scripts/review/record_cf_verdict.py", "status": "modified"}],
+    "deleted": [{"filename": "scripts/agent_runtime/runner.py", "status": "removed"}],
+    "renamed-away": [
+        {"filename": "docs/runner.py", "previous_filename": "scripts/agent_runtime/runner.py", "status": "renamed"}
+    ],
+    "mixed": [
+        {"filename": "docs/unit.md", "status": "modified"},
+        {"filename": "scripts/publish/github.py", "status": "added"},
+    ],
+}
+REQUESTED_RISKS = [pytest.param({}, id="absent"), {"review_risk": None}, {"review_risk": "medium"}]
+
+
+@pytest.mark.parametrize("target", sorted(SECURITY_TARGETS))
+@pytest.mark.parametrize("updates", REQUESTED_RISKS)
+@pytest.mark.parametrize("shape", CURSOR_SHAPES)
+def test_a_cursor_grok_verdict_on_a_security_target_is_refused_whatever_risk_was_requested(
+    monkeypatch, tmp_path, target, updates, shape
+):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"}, files=SECURITY_TARGETS[target])
+    cursor_receipt_shape(tasks, shape, requested="grok-4.7-high", attested="Grok 4.7 256K High", **updates)
+    with pytest.raises(recorder.RecordError, match="unqualified at code/critical review"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("families", [{"xai"}, {"moonshot"}, {"openai", "xai"}, {"google", "moonshot"}])
+@pytest.mark.parametrize("risk", [None, "critical"])
+@pytest.mark.parametrize("shape", CURSOR_SHAPES)
+def test_a_cursor_opus_verdict_against_an_xai_or_moonshot_author_is_refused(
+    monkeypatch, tmp_path, families, risk, shape
+):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families=families)
+    cursor_receipt_shape(
+        tasks, shape, requested="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High", review_risk=risk
+    )
+    with pytest.raises(recorder.RecordError, match="Cursor-as-reviewer is ineligible"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("author", ["Grok 4.7 256K High", "Composer 2.5"])
+@pytest.mark.parametrize("shape", CURSOR_SHAPES)
+def test_a_cursor_opus_verdict_on_a_canonical_cursor_authored_pr_is_refused(monkeypatch, tmp_path, author, shape):
+    tasks, comments, calls = record_against_cursor_author(monkeypatch, tmp_path, {}, model=author)
+    cursor_receipt_shape(
+        tasks, shape, requested="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High", review_risk="critical"
+    )
+    with pytest.raises(recorder.RecordError, match="Cursor-as-reviewer is ineligible"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "agent,model,families,recorded",
+    [
+        ("cursor", "claude-opus-5-5-high", {"openai"}, "model=claude-opus-5-5 family=anthropic"),
+        ("codex", "gpt-6.1-sol", {"xai", "moonshot"}, "model=gpt-6.1-sol family=openai"),
+        ("claude", "claude-opus-5-5", {"xai"}, "model=claude-opus-5-5 family=anthropic"),
+    ],
+)
+@pytest.mark.parametrize("target", sorted(SECURITY_TARGETS))
+def test_a_critical_reviewer_still_records_on_a_security_target(
+    monkeypatch, tmp_path, agent, model, families, recorded, target
+):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families=families, files=SECURITY_TARGETS[target])
+    if agent == "cursor":
+        cursor_receipt_shape(tasks, "terminal", requested=model, attested="Claude Opus 5.5 300K High")
+    else:
+        write_task(tasks, agent=agent, model=model)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert (result["comment"], result["status"]) == ("posted", "posted")
+    assert recorded in comments[0]["body"]
+    assert calls == {"posts": 1, "statuses": 1}
+
+
+@pytest.mark.parametrize(
+    "files,changed",
+    [
+        pytest.param([], 0, id="empty"),
+        pytest.param(ORDINARY_FILES, 2, id="truncated-listing"),
+        pytest.param(ORDINARY_FILES, None, id="count-missing"),
+        pytest.param([{"filename": "docs/unit.md"}], 1, id="status-missing"),
+        pytest.param([{"filename": "", "status": "modified"}], 1, id="name-empty"),
+        pytest.param([{"filename": ["docs/unit.md"], "status": "modified"}], 1, id="name-list"),
+        pytest.param([{"filename": "docs/a.md", "status": "renamed"}], 1, id="rename-source-missing"),
+        pytest.param([{"filename": "docs/a.md", "previous_filename": 7, "status": "copied"}], 1, id="source-malformed"),
+    ],
+)
+def test_an_incomplete_or_malformed_target_listing_is_refused_before_publication(monkeypatch, tmp_path, files, changed):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"}, files=files, changed=changed)
+    if changed is None:
+        fake_json = recorder._run_json
+
+        def without_count(args, *, input_text=None):
+            data = fake_json(args, input_text=input_text)
+            return {k: v for k, v in data.items() if k != "changedFiles"} if isinstance(data, dict) else data
+
+        monkeypatch.setattr(recorder, "_run_json", without_count)
+    cursor_receipt_shape(tasks, "terminal", requested="grok-4.7-high", attested="Grok 4.7 256K High")
+    with pytest.raises(recorder.RecordError, match=r"PR changed-path set (incomplete|malformed)"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_an_unavailable_target_listing_is_refused_before_publication(monkeypatch, tmp_path):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    fake_json = recorder._run_json
+
+    def files_unavailable(args, *, input_text=None):
+        if getattr(args, "verb", None) == "read-files":
+            raise recorder.RecordError("GitHub lookup or publication unavailable")
+        return fake_json(args, input_text=input_text)
+
+    monkeypatch.setattr(recorder, "_run_json", files_unavailable)
+    with pytest.raises(recorder.RecordError, match="unavailable"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_a_head_that_moves_while_the_target_is_read_is_refused(monkeypatch, tmp_path):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    fake_json = recorder._run_json
+
+    def moved_after_listing(args, *, input_text=None):
+        data = fake_json(args, input_text=input_text)
+        if isinstance(args, list) and "headRefOid,changedFiles" in args:
+            return {**data, "headRefOid": OTHER}
+        return data
+
+    monkeypatch.setattr(recorder, "_run_json", moved_after_listing)
+    with pytest.raises(recorder.RecordError, match="head moved since review"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_qualification_without_an_author_family_is_refused():
+    with pytest.raises(recorder.RecordError, match="no attributed author commits"):
+        recorder._require_qualified_reviewer(
+            {},
+            agent="codex",
+            requested="gpt-6.1-sol",
+            model="gpt-6.1-sol",
+            family="openai",
+            author_families=set(),
+            changed_paths=("docs/unit.md",),
+        )
+
+
+def test_the_target_listing_keeps_both_names_of_a_rename():
+    def pages(args):
+        assert args.verb == "read-files"
+        return SECURITY_TARGETS["renamed-away"] + SECURITY_TARGETS["mixed"]
+
+    def view(args):
+        assert args == ["gh", "pr", "view", "42", "--repo", REPOSITORY, "--json", "headRefOid,changedFiles"]
+        return {"headRefOid": SHA, "changedFiles": 3}
+
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(recorder, "_pages", pages)
+        patch.setattr(recorder, "_run_json", view)
+        assert recorder.target_changed_paths(REPOSITORY, 42, SHA) == (
+            "docs/runner.py",
+            "scripts/agent_runtime/runner.py",
+            "docs/unit.md",
+            "scripts/publish/github.py",
+        )
+
+
 @pytest.mark.parametrize(
     "updates,reason",
     [
@@ -2167,15 +2366,15 @@ def test_a_cursor_author_record_with_each_runtime_reported_source_resolves(monke
     assert recorder.author_families(REPOSITORY, 42, tasks) == {"anthropic"}
 
 
-def record_against_cursor_author(monkeypatch, tmp_path, source):
-    """Publish a Sol verdict whose PR author is a real Cursor task record."""
+def record_against_cursor_author(monkeypatch, tmp_path, source, *, model="Grok 4.7 256K High"):
+    """Publish a verdict whose PR author is a real Cursor task record."""
     real_author_families = recorder.author_families
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     monkeypatch.setattr(recorder, "author_families", real_author_families)
-    unreported_cursor_author(tasks, "cursor-9714-opus-critical", "Grok 4.7 256K High", source)
-    monkeypatch.setattr(
-        recorder, "_pages", lambda args: [producer_trailer_commit("cursor", "cursor-9714-opus-critical")]
-    )
+    unreported_cursor_author(tasks, "cursor-9714-opus-critical", model, source)
+    real_pages = recorder._pages
+    commits = [producer_trailer_commit("cursor", "cursor-9714-opus-critical")]
+    monkeypatch.setattr(recorder, "_pages", lambda args: commits if args.verb == "read-commits" else real_pages(args))
     return tasks, comments, calls
 
 

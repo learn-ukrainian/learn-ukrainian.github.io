@@ -369,6 +369,7 @@ def test_specific_graphql_reads_keep_variables_as_data(operation, fields):
         ("identity", {}),
         ("issue", {"number": 1}),
         ("comments", {"number": 1}),
+        ("files", {"number": 1}),
         ("checks", {"sha": "a" * 40}),
         ("runs", {"start": "2026-01-01", "end": "2026-01-02"}),
     ],
@@ -380,10 +381,28 @@ def test_specific_rest_reads_are_fixed_get_without_matcher(operation, fields, mo
     assert calls[0]["argv"][2:4] == ["--method", "GET"]
 
 
+def test_pr_files_read_is_the_fixed_paginated_listing(monkeypatch):
+    monkeypatch.setattr(gate, "private_tooling", lambda: pytest.fail("matcher"))
+    calls = []
+    request = pub.Request("read-files", repo="unit/public", number=7, paginate=True, slurp=True)
+    pub.request_run(request, runner=spy(calls))
+    assert calls[0]["argv"] == [
+        "gh",
+        "api",
+        "--method",
+        "GET",
+        "repos/unit/public/pulls/7/files?per_page=100",
+        "--paginate",
+        "--slurp",
+    ]
+
+
 @pytest.mark.parametrize(
     "operation,fields",
     [
         ("comments", {"number": "1/comments?x=unit"}),
+        ("files", {"number": "1/files?x=unit"}),
+        ("files", {"number": 1, "sha": "a" * 40}),
         ("checks", {"sha": "unit?x=y"}),
         ("graphql", {"query": "mutation{x}"}),
         ("subissue-batch", {"cursors": {"unit": None}, "body_roots": set()}),
@@ -788,11 +807,13 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
                 "worktree_branch": "unit",
                 "worktree_base_sha": "a" * 40,
                 "model": "gpt-6.1-sol",
+                "agent": "codex",
                 "started_at": "2026-01-01T00:00:00+00:00",
             }
             monkeypatch.setattr(module, "_task", lambda *a: (task, "VERDICT: APPROVE\n" + TOKEN))
             monkeypatch.setattr(module, "_pr", lambda *a: {"number": 1, "headRefName": "unit", "headRefOid": "a" * 40})
             monkeypatch.setattr(module, "author_families", lambda *a: {"anthropic"})
+            monkeypatch.setattr(module, "target_changed_paths", lambda *a: ("docs/unit.md",))
             monkeypatch.setattr(module.GitHubAdapter, "identity", lambda *a: "unit")
             monkeypatch.setattr(module.GitHubAdapter, "comments", lambda *a: [])
             module.record("unit-review", pr_number=1, task_root=tmp_path, lock_root=tmp_path / "locks")
