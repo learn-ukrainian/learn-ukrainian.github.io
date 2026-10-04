@@ -14,9 +14,19 @@ import yaml
 
 from scripts.common.task_store_paths import tasks_dir
 
+from . import lock, registry, sources
 from . import reference_sense_v1 as matcher
 from . import sense_bindings as bindings
-from . import sources
+
+
+def validate_formula_record(word: dict, store: dict, evidence: Path, api: sources.Sources) -> None:
+    """Keep part W-ids bound to their locked append-only lexical allocations."""
+    lock.require(evidence / "_words.yaml")
+    bindings.formulas.validate(word, {w["id"]: w for w in store["words"]}, api)
+    try:
+        registry.check_store(registry.load(evidence / "_words.registry.yaml"), store["words"])
+    except ValueError as exc:
+        raise ValueError("formula_part_identity_invalid") from exc
 
 
 def select_store(
@@ -28,7 +38,7 @@ def select_store(
     key_id: str | None = None,
 ) -> tuple[dict[str, dict], list[dict]]:
     """Measure without publishing private input, including repeated reference entries."""
-    words = store["words"]
+    words = [w for w in store["words"] if w.get("kind") != "formula"]
     rows = api.gloss_rows((w["lemma"], w["pos"]) for w in words).raw
     kaikki = api.kaikki_rows(w["lemma"] for w in words).raw
     ulif = api.ulif_entries(w["lemma"] for w in words).raw
@@ -81,6 +91,17 @@ def select_store(
                 else "reference_ambiguous"
             )
             decisions.append({"word": word["id"], "reason": reason or "reference_ambiguous", **report})
+    records = {w["id"]: w for w in store["words"]}
+    for word in store["words"]:
+        if word.get("kind") != "formula":
+            continue
+        bindings.formulas.validate(word, records, api)
+        binding, decision = bindings.auto_formula_binding(
+            word, api.formula_rows(word).raw, inventory, private, key, key_id
+        )
+        decisions.append(decision)
+        if binding:
+            selected[word["id"]] = binding
     return selected, decisions
 
 
@@ -119,7 +140,7 @@ def _redact_validated_locations(
             binding = context.entries.get(wid)
             if not word or not binding:
                 continue
-            row = api.gloss_rows([(word["lemma"], word["pos"])]).raw.get((word["lemma"], word["pos"]), [])
+            row = bindings.rows_for(word, api)
             selection = context.select(word, row, None)
             if selection.gloss is None:
                 continue
@@ -301,6 +322,8 @@ def leak_scan(
                         remember(lemma, span, whole)
     forms = {}
     for word in words.values():
+        if word.get("kind") == "formula":
+            continue
         forms.setdefault(sources.unstressed_headword(word["lemma"]), set()).update(
             _scan_normalize(variant)
             for v in (word["lemma"], *(f["form"] for f in word.get("forms", []) if f.get("form")))
@@ -420,7 +443,7 @@ def parser(command: str) -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog=f"sense-{command}",
         description=(
-            "Select exact private reference meanings or bind a recorded reviewed dictionary span.\n"
+            "Select private reference meanings, formula atoms, or reviewed lexical spans.\n"
             "Private inputs and receipts stay outside Git; diagnostics expose only ids and reason codes."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -439,7 +462,9 @@ def parser(command: str) -> argparse.ArgumentParser:
     if command == "select":
         p.add_argument("--private-input", required=True, type=Path, help="Private JSONL extraction outside Git")
         modes = p.add_mutually_exclusive_group()
-        modes.add_argument("--write", action="store_true", help="Update reference bindings and lock")
+        modes.add_argument(
+            "--write", action="store_true", help="Update bindings and lock; report and skip stale formula bindings"
+        )
         modes.add_argument("--check", action="store_true", help="Reselect, scan and verify/seal current head")
         p.add_argument("--key-file", type=Path, help="Host-local secret key, at least 32 bytes")
         p.add_argument("--key-id", help="Public non-secret key identifier")
@@ -466,7 +491,7 @@ def parser(command: str) -> argparse.ArgumentParser:
         p.add_argument("--atom-index", type=int, default=0, help="Atom position from candidate list (default: 0)")
         p.add_argument("--review-task", help="Terminal Ukrainian review dispatch id")
         p.add_argument(
-            "--author-model", help="Optional author consistency check; identity is derived from the dispatch"
+            "--author-model", help="Lexical review author consistency check; identity is derived from the dispatch"
         )
     return p
 
@@ -496,28 +521,57 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                 word = next((w for w in store["words"] if w["id"] == args.word), None)
                 if word is None:
                     raise ValueError("word_missing")
-                rows = api.gloss_rows([(word["lemma"], word["pos"])]).raw[(word["lemma"], word["pos"])]
+                rows = bindings.rows_for(word, api)
+                if word.get("kind") == "formula":
+                    validate_formula_record(word, store, evidence, api)
                 pool = bindings.candidate_list(word, rows)
                 if args.candidates:
                     print(
                         json.dumps(
-                            {"word": args.word, "candidates_sha256": bindings.digest(pool), "candidates": pool},
+                            {
+                                "word": args.word,
+                                "candidates_sha256": bindings.digest(pool),
+                                "candidates": pool,
+                                **(
+                                    {
+                                        **bindings.formulas.definition(word),
+                                        "definition_sha256": word["definition_sha256"],
+                                    }
+                                    if word.get("kind") == "formula"
+                                    else {}
+                                ),
+                            },
                             ensure_ascii=False,
                         )
                     )
                     return 0
-                if None in (args.row_id, args.span_index, args.review_task):
-                    raise ValueError("review_arguments_required")
-                context.entries[args.word] = bindings.reviewed_binding(
-                    word,
-                    pool,
-                    args.row_id,
-                    args.span_index,
-                    args.review_task,
-                    tasks_dir(),
-                    args.author_model,
-                    atom_index=args.atom_index,
-                )
+                if word.get("kind") == "formula":
+                    if None in (args.row_id, args.span_index):
+                        raise ValueError("formula_coordinates_required")
+                    chosen = next(
+                        (
+                            c
+                            for c in pool
+                            if c["id"] == args.row_id
+                            and c["span_index"] == args.span_index
+                            and c["atom_index"] == args.atom_index
+                        ),
+                        None,
+                    )
+                    context.entries[args.word] = bindings.formula_binding(word, pool, chosen)
+                else:
+                    if None in (args.row_id, args.span_index, args.review_task):
+                        raise ValueError("review_arguments_required")
+                    context.entries[args.word] = bindings.reviewed_binding(
+                        word,
+                        pool,
+                        args.row_id,
+                        args.span_index,
+                        args.review_task,
+                        tasks_dir(),
+                        args.author_model,
+                        atom_index=args.atom_index,
+                    )
                 bindings.write(path, args.level, context.entries)
                 print(
                     json.dumps(
@@ -539,16 +593,42 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                 bindings.keyed({}, key)
             selected, decisions = select_store(store, context.inventory, private, api, key, args.key_id)
             if args.write:
-                selected.update({k: v for k, v in context.entries.items() if v["method"] == "reviewed.v1"})
+                by_id = {w["id"]: w for w in store["words"]}
+                for wid, binding in context.entries.items():
+                    if binding["method"] == "reviewed.v1":
+                        selected[wid] = binding
+                    elif binding["method"] == "formula_row.v1":
+                        word = by_id.get(wid)
+                        valid = word is not None and word.get("kind") == "formula"
+                        if valid:
+                            validate_formula_record(word, store, evidence, api)
+                            valid = context.select(word, bindings.rows_for(word, api), None).gloss is not None
+                        if not valid:
+                            selected.pop(wid, None)
+                            decisions = [d for d in decisions if d["word"] != wid]
+                            decisions.append({"word": wid, "reason": "formula_binding_invalid"})
+                            continue
+                        selected[wid] = binding
                 bindings.write(path, args.level, selected)
             if args.check:
                 for wid, binding in context.entries.items():
-                    if binding["method"] != "reviewed.v1":
+                    if binding["method"] not in {"reviewed.v1", "formula_row.v1"}:
                         continue
                     word = next((w for w in store["words"] if w["id"] == wid), None)
                     if word is None:
                         raise ValueError("word_missing")
-                    rows = api.gloss_rows([(word["lemma"], word["pos"])]).raw.get((word["lemma"], word["pos"]), [])
+                    rows = bindings.rows_for(word, api)
+                    if word.get("kind") == "formula":
+                        validate_formula_record(word, store, evidence, api)
+                    if binding["method"] == "formula_row.v1":
+                        if context.select(word, rows, None).gloss is None:
+                            raise ValueError("formula_binding_invalid")
+                        # Keyed formula reference evidence is reselected; coordinate-only
+                        # bindings keep their explicit public sense choice.
+                        if "commitment" in binding and selected.get(wid) != binding:
+                            raise ValueError("formula_binding_reselection_failed")
+                        selected.pop(wid, None)
+                        continue
                     pool = bindings.candidate_list(word, rows)
                     current = bindings.reviewed_binding(
                         word,
@@ -649,6 +729,24 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
             "review_sources_unproven",
             "review_date_invalid",
             "private_output_inside_repository",
+            "formula_coordinates_required",
+            "formula_binding_invalid",
+            "formula_binding_reselection_failed",
+            "formula_gloss_ineligible",
+            "formula_part_identity_invalid",
+            "formula_vesum_unavailable",
+            "formula_tokens_invalid",
+            "formula_punctuation_invalid",
+            "formula_token_parts_mismatch",
+            "formula_part_cycle",
+            "formula_part_missing_or_retired",
+            "formula_part_non_lexical",
+            "formula_part_ambiguous",
+            "formula_part_entry_invalid",
+            "formula_part_form_invalid",
+            "formula_alias_unattested",
+            "formula_alias_invalid",
+            "formula_definition_invalid",
         }
         reason = str(error) if isinstance(error, ValueError) and str(error) in safe_codes else type(error).__name__
         print(json.dumps({"status": "failed", "reason": reason}))

@@ -17,7 +17,7 @@ from scripts.curriculum.validate import a1_reference
 from scripts.review.model_catalog import load_model_catalog, resolve_catalog_model_id
 from scripts.review.receipts import ledger
 
-from . import lock, sources
+from . import formulas, lock, sources
 from . import reference_sense_v1 as matcher
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -109,6 +109,8 @@ class Context:
         return cls(level, entries, inventory)
 
     def members(self, word: dict) -> list[dict]:
+        if word.get("kind") == "formula":
+            return []
         return [
             r
             for r in self.inventory
@@ -119,10 +121,44 @@ class Context:
     def select(self, word: dict, rows: list[dict], payload: dict | None, **kwargs) -> sources.GlossSelection:
         """Bindings first; a reference member is never precision-first fallback."""
         binding = self.entries.get(word["id"])
+        if word.get("kind") == "formula":
+            if self.invalid:
+                return sources.GlossSelection(reason="formula_binding_invalid")
+            if not binding:
+                return sources.GlossSelection(reason="formula_binding_missing")
+            pool = candidate_list(word, rows)
+            selected = next((c for c in pool if all(c[k] == binding.get(k) for k in matcher.REF_FIELDS)), None)
+            reference_valid = "commitment" not in binding or (
+                binding.get("inventory") == INVENTORY
+                and binding.get("locator")
+                in {
+                    r["locator"]
+                    for r in self.inventory
+                    if any(
+                        formulas.printed_headword(v) == formulas.printed_headword(word["text"])
+                        for v in (r["lemma"], r.get("stressed", ""), *r.get("variants", []))
+                    )
+                }
+            )
+            if (
+                not reference_valid
+                or binding.get("method") != formulas.METHOD
+                or binding.get("word") != word["id"]
+                or selected is None
+                or word.get("definition_sha256") != formulas.definition_digest(word)
+                or binding.get("definition_sha256") != word.get("definition_sha256")
+                or binding.get("candidates_sha256") != digest(pool)
+            ):
+                return sources.GlossSelection(reason="formula_binding_invalid")
+            return sources.GlossSelection(
+                binding["span"], "dmklinger_uk_en", {k: binding[k] for k in matcher.REF_FIELDS}
+            )
         member = bool(self.members(word))
         if self.invalid:
             return sources.GlossSelection(reason="reference_binding_invalid")
         if binding:
+            if binding["method"] == formulas.METHOD:
+                return sources.GlossSelection(reason="reference_binding_invalid")
             candidates = matcher.candidates(word, rows, pronoun_entry=kwargs.get("pronoun_entry"))
             selected = next(
                 (c for c in candidates if all(c[k] == binding.get(k) for k in matcher.REF_FIELDS)),
@@ -166,9 +202,101 @@ def reference_binding(word: dict, ref: dict, private: dict, key: bytes, key_id: 
 def candidate_list(word: dict, rows: list[dict]) -> list[dict]:
     """Reviewable public values only; their digest is the review's exact subject."""
     return [
-        {**{k: c[k] for k in matcher.REF_FIELDS}, "labels": list(c["labels"]), "definitions": list(c["definitions"])}
+        {
+            **{k: c[k] for k in matcher.REF_FIELDS},
+            "labels": list(c["labels"]),
+            "definitions": list(c["definitions"]),
+            **({"headword": c["headword"]} if word.get("kind") == "formula" else {}),
+        }
         for c in matcher.candidates(word, rows)
     ]
+
+
+def formula_binding(word: dict, pool: list[dict], chosen: dict) -> dict:
+    """Pin only an eligible printed candidate; no formula review dispatch required."""
+    if chosen not in pool or word.get("definition_sha256") != formulas.definition_digest(word):
+        raise ValueError("formula_binding_invalid")
+    return {
+        "word": word["id"],
+        "method": formulas.METHOD,
+        "definition_sha256": word["definition_sha256"],
+        "candidates_sha256": digest(pool),
+        **{k: chosen[k] for k in matcher.REF_FIELDS},
+    }
+
+
+def choose_formula(
+    word: dict, pool: list[dict], inventory: list[dict], private: dict | None = None
+) -> tuple[dict | None, dict]:
+    """Private meaning selects public wording, then request note, then source order.
+
+    Diagnostics carry only public coordinates, locators and reason codes.
+    """
+    if not pool:
+        return None, {"word": word["id"], "reason": "formula_binding_missing"}
+    names = {formulas.printed_headword(word["text"])}
+    for member in inventory:
+        if not any(
+            formulas.printed_headword(v) in names
+            for v in (member["lemma"], member.get("stressed", ""), *member.get("variants", []))
+        ):
+            continue
+        reference = (private or {}).get(member["locator"])
+        if reference is None:
+            continue
+        group = matcher.classify(reference["meaning"])
+        if group.reason:
+            continue
+        meanings = {
+            matcher.normalize(a, "formula")
+            for part in re.split(r"[!?]+(?:\s+|$)", group.head)
+            for a in matcher.source_atoms(part)
+        }
+        chosen = next((c for c in pool if matcher.normalize(c["span"], "formula") in meanings), None)
+        if chosen is not None:
+            return chosen, {"word": word["id"], "reason": "formula_reference_match", "locator": member["locator"]}
+    note = word.get("note", "")
+    group = matcher.classify(note)
+    meanings = (
+        {matcher.normalize(a, "formula") for a in matcher.source_atoms(group.head)} if not group.reason else set()
+    )
+    chosen = next((c for c in pool if matcher.normalize(c["span"], "formula") in meanings), None)
+    return (
+        (chosen, {"word": word["id"], "reason": "formula_note_match"})
+        if chosen
+        else (pool[0], {"word": word["id"], "reason": "formula_first_meaning"})
+    )
+
+
+def auto_formula_binding(
+    word: dict,
+    rows: list[dict],
+    inventory: list[dict],
+    private: dict | None = None,
+    key: bytes | None = None,
+    key_id: str | None = None,
+) -> tuple[dict | None, dict]:
+    pool = candidate_list(word, rows)
+    chosen, decision = choose_formula(word, pool, inventory, private)
+    if chosen is None:
+        if rows:
+            raise ValueError("formula_gloss_ineligible")
+        return None, decision
+    binding = formula_binding(word, pool, chosen)
+    if decision["reason"] == "formula_reference_match" and key is not None and key_id:
+        binding.update(
+            inventory=INVENTORY,
+            locator=decision["locator"],
+            commitment=keyed(private[decision["locator"]], key),
+            key_id=key_id,
+        )
+    return binding, {**decision, **{k: chosen[k] for k in ("id", "span_index", "atom_index")}}
+
+
+def rows_for(word: dict, api: sources.Sources) -> list[dict]:
+    if word.get("kind") == "formula":
+        return api.formula_rows(word).raw
+    return api.gloss_rows([(word["lemma"], word["pos"])]).raw.get((word["lemma"], word["pos"]), [])
 
 
 def reviewed_binding(
