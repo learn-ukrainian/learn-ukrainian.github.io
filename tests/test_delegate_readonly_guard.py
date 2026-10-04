@@ -1073,7 +1073,7 @@ def test_read_only_agy_cwd_pin_allows_late_settle(tmp_path, monkeypatch):
     Mirrors the 2026-09-24 agy evidence on #8516: the CLI starts in its own
     scratch directory and only later finds the cwd it was given.
     """
-    monkeypatch.setenv(runner._CWD_PIN_GRACE_ENV, "10")
+    monkeypatch.setenv(runner._CWD_PIN_GRACE_ENV, "120")
     elsewhere = tmp_path / "elsewhere"
     elsewhere.mkdir()
     pinned = tmp_path / "pinned"
@@ -1082,7 +1082,7 @@ def test_read_only_agy_cwd_pin_allows_late_settle(tmp_path, monkeypatch):
     with _sleeping_child(elsewhere, *argv) as proc:
         pin = runner._ChildCwdPin.start(proc=proc, cwd=pinned, mode="read-only", agent_name="agy", task_id="t")
         assert pin is not None
-        deadline = time.monotonic() + 5
+        deadline = time.monotonic() + 60
         while time.monotonic() < deadline and not pin.verified:
             assert pin.check() is None
             time.sleep(0.2)

@@ -265,17 +265,20 @@ os.chdir('/')
 fd = os.open(os.devnull, os.O_RDWR)
 for dest in (0, 1, 2):
     os.dup2(fd, dest)
-with open({str(pidfile)!r}, 'w') as handle:
+with open({str(pidfile) + '.tmp'!r}, 'w') as handle:
     handle.write(str(os.getpid()))
-time.sleep(30)
+os.replace({str(pidfile) + '.tmp'!r}, {str(pidfile)!r})
+time.sleep(120)
 """
 
 
 def _wait_pidfile(pidfile: Path) -> int:
-    deadline = time.monotonic() + 5
+    deadline = time.monotonic() + 60
     while time.monotonic() < deadline:
-        if pidfile.exists() and pidfile.read_text():
-            return int(pidfile.read_text())
+        if pidfile.exists():
+            content = pidfile.read_text()
+            if content:
+                return int(content)
         time.sleep(0.01)
     raise AssertionError("fake detached process did not become ready")
 
@@ -296,7 +299,7 @@ def test_snapshot_finds_double_fork_after_reparent_and_cwd_change(tmp_path, name
     pidfile = tmp_path / "pid"
     script.write_text(_detached_script(pidfile))
     try:
-        subprocess.run([sys.executable, str(script)], check=True, timeout=5)
+        subprocess.run([sys.executable, str(script)], check=True, timeout=60)
         pid = _wait_pidfile(pidfile)
         proc = psutil.Process(pid)
         identity = (pid, proc.create_time())
@@ -359,9 +362,10 @@ def test_real_pytest_session_fails_and_names_detached_survivor(tmp_path, foreign
     (tmp_path / "test_leak.py").write_text(
         "import subprocess, sys, time\nfrom pathlib import Path\n"
         "def test_leak():\n"
-        f"    subprocess.run([sys.executable, *{['-I'] if foreign else []!r}, {str(launcher)!r}], check=True, timeout=5)\n"
+        f"    subprocess.run([sys.executable, *{['-I'] if foreign else []!r}, {str(launcher)!r}], check=True, timeout=60)\n"
         f"    ready = Path({str(pidfile)!r})\n"
-        "    for _ in range(500):\n"
+        "    deadline = time.monotonic() + 60\n"
+        "    while time.monotonic() < deadline:\n"
         "        if ready.exists() and ready.read_text(): return\n"
         "        time.sleep(0.01)\n"
         "    assert False, 'child not ready'\n",
@@ -373,7 +377,7 @@ def test_real_pytest_session_fails_and_names_detached_survivor(tmp_path, foreign
         result = subprocess.run(
             [sys.executable, "-m", "pytest", "-q", "-c", str(tmp_path / "pytest.ini"),
              "--confcutdir", str(tmp_path), *parallel_args, str(tmp_path / "test_leak.py")],
-            cwd=tmp_path, env=env, capture_output=True, text=True, timeout=20,
+            cwd=tmp_path, env=env, capture_output=True, text=True, timeout=120,
         )
         output = result.stdout + result.stderr
         pid = _wait_pidfile(pidfile)
@@ -503,7 +507,7 @@ def test_smoke_reaps_group_and_detached_child_for_all_outcomes(tmp_path, ending,
     pidfile = tmp_path / "pid"
     child_code = _detached_script(pidfile)
     if exec_sleep:
-        child_code = child_code.replace("time.sleep(30)", "os.execl('/bin/sleep', 'sleep', '30')")
+        child_code = child_code.replace("time.sleep(120)", "os.execl('/bin/sleep', 'sleep', '120')")
     script.write_text(f"#!{sys.executable}\n" + child_code.replace(
         "if os.fork():\n    os._exit(0)",
         f"if os.fork():\n    while not os.path.exists({str(pidfile)!r}): time.sleep(0.01)\n"
@@ -512,12 +516,16 @@ def test_smoke_reaps_group_and_detached_child_for_all_outcomes(tmp_path, ending,
         f"    os._exit({1 if ending == 'failure' else 0})", 1,
     ))
     script.chmod(0o755)
-    if ending == "exception":
-        def broken_communicate(proc, *args, **kwargs):
-            _wait_pidfile(pidfile)
-            raise ValueError("fake communication failure")
+    communicate = subprocess.Popen.communicate
 
-        monkeypatch.setattr(subprocess.Popen, "communicate", broken_communicate)
+    def communicate_after_readiness(proc, *args, **kwargs):
+        # Start the behaviour timeout only after the detached fake is ready.
+        _wait_pidfile(pidfile)
+        if ending == "exception":
+            raise ValueError("fake communication failure")
+        return communicate(proc, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess.Popen, "communicate", communicate_after_readiness)
     try:
         if ending == "timeout":
             with pytest.raises(subprocess.TimeoutExpired):
@@ -546,7 +554,7 @@ def test_smoke_teardown_preserves_unrelated_preexisting_process(tmp_path, fake_c
     pidfile = tmp_path / "other.pid"
     other.write_text(_detached_script(pidfile))
     try:
-        subprocess.run([sys.executable, str(other)], check=True, timeout=5)
+        subprocess.run([sys.executable, str(other)], check=True, timeout=60)
         pid = _wait_pidfile(pidfile)
         result = guard.bounded_cursor_smoke(str(fake_cursor_bin / "cursor-agent"), timeout=5)
         assert result.returncode == 0

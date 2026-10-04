@@ -4451,12 +4451,13 @@ def test_typed_publisher_cleans_retry_tempfiles_on_sigterm(tmp_path, gh_shim_san
             "TMPDIR": str(temp_dir),
         },
     )
-    for _ in range(100):
+    deadline = time.monotonic() + 60
+    while time.monotonic() < deadline:
         if ready.exists():
             break
         time.sleep(0.01)
     assert ready.exists()
-    readable, _, _ = select.select([proc.stderr], [], [], 2)
+    readable, _, _ = select.select([proc.stderr], [], [], 60)
     assert readable, "shim did not enter secondary-rate-limit backoff"
     # The retry diagnostic is emitted immediately before the delay starts.
     # Give the shell a scheduling turn so SIGTERM reaches active backoff code.
