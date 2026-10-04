@@ -551,12 +551,18 @@ def _scope_bindings(statements: list[ast.stmt]) -> dict[str, ast.expr]:
 def _bindings_repo_root_names(
     bindings: dict[str, ast.expr],
     repo_root_names: frozenset[str] = frozenset(),
+    *,
+    expressions: dict[ast.expr, str] | None = None,
 ) -> frozenset[str]:
     """Bound names whose value is a repository-rooted expression, transitively.
 
     A function-local ``api_dir = ROOT / "scripts" / "api"`` roots any walk off
     ``api_dir`` just as a module-level constant would.
+    ``expressions`` belongs to this scan's AST, never to a file or test session.
+    Reused module bindings need rendering once, even across functions and
+    fixed-point iterations; root classification still runs with current names.
     """
+    expressions = {} if expressions is None else expressions
     names: set[str] = set()
     changed = True
     while changed:
@@ -564,7 +570,9 @@ def _bindings_repo_root_names(
         for name, value in bindings.items():
             if name in names:
                 continue
-            if _is_repo_root_expr(ast.unparse(value), frozenset(repo_root_names | names)):
+            if value not in expressions:
+                expressions[value] = ast.unparse(value)
+            if _is_repo_root_expr(expressions[value], frozenset(repo_root_names | names)):
                 names.add(name)
                 changed = True
     return frozenset(names)
@@ -686,11 +694,12 @@ def _implicated_test_functions(tree: ast.Module, source: str | None = None) -> d
         else {}
     )
     direct: dict[str, list[str]] = {}
+    expressions: dict[ast.expr, str] = {}
     for name, (node, _owner) in functions.items():
         if lines is not None and not _could_contain_scan(function_source[name]):
             continue
         bindings = {**module_bindings, **_scope_bindings(node.body)}
-        root_names = repo_root_names | _bindings_repo_root_names(bindings, repo_root_names)
+        root_names = repo_root_names | _bindings_repo_root_names(bindings, repo_root_names, expressions=expressions)
         if sites := _direct_scan_sites(node, root_names, bindings):
             direct[name] = sites
 
@@ -770,6 +779,10 @@ def test_repo_tree_scanners_carry_the_marker() -> None:
         relative = module.relative_to(_REPO_ROOT).as_posix()
         tree = ast.parse(source, filename=str(module))
         module_marked = _module_marked(tree)
+        # The module mark applies to every function and module-level scan. No
+        # scan-site analysis can add a missing marker once this is established.
+        if module_marked:
+            continue
         for function, sites in _implicated_test_functions(tree, source).items():
             node_id = f"{relative}::{function}"
             if node_id in NOT_REPO_WIDE:
@@ -1612,6 +1625,55 @@ def test_cached_scan_facts_recompute_after_source_changes() -> None:
     assert "test_scan" in _cached_scan_facts("changed.py", first)[0]
     assert "test_changed" in _cached_scan_facts("changed.py", second)[0]
     assert "test_scan" not in _cached_scan_facts("changed.py", second)[0]
+
+
+def test_scan_renders_shared_bindings_once_without_caching_classification(monkeypatch: pytest.MonkeyPatch) -> None:
+    tree = _synthetic(
+        """
+        later = base / "scripts"
+        base = ROOT
+
+        def test_first():
+            later.rglob("*.py")
+
+        def test_second():
+            later.glob("*.py")
+        """
+    )
+    original = ast.unparse
+    rendered: list[ast.AST] = []
+
+    def record(node: ast.AST) -> str:
+        rendered.append(node)
+        return original(node)
+
+    # These module bindings are rendered once for module root discovery, then
+    # once for the entire function scan, rather than once per test/iteration.
+    monkeypatch.setattr(ast, "unparse", record)
+    assert set(_implicated_test_functions(tree)) == {"test_first", "test_second"}
+    binding = tree.body[0].value
+    assert rendered.count(binding) == 3  # two root-discovery iterations, one shared render
+
+    # Mutating the same AST and rescanning must render and classify it afresh.
+    tree.body[1].value = ast.Name(id="tmp_path", ctx=ast.Load())
+    assert _implicated_test_functions(tree) == {}
+
+
+def test_scanner_guard_detects_marker_removal_and_restoration(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tests = tmp_path / "tests"
+    tests.mkdir()
+    module = tests / "test_scanner.py"
+    scanner = 'def test_scan():\n    (REPO / "scripts").rglob("*.py")\n'
+    marked = "import pytest\npytestmark = pytest.mark.repo_wide\n" + scanner
+    module.write_text(marked, encoding="utf-8")
+    monkeypatch.setattr(sys.modules[__name__], "_REPO_ROOT", tmp_path)
+    monkeypatch.setattr(sys.modules[__name__], "_TESTS_ROOT", tests)
+    test_repo_tree_scanners_carry_the_marker()
+    module.write_text(scanner, encoding="utf-8")
+    with pytest.raises(AssertionError, match=re.escape("tests/test_scanner.py::test_scan")):
+        test_repo_tree_scanners_carry_the_marker()
+    module.write_text(marked, encoding="utf-8")
+    test_repo_tree_scanners_carry_the_marker()
 
 
 def _synthetic(source: str) -> ast.Module:
