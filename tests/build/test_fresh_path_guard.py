@@ -21,7 +21,7 @@ def test_public_diagnostic_preserves_relative_paths_and_reason_codes():
     assert public_diagnostic(message, Path("/tmp/project")) == message
 
 
-@pytest.mark.parametrize("scheme", ["https", "http", "ftp", "custom+v1"])
+@pytest.mark.parametrize("scheme", ["https", "http", "HTTPS", "HTTP"])
 @pytest.mark.parametrize("url_path", ["receipt.yaml?check=12#reason", "part;param/file", "part(one)/file", "part,two/file"])
 def test_public_diagnostic_preserves_urls_while_sanitizing_paths(scheme, url_path):
     url = f"{scheme}://example.test/tmp/project/{url_path}"
@@ -29,6 +29,13 @@ def test_public_diagnostic_preserves_urls_while_sanitizing_paths(scheme, url_pat
     assert public_diagnostic(message, Path("/tmp/project")) == (
         f"See '{url}'; missing <external-path> and ./receipt.yaml"
     )
+
+
+@pytest.mark.parametrize("scheme", ["file", "FILE", "ftp", "custom+v1", "httpx"])
+@pytest.mark.parametrize("location", ["/home/other/tasks/output.txt", "example.test/home/other/output.txt"])
+def test_public_diagnostic_redacts_non_http_url_paths(scheme, location):
+    message = f"saved to: {scheme}://{location}"
+    assert public_diagnostic(message, Path("/tmp/project")) == f"saved to: {scheme}:<external-path>"
 
 
 @pytest.mark.parametrize("layer", ["writer", "engine", "harness"])

@@ -11,10 +11,12 @@ SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 def public_diagnostic(message: str, repo_root: Path) -> str:
     """Keep repository-relative diagnostics; withhold external absolute paths."""
     root = str(repo_root.resolve())
-    # Preserve URL tokens before either path replacement, even when their URL
+    # Preserve HTTP(S) URL tokens before either path replacement, even when their URL
     # path happens to contain the repository root.
     parts = re.split(r"([A-Za-z][A-Za-z0-9+.-]*://[^\s\"'<>]+)", message)
-    for index in range(0, len(parts), 2):
+    for index in range(len(parts)):
+        if index % 2 and re.match(r"https?://", parts[index], re.IGNORECASE):
+            continue
         part = re.sub(re.escape(root) + r"(?=/|$|[\s\"'<>()[\]{},;:])", ".", parts[index])
         # Exception messages may name files outside the repository (including home
         # directories). Their locations are never useful in tracked build state.

@@ -131,6 +131,26 @@ def test_track_harness_failures_sanitizes_home_path_in_written_evidence(tmp_path
     assert lock.check(path)
 
 
+def test_track_harness_failures_sanitizes_file_url_in_written_evidence(tmp_path):
+    @writer._track_harness_failures
+    def fail(*, _on_dispatch, **kwargs):
+        _on_dispatch()
+        raise writer.WriterHarnessError(
+            "delegate.py wait failed with exit code 1: saved to: file:///home/other/tasks/output.txt"
+        )
+
+    with pytest.raises(writer.WriterHarnessError) as error:
+        fail(**_dispatch_options(tmp_path))
+    assert error.value.harness_recorded is True
+    path = tmp_path / "lesson-1.writer-harness.yaml"
+    content = path.read_text()
+    assert "/home/" not in content
+    assert yaml.safe_load(content)["failures"][0]["reason"] == (
+        "delegate.py wait failed with exit code 1: saved to: file:<external-path>"
+    )
+    assert lock.check(path)
+
+
 def test_fresh_direct_writer_stops_after_three_harness_failures(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     calls = []
