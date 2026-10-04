@@ -177,7 +177,6 @@
         "C5",
         "C6",
         "C7",
-        "C8",
         "C9"
       ],
       "properties": {
@@ -201,9 +200,6 @@
         },
         "C7": {
           "$ref": "#/$defs/C7"
-        },
-        "C8": {
-          "$ref": "#/$defs/C8"
         },
         "C9": {
           "$ref": "#/$defs/C9"
@@ -1323,137 +1319,6 @@
                 "properties": {
                   "operation": {
                     "const": "modern_norm_selection"
-                  }
-                }
-              },
-              "minContains": 10,
-              "maxContains": 12
-            }
-          ]
-        }
-      }
-    },
-    "C8": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "binding",
-        "source_fields",
-        "required_context",
-        "target_policy",
-        "exclusions",
-        "line_count",
-        "line_count_rationale",
-        "instructions"
-      ],
-      "properties": {
-        "binding": {
-          "type": "string",
-          "minLength": 1
-        },
-        "source_fields": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "word",
-            "context"
-          ],
-          "properties": {
-            "word": {
-              "type": "string",
-              "minLength": 1
-            },
-            "context": {
-              "type": "string",
-              "minLength": 1
-            }
-          }
-        },
-        "required_context": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
-        "target_policy": {
-          "type": "string",
-          "minLength": 1
-        },
-        "exclusions": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
-        "line_count": {
-          "type": "integer",
-          "minimum": 10,
-          "maximum": 12
-        },
-        "line_count_rationale": {
-          "type": "string",
-          "minLength": 1
-        },
-        "instructions": {
-          "type": "array",
-          "minItems": 10,
-          "maxItems": 12,
-          "uniqueItems": true,
-          "items": {
-            "oneOf": [
-              {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "id",
-                  "operation",
-                  "template",
-                  "slots"
-                ],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "pattern": "^C8\\.supported_pronunciation\\.[0-9]{2}$"
-                  },
-                  "operation": {
-                    "const": "supported_pronunciation"
-                  },
-                  "template": {
-                    "type": "string",
-                    "minLength": 1,
-                    "pattern": "^(?=[\\s\\S]*\\{word\\})(?=[\\s\\S]*\\{context\\})(?:[^{}]|\\{(?:word|context)\\})+$"
-                  },
-                  "slots": {
-                    "type": "array",
-                    "uniqueItems": true,
-                    "minItems": 2,
-                    "maxItems": 2,
-                    "items": {
-                      "enum": [
-                        "word",
-                        "context"
-                      ]
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "allOf": [
-            {
-              "contains": {
-                "type": "object",
-                "required": [
-                  "operation"
-                ],
-                "properties": {
-                  "operation": {
-                    "const": "supported_pronunciation"
                   }
                 }
               },

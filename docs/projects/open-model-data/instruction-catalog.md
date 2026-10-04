@@ -12,6 +12,8 @@ it does not certify PA6. The driver adopts the stricter numerical bounds
 
 ## Scope and counts
 
+C8 was removed by plan v3.5.0 / O7.
+
 Only `components.*.instructions[].template` is project-written training text.
 Control metadata and evidence never become instructions, answers or reasoning.
 No answer text, explanation or worked solution is authored here.
@@ -25,9 +27,8 @@ No answer text, explanation or worked solution is authored here.
 | C5 | 12 | Full Правопис § containing its printed example. |
 | C6 | 24 | 12 calque-only sentence lines and 12 signed book-replacement lines. |
 | C7 | 12 | Modern-attested side of an admitted opt-in contrast pair. |
-| C8 | 12 | Normative/admissible transcription and the author's quoted verdict. |
 | C9 | 12 | Complete text under an authenticated printed textbook heading. |
-| **Total** | **144** | **9 components, 11 operations; C2 has two 12-line applicability variants.** |
+| **Total** | **132** | **8 components, 10 operations; C2 has two 12-line applicability variants.** |
 
 Twelve distinct starts per applicable line set give balanced top1 = 1/12 (8.33%) and
 top5 = 5/12 (41.67%). Dropping two disputed lines leaves ten starts:
@@ -51,7 +52,7 @@ empty arrays/the empty row string; at least one header cell must be nonblank.
 E4/E5 supplies source context and authenticated fields; C2 fixes its lossless header and
 variant serialization below, rather than guessing a single printed label.
 
-Sentences, printed examples and phonetic contexts follow a colon without outer
+Sentences and printed examples follow a colon without outer
 quotes or added terminal punctuation. A source sentence's own punctuation and
 internal quotes remain intact. Other quoted slots withhold values containing
 guillemets, preventing nested same-form quotes without transforming the source.
@@ -97,13 +98,6 @@ template patterns, with six source-value fixtures and quotation mutations.
 - **C7:** no interpolation slots. The admitted #8982 pair is mandatory context,
   with modern-source and Soviet-context roles. SUM-11 never supplies the norm;
   unadjudicated pairs, the default split and pretraining remain excluded.
-- **C8:** printed word and phonetic context require transcription, supporting
-  paragraph span, same-paragraph verdict, rule/page and ULIF stress cross-check.
-  All lines request normative/admissible transcription **and** the author's
-  assessment, with author identity in context. Wording varies throughout;
-  no repeated second sentence or dangling paragraph reference remains.
-  Non-norm-only paragraphs, ambiguous verdicts, mismatches and illegible
-  notation are withheld. A non-norm reading is only on the rejected side.
 - **C9:** `section_title` is a heading **printed in textbook text**, extracted
   verbatim with position by #8341. It is keyed by verbatim book title, grade
   or level, unit identity and page. Lines ask for text **під заголовком**:
@@ -359,7 +353,7 @@ whole-text frequency. This draft does not change it or the production checker.
      **once per record**, even if repeated inside it. Maximum record prevalence
      `max_gram(records containing gram)/N` ≤ **0.60**. Denominator is records,
      never gram positions. Report the leading grams and their shares.
-   These catch the old C8 repeated second sentence (prevalence 1.0), even if
+   These catch a repeated sentence-length span (prevalence 1.0), even if
    moved into the middle. Eight tokens capture a shared sentence-length span
    while allowing short binding vocabulary. This does not prove semantic variety.
 7. Report N, distinct prefixes/templates/suffixes, their shares and ID shares.
@@ -384,7 +378,7 @@ and return it to the driver; dropping a disputed line never licenses relaxation.
 
 Recomputed with `tokens`, `shares` and `repetition` in the committed test,
 loaded with the task-prescribed interpreter via `importlib.util.spec_from_file_location`.
-For **each of the 12 applicability sets** (C2 split by `sense_variant`), N=12:
+For **each of the 11 applicability sets** (C2 split by `sense_variant`), N=12:
 one-token prefix, four-token prefix,
 whole template and ID frequencies are all **top1=1/12, top5=5/12**
 (0.083333…/0.416666…). They remain below **0.15/0.60**. After dropping the
@@ -413,7 +407,6 @@ remain 0.60. No source value or slot name contributes token diversity.
 | C6.calque_correction | 2/12 | 1/12 | 1/12 | 1/12 | 1/12 |
 | C6.book_calque_replacement | 7/12 | 6/12 | 6/12 | 1/12 | 1/12 |
 | C7.modern_norm_selection | 5/12 | 3/12 | 3/12 | 1/12 | 1/12 |
-| C8.supported_pronunciation | 9/12 | 8/12 | 8/12 | 2/12 | 1/12 |
 | C9.verbatim_section | 12/12 | 8/12 | 5/12 | 2/12 | 2/12 |
 
 Reproduction (inside the assigned worktree):
@@ -450,8 +443,8 @@ concentration arithmetic. Negative fixtures cover:
 | Single repeated template | Prefix/template/suffix/n-gram shares 1.0: FAIL. |
 | Twelve balanced lines, then two dropped | Prefix/ID/template limits retain slack. |
 | Distinct IDs with one first token | Prefix top1 = 1.0: FAIL. |
-| Balanced prefixes with old C8 suffix | Suffix and n-gram prevalence 1.0: FAIL. |
-| Old C8 sentence moved into the middle | Whole-template n-gram prevalence 1.0: FAIL. |
+| Balanced prefixes with a shared suffix | Suffix and n-gram prevalence 1.0: FAIL. |
+| Shared sentence moved into the middle | Whole-template n-gram prevalence 1.0: FAIL. |
 | Same gram repeated many times inside a record | Count that record once. |
 | Short templates | Full tuple retained, never omitted. |
 | Missing declared slot or invented role/answer | Schema refusal. |
@@ -474,7 +467,7 @@ verification remain E4/E5 responsibilities.
 | Opus 6: C4 omitted citation request | Definition plus same-entry citation explicitly requested in every line; both stay in target. |
 | Opus 7: concentration/slack | 12 lines/operation; 0.15/0.60 proposal; suffix and whole-template 8-gram prevalence. |
 | Opus 8 + Flash C3 .03 fixes | `до слова` in both synonym/antonym .03 lines. |
-| Opus 9: dangling references | Author identified in context; C6/C8 refer to author, without unnamed book/paragraph. |
+| Opus 9: dangling references | Author identified in context; C6 refers to author, without unnamed book/paragraph. |
 | Opus 10: C5 wrong unit | Full § requested, matching E3b storage; no sub-point selection. |
 | Opus 11: evidence/schema/test nits | Official offline Правопис proof; mandatory slots + committed mutations; typed versionable metadata. |
 | Flash C2.agreed_form.03 | `форму слова`; no `для` and no visible homonym ID. |
@@ -711,18 +704,6 @@ Found: 22/22
 | C7.modern_norm_selection.10 | `Found: 9/9` | `No results in Антоненко-Давидович for: "Форму що відповідає сучасній нормі обери з наведеної пари"` | `Found 1 results for: "Форму що відповідає сучасній нормі обери з наведеної пари"`; `antonenko-davydovych-yak-my-hovorymo_p120` |
 | C7.modern_norm_selection.11 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Сучасну нормативну форму запиши з наведеної пари"` | `Found 1 results for: "Сучасну нормативну форму запиши з наведеної пари"`; `antonenko-davydovych-yak-my-hovorymo_p042` |
 | C7.modern_norm_selection.12 | `Found: 9/9` | `No results in Антоненко-Давидович for: "Із поданих форм назви ту що відповідає сучасній нормі"` | `Found 1 results for: "Із поданих форм назви ту що відповідає сучасній нормі"`; `antonenko-davydovych-yak-my-hovorymo_p168` |
-| C8.supported_pronunciation.01 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Подай нормативну або допустиму вимову слова та оцінку яку дає автор Фонетичний контекст"` | `Found 1 results for: "Подай нормативну або допустиму вимову слова та оцінку яку дає автор Фонетичний контекст"`; `antonenko-davydovych-yak-my-hovorymo_p131` |
-| C8.supported_pronunciation.02 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Запиши нормативну або допустиму вимову слова разом з авторовою оцінкою Контекст вимови"` | `Found 1 results for: "Запиши нормативну або допустиму вимову слова разом з авторовою оцінкою Контекст вимови"`; `antonenko-davydovych-yak-my-hovorymo_p125` |
-| C8.supported_pronunciation.03 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Наведи авторову оцінку й нормативну або допустиму вимову слова в такому контексті"` | `Found 1 results for: "Наведи авторову оцінку й нормативну або допустиму вимову слова в такому контексті"`; `antonenko-davydovych-yak-my-hovorymo_p138` |
-| C8.supported_pronunciation.04 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Вкажи нормативну або допустиму вимову слова і процитуй оцінку автора Контекст"` | `Found 1 results for: "Вкажи нормативну або допустиму вимову слова і процитуй оцінку автора Контекст"`; `antonenko-davydovych-yak-my-hovorymo_p129` |
-| C8.supported_pronunciation.05 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Відтвори нормативну або допустиму вимову слова та її оцінку автором у наведеному контексті"` | `Found 1 results for: "Відтвори нормативну або допустиму вимову слова та її оцінку автором у наведеному контексті"`; `antonenko-davydovych-yak-my-hovorymo_p050` |
-| C8.supported_pronunciation.06 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Слово має нормативну або допустиму вимову Подай її та оцінку автора Фонетичний контекст"` | `Found 1 results for: "Слово має нормативну або допустиму вимову Подай її та оцінку автора Фонетичний контекст"`; `antonenko-davydovych-yak-my-hovorymo_p129` |
-| C8.supported_pronunciation.07 | `Found: 14/14` | `No results in Антоненко-Давидович for: "Яку вимову слова автор визнає нормативною або допустимою Наведи її та авторову оцінку Контекст"` | `Found 1 results for: "Яку вимову слова автор визнає нормативною або допустимою Наведи її та авторову оцінку Контекст"`; `antonenko-davydovych-yak-my-hovorymo_p025` |
-| C8.supported_pronunciation.08 | `Found: 15/15` | `No results in Антоненко-Давидович for: "Як нормативно або допустимо вимовляти слово Подай вимову й оцінку яку дає автор Контекст вимови"` | `Found 1 results for: "Як нормативно або допустимо вимовляти слово Подай вимову й оцінку яку дає автор Контекст вимови"`; `antonenko-davydovych-yak-my-hovorymo_p129` |
-| C8.supported_pronunciation.09 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Процитуй оцінку автора й запиши нормативну або допустиму вимову слова Фонетичний контекст"` | `Found 1 results for: "Процитуй оцінку автора й запиши нормативну або допустиму вимову слова Фонетичний контекст"`; `antonenko-davydovych-yak-my-hovorymo_p129` |
-| C8.supported_pronunciation.10 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Дослівно відтвори нормативну або допустиму вимову слова разом з оцінкою автора Контекст"` | `Found 1 results for: "Дослівно відтвори нормативну або допустиму вимову слова разом з оцінкою автора Контекст"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
-| C8.supported_pronunciation.11 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Нормативну або допустиму вимову слова наведи з авторовою оцінкою в такому фонетичному контексті"` | `Found 1 results for: "Нормативну або допустиму вимову слова наведи з авторовою оцінкою в такому фонетичному контексті"`; `antonenko-davydovych-yak-my-hovorymo_p138` |
-| C8.supported_pronunciation.12 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Оцінку автора подай разом із нормативною або допустимою вимовою слова Контекст вимови"` | `Found 1 results for: "Оцінку автора подай разом із нормативною або допустимою вимовою слова Контекст вимови"`; `antonenko-davydovych-yak-my-hovorymo_p129` |
 | C9.verbatim_section.01 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Подай дослівно текст під таким заголовком Підручник клас або рівень заголовок"` | `Found 1 results for: "Подай дослівно текст під таким заголовком Підручник клас або рівень заголовок"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
 | C9.verbatim_section.02 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Наведи текст під надрукованим заголовком без змін Назва підручника клас або рівень заголовок"` | `Found 1 results for: "Наведи текст під надрукованим заголовком без змін Назва підручника клас або рівень заголовок"`; `antonenko-davydovych-yak-my-hovorymo_p164` |
 | C9.verbatim_section.03 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Відтвори повністю текст під заголовком із підручника Назва заголовок клас або рівень"` | `Found 1 results for: "Відтвори повністю текст під заголовком із підручника Назва заголовок клас або рівень"`; `antonenko-davydovych-yak-my-hovorymo_p164` |
@@ -792,7 +773,6 @@ search for `instruction_catalog`; no full test suite was collected.
 | S1 / Flash FIX | C2.agreed_form.08: `?` follows `{slot}` before the final sense block. |
 | S2 | C2 .01–12 and both C3 operations .01–12: final unquoted `Значення: {sense}`; six punctuation/parenthesis fixtures and quotation mutations. |
 | S3 | C6.book_calque_replacement.01–12: one/multiple replacements or neutral `замінити`; .08/.10 already neutral. |
-| N1 | C8.supported_pronunciation.05: `та авторову оцінку`. |
 | N2 | Per-operation 4-/5-/6-gram prevalence above, diagnostic only; stricter 0.15/0.60 retained. |
 | N3 | C1.sentence_correction.10/.12: final conditional `якщо воно правильне`. |
 
@@ -816,20 +796,8 @@ Sources MCP calls in this round (source roles differ):
   **`Found 1 results for: "вірний"`**, chunk
   `antonenko-davydovych-yak-my-hovorymo_p051`, independently supplies the
   book passage with those replacements.
-- `search_style_guide(query="орудний", limit=1)`:
-  **`Found 1 results in **Антоненко-Давидович** for: "орудний"`**,
-  headword `Орудний відмінок дійової особи й знаряддя`.
-  `search_text(query="орудний", source_file="antonenko-davydovych-yak-my-hovorymo", limit=1)`:
-  **`Found 1 results for: "орудний"`**, chunk `_p014` (time, not agent usage).
-  A narrower full-book query, `search_text(query="Енеєм",
-  source_file="antonenko-davydovych-yak-my-hovorymo", limit=1)`, returned
-  **`Found 1 results for: "Енеєм"`**, chunk `_p013`: the relevant agent-case
-  paragraph says **`але не треба й надуживати ним`**. This supports N1's
-  stylistic simplification; VESUM attests `авторову`.
-  `search_style_guide(query="авторову", limit=1)` returned
-  **`No results in Антоненко-Давидович for: "авторову"`**; absence is not approval.
-- `check_russian_shadow(word="авторову")` and `check_russian_shadow(word="заміни")`:
-  **`"matches_russian": false`**, **`"confidence": 0.0`** each.
+- `check_russian_shadow(word="заміни")`:
+  **`"matches_russian": false`**, **`"confidence": 0.0`**.
   These are suspicion checks, not calque verdicts. No Russianism judgment is
   inferred from them.
 
@@ -865,7 +833,7 @@ The production relationship checker remains E5's deliverable.
 ## Driver handback and stopping rule
 
 The worker milestone is a pushed review-fix branch with clean status, not issue
-closure. The catalog denominator is C1–C9 (9 components, 144 lines, 12 applicability sets).
+closure. The catalog denominator is C1–C7 + C9 (8 components, 132 lines, 11 applicability sets).
 The accountable `claude-open-model-data` driver owns:
 
 1. Fresh exact-head non-author language/semantic reviews and code CF where
@@ -874,8 +842,7 @@ The accountable `claude-open-model-data` driver owns:
    reviews; retain the adopted 0.15/0.60 bounds and verify scheduling feasibility
    in each source eligibility stratum.
 3. E4 source-field authentication: C2 header-cell locators/visible senses and
-   complete variant agreement, C3 sense labels, C8
-   context/author identity and C9 printed headings/position from #8341.
+   complete variant agreement, C3 sense labels and C9 printed headings/position from #8341.
    Sparse label availability means withholding, never inferred labels.
 4. E5-backed production checker with independently executed negative fixtures;
    the local arithmetic test cannot satisfy that production gate or D4.
@@ -930,10 +897,10 @@ Sources MCP calls in this round:
 
 Read-only census reproduction above returned the quoted variant counts and
 parse-error counts. Metric reproduction above returned prefix top1/top5
-**1/12 and 5/12** for all twelve applicability sets and combined C2; no bounds
-were changed. The catalog has **144 lines**, remains draft and ineligible.
+**1/12 and 5/12** for all eleven applicability sets and combined C2; no bounds
+were changed. The catalog has **132 lines**, remains draft and ineligible.
 
-Final scoped validation runs in the assigned worktree:
+Historical round-4 scoped validation, before plan v3.5.0, ran in the assigned worktree:
 
 ```bash
 "$LU_PROJECT_PYTHON" -m pytest tests/projects/open_model_data/test_instruction_catalog.py -q
