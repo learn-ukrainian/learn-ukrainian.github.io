@@ -414,6 +414,9 @@ def write_manifest(
     for path, expected in expected_paths:
         if path.resolve() != expected.resolve():
             raise ManifestInputError(path, "digest_path_mismatch", root)
+    # Validate the current lesson too, including lesson 1 whose reviewer digest
+    # is empty. Keep the reviewer's prior-lesson digest unchanged.
+    build_digest(level, slug, n + 1, repo_root=root)
     digest_doc = build_digest(level, slug, n, repo_root=root)
     digest_path, _ = write_digest(digest_doc, repo_root=root)
     page = page_dir / f"{n}.mdx"

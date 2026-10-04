@@ -188,7 +188,7 @@ from scripts.curriculum.resolver import codes as resolver_codes
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.stream import resolve
-from scripts.curriculum.resolver.tokenize import tokenize
+from scripts.curriculum.resolver.tokenize import lookup_form, tokenize
 from scripts.generate_mdx.atlas_links import atlas_href_for
 from scripts.generate_mdx.converters import (
     DIALOGUE_BOX_CLOSING_LINE,
@@ -1955,7 +1955,16 @@ def apply_stress(expanded_doc: dict[str, Any], stream: Any) -> dict[str, Any]:
         txt = unit["text"]
         for start, length, stressed_val in reps:
             if start + length <= len(txt):
-                txt = txt[:start] + stressed_val + txt[start + length :]
+                original = txt[start : start + length]
+                plain = strip_accents(stressed_val)
+                if len(plain) != len(original) or lookup_form(plain).casefold() != lookup_form(original).casefold():
+                    raise AssemblerError("stress_surface_mismatch", "stress must preserve the token's characters", "engine")
+                # Records supply accents; the writer supplies the characters and case.
+                characters = iter(original)
+                replacement = "".join(
+                    ch if ch in ("\u0300", "\u0301") else next(characters) for ch in stressed_val
+                )
+                txt = txt[:start] + replacement + txt[start + length :]
         unit["text"] = txt
 
     return {
@@ -2671,7 +2680,9 @@ def check_9_stress_and_render(
     try:
         stressed_doc = apply_stress(expanded_doc, stream)
     except Exception as exc:
-        return CheckResult(check=9, passed=False, reason=f"stress application raised: {exc}", layer="writer")
+        return CheckResult(
+            check=9, passed=False, reason=f"stress application raised: {exc}", layer=getattr(exc, "layer", "writer")
+        )
 
     tokens = getattr(stream, "tokens", None) or (stream.get("tokens") if isinstance(stream, dict) else [])
     for tok in tokens:

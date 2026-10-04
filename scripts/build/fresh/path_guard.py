@@ -8,6 +8,15 @@ from pathlib import Path
 SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 
 
+def public_diagnostic(message: str, repo_root: Path) -> str:
+    """Keep repository-relative diagnostics; withhold external absolute paths."""
+    root = str(repo_root.resolve())
+    message = re.sub(re.escape(root) + r"(?=/|$|[\s\"'<>()[\]{},;:])", ".", message)
+    # Exception messages may name files outside the repository (including home
+    # directories). Their locations are never useful in tracked build state.
+    return re.sub(r"(?<![\w./])/(?:[^\s\"'<>()[\]{},;]+)", "<external-path>", message)
+
+
 def validate_module(level: str, slug: str) -> None:
     """Reject malformed module identifiers before building any filesystem path."""
     from scripts.build.fresh.draft_schema import LEVELS

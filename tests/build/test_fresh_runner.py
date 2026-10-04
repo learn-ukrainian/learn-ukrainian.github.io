@@ -712,6 +712,43 @@ def test_check_12_failure_has_error_file_and_no_current_manifest(tmp_path, monke
     assert not (state / "lesson-1.manifest.yaml").exists()
 
 
+@pytest.mark.parametrize("stage", [7, 12])
+@pytest.mark.parametrize("external", [False, True])
+def test_failure_state_withholds_absolute_paths(tmp_path, monkeypatch, stage, external):
+    from scripts.review.digest.error import DigestError
+
+    draft, plan, pack, words = _fixture()
+    path = Path("/home/private-user/project/receipts.yaml") if external else tmp_path / "state/receipts.yaml"
+
+    def fail(*a, **kw):
+        raise DigestError("receipt_span_alignment_failed", f"receipts {path}: token mismatch")
+
+    kwargs = {"manifest_writer": fail} if stage == 12 else {"inventory_gate": fail}
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, **kwargs)
+    assert report["passed"] is False and report["passed_through"] == stage
+    files = [state / "lesson-1.regeneration.yaml", state / "lesson-1.gates.yaml"]
+    if stage == 12:
+        files.append(state / "lesson-1.manifest-error.yaml")
+    serialized = "\n".join(p.read_text() for p in files) + str(report)
+    assert str(tmp_path) not in serialized and "/home/" not in serialized
+    assert "receipt_span_alignment_failed" in serialized
+    assert ("<external-path>" if external else "./state/receipts.yaml") in serialized
+
+
+def test_stress_surface_mismatch_is_an_engine_failure(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+
+    def mismatch(*args):
+        raise assemble.AssemblerError("stress_surface_mismatch", "different surface", "engine")
+
+    monkeypatch.setattr(assemble, "apply_stress", mismatch)
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed_through"] == 9 and not report["passed"]
+    failed = next(row for row in report["checks"] if row["status"] == "failed")
+    assert failed["layer"] == "engine" and "stress_surface_mismatch" in failed["reason"]
+    assert load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)["terminal_layer"] == "engine"
+
+
 def test_contract_fixture_marked_form_stops_at_check_7(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
     words["words"][0]["forms"][0]["markers"] = ["arch"]
