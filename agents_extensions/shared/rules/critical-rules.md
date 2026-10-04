@@ -113,7 +113,8 @@ TruffleHog in verified mode without an operator decision and never paste raw fin
 Runbook: `docs/runbooks/secret-scanning.md`.
 
 **8.4 — Before merge, both must hold: (A) required CI green on the merge candidate, and (B) a review
-artifact from a model family different from the author's.** It must be **independent** (never review
+artifact from a model family different from the author's, or an eligible quick fix's driver
+receipt per `workflow.md` § Quick-fix path.** Model review must be **independent** (never review
 your own work) and an actual review — *discussion does not satisfy it*. Resolve the seat with
 `.venv/bin/python -m scripts.review.closeout_cli … resolve-reviewer` rather than hand-picking one.
 A `FAIL` that is blocked purely by missing evidence (no network, sandboxed filesystem) is **not** a

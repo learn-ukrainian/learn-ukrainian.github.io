@@ -924,3 +924,96 @@ def test_cross_workflow_in_progress_is_not_green():
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+def test_quick_fix_sync_and_closeout_use_validated_evidence(tmp_path: Path) -> None:
+    from tests.orchestration import test_task_lifecycle as fixtures
+
+    receipt, reference = fixtures._quick_fix_receipt(tmp_path)
+    head = receipt["head_sha"]
+    ledger = fixtures._quick_fix_ledger(receipt, reference)
+    path = tmp_path / "quick-fix-lifecycle.json"
+    task_lifecycle.write_lifecycle(path, ledger)
+    adapter = FakeAdapter(fixtures._quick_fix_observation(receipt, reference))
+    args = dict(
+        authorized_by="codex-devops",
+        branch="codex/42-closeout",
+        worktree="/repo/.worktrees/dispatch/codex/42-closeout",
+        now=NOW,
+    )
+
+    result = task_closeout.perform_mutation(path, adapter, action="sync-acs", **args)
+
+    assert result["remote_mutation_performed"] is True
+    body = adapter.observation["github"]["issue"]["body"]
+    assert "- [x] **AC-IMPL**" in body
+    assert "- [x] **AC-REVIEW**" in body
+    assert "- [ ] **AC-MERGE**" in body
+    synced = task_lifecycle.load_lifecycle(path)
+    assert synced["current_state"] == "CI_PASSED"
+    assert not any(e["type"] in {"review", "behavior_proof"} for e in synced["evidence"])
+
+    # Complete the actual mutation sequence after observed merge; later close and
+    # cleanup evidence is recorded after readback, never fabricated up front.
+    merged = fixtures._add_at(synced, "AC-MERGE", "github", head)
+    task_lifecycle.write_lifecycle(path, merged)
+    adapter.observation["github"]["pr"].update(state="MERGED", merge_sha=MERGE, merged_at=NOW)
+    task_closeout.perform_mutation(path, adapter, action="sync-acs", **args)
+    closed = task_closeout.perform_mutation(path, adapter, action="close-issue", **args)
+    assert closed["remote_mutation_performed"] is True
+    assert adapter.calls == ["sync-acs", "sync-acs", "close-issue"]
+    assert adapter.observation["github"]["issue"]["state"] == "CLOSED"
+    adapter.observation["local"].update(
+        worktree_present=False,
+        local_branch_present=False,
+        remote_branch_present=False,
+        actual_worktree_branch=None,
+        worktree_branch_matches=False,
+    )
+    postclose = fixtures._add_at(task_lifecycle.load_lifecycle(path), "AC-CLOSE", "github", head)
+    postclose = fixtures._add_at(postclose, "AC-CLEAN", "cleanup", head)
+    task_lifecycle.write_lifecycle(path, postclose)
+    task_closeout.perform_mutation(path, adapter, action="sync-acs", **args)
+    final = task_lifecycle.evaluate(task_lifecycle.load_lifecycle(path), adapter.observation)
+    assert final["state"] == "CLEANED_UP", final["hard_blockers"]
+    assert set(final["satisfied_criteria"]) == {"AC-IMPL", "AC-REVIEW", "AC-MERGE", "AC-CLOSE", "AC-CLEAN"}
+    assert final["valid_evidence"]["AC-REVIEW"] == ["quick_fix"]
+
+
+@pytest.mark.parametrize("failure", ["moved", "digest", "exclusion"])
+def test_quick_fix_sync_never_checks_invalid_proof(tmp_path: Path, failure: str) -> None:
+    from tests.orchestration import test_task_lifecycle as fixtures
+
+    mutations = (fixtures._incomplete_exclusions,) if failure == "exclusion" else ()
+    receipt, reference = fixtures._quick_fix_receipt(tmp_path, *mutations)
+    ledger = fixtures._quick_fix_ledger(receipt, reference)
+    observation = fixtures._quick_fix_observation(receipt, reference)
+    if failure == "moved":
+        fixtures._moved_head(observation, reference)
+    elif failure == "digest":
+        Path(reference["receipt_path"]).write_text("{}")
+    path = tmp_path / "lifecycle.json"
+    task_lifecycle.write_lifecycle(path, ledger)
+    adapter = FakeAdapter(observation)
+    task_closeout.perform_mutation(
+        path,
+        adapter,
+        action="sync-acs",
+        authorized_by="codex-devops",
+        branch="codex/42-closeout",
+        worktree="/repo/.worktrees/dispatch/codex/42-closeout",
+        now=NOW,
+    )
+    assert "- [ ] **AC-IMPL**" in adapter.observation["github"]["issue"]["body"]
+    assert "- [ ] **AC-REVIEW**" in adapter.observation["github"]["issue"]["body"]
+    with pytest.raises(task_lifecycle.LifecycleError, match="issue close blocked"):
+        task_closeout.perform_mutation(
+            path,
+            adapter,
+            action="close-issue",
+            authorized_by="codex-devops",
+            branch="codex/42-closeout",
+            worktree="/repo/.worktrees/dispatch/codex/42-closeout",
+            now=NOW,
+        )
+    assert "close-issue" not in adapter.calls

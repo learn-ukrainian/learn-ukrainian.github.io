@@ -94,7 +94,9 @@ tie-breakers.
    ≥1 other agent BEFORE committing; solo only for trivial work. Two distinct duties, don't
    conflate them: (a) *discussion/panel input* improves the work but does NOT satisfy the
    independent-review gate; (b) the **review gate requires an independent reviewer from
-   OUTSIDE your own model family** — never self-review, never same-family swarms. Keep lanes
+   OUTSIDE your own model family** — never self-review, never same-family swarms.
+   Eligible quick fixes use the driver receipt per `workflow.md` § Quick-fix path;
+   authority, security and architecture changes still require independent review. Keep lanes
    busy — an idle paid lane wastes the operator's money (operator policy: max out paid
    limits; cost is never a reason to hold back — passivity is the failure mode, not spend).
    **Driver routing is enforced** (operator GO 2026-08-06): every dispatch needs a

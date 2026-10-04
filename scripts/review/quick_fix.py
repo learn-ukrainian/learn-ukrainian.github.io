@@ -24,6 +24,7 @@ from fnmatch import fnmatchcase
 from pathlib import Path
 from typing import Any
 
+from scripts.guardrails.worktree_containment import is_dispatch_worktree
 from scripts.review.security_paths import is_security_sensitive_change
 
 SCHEMA_VERSION = "quick-fix-receipt.v1"
@@ -130,28 +131,117 @@ def _run_command(command: Sequence[str], cwd: Path, timeout: float) -> dict[str,
     }
 
 
+def _status(repo: Path) -> str:
+    return _git_text(repo, ["status", "--porcelain", "--untracked-files=all"])
+
+
 def _require_clean(repo: Path, head_sha: str, when: str) -> None:
     if resolve_sha(repo, "HEAD") != head_sha:
-        raise QuickFixError(f"checkout HEAD moved {when}")
-    if _git_text(repo, ["status", "--porcelain"]):
-        raise QuickFixError(f"checkout is not clean {when}")
+        raise QuickFixError(f"checkout HEAD moved {when}; nothing was restored or discarded")
+    dirty = _status(repo)
+    if dirty:
+        raise QuickFixError(f"checkout is not clean {when}; changes left untouched: {' | '.join(dirty.splitlines())}")
+
+
+def _require_dispatch_worktree(repo: Path) -> None:
+    if not is_dispatch_worktree(repo):
+        raise QuickFixError(
+            "record runs only in a .worktrees/dispatch/<agent>/<task>/ checkout of the exact head, never the primary"
+        )
+
+
+def _blob(repo: Path, rev: str, path: str) -> tuple[str, bool] | None:
+    entry = _git_text(repo, ["ls-tree", rev, "--", path])
+    if not entry:
+        return None
+    mode, kind, oid = entry.split("\t", 1)[0].split()
+    if kind != "blob" or mode not in {"100644", "100755"}:
+        raise QuickFixError("proof restoration supports only regular files; use independent review for this diff")
+    return oid, mode == "100755"
+
+
+def _holds(repo: Path, path: str, blob: tuple[str, bool] | None) -> bool:
+    """Restore only a regular file still holding our exact reverted bytes and executable mode."""
+    target = repo / path
+    if blob is None:
+        return not os.path.lexists(target)
+    return (
+        target.is_file()
+        and not target.is_symlink()
+        and bool(target.stat().st_mode & 0o111) == blob[1]
+        and _git_text(repo, ["hash-object", "--", path]) == blob[0]
+    )
+
+
+def _restore_fix_paths(repo: Path, *, head_sha: str, reverted: Mapping[str, tuple[str, bool] | None]) -> None:
+    """Put back only fix paths still holding exactly the reverted content; never discard anything else."""
+    if resolve_sha(repo, "HEAD") != head_sha:
+        raise QuickFixError("checkout HEAD moved during the reproduction run; fix paths were left reverted")
+    ours = [path for path, blob in reverted.items() if _holds(repo, path, blob)]
+    if ours:
+        _git_text(repo, ["restore", f"--source={head_sha}", "--worktree", "--", *ours])
+    _require_clean(repo, head_sha, "after the reproduction run")
 
 
 def _run_without_fix(
     repo: Path, *, base_sha: str, head_sha: str, fix_paths: Sequence[str], command: Sequence[str], timeout: float
 ) -> dict[str, Any]:
-    """Run the command with the fix paths at base and the regression tests at head."""
-    at_base = [path for path in fix_paths if _git(repo, ["cat-file", "-e", f"{base_sha}:{path}"]).returncode == 0]
-    added = [path for path in fix_paths if path not in at_base]
+    """Run the command with the fix paths at base and the regression tests at head.
+
+    Only the working-tree copies of the fix paths change; the index stays at head. Afterwards a
+    fix path is restored only while it still holds the reverted content, so tracked or untracked
+    changes made by the command, or concurrently, are preserved and refuse the receipt.
+    """
+    # Refuse unsupported head modes before touching any file, too.
+    for path in fix_paths:
+        _blob(repo, head_sha, path)
+    reverted = {path: _blob(repo, base_sha, path) for path in fix_paths}
+    at_base = [path for path, blob in reverted.items() if blob is not None]
     try:
         if at_base:
-            _git_text(repo, ["restore", f"--source={base_sha}", "--staged", "--worktree", "--", *at_base])
-        if added:
-            _git_text(repo, ["rm", "-q", "-f", "--", *added])
-        return _run_command(command, repo, timeout)
-    finally:
-        _git(repo, ["reset", "-q", "--hard", head_sha])
-        _require_clean(repo, head_sha, "after restoring the fix")
+            _git_text(repo, ["restore", f"--source={base_sha}", "--worktree", "--", *at_base])
+        for path, blob in reverted.items():
+            if blob is None:
+                (repo / path).unlink()
+        outcome = _run_command(command, repo, timeout)
+    except BaseException as exc:
+        try:
+            _restore_fix_paths(repo, head_sha=head_sha, reverted=reverted)
+        except QuickFixError as restore_error:
+            raise QuickFixError(f"{exc}; {restore_error}") from exc
+        raise
+    _restore_fix_paths(repo, head_sha=head_sha, reverted=reverted)
+    return outcome
+
+
+def _split_regression(
+    repo: Path,
+    *,
+    head_sha: str,
+    paths: Sequence[str],
+    test_paths: Sequence[str],
+    revert_test_paths: Sequence[str],
+) -> tuple[list[str], list[str], list[str]]:
+    """Hold regression files at head unless explicitly identified as the test correction."""
+    tests = sorted({path.strip().removeprefix("./") for path in test_paths if path.strip()})
+    reverted_tests = sorted({path.strip().removeprefix("./") for path in revert_test_paths if path.strip()})
+    if not tests:
+        raise QuickFixError("at least one regression test path is required")
+    missing = [
+        path
+        for path in tests
+        if _git(repo, ["cat-file", "-t", f"{head_sha}:{path}"]).stdout.decode("utf-8", "replace").strip() != "blob"
+    ]
+    if missing:
+        raise QuickFixError(f"regression test paths must be tracked files at the head: {', '.join(missing)}")
+    if not set(reverted_tests) <= set(tests) & set(paths):
+        raise QuickFixError("reverted regression test paths must be changed files named by --test-path")
+    fixes = sorted((set(paths) - set(tests)) | set(reverted_tests))
+    if not fixes:
+        raise QuickFixError(
+            "no correction beyond the held regression tests; identify a test correction with --revert-test-path"
+        )
+    return tests, fixes, reverted_tests
 
 
 def record_receipt(
@@ -171,6 +261,7 @@ def record_receipt(
     sensitive_path_rationale: str | None,
     timeout: float = DEFAULT_TIMEOUT_SECONDS,
     now: str | None = None,
+    revert_test_paths: Sequence[str] = (),
 ) -> dict[str, Any]:
     """Run the reproduction and regression at the exact head and build a receipt."""
     if not attest_no_exclusions:
@@ -180,6 +271,7 @@ def record_receipt(
         raise QuickFixError("the accountable driver, not the author, decides quick-fix eligibility")
     if not command:
         raise QuickFixError("a regression command is required")
+    _require_dispatch_worktree(repo)
     head_sha = resolve_sha(repo, "HEAD")
     _require_clean(repo, head_sha, "before recording")
     base_sha = resolve_sha(repo, base)
@@ -189,12 +281,9 @@ def record_receipt(
     if inspected_diff_sha256 != digest:
         raise QuickFixError("driver-inspected diff digest does not match the exact base..head diff")
     paths = changed_paths(repo, base_sha, head_sha)
-    tests = sorted({path.strip().removeprefix("./") for path in test_paths if path.strip()})
-    if not tests or not set(tests) <= set(paths):
-        raise QuickFixError("regression test paths must be non-empty and changed by the fix")
-    fix_paths = [path for path in paths if path not in tests]
-    if not fix_paths:
-        raise QuickFixError("the diff contains no correction beyond the regression tests")
+    tests, fix_paths, reverted_tests = _split_regression(
+        repo, head_sha=head_sha, paths=paths, test_paths=test_paths, revert_test_paths=revert_test_paths
+    )
     authority = authority_paths(paths)
     if authority:
         raise QuickFixError(f"review/merge-authority paths require independent review: {', '.join(authority)}")
@@ -220,6 +309,7 @@ def record_receipt(
         "changed_paths": paths,
         "regression_test_paths": tests,
         "fix_paths": fix_paths,
+        "reverted_test_paths": reverted_tests,
         "sensitive_paths": sensitive,
         "sensitive_path_rationale": rationale,
         "command": list(command),
@@ -269,7 +359,15 @@ def receipt_error(
     fixes = receipt.get("fix_paths")
     if not all(isinstance(value, list) and all(isinstance(p, str) for p in value) for value in (paths, tests, fixes)):
         return "quick-fix receipt path lists are malformed"
-    if not tests or not set(tests) <= set(paths) or not fixes or sorted(set(paths) - set(tests)) != fixes:
+    reverted_tests = receipt.get("reverted_test_paths", [])
+    if not isinstance(reverted_tests, list) or not all(isinstance(p, str) for p in reverted_tests):
+        return "quick-fix receipt reverted test paths are malformed"
+    if (
+        not tests
+        or not fixes
+        or not set(reverted_tests) <= set(tests) & set(paths)
+        or sorted((set(paths) - set(tests)) | set(reverted_tests)) != fixes
+    ):
         return "quick-fix receipt does not separate regression tests from a non-empty fix"
     authority = authority_paths(paths)
     if authority:
@@ -340,6 +438,7 @@ def cmd_record(args: argparse.Namespace) -> int:
         base=args.base,
         command=shlex.split(args.regression_command),
         test_paths=args.test_path,
+        revert_test_paths=args.revert_test_path,
         author=args.author,
         driver=args.driver,
         inspected_diff_sha256=args.inspected_diff_sha256,
@@ -377,11 +476,21 @@ def build_parser() -> argparse.ArgumentParser:
       --defect 'launcher drops the stream' --qualification 'restores the documented argument' \\
       --attest-no-exclusions --out /abs/path/quick-fix-9712.json
 
+Run record from a clean .worktrees/dispatch/<agent>/<task>/ checkout of the exact head, never the
+primary. Regression test paths are tracked files at HEAD (new, changed or pre-existing) named by
+path. They stay at HEAD in both runs unless explicitly named by --revert-test-path as the
+correction itself. For test-only fixes, use a constant check that distinguishes the correction
+(e.g. an external deterministic probe); the driver inspects the command and actual output.
+Command arguments are not parsed as evidence that a particular check ran.
+
 Outputs: show prints the exact diff and its digest. record runs the regression command with the
-fix paths reverted to base (must fail) and at HEAD (must pass), always resets the checkout to HEAD,
-writes the receipt once and prints the task_closeout add-evidence --details reference.
-Exit codes: 0 success; 2 refused (dirty/moved checkout, digest mismatch, missing reproduction,
-failing regression, authority paths or missing attestation).
+working-tree copies of the fix paths reverted to base (must fail) and at HEAD (must pass), then
+restores only fix paths still holding the reverted content; any other change, by the command or
+concurrently, is left in place and refuses the receipt. It writes the receipt once and prints the
+task_closeout add-evidence --details reference.
+Exit codes: 0 success; 2 refused (primary, dirty or moved checkout, digest mismatch, missing
+reproduction, failing regression, changed files, authority paths or missing
+attestation).
 Related: agents_extensions/shared/rules/workflow.md § Quick-fix path, #9719""",
     )
     parser.add_argument("--repo-root", type=Path, default=Path.cwd(), help="Checkout of the exact head (default: cwd).")
@@ -399,12 +508,21 @@ Related: agents_extensions/shared/rules/workflow.md § Quick-fix path, #9719""",
         "--base", default="origin/main", help="Base ref the fix is measured against (default: origin/main)."
     )
     record.add_argument(
-        "--test-path", action="append", required=True, help="Changed regression test path; repeat for several."
+        "--test-path",
+        action="append",
+        required=True,
+        help="Tracked regression test file (new, changed or pre-existing); held at HEAD unless --revert-test-path names it.",
+    )
+    record.add_argument(
+        "--revert-test-path",
+        action="append",
+        default=[],
+        help="Changed --test-path that is itself the correction; revert it for reproduction (default: none).",
     )
     record.add_argument(
         "--regression-command",
         required=True,
-        help="Command run without a shell, e.g. '.venv/bin/python -m pytest t.py'.",
+        help="Constant before/after command run without a shell, e.g. '.venv/bin/python -m pytest t.py'.",
     )
     record.add_argument("--author", required=True, help="Authoring agent/task id.")
     record.add_argument("--driver", required=True, help="Accountable driver agent id; must differ from --author.")

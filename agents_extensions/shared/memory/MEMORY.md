@@ -62,11 +62,13 @@ Before EVER asking the user for additional pedagogical material, check: `docs/re
 ## #0I — DON'T STACK MICRO-DILEMMAS, DECIDE FOR THE USER (2026-05-04)
 Compound decisions = ONE table + ONE recommendation, NEVER N parallel sign-off questions. Required shape: (1) state of play 1-3 sentences, (2) options table 2-3 rows max, (3) **MY RECOMMENDATION** with one explicit pick + why + reject worst by name, (4) "going to execute unless you stop me" + first action verb. A numbered "sign off on these N" list IS a menu — forbidden.
 
-## #0H — CF REVIEW MANDATORY ON EVERY PR; THEN MERGE (2026-07-27)
-**Independent cross-family (CF) formal review is ALWAYS mandatory before merge.** No exceptions for “small,” docs-only, launcher, or infra PRs. Discussion / self-review / same-family review ≠ the gate.
-- Request immediately after `.venv/bin/python -m scripts.publish pr-create` — **lightweight direct path (sealed `review-pr` RETIRED 2026-08-07):** `printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review`, then post the verdict on the PR. Resolve the reviewer lane with `scripts.review.closeout_cli ... resolve-reviewer` (must be outside the author's model family; eligibility pins are retired with the sealed path). `--type review` routes to headless `delegate.py dispatch` WITH tools (`gh`/pytest), never tool-less ACP (2026-08-23, #7155) — a reviewer needs `gh` to ground a verdict.
-- Closeout incomplete until CF is requested (and settled). Failure encoded: 2026-07-27 Grok shipped #5875 without CF review; operator had to ask.
-- After CF pass + green blocking CI: `.venv/bin/python -m scripts.publish pr-merge --number N` (action bias — don’t leave PRs limbo). Hold only for CF fail or blocking CI.
+## #0H — REVIEW PATH BEFORE CI; THEN MERGE
+Independent cross-family formal review is required unless the accountable driver qualifies a
+reproduced repair under `workflow.md` § Quick-fix path and records its exact-head receipt.
+Security, architecture and review/merge-authority changes still require independent review.
+Discussion, self-review and same-family review do not satisfy that gate.
+- Push the branch; resolve the outside-family reviewer with `scripts.review.closeout_cli resolve-reviewer` and settle exact-head review before opening the PR. For an eligible quick fix, record the distinct driver receipt instead; never fabricate CF approval.
+- Then open the PR and obtain same-head blocking CI green; enqueue with `.venv/bin/python -m scripts.publish pr-merge --number N` and complete verification and common cleanup. Never bypass CI.
 
 ## #0G — NEVER REPORT ASYNC-TASK STATE FROM MEMORY (2026-05-08)
 Before saying "task X is running / X just finished / X is at step Y", ALWAYS query `delegate.py status-or-fail X` or Monitor API `/api/delegate/active`. Memory of state from 2 minutes ago is wrong by default. Established 2026-05-08 after orchestrator reported bakeoff "Gemini mid-write" when it had finished.
@@ -137,7 +139,7 @@ School Grade 1-4 ≠ A1/A2. Orthogonal. ADR-007 killed grade→CEFR SQL filter. 
 NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bootstrap.md` BEFORE discussing. Flow: UK wikis → UK A1/A2 → those become source → English A1/A2 immersion against enriched corpus.
 
 ## Critical Behavioral Rules (condensed)
-- **PRE-COMMIT AUTO:** Done + tests pass → ruff, then request the cross-family review per #0H (`resolve-reviewer` picks the seat). User never reminds.
+- **PRE-COMMIT AUTO:** Done + tests pass → ruff, then establish the review path per #0H (`resolve-reviewer` picks the seat). User never reminds.
 - **QUALITY GATE:** Every changed function needs a test. 80%+ on critical paths.
 - **HYGIENE:** Work like now: act, record durable memory immediately, commit/push cleanup, keep git clean, update stale/partial issues. No chat-only promises.
 - **EDUCATION NOT SOFTWARE:** Real learners use these. Build ONE module → verify pedagogy → next.

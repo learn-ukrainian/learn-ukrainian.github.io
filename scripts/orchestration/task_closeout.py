@@ -507,15 +507,10 @@ def evidenced_issue_body(
     ledger: Mapping[str, Any], observation: Mapping[str, Any]
 ) -> tuple[str, list[str]]:
     evaluation = task_lifecycle.evaluate(ledger, observation)
-    valid = {key: set(value) for key, value in evaluation["valid_evidence"].items()}
     body = str(observation["github"]["issue"].get("body") or "")
-    checked_ids: list[str] = []
-    for criterion in ledger["ac_snapshot"]["criteria"]:
-        if not criterion["applicable"]:
-            continue
-        if set(criterion["required_evidence"]).issubset(valid.get(criterion["id"], set())):
-            body = _replace_checkbox(body, criterion["id"])
-            checked_ids.append(criterion["id"])
+    checked_ids = list(evaluation["satisfied_criteria"])
+    for ac_id in checked_ids:
+        body = _replace_checkbox(body, ac_id)
     return body, checked_ids
 
 

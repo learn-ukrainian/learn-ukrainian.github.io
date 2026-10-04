@@ -30,8 +30,8 @@ non-skippable:
 2. Use established best practice and fix root causes.
 3. Preserve Git/GitHub hygiene: layout A, dispatch worktrees, PRs, and
    `X-Agent` attribution.
-4. Use the fleet; the review gate is an independent **cross-family** review,
-   not discussion.
+4. Use the fleet; independent **cross-family** review is the gate, not discussion;
+   eligible quick fixes follow `workflow.md` § Quick-fix path.
 5. Route by model × harness fit; Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules.
 6. Substitute a constrained lane and record that substitution.
 7. Make tool-backed claims only; outcome validity precedes paid execution:
@@ -86,7 +86,8 @@ non-skippable:
 - Every commit has an `X-Agent: <agent>/<task-id>` trailer. Change tasks end in
   a pushed branch; never push directly to `main`. Workers neither merge nor
   arm auto-merge. **CF review-fix before CI** (operator 2026-09-18): exact-head
-  independent cross-family CF APPROVE/fix/re-CF on the branch **before opening
+  independent cross-family CF APPROVE/fix/re-CF (eligible quick fix: driver receipt
+  per `workflow.md` § Quick-fix path) on the branch **before opening
   any PR** (draft or ready; drafts still start CI here); then CI green on that
   same head; then the accountable orchestrator MUST merge (or enqueue via
   `.venv/bin/python -m scripts.publish pr-merge --number <N>`). Never leave an approved, green PR unmerged

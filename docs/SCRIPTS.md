@@ -19,7 +19,11 @@ meet it so agents can use them without source-diving.
 evidence for an eligible quick fix (`agents_extensions/shared/rules/workflow.md` § Quick-fix
 path). `show` prints the exact diff and its digest; `record` runs the regression command with
 the fix reverted (must fail) and at HEAD (must pass), then writes a `quick-fix-receipt.v1` and
-prints the `task_closeout add-evidence --type quick_fix` reference. Exit 2 means refused (#9719).
+prints the `task_closeout add-evidence --type quick_fix` reference. Run `record` only in a clean
+dispatch worktree. `--test-path` accepts existing tracked regressions; `--revert-test-path`
+identifies a changed test that is the correction, including test-only fixes with a constant
+distinguishing probe. Command-created edits are preserved and refuse the receipt; restoration
+never resets the checkout. Exit 2 means refused (#9719).
 
 ## Reviewer bench health
 

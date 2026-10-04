@@ -224,12 +224,18 @@ into audits; non-blocking style comments cannot hold a qualifying repair.
 
 Evidence (one distinct type, never a fabricated review or CF receipt):
 
-1. On a clean checkout of the exact head, the driver runs
+1. On a clean dispatch worktree of the exact head (never primary), the driver runs
    `.venv/bin/python -m scripts.review.quick_fix show`, inspects the diff, then `record`
    (help lists the flags). `record` runs the regression command with the fix paths reverted
    to base (must fail) and at the head (must pass), binds repository, issue, base, head and
    diff digest, the driver's qualification and the excluded categories, and refuses
    authority paths, security-sensitive paths without a rationale, or a moved or dirty head.
+   Existing tracked regressions need no unrelated edit. Regression files stay at head unless
+   `--revert-test-path` identifies a changed test that is itself the correction. Test-only
+   repairs require a constant command that distinguishes the correction; inspect actual
+   before/after output, not command-argument shapes. Uncertain proof refuses specifically.
+   Restoration changes only fix files still holding the exact reverted bytes and mode;
+   command-created or concurrent edits remain untouched and refuse the receipt.
 2. Post a PR comment "Quick fix — no separate model review" naming the receipt digest and
    head SHA. Record it with `task_closeout add-evidence --type quick_fix --url <comment>
    --details '{"quick_fix_receipt": …}'`; it stands in for `review` and `behavior_proof` only.

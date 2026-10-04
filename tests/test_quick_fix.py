@@ -27,15 +27,20 @@ def _git(repo: Path, *args: str) -> str:
     return completed.stdout.strip()
 
 
-def make_repo(tmp_path: Path, *, fix: dict[str, str | None] | None = None) -> tuple[Path, str, str]:
+def make_repo(
+    tmp_path: Path, *, fix: dict[str, str | None] | None = None, base_files: dict[str, str] | None = None
+) -> tuple[Path, str, str]:
     """Commit a buggy base, then a head with the given changes; return (repo, base, head)."""
     repo = tmp_path / "repo"
     repo.mkdir()
     _git(repo, "init", "-q", "-b", "main")
     _git(repo, "config", "user.email", "quick-fix@example.invalid")
     _git(repo, "config", "user.name", "quick-fix test")
-    (repo / ".gitignore").write_text("__pycache__/\n", encoding="utf-8")
+    (repo / ".gitignore").write_text("__pycache__/\n.worktrees/\n", encoding="utf-8")
     (repo / "calc.py").write_text(BUGGY, encoding="utf-8")
+    (repo / "test_existing.py").write_text(REGRESSION, encoding="utf-8")
+    for relative, content in (base_files or {}).items():
+        (repo / relative).write_text(content, encoding="utf-8")
     _git(repo, "add", "-A")
     _git(repo, "commit", "-q", "-m", "base")
     base = _git(repo, "rev-parse", "HEAD")
@@ -48,7 +53,10 @@ def make_repo(tmp_path: Path, *, fix: dict[str, str | None] | None = None) -> tu
             path.write_text(content, encoding="utf-8")
     _git(repo, "add", "-A")
     _git(repo, "commit", "-q", "-m", "fix")
-    return repo, base, _git(repo, "rev-parse", "HEAD")
+    head = _git(repo, "rev-parse", "HEAD")
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "fix-42"
+    _git(repo, "worktree", "add", "-q", "-b", "codex/fix-42", str(worktree), head)
+    return worktree, base, head
 
 
 def record(repo: Path, base: str, **overrides):
@@ -297,3 +305,116 @@ def test_cli_help_documents_examples_outputs_and_exit_codes() -> None:
     assert completed.returncode == 0
     for term in ("Examples:", "Outputs:", "Exit codes:", "Related:", "workflow.md § Quick-fix path"):
         assert term in completed.stdout
+
+
+def test_existing_unchanged_regression_proves_source_only_fix(tmp_path: Path) -> None:
+    repo, base, _ = make_repo(tmp_path, fix={"calc.py": FIXED})
+    receipt = record(repo, base, test_paths=["test_existing.py"], command=[sys.executable, "test_existing.py"])
+    assert receipt["changed_paths"] == ["calc.py"]
+    assert receipt["reproduction"]["exit_code"] == 1
+    assert receipt["regression"]["exit_code"] == 0
+    assert _check(receipt) is None
+
+
+def test_test_only_correction_with_constant_external_probe(tmp_path: Path) -> None:
+    # Deterministically model a test that accidentally depends on a scheduling detail.
+    repo, base, _ = make_repo(
+        tmp_path,
+        base_files={"test_existing.py": "def check(values):\n    assert values['sync'] == 1\n"},
+        fix={"test_existing.py": "def check(values):\n    assert values['async'] == 1\n"},
+    )
+    probe = tmp_path / "probe.py"
+    probe.write_text("import runpy\nns = runpy.run_path('test_existing.py')\nns['check']({'async': 1})\n")
+    original_probe = probe.read_bytes()
+    receipt = record(
+        repo,
+        base,
+        test_paths=["test_existing.py"],
+        revert_test_paths=["test_existing.py"],
+        command=[sys.executable, str(probe)],
+    )
+    assert receipt["changed_paths"] == receipt["fix_paths"] == receipt["reverted_test_paths"] == ["test_existing.py"]
+    assert "KeyError: 'sync'" in receipt["reproduction"]["output_tail"]
+    assert receipt["regression"]["exit_code"] == 0
+    assert probe.read_bytes() == original_probe
+    assert _check(receipt) is None
+    malformed = deepcopy(receipt)
+    malformed["reverted_test_paths"] = ["other.py"]
+    assert "separate regression tests" in str(_check(malformed))
+    malformed["reverted_test_paths"] = "test_existing.py"
+    assert "malformed" in str(_check(malformed))
+
+
+def test_primary_refusal_leaves_clean_primary_untouched(tmp_path: Path) -> None:
+    _repo, base, head = make_repo(tmp_path)
+    primary = tmp_path / "repo"
+    before = (primary / "calc.py").read_bytes()
+    with pytest.raises(quick_fix.QuickFixError, match="never the primary"):
+        record(primary, base)
+    assert (primary / "calc.py").read_bytes() == before
+    assert _git(primary, "rev-parse", "HEAD") == head
+    assert not _git(primary, "status", "--porcelain")
+
+
+@pytest.mark.parametrize("target", ["calc.py", "test_existing.py", "new.txt"])
+def test_reproduction_command_writes_are_preserved_and_refused(tmp_path: Path, target: str) -> None:
+    repo, base, head = make_repo(tmp_path)
+    command = [
+        sys.executable,
+        "-c",
+        f"from pathlib import Path; Path({target!r}).write_text('command edit'); raise SystemExit(1)",
+    ]
+    with pytest.raises(quick_fix.QuickFixError, match="changes left untouched"):
+        record(repo, base, command=command)
+    assert (repo / target).read_text() == "command edit"
+    assert _git(repo, "rev-parse", "HEAD") == head
+    if target != "calc.py":
+        assert (repo / "calc.py").read_text() == FIXED
+
+
+def test_reproduction_mode_change_is_preserved(tmp_path: Path) -> None:
+    repo, base, _ = make_repo(tmp_path)
+    command = [sys.executable, "-c", "from pathlib import Path; Path('calc.py').chmod(0o755); raise SystemExit(1)"]
+    with pytest.raises(quick_fix.QuickFixError, match="changes left untouched"):
+        record(repo, base, command=command)
+    assert (repo / "calc.py").stat().st_mode & 0o111
+    assert (repo / "calc.py").read_text() == BUGGY
+
+
+def test_timeout_restores_only_owned_reversion(tmp_path: Path) -> None:
+    repo, base, _ = make_repo(tmp_path)
+    with pytest.raises(quick_fix.QuickFixError, match="timeout proves nothing"):
+        record(repo, base, command=[sys.executable, "-c", "import time; time.sleep(5)"], timeout=0.2)
+    assert (repo / "calc.py").read_text() == FIXED
+    assert not _git(repo, "status", "--porcelain")
+
+
+def test_moved_head_refuses_restoration_and_receipt(tmp_path: Path) -> None:
+    repo, base, head = make_repo(tmp_path)
+    command = ["git", "checkout", "--detach", base]
+    with pytest.raises(quick_fix.QuickFixError, match="HEAD moved"):
+        record(repo, base, command=command)
+    assert _git(repo, "rev-parse", "HEAD") != head
+
+
+def test_fixed_run_writes_are_preserved_and_refused(tmp_path: Path) -> None:
+    repo, base, _ = make_repo(tmp_path)
+    command = [
+        sys.executable,
+        "-c",
+        "import calc; from pathlib import Path; "
+        "Path('test_existing.py').write_text('command edit') if calc.add(2,3)==5 else None; "
+        "raise SystemExit(0 if calc.add(2,3)==5 else 1)",
+    ]
+    with pytest.raises(quick_fix.QuickFixError, match="after the regression run"):
+        record(repo, base, command=command)
+    assert (repo / "test_existing.py").read_text() == "command edit"
+    assert (repo / "calc.py").read_text() == FIXED
+
+
+def test_bad_reverted_test_selection_is_refused(tmp_path: Path) -> None:
+    repo, base, _ = make_repo(tmp_path)
+    with pytest.raises(quick_fix.QuickFixError, match="changed files named"):
+        record(repo, base, revert_test_paths=["calc.py"])
+    with pytest.raises(quick_fix.QuickFixError, match="at least one"):
+        record(repo, base, test_paths=[])
