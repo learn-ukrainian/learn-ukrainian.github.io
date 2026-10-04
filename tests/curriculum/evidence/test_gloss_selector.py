@@ -678,7 +678,9 @@ def test_stressed_homonym_key_binds_its_row_even_against_kaikki():
         ("привіт", "hi"),
         ("грати", "to act"),
         ("свято", "festival"),
-        ("дзюрчати", "to purl"),
+        # ВТС: дзюрчати is flowing water's monotone babble; себе refers to the subject in any person.
+        ("дзюрчати", "to gurgle"),
+        ("себе", "oneself"),
         ("хліб", "bread"),
     ],
 )
@@ -914,6 +916,23 @@ def test_reference_book_gloss_stands_only_without_an_equal_candidate_or_ulif_pin
     assert sources.select_gloss(
         pinned, homonyms, None, reference={"gloss": "castle", "match": "dictionary"}
     ).reason == ("reference_binding_invalid")
+
+
+def test_ulif_pin_keeps_kaikki_to_the_pinned_rows_sense():
+    pinned = {"lemma": "замок", "pos": "noun", "ulif": {"key": ["замо́к", 2]}}
+    homonyms = [row(1, ["castle"], "за́мок"), row(2, ["lock"], "замо́к")]
+    castle = {"gloss": "castle", "match": "dictionary"}
+    # Kaikki's gloss of the excluded homonym never re-enters through the pin.
+    pool, _ = sources.reference_pool(pinned, homonyms, payload(["castle"]))
+    assert [c["span"] for c in pool] == ["lock"]
+    stale = sources.select_gloss(pinned, homonyms, payload(["castle"]), reference=castle)
+    assert (stale.gloss, stale.reason) == (None, "reference_binding_invalid")
+    # Kaikki still gives English for the pinned sense, and the pinned row stays cited.
+    pool, _ = sources.reference_pool(pinned, homonyms, payload(["castle", "locks"]))
+    assert [(c["span"], c["source"]) for c in pool] == [("lock", "dmklinger_uk_en"), ("locks", "kaikki_wiktionary")]
+    chosen = sources.select_gloss(pinned, homonyms, payload(["castle", "lock"]), reference={**castle, "gloss": "lock"})
+    assert (chosen.gloss, chosen.ref["id"], chosen.by_reference) == ("lock", 2, True)
+    assert sources.select_gloss(pinned, homonyms, payload(["castle", "lock"])).ref["id"] == 2
 
 
 def test_note_lead_precedes_the_reference():

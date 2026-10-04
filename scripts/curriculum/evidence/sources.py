@@ -582,6 +582,10 @@ def _gloss_pools(word: dict, rows: list[dict], payload: dict | None, pronoun_ent
     # ULIF decides the homonym only when its pinned entry excludes some rows.
     ordered = pinned if pinned and len(pinned) < len(rows) else rows
     pools = [[c for c in found if is_learner_gloss(c["span"])] for row, found in by_row if row in ordered]
+    if ordered is not rows:
+        # Kaikki names no homonym, so under a pin it may only give English the
+        # pinned row also gives; an excluded homonym's gloss never re-enters.
+        kaikki = [c for c in kaikki if any(_same_head(c["head"], p["head"]) for pool in pools for p in pool)]
     pools.append([c for c in kaikki if is_learner_gloss(c["span"])])
     return {
         "rows": rows,

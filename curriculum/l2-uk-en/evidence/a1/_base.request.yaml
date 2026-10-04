@@ -46,6 +46,7 @@ words:
     pos: noun
     want: new
     note: "closed class: reflexive pronoun (lemma for себе/собі/собою); basic reference"
+    meaning: "oneself"
 
   # Possessive pronouns
   - lemma: мій

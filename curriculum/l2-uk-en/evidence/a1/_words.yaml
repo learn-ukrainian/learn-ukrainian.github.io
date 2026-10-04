@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: f55d41f7228de1ab2e82a83bedd5a937fa9b4c23
+  mcp_commit: 3e317811ce2d7a3dc5067bef96c0539bd68ceb9a
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: ec6764811a4f5a7c0411a01f47f7faf3a14164ca8cd11635ef72f7d85213302f
+  sources_db: 8313bbccf6cfed4188796b07db9b4fbbbf5ece868226f53af42dfd88d51ca0e4
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: 7487d5ea22eb68949087667f5a84edd7c9f897ddf78be61a8cef5fe1e0a28493
@@ -718,14 +718,15 @@ words:
     stress_source: pending
     tags: noun:unanim:s:v_zna:pron:refl
     unresolvable_by_tags: true
-  gloss_en: myself
+  gloss_en: oneself
   gloss_ref:
-    id: 43
-    row_sha256: 95e83323b26161cfc5916e3d58102a208dcd8b014775cbc976a5321f79cea5ec
+    id: 42
+    row_sha256: ee92396d5d5a3caa55b68806116d7d41a066ea60f71ca2d6226e15271841c413
     table: dmklinger_uk_en
   gloss_source: dmklinger_uk_en
   id: W-009
   lemma: себе
+  meaning: oneself
   note: 'closed class: reflexive pronoun (lemma for себе/собі/собою); basic reference'
   pos: noun
   shadow:
@@ -12344,14 +12345,11 @@ words:
     stress_source: ulif
     stressed: дзюрчи́ть
     tags: verb:imperf:pres:s:3
-  gloss_en: to purl
-  gloss_ref:
-    id: 17628
-    row_sha256: 98894596a180a7a855284091451588aba91e05e241fa1ea416939403ab47c43e
-    table: dmklinger_uk_en
-  gloss_source: dmklinger_uk_en
+  gloss_en: to gurgle
+  gloss_source: request_meaning
   id: W-135
   lemma: дзюрчати
+  meaning: to gurgle
   note: T-010 source present form for soft дз; no conjugation explanation.
   pos: verb
   shadow:
