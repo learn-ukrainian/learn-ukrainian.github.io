@@ -66,6 +66,9 @@ SESSION_IDENTITY_ENV_VARS = (
     # Launcher driver identity (scripts/lib/launcher_core.sh).
     "SESSION_EPIC",
     "SESSION_HANDOFF_AGENT",
+    # Verified driver scope re-entry identity (scripts/lib/driver_scope.sh).
+    "LU_DRIVER_SCOPE_UNIT",
+    "LU_DRIVER_SCOPE_PID",
     # Rules-core seat of the launched session (scripts/lib/rules_core.sh); its
     # delegate.py workers and ACP calls inherit it.
     "LU_RULES_SEAT",

@@ -79,27 +79,25 @@ def install_scope_sandbox(root: Path) -> None:
         launcher.write_text(first + "\n" + exports + "\n" + rest)
 
 
-def _launcher(tmp_path: Path) -> tuple[Path, dict[str, str]]:
+def _launcher(tmp_path: Path, provider: str = "claude") -> tuple[Path, dict[str, str]]:
     root = tmp_path / "repo"
     env = scope_sandbox(root, tmp_path)
     core = root / "scripts/lib/launcher_core.sh"
     shutil.copy2(REPO / "scripts/lib/launcher_core.sh", core)
     # Only provider/lease/preparation seams are stubbed. The full main entry,
-    # scope setup, identity and limit validation stay real.
+    # defaults, Gemini refusal, scope setup, identity and limit validation stay real.
     core.write_text(
         core.read_text()
         + """
-launcher_defaults() { LC_DRY_RUN=0; LC_GOVERNOR=${TEST_GOVERNOR:-0}; LC_EPIC=devops; }
 launcher_clear_foreign_route_state() { :; }
-launcher_parse() { :; }
+launcher_parse() { LC_DRY_RUN=0; LC_GOVERNOR=${TEST_GOVERNOR:-0}; LC_EPIC=devops; }
 launcher_drop_force_from_successor_args() { :; }
 launcher_normalize_effort() { :; }
 launcher_resolve_roots() { :; }
 launcher_publication_path() { :; }
 launcher_normalize_model() { :; }
 launcher_validate_mode() { :; }
-launcher_validate_driver_certification() { :; }
-launcher_load_rules_core() { printf 'PREPARED\\n'; }
+launcher_load_rules_core() { [ -s "$FAKE_STARTS" ] || exit 98; printf 'PREPARED\\n'; }
 launcher_prepare_driver_identity() { :; }
 launcher_import_rollover_bundle() { printf 'IMPORT\\n'; }
 launcher_claim_driver_lease() { printf 'LEASE\\n'; }
@@ -115,9 +113,10 @@ launcher_adapter_preflight() { :; }
 launcher_adapter_canary() { :; }
 launcher_adapter_exec() { read -r line; printf 'PROVIDER:%s\\n' "$line"; exit "${TEST_RC:-0}"; }
 """)
-    launcher = root / "start-claude-driver.sh"
+    launcher = root / f"start-{provider}-driver.sh"
     launcher.write_text(
-        '#!/usr/bin/env bash\nset -euo pipefail\nsource "$(dirname "$0")/scripts/lib/launcher_core.sh"\nlauncher_main claude driver "$@"\n'
+        '#!/usr/bin/env bash\nset -euo pipefail\nsource "$(dirname "$0")/scripts/lib/launcher_core.sh"\n'
+        f'launcher_main {provider} driver "$@"\n'
     )
     return launcher, env
 
@@ -140,10 +139,29 @@ def test_all_paths_enter_once_before_preparation(tmp_path: Path, extra: dict[str
     result = _run(launcher, env, **extra)
     assert result.returncode == 0, result.stderr
     assert Path(env["FAKE_STARTS"]).read_text().splitlines() == ["start"]
+    assert result.stdout.count("PREPARED\n") == 1
     assert "PROVIDER:stdin survives" in result.stdout
     assert "high=6442450944 max=9663676416 swap=1073741824 oom=continue" in result.stderr
     assert "DRIVER_SCOPE_VERIFIED" in result.stderr
     assert "parent_memory_current=123456 parent_swap_current=654321" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "provider,model",
+    [
+        ("gemini", "gemini-3.8-flash-high"),
+        ("claude", "gemini-3.8-flash-high"),
+        ("claude", "gemini:gemini-3.1-pro-high"),
+    ],
+)
+def test_gemini_driver_refused_without_entering_scope(tmp_path: Path, provider: str, model: str) -> None:
+    launcher, env = _launcher(tmp_path, provider)
+    result = _run(launcher, env, LAUNCHER_MODEL=model, FAKE_BUS_FAIL="1")
+    assert result.returncode == 4, result.stderr
+    assert "AGY/Gemini is not a planning, design or driver seat." in result.stderr
+    assert result.stdout == ""
+    assert not Path(env["FAKE_STARTS"]).exists()
+    assert "DRIVER_SCOPE_" not in result.stderr
 
 
 @pytest.mark.parametrize(

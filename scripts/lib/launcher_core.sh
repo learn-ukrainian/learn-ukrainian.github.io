@@ -1298,7 +1298,8 @@ launcher_main() {
   launcher_clear_foreign_route_state
   launcher_defaults
   launcher_parse "$@"
-  # Reject before root resolution, adapter preflight, deployment, or any
+  # Defaults and parsing set the model before this guard reads it. Reject
+  # before scope entry, root resolution, adapter preflight, deployment, or any
   # continuity/lease/canary/provider work. Help remains a read-only request.
   launcher_refuse_gemini_driver
   launcher_drop_force_from_successor_args
@@ -1312,7 +1313,7 @@ launcher_main() {
   source "$LC_ROOT/scripts/lib/handoff_identity.sh"
   launcher_validate_mode
   launcher_validate_driver_certification
-  # Every driver path enters before expensive preparation, import and lease.
+  # Every admitted driver path enters before expensive preparation, import and lease.
   if [ "$LC_MODE" = driver ]; then
     if [ "$LC_DRY_RUN" = 1 ]; then
       printf 'LAUNCHER_DRY_RUN=1: would enter a verified per-driver memory-limited scope in lu-driver.slice\n'
