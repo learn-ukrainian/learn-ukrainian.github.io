@@ -1442,7 +1442,7 @@ def test_review_budget_substitute_pins_resolver_model(monkeypatch):
 
 
 def test_review_admits_sole_cross_family_seat_in_pace_deficit(monkeypatch, capsys):
-    budget = _budget()
+    budget = _budget(cursor="near_cap")
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -1465,7 +1465,7 @@ def test_review_admits_sole_cross_family_seat_in_pace_deficit(monkeypatch, capsy
     ],
 )
 def test_retained_reviewer_only_hints_about_missing_trusted_inputs(monkeypatch, capsys, inputs):
-    budget = _budget()
+    budget = _budget(cursor="near_cap")
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -1483,6 +1483,35 @@ def test_retained_reviewer_only_hints_about_missing_trusted_inputs(monkeypatch, 
     assert ("budget substitution requires --review-author-model and --review-risk (code profile only)" in output) == (
         missing_inputs
     )
+
+
+def test_deficit_reviewer_substitutes_the_available_cursor_opus_seat(monkeypatch, capsys):
+    budget = _budget()
+    budget["agents"]["claude"]["codexbar"] = {
+        "will_last_to_reset": False,
+        "weekly_pace_delta_pct": 12.0,
+        "weekly_expected_pct": 40.0,
+    }
+    args = _args(
+        "--agent",
+        "claude",
+        "--model",
+        "claude-opus-5-5",
+        "--check-budget",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "critical",
+    )
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("cursor", "claude-opus-5-5-high")
+    assert routing.substitution["requested_agent"] == "claude"
+    assert routing.substitution["requested_model"] == "claude-opus-5-5"
+    assert routing.substitution["actual_agent"] == "cursor"
+    assert routing.substitution["actual_model"] == "claude-opus-5-5-high"
+    output = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" in output and "REVIEW_BUDGET_RETAINED" not in output
 
 
 def test_explicit_reviewer_context_window_keeps_its_model(monkeypatch):
