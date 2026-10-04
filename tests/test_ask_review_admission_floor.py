@@ -81,14 +81,14 @@ def write_code_review_manifest(repo, path):
     return path
 
 
-def _args(*flags):
+def _args(*flags, model="claude-sonnet-5-5"):
     return delegate.build_parser().parse_args(
         [
             "dispatch",
             "--agent",
             "claude",
             "--model",
-            "claude-sonnet-5-5",
+            model,
             "--task-id",
             "floor-9125",
             "--mode",
@@ -218,9 +218,9 @@ def test_ukrainian_review_never_collects_floor_paths(tmp_path, monkeypatch, atte
     flags = ["--review-profile", "ukrainian"]
     if attempt:
         flags += ["--review-attempt", str(manifest)]
-    refusal, target = _admit(_args(*flags))
+    refusal, target = _admit(_args(*flags, model="claude-opus-5-5"))
     assert refusal is None
-    assert (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
+    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
 
 
 def test_admission_does_not_call_a_ukrainian_path_collector():
@@ -231,14 +231,14 @@ def test_admission_does_not_call_a_ukrainian_path_collector():
 
     (target,) = resolve_and_admit(
         ("claude",),
-        model="claude-sonnet-5-5",
+        model="claude-opus-5-5",
         mode="read-only",
         review_dispatch=True,
         review_profile="ukrainian",
         review_attempt=True,
         review_changed_paths=unexpected_paths,
     )
-    assert (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
+    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
 
 
 def test_ordinary_diff_keeps_sonnet(review_repo):

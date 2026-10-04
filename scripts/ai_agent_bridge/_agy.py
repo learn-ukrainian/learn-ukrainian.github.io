@@ -19,6 +19,7 @@ from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
+from scripts.agent_runtime.bounded_advisory import _CODE_SUFFIXES
 from scripts.common.scratch import ensure_scratch_root
 
 from ._ask_contract import (
@@ -156,20 +157,21 @@ _CONTENT_PREFIXES = (
 )
 # build_arc_landing.py consumes these schema-supported core levels. Its
 # ARC_LANDING_LEVELS tracks landing ownership, not the accepted input levels.
-_CONTENT_ARC_PATHS = frozenset(
-    f"site/src/data/arc-{level}.json" for level in ("a1", "a2", "b1", "b2")
-)
+_CONTENT_ARC_PATHS = frozenset(f"site/src/data/arc-{level}.json" for level in ("a1", "a2", "b1", "b2"))
 # Track roots whose top level also carries code-imported manifests/data.
 _CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
-# Data/code extensions that are never prose content anywhere under the roots.
-_CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
+# Program files are code wherever they live (the bounded-advisory code set);
+# databases are code-imported data.
+_CONTENT_CODE_SUFFIXES = _CODE_SUFFIXES | {".db", ".sqlite"}
 # Exact code-imported files inside the content roots.
-_CONTENT_CODE_PATHS = frozenset({
-    "curriculum/l2-uk-direct/manifest.yaml",
-    "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
-    "curriculum/l2-uk-en/module-mapping.json",
-    "curriculum/l2-uk-en/vocabulary.db",
-})
+_CONTENT_CODE_PATHS = frozenset(
+    {
+        "curriculum/l2-uk-direct/manifest.yaml",
+        "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
+        "curriculum/l2-uk-en/module-mapping.json",
+        "curriculum/l2-uk-en/vocabulary.db",
+    }
+)
 
 
 def _is_code_load_bearing_content(path: str) -> bool:
@@ -181,8 +183,9 @@ def _is_code_load_bearing_content(path: str) -> bool:
     (direct-track build/validate, agent_router, audits);
     ``module-mapping.json`` (legacy TypeScript migrations);
     ``vocabulary.db`` (vocab, practice, audit checks, lexicon backfill). Any
-    ``*.py`` / ``*.db`` / ``*.sqlite`` under the roots and any ``*.json`` at a
-    track root is code/data surface by extension.
+    program file (``*.js``, ``*.sh``, ``*.py``, ...), ``*.db`` or ``*.sqlite``
+    under the roots, in any letter case, and any ``*.json`` at a track root is
+    code/data surface by extension.
     """
     if path.startswith("curriculum/") and PurePosixPath(path).name == "curriculum.yaml":
         return True
@@ -190,7 +193,7 @@ def _is_code_load_bearing_content(path: str) -> bool:
         return True
     if not path.startswith(_CONTENT_PREFIXES):
         return False
-    if path.endswith(_CONTENT_CODE_SUFFIXES):
+    if PurePosixPath(path).suffix.lower() in _CONTENT_CODE_SUFFIXES:
         return True
     return any(
         path.startswith(root) and "/" not in path[len(root) :] and path.endswith(".json")

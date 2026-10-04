@@ -1599,23 +1599,39 @@ def test_b1_missing_unfinished_or_changed_advisor_evidence_refuses_at_the_worker
 # --- Round 2: B2 classification of normalized owned paths ------------------------
 
 
+_AMBIGUOUS_ENVELOPE = (bounded_advisory.ENVELOPE_REQUIRED, "ambiguous classification")
+# Review admission classifies a Ukrainian-profile review's owned target before the envelope check.
+_UKRAINIAN_REVIEW_OWNS_CODE = ("REVIEW_ROUTE_REFUSED", "first non-content path: scripts/delegate.py")
+
+
 @pytest.mark.parametrize(
-    "extra",
+    "extra,expected",
     [
-        ["--research-task-family", "ukrainian-authoring", "--owned-path", "scripts"],
-        ["--research-task-family", "ukrainian-authoring", "--owned-path", "././scripts/delegate.py"],
-        ["--research-task-family", "ukrainian-authoring", "--owned-path", "site/src/App.tsx"],
-        ["--review-profile", "ukrainian", "--owned-path", "scripts/delegate.py"],
-        ["--review-profile", "ukrainian", "--research-owned-path", "scripts"],
-        ["--research-task-family", "ukrainian-review", "--research-owned-path", "curriculum/../scripts/delegate.py"],
+        (["--research-task-family", "ukrainian-authoring", "--owned-path", "scripts"], _AMBIGUOUS_ENVELOPE),
+        (
+            ["--research-task-family", "ukrainian-authoring", "--owned-path", "././scripts/delegate.py"],
+            _AMBIGUOUS_ENVELOPE,
+        ),
+        (["--research-task-family", "ukrainian-authoring", "--owned-path", "site/src/App.tsx"], _AMBIGUOUS_ENVELOPE),
+        (["--review-profile", "ukrainian", "--owned-path", "scripts/delegate.py"], _UKRAINIAN_REVIEW_OWNS_CODE),
+        (["--review-profile", "ukrainian", "--research-owned-path", "scripts"], _AMBIGUOUS_ENVELOPE),
+        (
+            [
+                "--research-task-family",
+                "ukrainian-review",
+                "--research-owned-path",
+                "curriculum/../scripts/delegate.py",
+            ],
+            _AMBIGUOUS_ENVELOPE,
+        ),
     ],
     ids=["bare-root", "dot-dot-slash", "site-tsx", "profile-owns-code", "profile-research-root", "climbs-out"],
 )
-def test_b2_ukrainian_exemptions_owning_code_are_refused(env, capsys, extra):
+def test_b2_ukrainian_exemptions_owning_code_are_refused(env, capsys, extra, expected):
     rc = _dispatch(_argv(*extra, agent="agy", model=None))
     err = capsys.readouterr().err
     assert rc == 2, err
-    assert bounded_advisory.ENVELOPE_REQUIRED in err and "ambiguous classification" in err
+    assert all(marker in err for marker in expected), err
     assert env.spawned == [] and _worker_record(env.tasks) is None
 
 

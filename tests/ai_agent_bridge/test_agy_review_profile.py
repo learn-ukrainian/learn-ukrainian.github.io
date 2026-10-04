@@ -64,6 +64,83 @@ def test_other_data_and_code_paths_remain_non_content(path: str) -> None:
     assert f"first non-content path: {path}" in message
 
 
+_CONTENT_ROOT_DIRS = ("curriculum/l2-uk-en/a1", "curriculum/l2-uk-direct/a1", "site/src/content/docs/a1", "wiki")
+# The #9714 end-to-end bypass targets: approved Gemini Ukrainian verdicts on executable code.
+_BYPASS_TARGETS = ("wiki/reviewer-bypass.js", "curriculum/l2-uk-en/a1/reviewer-bypass.sh")
+
+
+def _code_paths_in_content_roots() -> list[str]:
+    from scripts.agent_runtime.bounded_advisory import _CODE_SUFFIXES
+
+    return [
+        f"{root}/program{suffix}" for root in _CONTENT_ROOT_DIRS for suffix in sorted(_CODE_SUFFIXES | {".JS", ".Sh"})
+    ]
+
+
+@pytest.mark.parametrize("path", [*_BYPASS_TARGETS, *_code_paths_in_content_roots()])
+def test_code_inside_content_roots_is_not_content(path: str) -> None:
+    assert not is_content_class_path(path)
+    message = gemini_content_paths_error(["wiki/a1/lesson.md", path])
+    assert message is not None
+    assert "gemini_code_review_forbidden" in message
+    assert f"first non-content path: {path}" in message
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "curriculum/l2-uk-en/a1/my-family.md",
+        "curriculum/l2-uk-en/a1/activities/my-family.yaml",
+        "curriculum/l2-uk-en/a1/vocabulary/my-family.json",
+        "curriculum/l2-uk-direct/a1/lesson.yaml",
+        "site/src/content/docs/a1/my-family.mdx",
+        "wiki/grammar/cases.md",
+        "wiki/sources/notes.txt",
+        "site/src/data/arc-b2.json",
+    ],
+)
+def test_learner_content_formats_remain_content(path: str) -> None:
+    assert is_content_class_path(path)
+    assert gemini_content_paths_error([path]) is None
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "curriculum/l2-uk-en/curriculum.yaml",
+        "curriculum/l2-uk-direct/curriculum.yaml",
+        "curriculum/l2-uk-direct/manifest.yaml",
+        "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
+        "curriculum/l2-uk-en/module-mapping.json",
+        "curriculum/l2-uk-en/vocabulary.db",
+        "curriculum/l2-uk-en/a1/index.sqlite",
+        "curriculum/l2-uk-direct/levels.json",
+    ],
+)
+def test_code_imported_manifests_remain_non_content(path: str) -> None:
+    assert not is_content_class_path(path)
+    assert f"first non-content path: {path}" in (gemini_content_paths_error([path]) or "")
+
+
+@pytest.mark.parametrize("path", _BYPASS_TARGETS)
+def test_publisher_refuses_a_gemini_ukrainian_verdict_on_content_root_code(path: str) -> None:
+    from scripts.agent_runtime.target_admission import ukrainian_review_refusal
+    from scripts.review import record_cf_verdict as recorder
+
+    gemini = {"agent": "agy", "requested": "gemini-3.8-flash-high", "model": "gemini-3.8-flash-high"}
+    task = {"review_profile": "ukrainian"}
+    assert f"first non-content path: {path}" in (
+        ukrainian_review_refusal("agy", gemini["model"], target_paths=(path,)) or ""
+    )
+    with pytest.raises(recorder.RecordError, match=f"first non-content path: {path}"):
+        recorder._require_qualified_reviewer(
+            task, **gemini, family="google", author_families={"anthropic"}, changed_paths=(path,)
+        )
+    recorder._require_qualified_reviewer(
+        task, **gemini, family="google", author_families={"anthropic"}, changed_paths=("wiki/a1/lesson.md",)
+    )
+
+
 def test_arc_content_paths_match_landing_generator() -> None:
     """Bind the fixed allowlist to the generator's validated inputs and outputs."""
     from scripts.ai_agent_bridge._agy import _CONTENT_ARC_PATHS
