@@ -234,6 +234,8 @@ Terra/medium V2 child defaults. Personal root defaults belong in
 `~/.codex/config.toml`; task-specific choices come from the model picker or CLI
 flags. `start-codex.sh` launches the CLI with:
 
+- `gpt-6.1-sol` at `medium` effort by default, shared with `start-codex-driver.sh`;
+  override with `--model` / `--effort` or `LAUNCHER_MODEL` / `LAUNCHER_EFFORT`
 - interactive Codex in dangerous bypass mode
 - live web search; project config supplies Codex 0.145 multi-agent V2
 - at most three project-configured spawned children (four active agents

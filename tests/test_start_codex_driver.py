@@ -260,7 +260,7 @@ def test_governor_pins_astra_and_is_mutation_guarded_against_lease_claim() -> No
     argv = _would_exec_argv(result)
     model_index = argv.index("--model")
     assert argv[model_index + 1] == "gpt-6.1-sol"
-    assert argv[model_index + 2 : model_index + 4] == ["-c", "model_reasoning_effort=high"]
+    assert argv[model_index + 2 : model_index + 4] == ["-c", "model_reasoning_effort=medium"]
     # Mutation guard: removing this seed leaves the bounded Astra invocation
     # without the operator-ordered supervision instruction.
     assert argv[model_index + 4] == (
@@ -333,7 +333,7 @@ def test_governor_execs_astra_after_healthy_transport_probe(tmp_path: Path) -> N
     assert '{"status":"healthy","fresh":true}' in result.stdout
     assert "CODEX_EXEC" in result.stdout
     assert "--model gpt-6.1-sol" in result.stdout
-    assert "model_reasoning_effort=high" in result.stdout
+    assert "model_reasoning_effort=medium" in result.stdout
     assert "dynamic-area-epic-fleet-governor.md" in result.stdout
 
 

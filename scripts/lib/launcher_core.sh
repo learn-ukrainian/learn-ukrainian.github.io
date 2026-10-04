@@ -56,12 +56,14 @@ $driver_mode
 Options:
   -h, --help                 Show this help and exit.
   --model MODEL              Provider model. Claude driver default: claude-opus-5-5[1m].
+                             Codex default (driver and interactive): gpt-6.1-sol.
                              Cursor default (driver and interactive): grok-4.7-high;
                              it also accepts composer-2.5, never Auto, a Fast variant,
                              an empty model or a forwarded --model. Claude
                              interactive / Grok: omit to keep last TUI/session model.
   --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
-                             --reasoning-effort). Claude driver default: high. Otherwise
+                             --reasoning-effort). Claude driver default: high;
+                             Codex default (driver and interactive): medium. Otherwise
                              omit to keep last session selection. Other providers ignore.
   --harness HARNESS          Provider harness (default: ${LC_HARNESS}).
   --epic SELECTOR            Driver lane only; for example: devops or atlas.
@@ -80,10 +82,11 @@ Environment:
   LU_RULES_SEAT              Rules core seat: core or content (default: content for a
                              curriculum driver lane, else core). Exported to the session.
   LAUNCHER_MODEL             Default model when --model is omitted (Claude driver:
-                             claude-opus-5-5[1m]; Cursor: grok-4.7-high; empty
+                             claude-opus-5-5[1m]; Codex: gpt-6.1-sol;
+                             Cursor: grok-4.7-high; empty
                              for Claude interactive/Grok = last session).
   LAUNCHER_EFFORT            Default effort when --effort is omitted (Claude driver: high;
-                             empty for Claude interactive/Grok = last session).
+                             Codex: medium; empty for Claude interactive/Grok = last session).
   LAUNCHER_HARNESS           Default harness when --harness is omitted.
 $provider_env
 
@@ -352,8 +355,7 @@ launcher_defaults() {
   esac
   LC_EFFORT="${LAUNCHER_EFFORT:-}"
   if [ "$LC_PROVIDER" = codex ] && [ -z "$LC_EFFORT" ]; then
-    # Operator 2026-09-22: Sol's seat is high, including the ordinary launcher.
-    LC_EFFORT=high
+    LC_EFFORT=medium
   fi
   if [ "$LC_PROVIDER" = claude ] && [ "$LC_MODE" = driver ] && [ -z "$LC_EFFORT" ]; then
     # Opus 5.5 API default is medium; orchestrating seats run at high.

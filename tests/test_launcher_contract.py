@@ -260,15 +260,28 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
 @pytest.mark.parametrize(
     ("launcher", "args", "model", "effort"),
     [
-        ("start-codex.sh", [], "gpt-6.1-sol", "high"),
-        ("start-codex-driver.sh", ["--epic", "devops"], "gpt-6.1-sol", "high"),
+        ("start-codex.sh", [], "gpt-6.1-sol", "medium"),
+        ("start-codex-driver.sh", ["--epic", "devops"], "gpt-6.1-sol", "medium"),
         ("start-codex.sh", ["--model", "gpt-6.1-sol", "--effort", "max"], "gpt-6.1-sol", "max"),
+        ("start-codex-driver.sh", ["--epic", "devops", "--effort", "high"], "gpt-6.1-sol", "high"),
     ],
 )
 def test_codex_launchers_pin_roles_and_preserve_explicit_effort(launcher, args, model, effort):
     result = run_launcher(launcher, *args)
     assert result.returncode == 0, result.stderr
     assert f"--model {model}" in result.stdout
+    assert f"model_reasoning_effort={effort}" in result.stdout
+
+
+@pytest.mark.parametrize(
+    ("launcher", "args"),
+    [("start-codex.sh", []), ("start-codex-driver.sh", ["--epic", "devops"])],
+)
+@pytest.mark.parametrize(("override", "effort"), [([], "low"), (["--effort", "high"], "high")])
+def test_codex_effort_environment_override_and_cli_precedence(launcher, args, override, effort):
+    result = run_launcher(launcher, *args, *override, env={"LAUNCHER_EFFORT": "low"})
+    assert result.returncode == 0, result.stderr
+    assert "--model gpt-6.1-sol" in result.stdout
     assert f"model_reasoning_effort={effort}" in result.stdout
 
 
