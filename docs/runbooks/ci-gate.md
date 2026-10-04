@@ -51,7 +51,7 @@ that chose *which* tests or checks a change ran is gone.
 | Static practice assets | Contracts | checks.sh |
 | Dossier word counts | Contracts | checks.sh |
 | BIO preparation capsules and holds | Contracts (inline Python) | checks.sh → `scripts/ci/bio_preparation_gate.py` |
-| Frontend build, generated-artifact drift (before test:unit re-runs hydrate), unit and built-output tests | Frontend, when the denominator matched | Frontend (same denominator, same order) |
+| Frontend build, generated-artifact drift (directly after the build), unit and built-output tests | Frontend, when the denominator matched | Frontend (same denominator, same order); one hydrate and one recorded build, reused only after verification (below) |
 | Frontend change denominator incl. backend hydrate inputs | Changes (`classify_changes`) | Frontend scope step (`frontend_change_scope.py`); completeness kept by `tests/test_frontend_denominator_invariant.py` |
 | Full non-slow pytest, strict markers, `--timeout=120` | pytest shards (full/selected/docs/content tiers) | pytest shards, full suite on every event |
 | Postgres tests must not skip (`pg_skip_guard.py`) | per shard | per shard |
@@ -149,6 +149,32 @@ diff, so the scan reads the metadata alone.
 Because the pull_request run already executes every job, reuse applies
 whenever `main` has not moved between the PR's last green run and its queue
 entry.
+
+## Frontend: one hydrate, one recorded build (#9718)
+
+The Frontend step runs `npm run hydrate` once, then
+`site/tests/helpers/ci-build-artifact.ts record` runs `astro build` once. The
+record (under `$RUNNER_TEMP`) keeps the complete build log and exit code, writes a
+fresh nonce into `dist/`, and stores the input identity: HEAD, the tracked
+working-tree diff and the content hash of every file under `site/src/data`,
+`site/public` and `data/atlas.db`. A failed build fails the step at once.
+
+The generated-artifact drift check runs directly after the build. Then:
+
+1. `npm run test:unit:ci` verifies the record, then runs the same Vitest command
+   and excludes as `test:unit`, without a second hydrate.
+2. `ci-build-artifact.ts verify` runs again, so an input a unit test changed
+   fails here.
+3. `npm run test:built-output` runs with `FRONTEND_BUILD_RECORD` set.
+   `build-renders.test.ts` verifies the record and runs its original assertions
+   on the recorded log and `dist/`, without rebuilding.
+
+Verification fails if the record, log or `dist/` is missing, the log hash or the
+`dist/` nonce differs, the build exited non-zero, or any input changed. It never
+falls back to a rebuild. Without `FRONTEND_BUILD_RECORD`, `npm test`,
+`npm run test:unit` and `npm run test:built-output` behave as before:
+self-contained, with their own hydrate and build. Unit test files still run one at
+a time (`fileParallelism: false` in `site/vitest.config.ts`).
 
 ## pytest shards
 
