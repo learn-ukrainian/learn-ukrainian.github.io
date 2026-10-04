@@ -1,0 +1,366 @@
+activities:
+- id: a1
+  instruction: Choose the sound class represented by each letter, using the source symbols and English labels.
+  items:
+  - correct: 0
+    explanation: Recall the vowel sound modeled for this letter and select the source's dot symbol.
+    host:
+      kind: quote
+      ref: T-039
+    kind: comprehension
+    option_why:
+    - The dot is the source symbol for this vowel sound.
+    - The dash marks a consonant sound, so it does not fit this letter.
+    options:
+    - '[•] — vowel'
+    - '[–] — consonant'
+    question: Which sound class does {{uk:А}} represent?
+  - correct: 1
+    explanation: Recall the consonant sound modeled for this letter and select the source's dash symbol.
+    host:
+      kind: quote
+      ref: T-039
+    kind: comprehension
+    option_why:
+    - The dot marks a vowel sound, so it does not fit this letter.
+    - The dash is the source symbol for this consonant sound.
+    options:
+    - '[•] — vowel'
+    - '[–] — consonant'
+    question: Which sound class does {{uk:М}} represent?
+  - correct: 1
+    explanation: Recall the vowel sound modeled for this letter and select the source's dot symbol.
+    host:
+      kind: quote
+      ref: T-039
+    kind: comprehension
+    option_why:
+    - The dash marks a consonant sound, so it does not fit this letter.
+    - The dot is the source symbol for this vowel sound.
+    options:
+    - '[–] — consonant'
+    - '[•] — vowel'
+    question: Which sound class does {{uk:О}} represent?
+  - correct: 0
+    explanation: Recall the vowel sound modeled for this letter and select the source's dot symbol.
+    host:
+      kind: quote
+      ref: T-039
+    kind: comprehension
+    option_why:
+    - The dot is the source symbol for this vowel sound.
+    - The dash marks a consonant sound, so it does not fit this letter.
+    options:
+    - '[•] — vowel'
+    - '[–] — consonant'
+    question: Which sound class does {{uk:У}} represent?
+  - correct: 1
+    explanation: Recall the vowel sound modeled for this letter and select the source's dot symbol.
+    host:
+      kind: quote
+      ref: T-039
+    kind: comprehension
+    option_why:
+    - The dash marks a consonant sound, so it does not fit this letter.
+    - The dot is the source symbol for this vowel sound.
+    options:
+    - '[–] — consonant'
+    - '[•] — vowel'
+    question: Which sound class does {{uk:И}} represent?
+- id: a2
+  instruction: Read the consonant-first and vowel-first rows after your teacher, then copy both rows and the model word into
+    your notebook; copying is practised offline and is not machine-verified.
+  letters:
+  - key_word: мама
+    lower: ма мо му ми
+    note: Consonant first, then vowel.
+    upper: МА МО МУ МИ
+  - lower: ам ом ум им
+    note: Vowel first, then consonant.
+    upper: АМ ОМ УМ ИМ
+- id: a3
+  instruction: Listen to each model and repeat before looking back at the two letter shapes.
+  items:
+  - explanation: Repeat after this native single-letter model.
+    letter: И
+    video: V-007
+  - explanation: Repeat after this second native single-letter model and keep the two sounds distinct.
+    letter: І
+    video: V-009
+- id: a4
+  instruction: Listen to each recording and choose the letter representing its modeled sound.
+  items: []
+- id: a5
+  instruction: Read both rows after your teacher, then copy the rows and model names into your notebook; copying is practised
+    offline and is not machine-verified.
+  letters:
+  - key_word: '{{gloss:W-091}}'
+    lower: на но ну ни ні
+    note: Consonant first, then vowel.
+    upper: НА НО НУ НИ НІ
+  - key_word: '{{gloss:W-092}}'
+    lower: ан он ун ин ін
+    note: Vowel first, then consonant.
+    upper: АН ОН УН ИН ІН
+- id: a6
+  instruction: Listen to each recording and choose the letter representing its modeled sound.
+  items: []
+- id: a7
+  instruction: Read each printed syllable and choose consonant first or vowel first.
+  items:
+  - correct: 0
+    explanation: Read the first letter before the second; the consonant starts this syllable.
+    host:
+      kind: quote
+      ref: T-037
+    kind: comprehension
+    option_why:
+    - This order matches the consonant at the start and the vowel at the end.
+    - This order would put the vowel at the start, which the printed syllable does not do.
+    options:
+    - CV — consonant first
+    - VC — vowel first
+    question: Which order appears in {{uk:ма}}?
+  - correct: 1
+    explanation: Read the first letter before the second; the vowel starts this syllable.
+    host:
+      kind: quote
+      ref: T-037
+    kind: comprehension
+    option_why:
+    - This order would put the consonant at the start, which the printed syllable does not do.
+    - This order matches the vowel at the start and the consonant at the end.
+    options:
+    - CV — consonant first
+    - VC — vowel first
+    question: Which order appears in {{uk:ам}}?
+  - correct: 1
+    explanation: The consonant comes before the vowel in this printed syllable.
+    host:
+      kind: quote
+      ref: T-037
+    kind: comprehension
+    option_why:
+    - The vowel is second here, so vowel first does not match the print.
+    - The consonant is first here, so consonant first matches the print.
+    options:
+    - VC — vowel first
+    - CV — consonant first
+    question: Which order appears in {{uk:мо}}?
+  - correct: 0
+    explanation: The vowel comes before the consonant in this printed syllable.
+    host:
+      kind: quote
+      ref: T-037
+    kind: comprehension
+    option_why:
+    - The vowel is first here, so vowel first matches the print.
+    - The consonant is second here, so consonant first does not match the print.
+    options:
+    - VC — vowel first
+    - CV — consonant first
+    question: Which order appears in {{uk:ом}}?
+  - correct: 0
+    explanation: The consonant starts this printed syllable.
+    host:
+      kind: quote
+      ref: T-037
+    kind: comprehension
+    option_why:
+    - The consonant precedes the vowel, so this order fits.
+    - The vowel follows the consonant, so this order does not fit.
+    options:
+    - CV — consonant first
+    - VC — vowel first
+    question: Which order appears in {{uk:му}}?
+  - correct: 1
+    explanation: The vowel starts this printed syllable.
+    host:
+      kind: quote
+      ref: T-037
+    kind: comprehension
+    option_why:
+    - The consonant follows the vowel, so this order does not fit.
+    - The vowel precedes the consonant, so this order fits.
+    options:
+    - CV — consonant first
+    - VC — vowel first
+    question: Which order appears in {{uk:ум}}?
+  - correct: 1
+    explanation: The consonant starts this printed syllable.
+    host:
+      kind: quote
+      ref: T-037
+    kind: comprehension
+    option_why:
+    - The vowel is at the end, so vowel first does not fit.
+    - The consonant is at the start, so consonant first fits.
+    options:
+    - VC — vowel first
+    - CV — consonant first
+    question: Which order appears in {{uk:ми}}?
+  - correct: 0
+    explanation: The vowel starts this printed syllable.
+    host:
+      kind: quote
+      ref: T-037
+    kind: comprehension
+    option_why:
+    - The vowel is at the start, so vowel first fits.
+    - The consonant is at the end, so consonant first does not fit.
+    options:
+    - VC — vowel first
+    - CV — consonant first
+    question: Which order appears in {{uk:им}}?
+- id: a8
+  instruction: Find the different letter in each row; compare all three printed shapes.
+  items:
+  - correct: 1
+    explanation: The middle letter differs from the matching outer pair.
+    host:
+      kind: quote
+      ref: T-027
+    kind: comprehension
+    option_why:
+    - This letter matches the last letter, so it is part of the pair.
+    - This letter differs from both outer letters, so it is the single different shape.
+    - This letter matches the first letter, so it is part of the pair.
+    words:
+    - И
+    - І
+    - И
+  - correct: 0
+    explanation: The first letter differs from the matching second and third letters.
+    host:
+      kind: quote
+      ref: T-025
+    kind: comprehension
+    option_why:
+    - This letter differs from both following letters, so it is the single different shape.
+    - This letter matches the last letter, so it is part of the pair.
+    - This letter matches the middle letter, so it is part of the pair.
+    words:
+    - И
+    - І
+    - І
+  - correct: 2
+    explanation: The last letter differs from the matching first and second letters.
+    host:
+      kind: quote
+      ref: T-027
+    kind: comprehension
+    option_why:
+    - This letter matches the middle letter, so it is part of the pair.
+    - This letter matches the first letter, so it is part of the pair.
+    - This letter differs from both preceding letters, so it is the single different shape.
+    words:
+    - И
+    - И
+    - І
+  - correct: 1
+    explanation: The middle letter differs from the matching outer pair.
+    host:
+      kind: quote
+      ref: T-025
+    kind: comprehension
+    option_why:
+    - This letter matches the last letter, so it is part of the pair.
+    - This letter differs from both outer letters, so it is the single different shape.
+    - This letter matches the first letter, so it is part of the pair.
+    words:
+    - І
+    - И
+    - І
+consolidation:
+  activities:
+  - a7
+  - a8
+  lead_in: Work through the printed rows at your own pace, then compare the letter shapes.
+draft_schema: 1
+gaps:
+- detail: 'IMPLEMENTATION_BLOCKER: a4 requires audio-only V-007/V-009 playback with frames, title, captions, thumbnail and
+    target glyph hidden until submission, but QuizQuestion renders YouTubeVideo with a visible thumbnail and iframe; the renderer
+    owner must supply verified suppression before scoring.'
+  need: video
+  step: s4
+- detail: 'IMPLEMENTATION_BLOCKER: a6 requires audio-only V-010/V-008 playback with frames, title, captions, thumbnail and
+    target glyph hidden until submission, but QuizQuestion renders YouTubeVideo with a visible thumbnail and iframe; the renderer
+    owner must supply verified suppression before scoring.'
+  need: video
+  step: s5
+inputs:
+  learner_state_sha256: b95251ccba5580439d9c0839575afb381610e5977fa69651e15965c27d987343
+  lesson_lock_entry_sha256: be9801b9a3fe13f926de309fc847ab673adba2a042b5ef243bffce206a612610
+  pack_lock: 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46
+  plan_sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+  style_card_sha256: 89c5a4cfcc9387ab968ca99d0402faaabf645d7fb07c7ec03f9498e13fbb24e0
+  words_lock: 68a3fcc3529a496d56f1f0ad895d857d86738b0e104e6b56873e2a10e2a51988
+lesson:
+  module: a1/sounds-letters-and-hello
+  n: 3
+status: evidence_gap
+steps:
+- blocks:
+  - kind: video
+    lead_in: Play only the cited informal greeting excerpt, then respond aloud after the recording or your teacher.
+    ref: V-001
+    target_record: W-074
+  - kind: video
+    lead_in: Play only the cited formal greeting excerpt, then respond aloud again.
+    ref: V-002
+    target_record: W-075
+  - explains:
+    - V-001
+    - V-002
+    - T-001
+    - T-039
+    - X-002
+    kind: prose
+    text: Keep these greetings whole for speaking; their spellings are not today's reading task. Listen as your teacher models
+      the four familiar vowel sounds and the new consonant sound before showing their letters. First hear the difference between
+      the two sound classes; then look at the symbols that represent them.
+  - kind: video
+    lead_in: Listen to the consonant model and repeat after it.
+    ref: V-008
+    target_record: М
+  - explains:
+    - T-010
+    - X-003
+    - V-008
+    kind: prose
+    text: Now meet {{uk:М}} beside the four familiar vowel letters. Read means turn the visible letters into sounds. Follow
+      your teacher's printed syllable model from left to right. In the consonant-first row, start with the consonant and join
+      the vowel. In the vowel-first row, start with the vowel and finish with the consonant. Both orders appear in the primer
+      pattern. Read each row, then copy the rows and {{gloss:W-081}} into your notebook. Your teacher models these printed
+      syllables and the whole word; the single-letter recording does not record them.
+  - kind: activity
+    ref: a2
+  id: s1
+- blocks:
+  - explains:
+    - T-026
+    - T-001
+    - T-039
+    kind: prose
+    text: Use the attributed source symbols below to choose between the two sound classes. The English labels support this
+      decision; the source's category words are not spelling or reading targets. Look at each familiar glyph and recall the
+      sound your teacher modeled before choosing a class.
+  - kind: quote
+    ref: T-039
+  - kind: activity
+    ref: a1
+  id: s3
+- blocks: []
+  id: s4
+- blocks: []
+  id: s5
+- blocks:
+  - explains:
+    - T-037
+    kind: prose
+    text: The attributed primer grid below supports your workbook reading. Follow each syllable from left to right. Choose
+      consonant first or vowel first using the paired English labels. These are printed syllable units, rather than missing
+      pieces of a whole word. Your teacher can model them aloud.
+  - kind: quote
+    ref: T-037
+  id: s7

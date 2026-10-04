@@ -1,0 +1,45 @@
+checks:
+- check: 1
+  status: passed
+- check: 2
+  code: '2'
+  layer: pack
+  reason: 'evidence_gap: [{"detail": "IMPLEMENTATION_BLOCKER: a4 requires audio-only V-007/V-009 playback with frames, title,
+    captions, thumbnail and target glyph hidden until submission, but QuizQuestion renders YouTubeVideo with a visible thumbnail
+    and iframe; the renderer owner must supply verified suppression before scoring.", "need": "video", "step": "s4"}, {"detail":
+    "IMPLEMENTATION_BLOCKER: a6 requires audio-only V-010/V-008 playback with frames, title, captions, thumbnail and target
+    glyph hidden until submission, but QuizQuestion renders YouTubeVideo with a visible thumbnail and iframe; the renderer
+    owner must supply verified suppression before scoring.", "need": "video", "step": "s5"}]'
+  status: failed
+  step: s4
+- check: 3
+  reason: prior_check_failed
+  status: not_checked
+- check: 4
+  reason: prior_check_failed
+  status: not_checked
+- check: 5
+  reason: prior_check_failed
+  status: not_checked
+- check: 6
+  reason: prior_check_failed
+  status: not_checked
+- check: 7
+  reason: prior_check_failed
+  status: not_checked
+- check: 8
+  reason: prior_check_failed
+  status: not_checked
+- check: 9
+  reason: prior_check_failed
+  status: not_checked
+- check: 10
+  reason: prior_check_failed
+  status: not_checked
+- check: 11
+  reason: prior_check_failed
+  status: not_checked
+level: a1
+n: 3
+passed: false
+slug: sounds-letters-and-hello

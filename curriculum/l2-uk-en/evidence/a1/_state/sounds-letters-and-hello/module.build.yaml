@@ -1,0 +1,36 @@
+complete: false
+lessons:
+- layer: null
+  manifest_sha256: cf9061e41a6178f0a31b31110f38c1dfd1d3a9985028424efe9258a956845226
+  n: 1
+  passed: true
+  passed_through: 12
+  reason: null
+  regenerations: 1
+  stopping_check: null
+  terminal_layer: null
+- layer: null
+  manifest_sha256: 1be3329b1f9f196490890891a2994fae0352df31977f9da5157cec1b73377aff
+  n: 2
+  passed: true
+  passed_through: 12
+  reason: null
+  regenerations: 2
+  stopping_check: null
+  terminal_layer: null
+- layer: pack
+  manifest_sha256: null
+  n: 3
+  passed: false
+  passed_through: 2
+  reason: 'evidence_gap: [{"detail": "IMPLEMENTATION_BLOCKER: a4 requires audio-only V-007/V-009 playback with frames, title,
+    captions, thumbnail and target glyph hidden until submission, but QuizQuestion renders YouTubeVideo with a visible thumbnail
+    and iframe; the renderer owner must supply verified suppression before scoring.", "need": "video", "step": "s4"}, {"detail":
+    "IMPLEMENTATION_BLOCKER: a6 requires audio-only V-010/V-008 playback with frames, title, captions, thumbnail and target
+    glyph hidden until submission, but QuizQuestion renders YouTubeVideo with a visible thumbnail and iframe; the renderer
+    owner must supply verified suppression before scoring.", "need": "video", "step": "s5"}]'
+  regenerations: 0
+  stopping_check: 2
+  terminal_layer: pack
+level: a1
+slug: sounds-letters-and-hello

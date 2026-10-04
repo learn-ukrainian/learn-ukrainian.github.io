@@ -1,0 +1,240 @@
+---
+title: "звук і літера"
+description: ""
+sidebar:
+  order: 2
+  label: "02. звук і літера"
+pipeline: v7
+build_status: draft
+evidence:
+  lessons_lock_sha256: "5fd9b674e1cc6ed91fa3220e8bc2e8b128e3ee627526cce2d229f1d830e62fc3"
+  lesson_entry_sha256: "30a0d1899fe0de2f19e79f67b6338f770e5850c0465d1defd48c2dc172875c49"
+immersion: "a1-m01-03"
+job: "Tell an audible sound from a visible letter and recognise and copy А, О, У, И in primer order."
+prev: "/a1/sounds-letters-and-hello/1/"
+next: "/a1/sounds-letters-and-hello/3/"
+draft: true
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords from '@site/src/components/MarkTheWords';
+import { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes from '@site/src/components/HighlightMorphemes';
+import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок — Lesson">
+
+Play only 05:23–05:26. Listen, then respond aloud.
+
+> [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/episode1/)
+
+Play only 04:35–04:39. Listen, then respond aloud.
+
+> [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/episode2/)
+
+Repeat Приві́т! and До́брий день! as the intact greetings you already practised. These are oral recall prompts, not words to decode or copy. Now listen to the first letter recording below before looking at its symbol. You hear a sound; you see a letter. A printed letter can represent the sound, but the visible shape and the sound you hear are different things.
+
+Listen first, then look.
+
+>
+
+<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=hvB3VpcR3ZE" label="Ukrainian Lessons" />
+
+<Observe client:only='react' examples={JSON.parse(`["А", "[а]"]`)} prompt={"Which example shows a letter shape, and which represents the sound you heard?"} isUkrainian={true} instruction={"Compare the visible letter with the written representation of its sound."} />
+
+Work through one letter at a time. For each model, listen, look, trace the printed shape with your finger, then copy it into your notebook. Keep the recording and the printed shape together as you practise. Copying is an offline task; compare your work with the model.
+
+Begin with А. Hear its model, then trace and copy the capital and small shapes.
+
+Play the whole dedicated recording.
+
+>
+
+<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=hvB3VpcR3ZE" label="Ukrainian Lessons" />
+
+Next comes О. Listen before tracing, then copy both shapes beside your first pair.
+
+Play the whole dedicated recording.
+
+>
+
+<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=gJFxRIPRZbI" label="Ukrainian Lessons" />
+
+Continue with У. Repeat the model aloud, follow the printed shapes with your finger, then copy them.
+
+Play the whole dedicated recording.
+
+>
+
+<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=VB1O6PmtYRU" label="Ukrainian Lessons" />
+
+Finish with И. Hear the model, trace each shape, then add the last pair to your notebook.
+
+Play the whole dedicated recording.
+
+>
+
+<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=W-1rCu0indE" label="Ukrainian Lessons" />
+
+### Watch and Repeat
+
+<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "V-004", "letter": "А", "explanation": "Listen to the first model, then repeat it before continuing."}, {"video": "V-005", "letter": "О", "explanation": "Listen to the second model, then repeat it before continuing."}, {"video": "V-006", "letter": "У", "explanation": "Listen to the third model, then repeat it before continuing."}, {"video": "V-007", "letter": "И", "explanation": "Listen to the fourth model, then repeat it to complete the sequence."}]`)} instruction={"Play each whole recording and repeat its sound aloud in this order."} />
+
+### Letter Grid
+
+<LetterGrid client:only='react' letters={JSON.parse(`[{"lower": "а", "upper": "А"}, {"lower": "о", "upper": "О"}, {"lower": "у", "upper": "У"}, {"lower": "и", "upper": "И"}]`)} instruction={"Find each capital and small pair in order. Trace both shapes, then copy them into your notebook. Compare your copies with the printed models; notebook copying is not machine-verified."} />
+
+You have now met all four letters. Replay their sound models before comparing the printed forms. In the source models shown next, the seeing cue points to capital and small letters. The hearing cue points to a sound written inside square brackets. The brackets represent a sound on the page; they are not a recording.
+
+Replay the whole recording.
+
+>
+
+<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=hvB3VpcR3ZE" label="Ukrainian Lessons" />
+
+Replay the whole recording.
+
+>
+
+<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=gJFxRIPRZbI" label="Ukrainian Lessons" />
+
+Replay the whole recording.
+
+>
+
+<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=VB1O6PmtYRU" label="Ukrainian Lessons" />
+
+Replay the whole recording.
+
+>
+
+<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=W-1rCu0indE" label="Ukrainian Lessons" />
+
+Look through the four source models. Use the English seeing and hearing cues to compare their two parts. You are identifying letters and written sound representations, not reading the surrounding Ukrainian words. Then compare the clean capital and small pairs before moving to the workbook.
+
+> Бачу А, а. Чую [а].
+>
+> — *Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 32*
+
+> Бачу О, о. Чую [о].
+>
+> — *Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 36*
+
+> Бачу У, у. Чую [у].
+>
+> — *Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 40*
+
+> Бачу И, и. Чую [и].
+>
+> — *Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 44*
+
+### Quiz
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "What does А, а show after the seeing cue?", "options": [{"text": "Letters", "correct": true}, {"text": "A sound", "correct": false}], "explanation": "The seeing part presents the capital and small letter shapes.", "kind": "comprehension", "option_why": ["Letters is correct because the model presents two visible shapes after its seeing cue.", "A sound is incorrect because the sound representation appears separately inside brackets."], "host": {"kind": "quote", "ref": "T-006"}}, {"question": "What does [а] represent after the hearing cue?", "options": [{"text": "Letters", "correct": false}, {"text": "A sound", "correct": true}], "explanation": "The brackets mark the written representation of the sound.", "kind": "comprehension", "option_why": ["Letters is incorrect because the capital and small letter shapes appear in the seeing part.", "A sound is correct because the hearing part represents it inside square brackets."], "host": {"kind": "quote", "ref": "T-006"}}, {"question": "What does О, о show after the seeing cue?", "options": [{"text": "A sound", "correct": false}, {"text": "Letters", "correct": true}], "explanation": "Both visible shapes belong to the letter shown in the seeing part.", "kind": "comprehension", "option_why": ["A sound is incorrect because these are the visible shapes outside the brackets.", "Letters is correct because the model shows the capital and small shapes after the seeing cue."], "host": {"kind": "quote", "ref": "T-007"}}, {"question": "What does [о] represent after the hearing cue?", "options": [{"text": "A sound", "correct": true}, {"text": "Letters", "correct": false}], "explanation": "The hearing part uses brackets to represent the sound.", "kind": "comprehension", "option_why": ["A sound is correct because the bracketed symbol belongs to the hearing part.", "Letters is incorrect because the model places the capital and small shapes in its seeing part."], "host": {"kind": "quote", "ref": "T-007"}}, {"question": "What does У, у show after the seeing cue?", "options": [{"text": "Letters", "correct": true}, {"text": "A sound", "correct": false}], "explanation": "The seeing cue introduces the capital and small letter shapes.", "kind": "comprehension", "option_why": ["Letters is correct because these are the two visible shapes presented for seeing.", "A sound is incorrect because the model represents the sound separately inside brackets."], "host": {"kind": "quote", "ref": "T-008"}}, {"question": "What does [у] represent after the hearing cue?", "options": [{"text": "Letters", "correct": false}, {"text": "A sound", "correct": true}], "explanation": "The bracketed symbol represents the sound in the hearing part.", "kind": "comprehension", "option_why": ["Letters is incorrect because the model's letter pair is outside the brackets.", "A sound is correct because the hearing cue introduces this bracketed representation."], "host": {"kind": "quote", "ref": "T-008"}}, {"question": "What does И, и show after the seeing cue?", "options": [{"text": "A sound", "correct": false}, {"text": "Letters", "correct": true}], "explanation": "The two shapes are the capital and small versions of the letter.", "kind": "comprehension", "option_why": ["A sound is incorrect because these visible shapes belong to the seeing part.", "Letters is correct because the seeing cue introduces the capital and small shapes."], "host": {"kind": "quote", "ref": "T-009"}}, {"question": "What does [и] represent after the hearing cue?", "options": [{"text": "A sound", "correct": true}, {"text": "Letters", "correct": false}], "explanation": "The hearing cue introduces the sound represented inside brackets.", "kind": "comprehension", "option_why": ["A sound is correct because the model uses brackets for its hearing part.", "Letters is incorrect because the capital and small letter shapes appear separately."], "host": {"kind": "quote", "ref": "T-009"}}]`)} instruction={"Use each source model to decide whether the indicated part shows letters or represents a sound."} isUkrainian={true} />
+
+> А а
+>
+> — *Заболотний, «Українська мова», 5 клас, 2022, с. 2*
+
+> О о
+>
+> — *Заболотний, «Українська мова», 5 клас, 2022, с. 2*
+
+> У у
+>
+> — *Заболотний, «Українська мова», 5 клас, 2022, с. 2*
+
+> И и
+>
+> — *Заболотний, «Українська мова», 5 клас, 2022, с. 2*
+
+Listen before choosing a letter. During each listening item, keep the recording&#x27;s pictures and written labels hidden until you submit your answer. Then find the different letter in each row.
+
+</TabItem>
+<TabItem label="Словник — Vocabulary">
+
+*No vocabulary for this module.*
+
+</TabItem>
+<TabItem label="Вправи — Activities">
+
+*(див. вкладку «Урок»)*
+
+### Quiz
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which letter matches this recording?", "options": [{"text": "О", "correct": false}, {"text": "А", "correct": true}, {"text": "У", "correct": false}, {"text": "И", "correct": false}], "explanation": "The recording models the sound represented by А.", "kind": "listening", "option_why": ["О belongs to a different sound model from the one played here.", "А matches the sound demonstrated in this recording.", "У belongs to a different sound model from the one played here.", "И belongs to a different sound model from the one played here."], "target_record": "А", "host": {"kind": "video", "ref": "V-004", "url": "https://www.youtube.com/watch?v=hvB3VpcR3ZE", "label": "Ukrainian Lessons"}}, {"question": "Which letter matches this recording?", "options": [{"text": "О", "correct": true}, {"text": "У", "correct": false}, {"text": "И", "correct": false}, {"text": "А", "correct": false}], "explanation": "The recording models the sound represented by О.", "kind": "listening", "option_why": ["О matches the sound demonstrated in this recording.", "У belongs to a different sound model from the one played here.", "И belongs to a different sound model from the one played here.", "А belongs to a different sound model from the one played here."], "target_record": "О", "host": {"kind": "video", "ref": "V-005", "url": "https://www.youtube.com/watch?v=gJFxRIPRZbI", "label": "Ukrainian Lessons"}}, {"question": "Which letter matches this recording?", "options": [{"text": "И", "correct": false}, {"text": "А", "correct": false}, {"text": "О", "correct": false}, {"text": "У", "correct": true}], "explanation": "The recording models the sound represented by У.", "kind": "listening", "option_why": ["И belongs to a different sound model from the one played here.", "А belongs to a different sound model from the one played here.", "О belongs to a different sound model from the one played here.", "У matches the sound demonstrated in this recording."], "target_record": "У", "host": {"kind": "video", "ref": "V-006", "url": "https://www.youtube.com/watch?v=VB1O6PmtYRU", "label": "Ukrainian Lessons"}}, {"question": "Which letter matches this recording?", "options": [{"text": "У", "correct": false}, {"text": "О", "correct": false}, {"text": "И", "correct": true}, {"text": "А", "correct": false}], "explanation": "The recording models the sound represented by И.", "kind": "listening", "option_why": ["У belongs to a different sound model from the one played here.", "О belongs to a different sound model from the one played here.", "И matches the sound demonstrated in this recording.", "А belongs to a different sound model from the one played here."], "target_record": "И", "host": {"kind": "video", "ref": "V-007", "url": "https://www.youtube.com/watch?v=W-1rCu0indE", "label": "Ukrainian Lessons"}}]`)} instruction={"Play the whole recording for each item with its frames, title, captions, thumbnail and target letter hidden until you submit. Choose the capital letter that matches the sound you hear."} isUkrainian={true} />
+
+<OddOneOut client:only='react' instruction={"Find the one letter that does not belong to the capital and small pair."} items={JSON.parse(`[{"words": ["а", "А", "О"], "correct": 2, "explanation": "А and а are the source pair; О is a different letter.", "kind": "comprehension", "option_why": ["а is the small shape in the source pair, so it belongs.", "А is the capital shape in the source pair, so it belongs.", "О is a different letter from both members of the source pair."], "host": {"kind": "quote", "ref": "T-022"}}, {"words": ["У", "о", "О"], "correct": 0, "explanation": "О and о are the source pair; У is a different letter.", "kind": "comprehension", "option_why": ["У is a different letter from both members of the source pair.", "о is the small shape in the source pair, so it belongs.", "О is the capital shape in the source pair, so it belongs."], "host": {"kind": "quote", "ref": "T-023"}}, {"words": ["У", "И", "у"], "correct": 1, "explanation": "У and у are the source pair; И is a different letter.", "kind": "comprehension", "option_why": ["У is the capital shape in the source pair, so it belongs.", "И is a different letter from both members of the source pair.", "у is the small shape in the source pair, so it belongs."], "host": {"kind": "quote", "ref": "T-024"}}, {"words": ["и", "И", "А"], "correct": 2, "explanation": "И and и are the source pair; А is a different letter.", "kind": "comprehension", "option_why": ["и is the small shape in the source pair, so it belongs.", "И is the capital shape in the source pair, so it belongs.", "А is a different letter from both members of the source pair."], "host": {"kind": "quote", "ref": "T-025"}}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси — Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📚 Books:**
+- 📚 **Заболотний, «Українська мова», 5 клас, 2022, с. 2**
+- 📚 **Заболотний, «Українська мова», 5 клас, 2022, с. 2**
+- 📚 **Заболотний, «Українська мова», 5 клас, 2022, с. 2**
+- 📚 **Заболотний, «Українська мова», 5 клас, 2022, с. 2**
+- 📚 **Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 15**
+- 📚 **Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 32**
+- 📚 **Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 36**
+- 📚 **Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 40**
+- 📚 **Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 44**
+
+**📺 Videos:**
+- 📺 [Ukrainian Lessons](https://www.youtube.com/watch?v=hvB3VpcR3ZE) — Ukrainian Lessons
+- 📺 [Ukrainian Lessons](https://www.youtube.com/watch?v=gJFxRIPRZbI) — Ukrainian Lessons
+- 📺 [Ukrainian Lessons](https://www.youtube.com/watch?v=VB1O6PmtYRU) — Ukrainian Lessons
+- 📺 [Ukrainian Lessons](https://www.youtube.com/watch?v=W-1rCu0indE) — Ukrainian Lessons
+- 📺 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/episode1/) — Ukrainian Lessons Podcast
+- 📺 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/episode2/) — Ukrainian Lessons Podcast
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

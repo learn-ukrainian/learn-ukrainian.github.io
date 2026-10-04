@@ -1,0 +1,249 @@
+activities:
+- id: a1
+  instruction: Play the short greeting. Repeat it aloud, then play it again and give the matching response before looking.
+    This is offline speaking practice; your speech is not machine-verified.
+  items:
+  - explanation: Imagine a friend greeting you and say the same greeting back aloud.
+    video: V-001
+    word: привіт
+- id: a2
+  instruction: Choose the greeting that matches the exchange or the printed card in each situation.
+  items:
+  - correct: 1
+    explanation: Match the greeting to the friend exchange.
+    host:
+      kind: dialogue
+    kind: comprehension
+    option_why:
+    - This greeting belongs to the separate formal situation, rather than the peer exchange.
+    - This greeting matches the informal exchange between friends.
+    options:
+    - 'Добрий день!
+
+      Say this greeting.'
+    - 'Привіт!
+
+      Say this greeting.'
+    question: Two friends greet each other at the classroom entrance. Which greeting do they exchange?
+  - correct: 0
+    explanation: Use the formal greeting for this situation; the printed card shows its spelling.
+    host:
+      kind: quote
+      ref: T-040
+    kind: comprehension
+    option_why:
+    - This is the printed greeting used with the formal situations introduced earlier.
+    - This informal greeting does not fit the formal situation described here.
+    options:
+    - 'Добрий день!
+
+      Say this greeting.'
+    - 'Привіт!
+
+      Say this greeting.'
+    question: You greet a teacher. Which greeting on the printed card fits this formal situation?
+- id: a3
+  instruction: Play the short formal greeting. Repeat both words together, then imagine the receptionist greeting you and
+    reply aloud. This is offline speaking practice; your speech is not machine-verified.
+  items:
+  - explanation: Say the whole greeting back to the receptionist, keeping both words together.
+    video: V-002
+    word: добрий день
+- id: a4
+  instruction: Replace the informal greeting with the greeting on the printed card that fits the situation.
+  items:
+  - correct: 1
+    explanation: Use the formal greeting for this situation; the printed card shows its spelling.
+    host:
+      kind: quote
+      ref: T-040
+    kind: comprehension
+    option_why:
+    - This informal greeting does not fit the formal situation described here.
+    - This is the printed greeting used with the formal situations introduced earlier.
+    options:
+    - 'Привіт!
+
+      Say this greeting.'
+    - 'Добрий день!
+
+      Say this greeting.'
+    question: Someone uses {{uk:Привіт}} to greet a boss. Which greeting from the printed card repairs the choice?
+  - correct: 0
+    explanation: Use the formal greeting for this situation; the printed card shows its spelling.
+    host:
+      kind: quote
+      ref: T-040
+    kind: comprehension
+    option_why:
+    - This is the printed greeting used with the formal situations introduced earlier.
+    - This informal greeting does not fit the formal situation described here.
+    options:
+    - 'Добрий день!
+
+      Say this greeting.'
+    - 'Привіт!
+
+      Say this greeting.'
+    question: Someone uses {{uk:Привіт}} to greet a cashier. Which greeting from the printed card repairs the choice?
+- id: a5
+  instruction: Choose for each new meeting. Use the friend exchange or the printed card, then practise the greeting aloud.
+  items:
+  - correct: 0
+    explanation: Match the greeting to the friend exchange.
+    host:
+      kind: dialogue
+    kind: comprehension
+    option_why:
+    - This greeting matches the informal exchange between friends.
+    - This greeting belongs to the separate formal situation, rather than the peer exchange.
+    options:
+    - 'Привіт!
+
+      Say this greeting.'
+    - 'Добрий день!
+
+      Say this greeting.'
+    question: A friend greets you before class. Which greeting from the peer exchange fits your reply?
+  - correct: 0
+    explanation: Use the formal greeting for this situation; the printed card shows its spelling.
+    host:
+      kind: quote
+      ref: T-040
+    kind: comprehension
+    option_why:
+    - This is the printed greeting used with the formal situations introduced earlier.
+    - This informal greeting does not fit the formal situation described here.
+    options:
+    - 'Добрий день!
+
+      Say this greeting.'
+    - 'Привіт!
+
+      Say this greeting.'
+    question: You arrive at a hotel and greet the receptionist. Which greeting from the printed card fits?
+  - correct: 1
+    explanation: Use the formal greeting for this situation; the printed card shows its spelling.
+    host:
+      kind: quote
+      ref: T-040
+    kind: comprehension
+    option_why:
+    - This informal greeting does not fit the formal situation described here.
+    - This is the printed greeting used with the formal situations introduced earlier.
+    options:
+    - 'Привіт!
+
+      Say this greeting.'
+    - 'Добрий день!
+
+      Say this greeting.'
+    question: You greet your boss at the start of a meeting. Which greeting from the printed card fits?
+  - correct: 0
+    explanation: Use the formal greeting for this situation; the printed card shows its spelling.
+    host:
+      kind: quote
+      ref: T-040
+    kind: comprehension
+    option_why:
+    - This is the printed greeting used with the formal situations introduced earlier.
+    - This informal greeting does not fit the formal situation described here.
+    options:
+    - 'Добрий день!
+
+      Say this greeting.'
+    - 'Привіт!
+
+      Say this greeting.'
+    question: You enter the classroom and greet the teacher. Which greeting from the printed card fits?
+consolidation:
+  activities:
+  - a5
+  lead_in: Try the situations below, then say each chosen greeting aloud.
+dialogue:
+  lines:
+  - speaker: Ніна
+    text: Привіт!
+  - speaker: Іван
+    text: Привіт!
+  translation_en:
+  - Hi!
+  - Hi!
+draft_schema: 1
+gaps: []
+inputs:
+  learner_state_sha256: e4feb81e4f11e39f1ab165186d6b0b49a5221624a3740781663518c88fc22818
+  lesson_lock_entry_sha256: 2b59bf6eb48820f2dd6d24ee39aef7b081e80c49279afc72af0110f2140af9bc
+  pack_lock: 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46
+  plan_sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+  style_card_sha256: 89c5a4cfcc9387ab968ca99d0402faaabf645d7fb07c7ec03f9498e13fbb24e0
+  words_lock: 68a3fcc3529a496d56f1f0ad895d857d86738b0e104e6b56873e2a10e2a51988
+lesson:
+  module: a1/sounds-letters-and-hello
+  n: 1
+status: ok
+steps:
+- blocks:
+  - kind: video
+    ref: V-001
+  - explains:
+    - T-002
+    - X-001
+    - S-003
+    kind: prose
+    text: '{{uk:Привіт}} is the informal greeting for a friend or a peer. Meet it by listening first. Listen to the short
+      recording, repeat the whole greeting, then imagine a friend greeting you. Give the same greeting back aloud before looking
+      again. You are practising a first spoken response, without reading individual letters.'
+  - kind: activity
+    ref: a1
+  id: s1
+- blocks:
+  - kind: video
+    ref: V-002
+  - explains:
+    - T-002
+    - T-003
+    - T-020
+    - T-021
+    - T-041
+    - S-003
+    kind: prose
+    text: '{{uk:Добрий день}} is the greeting for the formal situations here. Keep the two words together when you repeat
+      it. You can use this greeting at any time of day. Imagine arriving at a hotel reception desk and greeting the receptionist.
+      A teacher is also a formal addressee. With a boss or cashier, choose this greeting instead of the informal peer greeting.
+      Listen, repeat, and say the matching response aloud.'
+  - kind: activity
+    ref: a3
+  id: s2
+- blocks:
+  - kind: quote
+    ref: T-040
+  id: s3
+- blocks:
+  - explains:
+    - T-035
+    - T-002
+    kind: prose
+    text: Two friends meet at the classroom entrance. Read their exchange with the English support below; you do not need
+      to work out their names letter by letter.
+  - kind: dialogue
+  - explains:
+    - T-040
+    - T-041
+    - T-021
+    - T-020
+    - T-002
+    - T-003
+    kind: prose
+    text: Compare the peer exchange with the printed greeting above. The printed greeting gives you the spelling, rather than
+      a teacher speaking. The formal situations are greeting a teacher, receptionist, boss or cashier. The formal greeting
+      works at any time of day. Replay both short recordings, then choose for each situation.
+  - kind: video
+    ref: V-001
+  - kind: video
+    ref: V-002
+  - kind: activity
+    ref: a2
+  - kind: activity
+    ref: a4
+  id: s4

@@ -1,0 +1,127 @@
+immersion:
+  advisory_uk_share:
+  - 40
+  - 55
+  band_key: a1-m01-03
+  not_checked:
+  - lesson_structural_minimums_not_calibrated
+  permitted_languages:
+    activity_instruction:
+    - en
+    activity_item:
+    - uk
+    - en
+    dialogue_line:
+    - uk
+    gloss:
+    - en
+    narration:
+    - en
+    quote:
+    - uk
+    resource_line:
+    - en
+    - uk
+  source: ulp_vocab
+  structural_targets:
+    min_uk_dialogue_lines: 0
+    min_uk_example_sentences: 0
+    min_vocab_entries: 0
+learner_state:
+  base_ids:
+  - W-001
+  - W-002
+  - W-003
+  - W-004
+  - W-005
+  - W-006
+  - W-007
+  - W-008
+  - W-009
+  - W-010
+  - W-011
+  - W-012
+  - W-013
+  - W-014
+  - W-015
+  - W-016
+  - W-017
+  - W-018
+  - W-019
+  - W-020
+  - W-021
+  - W-022
+  - W-023
+  - W-024
+  - W-025
+  - W-026
+  - W-027
+  - W-028
+  - W-029
+  - W-030
+  - W-031
+  - W-032
+  - W-033
+  - W-034
+  - W-035
+  - W-036
+  - W-037
+  - W-038
+  - W-039
+  - W-040
+  - W-041
+  - W-042
+  - W-043
+  - W-044
+  - W-045
+  - W-046
+  - W-047
+  - W-048
+  - W-049
+  - W-050
+  - W-051
+  - W-052
+  - W-053
+  - W-054
+  - W-055
+  - W-056
+  - W-057
+  - W-058
+  - W-059
+  - W-060
+  - W-061
+  - W-062
+  - W-063
+  - W-064
+  - W-065
+  - W-066
+  - W-067
+  - W-068
+  - W-069
+  - W-070
+  - W-071
+  - W-072
+  - W-073
+  core_ids:
+    W-074:
+      lesson: 1
+      position: 1
+    W-075:
+      lesson: 1
+      position: 1
+    W-076:
+      lesson: 1
+      position: 1
+  cumulative_core_count: 3
+  grammar_ids: {}
+  lesson_n: 2
+  letters: {}
+  level: a1
+  name_ids:
+    W-091:
+      lesson: 1
+      position: 1
+    W-093:
+      lesson: 1
+      position: 1
+  position: 1

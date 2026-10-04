@@ -1,0 +1,61 @@
+blocked_by: []
+diff: null
+digest_generator_version: '3'
+inputs:
+  activity_data: []
+  decisions:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml
+    sha256: b3083f3ca1f5a9ef3690d62fa0fe00a3706541b48d28a162dddc2ac428330d2b
+  gate_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/lesson-1.gates.yaml
+    sha256: ca8542f89ccae148cc1fb94c42e8e3d9ae9d7d982550776395bfd0b79935925a
+  learner_state:
+    path: curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/lesson-1.learner-state.yaml
+    sha256: b7a3be85df4f1756e148e479da90cb6e16589136bfb1a6deab28d2d015384ad4
+  lesson:
+    path: site/src/content/docs/a1/sounds-letters-and-hello/1.mdx
+    sha256: c1b8ba55fda750412f8f0b971af5d01efd385ea61147c21bac6145a801504cfb
+  lessons_lock:
+    path: curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/lessons.lock.yaml
+    sha256: 5fd9b674e1cc6ed91fa3220e8bc2e8b128e3ee627526cce2d229f1d830e62fc3
+  pack:
+    path: curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml
+    sha256: 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46
+  pack_lock:
+    path: curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock
+    sha256: 2619fa1332e060aca6f1fae85a290ca0bd287954698fdfd03b818f9f3f8424c4
+  plan:
+    path: curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml
+    sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+  provenance:
+    path: curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/lesson-1.provenance.yaml
+    sha256: dba2f64d3132e0609cdb22f322922ba82ebf90b2896dd0c0b09496d07088dfaf
+  style_card:
+    path: docs/style-cards/a1.md
+    sha256: 89c5a4cfcc9387ab968ca99d0402faaabf645d7fb07c7ec03f9498e13fbb24e0
+  words:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml
+    sha256: 68a3fcc3529a496d56f1f0ad895d857d86738b0e104e6b56873e2a10e2a51988
+  words_lock:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml.lock
+    sha256: 779f2c682549ab2cd8a8afa22373059b916d4b07154999a431aeccb28288f15e
+kind: lesson
+learner_state:
+  sha256: e4feb81e4f11e39f1ab165186d6b0b49a5221624a3740781663518c88fc22818
+  source: planned_state
+lesson: 1
+lesson_kind: lesson
+lesson_lock_entry:
+  entry_sha256: 2b59bf6eb48820f2dd6d24ee39aef7b081e80c49279afc72af0110f2140af9bc
+  lesson: 1
+  path: curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/lessons.lock.yaml
+level: a1
+manifest_schema: 1
+module_digest:
+  path: curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/digest-upto-1.yaml
+  sha256: ae50703a18852c3b1aa3f1d067013f21d8141dc0712012cd7f033898161079a3
+previous_attempt: null
+recap: false
+review_eligible: true
+slug: sounds-letters-and-hello
+upstream_lessons: []

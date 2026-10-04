@@ -1,0 +1,297 @@
+digest_schema: 1
+generator_version: '3'
+lessons:
+- dialogue:
+    address_forms: []
+    places: []
+    register: informal
+    setting: Classroom entrance; English identifies the social roles before the Ukrainian greeting chunks.
+    speakers:
+    - gender: f
+      name: Ніна
+      role: peer
+    - gender: m
+      name: Іван
+      role: peer
+    step: s4
+  grammar:
+    encountered_unexplained: []
+    taught: []
+  lesson: 1
+  names:
+  - chosen_by: resolver
+    forms:
+    - noun:anim:f:v_naz:prop:fname
+    length: 4
+    locator:
+      activity: null
+      block: inc_W-091
+      item: null
+      span: 0
+      step: null
+      tab: slovnyk
+    offset: 0
+    pos: noun
+    question_ref: null
+    record: W-091
+    span_ref: W-091
+    span_source: record
+  - chosen_by: resolver
+    forms:
+    - noun:anim:m:v_naz:prop:fname
+    length: 4
+    locator:
+      activity: null
+      block: inc_W-093
+      item: null
+      span: 0
+      step: null
+      tab: slovnyk
+    offset: 0
+    pos: noun
+    question_ref: null
+    record: W-093
+    span_ref: W-093
+    span_source: record
+  occurrences:
+  - chosen_by: resolver
+    forms:
+    - noun:inanim:m:v_naz
+    - noun:inanim:m:v_zna
+    length: 6
+    locator:
+      activity: null
+      block: core_W-074
+      item: null
+      span: 0
+      step: null
+      tab: slovnyk
+    offset: 0
+    pos: noun
+    question_ref: null
+    record: W-074
+    role: drilled
+    span_ref: W-074
+    span_source: record
+  - chosen_by: resolver
+    forms:
+    - adj:m:v_kly:compb
+    - adj:m:v_naz:compb
+    - adj:m:v_zna:rinanim:compb
+    length: 6
+    locator:
+      activity: null
+      block: core_W-075
+      item: null
+      span: 0
+      step: null
+      tab: slovnyk
+    offset: 0
+    pos: adj
+    question_ref: null
+    record: W-075
+    role: taught
+    span_ref: W-075
+    span_source: record
+  - chosen_by: resolver
+    forms:
+    - noun:inanim:m:v_naz
+    - noun:inanim:m:v_zna
+    length: 4
+    locator:
+      activity: null
+      block: core_W-076
+      item: null
+      span: 0
+      step: null
+      tab: slovnyk
+    offset: 0
+    pos: noun
+    question_ref: null
+    record: W-076
+    role: taught
+    span_ref: W-076
+    span_source: record
+  - chosen_by: resolver
+    forms:
+    - noun:inanim:m:v_naz
+    - noun:inanim:m:v_zna
+    length: 6
+    locator:
+      activity: null
+      block: 1
+      item: null
+      span: 0
+      step: s1
+      tab: urok
+    offset: 0
+    pos: noun
+    question_ref: null
+    record: W-074
+    role: drilled
+    span_ref: null
+    span_source: writer_prose
+  - chosen_by: resolver
+    forms:
+    - adj:m:v_kly:compb
+    - adj:m:v_naz:compb
+    - adj:m:v_zna:rinanim:compb
+    length: 6
+    locator:
+      activity: null
+      block: 1
+      item: null
+      span: 0
+      step: s2
+      tab: urok
+    offset: 0
+    pos: adj
+    question_ref: null
+    record: W-075
+    role: taught
+    span_ref: null
+    span_source: writer_prose
+  - chosen_by: resolver
+    forms:
+    - noun:inanim:m:v_naz
+    - noun:inanim:m:v_zna
+    length: 4
+    locator:
+      activity: null
+      block: 1
+      item: null
+      span: 0
+      step: s2
+      tab: urok
+    offset: 7
+    pos: noun
+    question_ref: null
+    record: W-076
+    role: taught
+    span_ref: null
+    span_source: writer_prose
+  - chosen_by: resolver
+    forms:
+    - adj:m:v_kly:compb
+    - adj:m:v_naz:compb
+    - adj:m:v_zna:rinanim:compb
+    length: 6
+    locator:
+      activity: null
+      block: 0
+      item: null
+      span: 0
+      step: s3
+      tab: urok
+    offset: 0
+    pos: adj
+    question_ref: null
+    record: W-075
+    role: taught
+    span_ref: T-040
+    span_source: record
+  - chosen_by: resolver
+    forms:
+    - noun:inanim:m:v_naz
+    - noun:inanim:m:v_zna
+    length: 4
+    locator:
+      activity: null
+      block: 0
+      item: null
+      span: 0
+      step: s3
+      tab: urok
+    offset: 7
+    pos: noun
+    question_ref: null
+    record: W-076
+    role: taught
+    span_ref: T-040
+    span_source: record
+  - chosen_by: resolver
+    forms:
+    - noun:inanim:m:v_naz
+    - noun:inanim:m:v_zna
+    length: 6
+    locator:
+      activity: null
+      block: dialogue_0
+      item: null
+      span: 0
+      step: s4
+      tab: urok
+    offset: 0
+    pos: noun
+    question_ref: null
+    record: W-074
+    role: drilled
+    span_ref: null
+    span_source: writer_prose
+  - chosen_by: resolver
+    forms:
+    - noun:inanim:m:v_naz
+    - noun:inanim:m:v_zna
+    length: 6
+    locator:
+      activity: null
+      block: dialogue_1
+      item: null
+      span: 0
+      step: s4
+      tab: urok
+    offset: 0
+    pos: noun
+    question_ref: null
+    record: W-074
+    role: drilled
+    span_ref: null
+    span_source: writer_prose
+  - chosen_by: resolver
+    forms:
+    - noun:inanim:m:v_naz
+    - noun:inanim:m:v_zna
+    length: 6
+    locator:
+      activity: a4
+      block: prompt
+      item: 0
+      span: 1
+      step: s4
+      tab: vpravy
+    offset: 0
+    pos: noun
+    question_ref: null
+    record: W-074
+    role: drilled
+    span_ref: null
+    span_source: writer_prose
+  - chosen_by: resolver
+    forms:
+    - noun:inanim:m:v_naz
+    - noun:inanim:m:v_zna
+    length: 6
+    locator:
+      activity: a4
+      block: prompt
+      item: 1
+      span: 1
+      step: s4
+      tab: vpravy
+    offset: 0
+    pos: noun
+    question_ref: null
+    record: W-074
+    role: drilled
+    span_ref: null
+    span_source: writer_prose
+level: a1
+plan_sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+slug: sounds-letters-and-hello
+sources:
+- lesson: 1
+  mdx_sha256: c1b8ba55fda750412f8f0b971af5d01efd385ea61147c21bac6145a801504cfb
+  observed_sha256: 26d692e3c7846214190da8d0c0c7c798e2030d7781f7994a80378e35d8f9b157
+  provenance_sha256: dba2f64d3132e0609cdb22f322922ba82ebf90b2896dd0c0b09496d07088dfaf
+  resolutions_sha256: 80eec7acfa6d8c290dbdb70974cd86f2365f206b079fb1a172c630b851d2f33d
+up_to: 2

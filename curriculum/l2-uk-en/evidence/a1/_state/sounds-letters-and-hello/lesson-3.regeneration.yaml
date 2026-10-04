@@ -1,0 +1,21 @@
+attempts:
+- at: '2026-10-04T07:01:20.622794Z'
+  attempt: 1
+  code: '2'
+  failed_check: 2
+  inputs:
+    card_sha256: 89c5a4cfcc9387ab968ca99d0402faaabf645d7fb07c7ec03f9498e13fbb24e0
+    pack_lock: 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46
+    plan_sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+    prompt_sha256: 0899596e28e18122c380bcacc07378ef243a6e4b243910e30c20484de85f6466
+    words_lock: 68a3fcc3529a496d56f1f0ad895d857d86738b0e104e6b56873e2a10e2a51988
+  reason: 'evidence_gap: [{"detail": "IMPLEMENTATION_BLOCKER: a4 requires audio-only V-007/V-009 playback with frames, title,
+    captions, thumbnail and target glyph hidden until submission, but QuizQuestion renders YouTubeVideo with a visible thumbnail
+    and iframe; the renderer owner must supply verified suppression before scoring.", "need": "video", "step": "s4"}, {"detail":
+    "IMPLEMENTATION_BLOCKER: a6 requires audio-only V-010/V-008 playback with frames, title, captions, thumbnail and target
+    glyph hidden until submission, but QuizQuestion renders YouTubeVideo with a visible thumbnail and iframe; the renderer
+    owner must supply verified suppression before scoring.", "need": "video", "step": "s5"}]'
+n: 3
+regenerations: 0
+slug: sounds-letters-and-hello
+terminal_layer: pack

@@ -14045,6 +14045,14 @@
       "sha256": "3d5950746c8e848c9ebb76cf5e53726a1ee03dee956b3898bae99eff3fe7ad71"
     },
     {
+      "path": "site/src/content/docs/a1/sounds-letters-and-hello/1.mdx",
+      "sha256": "c1b8ba55fda750412f8f0b971af5d01efd385ea61147c21bac6145a801504cfb"
+    },
+    {
+      "path": "site/src/content/docs/a1/sounds-letters-and-hello/2.mdx",
+      "sha256": "d37be930ddf07410909c2f456eefd2baf1652e9db7237bf583f4348559554d92"
+    },
+    {
       "path": "site/src/content/docs/a1/sounds-letters-and-hello/index.mdx",
       "sha256": "c4cdd8b9652a7ae6345b3049351fca146bd68e9dc2c32988c1a4d673acf3bb3e"
     },
