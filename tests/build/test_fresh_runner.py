@@ -719,7 +719,7 @@ def test_contract_fixture_marked_form_stops_at_check_7(tmp_path, monkeypatch):
     validate_fixture_words(words)
     report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     bad = next(row for row in report["checks"] if row["status"] == "failed")
-    assert bad["check"] == 7 and bad["layer"] == "pack" and bad["token"] == "слово"
+    assert bad["check"] == 7 and bad["layer"] == "writer" and bad["token"] == "слово"
 
 
 def test_contract_fixture_hyphenated_compound_through_check_9(tmp_path, monkeypatch):
@@ -1004,10 +1004,10 @@ def test_runner_keeps_owned_source_snapshot_through_choice_gate(tmp_path, monkey
     choices = runner.check_7_a1_choices
     captured = []
 
-    def scoped_resolve(expanded, allowlist, sources):
+    def scoped_resolve(expanded, allowlist, sources, **kwargs):
         sources._db()
         captured.append(sources)
-        return resolve(expanded, allowlist, sources)
+        return resolve(expanded, allowlist, sources, **kwargs)
 
     def scoped_choices(*args, **kwargs):
         assert kwargs["sources"] is captured[0]
@@ -1028,7 +1028,7 @@ def test_runner_releases_owned_snapshot_on_resolver_failure(tmp_path, monkeypatc
     monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
     captured = []
 
-    def unavailable(expanded, allowlist, sources):
+    def unavailable(expanded, allowlist, sources, **kwargs):
         sources._db()
         captured.append(sources)
         raise OSError("fixture source failure")
@@ -1054,10 +1054,10 @@ def test_runner_releases_snapshot_before_dispatch_and_reopens_at_gate(tmp_path, 
     original_resolve = runner.resolve
     original_choices = runner.check_7_a1_choices
 
-    def resolve(expanded, allowlist, sources):
+    def resolve(expanded, allowlist, sources, **kwargs):
         old = sources._db()
         captured.append((sources, old))
-        return original_resolve(expanded, allowlist, sources)
+        return original_resolve(expanded, allowlist, sources, **kwargs)
 
     def dispatch(batch, seat):
         sources, old = captured[0]
