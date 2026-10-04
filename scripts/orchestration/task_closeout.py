@@ -1031,7 +1031,12 @@ def build_parser() -> argparse.ArgumentParser:
     evidence.add_argument("--summary", required=True)
     evidence.add_argument("--url")
     evidence.add_argument("--commit")
-    evidence.add_argument("--details", help="JSON object; review evidence records model families and verdict.")
+    evidence.add_argument(
+        "--details",
+        help="JSON object; review evidence records model families and verdict; quick_fix evidence carries the "
+        "quick_fix_receipt reference printed by `scripts.review.quick_fix record` and --url names the PR "
+        "declaration comment.",
+    )
     evidence.add_argument("--now")
     evidence.set_defaults(func=cmd_evidence)
 

@@ -109,7 +109,8 @@
                     "certification",
                     "follow_up",
                     "cleanup",
-                    "document"
+                    "document",
+                    "quick_fix"
                   ]
                 }
               },
@@ -212,7 +213,8 @@
             "certification",
             "follow_up",
             "cleanup",
-            "document"
+            "document",
+            "quick_fix"
           ]
         },
         "summary": {"type": "string", "minLength": 1, "maxLength": 4000},

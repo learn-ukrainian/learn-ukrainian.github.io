@@ -182,6 +182,7 @@ The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09
 **CF review-fix before CI** clarified operator 2026-09-18):
 
 0. **CF review-fix before CI (binding).** Push the implementation branch.
+   (An eligible quick fix records its receipt here instead — § Quick-fix path.)
    Run independent exact-head cross-family CF on that branch (`ask-<lane>
    --branch <name>` / equivalent toolful review). On `REQUEST_CHANGES`: fix on
    the branch → re-CF the new SHA. **Do not open any PR** (draft or ready)
@@ -191,7 +192,8 @@ The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09
    Open the PR **only after** CF APPROVE on the tip you intend to land, so CI
    runs once on that tip. Accidental parallel CI is waste, not permission to
    skip this order.
-1. Independent cross-family exact-head review **APPROVE** on the tip.
+1. Independent cross-family exact-head review **APPROVE** on the tip — or, for an
+   eligible quick fix only, the driver's exact-head quick-fix receipt (§ Quick-fix path below).
 2. Open the PR (CI starts) and obtain **CI Gate green** on that **same** head.
 3. Only then enqueue. Never arm auto-merge ahead of either gate —
 early-armed auto-merge is how #7447–#7449 landed with empty reviews, and a moved head
@@ -201,6 +203,39 @@ substitute for review). Do **not** pass `--delete-branch` while this repo uses a
 merge queue (head deletion mid-queue can close without landing); delete the remote branch
 only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or apply merge-automation labels.
 `--auto` never bypasses blocking checks (#M-0.5 semantics unchanged).
+
+### Quick-fix path (operator-approved, #9719)
+
+A small correction that **restores existing approved behavior** may land without a separate
+model review: reproduce → patch → focused tests → accountable driver inspection → required
+CI → merge → verification and cleanup. Eligibility follows what the diff changes, not which
+directory holds it, and the **driver**, never the author, decides it. All must hold:
+
+- a concrete reproduced defect and one bounded user-visible correction;
+- a regression check that fails with the fix reverted and passes at the head;
+- the exact diff inspected by the driver; tests preserved; no unrelated cleanup or new capability.
+
+**Independent review stays required** when the diff changes credentials, authorization,
+permission or sandbox enforcement, security boundaries, review or merge authority,
+destructive behavior or architecture, and whenever the driver has material uncertainty
+about security, impact or scope. Rule, policy, review, publication and lifecycle-gate files
+are review authority by construction and always take review. Routine fixes do not expand
+into audits; non-blocking style comments cannot hold a qualifying repair.
+
+Evidence (one distinct type, never a fabricated review or CF receipt):
+
+1. On a clean checkout of the exact head, the driver runs
+   `.venv/bin/python -m scripts.review.quick_fix show`, inspects the diff, then `record`
+   (help lists the flags). `record` runs the regression command with the fix paths reverted
+   to base (must fail) and at the head (must pass), binds repository, issue, base, head and
+   diff digest, the driver's qualification and the excluded categories, and refuses
+   authority paths, security-sensitive paths without a rationale, or a moved or dirty head.
+2. Post a PR comment "Quick fix — no separate model review" naming the receipt digest and
+   head SHA. Record it with `task_closeout add-evidence --type quick_fix --url <comment>
+   --details '{"quick_fix_receipt": …}'`; it stands in for `review` and `behavior_proof` only.
+3. CI Gate green on that same head, PR-only landing, issue disposition and
+   `merge_closeout` still bind. A moved head voids the receipt; failed tests or unresolved
+   material findings block landing.
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
 2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a

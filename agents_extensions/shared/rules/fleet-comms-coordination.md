@@ -152,7 +152,8 @@ Every epic driver session (any harness) MUST:
    (direct ask + posted verdict). **Shielded formal CF (`review-pr`, sealed MCP,
    multi-GB `lu-review-*` / `shielded-reviews` clones) is RETIRED** (operator
    2026-08-07) — disk and process harm outweighed isolation benefit. Discussion
-   and same-family chat are still not the gate.
+   and same-family chat are still not the gate. The sole exception is an eligible
+   quick fix with the driver's exact-head receipt (`workflow.md` § Quick-fix path).
 5. Treat launcher-claimed stream leases as held — do not open/resume the lease yourself.
 6. **Session health by seat:**
    - **grok / gemini / kimi:** canary mint/score

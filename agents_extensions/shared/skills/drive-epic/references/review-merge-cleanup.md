@@ -13,6 +13,14 @@ and the attested SHA equals the current PR head. Discussion on the thread is not
 If the head moves after APPROVE, the CF is stale — re-run exact-head CF before any
 enqueue or re-queue.
 
+**Quick-fix path (sole exception, #9719).** A reproduced repair of existing approved
+behavior may skip the separate model review when you, the driver, inspect the exact diff
+and record its receipt (`.venv/bin/python -m scripts.review.quick_fix show` / `record`),
+declare it on the PR and record `quick_fix` evidence. CI and §7 landing still bind; a
+moved head voids the receipt. Any credential, authorization, sandbox, security-boundary,
+review/merge-authority, destructive or architecture change — or material doubt — takes
+the CF below. Contract: `workflow.md` § Quick-fix path.
+
 - **Execution and comms layers:** CF, design, and plan use toolful seats (`delegate.py` or
   native harnesses); ACP is toolless intercomm only (state transfer / ordinary asks and
   `discuss` with 2 to 4 enabled seats; every other participant count rejects), and
@@ -82,7 +90,8 @@ way with empty reviews. Drivers follow this order:
    runs once on that tip.
 1. **Independent cross-family exact-head CF** — attested `resolved_model`,
    different family from the author, APPROVE on the tip (post on the PR once
-   open, bound to that SHA).
+   open, bound to that SHA). An eligible quick fix uses its exact-head receipt
+   and PR declaration instead (§6 Quick-fix path).
 2. **Open the PR** → **CI Gate green** on that **same** head.
 3. **Merge queue only after both.** Enqueue then; never before.
 

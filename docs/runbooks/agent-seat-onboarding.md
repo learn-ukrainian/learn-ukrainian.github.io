@@ -19,6 +19,10 @@ caps or live modes.
 
 0. **Epic drivers:** run `.venv/bin/python -m scripts.fleet_comms cold-start-board` first —
    it probes fleet/plane/stream state so this list starts from live data, not memory.
+   Every driver launcher's injected prompt also names the review path: an eligible quick
+   fix of existing behavior lands on the driver's exact-head receipt plus CI; every other
+   change, including any authority, security or architecture change, takes independent
+   cross-family review (`agents_extensions/shared/rules/workflow.md` § Quick-fix path).
 1. Operator contract + model assignment via `GET /api/rules` (offline fallbacks
    under `agents_extensions/shared/rules/`).
 2. This runbook — ownership matrix, experimental ACPX boundary, Kimi routes.

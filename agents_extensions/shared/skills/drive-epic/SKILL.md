@@ -39,6 +39,9 @@ Per PR, in this order:
 - [ ] Exact-head cross-family `VERDICT: APPROVE` (attested `resolved_model` and SHA)
       posted on the PR. No PR, draft or ready, is opened before that APPROVE (§7 step 0).
       A new head makes the APPROVE stale; re-review before enqueueing.
+      Sole exception: an eligible quick fix of existing behavior uses your exact-head
+      quick-fix receipt and PR declaration instead (`workflow.md` § Quick-fix path); any
+      authority, security or architecture change, or material doubt, takes CF.
 - [ ] CI Gate green on that same head.
 - [ ] Enqueued with `.venv/bin/python -m scripts.publish pr-merge --number <N>` — never `--auto`, never `--delete-branch`.
 - [ ] `gh pr view <N>` shows `MERGED`.

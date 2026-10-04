@@ -870,7 +870,8 @@ The same table lives in `agents_extensions/shared/memory/MEMORY.md` rule #M0. Th
 Review of record: ONE direct round via plain `ask-<lane>` (reference the branch/diff
 for the reviewer to fetch; do not paste huge diffs inline), verdict + findings posted
 on the PR at the current head by the requester. Then merge when CI is green and reap
-the worktree (`reap_worktrees.py --apply` / `drive-epic` §7a).
+the worktree (`reap_worktrees.py --apply` / `drive-epic` §7a). An eligible quick fix needs
+no reviewer route: the driver's exact-head receipt replaces it (`workflow.md` § Quick-fix path).
 
 ```bash
 printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings." | \

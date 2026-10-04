@@ -160,7 +160,9 @@ Compose only the rows that apply (N/A needs a reason — do not skip silently):
       with **quality-posture receipt** (best-practice basis, root-cause treatment,
       no unnecessary architecture, no scope creep) + required CI green on that
       head + **landed** (merge verified, not merely enqueued) by the accountable
-      driver — workers never merge; drivers never ask the operator to merge
+      driver — workers never merge; drivers never ask the operator to merge.
+      Sole exception to the APPROVE: an eligible quick fix carries the driver's
+      exact-head quick-fix receipt instead (`workflow.md` § Quick-fix path)
 - [ ] **Git hygiene:** remote branch gone, local branch gone, dispatch worktree(s)
       reaped (`merge_closeout` / `reap_worktrees.py`)
 - [ ] **GitHub hygiene:** issue updated; closed when acceptance criteria are met

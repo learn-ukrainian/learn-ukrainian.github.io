@@ -83,6 +83,18 @@ requires a clean outside-family closeout plus its target-bound
 `.agent/review-closeout/` receipt path so rollover and worktree cleanup do not
 discard the proof.
 
+An eligible quick fix (`workflow.md` § Quick-fix path) records typed
+`quick_fix` evidence instead of a model review. Its
+`details.quick_fix_receipt` has the same four-field reference shape and points
+to a `quick-fix-receipt.v1` written by `scripts.review.quick_fix record`; its
+URL names the PR comment declaring the quick fix with the receipt digest and
+head SHA. Reconciliation rereads the receipt and refuses a moved head, digest
+or changed-path drift, a missing declaration, a passing reproduction, a failing
+regression, an author acting as driver, an incomplete exclusion set, an
+authority path, or a security-sensitive path without the driver's rationale.
+A valid `quick_fix` record satisfies that criterion's `review` and
+`behavior_proof` requirements only; CI and every other evidence type still bind.
+
 Evidence due at `ISSUE_CLOSED` or `CLEANED_UP` may be derived from the
 post-action authoritative observation. This permits truthful staged closeout
 without pretending issue closure or cleanup happened before it did. The task is
@@ -130,7 +142,8 @@ is `BLOCKED_WITH_RECEIPT` with an owner, reason, evidence, and next action.
 
 Readiness requires a dispatch worktree, a clean primary checkout, valid
 `X-Agent` trailers on every task commit, no protected/generated artifacts, a
-current-head independent outside-author-family review, no unresolved requested
+current-head independent outside-author-family review (or a verified
+`quick_fix` receipt for an eligible quick fix), no unresolved requested
 changes, and passing required checks. Auto-merge must not predate the verified
 review receipt and cannot be armed for a draft PR.
 

@@ -60,7 +60,11 @@ tie-breakers.
      in the CF fix loop. Then: open PR → CF APPROVE posted on that head +
      CI Gate green on that **same** head + merged/enqueued by the accountable
      driver — never ask the operator to merge. Canonical: `workflow.md` §
-     Merge policy / landing order #7450.
+     Merge policy / landing order #7450. Sole exception (operator-approved,
+     #9719): an eligible quick fix of existing behavior lands on the driver's
+     exact-head quick-fix receipt instead of CF (`workflow.md` § Quick-fix
+     path); CI and hygiene still bind, and authority, security or
+     architecture changes always take CF.
    - **Git hygiene:** remote branch gone, local branch gone, dispatch worktree(s) reaped
      (`merge_closeout` / `reap_worktrees.py`); no zombie refs for that PR.
    - **GitHub hygiene:** issue updated with evidence; closed when acceptance criteria

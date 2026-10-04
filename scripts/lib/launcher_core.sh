@@ -1250,7 +1250,7 @@ launcher_bind_drive_epic() {
   else
     fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6) — verdict posted on the PR, merge when CI green, sealed formal CF is retired; authority mode is durable state and ACP is provider transport.'
   fi
-  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease and ran its provider canary; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review."
+  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease and ran its provider canary; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Review path (agents_extensions/shared/rules/workflow.md § Quick-fix path): a driver-verified quick fix of existing behavior lands on its exact-head receipt plus CI; every other change, including any authority, security or architecture change, needs independent cross-family review."
   launcher_inject_driver_agent
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")
   if [ "$LC_DRY_RUN" = "1" ]; then

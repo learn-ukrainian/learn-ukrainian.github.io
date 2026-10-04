@@ -291,6 +291,31 @@ def test_auto_merge_is_blocked_until_current_head_review(tmp_path: Path) -> None
     assert "outside-family review" in ledger["mutation_receipts"][-1]["detail"]
 
 
+def test_cli_records_quick_fix_evidence_only_with_a_declaration(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from tests import test_quick_fix
+
+    path, _ = _ledger(tmp_path, review=False)
+    repo, base, head = test_quick_fix.make_repo(tmp_path)
+    reference = test_quick_fix.write_reference(
+        (tmp_path / "quick-fix-42.json").resolve(), test_quick_fix.record(repo, base)
+    )
+    argv = [
+        "add-evidence", "--state-file", str(path), "--ac-id", "AC-REVIEW", "--type", "quick_fix",
+        "--summary", "driver-verified quick fix", "--commit", head,
+        "--details", json.dumps({"quick_fix_receipt": reference}), "--now", NOW,
+    ]  # fmt: skip
+
+    assert task_closeout.main(argv) == 2
+    assert "PR declaration comment" in capsys.readouterr().err
+    assert task_closeout.main([*argv, "--url", "https://github.com/org/repo/pull/77#issuecomment-9"]) == 0
+
+    records = [item for item in task_lifecycle.load_lifecycle(path)["evidence"] if item["type"] == "quick_fix"]
+    assert len(records) == 1
+    assert records[0]["details"] == {"quick_fix_receipt": reference}
+
+
 def test_auto_merge_rejects_closing_reference_when_scope_is_retained(tmp_path: Path) -> None:
     path, ledger = _ledger(tmp_path)
     ledger = task_lifecycle.set_remaining_scope(

@@ -151,8 +151,9 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
   ready — drafts still start CI in this repo). Do not burn CI while CF
   findings are still being fixed. See `workflow.md` § Merge policy.
 - Enqueue **only** when all three hold (landing order #7450): exact-head cross-family CF APPROVE
-  with **no BLOCKING finding outstanding** per §8.4 · PR is **not a draft** · **CI Gate green on
-  that same head**. Pending is not green; a documented non-blocking finding does not hold enqueue.
+  with **no BLOCKING finding outstanding** per §8.4 (or, for an eligible quick fix only, the
+  driver's exact-head receipt per `workflow.md` § Quick-fix path) · PR is **not a draft** ·
+  **CI Gate green on that same head**. Pending is not green; a documented non-blocking finding does not hold enqueue.
 - Use `.venv/bin/python -m scripts.publish pr-merge --number <N> --repo <owner/repo>` after both gates. Automated merge
   configuration and `--auto` are not a substitute for either gate. See
   [`workflow.md`](workflow.md) for the binding landing order.

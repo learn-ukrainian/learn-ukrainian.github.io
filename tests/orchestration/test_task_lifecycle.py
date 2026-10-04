@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.orchestration import task_closeout, task_identity, task_lifecycle
+from tests import test_quick_fix
 
 NOW = "2026-07-16T10:00:00Z"
 HEAD = "a" * 40
@@ -869,6 +870,209 @@ def test_every_lifecycle_boundary_survives_durable_resume(tmp_path: Path, state:
 
     assert resumed == task_lifecycle.validate_lifecycle(ledger)
     assert task_lifecycle.carrier_projection(resumed)["current_state"] == state
+
+
+# --------------------------------------------------------------------------- #
+# #9719 — a verified quick-fix receipt is the approved alternative to an
+# independent review; it never relaxes CI, head binding or the normal path.
+# --------------------------------------------------------------------------- #
+QUICK_FIX_URL = "https://github.com/org/repo/pull/77#issuecomment-9"
+
+
+def _quick_fix_receipt(tmp_path: Path, *mutations) -> tuple[dict, dict]:
+    repo, base, _ = test_quick_fix.make_repo(tmp_path)
+    receipt = test_quick_fix.record(repo, base)
+    for mutate in mutations:
+        mutate(receipt)
+    reference = test_quick_fix.write_reference((tmp_path / "quick-fix-42.json").resolve(), receipt)
+    return receipt, reference
+
+
+def _add_at(ledger: dict, ac_id: str, kind: str, head: str, *, url: str | None = None, details=None) -> dict:
+    updated, _ = task_lifecycle.add_evidence(
+        ledger,
+        ac_id=ac_id,
+        evidence_type=kind,
+        summary=f"verified {ac_id}",
+        url=url,
+        commit=head,
+        details=details,
+        recorded_at=NOW,
+    )
+    return updated
+
+
+def _quick_fix_ledger(receipt: dict, reference: dict) -> dict:
+    head = receipt["head_sha"]
+    ledger = _add_at(_ledger(behavior_proof=True), "AC-IMPL", "test", head)
+    for ac_id in ("AC-IMPL", "AC-REVIEW"):
+        ledger = _add_at(ledger, ac_id, "quick_fix", head, url=QUICK_FIX_URL, details={"quick_fix_receipt": reference})
+    return ledger
+
+
+def _quick_fix_observation(receipt: dict, reference: dict, *, pr_state: str = "OPEN", checks: str = "SUCCESS") -> dict:
+    observation = _observation(_body(), pr_state=pr_state, checks=checks)
+    observation["github"]["pr"]["head_sha"] = receipt["head_sha"]
+    observation["github"]["comments"].append(
+        {
+            "url": QUICK_FIX_URL,
+            "body": (
+                "Quick fix — no separate model review. "
+                f"Receipt {reference['receipt_sha256']} at head {reference['target_sha']}."
+            ),
+            "created_at": NOW,
+        }
+    )
+    observation["local"]["commits"] = [{"sha": receipt["head_sha"], "x_agent_trailers": ["X-Agent: claude/fix-42"]}]
+    observation["local"]["changed_paths"] = list(receipt["changed_paths"])
+    return observation
+
+
+def test_verified_quick_fix_passes_review_gate_without_a_model_review(tmp_path: Path) -> None:
+    receipt, reference = _quick_fix_receipt(tmp_path)
+    ledger = _quick_fix_ledger(receipt, reference)
+
+    result = task_lifecycle.evaluate(ledger, _quick_fix_observation(receipt, reference))
+
+    assert result["state"] == "CI_PASSED", result["hard_blockers"]
+    assert not [record for record in ledger["evidence"] if record["type"] in {"review", "behavior_proof"}]
+    assert "quick_fix" in result["valid_evidence"]["AC-REVIEW"]
+
+    merged = task_lifecycle.evaluate(
+        _add_at(ledger, "AC-MERGE", "github", receipt["head_sha"]),
+        _quick_fix_observation(receipt, reference, pr_state="MERGED"),
+    )
+    assert merged["state"] == "MERGED", merged["hard_blockers"]
+
+
+def test_quick_fix_never_waives_required_ci(tmp_path: Path) -> None:
+    receipt, reference = _quick_fix_receipt(tmp_path)
+
+    result = task_lifecycle.evaluate(
+        _quick_fix_ledger(receipt, reference), _quick_fix_observation(receipt, reference, checks="FAILURE")
+    )
+
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert result["hard_blockers"] == ["required CI failed: CI Gate"]
+
+
+def _moved_head(observation: dict, reference: dict) -> None:
+    observation["github"]["pr"]["head_sha"] = "d" * 40
+
+
+def _no_declaration(observation: dict, reference: dict) -> None:
+    observation["github"]["comments"] = [c for c in observation["github"]["comments"] if c["url"] != QUICK_FIX_URL]
+
+
+def _vague_declaration(observation: dict, reference: dict) -> None:
+    observation["github"]["comments"][-1]["body"] = "Quick fix, trust me."
+
+
+def _tampered_receipt(observation: dict, reference: dict) -> None:
+    path = Path(reference["receipt_path"])
+    path.write_text(path.read_text(encoding="utf-8").replace('"exit_code": 1', '"exit_code": 0'), encoding="utf-8")
+
+
+def _extra_changed_path(observation: dict, reference: dict) -> None:
+    observation["local"]["changed_paths"].append("scripts/unrelated.py")
+
+
+def _deleted_receipt(observation: dict, reference: dict) -> None:
+    Path(reference["receipt_path"]).unlink()
+
+
+@pytest.mark.parametrize(
+    ("change", "message"),
+    (
+        (_moved_head, "not bound to current PR head"),
+        (_no_declaration, "absent from authoritative PR comments"),
+        (_vague_declaration, "does not name the receipt digest"),
+        (_tampered_receipt, "digest does not match"),
+        (_extra_changed_path, "differ from the observed PR diff"),
+        (_deleted_receipt, "quick-fix receipt is unreadable"),
+    ),
+)
+def test_quick_fix_refuses_moved_missing_or_stale_evidence(tmp_path: Path, change, message: str) -> None:
+    receipt, reference = _quick_fix_receipt(tmp_path)
+    observation = _quick_fix_observation(receipt, reference)
+    change(observation, reference)
+
+    result = task_lifecycle.evaluate(_quick_fix_ledger(receipt, reference), observation)
+
+    assert result["state"] not in {"REVIEW_PASSED", "CI_PASSED", "MERGED"}
+    assert "quick_fix" not in result["valid_evidence"].get("AC-REVIEW", [])
+    assert any(message in blocker for blocker in result["hard_blockers"]), result["hard_blockers"]
+
+
+def _authority_change(receipt: dict) -> None:
+    receipt["changed_paths"] = sorted([*receipt["changed_paths"], "scripts/publish/merge.py"])
+    receipt["fix_paths"] = sorted([*receipt["fix_paths"], "scripts/publish/merge.py"])
+
+
+def _incomplete_exclusions(receipt: dict) -> None:
+    del receipt["driver"]["exclusions"]["review_or_merge_authority"]
+
+
+def _self_inspected(receipt: dict) -> None:
+    receipt["driver"]["agent"] = receipt["author"]["agent"]
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    (
+        (_authority_change, "review/merge-authority paths"),
+        (_incomplete_exclusions, "every disqualifying change category"),
+        (_self_inspected, "distinct from the author"),
+    ),
+)
+def test_quick_fix_refuses_disqualified_or_incomplete_receipts(tmp_path: Path, mutation, message: str) -> None:
+    receipt, reference = _quick_fix_receipt(tmp_path, mutation)
+    observation = _quick_fix_observation(receipt, reference)
+
+    result = task_lifecycle.evaluate(_quick_fix_ledger(receipt, reference), observation)
+
+    assert result["state"] not in {"REVIEW_PASSED", "CI_PASSED"}
+    assert any(message in blocker for blocker in result["hard_blockers"]), result["hard_blockers"]
+
+
+def test_quick_fix_evidence_shape_is_bound_at_record_time(tmp_path: Path) -> None:
+    receipt, reference = _quick_fix_receipt(tmp_path)
+    ledger = _ledger()
+    head = receipt["head_sha"]
+
+    with pytest.raises(task_lifecycle.LifecycleError, match="PR declaration comment"):
+        _add_at(ledger, "AC-REVIEW", "quick_fix", head, details={"quick_fix_receipt": reference})
+    with pytest.raises(task_lifecycle.LifecycleError, match="does not match its evidence subject"):
+        _add_at(ledger, "AC-REVIEW", "quick_fix", "e" * 40, url=QUICK_FIX_URL, details={"quick_fix_receipt": reference})
+    with pytest.raises(task_lifecycle.LifecycleError, match=r"requires details\.quick_fix_receipt"):
+        _add_at(
+            ledger, "AC-REVIEW", "quick_fix", head, url=QUICK_FIX_URL, details={"behavior_proof_receipt": reference}
+        )
+    for path, message in (
+        ("quick-fix.json", "quick-fix receipt path must be absolute"),
+        ("/x/review/q.json", "forbidden"),
+    ):
+        with pytest.raises(task_lifecycle.LifecycleError, match=message):
+            _add_at(
+                ledger,
+                "AC-REVIEW",
+                "quick_fix",
+                head,
+                url=QUICK_FIX_URL,
+                details={"quick_fix_receipt": {**reference, "receipt_path": path}},
+            )
+
+
+def test_without_review_or_quick_fix_the_normal_review_path_still_waits(tmp_path: Path) -> None:
+    receipt, reference = _quick_fix_receipt(tmp_path)
+    ledger = _add_at(_ledger(), "AC-IMPL", "test", receipt["head_sha"])
+
+    open_result = task_lifecycle.evaluate(ledger, _quick_fix_observation(receipt, reference))
+    merged_result = task_lifecycle.evaluate(ledger, _quick_fix_observation(receipt, reference, pr_state="MERGED"))
+
+    assert open_result["state"] == "REVIEW_REQUESTED"
+    assert "independent outside-author-family review is pending" in open_result["waiting"]
+    assert any("lacks verified current-head outside-family review" in b for b in merged_result["hard_blockers"])
 
 
 # --------------------------------------------------------------------------- #

@@ -13,6 +13,7 @@ from pathlib import Path
 import pytest
 
 from tests.test_launcher_contract import PUBLIC as PUBLIC_LAUNCHERS
+from tests.test_launcher_contract import run_launcher
 
 REPO = Path(__file__).resolve().parents[1]
 LAUNCHER_CORE = REPO / "scripts/lib/launcher_core.sh"
@@ -96,6 +97,66 @@ def test_no_launcher_prompt_branch_names_review_pr() -> None:
     # The richer clause is allowed to name the retired command only to say
     # "do not use" — never as an instruction to run it.
     assert "RETIRED — do not use" in cold_start
+
+
+QUICK_FIX_RULE = "agents_extensions/shared/rules/workflow.md"
+QUICK_FIX_POINTER = f"{QUICK_FIX_RULE} § Quick-fix path"
+DRIVER_LAUNCHERS = tuple(name for name in PUBLIC_LAUNCHERS if name.endswith("-driver.sh"))
+# AGY/Gemini is not a driver seat; its driver launcher refuses before any lease.
+REFUSING_DRIVER_LAUNCHERS = ("start-gemini-driver.sh",)
+
+
+def _argv(path: Path) -> list[str]:
+    return [arg for arg in path.read_bytes().decode("utf-8").split("\0") if arg]
+
+
+@pytest.mark.parametrize("launcher", [name for name in DRIVER_LAUNCHERS if name not in REFUSING_DRIVER_LAUNCHERS])
+def test_driver_start_delivers_quick_fix_pointer_after_lease_and_canary(launcher: str, tmp_path: Path) -> None:
+    argv_file = tmp_path / "argv"
+
+    result = run_launcher(launcher, "--epic", "devops", env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file)})
+
+    assert result.returncode == 0, result.stderr
+    out = result.stdout
+    claim = out.index("would claim lease")
+    canary = out.index("provider canary", claim)
+    bind = out.index("would bind drive-epic after lease and provider canary")
+    assert claim < canary < bind < out.index("would exec")
+    argv = _argv(argv_file)
+    carriers = [arg for arg in argv if QUICK_FIX_POINTER in arg]
+    assert len(carriers) == 1, "one shared injection reaches the provider"
+    prompt = carriers[0]
+    assert prompt.count(QUICK_FIX_POINTER) == 1
+    assert "drive-epic/SKILL.md" in prompt and "do not claim, renew, or reopen the lease" in prompt
+    assert "independent cross-family review" in prompt
+    assert "authority, security or architecture" in prompt
+    assert "### Quick-fix path" in (REPO / QUICK_FIX_RULE).read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize("launcher", REFUSING_DRIVER_LAUNCHERS)
+def test_non_driver_seat_still_refuses_before_lease(launcher: str, tmp_path: Path) -> None:
+    result = run_launcher(launcher, "--epic", "devops", env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(tmp_path / "argv")})
+
+    assert result.returncode != 0
+    assert "would claim lease" not in result.stdout
+    assert not (tmp_path / "argv").exists()
+
+
+@pytest.mark.parametrize("launcher", ["start-claude.sh", "start-codex.sh"])
+def test_interactive_start_is_not_bound_to_a_driver_prompt(launcher: str, tmp_path: Path) -> None:
+    argv_file = tmp_path / "argv"
+
+    result = run_launcher(launcher, env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file)})
+
+    assert result.returncode == 0, result.stderr
+    assert "would claim lease" not in result.stdout
+    assert "would bind drive-epic" not in result.stdout
+    assert not any(QUICK_FIX_POINTER in arg for arg in _argv(argv_file))
+
+
+def test_fleet_clause_does_not_contradict_the_quick_fix_path() -> None:
+    cold_start = (REPO / "scripts/lib/fleet_comms_cold_start.sh").read_text(encoding="utf-8")
+    assert "except a driver-verified quick fix, workflow.md § Quick-fix path" in cold_start
 
 
 def test_seat_onboarding_teaches_work_authority_failures() -> None:

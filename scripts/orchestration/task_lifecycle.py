@@ -25,6 +25,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.orchestration import issue_stream_audit, task_identity
+from scripts.review import quick_fix
 from scripts.review.review_contract import ALLOWED_DISPOSITIONS
 
 SCHEMA_VERSION = "task-lifecycle.v1"
@@ -63,9 +64,13 @@ EVIDENCE_TYPES = frozenset(
         "follow_up",
         "cleanup",
         "document",
+        "quick_fix",
     }
 )
 CURRENT_HEAD_EVIDENCE = EVIDENCE_TYPES - {"follow_up", "cleanup"}
+# A verified quick-fix receipt is the approved alternative to independent review
+# and its behavior proof (agents_extensions/shared/rules/workflow.md § Quick-fix path).
+QUICK_FIX_SATISFIES = frozenset({"review", "behavior_proof"})
 PROTECTED_PATH_PATTERNS = (
     ".python-version",
     ".yamllint",
@@ -422,29 +427,39 @@ def _receipt_event_payload(record: Mapping[str, Any]) -> dict[str, Any]:
     return {key: deepcopy(value) for key, value in record.items() if key != "id"}
 
 
-def _validate_behavior_proof_reference_shape(details: Mapping[str, Any]) -> dict[str, str]:
-    reference = details.get("behavior_proof_receipt")
+def _validate_receipt_reference_shape(
+    details: Mapping[str, Any], *, key: str = "behavior_proof_receipt", label: str = "behavior-proof"
+) -> dict[str, str]:
+    reference = details.get(key)
     if not isinstance(reference, Mapping):
-        raise LifecycleError("behavior-proof evidence requires details.behavior_proof_receipt")
+        raise LifecycleError(f"{label} evidence requires details.{key}")
     required = {"receipt_path", "receipt_sha256", "input_sha256", "target_sha"}
     if set(reference) != required:
         raise LifecycleError(
-            "behavior-proof receipt reference requires only receipt_path, receipt_sha256, input_sha256, and target_sha"
+            f"{label} receipt reference requires only receipt_path, receipt_sha256, input_sha256, and target_sha"
         )
-    normalized = {key: str(reference.get(key) or "") for key in sorted(required)}
+    normalized = {field: str(reference.get(field) or "") for field in sorted(required)}
     receipt_path = Path(normalized["receipt_path"]).expanduser()
     if not receipt_path.is_absolute():
-        raise LifecycleError("behavior-proof receipt path must be absolute")
+        raise LifecycleError(f"{label} receipt path must be absolute")
     slash_path = str(receipt_path).replace("\\", "/")
     if any(marker in slash_path for marker in FORBIDDEN_RECEIPT_PATH_MARKERS):
-        raise LifecycleError("behavior-proof receipt path is a forbidden generated-artifact path")
+        raise LifecycleError(f"{label} receipt path is a forbidden generated-artifact path")
     if not re.fullmatch(r"sha256:[0-9a-f]{64}", normalized["receipt_sha256"]):
-        raise LifecycleError("behavior-proof receipt digest must be sha256:<64 lowercase hex>")
+        raise LifecycleError(f"{label} receipt digest must be sha256:<64 lowercase hex>")
     if not re.fullmatch(r"[0-9a-f]{64}", normalized["input_sha256"]):
-        raise LifecycleError("behavior-proof target-input fingerprint must be 64 lowercase hex")
+        raise LifecycleError(f"{label} target-input fingerprint must be 64 lowercase hex")
     if not re.fullmatch(r"[0-9a-f]{40}", normalized["target_sha"]):
-        raise LifecycleError("behavior-proof target SHA must be 40 lowercase hex")
+        raise LifecycleError(f"{label} target SHA must be 40 lowercase hex")
     return normalized
+
+
+def _validate_behavior_proof_reference_shape(details: Mapping[str, Any]) -> dict[str, str]:
+    return _validate_receipt_reference_shape(details)
+
+
+def _validate_quick_fix_reference_shape(details: Mapping[str, Any]) -> dict[str, str]:
+    return _validate_receipt_reference_shape(details, key="quick_fix_receipt", label="quick-fix")
 
 
 def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
@@ -505,6 +520,12 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
             reference = _validate_behavior_proof_reference_shape(record["details"])
             if subject["commit"] is None or reference["target_sha"] != subject["commit"]:
                 raise LifecycleError("behavior-proof receipt target SHA does not match its evidence subject")
+        if record["type"] == "quick_fix":
+            reference = _validate_quick_fix_reference_shape(record["details"])
+            if subject["commit"] is None or reference["target_sha"] != subject["commit"]:
+                raise LifecycleError("quick-fix receipt target SHA does not match its evidence subject")
+            if not record["url"]:
+                raise LifecycleError("quick-fix evidence requires the URL of its PR declaration comment")
     for evidence_id in ledger["remaining_scope"]["evidence_ids"]:
         if evidence_id not in evidence_ids:
             raise LifecycleError("remaining-scope evidence ID is not present in the evidence ledger")
@@ -918,11 +939,49 @@ def _behavior_proof_reference_error(record: Mapping[str, Any], *, head_sha: str 
     return None
 
 
+def _quick_fix_reference_error(
+    record: Mapping[str, Any],
+    *,
+    identity: Mapping[str, Any],
+    head_sha: str | None,
+    comment_bodies: Mapping[str, str],
+    observed_paths: list[str],
+) -> str | None:
+    try:
+        reference = _validate_quick_fix_reference_shape(record["details"])
+    except LifecycleError as exc:
+        return str(exc)
+    target_sha = reference["target_sha"]
+    if head_sha and target_sha != head_sha:
+        return "quick-fix receipt is not bound to the current PR head"
+    declaration = comment_bodies.get(str(record["url"] or ""))
+    if declaration is None:
+        return "quick-fix declaration URL is absent from authoritative PR comments"
+    if reference["receipt_sha256"] not in declaration or target_sha not in declaration:
+        return "quick-fix PR declaration does not name the receipt digest and exact head"
+    try:
+        receipt_bytes = Path(reference["receipt_path"]).expanduser().read_bytes()
+        receipt = json.loads(receipt_bytes)
+    except (OSError, json.JSONDecodeError) as exc:
+        return f"quick-fix receipt is unreadable: {exc}"
+    if "sha256:" + hashlib.sha256(receipt_bytes).hexdigest() != reference["receipt_sha256"]:
+        return "quick-fix receipt digest does not match the referenced file"
+    return quick_fix.receipt_error(
+        receipt,
+        repository=identity["repository"],
+        issue=identity["github_issue_number"],
+        head_sha=target_sha,
+        input_sha256=reference["input_sha256"],
+        observed_paths=observed_paths,
+    )
+
+
 def _evidence_status(
     ledger: Mapping[str, Any],
     *,
     head_sha: str | None,
-    comment_urls: set[str],
+    comment_bodies: Mapping[str, str],
+    observed_paths: list[str] | None = None,
 ) -> tuple[dict[str, set[str]], list[str]]:
     valid: dict[str, set[str]] = {}
     invalid: list[str] = []
@@ -937,11 +996,26 @@ def _evidence_status(
             if reference_error:
                 invalid.append(f"{record['ac_id']}: {reference_error}")
                 continue
-        if kind == "review" and (not record["url"] or record["url"] not in comment_urls):
+        if kind == "quick_fix":
+            reference_error = _quick_fix_reference_error(
+                record,
+                identity=ledger["identity"],
+                head_sha=head_sha,
+                comment_bodies=comment_bodies,
+                observed_paths=list(observed_paths or []),
+            )
+            if reference_error:
+                invalid.append(f"{record['ac_id']}: {reference_error}")
+                continue
+        if kind == "review" and (not record["url"] or record["url"] not in comment_bodies):
             invalid.append(f"{record['ac_id']}: review receipt URL is absent from authoritative PR comments")
             continue
         valid.setdefault(record["ac_id"], set()).add(kind)
     return valid, invalid
+
+
+def _satisfied_kinds(kinds: set[str]) -> set[str]:
+    return kinds | QUICK_FIX_SATISFIES if "quick_fix" in kinds else kinds
 
 
 def _criteria_due_blockers(
@@ -955,7 +1029,7 @@ def _criteria_due_blockers(
     for item in ledger["ac_snapshot"]["criteria"]:
         if not item["applicable"] or STATE_RANK[item["due_state"]] > target_rank:
             continue
-        missing = sorted(set(item["required_evidence"]) - valid_evidence.get(item["id"], set()))
+        missing = sorted(set(item["required_evidence"]) - _satisfied_kinds(valid_evidence.get(item["id"], set())))
         if missing:
             blockers.append(f"{item['id']}: missing typed evidence {', '.join(missing)}")
     return blockers
@@ -999,9 +1073,17 @@ def _local_readiness(local: Mapping[str, Any]) -> list[str]:
     return blockers
 
 
+def _gate_records(ledger: Mapping[str, Any], valid_evidence: Mapping[str, set[str]]) -> list[Mapping[str, Any]]:
+    """Valid review-gate records: independent reviews or verified quick-fix receipts."""
+    return [
+        record
+        for record in ledger["evidence"]
+        if record["type"] in {"review", "quick_fix"} and record["type"] in valid_evidence.get(record["ac_id"], set())
+    ]
+
+
 def _review_passed(ledger: Mapping[str, Any], valid_evidence: Mapping[str, set[str]]) -> bool:
-    review_records = [record for record in ledger["evidence"] if record["type"] == "review"]
-    return any("review" in valid_evidence.get(record["ac_id"], set()) for record in review_records)
+    return bool(_gate_records(ledger, valid_evidence))
 
 
 def _checks_status(required: list[str], checks: list[Mapping[str, Any]]) -> tuple[bool, bool, list[str]]:
@@ -1076,12 +1158,17 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
 
     expected_pr = ledger["pr"]["number"]
     head_sha = pr.get("head_sha") if isinstance(pr, Mapping) else None
-    comment_urls = {
-        str(comment.get("url"))
+    comment_bodies = {
+        str(comment.get("url")): str(comment.get("body") or "")
         for comment in github.get("comments") or []
         if isinstance(comment, Mapping) and comment.get("url")
     }
-    valid_evidence, invalid_evidence = _evidence_status(ledger, head_sha=head_sha, comment_urls=comment_urls)
+    valid_evidence, invalid_evidence = _evidence_status(
+        ledger,
+        head_sha=head_sha,
+        comment_bodies=comment_bodies,
+        observed_paths=[str(path) for path in local.get("changed_paths") or []],
+    )
     hard.extend(invalid_evidence)
 
     readiness_local = local
@@ -1127,11 +1214,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                 else:
                     last_success = "REVIEW_PASSED"
                     auto_enabled = pr.get("auto_merge_enabled_at")
-                    review_times = [
-                        record["recorded_at"]
-                        for record in ledger["evidence"]
-                        if record["type"] == "review" and "review" in valid_evidence.get(record["ac_id"], set())
-                    ]
+                    review_times = [record["recorded_at"] for record in _gate_records(ledger, valid_evidence)]
                     if auto_enabled and review_times and auto_enabled < max(review_times):
                         hard.append("auto-merge was armed before the verified review gate")
                 checks_ok, checks_waiting, checks_failed = _checks_status(
@@ -1156,14 +1239,10 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                 ledger["required_checks"], list(pr.get("checks") or [])
             )
             if not review_ok:
-                hard.append("merged PR lacks verified current-head outside-family review")
+                hard.append("merged PR lacks verified current-head outside-family review or quick-fix receipt")
             else:
                 auto_enabled = pr.get("auto_merge_enabled_at")
-                review_times = [
-                    record["recorded_at"]
-                    for record in ledger["evidence"]
-                    if record["type"] == "review" and "review" in valid_evidence.get(record["ac_id"], set())
-                ]
+                review_times = [record["recorded_at"] for record in _gate_records(ledger, valid_evidence)]
                 if auto_enabled and review_times and auto_enabled < max(review_times):
                     hard.append("auto-merge was armed before the verified review gate")
             if checks_failed:

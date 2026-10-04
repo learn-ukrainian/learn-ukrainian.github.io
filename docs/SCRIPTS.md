@@ -13,6 +13,14 @@ Before guessing CLI flags, run the tool's `--help`. The repo standard lives in
 `agents_extensions/shared/rules/cli-help-standard.md`, and touched CLIs are expected to
 meet it so agents can use them without source-diving.
 
+## Quick-fix receipts
+
+`.venv/bin/python -m scripts.review.quick_fix {show|record}` records the driver's exact-head
+evidence for an eligible quick fix (`agents_extensions/shared/rules/workflow.md` § Quick-fix
+path). `show` prints the exact diff and its digest; `record` runs the regression command with
+the fix reverted (must fail) and at HEAD (must pass), then writes a `quick-fix-receipt.v1` and
+prints the `task_closeout add-evidence --type quick_fix` reference. Exit 2 means refused (#9719).
+
 ## Reviewer bench health
 
 `.venv/bin/python -m scripts.review.bench_health [--profile code|infra] [--risk low|medium|high|critical]`
