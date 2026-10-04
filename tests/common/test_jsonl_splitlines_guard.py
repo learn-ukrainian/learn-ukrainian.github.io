@@ -3,6 +3,10 @@
 Intraprocedural data flow follows assignments, loop/comprehension variables,
 container mutations, and local parser wrappers. A split is only reported when
 its output reaches a JSON parser; merely sharing a function is not sufficient.
+This is a bounded syntactic guard, not a complete call-graph analysis: parser
+callbacks (including map), assigned parser aliases, JSONDecoder.decode,
+self/cls method calls, imported wrappers, nested/lambda closures, and helpers
+returning split output are not followed. Inventory review covers those limits.
 The exceptions identify reviewed byte readers, non-record diagnostic text,
 and frozen sources whose release receipts prohibit byte changes.
 """
@@ -10,6 +14,7 @@ and frozen sources whose release receipts prohibit byte changes.
 from __future__ import annotations
 
 import ast
+import hashlib
 from pathlib import Path
 
 import pytest
@@ -80,46 +85,33 @@ ALLOWLIST: dict[tuple[str, str], tuple[str, str | tuple[str, ...]]] = {
         "Diagnostic lines locate an API Error wrapper; raw_decode receives a slice of the original stderr, not split lines.",
         "stderr.splitlines(keepends=True)",
     ),
-    # Frozen receipt bindings: UA v0.1.0/v0.1.1 manifests, Gemma paths.py,
-    # and phase3_v2_compatibility.MIGRATED_ENGINE_SOURCE_SHA256.
+    # Release-frozen bindings below name the actual pin and its source file.
     ("scripts/projects/open_model_data/gemma_hardware_probe.py", "collect_job"): (
-        "hash-pinned frozen source; changing bytes breaks its release receipt",
+        "hash-pinned frozen source; "
+        "scripts/projects/open_model_data/paths.py: "
+        "GEMMA_PROBE_RUNNER_SHA256=7d3e12dfb114ce96f14a195c8d8515964c77e125df4b649b9b31989b2e5c8ab6; existing "
+        "runner_sha256 receipts require this pin",
         "logs_result.stdout.splitlines()",
     ),
-    ("scripts/projects/open_model_data/phase3_disposition_audit.py", "_source_receipt"): (
-        "hash-pinned frozen source; changing bytes breaks its release receipt",
-        "ledger_path.read_text(encoding='utf-8').splitlines()",
-    ),
-    ("scripts/projects/open_model_data/phase3_heldout_partition.py", "_load_freeze_ua_gec_units"): (
-        "hash-pinned frozen source; changing bytes breaks its release receipt",
-        ("snapshot.artifacts[member].decode('utf-8').splitlines()", "path.read_text(encoding='utf-8').splitlines()"),
-    ),
-    ("scripts/projects/open_model_data/phase3_pravopys_delta.py", "_read_jsonl"): (
-        "hash-pinned frozen source; changing bytes breaks its release receipt",
-        "path.read_text(encoding='utf-8').splitlines()",
-    ),
-    ("scripts/projects/open_model_data/phase3_source_dispositions.py", "_ledger_records"): (
-        "hash-pinned frozen source; changing bytes breaks its release receipt",
-        "path.read_text(encoding='utf-8').splitlines()",
-    ),
-    ("scripts/projects/open_model_data/phase3_source_production_transport.py", "_strict_response"): (
-        "hash-pinned frozen source; changing bytes breaks its release receipt",
-        "text.splitlines()",
-    ),
-    ("scripts/projects/open_model_data/phase3_source_unit_materialization.py", "_read_ledger"): (
-        "hash-pinned frozen source; changing bytes breaks its release receipt",
-        "path.read_text(encoding='utf-8').splitlines()",
-    ),
     ("scripts/projects/ua_eval_harness/evaluate_model.py", "_read_jsonl"): (
-        "hash-pinned frozen source; changing bytes breaks its release receipt",
+        "hash-pinned frozen source; "
+        "data/projects/ua_eval_harness/releases/v0.1.0/freeze_manifest.json and "
+        "data/projects/ua_eval_harness/releases/v0.1.1/freeze_manifest.json: "
+        "scorer_sha256=358ee1419533577fb185615c8a80b15688214a89fe3003d9fe9425954511402a",
         "path.read_text(encoding='utf-8').splitlines()",
     ),
     ("scripts/projects/ua_eval_harness/run_model_batch.py", "_read_jsonl"): (
-        "hash-pinned frozen source; changing bytes breaks its release receipt",
+        "hash-pinned frozen source; "
+        "data/projects/ua_eval_harness/releases/v0.1.1/freeze_manifest.json: "
+        "scripts/projects/ua_eval_harness/run_model_batch.py "
+        "sha256=bf8a471a1a68295444a697ac5fd252a48695e57d561b82d70a8e65b672c29b32",
         "path.read_text(encoding='utf-8').splitlines()",
     ),
     ("scripts/projects/ua_eval_harness/run_model_batch.py", "_ndjson_assistant_text"): (
-        "hash-pinned frozen source; changing bytes breaks its release receipt",
+        "hash-pinned frozen source; "
+        "data/projects/ua_eval_harness/releases/v0.1.1/freeze_manifest.json: "
+        "scripts/projects/ua_eval_harness/run_model_batch.py "
+        "sha256=bf8a471a1a68295444a697ac5fd252a48695e57d561b82d70a8e65b672c29b32",
         "raw_text.splitlines()",
     ),
 }
@@ -356,6 +348,8 @@ def test_guard_does_not_confuse_human_text_with_json_input(body):
 def test_allowlist_reasons_and_exact_call_shapes_are_current():
     for (path, function), (reason, expression) in ALLOWLIST.items():
         assert reason
+        if reason.startswith("hash-pinned frozen source;"):
+            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() in reason
         tree = ast.parse((ROOT / path).read_text())
         scope = dict(_scopes(tree))[function]
         expressions = (expression,) if isinstance(expression, str) else expression
@@ -375,6 +369,6 @@ def test_byte_exception_does_not_allow_decode_before_splitting():
     [key for key, (reason, _) in ALLOWLIST.items() if reason.startswith("hash-pinned frozen source;")],
 )
 def test_frozen_exception_does_not_admit_unreviewed_split(path, function):
-    assert ALLOWLIST[path, function][0] == "hash-pinned frozen source; changing bytes breaks its release receipt"
+    assert "sha256=" in ALLOWLIST[path, function][0] or "SHA256=" in ALLOWLIST[path, function][0]
     source = f"import json\ndef {function}(unreviewed_text):\n    return json.loads(unreviewed_text.splitlines()[-1])"
     assert violations(path, source)

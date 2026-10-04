@@ -21,6 +21,7 @@ from typing import Any
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import phase3_disposition_audit as disposition_audit
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -281,7 +282,9 @@ def _ledger_records(path: Path, family_id: str) -> list[dict[str, str]]:
     records: list[dict[str, str]] = []
     seen: set[tuple[str, str, str]] = set()
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
+        if lines and lines[-1] == "":
+            lines.pop()
     except OSError as exc:
         raise DispositionError(f"cannot read frozen ledger: {path.name}") from exc
     for ordinal, line in enumerate(lines, start=1):
