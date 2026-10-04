@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 import re
+import sys
 import tempfile
 import unicodedata
 from collections import Counter
@@ -26,6 +27,11 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
@@ -125,7 +131,7 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     """Load non-empty JSONL records with attributable line failures."""
     rows: list[dict[str, Any]] = []
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
     except OSError as exc:
         raise FactoryError(f"cannot read JSONL {path}: {exc}") from exc
     for line_number, line in enumerate(lines, 1):

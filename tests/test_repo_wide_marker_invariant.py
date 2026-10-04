@@ -129,6 +129,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/build/test_fresh_page_safety.py::test_ci_runs_site_toolchain_tests_in_required_frontend_job",
     "tests/build/test_fresh_plan_review.py::test_every_plan_manifest_of_record_in_the_repository_still_validates",
     "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",
+    "tests/common/test_jsonl_splitlines_guard.py::test_scripts_structured_readers_do_not_use_str_splitlines",
     "tests/packaging/test_systemd_templates.py::test_data_volume_dropins_cover_all_services_and_preserve_commands",
     "tests/projects/open_model_data/test_k_path_literal_guard.py::test_k_path_literals_are_resolved_or_allowlisted",
     "tests/projects/open_model_data/test_quarantine.py::test_archive_import_guard_active_code",

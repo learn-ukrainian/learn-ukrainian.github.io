@@ -14,9 +14,15 @@ import hashlib
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 from pathlib import Path
 from typing import Any
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATASET = REPO_ROOT / "data/datasets/hramatka_literary_poltava_v1/hramatka_literary_poltava_v1.jsonl"
@@ -214,7 +220,7 @@ def evaluation_texts(paths: list[Path]) -> list[str]:
         if not path.exists():
             continue
         if path.suffix == ".jsonl":
-            values = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+            values = [json.loads(line) for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line]
         else:
             values = [json.loads(path.read_text(encoding="utf-8"))]
         stack = list(values)

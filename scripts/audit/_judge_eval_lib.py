@@ -27,6 +27,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 DB = PROJECT_ROOT / "data" / "sources.db"
 VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
 UA_GEC_ROOT = PROJECT_ROOT / "data" / "ua-gec"
@@ -121,7 +123,7 @@ def pull_calibration_cases(
         source_note = f"git show {effective_ref}:{blob}"
 
     cases: list[dict[str, Any]] = []
-    for line in text.splitlines():
+    for line in split_jsonl_lines(text):
         line = line.strip()
         if line:
             cases.append(json.loads(line))

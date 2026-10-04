@@ -79,6 +79,7 @@ from scripts.build.module_size_policy import (
     size_policy_summary,
 )
 from scripts.build.prompt_builder import DOWNSTREAM_TOKENS, TOKEN_RE, render_prompt
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.review_loop import (
     aggregate_min as review_loop_aggregate_min,
 )
@@ -4520,7 +4521,7 @@ def parse_writer_output_strict_json(output: str, *, lesson_mode: bool = False) -
     # opens and closes are 3.
     _FENCE_LINE_RE = re.compile(r"^\s*(?P<run>`{3,})(?P<info>.*)$")
 
-    for line_no, line in enumerate(output.splitlines(), start=1):
+    for line_no, line in enumerate(split_jsonl_lines(output), start=1):
         fence_match = _FENCE_LINE_RE.match(line)
         if fence_match:
             run_len = len(fence_match.group("run"))
@@ -14691,7 +14692,7 @@ def _load_jsonl_tool_calls(path: Path) -> list[dict[str, Any]]:
     calls: list[dict[str, Any]] = []
     if not path.exists():
         return calls
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in split_jsonl_lines(path.read_text(encoding="utf-8")):
         if not line.strip():
             continue
         try:

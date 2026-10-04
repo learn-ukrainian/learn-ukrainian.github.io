@@ -52,10 +52,12 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter
 
 DB = PROJECT_ROOT / "data" / "sources.db"
@@ -66,6 +68,11 @@ VENV_PY = project_interpreter()
 # calls can exceed 240s under load; claude/codex consistently land under
 # 60s but headroom is cheap.
 JUDGE_TIMEOUT_S = 480
+
+
+def _read_jsonl_records(path: Path) -> list[dict[str, Any]]:
+    """Load physical JSONL records independently of model/corpus setup."""
+    return [json.loads(line) for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
 
 
 def retrieve_antonenko(text: str, k: int = 8) -> list[dict]:
@@ -326,7 +333,7 @@ def main() -> None:
         suffix_tag = re.sub(r"[^a-zA-Z0-9]+", "", args.judge_model)
         out_path = inputs_path.with_name(f"judgments-{suffix_tag}.jsonl")
 
-    inputs = [json.loads(line) for line in inputs_path.read_text().splitlines() if line.strip()]
+    inputs = _read_jsonl_records(inputs_path)
     inputs = [i for i in inputs if i.get("status") == "ok"]
     print(f"Judging {len(inputs)} cells with {args.judge_family}/{args.judge_model} → {out_path}", file=sys.stderr)
 

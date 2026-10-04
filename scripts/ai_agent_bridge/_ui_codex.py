@@ -57,6 +57,11 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 CODEX_SESSIONS_ROOT = Path.home() / ".codex" / "sessions"
 DEFAULT_TIMEOUT_S = 1800  # 30 min — covers most multi-turn dispatches
 
@@ -156,7 +161,7 @@ def send(
     duration_s = (datetime.now(UTC) - start).total_seconds()
 
     events: list[dict] = []
-    for line in stdout.splitlines():
+    for line in split_jsonl_lines(stdout):
         line = line.strip()
         if not line:
             continue

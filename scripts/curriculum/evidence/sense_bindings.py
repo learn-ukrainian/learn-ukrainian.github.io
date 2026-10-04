@@ -13,6 +13,7 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.curriculum.validate import a1_reference
 from scripts.review.model_catalog import load_model_catalog, resolve_catalog_model_id
 from scripts.review.receipts import ledger
@@ -64,7 +65,7 @@ def public_entries(path: Path) -> list[dict]:
 
 def private_entries(path: Path, inventory: list[dict]) -> dict[str, dict]:
     """Require total, unique, inventory-bound coverage before any selection."""
-    values = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+    values = [json.loads(line) for line in split_jsonl_lines(path.read_text()) if line.strip()]
     by_locator = {row["locator"]: row for row in values}
     if len(by_locator) != len(values) or set(by_locator) != {row["locator"] for row in inventory}:
         raise ValueError("private_inventory_coverage_invalid")

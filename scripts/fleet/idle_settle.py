@@ -29,6 +29,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root
 from scripts.fleet import credit_lane
 
@@ -689,7 +690,7 @@ def load_events(path: Path) -> list[dict[str, Any]]:
         raw = path.read_text(encoding="utf-8")
     except OSError:
         return []
-    for line in raw.splitlines():
+    for line in jsonl_lines(raw):
         text = line.strip()
         if not text:
             continue

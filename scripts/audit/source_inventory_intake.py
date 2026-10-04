@@ -13,6 +13,7 @@ from typing import Any
 
 import yaml
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 
@@ -317,7 +318,7 @@ def _read_delimited_inventory(
 
 def _read_jsonl_inventory(path: Path, *, inventory_path: str) -> list[SourceInventoryRecord]:
     records: list[SourceInventoryRecord] = []
-    for line_number, line in enumerate(path.read_text(encoding=_TEXT_ENCODING).splitlines(), start=1):
+    for line_number, line in enumerate(split_jsonl_lines(path.read_text(encoding=_TEXT_ENCODING)), start=1):
         if not line.strip():
             continue
         try:

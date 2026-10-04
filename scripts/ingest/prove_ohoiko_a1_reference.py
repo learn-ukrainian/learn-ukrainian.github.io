@@ -15,6 +15,8 @@ from pathlib import Path
 import pymupdf
 import yaml
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 
 def clean(text: str, stress_free: bool = False) -> str:
     text = text.replace("c", "с").replace("á", "а\u0301").replace("é", "е\u0301").replace("'", "’").replace("ʼ", "’")
@@ -238,7 +240,7 @@ def raw_glossary_meanings(lines: list[dict], page: int) -> list[tuple[tuple, str
 def prove_meanings(pdf: Path, inventory: Path, meanings: Path) -> dict:
     """Compare raw glyph boundaries with private JSONL, reporting locators only."""
     public = [r for s in yaml.safe_load(inventory.read_text())["sources"] for r in s["headwords"]]
-    private = [json.loads(l) for l in meanings.read_text().splitlines() if l.strip()]
+    private = [json.loads(l) for l in split_jsonl_lines(meanings.read_text()) if l.strip()]
     private_by_locator = {r["locator"]: r for r in private}
     expected_values = []
     expected_locators = {f"{row['locator']}#{i + 1}" for i, row in enumerate(public)}

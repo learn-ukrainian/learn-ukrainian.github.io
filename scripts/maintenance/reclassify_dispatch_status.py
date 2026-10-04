@@ -30,6 +30,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 import delegate
 from agent_runtime.runner import _load_adapter
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration.task_record_store import iter_task_records
 
@@ -58,7 +59,7 @@ def _load_usage_by_task_id(usage_dir: Path) -> dict[str, dict[str, Any]]:
         return records
 
     for path in sorted(usage_dir.glob("usage_*.jsonl")):
-        for line in path.read_text().splitlines():
+        for line in split_jsonl_lines(path.read_text()):
             if not line.strip():
                 continue
             try:

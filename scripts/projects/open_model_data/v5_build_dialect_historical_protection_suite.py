@@ -28,6 +28,7 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data.dialect_protection_invariants import (
     LEMKO_BANNED_TARGET_RE,
     MAX_TOLERATED_DIALECT_CORRUPTION,
@@ -153,7 +154,9 @@ def extract_sentences(text: str) -> list[str]:
 def _load_existing_suite() -> list[dict[str, Any]]:
     if not EXISTING_SUITE_FILE.exists():
         return []
-    return [json.loads(line) for line in EXISTING_SUITE_FILE.read_text(encoding="utf-8").splitlines() if line.strip()]
+    return [
+        json.loads(line) for line in split_jsonl_lines(EXISTING_SUITE_FILE.read_text(encoding="utf-8")) if line.strip()
+    ]
 
 
 def _reuse_existing_subgroup(subgroup: str, quota: int) -> list[dict[str, Any]]:
@@ -169,7 +172,7 @@ def mine_lemko_from_seeds(quota: int = 40) -> list[dict[str, Any]]:
         raise FileNotFoundError(f"Lemko seed file missing: {LEMKO_SEED_FILE}")
     records: list[dict[str, Any]] = []
     seen: set[str] = set()
-    for line in LEMKO_SEED_FILE.read_text(encoding="utf-8").splitlines():
+    for line in split_jsonl_lines(LEMKO_SEED_FILE.read_text(encoding="utf-8")):
         if len(records) >= quota:
             break
         if not line.strip():
@@ -278,7 +281,7 @@ def mine_oes_from_seeds() -> list[dict[str, Any]]:
     if not OES_SEED_FILE.exists():
         raise FileNotFoundError(f"OES seed file missing: {OES_SEED_FILE}")
     raw: list[dict[str, Any]] = []
-    for line in OES_SEED_FILE.read_text(encoding="utf-8").splitlines():
+    for line in split_jsonl_lines(OES_SEED_FILE.read_text(encoding="utf-8")):
         if not line.strip():
             continue
         seed = json.loads(line)
@@ -591,7 +594,7 @@ def mine_middle_ua_from_seeds(quota: int) -> list[dict[str, Any]]:
         raise FileNotFoundError(f"Middle Ukrainian seed file missing: {MID_UA_SEED_FILE}")
     records: list[dict[str, Any]] = []
     seen: set[str] = set()
-    for line in MID_UA_SEED_FILE.read_text(encoding="utf-8").splitlines():
+    for line in split_jsonl_lines(MID_UA_SEED_FILE.read_text(encoding="utf-8")):
         if len(records) >= quota:
             break
         if not line.strip():

@@ -43,6 +43,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.scratch import ensure_scratch_root, scratch_scan_roots
 from scripts.orchestration.thread_handoff import (
     _default_machine_id,
@@ -1829,7 +1830,7 @@ def _probe_sealed_read_mcp(
             f"sealed_reader_probe_failed:rc={completed.returncode}:{(completed.stderr or '')[:160]}"
         )
     try:
-        responses = [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
+        responses = [json.loads(line) for line in jsonl_lines(completed.stdout) if line.strip()]
         listed = {tool["name"] for tool in responses[1]["result"]["tools"]}
         payload = json.loads(responses[2]["result"]["content"][0]["text"])
         required_payload = json.loads(responses[3]["result"]["content"][0]["text"])

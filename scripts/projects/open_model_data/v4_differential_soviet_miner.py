@@ -25,6 +25,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 
@@ -821,6 +822,11 @@ def build_differential_receipt(
     return receipt, index_content, manifest_content, manifest_data
 
 
+def _jsonl_record_count(text: str) -> int:
+    """Count nonblank physical JSONL records without parsing their payloads."""
+    return sum(1 for line in split_jsonl_lines(text) if line.strip())
+
+
 def run_miner(
     sources_db_path: Path,
     vesum_db_path: Path,
@@ -852,7 +858,7 @@ def run_miner(
             print(f"Error: Hash mismatch for {index_path.name}: {current_index_sha} != {expected_index_sha}")
             return 1
 
-        actual_line_count = len([line for line in content.splitlines() if line.strip()])
+        actual_line_count = _jsonl_record_count(content)
         expected_line_count = receipt["files"]["candidates_index"]["line_count"]
         if actual_line_count != expected_line_count:
             print(f"Error: Line count mismatch for {index_path.name}: {actual_line_count} != {expected_line_count}")

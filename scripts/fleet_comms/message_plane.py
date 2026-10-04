@@ -35,6 +35,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneError,
@@ -706,7 +707,7 @@ def _summarize_parity_telemetry(
     if not path.is_file():
         return summary
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
     except OSError:
         logger.exception("parity telemetry unreadable: %s", path)
         summary["read_error"] = "telemetry_read_failed"

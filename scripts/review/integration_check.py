@@ -49,6 +49,7 @@ from scripts.agent_runtime import review_mcp
 from scripts.build.fresh import assemble, plan_manifest, runner
 from scripts.build.fresh import manifest as fresh_manifest
 from scripts.build.fresh.cli import main as fresh_cli
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
@@ -107,7 +108,7 @@ class Run:
         try:
             return json.loads(text) if text else {}
         except ValueError:
-            return json.loads(text.splitlines()[-1])
+            return json.loads(split_jsonl_lines(text)[-1])
 
 
 def run_main(main: Callable[[list[str] | None], int], argv: list[str]) -> Run:

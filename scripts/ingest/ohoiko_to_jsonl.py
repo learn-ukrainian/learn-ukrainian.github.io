@@ -24,6 +24,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.ingest import ohoiko_books_ingest as books
 from scripts.ingest import ohoiko_verbs_ingest as verbs
 
@@ -35,9 +36,7 @@ def resolve_gdrive_root() -> Path | None:
     if env:
         path = Path(env)
         return path if path.is_dir() else None
-    matches = sorted(
-        Path.home().glob("Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data")
-    )
+    matches = sorted(Path.home().glob("Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data"))
     return matches[0] if matches else None
 
 
@@ -147,15 +146,13 @@ def write_jsonl(path: Path, rows: Sequence[dict[str, Any]]) -> Path:
 
 
 def ingest_jsonl(path: Path, *, db_path: Path, force: bool) -> dict[str, int]:
-    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    rows = [json.loads(line) for line in jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
     if not rows:
         return {"inserted": 0}
     source_file = str(rows[0]["source_file"])
     conn = sqlite3.connect(db_path)
     try:
-        before = conn.execute(
-            "SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)
-        ).fetchone()[0]
+        before = conn.execute("SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)).fetchone()[0]
         if force:
             conn.execute("DELETE FROM textbooks WHERE source_file = ?", (source_file,))
         inserted = 0
@@ -188,9 +185,7 @@ def ingest_jsonl(path: Path, *, db_path: Path, force: bool) -> dict[str, int]:
             inserted += 1
         conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES('rebuild')")
         conn.commit()
-        after = conn.execute(
-            "SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)
-        ).fetchone()[0]
+        after = conn.execute("SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)).fetchone()[0]
     finally:
         conn.close()
     return {"before": before, "after": after, "inserted": inserted}

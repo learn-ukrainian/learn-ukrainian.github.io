@@ -26,6 +26,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
@@ -950,7 +955,7 @@ def run_pretraining_audit(
     sft_total_count = 0
 
     for sft_file in sft_files:
-        for line_idx, line in enumerate(sft_file.read_text(encoding="utf-8").splitlines()):
+        for line_idx, line in enumerate(split_jsonl_lines(sft_file.read_text(encoding="utf-8"))):
             if not line.strip():
                 continue
             sft_total_count += 1
@@ -1007,7 +1012,7 @@ def run_pretraining_audit(
     dpo_total_count = 0
 
     for dpo_file in dpo_files:
-        for line_idx, line in enumerate(dpo_file.read_text(encoding="utf-8").splitlines()):
+        for line_idx, line in enumerate(split_jsonl_lines(dpo_file.read_text(encoding="utf-8"))):
             if not line.strip():
                 continue
             dpo_total_count += 1

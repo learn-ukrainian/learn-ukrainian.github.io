@@ -11,11 +11,20 @@ from pathlib import Path
 
 import yaml
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.verification import stress
 from scripts.verification.ulif_stress import joined_analyses
 from scripts.wiki.sources_db import ulif_stress_build, ulif_stress_rows
 
 WORD_RE = re.compile(r"[А-Яа-яЄєІіЇїҐґ][А-Яа-яЄєІіЇїҐґ\u0301\u0300'’ʼ-]*")
+
+
+def _replay_forms(path: Path) -> list:
+    """Read strict physical JSONL records without requiring the ingestion/audit setup."""
+    lines = split_jsonl_lines(path.read_text())
+    if lines[-1] == "":
+        lines.pop()
+    return [json.loads(line)["form"] for line in lines]
 
 
 def corpus_forms(root: Path) -> tuple[list[str], list[dict]]:
@@ -98,7 +107,7 @@ def write_report(root: Path, out: Path, *, seed: int = 8398, forms_file: Path | 
     """Write the full corpus comparison, disagreements, sample and hashed denominator."""
     forms, inputs = corpus_forms(root)
     if forms_file is not None:
-        forms = [json.loads(line)["form"] for line in forms_file.read_text().splitlines()]
+        forms = _replay_forms(forms_file)
         if len(forms) != len(set(forms)):
             raise ValueError("Replay denominator contains duplicate forms")
     out.mkdir(parents=True, exist_ok=True)

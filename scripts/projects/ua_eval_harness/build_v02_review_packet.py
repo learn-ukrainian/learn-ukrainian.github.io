@@ -6,8 +6,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 ROOT = Path(__file__).resolve().parents[3]
 EVIDENCE = ROOT / "data/projects/ua_eval_harness/analysis/v0.1.1/item_evidence.jsonl"
@@ -61,7 +67,9 @@ def validate_packet_rows(rows: list[dict[str, Any]]) -> None:
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
+        if lines[-1] == "":
+            lines.pop()
     except OSError as exc:
         raise PacketError(f"cannot read {path}: {exc}") from exc
     rows: list[dict[str, Any]] = []

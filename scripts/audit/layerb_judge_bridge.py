@@ -53,6 +53,7 @@ if __package__ in {None, ""}:
 from scripts.agent_runtime.telemetry import codex_model_identity
 from scripts.agent_runtime.tool_calls import normalize_tool_calls
 from scripts.audit import layerb_shadow
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 BRIDGE_VERSION = "qg-layer-b-judge-bridge.v5"
 PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v3-flattened"
@@ -922,7 +923,7 @@ def _read_strict_jsonl(path: Path) -> list[dict[str, Any]]:
     """Read a non-empty complete JSONL trace or fail the transport closed."""
 
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
         raise BridgeInvocationError("trace_missing") from exc
     except (OSError, UnicodeDecodeError) as exc:

@@ -4012,3 +4012,38 @@ def test_process_codex_legacy_review_path_fails_closed_before_snapshot(
     # Confirm no lu-review-* snapshot directory was created
     assert not list(scratch.glob("lu-review-*"))
     assert not list(tmp_path.glob("lu-review-*"))
+
+
+@pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_sealed_reader_probe_preserves_unicode_separators(tmp_path, monkeypatch, sep):
+    manifest = tmp_path / ".review-bundle" / "manifest.json"
+    manifest.parent.mkdir()
+    manifest.write_text("{}", encoding="utf-8")
+    chunk = {"path": ".review-bundle/manifest.json", "sha256": hashlib.sha256(b"{}").hexdigest()}
+    payloads = [
+        {},
+        {
+            "tools": [
+                {"name": name}
+                for name in ("list_files", "read_file", "read_required", "read_required_all", "search_text")
+            ]
+        },
+        {**chunk, "offset": 0, "chunk_bytes": 2},
+        {"index": 0, "offset": 0, "chunks": [chunk]},
+        {"eof": True, "chunks": [chunk]},
+    ]
+    responses = [{"note": f"a{sep}b", "result": payloads[0]}, {"result": payloads[1]}]
+    responses.extend({"result": {"content": [{"text": json.dumps(payload)}]}} for payload in payloads[2:])
+    stdout = "\n".join(json.dumps(row, ensure_ascii=False) for row in responses) + "\n"
+    monkeypatch.setattr("scripts.review.isolation.wrap_argv_with_sandbox", lambda argv, sandbox: argv)
+    monkeypatch.setattr(
+        "scripts.review.isolation.subprocess.run", lambda *a, **k: subprocess.CompletedProcess(a[0], 0, stdout, "")
+    )
+    from types import SimpleNamespace
+
+    _probe_sealed_read_mcp(
+        python_bin=Path("/fixture/python"),
+        helper=tmp_path / "helper.py",
+        snapshot_root=tmp_path,
+        sandbox=SimpleNamespace(write_root=str(tmp_path)),
+    )

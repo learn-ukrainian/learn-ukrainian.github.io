@@ -35,6 +35,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.goal_driver.status_lines import (
     ABORT_KIND,
     DONE_KIND,
@@ -166,7 +167,7 @@ def _last_status_from_transcript(transcript_path: Path) -> StatusLine | None:
         return None
 
     assistant_chunks: list[str] = []
-    for line in tail.splitlines():
+    for line in split_jsonl_lines(tail):
         if not line.strip():
             continue
         try:

@@ -205,7 +205,8 @@ def read_json(path: Path) -> dict[str, Any]:
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        # The reviewed worker ships as one flat file, so LF parsing stays local.
+        lines = [line.removesuffix("\r") for line in path.read_text(encoding="utf-8").split("\n")]
     except OSError as exc:
         raise WorkerError(f"cannot read JSONL {path.name}: {exc}") from exc
     rows: list[dict[str, Any]] = []

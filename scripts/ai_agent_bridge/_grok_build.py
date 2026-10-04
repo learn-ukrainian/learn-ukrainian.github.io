@@ -27,6 +27,7 @@ from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 from ._ask_contract import (
     MAX_TOTAL_ASK_RETRIES,
@@ -446,7 +447,7 @@ def _native_grok_turn_status(*, session_id: str | None, cwd: Path) -> dict[str, 
     events_path = grok_session_dir(grok_home, cwd, session_id) / "events.jsonl"
     try:
         events = []
-        for line in events_path.read_text(encoding="utf-8").splitlines():
+        for line in split_jsonl_lines(events_path.read_text(encoding="utf-8")):
             if line.strip():
                 event = json.loads(line)
                 if not isinstance(event, dict):
