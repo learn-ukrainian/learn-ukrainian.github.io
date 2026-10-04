@@ -36,7 +36,10 @@ exec "$@"
     exe = bindir / "systemctl"
     exe.write_text("""#!/usr/bin/env bash
 [ "${FAKE_BUS_FAIL:-0}" = 0 ] || exit 1
-if [[ "$*" == *lu-driver.slice* ]]; then printf 'loaded\\n'; exit; fi
+if [[ "$*" == *lu-driver.slice* ]]; then
+  printf 'LoadState=%s\\nFragmentPath=%s\\n' "${FAKE_SLICE_LOAD_STATE:-loaded}" "${FAKE_SLICE_FRAGMENT-/test/lu-driver.slice}"
+  exit
+fi
 printf 'Id=%s\\nControlGroup=/test/lu.slice/lu-driver.slice/%s\\nSlice=lu-driver.slice\\nOOMPolicy=%s\\nActiveState=active\\n' "$LU_DRIVER_SCOPE_UNIT" "$LU_DRIVER_SCOPE_UNIT" "${FAKE_OOM_POLICY:-continue}"
 """)
     exe.chmod(0o755)
@@ -143,6 +146,32 @@ def test_all_paths_enter_once_before_preparation(tmp_path: Path, extra: dict[str
     assert "parent_memory_current=123456 parent_swap_current=654321" in result.stderr
 
 
+@pytest.mark.parametrize(
+    "state,fragment,installed",
+    [
+        ("loaded", "/test/lu-driver.slice", True),
+        ("loaded", "", False),
+        ("masked", "/dev/null", False),
+        ("not-found", "", False),
+    ],
+)
+def test_slice_requires_loaded_unit_file(tmp_path: Path, state: str, fragment: str, installed: bool) -> None:
+    launcher, env = _launcher(tmp_path)
+    result = _run(launcher, env, FAKE_SLICE_LOAD_STATE=state, FAKE_SLICE_FRAGMENT=fragment)
+    starts = Path(env["FAKE_STARTS"])
+    if installed:
+        assert result.returncode == 0, result.stderr
+        assert starts.read_text().splitlines() == ["start"]
+        assert "PROVIDER:stdin survives" in result.stdout
+    else:
+        assert result.returncode == 6, result.stderr
+        assert "DRIVER_SCOPE_REFUSED reason=slice-not-installed" in result.stderr
+        assert not starts.exists()
+        assert "PREPARED" not in result.stdout
+        assert "LEASE" not in result.stdout
+        assert "PROVIDER:" not in result.stdout
+
+
 @pytest.mark.parametrize("rc", [1, 2, 3, 4, 5, 137])
 def test_provider_status_preserved(tmp_path: Path, rc: int) -> None:
     launcher, env = _launcher(tmp_path)
@@ -209,6 +238,28 @@ def test_same_pid_forged_identity_refused(tmp_path: Path) -> None:
     )
     assert result.returncode == 6
     assert "cgroup-mismatch" in result.stderr
+    assert not Path(env["FAKE_STARTS"]).exists()
+
+
+def test_same_pid_without_unit_refused(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    env = scope_sandbox(root, tmp_path)
+    Path(env["FAKE_CGROUP"]).write_text("0::/test/lu.slice/lu-driver.slice/lu-driver-fake.scope\n")
+    helper = root / "scripts/lib/driver_scope.sh"
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            f"set -u; source {shlex.quote(str(helper))}; LC_MODE=driver; "
+            "export LU_DRIVER_SCOPE_PID=$$; unset LU_DRIVER_SCOPE_UNIT; launcher_enter_driver_scope",
+        ],
+        env={**os.environ, **env},
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    assert result.returncode == 6, result.stderr
+    assert "DRIVER_SCOPE_REFUSED reason=unit-mismatch" in result.stderr
     assert not Path(env["FAKE_STARTS"]).exists()
 
 

@@ -13,6 +13,7 @@ import pytest
 from tests.launcher_libraries import launcher_library_files
 from tests.launcher_sandbox import copy_slot_registry
 from tests.rules_core_view import install_loader_bypass
+from tests.test_launcher_driver_scope import install_scope_sandbox
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 # Tests spawn the same prescribed project interpreter that is running pytest;
@@ -65,6 +66,7 @@ def _prepare_repo(tmp_path: Path, *, separate_git_dir: bool = False) -> tuple[Pa
         destination = primary / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / relative, destination)
+    install_scope_sandbox(primary)
     install_loader_bypass(primary)
     # Driver launches check their handoff slot against the real roster (#8303).
     copy_slot_registry(primary)

@@ -33,11 +33,15 @@ driver_scope_bus() {
   command -v systemd-run >/dev/null && command -v systemctl >/dev/null || {
     driver_scope_refuse systemd-unavailable; return 6;
   }
-  local state
-  state="$(systemctl --user show lu-driver.slice -p LoadState --value 2>/dev/null)" || {
+  local props key value state="" fragment=""
+  props="$(systemctl --user show lu-driver.slice -p LoadState -p FragmentPath 2>/dev/null)" || {
     driver_scope_refuse user-manager-unavailable; return 6;
   }
-  [ "$state" = loaded ] || { driver_scope_refuse slice-not-installed; return 6; }
+  while IFS='=' read -r key value; do
+    case "$key" in LoadState) state="$value" ;; FragmentPath) fragment="$value" ;; esac
+  done <<< "$props"
+  # Slice names can be loaded implicitly without an installed unit file.
+  [ "$state" = loaded ] && [ -n "$fragment" ] || { driver_scope_refuse slice-not-installed; return 6; }
 }
 
 driver_scope_verify() {
@@ -49,7 +53,7 @@ driver_scope_verify() {
     */lu.slice/lu-driver.slice/lu-driver-*.scope) ;;
     *) driver_scope_refuse cgroup-mismatch; return 6 ;;
   esac
-  [ "${actual##*/}" = "$LU_DRIVER_SCOPE_UNIT" ] || { driver_scope_refuse unit-mismatch; return 6; }
+  [ "${actual##*/}" = "${LU_DRIVER_SCOPE_UNIT:-}" ] || { driver_scope_refuse unit-mismatch; return 6; }
   props="$(systemctl --user show "$LU_DRIVER_SCOPE_UNIT" -p Id -p ControlGroup -p Slice -p OOMPolicy -p ActiveState 2>/dev/null)" || {
     driver_scope_refuse unit-unverifiable; return 6;
   }

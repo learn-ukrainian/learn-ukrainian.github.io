@@ -12210,16 +12210,24 @@ def _dispatch(
             # pid=None and no zombie detection could rescue it
             # (because zombie detection is gated on `pid and not alive`).
             # Codex 2026-04-10 audit finding.
-            # DispatchIsolationError means the scope may already have started
-            # the worker (late marker, or /proc could not prove it never
-            # exec'd). The task is failed and not relaunched.
+            # A fallback refusal starts no worker. Other isolation errors can
+            # mean a late marker or an unprovable exec; never relaunch those.
+            fallback_refused = isinstance(exc, dispatch_isolation.DispatchIsolationError) and str(exc).startswith(
+                "fallback-refused:"
+            )
             if isinstance(exc, dispatch_isolation.DispatchIsolationError):
                 spawn_error = f"dispatch isolation: {exc}"[:500]
-                returncode_reason = "scoped worker startup was ambiguous; not relaunched"
+                returncode_reason = (
+                    "worker process was not started"
+                    if fallback_refused
+                    else "scoped worker startup was ambiguous; not relaunched"
+                )
             else:
                 spawn_error = f"Popen failed: {type(exc).__name__}: {exc}"[:500]
                 returncode_reason = "worker process was not started"
             failed_state = _read_state(state_path) or initial_state
+            if fallback_refused:
+                failed_state["failure_reason"] = "dispatch_fallback_refused"
             failed_state.update(
                 {
                     "status": "failed",

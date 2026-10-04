@@ -17,6 +17,7 @@ from tests.rules_core_view import (
     rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
 )
 from tests.test_launcher_contract import REPO, run_launcher
+from tests.test_launcher_driver_scope import install_scope_sandbox
 
 
 @pytest.fixture(autouse=True)
@@ -61,6 +62,7 @@ def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
         target = root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, target)
+    install_scope_sandbox(root)
     install_loader_bypass(root)
 
     probe = root / ".venv" / "bin" / "python"

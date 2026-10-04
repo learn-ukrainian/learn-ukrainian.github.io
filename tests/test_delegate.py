@@ -1954,6 +1954,45 @@ def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_tasks_dir, capsys)
     assert "failed to spawn" in capsys.readouterr().err
 
 
+@pytest.mark.parametrize(
+    "reason",
+    ["inside-driver-scope; systemd-run unavailable", "caller-cgroup-unavailable", "caller-cgroup-unverifiable"],
+)
+@pytest.mark.parametrize("review", [False, True])
+def test_dispatch_fallback_refusal_records_no_worker_started(tmp_tasks_dir, capsys, reason, review):
+    path = delegate._state_path("fallback-refusal")
+    args = _minimal_dispatch_args("fallback-refusal")
+    refusal = f"fallback-refused: {reason}"
+
+    def refuse(*_args, **_kwargs):
+        # Match the state of a formal review without invoking a provider.
+        if review:
+            spawning = delegate._read_state(path)
+            spawning["require_review_verdict"] = True
+            delegate._write_state_atomic(path, spawning)
+        raise delegate.dispatch_isolation.DispatchIsolationError(refusal)
+
+    with (
+        patch("delegate.dispatch_isolation.spawn_detached_worker", side_effect=refuse) as spawn,
+        patch("delegate.subprocess.Popen") as popen,
+    ):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 1
+    spawn.assert_called_once()
+    popen.assert_not_called()
+    state = delegate._read_state(path)
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["pid"] is None
+    assert state["returncode"] is None
+    assert state["returncode_reason"] == "worker process was not started"
+    assert state["failure_reason"] == "dispatch_fallback_refused"
+    assert refusal in state["stderr_excerpt"]
+    assert "ambiguous" not in state["returncode_reason"]
+    assert "failed to spawn" in capsys.readouterr().err
+
+
 def test_dispatch_popen_failure_records_worktree_head(tmp_tasks_dir, tmp_path, monkeypatch):
     _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="popen-head")
     monkeypatch.setattr(

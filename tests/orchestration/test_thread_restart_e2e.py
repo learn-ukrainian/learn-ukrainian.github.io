@@ -28,6 +28,7 @@ from tests.launcher_libraries import launcher_library_files
 from tests.launcher_sandbox import copy_slot_registry
 from tests.project_python import project_python
 from tests.rules_core_view import install_loader_bypass
+from tests.test_launcher_driver_scope import _launcher, install_scope_sandbox
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 pytestmark = pytest.mark.repo_wide
@@ -191,6 +192,7 @@ def init_repo(
         watcher.chmod(0o755)
         # Driver launches check their handoff slot against the real roster (#8303).
         copy_slot_registry(primary)
+        install_scope_sandbox(primary)
         install_loader_bypass(primary)
     git(primary, "add", ".")
     git(primary, "commit", "-m", "test fixture")
@@ -1054,6 +1056,57 @@ def test_app_style_worktree_bootstrap_deploys_hook_and_discovers_canonical_packe
     assert "-t fresh-app-thread" in started.stdout
     assert_cleanup_locked(primary, packet)
     assert git(replacement, "status", "--short", "--untracked-files=all").stdout == ""
+
+
+def test_real_session_supervisor_exec_successor_reuses_driver_scope(tmp_path: Path) -> None:
+    """Real main/scope/successor helpers; only manager, kernel and lease seams are fake."""
+    launcher, scope_env = _launcher(tmp_path)
+    launcher.chmod(0o755)  # The real successor helper execs the public entrypoint.
+    shutil.copy2(REPO_ROOT / "scripts/lib/session_supervisor.sh", launcher.parent / "scripts/lib/session_supervisor.sh")
+    phases = tmp_path / "successor-phases"
+    (launcher.parent / "scripts/launchers/claude.sh").write_text(
+        """launcher_adapter_validate() { :; }
+launcher_adapter_preflight() { :; }
+launcher_adapter_canary() { :; }
+launcher_adapter_exec() {
+  printf '%s %s %s\\n' "${SESSION_SUPERVISOR_WAKE_DELIVERY:-initial}" "$$" "$LU_DRIVER_SCOPE_UNIT" >> "$TEST_PHASES"
+  if [ "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" = successor-test ]; then
+    [ "$SESSION_SUPERVISOR_WAKE_STREAM" = epic:5703 ] || exit 98
+    read -r line
+    printf 'SUCCESSOR:%s\\n' "$line"
+    return 0
+  fi
+  source "$LC_ROOT/scripts/lib/session_supervisor.sh"
+  LC_DRIVER_LEASE_CLOSED=1
+  LC_SUPERVISORY_DELIVERY=successor-test
+  SESSION_STREAM_ID=epic:5703
+  session_supervisor_exec_successor
+  printf 'EXEC_RETURNED\\n'
+  exit 99
+}
+""",
+        encoding="utf-8",
+    )
+    result = subprocess.run(
+        [str(launcher)],
+        cwd=launcher.parent,
+        env={**os.environ, **scope_env, "TEST_PHASES": str(phases)},
+        input="stdin survives\n",
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    initial, successor = [line.split() for line in phases.read_text().splitlines()]
+    assert initial[0] == "initial"
+    assert successor[0] == "successor-test"
+    assert initial[1:] == successor[1:]  # Same PID and unit through the exec.
+    assert Path(scope_env["FAKE_STARTS"]).read_text().splitlines() == ["start"]
+    assert result.stderr.count("DRIVER_SCOPE_START ") == 1
+    assert result.stderr.count("DRIVER_SCOPE_VERIFIED ") == 3  # Entry, initial main, successor main.
+    assert result.stdout.count("PREPARED") == 2
+    assert "SUCCESSOR:stdin survives" in result.stdout
+    assert "EXEC_RETURNED" not in result.stdout
 
 
 def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover(

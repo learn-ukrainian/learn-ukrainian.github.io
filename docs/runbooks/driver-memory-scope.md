@@ -20,6 +20,14 @@ user manager/bus and install the unit; do not bypass this boundary. The helper
 derives a missing runtime directory only from the current user's owned logind
 directory and bus socket. Headless tool shells, cron and service callers must
 have access to that user's manager; an inaccessible manager is a refusal.
+Before starting a scope, `lu-driver.slice` must report both `LoadState=loaded`
+and a non-empty `FragmentPath`. A loaded implicit slice with no unit file is
+refused as `slice-not-installed` before preparation or lease acquisition.
+
+SIGQUIT remains ignored throughout the scoped tree because Bash launches the
+scope wrapper as a background job without job control. INT, TERM and HUP are
+forwarded; when trapped, their conventional statuses (130, 143 and 129) replace
+the inner status. An ordinary unsignalled exit preserves the provider's status.
 
 ## Sizing evidence and rule
 
@@ -79,6 +87,8 @@ per-driver ceiling does not establish safe concurrency or a shared-pool cap.
 for a bounded test. High must be positive and strictly below Max; Max and swap
 cannot exceed the configured defaults. Effective values are logged. Changing
 production ceilings requires updating this configuration and its sizing proof.
+Use values aligned to the host's memory page size: the kernel rounds unaligned
+values, and exact read-back verification then refuses them as `limits-mismatch`.
 
 ## Install after review
 
@@ -94,6 +104,8 @@ systemctl --user show lu-driver.slice -p LoadState -p FragmentPath
 No enable step is needed: transient scopes activate the slice. No system unit,
 linger setting, service unit or dispatch limit is changed. No `lu.slice` pool
 cap is included. The accountable driver installs after independent review.
+The read-back must show `LoadState=loaded` and a non-empty `FragmentPath`;
+`LoadState=loaded` alone does not prove that the unit file is installed.
 
 ## Death and admission behavior
 
@@ -106,6 +118,10 @@ existing TTL/expiry path recovers the lease; no early reclaim is introduced.
 Plain dispatch fallback inside a driver scope is refused with
 `fallback-refused: inside-driver-scope`. No harness has a validated bounded
 fallback exemption. Missing caller cgroup evidence also refuses fallback.
+This caller check precedes `allow_fallback`, so missing or unverifiable cgroup
+evidence can refuse fallback even outside a driver scope or hide an earlier
+startup reason. Dispatch records these refusals as `dispatch_fallback_refused`
+with `worker process was not started`, retaining the detail in `stderr_excerpt`.
 Successful dispatch scopes continue under `lu-dispatch.slice`.
 
 The launcher reports live parent `memory.current` and `memory.swap.current`.
