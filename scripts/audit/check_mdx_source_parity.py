@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import functools
+import hashlib
 import os
 import re
 import subprocess
@@ -169,6 +170,68 @@ def is_arc_generated(mdx_path: Path, staged: bool = False) -> bool:
     expected = _arc_generated_files(mdx_path.relative_to(MDX_DIR).parts[0]).get(mdx_path)
     return expected is not None and _page_bytes(mdx_path, staged) == expected.encode("utf-8")
 
+def is_fresh_lesson_path(mdx_path: Path) -> bool:
+    """Fresh lesson pages use ``<level>/<module>/<positive lesson number>.mdx``."""
+    try:
+        parts = mdx_path.relative_to(MDX_DIR).parts
+    except ValueError:
+        return False
+    return len(parts) == 3 and re.fullmatch(r"[1-9][0-9]*\.mdx", parts[-1]) is not None
+
+def is_fresh_generated(mdx_path: Path, staged: bool = False) -> bool:
+    """Verify the engine's hash-bound page snapshot and its current source records.
+
+    ``write_manifest`` keeps the generated MDX snapshot in the evidence state
+    directory. Use that canonical receipt, including staged source bytes during
+    pre-commit; a source change alone cannot authorize hand-edited lesson text.
+    """
+    if not is_fresh_lesson_path(mdx_path):
+        return False
+    level, slug, filename = mdx_path.relative_to(MDX_DIR).parts
+    n = int(Path(filename).stem)
+    state = SOURCE_DIR / "evidence" / level / "_state" / slug
+    manifest_path = state / f"lesson-{n}.manifest.yaml"
+    raw = _page_bytes(manifest_path, staged)
+    digest = _page_bytes(state / f"lesson-{n}.manifest.sha256", staged)
+    if raw is None or digest is None or hashlib.sha256(raw).hexdigest().encode() != digest.strip():
+        return False
+    try:
+        doc = yaml.safe_load(raw)
+        if (doc["kind"], doc["level"], doc["slug"], doc["lesson"]) != ("lesson", level, slug, n):
+            return False
+        inputs = doc["inputs"]
+        page = inputs["lesson"]
+        if page["path"] != mdx_path.relative_to(PROJECT_ROOT).as_posix():
+            return False
+        page_digest = page["sha256"]
+        if re.fullmatch(r"[0-9a-f]{64}", page_digest) is None:
+            return False
+        snapshot = _page_bytes(state / "manifests" / f"lesson-{n}" / f"lesson.{page_digest}.mdx", staged)
+        if snapshot is None or hashlib.sha256(snapshot).hexdigest() != page_digest:
+            return False
+        if _page_bytes(mdx_path, staged) != snapshot:
+            return False
+        # These are the record inputs required to reproduce a fresh lesson.
+        if not {"plan", "pack", "words", "provenance", "lessons_lock"} <= inputs.keys():
+            return False
+        if str(PROJECT_ROOT) not in sys.path:
+            sys.path.insert(0, str(PROJECT_ROOT))
+        from scripts.build.fresh.manifest import pinned_entries
+
+        pins = pinned_entries(inputs)
+        if not {"plan", "pack", "words", "provenance", "lessons_lock", "lesson"} <= {name for name, _pin in pins}:
+            return False
+        for _name, pin in pins:
+            relative = Path(pin["path"])
+            if relative.is_absolute() or ".." in relative.parts:
+                return False
+            data = _page_bytes(PROJECT_ROOT / relative, staged)
+            if data is None or hashlib.sha256(data).hexdigest() != pin["sha256"]:
+                return False
+    except (KeyError, TypeError, ValueError, yaml.YAMLError, AttributeError):
+        return False
+    return True
+
 def has_generator_change(changed_files: set[Path]) -> bool:
     """Return true when the MDX generator itself is part of the change set."""
     for changed_file in changed_files:
@@ -258,6 +321,11 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
                         "scripts/build/build_arc_landing.py generates for that path",
                     )
                 )
+            continue
+
+        if is_fresh_lesson_path(mdx_path):
+            if not is_fresh_generated(mdx_path, staged=cached):
+                violations.append((mdx_path, "fresh lesson differs from its engine snapshot or pinned evidence sources"))
             continue
 
         level = parts[0]
@@ -352,6 +420,10 @@ def main(argv: list[str] | None = None) -> int:
         legacy_levels = get_legacy_levels()
         violations = []
         for mdx_path in MDX_DIR.rglob("*.mdx"):
+            if is_fresh_lesson_path(mdx_path):
+                if not is_fresh_generated(mdx_path):
+                    violations.append((mdx_path, "fresh lesson differs from its engine snapshot or pinned evidence sources"))
+                continue
             rel_path = mdx_path.relative_to(MDX_DIR)
             parts = rel_path.parts
             if len(parts) < 2:
