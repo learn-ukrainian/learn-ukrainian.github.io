@@ -1,0 +1,12 @@
+inputs:
+  allowlist_sha256: 2028c26e492fa76cf7f1103f5aa2a2514ab33100740b4e406f22cc48df5aec85
+  expanded_sha256: d5bf9dec6e1e1d04279faa1d79d79155102d9d2344ee74c19e08753611bf08ee
+  trie_digest: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
+  vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
+  words_lock: 68a3fcc3529a496d56f1f0ad895d857d86738b0e104e6b56873e2a10e2a51988
+lesson:
+  level: a1
+  n: 1
+  slug: sounds-letters-and-hello
+questions: []
+questions_schema: 1

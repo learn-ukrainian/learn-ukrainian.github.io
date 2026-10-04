@@ -1,0 +1,643 @@
+lesson:
+  level: a1
+  n: 1
+  slug: sounds-letters-and-hello
+stressed_schema: 1
+units:
+- activity: null
+  block: 1
+  item: null
+  role: quoted_term
+  step: s1
+  tab: urok
+  text: приві́т
+- activity: null
+  block: 1
+  item: null
+  role: narration
+  step: s1
+  tab: urok
+  text: ' is the informal greeting for a friend or a peer. Meet it by listening first. Listen to the short recording, repeat
+    the whole greeting, then imagine a friend greeting you. Give the same greeting back aloud before looking again. You are
+    practising a first spoken response, without reading individual letters.'
+- activity: null
+  block: 1
+  item: null
+  role: quoted_term
+  step: s2
+  tab: urok
+  text: до́брий день
+- activity: null
+  block: 1
+  item: null
+  role: narration
+  step: s2
+  tab: urok
+  text: ' is the greeting for the formal situations here. Keep the two words together when you repeat it. You can use this
+    greeting at any time of day. Imagine arriving at a hotel reception desk and greeting the receptionist. A teacher is also
+    a formal addressee. With a boss or cashier, choose this greeting instead of the informal peer greeting. Listen, repeat,
+    and say the matching response aloud.'
+- activity: null
+  block: 0
+  item: null
+  role: record_print
+  step: s3
+  tab: urok
+  text: до́брий день!
+- activity: null
+  block: 0
+  item: null
+  role: narration
+  step: s4
+  tab: urok
+  text: Two friends meet at the classroom entrance. Read their exchange with the English support below; you do not need to
+    work out their names letter by letter.
+- activity: null
+  block: dialogue_0
+  item: null
+  role: dialogue_line
+  step: s4
+  tab: urok
+  text: приві́т!
+- activity: null
+  block: dialogue_1
+  item: null
+  role: dialogue_line
+  step: s4
+  tab: urok
+  text: приві́т!
+- activity: null
+  block: dialogue_translation_0
+  item: null
+  role: vesum_exempt
+  step: s4
+  tab: urok
+  text: Hi!
+- activity: null
+  block: dialogue_translation_1
+  item: null
+  role: vesum_exempt
+  step: s4
+  tab: urok
+  text: Hi!
+- activity: null
+  block: 2
+  item: null
+  role: narration
+  step: s4
+  tab: urok
+  text: Compare the peer exchange with the printed greeting above. The printed greeting gives you the spelling, rather than
+    a teacher speaking. The formal situations are greeting a teacher, receptionist, boss or cashier. The formal greeting works
+    at any time of day. Replay both short recordings, then choose for each situation.
+- activity: null
+  block: consolidation_lead_in
+  item: null
+  role: narration
+  step: null
+  tab: urok
+  text: Try the situations below, then say each chosen greeting aloud.
+- activity: a1
+  block: instruction
+  item: null
+  role: instruction
+  step: s1
+  tab: vpravy
+  text: Play the short greeting. Repeat it aloud, then play it again and give the matching response before looking. This is
+    offline speaking practice; your speech is not machine-verified.
+- activity: a1
+  block: explanation
+  item: 0
+  role: instruction
+  step: s1
+  tab: vpravy
+  text: Imagine a friend greeting you and say the same greeting back aloud.
+- activity: a2
+  block: instruction
+  item: null
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Choose the greeting that matches the exchange or the printed card in each situation.
+- activity: a2
+  block: prompt
+  item: 0
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: Two friends greet each other at the classroom entrance. Which greeting do they exchange?
+- activity: a2
+  block: opt_0
+  item: 0
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Добрий день!
+
+    Say this greeting.'
+- activity: a2
+  block: opt_1
+  item: 0
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Привіт!
+
+    Say this greeting.'
+- activity: a2
+  block: explanation
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Match the greeting to the friend exchange.
+- activity: a2
+  block: option_why_0
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This greeting belongs to the separate formal situation, rather than the peer exchange.
+- activity: a2
+  block: option_why_1
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This greeting matches the informal exchange between friends.
+- activity: a2
+  block: prompt
+  item: 1
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: You greet a teacher. Which greeting on the printed card fits this formal situation?
+- activity: a2
+  block: opt_0
+  item: 1
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Добрий день!
+
+    Say this greeting.'
+- activity: a2
+  block: opt_1
+  item: 1
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Привіт!
+
+    Say this greeting.'
+- activity: a2
+  block: explanation
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Use the formal greeting for this situation; the printed card shows its spelling.
+- activity: a2
+  block: option_why_0
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This is the printed greeting used with the formal situations introduced earlier.
+- activity: a2
+  block: option_why_1
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This informal greeting does not fit the formal situation described here.
+- activity: a3
+  block: instruction
+  item: null
+  role: instruction
+  step: s2
+  tab: vpravy
+  text: Play the short formal greeting. Repeat both words together, then imagine the receptionist greeting you and reply aloud.
+    This is offline speaking practice; your speech is not machine-verified.
+- activity: a3
+  block: explanation
+  item: 0
+  role: instruction
+  step: s2
+  tab: vpravy
+  text: Say the whole greeting back to the receptionist, keeping both words together.
+- activity: a4
+  block: instruction
+  item: null
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Replace the informal greeting with the greeting on the printed card that fits the situation.
+- activity: a4
+  block: prompt
+  item: 0
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: 'Someone uses '
+- activity: a4
+  block: prompt
+  item: 0
+  role: quoted_term
+  step: s4
+  tab: vpravy
+  text: приві́т
+- activity: a4
+  block: prompt
+  item: 0
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: ' to greet a boss. Which greeting from the printed card repairs the choice?'
+- activity: a4
+  block: opt_0
+  item: 0
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Привіт!
+
+    Say this greeting.'
+- activity: a4
+  block: opt_1
+  item: 0
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Добрий день!
+
+    Say this greeting.'
+- activity: a4
+  block: explanation
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Use the formal greeting for this situation; the printed card shows its spelling.
+- activity: a4
+  block: option_why_0
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This informal greeting does not fit the formal situation described here.
+- activity: a4
+  block: option_why_1
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This is the printed greeting used with the formal situations introduced earlier.
+- activity: a4
+  block: prompt
+  item: 1
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: 'Someone uses '
+- activity: a4
+  block: prompt
+  item: 1
+  role: quoted_term
+  step: s4
+  tab: vpravy
+  text: приві́т
+- activity: a4
+  block: prompt
+  item: 1
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: ' to greet a cashier. Which greeting from the printed card repairs the choice?'
+- activity: a4
+  block: opt_0
+  item: 1
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Добрий день!
+
+    Say this greeting.'
+- activity: a4
+  block: opt_1
+  item: 1
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Привіт!
+
+    Say this greeting.'
+- activity: a4
+  block: explanation
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Use the formal greeting for this situation; the printed card shows its spelling.
+- activity: a4
+  block: option_why_0
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This is the printed greeting used with the formal situations introduced earlier.
+- activity: a4
+  block: option_why_1
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This informal greeting does not fit the formal situation described here.
+- activity: a5
+  block: instruction
+  item: null
+  role: instruction
+  step: null
+  tab: vpravy
+  text: Choose for each new meeting. Use the friend exchange or the printed card, then practise the greeting aloud.
+- activity: a5
+  block: prompt
+  item: 0
+  role: item_prompt
+  step: null
+  tab: vpravy
+  text: A friend greets you before class. Which greeting from the peer exchange fits your reply?
+- activity: a5
+  block: opt_0
+  item: 0
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Привіт!
+
+    Say this greeting.'
+- activity: a5
+  block: opt_1
+  item: 0
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Добрий день!
+
+    Say this greeting.'
+- activity: a5
+  block: explanation
+  item: 0
+  role: instruction
+  step: null
+  tab: vpravy
+  text: Match the greeting to the friend exchange.
+- activity: a5
+  block: option_why_0
+  item: 0
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This greeting matches the informal exchange between friends.
+- activity: a5
+  block: option_why_1
+  item: 0
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This greeting belongs to the separate formal situation, rather than the peer exchange.
+- activity: a5
+  block: prompt
+  item: 1
+  role: item_prompt
+  step: null
+  tab: vpravy
+  text: You arrive at a hotel and greet the receptionist. Which greeting from the printed card fits?
+- activity: a5
+  block: opt_0
+  item: 1
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Добрий день!
+
+    Say this greeting.'
+- activity: a5
+  block: opt_1
+  item: 1
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Привіт!
+
+    Say this greeting.'
+- activity: a5
+  block: explanation
+  item: 1
+  role: instruction
+  step: null
+  tab: vpravy
+  text: Use the formal greeting for this situation; the printed card shows its spelling.
+- activity: a5
+  block: option_why_0
+  item: 1
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This is the printed greeting used with the formal situations introduced earlier.
+- activity: a5
+  block: option_why_1
+  item: 1
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This informal greeting does not fit the formal situation described here.
+- activity: a5
+  block: prompt
+  item: 2
+  role: item_prompt
+  step: null
+  tab: vpravy
+  text: You greet your boss at the start of a meeting. Which greeting from the printed card fits?
+- activity: a5
+  block: opt_0
+  item: 2
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Привіт!
+
+    Say this greeting.'
+- activity: a5
+  block: opt_1
+  item: 2
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Добрий день!
+
+    Say this greeting.'
+- activity: a5
+  block: explanation
+  item: 2
+  role: instruction
+  step: null
+  tab: vpravy
+  text: Use the formal greeting for this situation; the printed card shows its spelling.
+- activity: a5
+  block: option_why_0
+  item: 2
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This informal greeting does not fit the formal situation described here.
+- activity: a5
+  block: option_why_1
+  item: 2
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This is the printed greeting used with the formal situations introduced earlier.
+- activity: a5
+  block: prompt
+  item: 3
+  role: item_prompt
+  step: null
+  tab: vpravy
+  text: You enter the classroom and greet the teacher. Which greeting from the printed card fits?
+- activity: a5
+  block: opt_0
+  item: 3
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Добрий день!
+
+    Say this greeting.'
+- activity: a5
+  block: opt_1
+  item: 3
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Привіт!
+
+    Say this greeting.'
+- activity: a5
+  block: explanation
+  item: 3
+  role: instruction
+  step: null
+  tab: vpravy
+  text: Use the formal greeting for this situation; the printed card shows its spelling.
+- activity: a5
+  block: option_why_0
+  item: 3
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This is the printed greeting used with the formal situations introduced earlier.
+- activity: a5
+  block: option_why_1
+  item: 3
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This informal greeting does not fit the formal situation described here.
+- activity: null
+  block: core_W-074
+  item: null
+  role: record_print
+  step: null
+  tab: slovnyk
+  text: приві́т
+- activity: null
+  block: core_W-075
+  item: null
+  role: record_print
+  step: null
+  tab: slovnyk
+  text: до́брий
+- activity: null
+  block: core_W-076
+  item: null
+  role: record_print
+  step: null
+  tab: slovnyk
+  text: день
+- activity: null
+  block: inc_W-091
+  item: null
+  role: record_print
+  step: null
+  tab: slovnyk
+  text: Ні́на
+- activity: null
+  block: inc_W-093
+  item: null
+  role: record_print
+  step: null
+  tab: slovnyk
+  text: Іва́н
+- activity: null
+  block: res_T-002
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast — Анна Огойко
+- activity: null
+  block: res_T-003
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast — Анна Огойко
+- activity: null
+  block: res_T-020
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast — Анна Огойко
+- activity: null
+  block: res_T-021
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast — Анна Огойко
+- activity: null
+  block: res_T-041
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast — Анна Огойко
+- activity: null
+  block: res_T-040
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Жаркова, «Я досліджую світ», 1 клас, ч. 1, 2024, с. 25
+- activity: null
+  block: res_T-035
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 31
+- activity: null
+  block: res_V-001
+  item: null
+  role: record_print
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast
+- activity: null
+  block: res_V-002
+  item: null
+  role: record_print
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast

@@ -1,0 +1,26 @@
+attempts:
+- at: '2026-10-04T04:23:07.053007Z'
+  attempt: 1
+  code: '5'
+  failed_check: 5
+  inputs:
+    card_sha256: 89c5a4cfcc9387ab968ca99d0402faaabf645d7fb07c7ec03f9498e13fbb24e0
+    pack_lock: 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46
+    plan_sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+    prompt_sha256: b3e2b92fb97cfc13e58dd6d9200592f42849517815c12a07b5a8062a0d41dbed
+    words_lock: 68a3fcc3529a496d56f1f0ad895d857d86738b0e104e6b56873e2a10e2a51988
+  reason: 'internal_learner_term: build/process term: chunk'
+last_success:
+  at: '2026-10-04T04:30:35.824460Z'
+  inputs:
+    card_sha256: 89c5a4cfcc9387ab968ca99d0402faaabf645d7fb07c7ec03f9498e13fbb24e0
+    draft_sha256: 25af265a45a1a0c327e3e52ac166f3dbf2fd2293589d67420b86f25130a5dde7
+    pack_lock: 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46
+    plan_sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+    prompt_sha256: b3e2b92fb97cfc13e58dd6d9200592f42849517815c12a07b5a8062a0d41dbed
+    words_lock: 68a3fcc3529a496d56f1f0ad895d857d86738b0e104e6b56873e2a10e2a51988
+  through_check: 12
+n: 1
+regenerations: 1
+slug: sounds-letters-and-hello
+terminal_layer: null

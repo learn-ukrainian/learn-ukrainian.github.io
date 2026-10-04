@@ -1,0 +1,61 @@
+lesson:
+  level: a1
+  n: 2
+  slug: sounds-letters-and-hello
+observed_schema: 1
+records:
+- forms:
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 0
+      urok: 1
+      vpravy: 0
+    tags: noun:inanim:m:v_naz
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 0
+      urok: 1
+      vpravy: 0
+    tags: noun:inanim:m:v_zna
+  id: W-074
+  role: recycled
+- forms:
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 0
+      urok: 1
+      vpravy: 0
+    tags: adj:m:v_kly:compb
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 0
+      urok: 1
+      vpravy: 0
+    tags: adj:m:v_naz:compb
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 0
+      urok: 1
+      vpravy: 0
+    tags: adj:m:v_zna:rinanim:compb
+  id: W-075
+  role: recycled
+- forms:
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 0
+      urok: 1
+      vpravy: 0
+    tags: noun:inanim:m:v_naz
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 0
+      urok: 1
+      vpravy: 0
+    tags: noun:inanim:m:v_zna
+  id: W-076
+  role: recycled
+untaught_forms:
+  count: 0
+  forms: []
+  share: 0.0

@@ -1,0 +1,29 @@
+closure_schema: 1
+lessons:
+- current_manifest_sha256: 65a48518ddb2eeea575ca98e668bc56505779b82b803036911e61613cc658472
+  kind: lesson
+  lesson_sha256: 2823f943170f3ddc3925e94af414ffc4ca21ac5ec3538bef9a2e62883b6c2289
+  n: 1
+- current_manifest_sha256: null
+  kind: lesson
+  lesson_sha256: 3d361e23e41a9b11cb955e8a325568bb487ac7b8d6c45679398b67e095ab6063
+  n: 2
+- current_manifest_sha256: null
+  kind: lesson
+  lesson_sha256: null
+  n: 3
+- current_manifest_sha256: null
+  kind: lesson
+  lesson_sha256: null
+  n: 4
+- current_manifest_sha256: null
+  kind: lesson
+  lesson_sha256: null
+  n: 5
+- current_manifest_sha256: null
+  kind: recap
+  lesson_sha256: null
+  n: 6
+level: a1
+slug: sounds-letters-and-hello
+stale: []
