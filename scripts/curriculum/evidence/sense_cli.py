@@ -37,60 +37,39 @@ def select_store(
     key: bytes | None = None,
     key_id: str | None = None,
 ) -> tuple[dict[str, dict], list[dict]]:
-    """Measure without publishing private input, including repeated reference entries."""
+    """Anna's dictionary chooses the English of each word it prints; formulas take their printed row.
+
+    Diagnostics carry ids and public locators only.
+    """
     words = [w for w in store["words"] if w.get("kind") != "formula"]
     rows = api.gloss_rows((w["lemma"], w["pos"]) for w in words).raw
     kaikki = api.kaikki_rows(w["lemma"] for w in words).raw
-    ulif = api.ulif_entries(w["lemma"] for w in words).raw
     context = bindings.Context(store["level"], {}, inventory)
     selected, decisions = {}, []
     for word in words:
-        members = context.members(word)
+        # The private printed label and the public inventory headword must both be the lemma.
+        members = [
+            m
+            for m in context.labelled(word)
+            if bindings.printed_headword(private[m["locator"]]["printed_label"]) == word["lemma"]
+        ]
         if not members:
             decisions.append({"word": word["id"], "reason": "reference_non_member"})
             continue
-        report = {"unknown_label_spans": 0, "uncertain_scope_spans": 0}
-        results = [
-            (
-                member,
-                matcher.select(
-                    word,
-                    rows.get((word["lemma"], word["pos"]), []),
-                    private[member["locator"]]["meaning"],
-                    kaikki.get(word["lemma"]),
-                    ulif_entries=ulif.get(word["lemma"], []),
-                    report=report,
-                ),
-            )
-            for member in members
-        ]
-        successful = [r for _, r in results if r.ref]
-        if len(successful) == len(results) and len({matcher.signature(r.candidates[0]) for r in successful}) == 1:
-            member, result = min(
-                results,
-                key=lambda pair: (
-                    pair[1].ref["id"],
-                    pair[1].ref["span_index"],
-                    pair[1].ref["atom_index"],
-                    pair[0]["locator"],
-                ),
-            )
-            decisions.append(
-                {"word": word["id"], **{k: result.ref[k] for k in ("id", "span_index", "atom_index")}, **report}
-            )
-            if key is not None and key_id:
-                selected[word["id"]] = bindings.reference_binding(
-                    word, result.ref, private[member["locator"]], key, key_id
-                )
-        else:
-            reason = (
-                "reference_no_match"
-                if all(r.reason == "reference_no_match" for _, r in results)
-                else results[0][1].reason
-                if len(results) == 1
-                else "reference_ambiguous"
-            )
-            decisions.append({"word": word["id"], "reason": reason or "reference_ambiguous", **report})
+        result = bindings.book_choice(
+            word,
+            rows.get((word["lemma"], word["pos"]), []),
+            kaikki.get(word["lemma"]),
+            [private[m["locator"]]["meaning"] for m in members],
+        )
+        if result is None:
+            decisions.append({"word": word["id"], "reason": "reference_no_gloss"})
+            continue
+        choice, index = result
+        member = members[index]
+        decisions.append({"word": word["id"], "match": choice["match"], "locator": member["locator"]})
+        if key is not None and key_id:
+            selected[word["id"]] = bindings.book_binding(word, choice, private[member["locator"]], key, key_id)
     records = {w["id"]: w for w in store["words"]}
     for word in store["words"]:
         if word.get("kind") != "formula":
@@ -106,18 +85,45 @@ def select_store(
 
 
 def _redact_validated_locations(
-    content: bytes, context: bindings.Context, words: dict, api: sources.Sources, *, kind: str
+    content: bytes,
+    context: bindings.Context,
+    words: dict,
+    api: sources.Sources,
+    *,
+    kind: str,
+    public: dict[str, set[str]] | None = None,
 ) -> bytes:
-    """Redact validated scalar nodes only, preserving every other occurrence."""
+    """Redact validated scalar nodes only, preserving every other occurrence.
+
+    ``public`` maps a word id to the open-dictionary atoms and spans of that
+    record's own lemma. A store gloss equal to one of them, at the location the
+    selector validates, is public even when another lemma's private entry shares
+    the English.
+    """
     if kind not in {"bindings", "words"}:
         return content
     try:
         text = content.decode("utf-8")
-        # Aliases can point outside the allowed location, and duplicate keys
-        # make the parsed value's origin ambiguous. Neither receives exemptions.
-        if any(isinstance(event, yaml.AliasEvent) for event in yaml.parse(text)):
-            return content
         tree = yaml.compose(text)
+        # An alias repeats its anchor's value outside the allowed location, so a
+        # node reached more than once (directly or inside an aliased subtree) is
+        # never exempt. Unrelated aliases elsewhere in the file void nothing.
+        reached = Counter()
+
+        def reach(node, ancestors: frozenset[int] = frozenset()) -> None:
+            reached[id(node)] += 1
+            if id(node) in ancestors:
+                return
+            inner = ancestors | {id(node)}
+            if isinstance(node, yaml.SequenceNode):
+                for child in node.value:
+                    reach(child, inner)
+            elif isinstance(node, yaml.MappingNode):
+                for key, value in node.value:
+                    reach(key, inner)
+                    reach(value, inner)
+
+        reach(tree)
 
         def mapping(node):
             if not isinstance(node, yaml.MappingNode):
@@ -138,24 +144,37 @@ def _redact_validated_locations(
             wid = entry.get("word" if kind == "bindings" else "id")
             word = words.get(wid)
             binding = context.entries.get(wid)
-            if not word or not binding:
+            own_public = (public or {}).get(wid, set())
+            if not word or not (binding or (kind == "words" and own_public)):
                 continue
             row = bindings.rows_for(word, api)
-            selection = context.select(word, row, None)
+            payload_row = (
+                None if word.get("kind") == "formula" else api.kaikki_rows([word["lemma"]]).raw.get(word["lemma"])
+            )
+            selection = context.select(word, row, payload_row)
             if selection.gloss is None:
                 continue
-            allowed = []
-            if kind == "bindings" and entry == binding:
-                allowed.append(fields["span"])
-            elif (
+            validated = (
                 kind == "words"
-                and entry.get("gloss_en") == binding["span"]
+                and entry.get("gloss_en") == selection.gloss
                 and entry.get("gloss_ref") == selection.ref
-                and entry.get("gloss_basis") == context.basis(wid)
-            ):
-                allowed.extend([fields["gloss_en"], mapping(fields["gloss_ref"])["span"]])
-            for scalar in allowed:
-                if not isinstance(scalar, yaml.ScalarNode) or scalar.value != binding["span"]:
+                and entry.get("gloss_basis") == selection.basis
+            )
+            # (scalar node, the only value it may hold)
+            allowed = []
+            if binding:
+                # A dictionary binding shows its atom (``span``); Anna's binding shows its ``gloss``.
+                shown_field = "span" if "span" in binding else "gloss"
+                if kind == "bindings" and entry == binding:
+                    allowed.append((fields[shown_field], binding[shown_field]))
+                elif validated and binding[shown_field] == selection.gloss and selection.basis is not None:
+                    allowed.append((fields["gloss_en"], binding[shown_field]))
+            if not allowed and validated and matcher.normalize(selection.gloss, word["pos"]) in own_public:
+                allowed.append((fields["gloss_en"], selection.gloss))
+            if allowed and kind == "words" and isinstance(selection.ref, dict) and "span" in selection.ref:
+                allowed.append((mapping(fields["gloss_ref"])["span"], allowed[0][1]))
+            for scalar, value in allowed:
+                if not isinstance(scalar, yaml.ScalarNode) or scalar.value != value or reached[id(scalar)] != 1:
                     return content
                 ranges.append((scalar.start_mark.index, scalar.end_mark.index))
         for start, end in sorted(ranges, reverse=True):
@@ -289,41 +308,50 @@ def leak_scan(
         "commit_count": int(bindings.git(repo, "rev-list", "--count", f"{merge_base}..{head}")),
     }
     words = {w["id"]: w for w in store["words"]}
+    lexical = {wid: w for wid, w in words.items() if w.get("kind") != "formula"}
     entries = {row["locator"]: row for row in context.inventory}
+    record_lemmas = {sources.unstressed_headword(w["lemma"]): w["lemma"] for w in lexical.values()}
     lemmas = {sources.unstressed_headword(row["lemma"]) for row in entries.values()}
-    public_atoms, public_spans = {}, {}
+    open_spans = {}
     positions = {sources.unstressed_headword(row["lemma"]): row.get("pos", "noun") for row in entries.values()}
-
-    def remember(lemma: str, span: str, whole: str):
-        pos = positions[lemma]
-        public_spans.setdefault(lemma, set()).update((matcher.normalize(span, pos), matcher.normalize(whole, pos)))
-        public_atoms.setdefault(lemma, set()).update(
-            matcher.normalize(a, pos) for a in matcher.source_atoms(sources._gloss_head(span))
-        )
-        group = matcher.classify(span)
-        if not group.reason:
-            public_atoms[lemma].update(matcher.normalize(a, pos) for a in matcher.source_atoms(group.head))
 
     # Leak exemptions consider every open row for the lemma, including senses
     # that the learner selector would withhold for POS or annotation reasons.
     for raw in api._db().execute("SELECT * FROM dmklinger_uk_en"):
         row = dict(raw)
         lemma = sources.unstressed_headword(row["word"])
-        if lemma not in lemmas:
+        if lemma not in lemmas and lemma not in record_lemmas:
             continue
-        for span, whole in matcher.row_spans(row):
-            remember(lemma, span, whole)
-    for lemma, payload in api.kaikki_rows(row["lemma"] for row in entries.values()).raw.items():
+        open_spans.setdefault(lemma, []).extend(matcher.row_spans(row))
+    kaikki_lemmas = [row["lemma"] for row in entries.values()] + list(record_lemmas.values())
+    for lemma, payload in api.kaikki_rows(dict.fromkeys(kaikki_lemmas)).raw.items():
         lemma = sources.unstressed_headword(lemma)
         for whole in (payload or {}).get("glosses", []):
             if isinstance(whole, str):
                 for part in sources._sub_senses(whole):
-                    for span in sources._sense_spans(part):
-                        remember(lemma, span, whole)
+                    open_spans.setdefault(lemma, []).extend((span, whole) for span in sources._sense_spans(part))
+
+    def public(lemma: str, pos: str) -> tuple[set[str], set[str]]:
+        """Normalized open-dictionary atoms and spans of one lemma."""
+        atoms, spans = set(), set()
+        for span, whole in open_spans.get(lemma, ()):
+            spans.update((matcher.normalize(span, pos), matcher.normalize(whole, pos)))
+            atoms.update(matcher.normalize(a, pos) for a in matcher.source_atoms(sources._gloss_head(span)))
+            group = matcher.classify(span)
+            if not group.reason:
+                atoms.update(matcher.normalize(a, pos) for a in matcher.source_atoms(group.head))
+        return atoms, spans
+
+    public_atoms, public_spans = {}, {}
+    for lemma in lemmas:
+        public_atoms[lemma], public_spans[lemma] = public(lemma, positions[lemma])
+    # A store gloss is public when it is an open atom or span of its own record's lemma.
+    # A formula's gloss is exempt only through its validated binding.
+    record_public = {
+        wid: set().union(*public(sources.unstressed_headword(w["lemma"]), w["pos"])) for wid, w in lexical.items()
+    }
     forms = {}
-    for word in words.values():
-        if word.get("kind") == "formula":
-            continue
+    for word in lexical.values():
         forms.setdefault(sources.unstressed_headword(word["lemma"]), set()).update(
             _scan_normalize(variant)
             for v in (word["lemma"], *(f["form"] for f in word.get("forms", []) if f.get("form")))
@@ -402,7 +430,7 @@ def leak_scan(
             "bindings" if path == prefix + bindings.BINDINGS else "words" if path == prefix + "_words.yaml" else "other"
         )
         scan(
-            _redact_validated_locations(content, context, words, api, kind=kind),
+            _redact_validated_locations(content, context, words, api, kind=kind, public=record_public),
             path,
             "committed_files",
             gate=path in gate_paths,
@@ -642,7 +670,7 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                     if current != binding:
                         raise ValueError("review_subject_stale_or_unapproved")
                     selected.pop(wid, None)
-                expected = {k: v for k, v in context.entries.items() if v["method"] == matcher.METHOD}
+                expected = {k: v for k, v in context.entries.items() if v["method"] == bindings.BOOK_METHOD}
                 if selected != expected:
                     raise ValueError("reference_binding_reselection_failed")
                 pr_text = None
@@ -691,10 +719,10 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                 json.dumps(
                     {
                         "decisions": decisions,
-                        "resolved": sum("id" in d for d in decisions),
+                        # A lexical choice names its match; a formula choice names its row coordinates.
+                        "resolved": sum("match" in d or "id" in d for d in decisions),
+                        "book_glosses": sum(d.get("match") == "book" for d in decisions),
                         "total": len(decisions),
-                        "unknown_label_spans": sum(d.get("unknown_label_spans", 0) for d in decisions),
-                        "uncertain_scope_spans": sum(d.get("uncertain_scope_spans", 0) for d in decisions),
                     },
                     ensure_ascii=False,
                 )

@@ -81,7 +81,7 @@ def bind(word, api, tmp_path):
             "gloss_en": selected.gloss,
             "gloss_source": selected.source,
             "gloss_ref": selected.ref,
-            "gloss_basis": context.basis(word["id"]),
+            "gloss_basis": selected.basis,
         },
         context,
         pool,
@@ -399,6 +399,20 @@ def test_A7_formula_binding_preserved_and_checked(api, tmp_path, monkeypatch, ca
         == 0
     )
     assert bindings.load(tmp_path / bindings.BINDINGS, "a1") == context.entries
+
+
+def test_formula_selection_carries_its_basis_and_local_proof(api, tmp_path):
+    word, context, _ = bind(formula(), api, tmp_path)
+    selected = context.select(word, api.formula_rows(word).raw, None)
+    assert selected.basis == {"method": formulas.METHOD, "binding": f"{bindings.BINDINGS}#{word['id']}"}
+    binding = context.entries[word["id"]]
+    # A coordinate-only formula needs no receipt; one committed to the book does.
+    assert bindings.local_proof(binding) is None
+    committed = {**binding, "inventory": bindings.INVENTORY, "locator": "p1#1", "commitment": "0" * 64, "key_id": "k"}
+    assert bindings.local_proof(committed) == "private_commitment"
+    assert bindings.local_proof({"method": bindings.BOOK_METHOD}) == "private_commitment"
+    assert bindings.local_proof({"method": "reviewed.v1"}) == "review_provenance"
+    assert bindings.local_proof({}) is None
 
 
 def test_formula_public_verifier_checks_coordinates_without_review(api, tmp_path, monkeypatch):

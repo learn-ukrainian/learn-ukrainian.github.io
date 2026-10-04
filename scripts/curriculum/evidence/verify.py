@@ -220,13 +220,13 @@ def verify_words_store(
                         word.get("gloss_en") != selection.gloss
                         or word.get("gloss_ref") != selection.ref
                         or word.get("gloss_source") != selection.source
-                        or word.get("gloss_basis") != (binding_context.basis(word["id"]) if selection.gloss else None)
+                        or word.get("gloss_basis") != selection.basis
                     ):
                         errors.append(f"{word['id']}: formula_binding_invalid")
-                    binding = binding_context.entries.get(word["id"], {})
-                    if "commitment" in binding:
+                    unchecked = sense_bindings.local_proof(binding_context.entries.get(word["id"], {}))
+                    if unchecked:
                         warnings.append(f"{word['id']}: {sense_bindings.CI_NOTICE}")
-                        not_checked.append(f"{word['id']}:private_commitment")
+                        not_checked.append(f"{word['id']}:{unchecked}")
                 except (ValueError, OSError, KeyError) as exc:
                     errors.append(f"{word['id']}: {exc}")
                 continue
@@ -289,18 +289,14 @@ def verify_words_store(
                 pronoun_entry=pronoun_entry,
                 ulif_entries=sources_instance.ulif_entries([lemma]).raw.get(lemma, []),
             )
-            if selection.reason == "reference_binding_invalid" or (
-                selection.reason == "reference_binding_missing" and word.get("gloss_en")
-            ):
+            if selection.reason == "reference_binding_invalid":
                 errors.append(f"{codes.GLOSS_MISMATCH}: {word_id}: {selection.reason}")
-            elif selection.reason == "reference_binding_missing":
-                warnings.append(f"{word_id}: reference_binding_missing")
-            if word.get("gloss_basis") != binding_context.basis(word_id):
+            if word.get("gloss_basis") != selection.basis:
                 errors.append(f"{codes.GLOSS_MISMATCH}: {word_id}: binding_basis_mismatch")
             method = binding_context.entries.get(word_id, {}).get("method")
-            if method in {"a1_reference_meaning.v1", "reviewed.v1"}:
+            if method in sense_bindings.LOCAL_PROOF_METHODS:
                 warnings.append(f"{word_id}: {sense_bindings.CI_NOTICE}")
-                unchecked = "private_commitment" if method == "a1_reference_meaning.v1" else "review_provenance"
+                unchecked = sense_bindings.LOCAL_PROOF_METHODS[method]
                 not_checked.append(f"{word_id}:{unchecked}")
             expected_gloss = selection.gloss
             expected_gloss_source = selection.source
@@ -542,7 +538,10 @@ def verify_words_store(
             "sources_db_scheme": scheme,
             "cited_rows_drifted_words": rows_drifted_total,
             "private_commitments": {"status": "unverifiable_in_ci", "local_receipt_required": True}
-            if any(w.get("gloss_basis", {}).get("method") == "a1_reference_meaning.v1" for w in words_list)
+            if any(
+                sense_bindings.LOCAL_PROOF_METHODS.get(w.get("gloss_basis", {}).get("method")) == "private_commitment"
+                for w in words_list
+            )
             else {"status": "not_applicable"},
             "not_checked": not_checked,
             "snapshot": sources_instance.snapshot_report(),
@@ -727,17 +726,12 @@ def verify_plan_glosses(
             and stored
             and (
                 stored != selection.gloss
-                or word.get("gloss_basis") != binding_context.basis(wid)
+                or word.get("gloss_basis") != selection.basis
                 or (selection.ref and selection.ref.get("span") and word.get("gloss_ref") != selection.ref)
             )
         ):
             errors.append(f"{codes.GLOSS_MISMATCH}: {label}: selected_gloss_changed")
-        if selection.reason in {
-            "reference_binding_missing",
-            "reference_binding_invalid",
-            "formula_binding_missing",
-            "formula_binding_invalid",
-        }:
+        if selection.reason in {"reference_binding_invalid", "formula_binding_missing", "formula_binding_invalid"}:
             errors.append(f"{codes.GLOSS_MISSING}: {label}: {selection.reason}")
         elif selection.reason == codes.GLOSS_SENSE_UNRESOLVED:
             errors.append(f"{codes.GLOSS_SENSE_UNRESOLVED}: {label}: candidates={list(selection.candidates)!r}")
@@ -961,17 +955,9 @@ def verify_pack(
                         raise ValueError("word store must be a mapping")
                     context = sense_bindings.Context.read(level, evidence_base)
                     for wid in sorted(cited_gloss_ids(plan_doc)):
-                        binding = context.entries.get(wid, {})
-                        method = binding.get("method")
-                        if method in {"a1_reference_meaning.v1", "reviewed.v1"} or (
-                            method == "formula_row.v1" and "commitment" in binding
-                        ):
+                        unchecked = sense_bindings.local_proof(context.entries.get(wid, {}))
+                        if unchecked:
                             warnings.append(f"{level}/{slug} {wid}: {sense_bindings.CI_NOTICE}")
-                            unchecked = (
-                                "private_commitment"
-                                if method in {"a1_reference_meaning.v1", "formula_row.v1"}
-                                else "review_provenance"
-                            )
                             not_checked.append(f"{wid}:{unchecked}")
                     errors.extend(
                         verify_plan_glosses(

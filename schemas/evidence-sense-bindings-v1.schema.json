@@ -26,6 +26,7 @@
             "enum": [
               "a1_reference_meaning.v1",
               "reviewed.v1",
+              "ohoiko_reference",
               "formula_row.v1"
             ]
           },
@@ -48,6 +49,17 @@
             "type": "string",
             "minLength": 1,
             "description": "The binding certifies the displayed open-dictionary atom and matching restricting labels. A trailing definition is retained in the source signature but is not compared to the reference meaning. Multi-head references are never accepted under v1 because that signature includes the atom."
+          },
+          "gloss": {
+            "type": "string",
+            "minLength": 1,
+            "description": "ohoiko_reference only: the English shown to the learner. With match dictionary it is an open-dictionary candidate's displayed gloss; with match book it is the A1 reference dictionary's own short gloss, the only private text a binding may carry."
+          },
+          "match": {
+            "enum": [
+              "dictionary",
+              "book"
+            ]
           },
           "inventory": {
             "const": "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml"
@@ -130,16 +142,92 @@
         },
         "required": [
           "word",
-          "method",
-          "table",
-          "id",
-          "row_sha256",
-          "span_index",
-          "span",
-          "atom_index"
+          "method"
         ],
         "additionalProperties": false,
         "allOf": [
+          {
+            "if": {
+              "properties": {
+                "method": {
+                  "const": "ohoiko_reference"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "gloss",
+                "match",
+                "inventory",
+                "locator",
+                "commitment",
+                "key_id"
+              ],
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "table"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "id"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "row_sha256"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "span_index"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "span"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "atom_index"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "reviewer"
+                    ]
+                  }
+                ]
+              }
+            },
+            "else": {
+              "required": [
+                "table",
+                "id",
+                "row_sha256",
+                "span_index",
+                "span",
+                "atom_index"
+              ],
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "gloss"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "match"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
           {
             "if": {
               "properties": {
