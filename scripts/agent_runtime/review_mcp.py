@@ -789,7 +789,7 @@ def prepare_review_attempt(
     if not isinstance(attempt_id, str) or not _TOKEN_RE.match(attempt_id):
         raise ValueError(f"invalid attempt_id: must match {_TOKEN_RE.pattern} (got {_describe_identifier(attempt_id)})")
 
-    review_tools(review_access)  # Validate before reserving files or an attempt id.
+    python_bin, sources_server = sources_server_launch()
     canonical_harness = (harness or "").lower().strip()
     if canonical_harness in UNSUPPORTED_HARNESS_REASONS:
         raise ValueError(
@@ -810,7 +810,6 @@ def prepare_review_attempt(
 
     # Primary checkout root: resolved via repository helper scripts.common.repo_root
     primary_root = review_server_checkout()
-    python_bin, sources_server = sources_server_launch()
 
     # The receipts root (default or explicit) is the trust anchor: verified itself, with
     # everything below it walked no-follow. Its ancestors are followed by design.
@@ -839,6 +838,31 @@ def prepare_review_attempt(
         # Admission checked the primary earlier in the dispatch; the seat launches what is on disk now (#9163).
         check_launch_contract(review_contract, primary_root, python_bin)
 
+    def _already_exists() -> FileExistsError:
+        return FileExistsError(
+            f"review attempt {_echo_identifier(attempt_id)!r} already exists for review {_echo_identifier(review_id)!r}"
+        )
+
+    existing = [ledger_name, sidecar_name, config_name]
+    existing += [home.name for home in (codex_home, agy_home) if home is not None]
+    # Preserve specific directory and duplicate-attempt refusals before server
+    # validation, without provisioning anything for an invalid launch. The
+    # creation pass below repeats these checks to handle concurrent attempts.
+    try:
+        existing_fd = _open_attempt_dir(review_dir)
+    except FileNotFoundError:
+        pass
+    else:
+        try:
+            if any(_lexists(name, existing_fd) for name in existing):
+                raise _already_exists()
+        finally:
+            os.close(existing_fd)
+
+    # Bind validation and configuration to one launch resolution before
+    # creating artifacts. Worktree declarations cannot authorize another server.
+    review_tools(review_access, server_path=sources_server)
+
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
     config_payload = sources_mcp_config(
         python_bin,
@@ -866,15 +890,8 @@ def prepare_review_attempt(
                 else:
                     os.unlink(name, dir_fd=review_fd)
 
-    def _already_exists() -> FileExistsError:
-        return FileExistsError(
-            f"review attempt {_echo_identifier(attempt_id)!r} already exists for review {_echo_identifier(review_id)!r}"
-        )
-
     try:
         # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
-        existing = [ledger_name, sidecar_name, config_name]
-        existing += [home.name for home in (codex_home, agy_home) if home is not None]
         if any(_lexists(name, review_fd) for name in existing):
             raise _already_exists()
 

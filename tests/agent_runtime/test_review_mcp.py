@@ -46,6 +46,7 @@ from scripts.agent_runtime.review_mcp import (
     verify_codex_review_effective_mcp,
     verify_review_attempt_paths,
 )
+from scripts.agent_runtime.sources_read_only import SERVER_PATH
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.review import render_contract
@@ -2712,7 +2713,7 @@ def test_prepare_refuses_a_server_changed_since_admission_before_writing_anythin
     primary = tmp_path / "primary"
     server = primary / ".mcp" / "servers" / "sources" / "server.py"
     server.parent.mkdir(parents=True)
-    server.write_text("import json\nprint('receipt: <id>')\n", encoding="utf-8")
+    server.write_bytes(SERVER_PATH.read_bytes())
     (primary / render_contract.LOCK_FILE).write_text("anyio==4.15.1\n", encoding="utf-8")
     monkeypatch.setattr(review_mcp_module, "resolve_repo_root", lambda *_args: primary)
     python = project_interpreter()  # what prepare writes into the config
@@ -2754,6 +2755,9 @@ def test_prepare_refuses_a_server_changed_since_admission_before_writing_anythin
 def test_default_root_uses_the_same_root_check(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    server = tmp_path / ".mcp" / "servers" / "sources" / "server.py"
+    server.parent.mkdir(parents=True)
+    server.write_bytes(SERVER_PATH.read_bytes())
     monkeypatch.setattr(review_mcp_module, "resolve_repo_root", lambda *_args: tmp_path)
     kwargs = {"review_id": "rev-x-001", "attempt_id": "att-x-001", "manifest_path": manifest_file, "harness": "codex"}
     plan = prepare_review_attempt(**kwargs)

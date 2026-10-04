@@ -37,12 +37,15 @@ import json as _json
 import logging
 import os
 import re
+import selectors
 import shutil
+import subprocess
 import tempfile
+import time
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
 from scripts.review.receipts.ledger import review_tools
@@ -61,10 +64,143 @@ from .codex_events import (
     tool_calls_from_items,
 )
 
+if TYPE_CHECKING:
+    from scripts.review.isolation import SandboxCapability
+
 _logger = logging.getLogger(__name__)
 
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 _EXCERPT_CHARS = 500
+
+
+class CodexReviewConfigError(ValueError):
+    """A review's config provenance cannot establish its MCP boundary."""
+
+
+def _codex_config_layers(
+    binary: str, cwd: Path, home: str, *, env: dict[str, str] | None = None, sandbox: SandboxCapability | None = None
+) -> list[dict]:
+    """Read native layer provenance without starting a model turn.
+
+    Installed ``codex exec --help``: ``--ignore-user-config`` means
+    "Do not load `$CODEX_HOME/config.toml`; auth still uses `CODEX_HOME`".
+    Official precedence: CLI > project > profile > user > cloud > system.
+    https://learn.chatgpt.com/docs/config-file/config-basic
+    ``config/read`` with ``includeLayers`` also exposes shadowed definitions;
+    checking only ``mcp list`` would lose their provenance.
+
+    Sealed reviews supply the final allowlisted launch environment and sandbox
+    after auth staging, so signed-in cloud layers and auth refreshes are shared
+    with launch. Other callers use the same environment allowlist.
+    """
+    from scripts.review.isolation import build_reviewer_env, wrap_argv_with_sandbox
+
+    probe_env = dict(env) if env is not None else build_reviewer_env(engine="codex", reject_root=cwd)
+    probe_env["CODEX_HOME"] = home
+    argv = [binary, "app-server"]
+    if sandbox is not None:
+        argv = wrap_argv_with_sandbox(argv, sandbox)
+    messages = [
+        {"id": 1, "method": "initialize", "params": {"clientInfo": {"name": "review-config-gate", "version": "1"}}},
+        {"method": "initialized"},
+        {"id": 2, "method": "config/read", "params": {"cwd": str(cwd), "includeLayers": True}},
+    ]
+    try:
+        with subprocess.Popen(
+            # app-server has no ignore-user-config flag. Read original layers
+            # without CLI MCP overrides: an ignored user URL must not merge
+            # into the launch's stdio command during this provenance probe.
+            argv,
+            cwd=cwd,
+            env=probe_env,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+        ) as proc:
+            try:
+                assert proc.stdin is not None and proc.stdout is not None
+                proc.stdin.write(("\n".join(_json.dumps(msg) for msg in messages) + "\n").encode())
+                proc.stdin.flush()
+                deadline = time.monotonic() + 10
+                pending = b""
+                size = 0
+                with selectors.DefaultSelector() as selector:
+                    selector.register(proc.stdout, selectors.EVENT_READ)
+                    while time.monotonic() < deadline:
+                        if not selector.select(max(0, deadline - time.monotonic())):
+                            break
+                        chunk = os.read(proc.stdout.fileno(), 65536)
+                        if not chunk:
+                            break
+                        size += len(chunk)
+                        if size > 4 * 1024 * 1024:
+                            break
+                        pending += chunk
+                        while b"\n" in pending:
+                            line, pending = pending.split(b"\n", 1)
+                            reply = _json.loads(line)
+                            if reply.get("id") == 2:
+                                layers = reply.get("result", {}).get("layers")
+                                if not isinstance(layers, list) or not layers:
+                                    raise CodexReviewConfigError("review_mcp_config_layers_unavailable")
+                                return layers
+            finally:
+                proc.terminate()
+                try:
+                    proc.wait(timeout=2)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    proc.wait()
+    except (OSError, ValueError, AttributeError, subprocess.SubprocessError) as exc:
+        raise CodexReviewConfigError("review_mcp_config_layers_unavailable") from exc
+    raise CodexReviewConfigError("review_mcp_config_layers_unavailable")
+
+
+def _validate_review_mcp_layers(layers: list[dict], expected: dict, home: str) -> None:
+    """Only adapter-authored CLI definitions may supply a review's MCP set."""
+    if not isinstance(layers, list) or not layers:
+        raise CodexReviewConfigError("review_mcp_config_layers_unavailable")
+    for layer in layers:
+        if (
+            not isinstance(layer, dict)
+            or not isinstance(layer.get("name"), dict)
+            or not isinstance(layer["name"].get("type"), str)
+        ):
+            raise CodexReviewConfigError("review_mcp_config_layers_unavailable")
+        source = layer["name"]
+        config = layer.get("config")
+        if not isinstance(config, dict):
+            raise CodexReviewConfigError("review_mcp_config_layers_unavailable")
+        # exec ignores exactly the base user file, not profile or other layers.
+        if (
+            source.get("type") == "user"
+            and source.get("profile") is None
+            and isinstance(source.get("file"), str)
+            and Path(source["file"]).resolve() == Path(home, "config.toml").resolve()
+        ):
+            continue
+        servers = config.get("mcp_servers", {})
+        if not isinstance(servers, dict):
+            raise CodexReviewConfigError("review_mcp_config_layers_unavailable")
+        # The provenance probe supplies no MCP CLI overrides. Any definition
+        # it reports (including a session layer) was not written by this adapter.
+        if servers:
+            raise CodexReviewConfigError("review_mcp_foreign_config_layer")
+    # An ignored base-user definition cannot serve as the launch's only source.
+    # The adapter must emit an explicit transport, not just tool policy keys.
+    if expected and not all(
+        isinstance(server, dict) and (server.get("command") or server.get("url")) for server in expected.values()
+    ):
+        raise CodexReviewConfigError("review_mcp_sources_definition_mismatch")
+
+
+def _validate_review_mcp_keys(value: dict) -> None:
+    """Refuse dotted/quoted keys that escape the adapter's nested MCP map."""
+    for key, nested in value.items():
+        if not isinstance(key, str) or not re.fullmatch(r"[A-Za-z0-9_-]+", key):
+            raise CodexReviewConfigError("review_mcp_foreign_config_override")
+        if isinstance(nested, dict):
+            _validate_review_mcp_keys(nested)
 
 
 # Exposure filtering remains effective even under parent-sandboxed bypass.
@@ -213,7 +349,16 @@ class CodexAdapter:
         # sessions/ directory the subprocess actually writes to.
         effective_codex_home = tc_early.get("codex_home_override")
         if not effective_codex_home and review_write_root is not None:
-            effective_codex_home = str(review_write_root / "home" / ".codex")
+            private_home = review_write_root / "home" / ".codex"
+            # Reserve the launch home now. Isolation stages auth once and
+            # probes its layers there before permitting the model launch.
+            try:
+                private_home.mkdir(mode=0o700, exist_ok=True)
+            except OSError as exc:
+                raise CodexReviewConfigError("review_mcp_config_layers_unavailable") from exc
+            if private_home.is_symlink():
+                raise CodexReviewConfigError("review_mcp_config_home_unsafe")
+            effective_codex_home = str(private_home)
         self._codex_home_scope = str(
             Path(effective_codex_home or os.environ.get("CODEX_HOME") or Path.home() / ".codex").resolve()
         )
@@ -263,6 +408,22 @@ class CodexAdapter:
             # --ignore-rules. Run from the parent-created instruction-free
             # directory; complete changed content remains in the sealed prompt.
             execution_cwd = review_write_root / "exec"
+        guard_sources_config = tc_early.get("ignore_user_config") or tc_early.get("review_isolation")
+        if guard_sources_config:
+            servers = tc_early.get("mcp_servers", {})
+            if not isinstance(servers, dict):
+                raise CodexReviewConfigError("review_mcp_foreign_config_override")
+            _validate_review_mcp_keys(servers)
+            if servers and not tc_early.get("review_isolation") and set(servers) != {"sources"}:
+                raise CodexReviewConfigError("review_mcp_foreign_config_override")
+            for server in servers.values():
+                if not isinstance(server, dict) or not (server.get("command") or server.get("url")):
+                    raise CodexReviewConfigError("review_mcp_sources_definition_mismatch")
+            if not tc_early.get("review_isolation"):
+                # Sealed reviews must wait for the final auth staging in
+                # prepare_isolated_review_launch to see signed-in cloud layers.
+                layers = _codex_config_layers(codex_bin, execution_cwd, self._codex_home_scope)
+                _validate_review_mcp_layers(layers, servers, self._codex_home_scope)
         if (tc_early.get("review_isolation") or tc_early.get("attempt_os_sandbox")) and write_root is not None:
             out_dir = write_root / "tmp"
             output_path = out_dir / f"codex-runtime{safe_suffix}-{os.getpid()}.txt"
