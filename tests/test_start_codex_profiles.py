@@ -294,7 +294,7 @@ def test_launcher_targets_canonical_main_without_creating_worktree(tmp_path: Pat
         "--model",
         "gpt-6.1-sol",
         "-c",
-        "model_reasoning_effort=high",
+        "model_reasoning_effort=medium",
         "resume",
         "thread-id",
     ]
@@ -355,7 +355,7 @@ def test_launcher_binds_epic_when_no_codex_args_remain(tmp_path: Path) -> None:
         "--model",
         "gpt-6.1-sol",
         "-c",
-        "model_reasoning_effort=high",
+        "model_reasoning_effort=medium",
     ]
     assert any("already claimed the hramatka lease" in arg for arg in forwarded)
 
