@@ -601,6 +601,49 @@
       ]
     },
     "word": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/lexical"
+        },
+        {
+          "$ref": "#/$defs/formula"
+        }
+      ]
+    },
+    "ulif_cited": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "const": "ulif"
+        },
+        "key": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "integer",
+              "minimum": 1
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "row_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "source",
+        "key"
+      ],
+      "additionalProperties": false
+    },
+    "lexical": {
       "type": "object",
       "properties": {
         "id": {
@@ -941,38 +984,125 @@
         }
       ]
     },
-    "ulif_cited": {
+    "formula": {
       "type": "object",
       "properties": {
-        "source": {
-          "const": "ulif"
+        "id": {
+          "type": "string",
+          "pattern": "^W-[0-9]*[1-9][0-9]*$"
         },
-        "key": {
+        "kind": {
+          "const": "formula"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parts": {
           "type": "array",
-          "prefixItems": [
-            {
-              "type": "string",
-              "minLength": 1
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "word": {
+                "type": "string",
+                "pattern": "^W-[0-9]*[1-9][0-9]*$"
+              },
+              "form": {
+                "type": "string",
+                "minLength": 1
+              }
             },
-            {
-              "type": "integer",
-              "minimum": 1
-            }
-          ],
-          "items": false,
-          "minItems": 2,
-          "maxItems": 2
+            "required": [
+              "word",
+              "form"
+            ],
+            "additionalProperties": false
+          }
         },
-        "row_sha256": {
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "definition_sha256": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
+        },
+        "entry": {
+          "const": {
+            "source": "formula"
+          }
+        },
+        "gloss_en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "gloss_source": {
+          "const": "dmklinger_uk_en"
+        },
+        "gloss_ref": {
+          "$ref": "#/$defs/gloss_ref"
+        },
+        "gloss_basis": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "const": "formula_row.v1"
+            },
+            "binding": {
+              "type": "string",
+              "pattern": "^_sense_bindings\\.yaml#W-[0-9]+$"
+            }
+          },
+          "required": [
+            "method",
+            "binding"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string"
         }
       },
       "required": [
-        "source",
-        "key"
+        "id",
+        "kind",
+        "text",
+        "parts",
+        "definition_sha256",
+        "entry"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "dependentRequired": {
+        "gloss_en": [
+          "gloss_en",
+          "gloss_source",
+          "gloss_ref",
+          "gloss_basis"
+        ],
+        "gloss_source": [
+          "gloss_en",
+          "gloss_source",
+          "gloss_ref",
+          "gloss_basis"
+        ],
+        "gloss_ref": [
+          "gloss_en",
+          "gloss_source",
+          "gloss_ref",
+          "gloss_basis"
+        ],
+        "gloss_basis": [
+          "gloss_en",
+          "gloss_source",
+          "gloss_ref",
+          "gloss_basis"
+        ]
+      }
     }
   },
   "$comment": "Shape contract only: the builder/verifier checks source equality, one-entry paradigms, unique ids, and stressed == form for stress_source none. Store records use numeric id order; form lists retain VESUM order."

@@ -1323,6 +1323,18 @@ class Sources:
             self._progress("glosses", min(start + BATCH_SIZE, len(requested)), len(requested))
         return self._db_result(result)
 
+    def formula_rows(self, word: dict) -> SourceResult[list[dict]]:
+        """Exact formula/declared-alias headwords, with no lexical POS filter."""
+        from .formulas import headword, printed_headword
+
+        names = {printed_headword(word["text"]), *(headword(a) for a in word.get("aliases", []))}
+        rows = [
+            dict(r)
+            for r in self._db().execute("SELECT * FROM dmklinger_uk_en ORDER BY id")
+            if headword(r["word"]) in names
+        ]
+        return SourceResult(rows, batch_digest({"formula": rows}), {"scheme": SOURCES_DB_SCHEME})
+
     def kaikki_rows(self, lemmas: Iterable[str]) -> SourceResult[dict[str, dict | None]]:
         """Read exact lemma keys from the immutable, locally built Kaikki side DB."""
         if self._kaikki_conn is None:

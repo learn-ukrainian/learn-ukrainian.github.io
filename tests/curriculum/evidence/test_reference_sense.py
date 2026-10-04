@@ -531,6 +531,37 @@ def test_leak_signals_mapping_wording_and_public_exceptions(bound, tmp_path, mea
     assert result["pr_text"] == "unverified"
 
 
+def test_leak_scan_accepts_a_store_with_formula_records(bound, tmp_path):
+    """A formula has no lemma; the lexical public maps skip it rather than fail."""
+    root, api, _b = bound
+    repo = tmp_path / "formula-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    git(repo, "commit", "--allow-empty", "-qm", "base")
+    (repo / "note.txt").write_text("nothing private")
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "baseline")
+    context = bindings.Context.read("a1", root)
+    formula = {
+        "id": "W-099",
+        "kind": "formula",
+        "text": "Синтетика!",
+        "parts": [{"word": WORD["id"], "form": "Синтетика"}],
+        "entry": {"source": "formula"},
+    }
+    result = sense_cli.leak_scan(
+        repo,
+        {FIXTURE["private"]["locator"]: FIXTURE["private"]},
+        context,
+        {"words": [WORD, formula]},
+        api,
+        base="HEAD^",
+    )
+    assert result["status"] == "checked", result
+
+
 def test_scan_pattern_overlapping_prefixes_boundaries_and_unicode():
     pattern, prefixes = sense_cli._scan_pattern({"cat", "cat food", "food", "é"})
     hits = [term for m in pattern.finditer("cat food cats é") for term in prefixes[m[1]]]

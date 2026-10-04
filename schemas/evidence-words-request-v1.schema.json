@@ -25,6 +25,16 @@
   "additionalProperties": false,
   "$defs": {
     "word": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/lexical"
+        },
+        {
+          "$ref": "#/$defs/formula"
+        }
+      ]
+    },
+    "lexical": {
       "type": "object",
       "properties": {
         "lemma": {
@@ -97,6 +107,107 @@
       "required": [
         "lemma",
         "pos",
+        "want"
+      ],
+      "additionalProperties": false
+    },
+    "formula": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "formula"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "lemma": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pos": {
+                "type": "string",
+                "minLength": 1
+              },
+              "entry": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "const": "vesum"
+                      },
+                      "entry_id": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "entry_id"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "const": "ulif"
+                      },
+                      "homonym_index": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "homonym_index"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": [
+              "lemma",
+              "pos"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "want": {
+          "oneOf": [
+            {
+              "const": "new"
+            },
+            {
+              "type": "string",
+              "pattern": "^W-[0-9]*[1-9][0-9]*$"
+            }
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text",
+        "parts",
         "want"
       ],
       "additionalProperties": false

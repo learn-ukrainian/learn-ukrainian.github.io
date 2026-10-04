@@ -26,7 +26,8 @@
             "enum": [
               "a1_reference_meaning.v1",
               "reviewed.v1",
-              "ohoiko_reference"
+              "ohoiko_reference",
+              "formula_row.v1"
             ]
           },
           "table": {
@@ -129,6 +130,14 @@
           "atom_index": {
             "type": "integer",
             "minimum": 0
+          },
+          "definition_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "candidates_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
           }
         },
         "required": [
@@ -276,6 +285,77 @@
                     }
                   ]
                 }
+              },
+              "else": {
+                "not": {
+                  "required": [
+                    "reviewer"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "method": {
+                  "const": "formula_row.v1"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "definition_sha256",
+                "candidates_sha256"
+              ]
+            },
+            "else": {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "definition_sha256"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "candidates_sha256"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "method": {
+                  "const": "formula_row.v1"
+                }
+              }
+            },
+            "then": {
+              "dependentRequired": {
+                "locator": [
+                  "inventory",
+                  "commitment",
+                  "key_id"
+                ],
+                "inventory": [
+                  "locator",
+                  "commitment",
+                  "key_id"
+                ],
+                "commitment": [
+                  "inventory",
+                  "locator",
+                  "key_id"
+                ],
+                "key_id": [
+                  "inventory",
+                  "locator",
+                  "commitment"
+                ]
               }
             }
           }

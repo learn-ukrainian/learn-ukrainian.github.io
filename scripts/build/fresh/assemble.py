@@ -446,7 +446,7 @@ def gloss_replacer(words_store: dict[str, Any], *, include_english: bool = True)
         wid = match.group(1)
         w_rec = words_by_id.get(wid)
         if w_rec:
-            lem = w_rec.get("lemma", "")
+            lem = w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", "")
             gl = w_rec.get("gloss_en") or ""
             return f"{lem} ({gl})" if gl and include_english else lem
         return wid
@@ -960,7 +960,8 @@ def assemble_expanded_document(
                 raise AssemblerError("gloss_ref_malformed", f"gloss reference {text!r} is not {{{{gloss:W-n}}}}")
             source = "record"
             ref = gloss_match.group(1)
-        clean = strip_accents(text) if source != "writer_prose" else text
+        exact_formula = source == "record" and words_by_id.get(ref, {}).get("kind") == "formula"
+        clean = strip_accents(text) if source != "writer_prose" and not exact_formula else text
         loc_key = (tab, step, activity, item, block)
         span_idx = block_span_counts.get(loc_key, 0)
         start_off = block_offsets.get(loc_key, 0)
@@ -1603,23 +1604,26 @@ def assemble_expanded_document(
     core_items = vocab_inv.get("core", [])
     incidental_items = vocab_inv.get("incidental", [])
 
+    seen_vocab: set[str] = set()
     for c in core_items:
         if isinstance(c, dict):
             wid = c.get("evidence")
-            if wid:
+            if wid and wid not in seen_vocab:
+                seen_vocab.add(wid)
                 w_rec = words_by_id.get(wid)
                 if not w_rec:
                     raise AssemblerError(WORD_NOT_FOUND, f"core word {wid} not found in words store")
-                lemma = str(w_rec.get("lemma", ""))
+                lemma = str(w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", ""))
                 add_unit("slovnyk", None, None, None, f"core_{wid}", "record_print", lemma, source="record", ref=wid)
 
     for inc in incidental_items:
         wid = inc.get("evidence") if isinstance(inc, dict) else inc
-        if isinstance(wid, str):
+        if isinstance(wid, str) and wid not in seen_vocab:
+            seen_vocab.add(wid)
             w_rec = words_by_id.get(wid)
             if not w_rec:
                 raise AssemblerError(WORD_NOT_FOUND, f"incidental word {wid} not found in words store")
-            lemma = str(w_rec.get("lemma", ""))
+            lemma = str(w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", ""))
             add_unit("slovnyk", None, None, None, f"inc_{wid}", "record_print", lemma, source="record", ref=wid)
 
     # 4. Tab: resursy (Resources) - CITED ids only
@@ -1925,11 +1929,16 @@ def build_slovnyk_entries(
 
     entries: list[tuple[str, dict[str, Any]]] = []
 
+    seen: set[str] = set()
+
     def process_item(wid: str, forms_list: list[str]) -> None:
+        if wid in seen:
+            return
+        seen.add(wid)
         if wid not in words_by_id:
             return
         w_rec = words_by_id[wid]
-        lemma = str(w_rec.get("lemma", ""))
+        lemma = str(w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", ""))
 
         # Lemma stress comes from the record's lemma form, never first learner form
         stressed_lemma = lemma
@@ -1947,7 +1956,11 @@ def build_slovnyk_entries(
 
         gloss = selected_senses.get(wid) or str(w_rec.get("gloss_en") or "")
         try:
-            atlas_href = atlas_href_for(lemma, translation=gloss, pos=str(w_rec.get("pos", "")))
+            atlas_href = (
+                None
+                if w_rec.get("kind") == "formula"
+                else atlas_href_for(lemma, translation=gloss, pos=str(w_rec.get("pos", "")))
+            )
         except Exception:
             atlas_href = None
 
@@ -1972,10 +1985,12 @@ def build_slovnyk_entries(
             item_entry["forms"] = taught_forms
         entries.append((wid, item_entry))
 
+    seen_vocab: set[str] = set()
     for c in core_items:
         if isinstance(c, dict):
             wid = c.get("evidence")
-            if wid:
+            if wid and wid not in seen_vocab:
+                seen_vocab.add(wid)
                 process_item(wid, c.get("forms", []))
 
     for inc in incidental_items:

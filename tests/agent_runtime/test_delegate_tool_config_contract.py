@@ -208,6 +208,11 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
         tool_config.pop("reviewer_tools")
     if adapter_cls.__name__ == "KimiAdapter":
         tool_config["harness"] = "kimicc"
+    if adapter_cls.__name__ == "AgyAdapter":
+        # AGY grants are now checked before its CLI probe. Supply a real scoped
+        # home and an admitted tool instead of the generic synthetic payload.
+        tool_config["allowed_tools"] = "mcp__sources__verify_words"
+        (Path(tool_config["agy_home_override"]) / ".gemini" / "antigravity-cli").mkdir(parents=True)
 
     try:
         plan = adapter_cls().build_invocation(

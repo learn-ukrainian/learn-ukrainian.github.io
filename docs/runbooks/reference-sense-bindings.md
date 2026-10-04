@@ -223,3 +223,54 @@ of the commitment or reviewer block; both verifiers record the unchecked proof.
 Review of record requires the local receipt. Builder,
 word-store verifier and pack gloss gate use bindings first. Rendering and
 immersion counting both consume the selected `gloss_en`, never `sense_gloss`.
+
+## Formula records
+
+A formula is a printed fixed chunk (`kind: formula`, `text`, ordered lexical
+`parts`, optional declared `aliases`). Each original Cyrillic token must be an
+attested form of its pinned lexical part; formulas cannot nest or introduce
+parts into learner state. Only `! . ? …` are permitted as terminal punctuation.
+The printed text is preserved. Aliases enumerate exact dictionary headwords;
+they are VESUM-attested alternative spellings, never evidence of sense.
+
+`formula_row.v1` pins the definition digest, complete candidate digest and exact
+open-dictionary row/span/atom. Formula selection needs no per-item review
+receipt. Ukrainian source meaning guides selection; the bilingual row supplies
+the displayed English atom. A cross-family lesson review checks applicability.
+Selection tries, in order, a normalized match to the private A1 reference's
+meaning, a match to the request's meaning in `note`, and the first eligible
+candidate atom in source order. No candidate row leaves `formula_binding_missing`;
+malformed definitions and stale coordinates fail with typed integrity reasons.
+No part glosses are composed. A formula takes only its own binding, so the
+lexical order above never applies to it; its record carries
+`gloss_basis: {method: formula_row.v1, binding}`.
+
+Supply `build-words --private-input PRIVATE_JSONL --key-file PRIVATE_KEY
+--key-id build1` for private-reference selection. With no private input, request
+notes and open-source order remain available. The private extraction, keys and
+meanings stay outside Git. A reference-selected binding records only the public
+inventory/locator and keyed commitment, alongside the open dictionary atom.
+`--dry-run` measures without writing a store or bindings; it needs no key.
+
+`sense-select --write` also selects formulas and preserves existing valid
+formula entries without changing their bytes. `--check` verifies their public
+formula path separately from lexical reviewed receipts, and recomputes keyed
+reference selections. The lexical reviewed remainder keeps its dispatch and
+sources-ledger contract.
+
+`sense-bind --candidates` displays every eligible formula candidate with full
+coordinates and definition/candidate digests. An explicit formula choice accepts
+only printed candidate coordinates, without `--review-task` or free text:
+
+```bash
+.venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 --candidates
+.venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 \
+  --row-id 1 --span-index 0 --atom-index 0
+```
+
+Rebuilding removes stale formula glosses; a citing pack fails with
+`formula_binding_invalid`. Public CI verifies formula definition, candidate
+list, row hash, exact atom eligibility and store agreement. It does not pretend
+to prove private commitments: those retain the local-receipt warning. Formula
+bindings have no reviewer-provenance warning. Rendering, Словник and immersion
+counting all consume the same printed text and selected gloss.
