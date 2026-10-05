@@ -526,10 +526,12 @@ def _known_streams(ctx: MonitorContext | None = None) -> list[str] | None:
 
 
 def _unscoped_unknown_digest(items: list[dict[str, Any]], stream: str) -> dict[str, Any]:
-    """Unknown rows that are not on the requested lane.
+    """Unknown rows that are not already on this lane's pick list.
 
-    An empty stream queue must not read as "no remaining work". These rows
-    stay off the pick list and are counted here with their reasons.
+    An empty stream queue must not read as "no remaining work". A row that
+    still names the requested stream is counted here when it is not actionable,
+    so ``source_ok: false`` cannot drop it. Rows already on the pick list stay
+    there and are not counted twice.
     """
     reason_counts: dict[str, int] = {}
     count = 0
@@ -542,7 +544,7 @@ def _unscoped_unknown_digest(items: list[dict[str, Any]], stream: str) -> dict[s
             or action.get("code") == "INSPECT_UNKNOWN"
             or stream_status == "unknown"
         )
-        if not unknown or stream in _item_streams(item):
+        if not unknown or (stream in _item_streams(item) and is_actionable(item)):
             continue
         count += 1
         reasons = action.get("reason_codes") if isinstance(action.get("reason_codes"), list) else []

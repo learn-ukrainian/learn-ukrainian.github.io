@@ -33,6 +33,8 @@ ACTIVE_TASK_STATUSES = {"running", "spawning"}
 DELEGATE_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
 
 
+
+
 def _tasks_dir(ctx: MonitorContext | None = None) -> Path:
     if isinstance(ctx, MonitorContext):
         return ctx.roots.batch_state_dir / "tasks"
@@ -177,7 +179,9 @@ def _authoritative_task_repository(task: dict[str, Any]) -> str | None:
     return claimed[0]
 
 
-_TASK_STATE_CACHE: dict[str, tuple[float, dict[str, Any], str, bool, str | None, int | None]] = {}
+_TASK_STATE_CACHE: dict[
+    str, tuple[float, dict[str, Any], str, bool, str | None, int | None]
+] = {}
 _LAST_TASKS_DIR_STR: str = ""
 
 
@@ -244,7 +248,9 @@ def _load_task_cache_from_db(
         )
         rows = cursor.fetchall()
         conn.close()
-        cache: dict[str, tuple[float, dict[str, Any], str, bool, str | None, int | None]] = {}
+        cache: dict[
+            str, tuple[float, dict[str, Any], str, bool, str | None, int | None]
+        ] = {}
         for row in rows:
             (
                 path_str,
@@ -508,7 +514,11 @@ def _delegate_task_rows(
                 pid_int,
             )
             _TASK_STATE_CACHE[path_str] = cached_tuple
-            subst_str = json.dumps(subst) if isinstance(subst, dict) else (str(subst) if subst is not None else None)
+            subst_str = (
+                json.dumps(subst)
+                if isinstance(subst, dict)
+                else (str(subst) if subst is not None else None)
+            )
             dirty_records.append(
                 (
                     path_str,
@@ -535,7 +545,9 @@ def _delegate_task_rows(
             continue
 
         # Scope applies on raw task state only — never re-emit repository identity.
-        if repo_predicate is not None and (claimed_repo is None or claimed_repo != repo_predicate):
+        if repo_predicate is not None and (
+            claimed_repo is None or claimed_repo != repo_predicate
+        ):
             continue
 
         task_id = summary["task_id"]
@@ -561,14 +573,17 @@ def _delegate_task_rows(
     # Records archived (#8625) or removed since the last scan leave the cache too.
     # Only directories this query scanned are judged, so a hot-only query never
     # evicts the archive entries an all-history query cached.
-    vanished = [path for path in _TASK_STATE_CACHE if path not in seen_paths and os.path.dirname(path) in scanned_dirs]
+    vanished = [
+        path for path in _TASK_STATE_CACHE if path not in seen_paths and os.path.dirname(path) in scanned_dirs
+    ]
     if vanished:
         for path in vanished:
             del _TASK_STATE_CACHE[path]
         _delete_task_cache_entries(tasks_dir_str, vanished, resolved)
 
     rows.sort(
-        key=lambda item: _parse_iso_datetime(item.get("started_at")) or datetime.min.replace(tzinfo=UTC),
+        key=lambda item: _parse_iso_datetime(item.get("started_at"))
+        or datetime.min.replace(tzinfo=UTC),
         reverse=True,
     )
     return rows
@@ -577,14 +592,8 @@ def _delegate_task_rows(
 def list_delegate_tasks(
     *,
     status: Literal[
-        "running",
-        "done",
-        "failed",
-        "timeout",
-        "spawning",
-        "needs_finalize",
-        "no_deliverable",
-        "all",
+        "running", "done", "failed", "timeout", "spawning",
+        "needs_finalize", "no_deliverable", "all",
     ] = "all",
     limit: int = 50,
     repository: str | None = None,
@@ -641,16 +650,12 @@ def get_delegate_task_detail(
                     result_text = result_text[:-1]
                 truncated = True
 
-    return (
-        task,
-        {
-            "task": task,
-            "result": result_text,
-            "result_truncated": truncated,
-            "alive": alive,
-        },
-        False,
-    )
+    return task, {
+        "task": task,
+        "result": result_text,
+        "result_truncated": truncated,
+        "alive": alive,
+    }, False
 
 
 def active_delegate_count(ctx: MonitorContext | None = None) -> int:
@@ -676,14 +681,8 @@ def active_delegate_tasks(
 @router.get("/tasks")
 async def delegate_tasks(
     status: Literal[
-        "running",
-        "done",
-        "failed",
-        "timeout",
-        "spawning",
-        "needs_finalize",
-        "no_deliverable",
-        "all",
+        "running", "done", "failed", "timeout", "spawning",
+        "needs_finalize", "no_deliverable", "all",
     ] = Query("all"),
     limit: int = Query(50, ge=1, le=500),
     ctx: MonitorContext = Depends(get_ctx),
