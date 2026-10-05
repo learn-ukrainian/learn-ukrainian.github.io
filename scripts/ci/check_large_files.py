@@ -6,6 +6,9 @@ Use in CI checks and merge queue; do not use for historical scanning or working-
 from __future__ import annotations
 
 import argparse
+import csv
+import io
+import string
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -13,6 +16,7 @@ from pathlib import Path
 
 THRESHOLD_BYTES = 5 * 1024 * 1024  # 5,242,880 bytes (5 MB)
 DEFAULT_ALLOWLIST = "scripts/ci/large_files_allowlist.txt"
+_HEX_DIGITS = set(string.hexdigits)
 
 
 @dataclass(frozen=True)
@@ -53,6 +57,59 @@ def _run_git(args: list[str], cwd: Path, timeout: int = 30) -> bytes:
         err = res.stderr.decode("utf-8", errors="replace").strip()
         raise RuntimeError(f"Git command failed ({' '.join(args)}): {err}")
     return res.stdout
+
+
+def _is_valid_object_id(oid: str) -> bool:
+    return len(oid) in (40, 64) and set(oid).issubset(_HEX_DIGITS)
+
+
+def batch_check_blob_sizes(shas: list[str], cwd: Path, timeout: int = 30) -> dict[str, int]:
+    """Query blob sizes for object SHAs using a single git cat-file --batch-check process."""
+    if not shas:
+        return {}
+    for sha in shas:
+        if not _is_valid_object_id(sha):
+            raise RuntimeError(f"Invalid object ID: {sha!r}")
+
+    input_data = "".join(f"{sha}\n" for sha in shas).encode("ascii")
+    res = subprocess.run(
+        ["git", "cat-file", "--batch-check"],
+        input=input_data,
+        cwd=cwd,
+        capture_output=True,
+        check=False,
+        timeout=timeout,
+    )
+    if res.returncode != 0:
+        err = res.stderr.decode("utf-8", errors="replace").strip()
+        raise RuntimeError(f"Git cat-file --batch-check failed: {err}")
+
+    lines = res.stdout.decode("utf-8", errors="replace").splitlines()
+    if len(lines) != len(shas):
+        raise RuntimeError(
+            f"git cat-file --batch-check response count mismatch: expected {len(shas)}, got {len(lines)}"
+        )
+
+    sizes: dict[str, int] = {}
+    for expected_sha, line in zip(shas, lines, strict=True):
+        parts = line.split()
+        if len(parts) == 2 and parts[1] == "missing":
+            raise RuntimeError(f"Git object missing in batch-check: {expected_sha}")
+        if len(parts) != 3:
+            raise RuntimeError(f"Malformed git cat-file --batch-check output for {expected_sha}: {line!r}")
+        obj_name, obj_type, size_str = parts
+        if obj_name != expected_sha:
+            raise RuntimeError(f"Mismatched batch-check response object: expected {expected_sha}, got {obj_name}")
+        if obj_type != "blob":
+            raise RuntimeError(f"Expected blob object type for {expected_sha}, got {obj_type!r}")
+        try:
+            size = int(size_str)
+            if size < 0:
+                raise ValueError
+        except ValueError:
+            raise RuntimeError(f"Invalid blob size {size_str!r} for object {expected_sha}") from None
+        sizes[expected_sha] = size
+    return sizes
 
 
 def resolve_commit(ref: str, cwd: Path) -> str:
@@ -97,7 +154,7 @@ def check_changed_vs_base(
     if len(tokens) % 2 != 0:
         raise RuntimeError("Corrupted git diff output: odd token count.")
 
-    violations: list[tuple[str, int]] = []
+    items_to_check: list[tuple[str, str]] = []
     for i in range(0, len(tokens), 2):
         meta, path_bytes = tokens[i], tokens[i + 1]
         path = path_bytes.decode("utf-8", errors="surrogateescape")
@@ -108,10 +165,60 @@ def check_changed_vs_base(
         dst_mode_str, dst_sha_str, status_str = dst_mode.decode(), dst_sha.decode(), status.decode()
         if status_str == "D" or dst_mode_str in ("000000", "160000") or dst_sha_str.startswith("0000000"):
             continue
-        size = int(_run_git(["cat-file", "-s", dst_sha_str], cwd=repo_root).decode().strip())
+        items_to_check.append((path, dst_sha_str))
+
+    if not items_to_check:
+        return []
+
+    unique_shas = list(dict.fromkeys(sha for _, sha in items_to_check))
+    sizes_by_sha = batch_check_blob_sizes(unique_shas, cwd=repo_root)
+
+    violations: list[tuple[str, int]] = []
+    for path, sha in items_to_check:
+        size = sizes_by_sha[sha]
         if size > threshold and path not in allowlist:
             violations.append((path, size))
     return violations
+
+
+def parse_classification_table(tsv_content: str) -> dict[str, str]:
+    """Parse registry/artifacts/classification-v1.tsv content into {path: class}."""
+    if not tsv_content.strip():
+        raise ValueError("Classification table content is empty")
+
+    reader = csv.DictReader(io.StringIO(tsv_content), delimiter="\t")
+    if reader.fieldnames is None:
+        raise ValueError("Malformed classification table: missing header line")
+
+    fieldnames = [f.strip() for f in reader.fieldnames if f is not None]
+    if "path" not in fieldnames:
+        raise ValueError("Classification table missing required 'path' column")
+    if "class" not in fieldnames:
+        raise ValueError("Classification table missing required 'class' column")
+    if fieldnames.count("path") > 1 or fieldnames.count("class") > 1:
+        raise ValueError("Classification table has duplicate 'path' or 'class' column")
+
+    classes: dict[str, str] = {}
+    valid_classes = {"A", "K", "S"}
+
+    for row_num, row in enumerate(reader, start=2):
+        if None in row or any(v is None for v in row.values()):
+            raise ValueError(f"Malformed row {row_num} in classification table: column count mismatch")
+        raw_path = row.get("path")
+        raw_cls = row.get("class")
+        if raw_path is None or raw_cls is None:
+            raise ValueError(f"Malformed row {row_num} in classification table")
+        path = raw_path.strip()
+        cls = raw_cls.strip()
+        if not path or not cls:
+            raise ValueError(f"Empty path or class at row {row_num} in classification table")
+        if cls not in valid_classes:
+            raise ValueError(f"Unsupported class code {cls!r} at row {row_num} for path {path!r}")
+        if path in classes:
+            raise ValueError(f"Duplicate path classification for {path!r} at row {row_num}")
+        classes[path] = cls
+
+    return classes
 
 
 def seed_allowlist(
@@ -121,7 +228,18 @@ def seed_allowlist(
     threshold: int = THRESHOLD_BYTES,
 ) -> list[AllowlistEntry]:
     """Seed allowlist from origin/main tree."""
-    out = _run_git(["ls-tree", "-r", "-l", "-z", seed_ref], cwd=repo_root)
+    seed_commit = resolve_commit(seed_ref, cwd=repo_root)
+
+    try:
+        tsv_bytes = _run_git(["show", f"{seed_commit}:registry/artifacts/classification-v1.tsv"], cwd=repo_root)
+        tsv_content = tsv_bytes.decode("utf-8")
+        classification_table = parse_classification_table(tsv_content)
+    except Exception as exc:
+        raise RuntimeError(
+            f"Failed to read or parse classification table at {seed_commit}:registry/artifacts/classification-v1.tsv: {exc}"
+        ) from exc
+
+    out = _run_git(["ls-tree", "-r", "-l", "-z", seed_commit], cwd=repo_root)
     qualifying: list[tuple[str, int]] = []
     for entry in [e for e in out.split(b"\0") if e]:
         meta, path_raw = entry.split(b"\t", 1)
@@ -135,12 +253,24 @@ def seed_allowlist(
     qualifying.sort(key=lambda x: x[0])
     entries: list[AllowlistEntry] = []
     for path, size in qualifying:
-        if path.startswith(("data/", "registry/", "site/src/data/")):
-            reason = "existing tracked data; leaves git through the data/ split"
+        if path.startswith("data/"):
+            cls = classification_table.get(path)
+            if cls == "A":
+                reason = "existing tracked data; leaves git through the data/ split"
+            elif cls == "K":
+                reason = "existing tracked data; kept in git as class K under the data/ split"
+            elif cls == "S":
+                reason = "existing tracked data; class S placeholder/control under the data/ split (not class A)"
+            else:
+                reason = "existing tracked data; absent from classification-v1.tsv; no split migration established"
+        elif path.startswith("registry/"):
+            reason = "existing tracked data; kept in git as class K under the data/ split"
+        elif path.startswith("site/src/data/"):
+            reason = "existing tracked data; grandfathered site-input"
         elif "_archive" in path:
             reason = "existing tracked data; archived session record"
         else:
-            reason = "existing tracked data; grandfathered prior to large-file guard"
+            reason = "existing tracked file, no migration planned"
         entries.append(AllowlistEntry(path=path, size=size, reason=reason))
 
     lines = ["# Large files allowlist", "# Format: <repository-relative-path> <tab> <size-in-bytes> <tab> <reason>"]

@@ -591,3 +591,15 @@ def test_ci_gate_guard_step_missing_sha_fails() -> None:
     )
     assert res_mg.returncode != 0
     assert "Missing merge_group head_sha" in (res_mg.stdout + res_mg.stderr)
+
+
+def test_ci_gate_guard_steps_lack_continue_on_error() -> None:
+    steps = _ci_gate_job()["steps"]
+    step_names = [step.get("name") for step in steps]
+    aggregation_idx = step_names.index("Require every job")
+    guard_steps = steps[:aggregation_idx]
+    assert len(guard_steps) == 3
+    for step in guard_steps:
+        assert "continue-on-error" not in step or not step["continue-on-error"], (
+            f"Step {step.get('name')!r} must not have continue-on-error"
+        )
