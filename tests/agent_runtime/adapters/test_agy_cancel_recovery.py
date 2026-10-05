@@ -69,6 +69,10 @@ def _parse(tmp_path, events, *, stderr="", envelope=None, returncode=0):
         "grep -rn needle scripts",
         "rg needle scripts",
         "git grep needle",
+        "git grep -n x",
+        "git grep -nl x | head -n 5",
+        "rg -n 'a*b' src",
+        "git log -S x --oneline || true",
         "find scripts -name '*.py'",
         "ls -la scripts",
         "git log -Sneedle --oneline",
@@ -137,6 +141,15 @@ def test_agy_model_killed_read_with_complete_reply_is_accepted(tmp_path, command
         "rg --hostname-bin script needle",
         "git grep --open-files-in-pager=script needle",
         "git grep -Oscript needle",
+        "git grep -nOtouch needle",
+        "git grep -nO\"sh -c 'touch PWNED'\" needle",
+        "git grep -nO'sh -c \"rm -rf -- ..\"' needle",
+        "git grep -lOtouch needle",
+        "git grep -iO needle",
+        "git log -p --ext-diff",
+        "rg -uuu --pre=x n",
+        "git grep --open-files-in-pager=x n",
+        "sed -n -e 'w out'",
         "git -c alias.x=script show",
         "git show --ext-diff",
         "git show --textconv",
@@ -498,3 +511,201 @@ def test_agy_pre_model_proof_rejects_unknown_transcript_evidence(tmp_path, case)
         metadata[agy._TRANSCRIPT_BASELINE_KEY] = {"conversation_id": _FINISHED_CONVERSATION_ID, "offset": None}
     plan = InvocationPlan(cmd=["agy"], cwd=tmp_path, env_overrides={agy._AGY_LOG_ENV: str(log)}, metadata=metadata)
     assert not agy._pre_model_failure(plan, "", bound)
+
+
+# Independent manual-derived examples. Adding a production option without an
+# example fails coverage; each example passes through the full shell gate.
+_READ_OPTION_EXAMPLES = {
+    ("grep",): (
+        "-n -l -L -i -w -c -E -F -P -h -H -r -R -v -o --count --line-number --files-with-matches --ignore-case --",
+        {
+            "-e": "needle",
+            "-A": "2",
+            "-B": "2",
+            "-C": "2",
+            "-m": "2",
+            "--regexp": "needle",
+            "--after-context": "2",
+            "--before-context": "2",
+            "--context": "2",
+            "--max-count": "2",
+        },
+        "needle file",
+    ),
+    ("rg",): (
+        "-n -l -i -w -c -F -P -v -o -u --count --files --hidden --no-heading --line-number --files-with-matches --ignore-case --",
+        {
+            "-e": "needle",
+            "-A": "2",
+            "-B": "2",
+            "-C": "2",
+            "-m": "2",
+            "-g": "file",
+            "-t": "py",
+            "--regexp": "needle",
+            "--after-context": "2",
+            "--before-context": "2",
+            "--context": "2",
+            "--max-count": "2",
+            "--glob": "file",
+            "--type": "py",
+        },
+        "needle file",
+    ),
+    ("git", "grep"): (
+        "-n -l -L -i -w -c -E -F -P -h -H --count --name-only --",
+        {"-e": "needle", "-A": "2", "-B": "2", "-C": "2"},
+        "needle",
+    ),
+    ("git", "log"): (
+        "-p --oneline --stat --name-only --name-status --no-patch --",
+        {
+            "-S": "needle",
+            "-G": "needle",
+            "-n": "2",
+            "--max-count": "2",
+            "--since": "2020-01-01",
+            "--until": "2020-01-02",
+            "--grep": "needle",
+        },
+        "HEAD",
+    ),
+    ("git", "show"): ("-p --oneline --stat --name-only --name-status --no-patch --", {}, "HEAD:file"),
+    ("find",): (
+        "-print -print0 -o",
+        {
+            "-name": "file",
+            "-iname": "file",
+            "-path": "file",
+            "-ipath": "file",
+            "-type": "f",
+            "-maxdepth": "2",
+            "-mindepth": "1",
+        },
+        "",
+    ),
+    ("ls",): ("-l -a -A -h -R -d -1 --all --almost-all --human-readable --recursive --directory --", {}, "file"),
+    ("cat",): ("-n -b -s --number --number-nonblank --squeeze-blank --", {}, "file"),
+    ("head",): ("-q -v --quiet --verbose --", {"-n": "2", "-c": "2", "--lines": "2", "--bytes": "2"}, "file"),
+    ("tail",): ("-q -v --quiet --verbose --", {"-n": "2", "-c": "2", "--lines": "2", "--bytes": "2"}, "file"),
+    ("sed",): ("-n --", {}, "1,2p file"),
+    ("wc",): ("-l -w -c -m -L --lines --words --bytes --chars --max-line-length --", {}, "file"),
+    ("sort",): (
+        "-n -r -u -f -s --numeric-sort --reverse --unique --ignore-case --stable --",
+        {"-k": "1", "-t": ":", "--key": "1", "--field-separator": ":"},
+        "file",
+    ),
+    ("uniq",): ("-c -d -u -i --count --repeated --unique --ignore-case --", {}, "file"),
+}
+
+
+def test_agy_option_examples_cover_the_entire_allowlist():
+    assert _READ_OPTION_EXAMPLES.keys() == agy._KILL_READ_OPTIONS.keys()
+    for key, (flags, values, _operands) in _READ_OPTION_EXAMPLES.items():
+        spec = agy._KILL_READ_OPTIONS[key]
+        assert set(flags.split()) == spec.flags
+        assert values.keys() == spec.values
+
+
+@pytest.mark.parametrize(
+    "key,option,value,operands",
+    [
+        (key, option, value, operands)
+        for key, (flags, values, operands) in _READ_OPTION_EXAMPLES.items()
+        for option, value in [*((flag, None) for flag in flags.split()), *values.items()]
+    ],
+)
+def test_agy_every_allowlisted_option_is_exercised(key, option, value, operands):
+    prefix = " ".join(key)
+    if key == ("find",):
+        prefix += " ."
+    if key == ("sed",) and option == "--":
+        prefix += " -n"
+    suffix = f" {operands}" if operands else ""
+    assert agy._read_only_killed_command(f"{prefix} {option}{' ' + value if value is not None else ''}{suffix}")
+    if value is not None:
+        if option.startswith("--"):
+            assert agy._read_only_killed_command(f"{prefix} {option}={value}{suffix}")
+        elif len(option) == 2:
+            assert agy._read_only_killed_command(f"{prefix} {option}{value}{suffix}")
+        assert not agy._read_only_killed_command(f"{prefix} {option}")
+    elif option.startswith("--") and option != "--":
+        assert not agy._read_only_killed_command(f"{prefix} {option}=x{suffix}")
+
+
+@pytest.mark.parametrize("key", _READ_OPTION_EXAMPLES)
+def test_agy_unknown_options_fail_before_operand_boundary(key):
+    command = " ".join(key)
+    assert not agy._read_only_killed_command(f"{command} --unknown file")
+    assert not agy._read_only_killed_command(f"{command} -Z file")
+    # Options must still be validated after a regular operand.
+    assert not agy._read_only_killed_command(f"{command} file --unknown")
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "grep -nle needle file",
+        "rg -unC2 needle file",
+        "git grep -nie-Otouch",
+        "git log -pn2",
+        "head -qvn2 file",
+        "tail -20 file",
+        "rg -- --pre=x",
+        "rg needle -- --pre=x",
+        "git grep -- -Osh needle",
+        "cat -- -unknown",
+        "sed -n 1p -- -e",
+        "uniq -- -unknown",
+        "find . -name -exec",
+        "find . -name '*.py' -o -name '*.md'",
+        "cat file | wc -l | sort -nr | uniq -c",
+    ],
+)
+def test_agy_option_groups_values_and_operand_boundary_are_safe(command):
+    assert agy._read_only_killed_command(command)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git -n grep needle",
+        "git status",
+        "git grep -nlZ needle",
+        "git grep -nO needle",
+        'git grep -n"O"touch needle',
+        "git grep --op=x needle",
+        "git log --outp=x",
+        "rg --hostname-b=x needle",
+        "rg --pre-glob=needle needle",
+        "rg --coun needle",
+        "grep --line-num needle",
+        "find -- . -exec writer +",
+        "find . -- -delete",
+        "find . -nam file",
+        "find . -name=file",
+        "sed -n 1p -e 'w out'",
+        "sed -n -- 'w out'",
+        "sed -- 1p file",
+        "uniq input output",
+        "uniq -- input output",
+        "uniq -ci input output",
+        "sort -noout file",
+        "sort --compress-program=writer",
+        "head -20q file",
+    ],
+)
+def test_agy_option_allowlist_rejects_execution_writes_and_nonexact_spellings(command):
+    assert not agy._read_only_killed_command(command)
+
+
+@pytest.mark.parametrize("key", _READ_OPTION_EXAMPLES)
+def test_agy_every_short_flag_group_rejects_an_unknown_member(key):
+    flags, _values, operands = _READ_OPTION_EXAMPLES[key]
+    short_flags = [flag[1:] for flag in flags.split() if len(flag) == 2]
+    if not short_flags:
+        return  # find has single-dash predicates, not short flags.
+    group = "-" + "".join(short_flags)
+    command = " ".join(key)
+    assert agy._read_only_killed_command(f"{command} {group} {operands}")
+    assert not agy._read_only_killed_command(f"{command} {group}Z {operands}")

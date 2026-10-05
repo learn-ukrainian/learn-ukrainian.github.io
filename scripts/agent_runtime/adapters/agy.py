@@ -224,29 +224,160 @@ _TASK_FINISHED_OUTCOME = "finished"
 _SUBAGENT_TOOL = "invoke_subagent"
 _MODEL_EVENT_TYPES = frozenset({"PLANNER_RESPONSE", "GENERIC", "MCP_TOOL"})
 
+
 # Only parsed read stages and the approved stderr/failure suffixes are safe.
 # Executable read options and unknown shell syntax fail closed (#8771).
-_KILL_READ_COMMANDS = frozenset({"grep", "rg", "find", "ls", "cat", "head", "tail", "sed", "git"})
-_KILL_EXECUTABLE_OPTIONS = frozenset(
-    {
-        "-delete",
-        "-exec",
-        "-execdir",
-        "-ok",
-        "-okdir",
-        "-fprint",
-        "-fprint0",
-        "-fprintf",
-        "-fls",
-        "--pre",
-        "--hostname-bin",
-        "--ext-diff",
-        "--textconv",
-        "--output",
-        "--open-files-in-pager",
-        "-O",
-    }
-)
+@dataclasses.dataclass(frozen=True)
+class _ReadOptions:
+    flags: frozenset[str]
+    values: frozenset[str] = frozenset()
+
+
+# Exact option spellings only. Values cannot add options; grouped short flags
+# are checked letter by letter. No pager, preprocessor, output or script flags.
+# Sources: installed tool manuals; git-scm.com/docs/git-{grep,log,show}; rg --help.
+_KILL_READ_OPTIONS: dict[tuple[str, ...], _ReadOptions] = {
+    ("grep",): _ReadOptions(
+        frozenset(
+            [
+                "-n",
+                "-l",
+                "-L",
+                "-i",
+                "-w",
+                "-c",
+                "-E",
+                "-F",
+                "-P",
+                "-h",
+                "-H",
+                "-r",
+                "-R",
+                "-v",
+                "-o",
+                "--count",
+                "--line-number",
+                "--files-with-matches",
+                "--ignore-case",
+                "--",
+            ]
+        ),
+        frozenset(
+            [
+                "-e",
+                "-A",
+                "-B",
+                "-C",
+                "-m",
+                "--regexp",
+                "--after-context",
+                "--before-context",
+                "--context",
+                "--max-count",
+            ]
+        ),
+    ),
+    ("rg",): _ReadOptions(
+        frozenset(
+            [
+                "-n",
+                "-l",
+                "-i",
+                "-w",
+                "-c",
+                "-F",
+                "-P",
+                "-v",
+                "-o",
+                "-u",
+                "--count",
+                "--files",
+                "--hidden",
+                "--no-heading",
+                "--line-number",
+                "--files-with-matches",
+                "--ignore-case",
+                "--",
+            ]
+        ),
+        frozenset(
+            [
+                "-e",
+                "-A",
+                "-B",
+                "-C",
+                "-m",
+                "-g",
+                "-t",
+                "--regexp",
+                "--after-context",
+                "--before-context",
+                "--context",
+                "--max-count",
+                "--glob",
+                "--type",
+            ]
+        ),
+    ),
+    ("git", "grep"): _ReadOptions(
+        frozenset(["-n", "-l", "-L", "-i", "-w", "-c", "-E", "-F", "-P", "-h", "-H", "--count", "--name-only", "--"]),
+        frozenset(["-e", "-A", "-B", "-C"]),
+    ),
+    ("git", "log"): _ReadOptions(
+        frozenset(["-p", "--oneline", "--stat", "--name-only", "--name-status", "--no-patch", "--"]),
+        frozenset(["-S", "-G", "-n", "--max-count", "--since", "--until", "--grep"]),
+    ),
+    ("git", "show"): _ReadOptions(
+        frozenset(["-p", "--oneline", "--stat", "--name-only", "--name-status", "--no-patch", "--"]),
+    ),
+    # find's -- ends startup options, not its expression. It cannot make a
+    # following -exec/-delete into an operand, so it is deliberately absent.
+    ("find",): _ReadOptions(
+        frozenset(["-print", "-print0", "-o"]),
+        frozenset(["-name", "-iname", "-path", "-ipath", "-type", "-maxdepth", "-mindepth"]),
+    ),
+    ("ls",): _ReadOptions(
+        frozenset(
+            [
+                "-l",
+                "-a",
+                "-A",
+                "-h",
+                "-R",
+                "-d",
+                "-1",
+                "--all",
+                "--almost-all",
+                "--human-readable",
+                "--recursive",
+                "--directory",
+                "--",
+            ]
+        )
+    ),
+    ("cat",): _ReadOptions(frozenset(["-n", "-b", "-s", "--number", "--number-nonblank", "--squeeze-blank", "--"])),
+    ("head",): _ReadOptions(
+        frozenset(["-q", "-v", "--quiet", "--verbose", "--"]),
+        frozenset(["-n", "-c", "--lines", "--bytes"]),
+    ),
+    ("tail",): _ReadOptions(
+        frozenset(["-q", "-v", "--quiet", "--verbose", "--"]),
+        frozenset(["-n", "-c", "--lines", "--bytes"]),
+    ),
+    ("sed",): _ReadOptions(frozenset({"-n", "--"})),
+    ("wc",): _ReadOptions(
+        frozenset(["-l", "-w", "-c", "-m", "-L", "--lines", "--words", "--bytes", "--chars", "--max-line-length", "--"])
+    ),
+    ("sort",): _ReadOptions(
+        frozenset(
+            ["-n", "-r", "-u", "-f", "-s", "--numeric-sort", "--reverse", "--unique", "--ignore-case", "--stable", "--"]
+        ),
+        frozenset(["-k", "-t", "--key", "--field-separator"]),
+    ),
+    ("uniq",): _ReadOptions(
+        frozenset(["-c", "-d", "-u", "-i", "--count", "--repeated", "--unique", "--ignore-case", "--"])
+    ),
+}
 _KILLED_COMMAND_LIMIT = 500
 
 
@@ -311,35 +442,81 @@ def _read_only_killed_command(command: str) -> bool:
         return False
 
 
+def _read_options(
+    argv: list[str], spec: _ReadOptions, *, numeric_count: bool = False
+) -> tuple[set[str], list[str]] | None:
+    """Check exact long options and every member of short-option groups."""
+    seen: set[str] = set()
+    operands: list[str] = []
+    index = 0
+    while index < len(argv):
+        arg = argv[index]
+        index += 1
+        if arg == "--":
+            if arg not in spec.flags:
+                return None
+            seen.add(arg)
+            operands.extend(argv[index:])
+            break
+        if not arg.startswith("-") or arg == "-":
+            operands.append(arg)
+            continue
+        # Preserve the existing head/tail -20 shorthand, digits only. No
+        # historical suffix flags may bypass the table through this spelling.
+        if numeric_count and re.fullmatch(r"-[0-9]+", arg) and "-n" in spec.values:
+            seen.add("-n")
+            continue
+        option, equal, _value = arg.partition("=") if arg.startswith("--") else (arg, "", "")
+        if option in spec.flags:
+            if equal:
+                return None
+            seen.add(option)
+            continue
+        if option in spec.values:
+            seen.add(option)
+            if not equal:
+                if index == len(argv):
+                    return None
+                index += 1
+            continue
+        if arg.startswith("--"):
+            return None
+        # Single-dash long options (find predicates) must match exactly above.
+        # Other words are groups; a value option owns the remainder or next arg.
+        for offset, letter in enumerate(arg[1:], start=1):
+            option = "-" + letter
+            if option in spec.values:
+                seen.add(option)
+                if offset == len(arg) - 1:
+                    if index == len(argv):
+                        return None
+                    index += 1
+                break
+            if option not in spec.flags:
+                return None
+            seen.add(option)
+    return seen, operands
+
+
 def _read_only_killed_argv(argv: list[str]) -> bool:
     """Validate a read stage with written arguments; never turn stdin into argv."""
-    if not argv or argv[0] not in _KILL_READ_COMMANDS:
+    if not argv:
         return False
-    if any(arg.split("=", 1)[0] in _KILL_EXECUTABLE_OPTIONS for arg in argv[1:]):
+    key = tuple(argv[:2]) if argv[0] == "git" else (argv[0],)
+    spec = _KILL_READ_OPTIONS.get(key)
+    if spec is None:
         return False
-    # Git accepts unambiguous long-option abbreviations, including executable
-    # diff/text conversion options. Do not let spelling shorten the boundary.
-    if any(
-        arg.startswith("--")
-        and len(option := arg.split("=", 1)[0]) > 2
-        and any(forbidden.startswith(option) for forbidden in _KILL_EXECUTABLE_OPTIONS if forbidden.startswith("--"))
-        for arg in argv[1:]
-    ):
+    parsed = _read_options(argv[len(key) :], spec, numeric_count=key in {("head",), ("tail",)})
+    if parsed is None:
         return False
-    if argv[0] == "git":
-        return (
-            len(argv) > 1 and argv[1] in {"grep", "log", "show"} and not any(arg.startswith("-O") for arg in argv[2:])
-        )
-    if argv[0] == "sed":
-        # sed -n alone still executes its program: admit only a print range.
-        return (
-            len(argv) >= 3
-            and argv[1] == "-n"
-            and re.fullmatch(r"\d+(?:,\d+)?p", argv[2]) is not None
-            and all(not arg.startswith("-") or arg == "--" for arg in argv[3:])
-        )
-    # Attached short options can execute a pager too (git grep -Oless).
-    return not (argv[0] == "rg" and any(arg.startswith("--pre") for arg in argv[1:]))
+    seen, operands = parsed
+    if key == ("sed",):
+        # Even sed -n executes its program: only one numeric print range is safe.
+        return "-n" in seen and bool(operands) and re.fullmatch(r"[0-9]+(?:,[0-9]+)?p", operands[0]) is not None
+    if key == ("uniq",):
+        # uniq's second positional operand is an OUTPUT file, even after --.
+        return len(operands) <= 1
+    return True
 
 
 def _pre_model_failure(plan: InvocationPlan | None, stdout: str, bound: _TranscriptSlice | None) -> bool:
