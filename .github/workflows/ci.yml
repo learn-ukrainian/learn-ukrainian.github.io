@@ -81,7 +81,7 @@ jobs:
           python-version-file: '.python-version'
       - id: metadata
         run: python3 -m scripts.ci.metadata_commit --commit HEAD >> "$GITHUB_OUTPUT"
-      - uses: trufflesecurity/trufflehog@f714bf454f350590f4a24c3ddb1aef02c35bf5b6 # v3.97.5
+      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # v3.97.9
         with:
           base: ${{ steps.metadata.outputs.parent }}
           head: ${{ steps.metadata.outputs.commit }}
@@ -125,7 +125,7 @@ jobs:
             python3 scripts/audit/lint_opsec_leaks.py --public-identifiers
           fi
       - run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
-      - uses: trufflesecurity/trufflehog@f714bf454f350590f4a24c3ddb1aef02c35bf5b6 # v3.97.5
+      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # v3.97.9
         with:
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
