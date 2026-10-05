@@ -1163,17 +1163,21 @@ def _tree_membership(
         }
 
     if frontier and warnings is not None:
+        # The frontier's children were never read, exactly like an
+        # INCOMPLETE_NODE subtree, so consumers count it as unread (#9783).
         warnings.append({"code": "truncated_depth", "depth": _MAX_SUBISSUE_DEPTH, "frontier": sorted(frontier)})
 
+    # Close each root over every adjacency that WAS read. The fetch walk is
+    # shared, so a node first reached shallowly from one root can sit deeper
+    # than the fetch depth below another; a depth-capped closure here would
+    # silently drop that root's claim on the node's descendants (#9783).
     membership = {}
     for root in roots:
         descendants: set[int] = set()
         level = {root}
-        for _depth in range(_MAX_SUBISSUE_DEPTH):
-            level = set().union(*(children.get(parent, set()) for parent in level)) - roots
+        while level:
+            level = set().union(*(children.get(parent, set()) for parent in level)) - roots - descendants
             descendants.update(level)
-            if not level:
-                break
         membership[root] = (
             descendants,
             {int(match) for match in ISSUE_REF_RE.findall(bodies.get(root, ""))},
@@ -1338,13 +1342,7 @@ def run_audit(
     membership = fetch_tree_membership(
         {epic for epics in registry.values() for epic in epics}, root, traversal_warnings
     )
-    incomplete_nodes = sorted(
-        {
-            w["issue"]
-            for w in traversal_warnings
-            if w.get("code") == "traversal_incomplete" and _is_positive_int(w.get("issue"))
-        }
-    )
+    incomplete_nodes = sorted(_unread_warning_nodes(traversal_warnings))
     report = classify(open_issues, registry, membership, incomplete_nodes=incomplete_nodes)
     if incomplete_nodes:
         # Fail closed (#8661): an unread subtree can hide a duplicate
@@ -1459,25 +1457,43 @@ def _valid_open_numbers(value: object) -> bool:
     return isinstance(value, list) and all(_is_positive_int(n) for n in value)
 
 
+# Traversal warning codes that mean part of the native tree was never read:
+# ``traversal_incomplete`` names one unread node (fetch failure, missing
+# cursor, page ceiling); ``truncated_depth`` names the frontier whose children
+# lie beyond ``_MAX_SUBISSUE_DEPTH`` (#9783). Either can hide another owner.
+# ``unresolved_subissue`` (GitHub answered: no such node here) and
+# ``cross_repo_subissue`` (another repository's namespace) are read outcomes.
+_UNREAD_WARNING_CODES = frozenset({"traversal_incomplete", "truncated_depth"})
+
+
+def _unread_warning_nodes(warnings: object) -> set[int]:
+    """Issue numbers that traversal ``warnings`` record as never read."""
+    nodes: set[int] = set()
+    if not isinstance(warnings, list):
+        return nodes
+    for warning in warnings:
+        if not isinstance(warning, dict):
+            continue
+        if warning.get("code") == "traversal_incomplete" and _is_positive_int(warning.get("issue")):
+            nodes.add(warning["issue"])
+        elif warning.get("code") == "truncated_depth" and isinstance(warning.get("frontier"), list):
+            nodes.update(n for n in warning["frontier"] if _is_positive_int(n))
+    return nodes
+
+
 def unread_membership_nodes(report: dict) -> set[int]:
     """Issue numbers the audit recorded as never read.
 
-    A non-list ``incomplete_nodes`` or ``warnings`` contributes nothing here;
+    Covers ``incomplete_nodes`` plus every unread-frontier warning
+    (``traversal_incomplete`` and the ``truncated_depth`` frontier). A non-list
+    ``incomplete_nodes`` or ``warnings`` contributes nothing here;
     :func:`membership_report_is_complete` rejects those shapes on its own.
     """
     nodes: set[int] = set()
     raw = report.get("incomplete_nodes")
     if isinstance(raw, list):
         nodes.update(n for n in raw if _is_positive_int(n))
-    warnings = report.get("warnings")
-    if isinstance(warnings, list):
-        for warning in warnings:
-            if (
-                isinstance(warning, dict)
-                and warning.get("code") == "traversal_incomplete"
-                and _is_positive_int(warning.get("issue"))
-            ):
-                nodes.add(warning["issue"])
+    nodes.update(_unread_warning_nodes(report.get("warnings")))
     return nodes
 
 
@@ -1486,9 +1502,10 @@ def membership_report_is_complete(report: object) -> bool:
 
     ``membership_complete`` must be the boolean ``True``. A missing flag, the
     string ``"false"``, or any other value is unverified — a pre-flag cache
-    must be refreshed, not trusted. ``incomplete_nodes`` must be a list, and
-    neither that list nor a ``traversal_incomplete`` warning may name an
-    unread issue.
+    must be refreshed, not trusted. ``incomplete_nodes`` must be a list, no
+    unread-frontier warning (``traversal_incomplete`` or ``truncated_depth``)
+    may be present — even one whose node list is malformed — and nothing may
+    name an unread issue.
     """
     if not isinstance(report, dict):
         return False
@@ -1498,6 +1515,8 @@ def membership_report_is_complete(report: object) -> bool:
         return False
     warnings = report.get("warnings")
     if warnings is not None and not isinstance(warnings, list):
+        return False
+    if any(isinstance(w, dict) and w.get("code") in _UNREAD_WARNING_CODES for w in warnings or ()):
         return False
     return not unread_membership_nodes(report)
 
@@ -1527,7 +1546,7 @@ def validate_membership_report(report: object, max_age_s: int) -> dict | None:
     # Completeness gate (#8661): trust membership only when the audit
     # explicitly certifies a finished traversal. A missing flag, the string
     # "false", a non-list incomplete_nodes, an unread node, or a
-    # traversal_incomplete warning all fail closed. A pre-flag cache therefore
+    # traversal_incomplete / truncated_depth warning all fail closed. A pre-flag cache therefore
     # reads as unverified (None) and the caller must refresh it.
     if not membership_report_is_complete(report):
         return None
@@ -1688,7 +1707,8 @@ def human_summary(report: dict) -> str:
         if warning["code"] == "truncated_depth":
             lines.append(
                 f"WARN: native sub-issue traversal truncated at depth {warning['depth']} "
-                f"with {len(warning['frontier'])} parents still to inspect"
+                f"with {len(warning['frontier'])} parents still to inspect — the audit is "
+                "incomplete and fails closed (ok: false)"
             )
         elif warning["code"] == "unresolved_subissue":
             lines.append(f"WARN: sub-issue #{warning['issue']} no longer resolves in this repository; skipped")

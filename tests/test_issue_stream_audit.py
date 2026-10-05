@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import itertools
 import json
 import re
 import subprocess
 import textwrap
 import threading
+import time
 from datetime import date
 from pathlib import Path
 
@@ -2008,6 +2010,165 @@ def test_run_audit_incomplete_report_has_completeness_flag_and_fails_closed(tmp_
     assert cache_file.exists()
     assert read_membership_index(3600, cache_path=cache_file) is None
     assert validate_membership_report(report, 3600) is None
+
+
+# --------------------------------------------------------------------------- #
+# #9783 review: a depth-truncated traversal is incomplete. Epic 10 reaches
+# parent 30 -> issue 42 directly; epic 20 reaches the same parent through a
+# chain 201 -> 202 -> ... that the fetch walk stops inside, so its claim on 30
+# and 42 is never read. Only the unread frontier betrays the second owner.
+# --------------------------------------------------------------------------- #
+_DEEP_CHAIN = list(range(201, 209))  # eight links: 208 is the depth-8 frontier
+
+
+def _deep_chain_edges(chain: list[int]) -> dict[int, list[int]]:
+    edges = {10: [30], 30: [42], 20: [chain[0]]}
+    edges.update({a: [b] for a, b in itertools.pairwise(chain)})
+    edges[chain[-1]] = [30]
+    return edges
+
+
+def _run_deep_chain_audit(tmp_path, monkeypatch, chain: list[int], *, body_refs: dict[int, str] | None = None):
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    root = tmp_path / "repo"
+    _make_repo(root, epics=[10, 20])
+    edges = _deep_chain_edges(chain)
+
+    def fetch_batch(cursors):
+        return {
+            number: _page(edges.get(number, []), False, body=(body_refs or {}).get(number, ""), child_totals={42: 0})
+            for number in cursors
+        }
+
+    monkeypatch.setattr(
+        issue_stream_audit,
+        "fetch_tree_membership",
+        lambda roots, repo_root, warnings: _tree_membership(roots, fetch_batch, warnings),
+    )
+    monkeypatch.setattr(issue_stream_audit, "fetch_open_issues", lambda _r: _issues(10, 20, 30, 42, 500, *chain))
+    monkeypatch.setattr(
+        issue_stream_audit, "fetch_issue_states", lambda nums, _r, **_k: ({n: "OPEN" for n in nums}, set())
+    )
+    return run_audit(root)
+
+
+def test_depth_truncated_audit_is_incomplete_and_refuses_native_chain(tmp_path, monkeypatch):
+    from scripts.orchestration import task_lifecycle
+
+    report = _run_deep_chain_audit(tmp_path, monkeypatch, _DEEP_CHAIN)
+
+    assert {"code": "truncated_depth", "depth": 8, "frontier": [208]} in report["warnings"]
+    assert report["ok"] is False
+    assert report["membership_complete"] is False
+    assert report["incomplete_nodes"] == [208]
+    # The trap: everything that WAS read shows one owner for both nodes.
+    assert report["effective_membership"]["42"]["epics"] == [10]
+    assert report["effective_membership"]["30"]["epics"] == [10]
+    assert issue_stream_audit.membership_report_is_complete(report) is False
+    assert validate_membership_report(report, 3600) is None
+
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=30,
+        registered_epics=[10, 20],
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert result["method"] is None
+    assert "incomplete" in result["reason"]
+    assert "#208" in result["reason"]
+
+    # Completing the same traversal reveals both nodes as multi-homed.
+    monkeypatch.setattr(issue_stream_audit, "_MAX_SUBISSUE_DEPTH", 16)
+    complete = _run_deep_chain_audit(tmp_path / "complete", monkeypatch, _DEEP_CHAIN)
+    assert complete["membership_complete"] is True
+    assert complete["incomplete_nodes"] == []
+    assert complete["effective_membership"]["42"]["epics"] == [10, 20]
+    assert complete["effective_membership"]["30"]["epics"] == [10, 20]
+    refused = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=30,
+        registered_epics=[10, 20],
+        membership_report=complete,
+    )
+    assert refused["valid"] is False
+    assert "multi-homed" in refused["reason"]
+
+
+def test_depth_truncated_audit_refuses_body_path(tmp_path, monkeypatch):
+    """The body path consumes the same completeness contract: epic 10's body
+    names #500, and the unread depth frontier under epic 20 could claim it too."""
+    from scripts.orchestration import task_lifecycle
+
+    report = _run_deep_chain_audit(tmp_path, monkeypatch, _DEEP_CHAIN, body_refs={10: "Tracked: #500"})
+
+    assert report["effective_membership"]["500"] == {
+        "epics": [10],
+        "streams": ["s"],
+        "via": "body",
+        "unique_stream": True,
+    }
+    result = task_lifecycle.resolve_membership(
+        issue_number=500,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10, 20],
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "incomplete" in result["reason"]
+    assert "#208" in result["reason"]
+
+
+def test_shared_walk_closes_each_root_past_the_fetch_depth():
+    """A node fetched shallowly from one root can sit deeper than the fetch
+    depth below another root. Every adjacency was read, so the traversal is
+    complete and the deeper root must still claim the node's descendants."""
+    chain = list(range(201, 208))  # 30 sits at level 8 below epic 20, 42 at level 9
+    edges = _deep_chain_edges(chain)
+
+    def fetch_batch(cursors):
+        return {number: _page(edges.get(number, []), False, child_totals={42: 0}) for number in cursors}
+
+    warnings = []
+    membership = _tree_membership({10, 20}, fetch_batch, warnings)
+    assert warnings == []
+    assert membership[10][0] == {30, 42}
+    assert membership[20][0] == {*chain, 30, 42}
+    report = classify(_issues(10, 20, 30, 42, *chain), {"s": [10, 20]}, membership)
+    assert report["effective_membership"]["42"]["unique_stream"] is False
+
+
+def test_truncated_depth_warning_alone_makes_report_incomplete():
+    """A cache claiming completeness while carrying a depth-truncation warning,
+    even one whose frontier is malformed, is unverified."""
+    base = {
+        "generated_at": int(time.time()),
+        "membership_complete": True,
+        "incomplete_nodes": [],
+        "effective_membership": {},
+        "open_issue_numbers": [],
+    }
+    truncated = {**base, "warnings": [{"code": "truncated_depth", "depth": 8, "frontier": [208, 209]}]}
+    assert issue_stream_audit.unread_membership_nodes(truncated) == {208, 209}
+    assert issue_stream_audit.membership_report_is_complete(truncated) is False
+    assert validate_membership_report(truncated, 3600) is None
+    assert make_membership_resolver(truncated)(1, 1) is False
+    assert make_issue_resolver(truncated)("1") is False
+
+    malformed = {**base, "warnings": [{"code": "truncated_depth", "depth": 8, "frontier": "208"}]}
+    assert issue_stream_audit.membership_report_is_complete(malformed) is False
+
+    benign = {
+        **base,
+        "warnings": [
+            {"code": "unresolved_subissue", "issue": 7},
+            {"code": "cross_repo_subissue", "parent": 1, "issue": 2, "repository": "other/repo"},
+        ],
+    }
+    assert issue_stream_audit.membership_report_is_complete(benign) is True
 
 
 @pytest.fixture(autouse=True)
