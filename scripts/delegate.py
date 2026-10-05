@@ -10784,24 +10784,6 @@ def _dispatch(
         if write_intent_error:
             print(write_intent_error, file=sys.stderr)
             return 2
-    # #9739: before the task directory, archival, runtime cleanup, forwarding, any
-    # rebase, worktree or provider. A forwarded dispatch runs this again on its host.
-    try:
-        authoring_admission = _authoring_review_admission(
-            args,
-            dispatch_agent=dispatch_agent,
-            requested_harness=requested_harness,
-            requested_branch=requested_branch,
-            worktree_arg=worktree_arg,
-            validated_worktree=validated_worktree,
-            validated_cwd=validated_cwd,
-            target_repo_root=target_repo_root,
-            repository=fleet_repo.github,
-            default_repo=bool(fleet_repo.default),
-        )
-    except _AuthoringReviewRefused as exc:
-        print(exc.render(), file=sys.stderr)
-        return 2
     state_path = _state_path(task_id)
     silence_timeout = getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S)
     initial_response_timeout = getattr(
@@ -10880,11 +10862,6 @@ def _dispatch(
         print(write_cwd_error, file=sys.stderr)
         return 2
 
-    if getattr(args, "preflight_triage", False):
-        preflight_rc = _run_preflight_triage(args, worktree_arg=worktree_arg)
-        if preflight_rc is not None:
-            return preflight_rc
-
     dirty_primary_error = _resolve_dirty_primary_checkout_error(mode=args.mode)
     if dirty_primary_error:
         print(dirty_primary_error, file=sys.stderr)
@@ -10894,6 +10871,36 @@ def _dispatch(
     if primary_integrity_error:
         print(primary_integrity_error, file=sys.stderr)
         return 2
+
+    # #9739: after the argument and checkout checks above, so a malformed dispatch
+    # gets its own refusal; before preflight triage, the task directory, archival,
+    # runtime cleanup, forwarding, any rebase, worktree or provider. A forwarded
+    # dispatch runs this again on its host; a checkout reaped while dispatch
+    # waits for its lock is admitted again under that lock (#8610).
+    def admit_authoring() -> _AuthoringAdmission | None:
+        return _authoring_review_admission(
+            args,
+            dispatch_agent=dispatch_agent,
+            requested_harness=requested_harness,
+            requested_branch=requested_branch,
+            worktree_arg=worktree_arg,
+            validated_worktree=validated_worktree,
+            validated_cwd=validated_cwd,
+            target_repo_root=target_repo_root,
+            repository=fleet_repo.github,
+            default_repo=bool(fleet_repo.default),
+        )
+
+    try:
+        authoring_admission = admit_authoring()
+    except _AuthoringReviewRefused as exc:
+        print(exc.render(), file=sys.stderr)
+        return 2
+
+    if getattr(args, "preflight_triage", False):
+        preflight_rc = _run_preflight_triage(args, worktree_arg=worktree_arg)
+        if preflight_rc is not None:
+            return preflight_rc
 
     _warn_node_modules_integrity()
     _warn_venv_integrity()
@@ -11254,8 +11261,15 @@ def _dispatch(
             if changed_error:
                 raise ValueError(changed_error.removeprefix("❌ "))
             # A3 (#9739): under the lock and before any rebase, the admitted
-            # branch head must still be the head the authors were read from.
-            moved = _authoring_target_moved(authoring_admission, repo_root=target_repo_root)
+            # branch head must still be the head the authors were read from;
+            # a checkout reaped meanwhile becomes a fresh worktree, admitted again.
+            try:
+                authoring_admission, moved = _authoring_recheck_under_lock(
+                    authoring_admission, repo_root=target_repo_root, readmit=admit_authoring
+                )
+            except _AuthoringReviewRefused as exc:
+                print(exc.render(), file=sys.stderr)
+                return 2
             if moved:
                 print(moved, file=sys.stderr)
                 return 2
@@ -12979,6 +12993,36 @@ def _authoring_target_head(
     return None
 
 
+def _git_common_dir_identity(path: Path) -> Path | None:
+    """The repository ``path`` belongs to: git's absolute common directory, canonical; None outside git."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+            cwd=path,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    common = (proc.stdout or "").strip() if proc.returncode == 0 else ""
+    return Path(common).resolve() if common else None
+
+
+def _is_other_repository(checkout: Path, repo_root: Path) -> bool:
+    """True only when git proves ``checkout`` belongs to a repository other than ``repo_root``'s.
+
+    Repository identity is the shared git common directory, never a path name:
+    a sibling worktree laid out like one of the primary's still has its own
+    common directory. Unresolvable identity is not proof of a sibling.
+    """
+    checkout_repo = _git_common_dir_identity(checkout)
+    target_repo = _git_common_dir_identity(repo_root)
+    return checkout_repo is not None and target_repo is not None and checkout_repo != target_repo
+
+
 def _authoring_review_admission(
     args: argparse.Namespace,
     *,
@@ -13003,7 +13047,9 @@ def _authoring_review_admission(
     catalog qualification, families, protected seats and the risk floor; it
     records reviewer availability as unknown. Reads only, never fetches; runs
     before any task record, archival, forwarding, rebase, worktree or
-    provider. Returns None for read-only dispatches; raises
+    provider. Returns None for read-only dispatches and for sibling
+    repositories (``--repo``, or a ``--cwd`` checkout whose git common
+    directory is another repository's); raises
     ``_AuthoringReviewRefused``, which no override flag bypasses.
     """
     if args.mode not in _WRITE_CAPABLE_MODES:
@@ -13029,7 +13075,10 @@ def _authoring_review_admission(
             "pass every path this writer owns.",
             record,
         )
-    if not default_repo:
+    cwd_only = (
+        validated_cwd is not None and validated_worktree is None and worktree_arg != "auto" and not requested_branch
+    )
+    if not default_repo or (cwd_only and _is_other_repository(validated_cwd, target_repo_root)):
         # Protected seats and risk floors describe this repository's own paths.
         record.update({"applicable": False, "reason": "sibling repository"})
         return None
@@ -13151,6 +13200,30 @@ def _authoring_review_state_fields(args: argparse.Namespace, admission: _Authori
         if values:
             fields[key] = [values] if isinstance(values, str) else list(values)
     return fields
+
+
+def _authoring_recheck_under_lock(
+    admission: _AuthoringAdmission | None,
+    *,
+    repo_root: Path,
+    readmit: Callable[[], _AuthoringAdmission | None],
+) -> tuple[_AuthoringAdmission | None, str | None]:
+    """A3 under the worktree lock: the admission that now applies, and refusal text if its head moved.
+
+    A removal holding the lock may take the admitted checkout while dispatch
+    waits (#8610); dispatch then creates a fresh worktree, so admission is run
+    again for that target instead of reading the vanished checkout as a moved
+    head. A checkout still present at another head stays refused. Raises
+    ``_AuthoringReviewRefused`` when the re-run refuses.
+    """
+    if (
+        admission is not None
+        and admission.kind == "existing-worktree"
+        and admission.checkout is not None
+        and not os.path.lexists(admission.checkout)
+    ):
+        return readmit(), None
+    return admission, _authoring_target_moved(admission, repo_root=repo_root)
 
 
 def _authoring_target_moved(

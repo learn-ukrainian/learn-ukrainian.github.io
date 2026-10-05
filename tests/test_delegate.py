@@ -11566,6 +11566,128 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
     assert Path(state["worktree_path"]) == sibling_wt
 
 
+@pytest.mark.parametrize("target", ["sibling", "primary"])
+def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(tmp_tasks_dir, tmp_path, monkeypatch, target):
+    """#9739: a --cwd checkout of another repository skips authoring admission like --repo; the primary's own
+    worktree at the same relative path (``.worktrees/dispatch/codex/task-1``) is admitted as usual."""
+    primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
+    primary_wt = primary / ".worktrees" / "dispatch" / "codex" / "task-1"
+    assert primary_wt.is_dir() and primary_wt.relative_to(primary) == sibling_wt.relative_to(sibling)
+    assert delegate._is_other_repository(sibling_wt, primary)
+    assert not delegate._is_other_repository(primary_wt, primary)
+    assert not delegate._is_other_repository(tmp_path, primary)  # outside git: identity unproven, never a sibling
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    checkout = sibling_wt if target == "sibling" else primary_wt
+    monkeypatch.chdir(sibling if target == "sibling" else primary)
+    _patch_worker_popen(monkeypatch)
+    task_id = f"identity-{target}"
+
+    rc = delegate.cmd_dispatch(_write_args(task_id=task_id, mode="workspace-write", cwd=str(checkout)))
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state is not None and Path(state["worktree_path"]) == checkout
+    if target == "sibling":
+        assert delegate.AUTHORING_REVIEW_STATE_KEY not in state
+    else:
+        admission = state[delegate.AUTHORING_REVIEW_STATE_KEY]
+        assert admission["target"] == "existing-worktree"
+        assert admission["head_sha"] == delegate._resolve_sha(primary_wt)
+
+
+def _malformed_dispatch(case: str, tmp_path: Path, monkeypatch) -> tuple[argparse.Namespace, str]:
+    """A write dispatch that one cheap argument or checkout check refuses, and that refusal's text."""
+    if case == "different-git-root":
+        primary, sibling, _ = _init_sibling_pair(tmp_path)
+        monkeypatch.chdir(sibling)
+    else:
+        primary, primary_wt = _init_repo_with_worktree(tmp_path)
+        monkeypatch.chdir(primary)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    # No --owned-path: authoring admission would refuse every one of these with AUTHORING_REVIEW_SCOPE_UNKNOWN.
+    common = {"task_id": f"malformed-{case}", "mode": "workspace-write", "owned_path": []}
+    if case == "cwd-with-worktree":
+        return _write_args(cwd=str(primary_wt), worktree="auto", **common), "--cwd cannot be combined with --worktree"
+    if case == "primary-checkout":
+        return _write_args(cwd=str(primary), **common), "primary"
+    if case == "dirty-primary":
+        monkeypatch.setattr(delegate, "_resolve_dirty_primary_checkout_error", lambda **_kw: "❌ primary is dirty")
+        return _write_args(worktree="auto", **common), "❌ primary is dirty"
+    return _write_args(worktree="auto", **common), "different git root"
+
+
+@pytest.mark.parametrize("case", ["cwd-with-worktree", "different-git-root", "primary-checkout", "dirty-primary"])
+def test_malformed_write_dispatch_gets_its_own_refusal_before_authoring_admission(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, case
+):
+    """#9739: argument and checkout checks precede authoring admission, so the caller sees what is wrong."""
+    _sanitize_git_env_for_test(monkeypatch)
+    args, expected = _malformed_dispatch(case, tmp_path, monkeypatch)
+    admissions: list[str] = []
+    real_admission = delegate._authoring_review_admission
+    monkeypatch.setattr(
+        delegate,
+        "_authoring_review_admission",
+        lambda *a, **k: admissions.append("called") or real_admission(*a, **k),
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    err = capsys.readouterr().err
+    assert rc == 2
+    assert expected in err
+    assert "AUTHORING_REVIEW" not in err
+    assert admissions == []
+    assert delegate._read_state(delegate._state_path(args.task_id)) is None
+
+
+def test_authoring_admission_follows_the_cheap_checks_and_precedes_every_side_effect(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    """#9739: a refused writer passed every argument check, and nothing ran or was written before the refusal."""
+    primary, _ = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(primary)
+    events: list[str] = []
+
+    def spy(name: str, *, passthrough: bool) -> None:
+        real = getattr(delegate, name)
+        monkeypatch.setattr(
+            delegate, name, lambda *a, **k: events.append(name) or (real(*a, **k) if passthrough else None)
+        )
+
+    for name in ("_resolve_dirty_primary_checkout_error", "_resolve_primary_integrity_error"):
+        spy(name, passthrough=True)
+    spy("_authoring_review_admission", passthrough=True)
+    for name in (
+        "_run_preflight_triage",
+        "_sweep_runtime_tmp_orphans",
+        "_archive_task_artifacts",
+        "_evaluate_dispatch_admission",
+        "worktree_lock",
+        "_resolve_worktree_base_sha",
+        "_ensure_worktree",
+    ):
+        spy(name, passthrough=False)
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kw: events.append("forward"))
+
+    rc = delegate.cmd_dispatch(
+        _write_args(task_id="admission-order", worktree="auto", owned_path=[], preflight_triage=True)
+    )
+
+    assert rc == 2
+    assert f"❌ {delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN}:" in capsys.readouterr().err
+    assert events == [
+        "_resolve_dirty_primary_checkout_error",
+        "_resolve_primary_integrity_error",
+        "_authoring_review_admission",
+    ]
+    assert not delegate._state_path("admission-order").exists()
+    assert not (primary / ".worktrees" / "dispatch" / "codex" / "admission-order").exists()
+
+
 def test_dispatch_help_omits_deprecated_cwd_dot_example():
     """Issue #4445: help/examples must not advertise `--cwd .` or a flat
     worktree layout for write-capable work."""
@@ -13434,6 +13556,57 @@ def test_dispatch_waits_for_settle_then_follows_missing_worktree_path(tmp_tasks_
     assert state["worktree_reused"] is False
     # (d) the dispatch lock is released before its worker, whose settle takes it again, starts.
     assert worker_spawns == [True]
+
+
+@pytest.mark.parametrize("change", ["unchanged", "moved", "vanished", "vanished-then-refused"])
+def test_authoring_recheck_readmits_a_vanished_checkout_and_refuses_a_moved_one(tmp_path, change):
+    """#9739 A3 with #8610: a checkout reaped during the lock wait is admitted again as the fresh worktree dispatch
+    will create; a checkout still present at another head is a moved target and stays refused."""
+    primary, checkout = _init_repo_with_worktree(tmp_path)
+    admitted_head = delegate._resolve_sha(checkout)
+    admission = delegate._AuthoringAdmission("existing-worktree", admitted_head, checkout, None, None, {})
+    fresh = delegate._AuthoringAdmission("new-branch", admitted_head, None, None, None, {"target": "new-branch"})
+    readmissions: list[str] = []
+
+    def readmit():
+        readmissions.append(change)
+        if change == "vanished-then-refused":
+            raise delegate._AuthoringReviewRefused(delegate.AUTHORING_REVIEW_NO_ROUTE, "no reviewer remains.", {})
+        return fresh
+
+    if change == "moved":
+        subprocess.run(
+            ["git", "-C", str(checkout), "commit", "-q", "--allow-empty", "--no-gpg-sign", "-m", "another writer"],
+            check=True,
+            capture_output=True,
+            env=delegate._sanitized_git_env(),
+            timeout=30,
+        )
+    elif change.startswith("vanished"):
+        subprocess.run(
+            ["git", "-C", str(primary), "worktree", "remove", "--force", str(checkout)],
+            check=True,
+            capture_output=True,
+            env=delegate._sanitized_git_env(),
+            timeout=30,
+        )
+
+    if change == "vanished-then-refused":
+        with pytest.raises(delegate._AuthoringReviewRefused) as refused:
+            delegate._authoring_recheck_under_lock(admission, repo_root=primary, readmit=readmit)
+        assert refused.value.code == delegate.AUTHORING_REVIEW_NO_ROUTE
+        assert readmissions == [change]
+        return
+    current, moved = delegate._authoring_recheck_under_lock(admission, repo_root=primary, readmit=readmit)
+
+    if change == "unchanged":
+        assert (current, moved, readmissions) == (admission, None, [])
+    elif change == "moved":
+        assert current is admission and readmissions == []
+        assert moved is not None and f"❌ {delegate.AUTHORING_REVIEW_TARGET_MOVED}:" in moved
+        assert f"admitted {admitted_head[:12]}, now {delegate._resolve_sha(checkout)[:12]}" in moved
+    else:
+        assert (current, moved, readmissions) == (fresh, None, [change])
 
 
 def test_dispatch_fails_before_spawning_when_the_worktree_lock_is_busy(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
@@ -18392,13 +18565,16 @@ def test_creation_inventory_failure_retains_new_tree_without_spawning(tmp_tasks_
     assert "creation inventory unavailable (CalledProcessError); worker not started" in state["last_error"]
 
 
-@pytest.mark.parametrize("reply,dispatch_verdict,recorded", [
-    ("**VERDICT: APPROVE**", "APPROVE", "APPROVED"),
-    ("VERDICT: APPROVE\nVERDICT: APPROVED", "APPROVED", "APPROVED"),
-    ("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE", "APPROVE", "APPROVED"),
-    ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "REQUEST_CHANGES", None),
-    ("```\nVERDICT: APPROVE\n```", None, None),
-])
+@pytest.mark.parametrize(
+    "reply,dispatch_verdict,recorded",
+    [
+        ("**VERDICT: APPROVE**", "APPROVE", "APPROVED"),
+        ("VERDICT: APPROVE\nVERDICT: APPROVED", "APPROVED", "APPROVED"),
+        ("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE", "APPROVE", "APPROVED"),
+        ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "REQUEST_CHANGES", None),
+        ("```\nVERDICT: APPROVE\n```", None, None),
+    ],
+)
 def test_parse_review_verdict_shared_lines_preserve_consumer_policies(reply, dispatch_verdict, recorded):
     from scripts.review import record_cf_verdict as recorder
 

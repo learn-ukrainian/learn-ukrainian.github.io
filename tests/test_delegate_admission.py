@@ -93,7 +93,27 @@ def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str = "ad
     return delegate.build_parser().parse_args(argv)
 
 
+def _pin_origin_main_to_head(monkeypatch) -> None:
+    """Give write-dispatch review admission (#9739) the ``origin/main`` it reads locally.
+
+    Most CI shards are shallow clones without ``origin/main``. Pinned to the
+    checkout's own HEAD, the dispatch is a fresh branch with no commits of its
+    own, so these tests check host admission, not the runner's clone depth
+    (tests/test_authoring_review_feasibility.py covers authored branches). The
+    dry-run worktree base, which would fetch ``origin/main``, is that HEAD too.
+    """
+    head = _git(delegate._REPO_ROOT, "rev-parse", "HEAD")
+    real_resolve_sha = delegate._resolve_sha
+
+    def resolve_sha(path, ref="HEAD"):
+        return head if ref == "origin/main^{commit}" else real_resolve_sha(path, ref)
+
+    monkeypatch.setattr(delegate, "_resolve_sha", resolve_sha)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head)
+
+
 def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
 
     rc = delegate.cmd_dispatch(_dry_run_args())
@@ -109,6 +129,7 @@ def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(tasks_dir, mon
 
 
 def test_dispatch_refuses_on_low_memory_and_high_load(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     monkeypatch.setattr(
         dispatch_admission,
         "probe_host",
@@ -174,6 +195,7 @@ def test_admission_sweeps_dead_workers_to_crashed_and_frees_their_slot(tasks_dir
 
 
 def test_dry_run_reports_dead_workers_without_marking_them(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     dead = _running_record(tasks_dir, "dead-writer", pid=424242)
     monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: False)
 
