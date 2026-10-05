@@ -1,0 +1,295 @@
+{
+  "claims": [],
+  "records": [
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": null,
+        "pr": null
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-unlinked"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": null,
+        "merged_at": null
+      },
+      "outcome": {
+        "issue": 105,
+        "pr": 205
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-no-merge"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 106,
+        "pr": 206
+      },
+      "review_of_record": null,
+      "spans": [
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-no-review"
+    },
+    {
+      "arm": "before",
+      "cleanup": null,
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 107,
+        "pr": 207
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-no-cleanup"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 108,
+        "pr": 208
+      },
+      "review_of_record": {
+        "author_family": "openai",
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-self-review"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 109,
+        "pr": 209
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-stale-head"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 110,
+        "pr": 210
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "ci_test_repair",
+      "task_id": "fixture-outside-strata"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "exclusion": "dry_run",
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 111,
+        "pr": 211
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-excluded-dry-run"
+    }
+  ],
+  "schema_version": "delivery-baseline-input.v1"
+}

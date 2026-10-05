@@ -1,0 +1,59 @@
+{
+  "claims": [],
+  "records": [
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 102,
+        "pr": 202
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": null,
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        },
+        {
+          "end": "2026-01-01T11:30:00Z",
+          "end_field": "review_task.finished_at",
+          "kind": "worker_wall",
+          "stage": "verification_review",
+          "start": "2026-01-01T11:00:00Z",
+          "start_field": "file.mtime"
+        },
+        {
+          "end": "2026-01-01T09:01:00Z",
+          "end_field": "canary.checked_at",
+          "kind": "elapsed",
+          "stage": "onboarding",
+          "start": "2026-01-01T09:00:00Z",
+          "start_field": "session.capsule.generated_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-missing-1"
+    }
+  ],
+  "schema_version": "delivery-baseline-input.v1"
+}
