@@ -6,6 +6,13 @@ mark hot / near_cap / deficit lanes AVOID. Shares the Monitor snapshot and
 blocking native refresh path with ``scripts.fleet.usage``. The admission line
 reports whether ``delegate.py dispatch`` would admit a write worker on this host
 now, from the same function dispatch calls (#8645).
+
+Every row's capacity comes from the shared owner,
+:func:`scripts.fleet.credit_lane.routing_facts` (#9740): this module adds only
+picker-local restrictions (retired aliases, ACP transport eligibility, the
+operator Codex reset reserve) and presentation. A pace deficit read from a
+stale snapshot is ``UNKNOWN — stale/advisory``: ranked after every row with
+verified capacity and never in ``cooler_lanes`` or ``--strict`` success.
 """
 
 from __future__ import annotations
@@ -122,39 +129,23 @@ def is_avoid_lane(
     agent_info: dict[str, Any] | None,
     *,
     lane: str | None = None,
-    deficit: dict[str, Any] | None = None,
+    facts: credit_lane.RoutingFacts | None = None,
 ) -> bool:
-    """True when hot/near_cap/need_login, CodexBar deficit, or ``lane`` is retired."""
-    if _is_hard_avoid(agent_info, lane=lane):
+    """True when ``lane`` is retired or the shared routing facts class it ``avoid``.
+
+    ``avoid`` covers ineligible, unhealthy, NEED_LOGIN, near cap without credit
+    relief, runtime-blocked hot and a current uncovered pace deficit.
+    """
+    if lane is not None and lane.strip().lower() in RETIRED_AGENT_ALIASES:
         return True
-    deficit = deficit if deficit is not None else credit_lane.pace_deficit_state(lane or "", agent_info)
-    status = lane_status({**(agent_info or {}), "status": deficit["status"]})
-    if status in _AVOID_STATUSES:
-        return True
-    return deficit["uncovered"] is True
+    if facts is None:
+        facts = credit_lane.routing_facts(lane or "", agent_info, model=None)
+    return facts.capacity == credit_lane.CAPACITY_AVOID
 
 
 def remaining_pct(agent_info: dict[str, Any] | None) -> float | None:
-    info = agent_info or {}
-    rem = info.get("remaining_pct")
-    if isinstance(rem, (int, float)):
-        return float(rem)
-    provider_windows = info.get("provider_windows")
-    if isinstance(provider_windows, dict):
-        auto = provider_windows.get("auto")
-        if isinstance(auto, dict) and isinstance(auto.get("remaining_pct"), (int, float)):
-            return float(auto["remaining_pct"])
-    headroom = info.get("headroom_pct")
-    if isinstance(headroom, (int, float)):
-        return float(headroom)
-    burn = info.get("burn_pct_7d")
-    if isinstance(burn, (int, float)):
-        return 100.0 - float(burn)
-    cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
-    weekly = cb.get("weekly_remaining_pct") if isinstance(cb, dict) else None
-    if isinstance(weekly, (int, float)):
-        return float(weekly)
-    return None
+    """Plan remaining-% as the owner reads it (:func:`credit_lane.plan_remaining_pct`)."""
+    return credit_lane.plan_remaining_pct(agent_info or {})
 
 
 def pace_summary(agent_info: dict[str, Any] | None) -> str:
@@ -211,16 +202,16 @@ def _mirror_retired_quota(agents: dict[str, Any], lane: str, info: dict[str, Any
     return info, None
 
 
-def fetch_active_in_flight(*, timeout: float = 2.0) -> dict[str, int]:
-    """Fail-open read of /api/delegate/active → agent → count."""
+def fetch_active_in_flight(*, timeout: float = 2.0) -> dict[str, int] | None:
+    """Read /api/delegate/active → agent → count; None when it cannot be read (load unknown, not zero)."""
     url = f"{_monitor_base()}/api/delegate/active"
     try:
         with urllib.request.urlopen(url, timeout=timeout) as response:
             payload = json.loads(response.read().decode("utf-8"))
     except (OSError, TimeoutError, urllib.error.URLError, json.JSONDecodeError, ValueError):
-        return {}
+        return None
     if not isinstance(payload, dict):
-        return {}
+        return None
     counts: dict[str, int] = {}
     for task in payload.get("tasks") or []:
         if not isinstance(task, dict):
@@ -243,6 +234,22 @@ _CREDIT_NOTE_STATES = frozenset(
 )
 
 
+def _in_flight(lane: str, active: dict[str, int] | None, budget: dict[str, Any]) -> int | None:
+    """Observed in-flight count for ``lane``; None when no active-work observation exists.
+
+    A successful observation without the lane is an established zero. The live
+    Monitor read wins; the snapshot's ``in_flight`` map is the fallback.
+    """
+    budget_flight = budget.get("in_flight") if isinstance(budget.get("in_flight"), dict) else None
+    if active is not None:
+        value = active.get(lane, (budget_flight or {}).get(lane, 0))
+    else:
+        value = budget_flight.get(lane, 0) if budget_flight is not None else None
+    if value is None or isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    return int(value)
+
+
 def build_lane_rows(
     budget: dict[str, Any],
     *,
@@ -254,22 +261,17 @@ def build_lane_rows(
 ) -> list[dict[str, Any]]:
     """Pure formatter input: one row per lane from a routing-budget payload.
 
-    A lane the credit policy marks ``credit_balance_present`` is usable (that
-    status) instead of near_cap/AVOID; retirement, ineligibility, ill health
-    and NEED_LOGIN still avoid it. Each row carries ``credit``. An unreadable
-    policy marks the built-in credit lanes ``policy_error`` (plan state
-    applies) and leaves every other lane unchanged.
+    Each row's capacity is :func:`credit_lane.routing_facts` (lane inventory)
+    over the snapshot's diagnostics; the row carries those facts as
+    ``routing_facts`` and the class as ``capacity`` (``verified``,
+    ``unknown_stale``, ``unknown`` or ``avoid``). A lane the credit policy
+    marks ``credit_balance_present`` is usable (that status) instead of
+    near_cap/AVOID; retirement, ineligibility, ill health and NEED_LOGIN still
+    avoid it. An unreadable policy marks the built-in credit lanes
+    ``policy_error`` (plan state applies) and leaves every other lane unchanged.
+    ``in_flight`` is None when no active-work observation exists.
     """
-    policy = credit_policy
-    policy_error: str | None = None
-    if policy is None:
-        try:
-            policy = credit_lane.load_policy()
-        except ValueError as exc:
-            policy_error = str(exc)
     agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
-    budget_flight = budget.get("in_flight") if isinstance(budget.get("in_flight"), dict) else {}
-    active = active_in_flight or {}
     reserve = (
         reset_reserve
         if reset_reserve is not None
@@ -303,36 +305,47 @@ def build_lane_rows(
             info, quota_source = _mirror_retired_quota(agents, lane, info)
         if budget.get("transport") == "acp" and info.get("eligible") is not True:
             info = {**info, "eligible": False}
+        facts = credit_lane.routing_facts(
+            lane, info, model=None, snapshot_metadata=diagnostics, policy=credit_policy, now=now
+        )
+        retired_target = RETIRED_AGENT_ALIASES.get(lane)
         reserve_relaxes = (
             lane == "codex"
             and codex_is_threatened(info)
             and codex_reset_reserve_eligible(reserve, info, snapshot_stale=snapshot_stale)
         )
-        credit = (
-            credit_lane.lane_credit_report(lane, info, policy, now=now, snapshot_stale=snapshot_stale)
-            if policy is not None
-            else credit_lane.policy_error_state(lane, policy_error or "unknown error")
-        )
-        credit_relaxes = credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT and not _is_hard_avoid(info, lane=lane)
-        deficit = credit_lane.pace_deficit_state(
-            lane,
-            info,
-            policy=policy,
-            now=now,
-            snapshot_stale=snapshot_stale,
-        )
-        status = (
-            credit_lane.CREDIT_BALANCE_PRESENT if credit_relaxes else lane_status({**info, "status": deficit["status"]})
-        )
+        credit = facts.credit
+        credit_relaxes = facts.credit_relief and facts.capacity != credit_lane.CAPACITY_AVOID and not retired_target
+        stale_advisory = facts.capacity == credit_lane.CAPACITY_UNKNOWN_STALE
+        if credit_relaxes:
+            status = credit_lane.CREDIT_BALANCE_PRESENT
+        elif stale_advisory:
+            status = "unknown"
+        else:
+            status = lane_status({**info, "status": facts.status})
         will_last = will_last_to_reset(info)
         cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else None
-        pace_deficit = deficit["uncovered"] is True
-        retired_target = RETIRED_AGENT_ALIASES.get(lane)
-        avoid = is_avoid_lane(info, lane=lane, deficit=deficit) and not reserve_relaxes and not credit_relaxes
-        in_flight = int(active.get(lane, budget_flight.get(lane, 0) or 0) or 0)
+        pace_deficit = facts.uncovered is True
+        avoid = (
+            (bool(retired_target) or facts.capacity == credit_lane.CAPACITY_AVOID)
+            and not reserve_relaxes
+            and not credit_relaxes
+        )
+        if avoid:
+            capacity = {
+                "state": credit_lane.CAPACITY_AVOID,
+                "reason": f"retired→{retired_target}" if retired_target else facts.capacity_reason,
+            }
+        elif reserve_relaxes:
+            capacity = {"state": credit_lane.CAPACITY_VERIFIED, "reason": "operator Codex reset reserve eligible"}
+        elif retired_target is None and facts.capacity == credit_lane.CAPACITY_AVOID and credit_relaxes:
+            capacity = {"state": credit_lane.CAPACITY_VERIFIED, "reason": facts.capacity_reason}
+        else:
+            capacity = {"state": facts.capacity, "reason": facts.capacity_reason}
+        in_flight = _in_flight(lane, active_in_flight, budget)
         notes: list[str] = []
-        if deficit["covered_by"]:
-            notes.append(deficit["reason"])
+        if facts.covered_by:
+            notes.append(facts.pace_reason)
         if quota_source:
             notes.append(f"quota:{quota_source}")
         if credit_relaxes:
@@ -352,6 +365,10 @@ def build_lane_rows(
                 notes.append(f"free full reset available ({available}; operator decision)")
         if reserve_relaxes:
             notes.append(f"reset reserve eligible ({reserve.get('remaining_resets')} remaining)")
+        if stale_advisory:
+            notes.append(facts.capacity_reason)
+        if facts.health == credit_lane.UNKNOWN:
+            notes.append(f"health unknown ({facts.health_basis})")
         if avoid:
             notes.append("AVOID")
             health_info = info.get("health") if isinstance(info.get("health"), dict) else {}
@@ -368,26 +385,31 @@ def build_lane_rows(
                 notes.append("deficit")
             if status in _AVOID_STATUSES:
                 notes.append(status)
+            elif facts.capacity_reason.startswith("near cap"):
+                notes.append(facts.capacity_reason.split(";")[0])
         elif in_flight == 0 and status in _COOL_STATUSES:
             notes.append("idle")
-        elif in_flight > 0:
+        elif in_flight is not None and in_flight > 0:
             notes.append(f"{in_flight} in flight")
-        rem = remaining_pct(info)
         rows.append(
             {
                 "lane": lane,
                 "status": status,
-                "remaining_pct": rem,
+                "remaining_pct": facts.plan_remaining_pct,
+                "remaining_source": facts.remaining_source,
                 "will_last": will_last,
                 "pace": pace_summary(info),
                 "in_flight": in_flight,
                 "avoid": avoid,
+                "capacity": capacity,
+                "health": facts.health,
                 "reset_reserve_eligible": reserve_relaxes,
                 "notes": "; ".join(notes) if notes else "",
                 "credit": credit,
+                "routing_facts": facts.summary(),
                 **(
                     {
-                        "pace_deficit": deficit,
+                        "pace_deficit": facts.pace_deficit,
                         "codexbar": cb,
                         **{
                             key: info[key]
@@ -403,7 +425,7 @@ def build_lane_rows(
                             if key in info
                         },
                     }
-                    if deficit["raw_deficit"] is True
+                    if facts.raw_deficit is True
                     else {}
                 ),
             }
@@ -419,10 +441,11 @@ def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         status = str(row.get("status") or "unknown")
         rem = row.get("remaining_pct")
         rem_key = -float(rem) if isinstance(rem, (int, float)) else 0.0
-        in_flight = int(row.get("in_flight") or 0)
+        in_flight = row.get("in_flight")
+        flight_key = (in_flight is None, int(in_flight or 0))
         lane_name = str(row.get("lane") or "")
         lane_rank = _CODE_LANE_PRIORITY.get(lane_name, 50)
-        status_rank = {
+        status_rank: float = {
             "cool": 0,
             "warm": 1,
             "unknown": 2,
@@ -432,8 +455,11 @@ def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "hot": 8,
             "near_cap": 9,
         }.get(status, 5)
+        if (row.get("capacity") or {}).get("state") == credit_lane.CAPACITY_UNKNOWN_STALE:
+            # UNKNOWN — stale/advisory: after every row with verified capacity (A5, #9740).
+            status_rank = 7.5
         reserve_priority = 0 if row.get("reset_reserve_eligible") else 1
-        return (avoid, reserve_priority, status_rank, lane_rank, in_flight, rem_key, lane_name)
+        return (avoid, reserve_priority, status_rank, lane_rank, flight_key, rem_key, lane_name)
 
     ordered = sorted(rows, key=_sort_key)
     out: list[dict[str, Any]] = []
@@ -464,7 +490,7 @@ def format_table(rows: list[dict[str, Any]]) -> str:
                 rem_s,
                 will_s,
                 str(row.get("pace") or "—"),
-                str(int(row.get("in_flight") or 0)),
+                "—" if row.get("in_flight") is None else str(int(row["in_flight"])),
                 str(row.get("notes") or ""),
             )
         )
@@ -494,6 +520,7 @@ def format_pick_order(pick_order: list[dict[str, Any]]) -> str:
 
 
 def cooler_lanes(rows: list[dict[str, Any]]) -> list[str]:
+    """Lanes with verified capacity; UNKNOWN (including stale/advisory) rows never qualify."""
     return [
         str(row["lane"])
         for row in rows
@@ -684,9 +711,14 @@ def main(argv: list[str] | None = None) -> int:
             "Weekly pace deficits covered by fresh credits (allowlisted models) or an unexpired free\n"
             "full reset are not hot. Reserve evidence must be fresh and free of recent rate limits.\n"
             "JSON rows keep the raw pace and say which reserve covers it; near_cap is unchanged.\n"
+            "Every row's capacity is the shared owner reading (credit_lane.routing_facts): JSON rows carry\n"
+            "`routing_facts`, `capacity` (verified | unknown | unknown_stale | avoid) and `health`\n"
+            "(healthy | unhealthy | unknown). `remaining%` is the tightest plan window. A pace deficit read\n"
+            "from a stale snapshot shows `unknown` with `UNKNOWN — stale/advisory`: ranked after every\n"
+            "verified row, never a cooler seat, never --strict success. Unknown load prints `—` (JSON null).\n"
             "Exit codes: 0 success; 2 invalid arguments or no admissible lane with --strict.\n"
             "Related: /api/state/routing-budget?transport=acp; scripts/orchestration/dispatch_admission.py;\n"
-            "issues #7812, #8645, #9518, #9615."
+            "issues #7812, #8645, #9518, #9615, #9740."
         ),
     )
     parser.add_argument(

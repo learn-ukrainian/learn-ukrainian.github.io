@@ -646,16 +646,21 @@ WAVE_MODELS_UNREADABLE = (
 )
 
 
-def _near_cap_credit(lane: str, record: Mapping[str, Any], now: datetime | None) -> dict[str, Any] | None:
+def _near_cap_credit(
+    lane: str, record: Mapping[str, Any], now: datetime | None, *, snapshot_stale: bool = False
+) -> dict[str, Any] | None:
     """Credit receipt for a near-cap lane from its published ``agents.<lane>.credit`` (#9517).
 
     :func:`credit_lane.published_credit_relief` re-checks the published state
-    against the local policy, the clock and the current shared runtime
-    rate-limit records; None when nothing could relax the
+    against the complete lane record (snapshot staleness, probe freshness,
+    age and stale flag; #9740 F6), the local policy, the clock and the current
+    shared runtime rate-limit records; None when nothing could relax the
     plan state (any published state other than ``credit_balance_present``, a
     lane outside the policy, or an unreadable policy).
     """
-    receipt = credit_lane.published_credit_relief(lane, record.get("credit"), None, now=now)
+    receipt = credit_lane.published_credit_relief(
+        lane, record.get("credit"), None, now=now, record=record, snapshot_stale=snapshot_stale
+    )
     if receipt is None:
         return None
     return {
@@ -678,6 +683,12 @@ def _health_assessment(
     A ``near_cap`` lane also counts when its published credit state is a fresh
     ``credit_balance_present`` (#9517); every other credit state, and a lane
     without one, keeps the plan status decision.
+
+    Status and health are the shared routing facts of the complete record
+    (:func:`credit_lane.routing_facts`, #9740). Only positively established
+    health counts: unknown health (a lane-health scan that could not run) is
+    not available, as an unhealthy lane is not. The ledger receipt schema
+    (``healthLane``) records ``healthy`` as a boolean only.
     """
     agents = snapshot.get("agents")
     diagnostics = snapshot.get("diagnostics")
@@ -697,9 +708,9 @@ def _health_assessment(
                 lanes.append({"lane": lane, "status": "missing", "healthy": False, "stale": True})
                 relevant_lane_stale = True
                 continue
-            status = str(record.get("status", "unknown"))
-            health = record.get("health")
-            healthy = bool(health.get("healthy")) if isinstance(health, Mapping) else False
+            facts = credit_lane.routing_facts(lane, record, model=None, snapshot_metadata=diagnostics, now=now)
+            status = facts.status
+            healthy = facts.health == credit_lane.HEALTHY
             codexbar = record.get("codexbar")
             stale = bool(codexbar.get("stale")) if isinstance(codexbar, Mapping) else False
             relevant_lane_stale = relevant_lane_stale or stale
@@ -715,7 +726,7 @@ def _health_assessment(
             }
             plan_ok = status in acceptable
             if status == "near_cap":
-                credit = _near_cap_credit(lane, record, now)
+                credit = _near_cap_credit(lane, record, now, snapshot_stale=snapshot_stale)
                 if credit is not None:
                     entry["credit_state"] = credit["state"]
                     entry["credit"] = credit

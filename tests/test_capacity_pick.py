@@ -574,3 +574,89 @@ def test_codex_without_usable_credits_stays_near_cap_avoid(overrides, state):
     codex = next(row for row in rows if row["lane"] == "codex")
     assert (codex["credit"]["state"], codex["status"], codex["avoid"]) == (state, "near_cap", True)
     assert "codex" not in capacity_pick.cooler_lanes(rows)
+
+
+# --- #9740: shared routing facts in rows, order and CLI -------------------------
+
+
+def test_unknown_load_renders_as_dash_and_null(monkeypatch):
+    budget = _fixture_budget()
+    budget.pop("in_flight")
+    rows = capacity_pick.build_lane_rows(budget, reset_reserve={"available": False})
+    assert {row["in_flight"] for row in rows} == {None}
+    assert all("idle" not in row["notes"].split("; ") for row in rows)
+    table = capacity_pick.format_table(rows)
+    cursor_line = next(line for line in table.splitlines() if line.startswith("cursor"))
+    assert " — " in cursor_line or cursor_line.split(" | ")[5].strip() == "—"
+
+
+def test_unreadable_active_work_is_none_not_empty(monkeypatch):
+    def broken(*_a, **_k):
+        raise OSError("down")
+
+    monkeypatch.setattr(capacity_pick.urllib.request, "urlopen", broken)
+    assert capacity_pick.fetch_active_in_flight() is None
+
+
+def test_rows_carry_owner_facts_and_remaining_reading():
+    """F1: the row's remaining is the owner's tightest window; every row carries the facts."""
+    budget = _fixture_budget()
+    budget["agents"]["grok"]["codexbar"] = {"primary_remaining_pct": 3.0}
+    rows = {row["lane"]: row for row in capacity_pick.build_lane_rows(budget, reset_reserve={"available": False})}
+    assert rows["grok"]["remaining_pct"] == 3.0
+    assert rows["grok"]["remaining_source"] == "codexbar.primary_remaining_pct"
+    for row in rows.values():
+        assert row["routing_facts"]["plan_remaining_pct"] == row["remaining_pct"]
+        assert row["capacity"]["state"] in {"verified", "unknown", "unknown_stale", "avoid"}
+
+
+def test_stale_unknown_never_ranks_ahead_of_verified_capacity():
+    """F2 rank-inversion control (A5): a stale-advisory lane with far more remaining allowance
+    ranks after cool, warm and credit-balance rows, and is not a cooler lane or --strict success."""
+    stale = {
+        "lane": "codex",
+        "status": "unknown",
+        "remaining_pct": 99.0,
+        "in_flight": 0,
+        "avoid": False,
+        "capacity": {"state": "unknown_stale"},
+    }
+    warm = {
+        "lane": "kimi",
+        "status": "warm",
+        "remaining_pct": 11.0,
+        "in_flight": 3,
+        "avoid": False,
+        "capacity": {"state": "verified"},
+    }
+    credit = {"lane": "grok", "status": "credit_balance_present", "remaining_pct": 2.0, "in_flight": 0, "avoid": False}
+    order = capacity_pick.build_pick_order([stale, warm, credit])
+    assert [row["lane"] for row in order] == ["kimi", "grok", "codex"]
+    assert capacity_pick.cooler_lanes([stale]) == []
+
+
+def test_strict_fails_when_the_only_capacity_is_stale_advisory(monkeypatch, capsys):
+    from scripts.fleet import usage
+
+    budget = {
+        "agents": {
+            "codex": {
+                "status": "hot",
+                "status_source": "weekly_pace",
+                "remaining_pct": 60.0,
+                "freshness": "stale_last_good",
+                "codexbar": {"weekly_expected_pct": 25.0, "weekly_pace_delta_pct": 15.0, "will_last_to_reset": False},
+            }
+        },
+        "diagnostics": {"stale": True},
+        "recommendation": {"primary_agent_for_code": None, "warnings": []},
+    }
+    monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: budget)
+    monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
+    monkeypatch.setattr(capacity_pick, "load_reset_reserve", lambda *_a, **_k: {"available": False})
+    monkeypatch.setattr(capacity_pick, "admission_status", lambda: {"admitted": None, "line": "admission: fixture"})
+    assert capacity_pick.main(["--strict", "--json"]) == 2
+    report = json.loads(capsys.readouterr().out)
+    codex = next(row for row in report["rows"] if row["lane"] == "codex")
+    assert (codex["status"], codex["avoid"], codex["capacity"]["state"]) == ("unknown", False, "unknown_stale")
+    assert report["cooler_lanes"] == []

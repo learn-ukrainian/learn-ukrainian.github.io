@@ -534,3 +534,91 @@ def test_need_login_credit_lane_is_not_credit_backed():
     assert state_router._credit_backed({"credit": present, "probe_state": "NEED_LOGIN"}) is False
     assert state_router._credit_backed({"credit": {"state": "credits_exhausted"}}) is False
     assert state_router._credit_backed(None) is False
+
+
+# --- #9740: shared routing facts in the producer and recommendation ------------
+
+FACTS_NOW = datetime(2026, 10, 5, 12, 0, tzinfo=UTC)
+
+
+def _codex_payload(**overrides) -> dict:
+    payload = {
+        "lane": "codex",
+        "source": "codex_oauth",
+        "weekly_used_pct": 40.0,
+        "weekly_remaining_pct": 60.0,
+        "primary_used_pct": 10.0,
+        "primary_remaining_pct": 90.0,
+        "weekly_expected_pct": 25.0,
+        "weekly_pace_delta_pct": 15.0,
+        "will_last_to_reset": False,
+        "weekly_resets_at": "2026-10-09T12:00:00Z",
+        "age_s": 30.0,
+        "fetched_at": "2026-10-05T11:59:30Z",
+    }
+    payload.update(overrides)
+    return payload
+
+
+def _produce(monkeypatch, tmp_path, payload: dict) -> dict:
+    budget_path = _configure_base(monkeypatch, tmp_path)
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda lane: payload if lane == "codex" else None)
+    monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda: None)
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda *_a, **_k: {"windows": {}})
+    return state_router.compute_routing_budget(
+        FACTS_NOW,
+        budget_config_path=budget_path,
+        tasks_dir=tmp_path / "tasks",
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
+
+
+@pytest.mark.parametrize(
+    ("overrides", "expected"),
+    [({}, "unavailable"), ({"stale": True}, "stale_last_good"), ({"freshness": "fresh"}, "fresh")],
+    ids=["missing", "stale-flag", "explicit"],
+)
+def test_producer_never_publishes_fresh_for_missing_freshness(monkeypatch, tmp_path, overrides, expected):
+    """A6: nested ``codexbar.freshness`` and ``diagnostics.codexbar_freshness`` keep the probe's own label."""
+    budget = _produce(monkeypatch, tmp_path, _codex_payload(**overrides))
+    assert budget["agents"]["codex"]["codexbar"]["freshness"] == expected
+    assert budget["diagnostics"]["codexbar_freshness"]["codex"] == expected
+
+
+def test_stale_pace_deficit_is_unknown_stale_advisory_in_the_recommendation(monkeypatch, tmp_path):
+    """F2/A2: the raw deficit stays published; the recommendation label is UNKNOWN — stale/advisory."""
+    budget = _produce(monkeypatch, tmp_path, _codex_payload(stale=True, freshness="stale_last_good"))
+    codex = budget["agents"]["codex"]
+    assert budget["diagnostics"]["stale"] is True
+    assert codex["pace_deficit"]["raw_deficit"] is True and codex["pace_deficit"]["uncovered"] is True
+    assert codex["routing_facts"]["capacity"] == credit_lane.CAPACITY_UNKNOWN_STALE
+    warnings = budget["recommendation"]["warnings"]
+    assert any(f"lane codex: {credit_lane.STALE_ADVISORY_LABEL}" in warning for warning in warnings)
+    assert budget["recommendation"]["primary_agent_for_code"] != "inline_orchestrator"
+
+
+def test_fresh_pace_deficit_stays_hot_in_the_recommendation(monkeypatch, tmp_path):
+    budget = _produce(monkeypatch, tmp_path, _codex_payload(freshness="fresh"))
+    codex = budget["agents"]["codex"]
+    assert codex["status"] == "hot"
+    assert codex["routing_facts"]["capacity"] == credit_lane.CAPACITY_AVOID
+    assert not any(credit_lane.STALE_ADVISORY_LABEL in warning for warning in budget["recommendation"]["warnings"])
+    assert budget["recommendation"]["primary_agent_for_code"] != "codex"
+
+
+def test_published_routing_facts_match_a_recomputation(monkeypatch, tmp_path):
+    budget = _produce(monkeypatch, tmp_path, _codex_payload(freshness="fresh"))
+    record = budget["agents"]["codex"]
+    facts = credit_lane.routing_facts(
+        "codex",
+        record,
+        model=None,
+        snapshot_metadata=budget["diagnostics"],
+        now=FACTS_NOW,
+        usage_dir=tmp_path / "api_usage",
+    )
+    published = dict(record["routing_facts"])
+    assert published.pop("credit_state") == facts.credit["state"]
+    assert published == {key: value for key, value in facts.to_dict().items() if key != "credit"}

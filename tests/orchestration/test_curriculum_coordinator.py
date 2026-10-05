@@ -380,10 +380,21 @@ def _credit_snapshot(
     healthy: bool = True,
     stale: bool = False,
 ) -> dict[str, Any]:
-    """Health snapshot whose codex lane carries ``credit`` as its published ``agents.codex.credit``."""
+    """Health snapshot whose codex lane carries ``credit`` as its published ``agents.codex.credit``.
+
+    The lane record is complete (#9740 F6): relief is re-checked against the
+    probe's own freshness, age and stale flag, not only the published leaf.
+    """
     snapshot = _health()()
     snapshot["agents"]["codex"].update(
-        {"status": status, "health": {"healthy": healthy}, "codexbar": {"stale": stale}, "credit": credit}
+        {
+            "status": status,
+            "health": {"healthy": healthy},
+            "freshness": "fresh",
+            "age_s": 30,
+            "codexbar": {"stale": stale},
+            "credit": credit,
+        }
     )
     return snapshot
 
