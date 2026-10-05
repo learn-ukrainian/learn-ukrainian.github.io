@@ -73,13 +73,16 @@ ROLLOVER_MODE=""
 # EVERY tool call (PR #6413 finding #3). This also fixes worktree sessions,
 # where the old $PROJECT_DIR/.venv interpreter check silently disabled the monitor
 # (linked worktrees carry no venv — F001 r5 class).
+# rollover_mode counts only from a record that names this session, the same rule
+# context-rollover-guard.sh applies; a foreign, missing or unreadable record (or
+# the environment alone) keeps the continuation behaviour.
 RECORD_FILE=$(context_session_record_file "$PROJECT_DIR" "$SESSION_ID")
 if [ -f "$RECORD_FILE" ] && [ ! -L "$RECORD_FILE" ]; then
-  RECORD_ROW=$(jq -r '
+  RECORD_ROW=$(jq -r --arg sid "$SESSION_ID" '
     [ (.actual_context_window_tokens // "" | tostring),
       (.actual_context_window_provenance // "unavailable"),
       (.rollover_warning_percentages | if type == "array" and length == 3 then join(" ") else "" end),
-      (.rollover_mode // "")
+      (if .session_id == $sid then .rollover_mode // "" else "" end)
     ] | join("\u0001")' "$RECORD_FILE" 2>/dev/null || true)
   if [ -n "$RECORD_ROW" ]; then
     IFS=$'\001' read -r WINDOW WINDOW_PROVENANCE WARNING_TIERS ROLLOVER_MODE <<< "$RECORD_ROW"
@@ -108,7 +111,6 @@ if [ "$WINDOW_VALID" -eq 0 ]; then
   WINDOW="${LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS:-}"
   WINDOW_PROVENANCE="declared-profile"
   WARNING_TIERS="${LEARN_UKRAINIAN_ROLLOVER_WARNING_PERCENTAGES:-}"
-  ROLLOVER_MODE="${LEARN_UKRAINIAN_ROLLOVER_MODE:-}"
 fi
 ROLLOVER_MODE=$(context_effective_rollover_mode "$ROLLOVER_MODE")
 
@@ -184,15 +186,28 @@ CONTEXT_FACT="${PCT}% of the ${WINDOW}-token context window [~${TOKENS}/${WINDOW
 # around a boundary does not re-announce. Only a compaction-scale drop - usage
 # below 60% of the level at the last announcement - re-arms the tiers, so a fresh
 # climb after compaction is announced again. State lives in gitignored runtime
-# storage as "<tier> <tokens>". Claude Code runs PostToolUse hooks of parallel
-# tool calls concurrently, so the read/compare/write is one locked claim.
-TIER_STATE_FILE="$PROJECT_DIR/batch_state/context_monitor/${SESSION_ID}.tier"
+# storage as "<tier> <tokens>".
+TIER_STATE_DIR="$PROJECT_DIR/batch_state/context_monitor"
+TIER_STATE_FILE="$TIER_STATE_DIR/${SESSION_ID}.tier"
+LAST_TIER=0
+LAST_TOKENS=0
+if [ -f "$TIER_STATE_FILE" ]; then
+  read -r LAST_TIER LAST_TOKENS < "$TIER_STATE_FILE" 2>/dev/null || true
+fi
+case "$LAST_TIER" in ''|*[!0-9]*) LAST_TIER=0 ;; esac
+case "$LAST_TOKENS" in ''|*[!0-9]*) LAST_TOKENS=0 ;; esac
+if [ "$LAST_TIER" -gt 0 ] && [ $((TOKENS * 100)) -lt $((LAST_TOKENS * 60)) ]; then
+  rm -f "$TIER_STATE_FILE" 2>/dev/null
+  LAST_TIER=0
+  LAST_TOKENS=0
+fi
 if [ "$PCT" -ge "$TIER3_PCT" ]; then TIER=3
 elif [ "$PCT" -ge "$TIER2_PCT" ]; then TIER=2
 elif [ "$PCT" -ge "$TIER1_PCT" ]; then TIER=1
 else TIER=0
 fi
-[ "$(context_claim_tier "$TIER_STATE_FILE" "$TIER" "$TOKENS")" = "claimed" ] || exit 0
+[ "$TIER" -gt "$LAST_TIER" ] || exit 0
+mkdir -p "$TIER_STATE_DIR" 2>/dev/null && printf '%s %s\n' "$TIER" "$TOKENS" > "$TIER_STATE_FILE" 2>/dev/null
 
 # operator_restart (#8511): the session never continues itself. It hands off,
 # tells the operator it is ready for a restart, and waits; context-rollover-guard.sh

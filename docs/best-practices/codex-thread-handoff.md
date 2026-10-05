@@ -305,8 +305,7 @@ Confirm the replacement with the same agent name:
 Native Claude sessions (`native_claude` in `scripts/config/context_profiles.yaml`,
 `rollover_mode: operator_restart`, #8511) never continue themselves: they hand
 off and wait for the operator to restart them.
-`agents_extensions/shared/hooks/context-monitor.sh` announces each tier once
-(an atomic per-session claim, so concurrent tool hooks announce it once):
+`agents_extensions/shared/hooks/context-monitor.sh` announces each tier once:
 
 - **650k (65%)** — heads-up: wrap up the current unit soon.
 - **700k (70%)** — finish the current unit; start no new multi-step work,

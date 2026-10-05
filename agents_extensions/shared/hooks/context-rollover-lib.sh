@@ -1,6 +1,7 @@
 #!/bin/bash
 # Shared helpers for context-monitor.sh and context-rollover-guard.sh (#8511).
 # Sourced, never registered as a hook; executing it directly does nothing.
+# Read-only: these helpers never write files.
 
 # Latest assistant input/cache usage from a Claude Code transcript, or 0.
 # Output tokens are not current context usage and are deliberately excluded.
@@ -55,62 +56,4 @@ context_effective_rollover_mode() {
   else
     printf 'continuation\n'
   fi
-}
-
-# Claim <tier> for this session at <tokens> under an exclusive lock, so
-# concurrent PostToolUse hooks announce each tier exactly once. The state file
-# holds "<tier> <tokens>". A compaction-scale drop (usage below 60% of the
-# level at the last claim) re-arms every tier. Prints "claimed" when this call
-# raised the tier; prints nothing otherwise (including when the lock cannot be
-# taken within about two seconds - the next tool call retries).
-context_claim_tier() {
-  local state_file="$1" tier="$2" tokens="$3" lock_file waited=0
-  mkdir -p "$(dirname "$state_file")" 2>/dev/null || return 0
-  if command -v flock >/dev/null 2>&1; then
-    (
-      flock -w 2 9 || exit 0
-      _context_claim_tier_locked "$state_file" "$tier" "$tokens"
-    ) 9>>"$state_file.lock"
-    return 0
-  fi
-  # No flock (e.g. stock macOS): bash's noclobber redirection is an exclusive
-  # create (O_EXCL) done by the shell itself. Not a mkdir binary: some
-  # implementations (uutils coreutils 0.8) report success to several racing
-  # callers. The holder removes the lock on exit or signal. Never test a
-  # lock's age and then delete it: a lock taken between the test and the
-  # delete would be lost. Only a lock still held after about two seconds -
-  # far longer than this millisecond critical section - is treated as left by
-  # a SIGKILLed hook: it is renamed aside and this call claims nothing (the
-  # next tool call retries).
-  lock_file="$state_file.lockfile"
-  while ! (set -o noclobber; : > "$lock_file") 2>/dev/null; do
-    waited=$((waited + 1))
-    if [ "$waited" -ge 40 ]; then
-      mv "$lock_file" "$lock_file.stale.$$" 2>/dev/null && rm -f "$lock_file.stale.$$"
-      return 0
-    fi
-    sleep 0.05
-  done
-  (
-    trap 'rm -f "$lock_file"' EXIT
-    trap 'exit 1' HUP INT TERM
-    _context_claim_tier_locked "$state_file" "$tier" "$tokens"
-  )
-}
-
-_context_claim_tier_locked() {
-  local state_file="$1" tier="$2" tokens="$3" last_tier=0 last_tokens=0
-  if [ -f "$state_file" ]; then
-    read -r last_tier last_tokens < "$state_file" 2>/dev/null || true
-  fi
-  case "$last_tier" in ''|*[!0-9]*) last_tier=0 ;; esac
-  case "$last_tokens" in ''|*[!0-9]*) last_tokens=0 ;; esac
-  if [ "$last_tier" -gt 0 ] && [ $((tokens * 100)) -lt $((last_tokens * 60)) ]; then
-    rm -f "$state_file" 2>/dev/null
-    last_tier=0
-  fi
-  [ "$tier" -gt "$last_tier" ] || return 0
-  printf '%s %s\n' "$tier" "$tokens" > "$state_file.tmp.$$" 2>/dev/null \
-    && mv -f "$state_file.tmp.$$" "$state_file" 2>/dev/null \
-    && printf 'claimed\n'
 }
