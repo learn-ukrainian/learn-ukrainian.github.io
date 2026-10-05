@@ -453,7 +453,7 @@ def test_stale_settle_existing_interrupted_tree_preserves_bytes(tasks_dir, repo,
     output.parent.mkdir()
     output.write_bytes(b"ignored output\x00\xff")
     result = tasks_dir / "interrupted.result"
-    result.write_bytes(b"result\x00\xff")
+    result.write_text("Український звіт\u2028result\n", encoding="utf-8")
     record = _record(
         tasks_dir,
         "interrupted",

@@ -1425,12 +1425,13 @@ def test_class_b_unavailable_activity_probe_retains(tmp_path, monkeypatch, statu
     import hashlib
 
     repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
     worktree = repo / ".worktrees/dispatch/codex/unavailable-task"
     git(repo, "worktree", "add", "--detach", str(worktree), "main")
     (repo / ".git/info/exclude").write_text("batch_state/\n.cache/\n.worktrees/\n")
     result_file = repo / "batch_state/tasks/unavailable-task.result"
     result_file.parent.mkdir(parents=True)
-    result_file.write_bytes(b"result\x00\xff")
+    result_file.write_text("Український звіт\u2028result\n", encoding="utf-8")
     output = worktree / ".cache/output.bin"
     output.parent.mkdir()
     output.write_bytes(b"ignored\x00\xff")
@@ -1438,6 +1439,10 @@ def test_class_b_unavailable_activity_probe_retains(tmp_path, monkeypatch, statu
         repo,
         "unavailable-task",
         status=status,
+        run_nonce="attempt",
+        pid=_dead_pid(),
+        worktree_path=str(worktree),
+        worktree_reused=False,
         result_file=str(result_file),
         result_sha256=hashlib.sha256(result_file.read_bytes()).hexdigest(),
     )
@@ -1446,9 +1451,10 @@ def test_class_b_unavailable_activity_probe_retains(tmp_path, monkeypatch, statu
     monkeypatch.setattr(rw, "_active_task_ids", lambda: None)
     patch_gh(monkeypatch, {})
 
-    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), merged_pr_only=False), worktree)
 
     assert result.action == "skipped", result
+    assert "probe unavailable" in result.reason, result.reason
     assert worktree.exists()
     assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result_file, output)] == before
 
@@ -1459,6 +1465,7 @@ def test_reap_callers_interrupted_retention_preserves_bytes(tmp_path, monkeypatc
     import hashlib
 
     repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
     tree = add_worktree(repo, "codex/interrupted", path=repo / ".worktrees/dispatch/codex/interrupted")
     (repo / ".git/info/exclude").write_text("batch_state/\n.cache/\n.worktrees/\n")
     output = tree / ".cache/output.bin"
@@ -1475,7 +1482,7 @@ def test_reap_callers_interrupted_retention_preserves_bytes(tmp_path, monkeypatc
     )
     record = repo / "batch_state/tasks/interrupted.json"
     result = record.with_suffix(".result")
-    result.write_bytes(b"result\x00\xff")
+    result.write_text("Український звіт\u2028result\n", encoding="utf-8")
     state = json.loads(record.read_text())
     state.update(result_file=str(result), result_sha256=hashlib.sha256(result.read_bytes()).hexdigest())
     record.write_text(json.dumps(state))

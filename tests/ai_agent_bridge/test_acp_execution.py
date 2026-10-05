@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import signal
 import subprocess
@@ -99,6 +101,54 @@ def test_no_checkout_teardown_retains_unattributed_output_without_ignore_rules(t
     assert (workspace / "notes.txt").read_bytes() == b"notes"
     assert not (primary / "batch_state/preserved/answer-9645").exists()
     assert "missing canonical task attribution; refusing worktree removal" in caplog.text
+
+
+def test_acp_teardown_explicit_retention_preserves_canonical_bytes(tmp_path):
+    primary = _make_primary(tmp_path)
+    tasks = primary / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    record = tasks / "retained-9742.json"
+    result = record.with_suffix(".result")
+    result.write_text("Український звіт\u2028ACP result\n", encoding="utf-8")
+    with acp_execution_cwd(primary, task_id="retained-9742") as workspace:
+        output = workspace / ".cache/output.bin"
+        output.parent.mkdir()
+        output.write_bytes(b"ignored output\x00\xff")
+        state = {
+            "task_id": "retained-9742",
+            "status": "needs_finalize",
+            "run_nonce": "current",
+            "worktree_path": str(workspace),
+            "keep_worktree": True,
+            "result_file": str(result),
+            "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
+        }
+        record.write_text(json.dumps(state))
+        before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)]
+        head = _git(workspace, "rev-parse", "HEAD").stdout.strip()
+    for _ in range(2):
+        current = json.loads(record.read_text())
+        receipt = current.pop("preserved_artifacts")
+        assert current == state
+        assert hashlib.sha256(record.read_bytes()).hexdigest() != before[0]
+        assert receipt["retention_disposition"] == "retained" and receipt["owner"] == "retained-9742"
+        assert receipt["next_condition"] and receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
+        copied = primary / receipt["location"] / ".cache/output.bin"
+        assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (result, output)] == before[1:]
+        assert hashlib.sha256(copied.read_bytes()).hexdigest() == before[2]
+        assert workspace.exists() and _git(workspace, "rev-parse", "HEAD").stdout.strip() == head
+        row = _acp_execution._remove_runtime_worktree(
+            primary,
+            workspace,
+            owner_task_id="retained-9742",
+            reason="repeated ACP cleanup",
+            dirty_probe=_acp_execution._own_runtime_is_scratch,
+        )
+        assert row.action == "skipped" and "keep_worktree" in row.reason
+        assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (result, output)] == before[1:]
+        assert {
+            key: value for key, value in json.loads(record.read_text()).items() if key != "preserved_artifacts"
+        } == state
 
 
 @pytest.mark.parametrize("error", [KeyboardInterrupt("cancelled"), TimeoutError("timeout")])

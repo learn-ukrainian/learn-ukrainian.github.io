@@ -646,7 +646,9 @@ def test_swept_executable_keys_never_run(world, managed, tmp_path, key, refused,
         assert not managed.exists()
 
 
-@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+@pytest.mark.parametrize(
+    "status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown", "retention"]
+)
 def test_sibling_remove_interrupted_work_preserves_bytes(world, managed, tmp_path, status):
     import hashlib
 
@@ -656,12 +658,13 @@ def test_sibling_remove_interrupted_work_preserves_bytes(world, managed, tmp_pat
     output = managed / "batch_state/output.bin"
     output.parent.mkdir()
     output.write_bytes(b"ignored output\x00\xff")
-    result.write_bytes(b"result\x00\xff")
+    result.write_text("Український звіт\u2028result\n", encoding="utf-8")
     record.write_text(
         json.dumps(
             {
                 "task_id": "interrupted",
-                "status": status,
+                "status": "done" if status == "retention" else status,
+                "keep_worktree": status == "retention",
                 "run_nonce": "attempt",
                 "worktree_path": str(managed),
                 "result_file": str(result),

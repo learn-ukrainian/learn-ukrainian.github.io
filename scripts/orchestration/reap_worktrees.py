@@ -2725,7 +2725,7 @@ def _qualifying_reason(
                     task_data = json.loads(task_file.read_text(encoding="utf-8"))
                     task_status = task_data.get("status")
                     if task_status in ("done", "failed", "no_deliverable") and (
-                        active_ids is None or task_id not in active_ids
+                        active_ids is not None and task_id not in active_ids
                     ):
                         task_settled = True
                 except Exception:

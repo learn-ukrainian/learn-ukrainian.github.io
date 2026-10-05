@@ -38,7 +38,9 @@ def test_push_settle_preserves_interrupted_record_and_outputs(interrupted_checko
 
 
 @pytest.mark.parametrize("writer", ["settle", "locked_healer"])
-def test_needs_finalize_missing_tree_preserves_exact_bytes(tmp_path, writer):
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited"])
+@pytest.mark.parametrize("keep", [False, True], ids=["ordinary", "retention"])
+def test_needs_finalize_missing_tree_preserves_exact_bytes(tmp_path, writer, status, keep):
     import hashlib
 
     from scripts.orchestration.dead_worker_state import mark_missing_worktree_failed
@@ -47,14 +49,15 @@ def test_needs_finalize_missing_tree_preserves_exact_bytes(tmp_path, writer):
     tasks.mkdir()
     path = tasks / "unfinished.json"
     result = path.with_suffix(".result")
-    result.write_bytes(b"recoverable report\x00\xff")
+    result.write_text("Український звіт\u2028recoverable report\n", encoding="utf-8")
     output = tmp_path / "ignored-output.bin"
     output.write_bytes(b"recoverable output\x00\xff")
     state = {
         "task_id": "unfinished",
         "run_nonce": "attempt-1",
         "pid": 999_999_999,
-        "status": "needs_finalize",
+        "status": status,
+        "keep_worktree": keep,
         "worktree_path": str(tmp_path / "gone"),
         "result_file": str(result),
         "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
@@ -433,7 +436,7 @@ def test_settle_task_settles_missing_worktree(tmp_path: Path, monkeypatch: pytes
         json.dumps(
             {
                 "task_id": task_id,
-                "status": "needs_finalize",
+                "status": "spawning",
                 "pid": 999_999_999,
                 "worktree_path": str(tmp_path / "reaped-wt"),
                 "worktree_branch": "atlas/dead-wt",
