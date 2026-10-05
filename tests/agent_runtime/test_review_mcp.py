@@ -77,6 +77,43 @@ def fake_agy_user_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return app_data
 
 
+def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_agy_user_home):
+    root = tmp_path / "lease"
+    root.mkdir()
+    home = review_mcp_module.prepare_agy_permission_home(root)
+    config = json.loads((home / ".gemini" / "config" / "mcp_config.json").read_text())
+    assert set(config["mcpServers"]) == {"sources"}
+    assert "LU_REVIEW_LEDGER_PATH" not in config["mcpServers"]["sources"].get("env", {})
+    settings = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())
+    assert settings == review_mcp_module.agy_review_settings()
+    assert (home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token").resolve() == (
+        fake_agy_user_home / "antigravity-oauth-token"
+    )
+    assert not list(root.glob("*.jsonl"))
+    with pytest.raises(FileExistsError):
+        review_mcp_module.prepare_agy_permission_home(root)
+
+
+def test_permission_home_refuses_missing_token_and_symlink_root(tmp_path, monkeypatch):
+    monkeypatch.setattr(review_mcp_module, "_real_agy_token", lambda: tmp_path / "missing-token")
+    with pytest.raises(ValueError, match="require_scoped_home"):
+        review_mcp_module.prepare_agy_permission_home(tmp_path)
+    token = tmp_path / "token"
+    token.write_text("fixture")
+    monkeypatch.setattr(review_mcp_module, "_real_agy_token", lambda: token)
+    link = tmp_path / "root-link"
+    link.symlink_to(tmp_path, target_is_directory=True)
+    with pytest.raises((OSError, review_mcp_module.ReviewDirectoryError)):
+        review_mcp_module.prepare_agy_permission_home(link)
+    assert not (tmp_path / "agy-review-home").exists()
+
+
+def test_review_ledger_path_pairs_attempt_and_refuses_other_suffix():
+    assert review_mcp_module.review_ledger_path("attempt.mcp.json") == Path("attempt.jsonl")
+    with pytest.raises(ValueError, match="invalid_review_attempt_config"):
+        review_mcp_module.review_ledger_path("other.json")
+
+
 @pytest.fixture(autouse=True)
 def _host_independent_umask() -> Iterator[None]:
     """Directories the tests pre-create must not be group-writable on a umask-002 host (#8652)."""

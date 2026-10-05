@@ -7,6 +7,8 @@ import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.adapters.base import InvocationPlan
@@ -18,6 +20,114 @@ from agent_runtime.telemetry import (
     resolve_invocation_telemetry,
 )
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
+
+
+@pytest.mark.parametrize("outcome", ["success", "failure", "timeout", "profiled", "profile-refused"])
+def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypatch, outcome):
+    import delegate
+    from agent_runtime.errors import AgentTimeoutError
+    from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
+    from tests.test_delegate_readonly_guard import _seed_read_only_checkout_fixture
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _seed_read_only_checkout_fixture(repo, monkeypatch)
+    tasks = repo / "batch_state" / "tasks"
+    tasks.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
+    profile = "ukrainian" if outcome in {"profiled", "profile-refused"} else None
+    task_id = "agy-record"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "cwd": str(repo),
+            "mode": "read-only",
+            "review_profile": profile,
+            "advisory_exemption": {
+                "model_id": "gemini-3.8-flash-high",
+                "task_family": "ukrainian-review",
+                "review_profile": profile,
+                "mode": "read-only",
+                "classified_paths": [],
+            },
+        },
+    )
+    telemetry = AgyTelemetry(
+        attempts=(
+            AgyAttempt(completion_reason="agy_background_task_canceled"),
+            AgyAttempt(
+                completion_reason="completed" if outcome in {"success", "profiled"} else "timeout",
+                cli_version="fixture",
+                denied_command_count=1,
+                executed_command_count=0,
+                sources_tool_names=("verify_words",),
+            ),
+        ),
+        retry_reason="incomplete_cancellation",
+        retry_disposition="retried",
+        accepted_attempt=2 if outcome in {"success", "profiled"} else None,
+        parent_task_id=task_id,
+    )
+    result = MagicMock(
+        ok=outcome in {"success", "profiled"},
+        response="complete" if outcome in {"success", "profiled"} else "",
+        stderr_excerpt=None,
+        returncode=0,
+        rate_limited=False,
+        substitution=None,
+        agy_telemetry=telemetry,
+        failure_code=None,
+    )
+    provision = MagicMock(return_value=repo / "lease-home")
+    if outcome == "profile-refused":
+        provision.side_effect = ValueError("agy_review_permissions_require_scoped_home")
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.prepare_agy_permission_home", provision)
+    lease = tmp_path / "lease"
+    lease.mkdir()
+    monkeypatch.setattr(delegate, "_reap_runtime_tmp_lease", lambda *_: {"tmp_bytes_freed": 0, "tmp_reap_error": None})
+    writes = []
+    original_write = delegate._write_state_atomic
+
+    def capture(path, state):
+        writes.append(dict(state))
+        original_write(path, state)
+
+    monkeypatch.setattr(delegate, "_write_state_atomic", capture)
+    with patch(
+        "agent_runtime.runner.invoke",
+        return_value=result,
+        side_effect=AgentTimeoutError("agy", 30, agy_telemetry=telemetry) if outcome == "timeout" else None,
+    ) as runtime:
+        delegate._run_worker(
+            task_id=task_id,
+            agent="agy",
+            prompt="Review supplied items.",
+            mode="read-only",
+            cwd_str=str(repo),
+            model="gemini-3.8-flash-high",
+            hard_timeout=30,
+            runtime_tmp_root=str(lease),
+        )
+    terminal = next(state for state in writes if state.get("status") in {"done", "failed", "timeout"})
+    if outcome == "profile-refused":
+        assert terminal["agy_attempt_count"] == 0
+        runtime.assert_not_called()
+        provision.assert_called_once()
+        return
+    assert runtime.call_args.kwargs["tool_config"].get("review_profile") == profile
+    if profile:
+        assert runtime.call_args.kwargs["tool_config"]["agy_home_override"] == str(repo / "lease-home")
+        provision.assert_called_once()
+    else:
+        provision.assert_not_called()
+    assert terminal["agy_attempt_count"] == 2
+    assert terminal["agy_retry_reason"] == "incomplete_cancellation"
+    assert terminal["agy_accepted_attempt"] == (2 if outcome in {"success", "profiled"} else None)
+    assert terminal["agy_attempts"][1]["sources_tool_names"] == ["verify_words"]
+    assert terminal["agy_attempts"][1]["denied_command_count"] == 1
 
 
 def test_resolve_dispatch_start_telemetry_codex_model_from_registry_effort_from_config(tmp_path, monkeypatch):
@@ -129,7 +239,9 @@ def test_deepseek_dispatch_start_telemetry_preserves_recorded_catalog_identity()
     ):
         with patch("agent_runtime.telemetry._probe_version", return_value="1.18.0"):
             telemetry = resolve_dispatch_start_telemetry(
-                agent_name="deepseek", requested_model=requested, requested_effort=None,
+                agent_name="deepseek",
+                requested_model=requested,
+                requested_effort=None,
             )
         assert telemetry.model == identity
         assert telemetry.effort == "high"

@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
-import shutil
 import subprocess
 
 import pytest
@@ -45,14 +43,13 @@ def test_exact_review_grants(tmp_path, scoped, route):
         config["strict_mcp_config"] = True
     plan = build(tmp_path, config)
     tools = review_tools("full" if route == "full" else "isolated")
-    commands = ["cat", "head", "tail", "wc"]
     settings = scoped / ".gemini" / "antigravity-cli" / "settings.json"
     assert json.loads(settings.read_text()) == {
         "permissions": {
             "allow": [
                 *[f"mcp(sources/{name})" for name in sorted(tools)],
-                *[f"command({command})" for command in commands],
-            ]
+            ],
+            "deny": ["command(*)", "write_file(*)"],
         }
     }
     assert settings.stat().st_mode & 0o777 == 0o600
@@ -154,7 +151,7 @@ def test_declared_admitted_requirements_and_tools(tmp_path, scoped):
             "review_access": "isolated",
             "agy_home_override": str(scoped),
             "allowed_tools": "Read,Glob,Grep,mcp__sources__verify_words",
-            "agy_required_permissions": ["command(cat)", "mcp(sources/verify_words)"],
+            "agy_required_permissions": ["mcp(sources/verify_words)"],
         },
     )
     assert "--dangerously-skip-permissions" not in plan.cmd
@@ -230,20 +227,14 @@ READER_LONG_OPTIONS = {
 
 
 @pytest.mark.parametrize("access", ["full", "isolated"])
-def test_every_command_grant_has_audited_nonexecuting_flags(access):
+def test_review_command_grants_are_empty(access):
     from scripts.agent_runtime.review_mcp import agy_review_settings
 
     commands = [
         rule[8:-1] for rule in agy_review_settings(access)["permissions"]["allow"] if rule.startswith("command(")
     ]
-    assert set(commands) == set(READER_LONG_OPTIONS)
-    for command in commands:
-        binary = shutil.which(command)
-        assert binary, command
-        help_result = subprocess.run([binary, "--help"], capture_output=True, text=True, check=True, timeout=5)
-        documented = set(re.findall(r"--([a-z][a-z0-9-]*)", help_result.stdout))
-        assert documented <= READER_LONG_OPTIONS[command] | {"help", "version"}, (command, documented)
-        assert not documented & {"pre", "pre-glob", "exec", "to-command", "output"}
+    assert not commands
+    assert agy_review_settings(access)["permissions"]["deny"] == ["command(*)", "write_file(*)"]
 
 
 @pytest.mark.parametrize("binary", READER_LONG_OPTIONS)
@@ -350,3 +341,42 @@ def test_model_response_cannot_supply_permission_denial(monkeypatch):
     monkeypatch.setattr(agy, "_completion_gap", lambda *a: (None, None))
     parsed = agy.AgyAdapter().parse_response(stdout=auto_denial("command"), stderr="", returncode=0, output_file=None)
     assert parsed.ok
+
+
+def test_trusted_ukrainian_profile_requires_scoped_home_before_probe(tmp_path, monkeypatch):
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
+    with pytest.raises(agy.AgyReviewPermissionError, match="require_scoped_home"):
+        build(tmp_path, {"review_profile": "ukrainian"})
+
+
+@pytest.mark.parametrize("config", [None, {"review_profile": "code"}, {"task_family": "recon"}])
+def test_prompt_keywords_never_enable_the_profile_for_recon(tmp_path, monkeypatch, config):
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
+    plan = build(tmp_path, config)
+    assert "--dangerously-skip-permissions" in plan.cmd
+    assert plan.metadata["agy_permission_profile_id"] is None
+
+
+def test_profile_denies_commands_and_preserves_sources(tmp_path, scoped):
+    plan = build(tmp_path, {"review_profile": "ukrainian", "agy_home_override": str(scoped)})
+    assert plan.metadata["agy_permission_profile_id"] == "ukrainian-review-command-denial-v1"
+    rules = json.loads((scoped / ".gemini" / "antigravity-cli" / "settings.json").read_text())["permissions"]
+    assert "command(*)" in rules["deny"]
+    assert not any(rule.startswith("mcp(") for rule in rules["deny"])
+    assert all(
+        f"mcp(sources/{tool})" in rules["allow"]
+        for tool in ("verify_words", "query_cefr_level", "check_russian_shadow")
+    )
+
+
+def test_scoped_attempt_log_is_unique_in_same_process(tmp_path, scoped):
+    config = {
+        "review_access": "isolated",
+        "agy_home_override": str(scoped),
+        "review_attempt_boundary": True,
+        "review_write_root": str(tmp_path),
+    }
+    first = build(tmp_path, config)
+    second = build(tmp_path, config)
+    assert first.env_overrides[agy._AGY_LOG_ENV] != second.env_overrides[agy._AGY_LOG_ENV]

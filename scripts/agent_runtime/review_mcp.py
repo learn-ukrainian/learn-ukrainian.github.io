@@ -548,23 +548,12 @@ def agy_review_app_data_dir(agy_home: Path | str) -> Path:
 
 
 def agy_review_settings(review_access: str = "isolated") -> dict[str, Any]:
-    """Grant the shared Sources contract and the route's evidence-reading commands.
-
-    AGY command rules match token prefixes, not executable capabilities. The
-    existing OS review boundary remains responsible for file and write access.
-    Never grant a shell, interpreter, arbitrary Git command or MCP wildcard.
-    """
+    """Permit the unchanged Sources contract; deny model-issued commands."""
     tools = review_tools(review_access)
-    # Only readers with no execute-program or output-file options. Search uses
-    # AGY's built-in tool: rg --pre executes programs. Git's --output can
-    # overwrite the scoped settings, and even inspection can run helpers.
-    commands = ["cat", "head", "tail", "wc"]
     return {
         "permissions": {
-            "allow": [
-                *[f"mcp(sources/{name})" for name in sorted(tools)],
-                *[f"command({command})" for command in commands],
-            ]
+            "allow": [f"mcp(sources/{name})" for name in sorted(tools)],
+            "deny": ["command(*)", "write_file(*)"],
         }
     }
 
@@ -637,7 +626,7 @@ def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: byte
         os.mkdir(parts[1], 0o700, dir_fd=gemini_fd)
         app_data_fd = _open_owned_dir(parts[1], dir_fd=gemini_fd)
         _create_file(config_parts[2], config_fd, config_bytes)
-        access = json.loads(config_bytes)["mcpServers"]["sources"]["env"]["LU_REVIEW_ACCESS"]
+        access = json.loads(config_bytes)["mcpServers"]["sources"].get("env", {}).get("LU_REVIEW_ACCESS", "isolated")
         _create_file("settings.json", app_data_fd, json.dumps(agy_review_settings(access)).encode())
         # A symlink, not a copy, by design: a token refresh (which may rotate the refresh
         # token) must land in the real token file. A refreshed copy would leave the real
@@ -648,6 +637,38 @@ def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: byte
         for fd in (app_data_fd, config_fd, gemini_fd):
             if fd is not None:
                 os.close(fd)
+
+
+def prepare_agy_permission_home(root: Path) -> Path:
+    """Use the review-attempt home provisioner for a trusted non-receipt review.
+
+    The caller supplies its existing runtime scratch lease. No receipt attempt
+    or ledger is invented for a dispatch that has none.
+    """
+    token = _real_agy_token()
+    if not token.is_file():
+        raise ValueError("agy_review_permissions_require_scoped_home")
+    python_bin, server = sources_server_launch()
+    config = isolated_sources_mcp_config(python_bin, server)
+    parent = _open_runtime_dir(root, ())
+    home_fd = None
+    try:
+        os.mkdir("agy-review-home", 0o700, dir_fd=parent)
+        home_fd = _open_owned_dir("agy-review-home", dir_fd=parent)
+        _populate_agy_review_home(home_fd, token, json.dumps(config).encode())
+    finally:
+        if home_fd is not None:
+            os.close(home_fd)
+        os.close(parent)
+    return root / "agy-review-home"
+
+
+def review_ledger_path(config_path: Path | str) -> Path:
+    """Resolve the host ledger paired with an existing attempt config."""
+    config = Path(config_path)
+    if not config.name.endswith(".mcp.json"):
+        raise ValueError("invalid_review_attempt_config")
+    return config.with_name(config.name.removesuffix(".mcp.json") + ".jsonl")
 
 
 def agy_oauth_link_problem(config_path: Path | str) -> str | None:

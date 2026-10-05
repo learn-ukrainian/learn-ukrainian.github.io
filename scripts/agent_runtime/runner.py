@@ -69,7 +69,8 @@ from scripts.agent_runtime.adapters.acpx import (
     active_communication_scope,
 )
 from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
-from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
+from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
+from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
 
 from .adapters.base import AgentAdapter
@@ -1020,6 +1021,7 @@ def _build_usage_record(
     agy_killed_commands: list[str] | None = None,
     agy_attempt_count: int = 1,
     agy_retry_reason: str | None = None,
+    agy_telemetry: AgyTelemetry | None = None,
 ) -> dict[str, Any]:
     """Assemble the usage record dict per design doc § 4.5 schema."""
     # Adapters may omit retry metadata; reject untyped values before using or serializing them.
@@ -1081,6 +1083,8 @@ def _build_usage_record(
         # The context is installed only by invoke_inter_agent(); no caller
         # metadata is permitted to supply or overwrite these fields.
         record["transport"] = transport.metadata()
+    if isinstance(agy_telemetry, AgyTelemetry) and not privacy_limited:
+        record.update(agy_telemetry.task_fields())
     if (agent == "agy" or agy_killed_commands or agy_attempt_count > 1 or agy_retry_reason) and not privacy_limited:
         record["agy_attempt_count"] = agy_attempt_count
         record["agy_retry_reason"] = agy_retry_reason
@@ -1097,6 +1101,8 @@ def _build_usage_record(
             kept.append(command)
         else:
             record["agy_killed_commands"] = kept
+    if isinstance(agy_telemetry, AgyTelemetry) and not privacy_limited:
+        record.update(agy_telemetry.task_fields())
     return record
 
 
@@ -1201,6 +1207,83 @@ class _ExecutionOutcome:
     # (expected root, last observed cwd) when the #8516 cwd pin killed the
     # child; None otherwise.
     cwd_pin_detail: tuple[str, str] | None = None
+    process_group_exited: bool = False
+
+
+@dataclass
+class _AgyLaunchBudget:
+    """Runner-owned budget shared across retry, failover and Gemini rungs."""
+
+    deadline: float
+    attempts: list[AgyAttempt] = field(default_factory=list)
+    retry_reason: str | None = None
+    retry_disposition: str = "no_retry"
+    reroute_reason: str | None = None
+    accepted_attempt: int | None = None
+
+    def snapshot(self, task_id: str | None) -> AgyTelemetry:
+        return AgyTelemetry(
+            attempts=tuple(self.attempts),
+            retry_reason=self.retry_reason,
+            retry_disposition=self.retry_disposition,
+            accepted_attempt=self.accepted_attempt,
+            reroute_required=self.reroute_reason is not None,
+            reroute_reason=self.reroute_reason,
+            parent_task_id=task_id,
+        )
+
+
+_AGY_INVOCATION_BUDGET: contextvars.ContextVar[_AgyLaunchBudget | None] = contextvars.ContextVar(
+    "agy_invocation_budget", default=None
+)
+
+
+def _agy_git_state(cwd: Path) -> tuple[bytes, bytes] | None:
+    """Read HEAD and porcelain without hooks, filters, refresh writes or output."""
+    try:
+        values = []
+        for args in (("rev-parse", "--verify", "HEAD"), ("status", "--porcelain", "--untracked-files=all")):
+            result = subprocess.run(
+                ["git", "--no-optional-locks", "-c", "core.fsmonitor=false", *args],
+                cwd=cwd,
+                capture_output=True,
+                timeout=10,
+                check=True,
+            )
+            values.append(result.stdout)
+        return values[0], values[1]
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
+def _agy_process_group_exited(pid: int) -> bool:
+    """A leader's exit alone is insufficient proof that its group stopped."""
+    if type(pid) is not int or pid <= 0:
+        return False
+    try:
+        os.killpg(pid, 0)
+    except ProcessLookupError:
+        return True
+    except OSError:
+        return False
+    return False
+
+
+def _agy_receipt_ledger_empty(tool_config: dict | None) -> bool:
+    """Fail closed on a missing, substituted or unreadable attempt ledger."""
+    tc = tool_config or {}
+    if not any(
+        tc.get(key)
+        for key in ("attempt_id", "review_id", "review_attempt_boundary", "review_ledger_path", "mcp_config_path")
+    ):
+        return True
+    try:
+        # Host-owned path, forwarded before sandbox staging; never borrow the
+        # review seat's or another attempt's ledger.
+        path = Path(tc["review_ledger_path"])
+        return safe_attempt_file_size(path, trusted_root=path.parent) == 0
+    except (KeyError, TypeError, ValueError, OSError, AttemptReadError):
+        return False
 
 
 @dataclass
@@ -1484,8 +1567,10 @@ def _execute_invocation_plan(
     stdout_silence_timeout: int | None = None,
     initial_response_timeout: int | None = None,
     v4_authorization_id: str | None = None,
+    agy_budget: _AgyLaunchBudget | None = None,
+    cli_version: str = "unknown",
 ) -> _ExecutionOutcome:
-    """Retry an AGY code-assist eligibility 503 once, within the original time budget."""
+    """Two launches maximum; cancellation and pre-model 503 share the retry."""
     kwargs = dict(
         agent_name=agent_name,
         adapter=adapter,
@@ -1507,53 +1592,157 @@ def _execute_invocation_plan(
     )
     if agent_name != "agy":
         return _execute_invocation_once(**kwargs)
-    started = time.monotonic()
-    execution = _execute_invocation_once(**kwargs)
-    if execution.parse.ok or execution.kill_reason:
-        return execution
-    from .adapters.agy import AGY_INCOMPLETE_RUN_REASONS
+    budget = agy_budget or _AGY_INVOCATION_BUDGET.get() or _AgyLaunchBudget(time.monotonic() + hard_timeout)
 
-    # Provider-attributed terminal error or stderr, never the model's reply.
-    errors = (execution.stderr_text, execution.parse.provider_error_text or "")
-    transient = any(
-        re.search(r"Eligibility check failed:\s*UNAVAILABLE \(code 503\)", line)
-        for text in errors
-        for line in text.splitlines()
-    )
-    reason = (execution.parse.stderr_excerpt or "").splitlines()
-    if (
-        not transient
-        or not execution.parse.agy_pre_model_failure
-        or execution.parse.agy_killed_commands
-        or (reason and reason[0] in AGY_INCOMPLETE_RUN_REASONS)
-    ):
-        return execution
-    remaining = hard_timeout - (time.monotonic() - started)
-    if remaining < 1:
-        return execution
-    # Fresh log and transcript baseline; the failed attempt cannot lend proof.
-    retry_plan = adapter.build_invocation(
-        prompt=prompt,
-        mode=mode,
-        cwd=cwd,
-        model=model,
-        task_id=task_id,
-        session_id=session_id,
-        tool_config=tool_config,
-    )
-    remaining = hard_timeout - (time.monotonic() - started)
-    if remaining < 1:
+    def finish(execution: _ExecutionOutcome) -> _ExecutionOutcome:
+        snapshot = budget.snapshot(task_id)
+        return replace(
+            execution,
+            parse=replace(
+                execution.parse,
+                agy_telemetry=snapshot,
+                agy_attempt_count=len(snapshot.attempts),
+                agy_retry_reason=snapshot.retry_reason,
+            ),
+        )
+
+    if len(budget.attempts) >= 2 or budget.deadline - time.monotonic() < 1:
+        budget.retry_disposition = "exhausted" if len(budget.attempts) >= 2 else "deadline_exhausted"
+        budget.reroute_reason = "agy_launch_cap_exhausted" if len(budget.attempts) >= 2 else "deadline_exhausted"
         cleanup = getattr(adapter, "cleanup_invocation", None)
         if cleanup is not None:
-            cleanup(retry_plan)
-        return execution
-    kwargs.update(plan=retry_plan, hard_timeout=int(remaining))
-    retry = _execute_invocation_once(**kwargs)
-    return replace(
-        retry,
-        duration_s=execution.duration_s + retry.duration_s,
-        parse=replace(retry.parse, agy_attempt_count=2, agy_retry_reason="pre_model_eligibility_503"),
-    )
+            cleanup(plan)
+        return finish(
+            _ExecutionOutcome(
+                parse=ParseResult(
+                    ok=False, response="", failure_code="provider_stream_incomplete", provider_error_text=""
+                ),
+                duration_s=0,
+                returncode=None,
+                kill_reason=None,
+                stdout_text="",
+                stderr_text="",
+                liveness_paths=(),
+            )
+        )
+    before = _agy_git_state(cwd) if mode == "read-only" else None
+    elapsed = 0.0
+    execution: _ExecutionOutcome | None = None
+    while True:
+        remaining = budget.deadline - time.monotonic()
+        if remaining < 1:
+            budget.retry_disposition = "deadline_exhausted"
+            budget.reroute_reason = "deadline_exhausted"
+            cleanup = getattr(adapter, "cleanup_invocation", None)
+            if cleanup is not None:
+                cleanup(kwargs["plan"])
+            return finish(
+                execution
+                or _ExecutionOutcome(
+                    parse=ParseResult(
+                        ok=False, response="", failure_code="provider_stream_incomplete", provider_error_text=""
+                    ),
+                    duration_s=0,
+                    returncode=None,
+                    kill_reason=None,
+                    stdout_text="",
+                    stderr_text="",
+                    liveness_paths=(),
+                )
+            )
+        kwargs["hard_timeout"] = int(remaining)
+        execution = _execute_invocation_once(**kwargs)
+        elapsed += execution.duration_s
+        parse = execution.parse
+        evidence = parse.agy_attempt or AgyAttempt(
+            completion_reason="completed" if parse.ok else "unknown",
+            failure_code=parse.failure_code,
+        )
+        budget.attempts.append(replace(evidence, cli_version=cli_version, runtime_stop_reason=execution.kill_reason))
+        budget.accepted_attempt = len(budget.attempts) if parse.ok and not execution.kill_reason else None
+        execution = replace(execution, duration_s=elapsed)
+        if parse.ok or execution.kill_reason or parse.rate_limited:
+            return finish(execution)
+        from .adapters.agy import AGY_BACKGROUND_TASK_CANCELED, AGY_INCOMPLETE_RUN_REASONS
+
+        cancellation = (
+            evidence.completion_reason == AGY_BACKGROUND_TASK_CANCELED
+            and parse.failure_code == "provider_stream_incomplete"
+        )
+        errors = (execution.stderr_text, parse.provider_error_text or "")
+        transient = any(
+            re.search(r"Eligibility check failed:\s*UNAVAILABLE \(code 503\)", line)
+            for text in errors
+            for line in text.splitlines()
+        )
+        eligibility = (
+            transient
+            and parse.agy_pre_model_failure
+            and not parse.agy_killed_commands
+            and evidence.completion_reason not in AGY_INCOMPLETE_RUN_REASONS
+        )
+        if not cancellation and not eligibility:
+            return finish(execution)
+        if len(budget.attempts) >= 2:
+            budget.retry_disposition = "exhausted"
+            budget.reroute_reason = "agy_retry_exhausted"
+            return finish(execution)
+        tc = tool_config or {}
+        receipt = any(
+            tc.get(key)
+            for key in ("review_id", "attempt_id", "review_attempt_boundary", "review_ledger_path", "mcp_config_path")
+        )
+        if mode != "read-only":
+            budget.retry_disposition = "unsafe_replay"
+            budget.reroute_reason = "unsafe_replay"
+            return finish(execution)
+        if cancellation and receipt:
+            budget.retry_disposition = "receipt_attempt_requires_fresh_dispatch"
+            budget.reroute_reason = "receipt_attempt_requires_fresh_dispatch"
+            return finish(execution)
+        if not _agy_receipt_ledger_empty(tool_config):
+            budget.retry_disposition = "unsafe_replay"
+            budget.reroute_reason = "receipt_attempt_requires_fresh_dispatch"
+            return finish(execution)
+        if cancellation and (not execution.process_group_exited or before is None or _agy_git_state(cwd) != before):
+            budget.retry_disposition = "unsafe_replay"
+            budget.reroute_reason = "unsafe_replay"
+            return finish(execution)
+        if budget.deadline - time.monotonic() < 1:
+            budget.retry_disposition = "deadline_exhausted"
+            budget.reroute_reason = "deadline_exhausted"
+            return finish(execution)
+        try:
+            retry_plan = adapter.build_invocation(
+                prompt=prompt,
+                mode=mode,
+                cwd=cwd,
+                model=model,
+                task_id=task_id,
+                session_id=None,
+                tool_config=tool_config,
+            )
+        except (OSError, ValueError, AgentRuntimeError):
+            budget.retry_disposition = "preparation_failed"
+            budget.reroute_reason = "retry_preparation_failed"
+            return finish(execution)
+        if budget.deadline - time.monotonic() < 1:
+            cleanup = getattr(adapter, "cleanup_invocation", None)
+            if cleanup is not None:
+                cleanup(retry_plan)
+            budget.retry_disposition = "deadline_exhausted"
+            budget.reroute_reason = "deadline_exhausted"
+            return finish(execution)
+        if (cancellation and _agy_git_state(cwd) != before) or not _agy_receipt_ledger_empty(tool_config):
+            cleanup = getattr(adapter, "cleanup_invocation", None)
+            if cleanup is not None:
+                cleanup(retry_plan)
+            budget.retry_disposition = "unsafe_replay"
+            budget.reroute_reason = "unsafe_replay"
+            return finish(execution)
+        budget.retry_reason = "incomplete_cancellation" if cancellation else "pre_model_eligibility_503"
+        budget.retry_disposition = "retried"
+        kwargs.update(plan=retry_plan, session_id=None)
 
 
 def _execute_invocation_once(
@@ -1979,6 +2168,9 @@ def _execute_invocation_once(
             parse=parse,
             duration_s=duration_s,
             returncode=final_returncode,
+            process_group_exited=agent_name == "agy"
+            and final_returncode is not None
+            and _agy_process_group_exited(proc.pid),
             kill_reason=kill_reason,
             stdout_text=stdout_text,
             stderr_text=stderr_text,
@@ -2169,6 +2361,7 @@ def _raise_for_kill_reason(
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
             failure_code="protocol_output_limit",
         )
         write_record(record)
@@ -2200,6 +2393,7 @@ def _raise_for_kill_reason(
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
             failure_code="cwd_unpinned",
         )
         write_record(record)
@@ -2233,6 +2427,7 @@ def _raise_for_kill_reason(
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
             failure_code="primary_tree_write",
         )
         write_record(record)
@@ -2259,6 +2454,7 @@ def _raise_for_kill_reason(
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2277,6 +2473,7 @@ def _raise_for_kill_reason(
             execution.duration_s,
             kind="stdout_silence_timeout",
             substitution=record_substitution,
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
         )
 
     if kill_reason == "initial_response_timeout":
@@ -2310,6 +2507,7 @@ def _raise_for_kill_reason(
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2328,6 +2526,7 @@ def _raise_for_kill_reason(
             execution.duration_s,
             kind="initial_response_timeout",
             substitution=record_substitution,
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
         )
 
     if kill_reason == "hard_timeout" and not parse.ok:
@@ -2356,6 +2555,7 @@ def _raise_for_kill_reason(
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2372,6 +2572,7 @@ def _raise_for_kill_reason(
             agent_name,
             hard_timeout,
             substitution=record_substitution,
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
         )
 
 
@@ -2399,6 +2600,9 @@ def _invoke_gemini_with_fallback(
     agy_killed_commands: list[str] = []
     agy_attempt_count = 0
     agy_retry_reason: str | None = None
+    agy_budget = _AGY_INVOCATION_BUDGET.get() or _AgyLaunchBudget(time.monotonic() + hard_timeout)
+    agy_snapshot: AgyTelemetry | None = None
+    agy_failure_code: str | None = None
 
     def _attempt_runner(
         rung: GeminiRung,
@@ -2406,9 +2610,15 @@ def _invoke_gemini_with_fallback(
         timeout_s: int | None,
     ) -> AttemptOutcome:
         nonlocal agy_attempt_count, agy_retry_reason, last_telemetry
-        nonlocal last_tool_calls
+        nonlocal last_tool_calls, agy_snapshot, agy_failure_code
         try:
             if rung.cli == "agy-cli":
+                if len(agy_budget.attempts) >= 2:
+                    agy_budget.retry_disposition = "exhausted"
+                    agy_budget.reroute_reason = "agy_launch_cap_exhausted"
+                    agy_snapshot = agy_budget.snapshot(task_id)
+                    agy_failure_code = "provider_stream_incomplete"
+                    return AttemptOutcome(status="fatal", elapsed_s=0, stderr_excerpt="agy_launch_cap_exhausted")
                 headroom_ok, headroom_reason = has_headroom("agy", rung.model)
                 if not headroom_ok:
                     return AttemptOutcome(
@@ -2459,6 +2669,8 @@ def _invoke_gemini_with_fallback(
                 tool_config=attempt_tool_config,
                 stdout_silence_timeout=stdout_silence_timeout,
                 initial_response_timeout=initial_response_timeout,
+                agy_budget=agy_budget,
+                cli_version=last_telemetry.cli_version,
             )
         except AgentUnavailableError as exc:
             if rung.cli == "agy-cli":
@@ -2473,6 +2685,8 @@ def _invoke_gemini_with_fallback(
         if attempt_agent_name == "agy":
             agy_attempt_count += parse.agy_attempt_count
             agy_retry_reason = parse.agy_retry_reason or agy_retry_reason
+            agy_snapshot = parse.agy_telemetry
+            agy_failure_code = parse.failure_code
         last_tool_calls = list(parse.tool_calls)
 
         if execution.kill_reason in ("stdout_silence_timeout", "initial_response_timeout"):
@@ -2524,7 +2738,12 @@ def _invoke_gemini_with_fallback(
             )
 
         return AttemptOutcome(
-            status="retryable_error",
+            status="fatal"
+            if (
+                parse.failure_code in {"provider_stream_incomplete", "provider_policy_refusal"}
+                or (parse.agy_telemetry and parse.agy_telemetry.reroute_required)
+            )
+            else "retryable_error",
             elapsed_s=execution.duration_s,
             stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
             returncode=execution.returncode,
@@ -2579,6 +2798,7 @@ def _invoke_gemini_with_fallback(
             agy_killed_commands=list(agy_killed_commands),
             agy_attempt_count=max(1, agy_attempt_count),
             agy_retry_reason=agy_retry_reason,
+            agy_telemetry=agy_snapshot,
         )
         write_record(record)
         return Result(
@@ -2602,6 +2822,7 @@ def _invoke_gemini_with_fallback(
             tool_calls_total=len(last_tool_calls),
             isolation_evidence=None,
             agy_killed_commands=list(agy_killed_commands),
+            agy_telemetry=agy_snapshot,
         )
 
     if call_result.attempts and all(attempt.status == "rate_limited" for attempt in call_result.attempts):
@@ -2625,9 +2846,12 @@ def _invoke_gemini_with_fallback(
             agy_killed_commands=list(agy_killed_commands),
             agy_attempt_count=max(1, agy_attempt_count),
             agy_retry_reason=agy_retry_reason,
+            agy_telemetry=agy_snapshot,
         )
         write_record(record)
-        raise RateLimitedError(agent_name, record_model, reason=(stderr_excerpt or "")[:200])
+        raise RateLimitedError(
+            agent_name, record_model, reason=(stderr_excerpt or "")[:200], agy_telemetry=agy_snapshot
+        )
 
     if (last_attempt_record is not None and last_attempt_record.status == "timeout") or "no budget left" in (
         call_result.error_message or ""
@@ -2652,9 +2876,10 @@ def _invoke_gemini_with_fallback(
             agy_killed_commands=list(agy_killed_commands),
             agy_attempt_count=max(1, agy_attempt_count),
             agy_retry_reason=agy_retry_reason,
+            agy_telemetry=agy_snapshot,
         )
         write_record(record)
-        raise AgentTimeoutError(agent_name, hard_timeout)
+        raise AgentTimeoutError(agent_name, hard_timeout, agy_telemetry=agy_snapshot)
 
     record = _build_usage_record(
         agent=agent_name,
@@ -2676,6 +2901,7 @@ def _invoke_gemini_with_fallback(
         agy_killed_commands=list(agy_killed_commands),
         agy_attempt_count=max(1, agy_attempt_count),
         agy_retry_reason=agy_retry_reason,
+        agy_telemetry=agy_snapshot,
     )
     write_record(record)
     return Result(
@@ -2699,6 +2925,8 @@ def _invoke_gemini_with_fallback(
         tool_calls_total=len(last_tool_calls),
         isolation_evidence=None,
         agy_killed_commands=list(agy_killed_commands),
+        agy_telemetry=agy_snapshot,
+        failure_code=agy_failure_code,
     )
 
 
@@ -2872,6 +3100,7 @@ def _invoke_with_runner_failover(
         raise RateLimitedError(agent_name, requested_route.model, reason)
 
     overall_start = time.monotonic()
+    agy_budget = _AGY_INVOCATION_BUDGET.get() or _AgyLaunchBudget(overall_start + hard_timeout)
     last_trigger = "requested"
     last_headroom_failure: tuple[FailoverRoute, str] | None = None
 
@@ -2939,6 +3168,8 @@ def _invoke_with_runner_failover(
             event_sink=event_sink,
             stdout_silence_timeout=stdout_silence_timeout,
             initial_response_timeout=initial_response_timeout,
+            agy_budget=agy_budget,
+            cli_version=telemetry.cli_version,
         )
         parse = execution.parse
         trigger = None
@@ -3052,6 +3283,7 @@ def _invoke_with_runner_failover(
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
         )
         write_record(record)
 
@@ -3079,6 +3311,7 @@ def _invoke_with_runner_failover(
             returncode=execution.returncode,
             failure_code=parse.failure_code,
             agy_killed_commands=_typed_agy_killed_commands(getattr(parse, "agy_killed_commands", None)),
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
             usage_record=record,
             model_identity=record.get("model_identity"),
             tool_calls=list(parse.tool_calls),
@@ -3348,6 +3581,7 @@ def _invoke_impl(
         stdout_silence_timeout=stdout_silence_timeout,
         initial_response_timeout=initial_response_timeout,
         v4_authorization_id=v4_authorization_id,
+        cli_version=telemetry.cli_version,
     )
     parse = execution.parse
 
@@ -3417,6 +3651,7 @@ def _invoke_impl(
         agy_killed_commands=getattr(parse, "agy_killed_commands", None),
         agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
         agy_retry_reason=getattr(parse, "agy_retry_reason", None),
+        agy_telemetry=getattr(parse, "agy_telemetry", None),
     )
     write_record(record)
 
@@ -3425,6 +3660,7 @@ def _invoke_impl(
             agent_name,
             record_model,
             reason=(parse.stderr_excerpt or "")[:200],
+            agy_telemetry=getattr(parse, "agy_telemetry", None),
         )
 
     return Result(
@@ -3444,6 +3680,7 @@ def _invoke_impl(
         returncode=execution.returncode,
         failure_code=parse.failure_code,
         agy_killed_commands=_typed_agy_killed_commands(getattr(parse, "agy_killed_commands", None)),
+        agy_telemetry=getattr(parse, "agy_telemetry", None),
         usage_record=record,
         model_identity=record.get("model_identity"),
         tool_calls=list(parse.tool_calls),
@@ -3499,6 +3736,9 @@ def invoke(
         task_id=task_id,
     )
     attribution_token = _INVOCATION_ATTRIBUTION.set(attribution)
+    agy_token = _AGY_INVOCATION_BUDGET.set(
+        _AgyLaunchBudget(time.monotonic() + hard_timeout) if agent_name in {"agy", "gemini"} else None
+    )
     launch = None
     attempt = None
     try:
@@ -3537,12 +3777,18 @@ def invoke(
             allow_runner_failover=attempt is None
             and not bool(tool_config and (tool_config.get("review_id") or tool_config.get("attempt_id"))),
         )
+    except BaseException as exc:
+        budget = _AGY_INVOCATION_BUDGET.get()
+        if budget is not None and (agent_name in {"agy", "gemini"} or budget.attempts):
+            exc.agy_telemetry = budget.snapshot(task_id)
+        raise
     finally:
         if launch is not None:
             launch.cleanup()
         if attempt is not None:
             attempt.cleanup()
         _INVOCATION_ATTRIBUTION.reset(attribution_token)
+        _AGY_INVOCATION_BUDGET.reset(agy_token)
 
 
 @dataclass(frozen=True)

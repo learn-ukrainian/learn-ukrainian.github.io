@@ -103,7 +103,7 @@ from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..jsonl import jsonl_lines
-from ..result import ParseResult
+from ..result import AgyAttempt, ParseResult
 from ..tool_calls import summarize_tool_output
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
@@ -875,7 +875,8 @@ class AgyAdapter:
         tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
         review_route = bool(
-            review_isolation
+            (mode == "read-only" and tc.get("review_profile") == "ukrainian")
+            or review_isolation
             or tc.get("review_attempt_boundary")
             or tc.get("review_access")
             or tc.get("review_id")
@@ -901,7 +902,7 @@ class AgyAdapter:
             log_dir = Path(str(tc["review_write_root"])) / "tmp"
             log_dir.mkdir(parents=True, exist_ok=True)
             safe_task = "".join(c if c.isalnum() or c in "-_." else "_" for c in (task_id or "review"))[:48]
-            log_path = log_dir / f"agy-runtime-{safe_task}-{os.getpid()}.log"
+            log_path = log_dir / f"agy-runtime-{safe_task}-{os.getpid()}-{uuid.uuid4().hex[:12]}.log"
         else:
             log_path = _build_log_path(task_id)
 
@@ -996,6 +997,7 @@ class AgyAdapter:
                 "agy_app_data_root": str(app_data_root),
                 "attempt_read_root": bool(tc.get("review_write_root")),
                 "log_read_root": str(log_read_root),
+                "agy_permission_profile_id": "ukrainian-review-command-denial-v1" if review_route else None,
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
@@ -1051,6 +1053,7 @@ class AgyAdapter:
             result,
             agy_killed_commands=killed,
             agy_pre_model_failure=_pre_model_failure(plan, stdout, bound),
+            agy_attempt=_attempt_evidence(bound, result, plan),
         )
 
     def _parse_response(
@@ -1089,6 +1092,7 @@ class AgyAdapter:
                 failure_code="provider_policy_refusal",
                 provider_error_text="",
                 stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED + "\n" + json.dumps(denial._asdict()),
+                agy_attempt=AgyAttempt(completion_reason=AGY_HEADLESS_PERMISSION_DENIED),
             )
         stream_error = str(stream_result.get("error") or "") if stream_result else ""
         # Only a failed terminal envelope owns error text. A SUCCESS result
@@ -1128,6 +1132,7 @@ class AgyAdapter:
                 provider_error_text=provider_error,
                 tool_calls=_parse_transcript_tool_calls(plan)
                 or _parse_stdout_marker_tool_calls(f"{stdout_response}\n{stderr_text}"),
+                agy_attempt=AgyAttempt(completion_reason=incomplete_reason),
             )
         output_schema = plan_output_schema(plan)
         if output_schema is not None:
@@ -1219,6 +1224,93 @@ class AgyAdapter:
             return
         with contextlib.suppress(FileNotFoundError):
             path.unlink()
+
+
+def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan: InvocationPlan | None) -> AgyAttempt:
+    """Count invocation-owned tool evidence before diagnostic truncation.
+
+    A command intent is not execution. Its bound result must show a task
+    start or synchronous completion; missing/error results remain unknown.
+    Deny-rule signals count only in the command's bound result slot, never on
+    model prose, Sources output or an unrelated diagnostic stream.
+    """
+    reason = (
+        result.agy_attempt.completion_reason
+        if result.agy_attempt
+        else ("completed" if result.ok else result.failure_code or "provider_error")
+    )
+    base = AgyAttempt(
+        completion_reason=reason,
+        failure_code=result.failure_code,
+        permission_profile_id=plan.metadata.get("agy_permission_profile_id") if plan else None,
+    )
+    if bound is None or bound.unreadable_lines:
+        return base
+    events = bound.events
+    # The same final-reply boundary used by the completion gate.
+    replies = [i for i, event in enumerate(events) if _is_model_event(event)]
+    reply = replies[-1] if replies else None
+    killed, excused = _model_killed_tasks(events, reply=reply)
+    if reply is None or events[reply].get("status") != "DONE":
+        excused = set()
+    from ..sources_read_only import sources_tool_sets
+
+    known_sources = set().union(*sources_tool_sets())
+    # Current AGY emits planner intents followed by GENERIC result slots in
+    # FIFO order; a planner's step index is not its tool result's step index.
+    pending: list[tuple[str, str]] = []
+    denied_steps: set[int] = set()
+    executed_steps: set[int] = set()
+    background_steps: set[int] = set()
+    background_tasks: set[str] = set()
+    sources: set[str] = set()
+    unknown_execution = False
+    for position, event in enumerate(events):
+        if event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL":
+            sources.update(
+                name
+                for call in _extract_transcript_tool_calls(event)
+                if (name := call["name"].removeprefix("mcp__sources__")) in known_sources
+            )
+            for call in event.get("tool_calls") or []:
+                if not isinstance(call, Mapping):
+                    continue
+                key = json.dumps(call, sort_keys=True, ensure_ascii=False, default=str)
+                if not any(key == waiting_key for waiting_key, _ in pending):
+                    pending.append((key, str(call.get("name") or "")))
+        if event.get("type") not in {"GENERIC", "TOOL_RESPONSE"}:
+            continue
+        step = _event_step_index(event)
+        slot = step if step is not None else position
+        content = str(event.get("content") or "")
+        command_result = bool(pending and pending.pop(0)[1] == "run_command")
+        if event.get("status") == "RUNNING" and (start := _BACKGROUND_START_HEADER_RE.match(content)):
+            if not start.group("timer"):
+                background_tasks.add(start.group("id"))
+                background_steps.add(slot)
+        elif command_result:
+            if (
+                event.get("status") in {"ERROR", "INVALID"} or content.strip() == "Matches user-configured deny rule."
+            ) and ("Matches user-configured deny rule." in content):
+                denied_steps.add(slot)
+            elif event.get("status") == "DONE":
+                executed_steps.add(slot)
+            else:
+                unknown_execution = True
+    unknown_execution |= any(name == "run_command" for _, name in pending)
+    return dataclasses.replace(
+        base,
+        evidence_complete=True,
+        kill_count=len(killed),
+        excused_kill_count=len(excused),
+        unexcused_kill_count=max(0, len(killed) - len(excused)),
+        unknown_command_count=sum(command == "<unknown command>" for command in killed),
+        denied_command_count=len(denied_steps),
+        executed_command_count=None
+        if unknown_execution
+        else len(background_tasks) + len(executed_steps - background_steps),
+        sources_tool_names=tuple(sorted(sources)),
+    )
 
 
 class AgyReviewPermissionError(ValueError):
