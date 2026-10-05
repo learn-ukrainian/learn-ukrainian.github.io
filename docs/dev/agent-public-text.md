@@ -78,17 +78,28 @@ override covers exactly one flagged publish. Claim-file reclamation remains
 maintenance work.
 
 The claim belongs to the command, not to the process that publishes (#9681).
-The first process of a command to read the override names its parent, the
-shell that set it, in `LU_OPSEC_OVERRIDE_ANCHOR` (`<pid>:<reason>`): importing
-`scripts.opsec.prepublish` does this, and so does the agent git shim for a
-push. Child processes inherit that anchor, so an in-process publish and a
-child push (`dispatch_settle`, delegate auto-finalize) or a recursive
-submodule push share one use. An anchor names a process only for its own
-reason, and only an ancestor of the claiming process can be claimed for; any
-other anchor refuses the flagged publish. Setting the anchor to another of
-one's own ancestors does yield a new claim, as setting a new reason always
-has: the override is a cooperative agent's logged false-positive escape, and
-the threat model excludes a malicious local writer.
+The command is the nearest process, from the claiming one upwards, that was not
+started with the override (`/proc/<pid>/environ`, fixed at exec): the shell
+whose command line set it, or a program that set it in its own environment.
+Every process the command starts inherits the override, so an in-process
+publish, a child push (`dispatch_settle`, delegate auto-finalize), its hooks and
+a recursive submodule push all reach the same process, whichever publishes
+first and whenever the publisher is imported; nothing is minted or carried. A
+shell can run the last program of its command line in place of itself (bash
+does), and that program walks past the shell, so the outermost process that
+inherited the override is claimed too: it holds the shell's pid and start time,
+which its earlier siblings claim as the command. Each claim key is a pid, its
+start time, the boot and the reason, and any key already claimed refuses. When
+a shell runs a one-program command line in place of itself, that command is
+keyed on the shell's parent (the agent harness), so the same reason is then
+single use for that parent's life; use a fresh reason per command. A
+flagged publish is refused when the command cannot be determined: no `/proc`
+(non-Linux hosts), an unreadable process, a parent replaced during the walk (a
+reused pid starts later than its child), or an override inherited up to init or
+the top of a pid namespace. A publisher that outlives its command and is
+adopted by a subreaper walks up to that subreaper instead; the override is a
+cooperative agent's logged false-positive escape, and the threat model excludes
+a malicious local writer.
 
 ## Raw gh reads and private writes
 
@@ -308,10 +319,11 @@ object, including an embedded one, without a blank line after its headers, or
 whose headers open with a continuation line, refuses the push naming only the
 object. Refusals name the rule, class, field and line, never the matched text.
 The single-use, logged `LU_OPSEC_OVERRIDE` applies only to a flagged push and
-is claimed for the command's anchor (see the override above), which the shim
-sets to the caller of the push unless a publisher above already carries one;
-the caller's own hook receives neither. A clean push neither uses up the override nor looks up that process,
-so a failed lookup refuses only a flagged push.
+is claimed once for the command that set it (see the override above). The
+shim's own Git lookups and the caller's own hooks (pre-push and
+reference-transaction) do not receive it. A clean push neither uses up the
+override nor looks up that command, so a failed lookup refuses only a flagged
+push.
 File contents are not scanned.
 
 **History already on the public default branch.** Nothing the destination

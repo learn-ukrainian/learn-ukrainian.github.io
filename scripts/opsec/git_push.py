@@ -134,8 +134,7 @@ def scan_environment(environment: dict[str, str]) -> dict[str, str]:
     scrubbed = {
         key: value
         for key, value in environment.items()
-        if key not in (gate.OVERRIDE, gate.OVERRIDE_ANCHOR, "GIT_CONFIG", "GIT_CURL_VERBOSE")
-        and not key.startswith("GIT_TRACE")
+        if key not in (gate.OVERRIDE, "GIT_CONFIG", "GIT_CURL_VERBOSE") and not key.startswith("GIT_TRACE")
     }
     scrubbed.update(
         GIT_TRACE2="0",
@@ -605,33 +604,6 @@ def isolate_scanner(repository: Repository) -> None:
         os.environ.pop(name, None)
 
 
-def claimant(environment: dict[str, str], reason: str) -> int:
-    """The process an override is claimed for: the command's carried anchor, else the caller of the push.
-
-    The agent git shim names the caller of a push as its anchor unless a
-    publisher above it already named the command's, and Git hands the anchor
-    to recursive submodule pushes, so every publication of one command claims
-    the same single use (#9681). Without an anchor it is the parent of the git
-    running this hook: the hook runs as a child of git, and git as a child of
-    the caller (the shim execs git).
-    """
-    anchor = gate.override_anchor(environment, reason)
-    if anchor is not None:
-        return anchor
-    try:
-        result = subprocess.run(
-            ["ps", "-o", "ppid=", "-p", str(os.getppid())],
-            env=gate.internal_environment(),
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=5,
-        )
-        return int(result.stdout.strip())
-    except Exception:
-        raise gate.PublishBlocked("OPSEC: override log unavailable; push refused.") from None
-
-
 def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *, public_repository=None) -> None:
     """Raise PublishBlocked unless every public text of this push is clean, already public or overridden.
 
@@ -700,17 +672,17 @@ def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *,
         gate.check_texts(dest, texts, environment={}, field_names=names)
     except gate.PublishBlocked as error:
         if reason.strip() and error.indices:
-            # Only a flagged push uses the override: its claimant is looked up
-            # here, and the blocked texts are checked again with the reason so
-            # the override is claimed once and logged before anything is sent.
-            # A clean push never reaches this, so a failed lookup cannot refuse it.
+            # Only a flagged push uses the override: the blocked texts are
+            # checked again with the reason, so the override is claimed once
+            # for the command that set it (gate.command_keys) and logged before
+            # anything is sent. A clean push never reaches this, so a failed
+            # process lookup cannot refuse it.
             flagged = sorted(error.indices)
             gate.check_texts(
                 dest,
                 [texts[index] for index in flagged],
                 environment={gate.OVERRIDE: reason},
                 field_names=[names[index] for index in flagged],
-                claimant=claimant(environment, reason),
             )
             return
         older = {owners[index - first] for index in error.indices if index >= first} - set(tips)

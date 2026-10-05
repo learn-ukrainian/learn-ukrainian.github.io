@@ -664,24 +664,21 @@ def test_clean_hook_runs_the_caller_hook_with_the_same_input_and_no_override(pus
     assert data == (" ".join(record) + "\n").encode() and "LU_OPSEC_OVERRIDE" not in environment
 
 
-UNKNOWN_PID = 2**31 - 1  # Above any pid_max: ps finds no such process, so the claimant lookup fails.
-
-
-def test_clean_push_with_an_override_needs_no_claimant(push_sandbox, monkeypatch):
-    """#9678: a clean push never looks up the claimant, so a failed lookup cannot refuse it."""
+def test_clean_push_with_an_override_needs_no_claimant(push_sandbox, monkeypatch, tmp_path):
+    """#9678: a clean push never looks up the command, so a failed lookup cannot refuse it."""
     push_sandbox.commit("clean subject")
-    monkeypatch.setattr(git_push.os, "getppid", lambda: UNKNOWN_PID)
+    monkeypatch.setattr(gate, "PROC", tmp_path / "no-proc")
     status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
     assert status == 0 and len(chained) == 1 and "LU_OPSEC_OVERRIDE" not in chained[0][2]
     assert not (push_sandbox.root / "batch_state/opsec").exists()
 
 
-def test_flagged_push_with_a_failed_claimant_lookup_is_refused(push_sandbox, monkeypatch, capfd):
+def test_flagged_push_with_a_failed_claimant_lookup_is_refused(push_sandbox, monkeypatch, capfd, tmp_path):
     push_sandbox.commit("subject " + TOKEN)
-    monkeypatch.setattr(git_push.os, "getppid", lambda: UNKNOWN_PID)
+    monkeypatch.setattr(gate, "PROC", tmp_path / "no-proc")
     status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
     err = capfd.readouterr().err
-    assert status == 1 and not chained and "override log unavailable; push refused" in err, err
+    assert status == 1 and not chained and "override is unidentifiable; write refused" in err, err
     assert not (push_sandbox.root / "batch_state/opsec/overrides.jsonl").exists()
 
 
