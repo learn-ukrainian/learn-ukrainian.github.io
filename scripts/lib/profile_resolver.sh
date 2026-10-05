@@ -40,7 +40,7 @@ resolve_context_profile() {
       break
     fi
     case "$key" in
-      PROFILE_ID|TRANSPORT|MAIN_MODEL_ID|MAIN_CONTEXT_WINDOW_TOKENS|AUTO_COMPACT_CAPACITY_TOKENS|COLD_START_PROFILE|COLD_START_BUDGET_TOKENS|ROLLOVER_WARNING_PERCENTAGES|REQUESTED_PROFILE_ID|REQUESTED_MODEL_ID|RESOLUTION_REASON|TRUSTED|MODEL_MISMATCH|EXPECTED_PROFILE_ID|EXPECTED_MAIN_MODEL_ID|EXPECTED_MAIN_CONTEXT_WINDOW_TOKENS)
+      PROFILE_ID|TRANSPORT|MAIN_MODEL_ID|MAIN_CONTEXT_WINDOW_TOKENS|AUTO_COMPACT_CAPACITY_TOKENS|COLD_START_PROFILE|COLD_START_BUDGET_TOKENS|ROLLOVER_WARNING_PERCENTAGES|ROLLOVER_MODE|REQUESTED_PROFILE_ID|REQUESTED_MODEL_ID|RESOLUTION_REASON|TRUSTED|MODEL_MISMATCH|EXPECTED_PROFILE_ID|EXPECTED_MAIN_MODEL_ID|EXPECTED_MAIN_CONTEXT_WINDOW_TOKENS)
         case "$seen_keys" in
           *"|$key|"*)
             parse_error=1
@@ -60,7 +60,21 @@ resolve_context_profile() {
   done <"$output_file"
   rm -f "$output_file"
 
-  if ((parse_error)) || ((field_count != 16)); then
+  # Launchers may pair this parser with the canonical checkout's resolver,
+  # which can predate ROLLOVER_MODE (#8511). Only that one field may be absent;
+  # it then takes the registry default.
+  if ((!parse_error)) && ((field_count == 16)); then
+    case "$seen_keys" in
+      *"|ROLLOVER_MODE|"*) parse_error=1 ;;
+      *)
+        resolved_keys[field_count]="ROLLOVER_MODE"
+        resolved_values[field_count]="continuation"
+        field_count=$((field_count + 1))
+        ;;
+    esac
+  fi
+
+  if ((parse_error)) || ((field_count != 17)); then
     echo "Error: Context-profile resolver returned an invalid field stream" >&2
     return 1
   fi

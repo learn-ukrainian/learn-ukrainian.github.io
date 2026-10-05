@@ -121,9 +121,26 @@ def _environment(project: Path, record_path: Path) -> dict[str, str]:
         "CODEX_THREAD_ID",
         "CODEX_SESSION_ID",
         "SESSION_HANDOFF_AGENT",
+        "SESSION_EPIC",
+        "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
+        "LEARN_UKRAINIAN_ROLLOVER_MODE",
     ):
         env.pop(name, None)
     return env
+
+
+def _native_claude_record() -> dict[str, object]:
+    """The native_claude profile as SessionStart records it (#8511)."""
+    record = _record(actual_window=1_000_000)
+    record.update(
+        {
+            "effective_profile_id": "native_claude",
+            "effective_model_id": "claude-native-family",
+            "rollover_warning_percentages": [65.0, 70.0, 75.0],
+            "rollover_mode": "operator_restart",
+        }
+    )
+    return record
 
 
 def _write_transcript(path: Path, *, input_tokens: int, cache_tokens: int) -> None:
@@ -545,3 +562,101 @@ def test_context_monitor_announces_each_tier_once_and_rearms_after_compaction(
     assert not state_file.exists()
     assert run(288_000).startswith("HEADS UP: Context is at 80%")  # fresh climb announces
     assert state_file.read_text(encoding="utf-8").split() == ["1", "288000"]
+
+
+def _monitor(
+    project: Path,
+    record_path: Path,
+    transcript: Path,
+    tokens: int,
+    **extra_env: str,
+) -> str:
+    _write_transcript(transcript, input_tokens=tokens, cache_tokens=0)
+    env = _environment(project, record_path)
+    env.update(extra_env)
+    completed = subprocess.run(
+        [os.fspath(CONTEXT_MONITOR)],
+        input=json.dumps(
+            {"session_id": "status-session", "transcript_path": os.fspath(transcript)}
+        ),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=project.parent,
+        env=env,
+        timeout=30,
+    )
+    if not completed.stdout.strip():
+        return ""
+    return json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
+
+
+def test_context_monitor_operator_restart_tiers_hand_off_and_wait(tmp_path: Path) -> None:
+    """#8511: 650k/700k warnings, and at 750k hand off, tell the operator, end the turn."""
+    project, record_path = _fake_project(tmp_path, _native_claude_record())
+    transcript = tmp_path / "native.jsonl"
+
+    assert _monitor(project, record_path, transcript, 640_000) == ""
+
+    heads_up = _monitor(project, record_path, transcript, 655_000)
+    assert heads_up.startswith("HEADS UP: Context is at 65%")
+
+    critical = _monitor(project, record_path, transcript, 705_000)
+    assert critical.startswith("CRITICAL: Context is at 70%")
+    assert "Finish the current logical unit" in critical
+    assert "tells the operator it is ready for a restart, and waits" in critical
+    assert "Start the supported continuation" not in critical
+
+    emergency = _monitor(project, record_path, transcript, 760_000)
+    assert emergency.startswith("EMERGENCY: Context is at 76%")
+    assert "waits for the operator to restart it" in emergency
+    assert "Refresh your lane handoff file" in emergency
+    assert "thread-rollover skill's prepare phase (references/prepare.md)" in emergency
+    assert (
+        "run .venv/bin/python scripts/orchestration/thread_handoff.py prepare"
+        " --agent claude --context-percent 76."
+    ) in emergency
+    assert "Tell the operator in one plain message" in emergency
+    assert "END THE TURN and wait" in emergency
+    assert "Start the supported continuation" not in emergency
+    assert "start-claude-driver.sh" not in emergency  # launcher unknown: not invented
+
+    # Tier 3 is announced once; later tool calls stay silent.
+    assert _monitor(project, record_path, transcript, 780_000) == ""
+
+
+def test_context_monitor_operator_restart_names_driver_launcher(tmp_path: Path) -> None:
+    project, record_path = _fake_project(tmp_path, _native_claude_record())
+
+    emergency = _monitor(
+        project, record_path, tmp_path / "native.jsonl", 760_000, SESSION_EPIC="infra"
+    )
+
+    assert "restart this session (./start-claude-driver.sh --epic infra)." in emergency
+
+
+def test_context_monitor_dispatched_worker_keeps_continuation_text(tmp_path: Path) -> None:
+    """A delegated worker has no operator to restart it, so it never waits for one."""
+    project, record_path = _fake_project(tmp_path, _native_claude_record())
+
+    emergency = _monitor(
+        project,
+        record_path,
+        tmp_path / "native.jsonl",
+        760_000,
+        LEARN_UKRAINIAN_DISPATCH_TASK_ID="impl-1",
+    )
+
+    assert emergency.startswith("EMERGENCY: Context is at 76%")
+    assert "Start the supported continuation" in emergency
+    assert "END THE TURN" not in emergency
+
+
+def test_context_monitor_other_profiles_keep_continuation_text(tmp_path: Path) -> None:
+    project, record_path = _fake_project(tmp_path, _record(actual_window=360_000))
+
+    emergency = _monitor(project, record_path, tmp_path / "sol.jsonl", 335_000)
+
+    assert emergency.startswith("EMERGENCY: Context is at 93%")
+    assert "Start the supported continuation" in emergency
+    assert "END THE TURN" not in emergency

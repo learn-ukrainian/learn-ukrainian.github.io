@@ -30,6 +30,7 @@ EXPECTED_ENV0_KEYS = {
     "COLD_START_PROFILE",
     "COLD_START_BUDGET_TOKENS",
     "ROLLOVER_WARNING_PERCENTAGES",
+    "ROLLOVER_MODE",
     "REQUESTED_PROFILE_ID",
     "REQUESTED_MODEL_ID",
     "RESOLUTION_REASON",
@@ -112,6 +113,44 @@ def test_production_registry_separates_sol_capacity_values() -> None:
         "cold_start_budget_tokens": 104_857,
         "rollover_warning_percentages": [75.0, 85.0, 92.0],
     }
+
+
+def test_native_claude_hands_off_at_750k_and_waits_for_operator_restart() -> None:
+    """#8511: 650k heads-up, 700k finish the unit, 750k hand off and wait."""
+    profile = load_registry(CONFIG_PATH)["profiles"]["native_claude"]
+    resolved = resolve_profile("native_claude", "claude-opus-5-5")
+
+    assert profile["rollover_warning_percentages"] == [65.0, 70.0, 75.0]
+    assert profile["rollover_mode"] == "operator_restart"
+    window = profile["main_context_window_tokens"]
+    assert [int(window * pct / 100) for pct in profile["rollover_warning_percentages"]] == [
+        650_000,
+        700_000,
+        750_000,
+    ]
+    assert resolved["trusted"]
+    assert resolved["rollover_mode"] == "operator_restart"
+
+
+def test_only_native_claude_declares_a_rollover_mode() -> None:
+    """Every other profile keeps the default continuation behaviour unchanged."""
+    raw = load_registry(CONFIG_PATH)["profiles"]
+
+    assert [key for key, profile in raw.items() if "rollover_mode" in profile] == ["native_claude"]
+    assert resolve_profile("sol_lead", "gpt-6.1-sol")["rollover_mode"] == "continuation"
+    assert resolve_profile("kimicc_k3", "kimi-k3[1m]")["rollover_mode"] == "continuation"
+    assert resolve_profile()["rollover_mode"] == "continuation"
+    # A model mismatch falls back, so it can never inherit operator_restart.
+    assert resolve_profile("native_claude", "gpt-6.1-sol")["rollover_mode"] == "continuation"
+
+
+def test_registry_rejects_unknown_rollover_mode(tmp_path: Path) -> None:
+    profiles = load_registry(CONFIG_PATH)["profiles"]
+    profiles["native_claude"]["rollover_mode"] = "wait"
+    path = _write_registry(tmp_path, profiles)
+
+    with pytest.raises(ContextProfileError, match="rollover_mode must be one of"):
+        load_registry(path)
 
 
 def test_no_context_profile_routes_to_retired_gpt56() -> None:
@@ -245,6 +284,7 @@ def test_env0_output_is_exact_allow_list() -> None:
     assert pairs[b"MAIN_CONTEXT_WINDOW_TOKENS"] == b"272000"
     assert pairs[b"AUTO_COMPACT_CAPACITY_TOKENS"] == b"258400"
     assert pairs[b"TRUSTED"] == b"1"
+    assert pairs[b"ROLLOVER_MODE"] == b"continuation"
     assert b"export " not in result.stdout
 
 
@@ -295,3 +335,47 @@ def test_shell_resolver_exports_only_project_private_fields() -> None:
     assert exported["LEARN_UKRAINIAN_PROFILE_ID"] == "sol_lead"
     assert exported["LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS"] == "272000"
     assert "eval " not in SHELL_RESOLVER.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    ("omitted", "accepted"),
+    [("ROLLOVER_MODE", True), ("TRUSTED", False)],
+)
+def test_shell_resolver_tolerates_only_a_pre_rollover_mode_resolver(
+    tmp_path: Path, omitted: str, accepted: bool
+) -> None:
+    """Launchers pair this parser with the canonical checkout's resolver, which can
+    predate #8511; only ROLLOVER_MODE may be missing, and it defaults safely."""
+    old_resolver = tmp_path / "old_context_profiles.py"
+    fields = {key: "x" for key in EXPECTED_ENV0_KEYS if key != omitted}
+    fields["PROFILE_ID"] = "native_claude"
+    old_resolver.write_text(
+        "import sys\n"
+        f"for key, value in {sorted(fields.items())!r}:\n"
+        "    sys.stdout.write(key + '\\0' + value + '\\0')\n",
+        encoding="utf-8",
+    )
+    command = f"""
+        set -uo pipefail
+        PROJECT_DIR={shlex.quote(os.fspath(PROJECT_ROOT))}
+        CLAUDE_PROFILE_RESOLVER_PYTHON={shlex.quote(sys.executable)}
+        CLAUDE_PROFILE_RESOLVER_PY={shlex.quote(os.fspath(old_resolver))}
+        source {shlex.quote(os.fspath(SHELL_RESOLVER))}
+        resolve_context_profile native_claude claude-opus-5-5 || exit 7
+        printf '%s|%s\\n' "$LEARN_UKRAINIAN_PROFILE_ID" "$LEARN_UKRAINIAN_ROLLOVER_MODE"
+    """
+    result = subprocess.run(
+        ["bash", "-c", command],
+        capture_output=True,
+        text=True,
+        env={"HOME": os.environ["HOME"], "PATH": os.environ["PATH"], "TMPDIR": os.fspath(tmp_path)},
+        timeout=30,
+        check=False,
+    )
+
+    if accepted:
+        assert result.returncode == 0, result.stderr
+        assert result.stdout == "native_claude|continuation\n"
+    else:
+        assert result.returncode == 7
+        assert "invalid field stream" in result.stderr

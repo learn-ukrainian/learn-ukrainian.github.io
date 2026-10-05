@@ -300,6 +300,31 @@ Confirm the replacement with the same agent name:
   --strict-verdict <reserved-strict-verdict-path>
 ```
 
+## Claude Operator-Restart Rollover (650k / 700k / 750k)
+
+Native Claude sessions (`native_claude` in `scripts/config/context_profiles.yaml`,
+`rollover_mode: operator_restart`, #8511) never continue themselves and never
+reach Claude Code's automatic compaction (about 97% of the 1M window).
+`agents_extensions/shared/hooks/context-monitor.sh` announces each tier once:
+
+- **650k (65%)** — heads-up: wrap up the current unit soon.
+- **700k (70%)** — finish the current unit; start no new multi-step work,
+  dispatches, or large operations.
+- **750k (75%)** — stop, refresh the lane handoff file, run the
+  `thread-rollover` skill's prepare phase (the hook prints the exact
+  `thread_handoff.py prepare` command), tell the operator in one plain message
+  that the session is ready for a restart, and end the turn.
+
+After 750k, `context-rollover-guard.sh` adds a short reminder to every later
+prompt, and its `PreCompact` hook (matcher `auto`) exits 2, which blocks
+automatic compaction (supported since Claude Code 2.1.105). Manual `/compact`
+stays available. If compaction instead fires to recover from a context-limit
+error, Claude Code surfaces that error and fails the request. The operator
+restarts with the session's launcher, for example
+`./start-claude-driver.sh --epic <lane>`; SessionStart then detects the
+prepared packet. Delegated workers (`LEARN_UKRAINIAN_DISPATCH_TASK_ID` set) and
+every other profile keep the continuation behaviour and native compaction.
+
 ## Safety Checks
 
 Check the lease at any time:
