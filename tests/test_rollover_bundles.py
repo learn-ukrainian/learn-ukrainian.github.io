@@ -610,3 +610,83 @@ def test_retention_keeps_latest_five_and_store_false_positive_contract(tmp_path:
     assert rows[0]["manifest"]["generation"] == 6
     with pytest.raises(ContentRejectedError):
         validate_entry_body("password: definitely-a-secret")
+
+
+def _serve_api_bundle(
+    monkeypatch: pytest.MonkeyPatch, manifest: dict, blob: bytes, *, upload_seq: int
+) -> None:
+    served = {**manifest, "upload_seq": upload_seq}
+    monkeypatch.setattr(
+        th,
+        "_bundle_api_list",
+        lambda _args, *, stream_id, limit=20: [{"manifest": served, "upload_seq": upload_seq}],
+    )
+    monkeypatch.setattr(th, "_bundle_api_by_seq", lambda _args, *, stream_id, upload_seq: (served, blob))
+
+
+def test_order_tie_at_a_synced_upload_keeps_newer_local_edits(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8511: SessionStart refused "bundle order ties but content differs" after the
+    driver refreshed its lane handoff following its own upload.  The local receipt
+    proves this host synced that immutable upload, so the local copy is newer."""
+    source = tmp_path / "source"
+    target = tmp_path / "target"
+    source.mkdir()
+    target.mkdir()
+    state = _seed_state(source, thread_id="source-thread", generation=2)
+    bundle = tmp_path / "remote.tgz"
+    assert th.cmd_export_bundle(_export_args(source, state, bundle)) == 0
+    capsys.readouterr()
+    manifest, _ = th._bundle_extract(bundle.read_bytes())
+    _serve_api_bundle(monkeypatch, manifest, bundle.read_bytes(), upload_seq=65)
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+    assert json.loads(capsys.readouterr().out)["status"] == "installed"
+    receipt = target / ".agent/thread-rollovers" / AGENT / "_bundle-receipts" / f"{state['lineage_id']}.json"
+    assert json.loads(receipt.read_text(encoding="utf-8"))["upload_seq"] == 65
+
+    lane_handoff = target / HANDOFF_PATH
+    lane_handoff.write_text("refreshed after the upload\n", encoding="utf-8")
+    lease = target / th.default_state_path(AGENT, state["lineage_id"])
+    lease_before = lease.read_bytes()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "noop"
+    assert result["reason"] == "local copy descends from this upload; keeping its newer local edits"
+    assert result["upload_seq"] == 65
+    assert result["generation"] == 2
+    assert result["local_newer_members"] == [HANDOFF_PATH]
+    assert lane_handoff.read_text(encoding="utf-8") == "refreshed after the upload\n"
+    assert lease.read_bytes() == lease_before
+    archive_root = target / ".agent" / "thread-rollovers" / AGENT / "_archive"
+    assert not archive_root.exists() or not any(archive_root.iterdir())
+
+
+def test_order_tie_without_an_upload_sequence_still_refuses(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Unsequenced file exports share upload_seq 0, so a tie proves no common snapshot."""
+    source = tmp_path / "source"
+    target = tmp_path / "target"
+    source.mkdir()
+    target.mkdir()
+    state = _seed_state(source, thread_id="source-thread")
+    bundle = tmp_path / "rollover.tgz"
+    assert th.cmd_export_bundle(_export_args(source, state, bundle)) == 0
+    capsys.readouterr()
+    assert th.cmd_import_bundle(_import_args(target, bundle)) == 0
+    capsys.readouterr()
+    (target / HANDOFF_PATH).write_text("diverged locally\n", encoding="utf-8")
+
+    assert th.cmd_import_bundle(_import_args(target, bundle)) == 2
+    refused = json.loads(capsys.readouterr().out)
+    assert refused["status"] == "refused"
+    assert refused["error"] == "bundle order ties but content differs; refusing to choose a copy"
+    assert (target / HANDOFF_PATH).read_text(encoding="utf-8") == "diverged locally\n"

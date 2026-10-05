@@ -5646,6 +5646,30 @@ def _bundle_import_candidate(
                     "lineage_id": lineage_id,
                     "rollover_id": manifest["rollover_id"],
                 }
+            # The order key ends in the upload sequence, and the local half of
+            # the tie comes from this lineage's receipt, which is written only
+            # when this host uploaded or installed that exact sequence.  A
+            # server-assigned sequence is immutable, so the remote copy is the
+            # snapshot the local copy was synced from; every difference is a
+            # later local edit (typically a refreshed lane handoff).  Keep the
+            # local copy.  Sequence 0 (an unsequenced file export) proves no
+            # common snapshot, so that tie still refuses.
+            if remote_order[4] >= 1:
+                differing = sorted(
+                    name
+                    for name in set(local_compare) | set(remote_compare)
+                    if local_compare.get(name) != remote_compare.get(name)
+                )
+                return {
+                    "status": "noop",
+                    "reason": "local copy descends from this upload; keeping its newer local edits",
+                    "agent": agent,
+                    "lineage_id": lineage_id,
+                    "rollover_id": manifest["rollover_id"],
+                    "generation": manifest["generation"],
+                    "upload_seq": remote_order[4],
+                    "local_newer_members": differing,
+                }
             return {
                 "status": "refused",
                 "error": "bundle order ties but content differs; refusing to choose a copy",
