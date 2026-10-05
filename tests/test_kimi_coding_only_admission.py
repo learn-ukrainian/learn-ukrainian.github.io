@@ -954,8 +954,15 @@ def test_dispatch_reads_owned_paths_in_the_reused_worktree(no_spawn, capsys, mon
     assert not no_spawn.exists() or not any(no_spawn.iterdir())
 
 
-def test_dispatch_refuses_a_worktree_base_that_moved_after_the_gate(tmp_path, monkeypatch, capsys):
-    """The base resolved under the worktree lock must be the commit the gate read."""
+def test_dispatch_refuses_a_worktree_base_that_moved_after_the_gate(tmp_path, monkeypatch, capsys, clean_git_env):
+    """The commit a new worktree starts at must be the commit the gate read.
+
+    The gate reads the local base; review admission then observes the
+    canonical default branch and freezes that commit for creation (#9739 A7).
+    When the branch moved in between, the worktree would start elsewhere.
+    """
+    from tests.test_authoring_review_feasibility import pin_review_target
+
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.delenv("LU_DISPATCH_CHECK_BUDGET", raising=False)
     monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
@@ -963,21 +970,26 @@ def test_dispatch_refuses_a_worktree_base_that_moved_after_the_gate(tmp_path, mo
     monkeypatch.setattr(delegate, "_check_capacity_hint", lambda *_a, **_k: None)
     monkeypatch.setattr(delegate, "_report_dispatch_admission", lambda *_a, **_k: None)
     _isolate_host_state(monkeypatch)
-    gate_base = _head()
-    calls: list[bool] = []
-
-    def resolve(**kwargs):
-        calls.append(kwargs["allow_rebase"])
-        return "0" * 40  # the fetch at creation moved the base
-
+    primary = tmp_path / "primary"
+    (primary / "docs").mkdir(parents=True)
+    _git(primary, "init", "-q", "--initial-branch=main")
+    (primary / "docs" / "notes.md").write_text("one\n", encoding="utf-8")
+    gate_base = _commit_all(primary, "the commit the gate read")
+    (primary / "docs" / "notes.md").write_text("two\n", encoding="utf-8")
+    moved = _commit_all(primary, "the default branch moved on")
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.setattr(delegate, "_local_repo_root", primary)
+    monkeypatch.chdir(primary)
     monkeypatch.setattr(delegate, "_resolve_local_base_sha", lambda **_kwargs: gate_base)
-    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", resolve)
+    pin_review_target(monkeypatch, moved)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", _fail)  # a new worktree resolves no base again
     argv = _dispatch(*_WRITE, "--dry-run", "--owned-path", "scripts/agent_runtime/runner.py")
     rc = delegate.main(argv)
     err = capsys.readouterr().err
     assert rc == 2, err
-    assert _TOKEN in err and f"is not the commit {gate_base} its owned paths were read at" in err
-    assert calls == [False]  # a Kimi worktree is never rebased
+    assert (
+        _TOKEN in err and f"the worktree base {moved} is not the commit {gate_base} its owned paths were read at" in err
+    )
 
 
 def test_dispatch_refuses_a_kimi_model_on_another_seat(no_spawn, capsys):
@@ -1014,10 +1026,13 @@ def test_web_ui_and_backend_dispatches_pass_admission(tmp_path, monkeypatch, own
     monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
     monkeypatch.setattr(delegate, "_run_dor_preflight", lambda *_a, **_k: (None, None))
     _isolate_host_state(monkeypatch)
-    # The gate reads the owned paths in HEAD's committed tree, the base the worktree is created from.
+    # The gate reads the owned paths in HEAD's committed tree, the base the worktree is created from: the default
+    # branch commit write-dispatch review admission observes and freezes (#9739 A7).
+    from tests.test_authoring_review_feasibility import pin_review_target
+
     base = _head()
     monkeypatch.setattr(delegate, "_resolve_local_base_sha", lambda **_kwargs: base)
-    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: base)
+    pin_review_target(monkeypatch, base)
     seen: list[str] = []
 
     def reached(agent, **_kwargs):
@@ -1496,7 +1511,9 @@ def test_a_kimi_quota_substitute_is_refused_before_its_job_is_enqueued(monkeypat
         _acp_compat._resolve_quota_substitution("codex", "rate_limited", already_substituted=False)
     # The job sink takes only an admitted target; a raw seat name is refused before the authority.
     with pytest.raises(TypeError, match="AdmittedTarget"):
-        _acp_compat._run_single_acp_job("kimi", "Consult.", task_id="t", source=None, effort=None, review=False, hard_timeout=60)
+        _acp_compat._run_single_acp_job(
+            "kimi", "Consult.", task_id="t", source=None, effort=None, review=False, hard_timeout=60
+        )
 
 
 @pytest.mark.parametrize("extra", [[], ["--pr", "9158"], ["--review"]])
@@ -2330,7 +2347,7 @@ def test_non_json_and_neutral_data_stay_admitted():
     """Plain text, JSON arrays and neutral selector values are not refused."""
     from scripts.ai_agent_bridge import _acp_compat
 
-    for data in (None, "plain text naming kimi in prose", "[\"kimi\"]", '{"to_model":"claude-opus-5-5","note":"kimi"}'):
+    for data in (None, "plain text naming kimi in prose", '["kimi"]', '{"to_model":"claude-opus-5-5","note":"kimi"}'):
         assert _acp_compat.require_compat_target("claude", data=data) == "claude"
     _acp_compat.refuse_kimi_recipients(("claude",), ("claude-opus-5-5",), attachments=({"to_model": "kimi-code/k3"},))
 
@@ -2885,7 +2902,9 @@ def job_plane(tmp_path):
     }
     controls = {
         "expired": _legacy_job(service, {"recipient": "codex", "metadata": {"task_id": "e"}}, deadline_at=_OLD),
-        "stale-lease": _legacy_job(service, {"recipient": "codex", "metadata": {"task_id": "s"}}, lease_expires_at=_OLD),
+        "stale-lease": _legacy_job(
+            service, {"recipient": "codex", "metadata": {"task_id": "s"}}, lease_expires_at=_OLD
+        ),
     }
 
     def state():

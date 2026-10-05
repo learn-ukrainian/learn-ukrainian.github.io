@@ -10895,6 +10895,11 @@ def _dispatch(
     except _AuthoringReviewRefused as exc:
         print(exc.render(), file=sys.stderr)
         return 2
+    # A worktree's base defaults to the repository's actual default branch where
+    # admission discovered it (M4); "main" only where admission does not apply.
+    worktree_base = getattr(args, "base", None) or (
+        authoring_admission.default_branch if authoring_admission is not None else "main"
+    )
     # The task directory is created only once the writer is admitted (#9739).
     state_path = _state_path(task_id)
 
@@ -11186,7 +11191,7 @@ def _dispatch(
                         requested_harness=getattr(args, "harness", None),
                         worktree_path=getattr(args, "worktree", None),
                         worktree_branch=getattr(args, "branch", None),
-                        worktree_base=getattr(args, "base", None) or "main",
+                        worktree_base=worktree_base,
                         keep_worktree=bool(getattr(args, "keep_worktree", False)),
                         hard_timeout=getattr(args, "hard_timeout", DEFAULT_HARD_TIMEOUT_S),
                         silence_timeout=getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S),
@@ -11265,22 +11270,24 @@ def _dispatch(
             # branch head must still be the head the authors were read from;
             # a checkout reaped meanwhile becomes a fresh worktree, admitted again.
             try:
-                authoring_admission, moved = _authoring_recheck_under_lock(
-                    authoring_admission, repo_root=target_repo_root, readmit=admit_authoring
-                )
+                authoring_admission, moved = _authoring_recheck_under_lock(authoring_admission, readmit=admit_authoring)
             except _AuthoringReviewRefused as exc:
                 print(exc.render(), file=sys.stderr)
                 return 2
             if moved:
                 print(moved.render(), file=sys.stderr)
                 return 2
-            if fleet_repo.default:
+            if authoring_admission is not None and authoring_admission.creation_sha is not None:
+                # A7: a new worktree starts at the commit admission enumerated from,
+                # never at a base dereferenced again.
+                resolved_worktree_base_sha = authoring_admission.creation_sha
+            elif fleet_repo.default:
                 resolved_worktree_base_sha = _resolve_worktree_base_sha(
                     agent=dispatch_agent,
                     task_id=task_id,
                     raw_path=resolved_worktree_raw,
                     validated_path=validated_worktree,
-                    base=getattr(args, "base", None) or "main",
+                    base=worktree_base,
                     branch=requested_branch,
                     detached=detached_read_only,
                     # A Kimi worktree is never rebased: it must stay at the commit the gate read.
@@ -11311,7 +11318,7 @@ def _dispatch(
                     lifecycle_carrier=lifecycle_carrier,
                     worktree_path=resolved_worktree_raw,
                     worktree_branch=requested_branch,
-                    worktree_base=getattr(args, "base", None) or "main",
+                    worktree_base=worktree_base,
                     agent_alias_note=agent_alias_note,
                     output_schema_path=output_schema_path,
                     output_schema_sha256=output_schema_sha256,
@@ -11330,9 +11337,7 @@ def _dispatch(
     # A3 (#9739): an attached --branch is fetched above; new commits on it since
     # admission (a push by another writer) were never checked, so refuse them.
     if requested_branch and resolved_worktree_base_sha is not None:
-        moved = _authoring_target_moved(
-            authoring_admission, repo_root=target_repo_root, resolved=resolved_worktree_base_sha
-        )
+        moved = _authoring_target_moved(authoring_admission, resolved=resolved_worktree_base_sha)
         if moved:
             print(moved.render(), file=sys.stderr)
             return 2
@@ -11425,7 +11430,7 @@ def _dispatch(
                     task_id=task_id,
                     raw_path=resolved_raw,
                     validated_path=validated_worktree,
-                    base=getattr(args, "base", None) or "main",
+                    base=worktree_base,
                     branch=requested_branch,
                     detached=detached_read_only,
                     resolved_base_sha=resolved_worktree_base_sha,
@@ -11608,7 +11613,7 @@ def _dispatch(
                     task_id=task_id,
                     raw_path=resolved_raw,
                     validated_path=validated_worktree,
-                    base=getattr(args, "base", None) or "main",
+                    base=worktree_base,
                     branch=requested_branch,
                     detached=detached_read_only,
                     resolved_base_sha=resolved_worktree_base_sha,
@@ -11624,7 +11629,7 @@ def _dispatch(
                     task_id=task_id,
                     raw_path=resolved_raw,
                     validated_path=validated_worktree,
-                    base=getattr(args, "base", None) or "main",
+                    base=worktree_base,
                     run_nonce=run_nonce,
                     detached=detached_read_only,
                 )
@@ -11668,7 +11673,7 @@ def _dispatch(
                     None if detached_read_only else requested_branch or _derive_worktree_branch(dispatch_agent, task_id)
                 ),
                 worktree_base_sha=resolved_worktree_base_sha,
-                worktree_base=getattr(args, "base", None) or "main",
+                worktree_base=worktree_base,
                 agent_alias_note=agent_alias_note,
                 output_schema_path=output_schema_path,
                 output_schema_sha256=output_schema_sha256,
@@ -11746,7 +11751,7 @@ def _dispatch(
                 stderr_fd.close()
                 print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
                 return 1
-            moved = _authoring_target_moved(authoring_admission, repo_root=target_repo_root)
+            moved = _authoring_bindings_moved(authoring_admission)
             if moved:
                 stdout_fd.close()
                 stderr_fd.close()
@@ -11841,7 +11846,7 @@ def _dispatch(
             worktree_path=worktree_path,
             worktree_branch=worktree_branch,
             worktree_base_sha=worktree_telemetry.get("base_sha") or resolved_worktree_base_sha,
-            worktree_base=getattr(args, "base", None) or "main",
+            worktree_base=worktree_base,
             agent_alias_note=agent_alias_note,
             output_schema_path=output_schema_path,
             output_schema_sha256=output_schema_sha256,
@@ -11925,7 +11930,7 @@ def _dispatch(
             "worktree_path": str(worktree_path) if worktree_path else None,
             "worktree_branch": worktree_branch,
             "worktree_base_sha": worktree_telemetry.get("base_sha"),
-            "worktree_base": getattr(args, "base", None) or ("main" if worktree_path else None),
+            "worktree_base": worktree_base if worktree_path else None,
             "worktree_rebased": bool(worktree_telemetry.get("rebased")),
             "worktree_reused": bool(worktree_telemetry.get("reused")),
             "worktree_layout": worktree_layout,
@@ -12955,9 +12960,10 @@ AUTHORING_REVIEW_STATE_KEY = "authoring_review_admission"
 # A write dispatch that names no planned review risk is checked at the strictest
 # risk; path inference may raise a declared risk, never lower it.
 AUTHORING_REVIEW_DEFAULT_RISK = "critical"
-# The default repository's default branch: the base of every dispatch PR, and so
-# the base the verdict recorder enumerates authors from unless --pr names another.
-AUTHORING_REVIEW_DEFAULT_BASE = "main"
+# A7 (#9739): an open-PR lookup that returns this many rows may be truncated, so
+# it is incomplete (M3).
+AUTHORING_REVIEW_PR_LOOKUP_LIMIT = 100
+_AUTHORING_COMMIT_SHA_RE = re.compile(r"[0-9a-f]{40}")
 
 
 class _AuthoringReviewRefused(Exception):
@@ -12975,9 +12981,38 @@ class _AuthoringReviewRefused(Exception):
         return f"❌ {self.code}: {self.detail} Branch preserved; provider_calls=0.\n{payload}"
 
 
+class _AuthoringObservationUnknown(Exception):
+    """A review-target observation did not complete; the message names no private detail."""
+
+
+@dataclass(frozen=True)
+class _ReviewBase:
+    """The commit the verdict recorder enumerates authors from, and what bound it (A7).
+
+    ``source`` is ``pr`` (``--pr``), ``open-pr`` (the one open PR of the head
+    branch) or ``default-branch`` (no open PR: the repository's actual default).
+    """
+
+    sha: str
+    branch: str
+    pr: int | None
+    source: str
+
+    def binding(self) -> tuple[str, str, int | None]:
+        return (self.sha, self.branch, self.pr)
+
+    def receipt(self, repository: str) -> dict[str, Any]:
+        return {"repository": repository, "branch": self.branch, "pr": self.pr, "source": self.source}
+
+
 @dataclass(frozen=True)
 class _AuthoringAdmission:
-    """What the authoring-review check admitted, for the re-check under the worktree lock (A3)."""
+    """The endpoints authoring-review admission froze, for the re-check under the worktree lock (A3, A7).
+
+    ``head_sha`` is the commit authors were enumerated to: an existing target's
+    head, or ``creation_sha`` for a new branch, which worktree creation then
+    uses as is. ``review_base`` is the enumeration's lower end.
+    """
 
     kind: str  # existing-worktree | existing-branch | new-branch
     head_sha: str
@@ -12985,43 +13020,234 @@ class _AuthoringAdmission:
     branch: str | None
     pinned_head: str | None
     record: dict[str, Any]
+    repository: str
+    remote: str
+    head_branch: str
+    pr: int | None
+    review_base: _ReviewBase
+    default_branch: str
+    creation_ref: str | None = None
+    creation_sha: str | None = None
 
 
-def _authoring_target_head(
-    *, kind: str, checkout: Path | None, branch: str | None, pinned_head: str | None, repo_root: Path
-) -> str | None:
-    """The branch head a writer would attach to, read from local refs only (never fetched)."""
-    if kind == "existing-worktree" and checkout is not None:
-        return _resolve_sha(checkout) if checkout.is_dir() else None
-    if kind == "existing-branch" and branch:
-        return pinned_head or _resolve_sha(repo_root, f"{_origin_base_ref(branch)}^{{commit}}")
-    return None
+def _authoring_canonical_remote() -> str:
+    """The remote serving the canonical GitHub repository, chosen as the fetch helpers choose it (#7522, M2)."""
+    return _resolve_canonical_remote_name(_git_remote_urls(_REPO_ROOT)) or "origin"
 
 
-def _authoring_review_base(args: argparse.Namespace, *, repository: str) -> str | None:
-    """The branch a writer's work will be reviewed against; None when it cannot be determined.
-
-    That is the base the verdict recorder reads (``pr_review_facts``): the PR's
-    base for ``--pr``, otherwise the repository's default branch. A caller's
-    ``--base`` never enters, so it cannot shrink the enumerated authors or the
-    protected scope.
-    """
-    pr_number = getattr(args, "pr", None)
-    if pr_number is None:
-        return AUTHORING_REVIEW_DEFAULT_BASE
+def _authoring_default_branch(remote: str) -> tuple[str, str]:
+    """The remote's actual default branch and its commit, from ``git ls-remote --symref`` (M4)."""
     try:
         proc = subprocess.run(
-            ["gh", "pr", "view", str(int(pr_number)), "--repo", repository, "--json", "baseRefName"],
+            ["git", "ls-remote", "--symref", remote, "HEAD"],
+            cwd=_REPO_ROOT,
             capture_output=True,
             text=True,
             check=False,
-            timeout=DEFAULT_GH_CLI_TIMEOUT_S,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
         )
-        payload = json.loads(proc.stdout) if proc.returncode == 0 else None
-    except (OSError, ValueError, subprocess.TimeoutExpired):
-        return None
-    base = payload.get("baseRefName") if isinstance(payload, dict) else None
-    return base.strip() if isinstance(base, str) and base.strip() else None
+    except subprocess.TimeoutExpired as exc:
+        raise _AuthoringObservationUnknown("the default-branch lookup timed out") from exc
+    except OSError as exc:
+        raise _AuthoringObservationUnknown("the default-branch lookup is unavailable") from exc
+    name = sha = None
+    for line in (proc.stdout or "").splitlines() if proc.returncode == 0 else ():
+        value, _, ref = line.partition("\t")
+        if ref.strip() != "HEAD":
+            continue
+        if value.startswith("ref: refs/heads/"):
+            name = value.removeprefix("ref: refs/heads/").strip()
+        elif _AUTHORING_COMMIT_SHA_RE.fullmatch(value.strip()):
+            sha = value.strip()
+    if not name or not sha:
+        raise _AuthoringObservationUnknown("the canonical remote's default branch is unavailable")
+    return name, sha
+
+
+def _authoring_gh_json(command: list[str], *, what: str) -> Any:
+    """One GitHub read; a failure is typed (timeout, quota, unavailable, malformed), never echoed."""
+    try:
+        proc = subprocess.run(command, capture_output=True, text=True, check=False, timeout=DEFAULT_GH_CLI_TIMEOUT_S)
+    except subprocess.TimeoutExpired as exc:
+        raise _AuthoringObservationUnknown(f"{what} timed out") from exc
+    except OSError as exc:
+        raise _AuthoringObservationUnknown(f"{what} is unavailable") from exc
+    if proc.returncode != 0:
+        detail = f"{proc.stderr or ''} {proc.stdout or ''}".casefold()
+        if "rate limit" in detail or "http 429" in detail:
+            raise _AuthoringObservationUnknown(f"{what} hit the GitHub API quota")
+        raise _AuthoringObservationUnknown(f"{what} is unavailable")
+    try:
+        return json.loads(proc.stdout)
+    except ValueError as exc:
+        raise _AuthoringObservationUnknown(f"{what} returned a malformed answer") from exc
+
+
+def _authoring_pr_base(row: Any, *, source: str, what: str) -> tuple[_ReviewBase, str]:
+    """A PR row's review base and head branch; a row missing either is malformed."""
+    if not isinstance(row, dict):
+        raise _AuthoringObservationUnknown(f"{what} returned a malformed answer")
+    number, base, base_sha, head = (row.get(key) for key in ("number", "baseRefName", "baseRefOid", "headRefName"))
+    if (
+        type(number) is not int
+        or not isinstance(base, str)
+        or not base.strip()
+        or not isinstance(base_sha, str)
+        or not _AUTHORING_COMMIT_SHA_RE.fullmatch(base_sha)
+        or not isinstance(head, str)
+    ):
+        raise _AuthoringObservationUnknown(f"{what} returned a malformed answer")
+    return _ReviewBase(base_sha, base.strip(), number, source), head
+
+
+def _authoring_open_pr_bases(repository: str, head_branch: str) -> list[_ReviewBase]:
+    """The review base of every open PR whose head is ``head_branch`` in ``repository`` itself (M3).
+
+    A fork's branch of the same name belongs to another repository and is left
+    out, so no outside fork can block a dispatch. A list at the lookup limit
+    may be truncated and is refused as incomplete.
+    """
+    what = "the open-PR lookup"
+    rows = _authoring_gh_json(
+        [
+            "gh",
+            "pr",
+            "list",
+            "--repo",
+            repository,
+            "--state",
+            "open",
+            "--head",
+            head_branch,
+            "--limit",
+            str(AUTHORING_REVIEW_PR_LOOKUP_LIMIT),
+            "--json",
+            "number,headRefName,isCrossRepository,baseRefName,baseRefOid",
+        ],
+        what=what,
+    )
+    if not isinstance(rows, list):
+        raise _AuthoringObservationUnknown(f"{what} returned a malformed answer")
+    if len(rows) >= AUTHORING_REVIEW_PR_LOOKUP_LIMIT:
+        raise _AuthoringObservationUnknown(f"{what} reached its limit, so it is incomplete")
+    bases: list[_ReviewBase] = []
+    for row in rows:
+        cross = row.get("isCrossRepository") if isinstance(row, dict) else None
+        if not isinstance(cross, bool):
+            raise _AuthoringObservationUnknown(f"{what} returned a malformed answer")
+        if cross:
+            continue
+        base, head = _authoring_pr_base(row, source="open-pr", what=what)
+        if head != head_branch:
+            raise _AuthoringObservationUnknown(f"{what} returned a malformed answer")
+        bases.append(base)
+    return bases
+
+
+def _authoring_review_base(
+    repository: str, *, pr: int | None, head_branch: str, default_branch: Callable[[], tuple[str, str]]
+) -> _ReviewBase:
+    """The base the verdict recorder will enumerate this branch's authors from (A7 §2).
+
+    ``--pr``: that PR's ``baseRefOid``, once the PR is shown open, in this
+    repository and headed by ``head_branch``. Otherwise the one open PR of
+    ``head_branch``, or, when the lookup establishes there is none, the
+    repository's actual default branch commit. A caller's ``--base`` never
+    enters. Raises ``_AuthoringObservationUnknown`` when the binding cannot be
+    established: unavailable, malformed, incomplete or ambiguous.
+    """
+    if pr is not None:
+        what = f"the lookup of PR #{int(pr)}"
+        row = _authoring_gh_json(
+            [
+                "gh",
+                "pr",
+                "view",
+                str(int(pr)),
+                "--repo",
+                repository,
+                "--json",
+                "number,state,headRefName,isCrossRepository,baseRefName,baseRefOid",
+            ],
+            what=what,
+        )
+        base, head = _authoring_pr_base(row, source="pr", what=what)
+        if row.get("state") != "OPEN" or row.get("isCrossRepository") is not False:
+            raise _AuthoringObservationUnknown(f"PR #{int(pr)} is not an open PR headed in {repository}")
+        if head != head_branch:
+            raise _AuthoringObservationUnknown(f"PR #{int(pr)} is headed by another branch than {head_branch}")
+        return base
+    bases = _authoring_open_pr_bases(repository, head_branch)
+    if len(bases) > 1:
+        raise _AuthoringObservationUnknown(
+            f"{len(bases)} open PRs are headed by {head_branch}, so the review base is ambiguous"
+        )
+    if bases:
+        return bases[0]
+    name, sha = default_branch()
+    return _ReviewBase(sha, name, None, "default-branch")
+
+
+def _authoring_start_commit(remote: str, ref: str, default: tuple[str, str]) -> str:
+    """The commit a new branch would start at: ``ref`` on the canonical remote, or the observed default tip."""
+    name, sha = default
+    start = sha if ref == name else _ls_remote_branch_sha(remote, ref)
+    if not start:
+        raise _AuthoringObservationUnknown(f"start branch {ref} is not readable on the canonical remote")
+    return start
+
+
+def _authoring_commit_available(sha: str) -> bool:
+    try:
+        proc = subprocess.run(
+            ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return proc.returncode == 0
+
+
+def _authoring_require_commit(sha: str, *, fetch: Callable[[], object], what: str, refresh: bool = False) -> None:
+    """M1: make an observed commit local, fetching from the canonical remote at most once.
+
+    The fetch only mirrors remote state into ``origin/<branch>``; the SHA stays
+    the one observed and is never resolved from a ref again. ``refresh``
+    fetches even when the commit is already local, keeping the tracking ref as
+    current as the base fetch at worktree creation used to (the Kimi gate reads
+    it, #9275).
+    """
+    if not refresh and _authoring_commit_available(sha):
+        return
+    # A failed fetch is judged by its outcome: the commit is still missing.
+    with contextlib.suppress(RuntimeError, ValueError):
+        fetch()
+    if not _authoring_commit_available(sha):
+        raise _AuthoringObservationUnknown(f"{what} {sha[:12]} is not available locally after fetching")
+
+
+def _authoring_attach_head(
+    *, kind: str, checkout: Path | None, branch: str | None, pinned_head: str | None, remote: str
+) -> str:
+    """The head an attaching writer continues: the checkout's commit, or the branch on the canonical remote.
+
+    A branch head is observed on the remote, never read from a possibly stale
+    tracking ref (M2); a pinned head is the commit the dispatch was pinned to.
+    """
+    if kind == "existing-worktree":
+        head = _resolve_sha(checkout) if checkout is not None and checkout.is_dir() else None
+        if not head:
+            raise _AuthoringObservationUnknown("the checkout's HEAD is unreadable")
+        return head
+    head = pinned_head or (_ls_remote_branch_sha(remote, branch) if branch else None)
+    if not head:
+        raise _AuthoringObservationUnknown(f"branch {branch} is not readable on the canonical remote")
+    return head
 
 
 def _git_common_dir_identity(path: Path) -> Path | None:
@@ -13076,15 +13302,18 @@ def _authoring_review_admission(
     scope come from ``record_cf_verdict.collect_branch_review_facts``, the
     calculation the verdict recorder uses. The check is structural (A2):
     catalog qualification, families, protected seats and the risk floor; it
-    records reviewer availability as unknown. Authors are enumerated from the
-    review base (:func:`_authoring_review_base`), never from ``--base``. Reads
-    only, never fetches (a ``--pr`` base is read from GitHub); runs before any
-    task record, archival, forwarding, rebase, worktree or
-    provider. Returns None for read-only dispatches and for checkouts of a
-    sibling repository (``--repo``, or a ``--cwd`` checkout whose git common
-    directory is another repository's); a ``--repo`` whose ``--cwd`` belongs
-    to a different repository is refused. Raises ``_AuthoringReviewRefused``,
-    which no override flag bypasses.
+    records reviewer availability as unknown. Authors are enumerated over
+    ``review_base_sha..creation_sha`` for a new branch and
+    ``review_base_sha..head_sha`` for an attach (A7): the review base is the
+    one the recorder will read (:func:`_authoring_review_base`), never
+    ``--base``; every endpoint is observed on the canonical remote, frozen in
+    the receipt and never resolved from a ref again. Fetches only to mirror
+    remote state (M1); runs before any task record, archival, forwarding,
+    rebase, worktree or provider. Returns None for read-only dispatches and
+    for checkouts of a sibling repository (``--repo``, or a ``--cwd`` checkout
+    whose git common directory is another repository's); a ``--repo`` whose
+    ``--cwd`` belongs to a different repository is refused. Raises
+    ``_AuthoringReviewRefused``, which no override flag bypasses.
     """
     if args.mode not in _WRITE_CAPABLE_MODES:
         return None
@@ -13155,38 +13384,54 @@ def _authoring_review_admission(
     else:
         kind, checkout = "new-branch", None
     record.update({"target": kind, "branch": requested_branch})
-    # Authorship is enumerated from the base the verdict recorder will use, never
-    # from --base, which only names where a new branch starts (A2).
-    review_base = _authoring_review_base(args, repository=repository)
-    if review_base is None:
+    remote = _authoring_canonical_remote()
+    pr = getattr(args, "pr", None)
+    creation_ref: str | None = None
+    creation_sha: str | None = None
+    try:
+        default_name, default_sha = _authoring_default_branch(remote)
+        if kind == "existing-worktree":
+            head_branch = _current_branch(checkout)
+            if head_branch in (None, "HEAD"):
+                raise _AuthoringObservationUnknown("the checkout has a detached HEAD, which names no PR")
+        else:
+            head_branch = requested_branch or _derive_worktree_branch(dispatch_agent, args.task_id)
+        record["head_branch"] = head_branch
+        # Authorship is enumerated from the base the verdict recorder will use,
+        # never from --base, which only names where a new branch starts (A2, A7).
+        review_base = _authoring_review_base(
+            repository, pr=pr, head_branch=head_branch, default_branch=lambda: (default_name, default_sha)
+        )
+        record.update({"review_base": review_base.receipt(repository), "review_base_sha": review_base.sha})
+        _authoring_require_commit(
+            review_base.sha, fetch=lambda: _fetch_base(review_base.branch), what="the review base commit"
+        )
+        if kind == "new-branch":
+            # The commit a new worktree starts at, frozen here and used as is by creation.
+            base_arg = getattr(args, "base", None)
+            creation_ref = _base_branch_name(base_arg) if base_arg else default_name
+            creation_sha = _authoring_start_commit(remote, creation_ref, (default_name, default_sha))
+            record.update({"creation_base": creation_ref, "creation_sha": creation_sha})
+            _authoring_require_commit(
+                creation_sha, fetch=lambda: _fetch_base(creation_ref), what="the creation commit", refresh=True
+            )
+            head = creation_sha
+        else:
+            head = _authoring_attach_head(
+                kind=kind, checkout=checkout, branch=requested_branch, pinned_head=pinned_head, remote=remote
+            )
+            _authoring_require_commit(
+                head, fetch=lambda: _fetch_existing_branch(head_branch), what="the branch head commit"
+            )
+    except _AuthoringObservationUnknown as exc:
         raise _AuthoringReviewRefused(
-            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
-            f"the base of PR #{getattr(args, 'pr', None)} is unavailable, so the branch's authors are unknown; retry.",
-            record,
-        )
-    base_ref = _origin_base_ref(review_base)
-    record["review_base"] = base_ref
-    base_tip = _resolve_sha(target_repo_root, f"{base_ref}^{{commit}}")
-    if kind == "new-branch":
-        start_ref = _origin_base_ref(getattr(args, "base", None) or AUTHORING_REVIEW_DEFAULT_BASE)
-        head = _resolve_sha(target_repo_root, f"{start_ref}^{{commit}}")
-    else:
-        start_ref = requested_branch or str(checkout)
-        head = _authoring_target_head(
-            kind=kind, checkout=checkout, branch=requested_branch, pinned_head=pinned_head, repo_root=target_repo_root
-        )
-    if not base_tip or not head:
-        missing = base_ref if not base_tip else start_ref
-        raise _AuthoringReviewRefused(
-            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
-            f"{missing} is not resolvable locally, so the branch's authors are unknown; fetch origin and retry.",
-            record,
-        )
+            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, f"{exc}, so the branch's authors are unknown; retry.", record
+        ) from exc
     try:
         facts = collect_branch_review_facts(
             repository=repository,
             repo_root=target_repo_root,
-            base_tip_sha=base_tip,
+            base_tip_sha=review_base.sha,
             head_sha=head,
             task_root=tasks_dir(),
             incoming_agent=dispatch_agent,
@@ -13207,7 +13452,22 @@ def _authoring_review_admission(
         or is_security_sensitive_change(facts.changed_paths, facts.scope_paths)
     )
     record["protected_scope"] = protected
-    admission = _AuthoringAdmission(kind, head, checkout, requested_branch, pinned_head, record)
+    admission = _AuthoringAdmission(
+        kind=kind,
+        head_sha=head,
+        checkout=checkout,
+        branch=requested_branch,
+        pinned_head=pinned_head,
+        record=record,
+        repository=repository,
+        remote=remote,
+        head_branch=head_branch,
+        pr=pr,
+        review_base=review_base,
+        default_branch=default_name,
+        creation_ref=creation_ref,
+        creation_sha=creation_sha,
+    )
     if kind == "new-branch" and not protected:
         record["applicable"] = False
         return admission
@@ -13261,16 +13521,17 @@ def _authoring_review_state_fields(args: argparse.Namespace, admission: _Authori
 def _authoring_recheck_under_lock(
     admission: _AuthoringAdmission | None,
     *,
-    repo_root: Path,
     readmit: Callable[[], _AuthoringAdmission | None],
 ) -> tuple[_AuthoringAdmission | None, _AuthoringReviewRefused | None]:
-    """A3 under the worktree lock: the admission that now applies, and the refusal if its head moved.
+    """A3 and A7 under the worktree lock: the admission that now applies, and the refusal if a binding moved.
 
     A removal holding the lock may take the admitted checkout while dispatch
-    waits (#8610); dispatch then creates a fresh worktree, so admission is run
-    again for that target instead of reading the vanished checkout as a moved
-    head. A checkout still present at another head stays refused. Raises
-    ``_AuthoringReviewRefused`` when the re-run refuses.
+    waits (#8610); dispatch then creates a fresh worktree, so the observation
+    is discarded and admission runs again in full for that target, freezing
+    its own creation and review-base commits (becoming a new branch exempts
+    nothing). Otherwise every frozen binding is observed again
+    (:func:`_authoring_bindings_moved`). Raises ``_AuthoringReviewRefused``
+    when the re-run refuses.
     """
     if (
         admission is not None
@@ -13279,38 +13540,82 @@ def _authoring_recheck_under_lock(
         and not os.path.lexists(admission.checkout)
     ):
         return readmit(), None
-    return admission, _authoring_target_moved(admission, repo_root=repo_root)
+    return admission, _authoring_bindings_moved(admission)
 
 
-def _authoring_target_moved(
-    admission: _AuthoringAdmission | None, *, repo_root: Path, resolved: str | None = None
-) -> _AuthoringReviewRefused | None:
-    """A3: the refusal, structured like the initial ones, when the admitted branch head moved; None when unchanged.
+def _authoring_bindings_moved(admission: _AuthoringAdmission | None) -> _AuthoringReviewRefused | None:
+    """A7: the refusal when an admitted endpoint differs before use; None when every binding is unchanged.
 
-    Read under the worktree lock before any rebase. ``resolved`` is the head the
-    worktree helpers settled on, compared for an attached ``--branch``; the base
-    auto-rebase of a reused worktree is not a move (it adds no branch commits).
+    Observed as at admission: an attached head (the checkout's commit, or the
+    branch on the canonical remote), a new branch's start commit, and the
+    review base with its branch and PR identity. An observation that cannot
+    complete refuses as unknown authorship, never as a proven move. The base
+    auto-rebase of a reused worktree runs after this and is not a move (A3).
     """
+    if admission is None:
+        return None
+    default_branch = functools.cache(lambda: _authoring_default_branch(admission.remote))
+    try:
+        if admission.kind == "new-branch":
+            assert admission.creation_ref is not None  # set for every new-branch admission
+            current = _authoring_start_commit(admission.remote, admission.creation_ref, default_branch())
+            moved = _authoring_drift(admission, "creation", current)
+        else:
+            current = _authoring_attach_head(
+                kind=admission.kind,
+                checkout=admission.checkout,
+                branch=admission.branch,
+                pinned_head=admission.pinned_head,
+                remote=admission.remote,
+            )
+            moved = _authoring_drift(admission, "head", current)
+        if moved:
+            return moved
+        base = _authoring_review_base(
+            admission.repository, pr=admission.pr, head_branch=admission.head_branch, default_branch=default_branch
+        )
+    except _AuthoringObservationUnknown as exc:
+        return _AuthoringReviewRefused(
+            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+            f"{exc} on re-checking the admitted target, so the branch's authors are unknown; retry.",
+            admission.record,
+        )
+    if base.binding() == admission.review_base.binding():
+        return None
+    return _authoring_drift(admission, "review_base", base.sha, current_base=base)
+
+
+def _authoring_target_moved(admission: _AuthoringAdmission | None, *, resolved: str) -> _AuthoringReviewRefused | None:
+    """A3: the refusal when the head the worktree helpers settled on for an attached ``--branch`` is not the admitted one."""
     if admission is None or admission.kind == "new-branch":
         return None
-    current = (
-        resolved
-        if resolved is not None
-        else _authoring_target_head(
-            kind=admission.kind,
-            checkout=admission.checkout,
-            branch=admission.branch,
-            pinned_head=admission.pinned_head,
-            repo_root=repo_root,
-        )
-    )
-    if current == admission.head_sha:
-        return None
+    return _authoring_drift(admission, "head", resolved)
+
+
+def _authoring_drift(
+    admission: _AuthoringAdmission, binding: str, current: str, *, current_base: _ReviewBase | None = None
+) -> _AuthoringReviewRefused | None:
+    """The structured ``TARGET_MOVED`` refusal (A6, M5) for one binding; None when it still holds."""
+    if binding == "review_base":
+        assert current_base is not None
+        admitted = admission.review_base.sha
+        what = f"the review base (admitted branch {admission.review_base.branch}, now {current_base.branch})"
+    else:
+        admitted = admission.creation_sha if binding == "creation" else admission.head_sha
+        what = "the start commit of the new branch" if binding == "creation" else "the branch head"
+        if current == admitted:
+            return None
+    assert admitted is not None
+    record = {**admission.record, "binding": binding, "admitted_sha": admitted, "current_sha": current}
+    if binding == "head":
+        record["current_head_sha"] = current
+    if current_base is not None:
+        record["current_review_base"] = current_base.receipt(admission.repository)
     return _AuthoringReviewRefused(
         AUTHORING_REVIEW_TARGET_MOVED,
-        f"the branch head moved after authoring-review admission (admitted {admission.head_sha[:12]}, "
-        f"now {(current or 'missing')[:12]}); retry the dispatch so its authors are checked again.",
-        {**admission.record, "current_head_sha": current},
+        f"{what} moved after authoring-review admission (admitted {admitted[:12]}, now {current[:12]}); "
+        "retry the dispatch so its authors are checked again.",
+        record,
     )
 
 
@@ -15381,11 +15686,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     d.add_argument(
         "--base",
-        default="main",
+        default=None,
         help=(
             "Base branch to fetch and branch the worktree from "
-            "(default: main). The worktree is branched from "
-            "origin/{base}, not local {base}."
+            "(default: the repository's default branch, read from the canonical "
+            "remote for a write dispatch; main otherwise). The worktree is branched "
+            "from origin/{base}, not local {base}. Where a writer starts, never "
+            "the base its authors are reviewed against (#9739)."
         ),
     )
     d.add_argument(

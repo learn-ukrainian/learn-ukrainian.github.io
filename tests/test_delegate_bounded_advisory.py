@@ -99,19 +99,16 @@ def env(monkeypatch, tmp_path):
     # origin/main) cannot. Pin it to the checkout's own HEAD so the dry-run
     # worktree plan still sees a real commit; the resolver's guard is
     # covered in tests/test_delegate.py. Write-dispatch review admission
-    # (#9739) reads the same origin/main tip locally: pin it to HEAD too, a
-    # fresh branch with no commits of its own (tests/test_authoring_review_feasibility.py
-    # covers authored branches).
+    # (#9739 A7) observes the default branch and open PRs on GitHub: pin them
+    # to HEAD and none, a fresh branch with no commits of its own
+    # (tests/test_authoring_review_feasibility.py covers authored branches).
+    from tests.test_authoring_review_feasibility import pin_review_target
+
     head_sha = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, check=True, capture_output=True, text=True, timeout=30
     ).stdout.strip()
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head_sha)
-    real_resolve_sha = delegate._resolve_sha
-
-    def resolve_sha(path, ref="HEAD"):
-        return head_sha if ref == "origin/main^{commit}" else real_resolve_sha(path, ref)
-
-    monkeypatch.setattr(delegate, "_resolve_sha", resolve_sha)
+    pin_review_target(monkeypatch, head_sha)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", health_only)
     telemetry = type("_Telemetry", (), {"model": "fixture-model", "effort": "high", "cli_version": "fixture"})()

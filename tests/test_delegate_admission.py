@@ -94,21 +94,19 @@ def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str = "ad
 
 
 def _pin_origin_main_to_head(monkeypatch) -> None:
-    """Give write-dispatch review admission (#9739) the ``origin/main`` it reads locally.
+    """Give write-dispatch review admission (#9739) a canonical default branch at the checkout's own HEAD.
 
-    Most CI shards are shallow clones without ``origin/main``. Pinned to the
-    checkout's own HEAD, the dispatch is a fresh branch with no commits of its
-    own, so these tests check host admission, not the runner's clone depth
-    (tests/test_authoring_review_feasibility.py covers authored branches). The
-    dry-run worktree base, which would fetch ``origin/main``, is that HEAD too.
+    Admission observes the default branch and the open PRs on GitHub (A7);
+    here that is HEAD and none, so the dispatch is a fresh branch with no
+    commits of its own and these tests check host admission, not the network
+    or the runner's clone depth (tests/test_authoring_review_feasibility.py
+    covers authored branches against a real remote). The dry-run worktree base
+    is that HEAD too.
     """
+    from tests.test_authoring_review_feasibility import pin_review_target
+
     head = _git(delegate._REPO_ROOT, "rev-parse", "HEAD")
-    real_resolve_sha = delegate._resolve_sha
-
-    def resolve_sha(path, ref="HEAD"):
-        return head if ref == "origin/main^{commit}" else real_resolve_sha(path, ref)
-
-    monkeypatch.setattr(delegate, "_resolve_sha", resolve_sha)
+    pin_review_target(monkeypatch, head)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head)
 
 

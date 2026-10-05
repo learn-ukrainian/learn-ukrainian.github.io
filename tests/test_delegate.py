@@ -189,6 +189,26 @@ def _fixture_worktree_lock_dir(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _review_target_from_fixture_refs(monkeypatch):
+    """Fixture repositories here have no canonical remote and no PRs.
+
+    Write-dispatch admission (#9739 A7) observes the canonical remote's default
+    branch and the open PRs of the head branch; here those are the fixture's own
+    ``origin/main`` and none. Observation against a real remote, PR lookups and
+    their failures are covered in tests/test_authoring_review_feasibility.py.
+    """
+
+    def default_branch(_remote: str) -> tuple[str, str]:
+        sha = delegate._resolve_sha(delegate._REPO_ROOT, "origin/main^{commit}")
+        if not sha:
+            raise delegate._AuthoringObservationUnknown("the canonical remote's default branch is unavailable")
+        return "main", sha
+
+    monkeypatch.setattr(delegate, "_authoring_default_branch", default_branch)
+    monkeypatch.setattr(delegate, "_authoring_open_pr_bases", lambda _repository, _head_branch: [])
+
+
+@pytest.fixture(autouse=True)
 def _keep_delegate_unit_tests_local(monkeypatch):
     """Isolate delegate unit tests from a live checkout's VPS occupancy marker."""
     monkeypatch.setenv(job_host_exec.ENV_ALLOW_NOTEBOOK, "1")
@@ -7205,10 +7225,12 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     assert state["worktree_local_venv"] == {"present": False, "kind": None, "path": None}
     assert "delegate worktree" in recorded_prompt["text"]
     assert f'(JSON-quoted path): "{worktree_path}"\n' in recorded_prompt["text"]
-    # At minimum: git fetch + git rev-parse --verify + git worktree add + git rev-parse HEAD.
+    # At minimum: git fetch + git worktree add + git rev-parse HEAD.
     assert any(c[:3] == ["git", "worktree", "add"] for c in calls)
     assert any(c[:2] == ["git", "fetch"] for c in calls)
-    # Dispatch admission and worktree creation share one immutable resolved SHA.
+    # Dispatch admission and worktree creation share one immutable SHA: the start commit admission observed and
+    # froze (#9739 A7), never a base dereferenced again.
+    assert state["authoring_review_admission"]["creation_sha"] == _STUB_HEAD_SHA
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
     assert add_cmd[-1] == _STUB_HEAD_SHA, f"worktree must be created from the resolved SHA, got base={add_cmd[-1]!r}"
     captured = capsys.readouterr()
@@ -7441,7 +7463,8 @@ def test_fetch_base_plain_branch_unchanged(monkeypatch):
 def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
     tmp_tasks_dir, tmp_path, monkeypatch, capsys
 ):
-    """base="origin/main" must fetch that ref and create from its SHA."""
+    """base="origin/main" names the default branch ``main``: admission fetches that ref and the worktree starts at
+    the commit it admitted (#9739 A7)."""
     import argparse
 
     class _FakeStdin:
@@ -7479,6 +7502,8 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
     assert rc == 0
     fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
     assert fetch_cmd == ["git", "fetch", "origin", "+refs/heads/main:refs/remotes/origin/main"]
+    admission = delegate._read_state(delegate._state_path("origin-base-smoke"))["authoring_review_admission"]
+    assert (admission["creation_base"], admission["creation_sha"]) == ("main", _STUB_ORIGIN_SHA)
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
     assert add_cmd[-1] == _STUB_ORIGIN_SHA, f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
 
@@ -8026,7 +8051,8 @@ def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypat
         recorded["env"] = kwargs.get("env", {})
         return _FakeProc()
 
-    _, fake_run = _make_run_stub()
+    # The reused checkout is on its dispatch branch: a detached one names no PR to review against (#9739 A7).
+    _, fake_run = _make_run_stub(abbrev_ref="codex/danger-merge-opt-in")
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     root = _tmp_dispatch_repo_root(tmp_tasks_dir.parent / "primary", monkeypatch)
@@ -13597,14 +13623,42 @@ def test_dispatch_waits_for_settle_then_follows_missing_worktree_path(tmp_tasks_
     assert worker_spawns == [True]
 
 
-@pytest.mark.parametrize("change", ["unchanged", "moved", "vanished", "vanished-then-refused"])
-def test_authoring_recheck_readmits_a_vanished_checkout_and_refuses_a_moved_one(tmp_path, change):
-    """#9739 A3 with #8610: a checkout reaped during the lock wait is admitted again as the fresh worktree dispatch
-    will create; a checkout still present at another head is a moved target and stays refused."""
+@pytest.mark.parametrize("change", ["unchanged", "moved", "unobservable", "vanished", "vanished-then-refused"])
+def test_authoring_recheck_readmits_a_vanished_checkout_and_refuses_a_moved_one(tmp_path, monkeypatch, change):
+    """#9739 A3/A7 with #8610: a checkout reaped during the lock wait is admitted again as the fresh worktree dispatch
+    will create; a checkout still present at another head stays refused; an observation that cannot complete is
+    unknown authorship, never a proven move."""
     primary, checkout = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     admitted_head = delegate._resolve_sha(checkout)
-    admission = delegate._AuthoringAdmission("existing-worktree", admitted_head, checkout, None, None, {})
-    fresh = delegate._AuthoringAdmission("new-branch", admitted_head, None, None, None, {"target": "new-branch"})
+    base = delegate._ReviewBase(delegate._resolve_sha(primary, "origin/main"), "main", None, "default-branch")
+    frozen = {
+        "branch": None,
+        "pinned_head": None,
+        "repository": "learn-ukrainian/learn-ukrainian.github.io",
+        "remote": "origin",
+        "pr": None,
+        "review_base": base,
+        "default_branch": "main",
+    }
+    admission = delegate._AuthoringAdmission(
+        kind="existing-worktree",
+        head_sha=admitted_head,
+        checkout=checkout,
+        record={},
+        head_branch="codex/task-1",
+        **frozen,
+    )
+    fresh = delegate._AuthoringAdmission(
+        kind="new-branch",
+        head_sha=base.sha,
+        checkout=None,
+        record={"target": "new-branch"},
+        head_branch="codex/task-1",
+        creation_ref="main",
+        creation_sha=base.sha,
+        **frozen,
+    )
     readmissions: list[str] = []
 
     def readmit():
@@ -13621,6 +13675,12 @@ def test_authoring_recheck_readmits_a_vanished_checkout_and_refuses_a_moved_one(
             env=delegate._sanitized_git_env(),
             timeout=30,
         )
+    elif change == "unobservable":
+
+        def unavailable(_remote):
+            raise delegate._AuthoringObservationUnknown("the default-branch lookup timed out")
+
+        monkeypatch.setattr(delegate, "_authoring_default_branch", unavailable)
     elif change.startswith("vanished"):
         subprocess.run(
             ["git", "-C", str(primary), "worktree", "remove", "--force", str(checkout)],
@@ -13632,11 +13692,11 @@ def test_authoring_recheck_readmits_a_vanished_checkout_and_refuses_a_moved_one(
 
     if change == "vanished-then-refused":
         with pytest.raises(delegate._AuthoringReviewRefused) as refused:
-            delegate._authoring_recheck_under_lock(admission, repo_root=primary, readmit=readmit)
+            delegate._authoring_recheck_under_lock(admission, readmit=readmit)
         assert refused.value.code == delegate.AUTHORING_REVIEW_NO_ROUTE
         assert readmissions == [change]
         return
-    current, moved = delegate._authoring_recheck_under_lock(admission, repo_root=primary, readmit=readmit)
+    current, moved = delegate._authoring_recheck_under_lock(admission, readmit=readmit)
 
     if change == "unchanged":
         assert (current, moved, readmissions) == (admission, None, [])
@@ -13644,6 +13704,11 @@ def test_authoring_recheck_readmits_a_vanished_checkout_and_refuses_a_moved_one(
         assert current is admission and readmissions == []
         assert moved is not None and moved.code == delegate.AUTHORING_REVIEW_TARGET_MOVED
         assert f"admitted {admitted_head[:12]}, now {delegate._resolve_sha(checkout)[:12]}" in moved.render()
+        assert moved.record["binding"] == "head"
+    elif change == "unobservable":
+        assert current is admission and moved is not None
+        assert moved.code == delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN
+        assert "the default-branch lookup timed out on re-checking the admitted target" in moved.detail
     else:
         assert (current, moved, readmissions) == (fresh, None, [change])
 
@@ -17143,6 +17208,8 @@ def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # The branch as the canonical remote serves it, observed by review admission (#9739 A7).
+    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, _branch: _STUB_BASE_SHA)
     monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: None)
     monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
     _patch_worker_popen(monkeypatch)
@@ -17189,46 +17256,57 @@ def test_cmd_dispatch_refusal_on_base_resolution_writes_terminal_task_record(
     monkeypatch,
     tmp_tasks_dir,
 ):
-    """#7236: base resolution refusal writes a failed task record with the reason."""
-    # The base is known locally (a remote-tracking ref of a since-deleted branch),
-    # so review admission reads it (#9739); fetching it at worktree time fails.
+    """#7236: base resolution refusal writes a failed task record with the reason.
+
+    An attached branch is resolved again under the worktree lock; a fetch failing
+    there is a worktree-preparation failure. A new branch's start commit is
+    resolved by review admission instead (#9739 A7), whose refusal writes no
+    record (A6).
+    """
     main, _dispatch_wt = _init_repo_with_worktree(tmp_path)
-    subprocess.run(
-        ["git", "-C", str(main), "update-ref", "refs/remotes/origin/non-existent-base-branch", "HEAD"],
+    head = subprocess.run(
+        ["git", "-C", str(main), "rev-parse", "HEAD"],
         check=True,
         capture_output=True,
+        text=True,
         env=delegate._sanitized_git_env(),
         timeout=30,
-    )
+    ).stdout.strip()
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     monkeypatch.chdir(main)
-    args = _write_args(
-        agent="agy",
-        # #9275: agy without a Ukrainian classification is the bounded fallback.
-        research_task_family="ukrainian-authoring",
-        owned_path=list(_UKRAINIAN_OWNED_PATHS),
-        task_id="task-7236-bad-base",
-        branch=None,
-        worktree="auto",
-        base="non-existent-base-branch",
-        mode="workspace-write",
-    )
+    served = {"agy/feature-7236": head}
+    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, branch: served.get(branch))
 
     def fail_base_sha(*a, **k):
-        raise RuntimeError("could not fetch origin/non-existent-base-branch")
+        raise RuntimeError("could not fetch existing branch 'agy/feature-7236'")
 
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", fail_base_sha)
 
-    rc = delegate.cmd_dispatch(args)
+    def dispatch(task_id: str, **target) -> int:
+        return delegate.cmd_dispatch(
+            _write_args(
+                agent="agy",
+                # #9275: agy without a Ukrainian classification is the bounded fallback.
+                research_task_family="ukrainian-authoring",
+                owned_path=list(_UKRAINIAN_OWNED_PATHS),
+                task_id=task_id,
+                worktree="auto",
+                mode="workspace-write",
+                **target,
+            )
+        )
 
-    assert rc == 1
+    assert dispatch("task-7236-bad-base", branch="agy/feature-7236", base=None) == 1
     state_file = delegate._state_path("task-7236-bad-base")
     assert state_file.exists()
     state = json.loads(state_file.read_text(encoding="utf-8"))
     assert state["status"] == "failed"
     assert state["returncode_reason"] == "worktree preparation failed"
-    assert "could not fetch origin/non-existent-base-branch" in (state["last_error"] or "")
+    assert "could not fetch existing branch 'agy/feature-7236'" in (state["last_error"] or "")
     assert state["finished_at"] is not None
+
+    assert dispatch("task-7236-unserved-base", branch=None, base="non-existent-base-branch") == 2
+    assert not delegate._state_path("task-7236-unserved-base").exists()
 
 
 # --- Issue #7242: Branch-holder release hardening ---
