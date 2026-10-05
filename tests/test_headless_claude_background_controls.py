@@ -26,6 +26,13 @@ Static limits, each covered by the behavioural layer rather than the scan:
   (``test_static_limit_imported_print_flag_is_documented``).
 - Branch conditions are not evaluated. The scan fails closed: a Claude argv
   that exists on any path must be controlled on every path that launches it.
+  Where paths meet (branches, conditional expressions, ``and``/``or``, loop
+  back edges, a function's several returns, the edges into ``except`` and
+  ``finally`` from every state of the ``try`` body), an env stays the
+  chokepoint's env only if it is that env on every path holding the
+  chokepoint's argv. Loops are re-run until those facts are stable.
+- ``contextlib.suppress`` is modelled as a path out of every state of its
+  block; another context manager whose ``__exit__`` swallows exceptions is not.
 - Dynamic dispatch (``getattr``, ``functools.partial``, ``eval``) is not followed,
   nor a launch wrapper defined in a module that neither names Claude nor
   launches a process itself.
@@ -42,14 +49,13 @@ Static limits, each covered by the behavioural layer rather than the scan:
 from __future__ import annotations
 
 import ast
-import gc
 import json
 import re
 import shlex
 import subprocess
 import textwrap
 from collections.abc import Iterable, Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from itertools import pairwise, product
 from pathlib import Path
 from typing import Any
@@ -130,8 +136,16 @@ def _opaque(names: frozenset[str]) -> Val:
     return Val(tok=Tok(names=names), alts=frozenset({((Tok(names=names, spread=True),), None)}))
 
 
+def _prints(toks: tuple[Tok, ...]) -> bool:
+    return any(tok.text in PRINT_FLAGS for tok in toks)
+
+
 def _cap(alts: Iterable[Alt]) -> frozenset[Alt]:
-    ranked = sorted(alts, key=lambda alt: not any(tok.text in PRINT_FLAGS for tok in alt[0]))
+    """Bound an argv set, keeping print-mode argvs first and, among them, unmarked ones."""
+    alts = alts if isinstance(alts, (frozenset, set, list, tuple)) else list(alts)
+    if len(alts) <= _MAX_ALTS:
+        return frozenset(alts)
+    ranked = sorted(alts, key=lambda alt: (not _prints(alt[0]), alt[1] is not None))
     return frozenset(ranked[:_MAX_ALTS])
 
 
@@ -150,10 +164,67 @@ def _as_element(val: Val) -> Tok:
 
 def _concat(left: frozenset[Alt], right: frozenset[Alt]) -> frozenset[Alt]:
     """Concatenate argvs; only an unchanged (copied) argv keeps its chokepoint mark."""
-    return _cap((a + b, mb if not a else ma if not b else None) for (a, ma), (b, mb) in product(left, right))
+
+    def combine(first: Alt, second: Alt) -> Alt:
+        (a, mark_a), (b, mark_b) = first, second
+        return a + b, mark_b if not a else mark_a if not b else None
+
+    if len(left) * len(right) <= _MAX_ALTS:
+        return frozenset(combine(a, b) for a, b in product(left, right))
+    # Rank before combining: a combined argv prints if either part does.
+    lefts = [(alt, _prints(alt[0])) for alt in left]
+    rights = [(alt, _prints(alt[0])) for alt in right]
+    candidates = [(combine(a, b), prints_a or prints_b) for (a, prints_a), (b, prints_b) in product(lefts, rights)]
+    candidates.sort(key=lambda candidate: (not candidate[1], candidate[0][1] is not None))
+    return frozenset(alt for alt, _ in candidates[:_MAX_ALTS])
 
 
-def _join(a: Val, b: Val) -> Val:
+def _argv_marks(val: Val) -> frozenset[int]:
+    """Chokepoint calls whose argv ``val`` (or one of its items) may hold."""
+    marks = frozenset(mark for _, mark in val.alts if mark is not None)
+    for item in val.items or ():
+        marks |= _argv_marks(item)
+    return marks
+
+
+def _has_env_marks(val: Val) -> bool:
+    return bool(val.env_marks) or any(_has_env_marks(item) for item in val.items or ())
+
+
+def _drop_env_marks(val: Val, live: frozenset[int]) -> Val:
+    """``val`` joined with a path where it is not that chokepoint's env and ``live`` argvs exist."""
+    if not live or not _has_env_marks(val):
+        return val
+    items = None if val.items is None else tuple(_drop_env_marks(item, live) for item in val.items)
+    return Val(tok=val.tok, alts=val.alts, env_marks=val.env_marks - live, items=items)
+
+
+def _env_signature(val: Val) -> tuple[Any, ...]:
+    return (val.env_marks, tuple(_env_signature(item) for item in val.items or ()))
+
+
+def _mark_signature(state: dict[str, Val]) -> dict[str, tuple[Any, ...]]:
+    """What a state says about chokepoint pairs: the only facts a loop pass must stabilise.
+
+    Argvs may keep growing (an accumulator list), but marks form a finite set, so
+    passes compared on this projection converge.
+    """
+    signature: dict[str, tuple[Any, ...]] = {}
+    for key, val in state.items():
+        marks = _argv_marks(val)
+        if marks or _has_env_marks(val):
+            signature[key] = (marks, _env_signature(val))
+    return signature
+
+
+def _join(a: Val, b: Val, live_a: frozenset[int], live_b: frozenset[int]) -> Val:
+    """Join the values one name holds on two paths.
+
+    ``live_a`` / ``live_b`` are the chokepoint argvs that exist on each path. The
+    join is conservative: an env stays a chokepoint's env only if, on every path
+    where that chokepoint's argv exists, it is that env. A path that never held
+    the argv cannot launch it, so it does not withdraw the mark.
+    """
     if a == b:
         return a
     if a.tok == b.tok:
@@ -164,22 +235,13 @@ def _join(a: Val, b: Val) -> Val:
         tok = Tok(names=a.tok.names | b.tok.names)
     items = None
     if a.items is not None and b.items is not None and len(a.items) == len(b.items):
-        items = tuple(_join(x, y) for x, y in zip(a.items, b.items, strict=True))
-    return Val(tok=tok, alts=_cap(a.alts | b.alts), env_marks=a.env_marks | b.env_marks, items=items)
-
-
-def _join_envs(envs: list[dict[str, Val]]) -> dict[str, Val]:
-    if not envs:
-        return {}
-    keys = set().union(*envs)
-    joined: dict[str, Val] = {}
-    for key in keys:
-        vals = [env[key] for env in envs if key in env]
-        out = vals[0]
-        for val in vals[1:]:
-            out = _join(out, val)
-        joined[key] = out
-    return joined
+        items = tuple(_join(x, y, live_a, live_b) for x, y in zip(a.items, b.items, strict=True))
+    env_marks = frozenset(
+        mark
+        for mark in a.env_marks | b.env_marks
+        if (mark in a.env_marks or mark not in live_a) and (mark in b.env_marks or mark not in live_b)
+    )
+    return Val(tok=tok, alts=_cap(a.alts | b.alts), env_marks=env_marks, items=items)
 
 
 # --- Shell command lines ---------------------------------------------------------
@@ -440,8 +502,14 @@ class Invocation:
 
 
 def _imports(tree: ast.AST) -> dict[str, str]:
+    return _import_table(ast.walk(tree))
+
+
+def _import_table(nodes: Iterable[ast.AST]) -> dict[str, str]:
+    """Local name -> imported dotted name; a later import (in source order) rebinds a name."""
     table: dict[str, str] = {}
-    for node in ast.walk(tree):
+    imports = [node for node in nodes if isinstance(node, (ast.Import, ast.ImportFrom))]
+    for node in sorted(imports, key=lambda node: (node.lineno, node.col_offset)):
         if isinstance(node, ast.Import):
             for alias in node.names:
                 table[alias.asname or alias.name.split(".")[0]] = (
@@ -492,46 +560,34 @@ def _callee_name(func: ast.AST) -> str | None:
 Wrappers = dict[str, set[tuple[int | str, str]]]
 
 
-class _CallsByFunction(ast.NodeVisitor):
-    """Each function with the calls in its own body (not in nested functions)."""
-
-    def __init__(self) -> None:
-        self.stack: list[tuple[ast.AST, bool]] = []
-        self.calls: list[tuple[ast.FunctionDef | ast.AsyncFunctionDef, bool, list[ast.Call]]] = []
-        self._current: list[list[ast.Call]] = []
-
-    def visit_ClassDef(self, node: ast.ClassDef) -> None:
-        self.stack.append((node, True))
-        self.generic_visit(node)
-        self.stack.pop()
-
-    def visit_FunctionDef(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
-        method = bool(self.stack) and self.stack[-1][1]
-        calls: list[ast.Call] = []
-        self.calls.append((node, method, calls))
-        self.stack.append((node, False))
-        self._current.append(calls)
-        self.generic_visit(node)
-        self._current.pop()
-        self.stack.pop()
-
-    visit_AsyncFunctionDef = visit_FunctionDef
-
-    def visit_Call(self, node: ast.Call) -> None:
-        if self._current:
-            self._current[-1].append(node)
-        self.generic_visit(node)
+FunctionCalls = tuple[ast.FunctionDef | ast.AsyncFunctionDef, bool, list[ast.Call]]
 
 
-def _argv_expressions(call: ast.Call, position: int | str, keyword: str | None) -> list[ast.expr]:
-    if position == "all":
-        return list(call.args)
-    if position == "from1":
-        return list(call.args[1:])
-    assert isinstance(position, int)
-    if 0 <= position < len(call.args):
-        return [call.args[position]]
-    return [kw.value for kw in call.keywords if kw.arg == keyword and keyword]
+def _calls_by_function(tree: ast.AST) -> tuple[list[FunctionCalls], list[ast.Import | ast.ImportFrom]]:
+    """Each function, whether it is a method, and the calls in its own body (not in nested functions).
+
+    One pass over the tree; the module's imports are collected on the way.
+    """
+    found: list[FunctionCalls] = []
+    imports: list[ast.Import | ast.ImportFrom] = []
+    # (node, calls of the enclosing function or None at module level, directly inside a class)
+    stack: list[tuple[ast.AST, list[ast.Call] | None, bool]] = [(tree, None, False)]
+    while stack:
+        node, calls, in_class = stack.pop()
+        for child in ast.iter_child_nodes(node):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                own: list[ast.Call] = []
+                found.append((child, in_class, own))
+                stack.append((child, own, False))
+            elif isinstance(child, ast.ClassDef):
+                stack.append((child, calls, True))
+            else:
+                if calls is not None and isinstance(child, ast.Call):
+                    calls.append(child)
+                elif isinstance(child, (ast.Import, ast.ImportFrom)):
+                    imports.append(child)
+                stack.append((child, calls, in_class))
+    return found, imports
 
 
 def _forwarded_param(expr: ast.expr, params: dict[str, tuple[int | str, str]]) -> tuple[int | str, str] | None:
@@ -557,34 +613,67 @@ def _params(fn: ast.FunctionDef | ast.AsyncFunctionDef, method: bool) -> dict[st
     return params
 
 
-def find_wrappers(trees: Iterable[ast.AST]) -> Wrappers:
-    """Functions (by name) that forward one of their parameters into a launch's argv, transitively."""
-    Site = tuple[str, dict[str, tuple[int | str, str]], ast.Call]
-    queue: list[tuple[Site, tuple[int | str, str | None]]] = []
-    callers: dict[str, list[Site]] = {}
-    for tree in trees:
-        imports = _imports(tree)
-        visitor = _CallsByFunction()
-        visitor.visit(tree)
-        for fn, method, calls in visitor.calls:
-            params = _params(fn, method)
-            if not params:
+Param = tuple[int | str, str]
+
+
+@dataclass(frozen=True)
+class CallFact:
+    """A call in a function body, reduced to what wrapper discovery needs (no parse tree)."""
+
+    function: str
+    launch: tuple[int | str, str | None] | None  # argv spec when the callee is a launch API
+    callee: str | None
+    args: tuple[Param | None, ...]  # the parameter each positional argument forwards
+    keywords: tuple[tuple[str | None, Param | None], ...]
+
+    def argv_params(self, position: int | str, keyword: str | None) -> list[Param | None]:
+        if position == "all":
+            return list(self.args)
+        if position == "from1":
+            return list(self.args[1:])
+        assert isinstance(position, int)
+        if 0 <= position < len(self.args):
+            return [self.args[position]]
+        return [param for name, param in self.keywords if name == keyword and keyword]
+
+
+def call_facts(tree: ast.AST) -> list[CallFact]:
+    """The calls in ``tree`` that forward a parameter of their function and so may make it a wrapper."""
+    functions, import_nodes = _calls_by_function(tree)
+    imports = _import_table(import_nodes)
+    facts: list[CallFact] = []
+    for fn, method, calls in functions:
+        params = _params(fn, method)
+        if not params:
+            continue
+        for call in calls:
+            args = tuple(_forwarded_param(arg, params) for arg in call.args)
+            keywords = tuple((kw.arg, _forwarded_param(kw.value, params)) for kw in call.keywords)
+            if not any(args) and not any(param for _, param in keywords):
                 continue
-            for call in calls:
-                site = (fn.name, params, call)
-                api = _launch_api(_qualify(call.func, imports))
-                if api is not None:
-                    queue.append((site, (api[0], api[1])))
-                elif (name := _callee_name(call.func)) is not None:
-                    callers.setdefault(name, []).append(site)
+            api = _launch_api(_qualify(call.func, imports))
+            callee = _callee_name(call.func)
+            if api is not None or callee is not None:
+                facts.append(CallFact(fn.name, (api[0], api[1]) if api else None, callee, args, keywords))
+    return facts
+
+
+def find_wrappers(facts: Iterable[CallFact]) -> Wrappers:
+    """Functions (by name) that forward one of their parameters into a launch's argv, transitively."""
+    queue: list[tuple[CallFact, tuple[int | str, str | None]]] = []
+    callers: dict[str, list[CallFact]] = {}
+    for fact in facts:
+        if fact.launch is not None:
+            queue.append((fact, fact.launch))
+        elif fact.callee is not None:
+            callers.setdefault(fact.callee, []).append(fact)
     wrappers: Wrappers = {}
     while queue:
-        (name, params, call), (position, keyword) = queue.pop()
-        for expr in _argv_expressions(call, position, keyword):
-            forwarded = _forwarded_param(expr, params)
-            if forwarded is not None and forwarded not in wrappers.get(name, set()):
-                wrappers.setdefault(name, set()).add(forwarded)
-                queue.extend((site, forwarded) for site in callers.get(name, ()))
+        fact, (position, keyword) = queue.pop()
+        for forwarded in fact.argv_params(position, keyword):
+            if forwarded is not None and forwarded not in wrappers.get(fact.function, set()):
+                wrappers.setdefault(fact.function, set()).add(forwarded)
+                queue.extend((site, forwarded) for site in callers.get(fact.function, ()))
     return wrappers
 
 
@@ -593,7 +682,15 @@ class _Ctx:
     scope: str
     scope_names_claude: bool
     report: bool
-    returns: list[Val]
+    returns: list[tuple[Val, frozenset[int]]]  # returned value, chokepoint argvs live on that path
+    traces: list[list[dict[str, Val]]] = field(default_factory=list)  # states an exception may leave from
+
+    def quiet(self) -> _Ctx:
+        return _Ctx(self.scope, self.scope_names_claude, False, [], self.traces)
+
+
+# Passes over a loop body before its entry state is taken as stable.
+_LOOP_PASSES = 3
 
 
 class _ModuleScan:
@@ -608,9 +705,11 @@ class _ModuleScan:
         self.scopes: dict[ast.AST, tuple[str, ...]] = {}
         self._index(tree, ())
         self.module_env: dict[str, Val] = {}
+        self.module_marks: frozenset[int] = frozenset()  # chokepoint argvs every path can reach
         self.return_cache: dict[ast.AST, Val] = {}
         self.in_progress: set[ast.AST] = set()
-        self.found: list[Invocation] = []
+        # (scope, line, kind) -> controlled; a site seen on several passes is controlled only if it always was.
+        self.found: dict[tuple[str, int, str], bool] = {}
 
     def _index(self, node: ast.AST, scope: tuple[str, ...]) -> None:
         for child in ast.iter_child_nodes(node):
@@ -626,13 +725,14 @@ class _ModuleScan:
     def run(self) -> list[Invocation]:
         # Module-level names first (without reporting), then every scope.
         self.module_env, _ = self._walk(self.tree.body, {}, _Ctx("<module>", False, False, []))
+        self.module_marks = self._live(self.module_env)
         self.return_cache.clear()
         self._walk(self.tree.body, dict(self.module_env), _Ctx("<module>", False, True, []))
         for fn, scope in self.scopes.items():
             env = self._params(fn)
             claude_scope = any("claude" in name.lower() for name in scope)
             self._walk(fn.body, env, _Ctx(".".join(scope), claude_scope, True, []))
-        return self.found
+        return [Invocation(self.path, scope, line, kind, ok) for (scope, line, kind), ok in self.found.items()]
 
     def _params(self, fn: ast.FunctionDef | ast.AsyncFunctionDef) -> dict[str, Val]:
         args = fn.args
@@ -648,17 +748,60 @@ class _ModuleScan:
         ctx = _Ctx(fn.name, False, False, [])
         self._walk(fn.body, self._params(fn), ctx)
         self.in_progress.discard(fn)
-        out = ctx.returns[0] if ctx.returns else Val()
-        for val in ctx.returns[1:]:
-            out = _join(out, val)
+        out = self._join_paths(ctx.returns) if ctx.returns else Val()
         self.return_cache[fn] = out
         return out
+
+    # Joins -----------------------------------------------------------------------
+
+    def _live(self, state: dict[str, Val], *vals: Val) -> frozenset[int]:
+        """Chokepoint argvs that exist on a path: in its names, the module's, or ``vals``."""
+        marks = self.module_marks
+        for val in (*state.values(), *vals):
+            marks |= _argv_marks(val)
+        return marks
+
+    def _join_paths(self, paths: list[tuple[Val, frozenset[int]]]) -> Val:
+        out, live = paths[0]
+        for val, other in paths[1:]:
+            out, live = _join(out, val, live, other), live | other
+        return out
+
+    def _join_states(self, states: list[dict[str, Val]]) -> dict[str, Val]:
+        """The state after several paths meet, each name joined conservatively (see ``_join``)."""
+        if len(states) == 1:
+            return dict(states[0])
+        lives: list[frozenset[int] | None] = [None] * len(states)
+
+        def live(index: int) -> frozenset[int]:
+            if lives[index] is None:
+                lives[index] = self._live(states[index])
+            return lives[index]  # type: ignore[return-value]
+
+        joined: dict[str, Val] = {}
+        for key in set().union(*states):
+            held = [(i, state.get(key, self.module_env.get(key))) for i, state in enumerate(states)]
+            present = [(i, val) for i, val in held if val is not None]
+            if all(val == present[0][1] for _, val in present) and len(present) == len(held):
+                joined[key] = present[0][1]
+                continue
+            marked = any(_has_env_marks(val) for _, val in present)
+            paths = [(val, live(i) if marked else frozenset()) for i, val in present]
+            out = self._join_paths(paths)
+            if marked:
+                for i, val in held:
+                    if val is None:  # unbound on this path: never that chokepoint's env
+                        out = _drop_env_marks(out, live(i))
+            joined[key] = out
+        return joined
 
     # Statements ------------------------------------------------------------------
 
     def _walk(self, body: list[ast.stmt], env: dict[str, Val], ctx: _Ctx) -> tuple[dict[str, Val], bool]:
         for stmt in body:
             env, done = self._stmt(stmt, env, ctx)
+            for trace in ctx.traces:
+                trace.append(dict(env))
             if done:
                 return env, True
         return env, False
@@ -669,7 +812,57 @@ class _ModuleScan:
             out, done = self._walk(body, dict(env), ctx)
             if not done:
                 live.append(out)
-        return (_join_envs(live), False) if live else (env, True)
+        return (self._join_states(live), False) if live else (env, True)
+
+    def _loop(self, stmt: ast.For | ast.AsyncFor | ast.While, env: dict[str, Val], ctx: _Ctx) -> dict[str, Val]:
+        """The state after a loop: the body is re-run until every iteration's entry state is stable on its marks.
+
+        Every pass reports; a later pass starts from a joined (wider) state, so a
+        site keeps the verdict of the pass that saw it least controlled.
+        """
+
+        def iterate(entry: dict[str, Val], run_ctx: _Ctx) -> dict[str, Val]:
+            state = dict(entry)
+            if isinstance(stmt, ast.While):
+                self._eval(stmt.test, state, run_ctx)  # evaluated again before every iteration
+            else:
+                self._bind(stmt.target, _opaque(_names(stmt.target)), state)
+            looped, _ = self._walk(stmt.body, state, run_ctx)
+            return self._join_states([entry, looped])
+
+        entry = env
+        for _ in range(_LOOP_PASSES):
+            following = iterate(entry, ctx)
+            if _mark_signature(following) == _mark_signature(entry):
+                return following
+            entry = following
+        return iterate(entry, ctx)
+
+    def _try(self, stmt: ast.Try, env: dict[str, Val], ctx: _Ctx) -> tuple[dict[str, Val], bool]:
+        """A handler (and ``finally``) may start from any state the body passed through."""
+        body_trace: list[dict[str, Val]] = [dict(env)]
+        escape_trace: list[dict[str, Val]] = []  # states an exception may carry into ``finally``
+        ctx.traces.append(escape_trace)
+        try:
+            ctx.traces.append(body_trace)
+            try:
+                tried, tried_done = self._walk(stmt.body, dict(env), ctx)
+            finally:
+                ctx.traces.pop()
+            outcomes = [] if tried_done else [self._walk(stmt.orelse, tried, ctx)]
+            raised = self._join_states(body_trace)
+            outcomes += [self._walk(handler.body, dict(raised), ctx) for handler in stmt.handlers]
+        finally:
+            ctx.traces.pop()
+        live = [out for out, done in outcomes if not done]
+        if not stmt.finalbody:
+            return (self._join_states(live), False) if live else (env, True)
+        # Launches in ``finally`` are checked from every state that can reach it;
+        # the code after the statement continues from the normal exits only.
+        self._walk(stmt.finalbody, self._join_states(live + body_trace + escape_trace), ctx)
+        if not live:
+            return env, True
+        return self._walk(stmt.finalbody, self._join_states(live), ctx.quiet())
 
     def _stmt(self, stmt: ast.stmt, env: dict[str, Val], ctx: _Ctx) -> tuple[dict[str, Val], bool]:
         if isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
@@ -692,7 +885,8 @@ class _ModuleScan:
             val = self._eval(stmt.value, env, ctx) if stmt.value is not None else Val()
             if ctx.report:
                 self._check_return(stmt, val, ctx)
-            ctx.returns.append(val)
+            # The caller sees only the returned value (and module names) of this path.
+            ctx.returns.append((val, self._live({}, val)))
             return env, True
         elif isinstance(stmt, ast.Raise):
             if stmt.exc is not None:
@@ -702,27 +896,31 @@ class _ModuleScan:
             self._eval(stmt.test, env, ctx)
             return self._branches([stmt.body, stmt.orelse], env, ctx)
         elif isinstance(stmt, (ast.For, ast.AsyncFor, ast.While)):
-            self._eval(stmt.iter if isinstance(stmt, (ast.For, ast.AsyncFor)) else stmt.test, env, ctx)
-            if isinstance(stmt, (ast.For, ast.AsyncFor)):
-                self._bind(stmt.target, _opaque(_names(stmt.target)), env)
-            looped, _ = self._walk(stmt.body, dict(env), ctx)
-            env = _join_envs([env, looped])
-            return self._walk(stmt.orelse, env, ctx)
+            if not isinstance(stmt, ast.While):
+                self._eval(stmt.iter, env, ctx)
+            return self._walk(stmt.orelse, self._loop(stmt, env, ctx), ctx)
         elif isinstance(stmt, (ast.With, ast.AsyncWith)):
             for item in stmt.items:
                 val = self._eval(item.context_expr, env, ctx)
                 if item.optional_vars is not None:
                     self._bind(item.optional_vars, _opaque(_names(item.optional_vars)) if not val.alts else val, env)
-            return self._walk(stmt.body, env, ctx)
+            suppressing = any(
+                isinstance(item.context_expr, ast.Call)
+                and _qualify(item.context_expr.func, self.imports).rsplit(".", 1)[-1] == "suppress"
+                for item in stmt.items
+            )
+            if not suppressing:
+                return self._walk(stmt.body, env, ctx)
+            # A suppressed exception continues after the block from any state the body passed through.
+            trace = [dict(env)]
+            ctx.traces.append(trace)
+            try:
+                self._walk(stmt.body, env, ctx)
+            finally:
+                ctx.traces.pop()
+            return self._join_states(trace), False
         elif isinstance(stmt, (ast.Try, getattr(ast, "TryStar", ast.Try))):
-            tried, tried_done = self._walk(stmt.body, dict(env), ctx)
-            outcomes = [] if tried_done else [self._walk(stmt.orelse, tried, ctx)]
-            for handler in stmt.handlers:
-                outcomes.append(self._walk(handler.body, _join_envs([env, tried]), ctx))
-            live = [out for out, done in outcomes if not done]
-            env = _join_envs(live) if live else env
-            final, final_done = self._walk(stmt.finalbody, env, ctx)
-            return final, final_done or not live
+            return self._try(stmt, env, ctx)
         elif isinstance(stmt, ast.Match):
             self._eval(stmt.subject, env, ctx)
             return self._branches([case.body for case in stmt.cases] + [[]], env, ctx)
@@ -816,15 +1014,15 @@ class _ModuleScan:
         if isinstance(node, ast.BinOp):
             left, right = self._eval(node.left, env, ctx), self._eval(node.right, env, ctx)
             return self._add(left, right) if isinstance(node.op, ast.Add) else _opaque(_names(node))
-        if isinstance(node, ast.IfExp):
-            self._eval(node.test, env, ctx)
-            return _join(self._eval(node.body, env, ctx), self._eval(node.orelse, env, ctx))
-        if isinstance(node, ast.BoolOp):
-            vals = [self._eval(value, env, ctx) for value in node.values]
-            out = vals[0]
-            for val in vals[1:]:
-                out = _join(out, val)
-            return out
+        if isinstance(node, (ast.IfExp, ast.BoolOp)):
+            if isinstance(node, ast.IfExp):
+                self._eval(node.test, env, ctx)
+                vals = [self._eval(node.body, env, ctx), self._eval(node.orelse, env, ctx)]
+            else:
+                vals = [self._eval(value, env, ctx) for value in node.values]
+            # Every operand shares this path, so every argv on it is live for each.
+            live = self._live(env, *vals) if any(map(_has_env_marks, vals)) else frozenset()
+            return self._join_paths([(val, live) for val in vals])
         if isinstance(node, (ast.Starred, ast.Await)):
             return self._eval(node.value, env, ctx)
         if isinstance(node, ast.NamedExpr):
@@ -920,7 +1118,7 @@ class _ModuleScan:
                 cmd = kwargs.get("cmd", args[0] if args else Val())
                 kinds = [_alt_kind(toks, ctx.scope_names_claude) for toks, _ in cmd.alts]
                 if any(kinds):
-                    self.found.append(Invocation(self.path, ctx.scope, node.lineno, "plan", False))
+                    self._record(ctx, node, "plan", False)
             return _opaque(frozenset({name}))
 
         if qualified in {"shlex.split"} and args:
@@ -956,11 +1154,8 @@ class _ModuleScan:
             isinstance(node.func, ast.Name)
             or (isinstance(node.func.value, ast.Name) and node.func.value.id in {"self", "cls"})
         ):
-            out: Val | None = None
-            for fn in self.functions[name]:
-                val = self._returns(fn)
-                out = val if out is None else _join(out, val)
-            return out or Val()
+            returned = [self._returns(fn) for fn in self.functions[name]]
+            return self._join_paths([(val, self._live({}, val)) for val in returned])
         return _opaque(_names(node.func))
 
     def _launch(
@@ -1016,14 +1211,18 @@ class _ModuleScan:
             if not direct and not shell:
                 continue
             controlled = not shell and all(mark is not None and mark in env.env_marks for mark in direct)
-            self.found.append(Invocation(self.path, ctx.scope, getattr(node, "lineno", 0), kind, controlled))
+            self._record(ctx, node, kind, controlled)
+
+    def _record(self, ctx: _Ctx, node: ast.AST, kind: str, controlled: bool) -> None:
+        key = (ctx.scope, getattr(node, "lineno", 0), kind)
+        self.found[key] = self.found.get(key, True) and controlled
 
 
 def scan_source(source: str, path: str, wrappers: Wrappers | None = None) -> list[Invocation]:
     """Return every Claude print-mode launch, builder return and plan in ``source``."""
     tree = ast.parse(source, filename=path)
     if wrappers is None:
-        wrappers = find_wrappers([tree])
+        wrappers = find_wrappers(call_facts(tree))
     return _ModuleScan(tree, path, wrappers).run()
 
 
@@ -1034,6 +1233,27 @@ def _python_sources() -> Iterator[tuple[str, str]]:
         yield path.relative_to(REPO_ROOT).as_posix(), path.read_text(encoding="utf-8")
 
 
+def scan_repository(sources: Iterable[tuple[str, str]]) -> list[Invocation]:
+    """Scan every module that names Claude; wrappers come from those and every module that launches.
+
+    Each parse tree is dropped once its facts are extracted, so the scan holds
+    one tree at a time (hundreds of modules launch processes).
+    """
+    facts: list[CallFact] = []
+    claude: dict[str, str] = {}
+    for rel, source in sources:
+        names_claude = "claude" in source.lower() and _PRINT_TEXT.search(source) is not None
+        if names_claude:
+            claude[rel] = source
+        if names_claude or _LAUNCH_TEXT.search(source):
+            facts.extend(call_facts(ast.parse(source, filename=rel)))
+    wrappers = find_wrappers(facts)
+    found: list[Invocation] = []
+    for rel, source in claude.items():
+        found.extend(_ModuleScan(ast.parse(source, filename=rel), rel, wrappers).run())
+    return found
+
+
 _PRINT_TEXT = re.compile(r"-p\b|--print\b")
 _LAUNCH_TEXT = re.compile(
     r"\b(subprocess|create_subprocess_\w+|os\.(system|popen|exec\w*|spawn\w*|posix_spawnp?)|pty\.spawn)\b"
@@ -1042,20 +1262,7 @@ _LAUNCH_TEXT = re.compile(
 
 @pytest.fixture(scope="module")
 def repo_invocations() -> list[Invocation]:
-    """Scan every module that names Claude; wrappers come from those and every module that launches."""
-    sources = dict(_python_sources())
-    claude = [rel for rel, source in sources.items() if "claude" in source.lower() and _PRINT_TEXT.search(source)]
-    relevant = sorted(set(claude) | {rel for rel, source in sources.items() if _LAUNCH_TEXT.search(source)})
-    gc.disable()  # hundreds of large ASTs: generational GC passes dominate the run time
-    try:
-        trees = {rel: ast.parse(sources[rel], filename=rel) for rel in relevant}
-        wrappers = find_wrappers(trees.values())
-        found: list[Invocation] = []
-        for rel in claude:
-            found.extend(_ModuleScan(trees[rel], rel, wrappers).run())
-    finally:
-        gc.enable()
-    return found
+    return scan_repository(_python_sources())
 
 
 def _harness_table() -> set[str]:
@@ -1189,6 +1396,17 @@ def test_chokepoint_merges_the_equals_form_and_leaves_its_inputs_unchanged() -> 
 # --- Behaviour: each direct launcher hands the child both controls ------------------------
 
 
+@pytest.fixture
+def ambient_switch_off(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The test process's own env has background tasks *enabled*.
+
+    A parent that already carries the switch (a Claude session running the
+    suite) would otherwise let a caller that forwards ``os.environ`` instead of
+    the chokepoint's env pass.
+    """
+    monkeypatch.setenv(SWITCH, "0")
+
+
 def _assert_child_controlled(argv: list[str], env: dict[str, str]) -> None:
     flag = argv.index("--disallowedTools")
     assert set(HEADLESS_BACKGROUND_TOOL_DENIES) <= set(argv[flag + 1].split(","))
@@ -1197,6 +1415,7 @@ def _assert_child_controlled(argv: list[str], env: dict[str, str]) -> None:
     assert env[SWITCH] == "1"
 
 
+@pytest.mark.usefixtures("ambient_switch_off")
 def test_batch_rebuild_child_is_controlled(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.syspath_prepend(str(SCRIPTS))
     from batch import batch_dispatcher_helpers as helpers
@@ -1217,6 +1436,7 @@ def test_batch_rebuild_child_is_controlled(monkeypatch: pytest.MonkeyPatch) -> N
     assert seen["argv"][seen["argv"].index("--permission-mode") + 1] == "bypassPermissions"
 
 
+@pytest.mark.usefixtures("ambient_switch_off")
 def test_pipeline_phase_child_is_controlled(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     from scripts.pipeline import dispatch
 
@@ -1240,6 +1460,7 @@ def test_pipeline_phase_child_is_controlled(monkeypatch: pytest.MonkeyPatch, tmp
     assert seen["input"] == "write the content"
 
 
+@pytest.mark.usefixtures("ambient_switch_off")
 @pytest.mark.parametrize("module_name", ["code_review_benchmark", "judge_calibration_matrix"])
 def test_native_claude_benchmark_child_is_controlled(monkeypatch: pytest.MonkeyPatch, module_name: str) -> None:
     import importlib
@@ -1261,6 +1482,7 @@ def test_native_claude_benchmark_child_is_controlled(monkeypatch: pytest.MonkeyP
     assert seen["argv"][-2:] == ["--", "prompt"]
 
 
+@pytest.mark.usefixtures("ambient_switch_off")
 def test_openai_proxy_claude_child_is_controlled(monkeypatch: pytest.MonkeyPatch) -> None:
     from scripts.ai_agent_bridge import openai_proxy as proxy
 
@@ -1279,6 +1501,7 @@ def test_openai_proxy_claude_child_is_controlled(monkeypatch: pytest.MonkeyPatch
     assert "hello" in seen["input"]
 
 
+@pytest.mark.usefixtures("ambient_switch_off")
 def test_zno_eval_claude_child_is_controlled(monkeypatch: pytest.MonkeyPatch) -> None:
     from scripts.eval.zno_nmt import adapters
 
@@ -1332,13 +1555,16 @@ def test_zno_eval_claude_child_is_controlled(monkeypatch: pytest.MonkeyPatch) ->
     assert seen["input"] == "exam"
 
 
+@pytest.mark.usefixtures("ambient_switch_off")
 def test_isolated_claude_review_launch_is_controlled(tmp_path: Path) -> None:
     from scripts.review.isolation import build_claude_review_argv
 
     binary = tmp_path / "claude"
     binary.write_text("#!/bin/sh\n", encoding="utf-8")
 
-    argv, env = build_claude_review_argv(binary, prompt="review", json_schema={"type": "object"}, env={"HOME": "/h"})
+    argv, env = build_claude_review_argv(
+        binary, prompt="review", json_schema={"type": "object"}, env={"HOME": "/h", SWITCH: "0"}
+    )
 
     _assert_child_controlled(argv, env)
     assert argv[argv.index("--tools") + 1] == "Read,Grep,Glob"
@@ -1417,6 +1643,68 @@ _UNCONTROLLED = {
         "    if claude:\n        cmd, env = headless_claude_launch(cmd, os.environ)\n"
         "    subprocess.run(cmd, env=env)\n"
     ),
+    # Round-2 false "controlled" forms: a join must not keep a control that one path lost.
+    "env-replaced-on-a-branch": (
+        'def run(p, discard_env):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        "    if discard_env:\n        env = os.environ\n    subprocess.run(cmd, env=env)\n"
+    ),
+    "switch-removed-on-a-branch": (
+        'def run(p, raw):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        '    if raw:\n        env.pop("CLAUDE_CODE_DISABLE_BACKGROUND_TASKS")\n    subprocess.run(cmd, env=env)\n'
+    ),
+    "env-chosen-by-conditional-expression": (
+        'def run(p, keep):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        "    subprocess.run(cmd, env=env if keep else os.environ)\n"
+    ),
+    "env-chosen-by-or": (
+        'def run(p, override):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        "    subprocess.run(cmd, env=override or env)\n"
+    ),
+    "argv-replaced-on-a-branch": (
+        'def run(p, plain):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        '    if plain:\n        cmd = ["claude", "-p", p]\n    subprocess.run(cmd, env=env)\n'
+    ),
+    "argv-mutated-on-a-branch": (
+        'def run(p, open_tools):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        '    if open_tools:\n        cmd.append("--disallowedTools=")\n    subprocess.run(cmd, env=env)\n'
+    ),
+    "argv-truncated-on-a-branch": (
+        'def run(p, short):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        "    if short:\n        cmd = cmd[:3]\n    subprocess.run(cmd, env=env)\n"
+    ),
+    "loop-reassigns-after-the-launch": (
+        'def run(p):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        "    for _attempt in range(3):\n        subprocess.run(cmd, env=env)\n        env = dict(os.environ)\n"
+    ),
+    "loop-may-reassign-before-the-launch": (
+        'def run(p, keys):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        '    for key in keys:\n        if key == "raw":\n            env = os.environ\n'
+        "    subprocess.run(cmd, env=env)\n"
+    ),
+    "while-loop-reassigns": (
+        'def run(p):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        "    while subprocess.run(cmd, env=env).returncode:\n        env = os.environ\n"
+    ),
+    "handler-sees-a-replaced-env": (
+        'def run(p):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        "    saved = env\n    try:\n        env = os.environ\n        prepare()\n        env = saved\n"
+        "    except OSError:\n        subprocess.run(cmd, env=env)\n"
+    ),
+    "finally-sees-a-replaced-env": (
+        'def run(p):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        "    saved = env\n    try:\n        env = os.environ\n        prepare()\n        env = saved\n"
+        "    finally:\n        subprocess.run(cmd, env=env)\n"
+    ),
+    "suppress-skips-the-restore": (
+        "from contextlib import suppress\n"
+        'def run(p):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        "    saved = env\n    with suppress(OSError):\n        env = os.environ\n        prepare()\n        env = saved\n"
+        "    subprocess.run(cmd, env=env)\n"
+    ),
+    "builder-may-return-another-env": (
+        'def build(p, raw):\n    cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)\n'
+        "    if raw:\n        env = os.environ\n    return cmd, env\n"
+    ),
 }
 
 
@@ -1457,6 +1745,25 @@ def test_scanner_flags_the_unprotected_caller_of_a_shared_builder() -> None:
     assert status == {("build", "return"): False, ("protected", "launch"): True, ("unprotected", "launch"): False}
 
 
+def test_scanner_flags_the_caller_of_a_builder_that_may_return_another_env() -> None:
+    """Joining a builder's returns keeps the env controlled only if every return pairs it with the argv."""
+    found = _scan(
+        """
+        def build(p, raw):
+            cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)
+            if raw:
+                return cmd, os.environ
+            return cmd, env
+
+        def run(p, raw):
+            cmd, env = build(p, raw)
+            return subprocess.run(cmd, env=env)
+        """
+    )
+    status = {(inv.scope, inv.line): inv.controlled for inv in found}
+    assert status == {("build", 7): False, ("build", 8): True, ("run", 12): False}
+
+
 def test_scanner_accepts_launches_that_use_the_chokepoint_pair() -> None:
     found = _scan(
         """
@@ -1480,9 +1787,38 @@ def test_scanner_accepts_launches_that_use_the_chokepoint_pair() -> None:
         async def later(p):
             cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)
             return await asyncio.create_subprocess_exec(*cmd, env=env)
+
+        def either(p, short):
+            if short:
+                cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)
+            else:
+                cmd, env = headless_claude_launch(["claude", "--print", "--", p], {})
+            return subprocess.run(cmd, env=env)
+
+        def each(prompts):
+            for p in prompts:
+                cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)
+                subprocess.run(cmd, env=env)
+
+        def retried(p):
+            cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)
+            try:
+                subprocess.run(cmd, env=env)
+            except OSError:
+                subprocess.run(cmd, env=env)
+            finally:
+                cleanup()
+            return subprocess.run(cmd, env=env)
+
+        def tolerant(p):
+            cmd, env = headless_claude_launch(["claude", "-p", p], os.environ)
+            with contextlib.suppress(OSError):
+                subprocess.run(cmd, env=env)
+            return subprocess.run(cmd, env=env)
         """
     )
-    assert {inv.scope for inv in found} == {"direct", "builder", "caller", "later"}
+    scopes = {"direct", "builder", "caller", "later", "either", "each", "retried", "tolerant"}
+    assert {inv.scope for inv in found} == scopes
     assert all(inv.controlled for inv in found)
 
 
