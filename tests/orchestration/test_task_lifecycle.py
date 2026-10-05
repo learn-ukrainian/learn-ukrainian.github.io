@@ -1272,3 +1272,98 @@ def test_membership_drift_blocks_a_later_reconcile() -> None:
     assert second_receipt["state"] == "BLOCKED_WITH_RECEIPT"
     assert "issue membership" in " ".join(second_receipt["hard_blockers"])
     assert ledger["current_state"] == "BLOCKED_WITH_RECEIPT"
+
+
+@pytest.mark.parametrize("line", [
+    "- [X] **AC-01b** — Output is current.",
+    "- [X] AC-01b: Output is current.",
+    "- [X] AC-01b Output is current.",
+])
+def test_observed_checkbox_forms_initialize_and_verify_snapshot(line):
+    parsed = task_lifecycle.parse_issue_acceptance_criteria(line)
+    assert parsed == [{"id": "AC-01b", "text": "Output is current.", "checked": True}]
+    policy = {"AC-01b": {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]}}
+    snapshot = task_lifecycle.build_ac_snapshot(line, policy, finalized_at=NOW)
+    ledger = task_lifecycle.build_lifecycle(
+        _identity(), author_family="codex", ac_snapshot=snapshot,
+        required_checks=["CI Gate"], now=NOW, pr_number=77,
+    )
+    ledger = _add(ledger, "AC-01b", "test")
+    equivalent = "- [ ] **AC-01b** — Output is current."
+    result = task_lifecycle.evaluate(ledger, _observation(equivalent))
+    assert not any("drift" in blocker or "stable-ID" in blocker for blocker in result["hard_blockers"])
+    drift = task_lifecycle.evaluate(ledger, _observation(equivalent.replace("current", "stale")))
+    assert any("drift" in blocker for blocker in drift["hard_blockers"])
+
+
+@pytest.mark.parametrize("mark,checked", [(" ", False), ("x", True), ("X", True)])
+@pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}", "{id} {text}"])
+def test_checkbox_forms_preserve_original_id_text_and_checked(mark, checked, form):
+    body = "- [ ] CI Gate green\n- [" + mark + "] " + form.format(id="AC-01", text="Output is current.")
+    assert task_lifecycle.parse_issue_acceptance_criteria(body) == [
+        {"id": "AC-01", "text": "Output is current.", "checked": checked},
+    ]
+
+
+@pytest.mark.parametrize("line", [
+    "- [ ] AC-01:", "- [ ] AC-01 : ", "- [ ] AC-01", "- [ ] **AC-01** — ",
+    "- [ ] AC-01. Missing separator", "- [ ] **AC-01**: Unsupported bold separator",
+    "- [ ] AC-: Missing identifier", "- [ ] AC-01/b Bad identifier",
+    "- [ ] AC-lowercase: Unsupported identifier",
+    "- [ ] AC-" + "1" * 30 + ": Too long", "- [y] AC-01: Bad checked state",
+    "- [ ] **AC-01 — Missing closing emphasis", "* [ ] AC-01: Unsupported bullet",
+])
+def test_malformed_ac_like_checkbox_cannot_disappear_from_mixed_snapshot(line):
+    body = "- [ ] **AC-OK** — Valid criterion.\n" + line
+    with pytest.raises(task_lifecycle.LifecycleError, match="malformed AC-like"):
+        task_lifecycle.parse_issue_acceptance_criteria(body)
+    result = task_lifecycle.evaluate(_ledger(), _observation(_body() + line))
+    assert any("malformed AC-like" in blocker for blocker in result["hard_blockers"])
+
+
+@pytest.mark.parametrize("second", ["- [x] AC-01: Same criterion.", "- [ ] AC-01 Same criterion."])
+def test_duplicate_ids_across_forms_refuse_snapshot(second):
+    with pytest.raises(task_lifecycle.LifecycleError, match=r"duplicate acceptance criterion ID.*AC-01"):
+        task_lifecycle.parse_issue_acceptance_criteria("- [ ] **AC-01** — Same criterion.\n" + second)
+
+
+def test_criterion_length_limits_and_legacy_bold_ids():
+    assert task_lifecycle.parse_issue_acceptance_criteria("- [ ] **LEGACY** - Existing criterion.")[0]["id"] == "LEGACY"
+    with pytest.raises(task_lifecycle.LifecycleError, match="ID exceeds 32"):
+        task_lifecycle.parse_issue_acceptance_criteria("- [ ] **AC-" + "1" * 30 + "b** — Too long.")
+    with pytest.raises(task_lifecycle.LifecycleError, match="exceeds 4000"):
+        task_lifecycle.parse_issue_acceptance_criteria("- [ ] AC-01: " + "x" * 4001)
+    with pytest.raises(task_lifecycle.LifecycleError, match="no stable-ID"):
+        task_lifecycle.parse_issue_acceptance_criteria("- [ ] CI Gate green")
+
+
+@pytest.mark.parametrize("line", [
+    "- [ ] **AC-01** — Output is current.",
+    "- [ ] AC-01: Output is current.",
+    "- [ ] AC-01 Output is current.",
+])
+def test_actual_closeout_init_accepts_equivalent_checkbox_forms(tmp_path, monkeypatch, line):
+    identity_path = tmp_path / "identity.json"
+    policy_path = tmp_path / "policy.json"
+    state_path = tmp_path / "lifecycle.json"
+    identity_path.write_text(json.dumps(_identity()))
+    policy_path.write_text(json.dumps({
+        "AC-01": {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]},
+    }))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", lambda self, repo, number: {
+        "body": line, "parent_epic": 10,
+    })
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+    args = task_closeout.build_parser().parse_args([
+        "--repo-root", str(tmp_path), "init", "--identity-file", str(identity_path),
+        "--ac-policy", str(policy_path), "--state-file", str(state_path),
+        "--author-family", "codex", "--required-check", "CI Gate", "--now", NOW,
+    ])
+    assert task_closeout.cmd_init(args) == 0
+    ledger = task_lifecycle.load_lifecycle(state_path)
+    assert ledger["ac_snapshot"]["criteria"][0]["id"] == "AC-01"
+    assert ledger["ac_snapshot"]["criteria"][0]["text"] == "Output is current."
+    result = task_lifecycle.evaluate(ledger, _observation("- [x] AC-01 Output is current."))
+    assert not any("drift" in blocker for blocker in result["hard_blockers"])
+    drift = task_lifecycle.evaluate(ledger, _observation("- [x] AC-01: Output changed."))
+    assert any("drift" in blocker for blocker in drift["hard_blockers"])
