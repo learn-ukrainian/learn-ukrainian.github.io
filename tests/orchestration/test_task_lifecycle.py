@@ -132,6 +132,297 @@ def _ready_evidence(ledger: dict) -> dict:
     )
 
 
+def _replacement(ledger: dict, target: dict, **overrides: object) -> tuple[dict, dict]:
+    args = {
+        "ac_id": target["ac_id"],
+        "evidence_type": target["type"],
+        "summary": "corrected evidence",
+        "url": target["url"],
+        "commit": target["subject"]["commit"],
+        "details": {**target["details"], "supersedes_evidence_id": target["id"]},
+        "recorded_at": NOW,
+        **overrides,
+    }
+    return task_lifecycle.add_evidence(ledger, **args)
+
+
+def test_review_url_correction_retires_error_without_changing_history(tmp_path: Path) -> None:
+    ledger = _add(_add(_ledger(), "AC-IMPL", "test"), "AC-REVIEW", "review",
+                  url="https://github.com/org/repo/pull/77",
+                  details={"author_family": "codex", "reviewer_family": "claude", "verdict": "pass"})
+    observation = _observation(_body())
+    ledger, receipt, _ = task_lifecycle.reconcile(ledger, observation, now=NOW)
+    assert receipt["state"] == "BLOCKED_WITH_RECEIPT"
+    original_bytes = task_lifecycle.canonical_json(ledger)
+    old = ledger["evidence"][-1]
+    corrected, new = _replacement(ledger, old, url=REVIEW_URL)
+    result = task_lifecycle.evaluate(corrected, observation)
+    assert result["state"] == "CI_PASSED"
+    assert result["hard_blockers"] == []
+    assert result["superseded_evidence_ids"] == [old["id"]]
+    assert result["retired_evidence_errors"] == {
+        old["id"]: "AC-REVIEW: review receipt URL is absent from authoritative PR comments",
+    }
+    replayed, replay_record = _replacement(corrected, old, url=REVIEW_URL)
+    assert replayed == corrected
+    assert replay_record == new
+    path = tmp_path / "lifecycle.json"
+    task_lifecycle.write_lifecycle(path, corrected)
+    loaded = task_lifecycle.load_lifecycle(path)
+    assert loaded == corrected
+    assert task_lifecycle.canonical_json(ledger) == original_bytes
+    assert loaded["evidence"][:-1] == ledger["evidence"]
+    updated, _, _ = task_lifecycle.reconcile(loaded, observation, now=NOW)
+    assert updated["observation_receipts"][0] == receipt
+    for row in updated["evidence"]:
+        assert row["id"] == task_lifecycle.digest(task_lifecycle._evidence_payload(row))
+    assert "superseded_evidence_ids" not in task_lifecycle.canonical_json(updated)
+    assert "retired_evidence_errors" not in task_lifecycle.canonical_json(updated)
+
+
+@pytest.mark.parametrize("link", [None, True, 7, [], {}, "", "sha256:" + "A" * 64, "a" * 64, "sha256:abc"])
+def test_malformed_supersession_rejected_at_append_and_load(tmp_path: Path, link: object) -> None:
+    ledger = _add(_ledger(), "AC-IMPL", "test")
+    old = ledger["evidence"][-1]
+    with pytest.raises(task_lifecycle.LifecycleError, match="supersedes_evidence_id must be sha256"):
+        _replacement(ledger, old, details={"supersedes_evidence_id": link})
+    tampered = deepcopy(ledger)
+    tampered["evidence"][0]["details"]["supersedes_evidence_id"] = link
+    tampered["evidence"][0]["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(tampered["evidence"][0]))
+    path = tmp_path / "tampered.json"
+    path.write_text(json.dumps(tampered), encoding="utf-8")
+    with pytest.raises(task_lifecycle.LifecycleError, match="supersedes_evidence_id must be sha256"):
+        task_lifecycle.load_lifecycle(path)
+
+
+def test_unknown_forward_self_and_cyclic_supersession_rejected(tmp_path: Path) -> None:
+    ledger = _add(_ledger(), "AC-IMPL", "test")
+    old = ledger["evidence"][-1]
+    with pytest.raises(task_lifecycle.LifecycleError, match="existing earlier"):
+        _replacement(ledger, old, details={"supersedes_evidence_id": "sha256:" + "f" * 64})
+    corrected, new = _replacement(ledger, old)
+    forward = deepcopy(corrected)
+    forward["evidence"].reverse()  # Both digests are valid, but the target is later.
+    with pytest.raises(task_lifecycle.LifecycleError, match="existing earlier"):
+        task_lifecycle.validate_lifecycle(forward)
+    with pytest.raises(task_lifecycle.LifecycleError, match="existing earlier"):
+        _replacement(ledger, old, details={"supersedes_evidence_id": new["id"]})
+    # Self/cyclic tampering cannot preserve content-addressed row IDs either.
+    for target in (old["id"], new["id"]):
+        tampered = deepcopy(corrected)
+        tampered["evidence"][0]["details"]["supersedes_evidence_id"] = target
+        path = tmp_path / "tampered.json"
+        path.write_text(json.dumps(tampered), encoding="utf-8")
+        with pytest.raises(task_lifecycle.LifecycleError, match="digest is invalid"):
+            task_lifecycle.load_lifecycle(path)
+
+
+@pytest.mark.parametrize("overrides", [{"ac_id": "AC-REVIEW"}, {"evidence_type": "command"}])
+def test_cross_criterion_or_type_supersession_rejected(overrides: dict) -> None:
+    ledger = _add(_ledger(), "AC-IMPL", "test")
+    with pytest.raises(task_lifecycle.LifecycleError, match="same criterion, type"):
+        _replacement(ledger, ledger["evidence"][-1], **overrides)
+    corrected, _ = _replacement(ledger, ledger["evidence"][-1])
+    row = corrected["evidence"][-1]
+    row["ac_id" if "ac_id" in overrides else "type"] = next(iter(overrides.values()))
+    row["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(row))
+    with pytest.raises(task_lifecycle.LifecycleError, match="same criterion, type"):
+        task_lifecycle.validate_lifecycle(corrected)
+
+
+@pytest.mark.parametrize("field,value", [("repository", "other/repo"), ("issue", 43), ("pr", 78)])
+def test_cross_subject_supersession_rejected_on_load(tmp_path: Path, field: str, value: object) -> None:
+    ledger = _add(_ledger(), "AC-IMPL", "test")
+    ledger, _ = _replacement(ledger, ledger["evidence"][-1])
+    row = ledger["evidence"][-1]
+    row["subject"][field] = value
+    row["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(row))
+    path = tmp_path / "cross-context.json"
+    path.write_text(json.dumps(ledger), encoding="utf-8")
+    with pytest.raises(task_lifecycle.LifecycleError, match="does not match"):
+        task_lifecycle.load_lifecycle(path)
+
+
+def test_duplicate_superseder_rejected_at_append_and_load(tmp_path: Path) -> None:
+    ledger = _add(_ledger(), "AC-IMPL", "test")
+    old = ledger["evidence"][-1]
+    corrected, row = _replacement(ledger, old)
+    with pytest.raises(task_lifecycle.LifecycleError, match="already has a superseder"):
+        _replacement(corrected, old, summary="second competing correction")
+    duplicate = deepcopy(row)
+    duplicate["summary"] = "second competing correction"
+    duplicate["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(duplicate))
+    corrected["evidence"].append(duplicate)
+    path = tmp_path / "duplicate.json"
+    path.write_text(json.dumps(corrected), encoding="utf-8")
+    with pytest.raises(task_lifecycle.LifecycleError, match="already has a superseder"):
+        task_lifecycle.load_lifecycle(path)
+
+
+@pytest.mark.parametrize("old_valid", [False, True])
+def test_invalid_chain_tip_blocks_and_never_inherits_proof(old_valid: bool) -> None:
+    ledger = _ready_evidence(_ledger())
+    old = ledger["evidence"][-1]
+    if not old_valid:
+        old["url"] = "https://github.com/org/repo/pull/77"
+        old["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(old))
+    ledger, middle = _replacement(ledger, old, url=REVIEW_URL)
+    ledger, tip = _replacement(ledger, middle, commit="c" * 40)
+    result = task_lifecycle.evaluate(ledger, _observation(_body()))
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert "AC-REVIEW" not in result["valid_evidence"]
+    assert result["retired_evidence_errors"] == {}
+    assert result["superseded_evidence_ids"] == [old["id"], middle["id"]]
+    assert "AC-REVIEW: review evidence is not bound to current PR head" in result["hard_blockers"]
+    url_error = "AC-REVIEW: review receipt URL is absent from authoritative PR comments"
+    assert (url_error in result["hard_blockers"]) is (not old_valid)
+    ledger, _ = _replacement(ledger, tip, commit=HEAD)
+    repaired = task_lifecycle.evaluate(ledger, _observation(_body()))
+    assert repaired["hard_blockers"] == []
+    assert set(repaired["retired_evidence_errors"]) == ({tip["id"]} if old_valid else {tip["id"], old["id"]})
+
+
+def test_moved_head_requires_independent_test_ci_and_review_replacements() -> None:
+    ledger = _ready_evidence(_ledger())
+    ledger = _add(ledger, "AC-IMPL", "ci")
+    observation = _observation(_body())
+    observation["github"]["pr"]["head_sha"] = "c" * 40
+    assert len(task_lifecycle.evaluate(ledger, observation)["hard_blockers"]) >= 3
+    old_rows = deepcopy(ledger["evidence"])
+    for old in old_rows:
+        ledger, _ = _replacement(ledger, old, commit="c" * 40)
+    result = task_lifecycle.evaluate(ledger, observation)
+    assert result["state"] == "CI_PASSED"
+    assert result["hard_blockers"] == []
+    assert set(result["retired_evidence_errors"]) == {row["id"] for row in old_rows}
+    assert ledger["evidence"][:len(old_rows)] == old_rows
+
+
+@pytest.mark.parametrize("pr_state", ["OPEN", "MERGED"])
+def test_review_timing_uses_only_effective_valid_rows(pr_state: str) -> None:
+    ledger = _ready_evidence(_ledger())
+    ledger = _add(ledger, "AC-MERGE", "github")
+    old = ledger["evidence"][1]
+    old["recorded_at"] = "2026-07-16T12:00:00Z"
+    old["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(old))
+    ledger, _ = _replacement(ledger, old, recorded_at=NOW)
+    observation = _observation(_body(), pr_state=pr_state)
+    result = task_lifecycle.evaluate(ledger, observation)
+    assert "auto-merge was armed before the verified review gate" not in result["hard_blockers"]
+    tip = ledger["evidence"][-1]
+    ledger, _ = _replacement(ledger, tip, recorded_at="2026-07-16T13:00:00Z")
+    late = task_lifecycle.evaluate(ledger, observation)
+    assert "auto-merge was armed before the verified review gate" in late["hard_blockers"]
+
+
+@pytest.mark.parametrize("pr_state", ["OPEN", "MERGED"])
+def test_invalid_review_row_does_not_supply_timing_for_valid_sibling(pr_state: str) -> None:
+    ledger = _ready_evidence(_ledger())
+    ledger = _add(ledger, "AC-MERGE", "github")
+    ledger, _ = task_lifecycle.add_evidence(
+        ledger, ac_id="AC-REVIEW", evidence_type="review", summary="invalid later review",
+        url="https://github.com/org/repo/pull/77", commit=HEAD,
+        details={"author_family": "codex", "reviewer_family": "claude", "verdict": "pass"},
+        recorded_at="2026-07-16T13:00:00Z",
+    )
+    result = task_lifecycle.evaluate(ledger, _observation(_body(), pr_state=pr_state))
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert "auto-merge was armed before the verified review gate" not in result["hard_blockers"]
+
+
+def test_valid_certification_superseded_by_bad_head_does_not_certify() -> None:
+    ledger = _ready_evidence(_ledger("certify"))
+    for ac_id, kind in (("AC-MERGE", "github"), ("AC-DEPLOY", "deployment"), ("AC-CERT", "certification")):
+        ledger = _add(ledger, ac_id, kind)
+    old = ledger["evidence"][-1]
+    ledger, bad = _replacement(ledger, old, commit="c" * 40)
+    observation = _observation(_body(include_deploy=True, include_certify=True), pr_state="MERGED", deployed=True)
+    result = task_lifecycle.evaluate(ledger, observation)
+    assert result["last_success_state"] == "DEPLOYED"
+    assert result["goal_reached"] is False
+    assert "AC-CERT" not in result["valid_evidence"]
+    assert result["retired_evidence_errors"] == {}
+    ledger, _ = _replacement(ledger, bad, commit=HEAD)
+    assert task_lifecycle.evaluate(ledger, observation)["last_success_state"] == "CERTIFIED"
+
+
+def test_remaining_scope_cannot_reference_superseded_evidence() -> None:
+    ledger = _add(_ledger(), "AC-IMPL", "follow_up")
+    old = ledger["evidence"][-1]
+    ledger, tip = _replacement(ledger, old)
+    with pytest.raises(task_lifecycle.LifecycleError, match="superseded record"):
+        task_lifecycle.set_remaining_scope(
+            ledger, status="transferred", summary="transfer", follow_up_issue=43,
+            follow_up_stream_epic=10, evidence_ids=[old["id"]], now=NOW,
+        )
+    transferred = task_lifecycle.set_remaining_scope(
+        ledger, status="transferred", summary="transfer", follow_up_issue=43,
+        follow_up_stream_epic=10, evidence_ids=[tip["id"]], now=NOW,
+    )
+    with pytest.raises(task_lifecycle.LifecycleError, match="superseded record"):
+        _replacement(transferred, tip)
+
+
+def test_behavior_proof_correction_does_not_inherit_receipt(tmp_path: Path) -> None:
+    ledger = _ready_evidence(_ledger(behavior_proof=True))
+    reference = _behavior_receipt_reference(tmp_path)
+    ledger = _add(ledger, "AC-IMPL", "behavior_proof", details=reference)
+    old = ledger["evidence"][-1]
+    path = Path(reference["behavior_proof_receipt"]["receipt_path"])
+    path.write_bytes(path.read_bytes() + b"\n")
+    bad_ref = deepcopy(reference)
+    bad_ref["behavior_proof_receipt"]["receipt_path"] = str(tmp_path / "missing.json")
+    ledger, bad = _replacement(ledger, old, details={**bad_ref, "supersedes_evidence_id": old["id"]})
+    result = task_lifecycle.evaluate(ledger, _observation(_body()))
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
+    assert result["retired_evidence_errors"] == {}
+    assert any("digest" in error for error in result["hard_blockers"])
+    assert any("unreadable" in error for error in result["hard_blockers"])
+    good_ref = _behavior_receipt_reference(tmp_path)
+    ledger, _ = _replacement(ledger, bad, details={**good_ref, "supersedes_evidence_id": bad["id"]})
+    assert task_lifecycle.evaluate(ledger, _observation(_body()))["hard_blockers"] == []
+
+
+@pytest.mark.parametrize("gate", ["requested_changes", "ci", "draft", "missing_review_ac", "cleanup"])
+def test_valid_correction_preserves_delivery_gates(gate: str) -> None:
+    ledger = _ready_evidence(_ledger())
+    ledger, _ = _replacement(ledger, ledger["evidence"][-1])
+    observation = _observation(_body())
+    if gate == "requested_changes":
+        observation["github"]["pr"]["requested_changes"] = True
+        expected = "unresolved requested changes"
+    elif gate == "ci":
+        observation["github"]["pr"]["checks"][0]["conclusion"] = "FAILURE"
+        expected = "required CI failed"
+    elif gate == "draft":
+        observation["github"]["pr"]["is_draft"] = True
+        expected = "PR remains a draft"
+    elif gate == "missing_review_ac":
+        ledger["ac_snapshot"]["criteria"][1]["required_evidence"].append("command")
+        ledger["ac_snapshot"]["content_hash"] = task_lifecycle.ac_content_hash(ledger["ac_snapshot"]["criteria"])
+        expected = "AC-REVIEW: missing typed evidence command"
+    else:
+        ledger = _add(ledger, "AC-MERGE", "github")
+        observation = _observation(_body(checked=True), pr_state="MERGED", issue_state="CLOSED")
+        expected = "merged task branch or dispatch worktree still requires cleanup"
+    result = task_lifecycle.evaluate(ledger, observation)
+    assert any(expected in item for item in [*result["hard_blockers"], *result["waiting"]])
+    assert result["disposition"] != "complete"
+
+
+@pytest.mark.parametrize("details,error", [
+    ({"author_family": "codex", "reviewer_family": "codex", "verdict": "pass"}, "outside"),
+    ({"author_family": "codex", "reviewer_family": "claude", "verdict": "fail"}, "must be pass"),
+    ({"author_family": "claude", "reviewer_family": "codex", "verdict": "pass"}, "author family"),
+])
+def test_review_correction_preserves_family_and_verdict_validation(details: dict, error: str) -> None:
+    ledger = _ready_evidence(_ledger())
+    old = ledger["evidence"][-1]
+    with pytest.raises(task_lifecycle.LifecycleError, match=error):
+        _replacement(ledger, old, details={**details, "supersedes_evidence_id": old["id"]})
+
+
 def _behavior_receipt_reference(tmp_path: Path, *, receipt_updates: dict | None = None) -> dict:
     input_sha256 = "c" * 64
     receipt = {

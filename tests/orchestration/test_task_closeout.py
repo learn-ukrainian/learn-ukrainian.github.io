@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 import time
 from copy import deepcopy
 from pathlib import Path
@@ -182,6 +184,68 @@ class FakeAdapter:
         self.calls.append("close-issue")
         self.observation["github"]["issue"]["state"] = "CLOSED"
         self.observation["github"]["issue"]["closed_at"] = NOW
+
+
+@pytest.mark.parametrize("replacement_url", [REVIEW_URL, "https://github.com/org/repo/pull/77#issuecomment-999"])
+def test_cli_append_correction_and_reconcile_mistyped_url(tmp_path: Path, replacement_url: str) -> None:
+    path, ledger = _ledger(tmp_path, review=False)
+    ledger, old = task_lifecycle.add_evidence(
+        ledger, ac_id="AC-REVIEW", evidence_type="review", summary="mistyped review URL",
+        url="https://github.com/org/repo/pull/77", commit=HEAD,
+        details={"author_family": "codex", "reviewer_family": "claude", "verdict": "pass"}, recorded_at=NOW,
+    )
+    task_lifecycle.write_lifecycle(path, ledger)
+    original = deepcopy(ledger)
+    observation_path = tmp_path / "observation.json"
+    observation_path.write_text(json.dumps(_observation()), encoding="utf-8")
+    command = [sys.executable, "-m", "scripts.orchestration.task_closeout"]
+    reconcile_args = ["reconcile", "--state-file", str(path), "--observation-file", str(observation_path), "--now", NOW]
+    before = subprocess.run([*command, *reconcile_args], capture_output=True, text=True, timeout=60, check=True)
+    assert json.loads(before.stdout)["receipt"]["state"] == "BLOCKED_WITH_RECEIPT"
+    before_ledger = task_lifecycle.load_lifecycle(path)
+    append_args = [
+        "add-evidence", "--state-file", str(path), "--ac-id", "AC-REVIEW", "--type", "review",
+        "--summary", "corrected canonical review URL", "--url", replacement_url, "--commit", HEAD,
+        "--details", json.dumps({**old["details"], "supersedes_evidence_id": old["id"]}), "--now", NOW,
+    ]
+    appended = subprocess.run([*command, *append_args], capture_output=True, text=True, timeout=60, check=True)
+    replacement = json.loads(appended.stdout)["evidence"]
+    assert replacement["details"]["supersedes_evidence_id"] == old["id"]
+    after = subprocess.run([*command, *reconcile_args], capture_output=True, text=True, timeout=60, check=True)
+    receipt = json.loads(after.stdout)["receipt"]
+    valid = replacement_url == REVIEW_URL
+    assert receipt["state"] == ("CI_PASSED" if valid else "BLOCKED_WITH_RECEIPT")
+    assert bool(receipt["hard_blockers"]) is (not valid)
+    persisted = task_lifecycle.load_lifecycle(path)
+    assert persisted["evidence"][:-1] == original["evidence"]
+    assert persisted["observation_receipts"][0] == before_ledger["observation_receipts"][0]
+    assert persisted["ac_snapshot"] == original["ac_snapshot"]
+    assert persisted["mutation_receipts"] == []
+    print(json.dumps({"before": json.loads(before.stdout), "append": json.loads(appended.stdout), "after": json.loads(after.stdout)}))
+
+
+def test_late_review_correction_refuses_auto_merge_mutation(tmp_path: Path) -> None:
+    path, ledger = _ledger(tmp_path)
+    old = ledger["evidence"][-1]
+    ledger, _ = task_lifecycle.add_evidence(
+        ledger, ac_id="AC-REVIEW", evidence_type="review", summary="late correction",
+        url=REVIEW_URL, commit=HEAD,
+        details={**old["details"], "supersedes_evidence_id": old["id"]},
+        recorded_at="2026-07-16T11:00:00Z",
+    )
+    task_lifecycle.write_lifecycle(path, ledger)
+    observation = _observation()
+    observation["github"]["pr"]["auto_merge_enabled_at"] = NOW
+    adapter = FakeAdapter(observation)
+    with pytest.raises(task_lifecycle.LifecycleError, match="armed before the verified review gate"):
+        task_closeout.perform_mutation(
+            path, adapter, action="arm-auto-merge", authorized_by="codex/9764",
+            branch="codex/42-closeout", worktree="/repo/.worktrees/dispatch/codex/42-closeout", now=NOW,
+        )
+    assert adapter.calls == []
+    persisted = task_lifecycle.load_lifecycle(path)
+    assert persisted["mutation_receipts"][-1]["status"] == "failed"
+    assert persisted["current_state"] == "BLOCKED_WITH_RECEIPT"
 
 
 def test_sync_acs_checks_only_evidenced_criteria_and_replays(tmp_path: Path) -> None:
