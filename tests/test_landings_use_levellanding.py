@@ -1,3 +1,4 @@
+import json
 import re
 from pathlib import Path
 
@@ -13,6 +14,17 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DOCS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 CONTENT_CONFIG_PATH = PROJECT_ROOT / "site" / "src" / "content.config.ts"
 ROUTER_PATH = PROJECT_ROOT / "site" / "src" / "pages" / "[...slug].astro"
+STATS_PATH = PROJECT_ROOT / "site" / "src" / "data" / "curriculum-stats.json"
+
+# #9754: the c1 landing cannot be regenerated yet because curriculum.yaml leaves
+# `review-c1-5` outside every c1 group (generate_landing_pages raises "modules
+# left ungrouped"). Strict xfail: it turns into a failure the moment the manifest
+# group and landing are fixed, forcing this marker's removal.
+C1_UNGROUPED_BLOCKER = pytest.mark.xfail(
+    strict=True,
+    raises=(AssertionError, ValueError),
+    reason="#9754: c1 manifest groups omit review-c1-5, so the c1 landing cannot be regenerated",
+)
 
 REQUIRED_PROPS = (
     "level",
@@ -127,3 +139,40 @@ def test_b2_landing_matches_generated_curriculum_state() -> None:
     actual = (DOCS_ROOT / "b2" / "index.mdx").read_text(encoding="utf-8")
 
     assert actual == expected, "Run `.venv/bin/python scripts/generate_landing_pages.py --track b2`."
+
+
+@pytest.mark.parametrize("track", ["bio", "folk"])
+def test_count_landing_matches_generated_curriculum_state(track: str) -> None:
+    curriculum = yaml.safe_load((PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text("utf-8"))
+    expected = generate_landing_pages.generate_landing_page(track, curriculum)
+    actual = (DOCS_ROOT / track / "index.mdx").read_text(encoding="utf-8")
+
+    assert actual == expected, f"Run `.venv/bin/python scripts/generate_landing_pages.py --track {track}`."
+
+
+@C1_UNGROUPED_BLOCKER
+def test_c1_landing_matches_generated_curriculum_state() -> None:
+    curriculum = yaml.safe_load((PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text("utf-8"))
+    expected = generate_landing_pages.generate_landing_page("c1", curriculum)
+    actual = (DOCS_ROOT / "c1" / "index.mdx").read_text(encoding="utf-8")
+
+    assert actual == expected, "Run `.venv/bin/python scripts/generate_landing_pages.py --track c1`."
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        pytest.param(path, id=path.parent.name, marks=C1_UNGROUPED_BLOCKER if path.parent.name == "c1" else ())
+        for path in _track_landings()
+    ],
+)
+def test_track_landing_module_count_matches_curriculum_stats(path: Path) -> None:
+    stats = json.loads(STATS_PATH.read_text(encoding="utf-8"))
+    track = path.parent.name
+    text = path.read_text(encoding="utf-8")
+
+    module_count = re.search(r"\bmoduleCount=\{(\d+)\}", text)
+    assert module_count is not None
+    assert int(module_count.group(1)) == stats[track]["modules"], (
+        f"{track} landing moduleCount differs from curriculum-stats.json"
+    )
