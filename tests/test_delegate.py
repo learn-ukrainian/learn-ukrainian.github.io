@@ -7036,9 +7036,14 @@ def test_run_worker_periodic_stdout_avoids_silence_timeout(
     assert not (tmp_tasks_dir / "dispatch_events.jsonl").exists()
 
 
-def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, capsys):
+def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     import argparse
 
+    # Review admission reads the target's origin/main (#9739); a fixture primary
+    # keeps that hermetic on a CI checkout without one.
+    main, _ = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
     args = argparse.Namespace(
         agent="codex",
         task_id="danger-no-worktree",
@@ -10012,6 +10017,16 @@ def _init_sibling_pair(tmp_path: Path) -> tuple[Path, Path, Path]:
     (tmp_path / "sibling").mkdir()
     primary, _ = _init_repo_with_worktree(tmp_path / "primary")
     sibling, sibling_wt = _init_repo_with_worktree(tmp_path / "sibling")
+    # The sibling worktree carries its own commit, absent from the primary. Without
+    # it both fixture histories can hash identically (same content, same second),
+    # which hid whether dispatch reads the sibling's commits from the right repository.
+    subprocess.run(
+        ["git", "-C", str(sibling_wt), "commit", "-q", "--allow-empty", "--no-gpg-sign", "-m", "sibling work"],
+        check=True,
+        capture_output=True,
+        env=delegate._sanitized_git_env(),
+        timeout=30,
+    )
     return primary, sibling, sibling_wt
 
 
@@ -11337,7 +11352,12 @@ def test_dispatch_rejects_write_capable_when_primary_has_untracked_non_receipt_f
     assert "job-42.json" not in err
 
 
-def test_dispatch_rejects_workspace_write_without_worktree(tmp_tasks_dir, capsys):
+def test_dispatch_rejects_workspace_write_without_worktree(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    # Review admission reads the target's origin/main (#9739); a fixture primary
+    # keeps that hermetic on a CI checkout without one.
+    main, _ = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
     args = _write_args(task_id="ww-no-wt", mode="workspace-write", cwd=None, worktree=None)
 
     rc = delegate.cmd_dispatch(args)

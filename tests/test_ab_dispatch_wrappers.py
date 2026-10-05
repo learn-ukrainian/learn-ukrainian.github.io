@@ -50,9 +50,7 @@ def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
-    rc = wrappers.handle_dispatch_fix(
-        argparse.Namespace(task_id="1741", brief_file=str(brief), dry_run=False)
-    )
+    rc = wrappers.handle_dispatch_fix(argparse.Namespace(task_id="1741", brief_file=str(brief), dry_run=False))
 
     assert rc == 0
     command = calls[0][0]
@@ -86,9 +84,7 @@ def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypa
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
-    rc = wrappers.handle_dispatch_fix(
-        argparse.Namespace(task_id="1701", brief_file=None, dry_run=True)
-    )
+    rc = wrappers.handle_dispatch_fix(argparse.Namespace(task_id="1701", brief_file=None, dry_run=True))
 
     assert rc == 0
     state = json.loads((state_dir / "1701.json").read_text(encoding="utf-8"))
@@ -128,9 +124,7 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
-    rc = wrappers.handle_review_deep(
-        argparse.Namespace(target="1740", effort="xhigh", dry_run=True)
-    )
+    rc = wrappers.handle_review_deep(argparse.Namespace(target="1740", effort="xhigh", dry_run=True))
 
     assert rc == 0
     state_path = next(state_dir.glob("review-1740-*.json"))
@@ -172,9 +166,7 @@ def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
-    rc = wrappers.handle_review_deep(
-        argparse.Namespace(target=str(target), effort="high", dry_run=False)
-    )
+    rc = wrappers.handle_review_deep(argparse.Namespace(target=str(target), effort="high", dry_run=False))
 
     assert rc == 0
     command = calls[0][0]
@@ -346,9 +338,7 @@ def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path)
         raise AssertionError(f"unexpected cmd: {cmd}")
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-    state = wrappers.run_ask_review_dispatch(
-        "claude", "review this", task_id="task-123", hard_timeout=600
-    )
+    state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123", hard_timeout=600)
     assert state["ok"] is True
     assert state["status"] == "done"
     assert state["response"] == "Reviewed the diff.\nVERDICT: APPROVED\n"
@@ -441,9 +431,7 @@ def test_run_ask_review_dispatch_judges_by_verdict_not_dispatch_exit(monkeypatch
     verdict must still fail loudly (covered by the sibling test above).
     """
     result_file = tmp_path / "result.md"
-    result_file.write_text(
-        "Adversarial review complete.\n\n**Verdict**: **APPROVE**\n", encoding="utf-8"
-    )
+    result_file.write_text("Adversarial review complete.\n\n**Verdict**: **APPROVE**\n", encoding="utf-8")
 
     def fake_run(cmd, **kwargs):
         if "dispatch" in cmd:
@@ -482,12 +470,8 @@ def _run_review_with_wait_state(monkeypatch, tmp_path, *, status, wait_rc, respo
     return wrappers.run_ask_review_dispatch("deepseek", "review this", task_id="review-8786")
 
 
-@pytest.mark.parametrize(
-    "status", ["timeout", "failed", "crashed", "rate_limited", "cancelled"]
-)
-def test_run_ask_review_dispatch_never_promotes_failed_terminal_status(
-    monkeypatch, tmp_path, status
-):
+@pytest.mark.parametrize("status", ["timeout", "failed", "crashed", "rate_limited", "cancelled"])
+def test_run_ask_review_dispatch_never_promotes_failed_terminal_status(monkeypatch, tmp_path, status):
     """#8786 review: a verdict beside a non-completed run is not a success.
 
     ``delegate wait`` reported ``timeout`` (or another terminal failure) while
