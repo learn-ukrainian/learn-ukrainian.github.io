@@ -184,11 +184,13 @@ launcher_adapter_prelease() {
   resolve_codex_pending_rollover "$LC_CODEX_CANONICAL_ROOT" "$SESSION_HANDOFF_AGENT"
 }
 launcher_adapter_canary() {
-  local py
+  local py stream
   py="$(launcher_project_python)" || exit 3
   local cmd=("$py" -m scripts.session_canary.codex_lane)
   if [ "$LC_DRY_RUN" = 1 ]; then echo 'codex adapter: would mint and bootstrap provider canary'; return 0; fi
-  "${cmd[@]}" mint --epic "$LC_EPIC" && "${cmd[@]}" bootstrap --epic "$LC_EPIC"
+  stream="$(launcher_selector_stream "$LC_EPIC")" || return 1
+  "${cmd[@]}" mint --epic "$LC_EPIC" --stream "$stream" \
+    && "${cmd[@]}" bootstrap --epic "$LC_EPIC" --stream "$stream"
 }
 launcher_adapter_exec() {
   if [ "$LC_HARNESS" = hermes ]; then launcher_hermes_exec; return; fi

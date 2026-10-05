@@ -125,6 +125,113 @@ def _run_runtime_governor(
     )
 
 
+def _runtime_driver_launcher(tmp_path: Path) -> tuple[Path, Path]:
+    """Keep selector resolution and the Codex adapter real, with local lifecycle stubs."""
+    launcher, executable_dir = _runtime_launcher(tmp_path)
+    root = launcher.parent
+    shutil.copy2(REPO / "scripts/config/issue_streams.yaml", root / "scripts/config/issue_streams.yaml")
+    for relative, body in {
+        "scripts/lib/thread_rollover_link.sh": """
+clear_codex_launcher_rollover_env() { :; }
+bootstrap_codex_checkout() { :; }
+resolve_codex_pending_rollover() { :; }
+""",
+        "scripts/lib/deploy_extensions.sh": "deploy_agent_extensions() { :; }\n",
+        "scripts/lib/fleet_comms_cold_start.sh": "fleet_comms_cold_clause() { :; }\n",
+    }.items():
+        (root / relative).write_text(body, encoding="utf-8")
+    core = root / "scripts/lib/launcher_core.sh"
+    with core.open("a", encoding="utf-8") as output:
+        output.write("""
+launcher_import_rollover_bundle() { :; }
+launcher_claim_driver_lease() {
+  launcher_prepare_driver_identity
+  printf 'LEASE_STUB %s\\n' "$(launcher_selector_stream "$LC_EPIC")"
+}
+""")
+    probe = root / ".venv/bin/python"
+    body = probe.read_text(encoding="utf-8")
+    body = body.replace(
+        f'exec {sys.executable!r} "$@"',
+        f"""if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.handoff_slot_registry" ]]; then
+  exit 0
+fi
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_canary.codex_lane" ]]; then
+  printf 'CANARY_EXEC '; printf '%q ' "$@"; printf '\\n'
+  # A missing/wrong stream must refuse execution, just as real mint does.
+  case "${{5:-}}" in
+    curriculum-upgrade) expected=epic:7994 ;;
+    devops) expected=epic:5703 ;;
+    *) exit 91 ;;
+  esac
+  [[ "$#" == 7 && "$4" == --epic && "$6" == --stream && "$7" == "$expected" ]] || exit 92
+  exit 0
+fi
+# Refuse any unplanned module so this fixture cannot contact live services.
+[[ "${{1:-}}" != -m ]] || exit 93
+exec {sys.executable!r} "$@"
+""",
+    )
+    probe.write_text(body, encoding="utf-8")
+    return launcher, executable_dir
+
+
+@pytest.mark.parametrize(
+    ("selector", "stream"),
+    [("curriculum-upgrade", "epic:7994"), ("devops", "epic:5703")],
+)
+def test_driver_canaries_use_canonical_stream_then_exec_provider(tmp_path: Path, selector: str, stream: str) -> None:
+    launcher, executable_dir = _runtime_driver_launcher(tmp_path)
+    result = run_launcher(
+        launcher.name,
+        "--epic",
+        selector,
+        root=launcher.parent,
+        dry_run=False,
+        env={
+            **_clean_environ(),
+            "CODEX_CANONICAL_REPO_ROOT": str(launcher.parent),
+            "PATH": f"{executable_dir}:{os.environ.get('PATH', '')}",
+        },
+    )
+
+    assert result.returncode == 0, result.stderr
+    canaries = [
+        shlex.split(line.removeprefix("CANARY_EXEC "))
+        for line in result.stdout.splitlines()
+        if line.startswith("CANARY_EXEC ")
+    ]
+    assert canaries == [
+        ["-m", "scripts.session_canary.codex_lane", operation, "--epic", selector, "--stream", stream]
+        for operation in ("mint", "bootstrap")
+    ]
+    assert f"LEASE_STUB {stream}" in result.stdout
+    assert result.stdout.index("LEASE_STUB") < result.stdout.index("CANARY_EXEC")
+    assert result.stdout.rindex("CANARY_EXEC") < result.stdout.index("CODEX_EXEC")
+
+
+def test_runtime_driver_refuses_unknown_selector_before_canary_or_provider(tmp_path: Path) -> None:
+    launcher, executable_dir = _runtime_driver_launcher(tmp_path)
+    result = run_launcher(
+        launcher.name,
+        "--epic",
+        "unknown-selector",
+        root=launcher.parent,
+        dry_run=False,
+        env={
+            **_clean_environ(),
+            "CODEX_CANONICAL_REPO_ROOT": str(launcher.parent),
+            "PATH": f"{executable_dir}:{os.environ.get('PATH', '')}",
+        },
+    )
+
+    assert result.returncode == 2, result.stderr
+    assert "unknown lane selector 'unknown-selector'" in result.stderr
+    assert "LEASE_STUB" not in result.stdout
+    assert "CANARY_EXEC" not in result.stdout
+    assert "CODEX_EXEC" not in result.stdout
+
+
 def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> None:
     result = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6.1-sol")
     assert result.returncode == 0, result.stderr
