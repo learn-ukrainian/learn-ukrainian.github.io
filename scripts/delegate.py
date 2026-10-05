@@ -8801,7 +8801,11 @@ def _run_worker(
 
             agy_telemetry = AgyTelemetry(parent_task_id=task_id) if agent == "agy" else None
             tool_config: dict[str, Any] = {}
-            if agent in {"agy", "gemini"} and mode == "read-only":
+            if (
+                agent in {"agy", "gemini"}
+                and mode == "read-only"
+                and (state.get("review") or require_review_verdict or review_id is not None)
+            ):
                 tool_config["review_profile"] = state.get("review_profile")
                 if state.get("review_profile") == "ukrainian" and mcp_config_path is None:
                     from scripts.agent_runtime.review_mcp import prepare_agy_permission_home
@@ -11869,6 +11873,8 @@ def _dispatch(
             "review_risk": getattr(args, "review_risk", None),
             "review_profile": getattr(args, "review_profile", None),
             "task_id": task_id,
+            "review": bool(getattr(args, "review", False))
+            or str(getattr(args, "type", "") or "").strip().casefold() == "review",
             "run_nonce": run_nonce,
             # Authoritative repository identity for the Work projection's scoped
             # delegate join (#7083); None stays unclassified and fails closed.

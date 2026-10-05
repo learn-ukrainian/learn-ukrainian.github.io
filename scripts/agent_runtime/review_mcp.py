@@ -547,9 +547,9 @@ def agy_review_app_data_dir(agy_home: Path | str) -> Path:
     return Path(agy_home) / ".gemini" / "antigravity-cli"
 
 
-def agy_review_settings(review_access: str = "isolated") -> dict[str, Any]:
-    """Permit the unchanged Sources contract; deny model-issued commands."""
-    tools = review_tools(review_access)
+def agy_review_settings(review_access: str | None = "isolated") -> dict[str, Any]:
+    """Permit the receipt contract, or all read-only Sources tools without a receipt."""
+    tools = sources_tool_sets()[0] if review_access is None else review_tools(review_access)
     return {
         "permissions": {
             "allow": [f"mcp(sources/{name})" for name in sorted(tools)],
@@ -626,7 +626,7 @@ def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: byte
         os.mkdir(parts[1], 0o700, dir_fd=gemini_fd)
         app_data_fd = _open_owned_dir(parts[1], dir_fd=gemini_fd)
         _create_file(config_parts[2], config_fd, config_bytes)
-        access = json.loads(config_bytes)["mcpServers"]["sources"].get("env", {}).get("LU_REVIEW_ACCESS", "isolated")
+        access = json.loads(config_bytes)["mcpServers"]["sources"].get("env", {}).get("LU_REVIEW_ACCESS")
         _create_file("settings.json", app_data_fd, json.dumps(agy_review_settings(access)).encode())
         # A symlink, not a copy, by design: a token refresh (which may rotate the refresh
         # token) must land in the real token file. A refreshed copy would leave the real

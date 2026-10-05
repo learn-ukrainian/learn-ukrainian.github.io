@@ -39,6 +39,7 @@ def test_exact_review_grants(tmp_path, scoped, route):
     config = {"agy_home_override": str(scoped), "mcp_server_names": ["sources"]}
     if route != "ad-hoc":
         config["review_access"] = route
+        config["review_profile"] = "ukrainian"
     else:
         config["strict_mcp_config"] = True
     plan = build(tmp_path, config)
@@ -58,6 +59,67 @@ def test_exact_review_grants(tmp_path, scoped, route):
     assert not (set(tools) & set(sources_tool_sets()[1]))
     # A repeated gate/launch builds the same settings, without a second grant.
     assert build(tmp_path, config).env_overrides == plan.env_overrides
+
+
+def test_permission_only_provisioned_home_passes_adapter_for_every_sources_reader(tmp_path, monkeypatch):
+    from scripts.agent_runtime.review_mcp import prepare_agy_permission_home
+
+    token = tmp_path / "fixture-token"
+    token.write_text("fixture")
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp._real_agy_token", lambda: token)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
+    home = prepare_agy_permission_home(tmp_path)
+    settings = home / ".gemini" / "antigravity-cli" / "settings.json"
+    before = settings.read_bytes()
+    readers, _ = sources_tool_sets()
+    plan = build(
+        tmp_path,
+        {
+            "review_profile": "ukrainian",
+            "agy_home_override": str(home),
+            "agy_required_permissions": [f"mcp(sources/{name})" for name in readers],
+        },
+    )
+    assert settings.read_bytes() == before
+    assert "--dangerously-skip-permissions" not in plan.cmd
+
+
+@pytest.mark.parametrize(
+    "required",
+    [
+        *[f"mcp(sources/{name})" for name in sources_tool_sets()[1]],
+        "mcp(other/verify_words)",
+        "mcp(sources/nonexistent)",
+        "command(cat)",
+        "write_file(*)",
+    ],
+)
+def test_permission_only_route_refuses_writers_and_non_sources(tmp_path, scoped, required):
+    with pytest.raises(agy.AgyReviewPermissionError, match="agy_review_permission_outside_allow_set"):
+        build(
+            tmp_path,
+            {
+                "review_profile": "ukrainian",
+                "agy_home_override": str(scoped),
+                "agy_required_permissions": [required],
+            },
+        )
+    assert not (scoped / ".gemini" / "antigravity-cli" / "settings.json").exists()
+
+
+@pytest.mark.parametrize("marker", ["review_id", "attempt_id", "review_attempt_boundary"])
+def test_receipt_marker_prevents_permission_only_widening(tmp_path, scoped, marker):
+    with pytest.raises(agy.AgyReviewPermissionError, match="agy_review_permission_outside_allow_set"):
+        build(
+            tmp_path,
+            {
+                "review_profile": "ukrainian",
+                "agy_home_override": str(scoped),
+                marker: "receipt",
+                "agy_required_permissions": ["mcp(sources/verify_word)"],
+            },
+        )
 
 
 @pytest.mark.parametrize(

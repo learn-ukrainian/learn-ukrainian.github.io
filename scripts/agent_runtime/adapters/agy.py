@@ -1370,7 +1370,11 @@ def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: s
         )
     if session_id:
         raise AgyReviewPermissionError("agy_review_permissions_require_fresh_session")
-    expected = agy_review_settings(access)
+    permission_only = tc.get("review_profile") == "ukrainian" and not any(
+        tc.get(key)
+        for key in ("review_access", "review_id", "attempt_id", "review_attempt_boundary", "review_isolation")
+    )
+    expected = agy_review_settings(None if permission_only else access)
     allow = set(expected["permissions"]["allow"])
     required = tc.get("agy_required_permissions", [])
     if (
