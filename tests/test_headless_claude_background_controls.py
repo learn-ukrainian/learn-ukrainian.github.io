@@ -21,12 +21,18 @@ Two layers:
    spawn or a reviewed entry in ``headless_claude_spawn_exceptions.yaml``. The
    rule never interprets data flow, loops, branches or closures. It also
    rejects aliased, from- or dynamic imports of the spawn modules; shadowing or
-   rebinding of the spawn modules and wrappers; non-canonical wrapper
-   bindings; ``env=``/``shell=``/``executable=`` or a string argv at a wrapper
-   call; shell-command literals that run ``claude -p``; and a function that
-   holds a Claude program token and a print flag without calling a wrapper or
-   the argv builder (an argv handed to an opaque helper). An exception entry
-   that matches no site fails.
+   rebinding of the spawn modules and wrappers; wrapper bindings that do not
+   resolve to the adapter module (relative imports resolve against the
+   importing file's package); ``env=``/``shell=``/``executable=`` or a string
+   argv at a wrapper call; shell-command literals that run ``claude -p``; and a
+   function that holds a Claude program token and a print flag without calling
+   a wrapper or the argv builder (an argv handed to an opaque helper).
+   Annotations are checked like any code; only an uncalled API naming a type
+   (``subprocess.Popen[str] | None``, ``tuple[subprocess.Popen, int]``) is no
+   site. A ``claude-probe`` exception clears only a frozen probe: a literal
+   ``[program, *words, --version|--help]`` (optionally behind a listed sandbox
+   prefixer), never a computed argv. An exception entry that matches no site
+   fails.
 
 Documented limits (not proven safe by any test here):
 
@@ -42,6 +48,11 @@ Documented limits (not proven safe by any test here):
 - **Dynamic and third-party spawning** (``ctypes``, ``pexpect``, ``sh``,
   ``multiprocessing`` targets, ``exec`` of generated code) is outside the named
   spawn API set.
+- **Introspection and evaluated strings.** Frame or ``gc`` access to a bound
+  probe argv, a string annotation evaluated by ``typing.get_type_hints``, and a
+  builtin generic (``list``, ``tuple``, ...) rebound outside this module are
+  not seen. The listed sandbox prefixers are trusted to keep the probe as
+  their argv's tail (``wrap_argv_with_sandbox`` and ``AttemptBoundary.wrap``).
 - Exceptions with category ``generic-runner`` spawn an argv the rule cannot
   see; each entry names why no Claude print-mode argv reaches it, and the
   callers that route Claude around it are behaviour-tested below.
@@ -149,7 +160,24 @@ _PROGRAM_ARG: dict[str, tuple[int, str | None]] = {
     **{f"os.spawn{suffix}": (1, None) for suffix in ("l", "le", "lp", "lpe", "v", "ve", "vp", "vpe")},
     PLAN: (0, "cmd"),
 }
-_ADAPTER_MODULES = ("agent_runtime.adapters.claude",)
+# The adapter by module name: under the repository root, and under the ``scripts/``
+# import root that entry points put on ``sys.path`` (the same file).
+ADAPTER_MODULE = "scripts.agent_runtime.adapters.claude"
+_ADAPTER_MODULES = frozenset({ADAPTER_MODULE, ADAPTER_MODULE.removeprefix("scripts.")})
+
+# A claude-probe exception clears only a frozen probe: a literal argv
+# ``[program, *subcommand words, flag]`` with a flag below, given to a list-argv
+# spawn without ``shell=``, ``executable=``, extra positionals or ``**`` options.
+FROZEN_PROBE_FLAGS = frozenset({"--version", "--help"})
+_PROBE_SPAWNS = frozenset(f"subprocess.{name}" for name in ("run", "Popen", "call", "check_call", "check_output"))
+# Sandbox launchers that prefix a frozen probe and keep it as their argv's tail,
+# by the module allowed to call them: those returning the argv, and those
+# returning ``(argv, env)`` (bound by the statement just before the spawn).
+_ARGV_PREFIXERS = {"scripts/review/isolation.py": frozenset({"wrap_argv_with_sandbox"})}
+_ARGV_ENV_PREFIXERS = {"scripts/agent_runtime/attempt_boundary.py": frozenset({"self.wrap"})}
+_PREFIXER_NAMES = frozenset().union(*_ARGV_PREFIXERS.values(), *_ARGV_ENV_PREFIXERS.values())
+
+_BUILTIN_GENERICS = frozenset({"list", "tuple", "dict", "set", "frozenset", "type"})
 
 CATEGORIES = frozenset({"non-claude", "claude-probe", "runtime", "generic-runner", "argv-builder"})
 
@@ -241,6 +269,10 @@ def program_key(expr: ast.expr | None) -> str:
         if isinstance(head, ast.Constant) and str(head.value).split():
             return str(head.value).split()[0]
         return "<f-string>"
+    if isinstance(expr, ast.IfExp) and program_key(expr.body) == program_key(expr.orelse):
+        return program_key(expr.body)
+    if isinstance(expr, ast.Call) and expr.args and _dotted(expr.func) in _PREFIXER_NAMES:
+        return program_key(expr.args[0])
     return ast.unparse(expr)
 
 
@@ -270,6 +302,8 @@ class Site:
     line: int
     # A literal argv's elements (``None`` for a non-constant one); ``None`` when the argv is not a literal.
     literal: tuple[str | None, ...] | None = None
+    # The spawn runs a frozen ``--version``/``--help`` probe (what a claude-probe exception may clear).
+    probe: bool = False
 
     @property
     def key(self) -> tuple[str, str, str]:
@@ -300,11 +334,50 @@ def _bound_name(alias: ast.alias, *, from_import: bool) -> str:
     return alias.asname or (alias.name if from_import else alias.name.split(".")[0])
 
 
-def _is_adapter_import(node: ast.ImportFrom) -> bool:
-    module = node.module or ""
-    if node.level:
-        return module in {"claude", "adapters.claude"}
-    return any(module == name or module.endswith(f".{name}") for name in _ADAPTER_MODULES)
+def resolve_import(node: ast.ImportFrom, path: str) -> str | None:
+    """The absolute module an ``ImportFrom`` in ``path`` names; ``None`` past the top package."""
+    if not node.level:
+        return node.module
+    package = Path(path).with_suffix("").parts[:-1]
+    if node.level - 1 >= len(package):
+        return None
+    base = package[: len(package) - (node.level - 1)]
+    return ".".join((*base, node.module) if node.module else base)
+
+
+def _is_adapter_import(node: ast.ImportFrom, path: str) -> bool:
+    return resolve_import(node, path) in _ADAPTER_MODULES
+
+
+def _is_word(expr: ast.expr) -> bool:
+    """A string constant that is no option: a program or subcommand word."""
+    return isinstance(expr, ast.Constant) and isinstance(expr.value, str) and not expr.value.startswith("-")
+
+
+def frozen_probe(expr: ast.expr | None, path: str) -> bool:
+    """A literal ``[program, *words, flag]``, a choice between two, or one behind an allowed sandbox prefixer."""
+    if isinstance(expr, (ast.List, ast.Tuple)) and len(expr.elts) >= 2:
+        program, *words, flag = expr.elts
+        return (
+            isinstance(flag, ast.Constant)
+            and flag.value in FROZEN_PROBE_FLAGS
+            and not isinstance(program, ast.Starred)
+            and (_is_word(program) or not isinstance(program, ast.Constant))
+            and all(_is_word(word) for word in words)
+        )
+    if isinstance(expr, ast.IfExp):
+        return frozen_probe(expr.body, path) and frozen_probe(expr.orelse, path)
+    return isinstance(expr, ast.Call) and _prefixed(expr, path, _ARGV_PREFIXERS)
+
+
+def _prefixed(call: ast.Call, path: str, prefixers: dict[str, frozenset[str]]) -> bool:
+    return (
+        _dotted(call.func) in prefixers.get(path, ())
+        and bool(call.args)
+        and not any(isinstance(arg, ast.Starred) for arg in call.args)
+        and all(kw.arg is not None for kw in call.keywords)
+        and frozen_probe(call.args[0], path)
+    )
 
 
 def _is_docstring(node: ast.AST) -> bool:
@@ -321,7 +394,8 @@ class _ModuleCheck(ast.NodeVisitor):
         self.scope: list[str] = []
         self.parents: dict[int, ast.AST] = {}
         self.called: set[int] = set()
-        self.annotations: set[int] = set()
+        self.annotations: set[int] = set()  # annotation roots
+        self.bound: set[str] = set()  # every name the module binds anywhere
 
     # -- scopes ------------------------------------------------------------------
 
@@ -336,13 +410,50 @@ class _ModuleCheck(ast.NodeVisitor):
         for parent in ast.walk(tree):
             for child in ast.iter_child_nodes(parent):
                 self.parents[id(child)] = parent
-            # Annotations name types (``subprocess.Popen[str]``); they never spawn.
-            annotation = getattr(parent, "annotation", None) or getattr(parent, "returns", None)
-            if isinstance(annotation, ast.AST):
-                self.annotations.update(id(node) for node in ast.walk(annotation))
+            for annotation in (getattr(parent, "annotation", None), getattr(parent, "returns", None)):
+                if isinstance(annotation, ast.AST):
+                    self.annotations.add(id(annotation))
+            if isinstance(parent, ast.Name) and not isinstance(parent.ctx, ast.Load):
+                self.bound.add(parent.id)
+            elif isinstance(parent, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                self.bound.add(parent.name)
+            elif isinstance(parent, ast.alias):
+                self.bound.add(_bound_name(parent, from_import=True))
+            elif isinstance(parent, ast.arg):
+                self.bound.add(parent.arg)
         self._check_holder(tree, tree.body)
         self.visit(tree)
         return self.found
+
+    def _names_a_type(self, node: ast.Attribute) -> bool:
+        """An uncalled API naming a type in an annotation, where no other code can receive it.
+
+        Annotations are otherwise checked like any code: they run at definition
+        time, or whenever something resolves them. The API may be the
+        annotation, be subscripted (``subprocess.Popen[str]``), be united with
+        ``None``, or sit in the arguments of a builtin generic the module never
+        rebinds (``tuple[subprocess.Popen, int]``).
+        """
+        child: ast.AST = node
+        while id(child) not in self.annotations:
+            parent = self.parents.get(id(child))
+            if isinstance(parent, ast.Subscript):
+                generic = parent.value
+                typed = (parent.value is node) or (
+                    isinstance(generic, ast.Name) and generic.id in _BUILTIN_GENERICS and generic.id not in self.bound
+                )
+            elif isinstance(parent, ast.Tuple):
+                outer = self.parents.get(id(parent))
+                typed = isinstance(outer, ast.Subscript) and outer.slice is parent
+            elif isinstance(parent, ast.BinOp):
+                other = parent.right if parent.left is child else parent.left
+                typed = isinstance(parent.op, ast.BitOr) and isinstance(other, ast.Constant) and other.value is None
+            else:
+                typed = False
+            if not typed:
+                return False
+            child = parent
+        return True
 
     def _scoped(self, node: ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef) -> None:
         self._protect_binding(node, node.name)
@@ -388,7 +499,10 @@ class _ModuleCheck(ast.NodeVisitor):
         if api is not None:
             self.called.add(id(node.func))
             expr = _program_expr(api, node)
-            self.found.sites.append(Site(self.path, self.function, api, program_key(expr), node.lineno, _literal(expr)))
+            probe = self._is_probe_spawn(api, node, expr)
+            self.found.sites.append(
+                Site(self.path, self.function, api, program_key(expr), node.lineno, _literal(expr), probe)
+            )
         if isinstance(node.func, ast.Name) and node.func.id in WRAPPERS:
             self.called.add(id(node.func))
             self.found.wrapper_calls.add((self.function, node.func.id))
@@ -400,6 +514,52 @@ class _ModuleCheck(ast.NodeVisitor):
             self._violation(node, "dynamic import of a spawn module")
         self.generic_visit(node)
 
+    def _is_probe_spawn(self, api: str, call: ast.Call, argv: ast.expr | None) -> bool:
+        """A list-argv spawn of a frozen probe, given directly or bound just before the spawn."""
+        positional = call.args[:1] if call.args else [kw.value for kw in call.keywords if kw.arg == "args"]
+        if (
+            api not in _PROBE_SPAWNS
+            or len(call.args) > 1
+            or len(positional) != 1
+            or any(kw.arg is None or kw.arg in {"shell", "executable"} for kw in call.keywords)
+        ):
+            return False
+        return frozen_probe(argv, self.path) or self._bound_probe(call, argv)
+
+    def _bound_probe(self, call: ast.Call, argv: ast.expr | None) -> bool:
+        """``n = <frozen>`` or ``n, env = <argv-env prefixer>(<frozen>, ...)`` as the statement just
+        before the spawn's, with ``n`` named nowhere else in the function."""
+        if not isinstance(argv, ast.Name):
+            return False
+        node: ast.AST = call
+        while not isinstance(node, ast.stmt):
+            node = self.parents[id(node)]
+        owner = self.parents.get(id(node))
+        block = next(
+            (b for b in (getattr(owner, f, None) for f in ("body", "orelse", "finalbody")) if node in (b or [])), []
+        )
+        index = block.index(node)
+        previous = block[index - 1] if index else None
+        if not (isinstance(previous, ast.Assign) and len(previous.targets) == 1):
+            return False
+        target, value = previous.targets[0], previous.value
+        if isinstance(target, ast.Name):
+            bound = target.id == argv.id and frozen_probe(value, self.path)
+        else:
+            names = target.elts if isinstance(target, ast.Tuple) else []
+            bound = (
+                bool(names)
+                and all(isinstance(name, ast.Name) for name in names)
+                and getattr(names[0], "id", None) == argv.id
+                and isinstance(value, ast.Call)
+                and _prefixed(value, self.path, _ARGV_ENV_PREFIXERS)
+            )
+        scope = node
+        while not isinstance(scope, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Module)):
+            scope = self.parents[id(scope)]
+        uses = sum(isinstance(sub, ast.Name) and sub.id == argv.id for sub in ast.walk(scope))
+        return bound and uses == 2
+
     def _check_wrapper_call(self, node: ast.Call) -> None:
         owned = sorted(kw.arg for kw in node.keywords if kw.arg in {"env", "shell", "executable"})
         if owned:
@@ -409,16 +569,16 @@ class _ModuleCheck(ast.NodeVisitor):
             self._violation(node, "wrapper call passes a shell command string, not an argv list")
 
     def visit_Attribute(self, node: ast.Attribute) -> None:
-        if id(node) in self.annotations:
-            return
         api = spawn_api(node)
-        if api is not None and id(node) not in self.called:
+        if api is not None and id(node) not in self.called and not self._names_a_type(node):
             self.found.sites.append(Site(self.path, self.function, api, "<reference>", node.lineno))
         if api is not None and not _canonically_reached(node):
             self._violation(node, f"{api} reached through {ast.unparse(node)}, not its canonical module binding")
         if node.attr in WRAPPERS | {ARGV_BUILDER}:
             self._violation(node, f"{node.attr} reached through an attribute, not its canonical import")
         target = (_dotted(node) or "").split(".")
+        if isinstance(node.ctx, (ast.Store, ast.Del)) and _dotted(node) in _ARGV_ENV_PREFIXERS.get(self.path, ()):
+            self._violation(node, f"assigns the probe sandbox prefixer {_dotted(node)}")
         if (
             isinstance(node.ctx, (ast.Store, ast.Del))
             and target[0] in SPAWN_MODULES
@@ -428,8 +588,6 @@ class _ModuleCheck(ast.NodeVisitor):
         self.generic_visit(node)
 
     def visit_Name(self, node: ast.Name) -> None:
-        if id(node) in self.annotations:
-            return
         if isinstance(node.ctx, (ast.Store, ast.Del)):
             self._protect_binding(node, node.id)
         elif node.id in SPAWN_MODULES and not self._attribute_owner(node):
@@ -466,6 +624,8 @@ class _ModuleCheck(ast.NodeVisitor):
     # -- bindings: shadowing, rebinding, canonical imports --------------------------------
 
     def _protect_binding(self, node: ast.AST, name: str) -> None:
+        if name in _ARGV_PREFIXERS.get(self.path, ()) and not (isinstance(node, ast.FunctionDef) and not self.scope):
+            self._violation(node, f"rebinds the probe sandbox prefixer {name}")
         if name in SPAWN_MODULES or name in WRAPPERS or name == ARGV_BUILDER:
             if self.path == ADAPTER and isinstance(node, ast.FunctionDef) and name in WRAPPERS | {ARGV_BUILDER}:
                 return
@@ -519,7 +679,7 @@ class _ModuleCheck(ast.NodeVisitor):
             elif not node.level and module == "asyncio" and alias.name == "subprocess":
                 self._violation(node, "from-import of asyncio.subprocess")
             elif alias.name in WRAPPERS | {ARGV_BUILDER} or bound in WRAPPERS | {ARGV_BUILDER}:
-                if alias.asname or not _is_adapter_import(node):
+                if alias.asname or not _is_adapter_import(node, self.path):
                     self._violation(
                         node, f"non-canonical binding of {alias.name} (import it from the adapter, unaliased)"
                     )
@@ -569,16 +729,20 @@ def load_exceptions(text: str) -> list[Exception_]:
 
 def problems(findings: dict[str, ModuleFindings], exceptions: Iterable[Exception_]) -> list[str]:
     """Every site, holder or violation the wrappers and the exceptions do not account for."""
-    allowed = {entry.key for entry in exceptions}
+    allowed = {entry.key: entry.category for entry in exceptions}
     out: list[str] = []
     for _path, found in sorted(findings.items()):
         out.extend(found.violations)
         for site in found.sites:
-            if (site.path, site.function, site.api) in WRAPPER_SPAWNS or site.key in allowed:
+            category = allowed.get(site.key)
+            if (site.path, site.function, site.api) in WRAPPER_SPAWNS or category not in {None, "claude-probe"}:
                 continue
-            out.append(f"{site.path}:{site.line} {site.function} spawns {site.program!r} via {site.api}")
+            if category == "claude-probe" and site.probe:
+                continue
+            frozen = " (a claude-probe exception clears only a frozen --version/--help probe)" if category else ""
+            out.append(f"{site.path}:{site.line} {site.function} spawns {site.program!r} via {site.api}{frozen}")
         for holder in found.holders:
-            if (holder.path, holder.function, HOLDER) not in allowed:
+            if allowed.get((holder.path, holder.function, HOLDER)) in {None, "claude-probe"}:
                 out.append(
                     f"{holder.path}:{holder.line} {holder.function} holds a Claude print-mode argv "
                     "but calls no wrapper (an opaque helper may run it)"
@@ -817,9 +981,10 @@ def exception_errors(
             errors.append(f"non-claude exception runs a Claude program: {label}")
         if entry.category == "claude-probe":
             for site in matched:
-                args = set(site.literal or ())
-                if site.literal is not None and (args & PRINT_FLAGS or not args & {"--version", "--help"}):
+                if not site.probe:
                     errors.append(f"claude-probe is not a fixed --version/--help probe: {label}:{site.line}")
+            if holder:
+                errors.append(f"claude-probe clears spawns, not argv holders: {label}")
         if entry.category == "runtime":
             runtime_path = entry.module.removeprefix("scripts/agent_runtime/")
             is_plan = any(site.api == PLAN for site in matched)
@@ -924,7 +1089,9 @@ def test_controls_have_a_single_source() -> None:
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 assert node.name not in owned, f"{rel}:{node.lineno} redefines {node.name}"
             if isinstance(node, ast.ImportFrom) and {alias.name for alias in node.names} & owned:
-                assert _is_adapter_import(node), f"{rel}:{node.lineno} imports a #9690 control from {node.module!r}"
+                assert _is_adapter_import(node, rel), (
+                    f"{rel}:{node.lineno} imports a #9690 control from {node.module!r}"
+                )
 
 
 # --- The wrappers ----------------------------------------------------------------------
@@ -1374,8 +1541,7 @@ _IMPORT = (
 )
 
 
-def _problems(body: str, exceptions: list[Exception_] | None = None) -> list[str]:
-    path = "scripts/fixture.py"
+def _problems(body: str, exceptions: list[Exception_] | None = None, path: str = "scripts/fixture.py") -> list[str]:
     findings = check_module(_IMPORT + textwrap.dedent(body), path)
     assert findings is not None, "fixture is not a Claude-referencing module"
     return problems({path: findings}, exceptions or [])
@@ -1519,7 +1685,11 @@ _ACCEPTED = {
     "annotation": "def run(proc: subprocess.Popen[str]) -> subprocess.Popen[str]:\n    return proc\n",
     "docstring": 'def run():\n    """Start ``claude -p hello`` through the wrapper."""\n',
     "claude-probe-text": 'MESSAGE = "install claude, then run it"\n',
-    "relative-adapter-import": "from .claude import popen_headless_claude\n",
+    "annotation-generics": (
+        "def run(procs: list[subprocess.Popen], pair: tuple[subprocess.Popen | None, int]) -> subprocess.Popen[str]:\n"
+        "    return procs[0]\n"
+    ),
+    "scripts-root-adapter-import": "from agent_runtime.adapters.claude import run_headless_claude\n",
 }
 
 
@@ -1557,6 +1727,232 @@ def test_exception_checks_catch_stale_and_miscategorised_entries() -> None:
     assert any("stale exception" in e for e in errors)
     assert any("known category and a reason" in e for e in errors)
     assert any("argv-builder must" in e for e in errors)
+
+
+# --- Round-2 blockers (review-9750-d): each reviewer mutant is rejected ----------------------------
+
+_ANNOTATION_REJECTED = {
+    # The reviewer's mutant: a spawn in a parameter annotation runs when the function is defined.
+    "parameter-getattr": 'def run(track_name: getattr(subprocess, "Popen")([CLAUDE_BIN, "-p", "probe"])):\n    pass\n',
+    "parameter-partial": (
+        'import functools\ndef run(x: functools.partial(subprocess.Popen, ["claude", "-p", "x"])()):\n    pass\n'
+    ),
+    "parameter-direct": 'def run(x: subprocess.Popen(["claude", "-p", "x"])):\n    pass\n',
+    "return": 'def run() -> getattr(subprocess, "run")(["claude", "-p", "x"]):\n    pass\n',
+    "module-variable": 'X: getattr(subprocess, "Popen") = None\n',
+    "class-variable": (
+        'import functools\nclass C:\n    x: functools.partial(subprocess.Popen, ["claude", "-p", "x"])() = 1\n'
+    ),
+    "local-variable-reference": "def run():\n    x: hook(subprocess.Popen) = 1\n",
+    # Type positions where other code would receive the API.
+    "foreign-subscript": "def run(x: registry[subprocess.Popen]):\n    pass\n",
+    "foreign-union": "def run(x: subprocess.Popen | hook):\n    pass\n",
+    "rebound-generic": "list = Registry()\ndef run(x: list[subprocess.Popen]):\n    pass\n",
+}
+
+
+@pytest.mark.parametrize("body", list(_ANNOTATION_REJECTED.values()), ids=list(_ANNOTATION_REJECTED))
+def test_rule_checks_annotations_like_code(body: str) -> None:
+    assert _problems(body)
+
+
+def _mutated(path: str, old: str, new: str) -> ModuleFindings:
+    source = (REPO_ROOT / path).read_text(encoding="utf-8")
+    assert source.count(old) == 1, f"mutation anchor drifted in {path}: {old!r}"
+    findings = check_module(source.replace(old, new), path)
+    assert findings is not None
+    return findings
+
+
+def test_reviewer_annotation_mutant_in_batch_dispatcher_is_rejected(exceptions: list[Exception_]) -> None:
+    path = "scripts/batch/batch_dispatcher_helpers.py"
+    findings = _mutated(
+        path,
+        "def dispatch_claude_fix(track_name: str,",
+        'def dispatch_claude_fix(track_name: getattr(subprocess, "Popen")([CLAUDE_BIN, "-p", "probe"]),',
+    )
+    assert problems({path: findings}, exceptions)
+
+
+@pytest.mark.parametrize(
+    ("path", "module", "level", "expected"),
+    [
+        ("scripts/ai_agent_bridge/openai_proxy.py", "claude", 1, "scripts.ai_agent_bridge.claude"),
+        ("scripts/agent_runtime/adapters/kimicc.py", "claude", 1, ADAPTER_MODULE),
+        ("scripts/agent_runtime/adapters/__init__.py", "claude", 1, ADAPTER_MODULE),
+        ("scripts/agent_runtime/lane_probe.py", "adapters.claude", 1, ADAPTER_MODULE),
+        ("scripts/agent_runtime/adapters/kimicc.py", "adapters.claude", 2, ADAPTER_MODULE),
+        ("scripts/fixture.py", "claude", 3, None),
+        ("scripts/x.py", "agent_runtime.adapters.claude", 0, "agent_runtime.adapters.claude"),
+    ],
+)
+def test_relative_imports_resolve_against_the_importing_package(
+    path: str, module: str, level: int, expected: str | None
+) -> None:
+    node = ast.ImportFrom(module=module, names=[ast.alias(name="run_headless_claude")], level=level)
+    assert resolve_import(node, path) == expected
+
+
+_IMPORT_REJECTED = {
+    # The reviewer's mutant: a sibling ``claude`` module in the bridge package.
+    "bridge-sibling": ("scripts/ai_agent_bridge/openai_proxy.py", "from .claude import run_headless_claude\n"),
+    "other-prefix": ("scripts/fixture.py", "from evil.agent_runtime.adapters.claude import run_headless_claude\n"),
+    "other-claude-module": ("scripts/fixture.py", "from tools.claude import popen_headless_claude\n"),
+    "relative-past-the-top": ("scripts/fixture.py", "from ...claude import run_headless_claude\n"),
+    "builder-relative-elsewhere": ("scripts/review/x.py", "from .claude import headless_claude_argv\n"),
+}
+
+
+@pytest.mark.parametrize(("path", "body"), list(_IMPORT_REJECTED.values()), ids=list(_IMPORT_REJECTED))
+def test_rule_rejects_wrapper_bindings_that_resolve_elsewhere(path: str, body: str) -> None:
+    assert _problems(body, path=path)
+
+
+def test_rule_accepts_the_adapter_by_relative_import_in_its_own_package() -> None:
+    body = "from .claude import popen_headless_claude\nfrom ..adapters.claude import headless_claude_argv\n"
+    assert _problems(body, path="scripts/agent_runtime/adapters/fixture.py") == []
+
+
+def test_reviewer_relative_import_mutant_in_openai_proxy_is_rejected(exceptions: list[Exception_]) -> None:
+    path = "scripts/ai_agent_bridge/openai_proxy.py"
+    findings = _mutated(
+        path,
+        "    from scripts.agent_runtime.adapters.claude import run_headless_claude\n",
+        "    from .claude import run_headless_claude\n",
+    )
+    assert any(
+        "non-canonical binding of run_headless_claude" in problem for problem in problems({path: findings}, exceptions)
+    )
+
+
+def _probe(path: str, function: str, program: str) -> list[Exception_]:
+    return [Exception_(path, function, program, "claude-probe", "fixture probe")]
+
+
+_PROBE_REJECTED = {
+    # The reviewer's mutant on the old _probe_cli shape, under its old exception entry.
+    "reviewer-argv-rebuilt": (
+        "def _probe_cli(argv):\n    argv = [*argv[:-1], '-p', 'probe']\n    return subprocess.run(argv, timeout=1)\n",
+        "argv",
+    ),
+    "computed-argv": "def _probe_cli(argv):\n    return subprocess.run(argv, timeout=1)\n",
+    "print-flag-word": "def _probe_cli(binary):\n    return subprocess.run([binary, '-p', '--version'])\n",
+    "non-constant-word": "def _probe_cli(binary, flag):\n    return subprocess.run([binary, flag, '--version'])\n",
+    "starred-prefix": "def _probe_cli(binary):\n    return subprocess.run([*binary, '--version'])\n",
+    "separator": "def _probe_cli(binary):\n    return subprocess.run([binary, '--', '--version'])\n",
+    "flag-not-last": "def _probe_cli(binary):\n    return subprocess.run([binary, '--version', '-p'])\n",
+    "npx-computed-package": "def _probe_cli(package):\n    return subprocess.run(['npx', package, '--version'])\n",
+    "shell": "def _probe_cli(binary):\n    return subprocess.run([binary, '--version'], shell=True)\n",
+    "executable": "def _probe_cli(binary):\n    return subprocess.run([binary, '--version'], executable='/bin/claude')\n",
+    "options-splat": "def _probe_cli(binary, **options):\n    return subprocess.run([binary, '--version'], **options)\n",
+    "extra-positional": "def _probe_cli(binary):\n    return subprocess.run([binary, '--version'], -1, '/bin/claude')\n",
+    "string-command": "def _probe_cli(binary):\n    return subprocess.getoutput(binary + ' --version')\n",
+    "binding-used-again": (
+        "def _probe_cli(binary):\n    argv = [binary, '--version']\n"
+        "    return subprocess.run(argv, input=argv.append('-p'))\n"
+    ),
+    "binding-not-adjacent": (
+        "def _probe_cli(binary):\n    argv = [binary, '--version']\n    log(binary)\n    return subprocess.run(argv)\n"
+    ),
+    "prefixer-outside-its-module": (
+        "def _probe_cli(binary, box):\n    return subprocess.run(wrap_argv_with_sandbox([binary, '-p', 'x'], box))\n"
+    ),
+}
+
+
+@pytest.mark.parametrize("case", list(_PROBE_REJECTED.values()), ids=list(_PROBE_REJECTED))
+def test_claude_probe_exception_clears_only_a_frozen_probe(case: str | tuple[str, str]) -> None:
+    body, program = case if isinstance(case, tuple) else (case, None)
+    path = "scripts/fixture.py"
+    findings = check_module(_IMPORT + body, path)
+    assert findings is not None
+    keys = {site.program for site in findings.sites if site.function == "_probe_cli"}
+    assert len(keys) == 1, keys
+    entries = _probe(path, "_probe_cli", program or keys.pop())
+    assert problems({path: findings}, entries)
+    assert any(
+        "not a fixed --version/--help probe" in error for error in exception_errors({path: findings}, entries, set())
+    )
+
+
+_PROBE_ACCEPTED = {
+    "version": ("scripts/fixture.py", "def probe(b):\n    return subprocess.run([b, '--version'], timeout=5)\n", "b"),
+    "subcommand-help": (
+        "scripts/fixture.py",
+        "def probe(b):\n    return subprocess.run(args=(b, 'exec', '--help'))\n",
+        "b",
+    ),
+    "npx-constant": (
+        "scripts/fixture.py",
+        "def probe():\n    return subprocess.run(['npx', '@anthropic-ai/claude-code@latest', '--version'])\n",
+        "npx",
+    ),
+    "sandbox-choice": (
+        "scripts/review/isolation.py",
+        "def probe(b, box):\n"
+        "    return subprocess.run(wrap_argv_with_sandbox([b, '--help'], box) if box else [b, '--help'], env={})\n",
+        "b",
+    ),
+    "boundary-binding": (
+        "scripts/agent_runtime/attempt_boundary.py",
+        "class B:\n    def probe(self, cmd, overrides):\n"
+        "        version_cmd, env = self.wrap([cmd[0], '--version'], overrides)\n"
+        "        return subprocess.run(version_cmd, env=env, timeout=5)\n",
+        "version_cmd",
+    ),
+}
+
+
+@pytest.mark.parametrize(("path", "body", "program"), list(_PROBE_ACCEPTED.values()), ids=list(_PROBE_ACCEPTED))
+def test_claude_probe_exception_clears_a_frozen_probe(path: str, body: str, program: str) -> None:
+    findings = check_module(_IMPORT + body, path)
+    assert findings is not None
+    function = next(site.function for site in findings.sites)
+    entries = _probe(path, function, program)
+    assert problems({path: findings}, entries) == []
+    assert exception_errors({path: findings}, entries, set()) == []
+
+
+def test_probe_prefixers_cannot_be_rebound() -> None:
+    assert _problems("def run():\n    wrap_argv_with_sandbox = print\n", path="scripts/review/isolation.py")
+    assert _problems(
+        "class B:\n    def run(self):\n        self.wrap = print\n", path="scripts/agent_runtime/attempt_boundary.py"
+    )
+
+
+@pytest.mark.parametrize(
+    ("path", "old", "new"),
+    [
+        # The reviewer's shape on today's shared probe: the argv keeps its program but gains a print flag.
+        ("scripts/utils/claude_version.py", '[cmd_prefix[0], "--version"]', '[cmd_prefix[0], "-p", "probe"]'),
+        ("scripts/utils/claude_version.py", '[cmd_prefix[0], "--version"]', '[*cmd_prefix, "--version"]'),
+        (
+            "scripts/agent_runtime/attempt_boundary.py",
+            'self.wrap([cmd[0], "--version"], env_overrides)',
+            'self.wrap([*cmd, "--version"], env_overrides)',
+        ),
+        ("scripts/eval/zno_nmt/adapters.py", '[binary, "--help"]', '[binary, "-p", "--help"]'),
+        ("scripts/review/isolation.py", 'else [program, "--version"]', 'else [program, *extra, "--version"]'),
+    ],
+)
+def test_real_probe_mutants_are_rejected(path: str, old: str, new: str, exceptions: list[Exception_]) -> None:
+    assert problems({path: _mutated(path, old, new)}, exceptions)
+
+
+def test_version_probe_runs_only_literal_version_argvs(monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts.utils import claude_version
+
+    argvs: list[list[str]] = []
+    monkeypatch.setattr(
+        claude_version.subprocess,
+        "run",
+        lambda argv, **_kwargs: argvs.append(argv) or subprocess.CompletedProcess(argv, 0, "2.1.200", ""),
+    )
+    assert claude_version.run_version_probe(["/opt/claude"], timeout=1) is not None
+    assert claude_version.run_version_probe(claude_version.CLAUDE_NPX_PREFIX, timeout=1) is not None
+    assert claude_version.run_version_probe(["claude", "-p"], timeout=1) is None
+    assert claude_version.run_version_probe(["npx", "other-package"], timeout=1) is None
+    assert argvs == [["/opt/claude", "--version"], ["npx", "@anthropic-ai/claude-code@latest", "--version"]]
 
 
 def test_limit_a_module_without_a_claude_reference_is_not_checked() -> None:

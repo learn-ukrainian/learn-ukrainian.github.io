@@ -501,19 +501,15 @@ def _discussion_readonly_requested(tool_config: dict | None) -> bool:
 def _probe_claude_cli_version(cmd_prefix: tuple[str, ...]) -> tuple[int, int, int] | None:
     """Probe ``claude --version`` once per binary prefix for this process."""
     try:
-        from utils.claude_version import _parse_claude_semver
+        from utils.claude_version import _parse_claude_semver, run_version_probe
     except ImportError:
         return None
 
     try:
-        result = subprocess.run(
-            [*cmd_prefix, "--version"],
-            capture_output=True,
-            text=True,
-            timeout=5,
-            check=False,
-        )
+        result = run_version_probe(cmd_prefix, timeout=5)
     except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+        return None
+    if result is None:
         return None
 
     combined = f"{result.stdout or ''}\n{result.stderr or ''}".strip()

@@ -10,7 +10,9 @@
 #
 # Categories:
 #   non-claude      runs a program other than Claude Code (program must not name Claude)
-#   claude-probe    fixed non-headless probe (`--version`, `--help`) of a CLI that may be Claude
+#   claude-probe    fixed non-headless probe of a CLI that may be Claude; clears only a literal
+#                   `[program, *words, --version|--help]` argv (optionally behind a listed
+#                   sandbox prefixer), never a computed one
 #   runtime         the tested agent-runtime path: Claude/KimiCC plans and the shared runner
 #                   (module must be the runner or a harness in _CLAUDE_CODE_HARNESSES)
 #   generic-runner  spawns an argv the rule cannot see; the reason names what reaches it.
@@ -39,13 +41,12 @@ exceptions:
   # scripts/agent_runtime/adapters/claude.py
   - {module: scripts/agent_runtime/adapters/claude.py, function: "ClaudeAdapter.build_invocation", program: "<argv-holder>", category: runtime, reason: "builds the runtime Claude plan argv; the shared runner launches it (runner-tested harness)"}
   - {module: scripts/agent_runtime/adapters/claude.py, function: "ClaudeAdapter.build_invocation", program: "cmd", category: runtime, reason: "Claude plan; the shared runner launches it with the plan's HEADLESS_BACKGROUND_ENV and settings denies (tests/agent_runtime/test_claude_no_background.py)"}
-  - {module: scripts/agent_runtime/adapters/claude.py, function: "_probe_claude_cli_version", program: "*cmd_prefix", category: claude-probe, reason: "fixed `claude --version` probe"}
   # scripts/agent_runtime/adapters/grok_build.py
   - {module: scripts/agent_runtime/adapters/grok_build.py, function: "GrokBuildAdapter.build_invocation", program: "cmd", category: non-claude, reason: "plan runs the Grok Build CLI"}
   # scripts/agent_runtime/adapters/kimicc.py
   - {module: scripts/agent_runtime/adapters/kimicc.py, function: "KimiccHarness.build_invocation", program: "cmd", category: runtime, reason: "KimiCC plan runs kimicc_headless.sh with the switch and denies (runner-tested harness)"}
   # scripts/agent_runtime/attempt_boundary.py
-  - {module: scripts/agent_runtime/attempt_boundary.py, function: "AttemptBoundary.verify_seat", program: "version_cmd", category: claude-probe, reason: "fixed `<seat binary> --version` probe through the attempt boundary"}
+  - {module: scripts/agent_runtime/attempt_boundary.py, function: "AttemptBoundary.verify_seat", program: "version_cmd", category: claude-probe, reason: "literal `<seat binary> --version` probe, wrapped by self.wrap in the statement just before the spawn"}
   - {module: scripts/agent_runtime/attempt_boundary.py, function: "SourcesConnection._serve", program: "self.server['command']", category: non-claude, reason: "starts the sources MCP server (project interpreter) for a boundary check"}
   - {module: scripts/agent_runtime/attempt_boundary.py, function: "full_review_reads", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/agent_runtime/attempt_boundary.py, function: "verify_full_review_tree", program: "git", category: non-claude, reason: "runs git"}
@@ -56,8 +57,6 @@ exceptions:
   # scripts/agent_runtime/kimi_admission.py
   - {module: scripts/agent_runtime/kimi_admission.py, function: "CommitTree._git", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/agent_runtime/kimi_admission.py, function: "worktree_trees", program: "git", category: non-claude, reason: "runs git"}
-  # scripts/agent_runtime/lane_probe.py
-  - {module: scripts/agent_runtime/lane_probe.py, function: "probe_lane", program: "command", category: claude-probe, reason: "runs `_version_command(plan.cmd)`: the lane binary's `--version`, never the plan's prompt run"}
   # scripts/agent_runtime/review_mcp.py
   - {module: scripts/agent_runtime/review_mcp.py, function: "verify_agy_review_effective_mcp", program: "probe", category: non-claude, reason: "`agy mcp list` probe"}
   - {module: scripts/agent_runtime/review_mcp.py, function: "verify_codex_review_effective_mcp", program: "probe", category: non-claude, reason: "`codex mcp list` probe"}
@@ -110,7 +109,6 @@ exceptions:
   - {module: scripts/ai_agent_bridge/_ui_codex.py, function: "send", program: "codex", category: non-claude, reason: "runs the Codex CLI"}
   # scripts/ai_agent_bridge/openai_proxy.py
   - {module: scripts/ai_agent_bridge/openai_proxy.py, function: "_claude_backend", program: "<argv-holder>", category: argv-builder, reason: "builds the claude backend argv; _run_backend_command runs it through run_headless_claude", spawned_by: _run_backend_command}
-  - {module: scripts/ai_agent_bridge/openai_proxy.py, function: "_probe_cli", program: "argv", category: claude-probe, reason: "fixed `<backend> --version` probes, including `claude --version`"}
   - {module: scripts/ai_agent_bridge/openai_proxy.py, function: "_run_backend_command", program: "argv", category: generic-runner, reason: "codex, agy and hermes backends; the claude backend takes run_headless_claude in the same function (test_openai_proxy_claude_child_is_controlled)"}
   # scripts/api/agent_router.py
   - {module: scripts/api/agent_router.py, function: "_execute_command", program: "args", category: generic-runner, reason: "in-module callers pass ps and git status only"}
@@ -209,7 +207,7 @@ exceptions:
   - {module: scripts/delegate.py, function: "_worktree_is_dirty", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_worktree_registration", program: "git", category: non-claude, reason: "runs git"}
   # scripts/eval/zno_nmt/adapters.py
-  - {module: scripts/eval/zno_nmt/adapters.py, function: "_run_checked", program: "argv", category: claude-probe, reason: "fixed `<binary> --help` / `--version` capability probes"}
+  - {module: scripts/eval/zno_nmt/adapters.py, function: "_claude_capabilities", program: "binary", category: claude-probe, reason: "literal `<binary> --help` and `<binary> --version` capability probes"}
   - {module: scripts/eval/zno_nmt/adapters.py, function: "run_claude", program: "<argv-holder>", category: argv-builder, reason: "builds the restricted ZNO Claude argv; _run_claude_process runs it through popen_headless_claude", spawned_by: _run_claude_process}
   # scripts/hooks/measure_hook_stack.py
   - {module: scripts/hooks/measure_hook_stack.py, function: "_time_one", program: "argv", category: non-claude, reason: "times repository hook scripts (bash) from the STACK table"}
@@ -250,10 +248,9 @@ exceptions:
   - {module: scripts/review/isolation.py, function: "_probe_sealed_read_mcp", program: "command", category: non-claude, reason: "runs the sealed-read MCP helper under Python in the sandbox"}
   - {module: scripts/review/isolation.py, function: "_sealed_reader_python_runtime", program: "str(python_bin)", category: non-claude, reason: "probes the sealed reader's Python runtime"}
   - {module: scripts/review/isolation.py, function: "prepare_host_sandbox", program: "cmd", category: non-claude, reason: "sandbox probe running /bin/cat"}
-  - {module: scripts/review/isolation.py, function: "prepare_host_sandbox", program: "wrap_argv_with_sandbox(['/bin/cat', str(denied)], provisional)", category: non-claude, reason: "sandbox probe running /bin/cat"}
-  - {module: scripts/review/isolation.py, function: "prepare_host_sandbox", program: "wrap_argv_with_sandbox(['/bin/sh', '-c', 'printf bad > \"$1\"', 'review-probe', str(snapshot_probe)], provisional)", category: non-claude, reason: "sandbox write-denial probe running /bin/sh printf"}
-  - {module: scripts/review/isolation.py, function: "prepare_host_sandbox", program: "wrap_argv_with_sandbox(['/bin/sh', '-c', 'printf w > \"$1\" && cat \"$1\"', 'review-probe', str(write_probe)], provisional)", category: non-claude, reason: "sandbox write probe running /bin/sh printf"}
-  - {module: scripts/review/isolation.py, function: "probe_engine_help", program: "command", category: claude-probe, reason: "fixed `<engine> --help` capability probe, optionally sandboxed"}
+  - {module: scripts/review/isolation.py, function: "prepare_host_sandbox", program: "/bin/cat", category: non-claude, reason: "sandbox read-denial probe running /bin/cat behind wrap_argv_with_sandbox"}
+  - {module: scripts/review/isolation.py, function: "prepare_host_sandbox", program: "/bin/sh", category: non-claude, reason: "sandbox write-denial and write probes running /bin/sh printf behind wrap_argv_with_sandbox"}
+  - {module: scripts/review/isolation.py, function: "probe_engine_help", program: "program", category: claude-probe, reason: "literal `<engine> --help`, `--version` and `exec --help` probes, optionally behind wrap_argv_with_sandbox"}
   - {module: scripts/review/isolation.py, function: "stage_engine_auth", program: "str(security)", category: non-claude, reason: "reads a keychain item with the macOS security tool"}
   - {module: scripts/review/isolation.py, function: "verify_macos_sandbox", program: "str(sandbox_exec)", category: non-claude, reason: "sandbox-exec probe running /bin/cat"}
   # scripts/review/record_cf_verdict.py
@@ -267,4 +264,5 @@ exceptions:
   # scripts/tools/upgrade_activity_hints.py
   - {module: scripts/tools/upgrade_activity_hints.py, function: "call_agy", program: "*command", category: non-claude, reason: "runs ai_agent_bridge ask-agy"}
   # scripts/utils/claude_version.py
-  - {module: scripts/utils/claude_version.py, function: "supports_exclude_dynamic_system_prompt_sections", program: "*cmd_prefix", category: claude-probe, reason: "fixed `claude --version` probe"}
+  - {module: scripts/utils/claude_version.py, function: "run_version_probe", program: "cmd_prefix[0]", category: claude-probe, reason: "literal `<program> --version` probe shared by the version gates, the lane probe and the proxy health probes"}
+  - {module: scripts/utils/claude_version.py, function: "run_version_probe", program: "npx", category: claude-probe, reason: "literal `npx @anthropic-ai/claude-code@latest --version` probe of the npx fallback"}

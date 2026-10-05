@@ -2410,19 +2410,45 @@ def probe_engine_help(
     cwd: Path | None = None,
 ) -> str:
     """Probe the exact binary, optionally only through the verified sandbox."""
+    program = str(binary)
+    run_env = dict(env) if env is not None else None
+    run_cwd = str(cwd) if cwd is not None else None
+    # Each probe argv is a literal: the headless-spawn rule (#9750) clears only fixed --help/--version probes.
+    probes = (
+        lambda: subprocess.run(
+            wrap_argv_with_sandbox([program, "--help"], sandbox) if sandbox is not None else [program, "--help"],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+            env=run_env,
+            cwd=run_cwd,
+        ),
+        lambda: subprocess.run(
+            wrap_argv_with_sandbox([program, "--version"], sandbox) if sandbox is not None else [program, "--version"],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+            env=run_env,
+            cwd=run_cwd,
+        ),
+        lambda: subprocess.run(
+            wrap_argv_with_sandbox([program, "exec", "--help"], sandbox)
+            if sandbox is not None
+            else [program, "exec", "--help"],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+            env=run_env,
+            cwd=run_cwd,
+        ),
+    )
     chunks: list[str] = []
-    for args in ([str(binary), "--help"], [str(binary), "--version"], [str(binary), "exec", "--help"]):
-        command = wrap_argv_with_sandbox(args, sandbox) if sandbox is not None else args
+    for probe in probes:
         try:
-            proc = subprocess.run(
-                command,
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                check=False,
-                env=dict(env) if env is not None else None,
-                cwd=str(cwd) if cwd is not None else None,
-            )
+            proc = probe()
         except (OSError, subprocess.TimeoutExpired):
             continue
         chunks.append(proc.stdout or "")

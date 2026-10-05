@@ -30,8 +30,10 @@ from ._config import _PARENT_ENV, AGY_CLI, CLAUDE_CMD, CODEX_CLI, REPO_ROOT
 
 try:
     from scripts.agent_runtime.adapters.claude import run_headless_claude
+    from scripts.utils.claude_version import run_version_probe
 except ModuleNotFoundError:  # run as the top-level ai_agent_bridge package
     from agent_runtime.adapters.claude import run_headless_claude
+    from utils.claude_version import run_version_probe
 
 _DEFAULT_BACKEND_TIMEOUT_S = 120
 _HERMES_STDIN_MODULE = "scripts.ai_agent_bridge._hermes_stdin"
@@ -335,39 +337,32 @@ _ROUTABLE_MODELS: dict[str, ModelRoute] = {
 }
 
 
-def _probe_cli(argv: list[str]) -> tuple[bool, str]:
+def _probe_cli(cmd_prefix: list[str]) -> tuple[bool, str]:
+    """Run the backend's fixed ``--version`` probe; an unprobeable prefix is unavailable."""
     try:
-        result = subprocess.run(
-            argv,
-            capture_output=True,
-            text=True,
-            timeout=1,
-            cwd=str(REPO_ROOT),
-            env=_PARENT_ENV,
-            check=False,
-        )
+        result = run_version_probe(cmd_prefix, timeout=1, cwd=str(REPO_ROOT), env=_PARENT_ENV)
     except (OSError, subprocess.TimeoutExpired):
         return False, ""
-    if result.returncode == 0:
+    if result is not None and result.returncode == 0:
         return True, result.stdout.strip().splitlines()[0] if result.stdout.strip() else "unknown"
     return False, ""
 
 
 def _probe_codex() -> tuple[bool, str]:
-    return _probe_cli([CODEX_CLI, "--version"])
+    return _probe_cli([CODEX_CLI])
 
 
 def _probe_gemini() -> tuple[bool, str]:
     """Health probe for the Gemini-family route (AGY CLI, not retired gemini-cli)."""
-    return _probe_cli([AGY_CLI, "--version"])
+    return _probe_cli([AGY_CLI])
 
 
 def _probe_claude() -> tuple[bool, str]:
-    return _probe_cli([*CLAUDE_CMD, "--version"])
+    return _probe_cli(CLAUDE_CMD)
 
 
 def _probe_hermes() -> tuple[bool, str]:
-    return _probe_cli([shutil.which("hermes") or "hermes", "--version"])
+    return _probe_cli([shutil.which("hermes") or "hermes"])
 
 
 _BACKEND_PROBES: dict[str, Callable[[], tuple[bool, str]]] = {
