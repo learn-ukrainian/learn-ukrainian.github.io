@@ -2975,7 +2975,7 @@ def _prune_branch(
     return None if deleted.returncode == 0 else _format_failure(deleted)
 
 
-_ClaimIdentity = tuple[str, str, str]
+_ClaimIdentity = tuple[str, str, str, str, int]
 
 
 def _pid_proven_absent(record: dict[str, Any]) -> bool:
@@ -2997,10 +2997,16 @@ def _pid_proven_absent(record: dict[str, Any]) -> bool:
 
 
 def _needs_finalize_claim_identity(record: dict[str, Any]) -> _ClaimIdentity | None:
-    """Return the (task id, branch, recorded head) a settled-claim proof is bound to, if all are present."""
-    identity = (record.get("task_id"), record.get("worktree_branch"), record.get("final_branch_head_commit"))
-    if all(isinstance(part, str) and part for part in identity):
-        return identity  # type: ignore[return-value]
+    """Bind a settled-claim proof to its task, branch, head, nonce and worker PID."""
+    identity = (
+        record.get("task_id"),
+        record.get("worktree_branch"),
+        record.get("final_branch_head_commit"),
+        record.get("run_nonce"),
+    )
+    pid = record.get("pid")
+    if all(isinstance(part, str) and part for part in identity) and type(pid) is int and pid > 0:
+        return (*identity, pid)  # type: ignore[return-value]
     return None
 
 
@@ -3016,7 +3022,7 @@ def _needs_finalize_claim_proven_settled(repo_root: Path, record: dict[str, Any]
     identity = _needs_finalize_claim_identity(record)
     if identity is None or not _pid_proven_absent(record):
         return None
-    _, branch, head = identity
+    _, branch, head, _, _ = identity
     states, error = _query_pr_states(repo_root, branch)
     if error is None and any(state.state == "MERGED" and state.head_sha == head for state in states):
         return identity
@@ -3059,6 +3065,13 @@ def _enter_dispatch_worktree_guard(
         "owner_task_id": owner_task_id,
         "owner_state_file": tasks_dir / f"{owner_task_id}.json" if owner_task_id else None,
     }
+    owner_record = _task_record(repo_root, owner_task_id) if owner_task_id else None
+    owner_attempt = None
+    if owner_record is not None and owner_record.get("status") == "needs_finalize":
+        nonce = owner_record.get("run_nonce")
+        if not isinstance(nonce, str) or not nonce or not _pid_proven_absent(owner_record):
+            return f"needs_finalize owner {owner_task_id} attempt unknown; retain until nonce and absent PID are proven"
+        owner_attempt = (nonce, owner_record.get("pid"))
 
     # Prove every needs_finalize claim's merge before taking the lock: the PR lookup
     # is a network call that would otherwise hold delegate's dispatch lock.
@@ -3084,6 +3097,14 @@ def _enter_dispatch_worktree_guard(
         identity = _needs_finalize_claim_identity(record)
         return identity is not None and identity in proven and _pid_proven_absent(record)
 
+    if owner_attempt is not None:
+        current_owner = _task_record(repo_root, owner_task_id)
+        if (
+            current_owner is None
+            or (current_owner.get("run_nonce"), current_owner.get("pid")) != owner_attempt
+            or not _pid_proven_absent(current_owner)
+        ):
+            return f"needs_finalize owner {owner_task_id} attempt changed; retain until current attempt is qualified"
     return worktree_claims.active_worktree_claim_refusal(info.path, settled_claim=still_settled, **claim_scan)
 
 

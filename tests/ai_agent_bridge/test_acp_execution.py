@@ -101,6 +101,23 @@ def test_no_checkout_teardown_retains_unattributed_output_without_ignore_rules(t
     assert "missing canonical task attribution; refusing worktree removal" in caplog.text
 
 
+@pytest.mark.parametrize("error", [KeyboardInterrupt("cancelled"), TimeoutError("timeout")])
+def test_interrupted_acp_teardown_preserves_output_bytes(tmp_path, error, caplog):
+    import hashlib
+
+    primary = _make_primary(tmp_path)
+    with pytest.raises(type(error)):
+        with acp_execution_cwd(primary, task_id="interrupted-9742") as workspace:
+            output = workspace / ".cache/output.bin"
+            output.parent.mkdir()
+            output.write_bytes(b"interrupted ACP output\x00\xff")
+            before = hashlib.sha256(output.read_bytes()).hexdigest()
+            raise error
+    assert workspace.exists()
+    assert hashlib.sha256(output.read_bytes()).hexdigest() == before
+    assert "missing canonical task attribution; refusing worktree removal" in caplog.text
+
+
 @pytest.mark.parametrize(
     "token",
     [

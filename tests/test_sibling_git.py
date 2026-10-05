@@ -238,16 +238,20 @@ def test_repository_gh_credential_helpers_refused(world, scope, verb):
 def test_command_gh_credential_helpers_refused(world):
     with sg.git_session() as runner:
         # Exercise Git's real command-scope output, without caller inheritance.
-        runner.env.update({
-            "GIT_CONFIG_COUNT": "1",
-            "GIT_CONFIG_KEY_0": "credential.https://github.com.helper",
-            "GIT_CONFIG_VALUE_0": "!gh auth git-credential",
-        })
+        runner.env.update(
+            {
+                "GIT_CONFIG_COUNT": "1",
+                "GIT_CONFIG_KEY_0": "credential.https://github.com.helper",
+                "GIT_CONFIG_VALUE_0": "!gh auth git-credential",
+            }
+        )
         with pytest.raises(sg.Refusal, match="unsupported redirect, transport, or executable configuration"):
             sg._safe_config(runner, world[1])
 
 
-@pytest.mark.parametrize("key", ["include.path", "includeIf.gitdir:*/.path", "url.ssh://git@github.com/.insteadOf", "core.sshCommand"])
+@pytest.mark.parametrize(
+    "key", ["include.path", "includeIf.gitdir:*/.path", "url.ssh://git@github.com/.insteadOf", "core.sshCommand"]
+)
 @pytest.mark.parametrize("verb", ["status", "sync-main"])
 def test_global_unsafe_config_still_refused(world, tmp_path, key, verb):
     included = tmp_path / "included gitconfig"
@@ -277,13 +281,16 @@ def foreign(world, tmp_path):
     return checkout, sha, bundle
 
 
-@pytest.mark.parametrize("name", [
-    "git@github.com:fixture/sibling.git",
-    "ssh://git@github.com/fixture/sibling.git",
-    "github.com/fixture/sibling.git",
-    "github:fixture",
-    "sibling-git-canonical",
-])
+@pytest.mark.parametrize(
+    "name",
+    [
+        "git@github.com:fixture/sibling.git",
+        "ssh://git@github.com/fixture/sibling.git",
+        "github.com/fixture/sibling.git",
+        "github:fixture",
+        "sibling-git-canonical",
+    ],
+)
 def test_remote_names_cannot_redirect_fetch(world, foreign, tmp_path, name):
     sibling, upstream = world[1:]
     other, sha, _ = foreign
@@ -637,6 +644,42 @@ def test_swept_executable_keys_never_run(world, managed, tmp_path, key, refused,
         assert git(sibling, "rev-parse", "HEAD") == sha
     elif verb == "worktree-remove":
         assert not managed.exists()
+
+
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+def test_sibling_remove_interrupted_work_preserves_bytes(world, managed, tmp_path, status):
+    import hashlib
+
+    primary, _sibling, _upstream = world
+    record = primary / "batch_state/tasks/interrupted.json"
+    result = tmp_path / "interrupted.result"
+    output = managed / "batch_state/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    result.write_bytes(b"result\x00\xff")
+    record.write_text(
+        json.dumps(
+            {
+                "task_id": "interrupted",
+                "status": status,
+                "run_nonce": "attempt",
+                "worktree_path": str(managed),
+                "result_file": str(result),
+                "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
+            }
+        )
+    )
+    # The closed sibling caller must refuse a modified tracked file before its raw boundary.
+    (managed / "file.txt").write_text("recoverable uncommitted work")
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)]
+    try:
+        for _ in range(2):
+            rc, _out, err = invoke("worktree-remove", managed)
+            assert rc == 2 and err
+            assert managed.exists()
+            assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)] == before
+    finally:
+        record.unlink()
 
 
 @pytest.mark.parametrize("key", ["protocol.allow", "protocol.ext.allow", "protocol.file.allow", "protocol.ssh.allow"])

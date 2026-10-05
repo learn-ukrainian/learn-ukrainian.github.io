@@ -10,6 +10,66 @@ from typing import Any
 
 import pytest
 
+from tests.orchestration.test_interrupted_caller_matrix import hashes
+from tests.orchestration.test_interrupted_caller_matrix import interrupted_checkout as interrupted_checkout
+
+
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+def test_push_settle_preserves_interrupted_record_and_outputs(interrupted_checkout, monkeypatch, status):
+    repo, tree, tasks, record, result, output = interrupted_checkout
+    state = {
+        "task_id": "interrupted",
+        "status": status,
+        "run_nonce": "attempt",
+        "worktree_path": str(tree),
+        "worktree_branch": "codex/interrupted",
+        "result_file": str(result),
+        "result_sha256": hashes([result])[0],
+        "keep_worktree": True,
+    }
+    record.write_text(json.dumps(state))
+    before = hashes([record, result, output])
+    monkeypatch.setattr(ds, "default_ledger_path", lambda: repo / "ownership.sqlite3")
+    monkeypatch.setattr(ds, "_find_pr", lambda *_args: (None, None))
+    for _ in range(2):
+        report = ds.settle_task("interrupted", task_dir=tasks, repo_root=repo, release_stale=False)
+        assert report.status == status
+        assert hashes([record, result, output]) == before
+
+
+@pytest.mark.parametrize("writer", ["settle", "locked_healer"])
+def test_needs_finalize_missing_tree_preserves_exact_bytes(tmp_path, writer):
+    import hashlib
+
+    from scripts.orchestration.dead_worker_state import mark_missing_worktree_failed
+
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    path = tasks / "unfinished.json"
+    result = path.with_suffix(".result")
+    result.write_bytes(b"recoverable report\x00\xff")
+    output = tmp_path / "ignored-output.bin"
+    output.write_bytes(b"recoverable output\x00\xff")
+    state = {
+        "task_id": "unfinished",
+        "run_nonce": "attempt-1",
+        "pid": 999_999_999,
+        "status": "needs_finalize",
+        "worktree_path": str(tmp_path / "gone"),
+        "result_file": str(result),
+        "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
+    }
+    path.write_text(json.dumps(state, indent=2))
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, result, output)]
+    for _ in range(2):
+        if writer == "settle":
+            assert ds.settle_missing_worktree(tasks, "unfinished") == []
+        else:
+            current, changed = mark_missing_worktree_failed(path, state, pid_alive=lambda _: False)
+            assert not changed and current == state
+        assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, result, output)] == before
+
+
 from scripts.fleet import idle_settle
 from scripts.guardrails.delegate_ownership import OwnershipLedger
 from scripts.orchestration import dispatch_settle as ds

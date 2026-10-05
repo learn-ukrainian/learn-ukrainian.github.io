@@ -71,7 +71,6 @@ RELEASED_TASK_STATUSES = frozenset(
         "cancelled",
         "crashed",
         "dry_run",
-        "reaped",
     }
 )
 

@@ -2701,7 +2701,8 @@ def test_dispatch_force_new_refuses_live_running_or_spawning(tmp_tasks_dir, caps
     assert list(tmp_tasks_dir.glob(f"{task_id}.*.archived.result")) == []
 
 
-def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_dir, capsys):
+@pytest.mark.parametrize("status", ["done", "failed", "cancelled", "rate_limited", "needs_finalize"])
+def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_dir, capsys, status):
     """#6980: --force-new is the only reuse escape, and it must archive both
     the prior record and the prior result before writing a new spawn state.
     """
@@ -2709,7 +2710,7 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     result_path = path.with_suffix(".result")
     original = {
         "task_id": "force-new-task",
-        "status": "done",
+        "status": status,
         "initiator": "owner",
         "pid": None,
         "receipt": "keep-this-attestation",
@@ -2717,6 +2718,10 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     }
     delegate._write_state_atomic(path, original)
     result_path.write_text("completed receipt evidence\n", encoding="utf-8")
+    import hashlib
+
+    before_record = hashlib.sha256(path.read_bytes()).hexdigest()
+    before_result = hashlib.sha256(result_path.read_bytes()).hexdigest()
 
     with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()):
         rc = delegate.cmd_dispatch(_minimal_dispatch_args("force-new-task", force_new=True, initiator="owner"))
@@ -2727,6 +2732,8 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     assert len(archived_json) == 1
     assert len(archived_result) == 1
     assert json.loads(archived_json[0].read_text(encoding="utf-8")) == original
+    assert hashlib.sha256(archived_json[0].read_bytes()).hexdigest() == before_record
+    assert hashlib.sha256(archived_result[0].read_bytes()).hexdigest() == before_result
     assert archived_result[0].read_text(encoding="utf-8") == "completed receipt evidence\n"
     state = delegate._read_state(path)
     assert state is not None
@@ -9059,8 +9066,8 @@ def test_branch_holder_rejects_reaper_reservation(tmp_path, monkeypatch, tmp_tas
     assert reason == "reaper lifecycle reservation is pending"
 
 
-def test_branch_holder_releases_reaped_task_after_empty_activity_probes(tmp_path, monkeypatch, tmp_tasks_dir):
-    """A reaped task record is terminal but still requires empty probes."""
+def test_branch_holder_retains_reaped_task_after_empty_activity_probes(tmp_path, monkeypatch, tmp_tasks_dir):
+    """An unsupported historical status cannot release ownership."""
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "reaped"
     branch = "codex/reaped"
     _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
@@ -9073,8 +9080,8 @@ def test_branch_holder_releases_reaped_task_after_empty_activity_probes(tmp_path
 
     releasable, reason = delegate._stale_branch_holder_releasable(occupied, branch)
 
-    assert releasable is True
-    assert reason == "clean+synced; task status=reaped"
+    assert releasable is False
+    assert "reaped" in reason
 
 
 def test_branch_holder_refuses_needs_finalize_task(tmp_path, monkeypatch, tmp_tasks_dir):
@@ -12144,6 +12151,37 @@ def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tas
         assert repeated == {"task_id": "rescue-test", "action": "skipped", "reason": "already rescued at HEAD"}
 
 
+@pytest.mark.parametrize("status", ["cancelled", "rate_limited"])
+def test_rescue_admitted_interrupted_work_preserves_bytes(tmp_path, monkeypatch, tmp_tasks_dir, status):
+    """A6 prerequisite: exercise the existing rescue after admission, before widening its gate."""
+    import hashlib
+
+    _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    state = delegate._read_state(state_path)
+    state.update(status=status, run_nonce="interrupted-attempt")
+    delegate._write_state_atomic(state_path, state)
+    result_file = state_path.with_suffix(".result")
+    result_file.write_bytes(b"interrupted report\x00\xff")
+    before = hashlib.sha256(result_file.read_bytes()).hexdigest()
+    artifact = (worktree / "artifact.txt").read_bytes()
+    monkeypatch.setattr(delegate, "_RESCUE_TERMINAL_STATUSES", delegate._RESCUE_TERMINAL_STATUSES | {status})
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert result["action"] == "rescued", result
+    retrieved = subprocess.run(
+        ["git", "--git-dir", str(origin), "show", f"{result['rescue_ref']}:artifact.txt"],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    ).stdout
+    assert hashlib.sha256(retrieved).digest() == hashlib.sha256(artifact).digest()
+    assert hashlib.sha256(result_file.read_bytes()).hexdigest() == before
+    saved = state_path.read_bytes()
+    assert delegate._rescue_task(state_path, apply=True)["reason"] == "already rescued at HEAD"
+    assert state_path.read_bytes() == saved
+
+
 def test_rescue_unknown_ahead_count_is_reported(tmp_path, monkeypatch, tmp_tasks_dir):
     _primary, _worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
     monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_args, **_kwargs: None)
@@ -12152,6 +12190,43 @@ def test_rescue_unknown_ahead_count_is_reported(tmp_path, monkeypatch, tmp_tasks
 
     assert result["action"] == "skipped"
     assert result["reason"] == "ahead count unavailable"
+
+
+@pytest.mark.parametrize("replacement", [False, True])
+def test_rescue_final_write_preserves_current_record(tmp_path, monkeypatch, tmp_tasks_dir, replacement):
+    """Simulate a force-new replacement during the network push; stale rescue cannot overwrite it."""
+    import hashlib
+
+    _primary, worktree, _origin, path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    state = delegate._read_state(path)
+    state["run_nonce"] = "original"
+    delegate._write_state_atomic(path, state)
+    real_git = delegate._rescue_git
+    changed = []
+
+    def push_then_replace(cwd, *args, **kwargs):
+        proc = real_git(cwd, *args, **kwargs)
+        if args[0] == "push" and proc.returncode == 0:
+            current = delegate._read_state(path)
+            current["concurrent_note"] = "keep this"
+            if replacement:
+                delegate._archive_task_artifacts("rescue-test")
+                current.update(run_nonce="replacement", status="spawning")
+            delegate._write_state_atomic(path, current)
+            changed.append(hashlib.sha256(path.read_bytes()).hexdigest())
+        return proc
+
+    monkeypatch.setattr(delegate, "_rescue_git", push_then_replace)
+    row = delegate._rescue_task(path, apply=True)
+    current = delegate._read_state(path)
+    assert current["concurrent_note"] == "keep this"
+    assert worktree.exists()
+    if replacement:
+        assert row["action"] == "skipped" and "attempt changed" in row["reason"]
+        assert current["run_nonce"] == "replacement" and current.get("rescue_ref") is None
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == changed[0]
+    else:
+        assert row["action"] == "rescued" and current["rescue_status"] == "rescued"
 
 
 def test_rescue_push_failure_keeps_worktree(tmp_path, monkeypatch, tmp_tasks_dir):
@@ -12412,8 +12487,10 @@ def _run_settle_reap_worker(
     own_state: dict[str, Any] = {
         "task_id": task_id,
         "status": "running",
+        "mode": mode,
         "worktree_path": str(worktree),
         "worktree_base": "main",
+        "worktree_base_sha": delegate._resolve_sha(worktree),
         "worktree_branch": branch,
     }
     if worktree_reused is not None:
@@ -12624,6 +12701,76 @@ def test_read_only_clean_settle_removes_detached_worktree(tmp_tasks_dir, tmp_pat
     assert state["status"] == "done"
     assert state["worktree_reap"]["action"] == "removed"
     assert state["worktree_reap"]["branch"] is None
+    assert not worktree.exists()
+
+
+def test_read_only_worker_exit_settle_retains_detached_worker_commit(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Porcelain stays clean after the worker commits; HEAD must still be recoverable."""
+    real_invoke = delegate._run_worker
+    real_resolve = delegate._resolve_sha
+    heads = []
+
+    def worker_with_commit(**kwargs):
+        worktree = Path(kwargs["cwd_str"])
+        (worktree / "worker-output.txt").write_bytes(b"unique worker commit\x00\xff")
+        subprocess.run(["git", "add", "worker-output.txt"], cwd=worktree, check=True, capture_output=True, timeout=30)
+        subprocess.run(
+            ["git", "commit", "-m", "worker output"], cwd=worktree, check=True, capture_output=True, timeout=30
+        )
+        heads.append(real_resolve(worktree))
+        return real_invoke(**kwargs)
+
+    monkeypatch.setattr(delegate, "_run_worker", worker_with_commit)
+    _primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="worker-commit",
+        mode="read-only",
+        detached=True,
+    )
+    assert branch is None and state["worktree_reap"]["action"] == "skipped"
+    assert "HEAD moved or unknown" in state["worktree_reap"]["reason"]
+    assert real_resolve(worktree) == heads[0]
+    assert (worktree / "worker-output.txt").read_bytes() == b"unique worker commit\x00\xff"
+
+
+@pytest.mark.parametrize("proof", ["base", "remote", "unknown", "stale"])
+def test_read_only_settle_head_and_attempt_proof(tmp_tasks_dir, tmp_path, monkeypatch, proof):
+    _primary, worktree, _origin, path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    head = delegate._resolve_sha(worktree)
+    record = delegate._read_state(path)
+    record.update(mode="read-only", run_nonce="old", worktree_base_sha=head if proof == "base" else None)
+    delegate._write_state_atomic(path, record)
+    if proof == "remote":
+        subprocess.run(
+            ["git", "push", "origin", "HEAD:refs/heads/preserved"],
+            cwd=worktree,
+            check=True,
+            capture_output=True,
+            timeout=30,
+        )
+    if proof == "stale":
+        delegate._write_state_atomic(path, {**record, "run_nonce": "new"})
+    out = delegate._settle_worktree_reap(
+        worktree,
+        created_by_this_dispatch=True,
+        settling_task_id="rescue-test",
+        task_record=record,
+    )
+    assert out["action"] == ("removed" if proof in {"base", "remote"} else "skipped"), out
+    assert worktree.exists() == (proof not in {"base", "remote"})
+
+
+def test_settle_pre_spawn_review_refusal_removes_recordless_reservation(tmp_tasks_dir, tmp_path, monkeypatch):
+    _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="review-refusal")
+    assert not delegate._state_path("review-refusal").exists()
+    out = delegate._settle_worktree_reap(
+        worktree,
+        created_by_this_dispatch=True,
+        settling_task_id="review-refusal",
+    )
+    assert out["action"] == "removed", out
     assert not worktree.exists()
 
 
@@ -13035,7 +13182,7 @@ def test_active_legacy_claim_through_symlink_alias_blocks_reap(tmp_tasks_dir, tm
         (b'{"status": ["done"]}', True),
         (b'{"status": "d\\u006fne"}', True),
         (b'{"status": "done_later"}', True),
-        (b'{"status": "reaped"}', False),
+        (b'{"status": "reaped"}', True),
     ],
 )
 def test_claim_prefilter_keeps_active_and_statusless_records(raw, candidate):
@@ -18283,13 +18430,16 @@ def test_creation_inventory_failure_retains_new_tree_without_spawning(tmp_tasks_
     assert "creation inventory unavailable (CalledProcessError); worker not started" in state["last_error"]
 
 
-@pytest.mark.parametrize("reply,dispatch_verdict,recorded", [
-    ("**VERDICT: APPROVE**", "APPROVE", "APPROVED"),
-    ("VERDICT: APPROVE\nVERDICT: APPROVED", "APPROVED", "APPROVED"),
-    ("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE", "APPROVE", "APPROVED"),
-    ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "REQUEST_CHANGES", None),
-    ("```\nVERDICT: APPROVE\n```", None, None),
-])
+@pytest.mark.parametrize(
+    "reply,dispatch_verdict,recorded",
+    [
+        ("**VERDICT: APPROVE**", "APPROVE", "APPROVED"),
+        ("VERDICT: APPROVE\nVERDICT: APPROVED", "APPROVED", "APPROVED"),
+        ("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE", "APPROVE", "APPROVED"),
+        ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "REQUEST_CHANGES", None),
+        ("```\nVERDICT: APPROVE\n```", None, None),
+    ],
+)
 def test_parse_review_verdict_shared_lines_preserve_consumer_policies(reply, dispatch_verdict, recorded):
     from scripts.review import record_cf_verdict as recorder
 
