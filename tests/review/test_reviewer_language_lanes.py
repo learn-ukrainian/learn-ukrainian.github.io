@@ -73,9 +73,9 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
     assert all(
         item["family"] in {"openai", "anthropic", "google"} or item["status"] == "excluded" for item in payload["trace"]
     )
-    # #9488: the attested Cursor Grok seat is on the ladder, never for Ukrainian content.
+    # #9769: both Grok transports stay excluded from Ukrainian content.
     xai = [item for item in payload["trace"] if item["family"] == "xai"]
-    assert [item["name"] for item in xai] == ["grok-4.7-cursor-fallback"]
+    assert [item["name"] for item in xai] == ["grok-4.7", "grok-4.7-cursor-fallback"]
     assert xai[0]["status"] == "excluded"
     assert "Ukrainian-content language-lanes exclusion" in xai[0]["reason"]
     composer = next(item for item in payload["trace"] if item["name"] == "composer-2.5")
@@ -142,8 +142,8 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     assert "unknown explicit reviewer pin" in deepseek_pin.fail_closed_reason
 
 
-def test_pure_infra_change_falls_only_to_the_attested_cursor_grok_when_primary_lanes_are_unhealthy():
-    """#9488: native Grok never judges; the runtime-attested Cursor seat is the last resort."""
+def test_pure_infra_change_falls_to_grok_when_primary_lanes_are_unhealthy():
+    """#9769: both admitted transports cover non-language infra review."""
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -154,15 +154,16 @@ def test_pure_infra_change_falls_only_to_the_attested_cursor_grok_when_primary_l
         ),
     )
     assert resolution.selected is not None
-    assert (resolution.selected.name, resolution.selected.transport) == ("grok-4.7-cursor-fallback", "cursor")
-    assert [item.name for item in resolution.trace if item.family == "xai"] == ["grok-4.7-cursor-fallback"]
+    assert resolution.selected.concrete_model == "grok-4.7"
+    assert resolution.selected.transport in {"native_grok", "cursor"}
+    assert [item.name for item in resolution.trace if item.family == "xai"] == ["grok-4.7", "grok-4.7-cursor-fallback"]
     dark = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
             review_profile="infra",
             domain="infra",
             changed_paths=("scripts/orchestration/worker.py",),
-            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "cursor": "unhealthy"},
+            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"},
         ),
     )
     assert dark.selected is None

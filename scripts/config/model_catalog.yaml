@@ -44,10 +44,10 @@ policy:
       GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug.
       Claude Opus 5.5 may use native Claude or an explicitly verified Cursor slug.
       Grok is native CLI ONLY at grok-4.7 for every seat
-      (interactive, orchestrator, ask, dispatch, cursor availability fallback). Native Grok never
-      reviews or judges. Operator decision 2026-10-02 (#9488): Grok reviews code and infra only
-      through the Cursor seat pinned to grok-4.7-high whose runtime attests the concrete model;
-      Sol stays the first seat and the Cursor seat is the Sol-spared last resort.
+      (interactive, orchestrator, ask, dispatch), with the Cursor transport fallback.
+      Operator decision 2026-10-05 (#9769): native Grok and the Cursor seat pinned to
+      grok-4.7-high are regular code/infra reviewers at every risk, including critical;
+      verdicts require runtime model attestation and exclude xAI-authored changes.
       Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode
       first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
       Hermes and OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.
@@ -146,12 +146,13 @@ review_scheduler:
       - recon
       - bounded_investigation
   automatic_near_cap_assignments: false
-  # Operator decision 2026-10-02 (#9538): a formal review at a listed risk is
+  # Operator decisions 2026-10-02 (#9538), 2026-10-05 (#9769): a listed risk is
   # performed only by these models, on any catalogued transport (Opus 5.5
   # natively or through Cursor). This is an eligibility gate: ladders, explicit
   # pins, custom ladders and delegate review admission all apply it.
   risk_reviewer_models:
-    high: [gpt-6.1-sol, claude-opus-5-5]
+    high: [gpt-6.1-sol, claude-opus-5-5, grok-4.7]
+    critical: [gpt-6.1-sol, claude-opus-5-5, grok-4.7]
   endpoints:
     claude:
       formal_review_eligible: true
@@ -204,8 +205,8 @@ review_scheduler:
       credential_limit: 2
       capacity_weight: 1.0
     grok:
-      # Transport flag only: native Grok never judges code or infra; the
-      # resolver and the ladder lint refuse it (#9488 kept that rule).
+      # Operator decision 2026-10-05 (#9769): native code/infra review at every risk.
+      # Verdict recording requires runtime modelUsage attestation.
       formal_review_eligible: true
       models: [grok-4.7]
       participant: grok
@@ -676,7 +677,8 @@ models:
     lifecycle: active
     # Current CLI default. grok-4.7-build-fast is about 2x the price and is not
     # an alias. grok-4.6 is not admitted.
-    roles: [coding, strong_review, adversarial_review, debugging]
+    roles: [coding, strong_review, adversarial_review, critical_review, debugging]
+    runtime_model_ids: [grok-4.7-build]
     transports: [native_grok, cursor]
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
     weaknesses: [native_subscription_window]
@@ -1053,7 +1055,7 @@ review_candidates:
     capabilities: [code_review, isolation, sealed_evidence]
     advisory_only_for_author_families: [openai]
   grok-4.7:
-    # Retained identity for explicit-pin refusal; native Grok never judges code/infra.
+    # Operator decision 2026-10-05 (#9769): regular native code/infra reviewer.
     model_id: grok-4.7
     route: grok
     transport: native_grok
@@ -1061,12 +1063,11 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
   grok-4.7-cursor-fallback:
-    # Operator decision 2026-10-02 (#9488): the Sol-spared code/infra reviewer.
+    # Operator decision 2026-10-05 (#9769): regular code/infra transport fallback.
     # The exact Cursor slug grok-4.7-high is the one whose runtime report
     # ("Grok 4.7 256K High") record_cf_verdict accepts; bare grok-4.7 runs the
-    # Fast variant. No critical_review role, so critical risk stays Sol/Opus.
+    # Fast variant; only the high-effort runtime report attests this seat.
     model_id: grok-4.7
-    last_resort: true
     route: cursor
     transport: cursor
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model grok-4.7-high
@@ -1130,8 +1131,8 @@ review_candidates:
 # Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
 # cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
 # AGY remains fail-closed because its text-only wrapper cannot consume the
-# parent-owned sealed MCP. Native Grok never judges (Grok reviews code/infra only through the
-# attested Cursor seat, #9488); Kimi: web, UI and backend coding only, never review.
+# parent-owned sealed MCP. Native and Cursor Grok review code/infra with runtime
+# attestation at every risk (#9769); Kimi: web, UI and backend coding only, never review.
 # Parallel escalate ladder (user 2026-07-22): practical default + authority deep.
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
@@ -1215,7 +1216,8 @@ orchestrator_seats:
       allowlist-union family {xAI, Moonshot}: Cursor-authored PRs require a single
       cross-family reviewer from outside {xAI, Moonshot}; Cursor-as-reviewer is eligible
       only against authors outside {xAI, Moonshot}. Attested Cursor grok-4.7 = xAI family; it is
-      a formal code/infra reviewer only as the review_candidates grok-4.7-cursor-fallback seat (#9488).
+      a regular formal code/infra reviewer at every risk, including critical
+      (operator decision 2026-10-05, #9769), alongside the native Grok seat.
       Driver-of-record still requires an attested concrete resolved_model from the run.
       Concurrency is 1 (the driver session is the Cursor lane; do not dispatch --agent cursor
       from within the driver session).
@@ -1276,33 +1278,33 @@ formal_cf_defaults:
 
 review_ladders:
   # Hard filters precede last-resort preference, then suitability and quality.
-  # Opus / Sol handle critical review first (#9394). Native Grok never judges;
-  # the attested Cursor Grok seat is the Sol-spared last resort (#9488) and has
-  # no critical_review role, so critical lists it only to record that exclusion.
+  # Operator decision 2026-10-05 (#9769): Opus, native Grok, then Cursor Grok.
+  # Both Grok transports require runtime attestation and exclude xAI authors.
   # GLM remains explicit-pin only. Fable holds no review role at any risk (#9583).
   critical:
     - [openai_frontier]
     - [claude-opus-5-5]
-    - [claude-opus-5-5-cursor-fallback]
-    - [composer-2.5]
-    - [pool]
-    - [pool-xs]
+    - [grok-4.7]
     - [grok-4.7-cursor-fallback]
+    - [claude-opus-5-5-cursor-fallback]
   # High lists only review_scheduler.risk_reviewer_models.high (#9538): when
-  # neither seat is eligible the resolver returns no reviewer with a stated reason.
+  # no seat is eligible the resolver returns no reviewer with a stated reason.
   high:
     - [openai_frontier]
     - [claude-opus-5-5]
+    - [grok-4.7]
+    - [grok-4.7-cursor-fallback]
     - [claude-opus-5-5-cursor-fallback]
   medium: &practical_first_code_review
     - [openai_frontier]
     - [claude-opus-5-5]
+    - [grok-4.7]
+    - [grok-4.7-cursor-fallback]
     - [claude-opus-5-5-cursor-fallback]
     - [claude-sonnet-5-5]
     - [composer-2.5]
     - [pool]
     - [pool-xs]
-    - [grok-4.7-cursor-fallback]
   low: *practical_first_code_review
 
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).

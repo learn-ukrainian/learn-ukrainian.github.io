@@ -379,8 +379,8 @@ def test_poolside_laguna_family_exact_ids_and_roles():
         "poolside/laguna-xs-2.1",
         "poolside/laguna-m.1",
     ]
-    # Ladder includes both gen-2 seats (high holds only Sol and Opus, #9538).
-    for risk in ("medium", "low", "critical"):
+    # Routine ladders include both gen-2 seats; high/critical admit only Sol, Opus and Grok.
+    for risk in ("medium", "low"):
         names = {n for rung in catalog["review_ladders"][risk] for n in rung}
         assert "pool" in names
         assert "pool-xs" in names
@@ -412,10 +412,10 @@ def test_gpt_and_grok_primary_formal_routes_are_native():
     assert candidates["openai_frontier"]["transport"] == "native_codex"
     assert "gpt-5.6-terra" not in candidates
     assert candidates["grok-4.7"]["transport"] == "native_grok"
-    # #9488: the Sol-spared Cursor seat pins the exact slug the runtime attests — never Cursor auto.
+    # #9769: the regular Cursor seat pins the exact runtime-attestable slug, never Auto.
     assert candidates["grok-4.7-cursor-fallback"]["transport"] == "cursor"
     assert candidates["grok-4.7-cursor-fallback"]["model_id"] == "grok-4.7"
-    assert candidates["grok-4.7-cursor-fallback"]["last_resort"] is True
+    assert candidates["grok-4.7-cursor-fallback"].get("last_resort", False) is False
     assert candidates["grok-4.7-cursor-fallback"]["invocation"].endswith(
         "--agent cursor --model grok-4.7-high"
     )
@@ -580,20 +580,22 @@ def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
     assert fc["claude"]["escalate_model_id"] == "claude-opus-5-5"
 
 
-def test_high_ladder_is_sol_and_opus_only():
-    """#9538: high-risk review resolves only to Sol or Opus; medium and low stay practical."""
+def test_high_ladder_admits_sol_opus_and_grok():
+    """#9769: high-risk review admits both Grok transports alongside Opus and Sol."""
     ladders = load_model_catalog()["review_ladders"]
     assert ladders["high"] == [
         ["openai_frontier"],
         ["claude-opus-5-5"],
+        ["grok-4.7"],
+        ["grok-4.7-cursor-fallback"],
         ["claude-opus-5-5-cursor-fallback"],
     ]
     assert ladders["medium"] == ladders["low"]
-    assert ladders["medium"][:3] == ladders["high"]
+    assert ladders["medium"][:5] == ladders["high"]
     assert len(ladders["medium"]) > len(ladders["high"])
 
 
-@pytest.mark.parametrize("candidate", ["claude-sonnet-5-5", "grok-4.7-cursor-fallback", "composer-2.5"])
+@pytest.mark.parametrize("candidate", ["claude-sonnet-5-5", "composer-2.5"])
 def test_catalog_rejects_a_high_ladder_seat_outside_risk_reviewer_models(candidate):
     """#9538: the high ladder can list only the models risk_reviewer_models.high names."""
     broken = deepcopy(load_model_catalog())
@@ -602,14 +604,14 @@ def test_catalog_rejects_a_high_ladder_seat_outside_risk_reviewer_models(candida
         validate_catalog(broken)
 
 
-def test_risk_reviewer_models_names_sol_and_opus_at_high_only():
-    """#9538: one catalogue definition; the other risks stay unrestricted by it."""
+def test_risk_reviewer_models_names_sol_opus_grok_at_high_and_critical():
+    """#9769: both high and critical use the same admitted models."""
     catalog = load_model_catalog()
-    assert catalog["review_scheduler"]["risk_reviewer_models"] == {"high": ["gpt-6.1-sol", "claude-opus-5-5"]}
+    assert catalog["review_scheduler"]["risk_reviewer_models"] == {risk: ["gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"] for risk in ("high", "critical")}
     assert risk_reviewer_refusal("claude-opus-5-5-high", "high", catalog) is None
     assert risk_reviewer_refusal("gpt-6.1-sol", "HIGH", catalog) is None
     assert "performed only by" in risk_reviewer_refusal("claude-sonnet-5-5", "high", catalog)
-    for risk in ("critical", "medium", "low"):
+    for risk in ("medium", "low"):
         assert risk_reviewer_refusal("claude-sonnet-5-5", risk, catalog) is None
 
 
@@ -639,9 +641,9 @@ def test_practical_ladders_exclude_advisory_roles():
         assert "gpt-5.6-terra" not in names
         assert "claude-sonnet-5-5" in names
         assert "pool" in names
-        # #9488: only the attested Cursor Grok seat; native Grok never judges.
+        # #9769: native Grok and its attested Cursor fallback are regular reviewers.
         assert "grok-4.7-cursor-fallback" in names
-        assert "grok-4.7" not in names
+        assert "grok-4.7" in names
     critical = {name for rung in ladders["critical"] for name in rung}
     assert "openai_frontier" in critical
     assert "claude-fable-5-1" not in critical
@@ -956,15 +958,14 @@ def test_catalog_rejects_future_review_date():
 def test_critical_ladder_anthropic_authority_is_opus_without_fable():
     catalog = load_model_catalog()
     flat = [name for rung in catalog["review_ladders"]["critical"] for name in rung]
-    assert flat[:3] == ["openai_frontier", "claude-opus-5-5", "claude-opus-5-5-cursor-fallback"]
-    # #9488: the Cursor Grok seat closes the list; it has no critical_review role.
-    assert flat[-1] == "grok-4.7-cursor-fallback"
+    assert flat[:4] == ["openai_frontier", "claude-opus-5-5", "grok-4.7", "grok-4.7-cursor-fallback"]
+    assert flat[-1] == "claude-opus-5-5-cursor-fallback"
     # #9583: Fable is no longer a critical last resort.
     assert not any(name.startswith("claude-fable-") for name in flat)
     assert "claude-opus-5" not in flat
     assert "claude-sonnet-5-5" not in flat
     for name in flat:
-        assert catalog["review_candidates"][name].get("last_resort", False) == (name == "grok-4.7-cursor-fallback")
+        assert catalog["review_candidates"][name].get("last_resort", False) is False
 
 
 def test_opus_advisory_capability_does_not_grant_orchestration() -> None:
@@ -1547,16 +1548,17 @@ def test_last_resort_marker_must_be_boolean(value):
 
 def test_primary_cannot_follow_last_resort_even_if_quality_is_equal():
     catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["grok-4.7-cursor-fallback"]["last_resort"] = True
     catalog["review_ladders"]["critical"] = [["grok-4.7-cursor-fallback"], ["claude-opus-5-5"]]
     with pytest.raises(ModelCatalogError, match="improves quality in a later rung"):
         validate_catalog(catalog)
 
 
 @pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
-def test_grok_cannot_reenter_any_code_review_ladder(risk):
+def test_grok_cannot_repeat_in_any_code_review_ladder(risk):
     catalog = deepcopy(load_model_catalog())
     catalog["review_ladders"][risk].append(["grok-4.7"])
-    with pytest.raises(ModelCatalogError, match="Grok never judges"):
+    with pytest.raises(ModelCatalogError, match="repeats candidate"):
         validate_catalog(catalog)
 
 
@@ -1566,3 +1568,9 @@ def test_catalog_selection_order_matches_last_resort_and_suitability_policy():
         "profile_risk_suitability", "review_quality_tier",
         "health_and_quota_within_tier", "cost_within_equivalent_fit",
     ]
+
+
+def test_native_grok_runtime_attestation_allowlist_is_exact():
+    model = load_model_catalog()["models"]["grok-4.7"]
+    assert model["runtime_model_ids"] == ["grok-4.7-build"]
+    assert "grok-4.7-build-fast" not in model["runtime_model_ids"]

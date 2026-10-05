@@ -2482,13 +2482,13 @@ def _cursor_model_state(
     substitution: dict[str, Any] | None = None,
     initial: bool = False,
 ) -> dict[str, Any]:
-    """Return a truthful Cursor model-attribution companion for task state.
+    """Return runtime model-attribution companions for Cursor and native Grok.
 
     ``model`` remains the requested selector unless the runtime supplied a
-    concrete Cursor model. The separate ``resolved_model`` field makes an
+    concrete runtime model. The separate ``resolved_model`` field makes an
     unresolved Auto run explicit without promoting ``auto`` to family proof.
     """
-    if agent != "cursor":
+    if agent not in {"cursor", "grok", "grok-build"}:
         return {}
 
     if initial:

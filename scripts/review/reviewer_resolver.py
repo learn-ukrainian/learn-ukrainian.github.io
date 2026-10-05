@@ -14,11 +14,11 @@ demote a model into a lower-quality rung.
 The model inventory, candidate routes, and risk ladders are loaded from the
 versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 (``REVIEW_CANDIDATES`` / ``REVIEW_LADDERS`` via ``_catalog_candidate`` /
-``_catalog_ladder``). Policy changes belong in YAML: critical prefers Sol / Opus;
-Fable holds no review role (#9583), routine ladders keep practical seats, native Grok never
-judges, and the runtime-attested Cursor Grok seat is the Sol-spared last resort
-below critical (#9488). A formal review at high risk is performed only by the
-models ``review_scheduler.risk_reviewer_models`` lists (#9538); that is an
+``_catalog_ladder``). Policy changes belong in YAML: critical admits Sol / Opus / Grok;
+Fable holds no review role (#9583); native and runtime-attested Cursor Grok are
+regular code/infra reviewers at every risk (operator decision 2026-10-05, #9769).
+A formal review at high or critical risk is performed only by the models
+``review_scheduler.risk_reviewer_models`` lists; that is an
 eligibility gate, so it binds explicit pins and custom ladders too.
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
@@ -739,10 +739,14 @@ def evaluate_candidate(
             health=health,
         )
     if inputs.subject_seats or inputs.subject_families:
+        # The Grok model governs both admitted transports (#9769).
+        subject_families = inputs.subject_families
+        if "cursor" in inputs.subject_seats:
+            subject_families = frozenset((*subject_families, "xai"))
         subject_reason = subject_exclusion_reason(
             candidate,
             seats=inputs.subject_seats,
-            families=inputs.subject_families,
+            families=subject_families,
             evidence=inputs.subject_evidence,
         )
         if subject_reason:
@@ -759,29 +763,6 @@ def evaluate_candidate(
                 reason=subject_reason,
                 health=health,
             )
-
-    # Operator decision 2026-10-02 (#9488): Grok reviews code and infra only
-    # through the Cursor seat whose runtime attests the concrete model. Every
-    # other gate below (independence, suitability, health) still applies to it.
-    if (candidate.family == "xai" or model_family == "xai") and not (
-        candidate.transport == "cursor" and candidate.route == "cursor"
-    ):
-        return CandidateResult(
-            name=candidate.name,
-            concrete_model=candidate.concrete_model,
-            family=candidate.family,
-            route=candidate.route,
-            transport=candidate.transport,
-            invocation=candidate.invocation,
-            quality_tier=candidate.quality_tier,
-            requires_silence_timeout=candidate.requires_silence_timeout,
-            status="excluded",
-            reason=(
-                "native Grok never judges: Grok reviews code and infra only through the "
-                "runtime-attested Cursor seat (core.md P2, #9488)"
-            ),
-            health=health,
-        )
 
     # Operator 2026-09-25: Gemini reviews Ukrainian only, never code. Keep this
     # hard gate even for injected ladders and explicitly pinned candidates.
