@@ -173,8 +173,6 @@ def resolve_worktree_record(worktree: Path, tasks_dir: Path, *, repo_root: Path)
         # Finished references alone are not ownership. Without one creator,
         # output retains unknown attribution; empty trees remain removable.
         creators = [match for match in matches if match[1].get("worktree_reused") is False]
-        if len(creators) == 1 and any(match[1].get("task_id") != creators[0][1].get("task_id") for match in matches):
-            return None, {}
         if len(creators) == 1 and is_superseded_record(creators[0][0]):
             identity = creators[0][1].get("task_id")
             if isinstance(identity, str) and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity):

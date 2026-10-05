@@ -419,15 +419,23 @@ def test_internal_release_link_to_vanished_pids_records_target_absence(checkout)
     assert output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
 
 
-def test_different_task_reuser_cannot_borrow_a_canonical_creator(checkout):
+def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout):
     repo, primary, tasks = checkout
-    artifact(checkout, "ignored/report.txt")
+    source = artifact(checkout, "ignored/report.txt")
     creator = {"task_id": "output-task", "worktree_path": str(repo), "worktree_reused": False, "status": "done"}
-    (tasks / "output-task.json").write_text(json.dumps(creator))
-    (tasks / "other-task.json").write_text(json.dumps(dict(creator, task_id="other-task", worktree_reused=True)))
-    assert output.resolve_worktree_record(repo, tasks, repo_root=primary) == (None, {})
-    ok, reason, _ = output.preserve_worktree_artifacts(repo, primary=primary, tasks_dir=tasks, task_id=None)
-    assert not ok and "missing canonical task attribution" in reason
+    canonical = tasks / "output-task.json"
+    canonical.write_text(json.dumps(creator))
+    reuser = dict(creator, task_id="other-task", worktree_reused=True)
+    reused_record = tasks / "other-task.json"
+    reused_record.write_text(json.dumps(reuser))
+    for _ in range(2):  # Exercise both fresh and content-verified cached lookups.
+        assert output.resolve_worktree_record(repo, tasks, repo_root=primary) == (canonical, creator)
+    ok, reason, receipt = output.preserve_worktree_artifacts(repo, primary=primary, tasks_dir=tasks, task_id=None)
+    assert ok and not reason and receipt["task_id"] == "output-task"
+    assert (primary / receipt["location"] / "ignored/report.txt").read_bytes() == source.read_bytes()
+    assert output.verify_retrieval(primary, receipt) == receipt["content_sha256"]
+    assert json.loads(canonical.read_text())["preserved_artifacts"] == receipt
+    assert json.loads(reused_record.read_text()) == reuser
 
 
 @pytest.mark.parametrize("case", ["force_new", "vanished_copy", "internal_link", "changed_copy"])
