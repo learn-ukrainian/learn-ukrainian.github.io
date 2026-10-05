@@ -25,6 +25,9 @@ from scripts.eval.uk_preamble.dispatch import (
 )
 from scripts.eval.uk_preamble.runner import Executor, TaskSpec, composition_frame, raw_path, render, rules_block
 
+CALLER = "harness"
+
+
 FAKE_DELEGATE = textwrap.dedent(
     """
     import hashlib, json, sys, time
@@ -46,7 +49,9 @@ FAKE_DELEGATE = textwrap.dedent(
             )
             sys.exit(2)
         if "--dry-run" in args:
-            record.write_text(json.dumps({"status": "dry_run", "task_id": task_id}))
+            record.write_text(json.dumps({
+                "status": "dry_run", "task_id": task_id, "initiator": "__CALLER__",
+            }))
             print(task_id); print("dry-nonce"); sys.exit(0)
         prompt = Path(args[args.index("--prompt-file") + 1]).read_text()
         result = state_dir / f"{task_id}.result"
@@ -69,8 +74,10 @@ FAKE_DELEGATE = textwrap.dedent(
             time.sleep(30)
         sys.exit(0)
     if command == "status":
+        if "unreadable" in task_id:
+            print("NOT-JSON"); sys.exit(1)
         if not record.exists():
-            print(json.dumps({"error": "no state file"})); sys.exit(1)
+            print(json.dumps({"error": f"no state file for task {task_id!r}"})); sys.exit(1)
         print(record.read_text()); sys.exit(0)
     sys.exit(2)
     """
@@ -78,9 +85,10 @@ FAKE_DELEGATE = textwrap.dedent(
 
 
 @pytest.fixture
-def fake(tmp_path: Path) -> tuple[DelegateDispatcher, Path, Path]:
+def fake(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[DelegateDispatcher, Path, Path]:
+    monkeypatch.setattr(dispatch_module, "caller_initiator", lambda: CALLER)
     script = tmp_path / "delegate.py"
-    script.write_text(FAKE_DELEGATE, encoding="utf-8")
+    script.write_text(FAKE_DELEGATE.replace("__CALLER__", CALLER), encoding="utf-8")
     prompt = tmp_path / "prompt.md"
     prompt.write_text("Завдання.\n", encoding="utf-8")
     worker = tmp_path / "worker"
@@ -365,19 +373,60 @@ def test_result_digest_mismatch_is_refused(fake):
         dispatcher.wait("t-tamper", "n1")
 
 
+def test_caller_initiator_matches_delegate_attribution():
+    from scripts.agent_runtime.attribution import resolve_invocation_attribution
+
+    assert dispatch_module.caller_initiator() == resolve_invocation_attribution().initiator
+
+
 def test_preflight_dry_run_is_idempotent_and_a_real_dispatch_still_refuses_reuse(fake):
+    """No record omits --force-new. This caller's terminal dry_run passes it. A real id is not reused."""
     dispatcher, prompt, state = fake
     seat = SEATS["claude-opus-5-5"]
     dispatcher.preflight("t-pre", seat, "judge", prompt)
     dispatcher.preflight("t-pre", seat, "judge", prompt)  # the first dry run left a terminal dry_run record
+    assert [call[0] for call in _calls(state)] == ["status", "dispatch", "status", "dispatch"]
     dry_calls = [call for call in _calls(state) if "--dry-run" in call]
     assert len(dry_calls) == 2
+    assert "--force-new" not in dry_calls[0]
+    assert "--force-new" in dry_calls[1]
     for call in dry_calls:
-        assert "--force-new" in call
         assert call[call.index("--research-task-family") + 1] == "ukrainian-review"
+    record = json.loads((state / "t-pre.json").read_text(encoding="utf-8"))
+    assert record["status"] == "dry_run" and record["initiator"] == CALLER
     dispatcher.dispatch("t-real", seat, "writing", prompt, force_new=False)
     with pytest.raises(DispatchError, match="already"):
         dispatcher.dispatch("t-real", seat, "writing", prompt, force_new=False)
+
+
+@pytest.mark.parametrize(
+    ("task_id", "record", "token"),
+    [
+        ("t-done", {"status": "done", "initiator": CALLER, "task_id": "t-done"}, "status 'done'"),
+        ("t-running", {"status": "running", "initiator": CALLER, "task_id": "t-running"}, "status 'running'"),
+        ("t-other", {"status": "dry_run", "initiator": "other-owner", "task_id": "t-other"}, "initiator 'other-owner'"),
+        ("t-unreadable", None, "output is unreadable"),
+    ],
+)
+def test_preflight_refuses_anything_but_our_terminal_dry_run(fake, task_id: str, record: dict | None, token: str):
+    """Each colliding state is refused before dispatch, so the existing record is not archived."""
+    dispatcher, prompt, state = fake
+    state.mkdir(parents=True, exist_ok=True)
+    path = state / f"{task_id}.json"
+    before = None
+    if record is not None:
+        path.write_text(json.dumps(record), encoding="utf-8")
+        before = path.read_text(encoding="utf-8")
+    with pytest.raises(DispatchError, match="Nothing was archived") as caught:
+        dispatcher.preflight(task_id, SEATS["claude-opus-5-5"], "review", prompt)
+    assert token in str(caught.value)
+    calls = _calls(state)
+    assert calls and calls[0][0] == "status"
+    assert not any(call[0] == "dispatch" for call in calls)
+    if before is None:
+        assert not path.exists()
+    else:
+        assert path.read_text(encoding="utf-8") == before
 
 
 def test_unknown_kind_is_not_dispatched(fake):

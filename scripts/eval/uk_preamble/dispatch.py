@@ -36,6 +36,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
+from scripts.agent_runtime.attribution import resolve_invocation_attribution
 from scripts.lib.rules_core import RulesCoreError
 
 from .common import Seat, sha256_bytes, sha256_text
@@ -127,6 +128,14 @@ class TaskOutcome:
 
 class DispatchError(Exception):
     """The dispatcher refused or failed to start a task."""
+
+
+def caller_initiator() -> str:
+    """The initiator delegate records when this process dispatches without ``--initiator``.
+
+    ``unknown`` is not a caller: delegate refuses ``--force-new`` for it, and so does preflight.
+    """
+    return resolve_invocation_attribution().initiator
 
 
 def task_family(kind: str) -> str:
@@ -353,18 +362,64 @@ class DelegateDispatcher:
         lines = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
         return lines[-1] if len(lines) >= 2 else None
 
+    def _existing_record(self, task_id: str) -> dict[str, Any] | None:
+        """The task record, or None when delegate reports that none exists.
+
+        Unreadable status output refuses the caller. A missing record is not an error.
+        """
+        try:
+            proc = self._run("status", task_id)
+        except DispatchError as exc:
+            raise DispatchError(f"preflight {task_id} refused: {exc} Nothing was archived.") from exc
+        text = proc.stdout.strip()
+        try:
+            state = json.loads(text) if text else None
+        except ValueError as exc:
+            raise DispatchError(
+                f"preflight {task_id} refused: delegate status output is unreadable ({exc}). Nothing was archived."
+            ) from exc
+        if not isinstance(state, dict):
+            raise DispatchError(
+                f"preflight {task_id} refused: delegate status output is unreadable. Nothing was archived."
+            )
+        if proc.returncode != 0:
+            error = state.get("error")
+            if isinstance(error, str) and "no state file" in error:
+                return None
+            detail = error if isinstance(error, str) else text[-400:]
+            raise DispatchError(
+                f"preflight {task_id} refused: delegate status is unreadable ({detail}). Nothing was archived."
+            )
+        return state
+
     def preflight(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> None:
         """Validate the dispatch with ``--dry-run``.
 
         A dry run leaves a terminal ``dry_run`` record, and that record does not
         store ``dispatch_args_sha256`` (delegate returns before the hash is
-        written), so a later dry run cannot tell from the record that the
-        arguments are the same. ``--force-new`` re-validates the current
-        arguments and archives only the caller's own terminal record; delegate
-        excludes it from the argument hash. A real dispatch does not pass it,
-        and still refuses to reuse an existing task id.
+        written). ``--force-new`` is passed only when ``status`` shows that record
+        exists, is a terminal ``dry_run``, and was written by this caller, so a
+        repeated dry run can replace it. Delegate excludes ``--force-new`` from the
+        argument hash and would otherwise archive any terminal record this caller
+        owns, including a real ``done``. When no record exists, the dry run omits
+        ``--force-new``. Any other state (a real ``done``, ``running``, another
+        owner, or unreadable status) refuses this preflight before dispatch, so
+        nothing is archived. A real dispatch omits ``--force-new`` and still
+        refuses to reuse an existing task id.
         """
-        args = [*self._dispatch_args(task_id, seat, kind, prompt_path), "--dry-run", "--force-new"]
+        record = self._existing_record(task_id)
+        args = [*self._dispatch_args(task_id, seat, kind, prompt_path), "--dry-run"]
+        if record is not None:
+            status = record.get("status")
+            initiator = record.get("initiator")
+            caller = caller_initiator()
+            owned_dry_run = status == "dry_run" and initiator not in (None, "unknown") and initiator == caller
+            if not owned_dry_run:
+                raise DispatchError(
+                    f"preflight {task_id} refused: record status {status!r} initiator {initiator!r} "
+                    f"is not this caller's ({caller!r}) terminal dry_run. Nothing was archived."
+                )
+            args.append("--force-new")
         proc = self._run(*args, timeout=SPAWN_TIMEOUT)
         if proc.returncode != 0:
             raise DispatchError(f"delegate dry-run {task_id} exited {proc.returncode}: {proc.stderr.strip()[-800:]}")

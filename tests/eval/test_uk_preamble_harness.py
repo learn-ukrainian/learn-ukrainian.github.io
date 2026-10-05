@@ -62,6 +62,7 @@ class FakeDispatcher:
         self.foreign_prompt: set[str] = set()
         self.conditions_for: dict[str, dict[str, Any]] = {}
         self.writing_for: dict[tuple[bool, str], str] = {}  # (has preamble, item id) -> text
+        self.hard_timeout = 3600
         self.core = "[rules core]\n\n"
 
     def _composed(self, prompt: str) -> str:
@@ -127,7 +128,7 @@ class FakeDispatcher:
         return task_id in self.records
 
     def expected_args_sha256(self, task_id, seat, kind, prompt_path: Path) -> str:
-        return sha256_text(f"{task_id}|{seat.seat_id}|{kind}|{prompt_path}")
+        return sha256_text(f"{task_id}|{seat.seat_id}|{kind}|{prompt_path}|{self.hard_timeout}")
 
     def dispatch(self, task_id, seat, kind, prompt_path: Path, *, force_new: bool) -> str:
         if task_id in self.refuse:
@@ -200,7 +201,12 @@ def _make_env(
     worker.mkdir()
     fake = FakeDispatcher(set_dict, worker.resolve())
     workspace = {"head": "commit-a"}
-    monkeypatch.setattr(cli, "make_dispatcher", lambda args, cwd: fake)
+
+    def make_dispatcher(args, cwd, bound=fake):
+        bound.hard_timeout = args.hard_timeout
+        return bound
+
+    monkeypatch.setattr(cli, "make_dispatcher", make_dispatcher)
     monkeypatch.setattr(cli, "make_workspace", lambda cwd: lambda: dict(workspace))
     monkeypatch.setattr(cli, "make_sources", FakeSources)
     results = outside_dir / "results"
@@ -742,6 +748,49 @@ def test_judge_ratio_exactly_at_the_bound_is_judged_and_terms_are_frozen(env, ca
     capsys.readouterr()
     assert _score(env, "--judge-length-ratio", "0.5") == 2
     assert "judge terms were frozen" in capsys.readouterr().err
+
+
+def test_score_judge_refuses_a_legacy_manifest_before_any_dispatch(env, capsys):
+    """A manifest without dispatch_args_sha256 must not start judges (review round 2)."""
+    assert cli.main(env["run"]) == 0
+    path = env["results"] / "manifest.json"
+    manifest = read_json(path)
+    del manifest["frozen"]["dispatch_args_sha256"]
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    before = list(env["fake"].dispatched)
+    capsys.readouterr()
+    assert _score(env, "--judge") == 2
+    err = capsys.readouterr().err
+    assert "dispatch_args_sha256" in err and "--run-tag" in err and "never mixed" in err
+    assert env["fake"].dispatched == before
+    assert "judge" not in read_json(path)
+
+
+def test_judge_retry_with_different_arguments_is_refused_before_dispatch(env, capsys):
+    """A retry that changes --hard-timeout must not dispatch, or reuse judges frozen earlier."""
+    assert cli.main(env["run"]) == 0
+    assert _score(env, "--judge") == 0
+    manifest = read_json(env["results"] / "manifest.json")
+    frozen_args = manifest["judge"]["dispatch_args_sha256"]
+    assert set(frozen_args) == set(SEATS)
+    judge_ids = [task_id for task_id, _force in env["fake"].dispatched if "-judge-" in task_id]
+    assert judge_ids
+    victim = judge_ids[0]
+    raw_path = env["results"] / "raw" / f"{victim}.json"
+    raw = read_json(raw_path)
+    raw["accepted"] = False
+    raw["status"] = "timeout"
+    raw_path.write_text(json.dumps(raw), encoding="utf-8")
+    before = list(env["fake"].dispatched)
+    capsys.readouterr()
+    assert _score(env, "--judge", "--retry-failed", "--hard-timeout", "17") == 2
+    err = capsys.readouterr().err
+    assert "per seat" in err and "--run-tag" in err and "never mixed" in err
+    assert env["fake"].dispatched == before
+    assert read_json(env["results"] / "manifest.json")["judge"]["dispatch_args_sha256"] == frozen_args
+    # The same frozen arguments still retry only the failed judge.
+    assert _score(env, "--judge", "--retry-failed") == 0
+    assert env["fake"].dispatched == [*before, (victim, True)]
 
 
 def test_judge_terms_freeze_on_the_first_judging_call_even_when_every_pair_is_excluded(env, capsys):

@@ -5,7 +5,8 @@ Results directory layout (private, outside every Git work tree, given on the com
     manifest.json              the frozen plan (set, variants, templates, rules core, seats,
                                repeats, kinds, item ids, chunking, run tag, worker cwd, delegate's
                                composition frame, dispatch argument hashes, protocol shortfalls)
-                               and, from the first ``score --judge``, the frozen judge terms
+                               and, from the first ``score --judge``, the frozen judge terms and, once
+                               judges are dispatched, each judge seat's dispatch-argument hash
     prompts/<task_id>.md       exact prompt the worker received (rules core included)
     raw/<task_id>.json         attributed outcome, executed conditions and raw response
     raw/<task_id>.pending.json dispatched, outcome not collected yet (holds the dispatch-time
@@ -170,6 +171,28 @@ def frozen_plan(
     }
 
 
+def dispatch_args_refusal(changed: Sequence[str]) -> str:
+    """Refusal for a manifest whose dispatch-argument freeze is missing or different.
+
+    A new ``--run-tag`` (and its results directory) is the only way to change arguments.
+    """
+    return (
+        "results directory was frozen under different dispatch arguments "
+        f"({', '.join(changed)}). A new --run-tag is the path; argument sets are never mixed."
+    )
+
+
+def require_frozen_dispatch_args(frozen: dict[str, Any]) -> None:
+    """Refuse a manifest written before dispatch arguments were frozen.
+
+    ``run`` records ``dispatch_args_sha256``. A later command that dispatches must see that
+    key: a legacy manifest is not resumed, including by ``score --judge``.
+    """
+    found = frozen.get("dispatch_args_sha256")
+    if not isinstance(found, dict) or not found:
+        raise HarnessError(dispatch_args_refusal(["dispatch_args_sha256"]))
+
+
 def ensure_manifest(results: ResultsDir, frozen: dict[str, Any], set_path: Path) -> dict[str, Any]:
     """Create the manifest, or refuse when a resumed run changes any frozen term."""
     path = results.path("manifest.json")
@@ -181,10 +204,7 @@ def ensure_manifest(results: ResultsDir, frozen: dict[str, Any], set_path: Path)
         )
         if changed:
             if "dispatch_args_sha256" in changed:
-                raise HarnessError(
-                    "results directory was frozen under different dispatch arguments "
-                    f"({', '.join(changed)}). A new --run-tag is the path; argument sets are never mixed."
-                )
+                raise HarnessError(dispatch_args_refusal(changed))
             raise HarnessError(f"results directory was frozen with different terms: {', '.join(changed)}")
         return manifest
     manifest = {"frozen": frozen, "set_path": str(set_path), "created_at": datetime.now(UTC).isoformat()}
@@ -259,6 +279,54 @@ def dispatch_args_frame(dispatcher: Dispatcher, tasks: Sequence[TaskSpec], resul
             task.task_id, task.seat, task.kind, prompt_path(results, task.task_id)
         )
     return found
+
+
+def judge_dispatch_args_frame(dispatcher: Dispatcher, tasks: Sequence[TaskSpec], results: ResultsDir) -> dict[str, str]:
+    """Argument hash of the first judge task of each seat.
+
+    Stored on the manifest's judge block at the first judge execution. Task ids and prompt
+    paths are stable for one plan, so a later change to a hashed flag (``--hard-timeout``)
+    changes every seat's hash.
+    """
+    found: dict[str, str] = {}
+    for task in tasks:
+        seat_id = task.seat.seat_id
+        if seat_id in found:
+            continue
+        found[seat_id] = dispatcher.expected_args_sha256(
+            task.task_id, task.seat, task.kind, prompt_path(results, task.task_id)
+        )
+    return found
+
+
+def freeze_judge_dispatch_args(
+    manifest: dict[str, Any],
+    dispatcher: Dispatcher,
+    tasks: Sequence[TaskSpec],
+    results: ResultsDir,
+) -> None:
+    """Store per-seat judge argument hashes, or refuse when this execution differs.
+
+    Called before any judge is dispatched. The first execution writes the hashes; every later
+    execution, including ``--retry-failed``, must present the same map.
+    """
+    fresh = judge_dispatch_args_frame(dispatcher, tasks, results)
+    judge = manifest.get("judge")
+    if not isinstance(judge, dict):
+        raise HarnessError("judge terms are not frozen; refusing to dispatch judges")
+    frozen = judge.get("dispatch_args_sha256")
+    if frozen is None:
+        judge["dispatch_args_sha256"] = fresh
+        write_private_json(results.path("manifest.json"), manifest)
+        return
+    recorded = frozen if isinstance(frozen, dict) else {}
+    if recorded == fresh:
+        return
+    seats = sorted(seat for seat in set(recorded) | set(fresh) if recorded.get(seat) != fresh.get(seat))
+    raise HarnessError(
+        "judge dispatch arguments were frozen per seat and differ "
+        f"({', '.join(seats)}). A new --run-tag is the path; argument sets are never mixed."
+    )
 
 
 def candidate_slots(plan: dict[str, Any]) -> list[Slot]:
@@ -498,9 +566,10 @@ class Executor:
         """Write prompts and validate each dispatch with the delegate's dry run; nothing is spawned.
 
         Each prompt's composition is computed and checked against the frozen frame first. The dry run
-        uses a distinct ``-preflight`` task id so it never collides with the real task. That id itself
-        is reused when a dry run is repeated; the dispatcher passes ``--force-new`` so delegate can
-        archive its own terminal ``dry_run`` record. A real dispatch does not.
+        uses a distinct ``-preflight`` task id so it never collides with the real task. When that id
+        already names this caller's terminal ``dry_run`` record, the dispatcher passes ``--force-new``
+        so the dry run can be repeated. When no record exists, it omits ``--force-new``. Any other
+        existing record refuses that preflight and archives nothing. A real dispatch omits it too.
         """
         summary = RunSummary()
         for task in tasks:
