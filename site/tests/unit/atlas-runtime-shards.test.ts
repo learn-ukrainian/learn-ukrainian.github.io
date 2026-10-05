@@ -1,8 +1,20 @@
 // @vitest-environment node
 
-import { existsSync, readFileSync, renameSync } from "node:fs";
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
+import { createHash } from "node:crypto";
+import { tmpdir } from "node:os";
 import { resolve } from "node:path";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { normalizeAtlasText } from "@site/src/lib/lexicon/normalize";
 import {
   admitsSearchArticle,
@@ -21,7 +33,7 @@ import {
   AtlasDataSourceError,
   type EntryRecord,
 } from "@site/src/lib/lexicon/atlas-data-source";
-import { rankSearchResults, type SearchRow } from "@site/src/lib/lexicon/search";
+import { rankSearchResults, type SearchAlias, type SearchRow } from "@site/src/lib/lexicon/search";
 import { PRACTICE_LEVELS, type PracticeLevel } from "@site/src/lib/lexicon/runtime-contract";
 import { renderWordAtlasArticle } from "../helpers/render-word-atlas-article";
 import {
@@ -125,41 +137,162 @@ function enumerateEntryRecordsFromTree(
 }
 
 /**
- * Point SqliteAtlasDataSource at the fixture DB and hide dual-publication
- * search artifacts so it projects search rows from the same DB the export used.
+ * Project search rows from the fixture DB using an empty private artifact
+ * directory. Keep the environment/cache selection until the callback settles.
  */
-function withFixtureSqlite<T>(fn: (sqlite: SqliteAtlasDataSource) => Promise<T>): Promise<T> {
+async function withFixtureSqlite<T>(fn: (sqlite: SqliteAtlasDataSource) => Promise<T>): Promise<T> {
   expect(hasFixtureDb).toBe(true);
-  const searchIndex = resolve(process.cwd(), "src/data/lexicon-search-index.json");
-  const searchAliases = resolve(process.cwd(), "src/data/lexicon-search-aliases.json");
-  const bakIndex = `${searchIndex}.f006-bak`;
-  const bakAliases = `${searchAliases}.f006-bak`;
+  const searchArtifactsDir = mkdtempSync(resolve(tmpdir(), "atlas-fixture-search-"));
   const prevAtlasDb = process.env.ATLAS_DB_PATH;
-  let movedIndex = false;
-  let movedAliases = false;
   try {
-    if (existsSync(searchIndex)) {
-      renameSync(searchIndex, bakIndex);
-      movedIndex = true;
-    }
-    if (existsSync(searchAliases)) {
-      renameSync(searchAliases, bakAliases);
-      movedAliases = true;
-    }
     process.env.ATLAS_DB_PATH = fixtureDbPath;
     resetSqliteAtlasDataSourceCachesForTests();
     resetAtlasPayloadCacheForTests();
-    const sqlite = new SqliteAtlasDataSource();
-    return fn(sqlite);
+    const sqlite = new SqliteAtlasDataSource({ searchArtifactsDir });
+    return await fn(sqlite);
   } finally {
-    if (movedIndex && existsSync(bakIndex)) renameSync(bakIndex, searchIndex);
-    if (movedAliases && existsSync(bakAliases)) renameSync(bakAliases, searchAliases);
     if (prevAtlasDb === undefined) delete process.env.ATLAS_DB_PATH;
     else process.env.ATLAS_DB_PATH = prevAtlasDb;
     resetSqliteAtlasDataSourceCachesForTests();
     resetAtlasPayloadCacheForTests();
+    rmSync(searchArtifactsDir, { recursive: true, force: true });
   }
 }
+
+function canonicalSearchSnapshot() {
+  const dir = resolve(process.cwd(), "src/data");
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((name) => /^lexicon-search-(index|aliases)\.json/.test(name))
+    .sort()
+    .map((name) => {
+      const path = resolve(dir, name);
+      const stat = statSync(path, { bigint: true });
+      return {
+        name,
+        bytes: stat.size.toString(),
+        mtimeNs: stat.mtimeNs.toString(),
+        sha256: createHash("sha256").update(readFileSync(path)).digest("hex"),
+      };
+    });
+}
+
+describe("Atlas fixture input isolation", () => {
+  test("instance search directories preserve the default and require both artifacts", async () => {
+    const root = mkdtempSync(resolve(tmpdir(), "atlas-search-inputs-"));
+    const defaultDir = resolve(root, "src/data");
+    const privateDir = resolve(root, "private");
+    const rows: SearchRow[] = [
+      { l: "sentinel private", r: "sentinel private", s: "private-sentinel", g: null },
+    ];
+    const aliases: SearchAlias[] = [
+      { a: "alias sentinel", k: "transliteration", s: rows[0]!.s, h: rows[0]!.l },
+    ];
+    const defaultRows: SearchRow[] = [
+      { l: "sentinel default", r: "sentinel default", s: "default-sentinel", g: null },
+    ];
+    let cwdSpy: ReturnType<typeof vi.spyOn> | undefined;
+    try {
+      for (const dir of [defaultDir, privateDir, resolve(root, "index-only"), resolve(root, "aliases-only")]) {
+        mkdirSync(dir, { recursive: true });
+      }
+      writeFileSync(resolve(defaultDir, "lexicon-search-index.json"), JSON.stringify(defaultRows));
+      writeFileSync(resolve(defaultDir, "lexicon-search-aliases.json"), "[]");
+      writeFileSync(resolve(privateDir, "lexicon-search-index.json"), JSON.stringify(rows));
+      writeFileSync(resolve(privateDir, "lexicon-search-aliases.json"), JSON.stringify(aliases));
+      writeFileSync(resolve(root, "index-only/lexicon-search-index.json"), JSON.stringify(rows));
+      writeFileSync(resolve(root, "aliases-only/lexicon-search-aliases.json"), JSON.stringify(aliases));
+
+      await withFixtureSqlite(async (emptySource) => {
+        const fallback = await emptySource.search("trustworthy");
+        expect(fallback.results.length).toBeGreaterThan(0);
+        // A private cwd exercises the real default path without writing canonical inputs.
+        cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(root);
+        const defaultSource = new SqliteAtlasDataSource();
+        const privateSource = new SqliteAtlasDataSource({ searchArtifactsDir: privateDir });
+        const defaultResults = (await defaultSource.search("sentinel")).results;
+        const privateResults = (await privateSource.search("sentinel")).results;
+        expect(defaultResults).toHaveLength(1);
+        expect(privateResults).toHaveLength(1);
+        expect(defaultResults).toEqual(
+          rankSearchResults(defaultRows, [], "sentinel", 12),
+        );
+        expect(privateResults).toEqual(
+          rankSearchResults(rows, aliases, "sentinel", 12),
+        );
+        expect((await privateSource.search("alias sentinel")).results[0]?.matchedAlias).toBe("alias sentinel");
+        expect((await privateSource.search("trustworthy")).results).toEqual([]);
+        for (const searchArtifactsDir of [resolve(root, "index-only"), resolve(root, "aliases-only")]) {
+          const partial = new SqliteAtlasDataSource({ searchArtifactsDir });
+          expect(await partial.search("trustworthy")).toEqual(fallback);
+          expect((await partial.search("sentinel")).results).toEqual([]);
+        }
+        // Constructing an override cannot change an existing reader or a later default.
+        expect(await emptySource.search("trustworthy")).toEqual(fallback);
+        expect(await new SqliteAtlasDataSource().search("sentinel")).toEqual(
+          await defaultSource.search("sentinel"),
+        );
+      });
+    } finally {
+      cwdSpy?.mockRestore();
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  test.each([
+    { settlement: "resolve", environment: "set" },
+    { settlement: "reject", environment: "set" },
+    { settlement: "resolve", environment: "unset" },
+    { settlement: "reject", environment: "unset" },
+  ] as const)(
+    "keeps fixture environment and cache through delayed callback $settlement, then restores $environment environment",
+    async ({ settlement, environment }) => {
+      const before = canonicalSearchSnapshot();
+      const root = mkdtempSync(resolve(tmpdir(), "atlas-previous-db-"));
+      const previousDb = resolve(root, "previous.db");
+      copyFileSync(fixtureDbPath, previousDb);
+      const originalEnv = process.env.ATLAS_DB_PATH;
+      let fixtureCache: ReturnType<typeof getAtlasPayloadCache> | undefined;
+      const rejection = new Error("delayed fixture rejection");
+      try {
+        process.env.ATLAS_DB_PATH = previousDb;
+        resetAtlasPayloadCacheForTests();
+        const previousCache = getAtlasPayloadCache();
+        if (environment === "unset") delete process.env.ATLAS_DB_PATH;
+        const result = withFixtureSqlite(async (sqlite) => {
+          fixtureCache = getAtlasPayloadCache();
+          expect(fixtureCache).not.toBe(previousCache);
+          await new Promise<void>((resolveCallback) => setTimeout(resolveCallback, 10));
+          expect(process.env.ATLAS_DB_PATH).toBe(fixtureDbPath);
+          expect(getAtlasPayloadCache()).toBe(fixtureCache);
+          expect(canonicalSearchSnapshot()).toEqual(before);
+          // Construct after the delay to prove the environment still selects the fixture.
+          const searchArtifactsDir = mkdtempSync(resolve(root, "delayed-search-"));
+          const delayed = new SqliteAtlasDataSource({ searchArtifactsDir });
+          expect(await delayed.search("trustworthy")).toEqual(await sqlite.search("trustworthy"));
+          if (settlement === "reject") throw rejection;
+          return "callback settled";
+        });
+        if (settlement === "reject") await expect(result).rejects.toBe(rejection);
+        else await expect(result).resolves.toBe("callback settled");
+        expect(process.env.ATLAS_DB_PATH).toBe(environment === "set" ? previousDb : undefined);
+        // Reload from the private copy even when the original environment was unset.
+        process.env.ATLAS_DB_PATH = previousDb;
+        const restoredCache = getAtlasPayloadCache();
+        expect(restoredCache).not.toBe(fixtureCache);
+        expect(restoredCache).not.toBe(previousCache);
+        expect(restoredCache.entries).toEqual(previousCache.entries);
+        expect(canonicalSearchSnapshot()).toEqual(before);
+      } finally {
+        if (originalEnv === undefined) delete process.env.ATLAS_DB_PATH;
+        else process.env.ATLAS_DB_PATH = originalEnv;
+        resetSqliteAtlasDataSourceCachesForTests();
+        resetAtlasPayloadCacheForTests();
+        rmSync(root, { recursive: true, force: true });
+      }
+    },
+  );
+});
 
 describe("atlas normalization vectors", () => {
   test("TypeScript normalizeAtlasText matches shared vectors", () => {
