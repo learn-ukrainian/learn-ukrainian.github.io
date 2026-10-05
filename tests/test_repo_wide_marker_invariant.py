@@ -122,6 +122,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/agent_runtime/test_attempt_safe_read.py::test_scripts_only_import_does_not_load_isolation",
+    "tests/agent_runtime/test_claude_no_background.py::test_claude_code_harness_denominator_is_complete",
     "tests/agent_runtime/test_claude_permissions.py::test_tracked_hooks_work_in_fresh_clone_without_deployed_claude",
     "tests/agent_runtime/test_npm_shim.py::test_shim_files_are_regular_executables",
     "tests/api/test_app_factory.py::test_db_access_patterns_have_the_step_two_allowlist",

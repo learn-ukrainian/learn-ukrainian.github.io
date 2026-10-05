@@ -317,6 +317,7 @@ def test_every_claude_code_harness_plan_disables_background(
     assert denied == list(HEADLESS_BACKGROUND_TOOL_DENIES)
 
 
+@pytest.mark.repo_wide
 def test_claude_code_harness_denominator_is_complete() -> None:
     """Every runtime adapter that resolves the Claude binary is in the table above."""
     adapters = REPO_ROOT / "scripts" / "agent_runtime" / "adapters"
