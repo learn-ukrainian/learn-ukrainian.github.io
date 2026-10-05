@@ -6,10 +6,10 @@ import json
 import os
 import subprocess
 import threading
-from pathlib import Path
 
 import pytest
 
+from scripts.fleet import ignored_task_output as output
 from scripts.orchestration import worktree_artifacts as wa
 from tests import _worktree_artifact_links as links
 
@@ -30,9 +30,34 @@ def checkout(tmp_path):
     return repo, primary, tasks
 
 
+def bound_record(checkout, record=None):
+    record = {} if record is None else record
+    record.setdefault("task_id", "artifact-task")
+    record.setdefault("worktree_path", str(checkout[0]))
+    record.setdefault("run_nonce", "artifact-run")
+    (checkout[2] / "artifact-task.json").write_text(json.dumps(record))
+    return record
+
+
 def guard(checkout, *, task_id="artifact-task", record=None):
     repo, primary, tasks = checkout
-    return wa.preserve_worktree_artifacts(repo, primary=primary, task_id=task_id, tasks_dir=tasks, task_record=record)
+    path = tasks / "artifact-task.json"
+    if record is not None:
+        record.setdefault("task_id", task_id)
+        record.setdefault("worktree_path", str(repo))
+        record.setdefault("run_nonce", "artifact-run")
+        if path.exists():
+            stored = json.loads(path.read_text())
+            # Response references belong to the canonical record, not hints.
+            stored.update({key: record[key] for key in ("response", "result_file") if key in record})
+            bound_record(checkout, stored)
+        else:
+            bound_record(checkout, record)
+    elif not path.exists() and task_id is not None:
+        bound_record(checkout)
+    return output.preserve_worktree_artifacts(
+        repo, primary=primary, task_id=task_id, tasks_dir=tasks, task_record=record
+    )
 
 
 def artifact(checkout, name="batch_state/sub/report.bin", payload=b"proof\x00\xff"):
@@ -45,11 +70,11 @@ def artifact(checkout, name="batch_state/sub/report.bin", payload=b"proof\x00\xf
 def test_preserved_bytes_record_and_idempotency(checkout):
     source = artifact(checkout)
     record = {"status": "done", "response": "Capture `batch_state/sub/report.bin`."}
-    (checkout[2] / "artifact-task.json").write_text(json.dumps(record))
+    bound_record(checkout, record)
     ok, reason, metadata = guard(checkout, record=record)
     assert ok and not reason
     assert metadata["count"] == 1
-    copy = Path(metadata["location"]) / "batch_state/sub/report.bin"
+    copy = (checkout[1] / metadata["location"]) / "batch_state/sub/report.bin"
     assert copy.read_bytes() == source.read_bytes()
     assert wa._fingerprint(copy) == wa._fingerprint(source)
     saved = json.loads((checkout[2] / "artifact-task.json").read_text())
@@ -57,26 +82,37 @@ def test_preserved_bytes_record_and_idempotency(checkout):
     assert guard(checkout)[0]  # Repeated guard retains verified existing bytes.
 
 
-def test_empty_files_dirs_and_pycache_do_not_need_identity(checkout):
-    artifact(checkout, payload=b"")
+def test_empty_dirs_and_pycache_do_not_need_identity(checkout):
     artifact(checkout, "batch_state/__pycache__/worker.pyc")
     (checkout[0] / "batch_state/empty").mkdir()
     assert guard(checkout, task_id=None) == (True, "", None)
     assert not (checkout[1] / "batch_state/preserved").exists()
 
 
+def test_empty_ignored_file_is_preserved_with_identity(checkout):
+    artifact(checkout, payload=b"")
+    artifact(checkout, "batch_state/__pycache__/worker.pyc")
+    ok, reason, receipt = guard(checkout)
+    assert ok and not reason
+    assert receipt["count"] == 1 and receipt["bytes"] == 0
+    location = checkout[1] / receipt["location"]
+    assert (location / "batch_state/sub/report.bin").read_bytes() == b""
+    assert not (location / "batch_state/__pycache__").exists()
+
+
 @pytest.mark.parametrize("task_id", [None, "../escape", "..", "bad/id"])
 def test_missing_or_unsafe_identity_blocks_copy(checkout, task_id):
     source = artifact(checkout)
+    bound_record(checkout, {"task_id": task_id})
     ok, reason, _ = guard(checkout, task_id=task_id)
-    assert not ok and "safe task identity" in reason
+    assert not ok and "canonical task attribution" in reason
     assert source.exists()
 
 
 @pytest.mark.parametrize("failure", ["copy", "corruption", "record"])
 def test_failed_copy_verification_or_record_blocks_removal(checkout, monkeypatch, failure):
     source = artifact(checkout)
-    (checkout[2] / "artifact-task.json").write_text(json.dumps({"status": "done"}))
+    bound_record(checkout, {"status": "done"})
     if failure == "copy":
 
         def fail_copy(*_args):
@@ -103,8 +139,10 @@ def test_different_existing_copy_is_never_overwritten(checkout):
     destination.parent.mkdir(parents=True)
     destination.write_bytes(b"previous evidence")
     ok, reason, _ = guard(checkout)
-    assert not ok and "different bytes" in reason
+    assert ok and not reason
     assert destination.read_bytes() == b"previous evidence"
+    receipt = json.loads((checkout[2] / "artifact-task.json").read_text())["preserved_artifacts"]
+    assert (checkout[1] / receipt["location"] / "batch_state/sub/report.bin").read_bytes() == b"proof\x00\xff"
 
 
 @pytest.mark.parametrize("destination", [False, True])
@@ -116,10 +154,19 @@ def test_symlink_paths_block_preservation(checkout, destination):
         (checkout[1] / "batch_state/preserved").symlink_to(elsewhere, target_is_directory=True)
     else:
         source.unlink()
-        source.symlink_to(checkout[0] / ".gitignore")
+        external = checkout[1] / "external.bin"
+        external.write_bytes(b"external bytes")
+        source.symlink_to(external)
     ok, reason, _ = guard(checkout)
-    assert not ok and ("symlink" in reason or "regular file" in reason)
-    assert not list(elsewhere.iterdir())
+    assert not ok and (
+        "symlink" in reason
+        or "regular file" in reason
+        or "retrieval location" in reason
+        or "links outside the checkout" in reason
+    )
+    assert not any(entry.is_file() for entry in elsewhere.rglob("*"))
+    if not destination:
+        assert external.read_bytes() == b"external bytes"
 
 
 def test_primary_task_sidecar_is_not_copied(checkout):
@@ -147,7 +194,7 @@ def test_named_ignored_artifact_outside_batch_state_preserved(checkout, referenc
     ok, _reason, metadata = guard(checkout, record={"response": f"Capture {reference}."})
     assert ok
     assert metadata["count"] == 1
-    assert (Path(metadata["location"]) / "ignored/a report.txt").read_bytes() == source.read_bytes()
+    assert ((checkout[1] / metadata["location"]) / "ignored/a report.txt").read_bytes() == source.read_bytes()
 
 
 def test_result_sidecar_is_read_and_tracked_named_files_are_safe(checkout):
@@ -156,7 +203,7 @@ def test_result_sidecar_is_read_and_tracked_named_files_are_safe(checkout):
     source = artifact(checkout, "ignored/note.txt")
     ok, _reason, metadata = guard(checkout, record={"result_file": str(sidecar)})
     assert ok
-    assert (Path(metadata["location"]) / "ignored/note.txt").read_bytes() == source.read_bytes()
+    assert ((checkout[1] / metadata["location"]) / "ignored/note.txt").read_bytes() == source.read_bytes()
     source.unlink()
     assert guard(checkout, record={"result_file": str(sidecar)})[0]
 
@@ -174,25 +221,28 @@ def test_unreadable_inventory_retains_artifact(checkout, monkeypatch):
 
 def test_malformed_task_record_is_not_overwritten(checkout):
     path = checkout[2] / "artifact-task.json"
-    path.write_text("broken JSON")
+    raw = '{"keep_worktree": true, broken JSON'
+    path.write_text(raw)
     assert not guard(checkout)[0]
-    assert path.read_text() == "broken JSON"
+    assert path.read_text() == raw
 
 
 def test_batch_state_symlink_cannot_hide_local_artifacts(checkout):
     source = artifact(checkout, "ignored/hidden.txt")
     (checkout[0] / "batch_state").symlink_to(source.parent, target_is_directory=True)
     ok, reason, _ = guard(checkout)
-    assert not ok and "batch_state is a symlink" in reason
+    assert ok and not reason
+    receipt = json.loads((checkout[2] / "artifact-task.json").read_text())["preserved_artifacts"]
+    assert (checkout[1] / receipt["location"] / "ignored/hidden.txt").read_bytes() == source.read_bytes()
     assert source.exists()
 
 
 def test_batch_state_link_loop_is_a_recorded_refusal(checkout):
-    (checkout[2] / "artifact-task.json").write_text(json.dumps({"status": "done"}))
+    bound_record(checkout, {"status": "done"})
     (checkout[0] / "batch_state").mkdir()
     (checkout[0] / "batch_state/loop").symlink_to("loop")
     ok, reason, metadata = guard(checkout)
-    assert not ok and "Symlink loop" in reason and metadata is None
+    assert not ok and "Symlink loop" in reason and metadata["retention_disposition"] == "retained"
     assert reason == json.loads((checkout[2] / "artifact-task.json").read_text())["artifact_preservation_error"]
 
 
@@ -213,7 +263,11 @@ def test_outbound_refusal_needs_a_link_inside_the_checkout(checkout, tmp_path, r
     (checkout[0] / "link").symlink_to(outside)
     reference = str(outside) if reference == "absolute" else reference
     ok, reason, metadata = guard(checkout, record={"response": f"Read `{reference}`."})
-    assert (ok, metadata) == (not refused, None)
+    assert ok is not refused
+    if refused:
+        assert metadata["retention_disposition"] == "retained"
+    else:
+        assert metadata is None
     assert (links.REFUSAL in reason) is refused
     assert outside.read_bytes() == b"lives outside the checkout"
 
@@ -223,21 +277,25 @@ def test_named_directory_or_cache_does_not_block(checkout, reference):
     artifact(checkout, "ignored/report.txt")
     cache = artifact(checkout, ".pytest_cache/cache.txt")
     reference = str(checkout[0]) if reference == "root" else reference
-    assert guard(checkout, record={"response": f"Worked in `{reference}`."}) == (True, "", None)
+    ok, reason, metadata = guard(checkout, record={"response": f"Worked in `{reference}`."})
+    assert ok and not reason
+    assert metadata["count"] == 1
+    assert (checkout[1] / metadata["location"] / "ignored/report.txt").read_bytes() == b"proof\x00\xff"
+    assert not (checkout[1] / metadata["location"] / ".pytest_cache/cache.txt").exists()
     assert cache.exists()
 
 
 def test_record_changed_during_copy_keeps_other_writers_fields(checkout, monkeypatch):
     artifact(checkout)
     path = checkout[2] / "artifact-task.json"
-    path.write_text(json.dumps({"status": "done", "response": "original"}))
+    initial = bound_record(checkout, {"status": "done", "response": "original"})
     copy = wa.shutil.copyfile
 
     def concurrent_writer(source, destination):
         from scripts.orchestration.dead_worker_state import task_state_lock
 
         with task_state_lock(path):
-            path.write_text(json.dumps({"status": "failed", "response": "new", "other_writer": True}))
+            path.write_text(json.dumps({**initial, "status": "failed", "response": "new", "other_writer": True}))
         return copy(source, destination)
 
     monkeypatch.setattr(wa.shutil, "copyfile", concurrent_writer)
@@ -252,11 +310,11 @@ def test_record_changed_during_copy_keeps_other_writers_fields(checkout, monkeyp
 
 def test_missing_record_is_not_created(checkout):
     source = artifact(checkout)
-    ok, reason, metadata = guard(checkout)
-    assert ok
-    assert "task record missing" in reason
-    assert metadata["record_update"] == "skipped_missing_record"
-    assert (Path(metadata["location"]) / "batch_state/sub/report.bin").read_bytes() == source.read_bytes()
+    ok, reason, metadata = guard(checkout, task_id=None)
+    assert not ok and "missing canonical task attribution" in reason
+    assert metadata["retention_disposition"] == "retained"
+    assert source.read_bytes() == b"proof\x00\xff"
+    assert not (checkout[1] / "batch_state/preserved").exists()
     assert not (checkout[2] / "artifact-task.json").exists()
 
 
@@ -266,9 +324,9 @@ def test_named_external_symlink_refuses_removal(checkout, tmp_path):
     (checkout[0] / "ignored").mkdir()
     (checkout[0] / "ignored/link.txt").symlink_to(target)
     path = checkout[2] / "artifact-task.json"
-    path.write_text(json.dumps({"status": "done"}))
+    bound_record(checkout, {"status": "done"})
     ok, reason, metadata = guard(checkout, record={"response": "Wrote `ignored/link.txt`."})
-    assert not ok and links.REFUSAL in reason and metadata is None
+    assert not ok and links.REFUSAL in reason and metadata["retention_disposition"] == "retained"
     assert links.REFUSAL in json.loads(path.read_text())["artifact_preservation_error"]
     assert target.read_bytes() == b"lives outside the checkout"
     assert not (checkout[1] / "batch_state/preserved").exists()
@@ -279,7 +337,7 @@ def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
     repo, primary, tasks = checkout
     outside = tmp_path / "outside"
     named, preserved, target = links.build_named_link(repo, primary, outside, scenario)
-    (tasks / "artifact-task.json").write_text(json.dumps({"status": "done"}))
+    bound_record(checkout, {"status": "done"})
     ok, reason, metadata = guard(checkout, record={"response": links.worker_response(named)})
     links.restore_access(repo)
     saved = json.loads((tasks / "artifact-task.json").read_text())
@@ -294,7 +352,7 @@ def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
         assert "artifact_preservation_error" not in saved
     else:
         assert ok and not reason and metadata["count"] == 1
-        assert (Path(metadata["location"]) / preserved).read_bytes() == links.PAYLOAD
+        assert ((checkout[1] / metadata["location"]) / preserved).read_bytes() == links.PAYLOAD
         assert saved["preserved_artifacts"] == metadata
 
 
@@ -303,7 +361,7 @@ def test_record_update_waits_for_the_shared_writer_lock(checkout):
     from scripts.orchestration.dead_worker_state import task_state_lock
 
     path = checkout[2] / "artifact-task.json"
-    path.write_text(json.dumps({"status": "running"}))
+    initial = bound_record(checkout, {"status": "running"})
     held, release = threading.Event(), threading.Event()
 
     def other_writer():
@@ -318,7 +376,9 @@ def test_record_update_waits_for_the_shared_writer_lock(checkout):
     holder.start()
     assert held.wait(10)
     updater = threading.Thread(
-        target=wa._update_existing_task_record, args=(path, {"preserved_artifacts": {"count": 1}})
+        target=output._update_bound_task_record,
+        args=(path, checkout[0], {"preserved_artifacts": {"count": 1}}),
+        kwargs={"repo_root": checkout[1]},
     )
     updater.start()
     updater.join(0.5)
@@ -328,13 +388,13 @@ def test_record_update_waits_for_the_shared_writer_lock(checkout):
     updater.join(10)
     assert waited, "update did not wait for the task-record writer lock"
     saved = json.loads(path.read_text())
-    assert saved == {"status": "done", "other_writer": True, "preserved_artifacts": {"count": 1}}
+    assert saved == {**initial, "status": "done", "other_writer": True, "preserved_artifacts": {"count": 1}}
 
 
 def test_success_clears_a_stale_preservation_error(checkout):
     artifact(checkout)
     path = checkout[2] / "artifact-task.json"
-    path.write_text(json.dumps({"status": "done", "artifact_preservation_error": "earlier copy failed"}))
+    bound_record(checkout, {"status": "done", "artifact_preservation_error": "earlier copy failed"})
     record = {"artifact_preservation_error": "earlier copy failed"}
     assert guard(checkout, record=record)[0]
     assert "artifact_preservation_error" not in json.loads(path.read_text())
@@ -355,7 +415,7 @@ _GIT_ENV = {
 
 def test_ignored_artifact_directory_of_regular_files(checkout):
     """Denominator row 2: a directory of regular files has its files discovered and preserved."""
-    (checkout[2] / "artifact-task.json").write_text(json.dumps({"status": "done"}))
+    bound_record(checkout, {"status": "done"})
     f1 = artifact(checkout, "batch_state/reports/probe/report1.json", payload=b'{"metric": 1}')
     f2 = artifact(checkout, "batch_state/reports/probe/report2.json", payload=b'{"metric": 2}')
     (checkout[0] / "batch_state/reports/probe/__pycache__").mkdir(parents=True, exist_ok=True)
@@ -364,7 +424,7 @@ def test_ignored_artifact_directory_of_regular_files(checkout):
     ok, reason, metadata = guard(checkout)
     assert ok and not reason
     assert metadata["count"] == 2
-    location = Path(metadata["location"])
+    location = checkout[1] / metadata["location"]
     assert (location / "batch_state/reports/probe/report1.json").read_bytes() == f1.read_bytes()
     assert (location / "batch_state/reports/probe/report2.json").read_bytes() == f2.read_bytes()
     assert not (location / "batch_state/reports/probe/__pycache__").exists()
@@ -408,7 +468,7 @@ def test_ignored_artifact_nested_repo_no_unpushed_commits(checkout, tmp_path):
     )
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with no unpushed commits" in reason
     assert "files" in reason and "bytes" in reason
     assert "batch_state/reports/scratch_repo" in reason
@@ -445,7 +505,7 @@ def test_ignored_artifact_nested_repo_with_unpushed_commits_never_discarded(chec
     commit_sha = rev_proc.stdout.strip()
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with unpushed commits" in reason
     assert "unpushed work must not be discarded" in reason
     assert commit_sha[:7] in reason or commit_sha in reason
@@ -486,7 +546,7 @@ def test_ignored_artifact_nested_linked_worktree_pointing_at_another_artifact(ch
     )
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested linked worktree whose gitdir pointer points at another artifact" in reason
     assert "batch_state/reports/primary_repo" in reason
 
@@ -500,7 +560,7 @@ def test_ignored_artifact_nested_repo_symlink_dot_git(checkout, tmp_path):
     (bad_repo / ".git").symlink_to(real_git_repo / ".git")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact has a symlinked .git entry" in reason
 
 
@@ -510,7 +570,7 @@ def test_ignored_artifact_nested_repo_corrupt_fails_closed(checkout):
     subprocess.run(["git", "init", str(corrupt_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
     (corrupt_dir / ".git/config").write_text("bad config syntax [[[")
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is an invalid nested git repository" in reason
 
 
@@ -538,7 +598,7 @@ def test_ignored_artifact_nested_repo_detached_head_unpushed_never_discarded(che
     )
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with unpushed commits" in reason
     assert "unpushed work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
@@ -581,7 +641,7 @@ def test_ignored_artifact_nested_repo_shell_quoting_in_cleanup_recommendation(ch
     )
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with no unpushed commits" in reason
     assert "clear with: " in reason
 
@@ -634,7 +694,7 @@ def test_ignored_artifact_nested_repo_unpushed_tag_never_discarded(checkout, tmp
     subprocess.run(["git", "reset", "--hard", "HEAD~1"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with unpushed commits" in reason
     assert "unpushed work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
@@ -677,7 +737,7 @@ def test_ignored_artifact_nested_repo_unpushed_stash_never_discarded(checkout, t
     subprocess.run(["git", "stash"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with unpushed commits" in reason
     assert "unpushed work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
@@ -719,7 +779,7 @@ def test_ignored_artifact_nested_repo_dirty_working_tree_never_discarded(checkou
     (repo_dir / "base.txt").write_text("uncommitted dirty changes\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with uncommitted" in reason
     assert "uncommitted work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
@@ -784,7 +844,7 @@ def test_ignored_artifact_nested_repo_ignored_evidence_never_discarded(checkout,
     (repo_dir / "valuable.json").write_text('{"evidence": "important probe"}')
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with uncommitted or ignored changes" in reason
     assert "uncommitted work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
@@ -831,7 +891,7 @@ def test_ignored_artifact_nested_repo_reflog_only_commits_never_discarded(checko
     subprocess.run(["git", "reset", "--hard", "HEAD~1"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with unpushed commits" in reason
     assert "unpushed work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
@@ -859,7 +919,7 @@ def test_ignored_artifact_nested_repo_clean_filter_hook_rejected_without_executi
     (repo_dir / "tracked.txt").write_text("initial content\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with executable or filter configuration" in reason
     assert not marker.exists(), "clean filter was executed!"
 
@@ -903,7 +963,7 @@ def test_ignored_artifact_nested_repo_assume_unchanged_never_discarded(checkout,
     (repo_dir / "probe.txt").write_text("modified concealed\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "concealed tracked changes" in reason
     assert "uncommitted work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
@@ -948,7 +1008,7 @@ def test_ignored_artifact_nested_repo_skip_worktree_never_discarded(checkout, tm
     (repo_dir / "probe.txt").write_text("modified concealed\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "concealed tracked changes" in reason
     assert "uncommitted work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
@@ -978,7 +1038,7 @@ def test_ignored_artifact_nested_repo_include_indirection_rejected_without_execu
     (repo_dir / "tracked.txt").write_text("initial content\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "configuration indirection (include/includeIf)" in reason
     assert not marker.exists(), "clean filter was executed via include indirection!"
     assert "clear with: rm -rf" not in reason
@@ -1008,7 +1068,7 @@ def test_ignored_artifact_nested_repo_includeif_indirection_rejected_without_exe
     (repo_dir / "tracked.txt").write_text("initial content\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "configuration indirection (include/includeIf)" in reason
     assert not marker.exists(), "clean filter was executed via includeIf indirection!"
     assert "clear with: rm -rf" not in reason
@@ -1038,7 +1098,7 @@ def test_ignored_artifact_nested_repo_config_worktree_filter_rejected_without_ex
     (repo_dir / "tracked.txt").write_text("initial content\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with executable or filter configuration" in reason
     assert not marker.exists(), "clean filter was executed via config.worktree!"
     assert "clear with: rm -rf" not in reason
@@ -1089,7 +1149,7 @@ def test_ignored_artifact_nested_repo_core_worktree_redirection_never_discarded(
     )
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "redirected worktree (core.worktree)" in reason or "does not match expected directory" in reason
     assert "clear with: rm -rf" not in reason
 
@@ -1130,7 +1190,7 @@ def test_ignored_artifact_nested_repo_commondir_clean_filter_rejected_without_ex
     (repo_dir / "tracked.txt").write_text("updated content\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "executable or filter configuration" in reason or "commondir metadata indirection" in reason
     assert not marker.exists(), "commondir clean filter was executed!"
     assert "clear with: rm -rf" not in reason
@@ -1162,7 +1222,7 @@ def test_ignored_artifact_nested_repo_commondir_metadata_indirection_rejected(ch
     (repo_dir / ".git/commondir").write_text(f"{common}\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "commondir metadata indirection" in reason
     assert "clear with: rm -rf" not in reason
 
@@ -1255,7 +1315,7 @@ def test_ignored_artifact_nested_repo_submodule_ignored_dirty_never_discarded(ch
     (repo_dir / "sub/valuable.txt").write_text("modified dirty content in submodule\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "uncommitted or ignored changes" in reason or "unverified submodules" in reason
     assert "clear with: rm -rf" not in reason
 
@@ -1342,7 +1402,7 @@ def test_ignored_artifact_nested_repo_submodule_clean_never_recommended_for_rm_r
     subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "unverified submodules" in reason
     assert "submodules must not be discarded without independent verification" in reason
     assert "clear with: rm -rf" not in reason
@@ -1443,7 +1503,7 @@ def test_ignored_artifact_nested_repo_submodule_clean_filter_rejected_without_ex
     (repo_dir / "sub/valuable.txt").write_text("child same-size!\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "unverified submodules" in reason
     assert not marker.exists(), "submodule clean filter was executed!"
     assert "clear with: rm -rf" not in reason
@@ -1521,7 +1581,7 @@ def test_ignored_artifact_nested_repo_unregistered_gitlink_filter_rejected_witho
     (sub_dir / "valuable.txt").write_text("child same-size!\n")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "unverified submodules" in reason
     assert not marker.exists(), "clean filter in unregistered gitlink was executed!"
     assert "clear with: rm -rf" not in reason
@@ -1590,7 +1650,7 @@ def test_ignored_artifact_nested_repo_unregistered_gitlink_no_child_gitdir_rejec
     shutil.rmtree(sub_dir / ".git")
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "unverified submodules" in reason
     assert "clear with: rm -rf" not in reason
 
@@ -1664,7 +1724,7 @@ def test_ignored_artifact_nested_repo_promisor_ext_helper_rejected_without_execu
         tree_obj.unlink()
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert not marker.exists(), "promisor ext:: transport helper was executed!"
     assert "executable or filter configuration" in reason or "invalid nested git repository" in reason
     assert "clear with: rm -rf" not in reason
@@ -1710,7 +1770,7 @@ def test_ignored_artifact_nested_repo_global_clean_filter_rejected_without_execu
     monkeypatch.setenv("HOME", str(fake_home))
     monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(fake_home / ".gitconfig"))
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "uncommitted or ignored changes" in reason
     assert not marker.exists(), "global clean filter was executed!"
     assert "clear with: rm -rf" not in reason
@@ -1733,7 +1793,7 @@ def test_ignored_artifact_nested_repo_trustctime_config_rejected(checkout):
     subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "executable or filter configuration" in reason
     assert "clear with: rm -rf" not in reason
 
@@ -1782,6 +1842,6 @@ def test_ignored_artifact_nested_repo_same_mtime_modified_bytes_rejected_without
     os.utime(probe, ns=(st.st_atime_ns, st.st_mtime_ns))
 
     ok, reason, metadata = guard(checkout)
-    assert not ok and metadata is None
+    assert not ok and metadata["retention_disposition"] == "retained"
     assert "uncommitted tracked changes" in reason or "uncommitted or ignored changes" in reason
     assert "clear with: rm -rf" not in reason

@@ -22,7 +22,7 @@ from scripts.orchestration.task_record_store import task_record_path
 MAX_PRESERVED_BYTES = 256 * 1024 * 1024
 
 
-def resolve_worktree_record(worktree: Path, tasks_dir: Path) -> tuple[Path | None, dict[str, Any]]:
+def resolve_worktree_record(worktree: Path, tasks_dir: Path, *, repo_root: Path) -> tuple[Path | None, dict[str, Any]]:
     """Resolve identity from canonical records, never from a caller's hint.
 
     Inspect hot and archived records: a different filename, renamed tree, or
@@ -47,9 +47,11 @@ def resolve_worktree_record(worktree: Path, tasks_dir: Path) -> tuple[Path | Non
                 raise ValueError("task identity inventory unreadable") from None
             continue
         if isinstance(record, dict):
-            if _record_matches_worktree(record, worktree):
+            if _record_matches_worktree(record, worktree, repo_root=repo_root):
                 matches.append((path, record))
-            elif record.get("keep_worktree") and _record_matches_worktree({"cwd": record.get("cwd")}, worktree):
+            elif record.get("keep_worktree") and _record_matches_worktree(
+                {"cwd": record.get("cwd")}, worktree, repo_root=repo_root
+            ):
                 raise ValueError("ambiguous retention task binding")
     if len(matches) > 1:
         kept = [match for match in matches if match[1].get("keep_worktree")]
@@ -191,8 +193,10 @@ def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, An
     )
 
 
-def _record_matches_worktree(record: Mapping[str, Any], worktree: Path) -> bool:
+def _record_matches_worktree(record: Mapping[str, Any], worktree: Path, *, repo_root: Path) -> bool:
     """Task names are hints; only resolved filesystem identity binds a record."""
+    from scripts.orchestration.worktree_claims import resolve_claim_path
+
     locations = [record.get("worktree_path") or record.get("cwd")]
     runtime_paths = record.get("acp_runtime_paths")
     if isinstance(runtime_paths, list):
@@ -201,7 +205,7 @@ def _record_matches_worktree(record: Mapping[str, Any], worktree: Path) -> bool:
         if not isinstance(location, str) or not location:
             continue
         try:
-            if Path(location).resolve(strict=True) == worktree.resolve(strict=True):
+            if resolve_claim_path(location, repo_root=repo_root) == worktree.resolve(strict=True):
                 return True
         except (OSError, ValueError, RuntimeError):
             continue
@@ -213,6 +217,7 @@ def _update_bound_task_record(
     worktree: Path,
     updates: Mapping[str, Any],
     *,
+    repo_root: Path,
     clear: tuple[str, ...] = (),
     expected_record: Mapping[str, Any] | None = None,
 ) -> bool:
@@ -224,7 +229,7 @@ def _update_bound_task_record(
             return False
         if not isinstance(record, dict):
             raise ValueError("task record is not an object")
-        if not _record_matches_worktree(record, worktree):
+        if not _record_matches_worktree(record, worktree, repo_root=repo_root):
             return False
         if expected_record is not None and any(
             record.get(key) != expected_record.get(key) for key in ("task_id", "run_nonce")
@@ -281,6 +286,7 @@ def preserve_worktree_artifacts(
     task_id: str | None,
     tasks_dir: Path,
     task_record: Mapping[str, Any] | None = None,
+    repo_root: Path | None = None,
 ) -> tuple[bool, str, dict[str, Any] | None]:
     """Mandatory preservation and retention gate, under the remover's lock.
 
@@ -289,6 +295,7 @@ def preserve_worktree_artifacts(
     oversized output, failed retrieval, or explicit retention refuses removal.
     Caller records and task IDs are hints, never retention authority.
     """
+    repo_root = primary if repo_root is None else repo_root
     record_path = None
     record: dict[str, Any] = {}
     metadata: dict[str, Any] = {
@@ -299,7 +306,7 @@ def preserve_worktree_artifacts(
     try:
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
-        record_path, record = resolve_worktree_record(worktree, tasks_dir)
+        record_path, record = resolve_worktree_record(worktree, tasks_dir, repo_root=repo_root)
         files = _ignored_output_files(worktree, primary, record)
         if not files and not record.get("keep_worktree"):
             return True, "", None
@@ -371,7 +378,7 @@ def preserve_worktree_artifacts(
         with artifacts.task_state_lock(record_path):
             current = json.loads(record_path.read_text(encoding="utf-8"))
             if (
-                not _record_matches_worktree(current, worktree)
+                not _record_matches_worktree(current, worktree, repo_root=repo_root)
                 or current.get("task_id") != identity
                 or current.get("run_nonce") != record.get("run_nonce")
             ):
@@ -391,7 +398,7 @@ def preserve_worktree_artifacts(
             current["preserved_artifacts"] = metadata
             current.pop("artifact_preservation_error", None)
             artifacts.reaper_lifecycle._atomic_write(record_path, current)
-        if isinstance(task_record, dict) and _record_matches_worktree(task_record, worktree):
+        if isinstance(task_record, dict) and _record_matches_worktree(task_record, worktree, repo_root=repo_root):
             task_record["preserved_artifacts"] = metadata
             task_record.pop("artifact_preservation_error", None)
         if metadata["retention_disposition"] == "retained":
@@ -409,7 +416,7 @@ def preserve_worktree_artifacts(
         metadata["retention_disposition"] = "retained"
         if metadata["next_condition"] == "none":
             metadata["next_condition"] = "owner repairs task receipt publication and proves retrieval"
-        if isinstance(task_record, dict) and _record_matches_worktree(task_record, worktree):
+        if isinstance(task_record, dict) and _record_matches_worktree(task_record, worktree, repo_root=repo_root):
             task_record["artifact_preservation_error"] = reason
         if record_path is not None:
             with contextlib.suppress(OSError, ValueError):
@@ -417,6 +424,7 @@ def preserve_worktree_artifacts(
                     record_path,
                     worktree,
                     {"artifact_preservation_error": reason, "preserved_artifacts": metadata},
+                    repo_root=repo_root,
                     expected_record=record,
                 )
         return False, reason, metadata

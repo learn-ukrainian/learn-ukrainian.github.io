@@ -99,14 +99,14 @@ def _load_task_state(tasks_dir: Path, task_id: str) -> dict[str, Any] | None:
     return data if isinstance(data, dict) else None
 
 
-def _worktree_path_from_state(state: dict[str, Any]) -> Path | None:
+def _worktree_path_from_state(state: dict[str, Any], *, repo_root: Path) -> Path | None:
     """Return the bound worktree path recorded in task state, if any."""
     for key in ("worktree_path", "cwd"):
         value = state.get(key)
         if value:
             try:
-                return Path(str(value)).resolve()
-            except OSError:
+                return worktree_claims.resolve_claim_path(str(value), repo_root=repo_root)
+            except (OSError, ValueError, RuntimeError):
                 continue
     return None
 
@@ -344,7 +344,7 @@ def _reap_main_worktree(
             "error": None,
         }
 
-    bound_path = _worktree_path_from_state(state)
+    bound_path = _worktree_path_from_state(state, repo_root=repo_root)
     if bound_path is None:
         return {
             "path": None,
@@ -877,7 +877,7 @@ def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply:
         return "retention release requires --apply"
     try:
         state = _load_task_state(tasks_dir, task_id)
-        worktree = _worktree_path_from_state(state or {})
+        worktree = _worktree_path_from_state(state or {}, repo_root=repo_root)
         if worktree is None or not worktree.exists():
             return "retention release requires an existing bound worktree"
         with worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(repo_root)):
@@ -889,7 +889,7 @@ def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply:
             )
             if refusal:
                 return refusal
-            path, record = ignored_task_output.resolve_worktree_record(worktree, tasks_dir)
+            path, record = ignored_task_output.resolve_worktree_record(worktree, tasks_dir, repo_root=repo_root)
             if path is None or record.get("task_id") != task_id:
                 return "retention release requires unambiguous owner attribution"
             receipt = record.get("preserved_artifacts", {})
