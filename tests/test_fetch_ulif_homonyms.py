@@ -2391,6 +2391,7 @@ def _fifo_input_ready(proc: subprocess.Popen, fifo_path: Path, *, timeout: float
         if remaining <= 0:
             raise AssertionError("timed out waiting for FIFO input readiness")
         try:
+            # Linux counts a reader blocked in FIFO open() for this nonblocking writer-open.
             writer_fd = os.open(fifo_path, os.O_WRONLY | os.O_NONBLOCK)
         except OSError as exc:
             if exc.errno != errno.ENXIO:
@@ -2400,6 +2401,12 @@ def _fifo_input_ready(proc: subprocess.Popen, fifo_path: Path, *, timeout: float
             break
     try:
         yield writer_fd
+    except BaseException:
+        # Reap before releasing the writer: EOF must not unblock a surviving child.
+        if proc.poll() is None:
+            proc.kill()
+        proc.wait(timeout=5)
+        raise
     finally:
         os.close(writer_fd)
 
@@ -2500,6 +2507,60 @@ def test_fifo_input_ready_closes_writer_on_failure(tmp_path):
         with pytest.raises(RuntimeError, match="consumer failed"):
             with _fifo_input_ready(proc, fifo_path) as writer_fd:
                 raise RuntimeError("consumer failed")
+        with pytest.raises(OSError) as closed:
+            os.fstat(writer_fd)
+        assert closed.value.errno == errno.EBADF
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+        proc.communicate(timeout=5)
+
+
+def test_fifo_input_ready_reaps_before_writer_release_on_timeout(tmp_path, monkeypatch):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    input_finished = tmp_path / "input_finished"
+    proc = subprocess.Popen(
+        [
+            sys.executable,
+            "-c",
+            "from pathlib import Path; import sys; "
+            "Path(sys.argv[1]).read_text(); Path(sys.argv[2]).touch()",
+            str(fifo_path),
+            str(input_finished),
+        ],
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    real_kill, real_wait = proc.kill, proc.wait
+    cleanup = []
+
+    def kill_with_writer_held():
+        os.fstat(writer_fd)
+        cleanup.append("kill")
+        real_kill()
+
+    def wait_with_writer_held(*args, **kwargs):
+        os.fstat(writer_fd)
+        result = real_wait(*args, **kwargs)
+        cleanup.append("reaped")
+        return result
+
+    try:
+        with monkeypatch.context() as patch:
+            patch.setattr(proc, "kill", kill_with_writer_held)
+            patch.setattr(proc, "wait", wait_with_writer_held)
+            with pytest.raises(subprocess.TimeoutExpired) as failure:
+                with _fifo_input_ready(proc, fifo_path) as writer_fd:
+                    try:
+                        proc.communicate(timeout=0.05)
+                    except subprocess.TimeoutExpired as exc:
+                        original_failure = exc
+                        raise
+            assert failure.value is original_failure
+            assert cleanup == ["kill", "reaped"]
+        assert proc.returncode == -signal.SIGKILL
+        assert not input_finished.exists()
         with pytest.raises(OSError) as closed:
             os.fstat(writer_fd)
         assert closed.value.errno == errno.EBADF
