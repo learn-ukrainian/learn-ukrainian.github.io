@@ -146,7 +146,7 @@ def test_native_codex_rejects_old_model_before_subprocess(monkeypatch):
 
 def test_native_codex_accepts_approved_model():
     cell = matrix.Cell("openai", "gpt-6.1-sol", "native_cli", "medium", "with_mcp")
-    command = matrix.build_native_command(cell, "prompt")
+    command, _env = matrix.build_native_command(cell, "prompt")
     assert command[command.index("--model") + 1] == "gpt-6.1-sol"
 
 

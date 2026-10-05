@@ -29,9 +29,9 @@ from pydantic import BaseModel, ConfigDict, Field
 from ._config import _PARENT_ENV, AGY_CLI, CLAUDE_CMD, CODEX_CLI, REPO_ROOT
 
 try:
-    from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+    from scripts.agent_runtime.adapters.claude import headless_claude_launch
 except ModuleNotFoundError:  # run as the top-level ai_agent_bridge package
-    from agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+    from agent_runtime.adapters.claude import headless_claude_launch
 
 _DEFAULT_BACKEND_TIMEOUT_S = 120
 _HERMES_STDIN_MODULE = "scripts.ai_agent_bridge._hermes_stdin"
@@ -296,11 +296,10 @@ def _claude_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
         model,
         "--input-format",
         "text",
-        # The run ends with its final turn; no background work may outlive it (#9750).
-        "--disallowedTools",
-        ",".join(HEADLESS_BACKGROUND_TOOL_DENIES),
     ]
-    result = _run_backend_command("claude", argv, prompt=prompt, env={**_PARENT_ENV, **HEADLESS_BACKGROUND_ENV})
+    # The run ends with its final turn; no background work may outlive it (#9750).
+    argv, env = headless_claude_launch(argv, _PARENT_ENV)
+    result = _run_backend_command("claude", argv, prompt=prompt, env=env)
     return CompletionResponse(content=result.stdout.strip())
 
 

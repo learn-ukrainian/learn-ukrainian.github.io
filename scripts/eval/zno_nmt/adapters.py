@@ -23,6 +23,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from scripts.agent_runtime.adapters.claude import headless_claude_launch
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter
 
@@ -668,8 +669,11 @@ def run_claude(packet: Mapping[str, Any], config: Mapping[str, Any], condition: 
             argv.extend(["--effort", checked["effort"]])
         if condition == "sources":
             argv.extend(["--allowedTools", ",".join(_tool_ref(tool) for tool in checked["tools"])])
+        # MCP tools stay enabled under --tools ""; the run ends with its final turn,
+        # so no background work may outlive it (#9750).
+        argv, env = headless_claude_launch(argv, _child_env(checked["max_output_tokens"]))
         started = time.monotonic()
-        completed = _run_claude_process(argv, cwd=root, env=_child_env(checked["max_output_tokens"]), prompt=prompt, timeout=checked["timeout_seconds"])
+        completed = _run_claude_process(argv, cwd=root, env=env, prompt=prompt, timeout=checked["timeout_seconds"])
         elapsed = time.monotonic() - started
         if completed.returncode != 0:
             failure_text = (completed.stdout or "") + "\n" + (completed.stderr or "")

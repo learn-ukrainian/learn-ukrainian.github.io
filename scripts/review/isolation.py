@@ -2473,10 +2473,17 @@ def build_claude_review_argv(
     *,
     prompt: str,
     json_schema: Mapping[str, Any],
+    env: Mapping[str, str],
     model: str | None = None,
     capabilities: EngineCapabilities | None = None,
-) -> list[str]:
-    """Argv for an isolated Claude review invocation (no write/MCP/project load)."""
+) -> tuple[list[str], dict[str, str]]:
+    """Argv and env for an isolated Claude review invocation (no write/MCP/project load).
+
+    ``env`` is the reviewer's base environment (``build_reviewer_env``); the
+    returned pair also carries the headless background controls (#9750).
+    """
+    from scripts.agent_runtime.adapters.claude import headless_claude_launch
+
     if capabilities is not None:
         require_engine_isolation(capabilities)
     cmd = [str(binary.resolve()), "-p", "--output-format", "text"]
@@ -2495,7 +2502,7 @@ def build_claude_review_argv(
     if model:
         cmd.extend(["--model", model])
     cmd.extend(["--", prompt])
-    return cmd
+    return headless_claude_launch(cmd, env)
 
 
 def build_codex_review_argv(

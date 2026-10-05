@@ -110,6 +110,7 @@ import re
 import shlex
 import shutil
 import subprocess
+from collections.abc import Mapping, Sequence
 from functools import cache
 from pathlib import Path
 from typing import Any
@@ -176,9 +177,44 @@ _MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 # under it and still start or schedule work past the turn, so they are denied
 # by name; a settings deny removes them in dontAsk, bypass and default modes.
 # env_sanitize allowlists the variable for the claude provider, and for kimi
-# only from adapter overrides. KimiccHarness reuses both constants.
+# only from adapter overrides. KimiccHarness reuses both constants; every
+# other headless launch applies them through ``headless_claude_launch``.
 HEADLESS_BACKGROUND_ENV = {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
 HEADLESS_BACKGROUND_TOOL_DENIES = ("Monitor", "ScheduleWakeup", "CronCreate", "Workflow")
+_DISALLOWED_TOOLS_FLAGS = ("--disallowedTools", "--disallowed-tools")
+
+
+def _with_background_denies(value: str) -> str:
+    denied = [tool.strip() for tool in value.split(",") if tool.strip()]
+    return ",".join([*denied, *(tool for tool in HEADLESS_BACKGROUND_TOOL_DENIES if tool not in denied)])
+
+
+def headless_claude_launch(argv: Sequence[str], env: Mapping[str, str]) -> tuple[list[str], dict[str, str]]:
+    """Return the argv and env a headless ``claude -p`` child must be started with (#9750).
+
+    Every direct ``claude -p`` launch outside the adapter passes its argv and
+    base environment through here and starts the child with the result. Each
+    existing ``--disallowedTools`` list keeps its entries and gains the
+    background denies; without one, a list is added before the ``--``
+    end-of-options marker (the option is variadic, so it must not precede a
+    positional prompt). The environment switch overrides the base value.
+    """
+    cmd = list(argv)
+    end = cmd.index("--") if "--" in cmd else len(cmd)
+    merged = False
+    for index in range(end):
+        token = cmd[index]
+        if token in _DISALLOWED_TOOLS_FLAGS and index + 1 < end:
+            cmd[index + 1] = _with_background_denies(cmd[index + 1])
+            merged = True
+        elif token.startswith(tuple(f"{flag}=" for flag in _DISALLOWED_TOOLS_FLAGS)):
+            flag, value = token.split("=", 1)
+            cmd[index] = f"{flag}={_with_background_denies(value)}"
+            merged = True
+    if not merged:
+        cmd[end:end] = ["--disallowedTools", ",".join(HEADLESS_BACKGROUND_TOOL_DENIES)]
+    return cmd, {**env, **HEADLESS_BACKGROUND_ENV}
+
 
 # Reader and writer tools come from the sources server's annotations
 # (``sources_read_only.sources_tool_sets``). tests/mcp/test_sources_tool_side_effects.py

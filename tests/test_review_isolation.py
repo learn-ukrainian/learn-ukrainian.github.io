@@ -738,7 +738,12 @@ def test_missing_engine_capability_refused_never_downgraded(tmp_path: Path) -> N
         help_text=("--bare --safe-mode --setting-sources --strict-mcp-config --disallowedTools --tools --json-schema"),
     )
     require_engine_isolation(good)
-    argv = build_claude_review_argv(fake, prompt="review", json_schema={"type": "object"}, capabilities=good)
+    argv, env = build_claude_review_argv(
+        fake, prompt="review", json_schema={"type": "object"}, env={"PATH": "/usr/bin"}, capabilities=good
+    )
+    assert env == {"PATH": "/usr/bin", "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
+    assert argv[argv.index("--disallowedTools") + 1] == "Monitor,ScheduleWakeup,CronCreate,Workflow"
+    assert argv.index("--disallowedTools") < argv.index("--") and argv[-1] == "review"
     assert "--bare" not in argv
     assert "--safe-mode" in argv
     assert argv[argv.index("--tools") + 1] == "Read,Grep,Glob"

@@ -26,9 +26,9 @@ except ModuleNotFoundError:
     from scripts.audit._judge_eval_lib import PROJECT_ROOT, utc_timestamp
 
 try:
-    from agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+    from agent_runtime.adapters.claude import headless_claude_launch
 except ModuleNotFoundError:
-    from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+    from scripts.agent_runtime.adapters.claude import headless_claude_launch
 
 REQUEST_TIMEOUT_S = 480
 HERMES_TIMEOUT_S = 600
@@ -402,8 +402,8 @@ def run_subprocess(
     )
 
 
-def build_native_command(cell: Cell, prompt: str) -> list[str]:
-    """Build the native CLI command for one prompt."""
+def build_native_command(cell: Cell, prompt: str) -> tuple[list[str], dict[str, str] | None]:
+    """Build the native CLI command and its environment (``None`` inherits) for one prompt."""
     if cell.family == "anthropic":
         # Two paths controlled by CLAUDE_MATRIX_USE_BARE (mirrors the
         # judge_calibration_matrix.py convention added 2026-05-17 in PR #2044):
@@ -428,10 +428,9 @@ def build_native_command(cell: Cell, prompt: str) -> list[str]:
             cmd.extend(["--effort", cell.effort])
         if cell.mcp_state == "with_mcp" and (PROJECT_ROOT / ".mcp.json").exists():
             cmd.extend(["--mcp-config", str(PROJECT_ROOT / ".mcp.json")])
-        # The run ends with its final turn; no background work may outlive it (#9750).
-        cmd.extend(["--disallowedTools", ",".join(HEADLESS_BACKGROUND_TOOL_DENIES)])
         cmd.extend(["--", prompt])
-        return cmd
+        # The run ends with its final turn; no background work may outlive it (#9750).
+        return headless_claude_launch(cmd, os.environ)
 
     if cell.family == "openai":
         if cell.model != "gpt-6.1-sol":
@@ -452,26 +451,25 @@ def build_native_command(cell: Cell, prompt: str) -> list[str]:
         if cell.mcp_state == "with_mcp":
             cmd.extend(["-c", 'mcp_servers.sources.url="http://127.0.0.1:8766/mcp"'])
         cmd.append(prompt)
-        return cmd
+        return cmd, None
 
     if cell.family == "google":
         cmd = ["gemini", "-m", cell.model]
         if cell.mcp_state == "with_mcp":
             cmd.extend(["--allowed-mcp-server-names", "sources"])
         cmd.extend(["-p", prompt])
-        return cmd
+        return cmd, None
 
     raise ValueError(f"no native CLI route for {cell.family}")
 
 
 def run_native_cli(cell: Cell, prompt: str) -> HarnessCall:
     """Invoke a native provider CLI for one benchmark prompt."""
-    cmd = build_native_command(cell, prompt)
+    cmd, env = build_native_command(cell, prompt)
     from scripts.review.model_catalog import require_execution_model
 
     transport = {"anthropic": "native_claude", "openai": "native_codex", "google": "native_gemini", "xai": "native_grok"}[cell.family]
     require_execution_model(cell.model, transport=transport)
-    env = {**os.environ, **HEADLESS_BACKGROUND_ENV} if cell.family == "anthropic" else None
     return run_subprocess(cmd, timeout_s=REQUEST_TIMEOUT_S, env=env)
 
 
