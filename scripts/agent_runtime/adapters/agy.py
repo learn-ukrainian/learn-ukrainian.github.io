@@ -254,7 +254,8 @@ def _read_only_killed_command(command: str) -> bool:
     """Parse quote-aware shell operators, then validate every read-only stage."""
     if not command or re.search(r"[\x00-\x1f\x7f$`()]", command):
         return False
-    # Locate operators without treating quoted/escaped pipes as shell syntax.
+    # Retain quoting while locating operators: shlex.split removes the evidence
+    # that distinguishes literal patterns from expansions into live options.
     operators: list[tuple[int, int, str]] = []
     quote = ""
     escaped = False
@@ -270,6 +271,9 @@ def _read_only_killed_command(command: str) -> bool:
                 quote = ""
         elif char in "\"'":
             quote = char
+        elif char in "*?[{}":
+            # Filename and brace expansion can add options absent from argv.
+            return False
         elif char in "|&;<>":
             end = index + 1
             while end < len(command) and command[end] in "|&;<>":
@@ -301,23 +305,14 @@ def _read_only_killed_command(command: str) -> bool:
         starts = [0, *(end for _, end, _ in operators)]
         ends = [*(start for start, _, _ in operators), len(command)]
         return all(
-            _read_only_killed_argv(shlex.split(command[start:end]), allow_xargs=position > 0)
-            for position, (start, end) in enumerate(zip(starts, ends, strict=True))
+            _read_only_killed_argv(shlex.split(command[start:end])) for start, end in zip(starts, ends, strict=True)
         )
     except ValueError:
         return False
 
 
-def _read_only_killed_argv(argv: list[str], *, allow_xargs: bool = False) -> bool:
-    """Validate a read stage, including an explicitly named safe xargs target."""
-    if allow_xargs and argv and argv[0] == "xargs":
-        target = 1
-        while target < len(argv) and argv[target] in {"-r", "--no-run-if-empty"}:
-            target += 1
-        if target < len(argv) and argv[target] == "--":
-            target += 1
-        # No replacement, NUL mode, shell target, default command or recursion.
-        return _read_only_killed_argv(argv[target:])
+def _read_only_killed_argv(argv: list[str]) -> bool:
+    """Validate a read stage with written arguments; never turn stdin into argv."""
     if not argv or argv[0] not in _KILL_READ_COMMANDS:
         return False
     if any(arg.split("=", 1)[0] in _KILL_EXECUTABLE_OPTIONS for arg in argv[1:]):

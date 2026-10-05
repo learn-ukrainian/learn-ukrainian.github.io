@@ -80,11 +80,20 @@ def _parse(tmp_path, events, *, stderr="", envelope=None, returncode=0):
         "rg needle scripts 2>/dev/null",
         "rg needle scripts || true",
         "rg needle scripts 2>/dev/null || true",
-        "find scripts -name '*.py' | xargs grep -l needle",
         "git grep -E 'a|b'",
+        'git grep -E "a|b"',
+        "git log -S x || true",
+        "git grep x | head -n 5",
         "rg 'a|b' scripts | grep needle",
-        "find scripts -name '*.py' | xargs -r grep -l needle",
-        "find scripts -name '*.py' | xargs -- grep -l needle",
+        "rg 'a*b' src",
+        'rg "a*b" src',
+        r"rg a\*b src",
+        "rg 'a?b' src",
+        'rg "[ab]" src',
+        r"rg \[ab\] src",
+        "ls '{a,b}'",
+        'ls "{a,b}"',
+        r"ls \{a,b\}",
         "cat '|'",
     ],
 )
@@ -136,6 +145,27 @@ def test_agy_model_killed_read_with_complete_reply_is_accepted(tmp_path, command
         "sed -i '1p' file",
         "sed -n 'w output' file",
         "rg 'unterminated",
+        "cat list | xargs sed -n 1p",
+        "cat list | xargs rg needle",
+        "cat list | xargs git log",
+        "cat list | xargs find .",
+        "find scripts -name '*.py' | xargs grep -l foo",
+        "find scripts -name '*.py' | xargs -r grep -l needle",
+        "find scripts -name '*.py' | xargs -- grep -l needle",
+        "xargs grep needle",
+        "xargs grep needle | head -n 5",
+        "cat list | xargs grep needle | head -n 5",
+        "cat list | 'xargs' grep needle",
+        "rg needle *",
+        "grep -r x src/*.py",
+        "ls {a,b}",
+        "rg needle ?",
+        "rg needle [ab]",
+        "ls {1..3}",
+        "rg 'needle'* src",
+        'rg "needle"? src',
+        "cat list | rg needle *",
+        "rg needle src 2>/dev/null || true | xargs grep needle",
     ],
 )
 def test_agy_model_killed_check_is_rejected_and_named(tmp_path, command):
@@ -152,7 +182,7 @@ def test_agy_model_killed_check_is_rejected_and_named(tmp_path, command):
     assert not result.ok
     assert result.response == ""
     assert result.stderr_excerpt.startswith(agy.AGY_BACKGROUND_TASK_CANCELED)
-    assert command in result.stderr_excerpt
+    assert json.dumps(command) in result.stderr_excerpt
     assert result.agy_killed_commands == [command]
 
 
