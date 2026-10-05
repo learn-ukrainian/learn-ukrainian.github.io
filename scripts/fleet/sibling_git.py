@@ -594,8 +594,10 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
     if not lock_file.is_file():
         raise Refusal("dispatch ownership lock is missing; use the existing cleanup workflow")
     _plain_path(lock_file)
+    reachability_refusal = None
 
     def releasable() -> tuple[bool, str]:
+        nonlocal reachability_refusal
         resolve_repository(repo.key, primary, git)
         _plain_path(target)
         marker, common = _git_dir(target)
@@ -607,9 +609,58 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
         if record is None or any(line == "locked" or line.startswith("locked ") for line in record):
             return False, "target is unregistered or locked"
         _safe_config(git, target, https=repo.transport == "https")
-        _checkout_safe(git, target, git.text(target, "rev-parse", "HEAD"))
+        head = git.text(target, "rev-parse", "--verify", "HEAD^{commit}")
+        _checkout_safe(git, target, head)
         _clean(git, target)
-        return True, "registered, clean and unlocked"
+        # A detached worker commit has no branch keeping it reachable after
+        # removal. Task status alone is not proof that its work was pushed.
+        reachability_refusal = "HEAD reachability is unknown"
+        try:
+            if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", head):
+                return False, reachability_refusal
+            tasks = primary / "batch_state/tasks"
+            needles = worktree_claims.worktree_claim_needles(target, target)
+            bases = set()
+            for state_file in sorted(tasks.iterdir()):
+                if state_file.suffix != ".json" or worktree_claims.is_superseded_record(state_file):
+                    continue
+                raw = state_file.read_bytes()
+                if not worktree_claims.record_may_claim_worktree(raw, needles):
+                    continue
+                state = json.loads(raw)
+                if not isinstance(state, dict):
+                    return False, reachability_refusal
+                claimed = state.get("worktree_path")
+                if claimed is None:
+                    continue
+                if not isinstance(claimed, str):
+                    return False, reachability_refusal
+                if worktree_claims.resolve_claim_path(claimed, repo_root=repo.checkout) != target:
+                    continue
+                if "worktree_base_sha" in state:
+                    base = state["worktree_base_sha"]
+                    if not isinstance(base, str) or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", base):
+                        return False, reachability_refusal
+                    if git.text(target, "rev-parse", "--verify", f"{base}^{{commit}}") != base:
+                        return False, reachability_refusal
+                    bases.add(base)
+            if len(bases) > 1:
+                return False, reachability_refusal
+            if bases == {head}:
+                reachability_refusal = None
+                return True, "registered, clean, unlocked and at recorded base"
+            # Only the validated canonical origin's fetched refs count; local
+            # branches, tags, other remotes and FETCH_HEAD do not prove a push.
+            refs = git.text(
+                repo.checkout, "for-each-ref", "--format=%(refname)", "--contains", head, "refs/remotes/origin/"
+            ).splitlines()
+            if any(ref.startswith("refs/remotes/origin/") and ref != "refs/remotes/origin/HEAD" for ref in refs):
+                reachability_refusal = None
+                return True, "registered, clean, unlocked and reachable from canonical remote"
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
+            return False, reachability_refusal
+        reachability_refusal = "HEAD is neither the recorded base nor reachable from canonical remote refs (unpushed)"
+        return False, reachability_refusal
 
     result = worktree_claims.remove_unclaimed_worktree(
         target,
@@ -625,7 +676,7 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
         git_runner=git.run,
     )
     if result.action != "removed":
-        raise Refusal("cleanup policy refused or removal failed; local work preserved")
+        raise Refusal(f"{reachability_refusal or 'cleanup policy refused or removal failed'}; local work preserved")
     return {"repo": repo.key, "verb": "worktree-remove", "removed": True}
 
 
@@ -639,7 +690,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Maintain a registered sibling with three closed Git verbs.\nUse from this repository root; raw sibling Git and arbitrary Git arguments receive no exemption.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         allow_abbrev=False,
-        epilog=f"Examples (use the shared project's absolute interpreter from a dispatch root):\n{examples()}\n\nOutputs: JSON on stdout; sync-main fetches and fast-forwards main; worktree-remove removes one clean, unlocked, unclaimed dispatch tree without force.\nExit codes: 0 success; 2 invalid invocation or refused maintenance.\nRelated: docs/runbooks/sibling-git.md; scripts/config/fleet_repos.yaml; #9309.",
+        epilog=f"Examples (use the shared project's absolute interpreter from a dispatch root):\n{examples()}\n\nOutputs: JSON on stdout; sync-main fetches and fast-forwards main; worktree-remove removes one clean, unlocked, unclaimed dispatch tree without force, only at its recorded base or reachable from canonical origin's fetched refs.\nExit codes: 0 success; 2 invalid invocation or refused maintenance.\nRelated: docs/runbooks/sibling-git.md; scripts/config/fleet_repos.yaml; #9309; #9742.",
     )
     parser.add_argument(
         "verb",
