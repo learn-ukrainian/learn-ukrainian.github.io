@@ -169,6 +169,12 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "gemini": {
         "GEMINI_AUTH_MODE",
     },
+    # The Claude adapter sets this on every headless run so the CLI cannot
+    # leave work in the background when the run ends (#9690). It is a
+    # feature switch, never a credential.
+    "claude": {
+        "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS",
+    },
     # CODEX_HOME must reach the codex subprocess so the V7 writer's
     # scoped config (materialized by
     # `linear_pipeline._ensure_codex_writer_home`) actually takes
@@ -217,6 +223,11 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
         "KIMI_CODE_CREDENTIALS_PATH",
         "KIMI_CODE_OAUTH_HOST",
         "KIMI_CODE_OAUTH_MARGIN",
+        # The KimiCC harness runs headless Claude Code and sets this like the
+        # Claude adapter (#9690). The provider name is "kimi" for both Kimi
+        # harnesses, so build_agent_env admits it only from adapter overrides:
+        # the native Kimi CLI plan never sets it.
+        "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS",
     },
 }
 
@@ -472,6 +483,11 @@ def build_agent_env(
         # AGY_APP_DATA_DIR (#8617); an ambient export must not leak into an
         # ordinary dispatch.
         raw.pop("AGY_APP_DATA_DIR", None)
+    if _normalized_provider(provider) == "kimi":
+        # Only the KimiCC plan sets the Claude background switch (#9690); an
+        # ambient export (a dispatch started from a headless Claude worker's
+        # shell) must not reach the native Kimi CLI.
+        raw.pop("CLAUDE_CODE_DISABLE_BACKGROUND_TASKS", None)
     raw.update(overrides or {})
     raw.pop("LU_OPSEC_OVERRIDE", None)
 

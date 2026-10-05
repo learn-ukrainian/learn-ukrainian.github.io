@@ -7,6 +7,10 @@
 # apiKeyHelper: --bare is stateless, so runs that exceed the roughly 15-minute
 # OAuth lifetime must be relaunched.
 #
+# The harness passes --disallowedTools (the background-tool denies) and sets
+# CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1; both reach claude -p unchanged, so the
+# run cannot leave work in the background when it ends (#9690).
+#
 # Kimi: web, UI and backend coding only — no Ukrainian-language content, no
 # reviews, consults, design or rules. Only --mode workspace-write is accepted.
 
@@ -41,7 +45,7 @@ while (($#)); do
       PROMPT="${2:?--prompt requires a value}"
       shift 2
       ;;
-    --mcp-config|--allowedTools|--agent|--max-budget-usd|--effort)
+    --mcp-config|--allowedTools|--disallowedTools|--agent|--max-budget-usd|--effort)
       FORWARD_ARGS+=("$1" "${2:?$1 requires a value}")
       shift 2
       ;;
