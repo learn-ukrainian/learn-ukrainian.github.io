@@ -36,6 +36,8 @@ class AgyAttempt:
     unknown_command_count: int | None = None
     permission_profile_id: str | None = None
     denied_command_count: int | None = None
+    denied_file_read_count: int | None = None
+    denied_mcp_count: int | None = None
     executed_command_count: int | None = None
     sources_tool_names: tuple[str, ...] = ()
     cli_version: str = "unknown"

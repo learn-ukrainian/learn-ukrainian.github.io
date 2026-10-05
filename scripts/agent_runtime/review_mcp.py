@@ -548,12 +548,25 @@ def agy_review_app_data_dir(agy_home: Path | str) -> Path:
 
 
 def agy_review_settings(review_access: str | None = "isolated") -> dict[str, Any]:
-    """Permit the receipt contract, or all read-only Sources tools without a receipt."""
-    tools = sources_tool_sets()[0] if review_access is None else review_tools(review_access)
+    """Grant the review contract and explicitly deny the other Sources tools.
+
+    Non-receipt Ukrainian reviews use REVIEW_TOOLS too. Full attempts retain
+    their existing contract's search_resources grant. Read the launched server
+    afresh so an unavailable inventory cannot yield a partial deny profile.
+    """
+    readers, writers = sources_tool_sets.__wrapped__(sources_server_launch()[1])
+    tools = review_tools(review_access or "isolated")
+    if not set(readers) >= tools:
+        raise ValueError("review_contract_contains_non_read_only_sources_tool")
     return {
         "permissions": {
             "allow": [f"mcp(sources/{name})" for name in sorted(tools)],
-            "deny": ["command(*)", "write_file(*)"],
+            "deny": [
+                "command(*)",
+                "write_file(*)",
+                "read_file(*)",
+                *[f"mcp(sources/{name})" for name in sorted((set(readers) | set(writers)) - tools)],
+            ],
         }
     }
 

@@ -12,8 +12,9 @@ Known behavioral facts (verify against the installed CLI when changing transport
 - ``--input-format stream-json --output-format stream-json`` accepts one
   NDJSON user message on stdin and returns a terminal ``result`` event.
 - Resume/new conversation is ``--conversation=<uuid>``.
-- Review routes write exact Sources and evidence-reading command grants in
-  their scoped home's ``settings.json``; they never skip permissions.
+- Review routes write exact Sources grants and explicit command, file-read
+  and non-contract Sources denials in their scoped home's ``settings.json``;
+  they never skip permissions.
   Non-review dispatches retain their existing headless permission mode.
 - Stream-json stdout carries the final answer in ``result.response``. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
@@ -997,7 +998,7 @@ class AgyAdapter:
                 "agy_app_data_root": str(app_data_root),
                 "attempt_read_root": bool(tc.get("review_write_root")),
                 "log_read_root": str(log_read_root),
-                "agy_permission_profile_id": "ukrainian-review-command-denial-v1" if review_route else None,
+                "agy_permission_profile_id": "ukrainian-review-command-denial-v2" if review_route else None,
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
@@ -1231,7 +1232,7 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
 
     A command intent is not execution. Its bound result must show a task
     start or synchronous completion; missing/error results remain unknown.
-    Deny-rule signals count only in the command's bound result slot, never on
+    Deny-rule signals count only in the tool's bound result slot, never on
     model prose, Sources output or an unrelated diagnostic stream.
     """
     reason = (
@@ -1260,6 +1261,8 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
     # FIFO order; a planner's step index is not its tool result's step index.
     pending: list[tuple[str, str]] = []
     denied_steps: set[int] = set()
+    denied_file_reads: set[int] = set()
+    denied_mcp: set[int] = set()
     executed_steps: set[int] = set()
     background_steps: set[int] = set()
     background_tasks: set[str] = set()
@@ -1283,15 +1286,25 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         step = _event_step_index(event)
         slot = step if step is not None else position
         content = str(event.get("content") or "")
-        command_result = bool(pending and pending.pop(0)[1] == "run_command")
+        tool = pending.pop(0)[1] if pending else None
+        command_result = tool == "run_command"
+        deny_rule = (
+            event.get("status") in {"ERROR", "INVALID"} or content.strip() == "Matches user-configured deny rule."
+        ) and "Matches user-configured deny rule." in content
+        if deny_rule:
+            native_denial = event.get("status") in {"ERROR", "INVALID"} and (
+                "Encountered error in step execution: permission check failed for " in content
+            )
+            if tool == "view_file" and native_denial and "Permission denied for read_file(" in content:
+                denied_file_reads.add(slot)
+            elif tool == "call_mcp_tool" and native_denial and "Permission denied for mcp(" in content:
+                denied_mcp.add(slot)
         if event.get("status") == "RUNNING" and (start := _BACKGROUND_START_HEADER_RE.match(content)):
             if not start.group("timer"):
                 background_tasks.add(start.group("id"))
                 background_steps.add(slot)
         elif command_result:
-            if (
-                event.get("status") in {"ERROR", "INVALID"} or content.strip() == "Matches user-configured deny rule."
-            ) and ("Matches user-configured deny rule." in content):
+            if deny_rule:
                 denied_steps.add(slot)
             elif event.get("status") == "DONE":
                 executed_steps.add(slot)
@@ -1306,6 +1319,8 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         unexcused_kill_count=max(0, len(killed) - len(excused)),
         unknown_command_count=sum(command == "<unknown command>" for command in killed),
         denied_command_count=len(denied_steps),
+        denied_file_read_count=len(denied_file_reads),
+        denied_mcp_count=len(denied_mcp),
         executed_command_count=None
         if unknown_execution
         else len(background_tasks) + len(executed_steps - background_steps),
@@ -1374,7 +1389,10 @@ def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: s
         tc.get(key)
         for key in ("review_access", "review_id", "attempt_id", "review_attempt_boundary", "review_isolation")
     )
-    expected = agy_review_settings(None if permission_only else access)
+    try:
+        expected = agy_review_settings(None if permission_only else access)
+    except (OSError, ValueError, SyntaxError, StopIteration):
+        raise AgyReviewPermissionError("agy_review_permissions_tool_inventory_unavailable") from None
     allow = set(expected["permissions"]["allow"])
     required = tc.get("agy_required_permissions", [])
     if (
