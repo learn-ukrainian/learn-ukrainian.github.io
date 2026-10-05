@@ -225,6 +225,7 @@ from scripts.orchestration.dead_worker_state import (
     write_state_unlocked,
 )
 from scripts.publish.github import Request, request_run
+from scripts.review.verdict_parser import recognized_verdicts
 
 if TYPE_CHECKING:
     from scripts.agent_runtime.target_admission import AdmittedTarget, Route, RouteRequest
@@ -2578,40 +2579,6 @@ _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON = "junk_only_worktree_changes"
 _AUTO_FINALIZE_NOTHING_OWNED_REASON = "no_changes_under_owned_paths"
 _AUTO_FINALIZE_NO_OWNED_PATHS_REASON = "no_owned_paths_declared"
 _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
-# Verdict vocabulary mirrors the live review parsers — no third vocabulary
-# (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
-# APPROVED / CHANGES_REQUESTED / BLOCKED by
-# scripts/fleet_comms/review_publication.py (and formerly
-# scripts/ai_agent_bridge/_review_verdict.py, removed in #8520). REQUEST_CHANGES is the token
-# cf_preflight.py and the review prompts actually ask reviewers to write.
-# Reviewers routinely render the label and token in Markdown emphasis
-# (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
-# full verdicts and must not be misread as missing (#8786). A verdict line
-# STARTS with the label: optional emphasis (``*``, ``_``), ``VERDICT``, then
-# emphasis/backticks/whitespace around its colon, then the token and a word
-# boundary. Anything may follow the token — reviewers write
-# ``**VERDICT: APPROVE.** Both issues are fixed.`` and
-# ``**VERDICT: APPROVE** (three non-blocking findings below)``. An inline or
-# quoted example ("I will report ``VERDICT: APPROVE`` later",
-# ``> VERDICT: APPROVE``) does not start with the label, so is not a verdict.
-# The boundary treats ``_`` as emphasis (``__APPROVE__``) unless a letter or
-# digit follows it (``APPROVE_LATER``), so ``APPROVEX`` is not a verdict.
-# Indentation follows CommonMark: at most three leading spaces; four or more,
-# or a tab, make the line an indented code block, i.e. an example.
-# After that indentation an ATX heading marker (``#`` to ``######`` plus at
-# least one space) may precede the label, so ``## VERDICT: REQUEST_CHANGES``
-# and ``# **VERDICT: APPROVE**`` are verdicts (#9305). ``##VERDICT: APPROVE``
-# has no space, which CommonMark does not treat as a heading, and
-# ``## The VERDICT: APPROVE`` does not start with the label; neither counts.
-_REVIEW_VERDICT_LINE_RE = re.compile(
-    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
-    r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
-    r"(?![^\W_]|_+[^\W_])",
-    re.IGNORECASE,
-)
-# A CommonMark fence line: at most three leading spaces, then three or more
-# backticks or tildes; group 2 is the rest of the line (info string).
-_CODE_FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -2832,59 +2799,10 @@ def _delivery_failure_reason(
     return _NO_DELIVERABLE_NO_COMMITS_REASON
 
 
-def _code_fence_opener(line: str) -> str | None:
-    """Return the fence run when ``line`` opens a CommonMark code fence.
-
-    A backtick fence's info string may not contain a backtick (that line is
-    inline code, not a fence).
-    """
-    match = _CODE_FENCE_RE.match(line)
-    if match is None:
-        return None
-    fence, info = match.groups()
-    if fence[0] == "`" and "`" in info:
-        return None
-    return fence
-
-
-def _closes_code_fence(line: str, opener: str) -> bool:
-    """Return whether ``line`` closes the fence opened by ``opener``.
-
-    Per CommonMark the closer uses the opener's character, is at least as
-    long, and carries nothing but trailing spaces or tabs; any other line —
-    including a fence of the other character — is block content.
-    """
-    match = _CODE_FENCE_RE.match(line)
-    if match is None:
-        return False
-    fence, rest = match.groups()
-    return fence[0] == opener[0] and len(fence) >= len(opener) and not rest.strip(" \t")
-
-
 def parse_review_verdict(response: str) -> str | None:
-    """Return the review's verdict token, or ``None`` when it states none.
-
-    The single verdict parser for the review-success contract (#8786): the
-    dispatch worker and the ask-* review wrapper both call it. Only a line
-    that starts with a verdict (see ``_REVIEW_VERDICT_LINE_RE``) outside a
-    code block counts, and the LAST such line wins — a report may discuss earlier
-    drafts, but its closing line is its verdict. An unclosed fence runs to the
-    end of the text, as in CommonMark.
-    """
-    verdict: str | None = None
-    open_fence: str | None = None
-    for line in response.splitlines():
-        if open_fence is not None:
-            if _closes_code_fence(line, open_fence):
-                open_fence = None
-            continue
-        open_fence = _code_fence_opener(line)
-        if open_fence is not None:
-            continue
-        match = _REVIEW_VERDICT_LINE_RE.match(line)
-        if match:
-            verdict = match.group(1).upper()
-    return verdict
+    """Return the final recognized verdict token, preserving dispatch policy."""
+    verdicts = recognized_verdicts(response)
+    return verdicts[-1] if verdicts else None
 
 
 def _review_verdict_failure_reason(response: str) -> str | None:

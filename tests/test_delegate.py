@@ -18390,3 +18390,21 @@ def test_creation_inventory_failure_retains_new_tree_without_spawning(tmp_tasks_
     assert tree.exists() and (tree / ".git").is_file()
     assert state["status"] == "failed" and not state.get("pid")
     assert "creation inventory unavailable (CalledProcessError); worker not started" in state["last_error"]
+
+
+@pytest.mark.parametrize("reply,dispatch_verdict,recorded", [
+    ("**VERDICT: APPROVE**", "APPROVE", "APPROVED"),
+    ("VERDICT: APPROVE\nVERDICT: APPROVED", "APPROVED", "APPROVED"),
+    ("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE", "APPROVE", "APPROVED"),
+    ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "REQUEST_CHANGES", None),
+    ("```\nVERDICT: APPROVE\n```", None, None),
+])
+def test_parse_review_verdict_shared_lines_preserve_consumer_policies(reply, dispatch_verdict, recorded):
+    from scripts.review import record_cf_verdict as recorder
+
+    assert delegate.parse_review_verdict(reply) == dispatch_verdict
+    if recorded is None:
+        with pytest.raises(recorder.RecordError, match="missing or ambiguous"):
+            recorder.normalize_verdict(reply)
+    else:
+        assert recorder.normalize_verdict(reply) == recorded

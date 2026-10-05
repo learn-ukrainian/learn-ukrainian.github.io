@@ -5058,7 +5058,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/curriculum.yaml",
-      "sha256": "da06ebcd40ce8e3b3b5a590184ad0ac577e22fb3105c81919fa9aacb47cf9f1f"
+      "sha256": "60b2c946b6f9c924187a50fb6f4d1c45b654921e273a14f8554b9778d81ef136"
     },
     {
       "path": "curriculum/l2-uk-en/folk/bylyny-kyivskoho-tsyklu/activities.yaml",
@@ -15166,7 +15166,7 @@
     },
     {
       "path": "site/src/content/docs/bio/index.mdx",
-      "sha256": "6f6cd6410a78e17c5a0dd865c9e2c150665d809598b3971e77c40220522ae18d"
+      "sha256": "0b7d0ed6636c4e1d97aee9251618ebd32276fe062fd26f35b95d051411937b4b"
     },
     {
       "path": "site/src/content/docs/bio/oleksandr-bilash.mdx",
@@ -15186,7 +15186,7 @@
     },
     {
       "path": "site/src/content/docs/c1/index.mdx",
-      "sha256": "fb78b86ab35d271850ee80ac5d345b970a4d9562c38270ce21a4fe0a8e6d77d7"
+      "sha256": "74baef470598bc4de626e91a040c1dbe4f4489a512aa85471ac7eae16d749c53"
     },
     {
       "path": "site/src/content/docs/c2/index.mdx",

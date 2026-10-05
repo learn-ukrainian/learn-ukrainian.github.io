@@ -1272,3 +1272,185 @@ def test_membership_drift_blocks_a_later_reconcile() -> None:
     assert second_receipt["state"] == "BLOCKED_WITH_RECEIPT"
     assert "issue membership" in " ".join(second_receipt["hard_blockers"])
     assert ledger["current_state"] == "BLOCKED_WITH_RECEIPT"
+
+
+@pytest.mark.parametrize("line", [
+    "- [X] **AC-01b** — Output is current.",
+    "- [X] AC-01b: Output is current.",
+    "- [X] AC-01b Output is current.",
+])
+def test_observed_checkbox_forms_initialize_and_verify_snapshot(line):
+    parsed = task_lifecycle.parse_issue_acceptance_criteria(line)
+    assert parsed == [{"id": "AC-01b", "text": "Output is current.", "checked": True}]
+    policy = {"AC-01b": {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]}}
+    snapshot = task_lifecycle.build_ac_snapshot(line, policy, finalized_at=NOW)
+    ledger = task_lifecycle.build_lifecycle(
+        _identity(), author_family="codex", ac_snapshot=snapshot,
+        required_checks=["CI Gate"], now=NOW, pr_number=77,
+    )
+    ledger = _add(ledger, "AC-01b", "test")
+    equivalent = "- [ ] **AC-01b** — Output is current."
+    result = task_lifecycle.evaluate(ledger, _observation(equivalent))
+    assert not any("drift" in blocker or "stable-ID" in blocker for blocker in result["hard_blockers"])
+    drift = task_lifecycle.evaluate(ledger, _observation(equivalent.replace("current", "stale")))
+    assert any("drift" in blocker for blocker in drift["hard_blockers"])
+
+
+@pytest.mark.parametrize("mark,checked", [(" ", False), ("x", True), ("X", True)])
+@pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}", "{id} {text}"])
+def test_checkbox_forms_preserve_original_id_text_and_checked(mark, checked, form):
+    body = "- [ ] CI Gate green\n- [" + mark + "] " + form.format(id="AC-01", text="Output is current.")
+    assert task_lifecycle.parse_issue_acceptance_criteria(body) == [
+        {"id": "AC-01", "text": "Output is current.", "checked": checked},
+    ]
+
+
+@pytest.mark.parametrize("line", [
+    "- [ ] AC-01:", "- [ ] AC-01 : ", "- [ ] AC-01", "- [ ] **AC-01** — ",
+    "- [ ] AC-01. Missing separator", "- [ ] **AC-01**: Unsupported bold separator",
+    "- [ ] AC-: Missing identifier", "- [ ] AC-01/b Bad identifier",
+    "- [ ] AC-lowercase: Unsupported identifier",
+    "- [ ] AC-" + "1" * 30 + ": Too long", "- [y] AC-01: Bad checked state",
+    "- [ ] **AC-01 — Missing closing emphasis", "* [ ] AC-01: Unsupported bullet",
+])
+def test_malformed_ac_like_checkbox_cannot_disappear_from_mixed_snapshot(line):
+    body = "- [ ] **AC-OK** — Valid criterion.\n" + line
+    with pytest.raises(task_lifecycle.LifecycleError, match="malformed AC-like"):
+        task_lifecycle.parse_issue_acceptance_criteria(body)
+    result = task_lifecycle.evaluate(_ledger(), _observation(_body() + line))
+    assert any("malformed AC-like" in blocker for blocker in result["hard_blockers"])
+
+
+@pytest.mark.parametrize("second", ["- [x] AC-01: Same criterion.", "- [ ] AC-01 Same criterion."])
+def test_duplicate_ids_across_forms_refuse_snapshot(second):
+    with pytest.raises(task_lifecycle.LifecycleError, match=r"duplicate acceptance criterion ID.*AC-01"):
+        task_lifecycle.parse_issue_acceptance_criteria("- [ ] **AC-01** — Same criterion.\n" + second)
+
+
+def test_criterion_length_limits_and_legacy_bold_ids():
+    assert task_lifecycle.parse_issue_acceptance_criteria("- [ ] **LEGACY** - Existing criterion.")[0]["id"] == "LEGACY"
+    with pytest.raises(task_lifecycle.LifecycleError, match="ID exceeds 32"):
+        task_lifecycle.parse_issue_acceptance_criteria("- [ ] **AC-" + "1" * 30 + "b** — Too long.")
+    with pytest.raises(task_lifecycle.LifecycleError, match="exceeds 4000"):
+        task_lifecycle.parse_issue_acceptance_criteria("- [ ] AC-01: " + "x" * 4001)
+    with pytest.raises(task_lifecycle.LifecycleError, match="no stable-ID"):
+        task_lifecycle.parse_issue_acceptance_criteria("- [ ] CI Gate green")
+
+
+@pytest.mark.parametrize("ac_id", ["AC-01", "AC-01b", "AC-01c"])
+@pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}", "{id} {text}"])
+def test_actual_closeout_init_accepts_equivalent_checkbox_forms(tmp_path, monkeypatch, ac_id, form):
+    line = "- [X] " + form.format(id=ac_id, text="Output is current.")
+    identity_path = tmp_path / "identity.json"
+    policy_path = tmp_path / "policy.json"
+    state_path = tmp_path / "lifecycle.json"
+    identity_path.write_text(json.dumps(_identity()))
+    policy_path.write_text(json.dumps({
+        ac_id: {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]},
+    }))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", lambda self, repo, number: {
+        "body": line, "parent_epic": 10,
+    })
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+    args = task_closeout.build_parser().parse_args([
+        "--repo-root", str(tmp_path), "init", "--identity-file", str(identity_path),
+        "--ac-policy", str(policy_path), "--state-file", str(state_path),
+        "--author-family", "codex", "--required-check", "CI Gate", "--pr", "77", "--now", NOW,
+    ])
+    assert task_closeout.cmd_init(args) == 0
+    ledger = task_lifecycle.load_lifecycle(state_path)
+    assert task_lifecycle.parse_issue_acceptance_criteria(line) == [
+        {"id": ac_id, "text": "Output is current.", "checked": True},
+    ]
+    assert ledger["ac_snapshot"]["criteria"][0]["id"] == ac_id
+    assert ledger["ac_snapshot"]["criteria"][0]["text"] == "Output is current."
+    snapshot = deepcopy(ledger["ac_snapshot"])
+    args = task_closeout.build_parser().parse_args([
+        "--repo-root", str(tmp_path), "add-evidence", "--state-file", str(state_path),
+        "--ac-id", ac_id, "--type", "test", "--summary", "Caller regression passed.",
+        "--commit", HEAD, "--now", NOW,
+    ])
+    assert task_closeout.cmd_evidence(args) == 0
+    ledger = task_lifecycle.load_lifecycle(state_path)
+    assert ledger["ac_snapshot"] == snapshot
+    assert ledger["evidence"][0]["ac_id"] == ac_id
+    assert task_closeout.cmd_evidence(args) == 0
+    assert task_lifecycle.load_lifecycle(state_path) == ledger
+    before_refusal = state_path.read_bytes()
+    for unknown_id in ["AC-99b", "AC-01/b", ac_id.lower()]:
+        args.ac_id = unknown_id
+        with pytest.raises(task_lifecycle.LifecycleError, match="unknown acceptance criterion"):
+            task_closeout.cmd_evidence(args)
+        assert state_path.read_bytes() == before_refusal
+    result = task_lifecycle.evaluate(ledger, _observation(f"- [ ] {ac_id} Output is current."))
+    assert not any("drift" in blocker for blocker in result["hard_blockers"])
+    assert result["valid_evidence"][ac_id] == ["test"]
+    drift = task_lifecycle.evaluate(ledger, _observation(f"- [x] {ac_id}: Output changed."))
+    assert any("drift" in blocker for blocker in drift["hard_blockers"])
+
+
+@pytest.mark.parametrize("ac_id", ["AZ", "AC-01", "A" + "Z" * 31, "AC-" + "1" * 28 + "b", "AC-01bC"])
+def test_schema_id_bounds_preserve_parser_snapshot_and_evidence(ac_id):
+    body = f"- [ ] **{ac_id}** — Output is current."
+    snapshot = task_lifecycle.build_ac_snapshot(
+        body, {ac_id: {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]}},
+        finalized_at=NOW,
+    )
+    ledger = task_lifecycle.build_lifecycle(
+        _identity(), author_family="codex", ac_snapshot=snapshot,
+        required_checks=["CI Gate"], now=NOW, pr_number=77,
+    )
+    updated = _add(ledger, ac_id, "test")
+    assert updated["ac_snapshot"] == snapshot
+    assert updated["ac_snapshot"]["criteria"][0]["id"] == ac_id
+    assert updated["evidence"][0]["ac_id"] == ac_id
+
+
+@pytest.mark.parametrize("ac_id", [
+    "", "A", "A" + "Z" * 32, "AC-" + "1" * 29 + "b", "ac-01b", "1C-01b",
+    "AC-lowercase", "AC-01b1", "AC-01_b", "AC-01/b", "AC-01b\n", "AC-01\u0431",
+])
+@pytest.mark.parametrize("target", ["criterion", "evidence"])
+def test_schema_refuses_invalid_ids_in_snapshot_and_evidence(ac_id, target):
+    ledger = _add(_ledger(), "AC-IMPL", "test")
+    if target == "criterion":
+        ledger["ac_snapshot"]["criteria"][0]["id"] = ac_id
+        ledger["ac_snapshot"]["content_hash"] = task_lifecycle.ac_content_hash(ledger["ac_snapshot"]["criteria"])
+        location = r"ac_snapshot.criteria.0.id"
+    else:
+        record = ledger["evidence"][0]
+        record["ac_id"] = ac_id
+        record["id"] = task_lifecycle.digest({key: value for key, value in record.items() if key != "id"})
+        location = r"evidence.0.ac_id"
+    with pytest.raises(task_lifecycle.LifecycleError, match=f"schema violation at {location}"):
+        task_lifecycle.validate_lifecycle(ledger)
+
+
+def test_schema_suffix_references_remain_bound_and_unique():
+    snapshot = task_lifecycle.build_ac_snapshot(
+        "- [ ] AC-01b: Output is current.",
+        {"AC-01b": {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]}},
+        finalized_at=NOW,
+    )
+    ledger = task_lifecycle.build_lifecycle(
+        _identity(), author_family="codex", ac_snapshot=snapshot,
+        required_checks=["CI Gate"], now=NOW, pr_number=77,
+    )
+    ledger = _add(ledger, "AC-01b", "test")
+    unbound = deepcopy(ledger)
+    record = unbound["evidence"][0]
+    record["ac_id"] = "AC-01c"
+    record["id"] = task_lifecycle.digest({key: value for key, value in record.items() if key != "id"})
+    with pytest.raises(task_lifecycle.LifecycleError, match="evidence targets unknown AC: AC-01c"):
+        task_lifecycle.validate_lifecycle(unbound)
+    duplicate_criteria = deepcopy(ledger)
+    duplicate_criteria["ac_snapshot"]["criteria"].append(deepcopy(snapshot["criteria"][0]))
+    duplicate_criteria["ac_snapshot"]["content_hash"] = task_lifecycle.ac_content_hash(
+        duplicate_criteria["ac_snapshot"]["criteria"],
+    )
+    with pytest.raises(task_lifecycle.LifecycleError, match="duplicate stable IDs"):
+        task_lifecycle.validate_lifecycle(duplicate_criteria)
+    duplicate_evidence = deepcopy(ledger)
+    duplicate_evidence["evidence"].append(deepcopy(ledger["evidence"][0]))
+    with pytest.raises(task_lifecycle.LifecycleError, match="duplicate evidence record"):
+        task_lifecycle.validate_lifecycle(duplicate_evidence)

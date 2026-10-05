@@ -1,3 +1,4 @@
+import json
 import re
 from pathlib import Path
 
@@ -13,6 +14,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DOCS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 CONTENT_CONFIG_PATH = PROJECT_ROOT / "site" / "src" / "content.config.ts"
 ROUTER_PATH = PROJECT_ROOT / "site" / "src" / "pages" / "[...slug].astro"
+STATS_PATH = PROJECT_ROOT / "site" / "src" / "data" / "curriculum-stats.json"
 
 REQUIRED_PROPS = (
     "level",
@@ -127,3 +129,57 @@ def test_b2_landing_matches_generated_curriculum_state() -> None:
     actual = (DOCS_ROOT / "b2" / "index.mdx").read_text(encoding="utf-8")
 
     assert actual == expected, "Run `.venv/bin/python scripts/generate_landing_pages.py --track b2`."
+
+
+@pytest.mark.parametrize("track", ["c1", "bio", "folk"])
+def test_count_landing_matches_generated_curriculum_state(track: str) -> None:
+    curriculum = yaml.safe_load((PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text("utf-8"))
+    expected = generate_landing_pages.generate_landing_page(track, curriculum)
+    actual = (DOCS_ROOT / track / "index.mdx").read_text(encoding="utf-8")
+
+    assert actual == expected, f"Run `.venv/bin/python scripts/generate_landing_pages.py --track {track}`."
+
+
+def _tracks_with_modules() -> list[str]:
+    stats = json.loads(STATS_PATH.read_text(encoding="utf-8"))
+    return [track for track, entry in stats.items() if track != "_total" and entry["modules"] > 0]
+
+
+@pytest.mark.parametrize(
+    "track",
+    _tracks_with_modules(),
+)
+def test_track_landing_module_count_matches_curriculum_stats(track: str) -> None:
+    stats = json.loads(STATS_PATH.read_text(encoding="utf-8"))
+    text = (DOCS_ROOT / track / "index.mdx").read_text(encoding="utf-8")
+
+    module_count = re.search(r"\bmoduleCount=\{(\d+)\}", text)
+    assert module_count is not None
+    assert int(module_count.group(1)) == stats[track]["modules"], (
+        f"{track} landing moduleCount differs from curriculum-stats.json"
+    )
+
+
+def _manifest_levels_with_groups() -> list[str]:
+    curriculum = yaml.safe_load((PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text("utf-8"))
+    return [level for level, entry in curriculum["levels"].items() if entry.get("groups")]
+
+
+@pytest.mark.parametrize("level", _manifest_levels_with_groups())
+def test_manifest_groups_cover_every_module(level: str) -> None:
+    """Every manifest module sits in a group, so `generate_landing_pages` can regenerate the level."""
+    curriculum = yaml.safe_load((PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text("utf-8"))
+    entry = curriculum["levels"][level]
+
+    validated = generate_landing_pages.validate_module_groups(level, entry["modules"], entry["groups"])
+
+    assert sum(g["end_index"] - g["start_index"] + 1 for g in validated) == len(entry["modules"])
+
+
+def test_manifest_group_validation_rejects_ungrouped_module() -> None:
+    """Negative control: a group list that stops short of the last module is rejected."""
+    modules = ["a", "b", "c"]
+    groups = [{"label": "G", "start": "a", "end": "b"}]
+
+    with pytest.raises(ValueError, match="modules left ungrouped: c"):
+        generate_landing_pages.validate_module_groups("x", modules, groups)
