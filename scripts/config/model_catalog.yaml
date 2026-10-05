@@ -100,7 +100,8 @@ review_scheduler:
   schema_version: review-scheduler.v1
   policy_version: deterministic-formal-routing.v2
   # Suitability is a semantic gate/rank, not a traffic-rotation weight. These
-  # ordered catalog roles are read from the selected model's `roles` field:
+  # ordered catalog roles use candidate `suitability_roles` when supplied,
+  # otherwise the selected model's `roles` field:
   # an absent role fails closed, and pressure only breaks ties at one exact
   # profile/risk suitability + quality tier.
   profile_risk_role_order:
@@ -152,7 +153,6 @@ review_scheduler:
   # pins, custom ladders and delegate review admission all apply it.
   risk_reviewer_models:
     high: [gpt-6.1-sol, claude-opus-5-5, grok-4.7]
-    critical: [gpt-6.1-sol, claude-opus-5-5, grok-4.7]
   endpoints:
     claude:
       formal_review_eligible: true
@@ -1057,6 +1057,8 @@ review_candidates:
   grok-4.7:
     # Operator decision 2026-10-05 (#9769): regular native code/infra reviewer.
     model_id: grok-4.7
+    # Rank after Sol/Opus at every risk without changing model activity roles.
+    suitability_roles: [critical_review]
     route: grok
     transport: native_grok
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model grok-4.7
@@ -1068,6 +1070,8 @@ review_candidates:
     # ("Grok 4.7 256K High") record_cf_verdict accepts; bare grok-4.7 runs the
     # Fast variant; only the high-effort runtime report attests this seat.
     model_id: grok-4.7
+    suitability_roles: [critical_review]
+    transport_fallback_for: grok-4.7
     route: cursor
     transport: cursor
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model grok-4.7-high

@@ -214,12 +214,15 @@ def test_unsupported_risk_fails_closed():
     assert "unsupported review risk" in resolution.fail_closed_reason
 
 
-def test_critical_uses_opus_while_high_and_routine_admit_grok():
-    assert resolve_reviewer(ResolverInputs(author_model="codex", risk="critical")).selected.name == "claude-opus-5-5"
-    for risk in ("high", "medium", "low"):
-        selected = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk)).selected
-        assert selected.concrete_model == "grok-4.7"
-        assert selected.family != "openai"
+def test_critical_uses_authority_while_routine_uses_practical_defaults():
+    # #9394: OpenAI author gets Opus at critical; #9538: high is Opus too;
+    # the practical defaults at medium and low remain Sonnet.
+    for risk in ("critical", "high"):
+        resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk))
+        assert resolution.selected.name == "claude-opus-5-5", risk
+    for risk in ("medium", "low"):
+        resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk))
+        assert resolution.selected.name == "claude-sonnet-5-5", risk
 
 
 @pytest.mark.parametrize("author_model", ("gpt-6.1-sol", "grok-4.7"))
@@ -236,8 +239,8 @@ def test_critical_security_review_excludes_sonnet_5_5(author_model: str, review_
 def test_high_risk_anthropic_author_gets_strong_practical_formal_gate():
     resolution = resolve_reviewer(ResolverInputs(author_model="claude", risk="high"))
     assert resolution.selected is not None
-    assert resolution.selected.concrete_model == "grok-4.7"
-    assert resolution.selected.suitability_rank == 0
+    assert resolution.selected.name == "openai_frontier"
+    assert resolution.selected.suitability_rank == 1
 
 
 def test_critical_anthropic_author_gets_astra_as_formal_gate():
@@ -246,22 +249,22 @@ def test_critical_anthropic_author_gets_astra_as_formal_gate():
     assert resolution.selected.concrete_model == "gpt-6.1-sol"
 
 
-def test_high_risk_openai_author_gets_grok_not_sonnet_or_fable():
+def test_high_risk_openai_author_gets_opus_not_sonnet_or_fable():
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-5.6-terra", risk="high"))
-    assert resolution.selected.concrete_model == "grok-4.7"
-    assert resolution.selected.transport in {"native_grok", "cursor"}
+    assert resolution.selected.name == "claude-opus-5-5"
+    assert resolution.selected.transport == "native_claude"
     # Astra remains same-family advisory context, never this author’s CF gate.
     assert next(entry for entry in resolution.trace if entry.name == "openai_frontier").status == "advisory_only"
 
 
-def test_high_risk_ladder_leaves_sonnet_out_and_admits_grok():
+def test_high_risk_ladder_leaves_sonnet_out_so_opus_wins_the_openai_author_seat():
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="high"))
-    assert resolution.selected.concrete_model == "grok-4.7"
-    assert resolution.selected.suitability_rank == 0
+    assert resolution.selected.name == "claude-opus-5-5"
+    assert resolution.selected.suitability_rank == 3
     assert "claude-sonnet-5-5" not in {item.name for item in resolution.trace}
-    # Routine suitability still ranks Grok ahead of Opus's critical_review role.
+    # At medium the practical ladder still lets Sonnet's closer fit beat Opus.
     medium = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="medium"))
-    assert medium.selected.concrete_model == "grok-4.7"
+    assert medium.selected.name == "claude-sonnet-5-5"
     opus = next(item for item in medium.trace if item.name == "claude-opus-5-5")
     assert opus.status == "eligible"
     assert opus.suitability_rank == 4
@@ -360,9 +363,9 @@ def test_high_risk_kimi_author_gets_claude_not_composer():
     assert "same family" in composer.reason
 
 
-def test_medium_risk_admits_grok_and_keeps_pool_transport_gate():
+def test_medium_risk_uses_sonnet_and_keeps_pool_eligible():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
-    assert resolution.selected.concrete_model == "grok-4.7"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     assert next(entry for entry in resolution.trace if entry.name == "pool").status == "excluded"
 
 
@@ -394,7 +397,7 @@ def test_codexbar_unavailable_status_fail_open_does_not_ban_lane():
         )
     )
     assert resolution.selected is not None
-    assert resolution.selected.concrete_model == "grok-4.7"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     assert resolution.selected.health in {None, "healthy"}
 
 
@@ -407,7 +410,7 @@ def test_unhealthy_route_is_unavailable_and_falls_to_the_next_quality_tier():
         )
     )
     # Practical ladder: Astra dark → Sonnet 5.5 (Claude healthy by default).
-    assert resolution.selected.concrete_model == "grok-4.7"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     terra = next(entry for entry in resolution.trace if entry.name == "openai_frontier")
     assert terra.status == "excluded"
     assert "unhealthy" in terra.reason
@@ -423,8 +426,8 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
         },
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
-    assert resolution.selected.concrete_model == "grok-4.7"
-    assert next(entry for entry in resolution.trace if entry.name == "claude-sonnet-5-5").health == "degraded"
+    assert resolution.selected.name == "claude-sonnet-5-5"
+    assert resolution.selected.health == "degraded"
 
 
 def test_gemini_lane_outage_does_not_create_code_review_route():
@@ -435,7 +438,7 @@ def test_gemini_lane_outage_does_not_create_code_review_route():
         }
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
-    assert resolution.selected.concrete_model == "grok-4.7"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     assert all(not entry.concrete_model.startswith("gemini-") for entry in resolution.trace)
 
 
@@ -478,7 +481,7 @@ def test_health_statuses_are_case_normalized_and_unsupported_values_fail_closed(
             routing_snapshot={"agy": "UNHEALTHY", "grok": "healthy"},
         )
     )
-    assert unhealthy.selected.concrete_model == "grok-4.7"
+    assert unhealthy.selected.name == "claude-sonnet-5-5"
 
     invalid = resolve_reviewer(
         ResolverInputs(
@@ -500,7 +503,7 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
             routing_snapshot={"agy": "pre_launch", "grok": "near_cap"},
         )
     )
-    assert pre_launch.selected.concrete_model == "grok-4.7"
+    assert pre_launch.selected.name == "claude-sonnet-5-5"
     assert pre_launch.selected.health is None
 
     unknown = resolve_reviewer(
@@ -511,7 +514,7 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
         )
     )
     missing = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
-    assert unknown.selected.concrete_model == missing.selected.concrete_model == "grok-4.7"
+    assert unknown.selected.name == missing.selected.name == "claude-sonnet-5-5"
     assert unknown.substitution_note is None
 
 
@@ -524,7 +527,7 @@ def test_near_cap_receives_no_new_automatic_assignment_and_uses_eligible_fallbac
         )
     )
     assert resolution.selected is not None
-    assert resolution.selected.concrete_model == "grok-4.7"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     terra = next(item for item in resolution.trace if item.name == "openai_frontier")
     assert terra.status == "excluded"
     assert "automatic assignments are prohibited" in terra.reason
@@ -559,7 +562,7 @@ def test_native_grok_health_and_cursor_transport_fallback():
 def test_missing_health_signal_is_fail_open():
     empty = resolve_reviewer(ResolverInputs(author_model="codex", risk="low", routing_snapshot={}))
     absent = resolve_reviewer(ResolverInputs(author_model="codex", risk="low", routing_snapshot=None))
-    assert empty.selected.concrete_model == absent.selected.concrete_model == "grok-4.7"
+    assert empty.selected.name == absent.selected.name == "claude-sonnet-5-5"
 
 
 def test_family_exclusion_is_not_mislabeled_as_a_substitution():
@@ -1079,11 +1082,11 @@ def test_ladders_place_native_and_cursor_grok_directly_after_opus(risk):
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
 
-def test_medium_codex_author_falls_through_unavailable_opus_to_grok():
+def test_medium_codex_author_keeps_sonnet_ahead_of_unavailable_opus():
     ladder = REVIEW_LADDERS["medium"]
     without_opus = tuple(rung for rung in ladder if not rung[0].name.startswith("claude-opus-5-5"))
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="medium"), ladder=without_opus)
-    assert resolution.selected.concrete_model == "grok-4.7"
+    assert resolution.selected.concrete_model == "claude-sonnet-5-5"
 
 
 def test_old_sonnet_record_still_resolves_anthropic_family():
@@ -1292,7 +1295,7 @@ def test_resolve_reviewer_unrelated_owned_path_does_not_change_selection():
     with_readme = resolve_reviewer(ResolverInputs(author_model="claude", risk="high", owned_paths=("README.md",)))
     assert with_readme == plain
     assert with_readme.selected is not None
-    assert with_readme.selected.concrete_model == "grok-4.7"
+    assert with_readme.selected.name == "openai_frontier"
 
 
 def test_resolve_reviewer_ambiguous_adapter_path_requires_explicit_subject():
@@ -1466,13 +1469,81 @@ def test_every_author_family_risk_profile_pick(family, author, risk, profile):
     if risk == "critical":
         expected = "gpt-6.1-sol" if family == "anthropic" else "claude-opus-5-5"
     elif risk == "high":
-        expected = ("gpt-6.1-sol" if profile == "code" else "claude-opus-5-5") if family == "xai" else "grok-4.7"
+        expected = "gpt-6.1-sol" if family == "anthropic" or (family != "openai" and profile == "code") else "claude-opus-5-5"
     else:
-        expected = "grok-4.7" if family == "openai" else "gpt-6.1-sol"
+        expected = "claude-sonnet-5-5" if family == "openai" else "gpt-6.1-sol"
     resolution = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, review_profile=profile))
     assert resolution.fail_closed_reason is None
     assert resolution.selected.concrete_model == expected
     assert resolution.selected.family != family
+
+
+_AUTHORITY_DOWN = {
+    "codex": "unhealthy",
+    "claude": "unhealthy",
+    "claude-opus-5-5-cursor-fallback": "unhealthy",
+}
+
+
+@pytest.mark.parametrize("author", ["gpt-6.1-sol", "claude-opus-5-5", "claude-sonnet-5-5", "grok-4.7", "kimi-code/k3"])
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+@pytest.mark.parametrize("profile", ["code", "infra"])
+@pytest.mark.parametrize("state,snapshot,fallback", [
+    ("healthy", {"codex": "healthy", "claude": "healthy", "grok": "healthy", "cursor": "healthy"}, False),
+    ("unknown", None, False),
+    ("native-down-authorities-up", {"grok": "unhealthy"}, False),
+    ("cursor-down-authorities-up", {"cursor": "unhealthy"}, False),
+    ("authorities-down", {**_AUTHORITY_DOWN, "grok": "healthy", "cursor": "healthy"}, True),
+    ("native-degraded", {**_AUTHORITY_DOWN, "grok": "degraded", "cursor": "healthy"}, True),
+    ("native-near-cap", {**_AUTHORITY_DOWN, "grok": "near_cap", "cursor": "healthy"}, True),
+    ("native-down", {**_AUTHORITY_DOWN, "grok": "unhealthy", "cursor": "healthy"}, True),
+    ("all-down", {**_AUTHORITY_DOWN, "grok": "unhealthy", "cursor": "unhealthy"}, True),
+])
+def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallback):
+    """Whole-ladder choices preserve other models' suitability at every risk."""
+    if fallback:
+        if author == "grok-4.7" or state == "all-down":
+            expected = None
+        elif state in {"native-near-cap", "native-down"}:
+            # Cursor's allowlist-union independence excludes Moonshot authors.
+            expected = None if author == "kimi-code/k3" else "grok-4.7-cursor-fallback"
+        else:
+            expected = "grok-4.7"
+    elif author in {"claude-opus-5-5", "claude-sonnet-5-5"}:
+        expected = "openai_frontier"
+    elif risk == "critical" or (risk == "high" and (author == "gpt-6.1-sol" or profile == "infra")):
+        expected = "claude-opus-5-5"
+    elif author == "gpt-6.1-sol":
+        expected = "claude-sonnet-5-5"
+    else:
+        expected = "openai_frontier"
+    result = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, review_profile=profile, routing_snapshot=snapshot))
+    assert (result.selected.name if result.selected else None) == expected
+
+
+def test_medium_anthropic_author_still_selects_sol_before_grok():
+    assert resolve_reviewer(ResolverInputs(author_model="claude-opus-5-5", risk="medium")).selected.name == "openai_frontier"
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_native_grok_precedes_cursor_across_heads_pressure_and_subject_exclusions(risk, profile):
+    # Deny the authority families as governed seats; cursor is deliberately
+    # better on every resource term, and reversed rungs cannot change fallback.
+    snapshot = {"agents": {
+        "grok": {"status": "healthy", "scheduler": {"completed_input_bytes": 999999, "quota_remaining_pct": 1}},
+        "cursor": {"status": "healthy", "scheduler": {"completed_input_bytes": 0, "quota_remaining_pct": 99}},
+    }}
+    for head in range(200):
+        inputs = ResolverInputs(
+            author_model="claude-sonnet-5-5", risk=risk, review_profile=profile,
+            subject_families=frozenset({"openai", "anthropic"}),
+            routing_snapshot=snapshot, exact_head=f"{head:040x}",
+        )
+        ladder = ((GROK_4_7_CURSOR_FALLBACK,), (GROK_4_7,))
+        assert resolve_reviewer(inputs, ladder=ladder).selected.name == "grok-4.7"
+        down = {"grok": "unhealthy", "cursor": "healthy"}
+        assert resolve_reviewer(replace(inputs, routing_snapshot=down), ladder=ladder).selected.name == "grok-4.7-cursor-fallback"
 
 
 @pytest.mark.parametrize("profile", ["code", "infra"])
@@ -1507,30 +1578,18 @@ _HIGH_SEATS = {"openai_frontier", "claude-opus-5-5", "claude-opus-5-5-cursor-fal
 _SOL_UNAVAILABLE = {"codex": "unhealthy"}
 # (author, Sol state, profile) -> expected concrete reviewer; None = no reviewer.
 _HIGH_DENOMINATOR = {
-    ("claude-opus-5-5", "healthy", "code"): "grok-4.7",
-    ("claude-opus-5-5", "healthy", "infra"): "grok-4.7",
-    ("claude-opus-5-5", "unavailable", "code"): "grok-4.7",
-    ("claude-opus-5-5", "unavailable", "infra"): "grok-4.7",
-    ("claude-sonnet-5-5", "healthy", "code"): "grok-4.7",
-    ("claude-sonnet-5-5", "healthy", "infra"): "grok-4.7",
-    ("claude-sonnet-5-5", "unavailable", "code"): "grok-4.7",
-    ("claude-sonnet-5-5", "unavailable", "infra"): "grok-4.7",
-    ("gpt-6.1-sol", "healthy", "code"): "grok-4.7",
-    ("gpt-6.1-sol", "healthy", "infra"): "grok-4.7",
-    ("gpt-6.1-sol", "unavailable", "code"): "grok-4.7",
-    ("gpt-6.1-sol", "unavailable", "infra"): "grok-4.7",
-    ("gpt-6-luna", "healthy", "code"): "grok-4.7",
-    ("gpt-6-luna", "healthy", "infra"): "grok-4.7",
-    ("gpt-6-luna", "unavailable", "code"): "grok-4.7",
-    ("gpt-6-luna", "unavailable", "infra"): "grok-4.7",
-    ("grok-4.7", "healthy", "code"): "gpt-6.1-sol",
-    ("grok-4.7", "healthy", "infra"): "claude-opus-5-5",
-    ("grok-4.7", "unavailable", "code"): "claude-opus-5-5",
-    ("grok-4.7", "unavailable", "infra"): "claude-opus-5-5",
-    ("composer-2.5", "healthy", "code"): "grok-4.7",
-    ("composer-2.5", "healthy", "infra"): "grok-4.7",
-    ("composer-2.5", "unavailable", "code"): "grok-4.7",
-    ("composer-2.5", "unavailable", "infra"): "grok-4.7",
+    (author, sol, profile): (
+        ("gpt-6.1-sol" if sol == "healthy" else "grok-4.7")
+        if author in {"claude-opus-5-5", "claude-sonnet-5-5"}
+        else (
+            "gpt-6.1-sol"
+            if author in {"grok-4.7", "composer-2.5"} and sol == "healthy" and profile == "code"
+            else "claude-opus-5-5"
+        )
+    )
+    for author in ("claude-opus-5-5", "claude-sonnet-5-5", "gpt-6.1-sol", "gpt-6-luna", "grok-4.7", "composer-2.5")
+    for sol in ("healthy", "unavailable")
+    for profile in ("code", "infra")
 }
 
 

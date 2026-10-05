@@ -23,12 +23,9 @@ REPOSITORY = "owner/repo"
 
 
 @pytest.fixture(autouse=True)
-def recorder_matcher(synthetic_opsec, monkeypatch):
-    from scripts.opsec import prepublish as gate
-    from tests.opsec_fixtures import CATALOG, synthetic_rules
+def recorder_matcher(synthetic_opsec):
+    from tests.opsec_fixtures import synthetic_rules
 
-    # Synthetic publication targets must not depend on a live repository catalog.
-    monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
     rules = synthetic_rules(rule="3-absolute-path", level=3, pattern=r"(?<![<\w:])/[A-Za-z][^\s`'\"<>),;\]}|*]*")
     (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
 

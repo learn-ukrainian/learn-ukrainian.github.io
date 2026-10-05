@@ -447,6 +447,28 @@ def test_native_plain_reply_does_not_attest_model():
     assert result.substitution["actual_model_known"] is False
 
 
+@pytest.mark.parametrize("agent", ["grok", "grok-build"])
+@pytest.mark.parametrize("runtime,substituted", [
+    ("grok-4.7-build", False),
+    ("grok-4.7", False),
+    ("grok-4.7-build-fast", True),
+    ("grok-4.6", True),
+    ("grok-4.7-build-extra", True),
+])
+def test_native_runtime_alias_keeps_requested_pin_and_real_substitution(agent, runtime, substituted):
+    from scripts import delegate
+
+    result = GrokBuildAdapter().parse_response(
+        stdout=json.dumps({"text": "VERDICT: APPROVE", "modelUsage": {runtime: {"modelCalls": 1}}}),
+        stderr="", returncode=0, output_file=None,
+    )
+    assert result.substitution["substituted"] is substituted
+    state = delegate._cursor_model_state(agent=agent, result=result, substitution=result.substitution)
+    assert state["model"] == (runtime if substituted else "grok-4.7")
+    assert state["resolved_model"] == runtime
+    assert state["resolved_model_source"] == "grok-model-usage"
+
+
 def test_parse_failure_nonzero():
     r = GrokBuildAdapter().parse_response(stdout="", stderr="boom", returncode=1, output_file=None)
     assert not r.ok

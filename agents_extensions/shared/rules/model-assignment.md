@@ -12,8 +12,9 @@ or its own subject seat. Verdicts count only with runtime model attestation: nat
 reports exactly one admitted model id; Cursor reports its pinned high-effort model itself.
 Designated approval remains Opus 5.5 + Sol 6.1; Gemini/AGY stays off code review and Kimi is unchanged.
 This interim seat is revisited when Gemini 4 or a code-capable Gemini model is admitted.
-`review_scheduler.risk_reviewer_models` admits Opus 5.5, Sol 6.1 and Grok 4.7 at high and critical.
-It is an eligibility gate for automatic ladders, explicit pins, custom ladders and delegate review
+`review_scheduler.risk_reviewer_models` admits Opus 5.5, Sol 6.1 and Grok 4.7 at high;
+critical eligibility requires the catalog's `critical_review` role. These eligibility gates
+apply to automatic ladders, explicit pins, custom ladders and delegate review
 admission, including `--force-agent` and budget substitution or retention. DeepSeek is excluded from dispatch and
 review, and Sonnet is excluded from critical security review. Historical
 capability and transport descriptions below confer no routing permission.

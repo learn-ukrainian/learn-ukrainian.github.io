@@ -33,6 +33,7 @@ from scripts.review.model_catalog import (
     resolve_kimi_model,
     retired_model_refusal,
     risk_reviewer_refusal,
+    runtime_model_matches_requested,
     validate_catalog,
     validate_glm_alias_consumers,
     validate_kimi_alias_consumers,
@@ -46,6 +47,52 @@ def test_committed_catalog_is_structurally_valid_and_current():
     assert catalog_age_days(catalog, as_of=date(2026, 9, 24)) == 0
     assert not catalog_is_stale(catalog, as_of=date(2026, 10, 23))
     assert catalog_is_stale(catalog, as_of=date(2026, 10, 25))
+
+
+@pytest.mark.parametrize("value", [None, "grok-4.7-build", [], [""], [" "], [1], ["grok-4.7-build", None]])
+def test_runtime_model_ids_require_nonempty_strings(value):
+    catalog = deepcopy(load_model_catalog())
+    catalog["models"]["grok-4.7"]["runtime_model_ids"] = value
+    with pytest.raises(ModelCatalogError, match="runtime_model_ids"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("runtime", ["grok-4.7-build-fast", "grok-4.7-build-FAST", "grok-4.7-fast-high", "grok-4.7_build_fast"])
+def test_review_runtime_model_ids_reject_fast_variants(runtime):
+    catalog = deepcopy(load_model_catalog())
+    catalog["models"]["grok-4.7"]["runtime_model_ids"] = [runtime]
+    with pytest.raises(ModelCatalogError, match="must not admit fast review variants"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("requested,runtime,expected", [
+    ("grok-4.7", "grok-4.7-build", True),
+    ("grok-4.7-high", "grok-4.7-build", True),
+    ("grok-4.7", "grok-4.7", True),
+    ("grok-4.7", "grok-4.7-build-fast", False),
+    ("grok-4.7", "grok-4.6", False),
+    ("grok-4.7", "grok-4.7-build-extra", False),
+    ("unknown", "grok-4.7-build", False),
+    ("gpt-6.1-sol", "grok-4.7-build", False),
+])
+def test_runtime_substitution_matches_only_requested_model_ids(requested, runtime, expected):
+    assert runtime_model_matches_requested(requested, runtime) is expected
+
+
+@pytest.mark.parametrize("roles", [[], ["not-a-role"], ["standard_review"]])
+def test_candidate_suitability_roles_must_be_nonempty_and_held(roles):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["grok-4.7"]["suitability_roles"] = roles
+    with pytest.raises(ModelCatalogError, match="suitability_roles"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("primary", ["unknown", "openai_frontier", "grok-4.7-cursor-fallback"])
+def test_transport_fallback_must_reference_primary_of_same_model(primary):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["grok-4.7-cursor-fallback"]["transport_fallback_for"] = primary
+    with pytest.raises(ModelCatalogError, match="transport_fallback_for"):
+        validate_catalog(catalog)
 
 
 @pytest.mark.parametrize("model_id", [
@@ -604,10 +651,10 @@ def test_catalog_rejects_a_high_ladder_seat_outside_risk_reviewer_models(candida
         validate_catalog(broken)
 
 
-def test_risk_reviewer_models_names_sol_opus_grok_at_high_and_critical():
-    """#9769: both high and critical use the same admitted models."""
+def test_risk_reviewer_models_names_sol_opus_grok_at_high():
+    """Critical eligibility uses critical_review without another allowlist."""
     catalog = load_model_catalog()
-    assert catalog["review_scheduler"]["risk_reviewer_models"] == {risk: ["gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"] for risk in ("high", "critical")}
+    assert catalog["review_scheduler"]["risk_reviewer_models"] == {"high": ["gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"]}
     assert risk_reviewer_refusal("claude-opus-5-5-high", "high", catalog) is None
     assert risk_reviewer_refusal("gpt-6.1-sol", "HIGH", catalog) is None
     assert "performed only by" in risk_reviewer_refusal("claude-sonnet-5-5", "high", catalog)

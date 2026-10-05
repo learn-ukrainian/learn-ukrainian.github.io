@@ -600,13 +600,15 @@ class GrokBuildAdapter:
         requested_model = self.default_model
         if plan is not None and "-m" in plan.cmd:
             requested_model = plan.cmd[plan.cmd.index("-m") + 1]
+        from scripts.review.model_catalog import runtime_model_matches_requested
+
         attribution = {
             "requested_provider": "grok",
             "requested_model": requested_model,
             "actual_provider": "grok",
             "actual_model": runtime_model,
             "actual_model_known": runtime_model is not None,
-            "substituted": bool(runtime_model and runtime_model != requested_model),
+            "substituted": bool(runtime_model and not runtime_model_matches_requested(requested_model, runtime_model)),
             "source": "grok-model-usage" if runtime_model else "unattested-harness",
             "marker": None,
         }

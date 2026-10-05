@@ -2528,6 +2528,14 @@ def _cursor_model_state(
         # one field, while leaving it at the requested ``auto`` selector when
         # attribution is unknown.
         state["model"] = resolved_model
+        if agent in {"grok", "grok-build"} and isinstance(substitution, dict):
+            from scripts.review.model_catalog import runtime_model_matches_requested
+
+            requested_model = substitution.get("requested_model")
+            if isinstance(requested_model, str) and runtime_model_matches_requested(requested_model, resolved_model):
+                # Keep the requested pin for legacy substitution comparisons;
+                # resolved_model retains the exact runtime attestation bytes.
+                state["model"] = requested_model
     return state
 
 

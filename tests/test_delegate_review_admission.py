@@ -1234,12 +1234,12 @@ def test_high_risk_review_admits_grok_and_substitutes_ineligible_sonnet(
     assert delegate._dispatch_is_review_typed(args)
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
     assert refusal is None
-    assert (target.recipient, target.model) in {("grok", "grok-4.7"), ("cursor", "grok-4.7-high")}
     if seat == "cursor":
         assert (target.recipient, target.model) == ("cursor", "grok-4.7-high")
         assert routing.substitution is None
         assert "REVIEW_IDENTITY_SUBSTITUTED:" not in capsys.readouterr().err
     else:
+        assert (target.recipient, target.model) == expected
         assert routing.substitution["source"] == "reviewer-resolver"
         assert routing.substitution["requested_model"] == model
         assert "REVIEW_IDENTITY_SUBSTITUTED:" in capsys.readouterr().err

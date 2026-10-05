@@ -392,8 +392,8 @@ def _resolve_review_target(
     family = resolve_family(concrete or "")
     # The seat's registered pin reviews too when no model is named (#9583).
     _refuse_non_review_models((requested_model,))
-    # Composer/Kimi never review. Grok is admitted only as the resolver's
-    # runtime-attested Cursor seat (#9488); native Grok is excluded there.
+    # Composer/Kimi never review. Native and Cursor Grok require runtime
+    # attestation and cross-family eligibility at every risk (#9769).
     forbidden = {"moonshot"}
     if profile != "ukrainian":
         forbidden.add("google")
