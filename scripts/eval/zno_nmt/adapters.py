@@ -23,7 +23,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.adapters.claude import headless_claude_launch
+from scripts.agent_runtime.adapters.claude import popen_headless_claude
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter
 
@@ -599,9 +599,13 @@ def _nonnegative_number(value: Any) -> int | float | None:
 
 
 def _run_claude_process(argv: list[str], *, cwd: Path, env: Mapping[str, str], prompt: str, timeout: int) -> subprocess.CompletedProcess[str]:
-    """Kill the whole CLI process group so an MCP proxy cannot survive a timeout."""
+    """Kill the whole CLI process group so an MCP proxy cannot survive a timeout.
+
+    ``env`` is the child's exact base environment; the adapter adds only the
+    background controls, since the run ends with its final turn (#9750).
+    """
     try:
-        process = subprocess.Popen(argv, cwd=str(cwd), env=dict(env), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True)
+        process = popen_headless_claude(argv, base_env=env, cwd=str(cwd), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True)
         stdout, stderr = process.communicate(prompt, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
         try:
@@ -669,11 +673,8 @@ def run_claude(packet: Mapping[str, Any], config: Mapping[str, Any], condition: 
             argv.extend(["--effort", checked["effort"]])
         if condition == "sources":
             argv.extend(["--allowedTools", ",".join(_tool_ref(tool) for tool in checked["tools"])])
-        # MCP tools stay enabled under --tools ""; the run ends with its final turn,
-        # so no background work may outlive it (#9750).
-        argv, env = headless_claude_launch(argv, _child_env(checked["max_output_tokens"]))
         started = time.monotonic()
-        completed = _run_claude_process(argv, cwd=root, env=env, prompt=prompt, timeout=checked["timeout_seconds"])
+        completed = _run_claude_process(argv, cwd=root, env=_child_env(checked["max_output_tokens"]), prompt=prompt, timeout=checked["timeout_seconds"])
         elapsed = time.monotonic() - started
         if completed.returncode != 0:
             failure_text = (completed.stdout or "") + "\n" + (completed.stderr or "")

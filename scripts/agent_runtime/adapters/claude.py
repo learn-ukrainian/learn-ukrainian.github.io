@@ -178,10 +178,12 @@ _MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 # by name; a settings deny removes them in dontAsk, bypass and default modes.
 # env_sanitize allowlists the variable for the claude provider, and for kimi
 # only from adapter overrides. KimiccHarness reuses both constants; every
-# other headless launch applies them through ``headless_claude_launch``.
+# other headless run is spawned by ``run_headless_claude``/``popen_headless_claude``.
 HEADLESS_BACKGROUND_ENV = {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
 HEADLESS_BACKGROUND_TOOL_DENIES = ("Monitor", "ScheduleWakeup", "CronCreate", "Workflow")
 _DISALLOWED_TOOLS_FLAGS = ("--disallowedTools", "--disallowed-tools")
+# The wrappers build the child environment and run the argv directly.
+_WRAPPER_OWNED_KWARGS = frozenset({"env", "shell", "executable"})
 
 
 def _with_background_denies(value: str) -> str:
@@ -189,15 +191,15 @@ def _with_background_denies(value: str) -> str:
     return ",".join([*denied, *(tool for tool in HEADLESS_BACKGROUND_TOOL_DENIES if tool not in denied)])
 
 
-def headless_claude_launch(argv: Sequence[str], env: Mapping[str, str]) -> tuple[list[str], dict[str, str]]:
-    """Return the argv and env a headless ``claude -p`` child must be started with (#9750).
+def headless_claude_argv(argv: Sequence[str]) -> list[str]:
+    """Return a copy of a headless ``claude -p`` argv with the background tools denied (#9750).
 
-    Every direct ``claude -p`` launch outside the adapter passes its argv and
-    base environment through here and starts the child with the result. Each
-    existing ``--disallowedTools`` list keeps its entries and gains the
+    Each existing ``--disallowedTools`` list keeps its entries and gains the
     background denies; without one, a list is added before the ``--``
     end-of-options marker (the option is variadic, so it must not precede a
-    positional prompt). The environment switch overrides the base value.
+    positional prompt). Idempotent. Pure: it spawns nothing, so a caller that
+    needs the argv alone (to report or digest it) can use it; the run itself
+    goes through ``run_headless_claude`` or ``popen_headless_claude``.
     """
     cmd = list(argv)
     end = cmd.index("--") if "--" in cmd else len(cmd)
@@ -213,7 +215,49 @@ def headless_claude_launch(argv: Sequence[str], env: Mapping[str, str]) -> tuple
             merged = True
     if not merged:
         cmd[end:end] = ["--disallowedTools", ",".join(HEADLESS_BACKGROUND_TOOL_DENIES)]
-    return cmd, {**env, **HEADLESS_BACKGROUND_ENV}
+    return cmd
+
+
+def _headless_spawn_args(
+    argv: Sequence[str], base_env: Mapping[str, str] | None, kwargs: Mapping[str, Any]
+) -> tuple[list[str], dict[str, str]]:
+    owned = sorted(_WRAPPER_OWNED_KWARGS & kwargs.keys())
+    if owned:
+        raise TypeError(f"headless Claude wrappers own {', '.join(owned)}; pass the base environment as base_env")
+    if isinstance(argv, (str, bytes)) or not all(isinstance(arg, str) for arg in argv):
+        raise TypeError("headless Claude argv must be a sequence of str, never a shell command")
+    env = dict(os.environ if base_env is None else base_env)
+    env.update(HEADLESS_BACKGROUND_ENV)
+    return headless_claude_argv(argv), env
+
+
+def run_headless_claude(
+    argv: Sequence[str], *, timeout: float, base_env: Mapping[str, str] | None = None, **kwargs: Any
+) -> subprocess.CompletedProcess[Any]:
+    """``subprocess.run`` a headless ``claude -p`` argv with the background controls forced (#9690, #9750).
+
+    A print-mode run ends with its final turn, so background work it started
+    would be lost. The child environment is a copy of ``base_env`` exactly
+    (the ambient environment only when it is omitted, so a caller's
+    exclusions hold), with ``CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1`` set
+    last; the argv gains the background-tool denies. ``env``, ``shell`` and
+    ``executable`` are refused: the argv runs directly. ``timeout`` is
+    required, so every run is bounded; every other keyword passes to
+    ``subprocess.run`` unchanged.
+    """
+    cmd, env = _headless_spawn_args(argv, base_env, kwargs)
+    return subprocess.run(cmd, env=env, timeout=timeout, **kwargs)
+
+
+def popen_headless_claude(
+    argv: Sequence[str], *, base_env: Mapping[str, str] | None = None, **kwargs: Any
+) -> subprocess.Popen[Any]:
+    """``subprocess.Popen`` counterpart of ``run_headless_claude``, with the same controls and refusals.
+
+    The caller bounds the process through ``communicate``/``wait`` timeouts.
+    """
+    cmd, env = _headless_spawn_args(argv, base_env, kwargs)
+    return subprocess.Popen(cmd, env=env, **kwargs)
 
 
 # Reader and writer tools come from the sources server's annotations

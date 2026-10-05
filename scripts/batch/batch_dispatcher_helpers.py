@@ -7,14 +7,13 @@ batch dispatcher system.
 
 import json
 import logging
-import os
 import shutil
 import subprocess
 import time
 from datetime import UTC, datetime
 from pathlib import Path
 
-from agent_runtime.adapters.claude import headless_claude_launch
+from agent_runtime.adapters.claude import run_headless_claude
 from audit.status_cache import get_source_paths, read_status
 from batch.batch_dispatcher_config import (
     COST_ESTIMATES,
@@ -350,16 +349,15 @@ def dispatch_claude_fix(track_name: str, slug: str, module_num: int,
     ]
     if supports_exclude_dynamic_system_prompt_sections((CLAUDE_BIN,)):
         cmd.append("--exclude-dynamic-system-prompt-sections")
-    # The run ends with its final turn; no background work may outlive it (#9750).
-    cmd, env = headless_claude_launch(cmd, os.environ)
 
     log.info(f"  Claude fix: {track_name}/{slug} (module {module_num})")
 
     start = time.monotonic()
     try:
-        result = subprocess.run(
+        # The run ends with its final turn; no background work may outlive it (#9750).
+        result = run_headless_claude(
             cmd, capture_output=True, text=True,
-            timeout=timeout, cwd=str(PROJECT_ROOT), env=env,
+            timeout=timeout, cwd=str(PROJECT_ROOT),
         )
         elapsed = time.monotonic() - start
         stdout_tail = result.stdout[-3000:] if result.stdout else ""

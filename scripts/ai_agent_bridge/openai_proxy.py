@@ -29,9 +29,9 @@ from pydantic import BaseModel, ConfigDict, Field
 from ._config import _PARENT_ENV, AGY_CLI, CLAUDE_CMD, CODEX_CLI, REPO_ROOT
 
 try:
-    from scripts.agent_runtime.adapters.claude import headless_claude_launch
+    from scripts.agent_runtime.adapters.claude import run_headless_claude
 except ModuleNotFoundError:  # run as the top-level ai_agent_bridge package
-    from agent_runtime.adapters.claude import headless_claude_launch
+    from agent_runtime.adapters.claude import run_headless_claude
 
 _DEFAULT_BACKEND_TIMEOUT_S = 120
 _HERMES_STDIN_MODULE = "scripts.ai_agent_bridge._hermes_stdin"
@@ -139,16 +139,18 @@ def _run_backend_command(
     env = dict(env) if env is not None else dict(_PARENT_ENV)
     env.setdefault("TERM", "xterm-256color")
     env.setdefault("COLORTERM", "truecolor")
-    result = subprocess.run(
-        argv,
-        input=prompt,
-        capture_output=True,
-        text=True,
-        timeout=_backend_timeout_s(),
-        cwd=str(cwd),
-        env=env,
-        check=False,
-    )
+    options: dict[str, Any] = {
+        "input": prompt,
+        "capture_output": True,
+        "text": True,
+        "cwd": str(cwd),
+        "check": False,
+    }
+    if backend_name == "claude":
+        # The run ends with its final turn; no background work may outlive it (#9750).
+        result = run_headless_claude(argv, base_env=env, timeout=_backend_timeout_s(), **options)
+    else:
+        result = subprocess.run(argv, env=env, timeout=_backend_timeout_s(), **options)
     if result.returncode != 0:
         raise subprocess.CalledProcessError(
             result.returncode,
@@ -297,9 +299,7 @@ def _claude_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
         "--input-format",
         "text",
     ]
-    # The run ends with its final turn; no background work may outlive it (#9750).
-    argv, env = headless_claude_launch(argv, _PARENT_ENV)
-    result = _run_backend_command("claude", argv, prompt=prompt, env=env)
+    result = _run_backend_command("claude", argv, prompt=prompt)
     return CompletionResponse(content=result.stdout.strip())
 
 

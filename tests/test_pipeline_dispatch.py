@@ -93,7 +93,8 @@ def test_dispatch_claude_phase_runs_without_background_work(monkeypatch, tmp_pat
         seen.update(cmd=cmd, env=kwargs["env"])
         return subprocess.CompletedProcess(cmd, 0, stdout="===CONTENT_START===\nx\n===CONTENT_END===", stderr="")
 
-    monkeypatch.setattr(dispatch_module, "run_with_heartbeat", fake_run)
+    monkeypatch.setenv("CLAUDE_CODE_DISABLE_BACKGROUND_TASKS", "0")
+    monkeypatch.setattr(dispatch_module.subprocess, "run", fake_run)
     monkeypatch.setattr(dispatch_module, "supports_exclude_dynamic_system_prompt_sections", lambda _bin: False)
     prompt_file = tmp_path / "phase.md"
     prompt_file.write_text("write the content", encoding="utf-8")

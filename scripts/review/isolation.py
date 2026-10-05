@@ -2473,16 +2473,15 @@ def build_claude_review_argv(
     *,
     prompt: str,
     json_schema: Mapping[str, Any],
-    env: Mapping[str, str],
     model: str | None = None,
     capabilities: EngineCapabilities | None = None,
-) -> tuple[list[str], dict[str, str]]:
-    """Argv and env for an isolated Claude review invocation (no write/MCP/project load).
+) -> list[str]:
+    """Argv for an isolated Claude review invocation (no write/MCP/project load).
 
-    ``env`` is the reviewer's base environment (``build_reviewer_env``); the
-    returned pair also carries the headless background controls (#9750).
+    Pure: it carries the background-tool denies (#9750) but spawns nothing;
+    ``run_claude_review`` runs it with the environment controls.
     """
-    from scripts.agent_runtime.adapters.claude import headless_claude_launch
+    from scripts.agent_runtime.adapters.claude import headless_claude_argv
 
     if capabilities is not None:
         require_engine_isolation(capabilities)
@@ -2502,7 +2501,40 @@ def build_claude_review_argv(
     if model:
         cmd.extend(["--model", model])
     cmd.extend(["--", prompt])
-    return headless_claude_launch(cmd, env)
+    return headless_claude_argv(cmd)
+
+
+def run_claude_review(
+    binary: Path,
+    *,
+    prompt: str,
+    json_schema: Mapping[str, Any],
+    env: Mapping[str, str],
+    timeout: float,
+    cwd: Path | None = None,
+    model: str | None = None,
+    capabilities: EngineCapabilities | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Run an isolated Claude review and capture its output.
+
+    ``env`` is the reviewer's exact base environment (``build_reviewer_env``):
+    the child gets it plus the background controls only, never the ambient
+    environment, because the run ends with its final turn (#9750).
+    """
+    from scripts.agent_runtime.adapters.claude import run_headless_claude
+
+    argv = build_claude_review_argv(
+        binary, prompt=prompt, json_schema=json_schema, model=model, capabilities=capabilities
+    )
+    return run_headless_claude(
+        argv,
+        base_env=env,
+        cwd=None if cwd is None else str(cwd),
+        capture_output=True,
+        text=True,
+        timeout=timeout,
+        check=False,
+    )
 
 
 def build_codex_review_argv(

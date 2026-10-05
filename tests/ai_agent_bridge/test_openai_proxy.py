@@ -344,15 +344,17 @@ def test_claude_backend_runs_without_background_work(monkeypatch):
 
     seen = []
 
-    def backend(name, argv, **kwargs):
+    def run(argv, **kwargs):
         seen.append((argv, kwargs))
         return subprocess.CompletedProcess(argv, 0, stdout="fixture", stderr="")
 
-    monkeypatch.setattr(proxy, "_run_backend_command", backend)
+    monkeypatch.setenv("CLAUDE_CODE_DISABLE_BACKGROUND_TASKS", "0")
+    monkeypatch.setattr(proxy.subprocess, "run", run)
     proxy._claude_backend("claude-opus-5-5", [proxy.Message(role="user", content="fixture")])
     ((argv, kwargs),) = seen
     assert argv[argv.index("--disallowedTools") + 1].split(",") == list(HEADLESS_BACKGROUND_TOOL_DENIES)
-    assert kwargs["env"] == {**proxy._PARENT_ENV, **HEADLESS_BACKGROUND_ENV}
+    defaults = {"TERM": "xterm-256color", "COLORTERM": "truecolor"}
+    assert kwargs["env"] == {**defaults, **proxy._PARENT_ENV, **HEADLESS_BACKGROUND_ENV}
 
 
 def test_codex_backend_rejects_override_before_preparation(monkeypatch):

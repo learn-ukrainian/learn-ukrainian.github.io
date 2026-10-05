@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from dataclasses import asdict
 from pathlib import Path
 
@@ -146,7 +147,7 @@ def test_native_codex_rejects_old_model_before_subprocess(monkeypatch):
 
 def test_native_codex_accepts_approved_model():
     cell = matrix.Cell("openai", "gpt-6.1-sol", "native_cli", "medium", "with_mcp")
-    command, _env = matrix.build_native_command(cell, "prompt")
+    command = matrix.build_native_command(cell, "prompt")
     assert command[command.index("--model") + 1] == "gpt-6.1-sol"
 
 
@@ -155,9 +156,15 @@ def test_native_claude_runs_without_background_work(monkeypatch):
     from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
 
     calls = []
-    monkeypatch.setattr(matrix, "run_subprocess", lambda cmd, **kwargs: calls.append((cmd, kwargs)) or "result")
+
+    def run(cmd, **kwargs):
+        calls.append((cmd, kwargs))
+        return subprocess.CompletedProcess(cmd, 0, stdout="verdict", stderr="")
+
+    monkeypatch.setenv("CLAUDE_CODE_DISABLE_BACKGROUND_TASKS", "0")
+    monkeypatch.setattr(matrix.subprocess, "run", run)
     cell = matrix.Cell("anthropic", "claude-opus-5-5", "native_cli", "high", "no_mcp")
-    assert matrix.run_native_cli(cell, "prompt") == "result"
+    assert matrix.run_native_cli(cell, "prompt").ok
     ((cmd, kwargs),) = calls
     denies = cmd.index("--disallowedTools")
     assert cmd[denies + 1].split(",") == list(HEADLESS_BACKGROUND_TOOL_DENIES)
@@ -171,4 +178,4 @@ def test_native_codex_gets_no_claude_background_controls(monkeypatch):
     matrix.run_native_cli(matrix.Cell("openai", "gpt-6.1-sol", "native_cli", "medium", "no_mcp"), "prompt")
     ((cmd, kwargs),) = calls
     assert "--disallowedTools" not in cmd
-    assert kwargs["env"] is None
+    assert kwargs["headless_claude"] is False
