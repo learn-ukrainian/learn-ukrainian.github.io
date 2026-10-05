@@ -53,14 +53,6 @@ def _install_fakes(tmp_path: Path) -> Path:
             sys.exit(1)
         if mode == "timeout":
             time.sleep(30)
-        if mode == "hold-pipes":
-            pid = os.fork()
-            if pid == 0:
-                time.sleep(30)
-                os._exit(0)
-            with open(os.environ["FAKE_GRANDCHILD_PID"], "w", encoding="ascii") as handle:
-                handle.write(str(pid))
-            time.sleep(30)
         if mode == "down":
             sys.stderr.write("Failed to connect to bus: No such file or directory\\n")
             sys.exit(1)
@@ -234,8 +226,23 @@ def test_probe_timeout_on_systemctl_is_the_user_manager_check(tmp_path: Path):
     assert "timed out" in result.reason
 
 
-def test_probe_timeout_on_loginctl_is_the_linger_check(tmp_path: Path):
+def test_probe_timeout_on_loginctl_is_the_linger_check(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """A loginctl timeout is the linger check, not an earlier probe command.
+
+    systemctl and stat share this short timeout. On a loaded runner they time
+    out before loginctl starts, so those checks are stubbed ready (#9746).
+    """
     bindir = _install_fakes(tmp_path)
+    monkeypatch.setattr(
+        iso,
+        "_slice_properties",
+        lambda _env, _timeout: {
+            "LoadState": "loaded",
+            "MemoryMax": _MEMORY_MAX,
+            "MemorySwapMax": _MEMORY_SWAP,
+        },
+    )
+    monkeypatch.setattr(iso, "_cgroup_fs_type", lambda _env, _mount, _timeout: "cgroup2fs")
     result = _probe(_env(bindir, FAKE_LOGINCTL="timeout"), _subtree(tmp_path), timeout_s=0.2)
 
     assert result.reason is not None
@@ -280,10 +287,22 @@ def test_only_fallback_skips_the_probe(tmp_path: Path, value: str):
 
 
 def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path):
-    """A grandchild that inherits the probe's stdout must not keep dispatch waiting."""
+    """A grandchild that inherits the probe's stdout must not keep dispatch waiting.
+
+    The probe command is a shell script. The shared Python fake spends this
+    0.2s budget on interpreter startup when the runner is loaded, and is killed
+    before it can fork (#9746).
+    """
     pidfile = tmp_path / "grandchild.pid"
-    bindir = _install_fakes(tmp_path)
-    env = _env(bindir, FAKE_SYSTEMCTL="hold-pipes", FAKE_GRANDCHILD_PID=str(pidfile))
+    bindir = tmp_path / "bin"
+    bindir.mkdir()
+    systemctl = bindir / "systemctl"
+    systemctl.write_text(
+        '#!/bin/sh\nsleep 30 &\necho "$!" > "$FAKE_GRANDCHILD_PID"\nsleep 30\n',
+        encoding="utf-8",
+    )
+    systemctl.chmod(0o755)
+    env = _env(bindir, FAKE_GRANDCHILD_PID=str(pidfile))
     timeout_s = 0.2
     fallback: list[list[str]] = []
     grandchild: int | None = None
@@ -372,7 +391,11 @@ def test_systemd_run_failure_relaunches_once_with_popen(tmp_path: Path, capsys: 
 
 
 def test_pre_exec_bus_stall_falls_back_to_popen(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
-    """A systemd-run that is still that program at the timeout never started the worker."""
+    """A systemd-run that is still that program at the timeout never started the worker.
+
+    The readiness probe is skipped. It spends the same timeout_s, so on a
+    loaded runner the probe times out before systemd-run starts (#9746).
+    """
     bindir = _install_fakes(tmp_path)
     env = _env(bindir, FAKE_SYSTEMD_RUN="timeout")
     fallback: list[list[str]] = []
@@ -401,11 +424,10 @@ def test_pre_exec_bus_stall_falls_back_to_popen(tmp_path: Path, capsys: pytest.C
             run_nonce="nonce-slow",
             popen=popen,
             env=env,
-            probe_env=env,
             stderr=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stdin=subprocess.DEVNULL,
-            subtree_path=_subtree(tmp_path),
+            check_probe=False,
             timeout_s=timeout_s,
         )
         elapsed = time.monotonic() - started
@@ -428,6 +450,10 @@ def test_pre_exec_bus_stall_falls_back_to_popen(tmp_path: Path, capsys: pytest.C
 
 
 def test_pre_exec_scope_that_survives_stop_is_not_relaunched(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """A scope that survives stop is not relaunched.
+
+    The readiness probe is skipped so the 0.3s budget is only the launch stall (#9746).
+    """
     bindir = _install_fakes(tmp_path)
     env = _env(bindir, FAKE_SYSTEMD_RUN="timeout")
     monkeypatch.setattr(iso, "_kill_if_alive", lambda _proc: None)
@@ -456,11 +482,10 @@ def test_pre_exec_scope_that_survives_stop_is_not_relaunched(tmp_path: Path, mon
                 run_nonce="nonce-unkillable",
                 popen=popen,
                 env=env,
-                probe_env=env,
                 stderr=subprocess.DEVNULL,
                 stdout=subprocess.DEVNULL,
                 stdin=subprocess.DEVNULL,
-                subtree_path=_subtree(tmp_path),
+                check_probe=False,
                 timeout_s=0.3,
             )
     finally:
