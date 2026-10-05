@@ -698,8 +698,23 @@ def test_temp_sweep_retains_linked_worktree_and_ignored_output(tmp_path, monkeyp
     assert str(checkout) in _git(primary, "worktree", "list", "--porcelain")
 
 
-def test_unreadable_temp_tree_scan_refuses_removal(tmp_path, monkeypatch):
-    target = tmp_path / "review-9645"
+@pytest.fixture(params=[False, True], ids=["tmpdir-unset", "tmpdir-set"])
+def temp_deletion_layout(tmp_path, monkeypatch, request):
+    """A repository never doubles as an approved scratch deletion root."""
+    primary = tmp_path / "primary"
+    scratch = tmp_path / "scratch"
+    primary.mkdir()
+    scratch.mkdir()
+    if request.param:
+        monkeypatch.setenv("TMPDIR", str(scratch))
+    else:
+        monkeypatch.delenv("TMPDIR", raising=False)
+    return primary, scratch
+
+
+def test_unreadable_temp_tree_scan_refuses_removal(temp_deletion_layout, monkeypatch):
+    primary, scratch = temp_deletion_layout
+    target = scratch / "review-9645"
     target.mkdir()
     source = target / "evidence.txt"
     source.write_bytes(b"evidence")
@@ -710,22 +725,23 @@ def test_unreadable_temp_tree_scan_refuses_removal(tmp_path, monkeypatch):
 
     monkeypatch.setattr(tls.os, "walk", unreadable)
     with pytest.raises(PermissionError, match="scan denied"):
-        tls._remove_path(target, repo_root=tmp_path, approved_temp_roots=(tmp_path,))
+        tls._remove_path(target, repo_root=primary, approved_temp_roots=(scratch,))
     assert source.read_bytes() == b"evidence"
 
 
 @pytest.mark.parametrize("marker", ["ordinary_metadata_directory", "broken_link"])
-def test_scratch_git_marker_disposition(tmp_path, marker):
-    target = tmp_path / "review-9645"
+def test_scratch_git_marker_disposition(temp_deletion_layout, marker):
+    primary, scratch = temp_deletion_layout
+    target = scratch / "review-9645"
     target.mkdir()
     metadata = target / ".git"
     if marker == "broken_link":
-        metadata.symlink_to(tmp_path / "absent")
+        metadata.symlink_to(scratch / "absent")
         with pytest.raises(ValueError, match="linked Git worktree metadata"):
-            tls._remove_path(target, repo_root=tmp_path, approved_temp_roots=(tmp_path,))
+            tls._remove_path(target, repo_root=primary, approved_temp_roots=(scratch,))
         assert target.exists()
     else:
         metadata.mkdir()
         (metadata / "object").write_bytes(b"disposable clone metadata")
-        tls._remove_path(target, repo_root=tmp_path, approved_temp_roots=(tmp_path,))
+        tls._remove_path(target, repo_root=primary, approved_temp_roots=(scratch,))
         assert not target.exists()
