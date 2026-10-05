@@ -8800,12 +8800,38 @@ def _run_worker(
     cursor_mcp_path: Path | None = None
     cursor_mcp_backup: bytes | None = None
     cursor_mcp_existed = False
+    from scripts.agent_runtime.result import AgyTelemetry
+
+    agy_telemetry = AgyTelemetry(parent_task_id=task_id) if agent == "agy" else None
 
     try:
         try:
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
+            if (
+                agent in {"agy", "gemini"}
+                and mode == "read-only"
+                and (state.get("review") or require_review_verdict or review_id is not None)
+            ):
+                tool_config["review_profile"] = state.get("review_profile")
+                if (
+                    state.get("review_profile") == "ukrainian"
+                    and mcp_config_path is None
+                    and review_id is None
+                    and attempt_id is None
+                ):
+                    # Formal attempts provision their home at the runtime boundary;
+                    # missing attempt inputs must reach its typed refusal first.
+                    from scripts.agent_runtime.review_mcp import prepare_agy_permission_home
+
+                    if runtime_tmp_root is None:
+                        raise ValueError("agy_review_permissions_require_scoped_home")
+                    tool_config["agy_home_override"] = str(prepare_agy_permission_home(Path(runtime_tmp_root)))
+            if agent in {"agy", "gemini"} and mcp_config_path is not None and attempt_id is not None:
+                from scripts.agent_runtime.review_mcp import review_ledger_path
+
+                tool_config["review_ledger_path"] = str(review_ledger_path(mcp_config_path))
             if max_budget_usd is not None:
                 tool_config["max_budget_usd"] = max_budget_usd
             if provider is not None:
@@ -8948,6 +8974,7 @@ def _run_worker(
             if not isinstance(runtime_failure_code, str):
                 runtime_failure_code = None
             substitution = getattr(result, "substitution", None)
+            agy_telemetry = getattr(result, "agy_telemetry", agy_telemetry)
         except KeyboardInterrupt as exc:
             # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
             # The runtime's finally block has already killed the CLI
@@ -8957,10 +8984,12 @@ def _run_worker(
             stderr_excerpt = f"cancelled via SIGTERM or Ctrl+C: {exc}"[:500]
             returncode_reason = "worker interrupted before a terminal subprocess returncode was available"
         except RateLimitedError as exc:
+            agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             rate_limited = True
             stderr_excerpt = str(exc)[:500]
             returncode_reason = "runtime rejected the dispatch before a terminal subprocess returncode was available"
         except AgentStalledError as exc:
+            agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             timed_out = True
             substitution = getattr(exc, "substitution", None)
             if getattr(exc, "kind", "stall") == "initial_response_timeout":
@@ -8980,6 +9009,7 @@ def _run_worker(
                 )[:500]
             returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
         except AgentTimeoutError as exc:
+            agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             substitution = getattr(exc, "substitution", None)
             stderr_excerpt = (
                 f"hard_timeout fired after {exc.hard_timeout}s: {exc} "
@@ -8988,6 +9018,7 @@ def _run_worker(
             )[:500]
             returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
         except AgentRuntimeError as exc:
+            agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
         except bounded_advisory.AdvisoryRefused as exc:
@@ -8998,6 +9029,7 @@ def _run_worker(
                 "bounded model failed its advisory admission at the provider handoff; provider not started"
             )
         except ValueError as exc:
+            agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             pre_spawn_failure = True
             stderr_excerpt = f"adapter rejected before spawn: {exc}"[:500]
             returncode_reason = "adapter rejected the dispatch before a process was spawned"
@@ -9477,6 +9509,8 @@ def _run_worker(
             finalize_error=finalize_error,
             last_error=last_error,
         )
+        if isinstance(agy_telemetry, AgyTelemetry):
+            core_terminal_state.update(agy_telemetry.task_fields())
         final_state["final_branch_head_commit"] = _resolve_sha(Path(worktree_path)) if worktree_path else None
         final_state["rescue_status"] = rescue_status
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
@@ -11854,6 +11888,8 @@ def _dispatch(
             "review_risk": getattr(args, "review_risk", None),
             "review_profile": getattr(args, "review_profile", None),
             "task_id": task_id,
+            "review": bool(getattr(args, "review", False))
+            or str(getattr(args, "type", "") or "").strip().casefold() == "review",
             "run_nonce": run_nonce,
             # Authoritative repository identity for the Work projection's scoped
             # delegate join (#7083); None stays unclassified and fails closed.
