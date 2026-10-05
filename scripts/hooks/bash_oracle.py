@@ -161,7 +161,9 @@ def run_oracle(rows=None, traffic=None):
             "ORACLE_GIT": str(binaries / "git"),
             "ORACLE_GH": str(binaries / "gh"),
         }
-        env.pop("CDPATH", None)
+        # Host shell options and GIT_DIR change discovery and must not change the score.
+        for name in ("CDPATH", "SHELLOPTS", "BASHOPTS", "BASH_ENV", "GIT_DIR", "GIT_WORK_TREE"):
+            env.pop(name, None)
 
         def protected(directory):
             path = Path(directory).resolve()
@@ -215,6 +217,8 @@ def run_oracle(rows=None, traffic=None):
                 redirect_stderr(io.StringIO()),
                 patch.dict(os.environ, {"CDPATH": "", "GH_REPO": "fixture/default"}),
             ):
+                for name in ("SHELLOPTS", "BASHOPTS", "BASH_ENV"):
+                    os.environ.pop(name, None)
                 if kind == "merge":
                     if expected_target:
                         with (
@@ -245,7 +249,9 @@ def run_oracle(rows=None, traffic=None):
                         patch.object(branch, "_in_main_worktree", lambda cwd: Path(cwd).resolve() == primary),
                         patch.object(branch, "_checked_out_branch", lambda cwd: "main"),
                     ):
-                        blocked = branch._command_danger_reason(command, start_cwd) is not None
+                        # main() is the scored entry. The patches keep the recording
+                        # git from answering repository discovery for this probe.
+                        blocked = branch.main() == 2
                 else:
                     try:
                         parsed = read_commands(command, cwd=str(start_cwd))
@@ -306,6 +312,7 @@ def run_oracle(rows=None, traffic=None):
                     "executed": [{"argv": [relative(a) for a in argv], "cwd": relative(cwd)} for argv, cwd in actual],
                     "judged": [{"args": [relative(a) for a in args], "cwd": relative(cwd)} for args, cwd in judged],
                     "targets": [{**target, "cwd": relative(target["cwd"])} for target in targets],
+                    "operation_executed": executed,
                     "wrong_target": wrong_target,
                     "missing_target": missing_target,
                     "blocked": blocked,
@@ -411,8 +418,19 @@ REASON_CLASSES = frozenset(
     }
 )
 _TYPED_HOOKS = {"merge": "guard-pr-merge", "admin": "guard-admin-merge", "branch": "guard-branch-switch-in-main"}
-# One machine-readable line. Prose and the exit code cannot supply a target or a reason class.
-_JUDGMENT_LINE = re.compile(r"(?m)^GUARD_JUDGMENT\s+(\{.*\})\s*$")
+# One stderr line. Prose, stdout, and the exit code cannot supply a reason class or a target.
+_JUDGMENT_LINE = re.compile(r"(?m)^GUARD_JUDGMENT (\{.*\})\s*$")
+_OVERBLOCK_BUDGET = 4
+_SHELL_OPTION_NAMES = ("SHELLOPTS", "BASHOPTS", "BASH_ENV")
+_GIT_ENV_NAMES = (
+    "GIT_DIR",
+    "GIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_PREFIX",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+)
+_JUDGMENT_KEYS = frozenset({"disposition", "reason_class"})
 
 
 class DanglingSupersession(Exception):
@@ -427,13 +445,21 @@ class SupersessionCycle(Exception):
     """A supersedes chain returns to an earlier row."""
 
 
+class TypedSupersededByUntyped(Exception):
+    """A typed row's successor is untyped, so the typed expectation would be dropped."""
+
+
+def _is_typed(row):
+    return "expected" in row and row.get("hook") in _TYPED_HOOKS
+
+
 class HookJudgment(NamedTuple):
     disposition: str | None
     reason_class: str | None
-    target: dict | None
-    targets: tuple | None
     exit_code: int
     consistent: bool
+    source: str
+    reported_targets: tuple | None
 
 
 def resolve_active_rows(rows):
@@ -474,52 +500,90 @@ def resolve_active_rows(rows):
 
     for row_id in by_id:
         terminal(row_id)
+    for prior, follower_ids in successors.items():
+        follower = by_id[follower_ids[0]]
+        if _is_typed(by_id[prior]) and not _is_typed(follower):
+            raise TypedSupersededByUntyped(
+                f"typed row superseded by untyped row: {prior} -> {follower['id']}"
+            )
     superseded = set(successors)
     return [row for row in rows if row["id"] not in superseded]
 
 
-def parse_hook_judgment(exit_code, output):
-    """Read a typed judgment from main()'s exit code and output.
+def _json_object(text):
+    """Parse one JSON object and reject duplicate keys."""
 
-    A GUARD_JUDGMENT line is the only source of a reason class or a target.
-    Without one, exit 0 is allow and exit 2 is block, both with no target.
+    def pairs(items):
+        keys = [key for key, _value in items]
+        if len(keys) != len(set(keys)):
+            raise ValueError("duplicate key")
+        return dict(items)
+
+    payload = json.loads(text, object_pairs_hook=pairs)
+    if not isinstance(payload, dict):
+        raise ValueError("judgment payload is not an object")
+    return payload
+
+
+def _reported_targets(payload):
+    """Targets carried on the judgment line, if the line has those keys.
+
+    They are never lookup evidence. None means the line did not report any.
     """
-    found = _JUDGMENT_LINE.findall(output)
-    if len(found) > 1:
-        return HookJudgment(None, None, None, None, exit_code, False)
-    if len(found) == 1:
-        try:
-            payload = json.loads(found[0])
-        except json.JSONDecodeError:
-            return HookJudgment(None, None, None, None, exit_code, False)
-        if not isinstance(payload, dict):
-            return HookJudgment(None, None, None, None, exit_code, False)
-        disposition = payload.get("disposition")
-        reason = payload.get("reason_class")
-        target = payload.get("target")
-        targets = payload.get("targets") if "targets" in payload else None
-        consistent = disposition in {"allow", "block", "refuse"} and _reason_matches_disposition(disposition, reason)
-        consistent = consistent and _target_shape(target) and _targets_shape(targets)
-        if disposition == "allow":
-            consistent = consistent and exit_code == 0
-        elif disposition in {"block", "refuse"}:
-            consistent = consistent and exit_code == 2
-        else:
-            consistent = False
-        listed = tuple(targets) if isinstance(targets, list) else None
-        return HookJudgment(
-            disposition if disposition in {"allow", "block", "refuse"} else None,
-            reason if isinstance(reason, str) else None,
-            target if isinstance(target, dict) else None,
-            listed,
-            exit_code,
-            consistent,
-        )
-    if exit_code == 0:
-        return HookJudgment("allow", None, None, (), exit_code, True)
-    if exit_code == 2:
-        return HookJudgment("block", None, None, (), exit_code, True)
-    return HookJudgment(None, None, None, None, exit_code, False)
+    if "target" not in payload and "targets" not in payload:
+        return None
+    items = []
+    listed = payload.get("targets")
+    if isinstance(listed, list):
+        items.extend(item for item in listed if isinstance(item, dict))
+    single = payload.get("target")
+    if isinstance(single, dict):
+        items.append(single)
+    return tuple(items)
+
+
+def parse_hook_judgment(exit_code, stderr):
+    """Read a typed judgment from main()'s exit code and stderr.
+
+    The line is `GUARD_JUDGMENT` plus one JSON object with exactly
+    `disposition` and `reason_class`. It is not a source of target evidence.
+    Without the line, exit 0 is allow and exit 2 is block. That fallback
+    cannot satisfy a refusal or a reason class. Any other exit, a duplicate
+    line, or a malformed payload is an execution failure.
+    """
+    found = _JUDGMENT_LINE.findall(stderr or "")
+    if len(found) != 1:
+        if found:
+            return HookJudgment(None, None, exit_code, False, "invalid", None)
+        if exit_code == 0:
+            return HookJudgment("allow", None, exit_code, True, "exit", None)
+        if exit_code == 2:
+            return HookJudgment("block", None, exit_code, True, "exit", None)
+        return HookJudgment(None, None, exit_code, False, "invalid", None)
+    try:
+        payload = _json_object(found[0])
+    except (json.JSONDecodeError, ValueError):
+        return HookJudgment(None, None, exit_code, False, "invalid", None)
+    reported = _reported_targets(payload)
+    disposition = payload.get("disposition")
+    reason = payload.get("reason_class")
+    known = disposition in {"allow", "block", "refuse"}
+    consistent = set(payload) == _JUDGMENT_KEYS and known and _reason_matches_disposition(disposition, reason)
+    if disposition == "allow":
+        consistent = consistent and exit_code == 0
+    elif disposition in {"block", "refuse"}:
+        consistent = consistent and exit_code == 2
+    else:
+        consistent = False
+    stored_reason = reason if isinstance(reason, str) else None
+    return HookJudgment(
+        disposition if known else None,
+        stored_reason,
+        exit_code,
+        consistent,
+        "line",
+        reported,
+    )
 
 
 def _reason_matches_disposition(disposition, reason):
@@ -530,30 +594,11 @@ def _reason_matches_disposition(disposition, reason):
     return False
 
 
-def _target_shape(target):
-    if target is None:
-        return True
-    if not isinstance(target, dict):
-        return False
-    repository = target.get("repository")
-    pr = target.get("pr")
-    cwd = target.get("cwd")
-    return (
-        isinstance(repository, str) and repository != "" and isinstance(pr, str) and pr != "" and isinstance(cwd, str)
-    )
-
-
-def _targets_shape(targets):
-    if targets is None:
-        return True
-    return isinstance(targets, list) and all(_target_shape(item) and item is not None for item in targets)
-
-
 def invoke_hook_main(module, command, cwd):
     """Run the hook the way production does: JSON on stdin, then main().
 
-    Helpers are not an entry point. The returned code and combined output are
-    the only evidence the comparison may use.
+    Helpers are not an entry point. Stdout and stderr stay separate so a
+    judgment line on stdout cannot satisfy the contract.
     """
     payload = json.dumps({"cwd": cwd, "tool_input": {"command": command}})
     stdout, stderr = io.StringIO(), io.StringIO()
@@ -569,7 +614,7 @@ def invoke_hook_main(module, command, cwd):
             code = exc.code if isinstance(exc.code, int) else 1
     if code is None:
         code = 0
-    return int(code), stdout.getvalue() + stderr.getvalue()
+    return int(code), stdout.getvalue(), stderr.getvalue()
 
 
 def _same_directory(actual, expected):
@@ -589,175 +634,443 @@ def _one_target_matches(expected_target, actual_target, invocation_cwd):
     return _same_directory(actual_target.get("cwd"), gold_cwd)
 
 
-def _targets_match(expected, judgment, invocation_cwd):
-    if "targets" in expected:
-        if judgment.targets is not None:
-            actual = list(judgment.targets)
-        elif judgment.target is None:
-            actual = []
-        else:
-            actual = [judgment.target]
-        expected_list = expected["targets"]
-        if len(actual) != len(expected_list):
+def _lists_match(expected_list, observed, invocation_cwd):
+    if len(expected_list) != len(observed):
+        return False
+    remaining = list(observed)
+    for gold in expected_list:
+        matched = False
+        for index, seen in enumerate(remaining):
+            if _one_target_matches(gold, seen, invocation_cwd):
+                del remaining[index]
+                matched = True
+                break
+        if not matched:
             return False
-        return all(
-            _one_target_matches(gold, seen, invocation_cwd) for gold, seen in zip(expected_list, actual, strict=True)
-        )
+    return not remaining
+
+
+def _gh_pr_lookup(argv):
+    """Return `(selector, repo)` for a recorded `gh pr view|checks` argv.
+
+    The repo is None when the recorded command did not pass one. This parser
+    reads the lookup argv only; it does not use the hook's own parser.
+    """
+    if not argv or argv[0] != "gh" or len(argv) < 4:
+        return None
+    repo = None
+    positional = []
+    index = 1
+    valued = {"--json", "--jq", "-H", "--hostname", "--field", "-f", "--template", "-t"}
+    while index < len(argv):
+        arg = argv[index]
+        if arg in {"-R", "--repo"}:
+            if index + 1 >= len(argv):
+                return None
+            repo = argv[index + 1]
+            index += 2
+            continue
+        if arg.startswith("--repo="):
+            repo = arg.split("=", 1)[1]
+            index += 1
+            continue
+        if arg.startswith("-R") and len(arg) > 2 and not arg.startswith("--"):
+            repo = arg[2:]
+            index += 1
+            continue
+        if arg in valued:
+            index += 2
+            continue
+        if arg.startswith("--") and "=" in arg:
+            index += 1
+            continue
+        if arg.startswith("-") and arg != "--":
+            index += 1
+            continue
+        if arg == "--":
+            positional.extend(argv[index + 1 :])
+            break
+        positional.append(arg)
+        index += 1
+    if len(positional) < 3 or positional[0] != "pr" or positional[1] not in {"view", "checks"}:
+        return None
+    selector = positional[2]
+    if not selector or selector.startswith("-"):
+        return None
+    return selector, repo
+
+
+def _lookup_happened(records):
+    """True when a recorded gh invocation looked up a PR or repository."""
+    for argv, _cwd in records:
+        if not argv or argv[0] != "gh":
+            continue
+        if _gh_pr_lookup(argv) is not None or "api" in argv[1:]:
+            return True
+    return False
+
+
+def _observed_targets(records):
+    """Unique PR identities from recorded gh view/checks calls."""
+    found = []
+    seen = set()
+    for argv, cwd in records:
+        parsed = _gh_pr_lookup(argv)
+        if parsed is None:
+            continue
+        selector, repo = parsed
+        identity = target_identity(selector, repo)
+        cwd_text = cwd or ""
+        try:
+            cwd_key = str(Path(cwd_text).resolve()) if cwd_text else ""
+        except OSError:
+            cwd_key = cwd_text
+        key = (identity["repository"], str(identity["pr"]), cwd_key)
+        if key in seen:
+            continue
+        seen.add(key)
+        found.append({"repository": identity["repository"], "pr": str(identity["pr"]), "cwd": cwd_text})
+    return found
+
+
+def _expected_targets_match(expected, observed, lookup_happened, invocation_cwd):
+    if "targets" in expected:
+        expected_list = expected["targets"]
+        if not isinstance(expected_list, list):
+            return False
+        if len(expected_list) == 0:
+            return not lookup_happened
+        return _lists_match(expected_list, observed, invocation_cwd)
     if "target" in expected:
-        return _one_target_matches(expected["target"], judgment.target, invocation_cwd)
+        if len(observed) != 1:
+            return False
+        return _one_target_matches(expected["target"], observed[0], invocation_cwd)
     return True
 
 
-def classify_judgment(expected, judgment, invocation_cwd):
-    """Pass only when disposition, reason class and target all match.
+def classify_judgment(expected, judgment, invocation_cwd, observed, lookup_happened):
+    """Pass only when disposition, reason class and the observed lookup match.
 
-    A disposition match with a different reason class or target is a failure.
-    Blocking or refusing a required allow is an over-block.
+    A reported target is not evidence. If it disagrees with the observed
+    lookup, the row fails. Blocking a required allow is an over-block.
+    Allowing a required block or refusal is an unsafe allow.
     """
     expected_disposition = expected.get("disposition")
-    if not judgment.consistent or judgment.disposition is None:
+
+    def dangerous():
         if expected_disposition == "allow" and judgment.exit_code != 0:
             return "over_block"
-        return "fail"
+        if expected_disposition in {"block", "refuse"} and judgment.exit_code == 0:
+            return "unsafe_allow"
+        return None
+
+    if judgment.reported_targets is not None and not _lists_match(
+        judgment.reported_targets, observed, invocation_cwd
+    ):
+        return dangerous() or "fail"
+    if judgment.source == "exit" and (expected_disposition == "refuse" or expected.get("reason_class") is not None):
+        return dangerous() or "fail"
+    if not judgment.consistent or judgment.disposition is None:
+        return dangerous() or "fail"
     disposition_ok = judgment.disposition == expected_disposition
     reason_ok = judgment.reason_class == expected.get("reason_class")
-    target_ok = _targets_match(expected, judgment, invocation_cwd)
+    target_ok = _expected_targets_match(expected, observed, lookup_happened, invocation_cwd)
     if disposition_ok and reason_ok and target_ok:
         return "pass"
     if expected_disposition == "allow" and judgment.disposition in {"block", "refuse"}:
         return "over_block"
+    if expected_disposition in {"block", "refuse"} and judgment.disposition == "allow":
+        return "unsafe_allow"
     return "fail"
 
 
+def _stripped_git_env():
+    env = os.environ.copy()
+    for name in (*_SHELL_OPTION_NAMES, *_GIT_ENV_NAMES, "CDPATH"):
+        env.pop(name, None)
+    return env
+
+
+def _real_git_binary():
+    """Absolute git binary, never a PATH shim that would re-enter the recorder."""
+    for candidate in ("/usr/bin/git", "/bin/git"):
+        path = Path(candidate)
+        if not path.is_file() or not os.access(path, os.X_OK):
+            continue
+        if path.read_bytes()[:2] != b"#!":
+            return candidate
+    return "/usr/bin/git"
+
+
+def _install_lookup_recorder(base):
+    """Record gh and git argv plus physical cwd. gh exits red; git is real.
+
+    A red or green exit is not target evidence. The record is.
+    """
+    binaries = base / "bin"
+    records = base / "records"
+    binaries.mkdir(parents=True, exist_ok=True)
+    records.mkdir(parents=True, exist_ok=True)
+    git_bin = _real_git_binary()
+    script = binaries / "lookup-record"
+    record_dir = shlex.quote(str(records))
+    script.write_text(
+        "#!/bin/bash\n"
+        "name=${0##*/}\n"
+        f'printf "%s\\0" "$(pwd -P)" "$name" "$@" > {record_dir}/$$-$RANDOM || exit 1\n'
+        f'if [[ "$name" == git ]]; then exec {shlex.quote(git_bin)} "$@"; fi\n'
+        "echo 'gh unavailable to the oracle scorer' >&2\n"
+        "exit 1\n",
+        encoding="utf-8",
+    )
+    script.chmod(0o755)
+    for name in ("git", "gh"):
+        path = binaries / name
+        if path.is_symlink() or path.exists():
+            path.unlink()
+        path.symlink_to(script)
+    return binaries, records
+
+
+def _clear_directory(path):
+    for child in path.iterdir():
+        if child.is_file() or child.is_symlink():
+            child.unlink()
+
+
+def _read_lookup_records(records):
+    found = []
+    for path in sorted(records.iterdir()):
+        if not path.is_file():
+            continue
+        fields = path.read_bytes().decode(errors="replace").split("\0")[:-1]
+        if len(fields) < 2:
+            continue
+        cwd, name, *args = fields
+        found.append(([name, *args], cwd))
+    return found
+
+
 def _prepare_probe(base):
-    """Synthetic primary and worktree. Git discovery is real; gh is a failing stub."""
+    """Synthetic primary and worktree. Git discovery is real; gh is a red stub."""
     primary = base / "primary"
     primary.mkdir()
-    subprocess.run(["git", "init", "-b", "main", str(primary)], check=True, capture_output=True, timeout=30)
-    subprocess.run(
-        ["git", "-C", str(primary), "config", "user.email", "oracle@example.invalid"],
-        check=True,
-        capture_output=True,
-        timeout=30,
-    )
-    subprocess.run(
-        ["git", "-C", str(primary), "config", "user.name", "oracle"],
-        check=True,
-        capture_output=True,
-        timeout=30,
-    )
+    git_env = _stripped_git_env()
+
+    def git(*args):
+        subprocess.run(["git", *args], env=git_env, check=True, capture_output=True, timeout=30)
+
+    git("init", "-b", "main", str(primary))
+    git("-C", str(primary), "config", "user.email", "oracle@example.invalid")
+    git("-C", str(primary), "config", "user.name", "oracle")
     (primary / "README").write_text("probe\n", encoding="utf-8")
-    subprocess.run(["git", "-C", str(primary), "add", "README"], check=True, capture_output=True, timeout=30)
-    subprocess.run(
-        ["git", "-C", str(primary), "-c", "commit.gpgsign=false", "commit", "-m", "probe"],
-        check=True,
-        capture_output=True,
-        timeout=30,
-    )
+    git("-C", str(primary), "add", "README")
+    git("-C", str(primary), "-c", "commit.gpgsign=false", "commit", "-m", "probe")
     worktree = primary / ".worktrees" / "wt"
-    subprocess.run(
-        ["git", "-C", str(primary), "worktree", "add", "-b", "wt", str(worktree)],
-        check=True,
-        capture_output=True,
-        timeout=30,
-    )
+    git("-C", str(primary), "worktree", "add", "-b", "wt", str(worktree))
     (primary / "wt").symlink_to(worktree, target_is_directory=True)
     (primary / "a" / "b").mkdir(parents=True)
     (primary / "primary").symlink_to(primary, target_is_directory=True)
     (primary / "link").symlink_to(worktree, target_is_directory=True)
     (primary / "file").write_text("git checkout\ngh pr merge\nx\n", encoding="utf-8")
     (primary / "script").write_text("gh pr merge 5\n", encoding="utf-8")
-    binaries = base / "bin"
-    binaries.mkdir()
-    gh = binaries / "gh"
-    gh.write_text("#!/bin/sh\necho 'gh unavailable to the oracle scorer' >&2\nexit 1\n", encoding="utf-8")
-    gh.chmod(0o755)
-    return primary, worktree, binaries, gh
+    binaries, records = _install_lookup_recorder(base)
+    return primary, worktree, binaries, records, binaries / "gh"
 
 
 def _row_directory(row, primary, worktree):
     return worktree if row.get("cwd") == "worktree" else primary
 
 
-def score_guard_oracle(rows=None, *, hooks=None, primary=None, worktree=None):
-    """Score active typed rows through each hook's main().
+def _scoring_environment(primary, binaries):
+    """Only the variables the hooks need. Host shell options are not copied."""
+    env = {
+        "PATH": os.pathsep.join((str(binaries), "/usr/bin", "/bin")),
+        "GH_REPO": "fixture/default",
+        "HOME": str(primary),
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+    }
+    temporary = os.environ.get("TMPDIR")
+    if temporary:
+        env["TMPDIR"] = temporary
+    return env
 
-    Supersession is transitive. The comparison is disposition, reason class and
-    target (repository, PR and working directory). Disposition alone does not pass.
+
+def _empty_counts(names, *, residual=False):
+    counts = {}
+    for name in names:
+        bucket = {"pass": 0, "fail": 0, "over_block": 0, "unsafe_allow": 0, "failing_ids": []}
+        if residual:
+            bucket["accepted_residual"] = 0
+        counts[name] = bucket
+    return counts
+
+
+def _add_verdict(bucket, verdict, row_id):
+    bucket[verdict] += 1
+    if verdict != "pass":
+        bucket["failing_ids"].append(row_id)
+
+
+def _bucket_totals(counts):
+    names = ("pass", "fail", "over_block", "unsafe_allow")
+    return {name: sum(bucket.get(name, 0) for bucket in counts.values()) for name in names}
+
+
+def _score_typed_rows(typed, *, hooks, primary, worktree, own_probe, counts):
+    scored = []
+    with tempfile.TemporaryDirectory(prefix="guard-oracle-scorer-") as probe_name:
+        base = Path(probe_name)
+        if own_probe:
+            primary, worktree, binaries, records, _gh = _prepare_probe(base)
+            stub_path = os.pathsep.join((str(binaries), "/usr/bin", "/bin"))
+            found = shutil.which("gh", path=stub_path)
+            if found is None or Path(found).name != "gh":
+                raise RuntimeError("oracle scorer refused to run: gh on PATH is not the local stub")
+        else:
+            binaries, records = _install_lookup_recorder(base)
+            if primary is None:
+                primary = Path("/oracle-probe")
+                worktree = primary / "worktree"
+        environment = _scoring_environment(primary, binaries)
+        active_hooks = hooks
+        with patch.dict(os.environ, environment, clear=True):
+            if active_hooks is None:
+                active_hooks = {name: load_hook(module_name) for name, module_name in _TYPED_HOOKS.items()}
+            branch_module = active_hooks.get("branch") if own_probe else None
+            branch_patch = (
+                patch.object(branch_module, "PROTECTED_ROOTS", [primary]) if branch_module is not None else nullcontext()
+            )
+            with branch_patch:
+                for row in typed:
+                    _clear_directory(records)
+                    kind = row["hook"]
+                    directory = _row_directory(row, primary, worktree)
+                    command = row["command"].replace("{primary}", str(primary))
+                    code, _stdout, stderr = invoke_hook_main(active_hooks[kind], command, str(directory))
+                    judgment = parse_hook_judgment(code, stderr)
+                    recorded = _read_lookup_records(records)
+                    observed = _observed_targets(recorded)
+                    lookup = _lookup_happened(recorded)
+                    verdict = classify_judgment(row["expected"], judgment, directory, observed, lookup)
+                    _add_verdict(counts[kind], verdict, row["id"])
+                    scored.append(
+                        {
+                            "id": row["id"],
+                            "hook": kind,
+                            "verdict": verdict,
+                            "disposition": judgment.disposition,
+                            "reason_class": judgment.reason_class,
+                            "observed_targets": observed,
+                        }
+                    )
+    return scored
+
+
+def _summarize_legacy(report):
+    """Disposition-only verdicts from the raw oracle. Accepted rows stay residuals."""
+    counts = _empty_counts((*_TYPED_HOOKS, "argv"), residual=True)
+    rows_out = []
+    for obs in report["observations"]:
+        kind = obs["hook"]
+        if kind not in counts:
+            counts[kind] = _empty_counts((kind,), residual=True)[kind]
+        if obs["accepted"]:
+            verdict = "accepted_residual"
+        elif obs["operation_executed"] and not obs["blocked"]:
+            verdict = "unsafe_allow"
+        elif obs["miss"] and obs["overblock"]:
+            verdict = "fail"
+        elif obs["overblock"]:
+            verdict = "over_block"
+        elif obs["miss"]:
+            verdict = "fail"
+        else:
+            verdict = "pass"
+        bucket = counts[kind]
+        if verdict == "accepted_residual":
+            bucket["accepted_residual"] += 1
+        else:
+            _add_verdict(bucket, verdict, obs["id"])
+        rows_out.append(
+            {
+                "id": obs["id"],
+                "hook": kind,
+                "verdict": verdict,
+                "blocked": obs["blocked"],
+                "executed": obs["operation_executed"],
+            }
+        )
+    return counts, rows_out
+
+
+def score_guard_oracle(rows=None, *, hooks=None, primary=None, worktree=None):
+    """Score active rows through each hook's main().
+
+    Typed rows compare disposition, reason class and the observed lookup.
+    Legacy rows compare disposition only, against real Bash and the red stub.
+    A failed typed row is never rescored as legacy.
     """
     if rows is None:
         rows = json.loads((ROOT / "tests/fixtures/guard_bash_oracle.json").read_text(encoding="utf-8"))["rows"]
     active = resolve_active_rows(rows)
-    typed = [row for row in active if "expected" in row and row.get("hook") in _TYPED_HOOKS]
-    untyped = len(active) - len(typed)
-    counts = {name: {"pass": 0, "fail": 0, "over_block": 0, "failing_ids": []} for name in _TYPED_HOOKS}
+    typed = [row for row in active if _is_typed(row)]
+    legacy = [row for row in active if not _is_typed(row)]
+    injected = hooks is not None
+    counts = _empty_counts(_TYPED_HOOKS)
     scored = []
-    own_probe = hooks is None and primary is None
-    probe_cm = tempfile.TemporaryDirectory(prefix="guard-oracle-scorer-") if own_probe else nullcontext()
-    with probe_cm as probe_name:
-        binaries = None
-        branch_module = None
-        if own_probe:
-            primary, worktree, binaries, gh = _prepare_probe(Path(probe_name))
-            stub_path = str(binaries) + os.pathsep + os.environ.get("PATH", "")
-            if shutil.which("gh", path=stub_path) != str(gh):
-                raise RuntimeError("oracle scorer refused to run: gh on PATH is not the local stub")
-            hooks = {name: load_hook(module_name) for name, module_name in _TYPED_HOOKS.items()}
-            branch_module = hooks["branch"]
-        elif primary is None:
-            primary = Path("/oracle-probe")
-            worktree = primary / "worktree"
-        environment = {
-            "PATH": (str(binaries) + os.pathsep if binaries is not None else "") + os.environ.get("PATH", ""),
-            "GH_REPO": "fixture/default",
-            "HOME": str(primary),
-            "CDPATH": "",
-        }
-        branch_patch = (
-            patch.object(branch_module, "PROTECTED_ROOTS", [primary]) if branch_module is not None else nullcontext()
+    if typed:
+        scored = _score_typed_rows(
+            typed,
+            hooks=hooks,
+            primary=primary,
+            worktree=worktree,
+            own_probe=not injected and primary is None,
+            counts=counts,
         )
-        with branch_patch, patch.dict(os.environ, environment, clear=False):
-            os.environ.pop("GH_TOKEN", None)
-            os.environ.pop("GITHUB_TOKEN", None)
-            for row in typed:
-                kind = row["hook"]
-                directory = _row_directory(row, primary, worktree)
-                command = row["command"].replace("{primary}", str(primary))
-                code, output = invoke_hook_main(hooks[kind], command, str(directory))
-                judgment = parse_hook_judgment(code, output)
-                verdict = classify_judgment(row["expected"], judgment, directory)
-                counts[kind][verdict] += 1
-                if verdict != "pass":
-                    counts[kind]["failing_ids"].append(row["id"])
-                scored.append(
-                    {
-                        "id": row["id"],
-                        "hook": kind,
-                        "verdict": verdict,
-                        "disposition": judgment.disposition,
-                        "reason_class": judgment.reason_class,
-                    }
-                )
+    legacy_counts = _empty_counts((*_TYPED_HOOKS, "argv"), residual=True)
+    legacy_rows_out = []
+    if legacy:
+        if injected:
+            raise RuntimeError("legacy rows are scored through the real hook main(), not an injected hook")
+        legacy_counts, legacy_rows_out = _summarize_legacy(run_oracle(rows=legacy, traffic=[]))
     return {
         "active_typed_rows": len(typed),
-        "untyped_active_rows": untyped,
+        "untyped_active_rows": len(legacy),
         "superseded_rows": len(rows) - len(active),
+        "overblock_budget": _OVERBLOCK_BUDGET,
         "hooks": counts,
+        "typed_totals": _bucket_totals(counts),
+        "legacy_hooks": legacy_counts,
+        "legacy_totals": _bucket_totals(legacy_counts),
         "rows": scored,
+        "legacy_rows": legacy_rows_out,
     }
+
+
+def score_status(report):
+    """Fail on any unsafe allow or other failure. Over-blocks have a budget of four."""
+    fails = unsafe = overs = 0
+    for section in ("hooks", "legacy_hooks"):
+        for bucket in report.get(section, {}).values():
+            fails += bucket.get("fail", 0)
+            unsafe += bucket.get("unsafe_allow", 0)
+            overs += bucket.get("over_block", 0)
+    return int(fails > 0 or unsafe > 0 or overs > _OVERBLOCK_BUDGET)
 
 
 def main():
     if sys.argv[1:] == ["--score"]:
         report = score_guard_oracle()
         print(json.dumps(report, indent=2))
-        return int(any(bucket["fail"] or bucket["over_block"] for bucket in report["hooks"].values()))
+        return score_status(report)
     report = run_oracle()
     print(json.dumps(report, indent=2))
     totals = report["totals"]
     return int(
         totals["misses"] > 0
-        or totals["overblocks"] > 4
+        or totals["overblocks"] > _OVERBLOCK_BUDGET
         or totals["traffic_blocks"] > 0
         or totals.get("expected_mismatches", 0) > 0
     )

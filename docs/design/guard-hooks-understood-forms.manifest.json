@@ -4,13 +4,13 @@
   "frozen_at": "2026-10-03T21:31:26Z",
   "implementation_head": "621fd45b34b183e3a1b30713aa92d5388c042d5f",
   "sha256": {
-    "docs/design/guard-hooks-understood-forms.md": "5b48b20245b72b2688f5f2b9c1ce490376201bb9ff1cf4292b4d54d3fde2db7c",
+    "docs/design/guard-hooks-understood-forms.md": "9469f6fc98061f3c3815d25557eff474594b3077d00e108f254699f2545a95c6",
     "tests/fixtures/guard_bash_oracle.json": "4dca12089ddf5b04d98f0ba93d08454001411b68ce9b11f6080716916ba8d19d",
     "tests/fixtures/guard_bash_traffic.json": "cb9fd3eaca8752c585dda62efc0210d99d349d2ef5ba7c08a6ec533611c25e57",
     "tests/fixtures/guard_bash_understood_traffic.json": "98caa660a1f163d7bdb38a7dcad929823bdffb6ce651a91289f766d4002c2d0b",
     "tests/fixtures/guard_bash_recording_setup.json": "e1b6c88530361a0b5655e37348ed9c1c666a810d129ba708f03b8b45db06900e",
     "tests/fixtures/guard_9115_baseline.json": "c9b89f375f9826ed216f482ced728974386f6aff9404618678b842d9a8616c7b",
-    "scripts/hooks/bash_oracle.py": "22e7a1d0a73f20f83ba9120732bf1d498991305b53e57f5bbbc35fe89f7cd990",
+    "scripts/hooks/bash_oracle.py": "c5614b97001310f02a3c0ead39a5b1b991d966737475051eef25a54828c68501",
     "tests/test_guard_understood_freeze.py": "ba63203257caaf0b123db91ee5a8f4000f7e88ec09f3ce7f64626ccf5fc29281"
   },
   "decision_sha256": {

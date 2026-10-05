@@ -327,6 +327,37 @@ over other unknown edges; it does not require that cd actually fail in the probe
 | `PARSE_INCOMPLETE`, `DECODE_FAILURE`, `LIMIT_EXCEEDED` | Incomplete syntax, decode failure or bounded budget exhausted; simplify the command. |
 | `RUNTIME_UNAVAILABLE` | Import/construction/walk/resolution or interpreter failure; run the documented project-interpreter repair and retry. No old-scanner fallback. |
 
+### Guard judgment line
+
+Designated decision 2026-10-05 on issue #9484, comment "Designated decision
+2026-10-05: guard judgment line" (decision text SHA-256 prefix `1d28b37c36f4b3cc`).
+
+A guard hook may emit exactly one stderr line: `GUARD_JUDGMENT ` followed by
+one JSON object. The object has exactly the keys `disposition` and
+`reason_class`. For `refuse`, `reason_class` is one of the frozen classes in
+the table above and no others: `UNKNOWN_EXECUTOR`, `DYNAMIC_OPERATION`,
+`DYNAMIC_COMMAND`, `FORWARDED_ARGUMENTS`, `ALIAS_EXECUTION`, `VISIBLE_SOURCE`,
+`EXECUTOR_OPTION`, `INDIRECT_REFERENCE`, `EXECUTED_REDIRECT`,
+`DYNAMIC_REDIRECT`, `UNKNOWN_CONTEXT`, `UNKNOWN_REPOSITORY`, `UNKNOWN_TARGET`,
+`CREATION_COMPOUND`, `UNACCOUNTED_OCCURRENCE`, `PARSE_INCOMPLETE`,
+`DECODE_FAILURE`, `LIMIT_EXCEEDED`, `RUNTIME_UNAVAILABLE`. For `allow` and
+`block` it is JSON null. The line carries no command text, target, or private
+detail. Exit 0 means allow. Exit 2 means block or refuse. Any other exit is an
+execution failure. A duplicate line, a malformed payload, a duplicate key, an
+unknown field or class, or an exit that disagrees with `disposition` fails the
+row. Stdout is not a judgment. A missing line falls back to the exit code
+(0 allow, 2 block) and cannot satisfy a required refusal or reason class.
+
+Targets are the observed `gh` and `git` lookups (repository or host, PR, and
+working directory), never the judgment line. A missing required lookup, a
+wrong identity, or any lookup on a `targets: []` row fails. A target reported
+on the line is not evidence; if it disagrees with the observed lookup, the
+row fails. A red or green stub alone is not target evidence.
+
+Every active legacy row is scored on disposition through `main()` against its
+existing raw expectation. There is no typed-reason requirement and no label
+change. A failed typed row is never rescored as legacy.
+
 ## Denominator, ground truth and acceptance
 
 The companion frozen manifest lists hashes and exact family counts. Original
