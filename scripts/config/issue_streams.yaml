@@ -22,7 +22,7 @@ streams:
     epics: [4706]
   infra-harness:
     title: "Infra & fleet reliability (hooks, dispatch, routing)"
-    epics: [6943]  # successor to closed #4707
+    epics: [6943, 9737]  # #6943 successor to closed #4707; #9737 nested program (#6943 is at GitHub's 100 sub-issue limit)
   docs-knowledge:
     title: "Repository knowledge system — docs authority, Astro truth, OpenWiki"
     epics: [5535]  # nested program; was provisionally under #4707/#6943 until this registry bootstrap (#5537)

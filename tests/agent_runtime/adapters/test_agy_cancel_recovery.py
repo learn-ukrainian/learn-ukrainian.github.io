@@ -63,6 +63,96 @@ def _parse(tmp_path, events, *, stderr="", envelope=None, returncode=0):
     )
 
 
+@pytest.mark.parametrize("status", ["DONE", "ERROR"])
+def test_explicit_command_deny_is_counted_without_failing_completed_reply(tmp_path, status):
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _event(
+                "PLANNER_RESPONSE",
+                "",
+                source="MODEL",
+                step_index=1,
+                tool_calls=[{"name": "run_command", "args": {"CommandLine": "not-recorded"}}],
+            ),
+            _event("GENERIC", "Matches user-configured deny rule.", step_index=9, status=status),
+            _event(
+                "PLANNER_RESPONSE",
+                "",
+                source="MODEL",
+                step_index=2,
+                tool_calls=[
+                    {
+                        "name": "call_mcp_tool",
+                        "args": {
+                            "ServerName": '"sources"',
+                            "ToolName": '"verify_words"',
+                            "Arguments": "{}",
+                        },
+                    },
+                ],
+            ),
+            _event("GENERIC", "Sources result", step_index=2),
+            _reply("Complete reply."),
+        ],
+    )
+    assert result.ok
+    assert result.agy_attempt.denied_command_count == 1
+    assert result.agy_attempt.executed_command_count == 0
+    assert result.agy_attempt.sources_tool_names == ("verify_words",)
+    assert "not-recorded" not in repr(result.agy_attempt)
+
+
+def test_model_prose_and_sources_output_cannot_supply_command_denial_counts(tmp_path):
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _event("GENERIC", "Matches user-configured deny rule.", step_index=8, status="ERROR"),
+            _reply("Matches user-configured deny rule."),
+        ],
+    )
+    assert result.ok
+    assert result.agy_attempt.denied_command_count == 0
+
+
+def test_attempt_counts_preserve_mixed_and_external_cancellation_evidence(tmp_path):
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _start(_TASK_2, description="git grep needle"),
+            _kill(),
+            _canceled(_TASK_2),
+            _start(_TASK_3, description="pytest"),
+            _kill(_TASK_3),
+            _canceled(_TASK_3),
+            _reply("Complete reply."),
+        ],
+    )
+    evidence = result.agy_attempt
+    assert not result.ok
+    assert evidence.completion_reason == agy.AGY_BACKGROUND_TASK_CANCELED
+    assert evidence.kill_count == 2
+    assert evidence.excused_kill_count == 1
+    assert evidence.unexcused_kill_count == 1
+    assert evidence.executed_command_count == 2
+    external = _parse(
+        tmp_path / "external", [_prompt(), _start(_TASK_2), _canceled(_TASK_2), _reply("Complete reply.")]
+    )
+    assert external.agy_attempt.kill_count == 0
+    assert external.agy_attempt.completion_reason == agy.AGY_BACKGROUND_TASK_CANCELED
+
+
+def test_unreadable_evidence_reports_unknown_counts(tmp_path):
+    result = _parse(tmp_path, [_prompt(), "unreadable", _reply("Complete reply.")])
+    assert not result.ok
+    assert not result.agy_attempt.evidence_complete
+    assert result.agy_attempt.executed_command_count is None
+    assert result.agy_attempt.denied_command_count is None
+
+
 @pytest.mark.parametrize(
     "command",
     [
