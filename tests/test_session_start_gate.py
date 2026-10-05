@@ -510,28 +510,6 @@ def test_import_bundle_runs_before_detect_and_is_fail_open(monkeypatch: pytest.M
     assert result["rollover_detect"] == {"status": "ok", "detect_status": "none"}
 
 
-def test_import_bundle_reconcile_needed_is_a_warning_not_a_refusal(monkeypatch: pytest.MonkeyPatch) -> None:
-    """#8511: a same-sequence divergence keeps local files and starts normally,
-    but SessionStart must surface the preserved remote copy."""
-    warning = (
-        "WARNING: rollover bundle upload 65 differs from the local copy in docs/x.md; kept the local "
-        "files and preserved the remote copy at .agent/r - reconcile them before relying on this handoff."
-    )
-
-    class FakeTH:
-        @staticmethod
-        def main(argv: list[str]) -> int:
-            assert "import-bundle" in argv
-            print(json.dumps({"status": "reconcile_needed", "warning": warning}))
-            return 0
-
-    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
-
-    result = gate.phase_rollover_import(_args(import_bundle=True, stream="epic:6943"))
-
-    assert result == {"status": "issue", "warning": warning}
-
-
 def test_python_version_matches_pin(tmp_path: Path) -> None:
     # This positive fixture pins the running interpreter, so it also exercises
     # a baseline runtime during patch-version migrations. The mismatch fixture

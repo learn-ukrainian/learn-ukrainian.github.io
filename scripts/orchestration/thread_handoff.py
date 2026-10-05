@@ -13,7 +13,6 @@ from __future__ import annotations
 import argparse
 import base64
 import binascii
-import errno
 import gzip
 import hashlib
 import http.client
@@ -25,7 +24,6 @@ import shlex
 import shutil
 import socket
 import sqlite3
-import stat
 import subprocess
 import sys
 import tarfile
@@ -52,7 +50,6 @@ if _LOCAL_REPO_ROOT not in sys.path:
 try:
     from scripts import context_canary
     from scripts.common.repo_root import project_interpreter
-    from scripts.common.safe_open import UnsafeEntryError, safe_open_below
     from scripts.orchestration import task_identity, thread_handoff_canary
     from scripts.orchestration.task_family import codex_state as task_family_codex_state
     from scripts.orchestration.task_family import rollover as task_family_rollover
@@ -77,7 +74,6 @@ except ImportError as exc:
 
     import context_canary
     from common.repo_root import project_interpreter
-    from common.safe_open import UnsafeEntryError, safe_open_below
     from orchestration.task_family import codex_state as task_family_codex_state
     from orchestration.task_family import rollover as task_family_rollover
     from orchestration.task_family import rollover_registry as task_family_rollover_registry
@@ -665,11 +661,6 @@ def _bundle_handoff_candidates_for_agent(repo_root: Path, stream_id: str, agent:
     return tuple(dict.fromkeys(candidates))
 
 
-# Remote copies kept for reconciliation after a same-sequence tie (#8511);
-# lives inside the lineage but is never bundled.
-BUNDLE_RECONCILE_DIR = "_bundle-reconcile"
-
-
 def _bundle_source_members(
     repo_root: Path,
     state_root: Path,
@@ -689,7 +680,6 @@ def _bundle_source_members(
             or path.is_symlink()
             or path.name == ".native-intent.lock"
             or path.name.endswith(".bundle.tgz")
-            or path.relative_to(lineage_root).parts[0] == BUNDLE_RECONCILE_DIR
         ):
             continue
         member_name = (
@@ -2665,51 +2655,6 @@ def write_bytes_atomic(path: Path, payload: bytes) -> None:
     tmp = path.with_suffix(path.suffix + f".tmp.{os.getpid()}")
     tmp.write_bytes(payload)
     os.replace(tmp, path)
-
-
-class UnsafeRolloverPathError(ValueError):
-    """A directory below a rollover lineage is a symlink or not a directory."""
-
-
-_NOFOLLOW_DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
-
-
-def _open_dir_nofollow(name: str | Path, *, dir_fd: int | None = None) -> int:
-    """Open one directory without following a symlink at its final component."""
-    try:
-        return os.open(name, _NOFOLLOW_DIR_FLAGS, dir_fd=dir_fd)
-    except OSError as exc:
-        if exc.errno in (errno.ELOOP, errno.ENOTDIR):
-            raise UnsafeRolloverPathError("a rollover path component is a symlink or not a directory") from None
-        raise
-
-
-def _open_lineage_subdir(lineage_fd: int, parts: tuple[str, ...], *, create: bool) -> int | None:
-    """Walk ``parts`` below an open lineage directory, every component ``O_NOFOLLOW``.
-
-    Returns a new descriptor for the last directory, or ``None`` when a
-    component is missing and ``create`` is false.  A symlinked or
-    non-directory component raises :class:`UnsafeRolloverPathError`.
-    """
-    fd = os.dup(lineage_fd)
-    try:
-        for part in parts:
-            if create:
-                with suppress(FileExistsError):
-                    os.mkdir(part, 0o700, dir_fd=fd)
-            try:
-                child = _open_dir_nofollow(part, dir_fd=fd)
-            except FileNotFoundError:
-                if create:
-                    raise
-                return None
-            os.close(fd)
-            fd = child
-        result, fd = fd, -1
-        return result
-    finally:
-        if fd >= 0:
-            os.close(fd)
 
 
 def _retire_unsatisfiable_native_plan(state: dict[str, Any], *, now: datetime) -> bool:
@@ -5630,73 +5575,6 @@ def _bundle_local_lineage_snapshot(
     return local_manifest, local_members, True
 
 
-def _bundle_preserve_remote_for_reconcile(
-    repo_root: Path,
-    state_root: Path,
-    *,
-    agent: str,
-    lineage_id: str,
-    upload_seq: int,
-    members: Mapping[str, bytes],
-) -> Path:
-    """Write remote members beside the kept local lineage; never touch live files.
-
-    Layout: ``<lineage>/_bundle-reconcile/upload-<seq>/<member path>``.  Bundle
-    exports skip this directory, so a preserved copy is never re-uploaded.
-
-    Every component below the real lineage directory is opened ``O_NOFOLLOW``
-    relative to its parent descriptor, so a redirected ``_bundle-reconcile``
-    (or any directory under it) cannot move a write outside the lineage.  All
-    destinations are checked before the first write: a symlinked or wrongly
-    typed component raises :class:`UnsafeRolloverPathError` and nothing is
-    written.
-    """
-    lineage_root = state_root / ".agent" / "thread-rollovers" / agent / lineage_id
-    reconcile_parts = (BUNDLE_RECONCILE_DIR, f"upload-{upload_seq}")
-    planned: list[tuple[tuple[str, ...], str, bytes]] = []
-    for name, payload in members.items():
-        member_parts = Path(_bundle_member_path(name)).parts
-        planned.append(
-            (
-                reconcile_parts + member_parts[:-1],
-                member_parts[-1],
-                _bundle_rewrite(payload, repo_root=repo_root) if _bundle_text_member(name) else payload,
-            )
-        )
-    lineage_fd = _open_dir_nofollow(lineage_root)
-    try:
-        for parent_parts, leaf, _ in planned:
-            parent_fd = _open_lineage_subdir(lineage_fd, parent_parts, create=False)
-            if parent_fd is None:
-                continue
-            try:
-                existing = os.lstat(leaf, dir_fd=parent_fd)
-            except FileNotFoundError:
-                continue
-            finally:
-                os.close(parent_fd)
-            if not stat.S_ISREG(existing.st_mode):
-                raise UnsafeRolloverPathError("a preserved reconciliation file is not a regular file")
-        for parent_parts, leaf, payload in planned:
-            parent_fd = _open_lineage_subdir(lineage_fd, parent_parts, create=True)
-            if parent_fd is None:  # create=True never reports a missing component
-                raise FileNotFoundError("reconciliation directory could not be created")
-            try:
-                tmp_name = f".{leaf}.tmp.{os.getpid()}"
-                try:
-                    tmp_fd = safe_open_below(parent_fd, tmp_name, os.O_WRONLY | os.O_CREAT | os.O_TRUNC)
-                except UnsafeEntryError as exc:
-                    raise UnsafeRolloverPathError(str(exc)) from None
-                with os.fdopen(tmp_fd, "wb") as handle:
-                    handle.write(payload)
-                os.replace(tmp_name, leaf, src_dir_fd=parent_fd, dst_dir_fd=parent_fd)
-            finally:
-                os.close(parent_fd)
-    finally:
-        os.close(lineage_fd)
-    return lineage_root.joinpath(*reconcile_parts)
-
-
 def _bundle_import_error(reason: str) -> int:
     print(json.dumps({"error": reason, "action": "import-bundle"}, separators=(",", ":")))
     return 2
@@ -5767,59 +5645,6 @@ def _bundle_import_candidate(
                     "agent": agent,
                     "lineage_id": lineage_id,
                     "rollover_id": manifest["rollover_id"],
-                }
-            # The order key ends in the upload sequence; the local half comes
-            # from this lineage's receipt, written when this host uploaded or
-            # installed that exact sequence.  The receipt proves a common
-            # snapshot, not that every differing local file is newer: a later
-            # local edit and a stale restore look the same.  Never overwrite
-            # local files and never drop the remote copy: keep the local copy,
-            # preserve the differing remote members under the lineage, and
-            # report that reconciliation is needed.  Sequence 0 (an
-            # unsequenced file export) proves no common snapshot, so that tie
-            # still refuses.
-            if remote_order[4] >= 1:
-                differing = sorted(
-                    name
-                    for name in set(local_compare) | set(remote_compare)
-                    if local_compare.get(name) != remote_compare.get(name)
-                )
-                try:
-                    reconcile_root = _bundle_preserve_remote_for_reconcile(
-                        repo_root,
-                        state_root,
-                        agent=agent,
-                        lineage_id=lineage_id,
-                        upload_seq=remote_order[4],
-                        members={name: remote_compare[name] for name in differing if name in remote_compare},
-                    )
-                except UnsafeRolloverPathError as exc:
-                    return {
-                        "status": "reconcile_refused",
-                        "error": f"refusing to preserve the remote copy for reconciliation: {exc}; "
-                        "nothing was written and the local copy was kept",
-                        "agent": agent,
-                        "lineage_id": lineage_id,
-                        "rollover_id": manifest["rollover_id"],
-                        "generation": manifest["generation"],
-                        "upload_seq": remote_order[4],
-                        "differing_members": differing,
-                    }
-                reconcile_rel = reconcile_root.relative_to(state_root).as_posix()
-                return {
-                    "status": "reconcile_needed",
-                    "reason": "local and remote copies differ at the same upload sequence; "
-                    "kept the local copy and preserved the remote copy for reconciliation",
-                    "warning": f"WARNING: rollover bundle upload {remote_order[4]} differs from the local copy "
-                    f"in {', '.join(differing)}; kept the local files and preserved the remote copy at "
-                    f"{reconcile_rel} - reconcile them before relying on this handoff.",
-                    "agent": agent,
-                    "lineage_id": lineage_id,
-                    "rollover_id": manifest["rollover_id"],
-                    "generation": manifest["generation"],
-                    "upload_seq": remote_order[4],
-                    "differing_members": differing,
-                    "reconcile_path": reconcile_rel,
                 }
             return {
                 "status": "refused",
@@ -5949,30 +5774,17 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
         result = results[0]
     else:
         statuses = {item["status"] for item in results}
-        if "refused" in statuses:
-            aggregate_status = "refused"
-        elif "reconcile_refused" in statuses:
-            aggregate_status = "reconcile_refused"
-        elif "reconcile_needed" in statuses:
-            aggregate_status = "reconcile_needed"
-        elif "installed" in statuses:
-            aggregate_status = "installed"
-        else:
-            aggregate_status = "noop"
-        warnings = [item["warning"] for item in results if item.get("warning")]
+        aggregate_status = "refused" if "refused" in statuses else "installed" if "installed" in statuses else "noop"
         result = {
             "status": aggregate_status,
-            **({"warning": " ".join(warnings)} if warnings else {}),
             "agent": agent,
             "stream_id": str(args.from_api),
             "bundles": results,
             "handoff_source": handoff_winner[0].get("agent") if handoff_winner is not None else None,
             "handoff_upload_seq": handoff_winner[0].get("upload_seq", 0) if handoff_winner is not None else None,
         }
-    if result.get("warning"):
-        print(result["warning"], file=sys.stderr)
     print(json.dumps(result, indent=2, ensure_ascii=False))
-    return 2 if any(item["status"] in {"refused", "reconcile_refused"} for item in results) else 0
+    return 2 if any(item["status"] == "refused" for item in results) else 0
 
 
 def rollover_identity_snapshot(state_root: Path, agent: str | None = None) -> dict[str, Any]:
@@ -6541,97 +6353,6 @@ def cmd_refresh_thread_lease_heartbeat(args: argparse.Namespace) -> int:
     return 0
 
 
-def _prepared_handoff_is_readable(lineage_dir: Path, handoff_path: str) -> bool:
-    """True when the reserved handoff is a non-empty regular file this user owns.
-
-    Every component from the lineage directory down is opened ``O_NOFOLLOW``
-    relative to its parent, so a symlink anywhere below the lineage fails.
-    """
-    parts = Path(handoff_path).parts
-    lineage_parts = Path(".agent", "thread-rollovers", lineage_dir.parent.name, lineage_dir.name).parts
-    if parts[: len(lineage_parts)] != lineage_parts or len(parts) <= len(lineage_parts):
-        return False
-    relative = parts[len(lineage_parts) :]
-    try:
-        lineage_fd = _open_dir_nofollow(lineage_dir)
-    except (OSError, UnsafeRolloverPathError):
-        return False
-    try:
-        parent_fd = _open_lineage_subdir(lineage_fd, relative[:-1], create=False)
-        if parent_fd is None:
-            return False
-        try:
-            handoff_fd = safe_open_below(parent_fd, relative[-1], os.O_RDONLY)
-        finally:
-            os.close(parent_fd)
-        with os.fdopen(handoff_fd, "rb") as handle:
-            return bool(handle.read(1))
-    except (OSError, UnsafeRolloverPathError):
-        return False
-    finally:
-        os.close(lineage_fd)
-
-
-def cmd_prepared_handoff(args: argparse.Namespace) -> int:
-    """Read-only: does a prepared, valid, readable rollover handoff exist for this thread?
-
-    The PreCompact guard (#8511) blocks automatic compaction only on exit 0.
-    A lease counts when :func:`validate_live_lease` accepts it, its replacement
-    is ``pending_start``, its active thread is ``--active-thread-id``, and its
-    reserved handoff is a readable, non-empty regular file.  Exit 1 means no
-    such handoff; exit 2 means the check itself failed.
-    """
-    try:
-        _, state_root = resolve_roots(args.repo_root)
-    except ValueError as exc:
-        print(json.dumps({"status": "error", "error": str(exc)}, indent=2))
-        return 2
-    thread_id = str(args.active_thread_id or "").strip()
-    if not thread_id:
-        print(json.dumps({"status": "error", "error": "--active-thread-id is empty"}, indent=2))
-        return 2
-    rejected: list[dict[str, str]] = []
-    rollovers = state_root / ".agent" / "thread-rollovers"
-    for path in sorted(rollovers.glob("*/*/lease.json")):
-        lineage_dir = path.parent
-        if any(item.is_symlink() for item in (lineage_dir.parent, lineage_dir, path)):
-            continue
-        try:
-            agent = normalize_agent_name(lineage_dir.parent.name)
-        except ValueError:
-            continue
-        state = load_state(path)
-        active = state.get("active")
-        if not isinstance(active, dict) or active.get("thread_id") != thread_id:
-            continue
-        lease_file = rel(path, state_root)
-        replacement, error = validate_live_lease(state, agent=agent, state_path=path)
-        if error or replacement is None:
-            rejected.append({"lease_file": lease_file, "error": error or "lease has no replacement"})
-            continue
-        if replacement.get("status") != "pending_start":
-            continue
-        handoff_path = str(replacement["handoff_path"])
-        if not _prepared_handoff_is_readable(lineage_dir, handoff_path):
-            rejected.append({"lease_file": lease_file, "error": "reserved handoff is not a readable regular file"})
-            continue
-        print(
-            json.dumps(
-                {
-                    "status": "prepared",
-                    "agent": agent,
-                    "lineage_id": state.get("lineage_id"),
-                    "rollover_id": replacement.get("rollover_id"),
-                    "handoff_path": handoff_path,
-                },
-                indent=2,
-            )
-        )
-        return 0
-    print(json.dumps({"status": "none", "rejected": rejected}, indent=2))
-    return 1
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path)
@@ -6878,13 +6599,6 @@ def build_parser() -> argparse.ArgumentParser:
     check.add_argument("--context-percent", type=float)
     check.add_argument("--context-threshold", type=float, default=DEFAULT_CONTEXT_THRESHOLD)
     check.set_defaults(func=cmd_check)
-
-    prepared_handoff = subparsers.add_parser(
-        "prepared-handoff",
-        help="Read-only: exit 0 when a valid, readable prepared rollover handoff exists for this active thread.",
-    )
-    prepared_handoff.add_argument("--active-thread-id", required=True)
-    prepared_handoff.set_defaults(func=cmd_prepared_handoff)
 
     audit = subparsers.add_parser("audit", help="Inspect local task identity plus Codex thread/automation metadata.")
     audit.add_argument("--codex-home", default=os.environ.get("CODEX_HOME", str(Path.home() / ".codex")))

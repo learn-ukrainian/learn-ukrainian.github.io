@@ -500,13 +500,6 @@ def phase_rollover_import(args: argparse.Namespace) -> dict[str, Any]:
             "status": "issue",
             "warning": f"WARNING: rollover bundle import exceeded its 3-second sub-budget ({elapsed:.2f}s); detect continues.",
         }
-    if rc == 0 and isinstance(payload, dict) and payload.get("status") == "reconcile_needed":
-        # Local files were kept and the remote copy preserved (#8511): start
-        # normally, but surface the divergence.
-        return {
-            "status": "issue",
-            "warning": str(payload.get("warning") or "WARNING: rollover bundle copies differ; reconciliation needed."),
-        }
     if rc == 0 and isinstance(payload, dict) and payload.get("status") not in {"warning", "refused"}:
         return {"status": "ok", "elapsed_seconds": round(elapsed, 3)}
     detail = " ".join((out or err).split()) or "no structured output"
