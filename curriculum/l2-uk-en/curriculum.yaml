@@ -526,7 +526,7 @@ levels:
         end: checkpoint-fine-arts
       - label: C1.11 [Theatre, Architecture & Cinema]
         start: teatralne-mystetstvo-1
-        end: c1-final-checkpoint
+        end: review-c1-5
     modules:
       # C1.0 [Bridge & Academic Foundation]
       - b2-review-bridge

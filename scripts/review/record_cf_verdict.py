@@ -44,8 +44,8 @@ from scripts.review.reviewer_resolver import (
     resolve_author_family,
     resolve_family,
 )
+from scripts.review.verdict_parser import recognized_verdicts
 
-VERDICT_LINE = re.compile(r"(?im)^\s*VERDICT:\s*(APPROVE|APPROVED|REQUEST_CHANGES|CHANGES_REQUESTED|BLOCKED)\b")
 NORMALIZED = {
     "APPROVE": "APPROVED",
     "APPROVED": "APPROVED",
@@ -74,7 +74,7 @@ class RecordError(RuntimeError):
 
 
 def normalize_verdict(reply: str) -> str:
-    tokens = {NORMALIZED[token.upper()] for token in VERDICT_LINE.findall(reply)}
+    tokens = {NORMALIZED[token.upper()] for token in recognized_verdicts(reply)}
     if len(tokens) != 1:
         raise RecordError("review reply has missing or ambiguous VERDICT token")
     return tokens.pop()

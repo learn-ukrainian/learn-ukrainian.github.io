@@ -89,7 +89,16 @@ _ROOT = Path(__file__).resolve().parents[2]
 _SCHEMA_PATH = _ROOT / "agents_extensions" / "shared" / "schemas" / "task-lifecycle.v1.schema.json"
 _SCHEMA = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
 _VALIDATOR = Draft202012Validator(_SCHEMA, format_checker=FormatChecker())
-_AC_RE = re.compile(r"^- \[(?P<checked>[ xX])\] \*\*(?P<id>[A-Z][A-Z0-9_-]{1,31})\*\*\s+[—-]\s+(?P<text>.+?)\s*$")
+# Preserve the legacy bold-ID grammar, adding observed numeric suffix IDs.
+_AC_RE = re.compile(
+    r"^- \[(?P<checked>[ xX])\] \*\*(?P<id>[A-Z][A-Z0-9_-]{1,31}|AC-[0-9]+[a-zA-Z]+)"
+    r"\*\*\s+[—-]\s+(?P<text>.+?)\s*$"
+)
+_PLAIN_AC_RE = re.compile(
+    r"^- \[(?P<checked>[ xX])\] (?P<id>AC-(?:[A-Z0-9][A-Z0-9_-]{0,28}|[0-9]+[a-zA-Z]+))"
+    r"(?:\s*:\s*|\s+(?![:\s]))(?P<text>\S.*?)\s*$"
+)
+_AC_LIKE_CHECKBOX_RE = re.compile(r"^[-*+]\s*\[[^\]]*\]\s*[*_`]*AC(?=[^A-Za-z]|$)", re.IGNORECASE)
 _SAFE_FAMILY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$")
 
 
@@ -261,10 +270,15 @@ def parse_issue_acceptance_criteria(body: str) -> list[dict[str, Any]]:
     criteria: list[dict[str, Any]] = []
     seen: set[str] = set()
     for raw_line in str(body or "").splitlines():
-        match = _AC_RE.fullmatch(raw_line.strip())
+        line = raw_line.strip()
+        match = _AC_RE.fullmatch(line) or _PLAIN_AC_RE.fullmatch(line)
         if not match:
+            if _AC_LIKE_CHECKBOX_RE.match(line):
+                raise LifecycleError("malformed AC-like acceptance criterion checkbox in issue body")
             continue
         ac_id = match.group("id")
+        if len(ac_id) > 32:
+            raise LifecycleError("acceptance criterion ID exceeds 32 characters")
         if ac_id in seen:
             raise LifecycleError(f"duplicate acceptance criterion ID in issue body: {ac_id}")
         seen.add(ac_id)
