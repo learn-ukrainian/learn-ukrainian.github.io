@@ -103,7 +103,9 @@ re-labels it as the harness set object; nothing is normalised or repaired.
   prompt of such a run ends with a short protocol note asking for a final
   `VERDICT: APPROVE` line after the JSON object. The note is identical across
   variants and the line is a marker only: it is not scored and is not a judgement
-  of the paragraphs.
+  of the paragraphs. The digest of the note's text is frozen with the profile, so
+  a resume under an edited note is refused before any dispatch. The note may prime
+  approval, so read variant comparisons under this option with that in mind.
 - A dry run validates each dispatch with `--dry-run` on a distinct
   `<task-id>-preflight` id. Before that call the harness reads the existing
   record (`delegate.py status`). It passes `--force-new` only when the record

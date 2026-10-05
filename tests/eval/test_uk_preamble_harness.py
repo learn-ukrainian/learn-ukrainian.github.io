@@ -546,9 +546,25 @@ def test_review_profile_is_frozen_marks_review_prompts_only_and_refuses_a_change
     assert len(env["fake"].dispatched) == dispatched
 
 
+def test_review_gate_marker_digest_is_frozen_and_an_edited_marker_refuses_the_resume(env, capsys, monkeypatch):
+    from scripts.eval.uk_preamble import prompts
+
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0
+    frozen = read_json(env["results"] / "manifest.json")["frozen"]
+    assert frozen["review_gate_marker_sha256"] == prompts.sha256_text(prompts.REVIEW_GATE_MARKER)
+    assert frozen["templates_sha256"] == prompts.template_fingerprint()  # the marker is outside the fingerprint
+    dispatched = len(env["fake"].dispatched)
+    capsys.readouterr()
+    monkeypatch.setattr(prompts, "REVIEW_GATE_MARKER", prompts.REVIEW_GATE_MARKER + " Edited.")
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 2
+    assert "review_gate_marker_sha256" in capsys.readouterr().err
+    assert len(env["fake"].dispatched) == dispatched
+
+
 def test_default_run_manifest_and_prompts_are_unchanged_by_the_review_profile_option(env, capsys):
     assert cli.main(env["run"]) == 0
-    assert "review_profile" not in read_json(env["results"] / "manifest.json")["frozen"]
+    frozen = read_json(env["results"] / "manifest.json")["frozen"]
+    assert "review_profile" not in frozen and "review_gate_marker_sha256" not in frozen
     assert not any("VERDICT" in p.read_text(encoding="utf-8") for p in (env["results"] / "prompts").glob("*.md"))
     capsys.readouterr()
     assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 2  # adding the value to a default run

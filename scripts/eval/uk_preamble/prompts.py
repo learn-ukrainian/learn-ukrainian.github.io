@@ -157,6 +157,11 @@ ends with one final line, `VERDICT: APPROVE`. The line is a protocol marker only
 paragraphs and is not scored. The JSON object stays exactly as specified above."""
 
 
+def review_gate_marker_sha256() -> str:
+    """Digest of the marker text; a profiled run freezes it because the marker is part of its review prompts."""
+    return sha256_text(REVIEW_GATE_MARKER)
+
+
 def template_fingerprint() -> str:
     """Hash of every instruction text and schema; frozen in the run manifest."""
     payload = {kind: [INSTRUCTIONS[kind], response_schema(kind)] for kind in INSTRUCTIONS}
