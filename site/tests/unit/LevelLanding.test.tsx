@@ -107,14 +107,13 @@ function landingInput(track: string) {
 
 describe('LevelLanding rendered from the committed track landings', () => {
   const tracks = [
-    { track: 'c1', level: 'C1', blocked: true }, // #9754: c1 landing still 132; see test_landings_use_levellanding.py
-    { track: 'bio', level: 'BIO', blocked: false },
-    { track: 'folk', level: 'FOLK', blocked: false },
+    { track: 'c1', level: 'C1' },
+    { track: 'bio', level: 'BIO' },
+    { track: 'folk', level: 'FOLK' },
   ];
 
-  for (const { track, level, blocked } of tracks) {
-    // `it.fails` flips to a failure once the c1 landing is regenerated, forcing removal of the flag.
-    (blocked ? it.fails : it)(`${track} landing shows the manifest module count`, () => {
+  for (const { track, level } of tracks) {
+    it(`${track} landing shows the manifest module count`, () => {
       const { moduleCount, items } = landingInput(track);
       render(<LevelLanding level={level} moduleCount={moduleCount} modules={[{ unit: 'All', items }]} />);
 
