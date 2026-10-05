@@ -27,9 +27,11 @@ Two layers:
    argv at a wrapper call; shell-command literals that run ``claude -p``; and a
    function that holds a Claude program token and a print flag without calling
    a wrapper or the argv builder (an argv handed to an opaque helper).
-   Annotations are checked like any code; only an uncalled API naming a type
-   (``subprocess.Popen[str] | None``, ``tuple[subprocess.Popen, int]``) is no
-   site. A ``claude-probe`` exception clears only a frozen probe: a literal
+   Annotations are checked like any code: they run at definition time, so an
+   API reference in one is a site (``proc: subprocess.Popen``). Only string
+   annotations and annotations in a module with ``from __future__ import
+   annotations`` are not code; a value beside one still is. A
+   ``claude-probe`` exception clears only a frozen probe: a literal
    ``[program, *words, --version|--help]`` (optionally behind a listed sandbox
    prefixer), never a computed argv. An exception entry that matches no site
    fails.
@@ -49,10 +51,10 @@ Documented limits (not proven safe by any test here):
   ``multiprocessing`` targets, ``exec`` of generated code) is outside the named
   spawn API set.
 - **Introspection and evaluated strings.** Frame or ``gc`` access to a bound
-  probe argv, a string annotation evaluated by ``typing.get_type_hints``, and a
-  builtin generic (``list``, ``tuple``, ...) rebound outside this module are
-  not seen. The listed sandbox prefixers are trusted to keep the probe as
-  their argv's tail (``wrap_argv_with_sandbox`` and ``AttemptBoundary.wrap``).
+  probe argv is not seen, nor is a quoted or postponed annotation recovered as
+  code by ``typing.get_type_hints`` or ``inspect.get_annotations(eval_str=True)``:
+  it is an evaluated string. The listed sandbox prefixers are trusted to keep
+  the probe as their argv's tail (``wrap_argv_with_sandbox`` and ``AttemptBoundary.wrap``).
 - Exceptions with category ``generic-runner`` spawn an argv the rule cannot
   see; each entry names why no Claude print-mode argv reaches it, and the
   callers that route Claude around it are behaviour-tested below.
@@ -176,8 +178,6 @@ _PROBE_SPAWNS = frozenset(f"subprocess.{name}" for name in ("run", "Popen", "cal
 _ARGV_PREFIXERS = {"scripts/review/isolation.py": frozenset({"wrap_argv_with_sandbox"})}
 _ARGV_ENV_PREFIXERS = {"scripts/agent_runtime/attempt_boundary.py": frozenset({"self.wrap"})}
 _PREFIXER_NAMES = frozenset().union(*_ARGV_PREFIXERS.values(), *_ARGV_ENV_PREFIXERS.values())
-
-_BUILTIN_GENERICS = frozenset({"list", "tuple", "dict", "set", "frozenset", "type"})
 
 CATEGORIES = frozenset({"non-claude", "claude-probe", "runtime", "generic-runner", "argv-builder"})
 
@@ -395,7 +395,7 @@ class _ModuleCheck(ast.NodeVisitor):
         self.parents: dict[int, ast.AST] = {}
         self.called: set[int] = set()
         self.annotations: set[int] = set()  # annotation roots
-        self.bound: set[str] = set()  # every name the module binds anywhere
+        self.postpones_annotations = False
 
     # -- scopes ------------------------------------------------------------------
 
@@ -413,47 +413,29 @@ class _ModuleCheck(ast.NodeVisitor):
             for annotation in (getattr(parent, "annotation", None), getattr(parent, "returns", None)):
                 if isinstance(annotation, ast.AST):
                     self.annotations.add(id(annotation))
-            if isinstance(parent, ast.Name) and not isinstance(parent.ctx, ast.Load):
-                self.bound.add(parent.id)
-            elif isinstance(parent, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                self.bound.add(parent.name)
-            elif isinstance(parent, ast.alias):
-                self.bound.add(_bound_name(parent, from_import=True))
-            elif isinstance(parent, ast.arg):
-                self.bound.add(parent.arg)
+        self.postpones_annotations = any(
+            isinstance(stmt, ast.ImportFrom)
+            and stmt.module == "__future__"
+            and any(alias.name == "annotations" for alias in stmt.names)
+            for stmt in tree.body
+        )
         self._check_holder(tree, tree.body)
         self.visit(tree)
         return self.found
 
-    def _names_a_type(self, node: ast.Attribute) -> bool:
-        """An uncalled API naming a type in an annotation, where no other code can receive it.
+    def _postponed_annotation(self, node: ast.AST) -> bool:
+        """A node inside an annotation the module postpones (``from __future__ import annotations``).
 
-        Annotations are otherwise checked like any code: they run at definition
-        time, or whenever something resolves them. The API may be the
-        annotation, be subscripted (``subprocess.Popen[str]``), be united with
-        ``None``, or sit in the arguments of a builtin generic the module never
-        rebinds (``tuple[subprocess.Popen, int]``).
+        A postponed annotation is stored as a string and runs only when
+        something evaluates it: the evaluated-string limit. Every other
+        annotation runs at definition time and is checked like any code.
         """
-        child: ast.AST = node
-        while id(child) not in self.annotations:
-            parent = self.parents.get(id(child))
-            if isinstance(parent, ast.Subscript):
-                generic = parent.value
-                typed = (parent.value is node) or (
-                    isinstance(generic, ast.Name) and generic.id in _BUILTIN_GENERICS and generic.id not in self.bound
-                )
-            elif isinstance(parent, ast.Tuple):
-                outer = self.parents.get(id(parent))
-                typed = isinstance(outer, ast.Subscript) and outer.slice is parent
-            elif isinstance(parent, ast.BinOp):
-                other = parent.right if parent.left is child else parent.left
-                typed = isinstance(parent.op, ast.BitOr) and isinstance(other, ast.Constant) and other.value is None
-            else:
-                typed = False
-            if not typed:
-                return False
-            child = parent
-        return True
+        if not self.postpones_annotations:
+            return False
+        child: ast.AST | None = node
+        while child is not None and id(child) not in self.annotations:
+            child = self.parents.get(id(child))
+        return child is not None
 
     def _scoped(self, node: ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef) -> None:
         self._protect_binding(node, node.name)
@@ -570,7 +552,7 @@ class _ModuleCheck(ast.NodeVisitor):
 
     def visit_Attribute(self, node: ast.Attribute) -> None:
         api = spawn_api(node)
-        if api is not None and id(node) not in self.called and not self._names_a_type(node):
+        if api is not None and id(node) not in self.called and not self._postponed_annotation(node):
             self.found.sites.append(Site(self.path, self.function, api, "<reference>", node.lineno))
         if api is not None and not _canonically_reached(node):
             self._violation(node, f"{api} reached through {ast.unparse(node)}, not its canonical module binding")
@@ -1682,12 +1664,12 @@ _ACCEPTED = {
         "def run(proc):\n    try:\n        return subprocess.PIPE, os.environ.get('CLAUDE_BIN'), os.pathsep\n"
         "    except subprocess.TimeoutExpired:\n        return getattr(os, 'O_NOFOLLOW', 0)\n"
     ),
-    "annotation": "def run(proc: subprocess.Popen[str]) -> subprocess.Popen[str]:\n    return proc\n",
+    "quoted-annotation": 'def run(proc: "subprocess.Popen[str]") -> "subprocess.Popen[str]":\n    return proc\n',
     "docstring": 'def run():\n    """Start ``claude -p hello`` through the wrapper."""\n',
     "claude-probe-text": 'MESSAGE = "install claude, then run it"\n',
-    "annotation-generics": (
-        "def run(procs: list[subprocess.Popen], pair: tuple[subprocess.Popen | None, int]) -> subprocess.Popen[str]:\n"
-        "    return procs[0]\n"
+    "quoted-annotation-generics": (
+        'def run(procs: "list[subprocess.Popen]", pair: "tuple[subprocess.Popen | None, int]") -> None:\n'
+        "    return None\n"
     ),
     "scripts-root-adapter-import": "from agent_runtime.adapters.claude import run_headless_claude\n",
 }
@@ -1748,12 +1730,69 @@ _ANNOTATION_REJECTED = {
     "foreign-subscript": "def run(x: registry[subprocess.Popen]):\n    pass\n",
     "foreign-union": "def run(x: subprocess.Popen | hook):\n    pass\n",
     "rebound-generic": "list = Registry()\ndef run(x: list[subprocess.Popen]):\n    pass\n",
+    # Round 3 (review-9750-e): an uncalled API in an eager annotation is stored there as the real
+    # class, and anything reading ``__annotations__`` can call it.
+    "type-annotation": "def run(proc: subprocess.Popen[str]) -> subprocess.Popen[str]:\n    return proc\n",
+    "type-annotation-generics": (
+        "def run(procs: list[subprocess.Popen], pair: tuple[subprocess.Popen | None, int]) -> None:\n    return None\n"
+    ),
+    # A quoted annotation is no code, but the value beside it is.
+    "quoted-with-value": 'proc: "subprocess.Popen" = subprocess.Popen\n',
 }
+
+# The reviewer's mutant and its variants: the stored class is recovered and called from another
+# annotation, where neither the argv-holder check nor a spawn-call site sees it.
+_RECOVERED = 'def dispatch(track_name: {owner}.__annotations__["{key}"]([CLAUDE_BIN, "-p", "probe"])):\n    pass\n'
+_ANNOTATION_RECOVERED = {
+    "parameter": "def _spawn_type(proc: subprocess.Popen):\n    pass\n"
+    + _RECOVERED.format(owner="_spawn_type", key="proc"),
+    "return": "def _spawn_type() -> subprocess.Popen:\n    pass\n"
+    + _RECOVERED.format(owner="_spawn_type", key="return"),
+    "class-attribute": "class Holder:\n    proc: subprocess.Popen = None\n"
+    + _RECOVERED.format(owner="Holder", key="proc"),
+}
+_ANNOTATION_REJECTED |= {f"{name}-recovered": body for name, body in _ANNOTATION_RECOVERED.items()}
 
 
 @pytest.mark.parametrize("body", list(_ANNOTATION_REJECTED.values()), ids=list(_ANNOTATION_REJECTED))
 def test_rule_checks_annotations_like_code(body: str) -> None:
     assert _problems(body)
+
+
+@pytest.mark.parametrize("body", list(_ANNOTATION_RECOVERED.values()), ids=list(_ANNOTATION_RECOVERED))
+def test_an_eager_annotation_naming_a_spawn_api_is_a_reference_site(body: str) -> None:
+    assert any("spawns '<reference>' via subprocess.Popen" in p for p in _problems(body))
+
+
+def _postponed_problems(body: str) -> list[str]:
+    path = "scripts/fixture.py"
+    findings = check_module("from __future__ import annotations\n" + _IMPORT + textwrap.dedent(body), path)
+    assert findings is not None
+    return problems({path: findings}, [])
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        _ANNOTATION_REJECTED["type-annotation"],
+        _ANNOTATION_REJECTED["type-annotation-generics"],
+        *_ANNOTATION_RECOVERED.values(),
+    ],
+)
+def test_rule_leaves_postponed_annotations_to_the_evaluated_string_limit(body: str) -> None:
+    assert _postponed_problems(body) == []
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "proc: subprocess.Popen = subprocess.Popen\n",
+        "class Holder:\n    proc: subprocess.Popen = subprocess.Popen\n",
+        "def run(proc: subprocess.Popen = subprocess.Popen):\n    pass\n",
+    ],
+)
+def test_rule_checks_values_beside_postponed_annotations(body: str) -> None:
+    assert _postponed_problems(body)
 
 
 def _mutated(path: str, old: str, new: str) -> ModuleFindings:
@@ -1772,6 +1811,17 @@ def test_reviewer_annotation_mutant_in_batch_dispatcher_is_rejected(exceptions: 
         'def dispatch_claude_fix(track_name: getattr(subprocess, "Popen")([CLAUDE_BIN, "-p", "probe"]),',
     )
     assert problems({path: findings}, exceptions)
+
+
+def test_reviewer_recovered_annotation_mutant_in_batch_dispatcher_is_rejected(exceptions: list[Exception_]) -> None:
+    path = "scripts/batch/batch_dispatcher_helpers.py"
+    findings = _mutated(
+        path,
+        "def dispatch_claude_fix(track_name: str,",
+        "def _spawn_type(proc: subprocess.Popen):\n    pass\n\n\n"
+        'def dispatch_claude_fix(track_name: _spawn_type.__annotations__["proc"]([CLAUDE_BIN, "-p", "probe"]),',
+    )
+    assert any("spawns '<reference>' via subprocess.Popen" in p for p in problems({path: findings}, exceptions))
 
 
 @pytest.mark.parametrize(
