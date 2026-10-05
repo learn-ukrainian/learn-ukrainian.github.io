@@ -420,6 +420,55 @@ def test_parse_success_json():
     assert r.rate_limited is False
 
 
+@pytest.mark.parametrize("usage,expected", [
+    ({"grok-4.7-build": {"modelCalls": 1}}, "grok-4.7-build"),
+    ({"grok-4.7-build-fast": {"modelCalls": 1}}, "grok-4.7-build-fast"),
+    ({}, None), (None, None), ([], None),
+    ({"grok-4.7-build": {}, "grok-4.7-build-fast": {}}, None),
+    ({"": {}}, None),
+])
+def test_native_runtime_identity_comes_only_from_single_model_usage_key(usage, expected):
+    from scripts import delegate
+
+    stdout = json.dumps({"text": "VERDICT: APPROVE grok-4.7-build", "model": "grok-4.7-build", "modelUsage": usage})
+    result = GrokBuildAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
+    assert result.ok
+    assert result.substitution["actual_model"] == expected
+    assert result.substitution["actual_model_known"] is (expected is not None)
+    state = delegate._cursor_model_state(agent="grok", result=result, substitution=result.substitution)
+    assert state["resolved_model"] == (expected or "unattested-harness")
+    assert state["resolved_model_known"] is (expected is not None)
+    assert state["resolved_model_source"] == ("grok-model-usage" if expected else "unattested-harness")
+
+
+def test_native_plain_reply_does_not_attest_model():
+    result = GrokBuildAdapter().parse_response(stdout="VERDICT: APPROVE grok-4.7-build", stderr="", returncode=0, output_file=None)
+    assert result.ok
+    assert result.substitution["actual_model_known"] is False
+
+
+@pytest.mark.parametrize("agent", ["grok", "grok-build"])
+@pytest.mark.parametrize("runtime,substituted", [
+    ("grok-4.7-build", False),
+    ("grok-4.7", False),
+    ("grok-4.7-build-fast", True),
+    ("grok-4.6", True),
+    ("grok-4.7-build-extra", True),
+])
+def test_native_runtime_alias_keeps_requested_pin_and_real_substitution(agent, runtime, substituted):
+    from scripts import delegate
+
+    result = GrokBuildAdapter().parse_response(
+        stdout=json.dumps({"text": "VERDICT: APPROVE", "modelUsage": {runtime: {"modelCalls": 1}}}),
+        stderr="", returncode=0, output_file=None,
+    )
+    assert result.substitution["substituted"] is substituted
+    state = delegate._cursor_model_state(agent=agent, result=result, substitution=result.substitution)
+    assert state["model"] == (runtime if substituted else "grok-4.7")
+    assert state["resolved_model"] == runtime
+    assert state["resolved_model_source"] == "grok-model-usage"
+
+
 def test_parse_failure_nonzero():
     r = GrokBuildAdapter().parse_response(stdout="", stderr="boom", returncode=1, output_file=None)
     assert not r.ok
@@ -881,3 +930,13 @@ def test_liveness_pinned_dir_deleted_mid_run_stays_bound(tmp_path, monkeypatch):
     assert after == (pinned, pinned / "events.jsonl")
     assert peer not in after
     assert plan.metadata["liveness_session_id"] == "pinned-then-gone"
+
+
+@pytest.mark.parametrize("structured", [False, True])
+def test_runtime_identity_survives_invocation_plan_and_structured_output(tmp_path, structured):
+    plan = InvocationPlan(cmd=["grok", "-m", "grok-4.7"], cwd=tmp_path, metadata={"output_schema": {"type": "object"}} if structured else {})
+    result = GrokBuildAdapter().parse_response(stdout=json.dumps({"text": "VERDICT: APPROVE", "structuredOutput": {"verdict": "APPROVE"}, "stopReason": "end_turn", "modelUsage": {"grok-4.7-build": {"modelCalls": 1}}}), stderr="", returncode=0, output_file=None, plan=plan)
+    assert result.ok
+    assert result.substitution["requested_model"] == "grok-4.7"
+    assert result.substitution["actual_model"] == "grok-4.7-build"
+    assert result.substitution["source"] == "grok-model-usage"

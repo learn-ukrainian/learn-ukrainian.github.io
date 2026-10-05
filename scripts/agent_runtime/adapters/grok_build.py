@@ -65,6 +65,7 @@ import os
 import shlex
 import shutil
 import tempfile
+from dataclasses import replace
 from pathlib import Path
 from urllib.parse import quote
 
@@ -589,9 +590,28 @@ class GrokBuildAdapter:
         plan: InvocationPlan | None = None,
         call_start_time: float | None = None,
     ) -> ParseResult:
-        _ = (output_file, plan, call_start_time)  # grok -p flushes to stdout
+        _ = (output_file, call_start_time)  # grok -p flushes to stdout
 
         obj = _parse_json_object(stdout)
+        usage = obj.get("modelUsage") if obj else None
+        runtime_model = next(iter(usage)) if isinstance(usage, dict) and len(usage) == 1 else None
+        if not isinstance(runtime_model, str) or not runtime_model.strip():
+            runtime_model = None
+        requested_model = self.default_model
+        if plan is not None and "-m" in plan.cmd:
+            requested_model = plan.cmd[plan.cmd.index("-m") + 1]
+        from scripts.review.model_catalog import runtime_model_matches_requested
+
+        attribution = {
+            "requested_provider": "grok",
+            "requested_model": requested_model,
+            "actual_provider": "grok",
+            "actual_model": runtime_model,
+            "actual_model_known": runtime_model is not None,
+            "substituted": bool(runtime_model and not runtime_model_matches_requested(requested_model, runtime_model)),
+            "source": "grok-model-usage" if runtime_model else "unattested-harness",
+            "marker": None,
+        }
         sid = (obj.get("sessionId") or obj.get("session_id")) if obj else None
         provider_error = provider_stderr_error(stderr or "")
         provider_failed = obj is not None and obj.get("type") == "error"
@@ -612,13 +632,14 @@ class GrokBuildAdapter:
                 failure_code=failure_code,
                 provider_error_text=provider_error,
                 session_id=sid if isinstance(sid, str) and sid else None,
+                substitution=attribution,
             )
 
         output_schema = plan_output_schema(plan)
         if output_schema is not None:
             envelope = json_value(stdout)
             envelope = envelope if isinstance(envelope, dict) else {}
-            return structured_result(
+            parsed = structured_result(
                 envelope.get("structuredOutput"),
                 output_schema,
                 returncode=returncode,
@@ -630,6 +651,7 @@ class GrokBuildAdapter:
                 ),
                 session_id=envelope.get("sessionId"),
             )
+            return replace(parsed, substitution=attribution)
 
         if obj is not None:
             text = str(obj.get("text") or "").strip()
@@ -661,6 +683,7 @@ class GrokBuildAdapter:
             session_id=session_id,
             tokens=None,  # grok JSON does not report token counts
             tool_calls=[],
+            substitution=attribution,
         )
 
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
