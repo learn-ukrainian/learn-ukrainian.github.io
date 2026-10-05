@@ -6,7 +6,10 @@
 # is relative to the directory Git runs hooks in, which is the current one.
 # GIT_CONFIG is unset for the query: it narrows `git config` to one file, while
 # Git reads core.hooksPath from every configuration source.
+# Neither the lookups nor the caller's hook publish, so neither receives the
+# command's LU_OPSEC_OVERRIDE (#9681).
 set -u
+unset LU_OPSEC_OVERRIDE
 name="$1"
 shift
 ours="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"

@@ -267,6 +267,159 @@ def test_clean_publish_with_override_needs_no_log(synthetic_opsec, tmp_path):
     )
 
 
+# One override per command across processes (#9681); multi-process flows are in tests/opsec/.
+# probe ROOT REASON [set] [child]: prints its pid and command keys; "set" sets the
+# override in its own environment first, "child" adds a child probe's output.
+KEY_PROBE = """
+import json, os, subprocess, sys
+sys.path.insert(0, sys.argv[1])
+from scripts.opsec import prepublish as gate
+if "set" in sys.argv[3:]:
+    os.environ[gate.OVERRIDE] = sys.argv[2]
+out = {"pid": os.getpid(), "keys": gate.command_keys(sys.argv[2])}
+if "child" in sys.argv[3:]:
+    child = subprocess.run([sys.executable, *sys.argv[:3]], capture_output=True, text=True, check=True)
+    out["child"] = json.loads(child.stdout)
+print(json.dumps(out))
+"""
+
+
+@pytest.fixture
+def key_probe(tmp_path):
+    probe = tmp_path / "key_probe.py"
+    probe.write_text(KEY_PROBE)
+    return str(probe)
+
+
+def _key_pid(key):
+    return int(key.split(":")[1])
+
+
+def test_every_program_of_a_command_line_names_the_shell_that_set_the_override(key_probe):
+    """bash runs the last program in place of itself: it still shares a key with its sibling."""
+    reason = "synthetic: reason"
+    line = 'export LU_OPSEC_OVERRIDE="$1"; echo "$$"; "$2" "$3" "$4" "$1" child; "$2" "$3" "$4" "$1"'
+    result = subprocess.run(
+        ["bash", "-c", line, "bash", reason, sys.executable, key_probe, str(ROOT)],
+        env={"PATH": os.defpath},
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=60,
+    )
+    shell, first, last = result.stdout.splitlines()
+    first, last = json.loads(first), json.loads(last)
+    # The first program inherited the override from the shell, which set it.
+    assert [_key_pid(key) for key in first["keys"]] == [first["pid"], int(shell)]
+    assert first["child"]["keys"] == first["keys"]
+    # The last program is the shell's process now: its inheritor key is the shell's key.
+    assert last["pid"] == int(shell) and last["keys"][0] == first["keys"][1]
+
+
+def test_a_program_that_sets_the_override_itself_is_the_command(key_probe):
+    result = subprocess.run(
+        [sys.executable, key_probe, str(ROOT), "synthetic reason", "set", "child"],
+        env={"PATH": os.defpath},
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=60,
+    )
+    probe = json.loads(result.stdout)
+    assert [_key_pid(key) for key in probe["keys"]] == [probe["pid"]]
+    assert probe["child"]["keys"][1] == probe["keys"][0]
+    assert _key_pid(probe["child"]["keys"][0]) == probe["child"]["pid"]
+
+
+def test_an_override_set_in_this_process_claims_once_for_this_process(synthetic_opsec, tmp_path):
+    reason = "synthetic false positive"
+    assert [_key_pid(key) for key in gate.command_keys(reason)] == [os.getpid()]
+    log = tmp_path / "state/overrides.jsonl"
+    gate.check_texts("github.com/unit/public", [TOKEN], environment={gate.OVERRIDE: reason}, log_path=log)
+    with pytest.raises(gate.PublishBlocked, match="already consumed"):
+        gate.check_texts("github.com/unit/public", [TOKEN], environment={gate.OVERRIDE: reason}, log_path=log)
+
+
+def _fake_processes(monkeypatch, table):
+    """table: pid -> (parent, start time, carries); this process is pid 100."""
+    monkeypatch.setattr(gate.os, "getpid", lambda: 100)
+    monkeypatch.setattr(gate, "_process", lambda pid, assignment: table[pid])
+
+
+def test_the_setter_and_the_outermost_inheritor_are_the_keys(monkeypatch):
+    _fake_processes(monkeypatch, {100: (90, 30, True), 90: (80, 20, True), 80: (70, 10, False)})
+    assert [key.split(":", 1)[1] for key in gate.command_keys("reason")] == ["90:20", "80:10"]
+
+
+@pytest.mark.parametrize(
+    "table",
+    [
+        pytest.param({100: (90, 30, True), 90: (80, 40, False)}, id="parent-started-after-its-child"),
+        pytest.param({100: (1, 30, True)}, id="inherited-from-init"),
+        pytest.param({100: (0, 30, True)}, id="top-of-a-pid-namespace"),
+        pytest.param({100: (90, 30, True)}, id="unreadable-parent"),
+        pytest.param({100: (90, 30, True), 90: (100, 30, True)}, id="cycle"),
+    ],
+)
+def test_an_undeterminable_command_refuses_the_flagged_publish(monkeypatch, synthetic_opsec, tmp_path, table):
+    _fake_processes(monkeypatch, table)
+    log = tmp_path / "state/overrides.jsonl"
+    with pytest.raises(gate.PublishBlocked, match="unidentifiable"):
+        gate.check_texts("github.com/unit/public", [TOKEN], environment={gate.OVERRIDE: "reason"}, log_path=log)
+    assert not log.exists() and not list(log.parent.glob("consumed-*"))
+
+
+def test_without_proc_a_flagged_publish_is_refused_and_a_clean_one_sent(monkeypatch, synthetic_opsec, tmp_path):
+    """Non-Linux hosts or an unreadable /proc: the command is unidentifiable."""
+    monkeypatch.setattr(gate, "PROC", tmp_path / "no-proc")
+    log = tmp_path / "state/overrides.jsonl"
+    with pytest.raises(gate.PublishBlocked, match="unidentifiable"):
+        gate.check_texts("github.com/unit/public", [TOKEN], environment={gate.OVERRIDE: "reason"}, log_path=log)
+    gate.check_texts("github.com/unit/public", ["clean"], environment={gate.OVERRIDE: "reason"}, log_path=log)
+    assert not log.exists()
+
+
+def test_a_pid_reused_while_it_is_read_is_refused(monkeypatch, tmp_path):
+    """The start time is read on both sides of the environment."""
+    proc = tmp_path / "proc"
+    (proc / "7").mkdir(parents=True)
+    (proc / "7/environ").write_bytes(b"LU_OPSEC_OVERRIDE=reason\0")
+    starts = iter(["5", "6", "5", "5", "5", "5"])
+
+    def read_bytes(path):
+        if path.name == "stat":
+            return f"7 (a) b) S 3 {' '.join(['0'] * 17)} {next(starts)} 0".encode()
+        return original(path)
+
+    original = Path.read_bytes
+    monkeypatch.setattr(gate, "PROC", proc)
+    monkeypatch.setattr(Path, "read_bytes", read_bytes)
+    with pytest.raises(LookupError):
+        gate._process(7, b"LU_OPSEC_OVERRIDE=reason")
+    assert gate._process(7, b"LU_OPSEC_OVERRIDE=reason") == (3, 5, True)
+    assert gate._process(7, b"LU_OPSEC_OVERRIDE=other") == (3, 5, False)
+
+
+def test_internal_lookups_receive_no_override(monkeypatch, tmp_path):
+    from scripts.opsec import gh_snapshot
+
+    monkeypatch.setenv(gate.OVERRIDE, "reason")
+    seen = []
+
+    def reader(argv, **kwargs):
+        seen.append((argv[0], kwargs["env"]))
+        return subprocess.CompletedProcess(argv, 0, f"{tmp_path}/.git\n", "")
+
+    monkeypatch.setattr(gate.subprocess, "run", reader)
+    gate.primary_root(tmp_path)
+    gh_snapshot.repository(tmp_path, dict(os.environ), reader=reader)
+    gate.checked_run(["gh", "pr", "list", "--json", "number"], runner=reader, env=dict(os.environ))
+    published = gate.publish_environment(dict(os.environ))
+    assert [name for name, _ in seen] == ["git", "git", "gh"]
+    for env in [*(env for _, env in seen), published]:
+        assert gate.OVERRIDE not in env
+
+
 def test_nondefault_public_catalog_entry_is_not_private(monkeypatch):
     monkeypatch.setattr(
         gate, "catalog", lambda: {"unit": {"github": "unit/public", "default": False, "role": "public-monorepo"}}

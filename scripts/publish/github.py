@@ -210,8 +210,13 @@ def _read_file(path, cwd, stdin):
 
 
 def _send(argv, *, environment, runner, cwd, **kwargs):
-    """Use the existing merge guard/retry helper only for the production transport."""
-    environment.pop("LU_OPSEC_OVERRIDE", None)
+    """Use the existing merge guard/retry helper only for the production transport.
+
+    Every gh call, merge-readiness reads included, gets a copy without the
+    override: a transport claims nothing, and the caller's environment keeps
+    the override for the scan that may claim it.
+    """
+    environment = gate.internal_environment(environment)
     if runner is None:
         from scripts.opsec.gh_entry import guarded_command
 
