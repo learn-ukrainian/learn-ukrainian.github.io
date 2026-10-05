@@ -992,6 +992,11 @@ def _enforce_resume_policy(
         )
 
 
+def _typed_agy_killed_commands(value: Any) -> list[str]:
+    """Optional adapter metadata is present only when it is a list of strings."""
+    return list(value) if isinstance(value, list) and all(isinstance(command, str) for command in value) else []
+
+
 def _build_usage_record(
     *,
     agent: str,
@@ -1017,6 +1022,10 @@ def _build_usage_record(
     agy_retry_reason: str | None = None,
 ) -> dict[str, Any]:
     """Assemble the usage record dict per design doc § 4.5 schema."""
+    # Adapters may omit retry metadata; reject untyped values before using or serializing them.
+    agy_attempt_count = agy_attempt_count if type(agy_attempt_count) is int else 1
+    agy_retry_reason = agy_retry_reason if isinstance(agy_retry_reason, str) else None
+    agy_killed_commands = _typed_agy_killed_commands(agy_killed_commands)
     # Ensure unbounded strings are capped so the JSON stays under POSIX PIPE_BUF (4KB)
     # to maintain atomic append guarantees in usage.py.
     privacy_limited = entrypoint in _PRIVACY_LIMITED_USAGE_ENTRYPOINTS
@@ -1075,7 +1084,7 @@ def _build_usage_record(
     if (agent == "agy" or agy_killed_commands or agy_attempt_count > 1 or agy_retry_reason) and not privacy_limited:
         record["agy_attempt_count"] = agy_attempt_count
         record["agy_retry_reason"] = agy_retry_reason
-        commands = [(command or "")[:500] for command in (agy_killed_commands or [])]
+        commands = [command[:500] for command in agy_killed_commands]
         kept: list[str] = []
         record["agy_killed_commands"] = kept
         for position, command in enumerate(commands):
@@ -2157,9 +2166,9 @@ def _raise_for_kill_reason(
             stderr_excerpt=(f"streamed_output_limit exceeded: limit={limit_bytes} observed={observed_bytes}"),
             tokens=None,
             substitution=record_substitution,
-            agy_killed_commands=list(parse.agy_killed_commands),
-            agy_attempt_count=parse.agy_attempt_count,
-            agy_retry_reason=parse.agy_retry_reason,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="protocol_output_limit",
         )
         write_record(record)
@@ -2188,9 +2197,9 @@ def _raise_for_kill_reason(
             )[:500],
             tokens=None,
             substitution=record_substitution,
-            agy_killed_commands=list(parse.agy_killed_commands),
-            agy_attempt_count=parse.agy_attempt_count,
-            agy_retry_reason=parse.agy_retry_reason,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="cwd_unpinned",
         )
         write_record(record)
@@ -2221,9 +2230,9 @@ def _raise_for_kill_reason(
             )[:500],
             tokens=None,
             substitution=record_substitution,
-            agy_killed_commands=list(parse.agy_killed_commands),
-            agy_attempt_count=parse.agy_attempt_count,
-            agy_retry_reason=parse.agy_retry_reason,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="primary_tree_write",
         )
         write_record(record)
@@ -2247,9 +2256,9 @@ def _raise_for_kill_reason(
             stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
-            agy_killed_commands=list(parse.agy_killed_commands),
-            agy_attempt_count=parse.agy_attempt_count,
-            agy_retry_reason=parse.agy_retry_reason,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2298,9 +2307,9 @@ def _raise_for_kill_reason(
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
-            agy_killed_commands=list(parse.agy_killed_commands),
-            agy_attempt_count=parse.agy_attempt_count,
-            agy_retry_reason=parse.agy_retry_reason,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2344,9 +2353,9 @@ def _raise_for_kill_reason(
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
-            agy_killed_commands=list(parse.agy_killed_commands),
-            agy_attempt_count=parse.agy_attempt_count,
-            agy_retry_reason=parse.agy_retry_reason,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2460,7 +2469,7 @@ def _invoke_gemini_with_fallback(
                 )
             raise
         parse = execution.parse
-        agy_killed_commands.extend(parse.agy_killed_commands)
+        agy_killed_commands.extend(_typed_agy_killed_commands(getattr(parse, "agy_killed_commands", None)))
         if attempt_agent_name == "agy":
             agy_attempt_count += parse.agy_attempt_count
             agy_retry_reason = parse.agy_retry_reason or agy_retry_reason
@@ -3040,9 +3049,9 @@ def _invoke_with_runner_failover(
             tokens=parse.tokens,
             substitution=substitution,
             failure_code=parse.failure_code,
-            agy_killed_commands=list(parse.agy_killed_commands),
-            agy_attempt_count=parse.agy_attempt_count,
-            agy_retry_reason=parse.agy_retry_reason,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
         )
         write_record(record)
 
@@ -3069,7 +3078,7 @@ def _invoke_with_runner_failover(
             stalled=False,
             returncode=execution.returncode,
             failure_code=parse.failure_code,
-            agy_killed_commands=list(parse.agy_killed_commands),
+            agy_killed_commands=_typed_agy_killed_commands(getattr(parse, "agy_killed_commands", None)),
             usage_record=record,
             model_identity=record.get("model_identity"),
             tool_calls=list(parse.tool_calls),
@@ -3405,9 +3414,9 @@ def _invoke_impl(
         tokens=parse.tokens,
         substitution=substitution,
         failure_code=parse.failure_code,
-        agy_killed_commands=list(parse.agy_killed_commands),
-        agy_attempt_count=parse.agy_attempt_count,
-        agy_retry_reason=parse.agy_retry_reason,
+        agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+        agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+        agy_retry_reason=getattr(parse, "agy_retry_reason", None),
     )
     write_record(record)
 
@@ -3434,7 +3443,7 @@ def _invoke_impl(
         stalled=False,
         returncode=execution.returncode,
         failure_code=parse.failure_code,
-        agy_killed_commands=list(parse.agy_killed_commands),
+        agy_killed_commands=_typed_agy_killed_commands(getattr(parse, "agy_killed_commands", None)),
         usage_record=record,
         model_identity=record.get("model_identity"),
         tool_calls=list(parse.tool_calls),

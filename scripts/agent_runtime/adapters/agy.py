@@ -102,6 +102,7 @@ from scripts.review.model_catalog import load_model_catalog, retired_model_refus
 from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
+from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
@@ -526,7 +527,7 @@ def _pre_model_failure(plan: InvocationPlan | None, stdout: str, bound: _Transcr
     # Only empty output or a lone provider error result can precede a model.
     if stdout.strip():
         try:
-            events = [json.loads(line) for line in stdout.splitlines() if line.strip()]
+            events = [json.loads(line) for line in jsonl_lines(stdout) if line.strip()]
         except ValueError:
             return False
         if len(events) != 1 or not isinstance(events[0], dict) or events[0].get("event") != "result":

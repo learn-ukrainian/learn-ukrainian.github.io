@@ -477,6 +477,25 @@ def test_agy_pre_model_proof_accepts_lone_provider_error(tmp_path):
     assert result.agy_pre_model_failure
 
 
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"])
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"])
+def test_agy_pre_model_proof_preserves_unicode_separators_in_json_strings(tmp_path, separator, line_ending):
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+
+    plan = InvocationPlan(
+        cmd=["agy", "stream-json"], cwd=tmp_path, env_overrides={agy._AGY_LOG_ENV: str(tmp_path / "missing.log")}
+    )
+    event = {
+        "event": "result",
+        "result": {"status": "ERROR", "error": f"Eligibility check failed:{separator}UNAVAILABLE (code 503)"},
+    }
+    stdout = json.dumps(event, ensure_ascii=False) + line_ending
+
+    assert agy._pre_model_failure(plan, stdout, None)
+    # Physical LF still separates records; a second event cannot prove pre-model failure.
+    assert not agy._pre_model_failure(plan, stdout + stdout, None)
+
+
 @pytest.mark.parametrize("command", ["python -c 'print(1)'", "git grep " + "x" * 600 + " | rm output"])
 def test_agy_killed_non_read_command_stays_rejected_if_finish_races_with_kill(tmp_path, command):
     result = _parse(

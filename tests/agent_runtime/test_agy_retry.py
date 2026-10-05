@@ -180,6 +180,96 @@ def test_agy_retry_wrapper_leaves_other_adapters_clock_and_plan_untouched(tmp_pa
     adapter.build_invocation.assert_not_called()
 
 
+@pytest.mark.parametrize(
+    "fields",
+    [
+        {},
+        {"agy_attempt_count": None, "agy_retry_reason": None, "agy_killed_commands": None},
+        {"agy_attempt_count": "2", "agy_retry_reason": 503, "agy_killed_commands": "git grep needle"},
+        {"agy_attempt_count": True, "agy_retry_reason": [], "agy_killed_commands": ["git grep needle", 1]},
+        {"agy_attempt_count": object(), "agy_retry_reason": object(), "agy_killed_commands": ("git grep needle",)},
+    ],
+    ids=["missing", "none", "wrong-types", "bool-and-mixed-list", "objects-and-tuple"],
+)
+def test_non_agy_result_optional_retry_fields_are_typed(tmp_path, monkeypatch, fields):
+    values = vars(ParseResult(ok=True, response="Complete reply.")).copy()
+    for name in ("agy_attempt_count", "agy_retry_reason", "agy_killed_commands"):
+        values.pop(name)
+    values.update(fields)
+    execution = replace(_outcome(ok=True, stderr=""), parse=SimpleNamespace(**values))
+    adapter = SimpleNamespace(
+        default_model="fixture-model",
+        supported_modes={"read-only"},
+        build_invocation=Mock(return_value=InvocationPlan(cmd=["fake-codex"], cwd=tmp_path)),
+    )
+    monkeypatch.setattr(runner, "_load_adapter", lambda _: adapter)
+    monkeypatch.setattr(runner, "has_headroom", lambda *_: (True, ""))
+    monkeypatch.setattr(runner, "load_failover_chain", lambda *_, **__: None)
+    monkeypatch.setattr(runner, "_execute_invocation_once", lambda **_: execution)
+    monkeypatch.setattr(
+        runner,
+        "_resolve_plan_telemetry",
+        lambda **_: SimpleNamespace(model="fixture-model", effort="high", cli_version="fixture"),
+    )
+    write = Mock()
+    monkeypatch.setattr(runner, "write_record", write)
+
+    result = runner._invoke_impl("codex", "prompt", cwd=tmp_path, task_id="fixture-task", entrypoint="delegate")
+
+    assert result.ok
+    assert result.agy_killed_commands == []
+    assert not {"agy_attempt_count", "agy_retry_reason", "agy_killed_commands"} & result.usage_record.keys()
+    assert write.call_args.args[0] == result.usage_record
+
+
+@pytest.mark.parametrize("agent", ["agy", "codex", "gemini"])
+@pytest.mark.parametrize(
+    "count, reason, commands, expected",
+    [
+        ("2", 503, "git grep needle", (1, None, [])),
+        (True, [], ("git grep needle",), (1, None, [])),
+        (None, None, None, (1, None, [])),
+        (2, object(), ["git grep needle"], (2, None, ["git grep needle"])),
+        (
+            object(),
+            "pre_model_eligibility_503",
+            ["git grep needle"],
+            (1, "pre_model_eligibility_503", ["git grep needle"]),
+        ),
+        (2, "pre_model_eligibility_503", ["git grep needle", 1], (2, "pre_model_eligibility_503", [])),
+    ],
+)
+def test_usage_record_validates_optional_retry_fields_for_every_agent(
+    tmp_path, agent, count, reason, commands, expected
+):
+    record = runner._build_usage_record(
+        agent=agent,
+        entrypoint="delegate",
+        model="fixture",
+        mode="read-only",
+        task_id="fixture",
+        cwd=tmp_path,
+        session_id=None,
+        duration_s=1,
+        input_chars=1,
+        output_chars=1,
+        returncode=0,
+        outcome="ok",
+        rate_limited=False,
+        stalled=False,
+        stderr_excerpt=None,
+        tokens=None,
+        agy_attempt_count=count,
+        agy_retry_reason=reason,
+        agy_killed_commands=commands,
+    )
+    assert (
+        record.get("agy_attempt_count", 1),
+        record.get("agy_retry_reason"),
+        record.get("agy_killed_commands", []),
+    ) == expected
+
+
 @pytest.mark.parametrize("ok", [True, False])
 @pytest.mark.parametrize("has_kills", [True, False], ids=["kills", "no-kills"])
 def test_agy_killed_commands_survive_gemini_ladder_result(tmp_path, monkeypatch, ok, has_kills):
