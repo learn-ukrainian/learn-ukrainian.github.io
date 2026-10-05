@@ -85,13 +85,16 @@ def _write_identity_cache(path: Path, entries: dict[str, Any]) -> None:
                 temporary.unlink()
 
 
-def resolve_worktree_record(worktree: Path, tasks_dir: Path, *, repo_root: Path) -> tuple[Path | None, dict[str, Any]]:
+def resolve_worktree_record(
+    worktree: Path, tasks_dir: Path, *, repo_root: Path, publish_cache: bool = True
+) -> tuple[Path | None, dict[str, Any]]:
     """Resolve identity from canonical records, never from a caller's hint.
 
     Inspect hot and archived records: a different filename, renamed tree, or
     optional task argument cannot hide a retention claim. Ambiguity fails closed.
     A content-verified cache bounds JSON decoding to changed/candidate records;
     all source files are still read, and filesystem aliases are resolved anew.
+    ``publish_cache=False`` keeps cache reads but never creates or updates it.
     """
     from scripts.orchestration.worktree_claims import record_may_claim_worktree, worktree_claim_needles
 
@@ -157,7 +160,7 @@ def resolve_worktree_record(worktree: Path, tasks_dir: Path, *, repo_root: Path)
                 )
             ):
                 raise ValueError("ambiguous retention task binding")
-    if changed or cached.keys() != identities.keys():
+    if publish_cache and (changed or cached.keys() != identities.keys()):
         _write_identity_cache(cache_path, identities)
     if len(matches) > 1:
         kept = [match for match in matches if match[1].get("keep_worktree")]
@@ -418,6 +421,8 @@ def preserve_worktree_artifacts(
     oversized output, failed retrieval, or explicit retention refuses removal.
     Caller records and task IDs are hints, never retention authority.
     """
+    from scripts.orchestration.worktree_claims import identity_cache_publication_allowed
+
     repo_root = primary if repo_root is None else repo_root
     record_path = None
     record: dict[str, Any] = {}
@@ -429,7 +434,12 @@ def preserve_worktree_artifacts(
     try:
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
-        record_path, record = resolve_worktree_record(worktree, tasks_dir, repo_root=repo_root)
+        record_path, record = resolve_worktree_record(
+            worktree,
+            tasks_dir,
+            repo_root=repo_root,
+            publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
+        )
         files = _ignored_output_files(worktree, primary, record)
         if not files and not record.get("keep_worktree"):
             return True, "", None
