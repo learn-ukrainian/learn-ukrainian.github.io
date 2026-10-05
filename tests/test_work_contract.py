@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.work.attention import _pr_check_state, apply_health_and_actions, derive_health, derive_safe_next_action
-from scripts.work.normalize import _build_pr_item, _match_dispatch, build_projection
+from scripts.work.normalize import _build_pr_item, _dispatch_from_tasks, _match_dispatch, build_projection
 from scripts.work.relations import (
     collect_missing_blocked_by_issue_numbers,
     detect_dependency_cycles,
@@ -3172,6 +3172,91 @@ def test_completed_check_reads_conclusion():
     )
 
 
+def test_check_status_and_contradictory_fields_do_not_pass():
+    """Production check runs use ``status``. A disagreement is not a pass."""
+    assert (
+        _pr_check_state({"statusCheckRollup": [{"name": "CI Gate", "status": "COMPLETED", "conclusion": "FAILURE"}]})
+        == "failing"
+    )
+    assert (
+        _pr_check_state({"statusCheckRollup": [{"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}]})
+        == "passing"
+    )
+    assert (
+        _pr_check_state({"statusCheckRollup": [{"name": "CI Gate", "state": "SUCCESS", "conclusion": "FAILURE"}]})
+        == "unknown"
+    )
+    assert (
+        _pr_check_state({"statusCheckRollup": [{"name": "CI Gate", "status": "IN_PROGRESS", "conclusion": "SUCCESS"}]})
+        == "pending"
+    )
+    assert _pr_check_state({"statusCheckRollup": [{"name": "CI Gate", "status": "IN_PROGRESS"}]}) == "pending"
+
+
+def _pr_row_9741(rollup: list[dict], ledger: dict) -> dict:
+    projection = build_projection(
+        _empty_sections_9741(
+            prs=SectionResult("prs", "ok", payload=[_pr_raw_9741(statusCheckRollup=rollup)], count=1),
+        ),
+        repository_id=REPO,
+        lifecycle_ledgers=[ledger],
+    )
+    return next(row for row in projection["items"] if row["resource_kind"] == "pr")
+
+
+def test_contradictory_checks_do_not_advise_merge():
+    """A fresh CI_PASSED receipt cannot outvote a contradictory or in-progress rollup."""
+    observed = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    ledger = _ci_passed_ledger(observed)
+
+    disagree = _pr_row_9741([{"name": "CI Gate", "state": "SUCCESS", "conclusion": "FAILURE"}], ledger)
+    assert disagree["projections"]["verification"]["ci_state"] == "unknown"
+    assert disagree["projections"]["verification"]["merge_evidence"]["reason"] == "ci_unknown"
+    assert disagree["health"] == "UNKNOWN"
+    assert disagree["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert disagree["safe_next_action"]["reason_codes"] == ["ci_unknown"]
+    assert disagree["safe_next_action"]["state"] == "unknown"
+
+    in_progress = _pr_row_9741([{"name": "CI Gate", "status": "IN_PROGRESS", "conclusion": "SUCCESS"}], ledger)
+    assert in_progress["projections"]["verification"]["ci_state"] == "pending"
+    assert in_progress["safe_next_action"]["code"] == "WAIT_CI"
+    assert in_progress["safe_next_action"]["reason_codes"] == ["ci_pending"]
+    assert in_progress["safe_next_action"]["state"] == "waiting"
+
+    bare = _pr_row_9741([{"name": "CI Gate", "status": "IN_PROGRESS"}], ledger)
+    assert bare["projections"]["verification"]["ci_state"] == "pending"
+    assert bare["safe_next_action"]["code"] == "WAIT_CI"
+    assert bare["safe_next_action"]["state"] == "waiting"
+    assert bare["safe_next_action"]["code"] != "WAIT_REVIEW"
+
+
+def test_future_dated_receipt_is_not_fresh():
+    from scripts.work.attention import LEDGER_RECEIPT_FUTURE_TOLERANCE_S, qualify_merge_advice
+
+    now = datetime(2026, 10, 5, 12, 0, tzinfo=UTC)
+    allowance = -LEDGER_RECEIPT_FUTURE_TOLERANCE_S
+    assert LEDGER_RECEIPT_FUTURE_TOLERANCE_S < 0
+    fresh = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    item = _pr_row_9741(
+        [{"name": "CI Gate", "state": "COMPLETED", "conclusion": "SUCCESS"}],
+        _ci_passed_ledger(fresh),
+    )
+    assert item["safe_next_action"]["code"] == "MERGE_WHEN_READY"
+
+    inside = (now + timedelta(seconds=allowance - 1)).isoformat().replace("+00:00", "Z")
+    outside = (now + timedelta(seconds=allowance + 1)).isoformat().replace("+00:00", "Z")
+    hours = (now + timedelta(hours=2)).isoformat().replace("+00:00", "Z")
+    assert qualify_merge_advice(item, _ci_passed_ledger(inside), now=now)["state"] == "ready"
+    assert qualify_merge_advice(item, _ci_passed_ledger(outside), now=now) == {
+        "state": "unknown",
+        "reason": "receipt_observed_at_future",
+    }
+    assert qualify_merge_advice(item, _ci_passed_ledger(hours), now=now) == {
+        "state": "unknown",
+        "reason": "receipt_observed_at_future",
+    }
+
+
 def test_task_name_suffix_does_not_attach():
     issue = {
         "number": 42,
@@ -3339,6 +3424,68 @@ def test_dead_running_task_is_not_healthy_execution():
     delegate_age = next(entry["age_s"] for entry in running["authority"] if entry["domain"] == "delegate")
     assert delegate_age != 100000.0
     assert running["projections"]["dispatch"]["accountable_owner"] == "unknown"
+
+
+def test_statusless_task_does_not_shift_liveness():
+    """A task with no status is omitted from both liveness lists."""
+    bare = {
+        "task_id": "bare",
+        "alive": True,
+        "repository": REPO,
+        "linked_issues": [{"issue": 11, "repository": REPO}],
+    }
+    running = {
+        "task_id": "runner",
+        "status": "running",
+        "alive": False,
+        "repository": REPO,
+        "linked_issues": [{"issue": 11, "repository": REPO}],
+    }
+    dispatch = _dispatch_from_tasks([bare, running], unresolved=False)
+    assert dispatch["task_ids"] == ["bare", "runner"]
+    assert dispatch["statuses"] == ["running"]
+    assert dispatch["alive"] == [False]
+
+    issue = {
+        "number": 11,
+        "title": "Liveness alignment",
+        "labels": [],
+        "assignees": [],
+        "body": "",
+        "state": "OPEN",
+        "url": f"https://github.com/{REPO}/issues/11",
+        "createdAt": "2026-08-01T00:00:00Z",
+        "updatedAt": "2026-08-02T00:00:00Z",
+    }
+    projection = build_projection(
+        _empty_sections_9741(
+            issues=SectionResult("issues", "ok", payload=[issue], count=1),
+            streams=SectionResult(
+                "streams",
+                "ok",
+                payload={
+                    "streams": {"infra-harness": [10]},
+                    "orphans": [],
+                    "open_stream_membership": {"11": ["infra-harness"]},
+                },
+                count=1,
+            ),
+            delegate_tasks=SectionResult(
+                "delegate_tasks",
+                "ok",
+                payload={"total": 2, "tasks": [bare, running]},
+                count=2,
+            ),
+        ),
+        repository_id=REPO,
+        lifecycle_ledgers=[],
+    )
+    row = next(item for item in projection["items"] if item["resource_kind"] == "issue")
+    assert row["projections"]["dispatch"]["statuses"] == ["running"]
+    assert row["projections"]["dispatch"]["alive"] == [False]
+    assert row["health"] == "AT_RISK"
+    assert row["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert row["safe_next_action"]["reason_codes"] == ["task_liveness_dead"]
 
 
 def test_unsuccessful_terminals_and_needs_finalize_are_visible():

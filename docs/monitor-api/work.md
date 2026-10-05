@@ -52,7 +52,9 @@ session hooks use); ambiguous or unknown selectors still fail closed (#6984).
   is unknown remain on `/projection`. `/next` does not put them on the
   requested lane. `digest.unscoped_unknown` is `{count, reason_counts}` for
   those rows, so an empty stream queue does not mean there is no remaining
-  work. `safe_next_action.state` is `ready`, `waiting`, `unknown`, or `none`.
+  work. An unknown row that still names the requested stream is included when
+  it is not on the pick list, such as an issue whose source is unqualified.
+  `safe_next_action.state` is `ready`, `waiting`, `unknown`, or `none`.
   It qualifies the named action. It does not admit, review, lease, or complete
   anything.
 - **Membership.** `denominator.streams_complete` is true only for a current
@@ -64,7 +66,9 @@ session hooks use); ambiguous or unknown selectors still fail closed (#6984).
   is missing) and `authority[].stale` follows the section status.
 - **Merge advice** is `MERGE_WHEN_READY` only when the latest persisted
   lifecycle receipt matches the repository, PR, and head, its `observed_at`
-  is within 900 seconds (`LEDGER_RECEIPT_FRESHNESS_S`), `evaluate` on that
+  is within 900 seconds (`LEDGER_RECEIPT_FRESHNESS_S`) and not further ahead
+  than `LEDGER_RECEIPT_FUTURE_TOLERANCE_S` (30 seconds; further ahead is
+  `receipt_observed_at_future`), `evaluate` on that
   receipt returns `CI_PASSED` with no hard blockers, and Work's own same-head
   observation is non-draft, merge state neither `DIRTY` nor `UNKNOWN`, with
   no requested changes and CI neither failing nor pending. Anything else is

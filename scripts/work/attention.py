@@ -29,10 +29,15 @@ NON_ACTIONABLE_ACTION_CODES = frozenset({"INSPECT_UNKNOWN", "OPEN_GITHUB", "NONE
 
 # Receipt ``observed_at`` older than this cannot support merge advice (#9741 A1).
 LEDGER_RECEIPT_FRESHNESS_S = 900
+# Age below this is a future receipt, not freshness. The value is a small
+# negative clock-skew allowance (#9741). A timestamp further ahead stays
+# unknown so it cannot remain fresh for the skew plus the 900s window.
+LEDGER_RECEIPT_FUTURE_TOLERANCE_S = -30
 
 _FAILING_CHECK_TOKENS = frozenset({"FAILURE", "FAILED", "ERROR", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED"})
 _PENDING_CHECK_TOKENS = frozenset({"PENDING", "QUEUED", "IN_PROGRESS", "EXPECTED"})
 _PASSING_CHECK_TOKENS = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
+_TERMINAL_CHECK_STATES = _FAILING_CHECK_TOKENS | _PASSING_CHECK_TOKENS
 
 # Unsuccessful terminals stay visible. ``done`` is termination, not delivery.
 _OFF_TRACK_TERMINALS = frozenset({"failed", "timeout", "no_deliverable"})
@@ -71,12 +76,23 @@ def _action(code: str, reasons: list[str], state: str) -> dict[str, Any]:
 
 
 def _rollup_token(entry: dict[str, Any]) -> str:
-    """Check token. A completed run is its ``conclusion``, not the word COMPLETED."""
-    state = str(entry.get("state") or "").upper()
-    conclusion = str(entry.get("conclusion") or "").upper()
-    if state == "COMPLETED":
+    """Check token from ``state`` or ``status``, then ``conclusion``.
+
+    Check runs in production carry ``status`` (REST and ``gh``). Commit
+    statuses carry ``state``. A status other than ``COMPLETED`` is pending,
+    including an in-progress run with no conclusion. A completed run is its
+    conclusion. A terminal state that disagrees with the conclusion is unknown.
+    """
+    state = str(entry.get("state") or "").strip().upper()
+    status = str(entry.get("status") or "").strip().upper()
+    conclusion = str(entry.get("conclusion") or "").strip().upper()
+    if status and status != "COMPLETED":
+        return "PENDING"
+    if state in _TERMINAL_CHECK_STATES and conclusion and state != conclusion:
+        return "UNKNOWN"
+    if state == "COMPLETED" or status == "COMPLETED":
         return conclusion or "UNKNOWN"
-    return state or conclusion
+    return state or status or conclusion
 
 
 def _pr_check_state(pr: dict[str, Any] | None) -> str:
@@ -306,6 +322,12 @@ def derive_safe_next_action(item: dict[str, Any]) -> dict[str, Any]:
                 return _action("MERGE_WHEN_READY", ["ci_passed_current_head"], "ready")
             reason = str(evidence.get("reason") or "merge_evidence_unknown")
             return _action("INSPECT_UNKNOWN", [reason], "unknown")
+        if decision == "APPROVED":
+            # Unknown CI must name the same reason as merge evidence. Waiting
+            # on review would hide that the head is already approved.
+            evidence = verification.get("merge_evidence") or {}
+            reason = str(evidence.get("reason") or "ci_unknown")
+            return _action("INSPECT_UNKNOWN", [reason], "unknown")
         if item.get("lifecycle") == "draft":
             return _action("OPEN_GITHUB", ["draft_pr"], "none")
         return _action("WAIT_REVIEW", ["pr_open"], "waiting")
@@ -369,8 +391,9 @@ def qualify_merge_advice(
 
     Positive advice requires ``evaluate`` on the latest persisted receipt to
     return ``CI_PASSED`` with no hard blockers, the receipt to match this
-    repository, PR, and head within ``LEDGER_RECEIPT_FRESHNESS_S``, and Work's
-    own same-head observation to show a non-draft PR whose merge state is
+    repository, PR, and head within ``LEDGER_RECEIPT_FRESHNESS_S`` and not
+    further ahead than ``LEDGER_RECEIPT_FUTURE_TOLERANCE_S``, and Work's own
+    same-head observation to show a non-draft PR whose merge state is
     neither ``DIRTY`` nor ``UNKNOWN``, with no requested changes and CI neither
     failing nor pending. Anything else suppresses merge advice.
     """
@@ -407,6 +430,8 @@ def qualify_merge_advice(
     if moment.tzinfo is None:
         moment = moment.replace(tzinfo=UTC)
     age_s = (moment.astimezone(UTC) - observed).total_seconds()
+    if age_s < LEDGER_RECEIPT_FUTURE_TOLERANCE_S:
+        return _unknown("receipt_observed_at_future")
     if age_s > LEDGER_RECEIPT_FRESHNESS_S:
         return _unknown("receipt_stale")
 

@@ -1682,6 +1682,39 @@ def test_work_next_reports_unscoped_unknown(monkeypatch):
     assert nxt["stream"] == "infra-harness"
 
 
+def test_work_next_counts_in_stream_unknown_source(monkeypatch):
+    """An unqualified issue that still names the lane is counted, not dropped."""
+    sections = _qualify_sections(
+        issues=SectionResult(
+            "issues",
+            "unavailable",
+            payload=[_issue_row(6010, "Source down")],
+            count=0,
+            reason="issues_down",
+        ),
+        streams=SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "streams": {"infra-harness": [10]},
+                "orphans": [],
+                "open_stream_membership": {"6010": ["infra-harness"]},
+            },
+            count=1,
+        ),
+    )
+    _local, projection, nxt = _projection_and_next(monkeypatch, sections)
+    row = next(item for item in projection["items"] if item["remote_id"] == "6010")
+    assert row["flags"]["source_ok"] is False
+    assert "infra-harness" in row["projections"]["stream"]["streams"]
+    assert row["health"] == "UNKNOWN"
+    assert row["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert row["safe_next_action"]["reason_codes"] == ["source_unavailable"]
+    assert nxt["queue"] == []
+    assert nxt["digest"]["unscoped_unknown"]["count"] == 1
+    assert nxt["digest"]["unscoped_unknown"]["reason_counts"] == {"source_unavailable": 1}
+
+
 def test_projection_timeout_fallback_downgrades_decision_fields(monkeypatch):
     import time
 

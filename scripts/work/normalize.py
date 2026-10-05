@@ -195,10 +195,13 @@ def _dispatch_from_tasks(
     unresolved: bool,
     association_reason: str | None = None,
 ) -> dict[str, Any]:
+    # One filtered list, so a task with no status cannot shift the alive
+    # flag of a later running task onto the wrong index.
+    observed_tasks = [task for task in tasks if task.get("status")]
     projection: dict[str, Any] = {
         "task_ids": [str(task.get("task_id")) for task in tasks if task.get("task_id")],
-        "statuses": [str(task.get("status")) for task in tasks if task.get("status")],
-        "alive": [task.get("alive") if "alive" in task else None for task in tasks],
+        "statuses": [str(task.get("status")) for task in observed_tasks],
+        "alive": [task.get("alive") if "alive" in task else None for task in observed_tasks],
         "runtime_age_s": [_runtime_age(task) for task in tasks],
         "unresolved": unresolved,
         "agents": [str(task.get("agent")) for task in tasks if task.get("agent")],
