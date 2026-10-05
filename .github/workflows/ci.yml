@@ -404,8 +404,38 @@ jobs:
     if: always()
     needs: [reuse, queue-metadata-scan, secret-scan, checks, freeze-durations, frontend, dependency-audit, pytest, pytest-report]
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
+      - name: Check out repository
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'merge_group' && github.event.merge_group.head_sha || '' }}
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Set up Python
+        id: setup-python-gate
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Check large files guard
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.head_sha || '' }}
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+        run: |
+          if [ "$EVENT_NAME" = "merge_group" ] && [ -z "$HEAD_SHA" ]; then
+            echo "::error::Missing merge_group head_sha"
+            exit 1
+          fi
+          if [ -z "$BASE_SHA" ]; then
+            echo "::error::Missing base SHA for large file guard in $EVENT_NAME"
+            exit 1
+          fi
+          "$PYTHON_BIN" scripts/ci/check_large_files.py --changed-vs-base "$BASE_SHA"
       - name: Require every job
         env:
           EVENT_NAME: ${{ github.event_name }}
