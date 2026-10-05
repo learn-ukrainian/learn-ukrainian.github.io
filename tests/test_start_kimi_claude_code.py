@@ -9,6 +9,8 @@ import pytest
 
 from tests.test_launcher_contract import run_launcher
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 _KIMI_CREDENTIALS = {
     "KIMICC_AUTH_TOKEN": "",
     "MOONSHOT_API_KEY": "",
