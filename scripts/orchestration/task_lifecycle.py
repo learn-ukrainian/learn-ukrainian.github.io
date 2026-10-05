@@ -18,6 +18,7 @@ import subprocess
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from copy import deepcopy
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -436,6 +437,16 @@ def _receipt_event_payload(record: Mapping[str, Any]) -> dict[str, Any]:
     return {key: deepcopy(value) for key, value in record.items() if key != "id"}
 
 
+def _utc_timestamp(value: str) -> datetime:
+    try:
+        timestamp = datetime.fromisoformat(value.upper().replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise LifecycleError("correction chronology requires a valid timestamp") from exc
+    if timestamp.tzinfo is None:
+        raise LifecycleError("correction chronology requires a timezone-aware timestamp")
+    return timestamp.astimezone(UTC)
+
+
 def _validate_behavior_proof_reference_shape(details: Mapping[str, Any]) -> dict[str, str]:
     reference = details.get("behavior_proof_receipt")
     if not isinstance(reference, Mapping):
@@ -536,6 +547,8 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
                 or any(target["subject"][key] != subject[key] for key in ("repository", "issue", "pr"))
             ):
                 raise LifecycleError("superseding evidence must have the same criterion, type, repository, issue, and PR")
+            if _utc_timestamp(record["recorded_at"]) <= _utc_timestamp(target["recorded_at"]):
+                raise LifecycleError("superseding evidence recorded_at must be strictly later than its target")
             superseded_ids.add(target_id)
         earlier_evidence[record["id"]] = record
     for evidence_id in ledger["remaining_scope"]["evidence_ids"]:
@@ -628,6 +641,11 @@ def add_evidence(
     for existing in ledger["evidence"]:
         if existing["id"] == record["id"]:
             return ledger, existing
+    if (
+        "supersedes_evidence_id" in record["details"]
+        and _utc_timestamp(recorded_at) < _utc_timestamp(ledger["updated_at"])
+    ):
+        raise LifecycleError("new superseding evidence recorded_at must not predate ledger updated_at")
     ledger["evidence"].append(record)
     ledger["updated_at"] = recorded_at
     return validate_lifecycle(ledger), record

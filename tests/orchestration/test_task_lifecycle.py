@@ -4,6 +4,7 @@ import hashlib
 import json
 import subprocess
 from copy import deepcopy
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -140,7 +141,10 @@ def _replacement(ledger: dict, target: dict, **overrides: object) -> tuple[dict,
         "url": target["url"],
         "commit": target["subject"]["commit"],
         "details": {**target["details"], "supersedes_evidence_id": target["id"]},
-        "recorded_at": NOW,
+        "recorded_at": max(
+            datetime.fromisoformat(target["recorded_at"]) + timedelta(seconds=1),
+            datetime.fromisoformat(ledger["updated_at"]),
+        ).astimezone(UTC).isoformat().replace("+00:00", "Z"),
         **overrides,
     }
     return task_lifecycle.add_evidence(ledger, **args)
@@ -156,6 +160,7 @@ def test_review_url_correction_retires_error_without_changing_history(tmp_path: 
     original_bytes = task_lifecycle.canonical_json(ledger)
     old = ledger["evidence"][-1]
     corrected, new = _replacement(ledger, old, url=REVIEW_URL)
+    observation["github"]["pr"]["auto_merge_enabled_at"] = "2026-07-16T12:00:00Z"
     result = task_lifecycle.evaluate(corrected, observation)
     assert result["state"] == "CI_PASSED"
     assert result["hard_blockers"] == []
@@ -178,6 +183,97 @@ def test_review_url_correction_retires_error_without_changing_history(tmp_path: 
         assert row["id"] == task_lifecycle.digest(task_lifecycle._evidence_payload(row))
     assert "superseded_evidence_ids" not in task_lifecycle.canonical_json(updated)
     assert "retired_evidence_errors" not in task_lifecycle.canonical_json(updated)
+
+
+@pytest.mark.parametrize("recorded_at", [
+    NOW,
+    "2026-07-16T09:59:59Z",
+    "2026-07-16T11:00:00+01:00",  # Same instant, different spelling.
+    "2026-07-16T11:59:59+02:00",  # Lexically later, chronologically earlier.
+])
+def test_correction_requires_later_target_timestamp_at_append_and_load(tmp_path: Path, recorded_at: str) -> None:
+    ledger = _add(_ledger(), "AC-IMPL", "test")
+    old = ledger["evidence"][-1]
+    # An ordinary ledger update may predate its evidence; the target check must
+    # independently reject these corrections at both append and load.
+    ledger["updated_at"] = "2026-07-16T09:00:00Z"
+    original = deepcopy(ledger)
+    with pytest.raises(task_lifecycle.LifecycleError, match="strictly later than its target"):
+        _replacement(ledger, old, recorded_at=recorded_at)
+    corrected, _ = _replacement(ledger, old)
+    row = corrected["evidence"][-1]
+    row["recorded_at"] = recorded_at
+    row["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(row))
+    path = tmp_path / "tampered.json"
+    path.write_text(json.dumps(corrected), encoding="utf-8")
+    with pytest.raises(task_lifecycle.LifecycleError, match="strictly later than its target"):
+        task_lifecycle.load_lifecycle(path)
+    assert ledger == original
+
+
+@pytest.mark.parametrize("recorded_at", ["2026-07-16T10:30:00Z", "2026-07-16T12:30:00+02:00"])
+def test_new_correction_cannot_predate_previous_ledger_update(recorded_at: str) -> None:
+    ledger = _add(_ledger(), "AC-IMPL", "test")
+    old = ledger["evidence"][-1]
+    ledger = task_lifecycle.set_remaining_scope(
+        ledger, status="none", summary="", follow_up_issue=None,
+        follow_up_stream_epic=None, evidence_ids=[], now="2026-07-16T11:00:00Z",
+    )
+    original = deepcopy(ledger)
+    with pytest.raises(task_lifecycle.LifecycleError, match="must not predate ledger updated_at"):
+        _replacement(ledger, old, recorded_at=recorded_at)
+    assert ledger == original
+
+
+@pytest.mark.parametrize("target_at,updated_at,recorded_at", [
+    (NOW, NOW, "2026-07-16T10:00:00.1Z"),  # Lexically earlier, chronologically later.
+    ("2026-07-16T11:00:00+02:00", NOW, NOW),  # Equal to prior update is allowed.
+    (NOW, "2026-07-16T10:30:00Z", "2026-07-16T10:00:01-01:00"),
+    (NOW, NOW, "2026-07-16t10:00:01z"),
+])
+def test_honest_correction_and_replay_after_later_update(
+    tmp_path: Path, target_at: str, updated_at: str, recorded_at: str,
+) -> None:
+    ledger = _add(_ledger(), "AC-IMPL", "test")
+    old = ledger["evidence"][-1]
+    old["recorded_at"] = target_at
+    old["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(old))
+    ledger["updated_at"] = updated_at
+    original_bytes = task_lifecycle.canonical_json(old)
+    corrected, new = _replacement(ledger, old, recorded_at=recorded_at)
+    assert corrected["updated_at"] == recorded_at
+    assert task_lifecycle.canonical_json(corrected["evidence"][0]) == original_bytes
+    updated = task_lifecycle.set_remaining_scope(
+        corrected, status="none", summary="", follow_up_issue=None,
+        follow_up_stream_epic=None, evidence_ids=[], now="2026-07-16T12:00:00Z",
+    )
+    path = tmp_path / "lifecycle.json"
+    task_lifecycle.write_lifecycle(path, updated)
+    loaded = task_lifecycle.load_lifecycle(path)
+    replayed, replay_row = _replacement(loaded, old, recorded_at=recorded_at)
+    assert replayed == loaded == updated
+    assert replay_row == new
+
+
+@pytest.mark.parametrize("recorded_at,error", [
+    ("invalid", "valid timestamp"),
+    ("2026-07-16T11:00:00", "timezone-aware timestamp"),
+])
+def test_correction_rejects_unparseable_timestamp(recorded_at: str, error: str) -> None:
+    ledger = _add(_ledger(), "AC-IMPL", "test")
+    with pytest.raises(task_lifecycle.LifecycleError, match=error):
+        _replacement(ledger, ledger["evidence"][-1], recorded_at=recorded_at)
+
+
+def test_ordinary_evidence_retains_existing_timestamp_semantics() -> None:
+    ledger = _add(_ledger(), "AC-IMPL", "test")
+    ledger["updated_at"] = "2026-07-16T12:00:00Z"
+    updated, row = task_lifecycle.add_evidence(
+        ledger, ac_id="AC-IMPL", evidence_type="test", summary="ordinary earlier evidence",
+        url=None, commit=HEAD, details={}, recorded_at="2026-07-16T09:00:00Z",
+    )
+    assert updated["updated_at"] == row["recorded_at"] == "2026-07-16T09:00:00Z"
+    assert task_lifecycle.validate_lifecycle(updated) == updated
 
 
 @pytest.mark.parametrize("link", [None, True, 7, [], {}, "", "sha256:" + "A" * 64, "a" * 64, "sha256:abc"])
@@ -277,7 +373,9 @@ def test_invalid_chain_tip_blocks_and_never_inherits_proof(old_valid: bool) -> N
     url_error = "AC-REVIEW: review receipt URL is absent from authoritative PR comments"
     assert (url_error in result["hard_blockers"]) is (not old_valid)
     ledger, _ = _replacement(ledger, tip, commit=HEAD)
-    repaired = task_lifecycle.evaluate(ledger, _observation(_body()))
+    observation = _observation(_body())
+    observation["github"]["pr"]["auto_merge_enabled_at"] = "2026-07-16T12:00:00Z"
+    repaired = task_lifecycle.evaluate(ledger, observation)
     assert repaired["hard_blockers"] == []
     assert set(repaired["retired_evidence_errors"]) == ({tip["id"]} if old_valid else {tip["id"], old["id"]})
 
@@ -291,6 +389,7 @@ def test_moved_head_requires_independent_test_ci_and_review_replacements() -> No
     old_rows = deepcopy(ledger["evidence"])
     for old in old_rows:
         ledger, _ = _replacement(ledger, old, commit="c" * 40)
+    observation["github"]["pr"]["auto_merge_enabled_at"] = "2026-07-16T12:00:00Z"
     result = task_lifecycle.evaluate(ledger, observation)
     assert result["state"] == "CI_PASSED"
     assert result["hard_blockers"] == []
@@ -303,7 +402,7 @@ def test_review_timing_uses_only_effective_valid_rows(pr_state: str) -> None:
     ledger = _ready_evidence(_ledger())
     ledger = _add(ledger, "AC-MERGE", "github")
     old = ledger["evidence"][1]
-    old["recorded_at"] = "2026-07-16T12:00:00Z"
+    old["recorded_at"] = "2026-07-16T09:00:00Z"
     old["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(old))
     ledger, _ = _replacement(ledger, old, recorded_at=NOW)
     observation = _observation(_body(), pr_state=pr_state)

@@ -103,7 +103,13 @@ contribute proof, certification or review timing. Only an independently valid
 chain tip retires earlier errors; an invalid tip leaves historical errors and
 its own failures blocking, even when it replaces previously valid evidence.
 No replacement inherits proof or timestamps. A review correction recorded after
-auto-merge arming remains blocked by the existing timing gate. `evaluate` exposes
+auto-merge arming remains blocked by the existing timing gate. Append and load
+require a correction's `recorded_at` to be strictly later than its target's.
+A new correction append also cannot predate the previously persisted ledger
+`updated_at`; identical-record replay returns unchanged before that append
+check, even after subsequent ledger updates. Chronology compares parsed UTC
+timestamps, including offsets and fractional seconds. These checks apply only
+to corrections; ordinary evidence and CLI `--now` remain supported. `evaluate` exposes
 `superseded_evidence_ids` and `retired_evidence_errors` as output only; the ledger
 does not persist retirement state. Remaining scope cannot reference superseded
 evidence. All due-criterion, head, behavior-receipt, review, CI and closeout gates
