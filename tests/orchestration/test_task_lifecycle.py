@@ -1476,3 +1476,265 @@ def test_membership_drift_blocks_a_later_reconcile() -> None:
     assert second_receipt["state"] == "BLOCKED_WITH_RECEIPT"
     assert "issue membership" in " ".join(second_receipt["hard_blockers"])
     assert ledger["current_state"] == "BLOCKED_WITH_RECEIPT"
+
+
+def test_explicit_supersession_preserves_old_rows_and_accepts_current_replacement() -> None:
+    ledger = _add_at(_ledger(), "AC-IMPL", "test", "d" * 40)
+    old_id = ledger["evidence"][0]["id"]
+    before = task_lifecycle.evaluate(ledger, _observation(_body()))
+    assert any("not bound" in error for error in before["hard_blockers"])
+    ledger = _add_at(ledger, "AC-IMPL", "test", HEAD, details={"supersedes_evidence_ids": [old_id]})
+    result = task_lifecycle.evaluate(ledger, _observation(_body()))
+    assert ledger["evidence"][0]["id"] == old_id
+    assert result["valid_evidence"]["AC-IMPL"] == ["test"]
+    assert not any("not bound" in error for error in result["hard_blockers"])
+    moved = _observation(_body())
+    moved["github"]["pr"]["head_sha"] = "e" * 40
+    valid, invalid = task_lifecycle._evidence_status(ledger, head_sha="e" * 40, comment_bodies={})
+    assert len(invalid) == 2 and not valid
+    assert any("not bound" in error for error in task_lifecycle.evaluate(ledger, moved)["hard_blockers"])
+
+
+@pytest.mark.parametrize("ac,kind,ids", [
+    ("AC-MERGE", "test", None), ("AC-IMPL", "document", None),
+    ("AC-IMPL", "test", ["sha256:" + "f" * 64]),
+    ("AC-IMPL", "test", "bad"), ("AC-IMPL", "test", [1]),
+])
+def test_supersession_refuses_unbound_cross_criterion_or_kind(ac, kind, ids) -> None:
+    ledger = _add_at(_ledger(), "AC-IMPL", "test", "d" * 40)
+    with pytest.raises(task_lifecycle.LifecycleError, match="supersession"):
+        _add_at(ledger, ac, kind, HEAD,
+                details={"supersedes_evidence_ids": ids if ids is not None else [ledger["evidence"][0]["id"]]})
+
+
+def test_unsuperseded_old_row_and_invalid_replacement_still_block(tmp_path: Path) -> None:
+    ledger = _add_at(_ledger(), "AC-IMPL", "test", "d" * 40)
+    ledger = _add_at(ledger, "AC-IMPL", "test", HEAD)
+    assert any("not bound" in error for error in task_lifecycle.evaluate(ledger, _observation(_body()))["hard_blockers"])
+    ledger = _add_at(_ledger(), "AC-REVIEW", "review", "d" * 40, url=REVIEW_URL,
+                     details={"author_family": "codex", "reviewer_family": "claude", "verdict": "pass"})
+    old_id = ledger["evidence"][0]["id"]
+    ledger = _add_at(ledger, "AC-REVIEW", "review", HEAD, url=REVIEW_URL + "0",
+                     details={"author_family": "codex", "reviewer_family": "claude", "verdict": "pass",
+                              "supersedes_evidence_ids": [old_id]})
+    result = task_lifecycle.evaluate(ledger, _observation(_body()))
+    assert any("not bound" in error for error in result["hard_blockers"])
+    assert "AC-REVIEW" not in result["valid_evidence"]
+
+
+def _dispatcher_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    worktree, base, _ = test_quick_fix.make_repo(tmp_path)
+    git = test_quick_fix._git
+    git(worktree, "commit", "--amend", "-qm", "fix\n\nX-Agent: codex/thread-new")
+    head = git(worktree, "rev-parse", "HEAD")
+    primary = task_lifecycle.canonical_state_root(worktree)
+    (primary / ".git/info/exclude").write_text("batch_state/\n")
+    tasks = primary / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    result = tasks / "thread-new.result"
+    result.write_bytes(b"dispatcher result retained verbatim\n")
+    dispatch_path = primary / ".worktrees/dispatch/codex/thread-new"
+    record = {
+        "task_id": "thread-new", "repository": "org/repo", "agent": "codex",
+        "task_lifecycle": {"identity": _identity()}, "status": "done", "mode": "danger",
+        "returncode": 0, "exit_code": 0, "finished_at": NOW, "commits_ahead": 1,
+        "worktree_dirty_on_exit": False, "needs_finalize": False, "worktree_path": str(dispatch_path),
+        "worktree_branch": "codex/thread-new", "final_branch_head_commit": head, "worktree_base_sha": base,
+        "result_file": str(result), "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
+        "owned_paths": ["calc.py", "test_calc.py"],
+        "worktree_reap": {"action": "removed", "path": str(dispatch_path), "branch": "codex/thread-new",
+                          "dirty": False, "reason": "settled clean worktree; branch ref kept", "error": None},
+    }
+    path = tasks / "thread-new.json"
+    path.write_text(json.dumps(record))
+    monkeypatch.chdir(worktree)
+    git(worktree, "update-ref", "refs/remotes/origin/main", base)
+    entry = {"sha": head, "commit": {"message": git(worktree, "show", "-s", "--format=%B", head)}}
+    kwargs = dict(head_sha=head, branch="codex/thread-new", worktree=str(dispatch_path), identity=_identity(),
+                  github_commits=[entry], base_sha=base, merged=True)
+    return worktree, path, record, kwargs
+
+
+def test_reaped_dispatcher_proof_is_honest_and_supports_guarded_close(tmp_path, monkeypatch) -> None:
+    repo, path, record, kwargs = _dispatcher_fixture(tmp_path, monkeypatch)
+    local = task_lifecycle.observe_local_git(repo, **kwargs)
+    assert local["worktree_present"] is False and local["dispatch_worktree_used"] is False
+    assert not task_lifecycle._local_readiness(local)
+    proof = local["dispatcher_provenance"]
+    assert proof["author_head"] == record["final_branch_head_commit"]
+    assert proof["record_sha256"] == "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    ledger = _ready_evidence(_ledger())
+    # Bind existing typed evidence to the actual fixture Git head, preserving IDs.
+    ledger["evidence"] = []
+    for ac, kind in (("AC-IMPL", "test"), ("AC-REVIEW", "review"), ("AC-MERGE", "github")):
+        ledger = _add_at(ledger, ac, kind, kwargs["head_sha"], url=REVIEW_URL if kind == "review" else None,
+                         details={"author_family": "codex", "reviewer_family": "claude", "verdict": "pass"}
+                         if kind == "review" else {})
+    observation = _observation(_body(checked=True), pr_state="MERGED")
+    observation["github"]["pr"]["head_sha"] = kwargs["head_sha"]
+    observation["local"] = local
+    evaluation = task_lifecycle.evaluate(ledger, observation)
+    assert evaluation["goal_reached"] is True and not evaluation["hard_blockers"]
+    task_closeout._assert_mutation_ready("close-issue", ledger, observation)
+
+
+@pytest.mark.parametrize("change", [
+    {"status": "failed"}, {"needs_finalize": True}, {"rescue_status": "unpushed work - needs rescue"},
+    {"returncode": 1}, {"exit_code": 1}, {"mode": "read-only"}, {"worktree_dirty_on_exit": True},
+    {"commits_ahead": 0}, {"commits_ahead": 2}, {"task_id": "other"}, {"repository": "other/repo"},
+    {"task_lifecycle": {}}, {"worktree_path": "/other"}, {"worktree_branch": "other"},
+    {"agent": "other"}, {"result_sha256": "f" * 64}, {"result_file": "/other/result"},
+    {"final_branch_head_commit": "f" * 40}, {"worktree_base_sha": None}, {"owned_paths": ["other.py"]},
+    {"worktree_reap": {}}, {"finished_at": None},
+])
+def test_dispatcher_proof_refuses_contradictory_or_unsuccessful_record(tmp_path, monkeypatch, change) -> None:
+    repo, path, record, kwargs = _dispatcher_fixture(tmp_path, monkeypatch)
+    record.update(change)
+    path.write_text(json.dumps(record))
+    local = task_lifecycle.observe_local_git(repo, **kwargs)
+    assert local["dispatcher_provenance"] is None
+    assert local["provenance_error"]
+    assert task_lifecycle._local_readiness(local)
+
+
+def test_dispatcher_proof_refuses_missing_result_and_unverified_post_dispatch_head(tmp_path, monkeypatch) -> None:
+    repo, _path, record, kwargs = _dispatcher_fixture(tmp_path, monkeypatch)
+    result = Path(record["result_file"])
+    result.unlink()
+    assert task_lifecycle.observe_local_git(repo, **kwargs)["provenance_error"]
+    result.write_bytes(b"dispatcher result retained verbatim\n")
+    (repo / "calc.py").write_text("unauthorized change\n")
+    test_quick_fix._git(repo, "commit", "-am", "later\n\nX-Agent: codex/thread-new")
+    head = test_quick_fix._git(repo, "rev-parse", "HEAD")
+    kwargs["github_commits"].append({"sha": head, "commit": {"message": "later\n\nX-Agent: codex/thread-new"}})
+    kwargs["head_sha"] = head
+    local = task_lifecycle.observe_local_git(repo, **kwargs)
+    assert "unverified post-dispatch" in local["provenance_error"]
+
+
+def _github_merge_fixture(repo, base, author_head, *, edited=False):
+    git = test_quick_fix._git
+    git(repo, "checkout", "-qb", "base-update", base)
+    (repo / "base-only.txt").write_text("base update\n")
+    git(repo, "add", "base-only.txt")
+    git(repo, "commit", "-qm", "base update")
+    base_head = git(repo, "rev-parse", "HEAD")
+    git(repo, "checkout", "-qb", "merge-fixture", author_head)
+    git(repo, "merge", "--no-ff", "-qm", "base merge", base_head)
+    if edited:
+        (repo / "base-only.txt").write_text("hidden edit\n")
+        git(repo, "commit", "-qam", "edited merge", "--amend")
+    merge = git(repo, "rev-parse", "HEAD")
+    raw = git(repo, "cat-file", "commit", merge)
+    headers, _, _ = raw.partition("\n\n")
+    headers = "\n".join(
+        "committer GitHub <noreply@github.com> " + line.rsplit("> ", 1)[1]
+        if line.startswith("committer ") else line for line in headers.splitlines()
+    )
+    message = "Merge branch 'main' into codex/thread-new"
+    payload = headers + "\n\n" + message + "\n"
+    signature = "-----BEGIN PGP SIGNATURE-----\nfixture\n-----END PGP SIGNATURE-----"
+    signed = headers + "\ngpgsig " + signature.replace("\n", "\n ") + "\n\n" + message + "\n"
+    run = subprocess.run(["git", "hash-object", "-w", "-t", "commit", "--stdin"], cwd=repo,
+                         input=signed, text=True, capture_output=True, check=True, timeout=30)
+    sha = run.stdout.strip()
+    entry = {
+        "sha": sha, "parents": [{"sha": author_head}, {"sha": base_head}],
+        "committer": {"login": "web-flow"}, "commit": {
+            "message": message, "committer": {"name": "GitHub", "email": "noreply@github.com"},
+            "tree": {"sha": git(repo, "rev-parse", f"{sha}^{{tree}}")},
+            "verification": {"verified": True, "reason": "valid", "payload": payload, "signature": signature},
+        },
+    }
+    git(repo, "update-ref", "refs/remotes/origin/main", base_head)
+    return entry, base_head
+
+
+def test_only_verified_clean_github_base_update_passes_attribution(tmp_path, monkeypatch) -> None:
+    repo, _, record, kwargs = _dispatcher_fixture(tmp_path, monkeypatch)
+    entry, base_head = _github_merge_fixture(repo, record["worktree_base_sha"], kwargs["head_sha"])
+    kwargs.update(head_sha=entry["sha"], base_sha=base_head)
+    kwargs["github_commits"].append(entry)
+    local = task_lifecycle.observe_local_git(repo, **kwargs)
+    assert local["commits"][-1]["x_agent_trailers"] == []
+    assert local["commits"][-1]["github_base_update"]["parents"][0] == record["final_branch_head_commit"]
+    assert local["dispatcher_provenance"]["current_head"] == entry["sha"]
+    assert not task_lifecycle._local_readiness(local)
+
+
+@pytest.mark.parametrize("mutation", [
+    lambda e: e["committer"].update(login="ordinary"),
+    lambda e: e["commit"]["committer"].update(name="ordinary"),
+    lambda e: e["commit"]["verification"].update(verified=False),
+    lambda e: e["commit"]["verification"].update(payload="forged"),
+    lambda e: e["commit"]["verification"].update(signature="forged"),
+    lambda e: e["commit"].update(message="ordinary merge"),
+    lambda e: e.update(parents=e["parents"][:1]),
+    lambda e: e["commit"]["tree"].update(sha="f" * 40),
+    lambda e: e.update(parents=list(reversed(e["parents"]))),
+])
+def test_github_merge_proof_refuses_unverified_or_contradictory_metadata(tmp_path, monkeypatch, mutation) -> None:
+    repo, _, record, kwargs = _dispatcher_fixture(tmp_path, monkeypatch)
+    entry, base_head = _github_merge_fixture(repo, record["worktree_base_sha"], kwargs["head_sha"])
+    mutation(entry)
+    kwargs.update(head_sha=entry["sha"], base_sha=base_head)
+    kwargs["github_commits"].append(entry)
+    local = task_lifecycle.observe_local_git(repo, **kwargs)
+    assert local["dispatcher_provenance"] is None
+    assert not local["commits"][-1].get("github_base_update")
+    assert task_lifecycle._local_readiness(local)
+
+
+def test_edited_merge_tree_never_gets_attribution_exception(tmp_path, monkeypatch) -> None:
+    repo, _, record, kwargs = _dispatcher_fixture(tmp_path, monkeypatch)
+    entry, base_head = _github_merge_fixture(repo, record["worktree_base_sha"], kwargs["head_sha"], edited=True)
+    assert task_lifecycle._github_base_update(repo, entry, branch="codex/thread-new", base_sha=base_head) is None
+
+
+def test_dispatcher_archive_preserves_original_result_digest(tmp_path, monkeypatch) -> None:
+    repo, path, record, kwargs = _dispatcher_fixture(tmp_path, monkeypatch)
+    archive = path.parent / "archive"
+    archive.mkdir()
+    path.rename(archive / path.name)
+    Path(record["result_file"]).rename(archive / "thread-new.result")
+    local = task_lifecycle.observe_local_git(repo, **kwargs)
+    assert not task_lifecycle._local_readiness(local)
+    assert Path(local["dispatcher_provenance"]["record_path"]).parent == archive
+    assert Path(local["dispatcher_provenance"]["result_path"]).parent == archive
+
+
+@pytest.mark.parametrize("target", ["record", "result", "dispatch"])
+def test_dispatcher_proof_refuses_symlinked_paths(tmp_path, monkeypatch, target) -> None:
+    repo, path, record, kwargs = _dispatcher_fixture(tmp_path, monkeypatch)
+    selected = path if target == "record" else Path(record["result_file"]) if target == "result" else Path(record["worktree_path"])
+    if target == "dispatch":
+        selected.symlink_to(repo, target_is_directory=True)
+        kwargs["worktree"] = str(selected.with_name("reaped-proof"))
+    else:
+        original = selected.with_suffix(".original")
+        selected.rename(original)
+        selected.symlink_to(original)
+    local = task_lifecycle.observe_local_git(repo, **kwargs)
+    assert local["dispatcher_provenance"] is None and local["provenance_error"]
+
+
+def test_dispatcher_proof_refuses_missing_record_or_empty_result(tmp_path, monkeypatch) -> None:
+    repo, path, record, kwargs = _dispatcher_fixture(tmp_path, monkeypatch)
+    path.unlink()
+    assert "record is missing" in task_lifecycle.observe_local_git(repo, **kwargs)["provenance_error"]
+    path.write_text(json.dumps(record))
+    Path(record["result_file"]).write_bytes(b"")
+    assert "digest does not match" in task_lifecycle.observe_local_git(repo, **kwargs)["provenance_error"]
+
+
+def test_supersession_duplicate_or_other_subject_never_validates() -> None:
+    ledger = _add_at(_ledger(), "AC-IMPL", "test", "d" * 40)
+    old_id = ledger["evidence"][0]["id"]
+    with pytest.raises(task_lifecycle.LifecycleError, match="duplicate"):
+        _add_at(ledger, "AC-IMPL", "test", HEAD, details={"supersedes_evidence_ids": [old_id, old_id]})
+    ledger = _add_at(ledger, "AC-IMPL", "test", HEAD, details={"supersedes_evidence_ids": [old_id]})
+    replacement = ledger["evidence"][-1]
+    replacement["subject"]["pr"] = 78
+    replacement["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(replacement))
+    with pytest.raises(task_lifecycle.LifecycleError, match="subject binding differs"):
+        task_lifecycle.validate_lifecycle(ledger)

@@ -71,6 +71,13 @@ receipt must exist in either the authoritative PR conversation comments or the
 native pull-request reviews endpoint, and requested changes must be absent on
 the current head.
 
+A replacement evidence row may declare `details.supersedes_evidence_ids` with
+exact prior evidence IDs. Each ID must already exist and bind to the same AC,
+kind, repository, issue and PR. The old rows remain immutable. Reconciliation
+suppresses their blockers only when the replacement itself passes all validators
+on the current PR head. A moved head, invalid replacement, cross-AC/kind link,
+or unsuperseded old row still refuses; a newer timestamp alone replaces nothing.
+
 An AC policy marks a user-visible criterion with
 `behavior_proof_required: true` and includes the typed `behavior_proof`
 evidence requirement. That evidence never copies a prose status. Its
@@ -99,6 +106,37 @@ Evidence due at `ISSUE_CLOSED` or `CLEANED_UP` may be derived from the
 post-action authoritative observation. This permits truthful staged closeout
 without pretending issue closure or cleanup happened before it did. The task is
 not terminal until those post-action criteria are also evidenced and checked.
+
+## Authoring provenance after cleanup
+
+Current worktree presence remains a filesystem observation. For a merged PR
+whose authoring tree has been reaped, reconciliation may verify the original
+canonical dispatcher record and result sidecar using the existing hot/archive
+record locator. It requires exact lifecycle identity, task, repository, owned
+dispatch path and branch; terminal `done`, clean exit, no finalization/rescue
+failure, positive commit count, and the dispatcher's clean common-reaper result.
+The original result bytes must match the recorded SHA-256. Git must prove the
+recorded base/author-head ancestry, commit count, owned paths and exact task
+X-Agent trailers; authoritative publisher PR commits must include both the
+recorded author head and current PR head. Result prose grants no authority.
+Missing, contradictory or digest-mismatched artifacts refuse.
+
+This observation exposes `dispatcher_provenance` with original record/result
+paths and digests, task, author/current heads and original dispatch path. It
+never changes `worktree_present` to true or backdates the observation. New
+post-dispatch author changes require their own evidence; only verified unchanged
+GitHub base updates may connect the recorded author head to the PR head.
+
+A trailerless base update is exempt only with publisher commit data identifying
+GitHub's `web-flow` committer, a valid verified signature matching the local
+commit's signature/payload, the exact main-into-dispatch-branch message, and two
+locally matching parents/tree. The existing isolated clean-base-merge verifier
+must reproduce that tree without conflicts and prove the second parent belongs
+to the authoritative PR base. The observation records source, commit digest,
+parents and tree in `github_base_update`. Ordinary, edited, unsigned,
+unverified or contradictory merge commits still require X-Agent attribution.
+This provenance check grants no review clearance; standard independent review
+and quick-fix qualification refusals remain binding.
 
 ## Reconciliation and mutation
 

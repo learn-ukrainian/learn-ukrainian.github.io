@@ -24,7 +24,7 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 from scripts.github_check_rollup import group_collapsed_by_name
-from scripts.orchestration import issue_stream_audit, task_identity
+from scripts.orchestration import issue_stream_audit, task_identity, task_record_store
 from scripts.review import quick_fix
 from scripts.review.review_contract import ALLOWED_DISPOSITIONS
 
@@ -490,12 +490,25 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
             raise LifecycleError(f"{criterion['id']}: behavior-proof-required AC must require behavior_proof evidence")
     criteria_by_id = {item["id"]: item for item in criteria}
     evidence_ids: set[str] = set()
+    prior_evidence: dict[str, Mapping[str, Any]] = {}
     for record in ledger["evidence"]:
         if record["id"] != digest(_evidence_payload(record)):
             raise LifecycleError(f"evidence {record['id']} digest is invalid")
         if record["id"] in evidence_ids:
             raise LifecycleError(f"duplicate evidence record: {record['id']}")
+        supersedes = record["details"].get("supersedes_evidence_ids", [])
+        if not isinstance(supersedes, list) or any(not isinstance(item, str) for item in supersedes):
+            raise LifecycleError("supersession must list exact prior evidence IDs")
+        if len(supersedes) != len(set(supersedes)):
+            raise LifecycleError("supersession contains duplicate evidence IDs")
+        for old_id in supersedes:
+            old = prior_evidence.get(old_id)
+            if old is None or old["ac_id"] != record["ac_id"] or old["type"] != record["type"]:
+                raise LifecycleError("supersession requires prior same-criterion, same-kind evidence")
+            if any(old["subject"][key] != record["subject"][key] for key in ("repository", "issue", "pr")):
+                raise LifecycleError("supersession subject binding differs")
         evidence_ids.add(record["id"])
+        prior_evidence[record["id"]] = record
         if record["ac_id"] not in criteria_by_id:
             raise LifecycleError(f"evidence targets unknown AC: {record['ac_id']}")
         subject = record["subject"]
@@ -745,12 +758,161 @@ def protected_paths(paths: list[str]) -> list[str]:
     )
 
 
+def _github_base_update(
+    repo_root: Path, entry: Mapping[str, Any], *, branch: str | None, base_sha: str | None,
+) -> dict[str, Any] | None:
+    """Exempt only a GitHub-signed, locally reproduced unchanged base update."""
+    from scripts.review.record_cf_verdict import _is_clean_base_merge
+
+    data = entry.get("commit") or {}
+    verification = data.get("verification") or {}
+    if (
+        not branch or not base_sha
+        or (entry.get("committer") or {}).get("login") != "web-flow"
+        or (data.get("committer") or {}).get("name") != "GitHub"
+        or (data.get("committer") or {}).get("email") != "noreply@github.com"
+        or verification.get("verified") is not True or verification.get("reason") != "valid"
+        or data.get("message") != f"Merge branch 'main' into {branch}"
+    ):
+        return None
+    raw = _run_git(repo_root, ["cat-file", "commit", entry["sha"]])
+    headers, _, message = raw.partition("\n\n")
+    if not any(line.startswith("committer GitHub <noreply@github.com> ") for line in headers.splitlines()):
+        return None
+    unsigned: list[str] = []
+    signature: list[str] = []
+    in_signature = False
+    for line in headers.splitlines():
+        if line.startswith("gpgsig "):
+            in_signature = True
+            signature.append(line.removeprefix("gpgsig "))
+            continue
+        if in_signature and line.startswith(" "):
+            signature.append(line[1:])
+            continue
+        in_signature = False
+        unsigned.append(line)
+    if not signature or "\n".join(signature).strip() != str(verification.get("signature") or "").strip():
+        return None
+    payload = "\n".join(unsigned) + "\n\n" + message
+    if payload.rstrip("\n") != str(verification.get("payload") or "").rstrip("\n"):
+        return None
+    if not _is_clean_base_merge(dict(entry), base_sha):
+        return None
+    return {
+        "source": "github_pr_commits", "sha": entry["sha"], "digest": digest(entry),
+        "parents": [parent["sha"] for parent in entry["parents"]],
+        "tree": data["tree"]["sha"], "verified_signature": True, "clean_merge": True,
+    }
+
+
+def _dispatcher_authoring_proof(
+    repo_root: Path, identity: Mapping[str, Any], *, head_sha: str | None,
+    branch: str | None, commits: list[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Read original dispatcher artifacts, never an author-authored narrative."""
+    task_id = identity["replacement_task_id"]
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", task_id):
+        raise LifecycleError("dispatcher task ID is not a canonical filename")
+    primary = canonical_state_root(repo_root)
+    tasks = primary / "batch_state" / "tasks"
+    record_path = task_record_store.locate_task_record(tasks, task_id)
+    if record_path is None:
+        raise LifecycleError("canonical dispatcher record is missing")
+    if any(path.is_symlink() for path in (record_path, *record_path.parents)) or record_path.resolve().parent not in (tasks.resolve(), (tasks / "archive").resolve()):
+        raise LifecycleError("dispatcher record path is not canonical")
+    record_bytes = record_path.read_bytes()
+    record = json.loads(record_bytes)
+    if (
+        record.get("task_id") != task_id or record.get("repository") != identity["repository"]
+        or (record.get("task_lifecycle") or {}).get("identity") != dict(identity)
+    ):
+        raise LifecycleError("dispatcher identity does not match lifecycle")
+    if (
+        record.get("status") != "done" or record.get("returncode") != 0 or record.get("exit_code") != 0
+        or record.get("mode") not in {"danger", "write", "workspace-write"}
+        or record.get("worktree_dirty_on_exit") is not False or record.get("needs_finalize") is not False
+        or record.get("finalize_error") or record.get("rescue_status") or not record.get("finished_at")
+        or not isinstance(record.get("commits_ahead"), int) or record["commits_ahead"] < 1
+    ):
+        raise LifecycleError("dispatcher did not record terminal clean pushed authoring")
+    agent = record.get("agent")
+    if not isinstance(agent, str) or not re.fullmatch(r"[A-Za-z0-9_-]+", agent):
+        raise LifecycleError("dispatcher agent is invalid")
+    dispatch_path = primary / ".worktrees" / "dispatch" / agent / task_id
+    if record.get("worktree_path") != str(dispatch_path) or record.get("worktree_branch") != branch:
+        raise LifecycleError("dispatcher owned path or branch does not match")
+    if any(path.is_symlink() for path in (dispatch_path, *dispatch_path.parents)):
+        raise LifecycleError("dispatcher path has a symlink")
+    reap = record.get("worktree_reap") or {}
+    if (
+        reap.get("action") != "removed" or reap.get("path") != str(dispatch_path)
+        or reap.get("branch") != branch or reap.get("dirty") is not False or reap.get("error")
+        or reap.get("reason") != "settled clean worktree; branch ref kept"
+    ):
+        raise LifecycleError("canonical dispatcher cleanup proof is missing or contradictory")
+    result_name = task_id + ".result"
+    result_file = record.get("result_file")
+    if result_file not in (str(tasks / result_name), str(record_path.with_name(result_name))):
+        raise LifecycleError("dispatcher result path is not canonical")
+    result_path = Path(task_record_store.relocated_result_file(record_path, result_file))
+    if result_path.is_symlink() or result_path.resolve().parent != record_path.resolve().parent:
+        raise LifecycleError("dispatcher result is outside its canonical record directory")
+    result_bytes = result_path.read_bytes()
+    result_hash = hashlib.sha256(result_bytes).hexdigest()
+    if not result_bytes or result_hash != record.get("result_sha256"):
+        raise LifecycleError("dispatcher result digest does not match")
+    author_head = record.get("final_branch_head_commit")
+    base = record.get("worktree_base_sha")
+    if not all(isinstance(sha, str) and re.fullmatch(r"[0-9a-f]{40}", sha) for sha in (author_head, base, head_sha)):
+        raise LifecycleError("dispatcher recorded author head/base is missing")
+    _run_git(repo_root, ["merge-base", "--is-ancestor", base, author_head])
+    _run_git(repo_root, ["merge-base", "--is-ancestor", author_head, head_sha])
+    authored = _run_git(repo_root, ["rev-list", f"{base}..{author_head}"]).splitlines()
+    if not authored or len(authored) != record["commits_ahead"]:
+        raise LifecycleError("dispatcher author commit count contradicts Git")
+    authoritative = {commit["sha"]: commit for commit in commits}
+    if author_head not in authoritative or head_sha not in authoritative:
+        raise LifecycleError("dispatcher author/current head is absent from authoritative PR commits")
+    for sha in authored:
+        message = _run_git(repo_root, ["show", "-s", "--format=%B", sha])
+        trailers = [line.strip() for line in message.splitlines() if line.strip().lower().startswith("x-agent:")]
+        if trailers != [f"X-Agent: {agent}/{task_id}"]:
+            raise LifecycleError("dispatcher author commit attribution does not match")
+    later = _run_git(repo_root, ["rev-list", "--first-parent", f"{author_head}..{head_sha}"]).splitlines()
+    cursor = head_sha
+    for sha in later:
+        proof = (authoritative.get(sha) or {}).get("github_base_update")
+        if not proof or sha != cursor:
+            raise LifecycleError("current head contains unverified post-dispatch changes")
+        cursor = proof["parents"][0]
+    if cursor != author_head:
+        raise LifecycleError("current head is not a verified base-update chain from author head")
+    changed = _run_git(repo_root, ["diff", "--name-only", f"{base}..{author_head}"]).splitlines()
+    owned = record.get("owned_paths")
+    if not isinstance(owned, list) or not owned or any(
+        not any(path == pattern or fnmatch.fnmatch(path, pattern) for pattern in owned) for path in changed
+    ):
+        raise LifecycleError("dispatcher changed paths exceed owned paths")
+    return {
+        "source": "canonical_dispatcher", "task_id": task_id,
+        "record_path": str(record_path), "record_sha256": "sha256:" + hashlib.sha256(record_bytes).hexdigest(),
+        "result_path": str(result_path), "result_sha256": "sha256:" + result_hash,
+        "author_head": author_head, "current_head": head_sha, "dispatch_path": str(dispatch_path),
+        "branch": branch, "changed_paths": changed, "verified": True,
+    }
+
+
 def observe_local_git(
     repo_root: Path,
     *,
     head_sha: str | None,
     branch: str | None,
     worktree: str | None,
+    identity: Mapping[str, Any] | None = None,
+    github_commits: list[Mapping[str, Any]] | None = None,
+    base_sha: str | None = None,
+    merged: bool = False,
 ) -> dict[str, Any]:
     """Collect deterministic local Git/worktree closeout facts.
 
@@ -821,7 +983,37 @@ def observe_local_git(
             # The immutable pre-merge receipt remains the authority for hygiene
             # when squash merge/branch deletion makes the old comparison absent.
             pass
+    provenance = None
+    provenance_error = None
+    if github_commits is not None:
+        commits = []
+        for entry in github_commits:
+            try:
+                sha = entry["sha"]
+                if not isinstance(sha, str) or not re.fullmatch(r"[0-9a-f]{40}", sha):
+                    raise LifecycleError("authoritative PR commit SHA is invalid")
+                message = _run_git(root, ["show", "-s", "--format=%B", sha])
+                if message != (entry.get("commit") or {}).get("message", "").strip():
+                    raise LifecycleError("authoritative PR commit message contradicts Git")
+                trailers = [line.strip() for line in message.splitlines() if line.strip().lower().startswith("x-agent:")]
+                commit = {"sha": sha, "x_agent_trailers": trailers}
+                if not trailers:
+                    proof = _github_base_update(root, entry, branch=branch, base_sha=base_sha)
+                    if proof:
+                        commit["github_base_update"] = proof
+                commits.append(commit)
+            except (LifecycleError, KeyError, TypeError, ValueError) as exc:
+                provenance_error = str(exc)
+                commits.append({"sha": entry.get("sha"), "x_agent_trailers": []})
+    if merged and not worktree_present and identity and not provenance_error:
+        try:
+            provenance = _dispatcher_authoring_proof(root, identity, head_sha=head_sha, branch=branch, commits=commits)
+            changed_paths = provenance["changed_paths"]
+        except (LifecycleError, OSError, ValueError, KeyError, TypeError) as exc:
+            provenance_error = str(exc)
     return {
+        "dispatcher_provenance": provenance,
+        "provenance_error": provenance_error,
         "primary_checkout": str(primary),
         "primary_clean": primary_clean,
         "dispatch_worktree_used": dispatch_worktree_used,
@@ -984,17 +1176,18 @@ def _evidence_status(
     observed_paths: list[str] | None = None,
 ) -> tuple[dict[str, set[str]], list[str]]:
     valid: dict[str, set[str]] = {}
-    invalid: list[str] = []
+    errors: dict[str, str] = {}
+    accepted: list[Mapping[str, Any]] = []
     for record in ledger["evidence"]:
         kind = record["type"]
         commit = record["subject"]["commit"]
         if kind in CURRENT_HEAD_EVIDENCE and head_sha and commit != head_sha:
-            invalid.append(f"{record['ac_id']}: {kind} evidence is not bound to current PR head")
+            errors[record["id"]] = f"{record['ac_id']}: {kind} evidence is not bound to current PR head"
             continue
         if kind == "behavior_proof":
             reference_error = _behavior_proof_reference_error(record, head_sha=head_sha)
             if reference_error:
-                invalid.append(f"{record['ac_id']}: {reference_error}")
+                errors[record["id"]] = f"{record['ac_id']}: {reference_error}"
                 continue
         if kind == "quick_fix":
             reference_error = _quick_fix_reference_error(
@@ -1005,13 +1198,21 @@ def _evidence_status(
                 observed_paths=list(observed_paths or []),
             )
             if reference_error:
-                invalid.append(f"{record['ac_id']}: {reference_error}")
+                errors[record["id"]] = f"{record['ac_id']}: {reference_error}"
                 continue
         if kind == "review" and (not record["url"] or record["url"] not in comment_bodies):
-            invalid.append(f"{record['ac_id']}: review receipt URL is absent from authoritative PR comments")
+            errors[record["id"]] = f"{record['ac_id']}: review receipt URL is absent from authoritative PR comments"
             continue
-        valid.setdefault(record["ac_id"], set()).add(kind)
-    return valid, invalid
+        accepted.append(record)
+    superseded = {
+        old_id for record in accepted
+        if head_sha and record["subject"]["commit"] == head_sha
+        for old_id in record["details"].get("supersedes_evidence_ids", [])
+    }
+    for record in accepted:
+        if record["id"] not in superseded:
+            valid.setdefault(record["ac_id"], set()).add(record["type"])
+    return valid, [error for record_id, error in errors.items() if record_id not in superseded]
 
 
 def _satisfied_kinds(kinds: set[str]) -> set[str]:
@@ -1066,17 +1267,23 @@ def _local_readiness(local: Mapping[str, Any]) -> list[str]:
     blockers: list[str] = []
     if not local.get("primary_clean"):
         blockers.append("primary checkout is not clean")
-    if not local.get("dispatch_worktree_used"):
+    provenance = local.get("dispatcher_provenance") or {}
+    recovered = provenance.get("verified") is True and provenance.get("source") == "canonical_dispatcher"
+    if local.get("provenance_error"):
+        blockers.append(f"authoring provenance refused: {local['provenance_error']}")
+    if not local.get("dispatch_worktree_used") and not recovered:
         blockers.append("implementation was not observed in a dispatch worktree")
-    if not local.get("worktree_present"):
+    if not local.get("worktree_present") and not recovered:
         blockers.append("the claimed dispatch worktree was absent from git worktree list")
-    if not local.get("worktree_branch_matches"):
+    if not local.get("worktree_branch_matches") and not recovered:
         blockers.append("the claimed dispatch worktree branch did not match Git authority")
     commits = local.get("commits") or []
     if not commits:
         blockers.append("no task commits were available for X-Agent validation")
     for commit in commits:
         trailers = commit.get("x_agent_trailers") or []
+        if not trailers and commit.get("github_base_update"):
+            continue
         if len(trailers) != 1 or not str(trailers[0]).split(":", 1)[-1].strip():
             blockers.append(f"commit {commit.get('sha', 'unknown')} lacks exactly one valid X-Agent trailer")
     forbidden = local.get("forbidden_paths") or []
@@ -1087,10 +1294,14 @@ def _local_readiness(local: Mapping[str, Any]) -> list[str]:
 
 def _gate_records(ledger: Mapping[str, Any], valid_evidence: Mapping[str, set[str]]) -> list[Mapping[str, Any]]:
     """Valid review-gate records: independent reviews or verified quick-fix receipts."""
+    superseded = {
+        old_id for record in ledger["evidence"]
+        for old_id in record["details"].get("supersedes_evidence_ids", [])
+    }
     return [
         record
         for record in ledger["evidence"]
-        if record["type"] in {"review", "quick_fix"} and record["type"] in valid_evidence.get(record["ac_id"], set())
+        if record["id"] not in superseded and record["type"] in {"review", "quick_fix"} and record["type"] in valid_evidence.get(record["ac_id"], set())
     ]
 
 
@@ -1185,7 +1396,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
 
     readiness_local = local
     prior_local = _latest_premerge_local(ledger)
-    if prior_local is not None and (
+    if prior_local is not None and not local.get("dispatcher_provenance") and not local.get("provenance_error") and (
         not local.get("commits") or not local.get("worktree_present") or not local.get("worktree_branch_matches")
     ):
         readiness_local = prior_local

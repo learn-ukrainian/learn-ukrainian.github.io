@@ -250,7 +250,7 @@ class GhGitHubAdapter:
                 "--json",
                 "number,url,state,isDraft,headRefOid,headRefName,mergeCommit,mergedAt,"
                 "autoMergeRequest,reviewDecision,reviews,statusCheckRollup,body,"
-                "closingIssuesReferences",
+                "closingIssuesReferences,baseRefOid",
             ]
         )
         checks = project_closeout_checks(pr.get("statusCheckRollup") or [])
@@ -272,6 +272,7 @@ class GhGitHubAdapter:
             "is_draft": bool(pr.get("isDraft")),
             "head_sha": pr.get("headRefOid"),
             "head_branch": pr.get("headRefName"),
+            "base_sha": pr.get("baseRefOid"),
             "merge_sha": merge_commit.get("oid"),
             "merged_at": pr.get("mergedAt"),
             "auto_merge_enabled_at": auto.get("enabledAt"),
@@ -449,11 +450,22 @@ class GhGitHubAdapter:
                 "error": str(exc),
             }
         pr = github["pr"]
+        commits = None
+        if pr.get("number") and pr.get("head_sha"):
+            pages = self._json(Request("read-commits", repo=canonical["identity"]["repository"],
+                                       number=pr["number"], paginate=True, slurp=True))
+            if not isinstance(pages, list) or not all(isinstance(page, list) for page in pages):
+                raise task_lifecycle.LifecycleError("authoritative PR commit pages are malformed")
+            commits = [entry for page in pages for entry in page]
+            if not commits or not all(isinstance(entry, dict) for entry in commits):
+                raise task_lifecycle.LifecycleError("authoritative PR commit set is missing or malformed")
         local = task_lifecycle.observe_local_git(
             self.repo_root,
             head_sha=pr.get("head_sha"),
             branch=branch or pr.get("head_branch"),
             worktree=worktree or str(self.repo_root),
+            identity=canonical["identity"], github_commits=commits,
+            base_sha=pr.get("base_sha"), merged=pr.get("state") == "MERGED",
         )
         return {
             "schema_version": task_lifecycle.OBSERVATION_SCHEMA_VERSION,
@@ -1030,7 +1042,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--details",
         help="JSON object; review evidence records model families and verdict; quick_fix evidence carries the "
         "quick_fix_receipt reference printed by `scripts.review.quick_fix record` and --url names the PR "
-        "declaration comment.",
+        "declaration comment; supersedes_evidence_ids lists exact prior same-AC/same-kind IDs.",
     )
     evidence.add_argument("--now")
     evidence.set_defaults(func=cmd_evidence)

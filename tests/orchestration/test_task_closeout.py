@@ -1017,3 +1017,42 @@ def test_quick_fix_sync_never_checks_invalid_proof(tmp_path: Path, failure: str)
             now=NOW,
         )
     assert "close-issue" not in adapter.calls
+
+
+def test_observe_reads_publisher_commit_pages_and_passes_exact_provenance_inputs(tmp_path, monkeypatch) -> None:
+    _, ledger = _ledger(tmp_path)
+    github = _observation(pr_state="MERGED")["github"]
+    github["pr"]["base_sha"] = "c" * 40
+    entries = [{"sha": HEAD, "commit": {"message": "fixture"}}]
+    seen = []
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
+    monkeypatch.setattr(adapter, "_github_observation", lambda _: github)
+
+    def read(request):
+        seen.append(request)
+        return [entries[:1], []]
+
+    monkeypatch.setattr(adapter, "_json", read)
+    inputs = {}
+
+    def observe(repo, **kwargs):
+        inputs.update(kwargs)
+        return {"worktree_present": False}
+
+    monkeypatch.setattr(task_lifecycle, "observe_local_git", observe)
+    result = adapter.observe(ledger, now=NOW, worktree=str(tmp_path))
+    assert seen[0].verb == "read-commits"
+    assert seen[0].fields == {"repo": "org/repo", "number": 77, "paginate": True, "slurp": True}
+    assert inputs["identity"] == ledger["identity"] and inputs["github_commits"] == entries
+    assert inputs["base_sha"] == "c" * 40 and inputs["merged"] is True
+    assert result["local"]["worktree_present"] is False
+
+
+@pytest.mark.parametrize("pages", [None, {}, [None], [], [[]], [["malformed"]]])
+def test_observe_refuses_missing_or_malformed_authoritative_commit_pages(tmp_path, monkeypatch, pages) -> None:
+    _, ledger = _ledger(tmp_path)
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
+    monkeypatch.setattr(adapter, "_github_observation", lambda _: _observation()["github"])
+    monkeypatch.setattr(adapter, "_json", lambda _: pages)
+    with pytest.raises(task_lifecycle.LifecycleError, match="authoritative PR commit"):
+        adapter.observe(ledger, now=NOW)
