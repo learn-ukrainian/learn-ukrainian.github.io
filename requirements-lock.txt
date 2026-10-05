@@ -133,7 +133,7 @@ packaging==26.3
 pandas==3.0.1
 parso==0.8.7
 pathspec==1.1.1
-peft==0.20.0
+peft==0.21.0
 pexpect==4.9.0
 pip==26.2.1
 pillow==12.3.0
