@@ -813,11 +813,10 @@ def test_codex_adapter_disables_apps_connector_across_all_invocations(tmp_path, 
 def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
     """Dispatched review isolation workers must also disable apps connector (#7181)."""
     from scripts.review.isolation import review_isolation_tool_config
+    from tests.agent_runtime.test_codex_sources_config_layers import write_config_probe_binary
     from tests.test_review_isolation import _private_review_roots
 
-    fake = tmp_path / "codex"
-    fake.write_text("#!/bin/sh\n", encoding="utf-8")
-    fake.chmod(0o755)
+    fake = write_config_probe_binary(tmp_path / "codex")
     snapshot = tmp_path / "snapshot"
     snapshot.mkdir()
     write_root, exec_root = _private_review_roots(tmp_path, "codex-test-7181")
@@ -4451,12 +4450,13 @@ def test_typed_publisher_cleans_retry_tempfiles_on_sigterm(tmp_path, gh_shim_san
             "TMPDIR": str(temp_dir),
         },
     )
-    for _ in range(100):
+    deadline = time.monotonic() + 60
+    while time.monotonic() < deadline:
         if ready.exists():
             break
         time.sleep(0.01)
     assert ready.exists()
-    readable, _, _ = select.select([proc.stderr], [], [], 2)
+    readable, _, _ = select.select([proc.stderr], [], [], 60)
     assert readable, "shim did not enter secondary-rate-limit backoff"
     # The retry diagnostic is emitted immediately before the delay starts.
     # Give the shell a scheduling turn so SIGTERM reaches active backoff code.

@@ -22,6 +22,7 @@ import pytest
 
 import delegate
 from scripts.api.subscription_usage import compute_usage_pace, pace_is_deficit
+from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 
 
 @pytest.fixture(autouse=True)
@@ -329,14 +330,44 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
     assert "ROUTING WARNING" in captured.err
 
 
-def test_issue_9272_review_dry_run_never_prints_grok_substitution(monkeypatch, tmp_path, capsys):
+def test_issue_9272_review_dry_run_never_prints_grok_substitution(ordinary_review_scope, monkeypatch, tmp_path, capsys):
+    import subprocess
+
+    from tests.test_ask_review_admission_floor import _git
+
+    worktree = ordinary_review_scope / ".worktrees/dispatch/codex/budget-check-fixture"
+    _git(ordinary_review_scope, "worktree", "add", "-b", "review-target", str(worktree), "HEAD")
+    real_popen = subprocess.Popen
     _patch_spawn(monkeypatch, tmp_path)
     spawned = _track_worker_spawns(monkeypatch)
+    worker_popen = subprocess.Popen
+
+    def fixture_popen(command, *args, **kwargs):
+        if command[0] == "git":
+            return real_popen(command, *args, **kwargs)
+        return worker_popen(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "Popen", fixture_popen)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", ordinary_review_scope)
+    monkeypatch.chdir(ordinary_review_scope)
+    # The fixture already materializes the fetched ref; the dry run never contacts a remote.
+    monkeypatch.setattr(delegate, "_fetch_existing_branch", lambda _branch: None)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _codex_cursor_budget(codex_status="near_cap"))
     monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
-    args = _dispatch_args("--agent", "codex", "--model", "gpt-6.1-sol", "--require-review-verdict",
-                          "--check-budget", "--dry-run")
+    args = _dispatch_args(
+        "--agent",
+        "codex",
+        "--model",
+        "gpt-6.1-sol",
+        "--require-review-verdict",
+        "--branch",
+        "review-target",
+        "--check-budget",
+        "--dry-run",
+    )
+    args.cwd = None
+    args.worktree = "auto"
     assert delegate.cmd_dispatch(args) == 0
     assert not spawned
     assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err

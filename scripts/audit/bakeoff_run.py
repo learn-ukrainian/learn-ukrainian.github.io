@@ -19,6 +19,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.agent_runtime.registry import get_agent_entry
 from scripts.build import linear_pipeline
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 DEFAULT_WRITERS = "claude-tools,gemini-tools,codex-tools"
 DEFAULT_COMMAND_TIMEOUT_SECONDS: float = 300.0
@@ -88,7 +89,7 @@ def _short_name(writer: str) -> str:
 def _jsonl_has_event(path: Path, event: str) -> bool:
     if not path.exists() or path.stat().st_size == 0:
         return False
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in split_jsonl_lines(path.read_text(encoding="utf-8")):
         try:
             payload = json.loads(line)
         except json.JSONDecodeError:

@@ -32,6 +32,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.ingest import ulp_lesson_notes_ingest as ulp
 
 DEFAULT_TARGET_CHARS = 1500
@@ -44,9 +45,7 @@ def resolve_gdrive_root() -> Path | None:
     if env:
         path = Path(env)
         return path if path.is_dir() else None
-    matches = sorted(
-        Path.home().glob("Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data")
-    )
+    matches = sorted(Path.home().glob("Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data"))
     return matches[0] if matches else None
 
 
@@ -104,7 +103,9 @@ def lesson_records(
         windows = window_text(body, target=target, overlap=overlap)
         for index, window in enumerate(windows, start=1):
             chunk_id = f"{book.source_file}_l{lesson.number:04d}_w{index:03d}"
-            title = f"Lesson {lesson.number}: {lesson.title}".rstrip(": ") if lesson.title else f"Lesson {lesson.number}"
+            title = (
+                f"Lesson {lesson.number}: {lesson.title}".rstrip(": ") if lesson.title else f"Lesson {lesson.number}"
+            )
             if len(windows) > 1:
                 title = f"{title} (part {index}/{len(windows)})"
             rows.append(
@@ -144,15 +145,13 @@ def write_season_jsonl(book: ulp.BookConfig, rows: Sequence[Mapping[str, Any]], 
 
 def ingest_jsonl(path: Path, *, db_path: Path, force: bool) -> dict[str, int]:
     """Replace textbooks rows for this source_file from JSONL."""
-    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    rows = [json.loads(line) for line in jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
     if not rows:
         return {"deleted": 0, "inserted": 0}
     source_file = str(rows[0]["source_file"])
     conn = sqlite3.connect(db_path)
     try:
-        before = conn.execute(
-            "SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)
-        ).fetchone()[0]
+        before = conn.execute("SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)).fetchone()[0]
         if force:
             conn.execute("DELETE FROM textbooks WHERE source_file = ?", (source_file,))
         inserted = 0
@@ -186,9 +185,7 @@ def ingest_jsonl(path: Path, *, db_path: Path, force: bool) -> dict[str, int]:
         # FTS external-content rebuild for textbooks
         conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES('rebuild')")
         conn.commit()
-        after = conn.execute(
-            "SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)
-        ).fetchone()[0]
+        after = conn.execute("SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)).fetchone()[0]
     finally:
         conn.close()
     return {"before": before, "after": after, "inserted": inserted, "deleted": before if force else 0}

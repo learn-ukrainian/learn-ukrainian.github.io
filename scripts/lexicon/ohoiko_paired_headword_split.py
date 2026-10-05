@@ -51,6 +51,7 @@ def _resolve_repo_path(path: Path) -> Path:
     return path
 
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.lexicon import curated_ohoiko_ulp_repromote as promo
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.heritage_classifier import classify_lemma
@@ -847,7 +848,7 @@ def append_space_collapse_audit(
     original = path.read_text(encoding="utf-8") if path.exists() else ""
     existing: set[tuple[str, str, str, str]] = set()
     if original:
-        for line_number, line in enumerate(original.splitlines(), start=1):
+        for line_number, line in enumerate(split_jsonl_lines(original), start=1):
             if not line.strip():
                 continue
             try:

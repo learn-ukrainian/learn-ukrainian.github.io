@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import re
 import stat
@@ -481,6 +482,40 @@ def test_invalid_writer_effort_refused(tmp_path, passing_preflight):
             output_dir=tmp_path / "out",
             preflight_result=passing_preflight,
         )
+
+
+def test_retry_prompt_contains_engine_feedback_and_seals_actual_bytes(tmp_path, a1_valid_fixture, passing_preflight):
+    draft, types = a1_valid_fixture
+    prompt = tmp_path / "prompt.md"
+    prompt.write_text("Base writer contract", encoding="utf-8")
+    base_sha = hashlib.sha256(prompt.read_bytes()).hexdigest()
+    inputs = _inputs(base_sha)
+    output = tmp_path / "output"
+    failure = {"check": 5, "layer": "writer", "reason": "internal_learner_term: build/process term: chunk"}
+    record_failure(output / "lesson-1.regeneration.yaml", "sample", 1, failure, inputs)
+    received = []
+
+    def fake(task_id, prompt_file, result_file):
+        received.append((task_id, prompt_file.read_bytes()))
+        result_file.write_bytes(yaml.safe_dump(draft).encode())
+
+    result = dispatch_writer(
+        writer="codex", model="gpt-6.1-sol", level="a1", slug="sample", lesson_n=1,
+        prompt_file=prompt, prompt_sha256=base_sha, inputs=inputs, output_dir=output,
+        preflight_result=passing_preflight, fake_seat=fake, repo_root=tmp_path,
+        plan_activity_types=types, attempt=2,
+    )
+    task_id, actual = received[0]
+    effective_sha = hashlib.sha256(actual).hexdigest()
+    assert b"Engine feedback for regeneration" in actual
+    assert failure["reason"].encode() in actual
+    assert prompt.read_text() == "Base writer contract"
+    assert task_id.endswith(f"-feedback-{effective_sha[:16]}")
+    meta = yaml.safe_load(result["writer_meta_file"].read_bytes())
+    assert result["prompt_sha256"] == meta["prompt_sha256"] == effective_sha
+    assert meta["base_prompt_sha256"] == base_sha
+    ledger = load_ledger(output / "lesson-1.regeneration.yaml", "sample", 1, inputs)
+    assert len(ledger["attempts"]) == 1 and ledger["terminal_layer"] is None
 
 
 def test_writer_effort_task_ledger_keying(tmp_path, a1_valid_fixture, passing_preflight):

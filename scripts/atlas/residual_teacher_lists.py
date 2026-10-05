@@ -38,6 +38,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.lexicon.curated_seed_atlas_admission import normalize_rows, prepare_practice_seed
 from scripts.lexicon.manifest_io import DEFAULT_MANIFEST, load_manifest
 
@@ -48,7 +49,7 @@ SUMMARY_SCHEMA = "atlas-residual-teacher-lists-v1"
 
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
-    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    rows = [json.loads(line) for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
     if not all(isinstance(row, dict) for row in rows):
         raise ValueError(f"JSONL rows must be objects: {path}")
     return rows

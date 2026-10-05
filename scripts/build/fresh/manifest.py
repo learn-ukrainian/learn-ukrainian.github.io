@@ -38,7 +38,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.build.fresh.immersion import lesson_immersion_payload
-from scripts.build.fresh.path_guard import checked_existing_path, checked_path
+from scripts.build.fresh.path_guard import checked_existing_path, checked_path, public_diagnostic
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
 from scripts.review.digest.generator import GENERATOR_VERSION, build_digest, write_digest
@@ -414,6 +414,9 @@ def write_manifest(
     for path, expected in expected_paths:
         if path.resolve() != expected.resolve():
             raise ManifestInputError(path, "digest_path_mismatch", root)
+    # Validate the current lesson too, including lesson 1 whose reviewer digest
+    # is empty. Keep the reviewer's prior-lesson digest unchanged.
+    build_digest(level, slug, n + 1, repo_root=root)
     digest_doc = build_digest(level, slug, n, repo_root=root)
     digest_path, _ = write_digest(digest_doc, repo_root=root)
     page = page_dir / f"{n}.mdx"
@@ -518,6 +521,9 @@ def write_manifest_error(state_dir: Path, n: int, reason: str, path: str, at: st
     current, sidecar, error = current_paths(state_dir, n)
     current.unlink(missing_ok=True)
     sidecar.unlink(missing_ok=True)
-    doc = {"check": 12, "reason": reason, "path": path, "layer": "engine", "at": at}
+    doc = {
+        "check": 12, "reason": public_diagnostic(reason, SCHEMA.parents[1]),
+        "path": path, "layer": "engine", "at": at,
+    }
     lock.atomic_write(error, lock.yaml_bytes(doc))
     return doc

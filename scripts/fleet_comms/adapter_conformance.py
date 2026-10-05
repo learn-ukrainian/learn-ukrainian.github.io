@@ -19,6 +19,7 @@ from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.fleet_comms.contracts import AssistantSegment, CompletionState, ResponseEnvelope
 
 PRIMARY_ADAPTERS = frozenset({"codex", "claude", "agy"})
@@ -90,7 +91,7 @@ def parse_capture_events(text: str) -> list[dict[str, Any]]:
 
 def _parse_jsonl(text: str) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
-    for line in text.splitlines():
+    for line in split_jsonl_lines(text):
         line = line.strip()
         if not line or not line.startswith("{"):
             continue

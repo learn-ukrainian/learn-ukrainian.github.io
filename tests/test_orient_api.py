@@ -438,11 +438,10 @@ def test_orient_hard_timeout_isolates_async_collector(monkeypatch):
     run: the async pipeline collector could block the whole response.
     ``asyncio.wait_for`` properly cancels pure-async awaitables.
 
-    Note: ``asyncio.wait_for`` cannot interrupt a blocked SYNC thread
-    started via ``asyncio.to_thread`` — Python threads aren't
-    cancellable once running. For sync collectors, protection is the
-    per-subprocess ``timeout`` inside ``_run_command`` (2 s), which is
-    exercised implicitly by the "swallows failing subquery" test.
+    Both sections use async collectors here so failure isolation does
+    not depend on sync executor scheduling within the 0.1 s budget.
+    Sync runtime scheduling is covered separately by
+    ``test_orient_runtime_survives_default_executor_saturation``.
     """
     import asyncio
 
@@ -455,15 +454,22 @@ def test_orient_hard_timeout_isolates_async_collector(monkeypatch):
 
     monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", hang_forever)
 
+    async def immediate_runtime(ctx=None):
+        return {"agents": ["codex"]}
+
+    section_specs = api_main._orient_section_specs()
+    section_specs["runtime"] = (immediate_runtime, {}, True)
+    monkeypatch.setattr(api_main, "_orient_section_specs", lambda: section_specs)
+
     start = time.perf_counter()
-    response = client.get("/api/orient")
+    response = client.get("/api/orient?sections=pipeline,runtime")
     elapsed = time.perf_counter() - start
 
     assert response.status_code == 200
     assert_under_budget(elapsed, 1.0, f"orient should short-circuit, took {elapsed}s")
     data = response.json()
     assert "section_timeout" in data["pipeline"]["error"]
-    # Other sections must still populate — failure isolation is the point.
+    # The independent async section must still populate.
     assert data["runtime"]["agents"] == ["codex"]
 
 

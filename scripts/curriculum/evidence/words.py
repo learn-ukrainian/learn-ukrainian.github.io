@@ -23,7 +23,7 @@ from jsonschema import Draft202012Validator
 from scripts.verification import stress
 from scripts.wiki.sources_db import using_connection
 
-from . import codes, lock, registry, sources
+from . import codes, formulas, lock, registry, sense_bindings, sources
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 UKRAINIAN_VOWELS = frozenset("аеєиіїоуюяАЕЄИІЇОУЮЯ")
@@ -169,6 +169,9 @@ def build_words(
     stamp: bool = False,
     mcp_commit: str | None = None,
     report: Callable[[str], None] | None = None,
+    private_input: Path | None = None,
+    key: bytes | None = None,
+    key_id: str | None = None,
 ) -> dict[str, Any]:
     """Build or update a level word store from a validated request file."""
     request_path = Path(request_path)
@@ -189,6 +192,7 @@ def build_words(
     )
     plans_base = Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
 
+    binding_context = sense_bindings.Context.read(level, evidence_base)
     store_path = evidence_base / "_words.yaml"
     registry_path = evidence_base / "_words.registry.yaml"
 
@@ -229,7 +233,8 @@ def build_words(
         )
 
         # Gather requests
-        requested_words = request_raw["words"]
+        formula_requests = [rw for rw in request_raw["words"] if rw.get("kind") == "formula"]
+        requested_words = [rw for rw in request_raw["words"] if rw.get("kind") != "formula"]
         lemmas_requested = [sources.normalize_spelling(rw["lemma"]) for rw in requested_words]
         lemma_pos_pairs = [(sources.normalize_spelling(rw["lemma"]), rw["pos"]) for rw in requested_words]
 
@@ -261,6 +266,7 @@ def build_words(
         changed_ids: list[str] = []
         pending_reasons: list[dict[str, str]] = []
         unglossed: list[dict[str, str]] = []
+        processed_ids: set[str] = set()
 
         for rw in requested_words:
             lemma = sources.normalize_spelling(rw["lemma"])
@@ -387,6 +393,7 @@ def build_words(
                         "row_sha256": sources.row_digest(matching_entry),
                     }
 
+            processed_ids.add(word_id)
             word_doc: dict[str, Any] = {
                 "id": word_id,
                 "lemma": lemma,
@@ -503,7 +510,13 @@ def build_words(
             if exact_cefr and exact_cefr.get("level") in {"A1", "A2", "B1", "B2", "C1", "C2"}:
                 word_doc["cefr"] = cefr_field(exact_cefr)
 
-            selection = sources.select_gloss(
+            # The meaning and note name the lesson's sense, so they precede gloss selection.
+            if note:
+                word_doc["note"] = note
+            if rw.get("meaning") is not None:
+                word_doc["meaning"] = rw["meaning"]
+
+            selection = binding_context.select(
                 word_doc,
                 gloss_batch.get((lemma, pos), []),
                 kaikki_batch.get(lemma),
@@ -511,6 +524,8 @@ def build_words(
                 ulif_entries=ulif_batch.get(lemma, []),
             )
             if selection.gloss is not None:
+                if selection.basis:
+                    word_doc["gloss_basis"] = selection.basis
                 word_doc["gloss_en"] = selection.gloss
                 word_doc["gloss_source"] = selection.source
                 if selection.ref is not None:
@@ -536,14 +551,120 @@ def build_words(
                 if heritage_hits:
                     word_doc["heritage"] = heritage_hits
 
-            # Note
-            if note:
-                word_doc["note"] = note
-
             if word_id in existing_words and existing_words[word_id] != word_doc:
                 changed_ids.append(word_id)
 
             words_out[word_id] = word_doc
+
+        private = None
+        bindings_changed = False
+        if private_input is not None and (
+            formula_requests or any(w.get("kind") == "formula" for w in words_out.values())
+        ):
+            from scripts.ingest.build_ohoiko_a1_reference import require_private_path
+
+            require_private_path(private_input, Path.cwd())
+            private = sense_bindings.private_entries(private_input, binding_context.inventory)
+            if not dry_run and (key is None or not key_id):
+                raise ValueError("commitment_key_required")
+
+        # Formula definitions survive while their gloss is withheld. Process lexical
+        # requests first so part resolution is independent of request ordering.
+        for request in formula_requests:
+            word = formulas.resolve_request(request, words_out)
+            formulas.validate(word, words_out, sources_instance)
+            original = next(
+                (
+                    r
+                    for r in registry_records
+                    if not r.get("retired")
+                    and r.get("kind") == "formula"
+                    and r["text"] == word["text"]
+                    and r["parts"] == word["parts"]
+                ),
+                None,
+            )
+            if request["want"] != "new" and (original is None or original["id"] != request["want"]):
+                raise ValueError("formula_identity_changed")
+            word["id"] = (
+                original["id"]
+                if original
+                else registry.allocate(registry_records, formula=word, allocated_at_build=built_fingerprint)
+            )
+            words_out[word["id"]] = word
+            processed_ids.add(word["id"])
+        for wid, old in list(words_out.items()):
+            if old.get("kind") != "formula":
+                continue
+            formulas.validate(old, words_out, sources_instance)
+            rows = sources_instance.formula_rows(old).raw
+            if wid not in binding_context.entries and not binding_context.invalid:
+                binding, _decision = sense_bindings.auto_formula_binding(
+                    old, rows, binding_context.inventory, private, key, key_id
+                )
+                if binding:
+                    binding_context.entries[wid] = binding
+                    bindings_changed = True
+            selection = binding_context.select(old, rows, None)
+            updated = {
+                k: v for k, v in old.items() if k not in {"gloss_en", "gloss_source", "gloss_ref", "gloss_basis"}
+            }
+            if selection.gloss is not None:
+                updated.update(
+                    gloss_en=selection.gloss,
+                    gloss_source=selection.source,
+                    gloss_ref=selection.ref,
+                    gloss_basis=selection.basis,
+                )
+            else:
+                unglossed.append({"word_id": wid, "reason": selection.reason})
+            words_out[wid] = updated
+            processed_ids.add(wid)
+            if wid in existing_words and updated != existing_words[wid]:
+                changed_ids.append(wid)
+
+        # A bindings change also invalidates carried records in a partial build.
+        # Re-read their gloss dependencies; preserve all other lexical evidence.
+        carried = [
+            w
+            for wid, w in words_out.items()
+            if wid not in processed_ids
+            and (binding_context.members(w) or wid in binding_context.entries or w.get("gloss_basis"))
+        ]
+        if carried:
+            carry_rows = sources_instance.gloss_rows((w["lemma"], w["pos"]) for w in carried).raw
+            carry_kaikki = sources_instance.kaikki_rows(w["lemma"] for w in carried).raw
+            carry_ulif = sources_instance.ulif_entries(w["lemma"] for w in carried).raw
+            for old in carried:
+                wid, lemma, pos = old["id"], old["lemma"], old["pos"]
+                selection = binding_context.select(
+                    old,
+                    carry_rows.get((lemma, pos), []),
+                    carry_kaikki.get(lemma),
+                    ulif_entries=carry_ulif.get(lemma, []),
+                )
+                updated = {
+                    k: v for k, v in old.items() if k not in {"gloss_en", "gloss_source", "gloss_ref", "gloss_basis"}
+                }
+                if selection.gloss is not None:
+                    updated.update({"gloss_en": selection.gloss, "gloss_source": selection.source})
+                    if selection.ref is not None:
+                        updated["gloss_ref"] = selection.ref
+                    if selection.basis:
+                        updated["gloss_basis"] = selection.basis
+                else:
+                    unglossed.append(
+                        {
+                            "lemma": lemma,
+                            "pos": pos,
+                            "reason": selection.reason,
+                            "word_id": wid,
+                            "candidates": list(selection.candidates),
+                        }
+                    )
+                if updated != old:
+                    changed_ids.append(wid)
+                words_out[wid] = updated
 
         # Check citing plans for any changed existing records (Rule 7)
         changed_plans_map: dict[str, list[str]] = {}
@@ -595,6 +716,8 @@ def build_words(
             store_bytes = lock.yaml_bytes(store_doc)
             store_lock_digest = lock.write(store_path, store_bytes)
             registry_lock_digest = registry.write(registry_path, registry_records)
+            if bindings_changed:
+                sense_bindings.write(evidence_base / sense_bindings.BINDINGS, level, binding_context.entries)
 
         # Collect summary metrics
         total_forms = sum(len(w.get("forms", [])) for w in sorted_words)
@@ -720,6 +843,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--vesum-db", type=Path, default=None, help="Override VESUM database path")
 
+    parser.add_argument(
+        "--private-input", type=Path, help="Optional private reference JSONL for formula selection; outside Git"
+    )
+    parser.add_argument("--key-file", type=Path, help="Host-local key for formula reference commitments")
+    parser.add_argument("--key-id", help="Public key identifier for formula reference commitments")
     args = parser.parse_args(argv)
 
     report = lambda msg: print(f"progress: {msg}", file=sys.stderr)  # noqa: E731
@@ -737,6 +865,9 @@ def main(argv: list[str] | None = None) -> int:
             dry_run=args.dry_run,
             stamp=args.stamp,
             report=report,
+            private_input=args.private_input,
+            key=args.key_file.read_bytes() if args.key_file else None,
+            key_id=args.key_id,
         )
     except Exception as exc:
         if args.json:

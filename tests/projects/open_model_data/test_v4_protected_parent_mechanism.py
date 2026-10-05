@@ -15,6 +15,7 @@ import pytest
 from _v4_linguistic_context_fixture import constraints as linguistic_constraints
 from _v4_linguistic_context_fixture import stored_preparation
 from _v4_packaged_runtime_fixture import RuntimeResources, WheelRelease
+from _v4_shared_runtime_fixtures import assert_authorized_request
 from learn_ukrainian_v4_runtime import semantic_inputs, service_runtime
 from learn_ukrainian_v4_runtime import v4_a7_private_ledger as ledger
 from learn_ukrainian_v4_runtime import v4_canonical_authority_store as authority
@@ -27,12 +28,29 @@ from test_v4_operation_lifecycle import principal, role_connection
 from scripts.fleet_comms.request_executor import RequestExecutor
 
 
-def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect, review_transform=None,
-                   reviewer_sources=True, reviewer_negative=False, reviewer_invalid=False):
+def _run_real_pair(
+    pg_cluster,
+    tmp_path,
+    monkeypatch,
+    built_wheel,
+    signing_resources,
+    defect,
+    review_transform=None,
+    reviewer_sources=True,
+    reviewer_negative=False,
+    reviewer_invalid=False,
+):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg_cluster.info.dsn)
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-    io = RuntimeResources(tmp_path, pg_cluster, monkeypatch, defect=defect, reviewer_sources=reviewer_sources,
-                          reviewer_negative=reviewer_negative, reviewer_invalid=reviewer_invalid)
+    io = RuntimeResources(
+        tmp_path,
+        pg_cluster,
+        monkeypatch,
+        defect=defect,
+        reviewer_sources=reviewer_sources,
+        reviewer_negative=reviewer_negative,
+        reviewer_invalid=reviewer_invalid,
+    )
     constraints = linguistic_constraints()
     release = WheelRelease(built_wheel)
     try:
@@ -49,14 +67,16 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
                     raw=canonical_bytes({"schema": "hramatka-v4-operation-authorize.v1"}),
                     policy_digest=policy,
                 )
-                assert identifier
+                assert_authorized_request(conn, identifier, request_id)
                 owned = store.claim(
                     principal=replace(p, jti=request_id + "-execute"),
                     raw=canonical_bytes({"schema": "hramatka-v4-operation-execute.v1", "authorization_id": identifier}),
                     authorization_id=identifier,
                     policy_digest=policy,
                 )
-                assert owned["request_id"] == request_id
+                assert owned["request_id"] == request_id, (
+                    f"claim request mismatch: expected {request_id}, got {owned['request_id']}"
+                )
                 result = service._execute_owned_claim(owned)
                 assert result["state"] == "terminal"
                 record = authority.resolve_execution_observation(
@@ -114,8 +134,12 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
                 before = conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"]
                 with pytest.raises(OperationRefused, match="reviewer_sources_evidence_absent"):
                     run(reviewer.request_id, review_snapshot)
-                assert conn.execute("SELECT state FROM requests WHERE request_id=%s",
-                                    (reviewer.request_id,)).fetchone()["state"] == "failed"
+                assert (
+                    conn.execute("SELECT state FROM requests WHERE request_id=%s", (reviewer.request_id,)).fetchone()[
+                        "state"
+                    ]
+                    == "failed"
+                )
                 if reviewer_invalid:
                     rows = conn.execute(
                         "SELECT record_json FROM v4_sources_invocations WHERE request_id=%s",
@@ -124,8 +148,13 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
                     assert len(rows) == 1
                     assert json.loads(rows[0]["record_json"])["disposition"] == "invalid_input"
                 assert conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"] == before
-                assert conn.execute("SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s",
-                                    (reviewer.request_id,)).fetchone()["n"] == 0
+                assert (
+                    conn.execute(
+                        "SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s",
+                        (reviewer.request_id,),
+                    ).fetchone()["n"]
+                    == 0
+                )
                 return None
             _, review = run(reviewer.request_id, review_snapshot)
             signed_review = fleet.issue_reviewer_execution_receipt(task_id=review["task_id"], run_id=review["run_id"])
@@ -172,7 +201,10 @@ def test_real_parent_consumes_author_constraints_and_reviewer_row(
             _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect)
         with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
             assert [conn.execute(query).fetchone()["n"] for query in queries] == before
-            assert conn.execute("SELECT count(*) AS n FROM requests WHERE state='failed'").fetchone()["n"] == failed_before + 1
+            assert (
+                conn.execute("SELECT count(*) AS n FROM requests WHERE state='failed'").fetchone()["n"]
+                == failed_before + 1
+            )
     else:
         _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect)
 
@@ -194,12 +226,15 @@ def test_actual_parent_refuses_failed_child_without_artifact_or_observation(
         executable = tmp_path / "fixture-cli"
         action = (
             "sys.stdout.write('x' * 2097152);sys.stdout.flush();raise SystemExit(0)"
-            if failure == "capture_limit" else (
+            if failure == "capture_limit"
+            else (
                 "import subprocess,time;"
                 "subprocess.Popen([sys.executable,'-c','import time;time.sleep(30)']);time.sleep(10)"
             )
         )
-        executable.write_text(executable.read_text().replace("prompt=sys.stdin.read()", "prompt=sys.stdin.read()\n    " + action))
+        executable.write_text(
+            executable.read_text().replace("prompt=sys.stdin.read()", "prompt=sys.stdin.read()\n    " + action)
+        )
         for adapter in profile["adapters"].values():
             for entry in adapter["files"]:
                 if entry["source"] == str(executable):
@@ -211,20 +246,42 @@ def test_actual_parent_refuses_failed_child_without_artifact_or_observation(
             if failure == "execution_timeout":
                 # Shorten the actual canonical lease, with no clock replacement.
                 with conn.transaction():
-                    deadline = conn.execute("SELECT clock_timestamp()+interval '2 seconds' AS value").fetchone()["value"]
-                    conn.execute("UPDATE v4_operation_authorizations SET deadline_at=%s WHERE request_id=%s", (deadline, owned["request_id"]))
-                    conn.execute("UPDATE v4_execution_attempts SET deadline_at=%s WHERE attempt_id=%s", (deadline, owned["attempt_id"]))
-                    conn.execute("UPDATE requests SET expires_at=%s WHERE request_id=%s", (str(deadline), owned["request_id"]))
+                    deadline = conn.execute("SELECT clock_timestamp()+interval '2 seconds' AS value").fetchone()[
+                        "value"
+                    ]
+                    conn.execute(
+                        "UPDATE v4_operation_authorizations SET deadline_at=%s WHERE request_id=%s",
+                        (deadline, owned["request_id"]),
+                    )
+                    conn.execute(
+                        "UPDATE v4_execution_attempts SET deadline_at=%s WHERE attempt_id=%s",
+                        (deadline, owned["attempt_id"]),
+                    )
+                    conn.execute(
+                        "UPDATE requests SET expires_at=%s WHERE request_id=%s", (str(deadline), owned["request_id"])
+                    )
                 owned["deadline_at"] = deadline
             before = conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"]
-            runtime = service_runtime.V4ServiceRuntime(store=OperationStore(conn), verifier=None, release_provider=WheelRelease(built_wheel))
+            runtime = service_runtime.V4ServiceRuntime(
+                store=OperationStore(conn), verifier=None, release_provider=WheelRelease(built_wheel)
+            )
             started = time.monotonic()
             with pytest.raises(OperationRefused, match=failure):
                 runtime._execute_owned_claim(owned)
             assert time.monotonic() - started < 7
-            assert conn.execute("SELECT state FROM requests WHERE request_id=%s", (owned["request_id"],)).fetchone()["state"] == "failed"
+            assert (
+                conn.execute("SELECT state FROM requests WHERE request_id=%s", (owned["request_id"],)).fetchone()[
+                    "state"
+                ]
+                == "failed"
+            )
             assert conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"] == before
-            assert conn.execute("SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s", (owned["request_id"],)).fetchone()["n"] == 0
+            assert (
+                conn.execute(
+                    "SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s", (owned["request_id"],)
+                ).fetchone()["n"]
+                == 0
+            )
     finally:
         io.close()
 
@@ -235,15 +292,15 @@ def test_reviewer_pass_without_own_sources_call_is_not_observed_or_receipted(
     # A real author has verified Sources, but that attempt cannot satisfy the
     # reviewer. The fixture advertises all five tools and emits PASS without
     # calling Sources; the real parent must refuse before artifact persistence.
-    _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources,
-                   False, reviewer_sources=False)
+    _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, False, reviewer_sources=False)
 
 
 def test_reviewer_sources_negative_evidence_retains_real_fail_verdict(
     pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources
 ):
-    result = _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources,
-                            False, reviewer_negative=True)
+    result = _run_real_pair(
+        pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, False, reviewer_negative=True
+    )
     assert result["reviewer_receipt"]["verdict"] == "FAIL"
     assert result["review_record"]["verification_tool_ids"] == []
 
@@ -251,5 +308,4 @@ def test_reviewer_sources_negative_evidence_retains_real_fail_verdict(
 def test_reviewer_malformed_sources_call_does_not_count_as_verification(
     pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources
 ):
-    _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources,
-                   False, reviewer_invalid=True)
+    _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, False, reviewer_invalid=True)

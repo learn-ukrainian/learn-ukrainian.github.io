@@ -67,6 +67,11 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 AGY_APP_DATA_ROOT = Path.home() / ".gemini" / "antigravity-cli"
 AGY_CONVERSATIONS_ROOT = AGY_APP_DATA_ROOT / "conversations"
 DEFAULT_TIMEOUT_S = 1800  # 30 min - covers most multi-turn dispatches
@@ -115,7 +120,7 @@ def _read_transcript_events(thread_id: str | None) -> list[dict]:
 
     events: list[dict] = []
     try:
-        lines = transcript.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(transcript.read_text(encoding="utf-8"))
     except OSError:
         return []
 
@@ -135,7 +140,7 @@ def _parse_stdout_events(stdout: str) -> list[dict]:
     """Parse stdout JSON lines, or wrap plain print-mode stdout as one event."""
     events: list[dict] = []
     saw_json = False
-    for line in stdout.splitlines():
+    for line in split_jsonl_lines(stdout):
         if not line.strip():
             continue
         try:

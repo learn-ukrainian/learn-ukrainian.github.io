@@ -1,0 +1,516 @@
+bindings:
+- commitment: f672862cedca0d2c9fc0b70141d9707c8ab2cb444ccbe116c72e5b47af41bdc8
+  gloss: we
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#48
+  match: dictionary
+  method: ohoiko_reference
+  word: W-006
+- commitment: 1cc85e731760bc93cf9100cf6a37e422aa70cd8fe957b71dee6a64fb3ee0bd60
+  gloss: from
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p203 Словничок#357
+  match: dictionary
+  method: ohoiko_reference
+  word: W-021
+- commitment: ba3736182101d218d7363ba606a02b0f74f13ac0db6a3823ab39fde50bab5127
+  gloss: 'on'
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p206 Словничок#686
+  match: book
+  method: ohoiko_reference
+  word: W-025
+- commitment: 9165dad2fc3bd005992f2b1c908811058a09c736c8bbd74a393a8d125d2cd49d
+  gloss: to
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p203 Словничок#355
+  match: dictionary
+  method: ohoiko_reference
+  word: W-026
+- commitment: 67b69862ff06076f241f173b70236b8feea2eeb311c6233c3283585214522e98
+  gloss: for
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p203 Словничок#354
+  match: dictionary
+  method: ohoiko_reference
+  word: W-029
+- commitment: 0398d6bebfaa0a07ef9727200a44adeddc350e66a0c3f764b7e1e5b0d1850810
+  gloss: before
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p214 Словничок#1576
+  match: dictionary
+  method: ohoiko_reference
+  word: W-038
+- commitment: 31389adc4a4fc80450d3a86c49eff3a9cc7de4d70ca2b63a4adf04b1e02d9be1
+  gloss: after
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p210 Словничок#1204
+  match: dictionary
+  method: ohoiko_reference
+  word: W-041
+- commitment: 3aa54e92aa871f53a3ea13b7a2d8c57244b557daa5f9c6de39cb5f213f665bc7
+  gloss: near
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p210 Словничок#1136
+  match: dictionary
+  method: ohoiko_reference
+  word: W-044
+- commitment: ba495fe9eb3b8fa9996e657cf8e064246cc5727fdc2a0386a2ae8205b292b78d
+  gloss: through
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p215 Словничок#1645
+  match: dictionary
+  method: ohoiko_reference
+  word: W-045
+- commitment: 1b4fb079cb79390b61eac90c4942dc1d19a0decf1246557de28cea2bd4aefb0a
+  gloss: about
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#502
+  match: dictionary
+  method: ohoiko_reference
+  word: W-046
+- commitment: 977699297bea7f901ddcb1bbd22a91c521ec7ce1a20cbc842ab99b61bcc197bf
+  gloss: but
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#469
+  match: dictionary
+  method: ohoiko_reference
+  word: W-054
+- commitment: a2765b78ddf7aa004433f0299a0095ab01a0cb86bce8bf496dac9dcc2e4f5a4d
+  gloss: or
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#16
+  match: dictionary
+  method: ohoiko_reference
+  word: W-056
+- commitment: ef565cbe22359888c6680f6d58f37a1cd31d16a4e5cfb6e8f9b4c80dad5399eb
+  gloss: here it is
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#307
+  match: book
+  method: ohoiko_reference
+  word: W-065
+- commitment: e8cfebfed6852a2aeee759fee96ab1dd182a34bf28fcec4ee8ddd5857b941efb
+  gloss: yet
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p213 Словничок#1492
+  match: dictionary
+  method: ohoiko_reference
+  word: W-066
+- commitment: dd79e9f09a42b212a131129b5bc18c3006e0368f142e950ef0c3270daa442fa8
+  gloss: already
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p206 Словничок#710
+  match: dictionary
+  method: ohoiko_reference
+  word: W-068
+- commitment: a27ed57f41579b041cd12a9d6090c1c2816a2baf7832177be59887cc3a792aac
+  gloss: only
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p213 Словничок#1506
+  match: book
+  method: ohoiko_reference
+  word: W-070
+- commitment: d2bc4605fb2bc49b056ab1a78e066a08e0624db8a4433702fe47e194d72a21f5
+  gloss: only
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p203 Словничок#394
+  match: book
+  method: ohoiko_reference
+  word: W-072
+- commitment: 725207a35fe40ecbb1316c06d1a4eecc57a9e60b8d8654d403579af9b96203d1
+  gloss: day
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#4
+  match: dictionary
+  method: ohoiko_reference
+  word: W-076
+- commitment: aa4690e0d85d5fda3c88ccf2c73debdc06b31a093eec2e347d095435b9f2fba3
+  gloss: mom
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#47
+  match: dictionary
+  method: ohoiko_reference
+  word: W-081
+- commitment: 034714fc0a51395f6c26d30a47ee8e4dde8b0ab2fb309cfec10908bd0261ada4
+  gloss: plum
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#269
+  match: dictionary
+  method: ohoiko_reference
+  word: W-083
+- commitment: 7f8d199c55b3113dd9fef196a2d1f9687d8ed83f921257b051c2f9245f5a75ec
+  gloss: hand
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#145
+  match: dictionary
+  method: ohoiko_reference
+  word: W-084
+- commitment: db5cbb311e3906b5a27ec5a3a64d1cb9bbc6f2f2a52d2a365d4490f5cf461b5e
+  gloss: to hear
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p223 Додаток#2040
+  match: dictionary
+  method: ohoiko_reference
+  word: W-086
+- commitment: 8c495bf522dd53cd60caa252c8db230b0d2cca1b73c7a79edaeefb87c530ca93
+  gloss: to see
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#526
+  match: dictionary
+  method: ohoiko_reference
+  word: W-087
+- commitment: 6a0fd7b627bc8a99cb98494cf745beb53a628929d278812a91983b647276efc2
+  gloss: to read
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p223 Додаток#2037
+  match: dictionary
+  method: ohoiko_reference
+  word: W-088
+- commitment: 2ac14837062fa164ad2c7c731831ed786055eb5a31ddcbbe3d6de891191db7cb
+  gloss: to write
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p221 Додаток#1926
+  match: dictionary
+  method: ohoiko_reference
+  word: W-089
+- commitment: c2cc4556915f06ed9bb42ab507284b7fa85f646c6e82e983088d92264b611555
+  gloss: 'yes'
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#547
+  match: dictionary
+  method: ohoiko_reference
+  word: W-096
+- commitment: 225385eb02e56c6df182cff614c6beb71ed4da546f46b5b8805bdf7d7b139792
+  gloss: braid
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#259
+  match: dictionary
+  method: ohoiko_reference
+  word: W-097
+- commitment: 414d3a9247226012f3e2d484639474052cc2b723718f634559d6e868f69ab900
+  gloss: dad
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#644
+  match: dictionary
+  method: ohoiko_reference
+  word: W-101
+- commitment: b54a90d0a0d648ab9403222f34ea112b7b683301306dd0338ffb8f5eb6671238
+  gloss: roof
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p212 Словничок#1364
+  match: dictionary
+  method: ohoiko_reference
+  word: W-103
+- commitment: 2112fe44fdb4dd0cee4651a90b3d272958e6f572e004401c42dc3f1868d50e5b
+  gloss: winter
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#109
+  match: dictionary
+  method: ohoiko_reference
+  word: W-104
+- commitment: b778bf488e7ccac6526872b8cdda6c1c9dd0b3544edfc1e0a61a186f94297595
+  gloss: squirrel
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p214 Словничок#1582
+  match: dictionary
+  method: ohoiko_reference
+  word: W-105
+- commitment: cf8c431507da61129fc6bfc086e86514e871ca5016d1b0d14db3e8948ed946f6
+  gloss: tea
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#519
+  match: dictionary
+  method: ohoiko_reference
+  word: W-109
+- commitment: a2938d3e50422537a3ba01bf69fd8573d01564b3868ee866c42b7151c499bf5c
+  gloss: bread
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#515
+  match: dictionary
+  method: ohoiko_reference
+  word: W-110
+- commitment: ce4e2707cebe03e40427992e350e42cf911985e22a4d05893523cbee1a3c62d5
+  gloss: tooth
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#255
+  match: dictionary
+  method: ohoiko_reference
+  word: W-118
+- commitment: 18c1a76202485a5e14c9cf9efc678bd2972a9aee98f5dcb0660eaceab4bf3baa
+  gloss: wattle fence
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#324
+  match: book
+  method: ohoiko_reference
+  word: W-119
+- commitment: 88b487b6e4cfb3dca94d65793d4bfbb9204b765f2367ddd778d6e8a40b7704ce
+  gloss: shadow
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#155
+  match: dictionary
+  method: ohoiko_reference
+  word: W-120
+- commitment: deb5686486c4ea9d811bcf7d24ac560be09be60458290aa9f9c28b7a705e2ed7
+  gloss: food
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#175
+  match: dictionary
+  method: ohoiko_reference
+  word: W-121
+- commitment: 1befe7de16cf897d90b018b33aeb87f5f0c4d61abb21f879e7b21c4864b2e088
+  gloss: baby
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#192
+  match: dictionary
+  method: ohoiko_reference
+  word: W-123
+- commitment: 05dbac3ea7f0e1ecabaee4d646068b92a1e67114051da6f63d3630de048bcb29
+  gloss: blue
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#210
+  match: book
+  method: ohoiko_reference
+  word: W-126
+- commitment: 8db0e848fb11984eb3a298e44d5af2ec105e42689b93a7180e1b0ec711f905b7
+  gloss: raccoon
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#172
+  match: dictionary
+  method: ohoiko_reference
+  word: W-127
+- commitment: e760ce5f9bd49a8be3a30465a64ce30267800490c7285350047207f4e1de2aa2
+  gloss: rain
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#251
+  match: dictionary
+  method: ohoiko_reference
+  word: W-130
+- commitment: 36f236d929c884b983e67f5fa7236430b9c73d60e154939b2adb87d2c6049fe3
+  gloss: farm
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p213 Словничок#1486
+  match: dictionary
+  method: ohoiko_reference
+  word: W-131
+- commitment: 93b3751cc622dc63811ea15777de5aabe02f061ddbf73edf916ed31b6edfbf5f
+  gloss: to drink
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p221 Додаток#1930
+  match: dictionary
+  method: ohoiko_reference
+  word: W-137
+- commitment: 0b1b3c1c1e8a7ac55428e8dbc279eaa5b16cec3c8cf4f734e7f6f7feb27dc1df
+  gloss: family
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#63
+  match: dictionary
+  method: ohoiko_reference
+  word: W-138
+- commitment: 6d1d7f49a65af7d07f0a4548caa251c57c02915a190af82b173c6825b6495271
+  gloss: ball
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p203 Словничок#417
+  match: dictionary
+  method: ohoiko_reference
+  word: W-139
+- commitment: c1879499897ed8a473a279669a60e374859d114f94b10fd93cec3f0fdcf348ef
+  gloss: to rejoice
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p210 Словничок#1132
+  match: dictionary
+  method: ohoiko_reference
+  word: W-140
+- commitment: c4734e598e13405221b4d96df282002c3c2167c393197ec6cfe9414de0ab7c5e
+  gloss: purée
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#206
+  match: dictionary
+  method: ohoiko_reference
+  word: W-143
+- commitment: 2f2ebab746f603e27ce5dc4a428b07349347c64a548c46d90da098178cd13a9d
+  gloss: beech
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#91
+  match: dictionary
+  method: ohoiko_reference
+  word: W-148
+- commitment: bd4f0444ea4e4fc2034ffa8b77be7e834091bba1244ef366e5a39da498804323
+  gloss: to play
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#478
+  match: dictionary
+  method: ohoiko_reference
+  word: W-149
+- commitment: 3239b1601af476b976f7b608803806bab28ff275a248c46d35df8c5f3b8543da
+  gloss: son
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#147
+  match: dictionary
+  method: ohoiko_reference
+  word: W-158
+- commitment: 7abfe1ecb60da32e9e4e5ca28ed80b616663089c9ad601f8a4437f725be6c6b3
+  gloss: spring
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#95
+  match: dictionary
+  method: ohoiko_reference
+  word: W-160
+- commitment: 8e0932834addfca11c2d31b8f85c23273753ea6120ecbc6c772cb59965a638c1
+  gloss: who
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#596
+  match: dictionary
+  method: ohoiko_reference
+  word: W-162
+- commitment: 1712e94ef752ac025bd8dc70525c370d333d8ae39adc80eee2447d1e1e1a32d8
+  gloss: where
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#240
+  match: dictionary
+  method: ohoiko_reference
+  word: W-163
+- commitment: e7e58b4c4a56588cf9393d3140a4eff14293c03bdf4d244f06d522d27f80cb49
+  gloss: what
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#279
+  match: dictionary
+  method: ohoiko_reference
+  word: W-164
+- commitment: 458bb4b2d87fcb0abf384dad6c2efc22228c462c5560395942e37fcc45b0a0ff
+  gloss: to love
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p220 Додаток#1875
+  match: dictionary
+  method: ohoiko_reference
+  word: W-165
+- commitment: 76be52cceb10d8000bbf157062c7c1f93b2dd4c3b8d51e5680e77080ba2ee4fe
+  gloss: time
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#275
+  match: dictionary
+  method: ohoiko_reference
+  word: W-170
+- commitment: f579f06c190430549999d049c4c5ac0d86c0028fa6fa91e4f3dc6afed1a9c5c2
+  gloss: letter
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#92
+  match: dictionary
+  method: ohoiko_reference
+  word: W-171
+- commitment: 0955a008af8949d6b7400866d7092e6930951e1f13b29c5278b1019f3565ef39
+  gloss: blueness
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#316
+  match: book
+  method: ohoiko_reference
+  word: W-176
+- commitment: 31d1e4cb886b20f19299203198f203a86abece223c291023f8a1cbc4d66db266
+  gloss: rice
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#314
+  match: dictionary
+  method: ohoiko_reference
+  word: W-177
+- commitment: 8a8700e970ca8d96059255a6e999141259085dfc4e166ea417f10a9905826890
+  gloss: lynx
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#315
+  match: dictionary
+  method: ohoiko_reference
+  word: W-178
+- commitment: 95c9b9e84abe311e72501daa9f65629ea19c4abe2833a04f49639d5e3d2180a5
+  gloss: to beat
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#230
+  match: dictionary
+  method: ohoiko_reference
+  word: W-180
+- commitment: b4bd83e5635d6b41262a913922eef8e8cec3754be582af5e3e426dc2a73d18af
+  gloss: holiday
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p203 Словничок#433
+  match: dictionary
+  method: ohoiko_reference
+  word: W-181
+- commitment: da8ee065c77f33e343263223c23533e2ce6c5b668ed1a2d537273131f4ef22ef
+  gloss: Ukraine
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#69
+  match: dictionary
+  method: ohoiko_reference
+  word: W-183
+- commitment: c40819479ff1ccec588c1ed4a943987448998751eec9cf04e89a7edd14b4948f
+  gloss: Kyiv
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#39
+  match: dictionary
+  method: ohoiko_reference
+  word: W-184
+bindings_schema: 1
+level: a1
+matcher: reference_sense_v1

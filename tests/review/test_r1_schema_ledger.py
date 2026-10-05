@@ -1750,3 +1750,25 @@ def test_resource_catalogue_checks_are_ledgered_review_evidence(tmp_path, text, 
     [entry] = records(ledger)
     assert entry["receipt_id"] == receipt and entry["tool"] == "search_resources"
     assert search_outcome(entry["status"], entry["outcome_facts"]) == outcome
+
+
+@pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_ledger_records_preserve_unicode_separators(tmp_path, sep):
+    path = tmp_path / "receipt.jsonl"
+    receipt_id = append(
+        path,
+        review_id="fixture",
+        attempt_id="fixture",
+        manifest_sha256="a" * 64,
+        tool="verify_words",
+        server_version="fixture",
+        arguments={"note": f"a{sep}b"},
+        snapshots={},
+        status="ok",
+        result=f"c{sep}d",
+    )
+    found = records(path)
+    assert len(found) == 1
+    assert found[0]["receipt_id"] == receipt_id
+    assert found[0]["arguments"] == {"note": f"a{sep}b"}
+    assert found[0]["result"] == f"c{sep}d"

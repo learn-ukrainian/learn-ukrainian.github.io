@@ -4,7 +4,14 @@
  */
 
 import {
+  atlasNoteDetail,
+  displayGloss,
   resolveHeritageBoxes,
+  standardAlternatives,
+  SURZHYK_TO_AVOID_SOURCE,
+  usageSourceProof,
+  type UsageLabel,
+  type UsageSourceProof,
   type WarningSeverity,
 } from "./heritage-severity";
 import {
@@ -150,9 +157,11 @@ export interface HeritageAttestation {
 }
 
 export interface CuratedCalque {
-  kind: "participle" | "phrasal" | "sense_restricted";
+  kind: "participle" | "phrasal" | "sense_restricted" | "lexical";
   corrections: string[];
   note: string;
+  noteUk?: string;
+  evidence?: string[];
   source: string[];
   calque_sense?: string;
   authentic_sense?: string;
@@ -160,8 +169,9 @@ export interface CuratedCalque {
 
 export interface ReverseCalque {
   calque: string;
-  kind: "participle" | "phrasal" | "sense_restricted";
+  kind: "participle" | "phrasal" | "sense_restricted" | "lexical";
   note: string;
+  noteUk?: string;
   source: string[];
   calque_sense?: string;
 }
@@ -178,6 +188,7 @@ export interface HeritageStatus {
   "§6_note"?: {
     corrections: string[];
     note: string;
+    noteUk?: string;
     source: string[];
     citation?: string;
   } | null;
@@ -1159,7 +1170,12 @@ export function buildWordAtlasArticleView(
   );
   const shouldShowEditorialWarning = Boolean(heritageBoxes.red);
   const shouldShowHeritageDefense = Boolean(heritageBoxes.green);
-  const styleNotes = buildStyleNotes(heritage);
+  const styleNotes = buildStyleNotes(heritage, heritageBoxes.usageLabel, {
+    gloss: entry.gloss ?? null,
+    headword: entry.lemma,
+    avoidListed: entry.primary_source === SURZHYK_TO_AVOID_SOURCE,
+    sourceProof: usageSourceProof(entry.lemma),
+  });
   const statusBadges = buildStatusBadges({
     heritageBoxes,
     cefrLevel,
@@ -1273,6 +1289,7 @@ export function buildWordAtlasArticleView(
     externalGroups,
     componentLinks,
     phraseHasGloss,
+    glossDisplay: displayGloss(entry.gloss, heritageBoxes.usageLabel),
     shouldShowEditorialWarning,
     shouldShowHeritageDefense,
     styleNotes,
@@ -1318,12 +1335,13 @@ function buildStatusBadges(args: {
       className: "heritage-warn",
       label: heritageBoxes.inline?.label ?? "⚠ Потребує українського відповідника",
     });
-  } else if (heritageBoxes.yellow) {
+  } else if (heritageBoxes.yellow?.scope === "lemma") {
+    // #9603: a sense- or phrase-scoped caution never becomes a headword badge.
     badges.push({ className: "heritage-warn", label: "Калькове застереження" });
   } else if (heritageBoxes.green) {
     badges.push({
       className: "heritage-ok",
-      label: heritageBoxes.inline?.label ?? "✓ Питома українська лексика",
+      label: heritageBoxes.inline?.label ?? "✓ Засвідчена українська форма",
     });
   } else if (heritageBoxes.blue) {
     badges.push({ className: "heritage-warn", label: "СУМ-11: редакторський прапорець" });
@@ -1334,18 +1352,22 @@ function buildStatusBadges(args: {
       label: `CEFR ${cefrLevel}${enrichment?.cefr?.source?.includes("estimated") ? " · орієнтовно" : ""}`,
     });
   }
-  if (
-    heritage?.classification === "historism" ||
-    heritage?.classification === "archaism" ||
-    heritage?.classification === "authentic-archaism"
-  ) {
+  // Register badges follow the source-scoped label, not the raw classification.
+  const usageCode = heritageBoxes.usageLabel.code;
+  if (usageCode === "hist" || usageCode === "arch") {
     badges.push({
       className: "archaic",
-      label: heritage.classification === "historism" ? "Історизм у сучасному вжитку" : "Архаїзм",
+      // #9603: the badge attributes the source marker; no current-usage claim.
+      label: usageCode === "hist" ? `Історизм · ${heritageBoxes.usageLabel.authority.join(", ")}` : "Архаїзм",
+      title: heritageBoxes.usageLabel.authority.join(", "),
     });
   }
-  if (heritage?.classification === "dialect") {
-    badges.push({ className: "dialect", label: "Регіонально-літературне" });
+  if (usageCode === "dial") {
+    badges.push({
+      className: "dialect",
+      label: "Регіонально-літературне",
+      title: heritageBoxes.usageLabel.authority.join(", "),
+    });
   }
   if (isFullyMarked && dominantRegisterLabel) {
     badges.push({
@@ -1376,20 +1398,120 @@ function buildEtymologyStages(etymology: SourcedText | undefined, lemma: string)
   ];
 }
 
-function buildStyleNotes(heritage: HeritageStatus | null) {
+const USAGE_CLASS_LABELS_UK: Record<string, string> = {
+  "authentic-archaism": "архаїзм",
+  archaism: "архаїзм",
+  dialect: "діалектизм",
+  historism: "історизм",
+  borrowing: "запозичення",
+};
+
+function asSentence(text: string): string {
+  const trimmed = text.trim();
+  return /[.!?…]$/u.test(trimmed) ? trimmed : `${trimmed}.`;
+}
+
+// #9603: the reverse record names the warned form (``calque``), the
+// replacement (this headword) and its own scope note. Its citations are
+// references, not an excerpt establishing the replacement.
+function reverseCalqueNote(item: ReverseCalque, headword: string): string {
+  const where =
+    item.kind === "sense_restricted"
+      ? item.calque_sense
+        ? ` (лише в значенні: ${item.calque_sense})`
+        : " (лише в окремому значенні)"
+      : item.kind === "phrasal"
+        ? " (у сполученні)"
+        : "";
+  const context = (item.noteUk || item.note || "").trim();
+  const contextClause = context ? ` Примітка запису: ${asSentence(context)}` : "";
+  const sources = item.source?.length ? ` Посилання запису: ${item.source.join(", ")}.` : "";
+  return (
+    `Запис Атласу подає «${headword}» як заміну для «${item.calque}»${where}.${contextClause}` +
+    ` Застереження стосується «${item.calque}», а не цього слова.` +
+    ` Витягу з нормативного джерела, який установлював би цю заміну та її обсяг, запис не містить.${sources}`
+  );
+}
+
+const MAX_EVIDENCE_NOTES = 2;
+
+function avoidListNote(usageLabel: UsageLabel, alternatives: string[]): string {
+  const offered =
+    usageLabel.scope !== "unresolved" && alternatives.length > 0
+      ? ` Атлас пропонує відповідники: ${alternatives.join(", ")}; чи стосується це всього слова, окремого значення чи сполучення, запис не визначає.`
+      : "";
+  return `Слово внесено до переліку Атласу «суржик, якого слід уникати». Витягу з джерела, який стосувався б усього слова, запис не містить, тому слово не позначено як ненормативне.${offered}`;
+}
+
+// #9603: alternatives are a source's only with admitted source proof for the headword; otherwise they are Atlas's.
+function alternativesClause(proof: UsageSourceProof | null, alternatives: string[]): string {
+  if (proof?.corrections.length) {
+    const locators = Array.from(new Set([...proof.judgments, ...proof.citations].map((item) => item.locator)));
+    return `Джерело (${locators.join(", ")}) радить: ${proof.corrections.join(", ")}.`;
+  }
+  return alternatives.length > 0 ? `Атлас пропонує відповідники, не звірені з джерелом: ${alternatives.join(", ")}.` : "";
+}
+
+type StyleNoteContext = { gloss: string | null; headword?: string; avoidListed: boolean; sourceProof: UsageSourceProof | null };
+
+function unresolvedNotes(heritage: HeritageStatus | null, usageLabel: UsageLabel, context: StyleNoteContext): string[] {
+  const notes: string[] = [];
+  const alternatives = standardAlternatives(heritage, context.gloss);
+  const classLabel = USAGE_CLASS_LABELS_UK[heritage?.classification ?? ""];
+  if (alternatives.length > 0) {
+    // Source proof whose scope the record leaves open differs from no source proof at all.
+    const why = context.sourceProof?.corrections.length ? "Запис Атласу не встановлює, чи це стосується всього слова, окремого значення чи сполучення" : "Перевіреного витягу з джерела запис не містить";
+    notes.push(`${alternativesClause(context.sourceProof, alternatives)} ${why}, тому слово не позначено як русизм або кальку.`);
+  } else if (classLabel && usageLabel.evidence) {
+    // A source headword-slot marker that the modern card does not confirm for the whole word.
+    notes.push(
+      `${usageLabel.authority.join(", ")}: ${asSentence(usageLabel.evidence)} Сучасна тлумачна стаття про це слово не має такої позначки в заголовку або подає кілька значень чи омонімів, тому позначку «${classLabel}» не показано як ознаку всього слова.`,
+    );
+  } else if (classLabel) {
+    notes.push(
+      `Атлас не пов'язав класифікацію «${classLabel}» з позначкою джерела саме для цього слова й цього значення, тому її не показано як ознаку слова.`,
+    );
+  }
+  // Citations stored with an old record are provenance, not checked source excerpts.
+  for (const item of (heritage?.curated_calque?.evidence ?? []).slice(0, MAX_EVIDENCE_NOTES)) {
+    const separator = item.indexOf(":");
+    if (separator > 0) {
+      notes.push(
+        `Посилання запису Атласу, не звірене з джерелом (${item.slice(0, separator).trim()}): ${asSentence(item.slice(separator + 1))}`,
+      );
+    }
+  }
+  const atlasNote = atlasNoteDetail(heritage?.curated_calque?.noteUk ?? heritage?.["§6_note"]?.noteUk);
+  if (atlasNote) notes.push(asSentence(atlasNote));
+  return notes;
+}
+
+function buildStyleNotes(heritage: HeritageStatus | null, usageLabel: UsageLabel, context: StyleNoteContext) {
   const notes: string[] = [];
   if (heritage?.russian_shadow) {
     notes.push(
       "Морфологічна тінь російської форми: перевіряйте відмінювання за VESUM та Правописом 2019.",
     );
   }
-  if (heritage?.calque_warning?.detail) {
-    notes.push(`Калькове застереження: ${heritage.calque_warning.detail}`);
-  }
+  // #9603: stored Atlas prose is commentary, never a source excerpt, in every reader.
+  const detail = atlasNoteDetail(heritage?.calque_warning?.detail);
+  if (detail) notes.push(asSentence(detail));
   if (heritage?.curated_calque) {
-    notes.push(
-      `${heritage.curated_calque.note} Нейтральні відповідники: ${heritage.curated_calque.corrections.join(", ")}.`,
-    );
+    const note = atlasNoteDetail(heritage.curated_calque.note);
+    const offered = alternativesClause(context.sourceProof, heritage.curated_calque.corrections);
+    notes.push([note && asSentence(note), offered].filter(Boolean).join(" "));
+  }
+  // #9603: the avoid list is provenance; without bound evidence it stays a note.
+  const boundCondemnation = usageLabel.scope === "lemma" && (usageLabel.code === "rus" || usageLabel.code === "calq");
+  if (context.avoidListed && !boundCondemnation) {
+    notes.push(avoidListNote(usageLabel, standardAlternatives(heritage, context.gloss)));
+  }
+  // Guidance whose scope the record does not establish stays a note.
+  if (usageLabel.scope === "unresolved") {
+    notes.push(...unresolvedNotes(heritage, usageLabel, context));
+  }
+  for (const item of heritage?.reverse_calques ?? []) {
+    notes.push(reverseCalqueNote(item, context.headword ?? ""));
   }
   return notes;
 }

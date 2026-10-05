@@ -24,6 +24,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
@@ -751,7 +752,7 @@ def _manifest(path: Path, schema_path: Path) -> tuple[dict[str, Any], Path]:
 def _strict_response(raw: bytes, label: str) -> dict[str, Any]:
     text = raw.decode("utf-8").strip()
     if text.startswith("```"):
-        lines = text.splitlines()
+        lines = split_jsonl_lines(text)
         require(len(lines) >= 3 and lines[-1].strip() == "```", f"malformed {label} code fence")
         text = "\n".join(lines[1:-1])
         if text.lstrip().startswith("json"):

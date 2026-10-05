@@ -15,6 +15,11 @@ from typing import Any
 
 import yaml
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 try:
     from scripts.build.linear_pipeline import _TOOL_CITATION_RE
 except ImportError:
@@ -213,7 +218,7 @@ def read_jsonl(path: Path, warnings: list[str]) -> list[dict[str, Any]]:
         return []
 
     events: list[dict[str, Any]] = []
-    for line_no, line in enumerate(path.read_text("utf-8").splitlines(), start=1):
+    for line_no, line in enumerate(split_jsonl_lines(path.read_text("utf-8")), start=1):
         stripped = line.strip()
         if not stripped:
             continue

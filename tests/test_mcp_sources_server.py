@@ -35,6 +35,8 @@ import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime depend
 import requests  # noqa: F401  # Declares the Sources HTTP dependency to the CI fastlane.
 from mcp.types import CallToolRequestParams, TextContent
 
+from scripts.verification.vesum import _resolve_vesum_db_path
+
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 VESUM_FIXTURE_VERSION = "a" * 64
 VESUM_FIXTURE_MATCH = {"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}
@@ -1475,7 +1477,7 @@ class TestCheckRussianShadowHandler:
             assert data["matches_russian"] is False
 
 
-_VESUM_DB = Path(__file__).resolve().parents[1] / "data" / "vesum.db"
+_VESUM_DB = _resolve_vesum_db_path()
 
 
 @pytest.mark.skipif(

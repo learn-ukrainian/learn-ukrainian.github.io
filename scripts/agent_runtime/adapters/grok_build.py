@@ -62,13 +62,13 @@ from __future__ import annotations
 import json
 import logging
 import os
-import re
 import shlex
 import shutil
 import tempfile
 from pathlib import Path
 from urllib.parse import quote
 
+from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..result import ParseResult
 from ..trail_isolation import (
     GROK_TRAIL_DENY_TOOLS,
@@ -82,10 +82,6 @@ from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
 
-_RATE_LIMIT_RE = re.compile(
-    r"rate limit|rate_limit|usage limit|quota exceeded|too many requests|\b429\b",
-    re.IGNORECASE,
-)
 
 # Runtime mode → grok CLI --permission-mode value.
 # Issue #7583: on grok 1.0.x, acceptEdits does not cover shell headlessly (turn
@@ -373,12 +369,7 @@ class GrokBuildAdapter:
             guard_definition = _reviewer_agent_definition()
             guard_agent_suffix = ".grok-reviewer-agent.md"
             guard_agent_key = _META_REVIEWER_AGENT_FILE
-        elif (
-            mode in _UNATTENDED_WRITE_MODES
-            and not trail_isolation
-            and not review_isolation
-            and not mcp_read_only
-        ):
+        elif mode in _UNATTENDED_WRITE_MODES and not trail_isolation and not review_isolation and not mcp_read_only:
             # Same tracked PreToolUse set Claude workers load, without the
             # reviewer publish guard. The push rewrite is env-only and stays
             # off this path.
@@ -386,9 +377,7 @@ class GrokBuildAdapter:
             guard_agent_suffix = ".grok-write-agent.md"
             guard_agent_key = _META_WRITE_GUARD_AGENT_FILE
         if guard_definition is not None and guard_agent_suffix is not None:
-            with tempfile.NamedTemporaryFile(
-                "w", suffix=guard_agent_suffix, delete=False, encoding="utf-8"
-            ) as handle:
+            with tempfile.NamedTemporaryFile("w", suffix=guard_agent_suffix, delete=False, encoding="utf-8") as handle:
                 handle.write(guard_definition)
                 guard_agent_file = handle.name
             cmd.extend(["--agent", guard_agent_file])
@@ -602,18 +591,46 @@ class GrokBuildAdapter:
     ) -> ParseResult:
         _ = (output_file, plan, call_start_time)  # grok -p flushes to stdout
 
+        obj = _parse_json_object(stdout)
+        sid = (obj.get("sessionId") or obj.get("session_id")) if obj else None
+        provider_error = provider_stderr_error(stderr or "")
+        provider_failed = obj is not None and obj.get("type") == "error"
+        if provider_failed:
+            error = obj.get("error")
+            # Native Grok documents type=error with a top-level message;
+            # retain the older error field without reading reply/text fields.
+            if not isinstance(error, str):
+                error = obj.get("message")
+            provider_error = error if isinstance(error, str) else ""
+        if provider_failed or (returncode != 0 and provider_error):
+            failure_code = provider_failure_code(provider_error)
+            return ParseResult(
+                ok=False,
+                response="",
+                stderr_excerpt=provider_error[:500] or "grok provider error",
+                rate_limited=failure_code == "rate_limited",
+                failure_code=failure_code,
+                provider_error_text=provider_error,
+                session_id=sid if isinstance(sid, str) and sid else None,
+            )
+
         output_schema = plan_output_schema(plan)
         if output_schema is not None:
             envelope = json_value(stdout)
             envelope = envelope if isinstance(envelope, dict) else {}
             return structured_result(
-                envelope.get("structuredOutput"), output_schema, returncode=returncode,
-                terminal_ok=("structuredOutput" in envelope and envelope.get("stopReason") == "end_turn"
-                             and "structuredOutputError" not in envelope and envelope.get("type") != "error"),
+                envelope.get("structuredOutput"),
+                output_schema,
+                returncode=returncode,
+                terminal_ok=(
+                    "structuredOutput" in envelope
+                    and envelope.get("stopReason") == "end_turn"
+                    and "structuredOutputError" not in envelope
+                    and envelope.get("type") != "error"
+                ),
                 session_id=envelope.get("sessionId"),
             )
 
-        obj = _parse_json_object(stdout)
         if obj is not None:
             text = str(obj.get("text") or "").strip()
             sid = obj.get("sessionId") or obj.get("session_id")
@@ -625,8 +642,9 @@ class GrokBuildAdapter:
 
         usable = bool(text)
         failed = returncode != 0 or not usable
-        rate_limited = failed and bool(_RATE_LIMIT_RE.search(f"{stderr or ''}\n{stdout or ''}"))
-        ok = returncode == 0 and usable and not rate_limited
+        failure_code = provider_failure_code(provider_error) if failed else None
+        rate_limited = failed and failure_code == "rate_limited"
+        ok = returncode == 0 and usable and not failed
 
         stderr_excerpt: str | None = None
         if not ok:
@@ -638,6 +656,8 @@ class GrokBuildAdapter:
             response=text if ok else "",
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
+            failure_code=failure_code,
+            provider_error_text=provider_error,
             session_id=session_id,
             tokens=None,  # grok JSON does not report token counts
             tool_calls=[],

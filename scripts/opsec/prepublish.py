@@ -302,18 +302,15 @@ def check_texts(
 ) -> None:
     """Scan final fields; an override permits policy hits only after a durable log.
 
-    claimant is the process whose override is claimed once; by default the
-    caller's parent (the shell that set it).
+    The override is dropped from environment on every call but claimed and
+    logged only when a scan blocks, so a clean, empty or private publish
+    leaves it for the one flagged publish it was set for. claimant is the
+    process whose override is claimed once; by default the caller's parent
+    (the shell that set it).
     """
     environment = os.environ if environment is None else environment
     reason = environment.pop("LU_OPSEC_OVERRIDE", "")
-    if not texts:
-        if reason.strip():
-            _record_override(destination, [], reason, log_path, claimant)
-        return
-    if is_private(destination):
-        if reason.strip():
-            _record_override(destination, [], reason, log_path, claimant)
+    if not texts or is_private(destination):
         return
     loaded = _load_matcher(tooling or private_tooling())
     blocks = []
@@ -333,10 +330,10 @@ def check_texts(
                 location = f"rule={rule} class={level} field={name} line={line}"
                 if location not in locations:
                     locations.append(location)
+    if not blocks:
+        return
     if reason.strip():
         _record_override(destination, blocks, reason, log_path, claimant)
-        return
-    if not blocks:
         return
     error = PublishBlocked(
         f"OPSEC blocked: {'; '.join(locations)}. Remove the flagged detail; for a false positive, "

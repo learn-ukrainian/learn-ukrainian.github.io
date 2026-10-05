@@ -173,7 +173,7 @@ pypdfium2==4.30.0
 pyproject_hooks==1.2.0
 pytest==9.1.1
 pytest-cov==7.1.0
-pytest-mock==3.15.1
+pytest-mock==3.16.0
 pytest-rerunfailures==16.7
 pytest-timeout==2.4.0
 pytest-xdist==3.8.0
@@ -214,7 +214,7 @@ stevedore==5.8.0
 sympy==1.14.0
 tenacity==9.1.4
 termcolor==3.3.0
-threadpoolctl==3.6.0
+threadpoolctl==3.7.0
 timm==1.0.27
 tokenizers==0.22.2
 torch==2.13.0

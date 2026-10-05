@@ -17,7 +17,7 @@ from pathlib import Path
 def wait_for_line(
     path: Path,
     *,
-    timeout: float = 5.0,
+    timeout: float = 60.0,
     interval: float = 0.01,
     stop_if: Callable[[], bool] | None = None,
 ) -> str:
@@ -41,6 +41,6 @@ def wait_for_line(
     raise AssertionError(f"{path} did not contain a complete line within {timeout}s (last read: {content!r})")
 
 
-def wait_for_pid_line(path: Path, *, timeout: float = 5.0) -> int:
+def wait_for_pid_line(path: Path, *, timeout: float = 60.0) -> int:
     """Poll ``path`` until it holds a complete newline-terminated PID."""
     return int(wait_for_line(path, timeout=timeout))

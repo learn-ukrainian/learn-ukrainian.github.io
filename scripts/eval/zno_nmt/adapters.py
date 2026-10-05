@@ -23,6 +23,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter
 
 from .mcp_proxy import REFERENCE_TOOLS
@@ -325,7 +326,7 @@ def _child_env(max_output_tokens: int) -> dict[str, str]:
 def _parse_sse_or_json(raw: bytes) -> dict[str, Any]:
     text = raw.decode("utf-8", errors="strict")
     candidates = [text]
-    candidates.extend(line[5:].strip() for line in text.splitlines() if line.startswith("data:"))
+    candidates.extend(line[5:].strip() for line in split_jsonl_lines(text) if line.startswith("data:"))
     for candidate in reversed(candidates):
         try:
             value = _strict_json_loads(candidate)
@@ -509,7 +510,10 @@ def _parse_stream_json(
     observed_tools: list[str] = []
     init_seen = False
     usage: dict[str, int | float | None] = {"input_tokens": None, "output_tokens": None, "total_tokens": None, "cost_usd": None}
-    for line in stdout.splitlines():
+    lines = split_jsonl_lines(stdout)
+    if lines[-1] == "":
+        lines.pop()
+    for line in lines:
         try:
             event = _strict_json_loads(line)
         except AdapterError as exc:

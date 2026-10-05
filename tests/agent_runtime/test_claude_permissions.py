@@ -1,11 +1,23 @@
-"""Command and deployed-hook coverage for headless Claude workers."""
+"""Command and deployed-hook coverage for headless Claude workers.
+
+The fnmatch helper below is a model, not proof of the installed CLI matcher.
+Evidence: installed Claude Code 2.1.288 ``claude --help``, ``claude doctor
+--help`` and ``claude mcp --help`` expose no permission-evaluation-only command.
+``--print`` runs a model turn; doctor checks installation/settings, and MCP
+commands manage servers, not tool authorization. Thus a live matcher check
+cannot be exercised through the documented CLI without a potentially paid
+call. Set LU_LIVE_CLAUDE_PERMISSIONS=1 to opt into the isolated stub-server
+test below. CI skips it by default; no real sources writer is ever launched.
+"""
 
 import asyncio
 import fnmatch
 import importlib.util
 import io
 import json
+import os
 import shlex
+import shutil
 import subprocess
 import sys
 import tarfile
@@ -33,6 +45,64 @@ ALTERNATE_SERVER_NAMES = ("sources_alias", "plugin_lu_sources", "srv")
 def _claude_denies(rules: list[str], tool: str) -> bool:
     """Claude's documented deny match: an exact name, or a glob over the full tool name."""
     return any(fnmatch.fnmatchcase(tool, rule) for rule in rules)
+
+
+@pytest.mark.live_network
+@pytest.mark.skipif(os.environ.get("LU_LIVE_CLAUDE_PERMISSIONS") != "1", reason="opt-in paid Claude CLI matcher check")
+def test_live_claude_reader_allowed_writer_denied(tmp_path: Path) -> None:
+    """Require native permission-denial evidence and independent stub execution evidence."""
+    binary = shutil.which("claude")
+    assert binary is not None, "opted-in live test requires the installed Claude CLI"
+    audit = tmp_path / "calls.jsonl"
+    stub = tmp_path / "stub_sources.py"
+    stub.write_text(
+        "import json, sys\n"
+        "from pathlib import Path\n"
+        "from mcp.server.fastmcp import FastMCP\n"
+        "mcp = FastMCP('permission-fixture')\n"
+        "def record(name):\n"
+        "    with Path(sys.argv[1]).open('a') as f: f.write(json.dumps(name) + '\\n')\n"
+        "    return name\n"
+        "@mcp.tool()\n"
+        "def inspect_word(word: str) -> str:\n"
+        "    return record('inspect_word')\n"
+        "@mcp.tool()\n"
+        "def query_wikipedia(query: str) -> str:\n"
+        "    return record('query_wikipedia')\n"
+        "mcp.run(transport='stdio')\n"
+    )
+    cmd = _reviewer_plan(tmp_path)
+    # Keep the generated settings, allow/deny lists and dontAsk mode intact;
+    # replace only the real server with harmless, independently logged tools.
+    cmd[0] = binary
+    cmd[cmd.index("--mcp-config") + 1] = json.dumps(
+        {"mcpServers": {"sources": {"command": sys.executable, "args": [str(stub), str(audit)]}}}
+    )
+    cmd[cmd.index("--output-format") + 1] = "json"
+    cmd.extend(["--setting-sources", "", "--no-session-persistence", "--max-turns", "4"])
+    # stdin carries the prompt in the adapter's normal print invocation.
+    proc = subprocess.run(
+        cmd,
+        input=(
+            "Test only these two MCP tools. Call mcp__sources__inspect_word with word='fixture'. "
+            "Then attempt mcp__sources__query_wikipedia with query='fixture' once, even if it is denied. "
+            "Do not use other tools or substitute a tool."
+        ),
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=90,
+        env=build_agent_env(provider="claude"),
+    )
+    # Do not echo a paid response, credentials or stderr into public diagnostics.
+    assert proc.returncode == 0, f"Claude live matcher process exited {proc.returncode}"
+    result = json.loads(proc.stdout)
+    assert result.get("is_error") is False
+    assert audit.is_file(), "allowed read tool never reached the stub"
+    assert set(json.loads(line) for line in audit.read_text().splitlines()) == {"inspect_word"}
+    assert any(
+        denial.get("tool_name") == "mcp__sources__query_wikipedia" for denial in result.get("permission_denials", [])
+    ), "no native writer permission denial: a model refusing to call is insufficient evidence"
 
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])

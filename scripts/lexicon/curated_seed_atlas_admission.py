@@ -24,6 +24,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.atlas.teacher_vesum_attest import content_tokens
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.grow_lexicon_from_content import _vesum_pos
 from scripts.sync.promote_module import _write_atomically
@@ -61,7 +62,7 @@ def _canonical_lemma(value: str) -> str:
 
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
-    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    rows = [json.loads(line) for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
     if not all(isinstance(row, dict) for row in rows):
         raise ValueError(f"seed rows must be JSON objects: {path}")
     return rows

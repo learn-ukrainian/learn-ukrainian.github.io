@@ -27,7 +27,13 @@ if TYPE_CHECKING:
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data.paths import refuse_quarantined
+
+
+def _read_jsonl_records(path: Path) -> list[dict[str, Any]]:
+    """Load physical JSONL records independently of model/corpus setup."""
+    return [json.loads(line) for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
 
 
 def sha256_file(path: Path) -> str:
@@ -203,8 +209,8 @@ def main() -> int:
     print(f"Protection file: {args.protection_file} (SHA-256: {prot_sha})")
 
     # Load eval cases
-    heldout_cases = [json.loads(line) for line in args.heldout_file.read_text(encoding="utf-8").splitlines() if line.strip()]
-    prot_cases = [json.loads(line) for line in args.protection_file.read_text(encoding="utf-8").splitlines() if line.strip()]
+    heldout_cases = _read_jsonl_records(args.heldout_file)
+    prot_cases = _read_jsonl_records(args.protection_file)
     print(f"Loaded {len(heldout_cases)} held-out cases and {len(prot_cases)} protection cases.")
 
     # Load tokenizer and base model
@@ -240,7 +246,7 @@ def main() -> int:
 
     # Step 2: Training Run
     print("\n--- PHASE 2: LoRA Fine-Tuning Run ---")
-    train_records = [json.loads(line) for line in args.train_file.read_text(encoding="utf-8").splitlines() if line.strip()]
+    train_records = _read_jsonl_records(args.train_file)
     print(f"Loaded {len(train_records)} training records.")
 
     if hasattr(model, "gradient_checkpointing_enable"):

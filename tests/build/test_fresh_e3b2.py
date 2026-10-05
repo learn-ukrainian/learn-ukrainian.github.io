@@ -105,6 +105,44 @@ def _fixture(root: Path):
     return level, slug, plan_dir, evidence_dir, state_dir, page_dir
 
 
+@pytest.mark.parametrize("mismatch", [False, True])
+def test_current_lesson_receipts_checked_before_its_manifest(tmp_path, monkeypatch, mismatch):
+    """Lesson 1's empty prior digest cannot hide a case mismatch until lesson 2."""
+    from scripts.review.digest.error import DigestError
+    from tests.build.test_fresh_provenance import _write_observed_from_receipts
+    from tests.build.test_fresh_runner import _fixture as lesson_fixture
+    from tests.build.test_fresh_runner import _run_contract
+
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
+    draft, plan, pack, words = lesson_fixture(text="{{uk:Слово}} " + "слово " * 11)
+    run_dir = tmp_path / "runner"
+    run_dir.mkdir()
+    report, state, _ = _run_contract(run_dir, monkeypatch, draft, plan, pack, words)
+    assert report["passed"], report
+    _write_observed_from_receipts(state, plan)
+    for name in ("observed", "resolutions", "provenance"):
+        doc = yaml.safe_load((state / f"lesson-1.{name}.yaml").read_bytes())
+        doc["lesson"]["slug"] = slug
+        if mismatch and name == "provenance":
+            for span in doc["spans"]:
+                if span["text"].startswith("С"):
+                    span["text"] = span["text"].lower()
+        lock.write(state_dir / f"lesson-1.{name}.yaml", lock.yaml_bytes(doc))
+    (page_dir / "1.mdx").write_bytes((run_dir / "site/1.mdx").read_bytes())
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state())
+    if mismatch:
+        with pytest.raises(DigestError, match="receipt_span_alignment_failed"):
+            _write(level, slug, 1, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+        assert not (state_dir / "lesson-1.manifest.yaml").exists()
+    else:
+        doc, _ = _write(level, slug, 1, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+        digest = yaml.safe_load((tmp_path / doc["module_digest"]["path"]).read_bytes())
+        assert digest["lessons"] == []
+        # The same current receipt/span pair must remain aligned when it becomes
+        # lesson 2's upstream input.
+        _write(level, slug, 2, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+
+
 def _fake_state(data: dict | None = None, *, cumulative_core_count: int = 0):
     """A planned-state stand-in exposing what the manifest reads: to_dict, the count and the waiver."""
     return type(
@@ -916,8 +954,8 @@ def test_module_writer_budget_counts_only_delivered_content(
         "refusal": WriterHarnessError("delegate.py dispatch refused"),
         "timeout": WriterHarnessError("delegate.py wait timed out"),
         "harvest": OSError("result unavailable"),
-        "configuration": ValueError("invalid seat"),
-        "invalid_reply": WriterCallError("Failed to parse writer output as YAML"),
+        "configuration": ValueError(f"invalid seat: {tmp_path / 'state/writer.yaml'} /home/private-user/config.yaml"),
+        "invalid_reply": WriterCallError(f"Failed to parse writer output as YAML: {tmp_path / 'state/reply.yaml'}"),
     }
     attempts = []
 
@@ -939,6 +977,10 @@ def test_module_writer_budget_counts_only_delivered_content(
             level, slug, repo_root=tmp_path, lesson_n=1, writer_seat="codex:fixture", writer_dispatch=failing_writer
         )
         lesson = report["lessons"][0]
+        state_text = (state / "module.build.yaml").read_text()
+        state_text += "".join(path.read_text() for path in state.glob("lesson-1.*ration.yaml"))
+        state_text += "".join(path.read_text() for path in state.glob("lesson-1.writer-harness.yaml"))
+        assert str(tmp_path) not in state_text and "/home/" not in state_text
         if failure_kind == "invalid_reply":
             assert lesson["layer"] == "writer"
             assert len(load_ledger(ledger_path, slug, 1)["attempts"]) == prior_failures + 1
@@ -1291,10 +1333,17 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     if evidence_path:
         shutil.copy2(state_dir / "lesson-1.manifest-error.yaml", saved / "lesson-1.manifest-error.yaml")
         shutil.copy2(state_dir / "module.build.yaml", saved / "mismatch-module.build.yaml")
+    # A previous build may already contain an unsafe diagnostic. Resuming it
+    # must not copy that host location into the newly written module report.
+    old_ledger = load_ledger(state_dir / "lesson-1.regeneration.yaml", slug, 1)
+    old_ledger["attempts"][-1]["reason"] = f"receipt failure at {tmp_path}/receipt.yaml /home/other/receipt.yaml"
+    lock.write(state_dir / "lesson-1.regeneration.yaml", lock.yaml_bytes(old_ledger))
     terminal = module.build_module(
         level, slug, repo_root=tmp_path, lesson_n=1, writer_seat="codex:gpt-6.1-sol", runner=run_actual
     )
     assert terminal["lessons"][0]["terminal_layer"] == "engine"
+    assert str(tmp_path) not in terminal["lessons"][0]["reason"] and "/home/" not in terminal["lessons"][0]["reason"]
+    assert str(tmp_path) not in (state_dir / "module.build.yaml").read_text()
     assert calls == calls_before_mismatch
     if evidence_path:
         shutil.copy2(state_dir / "module.build.yaml", saved / "terminal-module.build.yaml")

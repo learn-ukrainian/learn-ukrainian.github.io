@@ -12,9 +12,9 @@ Known behavioral facts (verify against the installed CLI when changing transport
 - ``--input-format stream-json --output-format stream-json`` accepts one
   NDJSON user message on stdin and returns a terminal ``result`` event.
 - Resume/new conversation is ``--conversation=<uuid>``.
-- Write-capable modes use ``--dangerously-skip-permissions``. Read-only
-  hangs on interactive permission prompts; callers must force
-  ``mode="danger"`` for headless dispatch (mirrors the codex protection).
+- Review routes write exact Sources and evidence-reading command grants in
+  their scoped home's ``settings.json``; they never skip permissions.
+  Non-review dispatches retain their existing headless permission mode.
 - Stream-json stdout carries the final answer in ``result.response``. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
   ``--log-file`` path for each invocation: the conversation id that log names
@@ -99,22 +99,13 @@ from typing import Any, NamedTuple
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
 
+from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
-
-# Defensive defaults borrowed from Gemini CLI. Agy is new enough that these
-# may need adjustment once we see real Antigravity rate-limit errors.
-_RATE_LIMIT_PATTERNS = (
-    r"RESOURCE_EXHAUSTED",
-    r"usage limit reached",
-    r"quota exceeded",
-    r"daily.{0,10}limit.{0,10}exceeded",
-)
-_RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 
 # Background-task handling (#8502/#8503). AGY's ``run_command`` tool caps
 # ``WaitMsBeforeAsync`` at 10000 ms, so any command running longer than ten
@@ -158,6 +149,7 @@ AGY_BACKGROUND_TASK_CANCELED = "agy_background_task_canceled"
 AGY_PRINT_TIMEOUT_PARTIAL = "agy_print_timeout_partial"
 AGY_TRANSCRIPT_UNBOUND = "agy_transcript_unbound"
 AGY_TRANSCRIPT_UNREADABLE = "agy_transcript_unreadable"
+AGY_HEADLESS_PERMISSION_DENIED = "agy_headless_permission_denied"
 AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_BACKGROUND_TASK_ABANDONED,
     AGY_BACKGROUND_TASK_UNCONFIRMED,
@@ -165,6 +157,7 @@ AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_PRINT_TIMEOUT_PARTIAL,
     AGY_TRANSCRIPT_UNBOUND,
     AGY_TRANSCRIPT_UNREADABLE,
+    AGY_HEADLESS_PERMISSION_DENIED,
 )
 AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
 _AGY_MIN_BACKGROUND_WAIT_VERSION: tuple[int, int, int] = (1, 2, 9)
@@ -478,11 +471,22 @@ class AgyAdapter:
 
         tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
+        review_route = bool(
+            review_isolation
+            or tc.get("review_attempt_boundary")
+            or tc.get("review_access")
+            or tc.get("review_id")
+            or tc.get("attempt_id")
+            or tc.get("reviewer_tools")
+            or (tc.get("strict_mcp_config") and tc.get("agy_home_override"))
+        )
         if review_isolation and not tc.get("review_attempt_boundary"):
             raise ValueError(
                 "agy_isolated_review_unsupported: AGY cannot yet prove native "
                 "project-instruction, MCP, hook, and nested-reviewer suppression"
             )
+        if review_route:
+            _write_review_permissions(tc, mode=mode, session_id=session_id)
 
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
         # Prefer absolute binary for isolation policy / sandbox argv0 rules.
@@ -504,16 +508,7 @@ class AgyAdapter:
 
         # Non-review: `--dangerously-skip-permissions` is unconditional so
         # headless tool use does not hang on interactive prompts.
-        # Review (#5285): never skip permissions; require OS sandbox (runner)
-        # plus AGY `--sandbox` when available. Fail closed if review asks for
-        # skip-permissions explicitly.
-        full_review = tc.get("review_access") == "full"
-        if full_review and mode != "read-only":
-            raise ValueError("full_review_requires_read_only")
-        if (review_isolation or full_review) and tc.get("agy_skip_permissions"):
-            raise ValueError(
-                "AgyAdapter: review_isolation forbids agy_skip_permissions / --dangerously-skip-permissions"
-            )
+        # Review: exact scoped grants plus the OS boundary and AGY --sandbox.
 
         # The prompt must never occupy one argv element: Linux rejects an
         # argument above MAX_ARG_STRLEN before agy can start (#8992).
@@ -524,10 +519,9 @@ class AgyAdapter:
             )
             + "\n"
         )
-        if review_isolation or full_review:
+        if review_route:
             # The OS boundary owns full-review write denial; native sandbox is supplementary.
-            if full_review or tc.get("agy_review_sandbox", True):
-                cmd.append("--sandbox")
+            cmd.append("--sandbox")
         else:
             cmd.append("--dangerously-skip-permissions")
         cmd.extend(
@@ -649,7 +643,30 @@ class AgyAdapter:
             else ("" if stream_mode else (stdout or "").strip())
         )
         stderr_text = (stderr or "").strip()
+        if denial := _headless_permission_denial(stderr_text):
+            # Native headless refusal outranks missing output/transcript proof.
+            # Preserve the runtime's closed classification; put permission
+            # details in the diagnostic, without repeating bypass advice.
+            return ParseResult(
+                ok=False,
+                response="",
+                failure_code="provider_policy_refusal",
+                provider_error_text="",
+                stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED + "\n" + json.dumps(denial._asdict()),
+            )
         stream_error = str(stream_result.get("error") or "") if stream_result else ""
+        # Only a failed terminal envelope owns error text. A SUCCESS result
+        # and malformed/duplicate streams cannot supply a provider failure.
+        provider_error = (
+            stream_error
+            if stream_result is not None
+            and stream_result.get("status") == "ERROR"
+            and stream_problem is not None
+            and stream_problem.startswith("agy_stream_result_error")
+            else provider_stderr_error(stderr_text)
+            if returncode != 0 or not stdout_response
+            else ""
+        )
         incomplete_reason = _incomplete_run_reason(stderr_text)
         language_warning: str | None = None
         if incomplete_reason is None and stream_result is not None and stream_problem is None:
@@ -670,7 +687,9 @@ class AgyAdapter:
                 ok=False,
                 response="",
                 stderr_excerpt=excerpt[:500],
-                rate_limited=bool(_RATE_LIMIT_RE.search(f"{stdout_response}\n{stream_error}\n{stderr_text}")),
+                rate_limited=provider_failure_code(provider_error) == "rate_limited",
+                failure_code=provider_failure_code(provider_error) if provider_error else "provider_stream_incomplete",
+                provider_error_text=provider_error,
                 tool_calls=_parse_transcript_tool_calls(plan)
                 or _parse_stdout_marker_tool_calls(f"{stdout_response}\n{stderr_text}"),
             )
@@ -695,17 +714,27 @@ class AgyAdapter:
             )
             if stream_problem is not None:
                 structured = dataclasses.replace(structured, stderr_excerpt=stream_problem)
-            if structured.ok:
-                structured = dataclasses.replace(structured, tokens=_stream_total_tokens(stream_result))
+            if not structured.ok:
+                failure_code = provider_failure_code(provider_error) if provider_error else structured.failure_code
+                structured = dataclasses.replace(
+                    structured,
+                    failure_code=failure_code,
+                    rate_limited=failure_code == "rate_limited",
+                    provider_error_text=provider_error,
+                )
+            else:
+                structured = dataclasses.replace(
+                    structured, tokens=_stream_total_tokens(stream_result), provider_error_text=""
+                )
             if structured.ok and language_warning is not None:
                 structured = dataclasses.replace(
                     structured, stderr_excerpt=_with_language_warning(language_warning, structured.stderr_excerpt)
                 )
             return structured
         combined = f"{stdout_response}\n{stream_error}\n{stderr_text}"
-        hard_limit_hit = bool(_RATE_LIMIT_RE.search(combined))
         call_failed = returncode != 0 or not bool(stdout_response) or stream_problem is not None
-        rate_limited = hard_limit_hit and call_failed
+        failure_code = provider_failure_code(provider_error) if call_failed else None
+        rate_limited = call_failed and failure_code == "rate_limited"
 
         ok = returncode == 0 and bool(stdout_response) and not rate_limited and stream_problem is None
         response = stdout_response if ok else ""
@@ -733,6 +762,8 @@ class AgyAdapter:
             response=response,
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
+            failure_code=failure_code,
+            provider_error_text=provider_error,
             session_id=stream_result.get("conversation_id") if stream_result else None,
             tokens=_stream_total_tokens(stream_result),
             tool_calls=tool_calls,
@@ -752,6 +783,116 @@ class AgyAdapter:
             return
         with contextlib.suppress(FileNotFoundError):
             path.unlink()
+
+
+class AgyReviewPermissionError(ValueError):
+    """A body-free, pre-launch review permission refusal."""
+
+    def __init__(self, reason: str) -> None:
+        self.reason = reason
+        super().__init__(reason)
+
+
+class AgyHeadlessPermissionDenial(NamedTuple):
+    """Native auto-denial details, with no inferred target."""
+
+    permission_kind: str
+    permission_target: str | None
+
+
+def _headless_permission_denial(stderr_text: str) -> AgyHeadlessPermissionDenial | None:
+    """Recognize the CLI's notice, not a model reply or generic denial text.
+
+    Recorded notices give only the kind and an ``<target>`` example. Accept a
+    concrete resource if the CLI supplies it, but never promote its placeholder
+    into an observed command or tool name.
+    """
+    notice = re.search(
+        r'^jetski: no output produced — a tool required the "(?P<kind>[a-z][a-z0-9_]*)'
+        r'(?:\((?P<target>[^"\r\n]*)\))?" permission that headless mode cannot prompt for, '
+        r"so it was auto-denied\.(?P<advice>[^\r\n]*)$",
+        stderr_text,
+        re.MULTILINE,
+    )
+    if notice is None:
+        return None
+    kind, target = notice.group("kind", "target")
+    if not target or "<target>" in target:
+        target = None
+    return AgyHeadlessPermissionDenial(kind, target)
+
+
+def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: str | None) -> None:
+    """Write a fresh scoped allow set; refuse requirements or config drift first.
+
+    ``agy_required_permissions`` is a list of exact action(target) resources
+    declared by the caller, never extracted from prompt text. An undeclared
+    model action cannot be predicted by this preflight; it remains subject to
+    native permissions and the OS boundary. Existing settings must match exactly
+    so global presets, ask/deny rules and wildcards cannot silently win.
+    """
+    from ..review_mcp import _open_runtime_dir, _safe_open_below, _strict_json_object, agy_review_settings
+
+    access = tc.get("review_access", "isolated")
+    if access not in {"full", "isolated"}:
+        raise AgyReviewPermissionError("agy_review_permissions_invalid_access")
+    if mode != "read-only":
+        raise AgyReviewPermissionError(
+            "full_review_requires_read_only" if access == "full" else "agy_review_permissions_require_read_only"
+        )
+    if session_id:
+        raise AgyReviewPermissionError("agy_review_permissions_require_fresh_session")
+    expected = agy_review_settings(access)
+    allow = set(expected["permissions"]["allow"])
+    required = tc.get("agy_required_permissions", [])
+    if (
+        not isinstance(required, (list, tuple))
+        or any(not isinstance(rule, str) or rule not in allow for rule in required)
+        or tc.get("agy_skip_permissions")
+        or tc.get("mcp_server_names", ["sources"]) != ["sources"]
+    ):
+        raise AgyReviewPermissionError("agy_review_permission_outside_allow_set: review forbids permission widening")
+    if (tools := tc.get("allowed_tools")) and (
+        not isinstance(tools, str)
+        or any(
+            tool not in {"Read", "Glob", "Grep"} and f"mcp(sources/{tool.removeprefix('mcp__sources__')})" not in allow
+            for tool in tools.split(",")
+        )
+    ):
+        raise AgyReviewPermissionError("agy_review_permission_outside_allow_set")
+    if not tc.get("agy_home_override"):
+        raise AgyReviewPermissionError("agy_review_permissions_require_scoped_home")
+    home = Path(str(tc["agy_home_override"])).absolute()
+    app_data = home / ".gemini" / "antigravity-cli"
+    if app_data.resolve() == _agy_app_data({}).resolve() or home.resolve() == Path.home().resolve():
+        raise AgyReviewPermissionError("agy_review_permissions_require_scoped_home")
+    directory = file_fd = None
+    try:
+        directory = _open_runtime_dir(home.parent, (home.name, ".gemini", "antigravity-cli"), create=False)
+        try:
+            file_fd = _safe_open_below(directory, "settings.json", os.O_RDONLY)
+        except FileNotFoundError:
+            file_fd = _safe_open_below(directory, "settings.json", os.O_WRONLY | os.O_CREAT | os.O_EXCL)
+            os.fchmod(file_fd, 0o600)
+            payload = (json.dumps(expected) + "\n").encode()
+            with os.fdopen(file_fd, "wb") as handle:
+                file_fd = None
+                handle.write(payload)
+        else:
+            with os.fdopen(file_fd, "rb") as handle:
+                file_fd = None
+                raw = handle.read(65537)
+                if len(raw) > 65536 or _strict_json_object(raw.decode()) != expected:
+                    raise AgyReviewPermissionError("agy_review_permissions_config_mismatch")
+    except AgyReviewPermissionError:
+        raise
+    except (OSError, ValueError, RuntimeError):
+        raise AgyReviewPermissionError("agy_review_permissions_unsafe_config") from None
+    finally:
+        if file_fd is not None:
+            os.close(file_fd)
+        if directory is not None:
+            os.close(directory)
 
 
 def _stream_result(stdout: str) -> tuple[dict[str, Any] | None, str | None]:

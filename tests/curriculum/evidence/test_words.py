@@ -776,14 +776,14 @@ def test_gloss_absent_when_no_row_and_present_when_matching(synthetic_vesum, syn
     w_verb = next(w for w in res["store"]["words"] if w["lemma"] == "synthetic")
     w_none = next(w for w in res["store"]["words"] if w["lemma"] == "synthetic-no-gloss")
 
-    # The noun Kaikki entry establishes a second source's presence but
-    # cannot corroborate the verb; it must not authorize sole-source fallback.
-    assert "gloss_en" not in w_verb
-    assert "gloss_source" not in w_verb
-    assert "gloss_ref" not in w_verb
-    gap = next(g for g in res["unglossed"] if g["lemma"] == "synthetic")
-    assert gap["reason"] == codes.GLOSS_SENSE_UNRESOLVED
-    assert gap["candidates"] == [{"gloss": "wrong POS", "source": "dmklinger_uk_en", "id": 3}]
+    # The verb row gives its plain first meaning; the noun Kaikki entry
+    # neither corroborates nor blocks it.
+    assert (w_verb["gloss_en"], w_verb["gloss_source"], w_verb["gloss_ref"]["id"]) == (
+        "to wrong POS",
+        "dmklinger_uk_en",
+        3,
+    )
+    assert not any(g["lemma"] == "synthetic" for g in res["unglossed"])
 
     assert "gloss_en" not in w_none
     assert "gloss_source" not in w_none
@@ -1166,10 +1166,10 @@ def test_kaikki_agreement_and_ambiguous_fallback(synthetic_vesum, synthetic_sour
         conn.execute("DELETE FROM dmklinger_uk_en WHERE word = 'synthetic'")
     with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum, kaikki_db=side) as api:
         second = words.build_words("a1", request, evidence_dir=tmp_path / "second", sources_instance=api)
-    assert "gloss_en" not in second["store"]["words"][0]
-    assert "gloss_source" not in second["store"]["words"][0]
-    assert second["unglossed"][0]["reason"] == codes.GLOSS_SENSE_UNRESOLVED
-    assert {c["gloss"] for c in second["unglossed"][0]["candidates"]} == {"first translation", "second copied sense"}
+    # Kaikki alone gives its first sense; polysemy is not a reason to withhold.
+    assert second["store"]["words"][0]["gloss_en"] == "first translation"
+    assert second["store"]["words"][0]["gloss_source"] == "kaikki_wiktionary"
+    assert second["unglossed"] == []
     assert "gloss_ref" not in second["store"]["words"][0]
     assert second["store"]["built_with"]["kaikki_content_sha256"] == "f" * 64
     assert second["store"]["built_with"]["kaikki_attribution"] == sources.KAIKKI_ATTRIBUTION

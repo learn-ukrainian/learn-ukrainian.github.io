@@ -74,7 +74,7 @@ def _fixture(*, text: str = "слово " * 11, two_senses: bool = False):
     w1["forms"][0]["stressed"] = "сло\u0301во"
     records = [w1]
     if two_senses:
-        w2 = make_word_record(2, "слово", gloss_en="word", sense_gloss="other sense")
+        w2 = make_word_record(2, "слово", gloss_en="other sense", sense_gloss="unchecked")
         w2["forms"][0]["stressed"] = "сло\u0301во"
         records.append(w2)
     words = make_words_store(words=records)
@@ -99,6 +99,54 @@ def _fixture(*, text: str = "слово " * 11, two_senses: bool = False):
     ):
         validate(obj)
     return draft, plan, pack, words
+
+
+@pytest.mark.parametrize("surface", ["И", "А", "О", "У", "И, и", "Ии", "[и]"])
+def test_literacy_inline_letters_bypass_word_lookup(surface):
+    from scripts.curriculum.resolver.inputs import ExpandedDocument
+    from scripts.curriculum.resolver.stream import resolve
+
+    draft, plan, pack, words = _fixture(text="Meet {{uk:" + surface + "}} and {{uk:слово}}.")
+    lesson = plan["lessons"][0]
+    lesson["inventory"]["phonetics"] = {"letters": ["А", "О", "У", "И"], "sounds": []}
+    # Word records for а/о/у must never win over the phonetics classification.
+    letters_as_words = [make_word_record(i, ch, pos="intj", gloss_en="synthetic")
+                        for i, ch in enumerate(["а", "о", "у"], 2)]
+    allowlist = Allowlist.from_records(words["words"] + letters_as_words, letters={"А", "О", "У", "И"})
+    expanded, provenance = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+    stream = resolve(ExpandedDocument.from_data(expanded), allowlist, _FixtureSources())
+    letter_rows = [t for t in stream.tokens if t["role"] == "phonetics"]
+    assert letter_rows
+    assert all(t["class"] == "letter_or_syllable" and t["candidates"] == [] for t in letter_rows)
+    assert all(t["selected"] is None for t in letter_rows)
+    assert any(s["role"] == "phonetics" for s in provenance["spans"])
+    assert any(t["token"] == "слово" and t["class"] == "resolved" for t in stream.tokens)
+    assert runner.check_7_deterministic(stream, lesson)["status"] == "passed"
+
+
+def test_literacy_unlisted_letter_has_typed_engine_failure():
+    from scripts.curriculum.resolver.inputs import ExpandedDocument
+    from scripts.curriculum.resolver.stream import resolve
+
+    draft, plan, pack, words = _fixture(text="Meet {{uk:Н}} and {{uk:слово}}.")
+    lesson = plan["lessons"][0]
+    lesson["inventory"]["phonetics"] = {"letters": ["И"], "sounds": []}
+    expanded, _ = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+    stream = resolve(ExpandedDocument.from_data(expanded), Allowlist.from_records(words["words"], letters={"И"}), _FixtureSources())
+    row = runner.check_7_deterministic(stream, lesson)
+    assert (row["status"], row["code"], row["layer"], row["token"]) == (
+        "failed", "letter_outside_state", "engine", "Н")
+
+
+def test_internal_term_triggers_writer_regeneration_feedback(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture(text="Learn it by ear as one chunk. " + "слово " * 11)
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    row = next(r for r in report["checks"] if r["status"] == "failed")
+    assert (row["check"], row["layer"], row["token"]) == (5, "writer", "chunk")
+    assert row["reason"] == "internal_learner_term: build/process term: chunk"
+    ledger = load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)
+    assert ledger["terminal_layer"] is None
+    assert ledger["attempts"][0]["reason"] == row["reason"]
 
 
 def test_runner_calls_frozen_draft_report_interface(tmp_path, monkeypatch):
@@ -664,6 +712,43 @@ def test_check_12_failure_has_error_file_and_no_current_manifest(tmp_path, monke
     assert not (state / "lesson-1.manifest.yaml").exists()
 
 
+@pytest.mark.parametrize("stage", [7, 12])
+@pytest.mark.parametrize("external", [False, True])
+def test_failure_state_withholds_absolute_paths(tmp_path, monkeypatch, stage, external):
+    from scripts.review.digest.error import DigestError
+
+    draft, plan, pack, words = _fixture()
+    path = Path("/home/private-user/project/receipts.yaml") if external else tmp_path / "state/receipts.yaml"
+
+    def fail(*a, **kw):
+        raise DigestError("receipt_span_alignment_failed", f"receipts {path}: token mismatch")
+
+    kwargs = {"manifest_writer": fail} if stage == 12 else {"inventory_gate": fail}
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, **kwargs)
+    assert report["passed"] is False and report["passed_through"] == stage
+    files = [state / "lesson-1.regeneration.yaml", state / "lesson-1.gates.yaml"]
+    if stage == 12:
+        files.append(state / "lesson-1.manifest-error.yaml")
+    serialized = "\n".join(p.read_text() for p in files) + str(report)
+    assert str(tmp_path) not in serialized and "/home/" not in serialized
+    assert "receipt_span_alignment_failed" in serialized
+    assert ("<external-path>" if external else "./state/receipts.yaml") in serialized
+
+
+def test_stress_surface_mismatch_is_an_engine_failure(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+
+    def mismatch(*args):
+        raise assemble.AssemblerError("stress_surface_mismatch", "different surface", "engine")
+
+    monkeypatch.setattr(assemble, "apply_stress", mismatch)
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed_through"] == 9 and not report["passed"]
+    failed = next(row for row in report["checks"] if row["status"] == "failed")
+    assert failed["layer"] == "engine" and "stress_surface_mismatch" in failed["reason"]
+    assert load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)["terminal_layer"] == "engine"
+
+
 def test_contract_fixture_marked_form_stops_at_check_7(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
     words["words"][0]["forms"][0]["markers"] = ["arch"]
@@ -671,7 +756,7 @@ def test_contract_fixture_marked_form_stops_at_check_7(tmp_path, monkeypatch):
     validate_fixture_words(words)
     report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     bad = next(row for row in report["checks"] if row["status"] == "failed")
-    assert bad["check"] == 7 and bad["layer"] == "pack" and bad["token"] == "слово"
+    assert bad["check"] == 7 and bad["layer"] == "writer" and bad["token"] == "слово"
 
 
 def test_contract_fixture_hyphenated_compound_through_check_9(tmp_path, monkeypatch):
@@ -956,10 +1041,10 @@ def test_runner_keeps_owned_source_snapshot_through_choice_gate(tmp_path, monkey
     choices = runner.check_7_a1_choices
     captured = []
 
-    def scoped_resolve(expanded, allowlist, sources):
+    def scoped_resolve(expanded, allowlist, sources, **kwargs):
         sources._db()
         captured.append(sources)
-        return resolve(expanded, allowlist, sources)
+        return resolve(expanded, allowlist, sources, **kwargs)
 
     def scoped_choices(*args, **kwargs):
         assert kwargs["sources"] is captured[0]
@@ -980,7 +1065,7 @@ def test_runner_releases_owned_snapshot_on_resolver_failure(tmp_path, monkeypatc
     monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
     captured = []
 
-    def unavailable(expanded, allowlist, sources):
+    def unavailable(expanded, allowlist, sources, **kwargs):
         sources._db()
         captured.append(sources)
         raise OSError("fixture source failure")
@@ -1006,10 +1091,10 @@ def test_runner_releases_snapshot_before_dispatch_and_reopens_at_gate(tmp_path, 
     original_resolve = runner.resolve
     original_choices = runner.check_7_a1_choices
 
-    def resolve(expanded, allowlist, sources):
+    def resolve(expanded, allowlist, sources, **kwargs):
         old = sources._db()
         captured.append((sources, old))
-        return original_resolve(expanded, allowlist, sources)
+        return original_resolve(expanded, allowlist, sources, **kwargs)
 
     def dispatch(batch, seat):
         sources, old = captured[0]

@@ -1,0 +1,264 @@
+{
+  "_verdict_for_findings": "FAIL",
+  "aggregate_llm_review": {
+    "aggregate": {
+      "failing_dims": [],
+      "min_dim": "pedagogical",
+      "min_score": 10.0,
+      "rejected_dims": [],
+      "terminal_verdict": "PASS",
+      "verdict": "PASS",
+      "warning_dims": []
+    },
+    "dimensions": {
+      "decolonization": {
+        "evidence": "\"placeholder\"",
+        "score": 10.0,
+        "verdict": "PASS"
+      },
+      "engagement": {
+        "evidence": "\"placeholder\"",
+        "score": 10.0,
+        "verdict": "PASS"
+      },
+      "naturalness": {
+        "evidence": "\"placeholder\"",
+        "score": 10.0,
+        "verdict": "PASS"
+      },
+      "pedagogical": {
+        "evidence": "Before adding -ся, fix the regular first-conjugation template in mind",
+        "evidence_quotes": [
+          "Before adding -ся, fix the regular first-conjugation template in mind",
+          "The routine vocabulary is small on purpose — fluency over breadth",
+          "This four-line template is the smallest complete monologue"
+        ],
+        "score": 10.0,
+        "verdict": "PASS"
+      },
+      "tone": {
+        "evidence": "\"placeholder\"",
+        "score": 10.0,
+        "verdict": "PASS"
+      }
+    }
+  },
+  "baseline_commit": "1fc2efe46f712a98ead2301e029f1c88227776fd",
+  "parse_and_evaluate_llm_response": [
+    {
+      "attribution": {
+        "corpus": "curriculum_review",
+        "doc_id": null,
+        "evidence": "LLM reviewer judgment",
+        "license": null,
+        "pair_id": null
+      },
+      "confidence": "llm_judgment",
+      "contact_source_lang": "unknown",
+      "detector": {
+        "adapter": "llm_reviewer_evaluator",
+        "rule_id": "llm_awkward_passive_result_state"
+      },
+      "dimension": "ukrainian_style",
+      "disposition": "defect",
+      "excerpt": "застосунок має бути відкритий",
+      "file": "module.md",
+      "finding_id": "99fdde1f821469893e23de21",
+      "issue_class": "calque",
+      "issue_id": "AWKWARD_PASSIVE_RESULT_STATE",
+      "line": 3,
+      "message": "Use an active or impersonal Ukrainian instruction instead of a literal passive state.",
+      "severity": "critical",
+      "source_lang": "unknown",
+      "span": {
+        "end": 61,
+        "start": 32
+      },
+      "suggested_replacement": [],
+      "track_l1": "en",
+      "ua_gec_tag": null
+    },
+    {
+      "attribution": {
+        "corpus": "curriculum_review",
+        "doc_id": null,
+        "evidence": "LLM reviewer judgment",
+        "license": null,
+        "pair_id": null
+      },
+      "confidence": "llm_judgment",
+      "contact_source_lang": "unknown",
+      "detector": {
+        "adapter": "llm_reviewer_evaluator",
+        "rule_id": "llm_unnatural_anthropomorphism"
+      },
+      "dimension": "ukrainian_style",
+      "disposition": "defect",
+      "excerpt": "Застереження каже: будь обережний",
+      "file": "module.md",
+      "finding_id": "952bfe735a005be013efe4fa",
+      "issue_class": "other",
+      "issue_id": "UNNATURAL_ANTHROPOMORPHISM",
+      "line": 3,
+      "message": "Abstract lesson metalanguage should not be anthropomorphized as a speaker.",
+      "severity": "warning",
+      "source_lang": "unknown",
+      "span": {
+        "end": 96,
+        "start": 63
+      },
+      "suggested_replacement": [],
+      "track_l1": "en",
+      "ua_gec_tag": null
+    },
+    {
+      "attribution": {
+        "corpus": "curriculum_review",
+        "doc_id": null,
+        "evidence": "LLM reviewer judgment",
+        "license": null,
+        "pair_id": null
+      },
+      "confidence": "llm_judgment",
+      "contact_source_lang": "unknown",
+      "detector": {
+        "adapter": "llm_reviewer_evaluator",
+        "rule_id": "llm_ukrainian_grammar_calque"
+      },
+      "dimension": "ukrainian_style",
+      "disposition": "defect",
+      "excerpt": "радить не робити певної поведінки",
+      "file": "module.md",
+      "finding_id": "8db6049fa296749d7362f839",
+      "issue_class": "grammar",
+      "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
+      "line": 4,
+      "message": "The government and nominalized behavior phrase are translated and unnatural.",
+      "severity": "warning",
+      "source_lang": "unknown",
+      "span": {
+        "end": 135,
+        "start": 102
+      },
+      "suggested_replacement": [],
+      "track_l1": "en",
+      "ua_gec_tag": null
+    },
+    {
+      "attribution": {
+        "corpus": "curriculum_review",
+        "doc_id": null,
+        "evidence": "LLM reviewer judgment",
+        "license": null,
+        "pair_id": null
+      },
+      "confidence": "llm_judgment",
+      "contact_source_lang": "unknown",
+      "detector": {
+        "adapter": "llm_reviewer_evaluator",
+        "rule_id": "llm_unnatural_meta_register"
+      },
+      "dimension": "ukrainian_style",
+      "disposition": "defect",
+      "excerpt": "дія має дати конкретний результат чи описати процес?",
+      "file": "module.md",
+      "finding_id": "70806b443dc4c2d3923336de",
+      "issue_class": "register",
+      "issue_id": "UNNATURAL_META_REGISTER",
+      "line": 5,
+      "message": "This abstract prompt-like sentence is not natural learner-facing Ukrainian.",
+      "severity": "warning",
+      "source_lang": "unknown",
+      "span": {
+        "end": 198,
+        "start": 146
+      },
+      "suggested_replacement": [],
+      "track_l1": "en",
+      "ua_gec_tag": null
+    },
+    {
+      "attribution": {
+        "corpus": "curriculum_review",
+        "doc_id": null,
+        "evidence": "LLM reviewer judgment",
+        "license": null,
+        "pair_id": null
+      },
+      "confidence": "llm_judgment",
+      "contact_source_lang": "unknown",
+      "detector": {
+        "adapter": "llm_reviewer_evaluator",
+        "rule_id": "llm_ukrainian_grammar_calque"
+      },
+      "dimension": "ukrainian_style",
+      "disposition": "defect",
+      "excerpt": "доконаний вид дає результат із вікном",
+      "file": "module.md",
+      "finding_id": "59752fb861695e09b116c64b",
+      "issue_class": "grammar",
+      "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
+      "line": 6,
+      "message": "The metaphor and argument structure are literal and unidiomatic.",
+      "severity": "warning",
+      "source_lang": "unknown",
+      "span": {
+        "end": 247,
+        "start": 210
+      },
+      "suggested_replacement": [],
+      "track_l1": "en",
+      "ua_gec_tag": null
+    },
+    {
+      "attribution": {
+        "corpus": "curriculum_review",
+        "doc_id": null,
+        "evidence": "LLM reviewer judgment",
+        "license": null,
+        "pair_id": null
+      },
+      "confidence": "llm_judgment",
+      "contact_source_lang": "unknown",
+      "detector": {
+        "adapter": "llm_reviewer_evaluator",
+        "rule_id": "llm_calqued_preposition"
+      },
+      "dimension": "ukrainian_style",
+      "disposition": "defect",
+      "excerpt": "У кухні",
+      "file": "module.md",
+      "finding_id": "d05e480c91a4a559f4517e2b",
+      "issue_class": "calque",
+      "issue_id": "CALQUED_PREPOSITION",
+      "line": 6,
+      "message": "In this ordinary locative teaching context, use the idiomatic На кухні.",
+      "severity": "warning",
+      "source_lang": "unknown",
+      "span": {
+        "end": 256,
+        "start": 249
+      },
+      "suggested_replacement": [],
+      "track_l1": "en",
+      "ua_gec_tag": null
+    }
+  ],
+  "parse_review_response": {
+    "evidence": "Before adding -ся, fix the regular first-conjugation template in mind",
+    "evidence_quotes": [
+      "Before adding -ся, fix the regular first-conjugation template in mind",
+      "The routine vocabulary is small on purpose — fluency over breadth",
+      "This four-line template is the smallest complete monologue"
+    ],
+    "score": 10.0,
+    "verdict": "PASS"
+  },
+  "phase_review": {
+    "issues": [
+      "activities[0]: mechanical fixture defect"
+    ],
+    "status": "failed",
+    "verdict": "FAIL"
+  }
+}

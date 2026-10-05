@@ -372,24 +372,110 @@ def test_split_object_refuses_text_outside_any_message(raw):
     assert str(raised.value).startswith("OPSEC: commit[unit] ") and TOKEN not in str(raised.value)
 
 
-def _unfold_seconds(size, repeats=5):
-    """Best time to split a commit whose mergetag header continues over size bytes of 256-byte lines."""
+class _CountedBytes(bytes):
+    """Count bytes copied by slicing/concatenation; preserve the meter through header splitting.
+
+    Repeated immutable-byte concatenation costs the accumulated prefix's size,
+    not just one operation. Counting calls alone would miss quadratic copying.
+    The final built-in join returns ordinary bytes and copies each fragment once.
+    """
+
+    def __new__(cls, value, copied):
+        instance = super().__new__(cls, value)
+        instance.copied = copied
+        return instance
+
+    def _count(self, value):
+        self.copied[0] += len(value)
+        return _CountedBytes(value, self.copied)
+
+    def __add__(self, other):
+        return self._count(super().__add__(other))
+
+    def __radd__(self, other):
+        return self._count(other + bytes(self))
+
+    def __getitem__(self, key):
+        value = super().__getitem__(key)
+        return self._count(value) if isinstance(key, slice) else value
+
+    def partition(self, separator):
+        return tuple(self._count(part) for part in super().partition(separator))
+
+    def split(self, separator=None, maxsplit=-1):
+        return [self._count(part) for part in super().split(separator, maxsplit)]
+
+
+@pytest.mark.parametrize("size", [32 << 10, 128 << 10, 8 << 20])
+def test_continuation_unfolding_is_linear_in_the_header_size(size):
+    """Copied bytes stay within a fixed multiple of input bytes, independent of runner load."""
     line = b" " + b"x" * 255
     raw = b"tree 0\nmergetag object 0" + (b"\n" + line) * (size // 256) + b"\n\nclean\n"
+    copied = [0]
+    fields, message = git_push.split_object(_CountedBytes(raw, copied), "commit[unit]")
+    expected = b"object 0" + (b"\n" + line[1:]) * (size // 256)
+    assert fields == [(b"tree", b"0"), (b"mergetag", expected)] and message == "clean\n"
+    # Include the one final join, which does not dispatch to bytes-subclass methods.
+    work = copied[0] + sum(len(value) for _, value in fields)
+    assert copied[0] >= len(raw), "byte-copy instrumentation was bypassed"
+    assert work <= 8 * len(raw), f"unfolding copied {work} bytes for {len(raw)} input bytes"
+
+
+def _unfold_cpu_seconds(size, repeats=3):
+    """Best thread CPU time on plain bytes, including copies invisible to the subclass counter."""
+    line = b" " + b"x" * 63
+    raw = b"tree 0\nmergetag object 0" + (b"\n" + line) * (size // 64) + b"\n\nclean\n"
+    expected = [(b"tree", b"0"), (b"mergetag", b"object 0" + (b"\n" + line[1:]) * (size // 64))]
     best = float("inf")
     for _ in range(repeats):
-        started = time.perf_counter()
-        fields, _ = git_push.split_object(raw, "commit[unit]")
-        best = min(best, time.perf_counter() - started)
-    assert len(fields[1][1]) == len(b"object 0") + (size // 256) * 256
+        started = time.thread_time()
+        fields, message = git_push.split_object(raw, "commit[unit]")
+        best = min(best, time.thread_time() - started)
+        assert fields == expected and message == "clean\n"
     return best
 
 
-def test_continuation_unfolding_is_linear_in_the_header_size():
-    """Four times the continuation costs about four times as long (quadratic unfolding costs sixteen)."""
-    small, large = _unfold_seconds(512 << 10), _unfold_seconds(2 << 20)
-    assert large < 8 * small, (small, large)
-    assert _unfold_seconds(8 << 20, repeats=1) < 5
+def test_continuation_unfolding_has_linear_cpu_scaling():
+    """A 16x input increase allows 64x CPU work; quadratic unfolding needs about 256x."""
+    # Thread CPU time excludes descheduling and other threads' work. Best-of-three
+    # reduces transient noise; a 1 ms floor avoids ratios dominated by timer overhead.
+    # Short continuation lines make repeated full-prefix copies dominate loop overhead.
+    small, large = _unfold_cpu_seconds(128 << 10), _unfold_cpu_seconds(2 << 20)
+    assert large <= 64 * max(small, 0.001), f"unfolding CPU scaling: small={small:.6f}s large={large:.6f}s"
+
+
+@pytest.mark.parametrize(
+    ("combine", "counted"),
+    [
+        pytest.param(lambda value, part: value + b"\n" + part, True, id="concatenation"),
+        pytest.param(lambda value, part: b"\n".join([value, part]), False, id="join"),
+        pytest.param(lambda value, part: bytes(bytearray(value) + b"\n" + bytes(part)), False, id="bytearray"),
+        pytest.param(lambda value, part: b"%b\n%b" % (value, part), False, id="formatting"),
+    ],
+)
+def test_linearity_checks_reject_quadratic_unfolding(monkeypatch, combine, counted):
+    def quadratic(raw, position):
+        header, _, body = (b"\n" + raw).partition(b"\n\n")
+        fields = []
+        for line in header[1:].split(b"\n"):
+            if line.startswith(b" "):
+                key, value = fields[-1]
+                fields[-1] = (key, combine(value, line[1:]))
+            elif line:
+                key, _, value = line.partition(b" ")
+                fields.append((key, value))
+        return fields, body.decode("utf-8", "replace")
+
+    monkeypatch.setattr(git_push, "split_object", quadratic)
+    if counted:
+        with pytest.raises(AssertionError, match="unfolding copied"):
+            test_continuation_unfolding_is_linear_in_the_header_size(32 << 10)
+    else:
+        # These regressions bypass the deterministic meter, so prove the CPU
+        # scaling check catches them even while the copy-counter check passes.
+        test_continuation_unfolding_is_linear_in_the_header_size(32 << 10)
+    with pytest.raises(AssertionError, match="unfolding CPU scaling"):
+        test_continuation_unfolding_has_linear_cpu_scaling()
 
 
 # --- A clean push is ordinary: delivered unchanged, with Git's own bookkeeping ---
@@ -664,6 +750,39 @@ def test_clean_hook_runs_the_caller_hook_with_the_same_input_and_no_override(pus
     assert data == (" ".join(record) + "\n").encode() and "LU_OPSEC_OVERRIDE" not in environment
 
 
+UNKNOWN_PID = 2**31 - 1  # Above any pid_max: ps finds no such process, so the claimant lookup fails.
+
+
+def test_clean_push_with_an_override_needs_no_claimant(push_sandbox, monkeypatch):
+    """#9678: a clean push never looks up the claimant, so a failed lookup cannot refuse it."""
+    push_sandbox.commit("clean subject")
+    monkeypatch.setattr(git_push.os, "getppid", lambda: UNKNOWN_PID)
+    status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
+    assert status == 0 and len(chained) == 1 and "LU_OPSEC_OVERRIDE" not in chained[0][2]
+    assert not (push_sandbox.root / "batch_state/opsec").exists()
+
+
+def test_flagged_push_with_a_failed_claimant_lookup_is_refused(push_sandbox, monkeypatch, capfd):
+    push_sandbox.commit("subject " + TOKEN)
+    monkeypatch.setattr(git_push.os, "getppid", lambda: UNKNOWN_PID)
+    status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
+    err = capfd.readouterr().err
+    assert status == 1 and not chained and "override log unavailable; push refused" in err, err
+    assert not (push_sandbox.root / "batch_state/opsec/overrides.jsonl").exists()
+
+
+def test_flagged_push_claims_and_logs_the_override_once(push_sandbox, monkeypatch, capfd):
+    push_sandbox.commit("clean subject")
+    push_sandbox.commit("subject " + TOKEN)
+    status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
+    assert status == 0 and len(chained) == 1, capfd.readouterr().err
+    log = push_sandbox.root / "batch_state/opsec/overrides.jsonl"
+    rows = [json.loads(line) for line in log.read_text().splitlines()]
+    assert len(rows) == 1 and rows[0]["rule_ids"] == ["synthetic-rule"] and rows[0]["reason"] == "reason"
+    again, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
+    assert again == 1 and not chained and "override already consumed" in capfd.readouterr().err
+
+
 # --- History already on the public default branch is excluded by its verified authoritative head ---
 
 FETCH_HINT = "fetching the public default branch lets the scan skip history that is already public"
@@ -891,10 +1010,16 @@ def _write_loose(store, sha, raw):
 
 
 @pytest.mark.parametrize("store", ["own", "alternate"])
-def test_altered_public_history_bytes_exclude_nothing(push_sandbox, monkeypatch, capfd, tmp_path, store):
+@pytest.mark.parametrize("ordering", [(), ("--topo-order",)], ids=["date-order", "topo-order"])
+def test_altered_public_history_bytes_exclude_nothing(push_sandbox, monkeypatch, capfd, tmp_path, store, ordering):
     """Bytes under the authoritative head's id that name the hit as a parent must not hide the hit."""
     public_head = push_sandbox.commit("published clean")
+    # Start the hit from the common base, not the public head. Otherwise forging
+    # public_head -> hit creates a cycle (hit -> public_head already exists),
+    # and Git's positive control depends on how it traverses that invalid graph.
+    _git(push_sandbox.work, "reset", "-q", "--hard", "HEAD~1")
     hit = push_sandbox.commit("subject " + TOKEN)
+    assert public_head not in _git(push_sandbox.work, "rev-list", hit).split()
     genuine = subprocess.run(
         [REAL_GIT, "cat-file", "commit", public_head],
         cwd=push_sandbox.work,
@@ -913,7 +1038,7 @@ def test_altered_public_history_bytes_exclude_nothing(push_sandbox, monkeypatch,
         _loose(objects, public_head).unlink()
         (objects / "info/alternates").write_text(f"{alternate}\n")
     # Positive control: git trusts the stored bytes and would exclude the hit.
-    assert _git(push_sandbox.work, "rev-list", hit, f"^{public_head}") == ""
+    assert _git(push_sandbox.work, "rev-list", *ordering, hit, f"^{public_head}") == ""
     status, _ = run_hook(push_sandbox, monkeypatch, FakePublic(public_head))
     err = capfd.readouterr().err
     assert status == 1 and f"field=commit[{hit[:12]}].message" in err, err

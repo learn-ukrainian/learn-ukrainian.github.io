@@ -20,6 +20,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import correction_factory as evaluation
 from scripts.projects.open_model_data.correction_protection_rules import iter_rule_matches
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -113,7 +114,7 @@ def _release_bundle(release_dir: Path) -> dict[str, list[dict[str, Any]]]:
     bundle = {}
     for name in PUBLIC_FILES:
         raw = _release_bytes(release_dir, f"{name}.jsonl", snapshot)
-        bundle[name] = [json.loads(line) for line in raw.decode("utf-8").splitlines() if line.strip()]
+        bundle[name] = [json.loads(line) for line in split_jsonl_lines(raw.decode("utf-8")) if line.strip()]
     return bundle
 
 
@@ -200,7 +201,7 @@ def public_bundle(factory_public_dir: Path) -> tuple[dict[str, list[dict[str, An
             == {key: expected[key] for key in ("records", "bytes", "sha256")},
             f"factory public artifact drift: {name}",
         )
-        bundle[name] = [json.loads(line) for line in raw.decode("utf-8").splitlines() if line.strip()]
+        bundle[name] = [json.loads(line) for line in split_jsonl_lines(raw.decode("utf-8")) if line.strip()]
     return bundle, manifest
 
 

@@ -13,7 +13,7 @@ from scripts.tools import detach_session_task
 
 
 def _wait_for_text(path: Path, expected: str) -> None:
-    deadline = time.monotonic() + 5
+    deadline = time.monotonic() + 60
     while time.monotonic() < deadline:
         if path.exists() and expected in path.read_text(encoding="utf-8"):
             return

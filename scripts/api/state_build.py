@@ -15,6 +15,8 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 from .config import LEVELS
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
@@ -497,7 +499,7 @@ def compute_build_stats(track: str, *, curriculum_root: Path) -> dict:
         return {"track": track, "entries": [], "summary": {}}
 
     entries = []
-    for line in stats_path.read_text().splitlines():
+    for line in split_jsonl_lines(stats_path.read_text()):
         if line.strip():
             try:
                 entries.append(json.loads(line))

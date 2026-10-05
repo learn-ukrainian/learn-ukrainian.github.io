@@ -648,6 +648,44 @@ ACPX_PARSED_RESPONSE_LIMIT_BYTES = 512 * 1024
 ACPX_TOOL_CALL_LIMIT = 2048
 
 
+# Leaked provider tool syntax is not an answer. Match complete outer blocks,
+# rather than searching for tokens that legitimate prose may quote. XML-like
+# formats cover DeepSeek DSML, Claude antml, and GLM/Hermes; special-token
+# formats cover Kimi, Gemma, and DeepSeek's earlier tool-call encoding.
+_TOOL_CALL_MARKUP = re.compile(
+    r"<(?P<xml_tag>｜DSML｜(?:function_calls|tool_calls|invoke)"
+    r"|antml:(?:function_calls|invoke)|function_calls|tool_calls|tool_call)"
+    r"(?:\s[^>]*)?>.*?</(?P=xml_tag)\s*>"
+    r"|<\|tool_calls_section_begin\|>.*?<\|tool_calls_section_end\|>"
+    r"|<\|tool_call_begin\|>.*?<\|tool_call_end\|>"
+    r"|<start_function_call>.*?<end_function_call>"
+    r"|<\|tool_call>.*?<tool_call\|>(?:<\|tool_response>)?"
+    r"|<｜tool▁calls▁begin｜>.*?<｜tool▁calls▁end｜>"
+    r"|<｜tool▁call▁begin｜>.*?<｜tool▁call▁end｜>",
+    re.DOTALL,
+)
+_MARKUP_FENCE = re.compile(r"(?P<fence>`{3,}|~{3,})[^\n]*\n(?P<body>.*?)\n(?P=fence)", re.DOTALL)
+
+
+def _is_tool_call_only_reply(response: str) -> bool:
+    """Recognize only a whole reply made of known tool-call blocks."""
+    remaining = response.strip()
+    fenced = _MARKUP_FENCE.fullmatch(remaining)
+    if fenced is not None:
+        remaining = fenced["body"].strip()
+    if not remaining:
+        return False
+    position = 0
+    while position < len(remaining):
+        block = _TOOL_CALL_MARKUP.match(remaining, position)
+        if block is None:
+            return False
+        position = block.end()
+        while position < len(remaining) and remaining[position].isspace():
+            position += 1
+    return True
+
+
 @dataclass(frozen=True)
 class AcpxTransportProvenance:
     """Runner-sealed provenance for one ACP inter-agent invocation.
@@ -2074,7 +2112,8 @@ class AcpxAdapter:
         request-id *generation*, more than one terminal ``stopReason``
         response, a terminal ``error`` object, a stream that ends without
         ever reaching a terminal ``stopReason``, or
-        ``stopReason == "cancelled"``. A fresh request (``method`` + ``id``,
+        ``stopReason == "cancelled"``, or a reply containing only tool-call
+        markup instead of an answer. A fresh request (``method`` + ``id``,
         no ``result``/``error``) opens a new generation for that id, so an
         agent-originated ``session/request_permission`` that reuses ``0``/``1``
         cannot match the client's ``initialize``/``session/new`` receipts.
@@ -2324,6 +2363,13 @@ class AcpxAdapter:
                 f"(observed={response_bytes})",
                 stderr,
                 failure_code="protocol_output_limit",
+            )
+
+        if _is_tool_call_only_reply(response):
+            return self._closed(
+                "ACP reply contains only tool-call markup, without an answer",
+                stderr,
+                failure_code="result_invalid",
             )
 
         normalized_tool_calls: list[dict[str, Any]] = []

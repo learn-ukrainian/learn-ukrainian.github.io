@@ -43,6 +43,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.scratch import ensure_scratch_root, scratch_scan_roots
 from scripts.orchestration.thread_handoff import (
     _default_machine_id,
@@ -1838,7 +1839,7 @@ def _probe_sealed_read_mcp(
             f"sealed_reader_probe_failed:rc={completed.returncode}:{(completed.stderr or '')[:160]}"
         )
     try:
-        responses = [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
+        responses = [json.loads(line) for line in jsonl_lines(completed.stdout) if line.strip()]
         listed = {tool["name"] for tool in responses[1]["result"]["tools"]}
         payload = json.loads(responses[2]["result"]["content"][0]["text"])
         required_payload = json.loads(responses[3]["result"]["content"][0]["text"])
@@ -4012,6 +4013,18 @@ def prepare_isolated_review_launch(
     for key, value in auth_env.items():
         env[key] = value
 
+    work_cwd = (cwd or snap).resolve()
+    if not (is_within(work_cwd, snap) or is_within(work_cwd, write)):
+        raise ReviewIsolationError(f"review_cwd_outside_isolation_roots:{work_cwd}")
+    if engine_key == "codex":
+        from scripts.agent_runtime.adapters.codex import _codex_config_layers, _validate_review_mcp_layers
+
+        # Signed-in cloud config is invisible before auth staging. Use the
+        # pinned binary, cwd, environment, sandbox and home that will launch;
+        # never restage auth afterward, which would discard a probe refresh.
+        layers = _codex_config_layers(str(binary), work_cwd, env["CODEX_HOME"], env=env, sandbox=sandbox)
+        _validate_review_mcp_layers(layers, {}, env["CODEX_HOME"])
+
     wrapped = wrap_argv_with_sandbox(abs_argv, sandbox)
     argv_digest = hashlib.sha256(json.dumps(wrapped, separators=(",", ":")).encode("utf-8")).hexdigest()
     evidence = build_isolation_evidence(
@@ -4029,9 +4042,6 @@ def prepare_isolated_review_launch(
         prompt_transport=prompt_transport,
         bundle_identity=bundle_identity,
     )
-    work_cwd = (cwd or snap).resolve()
-    if not (is_within(work_cwd, snap) or is_within(work_cwd, write)):
-        raise ReviewIsolationError(f"review_cwd_outside_isolation_roots:{work_cwd}")
     return IsolatedReviewLaunch(
         argv=wrapped,
         env=env,

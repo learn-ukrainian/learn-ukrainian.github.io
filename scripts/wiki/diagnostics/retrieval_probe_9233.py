@@ -845,8 +845,8 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/wiki/diagnostics/retrieval_probe_9233.py --temp-dir /tmp/probe-9233\n"
-            "  .venv/bin/python scripts/wiki/diagnostics/retrieval_probe_9233.py --sources-db data/sources.db --vesum-db data/vesum.db --temp-dir /tmp/probe-9233\n"
+            '  .venv/bin/python scripts/wiki/diagnostics/retrieval_probe_9233.py --temp-dir "$TMPDIR/probe-9233"\n'
+            '  .venv/bin/python scripts/wiki/diagnostics/retrieval_probe_9233.py --sources-db data/sources.db --vesum-db data/vesum.db --temp-dir "$TMPDIR/probe-9233"\n'
             "Outputs: generated queries.yaml and phase1-results.md under --output-dir; temporary lemma index under --temp-dir; source databases are read-only.\n"
             "Exit codes: 0 means the probe and report completed; >=1 means invalid input or a retrieval/build failure.\n"
             "Related: frozen #9233 bake-off design v3; scripts/wiki/sources_db.py; issue #9233."
@@ -854,7 +854,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--sources-db", type=Path, help="Read-only sources.db path; default is the project active database resolved by sources_db.")
     parser.add_argument("--vesum-db", type=Path, help="Read-only VESUM path; default is the project VESUM database resolver.")
-    parser.add_argument("--temp-dir", type=Path, required=True, help="Existing or creatable temporary directory outside this repository for the lemma SQLite index; example: /tmp/probe-9233.")
+    parser.add_argument(
+        "--temp-dir",
+        type=Path,
+        required=True,
+        help='Existing or creatable temporary directory outside this repository for the lemma SQLite index; example: "$TMPDIR/probe-9233".',
+    )
     parser.add_argument("--output-dir", type=Path, default=ROOT / "docs/research/retrieval-bakeoff-9233", help="Directory for frozen queries and generated results; default: docs/research/retrieval-bakeoff-9233.")
     parser.add_argument("--queries-only", action="store_true", help="Write/freeze queries.yaml and report its SHA-256 without running any retrieval arm; default: run the full probe.")
     parser.add_argument("--regenerate-queries", action="store_true", help="Rebuild queries.yaml from the cited pack, arcs, source text, and VESUM before any arm runs; default: reuse the frozen file.")

@@ -104,6 +104,7 @@ def cmd_plane_status(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.fleet_comms.fleet_overview import OMITTED
 
 
@@ -762,7 +763,7 @@ def cmd_authority_import(args: argparse.Namespace) -> int:
             else:
                 record_path = Path(args.records_jsonl).expanduser()
                 try:
-                    lines = record_path.read_text(encoding="utf-8").splitlines()
+                    lines = split_jsonl_lines(record_path.read_text(encoding="utf-8"))
                     records = [json.loads(line) for line in lines if line.strip()]
                 except (OSError, json.JSONDecodeError) as exc:
                     raise FleetCommsCliError("authority_import_records_unreadable") from exc

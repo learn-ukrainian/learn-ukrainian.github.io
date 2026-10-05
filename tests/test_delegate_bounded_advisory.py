@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
 from scripts.agent_runtime import bounded_advisory
+from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 
 REPO_ROOT = delegate._REPO_ROOT
 WORKER_ID = "luna-worker"
@@ -535,9 +536,20 @@ def test_m16_gemini_flash_with_conflicting_classification_is_refused(env, capsys
     assert env.spawned == [] and _worker_record(env.tasks) is None
 
 
-def test_m16_gemini_flash_code_review_profile_is_refused_at_reviewer_admission(env, capsys):
+def test_m16_gemini_flash_code_review_profile_is_refused_at_reviewer_admission(ordinary_review_scope, env, capsys):
     """#9538: --review-profile code types the dispatch as a code review, which Gemini never performs."""
-    rc = _dispatch(_argv("--research-task-family", "ukrainian-authoring", "--review-profile", "code", agent="agy", model=None))
+    rc = _dispatch(
+        _argv(
+            "--branch",
+            "review-target",
+            "--research-task-family",
+            "ukrainian-authoring",
+            "--review-profile",
+            "code",
+            agent="agy",
+            model=None,
+        )
+    )
     _assert_refused(env, capsys, rc, "REVIEW_ROUTE_REFUSED: requested reviewer is ineligible for --review-profile code")
 
 
@@ -729,15 +741,18 @@ def test_advisor_flags_are_refused_when_inconsistent(env, capsys, extra, model, 
     _assert_refused(env, capsys, rc, code, task_id=ADVISOR_ID)
 
 
-@pytest.mark.parametrize(
-    "agent,model", [("claude", "claude-fable-5-1"), ("cursor", "claude-fable-5-1-thinking-high")]
-)
+@pytest.mark.parametrize("agent,model", [("claude", "claude-fable-5-1"), ("cursor", "claude-fable-5-1-thinking-high")])
 def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model):
     """#9583: the advisor is the catalog's advisor model; Fable holds no advisory role on any seat."""
     rc = _dispatch(
         _argv(
-            "--advisory-role", "bounded_advisory_envelope", "--advisory-binding", "a" * 64,
-            agent=agent, model=model, task_id=ADVISOR_ID,
+            "--advisory-role",
+            "bounded_advisory_envelope",
+            "--advisory-binding",
+            "a" * 64,
+            agent=agent,
+            model=model,
+            task_id=ADVISOR_ID,
         )
     )
     _assert_refused(env, capsys, rc, bounded_advisory.ADVISOR_ROUTE_REFUSED, task_id=ADVISOR_ID)

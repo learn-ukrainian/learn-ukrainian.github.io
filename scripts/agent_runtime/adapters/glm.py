@@ -11,13 +11,13 @@ from __future__ import annotations
 import json
 import logging
 import os
-import re
 import shutil
 from pathlib import Path
 
 from scripts.review.model_catalog import retired_model_refusal
 
 from ..errors import AgentRuntimeError
+from ..failure_codes import opencode_provider_error, provider_failure_code, provider_stderr_error
 from ..result import ParseResult
 from ..trail_isolation import TrailIsolationError, trail_isolation_requested
 from .base import InvocationPlan
@@ -33,11 +33,6 @@ _OPENCODE_MODEL_ROUTES: dict[str, str] = {
 # Env vars whose presence indicates an automated/CI context where the
 # China-egress constraint forbids invoking GLM (matches ask-glm backstop).
 _CI_ENV_VARS: tuple[str, ...] = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
-
-_RATE_LIMIT_RE = re.compile(
-    r"rate limit|rate_limit|usage limit|quota exceeded|too many requests|resource_exhausted|\b429\b",
-    re.IGNORECASE,
-)
 
 
 class GlmEgressForbiddenError(AgentRuntimeError, ValueError):
@@ -109,9 +104,7 @@ class GlmAdapter:
         effort: str | None = None,
     ) -> InvocationPlan:
         if trail_isolation_requested(tool_config):
-            raise TrailIsolationError(
-                "trail isolation refused for GLM: opencode does not enforce tool restrictions"
-            )
+            raise TrailIsolationError("trail isolation refused for GLM: opencode does not enforce tool restrictions")
         assert_glm_egress_allowed("GlmAdapter")
 
         if mode not in self.supported_modes:
@@ -176,7 +169,6 @@ class GlmAdapter:
         call_start_time: float | None = None,
     ) -> ParseResult:
         _ = (output_file, call_start_time)
-        rate_limited = bool(_RATE_LIMIT_RE.search(f"{stderr or ''}\n{stdout or ''}"))
 
         try:
             from scripts.ai_agent_bridge._opencode import _parse_opencode_stream, read_opencode_turn_status
@@ -194,7 +186,13 @@ class GlmAdapter:
         turn_status = read_opencode_turn_status(stdout, cwd=cwd)
 
         usable = bool(text) and turn_status.outcome == "completed"
-        ok = returncode == 0 and usable and not rate_limited
+        provider_error, failure_code = opencode_provider_error(stdout)
+        failed = returncode != 0 or not usable or failure_code is not None
+        if failed and failure_code is None:
+            provider_error = provider_stderr_error(stderr or "")
+            failure_code = provider_failure_code(provider_error) if provider_error else "provider_stream_incomplete"
+        rate_limited = failed and failure_code == "rate_limited"
+        ok = returncode == 0 and usable and failure_code is None
 
         stderr_excerpt: str | None = None
         if not ok:
@@ -211,6 +209,8 @@ class GlmAdapter:
             response=text if ok else "",
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
+            failure_code=failure_code,
+            provider_error_text=provider_error,
             session_id=turn_status.session_id,
             tokens=None,
             tool_calls=[],
