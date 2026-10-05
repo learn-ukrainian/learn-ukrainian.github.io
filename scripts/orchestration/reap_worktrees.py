@@ -53,7 +53,7 @@ from scripts.common.acp_runtime_lock import (
 )
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
-from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_claims, worktree_prep
+from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -358,8 +358,8 @@ def is_under_worktrees(repo_root: Path, path: Path) -> bool:
 def _worktree_clean(path: Path, *, timeout: float | None = None) -> bool | None:
     """Return True when the worktree has no meaningful dirty files.
 
-    Dispatch workers often leave an untracked ``.venv`` (or nested site
-    venv) which must not block reaping multi-hundred-MB trees. Callers
+    Untracked known caches and verified provisioned links are disposable;
+    real environments and tracked changes retain the tree. Callers
     holding delegate's per-worktree lock pass
     :data:`_LOCKED_GIT_STATUS_TIMEOUT_S` so a wedged ``git status``
     surfaces as :class:`subprocess.TimeoutExpired` (a skip) instead of
@@ -368,12 +368,12 @@ def _worktree_clean(path: Path, *, timeout: float | None = None) -> bool | None:
     proc = _run(["git", "status", "--porcelain", "-uall"], cwd=path, timeout=timeout)
     if proc.returncode != 0:
         return None
-    ignored_prefixes = (".venv/", ".venv", "node_modules/", "node_modules")
+    primary = primary_checkout_root(path)
     for raw in (proc.stdout or "").splitlines():
         if len(raw) < 4:
             continue
         rel = raw[3:].strip().strip('"')
-        if rel in ignored_prefixes or rel.startswith((".venv/", "node_modules/")):
+        if raw[:2] == "??" and worktree_artifacts.is_disposable_path(Path(rel), worktree=path, primary=primary):
             continue
         return False
     return True
@@ -2201,28 +2201,7 @@ def _terminal_dispatch_reason(
     return f"settled dispatch task-id={task_id} status={task_status}"
 
 
-# Tool-regenerated caches and exact dispatcher-provisioned links are disposable.
-# Real ``.venv/`` and ``node_modules/`` entries may hold an only copy of work.
-_PYCACHE_DIR = "__pycache__"
-_TOPLEVEL_CACHE_PREFIXES = (".pytest_cache/", ".ruff_cache/", ".mypy_cache/")
-_ENV_DIRS = frozenset({".venv", "node_modules"})
-_PROVISIONED_LINK_PATHS = frozenset({"data/sources.db", "data/vesum.db", "node_modules", "site/node_modules"})
-
 _DETACHED_CLEAN_CONTAINED_PREFIX = "detached clean contained"
-
-
-def _is_regenerable_cache_path(path: str) -> bool:
-    """True for a path inside a ``__pycache__/`` or a top-level tool cache.
-
-    Any ``.venv`` or ``node_modules`` segment disqualifies the path, and a loose
-    ``*.pyc`` outside ``__pycache__/`` is not a cache. A hand-made file placed
-    inside an ignored cache directory is treated as disposable (documented
-    residual in the worktree-cleanup runbook).
-    """
-    segments = path.split("/")
-    if _ENV_DIRS.intersection(segments):
-        return False
-    return _PYCACHE_DIR in segments[:-1] or path.startswith(_TOPLEVEL_CACHE_PREFIXES)
 
 
 def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = None) -> bool:
@@ -2249,18 +2228,9 @@ def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = N
         if not entry.startswith("!! "):
             return False
         relative = entry[3:]
-        if _is_regenerable_cache_path(relative):
-            continue
-        if relative not in _PROVISIONED_LINK_PATHS:
-            return False
-        link = path / relative
         try:
             primary = primary_checkout_root(path)
-            if (
-                not link.is_symlink()
-                or primary.resolve(strict=True) == path.resolve(strict=True)
-                or link.resolve(strict=True) != (primary / relative).resolve(strict=True)
-            ):
+            if not worktree_artifacts.is_disposable_path(Path(relative), worktree=path, primary=primary):
                 return False
         except (OSError, RuntimeError):
             return False
@@ -3569,8 +3539,8 @@ def _reap_qualified_worktree(
         # fraction of a second kills ``git worktree remove --force``
         # mid-delete. Removal keeps :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`
         # (120s). A waiter that hits its 30s lock timeout retries.
-        # ``_worktree_clean`` accepts disposable ignored residue such as a
-        # worker's ``.venv``; git still counts it, so force is required.
+        # Git still counts ignored residue on a clean checkout, so force is
+        # required. The shared gate preserves non-disposable output first.
         control_root = control_plane_root(repo_root)
         preservation_receipt: dict[str, Any] = {}
         foreign_root = None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)

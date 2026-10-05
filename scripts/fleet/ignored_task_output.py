@@ -15,11 +15,140 @@ from pathlib import Path
 from typing import Any
 
 from scripts.orchestration import worktree_artifacts as artifacts
-from scripts.orchestration.task_record_store import archived_task_record_path, task_record_path
+from scripts.orchestration.task_record_store import task_record_path
 
 # Bound automatic disk duplication. Larger outputs require owner disposition;
 # the complete source checkout survives rather than receiving a partial copy.
 MAX_PRESERVED_BYTES = 256 * 1024 * 1024
+
+
+def resolve_worktree_record(worktree: Path, tasks_dir: Path) -> tuple[Path | None, dict[str, Any]]:
+    """Resolve identity from canonical records, never from a caller's hint.
+
+    Inspect hot and archived records: a different filename, renamed tree, or
+    optional task argument cannot hide a retention claim. Ambiguity fails closed.
+    """
+    from scripts.orchestration.worktree_claims import record_may_claim_worktree, worktree_claim_needles
+
+    matches = []
+    needles = worktree_claim_needles(worktree, worktree.resolve())
+    for path in sorted(tasks_dir.glob("*.json")) + sorted((tasks_dir / "archive").glob("*.json")):
+        try:
+            raw = path.read_bytes()
+        except OSError:
+            raise ValueError("task identity inventory unreadable") from None
+        try:
+            record = json.loads(raw)
+        except ValueError:
+            # Reuse the claim owner's existing released-record proof only for
+            # corrupt records with no possible retention key. Valid records,
+            # including released symlink aliases, are always resolved below.
+            if record_may_claim_worktree(raw, needles) or b'"keep_worktree"' in raw:
+                raise ValueError("task identity inventory unreadable") from None
+            continue
+        if isinstance(record, dict):
+            if _record_matches_worktree(record, worktree):
+                matches.append((path, record))
+            elif record.get("keep_worktree") and _record_matches_worktree({"cwd": record.get("cwd")}, worktree):
+                raise ValueError("ambiguous retention task binding")
+    if len(matches) > 1:
+        kept = [match for match in matches if match[1].get("keep_worktree")]
+        if len(kept) == 1:
+            return kept[0]
+        if kept:
+            raise ValueError("ambiguous worktree task attribution with retention intent")
+        # Finished references alone are not ownership. Without one creator,
+        # output retains unknown attribution; empty trees remain removable.
+        creators = [match for match in matches if match[1].get("worktree_reused") is False]
+        return creators[0] if len(creators) == 1 else (None, {})
+    return matches[0] if matches else (None, {})
+
+
+def creation_inventory(worktree: Path, *, primary: Path, task_id: str, run_nonce: str) -> dict[str, Any]:
+    """Capture under delegate's existing per-worktree lock before worker spawn."""
+    try:
+        files = _ignored_output_files(worktree, primary, {})
+        status = worktree.stat()
+        paths = _path_inventory(worktree, files)
+    except (OSError, RuntimeError, subprocess.SubprocessError) as exc:
+        raise ValueError(f"creation inventory unavailable ({type(exc).__name__}); worker not started") from exc
+    return {
+        "schema": "ignored-baseline.v1",
+        "task_id": task_id,
+        "run_nonce": run_nonce,
+        "directory_identity": [status.st_dev, status.st_ino],
+        "paths": paths,
+    }
+
+
+def _path_inventory(root: Path, files: list[str]) -> list[dict[str, Any]]:
+    return [
+        {"path": name, "size": size, "sha256": digest}
+        for name in files
+        for size, digest in [artifacts._fingerprint(root / name)]
+    ]
+
+
+def _classified_inventory(worktree: Path, files: list[str], record: Mapping[str, Any]) -> list[dict[str, Any]]:
+    baseline = record.get("ignored_output_baseline")
+    status = worktree.stat()
+    trusted = (
+        isinstance(baseline, dict)
+        and baseline.get("schema") == "ignored-baseline.v1"
+        and record.get("worktree_reused") is False
+        and baseline.get("task_id") == record.get("task_id")
+        and bool(record.get("run_nonce"))
+        and baseline.get("run_nonce") == record.get("run_nonce")
+        and baseline.get("directory_identity") == [status.st_dev, status.st_ino]
+        and isinstance(baseline.get("paths"), list)
+    )
+    before = {}
+    if trusted:
+        try:
+            before = {entry["path"]: entry for entry in baseline["paths"]}
+            if len(before) != len(baseline["paths"]) or any(
+                set(entry) != {"path", "size", "sha256"}
+                or not isinstance(entry["size"], int)
+                or entry["size"] < 0
+                or not re.fullmatch(r"[a-f0-9]{64}", entry["sha256"])
+                for entry in before.values()
+            ):
+                trusted = False
+        except (KeyError, TypeError):
+            trusted = False
+    entries = _path_inventory(worktree, files)
+    for entry in entries:
+        entry["class"] = (
+            ("pre_existing" if before.get(entry["path"]) == entry else "task_created")
+            if trusted
+            else "unknown_baseline"
+        )
+    return entries
+
+
+def verify_retrieval(primary: Path, receipt: Mapping[str, Any]) -> str:
+    """Retrieve every preserved file and independently verify names, sizes, bytes."""
+    relative = Path(receipt["location"])
+    if relative.is_absolute() or ".." in relative.parts or not relative.is_relative_to("batch_state/preserved"):
+        raise ValueError("invalid retrieval location")
+    location = primary / relative
+    if location.resolve(strict=True) != location.absolute():
+        raise ValueError("linked retrieval location")
+    paths = receipt["paths"]
+    names = [entry["path"] for entry in paths]
+    if any(Path(name).is_absolute() or ".." in Path(name).parts for name in names):
+        raise ValueError("invalid retrieval path")
+    entries = list(location.rglob("*"))
+    if any(entry.is_symlink() for entry in entries):
+        raise ValueError("linked retrieval entry")
+    if sorted(entry.relative_to(location).as_posix() for entry in entries if not entry.is_dir()) != names:
+        raise ValueError("retrieval inventory mismatch")
+    if _path_inventory(location, names) != [{key: entry[key] for key in ("path", "size", "sha256")} for entry in paths]:
+        raise ValueError("retrieval bytes mismatch")
+    digest = _content_digest(location, names)
+    if digest != receipt["content_sha256"]:
+        raise ValueError("retrieval digest mismatch")
+    return digest
 
 
 def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, Any]) -> list[str]:
@@ -37,7 +166,7 @@ def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, An
         relative = Path(name)
         if relative.is_absolute() or ".." in relative.parts:
             raise ValueError("ignored output inventory escaped worktree")
-        if artifacts._is_disposable_path(relative):
+        if artifacts.is_disposable_path(relative, worktree=worktree, primary=primary):
             continue
         source = worktree / relative
         status = source.lstat()
@@ -45,8 +174,6 @@ def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, An
             resolved = source.resolve(strict=True)
             if resolved.is_relative_to(primary / "batch_state") and not resolved.is_relative_to(root):
                 continue  # Shared state survives removal of the link.
-            if name in {"data/sources.db", "data/vesum.db"} and resolved == (primary / name).resolve(strict=True):
-                continue  # Dispatcher-provisioned database link; never read it.
             if resolved.is_relative_to(root):
                 continue  # Local target is inventoried independently or tracked.
             raise ValueError("ignored output links outside the checkout")
@@ -59,22 +186,35 @@ def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, An
         else:
             raise ValueError("ignored output is not a regular file")
     files.update(named)
-    return sorted(name for name in files if not artifacts._is_disposable_path(Path(name)))
+    return sorted(
+        name for name in files if not artifacts.is_disposable_path(Path(name), worktree=worktree, primary=primary)
+    )
 
 
 def _record_matches_worktree(record: Mapping[str, Any], worktree: Path) -> bool:
     """Task names are hints; only resolved filesystem identity binds a record."""
-    location = record.get("worktree_path") or record.get("cwd")
-    if not isinstance(location, str) or not location:
-        return False
-    try:
-        return Path(location).resolve(strict=True) == worktree.resolve(strict=True)
-    except (OSError, ValueError, RuntimeError):
-        return False
+    locations = [record.get("worktree_path") or record.get("cwd")]
+    runtime_paths = record.get("acp_runtime_paths")
+    if isinstance(runtime_paths, list):
+        locations.extend(runtime_paths)
+    for location in locations:
+        if not isinstance(location, str) or not location:
+            continue
+        try:
+            if Path(location).resolve(strict=True) == worktree.resolve(strict=True):
+                return True
+        except (OSError, ValueError, RuntimeError):
+            continue
+    return False
 
 
 def _update_bound_task_record(
-    path: Path, worktree: Path, updates: Mapping[str, Any], *, clear: tuple[str, ...] = ()
+    path: Path,
+    worktree: Path,
+    updates: Mapping[str, Any],
+    *,
+    clear: tuple[str, ...] = (),
+    expected_record: Mapping[str, Any] | None = None,
 ) -> bool:
     """Recheck binding under the writer lock, including re-dispatch during copying."""
     with artifacts.task_state_lock(path):
@@ -85,6 +225,10 @@ def _update_bound_task_record(
         if not isinstance(record, dict):
             raise ValueError("task record is not an object")
         if not _record_matches_worktree(record, worktree):
+            return False
+        if expected_record is not None and any(
+            record.get(key) != expected_record.get(key) for key in ("task_id", "run_nonce")
+        ):
             return False
         record.update(updates)
         for key in clear:
@@ -109,7 +253,10 @@ def _reusable_copy(parent: Path, worktree: Path, files: list[str], digest: str) 
     for manifest in sorted(parent.glob("*.manifest.json")):
         try:
             saved = json.loads(manifest.read_text(encoding="utf-8"))
-            if not isinstance(saved, dict) or saved.get("worktree_path") != str(worktree):
+            if (
+                not isinstance(saved, dict)
+                or saved.get("worktree_sha256") != hashlib.sha256(str(worktree).encode()).hexdigest()
+            ):
                 continue
             if saved.get("content_sha256") != digest:
                 continue
@@ -135,100 +282,141 @@ def preserve_worktree_artifacts(
     tasks_dir: Path,
     task_record: Mapping[str, Any] | None = None,
 ) -> tuple[bool, str, dict[str, Any] | None]:
-    """Copy all ignored output before removal, independent of terminal status.
+    """Mandatory preservation and retention gate, under the remover's lock.
 
-    Call under the remover's existing ownership/liveness lock. Task start values
-    never affect selection: earlier attempts' output must survive too. An absent task
-    identity is derived from the dispatch path, or uses a worktree path digest. Each
-    changed output has its own destination; identical verified copies are reused.
-    Inventory, cap, copy, verification and record errors retain the
-    checkout. Existing preservation layout and verified-copy mechanics are reused.
+    Decision B inventories everything without a clock cutoff. Baselines only
+    label provenance; they never reduce the copied set. No canonical attribution,
+    oversized output, failed retrieval, or explicit retention refuses removal.
+    Caller records and task IDs are hints, never retention authority.
     """
-    if task_id is None:
-        from scripts.orchestration.reap_worktrees import _dispatch_task_id_for_path
-
-        task_id = _dispatch_task_id_for_path(primary, worktree)
     record_path = None
-    record = {}
-    metadata = None
+    record: dict[str, Any] = {}
+    metadata: dict[str, Any] = {
+        "retention_disposition": "retained",
+        "owner": "infra lane",
+        "next_condition": "establish canonical task attribution and verified retrieval",
+    }
     try:
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
-        if task_id:
-            for candidate in (task_record_path(tasks_dir, task_id), archived_task_record_path(tasks_dir, task_id)):
-                if not candidate.exists():
-                    continue
-                stored = json.loads(candidate.read_text(encoding="utf-8"))
-                if not isinstance(stored, dict):
-                    raise ValueError("task record is not an object")
-                if _record_matches_worktree(stored, worktree):
-                    record_path, record = candidate, stored
-                    break
-        if not record and task_record and _record_matches_worktree(task_record, worktree):
-            record = dict(task_record)
+        record_path, record = resolve_worktree_record(worktree, tasks_dir)
         files = _ignored_output_files(worktree, primary, record)
-        if not files:
+        if not files and not record.get("keep_worktree"):
             return True, "", None
-        identity = task_id or "worktree-" + hashlib.sha256(str(worktree.resolve()).encode()).hexdigest()[:24]
-        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity):
-            raise ValueError("artifact preservation requires a safe task identity")
-        total_bytes = sum((worktree / name).stat().st_size for name in files)
-        if total_bytes > MAX_PRESERVED_BYTES:
-            raise ValueError(f"ignored output exceeds preservation cap ({total_bytes} > {MAX_PRESERVED_BYTES} bytes)")
-        parent = primary / "batch_state" / "preserved" / identity
-        if parent.is_relative_to(worktree):
-            raise ValueError("preservation destination is inside the worktree")
-        digest = _content_digest(worktree, files)
-        location = _reusable_copy(parent, worktree, files, digest)
-        reused = location is not None
-        if location is None:
-            location = parent / uuid.uuid4().hex
-            for name in files:
-                destination = location / name
-                if destination.resolve() != destination.absolute():
-                    raise ValueError("preserved artifact destination contains a symlink")
-                artifacts._copy_verified(worktree / name, destination)
-        # Recheck the complete inventory and all bytes after the last copy.
+        identity = record.get("task_id")
+        metadata.update(
+            {
+                "count": len(files),
+                "bytes": sum((worktree / name).stat().st_size for name in files),
+                "paths": _classified_inventory(worktree, files, record),
+            }
+        )
         if (
-            files != _ignored_output_files(worktree, primary, record)
-            or sum((location / name).stat().st_size for name in files) != total_bytes
-            or _content_digest(worktree, files) != digest
-            or _content_digest(location, files) != digest
+            not isinstance(identity, str)
+            or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity)
+            or record_path
+            not in (task_record_path(tasks_dir, identity), task_record_path(tasks_dir / "archive", identity))
         ):
-            raise ValueError("ignored output changed during preservation")
-        metadata = {
-            "count": len(files),
-            "bytes": total_bytes,
-            "location": str(location),
-            "worktree_path": str(worktree),
-            "content_sha256": digest,
-            "reused": reused,
-        }
-        if not reused:
-            with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
-                json.dump(metadata, manifest, sort_keys=True)
-                manifest.write("\n")
-        if record_path is None or not _update_bound_task_record(
-            record_path, worktree, {"preserved_artifacts": metadata}, clear=("artifact_preservation_error",)
-        ):
-            metadata["record_update"] = "skipped_missing_record"
-            receipt_path = location.with_name(location.name + ("-" + uuid.uuid4().hex if reused else "") + ".receipt.json")
-            metadata["receipt_path"] = str(receipt_path)
-            with receipt_path.open("x", encoding="utf-8") as receipt_file:
-                json.dump(metadata, receipt_file, sort_keys=True)
-                receipt_file.write("\n")
-            print(f"Preserved {len(files)} files ({total_bytes} bytes) at {location}; receipt: {receipt_path}", file=sys.stderr)
+            raise ValueError("missing canonical task attribution")
+        metadata.update(
+            {
+                "owner": identity,
+                "task_id": identity,
+                "run_nonce": record.get("run_nonce"),
+                "worktree_sha256": hashlib.sha256(str(worktree).encode()).hexdigest(),
+            }
+        )
+        total_bytes = metadata["bytes"]
+        if total_bytes > MAX_PRESERVED_BYTES:
+            metadata["next_condition"] = "owner retrieves output exceeding the preservation cap"
+            raise ValueError(f"ignored output exceeds preservation cap ({total_bytes} > {MAX_PRESERVED_BYTES} bytes)")
+        if files or record.get("keep_worktree"):
+            parent = primary / "batch_state" / "preserved" / identity
+            if parent.is_relative_to(worktree):
+                raise ValueError("preservation destination is inside the worktree")
+            digest = _content_digest(worktree, files)
+            location = _reusable_copy(parent, worktree, files, digest)
+            reused = location is not None
+            if location is None:
+                location = parent / uuid.uuid4().hex
+                metadata["next_condition"] = "owner completes verified copy and retrieval"
+                location.mkdir(parents=True, exist_ok=False)
+                for name in files:
+                    destination = location / name
+                    if destination.resolve() != destination.absolute():
+                        raise ValueError("preserved artifact destination contains a symlink")
+                    artifacts._copy_verified(worktree / name, destination)
+            metadata.update(
+                {"location": location.relative_to(primary).as_posix(), "content_sha256": digest, "reused": reused}
+            )
+            metadata["next_condition"] = "owner repairs failed retrieval and verifies all bytes"
+            metadata["retrieval_proof_sha256"] = verify_retrieval(primary, metadata)
+            if files != _ignored_output_files(worktree, primary, record) or _content_digest(worktree, files) != digest:
+                raise ValueError("ignored output changed during preservation")
+            # The manifest is only a locator; retries independently read all bytes.
+            if not reused:
+                with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
+                    json.dump(metadata, manifest, sort_keys=True)
+                    manifest.write("\n")
+        if record.get("keep_worktree"):
+            metadata["next_condition"] = (
+                "existing owner releases retention after proven retrieval via post_task_reap --release-retention"
+            )
         else:
-            print(f"Preserved {len(files)} files ({total_bytes} bytes) at {location}", file=sys.stderr)
+            metadata.update({"retention_disposition": "retrieved", "next_condition": "none"})
+        if metadata["retention_disposition"] != "retained":
+            metadata["next_condition"] = "owner repairs task receipt publication"
+        # Recheck intent under the task writer lock. A concurrent record update
+        # cannot have its keep flag overwritten by this gate's earlier snapshot.
+        with artifacts.task_state_lock(record_path):
+            current = json.loads(record_path.read_text(encoding="utf-8"))
+            if (
+                not _record_matches_worktree(current, worktree)
+                or current.get("task_id") != identity
+                or current.get("run_nonce") != record.get("run_nonce")
+            ):
+                raise ValueError("task attribution changed during preservation")
+            if current.get("keep_worktree"):
+                metadata.update(
+                    {
+                        "retention_disposition": "retained",
+                        "next_condition": "existing owner releases retention after proven retrieval via post_task_reap --release-retention",
+                    }
+                )
+            prior_release = current.get("preserved_artifacts", {}).get("retention_release")
+            if prior_release:
+                metadata["retention_release"] = prior_release
+            if metadata["retention_disposition"] != "retained":
+                metadata["next_condition"] = "none"
+            current["preserved_artifacts"] = metadata
+            current.pop("artifact_preservation_error", None)
+            artifacts.reaper_lifecycle._atomic_write(record_path, current)
         if isinstance(task_record, dict) and _record_matches_worktree(task_record, worktree):
             task_record["preserved_artifacts"] = metadata
             task_record.pop("artifact_preservation_error", None)
+        if metadata["retention_disposition"] == "retained":
+            return False, "artifact preservation failed: keep_worktree intent set; refusing worktree removal", metadata
+        print(
+            f"Preserved {len(files)} files ({total_bytes} bytes); retrieval SHA-256: {metadata.get('retrieval_proof_sha256')}",
+            file=sys.stderr,
+        )
         return True, "", metadata
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
-        reason = f"artifact preservation failed: {exc}; refusing worktree removal"
+        # Never place filesystem exception paths in receipts.
+        detail = str(exc).replace(str(worktree), "<worktree>").replace(str(primary), "<primary>")
+        detail = re.sub(r"/(?:home|Users)/[^\s'\"]+", "<private-path>", detail)
+        reason = f"artifact preservation failed: {detail}; refusing worktree removal"
+        metadata["retention_disposition"] = "retained"
+        if metadata["next_condition"] == "none":
+            metadata["next_condition"] = "owner repairs task receipt publication and proves retrieval"
         if isinstance(task_record, dict) and _record_matches_worktree(task_record, worktree):
             task_record["artifact_preservation_error"] = reason
         if record_path is not None:
             with contextlib.suppress(OSError, ValueError):
-                _update_bound_task_record(record_path, worktree, {"artifact_preservation_error": reason})
+                _update_bound_task_record(
+                    record_path,
+                    worktree,
+                    {"artifact_preservation_error": reason, "preserved_artifacts": metadata},
+                    expected_record=record,
+                )
         return False, reason, metadata

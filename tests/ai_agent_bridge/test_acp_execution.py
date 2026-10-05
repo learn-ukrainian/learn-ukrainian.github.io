@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import os
 import signal
 import subprocess
@@ -29,7 +28,8 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
         ["git", "-C", str(repo), *args],
         check=True,
         capture_output=True,
-        text=True, timeout=30,
+        text=True,
+        timeout=30,
     )
 
 
@@ -82,25 +82,23 @@ def test_primary_root_call_uses_and_removes_detached_no_checkout_worktree(
     assert str(workspace) not in listed
 
 
-def test_no_checkout_teardown_preserves_untracked_output_without_ignore_rules(tmp_path, capsys):
+def test_no_checkout_teardown_retains_unattributed_output_without_ignore_rules(tmp_path, caplog):
     primary = _make_primary(tmp_path)
     with acp_execution_cwd(primary, task_id="answer-9645") as workspace:
         assert _git(workspace, "ls-files").stdout == ""
-        for name, payload in [(".cache/out/answer.txt", b"answer"), ("notes.txt", b"notes"),
-                              (".pytest_breadcrumbs/probe", b"cache")]:
+        for name, payload in [
+            (".cache/out/answer.txt", b"answer"),
+            ("notes.txt", b"notes"),
+            (".pytest_breadcrumbs/probe", b"cache"),
+        ]:
             source = workspace / name
             source.parent.mkdir(parents=True, exist_ok=True)
             source.write_bytes(payload)
-    assert not workspace.exists()
-    receipts = list((primary / "batch_state/preserved/answer-9645").glob("*.receipt.json"))
-    assert len(receipts) == 1
-    receipt = json.loads(receipts[0].read_text())
-    assert receipt["count"] == 2 and receipt["bytes"] == 11
-    location = Path(receipt["location"])
-    assert (location / ".cache/out/answer.txt").read_bytes() == b"answer"
-    assert (location / "notes.txt").read_bytes() == b"notes"
-    assert not (location / ".pytest_breadcrumbs").exists()
-    assert str(receipts[0]) in capsys.readouterr().err
+    assert workspace.exists()
+    assert (workspace / ".cache/out/answer.txt").read_bytes() == b"answer"
+    assert (workspace / "notes.txt").read_bytes() == b"notes"
+    assert not (primary / "batch_state/preserved/answer-9645").exists()
+    assert "missing canonical task attribution; refusing worktree removal" in caplog.text
 
 
 @pytest.mark.parametrize(

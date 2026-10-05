@@ -462,6 +462,7 @@ def discover_candidates(
 
 def refuse_git_checkout_removal(target: Path) -> None:
     """Keep linked Git worktrees out of scratch-only recursive removal (#9645)."""
+
     # This legacy scratch sweep has no worktree ownership/claim proof. Do
     # not let a matching basename bypass the shared worktree remover (#9645),
     # including a parent scratch directory containing a linked checkout.

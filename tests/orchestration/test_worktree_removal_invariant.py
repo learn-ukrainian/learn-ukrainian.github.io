@@ -54,7 +54,7 @@ ALLOWLIST: dict[tuple[str, str | None], str] = {
 # historical. A reference outside the allowlist is a bypass.
 LOW_LEVEL_REMOVERS = frozenset({"git_worktree_remove", "_git_worktree_remove", "remove_worktree", "_remove_worktree"})
 
-_SHELL_PHRASE = re.compile(r'''(?:\bworktree\b|["']worktree["'])\s+(?:\bremove\b|["']remove["'])''')
+_SHELL_PHRASE = re.compile(r"""(?:\bworktree\b|["']worktree["'])\s+(?:\bremove\b|["']remove["'])""")
 _DYNAMIC_ACTION = re.compile(r"(?:\$[A-Za-z_{]|\{\{.*\}\}|\*\w+)")
 _QUOTED_ARGV_PAIR = re.compile(r"""["']worktree["']\s*,\s*["']remove["']""")
 _SHELL_SCRIPT_FLAG = re.compile(r"^-[A-Za-z]*c$")
@@ -97,10 +97,7 @@ def _has_dynamic_git_worktree_action(words: list[str | None], *, allow_bare: boo
     """Catch a worktree argv whose action is supplied by a variable or template."""
     dynamic_pair = any(
         words[index] == "worktree"
-        and (
-            words[index + 1] is None
-            or _DYNAMIC_ACTION.search(words[index + 1]) is not None
-        )
+        and (words[index + 1] is None or _DYNAMIC_ACTION.search(words[index + 1]) is not None)
         for index in range(len(words) - 1)
     )
     has_git_prefix = words[:1] == ["git"]
@@ -140,8 +137,10 @@ def python_sites(source: str, relpath: str) -> list[Site]:
             words = [_literal_text(element) for element in node.elts]
             parent = parents.get(node)
             parent_func = (
-                parent.func.attr if isinstance(parent, ast.Call) and isinstance(parent.func, ast.Attribute)
-                else parent.func.id if isinstance(parent, ast.Call) and isinstance(parent.func, ast.Name)
+                parent.func.attr
+                if isinstance(parent, ast.Call) and isinstance(parent.func, ast.Attribute)
+                else parent.func.id
+                if isinstance(parent, ast.Call) and isinstance(parent.func, ast.Name)
                 else None
             )
             git_variable_prefix = bool(node.elts) and isinstance(node.elts[0], ast.Name) and node.elts[0].id == "git"
@@ -159,7 +158,13 @@ def python_sites(source: str, relpath: str) -> list[Site]:
                     add(node, "shell -c script")
         elif isinstance(node, ast.Call):
             call_words = [_literal_text(arg) for arg in node.args]
-            func_name = node.func.attr if isinstance(node.func, ast.Attribute) else node.func.id if isinstance(node.func, ast.Name) else None
+            func_name = (
+                node.func.attr
+                if isinstance(node.func, ast.Attribute)
+                else node.func.id
+                if isinstance(node.func, ast.Name)
+                else None
+            )
             if _has_argv_pair(call_words) or _has_dynamic_git_worktree_action(
                 call_words,
                 allow_bare=func_name in {"run_git", "_run_git"},
@@ -198,8 +203,7 @@ def yaml_sites(source: str, relpath: str) -> list[Site]:
                 walk(key)
                 walk(value)
         elif isinstance(node, yaml.ScalarNode) and (
-            _SHELL_PHRASE.search(node.value)
-            or re.search(r"\bworktree\b\s+(?:\$[A-Za-z_{]|\{\{)", node.value)
+            _SHELL_PHRASE.search(node.value) or re.search(r"\bworktree\b\s+(?:\$[A-Za-z_{]|\{\{)", node.value)
         ):
             sites.append(Site(relpath, None, node.start_mark.line + 1, "command string"))
 
@@ -390,3 +394,44 @@ def test_production_prefilter_parses_dynamic_action_without_remove_word(tmp_path
     sites = production_sites(tmp_path)
 
     assert [(site.path, site.kind) for site in sites] == [("scripts/cleanup.py", "argv")]
+
+
+from tests.orchestration import test_worktree_output_chokepoint as boundary_fixtures
+
+boundary_tree = boundary_fixtures.boundary_tree
+
+
+@pytest.mark.parametrize("boundary", boundary_fixtures.BOUNDARIES)
+def test_permitted_removal_pipeline_cannot_bypass_refusing_gate(boundary_tree, monkeypatch, boundary):
+    from scripts.fleet import ignored_task_output
+
+    calls = []
+
+    def refuse(worktree, **_kwargs):
+        calls.append(worktree)
+        return False, "artifact preservation failed: invariant refusal; refusing worktree removal", None
+
+    monkeypatch.setattr(ignored_task_output, "preserve_worktree_artifacts", refuse)
+    result = boundary_fixtures.boundary_remove(boundary, boundary_tree, monkeypatch)
+    assert calls == [boundary_tree[1]]
+    assert result["action"] in {"skipped", "retained"}
+    assert boundary_tree[1].exists()
+
+
+@pytest.mark.parametrize("caller", boundary_fixtures.CALLERS)
+def test_other_caller_classes_cannot_bypass_refusing_gate(tmp_path, monkeypatch, capsys, caller):
+    from scripts.fleet import ignored_task_output
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    repo = _primary(tmp_path)
+    tree = _linked(repo, "codex/done-output")
+    calls = []
+
+    def refuse(worktree, **_kwargs):
+        calls.append(worktree)
+        return False, "artifact preservation failed: invariant refusal; refusing worktree removal", None
+
+    monkeypatch.setattr(ignored_task_output, "preserve_worktree_artifacts", refuse)
+    assert boundary_fixtures.remove(caller, repo, tree, capsys, monkeypatch) is False
+    assert calls == [tree]
+    assert tree.exists()

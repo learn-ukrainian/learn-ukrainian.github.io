@@ -686,7 +686,11 @@ def test_temp_sweep_retains_linked_worktree_and_ignored_output(tmp_path, monkeyp
     os.utime(candidate, (past, past))
     monkeypatch.setattr(tls, "path_liveness", lambda _path: tls.LIVENESS_CLEAR)
     report = tls.sweep_tmp_leaks(
-        apply=True, tmp_roots=[scratch], min_age_s=3600, min_free_gb=0.0, repo_root=primary,
+        apply=True,
+        tmp_roots=[scratch],
+        min_age_s=3600,
+        min_free_gb=0.0,
+        repo_root=primary,
     )
     assert report["roots_reaped"] == 0 and report["errors"] == 1
     assert report["skipped"] == [{"path": str(candidate), "reason": "delete_guard_refused"}]

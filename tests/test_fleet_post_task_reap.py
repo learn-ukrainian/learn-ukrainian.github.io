@@ -61,7 +61,7 @@ def test_s3_post_task_reap_preserves_tar_member_with_restored_old_mtime(hermetic
     assert not worktree.exists()
     receipt = json.loads(record_path.read_text())["preserved_artifacts"]
     assert receipt["count"] == 2 and receipt["bytes"] == len(payload) + 6
-    location = Path(receipt["location"])
+    location = repo / receipt["location"]
     assert (location / ".cache/dl/archive_member.txt").read_bytes() == payload
     assert (location / ".cache/dl/recent.txt").read_bytes() == b"recent"
 
@@ -231,8 +231,6 @@ def test_post_task_reap_preserves_ignored_artifacts(hermetic_reap, runtime, arti
         tasks, task_id, "done", None if runtime else worktree, acp_runtime_paths=[worktree] if runtime else None
     )
     path = tasks / f"{task_id}.json"
-    before = json.loads(path.read_text())
-
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
 
     row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
@@ -240,14 +238,11 @@ def test_post_task_reap_preserves_ignored_artifacts(hermetic_reap, runtime, arti
     assert not worktree.exists()
     state = json.loads(path.read_text())
     receipt = row["preserved_artifacts"]
-    if runtime:
-        assert state == before  # Runtime ownership alone does not bind the task record.
-        assert json.loads(Path(receipt["receipt_path"]).read_text()) == receipt
-    else:
-        assert state["preserved_artifacts"] == receipt
+    assert state["preserved_artifacts"] == receipt
+    assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
     assert receipt["count"] == 1
     assert receipt["bytes"] == len(b"post-task evidence")
-    assert (Path(receipt["location"]) / artifact_name).read_bytes() == b"post-task evidence"
+    assert ((repo / receipt["location"]) / artifact_name).read_bytes() == b"post-task evidence"
 
 
 def test_running_skip(hermetic_reap):
@@ -901,12 +896,8 @@ def test_post_task_reap_result_named_file_scope(hermetic_reap, runtime, referenc
     assert not worktree.exists()
     state = json.loads(path.read_text())
     receipt = row["preserved_artifacts"]
-    if runtime:
-        assert state == record
-        assert json.loads(Path(receipt["receipt_path"]).read_text()) == receipt
-    else:
-        assert state["preserved_artifacts"] == receipt
-    location = Path(receipt["location"])
+    assert state["preserved_artifacts"] == receipt
+    location = repo / receipt["location"]
     assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
     assert not (location / ".pytest_cache/cache.txt").exists()
     assert receipt["count"] == 1
@@ -960,7 +951,9 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
     state = json.loads(path.read_text())
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
-    location = Path(state.get("preserved_artifacts", {}).get("location", repo / "batch_state/preserved" / task_id))
+    location = repo / Path(
+        state.get("preserved_artifacts", {}).get("location", repo / "batch_state/preserved" / task_id)
+    )
     if scenario in links.REFUSALS:
         assert row["action"] == ("retained" if runtime else "skipped"), row
         assert links.REFUSALS[scenario] in row["reason"], row

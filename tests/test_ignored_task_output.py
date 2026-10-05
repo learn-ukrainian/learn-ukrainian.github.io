@@ -17,7 +17,10 @@ artifact = fixtures.artifact
 
 def preserve(checkout, record=None, task_id="output-task"):
     repo, primary, tasks = checkout
+    if record is None and task_id is not None and not (tasks / f"{task_id}.json").exists():
+        record = {}
     if record is not None:
+        record.setdefault("task_id", task_id)
         record.setdefault("worktree_path", str(repo))
         (tasks / f"{task_id}.json").write_text(json.dumps(record))
     return output.preserve_worktree_artifacts(
@@ -34,13 +37,14 @@ def test_all_ignored_output_preserved_without_response_names(checkout, status):
     ok, reason, receipt = preserve(checkout, {"status": status, "started_at": "2000-01-01T00:00:00Z"})
     assert ok and not reason
     assert receipt["count"] == 2 and receipt["bytes"] == 13
-    assert (Path(receipt["location"]) / ".cache/transcriptions/page.txt").read_bytes() == b"transcription"
-    assert (Path(receipt["location"]) / "ignored/empty.txt").is_file()
+    assert ((checkout[1] / receipt["location"]) / ".cache/transcriptions/page.txt").read_bytes() == b"transcription"
+    assert ((checkout[1] / receipt["location"]) / "ignored/empty.txt").is_file()
     assert json.loads((tasks / "output-task.json").read_text())["preserved_artifacts"] == receipt
 
 
 @pytest.mark.parametrize(
-    "start", ["2000-01-01T00:00:00Z", None, "bad", "2000-01-01T00:00:00", "2999-01-01T00:00:00Z"],
+    "start",
+    ["2000-01-01T00:00:00Z", None, "bad", "2000-01-01T00:00:00", "2999-01-01T00:00:00Z"],
     ids=["old", "missing", "malformed", "naive", "future"],
 )
 def test_start_values_are_irrelevant_to_selection(checkout, start):
@@ -50,10 +54,13 @@ def test_start_values_are_irrelevant_to_selection(checkout, start):
     record = {} if start is None else {"started_at": start}
     ok, _, receipt = preserve(checkout, record)
     assert ok and receipt["count"] == 2
-    location = Path(receipt["location"])
+    location = checkout[1] / receipt["location"]
     assert (location / "ignored/old.txt").read_bytes() == old.read_bytes()
     assert (location / "ignored/modified.txt").read_bytes() == modified.read_bytes()
-    assert set(receipt) == {"count", "bytes", "location", "worktree_path", "content_sha256", "reused"}
+    assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
+    assert receipt["retention_disposition"] == "retrieved"
+    assert all(entry["class"] == "unknown_baseline" for entry in receipt["paths"])
+    assert str(checkout[0]) not in json.dumps(receipt)
 
 
 @pytest.mark.parametrize("cache", sorted(output.artifacts._DISPOSABLE_DIRECTORIES - {".git"}))
@@ -74,8 +81,8 @@ def test_failure_retains_sources(checkout, monkeypatch, failure):
         )
     elif failure == "record":
         monkeypatch.setattr(
-            output,
-            "_update_bound_task_record",
+            output.artifacts.reaper_lifecycle,
+            "_atomic_write",
             lambda *args, **kwargs: (_ for _ in ()).throw(OSError("record denied")),
         )
     else:
@@ -98,13 +105,13 @@ def test_failure_retains_sources(checkout, monkeypatch, failure):
         assert not (checkout[1] / "batch_state/preserved").exists()
 
 
-def test_missing_record_uses_receipt_identity_and_all_ignored_files(checkout):
+def test_missing_record_retains_unknown_output_without_fallback_attribution(checkout):
     artifact(checkout, "ignored/report.txt")
     ok, _, receipt = preserve(checkout, task_id=None)
-    assert ok and receipt["count"] == 1
-    assert receipt["record_update"] == "skipped_missing_record"
-    assert Path(receipt["location"]).parent.name.startswith("worktree-")
-    assert json.loads(Path(receipt["receipt_path"]).read_text()) == receipt
+    assert not ok and receipt["count"] == 1
+    assert receipt["retention_disposition"] == "retained"
+    assert receipt["owner"] == "infra lane"
+    assert not (checkout[1] / "batch_state/preserved").exists()
 
 
 def test_cap_is_inclusive_and_existing_copies_are_verified(checkout, monkeypatch):
@@ -121,7 +128,7 @@ def test_touch_old_mtime_during_task_is_preserved(checkout):
     assert source.stat().st_mtime < started.timestamp() <= source.stat().st_ctime
     ok, _, receipt = preserve(checkout, {"started_at": started.isoformat()})
     assert ok and receipt["count"] == 1
-    assert (Path(receipt["location"]) / "ignored/touched.txt").read_bytes() == b"new task output"
+    assert ((checkout[1] / receipt["location"]) / "ignored/touched.txt").read_bytes() == b"new task output"
 
 
 def test_retry_preserves_different_bytes_without_overwriting_first_attempt(checkout):
@@ -131,8 +138,8 @@ def test_retry_preserves_different_bytes_without_overwriting_first_attempt(check
     source.write_bytes(b"second attempt")
     ok, _, second = preserve(checkout)
     assert ok and first["location"] != second["location"]
-    assert (Path(first["location"]) / "ignored/report.txt").read_bytes() == b"first attempt"
-    assert (Path(second["location"]) / "ignored/report.txt").read_bytes() == b"second attempt"
+    assert ((checkout[1] / first["location"]) / "ignored/report.txt").read_bytes() == b"first attempt"
+    assert ((checkout[1] / second["location"]) / "ignored/report.txt").read_bytes() == b"second attempt"
     assert json.loads((checkout[2] / "output-task.json").read_text())["preserved_artifacts"] == second
 
 
@@ -150,7 +157,7 @@ def test_retry_reuses_identical_copy_without_copying(checkout, monkeypatch):
 def test_only_real_path_bound_record_receives_receipt(checkout, binding):
     repo, _, tasks = checkout
     artifact(checkout, "ignored/old.txt", b"old output")
-    record = {"started_at": "2999-01-01T00:00:00Z"}
+    record = {"task_id": "output-task", "started_at": "2999-01-01T00:00:00Z"}
     if binding == "other":
         other = repo.parent / "other"
         other.mkdir()
@@ -166,13 +173,14 @@ def test_only_real_path_bound_record_receives_receipt(checkout, binding):
     ok, _, receipt = output.preserve_worktree_artifacts(
         repo, primary=checkout[1], task_id="output-task", tasks_dir=tasks, task_record=record
     )
-    assert ok and receipt["count"] == 1
-    assert (Path(receipt["location"]) / "ignored/old.txt").read_bytes() == b"old output"
+    assert receipt["count"] == 1
     if binding in {"cwd", "alias"}:
+        assert ok
+        assert (checkout[1] / receipt["location"] / "ignored/old.txt").read_bytes() == b"old output"
         assert json.loads(path.read_text())["preserved_artifacts"] == receipt
         assert record["preserved_artifacts"] == receipt
     else:
-        assert Path(receipt["receipt_path"]).exists()
+        assert not ok and receipt["retention_disposition"] == "retained"
         assert json.loads(path.read_text()) == record and "preserved_artifacts" not in record
 
 
@@ -186,17 +194,17 @@ def test_matching_archive_wins_over_unrelated_hot_record(checkout):
     (tasks / "output-task.json").write_text(json.dumps(hot))
     archive = tasks / "archive/output-task.json"
     archive.parent.mkdir()
-    archive.write_text(json.dumps({"cwd": str(repo), "started_at": "2999-01-01T00:00:00Z"}))
+    archive.write_text(json.dumps({"task_id": "output-task", "cwd": str(repo), "started_at": "2999-01-01T00:00:00Z"}))
     ok, _, receipt = output.preserve_worktree_artifacts(repo, primary=primary, task_id="output-task", tasks_dir=tasks)
     assert ok and receipt["count"] == 2 and not receipt["reused"]
-    assert (Path(receipt["location"]) / "ignored/new.txt").read_bytes() == b"new"
-    assert (Path(receipt["location"]) / "ignored/old.txt").read_bytes() == old.read_bytes()
-    assert (Path(receipt["location"]) / "ignored/new.txt").read_bytes() == new.read_bytes()
+    assert ((checkout[1] / receipt["location"]) / "ignored/new.txt").read_bytes() == b"new"
+    assert ((checkout[1] / receipt["location"]) / "ignored/old.txt").read_bytes() == old.read_bytes()
+    assert ((checkout[1] / receipt["location"]) / "ignored/new.txt").read_bytes() == new.read_bytes()
     assert json.loads(archive.read_text())["preserved_artifacts"] == receipt
     assert json.loads((tasks / "output-task.json").read_text()) == hot
 
 
-def test_record_redispatched_during_copy_gets_separate_receipt(checkout, monkeypatch):
+def test_record_redispatched_during_copy_refuses_removal_without_updating_new_record(checkout, monkeypatch):
     repo, _, tasks = checkout
     artifact(checkout, "ignored/report.txt")
     other = repo.parent / "other"
@@ -210,7 +218,7 @@ def test_record_redispatched_during_copy_gets_separate_receipt(checkout, monkeyp
 
     monkeypatch.setattr(output.artifacts, "_copy_verified", redispatch)
     ok, _, receipt = preserve(checkout, {"status": "done"})
-    assert ok and receipt["count"] == 1 and Path(receipt["receipt_path"]).exists()
+    assert not ok and receipt["count"] == 1 and receipt["retention_disposition"] == "retained"
     assert json.loads((tasks / "output-task.json").read_text()) == replacement
 
 
@@ -219,7 +227,7 @@ def test_unverified_previous_copy_is_not_reused(checkout, change):
     artifact(checkout, "ignored/report.txt", b"original")
     ok, _, first = preserve(checkout)
     assert ok
-    location = Path(first["location"])
+    location = checkout[1] / first["location"]
     if change == "corrupt":
         (location / "ignored/report.txt").write_bytes(b"corrupt!")
     elif change == "extra":
@@ -229,23 +237,22 @@ def test_unverified_previous_copy_is_not_reused(checkout, change):
     elif change == "other_worktree":
         manifest = location.with_suffix(".manifest.json")
         saved = json.loads(manifest.read_text())
-        saved["worktree_path"] = str(checkout[0].parent)
+        saved["worktree_sha256"] = "other"
         manifest.write_text(json.dumps(saved))
     else:
         location.with_suffix(".manifest.json").write_text("not json")
     ok, _, second = preserve(checkout)
     assert ok and not second["reused"] and first["location"] != second["location"]
-    assert (Path(second["location"]) / "ignored/report.txt").read_bytes() == b"original"
+    assert ((checkout[1] / second["location"]) / "ignored/report.txt").read_bytes() == b"original"
 
 
-def test_missing_record_identical_retry_reuses_copy_with_new_receipt(checkout):
+def test_missing_record_identical_retry_remains_retained_without_copy(checkout):
     artifact(checkout, "ignored/report.txt")
     ok, _, first = preserve(checkout, task_id=None)
-    assert ok
+    assert not ok and first["retention_disposition"] == "retained"
     ok, _, second = preserve(checkout, task_id=None)
-    assert ok and second["reused"] and first["location"] == second["location"]
-    assert first["receipt_path"] != second["receipt_path"]
-    assert json.loads(Path(second["receipt_path"]).read_text()) == second
+    assert not ok and second == first
+    assert not (checkout[1] / "batch_state/preserved").exists()
 
 
 def test_same_bytes_with_different_file_list_get_new_attempt(checkout):
@@ -269,6 +276,7 @@ def test_same_task_and_bytes_in_another_worktree_get_new_attempt(checkout):
     (other / ".gitignore").write_text("ignored/\n")
     subprocess.run(["git", "add", ".gitignore"], cwd=other, check=True, capture_output=True, timeout=30)
     artifact((other, primary, tasks), "ignored/report.txt", b"same bytes")
+    (tasks / "output-task.json").write_text(json.dumps({"task_id": "output-task", "worktree_path": str(other)}))
     ok, _, second = output.preserve_worktree_artifacts(other, primary=primary, task_id="output-task", tasks_dir=tasks)
     assert ok and not second["reused"] and second["location"] != first["location"]
     assert second["content_sha256"] == first["content_sha256"]
@@ -300,21 +308,21 @@ def test_preservation_error_never_updates_an_unbound_record(checkout, monkeypatc
     ok, reason, _ = output.preserve_worktree_artifacts(
         repo, primary=primary, task_id="output-task", tasks_dir=tasks, task_record=record
     )
-    assert not ok and "preservation cap" in reason
+    assert not ok and "missing canonical task attribution" in reason
     assert json.loads(path.read_text()) == record and "artifact_preservation_error" not in record
 
 
-def test_missing_record_receipt_write_failure_retains_sources(checkout, monkeypatch):
+def test_manifest_write_failure_retains_sources(checkout, monkeypatch):
     source = artifact(checkout, "ignored/report.txt", b"task output")
     original_open = Path.open
 
     def fail_receipt(path, *args, **kwargs):
-        if path.name.endswith(".receipt.json"):
+        if path.name.endswith(".manifest.json"):
             raise OSError("receipt denied")
         return original_open(path, *args, **kwargs)
 
     monkeypatch.setattr(Path, "open", fail_receipt)
-    ok, reason, _ = preserve(checkout, task_id=None)
+    ok, reason, _ = preserve(checkout)
     assert not ok and "receipt denied" in reason and "refusing worktree removal" in reason
     assert source.read_bytes() == b"task output"
 
@@ -325,7 +333,7 @@ def test_entire_exclusion_is_limited_to_logs(checkout):
     artifact(checkout, ".entire/report.txt", b"task output")
     ok, _, receipt = preserve(checkout)
     assert ok and receipt["count"] == 1
-    assert (Path(receipt["location"]) / ".entire/report.txt").read_bytes() == b"task output"
+    assert ((checkout[1] / receipt["location"]) / ".entire/report.txt").read_bytes() == b"task output"
 
 
 def test_directory_inventory_prunes_entire_logs_but_keeps_output(checkout):
@@ -344,5 +352,5 @@ def test_tool_state_excluded_but_cache_output_survives(checkout, cache):
     artifact(checkout, ".cache/out/answer.txt", b"task output")
     ok, _, receipt = preserve(checkout, {"response": f"Tool state: `{cache}/tool.bin`."})
     assert ok and receipt["count"] == 1 and receipt["bytes"] == len(b"task output")
-    assert (Path(receipt["location"]) / ".cache/out/answer.txt").read_bytes() == b"task output"
-    assert not (Path(receipt["location"]) / cache).exists()
+    assert ((checkout[1] / receipt["location"]) / ".cache/out/answer.txt").read_bytes() == b"task output"
+    assert not ((checkout[1] / receipt["location"]) / cache).exists()

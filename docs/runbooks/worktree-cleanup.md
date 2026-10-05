@@ -71,8 +71,8 @@ no on-disk ignore rules, so the guard inventories all untracked non-cache files.
 All such output is preserved, including files from earlier attempts in a
 reused checkout and files written before the current task started. Start values
 (old, missing, malformed, naive, or future) never affect file selection. There
-is no time cutoff or creator-history eligibility check. Record binding only
-attributes the receipt: the record's `worktree_path` (or fallback `cwd`) must
+is no time cutoff. Baselines label provenance; canonical record binding and
+retention intent guard removal: the record's `worktree_path` (or fallback `cwd`) must
 resolve to the checkout being removed. Hot then archived records are checked
 for that binding; task ids alone never bind records.
 Output retains its relative paths under
@@ -80,37 +80,63 @@ Output retains its relative paths under
 to its resolved worktree and a digest of the file list and bytes. Retries reuse
 an existing copy only after verifying its complete file list and bytes again;
 changed output gets a new attempt directory, keeping earlier copies intact.
-Closeout without a task identity derives it from the dispatch path, or uses `worktree-<path-digest>`
-at the same destination. Empty files
-are included. Existing copy verification checks size and SHA-256, refuses
-conflicting evidence, and rechecks inventory and copied bytes before removal.
+Missing or ambiguous canonical task attribution retains the tree with an Infra
+owner and a concrete next condition. No fallback task identity authorizes
+removal. Empty files are included. Copy verification checks size and SHA-256,
+refuses conflicting evidence, and independently retrieves the complete copy
+before removal.
 
 Known tool directories (`__pycache__`, `.pytest_cache`, `.ruff_cache`,
-`.mypy_cache`, `.venv`, `node_modules`, `.pytest_breadcrumbs`, `.astro`,
+`.mypy_cache`, `.pytest_breadcrumbs`, `.astro`,
 `.hypothesis`, `.tox`, `.nox`, `.entire/logs`, and Git metadata) are excluded. `.cache`
 itself is deliberately not a tool-cache exemption. Shared state and verified
 provisioned database links survive outside the worktree and are never copied.
-Task output placed in an excluded cache remains disposable.
+Task output placed in an excluded cache remains disposable. Real `.venv` and
+`node_modules` directories are never disposable, including below caches; only
+verified provisioned links are disposable. `worktree_artifacts.is_disposable_path`
+is the shared taxonomy for creation, preservation and scheduled reaping.
 
 Automatic preservation is capped at **256 MiB per worktree**, bounding disk
 duplication while accommodating text output and small reports. Above the cap,
 no partial copy is attempted and the worktree is retained for its owner's
 disposition. Inventory, copy, byte-verification, or task-record write failures
-also retain it, as do manifest or fallback-receipt write failures. Task terminal
+also retain it, as do manifest or canonical task-receipt write failures. Task terminal
 status never changes preservation eligibility. Existing ownership and liveness
 gates still apply before preservation and removal.
 Existing task records and reap/closeout receipts report `preserved_artifacts`
-with `count`, `bytes`, `location`, `worktree_path`, `content_sha256`, and `reused`.
-No timestamp or creator-history fields are stored in preservation metadata.
-Each copy's location is printed. If no task
-record is bound to the checkout, a `.receipt.json` file beside the copy stores
-that metadata plus `record_update` and `receipt_path`, and its path is printed;
-no task record is synthesized or changed.
-Binding is rechecked under the shared task-record writer lock before updates.
-Reused copies report `reused: true`, with a fresh receipt when no bound record
-exists. The infra lane
-owns retention of `batch_state/preserved/`. Output owners must recover their
-files before retention is decided; this change adds no automatic deletion policy.
+with `count`, `bytes`, repository-relative `location`, `worktree_sha256`,
+`content_sha256`, `retrieval_proof_sha256`, `reused`, and per-path `path`,
+`size`, `sha256` and `class`. Receipts contain no contents or absolute home
+paths. Each retained receipt includes `owner` and `next_condition`; disposition
+is `retained`, `retrieved`, or `released`.
+
+Creation captures `ignored_output_baseline` in the existing task record while
+`delegate.worktree_lock` remains held through record publication, before worker
+spawn. It binds path/size/digest entries to task ID, run nonce and directory
+identity. Unchanged baseline entries are `pre_existing`; new or modified entries
+are `task_created`. Missing, malformed, reused or identity-mismatched baselines
+are `unknown_baseline`. All three classes are preserved equally: no timestamp
+or baseline excludes output.
+
+Both removal pipelines honor canonical `keep_worktree` even when Git is clean.
+The gate discovers the bound hot/archive task record itself; caller-supplied
+records cannot hide intent. A kept tree may acquire a passing retrieval receipt
+but remains retained. Only an explicit existing-owner release through
+`post_task_reap --release-retention --apply` clears intent. The command uses
+`owner_release_refusal`, requires an existing passing retrieval receipt for the
+same owner/run, rechecks preserved bytes against current output, and records the
+release before removal. Missing proof, changed output, corrupt copies, a reused
+checkout or mismatched owner refuses release. Dry-run never releases intent.
+No new lock or state authority is introduced.
+
+```bash
+.venv/bin/python -m scripts.fleet.post_task_reap --task-id <task-id> --release-retention --apply
+```
+
+Infra owns legacy-tree and disk-use residuals and retention of
+`batch_state/preserved/`. This change adds no automatic deletion policy for
+preserved copies. Off-repository historical recovery remains unknown until the
+open-model-data owner verifies it.
 
 Cleanup is fail-closed. A worktree is preserved when any of these is true:
 
@@ -298,9 +324,9 @@ disk-limited host. `reap_worktrees` reaps it under `--apply` and `--safe-only`
   and is not an ACP runtime worktree;
 - `git status --porcelain=v1 -z --ignored --untracked-files=all` succeeds and
   every entry is an **ignored** (`!!`) regenerable cache or verified
-  provisioned link. A cache is a path with a
-  `__pycache__/` directory segment, or one under a top-level `.pytest_cache/`,
-  `.ruff_cache/` or `.mypy_cache/`. Any staged, modified, renamed or untracked
+  provisioned link. The public `worktree_artifacts.is_disposable_path` interface
+  owns the cache taxonomy at any depth outside real environments. Any staged,
+  modified, renamed or untracked
   entry preserves the checkout. The only provisioned link paths are
   `data/sources.db`, `data/vesum.db`, `node_modules` and `site/node_modules`;
   each must be a symlink resolving to the same relative path in the primary
@@ -310,8 +336,8 @@ disk-limited host. `reap_worktrees` reaps it under `--apply` and `--safe-only`
   with a `.venv` or `node_modules` segment (even inside a `__pycache__/`) and
   loose `*.pyc` files outside `__pycache__/` preserve it. The allowlists are fixed and never consult
   `.gitignore` or `info/exclude`; a git failure preserves. Documented residual:
-  a hand-made file placed inside an ignored `__pycache__/` or top-level cache
-  directory is treated as disposable;
+  a hand-made file placed inside an ignored known cache directory
+  is treated as disposable;
 - HEAD is an ancestor of `origin/main` or contained in some
   `refs/remotes/origin/*` ref (no age threshold, no task record needed);
 - it is not locked, no live process has its working directory inside it, and

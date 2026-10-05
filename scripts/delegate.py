@@ -11658,6 +11658,15 @@ def _dispatch(
                 )
                 if fleet_repo_meta is not None:
                     worktree_telemetry["fleet_repo"] = fleet_repo_meta
+            if not worktree_telemetry.get("reused"):
+                from scripts.fleet.ignored_task_output import creation_inventory
+
+                worktree_telemetry["ignored_output_baseline"] = creation_inventory(
+                    worktree_path,
+                    primary=_REPO_ROOT,
+                    task_id=task_id,
+                    run_nonce=run_nonce,
+                )
         except (ValueError, RuntimeError) as exc:
             stdout_fd.close()
             stderr_fd.close()
@@ -11944,6 +11953,7 @@ def _dispatch(
             "worktree_layout": worktree_layout,
             "worktree_sparse": worktree_telemetry.get("sparse"),
             "worktree_local_venv": worktree_telemetry.get("local_venv"),
+            "ignored_output_baseline": worktree_telemetry.get("ignored_output_baseline"),
             "runtime_tmp_root": str(runtime_tmp_root),
             "tmp_bytes_freed": None,
             "tmp_reap_error": None,

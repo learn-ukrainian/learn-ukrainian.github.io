@@ -128,9 +128,7 @@ def test_review_cleanup_refuses_parent_of_linked_worktree(
     assert _git(repo, "worktree", "list", "--porcelain") == registration
 
 
-def test_review_cleanup_retains_worktree_after_permission_repair(
-    linked_review_tree: tuple[Path, Path, Path]
-) -> None:
+def test_review_cleanup_retains_worktree_after_permission_repair(linked_review_tree: tuple[Path, Path, Path]) -> None:
     repo, root, output = linked_review_tree
     payload = output.read_bytes()
     registration = _git(repo, "worktree", "list", "--porcelain")

@@ -28,7 +28,7 @@ from scripts.orchestration import worktree_claims
 
 @pytest.mark.parametrize("caller", ["superseded-review", "stale-holder"])
 @pytest.mark.parametrize("record_exists", [True, False, "redispatched"])
-def test_cleanup_derives_dispatch_identity_and_reports_preserved_location(
+def test_cleanup_requires_canonical_attribution_and_verified_retrieval(
     tmp_path, monkeypatch, capsys, caller, record_exists
 ):
     from tests.orchestration.test_worktree_claims_cli import _linked, _primary
@@ -61,25 +61,27 @@ def test_cleanup_derives_dispatch_identity_and_reports_preserved_location(
     else:
         monkeypatch.setattr(delegate, "_stale_branch_holder_releasable", lambda *_args: (True, "clean+contained"))
         released = delegate._release_stale_branch_holders(branch=branch, holders=[worktree], dry_run=False)
-    assert released == [worktree] and not worktree.exists()
-    if record_exists is True:
-        receipt = json.loads(record_path.read_text())["preserved_artifacts"]
-    else:
-        receipts = list((primary / "batch_state/preserved" / task_id).glob("*.receipt.json"))
-        assert len(receipts) == 1
+    diagnostic = capsys.readouterr().err
+    if record_exists is not True:
+        assert released == [] and worktree.exists()
+        assert source.read_bytes() == b"review output"
+        assert not (primary / "batch_state/preserved" / task_id).exists()
+        assert "missing canonical task attribution; refusing worktree removal" in diagnostic
         if record_exists == "redispatched":
             assert json.loads(record_path.read_text()) == record
         else:
             assert not record_path.exists()
-        receipt = json.loads(receipts[0].read_text())
+        return
+    assert released == [worktree] and not worktree.exists()
+    receipt = json.loads(record_path.read_text())["preserved_artifacts"]
     assert receipt["count"] == 1 and receipt["bytes"] == len(b"review output")
-    location = Path(receipt["location"])
+    location = primary / receipt["location"]
     assert location.parent.name == task_id
     assert (location / ".cache/out/answer.txt").read_bytes() == b"review output"
-    diagnostic = capsys.readouterr().err
-    assert str(location) in diagnostic
-    if record_exists is not True:
-        assert receipt["receipt_path"] in diagnostic
+    from scripts.fleet import ignored_task_output
+
+    assert ignored_task_output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+    assert receipt["retrieval_proof_sha256"] in diagnostic
 
 
 @pytest.fixture(autouse=True)

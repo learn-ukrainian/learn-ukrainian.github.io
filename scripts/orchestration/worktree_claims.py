@@ -616,7 +616,10 @@ def git_worktree_remove(
     environment and execution-safe configuration inside this chokepoint.
     Ignored non-cache output is verified and preserved here for every caller
     (#9645). Failure returns a refusal without invoking destructive Git.
-    ``preservation_receipt`` receives copy metadata when output is found.
+    The gate resolves canonical worktree-bound records itself and honors
+    keep_worktree even when callers supply no task record. Baselines label
+    attribution only; missing attribution and failed retrieval retain the tree.
+    ``preservation_receipt`` receives retrieval or retention metadata.
     """
     target = worktree
     if force:
@@ -730,8 +733,13 @@ def remove_unclaimed_worktree(
 
     def outcome(action: str, why: str, *, error: str | None = None) -> WorktreeRemoval:
         return WorktreeRemoval(
-            action=action, path=str(worktree), reason=why, branch=branch, dirty=dirty,
-            error=error, preserved_artifacts=preservation_receipt or None,
+            action=action,
+            path=str(worktree),
+            reason=why,
+            branch=branch,
+            dirty=dirty,
+            error=error,
+            preserved_artifacts=preservation_receipt or None,
         )
 
     with contextlib.ExitStack() as locks:
@@ -775,9 +783,15 @@ def remove_unclaimed_worktree(
                 _git_probe(["worktree", "unlock", str(worktree)], cwd=repo_root)
             runner_options = {} if git_runner is None else {"git_runner": git_runner}
             error = git_worktree_remove(
-                repo_root, worktree, force=force, control_root=control_root,
-                tasks_dir=tasks_dir, task_id=owner_task_id, task_record=task_record,
-                preservation_receipt=preservation_receipt, **runner_options,
+                repo_root,
+                worktree,
+                force=force,
+                control_root=control_root,
+                tasks_dir=tasks_dir,
+                task_id=owner_task_id,
+                task_record=task_record,
+                preservation_receipt=preservation_receipt,
+                **runner_options,
             )
         except Exception as exc:
             return outcome("error", "worktree removal raised", error=f"{type(exc).__name__}: {exc}")
