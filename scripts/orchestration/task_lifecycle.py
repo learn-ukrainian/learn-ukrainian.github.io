@@ -965,11 +965,13 @@ def observe_local_git(
 
     commits: list[dict[str, Any]] = []
     changed_paths: list[str] = []
+    scope_observed = False
     if head_sha:
         try:
             base = _run_git(root, ["merge-base", "origin/main", head_sha])
             changed_raw = _run_git(root, ["diff", "--name-only", f"{base}..{head_sha}"])
             changed_paths = [line for line in changed_raw.splitlines() if line]
+            scope_observed = True
             log = _run_git(root, ["log", "--format=%H%x1f%B%x1e", f"{base}..{head_sha}"])
             for record in log.split("\x1e"):
                 if not record.strip() or "\x1f" not in record:
@@ -1007,8 +1009,9 @@ def observe_local_git(
                 commits.append({"sha": entry.get("sha"), "x_agent_trailers": []})
     if merged and not worktree_present and identity and not provenance_error:
         try:
+            if not scope_observed:
+                raise LifecycleError("whole-PR changed paths could not be established from Git")
             provenance = _dispatcher_authoring_proof(root, identity, head_sha=head_sha, branch=branch, commits=commits)
-            changed_paths = provenance["changed_paths"]
         except (LifecycleError, OSError, ValueError, KeyError, TypeError) as exc:
             provenance_error = str(exc)
     return {

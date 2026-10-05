@@ -127,6 +127,12 @@ never changes `worktree_present` to true or backdates the observation. New
 post-dispatch author changes require their own evidence; only verified unchanged
 GitHub base updates may connect the recorded author head to the PR head.
 
+The observation's `changed_paths` and protected-path classification retain the
+independently observed whole-PR Git diff, including inherited unmerged changes.
+`dispatcher_provenance.changed_paths` describes only the dispatcher's own packet
+from its recorded base to author head; it cannot narrow PR scope. Recovery
+refuses when Git cannot establish the whole-PR scope.
+
 A trailerless base update is exempt only with publisher commit data identifying
 GitHub's `web-flow` committer, a valid verified signature matching the local
 commit's signature/payload, the exact main-into-dispatch-branch message, and two

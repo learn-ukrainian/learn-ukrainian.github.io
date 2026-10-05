@@ -1522,9 +1522,19 @@ def test_unsuperseded_old_row_and_invalid_replacement_still_block(tmp_path: Path
     assert "AC-REVIEW" not in result["valid_evidence"]
 
 
-def _dispatcher_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    worktree, base, _ = test_quick_fix.make_repo(tmp_path)
+def _dispatcher_fixture(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, *, inherited_paths: tuple[str, ...] = (),
+):
+    inherited = dict.fromkeys(inherited_paths, "inherited change\n")
+    worktree, base, _ = test_quick_fix.make_repo(tmp_path, fix=inherited or None)
     git = test_quick_fix._git
+    if inherited_paths:
+        git(worktree, "commit", "--amend", "-qm", "inherited\n\nX-Agent: codex/thread-old")
+        base = git(worktree, "rev-parse", "HEAD")
+        (worktree / "calc.py").write_text(test_quick_fix.FIXED)
+        (worktree / "test_calc.py").write_text(test_quick_fix.REGRESSION)
+        git(worktree, "add", "calc.py", "test_calc.py")
+        git(worktree, "commit", "-qm", "fix")
     git(worktree, "commit", "--amend", "-qm", "fix\n\nX-Agent: codex/thread-new")
     head = git(worktree, "rev-parse", "HEAD")
     primary = task_lifecycle.canonical_state_root(worktree)
@@ -1548,10 +1558,14 @@ def _dispatcher_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     path = tasks / "thread-new.json"
     path.write_text(json.dumps(record))
     monkeypatch.chdir(worktree)
-    git(worktree, "update-ref", "refs/remotes/origin/main", base)
+    pr_base = git(worktree, "rev-parse", f"{base}^") if inherited_paths else base
+    git(worktree, "update-ref", "refs/remotes/origin/main", pr_base)
     entry = {"sha": head, "commit": {"message": git(worktree, "show", "-s", "--format=%B", head)}}
+    entries = [entry]
+    if inherited_paths:
+        entries.insert(0, {"sha": base, "commit": {"message": git(worktree, "show", "-s", "--format=%B", base)}})
     kwargs = dict(head_sha=head, branch="codex/thread-new", worktree=str(dispatch_path), identity=_identity(),
-                  github_commits=[entry], base_sha=base, merged=True)
+                  github_commits=entries, base_sha=pr_base, merged=True)
     return worktree, path, record, kwargs
 
 
@@ -1576,6 +1590,43 @@ def test_reaped_dispatcher_proof_is_honest_and_supports_guarded_close(tmp_path, 
     evaluation = task_lifecycle.evaluate(ledger, observation)
     assert evaluation["goal_reached"] is True and not evaluation["hard_blockers"]
     task_closeout._assert_mutation_ready("close-issue", ledger, observation)
+
+
+@pytest.mark.parametrize("inherited_paths", [("inherited.py",), ("inherited.py", ".python-version")])
+def test_reaped_dispatcher_preserves_whole_pr_scope(tmp_path, monkeypatch, inherited_paths) -> None:
+    repo, _, record, kwargs = _dispatcher_fixture(tmp_path, monkeypatch, inherited_paths=inherited_paths)
+    local = task_lifecycle.observe_local_git(repo, **kwargs)
+    packet_paths = ["calc.py", "test_calc.py"]
+    assert local["provenance_error"] is None
+    assert local["dispatcher_provenance"]["changed_paths"] == packet_paths
+    assert local["changed_paths"] == sorted([*inherited_paths, *packet_paths])
+    assert record["commits_ahead"] == 1
+    assert len(local["commits"]) == 2
+    protected = [".python-version"] if ".python-version" in inherited_paths else []
+    assert local["forbidden_paths"] == protected
+    assert task_lifecycle._local_readiness(local) == (
+        ["forbidden/generated paths changed: .python-version"] if protected else []
+    )
+
+
+@pytest.mark.parametrize("failure", ["head", "merge-base", "diff"])
+def test_reaped_dispatcher_refuses_unavailable_whole_pr_scope(tmp_path, monkeypatch, failure) -> None:
+    repo, _, _, kwargs = _dispatcher_fixture(tmp_path, monkeypatch)
+    run_git = task_lifecycle._run_git
+
+    def unavailable_scope(root, args):
+        if args[0] == failure and (failure != "merge-base" or args[1] == "origin/main"):
+            raise task_lifecycle.LifecycleError("scope probe unavailable")
+        return run_git(root, args)
+
+    monkeypatch.setattr(task_lifecycle, "_run_git", unavailable_scope)
+    if failure == "head":
+        kwargs["head_sha"] = None
+    local = task_lifecycle.observe_local_git(repo, **kwargs)
+    assert local["dispatcher_provenance"] is None
+    assert "whole-PR changed paths could not be established from Git" in local["provenance_error"]
+    assert local["changed_paths"] == []
+    assert any("authoring provenance refused" in error for error in task_lifecycle._local_readiness(local))
 
 
 @pytest.mark.parametrize("change", [
