@@ -286,23 +286,73 @@ def test_only_fallback_skips_the_probe(tmp_path: Path, value: str):
     assert result.reason is None
 
 
+# Environ entry that marks both sleeps this probe starts. ``ps`` does not show
+# it; the reap scans ``/proc/<pid>/environ`` and never prints the block.
+_GRANDCHILD_TAG_PREFIX = "lu9746-sleep-30"
+
+
+def _tagged_grandchild_pids(tag: str) -> list[int]:
+    """PIDs whose environment still carries this run's grandchild tag."""
+    needle = f"FAKE_GRANDCHILD_TAG={tag}".encode()
+    protected = {os.getpid(), os.getppid()}
+    found: list[int] = []
+    for entry in Path("/proc").iterdir():
+        if not entry.name.isdigit():
+            continue
+        pid = int(entry.name)
+        if pid in protected:
+            continue
+        try:
+            raw = (entry / "environ").read_bytes()
+        except OSError:
+            continue
+        if needle in raw.split(b"\0"):
+            found.append(pid)
+    return found
+
+
+def _reap_tagged_grandchildren(tag: str, *extra: int) -> list[int]:
+    """SIGKILL every tagged child (and ``extra``) and return any that remain."""
+    pids = set(_tagged_grandchild_pids(tag))
+    pids.update(pid for pid in extra if pid > 0)
+    deadline = time.monotonic() + 1.0
+    while True:
+        for pid in list(pids):
+            with suppress(ProcessLookupError):
+                os.kill(pid, signal.SIGKILL)
+        pids.update(_tagged_grandchild_pids(tag))
+        alive: list[int] = []
+        for pid in sorted(pids):
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                continue
+            alive.append(pid)
+        if not alive or time.monotonic() >= deadline:
+            return alive
+        time.sleep(0.02)
+
+
 def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path):
     """A grandchild that inherits the probe's stdout must not keep dispatch waiting.
 
     The probe command is a shell script. The shared Python fake spends this
     0.2s budget on interpreter startup when the runner is loaded, and is killed
-    before it can fork (#9746).
+    before it can fork (#9746). ``exec sleep 30`` replaces the shell, so the
+    probe kills that foreground child directly. The background grandchild stays
+    alive until this test reaps every tagged child.
     """
     pidfile = tmp_path / "grandchild.pid"
+    tag = f"{_GRANDCHILD_TAG_PREFIX}-{uuid.uuid4().hex}"
     bindir = tmp_path / "bin"
     bindir.mkdir()
     systemctl = bindir / "systemctl"
     systemctl.write_text(
-        '#!/bin/sh\nsleep 30 &\necho "$!" > "$FAKE_GRANDCHILD_PID"\nsleep 30\n',
+        '#!/bin/sh\nsleep 30 &\necho "$!" > "$FAKE_GRANDCHILD_PID"\nexec sleep 30\n',
         encoding="utf-8",
     )
     systemctl.chmod(0o755)
-    env = _env(bindir, FAKE_GRANDCHILD_PID=str(pidfile))
+    env = _env(bindir, FAKE_GRANDCHILD_PID=str(pidfile), FAKE_GRANDCHILD_TAG=tag)
     timeout_s = 0.2
     fallback: list[list[str]] = []
     grandchild: int | None = None
@@ -336,14 +386,17 @@ def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path):
         assert pidfile.is_file()
         grandchild = int(pidfile.read_text(encoding="ascii"))
         os.kill(grandchild, 0)
+        deadline = time.monotonic() + 1.0
+        tagged = _tagged_grandchild_pids(tag)
+        while set(tagged) != {grandchild} and time.monotonic() < deadline:
+            time.sleep(0.02)
+            tagged = _tagged_grandchild_pids(tag)
+        assert set(tagged) == {grandchild}
         assert elapsed < timeout_s + iso._REAP_TIMEOUT_S + 2.0
     finally:
-        if grandchild is None and pidfile.is_file():
-            with suppress(ValueError):
-                grandchild = int(pidfile.read_text(encoding="ascii"))
-        if grandchild is not None:
-            with suppress(ProcessLookupError):
-                os.kill(grandchild, signal.SIGKILL)
+        extra = () if grandchild is None else (grandchild,)
+        leftover = _reap_tagged_grandchildren(tag, *extra)
+    assert leftover == []
 
 
 def test_systemd_run_failure_relaunches_once_with_popen(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
