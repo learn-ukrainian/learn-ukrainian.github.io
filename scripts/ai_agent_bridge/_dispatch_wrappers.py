@@ -435,6 +435,40 @@ def build_ask_review_wait_command(task_id: str, *, timeout: int) -> list[str]:
 
 _ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800
 
+_NATIVE_CODE_REVIEW_OUTPUT = """## Existing code-review output and exact-target evidence contract
+
+In your first completed reply, include a plain, unfenced verdict line:
+VERDICT: APPROVE, VERDICT: REQUEST_CHANGES, or VERDICT: BLOCKED, as warranted
+by your independent judgment. Also include one native JSON object, unfenced, conforming to
+schemas/code-review-findings.v1.schema.json (schema_version: code-review-findings.v1).
+Read that schema: overall requires correctness, explanation, confidence; each
+finding requires id, title, body, priority, confidence, category, location,
+verbatim, why_wrong, smallest_fix, sources. Do not add fields or wrap the object
+in another object. Retain every material and nonblocking finding, including
+nonblocking findings with an approving verdict; choose judgment and confidence
+independently.
+
+For each finding, use a repository-relative location.path and complete literal
+source lines from the exact reviewed target in verbatim, including all leading
+indentation, tabs, trailing spaces and intervening blank lines. Use JSON escapes
+for newlines and tabs; do not strip whitespace, quote only a substring, add line
+numbers, diff prefixes, backticks or ellipses. Only line endings are normalized.
+The 1-based start_line/end_line are inclusive and must exactly cover those lines:
+end_line = start_line + number of quoted source lines - 1.
+
+The primary location must be in a changed file. For claim_type "present", the
+quoted span must intersect an actual changed new-side line. Put unchanged
+consumers and supporting references in body/sources, anchoring the finding to
+the relevant changed source. For claim_type "missing", quote real contextual
+evidence in a changed file (which may be an unchanged line); explain the absence
+in body/why_wrong, never invent a line for absent code.
+
+Before replying, locally reread each quote at the exact target (git show at the
+pinned head for committed reviews), compare every character and inclusive span,
+and check the target diff for present anchors. Return the findings JSON yourself;
+the existing strict verifier remains authoritative.
+"""
+
 
 def run_ask_review_dispatch(
     agent: str,
@@ -467,7 +501,10 @@ def run_ask_review_dispatch(
     timeout = hard_timeout or _ASK_REVIEW_DEFAULT_TIMEOUT_S
     with _prompt_directory() as prompt_directory:
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"
-        prompt_path.write_text(content, encoding="utf-8")
+        prompt = content
+        if review_profile in {"code", "infra"} or re.search(r"\bcode-review-findings\.v1\b", content):
+            prompt += "\n\n" + _NATIVE_CODE_REVIEW_OUTPUT
+        prompt_path.write_text(prompt, encoding="utf-8")
         dispatch_command = build_ask_review_dispatch_command(
             target,
             task_id,
