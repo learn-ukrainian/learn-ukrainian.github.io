@@ -5,10 +5,12 @@ from __future__ import annotations
 import contextlib
 import hashlib
 import json
+import os
 import re
 import stat
 import subprocess
 import sys
+import tempfile
 import uuid
 from collections.abc import Mapping
 from pathlib import Path
@@ -21,24 +23,100 @@ from scripts.orchestration.task_record_store import task_record_path
 # the complete source checkout survives rather than receiving a partial copy.
 MAX_PRESERVED_BYTES = 256 * 1024 * 1024
 
+_IDENTITY_KEYS = ("worktree_path", "cwd", "acp_runtime_paths", "keep_worktree", "worktree_reused")
+_IDENTITY_CACHE_SCHEMA = "worktree-record-identities.v1"
+
+
+def _identity_cache_path(tasks_dir: Path) -> Path:
+    # Not *.json: the cache must never become part of the task inventory.
+    return tasks_dir / ".worktree-record-identities.cache"
+
+
+def _identity_decoder_context() -> dict[str, Any]:
+    # A previously valid record may become corrupt under a different int limit.
+    return {
+        "python": list(sys.version_info[:3]),
+        "int_max_str_digits": getattr(sys, "get_int_max_str_digits", lambda: 0)(),
+    }
+
+
+def _read_identity_cache(path: Path) -> dict[str, Any]:
+    """A missing, stale-format or damaged accelerator supplies no evidence."""
+    try:
+        cache = json.loads(path.read_bytes())
+        entries = cache["entries"]
+        if (
+            cache["schema"] == _IDENTITY_CACHE_SCHEMA
+            and cache.get("decoder") == _identity_decoder_context()
+            and isinstance(entries, dict)
+            and cache["sha256"] == hashlib.sha256(json.dumps(entries, sort_keys=True).encode()).hexdigest()
+        ):
+            return entries
+    except (OSError, ValueError, KeyError, TypeError, RecursionError):
+        pass
+    return {}
+
+
+def _write_identity_cache(path: Path, entries: dict[str, Any]) -> None:
+    """Publish atomically without another lock; concurrent stale writers are safe.
+
+    Every hit is checked against the current source bytes. Losing a cache update
+    only causes another parse, so neither a cache lock nor task-writer changes
+    are needed. Cache I/O failure never changes task-inventory semantics.
+    """
+    temporary = None
+    try:
+        encoded = json.dumps(entries, sort_keys=True).encode()
+        cache = {
+            "schema": _IDENTITY_CACHE_SCHEMA,
+            "decoder": _identity_decoder_context(),
+            "entries": entries,
+            "sha256": hashlib.sha256(encoded).hexdigest(),
+        }
+        with tempfile.NamedTemporaryFile(dir=path.parent, prefix=".record-identities-", delete=False) as stream:
+            temporary = Path(stream.name)
+            stream.write(json.dumps(cache).encode())
+        os.replace(temporary, path)
+    except (OSError, ValueError, TypeError, RecursionError):
+        pass
+    finally:
+        if temporary is not None:
+            with contextlib.suppress(OSError):
+                temporary.unlink()
+
 
 def resolve_worktree_record(worktree: Path, tasks_dir: Path, *, repo_root: Path) -> tuple[Path | None, dict[str, Any]]:
     """Resolve identity from canonical records, never from a caller's hint.
 
     Inspect hot and archived records: a different filename, renamed tree, or
     optional task argument cannot hide a retention claim. Ambiguity fails closed.
+    A content-verified cache bounds JSON decoding to changed/candidate records;
+    all source files are still read, and filesystem aliases are resolved anew.
     """
     from scripts.orchestration.worktree_claims import record_may_claim_worktree, worktree_claim_needles
 
     matches = []
     needles = worktree_claim_needles(worktree, worktree.resolve())
+    cache_path = _identity_cache_path(tasks_dir)
+    cached = _read_identity_cache(cache_path)
+    identities = {}
+    changed = False
     for path in sorted(tasks_dir.glob("*.json")) + sorted((tasks_dir / "archive").glob("*.json")):
         try:
             raw = path.read_bytes()
         except OSError:
             raise ValueError("task identity inventory unreadable") from None
+        digest = hashlib.sha256(raw).hexdigest()
+        name = path.relative_to(tasks_dir).as_posix()
+        entry = cached.get(name)
+        hit = (
+            isinstance(entry, dict)
+            and entry.get("source_sha256") == digest
+            and isinstance(entry.get("identity"), dict)
+            and set(entry["identity"]) == set(_IDENTITY_KEYS)
+        )
         try:
-            record = json.loads(raw)
+            record = entry["identity"] if hit else json.loads(raw)
         except ValueError:
             # Reuse the claim owner's existing released-record proof only for
             # corrupt records with no possible retention key. Valid records,
@@ -46,13 +124,24 @@ def resolve_worktree_record(worktree: Path, tasks_dir: Path, *, repo_root: Path)
             if record_may_claim_worktree(raw, needles) or b'"keep_worktree"' in raw:
                 raise ValueError("task identity inventory unreadable") from None
             continue
+        identity = (
+            {key: record.get(key) for key in _IDENTITY_KEYS}
+            if isinstance(record, dict)
+            else dict.fromkeys(_IDENTITY_KEYS)
+        )
+        identities[name] = {"source_sha256": digest, "identity": identity}
+        changed |= not hit
         if isinstance(record, dict):
             if _record_matches_worktree(record, worktree, repo_root=repo_root):
+                if hit:
+                    record = json.loads(raw)  # Return the complete canonical record, never its projection.
                 matches.append((path, record))
             elif record.get("keep_worktree") and _record_matches_worktree(
                 {"cwd": record.get("cwd")}, worktree, repo_root=repo_root
             ):
                 raise ValueError("ambiguous retention task binding")
+    if changed or cached.keys() != identities.keys():
+        _write_identity_cache(cache_path, identities)
     if len(matches) > 1:
         kept = [match for match in matches if match[1].get("keep_worktree")]
         if len(kept) == 1:
