@@ -221,3 +221,16 @@ def test_dor_workflow_comment_creates_once_for_empty_comments() -> None:
     assert len(calls) == 1
     assert calls[0][0:2] == ("POST", "/issues/123/comments")
     assert "Missing fields:" in calls[0][2]["body"]
+
+
+def test_intake_accepted_plain_colon_criteria_initialize_lifecycle():
+    from scripts.orchestration import task_lifecycle
+
+    assert score_body(COMPLETE)["verdict"] == "PASS"
+    policy = {key: {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]}
+              for key in ("AC-01", "AC-02")}
+    snapshot = task_lifecycle.build_ac_snapshot(COMPLETE, policy, finalized_at="2026-10-05T12:36:05Z")
+    assert [(item["id"], item["text"]) for item in snapshot["criteria"]] == [
+        ("AC-01", "checker WARN when new DoR fields missing"),
+        ("AC-02", "PR merged with CF + green CI"),
+    ]

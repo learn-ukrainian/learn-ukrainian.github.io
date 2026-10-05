@@ -1668,8 +1668,42 @@ def test_missing_path_rule_refuses_even_when_all_lines_normalize(monkeypatch, tm
     from tests.opsec_fixtures import synthetic_rules
 
     tasks, _, calls = setup_record(monkeypatch, tmp_path)
-    write_task(tasks, reply="\u00a0VERDICT: APPROVE\n\u200b/checkout/scripts/unit.py")
+    write_task(tasks, reply="VERDICT: APPROVE\u00a0\n\u200b/checkout/scripts/unit.py")
     (synthetic_opsec / "rules.json").write_text(json.dumps(synthetic_rules()))
     with pytest.raises(recorder.RecordError, match="absolute-path rule unavailable/incompatible"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("reply", ["**VERDICT: APPROVE**", "## **VERDICT**: **APPROVE**"])
+def test_markdown_approval_records_on_actual_boundary(monkeypatch, tmp_path, reply):
+    tasks, _comments, calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, reply=reply)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["verdict"] == "APPROVED"
+    assert calls == {"posts": 1, "statuses": 1}
+
+
+@pytest.mark.parametrize("reply", ["```\nVERDICT: APPROVE\n```", "    VERDICT: APPROVE", "\tVERDICT: APPROVE"])
+def test_code_example_refuses_publication(monkeypatch, tmp_path, reply):
+    tasks, _comments, calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, reply=reply)
+    with pytest.raises(recorder.RecordError, match="missing or ambiguous"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_fenced_change_request_does_not_contaminate_real_approval():
+    assert recorder.normalize_verdict("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE") == "APPROVED"
+
+
+def test_approval_aliases_are_one_normalized_decision():
+    assert recorder.normalize_verdict("VERDICT: APPROVE\n**VERDICT: APPROVED**") == "APPROVED"
+
+
+def test_non_commonmark_indentation_refuses_before_publication(monkeypatch, tmp_path):
+    tasks, _comments, calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, reply="\u00a0VERDICT: APPROVE\n\u200b/checkout/scripts/unit.py")
+    with pytest.raises(recorder.RecordError, match="missing or ambiguous"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 0, "statuses": 0}
