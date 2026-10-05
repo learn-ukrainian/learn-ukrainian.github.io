@@ -6,7 +6,9 @@ Results directory layout (private, outside every Git work tree, given on the com
                                repeats, kinds, item ids, chunking, run tag, worker cwd, delegate's
                                composition frame, dispatch argument hashes, protocol shortfalls)
                                and, from the first ``score --judge``, the frozen judge terms and, once
-                               judges are dispatched, each judge seat's dispatch-argument hash
+                               judges are dispatched, each judge seat's dispatch-argument hash.
+                               A missing hash is not filled in when a judge record, result or score
+                               for this run tag already exists: that resume is refused.
     prompts/<task_id>.md       exact prompt the worker received (rules core included)
     raw/<task_id>.json         attributed outcome, executed conditions and raw response
     raw/<task_id>.pending.json dispatched, outcome not collected yet (holds the dispatch-time
@@ -47,6 +49,7 @@ from .common import (
     judge_seats,
     read_json,
     sha256_text,
+    validate_run_tag,
     word_count,
     write_private_json,
     write_private_text,
@@ -299,6 +302,105 @@ def judge_dispatch_args_frame(dispatcher: Dispatcher, tasks: Sequence[TaskSpec],
     return found
 
 
+def judge_argument_hash_missing(manifest: dict[str, Any]) -> bool:
+    """True when this manifest has no per-seat judge argument hash to compare against."""
+    judge = manifest.get("judge")
+    if not isinstance(judge, dict):
+        return True
+    return judge.get("dispatch_args_sha256") is None
+
+
+def _judge_task_prefix(run_tag: str) -> str:
+    return f"{TASK_PREFIX}-{validate_run_tag(run_tag)}-judge-"
+
+
+def _unfrozen_judge_evidence_refusal(evidence: str) -> str:
+    """Refusal when judges already ran but their argument hash was never stored.
+
+    A new ``--run-tag`` is the only way to judge again. The missing hash is not backfilled
+    over results that were produced under arguments this manifest does not record.
+    """
+    return (
+        "judge dispatch arguments were never frozen, but judges already ran for this run tag "
+        f"({evidence}). A new --run-tag is the path; argument sets are never mixed."
+    )
+
+
+def _prior_judge_evidence(
+    results: ResultsDir,
+    run_tag: str,
+    dispatcher: Dispatcher,
+    tasks: Sequence[TaskSpec],
+) -> str | None:
+    """A judge record, stored result or score for ``run_tag``, or None on a first execution.
+
+    A result is a raw outcome or a pending marker under this run's judge-task prefix.
+    A score is a ``scores.json`` judge row for such a task. A record is a planned judge
+    task the dispatcher already knows. Any one of them means judges ran before the
+    argument hash was stored, so the hash must not be invented afterwards.
+    """
+    prefix = _judge_task_prefix(run_tag)
+    raw_dir = results.root / "raw"
+    if raw_dir.is_dir():
+        names = sorted(
+            path.name
+            for path in raw_dir.iterdir()
+            if path.is_file() and path.name.startswith(prefix) and path.name.endswith(".json")
+        )
+        if names:
+            return f"result {names[0]}"
+    scores_path = results.path("scores.json")
+    if scores_path.is_file():
+        try:
+            scores = read_json(scores_path)
+        except (OSError, ValueError):
+            return "unreadable scores.json"
+        if not isinstance(scores, dict):
+            return "unreadable scores.json"
+        rows = scores.get("judge")
+        if "judge" in scores and not isinstance(rows, list):
+            return "unreadable judge scores"
+        if isinstance(rows, list):
+            for row in rows:
+                if not isinstance(row, dict):
+                    continue
+                task_id = row.get("task_id")
+                if not isinstance(task_id, str) or not task_id.startswith(prefix):
+                    continue
+                if row.get("failed") is False:
+                    return f"accepted score {task_id}"
+                return f"judge score {task_id}"
+    for task in tasks:
+        if not task.task_id.startswith(prefix):
+            continue
+        try:
+            known = dispatcher.known(task.task_id)
+        except DispatchError as exc:
+            raise HarnessError(
+                f"{task.task_id}: cannot tell whether a judge record exists ({exc}). "
+                "A new --run-tag is the path; argument sets are never mixed."
+            ) from exc
+        if known:
+            return f"judge record {task.task_id}"
+    return None
+
+
+def refuse_unfrozen_judge_resume(
+    results: ResultsDir,
+    run_tag: str,
+    dispatcher: Dispatcher,
+    tasks: Sequence[TaskSpec],
+) -> None:
+    """Refuse to freeze judge arguments when this run tag already has judge evidence.
+
+    Returns when no judge record, result or score exists. That is a first execution,
+    and the caller may freeze the current arguments.
+    """
+    evidence = _prior_judge_evidence(results, run_tag, dispatcher, tasks)
+    if evidence is not None:
+        raise HarnessError(_unfrozen_judge_evidence_refusal(evidence))
+
+
 def freeze_judge_dispatch_args(
     manifest: dict[str, Any],
     dispatcher: Dispatcher,
@@ -307,18 +409,26 @@ def freeze_judge_dispatch_args(
 ) -> None:
     """Store per-seat judge argument hashes, or refuse when this execution differs.
 
-    Called before any judge is dispatched. The first execution writes the hashes; every later
-    execution, including ``--retry-failed``, must present the same map.
+    Called before any judge is dispatched. The first execution, which has no judge
+    record, result or score for the run tag, writes the hashes. A missing hash with
+    any of that evidence is refused before the manifest is modified: those judges
+    ran under arguments this file does not record, and a new ``--run-tag`` is the
+    path. Every later execution, including ``--retry-failed``, must present the same map.
     """
-    fresh = judge_dispatch_args_frame(dispatcher, tasks, results)
     judge = manifest.get("judge")
     if not isinstance(judge, dict):
         raise HarnessError("judge terms are not frozen; refusing to dispatch judges")
     frozen = judge.get("dispatch_args_sha256")
     if frozen is None:
+        run_tag = manifest.get("frozen", {}).get("run_tag")
+        if not isinstance(run_tag, str):
+            raise HarnessError("manifest has no run tag; refusing to freeze judge arguments")
+        refuse_unfrozen_judge_resume(results, run_tag, dispatcher, tasks)
+        fresh = judge_dispatch_args_frame(dispatcher, tasks, results)
         judge["dispatch_args_sha256"] = fresh
         write_private_json(results.path("manifest.json"), manifest)
         return
+    fresh = judge_dispatch_args_frame(dispatcher, tasks, results)
     recorded = frozen if isinstance(frozen, dict) else {}
     if recorded == fresh:
         return

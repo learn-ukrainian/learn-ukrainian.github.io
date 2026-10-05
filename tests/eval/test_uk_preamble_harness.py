@@ -793,6 +793,114 @@ def test_judge_retry_with_different_arguments_is_refused_before_dispatch(env, ca
     assert env["fake"].dispatched == [*before, (victim, True)]
 
 
+def _judge_dispatch_ids(env) -> list[str]:
+    return [task_id for task_id, _force in env["fake"].dispatched if "-judge-" in task_id]
+
+
+def _clear_judge_scores(env) -> None:
+    path = env["results"] / "scores.json"
+    scores = read_json(path)
+    scores["judge"] = []
+    path.write_text(json.dumps(scores), encoding="utf-8")
+
+
+def _remove_judge_raw(env) -> None:
+    for path in (env["results"] / "raw").glob("*judge*"):
+        path.unlink()
+
+
+@pytest.mark.parametrize("keep", ["result", "record", "score", "pending", "result-no-block"])
+def test_missing_judge_hash_with_prior_judge_evidence_is_refused(env, capsys, keep):
+    """Judges that ran before per-seat hashes existed must not be mixed with new arguments.
+
+    A manifest with candidate hashes but no judge hash, plus any judge record, result
+    or accepted score for this run tag, is refused before the manifest changes and
+    before any dispatch. The guidance is a new ``--run-tag``.
+    """
+    assert cli.main(env["run"]) == 0
+    assert _score(env, "--judge") == 0
+    judge_ids = _judge_dispatch_ids(env)
+    assert len(judge_ids) == 12
+    scores = read_json(env["results"] / "scores.json")
+    assert any(row.get("failed") is False and "-judge-" in row["task_id"] for row in scores["judge"])
+    victim = judge_ids[0]
+    raw_path = env["results"] / "raw" / f"{victim}.json"
+    raw = read_json(raw_path)
+    raw["accepted"] = False
+    raw["status"] = "timeout"
+    raw_path.write_text(json.dumps(raw), encoding="utf-8")
+    path = env["results"] / "manifest.json"
+    manifest = read_json(path)
+    if keep == "result-no-block":
+        del manifest["judge"]
+    else:
+        del manifest["judge"]["dispatch_args_sha256"]
+    path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if keep in {"record", "score", "pending"}:
+        _remove_judge_raw(env)
+    if keep != "score":
+        _clear_judge_scores(env)
+    if keep != "record":
+        env["fake"].records.clear()
+    if keep == "pending":
+        (env["results"] / "raw" / f"{victim}.pending.json").write_text("{}\n", encoding="utf-8")
+    raw_names = sorted(p.name for p in (env["results"] / "raw").glob("*judge*"))
+    if keep in {"result", "result-no-block"}:
+        assert raw_names
+        assert not env["fake"].known(victim)
+    elif keep == "pending":
+        assert raw_names == [f"{victim}.pending.json"]
+        assert not env["fake"].known(victim)
+    elif keep == "record":
+        assert raw_names == []
+        assert env["fake"].known(victim)
+    else:
+        assert raw_names == []
+        assert not env["fake"].known(victim)
+        assert any(row.get("failed") is False for row in read_json(env["results"] / "scores.json")["judge"])
+    blob = path.read_bytes()
+    dispatched = list(env["fake"].dispatched)
+    waited = list(env["fake"].waited)
+    capsys.readouterr()
+    assert _score(env, "--judge", "--retry-failed", "--hard-timeout", "17") == 2
+    err = capsys.readouterr().err
+    assert "never frozen" in err and "already ran" in err and "--run-tag" in err and "never mixed" in err
+    if keep == "pending":
+        assert f"result {victim}.pending.json" in err
+    elif keep == "record":
+        assert "judge record " in err
+    elif keep == "score":
+        assert "accepted score " in err
+    else:
+        assert "result " in err and ".pending.json" not in err
+    assert path.read_bytes() == blob
+    assert env["fake"].dispatched == dispatched
+    assert env["fake"].waited == waited
+
+
+def test_first_judge_execution_freezes_arguments_and_dispatches(env):
+    """No judge record, result or score: the first ``score --judge`` still freezes and runs.
+
+    An earlier candidate-only score writes ``scores.json`` with an empty judge list.
+    That is not judge evidence, so the hash is stored and the judges are dispatched.
+    """
+    assert cli.main(env["run"]) == 0
+    assert _score(env) == 0
+    assert read_json(env["results"] / "scores.json")["judge"] == []
+    manifest_path = env["results"] / "manifest.json"
+    assert "judge" not in read_json(manifest_path)
+    before = list(env["fake"].dispatched)
+    assert _score(env, "--judge") == 0
+    frozen = read_json(manifest_path)["judge"]["dispatch_args_sha256"]
+    assert set(frozen) == set(SEATS)
+    new = env["fake"].dispatched[len(before) :]
+    assert new and all("-judge-" in task_id for task_id, _force in new)
+    assert all(read_json(env["results"] / "raw" / f"{task_id}.json")["accepted"] for task_id, _force in new)
+    assert _score(env, "--judge") == 0
+    assert env["fake"].dispatched == [*before, *new]
+    assert read_json(manifest_path)["judge"]["dispatch_args_sha256"] == frozen
+
+
 def test_judge_terms_freeze_on_the_first_judging_call_even_when_every_pair_is_excluded(env, capsys):
     """Round 2: an all-excluded first ``score --judge`` froze nothing, so ratio 0.005 was accepted later."""
     long_text = " ".join(["слово"] * 300)
