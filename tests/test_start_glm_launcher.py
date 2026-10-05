@@ -12,6 +12,8 @@ import pytest
 from tests.helpers.python import project_python
 from tests.test_launcher_contract import REPO, run_launcher
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 _GLM_CREDENTIALS = {
     "GLMCC_AUTH_TOKEN": "",
     "ZAI_API_KEY": "",

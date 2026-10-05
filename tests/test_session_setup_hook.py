@@ -22,6 +22,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from tests.helpers.monitor import UNREACHABLE_MONITOR_URL
 from tests.helpers.python import project_python
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -30,7 +31,9 @@ _FIXTURE_ENV_KEYS = ("PATH", "HOME", "TMPDIR", "LANG")
 
 
 def _fixture_environment() -> dict[str, str]:
-    return {name: os.environ[name] for name in _FIXTURE_ENV_KEYS if name in os.environ}
+    env = {name: os.environ[name] for name in _FIXTURE_ENV_KEYS if name in os.environ}
+    env["LU_MONITOR_LOOPBACK"] = UNREACHABLE_MONITOR_URL
+    return env
 
 
 def _fixture_allowlist() -> list[str]:
@@ -267,7 +270,7 @@ def test_session_setup_renders_remote_epic_state_and_fails_open(tmp_path: Path) 
         assert unavailable_result.returncode == 0, unavailable_result.stderr
         assert "REMOTE EPIC STATE (Monitor API)" not in unavailable_context
 
-        dead_result, dead_context = run_hook("http://127.0.0.1:1")
+        dead_result, dead_context = run_hook(UNREACHABLE_MONITOR_URL)
         assert dead_result.returncode == 0, dead_result.stderr
         assert "REMOTE EPIC STATE (Monitor API)" not in dead_context
     finally:

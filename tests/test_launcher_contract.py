@@ -31,6 +31,8 @@ from tests.rules_core_view import (
 )
 from tests.test_launcher_driver_scope import install_scope_sandbox
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 REPO = Path(__file__).resolve().parents[1]
 # The checkout run_launcher starts launchers from; rules_core_absent tests get a
 # view of REPO whose launcher loader loads nothing (tests/rules_core_view.py).

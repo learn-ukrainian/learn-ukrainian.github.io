@@ -19,6 +19,8 @@ from tests.rules_core_view import (
 from tests.test_launcher_contract import REPO, run_launcher
 from tests.test_launcher_driver_scope import install_scope_sandbox
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 
 @pytest.fixture(autouse=True)
 def _use_checkout_context_profile(monkeypatch):

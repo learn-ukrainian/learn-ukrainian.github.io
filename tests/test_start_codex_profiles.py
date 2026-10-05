@@ -15,6 +15,8 @@ from tests.launcher_sandbox import copy_slot_registry
 from tests.rules_core_view import install_loader_bypass
 from tests.test_launcher_driver_scope import install_scope_sandbox
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 # Tests spawn the same prescribed project interpreter that is running pytest;
 # dispatch worktrees intentionally do not contain a private .venv.

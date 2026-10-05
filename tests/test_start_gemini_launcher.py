@@ -11,6 +11,8 @@ import pytest
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 from tests.test_launcher_contract import run_launcher
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 DRIVER_REFUSAL = (
     "AGY/Gemini is not a planning, design or driver seat. "
     "Eligible driver seats: claude-opus-5-5 (Opus 5.5), gpt-6.1-sol (Sol 6.1); "

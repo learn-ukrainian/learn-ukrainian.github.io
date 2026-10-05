@@ -23,6 +23,7 @@ from scripts.orchestration.fleet_taxonomy import (
     resolve_area,
     resolve_area_by_epic,
 )
+from tests.helpers.monitor import UNREACHABLE_MONITOR_URL
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HANDOFF_IDENTITY_SH = _REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh"
@@ -444,6 +445,8 @@ def test_session_setup_hook_epic_validation_contract(
         "SESSION_BOUNDED_RUNNER": str(_REPO_ROOT / "scripts" / "agent_runtime" / "bounded_command.py"),
         "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID": "native_claude",
         "CODEX_CANONICAL_REPO_ROOT": str(project_dir),
+        # Explicit env bypasses the autouse Monitor pin; keep the live Monitor out (#9711).
+        "LU_MONITOR_LOOPBACK": UNREACHABLE_MONITOR_URL,
     }
 
     try:

@@ -10,6 +10,8 @@ import pytest
 from scripts.review.model_catalog import load_model_catalog
 from tests.test_launcher_contract import run_launcher
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 
 def _stub_claude(tmp_path: Path) -> Path:
     bin_dir = tmp_path / "bin"

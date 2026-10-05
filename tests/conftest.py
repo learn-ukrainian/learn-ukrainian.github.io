@@ -32,6 +32,7 @@ from scripts.common.bridge_paths import configured_bridge_db_path, default_bridg
 from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
 from scripts.common.repo_root import resolve_repo_root
 from tests import sparse_trees
+from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
 pytest_plugins = [
     "tests.helpers.checkout_write_guard",
@@ -800,6 +801,31 @@ def _isolate_overview_last_good(tmp_path, monkeypatch):
     router = _loaded_module("scripts", "api", "dashboard_router")
     if router is not None:
         router.reset_overview_state_for_tests()
+
+
+@pytest.fixture
+def hermetic_monitor(monkeypatch):
+    """Hook and launcher subprocesses never reach this host's live Monitor API (#9711).
+
+    Hooks, launchers and the thread-handoff helper resolve the Monitor from
+    ``LU_MONITOR_LOOPBACK`` and fall back to port 8765. CI has no Monitor, so a
+    developer host with one (and live stream leases) saw different hook output.
+    Pin the variable to an unreachable loopback port: every Monitor call fails
+    fast into the fail-open path, exactly as in CI. The ``tool-timing.sh`` hook
+    reads its own endpoint variable and would otherwise post fake telemetry to
+    the live Monitor, so that one is pinned too, as is ``delegate.py``'s
+    dispatch-time health probe (``DELEGATE_MONITOR_API``).
+
+    Opt in with ``pytestmark = pytest.mark.usefixtures("hermetic_monitor")`` in a
+    module that spawns hooks or launchers with an inherited environment. It is
+    not autouse: in-process tests that mock ``urlopen`` at the default Monitor
+    URL depend on the unpinned default. A test that needs Monitor responses sets
+    its own value to a local stub server; a subprocess test that builds an
+    explicit environment must pass the variables through itself.
+    """
+    monkeypatch.setenv("LU_MONITOR_LOOPBACK", UNREACHABLE_MONITOR_URL)
+    monkeypatch.setenv("TOOL_TIMING_API_URL", UNREACHABLE_TOOL_TIMING_URL)
+    monkeypatch.setenv("DELEGATE_MONITOR_API", UNREACHABLE_MONITOR_URL)
 
 
 @pytest.fixture(autouse=True)

@@ -1,6 +1,10 @@
 """Native Codex launcher behavior after the driver split."""
 
+import pytest
+
 from tests.test_launcher_contract import run_launcher
+
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
 
 def test_codex_interactive_rejects_epic() -> None:

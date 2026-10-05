@@ -9,6 +9,12 @@ while IFS= read -r variable; do
   esac
 done < <(compgen -e)
 
+# The scrub above also drops the operator's Monitor override. Pin the hook's
+# Monitor to an unreachable loopback port (the same one every thread_handoff
+# call below uses) so a live Monitor API and live stream leases on the host can
+# never change a fixture result; CI has no Monitor, so this matches CI.
+export LU_MONITOR_LOOPBACK=http://127.0.0.1:1
+
 unset GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_COMMON_DIR GIT_DIR GIT_INDEX_FILE
 unset GIT_OBJECT_DIRECTORY GIT_PREFIX GIT_WORK_TREE
 
