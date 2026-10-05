@@ -6549,6 +6549,8 @@ def test_run_worker_agy_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, t
     assert rc == 0
     tool_config = mock_invoke.call_args.kwargs["tool_config"]
     assert tool_config == {
+        "review_profile": None,
+        "review_ledger_path": str(plan.ledger_path),
         "mcp_config_path": str(plan.config_path),
         "strict_mcp_config": True,
         "mcp_server_names": ["sources"],
