@@ -87,6 +87,7 @@ import json
 import logging
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -98,6 +99,7 @@ from typing import Any, NamedTuple
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
+from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..result import ParseResult
@@ -129,8 +131,9 @@ _logger = logging.getLogger(__name__)
 # (a background command, a timer, a tool step still RUNNING, a subagent) needs
 # its own finish event positioned before the final reply, which must be the
 # last model event (see ``_slice_completion_gap``). A task that ends any other
-# way — canceled, and by the same rule timed out or failed — never finished its
-# command, so the run fails as ``AGY_BACKGROUND_TASK_CANCELED`` (#8502 r10). What the reply SAYS never
+# way — canceled, timed out or failed — never finished its command. Only an
+# invocation-owned model kill of an allowlisted read may be excused (#8771),
+# with its command retained in the result; all other ends still fail. What the reply SAYS never
 # decides the run (#8502 r9): pending-work wording in a structurally complete
 # run is recorded as a warning, not a failure. Ambiguous evidence is unconfirmed
 # (#8502 r7): a slice line that does not parse fails the run, it is never
@@ -208,6 +211,10 @@ _BACKGROUND_START_HEADER_RE = re.compile(
     r"\ACreated At: [^\n]*\nTool is running as a background task with task id: (?P<id>\S+)"
     r"(?:\nTask Description: (?P<timer>Timer:))?"
 )
+_BACKGROUND_COMMAND_HEADER_RE = re.compile(
+    r"\ACreated At: [^\n]*\nTool is running as a background task with task id: \S+"
+    r"\nTask Description: (?P<command>[\s\S]*?)\nTask logs are available at: [^\n]+"
+)
 _TASK_MESSAGE_HEADER_RE = re.compile(
     r"\A[^\n]*\n\n<SYSTEM_MESSAGE>\n\[Message\] timestamp=\S+ sender=(?P<sender>\S+) priority=\S+ "
     r"content=(?P<first_line>[^\n]*)"
@@ -216,6 +223,119 @@ _TASK_ENDED_RE = re.compile(r'\ATask id "(?P<id>[^"]+)" (?P<outcome>[^\n]*?) wit
 _TASK_FINISHED_OUTCOME = "finished"
 _SUBAGENT_TOOL = "invoke_subagent"
 _MODEL_EVENT_TYPES = frozenset({"PLANNER_RESPONSE", "GENERIC", "MCP_TOOL"})
+
+# Deliberately single-command only: shell composition and executable read
+# options do not prove a read-only search. Unknown syntax fails closed (#8771).
+_KILL_READ_COMMANDS = frozenset({"grep", "rg", "find", "ls", "cat", "head", "tail", "sed", "git"})
+_KILL_EXECUTABLE_OPTIONS = frozenset(
+    {
+        "-delete",
+        "-exec",
+        "-execdir",
+        "-ok",
+        "-okdir",
+        "-fprint",
+        "-fprint0",
+        "-fprintf",
+        "-fls",
+        "--pre",
+        "--hostname-bin",
+        "--ext-diff",
+        "--textconv",
+        "--output",
+        "--open-files-in-pager",
+        "-O",
+    }
+)
+_KILLED_COMMAND_LIMIT = 500
+
+
+def _read_only_killed_command(command: str) -> bool:
+    """Recognize only non-executing search/listing/read commands, never shell code."""
+    if not command or re.search(r"[\x00-\x1f\x7f$`;&|<>()]", command):
+        return False
+    try:
+        argv = shlex.split(command)
+    except ValueError:
+        return False
+    if not argv or argv[0] not in _KILL_READ_COMMANDS:
+        return False
+    if any(arg.split("=", 1)[0] in _KILL_EXECUTABLE_OPTIONS for arg in argv[1:]):
+        return False
+    # Git accepts unambiguous long-option abbreviations, including executable
+    # diff/text conversion options. Do not let spelling shorten the boundary.
+    if any(
+        arg.startswith("--")
+        and len(option := arg.split("=", 1)[0]) > 2
+        and any(forbidden.startswith(option) for forbidden in _KILL_EXECUTABLE_OPTIONS if forbidden.startswith("--"))
+        for arg in argv[1:]
+    ):
+        return False
+    if argv[0] == "git":
+        return (
+            len(argv) > 1 and argv[1] in {"grep", "log", "show"} and not any(arg.startswith("-O") for arg in argv[2:])
+        )
+    if argv[0] == "sed":
+        # sed -n alone still executes its program: admit only a print range.
+        return (
+            len(argv) >= 3
+            and argv[1] == "-n"
+            and re.fullmatch(r"\d+(?:,\d+)?p", argv[2]) is not None
+            and all(not arg.startswith("-") or arg == "--" for arg in argv[3:])
+        )
+    # Attached short options can execute a pager too (git grep -Oless).
+    return not (argv[0] == "rg" and any(arg.startswith("--pre") for arg in argv[1:]))
+
+
+def _model_killed_tasks(events: list[dict[str, Any]], *, reply: int | None = None) -> tuple[list[str], set[str]]:
+    """Retain every model kill and identify reads canceled after that kill, before the reply."""
+    commands: dict[str, str] = {}
+    kills: dict[str, int] = {}
+    diagnostics: list[str] = []
+    excused: set[str] = set()
+    for position, event in enumerate(events):
+        content = str(event.get("content") or "")
+        if event.get("status") == "RUNNING" and (start := _BACKGROUND_START_HEADER_RE.match(content)):
+            description = _BACKGROUND_COMMAND_HEADER_RE.match(content)
+            command = description.group("command") if description else "<unknown command>"
+            commands[start.group("id")] = command
+            kills.pop(start.group("id"), None)
+            excused.discard(start.group("id"))
+        if event.get("source") == "MODEL" and event.get("type") == "PLANNER_RESPONSE":
+            for call in event.get("tool_calls") or []:
+                if not isinstance(call, Mapping) or call.get("name") != "manage_task":
+                    continue
+                args = _coerce_args(call.get("args"))
+                if _decode_jsonish(args.get("Action")) != "kill":
+                    continue
+                task = _decode_jsonish(args.get("TaskId"))
+                if not isinstance(task, str):
+                    task = ""
+                command = commands.get(task, "<unknown command>")
+                diagnostics.append((redact_text(command) or "")[:_KILLED_COMMAND_LIMIT])
+                if task in commands and (reply is None or position < reply) and event.get("status") == "DONE":
+                    kills[task] = position
+        if event.get("type") != "SYSTEM_MESSAGE" or not (message := _TASK_MESSAGE_HEADER_RE.match(content)):
+            continue
+        task = message.group("sender")
+        end = _TASK_ENDED_RE.match(message.group("first_line"))
+        # Last event wins; even a progress message removes the exception.
+        excused.discard(task)
+        if (
+            end is not None
+            and end.group("id") == task
+            and end.group("outcome") == "was canceled"
+            and task in kills
+            and kills[task] < position
+            and (reply is None or position < reply)
+            and _read_only_killed_command(commands[task])
+        ):
+            excused.add(task)
+        # A past kill cannot authorize a later external cancellation.
+        kills.pop(task, None)
+    return diagnostics, excused
+
+
 # DIAGNOSTIC ONLY, NEVER A GATE (#8502 r9). Natural language is unbounded, so
 # no vocabulary can prove a run finished or unfinished; the structural check in
 # ``_slice_completion_gap`` is the whole gate. The survey above makes it
@@ -627,6 +747,35 @@ class AgyAdapter:
         plan: InvocationPlan | None = None,
         call_start_time: float | None = None,
     ) -> ParseResult:
+        """Keep killed-command evidence on every outcome, including early refusals."""
+        bound = _invocation_transcript(plan)
+        killed, _excused = _model_killed_tasks(bound.events) if bound is not None else ([], set())
+        result = self._parse_response(
+            stdout=stdout,
+            stderr=stderr,
+            returncode=returncode,
+            output_file=output_file,
+            plan=plan,
+            call_start_time=call_start_time,
+        )
+        if killed and not result.ok:
+            reason, _, detail = (result.stderr_excerpt or "").partition("\n")
+            blocked = [command for command in killed if not _read_only_killed_command(command)]
+            result = dataclasses.replace(
+                result, stderr_excerpt=f"{reason}\nkilled commands: {json.dumps(blocked or killed)}\n{detail}"[:500]
+            )
+        return dataclasses.replace(result, agy_killed_commands=killed)
+
+    def _parse_response(
+        self,
+        *,
+        stdout: str,
+        stderr: str,
+        returncode: int,
+        output_file: Path | None,
+        plan: InvocationPlan | None = None,
+        call_start_time: float | None = None,
+    ) -> ParseResult:
         """Parse AGY output.
 
         The terminal stream result is the canonical final response. Tool-call telemetry is parsed
@@ -978,9 +1127,9 @@ def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str
     the run started before that reply must be closed by its own finish event,
     also positioned before it (``_open_work``); a finish written after the
     reply means the reply was written while the work still ran. A task that
-    ended without finishing (canceled, timed out, failed) never completed its
-    command, whatever the reply says next: ``AGY_BACKGROUND_TASK_CANCELED``
-    (#8502 r10), a reason that never auto-finalizes the run. This is the
+    ended without finishing (canceled, timed out, failed) fails unless it was
+    the model's own kill of an allowlisted read before this final reply
+    (#8771). All kills remain diagnostic evidence. This is the
     whole gate: what the reply says is never consulted (#8502 r9). stderr
     cannot stand in for the transcript: agy's "root agent idle; waiting up to
     … for N background task(s)" line is absent on some paths, so it can only
@@ -998,7 +1147,8 @@ def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str
     if final_reply.get("tool_calls") or not str(final_reply.get("content") or "").strip():
         return AGY_BACKGROUND_TASK_UNCONFIRMED
     started, _finished, unfinished, still_open = _open_work(work, reply=model_events[-1])
-    if unfinished:
+    _killed, excused = _model_killed_tasks(work, reply=model_events[-1])
+    if unfinished - (excused if final_reply.get("status") == "DONE" else set()):
         return AGY_BACKGROUND_TASK_CANCELED
     if still_open:
         return AGY_BACKGROUND_TASK_UNCONFIRMED

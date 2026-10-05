@@ -83,6 +83,8 @@ class ParseResult:
     response_envelope: ResponseEnvelope | None = None
     failure_code: str | None = None
     provider_error_text: str | None = None
+    # Redacted, bounded command text for every model-owned AGY kill (#8771).
+    agy_killed_commands: list[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -160,3 +162,4 @@ class Result:
     # The adapter's closed, body-free failure classification (ParseResult.failure_code),
     # e.g. ``provider_policy_refusal``; None on success or when unclassified.
     failure_code: str | None = None
+    agy_killed_commands: list[str] = field(default_factory=list)

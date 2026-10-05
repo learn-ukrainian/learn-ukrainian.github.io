@@ -1012,6 +1012,7 @@ def _build_usage_record(
     tokens: int | None,
     substitution: dict[str, Any] | None = None,
     failure_code: str | None = None,
+    agy_killed_commands: list[str] | None = None,
 ) -> dict[str, Any]:
     """Assemble the usage record dict per design doc § 4.5 schema."""
     # Ensure unbounded strings are capped so the JSON stays under POSIX PIPE_BUF (4KB)
@@ -1069,6 +1070,8 @@ def _build_usage_record(
         # The context is installed only by invoke_inter_agent(); no caller
         # metadata is permitted to supply or overwrite these fields.
         record["transport"] = transport.metadata()
+    if (agent == "agy" or agy_killed_commands) and not privacy_limited:
+        record["agy_killed_commands"] = list(agy_killed_commands or [])
     return record
 
 
@@ -1438,6 +1441,84 @@ def _attempt_boundary_refusal(exc: Exception, *, stage: str) -> str:
 
 
 def _execute_invocation_plan(
+    *,
+    agent_name: str,
+    adapter: AgentAdapter,
+    plan: Any,
+    prompt: str,
+    mode: str,
+    cwd: Path,
+    model: str,
+    task_id: str | None,
+    session_id: str | None,
+    entrypoint: str,
+    hard_timeout: int,
+    stall_timeout: int,
+    tool_config: dict | None = None,
+    event_sink: Callable[..., None] | None = None,
+    stdout_silence_timeout: int | None = None,
+    initial_response_timeout: int | None = None,
+    v4_authorization_id: str | None = None,
+) -> _ExecutionOutcome:
+    """Retry an AGY code-assist eligibility 503 once, within the original time budget."""
+    kwargs = dict(
+        agent_name=agent_name,
+        adapter=adapter,
+        plan=plan,
+        prompt=prompt,
+        mode=mode,
+        cwd=cwd,
+        model=model,
+        task_id=task_id,
+        session_id=session_id,
+        entrypoint=entrypoint,
+        hard_timeout=hard_timeout,
+        stall_timeout=stall_timeout,
+        tool_config=tool_config,
+        event_sink=event_sink,
+        stdout_silence_timeout=stdout_silence_timeout,
+        initial_response_timeout=initial_response_timeout,
+        v4_authorization_id=v4_authorization_id,
+    )
+    if agent_name != "agy":
+        return _execute_invocation_once(**kwargs)
+    started = time.monotonic()
+    execution = _execute_invocation_once(**kwargs)
+    if execution.parse.ok or execution.kill_reason:
+        return execution
+    from .adapters.agy import AGY_INCOMPLETE_RUN_REASONS
+
+    # Provider-attributed terminal error or stderr, never the model's reply.
+    errors = (execution.stderr_text, execution.parse.provider_error_text or "")
+    transient = any("Eligibility check failed" in text and "UNAVAILABLE (code 503)" in text for text in errors)
+    reason = (execution.parse.stderr_excerpt or "").splitlines()
+    if not transient or execution.parse.agy_killed_commands or (reason and reason[0] in AGY_INCOMPLETE_RUN_REASONS):
+        return execution
+    remaining = hard_timeout - (time.monotonic() - started)
+    if remaining < 1:
+        return execution
+    # Fresh log and transcript baseline; the failed attempt cannot lend proof.
+    retry_plan = adapter.build_invocation(
+        prompt=prompt,
+        mode=mode,
+        cwd=cwd,
+        model=model,
+        task_id=task_id,
+        session_id=session_id,
+        tool_config=tool_config,
+    )
+    remaining = hard_timeout - (time.monotonic() - started)
+    if remaining < 1:
+        cleanup = getattr(adapter, "cleanup_invocation", None)
+        if cleanup is not None:
+            cleanup(retry_plan)
+        return execution
+    kwargs.update(plan=retry_plan, hard_timeout=int(remaining))
+    retry = _execute_invocation_once(**kwargs)
+    return replace(retry, duration_s=execution.duration_s + retry.duration_s)
+
+
+def _execute_invocation_once(
     *,
     agent_name: str,
     adapter: AgentAdapter,
@@ -2047,6 +2128,7 @@ def _raise_for_kill_reason(
             stderr_excerpt=(f"streamed_output_limit exceeded: limit={limit_bytes} observed={observed_bytes}"),
             tokens=None,
             substitution=record_substitution,
+            agy_killed_commands=list(parse.agy_killed_commands),
             failure_code="protocol_output_limit",
         )
         write_record(record)
@@ -2075,6 +2157,7 @@ def _raise_for_kill_reason(
             )[:500],
             tokens=None,
             substitution=record_substitution,
+            agy_killed_commands=list(parse.agy_killed_commands),
             failure_code="cwd_unpinned",
         )
         write_record(record)
@@ -2105,6 +2188,7 @@ def _raise_for_kill_reason(
             )[:500],
             tokens=None,
             substitution=record_substitution,
+            agy_killed_commands=list(parse.agy_killed_commands),
             failure_code="primary_tree_write",
         )
         write_record(record)
@@ -2128,6 +2212,7 @@ def _raise_for_kill_reason(
             stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            agy_killed_commands=list(parse.agy_killed_commands),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2176,6 +2261,7 @@ def _raise_for_kill_reason(
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            agy_killed_commands=list(parse.agy_killed_commands),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2219,6 +2305,7 @@ def _raise_for_kill_reason(
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            agy_killed_commands=list(parse.agy_killed_commands),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2259,6 +2346,7 @@ def _invoke_gemini_with_fallback(
     """Run Gemini through the shared model/auth fallback ladder."""
     last_telemetry: InvocationTelemetry | None = None
     last_tool_calls: list[dict[str, Any]] = []
+    agy_killed_commands: list[str] = []
 
     def _attempt_runner(
         rung: GeminiRung,
@@ -2329,6 +2417,7 @@ def _invoke_gemini_with_fallback(
                 )
             raise
         parse = execution.parse
+        agy_killed_commands.extend(parse.agy_killed_commands)
         last_tool_calls = list(parse.tool_calls)
 
         if execution.kill_reason in ("stdout_silence_timeout", "initial_response_timeout"):
@@ -2432,6 +2521,7 @@ def _invoke_gemini_with_fallback(
             stalled=False,
             stderr_excerpt=stderr_excerpt,
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+            agy_killed_commands=list(agy_killed_commands),
         )
         write_record(record)
         return Result(
@@ -2454,6 +2544,7 @@ def _invoke_gemini_with_fallback(
             tool_calls=last_tool_calls,
             tool_calls_total=len(last_tool_calls),
             isolation_evidence=None,
+            agy_killed_commands=list(agy_killed_commands),
         )
 
     if call_result.attempts and all(attempt.status == "rate_limited" for attempt in call_result.attempts):
@@ -2474,6 +2565,7 @@ def _invoke_gemini_with_fallback(
             stalled=False,
             stderr_excerpt=stderr_excerpt,
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+            agy_killed_commands=list(agy_killed_commands),
         )
         write_record(record)
         raise RateLimitedError(agent_name, record_model, reason=(stderr_excerpt or "")[:200])
@@ -2498,6 +2590,7 @@ def _invoke_gemini_with_fallback(
             stalled=False,
             stderr_excerpt=stderr_excerpt,
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+            agy_killed_commands=list(agy_killed_commands),
         )
         write_record(record)
         raise AgentTimeoutError(agent_name, hard_timeout)
@@ -2519,6 +2612,7 @@ def _invoke_gemini_with_fallback(
         stalled=False,
         stderr_excerpt=stderr_excerpt,
         tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+        agy_killed_commands=list(agy_killed_commands),
     )
     write_record(record)
     return Result(
@@ -2541,6 +2635,7 @@ def _invoke_gemini_with_fallback(
         tool_calls=last_tool_calls,
         tool_calls_total=len(last_tool_calls),
         isolation_evidence=None,
+        agy_killed_commands=list(agy_killed_commands),
     )
 
 
@@ -2891,6 +2986,7 @@ def _invoke_with_runner_failover(
             tokens=parse.tokens,
             substitution=substitution,
             failure_code=parse.failure_code,
+            agy_killed_commands=list(parse.agy_killed_commands),
         )
         write_record(record)
 
@@ -2917,6 +3013,7 @@ def _invoke_with_runner_failover(
             stalled=False,
             returncode=execution.returncode,
             failure_code=parse.failure_code,
+            agy_killed_commands=list(parse.agy_killed_commands),
             usage_record=record,
             model_identity=record.get("model_identity"),
             tool_calls=list(parse.tool_calls),
@@ -3252,6 +3349,7 @@ def _invoke_impl(
         tokens=parse.tokens,
         substitution=substitution,
         failure_code=parse.failure_code,
+        agy_killed_commands=list(parse.agy_killed_commands),
     )
     write_record(record)
 
@@ -3278,6 +3376,7 @@ def _invoke_impl(
         stalled=False,
         returncode=execution.returncode,
         failure_code=parse.failure_code,
+        agy_killed_commands=list(parse.agy_killed_commands),
         usage_record=record,
         model_identity=record.get("model_identity"),
         tool_calls=list(parse.tool_calls),
