@@ -97,17 +97,24 @@ def resolve_worktree_record(worktree: Path, tasks_dir: Path, *, repo_root: Path)
 
     matches = []
     needles = worktree_claim_needles(worktree, worktree.resolve())
+    try:
+        resolved_worktree = worktree.resolve(strict=True)
+    except (OSError, ValueError, RuntimeError):
+        resolved_worktree = None
+    claim_paths: dict[str, Path] = {}
     cache_path = _identity_cache_path(tasks_dir)
     cached = _read_identity_cache(cache_path)
     identities = {}
     changed = False
-    for path in sorted(tasks_dir.glob("*.json")) + sorted((tasks_dir / "archive").glob("*.json")):
+    for prefix, path in [("", path) for path in sorted(tasks_dir.glob("*.json"))] + [
+        ("archive/", path) for path in sorted((tasks_dir / "archive").glob("*.json"))
+    ]:
         try:
             raw = path.read_bytes()
         except OSError:
             raise ValueError("task identity inventory unreadable") from None
         digest = hashlib.sha256(raw).hexdigest()
-        name = path.relative_to(tasks_dir).as_posix()
+        name = prefix + path.name
         entry = cached.get(name)
         hit = (
             isinstance(entry, dict)
@@ -132,12 +139,22 @@ def resolve_worktree_record(worktree: Path, tasks_dir: Path, *, repo_root: Path)
         identities[name] = {"source_sha256": digest, "identity": identity}
         changed |= not hit
         if isinstance(record, dict):
-            if _record_matches_worktree(record, worktree, repo_root=repo_root):
+            if resolved_worktree is not None and _record_matches_worktree(
+                record, worktree, repo_root=repo_root, resolved_worktree=resolved_worktree, claim_paths=claim_paths
+            ):
                 if hit:
                     record = json.loads(raw)  # Return the complete canonical record, never its projection.
                 matches.append((path, record))
-            elif record.get("keep_worktree") and _record_matches_worktree(
-                {"cwd": record.get("cwd")}, worktree, repo_root=repo_root
+            elif (
+                resolved_worktree is not None
+                and record.get("keep_worktree")
+                and _record_matches_worktree(
+                    {"cwd": record.get("cwd")},
+                    worktree,
+                    repo_root=repo_root,
+                    resolved_worktree=resolved_worktree,
+                    claim_paths=claim_paths,
+                )
             ):
                 raise ValueError("ambiguous retention task binding")
     if changed or cached.keys() != identities.keys():
@@ -282,10 +299,22 @@ def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, An
     )
 
 
-def _record_matches_worktree(record: Mapping[str, Any], worktree: Path, *, repo_root: Path) -> bool:
+def _record_matches_worktree(
+    record: Mapping[str, Any],
+    worktree: Path,
+    *,
+    repo_root: Path,
+    resolved_worktree: Path | None = None,
+    claim_paths: dict[str, Path] | None = None,
+) -> bool:
     """Task names are hints; only resolved filesystem identity binds a record."""
     from scripts.orchestration.worktree_claims import resolve_claim_path
 
+    if resolved_worktree is None:
+        try:
+            resolved_worktree = worktree.resolve(strict=True)
+        except (OSError, ValueError, RuntimeError):
+            return False
     locations = [record.get("worktree_path") or record.get("cwd")]
     runtime_paths = record.get("acp_runtime_paths")
     if isinstance(runtime_paths, list):
@@ -294,7 +323,12 @@ def _record_matches_worktree(record: Mapping[str, Any], worktree: Path, *, repo_
         if not isinstance(location, str) or not location:
             continue
         try:
-            if resolve_claim_path(location, repo_root=repo_root) == worktree.resolve(strict=True):
+            claimed = claim_paths.get(location) if claim_paths is not None else None
+            if claimed is None:
+                claimed = resolve_claim_path(location, repo_root=repo_root)
+                if claim_paths is not None:
+                    claim_paths[location] = claimed
+            if claimed == resolved_worktree:
                 return True
         except (OSError, ValueError, RuntimeError):
             continue

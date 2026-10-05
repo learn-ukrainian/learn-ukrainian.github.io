@@ -10,6 +10,25 @@ import pytest
 from scripts.fleet import ignored_task_output as output
 
 
+def legacy_record_matches_worktree(record, worktree, *, repo_root):
+    """Keep the replay oracle independent of the optimized matcher."""
+    from scripts.orchestration.worktree_claims import resolve_claim_path
+
+    locations = [record.get("worktree_path") or record.get("cwd")]
+    runtime_paths = record.get("acp_runtime_paths")
+    if isinstance(runtime_paths, list):
+        locations.extend(runtime_paths)
+    for location in locations:
+        if not isinstance(location, str) or not location:
+            continue
+        try:
+            if resolve_claim_path(location, repo_root=repo_root) == worktree.resolve(strict=True):
+                return True
+        except (OSError, ValueError, RuntimeError):
+            continue
+    return False
+
+
 def legacy_resolve_worktree_record(
     worktree: Path, tasks_dir: Path, *, repo_root: Path
 ) -> tuple[Path | None, dict[str, Any]]:
@@ -37,9 +56,9 @@ def legacy_resolve_worktree_record(
                 raise ValueError("task identity inventory unreadable") from None
             continue
         if isinstance(record, dict):
-            if output._record_matches_worktree(record, worktree, repo_root=repo_root):
+            if legacy_record_matches_worktree(record, worktree, repo_root=repo_root):
                 matches.append((path, record))
-            elif record.get("keep_worktree") and output._record_matches_worktree(
+            elif record.get("keep_worktree") and legacy_record_matches_worktree(
                 {"cwd": record.get("cwd")}, worktree, repo_root=repo_root
             ):
                 raise ValueError("ambiguous retention task binding")
@@ -182,6 +201,70 @@ def test_cached_symlink_is_resolved_again_after_retargeting(store):
     replay(tasks, root, [tree, other, alias])
     assert output.resolve_worktree_record(tree, tasks, repo_root=root) == (None, {})
     assert output.resolve_worktree_record(other, tasks, repo_root=root)[0] == tasks / "record.json"
+
+
+def test_hot_and_archived_same_name_keep_distinct_cache_entries(store):
+    root, tasks, tree = store
+    save(tasks, "record.json", {"cwd": str(root), "worktree_reused": True})
+    archived = save(tasks, "archive/record.json", {"cwd": str(tree), "keep_worktree": True})
+    replay(tasks, root, [tree, root])
+    replay(tasks, root, [tree, root])
+    cache = output._read_identity_cache(output._identity_cache_path(tasks))
+    assert set(cache) == {"record.json", "archive/record.json"}
+    assert output.resolve_worktree_record(tree, tasks, repo_root=root)[0] == archived
+
+
+def test_target_is_strictly_resolved_once_per_lookup(store, monkeypatch):
+    root, tasks, tree = store
+    for i in range(4):
+        save(tasks, f"record-{i}.json", {"cwd": str(root / "other"), "acp_runtime_paths": [str(tree)]})
+    original = Path.resolve
+    strict_targets = []
+
+    def resolve(path, strict=False):
+        if path == tree and strict:
+            strict_targets.append(path)
+        return original(path, strict=strict)
+
+    monkeypatch.setattr(Path, "resolve", resolve)
+    assert output.resolve_worktree_record(tree, tasks, repo_root=root) == (None, {})
+    assert strict_targets == [tree]
+
+
+@pytest.mark.parametrize("failure", [OSError, ValueError, RuntimeError])
+def test_failed_strict_target_resolution_keeps_every_comparison_false(store, monkeypatch, failure):
+    root, tasks, tree = store
+    save(tasks, "record.json", {"cwd": str(tree), "keep_worktree": True})
+    original = Path.resolve
+
+    def resolve(path, strict=False):
+        if path == tree and strict:
+            raise failure("unresolvable target")
+        return original(path, strict=strict)
+
+    monkeypatch.setattr(Path, "resolve", resolve)
+    replay(tasks, root, [tree])
+    assert output.resolve_worktree_record(tree, tasks, repo_root=root) == (None, {})
+
+
+def test_claim_paths_are_memoized_only_within_each_lookup(store, monkeypatch):
+    from scripts.orchestration import worktree_claims
+
+    root, tasks, tree = store
+    for i in range(4):
+        save(tasks, f"record-{i}.json", {"cwd": str(root / "other"), "acp_runtime_paths": [str(tree)]})
+    original = worktree_claims.resolve_claim_path
+    locations = []
+
+    def resolve(location, *, repo_root):
+        locations.append(location)
+        return original(location, repo_root=repo_root)
+
+    monkeypatch.setattr(worktree_claims, "resolve_claim_path", resolve)
+    for _ in range(2):
+        locations.clear()
+        assert output.resolve_worktree_record(tree, tasks, repo_root=root) == (None, {})
+        assert locations == [str(root / "other"), str(tree)]
 
 
 def test_cached_keep_worktree_cwd_ambiguity(store):
