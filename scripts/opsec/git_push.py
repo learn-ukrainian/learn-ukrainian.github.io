@@ -134,7 +134,7 @@ def scan_environment(environment: dict[str, str]) -> dict[str, str]:
     scrubbed = {
         key: value
         for key, value in environment.items()
-        if key not in ("LU_OPSEC_OVERRIDE", "GIT_CONFIG", "GIT_CURL_VERBOSE") and not key.startswith("GIT_TRACE")
+        if key not in (gate.OVERRIDE, "GIT_CONFIG", "GIT_CURL_VERBOSE") and not key.startswith("GIT_TRACE")
     }
     scrubbed.update(
         GIT_TRACE2="0",
@@ -293,7 +293,7 @@ class CanonicalPublicRepository:
 
     def __init__(self, repo: str, environment: dict[str, str], *, runner=None, timeout: int = API_TIMEOUT):
         self.repo = repo
-        self.environment = {key: value for key, value in environment.items() if key != "LU_OPSEC_OVERRIDE"}
+        self.environment = gate.internal_environment(environment)
         self.runner = runner
         self.timeout = timeout
         self.calls = 0
@@ -604,23 +604,6 @@ def isolate_scanner(repository: Repository) -> None:
         os.environ.pop(name, None)
 
 
-def claimant() -> int:
-    """The process an override is claimed for: the parent of the git running this hook.
-
-    The hook runs as a child of git, and git as a child of the caller (the
-    shim execs git), so an override set in one shell is claimed once there,
-    as for every other publisher. A recursive submodule push claims for its
-    parent push.
-    """
-    try:
-        result = subprocess.run(
-            ["ps", "-o", "ppid=", "-p", str(os.getppid())], capture_output=True, text=True, check=True, timeout=5
-        )
-        return int(result.stdout.strip())
-    except Exception:
-        raise gate.PublishBlocked("OPSEC: override log unavailable; push refused.") from None
-
-
 def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *, public_repository=None) -> None:
     """Raise PublishBlocked unless every public text of this push is clean, already public or overridden.
 
@@ -639,13 +622,11 @@ def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *,
     object_format = repository.object_format()
     updates = parse_updates(data, ID_LENGTH[object_format])
     isolate_scanner(repository)
-    overrides = dict(environment)
-    claim = claimant() if overrides.get("LU_OPSEC_OVERRIDE", "").strip() else None
+    reason = environment.get(gate.OVERRIDE, "")
     dest = destination(url)
     if gate.is_private(dest):
         if trusted_route(repository, remote, url):
-            gate.check_texts(dest, [], environment=overrides, claimant=claim)  # Records a supplied override.
-            return
+            return  # Nothing public is sent, so the override is neither used nor claimed.
         dest += "#untrusted-route"  # Never private: scanned as public.
     texts, names, tips = published_refs(repository, updates)
     owners: list[str] = []  # The commit each commit text belongs to, from texts[first] on.
@@ -688,8 +669,22 @@ def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *,
         )
     first = len(texts) - len(owners)
     try:
-        gate.check_texts(dest, texts, environment=overrides, field_names=names, claimant=claim)
+        gate.check_texts(dest, texts, environment={}, field_names=names)
     except gate.PublishBlocked as error:
+        if reason.strip() and error.indices:
+            # Only a flagged push uses the override: the blocked texts are
+            # checked again with the reason, so the override is claimed once
+            # for the command that set it (gate.command_keys) and logged before
+            # anything is sent. A clean push never reaches this, so a failed
+            # process lookup cannot refuse it.
+            flagged = sorted(error.indices)
+            gate.check_texts(
+                dest,
+                [texts[index] for index in flagged],
+                environment={gate.OVERRIDE: reason},
+                field_names=[names[index] for index in flagged],
+            )
+            return
         older = {owners[index - first] for index in error.indices if index >= first} - set(tips)
         if state == "absent here" and older:
             raise gate.PublishBlocked(
@@ -737,8 +732,7 @@ def main(argv: list[str] | None = None, *, stdin: bytes | None = None, public_re
     except Exception:
         print("OPSEC: push scan unavailable; push refused.", file=sys.stderr)
         return 1
-    environment.pop("LU_OPSEC_OVERRIDE", None)
-    return (chain or exec_caller_hook)(arguments, data, environment)
+    return (chain or exec_caller_hook)(arguments, data, gate.internal_environment(environment))
 
 
 if __name__ == "__main__":

@@ -14,6 +14,7 @@ covered in ``tests/test_delegate.py``.
 
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 from pathlib import Path
@@ -23,6 +24,64 @@ import pytest
 
 import scripts.delegate as delegate
 from scripts.orchestration import worktree_claims
+
+
+@pytest.mark.parametrize("caller", ["superseded-review", "stale-holder"])
+@pytest.mark.parametrize("record_exists", [True, False, "redispatched"])
+def test_cleanup_requires_canonical_attribution_and_verified_retrieval(
+    tmp_path, monkeypatch, capsys, caller, record_exists
+):
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    tasks = primary / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    task_id = "review-output-r1"
+    branch = f"codex/{task_id}"
+    worktree = _linked(primary, branch)
+    with (primary / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    source = worktree / ".cache/out/answer.txt"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"review output")
+    record_path = tasks / f"{task_id}.json"
+    if record_exists:
+        record = {"task_id": task_id, "status": "done", "worktree_path": str(worktree)}
+        if record_exists == "redispatched":
+            other = primary / ".worktrees/dispatch/claude" / task_id
+            other.mkdir(parents=True)
+            record.update(worktree_path=str(other), started_at="2999-01-01T00:00:00Z")
+        record_path.write_text(json.dumps(record))
+    if caller == "superseded-review":
+        monkeypatch.setattr(delegate, "_dispatch_worktree_components", lambda: [(worktree, task_id)])
+        monkeypatch.setattr(delegate, "_superseded_review_release_proof", lambda _path: (True, "clean+contained"))
+        released = delegate._release_superseded_review_worktrees("review-output-r2", dry_run=False)
+    else:
+        monkeypatch.setattr(delegate, "_stale_branch_holder_releasable", lambda *_args: (True, "clean+contained"))
+        released = delegate._release_stale_branch_holders(branch=branch, holders=[worktree], dry_run=False)
+    diagnostic = capsys.readouterr().err
+    if record_exists is not True:
+        assert released == [] and worktree.exists()
+        assert source.read_bytes() == b"review output"
+        assert not (primary / "batch_state/preserved" / task_id).exists()
+        assert "missing canonical task attribution; refusing worktree removal" in diagnostic
+        if record_exists == "redispatched":
+            assert json.loads(record_path.read_text()) == record
+        else:
+            assert not record_path.exists()
+        return
+    assert released == [worktree] and not worktree.exists()
+    receipt = json.loads(record_path.read_text())["preserved_artifacts"]
+    assert receipt["count"] == 1 and receipt["bytes"] == len(b"review output")
+    location = primary / receipt["location"]
+    assert location.parent.name == task_id
+    assert (location / ".cache/out/answer.txt").read_bytes() == b"review output"
+    from scripts.fleet import ignored_task_output
+
+    assert ignored_task_output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+    assert receipt["retrieval_proof_sha256"] in diagnostic
 
 
 @pytest.fixture(autouse=True)
@@ -196,7 +255,12 @@ def test_detached_review_dependency_refusal_remedy_requires_a_separate_retained_
 
 
 def test_later_round_removes_only_earlier_clean_rounds(monkeypatch, tmp_path: Path) -> None:
-    earlier = tmp_path / "codex" / "review-topic-r2"
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    earlier = _linked(primary, "codex/review-topic-r2")
+    real_run = subprocess.run
     same = tmp_path / "agy" / "review-topic-r4"
     other = tmp_path / "codex" / "review-other-r1"
     removed: list[str] = []
@@ -210,7 +274,7 @@ def test_later_round_removes_only_earlier_clean_rounds(monkeypatch, tmp_path: Pa
 
     def fake_run(cmd, **_kwargs):
         if cmd[:2] == ["git", "ls-files"]:
-            return subprocess.CompletedProcess(cmd, 0, b"", b"")
+            return real_run(cmd, **_kwargs)
         if "worktree" in cmd and "remove" in cmd:
             removed.append(cmd[-1])
 
@@ -324,12 +388,19 @@ def test_review_round_containment_git_error_is_kept(monkeypatch, tmp_path: Path)
 
 
 def test_contained_review_round_deletes_scratch_branch(monkeypatch, tmp_path: Path) -> None:
-    earlier = tmp_path / "codex" / "review-topic-r2"
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    earlier = _linked(primary, "codex/review-topic-r2")
+    real_run = subprocess.run
     commands: list[list[str]] = []
     monkeypatch.setattr(delegate, "_dispatch_worktree_components", lambda: [(earlier, "review-topic-r2")])
     monkeypatch.setattr(delegate, "_superseded_review_releasable", lambda _path: (True, "clean; task status=done"))
 
     def fake_run(cmd, **_kwargs):
+        if cmd[:2] == ["git", "ls-files"]:
+            return real_run(cmd, **_kwargs)
         commands.append(list(cmd))
         return _git_reply(list(cmd), contained=True)
 

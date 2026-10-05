@@ -24,6 +24,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import verify_phase3_source_universe_freeze as source_freeze
 
@@ -510,7 +511,10 @@ def _source_receipt(source_universe_dir: Path) -> tuple[dict[str, Any], str, dic
         family_id = family["family_id"]
         ledger_path = source_universe_dir / family["ledger_file"]
         units: list[dict[str, str]] = []
-        for line in ledger_path.read_text(encoding="utf-8").splitlines():
+        lines = split_jsonl_lines(ledger_path.read_text(encoding="utf-8"))
+        if lines and lines[-1] == "":
+            lines.pop()
+        for line in lines:
             item = json.loads(line)
             units.append(
                 {

@@ -1,0 +1,9 @@
+# Large files allowlist
+# Format: <repository-relative-path> <tab> <size-in-bytes> <tab> <reason>
+curriculum/l2-uk-en/_archive/lit/orchestration/bu-ba-bu-the-end-of-soviet/research-gemini-session.json	8428805	existing tracked data; archived session record
+data/datasets/hramatka_literary_poltava_v1/hramatka_literary_poltava_v1.jsonl	11362314	existing tracked data; leaves git through the data/ split
+registry/lexicon/source-inventory-review-decisions/2026-07-19-textbook-jsonl-curated-bulk-approve.yaml	20707802	existing tracked data; kept in git as class K under the data/ split
+registry/lexicon/source-inventory-review-decisions/2026-09-02-teacher-lesson-delta-approve.yaml	8649468	existing tracked data; kept in git as class K under the data/ split
+registry/lexicon/source-inventory/oneshot/textbook-jsonl-curated-2026-07-19-bulk.yaml	13520323	existing tracked data; kept in git as class K under the data/ split
+site/src/data/etymology-manifest.json	31485716	existing tracked data; grandfathered site-input
+site/src/data/lexicon-teacher-cloze.json	7484635	existing tracked data; grandfathered site-input

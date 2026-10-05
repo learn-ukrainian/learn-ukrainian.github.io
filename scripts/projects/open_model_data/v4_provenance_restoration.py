@@ -28,6 +28,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import source_work_locator_index as locators
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
@@ -166,7 +167,7 @@ def _load_snapshot(path: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
 
 def _load_ledger(path: Path) -> dict[str, dict[str, Any]]:
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
     except OSError as exc:
         raise RestorationError(f"cannot read inventory ledger {path}: {exc}") from exc
     records: dict[str, dict[str, Any]] = {}

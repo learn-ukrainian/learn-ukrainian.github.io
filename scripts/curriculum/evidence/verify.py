@@ -20,7 +20,7 @@ from jsonschema import Draft202012Validator
 from scripts.verification import stress
 from scripts.wiki.sources_db import using_connection
 
-from . import codes, lock, pack, publication, registry, sources
+from . import codes, lock, pack, publication, registry, sense_bindings, sources
 from .words import (
     cefr_field,
     cited_rows,
@@ -68,11 +68,13 @@ def verify_words_store(
     )
     plans_base = Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
 
+    binding_context = sense_bindings.Context.read(level, evidence_base)
     store_path = evidence_base / "_words.yaml"
     registry_path = evidence_base / "_words.registry.yaml"
 
     errors: list[str] = []
     warnings: list[str] = []
+    not_checked: list[str] = []
 
     if not store_path.is_file():
         return {
@@ -181,7 +183,9 @@ def verify_words_store(
         total_forms = 0
 
         words_list = store_doc.get("words", [])
-        kaikki_result = sources_instance.kaikki_rows(word["lemma"] for word in words_list)
+        kaikki_result = sources_instance.kaikki_rows(
+            word["lemma"] for word in words_list if word.get("kind") != "formula"
+        )
         if any(isinstance(word.get("gloss_source"), str) for word in words_list) and (
             "kaikki_content_sha256" not in built_with or "kaikki_attribution" not in built_with
         ):
@@ -202,6 +206,30 @@ def verify_words_store(
             prev_num = cur_num
 
         for word in words_list:
+            if word.get("kind") == "formula":
+                try:
+                    sense_bindings.formulas.validate(word, {w["id"]: w for w in words_list}, sources_instance)
+                    selection = binding_context.select(word, sense_bindings.rows_for(word, sources_instance), None)
+                    if selection.reason:
+                        (
+                            errors
+                            if word.get("gloss_en") or selection.reason == "formula_binding_invalid"
+                            else warnings
+                        ).append(f"{word['id']}: {selection.reason}")
+                    if (
+                        word.get("gloss_en") != selection.gloss
+                        or word.get("gloss_ref") != selection.ref
+                        or word.get("gloss_source") != selection.source
+                        or word.get("gloss_basis") != selection.basis
+                    ):
+                        errors.append(f"{word['id']}: formula_binding_invalid")
+                    unchecked = sense_bindings.local_proof(binding_context.entries.get(word["id"], {}))
+                    if unchecked:
+                        warnings.append(f"{word['id']}: {sense_bindings.CI_NOTICE}")
+                        not_checked.append(f"{word['id']}:{unchecked}")
+                except (ValueError, OSError, KeyError) as exc:
+                    errors.append(f"{word['id']}: {exc}")
+                continue
             word_id = word["id"]
             lemma = word["lemma"]
             pos = word["pos"]
@@ -254,13 +282,22 @@ def verify_words_store(
             # Check Gloss against source
             gloss_rows = sources_instance.gloss_rows([(lemma, pos)]).raw.get((lemma, pos), [])
             pronoun_entry = any("pron" in str(form.get("tags", "")).split(":") for form in word.get("forms", []))
-            selection = sources.select_gloss(
+            selection = binding_context.select(
                 word,
                 gloss_rows,
                 kaikki_result.raw.get(lemma),
                 pronoun_entry=pronoun_entry,
                 ulif_entries=sources_instance.ulif_entries([lemma]).raw.get(lemma, []),
             )
+            if selection.reason == "reference_binding_invalid":
+                errors.append(f"{codes.GLOSS_MISMATCH}: {word_id}: {selection.reason}")
+            if word.get("gloss_basis") != selection.basis:
+                errors.append(f"{codes.GLOSS_MISMATCH}: {word_id}: binding_basis_mismatch")
+            method = binding_context.entries.get(word_id, {}).get("method")
+            if method in sense_bindings.LOCAL_PROOF_METHODS:
+                warnings.append(f"{word_id}: {sense_bindings.CI_NOTICE}")
+                unchecked = sense_bindings.LOCAL_PROOF_METHODS[method]
+                not_checked.append(f"{word_id}:{unchecked}")
             expected_gloss = selection.gloss
             expected_gloss_source = selection.source
             expected_gloss_ref = selection.ref
@@ -500,6 +537,13 @@ def verify_words_store(
             "source_version_changed": source_version_changed,
             "sources_db_scheme": scheme,
             "cited_rows_drifted_words": rows_drifted_total,
+            "private_commitments": {"status": "unverifiable_in_ci", "local_receipt_required": True}
+            if any(
+                sense_bindings.LOCAL_PROOF_METHODS.get(w.get("gloss_basis", {}).get("method")) == "private_commitment"
+                for w in words_list
+            )
+            else {"status": "not_applicable"},
+            "not_checked": not_checked,
             "snapshot": sources_instance.snapshot_report(),
             "errors": errors,
             "warnings": warnings,
@@ -627,13 +671,18 @@ def cited_gloss_ids(plan: dict) -> set[str]:
     return found
 
 
-def verify_plan_glosses(plan: dict, store: dict, module: str, api: sources.Sources) -> list[str]:
+def verify_plan_glosses(
+    plan: dict, store: dict, module: str, api: sources.Sources, *, binding_context: sense_bindings.Context | None = None
+) -> list[str]:
     """Unconditional learner-gloss gate for a module's cited words.
 
     Recompute the builder's gap diagnostics without adding fields to records.
     Proper names require a nonempty paradigm with prop on every form.
     """
     errors: list[str] = []
+    binding_context = binding_context or sense_bindings.Context.read(
+        store.get("level", module.split("/")[0]), REPO_ROOT / "curriculum/l2-uk-en/evidence" / module.split("/")[0]
+    )
     by_id = {word["id"]: word for word in store.get("words", [])}
     cited = cited_gloss_ids(plan)
     requested = [by_id[wid] for wid in sorted(cited) if wid in by_id]
@@ -642,27 +691,49 @@ def verify_plan_glosses(plan: dict, store: dict, module: str, api: sources.Sourc
         for word in requested
         if not (word.get("forms") and all("prop" in form.get("tags", "").split(":") for form in word["forms"]))
     ]
-    rows = api.gloss_rows((word["lemma"], word["pos"]) for word in common).raw if common else {}
-    payloads = api.kaikki_rows(word["lemma"] for word in common).raw if common else {}
-    ulif = api.ulif_entries(word["lemma"] for word in common).raw if common else {}
+    rows = (
+        api.gloss_rows((word["lemma"], word["pos"]) for word in common if word.get("kind") != "formula").raw
+        if common
+        else {}
+    )
+    payloads = api.kaikki_rows(word["lemma"] for word in common if word.get("kind") != "formula").raw if common else {}
+    ulif = api.ulif_entries(word["lemma"] for word in common if word.get("kind") != "formula").raw if common else {}
     for wid in sorted(cited):
         word = by_id.get(wid)
         if word is None:
             errors.append(f"{codes.GLOSS_MISSING}: {module} {wid} (lemma unavailable): word_record_missing")
             continue
-        label = f"{module} {wid} ({word['lemma']})"
+        label = f"{module} {wid} ({word.get('text', word.get('lemma'))})"
         stored = word.get("gloss_en")
         if stored is not None and not sources.is_learner_gloss(stored):
             errors.append(f"{codes.GLOSS_NOT_LEARNER_SENSE}: {label}: {stored!r}")
         if word not in common:
             continue
-        selection = sources.select_gloss(
+        if word.get("kind") == "formula":
+            try:
+                sense_bindings.formulas.validate(word, by_id, api)
+            except (ValueError, OSError, KeyError) as exc:
+                errors.append(f"{label}: {exc}")
+                continue
+        selection = binding_context.select(
             word,
-            rows.get((word["lemma"], word["pos"]), []),
-            payloads.get(word["lemma"]),
-            ulif_entries=ulif.get(word["lemma"], []),
+            api.formula_rows(word).raw if word.get("kind") == "formula" else rows.get((word["lemma"], word["pos"]), []),
+            payloads.get(word.get("lemma")),
+            ulif_entries=ulif.get(word.get("lemma"), []),
         )
-        if selection.reason == codes.GLOSS_SENSE_UNRESOLVED:
+        if (
+            selection.gloss
+            and stored
+            and (
+                stored != selection.gloss
+                or word.get("gloss_basis") != selection.basis
+                or (selection.ref and selection.ref.get("span") and word.get("gloss_ref") != selection.ref)
+            )
+        ):
+            errors.append(f"{codes.GLOSS_MISMATCH}: {label}: selected_gloss_changed")
+        if selection.reason in {"reference_binding_invalid", "formula_binding_missing", "formula_binding_invalid"}:
+            errors.append(f"{codes.GLOSS_MISSING}: {label}: {selection.reason}")
+        elif selection.reason == codes.GLOSS_SENSE_UNRESOLVED:
             errors.append(f"{codes.GLOSS_SENSE_UNRESOLVED}: {label}: candidates={list(selection.candidates)!r}")
         elif not stored or not isinstance(stored, str) or not stored.strip():
             errors.append(f"{codes.GLOSS_MISSING}: {label}: builder reason={selection.reason or 'gloss_not_stored'}")
@@ -882,7 +953,21 @@ def verify_pack(
                     store = yaml.safe_load((evidence_base / "_words.yaml").read_text(encoding="utf-8"))
                     if not isinstance(store, dict):
                         raise ValueError("word store must be a mapping")
-                    errors.extend(verify_plan_glosses(plan_doc, store, f"{level}/{slug}", sources_instance))
+                    context = sense_bindings.Context.read(level, evidence_base)
+                    for wid in sorted(cited_gloss_ids(plan_doc)):
+                        unchecked = sense_bindings.local_proof(context.entries.get(wid, {}))
+                        if unchecked:
+                            warnings.append(f"{level}/{slug} {wid}: {sense_bindings.CI_NOTICE}")
+                            not_checked.append(f"{wid}:{unchecked}")
+                    errors.extend(
+                        verify_plan_glosses(
+                            plan_doc,
+                            store,
+                            f"{level}/{slug}",
+                            sources_instance,
+                            binding_context=sense_bindings.Context.read(level, evidence_base),
+                        )
+                    )
                 except (OSError, ValueError, yaml.YAMLError, KeyError, TypeError) as exc:
                     errors.append(
                         f"{codes.SOURCE_UNAVAILABLE}: {level}/{slug}: word-store gloss gate: {type(exc).__name__}"

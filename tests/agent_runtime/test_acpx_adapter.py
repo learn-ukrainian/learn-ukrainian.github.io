@@ -9,8 +9,9 @@ pinned local ``acpx@0.13.0`` binary and the
 ``acpxCode``/``detailCode``/``EXIT_CODES`` constants read directly out of
 ``node_modules/acpx/dist/*.js`` — see the module docstring in
 ``scripts/agent_runtime/adapters/acpx.py`` for the captured contract this
-suite verifies against. No test in this file spawns a real subprocess or
-touches the network; all process-lifecycle categories (success, cancel,
+suite verifies against. Local Git fixtures and binary-version probes spawn
+subprocesses; no test invokes a provider or touches the network. All
+process-lifecycle categories (success, cancel,
 timeout, crash, malformed/partial NDJSON, duplicate replay, auth failure) are
 exercised as pure ``parse_response()`` calls over fixture stdout, exactly as
 the runner would call the adapter after collecting subprocess output. Grok
@@ -24,6 +25,7 @@ import os
 import shlex
 import subprocess
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import pytest
 
@@ -48,6 +50,7 @@ from scripts.agent_runtime.adapters.acpx import (
 )
 from scripts.agent_runtime.env_sanitize import build_agent_env
 from scripts.agent_runtime.routes import DEEPSEEK_FIRST_PARTY_FORBIDDEN_MARKER
+from scripts.common.git_context import sanitized_git_env
 
 _SUCCESS_NDJSON = (
     '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
@@ -203,6 +206,37 @@ _INVALID_USAGE_NDJSON = (
     '{"jsonrpc":"2.0","method":"session/update","params":{"update":'
     '{"sessionUpdate":"usage_update","totalTokens":"unknown"}}}\n'
 )
+
+
+@pytest.fixture(scope="module")
+def _acpx_worktree(tmp_path_factory):
+    """A real isolated Git checkout, even when basetemp is inside a primary."""
+    primary = tmp_path_factory.mktemp("acpx-primary")
+    worktree = primary / ".worktrees" / "dispatch" / "acpx" / "unit-tests"
+    commands = (
+        ["git", "init", "-q", "-b", "main", str(primary)],
+        [
+            "git", "-C", str(primary), "-c", "user.name=Test",
+            "-c", "user.email=test@example.com", "-c", "core.hooksPath=",
+            "-c", "commit.gpgsign=false", "commit", "-q", "--allow-empty",
+            "-m", "ACPX isolation fixture",
+        ],
+        ["git", "-C", str(primary), "worktree", "add", "-q", "--detach", str(worktree)],
+    )
+    for command in commands:
+        subprocess.run(
+            command, check=True, capture_output=True, text=True,
+            env=sanitized_git_env(), timeout=30,
+        )
+    return worktree
+
+
+@pytest.fixture
+def tmp_path(tmp_path, _acpx_worktree):
+    """Unique per-test directories inside the suite's registered worktree."""
+    # Pytest can reuse a truncated name after removing a passed test's path.
+    with TemporaryDirectory(prefix=f"{tmp_path.name}-", dir=_acpx_worktree) as directory:
+        yield Path(directory)
 
 
 @pytest.fixture(autouse=True)
@@ -1090,6 +1124,35 @@ def test_build_invocation_allows_non_primary_cwd(tmp_path, monkeypatch):
 
     plan = _build(adapter, cwd=tmp_path)
     assert plan.cwd == tmp_path
+
+
+def test_build_invocation_real_containment_refuses_primary_allows_isolated_root(
+    tmp_path, monkeypatch
+):
+    """#9669: a temporary directory in a primary checkout stays protected."""
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    primary = tmp_path / "synthetic-primary"
+    primary.mkdir()
+    subprocess.run(
+        ["git", "init", "-q", "-b", "main", str(primary)],
+        check=True, capture_output=True, text=True, env=sanitized_git_env(), timeout=30,
+    )
+    temporary_root = primary / "temporary-fixture"
+    temporary_root.mkdir()
+    containment = acpx_module._worktree_containment
+    for protected in (primary, temporary_root):
+        assert containment.classify_repo_path(protected, cwd=protected) == "primary_checkout"
+        with pytest.raises(AcpxShadowRefusalError, match="protected primary checkout"):
+            _build(AcpxAdapter(), cwd=protected)
+
+    # No classifier patch: this also fails when pytest's tmp root belongs to
+    # a containing primary repository rather than an isolated checkout.
+    plan = _build(AcpxAdapter(), cwd=tmp_path)
+    assert plan.cwd == tmp_path
+    assert containment.classify_repo_path(tmp_path, cwd=tmp_path) == "dispatch_worktree"
+    fixture_primary = containment.resolve_main_root(tmp_path)
+    assert tmp_path.parent in containment.registered_worktrees(fixture_primary)
 
 
 # ---------------------------------------------------------------------------

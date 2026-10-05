@@ -547,9 +547,20 @@ def agy_review_app_data_dir(agy_home: Path | str) -> Path:
     return Path(agy_home) / ".gemini" / "antigravity-cli"
 
 
+def agy_review_settings(review_access: str | None = "isolated") -> dict[str, Any]:
+    """Permit the receipt contract, or all read-only Sources tools without a receipt."""
+    tools = sources_tool_sets()[0] if review_access is None else review_tools(review_access)
+    return {
+        "permissions": {
+            "allow": [f"mcp(sources/{name})" for name in sorted(tools)],
+            "deny": ["command(*)", "write_file(*)"],
+        }
+    }
+
+
 def agy_full_review_settings() -> dict[str, Any]:
-    """Grant exact sources review tool targets, with no wildcard or bypass."""
-    return {"permissions": {"allow": [f"mcp(sources/{name})" for name in sorted(review_tools("full"))]}}
+    """Compatibility entry point for full-attempt provisioning and verification."""
+    return agy_review_settings("full")
 
 
 def agy_review_mcp_config_path(agy_home: Path | str) -> Path:
@@ -615,6 +626,8 @@ def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: byte
         os.mkdir(parts[1], 0o700, dir_fd=gemini_fd)
         app_data_fd = _open_owned_dir(parts[1], dir_fd=gemini_fd)
         _create_file(config_parts[2], config_fd, config_bytes)
+        access = json.loads(config_bytes)["mcpServers"]["sources"].get("env", {}).get("LU_REVIEW_ACCESS")
+        _create_file("settings.json", app_data_fd, json.dumps(agy_review_settings(access)).encode())
         # A symlink, not a copy, by design: a token refresh (which may rotate the refresh
         # token) must land in the real token file. A refreshed copy would leave the real
         # token stale or invalidated and break every other AGY lane. "Nothing written to the
@@ -624,6 +637,38 @@ def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: byte
         for fd in (app_data_fd, config_fd, gemini_fd):
             if fd is not None:
                 os.close(fd)
+
+
+def prepare_agy_permission_home(root: Path) -> Path:
+    """Use the review-attempt home provisioner for a trusted non-receipt review.
+
+    The caller supplies its existing runtime scratch lease. No receipt attempt
+    or ledger is invented for a dispatch that has none.
+    """
+    token = _real_agy_token()
+    if not token.is_file():
+        raise ValueError("agy_review_permissions_require_scoped_home")
+    python_bin, server = sources_server_launch()
+    config = isolated_sources_mcp_config(python_bin, server)
+    parent = _open_runtime_dir(root, ())
+    home_fd = None
+    try:
+        os.mkdir("agy-review-home", 0o700, dir_fd=parent)
+        home_fd = _open_owned_dir("agy-review-home", dir_fd=parent)
+        _populate_agy_review_home(home_fd, token, json.dumps(config).encode())
+    finally:
+        if home_fd is not None:
+            os.close(home_fd)
+        os.close(parent)
+    return root / "agy-review-home"
+
+
+def review_ledger_path(config_path: Path | str) -> Path:
+    """Resolve the host ledger paired with an existing attempt config."""
+    config = Path(config_path)
+    if not config.name.endswith(".mcp.json"):
+        raise ValueError("invalid_review_attempt_config")
+    return config.with_name(config.name.removesuffix(".mcp.json") + ".jsonl")
 
 
 def agy_oauth_link_problem(config_path: Path | str) -> str | None:
@@ -765,7 +810,7 @@ def prepare_review_attempt(
     if not isinstance(attempt_id, str) or not _TOKEN_RE.match(attempt_id):
         raise ValueError(f"invalid attempt_id: must match {_TOKEN_RE.pattern} (got {_describe_identifier(attempt_id)})")
 
-    review_tools(review_access)  # Validate before reserving files or an attempt id.
+    python_bin, sources_server = sources_server_launch()
     canonical_harness = (harness or "").lower().strip()
     if canonical_harness in UNSUPPORTED_HARNESS_REASONS:
         raise ValueError(
@@ -786,7 +831,6 @@ def prepare_review_attempt(
 
     # Primary checkout root: resolved via repository helper scripts.common.repo_root
     primary_root = review_server_checkout()
-    python_bin, sources_server = sources_server_launch()
 
     # The receipts root (default or explicit) is the trust anchor: verified itself, with
     # everything below it walked no-follow. Its ancestors are followed by design.
@@ -815,6 +859,31 @@ def prepare_review_attempt(
         # Admission checked the primary earlier in the dispatch; the seat launches what is on disk now (#9163).
         check_launch_contract(review_contract, primary_root, python_bin)
 
+    def _already_exists() -> FileExistsError:
+        return FileExistsError(
+            f"review attempt {_echo_identifier(attempt_id)!r} already exists for review {_echo_identifier(review_id)!r}"
+        )
+
+    existing = [ledger_name, sidecar_name, config_name]
+    existing += [home.name for home in (codex_home, agy_home) if home is not None]
+    # Preserve specific directory and duplicate-attempt refusals before server
+    # validation, without provisioning anything for an invalid launch. The
+    # creation pass below repeats these checks to handle concurrent attempts.
+    try:
+        existing_fd = _open_attempt_dir(review_dir)
+    except FileNotFoundError:
+        pass
+    else:
+        try:
+            if any(_lexists(name, existing_fd) for name in existing):
+                raise _already_exists()
+        finally:
+            os.close(existing_fd)
+
+    # Bind validation and configuration to one launch resolution before
+    # creating artifacts. Worktree declarations cannot authorize another server.
+    review_tools(review_access, server_path=sources_server)
+
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
     config_payload = sources_mcp_config(
         python_bin,
@@ -842,15 +911,8 @@ def prepare_review_attempt(
                 else:
                     os.unlink(name, dir_fd=review_fd)
 
-    def _already_exists() -> FileExistsError:
-        return FileExistsError(
-            f"review attempt {_echo_identifier(attempt_id)!r} already exists for review {_echo_identifier(review_id)!r}"
-        )
-
     try:
         # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
-        existing = [ledger_name, sidecar_name, config_name]
-        existing += [home.name for home in (codex_home, agy_home) if home is not None]
         if any(_lexists(name, review_fd) for name in existing):
             raise _already_exists()
 
@@ -908,6 +970,7 @@ def prepare_review_attempt(
         adapter_options["review_access"] = review_access
     if agy_home is not None:
         adapter_options["agy_home_override"] = str(agy_home)
+        adapter_options["review_access"] = review_access
 
     return ReviewMcpPlan(
         config_path=config_path,
@@ -1176,16 +1239,16 @@ def verify_agy_review_effective_mcp(
     if env.get("HOME") != str(agy_home) or env.get("AGY_APP_DATA_DIR") != str(app_data):
         # Name the variables, never their values: the launch environment is not log-safe.
         raise refuse("the launch environment does not carry the scoped HOME/AGY_APP_DATA_DIR")
-    if boundary and boundary.full:
-        settings = app_data / "settings.json"
-        try:
-            permissions = _strict_json_object(
-                _read_attempt_file(agy_home.parent, *settings.relative_to(agy_home.parent).parts)
-            )
-        except (OSError, ValueError):
-            raise refuse("full AGY review requires the sources-only permission rule") from None
-        if permissions != agy_full_review_settings():
-            raise refuse("full AGY review requires exactly the sources review tool permission rules")
+    access = ("full" if boundary.full else "isolated") if boundary else expected["env"]["LU_REVIEW_ACCESS"]
+    settings = app_data / "settings.json"
+    try:
+        permissions = _strict_json_object(
+            _read_attempt_file(agy_home.parent, *settings.relative_to(agy_home.parent).parts)
+        )
+    except (OSError, ValueError):
+        raise refuse("AGY review requires the scoped permission rules") from None
+    if permissions != agy_review_settings(access):
+        raise refuse("AGY review requires exactly the sources review tool and command permission rules")
     if (app_data / "mcp_config.json").exists() or (app_data / "mcp_config.json").is_symlink():
         raise refuse("the scoped AGY_APP_DATA_DIR holds an unexpected mcp_config.json")
 

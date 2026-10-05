@@ -7,6 +7,8 @@ import pytest
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 from tests.test_launcher_contract import run_launcher
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 
 def test_kimi_native_is_default_and_interactive_rejects_epic() -> None:
     interactive = run_launcher("start-kimi.sh")

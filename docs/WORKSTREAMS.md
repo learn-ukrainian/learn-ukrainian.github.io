@@ -61,7 +61,7 @@ is the single source of truth for membership (auditor:
 | --- | --- | --- |
 | atlas-practice | #4387 | Word Atlas + Practice Hub product & UX (intake epics #4220, #4378, #5224 and UX epic #4700 folded into umbrella #4387) |
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
-| infra-harness | #6943 (successor to closed #4707) | Infra & fleet reliability (hooks, dispatch, routing). CI speed/reliability program (#8875): [`ci-speed-program.md`](epics/ci-speed-program.md) |
+| infra-harness | #6943 (successor to closed #4707), #9737 (nested program; #6943 is at GitHub's 100 sub-issue limit) | Infra & fleet reliability (hooks, dispatch, routing). CI speed/reliability program (#8875): [`ci-speed-program.md`](epics/ci-speed-program.md) |
 | docs-knowledge | #5535 | Repository knowledge system — curated docs authority, plain-Astro truth, optional OpenWiki layer |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | monitor (`ops-api` alias) | #7919 (successor to closed #7177) | **Ops API + UI** — operator API (`scripts/api`) + dashboards; Monitor routes are a subset |
@@ -75,7 +75,7 @@ is the single source of truth for membership (auditor:
 
 The `eval-harness` and `a1-upgrade` launcher streams were retired on 2026-09-24. Closed #4913's residual was folded into #6943 and #6321 per #8305; #7995 closed with no sub-issues.
 
-Rules for every orchestrator (Claude, Codex UI, agy, cursor): work from your stream epic;
+Rules for every orchestrator (Claude, Codex UI, cursor, grok): work from your stream epic;
 link new issues to a stream at creation; orphans get flagged at every cold start.
 
 The completed public benchmark v0.1.1 is owned by closed #2156. Closed #6057

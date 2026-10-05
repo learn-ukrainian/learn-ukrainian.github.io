@@ -57,6 +57,7 @@ def test_review_mcp_provisions_attempt_access_and_exact_claude_tools(world, tmp_
         assert agy_full_review_settings()["permissions"]["allow"] == [
             f"mcp(sources/{t})" for t in sorted(FULL_REVIEW_TOOLS)
         ]
+        assert agy_full_review_settings()["permissions"]["deny"] == ["command(*)", "write_file(*)"]
 
 
 def full_probe_code(targets, host_home, pinned, corpus, child_marker, abstract):
@@ -269,7 +270,9 @@ def test_agy_full_review_uses_native_sandbox_without_permission_bypass(tmp_path,
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
     kw = dict(prompt="review", mode="read-only", cwd=tmp_path, model=None, task_id="review", session_id=None)
-    plan = AgyAdapter().build_invocation(**kw, tool_config={"review_access": "full", "agy_review_sandbox": False})
+    home = tmp_path / "scoped-home"
+    (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
+    plan = AgyAdapter().build_invocation(**kw, tool_config={"review_access": "full", "agy_home_override": str(home)})
     assert "--sandbox" in plan.cmd
     assert "--dangerously-skip-permissions" not in plan.cmd
     with pytest.raises(ValueError, match="forbids"):
@@ -279,8 +282,9 @@ def test_agy_full_review_uses_native_sandbox_without_permission_bypass(tmp_path,
 
 
 @pytest.mark.parametrize("access", ["full", "isolated"])
-def test_agy_sources_permission_is_only_projected_for_full_attempts(world, tmp_path, monkeypatch, access):
+def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(world, tmp_path, monkeypatch, access):
     from scripts.agent_runtime.adapters import agy
+    from scripts.agent_runtime.review_mcp import agy_review_settings
 
     root, _ = world
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy", review_access=access)
@@ -298,18 +302,10 @@ def test_agy_sources_permission_is_only_projected_for_full_attempts(world, tmp_p
             tool_config=boundary.tool_config,
         )
         settings = Path(plan.env_overrides["AGY_APP_DATA_DIR"]) / "settings.json"
-        if access == "full":
-            from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS
-
-            assert json.loads(settings.read_bytes()) == {
-                "permissions": {"allow": [f"mcp(sources/{name})" for name in sorted(FULL_REVIEW_TOOLS)]}
-            }
-            assert "--sandbox" in plan.cmd
-            assert "--dangerously-skip-permissions" not in plan.cmd
-        else:
-            assert not settings.exists()
-            assert "--sandbox" not in plan.cmd
-            assert "--dangerously-skip-permissions" in plan.cmd
+        assert json.loads(settings.read_bytes()) == agy_review_settings(access)
+        assert settings.stat().st_mode & 0o777 == 0o600
+        assert "--sandbox" in plan.cmd
+        assert "--dangerously-skip-permissions" not in plan.cmd
     finally:
         boundary.cleanup()
 

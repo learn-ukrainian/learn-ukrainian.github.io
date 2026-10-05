@@ -6,17 +6,250 @@ import argparse
 import json
 import subprocess
 import sys
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
+from scripts.ai_agent_bridge import _cli
 from scripts.ai_agent_bridge import _dispatch_wrappers as wrappers
 
 
 def _option(command: list[str], name: str) -> str:
     return command[command.index(name) + 1]
+
+
+def _capture_native_review(monkeypatch, tmp_path, content, profile, response, *, head=None, data=None, ok=True):
+    """Exercise the real caller/composer; replace only the subprocess boundary."""
+    result = tmp_path / "native-result.md"
+    output = tmp_path / "returned-review.md"
+    calls = []
+    prompts = []
+
+    def native_boundary(command, **kwargs):
+        calls.append(command)
+        if command[2] == "dispatch":
+            prompt = Path(_option(command, "--prompt-file")).read_bytes().decode("utf-8")
+            prompts.append(prompt)
+            reply = response(prompt) if callable(response) else response
+            result.write_text(reply, encoding="utf-8")
+            assert _option(command, "--mode") == "read-only"
+            assert "--require-review-verdict" in command
+            assert kwargs["cwd"] == wrappers.REPO_ROOT
+            if profile:
+                assert _option(command, "--review-profile") == profile
+            else:
+                assert "--review-profile" not in command
+            if head:
+                assert _option(command, "--pinned-head") == head
+            return subprocess.CompletedProcess(command, 0)
+        assert command[2] == "wait"
+        return subprocess.CompletedProcess(
+            command, 0, stdout=json.dumps({"status": "done", "result_file": str(result)})
+        )
+
+    with monkeypatch.context() as patch:
+        patch.setenv("LU_RUNTIME_TMP_ROOT", str(tmp_path))
+        patch.setattr(wrappers.subprocess, "run", native_boundary)
+        def dispatch():
+            _cli._dispatch_headless_review(
+                "claude", content, data=data, task_id="native-contract", model=None, effort=None,
+                output_path=str(output), stdout_only=False, hard_timeout=None,
+                review_profile=profile, pinned_head=head,
+            )
+
+        if ok:
+            dispatch()
+        else:
+            with pytest.raises(SystemExit, match="review dispatch did not complete: status='failed'"):
+                dispatch()
+    assert len(calls) == 2  # One dispatch and one wait, no corrective retry.
+    assert len(prompts) == 1
+    assert output.read_bytes() == result.read_bytes()  # No returned JSON/citation rewriting.
+    return prompts[0]
+
+
+@pytest.mark.parametrize(
+    ("profile", "review_request", "applicable"),
+    [
+        ("code", "Review this branch.", True),
+        ("infra", "Review this branch.", True),
+        (None, "Return code-review-findings.v1 JSON.", True),
+        ("code", "Return code-review-findings.v1 JSON.", True),
+        ("ukrainian", "Return code-review-findings.v1 JSON.", True),
+        (None, "Review code; verdict only.", False),
+        ("ukrainian", "Review this meaning; verdict only.", False),
+        ("ukrainian", "Review this lesson; verdict only.", False),
+        ("ukrainian", "Review this source; verdict only.", False),
+        (None, "Discuss code-review-findings.v10.", False),
+    ],
+)
+@pytest.mark.parametrize("data", [None, "", "Prior code-review-findings.v1 payload\r\n\t  \r\n"])
+def test_native_prompt_delivers_code_contract_only_when_requested(
+    monkeypatch, tmp_path, profile, review_request, applicable, data
+):
+    content = f"{review_request}\r\n\r\nKeep caller whitespace: \t  \r\n\r\n"
+    prompt = _capture_native_review(monkeypatch, tmp_path, content, profile, "VERDICT: BLOCKED\n", data=data)
+    attachment = "\n\n--- attached inert text ---\n" + data if data else ""
+    if not applicable:
+        assert prompt == content + attachment
+        return
+    assert prompt == content + "\n\n" + wrappers._NATIVE_CODE_REVIEW_OUTPUT + attachment
+    guidance = prompt[len(content) + 2 : len(content) + 2 + len(wrappers._NATIVE_CODE_REVIEW_OUTPUT)]
+    # Verify instructions at the subprocess boundary rather than a constant's existence.
+    assert guidance.count("## Existing code-review output") == 1
+    for requirement in (
+        "first completed reply",
+        "plain, unfenced verdict",
+        "one native JSON object",
+        "schemas/code-review-findings.v1.schema.json",
+        "nonblocking finding",
+        "judgment and confidence",
+        "repository-relative",
+        "all leading",
+        "tabs, trailing spaces",
+        "intervening blank lines",
+        "Only line endings",
+        "end_line = start_line + number of quoted source lines - 1",
+        'claim_type "present"',
+        "actual changed new-side line",
+        "body/sources",
+        'claim_type "missing"',
+        "real contextual",
+        "never invent a line",
+        "locally reread",
+        "pinned head",
+        "existing strict verifier",
+    ):
+        assert requirement in guidance
+
+
+def test_native_prompt_preserves_caller_markers_without_splitting(monkeypatch, tmp_path):
+    content = "Caller-authored example:\n--- attached inert text ---\nReturn code-review-findings.v1 JSON.\t \n"
+    data = "Attachment provenance: fixture\r\n--- attached inert text ---\r\n\tDATA  \r\n"
+    prompt = _capture_native_review(monkeypatch, tmp_path, content, None, "VERDICT: BLOCKED\n", data=data)
+    assert prompt == content + "\n\n" + wrappers._NATIVE_CODE_REVIEW_OUTPUT + "\n\n--- attached inert text ---\n" + data
+
+
+@pytest.mark.parametrize("verdict", [None, "REQUEST_CHANGES"])
+def test_native_guidance_echo_cannot_supply_or_override_verdict(monkeypatch, tmp_path, verdict):
+    from scripts import delegate
+    from scripts.review.verdict_parser import recognized_verdicts
+
+    assert recognized_verdicts(wrappers._NATIVE_CODE_REVIEW_OUTPUT) == []
+    content = "Return code-review-findings.v1 JSON."
+
+    def echo_guidance(prompt):
+        guidance = prompt[len(content) :]
+        assert recognized_verdicts(guidance) == []
+        response = (f"VERDICT: {verdict}\n" if verdict else "") + "Contract noted:\n" + guidance
+        assert delegate.parse_review_verdict(response) == verdict
+        return response
+
+    _capture_native_review(monkeypatch, tmp_path, content, None, echo_guidance, ok=verdict is not None)
+
+
+@pytest.fixture
+def native_exact_target(tmp_path):
+    """Committed target with whitespace-sensitive changes and an unchanged consumer."""
+    from scripts.common.git_context import sanitized_git_env
+    from scripts.review.target_resolution import resolve_commit_target
+
+    repo = tmp_path / "target"
+    repo.mkdir()
+
+    def git(*args):
+        return subprocess.run(
+            ["git", *args],
+            cwd=repo,
+            env=sanitized_git_env(),
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        ).stdout.strip()
+
+    git("init", "-q")
+    git("config", "user.name", "Test")
+    git("config", "user.email", "test@example.com")
+    git("config", "core.hooksPath", "/dev/null")
+    source = repo / "service.py"
+    source.write_text("def serve():\n    value = 1\n    return value\n", encoding="utf-8")
+    (repo / "consumer.py").write_text("from service import serve\n", encoding="utf-8")
+    git("add", "service.py", "consumer.py")
+    git("commit", "-qm", "base")
+    quote = "    value = 2  \n\n\treturn value"
+    source.write_text(f"def serve():\n{quote}\n", encoding="utf-8")
+    git("add", "service.py")
+    git("commit", "-qm", "review target")
+    target = resolve_commit_target(repo, "HEAD")
+    # The verifier must load frozen Git content, not this subsequent working copy.
+    source.write_text("different working copy\n", encoding="utf-8")
+    return repo, target, quote
+
+
+@pytest.mark.parametrize("profile", ["code", "infra", None])
+def test_native_first_reply_exact_target_evidence_controls(monkeypatch, tmp_path, native_exact_target, profile):
+    from scripts.review.evidence import changed_lines_map, verify_finding_evidence
+    from scripts.review.review_contract import validate_reviewer_payload
+    from scripts.review.verdict_parser import recognized_verdicts
+
+    repo, target, quote = native_exact_target
+    finding = {
+        "id": "F1",
+        "title": "Nonblocking consumer concern",
+        "body": "consumer.py uses serve.",
+        "priority": "P3",
+        "confidence": 0.65,
+        "category": "api",
+        "location": {"path": "service.py", "start_line": 2, "end_line": 4, "claim_type": "present"},
+        "verbatim": quote,
+        "why_wrong": "Changed return may affect the unchanged consumer.",
+        "smallest_fix": "Check consumer expectations.",
+        "sources": ["consumer.py:1"],
+    }
+    missing = deepcopy(finding)
+    missing.update(id="F2", title="Missing guard", verbatim="def serve():")
+    missing["location"].update(start_line=1, end_line=1, claim_type="missing")
+    payload = {
+        "schema_version": "code-review-findings.v1",
+        "overall": {"correctness": "correct", "explanation": "Only nonblocking concerns.", "confidence": 0.9},
+        "findings": [finding, missing],
+    }
+    response = "VERDICT: APPROVE\n" + json.dumps(payload)
+    content = "Review the exact target.\n"
+    if profile is None:
+        content += "Return code-review-findings.v1 JSON.\n"
+    prompt = _capture_native_review(monkeypatch, tmp_path, content, profile, response, head=target.head_sha)
+    assert "complete literal" in prompt
+    assert recognized_verdicts(response) == ["APPROVE"]
+    returned = json.loads(response.split("\n", 1)[1])
+    validate_reviewer_payload(returned)
+    assert returned == payload  # Findings and both confidence levels preserved.
+    changed = changed_lines_map(repo, target)
+    assert changed == {"service.py": {2, 3, 4}}
+
+    def check(candidate):
+        validate_reviewer_payload({**payload, "findings": [candidate]})
+        return verify_finding_evidence(candidate, repo_root=repo, target=target, changed_lines=changed)
+
+    assert check(returned["findings"][0]).outcome == "verified"
+    assert check(returned["findings"][1]).outcome == "verified"
+    stripped = deepcopy(finding)
+    stripped["verbatim"] = "\n".join(line.strip() for line in quote.split("\n"))
+    assert check(stripped).outcome == "quote_missing"
+    inflated = deepcopy(finding)
+    inflated["location"]["end_line"] = 5
+    assert check(inflated).outcome == "line_mismatch"
+    unchanged_line = deepcopy(missing)
+    unchanged_line["location"]["claim_type"] = "present"
+    assert check(unchanged_line).outcome == "out_of_scope"
+    unchanged_consumer = deepcopy(finding)
+    unchanged_consumer["location"].update(path="consumer.py", start_line=1, end_line=1)
+    unchanged_consumer["verbatim"] = "from service import serve"
+    assert check(unchanged_consumer).outcome == "out_of_scope"
 
 
 def _patch_state_dir(monkeypatch, tmp_path: Path) -> Path:

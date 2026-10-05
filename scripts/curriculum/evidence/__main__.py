@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import codes, lesson_lock, pack, verify, words
+from . import codes, lesson_lock, pack, sense_cli, verify, words
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -20,6 +20,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Commands:\n"
+            "  sense-select  Select exact reference meanings and check private evidence\n"
+            "  sense-bind    Choose a source span approved by a recorded reviewer\n"
             "  build-words   Build or update a level word store from a request YAML\n"
             "  words-verify  Verify integrity of a level word store against sources and ledger\n"
             "  build-pack    Build a module evidence pack from a request YAML\n"
@@ -40,6 +42,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "command",
         choices=[
+            "sense-select",
+            "sense-bind",
             "build-words",
             "build_words",
             "words-verify",
@@ -62,7 +66,11 @@ def main(argv: list[str] | None = None) -> int:
     cmd = args_list[0]
     rest = args_list[1:]
 
-    if cmd in {"build-words", "build_words"}:
+    if cmd == "sense-select":
+        return sense_cli.main(rest)
+    elif cmd == "sense-bind":
+        return sense_cli.main(rest, command="bind")
+    elif cmd in {"build-words", "build_words"}:
         return words.main(rest)
     elif cmd in {"words-verify", "words_verify"}:
         return verify.main(rest)

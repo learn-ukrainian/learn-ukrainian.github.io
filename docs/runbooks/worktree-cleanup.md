@@ -23,6 +23,121 @@ environment residue.
 
 ## Safety contract
 
+Every Git-based worktree removal preserves ignored output at the sole raw
+`git worktree remove` boundary in `scripts/orchestration/worktree_claims.py`,
+using `scripts/fleet/ignored_task_output.py`. The dispatch exit and post-task
+reapers, ACP execution teardown, data-tier cleanup, sibling Git maintenance,
+task-family cleanup, and removal CLI all inherit this guard. The common P0
+reaper calls the same boundary under its own ownership/liveness lock;
+`merge_closeout` and scheduled cleanup invoke that reaper. Preservation runs
+once, after ownership/claim checks and before deletion. A preservation failure
+returns a typed skipped/refusal result and leaves the directory intact.
+`branch_sweep` deletes branch refs only. The separate husk removal accepts
+only unregistered directories with no files or symlinks. The legacy temp leak
+sweep and review temporary-tree cleanup refuse a candidate containing a linked
+worktree's `.git` file or a symlinked `.git` anywhere in its directory tree (or
+an unreadable scan).
+Matching scratch names do not permit removing linked worktrees outside the
+shared guard; ordinary disposable clones with their own `.git` directory
+retain their existing scratch-cleanup behavior.
+
+### Removal path audit (#9645)
+
+| Entry point / primitive | Disposition |
+| --- | --- |
+| `worktree_claims.git_worktree_remove`: raw Git argv | Preserves once before deletion; failures return a refusal. |
+| `delegate._remove_dispatch_worktree`: settle, stale holder and superseded review cleanup | Shared locked remover, then guarded raw Git. |
+| `post_task_reap._remove_acp_runtime_worktree` | Shared locked remover; regular dispatches use the common reaper. |
+| `_acp_execution._remove_runtime_worktree`: context teardown and dead-runtime sweep | Shared locked remover; no-checkout teardown inventories all untracked non-cache files, even without ignore rules. Dead-runtime sweep retains unexpected files. |
+| `data_tier.remove_test_worktree`: stale and final cleanup | Shared locked remover. |
+| `sibling_git.worktree_remove` | Shared locked remover; preservation uses the public control plane. |
+| `task_family.git_safety.remove_unclaimed_worktree`: executor cleanup | Shared locked remover. |
+| `worktree_claims remove`, `wt.sh`, RB2 failed-dispatch cleanup | Guarded CLI, then shared locked remover. |
+| `reap_worktrees._reap_qualified_worktree`; `merge_closeout`; scheduled cleanup | Locked reaper pipeline, then guarded raw Git. |
+| `reap_worktrees._remove_dispatch_husk_locked`: `shutil.rmtree` | Only unregistered, file-free and symlink-free husks; rechecked under the shared lock. |
+| `tmp_leak_sweep._remove_path`: `shutil.rmtree` | Refuses linked worktree markers, including nested checkouts and unreadable scans. |
+| `review.isolation._remove_review_temp_tree`: `shutil.rmtree` | Repairs review permissions without following symlinks, then refuses linked worktree markers, nested checkouts and unreadable scans before deletion. Root symlinks are refused; the orphan sweep reports refusals as errors. Plain temporary trees and disposable clones remain eligible. |
+
+The remaining recursive deletion and `rmdir` hits operate on runtime leases,
+review snapshot/neutral metadata, capture records, generated staging/output,
+owned hook metadata, empty deployed mirror directories, or audit fixtures.
+They are not registered worktree-root removers. In particular,
+`audit/test_handoff_identity.sh` removes a mock rollover directory, and
+`review/snapshot.py` only calls `rmdir` on an empty extracted overlay member.
+
+The guard inventories all Git-ignored regular files, including `.cache/`
+outputs never named in a response. No-checkout runtimes have an empty index and
+no on-disk ignore rules, so the guard inventories all untracked non-cache files.
+All such output is preserved, including files from earlier attempts in a
+reused checkout and files written before the current task started. Start values
+(old, missing, malformed, naive, or future) never affect file selection. There
+is no time cutoff. Baselines label provenance; canonical record binding and
+retention intent guard removal: the record's `worktree_path` (or fallback `cwd`) must
+resolve to the checkout being removed. Hot then archived records are checked
+for that binding; task ids alone never bind records.
+Output retains its relative paths under
+`batch_state/preserved/<task-id>/<attempt-nonce>/`. A manifest binds each copy
+to its resolved worktree and a digest of the file list and bytes. Retries reuse
+an existing copy only after verifying its complete file list and bytes again;
+changed output gets a new attempt directory, keeping earlier copies intact.
+Missing or ambiguous canonical task attribution retains the tree with an Infra
+owner and a concrete next condition. No fallback task identity authorizes
+removal. Empty files are included. Copy verification checks size and SHA-256,
+refuses conflicting evidence, and independently retrieves the complete copy
+before removal.
+
+Known tool directories (`__pycache__`, `.pytest_cache`, `.ruff_cache`,
+`.mypy_cache`, `.pytest_breadcrumbs`, `.astro`,
+`.hypothesis`, `.tox`, `.nox`, `.entire/logs`, and Git metadata) are excluded. `.cache`
+itself is deliberately not a tool-cache exemption. Shared state and verified
+provisioned database links survive outside the worktree and are never copied.
+Task output placed in an excluded cache remains disposable. Real `.venv` and
+`node_modules` directories are never disposable, including below caches; only
+verified provisioned links are disposable. `worktree_artifacts.is_disposable_path`
+is the shared taxonomy for creation, preservation and scheduled reaping.
+
+Automatic preservation is capped at **256 MiB per worktree**, bounding disk
+duplication while accommodating text output and small reports. Above the cap,
+no partial copy is attempted and the worktree is retained for its owner's
+disposition. Inventory, copy, byte-verification, or task-record write failures
+also retain it, as do manifest or canonical task-receipt write failures. Task terminal
+status never changes preservation eligibility. Existing ownership and liveness
+gates still apply before preservation and removal.
+Existing task records and reap/closeout receipts report `preserved_artifacts`
+with `count`, `bytes`, repository-relative `location`, `worktree_sha256`,
+`content_sha256`, `retrieval_proof_sha256`, `reused`, and per-path `path`,
+`size`, `sha256` and `class`. Receipts contain no contents or absolute home
+paths. Each retained receipt includes `owner` and `next_condition`; disposition
+is `retained`, `retrieved`, or `released`.
+
+Creation captures `ignored_output_baseline` in the existing task record while
+`delegate.worktree_lock` remains held through record publication, before worker
+spawn. It binds path/size/digest entries to task ID, run nonce and directory
+identity. Unchanged baseline entries are `pre_existing`; new or modified entries
+are `task_created`. Missing, malformed, reused or identity-mismatched baselines
+are `unknown_baseline`. All three classes are preserved equally: no timestamp
+or baseline excludes output.
+
+Both removal pipelines honor canonical `keep_worktree` even when Git is clean.
+The gate discovers the bound hot/archive task record itself; caller-supplied
+records cannot hide intent. A kept tree may acquire a passing retrieval receipt
+but remains retained. Only an explicit existing-owner release through
+`post_task_reap --release-retention --apply` clears intent. The command uses
+`owner_release_refusal`, requires an existing passing retrieval receipt for the
+same owner/run, rechecks preserved bytes against current output, and records the
+release before removal. Missing proof, changed output, corrupt copies, a reused
+checkout or mismatched owner refuses release. Dry-run never releases intent.
+No new lock or state authority is introduced.
+
+```bash
+.venv/bin/python -m scripts.fleet.post_task_reap --task-id <task-id> --release-retention --apply
+```
+
+Infra owns legacy-tree and disk-use residuals and retention of
+`batch_state/preserved/`. This change adds no automatic deletion policy for
+preserved copies. Off-repository historical recovery remains unknown until the
+open-model-data owner verifies it.
+
 Cleanup is fail-closed. A worktree is preserved when any of these is true:
 
 - its pull request is open (`open_pr`);
@@ -30,7 +145,7 @@ Cleanup is fail-closed. A worktree is preserved when any of these is true:
   is `MERGED` and the origin branch is gone, or it lacks merge proof (`unmerged`);
 - its task is active or non-terminal, a live process has a working directory inside it,
   or an active task lease, rollover lease, write-ownership claim, or reap reservation exists (`active_dispatch`);
-- a non-terminal review task's `review_contract.input_root` overlaps it; dispatch holds the shared removal lock during input preparation until that claim is published, and terminal status releases the claim;
+- a non-terminal review attempt reads from it. The task record claims the deepest registered linked checkout containing each of these inputs, including subdirectories and symlink spellings: its `review_contract.input_root`, and every `review_input_paths` entry, namely the attempt manifest (dispatch resolves its path once at admission, so every later read and the worker use the symlink target, never the supplied spelling) and the worker's own code checkout (it runs from there for the whole attempt). A formal attempt takes no output schema (`--review-attempt` with `--output-schema` is refused). Inputs in the primary checkout, or outside any registered checkout, claim nothing. Before it reserves the attempt id, dispatch refuses a review contract without an `input_root`, and refuses the attempt when the fleet scratch root (`LU_SCRATCH_ROOT`, which holds the worker's runtime tmp lease) lies inside a registered linked checkout (`review_scratch_root_in_worktree`). It holds the shared removal lock of every claimed checkout during input preparation until the task record publishes the claims. Only a terminal task status ends the protection; an owner or settled-claim exemption does not, and a record with an unreadable or malformed claim, or an unavailable worktree registration, refuses removal rather than releasing it;
 - it is the repository's primary checkout (`primary`);
 - it has uncommitted changes or untracked files (`dirty`), which are retained as exceptions and never force-deleted;
 - it is in a detached HEAD or unresolvable state and does not meet the
@@ -209,9 +324,9 @@ disk-limited host. `reap_worktrees` reaps it under `--apply` and `--safe-only`
   and is not an ACP runtime worktree;
 - `git status --porcelain=v1 -z --ignored --untracked-files=all` succeeds and
   every entry is an **ignored** (`!!`) regenerable cache or verified
-  provisioned link. A cache is a path with a
-  `__pycache__/` directory segment, or one under a top-level `.pytest_cache/`,
-  `.ruff_cache/` or `.mypy_cache/`. Any staged, modified, renamed or untracked
+  provisioned link. The public `worktree_artifacts.is_disposable_path` interface
+  owns the cache taxonomy at any depth outside real environments. Any staged,
+  modified, renamed or untracked
   entry preserves the checkout. The only provisioned link paths are
   `data/sources.db`, `data/vesum.db`, `node_modules` and `site/node_modules`;
   each must be a symlink resolving to the same relative path in the primary
@@ -221,8 +336,8 @@ disk-limited host. `reap_worktrees` reaps it under `--apply` and `--safe-only`
   with a `.venv` or `node_modules` segment (even inside a `__pycache__/`) and
   loose `*.pyc` files outside `__pycache__/` preserve it. The allowlists are fixed and never consult
   `.gitignore` or `info/exclude`; a git failure preserves. Documented residual:
-  a hand-made file placed inside an ignored `__pycache__/` or top-level cache
-  directory is treated as disposable;
+  a hand-made file placed inside an ignored known cache directory
+  is treated as disposable;
 - HEAD is an ancestor of `origin/main` or contained in some
   `refs/remotes/origin/*` ref (no age threshold, no task record needed);
 - it is not locked, no live process has its working directory inside it, and
@@ -621,6 +736,56 @@ names by hand after confirming with `lsof`/`fuser` that nothing holds them.
 The managed `task-scratch` namespace, every scratch root (`/var/tmp/lu`, the
 `<tmp>/lu-scratch` fallback, `$LU_RUNTIME_TMP_BASE_ROOT`) and their ancestors are
 excluded from the scan even when a basename matches a pattern.
+
+## Claude session scratch and one-off reporting (#8783)
+
+The scheduled hygiene runner also handles Claude session scratch (#8783) once
+per host run. Its default is report-only; `--apply` enables removal. The sweep
+recognizes UUID session directories immediately under the per-user Claude temp
+root or under a project directory. It never follows directory symlinks, including
+root ancestors, and uses descriptor-relative, symlink-resistant removal. A
+positive live-process match always preserves the session. The sweep reads Claude
+Code's per-process `sessions/<pid>.json` registry under `CLAUDE_CONFIG_DIR`
+(default: the user's Claude config directory). A registry PID with a matching
+kernel start time (`procStart`) protects its `sessionId`, even when process
+enumeration omits it or the executable has another name. PID reuse with a different
+start time does not establish liveness.
+
+Removal requires readable registry evidence whose `pidDomain` matches the
+sweeper's machine identity and PID namespace, plus no unidentified Claude process.
+A missing, empty, malformed or inaccessible registry, a mismatched domain, or a
+Claude executable/first argument, native executable under `claude/versions/`, or
+Node running Claude Code's `claude-code/cli.js` entrypoint without a matching
+registry entry prevents absence proof, including for confirmed v2 thread-handoff
+predecessors. Access denied on unrelated processes and later data argument paths
+containing `claude` do not block absence proof. Unknown entries remain preserved; session age never
+authorizes deletion. Deep-tree recursion errors are reported per entry and do
+not abort the remaining hygiene run. Registry JSON parse failures, including
+excessive nesting, prevent absence proof. Lease JSON parse failures are recorded
+as errors and preserve sessions without a positive live match as `unknown_session`;
+an unreadable lease cannot safely identify which predecessor it affects.
+
+Apply rechecks liveness immediately before removal, but this is not an atomic
+transaction with Claude's session startup. A `claude --resume <id>` starting
+after that recheck can race with removal and lose scratch. Avoid starting or
+resuming sessions during an apply run; use dry-run when that cannot be ensured.
+
+To inspect session scratch independently:
+
+```bash
+.venv/bin/python -m scripts.maintenance.claude_session_scratch
+```
+
+Add `--rollover-root .agent/thread-rollovers/claude` to read confirmed lineage
+records, or `--apply` to remove proven-ended directories. The independent CLI
+prints counts and bytes only. Scheduled private receipts retain per-entry reasons;
+public summaries retain only aggregate counts, bytes and preservation reasons.
+
+The batch-state sweep lists regular files at least 100 MiB outside managed
+`tasks/` state in `one_off_artifacts`, including `manifest_*.json` outputs. Each
+entry has a batch-state-relative path, bytes, age in days and `report_only` action.
+Owners use this list to decide disposition; the one-off report never removes
+these files. Scheduled public summaries expose their count and total bytes.
 
 ## Task-owned scratch for large ad-hoc runs (#8738)
 

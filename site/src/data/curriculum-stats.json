@@ -1,7 +1,4 @@
 {
-  "a1": {
-    "modules": 0
-  },
   "a1-v1": {
     "modules": 55
   },
@@ -15,13 +12,13 @@
     "modules": 93
   },
   "c1": {
-    "modules": 132
+    "modules": 133
   },
   "hist": {
     "modules": 140
   },
   "bio": {
-    "modules": 310
+    "modules": 410
   },
   "lit": {
     "modules": 232
@@ -60,7 +57,10 @@
     "modules": 17
   },
   "folk": {
-    "modules": 42
+    "modules": 40
   },
-  "_total": 1833
+  "a1": {
+    "modules": 0
+  },
+  "_total": 1932
 }

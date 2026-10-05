@@ -24,6 +24,7 @@ if __package__ in (None, ""):
 
 from jsonschema import Draft202012Validator
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import phase3_source_universe as source
 from scripts.projects.open_model_data import verify_phase3_source_universe_freeze as freeze_verifier
 from scripts.projects.open_model_data.paths import ARTIFACT_OPEN_MODEL_DATA_DIR, REGISTRY_OPEN_MODEL_DATA_DIR
@@ -127,7 +128,10 @@ def _read_ledger(path: Path, family_id: str) -> list[dict[str, Any]]:
     _regular_file(path, f"frozen {family_id} ledger")
     rows: list[dict[str, Any]] = []
     try:
-        for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
+        if lines and lines[-1] == "":
+            lines.pop()
+        for line_number, line in enumerate(lines, start=1):
             value = json.loads(line)
             require(isinstance(value, dict), f"invalid frozen ledger row: {family_id}:{line_number}")
             rows.append(value)

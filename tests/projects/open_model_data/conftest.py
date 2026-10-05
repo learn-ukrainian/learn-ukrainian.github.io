@@ -8,6 +8,9 @@ in a non-top-level conftest.
 from __future__ import annotations
 
 from _v4_shared_runtime_fixtures import (
+    _pg_server as _pg_server,
+)
+from _v4_shared_runtime_fixtures import (
     built_wheel as built_wheel,
 )
 from _v4_shared_runtime_fixtures import (

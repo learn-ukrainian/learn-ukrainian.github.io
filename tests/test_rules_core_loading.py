@@ -35,6 +35,8 @@ from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 from tests.rules_core_view import absent_checkout, checkout_view
 from tests.test_launcher_contract import REPO, hermes_stub_env
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 REAL_CORE_DIR = REPO / rules_core.RULES_DIR_REL
 FIXTURE_CORE_DIR = REPO / "tests" / "fixtures" / "rules_core"
 CORE_DIR = (
@@ -277,7 +279,6 @@ LAUNCHER_ROWS = (
     ("codex-claude-code", "start-codex.sh", ("--harness", "claude-code"), None, "--append-system-prompt", "core"),
     ("codex-hermes", "start-codex.sh", ("--harness", "hermes"), "hermes", "--query", "core"),
     ("gemini-agy-interactive", "start-gemini.sh", (), None, "-i", "core"),
-    ("gemini-agy-driver", "start-gemini-driver.sh", ("--epic", "infra"), None, "-i", "core"),
     ("cursor-driver", "start-cursor-driver.sh", ("--epic", "infra"), None, "positional", "core"),
     ("grok-interactive", "start-grok.sh", (), None, "--rules", "core"),
     ("grok-driver", "start-grok-driver.sh", ("--epic", "infra"), None, "--rules", "core"),
@@ -361,12 +362,14 @@ def test_launcher_seat_env_makes_an_interactive_seat_content(tmp_path: Path, cor
     _assert_core(_carrier(argv, "--append-system-prompt"), "content", "claude-interactive-content-env")
 
 
-def test_driver_binding_follows_the_core_in_initial_prompt_harnesses(tmp_path: Path, core_root: Path) -> None:
-    _, argv = _launch(core_root, "start-gemini-driver.sh", ("--epic", "infra"), tmp_path, None)
-    seed = _carrier(argv, "-i")
-    assert seed.startswith(
-        rules_core.core_block("core") + "\n\nLoad agents_extensions/shared/skills/drive-epic/SKILL.md"
+def test_gemini_driver_is_refused_before_core_or_provider_loading(tmp_path: Path, core_root: Path) -> None:
+    result, argv = _launch(
+        core_root, "start-gemini-driver.sh", ("--epic", "infra"), tmp_path, None, expect_launch=False
     )
+    assert result.returncode == 4
+    assert "AGY/Gemini is not a planning, design or driver seat" in result.stderr
+    assert result.stdout == ""
+    assert argv == []
 
 
 def test_agy_forwarded_prompt_is_prefixed_not_duplicated(tmp_path: Path, core_root: Path) -> None:

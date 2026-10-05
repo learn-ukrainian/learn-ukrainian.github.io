@@ -107,7 +107,7 @@ def test_committed_history_list_names_tracked_test_files() -> None:
         assert (_REPO_ROOT / name).is_file(), name
 
 
-def test_durations_sum_testcase_time_per_file(tmp_path: Path) -> None:
+def test_durations_sum_testcase_time_per_file(tmp_path: Path, capsys) -> None:
     junit = tmp_path / "junit.xml"
     junit.write_text(
         """<testsuites><testsuite>
@@ -119,6 +119,8 @@ def test_durations_sum_testcase_time_per_file(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     assert junit_file_seconds([junit]) == {"tests/audit/test_x.py": 3.5, "tests/test_y.py": 0.25}
+    assert split_main(["durations", str(junit)]) == 0
+    assert json.loads(capsys.readouterr().out) == {"tests/audit/test_x.py": 3.5, "tests/test_y.py": 0.25}
 
 
 def test_committed_durations_are_seconds_per_test_file() -> None:
@@ -816,7 +818,7 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
 
 def test_pytest_is_skipped_only_on_a_recorded_reuse() -> None:
     jobs = _jobs_of_ci()
-    assert jobs["pytest"]["needs"] == ["reuse"]
+    assert jobs["pytest"]["needs"] == ["reuse", "freeze-durations"]
     assert jobs["pytest"]["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
     assert jobs["reuse"]["if"] == "github.event_name == 'merge_group'"
     assert jobs["reuse"]["permissions"] == {"contents": "read", "actions": "read", "pull-requests": "read"}
@@ -851,7 +853,18 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
 
 def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> None:
     text = _CI.read_text(encoding="utf-8")
-    assert "continue-on-error" not in text
+    optional = [
+        (job_id, step)
+        for job_id, job in _jobs_of_ci().items()
+        for step in job.get("steps", [])
+        if "continue-on-error" in step
+    ]
+    assert len(optional) == 1
+    job_id, telemetry = optional[0]
+    assert job_id == "pytest" and telemetry["continue-on-error"] is True
+    assert telemetry["uses"].startswith("actions/download-artifact@")
+    assert telemetry["with"]["name"] == "pytest-duration-snapshot"
+    assert all("continue-on-error" not in job for job in _jobs_of_ci().values())
     for job_id, job in _jobs_of_ci().items():
         for step in job.get("steps", []):
             uses = step.get("uses")

@@ -28,6 +28,7 @@ if __package__ in (None, ""):
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_near_duplicate as near
 from scripts.projects.open_model_data import phase3_source_universe as freeze_mod
@@ -269,10 +270,10 @@ def _load_freeze_ua_gec_units(source_universe: Path) -> list[dict[str, Any]]:
         snapshot = artifact_set("open_model_evidence_indexes", repo=ROOT)
         member = "projects/open_model_data/evidence/source_universe_v1/ua_gec.units.jsonl"
         require(member in snapshot.artifacts, f"missing frozen ua_gec units: {path}; hydrate P3 artifacts")
-        lines = snapshot.artifacts[member].decode("utf-8").splitlines()
+        lines = split_jsonl_lines(snapshot.artifacts[member].decode("utf-8"))
     else:
         require(path.is_file(), f"missing frozen ua_gec units: {path}")
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
     units: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
     for ordinal, line in enumerate(lines, start=1):

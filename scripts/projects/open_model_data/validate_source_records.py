@@ -5,12 +5,18 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from collections import Counter
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 
 from jsonschema import Draft202012Validator, FormatChecker
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT_DIR = ROOT / "registry/projects/open_model_data/contracts"
@@ -78,7 +84,7 @@ def load_records(path: Path) -> list[Any]:
     """Load one JSON record, a JSON list, or JSONL deterministically."""
     raw = path.read_text(encoding="utf-8")
     if path.suffix == ".jsonl":
-        return [json.loads(line) for line in raw.splitlines() if line.strip()]
+        return [json.loads(line) for line in split_jsonl_lines(raw) if line.strip()]
     value = json.loads(raw)
     return value if isinstance(value, list) else [value]
 

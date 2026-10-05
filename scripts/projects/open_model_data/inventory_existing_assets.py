@@ -55,6 +55,8 @@ WORD_RE = re.compile(WORD_PATTERN, re.UNICODE)
 
 from learn_ukrainian_v4_runtime.inventory_existing_assets import PRIVATE_TEXTBOOK_SOURCES
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 PRIVATE_RAW_PATHS = {
     "anna-ohoiko-1000-words-2nd-ed": "private_curriculum/ohoiko/1000-words-2nd-ed.jsonl",
     "anna-ohoiko-500-verbs": "private_curriculum/ohoiko/500-verbs.jsonl",
@@ -128,6 +130,11 @@ ELIGIBILITY_KEYS = (
     "synthetic_research_only",
     "excluded_pending_review",
 )
+
+
+def _read_jsonl_records(path: Path) -> list[dict[str, Any]]:
+    """Load physical JSONL records independently of model/corpus setup."""
+    return [json.loads(line) for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
 
 
 def canonical_json(value: Any) -> str:
@@ -707,6 +714,11 @@ def collect_database_records(
     return records
 
 
+def _jsonl_record_count(text: str) -> int:
+    """Count nonblank physical JSONL records without parsing their payloads."""
+    return sum(1 for line in split_jsonl_lines(text) if line.strip())
+
+
 def collect_repo_records(repo_root: Path) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     curriculum = repo_root / "curriculum/l2-uk-en"
@@ -809,9 +821,7 @@ def collect_repo_records(repo_root: Path) -> list[dict[str, Any]]:
     )
 
     pedagogy_path = repo_root / "data/datasets/hramatka_uk_pedagogy_v1/hramatka_uk_pedagogy_v1.jsonl"
-    pedagogy_rows = [
-        json.loads(line) for line in pedagogy_path.read_text(encoding="utf-8").splitlines() if line.strip()
-    ]
+    pedagogy_rows = _read_jsonl_records(pedagogy_path)
     records.append(
         make_record(
             asset_id="synthetic.hramatka_uk_pedagogy_v1",
@@ -854,12 +864,8 @@ def collect_repo_records(repo_root: Path) -> list[dict[str, Any]]:
     heldout = json.loads(
         (repo_root / "data/projects/ua_eval_harness/heldout_manifest_v1.json").read_text(encoding="utf-8")
     )
-    eval_rows = sum(
-        1
-        for line in (repo_root / "data/projects/ua_eval_harness/evalset_v1.jsonl")
-        .read_text(encoding="utf-8")
-        .splitlines()
-        if line.strip()
+    eval_rows = _jsonl_record_count(
+        (repo_root / "data/projects/ua_eval_harness/evalset_v1.jsonl").read_text(encoding="utf-8")
     )
     records.append(
         make_record(
@@ -1396,7 +1402,7 @@ def aggregate_summary(
 
 def load_fixture_records(path: Path) -> list[dict[str, Any]]:
     if path.suffix == ".jsonl":
-        return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        return _read_jsonl_records(path)
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, list):
         raise ValueError("fixture JSON must contain a list of ledger records")

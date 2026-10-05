@@ -1,0 +1,59 @@
+{
+  "claims": [],
+  "records": [
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "ae7f76faa206fc03cb77cb54796349bc0ef41d05",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 103,
+        "pr": 203
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "ae7f76faa206fc03cb77cb54796349bc0ef41d05",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T11:10:00Z",
+          "end_field": "github.check_run.completedAt",
+          "kind": "check_wall",
+          "stage": "ci_landing",
+          "start": "2026-01-01T11:00:00Z",
+          "start_field": "github.check_run.startedAt"
+        },
+        {
+          "end": "2026-01-01T11:15:00Z",
+          "end_field": "github.check_run.completedAt",
+          "kind": "check_wall",
+          "stage": "ci_landing",
+          "start": "2026-01-01T11:05:00Z",
+          "start_field": "github.check_run.startedAt"
+        },
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-overlap-1"
+    }
+  ],
+  "schema_version": "delivery-baseline-input.v1"
+}

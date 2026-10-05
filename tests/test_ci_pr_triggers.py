@@ -248,7 +248,9 @@ _EVENTS = {
 }
 
 
-def _simulate(github: dict[str, Any], *, reuse: str = "false") -> tuple[dict[str, str], dict[str, str]]:
+def _simulate(
+    github: dict[str, Any], *, reuse: str = "false", failures: set[str] | None = None
+) -> tuple[dict[str, str], dict[str, str]]:
     """Return (job id -> success|skipped, job id -> evaluated check name) for ci.yml.
 
     Follows GitHub's rule: a job whose `if` has no status function carries an
@@ -277,7 +279,7 @@ def _simulate(github: dict[str, Any], *, reuse: str = "false") -> tuple[dict[str
             ran = False
         else:
             ran = True if condition is None else _condition(condition, context)
-        results[job_id] = "success" if ran else "skipped"
+        results[job_id] = ("failure" if failures and job_id in failures else "success") if ran else "skipped"
         names[job_id] = _interpolate(job.get("name", job_id), context)
     return results, names
 
@@ -310,7 +312,7 @@ def test_every_event_runs_every_job(event: str) -> None:
 
 def test_merge_queue_reuse_skips_every_reused_job() -> None:
     results, _ = _simulate(_EVENTS["merge_group"], reuse="true")
-    reused = {"secret-scan", "checks", "frontend", "dependency-audit", "pytest", "pytest-report"}
+    reused = {"secret-scan", "checks", "freeze-durations", "frontend", "dependency-audit", "pytest", "pytest-report"}
     assert {job for job, result in results.items() if result != "success"} == reused
     # The queue commit's message, author and committer are scanned even on reuse.
     assert results["queue-metadata-scan"] == "success"
@@ -366,9 +368,9 @@ def _ci_gate_job() -> dict:
 
 
 def _gate_script() -> str:
-    steps = _ci_gate_job()["steps"]
-    assert len(steps) == 1
-    script = steps[0]["run"]
+    aggregation_steps = [step for step in _ci_gate_job()["steps"] if step.get("name") == "Require every job"]
+    assert len(aggregation_steps) == 1
+    script = aggregation_steps[0]["run"]
     assert isinstance(script, str)
     return script
 
@@ -390,6 +392,7 @@ def test_ci_gate_runs_after_cancel() -> None:
 _GREEN = {
     "SECRET_SCAN": "success",
     "CHECKS": "success",
+    "FREEZE_DURATIONS": "success",
     "FRONTEND": "success",
     "DEPENDENCY_AUDIT": "success",
     "PYTEST": "success",
@@ -427,6 +430,7 @@ def test_gate_passes_a_green_pull_request_run() -> None:
 @pytest.mark.parametrize(
     "overrides",
     [
+        {"FREEZE_DURATIONS": "failure"},
         {"PYTEST": "failure"},
         {"PYTEST": "skipped"},
         {"PYTEST_REPORT": "skipped"},
@@ -456,7 +460,7 @@ _REUSED = {name: "skipped" for name in _GREEN}
 def test_gate_accepts_merge_queue_reuse_with_a_run_id() -> None:
     result = _run_gate("merge_group", REUSE_JOB="success", REUSE="true", REUSED_RUN="123", **_REUSED)
     assert result.returncode == 0, result.stdout
-    for job in ("secret-scan", "checks", "frontend", "dependency-audit", "pytest", "pytest-report"):
+    for job in ("secret-scan", "checks", "freeze-durations", "frontend", "dependency-audit", "pytest", "pytest-report"):
         assert f"{job} reused from run 123" in result.stdout
 
 
@@ -485,3 +489,117 @@ def test_gate_fails_closed_in_the_merge_queue(overrides: dict[str, str]) -> None
 def test_gate_passes_a_full_merge_queue_run() -> None:
     result = _run_gate("merge_group", REUSE_JOB="success", REUSE="false")
     assert result.returncode == 0, result.stdout
+
+
+@pytest.mark.parametrize("failed_job", ["checks", "freeze-durations"])
+def test_pytest_runs_after_lint_or_freeze_failure(failed_job: str) -> None:
+    results, _ = _simulate(_EVENTS["workflow_dispatch"], failures={failed_job})
+    assert results[failed_job] == "failure"
+    assert results["pytest"] == "success"
+
+
+def test_ci_gate_job_timeout_is_five_minutes() -> None:
+    assert _ci_gate_job()["timeout-minutes"] == 5
+
+
+def test_ci_gate_guard_step_order_and_event_conditions() -> None:
+    steps = _ci_gate_job()["steps"]
+    step_names = [step.get("name") for step in steps]
+    assert "Require every job" in step_names
+    assert "Check large files guard" in step_names
+
+    guard_idx = step_names.index("Check large files guard")
+    aggregation_idx = step_names.index("Require every job")
+    assert guard_idx < aggregation_idx
+
+    # All steps preceding the aggregation step must be guarded for pull_request and merge_group only
+    guard_steps = steps[:aggregation_idx]
+    assert len(guard_steps) == 3
+
+    for step in guard_steps:
+        cond = step.get("if")
+        assert cond is not None, f"Step {step.get('name')} missing condition"
+        # Test against all defined events
+        assert _condition(cond, {"github": _EVENTS["opened"]}) is True
+        assert _condition(cond, {"github": _EVENTS["synchronize"]}) is True
+        assert _condition(cond, {"github": _EVENTS["reopened"]}) is True
+        assert _condition(cond, {"github": _EVENTS["merge_group"]}) is True
+        assert _condition(cond, {"github": _EVENTS["schedule"]}) is False
+        assert _condition(cond, {"github": _EVENTS["workflow_dispatch"]}) is False
+
+    # Check checkout step configuration and expression bindings
+    checkout_step = steps[0]
+    assert checkout_step.get("uses", "").startswith("actions/checkout@")
+    assert checkout_step["with"]["fetch-depth"] == 0
+    assert checkout_step["with"]["persist-credentials"] is False
+
+    pr_ctx = {
+        "github": {
+            "event_name": "pull_request",
+            "event": {"pull_request": {"base": {"sha": "pr_base_sha_abc"}}},
+        }
+    }
+    mg_ctx = {
+        "github": {
+            "event_name": "merge_group",
+            "event": {"merge_group": {"head_sha": "mg_head_sha_def", "base_sha": "mg_base_sha_123"}},
+        }
+    }
+
+    # Evaluate checkout ref binding
+    ref_template = checkout_step["with"]["ref"]
+    assert _interpolate(ref_template, pr_ctx) == ""
+    assert _interpolate(ref_template, mg_ctx) == "mg_head_sha_def"
+
+    # Evaluate guard base SHA binding
+    guard_step = steps[2]
+    base_template = guard_step["env"]["BASE_SHA"]
+    assert _interpolate(base_template, pr_ctx) == "pr_base_sha_abc"
+    assert _interpolate(base_template, mg_ctx) == "mg_base_sha_123"
+
+
+def test_ci_gate_guard_step_missing_sha_fails() -> None:
+    steps = _ci_gate_job()["steps"]
+    guard_step = next(s for s in steps if s.get("name") == "Check large files guard")
+    script = guard_step["run"]
+
+    # In PR event with missing BASE_SHA:
+    res_pr = subprocess.run(
+        ["bash", "-e", "-c", script],
+        capture_output=True,
+        text=True,
+        env={**os.environ, "EVENT_NAME": "pull_request", "BASE_SHA": ""},
+        check=False,
+        timeout=30,
+    )
+    assert res_pr.returncode != 0
+    assert "Missing base SHA" in (res_pr.stdout + res_pr.stderr)
+
+    # In merge_group event with missing HEAD_SHA:
+    res_mg = subprocess.run(
+        ["bash", "-e", "-c", script],
+        capture_output=True,
+        text=True,
+        env={
+            **os.environ,
+            "EVENT_NAME": "merge_group",
+            "HEAD_SHA": "",
+            "BASE_SHA": "some_base",
+        },
+        check=False,
+        timeout=30,
+    )
+    assert res_mg.returncode != 0
+    assert "Missing merge_group head_sha" in (res_mg.stdout + res_mg.stderr)
+
+
+def test_ci_gate_guard_steps_lack_continue_on_error() -> None:
+    steps = _ci_gate_job()["steps"]
+    step_names = [step.get("name") for step in steps]
+    aggregation_idx = step_names.index("Require every job")
+    guard_steps = steps[:aggregation_idx]
+    assert len(guard_steps) == 3
+    for step in guard_steps:
+        assert "continue-on-error" not in step or not step["continue-on-error"], (
+            f"Step {step.get('name')!r} must not have continue-on-error"
+        )

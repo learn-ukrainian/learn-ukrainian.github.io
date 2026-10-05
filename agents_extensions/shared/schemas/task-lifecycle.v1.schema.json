@@ -78,7 +78,7 @@
               "behavior_proof_required"
             ],
             "properties": {
-              "id": {"type": "string", "pattern": "^[A-Z][A-Z0-9_-]{1,31}$"},
+              "id": {"type": "string", "pattern": "^(?=.{2,32}$)(?:[A-Z][A-Z0-9_-]{1,31}|AC-[0-9]+[a-zA-Z]+)(?![\\s\\S])"},
               "text": {"type": "string", "minLength": 1, "maxLength": 4000},
               "applicable": {"type": "boolean"},
               "due_state": {
@@ -199,7 +199,7 @@
       ],
       "properties": {
         "id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-        "ac_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9_-]{1,31}$"},
+        "ac_id": {"type": "string", "pattern": "^(?=.{2,32}$)(?:[A-Z][A-Z0-9_-]{1,31}|AC-[0-9]+[a-zA-Z]+)(?![\\s\\S])"},
         "type": {
           "enum": [
             "command",

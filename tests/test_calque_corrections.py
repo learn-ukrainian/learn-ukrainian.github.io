@@ -25,6 +25,7 @@ from scripts.lexicon.calque_corrections import (
     LEXICALISED_SAFE,
     PHRASAL_CALQUES,
     SENSE_RESTRICTED_CALQUES,
+    SOURCE_CHECKED_CHUNKS,
 )
 
 # Forms the swarm proposed but that live verification cleared as authentic
@@ -260,3 +261,55 @@ def test_requested_spot_checks_resolve_with_evidence():
         assert note["evidence"], f"no evidence for {form}"
         assert "search_heritage" in note["heritage_guard"]
         print(f"SPOT_CHECK_{form}:", note)
+
+
+def test_yavlyatysia_cites_the_chunk_that_holds_its_correction():
+    """#9603: Авраменко 9 кл. s0159 holds «являтися переможцем → бути переможцем»; s0162 does not.
+
+    Verified by the driver's source receipt (sources MCP get_chunk_context on
+    both chunks); this pins the repaired locator offline.
+    """
+    evidence = SENSE_RESTRICTED_CALQUES["являтися"]["evidence"]
+    locators = [item.partition(":")[0] for item in evidence]
+    assert "9-klas-ukrajinska-mova-avramenko-2017_s0159" in locators
+    assert "9-klas-ukrajinska-mova-avramenko-2017_s0162" not in locators
+
+
+def test_source_checked_chunks_bind_each_cited_excerpt_to_its_correction():
+    """#9603: each reviewer-checked chunk binds the verbatim excerpt its record cites.
+
+    The excerpts were re-read with sources MCP get_chunk_context and checked as
+    verbatim (``…``-joined) spans of the read-only primary sources.db chunk
+    (receipt: batch_state/reports/atlas-9603-final-review-repair/source-passages.json).
+    The 7-klas litvinova/zabolotnyi 2024 and 9-klas zabolotnyi 2017 books are
+    absent there, so their locators must stay unchecked references.
+    """
+    from scripts.lexicon.heritage_classifier import _curated_calque_map, source_text_digest
+
+    kinds = {"sense": "sense_restricted", "phrase": "phrasal"}
+    for locator, (scope, rejected, endorsed, digest) in SOURCE_CHECKED_CHUNKS.items():
+        row = _curated_calque_map()[rejected]
+        assert row["kind"] == kinds[scope], locator
+        assert {form.partition(" (")[0] for form in endorsed} <= set(row["corrections"]), locator
+        excerpts = [item.partition(":")[2].strip() for item in row["evidence"] if item.partition(":")[0] == locator]
+        assert [source_text_digest(item) for item in excerpts] == [digest], locator
+        # A stated context is the passage's own: «чинний (закон)», «активний (вулкан)».
+        for form in endorsed:
+            base, _, context = form.partition(" (")
+            text = excerpts[0].casefold()
+            assert base in text and context.rstrip(")") in text, (locator, form)
+    assert SOURCE_CHECKED_CHUNKS["7-klas-ukrmova-avramenko-2024_s0106"][2] == ("чинний (закон)", "активний (вулкан)")
+    cited = {
+        item.partition(":")[0]
+        for bucket in (CURATED_CALQUES, PHRASAL_CALQUES, SENSE_RESTRICTED_CALQUES)
+        for row in bucket.values()
+        for item in row.get("evidence", [])
+    }
+    for absent in (
+        "7-klas-ukrmova-litvinova-2024_s0186",
+        "7-klas-ukrmova-zabolotnyi-2024_s0229",
+        "7-klas-ukrmova-zabolotnyi-2024_s0143",
+        "7-klas-ukrmova-zabolotnyi-2024_s0124",
+        "9-klas-ukrmova-zabolotnyi-2017_s0291",
+    ):
+        assert absent in cited and absent not in SOURCE_CHECKED_CHUNKS

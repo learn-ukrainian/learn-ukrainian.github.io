@@ -11,6 +11,8 @@ import sys
 import tomllib
 from pathlib import Path
 
+import pytest
+
 from scripts.agent_runtime import codex_hook_policy
 from scripts.agent_runtime.codex_hook_policy import (
     ENFORCE_VENV_TIMEOUT,
@@ -22,6 +24,8 @@ from scripts.agent_runtime.codex_hook_policy import (
     run_guard,
 )
 from tests.helpers.python import project_python
+
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PRIMARY_ROOT = Path(

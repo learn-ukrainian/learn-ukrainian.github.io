@@ -44,11 +44,17 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 from scripts.storage import paths as storage_paths
 from scripts.storage.artifacts import write_artifact_set
 
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
+
+
+def _read_jsonl_records(path: Path) -> list[dict[str, Any]]:
+    """Load physical JSONL records independently of model/corpus setup."""
+    return [json.loads(line) for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
 
 
 def _primary_repo_root() -> Path | None:
@@ -1096,7 +1102,7 @@ def build_sft_dialect_dataset(
         for shard in sorted(shards_dir.glob("sft_shard_*.jsonl")):
             if replay_count >= replay_quota:
                 break
-            for line in shard.read_text(encoding="utf-8").splitlines():
+            for line in split_jsonl_lines(shard.read_text(encoding="utf-8")):
                 if replay_count >= replay_quota:
                     break
                 if not line.strip():
@@ -1298,7 +1304,7 @@ def verify_modern_literary_regression(
     if not V02_BASELINE_SUITE_PATH.exists():
         return {"available": False, "passed": False, "note": "v0.2 baseline suite missing"}
 
-    lines = [json.loads(l) for l in V02_BASELINE_SUITE_PATH.read_text(encoding="utf-8").splitlines() if l.strip()]
+    lines = _read_jsonl_records(V02_BASELINE_SUITE_PATH)
     total = len(lines)
     if total == 0:
         return {"available": False, "passed": False, "note": "v0.2 baseline suite is empty"}
@@ -1538,15 +1544,13 @@ def main() -> None:
                 replay_shards_dir=args.replay_shards_dir,
             )
 
-        cases = [json.loads(l) for l in eval_path.read_text(encoding="utf-8").splitlines() if l.strip()]
+        cases = _read_jsonl_records(eval_path)
 
         preds = None
         if args.predictions is not None:
             preds = {}
-            for line in args.predictions.read_text(encoding="utf-8").splitlines():
-                if line.strip():
-                    item = json.loads(line)
-                    preds[item["eval_id"]] = item.get("output") or item.get("prediction") or ""
+            for item in _read_jsonl_records(args.predictions):
+                preds[item["eval_id"]] = item.get("output") or item.get("prediction") or ""
             print(f"Loaded {len(preds)} predictions from {args.predictions}.")
         else:
             print("Notice: No model predictions provided via --predictions.")

@@ -5,6 +5,13 @@ spawn. In particular, OAuth stays out of ``InvocationPlan.env_overrides`` so a
 fresh token is exported only to the Claude Code child. ``--bare`` intentionally
 makes this stateless: long calls must be relaunched before the roughly
 15-minute Kimi OAuth access-token lifetime.
+
+No background work (#9690): the route is a headless ``claude -p`` run, so it
+receives the Claude adapter's ``HEADLESS_BACKGROUND_ENV`` and its
+``HEADLESS_BACKGROUND_TOOL_DENIES`` (forwarded as ``--disallowedTools``). In
+Claude Code 2.1.289 ``--bare`` already offers only Bash, Edit and Read, with no
+``run_in_background``; the explicit controls keep the guarantee if that reduced
+tool set changes.
 """
 
 from __future__ import annotations
@@ -25,7 +32,13 @@ from ..kimi_admission import ADMITTED_MODE, OWNED_PATHS_KEY, format_refusal, ref
 from ..result import ParseResult
 from ..trail_isolation import TrailIsolationError, trail_isolation_requested
 from .base import InvocationPlan
-from .claude import ClaudeAdapter, _default_claude_bin, _ensure_supported_claude_cli_version
+from .claude import (
+    HEADLESS_BACKGROUND_ENV,
+    HEADLESS_BACKGROUND_TOOL_DENIES,
+    ClaudeAdapter,
+    _default_claude_bin,
+    _ensure_supported_claude_cli_version,
+)
 
 _HEADLESS_WRAPPER = Path(__file__).resolve().parents[1] / "kimicc_headless.sh"
 # Keys delegate.py may add to any attempt. Agent-specific homes (codex/agy)
@@ -201,8 +214,9 @@ class KimiccHarness:
         effective_effort = effort or ("high" if route["kimicc_alias"] == "k3" else None)
         if effective_effort:
             cmd.extend(["--effort", effective_effort])
+        cmd.extend(["--disallowedTools", ",".join(HEADLESS_BACKGROUND_TOOL_DENIES)])
 
-        env_overrides = {"KIMICC_CLAUDE_BIN": claude_bin}
+        env_overrides = {**HEADLESS_BACKGROUND_ENV, "KIMICC_CLAUDE_BIN": claude_bin}
         if effective_effort:
             # The wrapper derives Claude Code's environment default from this
             # value. Mirror the exact child argv so an explicit override does

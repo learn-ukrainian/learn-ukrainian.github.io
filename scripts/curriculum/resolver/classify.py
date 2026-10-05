@@ -15,6 +15,7 @@ from .inputs import Allowlist, Unit
 from .tokenize import Token, tokenize
 
 GLOSS_ID_RE = re.compile(r"W-[0-9]*[1-9][0-9]*")
+LETTER_MODEL_RE = re.compile(r"(?<!\w)([А-ЯІЇЄҐ])\s*,?\s*([а-яіїєґ])(?!\w)|\[([А-ЯІЇЄҐа-яіїєґ])\]")
 
 
 @dataclass(frozen=True)
@@ -35,6 +36,15 @@ def _gloss_token(unit: Unit, match: re.Match) -> Token:
     return Token(match.group(0), match.start(), "gloss_id", match.group(0), False, (match.group(0),))
 
 
+def _in_letter_model(text: str, token: Token) -> bool:
+    """A source's explicit capital/small pair or bracketed single sound."""
+    return any(
+        match.start() <= token.start and token.end <= match.end()
+        and (match.group(3) is not None or match.group(1).casefold() == match.group(2).casefold())
+        for match in LETTER_MODEL_RE.finditer(text)
+    )
+
+
 def classify_unit(unit: Unit, allowlist: Allowlist) -> list[Classified]:
     if unit.role == "gloss_ref":
         return _gloss_refs(unit, allowlist)
@@ -47,7 +57,9 @@ def classify_unit(unit: Unit, allowlist: Allowlist) -> list[Classified]:
         elif token.kind != "cyrillic":
             message = f"mixed-script or unknown letters in {token.text!r}"
             out.append(Classified(unit, token, codes.SENTENCE_TOKEN, codes.UNCLASSIFIABLE, message))
-        elif unit.role == "phonetics":
+        elif unit.role == "phonetics" or (
+            unit.role == "record_print" and allowlist.letters and _in_letter_model(unit.text, token)
+        ):
             outside = sorted({ch for ch in token.lookup.lower() if ch.isalpha()} - allowlist.letters)
             if outside:
                 out.append(

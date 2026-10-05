@@ -62,6 +62,11 @@ first reviews, C7–C14 from the second, C15–C20 from the third, C21–C28 fro
       same when the step records the teacher modelling that letter (note)
   C28 a word id a step's teach text names outside the lesson's inventory and the prior learner state (failure)
 
+C29 (#9582) checks A1 core/incidental vocabulary against the words-only reference,
+with typed exceptions and class-specific A1 closed-class attestations for inventory-absent words;
+advisory until #9541 PR2 sets A1_REFERENCE_ENFORCEMENT to failure. Membership is spelling-based,
+so unlabelled reference POS never rejects an inventory member.
+
 Check 7 of #9487 is a learner-state fix (scripts/curriculum/learner_state/planned.py). Check 9 of the
 second round is in pack-verify (scripts/curriculum/evidence/sources.py, Standard line numbering).
 
@@ -213,19 +218,22 @@ otherwise at lesson end; options have no recording exemption.
 
 from __future__ import annotations
 
+import hashlib
 import re
 import unicodedata
 from collections import Counter
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from functools import cached_property
+from functools import cached_property, lru_cache
 from itertools import permutations
 from pathlib import Path
+
+import yaml
 
 from scripts.practice.euphony_stem_engine import VOWELS as VOWEL_LETTERS
 
 from ..arc.loader import ArcPosition
-from . import codes, quote_bytes
+from . import a1_reference, codes, config, quote_bytes
 from .cross import LevelPlans
 from .mechanical import Gates, _names_letter, tokens_of
 from .pack import Pack, WordStore
@@ -1983,6 +1991,134 @@ class ReviewGates(Gates):
                         step["id"],
                     )
 
+    # -- C29 (#9582) ---------------------------------------------------------
+
+    def check_a1_reference(self) -> None:
+        """Check only newly introduced core/incidental records, with typed exceptions."""
+        if self.level != "a1" or self.plan.get("level") != "a1":
+            return
+        mode = config.A1_REFERENCE_ENFORCEMENT
+        if mode not in {"advisory", "failure"}:
+            self.fail(codes.A1_REFERENCE_INVALID, "C29: invalid A1_REFERENCE_ENFORCEMENT", None)
+            return
+        try:
+            members, alternatives = a1_reference.reference_spellings(a1_reference.INVENTORY_PATH)
+            closed_class = a1_reference.closed_class_a1(a1_reference.CLOSED_CLASS_PATH)
+            for path in (a1_reference.INVENTORY_PATH, a1_reference.CLOSED_CLASS_PATH, Path(config.__file__)):
+                self.report.inputs[str(path.relative_to(Path(__file__).resolve().parents[3]))] = hashlib.sha256(
+                    path.read_bytes()
+                ).hexdigest()
+        except (OSError, ValueError, yaml.YAMLError) as error:
+            self.fail(codes.A1_REFERENCE_INVALID, f"C29: cannot read reference inventory: {error}", None)
+            return
+        emit = self.note if mode == "advisory" else self.fail
+        lemma_tags = lru_cache(maxsize=None)(a1_reference.lemma_form_tags)
+        for lesson in self.plan["lessons"]:
+            vocabulary = lesson["inventory"]["vocabulary"]
+            activities = {activity["id"]: activity for activity in lesson.get("activities") or []}
+            for item in vocabulary["core"] + vocabulary["incidental"]:
+                record = self.store.records.get(item["evidence"])
+                if record is None:
+                    continue  # the existing unknown-word gate owns this failure
+                if record.form_tags and all("prop" in tags.split(":") for tags in record.form_tags):
+                    continue  # same nonempty, all-forms proper-name flag as pack-verify
+                lemma = a1_reference.normalize(record.lemma)
+                exception = item.get("a1_reference_exception")
+                if lemma in members and exception is None:
+                    continue
+                step_id = next(
+                    (
+                        s["id"]
+                        for s in lesson["steps"]
+                        if record.id in (s.get("introduces") or {}).get("vocabulary", [])
+                    ),
+                    None,
+                )
+                if step_id is None:
+                    # Incidentals need not appear in introduces.vocabulary. Use their
+                    # first explicit step reference, including a bound activity.
+                    step_id = next(
+                        (
+                            step["id"]
+                            for step in lesson["steps"]
+                            if record.id in (step.get("uses") or {}).get("vocabulary", [])
+                            or record.id in _ids(_WORD_ID, step.get("teach") or "")
+                            or any(
+                                record.id in _ids(_WORD_ID, activities[activity_id]["focus"])
+                                or record.id in activities[activity_id].get("targets", [])
+                                for activity_id in step.get("practice") or []
+                                if activity_id in activities
+                            )
+                        ),
+                        None,
+                    )
+                if (
+                    lemma not in members
+                    and exception is None
+                    and a1_reference.eligible_closed_class(
+                        record.lemma,
+                        record.form_tags,
+                        closed_class,
+                    )
+                ):
+                    self.note(
+                        codes.A1_REFERENCE_CLOSED_CLASS_A1,
+                        f"C29: {record.id} {record.lemma}: closed_class_a1 source attestation",
+                        lesson["n"],
+                        step_id,
+                    )
+                    continue
+                reason = "absent from the A1 reference inventory"
+                if exception is not None:
+                    kind = exception["class"]
+                    if kind == "phonetics_term":
+                        if lemma in config.A1_REFERENCE_PHONETICS_TERMS:
+                            continue
+                        reason = "phonetics_term is valid only for the closed phonetics allowlist"
+                    elif kind == "letter_example_no_a1_word":
+                        step_id = exception["step"]
+                        letter = a1_reference.normalize(exception["letter"])
+                        step = next((s for s in lesson["steps"] if s["id"] == step_id), None)
+                        if step is None:
+                            reason = f"exception step {step_id} does not exist in this lesson"
+                        elif letter not in {
+                            a1_reference.normalize(v) for v in (step.get("introduces") or {}).get("letters", [])
+                        }:
+                            reason = f"exception step {step_id} does not introduce letter {letter}"
+                        elif letter not in lemma:
+                            reason = f"lemma does not contain exception letter {letter}"
+                        elif self.taught_before is None:
+                            reason = "exception cannot be verified: taught-letter state is unavailable"
+                        else:
+                            taught = self._taught_at_steps(lesson)[step_id]
+                            available = sorted(w for w in alternatives if letter in w and self._readable(w, taught))
+                            if not available:
+                                continue
+                            reason = f"decodable inventory alternatives for {letter}: {', '.join(available)}"
+                    else:
+                        reason = "unknown reference exception class"
+                elif self.taught_before is None or step_id is None:
+                    reason += "; teaching replacements unavailable: introducing-step letter state is unavailable"
+                else:
+                    taught = self._taught_at_steps(lesson)[step_id]
+                    try:
+                        replacements = a1_reference.teaching_replacement_text(
+                            record.form_tags,
+                            lambda word, taught=taught: self._readable(word, taught),
+                            lemma_tags,
+                            a1_reference.INVENTORY_PATH,
+                        )
+                    except quote_bytes.VesumUnavailable:
+                        reason += "; teaching replacements unavailable: VESUM lookup failed"
+                    else:
+                        reason += f"; teaching replacements: {replacements}"
+                emit(
+                    codes.A1_REFERENCE_WORD_MISSING if exception is None else codes.A1_REFERENCE_EXCEPTION_INVALID,
+                    f"C29: {record.id} {record.lemma}: {reason} (#9582; enforcement={mode})",
+                    lesson["n"],
+                    step_id,
+                )
+
 
 def _focuses(lesson: dict) -> list[str]:
     return [activity["focus"] for activity in lesson.get("activities") or []]
@@ -2063,7 +2199,7 @@ def check_review_gates(
     strict: bool = False,
     vesum_declared_unavailable: bool = False,
 ) -> None:
-    """Run gates C1–C28 on a plan that already passed the schema, with its pack and word store loaded."""
+    """Run gates C1–C29 on a plan that already passed the schema, with its pack and word store loaded."""
     gates = ReviewGates(
         report,
         plan,
@@ -2104,3 +2240,4 @@ def check_review_gates(
     gates.check_comprehension_targets_in_host()
     gates.check_letter_recordings()
     gates.check_teach_words_in_inventory()
+    gates.check_a1_reference()

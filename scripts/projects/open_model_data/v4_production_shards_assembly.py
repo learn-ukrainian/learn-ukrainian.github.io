@@ -32,6 +32,7 @@ if str(REPO_ROOT) not in sys.path:
 import jsonschema
 from jsonschema import Draft202012Validator
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
@@ -169,7 +170,7 @@ def _verified_artifact_bytes(path: Path, group: str, snapshots: dict[str, Artifa
 
 
 def _jsonl_bytes(data: bytes) -> list[dict[str, Any]]:
-    return [json.loads(line) for line in data.decode("utf-8").splitlines() if line.strip()]
+    return [json.loads(line) for line in split_jsonl_lines(data.decode("utf-8")) if line.strip()]
 
 
 def write_jsonl(path: Path, records: Sequence[dict[str, Any]]) -> None:

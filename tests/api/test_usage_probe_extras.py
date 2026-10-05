@@ -253,25 +253,52 @@ def test_reset_inventory_filters_status_and_accepts_no_expiry():
     assert result["available_count"] == 1 and result["expires_at"] == [None]
 
 
+@pytest.mark.parametrize("has_fetch_time,policy_error", [(True, False), (False, False), (True, True)])
 @pytest.mark.parametrize(
     "freshness,expires",
     [("fresh", "2099-01-01T00:00:00Z"), ("fresh", "2000-01-01T00:00:00Z"), ("stale_last_good", "2099-01-01T00:00:00Z")],
 )
-def test_inventory_note_never_changes_reserve_or_admission(freshness, expires):
-    info = {"status": "near_cap", "burn_pct_7d": 95, "freshness": freshness, "remaining_pct": 5, "eligible": False}
+def test_inventory_note_never_changes_reserve_or_admission(
+    freshness, expires, has_fetch_time, policy_error, monkeypatch
+):
+    if policy_error:
+
+        def broken_policy():
+            raise ValueError("unreadable policy")
+
+        monkeypatch.setattr(capacity_pick.credit_lane, "load_policy", broken_policy)
+    info = {
+        "status": "near_cap",
+        "burn_pct_7d": 95,
+        "freshness": freshness,
+        "age_s": 0,
+        "remaining_pct": 5,
+        "eligible": False,
+    }
     reserve = {"remaining_resets": 0, "asserted_at": None}
     budget = {"agents": {"codex": info}, "reset_reserve": reserve}
-    before = capacity_pick.build_lane_rows(budget, reset_reserve=reserve)
+    before = capacity_pick.build_lane_rows(budget, reset_reserve=reserve, now=NOW)
     frozen = copy.deepcopy(reserve)
     info["reset_credits"] = {"available_count": 2, "expires_at": [expires, expires]}
-    after = capacity_pick.build_lane_rows(budget, reset_reserve=reserve)
+    if has_fetch_time:
+        info["reset_credits"]["fetched_at"] = NOW.isoformat()
+    after = capacity_pick.build_lane_rows(budget, reset_reserve=reserve, now=NOW)
     base = next(row for row in before if row["lane"] == "codex")
     row = next(row for row in after if row["lane"] == "codex")
     assert reserve == frozen
-    assert {k: v for k, v in row.items() if k != "notes"} == {k: v for k, v in base.items() if k != "notes"}
+    # Both notes and reset_advice describe inventory; every admission field
+    # must remain identical when only inventory changes.
+    admission_rows = []
+    for entry in (base, row):
+        admission = {k: copy.deepcopy(v) for k, v in entry.items() if k != "notes"}
+        admission["credit"].pop("reset_advice", None)
+        admission_rows.append(admission)
+    assert admission_rows[0] == admission_rows[1]
     assert row["avoid"] is True
     has_note = "free full reset available" in row["notes"]
-    assert has_note is (freshness == "fresh" and expires.startswith("2099"))
+    assert has_note is (freshness == "fresh" and expires.startswith("2099") and has_fetch_time and not policy_error)
+    if policy_error:
+        assert row["credit"]["state"] == "policy_error"
 
 
 def test_recorded_codex_near_cap_reaches_note_without_relaxing(monkeypatch, tmp_path, capsys, payloads):

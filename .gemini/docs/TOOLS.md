@@ -30,7 +30,7 @@ These tools are available via MCP (in my native tool definitions). ALWAYS use th
 | Component | What |
 |-----------|------|
 | **Monitor API** | `http://localhost:8765` — FastAPI server with 30+ endpoints. **Use this first, not grep.** Full docs: `docs/MONITOR-API.md` |
-| **Module dashboard** | `scripts/module_dashboard.py` — aggregated module health (also available via API) |
+| **Track health** | `GET /api/state/track-health/{track}` — aggregated build, audit, and review health |
 | **Audit system** | `scripts/audit_module.py` — deterministic quality gates |
 | **Build pipeline v6** | `scripts/build/v6_build.py` — phases: check → research → skeleton → pre-verify → write → exercises → activities → repair → verify-exercises → annotate → vocab → enrich → verify → review → stress → publish → audit |
 

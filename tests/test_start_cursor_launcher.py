@@ -13,6 +13,8 @@ import yaml
 from scripts.review.model_catalog import load_model_catalog
 from tests.test_launcher_contract import REPO, run_launcher
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 DRIVER = "start-cursor-driver.sh"
 RETIRED_MODEL_IDS = {
     model_id for model_id, entry in load_model_catalog()["models"].items()

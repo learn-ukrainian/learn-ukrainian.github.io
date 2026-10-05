@@ -21,6 +21,7 @@ import subprocess
 import sys
 import tempfile
 import tomllib
+import uuid
 from dataclasses import replace
 from pathlib import Path
 
@@ -43,6 +44,8 @@ from learn_ukrainian_v4_runtime.operation_store import OperationStore
 from learn_ukrainian_v4_runtime.pg_schema import apply_pg_schema
 from packaging.markers import Marker, default_environment
 from packaging.requirements import Requirement
+from psycopg import sql
+from psycopg.conninfo import make_conninfo
 from psycopg.rows import dict_row
 
 from scripts.fleet_comms.request_executor import RequestExecutor
@@ -76,7 +79,8 @@ def role_connection(pg, role):
 
 
 @pytest.fixture(scope="module")
-def pg_cluster(tmp_path_factory):
+def _pg_server(tmp_path_factory):
+    """Keep one server and a closed, schema-applied template per module."""
     root = tmp_path_factory.mktemp("v4-pg")
     data = root / "data"
     sock = Path(tempfile.mkdtemp(prefix="v4pg-", dir="/tmp"))
@@ -118,7 +122,12 @@ def pg_cluster(tmp_path_factory):
     try:
         conn = psycopg.connect(host=str(sock), port=55439, dbname="postgres", autocommit=True, row_factory=dict_row)
         try:
-            assert apply_pg_schema(conn) == 6
+            conn.execute("CREATE DATABASE v4_test_template")
+            with psycopg.connect(
+                make_conninfo(conn.info.dsn, dbname="v4_test_template"), autocommit=True, row_factory=dict_row
+            ) as template:
+                assert apply_pg_schema(template) == 6
+            conn.execute("ALTER DATABASE v4_test_template ALLOW_CONNECTIONS false")
             yield conn
         finally:
             conn.close()
@@ -131,6 +140,32 @@ def pg_cluster(tmp_path_factory):
         )
         shutil.rmtree(sock, ignore_errors=True)
         shutil.rmtree(root, ignore_errors=True)
+
+
+@pytest.fixture
+def pg_cluster(_pg_server):
+    """Give every test its own database, including connections opened via DSN."""
+    database_name = "v4_test_" + uuid.uuid4().hex
+    database = sql.Identifier(database_name)
+    _pg_server.execute(sql.SQL("CREATE DATABASE {} TEMPLATE v4_test_template").format(database))
+    try:
+        with psycopg.connect(
+            make_conninfo(_pg_server.info.dsn, dbname=database_name), autocommit=True, row_factory=dict_row
+        ) as conn:
+            yield conn
+    finally:
+        _pg_server.execute(sql.SQL("DROP DATABASE {} WITH (FORCE)").format(database))
+
+
+def assert_authorized_request(conn, identifier, request_id):
+    """Catch a foreign queue dequeue before the helper can claim or execute it."""
+    assert identifier, f"no authorization for expected request {request_id}"
+    row = conn.execute(
+        "SELECT request_id FROM v4_operation_authorizations WHERE authorization_digest=%s",
+        (digest(identifier.encode()),),
+    ).fetchone()
+    actual = row["request_id"] if row else None
+    assert actual == request_id, f"authorization request mismatch: expected {request_id}, got {actual}"
 
 
 @pytest.fixture
@@ -153,7 +188,7 @@ def prepared(pg_cluster, monkeypatch, tmp_path):
         auth_principal = principal("authorize-" + request.request_id)
         raw = canonical_bytes({"schema": "hramatka-v4-operation-authorize.v1"})
         identifier = store.authorize(principal=auth_principal, raw=raw, policy_digest=policy)
-        assert identifier
+        assert_authorized_request(conn, identifier, request.request_id)
     execution = canonical_bytes({"authorization_id": identifier, "schema": "hramatka-v4-operation-execute.v1"})
     return {
         "request_id": request.request_id,

@@ -154,7 +154,9 @@ def test_resolve_reviewer_persists_resolution_to_state_file(tmp_path):
     state_file = tmp_path / "state.json"
     assert not state_file.exists()
 
-    proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude", real_process=True)
+    proc = _run_cli(
+        state_file, "resolve-reviewer", "--author-model", "claude", "--owned-path", "ordinary.py", real_process=True
+    )
     assert proc.returncode == 0, proc.stderr
 
     assert state_file.exists()
@@ -167,6 +169,34 @@ def test_resolve_reviewer_persists_resolution_to_state_file(tmp_path):
     assert resolution["policy_version"] == "deterministic-formal-routing.v2"
     # On-disk receipt matches the stdout payload exactly.
     assert resolution == json.loads(proc.stdout)
+
+
+def test_code_reviewer_without_target_or_owned_path_refuses_with_typed_reason(tmp_path):
+    state = tmp_path / "state.json"
+    proc = _run_cli(state, "resolve-reviewer", "--author-model", "gpt-6.1-sol", "--risk", "low")
+    assert proc.returncode == 1
+    assert json.loads(proc.stderr)["error"].startswith("review_target_required:")
+    assert not state.exists()
+
+
+@pytest.mark.parametrize("field", ["base_sha", "head_sha"])
+def test_state_file_sha_validation_precedes_git(tmp_path, monkeypatch, field):
+    repo = _init_repo(tmp_path)
+    state = tmp_path / "state.json"
+    assert _run_cli(state, "target", "--mode", "commit", "--commit", "HEAD", "--repo-root", str(repo)).returncode != 0
+    # A commit target needs a parent; use a local target's canonical structure.
+    assert _run_cli(state, "target", "--mode", "local", "--repo-root", str(repo)).returncode == 0
+    record = json.loads(state.read_text())
+    record["target"][field] = "--not-a-sha"
+    state.write_text(json.dumps(record))
+
+    def unexpected(*_args):
+        pytest.fail("invalid state-file SHA must refuse before git")
+
+    monkeypatch.setattr("scripts.review.closeout_cli.git_changed_paths", unexpected)
+    proc = _run_cli(state, "resolve-reviewer", "--author-model", "gpt-6.1-sol")
+    assert proc.returncode == 1
+    assert json.loads(proc.stderr)["error"] == "target_sha_invalid"
 
 
 def test_resolve_reviewer_merges_into_existing_state_file(tmp_path):
@@ -189,7 +219,7 @@ def test_resolve_reviewer_merges_into_existing_state_file(tmp_path):
 
 def test_resolve_reviewer_persists_fail_closed_resolution(tmp_path):
     state_file = tmp_path / "state.json"
-    proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "unknown-seat")
+    proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "unknown-seat", "--owned-path", "ordinary.py")
     assert proc.returncode != 0
 
     state = json.loads(state_file.read_text(encoding="utf-8"))
@@ -215,6 +245,8 @@ def test_resolve_reviewer_cli_rejects_invalid_risk_and_fail_closed_identity(tmp_
         "resolve-reviewer",
         "--author-model",
         "unknown-seat",
+        "--owned-path",
+        "ordinary.py",
     )
     assert unknown_author.returncode != 0
     assert json.loads(unknown_author.stdout)["selected"] is None
@@ -227,6 +259,8 @@ def test_resolve_reviewer_cli_selects_single_reviewer_outside_union_for_cursor_a
         "resolve-reviewer",
         "--author-model",
         "cursor-auto",
+        "--owned-path",
+        "ordinary.py",
     )
     assert proc.returncode == 0, proc.stderr
     payload = json.loads(proc.stdout)
@@ -240,17 +274,17 @@ def test_resolve_reviewer_cli_selects_single_reviewer_outside_union_for_cursor_a
 def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monkeypatch, injected_grok):
     from scripts.review import reviewer_resolver
 
-    # The high ladder holds only Sol and Opus (#9538), so the attested Cursor
-    # Grok seat is traced only at medium; the injected variant still pins high.
+    # The adapter path raises either requested risk to critical, so inject
+    # Grok into the effective ladder that the resolver actually walks.
     risk = "high" if injected_grok else "medium"
     if injected_grok:
         # Subject exclusion must still refuse a caller-supplied Grok ladder;
         # automatic ladders list only the attested Cursor Grok seat (#9488).
         monkeypatch.setitem(
             reviewer_resolver.REVIEW_LADDERS,
-            "high",
+            "critical",
             (
-                *reviewer_resolver.REVIEW_LADDERS["high"],
+                *reviewer_resolver.REVIEW_LADDERS["critical"],
                 (
                     reviewer_resolver.GROK_4_7,
                     reviewer_resolver.GROK_4_7_CURSOR_FALLBACK,
@@ -273,6 +307,7 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
         str(_write_claude_unhealthy_snapshot(tmp_path)),
     )
     payload = json.loads(proc.stdout)
+    assert payload["resolved_risk"] == "critical"
     grok_entries = [entry for entry in payload["trace"] if entry["family"] == "xai"]
     if injected_grok:
         assert {entry["name"] for entry in grok_entries} == {"grok-4.7", "grok-4.7-cursor-fallback"}

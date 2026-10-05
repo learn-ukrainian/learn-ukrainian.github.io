@@ -6,6 +6,8 @@ import { Window, type Document, type Element } from 'happy-dom';
 import Home from '../../src/pages/index.astro';
 import CourseLayout from '../../src/layouts/CourseLayout.astro';
 import { CHROME_STRINGS } from '../../src/lib/i18n/chrome';
+import { readFileSync } from 'node:fs';
+import yaml from 'js-yaml';
 
 const editions = ['/a1/', '/a1-v1/'];
 
@@ -63,6 +65,25 @@ describe('public A1 edition entry points', () => {
     const ladder = home.querySelector('.track-column')!;
     requireBothEditions(ladder);
     expect(ladder.querySelector('a[href="/a1-v1/"]')?.textContent).toContain('55');
+  });
+
+  test('course map shows the manifest-derived module count on every linked track row (from curriculum.yaml)', () => {
+    // The manifest, not the generated JSON, is the oracle: a stale stats file must fail here.
+    const manifest = yaml.load(
+      readFileSync(new URL('../../../curriculum/l2-uk-en/curriculum.yaml', import.meta.url), 'utf8'),
+    ) as { levels: Record<string, { modules?: string[] }> };
+    const rows = [...home.querySelectorAll('.track-inventory-grid a.track-link')];
+    const shown = new Map(rows.map((row) => [
+      row.getAttribute('href')!.replaceAll('/', ''),
+      row.querySelector('.track-meta')!.textContent!.trim(),
+    ]));
+    // #9754: the tracks whose counts were stale must be on the map, with their current counts.
+    for (const id of ['c1', 'bio', 'folk']) {
+      expect(shown.has(id), id).toBe(true);
+    }
+    for (const [id, meta] of shown) {
+      expect(meta, id).toMatch(new RegExp(`^${manifest.levels[id].modules!.length}\\s`));
+    }
   });
 
   test.each(editions)('desktop and mobile header retain both editions on %s', async (currentPath) => {

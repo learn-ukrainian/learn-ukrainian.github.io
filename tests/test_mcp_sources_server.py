@@ -35,6 +35,8 @@ import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime depend
 import requests  # noqa: F401  # Declares the Sources HTTP dependency to the CI fastlane.
 from mcp.types import CallToolRequestParams, TextContent
 
+from scripts.verification.vesum import _resolve_vesum_db_path
+
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 VESUM_FIXTURE_VERSION = "a" * 64
 VESUM_FIXTURE_MATCH = {"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}
@@ -595,6 +597,10 @@ class TestQueryUlifRecordsHandler:
         assert tool.input_schema["required"] == ["word"]
         assert "pos" in tool.input_schema["properties"]
         assert "tags" in tool.input_schema["properties"]
+
+
+# The live-site outage tests run as if no official edition were stored (#9610).
+_PRAVOPYS_NOT_STORED = {"status": "store_unavailable", "reason": "missing_table"}
 
 
 class TestLiveSourceUnavailable:
@@ -1471,7 +1477,7 @@ class TestCheckRussianShadowHandler:
             assert data["matches_russian"] is False
 
 
-_VESUM_DB = Path(__file__).resolve().parents[1] / "data" / "vesum.db"
+_VESUM_DB = _resolve_vesum_db_path()
 
 
 @pytest.mark.skipif(
@@ -2207,7 +2213,10 @@ class TestWikipediaPravopysHeritageOutage:
 
     def test_pravopys_outage_is_unavailable(self, server_module):
         unavailable = {"status": "unavailable", "section": 3, "url": "u", "reason": "HTTP 403"}
-        with patch("rag.source_query.pravopys_section", return_value=unavailable) as fetch:
+        with (
+            patch("rag.source_query.pravopys_offline", return_value=_PRAVOPYS_NOT_STORED),
+            patch("rag.source_query.pravopys_section", return_value=unavailable) as fetch,
+        ):
             result = _run(server_module.handle_query_pravopys({"topic": "3"}))
         content = result[0] if isinstance(result, tuple) else result
         assert fetch.call_args.kwargs.get("report_unavailable") is True
@@ -2245,7 +2254,10 @@ class TestWikipediaPravopysHeritageOutage:
 def test_pravopys_unavailable_envelope_is_an_error_not_empty(server_module):
     """#9005 r4: the structured envelope of an unreachable Правопис is status=error, not the miss status."""
     unavailable = {"status": "unavailable", "section": 3, "url": "u", "reason": "HTTP 403"}
-    with patch("rag.source_query.pravopys_section", return_value=unavailable):
+    with (
+        patch("rag.source_query.pravopys_offline", return_value=_PRAVOPYS_NOT_STORED),
+        patch("rag.source_query.pravopys_section", return_value=unavailable),
+    ):
         result = _run(server_module.handle_query_pravopys({"topic": "3"}))
     assert isinstance(result, tuple)
     _content, envelope = result

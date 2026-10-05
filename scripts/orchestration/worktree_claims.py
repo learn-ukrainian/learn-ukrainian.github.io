@@ -29,9 +29,9 @@ import subprocess
 import sys
 import threading
 import time
-from collections.abc import Callable, Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeGuard
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import main_checkout_root
@@ -268,14 +268,46 @@ def is_superseded_record(state_file: Path) -> bool:
     return _SUPERSEDED_RECORD_RE.search(state_file.name) is not None
 
 
-def review_contract_input_root(contract: dict[str, Any], *, review_access: str = "full") -> str | None:
-    """Validate input claims, allowing rootless isolated non-rendered contracts."""
-    if "input_root" not in contract and review_access == "isolated" and "render_checkout" not in contract:
-        return None
+def required_review_input_root(contract: dict[str, Any]) -> str:
+    """Return the input root a dispatched attempt needs in every access mode (#9597).
+
+    The worker's attempt boundary reads it whether access is full or isolated,
+    so dispatch refuses a contract without one before reserving the attempt id.
+    """
     input_root = contract.get("input_root")
-    if not isinstance(input_root, str) or not input_root.strip() or "\x00" in input_root:
+    if not _valid_review_input_path(input_root):
         raise ValueError("review_input_root_invalid: review contract requires a non-empty input_root")
     return input_root
+
+
+def review_contract_input_root(contract: dict[str, Any], *, review_access: str = "full") -> str | None:
+    """Validate a persisted record's input claim, allowing rootless isolated non-rendered contracts."""
+    if "input_root" not in contract and review_access == "isolated" and "render_checkout" not in contract:
+        return None
+    return required_review_input_root(contract)
+
+
+def _valid_review_input_path(value: object) -> TypeGuard[str]:
+    return isinstance(value, str) and bool(value.strip()) and "\x00" not in value
+
+
+def repository_registration(repo_root: Path) -> tuple[Path, list[Path]]:
+    """Return ``repo_root``'s primary checkout and every worktree registered with it.
+
+    The list is read from the primary checkout's common git dir, never
+    discovered from the path being judged, so a nested repository inside a
+    linked checkout cannot mask the checkout around it (#9597). The removal
+    guard and dispatch's review-input lock and scratch check share this source.
+    Raises :class:`ValueError` when the registration cannot be read.
+    """
+    try:
+        main_root = worktree_containment.resolve_main_root(repo_root)
+    except (OSError, RuntimeError) as exc:
+        raise ValueError(f"worktree registration unavailable ({type(exc).__name__})") from exc
+    registered = worktree_containment.registered_worktrees(main_root)
+    if not registered:
+        raise ValueError("worktree registration unavailable")
+    return main_root, registered
 
 
 def review_input_worktree(input_root: Path, *, main_root: Path, registered: Iterable[Path]) -> Path | None:
@@ -305,8 +337,9 @@ def active_worktree_claim_refusal(
 
     A task record whose status is not in :data:`RELEASED_TASK_STATUSES` and
     whose ``worktree_path`` resolves to the same checkout blocks removal.
-    Its ``review_contract.input_root`` also claims the deepest registered linked
-    checkout containing it, including subdirectories and symlink spellings.
+    Its ``review_contract.input_root`` and each ``review_input_paths`` entry
+    (the attempt's other reads, #9597) also claim the deepest registered linked
+    checkout containing them, including subdirectories and symlink spellings.
     Inputs in the primary checkout claim no removable checkout.
     Review input claims are never exempted as owner or settled claims; only a
     terminal status releases them. ``review_inputs_only`` lets plan-time callers
@@ -384,23 +417,24 @@ def active_worktree_claim_refusal(
                 return refused(state_file, "unreadable")
         else:
             input_root = None
-        if input_root is not None:
+        input_paths = record.get("review_input_paths", [])
+        if not isinstance(input_paths, list) or not all(_valid_review_input_path(path) for path in input_paths):
+            return refused(state_file, "unreadable")
+        claimed_inputs = [("review input root", input_root)] if input_root is not None else []
+        claimed_inputs.extend(("review attempt input", path) for path in input_paths)
+        for label, raw_input in claimed_inputs:
             try:
-                inputs = resolve_claim_path(input_root, repo_root=repo_root)
+                inputs = resolve_claim_path(raw_input, repo_root=repo_root)
             except (OSError, RuntimeError, ValueError):
                 return refused(state_file, "unreadable")
             if review_registration is None:
                 try:
-                    main_root = worktree_containment.resolve_main_root(repo_root)
-                    registered = worktree_containment.registered_worktrees(main_root)
-                    if not registered:
-                        raise ValueError("worktree registration unavailable")
-                    review_registration = (main_root, registered)
-                except (OSError, RuntimeError, ValueError):
+                    review_registration = repository_registration(repo_root)
+                except ValueError:
                     return refused(state_file, "review input worktree registration unavailable")
             main_root, registered = review_registration
             if review_input_worktree(inputs, main_root=main_root, registered=registered) == target:
-                return f"review input root claimed by active task {record.get('task_id') or state_file.stem}"
+                return f"{label} claimed by active task {record.get('task_id') or state_file.stem}"
         if review_inputs_only:
             continue
         if (
@@ -448,10 +482,14 @@ class WorktreeRemoval:
     branch: str | None = None
     dirty: bool | None = None
     error: str | None = None
+    preserved_artifacts: dict[str, Any] | None = None
 
     def as_record(self) -> dict[str, Any]:
         """Return the outcome as a JSON-ready dict."""
-        return dataclasses.asdict(self)
+        record = dataclasses.asdict(self)
+        if self.preserved_artifacts is None:
+            record.pop("preserved_artifacts")
+        return record
 
 
 def _git_probe(args: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str] | None:
@@ -555,6 +593,11 @@ def git_worktree_remove(
     timeout: float | None = None,
     approved_temp_roots: Iterable[Path] = (),
     git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+    control_root: Path | None = None,
+    tasks_dir: Path | None = None,
+    task_id: str | None = None,
+    task_record: Mapping[str, Any] | None = None,
+    preservation_receipt: dict[str, Any] | None = None,
 ) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
@@ -571,6 +614,12 @@ def git_worktree_remove(
     removal, since the killed git may leave a half-deleted checkout behind.
     A caller may supply ``git_runner`` to preserve its fixed executable,
     environment and execution-safe configuration inside this chokepoint.
+    Ignored non-cache output is verified and preserved here for every caller
+    (#9645). Failure returns a refusal without invoking destructive Git.
+    The gate resolves canonical worktree-bound records itself and honors
+    keep_worktree even when callers supply no task record. Baselines label
+    attribution only; missing attribution and failed retrieval retain the tree.
+    ``preservation_receipt`` receives retrieval or retention metadata.
     """
     target = worktree
     if force:
@@ -582,6 +631,26 @@ def git_worktree_remove(
             )
         except ValueError as exc:
             return f"delete guard refused worktree target: {exc}"
+    # Both locked removal pipelines meet here. Preserve exactly once, after
+    # their ownership/claim checks and immediately before destructive Git.
+    from scripts.fleet.ignored_task_output import preserve_worktree_artifacts
+
+    try:
+        primary = control_root if control_root is not None else control_plane_root(repo_root)
+        ok, refusal, metadata = preserve_worktree_artifacts(
+            target,
+            primary=primary,
+            task_id=task_id,
+            tasks_dir=tasks_dir if tasks_dir is not None else primary / "batch_state" / "tasks",
+            task_record=task_record,
+            repo_root=repo_root,
+        )
+    except (ControlPlaneError, OSError, ValueError) as exc:
+        return f"artifact preservation failed: {exc}; refusing worktree removal"
+    if metadata is not None and preservation_receipt is not None:
+        preservation_receipt.update(metadata)
+    if not ok:
+        return refusal
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
     bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
     try:
@@ -628,6 +697,7 @@ def remove_unclaimed_worktree(
     lock_dir: Path | None = None,
     lock_timeout_s: float | None = None,
     git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+    task_record: Mapping[str, Any] | None = None,
 ) -> WorktreeRemoval:
     """Remove ``worktree`` unless a live task claims it. Every remover comes here (#8610).
 
@@ -660,9 +730,18 @@ def remove_unclaimed_worktree(
     """
     branch: str | None = None
     dirty: bool | None = None
+    preservation_receipt: dict[str, Any] = {}
 
     def outcome(action: str, why: str, *, error: str | None = None) -> WorktreeRemoval:
-        return WorktreeRemoval(action=action, path=str(worktree), reason=why, branch=branch, dirty=dirty, error=error)
+        return WorktreeRemoval(
+            action=action,
+            path=str(worktree),
+            reason=why,
+            branch=branch,
+            dirty=dirty,
+            error=error,
+            preserved_artifacts=preservation_receipt or None,
+        )
 
     with contextlib.ExitStack() as locks:
         try:
@@ -704,10 +783,22 @@ def remove_unclaimed_worktree(
                 # which reports git's own error.
                 _git_probe(["worktree", "unlock", str(worktree)], cwd=repo_root)
             runner_options = {} if git_runner is None else {"git_runner": git_runner}
-            error = git_worktree_remove(repo_root, worktree, force=force, **runner_options)
+            error = git_worktree_remove(
+                repo_root,
+                worktree,
+                force=force,
+                control_root=control_root,
+                tasks_dir=tasks_dir,
+                task_id=owner_task_id,
+                task_record=task_record,
+                preservation_receipt=preservation_receipt,
+                **runner_options,
+            )
         except Exception as exc:
             return outcome("error", "worktree removal raised", error=f"{type(exc).__name__}: {exc}")
         if error is not None:
+            if error.startswith("artifact preservation failed:"):
+                return outcome("skipped", error)
             return outcome("error", "worktree removal failed", error=error)
         return outcome("removed", f"{reason} ({detail})" if detail else reason)
 

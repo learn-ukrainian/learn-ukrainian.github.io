@@ -6,6 +6,10 @@ Both interfaces validate the same closed field schemas. PR creation requires
 explicit base and head names so implicit branch names cannot escape scanning. Arbitrary flags,
 endpoints, GraphQL documents and payload passthrough are unavailable.
 
+Destination resolution validates ASCII hostname labels before lowercasing;
+malformed destinations remain `unknown`. Repository-bound operations refuse
+`unknown`; both `GH_HOST` and API hostname flags use the resolved host.
+
 ```sh
 python -m scripts.publish issue-comment --repo unit/public --number 1 --body-file reply.md
 python -m scripts.publish pr-review --repo unit/public --number 1 --verdict approve
@@ -67,8 +71,35 @@ rules or incompatible spans refuse recording without a fallback tokenizer.
 `LU_OPSEC_OVERRIDE=reason` permits a false-positive match only after a durable
 local log write. It cannot bypass missing or incompatible tooling. The log
 contains timestamp, repository identity, rule identifiers and reason, never
-payload text. The child receives no override; a parent-scoped reason can be
-consumed once. Claim-file reclamation remains maintenance work.
+payload text. Transports and internal lookups receive no override; a reason
+can be consumed once per command. A clean, empty or private publish never uses
+up the override: it is claimed and logged only when a scan blocks, so one
+override covers exactly one flagged publish. Claim-file reclamation remains
+maintenance work.
+
+The claim belongs to the command, not to the process that publishes (#9681).
+The command is the nearest process, from the claiming one upwards, that was not
+started with the override (`/proc/<pid>/environ`, fixed at exec): the shell
+whose command line set it, or a program that set it in its own environment.
+Every process the command starts inherits the override, so an in-process
+publish, a child push (`dispatch_settle`, delegate auto-finalize), its hooks and
+a recursive submodule push all reach the same process, whichever publishes
+first and whenever the publisher is imported; nothing is minted or carried. A
+shell can run the last program of its command line in place of itself (bash
+does), and that program walks past the shell, so the outermost process that
+inherited the override is claimed too: it holds the shell's pid and start time,
+which its earlier siblings claim as the command. Each claim key is a pid, its
+start time, the boot and the reason, and any key already claimed refuses. When
+a shell runs a one-program command line in place of itself, that command is
+keyed on the shell's parent (the agent harness), so the same reason is then
+single use for that parent's life; use a fresh reason per command. A
+flagged publish is refused when the command cannot be determined: no `/proc`
+(non-Linux hosts), an unreadable process, a parent replaced during the walk (a
+reused pid starts later than its child), or an override inherited up to init or
+the top of a pid namespace. A publisher that outlives its command and is
+adopted by a subreaper walks up to that subreaper instead; the override is a
+cooperative agent's logged false-positive escape, and the threat model excludes
+a malicious local writer.
 
 ## Raw gh reads and private writes
 
@@ -287,8 +318,12 @@ fields are reported as `commit[<id>].mergetag[<n>].tagname` and `.message`. An
 object, including an embedded one, without a blank line after its headers, or
 whose headers open with a continuation line, refuses the push naming only the
 object. Refusals name the rule, class, field and line, never the matched text.
-The single-use, logged `LU_OPSEC_OVERRIDE` applies and is claimed for the
-process that started the push; the caller's own hook does not receive it.
+The single-use, logged `LU_OPSEC_OVERRIDE` applies only to a flagged push and
+is claimed once for the command that set it (see the override above). The
+shim's own Git lookups and the caller's own hooks (pre-push and
+reference-transaction) do not receive it. A clean push neither uses up the
+override nor looks up that command, so a failed lookup refuses only a flagged
+push.
 File contents are not scanned.
 
 **History already on the public default branch.** Nothing the destination

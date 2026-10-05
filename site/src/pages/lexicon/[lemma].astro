@@ -19,6 +19,7 @@ import { buildAtlasStaticPaths } from "../../lib/lexicon/atlas-static-paths";
 import { SqliteAtlasDataSource } from "../../lib/lexicon/sqlite-atlas-data-source";
 import { atlasLinkCatalog } from "../../lib/lexicon/atlas-link-catalog";
 import { buildAtlasLinkResolver } from "../../lib/lexicon/word-atlas-article-model";
+import { displayGloss, resolveHeritageBoxes } from "../../lib/lexicon/heritage-severity";
 import type { EntryRecord } from "../../lib/lexicon/atlas-data-source";
 import type { WordAtlasPageState } from "../../lib/lexicon/word-atlas-page-state";
 
@@ -78,7 +79,7 @@ const frontmatter = {
   title: entry?.lemma ?? "Атлас слів",
   description: entry?.form_of
     ? `${entry.lemma} — форма слова «${entry.form_of.lemma}»`
-    : entry?.gloss ? `${entry.lemma} — ${entry.gloss}` : "Стаття Лексикону",
+    : entry?.gloss ? `${entry.lemma} — ${displayGloss(entry.gloss, resolveHeritageBoxes(entry).usageLabel)?.text}` : "Стаття Лексикону",
 };
 ---
 

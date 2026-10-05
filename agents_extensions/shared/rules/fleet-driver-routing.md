@@ -17,7 +17,7 @@ attach tool-backed breadth evidence on handoff; missing card is a process defect
 only, PATH/tool outage already substituted) is allowed; silent single-seat
 marathons are not.
 
-**Escape:** The operator, or Opus 5.5 and Sol 6.1 jointly (designated approval), may waive breadth for one named
+**Escape:** The operator, or Opus 5.5 and Sol 6.1 agreeing (designated approval; when one authored the proposal, the other's approval completes it; any other author needs both), may waive breadth for one named
 session with a written NOTE on the issue/handoff. Cannot become the default.
 
 **Sunset review:** 2026-09-06 or when breadth report shows median driver
@@ -42,8 +42,8 @@ from ordinary advice; do not spend advisory turns on ordinary implementation or 
 
 **Standing routing preference (#9583, operator decision 2026-10-03):** advice, critique, review and
 design input use Opus 5.5 / Sol 6.1. Designated approval is given by the operator, or by
-`claude-opus-5-5` and `gpt-6.1-sol` both approving, neither being the proposal's author; if they
-disagree, the operator decides. Fable and the former Astra seat are not a last resort for any of these.
+`claude-opus-5-5` and `gpt-6.1-sol` agreeing; when one of them authored the proposal, the other's
+approval completes it; a proposal by any other agent needs both; if they disagree, the operator decides (#9616). Fable and the former Astra seat are not a last resort for any of these.
 
 Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or smoke
 `--limit 5` jobs.
@@ -264,7 +264,7 @@ Trivial one-shot (typo, single-file comment) is exempt if labeled
 | VPS launcher scripts, health probes, rsync gates | practical |
 | Residual lemma EN strategy, morphology policy | **authority brief** → heap fill |
 | Routine formal CF | practical cross-family |
-| Contested CF / architecture / process | Opus 5.5 / Sol 6.1; designated approval needs both (#9583); operator escalation unchanged; formal CF remains independent and task-qualified |
+| Contested CF / architecture / process | Opus 5.5 / Sol 6.1; designated approval needs them to agree, and when one authored the proposal the other's approval completes it, and any other author needs both (#9583, #9616); operator escalation unchanged; formal CF remains independent and task-qualified |
 | UK content authoring | language-lane only (existing model-assignment) |
 
 ---

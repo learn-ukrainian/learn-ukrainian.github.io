@@ -12,9 +12,9 @@ Known behavioral facts (verify against the installed CLI when changing transport
 - ``--input-format stream-json --output-format stream-json`` accepts one
   NDJSON user message on stdin and returns a terminal ``result`` event.
 - Resume/new conversation is ``--conversation=<uuid>``.
-- Write-capable modes use ``--dangerously-skip-permissions``. Read-only
-  hangs on interactive permission prompts; callers must force
-  ``mode="danger"`` for headless dispatch (mirrors the codex protection).
+- Review routes write exact Sources and evidence-reading command grants in
+  their scoped home's ``settings.json``; they never skip permissions.
+  Non-review dispatches retain their existing headless permission mode.
 - Stream-json stdout carries the final answer in ``result.response``. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
   ``--log-file`` path for each invocation: the conversation id that log names
@@ -87,6 +87,7 @@ import json
 import logging
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -98,23 +99,16 @@ from typing import Any, NamedTuple
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
+from scripts.secret_redactor import redact_text
 
-from ..result import ParseResult
+from ..failure_codes import provider_failure_code, provider_stderr_error
+from ..jsonl import jsonl_lines
+from ..result import AgyAttempt, ParseResult
 from ..tool_calls import summarize_tool_output
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
-
-# Defensive defaults borrowed from Gemini CLI. Agy is new enough that these
-# may need adjustment once we see real Antigravity rate-limit errors.
-_RATE_LIMIT_PATTERNS = (
-    r"RESOURCE_EXHAUSTED",
-    r"usage limit reached",
-    r"quota exceeded",
-    r"daily.{0,10}limit.{0,10}exceeded",
-)
-_RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 
 # Background-task handling (#8502/#8503). AGY's ``run_command`` tool caps
 # ``WaitMsBeforeAsync`` at 10000 ms, so any command running longer than ten
@@ -138,8 +132,9 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # (a background command, a timer, a tool step still RUNNING, a subagent) needs
 # its own finish event positioned before the final reply, which must be the
 # last model event (see ``_slice_completion_gap``). A task that ends any other
-# way — canceled, and by the same rule timed out or failed — never finished its
-# command, so the run fails as ``AGY_BACKGROUND_TASK_CANCELED`` (#8502 r10). What the reply SAYS never
+# way — canceled, timed out or failed — never finished its command. Only an
+# invocation-owned model kill of an allowlisted read may be excused (#8771),
+# with its command retained in the result; all other ends still fail. What the reply SAYS never
 # decides the run (#8502 r9): pending-work wording in a structurally complete
 # run is recorded as a warning, not a failure. Ambiguous evidence is unconfirmed
 # (#8502 r7): a slice line that does not parse fails the run, it is never
@@ -158,6 +153,7 @@ AGY_BACKGROUND_TASK_CANCELED = "agy_background_task_canceled"
 AGY_PRINT_TIMEOUT_PARTIAL = "agy_print_timeout_partial"
 AGY_TRANSCRIPT_UNBOUND = "agy_transcript_unbound"
 AGY_TRANSCRIPT_UNREADABLE = "agy_transcript_unreadable"
+AGY_HEADLESS_PERMISSION_DENIED = "agy_headless_permission_denied"
 AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_BACKGROUND_TASK_ABANDONED,
     AGY_BACKGROUND_TASK_UNCONFIRMED,
@@ -165,6 +161,7 @@ AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_PRINT_TIMEOUT_PARTIAL,
     AGY_TRANSCRIPT_UNBOUND,
     AGY_TRANSCRIPT_UNREADABLE,
+    AGY_HEADLESS_PERMISSION_DENIED,
 )
 AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
 _AGY_MIN_BACKGROUND_WAIT_VERSION: tuple[int, int, int] = (1, 2, 9)
@@ -215,6 +212,10 @@ _BACKGROUND_START_HEADER_RE = re.compile(
     r"\ACreated At: [^\n]*\nTool is running as a background task with task id: (?P<id>\S+)"
     r"(?:\nTask Description: (?P<timer>Timer:))?"
 )
+_BACKGROUND_COMMAND_HEADER_RE = re.compile(
+    r"\ACreated At: [^\n]*\nTool is running as a background task with task id: \S+"
+    r"\nTask Description: (?P<command>[\s\S]*?)\nTask logs are available at: [^\n]+"
+)
 _TASK_MESSAGE_HEADER_RE = re.compile(
     r"\A[^\n]*\n\n<SYSTEM_MESSAGE>\n\[Message\] timestamp=\S+ sender=(?P<sender>\S+) priority=\S+ "
     r"content=(?P<first_line>[^\n]*)"
@@ -223,6 +224,401 @@ _TASK_ENDED_RE = re.compile(r'\ATask id "(?P<id>[^"]+)" (?P<outcome>[^\n]*?) wit
 _TASK_FINISHED_OUTCOME = "finished"
 _SUBAGENT_TOOL = "invoke_subagent"
 _MODEL_EVENT_TYPES = frozenset({"PLANNER_RESPONSE", "GENERIC", "MCP_TOOL"})
+
+
+# Only parsed read stages and the approved stderr/failure suffixes are safe.
+# Executable read options and unknown shell syntax fail closed (#8771).
+@dataclasses.dataclass(frozen=True)
+class _ReadOptions:
+    flags: frozenset[str]
+    values: frozenset[str] = frozenset()
+
+
+# Exact option spellings only. Values cannot add options; grouped short flags
+# are checked letter by letter. No pager, preprocessor, output or script flags.
+# Sources: installed tool manuals; git-scm.com/docs/git-{grep,log,show}; rg --help.
+_KILL_READ_OPTIONS: dict[tuple[str, ...], _ReadOptions] = {
+    ("grep",): _ReadOptions(
+        frozenset(
+            [
+                "-n",
+                "-l",
+                "-L",
+                "-i",
+                "-w",
+                "-c",
+                "-E",
+                "-F",
+                "-P",
+                "-h",
+                "-H",
+                "-r",
+                "-R",
+                "-v",
+                "-o",
+                "--count",
+                "--line-number",
+                "--files-with-matches",
+                "--ignore-case",
+                "--",
+            ]
+        ),
+        frozenset(
+            [
+                "-e",
+                "-A",
+                "-B",
+                "-C",
+                "-m",
+                "--regexp",
+                "--after-context",
+                "--before-context",
+                "--context",
+                "--max-count",
+            ]
+        ),
+    ),
+    ("rg",): _ReadOptions(
+        frozenset(
+            [
+                "-n",
+                "-l",
+                "-i",
+                "-w",
+                "-c",
+                "-F",
+                "-P",
+                "-v",
+                "-o",
+                "-u",
+                "--count",
+                "--files",
+                "--hidden",
+                "--no-heading",
+                "--line-number",
+                "--files-with-matches",
+                "--ignore-case",
+                "--",
+            ]
+        ),
+        frozenset(
+            [
+                "-e",
+                "-A",
+                "-B",
+                "-C",
+                "-m",
+                "-g",
+                "-t",
+                "--regexp",
+                "--after-context",
+                "--before-context",
+                "--context",
+                "--max-count",
+                "--glob",
+                "--type",
+            ]
+        ),
+    ),
+    ("git", "grep"): _ReadOptions(
+        frozenset(["-n", "-l", "-L", "-i", "-w", "-c", "-E", "-F", "-P", "-h", "-H", "--count", "--name-only", "--"]),
+        frozenset(["-e", "-A", "-B", "-C"]),
+    ),
+    ("git", "log"): _ReadOptions(
+        frozenset(["-p", "--oneline", "--stat", "--name-only", "--name-status", "--no-patch", "--"]),
+        frozenset(["-S", "-G", "-n", "--max-count", "--since", "--until", "--grep"]),
+    ),
+    ("git", "show"): _ReadOptions(
+        frozenset(["-p", "--oneline", "--stat", "--name-only", "--name-status", "--no-patch", "--"]),
+    ),
+    # find's -- ends startup options, not its expression. It cannot make a
+    # following -exec/-delete into an operand, so it is deliberately absent.
+    ("find",): _ReadOptions(
+        frozenset(["-print", "-print0", "-o"]),
+        frozenset(["-name", "-iname", "-path", "-ipath", "-type", "-maxdepth", "-mindepth"]),
+    ),
+    ("ls",): _ReadOptions(
+        frozenset(
+            [
+                "-l",
+                "-a",
+                "-A",
+                "-h",
+                "-R",
+                "-d",
+                "-1",
+                "--all",
+                "--almost-all",
+                "--human-readable",
+                "--recursive",
+                "--directory",
+                "--",
+            ]
+        )
+    ),
+    ("cat",): _ReadOptions(frozenset(["-n", "-b", "-s", "--number", "--number-nonblank", "--squeeze-blank", "--"])),
+    ("head",): _ReadOptions(
+        frozenset(["-q", "-v", "--quiet", "--verbose", "--"]),
+        frozenset(["-n", "-c", "--lines", "--bytes"]),
+    ),
+    ("tail",): _ReadOptions(
+        frozenset(["-q", "-v", "--quiet", "--verbose", "--"]),
+        frozenset(["-n", "-c", "--lines", "--bytes"]),
+    ),
+    ("sed",): _ReadOptions(frozenset({"-n", "--"})),
+    ("wc",): _ReadOptions(
+        frozenset(["-l", "-w", "-c", "-m", "-L", "--lines", "--words", "--bytes", "--chars", "--max-line-length", "--"])
+    ),
+    ("sort",): _ReadOptions(
+        frozenset(
+            ["-n", "-r", "-u", "-f", "-s", "--numeric-sort", "--reverse", "--unique", "--ignore-case", "--stable", "--"]
+        ),
+        frozenset(["-k", "-t", "--key", "--field-separator"]),
+    ),
+    ("uniq",): _ReadOptions(
+        frozenset(["-c", "-d", "-u", "-i", "--count", "--repeated", "--unique", "--ignore-case", "--"])
+    ),
+}
+_KILLED_COMMAND_LIMIT = 500
+
+
+def _read_only_killed_command(command: str) -> bool:
+    """Parse quote-aware shell operators, then validate every read-only stage."""
+    if not command or re.search(r"[\x00-\x1f\x7f$`()]", command):
+        return False
+    # Retain quoting while locating operators: shlex.split removes the evidence
+    # that distinguishes literal patterns from expansions into live options.
+    operators: list[tuple[int, int, str]] = []
+    quote = ""
+    escaped = False
+    index = 0
+    while index < len(command):
+        char = command[index]
+        if escaped:
+            escaped = False
+        elif char == "\\" and quote != "'":
+            escaped = True
+        elif quote:
+            if char == quote:
+                quote = ""
+        elif char in "\"'":
+            quote = char
+        elif char in "*?[{}":
+            # Filename and brace expansion can add options absent from argv.
+            return False
+        elif char in "|&;<>":
+            end = index + 1
+            while end < len(command) and command[end] in "|&;<>":
+                end += 1
+            operators.append((index, end, command[index:end]))
+            index = end - 1
+        index += 1
+    if quote or escaped:
+        return False
+    try:
+        if operators and operators[-1][2] == "||":
+            start, end, _ = operators.pop()
+            if shlex.split(command[end:]) != ["true"]:
+                return False
+            command = command[:start].rstrip()
+        # The only redirect is an adjacent fd 2 followed by the null device.
+        if operators and operators[-1][2] == ">":
+            start, end, _ = operators.pop()
+            if (
+                start < 2
+                or command[start - 1] != "2"
+                or not command[start - 2].isspace()
+                or shlex.split(command[end:]) != ["/dev/null"]
+            ):
+                return False
+            command = command[: start - 1].rstrip()
+        if any(operator != "|" for _, _, operator in operators):
+            return False
+        starts = [0, *(end for _, end, _ in operators)]
+        ends = [*(start for start, _, _ in operators), len(command)]
+        return all(
+            _read_only_killed_argv(shlex.split(command[start:end])) for start, end in zip(starts, ends, strict=True)
+        )
+    except ValueError:
+        return False
+
+
+def _read_options(
+    argv: list[str], spec: _ReadOptions, *, numeric_count: bool = False
+) -> tuple[set[str], list[str]] | None:
+    """Check exact long options and every member of short-option groups."""
+    seen: set[str] = set()
+    operands: list[str] = []
+    index = 0
+    while index < len(argv):
+        arg = argv[index]
+        index += 1
+        if arg == "--":
+            if arg not in spec.flags:
+                return None
+            seen.add(arg)
+            operands.extend(argv[index:])
+            break
+        if not arg.startswith("-") or arg == "-":
+            operands.append(arg)
+            continue
+        # Preserve the existing head/tail -20 shorthand, digits only. No
+        # historical suffix flags may bypass the table through this spelling.
+        if numeric_count and re.fullmatch(r"-[0-9]+", arg) and "-n" in spec.values:
+            seen.add("-n")
+            continue
+        option, equal, _value = arg.partition("=") if arg.startswith("--") else (arg, "", "")
+        if option in spec.flags:
+            if equal:
+                return None
+            seen.add(option)
+            continue
+        if option in spec.values:
+            seen.add(option)
+            if not equal:
+                if index == len(argv):
+                    return None
+                index += 1
+            continue
+        if arg.startswith("--"):
+            return None
+        # Single-dash long options (find predicates) must match exactly above.
+        # Other words are groups; a value option owns the remainder or next arg.
+        for offset, letter in enumerate(arg[1:], start=1):
+            option = "-" + letter
+            if option in spec.values:
+                seen.add(option)
+                if offset == len(arg) - 1:
+                    if index == len(argv):
+                        return None
+                    index += 1
+                break
+            if option not in spec.flags:
+                return None
+            seen.add(option)
+    return seen, operands
+
+
+def _read_only_killed_argv(argv: list[str]) -> bool:
+    """Validate a read stage with written arguments; never turn stdin into argv."""
+    if not argv:
+        return False
+    key = tuple(argv[:2]) if argv[0] == "git" else (argv[0],)
+    spec = _KILL_READ_OPTIONS.get(key)
+    if spec is None:
+        return False
+    parsed = _read_options(argv[len(key) :], spec, numeric_count=key in {("head",), ("tail",)})
+    if parsed is None:
+        return False
+    seen, operands = parsed
+    if key == ("sed",):
+        # Even sed -n executes its program: only one numeric print range is safe.
+        return "-n" in seen and bool(operands) and re.fullmatch(r"[0-9]+(?:,[0-9]+)?p", operands[0]) is not None
+    if key == ("uniq",):
+        # uniq's second positional operand is an OUTPUT file, even after --.
+        return len(operands) <= 1
+    return True
+
+
+def _pre_model_failure(plan: InvocationPlan | None, stdout: str, bound: _TranscriptSlice | None) -> bool:
+    """Prove this attempt has no prompt/model events; unreadable evidence refuses."""
+    if plan is None or not (log_file := plan.env_overrides.get(_AGY_LOG_ENV)):
+        return False
+    # Only empty output or a lone provider error result can precede a model.
+    if stdout.strip():
+        try:
+            events = [json.loads(line) for line in jsonl_lines(stdout) if line.strip()]
+        except ValueError:
+            return False
+        if len(events) != 1 or not isinstance(events[0], dict) or events[0].get("event") != "result":
+            return False
+        result = events[0].get("result")
+        if (
+            not isinstance(result, dict)
+            or result.get("status") != "ERROR"
+            or result.get("response")
+            or "structured_output" in result
+            or result.get("usage")
+        ):
+            return False
+    if bound is not None:
+        return not bound.unreadable_lines and not any(
+            event.get("type") == "USER_INPUT" or _is_model_event(event) or event.get("source") == "MODEL"
+            for event in bound.events
+        )
+    baseline = plan.metadata.get(_TRANSCRIPT_BASELINE_KEY)
+    if isinstance(baseline, Mapping):
+        # A missing/unreadable resumed slice cannot prove that nothing ran.
+        return False
+    try:
+        log = safe_read_attempt_file(Path(log_file), trusted_root=Path(plan.metadata.get("log_read_root", "/")))
+    except FileNotFoundError:
+        return True  # Fresh attempt failed before creating a conversation log.
+    except (OSError, AttemptReadError):
+        return False
+    # A named conversation with an unavailable slice is unknown, not pre-model.
+    return re.search(r"conversation|sending message", log.decode("utf-8", errors="replace"), re.IGNORECASE) is None
+
+
+def _model_killed_tasks(
+    events: list[dict[str, Any]], *, reply: int | None = None, blocked: list[str] | None = None
+) -> tuple[list[str], set[str]]:
+    """Retain every model kill and identify reads canceled after that kill, before the reply."""
+    commands: dict[str, str] = {}
+    kills: dict[str, int] = {}
+    diagnostics: list[str] = []
+    excused: set[str] = set()
+    for position, event in enumerate(events):
+        content = str(event.get("content") or "")
+        if event.get("status") == "RUNNING" and (start := _BACKGROUND_START_HEADER_RE.match(content)):
+            description = _BACKGROUND_COMMAND_HEADER_RE.match(content)
+            command = description.group("command") if description else "<unknown command>"
+            commands[start.group("id")] = command
+            kills.pop(start.group("id"), None)
+            excused.discard(start.group("id"))
+        if event.get("source") == "MODEL" and event.get("type") == "PLANNER_RESPONSE":
+            for call in event.get("tool_calls") or []:
+                if not isinstance(call, Mapping) or call.get("name") != "manage_task":
+                    continue
+                args = _coerce_args(call.get("args"))
+                if _decode_jsonish(args.get("Action")) != "kill":
+                    continue
+                task = _decode_jsonish(args.get("TaskId"))
+                if not isinstance(task, str):
+                    task = ""
+                command = commands.get(task, "<unknown command>")
+                diagnostics.append((redact_text(command) or "")[:_KILLED_COMMAND_LIMIT])
+                # A finish racing with a kill cannot admit a non-read command.
+                # Judge original invocation-owned bytes, never capped diagnostics.
+                if (
+                    blocked is not None
+                    and (reply is None or position < reply)
+                    and not _read_only_killed_command(command)
+                ):
+                    blocked.append(command)
+                if task in commands and (reply is None or position < reply) and event.get("status") == "DONE":
+                    kills[task] = position
+        if event.get("type") != "SYSTEM_MESSAGE" or not (message := _TASK_MESSAGE_HEADER_RE.match(content)):
+            continue
+        task = message.group("sender")
+        end = _TASK_ENDED_RE.match(message.group("first_line"))
+        # Last event wins; even a progress message removes the exception.
+        excused.discard(task)
+        if (
+            end is not None
+            and end.group("id") == task
+            and end.group("outcome") == "was canceled"
+            and task in kills
+            and kills[task] < position
+            and (reply is None or position < reply)
+            and _read_only_killed_command(commands[task])
+        ):
+            excused.add(task)
+        # A past kill cannot authorize a later external cancellation.
+        kills.pop(task, None)
+    return diagnostics, excused
+
+
 # DIAGNOSTIC ONLY, NEVER A GATE (#8502 r9). Natural language is unbounded, so
 # no vocabulary can prove a run finished or unfinished; the structural check in
 # ``_slice_completion_gap`` is the whole gate. The survey above makes it
@@ -478,11 +874,23 @@ class AgyAdapter:
 
         tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
+        review_route = bool(
+            (mode == "read-only" and tc.get("review_profile") == "ukrainian")
+            or review_isolation
+            or tc.get("review_attempt_boundary")
+            or tc.get("review_access")
+            or tc.get("review_id")
+            or tc.get("attempt_id")
+            or tc.get("reviewer_tools")
+            or (tc.get("strict_mcp_config") and tc.get("agy_home_override"))
+        )
         if review_isolation and not tc.get("review_attempt_boundary"):
             raise ValueError(
                 "agy_isolated_review_unsupported: AGY cannot yet prove native "
                 "project-instruction, MCP, hook, and nested-reviewer suppression"
             )
+        if review_route:
+            _write_review_permissions(tc, mode=mode, session_id=session_id)
 
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
         # Prefer absolute binary for isolation policy / sandbox argv0 rules.
@@ -494,7 +902,7 @@ class AgyAdapter:
             log_dir = Path(str(tc["review_write_root"])) / "tmp"
             log_dir.mkdir(parents=True, exist_ok=True)
             safe_task = "".join(c if c.isalnum() or c in "-_." else "_" for c in (task_id or "review"))[:48]
-            log_path = log_dir / f"agy-runtime-{safe_task}-{os.getpid()}.log"
+            log_path = log_dir / f"agy-runtime-{safe_task}-{os.getpid()}-{uuid.uuid4().hex[:12]}.log"
         else:
             log_path = _build_log_path(task_id)
 
@@ -504,16 +912,7 @@ class AgyAdapter:
 
         # Non-review: `--dangerously-skip-permissions` is unconditional so
         # headless tool use does not hang on interactive prompts.
-        # Review (#5285): never skip permissions; require OS sandbox (runner)
-        # plus AGY `--sandbox` when available. Fail closed if review asks for
-        # skip-permissions explicitly.
-        full_review = tc.get("review_access") == "full"
-        if full_review and mode != "read-only":
-            raise ValueError("full_review_requires_read_only")
-        if (review_isolation or full_review) and tc.get("agy_skip_permissions"):
-            raise ValueError(
-                "AgyAdapter: review_isolation forbids agy_skip_permissions / --dangerously-skip-permissions"
-            )
+        # Review: exact scoped grants plus the OS boundary and AGY --sandbox.
 
         # The prompt must never occupy one argv element: Linux rejects an
         # argument above MAX_ARG_STRLEN before agy can start (#8992).
@@ -524,10 +923,9 @@ class AgyAdapter:
             )
             + "\n"
         )
-        if review_isolation or full_review:
+        if review_route:
             # The OS boundary owns full-review write denial; native sandbox is supplementary.
-            if full_review or tc.get("agy_review_sandbox", True):
-                cmd.append("--sandbox")
+            cmd.append("--sandbox")
         else:
             cmd.append("--dangerously-skip-permissions")
         cmd.extend(
@@ -599,6 +997,7 @@ class AgyAdapter:
                 "agy_app_data_root": str(app_data_root),
                 "attempt_read_root": bool(tc.get("review_write_root")),
                 "log_read_root": str(log_read_root),
+                "agy_permission_profile_id": "ukrainian-review-command-denial-v1" if review_route else None,
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
@@ -633,6 +1032,40 @@ class AgyAdapter:
         plan: InvocationPlan | None = None,
         call_start_time: float | None = None,
     ) -> ParseResult:
+        """Keep killed-command evidence on every outcome, including early refusals."""
+        bound = _invocation_transcript(plan)
+        killed, _excused = _model_killed_tasks(bound.events) if bound is not None else ([], set())
+        result = self._parse_response(
+            stdout=stdout,
+            stderr=stderr,
+            returncode=returncode,
+            output_file=output_file,
+            plan=plan,
+            call_start_time=call_start_time,
+        )
+        if killed and not result.ok:
+            reason, _, detail = (result.stderr_excerpt or "").partition("\n")
+            blocked = [command for command in killed if not _read_only_killed_command(command)]
+            result = dataclasses.replace(
+                result, stderr_excerpt=f"{reason}\nkilled commands: {json.dumps(blocked or killed)}\n{detail}"[:500]
+            )
+        return dataclasses.replace(
+            result,
+            agy_killed_commands=killed,
+            agy_pre_model_failure=_pre_model_failure(plan, stdout, bound),
+            agy_attempt=_attempt_evidence(bound, result, plan),
+        )
+
+    def _parse_response(
+        self,
+        *,
+        stdout: str,
+        stderr: str,
+        returncode: int,
+        output_file: Path | None,
+        plan: InvocationPlan | None = None,
+        call_start_time: float | None = None,
+    ) -> ParseResult:
         """Parse AGY output.
 
         The terminal stream result is the canonical final response. Tool-call telemetry is parsed
@@ -649,7 +1082,31 @@ class AgyAdapter:
             else ("" if stream_mode else (stdout or "").strip())
         )
         stderr_text = (stderr or "").strip()
+        if denial := _headless_permission_denial(stderr_text):
+            # Native headless refusal outranks missing output/transcript proof.
+            # Preserve the runtime's closed classification; put permission
+            # details in the diagnostic, without repeating bypass advice.
+            return ParseResult(
+                ok=False,
+                response="",
+                failure_code="provider_policy_refusal",
+                provider_error_text="",
+                stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED + "\n" + json.dumps(denial._asdict()),
+                agy_attempt=AgyAttempt(completion_reason=AGY_HEADLESS_PERMISSION_DENIED),
+            )
         stream_error = str(stream_result.get("error") or "") if stream_result else ""
+        # Only a failed terminal envelope owns error text. A SUCCESS result
+        # and malformed/duplicate streams cannot supply a provider failure.
+        provider_error = (
+            stream_error
+            if stream_result is not None
+            and stream_result.get("status") == "ERROR"
+            and stream_problem is not None
+            and stream_problem.startswith("agy_stream_result_error")
+            else provider_stderr_error(stderr_text)
+            if returncode != 0 or not stdout_response
+            else ""
+        )
         incomplete_reason = _incomplete_run_reason(stderr_text)
         language_warning: str | None = None
         if incomplete_reason is None and stream_result is not None and stream_problem is None:
@@ -670,9 +1127,12 @@ class AgyAdapter:
                 ok=False,
                 response="",
                 stderr_excerpt=excerpt[:500],
-                rate_limited=bool(_RATE_LIMIT_RE.search(f"{stdout_response}\n{stream_error}\n{stderr_text}")),
+                rate_limited=provider_failure_code(provider_error) == "rate_limited",
+                failure_code=provider_failure_code(provider_error) if provider_error else "provider_stream_incomplete",
+                provider_error_text=provider_error,
                 tool_calls=_parse_transcript_tool_calls(plan)
                 or _parse_stdout_marker_tool_calls(f"{stdout_response}\n{stderr_text}"),
+                agy_attempt=AgyAttempt(completion_reason=incomplete_reason),
             )
         output_schema = plan_output_schema(plan)
         if output_schema is not None:
@@ -695,17 +1155,27 @@ class AgyAdapter:
             )
             if stream_problem is not None:
                 structured = dataclasses.replace(structured, stderr_excerpt=stream_problem)
-            if structured.ok:
-                structured = dataclasses.replace(structured, tokens=_stream_total_tokens(stream_result))
+            if not structured.ok:
+                failure_code = provider_failure_code(provider_error) if provider_error else structured.failure_code
+                structured = dataclasses.replace(
+                    structured,
+                    failure_code=failure_code,
+                    rate_limited=failure_code == "rate_limited",
+                    provider_error_text=provider_error,
+                )
+            else:
+                structured = dataclasses.replace(
+                    structured, tokens=_stream_total_tokens(stream_result), provider_error_text=""
+                )
             if structured.ok and language_warning is not None:
                 structured = dataclasses.replace(
                     structured, stderr_excerpt=_with_language_warning(language_warning, structured.stderr_excerpt)
                 )
             return structured
         combined = f"{stdout_response}\n{stream_error}\n{stderr_text}"
-        hard_limit_hit = bool(_RATE_LIMIT_RE.search(combined))
         call_failed = returncode != 0 or not bool(stdout_response) or stream_problem is not None
-        rate_limited = hard_limit_hit and call_failed
+        failure_code = provider_failure_code(provider_error) if call_failed else None
+        rate_limited = call_failed and failure_code == "rate_limited"
 
         ok = returncode == 0 and bool(stdout_response) and not rate_limited and stream_problem is None
         response = stdout_response if ok else ""
@@ -733,6 +1203,8 @@ class AgyAdapter:
             response=response,
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
+            failure_code=failure_code,
+            provider_error_text=provider_error,
             session_id=stream_result.get("conversation_id") if stream_result else None,
             tokens=_stream_total_tokens(stream_result),
             tool_calls=tool_calls,
@@ -752,6 +1224,207 @@ class AgyAdapter:
             return
         with contextlib.suppress(FileNotFoundError):
             path.unlink()
+
+
+def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan: InvocationPlan | None) -> AgyAttempt:
+    """Count invocation-owned tool evidence before diagnostic truncation.
+
+    A command intent is not execution. Its bound result must show a task
+    start or synchronous completion; missing/error results remain unknown.
+    Deny-rule signals count only in the command's bound result slot, never on
+    model prose, Sources output or an unrelated diagnostic stream.
+    """
+    reason = (
+        result.agy_attempt.completion_reason
+        if result.agy_attempt
+        else ("completed" if result.ok else result.failure_code or "provider_error")
+    )
+    base = AgyAttempt(
+        completion_reason=reason,
+        failure_code=result.failure_code,
+        permission_profile_id=plan.metadata.get("agy_permission_profile_id") if plan else None,
+    )
+    if bound is None or bound.unreadable_lines:
+        return base
+    events = bound.events
+    # The same final-reply boundary used by the completion gate.
+    replies = [i for i, event in enumerate(events) if _is_model_event(event)]
+    reply = replies[-1] if replies else None
+    killed, excused = _model_killed_tasks(events, reply=reply)
+    if reply is None or events[reply].get("status") != "DONE":
+        excused = set()
+    from ..sources_read_only import sources_tool_sets
+
+    known_sources = set().union(*sources_tool_sets())
+    # Current AGY emits planner intents followed by GENERIC result slots in
+    # FIFO order; a planner's step index is not its tool result's step index.
+    pending: list[tuple[str, str]] = []
+    denied_steps: set[int] = set()
+    executed_steps: set[int] = set()
+    background_steps: set[int] = set()
+    background_tasks: set[str] = set()
+    sources: set[str] = set()
+    unknown_execution = False
+    for position, event in enumerate(events):
+        if event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL":
+            sources.update(
+                name
+                for call in _extract_transcript_tool_calls(event)
+                if (name := call["name"].removeprefix("mcp__sources__")) in known_sources
+            )
+            for call in event.get("tool_calls") or []:
+                if not isinstance(call, Mapping):
+                    continue
+                key = json.dumps(call, sort_keys=True, ensure_ascii=False, default=str)
+                if not any(key == waiting_key for waiting_key, _ in pending):
+                    pending.append((key, str(call.get("name") or "")))
+        if event.get("type") not in {"GENERIC", "TOOL_RESPONSE"}:
+            continue
+        step = _event_step_index(event)
+        slot = step if step is not None else position
+        content = str(event.get("content") or "")
+        command_result = bool(pending and pending.pop(0)[1] == "run_command")
+        if event.get("status") == "RUNNING" and (start := _BACKGROUND_START_HEADER_RE.match(content)):
+            if not start.group("timer"):
+                background_tasks.add(start.group("id"))
+                background_steps.add(slot)
+        elif command_result:
+            if (
+                event.get("status") in {"ERROR", "INVALID"} or content.strip() == "Matches user-configured deny rule."
+            ) and ("Matches user-configured deny rule." in content):
+                denied_steps.add(slot)
+            elif event.get("status") == "DONE":
+                executed_steps.add(slot)
+            else:
+                unknown_execution = True
+    unknown_execution |= any(name == "run_command" for _, name in pending)
+    return dataclasses.replace(
+        base,
+        evidence_complete=True,
+        kill_count=len(killed),
+        excused_kill_count=len(excused),
+        unexcused_kill_count=max(0, len(killed) - len(excused)),
+        unknown_command_count=sum(command == "<unknown command>" for command in killed),
+        denied_command_count=len(denied_steps),
+        executed_command_count=None
+        if unknown_execution
+        else len(background_tasks) + len(executed_steps - background_steps),
+        sources_tool_names=tuple(sorted(sources)),
+    )
+
+
+class AgyReviewPermissionError(ValueError):
+    """A body-free, pre-launch review permission refusal."""
+
+    def __init__(self, reason: str) -> None:
+        self.reason = reason
+        super().__init__(reason)
+
+
+class AgyHeadlessPermissionDenial(NamedTuple):
+    """Native auto-denial details, with no inferred target."""
+
+    permission_kind: str
+    permission_target: str | None
+
+
+def _headless_permission_denial(stderr_text: str) -> AgyHeadlessPermissionDenial | None:
+    """Recognize the CLI's notice, not a model reply or generic denial text.
+
+    Recorded notices give only the kind and an ``<target>`` example. Accept a
+    concrete resource if the CLI supplies it, but never promote its placeholder
+    into an observed command or tool name.
+    """
+    notice = re.search(
+        r'^jetski: no output produced — a tool required the "(?P<kind>[a-z][a-z0-9_]*)'
+        r'(?:\((?P<target>[^"\r\n]*)\))?" permission that headless mode cannot prompt for, '
+        r"so it was auto-denied\.(?P<advice>[^\r\n]*)$",
+        stderr_text,
+        re.MULTILINE,
+    )
+    if notice is None:
+        return None
+    kind, target = notice.group("kind", "target")
+    if not target or "<target>" in target:
+        target = None
+    return AgyHeadlessPermissionDenial(kind, target)
+
+
+def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: str | None) -> None:
+    """Write a fresh scoped allow set; refuse requirements or config drift first.
+
+    ``agy_required_permissions`` is a list of exact action(target) resources
+    declared by the caller, never extracted from prompt text. An undeclared
+    model action cannot be predicted by this preflight; it remains subject to
+    native permissions and the OS boundary. Existing settings must match exactly
+    so global presets, ask/deny rules and wildcards cannot silently win.
+    """
+    from ..review_mcp import _open_runtime_dir, _safe_open_below, _strict_json_object, agy_review_settings
+
+    access = tc.get("review_access", "isolated")
+    if access not in {"full", "isolated"}:
+        raise AgyReviewPermissionError("agy_review_permissions_invalid_access")
+    if mode != "read-only":
+        raise AgyReviewPermissionError(
+            "full_review_requires_read_only" if access == "full" else "agy_review_permissions_require_read_only"
+        )
+    if session_id:
+        raise AgyReviewPermissionError("agy_review_permissions_require_fresh_session")
+    permission_only = tc.get("review_profile") == "ukrainian" and not any(
+        tc.get(key)
+        for key in ("review_access", "review_id", "attempt_id", "review_attempt_boundary", "review_isolation")
+    )
+    expected = agy_review_settings(None if permission_only else access)
+    allow = set(expected["permissions"]["allow"])
+    required = tc.get("agy_required_permissions", [])
+    if (
+        not isinstance(required, (list, tuple))
+        or any(not isinstance(rule, str) or rule not in allow for rule in required)
+        or tc.get("agy_skip_permissions")
+        or tc.get("mcp_server_names", ["sources"]) != ["sources"]
+    ):
+        raise AgyReviewPermissionError("agy_review_permission_outside_allow_set: review forbids permission widening")
+    if (tools := tc.get("allowed_tools")) and (
+        not isinstance(tools, str)
+        or any(
+            tool not in {"Read", "Glob", "Grep"} and f"mcp(sources/{tool.removeprefix('mcp__sources__')})" not in allow
+            for tool in tools.split(",")
+        )
+    ):
+        raise AgyReviewPermissionError("agy_review_permission_outside_allow_set")
+    if not tc.get("agy_home_override"):
+        raise AgyReviewPermissionError("agy_review_permissions_require_scoped_home")
+    home = Path(str(tc["agy_home_override"])).absolute()
+    app_data = home / ".gemini" / "antigravity-cli"
+    if app_data.resolve() == _agy_app_data({}).resolve() or home.resolve() == Path.home().resolve():
+        raise AgyReviewPermissionError("agy_review_permissions_require_scoped_home")
+    directory = file_fd = None
+    try:
+        directory = _open_runtime_dir(home.parent, (home.name, ".gemini", "antigravity-cli"), create=False)
+        try:
+            file_fd = _safe_open_below(directory, "settings.json", os.O_RDONLY)
+        except FileNotFoundError:
+            file_fd = _safe_open_below(directory, "settings.json", os.O_WRONLY | os.O_CREAT | os.O_EXCL)
+            os.fchmod(file_fd, 0o600)
+            payload = (json.dumps(expected) + "\n").encode()
+            with os.fdopen(file_fd, "wb") as handle:
+                file_fd = None
+                handle.write(payload)
+        else:
+            with os.fdopen(file_fd, "rb") as handle:
+                file_fd = None
+                raw = handle.read(65537)
+                if len(raw) > 65536 or _strict_json_object(raw.decode()) != expected:
+                    raise AgyReviewPermissionError("agy_review_permissions_config_mismatch")
+    except AgyReviewPermissionError:
+        raise
+    except (OSError, ValueError, RuntimeError):
+        raise AgyReviewPermissionError("agy_review_permissions_unsafe_config") from None
+    finally:
+        if file_fd is not None:
+            os.close(file_fd)
+        if directory is not None:
+            os.close(directory)
 
 
 def _stream_result(stdout: str) -> tuple[dict[str, Any] | None, str | None]:
@@ -837,9 +1510,9 @@ def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str
     the run started before that reply must be closed by its own finish event,
     also positioned before it (``_open_work``); a finish written after the
     reply means the reply was written while the work still ran. A task that
-    ended without finishing (canceled, timed out, failed) never completed its
-    command, whatever the reply says next: ``AGY_BACKGROUND_TASK_CANCELED``
-    (#8502 r10), a reason that never auto-finalizes the run. This is the
+    ended without finishing (canceled, timed out, failed) fails unless it was
+    the model's own kill of an allowlisted read before this final reply
+    (#8771). All kills remain diagnostic evidence. This is the
     whole gate: what the reply says is never consulted (#8502 r9). stderr
     cannot stand in for the transcript: agy's "root agent idle; waiting up to
     … for N background task(s)" line is absent on some paths, so it can only
@@ -857,7 +1530,11 @@ def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str
     if final_reply.get("tool_calls") or not str(final_reply.get("content") or "").strip():
         return AGY_BACKGROUND_TASK_UNCONFIRMED
     started, _finished, unfinished, still_open = _open_work(work, reply=model_events[-1])
-    if unfinished:
+    blocked: list[str] = []
+    _killed, excused = _model_killed_tasks(work, reply=model_events[-1], blocked=blocked)
+    if blocked:
+        return AGY_BACKGROUND_TASK_CANCELED
+    if unfinished - (excused if final_reply.get("status") == "DONE" else set()):
         return AGY_BACKGROUND_TASK_CANCELED
     if still_open:
         return AGY_BACKGROUND_TASK_UNCONFIRMED

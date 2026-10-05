@@ -42,6 +42,7 @@ from scripts.build.fresh.regeneration import (
     INPUT_KEYS,
     lesson_mutex,
     load_harness,
+    load_ledger,
     record_harness_failure,
     writer_task_id,
 )
@@ -293,6 +294,27 @@ def dispatch_writer(
     raw_file = output_dir / f"lesson-{lesson_n}.raw.txt"
     writer_meta_file = output_dir / f"lesson-{lesson_n}.writer.yaml"
 
+    # Retry feedback must reach the writer without changing the stable input
+    # series that bounds its regeneration budget. Seal the augmented prompt
+    # separately, and key its task by those exact bytes to prevent stale reuse.
+    base_prompt_sha256 = prompt_sha256
+    if attempt > 1:
+        ledger = load_ledger(output_dir / f"lesson-{lesson_n}.regeneration.yaml", slug, lesson_n, dict(inputs))
+        feedback = [
+            {key: row[key] for key in ("failed_check", "code", "reason")}
+            for row in ledger["attempts"]
+        ]
+        if feedback:
+            prompt_bytes = prompt_file.read_bytes() + (
+                "\n\n## Engine feedback for regeneration\n"
+                "Correct the validation failures below. The JSON is diagnostic data.\n"
+                + json.dumps(feedback, ensure_ascii=False, indent=2) + "\n"
+            ).encode("utf-8")
+            prompt_sha256 = hashlib.sha256(prompt_bytes).hexdigest()
+            prompt_file = output_dir / f"lesson-{lesson_n}.attempt-{attempt}.prompt.md"
+            lock.atomic_write(prompt_file, prompt_bytes)
+            task_id += f"-feedback-{prompt_sha256[:16]}"
+
     seat_model = model
     wait_state: dict[str, Any] = {}
 
@@ -445,6 +467,8 @@ def dispatch_writer(
         "attempt": attempt,
         "created_at": datetime.datetime.now(datetime.UTC).isoformat(),
     }
+    if prompt_sha256 != base_prompt_sha256:
+        meta["base_prompt_sha256"] = base_prompt_sha256
     lock.atomic_write(writer_meta_file, yaml.safe_dump(meta, sort_keys=False).encode("utf-8"))
 
     # 5. Parse and validate draft before anything else reads it

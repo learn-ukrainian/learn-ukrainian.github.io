@@ -50,6 +50,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 
@@ -876,7 +877,7 @@ def build_sft_dataset(
             for shard in sorted(V02_SFT_SHARDS_DIR.glob("sft_shard_*.jsonl")):
                 if replay_count >= replay_quota:
                     break
-                for line in shard.read_text(encoding="utf-8").splitlines():
+                for line in split_jsonl_lines(shard.read_text(encoding="utf-8")):
                     if replay_count >= replay_quota:
                         break
                     if not line.strip():

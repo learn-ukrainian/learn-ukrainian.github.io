@@ -26,6 +26,7 @@ from bs4 import BeautifulSoup
 from docx import Document
 from lxml import etree
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.curriculum.evidence.publication import load_owned_rights
 from scripts.ingest._section_coverage import LessonSection, ensure_section_schema, link_lesson_sections
 from scripts.storage.topology import is_network_filesystem_path
@@ -45,6 +46,14 @@ SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 
 class IngestError(Exception):
     """A closed diagnostic code, never a library exception message."""
+
+
+def _cached_jsonl_records(text: str) -> list:
+    """Read strict physical JSONL records without requiring the ingestion/audit setup."""
+    lines = split_jsonl_lines(text)
+    if lines[-1] == "":
+        lines.pop()
+    return [json.loads(line) for line in lines]
 
 
 def load_inventory(path: Path) -> list[dict]:
@@ -574,7 +583,7 @@ def process_work(
     if saved is not None and saved.get("input_digest") == digest and not force:
         try:
             content = jsonl.read_text(encoding="utf-8")
-            records = [json.loads(line) for line in content.splitlines()]
+            records = _cached_jsonl_records(content)
             artifact_valid = hashlib.sha256(content.encode()).hexdigest() == saved.get("jsonl_digest")
             existing = conn.execute("SELECT count(*) FROM textbooks WHERE source_file=?", (slug,)).fetchone()[0]
             # Rehearsal JSONL can populate a different database without forcing

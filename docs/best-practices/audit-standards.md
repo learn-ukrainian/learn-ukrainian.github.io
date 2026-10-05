@@ -24,7 +24,7 @@ MDX Gate (deterministic)
 └── 7. MDX generation         — always last, always succeeds if content passes
 ```
 
-**Shippable = all content gates PASS + review ≥ 8/10.** The review gate is enforced by the module dashboard (`scripts/module_dashboard.py`), not by the automated audit.
+**Shippable = all content gates PASS + review ≥ 8/10.** The review gate is not enforced by the automated audit; per-track review state is read from `GET /api/state/track-health/{track}` (`final_review`, `attention`).
 
 ---
 
@@ -34,7 +34,7 @@ MDX Gate (deterministic)
 - **Review findings** → `orchestration/{slug}/review-*.md` (raw outputs, prompts, results)
 - **Friction log** → `orchestration/{slug}/friction.yaml` (curated learnings that survive rebuilds)
 - **Global friction** → `docs/rules/global-friction.yaml` (project-wide linguistic constraints)
-- **Dashboard** → `scripts/module_dashboard.py` (aggregated view of all modules)
+- **Track health** → `GET /api/state/track-health/{track}` (aggregated build, audit, and review view)
 - **LLM-QG evidence-of-record** → `curriculum/l2-uk-en/{level}/{slug}/qg_evidence.json`
   (compact PASS evidence bound to the current module content hash)
 
@@ -56,11 +56,9 @@ Module frictions are specific to one module (e.g., "M02: сір is not a word").
 ### No more GH review tickets
 The pipeline no longer auto-creates GH issues for review passes. Review artifacts live in orchestration folders. GH issues are for work items only.
 
-### Dashboard
+### Track health
 ```bash
-.venv/bin/python scripts/module_dashboard.py a1           # all A1 modules
-.venv/bin/python scripts/module_dashboard.py a1 --first 6  # first 6 only
-.venv/bin/python scripts/module_dashboard.py a1 --failing-only
+curl -s http://localhost:8765/api/state/track-health/a1 | python3 -m json.tool
 ```
 
 ---

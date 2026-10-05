@@ -43,8 +43,8 @@
 | Model | Strengths | Weaknesses | Route / egress notes | Project seat |
 |---|---|---|---|---|
 | **Fable 5.1** | Selectable Claude model | Costly as bulk worker | Anthropic | No advisory, approval or review role (#9583) |
-| **GPT-6.1 Sol** | Accountable driving, coding, adversarial review, and hard OpenAI advisory judgment | Same-family review of OpenAI work is not independent | OpenAI / native Codex | Regular driver, coder, reviewer and advisor @ high; designated approver jointly with Opus 5.5 (#9583) |
-| **Claude Opus 5.5** | Hard Claude-lane coding, deep code review and hard advisory judgment | Costly as bulk worker | Anthropic / native Claude or verified Cursor slug | Hard coding, review and advisor @ high; designated approver jointly with Sol 6.1 (#9583) |
+| **GPT-6.1 Sol** | Accountable driving, coding, adversarial review, and hard OpenAI advisory judgment | Same-family review of OpenAI work is not independent | OpenAI / native Codex | Regular driver, coder, reviewer and advisor @ high; designated approver with Opus 5.5 (#9583, #9616) |
+| **Claude Opus 5.5** | Hard Claude-lane coding, deep code review and hard advisory judgment | Costly as bulk worker | Anthropic / native Claude or verified Cursor slug | Hard coding, review and advisor @ high; designated approver with Sol 6.1 (#9583, #9616) |
 | **GPT-6 Luna** | Fast bounded implementation, recon, and mechanical checks | Never sole architecture/security/language/release authority | OpenAI / native Codex | Bounded worker / recon @ high |
 | **Claude Haiku** | Fast cheap recon/triage on Anthropic lane; good for log/search skim | Never sole architecture/security/language/release authority | Anthropic | Recon (with Luna / 3.5 Flash) |
 | **Sonnet 5.5** | Well-scoped everyday coding and bug fixes; polished English reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, design review of pages/artifacts; faster and uses fewer tokens than Sonnet 5 | Weaker than Opus 5.5 on complex, open-ended work; security-sensitive code authoring (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions) goes to Opus 5.5 or Codex Sol; Ukrainian curriculum content stays with sanctioned language lanes (Opus 5.5 for Claude); escalate hard judgment to Opus 5.5 / Sol 6.1; designated approval remains separate | Anthropic | Provisional practical worker: after 10 recorded Sonnet 5.5 review or implementation outcomes, adopt or demote with evidence (#9111) |
@@ -162,7 +162,7 @@ Orchestrate stream        → GPT-6.1 Sol high | Claude Opus 5.5 high (exactly o
 UI / visual product       → Opus/Sol design → K3 or Sol/Opus/Grok implement web/UI code → Opus/Sol first if systems-hard
 UA language                 → Gemini 3.8 Flash High (AGY) + VESUM/sources (3.1 Pro only on explicit request, operator 2026-09-22)
 Security/bug CF             → author-family-conditional (Grok/GLM/Opus/…)
-Architecture decision       → Opus/Sol advice → designated approval (Opus 5.5 + Sol 6.1, or operator) → orchestrator integrates
+Architecture decision       → Opus/Sol advice → designated approval (operator, or Opus 5.5 + Sol 6.1: the non-author's approval when one authored it, both otherwise) → orchestrator integrates
 Recon                     → GPT-6 Luna high (Sol envelope) | Claude Haiku | Gemini 3.8 Flash (Sol envelope)
 ```
 
@@ -175,5 +175,6 @@ Recon                     → GPT-6 Luna high (Sol envelope) | Claude Haiku | Ge
 | 2026-07-19 | Initial scorecard from operator intent + web research + Sol #3588/#3593 | **drafted / provisional** — not full bakeoff-validated | grok/fleet-doctrine-scorecard |
 | 2026-07-19 | Add Claude Haiku to recon seat (with Luna / Gemini 3.5 Flash) | provisional | grok/fleet-scorecard-haiku-recon |
 | 2026-10-03 | Opus 5.5 and Sol 6.1 replace Fable / Astra as advisors and designated approvers (both approve, neither the author; operator decides on disagreement); Fable holds no advisory, approval or review role (#9583) | operator decision | claude/impl-9583 |
+| 2026-10-03 | Designated approval: Opus 5.5 and Sol 6.1 agreeing; when one of them authored the proposal, the other's approval completes it; any other author needs both; operator decides on disagreement (#9616) | operator decision | claude/impl-9616 |
 
 **Approval authority:** operator for ceiling-seat changes; orchestrator may update provisional notes and evidence ledger.

@@ -26,6 +26,8 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 POLICY = Path(__file__).with_name("blocking.json")
+OVERRIDE = "LU_OPSEC_OVERRIDE"
+PROC = Path("/proc")
 
 
 class PublishBlocked(RuntimeError):
@@ -70,10 +72,81 @@ def publication_cli(*error_types):
     return decorate
 
 
+def internal_environment(source: Mapping[str, str] | None = None) -> dict[str, str]:
+    """A copy for internal lookups and transports, which claim nothing: no override."""
+    return {key: value for key, value in (os.environ if source is None else source).items() if key != OVERRIDE}
+
+
+def _process(pid: int, assignment: bytes) -> tuple[int, int, bool]:
+    """(parent pid, start time, whether the environment pid was started with holds assignment).
+
+    /proc/<pid>/environ is the environment fixed when the process was
+    executed; later changes inside the process do not appear in it. The start
+    time is read on both sides of it, so a pid reused in between is refused.
+    """
+
+    def stat() -> tuple[int, int]:
+        raw = (PROC / str(pid) / "stat").read_bytes()
+        fields = raw[raw.rindex(b")") + 2 :].split()
+        return int(fields[1]), int(fields[19])
+
+    parent, started = stat()
+    carries = assignment in (PROC / str(pid) / "environ").read_bytes().split(b"\0")
+    if stat()[1] != started:
+        raise LookupError
+    return parent, started, carries
+
+
+def command_keys(reason: str) -> list[str]:
+    """The command an override with this reason was set for, as every process of it names it (#9681).
+
+    That command is the nearest process, from this one upwards, that was not
+    started with the override: the shell whose command line set it, or a
+    program that set it in its own environment. Every process it starts
+    inherits the override, so an in-process publish, a child push, its hooks
+    and a recursive submodule push all walk up to the same process, whichever
+    publishes first and whenever the publisher is imported.
+
+    A shell can run the last program of its command line in place of itself
+    (bash does), and that program, which inherited the override, walks past
+    the shell. So the outermost process that inherited the override is a key
+    too, and first: it is that shell's pid and start time, which its earlier
+    siblings hold as their command. Each key is a pid, its start time and the
+    boot, so a reused pid never matches.
+
+    Refused (PublishBlocked) when the command cannot be determined: no /proc
+    (non-Linux), an unreadable process, a parent replaced while walking (a
+    reused pid has a later start time than its child), or an override that
+    reaches init or the top of a pid namespace, which is no command.
+    """
+    try:
+        boot = (PROC / "sys/kernel/random/boot_id").read_text().strip()
+        assignment = os.fsencode(f"{OVERRIDE}={reason}")
+        pid = os.getpid()
+        parent, started, carries = _process(pid, assignment)
+        seen, inheritor = {pid}, None
+        while carries:
+            if parent <= 1 or parent in seen:
+                raise LookupError
+            seen.add(parent)
+            inheritor = (pid, started)
+            grandparent, parent_started, carries = _process(parent, assignment)
+            if parent_started > started:
+                raise LookupError
+            pid, parent, started = parent, grandparent, parent_started
+        if not boot:
+            raise LookupError
+        keys = [*([inheritor] if inheritor else []), (pid, started)]
+    except Exception:
+        raise PublishBlocked("OPSEC: the command that set the override is unidentifiable; write refused.") from None
+    return [f"{boot}:{key_pid}:{key_started}" for key_pid, key_started in keys]
+
+
 def primary_root(cwd: Path = ROOT) -> Path:
     result = subprocess.run(
         ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
         cwd=cwd,
+        env=internal_environment(),
         capture_output=True,
         text=True,
         check=False,
@@ -96,6 +169,15 @@ def catalog() -> dict:
         raise PublishBlocked("OPSEC: repository allowlist unavailable; write refused.") from None
 
 
+def normalize_hostname(value: str) -> str | None:
+    """Return a lowercase ASCII hostname, or None for malformed labels."""
+    # Check ASCII before lowercasing: Unicode look-alikes must not normalize in.
+    label = r"[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+    if value.isascii() and re.fullmatch(rf"{label}(?:\.{label})*", value.lower()):
+        return value.lower()
+    return None
+
+
 def normalize_repository(value: str, host: str = "github.com") -> str:
     """Return a canonical host/owner/name, or unknown (never private by default)."""
     value = value.strip().removesuffix(".git")
@@ -103,9 +185,12 @@ def normalize_repository(value: str, host: str = "github.com") -> str:
     value = re.sub(r"^https?://", "", value)
     parts = value.split("/")
     if len(parts) == 2:
-        parts.insert(0, host.lower())
-    if len(parts) == 3 and all(re.fullmatch(r"[A-Za-z0-9_.-]+", x) for x in parts[:3]):
-        return "/".join(parts[:3]).lower()
+        parts.insert(0, host)
+    if len(parts) != 3:
+        return "unknown"
+    hostname = normalize_hostname(parts[0])
+    if hostname is not None and all(re.fullmatch(r"[A-Za-z0-9_.-]+", part) for part in parts[1:]):
+        return "/".join([hostname, *parts[1:]]).lower()
     return "unknown"
 
 
@@ -286,22 +371,17 @@ def check_texts(
     tooling: Path | None = None,
     log_path: Path | None = None,
     field_names: list[str] | None = None,
-    claimant: int | None = None,
 ) -> None:
     """Scan final fields; an override permits policy hits only after a durable log.
 
-    claimant is the process whose override is claimed once; by default the
-    caller's parent (the shell that set it).
+    The override is dropped from environment on every call but claimed and
+    logged only when a scan blocks, so a clean, empty or private publish
+    leaves it for the one flagged publish it was set for. It is claimed once
+    for the command that set it (command_keys), across all of its processes.
     """
     environment = os.environ if environment is None else environment
-    reason = environment.pop("LU_OPSEC_OVERRIDE", "")
-    if not texts:
-        if reason.strip():
-            _record_override(destination, [], reason, log_path, claimant)
-        return
-    if is_private(destination):
-        if reason.strip():
-            _record_override(destination, [], reason, log_path, claimant)
+    reason = environment.pop(OVERRIDE, "")
+    if not texts or is_private(destination):
         return
     loaded = _load_matcher(tooling or private_tooling())
     blocks = []
@@ -321,10 +401,10 @@ def check_texts(
                 location = f"rule={rule} class={level} field={name} line={line}"
                 if location not in locations:
                     locations.append(location)
-    if reason.strip():
-        _record_override(destination, blocks, reason, log_path, claimant)
-        return
     if not blocks:
+        return
+    if reason.strip():
+        _record_override(destination, blocks, reason, log_path)
         return
     error = PublishBlocked(
         f"OPSEC blocked: {'; '.join(locations)}. Remove the flagged detail; for a false positive, "
@@ -339,36 +419,37 @@ def _record_override(
     blocks: list[tuple[str, int]],
     reason: str,
     log_path: Path | None,
-    claimant: int | None = None,
 ) -> None:
-    """Claim one parent-shell override and durably log it before sending."""
+    """Claim the command's one override and durably log it before sending.
+
+    Every key of the command (command_keys) is claimed in order, and one
+    already claimed refuses; only the outermost inheritor, a process of the
+    same command, can be claimed before such a refusal.
+    """
     record = {
         "timestamp": datetime.now(UTC).isoformat(),
         "destination": destination,
         "rule_ids": sorted({rule for rule, _ in blocks}),
         "reason": reason,
     }
-    claim = None
+    claims: list[str] = []
     try:
         target = log_path or primary_root() / "batch_state/opsec/overrides.jsonl"
         target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        parent = os.getppid() if claimant is None else claimant
-        started = subprocess.run(
-            ["ps", "-o", "lstart=", "-p", str(parent)], capture_output=True, text=True, check=True, timeout=5
-        ).stdout.strip()
-        if not started:
-            raise ValueError
-        key = hashlib.sha256(f"{parent}:{started}:{reason}".encode()).hexdigest()
-        claim = target.parent / ("consumed-" + key)
-        fd = os.open(claim, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
-        os.close(fd)
+        for key in command_keys(reason):
+            digest = hashlib.sha256(f"{key}:{reason}".encode("utf-8", "surrogateescape")).hexdigest()
+            claims.append(str(target.parent / ("consumed-" + digest)))
+        for claim in claims:
+            os.close(os.open(claim, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600))
         fd = os.open(target, os.O_WRONLY | os.O_APPEND | os.O_CREAT | os.O_NOFOLLOW, 0o600)
         with os.fdopen(fd, "a") as stream:
             stream.write(json.dumps(record, ensure_ascii=True) + "\n")
             stream.flush()
             os.fsync(stream.fileno())
+    except PublishBlocked:
+        raise
     except FileExistsError as exc:
-        if claim is not None and exc.filename == str(claim):
+        if exc.filename in claims:
             raise PublishBlocked("OPSEC: override already consumed; use a fresh command-scoped reason.") from None
         raise PublishBlocked("OPSEC: override log unavailable; write refused.") from None
     except Exception:
@@ -404,8 +485,7 @@ def real_gh(environment: Mapping[str, str]) -> str:
 
 def publish_environment(source: Mapping[str, str], *, root: Path = ROOT) -> dict[str, str]:
     """Keep the publishing shim first without propagating command-scoped overrides."""
-    env = dict(source)
-    env.pop("LU_OPSEC_OVERRIDE", None)
+    env = internal_environment(source)
     shim = str(root / "scripts/agent_runtime/shims")
     env["PATH"] = os.pathsep.join([shim, *[p for p in env.get("PATH", "").split(os.pathsep) if p and p != shim]])
     try:
@@ -422,8 +502,7 @@ def checked_run(args, *, runner=None, **kwargs):
         return runner(args, **kwargs)
     from scripts.opsec.gh_snapshot import admit
 
-    environment = dict(kwargs.get("env", os.environ))
+    environment = internal_environment(kwargs.get("env", os.environ))
     frozen = admit(list(args[1:]), cwd=Path(kwargs.get("cwd") or Path.cwd()), environment=environment, reader=runner)
-    environment.pop("LU_OPSEC_OVERRIDE", None)
     kwargs["env"] = environment
     return runner([args[0], *frozen.argv], **kwargs)

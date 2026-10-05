@@ -98,7 +98,10 @@ def resolve(
     sources: Any,
     *,
     report: Callable[[str], None] | None = None,
+    source_quote_units: frozenset[int] = frozenset(),
 ) -> ResolutionStream:
+    # The engine supplies only occurrences verified against the step's evidence,
+    # quote block, provenance and exact pack span. No allowlist record is added.
     inputs = source_inputs(expanded, allowlist, sources)
     index = FormIndex(allowlist)
     mapper = tags.TagMapper(report=report)
@@ -126,7 +129,10 @@ def resolve(
                 item.token, capitalised_record_match=index.capitalised_match(item.token), name_match=name_match
             ):
                 entry["surface"] = codes.PROPER_NOUN
-            if not candidates:
+            if not candidates and item.unit.index in source_quote_units:
+                entry["surface"] = codes.SKIPPED
+                entry["class"] = codes.skipped("source_quote")
+            elif not candidates:
                 entry["class"] = codes.LEMMA_OUTSIDE_STATE
                 marked = index.marked_candidates(item.token)
                 if marked:

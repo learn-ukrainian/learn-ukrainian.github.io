@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.agent_runtime.adapters import claude
+from scripts.agent_runtime.adapters import claude, codex
 from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.agent_runtime.review_mcp import (
     _render_codex_review_config,
@@ -20,6 +20,7 @@ from scripts.agent_runtime.sources_read_only import (
     sources_tool_sets,
 )
 from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS, REVIEW_TOOLS
+from tests.agent_runtime.test_codex_sources_config_layers import layer
 
 SOURCES_READ_ONLY_TOOLS, SOURCES_PERSISTING_TOOLS = sources_tool_sets()
 
@@ -45,10 +46,41 @@ def test_shared_tool_set_equals_wire_annotations():
     assert REVIEW_TOOLS <= FULL_REVIEW_TOOLS <= set(SOURCES_READ_ONLY_TOOLS)
 
 
-def test_claude_tool_sets_equal_shared_tool_sets():
-    """Keep Claude's local declarations aligned until it adopts the shared module."""
-    assert set(claude.SOURCES_READ_ONLY_TOOLS) == set(SOURCES_READ_ONLY_TOOLS)
-    assert set(claude.SOURCES_PERSISTING_TOOLS) == set(SOURCES_PERSISTING_TOOLS)
+def test_claude_adapter_keeps_no_tool_list_of_its_own():
+    assert claude.sources_tool_sets is sources_tool_sets
+    assert not hasattr(claude, "SOURCES_READ_ONLY_TOOLS")
+    assert not hasattr(claude, "SOURCES_PERSISTING_TOOLS")
+
+
+@pytest.mark.parametrize(
+    "tool_config",
+    [{"reviewer_tools": True}, {"allowed_tools": "mcp__sources__*"}, {"discussion_readonly": True}, None],
+    ids=["reviewer", "explicit", "discussion", "ad-hoc"],
+)
+def test_claude_annotation_change_denies_new_writer_without_updating_a_list(tmp_path, monkeypatch, tool_config):
+    path = tmp_path / "server.py"
+    path.write_text(
+        SERVER_PATH.read_text().replace(
+            'name="verify_word",', 'name="verify_word", annotations=_PERSISTING_LOOKUP_TOOL,'
+        )
+    )
+    monkeypatch.setattr(claude, "sources_tool_sets", lambda: sources_tool_sets(path))
+    plan = claude.ClaudeAdapter().build_invocation(
+        prompt="review",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=tool_config,
+    )
+    denies = plan.cmd[plan.cmd.index("--disallowedTools") + 1].split(",")
+    assert "mcp__sources__verify_word" in denies
+    assert "mcp__sources__verify_words" not in denies
+    if "--allowedTools" in plan.cmd and tool_config == {"reviewer_tools": True}:
+        allows = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
+        assert "mcp__sources__verify_word" not in allows
+        assert "mcp__sources__verify_words" in allows
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
@@ -319,7 +351,9 @@ def test_unverified_formal_codex_boundary_never_plans_or_launches_bypass(tmp_pat
 
 def test_sealed_codex_keeps_bypass_without_defining_sources(tmp_path):
     from scripts.review.isolation import review_isolation_tool_config
+    from tests.agent_runtime.test_codex_sources_config_layers import write_config_probe_binary
 
+    fake = write_config_probe_binary(tmp_path / "codex")
     snapshot, write = tmp_path / "snapshot", tmp_path / "write"
     snapshot.mkdir(mode=0o700)
     write.mkdir(mode=0o700)
@@ -329,7 +363,7 @@ def test_sealed_codex_keeps_bypass_without_defining_sources(tmp_path):
         **review_isolation_tool_config("codex"),
         "review_write_root": str(write),
         "review_snapshot_root": str(snapshot),
-        "review_engine_binary": "/bin/true",
+        "review_engine_binary": str(fake),
     }
     plan = CodexAdapter().build_invocation(
         prompt="review",
@@ -349,7 +383,8 @@ def test_sealed_codex_keeps_bypass_without_defining_sources(tmp_path):
 
 
 @pytest.mark.parametrize("session", [None, "resume-reader"])
-def test_ignore_user_config_without_sources_never_defines_partial_server(tmp_path, session):
+def test_ignore_user_config_without_sources_never_defines_partial_server(tmp_path, monkeypatch, session):
+    monkeypatch.setattr(codex, "_codex_config_layers", lambda *_args: [layer("system", {})])
     plan = CodexAdapter().build_invocation(
         prompt="review",
         mode="read-only",
@@ -366,7 +401,8 @@ def test_ignore_user_config_without_sources_never_defines_partial_server(tmp_pat
         plan.output_file.unlink()
 
 
-def test_ignore_user_config_with_explicit_sources_still_excludes_writers(tmp_path):
+def test_ignore_user_config_with_explicit_sources_still_excludes_writers(tmp_path, monkeypatch):
+    monkeypatch.setattr(codex, "_codex_config_layers", lambda *_args: [layer("system", {})])
     plan = CodexAdapter().build_invocation(
         prompt="lookup",
         mode="read-only",

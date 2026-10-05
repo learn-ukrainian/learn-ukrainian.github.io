@@ -58,6 +58,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import project_interpreter
 
 V7_BUILD = PROJECT_ROOT / "scripts/build/v7_build.py"
@@ -376,7 +377,7 @@ def _load_existing_cells(jsonl_path: Path) -> list[BenchCell]:
     if not jsonl_path.exists():
         return []
     out: list[BenchCell] = []
-    for line in jsonl_path.read_text(encoding="utf-8").splitlines():
+    for line in jsonl_lines(jsonl_path.read_text(encoding="utf-8")):
         if not line.strip():
             continue
         try:

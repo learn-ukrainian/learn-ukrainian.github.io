@@ -21,6 +21,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator, ValidationError
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -145,7 +146,7 @@ def _read_json(path: Path) -> Mapping[str, Any]:
 
 def _read_jsonl(path: Path) -> list[Mapping[str, Any]]:
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
         return [_as_mapping(json.loads(line), "frozen ledger row must be an object") for line in lines if line]
     except (OSError, json.JSONDecodeError) as exc:
         raise PravopysDeltaError(f"cannot read frozen JSONL ledger: {path}") from exc

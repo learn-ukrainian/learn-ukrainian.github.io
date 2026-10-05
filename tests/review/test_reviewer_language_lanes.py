@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import json
+import subprocess
 
 import pytest
 
+from scripts.common.git_context import sanitized_git_env
 from scripts.review.closeout_cli import main
 from scripts.review.reviewer_resolver import (
     GLM,
@@ -68,8 +70,9 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
         == 0
     )
     payload = json.loads(capsys.readouterr().out)
-    assert all(item["family"] in {"openai", "anthropic", "google"}
-               or item["status"] == "excluded" for item in payload["trace"])
+    assert all(
+        item["family"] in {"openai", "anthropic", "google"} or item["status"] == "excluded" for item in payload["trace"]
+    )
     # #9488: the attested Cursor Grok seat is on the ladder, never for Ukrainian content.
     xai = [item for item in payload["trace"] if item["family"] == "xai"]
     assert [item["name"] for item in xai] == ["grok-4.7-cursor-fallback"]
@@ -131,8 +134,9 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     assert pinned.selected is None
     assert pinned.fail_closed_reason
     deepseek_pin = resolve_reviewer(
-        ResolverInputs(author_model="codex", pinned_candidate="deepseek-v4.1-flash",
-                       pressure_override_reason="test pin")
+        ResolverInputs(
+            author_model="codex", pinned_candidate="deepseek-v4.1-flash", pressure_override_reason="test pin"
+        )
     )
     assert deepseek_pin.selected is None
     assert "unknown explicit reviewer pin" in deepseek_pin.fail_closed_reason
@@ -165,31 +169,73 @@ def test_pure_infra_change_falls_only_to_the_attested_cursor_grok_when_primary_l
 
 
 def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+
+    def git(*args):
+        return subprocess.check_output(["git", *args], cwd=repo, text=True, env=sanitized_git_env(), timeout=30).strip()
+
+    git("init", "-q", "-b", "trunk")
+    git("config", "user.email", "test@example.com")
+    git("config", "user.name", "Test")
+    source = repo / "scripts/lexicon/word_store.py"
+    source.parent.mkdir(parents=True)
+    source.write_text("value = 1\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-qm", "base")
+    base_sha = git("rev-parse", "HEAD")
+    source.write_text("value = 2\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-qm", "change word store")
+    head_sha = git("rev-parse", "HEAD")
     state_file = tmp_path / "review.json"
-    state_file.write_text(
-        json.dumps(
-            {
-                "target": {
-                    "mode": "commit",
-                    "base_sha": "a" * 40,
-                    "head_sha": "b" * 40,
-                    "changed_paths": ["scripts/lexicon/word_store.py"],
-                    "non_test_loc": 5,
-                    "clean_tree": True,
-                    "description": "test commit",
-                }
-            }
-        ),
-        encoding="utf-8",
+    assert (
+        main(
+            [
+                "--state-file",
+                str(state_file),
+                "target",
+                "--mode",
+                "commit",
+                "--commit",
+                head_sha,
+                "--repo-root",
+                str(repo),
+            ]
+        )
+        == 0
     )
+    capsys.readouterr()
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    assert state["target"]["base_sha"] == base_sha
+    assert state["target"]["head_sha"] == head_sha
+    assert state["target"]["changed_paths"] == ["scripts/lexicon/word_store.py"]
+    assert state["target_args"]["repo_root"] == str(repo.resolve())
     assert main(["--state-file", str(state_file), "resolve-reviewer", "--author-model", "codex"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["selected"]["family"] == "anthropic"
     assert any("Ukrainian-content language-lanes exclusion" in (item["reason"] or "") for item in payload["trace"])
 
+    state["target_args"].pop("repo_root")
+    state_file.write_text(json.dumps(state), encoding="utf-8")
+    assert main(["--state-file", str(state_file), "resolve-reviewer", "--author-model", "codex"]) == 1
+    assert json.loads(capsys.readouterr().err) == {"error": "target_repo_root_missing"}
+
     state_file.write_text("{}", encoding="utf-8")
     assert (
-        main(["--state-file", str(state_file), "resolve-reviewer", "--author-model", "codex", "--language-lane"]) == 0
+        main(
+            [
+                "--state-file",
+                str(state_file),
+                "resolve-reviewer",
+                "--author-model",
+                "codex",
+                "--language-lane",
+                "--owned-path",
+                "curriculum/A1/lesson.mdx",
+            ]
+        )
+        == 0
     )
     payload = json.loads(capsys.readouterr().out)
     assert payload["selected"]["family"] == "anthropic"
@@ -202,8 +248,7 @@ def test_ukrainian_semantic_profile_still_fails_closed():
     assert "unsupported local-code-review profile" in resolution.fail_closed_reason
 
 
-@pytest.mark.parametrize("author,expected", [("gpt-6.1-sol", "claude-opus-5-5"),
-                                            ("claude-opus-5-5", "gpt-6.1-sol")])
+@pytest.mark.parametrize("author,expected", [("gpt-6.1-sol", "claude-opus-5-5"), ("claude-opus-5-5", "gpt-6.1-sol")])
 def test_critical_ukrainian_code_review_prefers_opus_and_sol(author, expected):
     resolution = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", language_lane=True))
     assert resolution.selected.concrete_model == expected

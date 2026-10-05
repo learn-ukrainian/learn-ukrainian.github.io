@@ -46,12 +46,15 @@ from scripts.agent_runtime.review_mcp import (
     verify_codex_review_effective_mcp,
     verify_review_attempt_paths,
 )
+from scripts.agent_runtime.sources_read_only import SERVER_PATH, sources_tool_sets
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.review import render_contract
 from scripts.review.receipts import ledger as ledger_module
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 from scripts.review.render_contract import ReviewContractError
+from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
+from tests.test_ask_review_admission_floor import write_code_review_manifest
 
 
 @pytest.fixture(autouse=True)
@@ -72,6 +75,87 @@ def fake_agy_user_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     (app_data / "antigravity-oauth-token").write_text('{"fixture": true}\n', encoding="utf-8")
     monkeypatch.setenv("AGY_APP_DATA_DIR", str(app_data))
     return app_data
+
+
+def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_agy_user_home):
+    root = tmp_path / "lease"
+    root.mkdir()
+    home = review_mcp_module.prepare_agy_permission_home(root)
+    config = json.loads((home / ".gemini" / "config" / "mcp_config.json").read_text())
+    assert set(config["mcpServers"]) == {"sources"}
+    assert "LU_REVIEW_LEDGER_PATH" not in config["mcpServers"]["sources"].get("env", {})
+    settings = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())
+    readers, writers = sources_tool_sets()
+    assert settings["permissions"]["allow"] == [f"mcp(sources/{name})" for name in readers]
+    assert settings["permissions"]["deny"] == ["command(*)", "write_file(*)"]
+    assert not any("*" in rule for rule in settings["permissions"]["allow"])
+    assert not set(settings["permissions"]["allow"]) & {f"mcp(sources/{name})" for name in writers}
+    assert (home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token").resolve() == (
+        fake_agy_user_home / "antigravity-oauth-token"
+    )
+    assert not list(root.glob("*.jsonl"))
+    with pytest.raises(FileExistsError):
+        review_mcp_module.prepare_agy_permission_home(root)
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_receipt_attempt_permission_bytes_unchanged(manifest_file, tmp_path, access):
+    plan = prepare_review_attempt(
+        "rev-test-001",
+        "att-agy-001",
+        manifest_file,
+        "agy",
+        receipts_root=tmp_path / "receipts",
+        review_access=access,
+    )
+    # Frozen pre-fix contract; do not derive this expectation from review_tools.
+    names = [
+        "check_russian_shadow",
+        "check_text",
+        "inspect_word",
+        "inspect_words",
+        "query_cefr_level",
+        "query_grac",
+        "query_pravopys",
+        "query_r2u",
+        "query_sum20",
+        "search_heritage",
+        "search_style_guide",
+        "search_text",
+        "search_ua_gec_errors",
+        "verify_quote",
+        "verify_stress",
+        "verify_words",
+    ]
+    if access == "full":
+        names.append("search_resources")
+    expected = {
+        "permissions": {
+            "allow": [f"mcp(sources/{name})" for name in sorted(names)],
+            "deny": ["command(*)", "write_file(*)"],
+        }
+    }
+    assert (agy_review_app_data_dir(plan.agy_home) / "settings.json").read_bytes() == json.dumps(expected).encode()
+
+
+def test_permission_home_refuses_missing_token_and_symlink_root(tmp_path, monkeypatch):
+    monkeypatch.setattr(review_mcp_module, "_real_agy_token", lambda: tmp_path / "missing-token")
+    with pytest.raises(ValueError, match="require_scoped_home"):
+        review_mcp_module.prepare_agy_permission_home(tmp_path)
+    token = tmp_path / "token"
+    token.write_text("fixture")
+    monkeypatch.setattr(review_mcp_module, "_real_agy_token", lambda: token)
+    link = tmp_path / "root-link"
+    link.symlink_to(tmp_path, target_is_directory=True)
+    with pytest.raises((OSError, review_mcp_module.ReviewDirectoryError)):
+        review_mcp_module.prepare_agy_permission_home(link)
+    assert not (tmp_path / "agy-review-home").exists()
+
+
+def test_review_ledger_path_pairs_attempt_and_refuses_other_suffix():
+    assert review_mcp_module.review_ledger_path("attempt.mcp.json") == Path("attempt.jsonl")
+    with pytest.raises(ValueError, match="invalid_review_attempt_config"):
+        review_mcp_module.review_ledger_path("other.json")
 
 
 @pytest.fixture(autouse=True)
@@ -97,14 +181,15 @@ def _skip_advisory_dispatch_probes(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture(autouse=True)
-def _matched_review_contract(monkeypatch: pytest.MonkeyPatch) -> None:
+def _matched_review_contract(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Dispatch tests here dispatch literal prompts with no render record; the contract checks have their own tests
-    (#9163), here and in test_review_contract.py."""
+    (#9163), here and in test_review_contract.py. Like a real contract it names an input root (#9597)."""
     monkeypatch.setattr(
         review_mcp_module,
         "check_review_contract",
         lambda _prompt_file, prompt_text, **_ids: {
-            "prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()
+            "prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest(),
+            "input_root": str(tmp_path),
         },
     )
     monkeypatch.setattr(review_mcp_module, "check_launch_contract", lambda *_args: None)
@@ -115,6 +200,12 @@ def manifest_file(tmp_path: Path) -> Path:
     manifest = tmp_path / "manifest.yaml"
     manifest.write_text("review_id: rev-test-001\nattempt_id: att-test-001\n", encoding="utf-8")
     return manifest
+
+
+@pytest.fixture
+def code_review_manifest(ordinary_review_scope, tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate_cli, "_local_repo_root", ordinary_review_scope)
+    return write_code_review_manifest(ordinary_review_scope, tmp_path / "code-review.json")
 
 
 def _attempt_prompt(review_id: str, attempt_id: str) -> str:
@@ -196,6 +287,7 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
         expected_options["review_access"] = "isolated"
     if harness == "agy":
         expected_options["agy_home_override"] = str(plan.config_path.parent / f"{attempt_id}.agy-home")
+        expected_options["review_access"] = "isolated"
     assert plan.adapter_options == expected_options
     assert plan.mcp_config_path == plan.config_path
     assert plan.strict_mcp_config is True
@@ -283,10 +375,12 @@ def test_prepare_review_attempt_refuses_reused_attempt_id(manifest_file: Path, t
         )
 
 
-def test_delegate_dispatch_refusal_for_grok(manifest_file: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_delegate_dispatch_refusal_for_grok(code_review_manifest: Path, capsys: pytest.CaptureFixture[str]) -> None:
     rc = delegate_cli.main(
         [
             "dispatch",
+            "--review-profile",
+            "code",
             "--agent",
             "grok",
             "--task-id",
@@ -296,7 +390,7 @@ def test_delegate_dispatch_refusal_for_grok(manifest_file: Path, capsys: pytest.
             "--review-access",
             "isolated",
             "--review-attempt",
-            str(manifest_file),
+            str(code_review_manifest),
             "--review-id",
             "rev-001",
             "--attempt-id",
@@ -344,6 +438,8 @@ def test_delegate_dispatch_incomplete_review_attempt_flags(
     rc = delegate_cli.main(
         [
             "dispatch",
+            "--review-profile",
+            "ukrainian",
             "--agent",
             "claude",
             "--task-id",
@@ -445,7 +541,7 @@ def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> No
 
 @pytest.mark.parametrize("seat", ["cursor", "claude"])
 def test_delegate_dispatch_review_refuses_primary_checkout(
-    manifest_file: Path, capsys: pytest.CaptureFixture[str], seat: str
+    code_review_manifest: Path, capsys: pytest.CaptureFixture[str], seat: str
 ) -> None:
     # Cursor identity admission now precedes its dispatch worktree guard.
     # Keep that refusal covered, and exercise primary-checkout protection with
@@ -453,6 +549,8 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
     rc = delegate_cli.main(
         [
             "dispatch",
+            "--review-profile",
+            "code",
             "--agent",
             seat,
             "--mode",
@@ -466,7 +564,7 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
             "--review-access",
             "isolated",
             "--review-attempt",
-            str(manifest_file),
+            str(code_review_manifest),
             "--review-id",
             "rev-001",
             "--attempt-id",
@@ -514,6 +612,8 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
     rc = delegate_cli.main(
         [
             "dispatch",
+            "--review-profile",
+            "ukrainian",
             "--agent",
             "claude",
             "--task-id",
@@ -545,6 +645,8 @@ def test_delegate_dispatch_refuses_retired_alias_substitution(
     rc = delegate_cli.main(
         [
             "dispatch",
+            "--review-profile",
+            "ukrainian",
             "--agent",
             "gemini",
             "--task-id",
@@ -583,6 +685,8 @@ def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
         rc = delegate_cli.main(
             [
                 "dispatch",
+                "--review-profile",
+                "ukrainian",
                 "--agent",
                 "claude",
                 "--task-id",
@@ -631,6 +735,8 @@ def test_delegate_dispatch_refuses_reused_attempt_id(
         rc = delegate_cli.main(
             [
                 "dispatch",
+                "--review-profile",
+                "ukrainian",
                 "--agent",
                 "claude",
                 "--task-id",
@@ -1198,7 +1304,12 @@ def test_agy_home_layout_modes_and_single_source_config(
     token = app_data / "antigravity-oauth-token"
     assert token.is_symlink()
     assert Path(os.readlink(token)) == fake_agy_user_home / "antigravity-oauth-token"
-    assert sorted(entry.name for entry in app_data.iterdir()) == ["antigravity-oauth-token"]
+    assert sorted(entry.name for entry in app_data.iterdir()) == ["antigravity-oauth-token", "settings.json"]
+    from scripts.agent_runtime.review_mcp import agy_review_settings
+
+    settings = app_data / "settings.json"
+    assert json.loads(settings.read_text()) == agy_review_settings("isolated")
+    assert stat.S_IMODE(settings.stat().st_mode) == 0o600
 
 
 def test_agy_home_token_source_defaults_to_real_home_without_override(
@@ -2683,7 +2794,7 @@ def test_prepare_refuses_a_server_changed_since_admission_before_writing_anythin
     primary = tmp_path / "primary"
     server = primary / ".mcp" / "servers" / "sources" / "server.py"
     server.parent.mkdir(parents=True)
-    server.write_text("import json\nprint('receipt: <id>')\n", encoding="utf-8")
+    server.write_bytes(SERVER_PATH.read_bytes())
     (primary / render_contract.LOCK_FILE).write_text("anyio==4.15.1\n", encoding="utf-8")
     monkeypatch.setattr(review_mcp_module, "resolve_repo_root", lambda *_args: primary)
     python = project_interpreter()  # what prepare writes into the config
@@ -2725,6 +2836,9 @@ def test_prepare_refuses_a_server_changed_since_admission_before_writing_anythin
 def test_default_root_uses_the_same_root_check(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    server = tmp_path / ".mcp" / "servers" / "sources" / "server.py"
+    server.parent.mkdir(parents=True)
+    server.write_bytes(SERVER_PATH.read_bytes())
     monkeypatch.setattr(review_mcp_module, "resolve_repo_root", lambda *_args: tmp_path)
     kwargs = {"review_id": "rev-x-001", "attempt_id": "att-x-001", "manifest_path": manifest_file, "harness": "codex"}
     plan = prepare_review_attempt(**kwargs)

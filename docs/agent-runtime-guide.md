@@ -385,16 +385,29 @@ read-only argv instead expose all audited readers. Both approve each exposed too
 individually and hide writers even when a verified parent OS sandbox requires
 nested sandbox bypass. Sealed Codex reviews ignore user config and use only the
 injected `sealed_review` server; the adapter adds no Sources settings unless a
-Sources transport is explicitly defined. Claude's ordinary ad hoc reviewer profile denies
-the persisting tools explicitly. Claude and AGY formal attempts enforce the
+Sources transport is explicitly defined. Claude and AGY formal attempts enforce the
 receipt contract through the sources boundary and full-review allow rules. The
 Sources server also filters listings and refuses calls outside the formal
 receipt contract, independently of CLI exposure controls.
-Claude still maintains local tool tuples, checked for parity with the shared
-module; other Claude read-only profiles and explicit caller allowlists do not
-add persisting-tool denies. Cache-writing ULIF and Wikipedia tools are excluded
-from formal receipt contracts and these scoped reviewer grants; writers' access
-is unchanged.
+Every Claude `read-only` invocation takes both sets from the shared module and
+passes each persisting tool in `--disallowedTools`: the ordinary and formal
+reviewer profiles, explicit caller allowlists (including `mcp__sources__*`),
+`discussion_readonly`, `review_isolation`, and read-only calls with no profile.
+Claude matches MCP rules against the configured server name, so each writer is
+denied twice: as `mcp__sources__<tool>` and as `mcp__*__<tool>`. A deny glob
+must match the whole tool name, so the second rule removes the writer whatever
+name an explicit config, `.mcp.json`, user config or plugin registers the server
+under (for example `sources_alias`), while `query_ulif_records` and other longer
+reader names stay reachable. A same-named tool on another server is denied too.
+A live probe on Claude Code 2.1.288 with the real server registered as
+`sources_alias` showed all five writers exposed under the canonical deny alone,
+and none under the glob deny, even with `mcp__sources_alias__*` allowed.
+Claude applies deny rules before allow rules, so the deny also wins over user or
+checkout settings. If the server declarations cannot be read, the read-only
+invocation fails instead of launching without the denies. Cache-writing ULIF and
+Wikipedia tools are excluded from formal receipt contracts and these reviewer
+grants; `workspace-write` and `danger` argv are unchanged, so writers' and
+builds' cache access is unchanged.
 
 ### Claude headless permissions
 
@@ -428,14 +441,16 @@ configured server is named. The tracked PreToolUse guards still load via
 `--settings`, including under `dontAsk`; a hook that exits 2 blocks the
 call. `--bare` is what skips hooks.
 
-Without the opt-in, read-only calls retain the prior Claude CLI permissions.
+Without the opt-in, read-only calls retain the prior Claude CLI permissions
+plus the sources persisting-tool denies.
 This covers content quality reviews and tool-less bakeoff calls. Outside sealed
 `review_isolation`, an explicit `allowed_tools` value is passed
 unchanged as the sole `--allowedTools` argument, including an empty string. The
 adapter does not add reviewer tools or `dontAsk`, the reviewer deny list,
-publish hook, or push rewrite in that case. Shared worker guards still load.
-This keeps the V7 curriculum writer's `mcp__sources__*` allowlist restricted
-to sources tools.
+publish hook, or push rewrite in that case; it adds only the sources persisting-tool
+denies. Shared worker guards still load. This keeps a read-only caller's
+`mcp__sources__*` allowlist (V7 dimension reviewers, wiki review) restricted to
+the read-only sources tools.
 
 Every headless Claude invocation receives `--settings` with PreToolUse guards
 generated from `agents_extensions/shared/settings.json`. Hook commands resolve
@@ -453,6 +468,46 @@ only. Prefix Bash deny rules do not cover wrappers such as `git -C`.
 Claude `--bare` is disabled because it skips hooks. A live bubblewrap probe
 also allowed a primary-checkout write, so the bubblewrap sandbox is not relied
 on as the guard.
+
+### Claude headless runs cannot leave background work (#9690)
+
+A `claude -p` run exits when its final turn ends. Work it started in the
+background is then killed or never reported, so a worker could end with "the
+report will follow" and no verdict. Every `ClaudeAdapter` plan closes this in
+two parts, applied in every mode:
+
+- `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` in `env_overrides`. In Claude Code
+  2.1.289 this makes Bash reject `run_in_background` with an
+  `InputValidationError`, and it runs a background subagent request in the
+  foreground. It also disables MCP auto-backgrounding. `env_sanitize`
+  allowlists the variable for the `claude` provider only.
+- `permissions.deny` in the `--settings` JSON for `Monitor`, `ScheduleWakeup`,
+  `CronCreate` and `Workflow`. The variable leaves these tools available, and
+  they still start or schedule work past the turn. A settings deny removes them
+  from the tool list in `dontAsk`, `bypassPermissions` and default modes.
+
+The KimiCC harness (`--agent kimi --harness kimicc`) is also a headless
+`claude -p` run, through `kimicc_headless.sh`. Its plan reuses the same two
+constants: the variable in `env_overrides`, and the denies as one
+`--disallowedTools` argument that the wrapper forwards to `claude -p --bare`.
+The sanitizer sees the provider name `kimi` for both Kimi harnesses, so it
+keeps the variable for `kimi` only when the plan supplies it and drops an
+ambient export. The native Kimi CLI plan never sets it, so native Kimi gets
+neither control. In Claude Code 2.1.289 `--bare` already offers only Bash,
+Edit and Read, and Bash has no `run_in_background` there (a capture of the
+request sent to a local fake endpoint); the explicit controls keep the route
+closed if that reduced tool set changes.
+
+Sealed `review_isolation` drops the variable through its own environment
+allowlist. It is still closed, because `--tools Read,Grep,Glob` offers no tool
+that can background. Interactive launchers (`start-claude.sh`,
+`start-claude-driver.sh`, `scripts/launchers/claude.sh`) do not use the adapter
+and keep background tasks. A trailing `&` or `nohup` inside a foreground Bash
+call is a different path: `worker_leftovers.py` handles it (#8991).
+`tests/agent_runtime/test_claude_no_background.py` launches a fake CLI through
+the real runner and checks both parts, for the Claude adapter and for KimiCC
+behind its wrapper. It also checks that native Kimi gets neither, and that
+every adapter which resolves the Claude binary is in its harness table.
 
 ### Native Grok headless permission mapping (#7583)
 

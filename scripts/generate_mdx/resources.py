@@ -555,10 +555,13 @@ def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary"
         if not lemma:
             continue
 
-        cards.append({
-            "front": lemma,
-            "back": translation,
-        })
+        # Proper names can have no English gloss. Keep their vocabulary card,
+        # but do not offer a flashcard whose answer side is empty.
+        if translation:
+            cards.append({
+                "front": lemma,
+                "back": translation,
+            })
 
         # A pre-set atlas_href is resolved like a surface form (unique alias →
         # canonical entry; dead or ambiguous → no link). Absent key falls

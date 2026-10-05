@@ -160,7 +160,7 @@ ENGINE_PATHS = frozenset(
 MIGRATED_ENGINE_SOURCE_SHA256 = {
     "scripts/projects/open_model_data/phase3_heldout_partition.py": (
         "af0f544405a29055943d538b7e13f69983397ddac5562dea2ce156f06e924e77",
-        "af99c2d154e48510dfbc0f80135acd6efcca754cce5147522e7d9988f5bb59e9",
+        "e5afd03db7d3c768e9fff36b4410021aacfcb8424bd78b2a4dbf574682f51a25",
     ),
     "scripts/projects/open_model_data/phase3_rule_author_packets.py": (
         "d07538485af2456a47177df164ca5d266ef52203849188e506595ecb17d8a9b3",
@@ -176,11 +176,11 @@ MIGRATED_ENGINE_SOURCE_SHA256 = {
     ),
     "scripts/projects/open_model_data/phase3_source_dispositions.py": (
         "f1fe490423bc49fcfbca9902f193be78510c3b2b4a5c7cc1aec04b5c877bf903",
-        "56e0095fdb79c94c1a36e88eb16cb3634bcec382170e5f26636bdbc524695903",
+        "436a6eff5627cd2f42cf70c813cdb14d7a5048d88e23c2c26fc0036fd3a7ed1b",
     ),
     "scripts/projects/open_model_data/phase3_disposition_audit.py": (
         "5b40dc718387789a6d6a16aadcab5c900a6066aa96e6bae52d79b26a7c8b6177",
-        "7d5da1395175e2e4f0b858e100f2fe7c41f060fc694023873e02b40281c30376",
+        "68b7ddbb0c1fbfbd103e92c5b46ca4d7de707a685ebbefda1148db9f44de83a4",
     ),
     "scripts/projects/open_model_data/phase3_audit_entropy.py": (
         "0ae777894dd7b52eb6e91fd2f83eb079ecfd8a9aad9658571f8016ef6e8e7d86",
@@ -196,7 +196,7 @@ MIGRATED_ENGINE_SOURCE_SHA256 = {
     ),
     "scripts/projects/open_model_data/phase3_pravopys_delta.py": (
         "4ffdf9114d8a62625d192dac905b007a4124b1fe4d5e8662c790339f436a177a",
-        "afcb74a48896988d0d735a32c69d467aed8db031db2fce4b15205d2b60350318",
+        "5ef7a22e8a18d2922f3d81d56a70fee51a3ed62a3adcf45ef8c701ad4dc49139",
     ),
     "scripts/projects/open_model_data/phase3_evaluation_reproduction.py": (
         "bd743e6596448702f924b7c83bb3c95e61836780609d6f76ca9baa45feb42e5e",
@@ -224,11 +224,11 @@ MIGRATED_ENGINE_SOURCE_SHA256 = {
     ),
     "scripts/projects/open_model_data/phase3_source_production_transport.py": (
         "65bbd0ce715084c01a78df4ad047a90837e480928efeb0e0dd7fe9d8cd83debb",
-        "b9ec762891d2d9ff3fea4cc16b20b1c88591bfae72f32fc7f0ec0007db97ef05",
+        "3fb963276f23c7bd87bad5ffe4b0ba90f573a6fe54af627955820ad64b1ab188",
     ),
     "scripts/projects/open_model_data/phase3_source_unit_materialization.py": (
         "5e1b9ee4cf86ff1f951270e069274e8664e73df44c8903e65f17ad5653319bbe",
-        "998d8db85fa3f34ff0bb2b7be7509d3eed961a499cb6b1c65fa02272ead751ff",
+        "5ea96e2e94c0c4e06e3c0e29f79c03f59f9e3e3052a5e7f948a1f0fd32dfc396",
     ),
     "scripts/projects/open_model_data/phase3_source_universe.py": (
         "032088c131f97b28ba0e300f884fc18964854c6e96046288fbda69a595fb969d",

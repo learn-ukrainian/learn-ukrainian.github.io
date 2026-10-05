@@ -41,11 +41,6 @@ ENTRY_TYPES = (
     "multiword_term",
     "proper_name",
 )
-AUTHENTIC_RUSSIANISM_EXEMPTIONS = {
-    "authentic-archaism",
-    "dialect",
-    "historism",
-}
 _UK_SORT_ORDER = {letter: index for index, letter in enumerate(UKRAINIAN_ALPHABET)}
 _TOKEN_RE = re.compile(r"[\w\u0400-\u04ff]+", re.UNICODE)
 _LEADING_SENSE_RE = re.compile(r"^\s*\d+[.)]\s*")
@@ -110,6 +105,34 @@ _LEXEME_FILTER = _load_helper_module(
 )
 is_lexeme_entry = _LEXEME_FILTER.is_lexeme_entry
 _SURZHYK_SOURCE = _LEXEME_FILTER.SURZHYK_SOURCE
+
+# One source-scope contract for producer and projection (#9603); the module is
+# stdlib-only at import time, so the frontend CI interpreter can load it.
+_HERITAGE_CLASSIFIER = _load_helper_module(
+    "_atlas_heritage_classifier",
+    PROJECT_ROOT / "scripts" / "lexicon" / "heritage_classifier.py",
+)
+resolve_usage_label = _HERITAGE_CLASSIFIER.resolve_usage_label
+# Curated inputs of the ``usageSources`` projection in browse meta.
+USAGE_SOURCE_INPUTS = ("registry/lexicon/heritage_pairs.yaml", "scripts/lexicon/calque_corrections.py")
+_USAGE_SOURCES: dict[str, dict[str, Any]] | None = None
+
+
+def usage_sources() -> dict[str, dict[str, Any]]:
+    """Current curated source proof by headword (``usage_source_records``), cached."""
+    global _USAGE_SOURCES
+    if _USAGE_SOURCES is None:
+        _USAGE_SOURCES = _HERITAGE_CLASSIFIER.usage_source_records()
+    return _USAGE_SOURCES
+
+
+def usage_sources_payload() -> dict[str, Any]:
+    """The ``usageSources`` projection: proof records plus the digests of their inputs."""
+    return {
+        "schema": "atlas-usage-sources.v1",
+        "inputs": {path: _sha256((PROJECT_ROOT / path).read_bytes()) for path in USAGE_SOURCE_INPUTS},
+        "records": usage_sources(),
+    }
 
 
 def kind_for_source(source: Any) -> str:
@@ -332,35 +355,61 @@ def _uk_sort_key(value: object) -> tuple[tuple[int, str], ...]:
     return tuple(key)
 
 
-def classification_code(entry: Mapping[str, Any]) -> str | None:
-    """Return compact Atlas browse classification code, if any."""
-
-    kind = kind_for_source(entry.get("primary_source"))
-    if kind == "avoid":
-        return "avoid"
-
-    status = _heritage_status(entry)
-    classification = _clean_text(status.get("classification"))
-    warning_severity = _clean_text(status.get("warning_severity"))
-    is_russianism = status.get("is_russianism") is True
-
-    if classification not in AUTHENTIC_RUSSIANISM_EXEMPTIONS and (
-        warning_severity == "russianism_red" or is_russianism
-    ):
-        return "rus"
-    if warning_severity == "calque_yellow" and classification not in AUTHENTIC_RUSSIANISM_EXEMPTIONS:
-        return "calq"
-    if classification == "authentic-archaism":
-        return "arch"
-    if classification == "dialect":
-        return "dial"
-    if classification == "historism":
-        return "hist"
-    if classification == "borrowing":
-        return "borr"
-    if warning_severity == "calque_yellow":
-        return "calq"
+def _definition_cards(entry: Mapping[str, Any]) -> object:
+    enrichment = entry.get("enrichment")
+    if isinstance(enrichment, Mapping):
+        return enrichment.get("definition_cards")
     return None
+
+
+def classification_code(entry: Mapping[str, Any]) -> str | None:
+    """Return compact Atlas browse classification code, if any.
+
+    Stored ``warning_severity``/``classification`` fields are never trusted on
+    their own: a code is emitted only for a lemma-scoped label bound to the
+    headword by source evidence (``resolve_usage_label``). Russianism and
+    calque proof comes from the current curated records (``usage_sources``),
+    never from citations stored with the entry. Sense, phrase, reverse-calque
+    and unresolved records stay unlabelled in browse. The ``surzhyk_to_avoid``
+    list is provenance, not authority: it upgrades a bound Russianism/calque
+    to ``avoid`` and never labels a word alone (#9603).
+    """
+
+    headword = _clean_text(entry.get("lemma"))
+    label = resolve_usage_label(
+        dict(_heritage_status(entry)),
+        headword=headword,
+        definition_cards=_definition_cards(entry),
+        gloss=_clean_text(entry.get("gloss")),
+        source_proof=usage_sources().get(_HERITAGE_CLASSIFIER._normalize_word(headword or "")) or {},
+    )
+    if label["scope"] != "lemma" or label["code"] not in CLASSIFICATION_CODES:
+        return None
+    if label["code"] in {"rus", "calq"} and kind_for_source(entry.get("primary_source")) == "avoid":
+        return "avoid"
+    return str(label["code"])
+
+
+_EDITORIAL_GLOSS_RE = re.compile(r"^\s*(avoid|rus|calque)\s*:\s*(\S.*?)\s*$", re.IGNORECASE | re.DOTALL)
+_EDITORIAL_GLOSS_LEADS = {"avoid": "радять", "rus": "русизм —", "calque": "калька —"}
+_EMBEDDED_NORM_RE = re.compile(r"\(([^()]*\b(?:calque|russianism|surzhyk|standard Ukrainian)\b[^()]*)\)", re.IGNORECASE)
+
+
+def display_gloss(gloss: object, code: str | None) -> object:
+    """Browse/search gloss for ``gloss`` under browse ``code`` (#9603).
+
+    An editorial ``avoid:``/``rus:``/``calque:`` gloss or embedded ``(… calque …)``
+    clause reads as a word-wide instruction, so it stays verbatim only for a
+    lemma-bound Russianism or calque; otherwise it is a qualified Atlas note beside
+    the meaning (``displayGloss`` in heritage-severity.ts). The stored gloss is unchanged.
+    """
+    if not isinstance(gloss, str) or code in {"avoid", "rus", "calq"}:
+        return gloss
+    match = _EDITORIAL_GLOSS_RE.match(gloss)
+    if match is None:
+        return _EMBEDDED_NORM_RE.sub(r"(примітка Атласу: «\1»; обсяг застереження не встановлено)", gloss)
+    lead = _EDITORIAL_GLOSS_LEADS[match[1].lower()]
+    return f"примітка Атласу: {lead} «{match[2]}»; обсяг застереження не встановлено"
 
 
 def _translation_gloss(entry: Mapping[str, Any]) -> str | None:
@@ -498,6 +547,7 @@ def _search_row(entry: dict[str, Any]) -> dict[str, Any] | None:
     if level:
         row["c"] = level
     cls = classification_code(entry)
+    row["g"] = display_gloss(gloss, cls)
     if cls:
         row["cls"] = cls
     gerund_parent = _gerund_parent(entry)
@@ -637,6 +687,19 @@ def _heritage_status_for_slug(
     return {}
 
 
+def _definition_cards_for_slug(conn: sqlite3.Connection, slug: str) -> object:
+    row = conn.execute(
+        "SELECT payload_json FROM enrichment WHERE slug = ? AND section = 'definition_cards'",
+        (slug,),
+    ).fetchone()
+    if row is None:
+        return None
+    try:
+        return json.loads(row[0])
+    except (TypeError, json.JSONDecodeError):
+        return None
+
+
 def browse_rows_from_db_articles(
     articles: list[dict[str, Any]],
     db_path: Path,
@@ -645,25 +708,29 @@ def browse_rows_from_db_articles(
 
     conn = sqlite3.connect(db_path)
     try:
-        heritage_by_slug = {
-            slug: heritage_classification
-            for slug, heritage_classification in conn.execute(
-                "SELECT slug, heritage_classification FROM articles"
+        article_meta = {
+            slug: (heritage_classification, lemma, gloss)
+            for slug, heritage_classification, lemma, gloss in conn.execute(
+                "SELECT slug, heritage_classification, lemma, gloss FROM articles"
             )
         }
         browse_rows: list[dict[str, Any]] = []
         for row in articles:
             slug = str(row["s"])
+            heritage_classification, lemma, gloss = article_meta.get(slug, (None, None, None))
             pseudo_entry = {
+                "lemma": lemma or row.get("l"),
+                "gloss": gloss or row.get("g"),
                 "primary_source": _primary_source_for_slug(conn, slug),
                 "heritage_status": _heritage_status_for_slug(
                     conn,
                     slug,
-                    heritage_classification=_clean_text(heritage_by_slug.get(slug)),
+                    heritage_classification=_clean_text(heritage_classification),
                 ),
+                "enrichment": {"definition_cards": _definition_cards_for_slug(conn, slug)},
             }
-            browse_row = dict(row)
             cls = classification_code(pseudo_entry)
+            browse_row = {**row, "g": display_gloss(row.get("g"), cls)}
             if cls:
                 browse_row["cls"] = cls
             browse_rows.append(browse_row)
@@ -946,6 +1013,7 @@ def build_browse_outputs(
         },
         "browseShardCount": len(browse_shards),
         "browseShards": browse_shards,
+        "usageSources": usage_sources_payload(),
     }
     flagged_rows = sorted(flagged_rows, key=lambda item: _uk_sort_key(item["l"]))
     return meta, shards, flagged_rows
@@ -1025,6 +1093,8 @@ def main(argv: list[str] | None = None) -> int:
             will_refresh_browse=True,
         )
         browse_rows = browse_rows_from_db_articles(rows, args.db)
+        # Search rows show the same scoped gloss as browse (#9603).
+        rows = [{**row, "g": browse_row["g"]} for row, browse_row in zip(rows, browse_rows, strict=True)]
         meta, browse_shards, flagged_rows = build_browse_outputs(browse_rows)
         search_shards, search_shard_rows = build_search_shards(rows)
         write_index(rows, args.out)

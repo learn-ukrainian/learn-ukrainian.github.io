@@ -18,6 +18,7 @@ import subprocess
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from copy import deepcopy
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -89,7 +90,16 @@ _ROOT = Path(__file__).resolve().parents[2]
 _SCHEMA_PATH = _ROOT / "agents_extensions" / "shared" / "schemas" / "task-lifecycle.v1.schema.json"
 _SCHEMA = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
 _VALIDATOR = Draft202012Validator(_SCHEMA, format_checker=FormatChecker())
-_AC_RE = re.compile(r"^- \[(?P<checked>[ xX])\] \*\*(?P<id>[A-Z][A-Z0-9_-]{1,31})\*\*\s+[—-]\s+(?P<text>.+?)\s*$")
+# Preserve the legacy bold-ID grammar, adding observed numeric suffix IDs.
+_AC_RE = re.compile(
+    r"^- \[(?P<checked>[ xX])\] \*\*(?P<id>[A-Z][A-Z0-9_-]{1,31}|AC-[0-9]+[a-zA-Z]+)"
+    r"\*\*\s+[—-]\s+(?P<text>.+?)\s*$"
+)
+_PLAIN_AC_RE = re.compile(
+    r"^- \[(?P<checked>[ xX])\] (?P<id>AC-(?:[A-Z0-9][A-Z0-9_-]{0,28}|[0-9]+[a-zA-Z]+))"
+    r"(?:\s*:\s*|\s+(?![:\s]))(?P<text>\S.*?)\s*$"
+)
+_AC_LIKE_CHECKBOX_RE = re.compile(r"^[-*+]\s*\[[^\]]*\]\s*[*_`]*AC(?=[^A-Za-z]|$)", re.IGNORECASE)
 _SAFE_FAMILY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$")
 
 
@@ -261,10 +271,15 @@ def parse_issue_acceptance_criteria(body: str) -> list[dict[str, Any]]:
     criteria: list[dict[str, Any]] = []
     seen: set[str] = set()
     for raw_line in str(body or "").splitlines():
-        match = _AC_RE.fullmatch(raw_line.strip())
+        line = raw_line.strip()
+        match = _AC_RE.fullmatch(line) or _PLAIN_AC_RE.fullmatch(line)
         if not match:
+            if _AC_LIKE_CHECKBOX_RE.match(line):
+                raise LifecycleError("malformed AC-like acceptance criterion checkbox in issue body")
             continue
         ac_id = match.group("id")
+        if len(ac_id) > 32:
+            raise LifecycleError("acceptance criterion ID exceeds 32 characters")
         if ac_id in seen:
             raise LifecycleError(f"duplicate acceptance criterion ID in issue body: {ac_id}")
         seen.add(ac_id)
@@ -422,6 +437,16 @@ def _receipt_event_payload(record: Mapping[str, Any]) -> dict[str, Any]:
     return {key: deepcopy(value) for key, value in record.items() if key != "id"}
 
 
+def _utc_timestamp(value: str) -> datetime:
+    try:
+        timestamp = datetime.fromisoformat(value.upper().replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise LifecycleError("correction chronology requires a valid timestamp") from exc
+    if timestamp.tzinfo is None:
+        raise LifecycleError("correction chronology requires a timezone-aware timestamp")
+    return timestamp.astimezone(UTC)
+
+
 def _validate_behavior_proof_reference_shape(details: Mapping[str, Any]) -> dict[str, str]:
     reference = details.get("behavior_proof_receipt")
     if not isinstance(reference, Mapping):
@@ -475,6 +500,8 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
             raise LifecycleError(f"{criterion['id']}: behavior-proof-required AC must require behavior_proof evidence")
     criteria_by_id = {item["id"]: item for item in criteria}
     evidence_ids: set[str] = set()
+    earlier_evidence: dict[str, Mapping[str, Any]] = {}
+    superseded_ids: set[str] = set()
     for record in ledger["evidence"]:
         if record["id"] != digest(_evidence_payload(record)):
             raise LifecycleError(f"evidence {record['id']} digest is invalid")
@@ -505,9 +532,30 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
             reference = _validate_behavior_proof_reference_shape(record["details"])
             if subject["commit"] is None or reference["target_sha"] != subject["commit"]:
                 raise LifecycleError("behavior-proof receipt target SHA does not match its evidence subject")
+        if "supersedes_evidence_id" in record["details"]:
+            target_id = record["details"]["supersedes_evidence_id"]
+            if not isinstance(target_id, str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", target_id):
+                raise LifecycleError("supersedes_evidence_id must be sha256:<64 lowercase hex>")
+            target = earlier_evidence.get(target_id)
+            if target is None:
+                raise LifecycleError("supersedes_evidence_id must reference an existing earlier evidence record")
+            if target_id in superseded_ids:
+                raise LifecycleError("evidence record already has a superseder")
+            if (
+                target["ac_id"] != record["ac_id"]
+                or target["type"] != record["type"]
+                or any(target["subject"][key] != subject[key] for key in ("repository", "issue", "pr"))
+            ):
+                raise LifecycleError("superseding evidence must have the same criterion, type, repository, issue, and PR")
+            if _utc_timestamp(record["recorded_at"]) <= _utc_timestamp(target["recorded_at"]):
+                raise LifecycleError("superseding evidence recorded_at must be strictly later than its target")
+            superseded_ids.add(target_id)
+        earlier_evidence[record["id"]] = record
     for evidence_id in ledger["remaining_scope"]["evidence_ids"]:
         if evidence_id not in evidence_ids:
             raise LifecycleError("remaining-scope evidence ID is not present in the evidence ledger")
+        if evidence_id in superseded_ids:
+            raise LifecycleError("remaining-scope evidence ID references a superseded record")
     remaining = ledger["remaining_scope"]
     if remaining["status"] == "none":
         if remaining["follow_up_issue"] is not None or remaining["follow_up_stream_epic"] is not None:
@@ -593,6 +641,11 @@ def add_evidence(
     for existing in ledger["evidence"]:
         if existing["id"] == record["id"]:
             return ledger, existing
+    if (
+        "supersedes_evidence_id" in record["details"]
+        and _utc_timestamp(recorded_at) < _utc_timestamp(ledger["updated_at"])
+    ):
+        raise LifecycleError("new superseding evidence recorded_at must not predate ledger updated_at")
     ledger["evidence"].append(record)
     ledger["updated_at"] = recorded_at
     return validate_lifecycle(ledger), record
@@ -923,25 +976,50 @@ def _evidence_status(
     *,
     head_sha: str | None,
     comment_urls: set[str],
-) -> tuple[dict[str, set[str]], list[str]]:
+) -> dict[str, Any]:
+    """Validate rows independently, then retire errors only at valid chain tips."""
     valid: dict[str, set[str]] = {}
-    invalid: list[str] = []
+    errors: dict[str, str] = {}
     for record in ledger["evidence"]:
         kind = record["type"]
         commit = record["subject"]["commit"]
         if kind in CURRENT_HEAD_EVIDENCE and head_sha and commit != head_sha:
-            invalid.append(f"{record['ac_id']}: {kind} evidence is not bound to current PR head")
+            errors[record["id"]] = f"{record['ac_id']}: {kind} evidence is not bound to current PR head"
             continue
         if kind == "behavior_proof":
             reference_error = _behavior_proof_reference_error(record, head_sha=head_sha)
             if reference_error:
-                invalid.append(f"{record['ac_id']}: {reference_error}")
+                errors[record["id"]] = f"{record['ac_id']}: {reference_error}"
                 continue
         if kind == "review" and (not record["url"] or record["url"] not in comment_urls):
-            invalid.append(f"{record['ac_id']}: review receipt URL is absent from authoritative PR comments")
+            errors[record["id"]] = f"{record['ac_id']}: review receipt URL is absent from authoritative PR comments"
             continue
-        valid.setdefault(record["ac_id"], set()).add(kind)
-    return valid, invalid
+
+    superseders = {
+        record["details"]["supersedes_evidence_id"]: record["id"]
+        for record in ledger["evidence"]
+        if "supersedes_evidence_id" in record["details"]
+    }
+    # Validation guarantees earlier-only links and at most one superseder.
+    # Reverse ledger order resolves every chain in linear time without recursion.
+    tips: dict[str, str] = {}
+    for record in reversed(ledger["evidence"]):
+        record_id = record["id"]
+        successor = superseders.get(record_id)
+        tips[record_id] = tips[successor] if successor else record_id
+    retired = {record_id: error for record_id, error in errors.items() if tips[record_id] not in errors}
+    valid_ids: set[str] = set()
+    for record in ledger["evidence"]:
+        if record["id"] not in superseders and record["id"] not in errors:
+            valid_ids.add(record["id"])
+            valid.setdefault(record["ac_id"], set()).add(record["type"])
+    return {
+        "valid_evidence": valid,
+        "valid_evidence_ids": valid_ids,
+        "invalid_evidence": [error for record_id, error in errors.items() if record_id not in retired],
+        "superseded_evidence_ids": [record["id"] for record in ledger["evidence"] if record["id"] in superseders],
+        "retired_evidence_errors": retired,
+    }
 
 
 def _criteria_due_blockers(
@@ -999,9 +1077,8 @@ def _local_readiness(local: Mapping[str, Any]) -> list[str]:
     return blockers
 
 
-def _review_passed(ledger: Mapping[str, Any], valid_evidence: Mapping[str, set[str]]) -> bool:
-    review_records = [record for record in ledger["evidence"] if record["type"] == "review"]
-    return any("review" in valid_evidence.get(record["ac_id"], set()) for record in review_records)
+def _review_passed(ledger: Mapping[str, Any], valid_evidence_ids: set[str]) -> bool:
+    return any(record["type"] == "review" and record["id"] in valid_evidence_ids for record in ledger["evidence"])
 
 
 def _checks_status(required: list[str], checks: list[Mapping[str, Any]]) -> tuple[bool, bool, list[str]]:
@@ -1081,8 +1158,10 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         for comment in github.get("comments") or []
         if isinstance(comment, Mapping) and comment.get("url")
     }
-    valid_evidence, invalid_evidence = _evidence_status(ledger, head_sha=head_sha, comment_urls=comment_urls)
-    hard.extend(invalid_evidence)
+    evidence_status = _evidence_status(ledger, head_sha=head_sha, comment_urls=comment_urls)
+    valid_evidence = evidence_status["valid_evidence"]
+    valid_evidence_ids = evidence_status["valid_evidence_ids"]
+    hard.extend(evidence_status["invalid_evidence"])
 
     readiness_local = local
     prior_local = _latest_premerge_local(ledger)
@@ -1115,7 +1194,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             hard.append("unresolved requested changes remain on the PR")
             actions.append("address requested changes and obtain fresh current-head review")
         elif pr_state == "OPEN":
-            review_ok = _review_passed(ledger, valid_evidence)
+            review_ok = _review_passed(ledger, valid_evidence_ids)
             if not review_ok:
                 last_success = "REVIEW_REQUESTED"
                 waiting.append("independent outside-author-family review is pending")
@@ -1130,9 +1209,11 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                     review_times = [
                         record["recorded_at"]
                         for record in ledger["evidence"]
-                        if record["type"] == "review" and "review" in valid_evidence.get(record["ac_id"], set())
+                        if record["type"] == "review" and record["id"] in valid_evidence_ids
                     ]
-                    if auto_enabled and review_times and auto_enabled < max(review_times):
+                    if auto_enabled and review_times and _utc_timestamp(auto_enabled) < max(
+                        _utc_timestamp(recorded_at) for recorded_at in review_times
+                    ):
                         hard.append("auto-merge was armed before the verified review gate")
                 checks_ok, checks_waiting, checks_failed = _checks_status(
                     ledger["required_checks"], list(pr.get("checks") or [])
@@ -1151,7 +1232,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                         actions.append("arm or await auto-merge, then reconcile the merged PR")
 
         if pr_state == "MERGED":
-            review_ok = _review_passed(ledger, valid_evidence)
+            review_ok = _review_passed(ledger, valid_evidence_ids)
             checks_ok, checks_waiting, checks_failed = _checks_status(
                 ledger["required_checks"], list(pr.get("checks") or [])
             )
@@ -1162,9 +1243,11 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                 review_times = [
                     record["recorded_at"]
                     for record in ledger["evidence"]
-                    if record["type"] == "review" and "review" in valid_evidence.get(record["ac_id"], set())
+                    if record["type"] == "review" and record["id"] in valid_evidence_ids
                 ]
-                if auto_enabled and review_times and auto_enabled < max(review_times):
+                if auto_enabled and review_times and _utc_timestamp(auto_enabled) < max(
+                    _utc_timestamp(recorded_at) for recorded_at in review_times
+                ):
                     hard.append("auto-merge was armed before the verified review gate")
             if checks_failed:
                 hard.append(f"merged PR has failed required CI: {', '.join(checks_failed)}")
@@ -1202,7 +1285,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             waiting.append("terminal goal requires deployment")
             actions.append("deploy the merged commit and record authoritative evidence")
     certified = any(
-        record["type"] == "certification" and "certification" in valid_evidence.get(record["ac_id"], set())
+        record["type"] == "certification" and record["id"] in valid_evidence_ids
         for record in ledger["evidence"]
     )
     if last_success == "DEPLOYED" and goal == "certify":
@@ -1306,6 +1389,8 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         "waiting": list(dict.fromkeys(waiting)),
         "next_actions": list(dict.fromkeys(actions)),
         "valid_evidence": {key: sorted(value) for key, value in valid_evidence.items()},
+        "superseded_evidence_ids": evidence_status["superseded_evidence_ids"],
+        "retired_evidence_errors": evidence_status["retired_evidence_errors"],
         "preclose_missing_evidence": preclose_missing,
         "preclose_unchecked": preclose_unchecked,
         "goal_reached": goal_reached,

@@ -81,7 +81,7 @@ jobs:
           python-version-file: '.python-version'
       - id: metadata
         run: python3 -m scripts.ci.metadata_commit --commit HEAD >> "$GITHUB_OUTPUT"
-      - uses: trufflesecurity/trufflehog@f714bf454f350590f4a24c3ddb1aef02c35bf5b6 # v3.97.5
+      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # v3.97.9
         with:
           base: ${{ steps.metadata.outputs.parent }}
           head: ${{ steps.metadata.outputs.commit }}
@@ -125,7 +125,7 @@ jobs:
             python3 scripts/audit/lint_opsec_leaks.py --public-identifiers
           fi
       - run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
-      - uses: trufflesecurity/trufflehog@f714bf454f350590f4a24c3ddb1aef02c35bf5b6 # v3.97.5
+      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # v3.97.9
         with:
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
@@ -160,6 +160,41 @@ jobs:
         run: |
           npm ci
           PATH="$PWD/.venv/bin:$PATH" bash scripts/ci/checks.sh
+
+  freeze-durations:
+    name: Freeze pytest durations
+    needs: [reuse]
+    if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/ci/
+            scripts/__init__.py
+            .python-version
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      # Freeze once: independent per-shard lookups could produce different
+      # assignments if another merge-group run finishes during this matrix.
+      - name: Freeze pytest durations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: python3 -m scripts.ci.split_tests refresh --repo "$REPO" --output ci-artifacts/pytest-file-durations.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-duration-snapshot
+          path: ci-artifacts/pytest-file-durations.json
+          if-no-files-found: error
+          retention-days: 14
 
   frontend:
     # Builds only when the diff touches scripts/ci/frontend_change_denominator.json
@@ -212,7 +247,7 @@ jobs:
 
   pytest:
     name: pytest (${{ matrix.shard }})
-    needs: [reuse]
+    needs: [reuse, freeze-durations]
     if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -251,6 +286,12 @@ jobs:
         run: |
           uv pip install --python .venv/bin/python --require-hashes --only-binary=:all: --reinstall-package tree-sitter --reinstall-package tree-sitter-bash -r requirements-hooks.txt
           .venv/bin/python scripts/hooks/bash_oracle.py
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        # Telemetry is optional; shards still run with committed weights.
+        continue-on-error: true
+        with:
+          name: pytest-duration-snapshot
+          path: ci-artifacts
       - name: Run pytest
         env:
           SHARD: ${{ matrix.shard }}
@@ -264,8 +305,16 @@ jobs:
           # Shallow shards: a test that fetches from GitHub fails instead of
           # quietly downloading history (scripts/ci/history-tests.txt).
           [ "$SHARD" = 1 ] || export GIT_ALLOW_PROTOCOL=file
+          durations=scripts/ci/pytest-file-durations.json
+          snapshot=ci-artifacts/pytest-file-durations.json
+          if python3 -m scripts.ci.split_tests validate "$snapshot"; then
+            durations="$snapshot"
+          else
+            echo "::notice::duration snapshot unavailable or invalid; using committed weights"
+          fi
           git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
-            | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" > "$LU_PYTEST_SHARD_FILES"
+            | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
+              --durations "$durations" > "$LU_PYTEST_SHARD_FILES"
           .venv/bin/python -m pytest tests -n logical --dist=worksteal --max-worker-restart=0 \
             --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
             --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
@@ -315,6 +364,16 @@ jobs:
       - env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: python3 -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json
+      # Future runs learn only from a full, successful partition. The refresher
+      # further requires the entire merge-group workflow to have passed.
+      - name: Record pytest durations
+        run: python3 -m scripts.ci.split_tests durations ci-artifacts/shards/*/pytest-shard-*.xml > ci-artifacts/pytest-file-durations.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-file-durations
+          path: ci-artifacts/pytest-file-durations.json
+          if-no-files-found: error
+          retention-days: 14
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ci-tested-tree
@@ -348,10 +407,40 @@ jobs:
     name: CI Gate
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
-    needs: [reuse, queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, pytest, pytest-report]
+    needs: [reuse, queue-metadata-scan, secret-scan, checks, freeze-durations, frontend, dependency-audit, pytest, pytest-report]
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
+      - name: Check out repository
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'merge_group' && github.event.merge_group.head_sha || '' }}
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Set up Python
+        id: setup-python-gate
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Check large files guard
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.head_sha || '' }}
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+        run: |
+          if [ "$EVENT_NAME" = "merge_group" ] && [ -z "$HEAD_SHA" ]; then
+            echo "::error::Missing merge_group head_sha"
+            exit 1
+          fi
+          if [ -z "$BASE_SHA" ]; then
+            echo "::error::Missing base SHA for large file guard in $EVENT_NAME"
+            exit 1
+          fi
+          "$PYTHON_BIN" scripts/ci/check_large_files.py --changed-vs-base "$BASE_SHA"
       - name: Require every job
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -361,6 +450,7 @@ jobs:
           METADATA_SCAN: ${{ needs.queue-metadata-scan.result }}
           SECRET_SCAN: ${{ needs.secret-scan.result }}
           CHECKS: ${{ needs.checks.result }}
+          FREEZE_DURATIONS: ${{ needs.freeze-durations.result }}
           FRONTEND: ${{ needs.frontend.result }}
           DEPENDENCY_AUDIT: ${{ needs.dependency-audit.result }}
           PYTEST: ${{ needs.pytest.result }}
@@ -385,6 +475,7 @@ jobs:
           jobs=(
             secret-scan:SECRET_SCAN
             checks:CHECKS
+            freeze-durations:FREEZE_DURATIONS
             frontend:FRONTEND
             dependency-audit:DEPENDENCY_AUDIT
             pytest:PYTEST

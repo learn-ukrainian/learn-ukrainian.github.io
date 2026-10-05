@@ -4,6 +4,7 @@
   "description": "Changed-path denominator for full-tier frontend / frontend-e2e cheap-exit (#6917). A first-step path check exits 0 when nothing here changed. Prefixes end with /; other entries are exact paths. Hardening: the hydrate-entrypoint resolver only matches plain `npm run <name>` (not `npm run -s` / `npm run --silent`) and does not expand `npx` invocations — keep hydrate scripts on the covered forms or extend the resolver before adding those.",
   "paths": [
     "site/",
+    "curriculum/l2-uk-en/curriculum.yaml",
     "registry/practice/",
     "registry/lexicon/synonym_pair_verdicts.yaml",
     "registry/lexicon/curated_aliases.yaml",

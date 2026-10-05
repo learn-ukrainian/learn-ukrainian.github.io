@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.ua_eval_harness import verify_release_freeze_v011 as freeze_v011
 from scripts.projects.ua_eval_harness.evaluate_model import (
     EvaluationError,
@@ -61,7 +62,7 @@ def sha256(path: Path) -> str:
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     try:
-        rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+        rows = [json.loads(line) for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line]
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise EvidenceError(f"cannot read {path}: {exc}") from exc
     if not rows or not all(isinstance(row, dict) for row in rows):

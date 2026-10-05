@@ -26,9 +26,8 @@ from typing import Any
 
 from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
-from scripts.fleet import pr_identity
+from scripts.fleet import ignored_task_output, pr_identity
 from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims
-from scripts.orchestration.worktree_artifacts import preserve_worktree_artifacts
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
 _DISPATCH_WORKTREES_ROOT = ROOT / ".worktrees" / "dispatch"
@@ -100,14 +99,14 @@ def _load_task_state(tasks_dir: Path, task_id: str) -> dict[str, Any] | None:
     return data if isinstance(data, dict) else None
 
 
-def _worktree_path_from_state(state: dict[str, Any]) -> Path | None:
+def _worktree_path_from_state(state: dict[str, Any], *, repo_root: Path) -> Path | None:
     """Return the bound worktree path recorded in task state, if any."""
     for key in ("worktree_path", "cwd"):
         value = state.get(key)
         if value:
             try:
-                return Path(str(value)).resolve()
-            except OSError:
+                return worktree_claims.resolve_claim_path(str(value), repo_root=repo_root)
+            except (OSError, ValueError, RuntimeError):
                 continue
     return None
 
@@ -270,13 +269,7 @@ def _remove_acp_runtime_worktree(
     def releasable() -> tuple[bool, str]:
         if not _is_under_acp_runtime_root(path, repo_root):
             return False, "ACP runtime path is outside .worktrees/dispatch/acp/"
-        ok, refusal, _artifacts = preserve_worktree_artifacts(
-            path,
-            primary=worktree_claims.control_plane_root(repo_root),
-            task_id=task_id,
-            tasks_dir=tasks_dir,
-        )
-        return ok, refusal
+        return True, ""
 
     removal = worktree_claims.remove_unclaimed_worktree(
         path,
@@ -290,7 +283,13 @@ def _remove_acp_runtime_worktree(
         tasks_dir=tasks_dir,
     )
     if removal.action == "skipped":
-        return {"path": str(path), "action": "retained", "reason": removal.reason, "error": None}
+        return {
+            "path": str(path),
+            "action": "retained",
+            "reason": removal.reason,
+            "error": None,
+            **({"preserved_artifacts": removal.preserved_artifacts} if removal.preserved_artifacts is not None else {}),
+        }
     if removal.action == "removed" and path.exists():
         return {
             "path": str(path),
@@ -298,7 +297,13 @@ def _remove_acp_runtime_worktree(
             "reason": reason,
             "error": f"worktree path still exists after remove: {path}",
         }
-    return {"path": str(path), "action": removal.action, "reason": reason, "error": removal.error}
+    return {
+        "path": str(path),
+        "action": removal.action,
+        "reason": reason,
+        "error": removal.error,
+        "preserved_artifacts": removal.preserved_artifacts,
+    }
 
 
 def _parse_state_pid(state: dict[str, Any]) -> int | None:
@@ -339,7 +344,7 @@ def _reap_main_worktree(
             "error": None,
         }
 
-    bound_path = _worktree_path_from_state(state)
+    bound_path = _worktree_path_from_state(state, repo_root=repo_root)
     if bound_path is None:
         return {
             "path": None,
@@ -545,6 +550,7 @@ def _reap_via_canonical(
         "recovery_ref": row.recovery_ref,
         "branch": row.branch,
         "needs_attention": row.needs_attention,
+        "preserved_artifacts": row.preserved_artifacts,
     }
 
 
@@ -650,6 +656,7 @@ def _reap_terminal_without_pr(
         "error": result.error,
         "pr": result.pr,
         "recovery_ref": result.recovery_ref,
+        "preserved_artifacts": result.preserved_artifacts,
     }
 
 
@@ -779,6 +786,7 @@ def post_task_reap(
     repo_root: Path = ROOT,
     apply: bool = False,
     include_acp_runtime: bool = True,
+    release_retention: bool = False,
 ) -> dict[str, Any]:
     """Return a reap report for ``task_id``; delete only when ``apply`` is True."""
     tasks_dir = tasks_dir or default_tasks_dir()
@@ -793,11 +801,30 @@ def post_task_reap(
                 "action": "retained",
                 "reason": "no task state file found",
                 "error": None,
+                "preserved_artifacts": {
+                    "retention_disposition": "retained",
+                    "owner": "infra lane",
+                    "next_condition": "establish canonical task attribution before removal",
+                },
             },
             "acp_runtimes": [],
-            "errors": [],
+            "errors": ["retention release requires an existing task state"] if release_retention else [],
             "needs_attention": [],
         }
+
+    if release_retention:
+        refusal = _release_retention(task_id, tasks_dir=tasks_dir, repo_root=repo_root, apply=apply)
+        if refusal:
+            return {
+                "task_id": task_id,
+                "task_status": state.get("status"),
+                "apply": apply,
+                "main_worktree": {"action": "retained", "reason": refusal, "error": refusal},
+                "acp_runtimes": [],
+                "errors": [refusal],
+                "needs_attention": [],
+            }
+        state = _load_task_state(tasks_dir, task_id)
 
     main_result = _reap_main_worktree(
         task_id=task_id,
@@ -840,9 +867,76 @@ def post_task_reap(
     }
 
 
+def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply: bool) -> str | None:
+    """Existing owner explicitly releases only an already retrieved output set.
+
+    Use the same worktree -> task-state lock order as preservation. No state
+    authority is added: the existing task record holds intent and the receipt.
+    """
+    if not apply:
+        return "retention release requires --apply"
+    try:
+        state = _load_task_state(tasks_dir, task_id)
+        worktree = _worktree_path_from_state(state or {}, repo_root=repo_root)
+        if worktree is None or not worktree.exists():
+            return "retention release requires an existing bound worktree"
+        with worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(repo_root)):
+            refusal = worktree_claims.owner_release_refusal(
+                worktree,
+                owner_task_id=task_id,
+                tasks_dir=tasks_dir,
+                repo_root=repo_root,
+            )
+            if refusal:
+                return refusal
+            path, record = ignored_task_output.resolve_worktree_record(worktree, tasks_dir, repo_root=repo_root)
+            if path is None or record.get("task_id") != task_id:
+                return "retention release requires unambiguous owner attribution"
+            receipt = record.get("preserved_artifacts", {})
+            if (
+                not receipt.get("retrieval_proof_sha256")
+                or receipt.get("task_id") != task_id
+                or receipt.get("run_nonce") != record.get("run_nonce")
+            ):
+                return "retention release requires an existing passing retrieval receipt"
+            primary = worktree_claims.control_plane_root(repo_root)
+            digest = ignored_task_output.verify_retrieval(primary, receipt)
+            if digest != receipt["retrieval_proof_sha256"] or digest != ignored_task_output._content_digest(
+                worktree,
+                ignored_task_output._ignored_output_files(worktree, primary, record),
+            ):
+                return "retention release requires retrieval of the current output bytes"
+            with ignored_task_output.artifacts.task_state_lock(path):
+                current = json.loads(path.read_text(encoding="utf-8"))
+                if current != record:
+                    return "retention release refused: owner record changed"
+                receipt = dict(receipt)
+                receipt.update(
+                    {
+                        "retention_disposition": "released",
+                        "next_condition": "none",
+                        "retention_release": {
+                            "owner": task_id,
+                            "run_nonce": record["run_nonce"],
+                            "retrieval_proof_sha256": digest,
+                        },
+                    }
+                )
+                current.update({"keep_worktree": False, "preserved_artifacts": receipt})
+                reaper_lifecycle._atomic_write(path, current)
+        return None
+    except (OSError, ValueError, KeyError, TypeError, worktree_claims.WorktreeLockError):
+        return "retention release refused: owner or retrieval proof unavailable"
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--task-id", required=True, help="Task id whose worktree should be reaped")
+    parser.add_argument(
+        "--release-retention",
+        action="store_true",
+        help="Explicit existing-owner release after a passing retrieval receipt (requires --apply)",
+    )
     parser.add_argument(
         "--apply",
         action="store_true",
@@ -874,6 +968,7 @@ def main(argv: list[str] | None = None) -> int:
         repo_root=args.repo_root,
         apply=args.apply,
         include_acp_runtime=args.include_acp_runtime,
+        release_retention=args.release_retention,
     )
 
     print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))

@@ -4,7 +4,8 @@ Performs comprehensive batch verification of Ukrainian text or exercise items in
 a single call:
   - VESUM morphology existence (with sentence-initial capital fallback)
   - Stress oracle verification (chunked at STRESS_BATCH_CAP)
-  - Russian-shadow morphology detection (curated problems vs heuristic suspicions)
+  - Russian-shadow morphology and book-backed calque phrases (firm evidence vs
+    heuristic suspicions; function words are excluded from suspicions)
   - UA-GEC full-span error detection (multi-token problems vs single-token suspicions)
 """
 
@@ -24,6 +25,7 @@ from scripts.curriculum.resolver.tokenize import (
 )
 from scripts.lexicon.calque_corrections import CURATED_CALQUES, LEXICALISED_SAFE
 from scripts.storage.topology import ActiveDatabaseNetworkError, require_local_active_sources_db
+from scripts.verification.antonenko_patterns import PATTERNS, find_book_calques
 from scripts.verification.check_ru_morph import (
     KNOWN_SHADOW_LEMMAS,
     _morph_uk,
@@ -359,6 +361,18 @@ def check_text(
             unit_sentences.append((item_idx, item_id, item_text, current_sentence))
 
     unique_forms = list(tokens_by_form.keys())
+    # Unattested duration ranges (три-чотири) need numeral-part morphology
+    # for the book guard. Keep the input token and all diagnostic spans whole.
+    book_range_parts = (
+        [
+            part.lower()
+            for occurrences in tokens_by_form.values()
+            for part in occurrences[0][2].parts
+            if occurrences[0][2].hyphenated
+        ]
+        if "russian_shadow" in active_checks
+        else []
+    )
 
     raw_problems: list[dict[str, Any]] = []
     raw_suspicions: list[dict[str, Any]] = []
@@ -384,7 +398,7 @@ def check_text(
                     sent_init_caps.add(form)
                     break
 
-        query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in sent_init_caps]))
+        query_words = list(dict.fromkeys(unique_forms + [f.lower() for f in unique_forms] + book_range_parts))
         try:
             vesum_map = verify_words(query_words, db_path=vesum_path)
         except FileNotFoundError as err:
@@ -414,7 +428,7 @@ def check_text(
                 )
     elif "russian_shadow" in active_checks and unique_forms:
         # If vesum was not requested in checks, but russian_shadow needs verified set:
-        query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in unique_forms]))
+        query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in unique_forms] + book_range_parts))
         try:
             vesum_map = verify_words(query_words, db_path=vesum_path)
         except FileNotFoundError as err:
@@ -532,7 +546,7 @@ def check_text(
                         "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
                     }
                 )
-            elif res and res.get("matches_russian"):
+            elif res and res.get("matches_russian") and not _is_closed_class_token(form, vesum_map):
                 raw_suspicions.append(
                     {
                         "form": form,
@@ -548,6 +562,52 @@ def check_text(
                         "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
                     }
                 )
+
+        # Phrase evidence is independent of Russian-shadow confidence. All
+        # inflection decisions reuse the batch's authoritative VESUM readings.
+        book_findings: dict[tuple[str, str], dict[str, Any]] = {}
+        for item_idx, item_id, item_text in units:
+            for finding in find_book_calques(item_text, tokenize(item_text), vesum_map):
+                start, end = finding.pop("start"), finding.pop("end")
+                key = (finding["detail"]["pattern_id"], finding["form"])
+                loc = [item_id, start, end]
+                if key in book_findings:
+                    book_findings[key]["locations"].append(loc)
+                else:
+                    finding.update(check="russian_shadow", locations=[loc], _first_loc=(item_idx, start, end))
+                    book_findings[key] = finding
+        for finding in book_findings.values():
+            if finding["detail"]["status"] == "suspicion":
+                finding["detail"]["label"] = "suspicion, not a verdict"
+                raw_suspicions.append(finding)
+                continue
+            # Firm book evidence supersedes a heuristic on the same span,
+            # including only the covered occurrences of a repeated form.
+            covered = {tuple(loc) for loc in finding["locations"]}
+            for suspicion in raw_suspicions[:]:
+                if suspicion["check"] != "russian_shadow":
+                    continue
+                suspicion["locations"] = [loc for loc in suspicion["locations"] if tuple(loc) not in covered]
+                if not suspicion["locations"]:
+                    raw_suspicions.remove(suspicion)
+                else:
+                    first = suspicion["locations"][0]
+                    item_index = next(i for i, item_id, _ in units if item_id == first[0])
+                    suspicion["_first_loc"] = (item_index, first[1], first[2])
+            existing = next(
+                (
+                    p
+                    for p in raw_problems
+                    if p["check"] == "russian_shadow"
+                    and p["form"] == finding["form"]
+                    and p["locations"] == finding["locations"]
+                ),
+                None,
+            )
+            if existing is not None:
+                existing["detail"].update(finding["detail"])
+            else:
+                raw_problems.append(finding)
 
     # 6. UA-GEC check
     dropped_gec_rows = 0
@@ -628,6 +688,10 @@ def check_text(
                                 "error_code": "source_unavailable",
                                 "error": f"source_unavailable: {err}",
                             }
+                        if is_closed_class_span:
+                            # A contextual edit in one UA-GEC document cannot
+                            # make an ordinary function-word span suspicious.
+                            continue
                         is_collocation = any(r["error_type"] == "F/Collocation" for r in active_rows)
                         is_multi_token_calque = (
                             (not is_single_token)
@@ -644,13 +708,7 @@ def check_text(
                             }
                             is_suspicion = False
                         else:
-                            if is_closed_class_span:
-                                label = (
-                                    "UA-GEC correction of function words; depends on sentence context; "
-                                    "suspicion, not a verdict"
-                                )
-                            else:
-                                label = "UA-GEC correction in one document's context; suspicion, not a verdict"
+                            label = "UA-GEC correction in one document's context; suspicion, not a verdict"
                             detail = {
                                 "status": "suspicion",
                                 "label": label,
@@ -730,6 +788,7 @@ def check_text(
         "vesum_version": _vesum_version(),
         "ua_gec_file_signature": list(sources_sig) if sources_sig else None,
         "ua_gec_dropped_skipped_kind_rows": dropped_gec_rows,
+        "antonenko_pattern_count": len(PATTERNS) if "russian_shadow" in active_checks else 0,
     }
 
     return {

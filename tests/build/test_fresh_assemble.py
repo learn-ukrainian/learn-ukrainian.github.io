@@ -34,6 +34,8 @@ from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
 EXPANDED_SCHEMA_PATH = REPO_ROOT / "schemas" / "lesson-expanded-v1.schema.json"
 PACK_SCHEMA_PATH = REPO_ROOT / "schemas" / "evidence-pack-v1.schema.json"
 WORDS_SCHEMA_PATH = REPO_ROOT / "schemas" / "evidence-words-v1.schema.json"
@@ -60,6 +62,43 @@ def validate_fixture_plan(plan: dict[str, Any]) -> None:
 def validate_fixture_draft(draft: dict[str, Any], level: str = "a1") -> None:
     validator = draft_validator(level)
     validator.validate(draft)
+
+
+@pytest.mark.parametrize(
+    ("text", "stressed", "expected"),
+    [
+        ("Привіт", "приві́т", "Приві́т"),
+        ("ПРИВІТ", "приві́т", "ПРИВІ́Т"),
+        ("привіт", "приві́т", "приві́т"),
+        ("Добрий день", "до́брий день", "До́брий день"),
+        ("ДоБрИй ДеНь", "до́брий день", "До́БрИй ДеНь"),
+        ("Ab’cd", "ab'ćd", "Ab’ćd"),
+        ("Ab‑cd", "ab-ćd", "Ab‑ćd"),
+    ],
+)
+def test_apply_stress_preserves_each_writer_character(text, stressed, expected):
+    prefix = "Say " if text[0].islower() else ""
+    expanded = {"lesson": {}, "units": [{"text": prefix + text + "!"}]}
+    stream = {"tokens": [{"unit_index": 0, "offset": len(prefix), "token": text, "selected": {"stressed": stressed}}]}
+    result = apply_stress(expanded, stream)
+    assert result["units"][0]["text"] == prefix + expected + "!"
+    assert expanded["units"][0]["text"] == prefix + text + "!"
+
+
+def test_apply_stress_multiword_chunk_with_separate_receipt_tokens():
+    expanded = {"units": [{"text": "Добрий день!"}]}
+    stream = {"tokens": [
+        {"unit_index": 0, "offset": 0, "token": "Добрий", "selected": {"stressed": "до́брий"}},
+        {"unit_index": 0, "offset": 7, "token": "день", "selected": {"stressed": "день"}},
+    ]}
+    assert apply_stress(expanded, stream)["units"][0]["text"] == "До́брий день!"
+
+
+def test_apply_stress_refuses_a_different_surface():
+    expanded = {"units": [{"text": "Привіт"}]}
+    stream = {"tokens": [{"unit_index": 0, "offset": 0, "token": "Привіт", "selected": {"stressed": "віта́ю"}}]}
+    with pytest.raises(AssemblerError, match="stress_surface_mismatch"):
+        apply_stress(expanded, stream)
 
 
 # --- Canonical Schema-Valid Fixture Builders ---
@@ -388,7 +427,7 @@ def test_new_feedback_strings_are_resolver_units_and_reach_page_props() -> None:
     types = {"quiz1": "quiz", "group1": "group-sort", "match1": "match-up", "order1": "order"}
     plan = {
         "arc_ref": {"level": "a1", "position": 1},
-        "lessons": [{"n": 1, "steps": [], "activities": [{"id": aid, "type": kind} for aid, kind in types.items()]}]
+        "lessons": [{"n": 1, "steps": [], "activities": [{"id": aid, "type": kind} for aid, kind in types.items()]}],
     }
     draft = {"status": "ok", "steps": [], "activities": activities}
     expanded, provenance = assemble_expanded_document(draft, plan, {}, {}, "a1", "sample", 1)
@@ -697,7 +736,7 @@ def test_build_slovnyk_and_resursy_tabs(monkeypatch):
             "stressed": "де́нь",
         }
     ]
-    w2 = make_word_record(2, "день", pos="noun", forms=w2_forms, sense_gloss="day")
+    w2 = make_word_record(2, "день", pos="noun", forms=w2_forms, gloss_en="day", sense_gloss="unchecked")
     words_store = make_words_store(words=[w1, w2])
 
     t1 = make_text_record(1, "Цитата підручника", author="Shevchenko", work="Kobzar", year=1840, page=10)
@@ -1158,7 +1197,7 @@ def test_slovnyk_selected_sense_and_forms_and_pending_stress(monkeypatch):
 
     # W-1: stress_source: pending prints no stress (unstressed lemma 'день')
     assert slovnyk[0]["lemma"] == "день"
-    assert slovnyk[0]["translation"] == "selected day"
+    assert slovnyk[0]["translation"] == "day"
 
     # W-2: lemma stress comes from lemma form ('сло́во'), not learner form ('слова́')
     assert slovnyk[1]["lemma"] == "сло́во"
@@ -2334,3 +2373,25 @@ def test_grounding_only_resource_reaches_render_and_build_report(tmp_path, monke
         assert report["warnings"] == [
             {"code": "resource_citation_omitted", "record": record_id, "reason": "citable_metadata_missing"}
         ]
+
+
+@pytest.mark.parametrize("pos", ["propn", "name", "noun"])
+def test_glossless_proper_name_keeps_vocab_card_but_has_no_flashcard(pos):
+    from scripts.generate_mdx.resources import vocab_items_to_components
+
+    mdx = vocab_items_to_components([
+        {"lemma": "Ніна", "translation": "", "pos": pos, "atlas_href": None},
+        {"lemma": "sample", "translation": "example", "pos": "noun", "atlas_href": None},
+    ])
+    assert '"word":"Ніна"' in mdx
+    assert '"front":"Ніна"' not in mdx
+    assert '"front":"sample","back":"example"' in mdx
+
+
+def test_proper_name_with_gloss_remains_in_flashcard_deck():
+    from scripts.generate_mdx.resources import vocab_items_to_components
+
+    mdx = vocab_items_to_components([
+        {"lemma": "Name", "translation": "a name", "pos": "propn", "atlas_href": None},
+    ])
+    assert '"front":"Name","back":"a name"' in mdx

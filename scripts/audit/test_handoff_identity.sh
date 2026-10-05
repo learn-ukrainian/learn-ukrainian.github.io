@@ -62,8 +62,8 @@ eq "$(launcher_selector_stream ops-api)" "epic:7919" "ops-api alias → monitor 
 eq "$(launcher_selector_lane ops-api)" "monitor" "ops-api alias → monitor lane"
 eq "$(launcher_selector_lane atlas.practice)" "atlas" "atlas practice resolves to atlas"
 eq "$(launcher_selector_stream hramatka.lessons)" "epic:4542" "hramatka lessons resolves"
-# corpus is a documented, currently-recommended driver epic
-# (docs/runbooks/epic-orchestrator-roster.md: `./start-gemini-driver.sh --epic corpus`) — it must
+# corpus is a documented driver epic for eligible providers and a legacy
+# selector retained for historical handoff lookup — it must
 # stay in the allowlist alongside infra/atlas/hramatka/folk/bio.
 eq "$(launcher_selector_lane corpus)" "corpus" "corpus resolves to corpus lane"
 eq "$(launcher_selector_stream corpus-channels)" "epic:4706" "corpus-channels resolves to corpus stream"

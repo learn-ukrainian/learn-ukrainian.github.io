@@ -385,17 +385,55 @@ def coverage_probe_leaf(*args):
 # The schema pattern uses Unicode 17 assigned Cf/default-ignorable codepoints;
 # ECMA and Python must also reject mixed whitespace/format-only choices.
 INVISIBLE_CHOICE_TEXTS = (
-    " ", "\t", "\n", "\n\t", "\r\n", "\u00a0", "\u2003", "\u2028", "\u202f", "\u3000",
+    " ",
+    "\t",
+    "\n",
+    "\n\t",
+    "\r\n",
+    "\u00a0",
+    "\u2003",
+    "\u2028",
+    "\u202f",
+    "\u3000",
     *(chr(cp) for cp in range(0x110000) if unicodedata.category(chr(cp)) == "Cf"),
-    "\u034f", "\u115f", "\u1160", "\u17b4", "\u17b5", "\u3164", "\uffa0", "\ufe0f", "\U000e0100",
-    " \ufeff\u200b\u2060\u200d\n", "\U0001bca0\U000e0020\U000e0100",
-    "\U00013440", "\U00013447",
+    "\u034f",
+    "\u115f",
+    "\u1160",
+    "\u17b4",
+    "\u17b5",
+    "\u3164",
+    "\uffa0",
+    "\ufe0f",
+    "\U000e0100",
+    " \ufeff\u200b\u2060\u200d\n",
+    "\U0001bca0\U000e0020\U000e0100",
+    "\U00013440",
+    "\U00013447",
 )
 VISIBLE_CHOICE_TEXTS = ("Learner choice", "  Learner choice  ", "\ufeffx\u200b", "\U0001f642", "\U0001d11e")
 
 
 @pytest.mark.parametrize("level", LEVELS)
-@pytest.mark.parametrize("blank", [" ", "\t", "\n", "\t\n", "\u00a0", "\u2003", "\u2028", "\u202f", "\u3000", "\ufeff", "\u200b", "\u2060", "\u200d", "\U000e0020", "\ufe0f"])
+@pytest.mark.parametrize(
+    "blank",
+    [
+        " ",
+        "\t",
+        "\n",
+        "\t\n",
+        "\u00a0",
+        "\u2003",
+        "\u2028",
+        "\u202f",
+        "\u3000",
+        "\ufeff",
+        "\u200b",
+        "\u2060",
+        "\u200d",
+        "\U000e0020",
+        "\ufe0f",
+    ],
+)
 def test_translate_whitespace_choice_fails_live_activity_and_draft_schema(level, blank):
     from scripts.build.fresh.draft_schema import validate_draft
 
@@ -403,8 +441,14 @@ def test_translate_whitespace_choice_fails_live_activity_and_draft_schema(level,
     draft, plan, *_ = inputs
     types = {a["id"]: a["type"] for a in plan["lessons"][0]["activities"]}
     act = next(a for a in draft["activities"] if types[a["id"]] == "translate")
-    definition = json.loads((ROOT / f"schemas/activities-{level}.schema.json").read_text())["definitions"][f"translate-{level}"]
-    payload = {key: value for key, value in {**act, "type": "translate", "title": "Learner title"}.items() if key in definition["properties"]}
+    definition = json.loads((ROOT / f"schemas/activities-{level}.schema.json").read_text())["definitions"][
+        f"translate-{level}"
+    ]
+    payload = {
+        key: value
+        for key, value in {**act, "type": "translate", "title": "Learner title"}.items()
+        if key in definition["properties"]
+    }
     jsonschema.Draft7Validator(definition).validate(payload)
     act["items"][0]["options"][0]["text"] = blank
     payload["items"] = act["items"]
@@ -419,7 +463,11 @@ def choice_text_schemas(filename):
     def choices(node):
         if isinstance(node, dict):
             for key, child in node.items():
-                if key in {"options", "choices", "words", "letters", "syllables"} and isinstance(child, dict) and child.get("type") == "array":
+                if (
+                    key in {"options", "choices", "words", "letters", "syllables"}
+                    and isinstance(child, dict)
+                    and child.get("type") == "array"
+                ):
                     yield child["items"]
                 yield from choices(child)
         elif isinstance(node, list):
@@ -437,7 +485,9 @@ def choice_text_schemas(filename):
     return [text for choice in choices(json.loads((ROOT / "schemas" / filename).read_text())) for text in texts(choice)]
 
 
-@pytest.mark.parametrize("filename", ["activities-base.schema.json", *[f"activities-{level}.schema.json" for level in LEVELS]])
+@pytest.mark.parametrize(
+    "filename", ["activities-base.schema.json", *[f"activities-{level}.schema.json" for level in LEVELS]]
+)
 def test_every_choice_schema_preserves_empty_but_rejects_whitespace(filename):
     schemas = choice_text_schemas(filename)
     assert schemas
@@ -459,7 +509,9 @@ def test_every_choice_schema_preserves_empty_but_rejects_whitespace(filename):
 
 
 @pytest.mark.site_toolchain
-@pytest.mark.parametrize("filename", ["activities-base.schema.json", *[f"activities-{level}.schema.json" for level in LEVELS]])
+@pytest.mark.parametrize(
+    "filename", ["activities-base.schema.json", *[f"activities-{level}.schema.json" for level in LEVELS]]
+)
 def test_choice_patterns_preserve_empty_and_reject_unicode_whitespace_in_ecmascript(filename):
     schemas = choice_text_schemas(filename)
     assert schemas
@@ -482,8 +534,13 @@ for (const pattern of patterns) {
 """
     result = subprocess.run(
         ["node", "-e", script],
-        input=json.dumps({"patterns": [schema["pattern"] for schema in schemas],
-                          "invisible": INVISIBLE_CHOICE_TEXTS, "visible": VISIBLE_CHOICE_TEXTS}),
+        input=json.dumps(
+            {
+                "patterns": [schema["pattern"] for schema in schemas],
+                "invisible": INVISIBLE_CHOICE_TEXTS,
+                "visible": VISIBLE_CHOICE_TEXTS,
+            }
+        ),
         text=True,
         capture_output=True,
         cwd=ROOT,
@@ -652,3 +709,27 @@ def test_fresh_plan_directives_never_supply_activity_headings(render_environment
     result, _ = check_render(inputs, "a1")
     assert result.passed, result.to_dict()
     assert "WRITER DIRECTIVE" not in result.artifacts["mdx"]
+
+
+@pytest.mark.parametrize("level", LEVELS)
+def test_fresh_maximal_draft_formula_reference(level, render_environment):
+    draft, plan, pack, words = maximal_draft(level)
+    formula = {
+        "id": "W-3",
+        "kind": "formula",
+        "text": "Добрий день!",
+        "parts": [{"word": "W-1", "form": "Добрий"}, {"word": "W-2", "form": "день"}],
+        "gloss_en": "good day",
+    }
+    words["words"].append(formula)
+    inventory = plan["lessons"][0]["inventory"]["vocabulary"]
+    inventory["core"].append({"evidence": "W-3"})
+    inventory["incidental"].append({"evidence": "W-3"})
+    block = next(b for b in draft["steps"][0]["blocks"] if "text" in b)
+    block["text"] += " {{gloss:W-3}} {{gloss:W-3}}"
+    result, expanded = check_render((draft, plan, pack, words), level)
+    assert result.passed, result.to_dict()
+    vocab = assemble.build_slovnyk_entries(plan["lessons"][0], words)
+    assert [wid for wid, _ in vocab].count("W-3") == 1
+    assert next(item for wid, item in vocab if wid == "W-3")["lemma"] == "Добрий день!"
+    assert sum(u["role"] == "record_print" and u["text"] == "Добрий день!" for u in expanded["units"]) == 1

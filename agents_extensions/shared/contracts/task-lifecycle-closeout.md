@@ -88,6 +88,41 @@ post-action authoritative observation. This permits truthful staged closeout
 without pretending issue closure or cleanup happened before it did. The task is
 not terminal until those post-action criteria are also evidenced and checked.
 
+### Append-only evidence correction
+
+To correct a pointer or replace proof after a head update, append evidence using
+the existing CLI `add-evidence --details` JSON object with
+`"supersedes_evidence_id": "sha256:<64 lowercase hex>"`. The target must be an
+existing earlier record with the same criterion, type, repository, issue and
+PR; its head may differ. Each target has at most one superseder. Append and load
+reject null, malformed, unknown, self, forward, cyclic, duplicate and
+cross-context links. Original records, including URLs and digests, stay immutable.
+
+Every row passes current-proof validation independently. Superseded rows never
+contribute proof, certification or review timing. Only an independently valid
+chain tip retires earlier errors; an invalid tip leaves historical errors and
+its own failures blocking, even when it replaces previously valid evidence.
+No replacement inherits proof or timestamps. A review correction recorded after
+auto-merge arming remains blocked by the existing timing gate. For both open and
+merged PRs, that gate compares arming with the latest effective valid review as
+parsed UTC instants, for ordinary and replacement rows alike. Equivalent `Z`,
+offset, fractional-second and lowercase spellings have identical timing semantics;
+Invalid timestamps fail closed. Comparison never rewrites stored values or digests.
+Append and load require a correction's `recorded_at` to be strictly later than its target's.
+A new correction append also cannot predate the previously persisted ledger
+`updated_at`; identical-record replay returns unchanged before that append
+check, even after subsequent ledger updates. Chronology compares parsed UTC
+timestamps, including offsets and fractional seconds. These checks apply only
+to corrections; ordinary evidence and CLI `--now` remain supported. `evaluate` exposes
+`superseded_evidence_ids` and `retired_evidence_errors` as output only; the ledger
+does not persist retirement state. Remaining scope cannot reference superseded
+evidence. All due-criterion, head, behavior-receipt, review, CI and closeout gates
+still apply.
+
+Before appending a real review correction, the driver must toolfully verify the
+canonical comment's exact author, approved head SHA and verdict. A correction
+link does not establish approval or strengthen a comment's evidential authority.
+
 ## Reconciliation and mutation
 
 `reconcile` is read-only. It observes GitHub and local Git, validates identity,

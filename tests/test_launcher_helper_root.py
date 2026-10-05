@@ -24,7 +24,7 @@ import pytest
 
 REPO = Path(__file__).resolve().parents[1]
 
-pytestmark = pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+pytestmark = [pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available"), pytest.mark.usefixtures("hermetic_monitor")]
 
 _COPIED = (
     "start-claude-driver.sh",

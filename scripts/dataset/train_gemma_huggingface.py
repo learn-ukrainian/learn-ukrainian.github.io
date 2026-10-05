@@ -1,9 +1,15 @@
 """HuggingFace SFT entry point with a fail-closed Literary Poltava guard."""
 
 import argparse
+import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.projects.open_model_data.paths import refuse_quarantined
+
 CANDIDATE_JSONL = (
     REPO_ROOT / "data" / "datasets" / "hramatka_literary_poltava_v1" / "hramatka_literary_poltava_v1.jsonl"
 )
@@ -27,6 +33,7 @@ def refuse_rebuild_required_candidate(dataset_path: str) -> Path:
             "this candidate rebuild_required. Supply a separately rebuilt, "
             "rights-cleared dataset."
         )
+    refuse_quarantined(resolved_path, "Gemma fine-tuning dataset")
     return resolved_path
 
 

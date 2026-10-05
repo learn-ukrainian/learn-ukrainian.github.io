@@ -49,6 +49,7 @@ from scripts.agent_runtime import review_mcp
 from scripts.build.fresh import assemble, plan_manifest, runner
 from scripts.build.fresh import manifest as fresh_manifest
 from scripts.build.fresh.cli import main as fresh_cli
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
@@ -107,7 +108,7 @@ class Run:
         try:
             return json.loads(text) if text else {}
         except ValueError:
-            return json.loads(text.splitlines()[-1])
+            return json.loads(split_jsonl_lines(text)[-1])
 
 
 def run_main(main: Callable[[list[str] | None], int], argv: list[str]) -> Run:
@@ -1000,7 +1001,7 @@ def token_of(out: Path) -> str:
 
 
 def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review_id: str, attempt_id: str) -> list[str]:
-    """Keep the non-curriculum isolation mechanism smoke explicitly isolated."""
+    """Dispatch the plan, lesson and settle content attempts with their Ukrainian profile."""
     return [
         str(PYTHON),
         str(PRIMARY / "scripts" / "delegate.py"),
@@ -1015,6 +1016,8 @@ def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review
         str(prompt),
         "--review-access",
         "isolated",
+        "--review-profile",
+        "ukrainian",
         "--review-attempt",
         str(manifest),
         "--review-id",
@@ -1574,9 +1577,9 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.review.integration_check run-crafted --out /tmp/r2b-crafted\n"
-            "  .venv/bin/python -m scripts.review.integration_check prepare-real --out /tmp/r2b-real\n"
-            "  .venv/bin/python -m scripts.review.integration_check finish-real --out /tmp/r2b-real\n"
+            '  .venv/bin/python -m scripts.review.integration_check run-crafted --out "$TMPDIR/r2b-crafted"\n'
+            '  .venv/bin/python -m scripts.review.integration_check prepare-real --out "$TMPDIR/r2b-real"\n'
+            '  .venv/bin/python -m scripts.review.integration_check finish-real --out "$TMPDIR/r2b-real"\n'
             "\nOutputs: one PASS/FAIL line per case with its evidence (paths, hashes, database row counts); prepare-real\n"
             "also prints the cards and writes cards/*.json, prompts, returns/ and integration-state.json under --out.\n"
             "Exit codes: 0 every case passes; 1 a case fails or prepare-real found a problem; 2 usage or unusable --out.\n"

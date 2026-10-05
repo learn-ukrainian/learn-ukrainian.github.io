@@ -533,6 +533,51 @@ def test_review_intent_never_reaches_the_toolless_acp_shim(
     assert captured["agent"] == command.removeprefix("ask-")
 
 
+@pytest.mark.parametrize("caller_requests_schema", [False, True])
+def test_native_review_data_stays_separate_from_caller_instructions(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys, caller_requests_schema: bool,
+) -> None:
+    """Drive the actual --data parser/handler through to the native prompt file."""
+    from scripts.ai_agent_bridge import _dispatch_wrappers
+
+    content = "Review this branch.\t \n"
+    if caller_requests_schema:
+        content += "Return code-review-findings.v1 JSON.\n"
+    data = "Provenance: prior-review fixture\ncode-review-findings.v1\n\tattached text  \n"
+    attachment = tmp_path / "prior-review.txt"
+    attachment.write_text(data, encoding="utf-8")
+    reply = "VERDICT: REQUEST_CHANGES\n"
+    result_file = tmp_path / "native-result.md"
+    result_file.write_text(reply, encoding="utf-8")
+    prompts = []
+    calls = []
+
+    def native_boundary(command, **_kwargs):
+        calls.append(command)
+        if command[2] == "dispatch":
+            path = Path(command[command.index("--prompt-file") + 1])
+            prompts.append(path.read_bytes().decode("utf-8"))
+            assert "--review-profile" not in command
+            return subprocess.CompletedProcess(command, 0)
+        assert command[2] == "wait"
+        return subprocess.CompletedProcess(
+            command, 0, stdout=json.dumps({"status": "done", "result_file": str(result_file)})
+        )
+
+    monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(tmp_path))
+    monkeypatch.setattr(_dispatch_wrappers.subprocess, "run", native_boundary)
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", lambda *_a, **_k: pytest.fail("ACP reached"))
+    args = _cli._build_parser().parse_args(
+        ["ask-claude", content, "--review", "--data", str(attachment), "--task-id", "native-data"]
+    )
+    _cli._handle_ask_claude(args)
+
+    guidance = "\n\n" + _dispatch_wrappers._NATIVE_CODE_REVIEW_OUTPUT if caller_requests_schema else ""
+    assert prompts == [content + guidance + "\n\n--- attached inert text ---\n" + data]
+    assert len(calls) == 2  # Exactly one dispatch and wait; no provider retry.
+    assert capsys.readouterr().out == reply + "\n"
+
+
 def _capture_review_dispatch_argv(
     command: str,
     handler_name: str,
