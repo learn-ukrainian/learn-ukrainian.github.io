@@ -653,6 +653,13 @@ def test_sibling_remove_interrupted_work_preserves_bytes(world, managed, tmp_pat
     import hashlib
 
     primary, _sibling, _upstream = world
+    unique = managed / "unique-worker.bin"
+    unique.write_bytes(b"unique unpushed worker commit\x00\xff")
+    git(managed, "add", "--", unique.name)
+    git(managed, "-c", "core.hooksPath=/dev/null", "commit", "-m", "unique worker output")
+    head = git(managed, "rev-parse", "HEAD")
+    unique_sha256 = hashlib.sha256(unique.read_bytes()).hexdigest()
+    assert git(managed, "branch", "-r", "--contains", head) == ""
     record = primary / "batch_state/tasks/interrupted.json"
     result = tmp_path / "interrupted.result"
     output = managed / "batch_state/output.bin"
@@ -667,6 +674,7 @@ def test_sibling_remove_interrupted_work_preserves_bytes(world, managed, tmp_pat
                 "keep_worktree": status == "retention",
                 "run_nonce": "attempt",
                 "worktree_path": str(managed),
+                "final_branch_head_commit": head,
                 "result_file": str(result),
                 "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
             }
@@ -681,6 +689,8 @@ def test_sibling_remove_interrupted_work_preserves_bytes(world, managed, tmp_pat
             assert rc == 2 and err
             assert managed.exists()
             assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)] == before
+            assert git(managed, "rev-parse", "HEAD") == head
+            assert hashlib.sha256(unique.read_bytes()).hexdigest() == unique_sha256
     finally:
         record.unlink()
 
