@@ -322,15 +322,24 @@ The mode comes from the session record SessionStart writes; without a record
 for this session the guard does nothing. After 750k,
 `context-rollover-guard.sh` adds a short reminder to every later prompt. Its
 `PreCompact` hook (matcher `auto`) exits 2, which blocks automatic compaction
-(supported since Claude Code 2.1.105), only while the canonical rollover state
-holds a prepared (`pending_start`) lease whose active thread is this session
-and whose handoff file exists. A block fails the request that triggered
-compaction, so in every other case compaction runs. Manual `/compact` stays
-available. The operator
+(supported since Claude Code 2.1.105), only when
+`thread_handoff.py prepared-handoff --active-thread-id <this session>` exits 0.
+That check accepts a lease only if the canonical `validate_live_lease` (the
+same validation SessionStart detect uses) passes, its replacement is
+`pending_start`, its active thread is this session, and its reserved handoff
+opens, without following any symlink below the lineage, as a non-empty regular
+file this user owns. A block fails the request that triggered compaction, so
+in every other case (no such lease, a rejected lease, a validator error or
+timeout) compaction runs. Manual `/compact` stays available. The operator
 restarts with the session's launcher, for example
 `./start-claude-driver.sh --epic <lane>`; SessionStart then detects the
 prepared packet. Delegated workers (`LEARN_UKRAINIAN_DISPATCH_TASK_ID` set) and
 every other profile keep the continuation behaviour and native compaction.
+
+Rollover bundle import is unchanged: when a local and a remote bundle tie on
+the order key but differ in content, import refuses ("bundle order ties but
+content differs; refusing to choose a copy") and SessionStart continues
+without it. Safe reconciliation of such ties is tracked in #9789.
 
 ## Safety Checks
 
