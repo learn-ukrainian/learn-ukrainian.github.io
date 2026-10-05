@@ -289,11 +289,69 @@ def test_only_fallback_skips_the_probe(tmp_path: Path, value: str):
 # Environ entry that marks both sleeps this probe starts. ``ps`` does not show
 # it; the reap scans ``/proc/<pid>/environ`` and never prints the block.
 _GRANDCHILD_TAG_PREFIX = "lu9746-sleep-30"
+_GRANDCHILD_READY_DEADLINE_S = 5.0
+# Longer than timeout + reap slack, so a clock that includes this stall fails.
+_GRANDCHILD_START_DELAY_S = 3.0
+_DEAD_STATES = frozenset({"Z", "X"})
+_GRANDCHILD_SYSTEMCTL = """\
+#!/bin/sh
+if [ -n "${FAKE_START_DELAY:-}" ]; then
+    sleep "$FAKE_START_DELAY"
+fi
+sleep 30 &
+echo "$!" > "$FAKE_GRANDCHILD_PID"
+exec sleep 30
+"""
+
+
+def _tag_needle(tag: str) -> bytes:
+    return f"FAKE_GRANDCHILD_TAG={tag}".encode()
+
+
+def _proc_snapshot(pid: int) -> tuple[str, int] | None:
+    """Return ``(state, start_ticks)`` from ``/proc/<pid>/stat``.
+
+    ``state`` is field 3. ``start_ticks`` is field 22. ``comm`` may contain
+    spaces and parentheses, so fields are counted after the last ``)``.
+    ``None`` when the process is gone or the record cannot be parsed.
+    """
+    try:
+        blob = (Path("/proc") / str(pid) / "stat").read_bytes()
+    except OSError:
+        return None
+    end = blob.rfind(b")")
+    if end < 0:
+        return None
+    fields = blob[end + 2 :].split()
+    if len(fields) <= 19:
+        return None
+    try:
+        start_ticks = int(fields[19])
+    except ValueError:
+        return None
+    return fields[0].decode("ascii", errors="replace"), start_ticks
+
+
+def _environ_has_tag(pid: int, tag: str) -> bool:
+    try:
+        raw = (Path("/proc") / str(pid) / "environ").read_bytes()
+    except OSError:
+        return False
+    return _tag_needle(tag) in raw.split(b"\0")
+
+
+def _is_surviving_state(state: str) -> bool:
+    """Zombie and dead still pass ``kill(pid, 0)``. They are not survivors."""
+    return state[:1] not in _DEAD_STATES
+
+
+def _process_is_running(pid: int) -> bool:
+    snap = _proc_snapshot(pid)
+    return snap is not None and _is_surviving_state(snap[0])
 
 
 def _tagged_grandchild_pids(tag: str) -> list[int]:
     """PIDs whose environment still carries this run's grandchild tag."""
-    needle = f"FAKE_GRANDCHILD_TAG={tag}".encode()
     protected = {os.getpid(), os.getppid()}
     found: list[int] = []
     for entry in Path("/proc").iterdir():
@@ -302,60 +360,144 @@ def _tagged_grandchild_pids(tag: str) -> list[int]:
         pid = int(entry.name)
         if pid in protected:
             continue
-        try:
-            raw = (entry / "environ").read_bytes()
-        except OSError:
-            continue
-        if needle in raw.split(b"\0"):
+        if _environ_has_tag(pid, tag):
             found.append(pid)
     return found
 
 
+def _running_tagged_pids(tag: str) -> list[int]:
+    return [pid for pid in _tagged_grandchild_pids(tag) if _process_is_running(pid)]
+
+
 def _reap_tagged_grandchildren(tag: str, *extra: int) -> list[int]:
-    """SIGKILL every tagged child (and ``extra``) and return any that remain."""
-    pids = set(_tagged_grandchild_pids(tag))
-    pids.update(pid for pid in extra if pid > 0)
+    """SIGKILL tagged children while tag and start time still match.
+
+    The start time is field 22, recorded the first time the tag is seen.
+    Immediately before every signal both are read again. A missing tag, a
+    different start time, or a gone process is dropped and not signalled; a
+    changed start time is never accepted later. A zombie or dead state is
+    not a survivor.
+    """
+    protected = {os.getpid(), os.getppid()}
+    first_start: dict[int, int] = {}
+    blocked: set[int] = set()
+    tracked: set[int] = set()
+
+    def inspect(pid: int) -> tuple[str, int] | None:
+        if pid in blocked or pid <= 0 or pid in protected:
+            return None
+        if not _environ_has_tag(pid, tag):
+            return None
+        snap = _proc_snapshot(pid)
+        if snap is None:
+            return None
+        state, start = snap
+        recorded = first_start.get(pid)
+        if recorded is None:
+            first_start[pid] = start
+        elif start != recorded:
+            blocked.add(pid)
+            return None
+        if not _is_surviving_state(state):
+            return None
+        return state, start
+
+    def track(pids: list[int] | tuple[int, ...]) -> None:
+        for pid in pids:
+            if inspect(pid) is None:
+                tracked.discard(pid)
+            else:
+                tracked.add(pid)
+
+    initial: list[int] = []
+    for pid in (*_tagged_grandchild_pids(tag), *extra):
+        if pid not in initial:
+            initial.append(pid)
+    track(initial)
     deadline = time.monotonic() + 1.0
     while True:
-        for pid in list(pids):
+        for pid in list(tracked):
+            # Identity is proven on this read, then the signal is the next step.
+            if inspect(pid) is None:
+                tracked.discard(pid)
+                continue
             with suppress(ProcessLookupError):
                 os.kill(pid, signal.SIGKILL)
-        pids.update(_tagged_grandchild_pids(tag))
-        alive: list[int] = []
-        for pid in sorted(pids):
-            try:
-                os.kill(pid, 0)
-            except ProcessLookupError:
-                continue
-            alive.append(pid)
+        track(_tagged_grandchild_pids(tag))
+        alive = [pid for pid in sorted(tracked) if inspect(pid) is not None]
+        tracked.intersection_update(alive)
         if not alive or time.monotonic() >= deadline:
             return alive
         time.sleep(0.02)
 
 
-def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path):
-    """A grandchild that inherits the probe's stdout must not keep dispatch waiting.
+def _wait_for_running_child(pidfile: Path, deadline_s: float) -> int:
+    """Return the pid file's process once it exists and is not Z or X."""
+    deadline = time.monotonic() + deadline_s
+    while True:
+        try:
+            text = pidfile.read_text(encoding="ascii").strip()
+        except OSError:
+            text = ""
+        if text.isdigit() and _process_is_running(int(text)):
+            return int(text)
+        if time.monotonic() >= deadline:
+            raise AssertionError(f"grandchild was not running within {deadline_s:.1f}s")
+        time.sleep(0.02)
 
-    The probe command is a shell script. The shared Python fake spends this
-    0.2s budget on interpreter startup when the runner is loaded, and is killed
-    before it can fork (#9746). ``exec sleep 30`` replaces the shell, so the
-    probe kills that foreground child directly. The background grandchild stays
-    alive until this test reaps every tagged child.
+
+def _popen_after_child_is_running(pidfile: Path, ready: dict[str, float], deadline_s: float):
+    """Start the probe timeout only after the grandchild process is running.
+
+    ``_run`` applies ``timeout_s`` from the moment ``Popen`` returns. Shell
+    startup, the fork, and the pid file then sit inside that budget. This
+    wrapper lets that work finish under ``deadline_s`` and only then calls
+    the real ``wait``, so the measured interval is the hold under test.
+    The second ``wait`` is the post-kill reap; readiness is not repeated.
     """
+    real_popen = iso._Popen
+
+    def popen(argv, *args, **kwargs):
+        proc = real_popen(argv, *args, **kwargs)
+        if Path(argv[0]).name != "systemctl":
+            return proc
+        real_wait = proc.wait
+
+        def wait(*wait_args, **wait_kwargs):
+            if "at" not in ready:
+                _wait_for_running_child(pidfile, deadline_s)
+                ready["at"] = time.monotonic()
+            return real_wait(*wait_args, **wait_kwargs)
+
+        proc.wait = wait  # type: ignore[method-assign]
+        return proc
+
+    return popen
+
+
+def _assert_fallback_does_not_wait_on_grandchild(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    start_delay_s: float | None = None,
+) -> None:
     pidfile = tmp_path / "grandchild.pid"
     tag = f"{_GRANDCHILD_TAG_PREFIX}-{uuid.uuid4().hex}"
     bindir = tmp_path / "bin"
     bindir.mkdir()
     systemctl = bindir / "systemctl"
-    systemctl.write_text(
-        '#!/bin/sh\nsleep 30 &\necho "$!" > "$FAKE_GRANDCHILD_PID"\nexec sleep 30\n',
-        encoding="utf-8",
-    )
+    systemctl.write_text(_GRANDCHILD_SYSTEMCTL, encoding="utf-8")
     systemctl.chmod(0o755)
-    env = _env(bindir, FAKE_GRANDCHILD_PID=str(pidfile), FAKE_GRANDCHILD_TAG=tag)
+    overrides = {"FAKE_GRANDCHILD_PID": str(pidfile), "FAKE_GRANDCHILD_TAG": tag}
+    if start_delay_s is not None:
+        overrides["FAKE_START_DELAY"] = str(start_delay_s)
+    env = _env(bindir, **overrides)
     timeout_s = 0.2
+    deadline_s = _GRANDCHILD_READY_DEADLINE_S if start_delay_s is None else start_delay_s + _GRANDCHILD_READY_DEADLINE_S
     fallback: list[list[str]] = []
     grandchild: int | None = None
+    ready: dict[str, float] = {}
+    monkeypatch.setattr(iso, "_Popen", _popen_after_child_is_running(pidfile, ready, deadline_s))
 
     def popen(argv, **_kwargs):
         fallback.append(list(argv))
@@ -366,7 +508,7 @@ def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path):
 
         return _Proc()
 
-    started = time.monotonic()
+    spawned = time.monotonic()
     try:
         _proc, launch = iso.spawn_detached_worker(
             [_PY, "-c", "print('fallback')"],
@@ -378,24 +520,180 @@ def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path):
             subtree_path=_subtree(tmp_path),
             timeout_s=timeout_s,
         )
-        elapsed = time.monotonic() - started
+        assert "at" in ready
+        elapsed = time.monotonic() - ready["at"]
         assert launch.mode == iso.LAUNCH_FALLBACK
         assert launch.fallback_reason is not None
         assert "timed out" in launch.fallback_reason
         assert fallback == [[_PY, "-c", "print('fallback')"]]
         assert pidfile.is_file()
         grandchild = int(pidfile.read_text(encoding="ascii"))
-        os.kill(grandchild, 0)
+        assert _process_is_running(grandchild)
         deadline = time.monotonic() + 1.0
-        tagged = _tagged_grandchild_pids(tag)
+        tagged = _running_tagged_pids(tag)
         while set(tagged) != {grandchild} and time.monotonic() < deadline:
             time.sleep(0.02)
-            tagged = _tagged_grandchild_pids(tag)
+            tagged = _running_tagged_pids(tag)
         assert set(tagged) == {grandchild}
-        assert elapsed < timeout_s + iso._REAP_TIMEOUT_S + 2.0
+        limit = timeout_s + iso._REAP_TIMEOUT_S + 2.0
+        assert elapsed < limit
+        if start_delay_s is not None:
+            # The stall is outside the measured interval, and it really ran.
+            assert ready["at"] - spawned >= start_delay_s * 0.8
+            assert elapsed < start_delay_s
     finally:
         extra = () if grandchild is None else (grandchild,)
         leftover = _reap_tagged_grandchildren(tag, *extra)
+    assert leftover == []
+    if grandchild is not None:
+        assert not _process_is_running(grandchild)
+
+
+def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A grandchild that inherits the probe's stdout must not keep dispatch waiting.
+
+    The probe command forks ``sleep 30`` and then ``exec sleep 30``. The probe
+    kills that foreground child. The grandchild keeps the inherited capture
+    fds until this test reaps it. ``_run`` uses a file and ``wait``. A pipe
+    plus ``communicate()`` after the kill would block until the grandchild
+    exits, and the elapsed bound would fail.
+
+    Shell startup is outside the measured interval. The probe timeout starts
+    once the pid file exists and that child is running.
+    """
+    _assert_fallback_does_not_wait_on_grandchild(tmp_path, monkeypatch)
+
+
+def test_delayed_grandchild_start_does_not_fail_the_probe(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A startup stall longer than the probe budget must not fail the test.
+
+    The stall is longer than ``timeout_s`` plus the reap slack. Without a
+    readiness wait of its own, the probe kills the shell before the pid file
+    exists. A clock that includes the stall exceeds the elapsed bound.
+    """
+    _assert_fallback_does_not_wait_on_grandchild(tmp_path, monkeypatch, start_delay_s=_GRANDCHILD_START_DELAY_S)
+
+
+def _unused_probe_pid() -> int:
+    """A pid that is not a live process, so a missed kill patch cannot hit one."""
+    for pid in range(2_100_000_001, 2_100_000_011):
+        if not (Path("/proc") / str(pid)).exists():
+            return pid
+    raise AssertionError("no unused probe pid")
+
+
+def test_reap_does_not_signal_a_reused_pid(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A later start time at the same pid is reuse. It must not be signalled."""
+    tag = f"{_GRANDCHILD_TAG_PREFIX}-reuse"
+    pid = _unused_probe_pid()
+    signals: list[tuple[int, int]] = []
+    snapshots = {"n": 0}
+
+    def tagged(_tag: str) -> list[int]:
+        return [pid]
+
+    def has_tag(candidate: int, candidate_tag: str) -> bool:
+        return candidate == pid and candidate_tag == tag
+
+    def snapshot(candidate: int) -> tuple[str, int] | None:
+        if candidate != pid:
+            return None
+        snapshots["n"] += 1
+        # First sight is the original child. Every later read is a new process.
+        if snapshots["n"] == 1:
+            return ("S", 100)
+        return ("S", 999)
+
+    def kill(target: int, sig: int) -> None:
+        signals.append((target, sig))
+
+    module = sys.modules[__name__]
+    monkeypatch.setattr(module, "_tagged_grandchild_pids", tagged)
+    monkeypatch.setattr(module, "_environ_has_tag", has_tag)
+    monkeypatch.setattr(module, "_proc_snapshot", snapshot)
+    monkeypatch.setattr(os, "kill", kill)
+
+    leftover = _reap_tagged_grandchildren(tag, pid)
+    assert snapshots["n"] >= 2
+    assert signals == []
+    assert leftover == []
+
+
+def test_reap_does_not_signal_when_the_tag_is_gone(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The same start time with the tag gone is not the child we recorded."""
+    tag = f"{_GRANDCHILD_TAG_PREFIX}-untagged"
+    pid = _unused_probe_pid()
+    signals: list[tuple[int, int]] = []
+    tag_reads = {"n": 0}
+
+    def tagged(_tag: str) -> list[int]:
+        return [pid]
+
+    def has_tag(candidate: int, candidate_tag: str) -> bool:
+        if candidate != pid or candidate_tag != tag:
+            return False
+        tag_reads["n"] += 1
+        return tag_reads["n"] == 1
+
+    def snapshot(candidate: int) -> tuple[str, int] | None:
+        if candidate != pid:
+            return None
+        return ("S", 100)
+
+    def kill(target: int, sig: int) -> None:
+        signals.append((target, sig))
+
+    module = sys.modules[__name__]
+    monkeypatch.setattr(module, "_tagged_grandchild_pids", tagged)
+    monkeypatch.setattr(module, "_environ_has_tag", has_tag)
+    monkeypatch.setattr(module, "_proc_snapshot", snapshot)
+    monkeypatch.setattr(os, "kill", kill)
+
+    leftover = _reap_tagged_grandchildren(tag, pid)
+    assert tag_reads["n"] >= 2
+    assert signals == []
+    assert leftover == []
+
+
+@pytest.mark.parametrize("state", ["Z", "X"])
+def test_reap_counts_zombie_or_dead_as_terminated(monkeypatch: pytest.MonkeyPatch, state: str) -> None:
+    """``kill(pid, 0)`` succeeds on Z and X. Those states are not still running."""
+    tag = f"{_GRANDCHILD_TAG_PREFIX}-{state}"
+    pid = _unused_probe_pid()
+    signals: list[tuple[int, int]] = []
+    snapshots = {"n": 0}
+
+    def tagged(_tag: str) -> list[int]:
+        return [pid]
+
+    def has_tag(candidate: int, candidate_tag: str) -> bool:
+        return candidate == pid and candidate_tag == tag
+
+    def snapshot(candidate: int) -> tuple[str, int] | None:
+        if candidate != pid:
+            return None
+        snapshots["n"] += 1
+        return (state, 50)
+
+    def kill(target: int, sig: int) -> None:
+        # Existence probe succeeds for a zombie. Delivering it must not happen.
+        if sig == 0 and target == pid:
+            return
+        signals.append((target, sig))
+
+    module = sys.modules[__name__]
+    monkeypatch.setattr(module, "_tagged_grandchild_pids", tagged)
+    monkeypatch.setattr(module, "_environ_has_tag", has_tag)
+    monkeypatch.setattr(module, "_proc_snapshot", snapshot)
+    monkeypatch.setattr(os, "kill", kill)
+    try:
+        kill(pid, 0)
+    except ProcessLookupError:
+        raise AssertionError("kill(0) must succeed on this zombie fixture") from None
+
+    leftover = _reap_tagged_grandchildren(tag)
+    assert snapshots["n"] >= 1
+    assert signals == []
     assert leftover == []
 
 
