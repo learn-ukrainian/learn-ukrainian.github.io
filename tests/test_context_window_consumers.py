@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import json
 import os
+import re
+import shlex
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -121,9 +124,26 @@ def _environment(project: Path, record_path: Path) -> dict[str, str]:
         "CODEX_THREAD_ID",
         "CODEX_SESSION_ID",
         "SESSION_HANDOFF_AGENT",
+        "SESSION_EPIC",
+        "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
+        "LEARN_UKRAINIAN_ROLLOVER_MODE",
     ):
         env.pop(name, None)
     return env
+
+
+def _native_claude_record() -> dict[str, object]:
+    """The native_claude profile as SessionStart records it (#8511)."""
+    record = _record(actual_window=1_000_000)
+    record.update(
+        {
+            "effective_profile_id": "native_claude",
+            "effective_model_id": "claude-native-family",
+            "rollover_warning_percentages": [65.0, 70.0, 75.0],
+            "rollover_mode": "operator_restart",
+        }
+    )
+    return record
 
 
 def _write_transcript(path: Path, *, input_tokens: int, cache_tokens: int) -> None:
@@ -545,3 +565,236 @@ def test_context_monitor_announces_each_tier_once_and_rearms_after_compaction(
     assert not state_file.exists()
     assert run(288_000).startswith("HEADS UP: Context is at 80%")  # fresh climb announces
     assert state_file.read_text(encoding="utf-8").split() == ["1", "288000"]
+
+
+def _monitor(
+    project: Path,
+    record_path: Path,
+    transcript: Path,
+    tokens: int,
+    **extra_env: str,
+) -> str:
+    _write_transcript(transcript, input_tokens=tokens, cache_tokens=0)
+    env = _environment(project, record_path)
+    env.update(extra_env)
+    completed = subprocess.run(
+        [os.fspath(CONTEXT_MONITOR)],
+        input=json.dumps({"session_id": "status-session", "transcript_path": os.fspath(transcript)}),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=project.parent,
+        env=env,
+        timeout=30,
+    )
+    if not completed.stdout.strip():
+        return ""
+    return json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
+
+
+def test_context_monitor_operator_restart_tiers_hand_off_and_wait(tmp_path: Path) -> None:
+    """#8511: 650k/700k warnings, and at 750k hand off, tell the operator, end the turn."""
+    project, record_path = _fake_project(tmp_path, _native_claude_record())
+    transcript = tmp_path / "native.jsonl"
+
+    assert _monitor(project, record_path, transcript, 640_000) == ""
+
+    heads_up = _monitor(project, record_path, transcript, 655_000)
+    assert heads_up.startswith("HEADS UP: Context is at 65%")
+
+    critical = _monitor(project, record_path, transcript, 705_000)
+    assert critical.startswith("CRITICAL: Context is at 70%")
+    assert "Finish the current logical unit" in critical
+    assert "tells the operator it is ready for a restart, and waits" in critical
+    assert "Start the supported continuation" not in critical
+
+    emergency = _monitor(project, record_path, transcript, 760_000)
+    assert emergency.startswith("EMERGENCY: Context is at 76%")
+    assert "waits for the operator to restart it" in emergency
+    assert "Refresh your lane handoff file" in emergency
+    assert "thread-rollover skill's prepare phase (references/prepare.md)" in emergency
+    # The fake project has no interpreter helper: an honest placeholder, never
+    # a checkout-relative .venv path that a worktree does not have.
+    assert (
+        "run <project interpreter> scripts/orchestration/thread_handoff.py prepare"
+        " --agent claude --harness claude-code --active-thread-id status-session --stream-epic <epic-number>"
+        ' --semantic-title "<specific semantic task title>" --task-family <task-family> --role "<role>"'
+        " --terminal-goal <merge|deploy|certify> --context-percent 76"
+    ) in emergency
+    assert ".venv/bin/python" not in emergency
+    assert "handoff and bootstrap packet under .agent/thread-rollovers/" in emergency
+    assert "-thread-handoff.md" not in emergency  # prepare writes no lane-root handoff
+    assert "Tell the operator in one plain message" in emergency
+    assert "END THE TURN and wait for the operator to restart the session" in emergency
+    # Nothing blocks auto-compaction (#9790), so the text must not claim it.
+    assert "Claude Code may still compact it automatically near its own limit" in emergency
+    assert "compaction is blocked" not in emergency
+    assert "Start the supported continuation" not in emergency
+    assert "start-claude-driver.sh" not in emergency  # launcher unknown: not invented
+
+    # Tier 3 is announced on first crossing; a later sequential call stays silent.
+    state_file = project / "batch_state/context_monitor/status-session.tier"
+    assert state_file.read_text(encoding="utf-8") == "3 760000\n"
+    assert _monitor(project, record_path, transcript, 780_000) == ""
+    assert state_file.read_text(encoding="utf-8") == "3 760000\n"
+
+
+def test_context_monitor_operator_restart_names_driver_launcher(tmp_path: Path) -> None:
+    project, record_path = _fake_project(tmp_path, _native_claude_record())
+
+    emergency = _monitor(project, record_path, tmp_path / "native.jsonl", 760_000, SESSION_EPIC="infra")
+
+    assert "restart this session (./start-claude-driver.sh --epic infra)." in emergency
+
+
+def test_context_monitor_dispatched_worker_keeps_continuation_text(tmp_path: Path) -> None:
+    """A delegated worker has no operator to restart it, so it never waits for one."""
+    project, record_path = _fake_project(tmp_path, _native_claude_record())
+
+    emergency = _monitor(
+        project,
+        record_path,
+        tmp_path / "native.jsonl",
+        760_000,
+        LEARN_UKRAINIAN_DISPATCH_TASK_ID="impl-1",
+    )
+
+    assert emergency.startswith("EMERGENCY: Context is at 76%")
+    assert "Start the supported continuation" in emergency
+    assert "END THE TURN" not in emergency
+
+
+def test_context_monitor_other_profiles_keep_continuation_text(tmp_path: Path) -> None:
+    project, record_path = _fake_project(tmp_path, _record(actual_window=360_000))
+
+    emergency = _monitor(project, record_path, tmp_path / "sol.jsonl", 335_000)
+
+    assert emergency.startswith("EMERGENCY: Context is at 93%")
+    assert "Start the supported continuation" in emergency
+    assert "END THE TURN" not in emergency
+
+
+def test_context_monitor_ignores_operator_restart_from_another_sessions_record(tmp_path: Path) -> None:
+    """The mode binds to this session only, as in context-rollover-guard.sh: a
+    foreign record's operator_restart yields the continuation text."""
+    record = _native_claude_record()
+    record["session_id"] = "another-session"
+    project, record_path = _fake_project(tmp_path, record)
+
+    emergency = _monitor(project, record_path, tmp_path / "native.jsonl", 760_000)
+
+    assert emergency.startswith("EMERGENCY: Context is at 76%")
+    assert "Start the supported continuation" in emergency
+    assert "waits for the operator to restart it" not in emergency
+    assert "END THE TURN" not in emergency
+
+
+def test_context_monitor_without_a_record_ignores_env_operator_restart(tmp_path: Path) -> None:
+    """No session record: the trusted native_claude profile resolution supplies
+    the window and tiers, but never the rollover mode (it resolves to
+    operator_restart here), so the continuation text stays."""
+    project, _ = _fake_project(tmp_path, _native_claude_record())
+    (project / "scripts/lib/profile_resolver.sh").symlink_to(PROJECT_ROOT / "scripts/lib/profile_resolver.sh")
+
+    emergency = _monitor(
+        project,
+        tmp_path / "missing-record.json",
+        tmp_path / "native.jsonl",
+        760_000,
+        CODEX_CANONICAL_REPO_ROOT=os.fspath(project),
+        CLAUDE_PROFILE_RESOLVER_PY=os.fspath(PROJECT_ROOT / "scripts/lib/context_profiles.py"),
+        CLAUDE_PROFILE_RESOLVER_PYTHON=sys.executable,
+        LEARN_UKRAINIAN_REQUESTED_PROFILE_ID="native_claude",
+        LEARN_UKRAINIAN_OBSERVED_MODEL_ID="claude-opus-5-5",
+    )
+
+    assert emergency.startswith("EMERGENCY: Context is at 76% of the 1000000-token context window")
+    assert "capacity: declared-profile" in emergency
+    assert "Start the supported continuation" in emergency
+    assert "END THE TURN" not in emergency
+
+
+def _git(*args: str | os.PathLike[str]) -> None:
+    subprocess.run(
+        ["git", "-c", "user.name=test", "-c", "user.email=test@example.invalid", *map(os.fspath, args)],
+        check=True,
+        capture_output=True,
+        timeout=60,
+    )
+
+
+def _primary_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
+    """A real primary checkout with a linked dispatch worktree, as the fleet runs.
+    Only the primary has a .venv; the worktree reaches the repository scripts."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    _git("init", "-q", "-b", "main", primary)
+    (primary / ".gitignore").write_text(".agent/\n.venv/\n.worktrees/\nbatch_state/\nscripts\n", encoding="utf-8")
+    _git("-C", primary, "add", ".gitignore")
+    _git("-C", primary, "commit", "-q", "-m", "init")
+    worktree = primary / ".worktrees/dispatch/claude/probe"
+    _git("-C", primary, "worktree", "add", "-q", "-b", "probe", worktree)
+    (worktree / "scripts").symlink_to(PROJECT_ROOT / "scripts", target_is_directory=True)
+    interpreter = primary / ".venv/bin/python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} "$@"\n', encoding="utf-8")
+    interpreter.chmod(0o755)
+    return primary.resolve(), worktree.resolve()
+
+
+def test_context_monitor_prepare_command_runs_from_a_worktree(tmp_path: Path) -> None:
+    """#8511 review finding 2: the printed command uses the shared interpreter
+    and the runtime identity, runs from a dispatch worktree, and writes this
+    session's pending lease into the primary checkout's runtime state."""
+    primary, worktree = _primary_with_worktree(tmp_path)
+    record_path = tmp_path / "record.json"
+    record_path.write_text(json.dumps(_native_claude_record()), encoding="utf-8")
+    transcript = tmp_path / "native.jsonl"
+    _write_transcript(transcript, input_tokens=760_000, cache_tokens=0)
+    env = _environment(worktree, record_path)
+    for name in ("LEARN_UKRAINIAN_SESSION_ID", "CODEX_CANONICAL_REPO_ROOT"):
+        env.pop(name, None)
+
+    hook = subprocess.run(
+        [os.fspath(CONTEXT_MONITOR)],
+        input=json.dumps({"session_id": "status-session", "transcript_path": os.fspath(transcript)}),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=worktree,
+        env=env,
+        timeout=60,
+    )
+    emergency = json.loads(hook.stdout)["hookSpecificOutput"]["additionalContext"]
+    match = re.search(r"run (.+?) \(fill each <placeholder>", emergency)
+    assert match, emergency
+    printed = match.group(1)
+    assert printed.startswith(
+        f"{primary}/.venv/bin/python scripts/orchestration/thread_handoff.py prepare"
+        " --agent claude --harness claude-code --active-thread-id status-session --stream-epic <epic-number>"
+    )
+
+    filled = (
+        printed.replace("<epic-number>", "8511")
+        .replace('"<specific semantic task title>"', '"Probe the rollover command"')
+        .replace("<task-family>", "thread-rollover")
+        .replace('"<role>"', '"driver"')
+        .replace("<merge|deploy|certify>", "merge")
+    )
+    assert "<" not in filled
+    argv = shlex.split(filled)
+    # Keep the runtime state in this fixture's primary, not the real checkout.
+    argv[2:2] = ["--repo-root", os.fspath(primary)]
+
+    prepare_env = {key: value for key, value in env.items() if not key.startswith("LEARN_UKRAINIAN_SESSION")}
+    prepare_env["LU_MONITOR_LOOPBACK"] = "http://127.0.0.1:9"
+    prepared = subprocess.run(
+        argv, cwd=worktree, env=prepare_env, text=True, capture_output=True, check=False, timeout=120
+    )
+    assert prepared.returncode == 0, prepared.stdout + prepared.stderr
+    leases = list((primary / ".agent/thread-rollovers/claude").glob("*/lease.json"))
+    assert len(leases) == 1
+    lease = json.loads(leases[0].read_text(encoding="utf-8"))
+    assert lease["active"]["thread_id"] == "status-session"
+    assert lease["replacement"]["status"] == "pending_start"
+    assert lease["replacement"]["title_transition"]["harness"] == "claude-code"

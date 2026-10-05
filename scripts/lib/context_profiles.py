@@ -15,6 +15,11 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CONFIG_PATH = PROJECT_ROOT / "scripts" / "config" / "context_profiles.yaml"
 REGISTRY_VERSION = 1
+# ``continuation``: the agent prepares a rollover and starts the harness's
+# supported continuation itself. ``operator_restart``: the agent prepares the
+# rollover, tells the operator it is ready for a restart, and waits (#8511).
+ROLLOVER_MODES = ("continuation", "operator_restart")
+DEFAULT_ROLLOVER_MODE = "continuation"
 
 
 class ContextProfileError(ValueError):
@@ -109,6 +114,9 @@ def validate_profile(profile: dict[str, Any], *, key: str | None = None) -> list
         ):
             errors.append("rollover warning percentages must be strictly increasing between 0 and 100")
 
+    if profile.get("rollover_mode", DEFAULT_ROLLOVER_MODE) not in ROLLOVER_MODES:
+        errors.append(f"rollover_mode must be one of: {', '.join(ROLLOVER_MODES)}")
+
     if window and budget is not None:
         if budget > window:
             errors.append("cold_start_budget_tokens cannot exceed main_context_window_tokens")
@@ -153,9 +161,9 @@ def load_registry(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
 
 
 def load_profiles(config_path: Path = CONFIG_PATH) -> dict[str, dict[str, Any]]:
-    """Return validated profiles keyed by profile id."""
+    """Return validated profiles keyed by profile id, with optional fields defaulted."""
     profiles = load_registry(config_path)["profiles"]
-    return {key: dict(value) for key, value in profiles.items()}
+    return {key: {"rollover_mode": DEFAULT_ROLLOVER_MODE, **value} for key, value in profiles.items()}
 
 
 def get_profile(profile_id: str, *, config_path: Path = CONFIG_PATH) -> dict[str, Any]:
@@ -257,6 +265,7 @@ def main() -> int:
         "COLD_START_PROFILE": profile["cold_start_profile"],
         "COLD_START_BUDGET_TOKENS": profile["cold_start_budget_tokens"],
         "ROLLOVER_WARNING_PERCENTAGES": profile["rollover_warning_percentages"],
+        "ROLLOVER_MODE": profile["rollover_mode"],
         "REQUESTED_PROFILE_ID": profile["requested_profile_id"],
         "REQUESTED_MODEL_ID": profile["requested_model_id"],
         "RESOLUTION_REASON": profile["resolution_reason"],
