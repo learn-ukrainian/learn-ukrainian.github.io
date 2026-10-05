@@ -146,13 +146,16 @@ def frozen_plan(
     run_tag: str,
     worker_cwd: Path,
     block: str,
+    review_profile: str | None = None,
 ) -> dict[str, Any]:
     """Every term that defines the run and its denominator; frozen in the manifest, read by score and report.
+
+    ``review_profile`` is frozen only when set, so a plan without it keeps its manifest unchanged.
 
     ``composition`` (delegate's frame around the prompts, see ``composition_frame``) and
     ``dispatch_args_sha256`` (see ``dispatch_args_frame``) are added once the candidate prompts are planned.
     """
-    return {
+    plan = {
         "harness": HARNESS_VERSION,
         "scoring": SCORING_VERSION,
         "set_id": eval_set.set_id,
@@ -172,6 +175,9 @@ def frozen_plan(
         "worker_cwd": str(worker_cwd),
         "protocol_shortfalls": plan_shortfalls(eval_set, repeats, kinds),
     }
+    if review_profile:
+        plan["review_profile"] = review_profile
+    return plan
 
 
 def dispatch_args_refusal(changed: Sequence[str]) -> str:
@@ -465,7 +471,8 @@ def plan_candidate_tasks(
             payload = review_payload([reviews[item_id] for item_id in slot.item_ids])
         else:
             payload = writing_payload([writings[item_id] for item_id in slot.item_ids])
-        prompt = render(build_prompt(slot.kind, payload, preambles[slot.variant]), block)
+        review_profile = plan.get("review_profile")
+        prompt = render(build_prompt(slot.kind, payload, preambles[slot.variant], review_profile=review_profile), block)
         tasks.append(TaskSpec(slot.task_id, slot.seat, slot.kind, slot.variant, slot.repeat, slot.item_ids, prompt))
     return tasks
 
