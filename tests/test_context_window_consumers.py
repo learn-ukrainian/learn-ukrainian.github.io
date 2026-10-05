@@ -628,7 +628,10 @@ def test_context_monitor_operator_restart_tiers_hand_off_and_wait(tmp_path: Path
     assert "handoff and bootstrap packet under .agent/thread-rollovers/" in emergency
     assert "-thread-handoff.md" not in emergency  # prepare writes no lane-root handoff
     assert "Tell the operator in one plain message" in emergency
-    assert "END THE TURN and wait" in emergency
+    assert "END THE TURN and wait for the operator to restart the session" in emergency
+    # Nothing blocks auto-compaction (#9790), so the text must not claim it.
+    assert "Claude Code may still compact it automatically near its own limit" in emergency
+    assert "compaction is blocked" not in emergency
     assert "Start the supported continuation" not in emergency
     assert "start-claude-driver.sh" not in emergency  # launcher unknown: not invented
 
@@ -701,10 +704,10 @@ def _primary_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
     return primary.resolve(), worktree.resolve()
 
 
-def test_context_monitor_prepare_command_runs_from_a_worktree_and_arms_the_guard(tmp_path: Path) -> None:
+def test_context_monitor_prepare_command_runs_from_a_worktree(tmp_path: Path) -> None:
     """#8511 review finding 2: the printed command uses the shared interpreter
-    and the runtime identity, runs from a dispatch worktree, and the lease it
-    writes is exactly what lets context-rollover-guard.sh block auto-compaction."""
+    and the runtime identity, runs from a dispatch worktree, and writes this
+    session's pending lease into the primary checkout's runtime state."""
     primary, worktree = _primary_with_worktree(tmp_path)
     record_path = tmp_path / "record.json"
     record_path.write_text(json.dumps(_native_claude_record()), encoding="utf-8")
@@ -745,21 +748,6 @@ def test_context_monitor_prepare_command_runs_from_a_worktree_and_arms_the_guard
     # Keep the runtime state in this fixture's primary, not the real checkout.
     argv[2:2] = ["--repo-root", os.fspath(primary)]
 
-    def precompact() -> subprocess.CompletedProcess[str]:
-        return subprocess.run(
-            [os.fspath(PROJECT_ROOT / "agents_extensions/shared/hooks/context-rollover-guard.sh")],
-            input=json.dumps({"session_id": "status-session", "hook_event_name": "PreCompact", "trigger": "auto"}),
-            text=True,
-            capture_output=True,
-            check=False,
-            cwd=worktree,
-            env=env,
-            timeout=60,
-        )
-
-    before = precompact()
-    assert (before.returncode, before.stderr) == (0, "")  # nothing prepared yet: compaction runs
-
     prepare_env = {key: value for key, value in env.items() if not key.startswith("LEARN_UKRAINIAN_SESSION")}
     prepare_env["LU_MONITOR_LOOPBACK"] = "http://127.0.0.1:9"
     prepared = subprocess.run(
@@ -772,10 +760,6 @@ def test_context_monitor_prepare_command_runs_from_a_worktree_and_arms_the_guard
     assert lease["active"]["thread_id"] == "status-session"
     assert lease["replacement"]["status"] == "pending_start"
     assert lease["replacement"]["title_transition"]["harness"] == "claude-code"
-
-    guard = precompact()
-    assert guard.returncode == 2, guard.stderr
-    assert "its rollover handoff is prepared" in guard.stderr
 
 
 def _start_together(

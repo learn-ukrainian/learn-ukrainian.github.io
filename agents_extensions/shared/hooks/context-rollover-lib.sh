@@ -57,34 +57,6 @@ context_effective_rollover_mode() {
   fi
 }
 
-# True only when the canonical rollover validator accepts a prepared, not yet
-# started replacement whose active thread is <session id> and whose reserved
-# handoff is a readable, non-empty regular file: `thread_handoff.py
-# prepared-handoff` (validate_live_lease plus an O_NOFOLLOW read of the
-# lease's reserved packet path). Runs <project dir>'s copy with the shared
-# project interpreter under a timeout of CONTEXT_ROLLOVER_VALIDATOR_TIMEOUT
-# seconds (default and maximum 3, plus a 1-second kill grace, so it ends
-# before the hook's registered 5-second timeout; the check itself takes well
-# under a second). A missing interpreter, `timeout` or script, a timeout, or
-# any validator error returns false: the PreCompact guard then lets
-# compaction run, which is better than failing the request.
-context_session_has_prepared_rollover() {
-  local root="$1" session_id="$2" project_dir="$3" interpreter script seconds output
-  [ -n "$session_id" ] && [ -d "$root/.agent/thread-rollovers" ] || return 1
-  command -v timeout >/dev/null 2>&1 || return 1
-  script="$project_dir/scripts/orchestration/thread_handoff.py"
-  [ -f "$script" ] || return 1
-  # shellcheck source=scripts/lib/project_interpreter.sh
-  source "$project_dir/scripts/lib/project_interpreter.sh" 2>/dev/null || return 1
-  interpreter=$(project_interpreter_resolve "$project_dir" 2>/dev/null) || return 1
-  seconds="${CONTEXT_ROLLOVER_VALIDATOR_TIMEOUT:-3}"
-  case "$seconds" in ''|*[!0-9]*) seconds=3 ;; esac
-  [ "$seconds" -ge 1 ] && [ "$seconds" -le 3 ] || seconds=3
-  output=$(timeout -k 1 "$seconds" "$interpreter" "$script" --repo-root "$root" \
-    prepared-handoff --active-thread-id "$session_id" 2>/dev/null) || return 1
-  [ "$(printf '%s' "$output" | jq -r '.status // empty' 2>/dev/null)" = "prepared" ]
-}
-
 # Claim <tier> for this session at <tokens> under an exclusive lock, so
 # concurrent PostToolUse hooks announce each tier exactly once. The state file
 # holds "<tier> <tokens>". A compaction-scale drop (usage below 60% of the

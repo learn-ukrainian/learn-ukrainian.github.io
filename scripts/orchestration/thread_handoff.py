@@ -50,7 +50,6 @@ if _LOCAL_REPO_ROOT not in sys.path:
 try:
     from scripts import context_canary
     from scripts.common.repo_root import project_interpreter
-    from scripts.common.safe_open import safe_open_below
     from scripts.orchestration import task_identity, thread_handoff_canary
     from scripts.orchestration.task_family import codex_state as task_family_codex_state
     from scripts.orchestration.task_family import rollover as task_family_rollover
@@ -75,7 +74,6 @@ except ImportError as exc:
 
     import context_canary
     from common.repo_root import project_interpreter
-    from common.safe_open import safe_open_below
     from orchestration.task_family import codex_state as task_family_codex_state
     from orchestration.task_family import rollover as task_family_rollover
     from orchestration.task_family import rollover_registry as task_family_rollover_registry
@@ -6355,95 +6353,6 @@ def cmd_refresh_thread_lease_heartbeat(args: argparse.Namespace) -> int:
     return 0
 
 
-def _prepared_handoff_is_readable(lineage_dir: Path, handoff_path: str) -> bool:
-    """True when the reserved handoff is a non-empty regular file this user owns.
-
-    Every component from the lineage directory down is opened ``O_NOFOLLOW``
-    relative to its parent, so a symlink anywhere below the lineage fails.
-    """
-    parts = Path(handoff_path).parts
-    lineage_parts = Path(".agent", "thread-rollovers", lineage_dir.parent.name, lineage_dir.name).parts
-    relative = parts[len(lineage_parts) :]
-    if parts[: len(lineage_parts)] != lineage_parts or not relative or any(part in {".", ".."} for part in relative):
-        return False
-    dir_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
-    try:
-        fd = os.open(lineage_dir, dir_flags)
-    except OSError:
-        return False
-    try:
-        for part in relative[:-1]:
-            child = os.open(part, dir_flags, dir_fd=fd)
-            os.close(fd)
-            fd = child
-        with os.fdopen(safe_open_below(fd, relative[-1], os.O_RDONLY), "rb") as handle:
-            return bool(handle.read(1))
-    except OSError:  # includes UnsafeEntryError: symlink, FIFO, foreign owner
-        return False
-    finally:
-        os.close(fd)
-
-
-def cmd_prepared_handoff(args: argparse.Namespace) -> int:
-    """Read-only: does a prepared, valid, readable rollover handoff exist for this thread?
-
-    The PreCompact guard (#8511) blocks automatic compaction only on exit 0.
-    A lease counts when :func:`validate_live_lease` accepts it, its replacement
-    is ``pending_start``, its active thread is ``--active-thread-id``, and its
-    reserved handoff is a readable, non-empty regular file.  Exit 1 means no
-    such handoff; exit 2 means the check itself failed.
-    """
-    try:
-        _, state_root = resolve_roots(args.repo_root)
-    except ValueError as exc:
-        print(json.dumps({"status": "error", "error": str(exc)}, indent=2))
-        return 2
-    thread_id = str(args.active_thread_id or "").strip()
-    if not thread_id:
-        print(json.dumps({"status": "error", "error": "--active-thread-id is empty"}, indent=2))
-        return 2
-    rejected: list[dict[str, str]] = []
-    rollovers = state_root / ".agent" / "thread-rollovers"
-    for path in sorted(rollovers.glob("*/*/lease.json")):
-        lineage_dir = path.parent
-        if any(item.is_symlink() for item in (lineage_dir.parent, lineage_dir, path)):
-            continue
-        try:
-            agent = normalize_agent_name(lineage_dir.parent.name)
-        except ValueError:
-            continue
-        state = load_state(path)
-        active = state.get("active")
-        if not isinstance(active, dict) or active.get("thread_id") != thread_id:
-            continue
-        lease_file = rel(path, state_root)
-        replacement, error = validate_live_lease(state, agent=agent, state_path=path)
-        if error or replacement is None:
-            rejected.append({"lease_file": lease_file, "error": error or "lease has no replacement"})
-            continue
-        if replacement.get("status") != "pending_start":
-            continue
-        handoff_path = str(replacement["handoff_path"])
-        if not _prepared_handoff_is_readable(lineage_dir, handoff_path):
-            rejected.append({"lease_file": lease_file, "error": "reserved handoff is not a readable regular file"})
-            continue
-        print(
-            json.dumps(
-                {
-                    "status": "prepared",
-                    "agent": agent,
-                    "lineage_id": state.get("lineage_id"),
-                    "rollover_id": replacement.get("rollover_id"),
-                    "handoff_path": handoff_path,
-                },
-                indent=2,
-            )
-        )
-        return 0
-    print(json.dumps({"status": "none", "rejected": rejected}, indent=2))
-    return 1
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path)
@@ -6690,13 +6599,6 @@ def build_parser() -> argparse.ArgumentParser:
     check.add_argument("--context-percent", type=float)
     check.add_argument("--context-threshold", type=float, default=DEFAULT_CONTEXT_THRESHOLD)
     check.set_defaults(func=cmd_check)
-
-    prepared_handoff = subparsers.add_parser(
-        "prepared-handoff",
-        help="Read-only: exit 0 when a valid, readable prepared rollover handoff exists for this active thread.",
-    )
-    prepared_handoff.add_argument("--active-thread-id", required=True)
-    prepared_handoff.set_defaults(func=cmd_prepared_handoff)
 
     audit = subparsers.add_parser("audit", help="Inspect local task identity plus Codex thread/automation metadata.")
     audit.add_argument("--codex-home", default=os.environ.get("CODEX_HOME", str(Path.home() / ".codex")))

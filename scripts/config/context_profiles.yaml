@@ -38,7 +38,7 @@ profiles:
     cold_start_profile: full
     cold_start_budget_tokens: 100000
     # 650k heads-up, 700k finish the unit, 750k hand off and wait for the
-    # operator to restart (#8511); auto-compaction (~97%) must never run first.
+    # operator to restart (#8511), well before auto-compaction (~97%).
     rollover_warning_percentages: [65.0, 70.0, 75.0]
     rollover_mode: operator_restart
 

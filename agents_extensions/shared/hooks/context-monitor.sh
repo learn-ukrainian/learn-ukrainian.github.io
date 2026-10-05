@@ -196,7 +196,8 @@ fi
 
 # operator_restart (#8511): the session never continues itself. It hands off,
 # tells the operator it is ready for a restart, and waits; context-rollover-guard.sh
-# reminds on later prompts and blocks automatic compaction.
+# reminds on later prompts. Nothing blocks Claude Code's own auto-compaction
+# (holding it for a prepared handoff is #9790).
 RESTART_HINT=""
 [ -n "${SESSION_EPIC:-}" ] && RESTART_HINT=" (./start-claude-driver.sh --epic ${SESSION_EPIC})"
 if [ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER3_PCT" ]; then
@@ -207,7 +208,7 @@ if [ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER3_PCT" ]; the
     "1. Refresh your lane handoff file with current state, in-flight work, and next steps." \
     "2. Follow the thread-rollover skill's prepare phase (references/prepare.md): run ${PREPARE_CMD}. This writes the gitignored rollover lease plus its handoff and bootstrap packet under .agent/thread-rollovers/." \
     "3. Tell the operator in one plain message that the handoff is ready and they should restart this session${RESTART_HINT}." \
-    "4. END THE TURN and wait. Once the handoff is prepared, automatic compaction is blocked for this session; the restart replaces it.")
+    "4. END THE TURN and wait for the operator to restart the session. If the session keeps going instead, Claude Code may still compact it automatically near its own limit.")
 elif [ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER2_PCT" ]; then
   MSG=$(printf '%s\n%s\n%s\n%s\n' \
     "CRITICAL: Context is at ${CONTEXT_FACT}. The profile's critical rollover tier is ${TIER2_PCT}%." \

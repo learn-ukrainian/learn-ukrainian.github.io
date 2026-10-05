@@ -17,8 +17,7 @@ CONFIG_PATH = PROJECT_ROOT / "scripts" / "config" / "context_profiles.yaml"
 REGISTRY_VERSION = 1
 # ``continuation``: the agent prepares a rollover and starts the harness's
 # supported continuation itself. ``operator_restart``: the agent prepares the
-# rollover, tells the operator it is ready for a restart, and waits; automatic
-# compaction is blocked for such sessions (#8511).
+# rollover, tells the operator it is ready for a restart, and waits (#8511).
 ROLLOVER_MODES = ("continuation", "operator_restart")
 DEFAULT_ROLLOVER_MODE = "continuation"
 

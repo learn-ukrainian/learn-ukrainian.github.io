@@ -303,8 +303,8 @@ Confirm the replacement with the same agent name:
 ## Claude Operator-Restart Rollover (650k / 700k / 750k)
 
 Native Claude sessions (`native_claude` in `scripts/config/context_profiles.yaml`,
-`rollover_mode: operator_restart`, #8511) never continue themselves and never
-reach Claude Code's automatic compaction (about 97% of the 1M window).
+`rollover_mode: operator_restart`, #8511) never continue themselves: they hand
+off and wait for the operator to restart them.
 `agents_extensions/shared/hooks/context-monitor.sh` announces each tier once
 (an atomic per-session claim, so concurrent tool hooks announce it once):
 
@@ -320,21 +320,15 @@ reach Claude Code's automatic compaction (about 97% of the 1M window).
 
 The mode comes from the session record SessionStart writes; without a record
 for this session the guard does nothing. After 750k,
-`context-rollover-guard.sh` adds a short reminder to every later prompt. Its
-`PreCompact` hook (matcher `auto`) exits 2, which blocks automatic compaction
-(supported since Claude Code 2.1.105), only when
-`thread_handoff.py prepared-handoff --active-thread-id <this session>` exits 0.
-That check accepts a lease only if the canonical `validate_live_lease` (the
-same validation SessionStart detect uses) passes, its replacement is
-`pending_start`, its active thread is this session, and its reserved handoff
-opens, without following any symlink below the lineage, as a non-empty regular
-file this user owns. A block fails the request that triggered compaction, so
-in every other case (no such lease, a rejected lease, a validator error or
-timeout) compaction runs. Manual `/compact` stays available. The operator
-restarts with the session's launcher, for example
-`./start-claude-driver.sh --epic <lane>`; SessionStart then detects the
-prepared packet. Delegated workers (`LEARN_UKRAINIAN_DISPATCH_TASK_ID` set) and
-every other profile keep the continuation behaviour and native compaction.
+`context-rollover-guard.sh` (a `UserPromptSubmit` hook) adds a short reminder
+to every later prompt. Nothing blocks compaction: if the session keeps going,
+Claude Code may still compact it automatically near its own limit (about 97%
+of the 1M window). Holding automatic compaction while a prepared handoff
+exists is tracked in #9790. The operator restarts with the session's
+launcher, for example `./start-claude-driver.sh --epic <lane>`; SessionStart
+then detects the prepared packet. Delegated workers
+(`LEARN_UKRAINIAN_DISPATCH_TASK_ID` set) and every other profile keep the
+continuation behaviour.
 
 Rollover bundle import is unchanged: when a local and a remote bundle tie on
 the order key but differ in content, import refuses ("bundle order ties but
