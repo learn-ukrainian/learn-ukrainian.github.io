@@ -12,13 +12,16 @@ import importlib.util
 import io
 import json
 import os
+import re
 import shlex
+import shutil
 import subprocess
 import sys
 import tempfile
 from collections import Counter
-from contextlib import redirect_stderr
+from contextlib import nullcontext, redirect_stderr, redirect_stdout
 from pathlib import Path
+from typing import NamedTuple
 from unittest.mock import patch
 from urllib.parse import urlparse
 
@@ -383,7 +386,372 @@ def run_oracle(rows=None, traffic=None):
     }
 
 
+# Refusals carry one of these classes. A block has no class. Allow has no class.
+REASON_CLASSES = frozenset(
+    {
+        "UNKNOWN_EXECUTOR",
+        "DYNAMIC_OPERATION",
+        "DYNAMIC_COMMAND",
+        "FORWARDED_ARGUMENTS",
+        "ALIAS_EXECUTION",
+        "VISIBLE_SOURCE",
+        "EXECUTOR_OPTION",
+        "INDIRECT_REFERENCE",
+        "EXECUTED_REDIRECT",
+        "DYNAMIC_REDIRECT",
+        "UNKNOWN_CONTEXT",
+        "UNKNOWN_REPOSITORY",
+        "UNKNOWN_TARGET",
+        "CREATION_COMPOUND",
+        "UNACCOUNTED_OCCURRENCE",
+        "PARSE_INCOMPLETE",
+        "DECODE_FAILURE",
+        "LIMIT_EXCEEDED",
+        "RUNTIME_UNAVAILABLE",
+    }
+)
+_TYPED_HOOKS = {"merge": "guard-pr-merge", "admin": "guard-admin-merge", "branch": "guard-branch-switch-in-main"}
+# One machine-readable line. Prose and the exit code cannot supply a target or a reason class.
+_JUDGMENT_LINE = re.compile(r"(?m)^GUARD_JUDGMENT\s+(\{.*\})\s*$")
+
+
+class DanglingSupersession(Exception):
+    """A supersedes id is not an oracle row."""
+
+
+class MultipleActiveSuccessors(Exception):
+    """One row has two successors, so it has no single active expectation."""
+
+
+class SupersessionCycle(Exception):
+    """A supersedes chain returns to an earlier row."""
+
+
+class HookJudgment(NamedTuple):
+    disposition: str | None
+    reason_class: str | None
+    target: dict | None
+    targets: tuple | None
+    exit_code: int
+    consistent: bool
+
+
+def resolve_active_rows(rows):
+    """Return the single final successor of every supersession chain.
+
+    A cycle, a supersedes id that is not a row, or two successors of one row
+    fail the oracle before any hook is called.
+    """
+    by_id = {}
+    for row in rows:
+        row_id = row["id"]
+        if row_id in by_id:
+            raise ValueError(f"duplicate oracle row: {row_id}")
+        by_id[row_id] = row
+    successors = {}
+    for row in rows:
+        prior = row.get("supersedes")
+        if not prior:
+            continue
+        if prior not in by_id:
+            raise DanglingSupersession(f"dangling supersession: {row['id']} supersedes {prior}")
+        successors.setdefault(prior, []).append(row["id"])
+    for prior, follower_ids in successors.items():
+        if len(follower_ids) > 1:
+            joined = ", ".join(follower_ids)
+            raise MultipleActiveSuccessors(f"multiple active successors: {prior} -> {joined}")
+
+    def terminal(start):
+        seen = []
+        current = start
+        while current in successors:
+            if current in seen:
+                cycle = [*seen[seen.index(current) :], current]
+                raise SupersessionCycle("supersession cycle: " + " -> ".join(cycle))
+            seen.append(current)
+            current = successors[current][0]
+        return current
+
+    for row_id in by_id:
+        terminal(row_id)
+    superseded = set(successors)
+    return [row for row in rows if row["id"] not in superseded]
+
+
+def parse_hook_judgment(exit_code, output):
+    """Read a typed judgment from main()'s exit code and output.
+
+    A GUARD_JUDGMENT line is the only source of a reason class or a target.
+    Without one, exit 0 is allow and exit 2 is block, both with no target.
+    """
+    found = _JUDGMENT_LINE.findall(output)
+    if len(found) > 1:
+        return HookJudgment(None, None, None, None, exit_code, False)
+    if len(found) == 1:
+        try:
+            payload = json.loads(found[0])
+        except json.JSONDecodeError:
+            return HookJudgment(None, None, None, None, exit_code, False)
+        if not isinstance(payload, dict):
+            return HookJudgment(None, None, None, None, exit_code, False)
+        disposition = payload.get("disposition")
+        reason = payload.get("reason_class")
+        target = payload.get("target")
+        targets = payload.get("targets") if "targets" in payload else None
+        consistent = disposition in {"allow", "block", "refuse"} and _reason_matches_disposition(disposition, reason)
+        consistent = consistent and _target_shape(target) and _targets_shape(targets)
+        if disposition == "allow":
+            consistent = consistent and exit_code == 0
+        elif disposition in {"block", "refuse"}:
+            consistent = consistent and exit_code == 2
+        else:
+            consistent = False
+        listed = tuple(targets) if isinstance(targets, list) else None
+        return HookJudgment(
+            disposition if disposition in {"allow", "block", "refuse"} else None,
+            reason if isinstance(reason, str) else None,
+            target if isinstance(target, dict) else None,
+            listed,
+            exit_code,
+            consistent,
+        )
+    if exit_code == 0:
+        return HookJudgment("allow", None, None, (), exit_code, True)
+    if exit_code == 2:
+        return HookJudgment("block", None, None, (), exit_code, True)
+    return HookJudgment(None, None, None, None, exit_code, False)
+
+
+def _reason_matches_disposition(disposition, reason):
+    if disposition == "refuse":
+        return reason in REASON_CLASSES
+    if disposition in {"allow", "block"}:
+        return reason is None
+    return False
+
+
+def _target_shape(target):
+    if target is None:
+        return True
+    if not isinstance(target, dict):
+        return False
+    repository = target.get("repository")
+    pr = target.get("pr")
+    cwd = target.get("cwd")
+    return (
+        isinstance(repository, str) and repository != "" and isinstance(pr, str) and pr != "" and isinstance(cwd, str)
+    )
+
+
+def _targets_shape(targets):
+    if targets is None:
+        return True
+    return isinstance(targets, list) and all(_target_shape(item) and item is not None for item in targets)
+
+
+def invoke_hook_main(module, command, cwd):
+    """Run the hook the way production does: JSON on stdin, then main().
+
+    Helpers are not an entry point. The returned code and combined output are
+    the only evidence the comparison may use.
+    """
+    payload = json.dumps({"cwd": cwd, "tool_input": {"command": command}})
+    stdout, stderr = io.StringIO(), io.StringIO()
+    code = 1
+    with (
+        patch.object(sys, "stdin", io.StringIO(payload)),
+        redirect_stdout(stdout),
+        redirect_stderr(stderr),
+    ):
+        try:
+            code = module.main()
+        except SystemExit as exc:
+            code = exc.code if isinstance(exc.code, int) else 1
+    if code is None:
+        code = 0
+    return int(code), stdout.getvalue() + stderr.getvalue()
+
+
+def _same_directory(actual, expected):
+    if not isinstance(actual, str) or actual == "":
+        return False
+    return Path(actual).expanduser().resolve() == Path(expected).expanduser().resolve()
+
+
+def _one_target_matches(expected_target, actual_target, invocation_cwd):
+    if not isinstance(actual_target, dict) or not isinstance(expected_target, dict):
+        return False
+    if actual_target.get("repository") != expected_target.get("repository"):
+        return False
+    if str(actual_target.get("pr")) != str(expected_target.get("pr")):
+        return False
+    gold_cwd = expected_target.get("cwd", invocation_cwd)
+    return _same_directory(actual_target.get("cwd"), gold_cwd)
+
+
+def _targets_match(expected, judgment, invocation_cwd):
+    if "targets" in expected:
+        if judgment.targets is not None:
+            actual = list(judgment.targets)
+        elif judgment.target is None:
+            actual = []
+        else:
+            actual = [judgment.target]
+        expected_list = expected["targets"]
+        if len(actual) != len(expected_list):
+            return False
+        return all(
+            _one_target_matches(gold, seen, invocation_cwd) for gold, seen in zip(expected_list, actual, strict=True)
+        )
+    if "target" in expected:
+        return _one_target_matches(expected["target"], judgment.target, invocation_cwd)
+    return True
+
+
+def classify_judgment(expected, judgment, invocation_cwd):
+    """Pass only when disposition, reason class and target all match.
+
+    A disposition match with a different reason class or target is a failure.
+    Blocking or refusing a required allow is an over-block.
+    """
+    expected_disposition = expected.get("disposition")
+    if not judgment.consistent or judgment.disposition is None:
+        if expected_disposition == "allow" and judgment.exit_code != 0:
+            return "over_block"
+        return "fail"
+    disposition_ok = judgment.disposition == expected_disposition
+    reason_ok = judgment.reason_class == expected.get("reason_class")
+    target_ok = _targets_match(expected, judgment, invocation_cwd)
+    if disposition_ok and reason_ok and target_ok:
+        return "pass"
+    if expected_disposition == "allow" and judgment.disposition in {"block", "refuse"}:
+        return "over_block"
+    return "fail"
+
+
+def _prepare_probe(base):
+    """Synthetic primary and worktree. Git discovery is real; gh is a failing stub."""
+    primary = base / "primary"
+    primary.mkdir()
+    subprocess.run(["git", "init", "-b", "main", str(primary)], check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "-C", str(primary), "config", "user.email", "oracle@example.invalid"],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "-C", str(primary), "config", "user.name", "oracle"],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    (primary / "README").write_text("probe\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(primary), "add", "README"], check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "-C", str(primary), "-c", "commit.gpgsign=false", "commit", "-m", "probe"],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    worktree = primary / ".worktrees" / "wt"
+    subprocess.run(
+        ["git", "-C", str(primary), "worktree", "add", "-b", "wt", str(worktree)],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    (primary / "wt").symlink_to(worktree, target_is_directory=True)
+    (primary / "a" / "b").mkdir(parents=True)
+    (primary / "primary").symlink_to(primary, target_is_directory=True)
+    (primary / "link").symlink_to(worktree, target_is_directory=True)
+    (primary / "file").write_text("git checkout\ngh pr merge\nx\n", encoding="utf-8")
+    (primary / "script").write_text("gh pr merge 5\n", encoding="utf-8")
+    binaries = base / "bin"
+    binaries.mkdir()
+    gh = binaries / "gh"
+    gh.write_text("#!/bin/sh\necho 'gh unavailable to the oracle scorer' >&2\nexit 1\n", encoding="utf-8")
+    gh.chmod(0o755)
+    return primary, worktree, binaries, gh
+
+
+def _row_directory(row, primary, worktree):
+    return worktree if row.get("cwd") == "worktree" else primary
+
+
+def score_guard_oracle(rows=None, *, hooks=None, primary=None, worktree=None):
+    """Score active typed rows through each hook's main().
+
+    Supersession is transitive. The comparison is disposition, reason class and
+    target (repository, PR and working directory). Disposition alone does not pass.
+    """
+    if rows is None:
+        rows = json.loads((ROOT / "tests/fixtures/guard_bash_oracle.json").read_text(encoding="utf-8"))["rows"]
+    active = resolve_active_rows(rows)
+    typed = [row for row in active if "expected" in row and row.get("hook") in _TYPED_HOOKS]
+    untyped = len(active) - len(typed)
+    counts = {name: {"pass": 0, "fail": 0, "over_block": 0, "failing_ids": []} for name in _TYPED_HOOKS}
+    scored = []
+    own_probe = hooks is None and primary is None
+    probe_cm = tempfile.TemporaryDirectory(prefix="guard-oracle-scorer-") if own_probe else nullcontext()
+    with probe_cm as probe_name:
+        binaries = None
+        branch_module = None
+        if own_probe:
+            primary, worktree, binaries, gh = _prepare_probe(Path(probe_name))
+            stub_path = str(binaries) + os.pathsep + os.environ.get("PATH", "")
+            if shutil.which("gh", path=stub_path) != str(gh):
+                raise RuntimeError("oracle scorer refused to run: gh on PATH is not the local stub")
+            hooks = {name: load_hook(module_name) for name, module_name in _TYPED_HOOKS.items()}
+            branch_module = hooks["branch"]
+        elif primary is None:
+            primary = Path("/oracle-probe")
+            worktree = primary / "worktree"
+        environment = {
+            "PATH": (str(binaries) + os.pathsep if binaries is not None else "") + os.environ.get("PATH", ""),
+            "GH_REPO": "fixture/default",
+            "HOME": str(primary),
+            "CDPATH": "",
+        }
+        branch_patch = (
+            patch.object(branch_module, "PROTECTED_ROOTS", [primary]) if branch_module is not None else nullcontext()
+        )
+        with branch_patch, patch.dict(os.environ, environment, clear=False):
+            os.environ.pop("GH_TOKEN", None)
+            os.environ.pop("GITHUB_TOKEN", None)
+            for row in typed:
+                kind = row["hook"]
+                directory = _row_directory(row, primary, worktree)
+                command = row["command"].replace("{primary}", str(primary))
+                code, output = invoke_hook_main(hooks[kind], command, str(directory))
+                judgment = parse_hook_judgment(code, output)
+                verdict = classify_judgment(row["expected"], judgment, directory)
+                counts[kind][verdict] += 1
+                if verdict != "pass":
+                    counts[kind]["failing_ids"].append(row["id"])
+                scored.append(
+                    {
+                        "id": row["id"],
+                        "hook": kind,
+                        "verdict": verdict,
+                        "disposition": judgment.disposition,
+                        "reason_class": judgment.reason_class,
+                    }
+                )
+    return {
+        "active_typed_rows": len(typed),
+        "untyped_active_rows": untyped,
+        "superseded_rows": len(rows) - len(active),
+        "hooks": counts,
+        "rows": scored,
+    }
+
+
 def main():
+    if sys.argv[1:] == ["--score"]:
+        report = score_guard_oracle()
+        print(json.dumps(report, indent=2))
+        return int(any(bucket["fail"] or bucket["over_block"] for bucket in report["hooks"].values()))
     report = run_oracle()
     print(json.dumps(report, indent=2))
     totals = report["totals"]
