@@ -469,6 +469,32 @@ Claude `--bare` is disabled because it skips hooks. A live bubblewrap probe
 also allowed a primary-checkout write, so the bubblewrap sandbox is not relied
 on as the guard.
 
+### Claude headless runs cannot leave background work (#9690)
+
+A `claude -p` run exits when its final turn ends. Work it started in the
+background is then killed or never reported, so a worker could end with "the
+report will follow" and no verdict. Every `ClaudeAdapter` plan closes this in
+two parts, applied in every mode:
+
+- `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` in `env_overrides`. In Claude Code
+  2.1.289 this makes Bash reject `run_in_background` with an
+  `InputValidationError`, and it runs a background subagent request in the
+  foreground. It also disables MCP auto-backgrounding. `env_sanitize`
+  allowlists the variable for the `claude` provider only.
+- `permissions.deny` in the `--settings` JSON for `Monitor`, `ScheduleWakeup`,
+  `CronCreate` and `Workflow`. The variable leaves these tools available, and
+  they still start or schedule work past the turn. A settings deny removes them
+  from the tool list in `dontAsk`, `bypassPermissions` and default modes.
+
+Sealed `review_isolation` drops the variable through its own environment
+allowlist. It is still closed, because `--tools Read,Grep,Glob` offers no tool
+that can background. Interactive launchers (`start-claude.sh`,
+`start-claude-driver.sh`, `scripts/launchers/claude.sh`) do not use the adapter
+and keep background tasks. A trailing `&` or `nohup` inside a foreground Bash
+call is a different path: `worker_leftovers.py` handles it (#8991).
+`tests/agent_runtime/test_claude_no_background.py` launches a fake CLI through
+the real runner and checks both parts.
+
 ### Native Grok headless permission mapping (#7583)
 
 On native Grok 1.0.x CLI, `acceptEdits --always-approve` still prompts for shell

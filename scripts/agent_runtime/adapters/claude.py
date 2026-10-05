@@ -84,6 +84,14 @@ tracked checkout. A hook that exits 2 still blocks the call under
 retains ``--safe-mode`` and its OS sandbox; safe mode suppresses hooks and
 shell/write tools there.
 
+No background work (#9690): a print-mode run exits when its final turn ends,
+so a task it left in the background is killed or never reported. Every
+invocation sets ``CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1`` (Bash rejects
+``run_in_background``, a requested background subagent runs in the
+foreground, MCP calls are not auto-backgrounded) and its ``--settings`` deny
+the tools that start or schedule work outside the turn, which that variable
+leaves available: Monitor, ScheduleWakeup, CronCreate and Workflow.
+
 Liveness paths:
 - Returns the project-scoped Claude session JSONL file
   (``~/.claude/projects/<project>/<session>.jsonl``) if we can
@@ -160,6 +168,16 @@ _WORKSPACE_WRITE_TOOLS = (
     "WebSearch",
 )
 _MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
+
+# A headless run ends with its final turn: background work it started is lost
+# (#9690). Live probes, Claude Code 2.1.289: this variable makes Bash reject
+# ``run_in_background`` and runs a requested background subagent in the
+# foreground. Monitor, ScheduleWakeup, CronCreate and Workflow stay available
+# under it and still start or schedule work past the turn, so they are denied
+# by name; a settings deny removes them in dontAsk, bypass and default modes.
+# env_sanitize allowlists the variable for the claude provider.
+HEADLESS_BACKGROUND_ENV = {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
+HEADLESS_BACKGROUND_TOOL_DENIES = ("Monitor", "ScheduleWakeup", "CronCreate", "Workflow")
 
 # Reader and writer tools come from the sources server's annotations
 # (``sources_read_only.sources_tool_sets``). tests/mcp/test_sources_tool_side_effects.py
@@ -365,6 +383,13 @@ def _worker_guard_settings(*, publish_guard: bool = False) -> str:
     if not groups:
         raise RuntimeError("Claude worker PreToolUse guards unavailable")
     return json.dumps({"hooks": {"PreToolUse": groups}}, separators=(",", ":"))
+
+
+def _headless_worker_settings(*, publish_guard: bool) -> str:
+    """Guard hooks plus the background-tool denies every headless run receives."""
+    settings = json.loads(_worker_guard_settings(publish_guard=publish_guard))
+    settings["permissions"] = {"deny": list(HEADLESS_BACKGROUND_TOOL_DENIES)}
+    return json.dumps(settings, separators=(",", ":"))
 
 
 def _isolated_review_response_schema(tool_config: dict[str, Any]) -> str:
@@ -574,7 +599,7 @@ class ClaudeAdapter:
         # review isolation receives the settings flag too, but its existing
         # --safe-mode suppresses hooks and shell/write tools; the isolated OS
         # sandbox does not mount the checkout's tracked hook paths.
-        cmd.extend(["--settings", _worker_guard_settings(publish_guard=reviewer_guard and not review_isolation)])
+        cmd.extend(["--settings", _headless_worker_settings(publish_guard=reviewer_guard and not review_isolation)])
         if review_isolation:
             # Exact read/search tools + empty setting sources: no write/shell
             # tools and no project CLAUDE.md/hooks/skills when flags are honored.
@@ -746,6 +771,7 @@ class ClaudeAdapter:
             stdin_payload=prompt if use_stdin else "",
             output_file=None,
             env_overrides={
+                **HEADLESS_BACKGROUND_ENV,
                 **({"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {}),
                 **({"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_guard else {}),
             },

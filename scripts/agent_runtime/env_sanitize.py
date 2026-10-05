@@ -169,6 +169,12 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "gemini": {
         "GEMINI_AUTH_MODE",
     },
+    # The Claude adapter sets this on every headless run so the CLI cannot
+    # leave work in the background when the run ends (#9690). It is a
+    # feature switch, never a credential.
+    "claude": {
+        "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS",
+    },
     # CODEX_HOME must reach the codex subprocess so the V7 writer's
     # scoped config (materialized by
     # `linear_pipeline._ensure_codex_writer_home`) actually takes
