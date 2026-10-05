@@ -16,10 +16,66 @@ Issue: #1184
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from scripts.fleet_comms.contracts import ResponseEnvelope
+
+
+@dataclass(frozen=True)
+class AgyAttempt:
+    """Body-free evidence from one invocation-bound AGY transcript (#8771)."""
+
+    completion_reason: str | None = None
+    failure_code: str | None = None
+    runtime_stop_reason: str | None = None
+    evidence_complete: bool = False
+    kill_count: int | None = None
+    excused_kill_count: int | None = None
+    unexcused_kill_count: int | None = None
+    unknown_command_count: int | None = None
+    permission_profile_id: str | None = None
+    denied_command_count: int | None = None
+    executed_command_count: int | None = None
+    sources_tool_names: tuple[str, ...] = ()
+    cli_version: str = "unknown"
+
+
+@dataclass(frozen=True)
+class AgyTelemetry:
+    """One shared, bounded launch history, projected at the terminal checkpoint."""
+
+    attempts: tuple[AgyAttempt, ...] = ()
+    retry_reason: str | None = None
+    retry_disposition: str = "no_retry"
+    accepted_attempt: int | None = None
+    reroute_required: bool = False
+    reroute_reason: str | None = None
+    parent_task_id: str | None = None
+
+    def __post_init__(self) -> None:
+        if len(self.attempts) > 2 or any(not isinstance(attempt, AgyAttempt) for attempt in self.attempts):
+            raise ValueError("agy_launch_cap_exceeded")
+        if self.accepted_attempt is not None and not 1 <= self.accepted_attempt <= len(self.attempts):
+            raise ValueError("agy_accepted_attempt_invalid")
+
+    def task_fields(self) -> dict[str, Any]:
+        """Keep command text, arguments and source results out of task records."""
+        return {
+            "agy_attempt_count": len(self.attempts),
+            "agy_retry_reason": self.retry_reason,
+            "agy_retry_disposition": self.retry_disposition,
+            "agy_attempts": [
+                {**asdict(attempt), "sources_tool_names": list(attempt.sources_tool_names)} for attempt in self.attempts
+            ],
+            "agy_accepted_attempt": self.accepted_attempt,
+            "agy_reroute_required": self.reroute_required,
+            "agy_reroute_reason": self.reroute_reason,
+            "agy_parent_task_id": self.parent_task_id,
+            "agy_replacement_task_id": f"{self.parent_task_id}-agy-reroute-1"
+            if self.reroute_required and self.parent_task_id
+            else None,
+        }
 
 
 @dataclass(frozen=True)
@@ -89,6 +145,8 @@ class ParseResult:
     agy_pre_model_failure: bool = False
     agy_attempt_count: int = 1
     agy_retry_reason: str | None = None
+    agy_attempt: AgyAttempt | None = None
+    agy_telemetry: AgyTelemetry | None = None
 
 
 @dataclass(frozen=True)
@@ -167,3 +225,4 @@ class Result:
     # e.g. ``provider_policy_refusal``; None on success or when unclassified.
     failure_code: str | None = None
     agy_killed_commands: list[str] = field(default_factory=list)
+    agy_telemetry: AgyTelemetry | None = None
