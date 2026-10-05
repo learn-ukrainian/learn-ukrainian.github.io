@@ -392,15 +392,15 @@ def _resolve_review_target(
     family = resolve_family(concrete or "")
     # The seat's registered pin reviews too when no model is named (#9583).
     _refuse_non_review_models((requested_model,))
-    if attempt:
+    if attempt and seat in {"grok", "grok-build"}:
         from .review_mcp import UNSUPPORTED_HARNESS_REASONS
 
-        # Model admission (#9769) does not prove the formal-attempt harness
+        # Native Grok model admission (#9769) does not prove the attempt
         # boundary (#8517). Refuse before budget probes or attempt setup.
-        if detail := UNSUPPORTED_HARNESS_REASONS.get(seat):
-            raise ReviewAdmissionRefused(
-                f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail} (#8517)"
-            )
+        detail = UNSUPPORTED_HARNESS_REASONS[seat]
+        raise ReviewAdmissionRefused(
+            f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail} (#8517)"
+        )
     # Composer/Kimi never review. Native and Cursor Grok require runtime
     # attestation and cross-family eligibility at every risk (#9769).
     forbidden = {"moonshot"}
@@ -460,9 +460,12 @@ def _resolve_review_target(
     risk_note = "" if eligible or profile == "ukrainian" else risk_reviewer_refusal(concrete, inputs.risk) or ""
     risk_note = f" ({risk_note})" if risk_note else ""
     if attempt and not eligible:
-        detail = (
+        from .review_mcp import UNSUPPORTED_HARNESS_REASONS
+
+        detail = UNSUPPORTED_HARNESS_REASONS.get(
+            seat,
             f"requested model {concrete!r} is ineligible for --review-profile {profile}; "
-            "attempt identities cannot be substituted"
+            "attempt identities cannot be substituted",
         )
         raise ReviewAdmissionRefused(
             f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail}{risk_note} (#8517)"
