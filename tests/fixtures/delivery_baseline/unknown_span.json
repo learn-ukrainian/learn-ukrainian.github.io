@@ -12,7 +12,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "2d52e1b0cab97dd497d5eb2f6dbdc86bcc4ea359",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -21,7 +21,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "2d52e1b0cab97dd497d5eb2f6dbdc86bcc4ea359",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },

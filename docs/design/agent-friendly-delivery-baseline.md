@@ -56,16 +56,17 @@ Spans that overlap in time are never added together. For each record, stage and 
 - **Source.** Cohort members come from canonical task records and GitHub PR, check and merge history. Lifecycle ledgers are acceptance evidence where they exist. They are not an unbiased before group, and the two completed pilot ledgers are coverage examples only.
 - **Freeze before comparison.** Membership, arm (`before` or `after`), stratum, matched setup and the definition of delivered are fixed in the cohort file before any timing is read. The report records the cohort's `input_sha256`. Changing membership after seeing timings creates a new cohort with a new digest.
 - **Strata.** The six representative cases from #9737 are `launcher_repair`, `provider_runtime_failure`, `routine_product_change`, `architecture_change`, `ukrainian_content` and `long_epic_resume`. A record outside them (for example a CI/test repair) is excluded with the reason `outside_frozen_strata`. It is still listed in the report.
-- **Matched setup.** Each record carries `matched_setup`, for example the required-check set and review profile. If delivered records in a stratum carry more than one setup value across the two arms, the comparison is `inconclusive` (`incomparable_setup`).
-- **Explicit exclusions.** Dry runs, duplicate attempts of one outcome and records that cannot be read are excluded with a stated reason and listed. They are never silently dropped.
-- **Denominators.** Each stratum and arm reports its members, its delivered count and a count of each not-delivered reason.
+- **Matched setup.** Each record carries `matched_setup`, a non-empty object such as the required-check set and review profile. A setup that is absent, `null`, empty or holds a `null` value is unknown, never matched: if any delivered record in a stratum has an unknown setup, the comparison is `inconclusive` (`unknown_setup`). If delivered records in a stratum carry more than one known setup value across the two arms, the comparison is `inconclusive` (`incomparable_setup`).
+- **Explicit exclusions.** Dry runs, duplicate attempts of one outcome and records that cannot be read are excluded with a stated reason (the record's `exclusion` field) and listed. They are never silently dropped.
+- **One record per outcome.** The denominator counts outcomes, not task records. Two records describe the same outcome when they share a PR number or a merged head SHA, for example a failed attempt and its retry, or two author rounds on one PR. Choosing which attempt represents an outcome changes the timings, so the evaluator never chooses: when the cohort is frozen, every attempt but one carries an `exclusion` such as `duplicate_attempt`. A cohort in which two records that are not excluded share an outcome is malformed and is refused (exit 2).
+- **Denominators.** Each stratum and arm reports its members, its delivered count and a count of each not-delivered reason. Because of the rule above, each delivered record is a distinct outcome.
 
 ## 5. Delivered
 
 A record counts as delivered only if it has all of the following:
 
-1. **Linked outcome:** an issue number and a PR number.
-2. **Review of record:** an `APPROVE` verdict from a family different from the author's family, on the merged head SHA. Otherwise the reason is `no_review_of_record`, `review_not_independent` or `review_not_exact_head`.
+1. **Linked outcome:** an issue number and a PR number, each a positive integer. A JSON boolean, zero, negative, fractional or string value is not an identifier (`unlinked_outcome`).
+2. **Review of record:** an `APPROVE` verdict on the merged head SHA, with both `author_family` and `reviewer_family` known (non-empty strings) and different, compared without regard to case or surrounding whitespace. Independence is never inferred from a missing identity. Otherwise the reason is `no_review_of_record`, `review_identity_unknown`, `review_not_independent` or `review_not_exact_head`.
 3. **Merge:** a `mergedAt` value and a merged head SHA.
 4. **Cleanup:** a lifecycle `CLEANED_UP` observation, or an equivalent `scripts.orchestration.merge_closeout` proof. Either is entered in the cohort as `cleanup.state: CLEANED_UP` with its `observed_at`.
 
@@ -88,7 +89,7 @@ Input schema `delivery-baseline-input.v1` has two fields. `records[]` holds each
 .venv/bin/python -m scripts.ci.delivery_baseline <cohort.json>
 ```
 
-The evaluator exits 0 with a `delivery-baseline-report.v1` JSON document, or exits 2 on malformed input. It reads no task store, GitHub or Fleet database. Extracting canonical values into a cohort file is a separate, later step, and it must not commit real task records or telemetry.
+The evaluator exits 0 with a `delivery-baseline-report.v1` JSON document, or exits 2 on malformed input: an unreadable or non-JSON file, a wrong `schema_version`, a top level, record, span, sub-object or claim of the wrong JSON type, a duplicate `task_id`, or two records sharing one outcome without an exclusion (§4). `--help` lists examples, outputs, exit codes and related documents. It reads no task store, GitHub or Fleet database. Extracting canonical values into a cohort file is a separate, later step, and it must not commit real task records or telemetry.
 
 | Fixture | What it proves |
 | --- | --- |
@@ -98,4 +99,4 @@ The evaluator exits 0 with a `delivery-baseline-report.v1` JSON document, or exi
 | `not_delivered.json` | Unlinked, unmerged, unreviewed, self-reviewed, stale-head and uncleaned records are not delivered. Out-of-strata and dry-run records are excluded |
 | `stratum_floor.json` | 11 delivered per arm pooled, but 5/1 and 1/5 within two strata, makes both of those strata `inconclusive`. A stratum with 5 per arm is `reportable`. Claims on inconclusive or pooled comparisons are rejected |
 
-All fixtures are synthetic: invented task ids, PR numbers and SHAs, and no real records. The independent reviewer selects its own held-out controls.
+The tests also replay the first independent review's held-out mutations on an inline at-floor cohort (five per arm in one stratum): missing or blank author and reviewer families, repeated attempts at one outcome, absent or empty setup, boolean and non-positive identifiers, and malformed JSON structures. All fixtures are synthetic: invented task ids, PR numbers and SHAs (each record has its own merged head), and no real records. The independent reviewer selects its own held-out controls.

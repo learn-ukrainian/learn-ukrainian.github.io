@@ -33,7 +33,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "20b722634a85ecfa856951bb29b1a20f2f0b8475",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -42,7 +42,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "20b722634a85ecfa856951bb29b1a20f2f0b8475",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -70,7 +70,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "b0a98189fb4e4bbfaea50f4a5adfe4e02e68d191",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -79,7 +79,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "b0a98189fb4e4bbfaea50f4a5adfe4e02e68d191",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -107,7 +107,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "67efa8c1b52de2e8a01eeed7508198cacb9d4be4",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -116,7 +116,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "67efa8c1b52de2e8a01eeed7508198cacb9d4be4",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -144,7 +144,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "a8a2e4738d58664089b9055e479b5b2f1a48044b",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -153,7 +153,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "a8a2e4738d58664089b9055e479b5b2f1a48044b",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -181,7 +181,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "241d92640a5c6be2626e6a1919053f94451835c1",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -190,7 +190,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "241d92640a5c6be2626e6a1919053f94451835c1",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -218,7 +218,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "e2ec6090273decb145650410cae353dfcb1ea72f",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -227,7 +227,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "e2ec6090273decb145650410cae353dfcb1ea72f",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -255,7 +255,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "7c97bbdbcc8c80d9478b42b0eb2306258ae1478e",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -264,7 +264,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "7c97bbdbcc8c80d9478b42b0eb2306258ae1478e",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -292,7 +292,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "ce415d5016b64e0afb37811bc66311fffff37e09",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -301,7 +301,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "ce415d5016b64e0afb37811bc66311fffff37e09",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -329,7 +329,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "ee1fa2536958e7482661136bd9029a9f52dbf287",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -338,7 +338,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "ee1fa2536958e7482661136bd9029a9f52dbf287",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -366,7 +366,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "1db4aec2238a3601c9ccdd51c8654550488eea7e",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -375,7 +375,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "1db4aec2238a3601c9ccdd51c8654550488eea7e",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -403,7 +403,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "2f0c49e874cda14916f3935d9ee9996149378f42",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -412,7 +412,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "2f0c49e874cda14916f3935d9ee9996149378f42",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -440,7 +440,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "48833093f3446570c2be06e2de59b6d47a8cd8e5",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -449,7 +449,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "48833093f3446570c2be06e2de59b6d47a8cd8e5",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -477,7 +477,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "8f65ffecfef4690ce1fd6844cb61273a4c397f4c",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -486,7 +486,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "8f65ffecfef4690ce1fd6844cb61273a4c397f4c",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -514,7 +514,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "7e4d12be94736f1bc2c4563c9adac9090f4aacad",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -523,7 +523,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "7e4d12be94736f1bc2c4563c9adac9090f4aacad",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -551,7 +551,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "e460453df365a778100765cd978e2af8df36ccc0",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -560,7 +560,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "e460453df365a778100765cd978e2af8df36ccc0",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -588,7 +588,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "68d02d7aae3723d3195e21417678d7aae464b0b2",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -597,7 +597,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "68d02d7aae3723d3195e21417678d7aae464b0b2",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -625,7 +625,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "7d97284cc41761b68519c23ab37af9370b7625a0",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -634,7 +634,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "7d97284cc41761b68519c23ab37af9370b7625a0",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -662,7 +662,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "691861ca7cf9587fd73030fc08b7e3ec021d8fca",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -671,7 +671,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "691861ca7cf9587fd73030fc08b7e3ec021d8fca",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -699,7 +699,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "7a54b8b8c42e43aeb41547b26186cd44dd43320d",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -708,7 +708,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "7a54b8b8c42e43aeb41547b26186cd44dd43320d",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -736,7 +736,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "b00777be31393caa0a053ceb3e7b1380abc2d99a",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -745,7 +745,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "b00777be31393caa0a053ceb3e7b1380abc2d99a",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -773,7 +773,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "c6e1da49afe710a6295f141349ca1bcd8730bf3d",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -782,7 +782,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "c6e1da49afe710a6295f141349ca1bcd8730bf3d",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
@@ -810,7 +810,7 @@
         "review_profile": "code"
       },
       "merge": {
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "e799daf5eff4196b7bb2636f9c7a575a2bbe1ffd",
         "merged_at": "2026-01-02T12:00:00Z"
       },
       "outcome": {
@@ -819,7 +819,7 @@
       },
       "review_of_record": {
         "author_family": "anthropic",
-        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "head_sha": "e799daf5eff4196b7bb2636f9c7a575a2bbe1ffd",
         "reviewer_family": "openai",
         "verdict": "APPROVE"
       },
