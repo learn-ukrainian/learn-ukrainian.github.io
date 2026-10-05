@@ -1834,15 +1834,12 @@ def _dispatch_headless_review(
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
 
-    prompt = content
-    if data:
-        prompt += "\n\n--- attached inert text ---\n" + data
-
     try:
         result = run_ask_review_dispatch(
             dispatch_agent,
-            prompt,
+            content,
             task_id=task_id,
+            data=data,
             model=model,
             effort=effort,
             hard_timeout=hard_timeout,
