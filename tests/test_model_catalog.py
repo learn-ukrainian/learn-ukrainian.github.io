@@ -1006,7 +1006,7 @@ def test_critical_ladder_anthropic_authority_is_opus_without_fable():
     catalog = load_model_catalog()
     flat = [name for rung in catalog["review_ladders"]["critical"] for name in rung]
     assert flat[:4] == ["openai_frontier", "claude-opus-5-5", "grok-4.7", "grok-4.7-cursor-fallback"]
-    assert flat[-1] == "claude-opus-5-5-cursor-fallback"
+    assert flat[4:] == ["claude-opus-5-5-cursor-fallback", "composer-2.5", "pool", "pool-xs"]
     # #9583: Fable is no longer a critical last resort.
     assert not any(name.startswith("claude-fable-") for name in flat)
     assert "claude-opus-5" not in flat

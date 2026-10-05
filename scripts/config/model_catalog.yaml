@@ -1284,6 +1284,7 @@ review_ladders:
   # Hard filters precede last-resort preference, then suitability and quality.
   # Operator decision 2026-10-05 (#9769): Opus, native Grok, then Cursor Grok.
   # Both Grok transports require runtime attestation and exclude xAI authors.
+  # Composer and Pool lack critical_review; critical lists them to record exclusion.
   # GLM remains explicit-pin only. Fable holds no review role at any risk (#9583).
   critical:
     - [openai_frontier]
@@ -1291,6 +1292,9 @@ review_ladders:
     - [grok-4.7]
     - [grok-4.7-cursor-fallback]
     - [claude-opus-5-5-cursor-fallback]
+    - [composer-2.5]
+    - [pool]
+    - [pool-xs]
   # High lists only review_scheduler.risk_reviewer_models.high (#9538): when
   # no seat is eligible the resolver returns no reviewer with a stated reason.
   high:

@@ -1074,7 +1074,9 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
 def test_ladders_place_native_and_cursor_grok_directly_after_opus(risk):
     ladder = REVIEW_LADDERS[risk]
     assert [rung[0].name for rung in ladder[:5]] == ["openai_frontier", "claude-opus-5-5", "grok-4.7", "grok-4.7-cursor-fallback", "claude-opus-5-5-cursor-fallback"]
-    if risk in {"critical", "high"}:
+    if risk == "critical":
+        assert [rung[0].name for rung in ladder[5:]] == ["composer-2.5", "pool", "pool-xs"]
+    elif risk == "high":
         assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
     else:
         assert ladder[5][0].name == "claude-sonnet-5-5"
