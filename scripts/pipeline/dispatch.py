@@ -13,8 +13,10 @@ import time
 from pathlib import Path
 
 try:
+    from agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
     from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 except ModuleNotFoundError:
+    from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
     from scripts.utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 
 # Late imports to avoid circular dependencies
@@ -328,12 +330,15 @@ def dispatch_claude_phase(
     """Call Claude CLI headlessly for a phase prompt file."""
     env = os.environ.copy()
     env.pop("CLAUDECODE", None)
+    # The run ends with its final turn; no background work may outlive it (#9750).
+    env.update(HEADLESS_BACKGROUND_ENV)
 
     prompt = prompt_file.read_text("utf-8")
     prompt = prompt.replace("You are Gemini", "You are Claude")
 
     cmd = [_get_claude_bin(), "--model", model, "-p", "--output-format", "text"]
     cmd.extend(["--effort", "xhigh"])  # postmortem 2026-04-23: pin explicitly, never inherit default
+    cmd.extend(["--disallowedTools", ",".join(HEADLESS_BACKGROUND_TOOL_DENIES)])
     if supports_exclude_dynamic_system_prompt_sections((_get_claude_bin(),)):
         cmd.append("--exclude-dynamic-system-prompt-sections")
     if allow_tools:

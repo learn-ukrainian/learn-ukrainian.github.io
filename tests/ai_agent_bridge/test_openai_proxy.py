@@ -338,6 +338,23 @@ def test_codex_backend_defaults_to_sol(monkeypatch):
     assert len(seen) == 2
 
 
+def test_claude_backend_runs_without_background_work(monkeypatch):
+    """The headless Claude backend carries the #9690 controls from the adapter (#9750)."""
+    from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+
+    seen = []
+
+    def backend(name, argv, **kwargs):
+        seen.append((argv, kwargs))
+        return subprocess.CompletedProcess(argv, 0, stdout="fixture", stderr="")
+
+    monkeypatch.setattr(proxy, "_run_backend_command", backend)
+    proxy._claude_backend("claude-opus-5-5", [proxy.Message(role="user", content="fixture")])
+    ((argv, kwargs),) = seen
+    assert argv[argv.index("--disallowedTools") + 1].split(",") == list(HEADLESS_BACKGROUND_TOOL_DENIES)
+    assert kwargs["env"] == {**proxy._PARENT_ENV, **HEADLESS_BACKGROUND_ENV}
+
+
 def test_codex_backend_rejects_override_before_preparation(monkeypatch):
     def forbidden(*args, **kwargs):
         raise AssertionError("unauthorized model reached preparation")

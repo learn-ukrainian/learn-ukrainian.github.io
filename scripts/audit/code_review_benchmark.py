@@ -25,6 +25,11 @@ try:
 except ModuleNotFoundError:
     from scripts.audit._judge_eval_lib import PROJECT_ROOT, utc_timestamp
 
+try:
+    from agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+except ModuleNotFoundError:
+    from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+
 REQUEST_TIMEOUT_S = 480
 HERMES_TIMEOUT_S = 600
 HERMES_BIN = "hermes"
@@ -358,7 +363,9 @@ def command_version(binary: str) -> str:
     return combined.splitlines()[0] if combined else f"rc={proc.returncode}; empty version output"
 
 
-def run_subprocess(cmd: list[str], *, timeout_s: int, stdin: str | None = None) -> HarnessCall:
+def run_subprocess(
+    cmd: list[str], *, timeout_s: int, stdin: str | None = None, env: dict[str, str] | None = None
+) -> HarnessCall:
     """Run a provider CLI and capture bounded telemetry."""
     display_cmd = tuple(cmd[:])
     t0 = time.time()
@@ -367,6 +374,7 @@ def run_subprocess(cmd: list[str], *, timeout_s: int, stdin: str | None = None) 
             cmd,
             input=stdin,
             cwd=str(PROJECT_ROOT),
+            env=env,
             capture_output=True,
             text=True,
             timeout=timeout_s,
@@ -420,6 +428,8 @@ def build_native_command(cell: Cell, prompt: str) -> list[str]:
             cmd.extend(["--effort", cell.effort])
         if cell.mcp_state == "with_mcp" and (PROJECT_ROOT / ".mcp.json").exists():
             cmd.extend(["--mcp-config", str(PROJECT_ROOT / ".mcp.json")])
+        # The run ends with its final turn; no background work may outlive it (#9750).
+        cmd.extend(["--disallowedTools", ",".join(HEADLESS_BACKGROUND_TOOL_DENIES)])
         cmd.extend(["--", prompt])
         return cmd
 
@@ -461,7 +471,8 @@ def run_native_cli(cell: Cell, prompt: str) -> HarnessCall:
 
     transport = {"anthropic": "native_claude", "openai": "native_codex", "google": "native_gemini", "xai": "native_grok"}[cell.family]
     require_execution_model(cell.model, transport=transport)
-    return run_subprocess(cmd, timeout_s=REQUEST_TIMEOUT_S)
+    env = {**os.environ, **HEADLESS_BACKGROUND_ENV} if cell.family == "anthropic" else None
+    return run_subprocess(cmd, timeout_s=REQUEST_TIMEOUT_S, env=env)
 
 
 def _read_effort_line(text: str) -> tuple[int, str] | None:

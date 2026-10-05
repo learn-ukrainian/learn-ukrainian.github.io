@@ -7,12 +7,14 @@ batch dispatcher system.
 
 import json
 import logging
+import os
 import shutil
 import subprocess
 import time
 from datetime import UTC, datetime
 from pathlib import Path
 
+from agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
 from audit.status_cache import get_source_paths, read_status
 from batch.batch_dispatcher_config import (
     COST_ESTIMATES,
@@ -344,6 +346,8 @@ def dispatch_claude_fix(track_name: str, slug: str, module_num: int,
         CLAUDE_BIN, "-p", prompt,
         "--allowedTools", "Bash,Edit,Read,Write,Glob,Grep,WebSearch,WebFetch",
         "--permission-mode", "bypassPermissions",
+        # The run ends with its final turn; no background work may outlive it (#9750).
+        "--disallowedTools", ",".join(HEADLESS_BACKGROUND_TOOL_DENIES),
         "--max-budget-usd", budget,
     ]
     if supports_exclude_dynamic_system_prompt_sections((CLAUDE_BIN,)):
@@ -356,6 +360,7 @@ def dispatch_claude_fix(track_name: str, slug: str, module_num: int,
         result = subprocess.run(
             cmd, capture_output=True, text=True,
             timeout=timeout, cwd=str(PROJECT_ROOT),
+            env={**os.environ, **HEADLESS_BACKGROUND_ENV},
         )
         elapsed = time.monotonic() - start
         stdout_tail = result.stdout[-3000:] if result.stdout else ""
