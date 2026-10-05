@@ -1943,3 +1943,74 @@ def test_unreadable_rate_limit_evidence_denies_credit_relief(monkeypatch):
     result = evaluate_candidate(OPENAI_FRONTIER, inputs)
     assert result.status == "excluded"
     assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
+
+
+# --- #9739: complete branch authorship ------------------------------------------------------------
+
+
+def _complete(families, *, risk="medium", author_model="", author_family=None, paths=("docs/a.md",)):
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+
+    return resolve_reviewer(
+        ResolverInputs(
+            author_model=author_model,
+            author_family=author_family,
+            author_families=frozenset(families),
+            risk=risk,
+            changed_paths=paths,
+            owned_paths=paths,
+        )
+    )
+
+
+def test_complete_author_set_excludes_every_member_not_only_the_latest():
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+
+    latest_only = resolve_reviewer(
+        ResolverInputs(author_model="gpt-6.1-sol", risk="medium", changed_paths=("docs/a.md",))
+    )
+    complete = _complete({"anthropic", "openai"}, author_model="gpt-6.1-sol")
+
+    assert latest_only.selected.family == "anthropic"
+    assert complete.selected.name == "grok-4.7-cursor-fallback"
+    reasons = {entry.name: entry.reason for entry in complete.trace}
+    assert "same family as author (anthropic)" in reasons["claude-opus-5-5"]
+    assert _complete({"anthropic", "openai"}, risk="critical").selected is None
+
+
+def test_single_author_fields_add_to_the_complete_set_and_never_shrink_it():
+    # The single field names a family outside the set; both stay excluded.
+    resolution = _complete({"anthropic"}, author_model="gpt-6.1-sol", risk="critical")
+    assert resolution.selected is None and resolution.fail_closed_reason is None
+    # An explicit override cannot replace the set either.
+    assert (
+        _complete({"openai"}, author_model="claude-opus-5-5", author_family="anthropic", risk="critical").selected
+        is None
+    )
+
+
+@pytest.mark.parametrize(
+    "families,author_model",
+    [({"anthropic", "unknown"}, ""), ({"anthropic", "ambiguous"}, ""), ({"anthropic"}, "cursor")],
+)
+def test_complete_set_with_an_unresolved_member_fails_closed(families, author_model):
+    from scripts.review.reviewer_resolver import ResolverInputs, evaluate_candidate
+
+    resolution = _complete(families, author_model=author_model)
+    assert resolution.selected is None and "holds an unresolved family" in resolution.fail_closed_reason
+    inputs = ResolverInputs(author_model=author_model, author_families=frozenset(families), risk="medium")
+    assert evaluate_candidate(OPENAI_FRONTIER, inputs).status == "excluded"
+
+
+def test_cursor_auto_member_keeps_the_union_and_transport_restrictions():
+    resolution = _complete({"openai", "cursor-auto-union"})
+    reasons = {entry.name: entry.reason for entry in resolution.trace}
+    assert "within author union family" in reasons["grok-4.7-cursor-fallback"]
+    assert resolution.selected.family == "anthropic"
+
+
+def test_empty_complete_set_keeps_single_author_selection_identical():
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+
+    single = ResolverInputs(author_model="claude-opus-5-5", risk="high", changed_paths=("docs/a.md",))
+    assert resolve_reviewer(single) == resolve_reviewer(replace(single, author_families=frozenset()))

@@ -75,6 +75,10 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "launch_user_bus": {source: "caller" | "derived" | "unavailable", variables?, reason?},  # #9534
         "peak_rss_mib": float | null,               # terminal records; largest reaped child
         "owned_paths": [str] | absent,              # the --owned-path values: auto-finalize scope (#8991)
+        "authoring_review_admission": {check, reviewer_availability, target, head_sha, author_families,
+                                       risk, reviewer, ...} | absent,  # write dispatches: review feasibility (#9739)
+        "review_subject_seats": [str] | absent,     # --subject-seat values the verdict recorder re-applies (#9739)
+        "review_subject_families": [str] | absent,  # --subject-family values, likewise
         "leftovers_scan": "clear" | "live" | "unknown" | absent,  # exit scan of the worker's scope
         "leftovers_scope": {task_id, launch_mode, unit, cgroup, run_nonce, ...} | absent,
         "leftovers_scan_error": str | absent,       # why the scan was unknown
@@ -10862,6 +10866,24 @@ def _dispatch(
         if write_intent_error:
             print(write_intent_error, file=sys.stderr)
             return 2
+    # #9739: before the task directory, archival, runtime cleanup, forwarding, any
+    # rebase, worktree or provider. A forwarded dispatch runs this again on its host.
+    try:
+        authoring_admission = _authoring_review_admission(
+            args,
+            dispatch_agent=dispatch_agent,
+            requested_harness=requested_harness,
+            requested_branch=requested_branch,
+            worktree_arg=worktree_arg,
+            validated_worktree=validated_worktree,
+            validated_cwd=validated_cwd,
+            target_repo_root=target_repo_root,
+            repository=fleet_repo.github,
+            default_repo=bool(fleet_repo.default),
+        )
+    except _AuthoringReviewRefused as exc:
+        print(exc.render(), file=sys.stderr)
+        return 2
     state_path = _state_path(task_id)
     silence_timeout = getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S)
     initial_response_timeout = getattr(
@@ -11313,6 +11335,12 @@ def _dispatch(
             changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
             if changed_error:
                 raise ValueError(changed_error.removeprefix("❌ "))
+            # A3 (#9739): under the lock and before any rebase, the admitted
+            # branch head must still be the head the authors were read from.
+            moved = _authoring_target_moved(authoring_admission, repo_root=target_repo_root)
+            if moved:
+                print(moved, file=sys.stderr)
+                return 2
             if fleet_repo.default:
                 resolved_worktree_base_sha = _resolve_worktree_base_sha(
                     agent=dispatch_agent,
@@ -11365,6 +11393,16 @@ def _dispatch(
             failed_step = "lock worktree" if isinstance(exc, WorktreeLockError) else "resolve immutable worktree base"
             print(f"❌ failed to {failed_step} for {task_id!r}: {exc}", file=sys.stderr)
             return 1
+
+    # A3 (#9739): an attached --branch is fetched above; new commits on it since
+    # admission (a push by another writer) were never checked, so refuse them.
+    if requested_branch and resolved_worktree_base_sha is not None:
+        moved = _authoring_target_moved(
+            authoring_admission, repo_root=target_repo_root, resolved=resolved_worktree_base_sha
+        )
+        if moved:
+            print(moved, file=sys.stderr)
+            return 2
 
     # The base resolved under the worktree lock must be the commit the Kimi gate read.
     if kimi_start_commit is not None and worktree_arg and resolved_worktree_base_sha != kimi_start_commit:
@@ -11538,6 +11576,7 @@ def _dispatch(
                 dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
+            dry_run_state.update(_authoring_review_state_fields(args, authoring_admission))
             dry_run_state.update(advisory_admission.state_fields())
             dry_run_reap = _reap_runtime_tmp_lease(
                 runtime_tmp_root,
@@ -11774,6 +11813,12 @@ def _dispatch(
                 stderr_fd.close()
                 print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
                 return 1
+            moved = _authoring_target_moved(authoring_admission, repo_root=target_repo_root)
+            if moved:
+                stdout_fd.close()
+                stderr_fd.close()
+                print(moved, file=sys.stderr)
+                return 2
             worktree_path = resolved_wt
             worktree_branch = _current_branch(resolved_wt)
             worktree_telemetry["reused"] = True
@@ -11988,6 +12033,7 @@ def _dispatch(
         if cursor_auto_admission is not None:
             # The Cursor adapter runs Auto only with this admission (#9274).
             initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
+        initial_state.update(_authoring_review_state_fields(args, authoring_admission))
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
@@ -12963,6 +13009,263 @@ def _cursor_auto_refusal(
     )
 
 
+# #9739: a writer is admitted only while a qualified reviewer outside every
+# author family (the incoming writer's included) remains under the live catalog
+# floors. Typed reasons for the refusal; none can be overridden.
+AUTHORING_REVIEW_NO_ROUTE = "AUTHORING_REVIEW_NO_ROUTE"
+AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN = "AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN"
+AUTHORING_REVIEW_SCOPE_UNKNOWN = "AUTHORING_REVIEW_SCOPE_UNKNOWN"
+AUTHORING_REVIEW_TARGET_MOVED = "AUTHORING_REVIEW_TARGET_MOVED"
+AUTHORING_REVIEW_CATALOG_UNKNOWN = "AUTHORING_REVIEW_CATALOG_UNKNOWN"
+AUTHORING_REVIEW_STATE_KEY = "authoring_review_admission"
+# A write dispatch that names no planned review risk is checked at the strictest
+# risk; path inference may raise a declared risk, never lower it.
+AUTHORING_REVIEW_DEFAULT_RISK = "critical"
+
+
+class _AuthoringReviewRefused(Exception):
+    """Dispatch refused before any side effect: no reviewer would remain for the branch."""
+
+    def __init__(self, code: str, detail: str, record: dict[str, Any]) -> None:
+        super().__init__(f"{code}: {detail}")
+        self.code = code
+        self.detail = detail
+        self.record = record
+
+    def render(self) -> str:
+        """The stderr refusal: one actionable line, then one JSON line for tools."""
+        payload = json.dumps({AUTHORING_REVIEW_STATE_KEY: {**self.record, "refusal": self.code}}, sort_keys=True)
+        return f"❌ {self.code}: {self.detail} Branch preserved; provider_calls=0.\n{payload}"
+
+
+@dataclass(frozen=True)
+class _AuthoringAdmission:
+    """What the authoring-review check admitted, for the re-check under the worktree lock (A3)."""
+
+    kind: str  # existing-worktree | existing-branch | new-branch
+    head_sha: str
+    checkout: Path | None
+    branch: str | None
+    pinned_head: str | None
+    record: dict[str, Any]
+
+
+def _authoring_target_head(
+    *, kind: str, checkout: Path | None, branch: str | None, pinned_head: str | None, repo_root: Path
+) -> str | None:
+    """The branch head a writer would attach to, read from local refs only (never fetched)."""
+    if kind == "existing-worktree" and checkout is not None:
+        return _resolve_sha(checkout) if checkout.is_dir() else None
+    if kind == "existing-branch" and branch:
+        return pinned_head or _resolve_sha(repo_root, f"{_origin_base_ref(branch)}^{{commit}}")
+    return None
+
+
+def _authoring_review_admission(
+    args: argparse.Namespace,
+    *,
+    dispatch_agent: str,
+    requested_harness: str | None,
+    requested_branch: str | None,
+    worktree_arg: str | None,
+    validated_worktree: Path | None,
+    validated_cwd: Path | None,
+    target_repo_root: Path,
+    repository: str,
+    default_repo: bool,
+) -> _AuthoringAdmission | None:
+    """Admit a writer only if a qualified independent reviewer remains (#9739).
+
+    Applies to every write-capable dispatch: an attach to an existing branch or
+    worktree, and a new branch whose proposed scope is protected. Complete
+    authorship (every commit in ``git rev-list <base>..<head>`` plus this
+    writer, after substitution, aliases and ``--force-agent``) and protected
+    scope come from ``record_cf_verdict.collect_branch_review_facts``, the
+    calculation the verdict recorder uses. The check is structural (A2):
+    catalog qualification, families, protected seats and the risk floor; it
+    records reviewer availability as unknown. Reads only, never fetches; runs
+    before any task record, archival, forwarding, rebase, worktree or
+    provider. Returns None for read-only dispatches; raises
+    ``_AuthoringReviewRefused``, which no override flag bypasses.
+    """
+    if args.mode not in _WRITE_CAPABLE_MODES:
+        return None
+    from agent_runtime.telemetry import _resolve_model_from_defaults
+    from scripts.review.model_catalog import ModelCatalogError
+
+    planned_risk = getattr(args, "authoring_review_risk", None)
+    writer_model = _resolve_model_from_defaults(dispatch_agent, getattr(args, "model", None), harness=requested_harness)
+    record: dict[str, Any] = {
+        "checked_at": datetime.now(UTC).isoformat(),
+        "check": "structural",
+        "reviewer_availability": "unknown",
+        "planned_risk": planned_risk,
+        "incoming_agent": dispatch_agent,
+        "incoming_model": writer_model,
+    }
+    declared = _declared_owned_paths(getattr(args, "owned_path", None))
+    if not declared:
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_SCOPE_UNKNOWN,
+            "write dispatch declares no --owned-path, so its review scope cannot be checked; "
+            "pass every path this writer owns.",
+            record,
+        )
+    if not default_repo:
+        # Protected seats and risk floors describe this repository's own paths.
+        record.update({"applicable": False, "reason": "sibling repository"})
+        return None
+    try:
+        from scripts.review.record_cf_verdict import (
+            FACTS_SCOPE_UNKNOWN,
+            BranchFactsError,
+            collect_branch_review_facts,
+            structural_review_route,
+        )
+        from scripts.review.security_paths import effective_review_risk, is_security_sensitive_change
+    except (ImportError, ModelCatalogError) as exc:
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_CATALOG_UNKNOWN, f"model catalog or reviewer resolver unavailable ({exc}).", record
+        ) from exc
+
+    checkout: Path | None = None
+    if validated_worktree is not None:
+        checkout = validated_worktree
+    elif worktree_arg == "auto" or requested_branch:
+        checkout = _auto_worktree_path(dispatch_agent, args.task_id, repo_root=target_repo_root)
+    elif validated_cwd is not None:
+        checkout = validated_cwd
+    pinned_head = getattr(args, "pinned_head", None)
+    if checkout is not None and checkout.exists():
+        kind = "existing-worktree"
+    elif requested_branch:
+        kind, checkout = "existing-branch", None
+    else:
+        kind, checkout = "new-branch", None
+    base_ref = _origin_base_ref(getattr(args, "base", None) or "main")
+    base_tip = _resolve_sha(target_repo_root, f"{base_ref}^{{commit}}")
+    head = (
+        base_tip
+        if kind == "new-branch"
+        else _authoring_target_head(
+            kind=kind, checkout=checkout, branch=requested_branch, pinned_head=pinned_head, repo_root=target_repo_root
+        )
+    )
+    record.update({"target": kind, "branch": requested_branch})
+    if not base_tip or not head:
+        missing = base_ref if not base_tip else (requested_branch or str(checkout))
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+            f"{missing} is not resolvable locally, so the branch's authors are unknown; fetch origin and retry.",
+            record,
+        )
+    try:
+        facts = collect_branch_review_facts(
+            repository=repository,
+            repo_root=target_repo_root,
+            base_tip_sha=base_tip,
+            head_sha=head,
+            task_root=tasks_dir(),
+            incoming_agent=dispatch_agent,
+            incoming_model=writer_model,
+            owned_paths=declared,
+            subject_seats=tuple(getattr(args, "subject_seat", None) or ()),
+            subject_families=tuple(getattr(args, "subject_family", None) or ()),
+        )
+    except BranchFactsError as exc:
+        code = (
+            AUTHORING_REVIEW_SCOPE_UNKNOWN if exc.code == FACTS_SCOPE_UNKNOWN else AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN
+        )
+        raise _AuthoringReviewRefused(code, f"{exc} (head {head[:12]}).", record) from exc
+    record.update(facts.receipt())
+    protected = bool(
+        facts.subject_seats
+        or facts.subject_families
+        or is_security_sensitive_change(facts.changed_paths, facts.scope_paths)
+    )
+    record["protected_scope"] = protected
+    admission = _AuthoringAdmission(kind, head, checkout, requested_branch, pinned_head, record)
+    if kind == "new-branch" and not protected:
+        record["applicable"] = False
+        return admission
+    risk = str(planned_risk or AUTHORING_REVIEW_DEFAULT_RISK).strip().casefold()
+    try:
+        resolution = structural_review_route(facts, risk=risk)
+    except ModelCatalogError as exc:
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_CATALOG_UNKNOWN, f"model catalog unavailable ({exc}).", record
+        ) from exc
+    record.update(
+        {
+            "applicable": True,
+            "risk": effective_review_risk(risk, facts.changed_paths, facts.scope_paths),
+            "reviewer": (
+                {
+                    "name": resolution.selected.name,
+                    "model": resolution.selected.concrete_model,
+                    "family": resolution.selected.family,
+                    "route": resolution.selected.route,
+                }
+                if resolution.selected
+                else None
+            ),
+        }
+    )
+    if resolution.selected is None:
+        reason = resolution.fail_closed_reason or "no eligible formal reviewer in the catalog ladder"
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_NO_ROUTE,
+            f"write dispatch refused at {head[:12]}; authors={','.join(sorted(facts.existing_families)) or '(none)'}; "
+            f"incoming={facts.incoming_family}; risk={record['risk']}; no qualified reviewer remains outside all "
+            f"authors and protected seats ({reason}).",
+            record,
+        )
+    return admission
+
+
+def _authoring_review_state_fields(args: argparse.Namespace, admission: _AuthoringAdmission | None) -> dict[str, Any]:
+    """Task-record fields: the admission receipt, and explicit subjects the verdict recorder re-applies."""
+    fields: dict[str, Any] = {}
+    if admission is not None:
+        fields[AUTHORING_REVIEW_STATE_KEY] = admission.record
+    for flag, key in (("subject_seat", "review_subject_seats"), ("subject_family", "review_subject_families")):
+        values = getattr(args, flag, None)
+        if values:
+            fields[key] = [values] if isinstance(values, str) else list(values)
+    return fields
+
+
+def _authoring_target_moved(
+    admission: _AuthoringAdmission | None, *, repo_root: Path, resolved: str | None = None
+) -> str | None:
+    """A3: refusal text when the admitted branch head moved; None when unchanged.
+
+    Read under the worktree lock before any rebase. ``resolved`` is the head the
+    worktree helpers settled on, compared for an attached ``--branch``; the base
+    auto-rebase of a reused worktree is not a move (it adds no branch commits).
+    """
+    if admission is None or admission.kind == "new-branch":
+        return None
+    current = (
+        resolved
+        if resolved is not None
+        else _authoring_target_head(
+            kind=admission.kind,
+            checkout=admission.checkout,
+            branch=admission.branch,
+            pinned_head=admission.pinned_head,
+            repo_root=repo_root,
+        )
+    )
+    if current == admission.head_sha:
+        return None
+    return (
+        f"❌ {AUTHORING_REVIEW_TARGET_MOVED}: the branch head moved after authoring-review admission "
+        f"(admitted {admission.head_sha[:12]}, now {(current or 'missing')[:12]}); retry the dispatch so its "
+        "authors are checked again. Branch preserved; provider_calls=0."
+    )
+
+
 def _kimi_worktree_trees(worktree: Path) -> list[Any]:
     """An existing worktree as a Kimi worker sees it: its files on disk and the commit checked out there."""
     from scripts.agent_runtime.kimi_admission import worktree_trees
@@ -13303,7 +13606,34 @@ def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
     else:
         raise TargetResolutionError("review target required: supply --branch, --pr or a resolved --review-attempt")
     literal = git_changed_paths(_local_repo_root, target.base_sha, target.head_sha)
+    # The frozen endpoints the complete-authorship facts are read from (#9739).
+    args._review_target = target
     return tuple(dict.fromkeys((*literal, *(paths or ()))))
+
+
+def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str]) -> Any:
+    """Complete authorship and scope of the review target for a trusted code review (#9739).
+
+    Only a review that names its author and risk attests cross-family
+    independence, so only it reads the facts; legacy reviews keep intrinsic
+    eligibility. Runs after :func:`_dispatch_review_changed_paths` pinned the
+    target. Returns None without a branch or PR target.
+    """
+    from scripts.review.record_cf_verdict import collect_branch_review_facts
+
+    target = getattr(args, "_review_target", None)
+    if target is None or not (getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)):
+        return None
+    return collect_branch_review_facts(
+        repository=_resolve_dispatch_repository(_local_repo_root) or "",
+        repo_root=_local_repo_root,
+        base_tip_sha=target.base_sha,
+        head_sha=target.head_sha,
+        task_root=tasks_dir(),
+        owned_paths=owned_paths,
+        subject_seats=tuple(getattr(args, "subject_seat", None) or ()),
+        subject_families=tuple(getattr(args, "subject_family", None) or ()),
+    )
 
 
 def _admit_dispatch_target(
@@ -13344,6 +13674,14 @@ def _admit_dispatch_target(
         except (TargetResolutionError, OSError, subprocess.TimeoutExpired) as exc:
             raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
 
+    def collect_review_facts() -> Any:
+        from scripts.review.record_cf_verdict import BranchFactsError
+
+        try:
+            return _dispatch_review_facts(args, tuple(declared))
+        except BranchFactsError as exc:
+            raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
+
     try:
         (target,) = resolve_and_admit(
             (agent,),
@@ -13366,6 +13704,11 @@ def _admit_dispatch_target(
             ),
             review_subject_seats=frozenset(flag_paths("subject_seat")),
             review_subject_families=frozenset(flag_paths("subject_family")),
+            review_facts=(
+                collect_review_facts
+                if review_dispatch and (getattr(args, "review_profile", None) or "code") in {"code", "infra"}
+                else None
+            ),
             paths=owned,
             declared_paths=declared,
             repo=repo_role,
@@ -14895,13 +15238,25 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument(
+        "--authoring-review-risk",
+        default=None,
+        choices=("low", "medium", "high", "critical"),
+        help=(
+            "#9739: the planned review risk of the branch this write dispatch authors. Admission refuses "
+            "a writer when no qualified reviewer outside every author family would remain at this risk; "
+            "protected paths only raise it. Does not type the dispatch as a review. "
+            "Default: None, checked as critical. Example: medium for a routine mixed-family branch."
+        ),
+    )
+    d.add_argument(
         "--subject-seat",
         action="append",
         default=None,
         metavar="SEAT",
         help=(
-            "Seat governed by the reviewed change (repeatable); excluded by the reviewer resolver. "
-            "Default: none. Example: --subject-seat codex for a shared adapter change."
+            "Seat governed by the change (repeatable); excluded by the reviewer resolver, and by "
+            "write-dispatch review admission (#9739). Default: none. "
+            "Example: --subject-seat codex for a shared adapter change."
         ),
     )
     d.add_argument(
@@ -15140,8 +15495,9 @@ def build_parser() -> argparse.ArgumentParser:
             "#8991: a repo-relative path (dir/, dir/**, file, or glob) this task may "
             "commit. Repeatable; recorded as the task's owned_paths. Auto-finalize of a "
             "dirty danger-mode worktree commits only changes under these paths; without "
-            "any it commits nothing and the task ends needs_finalize. Independent of "
-            "--research-owned-path."
+            "any it commits nothing and the task ends needs_finalize. Required for a "
+            "write-capable --mode: review admission checks the branch's scope from it (#9739). "
+            "Independent of --research-owned-path."
         ),
     )
     d.add_argument(

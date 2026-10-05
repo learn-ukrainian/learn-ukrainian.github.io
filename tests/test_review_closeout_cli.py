@@ -777,3 +777,97 @@ def test_record_cycle_rejects_negative_outstanding_count(tmp_path):
     state_after = json.loads(state_file.read_text(encoding="utf-8"))
     assert state_after == state_before
     assert state_after["cycle_outstanding_counts"] == [2]
+
+
+# --- #9739: a committed target's reviewer is chosen from its complete authorship ------------------
+
+
+def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recorder(tmp_path, monkeypatch):
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    tasks = tmp_path / "tasks"
+    repo.commit(OPUS, message="first author")
+    repo.commit(SOL, message="latest author")
+    state = tmp_path / "state.json"
+    target = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+    assert target.returncode == 0, target.stderr
+    common = ("--author-model", "gpt-6.1-sol", "--repository", REPOSITORY, "--task-root", str(tasks))
+
+    medium = _run_cli(state, "resolve-reviewer", *common, "--risk", "medium")
+    payload = json.loads(medium.stdout)
+
+    # The latest author alone (GPT) would select Opus; the earlier Claude author excludes it.
+    assert medium.returncode == 0, medium.stdout
+    assert payload["selected"]["name"] == "grok-4.7-cursor-fallback"
+    assert payload["branch_facts"]["existing_families"] == ["anthropic", "openai"]
+    trace = {entry["name"]: entry["reason"] for entry in payload["trace"]}
+    assert "same family as author (anthropic)" in trace["claude-opus-5-5"]
+    # The recorder, from its own collection of the same Git facts, accepts that reviewer and not Opus.
+    frozen = json.loads(state.read_text())["target"]
+    facts = recorder.collect_branch_review_facts(
+        repository=REPOSITORY,
+        repo_root=repo.root,
+        base_tip_sha=frozen["base_sha"],
+        head_sha=frozen["head_sha"],
+        task_root=tasks,
+    )
+    recorder._require_qualified_reviewer(
+        facts, task={"agent": "cursor", "review_risk": "medium"}, model="grok-4.7", family="xai"
+    )
+    with pytest.raises(recorder.RecordError, match="not qualified"):
+        recorder._require_qualified_reviewer(
+            facts, task={"agent": "claude", "review_risk": "medium"}, model="claude-opus-5-5", family="anthropic"
+        )
+
+    critical = _run_cli(state, "resolve-reviewer", *common, "--risk", "critical")
+    assert critical.returncode == 1 and json.loads(critical.stdout)["selected"] is None
+
+
+def test_resolve_reviewer_fails_closed_on_an_unattributed_commit(tmp_path, monkeypatch):
+    from tests.test_authoring_review_feasibility import REPOSITORY, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    repo.commit(None, message="no trailer")
+    state = tmp_path / "state.json"
+    _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+
+    result = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tmp_path),
+    )
+
+    assert result.returncode == 1
+    payload = json.loads(result.stdout)
+    assert payload["selected"] is None
+    assert "branch review facts unavailable" in payload["fail_closed_reason"]
+    assert "missing explicit X-Agent" in payload["fail_closed_reason"]

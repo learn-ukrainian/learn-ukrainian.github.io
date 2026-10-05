@@ -88,7 +88,8 @@ def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str = "ad
         *extra,
     ]
     if mode != "read-only":
-        argv.append("--worktree")
+        # A write dispatch declares its scope (#9739); an ordinary path keeps a new branch unprotected.
+        argv.extend(("--worktree", "--owned-path", "scripts/example.py"))
     return delegate.build_parser().parse_args(argv)
 
 
@@ -210,6 +211,7 @@ def _live_danger_args(tasks: Path, task_id: str):
         worktree=str(_dispatch_worktree(tasks)),
         base="main",
         hard_timeout=3600,
+        owned_path=["scripts/example.py"],
     )
 
 
@@ -239,6 +241,9 @@ def _stub_worktree(monkeypatch, tasks: Path):
         lambda **_kwargs: (wt, "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}),
     )
     monkeypatch.setattr(delegate, "_resolve_sha", lambda *_args, **_kwargs: "abc1234")
+    # Git is stubbed, so branch authorship cannot be enumerated; these tests
+    # cover host admission. Authoring-review admission has its own tests (#9739).
+    monkeypatch.setattr(delegate, "_authoring_review_admission", lambda *_args, **_kwargs: None)
 
 
 def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, capsys):

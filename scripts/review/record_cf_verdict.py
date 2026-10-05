@@ -12,7 +12,10 @@ import re
 import stat
 import subprocess
 import sys
+import time
+from collections.abc import Callable, Iterable
 from contextlib import contextmanager
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -36,14 +39,23 @@ from scripts.orchestration.integration_sweep import (
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.publish.github import Request, request_run
-from scripts.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal
+from scripts.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal, resolve_catalog_model_id
 from scripts.review.reviewer_resolver import (
+    CURSOR_AUTO_UNION_FAMILIES,
     CURSOR_AUTO_UNION_FAMILY,
     FORMAL_CURSOR_REVIEW_MODELS,
+    REVIEW_CANDIDATES,
     UNRESOLVED_AUTHOR_FAMILIES,
+    ResolverInputs,
+    ReviewerResolution,
+    evaluate_candidate,
     resolve_author_family,
     resolve_family,
+    resolve_reviewer,
 )
+from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
+from scripts.review.subject_seat import prepare_subject_exclusion
+from scripts.review.target_resolution import TargetResolutionError
 
 VERDICT_LINE = re.compile(r"(?im)^\s*VERDICT:\s*(APPROVE|APPROVED|REQUEST_CHANGES|CHANGES_REQUESTED|BLOCKED)\b")
 NORMALIZED = {
@@ -111,9 +123,9 @@ def _hot_or_archived(task_root: Path, name: str) -> Path:
     return archived if not hot.exists() and archived.exists() else hot
 
 
-def _merge_proof_object_store() -> Path:
+def _merge_proof_object_store(start: Path | None = None) -> Path:
     """Find the checkout's shared objects without running Git or reading config."""
-    cwd = Path.cwd()
+    cwd = start or Path.cwd()
     for root in (cwd, *cwd.parents):
         marker = root / ".git"
         if marker.is_dir():
@@ -135,8 +147,11 @@ def _merge_proof_object_store() -> Path:
     raise OSError("Git checkout unavailable")
 
 
-def _is_clean_base_merge(entry: dict[str, Any], base_sha: str) -> bool:
-    """Bind a conflict-free base merge to GitHub metadata and raw local objects."""
+def _is_clean_base_merge(entry: dict[str, Any], base_sha: str, *, checkout: Path | None = None) -> bool:
+    """Bind a conflict-free base merge to commit metadata and raw local objects.
+
+    ``checkout`` locates the object store; the default is the current directory.
+    """
     commit_sha = entry.get("sha")
     commit_data = entry.get("commit")
     tree_data = commit_data.get("tree") if isinstance(commit_data, dict) else None
@@ -149,7 +164,7 @@ def _is_clean_base_merge(entry: dict[str, Any], base_sha: str) -> bool:
         return False
     git = ["git"]
     try:
-        objects = _merge_proof_object_store()
+        objects = _merge_proof_object_store(checkout)
         with TemporaryDirectory(prefix="cf-merge-") as isolated:
             # Construct a bare repository without importing init templates, config,
             # refs, grafts, attributes, or an index from the writable shared Git dir.
@@ -219,72 +234,495 @@ def _is_clean_base_merge(entry: dict[str, Any], base_sha: str) -> bool:
     return merged.stdout.strip() == tree
 
 
+@dataclass(frozen=True)
+class CommitAttribution:
+    """One branch commit and the author family its provenance proves.
+
+    ``family`` is None only for a Git-proven clean base merge, which authors nothing.
+    """
+
+    sha: str | None
+    family: str | None
+    source: str
+
+
+def _attribute_commit(
+    entry: dict[str, Any],
+    *,
+    repository: str,
+    task_root: Path,
+    base_sha: Callable[[], str],
+    checkout: Path | None = None,
+) -> CommitAttribution:
+    """Resolve one commit's author family; exempt only a Git-proven clean base merge, fail closed.
+
+    ``entry`` has the GitHub commit-listing shape (``sha``, ``commit.message``,
+    ``commit.tree.sha``, ``parents``). ``base_sha`` is called only when an
+    untrailered commit needs the clean-merge proof.
+    """
+    commit_sha = entry.get("sha")
+    message = (entry.get("commit") or {}).get("message")
+    if not isinstance(message, str):
+        raise RecordError("commit message unavailable")
+    trailers = re.findall(r"(?m)^X-Agent:\s*([^\s]+)\s*$", message)
+    if (
+        not trailers
+        and not re.search(r"(?m)^X-Agent:", message)
+        and isinstance(commit_sha, str)
+        and SHA.fullmatch(commit_sha)
+        and _is_clean_base_merge(entry, base_sha(), checkout=checkout)
+    ):
+        return CommitAttribution(commit_sha, None, "clean-base-merge")
+    if len(trailers) != 1 or "/" not in trailers[0]:
+        raise RecordError("author model unknown: missing explicit X-Agent model trailer")
+    harness, model = trailers[0].split("/", 1)
+    if not harness or not model:
+        raise RecordError("author model unknown")
+    # Cursor has historically required harness-aware resolution; otherwise
+    # resolve the model itself before consulting task provenance.
+    family = resolve_author_family(f"{harness}:{model}" if harness == "cursor" else model)
+    source = "trailer-model"
+    if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
+        if not TASK_ID.fullmatch(model):
+            raise RecordError("author model unknown")
+        task_file = _hot_or_archived(task_root, f"{model}.json")
+        if not task_file.resolve().is_relative_to(task_root.resolve()):
+            raise RecordError("author task provenance unavailable")
+        if task_file.exists():
+            # The common X-Agent trailer names a task, not a model. Resolve
+            # that task's recorded model only after validating its provenance.
+            try:
+                author_task = json.loads(task_file.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as exc:
+                raise RecordError("author task provenance unavailable") from exc
+            if author_task.get("repository") != repository or not str(author_task.get("agent") or "").startswith(
+                harness
+            ):
+                raise RecordError("author task provenance conflicts with commit trailer")
+            if harness.startswith("cursor"):
+                if author_task.get("resolved_model_known") is not True:
+                    raise RecordError("author family unknown")
+                author_model = author_task.get("resolved_model")
+            else:
+                author_model = author_task.get("model")
+            family = resolve_author_family(str(author_model or ""))
+            source = "task-record-archived" if task_file.parent.name == ARCHIVE_DIR_NAME else "task-record"
+        elif harness in SINGLE_FAMILY_HARNESSES:
+            family = SINGLE_FAMILY_HARNESSES[harness]
+            source = "single-family-harness"
+        else:
+            raise RecordError("author task provenance unavailable")
+    if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
+        raise RecordError("author family unknown")
+    if family == CURSOR_AUTO_UNION_FAMILY:
+        raise RecordError("author family mixed or unknown")
+    return CommitAttribution(commit_sha if isinstance(commit_sha, str) else None, family, source)
+
+
 def author_families(repository: str, pr_number: int, task_root: Path) -> set[str]:
-    """Resolve authored commits; exempt only Git-proven clean base merges, fail closed."""
+    """Resolve a PR's GitHub-listed commits; exempt only Git-proven clean base merges, fail closed.
+
+    A compatibility reader over :func:`_attribute_commit`. The recorder itself
+    uses :func:`pr_review_facts`, which also binds the listing to the local
+    ``git rev-list`` enumeration.
+    """
     commits = _pages(Request("read-commits", repo=repository, number=pr_number))
     if not commits:
         raise RecordError("PR commit set unavailable")
+    base: list[str] = []
+
+    def base_sha() -> str:
+        if not base:
+            pr = _run_json(["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "baseRefOid"])
+            value = pr.get("baseRefOid") if isinstance(pr, dict) else None
+            if not isinstance(value, str) or not SHA.fullmatch(value):
+                raise RecordError("PR base SHA unavailable; cannot prove clean base merge")
+            base.append(value)
+        return base[0]
+
     families = set()
-    base_sha = None
     for entry in commits:
-        message = (entry.get("commit") or {}).get("message")
-        if not isinstance(message, str):
-            raise RecordError("commit message unavailable")
-        trailers = re.findall(r"(?m)^X-Agent:\s*([^\s]+)\s*$", message)
-        if not trailers and not re.search(r"(?m)^X-Agent:", message):
-            commit_sha = entry.get("sha")
-            if isinstance(commit_sha, str) and SHA.fullmatch(commit_sha):
-                if base_sha is None:
-                    pr = _run_json(["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "baseRefOid"])
-                    base_sha = pr.get("baseRefOid") if isinstance(pr, dict) else None
-                    if not isinstance(base_sha, str) or not SHA.fullmatch(base_sha):
-                        raise RecordError("PR base SHA unavailable; cannot prove clean base merge")
-                if _is_clean_base_merge(entry, base_sha):
-                    continue
-        if len(trailers) != 1 or "/" not in trailers[0]:
-            raise RecordError("author model unknown: missing explicit X-Agent model trailer")
-        harness, model = trailers[0].split("/", 1)
-        if not harness or not model:
-            raise RecordError("author model unknown")
-        # Cursor has historically required harness-aware resolution; otherwise
-        # resolve the model itself before consulting task provenance.
-        family = resolve_author_family(f"{harness}:{model}" if harness == "cursor" else model)
-        if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
-            if not TASK_ID.fullmatch(model):
-                raise RecordError("author model unknown")
-            task_file = _hot_or_archived(task_root, f"{model}.json")
-            if not task_file.resolve().is_relative_to(task_root.resolve()):
-                raise RecordError("author task provenance unavailable")
-            if task_file.exists():
-                # The common X-Agent trailer names a task, not a model. Resolve
-                # that task's recorded model only after validating its provenance.
-                try:
-                    author_task = json.loads(task_file.read_text(encoding="utf-8"))
-                except (OSError, ValueError) as exc:
-                    raise RecordError("author task provenance unavailable") from exc
-                if author_task.get("repository") != repository or not str(author_task.get("agent") or "").startswith(
-                    harness
-                ):
-                    raise RecordError("author task provenance conflicts with commit trailer")
-                if harness.startswith("cursor"):
-                    if author_task.get("resolved_model_known") is not True:
-                        raise RecordError("author family unknown")
-                    author_model = author_task.get("resolved_model")
-                else:
-                    author_model = author_task.get("model")
-                family = resolve_author_family(str(author_model or ""))
-            elif harness in SINGLE_FAMILY_HARNESSES:
-                family = SINGLE_FAMILY_HARNESSES[harness]
-            else:
-                raise RecordError("author task provenance unavailable")
-        if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
-            raise RecordError("author family unknown")
-        if family == CURSOR_AUTO_UNION_FAMILY:
-            raise RecordError("author family mixed or unknown")
-        families.add(family)
+        family = _attribute_commit(entry, repository=repository, task_root=task_root, base_sha=base_sha).family
+        if family is not None:
+            families.add(family)
     if not families:
         raise RecordError("PR has no attributed author commits")
     return families
+
+
+# --- complete branch review facts (#9739) ------------------------------------
+#
+# One calculation serves dispatch admission, reviewer selection and this
+# recorder: every commit in ``git rev-list <base>..<head>`` (side parents
+# included, no path filter or recent-commit limit), attributed exactly as the
+# recorder attributes a commit, plus the incoming writer, plus the protected
+# scope the whole branch and the proposed owned paths touch.
+
+BRANCH_FACTS_TIMEOUT_S = 90.0
+_GIT_STEP_TIMEOUT_S = 30.0
+FACTS_AUTHORSHIP_UNKNOWN = "authorship_unknown"
+FACTS_SCOPE_UNKNOWN = "scope_unknown"
+FACTS_TARGET_UNKNOWN = "target_unknown"
+
+
+class BranchFactsError(RecordError):
+    """A branch review fact cannot be established; ``code`` names which one."""
+
+    def __init__(self, code: str, message: str, *, timed_out: bool = False) -> None:
+        super().__init__(message)
+        self.code = code
+        self.timed_out = timed_out
+
+
+@dataclass(frozen=True)
+class BranchReviewFacts:
+    """Complete authorship and protected scope of one frozen branch target."""
+
+    repository: str
+    base_tip_sha: str
+    head_sha: str
+    merge_base_sha: str | None
+    commits: tuple[CommitAttribution, ...]
+    existing_families: frozenset[str]
+    incoming_writer: str | None
+    incoming_family: str | None
+    changed_paths: tuple[str, ...]
+    owned_paths: tuple[str, ...]
+    subject_seats: frozenset[str]
+    subject_families: frozenset[str]
+    subject_evidence: tuple[str, ...]
+
+    @property
+    def author_families(self) -> frozenset[str]:
+        """Every committed author family plus the incoming writer's (the Cursor Auto union stays one token)."""
+        incoming = frozenset({self.incoming_family}) if self.incoming_family else frozenset()
+        return self.existing_families | incoming
+
+    @property
+    def excluded_families(self) -> frozenset[str]:
+        """``author_families`` with the Cursor Auto union expanded to its member families."""
+        expanded = set(self.author_families - {CURSOR_AUTO_UNION_FAMILY})
+        if CURSOR_AUTO_UNION_FAMILY in self.author_families:
+            expanded |= CURSOR_AUTO_UNION_FAMILIES
+        return frozenset(expanded)
+
+    @property
+    def scope_paths(self) -> tuple[str, ...]:
+        """Literal branch changes (both rename sides, deletions) plus the proposed owned paths."""
+        return tuple(dict.fromkeys((*self.changed_paths, *self.owned_paths)))
+
+    def resolver_inputs(self, *, risk: str, review_profile: str = "code", **overrides: Any) -> ResolverInputs:
+        """Reviewer-resolver inputs carrying these facts; ``overrides`` set the remaining fields."""
+        overrides.setdefault("domain", review_profile)
+        overrides.setdefault("author_model", "")
+        return ResolverInputs(
+            author_families=self.author_families,
+            review_profile=review_profile,
+            risk=risk,
+            changed_paths=self.changed_paths,
+            owned_paths=self.scope_paths,
+            subject_seats=self.subject_seats,
+            subject_families=self.subject_families,
+            subject_evidence=self.subject_evidence,
+            **overrides,
+        )
+
+    def receipt(self) -> dict[str, Any]:
+        """Privacy-safe summary for a dispatch or verdict record."""
+        return {
+            "repository": self.repository,
+            "base_tip_sha": self.base_tip_sha,
+            "head_sha": self.head_sha,
+            "commits": len(self.commits),
+            "existing_families": sorted(self.existing_families),
+            "incoming_writer": self.incoming_writer,
+            "incoming_family": self.incoming_family,
+            "author_families": sorted(self.author_families),
+            "subject_seats": sorted(self.subject_seats),
+            "subject_families": sorted(self.subject_families),
+            "scope_paths": len(self.scope_paths),
+        }
+
+
+def _facts_git(
+    repo_root: Path, args: list[str], *, deadline: float, code: str, input_bytes: bytes | None = None
+) -> bytes:
+    """Run one bounded read-only Git step; a timeout or failure is an unknown fact, never a truncated one."""
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise BranchFactsError(code, "branch fact collection timed out; refusing a partial history", timed_out=True)
+    # Ignore inherited Git redirection, replacement refs, grafts and commit
+    # graphs: the enumeration must describe the repository's real objects.
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update({"GIT_NO_REPLACE_OBJECTS": "1", "GIT_GRAFT_FILE": os.devnull})
+    command = ["git", "-C", str(repo_root), "-c", "core.commitGraph=false", "--no-replace-objects", *args]
+    try:
+        proc = subprocess.run(
+            command,
+            input=input_bytes,
+            capture_output=True,
+            env=env,
+            check=False,
+            timeout=min(remaining, _GIT_STEP_TIMEOUT_S),
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise BranchFactsError(code, f"git {args[0]} timed out; refusing a partial history", timed_out=True) from exc
+    except OSError as exc:
+        raise BranchFactsError(code, f"git {args[0]} unavailable") from exc
+    if proc.returncode:
+        raise BranchFactsError(code, f"git {args[0]} failed")
+    return proc.stdout
+
+
+def _read_commit_entries(repo_root: Path, shas: list[str], *, deadline: float) -> list[dict[str, Any]]:
+    """Read raw commits into the commit-listing shape :func:`_attribute_commit` takes."""
+    if not shas:
+        return []
+    data = _facts_git(
+        repo_root,
+        ["cat-file", "--batch"],
+        deadline=deadline,
+        code=FACTS_AUTHORSHIP_UNKNOWN,
+        input_bytes="".join(f"{sha}\n" for sha in shas).encode("ascii"),
+    )
+    entries: list[dict[str, Any]] = []
+    position = 0
+    try:
+        for sha in shas:
+            newline = data.index(b"\n", position)
+            header = data[position:newline].decode("ascii").split()
+            if len(header) != 3 or header[0] != sha or header[1] != "commit":
+                raise BranchFactsError(FACTS_AUTHORSHIP_UNKNOWN, f"commit {sha[:12]} unavailable")
+            size = int(header[2])
+            body = data[newline + 1 : newline + 1 + size].decode("utf-8")
+            position = newline + 1 + size + 1
+            headers, _, message = body.partition("\n\n")
+            lines = headers.splitlines()
+            trees = [line[5:] for line in lines if line.startswith("tree ")]
+            parents = [line[7:] for line in lines if line.startswith("parent ")]
+            entries.append(
+                {
+                    "sha": sha,
+                    "commit": {"message": message, "tree": {"sha": trees[0] if len(trees) == 1 else None}},
+                    "parents": [{"sha": parent} for parent in parents],
+                }
+            )
+    except (ValueError, UnicodeDecodeError) as exc:
+        raise BranchFactsError(FACTS_AUTHORSHIP_UNKNOWN, "commit objects unreadable") from exc
+    return entries
+
+
+def incoming_writer_family(agent: str, model: str | None) -> str:
+    """The family an incoming writer adds, resolved like a committed ``X-Agent: <agent>/<model>`` trailer.
+
+    Cursor Auto resolves to the {xAI, Moonshot} union token (A5): its concrete
+    model is unknown until the runtime attests it. Raises ``BranchFactsError``
+    when the family is unknown.
+    """
+    harness = str(agent or "").strip().lower()
+    concrete = str(model or "").strip()
+    family = resolve_author_family(f"cursor:{concrete}" if harness == "cursor" else concrete)
+    if (family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown") and harness in SINGLE_FAMILY_HARNESSES:
+        family = SINGLE_FAMILY_HARNESSES[harness]
+    if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
+        raise BranchFactsError(
+            FACTS_AUTHORSHIP_UNKNOWN, f"incoming writer family unknown ({harness}/{concrete or '(default)'})"
+        )
+    return family
+
+
+def collect_branch_review_facts(
+    *,
+    repository: str,
+    repo_root: Path,
+    base_tip_sha: str,
+    head_sha: str,
+    task_root: Path,
+    incoming_agent: str | None = None,
+    incoming_model: str | None = None,
+    owned_paths: Iterable[str] = (),
+    subject_seats: Iterable[str] = (),
+    subject_families: Iterable[str] = (),
+    timeout_s: float = BRANCH_FACTS_TIMEOUT_S,
+) -> BranchReviewFacts:
+    """Collect complete authorship and protected scope for ``base_tip_sha..head_sha``.
+
+    Commit membership is ``git rev-list <base>..<head>`` (A1), attributed by the
+    recorder's own per-commit rules (trailer, hot or archived task record,
+    Cursor attestation, single-family harness, Git-proven clean base merge).
+    ``incoming_agent``/``incoming_model`` name the writer about to be
+    dispatched, after any substitution. Scope is the literal diff against the
+    merge-base (both rename sides and deletions) plus ``owned_paths``, with the
+    subject seats ``prepare_subject_exclusion`` derives from it. A fresh branch
+    passes ``head_sha == base_tip_sha``. Reads only; never fetches. Raises
+    ``BranchFactsError`` (``code`` = authorship, scope or target unknown).
+    """
+    deadline = time.monotonic() + timeout_s
+    for label, sha in (("base", base_tip_sha), ("head", head_sha)):
+        if not isinstance(sha, str) or not SHA.fullmatch(sha):
+            raise BranchFactsError(FACTS_TARGET_UNKNOWN, f"{label} SHA missing or invalid")
+        try:
+            _facts_git(repo_root, ["cat-file", "-e", f"{sha}^{{commit}}"], deadline=deadline, code=FACTS_TARGET_UNKNOWN)
+        except BranchFactsError as exc:
+            if exc.timed_out:
+                raise
+            raise BranchFactsError(
+                FACTS_TARGET_UNKNOWN, f"{label} commit {sha[:12]} not available locally; fetch and retry"
+            ) from exc
+    listed = _facts_git(
+        repo_root, ["rev-list", f"{base_tip_sha}..{head_sha}"], deadline=deadline, code=FACTS_AUTHORSHIP_UNKNOWN
+    )
+    shas = listed.decode("ascii", errors="strict").split()
+    commits: list[CommitAttribution] = []
+    for entry in _read_commit_entries(repo_root, shas, deadline=deadline):
+        try:
+            commits.append(
+                _attribute_commit(
+                    entry,
+                    repository=repository,
+                    task_root=task_root,
+                    base_sha=lambda: base_tip_sha,
+                    checkout=repo_root,
+                )
+            )
+        except RecordError as exc:
+            raise BranchFactsError(FACTS_AUTHORSHIP_UNKNOWN, f"commit {entry['sha'][:12]}: {exc}") from exc
+        if time.monotonic() > deadline:
+            raise BranchFactsError(
+                FACTS_AUTHORSHIP_UNKNOWN, "branch fact collection timed out; refusing a partial history"
+            )
+    incoming_writer = None
+    incoming_family = None
+    if incoming_agent:
+        incoming_writer = f"{incoming_agent}/{incoming_model or '(default)'}"
+        incoming_family = incoming_writer_family(incoming_agent, incoming_model)
+    merge_base = None
+    changed: tuple[str, ...] = ()
+    if shas:
+        merge_base = (
+            _facts_git(repo_root, ["merge-base", base_tip_sha, head_sha], deadline=deadline, code=FACTS_SCOPE_UNKNOWN)
+            .decode("ascii")
+            .strip()
+        )
+        try:
+            changed = git_changed_paths(repo_root, merge_base, head_sha)
+        except TargetResolutionError as exc:
+            raise BranchFactsError(FACTS_SCOPE_UNKNOWN, str(exc)) from exc
+    owned = tuple(str(path) for path in owned_paths)
+    prepared = prepare_subject_exclusion(
+        subject_seats=frozenset(subject_seats),
+        subject_families=frozenset(subject_families),
+        owned_paths=tuple(dict.fromkeys((*changed, *owned))),
+    )
+    if prepared.fail_closed_reason:
+        raise BranchFactsError(FACTS_SCOPE_UNKNOWN, prepared.fail_closed_reason)
+    return BranchReviewFacts(
+        repository=repository,
+        base_tip_sha=base_tip_sha,
+        head_sha=head_sha,
+        merge_base_sha=merge_base,
+        commits=tuple(commits),
+        existing_families=frozenset(commit.family for commit in commits if commit.family),
+        incoming_writer=incoming_writer,
+        incoming_family=incoming_family,
+        changed_paths=changed,
+        owned_paths=owned,
+        subject_seats=prepared.seats,
+        subject_families=prepared.families,
+        subject_evidence=prepared.evidence,
+    )
+
+
+def structural_review_route(facts: BranchReviewFacts, *, risk: str, review_profile: str = "code") -> ReviewerResolution:
+    """Resolve a formal reviewer outside every author family under the live catalog floors.
+
+    Structural only (A2): no routing snapshot, so health and quota never decide
+    feasibility; the resolver's own health semantics stay unchanged.
+    """
+    return resolve_reviewer(facts.resolver_inputs(risk=risk, review_profile=review_profile))
+
+
+def pr_review_facts(
+    repository: str,
+    pr_number: int,
+    *,
+    head_sha: str,
+    task_root: Path,
+    repo_root: Path,
+    subject_seats: Iterable[str] = (),
+    subject_families: Iterable[str] = (),
+) -> BranchReviewFacts:
+    """Facts for an open PR's frozen head, bound to GitHub's listing of its commits (A1).
+
+    The PR's base and head come from GitHub; membership comes from the local
+    ``git rev-list``. Any difference between the two commit sets refuses.
+    """
+    pr = _run_json(["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "baseRefOid,headRefOid"])
+    base = pr.get("baseRefOid") if isinstance(pr, dict) else None
+    head = pr.get("headRefOid") if isinstance(pr, dict) else None
+    if not isinstance(base, str) or not SHA.fullmatch(base):
+        raise RecordError("PR base SHA unavailable; cannot prove clean base merge")
+    if head != head_sha:
+        raise RecordError("PR head moved since review; re-run exact-head review")
+    listed = _pages(Request("read-commits", repo=repository, number=pr_number))
+    if not listed:
+        raise RecordError("PR commit set unavailable")
+    github_shas = [entry.get("sha") for entry in listed]
+    if not all(isinstance(sha, str) and SHA.fullmatch(sha) for sha in github_shas):
+        raise RecordError("PR commit set malformed")
+    facts = collect_branch_review_facts(
+        repository=repository,
+        repo_root=repo_root,
+        base_tip_sha=base,
+        head_sha=head_sha,
+        task_root=task_root,
+        subject_seats=subject_seats,
+        subject_families=subject_families,
+    )
+    if sorted(github_shas) != sorted(commit.sha or "" for commit in facts.commits):
+        raise RecordError("PR commit set differs from the local base..head enumeration; fetch and retry")
+    return facts
+
+
+def _task_flag_values(task: dict[str, Any], key: str) -> tuple[str, ...]:
+    value = task.get(key)
+    if value is None:
+        return ()
+    if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+        raise RecordError(f"review task {key} malformed")
+    return tuple(value)
+
+
+def _require_qualified_reviewer(facts: BranchReviewFacts, *, task: dict[str, Any], model: str, family: str) -> None:
+    """Evaluate the actual reviewer against the resolver's rules on the branch facts (AC-01).
+
+    Protected seats and the risk floor bind as in selection; the reviewer need
+    not be the resolver's current top choice, so quota or ladder order alone
+    never invalidates a valid unchanged-head approval. The planned risk is the
+    review's recorded ``review_risk`` (the resolver default when absent);
+    path inference only raises it.
+    """
+    profile = str(task.get("review_profile") or "code").strip().casefold()
+    agent = str(task.get("agent") or "").strip().lower()
+    if profile == "ukrainian":
+        if agent not in {"claude", "codex", "agy"} or family not in {"anthropic", "openai", "google"}:
+            raise RecordError("reviewer not qualified: Ukrainian review needs a Claude, GPT or Gemini seat")
+        if facts.subject_seats or facts.subject_families or is_security_sensitive_change(facts.changed_paths):
+            raise RecordError("reviewer not qualified: protected scope needs a code-profile review")
+        return
+    canonical = resolve_catalog_model_id(model)
+    candidates = [
+        candidate
+        for candidate in REVIEW_CANDIDATES.values()
+        if candidate.route == agent and resolve_catalog_model_id(candidate.concrete_model) == canonical
+    ]
+    if not candidates:
+        raise RecordError(f"reviewer not qualified: {agent}/{model} is not a catalog review candidate")
+    inputs = facts.resolver_inputs(risk=str(task.get("review_risk") or "medium"), review_profile=profile)
+    results = [evaluate_candidate(candidate, inputs) for candidate in candidates]
+    if not any(result.status == "eligible" for result in results):
+        reasons = "; ".join(sorted({str(result.reason) for result in results}))
+        raise RecordError(f"reviewer not qualified for this branch: {reasons}")
 
 
 def _repo_root() -> Path:
@@ -512,9 +950,20 @@ def record(
     number = pr.get("number")
     if not isinstance(number, int) or number < 1:
         raise RecordError("PR number unavailable")
-    families = author_families(repository, number, task_root)
-    if family in families:
+    facts = pr_review_facts(
+        repository,
+        number,
+        head_sha=sha,
+        task_root=task_root,
+        repo_root=root or _repo_root(),
+        subject_seats=_task_flag_values(task, "review_subject_seats"),
+        subject_families=_task_flag_values(task, "review_subject_families"),
+    )
+    if not facts.existing_families:
+        raise RecordError("PR has no attributed author commits")
+    if family in facts.excluded_families:
         raise RecordError("reviewer family equals an author family")
+    _require_qualified_reviewer(facts, task=task, model=model, family=family)
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
