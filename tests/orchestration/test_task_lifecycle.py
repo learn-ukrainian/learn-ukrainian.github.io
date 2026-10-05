@@ -1669,6 +1669,119 @@ def test_resolve_membership_digest_is_deterministic_over_the_index() -> None:
 
 
 # --------------------------------------------------------------------------- #
+# #9783 — a native descendant reached through an unregistered sub-epic is
+# accepted only on the audit's own fresh, complete native-chain resolution.
+# --------------------------------------------------------------------------- #
+def _native(*epics: int) -> dict:
+    return {
+        "epics": list(epics),
+        "streams": ["infra"] if len(epics) == 1 else ["infra", "other"],
+        "via": "native",
+        "unique_stream": len(epics) == 1,
+    }
+
+
+def _chain(report: dict | None, *, stream_epic: int = 10, native_parent_epic: int = 30) -> dict:
+    return task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=stream_epic,
+        native_parent_epic=native_parent_epic,
+        registered_epics=[10, 20],
+        membership_report=report,
+    )
+
+
+def test_resolve_membership_accepts_native_grandchild_through_unregistered_sub_epic() -> None:
+    import time
+
+    now = time.time()
+    index = {"42": _native(10), "30": _native(10)}
+    result = _chain(_fresh_report(now, index))
+    assert result == {
+        "valid": True,
+        "method": "native_chain",
+        "epic": 10,
+        "generated_at": now,
+        "digest": task_lifecycle.digest(index),
+        "reason": None,
+    }
+
+
+@pytest.mark.parametrize(
+    "index,reason",
+    [
+        ({"42": _native(20), "30": _native(20)}, "reaches a different registered epic"),
+        ({"42": _native(10, 20), "30": _native(10)}, "multi-homed"),
+        ({"30": _native(10)}, "does not resolve the issue through a native sub-issue chain"),
+        (
+            {"42": {**_native(10), "via": "body"}, "30": _native(10)},
+            "does not resolve the issue through a native sub-issue chain",
+        ),
+        ({"42": _native(10)}, "native parent is not itself a native descendant"),
+        ({"42": _native(10), "30": _native(20)}, "native parent is not itself a native descendant"),
+    ],
+    ids=["different-epic", "multi-homed", "orphan", "body-only", "parent-absent", "parent-elsewhere"],
+)
+def test_resolve_membership_refuses_ambiguous_native_chain(index: dict, reason: str) -> None:
+    import time
+
+    now = time.time()
+    result = _chain(_fresh_report(now, index))
+    assert result["valid"] is False
+    assert result["method"] is None
+    assert result["reason"].startswith("native parent #30 is not a registered stream epic and ")
+    assert reason in result["reason"]
+    assert result["generated_at"] == now
+    assert result["digest"] == task_lifecycle.digest(index)
+
+
+def test_resolve_membership_refuses_native_chain_on_stale_missing_or_incomplete_audit() -> None:
+    import time
+
+    index = {"42": _native(10), "30": _native(10)}
+    stale = _chain(_fresh_report(time.time() - 7200, index))
+    missing = _chain(None)
+    incomplete_report = {
+        **_fresh_report(time.time(), index),
+        "membership_complete": False,
+        "incomplete_nodes": [30],
+    }
+    incomplete = _chain(incomplete_report)
+
+    for result in (stale, missing):
+        assert result["valid"] is False
+        assert "missing, stale, or malformed" in result["reason"]
+    assert incomplete["valid"] is False
+    assert "incomplete (unread nodes: #30)" in incomplete["reason"]
+
+
+def test_resolve_membership_registered_but_different_native_parent_ignores_chain_evidence() -> None:
+    """Chain evidence never overrides a native parent that is itself a
+    different registered stream epic."""
+    import time
+
+    report = _fresh_report(time.time(), {"42": _native(10), "20": _native(10)})
+    result = _chain(report, native_parent_epic=20)
+    assert result["valid"] is False
+    assert result["epic"] == 20
+    assert "native parent epic that differs" in result["reason"]
+
+
+@pytest.mark.parametrize(
+    "native_parent_epic,registered_epics,expected",
+    [
+        (None, [10, 20], True),
+        (30, [10, 20], True),
+        (10, [10, 20], False),
+        (20, [10, 20], False),
+    ],
+    ids=["no-parent", "unregistered-parent", "matching-parent", "registered-different-parent"],
+)
+def test_membership_needs_audit(native_parent_epic: int | None, registered_epics: list[int], expected: bool) -> None:
+    assert task_lifecycle.membership_needs_audit(native_parent_epic, registered_epics) is expected
+
+
+# --------------------------------------------------------------------------- #
 # #6028 — evaluate()/reconcile() wire resolve_membership in for the primary
 # issue and drift is caught fresh on every subsequent reconcile.
 # --------------------------------------------------------------------------- #
