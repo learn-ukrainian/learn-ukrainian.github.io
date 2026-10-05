@@ -3,13 +3,20 @@
 # context profile uses rollover_mode operator_restart at its prepared handoff
 # until the operator restarts it (#8511). Other profiles are untouched.
 #
+# The mode comes only from this session's own record (SessionStart writes it);
+# no record, a record for another session, or an unreadable record means the
+# guard does nothing.
+#
 # UserPromptSubmit: after context-monitor.sh has announced the final tier for
 # this session (its tier state file holds tier 3), each later prompt carries
 # one short reminder so it does not restart large work.
-# PreCompact: automatic compaction is blocked with exit code 2, which the Claude
-# Code hooks reference documents as "Blocks compaction" (supported since
-# 2.1.105). Manual /compact stays allowed. Claude Code discards a PreCompact
-# hook's systemMessage, so the reason goes to stderr.
+# PreCompact: automatic compaction is blocked with exit code 2 ("Blocks
+# compaction" in the Claude Code hooks reference, since 2.1.105) only while
+# the canonical rollover state holds a prepared handoff for THIS session. A
+# block fails the request that triggered compaction, so without a usable
+# handoff compaction runs: compaction is better than a failed request. Manual
+# /compact is never blocked. Claude Code discards a PreCompact hook's
+# systemMessage, so the reason goes to stderr.
 
 # Same harness and context exits as context-monitor.sh.
 if [ "${SESSION_HANDOFF_AGENT:-}" = "codex" ] \
@@ -38,18 +45,18 @@ SESSION_ID=$(printf '%s' "$INPUT" | jq -r '.session_id // empty' 2>/dev/null)
 case "$SESSION_ID" in */*|*..*) exit 0 ;; esac
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 
-ROLLOVER_MODE="${LEARN_UKRAINIAN_ROLLOVER_MODE:-}"
 RECORD_FILE=$(context_session_record_file "$PROJECT_DIR" "$SESSION_ID")
-if [ -f "$RECORD_FILE" ] && [ ! -L "$RECORD_FILE" ]; then
-  ROLLOVER_MODE=$(jq -r '.rollover_mode // empty' "$RECORD_FILE" 2>/dev/null || true)
-fi
+[ -f "$RECORD_FILE" ] && [ ! -L "$RECORD_FILE" ] || exit 0
+ROLLOVER_MODE=$(jq -r --arg sid "$SESSION_ID" \
+  'if .session_id == $sid then .rollover_mode // empty else empty end' "$RECORD_FILE" 2>/dev/null || true)
 [ "$(context_effective_rollover_mode "$ROLLOVER_MODE")" = "operator_restart" ] || exit 0
 
 case "$EVENT" in
   PreCompact)
     TRIGGER=$(printf '%s' "$INPUT" | jq -r '.trigger // empty' 2>/dev/null)
     [ "$TRIGGER" = "auto" ] || exit 0
-    printf '%s\n' "Automatic compaction is blocked for this session (rollover_mode operator_restart, #8511): prepare the handoff with the thread-rollover skill and restart the session instead. Manual /compact remains available." >&2
+    context_session_has_prepared_rollover "$(context_canonical_root "$PROJECT_DIR")" "$SESSION_ID" || exit 0
+    printf '%s\n' "Automatic compaction is blocked for this session (rollover_mode operator_restart, #8511): its rollover handoff is prepared, so restart the session instead. Manual /compact remains available." >&2
     exit 2
     ;;
   UserPromptSubmit)

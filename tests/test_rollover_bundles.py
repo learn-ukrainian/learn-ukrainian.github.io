@@ -624,15 +624,17 @@ def _serve_api_bundle(
     monkeypatch.setattr(th, "_bundle_api_by_seq", lambda _args, *, stream_id, upload_seq: (served, blob))
 
 
-def test_order_tie_at_a_synced_upload_keeps_newer_local_edits(
+def test_order_tie_at_a_synced_upload_keeps_local_and_preserves_remote_for_reconciliation(
     tmp_path: Path,
     handoff_candidates: None,
     capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """#8511: SessionStart refused "bundle order ties but content differs" after the
-    driver refreshed its lane handoff following its own upload.  The local receipt
-    proves this host synced that immutable upload, so the local copy is newer."""
+    """#8511 re-install counterexample: install upload 65 (the current handoff),
+    then restore an OLDER repo-local handoff while the lineage and receipt stay.
+    The receipt proves a common snapshot, not which side is newer, so the
+    re-import keeps the stale local file, preserves the remote copy beside the
+    lineage, and reports reconcile_needed instead of a silent noop."""
     source = tmp_path / "source"
     target = tmp_path / "target"
     source.mkdir()
@@ -650,21 +652,35 @@ def test_order_tie_at_a_synced_upload_keeps_newer_local_edits(
     assert json.loads(receipt.read_text(encoding="utf-8"))["upload_seq"] == 65
 
     lane_handoff = target / HANDOFF_PATH
-    lane_handoff.write_text("refreshed after the upload\n", encoding="utf-8")
+    current_handoff = lane_handoff.read_bytes()
+    lane_handoff.write_text("older handoff restored from a backup\n", encoding="utf-8")
     lease = target / th.default_state_path(AGENT, state["lineage_id"])
     lease_before = lease.read_bytes()
 
-    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
-    result = json.loads(capsys.readouterr().out)
-    assert result["status"] == "noop"
-    assert result["reason"] == "local copy descends from this upload; keeping its newer local edits"
-    assert result["upload_seq"] == 65
-    assert result["generation"] == 2
-    assert result["local_newer_members"] == [HANDOFF_PATH]
-    assert lane_handoff.read_text(encoding="utf-8") == "refreshed after the upload\n"
-    assert lease.read_bytes() == lease_before
+    for _ in range(2):  # repeatable: the same preserved copy, never an overwrite
+        assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+        captured = capsys.readouterr()
+        result = json.loads(captured.out)
+        reconcile = f".agent/thread-rollovers/{AGENT}/{state['lineage_id']}/_bundle-reconcile/upload-65"
+        assert result["status"] == "reconcile_needed"
+        assert result["upload_seq"] == 65
+        assert result["generation"] == 2
+        assert result["differing_members"] == [HANDOFF_PATH]
+        assert result["reconcile_path"] == reconcile
+        assert result["warning"].startswith("WARNING: rollover bundle upload 65 differs from the local copy")
+        assert HANDOFF_PATH in result["warning"]
+        assert result["warning"] in captured.err
+        assert lane_handoff.read_text(encoding="utf-8") == "older handoff restored from a backup\n"
+        assert (target / reconcile / HANDOFF_PATH).read_bytes() == current_handoff
+        assert lease.read_bytes() == lease_before
     archive_root = target / ".agent" / "thread-rollovers" / AGENT / "_archive"
     assert not archive_root.exists() or not any(archive_root.iterdir())
+
+    # The preserved copy is never bundled again, so it cannot leak into uploads.
+    members = th._bundle_local_members(
+        target, target, agent=AGENT, lineage_id=state["lineage_id"], stream_id=STREAM
+    )
+    assert not any("_bundle-reconcile" in name for name in members)
 
 
 def test_order_tie_without_an_upload_sequence_still_refuses(

@@ -4,8 +4,12 @@ from __future__ import annotations
 
 import json
 import os
+import re
+import shlex
 import shutil
 import subprocess
+import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -612,10 +616,15 @@ def test_context_monitor_operator_restart_tiers_hand_off_and_wait(tmp_path: Path
     assert "waits for the operator to restart it" in emergency
     assert "Refresh your lane handoff file" in emergency
     assert "thread-rollover skill's prepare phase (references/prepare.md)" in emergency
+    # The fake project has no interpreter helper: an honest placeholder, never
+    # a checkout-relative .venv path that a worktree does not have.
     assert (
-        "run .venv/bin/python scripts/orchestration/thread_handoff.py prepare"
-        " --agent claude --context-percent 76."
+        "run <project interpreter> scripts/orchestration/thread_handoff.py prepare"
+        " --agent claude --harness claude-code --active-thread-id status-session --stream-epic <epic-number>"
+        ' --semantic-title "<specific semantic task title>" --task-family <task-family> --role "<role>"'
+        " --terminal-goal <merge|deploy|certify> --context-percent 76"
     ) in emergency
+    assert ".venv/bin/python" not in emergency
     assert "Tell the operator in one plain message" in emergency
     assert "END THE TURN and wait" in emergency
     assert "Start the supported continuation" not in emergency
@@ -660,3 +669,235 @@ def test_context_monitor_other_profiles_keep_continuation_text(tmp_path: Path) -
     assert emergency.startswith("EMERGENCY: Context is at 93%")
     assert "Start the supported continuation" in emergency
     assert "END THE TURN" not in emergency
+
+
+def _git(*args: str | os.PathLike[str]) -> None:
+    subprocess.run(
+        ["git", "-c", "user.name=test", "-c", "user.email=test@example.invalid", *map(os.fspath, args)],
+        check=True,
+        capture_output=True,
+        timeout=60,
+    )
+
+
+def _primary_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
+    """A real primary checkout with a linked dispatch worktree, as the fleet runs.
+    Only the primary has a .venv; the worktree reaches the repository scripts."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    _git("init", "-q", "-b", "main", primary)
+    (primary / ".gitignore").write_text(".agent/\n.venv/\n.worktrees/\nbatch_state/\nscripts\n", encoding="utf-8")
+    _git("-C", primary, "add", ".gitignore")
+    _git("-C", primary, "commit", "-q", "-m", "init")
+    worktree = primary / ".worktrees/dispatch/claude/probe"
+    _git("-C", primary, "worktree", "add", "-q", "-b", "probe", worktree)
+    (worktree / "scripts").symlink_to(PROJECT_ROOT / "scripts", target_is_directory=True)
+    interpreter = primary / ".venv/bin/python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} "$@"\n', encoding="utf-8")
+    interpreter.chmod(0o755)
+    return primary.resolve(), worktree.resolve()
+
+
+def test_context_monitor_prepare_command_runs_from_a_worktree_and_arms_the_guard(tmp_path: Path) -> None:
+    """#8511 review finding 2: the printed command uses the shared interpreter
+    and the runtime identity, runs from a dispatch worktree, and the lease it
+    writes is exactly what lets context-rollover-guard.sh block auto-compaction."""
+    primary, worktree = _primary_with_worktree(tmp_path)
+    record_path = tmp_path / "record.json"
+    record_path.write_text(json.dumps(_native_claude_record()), encoding="utf-8")
+    transcript = tmp_path / "native.jsonl"
+    _write_transcript(transcript, input_tokens=760_000, cache_tokens=0)
+    env = _environment(worktree, record_path)
+    for name in ("LEARN_UKRAINIAN_SESSION_ID", "CODEX_CANONICAL_REPO_ROOT"):
+        env.pop(name, None)
+
+    hook = subprocess.run(
+        [os.fspath(CONTEXT_MONITOR)],
+        input=json.dumps({"session_id": "status-session", "transcript_path": os.fspath(transcript)}),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=worktree,
+        env=env,
+        timeout=60,
+    )
+    emergency = json.loads(hook.stdout)["hookSpecificOutput"]["additionalContext"]
+    match = re.search(r"run (.+?) \(fill each <placeholder>", emergency)
+    assert match, emergency
+    printed = match.group(1)
+    assert printed.startswith(
+        f"{primary}/.venv/bin/python scripts/orchestration/thread_handoff.py prepare"
+        " --agent claude --harness claude-code --active-thread-id status-session --stream-epic <epic-number>"
+    )
+
+    filled = (
+        printed.replace("<epic-number>", "8511")
+        .replace('"<specific semantic task title>"', '"Probe the rollover command"')
+        .replace("<task-family>", "thread-rollover")
+        .replace('"<role>"', '"driver"')
+        .replace("<merge|deploy|certify>", "merge")
+    )
+    assert "<" not in filled
+    argv = shlex.split(filled)
+    # Keep the runtime state in this fixture's primary, not the real checkout.
+    argv[2:2] = ["--repo-root", os.fspath(primary)]
+    prepare_env = {key: value for key, value in env.items() if not key.startswith("LEARN_UKRAINIAN_SESSION")}
+    prepare_env["LU_MONITOR_LOOPBACK"] = "http://127.0.0.1:9"
+    prepared = subprocess.run(
+        argv, cwd=worktree, env=prepare_env, text=True, capture_output=True, check=False, timeout=120
+    )
+    assert prepared.returncode == 0, prepared.stdout + prepared.stderr
+    leases = list((primary / ".agent/thread-rollovers/claude").glob("*/lease.json"))
+    assert len(leases) == 1
+    lease = json.loads(leases[0].read_text(encoding="utf-8"))
+    assert lease["active"]["thread_id"] == "status-session"
+    assert lease["replacement"]["status"] == "pending_start"
+    assert lease["replacement"]["title_transition"]["harness"] == "claude-code"
+
+    guard = subprocess.run(
+        [os.fspath(PROJECT_ROOT / "agents_extensions/shared/hooks/context-rollover-guard.sh")],
+        input=json.dumps({"session_id": "status-session", "hook_event_name": "PreCompact", "trigger": "auto"}),
+        text=True,
+        capture_output=True,
+        check=False,
+        cwd=worktree,
+        env=env,
+        timeout=60,
+    )
+    assert guard.returncode == 2, guard.stderr
+    assert "its rollover handoff is prepared" in guard.stderr
+
+
+def _start_together(
+    command: list[str], *, count: int, barrier: Path, stdin: str = "", **popen: object
+) -> list[tuple[int, str]]:
+    """Start <count> copies that all wait on <barrier>, then release them at once,
+    so the race is real rather than staggered by process start-up."""
+    barrier.unlink(missing_ok=True)
+    wait = f"while [ ! -e {shlex.quote(os.fspath(barrier))} ]; do sleep 0.005; done; exec \"$@\""
+    bash = shutil.which("bash")
+    assert bash
+    processes = [
+        subprocess.Popen(
+            [bash, "-c", wait, "barrier", *command],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            **popen,
+        )
+        for _ in range(count)
+    ]
+    for process in processes:
+        assert process.stdin is not None
+        process.stdin.write(stdin)
+        process.stdin.close()
+    time.sleep(0.5)
+    barrier.touch()
+    results = []
+    for process in processes:
+        assert process.stdout is not None
+        stdout = process.stdout.read()
+        results.append((process.wait(timeout=60), stdout))
+    return results
+
+
+def test_context_monitor_announces_tier_three_once_under_concurrency(tmp_path: Path) -> None:
+    """#8511 review finding 2: Claude Code runs PostToolUse hooks concurrently;
+    twelve simultaneous calls at 760k announce the final tier exactly once."""
+    project, record_path = _fake_project(tmp_path, _native_claude_record())
+    transcript = tmp_path / "native.jsonl"
+    _write_transcript(transcript, input_tokens=760_000, cache_tokens=0)
+    env = _environment(project, record_path)
+    payload = json.dumps({"session_id": "status-session", "transcript_path": os.fspath(transcript)})
+    state_file = project / "batch_state/context_monitor/status-session.tier"
+
+    for _ in range(3):
+        state_file.unlink(missing_ok=True)
+        results = _start_together(
+            [os.fspath(CONTEXT_MONITOR)],
+            count=12,
+            barrier=tmp_path / "go",
+            stdin=payload,
+            cwd=project.parent,
+            env=env,
+        )
+
+        assert [code for code, _ in results] == [0] * 12
+        announcements = [stdout for _, stdout in results if stdout.strip()]
+        assert len(announcements) == 1
+        assert json.loads(announcements[0])["hookSpecificOutput"]["additionalContext"].startswith(
+            "EMERGENCY: Context is at 76%"
+        )
+        assert state_file.read_text(encoding="utf-8").split() == ["3", "760000"]
+
+
+def test_tier_claim_lock_is_exactly_once_without_flock(tmp_path: Path) -> None:
+    """The no-flock fallback (stock macOS) is atomic too, even where the mkdir
+    binary is not (uutils coreutils)."""
+    tools = tmp_path / "bin"
+    tools.mkdir()
+    for tool in ("dirname", "mkdir", "sleep", "rmdir", "mv", "rm"):
+        found = shutil.which(tool)
+        assert found, tool
+        (tools / tool).symlink_to(found)
+    bash = shutil.which("bash")
+    assert bash
+    state_file = tmp_path / "state" / "s.tier"
+    lib = PROJECT_ROOT / "agents_extensions/shared/hooks/context-rollover-lib.sh"
+    script = (
+        f"source {shlex.quote(os.fspath(lib))}; command -v flock >/dev/null && exit 9; "
+        f"context_claim_tier {shlex.quote(os.fspath(state_file))} 3 760000"
+    )
+
+    for _ in range(3):
+        state_file.unlink(missing_ok=True)
+        results = _start_together(
+            [bash, "-c", script], count=12, barrier=tmp_path / "go", env={"PATH": os.fspath(tools)}
+        )
+
+        assert [code for code, _ in results] == [0] * 12, results
+        assert [stdout for _, stdout in results].count("claimed\n") == 1
+        assert state_file.read_text(encoding="utf-8") == "3 760000\n"
+        assert not (tmp_path / "state" / "s.tier.lockfile").exists()
+
+
+def test_tier_claim_lock_left_by_a_killed_hook_is_recovered(tmp_path: Path) -> None:
+    """A SIGKILLed holder leaves its lock file; the next call moves it aside
+    after about two seconds without claiming, and the call after that claims."""
+    tools = tmp_path / "bin"
+    tools.mkdir()
+    for tool in ("dirname", "mkdir", "sleep", "rmdir", "mv", "rm"):
+        found = shutil.which(tool)
+        assert found, tool
+        (tools / tool).symlink_to(found)
+    bash = shutil.which("bash")
+    assert bash
+    state_file = tmp_path / "state" / "s.tier"
+    lock_file = tmp_path / "state" / "s.tier.lockfile"
+    lock_file.parent.mkdir(parents=True)
+    lock_file.touch()
+    lib = PROJECT_ROOT / "agents_extensions/shared/hooks/context-rollover-lib.sh"
+    script = (
+        f"source {shlex.quote(os.fspath(lib))}; command -v flock >/dev/null && exit 9; "
+        f"context_claim_tier {shlex.quote(os.fspath(state_file))} 3 760000"
+    )
+
+    def claim() -> str:
+        completed = subprocess.run(
+            [bash, "-c", script],
+            capture_output=True,
+            text=True,
+            check=True,
+            env={"PATH": os.fspath(tools)},
+            timeout=30,
+        )
+        return completed.stdout
+
+    assert claim() == ""
+    assert not lock_file.exists()
+    assert not state_file.exists()
+    assert claim() == "claimed\n"
+    assert claim() == ""
+    assert not lock_file.exists()

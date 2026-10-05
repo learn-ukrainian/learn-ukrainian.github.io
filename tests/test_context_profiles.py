@@ -337,18 +337,19 @@ def test_shell_resolver_exports_only_project_private_fields() -> None:
     assert "eval " not in SHELL_RESOLVER.read_text(encoding="utf-8")
 
 
-@pytest.mark.parametrize(
-    ("omitted", "accepted"),
-    [("ROLLOVER_MODE", True), ("TRUSTED", False)],
-)
-def test_shell_resolver_tolerates_only_a_pre_rollover_mode_resolver(
-    tmp_path: Path, omitted: str, accepted: bool
-) -> None:
-    """Launchers pair this parser with the canonical checkout's resolver, which can
-    predate #8511; only ROLLOVER_MODE may be missing, and it defaults safely."""
+def _run_with_old_resolver(
+    tmp_path: Path,
+    *,
+    omitted: str,
+    profile_id: str = "native_claude",
+    model_id: str = "claude-opus-5-5",
+    project_dir: Path = PROJECT_ROOT,
+) -> subprocess.CompletedProcess[str]:
+    """Pair this parser with a resolver that predates a field, as a launcher
+    pointing CLAUDE_PROFILE_RESOLVER_PY at another checkout can (#8511)."""
     old_resolver = tmp_path / "old_context_profiles.py"
     fields = {key: "x" for key in EXPECTED_ENV0_KEYS if key != omitted}
-    fields["PROFILE_ID"] = "native_claude"
+    fields["PROFILE_ID"] = profile_id
     old_resolver.write_text(
         "import sys\n"
         f"for key, value in {sorted(fields.items())!r}:\n"
@@ -357,14 +358,14 @@ def test_shell_resolver_tolerates_only_a_pre_rollover_mode_resolver(
     )
     command = f"""
         set -uo pipefail
-        PROJECT_DIR={shlex.quote(os.fspath(PROJECT_ROOT))}
+        PROJECT_DIR={shlex.quote(os.fspath(project_dir))}
         CLAUDE_PROFILE_RESOLVER_PYTHON={shlex.quote(sys.executable)}
         CLAUDE_PROFILE_RESOLVER_PY={shlex.quote(os.fspath(old_resolver))}
         source {shlex.quote(os.fspath(SHELL_RESOLVER))}
-        resolve_context_profile native_claude claude-opus-5-5 || exit 7
+        resolve_context_profile native_claude {shlex.quote(model_id)} || exit 7
         printf '%s|%s\\n' "$LEARN_UKRAINIAN_PROFILE_ID" "$LEARN_UKRAINIAN_ROLLOVER_MODE"
     """
-    result = subprocess.run(
+    return subprocess.run(
         ["bash", "-c", command],
         capture_output=True,
         text=True,
@@ -373,9 +374,39 @@ def test_shell_resolver_tolerates_only_a_pre_rollover_mode_resolver(
         check=False,
     )
 
-    if accepted:
-        assert result.returncode == 0, result.stderr
-        assert result.stdout == "native_claude|continuation\n"
+
+def test_old_resolver_without_rollover_mode_takes_it_from_the_current_contract(tmp_path: Path) -> None:
+    """A resolver that predates ROLLOVER_MODE must not silently downgrade native
+    Claude to continuation; the mode comes from this checkout's profile YAML."""
+    result = _run_with_old_resolver(tmp_path, omitted="ROLLOVER_MODE")
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "native_claude|operator_restart\n"
+
+
+def test_old_resolver_without_rollover_mode_keeps_continuation_profiles(tmp_path: Path) -> None:
+    result = _run_with_old_resolver(tmp_path, omitted="ROLLOVER_MODE", profile_id="fallback", model_id="gpt-6.1-sol")
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "fallback|continuation\n"
+
+
+@pytest.mark.parametrize("case", ["profile_disagrees", "contract_missing"])
+def test_old_resolver_without_rollover_mode_fails_loudly_when_contract_cannot_answer(
+    tmp_path: Path, case: str
+) -> None:
+    if case == "profile_disagrees":
+        result = _run_with_old_resolver(tmp_path, omitted="ROLLOVER_MODE", profile_id="sol_lead")
     else:
-        assert result.returncode == 7
-        assert "invalid field stream" in result.stderr
+        result = _run_with_old_resolver(tmp_path, omitted="ROLLOVER_MODE", project_dir=tmp_path / "no-checkout")
+
+    assert result.returncode == 7
+    assert result.stdout == ""
+    assert "omitted ROLLOVER_MODE and the current contract could not supply it" in result.stderr
+
+
+def test_shell_resolver_rejects_any_other_missing_field(tmp_path: Path) -> None:
+    result = _run_with_old_resolver(tmp_path, omitted="TRUSTED")
+
+    assert result.returncode == 7
+    assert "invalid field stream" in result.stderr

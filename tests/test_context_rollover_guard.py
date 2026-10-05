@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -39,6 +40,37 @@ def _tier_state(project: Path, tier: int, tokens: int) -> None:
     state.write_text(f"{tier} {tokens}\n", encoding="utf-8")
 
 
+def _prepared_rollover(
+    project: Path,
+    *,
+    thread_id: str = SESSION,
+    status: str = "pending_start",
+    write_handoff: bool = True,
+    agent: str = "claude",
+) -> Path:
+    """A lease as ``thread_handoff.py prepare`` leaves it under the canonical root."""
+    lineage = "lineage-" + hashlib.sha256(f"{agent}\0{thread_id}".encode()).hexdigest()[:24]
+    handoff = f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/rollover-1/handoff.md"
+    lease = project / ".agent/thread-rollovers" / agent / lineage / "lease.json"
+    lease.parent.mkdir(parents=True, exist_ok=True)
+    lease.write_text(
+        json.dumps(
+            {
+                "schema_version": 2,
+                "agent": agent,
+                "lineage_id": lineage,
+                "active": {"thread_id": thread_id, "generation": 0},
+                "replacement": {"status": status, "rollover_id": "rollover-1", "handoff_path": handoff},
+            }
+        ),
+        encoding="utf-8",
+    )
+    if write_handoff:
+        (project / handoff).parent.mkdir(parents=True, exist_ok=True)
+        (project / handoff).write_text("# Handoff\n", encoding="utf-8")
+    return lease
+
+
 def _transcript(tmp_path: Path, tokens: int) -> Path:
     path = tmp_path / "transcript.jsonl"
     path.write_text(
@@ -72,6 +104,8 @@ def _run(
         "SESSION_HANDOFF_AGENT",
         "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
         "LEARN_UKRAINIAN_ROLLOVER_MODE",
+        "LEARN_UKRAINIAN_SESSION_ID",
+        "CODEX_CANONICAL_REPO_ROOT",
     ):
         env.pop(name, None)
     env.update(
@@ -145,23 +179,101 @@ def test_reminder_never_fires_for_continuation_profiles(tmp_path: Path, rollover
     assert _reminder(completed) == ""
 
 
-def test_precompact_auto_is_blocked_for_operator_restart(tmp_path: Path) -> None:
+def test_precompact_auto_is_blocked_only_with_this_sessions_prepared_handoff(tmp_path: Path) -> None:
     project, record_path = _project(tmp_path)
+    _prepared_rollover(project)
 
     completed = _run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"})
 
     assert completed.returncode == 2
     assert completed.stdout == ""
     assert "Automatic compaction is blocked for this session" in completed.stderr
+    assert "its rollover handoff is prepared" in completed.stderr
     assert "Manual /compact remains available" in completed.stderr
+
+
+def _assert_compaction_runs(completed: subprocess.CompletedProcess[str]) -> None:
+    assert (completed.returncode, completed.stdout, completed.stderr) == (0, "", "")
+
+
+def test_precompact_auto_runs_without_any_handoff_or_tier_marker(tmp_path: Path) -> None:
+    """Review probe 1: operator_restart with neither a handoff nor a tier marker."""
+    project, record_path = _project(tmp_path)
+
+    _assert_compaction_runs(_run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"}))
+
+
+def test_precompact_auto_runs_when_the_record_is_missing_despite_env_mode(tmp_path: Path) -> None:
+    """Review probe 2: no session record plus LEARN_UKRAINIAN_ROLLOVER_MODE=operator_restart.
+    The environment is not a session record, so the guard does nothing."""
+    project, record_path = _project(tmp_path)
+    record_path.unlink()
+    _prepared_rollover(project)
+
+    for event in ("PreCompact", "UserPromptSubmit"):
+        _tier_state(project, 3, 760_000)
+        completed = _run(
+            project,
+            tmp_path / "missing-record.json",
+            {"hook_event_name": event, "trigger": "auto"},
+            LEARN_UKRAINIAN_ROLLOVER_MODE="operator_restart",
+            CODEX_CANONICAL_REPO_ROOT=os.fspath(project),
+        )
+        _assert_compaction_runs(completed)
+
+
+def test_precompact_auto_runs_when_the_record_names_another_session(tmp_path: Path) -> None:
+    project, record_path = _project(tmp_path)
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    record["session_id"] = "another-session"
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+    _prepared_rollover(project)
+
+    _assert_compaction_runs(_run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"}))
+
+
+def test_precompact_auto_runs_when_the_record_is_unreadable(tmp_path: Path) -> None:
+    project, record_path = _project(tmp_path)
+    record_path.write_text("{not json", encoding="utf-8")
+    _prepared_rollover(project)
+
+    _assert_compaction_runs(_run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"}))
+
+
+@pytest.mark.parametrize(
+    "rollover",
+    [
+        {"thread_id": "another-session"},  # another session's packet
+        {"status": "resumed"},  # already taken over by its replacement
+        {"status": "superseded"},
+        {"write_handoff": False},  # lease without a usable handoff
+    ],
+)
+def test_precompact_auto_runs_without_a_usable_prepared_handoff_for_this_session(
+    tmp_path: Path, rollover: dict[str, object]
+) -> None:
+    project, record_path = _project(tmp_path)
+    _tier_state(project, 3, 760_000)  # a tier announcement alone is not a handoff
+    _prepared_rollover(project, **rollover)
+
+    _assert_compaction_runs(_run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"}))
+
+
+def test_precompact_auto_runs_when_the_rollover_state_is_unreadable(tmp_path: Path) -> None:
+    project, record_path = _project(tmp_path)
+    lease = _prepared_rollover(project)
+    lease.write_text("{truncated", encoding="utf-8")
+
+    _assert_compaction_runs(_run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"}))
 
 
 def test_precompact_manual_is_allowed(tmp_path: Path) -> None:
     project, record_path = _project(tmp_path)
+    _prepared_rollover(project)
 
     completed = _run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "manual"})
 
-    assert (completed.returncode, completed.stdout, completed.stderr) == (0, "", "")
+    _assert_compaction_runs(completed)
 
 
 @pytest.mark.parametrize(
@@ -179,25 +291,11 @@ def test_precompact_auto_is_untouched_outside_interactive_operator_restart(
     tmp_path: Path, rollover_mode: str | None, extra_env: dict[str, str]
 ) -> None:
     project, record_path = _project(tmp_path, rollover_mode=rollover_mode)
+    _prepared_rollover(project)
 
     completed = _run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"}, **extra_env)
 
-    assert (completed.returncode, completed.stdout, completed.stderr) == (0, "", "")
-
-
-def test_env_mode_applies_before_the_session_record_exists(tmp_path: Path) -> None:
-    project, record_path = _project(tmp_path)
-    record_path.unlink()
-
-    completed = _run(
-        project,
-        tmp_path / "missing-record.json",
-        {"hook_event_name": "PreCompact", "trigger": "auto"},
-        LEARN_UKRAINIAN_ROLLOVER_MODE="operator_restart",
-        CODEX_CANONICAL_REPO_ROOT=os.fspath(project),
-    )
-
-    assert completed.returncode == 2
+    _assert_compaction_runs(completed)
 
 
 def test_settings_register_guard_for_prompts_and_auto_compaction_only() -> None:

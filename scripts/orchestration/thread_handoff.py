@@ -661,6 +661,11 @@ def _bundle_handoff_candidates_for_agent(repo_root: Path, stream_id: str, agent:
     return tuple(dict.fromkeys(candidates))
 
 
+# Remote copies kept for reconciliation after a same-sequence tie (#8511);
+# lives inside the lineage but is never bundled.
+BUNDLE_RECONCILE_DIR = "_bundle-reconcile"
+
+
 def _bundle_source_members(
     repo_root: Path,
     state_root: Path,
@@ -680,6 +685,7 @@ def _bundle_source_members(
             or path.is_symlink()
             or path.name == ".native-intent.lock"
             or path.name.endswith(".bundle.tgz")
+            or path.relative_to(lineage_root).parts[0] == BUNDLE_RECONCILE_DIR
         ):
             continue
         member_name = (
@@ -5575,6 +5581,32 @@ def _bundle_local_lineage_snapshot(
     return local_manifest, local_members, True
 
 
+def _bundle_preserve_remote_for_reconcile(
+    repo_root: Path,
+    state_root: Path,
+    *,
+    agent: str,
+    lineage_id: str,
+    upload_seq: int,
+    members: Mapping[str, bytes],
+) -> Path:
+    """Write remote members beside the kept local lineage; never touch live files.
+
+    Layout: ``<lineage>/_bundle-reconcile/upload-<seq>/<member path>``.  Bundle
+    exports skip this directory, so a preserved copy is never re-uploaded.
+    """
+    lineage_root = state_root / ".agent" / "thread-rollovers" / agent / lineage_id
+    reconcile_root = lineage_root / BUNDLE_RECONCILE_DIR / f"upload-{upload_seq}"
+    for name, payload in members.items():
+        destination = reconcile_root / _bundle_member_path(name)
+        destination.resolve().relative_to(reconcile_root.resolve())
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        write_bytes_atomic(
+            destination, _bundle_rewrite(payload, repo_root=repo_root) if _bundle_text_member(name) else payload
+        )
+    return reconcile_root
+
+
 def _bundle_import_error(reason: str) -> int:
     print(json.dumps({"error": reason, "action": "import-bundle"}, separators=(",", ":")))
     return 2
@@ -5646,29 +5678,45 @@ def _bundle_import_candidate(
                     "lineage_id": lineage_id,
                     "rollover_id": manifest["rollover_id"],
                 }
-            # The order key ends in the upload sequence, and the local half of
-            # the tie comes from this lineage's receipt, which is written only
-            # when this host uploaded or installed that exact sequence.  A
-            # server-assigned sequence is immutable, so the remote copy is the
-            # snapshot the local copy was synced from; every difference is a
-            # later local edit (typically a refreshed lane handoff).  Keep the
-            # local copy.  Sequence 0 (an unsequenced file export) proves no
-            # common snapshot, so that tie still refuses.
+            # The order key ends in the upload sequence; the local half comes
+            # from this lineage's receipt, written when this host uploaded or
+            # installed that exact sequence.  The receipt proves a common
+            # snapshot, not that every differing local file is newer: a later
+            # local edit and a stale restore look the same.  Never overwrite
+            # local files and never drop the remote copy: keep the local copy,
+            # preserve the differing remote members under the lineage, and
+            # report that reconciliation is needed.  Sequence 0 (an
+            # unsequenced file export) proves no common snapshot, so that tie
+            # still refuses.
             if remote_order[4] >= 1:
                 differing = sorted(
                     name
                     for name in set(local_compare) | set(remote_compare)
                     if local_compare.get(name) != remote_compare.get(name)
                 )
+                reconcile_root = _bundle_preserve_remote_for_reconcile(
+                    repo_root,
+                    state_root,
+                    agent=agent,
+                    lineage_id=lineage_id,
+                    upload_seq=remote_order[4],
+                    members={name: remote_compare[name] for name in differing if name in remote_compare},
+                )
+                reconcile_rel = reconcile_root.relative_to(state_root).as_posix()
                 return {
-                    "status": "noop",
-                    "reason": "local copy descends from this upload; keeping its newer local edits",
+                    "status": "reconcile_needed",
+                    "reason": "local and remote copies differ at the same upload sequence; "
+                    "kept the local copy and preserved the remote copy for reconciliation",
+                    "warning": f"WARNING: rollover bundle upload {remote_order[4]} differs from the local copy "
+                    f"in {', '.join(differing)}; kept the local files and preserved the remote copy at "
+                    f"{reconcile_rel} - reconcile them before relying on this handoff.",
                     "agent": agent,
                     "lineage_id": lineage_id,
                     "rollover_id": manifest["rollover_id"],
                     "generation": manifest["generation"],
                     "upload_seq": remote_order[4],
-                    "local_newer_members": differing,
+                    "differing_members": differing,
+                    "reconcile_path": reconcile_rel,
                 }
             return {
                 "status": "refused",
@@ -5798,15 +5846,26 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
         result = results[0]
     else:
         statuses = {item["status"] for item in results}
-        aggregate_status = "refused" if "refused" in statuses else "installed" if "installed" in statuses else "noop"
+        if "refused" in statuses:
+            aggregate_status = "refused"
+        elif "reconcile_needed" in statuses:
+            aggregate_status = "reconcile_needed"
+        elif "installed" in statuses:
+            aggregate_status = "installed"
+        else:
+            aggregate_status = "noop"
+        warnings = [item["warning"] for item in results if item.get("warning")]
         result = {
             "status": aggregate_status,
+            **({"warning": " ".join(warnings)} if warnings else {}),
             "agent": agent,
             "stream_id": str(args.from_api),
             "bundles": results,
             "handoff_source": handoff_winner[0].get("agent") if handoff_winner is not None else None,
             "handoff_upload_seq": handoff_winner[0].get("upload_seq", 0) if handoff_winner is not None else None,
         }
+    if result.get("warning"):
+        print(result["warning"], file=sys.stderr)
     print(json.dumps(result, indent=2, ensure_ascii=False))
     return 2 if any(item["status"] == "refused" for item in results) else 0
 

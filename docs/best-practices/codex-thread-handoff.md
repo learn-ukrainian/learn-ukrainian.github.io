@@ -305,21 +305,28 @@ Confirm the replacement with the same agent name:
 Native Claude sessions (`native_claude` in `scripts/config/context_profiles.yaml`,
 `rollover_mode: operator_restart`, #8511) never continue themselves and never
 reach Claude Code's automatic compaction (about 97% of the 1M window).
-`agents_extensions/shared/hooks/context-monitor.sh` announces each tier once:
+`agents_extensions/shared/hooks/context-monitor.sh` announces each tier once
+(an atomic per-session claim, so concurrent tool hooks announce it once):
 
 - **650k (65%)** — heads-up: wrap up the current unit soon.
 - **700k (70%)** — finish the current unit; start no new multi-step work,
   dispatches, or large operations.
 - **750k (75%)** — stop, refresh the lane handoff file, run the
-  `thread-rollover` skill's prepare phase (the hook prints the exact
-  `thread_handoff.py prepare` command), tell the operator in one plain message
-  that the session is ready for a restart, and end the turn.
+  `thread-rollover` skill's prepare phase, tell the operator in one plain
+  message that the session is ready for a restart, and end the turn. The hook
+  prints the `thread_handoff.py prepare` command with the shared project
+  interpreter, `--harness claude-code`, and `--active-thread-id <this session>`;
+  the agent fills the task-identity placeholders.
 
-After 750k, `context-rollover-guard.sh` adds a short reminder to every later
-prompt, and its `PreCompact` hook (matcher `auto`) exits 2, which blocks
-automatic compaction (supported since Claude Code 2.1.105). Manual `/compact`
-stays available. If compaction instead fires to recover from a context-limit
-error, Claude Code surfaces that error and fails the request. The operator
+The mode comes from the session record SessionStart writes; without a record
+for this session the guard does nothing. After 750k,
+`context-rollover-guard.sh` adds a short reminder to every later prompt. Its
+`PreCompact` hook (matcher `auto`) exits 2, which blocks automatic compaction
+(supported since Claude Code 2.1.105), only while the canonical rollover state
+holds a prepared (`pending_start`) lease whose active thread is this session
+and whose handoff file exists. A block fails the request that triggered
+compaction, so in every other case compaction runs. Manual `/compact` stays
+available. The operator
 restarts with the session's launcher, for example
 `./start-claude-driver.sh --epic <lane>`; SessionStart then detects the
 prepared packet. Delegated workers (`LEARN_UKRAINIAN_DISPATCH_TASK_ID` set) and

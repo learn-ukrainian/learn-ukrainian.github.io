@@ -145,9 +145,33 @@ if [ -n "${SESSION_EPIC:-}" ] && declare -f launcher_selector_stream >/dev/null 
     *) ROLLOVER_STREAM=""; ROLLOVER_STREAM_EPIC="" ;;
   esac
 fi
-PREPARE_CMD=".venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent ${HANDOFF_AGENT} --context-percent ${PCT}"
-[ -n "$ROLLOVER_STREAM" ] && PREPARE_CMD="$PREPARE_CMD --stream $ROLLOVER_STREAM --stream-epic $ROLLOVER_STREAM_EPIC"
-unset HANDOFF_IDENTITY_SH ROLLOVER_STREAM ROLLOVER_STREAM_EPIC
+# The prepare command follows the thread-rollover skill (references/prepare.md):
+# the shared project interpreter (the primary checkout's, never a worktree
+# .venv), the actual harness, and this session as the exact active thread, so
+# context-rollover-guard.sh can match the prepared lease to this session.
+# Task-identity values only the agent knows stay as <placeholders>.
+PREPARE_PY="<project interpreter>"
+if [ -f "$PROJECT_DIR/scripts/lib/project_interpreter.sh" ]; then
+  # shellcheck source=scripts/lib/project_interpreter.sh
+  source "$PROJECT_DIR/scripts/lib/project_interpreter.sh"
+  if PREPARE_PY_RESOLVED=$(project_interpreter_resolve "$PROJECT_DIR" 2>/dev/null); then
+    PREPARE_PY=$(printf '%q' "$PREPARE_PY_RESOLVED")
+  fi
+  unset PREPARE_PY_RESOLVED
+fi
+if [[ "${0:-}" == *"/.gemini/"* ]]; then
+  PREPARE_HARNESS="agy"
+else
+  PREPARE_HARNESS="claude-code"
+fi
+PREPARE_CMD="${PREPARE_PY} scripts/orchestration/thread_handoff.py prepare --agent ${HANDOFF_AGENT} --harness ${PREPARE_HARNESS} --active-thread-id $(printf '%q' "$SESSION_ID")"
+if [ -n "$ROLLOVER_STREAM" ]; then
+  PREPARE_CMD="$PREPARE_CMD --stream $ROLLOVER_STREAM --stream-epic $ROLLOVER_STREAM_EPIC"
+else
+  PREPARE_CMD="$PREPARE_CMD --stream-epic <epic-number>"
+fi
+PREPARE_CMD="$PREPARE_CMD --semantic-title \"<specific semantic task title>\" --task-family <task-family> --role \"<role>\" --terminal-goal <merge|deploy|certify> --context-percent ${PCT} (fill each <placeholder>; add --issue-number <issue-number> when an issue scopes the work)"
+unset HANDOFF_IDENTITY_SH ROLLOVER_STREAM ROLLOVER_STREAM_EPIC PREPARE_PY PREPARE_HARNESS
 BOOTSTRAP_FILE=".agent/${HANDOFF_AGENT}-thread-bootstrap.md"
 HANDOFF_FILE=".agent/${HANDOFF_AGENT}-thread-handoff.md"
 CONTEXT_FACT="${PCT}% of the ${WINDOW}-token context window [~${TOKENS}/${WINDOW}; ${USAGE_SOURCE}; capacity: ${WINDOW_PROVENANCE}]"
@@ -160,28 +184,15 @@ CONTEXT_FACT="${PCT}% of the ${WINDOW}-token context window [~${TOKENS}/${WINDOW
 # around a boundary does not re-announce. Only a compaction-scale drop - usage
 # below 60% of the level at the last announcement - re-arms the tiers, so a fresh
 # climb after compaction is announced again. State lives in gitignored runtime
-# storage as "<tier> <tokens>".
-TIER_STATE_DIR="$PROJECT_DIR/batch_state/context_monitor"
-TIER_STATE_FILE="$TIER_STATE_DIR/${SESSION_ID}.tier"
-LAST_TIER=0
-LAST_TOKENS=0
-if [ -f "$TIER_STATE_FILE" ]; then
-  read -r LAST_TIER LAST_TOKENS < "$TIER_STATE_FILE" 2>/dev/null || true
-fi
-case "$LAST_TIER" in ''|*[!0-9]*) LAST_TIER=0 ;; esac
-case "$LAST_TOKENS" in ''|*[!0-9]*) LAST_TOKENS=0 ;; esac
-if [ "$LAST_TIER" -gt 0 ] && [ $((TOKENS * 100)) -lt $((LAST_TOKENS * 60)) ]; then
-  rm -f "$TIER_STATE_FILE" 2>/dev/null
-  LAST_TIER=0
-  LAST_TOKENS=0
-fi
+# storage as "<tier> <tokens>". Claude Code runs PostToolUse hooks of parallel
+# tool calls concurrently, so the read/compare/write is one locked claim.
+TIER_STATE_FILE="$PROJECT_DIR/batch_state/context_monitor/${SESSION_ID}.tier"
 if [ "$PCT" -ge "$TIER3_PCT" ]; then TIER=3
 elif [ "$PCT" -ge "$TIER2_PCT" ]; then TIER=2
 elif [ "$PCT" -ge "$TIER1_PCT" ]; then TIER=1
 else TIER=0
 fi
-[ "$TIER" -gt "$LAST_TIER" ] || exit 0
-mkdir -p "$TIER_STATE_DIR" 2>/dev/null && printf '%s %s\n' "$TIER" "$TOKENS" > "$TIER_STATE_FILE" 2>/dev/null
+[ "$(context_claim_tier "$TIER_STATE_FILE" "$TIER" "$TOKENS")" = "claimed" ] || exit 0
 
 # operator_restart (#8511): the session never continues itself. It hands off,
 # tells the operator it is ready for a restart, and waits; context-rollover-guard.sh
@@ -196,7 +207,7 @@ if [ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER3_PCT" ]; the
     "1. Refresh your lane handoff file with current state, in-flight work, and next steps." \
     "2. Follow the thread-rollover skill's prepare phase (references/prepare.md): run ${PREPARE_CMD}. This writes the gitignored rollover lease plus ${HANDOFF_FILE} and ${BOOTSTRAP_FILE}." \
     "3. Tell the operator in one plain message that the handoff is ready and they should restart this session${RESTART_HINT}." \
-    "4. END THE TURN and wait. Automatic compaction is blocked for this session; the restart replaces it.")
+    "4. END THE TURN and wait. Once the handoff is prepared, automatic compaction is blocked for this session; the restart replaces it.")
 elif [ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER2_PCT" ]; then
   MSG=$(printf '%s\n%s\n%s\n%s\n' \
     "CRITICAL: Context is at ${CONTEXT_FACT}. The profile's critical rollover tier is ${TIER2_PCT}%." \
