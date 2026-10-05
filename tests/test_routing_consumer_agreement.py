@@ -545,9 +545,14 @@ def test_wave_gate_counts_only_what_the_owner_establishes(snapshot):
         assert facts.health == credit_lane.HEALTHY
         assert facts.status in config["acceptable_statuses"] or facts.credit_relief
         assert not lane["stale"]
-    # Unknown health is never counted, and the receipt does not call it healthy.
+    # Unknown health is never counted, and the receipt says unknown (null with
+    # its basis), distinct from an established unhealthy lane.
     if facts.health != credit_lane.HEALTHY:
-        assert not available and lane["healthy"] is False
+        assert not available
+    if facts.health == credit_lane.UNHEALTHY:
+        assert lane["healthy"] is False and "health_basis" not in lane
+    if facts.health == credit_lane.UNKNOWN:
+        assert lane["healthy"] is None and lane["health_basis"] == facts.health_basis
     # Legitimate restriction: the wave's freshness requirement refuses any stale snapshot.
     if budget["diagnostics"].get("stale"):
         assert not passed and assessment["fresh"] is False

@@ -686,9 +686,10 @@ def _health_assessment(
 
     Status and health are the shared routing facts of the complete record
     (:func:`credit_lane.routing_facts`, #9740). Only positively established
-    health counts: unknown health (a lane-health scan that could not run) is
-    not available, as an unhealthy lane is not. The ledger receipt schema
-    (``healthLane``) records ``healthy`` as a boolean only.
+    health counts: unknown health (a lane-health scan that could not run, or a
+    missing lane record) is not available, as an unhealthy lane is not. The
+    receipt keeps them distinct: ``healthy`` is True/False when established and
+    null with its ``health_basis`` when unknown (``healthLane``).
     """
     agents = snapshot.get("agents")
     diagnostics = snapshot.get("diagnostics")
@@ -705,7 +706,15 @@ def _health_assessment(
         for lane in group["lanes"]:
             record = agents.get(lane)
             if not isinstance(record, Mapping):
-                lanes.append({"lane": lane, "status": "missing", "healthy": False, "stale": True})
+                lanes.append(
+                    {
+                        "lane": lane,
+                        "status": "missing",
+                        "healthy": None,
+                        "health_basis": "lane record missing",
+                        "stale": True,
+                    }
+                )
                 relevant_lane_stale = True
                 continue
             facts = credit_lane.routing_facts(lane, record, model=None, snapshot_metadata=diagnostics, now=now)
@@ -718,12 +727,14 @@ def _health_assessment(
             entry: dict[str, Any] = {
                 "lane": lane,
                 "status": status,
-                "healthy": healthy,
+                "healthy": None if facts.health == credit_lane.UNKNOWN else healthy,
                 "stale": stale,
                 "credit_state": str(published["state"])
                 if isinstance(published, Mapping) and published.get("state")
                 else None,
             }
+            if facts.health == credit_lane.UNKNOWN:
+                entry["health_basis"] = facts.health_basis
             plan_ok = status in acceptable
             if status == "near_cap":
                 credit = _near_cap_credit(lane, record, now, snapshot_stale=snapshot_stale)

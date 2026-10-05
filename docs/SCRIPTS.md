@@ -30,6 +30,39 @@ This diagnostic exception changes neither eligibility nor routing policy.
 
 For the Composer and pool exclusion evidence (AC-01), see [#9423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9423).
 
+## Routing facts (capacity and admission)
+
+`scripts.fleet.credit_lane.routing_facts(lane, record, *, model, snapshot_metadata=None, policy=None, now=None, usage_dir=None)`
+is the one reading of a routing-budget lane record (#9740). `capacity_pick`,
+`idle_settle` and the curriculum wave gate use its facts before adding their own
+restrictions (role, risk, egress, transport, wave config). The reviewer scheduler
+uses the same plan-window reader.
+Pass `model=None` for lane inventory. It returns the tightest plan window and its
+source, snapshot/probe freshness, `health` (`healthy`, `unhealthy` or `unknown`,
+with `health_basis`), the pace deficit, credit evidence and a `capacity` class:
+`verified`, `unknown`, `unknown_stale` or `avoid`. Missing data stays `unknown`, never
+fresh or healthy.
+
+- **`UNKNOWN — stale/advisory`:** a pace deficit or weekly-pace hot label read
+  from a stale snapshot or probe is `unknown_stale`. It is history, not a current
+  refusal. `capacity_pick` ranks these rows after every row with verified capacity
+  and before AVOID rows. They never appear in `cooler_lanes` and never satisfy
+  `--strict`. Near cap, runtime-blocked hot, unhealthy, `NEED_LOGIN` and ineligible
+  lanes stay AVOID.
+- **Lane health scan:** `scripts.api.lane_health.scan_lane_health` returns a typed
+  `LaneHealthScan`. Each lane's `health_for(lane)` record carries a `basis`:
+  `recent_tasks` (computed from tasks in the window), `scan_observed_idle` (scan ran,
+  no tasks, so healthy) or `scan_unavailable` (scan failed; `healthy` and failure
+  counts are null).
+- **Unobservable load:** if the task directory cannot be read, the routing budget
+  publishes `in_flight: null` (`—` in the picker). It never publishes `0`. Unknown
+  load is not idle: `idle_settle` needs `in_flight == 0` and explicit quota
+  permission (`quota_ok: true` or a `verified` class) before it counts a lane as
+  available.
+- **Wave receipts:** the coordinator ledger `healthLane` records `healthy` as
+  `true`/`false` when known, or `null` with a required `health_basis` when unknown,
+  such as a scan error or a missing lane record.
+
 ## Git hooks
 
 Run `scripts/install_git_hooks.sh` once after cloning to install delegators in
