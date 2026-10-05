@@ -1924,7 +1924,7 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
     the runner kills the process and parse_response returns those bytes.
 
     The mock process writes -o on its first poll, then never exits on its own.
-    Deliver stdout through the real pipe reader on a controlled poll tick,
+    Deliver stdout synchronously through the real reader function on a controlled poll tick,
     including after the old fixture's finite clock sequence would freeze.
     """
     from unittest.mock import MagicMock
@@ -1973,9 +1973,7 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
 
     # Advance per poll, not per monotonic read: reader/activity observations
     # must not consume a finite sequence and leave late stdout at frozen time.
-    import time as _time
-
-    base_time = _time.monotonic()
+    base_time = 1000.0
     simulated_now = base_time
 
     def fake_monotonic():
