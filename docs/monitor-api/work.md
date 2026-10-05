@@ -44,12 +44,51 @@ session hooks use); ambiguous or unknown selectors still fail closed (#6984).
   named with a reason in `digest.excluded_pending_native`.
 - **Actionable** is the server-side SSOT `scripts/work/attention.py::is_actionable`
   (OFF_TRACK/AT_RISK always; otherwise `safe_next_action.code` outside the
-  `INSPECT_UNKNOWN`/`OPEN_GITHUB`/`NONE` deny list). `dashboards/work.html`
-  mirrors it in JS under a parity contract test.
+  `INSPECT_UNKNOWN`/`OPEN_GITHUB`/`NONE` deny list). The projection stamps
+  that result on `flags.attention`. `dashboards/work.html` reads only that
+  flag and treats a missing flag as not actionable. It does not keep a copy
+  of the deny list.
+- **Unknown stays visible.** Rows whose membership or decision-bearing state
+  is unknown remain on `/projection`. `/next` does not put them on the
+  requested lane. `digest.unscoped_unknown` is `{count, reason_counts}` for
+  those rows, so an empty stream queue does not mean there is no remaining
+  work. `safe_next_action.state` is `ready`, `waiting`, `unknown`, or `none`.
+  It qualifies the named action. It does not admit, review, lease, or complete
+  anything.
+- **Membership.** `denominator.streams_complete` is true only for a current
+  complete streams observation (`status: ok`, not stale, not truncated, and
+  certified when the payload is an audit). A stale, incomplete, or uncertified
+  map sets the issue's current membership to `unknown` with
+  `projections.stream.membership_reason`. It does not fall back to homed.
+  `authority[].age_s` is the section observation age (`null` when the section
+  is missing) and `authority[].stale` follows the section status.
+- **Merge advice** is `MERGE_WHEN_READY` only when the latest persisted
+  lifecycle receipt matches the repository, PR, and head, its `observed_at`
+  is within 900 seconds (`LEDGER_RECEIPT_FRESHNESS_S`), `evaluate` on that
+  receipt returns `CI_PASSED` with no hard blockers, and Work's own same-head
+  observation is non-draft, merge state neither `DIRTY` nor `UNKNOWN`, with
+  no requested changes and CI neither failing nor pending. Anything else is
+  `unknown` with a named reason. The refresh does not call the live observer,
+  GitHub, `reconcile`, or `write_lifecycle`.
+- **Terminal is not delivery.** `done` stays unknown with reason
+  `task_done_not_delivered`. Unsuccessful terminals and `needs_finalize`
+  stay visible with their own reasons. A running or spawning task whose
+  liveness is dead or unknown is not healthy execution. Task runtime age
+  comes from `started_at` and is not the delegate section's observation age.
+  The accountable owner stays `unknown` (`owner_reason: owner_unknown`) until
+  a lease-backed stream driver record exists.
+- **Task association** is `linked_issues` on the delegate summary, copied from
+  the DoR-checked `dor_preflight` issues. A task name that merely ends in an
+  issue or PR number does not attach.
 - **Digest, never a queue**: `other_streams.actionable_counts_by_stream`
   (counts only), `other_streams.top_blockers` (≤3 repo-wide OFF_TRACK
-  pointers), `unscoped_actionable_count`, `excluded_pending_native`
+  pointers), `unscoped_actionable_count`, `unscoped_unknown`,
+  `excluded_pending_native`
   (`count` + ≤25 items with `streams` and `reason`).
+- **Stale projection timeout.** When `/projection` serves a cached payload
+  older than its freshness bound because a rebuild timed out, every
+  decision-bearing field in that response is `unknown` with reason
+  `projection_cache_past_freshness`. The row may remain as history.
 - **Warm cache only**: serves strictly from the unfiltered projection cache
   (single-flight, #6861). Cold → wire body
   `503 {"error": "building", "retry_after_s": 3}` (no FastAPI `detail`

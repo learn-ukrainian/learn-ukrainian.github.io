@@ -196,19 +196,33 @@ def test_pr_check_state_pr_8264_rollup_is_passing():
 
 @pytest.mark.parametrize(
     ("decision", "health", "action"),
-    [("REVIEW_REQUIRED", "AT_RISK", "REQUEST_CF_REVIEW"), ("APPROVED", "ON_TRACK", "MERGE_WHEN_READY")],
+    [
+        ("REVIEW_REQUIRED", "AT_RISK", "REQUEST_CF_REVIEW"),
+        # Approval plus a passing rollup is not merge advice. That requires a
+        # fresh lifecycle receipt, which this fixture does not carry.
+        ("APPROVED", "UNKNOWN", "INSPECT_UNKNOWN"),
+    ],
 )
 def test_pr_matrix_leftover_projection_routes_to_review_or_merge(
-    green_rollup_with_matrix_leftover, decision, health, action,
+    green_rollup_with_matrix_leftover,
+    decision,
+    health,
+    action,
 ):
     item = _build_pr_item(
         {"number": 7691, "reviewDecision": decision, "statusCheckRollup": green_rollup_with_matrix_leftover},
-        repository_id=REPO, tasks=[], reviews=[], section_times={},
+        repository_id=REPO,
+        tasks=[],
+        reviews=[],
+        section_times={},
     )
     apply_health_and_actions([item], source_ok=True)
     assert item["projections"]["verification"]["ci_state"] == "passing"
     assert item["health"] == health
     assert item["safe_next_action"]["code"] == action
+    if decision == "APPROVED":
+        assert item["safe_next_action"]["reason_codes"] == ["merge_evidence_unknown"]
+        assert item["safe_next_action"]["state"] == "unknown"
 
 
 def test_schema_loads_and_fixture_validates():
@@ -239,9 +253,7 @@ def test_saved_view_rejects_free_text_and_private_keys():
         parse_saved_view_params({"private_endpoint": "http://127.0.0.1:9999"})
     with pytest.raises(SchemaValidationError):
         parse_saved_view_params({"health": "kinda-bad"})
-    ok = parse_saved_view_params(
-        {"health": "AT_RISK", "kind": "issue", "orphan": "true", "repository_id": REPO}
-    )
+    ok = parse_saved_view_params({"health": "AT_RISK", "kind": "issue", "orphan": "true", "repository_id": REPO})
     assert ok["health"] == ["AT_RISK"]
     assert ok["orphan"] is True
 
@@ -512,12 +524,8 @@ def test_collector_entry_points_fail_closed_before_runner():
             },
             count=1,
         ),
-        "delegate_active": SectionResult(
-            "delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0
-        ),
-        "delegate_tasks": SectionResult(
-            "delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0
-        ),
+        "delegate_active": SectionResult("delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "delegate_tasks": SectionResult("delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0),
         "fleet_reviews": SectionResult(
             "fleet_reviews",
             "ok",
@@ -545,9 +553,7 @@ def test_collector_entry_points_fail_closed_before_runner():
     validate_projection(projection)
     assert {item["repository_id"] for item in projection["items"]} == {REPO}
     blob = json.dumps(projection)
-    cache_key = projection_cache_key(
-        parse_saved_view_params({"repository_id": REPO})
-    )
+    cache_key = projection_cache_key(parse_saved_view_params({"repository_id": REPO}))
     for bad in adversarial_ids:
         if not bad.strip():
             # Whitespace-only forms are not embeddable repository ids; skip
@@ -560,9 +566,7 @@ def test_collector_entry_points_fail_closed_before_runner():
 
     ok_filters = parse_saved_view_params({"repository_id": REPO})
     assert ok_filters["repository_id"] == [REPO]
-    assert projection_cache_key(ok_filters) == projection_cache_key(
-        {"repository_id": [REPO]}
-    )
+    assert projection_cache_key(ok_filters) == projection_cache_key({"repository_id": [REPO]})
     # Foreign filter values never become cache-key material — including via
     # direct projection_cache_key calls (self-validating boundary).
     for bad in saved_view_rejected:
@@ -572,14 +576,10 @@ def test_collector_entry_points_fail_closed_before_runner():
             projection_cache_key({"repository_id": bad})
     # Padded canonical forms: parser strips before admit, so exact public id
     # remains the only cache-key identity.
-    padded = parse_saved_view_params(
-        {"repository_id": f"  {REPO}  "}
-    )
+    padded = parse_saved_view_params({"repository_id": f"  {REPO}  "})
     assert padded["repository_id"] == [REPO]
     assert projection_cache_key(padded) == projection_cache_key(ok_filters)
-    assert projection_cache_key({"repository_id": f"  {REPO}  "}) == projection_cache_key(
-        ok_filters
-    )
+    assert projection_cache_key({"repository_id": f"  {REPO}  "}) == projection_cache_key(ok_filters)
 
 
 def test_saved_view_multivalue_filters_are_canonical():
@@ -749,9 +749,7 @@ def test_saved_view_rejects_oversized_raw_multivalue_before_canonicalize():
     assert len(oversized_health) > len(ALLOWED_HEALTH)
 
     with pytest.raises(SchemaValidationError, match="exceeds max"):
-        parse_saved_view_params(
-            {"kind": ["issue"] * (FILTER_MAX_RAW_ITEMS["kind"] + 1)}
-        )
+        parse_saved_view_params({"kind": ["issue"] * (FILTER_MAX_RAW_ITEMS["kind"] + 1)})
     with pytest.raises(SchemaValidationError, match="exceeds max"):
         parse_saved_view_params({"repository_id": [REPO, REPO]})
     with pytest.raises(SchemaValidationError, match="exceeds max"):
@@ -789,15 +787,9 @@ def test_build_projection_admits_filters_directly():
             },
             count=0,
         ),
-        "delegate_active": SectionResult(
-            "delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0
-        ),
-        "delegate_tasks": SectionResult(
-            "delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0
-        ),
-        "fleet_reviews": SectionResult(
-            "fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0
-        ),
+        "delegate_active": SectionResult("delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "delegate_tasks": SectionResult("delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "fleet_reviews": SectionResult("fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0),
     }
 
     # Foreign repository_id never appears in filters_applied.
@@ -813,12 +805,8 @@ def test_build_projection_admits_filters_directly():
         build_projection(empty, repository_id=REPO, filters={"health": ["NOPE"]})
 
     # kind alias and resource_kind both canonicalize; only canonical form is emitted.
-    via_kind = build_projection(
-        empty, repository_id=REPO, filters={"kind": ["pr", "issue", "issue"]}
-    )
-    via_resource = build_projection(
-        empty, repository_id=REPO, filters={"resource_kind": ["issue", "pr"]}
-    )
+    via_kind = build_projection(empty, repository_id=REPO, filters={"kind": ["pr", "issue", "issue"]})
+    via_resource = build_projection(empty, repository_id=REPO, filters={"resource_kind": ["issue", "pr"]})
     assert via_kind["filters_applied"] == via_resource["filters_applied"]
     assert via_kind["filters_applied"]["resource_kind"] == ["issue", "pr"]
     assert "kind" not in via_kind["filters_applied"]
@@ -967,12 +955,8 @@ def test_fleet_reviews_and_projection_reject_mixed_repositories():
             },
             count=0,
         ),
-        "delegate_active": SectionResult(
-            "delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0
-        ),
-        "delegate_tasks": SectionResult(
-            "delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0
-        ),
+        "delegate_active": SectionResult("delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "delegate_tasks": SectionResult("delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0),
         "fleet_reviews": SectionResult(
             "fleet_reviews",
             "ok",
@@ -987,8 +971,7 @@ def test_fleet_reviews_and_projection_reject_mixed_repositories():
     review_ids = {
         rid
         for item in projection["items"]
-        for rid in ((item.get("projections") or {}).get("review") or {}).get("review_ids")
-        or []
+        for rid in ((item.get("projections") or {}).get("review") or {}).get("review_ids") or []
     }
     assert "rev-public-linked" in review_ids
     assert "rev-public-unlinked" in review_ids
@@ -1006,7 +989,8 @@ def test_delegate_requires_authoritative_public_repository():
 
     Authoritative attribution is only ``repository`` / ``repository_id``. Paths,
     branches, and task_id numbers must not admit a row or attach it to a
-    same-number public issue/PR. Totals are public-admitted only.
+    same-number public issue/PR. A public row attaches to an issue only through
+    ``linked_issues``. Totals are public-admitted only.
     """
     from scripts.work.sources_public import (
         DELEGATE_TASK_LIMIT,
@@ -1024,6 +1008,7 @@ def test_delegate_requires_authoritative_public_repository():
             "agent": "codex",
             "status": "running",
             "repository": REPO,
+            "linked_issues": [{"issue": same_number, "repository": REPO}],
         },
         {
             "task_id": f"claude-pr-{same_number}-public",
@@ -1037,6 +1022,8 @@ def test_delegate_requires_authoritative_public_repository():
             "agent": "codex",
             "status": "running",
             "repository": private_repo,
+            # A canonical-looking link must not admit or attach a foreign row.
+            "linked_issues": [{"issue": same_number, "repository": REPO}],
         },
         {
             "task_id": f"codex-issue-{same_number}-suffix",
@@ -1183,31 +1170,25 @@ def test_delegate_requires_authoritative_public_repository():
             payload={"total": len(universe), "tasks": universe},
             count=len(universe),
         ),
-        "fleet_reviews": SectionResult(
-            "fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0
-        ),
+        "fleet_reviews": SectionResult("fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0),
     }
     projection = build_projection(sections, repository_id=REPO)
     validate_projection(projection)
     issue = next(i for i in projection["items"] if i["resource_kind"] == "issue")
     pr = next(i for i in projection["items"] if i["resource_kind"] == "pr")
-    assert set(issue["projections"]["dispatch"]["task_ids"]) == {
-        f"codex-issue-{same_number}-public"
-    }
-    assert set(pr["projections"]["dispatch"]["task_ids"]) == {
-        f"claude-pr-{same_number}-public"
-    }
-    task_ids = {
-        i["remote_id"]
-        for i in projection["items"]
-        if i["resource_kind"] == "task"
-    }
+    assert set(issue["projections"]["dispatch"]["task_ids"]) == {f"codex-issue-{same_number}-public"}
+    # A PR number inside a task name is not an association.
+    assert pr["projections"]["dispatch"]["task_ids"] == []
+    task_ids = {i["remote_id"] for i in projection["items"] if i["resource_kind"] == "task"}
     assert f"codex-issue-{same_number}-foreign" not in task_ids
     assert f"codex-issue-{same_number}-unclassified" not in task_ids
     assert f"codex-issue-{same_number}-ambiguous" not in task_ids
-    # Public linked tasks are attached to issue/PR, not re-emitted unlinked.
+    # The DoR-linked public task is attached to the issue, not re-emitted.
     assert f"codex-issue-{same_number}-public" not in task_ids
-    assert f"claude-pr-{same_number}-public" not in task_ids
+    pr_named = f"claude-pr-{same_number}-public"
+    assert pr_named in task_ids
+    pr_task = next(i for i in projection["items"] if i["remote_id"] == pr_named)
+    assert pr_task["omissions"][0]["reason"] == "no_canonical_issue_association"
     proj_blob = json.dumps(projection)
     assert private_repo not in proj_blob
     assert suffix_cousin not in proj_blob
@@ -1470,9 +1451,7 @@ def test_delegate_injected_loader_is_untrusted_without_public_claim():
             ],
             count=1,
         ),
-        "prs": SectionResult(
-            "prs", "ok", payload=[], count=0
-        ),
+        "prs": SectionResult("prs", "ok", payload=[], count=0),
         "streams": SectionResult(
             "streams",
             "ok",
@@ -1488,9 +1467,7 @@ def test_delegate_injected_loader_is_untrusted_without_public_claim():
         ),
         "delegate_active": active,
         "delegate_tasks": tasks,
-        "fleet_reviews": SectionResult(
-            "fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0
-        ),
+        "fleet_reviews": SectionResult("fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0),
     }
     projection = build_projection(sections, repository_id=REPO)
     validate_projection(projection)
@@ -1500,11 +1477,7 @@ def test_delegate_injected_loader_is_untrusted_without_public_claim():
     assert foreign_task_id not in proj_blob
     assert ambiguous_task_id not in proj_blob
     # Admitted public tasks surface unlinked; projection uses repository_id only.
-    task_remote = {
-        i["remote_id"]
-        for i in projection["items"]
-        if i["resource_kind"] == "task"
-    }
+    task_remote = {i["remote_id"] for i in projection["items"] if i["resource_kind"] == "task"}
     assert task_remote == {public_task_id, "public-via-repository_id"}
     for item in projection["items"]:
         if item["resource_kind"] == "task":
@@ -1539,9 +1512,7 @@ def test_delegate_production_loader_scopes_before_page(tmp_path, monkeypatch):
             "duration_s": 1.0,
         }
         payload.update(overrides)
-        (tasks_dir / f"{task_id}.json").write_text(
-            json.dumps(payload), encoding="utf-8"
-        )
+        (tasks_dir / f"{task_id}.json").write_text(json.dumps(payload), encoding="utf-8")
 
     for i in range(DELEGATE_TASK_LIMIT + 40):
         _write(
@@ -1553,9 +1524,7 @@ def test_delegate_production_loader_scopes_before_page(tmp_path, monkeypatch):
     for i in range(5):
         _write(
             f"public-old-{i:04d}",
-            started_at=(now - timedelta(days=2, minutes=i))
-            .isoformat()
-            .replace("+00:00", "Z"),
+            started_at=(now - timedelta(days=2, minutes=i)).isoformat().replace("+00:00", "Z"),
             repository=REPO,
         )
     _write(
@@ -1570,9 +1539,7 @@ def test_delegate_production_loader_scopes_before_page(tmp_path, monkeypatch):
         "public-spawning",
         status="spawning",
         pid=None,
-        started_at=(now - timedelta(days=3, minutes=1))
-        .isoformat()
-        .replace("+00:00", "Z"),
+        started_at=(now - timedelta(days=3, minutes=1)).isoformat().replace("+00:00", "Z"),
         repository_id=REPO,
         duration_s=None,
     )
@@ -1603,9 +1570,7 @@ def test_delegate_production_loader_scopes_before_page(tmp_path, monkeypatch):
     assert all(t["repository"] == REPO for t in active.payload["tasks"])
     assert all(t["repository"] == REPO for t in tasks.payload["tasks"])
     # Generic delegate summaries themselves still redact repository identity.
-    raw_list = delegate_router.list_delegate_tasks(
-        status="all", limit=DELEGATE_TASK_LIMIT, repository=REPO
-    )
+    raw_list = delegate_router.list_delegate_tasks(status="all", limit=DELEGATE_TASK_LIMIT, repository=REPO)
     raw_active = delegate_router.active_delegate_tasks(repository=REPO)
     for payload in (raw_list, raw_active):
         for row in payload["tasks"]:
@@ -1648,9 +1613,7 @@ def test_delegate_production_preserves_authoritative_total_beyond_page(tmp_path,
             "repository": REPO,
         }
         payload.update(overrides)
-        (tasks_dir / f"{task_id}.json").write_text(
-            json.dumps(payload), encoding="utf-8"
-        )
+        (tasks_dir / f"{task_id}.json").write_text(json.dumps(payload), encoding="utf-8")
 
     # Exactly 501 public tasks: one active + 500 done so active path stays exact.
     _write(
@@ -1663,14 +1626,10 @@ def test_delegate_production_preserves_authoritative_total_beyond_page(tmp_path,
     for i in range(DELEGATE_TASK_LIMIT):
         _write(
             f"public-done-{i:04d}",
-            started_at=(now - timedelta(seconds=i + 1))
-            .isoformat()
-            .replace("+00:00", "Z"),
+            started_at=(now - timedelta(seconds=i + 1)).isoformat().replace("+00:00", "Z"),
         )
 
-    raw = delegate_router.list_delegate_tasks(
-        status="all", limit=DELEGATE_TASK_LIMIT, repository=REPO
-    )
+    raw = delegate_router.list_delegate_tasks(status="all", limit=DELEGATE_TASK_LIMIT, repository=REPO)
     assert raw["total"] == public_total
     assert len(raw["tasks"]) == DELEGATE_TASK_LIMIT
     for row in raw["tasks"]:
@@ -1721,9 +1680,7 @@ def test_delegate_production_exact_total_when_within_page(tmp_path, monkeypatch)
             "duration_s": 1.0,
             "repository": REPO,
         }
-        (tasks_dir / f"{payload['task_id']}.json").write_text(
-            json.dumps(payload), encoding="utf-8"
-        )
+        (tasks_dir / f"{payload['task_id']}.json").write_text(json.dumps(payload), encoding="utf-8")
 
     tasks = fetch_delegate_tasks(repository_id=REPO)
     assert tasks.status == "ok"
@@ -1897,9 +1854,7 @@ def test_fleet_reviews_repository_filter_before_hard_cap():
     assert section.count == public_count
     assert section.payload["total"] == public_count
     assert len(section.payload["reviews"]) == public_count
-    assert {r["review_id"] for r in section.payload["reviews"]} == {
-        f"rev-public-{i:04d}" for i in range(public_count)
-    }
+    assert {r["review_id"] for r in section.payload["reviews"]} == {f"rev-public-{i:04d}" for i in range(public_count)}
     assert all(r["repository"] == REPO for r in section.payload["reviews"])
     # Loader was not forced through the full foreign-dominated universe.
     assert max(seen_offsets) < FLEET_REVIEW_HARD_CAP
@@ -1922,15 +1877,11 @@ def test_relations_and_cycle_detection():
     items = [
         {
             "work_id": issue_work_id(REPO, 1),
-            "relationships": [
-                {"type": "blocks", "target_id": issue_work_id(REPO, 2), "evidence": "t"}
-            ],
+            "relationships": [{"type": "blocks", "target_id": issue_work_id(REPO, 2), "evidence": "t"}],
         },
         {
             "work_id": issue_work_id(REPO, 2),
-            "relationships": [
-                {"type": "blocks", "target_id": issue_work_id(REPO, 1), "evidence": "t"}
-            ],
+            "relationships": [{"type": "blocks", "target_id": issue_work_id(REPO, 1), "evidence": "t"}],
         },
     ]
     cycles = detect_dependency_cycles(items)
@@ -2089,14 +2040,16 @@ def test_fetch_issue_states_batched_runner_handling():
 
     # 3. Successful runner
     def mock_runner(args, timeout_s):
-        stdout = json.dumps({
-            "data": {
-                "repository": {
-                    "i7178": {"number": 7178, "state": "CLOSED"},
-                    "i7184": {"number": 7184, "state": "OPEN"},
+        stdout = json.dumps(
+            {
+                "data": {
+                    "repository": {
+                        "i7178": {"number": 7178, "state": "CLOSED"},
+                        "i7184": {"number": 7184, "state": "OPEN"},
+                    }
                 }
             }
-        })
+        )
         return 0, stdout, ""
 
     res = fetch_issue_states_batched([7178, 7184], repository_id=REPO, runner=mock_runner)
@@ -2113,15 +2066,17 @@ def test_fetch_issue_states_batched_runner_handling():
 
     # 5. Missing / NOT_FOUND issue in data -> omitted from result
     def not_found_runner(args, timeout_s):
-        stdout = json.dumps({
-            "data": {
-                "repository": {
-                    "i7178": {"number": 7178, "state": "CLOSED"},
-                    "i999": None,
-                }
-            },
-            "errors": [{"type": "NOT_FOUND"}],
-        })
+        stdout = json.dumps(
+            {
+                "data": {
+                    "repository": {
+                        "i7178": {"number": 7178, "state": "CLOSED"},
+                        "i999": None,
+                    }
+                },
+                "errors": [{"type": "NOT_FOUND"}],
+            }
+        )
         return 1, stdout, "not found"
 
     res_nf = fetch_issue_states_batched([7178, 999], repository_id=REPO, runner=not_found_runner)
@@ -2131,85 +2086,58 @@ def test_fetch_issue_states_batched_runner_handling():
 
 
 def test_match_dispatch_requires_boundary_safe_issue_and_pr_ids():
-    """Substring prefixes must not attach unrelated dispatch state.
+    """Task-name suffixes are not an issue or PR association.
 
     Regression: unanchored ``#1`` matched ``#19``; ``pr-10`` matched ``pr-100``.
+    Only ``linked_issues`` from the DoR preflight attaches a task.
     """
-    tasks = [
+    named = [
         {"task_id": "codex-#19-fix", "status": "running", "agent": "codex", "repository": REPO},
         {"task_id": "codex-issue-19", "status": "running", "agent": "codex", "repository": REPO},
-        {"task_id": "codex-issue_19", "status": "running", "agent": "codex", "repository": REPO},
-        {"task_id": "codex/19/work", "status": "running", "agent": "codex", "repository": REPO},
         {"task_id": "worker-19", "status": "running", "agent": "codex", "repository": REPO},
         {"task_id": "codex-#1-fix", "status": "running", "agent": "claude", "repository": REPO},
-        {"task_id": "codex-issue-1", "status": "running", "agent": "claude", "repository": REPO},
-        {"task_id": "codex-issue_1", "status": "running", "agent": "claude", "repository": REPO},
-        {"task_id": "codex/1/work", "status": "running", "agent": "claude", "repository": REPO},
         {"task_id": "worker-1", "status": "running", "agent": "claude", "repository": REPO},
         {"task_id": "agy-pr-100", "status": "running", "agent": "agy", "repository": REPO},
-        {"task_id": "agy-pr_100", "status": "running", "agent": "agy", "repository": REPO},
-        {"task_id": "agy-pr/100", "status": "running", "agent": "agy", "repository": REPO},
-        {"task_id": "review-pr100", "status": "running", "agent": "agy", "repository": REPO},
         {"task_id": "agy-pr-10", "status": "running", "agent": "kimi", "repository": REPO},
-        {"task_id": "agy-pr_10", "status": "running", "agent": "kimi", "repository": REPO},
-        {"task_id": "agy-pr/10", "status": "running", "agent": "kimi", "repository": REPO},
         {"task_id": "review-pr10", "status": "running", "agent": "kimi", "repository": REPO},
-        # Unrelated numeric text must not become authority for a match.
         {"task_id": "retrycount1of19", "status": "running", "agent": "cursor", "repository": REPO},
-        {"task_id": "shard10of100", "status": "running", "agent": "cursor", "repository": REPO},
-        {"task_id": "build100timeout", "status": "running", "agent": "cursor", "repository": REPO},
         {"task_id": "page1", "status": "running", "agent": "cursor", "repository": REPO},
-        {"task_id": "v10-release", "status": "running", "agent": "cursor", "repository": REPO},
     ]
-
-    issue_1 = _match_dispatch(tasks, issue_number=1, pr_number=None)
-    assert set(issue_1["task_ids"]) == {
-        "codex-#1-fix",
-        "codex-issue-1",
-        "codex-issue_1",
-        "codex/1/work",
-        "worker-1",
+    linked = {
+        "task_id": "impl-9741",
+        "status": "running",
+        "agent": "grok",
+        "repository": REPO,
+        "alive": True,
+        "linked_issues": [{"issue": 1, "repository": REPO}],
     }
-    assert "codex-#19-fix" not in issue_1["task_ids"]
-    assert "codex-issue-19" not in issue_1["task_ids"]
-    assert "retrycount1of19" not in issue_1["task_ids"]
+    foreign = {
+        "task_id": "other-repo-1",
+        "status": "running",
+        "agent": "grok",
+        "linked_issues": [{"issue": 1, "repository": "other/repo"}],
+    }
+    tasks = [*named, linked, foreign]
+
+    issue_1 = _match_dispatch(tasks, repository_id=REPO, issue_number=1)
+    assert issue_1["task_ids"] == ["impl-9741"]
+    assert "codex-#1-fix" not in issue_1["task_ids"]
+    assert "worker-1" not in issue_1["task_ids"]
     assert "page1" not in issue_1["task_ids"]
+    assert "other-repo-1" not in issue_1["task_ids"]
 
-    issue_19 = _match_dispatch(tasks, issue_number=19, pr_number=None)
-    assert set(issue_19["task_ids"]) == {
-        "codex-#19-fix",
-        "codex-issue-19",
-        "codex-issue_19",
-        "codex/19/work",
-        "worker-19",
-    }
-    assert "codex-#1-fix" not in issue_19["task_ids"]
-    assert "codex-issue-1" not in issue_19["task_ids"]
+    issue_19 = _match_dispatch(tasks, repository_id=REPO, issue_number=19)
+    assert issue_19["task_ids"] == []
+    assert "codex-#19-fix" not in issue_19["task_ids"]
+    assert "worker-19" not in issue_19["task_ids"]
     assert "retrycount1of19" not in issue_19["task_ids"]
 
-    pr_10 = _match_dispatch(tasks, issue_number=None, pr_number=10)
-    assert set(pr_10["task_ids"]) == {
-        "agy-pr-10",
-        "agy-pr_10",
-        "agy-pr/10",
-        "review-pr10",
-    }
-    assert "agy-pr-100" not in pr_10["task_ids"]
-    assert "review-pr100" not in pr_10["task_ids"]
-    assert "shard10of100" not in pr_10["task_ids"]
-    assert "v10-release" not in pr_10["task_ids"]
-
-    pr_100 = _match_dispatch(tasks, issue_number=None, pr_number=100)
-    assert set(pr_100["task_ids"]) == {
-        "agy-pr-100",
-        "agy-pr_100",
-        "agy-pr/100",
-        "review-pr100",
-    }
-    assert "agy-pr-10" not in pr_100["task_ids"]
-    assert "review-pr10" not in pr_100["task_ids"]
-    assert "build100timeout" not in pr_100["task_ids"]
-    assert "shard10of100" not in pr_100["task_ids"]
+    # PR numbers in a task name never attach, including the old pr-10 / pr-100 split.
+    pr_named = _match_dispatch(tasks, repository_id=REPO, issue_number=None)
+    assert pr_named["task_ids"] == []
+    assert "agy-pr-10" not in pr_named["task_ids"]
+    assert "agy-pr-100" not in pr_named["task_ids"]
+    assert "review-pr10" not in pr_named["task_ids"]
 
 
 def test_health_never_uses_activity_and_pr_rules():
@@ -2316,9 +2244,7 @@ def test_historical_review_rows_never_off_track_or_request_cf_review():
             assert code == "WAIT_REVIEW"
 
     off_track_reviews = [i for i in resolved if i["health"] == "OFF_TRACK"]
-    request_cf_review_reviews = [
-        i for i in resolved if i["safe_next_action"]["code"] == "REQUEST_CF_REVIEW"
-    ]
+    request_cf_review_reviews = [i for i in resolved if i["safe_next_action"]["code"] == "REQUEST_CF_REVIEW"]
     assert off_track_reviews == []
     assert request_cf_review_reviews == []
     assert not any(_is_actionable(i) for i in resolved if i["lifecycle"] in terminal_lifecycles)
@@ -2794,9 +2720,7 @@ def test_missing_streams_cache_and_simulated_restart_behavior():
     assert public_src["sections"]["streams"]["status"] == "unavailable"
 
     # 2. Streams omission is tracked
-    assert any(
-        o["class"] == "streams" and o["reason"] == "no-cache" for o in projection["denominator"]["omissions"]
-    )
+    assert any(o["class"] == "streams" and o["reason"] == "no-cache" for o in projection["denominator"]["omissions"])
     assert projection["denominator"]["streams_complete"] is False
 
     # 3. Honest health: issues have UNKNOWN health and INSPECT_UNKNOWN safe_next_action
@@ -2866,9 +2790,7 @@ def test_work_projection_single_flight_under_concurrent_load(monkeypatch):
     monkeypatch.setattr(work_router, "_build_sync", slow_build)
 
     async def run_concurrent():
-        async with AsyncClient(
-            transport=ASGITransport(app=api_main.app), base_url="http://test"
-        ) as ac:
+        async with AsyncClient(transport=ASGITransport(app=api_main.app), base_url="http://test") as ac:
             tasks = [ac.get("/api/work/v1/projection") for _ in range(8)]
             responses = await asyncio.gather(*tasks)
             return responses
@@ -2908,9 +2830,7 @@ def test_work_projection_cold_timeout_completes_in_background_and_converges_on_r
     monkeypatch.setattr(work_router, "_build_sync", slow_build)
 
     async def run_flow():
-        async with AsyncClient(
-            transport=ASGITransport(app=api_main.app), base_url="http://test"
-        ) as ac:
+        async with AsyncClient(transport=ASGITransport(app=api_main.app), base_url="http://test") as ac:
             # Request 1: with a tiny timeout (0.02s) to simulate client-side 504 timeout
             monkeypatch.setattr(work_router, "TIMEOUT_S", 0.02)
             resp1 = await ac.get("/api/work/v1/projection")
@@ -2979,12 +2899,10 @@ def test_work_projection_serves_stale_on_rebuild_timeout(monkeypatch):
 
     # Set tiny timeout and slow build
     monkeypatch.setattr(work_router, "TIMEOUT_S", 0.01)
-    monkeypatch.setattr(work_router, "_build_sync", lambda *args, **kwargs: (time.sleep(0.1) or stale_payload))
+    monkeypatch.setattr(work_router, "_build_sync", lambda *args, **kwargs: time.sleep(0.1) or stale_payload)
 
     async def run_flow():
-        async with AsyncClient(
-            transport=ASGITransport(app=api_main.app), base_url="http://test"
-        ) as ac:
+        async with AsyncClient(transport=ASGITransport(app=api_main.app), base_url="http://test") as ac:
             resp = await ac.get("/api/work/v1/projection")
             assert resp.status_code == 200
             data = resp.json()
@@ -3013,3 +2931,541 @@ def test_warm_projection_cache_schedules_startup_task():
         assert result["schema_version"] == "work-projection.v1"
 
     asyncio.run(run_warmup())
+
+
+# ---------------------------------------------------------------------------
+# #9741 — evidence qualification. These names are the acceptance ledger.
+# ---------------------------------------------------------------------------
+
+_HEAD_9741 = "a" * 40
+_FIXED_9741 = "2026-07-16T10:00:00Z"
+_AC_BODY_9741 = (
+    "- [ ] **AC-IMPL** — Implementation is verified.\n"
+    "- [ ] **AC-REVIEW** — Independent review passes.\n"
+    "- [ ] **AC-MERGE** — The pull request merges.\n"
+    "- [ ] **AC-CLOSE** — The issue is actually closed.\n"
+    "- [ ] **AC-CLEAN** — The task branch and worktree are cleaned.\n"
+)
+
+
+def _ci_passed_ledger(observed_at: str, *, canary: str = "") -> dict:
+    """Persisted-receipt fixture. Production refresh must not call reconcile."""
+    from scripts.orchestration import task_identity, task_lifecycle
+
+    policy = {
+        "AC-IMPL": {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]},
+        "AC-REVIEW": {"due_state": "REVIEW_PASSED", "required_evidence": ["review"]},
+        "AC-MERGE": {"due_state": "MERGED", "required_evidence": ["github"]},
+        "AC-CLOSE": {"due_state": "ISSUE_CLOSED", "required_evidence": ["github"]},
+        "AC-CLEAN": {"due_state": "CLEANED_UP", "required_evidence": ["cleanup"]},
+    }
+    identity = task_identity.build_identity(
+        repository=REPO,
+        stream_epic=10,
+        stream_epic_url=None,
+        github_issue_number=42,
+        github_issue_url=None,
+        semantic_title="Qualify merge advice",
+        task_family="infrastructure",
+        role="implementer",
+        predecessor_task_id="thread-old",
+        replacement_task_id="thread-new",
+        lineage_id="lineage-9741",
+        generation=2,
+        terminal_goal="merge",
+        lifecycle_state="confirmed",
+    )
+    snapshot = task_lifecycle.build_ac_snapshot(_AC_BODY_9741, policy, finalized_at=_FIXED_9741)
+    ledger = task_lifecycle.build_lifecycle(
+        identity,
+        author_family="codex",
+        ac_snapshot=snapshot,
+        required_checks=["CI Gate"],
+        now=_FIXED_9741,
+        pr_number=77,
+    )
+    ledger, _evidence = task_lifecycle.add_evidence(
+        ledger,
+        ac_id="AC-IMPL",
+        evidence_type="test",
+        summary="verified AC-IMPL",
+        url=None,
+        commit=_HEAD_9741,
+        details=None,
+        recorded_at=_FIXED_9741,
+    )
+    review_url = f"https://github.com/{REPO}/pull/77#issuecomment-1"
+    ledger, _evidence = task_lifecycle.add_evidence(
+        ledger,
+        ac_id="AC-REVIEW",
+        evidence_type="review",
+        summary="verified AC-REVIEW",
+        url=review_url,
+        commit=_HEAD_9741,
+        details={"author_family": "codex", "reviewer_family": "gemini", "verdict": "pass"},
+        recorded_at=_FIXED_9741,
+    )
+    observation = {
+        "schema_version": task_lifecycle.OBSERVATION_SCHEMA_VERSION,
+        "observed_at": observed_at,
+        "github": {
+            "repository": REPO,
+            "registered_stream_epics": [10],
+            "issue": {
+                "number": 42,
+                "state": "OPEN",
+                "body": _AC_BODY_9741,
+                "url": identity["github_issue_url"],
+                "closed_at": None,
+                "parent_epic": 10,
+            },
+            "pr": {
+                "number": 77,
+                "url": ledger["pr"]["url"],
+                "state": "OPEN",
+                "is_draft": False,
+                "head_sha": _HEAD_9741,
+                "head_branch": "grok/impl-9741",
+                "merge_sha": None,
+                "merged_at": None,
+                "auto_merge_enabled_at": _FIXED_9741,
+                "review_decision": "APPROVED",
+                "requested_changes": False,
+                "reviews": [],
+                "checks": [{"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}],
+                "body": "Refs #42",
+            },
+            "comments": [{"url": review_url, "body": f"PASS {canary}", "created_at": _FIXED_9741}],
+            "deployments": [],
+            "follow_up": None,
+        },
+        "local": {
+            "primary_checkout": f"/repo/{canary}",
+            "primary_clean": True,
+            "dispatch_worktree_used": True,
+            "worktree": f"/repo/.worktrees/dispatch/grok/{canary or 'impl-9741'}",
+            "worktree_present": True,
+            "actual_worktree_branch": "grok/impl-9741",
+            "worktree_branch_matches": True,
+            "branch": "grok/impl-9741",
+            "local_branch_present": True,
+            "remote_branch_present": True,
+            "commits": [{"sha": _HEAD_9741, "x_agent_trailers": ["X-Agent: grok/impl-9741"]}],
+            "changed_paths": ["scripts/work/attention.py"],
+            "forbidden_paths": [],
+        },
+    }
+    checked = task_lifecycle.evaluate(ledger, observation)
+    assert checked["last_success_state"] == "CI_PASSED", checked["hard_blockers"]
+    assert not checked["hard_blockers"]
+    ledger, _receipt, replayed = task_lifecycle.reconcile(ledger, observation, now=observed_at)
+    assert replayed is False
+    return ledger
+
+
+def _pr_raw_9741(**overrides) -> dict:
+    raw = {
+        "number": 77,
+        "title": "Current head",
+        "state": "OPEN",
+        "isDraft": False,
+        "reviewDecision": "APPROVED",
+        "statusCheckRollup": [{"name": "CI Gate", "state": "COMPLETED", "conclusion": "SUCCESS"}],
+        "mergeStateStatus": "BLOCKED",
+        "labels": [],
+        "assignees": [],
+        "url": f"https://github.com/{REPO}/pull/77",
+        "createdAt": "2026-08-01T00:00:00Z",
+        "updatedAt": "2026-08-02T00:00:00Z",
+        "headRefOid": _HEAD_9741,
+        "headRefName": "grok/impl-9741",
+    }
+    raw.update(overrides)
+    return raw
+
+
+def _empty_sections_9741(**overrides) -> dict:
+    sections = {
+        "issues": SectionResult("issues", "ok", payload=[], count=0),
+        "prs": SectionResult("prs", "ok", payload=[], count=0),
+        "streams": SectionResult("streams", "ok", payload={"streams": {}, "orphans": []}, count=0),
+        "delegate_active": SectionResult("delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "delegate_tasks": SectionResult("delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "fleet_reviews": SectionResult("fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0),
+    }
+    sections.update(overrides)
+    return sections
+
+
+def test_state_current_head_merge_advice_requires_receipt():
+    """Positive merge advice needs a fresh same-head CI_PASSED receipt. BLOCKED is allowed."""
+    from datetime import UTC, datetime
+
+    from scripts.work.attention import qualify_merge_advice
+
+    observed = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    ledger = _ci_passed_ledger(observed)
+    projection = build_projection(
+        _empty_sections_9741(
+            prs=SectionResult("prs", "ok", payload=[_pr_raw_9741()], count=1),
+        ),
+        repository_id=REPO,
+        lifecycle_ledgers=[ledger],
+    )
+    validate_projection(projection)
+    item = next(row for row in projection["items"] if row["resource_kind"] == "pr")
+    assert item["projections"]["verification"]["merge_state_status"] == "BLOCKED"
+    assert item["projections"]["verification"]["merge_evidence"] == {
+        "state": "ready",
+        "reason": "ci_passed_current_head",
+    }
+    assert item["health"] == "ON_TRACK"
+    assert item["safe_next_action"]["code"] == "MERGE_WHEN_READY"
+    assert item["safe_next_action"]["state"] == "ready"
+    assert item["flags"]["attention"] is True
+
+    without = build_projection(
+        _empty_sections_9741(prs=SectionResult("prs", "ok", payload=[_pr_raw_9741()], count=1)),
+        repository_id=REPO,
+        lifecycle_ledgers=[],
+    )
+    bare = next(row for row in without["items"] if row["resource_kind"] == "pr")
+    assert bare["health"] == "UNKNOWN"
+    assert bare["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert bare["safe_next_action"]["reason_codes"] == ["no_ledger"]
+    assert bare["projections"]["verification"]["merge_evidence"]["state"] == "unknown"
+
+    stale_ledger = _ci_passed_ledger("2026-07-16T10:00:00Z")
+    stale = qualify_merge_advice(item, stale_ledger, now=datetime.now(UTC))
+    assert stale == {"state": "unknown", "reason": "receipt_stale"}
+
+    drafted = dict(item)
+    drafted["lifecycle"] = "draft"
+    assert qualify_merge_advice(drafted, ledger, now=datetime.now(UTC))["reason"] == "draft"
+    dirty = copy_item_merge(item, "DIRTY")
+    assert qualify_merge_advice(dirty, ledger, now=datetime.now(UTC))["reason"] == "merge_state_dirty"
+    unknown_merge = copy_item_merge(item, "UNKNOWN")
+    assert qualify_merge_advice(unknown_merge, ledger, now=datetime.now(UTC))["reason"] == "merge_state_unknown"
+
+
+def copy_item_merge(item: dict, status: str) -> dict:
+    import copy
+
+    cloned = copy.deepcopy(item)
+    cloned["projections"]["verification"]["merge_state_status"] = status
+    return cloned
+
+
+def test_completed_check_reads_conclusion():
+    assert (
+        _pr_check_state({"statusCheckRollup": [{"name": "CI Gate", "state": "COMPLETED", "conclusion": "FAILURE"}]})
+        == "failing"
+    )
+    assert (
+        _pr_check_state({"statusCheckRollup": [{"name": "CI Gate", "state": "COMPLETED", "conclusion": "SUCCESS"}]})
+        == "passing"
+    )
+    assert _pr_check_state({"statusCheckRollup": [{"name": "CI Gate", "state": "COMPLETED"}]}) == "unknown"
+    assert (
+        _pr_check_state({"statusCheckRollup": {"name": "CI Gate", "state": "COMPLETED", "conclusion": "FAILURE"}})
+        == "failing"
+    )
+
+
+def test_task_name_suffix_does_not_attach():
+    issue = {
+        "number": 42,
+        "title": "Named like a task",
+        "labels": [],
+        "assignees": [],
+        "body": "",
+        "state": "OPEN",
+        "url": f"https://github.com/{REPO}/issues/42",
+        "createdAt": "2026-08-01T00:00:00Z",
+        "updatedAt": "2026-08-02T00:00:00Z",
+    }
+    task = {
+        "task_id": "worker-42",
+        "agent": "grok",
+        "status": "running",
+        "alive": True,
+        "age_s": 12,
+        "repository": REPO,
+    }
+    projection = build_projection(
+        _empty_sections_9741(
+            issues=SectionResult("issues", "ok", payload=[issue], count=1),
+            streams=SectionResult(
+                "streams",
+                "ok",
+                payload={
+                    "streams": {"infra-harness": [10]},
+                    "open_stream_membership": {"42": ["infra-harness"]},
+                    "orphans": [],
+                },
+                count=1,
+            ),
+            delegate_tasks=SectionResult("delegate_tasks", "ok", payload={"total": 1, "tasks": [task]}, count=1),
+        ),
+        repository_id=REPO,
+        lifecycle_ledgers=[],
+    )
+    issue_row = next(row for row in projection["items"] if row["resource_kind"] == "issue")
+    task_row = next(row for row in projection["items"] if row["resource_kind"] == "task")
+    assert issue_row["projections"]["dispatch"]["task_ids"] == []
+    assert task_row["projections"]["dispatch"]["association_reason"] == "no_canonical_issue_association"
+    assert task_row["omissions"][0]["reason"] == "no_canonical_issue_association"
+    assert "worker-42" not in json.dumps(issue_row["projections"]["dispatch"]["task_ids"])
+
+
+def test_issue_source_unavailable_is_not_qualified_by_pr_section():
+    issue = {
+        "number": 7,
+        "title": "Missing issue source",
+        "labels": [],
+        "assignees": [],
+        "body": "",
+        "state": "OPEN",
+        "url": f"https://github.com/{REPO}/issues/7",
+        "createdAt": "2026-08-01T00:00:00Z",
+        "updatedAt": "2026-08-02T00:00:00Z",
+    }
+    projection = build_projection(
+        _empty_sections_9741(
+            issues=SectionResult("issues", "unavailable", payload=[issue], count=0, reason="issues_down"),
+            prs=SectionResult(
+                "prs",
+                "ok",
+                payload=[_pr_raw_9741(statusCheckRollup=[{"state": "FAILURE"}], reviewDecision="APPROVED")],
+                count=1,
+            ),
+            streams=SectionResult(
+                "streams",
+                "ok",
+                payload={"streams": {"infra-harness": [10]}, "open_stream_membership": {"7": ["infra-harness"]}},
+                count=1,
+            ),
+        ),
+        repository_id=REPO,
+        lifecycle_ledgers=[],
+    )
+    issue_row = next(row for row in projection["items"] if row["resource_kind"] == "issue")
+    pr_row = next(row for row in projection["items"] if row["resource_kind"] == "pr")
+    assert issue_row["flags"]["source_ok"] is False
+    assert issue_row["health"] == "UNKNOWN"
+    assert issue_row["safe_next_action"]["reason_codes"] == ["source_unavailable"]
+    assert pr_row["flags"]["source_ok"] is True
+    assert pr_row["health"] == "OFF_TRACK"
+    assert pr_row["safe_next_action"]["code"] == "FIX_CI"
+
+
+def test_incomplete_membership_is_not_homed():
+    issue = {
+        "number": 8,
+        "title": "Would have been an orphan",
+        "labels": [],
+        "assignees": [],
+        "body": "",
+        "state": "OPEN",
+        "url": f"https://github.com/{REPO}/issues/8",
+        "createdAt": "2026-08-01T00:00:00Z",
+        "updatedAt": "2026-08-02T00:00:00Z",
+    }
+    projection = build_projection(
+        _empty_sections_9741(
+            issues=SectionResult("issues", "ok", payload=[issue], count=1),
+            streams=SectionResult(
+                "streams",
+                "ok",
+                payload={
+                    "orphans": [{"number": 8, "title": "Would have been an orphan"}],
+                    "effective_membership": {"8": {"streams": ["infra-harness"]}},
+                    "membership_complete": False,
+                    "incomplete_nodes": [8],
+                },
+                count=1,
+            ),
+        ),
+        repository_id=REPO,
+        lifecycle_ledgers=[],
+    )
+    row = next(item for item in projection["items"] if item["resource_kind"] == "issue")
+    stream = row["projections"]["stream"]
+    assert stream["status"] == "unknown"
+    assert stream["streams"] == []
+    assert stream["membership_reason"] == "membership_incomplete"
+    assert stream["historical_status"] == "orphan"
+    assert row["health"] == "UNKNOWN"
+    assert projection["denominator"]["streams_complete"] is False
+    assert "effective_membership" not in json.dumps(projection)
+
+
+def test_dead_running_task_is_not_healthy_execution():
+    task = {
+        "task_id": "dead-run",
+        "agent": "grok",
+        "status": "running",
+        "alive": False,
+        "age_s": 30,
+        "repository": REPO,
+        "linked_issues": [],
+    }
+    live = {
+        "task_id": "long-run",
+        "agent": "grok",
+        "status": "running",
+        "alive": True,
+        "age_s": 100000,
+        "repository": REPO,
+        "linked_issues": [],
+    }
+    projection = build_projection(
+        _empty_sections_9741(
+            delegate_tasks=SectionResult("delegate_tasks", "ok", payload={"total": 2, "tasks": [task, live]}, count=2),
+        ),
+        repository_id=REPO,
+        lifecycle_ledgers=[],
+    )
+    rows = {item["remote_id"]: item for item in projection["items"] if item["resource_kind"] == "task"}
+    dead = rows["dead-run"]
+    assert dead["health"] == "AT_RISK"
+    assert dead["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert dead["safe_next_action"]["reason_codes"] == ["task_liveness_dead"]
+    assert dead["health"] != "ON_TRACK"
+    running = rows["long-run"]
+    assert running["safe_next_action"]["code"] == "CONTINUE_DISPATCH"
+    assert running["safe_next_action"]["state"] == "ready"
+    assert running["projections"]["dispatch"]["runtime_age_s"] == [100000.0]
+    delegate_age = next(entry["age_s"] for entry in running["authority"] if entry["domain"] == "delegate")
+    assert delegate_age != 100000.0
+    assert running["projections"]["dispatch"]["accountable_owner"] == "unknown"
+
+
+def test_unsuccessful_terminals_and_needs_finalize_are_visible():
+    statuses = [
+        "failed",
+        "timeout",
+        "rate_limited",
+        "cancelled",
+        "crashed",
+        "dry_run",
+        "blocked",
+        "no_deliverable",
+        "needs_finalize",
+        "done",
+    ]
+    tasks = [
+        {
+            "task_id": f"task-{status}",
+            "agent": "grok",
+            "status": status,
+            "alive": False,
+            "age_s": 5,
+            "repository": REPO,
+            "linked_issues": [],
+        }
+        for status in statuses
+    ]
+    projection = build_projection(
+        _empty_sections_9741(
+            delegate_tasks=SectionResult(
+                "delegate_tasks", "ok", payload={"total": len(tasks), "tasks": tasks}, count=len(tasks)
+            ),
+        ),
+        repository_id=REPO,
+        lifecycle_ledgers=[],
+    )
+    rows = {item["remote_id"]: item for item in projection["items"] if item["resource_kind"] == "task"}
+    assert rows["task-done"]["health"] == "UNKNOWN"
+    assert rows["task-done"]["safe_next_action"]["code"] == "NONE"
+    assert rows["task-done"]["safe_next_action"]["reason_codes"] == ["task_done_not_delivered"]
+    assert rows["task-done"]["safe_next_action"]["state"] == "none"
+    for status in ("failed", "timeout", "no_deliverable"):
+        assert rows[f"task-{status}"]["health"] == "OFF_TRACK"
+        assert rows[f"task-{status}"]["safe_next_action"]["reason_codes"] == [f"task_{status}"]
+    for status in ("rate_limited", "cancelled", "crashed", "dry_run", "blocked", "needs_finalize"):
+        assert rows[f"task-{status}"]["health"] == "AT_RISK", status
+        reason = "task_needs_finalize" if status == "needs_finalize" else f"task_{status}"
+        assert rows[f"task-{status}"]["safe_next_action"]["reason_codes"] == [reason]
+        assert rows[f"task-{status}"]["safe_next_action"]["code"] != "CONTINUE_DISPATCH"
+
+
+def _boom(*_args, **_kwargs):
+    raise AssertionError("authority seam called during refresh")
+
+
+@pytest.mark.parametrize(
+    ("test_name", "target"),
+    [
+        ("delegate_admission", "scripts.delegate._publish_admission_hold"),
+        ("record_cf_verdict", "scripts.review.record_cf_verdict.main"),
+        ("lease_mutation", "agents_extensions.shared.session_streams.handoff.claim_stream"),
+        ("closeout_observer", "scripts.orchestration.task_closeout.GhGitHubAdapter.observe"),
+        ("reconcile", "scripts.orchestration.task_lifecycle.reconcile"),
+        ("write_lifecycle", "scripts.orchestration.task_lifecycle.write_lifecycle"),
+        ("observe_local_git", "scripts.orchestration.task_lifecycle.observe_local_git"),
+    ],
+)
+def test_refresh_does_not_call_authority_seam(monkeypatch, test_name, target):
+    """Each non-authority seam raises if a refresh touches it."""
+    if test_name == "closeout_observer":
+        # task_closeout is a module, so a dotted class path is not importable.
+        # The live observer is GhGitHubAdapter.observe.
+        from scripts.orchestration.task_closeout import GhGitHubAdapter
+
+        monkeypatch.setattr(GhGitHubAdapter, "observe", _boom)
+    else:
+        monkeypatch.setattr(target, _boom)
+    if test_name == "lease_mutation":
+        from agents_extensions.shared.session_streams.store import SessionStreamStore
+
+        monkeypatch.setattr(SessionStreamStore, "claim_remote_session", _boom)
+        monkeypatch.setattr(SessionStreamStore, "release_remote_session", _boom)
+        monkeypatch.setattr(SessionStreamStore, "force_release_remote_session", _boom)
+    projection = build_projection(_empty_sections_9741(), repository_id=REPO, lifecycle_ledgers=[])
+    assert projection["schema_version"] == "work-projection.v1"
+    assert projection["capabilities"]["mutation"] is False
+
+
+def test_refresh_does_not_call_delegate_admission(monkeypatch):
+    test_refresh_does_not_call_authority_seam(
+        monkeypatch, "delegate_admission", "scripts.delegate._publish_admission_hold"
+    )
+
+
+def test_refresh_does_not_call_record_cf_verdict(monkeypatch):
+    test_refresh_does_not_call_authority_seam(monkeypatch, "record_cf_verdict", "scripts.review.record_cf_verdict.main")
+
+
+def test_refresh_does_not_call_lease_mutation(monkeypatch):
+    test_refresh_does_not_call_authority_seam(
+        monkeypatch,
+        "lease_mutation",
+        "agents_extensions.shared.session_streams.handoff.claim_stream",
+    )
+
+
+def test_refresh_does_not_call_closeout_observer(monkeypatch):
+    test_refresh_does_not_call_authority_seam(
+        monkeypatch,
+        "closeout_observer",
+        "scripts.orchestration.task_closeout.GhGitHubAdapter.observe",
+    )
+
+
+def test_refresh_does_not_call_reconcile(monkeypatch):
+    test_refresh_does_not_call_authority_seam(
+        monkeypatch, "reconcile", "scripts.orchestration.task_lifecycle.reconcile"
+    )
+
+
+def test_refresh_does_not_call_write_lifecycle(monkeypatch):
+    test_refresh_does_not_call_authority_seam(
+        monkeypatch, "write_lifecycle", "scripts.orchestration.task_lifecycle.write_lifecycle"
+    )
+
+
+def test_refresh_does_not_call_observe_local_git(monkeypatch):
+    test_refresh_does_not_call_authority_seam(
+        monkeypatch, "observe_local_git", "scripts.orchestration.task_lifecycle.observe_local_git"
+    )

@@ -17,6 +17,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME as TASK_ARCHIVE_DIR_NAME
 from scripts.orchestration.task_record_store import iter_task_records
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
+from scripts.work.sources_public import public_repository_id
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .monitor_context import production_context as production_context  # re-export: test monkeypatches
@@ -30,8 +31,6 @@ ACTIVE_TASK_STATUSES = {"running", "spawning"}
 # Authoritative repository-attribution fields on task state. Paths, branch names,
 # cwd, worktree, and task_id are never used for repository matching.
 DELEGATE_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
-
-
 
 
 def _tasks_dir(ctx: MonitorContext | None = None) -> Path:
@@ -178,9 +177,7 @@ def _authoritative_task_repository(task: dict[str, Any]) -> str | None:
     return claimed[0]
 
 
-_TASK_STATE_CACHE: dict[
-    str, tuple[float, dict[str, Any], str, bool, str | None, int | None]
-] = {}
+_TASK_STATE_CACHE: dict[str, tuple[float, dict[str, Any], str, bool, str | None, int | None]] = {}
 _LAST_TASKS_DIR_STR: str = ""
 
 
@@ -209,12 +206,15 @@ def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> sql
                 cli_version TEXT,
                 substitution TEXT,
                 claimed_repo TEXT,
-                run_nonce TEXT
+                run_nonce TEXT,
+                linked_issues TEXT
             )
             """
         )
         with contextlib.suppress(sqlite3.OperationalError):
             conn.execute("ALTER TABLE task_cache ADD COLUMN run_nonce TEXT")
+        with contextlib.suppress(sqlite3.OperationalError):
+            conn.execute("ALTER TABLE task_cache ADD COLUMN linked_issues TEXT")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_task_cache_mtime ON task_cache(mtime)")
         conn.commit()
         return conn
@@ -238,15 +238,13 @@ def _load_task_cache_from_db(
             """
             SELECT path, mtime, task_id, status, derived_status, pid, alive,
                    started_at, duration_s, agent, model, effort, cli_version,
-                   substitution, claimed_repo, run_nonce
+                   substitution, claimed_repo, run_nonce, linked_issues
             FROM task_cache
             """
         )
         rows = cursor.fetchall()
         conn.close()
-        cache: dict[
-            str, tuple[float, dict[str, Any], str, bool, str | None, int | None]
-        ] = {}
+        cache: dict[str, tuple[float, dict[str, Any], str, bool, str | None, int | None]] = {}
         for row in rows:
             (
                 path_str,
@@ -265,6 +263,7 @@ def _load_task_cache_from_db(
                 subst_str,
                 claimed_repo,
                 run_nonce,
+                linked_issues_raw,
             ) = row
             subst = None
             if subst_str:
@@ -284,6 +283,9 @@ def _load_task_cache_from_db(
                 "duration_s": duration_s,
                 "run_nonce": run_nonce,
             }
+            linked_issues = _decode_linked_issues(linked_issues_raw)
+            if linked_issues is not None:
+                summary["linked_issues"] = linked_issues
             cache[path_str] = (
                 float(mtime),
                 summary,
@@ -309,7 +311,7 @@ def _save_task_cache_entries(
             return
         conn.executemany(
             """
-            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             records,
         )
@@ -336,6 +338,70 @@ def _delete_task_cache_entries(
         conn.close()
     except (OSError, sqlite3.Error):
         pass
+
+
+def _decode_linked_issues(raw: Any) -> list[dict[str, Any]] | None:
+    if raw is None:
+        return None
+    if isinstance(raw, list):
+        payload = raw
+    elif isinstance(raw, str):
+        try:
+            payload = json.loads(raw)
+        except (json.JSONDecodeError, TypeError):
+            return None
+    else:
+        return None
+    if not isinstance(payload, list):
+        return None
+    return payload
+
+
+def _linked_issues_from_dor(task: dict[str, Any]) -> list[dict[str, Any]] | None:
+    """Canonical issue links from a DoR-checked preflight, or None when absent.
+
+    Foreign repositories are recorded on ``issue_repositories`` and also counted
+    inside ``issues``. One canonical link is emitted only for the remainder.
+    """
+    preflight = task.get("dor_preflight")
+    if not isinstance(preflight, dict):
+        return None
+    if "issues" not in preflight and "issue_repositories" not in preflight:
+        return None
+
+    canonical = public_repository_id()
+    foreign_by_number: dict[int, list[str]] = {}
+    foreign_links: list[dict[str, Any]] = []
+    raw_foreign = preflight.get("issue_repositories") or []
+    if isinstance(raw_foreign, list):
+        for entry in raw_foreign:
+            if not isinstance(entry, dict):
+                continue
+            try:
+                number = int(entry.get("issue"))
+            except (TypeError, ValueError):
+                continue
+            repo = entry.get("repo") if isinstance(entry.get("repo"), str) else entry.get("repository")
+            if not isinstance(repo, str) or not repo or number <= 0:
+                continue
+            foreign_by_number.setdefault(number, []).append(repo)
+            foreign_links.append({"issue": number, "repository": repo})
+    counts: dict[int, int] = {}
+    raw_issues = preflight.get("issues") or []
+    if isinstance(raw_issues, list):
+        for raw_issue in raw_issues:
+            try:
+                number = int(raw_issue)
+            except (TypeError, ValueError):
+                continue
+            if number > 0:
+                counts[number] = counts.get(number, 0) + 1
+    links: list[dict[str, Any]] = []
+    for number, count in sorted(counts.items()):
+        if count - len(foreign_by_number.get(number, [])) > 0:
+            links.append({"issue": number, "repository": canonical})
+    links.extend(foreign_links)
+    return links
 
 
 def _delegate_task_rows(
@@ -418,6 +484,7 @@ def _delegate_task_rows(
             raw_status = str(task.get("status") or "")
             subst = task.get("substitution")
             run_nonce = task.get("run_nonce")
+            linked_issues = _linked_issues_from_dor(task)
             summary = {
                 "task_id": task_id,
                 "agent": task.get("agent"),
@@ -430,6 +497,8 @@ def _delegate_task_rows(
                 "duration_s": task.get("duration_s"),
                 "run_nonce": run_nonce,
             }
+            if linked_issues is not None:
+                summary["linked_issues"] = linked_issues
             cached_tuple = (
                 mtime,
                 summary,
@@ -439,11 +508,7 @@ def _delegate_task_rows(
                 pid_int,
             )
             _TASK_STATE_CACHE[path_str] = cached_tuple
-            subst_str = (
-                json.dumps(subst)
-                if isinstance(subst, dict)
-                else (str(subst) if subst is not None else None)
-            )
+            subst_str = json.dumps(subst) if isinstance(subst, dict) else (str(subst) if subst is not None else None)
             dirty_records.append(
                 (
                     path_str,
@@ -462,6 +527,7 @@ def _delegate_task_rows(
                     subst_str,
                     claimed_repo,
                     run_nonce,
+                    json.dumps(linked_issues) if linked_issues is not None else None,
                 )
             )
 
@@ -469,44 +535,40 @@ def _delegate_task_rows(
             continue
 
         # Scope applies on raw task state only — never re-emit repository identity.
-        if repo_predicate is not None and (
-            claimed_repo is None or claimed_repo != repo_predicate
-        ):
+        if repo_predicate is not None and (claimed_repo is None or claimed_repo != repo_predicate):
             continue
 
         task_id = summary["task_id"]
-        rows.append(
-            {
-                "task_id": task_id,
-                "agent": summary.get("agent"),
-                "model": summary.get("model"),
-                "effort": summary.get("effort"),
-                "cli_version": summary.get("cli_version"),
-                "substitution": summary.get("substitution"),
-                "status": derived_status,
-                "started_at": summary.get("started_at"),
-                "duration_s": summary.get("duration_s"),
-                "age_s": _task_age_seconds(summary.get("started_at")),
-                "alive": alive,
-            }
-        )
+        row = {
+            "task_id": task_id,
+            "agent": summary.get("agent"),
+            "model": summary.get("model"),
+            "effort": summary.get("effort"),
+            "cli_version": summary.get("cli_version"),
+            "substitution": summary.get("substitution"),
+            "status": derived_status,
+            "started_at": summary.get("started_at"),
+            "duration_s": summary.get("duration_s"),
+            "age_s": _task_age_seconds(summary.get("started_at")),
+            "alive": alive,
+        }
+        if "linked_issues" in summary:
+            row["linked_issues"] = summary["linked_issues"]
+        rows.append(row)
 
     if dirty_records:
         _save_task_cache_entries(tasks_dir_str, dirty_records, resolved)
     # Records archived (#8625) or removed since the last scan leave the cache too.
     # Only directories this query scanned are judged, so a hot-only query never
     # evicts the archive entries an all-history query cached.
-    vanished = [
-        path for path in _TASK_STATE_CACHE if path not in seen_paths and os.path.dirname(path) in scanned_dirs
-    ]
+    vanished = [path for path in _TASK_STATE_CACHE if path not in seen_paths and os.path.dirname(path) in scanned_dirs]
     if vanished:
         for path in vanished:
             del _TASK_STATE_CACHE[path]
         _delete_task_cache_entries(tasks_dir_str, vanished, resolved)
 
     rows.sort(
-        key=lambda item: _parse_iso_datetime(item.get("started_at"))
-        or datetime.min.replace(tzinfo=UTC),
+        key=lambda item: _parse_iso_datetime(item.get("started_at")) or datetime.min.replace(tzinfo=UTC),
         reverse=True,
     )
     return rows
@@ -515,8 +577,14 @@ def _delegate_task_rows(
 def list_delegate_tasks(
     *,
     status: Literal[
-        "running", "done", "failed", "timeout", "spawning",
-        "needs_finalize", "no_deliverable", "all",
+        "running",
+        "done",
+        "failed",
+        "timeout",
+        "spawning",
+        "needs_finalize",
+        "no_deliverable",
+        "all",
     ] = "all",
     limit: int = 50,
     repository: str | None = None,
@@ -573,12 +641,16 @@ def get_delegate_task_detail(
                     result_text = result_text[:-1]
                 truncated = True
 
-    return task, {
-        "task": task,
-        "result": result_text,
-        "result_truncated": truncated,
-        "alive": alive,
-    }, False
+    return (
+        task,
+        {
+            "task": task,
+            "result": result_text,
+            "result_truncated": truncated,
+            "alive": alive,
+        },
+        False,
+    )
 
 
 def active_delegate_count(ctx: MonitorContext | None = None) -> int:
@@ -604,8 +676,14 @@ def active_delegate_tasks(
 @router.get("/tasks")
 async def delegate_tasks(
     status: Literal[
-        "running", "done", "failed", "timeout", "spawning",
-        "needs_finalize", "no_deliverable", "all",
+        "running",
+        "done",
+        "failed",
+        "timeout",
+        "spawning",
+        "needs_finalize",
+        "no_deliverable",
+        "all",
     ] = Query("all"),
     limit: int = Query(50, ge=1, le=500),
     ctx: MonitorContext = Depends(get_ctx),
