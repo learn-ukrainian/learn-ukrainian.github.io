@@ -135,6 +135,8 @@ def test_read_only_dispatch_is_exempt(tasks_dir, monkeypatch, capsys):
 
 
 def test_force_admission_records_the_reason(tasks_dir, monkeypatch, capsys):
+    # Admission metadata must not depend on a real origin/main fetch.
+    _stub_worktree(monkeypatch, tasks_dir)
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
 
     rc = delegate.cmd_dispatch(_dry_run_args("--force-admission", "hotfix #1234 while one worker drains"))
@@ -219,11 +221,17 @@ def _stub_worktree(monkeypatch, tasks: Path):
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     monkeypatch.chdir(primary)
     monkeypatch.setattr(delegate, "_resolve_write_cwd_error", lambda **_kwargs: None)
-    monkeypatch.setattr(
-        delegate.subprocess,
-        "run",
-        lambda cmd, **_kwargs: delegate.subprocess.CompletedProcess(cmd, 0, "", ""),
-    )
+
+    def run(cmd, **kwargs):
+        # The creation inventory requests binary, NUL-delimited Git output;
+        # other dispatch probes opt into text mode, just as subprocess does.
+        text_mode = (
+            kwargs.get("text") or kwargs.get("universal_newlines") or kwargs.get("encoding") or kwargs.get("errors")
+        )
+        output = "" if text_mode else b""
+        return delegate.subprocess.CompletedProcess(cmd, 0, output, output)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: "abc1234")
     monkeypatch.setattr(
         delegate,
@@ -387,13 +395,19 @@ def test_admitted_dispatch_holds_its_slot_while_the_worktree_is_created(tasks_di
 
 
 def test_dispatch_that_stops_after_admission_drops_its_hold(tasks_dir, monkeypatch, capsys):
+    from scripts.fleet import ignored_task_output
+
     _stub_worktree(monkeypatch, tasks_dir)
-    vanished = tasks_dir / "wt-vanished"
-    monkeypatch.setattr(
-        delegate,
-        "_ensure_worktree",
-        lambda **_kwargs: (vanished, "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}),
-    )
+    inventory = ignored_task_output.creation_inventory
+
+    def inventory_then_disappear(worktree, **kwargs):
+        # Simulate loss after successful preparation, before record publication.
+        # An already-missing tree now correctly fails the creation inventory first.
+        baseline = inventory(worktree, **kwargs)
+        worktree.rmdir()
+        return baseline
+
+    monkeypatch.setattr(ignored_task_output, "creation_inventory", inventory_then_disappear)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("must not spawn"))
 
     assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-stopped")) == 1

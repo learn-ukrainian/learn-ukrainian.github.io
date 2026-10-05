@@ -316,7 +316,16 @@ def _remove_review_temp_tree(root: Path) -> None:
     if not getattr(shutil.rmtree, "avoids_symlink_attacks", False):
         raise OSError("platform rmtree lacks symlink-attack protection")
 
+    # Review views may have unreadable directories; restore safe traversal
+    # before scanning so legitimate scratch trees remain removable.
     restore_review_temp_tree_permissions(root)
+    # Legacy review scratch names must never authorize worktree removal.
+    from scripts.orchestration.tmp_leak_sweep import refuse_git_checkout_removal
+
+    try:
+        refuse_git_checkout_removal(root)
+    except ValueError as exc:
+        raise OSError("Git checkout retained; use guarded worktree cleanup") from exc
     repair = _review_temp_reap_onexc(root)
     last_error: OSError | None = None
     for _attempt in range(2):

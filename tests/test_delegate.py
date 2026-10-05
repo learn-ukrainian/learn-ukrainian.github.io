@@ -7812,6 +7812,11 @@ def _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, task_id, extra_
             write = staticmethod(lambda data: written.append(data.decode() if isinstance(data, bytes) else data))
             close = staticmethod(lambda: None)
 
+    from scripts.fleet import ignored_task_output
+
+    # This prompt unit already stubs provisioning; model its inventory seam.
+    # The real creation/lock boundary is exercised by the creation test below.
+    monkeypatch.setattr(ignored_task_output, "creation_inventory", lambda _tree, **_kwargs: {"paths": []})
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **kwargs: _FakeProc())
     args = delegate.build_parser().parse_args(
@@ -8882,8 +8887,14 @@ def test_branch_reuse_releases_clean_terminal_holder_then_attaches(tmp_path, mon
     """#5340: clean + synced + terminal-task holder is released, not a bounce."""
     target = tmp_path / "target"
     # Layout matches .worktrees/dispatch/<agent>/<task>/
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "deepseek" / "review-5338-deepseek"
     branch = "grok-build/atlas-slice3-vendoring-retry"
+    _linked(primary, branch, occupied)
+    real_run = subprocess.run
     calls, base_stub = _make_run_stub(
         status_porcelain="",
         rev_parse_head_sha="same-sha",
@@ -8892,6 +8903,8 @@ def test_branch_reuse_releases_clean_terminal_holder_then_attaches(tmp_path, mon
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "ls-files"]:
+            return real_run(cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
@@ -8981,13 +8994,21 @@ def test_branch_reuse_refuses_clean_holder_with_active_task(tmp_path, monkeypatc
 def test_branch_reuse_releases_clean_holder_with_absent_task_record(tmp_path, monkeypatch, tmp_tasks_dir):
     """#5340: legacy holder without state releases after empty activity probes."""
     target = tmp_path / "target"
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "foo"
     branch = "codex/foo"
+    _linked(primary, branch, occupied)
+    real_run = subprocess.run
     calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
     list_hits = {"n": 0}
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "ls-files"]:
+            return real_run(cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
@@ -9129,13 +9150,21 @@ def test_branch_holder_absent_task_checks_every_layout_task_id(tmp_path, monkeyp
 def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(tmp_path, monkeypatch, tmp_tasks_dir):
     """#5340 CF F001: state key codex_foo vs path component foo still finds owner."""
     target = tmp_path / "target"
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "foo"
     branch = "codex/foo-followup"
+    _linked(primary, branch, occupied)
+    real_run = subprocess.run
     calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
     list_hits = {"n": 0}
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "ls-files"]:
+            return real_run(cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
@@ -12008,7 +12037,7 @@ def test_settle_reap_records_a_raising_removal_instead_of_raising(tmp_path, tmp_
     """A step that raises inside the shared chokepoint is an ``error`` record, never an exception."""
     _init_git_repo_for_test(tmp_path, monkeypatch)
 
-    def raising_remove(_repo_root, _worktree, *, force):
+    def raising_remove(_repo_root, _worktree, *, force, **_preservation_options):
         raise RuntimeError("simulated removal crash")
 
     monkeypatch.setattr(worktree_claims, "worktree_is_dirty", lambda _path: False)
@@ -12458,18 +12487,28 @@ def test_read_only_clean_settle_removes_worktree_and_keeps_branch(tmp_tasks_dir,
 
 
 @pytest.mark.parametrize("copy_fails", [False, True])
-def test_settle_preserves_ignored_artifacts_before_removal(tmp_tasks_dir, tmp_path, monkeypatch, copy_fails):
+@pytest.mark.parametrize("artifact_name", ["batch_state/reports/result.patch", ".cache/transcriptions/page.txt"])
+def test_settle_preserves_ignored_artifacts_before_removal(
+    tmp_tasks_dir, tmp_path, monkeypatch, copy_fails, artifact_name
+):
     from scripts.orchestration import worktree_artifacts
 
     task_id = "reap-preserve-artifacts"
     primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
     with (primary / ".git" / "info" / "exclude").open("a") as exclude:
         exclude.write("batch_state/\n")
-    artifact = worktree / "batch_state" / "reports" / "result.patch"
+    with (primary / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    artifact = worktree / artifact_name
     artifact.parent.mkdir(parents=True)
     payload = b"unapplied patch\x00\xff\n"
     artifact.write_bytes(payload)
-    record = {"task_id": task_id, "status": "done", "response": f"Capture `{artifact}`."}
+    record = {
+        "task_id": task_id,
+        "status": "done",
+        "worktree_path": str(worktree),
+        "started_at": "2000-01-01T00:00:00Z",
+    }
     delegate._write_state_atomic(delegate._state_path(task_id), record)
     if copy_fails:
 
@@ -12491,9 +12530,15 @@ def test_settle_preserves_ignored_artifacts_before_removal(tmp_tasks_dir, tmp_pa
     else:
         assert out["action"] == "removed", out
         assert not worktree.exists()
-        location = primary / "batch_state" / "preserved" / task_id
-        assert (location / "batch_state/reports/result.patch").read_bytes() == payload
-        assert state["preserved_artifacts"] == record["preserved_artifacts"] == {"count": 1, "location": str(location)}
+        location = primary / state["preserved_artifacts"]["location"]
+        assert (location / artifact_name).read_bytes() == payload
+        receipt = state["preserved_artifacts"]
+        assert receipt == record["preserved_artifacts"]
+        assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
+        assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
+        assert receipt["paths"][0]["sha256"] == hashlib.sha256(payload).hexdigest()
+        assert receipt["paths"][0]["class"] == "unknown_baseline"
+        assert str(primary) not in json.dumps(receipt)
     assert _branch_ref_present(primary, branch)
 
 
@@ -12521,8 +12566,49 @@ def test_settle_final_state_keeps_preservation_receipt(tmp_tasks_dir, tmp_path, 
     )
     assert state["worktree_reap"]["action"] == "removed", state["worktree_reap"]
     assert state["preserved_artifacts"]["count"] == 1
-    assert Path(state["preserved_artifacts"]["location"]) == primary / "batch_state/preserved/reap-receipt"
+    assert (primary / state["preserved_artifacts"]["location"]).parent == primary / "batch_state/preserved/reap-receipt"
     assert not worktree.exists()
+
+
+@pytest.mark.parametrize("over_cap", [False, True])
+def test_settle_preserves_pre_start_output_and_enforces_cap(tmp_tasks_dir, tmp_path, monkeypatch, over_cap):
+    from scripts.fleet import ignored_task_output as output
+
+    task_id = "ignored-output-boundary"
+    primary, worktree, _ = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    with (primary / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    old = worktree / ".cache/old.txt"
+    old.parent.mkdir()
+    old.write_bytes(b"pre-existing")
+    os.utime(old, (946684799, 946684799))
+    recent = old.parent / "recent.txt"
+    recent.write_bytes(b"task output")
+    if over_cap:
+        monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
+    record = {
+        "task_id": task_id,
+        "status": "done",
+        "worktree_path": str(worktree),
+        "started_at": "2999-01-01T00:00:00Z",
+    }
+    delegate._write_state_atomic(delegate._state_path(task_id), record)
+
+    result = delegate._settle_worktree_reap(
+        worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
+    )
+
+    if over_cap:
+        assert result["action"] == "skipped" and "preservation cap" in result["reason"]
+        assert recent.read_bytes() == b"task output" and old.exists()
+        assert not (primary / "batch_state/preserved" / task_id).exists()
+    else:
+        assert result["action"] == "removed" and not worktree.exists()
+        receipt = delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]
+        assert receipt["count"] == 2 and receipt["bytes"] == len(b"pre-existingtask output")
+        location = primary / receipt["location"]
+        assert (location / ".cache/recent.txt").read_bytes() == b"task output"
+        assert (location / ".cache/old.txt").read_bytes() == b"pre-existing"
 
 
 def test_read_only_clean_settle_removes_detached_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -16553,13 +16639,21 @@ def test_branch_reuse_releases_terminal_clean_holder_and_attaches(tmp_path, monk
     from scripts.orchestration import reap_worktrees
 
     target = tmp_path / "target"
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "task-7236-prior"
     branch = "cursor/feature-7236"
+    _linked(primary, branch, occupied)
+    real_run = subprocess.run
     calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
     list_hits = {"n": 0}
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "ls-files"]:
+            return real_run(cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
@@ -17816,19 +17910,17 @@ def test_settle_result_named_file_scope(tmp_tasks_dir, tmp_path, monkeypatch, re
         source.parent.mkdir(parents=True, exist_ok=True)
         source.write_bytes(b"named evidence")
     named = str(worktree) if reference == "root" else reference
-    record = {"task_id": task_id, "status": "done", "response": f"Result: `{named}`."}
+    record = {"task_id": task_id, "status": "done", "worktree_path": str(worktree), "response": f"Result: `{named}`."}
     delegate._write_state_atomic(delegate._state_path(task_id), record)
     result = delegate._settle_worktree_reap(
         worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
     )
     assert result["action"] == "removed", result
     assert not worktree.exists()
-    location = primary / "batch_state/preserved" / task_id
-    if reference == "ignored/report.txt":
-        assert (location / reference).read_bytes() == b"named evidence"
-        assert delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]["count"] == 1
-    else:
-        assert not location.exists()
+    location = primary / record["preserved_artifacts"]["location"]
+    assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
+    assert not (location / ".pytest_cache/cache.txt").exists()
+    assert delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]["count"] == 1
 
 
 @pytest.mark.parametrize("scenario", worktree_artifact_links.SCENARIOS)
@@ -17839,7 +17931,12 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
     with (primary / ".git/info/exclude").open("a") as exclude:
         exclude.write("ignored/\n")
     named, preserved, target = links.build_named_link(worktree, primary, tmp_path / "outside", scenario)
-    record = {"task_id": task_id, "status": "done", "response": links.worker_response(named)}
+    record = {
+        "task_id": task_id,
+        "status": "done",
+        "worktree_path": str(worktree),
+        "response": links.worker_response(named),
+    }
     delegate._write_state_atomic(delegate._state_path(task_id), record)
     result = delegate._settle_worktree_reap(
         worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
@@ -17848,7 +17945,9 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
     state = delegate._read_state(delegate._state_path(task_id))
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
-    location = primary / "batch_state/preserved" / task_id
+    location = primary / Path(
+        state.get("preserved_artifacts", {}).get("location", primary / "batch_state/preserved" / task_id)
+    )
     if scenario in links.REFUSALS:
         assert result["action"] == "skipped" and links.REFUSALS[scenario] in result["reason"], result
         assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
@@ -18122,3 +18221,63 @@ def test_delivery_declaration_preserves_unicode_separators(sep):
     declaration = {"outcome": "no_change", "reason": f"a{sep}b"}
     response = "Report\nDELIVERABLE: " + json.dumps(declaration, ensure_ascii=False) + "\n"
     assert delegate._parse_delivery_declaration(response) == declaration
+
+
+def test_creation_inventory_is_captured_under_existing_lock_before_spawn(tmp_tasks_dir, tmp_path, monkeypatch):
+    from scripts.fleet import ignored_task_output
+
+    main, _existing = _init_repo_with_worktree(tmp_path)
+    _add_local_bare_origin(main)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_resolve_invocation_git_root", lambda _start=None: main)
+    _patch_worker_popen(monkeypatch)
+    task_id = "creation-baseline"
+    path = main / ".worktrees/dispatch/codex" / task_id
+    captured = []
+    original = ignored_task_output.creation_inventory
+
+    def inventory(tree, **kwargs):
+        # The real dispatch lock refuses reentry on this thread; no second lock
+        # or task writer lock is needed while hashing the creation inventory.
+        with pytest.raises(delegate.WorktreeLockReentry):
+            with delegate.worktree_lock(tree):
+                pytest.fail("creation inventory ran outside its creation lock")
+        # Git add has finished, but a worker has not been spawned/published yet.
+        assert tree.is_dir() and (tree / ".git").is_file()
+        assert not (delegate._read_state(delegate._state_path(task_id)) or {}).get("pid")
+        result = original(tree, **kwargs)
+        captured.append(result)
+        return result
+
+    monkeypatch.setattr(ignored_task_output, "creation_inventory", inventory)
+    args = _write_args(task_id=task_id, mode="read-only", worktree=str(path), full_checkout=True, dry_run=False)
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert len(captured) == 1 and state["ignored_output_baseline"] == captured[0]
+    assert captured[0]["task_id"] == task_id and captured[0]["run_nonce"] == state["run_nonce"]
+    assert captured[0]["directory_identity"] == [path.stat().st_dev, path.stat().st_ino]
+
+
+def test_creation_inventory_failure_retains_new_tree_without_spawning(tmp_tasks_dir, tmp_path, monkeypatch):
+    from scripts.fleet import ignored_task_output
+
+    main, _existing = _init_repo_with_worktree(tmp_path)
+    _add_local_bare_origin(main)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_resolve_invocation_git_root", lambda _start=None: main)
+    _patch_worker_popen(monkeypatch)
+    task_id = "creation-inventory-failed"
+    tree = main / ".worktrees/dispatch/codex" / task_id
+    monkeypatch.setattr(
+        ignored_task_output.artifacts,
+        "_git_paths",
+        lambda *_args: (_ for _ in ()).throw(subprocess.CalledProcessError(1, "git")),
+    )
+    args = _write_args(task_id=task_id, mode="read-only", worktree=str(tree), full_checkout=True, dry_run=False)
+    assert delegate.cmd_dispatch(args) == 1
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert tree.exists() and (tree / ".git").is_file()
+    assert state["status"] == "failed" and not state.get("pid")
+    assert "creation inventory unavailable (CalledProcessError); worker not started" in state["last_error"]

@@ -227,10 +227,16 @@ class Git:
         _safe_config(self, repo.checkout, https=True)
         _https_url(repo.remote, repo.github)
         # Resolve in the parent; no credential material enters other Git verbs.
-        app_environment = {k: os.environ[k] for k in (
-            "LU_AGENT_GITHUB_APP_ID", "LU_AGENT_GITHUB_APP_INSTALLATION_ID",
-            "LU_AGENT_GITHUB_APP_PRIVATE_KEY", "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
-        ) if k in os.environ}
+        app_environment = {
+            k: os.environ[k]
+            for k in (
+                "LU_AGENT_GITHUB_APP_ID",
+                "LU_AGENT_GITHUB_APP_INSTALLATION_ID",
+                "LU_AGENT_GITHUB_APP_PRIVATE_KEY",
+                "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
+            )
+            if k in os.environ
+        }
         if not any(app_environment.values()):
             raise Refusal("HTTPS transport requires an App installation identity")
         try:
@@ -246,8 +252,14 @@ class Git:
         if identity.source != "app" or not identity.token:
             raise Refusal("HTTPS transport requires an App installation identity")
         try:
-            url = repo.remote if self.https_base_url is None else self.https_base_url + repo.remote.removeprefix("https://github.com")
-            header = "Authorization: Basic " + base64.b64encode(f"x-access-token:{identity.token}".encode()).decode("ascii")
+            url = (
+                repo.remote
+                if self.https_base_url is None
+                else self.https_base_url + repo.remote.removeprefix("https://github.com")
+            )
+            header = "Authorization: Basic " + base64.b64encode(f"x-access-token:{identity.token}".encode()).decode(
+                "ascii"
+            )
             env = {
                 "PATH": "/usr/bin:/bin",
                 "LANG": "C",
@@ -322,7 +334,11 @@ class Git:
         if result.returncode:
             raise Refusal("cannot inspect repository configuration")
         fields = result.stdout.split("\0")
-        return [(scope, *item.split("\n", 1)) for scope, item in zip(fields[::2], fields[1::2], strict=False) if "\n" in item]
+        return [
+            (scope, *item.split("\n", 1))
+            for scope, item in zip(fields[::2], fields[1::2], strict=False)
+            if "\n" in item
+        ]
 
 
 @contextmanager
@@ -340,11 +356,19 @@ def _safe_config(git: Git, path: Path, *, https: bool = False) -> None:
             key in {"core.worktree", "core.sshcommand", "core.attributesfile"}
             or (key == "core.bare" and value != "false")
             or key.startswith(("include.", "includeif.", "url."))
-            or key in {
-                "core.gitproxy", "core.alternaterefscommand", "extensions.refstorage",
-                "extensions.partialclone", "gc.recentobjectshook", "gpg.ssh.defaultkeycommand",
+            or key
+            in {
+                "core.gitproxy",
+                "core.alternaterefscommand",
+                "extensions.refstorage",
+                "extensions.partialclone",
+                "gc.recentobjectshook",
+                "gpg.ssh.defaultkeycommand",
             }
-            or (key.startswith("remote.") and key.endswith((".uploadpack", ".vcs", ".proxy", ".proxyauthmethod", ".promisor")))
+            or (
+                key.startswith("remote.")
+                and key.endswith((".uploadpack", ".vcs", ".proxy", ".proxyauthmethod", ".promisor"))
+            )
             # Git resolves remote names before URLs. Reserve our fetch remote
             # entirely; even another URL value would precede a -c override.
             or remote_name == _FETCH_REMOTE
@@ -356,13 +380,22 @@ def _safe_config(git: Git, path: Path, *, https: bool = False) -> None:
             # Inherited helpers are inspected but excluded from execution;
             # repository and command scopes remain untrusted.
             or (
-                key.startswith("credential.") and scope not in {"global", "system"}
+                key.startswith("credential.")
+                and scope not in {"global", "system"}
                 and (https or (key.endswith(".helper") and key != "credential.helper"))
             )
             or (key.startswith("diff.") and key.endswith((".command", ".textconv")))
-            or (key.startswith("gpg.") and key.endswith("program") and key not in {
-                "gpg.program", "gpg.openpgp.program", "gpg.x509.program", "gpg.ssh.program",
-            })
+            or (
+                key.startswith("gpg.")
+                and key.endswith("program")
+                and key
+                not in {
+                    "gpg.program",
+                    "gpg.openpgp.program",
+                    "gpg.x509.program",
+                    "gpg.ssh.program",
+                }
+            )
             or (key.startswith("branch.") and key.endswith(".mergeoptions"))
         ):
             raise Refusal("unsupported redirect, transport, or executable configuration")
@@ -482,13 +515,31 @@ def sync_main(repo: Repository, primary: Path, git: Git) -> dict:
     _checkout_safe(git, repo.checkout, fetched)
     if preflight() != old:
         raise Refusal("checkout changed during fetch")
-    added = set(git.text(
-        repo.checkout, "diff", "--no-ext-diff", "--no-textconv", "--no-renames",
-        "--name-only", "--diff-filter=A", "-z", old, fetched, "--",
-    ).split("\0")) - {""}
-    ignored = set(git.text(
-        repo.checkout, "ls-files", "--others", "--ignored", "--exclude-standard", "-z",
-    ).split("\0")) - {""}
+    added = set(
+        git.text(
+            repo.checkout,
+            "diff",
+            "--no-ext-diff",
+            "--no-textconv",
+            "--no-renames",
+            "--name-only",
+            "--diff-filter=A",
+            "-z",
+            old,
+            fetched,
+            "--",
+        ).split("\0")
+    ) - {""}
+    ignored = set(
+        git.text(
+            repo.checkout,
+            "ls-files",
+            "--others",
+            "--ignored",
+            "--exclude-standard",
+            "-z",
+        ).split("\0")
+    ) - {""}
     if added & ignored:
         raise Refusal("fast-forward would overwrite ignored local files; preserve local work")
     git.text(repo.checkout, "merge", "--ff-only", "--no-edit", "--no-stat", "--no-overwrite-ignore", fetched)
@@ -564,6 +615,7 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
         target,
         repo_root=repo.checkout,
         reason="closed sibling maintenance",
+        control_root=primary,
         owner_task_id=None,
         force=False,
         releasable=releasable,

@@ -11,6 +11,7 @@ import sqlite3
 import subprocess
 import threading
 import time
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -245,7 +246,7 @@ def test_canonical_reaper_preserves_ignored_batch_state(tmp_path, monkeypatch, c
         assert not worktree.exists()
         assert state["preserved_artifacts"]["count"] == 1
         assert (
-            Path(state["preserved_artifacts"]["location"]) / "batch_state/reports/evidence.bin"
+            (repo / state["preserved_artifacts"]["location"]) / "batch_state/reports/evidence.bin"
         ).read_bytes() == b"independent evidence\x00\xff"
 
 
@@ -733,11 +734,11 @@ def test_merged_worktree_is_kept_while_its_dispatch_lock_is_held(
     assert worktree.exists()
 
 
-def test_merged_worktree_with_only_untracked_venv_is_force_removed_after_guards(
+def test_merged_worktree_with_real_untracked_venv_is_retained(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Ignored worker environments do not defeat a fully qualified P0 reap."""
+    """A real environment is non-disposable even when its branch is merged."""
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/venv-residue")
     venv_file = worktree / ".venv" / "bin" / "python"
@@ -746,13 +747,13 @@ def test_merged_worktree_with_only_untracked_venv_is_force_removed_after_guards(
     patch_gh(monkeypatch, {"codex/venv-residue": [{"number": 6482, "state": "MERGED"}]})
 
     assert "?? .venv/bin/python" in git(worktree, "status", "--porcelain", "-uall")
-    assert rw._worktree_clean(worktree) is True
+    assert rw._worktree_clean(worktree) is False
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
-    assert result.action == "removed"
-    assert result.reason == "PR #6482 MERGED"
-    assert not worktree.exists()
+    assert result.action == "skipped"
+    assert worktree.exists()
+    assert venv_file.read_text() == "worker environment residue\n"
     assert_main_checkout_unchanged(repo)
 
 
@@ -919,6 +920,9 @@ def test_pushed_origin_clean_worktree_is_removed(
     git(worktree, "add", "pushed.txt")
     git(worktree, "commit", "-m", "feat: pushed")
     git(worktree, "push", "-u", "origin", "codex/pushed")
+    # This case isolates remote containment; fixture push-hook subprocesses
+    # must not replace that decision with incidental host process activity.
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(monkeypatch, {})
 
     results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
@@ -1495,6 +1499,8 @@ def test_open_pr_matching_origin_is_not_reaped(
     git(worktree, "add", "wip.txt")
     git(worktree, "commit", "-m", "wip")
     git(worktree, "push", "-u", "origin", "codex/open-pr")
+    # PR precedence is the subject here; liveness refusals have separate tests.
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(
         monkeypatch,
         {"codex/open-pr": [{"number": 99, "state": "OPEN"}]},
@@ -3226,7 +3232,9 @@ def test_permission_error_retained_as_exception(tmp_path: Path, monkeypatch: pyt
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(monkeypatch, {branch: []})
 
-    def fake_remove(repo_root: Path, worktree: Path, *, force: bool, timeout: float | None = None) -> str:
+    def fake_remove(
+        repo_root: Path, worktree: Path, *, force: bool, timeout: float | None = None, **_preservation_options
+    ) -> str:
         return "permission denied removing worktree: [Errno 13] Permission denied"
 
     monkeypatch.setattr(rw.worktree_claims, "git_worktree_remove", fake_remove)
@@ -3366,6 +3374,7 @@ def test_open_pr_worktree_counted_as_open_pr_not_unmerged(tmp_path: Path, monkey
     git(worktree, "add", "code.py")
     git(worktree, "commit", "-m", "add code")
     git(worktree, "push", "-u", "origin", "codex/feature-open")
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(
         monkeypatch,
         {"codex/feature-open": [{"number": 105, "state": "OPEN"}]},
@@ -5323,6 +5332,7 @@ def test_detached_clean_contained_in_remote_branch_only_is_reaped(
     git(worktree, "commit", "--allow-empty", "-m", "pushed side commit")
     git(worktree, "push", "origin", "HEAD:refs/heads/side")
     git(repo, "fetch", "origin")
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
 
     result = result_for(_reap_contained(repo, monkeypatch), worktree)
 
@@ -6850,13 +6860,68 @@ def test_canonical_reaper_result_named_file_scope(tmp_path, monkeypatch, referen
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
     assert result.action == "removed", result
     assert not worktree.exists()
-    location = repo / "batch_state/preserved" / task_id
-    if reference == "ignored/report.txt":
-        assert (location / reference).read_bytes() == b"named evidence"
-        saved = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
-        assert saved["preserved_artifacts"]["count"] == 1
-    else:
-        assert not location.exists()
+    location = repo / result.preserved_artifacts["location"]
+    assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
+    assert not (location / ".pytest_cache/cache.txt").exists()
+    saved = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
+    assert saved["preserved_artifacts"]["count"] == 1
+
+
+def test_canonical_reaper_preserves_old_output_when_task_id_was_redispatched(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "redispatched"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    source = worktree / ".cache/out/page.txt"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"old task output")
+    other = repo / ".worktrees/dispatch/claude" / task_id
+    other.mkdir(parents=True)
+    _write_task_record(repo, task_id, status="done", worktree_path=str(other), started_at="2999-01-01T00:00:00Z")
+    record_path = repo / "batch_state/tasks" / f"{task_id}.json"
+    before = record_path.read_bytes()
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9645, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    assert result.action == "skipped", result
+    assert worktree.exists() and record_path.read_bytes() == before
+    assert source.read_bytes() == b"old task output"
+    receipt = result.preserved_artifacts
+    assert receipt["count"] == 1 and receipt["owner"] == "infra lane"
+    assert receipt["retention_disposition"] == "retained" and receipt["next_condition"]
+
+
+def test_canonical_reaper_preserves_earlier_attempt_output_in_reused_checkout(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "reused-output"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    source = worktree / ".cache/out/page.txt"
+    source.parent.mkdir(parents=True)
+    payload = b"earlier attempt output"
+    source.write_bytes(payload)
+    # The later record binds to the same checkout, as on a same-id re-dispatch.
+    later_start = max(source.stat().st_mtime, source.stat().st_ctime) + 2
+    _write_task_record(
+        repo,
+        task_id,
+        status="done",
+        worktree_path=str(worktree),
+        worktree_reused=True,
+        started_at=datetime.fromtimestamp(later_start, UTC).isoformat(),
+    )
+    assert git(worktree, "status", "--porcelain") == ""
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9645, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    assert result.action == "removed", result
+    assert not worktree.exists()
+    receipt = result.preserved_artifacts
+    assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
+    assert json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())["preserved_artifacts"] == receipt
+    assert ((repo / receipt["location"]) / ".cache/out/page.txt").read_bytes() == payload
 
 
 @pytest.mark.parametrize("scenario", links.SCENARIOS)
@@ -6875,7 +6940,9 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
     state = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
-    location = repo / "batch_state/preserved" / task_id
+    location = repo / Path(
+        state.get("preserved_artifacts", {}).get("location", repo / "batch_state/preserved" / task_id)
+    )
     if scenario in links.REFUSALS:
         assert result.action == "skipped" and links.REFUSALS[scenario] in result.reason
         assert links.REFUSALS[scenario] in state["artifact_preservation_error"]

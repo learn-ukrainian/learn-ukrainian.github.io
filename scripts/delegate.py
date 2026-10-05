@@ -6914,24 +6914,6 @@ def _remove_dispatch_worktree(
     Returns a ``worktree_reap`` record whose ``action`` is ``removed``,
     ``skipped``, or ``error``; this never raises.
     """
-    from scripts.orchestration.worktree_artifacts import preserve_worktree_artifacts
-
-    preserved_artifacts = None
-
-    def preserve_before_remove() -> tuple[bool, str]:
-        nonlocal preserved_artifacts
-        ok, detail = releasable()
-        if not ok:
-            return ok, detail
-        ok, refusal, preserved_artifacts = preserve_worktree_artifacts(
-            worktree,
-            primary=_REPO_ROOT,
-            task_id=owner_task_id,
-            tasks_dir=tasks_dir(),
-            task_record=task_record,
-        )
-        return (True, detail) if ok else (False, refusal)
-
     removal = worktree_claims.remove_unclaimed_worktree(
         worktree,
         # A ``--repo`` sibling worktree is git-operated in its own repository,
@@ -6940,15 +6922,14 @@ def _remove_dispatch_worktree(
         control_root=_REPO_ROOT,
         reason=reason,
         owner_task_id=owner_task_id,
-        releasable=preserve_before_remove,
+        releasable=releasable,
+        task_record=task_record,
         force=force,
         tasks_dir=tasks_dir(),
         lock_dir=_worktree_lock_dir(),
         lock_timeout_s=_WORKTREE_LOCK_DEFAULT_TIMEOUT_S if lock_timeout_s is None else lock_timeout_s,
     )
     record = {**removal.as_record(), "pr": None}
-    if preserved_artifacts is not None:
-        record["preserved_artifacts"] = preserved_artifacts
     return record
 
 
@@ -11677,6 +11658,15 @@ def _dispatch(
                 )
                 if fleet_repo_meta is not None:
                     worktree_telemetry["fleet_repo"] = fleet_repo_meta
+            if not worktree_telemetry.get("reused"):
+                from scripts.fleet.ignored_task_output import creation_inventory
+
+                worktree_telemetry["ignored_output_baseline"] = creation_inventory(
+                    worktree_path,
+                    primary=_REPO_ROOT,
+                    task_id=task_id,
+                    run_nonce=run_nonce,
+                )
         except (ValueError, RuntimeError) as exc:
             stdout_fd.close()
             stderr_fd.close()
@@ -11963,6 +11953,7 @@ def _dispatch(
             "worktree_layout": worktree_layout,
             "worktree_sparse": worktree_telemetry.get("sparse"),
             "worktree_local_venv": worktree_telemetry.get("local_venv"),
+            "ignored_output_baseline": worktree_telemetry.get("ignored_output_baseline"),
             "runtime_tmp_root": str(runtime_tmp_root),
             "tmp_bytes_freed": None,
             "tmp_reap_error": None,
