@@ -1,0 +1,841 @@
+{
+  "claims": [
+    {
+      "metric": "authoring.worker_wall",
+      "stratum": "routine_product_change"
+    },
+    {
+      "metric": "authoring.worker_wall",
+      "stratum": "architecture_change"
+    },
+    {
+      "metric": "authoring.worker_wall",
+      "stratum": "launcher_repair"
+    },
+    {
+      "metric": "ci_landing.check_wall",
+      "stratum": "launcher_repair"
+    },
+    {
+      "metric": "authoring.worker_wall",
+      "stratum": "pooled"
+    }
+  ],
+  "records": [
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "20b722634a85ecfa856951bb29b1a20f2f0b8475",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 121,
+        "pr": 221
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "20b722634a85ecfa856951bb29b1a20f2f0b8475",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-floor-before-routine_product_change-0"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "b0a98189fb4e4bbfaea50f4a5adfe4e02e68d191",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 122,
+        "pr": 222
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "b0a98189fb4e4bbfaea50f4a5adfe4e02e68d191",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:31:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-floor-before-routine_product_change-1"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "67efa8c1b52de2e8a01eeed7508198cacb9d4be4",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 123,
+        "pr": 223
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "67efa8c1b52de2e8a01eeed7508198cacb9d4be4",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:32:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-floor-before-routine_product_change-2"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "a8a2e4738d58664089b9055e479b5b2f1a48044b",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 124,
+        "pr": 224
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "a8a2e4738d58664089b9055e479b5b2f1a48044b",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:33:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-floor-before-routine_product_change-3"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "241d92640a5c6be2626e6a1919053f94451835c1",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 125,
+        "pr": 225
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "241d92640a5c6be2626e6a1919053f94451835c1",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:34:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-floor-before-routine_product_change-4"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "e2ec6090273decb145650410cae353dfcb1ea72f",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 126,
+        "pr": 226
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "e2ec6090273decb145650410cae353dfcb1ea72f",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "architecture_change",
+      "task_id": "fixture-floor-before-architecture_change-0"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "7c97bbdbcc8c80d9478b42b0eb2306258ae1478e",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 127,
+        "pr": 227
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "7c97bbdbcc8c80d9478b42b0eb2306258ae1478e",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:30:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "launcher_repair",
+      "task_id": "fixture-floor-before-launcher_repair-0"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "ce415d5016b64e0afb37811bc66311fffff37e09",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 128,
+        "pr": 228
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "ce415d5016b64e0afb37811bc66311fffff37e09",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:31:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "launcher_repair",
+      "task_id": "fixture-floor-before-launcher_repair-1"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "ee1fa2536958e7482661136bd9029a9f52dbf287",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 129,
+        "pr": 229
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "ee1fa2536958e7482661136bd9029a9f52dbf287",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:32:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "launcher_repair",
+      "task_id": "fixture-floor-before-launcher_repair-2"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "1db4aec2238a3601c9ccdd51c8654550488eea7e",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 130,
+        "pr": 230
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "1db4aec2238a3601c9ccdd51c8654550488eea7e",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:33:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "launcher_repair",
+      "task_id": "fixture-floor-before-launcher_repair-3"
+    },
+    {
+      "arm": "before",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "2f0c49e874cda14916f3935d9ee9996149378f42",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 131,
+        "pr": 231
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "2f0c49e874cda14916f3935d9ee9996149378f42",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:34:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "launcher_repair",
+      "task_id": "fixture-floor-before-launcher_repair-4"
+    },
+    {
+      "arm": "after",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "48833093f3446570c2be06e2de59b6d47a8cd8e5",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 132,
+        "pr": 232
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "48833093f3446570c2be06e2de59b6d47a8cd8e5",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:20:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "routine_product_change",
+      "task_id": "fixture-floor-after-routine_product_change-0"
+    },
+    {
+      "arm": "after",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "8f65ffecfef4690ce1fd6844cb61273a4c397f4c",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 133,
+        "pr": 233
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "8f65ffecfef4690ce1fd6844cb61273a4c397f4c",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:20:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "architecture_change",
+      "task_id": "fixture-floor-after-architecture_change-0"
+    },
+    {
+      "arm": "after",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "7e4d12be94736f1bc2c4563c9adac9090f4aacad",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 134,
+        "pr": 234
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "7e4d12be94736f1bc2c4563c9adac9090f4aacad",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:21:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "architecture_change",
+      "task_id": "fixture-floor-after-architecture_change-1"
+    },
+    {
+      "arm": "after",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "e460453df365a778100765cd978e2af8df36ccc0",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 135,
+        "pr": 235
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "e460453df365a778100765cd978e2af8df36ccc0",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:22:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "architecture_change",
+      "task_id": "fixture-floor-after-architecture_change-2"
+    },
+    {
+      "arm": "after",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "68d02d7aae3723d3195e21417678d7aae464b0b2",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 136,
+        "pr": 236
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "68d02d7aae3723d3195e21417678d7aae464b0b2",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:23:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "architecture_change",
+      "task_id": "fixture-floor-after-architecture_change-3"
+    },
+    {
+      "arm": "after",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "7d97284cc41761b68519c23ab37af9370b7625a0",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 137,
+        "pr": 237
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "7d97284cc41761b68519c23ab37af9370b7625a0",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:24:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "architecture_change",
+      "task_id": "fixture-floor-after-architecture_change-4"
+    },
+    {
+      "arm": "after",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "691861ca7cf9587fd73030fc08b7e3ec021d8fca",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 138,
+        "pr": 238
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "691861ca7cf9587fd73030fc08b7e3ec021d8fca",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:20:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "launcher_repair",
+      "task_id": "fixture-floor-after-launcher_repair-0"
+    },
+    {
+      "arm": "after",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "7a54b8b8c42e43aeb41547b26186cd44dd43320d",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 139,
+        "pr": 239
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "7a54b8b8c42e43aeb41547b26186cd44dd43320d",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:21:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "launcher_repair",
+      "task_id": "fixture-floor-after-launcher_repair-1"
+    },
+    {
+      "arm": "after",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "b00777be31393caa0a053ceb3e7b1380abc2d99a",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 140,
+        "pr": 240
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "b00777be31393caa0a053ceb3e7b1380abc2d99a",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:22:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "launcher_repair",
+      "task_id": "fixture-floor-after-launcher_repair-2"
+    },
+    {
+      "arm": "after",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "c6e1da49afe710a6295f141349ca1bcd8730bf3d",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 141,
+        "pr": 241
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "c6e1da49afe710a6295f141349ca1bcd8730bf3d",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:23:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "launcher_repair",
+      "task_id": "fixture-floor-after-launcher_repair-3"
+    },
+    {
+      "arm": "after",
+      "cleanup": {
+        "observed_at": "2026-01-02T13:00:00Z",
+        "state": "CLEANED_UP"
+      },
+      "matched_setup": {
+        "required_check": "CI Gate",
+        "review_profile": "code"
+      },
+      "merge": {
+        "head_sha": "e799daf5eff4196b7bb2636f9c7a575a2bbe1ffd",
+        "merged_at": "2026-01-02T12:00:00Z"
+      },
+      "outcome": {
+        "issue": 142,
+        "pr": 242
+      },
+      "review_of_record": {
+        "author_family": "anthropic",
+        "head_sha": "e799daf5eff4196b7bb2636f9c7a575a2bbe1ffd",
+        "reviewer_family": "openai",
+        "verdict": "APPROVE"
+      },
+      "spans": [
+        {
+          "end": "2026-01-01T10:24:00Z",
+          "end_field": "task.finished_at",
+          "kind": "worker_wall",
+          "stage": "authoring",
+          "start": "2026-01-01T10:00:00Z",
+          "start_field": "task.started_at"
+        }
+      ],
+      "stratum": "launcher_repair",
+      "task_id": "fixture-floor-after-launcher_repair-4"
+    }
+  ],
+  "schema_version": "delivery-baseline-input.v1"
+}
