@@ -56,15 +56,8 @@ def test_review_mcp_provisions_attempt_access_and_exact_claude_tools(world, tmp_
         assert json.loads(agy_review_mcp_config_path(plan.agy_home).read_bytes())["mcpServers"]["sources"] == server
         assert agy_full_review_settings()["permissions"]["allow"] == [
             f"mcp(sources/{t})" for t in sorted(FULL_REVIEW_TOOLS)
-        ] + [
-            f"command({c})"
-            for c in [
-                "cat",
-                "head",
-                "tail",
-                "wc",
-            ]
         ]
+        assert agy_full_review_settings()["permissions"]["deny"] == ["command(*)", "write_file(*)"]
 
 
 def full_probe_code(targets, host_home, pinned, corpus, child_marker, abstract):
