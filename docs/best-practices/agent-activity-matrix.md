@@ -508,8 +508,9 @@ Total bakeoff cost to close all current ❓ slots: **~$50-80** spread across 5 d
   Cursor seat (`grok-4.7-high`), the Sol-spared last resort below critical; native Grok
   never judges.
 
-- v1.11 (superseded): 2026-10-01 (#9394). Opus / Sol first for review, critique, design and
-  Ukrainian work; Fable / Astra last resort. Grok never judges. #9275 unchanged.
+- v1.11 (Grok exclusion superseded by v1.15): 2026-10-01 (#9394). Opus / Sol first for
+  review, critique, design and Ukrainian work still holds; Fable / Astra last resort was
+  superseded by v1.13. Grok never judges was superseded by v1.15. #9275 unchanged.
 
 - v1.10: 2026-09-29 (#9230). GPT-6.1 Sol is the only Sol and holds the former GPT-6
   Astra advisory seat; `gpt-6-sol` and `gpt-6-astra` are not routable. Luna unchanged.

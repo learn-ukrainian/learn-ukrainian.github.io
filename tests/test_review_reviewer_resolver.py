@@ -57,6 +57,38 @@ def practical_astra(monkeypatch):
     return PRACTICAL_ASTRA
 
 
+@pytest.mark.parametrize("profile", ["code", "infra"])
+@pytest.mark.parametrize("entrypoint", ["evaluate", "pin", "custom_ladder"])
+def test_missing_critical_review_role_is_excluded(monkeypatch, profile, entrypoint):
+    candidate = replace(REVIEW_CANDIDATES["openai_frontier"], model_roles=frozenset({"strong_review"}))
+    inputs = ResolverInputs(author_model="claude-opus-5-5", review_profile=profile, risk="critical")
+    reason = f"missing required review role suitability: {profile}/critical catalog suitability"
+
+    if entrypoint == "evaluate":
+        result = evaluate_candidate(candidate, inputs)
+    else:
+        if entrypoint == "pin":
+            monkeypatch.setitem(REVIEW_CANDIDATES, candidate.name, candidate)
+            monkeypatch.setitem(
+                REVIEW_LADDERS,
+                "critical",
+                tuple(
+                    tuple(candidate if seat.name == candidate.name else seat for seat in rung)
+                    for rung in REVIEW_LADDERS["critical"]
+                ),
+            )
+            resolution = resolve_reviewer(
+                replace(inputs, pinned_candidate=candidate.name, pressure_override_reason="critical role gate probe")
+            )
+        else:
+            resolution = resolve_reviewer(inputs, ladder=((candidate,),))
+        assert resolution.selected is None
+        result = next(item for item in resolution.trace if item.name == candidate.name)
+
+    assert result.status == "excluded"
+    assert result.reason == reason
+
+
 def test_family_resolution_across_model_and_harness_aliases():
     cases = {
         "claude": "anthropic",

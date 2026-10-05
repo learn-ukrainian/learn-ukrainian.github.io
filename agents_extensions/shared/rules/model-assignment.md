@@ -6,7 +6,9 @@
 `claude-fable-5-1` holds no review role (#9583). Operator decision 2026-10-05 (#9769):
 Grok 4.7 is a regular code/infra reviewer at every risk, including critical, through native
 `--agent grok --model grok-4.7` and Cursor `--agent cursor --model grok-4.7-high`.
-Native Grok ranks directly after native Opus 5.5, followed by the Cursor Grok transport fallback.
+Grok never ranks ahead of an eligible, healthy Sol 6.1 or Opus 5.5; native Grok ranks before
+the Cursor Grok transport fallback. At medium and low risk, the existing catalog suitability
+order places Sonnet first.
 Neither transport reviews an xAI-authored change, including the unknown-Auto union {xAI, Moonshot},
 or its own subject seat. Verdicts count only with runtime model attestation: native `modelUsage`
 reports exactly one admitted model id; Cursor reports its pinned high-effort model itself.
