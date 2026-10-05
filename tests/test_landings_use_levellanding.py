@@ -159,17 +159,18 @@ def test_c1_landing_matches_generated_curriculum_state() -> None:
     assert actual == expected, "Run `.venv/bin/python scripts/generate_landing_pages.py --track c1`."
 
 
-@pytest.mark.parametrize(
-    "path",
-    [
-        pytest.param(path, id=path.parent.name, marks=C1_UNGROUPED_BLOCKER if path.parent.name == "c1" else ())
-        for path in _track_landings()
-    ],
-)
-def test_track_landing_module_count_matches_curriculum_stats(path: Path) -> None:
+def _tracks_with_modules() -> list[str]:
     stats = json.loads(STATS_PATH.read_text(encoding="utf-8"))
-    track = path.parent.name
-    text = path.read_text(encoding="utf-8")
+    return [track for track, entry in stats.items() if track != "_total" and entry["modules"] > 0]
+
+
+@pytest.mark.parametrize(
+    "track",
+    [pytest.param(track, marks=C1_UNGROUPED_BLOCKER if track == "c1" else ()) for track in _tracks_with_modules()],
+)
+def test_track_landing_module_count_matches_curriculum_stats(track: str) -> None:
+    stats = json.loads(STATS_PATH.read_text(encoding="utf-8"))
+    text = (DOCS_ROOT / track / "index.mdx").read_text(encoding="utf-8")
 
     module_count = re.search(r"\bmoduleCount=\{(\d+)\}", text)
     assert module_count is not None
