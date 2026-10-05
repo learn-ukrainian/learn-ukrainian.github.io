@@ -6492,6 +6492,8 @@ def test_run_worker_agy_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, t
     assert rc == 0
     tool_config = mock_invoke.call_args.kwargs["tool_config"]
     assert tool_config == {
+        "review_profile": None,
+        "review_ledger_path": str(plan.ledger_path),
         "mcp_config_path": str(plan.config_path),
         "strict_mcp_config": True,
         "mcp_server_names": ["sources"],
@@ -18283,13 +18285,16 @@ def test_creation_inventory_failure_retains_new_tree_without_spawning(tmp_tasks_
     assert "creation inventory unavailable (CalledProcessError); worker not started" in state["last_error"]
 
 
-@pytest.mark.parametrize("reply,dispatch_verdict,recorded", [
-    ("**VERDICT: APPROVE**", "APPROVE", "APPROVED"),
-    ("VERDICT: APPROVE\nVERDICT: APPROVED", "APPROVED", "APPROVED"),
-    ("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE", "APPROVE", "APPROVED"),
-    ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "REQUEST_CHANGES", None),
-    ("```\nVERDICT: APPROVE\n```", None, None),
-])
+@pytest.mark.parametrize(
+    "reply,dispatch_verdict,recorded",
+    [
+        ("**VERDICT: APPROVE**", "APPROVE", "APPROVED"),
+        ("VERDICT: APPROVE\nVERDICT: APPROVED", "APPROVED", "APPROVED"),
+        ("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE", "APPROVE", "APPROVED"),
+        ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "REQUEST_CHANGES", None),
+        ("```\nVERDICT: APPROVE\n```", None, None),
+    ],
+)
 def test_parse_review_verdict_shared_lines_preserve_consumer_policies(reply, dispatch_verdict, recorded):
     from scripts.review import record_cf_verdict as recorder
 

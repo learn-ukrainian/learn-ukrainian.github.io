@@ -8792,14 +8792,14 @@ def _run_worker(
     cursor_mcp_path: Path | None = None
     cursor_mcp_backup: bytes | None = None
     cursor_mcp_existed = False
+    from scripts.agent_runtime.result import AgyTelemetry
+
+    agy_telemetry = AgyTelemetry(parent_task_id=task_id) if agent == "agy" else None
 
     try:
         try:
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
-            from scripts.agent_runtime.result import AgyTelemetry
-
-            agy_telemetry = AgyTelemetry(parent_task_id=task_id) if agent == "agy" else None
             tool_config: dict[str, Any] = {}
             if (
                 agent in {"agy", "gemini"}
@@ -8807,13 +8807,20 @@ def _run_worker(
                 and (state.get("review") or require_review_verdict or review_id is not None)
             ):
                 tool_config["review_profile"] = state.get("review_profile")
-                if state.get("review_profile") == "ukrainian" and mcp_config_path is None:
+                if (
+                    state.get("review_profile") == "ukrainian"
+                    and mcp_config_path is None
+                    and review_id is None
+                    and attempt_id is None
+                ):
+                    # Formal attempts provision their home at the runtime boundary;
+                    # missing attempt inputs must reach its typed refusal first.
                     from scripts.agent_runtime.review_mcp import prepare_agy_permission_home
 
                     if runtime_tmp_root is None:
                         raise ValueError("agy_review_permissions_require_scoped_home")
                     tool_config["agy_home_override"] = str(prepare_agy_permission_home(Path(runtime_tmp_root)))
-            if mcp_config_path is not None and attempt_id is not None:
+            if agent in {"agy", "gemini"} and mcp_config_path is not None and attempt_id is not None:
                 from scripts.agent_runtime.review_mcp import review_ledger_path
 
                 tool_config["review_ledger_path"] = str(review_ledger_path(mcp_config_path))

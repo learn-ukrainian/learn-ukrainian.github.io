@@ -1625,7 +1625,14 @@ def _execute_invocation_plan(
                 liveness_paths=(),
             )
         )
-    before = _agy_git_state(cwd) if mode == "read-only" else None
+    tc = tool_config or {}
+    receipt = any(
+        tc.get(key)
+        for key in ("review_id", "attempt_id", "review_attempt_boundary", "review_ledger_path", "mcp_config_path")
+    )
+    # Receipt attempts cannot replay cancellation, so they need no Git snapshot.
+    # In particular, do not spawn a Git probe before the boundary can refuse.
+    before = _agy_git_state(cwd) if mode == "read-only" and not receipt else None
     elapsed = 0.0
     execution: _ExecutionOutcome | None = None
     while True:
@@ -1687,11 +1694,6 @@ def _execute_invocation_plan(
             budget.retry_disposition = "exhausted"
             budget.reroute_reason = "agy_retry_exhausted"
             return finish(execution)
-        tc = tool_config or {}
-        receipt = any(
-            tc.get(key)
-            for key in ("review_id", "attempt_id", "review_attempt_boundary", "review_ledger_path", "mcp_config_path")
-        )
         if mode != "read-only":
             budget.retry_disposition = "unsafe_replay"
             budget.reroute_reason = "unsafe_replay"
