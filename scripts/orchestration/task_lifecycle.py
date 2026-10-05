@@ -1211,7 +1211,9 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                         for record in ledger["evidence"]
                         if record["type"] == "review" and record["id"] in valid_evidence_ids
                     ]
-                    if auto_enabled and review_times and auto_enabled < max(review_times):
+                    if auto_enabled and review_times and _utc_timestamp(auto_enabled) < max(
+                        _utc_timestamp(recorded_at) for recorded_at in review_times
+                    ):
                         hard.append("auto-merge was armed before the verified review gate")
                 checks_ok, checks_waiting, checks_failed = _checks_status(
                     ledger["required_checks"], list(pr.get("checks") or [])
@@ -1243,7 +1245,9 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                     for record in ledger["evidence"]
                     if record["type"] == "review" and record["id"] in valid_evidence_ids
                 ]
-                if auto_enabled and review_times and auto_enabled < max(review_times):
+                if auto_enabled and review_times and _utc_timestamp(auto_enabled) < max(
+                    _utc_timestamp(recorded_at) for recorded_at in review_times
+                ):
                     hard.append("auto-merge was armed before the verified review gate")
             if checks_failed:
                 hard.append(f"merged PR has failed required CI: {', '.join(checks_failed)}")

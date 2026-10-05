@@ -103,8 +103,12 @@ contribute proof, certification or review timing. Only an independently valid
 chain tip retires earlier errors; an invalid tip leaves historical errors and
 its own failures blocking, even when it replaces previously valid evidence.
 No replacement inherits proof or timestamps. A review correction recorded after
-auto-merge arming remains blocked by the existing timing gate. Append and load
-require a correction's `recorded_at` to be strictly later than its target's.
+auto-merge arming remains blocked by the existing timing gate. For both open and
+merged PRs, that gate compares arming with the latest effective valid review as
+parsed UTC instants, for ordinary and replacement rows alike. Equivalent `Z`,
+offset, fractional-second and lowercase spellings have identical timing semantics;
+Invalid timestamps fail closed. Comparison never rewrites stored values or digests.
+Append and load require a correction's `recorded_at` to be strictly later than its target's.
 A new correction append also cannot predate the previously persisted ledger
 `updated_at`; identical-record replay returns unchanged before that append
 check, even after subsequent ledger updates. Chronology compares parsed UTC

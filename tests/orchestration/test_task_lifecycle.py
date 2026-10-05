@@ -4,7 +4,7 @@ import hashlib
 import json
 import subprocess
 from copy import deepcopy
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -395,6 +395,92 @@ def test_moved_head_requires_independent_test_ci_and_review_replacements() -> No
     assert result["hard_blockers"] == []
     assert set(result["retired_evidence_errors"]) == {row["id"] for row in old_rows}
     assert ledger["evidence"][:len(old_rows)] == old_rows
+
+
+@pytest.mark.parametrize("pr_state", ["OPEN", "MERGED"])
+@pytest.mark.parametrize("replacement", [False, True], ids=["ordinary", "replacement"])
+@pytest.mark.parametrize("review_style", ["Z", "negative-offset", "positive-offset", "fractional", "lowercase"])
+@pytest.mark.parametrize("arming_style", ["Z", "negative-offset", "positive-offset", "fractional", "lowercase"])
+@pytest.mark.parametrize("arming_delta", [-0.5, 0, 0.5], ids=["armed-early", "armed-equal", "armed-late"])
+def test_review_timing_compares_utc_instants(
+    pr_state: str, replacement: bool, review_style: str, arming_style: str, arming_delta: float,
+) -> None:
+    def spell(instant: datetime, style: str) -> str:
+        if style == "negative-offset":
+            return instant.astimezone(timezone(timedelta(hours=-3))).isoformat()
+        if style == "positive-offset":
+            return instant.astimezone(timezone(timedelta(hours=2))).isoformat()
+        value = instant.isoformat(timespec="microseconds" if style == "fractional" else "auto")
+        value = value.replace("+00:00", "Z")
+        return value.lower() if style == "lowercase" else value
+
+    review_instant = datetime(2026, 7, 16, 10, 30, tzinfo=UTC)
+    recorded_at = spell(review_instant, review_style)
+    armed_at = spell(review_instant + timedelta(seconds=arming_delta), arming_style)
+    ledger = _ready_evidence(_ledger())
+    ledger = _add(ledger, "AC-MERGE", "github")
+    old = ledger["evidence"][1]
+    original = deepcopy(ledger)
+    if replacement:
+        ledger, current = _replacement(ledger, old, recorded_at=recorded_at)
+        assert ledger["evidence"][:-1] == original["evidence"]
+    else:
+        ledger, current = task_lifecycle.add_evidence(
+            ledger, ac_id="AC-REVIEW", evidence_type="review", summary="current ordinary review",
+            url=REVIEW_URL, commit=HEAD, details=old["details"], recorded_at=recorded_at,
+        )
+    observation = _observation(_body(), pr_state=pr_state)
+    observation["github"]["pr"]["auto_merge_enabled_at"] = armed_at
+    ledger_bytes = task_lifecycle.canonical_json(ledger)
+    observation_bytes = task_lifecycle.canonical_json(observation)
+    result = task_lifecycle.evaluate(ledger, observation)
+    blocked = arming_delta < 0
+    assert result["hard_blockers"] == (["auto-merge was armed before the verified review gate"] if blocked else [])
+    assert result["state"] == ("BLOCKED_WITH_RECEIPT" if blocked else "CI_PASSED" if pr_state == "OPEN" else "MERGED")
+    assert result["superseded_evidence_ids"] == ([old["id"]] if replacement else [])
+    assert current["recorded_at"] == recorded_at
+    assert current["id"] == task_lifecycle.digest(task_lifecycle._evidence_payload(current))
+    assert task_lifecycle.canonical_json(ledger) == ledger_bytes
+    assert task_lifecycle.canonical_json(observation) == observation_bytes
+
+
+@pytest.mark.parametrize("pr_state", ["OPEN", "MERGED"])
+@pytest.mark.parametrize("reverse", [False, True])
+def test_review_timing_selects_latest_instant_before_maximum(pr_state: str, reverse: bool) -> None:
+    ledger = _ready_evidence(_ledger())
+    ledger = _add(ledger, "AC-MERGE", "github")
+    times = ["2026-07-16T12:15:00+02:00", "2026-07-16T08:00:00-03:00"]  # 10:15Z, 11:00Z.
+    for recorded_at in reversed(times) if reverse else times:
+        ledger, _ = task_lifecycle.add_evidence(
+            ledger, ac_id="AC-REVIEW", evidence_type="review", summary="additional valid review",
+            url=REVIEW_URL, commit=HEAD, details=ledger["evidence"][1]["details"], recorded_at=recorded_at,
+        )
+    observation = _observation(_body(), pr_state=pr_state)
+    observation["github"]["pr"]["auto_merge_enabled_at"] = "2026-07-16T10:30:00Z"
+    result = task_lifecycle.evaluate(ledger, observation)
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert result["hard_blockers"] == ["auto-merge was armed before the verified review gate"]
+
+
+@pytest.mark.parametrize("pr_state", ["OPEN", "MERGED"])
+@pytest.mark.parametrize("invalid_at", ["invalid", "2026-07-16T10:30:00", "2026-07-16T25:00:00Z"])
+@pytest.mark.parametrize("field", ["review", "arming"])
+def test_review_timing_invalid_timestamp_fails_closed(pr_state: str, invalid_at: str, field: str) -> None:
+    ledger = _ready_evidence(_ledger())
+    ledger = _add(ledger, "AC-MERGE", "github")
+    observation = _observation(_body(), pr_state=pr_state)
+    if field == "review":
+        record = ledger["evidence"][1]
+        record["recorded_at"] = invalid_at
+        record["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(record))
+    else:
+        observation["github"]["pr"]["auto_merge_enabled_at"] = invalid_at
+    ledger_bytes = task_lifecycle.canonical_json(ledger)
+    observation_bytes = task_lifecycle.canonical_json(observation)
+    with pytest.raises(task_lifecycle.LifecycleError):
+        task_lifecycle.evaluate(ledger, observation)
+    assert task_lifecycle.canonical_json(ledger) == ledger_bytes
+    assert task_lifecycle.canonical_json(observation) == observation_bytes
 
 
 @pytest.mark.parametrize("pr_state", ["OPEN", "MERGED"])
