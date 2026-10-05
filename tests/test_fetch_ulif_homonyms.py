@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import inspect
 import os
 import shlex
@@ -10,6 +11,7 @@ import sqlite3
 import subprocess
 import sys
 import time
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
@@ -2378,38 +2380,133 @@ def test_sigterm_during_input_reading_cli_produces_stop_summary_and_exit_interru
     assert "Resume command:" in err
 
 
-def test_sigterm_during_input_reading_subprocess_boundary(tmp_path):
+@contextmanager
+def _fifo_input_ready(proc: subprocess.Popen, fifo_path: Path, *, timeout: float = 10.0):
+    """Pair with the child's FIFO reader, keeping input blocked without payload or EOF."""
+    deadline = time.monotonic() + timeout
+    while True:
+        if proc.poll() is not None:
+            raise AssertionError(f"child exited before FIFO input readiness: {proc.returncode}")
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise AssertionError("timed out waiting for FIFO input readiness")
+        try:
+            writer_fd = os.open(fifo_path, os.O_WRONLY | os.O_NONBLOCK)
+        except OSError as exc:
+            if exc.errno != errno.ENXIO:
+                raise
+            time.sleep(min(0.01, remaining))
+        else:
+            break
+    try:
+        yield writer_fd
+    finally:
+        os.close(writer_fd)
+
+
+@pytest.mark.parametrize("startup_delay", [0.0, 1.2], ids=["immediate", "delayed"])
+def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_delay):
     fifo_path = tmp_path / "spellings_fifo"
     os.mkfifo(fifo_path)
-    proc = subprocess.Popen(
-        [
+    command = [
+        sys.executable,
+        "-m",
+        "scripts.lexicon.runner.fetch_ulif_homonyms",
+        "run",
+        "--spellings-file",
+        str(fifo_path),
+        "--state-dir",
+        str(tmp_path / "state"),
+        "--db",
+        str(tmp_path / "cache.db"),
+    ]
+    if startup_delay:
+        # Delay exec of the same real -m invocation in the same PID; no wrapper child to leak.
+        command = [
             sys.executable,
-            "-m",
-            "scripts.lexicon.runner.fetch_ulif_homonyms",
-            "run",
-            "--spellings-file",
-            str(fifo_path),
-            "--state-dir",
-            str(tmp_path / "state"),
-            "--db",
-            str(tmp_path / "cache.db"),
-        ],
-        stderr=subprocess.PIPE,
-        text=True,
-    )
+            "-c",
+            "import os, sys, time; time.sleep(float(sys.argv[1])); os.execv(sys.argv[2], sys.argv[2:])",
+            str(startup_delay),
+            *command,
+        ]
+    proc = subprocess.Popen(command, stderr=subprocess.PIPE, text=True)
     try:
-        time.sleep(0.8)
-        proc.send_signal(signal.SIGTERM)
-        _, err = proc.communicate(timeout=5)
+        # The CLI installs SIGTERM's handler before opening this FIFO. A writer
+        # open succeeds only once that reader exists; keep it open so read_text
+        # cannot finish and reach the network, even if the child is descheduled.
+        with _fifo_input_ready(proc, fifo_path) as writer_fd:
+            proc.send_signal(signal.SIGTERM)
+            _, err = proc.communicate(timeout=5)
+        with pytest.raises(OSError) as closed:
+            os.fstat(writer_fd)
+        assert closed.value.errno == errno.EBADF
     finally:
         if proc.poll() is None:
             proc.kill()
-            proc.wait()
+        proc.communicate(timeout=5)
 
     assert proc.returncode == EXIT_INTERRUPTED
     assert "=== ULIF Fetch Stop Summary ===" in err
     assert "Reason:               interrupted by operator" in err
     assert "Resume command:" in err
+    assert "Requests in run:      0" in err
+    assert not (tmp_path / "state").exists()
+    assert not (tmp_path / "cache.db").exists()
+
+
+@pytest.mark.parametrize(
+    ("child_code", "message", "timeout"),
+    [
+        ("import time; time.sleep(60)", "timed out waiting for FIFO input readiness", 0.5),
+        ("raise SystemExit(7)", "child exited before FIFO input readiness: 7", 5.0),
+    ],
+    ids=["missing-readiness", "premature-exit"],
+)
+def test_fifo_input_ready_refuses_unready_child(tmp_path, child_code, message, timeout):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    proc = subprocess.Popen([sys.executable, "-c", child_code], stderr=subprocess.PIPE, text=True)
+    started = time.monotonic()
+    try:
+        with pytest.raises(AssertionError, match=message):
+            with _fifo_input_ready(proc, fifo_path, timeout=timeout):
+                pytest.fail("unready child was accepted")
+        assert time.monotonic() - started < timeout + 1.0
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+        proc.communicate(timeout=5)
+
+
+def test_fifo_input_ready_propagates_unexpected_open_error(tmp_path):
+    proc = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
+    try:
+        with pytest.raises(FileNotFoundError):
+            with _fifo_input_ready(proc, tmp_path / "missing_fifo", timeout=0.5):
+                pytest.fail("missing FIFO was accepted")
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+        proc.communicate(timeout=5)
+
+
+def test_fifo_input_ready_closes_writer_on_failure(tmp_path):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    proc = subprocess.Popen(
+        [sys.executable, "-c", "import os, sys, time; os.open(sys.argv[1], os.O_RDONLY); time.sleep(60)", str(fifo_path)]
+    )
+    try:
+        with pytest.raises(RuntimeError, match="consumer failed"):
+            with _fifo_input_ready(proc, fifo_path) as writer_fd:
+                raise RuntimeError("consumer failed")
+        with pytest.raises(OSError) as closed:
+            os.fstat(writer_fd)
+        assert closed.value.errno == errno.EBADF
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+        proc.communicate(timeout=5)
 
 
 def test_interrupted_request_counts_attempt_and_updates_ledger(tmp_path, capsys):
