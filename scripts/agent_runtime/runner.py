@@ -992,6 +992,11 @@ def _enforce_resume_policy(
         )
 
 
+def _typed_agy_killed_commands(value: Any) -> list[str]:
+    """Optional adapter metadata is present only when it is a list of strings."""
+    return list(value) if isinstance(value, list) and all(isinstance(command, str) for command in value) else []
+
+
 def _build_usage_record(
     *,
     agent: str,
@@ -1012,8 +1017,15 @@ def _build_usage_record(
     tokens: int | None,
     substitution: dict[str, Any] | None = None,
     failure_code: str | None = None,
+    agy_killed_commands: list[str] | None = None,
+    agy_attempt_count: int = 1,
+    agy_retry_reason: str | None = None,
 ) -> dict[str, Any]:
     """Assemble the usage record dict per design doc § 4.5 schema."""
+    # Adapters may omit retry metadata; reject untyped values before using or serializing them.
+    agy_attempt_count = agy_attempt_count if type(agy_attempt_count) is int else 1
+    agy_retry_reason = agy_retry_reason if isinstance(agy_retry_reason, str) else None
+    agy_killed_commands = _typed_agy_killed_commands(agy_killed_commands)
     # Ensure unbounded strings are capped so the JSON stays under POSIX PIPE_BUF (4KB)
     # to maintain atomic append guarantees in usage.py.
     privacy_limited = entrypoint in _PRIVACY_LIMITED_USAGE_ENTRYPOINTS
@@ -1069,6 +1081,22 @@ def _build_usage_record(
         # The context is installed only by invoke_inter_agent(); no caller
         # metadata is permitted to supply or overwrite these fields.
         record["transport"] = transport.metadata()
+    if (agent == "agy" or agy_killed_commands or agy_attempt_count > 1 or agy_retry_reason) and not privacy_limited:
+        record["agy_attempt_count"] = agy_attempt_count
+        record["agy_retry_reason"] = agy_retry_reason
+        commands = [command[:500] for command in agy_killed_commands]
+        kept: list[str] = []
+        record["agy_killed_commands"] = kept
+        for position, command in enumerate(commands):
+            remaining = len(commands) - position - 1
+            candidate = [*kept, command, *([f"{remaining} more"] if remaining else [])]
+            record["agy_killed_commands"] = candidate
+            if len((json.dumps(record, ensure_ascii=False, default=str) + "\n").encode("utf-8")) > 4096:
+                record["agy_killed_commands"] = [*kept, f"{len(commands) - position} more"]
+                break
+            kept.append(command)
+        else:
+            record["agy_killed_commands"] = kept
     return record
 
 
@@ -1438,6 +1466,97 @@ def _attempt_boundary_refusal(exc: Exception, *, stage: str) -> str:
 
 
 def _execute_invocation_plan(
+    *,
+    agent_name: str,
+    adapter: AgentAdapter,
+    plan: Any,
+    prompt: str,
+    mode: str,
+    cwd: Path,
+    model: str,
+    task_id: str | None,
+    session_id: str | None,
+    entrypoint: str,
+    hard_timeout: int,
+    stall_timeout: int,
+    tool_config: dict | None = None,
+    event_sink: Callable[..., None] | None = None,
+    stdout_silence_timeout: int | None = None,
+    initial_response_timeout: int | None = None,
+    v4_authorization_id: str | None = None,
+) -> _ExecutionOutcome:
+    """Retry an AGY code-assist eligibility 503 once, within the original time budget."""
+    kwargs = dict(
+        agent_name=agent_name,
+        adapter=adapter,
+        plan=plan,
+        prompt=prompt,
+        mode=mode,
+        cwd=cwd,
+        model=model,
+        task_id=task_id,
+        session_id=session_id,
+        entrypoint=entrypoint,
+        hard_timeout=hard_timeout,
+        stall_timeout=stall_timeout,
+        tool_config=tool_config,
+        event_sink=event_sink,
+        stdout_silence_timeout=stdout_silence_timeout,
+        initial_response_timeout=initial_response_timeout,
+        v4_authorization_id=v4_authorization_id,
+    )
+    if agent_name != "agy":
+        return _execute_invocation_once(**kwargs)
+    started = time.monotonic()
+    execution = _execute_invocation_once(**kwargs)
+    if execution.parse.ok or execution.kill_reason:
+        return execution
+    from .adapters.agy import AGY_INCOMPLETE_RUN_REASONS
+
+    # Provider-attributed terminal error or stderr, never the model's reply.
+    errors = (execution.stderr_text, execution.parse.provider_error_text or "")
+    transient = any(
+        re.search(r"Eligibility check failed:\s*UNAVAILABLE \(code 503\)", line)
+        for text in errors
+        for line in text.splitlines()
+    )
+    reason = (execution.parse.stderr_excerpt or "").splitlines()
+    if (
+        not transient
+        or not execution.parse.agy_pre_model_failure
+        or execution.parse.agy_killed_commands
+        or (reason and reason[0] in AGY_INCOMPLETE_RUN_REASONS)
+    ):
+        return execution
+    remaining = hard_timeout - (time.monotonic() - started)
+    if remaining < 1:
+        return execution
+    # Fresh log and transcript baseline; the failed attempt cannot lend proof.
+    retry_plan = adapter.build_invocation(
+        prompt=prompt,
+        mode=mode,
+        cwd=cwd,
+        model=model,
+        task_id=task_id,
+        session_id=session_id,
+        tool_config=tool_config,
+    )
+    remaining = hard_timeout - (time.monotonic() - started)
+    if remaining < 1:
+        cleanup = getattr(adapter, "cleanup_invocation", None)
+        if cleanup is not None:
+            cleanup(retry_plan)
+        return execution
+    kwargs.update(plan=retry_plan, hard_timeout=int(remaining))
+    retry = _execute_invocation_once(**kwargs)
+    return replace(
+        retry,
+        duration_s=execution.duration_s + retry.duration_s,
+        parse=replace(retry.parse, agy_attempt_count=2, agy_retry_reason="pre_model_eligibility_503"),
+    )
+
+
+def _execute_invocation_once(
     *,
     agent_name: str,
     adapter: AgentAdapter,
@@ -2047,6 +2166,9 @@ def _raise_for_kill_reason(
             stderr_excerpt=(f"streamed_output_limit exceeded: limit={limit_bytes} observed={observed_bytes}"),
             tokens=None,
             substitution=record_substitution,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="protocol_output_limit",
         )
         write_record(record)
@@ -2075,6 +2197,9 @@ def _raise_for_kill_reason(
             )[:500],
             tokens=None,
             substitution=record_substitution,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="cwd_unpinned",
         )
         write_record(record)
@@ -2105,6 +2230,9 @@ def _raise_for_kill_reason(
             )[:500],
             tokens=None,
             substitution=record_substitution,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="primary_tree_write",
         )
         write_record(record)
@@ -2128,6 +2256,9 @@ def _raise_for_kill_reason(
             stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2176,6 +2307,9 @@ def _raise_for_kill_reason(
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2219,6 +2353,9 @@ def _raise_for_kill_reason(
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
             failure_code="timeout",
         )
         _emit_substitution_event(
@@ -2259,13 +2396,16 @@ def _invoke_gemini_with_fallback(
     """Run Gemini through the shared model/auth fallback ladder."""
     last_telemetry: InvocationTelemetry | None = None
     last_tool_calls: list[dict[str, Any]] = []
+    agy_killed_commands: list[str] = []
+    agy_attempt_count = 0
+    agy_retry_reason: str | None = None
 
     def _attempt_runner(
         rung: GeminiRung,
         _attempt_index: int,
         timeout_s: int | None,
     ) -> AttemptOutcome:
-        nonlocal last_telemetry
+        nonlocal agy_attempt_count, agy_retry_reason, last_telemetry
         nonlocal last_tool_calls
         try:
             if rung.cli == "agy-cli":
@@ -2329,6 +2469,10 @@ def _invoke_gemini_with_fallback(
                 )
             raise
         parse = execution.parse
+        agy_killed_commands.extend(_typed_agy_killed_commands(getattr(parse, "agy_killed_commands", None)))
+        if attempt_agent_name == "agy":
+            agy_attempt_count += parse.agy_attempt_count
+            agy_retry_reason = parse.agy_retry_reason or agy_retry_reason
         last_tool_calls = list(parse.tool_calls)
 
         if execution.kill_reason in ("stdout_silence_timeout", "initial_response_timeout"):
@@ -2432,6 +2576,9 @@ def _invoke_gemini_with_fallback(
             stalled=False,
             stderr_excerpt=stderr_excerpt,
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+            agy_killed_commands=list(agy_killed_commands),
+            agy_attempt_count=max(1, agy_attempt_count),
+            agy_retry_reason=agy_retry_reason,
         )
         write_record(record)
         return Result(
@@ -2454,6 +2601,7 @@ def _invoke_gemini_with_fallback(
             tool_calls=last_tool_calls,
             tool_calls_total=len(last_tool_calls),
             isolation_evidence=None,
+            agy_killed_commands=list(agy_killed_commands),
         )
 
     if call_result.attempts and all(attempt.status == "rate_limited" for attempt in call_result.attempts):
@@ -2474,6 +2622,9 @@ def _invoke_gemini_with_fallback(
             stalled=False,
             stderr_excerpt=stderr_excerpt,
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+            agy_killed_commands=list(agy_killed_commands),
+            agy_attempt_count=max(1, agy_attempt_count),
+            agy_retry_reason=agy_retry_reason,
         )
         write_record(record)
         raise RateLimitedError(agent_name, record_model, reason=(stderr_excerpt or "")[:200])
@@ -2498,6 +2649,9 @@ def _invoke_gemini_with_fallback(
             stalled=False,
             stderr_excerpt=stderr_excerpt,
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+            agy_killed_commands=list(agy_killed_commands),
+            agy_attempt_count=max(1, agy_attempt_count),
+            agy_retry_reason=agy_retry_reason,
         )
         write_record(record)
         raise AgentTimeoutError(agent_name, hard_timeout)
@@ -2519,6 +2673,9 @@ def _invoke_gemini_with_fallback(
         stalled=False,
         stderr_excerpt=stderr_excerpt,
         tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+        agy_killed_commands=list(agy_killed_commands),
+        agy_attempt_count=max(1, agy_attempt_count),
+        agy_retry_reason=agy_retry_reason,
     )
     write_record(record)
     return Result(
@@ -2541,6 +2698,7 @@ def _invoke_gemini_with_fallback(
         tool_calls=last_tool_calls,
         tool_calls_total=len(last_tool_calls),
         isolation_evidence=None,
+        agy_killed_commands=list(agy_killed_commands),
     )
 
 
@@ -2891,6 +3049,9 @@ def _invoke_with_runner_failover(
             tokens=parse.tokens,
             substitution=substitution,
             failure_code=parse.failure_code,
+            agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+            agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+            agy_retry_reason=getattr(parse, "agy_retry_reason", None),
         )
         write_record(record)
 
@@ -2917,6 +3078,7 @@ def _invoke_with_runner_failover(
             stalled=False,
             returncode=execution.returncode,
             failure_code=parse.failure_code,
+            agy_killed_commands=_typed_agy_killed_commands(getattr(parse, "agy_killed_commands", None)),
             usage_record=record,
             model_identity=record.get("model_identity"),
             tool_calls=list(parse.tool_calls),
@@ -3252,6 +3414,9 @@ def _invoke_impl(
         tokens=parse.tokens,
         substitution=substitution,
         failure_code=parse.failure_code,
+        agy_killed_commands=getattr(parse, "agy_killed_commands", None),
+        agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
+        agy_retry_reason=getattr(parse, "agy_retry_reason", None),
     )
     write_record(record)
 
@@ -3278,6 +3443,7 @@ def _invoke_impl(
         stalled=False,
         returncode=execution.returncode,
         failure_code=parse.failure_code,
+        agy_killed_commands=_typed_agy_killed_commands(getattr(parse, "agy_killed_commands", None)),
         usage_record=record,
         model_identity=record.get("model_identity"),
         tool_calls=list(parse.tool_calls),

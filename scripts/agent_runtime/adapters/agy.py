@@ -87,6 +87,7 @@ import json
 import logging
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -98,8 +99,10 @@ from typing import Any, NamedTuple
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
+from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
+from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
@@ -129,8 +132,9 @@ _logger = logging.getLogger(__name__)
 # (a background command, a timer, a tool step still RUNNING, a subagent) needs
 # its own finish event positioned before the final reply, which must be the
 # last model event (see ``_slice_completion_gap``). A task that ends any other
-# way — canceled, and by the same rule timed out or failed — never finished its
-# command, so the run fails as ``AGY_BACKGROUND_TASK_CANCELED`` (#8502 r10). What the reply SAYS never
+# way — canceled, timed out or failed — never finished its command. Only an
+# invocation-owned model kill of an allowlisted read may be excused (#8771),
+# with its command retained in the result; all other ends still fail. What the reply SAYS never
 # decides the run (#8502 r9): pending-work wording in a structurally complete
 # run is recorded as a warning, not a failure. Ambiguous evidence is unconfirmed
 # (#8502 r7): a slice line that does not parse fails the run, it is never
@@ -208,6 +212,10 @@ _BACKGROUND_START_HEADER_RE = re.compile(
     r"\ACreated At: [^\n]*\nTool is running as a background task with task id: (?P<id>\S+)"
     r"(?:\nTask Description: (?P<timer>Timer:))?"
 )
+_BACKGROUND_COMMAND_HEADER_RE = re.compile(
+    r"\ACreated At: [^\n]*\nTool is running as a background task with task id: \S+"
+    r"\nTask Description: (?P<command>[\s\S]*?)\nTask logs are available at: [^\n]+"
+)
 _TASK_MESSAGE_HEADER_RE = re.compile(
     r"\A[^\n]*\n\n<SYSTEM_MESSAGE>\n\[Message\] timestamp=\S+ sender=(?P<sender>\S+) priority=\S+ "
     r"content=(?P<first_line>[^\n]*)"
@@ -216,6 +224,401 @@ _TASK_ENDED_RE = re.compile(r'\ATask id "(?P<id>[^"]+)" (?P<outcome>[^\n]*?) wit
 _TASK_FINISHED_OUTCOME = "finished"
 _SUBAGENT_TOOL = "invoke_subagent"
 _MODEL_EVENT_TYPES = frozenset({"PLANNER_RESPONSE", "GENERIC", "MCP_TOOL"})
+
+
+# Only parsed read stages and the approved stderr/failure suffixes are safe.
+# Executable read options and unknown shell syntax fail closed (#8771).
+@dataclasses.dataclass(frozen=True)
+class _ReadOptions:
+    flags: frozenset[str]
+    values: frozenset[str] = frozenset()
+
+
+# Exact option spellings only. Values cannot add options; grouped short flags
+# are checked letter by letter. No pager, preprocessor, output or script flags.
+# Sources: installed tool manuals; git-scm.com/docs/git-{grep,log,show}; rg --help.
+_KILL_READ_OPTIONS: dict[tuple[str, ...], _ReadOptions] = {
+    ("grep",): _ReadOptions(
+        frozenset(
+            [
+                "-n",
+                "-l",
+                "-L",
+                "-i",
+                "-w",
+                "-c",
+                "-E",
+                "-F",
+                "-P",
+                "-h",
+                "-H",
+                "-r",
+                "-R",
+                "-v",
+                "-o",
+                "--count",
+                "--line-number",
+                "--files-with-matches",
+                "--ignore-case",
+                "--",
+            ]
+        ),
+        frozenset(
+            [
+                "-e",
+                "-A",
+                "-B",
+                "-C",
+                "-m",
+                "--regexp",
+                "--after-context",
+                "--before-context",
+                "--context",
+                "--max-count",
+            ]
+        ),
+    ),
+    ("rg",): _ReadOptions(
+        frozenset(
+            [
+                "-n",
+                "-l",
+                "-i",
+                "-w",
+                "-c",
+                "-F",
+                "-P",
+                "-v",
+                "-o",
+                "-u",
+                "--count",
+                "--files",
+                "--hidden",
+                "--no-heading",
+                "--line-number",
+                "--files-with-matches",
+                "--ignore-case",
+                "--",
+            ]
+        ),
+        frozenset(
+            [
+                "-e",
+                "-A",
+                "-B",
+                "-C",
+                "-m",
+                "-g",
+                "-t",
+                "--regexp",
+                "--after-context",
+                "--before-context",
+                "--context",
+                "--max-count",
+                "--glob",
+                "--type",
+            ]
+        ),
+    ),
+    ("git", "grep"): _ReadOptions(
+        frozenset(["-n", "-l", "-L", "-i", "-w", "-c", "-E", "-F", "-P", "-h", "-H", "--count", "--name-only", "--"]),
+        frozenset(["-e", "-A", "-B", "-C"]),
+    ),
+    ("git", "log"): _ReadOptions(
+        frozenset(["-p", "--oneline", "--stat", "--name-only", "--name-status", "--no-patch", "--"]),
+        frozenset(["-S", "-G", "-n", "--max-count", "--since", "--until", "--grep"]),
+    ),
+    ("git", "show"): _ReadOptions(
+        frozenset(["-p", "--oneline", "--stat", "--name-only", "--name-status", "--no-patch", "--"]),
+    ),
+    # find's -- ends startup options, not its expression. It cannot make a
+    # following -exec/-delete into an operand, so it is deliberately absent.
+    ("find",): _ReadOptions(
+        frozenset(["-print", "-print0", "-o"]),
+        frozenset(["-name", "-iname", "-path", "-ipath", "-type", "-maxdepth", "-mindepth"]),
+    ),
+    ("ls",): _ReadOptions(
+        frozenset(
+            [
+                "-l",
+                "-a",
+                "-A",
+                "-h",
+                "-R",
+                "-d",
+                "-1",
+                "--all",
+                "--almost-all",
+                "--human-readable",
+                "--recursive",
+                "--directory",
+                "--",
+            ]
+        )
+    ),
+    ("cat",): _ReadOptions(frozenset(["-n", "-b", "-s", "--number", "--number-nonblank", "--squeeze-blank", "--"])),
+    ("head",): _ReadOptions(
+        frozenset(["-q", "-v", "--quiet", "--verbose", "--"]),
+        frozenset(["-n", "-c", "--lines", "--bytes"]),
+    ),
+    ("tail",): _ReadOptions(
+        frozenset(["-q", "-v", "--quiet", "--verbose", "--"]),
+        frozenset(["-n", "-c", "--lines", "--bytes"]),
+    ),
+    ("sed",): _ReadOptions(frozenset({"-n", "--"})),
+    ("wc",): _ReadOptions(
+        frozenset(["-l", "-w", "-c", "-m", "-L", "--lines", "--words", "--bytes", "--chars", "--max-line-length", "--"])
+    ),
+    ("sort",): _ReadOptions(
+        frozenset(
+            ["-n", "-r", "-u", "-f", "-s", "--numeric-sort", "--reverse", "--unique", "--ignore-case", "--stable", "--"]
+        ),
+        frozenset(["-k", "-t", "--key", "--field-separator"]),
+    ),
+    ("uniq",): _ReadOptions(
+        frozenset(["-c", "-d", "-u", "-i", "--count", "--repeated", "--unique", "--ignore-case", "--"])
+    ),
+}
+_KILLED_COMMAND_LIMIT = 500
+
+
+def _read_only_killed_command(command: str) -> bool:
+    """Parse quote-aware shell operators, then validate every read-only stage."""
+    if not command or re.search(r"[\x00-\x1f\x7f$`()]", command):
+        return False
+    # Retain quoting while locating operators: shlex.split removes the evidence
+    # that distinguishes literal patterns from expansions into live options.
+    operators: list[tuple[int, int, str]] = []
+    quote = ""
+    escaped = False
+    index = 0
+    while index < len(command):
+        char = command[index]
+        if escaped:
+            escaped = False
+        elif char == "\\" and quote != "'":
+            escaped = True
+        elif quote:
+            if char == quote:
+                quote = ""
+        elif char in "\"'":
+            quote = char
+        elif char in "*?[{}":
+            # Filename and brace expansion can add options absent from argv.
+            return False
+        elif char in "|&;<>":
+            end = index + 1
+            while end < len(command) and command[end] in "|&;<>":
+                end += 1
+            operators.append((index, end, command[index:end]))
+            index = end - 1
+        index += 1
+    if quote or escaped:
+        return False
+    try:
+        if operators and operators[-1][2] == "||":
+            start, end, _ = operators.pop()
+            if shlex.split(command[end:]) != ["true"]:
+                return False
+            command = command[:start].rstrip()
+        # The only redirect is an adjacent fd 2 followed by the null device.
+        if operators and operators[-1][2] == ">":
+            start, end, _ = operators.pop()
+            if (
+                start < 2
+                or command[start - 1] != "2"
+                or not command[start - 2].isspace()
+                or shlex.split(command[end:]) != ["/dev/null"]
+            ):
+                return False
+            command = command[: start - 1].rstrip()
+        if any(operator != "|" for _, _, operator in operators):
+            return False
+        starts = [0, *(end for _, end, _ in operators)]
+        ends = [*(start for start, _, _ in operators), len(command)]
+        return all(
+            _read_only_killed_argv(shlex.split(command[start:end])) for start, end in zip(starts, ends, strict=True)
+        )
+    except ValueError:
+        return False
+
+
+def _read_options(
+    argv: list[str], spec: _ReadOptions, *, numeric_count: bool = False
+) -> tuple[set[str], list[str]] | None:
+    """Check exact long options and every member of short-option groups."""
+    seen: set[str] = set()
+    operands: list[str] = []
+    index = 0
+    while index < len(argv):
+        arg = argv[index]
+        index += 1
+        if arg == "--":
+            if arg not in spec.flags:
+                return None
+            seen.add(arg)
+            operands.extend(argv[index:])
+            break
+        if not arg.startswith("-") or arg == "-":
+            operands.append(arg)
+            continue
+        # Preserve the existing head/tail -20 shorthand, digits only. No
+        # historical suffix flags may bypass the table through this spelling.
+        if numeric_count and re.fullmatch(r"-[0-9]+", arg) and "-n" in spec.values:
+            seen.add("-n")
+            continue
+        option, equal, _value = arg.partition("=") if arg.startswith("--") else (arg, "", "")
+        if option in spec.flags:
+            if equal:
+                return None
+            seen.add(option)
+            continue
+        if option in spec.values:
+            seen.add(option)
+            if not equal:
+                if index == len(argv):
+                    return None
+                index += 1
+            continue
+        if arg.startswith("--"):
+            return None
+        # Single-dash long options (find predicates) must match exactly above.
+        # Other words are groups; a value option owns the remainder or next arg.
+        for offset, letter in enumerate(arg[1:], start=1):
+            option = "-" + letter
+            if option in spec.values:
+                seen.add(option)
+                if offset == len(arg) - 1:
+                    if index == len(argv):
+                        return None
+                    index += 1
+                break
+            if option not in spec.flags:
+                return None
+            seen.add(option)
+    return seen, operands
+
+
+def _read_only_killed_argv(argv: list[str]) -> bool:
+    """Validate a read stage with written arguments; never turn stdin into argv."""
+    if not argv:
+        return False
+    key = tuple(argv[:2]) if argv[0] == "git" else (argv[0],)
+    spec = _KILL_READ_OPTIONS.get(key)
+    if spec is None:
+        return False
+    parsed = _read_options(argv[len(key) :], spec, numeric_count=key in {("head",), ("tail",)})
+    if parsed is None:
+        return False
+    seen, operands = parsed
+    if key == ("sed",):
+        # Even sed -n executes its program: only one numeric print range is safe.
+        return "-n" in seen and bool(operands) and re.fullmatch(r"[0-9]+(?:,[0-9]+)?p", operands[0]) is not None
+    if key == ("uniq",):
+        # uniq's second positional operand is an OUTPUT file, even after --.
+        return len(operands) <= 1
+    return True
+
+
+def _pre_model_failure(plan: InvocationPlan | None, stdout: str, bound: _TranscriptSlice | None) -> bool:
+    """Prove this attempt has no prompt/model events; unreadable evidence refuses."""
+    if plan is None or not (log_file := plan.env_overrides.get(_AGY_LOG_ENV)):
+        return False
+    # Only empty output or a lone provider error result can precede a model.
+    if stdout.strip():
+        try:
+            events = [json.loads(line) for line in jsonl_lines(stdout) if line.strip()]
+        except ValueError:
+            return False
+        if len(events) != 1 or not isinstance(events[0], dict) or events[0].get("event") != "result":
+            return False
+        result = events[0].get("result")
+        if (
+            not isinstance(result, dict)
+            or result.get("status") != "ERROR"
+            or result.get("response")
+            or "structured_output" in result
+            or result.get("usage")
+        ):
+            return False
+    if bound is not None:
+        return not bound.unreadable_lines and not any(
+            event.get("type") == "USER_INPUT" or _is_model_event(event) or event.get("source") == "MODEL"
+            for event in bound.events
+        )
+    baseline = plan.metadata.get(_TRANSCRIPT_BASELINE_KEY)
+    if isinstance(baseline, Mapping):
+        # A missing/unreadable resumed slice cannot prove that nothing ran.
+        return False
+    try:
+        log = safe_read_attempt_file(Path(log_file), trusted_root=Path(plan.metadata.get("log_read_root", "/")))
+    except FileNotFoundError:
+        return True  # Fresh attempt failed before creating a conversation log.
+    except (OSError, AttemptReadError):
+        return False
+    # A named conversation with an unavailable slice is unknown, not pre-model.
+    return re.search(r"conversation|sending message", log.decode("utf-8", errors="replace"), re.IGNORECASE) is None
+
+
+def _model_killed_tasks(
+    events: list[dict[str, Any]], *, reply: int | None = None, blocked: list[str] | None = None
+) -> tuple[list[str], set[str]]:
+    """Retain every model kill and identify reads canceled after that kill, before the reply."""
+    commands: dict[str, str] = {}
+    kills: dict[str, int] = {}
+    diagnostics: list[str] = []
+    excused: set[str] = set()
+    for position, event in enumerate(events):
+        content = str(event.get("content") or "")
+        if event.get("status") == "RUNNING" and (start := _BACKGROUND_START_HEADER_RE.match(content)):
+            description = _BACKGROUND_COMMAND_HEADER_RE.match(content)
+            command = description.group("command") if description else "<unknown command>"
+            commands[start.group("id")] = command
+            kills.pop(start.group("id"), None)
+            excused.discard(start.group("id"))
+        if event.get("source") == "MODEL" and event.get("type") == "PLANNER_RESPONSE":
+            for call in event.get("tool_calls") or []:
+                if not isinstance(call, Mapping) or call.get("name") != "manage_task":
+                    continue
+                args = _coerce_args(call.get("args"))
+                if _decode_jsonish(args.get("Action")) != "kill":
+                    continue
+                task = _decode_jsonish(args.get("TaskId"))
+                if not isinstance(task, str):
+                    task = ""
+                command = commands.get(task, "<unknown command>")
+                diagnostics.append((redact_text(command) or "")[:_KILLED_COMMAND_LIMIT])
+                # A finish racing with a kill cannot admit a non-read command.
+                # Judge original invocation-owned bytes, never capped diagnostics.
+                if (
+                    blocked is not None
+                    and (reply is None or position < reply)
+                    and not _read_only_killed_command(command)
+                ):
+                    blocked.append(command)
+                if task in commands and (reply is None or position < reply) and event.get("status") == "DONE":
+                    kills[task] = position
+        if event.get("type") != "SYSTEM_MESSAGE" or not (message := _TASK_MESSAGE_HEADER_RE.match(content)):
+            continue
+        task = message.group("sender")
+        end = _TASK_ENDED_RE.match(message.group("first_line"))
+        # Last event wins; even a progress message removes the exception.
+        excused.discard(task)
+        if (
+            end is not None
+            and end.group("id") == task
+            and end.group("outcome") == "was canceled"
+            and task in kills
+            and kills[task] < position
+            and (reply is None or position < reply)
+            and _read_only_killed_command(commands[task])
+        ):
+            excused.add(task)
+        # A past kill cannot authorize a later external cancellation.
+        kills.pop(task, None)
+    return diagnostics, excused
+
+
 # DIAGNOSTIC ONLY, NEVER A GATE (#8502 r9). Natural language is unbounded, so
 # no vocabulary can prove a run finished or unfinished; the structural check in
 # ``_slice_completion_gap`` is the whole gate. The survey above makes it
@@ -627,6 +1030,39 @@ class AgyAdapter:
         plan: InvocationPlan | None = None,
         call_start_time: float | None = None,
     ) -> ParseResult:
+        """Keep killed-command evidence on every outcome, including early refusals."""
+        bound = _invocation_transcript(plan)
+        killed, _excused = _model_killed_tasks(bound.events) if bound is not None else ([], set())
+        result = self._parse_response(
+            stdout=stdout,
+            stderr=stderr,
+            returncode=returncode,
+            output_file=output_file,
+            plan=plan,
+            call_start_time=call_start_time,
+        )
+        if killed and not result.ok:
+            reason, _, detail = (result.stderr_excerpt or "").partition("\n")
+            blocked = [command for command in killed if not _read_only_killed_command(command)]
+            result = dataclasses.replace(
+                result, stderr_excerpt=f"{reason}\nkilled commands: {json.dumps(blocked or killed)}\n{detail}"[:500]
+            )
+        return dataclasses.replace(
+            result,
+            agy_killed_commands=killed,
+            agy_pre_model_failure=_pre_model_failure(plan, stdout, bound),
+        )
+
+    def _parse_response(
+        self,
+        *,
+        stdout: str,
+        stderr: str,
+        returncode: int,
+        output_file: Path | None,
+        plan: InvocationPlan | None = None,
+        call_start_time: float | None = None,
+    ) -> ParseResult:
         """Parse AGY output.
 
         The terminal stream result is the canonical final response. Tool-call telemetry is parsed
@@ -978,9 +1414,9 @@ def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str
     the run started before that reply must be closed by its own finish event,
     also positioned before it (``_open_work``); a finish written after the
     reply means the reply was written while the work still ran. A task that
-    ended without finishing (canceled, timed out, failed) never completed its
-    command, whatever the reply says next: ``AGY_BACKGROUND_TASK_CANCELED``
-    (#8502 r10), a reason that never auto-finalizes the run. This is the
+    ended without finishing (canceled, timed out, failed) fails unless it was
+    the model's own kill of an allowlisted read before this final reply
+    (#8771). All kills remain diagnostic evidence. This is the
     whole gate: what the reply says is never consulted (#8502 r9). stderr
     cannot stand in for the transcript: agy's "root agent idle; waiting up to
     … for N background task(s)" line is absent on some paths, so it can only
@@ -998,7 +1434,11 @@ def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str
     if final_reply.get("tool_calls") or not str(final_reply.get("content") or "").strip():
         return AGY_BACKGROUND_TASK_UNCONFIRMED
     started, _finished, unfinished, still_open = _open_work(work, reply=model_events[-1])
-    if unfinished:
+    blocked: list[str] = []
+    _killed, excused = _model_killed_tasks(work, reply=model_events[-1], blocked=blocked)
+    if blocked:
+        return AGY_BACKGROUND_TASK_CANCELED
+    if unfinished - (excused if final_reply.get("status") == "DONE" else set()):
         return AGY_BACKGROUND_TASK_CANCELED
     if still_open:
         return AGY_BACKGROUND_TASK_UNCONFIRMED
