@@ -126,8 +126,8 @@ class FakeDispatcher:
     def known(self, task_id: str) -> bool:
         return task_id in self.records
 
-    def expected_args_sha256(self, task_id, seat, prompt_path: Path) -> str:
-        return sha256_text(f"{task_id}|{seat.seat_id}|{prompt_path}")
+    def expected_args_sha256(self, task_id, seat, kind, prompt_path: Path) -> str:
+        return sha256_text(f"{task_id}|{seat.seat_id}|{kind}|{prompt_path}")
 
     def dispatch(self, task_id, seat, kind, prompt_path: Path, *, force_new: bool) -> str:
         if task_id in self.refuse:
@@ -139,7 +139,7 @@ class FakeDispatcher:
         conditions = {
             "effective_prompt_sha256": sha256_text(self._composed(prompt)),
             "prompt_blocks": ["rules_core", "worktree"],
-            "dispatch_args_sha256": self.expected_args_sha256(task_id, seat, prompt_path),
+            "dispatch_args_sha256": self.expected_args_sha256(task_id, seat, kind, prompt_path),
             "cwd": str(self.cwd),
             "mode": "read-only",
             "worktree_path": str(self.cwd),
@@ -277,7 +277,9 @@ def _dispatcher_python(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, python: 
             seen.update(kwargs)
 
     monkeypatch.setattr(cli, "DelegateDispatcher", Recorder)
-    args = cli.build_parser().parse_args(["run", "--set", "s", "--results", "r", "--variant", "none", *(["--python", python] if python else [])])
+    args = cli.build_parser().parse_args(
+        ["run", "--set", "s", "--results", "r", "--variant", "none", *(["--python", python] if python else [])]
+    )
     cli.make_dispatcher(args, tmp_path)
     return seen["python"]
 
@@ -309,7 +311,6 @@ def test_missing_project_interpreter_is_a_harness_error(monkeypatch, tmp_path: P
     monkeypatch.setattr(cli, "project_interpreter", missing)
     with pytest.raises(HarnessError, match="--python"):
         _dispatcher_python(monkeypatch, tmp_path, None)
-
 
 
 def test_run_dispatches_every_cell_and_resume_skips_accepted(env):
@@ -405,8 +406,25 @@ def test_dry_run_preflights_every_task_without_dispatch(env):
     assert cli.main([*env["run"], "--dry-run"]) == 0
     assert len(env["fake"].preflighted) == PLANNED and env["fake"].dispatched == []
     assert all(task_id.endswith("-preflight") for task_id in env["fake"].preflighted)
+    assert cli.main([*env["run"], "--dry-run"]) == 0  # a completed dry run can be repeated
+    assert len(env["fake"].preflighted) == PLANNED * 2 and env["fake"].dispatched == []
     assert cli.main(env["run"]) == 0  # a later real run dispatches every task
     assert len(env["fake"].dispatched) == PLANNED
+
+
+def test_manifest_frozen_under_old_dispatch_arguments_refuses_to_resume(env, capsys):
+    assert cli.main([*env["run"], "--dry-run"]) == 0
+    path = env["results"] / "manifest.json"
+    manifest = read_json(path)
+    frozen_args = manifest["frozen"]["dispatch_args_sha256"]
+    assert set(frozen_args) == {f"{kind}/{seat}" for kind in ("review", "writing") for seat in SEATS}
+    manifest["frozen"]["dispatch_args_sha256"] = {key: "0" * 64 for key in frozen_args}
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    capsys.readouterr()
+    assert cli.main([*env["run"], "--dry-run"]) == 2
+    err = capsys.readouterr().err
+    assert "different dispatch arguments" in err and "--run-tag" in err and "never mixed" in err
+    assert len(env["fake"].preflighted) == PLANNED and env["fake"].dispatched == []
 
 
 def test_malformed_output_counted_as_failed_items(env):

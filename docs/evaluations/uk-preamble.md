@@ -84,10 +84,20 @@ re-labels it as the harness set object; nothing is normalised or repaired.
   fixed instructions, schema and input. Variants of one task kind differ only
   in the preamble.
 - Every task goes through `scripts/delegate.py dispatch --mode read-only
-  --language-lane --rules-seat core --cwd <worker cwd>`, without `--worktree`,
-  `--lifecycle-file` or `--research-*` flags. Research pointers are
-  deliberately not requested: they are resolved per dispatch from a changing
-  registry and would add context outside the hashed prompt.
+  --language-lane --rules-seat core --cwd <worker cwd>` and
+  `--research-task-family` taken from the task kind (`ukrainian-review` for
+  review and judge, `ukrainian-authoring` for writing), for every seat. It
+  does not pass `--worktree`, `--lifecycle-file`, `--advisory-task` or any
+  other `--research-*` flag. The family classifies a Ukrainian task so a
+  Flash dispatch is not refused as a bounded fallback. Pointer-selecting
+  research flags stay off: those pointers are resolved per dispatch from a
+  changing registry. A record that still carries research state is not
+  accepted.
+- A dry run validates each dispatch with `--dry-run` on a distinct
+  `<task-id>-preflight` id and passes `--force-new`, so a repeated dry run
+  can archive the caller's own terminal `dry_run` record. A real dispatch
+  does not pass `--force-new` for that reason and still refuses to reuse an
+  existing task id.
 - Delegate still wraps the prompt. When the worker cwd lies in a registered
   Git worktree (the default cwd is this checkout, which is one when the
   harness runs from a dispatch worktree), delegate adds its worktree block
@@ -97,13 +107,17 @@ re-labels it as the harness set object; nothing is normalised or repaired.
   harness computes this composition with delegate's own functions, without
   spawning anything: the effective prompt, its prompt blocks, the recorded
   cwd and the worktree path for every prompt.
-- `run` freezes the frame delegate puts around the prompts (cwd, worktree
-  path, prompt blocks and the hashes of the text before and after the
-  prompt) in `manifest.json`. A plan whose prompts would be framed
-  differently is refused before anything is dispatched, for example a
-  preamble naming `curriculum/`, because its arm would then differ in more
-  than the preamble. A task whose frame has changed since the freeze is not
-  dispatched, and a resumed run whose frame changed is refused.
+- `run` freezes, in `manifest.json`, the frame delegate puts around the
+  prompts (cwd, worktree path, prompt blocks and the hashes of the text
+  before and after the prompt) and the dispatch argument hash of one task
+  per kind and seat. A plan whose prompts would be framed differently is
+  refused before anything is dispatched, for example a preamble naming
+  `curriculum/`, because its arm would then differ in more than the
+  preamble. A task whose frame has changed since the freeze is not
+  dispatched, and a resumed run whose frame or dispatch arguments changed
+  is refused. A manifest frozen under other arguments is not resumed; a new
+  `--run-tag` (with a new results directory) is the path, so argument sets
+  are never mixed.
 - An answer is accepted only when the task record shows the planned agent and
   model, no substitution, the rendered prompt as source prompt, delegate's
   expected composition of it (effective prompt hash, prompt blocks, cwd and
@@ -121,8 +135,8 @@ re-labels it as the harness set object; nothing is normalised or repaired.
   collected but not accepted (its dispatch-time checkout is unknown); failed or
   unaccepted tasks are re-dispatched only with `--retry-failed`. The complete
   plan (set, variants, templates, rules core, seats, repeats, kinds, item ids,
-  chunking, run tag, worker cwd, delegate's frame, protocol shortfalls, scoring
-  version) is frozen in
+  chunking, run tag, worker cwd, delegate's frame, dispatch argument hashes,
+  protocol shortfalls, scoring version) is frozen in
   `manifest.json`; a resumed run with any different term is refused, and
   `score` and `report` read the plan from the manifest.
 

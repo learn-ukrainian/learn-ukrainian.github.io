@@ -32,6 +32,7 @@ from .runner import (
     Executor,
     candidate_slots,
     composition_frame,
+    dispatch_args_frame,
     ensure_manifest,
     frozen_plan,
     load_manifest,
@@ -158,7 +159,9 @@ def _add_dispatch_args(sub: argparse.ArgumentParser) -> None:
         "--hard-timeout", type=_positive, default=3600, help="Per-task wall-clock limit in seconds. Default: 3600."
     )
     sub.add_argument(
-        "--python", default=None, help="Interpreter used to call scripts/delegate.py. Default: the shared project interpreter."
+        "--python",
+        default=None,
+        help="Interpreter used to call scripts/delegate.py. Default: the shared project interpreter.",
     )
 
 
@@ -334,6 +337,7 @@ def _cmd_run(args: argparse.Namespace) -> int:
     tasks = plan_candidate_tasks(eval_set, variants, plan, block)
     dispatcher = make_dispatcher(args, worker_cwd)
     plan["composition"] = composition_frame(dispatcher, tasks)
+    plan["dispatch_args_sha256"] = dispatch_args_frame(dispatcher, tasks, results)
     ensure_manifest(results, plan, args.set.resolve())
     executor = make_executor(args, results, worker_cwd, dispatcher, frame=plan["composition"])
     if args.dry_run:

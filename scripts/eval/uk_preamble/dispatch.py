@@ -6,18 +6,24 @@ Tests substitute a fake that implements the same ``Dispatcher`` protocol.
 
 Executed conditions. Only the preamble may differ between paired arms. The
 harness renders the rules core into every prompt and dispatches read-only
-with a fixed ``--cwd``, ``--rules-seat core`` and no ``--worktree``,
-``--lifecycle-file`` or ``--research-*`` flags (research pointers are resolved
-per dispatch from a changing registry, so they are never requested). Delegate
-still wraps the prompt: when ``--cwd`` lies in a registered worktree it adds
-its worktree block (whose sparse-checkout note depends on paths the prompt
-names) and then the rules core again in front of it. ``DelegateComposer``
-computes that composition with delegate's own functions, without spawning
-anything, so every task has an expected effective prompt hash, prompt
-blocks, cwd and worktree path. ``condition_problems`` accepts a task record
-only when it matches; the run freezes the frame around the prompt (see
-``composition_frame``) and refuses a plan whose arms would be framed
-differently.
+with a fixed ``--cwd`` and ``--rules-seat core``. The only research flag is
+``--research-task-family``, taken from the task kind (review and judge:
+``ukrainian-review``; writing: ``ukrainian-authoring``) for every seat. That
+classifies the task, so a Ukrainian review or writing dispatch is not refused
+as a bounded fallback. ``--worktree``, ``--lifecycle-file``, ``--advisory-task``
+and the pointer-selecting research flags are not passed: those pointers are
+resolved per dispatch from a changing registry. Delegate still wraps the
+prompt: when ``--cwd`` lies in a registered worktree it adds its worktree
+block (whose sparse-checkout note depends on paths the prompt names) and then
+the rules core again in front of it. ``DelegateComposer`` computes that
+composition with delegate's own functions, without spawning anything, so every
+task has an expected effective prompt hash, prompt blocks, cwd and worktree
+path. ``condition_problems`` accepts a task record only when it matches, and
+refuses one whose ``research`` field is set, so a live registry that attaches
+pointers because the family flag is present cannot add context to an accepted
+answer. The run freezes the frame around the prompt (see ``composition_frame``)
+and the argument hashes (see ``dispatch_args_frame``) and refuses a plan whose
+arms would be framed differently or whose arguments differ from the freeze.
 """
 
 from __future__ import annotations
@@ -53,6 +59,12 @@ SPAWN_TIMEOUT = 900  # seconds for dispatch, which may create a read-only worktr
 WAIT_MARGIN = 900  # seconds a wait may outlast the worker's hard timeout
 RULES_SEAT = "core"
 READ_ONLY = "read-only"
+# Classification is a property of the task kind, not the seat. Judge compares Ukrainian writing, so it is review.
+TASK_FAMILIES = {
+    "review": "ukrainian-review",
+    "writing": "ukrainian-authoring",
+    "judge": "ukrainian-review",
+}
 # Task-record fields that define what the worker ran under, besides the seat and the prompt.
 CONDITION_FIELDS = (
     "effective_prompt_sha256",
@@ -115,6 +127,14 @@ class TaskOutcome:
 
 class DispatchError(Exception):
     """The dispatcher refused or failed to start a task."""
+
+
+def task_family(kind: str) -> str:
+    """The ``--research-task-family`` for ``kind``. An unknown kind is refused, never dispatched unclassified."""
+    try:
+        return TASK_FAMILIES[kind]
+    except KeyError:
+        raise DispatchError(f"task kind {kind!r} has no Ukrainian task family") from None
 
 
 def frame(composition: dict[str, Any]) -> dict[str, Any]:
@@ -258,7 +278,7 @@ class Dispatcher(Protocol):
     def dispatch(self, task_id: str, seat: Seat, kind: str, prompt_path: Path, *, force_new: bool) -> str | None:
         """Start the task; returns the run nonce."""
 
-    def expected_args_sha256(self, task_id: str, seat: Seat, prompt_path: Path) -> str:
+    def expected_args_sha256(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> str:
         """The ``dispatch_args_sha256`` the task record must carry for the dispatch this dispatcher builds."""
 
     def compose(self, prompt: str) -> dict[str, Any]:
@@ -300,18 +320,19 @@ class DelegateDispatcher:
                 f"delegate {args[0]} {args[1] if len(args) > 1 else ''} timed out after {timeout}s"
             ) from exc
 
-    def _dispatch_args(self, task_id: str, seat: Seat, prompt_path: Path) -> list[str]:
+    def _dispatch_args(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> list[str]:
         args = ["dispatch", "--agent", seat.agent, "--model", seat.model, "--task-id", task_id]
         args += ["--prompt-file", str(prompt_path), "--mode", READ_ONLY, "--language-lane"]
         args += ["--cwd", str(self.cwd), "--rules-seat", RULES_SEAT, "--hard-timeout", str(self.hard_timeout)]
+        args += ["--research-task-family", task_family(kind)]
         if seat.effort:
             args += ["--effort", seat.effort]
         return args
 
-    def expected_args_sha256(self, task_id: str, seat: Seat, prompt_path: Path) -> str:
+    def expected_args_sha256(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> str:
         """Hash the arguments as delegate's own parser reads them (``--force-new`` is excluded by delegate)."""
         delegate = _delegate_module(self.delegate)
-        parsed = delegate.build_parser().parse_args(self._dispatch_args(task_id, seat, prompt_path))
+        parsed = delegate.build_parser().parse_args(self._dispatch_args(task_id, seat, kind, prompt_path))
         return delegate.dispatch_args_sha256(parsed)
 
     def compose(self, prompt: str) -> dict[str, Any]:
@@ -323,7 +344,7 @@ class DelegateDispatcher:
         return self._run("status", task_id).returncode == 0
 
     def dispatch(self, task_id: str, seat: Seat, kind: str, prompt_path: Path, *, force_new: bool) -> str | None:
-        args = self._dispatch_args(task_id, seat, prompt_path)
+        args = self._dispatch_args(task_id, seat, kind, prompt_path)
         if force_new:
             args.append("--force-new")
         proc = self._run(*args, timeout=SPAWN_TIMEOUT)
@@ -333,7 +354,18 @@ class DelegateDispatcher:
         return lines[-1] if len(lines) >= 2 else None
 
     def preflight(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> None:
-        proc = self._run(*self._dispatch_args(task_id, seat, prompt_path), "--dry-run", timeout=SPAWN_TIMEOUT)
+        """Validate the dispatch with ``--dry-run``.
+
+        A dry run leaves a terminal ``dry_run`` record, and that record does not
+        store ``dispatch_args_sha256`` (delegate returns before the hash is
+        written), so a later dry run cannot tell from the record that the
+        arguments are the same. ``--force-new`` re-validates the current
+        arguments and archives only the caller's own terminal record; delegate
+        excludes it from the argument hash. A real dispatch does not pass it,
+        and still refuses to reuse an existing task id.
+        """
+        args = [*self._dispatch_args(task_id, seat, kind, prompt_path), "--dry-run", "--force-new"]
+        proc = self._run(*args, timeout=SPAWN_TIMEOUT)
         if proc.returncode != 0:
             raise DispatchError(f"delegate dry-run {task_id} exited {proc.returncode}: {proc.stderr.strip()[-800:]}")
 

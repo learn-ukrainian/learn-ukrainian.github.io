@@ -37,7 +37,16 @@ FAKE_DELEGATE = textwrap.dedent(
     command, task_id = args[0], (args[args.index("--task-id") + 1] if "--task-id" in args else args[1])
     record = state_dir / f"{task_id}.json"
     if command == "dispatch":
+        if record.exists() and "--force-new" not in args:
+            status = json.loads(record.read_text()).get("status")
+            print(
+                f"task_id {task_id!r} is already {status}. Dispatch refuses to reuse a task-id in any state. "
+                "--force-new can archive only the caller's own terminal record+result.",
+                file=sys.stderr,
+            )
+            sys.exit(2)
         if "--dry-run" in args:
+            record.write_text(json.dumps({"status": "dry_run", "task_id": task_id}))
             print(task_id); print("dry-nonce"); sys.exit(0)
         prompt = Path(args[args.index("--prompt-file") + 1]).read_text()
         result = state_dir / f"{task_id}.result"
@@ -100,8 +109,11 @@ def test_dispatch_wait_attributes_the_answer_and_its_conditions(fake):
     for flag in ("--mode", "read-only", "--language-lane", "--cwd", str(dispatcher.cwd), "--rules-seat", "core"):
         assert flag in dispatch_args
     assert dispatch_args[dispatch_args.index("--effort") + 1] == "high"
-    # No flag that makes delegate append context outside the hashed prompt.
-    assert not any(arg.startswith("--research") or arg in {"--worktree", "--lifecycle-file"} for arg in dispatch_args)
+    # The family classifies the task. Pointer-selecting research flags, and flags that add other context, stay off.
+    assert dispatch_args[dispatch_args.index("--research-task-family") + 1] == "ukrainian-review"
+    assert [arg for arg in dispatch_args if arg.startswith("--research")] == ["--research-task-family"]
+    assert "--advisory-task" not in dispatch_args and "--force-new" not in dispatch_args
+    assert not any(arg in {"--worktree", "--lifecycle-file"} for arg in dispatch_args)
 
 
 def test_flash_dispatch_carries_no_effort(fake):
@@ -110,14 +122,24 @@ def test_flash_dispatch_carries_no_effort(fake):
     args = _calls(state)[-1]
     assert "--effort" not in args and "--force-new" in args
     assert args[args.index("--agent") + 1] == "agy"
+    assert args[args.index("--research-task-family") + 1] == "ukrainian-authoring"
 
 
 def test_expected_args_hash_is_the_delegate_parser_hash_of_the_built_dispatch(fake):
-    dispatcher, prompt, _ = fake
+    dispatcher, prompt, state = fake
     seat = SEATS["claude-opus-5-5"]
-    built = dispatcher._dispatch_args("t-opus", seat, prompt)
-    expected = delegate.dispatch_args_sha256(delegate.build_parser().parse_args(built))
-    assert dispatcher.expected_args_sha256("t-opus", seat, prompt) == expected
+    dispatcher.dispatch("t-opus", seat, "review", prompt, force_new=False)
+    sent = next(call for call in _calls(state) if call[0] == "dispatch")
+    expected = delegate.dispatch_args_sha256(delegate.build_parser().parse_args(sent))
+    assert dispatcher.expected_args_sha256("t-opus", seat, "review", prompt) == expected
+    built = dispatcher._dispatch_args("t-opus", seat, "review", prompt)
+    assert built == sent
+    writing = dispatcher._dispatch_args("t-opus", seat, "writing", prompt)
+    writing_hash = delegate.dispatch_args_sha256(delegate.build_parser().parse_args(writing))
+    assert writing_hash != expected  # the task family is part of the frozen argument hash
+    assert writing[writing.index("--research-task-family") + 1] == "ukrainian-authoring"
+    flash = dispatcher._dispatch_args("t-flash", SEATS["gemini-3.8-flash-high"], "review", prompt)
+    assert flash[flash.index("--research-task-family") + 1] == "ukrainian-review"
     with_extra = delegate.dispatch_args_sha256(delegate.build_parser().parse_args([*built, "--research-role", "x"]))
     assert with_extra != expected  # an extra flag would show in the recorded hash
     forced = delegate.dispatch_args_sha256(delegate.build_parser().parse_args([*built, "--force-new"]))
@@ -265,7 +287,7 @@ class SimulatedDelegate(DelegateDispatcher):
 
     def dispatch(self, task_id, seat, kind, prompt_path: Path, *, force_new: bool) -> str:
         prompt = prompt_path.read_text(encoding="utf-8")
-        record = _delegate_record(self.cwd, prompt, self.expected_args_sha256(task_id, seat, prompt_path))
+        record = _delegate_record(self.cwd, prompt, self.expected_args_sha256(task_id, seat, kind, prompt_path))
         response = json.dumps({"items": [{"id": "W1", "text": "Текст."}]}, ensure_ascii=False)
         conditions = {key: record.get(key) for key in dispatch_module.CONDITION_FIELDS}
         self.outcomes[task_id] = TaskOutcome(
@@ -343,10 +365,26 @@ def test_result_digest_mismatch_is_refused(fake):
         dispatcher.wait("t-tamper", "n1")
 
 
-def test_preflight_uses_dry_run(fake):
+def test_preflight_dry_run_is_idempotent_and_a_real_dispatch_still_refuses_reuse(fake):
     dispatcher, prompt, state = fake
-    dispatcher.preflight("t-pre", SEATS["claude-opus-5-5"], "judge", prompt)
-    assert "--dry-run" in _calls(state)[-1]
+    seat = SEATS["claude-opus-5-5"]
+    dispatcher.preflight("t-pre", seat, "judge", prompt)
+    dispatcher.preflight("t-pre", seat, "judge", prompt)  # the first dry run left a terminal dry_run record
+    dry_calls = [call for call in _calls(state) if "--dry-run" in call]
+    assert len(dry_calls) == 2
+    for call in dry_calls:
+        assert "--force-new" in call
+        assert call[call.index("--research-task-family") + 1] == "ukrainian-review"
+    dispatcher.dispatch("t-real", seat, "writing", prompt, force_new=False)
+    with pytest.raises(DispatchError, match="already"):
+        dispatcher.dispatch("t-real", seat, "writing", prompt, force_new=False)
+
+
+def test_unknown_kind_is_not_dispatched(fake):
+    dispatcher, prompt, state = fake
+    with pytest.raises(DispatchError, match="no Ukrainian task family"):
+        dispatcher.dispatch("t-essay", SEATS["claude-opus-5-5"], "essay", prompt, force_new=False)
+    assert not (state / "calls.jsonl").exists()
 
 
 def test_wait_timeout_becomes_dispatch_error(fake, monkeypatch: pytest.MonkeyPatch):

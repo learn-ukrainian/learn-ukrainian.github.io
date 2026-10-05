@@ -4,8 +4,8 @@ Results directory layout (private, outside every Git work tree, given on the com
 
     manifest.json              the frozen plan (set, variants, templates, rules core, seats,
                                repeats, kinds, item ids, chunking, run tag, worker cwd, delegate's
-                               composition frame, protocol shortfalls) and, from the first
-                               ``score --judge``, the frozen judge terms
+                               composition frame, dispatch argument hashes, protocol shortfalls)
+                               and, from the first ``score --judge``, the frozen judge terms
     prompts/<task_id>.md       exact prompt the worker received (rules core included)
     raw/<task_id>.json         attributed outcome, executed conditions and raw response
     raw/<task_id>.pending.json dispatched, outcome not collected yet (holds the dispatch-time
@@ -145,8 +145,8 @@ def frozen_plan(
 ) -> dict[str, Any]:
     """Every term that defines the run and its denominator; frozen in the manifest, read by score and report.
 
-    ``composition`` (delegate's frame around the prompts, see ``composition_frame``) is added once the
-    candidate prompts are rendered.
+    ``composition`` (delegate's frame around the prompts, see ``composition_frame``) and
+    ``dispatch_args_sha256`` (see ``dispatch_args_frame``) are added once the candidate prompts are planned.
     """
     return {
         "harness": HARNESS_VERSION,
@@ -180,6 +180,11 @@ def ensure_manifest(results: ResultsDir, frozen: dict[str, Any], set_path: Path)
             key for key in frozen.keys() | manifest["frozen"].keys() if frozen.get(key) != manifest["frozen"].get(key)
         )
         if changed:
+            if "dispatch_args_sha256" in changed:
+                raise HarnessError(
+                    "results directory was frozen under different dispatch arguments "
+                    f"({', '.join(changed)}). A new --run-tag is the path; argument sets are never mixed."
+                )
             raise HarnessError(f"results directory was frozen with different terms: {', '.join(changed)}")
         return manifest
     manifest = {"frozen": frozen, "set_path": str(set_path), "created_at": datetime.now(UTC).isoformat()}
@@ -235,6 +240,25 @@ def composition_frame(dispatcher: Dispatcher, tasks: Sequence[TaskSpec]) -> dict
     if first is None:
         raise HarnessError("the plan has no candidate tasks")
     return first[1]
+
+
+def dispatch_args_frame(dispatcher: Dispatcher, tasks: Sequence[TaskSpec], results: ResultsDir) -> dict[str, str]:
+    """Argument hash of the first task of each kind and seat.
+
+    Frozen on the manifest as ``dispatch_args_sha256``. The hash is delegate's hash of the
+    arguments this harness builds, including ``--research-task-family``, so a manifest frozen
+    under other arguments (or before tasks were classified) cannot be resumed. Task ids and
+    prompt paths are stable for one plan, and the same kind classifies every seat.
+    """
+    found: dict[str, str] = {}
+    for task in tasks:
+        key = f"{task.kind}/{task.seat.seat_id}"
+        if key in found:
+            continue
+        found[key] = dispatcher.expected_args_sha256(
+            task.task_id, task.seat, task.kind, prompt_path(results, task.task_id)
+        )
+    return found
 
 
 def candidate_slots(plan: dict[str, Any]) -> list[Slot]:
@@ -368,7 +392,7 @@ class Executor:
                 outcome.conditions,
                 expected=expected,
                 args_sha256=self.dispatcher.expected_args_sha256(
-                    task.task_id, task.seat, prompt_path(self.results, task.task_id)
+                    task.task_id, task.seat, task.kind, prompt_path(self.results, task.task_id)
                 ),
             )
         if workspace is None:
@@ -473,8 +497,10 @@ class Executor:
     def preflight(self, tasks: Sequence[TaskSpec]) -> RunSummary:
         """Write prompts and validate each dispatch with the delegate's dry run; nothing is spawned.
 
-        Each prompt's composition is computed and checked against the frozen frame first. The dry run leaves a terminal ``dry_run`` record, so it uses a distinct ``-preflight``
-        task id that never collides with the real task the next run resumes.
+        Each prompt's composition is computed and checked against the frozen frame first. The dry run
+        uses a distinct ``-preflight`` task id so it never collides with the real task. That id itself
+        is reused when a dry run is repeated; the dispatcher passes ``--force-new`` so delegate can
+        archive its own terminal ``dry_run`` record. A real dispatch does not.
         """
         summary = RunSummary()
         for task in tasks:
