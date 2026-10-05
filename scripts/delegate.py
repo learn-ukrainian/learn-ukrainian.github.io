@@ -14386,12 +14386,35 @@ def _adapter_model_rejection(agent: str, model: str) -> str | None:
         return None
     except Exception as exc:
         print(
-            f"⚠ model probe for {agent} could not verify {model}: {type(exc).__name__}",
+            f"⚠ model probe for {_registry_seat(entry)} could not verify {_catalog_model_label(model)}: "
+            f"{type(exc).__name__}",
             file=sys.stderr,
         )
         return None
     _discard_model_probe_output(plan)
     return None
+
+
+def _registry_seat(entry: object) -> str:
+    """The registry's name for ``entry`` (an alias's canonical seat), for log text (#9739).
+
+    Log text names seats and models as the registry and catalog spell them,
+    never as the caller passed them, which CodeQL's
+    ``py/clear-text-logging-sensitive-data`` flagged as secret data.
+    """
+    from agent_runtime.registry import AGENTS
+
+    return next((name for name, row in AGENTS.items() if row is entry), "an unregistered seat")
+
+
+def _catalog_model_label(model: str) -> str:
+    """The catalog id ``model`` names, for log text; an unknown model gets a fixed label (#9739)."""
+    from scripts.review.model_catalog import ModelCatalogError, canonical_model_id
+
+    try:
+        return canonical_model_id(model) or "an uncatalogued model"
+    except ModelCatalogError:
+        return "a model (catalog unavailable)"
 
 
 def _adapter_rejects_model(agent: str, model: str) -> bool:

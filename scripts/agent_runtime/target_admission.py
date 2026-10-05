@@ -660,7 +660,8 @@ def _slot_holder(
     except Exception as exc:
         _warn(
             warnings,
-            f"⚠️ channel-bridge: slot resolver failed for '{agent}' ({type(exc).__name__}: {exc}) — queued at identity",
+            f"⚠️ channel-bridge: slot resolver failed for the {_slot_label(agent, static_agents)} "
+            f"({type(exc).__name__}: {exc}) — queued at its identity",
         )
         return agent
     if res.has_holder:
@@ -668,9 +669,23 @@ def _slot_holder(
     if warn_if_unheld:
         _warn(
             warnings,
-            f"⚠️ channel-bridge: recipient slot '{agent}' has no live holder (queued at {res.queue_location})",
+            f"⚠️ channel-bridge: recipient {_slot_label(agent, static_agents, res.area_id)} has no live holder "
+            f"({res.reason or 'no-live-holder'}); queued in its channels DB delivery queue",
         )
     return agent
+
+
+def _slot_label(agent: str, static_agents: Collection[str], area_id: str | None = None) -> str:
+    """A slot's name for log text, built from trusted tables only (#9739).
+
+    The seat prefix comes from ``static_agents`` and the area from the fleet
+    taxonomy (``resolve_slot_holder``), so ``grok-infra`` reads ``grok slot in
+    area 'infra'``. The caller's slot string itself never reaches a log, which
+    CodeQL's ``py/clear-text-logging-sensitive-data`` flagged as secret data.
+    """
+    seat = max((name for name in static_agents if agent.startswith(f"{name}-")), key=len, default=None)
+    label = f"{seat} slot" if seat else "slot with an unregistered seat prefix"
+    return f"{label} in area '{area_id}'" if area_id else label
 
 
 def _warn(warnings: list[str] | None, message: str) -> None:

@@ -109,10 +109,37 @@ def test_slots_resolve_to_the_live_holder_or_keep_the_identity_with_a_warning(mo
         ("claude-folk",), mode=BRIDGE_MODE, slots=_channels.STATIC_VALID_AGENTS, warnings=warnings
     )
     assert (unheld.recipient, unheld.reason) == ("claude-folk", "explicit")
-    assert warnings and "has no live holder" in warnings[0]
+    assert warnings and "recipient claude slot has no live holder (no-live-holder)" in warnings[0]
+    # #9739: the caller's slot string never reaches the log text.
+    assert "claude-folk" not in warnings[0]
 
     (static,) = resolve_and_admit(("claude-infra",), mode=BRIDGE_MODE, slots=_channels.STATIC_VALID_AGENTS)
     assert static.recipient == "claude-infra"
+
+
+def test_slot_log_label_comes_from_the_seat_list_and_taxonomy_area():
+    # #9739: log text names a slot by its static seat prefix and taxonomy area.
+    seats = _channels.STATIC_VALID_AGENTS
+    assert target_admission._slot_label("grok-infra", seats, "infra") == "grok slot in area 'infra'"
+    assert target_admission._slot_label("claude-infra-x", seats) == "claude-infra slot"  # longest prefix
+    assert target_admission._slot_label("nobody-infra", seats) == "slot with an unregistered seat prefix"
+
+
+def test_slot_resolver_failure_warning_omits_the_caller_slot_string(monkeypatch, capsys):
+    def boom(_slot: str, **_kwargs: object) -> None:
+        raise RuntimeError("resolver down")
+
+    monkeypatch.setattr(slot_routing, "resolve_slot_holder", boom)
+    warnings: list[str] = []
+    (target,) = resolve_and_admit(
+        ("claude-folk",), mode=BRIDGE_MODE, slots=_channels.STATIC_VALID_AGENTS, warnings=warnings
+    )
+    assert target.recipient == "claude-folk"
+    expected = "slot resolver failed for the claude slot (RuntimeError: resolver down) — queued at its identity"
+    assert warnings and expected in warnings[0]
+    err = capsys.readouterr().err
+    assert expected in err
+    assert "claude-folk" not in err
 
 
 def test_compat_names_resolve_to_their_participant_and_unknown_names_fail():
