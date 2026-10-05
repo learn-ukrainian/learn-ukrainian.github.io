@@ -205,7 +205,7 @@ if [ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER3_PCT" ]; the
     "" \
     "STOP all current work THIS TURN. Do not dispatch, start new work, or start a continuation thread. Only:" \
     "1. Refresh your lane handoff file with current state, in-flight work, and next steps." \
-    "2. Follow the thread-rollover skill's prepare phase (references/prepare.md): run ${PREPARE_CMD}. This writes the gitignored rollover lease plus ${HANDOFF_FILE} and ${BOOTSTRAP_FILE}." \
+    "2. Follow the thread-rollover skill's prepare phase (references/prepare.md): run ${PREPARE_CMD}. This writes the gitignored rollover lease plus its handoff and bootstrap packet under .agent/thread-rollovers/." \
     "3. Tell the operator in one plain message that the handoff is ready and they should restart this session${RESTART_HINT}." \
     "4. END THE TURN and wait. Once the handoff is prepared, automatic compaction is blocked for this session; the restart replaces it.")
 elif [ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER2_PCT" ]; then

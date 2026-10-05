@@ -683,6 +683,62 @@ def test_order_tie_at_a_synced_upload_keeps_local_and_preserves_remote_for_recon
     assert not any("_bundle-reconcile" in name for name in members)
 
 
+@pytest.mark.parametrize("redirect", ["reconcile-dir", "upload-dir", "member-dir"])
+def test_reconcile_refuses_a_redirected_destination_and_writes_nothing(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    redirect: str,
+) -> None:
+    """Review-8511-b probe: a symlinked ``_bundle-reconcile`` (or a directory under
+    it) must not carry the preserved remote copy outside the lineage."""
+    source = tmp_path / "source"
+    target = tmp_path / "target"
+    source.mkdir()
+    target.mkdir()
+    state = _seed_state(source, thread_id="source-thread", generation=2)
+    bundle = tmp_path / "remote.tgz"
+    assert th.cmd_export_bundle(_export_args(source, state, bundle)) == 0
+    capsys.readouterr()
+    manifest, _ = th._bundle_extract(bundle.read_bytes())
+    _serve_api_bundle(monkeypatch, manifest, bundle.read_bytes(), upload_seq=65)
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+    capsys.readouterr()
+
+    lane_handoff = target / HANDOFF_PATH
+    lane_handoff.write_text("older handoff restored from a backup\n", encoding="utf-8")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    planted = outside / HANDOFF_PATH
+    planted.parent.mkdir(parents=True)
+    planted.write_text("outside file\n", encoding="utf-8")
+    reconcile = target / ".agent/thread-rollovers" / AGENT / state["lineage_id"] / th.BUNDLE_RECONCILE_DIR
+    if redirect == "reconcile-dir":
+        reconcile.symlink_to(outside, target_is_directory=True)
+    elif redirect == "upload-dir":
+        reconcile.mkdir()
+        (reconcile / "upload-65").symlink_to(outside, target_is_directory=True)
+    else:
+        first = Path(HANDOFF_PATH).parts[0]
+        (reconcile / "upload-65").mkdir(parents=True)
+        (reconcile / "upload-65" / first).symlink_to(outside / first, target_is_directory=True)
+    outside_before = sorted(p.relative_to(outside) for p in outside.rglob("*"))
+    lease = target / th.default_state_path(AGENT, state["lineage_id"])
+    lease_before = lease.read_bytes()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    result = json.loads(capsys.readouterr().out)
+
+    assert result["status"] == "reconcile_refused"
+    assert "nothing was written and the local copy was kept" in result["error"]
+    assert result["differing_members"] == [HANDOFF_PATH]
+    assert planted.read_text(encoding="utf-8") == "outside file\n"
+    assert sorted(p.relative_to(outside) for p in outside.rglob("*")) == outside_before
+    assert lane_handoff.read_text(encoding="utf-8") == "older handoff restored from a backup\n"
+    assert lease.read_bytes() == lease_before
+
+
 def test_order_tie_without_an_upload_sequence_still_refuses(
     tmp_path: Path,
     handoff_candidates: None,

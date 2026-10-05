@@ -122,6 +122,7 @@ def init_repo(
         "scripts/common/__init__.py",
         "scripts/common/git_context.py",
         "scripts/common/repo_root.py",
+        "scripts/common/safe_open.py",
         "scripts/lib/context_profiles.py",
         "scripts/lib/session_record.py",
         "scripts/config/context_profiles.yaml",

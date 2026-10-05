@@ -625,6 +625,8 @@ def test_context_monitor_operator_restart_tiers_hand_off_and_wait(tmp_path: Path
         " --terminal-goal <merge|deploy|certify> --context-percent 76"
     ) in emergency
     assert ".venv/bin/python" not in emergency
+    assert "handoff and bootstrap packet under .agent/thread-rollovers/" in emergency
+    assert "-thread-handoff.md" not in emergency  # prepare writes no lane-root handoff
     assert "Tell the operator in one plain message" in emergency
     assert "END THE TURN and wait" in emergency
     assert "Start the supported continuation" not in emergency
@@ -742,6 +744,22 @@ def test_context_monitor_prepare_command_runs_from_a_worktree_and_arms_the_guard
     argv = shlex.split(filled)
     # Keep the runtime state in this fixture's primary, not the real checkout.
     argv[2:2] = ["--repo-root", os.fspath(primary)]
+
+    def precompact() -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [os.fspath(PROJECT_ROOT / "agents_extensions/shared/hooks/context-rollover-guard.sh")],
+            input=json.dumps({"session_id": "status-session", "hook_event_name": "PreCompact", "trigger": "auto"}),
+            text=True,
+            capture_output=True,
+            check=False,
+            cwd=worktree,
+            env=env,
+            timeout=60,
+        )
+
+    before = precompact()
+    assert (before.returncode, before.stderr) == (0, "")  # nothing prepared yet: compaction runs
+
     prepare_env = {key: value for key, value in env.items() if not key.startswith("LEARN_UKRAINIAN_SESSION")}
     prepare_env["LU_MONITOR_LOOPBACK"] = "http://127.0.0.1:9"
     prepared = subprocess.run(
@@ -755,16 +773,7 @@ def test_context_monitor_prepare_command_runs_from_a_worktree_and_arms_the_guard
     assert lease["replacement"]["status"] == "pending_start"
     assert lease["replacement"]["title_transition"]["harness"] == "claude-code"
 
-    guard = subprocess.run(
-        [os.fspath(PROJECT_ROOT / "agents_extensions/shared/hooks/context-rollover-guard.sh")],
-        input=json.dumps({"session_id": "status-session", "hook_event_name": "PreCompact", "trigger": "auto"}),
-        text=True,
-        capture_output=True,
-        check=False,
-        cwd=worktree,
-        env=env,
-        timeout=60,
-    )
+    guard = precompact()
     assert guard.returncode == 2, guard.stderr
     assert "its rollover handoff is prepared" in guard.stderr
 
@@ -775,7 +784,7 @@ def _start_together(
     """Start <count> copies that all wait on <barrier>, then release them at once,
     so the race is real rather than staggered by process start-up."""
     barrier.unlink(missing_ok=True)
-    wait = f"while [ ! -e {shlex.quote(os.fspath(barrier))} ]; do sleep 0.005; done; exec \"$@\""
+    wait = f'while [ ! -e {shlex.quote(os.fspath(barrier))} ]; do sleep 0.005; done; exec "$@"'
     bash = shutil.which("bash")
     assert bash
     processes = [

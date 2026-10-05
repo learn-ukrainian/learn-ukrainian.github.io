@@ -57,30 +57,32 @@ context_effective_rollover_mode() {
   fi
 }
 
-# True when the canonical rollover state holds a prepared, not yet started
-# replacement whose recorded active thread is <session id> and whose handoff
-# file exists: the usable handoff `thread_handoff.py prepare` writes
-# (.agent/thread-rollovers/<agent>/<lineage>/lease.json, replacement status
-# pending_start, handoff_path relative to the canonical root).
+# True only when the canonical rollover validator accepts a prepared, not yet
+# started replacement whose active thread is <session id> and whose reserved
+# handoff is a readable, non-empty regular file: `thread_handoff.py
+# prepared-handoff` (validate_live_lease plus an O_NOFOLLOW read of the
+# lease's reserved packet path). Runs <project dir>'s copy with the shared
+# project interpreter under a timeout of CONTEXT_ROLLOVER_VALIDATOR_TIMEOUT
+# seconds (default and maximum 3, plus a 1-second kill grace, so it ends
+# before the hook's registered 5-second timeout; the check itself takes well
+# under a second). A missing interpreter, `timeout` or script, a timeout, or
+# any validator error returns false: the PreCompact guard then lets
+# compaction run, which is better than failing the request.
 context_session_has_prepared_rollover() {
-  local root="$1" session_id="$2" lease handoff
-  local rollovers="$root/.agent/thread-rollovers"
-  [ -n "$session_id" ] && [ -d "$rollovers" ] && [ ! -L "$rollovers" ] || return 1
-  for lease in "$rollovers"/*/*/lease.json; do
-    [ -f "$lease" ] && [ ! -L "$lease" ] || continue
-    handoff=$(jq -r --arg sid "$session_id" '
-      select(type == "object"
-        and (.active | type) == "object" and .active.thread_id == $sid
-        and (.replacement | type) == "object" and .replacement.status == "pending_start")
-      | .replacement.handoff_path // empty' "$lease" 2>/dev/null) || continue
-    case "$handoff" in
-      .agent/thread-rollovers/*) ;;
-      *) continue ;;
-    esac
-    case "$handoff" in *..*) continue ;; esac
-    [ -s "$root/$handoff" ] && [ ! -L "$root/$handoff" ] && return 0
-  done
-  return 1
+  local root="$1" session_id="$2" project_dir="$3" interpreter script seconds output
+  [ -n "$session_id" ] && [ -d "$root/.agent/thread-rollovers" ] || return 1
+  command -v timeout >/dev/null 2>&1 || return 1
+  script="$project_dir/scripts/orchestration/thread_handoff.py"
+  [ -f "$script" ] || return 1
+  # shellcheck source=scripts/lib/project_interpreter.sh
+  source "$project_dir/scripts/lib/project_interpreter.sh" 2>/dev/null || return 1
+  interpreter=$(project_interpreter_resolve "$project_dir" 2>/dev/null) || return 1
+  seconds="${CONTEXT_ROLLOVER_VALIDATOR_TIMEOUT:-3}"
+  case "$seconds" in ''|*[!0-9]*) seconds=3 ;; esac
+  [ "$seconds" -ge 1 ] && [ "$seconds" -le 3 ] || seconds=3
+  output=$(timeout -k 1 "$seconds" "$interpreter" "$script" --repo-root "$root" \
+    prepared-handoff --active-thread-id "$session_id" 2>/dev/null) || return 1
+  [ "$(printf '%s' "$output" | jq -r '.status // empty' 2>/dev/null)" = "prepared" ]
 }
 
 # Claim <tier> for this session at <tokens> under an exclusive lock, so

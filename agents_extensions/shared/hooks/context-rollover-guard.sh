@@ -12,11 +12,12 @@
 # one short reminder so it does not restart large work.
 # PreCompact: automatic compaction is blocked with exit code 2 ("Blocks
 # compaction" in the Claude Code hooks reference, since 2.1.105) only while
-# the canonical rollover state holds a prepared handoff for THIS session. A
-# block fails the request that triggered compaction, so without a usable
-# handoff compaction runs: compaction is better than a failed request. Manual
-# /compact is never blocked. Claude Code discards a PreCompact hook's
-# systemMessage, so the reason goes to stderr.
+# the canonical rollover validator (thread_handoff.py prepared-handoff) accepts
+# a prepared handoff for THIS session. A block fails the request that
+# triggered compaction, so without a usable handoff - or when the validator
+# fails or times out - compaction runs: compaction is better than a failed
+# request. Manual /compact is never blocked. Claude Code discards a PreCompact
+# hook's systemMessage, so the reason goes to stderr.
 
 # Same harness and context exits as context-monitor.sh.
 if [ "${SESSION_HANDOFF_AGENT:-}" = "codex" ] \
@@ -55,7 +56,7 @@ case "$EVENT" in
   PreCompact)
     TRIGGER=$(printf '%s' "$INPUT" | jq -r '.trigger // empty' 2>/dev/null)
     [ "$TRIGGER" = "auto" ] || exit 0
-    context_session_has_prepared_rollover "$(context_canonical_root "$PROJECT_DIR")" "$SESSION_ID" || exit 0
+    context_session_has_prepared_rollover "$(context_canonical_root "$PROJECT_DIR")" "$SESSION_ID" "$PROJECT_DIR" || exit 0
     printf '%s\n' "Automatic compaction is blocked for this session (rollover_mode operator_restart, #8511): its rollover handoff is prepared, so restart the session instead. Manual /compact remains available." >&2
     exit 2
     ;;

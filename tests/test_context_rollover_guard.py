@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
+import shlex
 import subprocess
+import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
+
+from scripts.orchestration import thread_handoff as th
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 HOOKS = PROJECT_ROOT / "agents_extensions/shared/hooks"
@@ -19,8 +23,11 @@ SESSION = "guard-session"
 
 
 def _project(tmp_path: Path, *, rollover_mode: str | None = "operator_restart") -> tuple[Path, Path]:
+    """A checkout whose scripts are this repository's and whose interpreter runs this test's Python."""
     project = tmp_path / "project"
     project.mkdir()
+    (project / "scripts").symlink_to(PROJECT_ROOT / "scripts", target_is_directory=True)
+    _interpreter(project, f'exec {shlex.quote(sys.executable)} "$@"')
     record: dict[str, object] = {
         "schema_version": 1,
         "session_id": SESSION,
@@ -32,6 +39,13 @@ def _project(tmp_path: Path, *, rollover_mode: str | None = "operator_restart") 
     record_path = tmp_path / "record.json"
     record_path.write_text(json.dumps(record), encoding="utf-8")
     return project, record_path
+
+
+def _interpreter(project: Path, body: str) -> None:
+    python = project / ".venv/bin/python"
+    python.parent.mkdir(parents=True, exist_ok=True)
+    python.write_text(f"#!/bin/sh\n{body}\n", encoding="utf-8")
+    python.chmod(0o755)
 
 
 def _tier_state(project: Path, tier: int, tokens: int) -> None:
@@ -49,26 +63,37 @@ def _prepared_rollover(
     agent: str = "claude",
 ) -> Path:
     """A lease as ``thread_handoff.py prepare`` leaves it under the canonical root."""
-    lineage = "lineage-" + hashlib.sha256(f"{agent}\0{thread_id}".encode()).hexdigest()[:24]
-    handoff = f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/rollover-1/handoff.md"
-    lease = project / ".agent/thread-rollovers" / agent / lineage / "lease.json"
-    lease.parent.mkdir(parents=True, exist_ok=True)
-    lease.write_text(
-        json.dumps(
-            {
-                "schema_version": 2,
-                "agent": agent,
-                "lineage_id": lineage,
-                "active": {"thread_id": thread_id, "generation": 0},
-                "replacement": {"status": status, "rollover_id": "rollover-1", "handoff_path": handoff},
-            }
-        ),
-        encoding="utf-8",
+    lineage_id = th.lineage_id_for(agent, thread_id)
+    state = th.prepare_state(
+        {
+            "schema_version": th.SCHEMA_VERSION,
+            "lineage_id": lineage_id,
+            "active": {"thread_id": thread_id, "generation": 0, "lineage_id": lineage_id},
+        },
+        agent=agent,
+        now=datetime(2026, 10, 5, 12, 0, tzinfo=UTC),
+        active_thread_id=thread_id,
+        active_automation_id=None,
+        context_percent=75.0,
+        force_new_replacement=False,
+        harness="claude-code",
     )
+    state["replacement"]["source_checkout"] = {"full_head": "a" * 40, "clean": True}
+    lease = project / th.default_state_path(agent, lineage_id)
+    th.write_rollover_state(lease, project, state)
+    if status != "pending_start":  # a later lifecycle state, written as-is
+        state["replacement"]["status"] = status
+        lease.write_text(json.dumps(state), encoding="utf-8")
     if write_handoff:
-        (project / handoff).parent.mkdir(parents=True, exist_ok=True)
-        (project / handoff).write_text("# Handoff\n", encoding="utf-8")
+        handoff = project / state["replacement"]["handoff_path"]
+        handoff.parent.mkdir(parents=True, exist_ok=True)
+        handoff.write_text("# Handoff\n", encoding="utf-8")
     return lease
+
+
+def _handoff(lease: Path) -> Path:
+    project = lease.parents[4]
+    return project / json.loads(lease.read_text(encoding="utf-8"))["replacement"]["handoff_path"]
 
 
 def _transcript(tmp_path: Path, tokens: int) -> Path:
@@ -255,6 +280,109 @@ def test_precompact_auto_runs_without_a_usable_prepared_handoff_for_this_session
     project, record_path = _project(tmp_path)
     _tier_state(project, 3, 760_000)  # a tier announcement alone is not a handoff
     _prepared_rollover(project, **rollover)
+
+    _assert_compaction_runs(_run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"}))
+
+
+def _unreadable(handoff: Path) -> None:
+    if os.geteuid() == 0:
+        pytest.skip("root reads mode-000 files")
+    handoff.chmod(0o000)
+
+
+def _directory(handoff: Path) -> None:
+    handoff.unlink()
+    handoff.mkdir()
+
+
+def _empty(handoff: Path) -> None:
+    handoff.write_text("", encoding="utf-8")
+
+
+def _symlinked_file(handoff: Path) -> None:
+    elsewhere = handoff.parents[5] / "elsewhere.md"
+    elsewhere.write_text("# Somebody else's handoff\n", encoding="utf-8")
+    handoff.unlink()
+    handoff.symlink_to(elsewhere)
+
+
+def _symlinked_packet_dir(handoff: Path) -> None:
+    packet = handoff.parent
+    moved = packet.parents[3] / "moved-packet"
+    packet.rename(moved)
+    packet.symlink_to(moved, target_is_directory=True)
+
+
+@pytest.mark.parametrize("spoil", [_unreadable, _directory, _empty, _symlinked_file, _symlinked_packet_dir])
+def test_precompact_auto_runs_when_the_prepared_handoff_is_unusable(tmp_path: Path, spoil) -> None:
+    """Review-8511-b probe 1: a prepared lease whose handoff cannot be read is not a handoff."""
+    project, record_path = _project(tmp_path)
+    handoff = _handoff(_prepared_rollover(project))
+    spoil(handoff)
+
+    _assert_compaction_runs(_run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"}))
+
+
+def test_precompact_auto_runs_with_a_borrowed_foreign_packet(tmp_path: Path) -> None:
+    """Review-8511-b probe 2: this session's lease pointing at another session's packet.
+    The canonical validator rejects it (not the reserved packet path), so compaction runs."""
+    project, record_path = _project(tmp_path)
+    foreign_handoff = json.loads(_prepared_rollover(project, thread_id="another-session").read_text())["replacement"][
+        "handoff_path"
+    ]
+    own = _prepared_rollover(project, write_handoff=False)
+    state = json.loads(own.read_text(encoding="utf-8"))
+    state["replacement"]["handoff_path"] = foreign_handoff
+    own.write_text(json.dumps(state), encoding="utf-8")
+    assert (project / foreign_handoff).read_text(encoding="utf-8") == "# Handoff\n"
+
+    _assert_compaction_runs(_run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"}))
+    validator = subprocess.run(
+        [
+            sys.executable,
+            os.fspath(PROJECT_ROOT / "scripts/orchestration/thread_handoff.py"),
+            "--repo-root",
+            os.fspath(project),
+            "prepared-handoff",
+            "--active-thread-id",
+            SESSION,
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=60,
+    )
+    assert validator.returncode == 1, validator.stderr
+    assert json.loads(validator.stdout)["rejected"][0]["error"] == (
+        "replacement handoff_path is missing, forged, or not the reserved packet path"
+    )
+
+
+def test_precompact_auto_runs_when_the_validator_times_out(tmp_path: Path) -> None:
+    project, record_path = _project(tmp_path)
+    _prepared_rollover(project)
+    _interpreter(project, "sleep 20")
+
+    completed = _run(
+        project,
+        record_path,
+        {"hook_event_name": "PreCompact", "trigger": "auto"},
+        CONTEXT_ROLLOVER_VALIDATOR_TIMEOUT="1",
+    )
+
+    _assert_compaction_runs(completed)
+
+
+@pytest.mark.parametrize("spoil", ["no-interpreter", "failing-interpreter", "no-scripts"])
+def test_precompact_auto_runs_when_the_validator_cannot_run(tmp_path: Path, spoil: str) -> None:
+    project, record_path = _project(tmp_path)
+    _prepared_rollover(project)
+    if spoil == "no-interpreter":
+        (project / ".venv/bin/python").unlink()
+    elif spoil == "failing-interpreter":
+        _interpreter(project, 'echo \'{"status": "prepared"}\'; exit 3')
+    else:
+        (project / "scripts").unlink()
 
     _assert_compaction_runs(_run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"}))
 
