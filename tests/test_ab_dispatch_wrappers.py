@@ -68,6 +68,28 @@ def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(
     assert not Path(captured_prompt["path"]).exists()
 
 
+@pytest.mark.parametrize(
+    ("owned", "expected"),
+    [
+        ("- `start-codex-driver.sh`\n", ["start-codex-driver.sh"]),
+        ("`pyproject.toml` and `Makefile`\n", ["pyproject.toml", "Makefile"]),
+        ("- `scripts/a.py`\n- `.gitignore`\n- `pyproject.toml`\n", ["scripts/a.py", ".gitignore", "pyproject.toml"]),
+        ("`pyproject.toml`, not a `word`, `--flag`, `..` or `.`\n", ["pyproject.toml"]),
+    ],
+    ids=["root-file-only", "root-files-with-and-without-a-dot", "mixed-scope", "words-are-not-paths"],
+)
+def test_dispatch_fix_keeps_repository_root_files_in_its_scope(monkeypatch, tmp_path, owned, expected):
+    """#9739: a root-level owned file (valid for delegate) is part of the derived scope, never silently dropped."""
+    monkeypatch.setattr(wrappers, "REPO_ROOT", tmp_path)
+    (tmp_path / "Makefile").write_text("all:\n", encoding="utf-8")
+    brief = tmp_path / "brief.md"
+    brief.write_text(f"# Fix\n\n## Owned paths\n\n{owned}\n## Verify\n`tests/x.py`\n", encoding="utf-8")
+
+    command = wrappers.build_dispatch_fix_command("9739", brief)
+
+    assert [command[i + 1] for i, item in enumerate(command) if item == "--owned-path"] == expected
+
+
 def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypatch, tmp_path):
     state_dir = _patch_state_dir(monkeypatch, tmp_path)
     lease_root = tmp_path / "learn-ukrainian" / "task-1701"

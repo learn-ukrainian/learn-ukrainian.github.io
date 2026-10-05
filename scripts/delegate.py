@@ -10784,7 +10784,6 @@ def _dispatch(
         if write_intent_error:
             print(write_intent_error, file=sys.stderr)
             return 2
-    state_path = _state_path(task_id)
     silence_timeout = getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S)
     initial_response_timeout = getattr(
         args,
@@ -10896,6 +10895,8 @@ def _dispatch(
     except _AuthoringReviewRefused as exc:
         print(exc.render(), file=sys.stderr)
         return 2
+    # The task directory is created only once the writer is admitted (#9739).
+    state_path = _state_path(task_id)
 
     if getattr(args, "preflight_triage", False):
         preflight_rc = _run_preflight_triage(args, worktree_arg=worktree_arg)
@@ -11271,7 +11272,7 @@ def _dispatch(
                 print(exc.render(), file=sys.stderr)
                 return 2
             if moved:
-                print(moved, file=sys.stderr)
+                print(moved.render(), file=sys.stderr)
                 return 2
             if fleet_repo.default:
                 resolved_worktree_base_sha = _resolve_worktree_base_sha(
@@ -11333,15 +11334,15 @@ def _dispatch(
             authoring_admission, repo_root=target_repo_root, resolved=resolved_worktree_base_sha
         )
         if moved:
-            print(moved, file=sys.stderr)
+            print(moved.render(), file=sys.stderr)
             return 2
 
     # The base resolved under the worktree lock must be the commit the Kimi gate read.
     if kimi_start_commit is not None and worktree_arg and resolved_worktree_base_sha != kimi_start_commit:
         from scripts.agent_runtime.kimi_admission import format_refusal
 
-        moved = f"the worktree base {resolved_worktree_base_sha} is not the commit {kimi_start_commit} its owned paths were read at"
-        print(f"❌ {format_refusal(dispatch_agent, [moved + '; retry the dispatch'])}", file=sys.stderr)
+        drift = f"the worktree base {resolved_worktree_base_sha} is not the commit {kimi_start_commit} its owned paths were read at"
+        print(f"❌ {format_refusal(dispatch_agent, [drift + '; retry the dispatch'])}", file=sys.stderr)
         return 2
 
     # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
@@ -11749,7 +11750,7 @@ def _dispatch(
             if moved:
                 stdout_fd.close()
                 stderr_fd.close()
-                print(moved, file=sys.stderr)
+                print(moved.render(), file=sys.stderr)
                 return 2
             worktree_path = resolved_wt
             worktree_branch = _current_branch(resolved_wt)
@@ -12949,10 +12950,14 @@ AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN = "AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN"
 AUTHORING_REVIEW_SCOPE_UNKNOWN = "AUTHORING_REVIEW_SCOPE_UNKNOWN"
 AUTHORING_REVIEW_TARGET_MOVED = "AUTHORING_REVIEW_TARGET_MOVED"
 AUTHORING_REVIEW_CATALOG_UNKNOWN = "AUTHORING_REVIEW_CATALOG_UNKNOWN"
+AUTHORING_REVIEW_REPOSITORY_MISMATCH = "AUTHORING_REVIEW_REPOSITORY_MISMATCH"
 AUTHORING_REVIEW_STATE_KEY = "authoring_review_admission"
 # A write dispatch that names no planned review risk is checked at the strictest
 # risk; path inference may raise a declared risk, never lower it.
 AUTHORING_REVIEW_DEFAULT_RISK = "critical"
+# The default repository's default branch: the base of every dispatch PR, and so
+# the base the verdict recorder enumerates authors from unless --pr names another.
+AUTHORING_REVIEW_DEFAULT_BASE = "main"
 
 
 class _AuthoringReviewRefused(Exception):
@@ -12991,6 +12996,32 @@ def _authoring_target_head(
     if kind == "existing-branch" and branch:
         return pinned_head or _resolve_sha(repo_root, f"{_origin_base_ref(branch)}^{{commit}}")
     return None
+
+
+def _authoring_review_base(args: argparse.Namespace, *, repository: str) -> str | None:
+    """The branch a writer's work will be reviewed against; None when it cannot be determined.
+
+    That is the base the verdict recorder reads (``pr_review_facts``): the PR's
+    base for ``--pr``, otherwise the repository's default branch. A caller's
+    ``--base`` never enters, so it cannot shrink the enumerated authors or the
+    protected scope.
+    """
+    pr_number = getattr(args, "pr", None)
+    if pr_number is None:
+        return AUTHORING_REVIEW_DEFAULT_BASE
+    try:
+        proc = subprocess.run(
+            ["gh", "pr", "view", str(int(pr_number)), "--repo", repository, "--json", "baseRefName"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GH_CLI_TIMEOUT_S,
+        )
+        payload = json.loads(proc.stdout) if proc.returncode == 0 else None
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        return None
+    base = payload.get("baseRefName") if isinstance(payload, dict) else None
+    return base.strip() if isinstance(base, str) and base.strip() else None
 
 
 def _git_common_dir_identity(path: Path) -> Path | None:
@@ -13045,12 +13076,15 @@ def _authoring_review_admission(
     scope come from ``record_cf_verdict.collect_branch_review_facts``, the
     calculation the verdict recorder uses. The check is structural (A2):
     catalog qualification, families, protected seats and the risk floor; it
-    records reviewer availability as unknown. Reads only, never fetches; runs
-    before any task record, archival, forwarding, rebase, worktree or
-    provider. Returns None for read-only dispatches and for sibling
-    repositories (``--repo``, or a ``--cwd`` checkout whose git common
-    directory is another repository's); raises
-    ``_AuthoringReviewRefused``, which no override flag bypasses.
+    records reviewer availability as unknown. Authors are enumerated from the
+    review base (:func:`_authoring_review_base`), never from ``--base``. Reads
+    only, never fetches (a ``--pr`` base is read from GitHub); runs before any
+    task record, archival, forwarding, rebase, worktree or
+    provider. Returns None for read-only dispatches and for checkouts of a
+    sibling repository (``--repo``, or a ``--cwd`` checkout whose git common
+    directory is another repository's); a ``--repo`` whose ``--cwd`` belongs
+    to a different repository is refused. Raises ``_AuthoringReviewRefused``,
+    which no override flag bypasses.
     """
     if args.mode not in _WRITE_CAPABLE_MODES:
         return None
@@ -13078,8 +13112,19 @@ def _authoring_review_admission(
     cwd_only = (
         validated_cwd is not None and validated_worktree is None and worktree_arg != "auto" and not requested_branch
     )
+    # Applicability follows the repository the writer's checkout belongs to,
+    # never the --repo label alone: protected seats and risk floors describe the
+    # default repository's own paths.
+    if not default_repo and cwd_only:
+        checkout_repo = _git_common_dir_identity(validated_cwd)
+        if checkout_repo is None or checkout_repo != _git_common_dir_identity(target_repo_root):
+            raise _AuthoringReviewRefused(
+                AUTHORING_REVIEW_REPOSITORY_MISMATCH,
+                f"--cwd is not a checkout of --repo {repository} (git common directory differs or is unknown); "
+                "pass a --cwd worktree of that repository, or drop --repo for a checkout of this one.",
+                record,
+            )
     if not default_repo or (cwd_only and _is_other_repository(validated_cwd, target_repo_root)):
-        # Protected seats and risk floors describe this repository's own paths.
         record.update({"applicable": False, "reason": "sibling repository"})
         return None
     try:
@@ -13109,18 +13154,29 @@ def _authoring_review_admission(
         kind, checkout = "existing-branch", None
     else:
         kind, checkout = "new-branch", None
-    base_ref = _origin_base_ref(getattr(args, "base", None) or "main")
+    record.update({"target": kind, "branch": requested_branch})
+    # Authorship is enumerated from the base the verdict recorder will use, never
+    # from --base, which only names where a new branch starts (A2).
+    review_base = _authoring_review_base(args, repository=repository)
+    if review_base is None:
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+            f"the base of PR #{getattr(args, 'pr', None)} is unavailable, so the branch's authors are unknown; retry.",
+            record,
+        )
+    base_ref = _origin_base_ref(review_base)
+    record["review_base"] = base_ref
     base_tip = _resolve_sha(target_repo_root, f"{base_ref}^{{commit}}")
-    head = (
-        base_tip
-        if kind == "new-branch"
-        else _authoring_target_head(
+    if kind == "new-branch":
+        start_ref = _origin_base_ref(getattr(args, "base", None) or AUTHORING_REVIEW_DEFAULT_BASE)
+        head = _resolve_sha(target_repo_root, f"{start_ref}^{{commit}}")
+    else:
+        start_ref = requested_branch or str(checkout)
+        head = _authoring_target_head(
             kind=kind, checkout=checkout, branch=requested_branch, pinned_head=pinned_head, repo_root=target_repo_root
         )
-    )
-    record.update({"target": kind, "branch": requested_branch})
     if not base_tip or not head:
-        missing = base_ref if not base_tip else (requested_branch or str(checkout))
+        missing = base_ref if not base_tip else start_ref
         raise _AuthoringReviewRefused(
             AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
             f"{missing} is not resolvable locally, so the branch's authors are unknown; fetch origin and retry.",
@@ -13207,8 +13263,8 @@ def _authoring_recheck_under_lock(
     *,
     repo_root: Path,
     readmit: Callable[[], _AuthoringAdmission | None],
-) -> tuple[_AuthoringAdmission | None, str | None]:
-    """A3 under the worktree lock: the admission that now applies, and refusal text if its head moved.
+) -> tuple[_AuthoringAdmission | None, _AuthoringReviewRefused | None]:
+    """A3 under the worktree lock: the admission that now applies, and the refusal if its head moved.
 
     A removal holding the lock may take the admitted checkout while dispatch
     waits (#8610); dispatch then creates a fresh worktree, so admission is run
@@ -13228,8 +13284,8 @@ def _authoring_recheck_under_lock(
 
 def _authoring_target_moved(
     admission: _AuthoringAdmission | None, *, repo_root: Path, resolved: str | None = None
-) -> str | None:
-    """A3: refusal text when the admitted branch head moved; None when unchanged.
+) -> _AuthoringReviewRefused | None:
+    """A3: the refusal, structured like the initial ones, when the admitted branch head moved; None when unchanged.
 
     Read under the worktree lock before any rebase. ``resolved`` is the head the
     worktree helpers settled on, compared for an attached ``--branch``; the base
@@ -13250,10 +13306,11 @@ def _authoring_target_moved(
     )
     if current == admission.head_sha:
         return None
-    return (
-        f"❌ {AUTHORING_REVIEW_TARGET_MOVED}: the branch head moved after authoring-review admission "
-        f"(admitted {admission.head_sha[:12]}, now {(current or 'missing')[:12]}); retry the dispatch so its "
-        "authors are checked again. Branch preserved; provider_calls=0."
+    return _AuthoringReviewRefused(
+        AUTHORING_REVIEW_TARGET_MOVED,
+        f"the branch head moved after authoring-review admission (admitted {admission.head_sha[:12]}, "
+        f"now {(current or 'missing')[:12]}); retry the dispatch so its authors are checked again.",
+        {**admission.record, "current_head_sha": current},
     )
 
 

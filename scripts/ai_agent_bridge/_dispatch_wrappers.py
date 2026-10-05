@@ -165,8 +165,8 @@ def brief_owned_paths(text: str) -> tuple[str, ...]:
     """Repo-relative paths listed under the brief's ``Owned paths`` heading.
 
     Paths are the backticked tokens of that section, or the lines of a fenced
-    block in it. Absolute paths and ``..`` segments are dropped; ``delegate.py``
-    validates the rest.
+    block in it, including repository-root files. Absolute paths, ``..``
+    segments and bare words are dropped; ``delegate.py`` validates the rest.
     """
     match = _OWNED_PATHS_HEADING.search(text)
     if match is None:
@@ -181,12 +181,23 @@ def brief_owned_paths(text: str) -> tuple[str, ...]:
     tokens = re.findall(r"`([^`\n]+)`", section.replace("```", "\n"))
     for block in re.findall(r"```[^\n]*\n(.*?)```", section, flags=re.S):
         tokens.extend(line.strip() for line in block.splitlines())
-    paths = [
-        token
-        for token in (raw.strip() for raw in tokens)
-        if _BRIEF_PATH.fullmatch(token) and "/" in token and not token.startswith("/") and ".." not in token.split("/")
-    ]
+    paths = [token for token in (raw.strip() for raw in tokens) if _is_brief_owned_path(token)]
     return tuple(dict.fromkeys(paths))
+
+
+def _is_brief_owned_path(token: str) -> bool:
+    """Whether a backticked token is a repo-relative path rather than a word.
+
+    A token with a ``/`` is a path. A token without one is a repository-root
+    file (``pyproject.toml``, ``start-codex-driver.sh``, ``.gitignore``) when it
+    has a name with a dot, or names a file at the repository root
+    (``Makefile``); a bare word such as ``codex`` is not a path.
+    """
+    if not _BRIEF_PATH.fullmatch(token) or token.startswith(("/", "-")) or ".." in token.split("/"):
+        return False
+    if "/" in token:
+        return True
+    return ("." in token and token.strip(".") != "") or (REPO_ROOT / token).is_file()
 
 
 def build_dispatch_fix_command(task_id: str, prompt_file: Path) -> list[str]:

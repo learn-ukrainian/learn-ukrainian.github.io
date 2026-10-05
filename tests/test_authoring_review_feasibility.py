@@ -601,6 +601,62 @@ def test_mixed_branch_refuses_a_writer_and_no_flag_overrides_it(boundary, capsys
     assert receipt["existing_families"] == ["anthropic", "openai"] and receipt["risk"] == "critical"
 
 
+@pytest.mark.parametrize(
+    "target",
+    [("--branch", "feature", "--base", "feature"), ("--worktree", "--base", "feature")],
+    ids=["attach-with-base-equal-to-branch", "new-branch-started-from-a-mixed-branch"],
+)
+def test_caller_base_never_erases_existing_authors(boundary, capsys, repo, tasks, target):
+    """Held-out probe of the review of record: --base equal to the branch used to enumerate no commits, admitting
+    an OpenAI reviewer the recorder (which reads the PR base) then rejects. Authors come from the review base."""
+    repo.commit(OPUS)
+    repo.commit(SOL)
+    repo.publish()
+    receipt = assert_refused(
+        boundary,
+        capsys,
+        repo,
+        tasks,
+        boundary(*target, "--owned-path", CLAUDE_ADAPTER),
+        delegate.AUTHORING_REVIEW_NO_ROUTE,
+    )
+    assert receipt["existing_families"] == ["anthropic", "openai"]
+    assert receipt["review_base"] == "origin/main"
+    assert receipt["base_tip_sha"] == repo.sha("origin/main")
+
+
+def test_review_base_is_the_pr_base_or_the_default_branch_never_the_caller_base(monkeypatch):
+    calls: list[list[str]] = []
+
+    def gh(command, **_kwargs):
+        calls.append(command)
+        return subprocess.CompletedProcess(command, 0, stdout=json.dumps({"baseRefName": "release"}))
+
+    monkeypatch.setattr(delegate.subprocess, "run", gh)
+    namespace = __import__("argparse").Namespace
+    assert delegate._authoring_review_base(namespace(base="feature"), repository=REPOSITORY) == "main"
+    assert calls == []
+    assert delegate._authoring_review_base(namespace(base="feature", pr=12), repository=REPOSITORY) == "release"
+    assert calls[-1][:5] == ["gh", "pr", "view", "12", "--repo"]
+
+    monkeypatch.setattr(delegate.subprocess, "run", lambda command, **_kw: subprocess.CompletedProcess(command, 1))
+    assert delegate._authoring_review_base(namespace(base="feature", pr=12), repository=REPOSITORY) is None
+
+
+def test_undeterminable_review_base_is_unknown_authorship(boundary, capsys, repo, tasks, monkeypatch):
+    repo.commit(OPUS)
+    repo.publish()
+    monkeypatch.setattr(delegate, "_authoring_review_base", lambda *_args, **_kwargs: None)
+    assert_refused(
+        boundary,
+        capsys,
+        repo,
+        tasks,
+        boundary("--branch", "feature", "--owned-path", "docs/a.md"),
+        delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+    )
+
+
 def test_adding_openai_to_an_anthropic_branch_refuses(boundary, capsys, repo, tasks):
     repo.commit(OPUS)
     repo.publish()
@@ -766,6 +822,18 @@ def test_dry_run_refusal_writes_nothing(boundary, capsys, repo, tasks):
     )
 
 
+def assert_moved_refusal(rc, capsys, tasks):
+    """A6: a moved head is refused like the initial refusals: exit 2, one JSON receipt line, no task record."""
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    assert f"❌ {delegate.AUTHORING_REVIEW_TARGET_MOVED}:" in err and "provider_calls=0" in err
+    receipt = json.loads(err.strip().splitlines()[-1])[delegate.AUTHORING_REVIEW_STATE_KEY]
+    assert receipt["refusal"] == delegate.AUTHORING_REVIEW_TARGET_MOVED
+    assert receipt["reviewer_availability"] == "unknown"
+    assert list(tasks.rglob("*")) == []
+    return receipt
+
+
 def test_reused_worktree_head_moving_after_admission_refuses_before_any_rebase(
     boundary, capsys, repo, tasks, monkeypatch
 ):
@@ -776,8 +844,8 @@ def test_reused_worktree_head_moving_after_admission_refuses_before_any_rebase(
 
     with _admitted_host(monkeypatch, on_admission=lambda: moved.commit(SOL, message="another writer")):
         rc, _ = boundary("--worktree", "--owned-path", "docs/a.md", "--dry-run")
-    err = capsys.readouterr().err
-    assert rc == 2 and f"❌ {delegate.AUTHORING_REVIEW_TARGET_MOVED}:" in err
+    receipt = assert_moved_refusal(rc, capsys, tasks)
+    assert receipt["current_head_sha"] == moved.sha("HEAD") != receipt["head_sha"]
     assert boundary.calls == []  # the rebase helper never ran
 
 
@@ -788,6 +856,5 @@ def test_attached_branch_fetched_past_its_admitted_head_refuses(boundary, capsys
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: pushed)
     with _admitted_host(monkeypatch):
         rc, _ = boundary("--branch", "feature", "--owned-path", "docs/a.md", "--dry-run")
-    err = capsys.readouterr().err
-    assert rc == 2 and f"❌ {delegate.AUTHORING_REVIEW_TARGET_MOVED}:" in err
-    assert not (tasks / "writer-1.json").exists()
+    receipt = assert_moved_refusal(rc, capsys, tasks)
+    assert receipt["current_head_sha"] == pushed != receipt["head_sha"]

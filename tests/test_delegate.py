@@ -11596,6 +11596,44 @@ def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(tmp_tasks_d
         assert admission["head_sha"] == delegate._resolve_sha(primary_wt)
 
 
+@pytest.mark.parametrize("checkout", ["primary", "sibling"])
+def test_sibling_repo_with_a_cwd_is_decided_by_the_checkouts_repository(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, checkout
+):
+    """#9739: --repo names a sibling, but authoring admission follows the --cwd checkout's git common directory: a
+    primary-repository worktree is refused as inconsistent (never exempted), a worktree of that sibling is exempt."""
+    from scripts.orchestration import fleet_repos
+
+    primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
+    primary_wt = primary / ".worktrees" / "dispatch" / "codex" / "task-1"
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(primary if checkout == "primary" else sibling)
+    real_resolve = fleet_repos.resolve_fleet_repo
+    sibling_repo = fleet_repos.FleetRepo(key="sib", github="acme/sibling", local_name="sibling", role="private-product")
+    monkeypatch.setattr(
+        fleet_repos,
+        "resolve_fleet_repo",
+        lambda key, **kw: (sibling_repo, sibling) if key == "sib" else real_resolve(key, **kw),
+    )
+    _patch_worker_popen(monkeypatch)
+    task_id = f"repo-cwd-{checkout}"
+    cwd = primary_wt if checkout == "primary" else sibling_wt
+
+    rc = delegate.cmd_dispatch(_write_args(task_id=task_id, cwd=str(cwd), repo="sib"))
+
+    err = capsys.readouterr().err
+    if checkout == "primary":
+        assert rc == 2, err
+        assert f"❌ {delegate.AUTHORING_REVIEW_REPOSITORY_MISMATCH}:" in err and "--repo acme/sibling" in err
+        assert not delegate._state_path_no_create(task_id).exists()
+    else:
+        assert rc == 0, err
+        state = delegate._read_state(delegate._state_path_no_create(task_id))
+        assert state is not None and Path(state["worktree_path"]) == sibling_wt
+        assert delegate.AUTHORING_REVIEW_STATE_KEY not in state
+
+
 def _malformed_dispatch(case: str, tmp_path: Path, monkeypatch) -> tuple[argparse.Namespace, str]:
     """A write dispatch that one cheap argument or checkout check refuses, and that refusal's text."""
     if case == "different-git-root":
@@ -11684,7 +11722,8 @@ def test_authoring_admission_follows_the_cheap_checks_and_precedes_every_side_ef
         "_resolve_primary_integrity_error",
         "_authoring_review_admission",
     ]
-    assert not delegate._state_path("admission-order").exists()
+    # Observed without calling _state_path(), which itself creates the task directory.
+    assert not tmp_tasks_dir.exists()
     assert not (primary / ".worktrees" / "dispatch" / "codex" / "admission-order").exists()
 
 
@@ -13603,8 +13642,8 @@ def test_authoring_recheck_readmits_a_vanished_checkout_and_refuses_a_moved_one(
         assert (current, moved, readmissions) == (admission, None, [])
     elif change == "moved":
         assert current is admission and readmissions == []
-        assert moved is not None and f"❌ {delegate.AUTHORING_REVIEW_TARGET_MOVED}:" in moved
-        assert f"admitted {admitted_head[:12]}, now {delegate._resolve_sha(checkout)[:12]}" in moved
+        assert moved is not None and moved.code == delegate.AUTHORING_REVIEW_TARGET_MOVED
+        assert f"admitted {admitted_head[:12]}, now {delegate._resolve_sha(checkout)[:12]}" in moved.render()
     else:
         assert (current, moved, readmissions) == (fresh, None, [change])
 
