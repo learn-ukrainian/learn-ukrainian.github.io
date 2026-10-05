@@ -224,8 +224,8 @@ _TASK_FINISHED_OUTCOME = "finished"
 _SUBAGENT_TOOL = "invoke_subagent"
 _MODEL_EVENT_TYPES = frozenset({"PLANNER_RESPONSE", "GENERIC", "MCP_TOOL"})
 
-# Deliberately single-command only: shell composition and executable read
-# options do not prove a read-only search. Unknown syntax fails closed (#8771).
+# Only parsed read stages and the approved stderr/failure suffixes are safe.
+# Executable read options and unknown shell syntax fail closed (#8771).
 _KILL_READ_COMMANDS = frozenset({"grep", "rg", "find", "ls", "cat", "head", "tail", "sed", "git"})
 _KILL_EXECUTABLE_OPTIONS = frozenset(
     {
@@ -251,13 +251,73 @@ _KILLED_COMMAND_LIMIT = 500
 
 
 def _read_only_killed_command(command: str) -> bool:
-    """Recognize only non-executing search/listing/read commands, never shell code."""
-    if not command or re.search(r"[\x00-\x1f\x7f$`;&|<>()]", command):
+    """Parse quote-aware shell operators, then validate every read-only stage."""
+    if not command or re.search(r"[\x00-\x1f\x7f$`()]", command):
+        return False
+    # Locate operators without treating quoted/escaped pipes as shell syntax.
+    operators: list[tuple[int, int, str]] = []
+    quote = ""
+    escaped = False
+    index = 0
+    while index < len(command):
+        char = command[index]
+        if escaped:
+            escaped = False
+        elif char == "\\" and quote != "'":
+            escaped = True
+        elif quote:
+            if char == quote:
+                quote = ""
+        elif char in "\"'":
+            quote = char
+        elif char in "|&;<>":
+            end = index + 1
+            while end < len(command) and command[end] in "|&;<>":
+                end += 1
+            operators.append((index, end, command[index:end]))
+            index = end - 1
+        index += 1
+    if quote or escaped:
         return False
     try:
-        argv = shlex.split(command)
+        if operators and operators[-1][2] == "||":
+            start, end, _ = operators.pop()
+            if shlex.split(command[end:]) != ["true"]:
+                return False
+            command = command[:start].rstrip()
+        # The only redirect is an adjacent fd 2 followed by the null device.
+        if operators and operators[-1][2] == ">":
+            start, end, _ = operators.pop()
+            if (
+                start < 2
+                or command[start - 1] != "2"
+                or not command[start - 2].isspace()
+                or shlex.split(command[end:]) != ["/dev/null"]
+            ):
+                return False
+            command = command[: start - 1].rstrip()
+        if any(operator != "|" for _, _, operator in operators):
+            return False
+        starts = [0, *(end for _, end, _ in operators)]
+        ends = [*(start for start, _, _ in operators), len(command)]
+        return all(
+            _read_only_killed_argv(shlex.split(command[start:end]), allow_xargs=position > 0)
+            for position, (start, end) in enumerate(zip(starts, ends, strict=True))
+        )
     except ValueError:
         return False
+
+
+def _read_only_killed_argv(argv: list[str], *, allow_xargs: bool = False) -> bool:
+    """Validate a read stage, including an explicitly named safe xargs target."""
+    if allow_xargs and argv and argv[0] == "xargs":
+        target = 1
+        while target < len(argv) and argv[target] in {"-r", "--no-run-if-empty"}:
+            target += 1
+        if target < len(argv) and argv[target] == "--":
+            target += 1
+        # No replacement, NUL mode, shell target, default command or recursion.
+        return _read_only_killed_argv(argv[target:])
     if not argv or argv[0] not in _KILL_READ_COMMANDS:
         return False
     if any(arg.split("=", 1)[0] in _KILL_EXECUTABLE_OPTIONS for arg in argv[1:]):
@@ -287,7 +347,49 @@ def _read_only_killed_command(command: str) -> bool:
     return not (argv[0] == "rg" and any(arg.startswith("--pre") for arg in argv[1:]))
 
 
-def _model_killed_tasks(events: list[dict[str, Any]], *, reply: int | None = None) -> tuple[list[str], set[str]]:
+def _pre_model_failure(plan: InvocationPlan | None, stdout: str, bound: _TranscriptSlice | None) -> bool:
+    """Prove this attempt has no prompt/model events; unreadable evidence refuses."""
+    if plan is None or not (log_file := plan.env_overrides.get(_AGY_LOG_ENV)):
+        return False
+    # Only empty output or a lone provider error result can precede a model.
+    if stdout.strip():
+        try:
+            events = [json.loads(line) for line in stdout.splitlines() if line.strip()]
+        except ValueError:
+            return False
+        if len(events) != 1 or not isinstance(events[0], dict) or events[0].get("event") != "result":
+            return False
+        result = events[0].get("result")
+        if (
+            not isinstance(result, dict)
+            or result.get("status") != "ERROR"
+            or result.get("response")
+            or "structured_output" in result
+            or result.get("usage")
+        ):
+            return False
+    if bound is not None:
+        return not bound.unreadable_lines and not any(
+            event.get("type") == "USER_INPUT" or _is_model_event(event) or event.get("source") == "MODEL"
+            for event in bound.events
+        )
+    baseline = plan.metadata.get(_TRANSCRIPT_BASELINE_KEY)
+    if isinstance(baseline, Mapping):
+        # A missing/unreadable resumed slice cannot prove that nothing ran.
+        return False
+    try:
+        log = safe_read_attempt_file(Path(log_file), trusted_root=Path(plan.metadata.get("log_read_root", "/")))
+    except FileNotFoundError:
+        return True  # Fresh attempt failed before creating a conversation log.
+    except (OSError, AttemptReadError):
+        return False
+    # A named conversation with an unavailable slice is unknown, not pre-model.
+    return re.search(r"conversation|sending message", log.decode("utf-8", errors="replace"), re.IGNORECASE) is None
+
+
+def _model_killed_tasks(
+    events: list[dict[str, Any]], *, reply: int | None = None, blocked: list[str] | None = None
+) -> tuple[list[str], set[str]]:
     """Retain every model kill and identify reads canceled after that kill, before the reply."""
     commands: dict[str, str] = {}
     kills: dict[str, int] = {}
@@ -313,6 +415,14 @@ def _model_killed_tasks(events: list[dict[str, Any]], *, reply: int | None = Non
                     task = ""
                 command = commands.get(task, "<unknown command>")
                 diagnostics.append((redact_text(command) or "")[:_KILLED_COMMAND_LIMIT])
+                # A finish racing with a kill cannot admit a non-read command.
+                # Judge original invocation-owned bytes, never capped diagnostics.
+                if (
+                    blocked is not None
+                    and (reply is None or position < reply)
+                    and not _read_only_killed_command(command)
+                ):
+                    blocked.append(command)
                 if task in commands and (reply is None or position < reply) and event.get("status") == "DONE":
                     kills[task] = position
         if event.get("type") != "SYSTEM_MESSAGE" or not (message := _TASK_MESSAGE_HEADER_RE.match(content)):
@@ -764,7 +874,11 @@ class AgyAdapter:
             result = dataclasses.replace(
                 result, stderr_excerpt=f"{reason}\nkilled commands: {json.dumps(blocked or killed)}\n{detail}"[:500]
             )
-        return dataclasses.replace(result, agy_killed_commands=killed)
+        return dataclasses.replace(
+            result,
+            agy_killed_commands=killed,
+            agy_pre_model_failure=_pre_model_failure(plan, stdout, bound),
+        )
 
     def _parse_response(
         self,
@@ -1147,7 +1261,10 @@ def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str
     if final_reply.get("tool_calls") or not str(final_reply.get("content") or "").strip():
         return AGY_BACKGROUND_TASK_UNCONFIRMED
     started, _finished, unfinished, still_open = _open_work(work, reply=model_events[-1])
-    _killed, excused = _model_killed_tasks(work, reply=model_events[-1])
+    blocked: list[str] = []
+    _killed, excused = _model_killed_tasks(work, reply=model_events[-1], blocked=blocked)
+    if blocked:
+        return AGY_BACKGROUND_TASK_CANCELED
     if unfinished - (excused if final_reply.get("status") == "DONE" else set()):
         return AGY_BACKGROUND_TASK_CANCELED
     if still_open:

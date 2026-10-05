@@ -13,7 +13,7 @@ from scripts.agent_runtime.result import ParseResult
 ELIGIBILITY_503 = "Eligibility check failed: UNAVAILABLE (code 503)"
 
 
-def _outcome(*, ok=False, stderr=ELIGIBILITY_503, reason=None, kill=None, commands=(), duration=2):
+def _outcome(*, pre_model=True, ok=False, stderr=ELIGIBILITY_503, reason=None, kill=None, commands=(), duration=2):
     return runner._ExecutionOutcome(
         parse=ParseResult(
             ok=ok,
@@ -21,6 +21,7 @@ def _outcome(*, ok=False, stderr=ELIGIBILITY_503, reason=None, kill=None, comman
             stderr_excerpt=reason,
             provider_error_text="",
             agy_killed_commands=list(commands),
+            agy_pre_model_failure=pre_model,
         ),
         duration_s=duration,
         returncode=0 if ok else 1,
@@ -31,7 +32,7 @@ def _outcome(*, ok=False, stderr=ELIGIBILITY_503, reason=None, kill=None, comman
     )
 
 
-def _execute(tmp_path, monkeypatch, outcomes, *, agent="agy", times=(0, 2, 2)):
+def _execute(tmp_path, monkeypatch, outcomes, *, agent="agy", mode="read-only", times=(0, 2, 2)):
     once = Mock(side_effect=outcomes)
     monkeypatch.setattr(runner, "_execute_invocation_once", once)
     monkeypatch.setattr(runner.time, "monotonic", Mock(side_effect=times))
@@ -43,7 +44,7 @@ def _execute(tmp_path, monkeypatch, outcomes, *, agent="agy", times=(0, 2, 2)):
         adapter=adapter,
         plan=first_plan,
         prompt="prompt",
-        mode="read-only",
+        mode=mode,
         cwd=tmp_path,
         model="gemini-3.8-flash-high",
         task_id="fixture-task",
@@ -68,6 +69,8 @@ def test_agy_eligibility_503_retries_once_then_returns_outcome(tmp_path, monkeyp
     assert once.call_args_list[1].kwargs["hard_timeout"] == 28
     assert result.parse.ok is retry_ok
     assert result.duration_s == 5
+    assert result.parse.agy_attempt_count == 2
+    assert result.parse.agy_retry_reason == "pre_model_eligibility_503"
     adapter.build_invocation.assert_called_once()
 
 
@@ -129,6 +132,9 @@ def test_agy_retry_does_not_extend_exhausted_timeout(tmp_path, monkeypatch):
 def test_agy_killed_commands_reach_result_and_persisted_usage_record(tmp_path, monkeypatch, ok):
     commands = ["git grep needle", "pytest -q"] if not ok else ["git grep needle"]
     execution = _outcome(ok=ok, stderr="", commands=commands)
+    execution = replace(
+        execution, parse=replace(execution.parse, agy_attempt_count=2, agy_retry_reason="pre_model_eligibility_503")
+    )
     adapter = SimpleNamespace(
         default_model="gemini-3.8-flash-high",
         supported_modes={"read-only"},
@@ -154,6 +160,8 @@ def test_agy_killed_commands_reach_result_and_persisted_usage_record(tmp_path, m
     assert result.agy_killed_commands == commands
     assert result.usage_record["agy_killed_commands"] == commands
     assert write.call_args.args[0]["agy_killed_commands"] == commands
+    assert write.call_args.args[0]["agy_attempt_count"] == 2
+    assert write.call_args.args[0]["agy_retry_reason"] == "pre_model_eligibility_503"
 
 
 def test_agy_retry_plan_build_counts_against_original_timeout(tmp_path, monkeypatch):
@@ -173,15 +181,20 @@ def test_agy_retry_wrapper_leaves_other_adapters_clock_and_plan_untouched(tmp_pa
 
 
 @pytest.mark.parametrize("ok", [True, False])
-def test_agy_killed_commands_survive_gemini_ladder_result(tmp_path, monkeypatch, ok):
+@pytest.mark.parametrize("has_kills", [True, False], ids=["kills", "no-kills"])
+def test_agy_killed_commands_survive_gemini_ladder_result(tmp_path, monkeypatch, ok, has_kills):
     from ai_llm.fallback import PRIMARY_GEMINI_MODEL
 
     adapter = SimpleNamespace(build_invocation=lambda **_: InvocationPlan(cmd=["fake-cli"], cwd=tmp_path))
-    commands = ["git grep needle"] if ok else ["pytest -q"]
+    commands = (["git grep needle"] if ok else ["pytest -q"]) if has_kills else []
 
     def execute(**kwargs):
         is_agy = kwargs["agent_name"] == "agy"
         outcome = _outcome(ok=ok and is_agy, stderr="", commands=commands if is_agy else ())
+        if is_agy:
+            outcome = replace(
+                outcome, parse=replace(outcome.parse, agy_attempt_count=2, agy_retry_reason="pre_model_eligibility_503")
+            )
         if not is_agy:
             outcome = replace(outcome, parse=replace(outcome.parse, rate_limited=True, stderr_excerpt="429 quota"))
         return outcome
@@ -219,3 +232,59 @@ def test_agy_killed_commands_survive_gemini_ladder_result(tmp_path, monkeypatch,
     assert result.agy_killed_commands == commands
     assert result.usage_record["agy_killed_commands"] == commands
     assert write.call_args.args[0]["agy_killed_commands"] == commands
+    assert result.usage_record["agy_attempt_count"] == 2
+    assert result.usage_record["agy_retry_reason"] == "pre_model_eligibility_503"
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+@pytest.mark.parametrize("pre_model", [True, False], ids=["pre-model", "model-started"])
+def test_agy_retry_requires_pre_model_proof_in_every_mode(tmp_path, monkeypatch, mode, pre_model):
+    first = _outcome(pre_model=pre_model)
+    outcomes = [first, _outcome(ok=True)] if pre_model else [first]
+    result, once, *_ = _execute(tmp_path, monkeypatch, outcomes, mode=mode)
+    assert once.call_count == (2 if pre_model else 1)
+    assert result.parse.agy_attempt_count == (2 if pre_model else 1)
+
+
+@pytest.mark.parametrize("provider_record", [False, True])
+def test_agy_retry_rejects_503_from_an_unrelated_error(tmp_path, monkeypatch, provider_record):
+    errors = "API error (attempt 1): UNAVAILABLE (code 503)\nEligibility check failed: PERMISSION_DENIED (code 403)"
+    first = _outcome(stderr="" if provider_record else errors)
+    if provider_record:
+        first = replace(first, parse=replace(first.parse, provider_error_text=errors))
+    result, once, *_ = _execute(tmp_path, monkeypatch, [first])
+    assert result is first
+    assert once.call_count == 1
+
+
+def test_agy_usage_record_caps_encoded_killed_commands(tmp_path):
+    import json
+
+    commands = ["git grep " + "ї" * 800 for _ in range(100)]
+    record = runner._build_usage_record(
+        agent="agy",
+        entrypoint="delegate",
+        model="gemini-3.8-flash-high",
+        mode="read-only",
+        task_id="fixture",
+        cwd=tmp_path,
+        session_id=None,
+        duration_s=5,
+        input_chars=10,
+        output_chars=10,
+        returncode=0,
+        outcome="ok",
+        rate_limited=False,
+        stalled=False,
+        stderr_excerpt="ї" * 500,
+        tokens=None,
+        agy_killed_commands=commands,
+        agy_attempt_count=2,
+        agy_retry_reason="pre_model_eligibility_503",
+    )
+    assert len((json.dumps(record, ensure_ascii=False, default=str) + "\n").encode("utf-8")) <= 4096
+    kept = record["agy_killed_commands"]
+    assert kept and all(len(command) <= 500 for command in kept)
+    assert kept[-1] == f"{100 - len(kept) + 1} more"
+    assert record["agy_attempt_count"] == 2
+    assert record["agy_retry_reason"] == "pre_model_eligibility_503"

@@ -85,6 +85,10 @@ class ParseResult:
     provider_error_text: str | None = None
     # Redacted, bounded command text for every model-owned AGY kill (#8771).
     agy_killed_commands: list[str] = field(default_factory=list)
+    # Adapter-owned absence of prompt/model events; unknown is not retryable.
+    agy_pre_model_failure: bool = False
+    agy_attempt_count: int = 1
+    agy_retry_reason: str | None = None
 
 
 @dataclass(frozen=True)

@@ -77,6 +77,15 @@ def _parse(tmp_path, events, *, stderr="", envelope=None, returncode=0):
         "sed -n '1,20p' scripts/config.py",
         "head -20 scripts/config.py",
         "tail -20 scripts/config.py",
+        "rg needle scripts 2>/dev/null",
+        "rg needle scripts || true",
+        "rg needle scripts 2>/dev/null || true",
+        "find scripts -name '*.py' | xargs grep -l needle",
+        "git grep -E 'a|b'",
+        "rg 'a|b' scripts | grep needle",
+        "find scripts -name '*.py' | xargs -r grep -l needle",
+        "find scripts -name '*.py' | xargs -- grep -l needle",
+        "cat '|'",
     ],
 )
 def test_agy_model_killed_read_with_complete_reply_is_accepted(tmp_path, command):
@@ -320,3 +329,142 @@ def test_agy_executable_option_abbreviations_and_multiline_commands_fail(tmp_pat
     )
     assert not result.ok
     assert result.agy_killed_commands == [command]
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "find scripts | xargs rm",
+        "grep needle scripts | sh",
+        "find scripts | xargs -I{} grep needle {}",
+        "find scripts | xargs -i grep needle",
+        "find scripts | xargs --replace={} grep needle",
+        "find scripts | xargs -0 grep needle",
+        "find scripts | xargs --null grep needle",
+        "find scripts | xargs",
+        "find scripts | xargs bash",
+        "find scripts | xargs xargs grep needle",
+        "cat file > output",
+        "cat file; rm x",
+        "cat file && true",
+        "cat file 2 > /dev/null",
+        "cat file 2>/other",
+        "cat file 1>/dev/null",
+        "cat file 2>>/dev/null",
+        "cat file 2>/dev/null | rm x",
+        "cat file || true; rm x",
+        "cat file || false",
+        "cat file |",
+        "| cat file",
+        "cat file ||",
+        "cat file | git show --output=file",
+        "cat file | xargs git grep -Oless",
+        "cat file | sed -n '1p;w output'",
+        "cat file | xargs rg --pre=writer",
+        "cat file | xargs sed -i '1p'",
+    ],
+)
+def test_agy_parsed_composition_rejects_writers_and_other_shell_syntax(command):
+    assert not agy._read_only_killed_command(command)
+
+
+@pytest.mark.parametrize("events", [[], [_prompt()], [_reply("reply")]])
+def test_agy_pre_model_proof_requires_no_prompt_or_model_event(tmp_path, events):
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+
+    if events:
+        plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, events)
+    else:
+        plan = InvocationPlan(
+            cmd=["agy"], cwd=tmp_path, env_overrides={agy._AGY_LOG_ENV: str(tmp_path / "missing.log")}
+        )
+    result = AgyAdapter().parse_response(
+        stdout="",
+        stderr="Eligibility check failed: UNAVAILABLE (code 503)",
+        returncode=1,
+        output_file=None,
+        plan=plan,
+    )
+    assert result.agy_pre_model_failure is (not events)
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        '{"event":"user","message":{"role":"user"}}',
+        '{"event":"step_update","step_update":{"state":"RUNNING"}}',
+        '{"event":"result","result":{"status":"ERROR","response":"model reply"}}',
+        "malformed output",
+    ],
+)
+def test_agy_pre_model_proof_rejects_started_or_unknown_stream(tmp_path, stdout):
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+
+    plan = InvocationPlan(
+        cmd=["agy", "stream-json"], cwd=tmp_path, env_overrides={agy._AGY_LOG_ENV: str(tmp_path / "missing.log")}
+    )
+    result = AgyAdapter().parse_response(
+        stdout=stdout,
+        stderr="Eligibility check failed: UNAVAILABLE (code 503)",
+        returncode=1,
+        output_file=None,
+        plan=plan,
+    )
+    assert not result.agy_pre_model_failure
+
+
+def test_agy_pre_model_proof_accepts_lone_provider_error(tmp_path):
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+
+    plan = InvocationPlan(
+        cmd=["agy", "stream-json"], cwd=tmp_path, env_overrides={agy._AGY_LOG_ENV: str(tmp_path / "missing.log")}
+    )
+    result = AgyAdapter().parse_response(
+        stdout=json.dumps(
+            {
+                "event": "result",
+                "result": {"status": "ERROR", "error": "Eligibility check failed: UNAVAILABLE (code 503)"},
+            }
+        ),
+        stderr="",
+        returncode=1,
+        output_file=None,
+        plan=plan,
+    )
+    assert result.agy_pre_model_failure
+
+
+@pytest.mark.parametrize("command", ["python -c 'print(1)'", "git grep " + "x" * 600 + " | rm output"])
+def test_agy_killed_non_read_command_stays_rejected_if_finish_races_with_kill(tmp_path, command):
+    result = _parse(
+        tmp_path,
+        [_prompt(), _start(_TASK_2, description=command), _kill(), _finish(_TASK_2), _reply("Complete reply.")],
+    )
+    assert not result.ok
+    assert result.stderr_excerpt.startswith(agy.AGY_BACKGROUND_TASK_CANCELED)
+    assert result.agy_killed_commands == [command[:500]]
+
+
+@pytest.mark.parametrize(
+    "case", ["unsafe-log", "missing-transcript", "unreadable-slice", "unknown-resume", "truncated-log"]
+)
+def test_agy_pre_model_proof_rejects_unknown_transcript_evidence(tmp_path, case):
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+
+    log = tmp_path / "attempt.log"
+    metadata = {}
+    bound = None
+    if case == "unsafe-log":
+        target = tmp_path / "target.log"
+        target.write_text("")
+        log.symlink_to(target)
+    elif case == "missing-transcript":
+        log.write_text(f"Print mode: conversation={_FINISHED_CONVERSATION_ID}, sending message\n")
+    elif case == "truncated-log":
+        log.write_text("Print mode: conversation=partial")
+    elif case == "unreadable-slice":
+        bound = agy._TranscriptSlice(tmp_path / "transcript.jsonl", [], 1)
+    else:
+        metadata[agy._TRANSCRIPT_BASELINE_KEY] = {"conversation_id": _FINISHED_CONVERSATION_ID, "offset": None}
+    plan = InvocationPlan(cmd=["agy"], cwd=tmp_path, env_overrides={agy._AGY_LOG_ENV: str(log)}, metadata=metadata)
+    assert not agy._pre_model_failure(plan, "", bound)
