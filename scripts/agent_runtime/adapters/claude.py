@@ -175,7 +175,8 @@ _MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 # foreground. Monitor, ScheduleWakeup, CronCreate and Workflow stay available
 # under it and still start or schedule work past the turn, so they are denied
 # by name; a settings deny removes them in dontAsk, bypass and default modes.
-# env_sanitize allowlists the variable for the claude provider.
+# env_sanitize allowlists the variable for the claude provider, and for kimi
+# only from adapter overrides. KimiccHarness reuses both constants.
 HEADLESS_BACKGROUND_ENV = {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
 HEADLESS_BACKGROUND_TOOL_DENIES = ("Monitor", "ScheduleWakeup", "CronCreate", "Workflow")
 

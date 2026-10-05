@@ -486,6 +486,18 @@ two parts, applied in every mode:
   they still start or schedule work past the turn. A settings deny removes them
   from the tool list in `dontAsk`, `bypassPermissions` and default modes.
 
+The KimiCC harness (`--agent kimi --harness kimicc`) is also a headless
+`claude -p` run, through `kimicc_headless.sh`. Its plan reuses the same two
+constants: the variable in `env_overrides`, and the denies as one
+`--disallowedTools` argument that the wrapper forwards to `claude -p --bare`.
+The sanitizer sees the provider name `kimi` for both Kimi harnesses, so it
+keeps the variable for `kimi` only when the plan supplies it and drops an
+ambient export. The native Kimi CLI plan never sets it, so native Kimi gets
+neither control. In Claude Code 2.1.289 `--bare` already offers only Bash,
+Edit and Read, and Bash has no `run_in_background` there (a capture of the
+request sent to a local fake endpoint); the explicit controls keep the route
+closed if that reduced tool set changes.
+
 Sealed `review_isolation` drops the variable through its own environment
 allowlist. It is still closed, because `--tools Read,Grep,Glob` offers no tool
 that can background. Interactive launchers (`start-claude.sh`,
@@ -493,7 +505,9 @@ that can background. Interactive launchers (`start-claude.sh`,
 and keep background tasks. A trailing `&` or `nohup` inside a foreground Bash
 call is a different path: `worker_leftovers.py` handles it (#8991).
 `tests/agent_runtime/test_claude_no_background.py` launches a fake CLI through
-the real runner and checks both parts.
+the real runner and checks both parts, for the Claude adapter and for KimiCC
+behind its wrapper. It also checks that native Kimi gets neither, and that
+every adapter which resolves the Claude binary is in its harness table.
 
 ### Native Grok headless permission mapping (#7583)
 
