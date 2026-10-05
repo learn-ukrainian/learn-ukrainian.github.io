@@ -151,6 +151,7 @@ from __future__ import annotations
 import argparse
 import ast
 import contextlib
+import dataclasses
 import functools
 import hashlib
 import json
@@ -6935,6 +6936,7 @@ def _validate_existing_worktree(
     expected_branch: str,
     base: str,
     allow_rebase: bool = True,
+    onto: str | None = None,
 ) -> bool:
     """Validate a reused worktree. Returns True if a rebase occurred.
 
@@ -6943,6 +6945,9 @@ def _validate_existing_worktree(
     checks skip silently when the path isn't a real git worktree (e.g.
     a tmp_path fixture) — those cases either fail at the first real git
     operation later or were never on the dispatch path to begin with.
+    ``onto``, when given, is the commit of ``origin/{base}`` admission
+    checked (#9739 A7): staleness and the rebase use it as is, never the
+    ref fetched again.
     """
     # 1. Branch check.
     try:
@@ -6999,10 +7004,13 @@ def _validate_existing_worktree(
     # runbooks mandate) never yields ``origin/origin/main`` — that
     # unresolvable ref made this whole check a silent no-op.
     origin_ref = _origin_base_ref(base)
-    _fetch_base(base)
+    target = onto or origin_ref
+    if onto is None:
+        _fetch_base(base)
+    shown = f"{origin_ref} at {onto[:12]}" if onto else origin_ref
     try:
         count_proc = subprocess.run(
-            ["git", "rev-list", "--count", f"HEAD..{origin_ref}"],
+            ["git", "rev-list", "--count", f"HEAD..{target}"],
             cwd=path,
             capture_output=True,
             text=True,
@@ -7023,19 +7031,19 @@ def _validate_existing_worktree(
 
     if not allow_rebase:
         raise WorktreeStaleBase(
-            f"worktree at {path} is {behind} commit(s) behind {origin_ref}; "
+            f"worktree at {path} is {behind} commit(s) behind {shown}; "
             "automatic rebasing is disabled. Synchronize it explicitly (for "
             "example, `git merge --ff-only "
-            f"{origin_ref}`) before attaching a worker."
+            f"{target}`) before attaching a worker."
         )
 
     print(
-        f"⚠️  worktree {path} is {behind} commit(s) behind {origin_ref}; attempting fast-forward rebase",
+        f"⚠️  worktree {path} is {behind} commit(s) behind {shown}; attempting fast-forward rebase",
         file=sys.stderr,
     )
     try:
         rebase_proc = subprocess.run(
-            ["git", "rebase", origin_ref],
+            ["git", "rebase", target],
             cwd=path,
             capture_output=True,
             text=True,
@@ -7053,7 +7061,7 @@ def _validate_existing_worktree(
                 timeout=DEFAULT_GIT_TIMEOUT_S,
             )
         raise WorktreeStaleBase(
-            f"worktree at {path} is {behind} commit(s) behind {origin_ref} "
+            f"worktree at {path} is {behind} commit(s) behind {shown} "
             f"and rebase timed out after {DEFAULT_GIT_TIMEOUT_S}s."
         ) from exc
     if rebase_proc.returncode != 0:
@@ -7068,7 +7076,7 @@ def _validate_existing_worktree(
                 timeout=DEFAULT_GIT_TIMEOUT_S,
             )
         raise WorktreeStaleBase(
-            f"worktree at {path} is {behind} commit(s) behind {origin_ref} "
+            f"worktree at {path} is {behind} commit(s) behind {shown} "
             f"and rebase failed. Resolve manually or remove:\n"
             f"    git worktree remove {path}"
         )
@@ -7642,6 +7650,7 @@ def _resolve_worktree_base_sha(
     base: str,
     branch: str | None,
     allow_rebase: bool = True,
+    rebase_onto: str | None = None,
     pinned_head_sha: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
@@ -7654,6 +7663,8 @@ def _resolve_worktree_base_sha(
     :func:`_ensure_worktree`. The latter must not fetch, rebase, or dereference
     a branch again when the SHA is supplied. ``validated_path``, when given, is
     used as is and never resolved again (#8775, :func:`_helper_worktree_path`).
+    ``rebase_onto`` pins a reused worktree's auto-rebase to the commit
+    authoring-review admission checked (#9739 A7).
     """
     worktree_path = _helper_worktree_path(raw_path, validated_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
@@ -7677,6 +7688,7 @@ def _resolve_worktree_base_sha(
             # Review admission already read these dependencies. A stale target
             # must refuse rather than advance to different admitted bytes.
             allow_rebase=allow_rebase and requested_branch is None and not review_dependencies,
+            onto=rebase_onto,
         )
         if requested_branch:
             # Existing paths used to return before this check, allowing local
@@ -11241,6 +11253,7 @@ def _dispatch(
     # Resolve the immutable worktree base once before ownership admission.
     resolved_worktree_base_sha: str | None = None
     resolved_worktree_raw: str | None = None
+    rebase_onto: str | None = None
     if worktree_arg and not (detached_read_only and bool(getattr(args, "dry_run", False))):
         resolved_worktree_raw = (
             str(_auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root))
@@ -11277,6 +11290,22 @@ def _dispatch(
             if moved:
                 print(moved.render(), file=sys.stderr)
                 return 2
+            # A Kimi worktree is never rebased: it must stay at the commit the gate read.
+            allow_rebase = not bool(getattr(args, "dry_run", False)) and kimi_start_commit is None
+            if (
+                allow_rebase
+                and authoring_admission is not None
+                and authoring_admission.kind == "existing-worktree"
+                and not requested_branch
+                and not review_dependencies
+            ):
+                # A7: the auto-rebase of a reused worktree is admitted before it
+                # runs, and runs onto exactly the commit admitted.
+                try:
+                    rebase_onto = _authoring_rebase_plan(authoring_admission, base=worktree_base)
+                except _AuthoringReviewRefused as exc:
+                    print(exc.render(), file=sys.stderr)
+                    return 2
             if authoring_admission is not None and authoring_admission.creation_sha is not None:
                 # A7: a new worktree starts at the commit admission enumerated from,
                 # never at a base dereferenced again.
@@ -11290,8 +11319,8 @@ def _dispatch(
                     base=worktree_base,
                     branch=requested_branch,
                     detached=detached_read_only,
-                    # A Kimi worktree is never rebased: it must stay at the commit the gate read.
-                    allow_rebase=not bool(getattr(args, "dry_run", False)) and kimi_start_commit is None,
+                    allow_rebase=allow_rebase,
+                    rebase_onto=rebase_onto,
                     review_dependencies=review_dependencies,
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
@@ -11334,10 +11363,13 @@ def _dispatch(
             print(f"❌ failed to {failed_step} for {task_id!r}: {exc}", file=sys.stderr)
             return 1
 
-    # A3 (#9739): an attached --branch is fetched above; new commits on it since
-    # admission (a push by another writer) were never checked, so refuse them.
-    if requested_branch and resolved_worktree_base_sha is not None:
-        moved = _authoring_target_moved(authoring_admission, resolved=resolved_worktree_base_sha)
+    # A3, A7 (#9739): the head the worker gets is the admitted one: commits pushed
+    # to an attached --branch since admission were never checked, and a reused
+    # worktree's auto-rebase must have produced the planned head.
+    if resolved_worktree_base_sha is not None:
+        moved = _authoring_target_moved(
+            authoring_admission, resolved=resolved_worktree_base_sha, rebase_onto=rebase_onto
+        )
         if moved:
             print(moved.render(), file=sys.stderr)
             return 2
@@ -11589,6 +11621,15 @@ def _dispatch(
     stdout_fd = open(stdout_log, "ab", buffering=0)  # noqa: SIM115
     stderr_fd = open(stderr_log, "ab", buffering=0)  # noqa: SIM115
 
+    def discard_logs() -> None:
+        """A refusal before any worker exists: close the logs and remove the ones still empty."""
+        stdout_fd.close()
+        stderr_fd.close()
+        for log in (stdout_log, stderr_log):
+            with contextlib.suppress(OSError):
+                if log.stat().st_size == 0:
+                    log.unlink()
+
     worktree_path: Path | None = None
     worktree_branch: str | None = None
     worktree_telemetry: dict[str, Any] = {}
@@ -11712,8 +11753,7 @@ def _dispatch(
         # git in this path, before either re-check.
         changed_error = _validated_path_changed_error("--cwd", candidate_cwd)
         if changed_error:
-            stdout_fd.close()
-            stderr_fd.close()
+            discard_logs()
             print(changed_error, file=sys.stderr)
             return 1
         resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
@@ -11721,8 +11761,7 @@ def _dispatch(
             try:
                 worktree_locks.enter_context(worktree_lock(resolved_wt))
             except WorktreeLockError as exc:
-                stdout_fd.close()
-                stderr_fd.close()
+                discard_logs()
                 print(f"❌ failed to lock worktree for {task_id!r}: {exc}", file=sys.stderr)
                 return 1
             # A removal that held the lock may have taken the checkout while
@@ -11731,13 +11770,11 @@ def _dispatch(
             # A symlink swapped in since validation is refused too (#8775).
             changed_error = _validated_path_changed_error("--cwd", candidate_cwd)
             if changed_error:
-                stdout_fd.close()
-                stderr_fd.close()
+                discard_logs()
                 print(changed_error, file=sys.stderr)
                 return 1
             if _resolve_verified_worktree_path(candidate_cwd) != resolved_wt:
-                stdout_fd.close()
-                stderr_fd.close()
+                discard_logs()
                 print(
                     f"❌ worktree {resolved_wt} for {task_id!r} was removed while dispatch waited for its lock; "
                     f"refusing to spawn in {candidate_cwd}",
@@ -11747,14 +11784,12 @@ def _dispatch(
             try:
                 _refuse_review_attempt_worktree_reuse(resolved_wt)
             except (OSError, ValueError, RuntimeError) as exc:
-                stdout_fd.close()
-                stderr_fd.close()
+                discard_logs()
                 print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
                 return 1
             moved = _authoring_bindings_moved(authoring_admission)
             if moved:
-                stdout_fd.close()
-                stderr_fd.close()
+                discard_logs()
                 print(moved.render(), file=sys.stderr)
                 return 2
             worktree_path = resolved_wt
@@ -11777,8 +11812,7 @@ def _dispatch(
 
         kimi_head = _resolve_sha(worktree_path) if worktree_path is not None else None
         if kimi_head is None or (kimi_start_commit is not None and kimi_head != kimi_start_commit):
-            stdout_fd.close()
-            stderr_fd.close()
+            discard_logs()
             where = f"is at {kimi_head}, not {kimi_start_commit}" if kimi_head else "is missing"
             print(f"❌ {format_refusal(dispatch_agent, [f'the worker worktree {where}'])}", file=sys.stderr)
             return 2
@@ -13028,6 +13062,10 @@ class _AuthoringAdmission:
     default_branch: str
     creation_ref: str | None = None
     creation_sha: str | None = None
+    # This writer's facts over ``base..head`` (raises ``_AuthoringReviewRefused``),
+    # and the planned risk, for the rebase plan and its result (A7).
+    collect: Callable[[str, str], Any] | None = dataclasses.field(default=None, compare=False, repr=False)
+    planned_risk: str | None = None
 
 
 def _authoring_canonical_remote() -> str:
@@ -13361,9 +13399,8 @@ def _authoring_review_admission(
             FACTS_SCOPE_UNKNOWN,
             BranchFactsError,
             collect_branch_review_facts,
-            structural_review_route,
         )
-        from scripts.review.security_paths import effective_review_risk, is_security_sensitive_change
+        from scripts.review.security_paths import is_security_sensitive_change
     except (ImportError, ModelCatalogError) as exc:
         raise _AuthoringReviewRefused(
             AUTHORING_REVIEW_CATALOG_UNKNOWN, f"model catalog or reviewer resolver unavailable ({exc}).", record
@@ -13427,24 +13464,31 @@ def _authoring_review_admission(
         raise _AuthoringReviewRefused(
             AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, f"{exc}, so the branch's authors are unknown; retry.", record
         ) from exc
-    try:
-        facts = collect_branch_review_facts(
-            repository=repository,
-            repo_root=target_repo_root,
-            base_tip_sha=review_base.sha,
-            head_sha=head,
-            task_root=tasks_dir(),
-            incoming_agent=dispatch_agent,
-            incoming_model=writer_model,
-            owned_paths=declared,
-            subject_seats=tuple(getattr(args, "subject_seat", None) or ()),
-            subject_families=tuple(getattr(args, "subject_family", None) or ()),
-        )
-    except BranchFactsError as exc:
-        code = (
-            AUTHORING_REVIEW_SCOPE_UNKNOWN if exc.code == FACTS_SCOPE_UNKNOWN else AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN
-        )
-        raise _AuthoringReviewRefused(code, f"{exc} (head {head[:12]}).", record) from exc
+
+    def collect(base_sha: str, head_sha: str) -> Any:
+        """This writer's branch facts over ``base_sha..head_sha``; a fact that cannot be established refuses."""
+        try:
+            return collect_branch_review_facts(
+                repository=repository,
+                repo_root=target_repo_root,
+                base_tip_sha=base_sha,
+                head_sha=head_sha,
+                task_root=tasks_dir(),
+                incoming_agent=dispatch_agent,
+                incoming_model=writer_model,
+                owned_paths=declared,
+                subject_seats=tuple(getattr(args, "subject_seat", None) or ()),
+                subject_families=tuple(getattr(args, "subject_family", None) or ()),
+            )
+        except BranchFactsError as exc:
+            code = (
+                AUTHORING_REVIEW_SCOPE_UNKNOWN
+                if exc.code == FACTS_SCOPE_UNKNOWN
+                else AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN
+            )
+            raise _AuthoringReviewRefused(code, f"{exc} (head {head_sha[:12]}).", record) from exc
+
+    facts = collect(review_base.sha, head)
     record.update(facts.receipt())
     protected = bool(
         facts.subject_seats
@@ -13467,10 +13511,22 @@ def _authoring_review_admission(
         default_branch=default_name,
         creation_ref=creation_ref,
         creation_sha=creation_sha,
+        collect=collect,
+        planned_risk=planned_risk,
     )
     if kind == "new-branch" and not protected:
         record["applicable"] = False
         return admission
+    _authoring_require_route(facts, planned_risk=planned_risk, record=record, at=head)
+    return admission
+
+
+def _authoring_require_route(facts: Any, *, planned_risk: str | None, record: dict[str, Any], at: str) -> None:
+    """Record the structural reviewer for ``facts``; refuse when none remains outside all authors (A2)."""
+    from scripts.review.model_catalog import ModelCatalogError
+    from scripts.review.record_cf_verdict import structural_review_route
+    from scripts.review.security_paths import effective_review_risk
+
     risk = str(planned_risk or AUTHORING_REVIEW_DEFAULT_RISK).strip().casefold()
     try:
         resolution = structural_review_route(facts, risk=risk)
@@ -13498,12 +13554,11 @@ def _authoring_review_admission(
         reason = resolution.fail_closed_reason or "no eligible formal reviewer in the catalog ladder"
         raise _AuthoringReviewRefused(
             AUTHORING_REVIEW_NO_ROUTE,
-            f"write dispatch refused at {head[:12]}; authors={','.join(sorted(facts.existing_families)) or '(none)'}; "
+            f"write dispatch refused at {at[:12]}; authors={','.join(sorted(facts.existing_families)) or '(none)'}; "
             f"incoming={facts.incoming_family}; risk={record['risk']}; no qualified reviewer remains outside all "
             f"authors and protected seats ({reason}).",
             record,
         )
-    return admission
 
 
 def _authoring_review_state_fields(args: argparse.Namespace, admission: _AuthoringAdmission | None) -> dict[str, Any]:
@@ -13569,6 +13624,11 @@ def _authoring_bindings_moved(admission: _AuthoringAdmission | None) -> _Authori
                 remote=admission.remote,
             )
             moved = _authoring_drift(admission, "head", current)
+            if not moved and admission.kind == "existing-worktree":
+                # The checkout's branch names its PR and so its review base: a switch at
+                # the same commit changes both (``HEAD`` when detached).
+                assert admission.checkout is not None  # set for every existing-worktree admission
+                moved = _authoring_branch_moved(admission, _current_branch(admission.checkout))
         if moved:
             return moved
         base = _authoring_review_base(
@@ -13585,11 +13645,167 @@ def _authoring_bindings_moved(admission: _AuthoringAdmission | None) -> _Authori
     return _authoring_drift(admission, "review_base", base.sha, current_base=base)
 
 
-def _authoring_target_moved(admission: _AuthoringAdmission | None, *, resolved: str) -> _AuthoringReviewRefused | None:
-    """A3: the refusal when the head the worktree helpers settled on for an attached ``--branch`` is not the admitted one."""
-    if admission is None or admission.kind == "new-branch":
+def _authoring_branch_moved(admission: _AuthoringAdmission, current: str | None) -> _AuthoringReviewRefused | None:
+    """The ``TARGET_MOVED`` refusal when the checkout no longer has the branch admission read; None when it does."""
+    if current == admission.head_branch:
         return None
+    now = "a detached HEAD" if current == "HEAD" else (current or "an unreadable branch")
+    record = {
+        **admission.record,
+        "binding": "head_branch",
+        "admitted_branch": admission.head_branch,
+        "current_branch": current,
+    }
+    return _AuthoringReviewRefused(
+        AUTHORING_REVIEW_TARGET_MOVED,
+        f"the checkout's branch moved after authoring-review admission (admitted {admission.head_branch}, now {now}), "
+        "so its PR and review base are no longer the admitted ones; retry the dispatch so its authors are checked again.",
+        record,
+    )
+
+
+def _authoring_target_moved(
+    admission: _AuthoringAdmission | None, *, resolved: str, rebase_onto: str | None = None
+) -> _AuthoringReviewRefused | None:
+    """A3, A7: the refusal when the head the worktree helpers settled on is not the admitted one.
+
+    A planned auto-rebase (``rebase_onto``, from :func:`_authoring_rebase_plan`)
+    legitimately moves a reused worktree's head; its result is checked by
+    :func:`_authoring_rebase_result_refusal` instead.
+    """
+    if admission is None or admission.kind == "new-branch" or resolved == admission.head_sha:
+        return None
+    if rebase_onto is not None and admission.record.get("rebase_planned"):
+        return _authoring_rebase_result_refusal(admission, onto=rebase_onto, rebased=resolved)
     return _authoring_drift(admission, "head", resolved)
+
+
+def _authoring_merge_facts(lower: Any, upper: Any) -> Any:
+    """Branch facts for the union of two enumerations (A7 rebase plan): every commit, family, path and subject."""
+    return dataclasses.replace(
+        upper,
+        base_tip_sha=lower.base_tip_sha,
+        commits=(*lower.commits, *upper.commits),
+        existing_families=lower.existing_families | upper.existing_families,
+        changed_paths=tuple(dict.fromkeys((*lower.changed_paths, *upper.changed_paths))),
+        subject_seats=lower.subject_seats | upper.subject_seats,
+        subject_families=lower.subject_families | upper.subject_families,
+        subject_evidence=tuple(dict.fromkeys((*lower.subject_evidence, *upper.subject_evidence))),
+    )
+
+
+def _authoring_rebase_plan(admission: _AuthoringAdmission, *, base: str) -> str:
+    """A7: the commit a reused worktree may be rebased onto, its result admitted before the branch is touched.
+
+    The auto-rebase replays the branch's own commits (``onto..head``) onto
+    ``onto``. Rebasing keeps each commit's message, and so its attribution, so
+    the recorder then enumerates ``review_base..onto`` plus those replays. Both
+    are checked here under the admitted review base and risk. ``onto`` is
+    observed on the canonical remote and returned for the rebase to use as is,
+    so the rebase can never move onto a later, unchecked tip. Read-only: it
+    only fetches to make the observed commit local (M1). Raises
+    ``_AuthoringReviewRefused``: ``AUTHORSHIP_UNKNOWN`` when ``onto`` or the
+    planned authors cannot be determined, ``NO_ROUTE`` when no reviewer
+    remains for the rebased branch.
+    """
+    assert admission.collect is not None  # set by every admission
+    record = admission.record
+    ref = _base_branch_name(base)
+    try:
+        # Observed as a new branch's start commit is (A7 §3).
+        onto = _authoring_start_commit(admission.remote, ref, _authoring_default_branch(admission.remote))
+        _authoring_require_commit(onto, fetch=lambda: _fetch_base(base), what="the rebase target commit")
+        behind = _git_rev_count(f"{admission.head_sha}..{onto}")
+    except _AuthoringObservationUnknown as exc:
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+            f"{exc}, so the authors of the rebased branch are unknown; retry. Branch not rebased.",
+            record,
+        ) from exc
+    record.update({"rebase_onto": onto, "rebase_planned": behind > 0})
+    if behind == 0:
+        return onto
+    planned = _authoring_merge_facts(
+        admission.collect(admission.review_base.sha, onto), admission.collect(onto, admission.head_sha)
+    )
+    record["rebase_existing_families"] = sorted(planned.existing_families)
+    _authoring_require_route(planned, planned_risk=admission.planned_risk, record=record, at=onto)
+    return onto
+
+
+def _authoring_rebase_result_refusal(
+    admission: _AuthoringAdmission, *, onto: str, rebased: str
+) -> _AuthoringReviewRefused | None:
+    """A7: the refusal when the rebased head is not the planned one; None when it is.
+
+    The planned head is the admitted commits replayed onto ``onto``: ``onto``
+    must be an ancestor, and the authors the recorder now enumerates must be
+    among the planned ones, with a reviewer still remaining. Runs before any
+    task record or worker; the rebase itself has already happened.
+    """
+    assert admission.collect is not None  # set by every admission
+    record = {**admission.record, "binding": "rebase", "admitted_sha": admission.head_sha, "current_sha": rebased}
+    planned = set(record.get("rebase_existing_families") or ())
+    try:
+        on_plan = _git_is_ancestor(onto, rebased)
+    except _AuthoringObservationUnknown as exc:
+        return _AuthoringReviewRefused(
+            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, f"{exc} after the rebase, so its authors are unknown; retry.", record
+        )
+    try:
+        actual = admission.collect(admission.review_base.sha, rebased) if on_plan else None
+        if actual is not None and actual.existing_families <= planned:
+            _authoring_require_route(actual, planned_risk=admission.planned_risk, record=record, at=rebased)
+            admission.record.update({"rebased_head_sha": rebased, "rebased_existing_families": sorted(planned)})
+            return None
+    except _AuthoringReviewRefused as exc:
+        return _AuthoringReviewRefused(exc.code, exc.detail, {**exc.record, **record})
+    record["current_existing_families"] = sorted(actual.existing_families) if actual is not None else None
+    return _AuthoringReviewRefused(
+        AUTHORING_REVIEW_TARGET_MOVED,
+        f"the rebased branch head {rebased[:12]} is not the planned rebase of {admission.head_sha[:12]} onto "
+        f"{onto[:12]}; retry the dispatch so its authors are checked again.",
+        record,
+    )
+
+
+def _git_rev_count(revisions: str) -> int:
+    """``git rev-list --count`` in the repository; raises ``_AuthoringObservationUnknown`` when it cannot complete."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-list", "--count", revisions],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise _AuthoringObservationUnknown("the commit count is unavailable") from exc
+    count = (proc.stdout or "").strip() if proc.returncode == 0 else ""
+    if not count.isdigit():
+        raise _AuthoringObservationUnknown("the commit count is unavailable")
+    return int(count)
+
+
+def _git_is_ancestor(ancestor: str, descendant: str) -> bool:
+    """Whether ``ancestor`` is an ancestor of ``descendant``; raises ``_AuthoringObservationUnknown`` on failure."""
+    try:
+        proc = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", ancestor, descendant],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise _AuthoringObservationUnknown("the ancestry check is unavailable") from exc
+    if proc.returncode not in (0, 1):
+        raise _AuthoringObservationUnknown("the ancestry check is unavailable")
+    return proc.returncode == 0
 
 
 def _authoring_drift(
@@ -13697,11 +13913,16 @@ def _kimi_start_trees(
         return trees, trees[-1].commit
     if getattr(args, "pr", None) and not getattr(args, "branch", None):
         raise ValueError("--pr without --branch: name the PR branch so its head is read before dispatch")
-    base_sha = _resolve_local_base_sha(
-        base=getattr(args, "base", None) or "main",
-        branch=getattr(args, "branch", None),
-        pinned_head_sha=getattr(args, "pinned_head", None),
-    )
+    branch, pinned_head = getattr(args, "branch", None), getattr(args, "pinned_head", None)
+    base = getattr(args, "base", None)
+    if not (base or branch or pinned_head):
+        # The new worktree starts at the repository's actual default branch, as
+        # authoring-review admission discovers it (#9739 M4), never an assumed main.
+        try:
+            base = _authoring_default_branch(_authoring_canonical_remote())[0]
+        except _AuthoringObservationUnknown as exc:
+            raise RuntimeError(f"{exc}; retry") from exc
+    base_sha = _resolve_local_base_sha(base=base or "", branch=branch, pinned_head_sha=pinned_head)
     return [CommitTree(_REPO_ROOT, base_sha, env=_sanitized_git_env())], base_sha
 
 

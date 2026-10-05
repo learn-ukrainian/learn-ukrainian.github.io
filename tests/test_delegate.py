@@ -13906,16 +13906,18 @@ def test_dispatch_locks_an_existing_checkout_before_base_resolution_can_rebase_i
     primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
     _dispatch_from_fixture_primary(primary, monkeypatch)
     observed: list[tuple[str, bool]] = []
+    # The checkout is up to date: its head is the one write-dispatch admission read (#9739 A3).
+    head = delegate._resolve_sha(worktree)
 
     def spy_base(**kwargs):
         assert kwargs["allow_rebase"] is not dry_run
         observed.append(("base", _worktree_lock_is_free(delegate._normalize_worktree_path(kwargs["raw_path"]))))
-        return "a" * 40
+        return head
 
     def spy_ensure(**kwargs):
         path = delegate._normalize_worktree_path(kwargs["raw_path"])
         observed.append(("ensure", _worktree_lock_is_free(path)))
-        return path, f"cursor/{task_id}", {"reused": True, "base_sha": "a" * 40, "layout": "dispatch"}
+        return path, f"cursor/{task_id}", {"reused": True, "base_sha": head, "layout": "dispatch"}
 
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", spy_base)
     monkeypatch.setattr(delegate, "_ensure_worktree", spy_ensure)

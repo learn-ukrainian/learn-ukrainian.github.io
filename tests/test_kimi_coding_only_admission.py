@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import contextlib
 import json
 import os
@@ -59,6 +60,11 @@ def _plumbing_only(monkeypatch) -> list[str]:
 
     monkeypatch.setattr(delegate.subprocess, "run", run)
     return ran
+
+
+def _observed_default_branch(monkeypatch, name: str = "main") -> None:
+    """The canonical remote's default branch, as review admission observes it (#9739 M4), without a remote read."""
+    monkeypatch.setattr(delegate, "_authoring_default_branch", lambda _remote: (name, "0" * 40))
 
 
 def _head(repo: Path = _REPO_ROOT) -> str:
@@ -796,6 +802,7 @@ def test_a_budget_substitution_onto_kimi_is_refused_before_cleanup_and_archiving
     base = _head()
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: base)
     _plumbing_only(monkeypatch)
+    _observed_default_branch(monkeypatch)
     monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
     substituted: list[str] = []
 
@@ -903,6 +910,7 @@ def test_dispatch_reads_owned_paths_at_the_new_worktree_base_commit(
     monkeypatch.setattr(delegate, "_fetch_base", _fail)
     monkeypatch.setattr(delegate, "_fetch_existing_branch", _fail)
     ran = _plumbing_only(monkeypatch)  # any fetch or other git write raises
+    _observed_default_branch(monkeypatch)
 
     reason = f"Cyrillic text in {path!r}, in commit {base[:12]}"
     _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, "--owned-path", path), reason)
@@ -926,10 +934,29 @@ def test_dispatch_refuses_a_base_missing_locally_without_fetching(
     monkeypatch.setattr(delegate, "_fetch_base", _fail)
     monkeypatch.setattr(delegate, "_fetch_existing_branch", _fail)
     ran = _plumbing_only(monkeypatch)
+    _observed_default_branch(monkeypatch)
 
     _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, "--owned-path", path, *extra), "base not available locally")
     assert set(ran) <= {"rev-parse"}
     assert not (primary / ".worktrees").exists()
+
+
+def test_a_new_worktree_is_read_at_the_discovered_default_branch_not_an_assumed_main(tmp_path, monkeypatch):
+    """Round-6 probe 3 (#9739 M4): in a repository whose default branch is ``develop`` (and has no ``main``), a new
+    Kimi worktree with no --base is read at ``develop``, discovered on the canonical remote as review admission
+    discovers it. It used to refuse with ``base not available locally (origin/main)``."""
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch, default_branch="develop")
+    monkeypatch.setattr(delegate, "_REPO_ROOT", repo.root)
+    args = argparse.Namespace(
+        worktree="auto", task_id="kimi-develop", base=None, branch=None, pr=None, pinned_head=None
+    )
+    trees, commit = delegate._kimi_start_trees(
+        args, agent="kimi", target_repo_root=repo.root, validated_worktree=None, validated_cwd=None
+    )
+    assert commit == repo.sha("origin/develop") == repo.remote_sha("develop")
+    assert [tree.commit for tree in trees] == [commit]
 
 
 def test_dispatch_reads_owned_paths_in_the_reused_worktree(no_spawn, capsys, monkeypatch, tmp_path, clean_git_env):

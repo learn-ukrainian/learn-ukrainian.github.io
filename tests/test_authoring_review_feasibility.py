@@ -703,7 +703,8 @@ def boundary(repo, tasks, monkeypatch, github):
     return dispatch
 
 
-def assert_refused(boundary, capsys, repo, tasks, result, code):
+def assert_refused(boundary, capsys, repo, tasks, result, code, *, reused: bool = False):
+    """A typed refusal with no side effect; ``reused`` keeps a checkout the test made itself (snapshotted)."""
     rc, before = result
     err = capsys.readouterr().err
     assert rc == 2, err
@@ -713,7 +714,7 @@ def assert_refused(boundary, capsys, repo, tasks, result, code):
     assert boundary.calls == []
     assert repo.snapshot() == before
     assert list(tasks.rglob("*")) == []
-    assert not (repo.root / ".worktrees").exists()
+    assert reused or not (repo.root / ".worktrees").exists()
     return receipt
 
 
@@ -1060,6 +1061,7 @@ def test_attached_branch_fetched_past_its_admitted_head_refuses(boundary, capsys
 CODEX_ADAPTER = "scripts/agent_runtime/adapters/codex.py"
 MIRROR_URL = "https://mirror.invalid/learn-ukrainian.git"
 REAL_RESOLVER = delegate._resolve_worktree_base_sha
+REAL_VALIDATOR = delegate._validate_existing_worktree
 
 
 @pytest.fixture
@@ -1351,3 +1353,173 @@ def test_an_admitted_new_branch_is_created_at_the_frozen_creation_commit(boundar
         boundary("--worktree", "--base", "custom", "--owned-path", CODEX_ADAPTER, writer=SOL)
     assert created["resolved_base_sha"] == admitted and created["branch"] is None
     assert boundary.calls == []  # the base resolver (a fetch and dereference) never ran
+
+
+# --- round 6: admission evaluates the commits a reused checkout actually ends up with ----------------
+
+
+class _Provisioned(Exception):
+    """Raised by a stub ``_ensure_worktree``: the dispatch was admitted and reached provisioning."""
+
+
+def reused_worktree_behind_main(repo: MiniRepo, github: FakeGitHub, *, main_trailer: str) -> tuple[Path, str, str]:
+    """A reused worktree whose PR targets an older release while ``main`` moved on with a ``main_trailer`` commit.
+
+    Returns the checkout, the release commit (the PR's review base) and the new ``main`` tip.
+    """
+    release = repo.publish("trunk", to="release")
+    repo.git("checkout", "-q", "trunk")
+    main = repo.commit(main_trailer, path="src/app.py", message="main moves on")
+    repo.publish("trunk", to="main")
+    checkout = delegate._auto_worktree_path("claude", "writer-1", repo_root=repo.root)
+    repo.git("worktree", "add", "-q", "-b", "claude/writer-1", str(checkout), release)
+    MiniRepo(checkout).commit(OPUS, message="feature work")
+    github.prs = [pr_row(42, "release", release, head="claude/writer-1")]
+    return checkout, release, main
+
+
+def test_an_auto_rebase_that_would_add_another_family_refuses_before_the_branch_is_touched(
+    boundary, github, capsys, repo, tasks, monkeypatch
+):
+    """Round-6 probe 1 (#9739): admission saw only Anthropic over the PR's release base and selected OpenAI; the
+    auto-rebase onto main then added an OpenAI commit the recorder enumerates. The planned rebase is now admitted
+    first and refused, with the rebase helpers never run and the branch untouched."""
+    checkout, release, main = reused_worktree_behind_main(repo, github, main_trailer=SOL)
+    head = MiniRepo(checkout).sha("HEAD")
+    admitted_dispatch_cleanup(monkeypatch)
+    with _admitted_host(monkeypatch):
+        result = boundary("--worktree", "--owned-path", "docs/a.md")
+    receipt = assert_refused(boundary, capsys, repo, tasks, result, delegate.AUTHORING_REVIEW_NO_ROUTE, reused=True)
+    assert receipt["existing_families"] == ["anthropic"] and receipt["review_base_sha"] == release
+    assert (receipt["rebase_onto"], receipt["rebase_planned"]) == (main, True)
+    assert receipt["rebase_existing_families"] == ["anthropic", "openai"] and receipt["reviewer"] is None
+    assert MiniRepo(checkout).sha("HEAD") == head  # never rebased
+
+    # The recorder, run on the history the rebase would have produced, sees both families and qualifies no one.
+    MiniRepo(checkout).git("rebase", "-q", main)
+    rebased = recorder.collect_branch_review_facts(
+        repository=REPOSITORY,
+        repo_root=repo.root,
+        base_tip_sha=release,
+        head_sha=MiniRepo(checkout).sha("HEAD"),
+        task_root=tasks,
+        incoming_agent="claude",
+        incoming_model="claude-opus-5-5",
+        owned_paths=("docs/a.md",),
+    )
+    assert rebased.existing_families == {"anthropic", "openai"} and selected(rebased, "critical") is None
+
+
+def test_an_auto_rebase_that_adds_only_same_family_commits_still_admits(
+    boundary, github, capsys, repo, tasks, monkeypatch
+):
+    """Positive control: main moved on with an Anthropic commit only; the planned rebase keeps an OpenAI reviewer,
+    the rebase runs onto exactly the planned commit and the rebased head reaches provisioning."""
+    checkout, _release, main = reused_worktree_behind_main(repo, github, main_trailer=OPUS)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", REAL_RESOLVER)
+    monkeypatch.setattr(delegate, "_validate_existing_worktree", REAL_VALIDATOR)
+    planned_onto: list[str] = []
+    real_plan = delegate._authoring_rebase_plan
+
+    def plan(admission, *, base):
+        planned_onto.append(real_plan(admission, base=base))
+        # The canonical main then moves on with an OpenAI commit the plan never saw; the rebase must not use it.
+        repo.advance_remote("main", SOL, path="src/app.py")
+        return planned_onto[-1]
+
+    monkeypatch.setattr(delegate, "_authoring_rebase_plan", plan)
+    created: dict = {}
+
+    def ensure_worktree(**kwargs):
+        created.update(kwargs)
+        raise _Provisioned
+
+    monkeypatch.setattr(delegate, "_ensure_worktree", ensure_worktree)
+    admitted_dispatch_cleanup(monkeypatch)
+    with _admitted_host(monkeypatch), pytest.raises(_Provisioned):
+        boundary("--worktree", "--owned-path", "docs/a.md")
+    rebased = MiniRepo(checkout).sha("HEAD")
+    assert planned_onto == [main] and created["resolved_base_sha"] == rebased
+    assert MiniRepo(checkout).git("rev-parse", "HEAD^") == main  # onto the planned commit, not the later tip
+    assert boundary.calls == []
+
+
+def test_a_rebase_result_that_is_not_the_planned_one_refuses(boundary, github, capsys, repo, tasks, monkeypatch):
+    """The plan admits Anthropic only; another writer commits in the checkout before the rebase replays it. The
+    rebased head is checked against the plan and refused before any task record or worker."""
+    checkout, _release, main = reused_worktree_behind_main(repo, github, main_trailer=OPUS)
+    monkeypatch.setattr(delegate, "_validate_existing_worktree", REAL_VALIDATOR)
+
+    def resolve_after_another_writer(**kwargs):
+        MiniRepo(checkout).commit(SOL, message="another writer")
+        return REAL_RESOLVER(**kwargs)
+
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", resolve_after_another_writer)
+    admitted_dispatch_cleanup(monkeypatch)
+    with _admitted_host(monkeypatch):
+        rc, _ = boundary("--worktree", "--owned-path", "docs/a.md")
+    receipt = assert_moved_refusal(rc, capsys, tasks)
+    assert (receipt["binding"], receipt["rebase_onto"]) == ("rebase", main)
+    assert receipt["rebase_existing_families"] == ["anthropic"]
+    assert receipt["current_existing_families"] == ["anthropic", "openai"]
+    assert receipt["current_sha"] == MiniRepo(checkout).sha("HEAD") != receipt["admitted_sha"]
+
+
+def test_an_unobservable_rebase_target_refuses_as_unknown_before_any_rebase(
+    boundary, github, capsys, repo, tasks, monkeypatch
+):
+    """A rebase target the canonical remote does not serve: its authors are unknown, so nothing is rebased."""
+    reused_worktree_behind_main(repo, github, main_trailer=OPUS)
+    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, _branch: None)
+    admitted_dispatch_cleanup(monkeypatch)
+    with _admitted_host(monkeypatch):
+        result = boundary("--worktree", "--base", "release", "--owned-path", "docs/a.md")
+    assert_refused(boundary, capsys, repo, tasks, result, delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, reused=True)
+
+
+def test_a_cwd_branch_switch_at_the_same_commit_refuses_as_moved(boundary, github, capsys, repo, tasks, monkeypatch):
+    """Round-6 probe 2 (#9739): the --cwd checkout was admitted on a branch whose PR targets main; under the lock it
+    is on another branch at the same commit, whose PR targets an older release. The branch binding refuses, and the
+    refusal leaves no log file behind."""
+    release = repo.publish("trunk", to="release")
+    repo.git("checkout", "-q", "trunk")
+    main = repo.commit(SOL, path="src/app.py", message="main moves on")
+    repo.publish("trunk", to="main")
+    checkout = delegate._auto_worktree_path("claude", "earlier-task", repo_root=repo.root)
+    repo.git("worktree", "add", "-q", "-b", "feat-a", str(checkout), main)
+    head = MiniRepo(checkout).commit(OPUS, message="feature work")
+    repo.git("branch", "feat-b", head)
+    github.prs = [pr_row(42, "main", main, head="feat-a"), pr_row(43, "release", release, head="feat-b")]
+    admitted_dispatch_cleanup(monkeypatch)
+    with _admitted_host(monkeypatch, on_admission=lambda: MiniRepo(checkout).git("checkout", "-q", "feat-b")):
+        rc, _ = boundary("--cwd", str(checkout), "--owned-path", "docs/a.md")
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    assert f"❌ {delegate.AUTHORING_REVIEW_TARGET_MOVED}:" in err and "provider_calls=0" in err
+    receipt = last_receipt(err)
+    assert (receipt["binding"], receipt["admitted_branch"], receipt["current_branch"]) == (
+        "head_branch",
+        "feat-a",
+        "feat-b",
+    )
+    assert receipt["review_base"]["pr"] == 42 and receipt["head_sha"] == MiniRepo(checkout).sha("HEAD")
+    assert [path for path in tasks.rglob("*") if path.is_file()] == []
+    assert boundary.calls == []
+
+
+def test_a_cwd_checkout_detached_at_the_same_commit_refuses_as_moved(
+    boundary, github, capsys, repo, tasks, monkeypatch
+):
+    repo.commit(OPUS)
+    repo.publish()
+    checkout = delegate._auto_worktree_path("claude", "earlier-task", repo_root=repo.root)
+    repo.git("worktree", "add", "-q", "-b", "feat-a", str(checkout), "feature")
+    admitted_dispatch_cleanup(monkeypatch)
+    detach = lambda: MiniRepo(checkout).git("checkout", "-q", "--detach")  # noqa: E731
+    with _admitted_host(monkeypatch, on_admission=detach):
+        rc, _ = boundary("--cwd", str(checkout), "--owned-path", "docs/a.md")
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    assert "now a detached HEAD" in err
+    assert last_receipt(err)["current_branch"] == "HEAD"
+    assert [path for path in tasks.rglob("*") if path.is_file()] == []
