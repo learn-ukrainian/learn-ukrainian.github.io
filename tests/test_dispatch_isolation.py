@@ -53,14 +53,6 @@ def _install_fakes(tmp_path: Path) -> Path:
             sys.exit(1)
         if mode == "timeout":
             time.sleep(30)
-        if mode == "hold-pipes":
-            pid = os.fork()
-            if pid == 0:
-                time.sleep(30)
-                os._exit(0)
-            with open(os.environ["FAKE_GRANDCHILD_PID"], "w", encoding="ascii") as handle:
-                handle.write(str(pid))
-            time.sleep(30)
         if mode == "down":
             sys.stderr.write("Failed to connect to bus: No such file or directory\\n")
             sys.exit(1)
@@ -234,8 +226,23 @@ def test_probe_timeout_on_systemctl_is_the_user_manager_check(tmp_path: Path):
     assert "timed out" in result.reason
 
 
-def test_probe_timeout_on_loginctl_is_the_linger_check(tmp_path: Path):
+def test_probe_timeout_on_loginctl_is_the_linger_check(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """A loginctl timeout is the linger check, not an earlier probe command.
+
+    systemctl and stat share this short timeout. On a loaded runner they time
+    out before loginctl starts, so those checks are stubbed ready (#9746).
+    """
     bindir = _install_fakes(tmp_path)
+    monkeypatch.setattr(
+        iso,
+        "_slice_properties",
+        lambda _env, _timeout: {
+            "LoadState": "loaded",
+            "MemoryMax": _MEMORY_MAX,
+            "MemorySwapMax": _MEMORY_SWAP,
+        },
+    )
+    monkeypatch.setattr(iso, "_cgroup_fs_type", lambda _env, _mount, _timeout: "cgroup2fs")
     result = _probe(_env(bindir, FAKE_LOGINCTL="timeout"), _subtree(tmp_path), timeout_s=0.2)
 
     assert result.reason is not None
@@ -279,52 +286,257 @@ def test_only_fallback_skips_the_probe(tmp_path: Path, value: str):
     assert result.reason is None
 
 
-def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path):
-    """A grandchild that inherits the probe's stdout must not keep dispatch waiting."""
-    pidfile = tmp_path / "grandchild.pid"
-    bindir = _install_fakes(tmp_path)
-    env = _env(bindir, FAKE_SYSTEMCTL="hold-pipes", FAKE_GRANDCHILD_PID=str(pidfile))
-    timeout_s = 0.2
-    fallback: list[list[str]] = []
-    grandchild: int | None = None
+_GRANDCHILD_READY_DEADLINE_S = 5.0
+# Longer than timeout + reap slack, so a clock that includes this stall fails.
+_GRANDCHILD_START_DELAY_S = 3.0
+_GRANDCHILD_SYSTEMCTL = """
+import os, time
+from pathlib import Path
 
-    def popen(argv, **_kwargs):
-        fallback.append(list(argv))
+time.sleep(float(os.environ.get("FAKE_START_DELAY", "0")))
+if os.fork() == 0:
+    # Written by the grandchild itself, after fork; stdout stays inherited.
+    Path(os.environ["FAKE_GRANDCHILD_PID"]).write_text(str(os.getpid()), encoding="ascii")
+time.sleep(30)
+"""
+_GRANDCHILD_HELPER_CODE = (
+    "import json, runpy, sys\n"
+    "ns = runpy.run_path(sys.argv[1])\n"
+    "report = ns['_grandchild_probe_helper'](ns['Path'](sys.argv[2]), float(sys.argv[3]), float(sys.argv[4]))\n"
+    "print(json.dumps(report))\n"
+)
 
-        class _Proc:
-            pid = 4
-            stdin = None
 
-        return _Proc()
+def _wait_for_child_ready(pidfile: Path, deadline_s: float) -> int:
+    """Wait for the controlled grandchild's acknowledgement, without inspecting processes."""
+    deadline = time.monotonic() + deadline_s
+    while True:
+        try:
+            text = pidfile.read_text(encoding="ascii").strip()
+        except OSError:
+            text = ""
+        if text.isdigit():
+            return int(text)
+        if time.monotonic() >= deadline:
+            raise AssertionError(f"grandchild was not ready within {deadline_s:.1f}s")
+        time.sleep(0.01)
 
-    started = time.monotonic()
-    try:
-        _proc, launch = iso.spawn_detached_worker(
-            [_PY, "-c", "print('fallback')"],
-            task_id="hold-pipes",
-            run_nonce="nonce-hold",
-            popen=popen,
-            env=env,
-            probe_env=env,
-            subtree_path=_subtree(tmp_path),
-            timeout_s=timeout_s,
-        )
-        elapsed = time.monotonic() - started
-        assert launch.mode == iso.LAUNCH_FALLBACK
-        assert launch.fallback_reason is not None
-        assert "timed out" in launch.fallback_reason
-        assert fallback == [[_PY, "-c", "print('fallback')"]]
-        assert pidfile.is_file()
-        grandchild = int(pidfile.read_text(encoding="ascii"))
-        os.kill(grandchild, 0)
-        assert elapsed < timeout_s + iso._REAP_TIMEOUT_S + 2.0
-    finally:
-        if grandchild is None and pidfile.is_file():
-            with suppress(ValueError):
-                grandchild = int(pidfile.read_text(encoding="ascii"))
-        if grandchild is not None:
+
+def _reap_owned_probe_children() -> list[dict[str, int]]:
+    """Kill and wait for our children, including newly adopted descendants.
+
+    Called only in the single-threaded subreaper helper. The kernel's own
+    child list supplies *owned*, unreaped PIDs, whose identities cannot be
+    reused before our waitpid. No tag, liveness scan or PID identity heuristic
+    participates in cleanup. Killing a parent can adopt more children, so
+    repeat until waitpid proves ECHILD, including absence of zombies.
+    """
+    children_path = Path(f"/proc/self/task/{os.getpid()}/children")
+    reaped = []
+    while True:
+        children = [int(pid) for pid in children_path.read_text(encoding="ascii").split()]
+        for pid in children:
             with suppress(ProcessLookupError):
-                os.kill(grandchild, signal.SIGKILL)
+                os.kill(pid, signal.SIGKILL)
+        for pid in children:
+            waited, status = os.waitpid(pid, 0)
+            reaped.append({"pid": waited, "returncode": os.waitstatus_to_exitcode(status)})
+        try:
+            waited, status = os.waitpid(-1, os.WNOHANG)
+        except ChildProcessError:
+            return reaped
+        if waited:
+            reaped.append({"pid": waited, "returncode": os.waitstatus_to_exitcode(status)})
+
+
+def _grandchild_probe_helper(tmp_path: Path, start_delay_s: float, ready_deadline_s: float) -> dict:
+    """Own the entire scenario and report only after all descendants are reaped.
+
+    Linux subreaper and signal settings are confined to this subprocess;
+    importing this module or running pytest never changes the worker's state.
+    """
+    import ctypes
+
+    if sys.platform != "linux":
+        return {"skip": "grandchild ownership proof requires Linux child-subreaper support"}
+    libc = ctypes.CDLL(None, use_errno=True)
+    if not hasattr(libc, "prctl"):
+        return {"skip": "PR_SET_CHILD_SUBREAPER is unavailable in libc"}
+    libc.prctl.argtypes = [ctypes.c_int, *([ctypes.c_ulong] * 4)]
+    libc.prctl.restype = ctypes.c_int
+    if libc.prctl(36, 1, 0, 0, 0) != 0:  # PR_SET_CHILD_SUBREAPER
+        return {"skip": f"PR_SET_CHILD_SUBREAPER is unavailable: errno {ctypes.get_errno()}"}
+
+    try:
+        Path(f"/proc/self/task/{os.getpid()}/children").read_text(encoding="ascii")
+    except OSError:
+        return {"skip": "Linux owned-child inventory is unavailable for subreaper cleanup"}
+
+    def timed_out(_signum, _frame):
+        raise TimeoutError("grandchild helper exceeded its deadline")
+
+    signal.signal(signal.SIGALRM, timed_out)
+    signal.setitimer(signal.ITIMER_REAL, start_delay_s + ready_deadline_s + 35.0)
+    report: dict = {"error": None}
+    held: list[subprocess.Popen] = []
+    ready: dict[str, float | int] = {}
+    try:
+        pidfile = tmp_path / "grandchild.pid"
+        bindir = tmp_path / "bin"
+        bindir.mkdir()
+        _write_exe(bindir / "systemctl", _GRANDCHILD_SYSTEMCTL)
+        env = _env(bindir, FAKE_GRANDCHILD_PID=str(pidfile), FAKE_START_DELAY=str(start_delay_s))
+        env.pop(iso.ENV_ISOLATION, None)
+        timeout_s = 0.2
+        fallback: list[list[str]] = []
+        real_popen = iso._Popen
+
+        def probe_popen(argv, *args, **kwargs):
+            proc = real_popen(argv, *args, **kwargs)
+            held.append(proc)  # Keep Popen destructors from reaping during cleanup.
+            real_wait = proc.wait
+
+            def wait(*wait_args, **wait_kwargs):
+                if "at" not in ready:
+                    ready["pid"] = _wait_for_child_ready(pidfile, ready_deadline_s)
+                    ready["at"] = time.monotonic()
+                return real_wait(*wait_args, **wait_kwargs)
+
+            proc.wait = wait  # type: ignore[method-assign]
+            return proc
+
+        def fallback_popen(argv, **_kwargs):
+            fallback.append(list(argv))
+
+            class _Proc:
+                pid = 4
+                stdin = None
+
+            return _Proc()
+
+        with pytest.MonkeyPatch.context() as patch:
+            patch.setattr(iso, "_Popen", probe_popen)
+            patch.setattr(iso, "_caller_in_driver_scope", lambda: False)
+            spawned = time.monotonic()
+            _proc, launch = iso.spawn_detached_worker(
+                [_PY, "-c", "print('fallback')"],
+                task_id="hold-pipes",
+                run_nonce="nonce-hold",
+                popen=fallback_popen,
+                env=env,
+                probe_env=env,
+                subtree_path=_subtree(tmp_path),
+                timeout_s=timeout_s,
+            )
+            elapsed = time.monotonic() - ready["at"]
+            grandchild = int(ready["pid"])
+            # The probe has killed/reaped its parent. Adoption plus waitpid
+            # proves this is our still-running child, not an observed PID.
+            waited, _status = os.waitpid(grandchild, os.WNOHANG)
+            report.update(
+                grandchild_pid=grandchild,
+                grandchild_running=waited == 0,
+                elapsed=elapsed,
+                startup_elapsed=ready["at"] - spawned,
+                launch_mode=launch.mode,
+                fallback_reason=launch.fallback_reason,
+                fallback=fallback,
+                elapsed_limit=timeout_s + iso._REAP_TIMEOUT_S + 2.0,
+            )
+    except Exception as exc:
+        report["error"] = f"{type(exc).__name__}: {exc}"
+    finally:
+        # Also runs when readiness fails, before the grandchild PID is known.
+        signal.setitimer(signal.ITIMER_REAL, 5.0)
+        report["reaped"] = _reap_owned_probe_children()
+        report["no_children"] = True  # Only after waitpid returned ECHILD.
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        # Cleanup may have waited directly for a Popen-owned child.
+        for proc in held:
+            if proc.returncode is None:
+                proc.returncode = next(item["returncode"] for item in report["reaped"] if item["pid"] == proc.pid)
+        report["probe_pids"] = [proc.pid for proc in held]
+        report["probe_returncodes"] = [proc.returncode for proc in held]
+    return report
+
+
+def _run_grandchild_probe_helper(
+    tmp_path: Path, *, start_delay_s: float = 0.0, ready_deadline_s: float | None = None
+) -> dict:
+    deadline_s = start_delay_s + _GRANDCHILD_READY_DEADLINE_S if ready_deadline_s is None else ready_deadline_s
+    completed = subprocess.run(
+        [_PY, "-c", _GRANDCHILD_HELPER_CODE, __file__, str(tmp_path), str(start_delay_s), str(deadline_s)],
+        capture_output=True,
+        text=True,
+        timeout=start_delay_s + deadline_s + 45.0,
+        check=True,
+    )
+    report = json.loads(completed.stdout)
+    if "skip" in report:
+        pytest.skip(report["skip"])
+    assert report["no_children"] is True, report
+    # Cleanup's ECHILD is the proof. A PID existence assertion after reaping
+    # would reintroduce a race with unrelated processes reusing those PIDs.
+    print(json.dumps({key: value for key, value in report.items() if key != "fallback"}, sort_keys=True))
+    return report
+
+
+def _assert_fallback_does_not_wait_on_grandchild(tmp_path: Path, *, start_delay_s: float = 0.0) -> None:
+    report = _run_grandchild_probe_helper(tmp_path, start_delay_s=start_delay_s)
+    assert report["error"] is None, report
+    assert report["launch_mode"] == iso.LAUNCH_FALLBACK, report
+    assert "timed out" in report["fallback_reason"], report
+    assert report["fallback"] == [[_PY, "-c", "print('fallback')"]], report
+    assert report["grandchild_running"], report
+    assert report["probe_returncodes"] == [-signal.SIGKILL], report
+    assert {item["pid"] for item in report["reaped"]} == {report["grandchild_pid"]}, report
+    assert report["reaped"][0]["returncode"] == -signal.SIGKILL, report
+    assert report["elapsed"] < report["elapsed_limit"], report
+    if start_delay_s:
+        assert report["startup_elapsed"] >= start_delay_s, report
+        assert report["elapsed"] < start_delay_s, report
+
+
+def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path) -> None:
+    """The inherited stdout holder must still run when fallback returns.
+
+    The helper owns and reaps the fake probe and its orphaned grandchild.
+    Pipe capture with post-kill communicate() instead of file capture/wait
+    would wait for the grandchild's exit and fail both alive/timing checks.
+    The measured interval starts only after the grandchild acknowledges fork.
+    """
+    _assert_fallback_does_not_wait_on_grandchild(tmp_path)
+
+
+def test_delayed_grandchild_start_does_not_fail_the_probe(tmp_path: Path) -> None:
+    """A startup stall longer than the probe budget stays outside measurement."""
+    _assert_fallback_does_not_wait_on_grandchild(tmp_path, start_delay_s=_GRANDCHILD_START_DELAY_S)
+
+
+@pytest.mark.parametrize("child_started", [False, True], ids=["before-fork", "after-fork"])
+def test_grandchild_probe_helper_reaps_on_readiness_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, child_started: bool
+) -> None:
+    """Readiness failures reap both an owned probe and an unacknowledged orphan."""
+    if child_started:
+        inject_failure = (
+            "real_ready = ns['_wait_for_child_ready']\n"
+            "def fail_ready(*args):\n"
+            "    real_ready(*args)\n"
+            "    raise AssertionError('injected readiness failure')\n"
+            "ns['_grandchild_probe_helper'].__globals__['_wait_for_child_ready'] = fail_ready\n"
+        )
+        code = _GRANDCHILD_HELPER_CODE.replace("report = ns[", inject_failure + "report = ns[")
+        monkeypatch.setattr(sys.modules[__name__], "_GRANDCHILD_HELPER_CODE", code)
+        report = _run_grandchild_probe_helper(tmp_path)
+        assert report["error"] == "AssertionError: injected readiness failure", report
+    else:
+        report = _run_grandchild_probe_helper(tmp_path, start_delay_s=3.0, ready_deadline_s=0.05)
+        assert report["error"] == "AssertionError: grandchild was not ready within 0.1s", report
+    reaped = {item["pid"] for item in report["reaped"]}
+    assert set(report["probe_pids"]) <= reaped, report
+    assert len(reaped) == (2 if child_started else 1), report
+    assert all(item["returncode"] == -signal.SIGKILL for item in report["reaped"]), report
 
 
 def test_systemd_run_failure_relaunches_once_with_popen(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
@@ -372,7 +584,11 @@ def test_systemd_run_failure_relaunches_once_with_popen(tmp_path: Path, capsys: 
 
 
 def test_pre_exec_bus_stall_falls_back_to_popen(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
-    """A systemd-run that is still that program at the timeout never started the worker."""
+    """A systemd-run that is still that program at the timeout never started the worker.
+
+    The readiness probe is skipped. It spends the same timeout_s, so on a
+    loaded runner the probe times out before systemd-run starts (#9746).
+    """
     bindir = _install_fakes(tmp_path)
     env = _env(bindir, FAKE_SYSTEMD_RUN="timeout")
     fallback: list[list[str]] = []
@@ -401,11 +617,10 @@ def test_pre_exec_bus_stall_falls_back_to_popen(tmp_path: Path, capsys: pytest.C
             run_nonce="nonce-slow",
             popen=popen,
             env=env,
-            probe_env=env,
             stderr=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stdin=subprocess.DEVNULL,
-            subtree_path=_subtree(tmp_path),
+            check_probe=False,
             timeout_s=timeout_s,
         )
         elapsed = time.monotonic() - started
@@ -428,6 +643,10 @@ def test_pre_exec_bus_stall_falls_back_to_popen(tmp_path: Path, capsys: pytest.C
 
 
 def test_pre_exec_scope_that_survives_stop_is_not_relaunched(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """A scope that survives stop is not relaunched.
+
+    The readiness probe is skipped so the 0.3s budget is only the launch stall (#9746).
+    """
     bindir = _install_fakes(tmp_path)
     env = _env(bindir, FAKE_SYSTEMD_RUN="timeout")
     monkeypatch.setattr(iso, "_kill_if_alive", lambda _proc: None)
@@ -456,11 +675,10 @@ def test_pre_exec_scope_that_survives_stop_is_not_relaunched(tmp_path: Path, mon
                 run_nonce="nonce-unkillable",
                 popen=popen,
                 env=env,
-                probe_env=env,
                 stderr=subprocess.DEVNULL,
                 stdout=subprocess.DEVNULL,
                 stdin=subprocess.DEVNULL,
-                subtree_path=_subtree(tmp_path),
+                check_probe=False,
                 timeout_s=0.3,
             )
     finally:
