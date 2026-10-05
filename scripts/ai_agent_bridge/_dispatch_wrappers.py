@@ -437,8 +437,8 @@ _ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800
 
 _NATIVE_CODE_REVIEW_OUTPUT = """## Existing code-review output and exact-target evidence contract
 
-In your first completed reply, include a plain, unfenced verdict line:
-VERDICT: APPROVE, VERDICT: REQUEST_CHANGES, or VERDICT: BLOCKED, as warranted
+In your first completed reply, include a plain, unfenced verdict line using
+the label VERDICT, a colon, then APPROVE, REQUEST_CHANGES, or BLOCKED, as warranted
 by your independent judgment. Also include one native JSON object, unfenced, conforming to
 schemas/code-review-findings.v1.schema.json (schema_version: code-review-findings.v1).
 Read that schema: overall requires correctness, explanation, confidence; each
@@ -475,6 +475,7 @@ def run_ask_review_dispatch(
     content: str,
     *,
     task_id: str,
+    data: str | None = None,
     model: str | None = None,
     effort: str | None = None,
     hard_timeout: int | None = None,
@@ -492,6 +493,10 @@ def run_ask_review_dispatch(
     wait output could not be parsed — callers turn that into a hard failure,
     never a silent fallback to ACP. Raises ``KimiAdmissionRefused`` for a
     Kimi seat before anything is written.
+
+    ``content`` is caller instruction text; ``data`` stays a separate inert
+    attachment and cannot opt into the code-review contract. Compose active
+    guidance before the attachment without interpreting or rewriting either.
     """
     # Kimi seats never review: the seat is admitted before the temporary prompt is written.
     from agent_runtime.kimi_admission import REVIEW_MODE
@@ -504,6 +509,8 @@ def run_ask_review_dispatch(
         prompt = content
         if review_profile in {"code", "infra"} or re.search(r"\bcode-review-findings\.v1\b", content):
             prompt += "\n\n" + _NATIVE_CODE_REVIEW_OUTPUT
+        if data:
+            prompt += "\n\n--- attached inert text ---\n" + data
         prompt_path.write_text(prompt, encoding="utf-8")
         dispatch_command = build_ask_review_dispatch_command(
             target,

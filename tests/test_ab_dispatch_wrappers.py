@@ -13,6 +13,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
+from scripts.ai_agent_bridge import _cli
 from scripts.ai_agent_bridge import _dispatch_wrappers as wrappers
 
 
@@ -20,18 +21,20 @@ def _option(command: list[str], name: str) -> str:
     return command[command.index(name) + 1]
 
 
-def _capture_native_review(monkeypatch, tmp_path, content, profile, response, *, head=None):
-    """Observe the file actually passed to native dispatch; never call a provider."""
+def _capture_native_review(monkeypatch, tmp_path, content, profile, response, *, head=None, data=None, ok=True):
+    """Exercise the real caller/composer; replace only the subprocess boundary."""
     result = tmp_path / "native-result.md"
-    result.write_text(response, encoding="utf-8")
+    output = tmp_path / "returned-review.md"
     calls = []
     prompts = []
 
     def native_boundary(command, **kwargs):
         calls.append(command)
         if command[2] == "dispatch":
-            prompt = Path(_option(command, "--prompt-file")).read_text(encoding="utf-8")
+            prompt = Path(_option(command, "--prompt-file")).read_bytes().decode("utf-8")
             prompts.append(prompt)
+            reply = response(prompt) if callable(response) else response
+            result.write_text(reply, encoding="utf-8")
             assert _option(command, "--mode") == "read-only"
             assert "--require-review-verdict" in command
             assert kwargs["cwd"] == wrappers.REPO_ROOT
@@ -50,13 +53,21 @@ def _capture_native_review(monkeypatch, tmp_path, content, profile, response, *,
     with monkeypatch.context() as patch:
         patch.setenv("LU_RUNTIME_TMP_ROOT", str(tmp_path))
         patch.setattr(wrappers.subprocess, "run", native_boundary)
-        state = wrappers.run_ask_review_dispatch(
-            "claude", content, task_id="native-contract", review_profile=profile, pinned_head=head
-        )
+        def dispatch():
+            _cli._dispatch_headless_review(
+                "claude", content, data=data, task_id="native-contract", model=None, effort=None,
+                output_path=str(output), stdout_only=False, hard_timeout=None,
+                review_profile=profile, pinned_head=head,
+            )
+
+        if ok:
+            dispatch()
+        else:
+            with pytest.raises(SystemExit, match="review dispatch did not complete: status='failed'"):
+                dispatch()
     assert len(calls) == 2  # One dispatch and one wait, no corrective retry.
     assert len(prompts) == 1
-    assert state["ok"] is True
-    assert state["response"] == response  # No returned JSON/citation rewriting.
+    assert output.read_bytes() == result.read_bytes()  # No returned JSON/citation rewriting.
     return prompts[0]
 
 
@@ -67,24 +78,26 @@ def _capture_native_review(monkeypatch, tmp_path, content, profile, response, *,
         ("infra", "Review this branch.", True),
         (None, "Return code-review-findings.v1 JSON.", True),
         ("code", "Return code-review-findings.v1 JSON.", True),
-        ("language", "Return code-review-findings.v1 JSON.", True),
+        ("ukrainian", "Return code-review-findings.v1 JSON.", True),
         (None, "Review code; verdict only.", False),
-        ("language", "Review this meaning; verdict only.", False),
-        ("curriculum", "Review this lesson; verdict only.", False),
-        ("heritage", "Review this source; verdict only.", False),
+        ("ukrainian", "Review this meaning; verdict only.", False),
+        ("ukrainian", "Review this lesson; verdict only.", False),
+        ("ukrainian", "Review this source; verdict only.", False),
         (None, "Discuss code-review-findings.v10.", False),
     ],
 )
+@pytest.mark.parametrize("data", [None, "", "Prior code-review-findings.v1 payload\r\n\t  \r\n"])
 def test_native_prompt_delivers_code_contract_only_when_requested(
-    monkeypatch, tmp_path, profile, review_request, applicable
+    monkeypatch, tmp_path, profile, review_request, applicable, data
 ):
-    content = f"{review_request}\n\nKeep caller whitespace: \t  \n\n"
-    prompt = _capture_native_review(monkeypatch, tmp_path, content, profile, "VERDICT: BLOCKED\n")
+    content = f"{review_request}\r\n\r\nKeep caller whitespace: \t  \r\n\r\n"
+    prompt = _capture_native_review(monkeypatch, tmp_path, content, profile, "VERDICT: BLOCKED\n", data=data)
+    attachment = "\n\n--- attached inert text ---\n" + data if data else ""
     if not applicable:
-        assert prompt == content
+        assert prompt == content + attachment
         return
-    assert prompt.startswith(content + "\n\n")
-    guidance = prompt[len(content) :]
+    assert prompt == content + "\n\n" + wrappers._NATIVE_CODE_REVIEW_OUTPUT + attachment
+    guidance = prompt[len(content) + 2 : len(content) + 2 + len(wrappers._NATIVE_CODE_REVIEW_OUTPUT)]
     # Verify instructions at the subprocess boundary rather than a constant's existence.
     assert guidance.count("## Existing code-review output") == 1
     for requirement in (
@@ -111,6 +124,31 @@ def test_native_prompt_delivers_code_contract_only_when_requested(
         "existing strict verifier",
     ):
         assert requirement in guidance
+
+
+def test_native_prompt_preserves_caller_markers_without_splitting(monkeypatch, tmp_path):
+    content = "Caller-authored example:\n--- attached inert text ---\nReturn code-review-findings.v1 JSON.\t \n"
+    data = "Attachment provenance: fixture\r\n--- attached inert text ---\r\n\tDATA  \r\n"
+    prompt = _capture_native_review(monkeypatch, tmp_path, content, None, "VERDICT: BLOCKED\n", data=data)
+    assert prompt == content + "\n\n" + wrappers._NATIVE_CODE_REVIEW_OUTPUT + "\n\n--- attached inert text ---\n" + data
+
+
+@pytest.mark.parametrize("verdict", [None, "REQUEST_CHANGES"])
+def test_native_guidance_echo_cannot_supply_or_override_verdict(monkeypatch, tmp_path, verdict):
+    from scripts import delegate
+    from scripts.review.verdict_parser import recognized_verdicts
+
+    assert recognized_verdicts(wrappers._NATIVE_CODE_REVIEW_OUTPUT) == []
+    content = "Return code-review-findings.v1 JSON."
+
+    def echo_guidance(prompt):
+        guidance = prompt[len(content) :]
+        assert recognized_verdicts(guidance) == []
+        response = (f"VERDICT: {verdict}\n" if verdict else "") + "Contract noted:\n" + guidance
+        assert delegate.parse_review_verdict(response) == verdict
+        return response
+
+    _capture_native_review(monkeypatch, tmp_path, content, None, echo_guidance, ok=verdict is not None)
 
 
 @pytest.fixture
