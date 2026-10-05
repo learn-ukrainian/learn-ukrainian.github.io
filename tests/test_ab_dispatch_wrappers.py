@@ -33,7 +33,11 @@ def _patch_state_dir(monkeypatch, tmp_path: Path) -> Path:
 def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(monkeypatch, tmp_path):
     monkeypatch.delenv("LU_RUNTIME_TMP_ROOT", raising=False)
     brief = tmp_path / "brief.md"
-    brief.write_text("# Fix this\n\nExisting acceptance criteria.\n", encoding="utf-8")
+    # A fix brief scopes its write dispatch through its own Owned paths section (#9739).
+    brief.write_text(
+        "# Fix this\n\nExisting acceptance criteria.\n\n## Owned paths\n\n- `scripts/ai_agent_bridge/_cli.py`\n",
+        encoding="utf-8",
+    )
     calls = []
     captured_prompt: dict[str, str | Path] = {}
 
@@ -60,6 +64,7 @@ def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(
     assert _option(command, "--task-id") == "1741"
     assert "--force-new" in command
     assert _option(command, "--effort") == "high"
+    assert _option(command, "--owned-path") == "scripts/ai_agent_bridge/_cli.py"
     assert "Existing acceptance criteria." in str(captured_prompt["text"])
     assert wrappers.MANDATORY_COMMIT_PUSH_PR_CHECKLIST in str(captured_prompt["text"])
     assert not Path(captured_prompt["path"]).exists()
@@ -73,7 +78,10 @@ def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypa
 
     def fake_run(command, **kwargs):
         assert command == ["gh", "issue", "view", "1701", "--json", "title,body"]
-        payload = {"title": "Security issue", "body": "Acceptance criteria from issue."}
+        payload = {
+            "title": "Security issue",
+            "body": "Acceptance criteria from issue.\n\n## Owned paths\n\n- `scripts/ai_agent_bridge/_cli.py`\n",
+        }
         return subprocess.CompletedProcess(command, 0, stdout=json.dumps(payload))
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
@@ -91,6 +99,7 @@ def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypa
     assert state["model"] is None
     assert state["effort"] == "high"
     assert _option(command, "--task-id") == "1701"
+    assert _option(command, "--owned-path") == "scripts/ai_agent_bridge/_cli.py"
     assert "--force-new" in command
     prompt_path = Path(state["prompt_file"])
     assert prompt_path.parent == lease_root

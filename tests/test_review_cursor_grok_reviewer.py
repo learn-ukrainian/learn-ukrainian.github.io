@@ -287,6 +287,29 @@ def _publishing(synthetic_opsec, publisher_transport, monkeypatch):
     monkeypatch.setattr(recorder, "absolute_path_spans", lambda text: [])
 
 
+def _pr_review_facts(families):
+    """The recorder's complete-authorship entry point (#9739), for a PR these families authored."""
+
+    def facts(repository, pr_number, *, head_sha, **_kwargs):
+        return recorder.BranchReviewFacts(
+            repository=repository,
+            base_tip_sha="b" * 40,
+            head_sha=head_sha,
+            merge_base_sha="b" * 40,
+            commits=tuple(recorder.CommitAttribution(None, family, "trailer-model") for family in sorted(families)),
+            existing_families=frozenset(families),
+            incoming_writer=None,
+            incoming_family=None,
+            changed_paths=(),
+            owned_paths=(),
+            subject_seats=frozenset(),
+            subject_families=frozenset(),
+            subject_evidence=(),
+        )
+
+    return facts
+
+
 def _record(monkeypatch, tmp_path, *, resolved_model, families=frozenset({"anthropic"}), **extra):
     tasks = tmp_path / "tasks"
     tasks.mkdir()
@@ -328,7 +351,7 @@ def _record(monkeypatch, tmp_path, *, resolved_model, families=frozenset({"anthr
         raise AssertionError(args)
 
     monkeypatch.setattr(recorder, "_run_json", fake_json)
-    monkeypatch.setattr(recorder, "author_families", lambda repository, number, task_root: set(families))
+    monkeypatch.setattr(recorder, "pr_review_facts", _pr_review_facts(families))
     monkeypatch.setattr(recorder.GitHubAdapter, "identity", lambda self: "fleet")
     monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda self, repository, number: list(comments))
     monkeypatch.setattr(recorder, "post_commit_status", lambda **kwargs: None)

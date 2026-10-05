@@ -1578,6 +1578,8 @@ def test_dor_dispatch_private_repo_stdin_prompt_uses_mapped_issue_card(tmp_tasks
             "--repo",
             "infra-private",
             "--worktree",
+            "--owned-path",
+            "scripts/",
             "--prompt",
             "-",
         ]
@@ -7047,6 +7049,7 @@ def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, capsys):
         cwd=None,
         worktree=None,
         hard_timeout=3600,
+        owned_path=list(_WRITE_OWNED_PATHS),
     )
 
     rc = delegate.cmd_dispatch(args)
@@ -7057,10 +7060,20 @@ def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, capsys):
     assert "--worktree" in captured.err
 
 
+# Write dispatches must declare an owned path (#9739); an ordinary, unprotected file.
+_WRITE_OWNED_PATHS = ["tracked.txt"]
+# A Gemini Flash Ukrainian-authoring writer owns lesson content only (#9275).
+_UKRAINIAN_OWNED_PATHS = ["curriculum/l2-uk-en/a1/lesson.md"]
+# Stubbed ``git rev-parse`` answers: full commit SHAs, as Git prints them.
+_STUB_BASE_SHA = "abc1234" + "0" * 33
+_STUB_HEAD_SHA = "deadbeef" * 5
+_STUB_ORIGIN_SHA = "feedc0de" * 5
+
+
 def _make_run_stub(
     *,
     rev_parse_verify_ok: bool = True,
-    rev_parse_head_sha: str = "abc1234",
+    rev_parse_head_sha: str = _STUB_BASE_SHA,
     status_porcelain: str = "",
     rev_list_count: str = "0",
     abbrev_ref: str = "",
@@ -7068,11 +7081,18 @@ def _make_run_stub(
 ):
     """Helper: build a fake subprocess.run that understands the git commands
     _ensure_worktree/_validate_existing_worktree issue. Returns ``(calls, fn)``.
+
+    The binary readers see an empty answer: the branch-review facts reader
+    (#9739, ``git -C <root> ... --no-replace-objects``) a fresh branch whose
+    commits exist and whose ``base..head`` lists none, and the Ukrainian
+    content classifier (``git --literal-pathspecs``) no tracked file.
     """
     calls: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
         calls.append(list(cmd))
+        if "--no-replace-objects" in cmd or cmd[:2] == ["git", "--literal-pathspecs"]:
+            return subprocess.CompletedProcess(cmd, 0, b"", b"")
         if cmd[:2] == ["git", "fetch"]:
             return subprocess.CompletedProcess(cmd, 0, "", "")
         if cmd[:2] == ["git", "rev-parse"]:
@@ -7136,7 +7156,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
         pid = 24680
         stdin = _FakeStdin()
 
-    calls, fake_run = _make_run_stub(rev_parse_head_sha="deadbeef")
+    calls, fake_run = _make_run_stub(rev_parse_head_sha=_STUB_HEAD_SHA)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
@@ -7161,6 +7181,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
         worktree=str(worktree_path),
         base="main",
         hard_timeout=3600,
+        owned_path=list(_WRITE_OWNED_PATHS),
     )
 
     rc = delegate.cmd_dispatch(args)
@@ -7173,7 +7194,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     assert state["worktree_path"].endswith(".worktrees/dispatch/codex/codex-1383")
     assert state["cwd"].endswith(".worktrees/dispatch/codex/codex-1383")
     assert state["pid"] == 24680
-    assert state["worktree_base_sha"] == "deadbeef"
+    assert state["worktree_base_sha"] == _STUB_HEAD_SHA
     assert state["worktree_reused"] is False
     assert state["dor_preflight"]["allow_warn_reason"] == "urgent repair"
     assert state["worktree_local_venv"] == {"present": False, "kind": None, "path": None}
@@ -7184,7 +7205,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     assert any(c[:2] == ["git", "fetch"] for c in calls)
     # Dispatch admission and worktree creation share one immutable resolved SHA.
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
-    assert add_cmd[-1] == "deadbeef", f"worktree must be created from the resolved SHA, got base={add_cmd[-1]!r}"
+    assert add_cmd[-1] == _STUB_HEAD_SHA, f"worktree must be created from the resolved SHA, got base={add_cmd[-1]!r}"
     captured = capsys.readouterr()
     assert "issue-1383-smoke" in captured.out
 
@@ -7297,7 +7318,7 @@ def _cursor_dispatch(tmp_path, monkeypatch, *, dor_record, **overrides: Any):
         popen_calls.append(a)
         return _FakeProc()
 
-    _calls, fake_run = _make_run_stub(rev_parse_head_sha="deadbeef")
+    _calls, fake_run = _make_run_stub(rev_parse_head_sha=_STUB_HEAD_SHA)
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     monkeypatch.setattr(delegate, "_run_dor_preflight", lambda prompt, reason, *, dispatch_repo: (None, dor_record))
@@ -7429,7 +7450,7 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
         pid = 24681
         stdin = _FakeStdin()
 
-    calls, fake_run = _make_run_stub(rev_parse_head_sha="feedc0de")
+    calls, fake_run = _make_run_stub(rev_parse_head_sha=_STUB_ORIGIN_SHA)
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
     _tmp_dispatch_repo_root(tmp_path, monkeypatch)
@@ -7445,6 +7466,7 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
         worktree=str(tmp_path / ".worktrees" / "dispatch" / "codex" / "codex-origin-base"),
         base="origin/main",
         hard_timeout=3600,
+        owned_path=list(_WRITE_OWNED_PATHS),
     )
 
     rc = delegate.cmd_dispatch(args)
@@ -7453,7 +7475,7 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
     fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
     assert fetch_cmd == ["git", "fetch", "origin", "+refs/heads/main:refs/remotes/origin/main"]
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
-    assert add_cmd[-1] == "feedc0de", f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
+    assert add_cmd[-1] == _STUB_ORIGIN_SHA, f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
 
 
 def test_validate_existing_worktree_origin_prefixed_base(monkeypatch, tmp_path):
@@ -8016,6 +8038,7 @@ def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypat
         worktree=str(worktree),
         base="main",
         hard_timeout=3600,
+        owned_path=list(_WRITE_OWNED_PATHS),
         allow_merge=True,
     )
 
@@ -8333,6 +8356,7 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
         agent="agy",
         # #9275: agy without a Ukrainian classification is the bounded fallback.
         research_task_family="ukrainian-authoring",
+        owned_path=list(_UKRAINIAN_OWNED_PATHS),
         task_id="existing-worktree",
         prompt="test",
         prompt_file=None,
@@ -9953,6 +9977,7 @@ def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, tmp_path, monkeypatch
         worktree="auto",  # sentinel from bare `--worktree`
         base="main",
         hard_timeout=3600,
+        owned_path=list(_WRITE_OWNED_PATHS),
         allow_merge=False,
     )
 
@@ -10042,6 +10067,8 @@ def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
     (main / "tracked.txt").write_text("x\n")
     _git(main, "add", "-A")
     _git(main, "commit", "-q", "-m", "init")
+    # A fetched origin/main: write-dispatch review admission reads the branch's authors from it (#9739).
+    _git(main, "update-ref", "refs/remotes/origin/main", "HEAD")
 
     dispatch_wt = main / ".worktrees" / "dispatch" / "codex" / "task-1"
     _git(main, "worktree", "add", "-q", "-b", "codex/task-1", str(dispatch_wt))
@@ -10126,6 +10153,9 @@ def _write_args(**overrides):
         "allow_merge": False,
     }
     base.update(overrides)
+    if base["mode"] != "read-only":
+        # A write dispatch declares the paths it owns (#9739).
+        base.setdefault("owned_path", list(_WRITE_OWNED_PATHS))
     if base.get("review_attempt"):
         # These attempt fixtures render lesson-review prompts, like the content producer.
         base.setdefault("review_profile", "ukrainian")
@@ -10336,7 +10366,8 @@ def test_dispatch_refuses_an_acp_runtime_cwd_or_worktree_before_side_effects(
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     monkeypatch.chdir(main)
     spawned: list[object] = []
-    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: spawned.append(a))
+    # Git reads still run: write-dispatch review admission reads the branch before this refusal (#9739).
+    _spawn_passthrough_popen(monkeypatch, spawned.append)
 
     rc = delegate.cmd_dispatch(_write_args(task_id="acp-attach", mode=mode, **{flag: str(runtime)}))
 
@@ -10688,7 +10719,7 @@ def test_dispatch_helpers_do_not_resolve_the_worktree_after_the_post_lock_check(
         if path != dispatch_wt:
             return real_resolve_sha(path, *args)
         helper_paths.append(path)
-        if len(helper_paths) == 3:
+        if len(helper_paths) == 5:
             raise ValueError("stopped at the worktree helper's first git step")
         return real_resolve_sha(path, *args)
 
@@ -10700,9 +10731,10 @@ def test_dispatch_helpers_do_not_resolve_the_worktree_after_the_post_lock_check(
 
     assert rc == 1
     assert "stopped at the worktree helper's first git step" in capsys.readouterr().err
-    # The base-SHA helper validates the checkout and reads HEAD; the worktree
-    # helper, given that pinned SHA, reads HEAD.
-    assert helper_paths[:3] == [dispatch_wt] * 3 and spawned == []
+    # Authoring-review admission reads HEAD before the lock and again under it
+    # (#9739); the base-SHA helper validates the checkout and reads HEAD; the
+    # worktree helper, given that pinned SHA, reads HEAD.
+    assert helper_paths[:5] == [dispatch_wt] * 5 and spawned == []
 
 
 def test_worktree_block_renders_the_path_as_quoted_data():
@@ -11318,9 +11350,12 @@ def test_dispatch_rejects_workspace_write_without_worktree(tmp_tasks_dir, capsys
 def test_dispatch_rejects_workspace_write_cwd_primary_checkout(
     tmp_tasks_dir,
     tmp_path,
+    monkeypatch,
     capsys,
 ):
     main, _ = _init_repo_with_worktree(tmp_path)
+    # Review admission reads the fixture's branch, so dispatch must target it (#9739).
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     args = _write_args(
         task_id="ww-cwd-main",
         mode="workspace-write",
@@ -11455,6 +11490,14 @@ def test_dispatch_refuses_branch_from_sibling_repo(
 ):
     """#6900: --branch fetches/attaches in the primary, same silent bind."""
     primary, sibling, _ = _init_sibling_pair(tmp_path)
+    # The PR branch is fetched in the primary, where review admission reads its authors (#9739).
+    subprocess.run(
+        ["git", "-C", str(primary), "update-ref", "refs/remotes/origin/codex/existing-pr", "HEAD"],
+        check=True,
+        capture_output=True,
+        env=delegate._sanitized_git_env(),
+        timeout=30,
+    )
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     monkeypatch.chdir(sibling)
     args = _write_args(
@@ -12970,6 +13013,8 @@ def test_active_claim_scan_matches_json_escaped_non_ascii_worktree_name(tmp_task
 
 def test_worktree_prep_failure_records_resolved_absolute_worktree_path(tmp_path, monkeypatch, tmp_tasks_dir):
     """#8610: a relative ``--worktree`` is recorded as the resolved absolute path on prep failure too."""
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    _fetch_fixture_origin_main(tmp_path)
     _tmp_dispatch_repo_root(tmp_path, monkeypatch)
     monkeypatch.setattr(delegate, "_resolve_dirty_primary_checkout_error", lambda *, mode: None)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda *a, **k: "a" * 40)
@@ -12982,6 +13027,7 @@ def test_worktree_prep_failure_records_resolved_absolute_worktree_path(tmp_path,
         agent="agy",
         # #9275: agy without a Ukrainian classification is the bounded fallback.
         research_task_family="ukrainian-authoring",
+        owned_path=list(_UKRAINIAN_OWNED_PATHS),
         task_id="task-8610-relative",
         branch=None,
         worktree=".worktrees/dispatch/agy/task-8610-relative/",
@@ -13118,10 +13164,35 @@ def _spawn_passthrough_popen(monkeypatch, on_worker_spawn):
 
 
 def _dispatch_from_fixture_primary(primary: Path, monkeypatch) -> None:
-    """Make ``cmd_dispatch`` accept the fixture primary: invoked from it, clean apart from worktrees."""
+    """Make ``cmd_dispatch`` accept the fixture primary: invoked from it, clean apart from worktrees,
+    with a fetched ``origin/main``."""
     with (primary / ".git" / "info" / "exclude").open("a", encoding="utf-8") as exclude:
         exclude.write(".worktrees/\n")
+    _fetch_fixture_origin_main(primary)
     monkeypatch.chdir(primary)
+
+
+def _fetch_fixture_origin_main(root: Path) -> None:
+    """Point ``origin/main`` at the fixture's HEAD, committing an empty base first if it has none.
+
+    Write-dispatch review admission reads the branch's authors from
+    ``origin/main..HEAD`` and refuses when ``origin/main`` is unresolvable (#9739).
+    """
+    env = delegate._sanitized_git_env()
+
+    def git(*args: str) -> subprocess.CompletedProcess:
+        return subprocess.run(
+            ["git", "-C", str(root), *args], capture_output=True, text=True, env=env, check=False, timeout=30
+        )
+
+    if git("rev-parse", "--verify", "--quiet", "HEAD").returncode:
+        for args in (
+            ("config", "user.email", "test@example.com"),
+            ("config", "user.name", "Test"),
+            ("commit", "-q", "--allow-empty", "--no-gpg-sign", "-m", "base"),
+        ):
+            assert git(*args).returncode == 0
+    assert git("update-ref", "refs/remotes/origin/main", "HEAD").returncode == 0
 
 
 def test_worktree_lock_files_are_private_and_persist(tmp_path, _fixture_worktree_lock_dir):
@@ -13351,6 +13422,7 @@ def test_dispatch_fails_before_spawning_when_the_worktree_lock_is_busy(tmp_tasks
     primary = tmp_path / "primary"
     primary.mkdir()
     _init_git_repo_for_test(primary, monkeypatch)
+    _fetch_fixture_origin_main(primary)
     worktree = _tmp_dispatch_repo_root(primary, monkeypatch) / ".worktrees" / "dispatch" / "agy" / task_id
     monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DEFAULT_TIMEOUT_S", 0.2)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda *a, **k: "a" * 40)
@@ -13364,6 +13436,7 @@ def test_dispatch_fails_before_spawning_when_the_worktree_lock_is_busy(tmp_tasks
             _write_args(
                 agent="agy",
                 research_task_family="ukrainian-authoring",
+                owned_path=list(_UKRAINIAN_OWNED_PATHS),
                 task_id=task_id,
                 worktree=str(worktree),
                 mode="workspace-write",
@@ -13395,6 +13468,7 @@ def test_cwd_dispatch_fails_when_the_worktree_lock_is_busy(tmp_tasks_dir, tmp_pa
             _write_args(
                 agent="agy",
                 research_task_family="ukrainian-authoring",
+                owned_path=list(_UKRAINIAN_OWNED_PATHS),
                 task_id="impl-cwd-busy",
                 cwd=str(worktree),
                 mode="workspace-write",
@@ -13508,6 +13582,7 @@ def test_cwd_dispatch_fails_when_the_worktree_is_removed_while_it_waits(tmp_task
         _write_args(
             agent="agy",
             research_task_family="ukrainian-authoring",
+            owned_path=list(_UKRAINIAN_OWNED_PATHS),
             task_id="impl-cwd-late",
             cwd=str(worktree),
             mode="workspace-write",
@@ -16819,7 +16894,7 @@ def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
 
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "cursor" / "task-7236-held"
     branch = "cursor/feature-7236"
-    calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha=_STUB_BASE_SHA)
 
     def fake_run(cmd, **kwargs):
         calls.append(list(cmd))
@@ -16831,7 +16906,7 @@ def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
                 "",
             )
         if cmd[:2] == ["git", "rev-parse"] and cmd[-1] == f"refs/heads/{branch}":
-            return subprocess.CompletedProcess(cmd, 0, "same-sha", "")
+            return subprocess.CompletedProcess(cmd, 0, _STUB_BASE_SHA, "")
         calls.pop()
         return base_stub(cmd, **kwargs)
 
@@ -16856,6 +16931,7 @@ def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
         agent="agy",
         # #9275: agy without a Ukrainian classification is the bounded fallback.
         research_task_family="ukrainian-authoring",
+        owned_path=list(_UKRAINIAN_OWNED_PATHS),
         task_id="task-7236-refused",
         branch=branch,
         worktree="auto",
@@ -16882,10 +16958,23 @@ def test_cmd_dispatch_refusal_on_base_resolution_writes_terminal_task_record(
     tmp_tasks_dir,
 ):
     """#7236: base resolution refusal writes a failed task record with the reason."""
+    # The base is known locally (a remote-tracking ref of a since-deleted branch),
+    # so review admission reads it (#9739); fetching it at worktree time fails.
+    main, _dispatch_wt = _init_repo_with_worktree(tmp_path)
+    subprocess.run(
+        ["git", "-C", str(main), "update-ref", "refs/remotes/origin/non-existent-base-branch", "HEAD"],
+        check=True,
+        capture_output=True,
+        env=delegate._sanitized_git_env(),
+        timeout=30,
+    )
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
     args = _write_args(
         agent="agy",
         # #9275: agy without a Ukrainian classification is the bounded fallback.
         research_task_family="ukrainian-authoring",
+        owned_path=list(_UKRAINIAN_OWNED_PATHS),
         task_id="task-7236-bad-base",
         branch=None,
         worktree="auto",
