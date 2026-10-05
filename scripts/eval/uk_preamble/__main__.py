@@ -32,12 +32,17 @@ from .runner import (
     Executor,
     candidate_slots,
     composition_frame,
+    dispatch_args_frame,
     ensure_manifest,
+    freeze_judge_dispatch_args,
     frozen_plan,
+    judge_argument_hash_missing,
     load_manifest,
     pair_checks,
     plan_candidate_tasks,
     plan_judge_tasks,
+    refuse_unfrozen_judge_resume,
+    require_frozen_dispatch_args,
     resolve_seats,
     rules_block,
 )
@@ -158,7 +163,9 @@ def _add_dispatch_args(sub: argparse.ArgumentParser) -> None:
         "--hard-timeout", type=_positive, default=3600, help="Per-task wall-clock limit in seconds. Default: 3600."
     )
     sub.add_argument(
-        "--python", default=None, help="Interpreter used to call scripts/delegate.py. Default: the shared project interpreter."
+        "--python",
+        default=None,
+        help="Interpreter used to call scripts/delegate.py. Default: the shared project interpreter.",
     )
 
 
@@ -334,6 +341,7 @@ def _cmd_run(args: argparse.Namespace) -> int:
     tasks = plan_candidate_tasks(eval_set, variants, plan, block)
     dispatcher = make_dispatcher(args, worker_cwd)
     plan["composition"] = composition_frame(dispatcher, tasks)
+    plan["dispatch_args_sha256"] = dispatch_args_frame(dispatcher, tasks, results)
     ensure_manifest(results, plan, args.set.resolve())
     executor = make_executor(args, results, worker_cwd, dispatcher, frame=plan["composition"])
     if args.dry_run:
@@ -390,16 +398,35 @@ def _cmd_score(args: argparse.Namespace) -> int:
     exit_code = 0
     judge_tasks, exclusions, terms = [], [], manifest.get("judge")
     if "writing" in plan["kinds"] and (args.judge or terms is not None):
+        # A legacy manifest has no dispatch-argument freeze. Refuse before judge terms are
+        # written and before any judge is dispatched; a new --run-tag is the path.
+        if args.judge:
+            require_frozen_dispatch_args(plan)
         block = rules_block()
         terms = _judge_terms(args, manifest, block)
+        # Planning only reads stored writing. It runs before any manifest write so a resume
+        # whose judges already ran, but whose judge-argument hash was never stored, can be
+        # refused with the manifest byte-identical.
+        judge_tasks, exclusions = plan_judge_tasks(eval_set, results, plan, terms, block)
+        if args.judge and judge_argument_hash_missing(manifest):
+            refuse_unfrozen_judge_resume(
+                results,
+                plan["run_tag"],
+                make_dispatcher(args, Path(plan["worker_cwd"])),
+                judge_tasks,
+            )
         if args.judge and manifest.get("judge") is None:
-            # Frozen on the first judging call, before exclusions are known: the bound must not
-            # be re-chosen after seeing which pairs it excludes.
+            # Frozen on the first judging call. The bound is the caller's terms, including when
+            # every pair is excluded; it is not recomputed from that outcome.
             manifest["judge"] = terms
             write_private_json(results.path("manifest.json"), manifest)
-        judge_tasks, exclusions = plan_judge_tasks(eval_set, results, plan, terms, block)
         if args.judge and judge_tasks:
-            summary = make_executor(args, results, Path(plan["worker_cwd"])).run(judge_tasks)
+            dispatcher = make_dispatcher(args, Path(plan["worker_cwd"]))
+            # Per-seat hashes are frozen on the first execution and checked on every later one,
+            # including --retry-failed, before this call dispatches anything. A missing hash
+            # is refused again here when judge evidence already exists, before the write.
+            freeze_judge_dispatch_args(manifest, dispatcher, judge_tasks, results)
+            summary = make_executor(args, results, Path(plan["worker_cwd"]), dispatcher).run(judge_tasks)
             exit_code = 0 if summary.complete else 1
     sources = make_sources()
     scored: dict[str, Any] = score_candidates(results, eval_set, slots, sources)
