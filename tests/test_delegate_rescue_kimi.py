@@ -403,3 +403,86 @@ def test_an_unexpected_rescue_exception_is_typed_by_its_class(kimi_rescue, monke
     assert result["reason"] == "rescue_step_failed, OSError"
     assert_no_host_details(json.dumps(result), worktree, origin)
     _assert_kept_locally(TASK_ID, "cannot stat", "rescue_step_failed")
+
+
+@pytest.mark.parametrize("contents", ["empty", "nonempty", "symlink", "replacement"])
+def test_failed_publish_add_keeps_its_cause_and_only_removes_its_empty_directory(
+    kimi_rescue, monkeypatch, contents
+):
+    worktree, _origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n", commit=True)
+    repo = delegate._rescue_repo(worktree)
+    registered = repo.git("worktree", "list", "--porcelain").stdout
+    real_git = delegate._rescue_git
+    created = []
+    removals = []
+    stderr = "fatal: synthetic worktree add failure"
+
+    def fail_add(cwd, *args, **kwargs):
+        if args[:2] == ("worktree", "add"):
+            path = Path(args[-2])
+            assert path.is_dir() and not list(path.iterdir())
+            created.append(path)
+            if contents == "nonempty":
+                (path / "keep.txt").write_text("retain\n")
+            elif contents in {"symlink", "replacement"}:
+                original = path.with_name(path.name + "-original")
+                path.rename(original)
+                if contents == "symlink":
+                    path.symlink_to(original, target_is_directory=True)
+                else:
+                    path.mkdir()
+            return subprocess.CompletedProcess(["git", *args], 128, "", stderr)
+        return real_git(cwd, *args, **kwargs)
+
+    real_remove = delegate.worktree_claims.remove_unclaimed_worktree
+
+    def record_removal(path, **kwargs):
+        removals.append(path)
+        return real_remove(path, **kwargs)
+
+    monkeypatch.setattr(delegate, "_rescue_git", fail_add)
+    monkeypatch.setattr(delegate.worktree_claims, "remove_unclaimed_worktree", record_removal)
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert result["reason"] == "rescue_publish_worktree_failed, git worktree, exit 128", result
+    assert result["action"] == "error"
+    _assert_kept_locally(TASK_ID, stderr, "rescue_publish_worktree_failed")
+    assert not removals  # A directory from a failed add is never a removal target.
+    (path,) = created
+    if contents == "empty":
+        assert not path.exists()
+    elif contents == "nonempty":
+        assert (path / "keep.txt").read_text() == "retain\n"
+    else:
+        assert path.is_dir()
+        assert path.is_symlink() == (contents == "symlink")
+        assert path.with_name(path.name + "-original").is_dir()
+    assert repo.git("worktree", "list", "--porcelain").stdout == registered
+
+
+@pytest.mark.parametrize("scope", ["--local", "--worktree"])
+def test_rescue_create_checkout_probe_and_removal_run_no_configured_programs(kimi_rescue, tmp_path, scope):
+    worktree, origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n", commit=True)
+    marker = tmp_path / "cleanup-program-ran"
+    hooks = tmp_path / "cleanup-hooks"
+    hooks.mkdir()
+    for name in ("post-checkout", "post-index-change", "fsmonitor"):
+        program = hooks / name
+        program.write_text(f"#!/bin/sh\necho {name} >> '{marker}'\nexit 0\n")
+        program.chmod(0o755)
+    # Shared settings configured by a worker also apply in a fresh publish tree.
+    _git(worktree, "config", scope, "core.hooksPath", str(hooks))
+    _git(worktree, "config", scope, "core.fsmonitor", str(hooks / "fsmonitor"))
+    repo = delegate._rescue_repo(worktree)
+    registered = repo.git("worktree", "list", "--porcelain").stdout
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert result["action"] == "rescued", result
+    assert not marker.exists(), marker.read_text()
+    assert _remote_heads(origin)[RESCUE_REF] == result["head"]
+    assert repo.git("worktree", "list", "--porcelain").stdout == registered
+    assert not list(worktree.parent.glob(f"{worktree.name}.rescue-*"))

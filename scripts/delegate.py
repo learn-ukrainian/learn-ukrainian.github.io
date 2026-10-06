@@ -7482,13 +7482,18 @@ def _rescue_publish_worktree(repo: _RescueRepo, head: str) -> Iterator[Path]:
     :func:`_rescue_checkout` has put the rescued commit in it.
     """
     path = Path(tempfile.mkdtemp(prefix=f"{repo.worktree.name}.rescue-", dir=repo.worktree.parent))
+    identity = path.stat(follow_symlinks=False)
+    created = False
+
+    def publish_git(target: Path, args: list[str]) -> subprocess.CompletedProcess[str]:
+        return _rescue_git(target, *args, env=_isolated_git_env(), git_options=_RESCUE_PLUMBING_OPTIONS)
 
     def publish_is_dirty(target: Path) -> bool | None:
         # --no-checkout leaves tracked deletions in the index, but no content to lose.
-        # Once populated, require the ordinary clean-tree proof under the removal lock.
+        # Once populated, require a clean-tree proof with programs disabled under the removal lock.
         if {entry.name for entry in target.iterdir()} == {".git"}:
             return False
-        return worktree_claims.worktree_is_dirty(target)
+        return worktree_claims.worktree_is_dirty(target, git_runner=publish_git)
 
     try:
         proc = repo.git("worktree", "add", "--detach", "--no-checkout", str(path), head)
@@ -7496,30 +7501,53 @@ def _rescue_publish_worktree(repo: _RescueRepo, head: str) -> Iterator[Path]:
             raise _RescueFailure(
                 "cannot create the rescue publish worktree", _git_cause("rescue_publish_worktree_failed", proc)
             )
+        created = True
         yield path
     finally:
-        removal = worktree_claims.remove_unclaimed_worktree(
-            path,
-            repo_root=_REPO_ROOT,
-            control_root=_REPO_ROOT,
-            reason="rescue publish worktree cleanup",
-            owner_task_id=None,
-            releasable=lambda: (True, "created by this rescue"),
-            force=True,
-            dirty_probe=publish_is_dirty,
-            tasks_dir=tasks_dir(),
-            lock_dir=_worktree_lock_dir(),
-        )
-        if removal.action != "removed":
-            raise _RescueFailure(
-                "cannot remove the rescue publish worktree",
-                _TypedCause("rescue_publish_worktree_failed", diagnostic=json.dumps(removal.as_record())),
+        if created:
+            removal = worktree_claims.remove_unclaimed_worktree(
+                path,
+                repo_root=_REPO_ROOT,
+                control_root=_REPO_ROOT,
+                reason="rescue publish worktree cleanup",
+                owner_task_id=None,
+                releasable=lambda: (True, "created by this rescue"),
+                force=True,
+                dirty_probe=publish_is_dirty,
+                git_runner=publish_git,
+                tasks_dir=tasks_dir(),
+                lock_dir=_worktree_lock_dir(),
             )
+            if removal.action != "removed":
+                raise _RescueFailure(
+                    "cannot remove the rescue publish worktree",
+                    _TypedCause("rescue_publish_worktree_failed", diagnostic=json.dumps(removal.as_record())),
+                )
+        else:
+            # The add failed. Only remove our original empty directory;
+            # a partial add, replacement or cleanup error must not hide the add failure.
+            with contextlib.suppress(OSError):
+                parent_fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+                try:
+                    current = os.stat(path.name, dir_fd=parent_fd, follow_symlinks=False)
+                    if (current.st_dev, current.st_ino) == (identity.st_dev, identity.st_ino):
+                        os.rmdir(path.name, dir_fd=parent_fd)
+                finally:
+                    os.close(parent_fd)
 
 
 def _rescue_checkout(publish: Path, commit: str) -> None:
     """Check ``commit`` out in the publish worktree, with the main repository's own configuration."""
-    proc = _rescue_git(publish, "reset", "--hard", "--quiet", commit, network=True)
+    proc = _rescue_git(
+        publish,
+        "reset",
+        "--hard",
+        "--quiet",
+        commit,
+        network=True,
+        env=_isolated_git_env(),
+        git_options=_RESCUE_PLUMBING_OPTIONS,
+    )
     if proc.returncode != 0:
         raise _RescueFailure("cannot check out the rescue commit", _git_cause("rescue_publish_worktree_failed", proc))
 

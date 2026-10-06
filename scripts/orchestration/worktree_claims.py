@@ -594,9 +594,24 @@ def checked_out_branch(worktree: Path) -> str | None:
     return name if name and name != "HEAD" else None
 
 
-def worktree_is_dirty(worktree: Path) -> bool | None:
-    """Return whether ``git status --porcelain`` lists anything; ``None`` when unknown."""
-    proc = _git_probe(["status", "--porcelain"], cwd=worktree)
+def worktree_is_dirty(
+    worktree: Path,
+    *,
+    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+) -> bool | None:
+    """Return whether ``git status --porcelain`` lists anything; ``None`` when unknown.
+
+    A supplied runner keeps the caller's execution-safe Git configuration.
+    Other callers retain the ordinary probe.
+    """
+    try:
+        proc = (
+            git_runner(worktree, ["status", "--porcelain"])
+            if git_runner is not None
+            else _git_probe(["status", "--porcelain"], cwd=worktree)
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
     if proc is None or proc.returncode != 0:
         return None
     return bool((proc.stdout or "").strip())
