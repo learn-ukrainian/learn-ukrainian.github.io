@@ -1,0 +1,96 @@
+{
+  "pinned_count_at_creation": 13,
+  "exceptions": [
+    {
+      "path": "agents_extensions/shared/hooks/guard-pr-merge.py",
+      "enclosing_symbol": "_check_states",
+      "multiplicity": 1,
+      "normalized_ast": "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[List(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='checks'), Name(id='pr', ctx=Load()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args=[Name(id='repo', ctx=Load())], keywords=[]), ctx=Load()), Constant(value='--json'), Constant(value='name,bucket,state')], ctx=Load())], keywords=[keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='env', value=Call(func=Name(id='_gh_env', ctx=Load()), args=[], keywords=[])), keyword(arg='cwd', value=Name(id='cwd', ctx=Load())), keyword(arg='text', value=Constant(value=True)), keyword(arg='timeout', value=Constant(value=8))])",
+      "explanation": "Spreads _repo_args(repo) before --json name,bucket,state."
+    },
+    {
+      "path": "agents_extensions/shared/hooks/guard-pr-merge.py",
+      "enclosing_symbol": "_check_states_from_status_rollup",
+      "multiplicity": 1,
+      "normalized_ast": "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[List(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='view'), Name(id='pr', ctx=Load()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args=[Name(id='repo', ctx=Load())], keywords=[]), ctx=Load()), Constant(value='--json'), Constant(value='statusCheckRollup')], ctx=Load())], keywords=[keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='env', value=Call(func=Name(id='_gh_env', ctx=Load()), args=[], keywords=[])), keyword(arg='cwd', value=Name(id='cwd', ctx=Load())), keyword(arg='text', value=Constant(value=True)), keyword(arg='timeout', value=Constant(value=8))])",
+      "explanation": "Spreads _repo_args(repo) before --json statusCheckRollup."
+    },
+    {
+      "path": "agents_extensions/shared/hooks/guard-pr-merge.py",
+      "enclosing_symbol": "_pr_meta",
+      "multiplicity": 1,
+      "normalized_ast": "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[List(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='view'), Name(id='pr', ctx=Load()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args=[Name(id='repo', ctx=Load())], keywords=[]), ctx=Load()), Constant(value='--json'), Constant(value='isDraft,baseRefName,body,headRefOid,number,url')], ctx=Load())], keywords=[keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='env', value=Call(func=Name(id='_gh_env', ctx=Load()), args=[], keywords=[])), keyword(arg='cwd', value=Name(id='cwd', ctx=Load())), keyword(arg='text', value=Constant(value=True)), keyword(arg='timeout', value=Constant(value=8))])",
+      "explanation": "Spreads _repo_args(repo) between the PR selector and --json."
+    },
+    {
+      "path": "agents_extensions/shared/hooks/heal-core-bare.py",
+      "enclosing_symbol": "main",
+      "multiplicity": 1,
+      "normalized_ast": "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[List(elts=[Call(func=Name(id='str', ctx=Load()), args=[Name(id='python_bin', ctx=Load())], keywords=[]), Call(func=Name(id='str', ctx=Load()), args=[Name(id='script', ctx=Load())], keywords=[]), Constant(value='--repo'), Call(func=Name(id='str', ctx=Load()), args=[Name(id='project_dir', ctx=Load())], keywords=[]), Constant(value='--fix'), Constant(value='-q')], ctx=Load())], keywords=[keyword(arg='check', value=Constant(value=False)), keyword(arg='stdout', value=Attribute(value=Name(id='subprocess', ctx=Load()), attr='DEVNULL', ctx=Load())), keyword(arg='stderr', value=Attribute(value=Name(id='subprocess', ctx=Load()), attr='DEVNULL', ctx=Load()))])",
+      "explanation": "Executable is project_interpreter(); script is scripts/audit/check_core_bare.py."
+    },
+    {
+      "path": "scripts/guardrails/assert_primary_on_main.py",
+      "enclosing_symbol": "_git",
+      "multiplicity": 1,
+      "normalized_ast": "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='cwd', value=Call(func=Name(id='str', ctx=Load()), args=[Name(id='cwd', ctx=Load())], keywords=[])), keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='text', value=Constant(value=True)), keyword(arg='env', value=Name(id='env', ctx=Load())), keyword(arg='check', value=Constant(value=False)), keyword(arg='timeout', value=Name(id='_GIT_TIMEOUT_S', ctx=Load()))])",
+      "explanation": "argv is ['git', *args] from the caller's git arguments, not a fixed template."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "_run_git",
+      "multiplicity": 1,
+      "normalized_ast": "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='text', value=Constant(value=True)), keyword(arg='check', value=Constant(value=False)), keyword(arg='env', value=Call(func=Name(id='sanitized_git_env', ctx=Load()), args=[], keywords=[])), keyword(arg='timeout', value=Name(id='_GIT_TIMEOUT_S', ctx=Load()))])",
+      "explanation": "argv is ['git', '-C', cwd, *args] from the caller's git arguments."
+    },
+    {
+      "path": "scripts/hooks/hook_timing.py",
+      "enclosing_symbol": "run_wrapped",
+      "multiplicity": 1,
+      "normalized_ast": "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='input', value=Name(id='stdin', ctx=Load())), keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='timeout', value=Name(id='_HOOK_TIMEOUT_SECONDS', ctx=Load()))])",
+      "explanation": "argv is the hook command passed into run_wrapped, not a displayed list."
+    },
+    {
+      "path": "scripts/hooks/measure_hook_stack.py",
+      "enclosing_symbol": "_time_one",
+      "multiplicity": 1,
+      "normalized_ast": "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='input', value=Name(id='stdin', ctx=Load())), keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='env', value=Name(id='env', ctx=Load())), keyword(arg='cwd', value=Name(id='ROOT', ctx=Load())), keyword(arg='timeout', value=Name(id='_HOOK_TIMEOUT_SECONDS', ctx=Load()))])",
+      "explanation": "argv is the hook command passed into _time_one, not a displayed list."
+    },
+    {
+      "path": "scripts/lib/session_record.py",
+      "enclosing_symbol": "canonical_state_root",
+      "multiplicity": 1,
+      "normalized_ast": "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name(id='command', ctx=Load())], keywords=[keyword(arg='check', value=Constant(value=False)), keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='text', value=Constant(value=True)), keyword(arg='env', value=Name(id='env', ctx=Load())), keyword(arg='timeout', value=Name(id='_GIT_TIMEOUT_SECONDS', ctx=Load()))])",
+      "explanation": "command is the git -C rev-parse list built above and passed by name."
+    },
+    {
+      "path": "scripts/opsec/gh_snapshot.py",
+      "enclosing_symbol": "admit",
+      "multiplicity": 1,
+      "normalized_ast": "Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load())",
+      "explanation": "reader defaults to subprocess.run and is forwarded to repository."
+    },
+    {
+      "path": "scripts/opsec/gh_snapshot.py",
+      "enclosing_symbol": "repository",
+      "multiplicity": 1,
+      "normalized_ast": "Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load())",
+      "explanation": "reader defaults to subprocess.run and launches git remote get-url origin."
+    },
+    {
+      "path": "scripts/opsec/prepublish.py",
+      "enclosing_symbol": "checked_run",
+      "multiplicity": 1,
+      "normalized_ast": "BoolOp(op=Or(), values=[Name(id='runner', ctx=Load()), Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load())])",
+      "explanation": "runner falls back to subprocess.run; args are the caller's, gh goes through admit."
+    },
+    {
+      "path": "scripts/orchestration/thread_handoff.py",
+      "enclosing_symbol": "run_command",
+      "multiplicity": 1,
+      "normalized_ast": "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name(id='args', ctx=Load())], keywords=[keyword(arg='cwd', value=Call(func=Name(id='str', ctx=Load()), args=[Name(id='cwd', ctx=Load())], keywords=[])), keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='text', value=Constant(value=True)), keyword(arg='timeout', value=Name(id='timeout_s', ctx=Load())), keyword(arg='check', value=Constant(value=False)), keyword(arg='env', value=Name(id='env', ctx=Load()))])",
+      "explanation": "args is caller-supplied; callers pass git, gh, ps, and the project interpreter."
+    }
+  ]
+}

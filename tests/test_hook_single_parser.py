@@ -1,128 +1,97 @@
-"""Fail the build when a hook grows a second shell parser (#9807).
+"""Fail the build when a hook grows a second shell parser or an unreviewed process start (#9807).
 
-The check is structural. Over the whole module it collects every binding of
-each name to the ``shlex`` module or a boundary module: imports, assignments,
-augmented and annotated assignments, unpacking, ``for`` / ``with`` /
-``except`` targets, walrus expressions, function and class definitions, and
-``global`` / ``nonlocal``. If a name is ever bound to one of those modules,
-every use of that name may be that module. A later, earlier, or untaken
-assignment does not remove that binding. Process runners are not copied
-through those bindings.
+Parser sites. Over the whole module the check collects every binding of each
+name to the ``shlex`` module or a boundary module. If a name is ever bound to
+one of those modules, every use of that name may be that module. A later,
+earlier, or untaken assignment does not remove that binding. A name bound to
+``shlex`` may appear only as ``quote`` or ``join`` in load context. ``shlex.split``
+and ``shlex.shlex`` are parser sites in every position. Imports of ``bashlex``
+and ``tree_sitter_bash`` are sites. ``shlex.quote`` and ``shlex.join`` are output
+quoting and are allowed. Generic regexes are not parsers.
 
-A name bound to the ``shlex`` module may appear only as ``quote`` or ``join``
-attribute access in load context; every other use of that name is a parser
-site. ``from shlex import split`` and ``from shlex import shlex`` are always
-sites. ``shlex.split`` and ``shlex.shlex`` are parser sites in every
-position, including when they are not the function of a call. Imports and
-references of ``bashlex`` and ``tree_sitter_bash`` are sites. A literal argv
-whose program is ``bash``, ``sh``, ``dash``, or ``zsh`` (or a path ending in
-one of those) and that requests a syntax check (``-n``, a short-option
-cluster containing ``n``, ``--noexec``, or ``-o noexec``) is a site. The
-argv or command may be a literal, a list concatenation, a starred literal,
-a name bound once in the same scope to a literal list or string, or a
-string built by ``%``, ``str.format``, or an f-string whose parts are
-literals. The call is a site when that value is still a recognizable shell
-and a syntax-check flag. A shell command string beginning with one of those
-programs plus a ``-n``-class flag is the same site on ``os.system``,
-``os.popen``, ``asyncio.create_subprocess_shell`` (including
-``asyncio.subprocess`` and a from-import of it), ``loop.subprocess_shell``,
-``subprocess.getoutput``, ``subprocess.getstatusoutput``, and
-``subprocess.*`` with ``shell=True``. ``loop.subprocess_exec`` is the same
-site when the receiver is an event loop obtained from ``asyncio``.
-``shlex.quote`` and ``shlex.join`` are output quoting and are allowed.
-Generic regexes, loops, and subprocess calls are not parsers.
+The shared parser boundary is ``shell_shlex.py`` and ``shell_redirects.py``.
+Outside it, a name bound to either module may appear only as a public export.
+Aliased imports and attribute access are checked. Wildcard imports and dynamic
+access to these modules fail. The observed parser sites must equal the frozen
+creation set exactly. This module is a test: production hooks must not import
+it, and it is not a bash oracle deployed with them.
 
-In a hook module outside the boundary, a process runner may appear only as
-the ``func`` of a call, or as the class of a match pattern (a call written
-in a pattern). Every other use — assignment value, argument, return,
-default, annotation, collection element, comprehension or loop iterable,
-unpacking source, or attribute of something else — is a violation,
-``runner used as a value``. In a hook module the runner is not followed into
-the name that received it. In a production helper, a name bound to a runner
-(assignment or parameter default) is that runner when called, and a
-module-level re-export of a runner callable or of a standard runner module
-is that object in modules that import the name. Any other use of a runner
-callable as a value is the same violation. A direct call keeps the argv and
-command-string checks over every argument, positional or keyword.
+Process starts. This check does not track commands through assignments, aliases,
+or event-loop objects. A process start is allowed only when both of these hold:
 
-A process runner is ``subprocess.run``, ``Popen``, ``call``, ``check_call``,
-``check_output``, ``getoutput``, or ``getstatusoutput``; ``os.system``,
-``os.popen``, ``os.exec*``, ``os.spawn*``, ``os.posix_spawn``, or
-``os.posix_spawnp``; or ``asyncio.create_subprocess_exec`` or
-``asyncio.create_subprocess_shell``. ``asyncio.subprocess`` is that asyncio
-runner module. The import, an aliased import, and the attribute
-``asyncio.subprocess`` are the module. ``from asyncio.subprocess import``
-of those two callables, with or without an alias, is the runner, and
-``from asyncio import subprocess`` binds the same module. The reference
-may be ``module.attr`` on any import of that module, including a dotted
-import whose final segment is the module, or a name brought in by ``from
-module import attr``. The final segment of ``asyncio.subprocess`` is not
-the ``subprocess`` module.
+1. It is a direct call ``subprocess.run``, ``subprocess.call``,
+   ``subprocess.check_call``, or ``subprocess.check_output``. ``Popen`` is not
+   permitted. ``subprocess`` is bound only by a module-level plain
+   ``import subprocess`` that is never rebound, aliased, passed, returned, or
+   stored. The call has exactly one positional argument, or only an explicit
+   ``args=`` keyword, and no call-level ``*args`` or ``**kwargs``. ``shell=``
+   may only be the literal ``False``. ``executable=`` is forbidden.
+2. That argument is a list or tuple display matching a reviewed command
+   template: a literal ``git`` or ``gh``, literal subcommand words, and variable
+   operands only in the template's operand positions. Config-injection forms
+   (``-c``, ``--config``, and alias definitions) are violations. There is no
+   general ``python`` permission.
 
-The module objects ``subprocess``, ``os``, ``asyncio``, and ``shlex`` follow
-the same shape when they are passed, assigned, or stored instead of used as
-the base of an attribute (``module used as a value``). ``asyncio.subprocess``
-used that way is the ``asyncio`` module. A ``shlex`` module used that way is
-also a parser site. ``getattr(subprocess, 'run')`` passes the module and is
-that violation; it is not a separate hole.
+Anything else that can start a process is a violation, reported as
+``process-start: path:line`` plus a reason code. That includes other
+``subprocess`` references except ``DEVNULL``, ``PIPE``, ``STDOUT``,
+``TimeoutExpired``, ``CalledProcessError``, and ``CompletedProcess``;
+``from subprocess import``; ``os`` process functions (``system``, ``popen``,
+``exec*``, ``spawn*``, ``posix_spawn*``, ``fork*``, ``startfile``) and ``os``
+module escapes; ``asyncio`` subprocess APIs and any ``subprocess_exec`` or
+``subprocess_shell`` attribute, whatever the receiver is; and ``pty``,
+``multiprocessing``, ``concurrent.futures.ProcessPoolExecutor``,
+``psutil.Popen``, ``pexpect``, ``sh``, and ``plumbum``. A new external
+capability has to be classified in this set before it is silent.
 
-In a hook module outside the boundary, ``from shlex import *``,
-``from subprocess import *``, ``from os import *``, ``from asyncio import *``,
-``from asyncio.subprocess import *``, and a wildcard import of either
-boundary module are violations by themselves. Star-imports are not expanded,
-except ``from asyncio.subprocess import *``, which binds that module's two
-runner callables so a call is still a site.
+Rule 4 exceptions. An existing call whose argv is not a reviewed template, and
+an existing helper default or alias that stores ``subprocess.run``, is listed
+in ``tests/fixtures/hook_process_start_baseline.json``. Each entry pins
+multiplicity, the normalized call AST, and a one-line explanation of where the
+command comes from. The fixture must equal the creation set in this module.
+Replacing, duplicating, or adding an entry fails unless both change together.
+An entry waives nothing in rule 1 or 3: ``shell=``, ``executable=``, a rebound
+or aliased ``subprocess``, and any other process API still fail when the same
+AST is written into the baseline.
 
-A name keeps every module it is imported as. Each binding is checked.
-Iteration over those sets is sorted.
+Trust assumptions. The check trusts that the literal names ``git`` and ``gh``
+resolve to those executables, and that user or system git/gh configuration does
+not define a shell alias for a reviewed subcommand. It does not read that
+configuration.
 
-Boundary modules are recognized by the final segment of every import form:
-a plain import, an alias, a dotted import (``import package.shell_shlex``),
-and a relative import. Attribute access on the resolved module must be a
-public export.
+Helper scope. The denominator is every hook module plus the production helpers
+those hooks import. A reached helper follows import-time imports, relative
+imports, and function-local absolute imports. ``scripts/ai_agent_bridge/`` and
+``agents_extensions/shared/session_streams/`` are not entered. The production
+helper count is 26.
 
-Name use is not a list of statement kinds. A parent map over ``ast.walk``
-inspects every name and every attribute chain, wherever it sits. External
-syntax-check calls use that same walk: every ``ast.Call`` is inspected, so
-the position of the call cannot hide it.
+The walk is a pure AST walk. It does not import or execute the modules it
+scans. Iteration order is sorted, so the result does not depend on
+``PYTHONHASHSEED``.
 
-Helper scope. The denominator is every hook module plus the production
-helpers reachable from those hooks. A reached helper follows its import-time
-imports, its relative imports, and its function-local absolute imports,
-including when the absolute import crosses a package boundary. Unrelated
-application packages are not entered: ``scripts/ai_agent_bridge/`` and
-``agents_extensions/shared/session_streams/``. Those are the application
-imports on the session-start helper chain, and they are not hook parsers.
-The resulting production helper count is 26.
-
-Accepted limitations (owner: claude-infra, slice 2b). Slice 2a does not
-establish the Move 2 guarantee while the handwritten scanners remain:
+Accepted limitations (owner: claude-infra). Slice 2a does not establish the
+Move 2 guarantee while the handwritten scanners remain:
 
 - Handwritten scanners, this inventory:
   ``agents_extensions/shared/hooks/guard-secret-print.py``
-  ``_strip_shell_comments``, ``_decode_ansi_c_quotes``,
-  ``_protect_parameters``, ``_substitution_spans``;
+  ``_strip_shell_comments``, ``_collapse_shell_line_continuations``,
+  ``_decode_ansi_c_quotes``, ``_protect_parameters``, ``_substitution_spans``;
   ``agents_extensions/shared/hooks/guard-primary-checkout-write.py``
-  ``_strip_shell_comments``, ``_decode_ansi_c_quotes``,
-  ``_mask_quoted_literals``, ``_normalize_backtick_substitutions``,
+  ``_strip_shell_comments``, ``_collapse_shell_line_continuations``,
+  ``_decode_ansi_c_quotes``, ``_mask_quoted_literals``,
+  ``_normalize_backtick_substitutions``,
   ``_normalize_quoted_command_substitutions``.
 - Execution and import machinery is not run: ``exec``, ``eval``, ``compile``,
   computed ``importlib`` / ``__import__``, and ``typing.get_type_hints``.
 - Quoted (string) annotations stay source text.
 - Dynamic namespace access: ``globals()``, ``vars()``, ``__dict__``, and
-  ``sys.modules[...]``. A runner reached only through that machinery, with no
-  direct reference to the module or the callable, stays unresolved.
-- Explicit ``Popen.__init__`` re-entry on an existing ``subprocess.Popen``.
-- ``type(p)`` reconstruction of a ``subprocess.Popen`` instance.
-- Internal stdlib re-exports, for example ``asyncio.base_events`` and
-  ``asyncio.events``. Re-exports through the standard runner modules
-  (``subprocess``, ``os``, ``asyncio``, ``asyncio.subprocess``) are covered.
-
-``shell_shlex.py`` and ``shell_redirects.py`` are the shared parser boundary.
-Outside those modules a name bound to either may appear only as a public
-export. This module is a test: production hooks must not import it, and it is
-not a bash oracle deployed with them. There is no ``bash -n`` subprocess in
-this check.
+  ``sys.modules[...]``. A process starter reached only through that machinery,
+  with no direct reference to the module or the callable, stays unresolved.
+- ``Popen.__init__`` re-entry and ``type(p)`` reconstruction are not separate
+  findings. Constructing ``subprocess.Popen`` is a violation; calling back into
+  an object that already exists is not detected.
+- Internal stdlib re-exports such as ``asyncio.base_events`` and
+  ``asyncio.events`` are not followed.
 """
 
 from __future__ import annotations
@@ -130,10 +99,9 @@ from __future__ import annotations
 import ast
 import json
 import os
-import shlex
 import subprocess
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -142,6 +110,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_PATH = REPO_ROOT / "tests" / "fixtures" / "hook_parser_sites_baseline.json"
+PROCESS_FIXTURE_PATH = REPO_ROOT / "tests" / "fixtures" / "hook_process_start_baseline.json"
 
 # Creation count. The on-disk fixture must equal ``CREATION_SITES`` exactly.
 # Shrinking a site means editing the fixture and that tuple in the same change.
@@ -217,51 +186,14 @@ WHITE_BOX_TESTS = frozenset(
 
 # Closed list. A new shell-parser dependency is a new site, not a silent miss.
 SHELL_PARSER_LIBRARIES = frozenset({"bashlex", "tree_sitter_bash"})
-SYNTAX_CHECK_SHELLS = frozenset({"bash", "sh", "dash", "zsh"})
 SHLEX_MODULE_ALLOWED_ATTRS = frozenset({"quote", "join"})
 DYNAMIC_MODULE_FUNCS = frozenset({"getattr", "vars", "globals", "__import__"})
-SUBPROCESS_FUNCS = frozenset({"run", "call", "check_call", "check_output", "Popen", "getoutput", "getstatusoutput"})
-OS_STRING_FUNCS = frozenset({"system", "popen"})
-OS_EXEC_LIST_FUNCS = frozenset({"execl", "execlp", "execle", "execlpe"})
-OS_EXEC_ARGV_FUNCS = frozenset({"execv", "execvp", "execvpe", "execve"})
-OS_SPAWN_LIST_FUNCS = frozenset({"spawnl", "spawnle", "spawnlp", "spawnlpe"})
-OS_SPAWN_ARGV_FUNCS = frozenset({"spawnv", "spawnve", "spawnvp", "spawnvpe"})
-# ``posix_spawn(path, argv, env)``: argv is the second positional, as with execv*.
-OS_POSIX_SPAWN_FUNCS = frozenset({"posix_spawn", "posix_spawnp"})
-OS_ARGV_SECOND_FUNCS = OS_EXEC_ARGV_FUNCS | OS_POSIX_SPAWN_FUNCS
-OS_RUNNER_FUNCS = (
-    OS_STRING_FUNCS
-    | OS_EXEC_LIST_FUNCS
-    | OS_EXEC_ARGV_FUNCS
-    | OS_SPAWN_LIST_FUNCS
-    | OS_SPAWN_ARGV_FUNCS
-    | OS_POSIX_SPAWN_FUNCS
-)
-ASYNCIO_EXEC_FUNCS = frozenset({"create_subprocess_exec"})
-ASYNCIO_SHELL_FUNCS = frozenset({"create_subprocess_shell"})
-ASYNCIO_RUNNER_FUNCS = ASYNCIO_EXEC_FUNCS | ASYNCIO_SHELL_FUNCS
-# Documented event-loop subprocess APIs. The receiver must be an event loop
-# obtained from asyncio, not an arbitrary object.
-LOOP_GETTERS = frozenset({"get_event_loop", "get_running_loop", "new_event_loop"})
-POLICY_GETTER = "get_event_loop_policy"
-POLICY_LOOP_METHODS = frozenset({"get_event_loop", "new_event_loop"})
-LOOP_SUBPROCESS_FUNCS = frozenset({"subprocess_exec", "subprocess_shell"})
-# ``asyncio.subprocess`` carries these runners. Its final segment is
-# ``subprocess``, which is a different family; the parent segment decides.
 # Star-imports of these modules are refused outside the boundary and are not
-# expanded. ``from asyncio.subprocess import *`` is refused and binds that
-# module's two runner callables.
+# expanded. ``asyncio.subprocess`` is named here because its final segment is
+# not the stdlib ``subprocess`` module.
 WILDCARD_IMPORT_MODULES = frozenset({"asyncio", "os", "shlex", "subprocess"})
-# Runner alias tracking is gone. May-bind is only the shlex module and the
-# boundary modules; a runner reference is judged where it is written.
+# May-bind is only the shlex module and the boundary modules.
 _MAY_BIND_KINDS = frozenset({"shlex_module", "boundary_module"})
-RUNNER_MODULE_FAMILIES = frozenset({"asyncio", "os", "subprocess"})
-VALUE_MODULE_FAMILIES = frozenset({"asyncio", "os", "shlex", "subprocess"})
-_RUNNER_FUNCS_BY_FAMILY = {
-    "asyncio": ASYNCIO_RUNNER_FUNCS,
-    "os": OS_RUNNER_FUNCS,
-    "subprocess": SUBPROCESS_FUNCS,
-}
 SHLEX_EXPORTS = frozenset({"split", "shlex", "quote", "join"})
 PARSER_SHLEX_ATTRS = frozenset({"split", "shlex"})
 
@@ -292,6 +224,29 @@ UNRELATED_APPLICATION_PREFIXES = (
 # Count of production helpers under the scope rule above. A change to the
 # rule that adds or drops a helper updates this count in the same change.
 PRODUCTION_HELPER_COUNT = 26
+
+# Reviewed command templates. ``None`` is an operand position. A call on main
+# matches one of these, or it is an exception in the process-start baseline.
+# There is no general python permission.
+COMMAND_TEMPLATES: tuple[tuple[str, tuple[str | None, ...]], ...] = (
+    ("git", ("rev-parse", "--git-common-dir")),
+    ("git", ("rev-parse", "--git-dir")),
+    ("git", ("rev-parse", "--path-format=absolute", "--git-common-dir")),
+    ("git", ("rev-parse", "--path-format=absolute", "--show-toplevel")),
+    ("git", ("symbolic-ref", "--quiet", "--short", "HEAD")),
+    ("gh", ("api", None)),
+    ("gh", ("pr", "checks", None, "--json", "name,bucket,state")),
+)
+
+PERMITTED_SUBPROCESS_RUNNERS = frozenset({"run", "call", "check_call", "check_output"})
+SUBPROCESS_NON_LAUNCHING = frozenset(
+    {"DEVNULL", "PIPE", "STDOUT", "TimeoutExpired", "CalledProcessError", "CompletedProcess"}
+)
+ASYNCIO_SUBPROCESS_ATTRS = frozenset({"create_subprocess_exec", "create_subprocess_shell"})
+EVENT_LOOP_SUBPROCESS_ATTRS = frozenset({"subprocess_exec", "subprocess_shell"})
+EXTERNAL_PROCESS_MODULES = frozenset({"pty", "multiprocessing", "pexpect", "plumbum", "sh"})
+_OS_GETATTR_FUNCS = frozenset({"getattr", "hasattr", "setattr", "delattr"})
+_ELIGIBLE_PROCESS_REASONS = frozenset({"argv-template", "runner-reference"})
 
 
 @dataclass(frozen=True)
@@ -349,8 +304,11 @@ class Violation:
     path: str
     enclosing_symbol: str
     detail: str
+    line: int = 0
 
     def format(self) -> str:
+        if self.kind == "process-start":
+            return f"process-start: {self.path}:{self.line}::{self.enclosing_symbol}::{self.detail}"
         return f"{self.kind}: {self.path}::{self.enclosing_symbol}::{self.detail}"
 
 
@@ -360,13 +318,14 @@ class Check:
     violations: tuple[Violation, ...]
     hook_files: tuple[str, ...]
     production_helpers: tuple[str, ...]
+    process_findings: tuple[ProcessFinding, ...] = ()
+    process_exceptions: tuple[ProcessException, ...] = ()
 
 
 @dataclass(frozen=True)
 class _Binding:
     kind: str
     detail: tuple[str, ...] = ()
-    argv: tuple[str | None, ...] | None = None
 
 
 _UNKNOWN = _Binding("unknown")
@@ -374,22 +333,11 @@ _UNKNOWN = _Binding("unknown")
 
 def _binding_sort_key(binding: _Binding) -> tuple[object, ...]:
     """Stable order for a binding set. The hash seed must not change results."""
-    if binding.argv is None:
-        return (binding.kind, binding.detail, True, ())
-    rendered = tuple("" if part is None else part for part in binding.argv)
-    return (binding.kind, binding.detail, False, rendered)
+    return (binding.kind, binding.detail)
 
 
 def _sorted_bindings(bindings: Iterable[_Binding]) -> list[_Binding]:
     return sorted(bindings, key=_binding_sort_key)
-
-
-def _first_syntax_identity(argvs: list[tuple[str | None, ...]]) -> str | None:
-    for argv in argvs:
-        identity = _syntax_identity(argv)
-        if identity:
-            return identity
-    return None
 
 
 def _enclosing_symbol(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> str:
@@ -413,6 +361,755 @@ def _enclosing_symbol(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> str:
     if not names:
         return "<module>"
     return ".".join(reversed(names))
+
+
+def _process_enclosing_symbol(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> str:
+    """Enclosing function, including a default or annotation on that function."""
+    names: list[str] = []
+    current: ast.AST | None = node
+    while current is not None:
+        parent = parents.get(current)
+        if isinstance(parent, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            in_body = any(current is statement for statement in parent.body)
+            in_signature = current is parent.args or current in parent.decorator_list or current is parent.returns
+            if in_body or in_signature:
+                names.append(parent.name)
+        elif isinstance(parent, ast.Lambda) and current in {parent.body, parent.args}:
+            names.append("<lambda>")
+        current = parent
+    if not names:
+        return "<module>"
+    return ".".join(reversed(names))
+
+
+def _is_os_process_attr(name: str) -> bool:
+    """True for the os process-start families named by the allowlist."""
+    return name in {"system", "popen", "startfile"} or name.startswith(("exec", "spawn", "posix_spawn", "fork"))
+
+
+def _is_config_literal(node: ast.AST) -> bool:
+    """True when a displayed argv word is a git/gh config or alias injection."""
+    if not isinstance(node, ast.Constant) or not isinstance(node.value, str):
+        return False
+    text = node.value
+    if text == "-c" or text.startswith("--config"):
+        return True
+    if text.startswith("!"):
+        return True
+    return "alias." in text and "!" in text
+
+
+def _module_is(module: str | None, name: str) -> bool:
+    if not module:
+        return False
+    return module == name or module.startswith(f"{name}.")
+
+
+def _is_stdlib_subprocess_module(module: str | None) -> bool:
+    """True for ``subprocess`` itself, not ``asyncio.subprocess`` or another package."""
+    if not module or module == "asyncio.subprocess" or module.startswith("asyncio.subprocess."):
+        return False
+    return module == "subprocess" or module.endswith(".subprocess")
+
+
+def _binding_targets(node: ast.AST) -> list[ast.AST]:
+    """Assignment, loop, with, and walrus targets. Imports and parameters are separate."""
+    if isinstance(node, (ast.For, ast.AsyncFor)):
+        return [node.target]
+    if isinstance(node, ast.Assign):
+        return list(node.targets)
+    if isinstance(node, (ast.AnnAssign, ast.AugAssign)):
+        return [node.target]
+    if isinstance(node, ast.NamedExpr):
+        return [node.target]
+    if isinstance(node, (ast.With, ast.AsyncWith)):
+        return [item.optional_vars for item in node.items if item.optional_vars is not None]
+    return []
+
+
+def _store_names(target: ast.AST) -> list[ast.Name]:
+    if isinstance(target, ast.Name) and isinstance(target.ctx, (ast.Store, ast.Del)):
+        return [target]
+    if isinstance(target, (ast.Tuple, ast.List)):
+        found: list[ast.Name] = []
+        for elt in target.elts:
+            found.extend(_store_names(elt))
+        return found
+    if isinstance(target, ast.Starred):
+        return _store_names(target.value)
+    return []
+
+
+def _is_module_level(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> bool:
+    current: ast.AST | None = node
+    while current is not None:
+        if isinstance(current, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda, ast.ClassDef)):
+            return False
+        current = parents.get(current)
+    return True
+
+
+def _attribute_root_name(node: ast.AST) -> tuple[str, tuple[str, ...]] | None:
+    chain = _attribute_chain(node)
+    if chain is None:
+        return None
+    root, attrs = chain
+    return root.id, attrs
+
+
+def _argv_matches_template(argv: ast.AST) -> bool:
+    """True when ``argv`` is a list or tuple display of one reviewed template."""
+    if not isinstance(argv, (ast.List, ast.Tuple)):
+        return False
+    elements = argv.elts
+    if not elements or any(isinstance(elt, ast.Starred) for elt in elements):
+        return False
+    executable = elements[0]
+    if not isinstance(executable, ast.Constant) or not isinstance(executable.value, str):
+        return False
+    rest = elements[1:]
+    for name, parts in COMMAND_TEMPLATES:
+        if executable.value != name or len(rest) != len(parts):
+            continue
+        if all(_template_part_matches(elt, part) for elt, part in zip(rest, parts, strict=True)):
+            return True
+    return False
+
+
+def _template_part_matches(elt: ast.AST, part: str | None) -> bool:
+    if isinstance(elt, ast.Starred) or _is_config_literal(elt):
+        return False
+    if part is None:
+        return True
+    return isinstance(elt, ast.Constant) and elt.value == part
+
+
+def _displayed_argv_has_config_injection(argv: ast.AST) -> bool:
+    if not isinstance(argv, (ast.List, ast.Tuple)):
+        return False
+    return any(_is_config_literal(elt) for elt in argv.elts)
+
+
+def _call_shape_reason(call: ast.Call) -> str | None:
+    """Rule 1 call-shape failure, or None when the call may be templated."""
+    if any(isinstance(arg, ast.Starred) for arg in call.args):
+        return "call-shape:starred-args"
+    for keyword in call.keywords:
+        if keyword.arg is not None:
+            continue
+        if _starred_keywords_name(keyword.value, "executable"):
+            return "call-shape:executable"
+        if _starred_keywords_name(keyword.value, "shell"):
+            return "call-shape:shell"
+        return "call-shape:starred-kwargs"
+    has_args = any(keyword.arg == "args" for keyword in call.keywords)
+    if has_args and call.args:
+        return "call-shape:positional-and-args"
+    if not has_args and len(call.args) != 1:
+        return "call-shape:positional-count"
+    for keyword in call.keywords:
+        if keyword.arg == "executable":
+            return "call-shape:executable"
+        if keyword.arg == "shell" and not (isinstance(keyword.value, ast.Constant) and keyword.value.value is False):
+            return "call-shape:shell"
+    return None
+
+
+def _starred_keywords_name(node: ast.expr, name: str) -> bool:
+    if not isinstance(node, ast.Dict):
+        return False
+    return any(isinstance(key, ast.Constant) and key.value == name for key in node.keys)
+
+
+def _call_argv_expr(call: ast.Call) -> ast.expr | None:
+    for keyword in call.keywords:
+        if keyword.arg == "args":
+            return keyword.value
+    if len(call.args) == 1:
+        return call.args[0]
+    return None
+
+
+def _exception_root(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> ast.AST:
+    """Largest expression that is the stored runner or the non-template call."""
+    current = node
+    while True:
+        parent = parents.get(current)
+        if isinstance(parent, ast.BoolOp):
+            current = parent
+            continue
+        if isinstance(parent, ast.IfExp) and current in {parent.body, parent.orelse}:
+            current = parent
+            continue
+        if isinstance(parent, ast.NamedExpr) and parent.value is current:
+            current = parent
+            continue
+        return current
+
+
+def _normalized_ast(node: ast.AST) -> str:
+    return ast.dump(node, include_attributes=False)
+
+
+@dataclass(frozen=True)
+class ProcessFinding:
+    """One allowlist miss. Eligible misses can match the shrink-only baseline."""
+
+    path: str
+    line: int
+    column: int
+    enclosing_symbol: str
+    reason: str
+    normalized_ast: str
+
+    @property
+    def eligible(self) -> bool:
+        return self.reason in _ELIGIBLE_PROCESS_REASONS
+
+    def key(self) -> tuple[str, str, str]:
+        return (self.path, self.enclosing_symbol, self.normalized_ast)
+
+    def as_violation(self) -> Violation:
+        return Violation("process-start", self.path, self.enclosing_symbol, self.reason, self.line)
+
+
+@dataclass(frozen=True)
+class ProcessException:
+    """One pinned non-template call or stored ``subprocess.run``."""
+
+    path: str
+    enclosing_symbol: str
+    multiplicity: int
+    normalized_ast: str
+    explanation: str
+
+    def key(self) -> tuple[str, str, str]:
+        return (self.path, self.enclosing_symbol, self.normalized_ast)
+
+
+PROCESS_EXCEPTION_COUNT = 13
+
+PROCESS_CREATION_EXCEPTIONS: tuple[ProcessException, ...] = (
+    ProcessException(
+        'agents_extensions/shared/hooks/guard-pr-merge.py',
+        '_check_states',
+        1,
+        (
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
+            "gs=[List(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='checks'), Nam"
+            "e(id='pr', ctx=Load()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args="
+            "[Name(id='repo', ctx=Load())], keywords=[]), ctx=Load()), Constant(value='--json'), Cons"
+            "tant(value='name,bucket,state')], ctx=Load())], keywords=[keyword(arg='capture_output', "
+            "value=Constant(value=True)), keyword(arg='env', value=Call(func=Name(id='_gh_env', ctx=L"
+            "oad()), args=[], keywords=[])), keyword(arg='cwd', value=Name(id='cwd', ctx=Load())), ke"
+            "yword(arg='text', value=Constant(value=True)), keyword(arg='timeout', value=Constant(val"
+            'ue=8))])'
+        ),
+        'Spreads _repo_args(repo) before --json name,bucket,state.',
+    ),
+    ProcessException(
+        'agents_extensions/shared/hooks/guard-pr-merge.py',
+        '_check_states_from_status_rollup',
+        1,
+        (
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
+            "gs=[List(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='view'), Name("
+            "id='pr', ctx=Load()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args=[N"
+            "ame(id='repo', ctx=Load())], keywords=[]), ctx=Load()), Constant(value='--json'), Consta"
+            "nt(value='statusCheckRollup')], ctx=Load())], keywords=[keyword(arg='capture_output', va"
+            "lue=Constant(value=True)), keyword(arg='env', value=Call(func=Name(id='_gh_env', ctx=Loa"
+            "d()), args=[], keywords=[])), keyword(arg='cwd', value=Name(id='cwd', ctx=Load())), keyw"
+            "ord(arg='text', value=Constant(value=True)), keyword(arg='timeout', value=Constant(value"
+            '=8))])'
+        ),
+        'Spreads _repo_args(repo) before --json statusCheckRollup.',
+    ),
+    ProcessException(
+        'agents_extensions/shared/hooks/guard-pr-merge.py',
+        '_pr_meta',
+        1,
+        (
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
+            "gs=[List(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='view'), Name("
+            "id='pr', ctx=Load()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args=[N"
+            "ame(id='repo', ctx=Load())], keywords=[]), ctx=Load()), Constant(value='--json'), Consta"
+            "nt(value='isDraft,baseRefName,body,headRefOid,number,url')], ctx=Load())], keywords=[key"
+            "word(arg='capture_output', value=Constant(value=True)), keyword(arg='env', value=Call(fu"
+            "nc=Name(id='_gh_env', ctx=Load()), args=[], keywords=[])), keyword(arg='cwd', value=Name"
+            "(id='cwd', ctx=Load())), keyword(arg='text', value=Constant(value=True)), keyword(arg='t"
+            "imeout', value=Constant(value=8))])"
+        ),
+        'Spreads _repo_args(repo) between the PR selector and --json.',
+    ),
+    ProcessException(
+        'agents_extensions/shared/hooks/heal-core-bare.py',
+        'main',
+        1,
+        (
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
+            "gs=[List(elts=[Call(func=Name(id='str', ctx=Load()), args=[Name(id='python_bin', ctx=Loa"
+            "d())], keywords=[]), Call(func=Name(id='str', ctx=Load()), args=[Name(id='script', ctx=L"
+            "oad())], keywords=[]), Constant(value='--repo'), Call(func=Name(id='str', ctx=Load()), a"
+            "rgs=[Name(id='project_dir', ctx=Load())], keywords=[]), Constant(value='--fix'), Constan"
+            "t(value='-q')], ctx=Load())], keywords=[keyword(arg='check', value=Constant(value=False)"
+            "), keyword(arg='stdout', value=Attribute(value=Name(id='subprocess', ctx=Load()), attr='"
+            "DEVNULL', ctx=Load())), keyword(arg='stderr', value=Attribute(value=Name(id='subprocess'"
+            ", ctx=Load()), attr='DEVNULL', ctx=Load()))])"
+        ),
+        'Executable is project_interpreter(); script is scripts/audit/check_core_bare.py.',
+    ),
+    ProcessException(
+        'scripts/guardrails/assert_primary_on_main.py',
+        '_git',
+        1,
+        (
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
+            "gs=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='cwd', value=Call(func=Name(id='"
+            "str', ctx=Load()), args=[Name(id='cwd', ctx=Load())], keywords=[])), keyword(arg='captur"
+            "e_output', value=Constant(value=True)), keyword(arg='text', value=Constant(value=True)),"
+            " keyword(arg='env', value=Name(id='env', ctx=Load())), keyword(arg='check', value=Consta"
+            "nt(value=False)), keyword(arg='timeout', value=Name(id='_GIT_TIMEOUT_S', ctx=Load()))])"
+        ),
+        "argv is ['git', *args] from the caller's git arguments, not a fixed template.",
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        '_run_git',
+        1,
+        (
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
+            "gs=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='capture_output', value=Constant"
+            "(value=True)), keyword(arg='text', value=Constant(value=True)), keyword(arg='check', val"
+            "ue=Constant(value=False)), keyword(arg='env', value=Call(func=Name(id='sanitized_git_env"
+            "', ctx=Load()), args=[], keywords=[])), keyword(arg='timeout', value=Name(id='_GIT_TIMEO"
+            "UT_S', ctx=Load()))])"
+        ),
+        "argv is ['git', '-C', cwd, *args] from the caller's git arguments.",
+    ),
+    ProcessException(
+        'scripts/hooks/hook_timing.py',
+        'run_wrapped',
+        1,
+        (
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
+            "gs=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='input', value=Name(id='stdin', "
+            "ctx=Load())), keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='ti"
+            "meout', value=Name(id='_HOOK_TIMEOUT_SECONDS', ctx=Load()))])"
+        ),
+        'argv is the hook command passed into run_wrapped, not a displayed list.',
+    ),
+    ProcessException(
+        'scripts/hooks/measure_hook_stack.py',
+        '_time_one',
+        1,
+        (
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
+            "gs=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='input', value=Name(id='stdin', "
+            "ctx=Load())), keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='en"
+            "v', value=Name(id='env', ctx=Load())), keyword(arg='cwd', value=Name(id='ROOT', ctx=Load"
+            "())), keyword(arg='timeout', value=Name(id='_HOOK_TIMEOUT_SECONDS', ctx=Load()))])"
+        ),
+        'argv is the hook command passed into _time_one, not a displayed list.',
+    ),
+    ProcessException(
+        'scripts/lib/session_record.py',
+        'canonical_state_root',
+        1,
+        (
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
+            "gs=[Name(id='command', ctx=Load())], keywords=[keyword(arg='check', value=Constant(value"
+            "=False)), keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='text',"
+            " value=Constant(value=True)), keyword(arg='env', value=Name(id='env', ctx=Load())), keyw"
+            "ord(arg='timeout', value=Name(id='_GIT_TIMEOUT_SECONDS', ctx=Load()))])"
+        ),
+        'command is the git -C rev-parse list built above and passed by name.',
+    ),
+    ProcessException(
+        'scripts/opsec/gh_snapshot.py',
+        'admit',
+        1,
+        (
+            "Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load())"
+        ),
+        'reader defaults to subprocess.run and is forwarded to repository.',
+    ),
+    ProcessException(
+        'scripts/opsec/gh_snapshot.py',
+        'repository',
+        1,
+        (
+            "Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load())"
+        ),
+        'reader defaults to subprocess.run and launches git remote get-url origin.',
+    ),
+    ProcessException(
+        'scripts/opsec/prepublish.py',
+        'checked_run',
+        1,
+        (
+            "BoolOp(op=Or(), values=[Name(id='runner', ctx=Load()), Attribute(value=Name(id='subproce"
+            "ss', ctx=Load()), attr='run', ctx=Load())])"
+        ),
+        "runner falls back to subprocess.run; args are the caller's, gh goes through admit.",
+    ),
+    ProcessException(
+        'scripts/orchestration/thread_handoff.py',
+        'run_command',
+        1,
+        (
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
+            "gs=[Name(id='args', ctx=Load())], keywords=[keyword(arg='cwd', value=Call(func=Name(id='"
+            "str', ctx=Load()), args=[Name(id='cwd', ctx=Load())], keywords=[])), keyword(arg='captur"
+            "e_output', value=Constant(value=True)), keyword(arg='text', value=Constant(value=True)),"
+            " keyword(arg='timeout', value=Name(id='timeout_s', ctx=Load())), keyword(arg='check', va"
+            "lue=Constant(value=False)), keyword(arg='env', value=Name(id='env', ctx=Load()))])"
+        ),
+        'args is caller-supplied; callers pass git, gh, ps, and the project interpreter.',
+    ),
+)
+
+
+def _finding(
+    path: str,
+    node: ast.AST,
+    parents: dict[ast.AST, ast.AST],
+    reason: str,
+    normalized: ast.AST | None = None,
+) -> ProcessFinding:
+    return ProcessFinding(
+        path,
+        getattr(node, "lineno", 0),
+        getattr(node, "col_offset", 0),
+        _process_enclosing_symbol(node, parents),
+        reason,
+        _normalized_ast(normalized if normalized is not None else node),
+    )
+
+
+def _benign_os_getattr(name: ast.Name, parents: dict[ast.AST, ast.AST]) -> bool:
+    """``getattr(os, "O_DIRECTORY", 0)`` reads a literal non-process attribute."""
+    parent = parents.get(name)
+    if not isinstance(parent, ast.Call) or not parent.args or parent.args[0] is not name:
+        return False
+    func = parent.func
+    if not isinstance(func, ast.Name) or func.id not in _OS_GETATTR_FUNCS or len(parent.args) < 2:
+        return False
+    attr = parent.args[1]
+    return isinstance(attr, ast.Constant) and isinstance(attr.value, str) and not _is_os_process_attr(attr.value)
+
+
+class _ProcessAllowlist:
+    """Positive allowlist over one module. The walk does not execute the module."""
+
+    def __init__(self, path: str, tree: ast.AST) -> None:
+        self.path = path
+        self.tree = tree
+        self.parents = _parent_map(tree)
+        self.findings: list[ProcessFinding] = []
+        self._subprocess_names: set[str] = set()
+        self._subprocess_clean = False
+        self._os_names: set[str] = set()
+        self._asyncio_names: set[str] = set()
+        self._asyncio_subprocess_names: set[str] = set()
+        self._psutil_names: set[str] = set()
+
+    def collect(self) -> list[ProcessFinding]:
+        self._collect_imports()
+        self._collect_binding_escapes()
+        self._collect_module_values()
+        self._collect_references()
+        self.findings.sort(key=lambda item: (item.line, item.column, item.reason, item.normalized_ast))
+        return self.findings
+
+    def _add(self, node: ast.AST, reason: str, normalized: ast.AST | None = None) -> None:
+        self.findings.append(_finding(self.path, node, self.parents, reason, normalized))
+
+    def _collect_imports(self) -> None:
+        plain_subprocess = False
+        tainted_subprocess = False
+        for node in ast.walk(self.tree):
+            if isinstance(node, ast.Import):
+                plain_subprocess, tainted_subprocess = self._collect_import(node, plain_subprocess, tainted_subprocess)
+            elif isinstance(node, ast.ImportFrom):
+                tainted_subprocess = self._collect_import_from(node) or tainted_subprocess
+        self._subprocess_clean = plain_subprocess and not tainted_subprocess
+
+    def _collect_import(
+        self, node: ast.Import, plain_subprocess: bool, tainted_subprocess: bool
+    ) -> tuple[bool, bool]:
+        module_level = _is_module_level(node, self.parents)
+        for alias in node.names:
+            root = alias.name.split(".", 1)[0]
+            local = alias.asname or root
+            if alias.name == "subprocess" or alias.name.startswith("subprocess."):
+                if alias.asname or not module_level or root != "subprocess":
+                    self._add(node, "binding:function-local-import" if not module_level else "binding:aliased-import")
+                    tainted_subprocess = True
+                    self._subprocess_names.add(local)
+                else:
+                    plain_subprocess = True
+                    self._subprocess_names.add("subprocess")
+            if root == "os" and alias.asname is None:
+                self._os_names.add("os")
+            elif alias.name == "os" and alias.asname:
+                self._os_names.add(alias.asname)
+            if alias.name == "asyncio" or alias.name.startswith("asyncio."):
+                self._remember_asyncio_import(node, alias)
+            if root == "psutil":
+                self._psutil_names.add(alias.asname or "psutil")
+            if root in EXTERNAL_PROCESS_MODULES and alias.name.split(".", 1)[0] == root:
+                self._add(node, f"external-capability:{root}")
+        return plain_subprocess, tainted_subprocess
+
+    def _remember_asyncio_import(self, node: ast.Import, alias: ast.alias) -> None:
+        if alias.name == "asyncio.subprocess" or alias.name.startswith("asyncio.subprocess."):
+            self._add(node, "asyncio-subprocess")
+            if alias.asname:
+                self._asyncio_subprocess_names.add(alias.asname)
+            else:
+                self._asyncio_names.add("asyncio")
+            return
+        local = alias.asname or "asyncio"
+        if alias.name == "asyncio" or (alias.asname is None and alias.name.startswith("asyncio.")):
+            self._asyncio_names.add(local if alias.asname or alias.name == "asyncio" else "asyncio")
+
+    def _collect_import_from(self, node: ast.ImportFrom) -> bool:
+        module = node.module or ""
+        tainted = False
+        if any(alias.name == "*" for alias in node.names):
+            # Wildcard imports are refused by the parser walk. They are not expanded.
+            return tainted
+        if _is_stdlib_subprocess_module(module):
+            self._add(node, "binding:from-import")
+            tainted = True
+        if _module_is(module, "os"):
+            for alias in node.names:
+                if _is_os_process_attr(alias.name):
+                    self._add(alias, f"os-process:{alias.name}")
+        if module == "asyncio.subprocess" or module.startswith("asyncio.subprocess."):
+            self._add(node, "asyncio-subprocess")
+        elif module == "asyncio":
+            self._collect_asyncio_from(node)
+        if module == "psutil" or module.startswith("psutil."):
+            for alias in node.names:
+                if alias.name == "Popen":
+                    self._add(alias, "external-capability:psutil.Popen")
+        if module == "concurrent.futures" or module.startswith("concurrent.futures."):
+            for alias in node.names:
+                if alias.name == "ProcessPoolExecutor":
+                    self._add(alias, "external-capability:ProcessPoolExecutor")
+        root = module.split(".", 1)[0]
+        if root in EXTERNAL_PROCESS_MODULES:
+            self._add(node, f"external-capability:{root}")
+        return tainted
+
+    def _collect_asyncio_from(self, node: ast.ImportFrom) -> None:
+        for alias in node.names:
+            local = alias.asname or alias.name
+            if alias.name in ASYNCIO_SUBPROCESS_ATTRS or alias.name == "subprocess":
+                self._add(alias, "asyncio-subprocess")
+                if alias.name == "subprocess":
+                    self._asyncio_subprocess_names.add(local)
+            elif alias.name == "subprocess_exec" or alias.name == "subprocess_shell":
+                self._add(alias, "event-loop-subprocess")
+
+    def _collect_binding_escapes(self) -> None:
+        for node in ast.walk(self.tree):
+            if isinstance(node, ast.arg) and node.arg == "subprocess":
+                self._add(node, "binding:rebound")
+                self._subprocess_clean = False
+                continue
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and node.name == "subprocess":
+                self._add(node, "binding:rebound")
+                self._subprocess_clean = False
+                continue
+            if isinstance(node, ast.ExceptHandler) and node.name == "subprocess":
+                self._add(node, "binding:rebound")
+                self._subprocess_clean = False
+                continue
+            for target in _binding_targets(node):
+                for name in _store_names(target):
+                    if name.id == "subprocess":
+                        self._add(name, "binding:rebound")
+                        self._subprocess_clean = False
+
+    def _collect_module_values(self) -> None:
+        for node in ast.walk(self.tree):
+            if not isinstance(node, ast.Name) or not isinstance(node.ctx, ast.Load):
+                continue
+            if node.id != "subprocess" or node.id not in self._subprocess_names:
+                continue
+            parent = self.parents.get(node)
+            if isinstance(parent, ast.Attribute) and parent.value is node:
+                continue
+            self._add(node, "binding:module-value")
+            self._subprocess_clean = False
+
+    def _collect_references(self) -> None:
+        for node in ast.walk(self.tree):
+            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
+                self._on_name(node)
+            elif isinstance(node, ast.Attribute) and isinstance(node.ctx, ast.Load):
+                self._on_attribute(node)
+
+    def _on_name(self, node: ast.Name) -> None:
+        parent = self.parents.get(node)
+        if isinstance(parent, ast.Attribute) and parent.value is node:
+            return
+        if node.id == "ProcessPoolExecutor":
+            self._add(node, "external-capability:ProcessPoolExecutor")
+        if node.id in self._os_names and not _benign_os_getattr(node, self.parents):
+            self._add(node, "os-escape")
+
+    def _on_attribute(self, node: ast.Attribute) -> None:
+        if node.attr == "ProcessPoolExecutor":
+            self._add(node, "external-capability:ProcessPoolExecutor")
+        if node.attr in EVENT_LOOP_SUBPROCESS_ATTRS:
+            self._add(node, "event-loop-subprocess")
+        root = _attribute_root_name(node)
+        if root is None:
+            self._on_unrooted_attribute(node)
+            return
+        name, attrs = root
+        if not attrs:
+            return
+        if name in self._os_names and _is_os_process_attr(attrs[-1]) and node.attr == attrs[-1]:
+            self._add(node, f"os-process:{node.attr}")
+        if name in self._psutil_names and node.attr == "Popen":
+            self._add(node, "external-capability:psutil.Popen")
+        if name in self._asyncio_names or name in self._asyncio_subprocess_names:
+            self._on_asyncio_attribute(node, name, attrs)
+        if name in self._subprocess_names and node.attr == attrs[-1] and self._name_is_subprocess(name, attrs[:-1]):
+            self._on_subprocess_attribute(node)
+
+    def _name_is_subprocess(self, name: str, leading: tuple[str, ...]) -> bool:
+        if leading:
+            return False
+        return name == "subprocess" or name in self._subprocess_names
+
+    def _on_unrooted_attribute(self, node: ast.Attribute) -> None:
+        """``something.subprocess_exec`` is already recorded. Asyncio calls on a call result too."""
+        if node.attr in ASYNCIO_SUBPROCESS_ATTRS and self._receiver_is_asyncio(node.value):
+            self._add(node, "asyncio-subprocess")
+
+    def _receiver_is_asyncio(self, node: ast.AST) -> bool:
+        if isinstance(node, ast.Name):
+            return node.id in self._asyncio_names or node.id in self._asyncio_subprocess_names
+        if isinstance(node, ast.Attribute) and node.attr == "subprocess":
+            return self._receiver_is_asyncio(node.value)
+        return False
+
+    def _on_asyncio_attribute(self, node: ast.Attribute, name: str, attrs: tuple[str, ...]) -> None:
+        if node.attr in ASYNCIO_SUBPROCESS_ATTRS and (
+            name in self._asyncio_subprocess_names or (len(attrs) >= 2 and attrs[-2] == "subprocess")
+        ):
+            self._add(node, "asyncio-subprocess")
+            return
+        if node.attr in ASYNCIO_SUBPROCESS_ATTRS and name in self._asyncio_names and attrs == (node.attr,):
+            self._add(node, "asyncio-subprocess")
+            return
+        if (
+            node.attr == "subprocess"
+            and name in self._asyncio_names
+            and not self._asyncio_subprocess_attribute_is_non_launching(node)
+        ):
+            parent = self.parents.get(node)
+            child_is_launcher = (
+                isinstance(parent, ast.Attribute)
+                and parent.value is node
+                and parent.attr in ASYNCIO_SUBPROCESS_ATTRS
+            )
+            if not child_is_launcher:
+                self._add(node, "asyncio-subprocess")
+
+    def _asyncio_subprocess_attribute_is_non_launching(self, node: ast.Attribute) -> bool:
+        parent = self.parents.get(node)
+        return isinstance(parent, ast.Attribute) and parent.value is node and parent.attr in SUBPROCESS_NON_LAUNCHING
+
+    def _on_subprocess_attribute(self, node: ast.Attribute) -> None:
+        parent = self.parents.get(node)
+        base_is_plain = isinstance(node.value, ast.Name) and node.value.id == "subprocess"
+        if node.attr in SUBPROCESS_NON_LAUNCHING:
+            return
+        if node.attr.startswith("__") and node.attr.endswith("__"):
+            # Dynamic namespace access is a named residual, not a process-start finding.
+            return
+        if node.attr not in PERMITTED_SUBPROCESS_RUNNERS:
+            self._add(node, f"subprocess-attribute:{node.attr}")
+            return
+        direct_call = isinstance(parent, ast.Call) and parent.func is node and base_is_plain
+        if not direct_call or not self._subprocess_clean or not base_is_plain:
+            if direct_call and base_is_plain and not self._subprocess_clean:
+                self._add(node, "binding:untrusted", parent)
+                return
+            reason = "runner-reference" if self._subprocess_clean and base_is_plain else "binding:untrusted"
+            root = _exception_root(node, self.parents) if reason == "runner-reference" else node
+            self._add(node, reason, root)
+            return
+        assert isinstance(parent, ast.Call)
+        shape = _call_shape_reason(parent)
+        if shape is not None:
+            self._add(parent, shape, parent)
+            return
+        argv = _call_argv_expr(parent)
+        if argv is not None and _displayed_argv_has_config_injection(argv):
+            self._add(parent, "config-injection", parent)
+            return
+        if argv is not None and _argv_matches_template(argv):
+            return
+        self._add(parent, "argv-template", parent)
+
+
+def collect_process_findings(path: str, tree: ast.AST) -> list[ProcessFinding]:
+    """Allowlist findings for one parsed module. Pure AST; nothing is executed."""
+    return _ProcessAllowlist(path, tree).collect()
+
+
+def reconcile_process_findings(
+    findings: Iterable[ProcessFinding],
+    baseline: Iterable[ProcessException],
+) -> tuple[list[Violation], list[str]]:
+    """Match eligible findings to the baseline. Rule 1 and rule 3 misses stay violations.
+
+    A baseline row does not waive ``shell=``, ``executable=``, a rebound import,
+    or another process API: those reasons are not eligible, so a row with the
+    same AST still leaves the violation in place.
+    """
+    expected: dict[tuple[str, str, str], int] = {}
+    for entry in baseline:
+        expected[entry.key()] = expected.get(entry.key(), 0) + entry.multiplicity
+    grouped: dict[tuple[str, str, str], list[ProcessFinding]] = defaultdict(list)
+    violations: list[Violation] = []
+    for finding in findings:
+        if not finding.eligible:
+            violations.append(finding.as_violation())
+            continue
+        grouped[finding.key()].append(finding)
+    for key in sorted(grouped):
+        group = sorted(grouped[key], key=lambda item: (item.line, item.column, item.reason))
+        allowed = expected.get(key, 0)
+        violations.extend(item.as_violation() for item in group[allowed:])
+    stale: list[str] = []
+    for key in sorted(expected):
+        seen = len(grouped.get(key, ()))
+        missing = expected[key] - seen
+        if missing > 0:
+            path, symbol, normalized = key
+            stale.extend([f"stale process exception: {path}::{symbol}::{normalized}"] * missing)
+    violations.sort(key=lambda item: (item.path, item.line, item.enclosing_symbol, item.detail))
+    return violations, stale
+
+
+def _stale_process_violation(item: str) -> Violation:
+    """Turn one reconcile stale row into a single violation.
+
+    ``item`` is ``stale process exception: path::symbol::normalized``. The
+    violation kind supplies that prefix once.
+    """
+    prefix = "stale process exception: "
+    body = item.removeprefix(prefix)
+    path, symbol, normalized = body.split("::", 2)
+    return Violation("stale process exception", path, symbol, normalized)
 
 
 @dataclass
@@ -455,52 +1152,20 @@ class _Scope:
         return None
 
 
-@dataclass(frozen=True)
-class _ReexportTables:
-    """Module-level names a project module exposes as runners or runner modules.
-
-    Keys are ``(dotted module, name)``. Runner values are ``(family, func)``.
-    Module values are ``subprocess``, ``os``, ``asyncio``, or
-    ``asyncio.subprocess``. Getter and event-loop names are the same keys.
-    """
-
-    runners: dict[tuple[str, str], tuple[str, str]]
-    modules: dict[tuple[str, str], str]
-    loop_getters: frozenset[tuple[str, str]]
-    policy_getters: frozenset[tuple[str, str]]
-    event_loops: frozenset[tuple[str, str]]
-
-
-_NO_REEXPORTS = _ReexportTables(
-    runners={},
-    modules={},
-    loop_getters=frozenset(),
-    policy_getters=frozenset(),
-    event_loops=frozenset(),
-)
-
-
 def _is_asyncio_subprocess_module(module: str) -> bool:
-    """True when ``module`` is the ``asyncio.subprocess`` runner module.
-
-    The final segment is ``subprocess``, which names another runner family.
-    The parent segment keeps this path on the asyncio runners.
-    """
+    """True for ``asyncio.subprocess``. Its final segment is not ``subprocess``."""
     return module.split(".")[-2:] == ["asyncio", "subprocess"]
 
 
 def _classify_leaf(leaf: str) -> tuple[str, str] | None:
     """Closed module named by an import's final segment.
 
-    The pair is ``(family, leaf)``. ``family`` is ``boundary``, ``shlex``,
-    ``subprocess``, ``os``, or ``asyncio``.
+    The pair is ``(family, leaf)``. ``family`` is ``boundary`` or ``shlex``.
     """
     if leaf in PUBLIC_EXPORTS:
         return ("boundary", leaf)
     if leaf == "shlex":
         return ("shlex", "shlex")
-    if leaf in RUNNER_MODULE_FAMILIES:
-        return (leaf, leaf)
     return None
 
 
@@ -523,45 +1188,6 @@ def _parent_map(tree: ast.AST) -> dict[ast.AST, ast.AST]:
         for child in ast.iter_child_nodes(node):
             parents[child] = node
     return parents
-
-
-def _is_runner_head(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> bool:
-    """True when ``node`` is the callable head of a call or match pattern."""
-    parent = parents.get(node)
-    if isinstance(parent, ast.Call) and parent.func is node:
-        return True
-    return isinstance(parent, ast.MatchClass) and parent.cls is node
-
-
-def _is_runner_alias_definition(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> bool:
-    """True when ``node`` is the value of a helper's runner binding.
-
-    An assignment or a parameter default defines the alias that calls follow.
-    A runner stored in a collection, returned, or passed elsewhere does not.
-    """
-    current = node
-    while True:
-        parent = parents.get(current)
-        if isinstance(parent, ast.BoolOp):
-            current = parent
-            continue
-        if isinstance(parent, ast.IfExp) and current in {parent.body, parent.orelse}:
-            current = parent
-            continue
-        if isinstance(parent, ast.NamedExpr) and parent.value is current:
-            current = parent
-            continue
-        if isinstance(parent, (ast.Assign, ast.AnnAssign)) and parent.value is current:
-            return True
-        if isinstance(parent, ast.arguments):
-            defaults = [*parent.defaults, *[item for item in parent.kw_defaults if item is not None]]
-            return current in defaults
-        return False
-
-
-def _is_attribute_base(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> bool:
-    parent = parents.get(node)
-    return isinstance(parent, ast.Attribute) and parent.value is node
 
 
 def _is_hook_path(path: str) -> bool:
@@ -602,58 +1228,6 @@ def _is_parser_library(module: str | None) -> str | None:
 def _is_deployed_oracle(path: str) -> bool:
     name = path.rsplit("/", 1)[-1]
     return _is_hook_path(path) and ("bash_oracle" in name or "shell_oracle" in name or "syntax_oracle" in name)
-
-
-def _executable_name(token: str) -> str:
-    return token.replace("\\", "/").rsplit("/", 1)[-1]
-
-
-def _syntax_identity(argv: tuple[str | None, ...]) -> str | None:
-    if not argv or argv[0] is None:
-        return None
-    words = list(argv)
-    exe = _executable_name(words[0])
-    rest = words[1:]
-    if exe == "env":
-        index = 0
-        while index < len(rest):
-            token = rest[index]
-            if token is None:
-                return None
-            if token in SYNTAX_CHECK_SHELLS or _executable_name(token) in SYNTAX_CHECK_SHELLS:
-                exe = _executable_name(token)
-                rest = rest[index + 1 :]
-                break
-            if token in {"-i", "-"} or token.startswith("-u") or "=" in token or token.startswith("-"):
-                index += 2 if token in {"-u", "-S"} else 1
-                continue
-            return None
-        else:
-            return None
-    if exe not in SYNTAX_CHECK_SHELLS:
-        return None
-    if _argv_requests_syntax_check(rest):
-        return f"syntax:{exe} -n"
-    return None
-
-
-def _argv_requests_syntax_check(argv: list[str | None]) -> bool:
-    """True when a literal argv asks a shell not to execute.
-
-    A short-option cluster containing ``n`` (``-n``, ``-nc``, ``-xn``),
-    ``--noexec``, or ``-o noexec`` is a syntax check. This is syntactic: the
-    tokens are not interpreted as a shell command line.
-    """
-    for index, token in enumerate(argv):
-        if token is None:
-            continue
-        if token == "--noexec":
-            return True
-        if token == "-o" and index + 1 < len(argv) and argv[index + 1] == "noexec":
-            return True
-        if token.startswith("-") and not token.startswith("--") and "n" in token[1:]:
-            return True
-    return False
 
 
 def _direct_alias_pairs(target: ast.AST, value: ast.AST) -> list[tuple[str, str]]:
@@ -727,33 +1301,19 @@ class _Analyzer:
         *,
         record_sites: bool,
         enforce_exports: bool,
-        reexports: _ReexportTables | None = None,
     ) -> None:
         self.path = path
         self.record_sites = record_sites
         self.enforce_exports = enforce_exports
-        tables = reexports or _NO_REEXPORTS
-        self._runner_reexports = tables.runners
-        self._module_reexports = tables.modules
-        self._reexport_loop_getters = tables.loop_getters
-        self._reexport_policy_getters = tables.policy_getters
-        self._reexport_event_loops = tables.event_loops
         self.sites: list[Site] = []
         self.violations: list[Violation] = []
+        self.process_findings: list[ProcessFinding] = []
         self._symbols: list[str] = []
         self._may: dict[str, set[_Binding]] = {}
         self._shlex_module_names: set[str] = set()
         self._boundary_names: dict[str, set[str]] = {}
         self._dynamic_aliases: dict[str, str] = {}
-        # Import bindings only. In a hook, assignment does not copy a runner
-        # into another name; that use is an escape violation. A helper follows
-        # the assignment into calls.
-        self._module_aliases: dict[str, set[str]] = {}
-        self._imported_runners: dict[str, set[tuple[str, str]]] = {}
         self._dotted_modules: dict[str, set[tuple[tuple[str, ...], str, str]]] = {}
-        self._project_modules: dict[str, str] = {}
-        self._loop_getters: set[str] = set()
-        self._policy_getters: set[str] = set()
         self._node_scopes: dict[int, _Scope] = {}
         self._module_scope: _Scope | None = None
 
@@ -769,10 +1329,9 @@ class _Analyzer:
 
     def analyze(self, tree: ast.Module) -> None:
         self._prepare_closed_names(tree)
-        # Name use and syntax-check calls are total walks. The statement
-        # visitor binds imports, records literal values those calls read, and
+        # Name use is a total walk. The statement visitor binds imports and
         # records imported callables. It does not decide which nodes can hold
-        # a module name or a call.
+        # a module name.
         self._inspect_bound_module_uses(tree)
         module = _Scope(kind="module", parent=None, module=None)  # type: ignore[arg-type]
         module.module = module
@@ -781,43 +1340,8 @@ class _Analyzer:
         self._hoist(tree.body, module)
         for stmt in tree.body:
             self._visit_stmt(stmt, module)
-        self._inspect_syntax_check_calls(tree)
-        self._inspect_runner_escape(tree)
+        self.process_findings.extend(collect_process_findings(self.path, tree))
 
-    def _scope_for(self, node: ast.AST, parents: dict[ast.AST, ast.AST]) -> _Scope:
-        """Lexical scope of ``node``.
-
-        The statement visitor stamps every statement and expression it walks.
-        A call it does not walk takes the nearest stamped ancestor: the
-        assignment or match statement for a target or pattern, and the
-        function definition for an annotation or a default.
-        """
-        current: ast.AST | None = node
-        while current is not None:
-            found = self._node_scopes.get(id(current))
-            if found is not None:
-                return found
-            current = parents.get(current)
-        if self._module_scope is None:
-            raise RuntimeError("syntax-check walk ran before the module scope existed")
-        return self._module_scope
-
-    def _inspect_syntax_check_calls(self, tree: ast.AST) -> None:
-        """Judge every call for an external syntax check, not a statement list."""
-        if not self.record_sites:
-            return
-        parents = _parent_map(tree)
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Call):
-                identity = self._call_syntax_identity(node, self._scope_for(node, parents))
-            elif isinstance(node, ast.MatchClass):
-                # ``case subprocess.run([...])`` is a class pattern, not an
-                # ``ast.Call``. The call is still written in that position.
-                identity = self._match_syntax_identity(node, self._scope_for(node, parents))
-            else:
-                continue
-            if identity:
-                self._record_site(node, identity, parents)
 
     def _bound_modules(self, name: str) -> list[tuple[str, str]]:
         """Every module ``name`` may be, shlex first, then boundary names in order."""
@@ -954,8 +1478,6 @@ class _Analyzer:
         self._may = {}
         self._shlex_module_names = set()
         self._boundary_names = {}
-        self._module_aliases = {}
-        self._imported_runners = {}
         self._dotted_modules = {}
         self._dynamic_aliases = {name: name for name in DYNAMIC_MODULE_FUNCS}
         pairs: list[tuple[str, str]] = []
@@ -990,22 +1512,15 @@ class _Analyzer:
         return True
 
     def _remember_module_import(self, alias: ast.alias) -> None:
-        """Record an ``import`` by the module's final segment.
+        """Record an import whose final segment is shlex or a boundary module.
 
-        ``import module as name`` binds ``name`` to that module. ``import
-        package.module`` binds ``package`` to the top package and the attribute
-        chain to the module. A runner module is remembered only so a direct
-        reference can be recognized; it is not copied through assignment.
-        ``asyncio.subprocess`` is the asyncio runner module, not ``subprocess``.
+        ``import module as name`` binds ``name``. ``import package.module``
+        binds the root name, and the attribute chain names the module.
         """
         parts = tuple(alias.name.split("."))
         leaf = parts[-1]
         root = parts[0]
         if alias.asname:
-            self._project_modules[alias.asname] = alias.name
-            if _is_asyncio_subprocess_module(alias.name):
-                self._bind_direct_module(alias.asname, "asyncio", "asyncio")
-                return
             classified = _classify_leaf(leaf)
             if classified is not None:
                 family, name = classified
@@ -1016,9 +1531,6 @@ class _Analyzer:
             family, name = root_classified
             self._bind_direct_module(root, family, name)
         if len(parts) > 1:
-            if _is_asyncio_subprocess_module(alias.name):
-                self._dotted_modules.setdefault(root, set()).add((parts[1:], "asyncio", "subprocess"))
-                return
             classified = _classify_leaf(leaf)
             if classified is not None:
                 family, name = classified
@@ -1029,8 +1541,6 @@ class _Analyzer:
             self._add_may(name, _Binding("shlex_module"))
         elif family == "boundary":
             self._add_may(name, _Binding("boundary_module", (leaf,)))
-        if family in VALUE_MODULE_FAMILIES:
-            self._module_aliases.setdefault(name, set()).add(family)
 
     def _dotted_rows(self, root: str) -> list[tuple[tuple[str, ...], str, str]]:
         return sorted(self._dotted_modules.get(root, ()), key=lambda row: (row[0], row[1], row[2]))
@@ -1050,29 +1560,9 @@ class _Analyzer:
         return found
 
     def _seed_import_from(self, node: ast.ImportFrom) -> None:
+        """May-bind a boundary module or shlex reached by ``from``."""
         module = node.module or ""
         module_leaf = module.split(".")[-1] if module else ""
-        resolved = _resolve_imported_module(self.path, node.module, node.level)
-        if resolved is not None:
-            for alias in node.names:
-                if alias.name == "*":
-                    continue
-                local = alias.asname or alias.name
-                pair = self._runner_reexports.get((resolved, alias.name))
-                if pair is not None:
-                    self._imported_runners.setdefault(local, set()).add(pair)
-                family = self._module_reexports.get((resolved, alias.name))
-                if family is not None:
-                    self._bind_direct_module(local, _runner_family(family), family)
-                if (resolved, alias.name) in self._reexport_loop_getters:
-                    self._loop_getters.add(local)
-                if (resolved, alias.name) in self._reexport_policy_getters:
-                    self._policy_getters.add(local)
-        if _is_asyncio_subprocess_module(module) and any(alias.name == "*" for alias in node.names):
-            for func in sorted(ASYNCIO_RUNNER_FUNCS):
-                self._imported_runners.setdefault(func, set()).add(("asyncio", func))
-        # ``from shell_shlex import name`` binds the export, not the module.
-        # ``from package import shell_shlex`` binds the module.
         if module_leaf not in PUBLIC_EXPORTS:
             for alias in node.names:
                 if alias.name in PUBLIC_EXPORTS:
@@ -1086,35 +1576,6 @@ class _Analyzer:
                     continue
                 family, name = classified
                 self._bind_direct_module(alias.asname or alias.name, family, name)
-        if _is_asyncio_subprocess_module(module):
-            funcs = ASYNCIO_RUNNER_FUNCS
-            family = "asyncio"
-        elif module_leaf == "subprocess":
-            funcs = SUBPROCESS_FUNCS
-            family = "subprocess"
-        elif module_leaf == "os":
-            funcs = OS_RUNNER_FUNCS
-            family = "os"
-        elif module_leaf == "asyncio":
-            funcs = ASYNCIO_RUNNER_FUNCS
-            family = "asyncio"
-        else:
-            return
-        if module_leaf == "asyncio" and not _is_asyncio_subprocess_module(module):
-            for alias in node.names:
-                local = alias.asname or alias.name
-                if alias.name == "subprocess":
-                    # ``from asyncio import subprocess`` is asyncio.subprocess.
-                    self._bind_direct_module(local, "asyncio", "asyncio")
-                elif alias.name in LOOP_GETTERS:
-                    self._loop_getters.add(local)
-                elif alias.name == POLICY_GETTER:
-                    self._policy_getters.add(local)
-        for alias in node.names:
-            if alias.name == "*" or alias.name not in funcs:
-                continue
-            local = alias.asname or alias.name
-            self._imported_runners.setdefault(local, set()).add((family, alias.name))
 
     def _propagate_may_bind(self, tree: ast.AST) -> None:
         """Copy a shlex or boundary binding through every alias of that name.
@@ -1220,161 +1681,6 @@ class _Analyzer:
                 elif binding.kind == "boundary_module":
                     self._boundary_names.setdefault(name, set()).add(binding.detail[0])
 
-    def _possible_runners(self, func: ast.expr, scope: _Scope) -> list[_Binding]:
-        """Runners ``func`` names. Helpers also follow a name bound to a runner."""
-        return [_Binding("runner", pair) for pair in self._direct_runner_bindings(func, scope, follow_aliases=True)]
-
-    def _direct_runner_bindings(
-        self,
-        node: ast.AST,
-        scope: _Scope | None = None,
-        *,
-        follow_aliases: bool = False,
-    ) -> list[tuple[str, str]]:
-        """``(family, func)`` for a runner written as ``module.attr`` or an import name.
-
-        ``follow_aliases`` is for calls. It is off while judging escape, so a
-        helper's alias definition is not itself reported as a value use of the
-        name it defines. Hook modules do not follow aliases.
-        """
-        found: set[tuple[str, str]] = set()
-        if isinstance(node, ast.Name):
-            found.update(self._imported_runners.get(node.id, ()))
-            if follow_aliases and scope is not None and not _is_hook_path(self.path):
-                binding = scope.lookup(node.id, node.lineno, node.col_offset)
-                if binding is not None and binding.kind == "runner" and len(binding.detail) >= 2:
-                    found.add((binding.detail[0], binding.detail[1]))
-        elif isinstance(node, ast.Attribute):
-            for family in self._runner_families(node.value):
-                funcs = _RUNNER_FUNCS_BY_FAMILY.get(family)
-                if funcs is not None and node.attr in funcs:
-                    found.add((family, node.attr))
-            if scope is not None and node.attr in LOOP_SUBPROCESS_FUNCS and self._is_event_loop(node.value, scope):
-                found.add(("asyncio", node.attr))
-            if isinstance(node.value, ast.Name):
-                dotted = self._project_modules.get(node.value.id)
-                if dotted is not None:
-                    pair = self._runner_reexports.get((dotted, node.attr))
-                    if pair is not None:
-                        found.add(pair)
-        return sorted(found)
-
-    def _is_policy_call(self, node: ast.AST) -> bool:
-        if not isinstance(node, ast.Call):
-            return False
-        func = node.func
-        if isinstance(func, ast.Name) and func.id in self._policy_getters:
-            return True
-        return (
-            isinstance(func, ast.Attribute)
-            and func.attr == POLICY_GETTER
-            and "asyncio" in self._module_families(func.value)
-        )
-
-    def _is_loop_getter_call(self, node: ast.AST) -> bool:
-        """True when ``node`` calls a public asyncio event-loop getter."""
-        if not isinstance(node, ast.Call):
-            return False
-        func = node.func
-        if isinstance(func, ast.Name) and func.id in self._loop_getters:
-            return True
-        if not isinstance(func, ast.Attribute) or func.attr not in LOOP_GETTERS:
-            return False
-        if isinstance(func.value, ast.Call) and func.attr in POLICY_LOOP_METHODS and self._is_policy_call(func.value):
-            return True
-        return "asyncio" in self._module_families(func.value)
-
-    def _is_event_loop(self, node: ast.AST, scope: _Scope) -> bool:
-        """True when ``node`` is an event loop obtained from asyncio."""
-        if self._is_loop_getter_call(node):
-            return True
-        if not isinstance(node, ast.Name):
-            return False
-        binding = scope.lookup(node.id, node.lineno, node.col_offset)
-        return binding is not None and binding.kind == "event_loop"
-
-    def _alias_pairs(self, node: ast.expr, scope: _Scope) -> list[tuple[str, str]]:
-        """Runner pairs a helper may bind from ``node``. Empty for hooks."""
-        if _is_hook_path(self.path):
-            return []
-        if isinstance(node, ast.BoolOp) and isinstance(node.op, ast.Or):
-            found: list[tuple[str, str]] = []
-            for value in node.values:
-                found.extend(self._alias_pairs(value, scope))
-            return sorted(set(found))
-        if isinstance(node, ast.IfExp):
-            return sorted(set([*self._alias_pairs(node.body, scope), *self._alias_pairs(node.orelse, scope)]))
-        if isinstance(node, ast.Name):
-            found = set(self._imported_runners.get(node.id, ()))
-            binding = scope.lookup(node.id, node.lineno, node.col_offset)
-            if binding is not None and binding.kind == "runner" and len(binding.detail) >= 2:
-                found.add((binding.detail[0], binding.detail[1]))
-            return sorted(found)
-        return self._direct_runner_bindings(node, scope, follow_aliases=False)
-
-    def _runner_binding_from_value(self, node: ast.expr, scope: _Scope) -> _Binding | None:
-        pairs = self._alias_pairs(node, scope)
-        if len(pairs) != 1:
-            return None
-        return _Binding("runner", pairs[0])
-
-    def _module_families(self, node: ast.AST) -> set[str]:
-        """Import families ``node`` names. Assignment does not copy one.
-
-        ``asyncio.subprocess`` is the asyncio family. The attribute is recognized
-        on an asyncio import, and so is a dotted import of that module path.
-        """
-        found: set[str] = set()
-        if isinstance(node, ast.Name):
-            found.update(self._module_aliases.get(node.id, ()))
-            return found
-        for family, _leaf in self._dotted_exact(node):
-            found.add(family)
-        if (
-            isinstance(node, ast.Attribute)
-            and node.attr == "subprocess"
-            and "asyncio" in self._module_families(node.value)
-        ):
-            found.add("asyncio")
-        return found
-
-    def _runner_families(self, node: ast.AST) -> list[str]:
-        """Runner-module families ``node`` is, from imports only."""
-        return sorted(family for family in self._module_families(node) if family in RUNNER_MODULE_FAMILIES)
-
-    def _direct_value_modules(self, node: ast.AST) -> list[str]:
-        """``subprocess``, ``os``, ``asyncio``, or ``shlex`` when ``node`` is that module."""
-        return sorted(family for family in self._module_families(node) if family in VALUE_MODULE_FAMILIES)
-
-    def _inspect_runner_escape(self, tree: ast.AST) -> None:
-        """A runner or, in a hook, a runner module used as a value is a violation.
-
-        Hook modules do not follow the name that received the runner. A helper
-        follows a direct binding (assignment or parameter default) into calls;
-        every other use of the runner callable is this violation. Passing the
-        module object is judged in hook modules only.
-        """
-        if not self.enforce_exports:
-            return
-        in_hook = _is_hook_path(self.path)
-        parents = _parent_map(tree)
-        for node in ast.walk(tree):
-            if not isinstance(node, (ast.Name, ast.Attribute)):
-                continue
-            scope = self._scope_for(node, parents)
-            runners = self._direct_runner_bindings(node, scope, follow_aliases=False)
-            if runners:
-                if _is_runner_head(node, parents):
-                    continue
-                if not in_hook and _is_runner_alias_definition(node, parents):
-                    continue
-                detail = ", ".join(f"{family}.{func}" for family, func in runners)
-                self._record_violation(node, "runner used as a value", detail, parents)
-                continue
-            if not in_hook or _is_attribute_base(node, parents):
-                continue
-            for module in self._direct_value_modules(node):
-                self._record_violation(node, "module used as a value", module, parents)
 
     def _hoist(self, body: list[ast.stmt], scope: _Scope) -> None:
         for stmt in body:
@@ -1468,24 +1774,15 @@ class _Analyzer:
                     self.add_violation("test-only bash oracle", f"imports {alias.name}")
                     self._bind_twice(scope, node, local, _UNKNOWN)
                 else:
-                    self._bind_twice(scope, node, local, self._imported_name_binding(node, alias.name))
+                    self._bind_twice(scope, node, local, _UNKNOWN)
             return
         self._bind_unknown_aliases(node, scope)
 
-    def _imported_name_binding(self, node: ast.ImportFrom, name: str) -> _Binding:
-        """Scope binding for a project re-export of an asyncio event loop."""
-        resolved = _resolve_imported_module(self.path, node.module, node.level)
-        if resolved is not None and (resolved, name) in self._reexport_event_loops:
-            return _Binding("event_loop")
-        return _UNKNOWN
-
     def _refuse_wildcard_import(self, node: ast.ImportFrom) -> None:
-        """Star-imports of runners, shlex, and the boundary are violations.
+        """Star-imports of shlex, subprocess, os, asyncio, and the boundary fail.
 
         Hook modules outside the boundary only. The names a star would bind are
-        not expanded. ``asyncio.subprocess`` is the exception: its two runners
-        are bound while the import is prepared, and the import is still a
-        violation.
+        not expanded.
         """
         if not self.enforce_exports:
             return
@@ -1531,12 +1828,11 @@ class _Analyzer:
             if alias.name in PUBLIC_EXPORTS:
                 self._bind_twice(scope, node, local, _Binding("boundary_module", (alias.name,)))
             else:
-                self._bind_twice(scope, node, local, self._imported_name_binding(node, alias.name))
+                self._bind_twice(scope, node, local, _UNKNOWN)
 
     def _bind_twice(self, scope: _Scope, node: ast.AST, name: str, binding: _Binding) -> None:
         # (0, 1) makes a function-local import visible to earlier uses in that
-        # function for literal argv and imported callables. Module names do
-        # not use this position: may-bind keeps every one.
+        # function. Module names do not use this position: may-bind keeps every one.
         self._bind_at(scope, 0, 1, name, binding)
         self._bind_at(scope, getattr(node, "lineno", 0), getattr(node, "col_offset", 0), name, binding)
 
@@ -1585,7 +1881,6 @@ class _Analyzer:
         parent = scope.parent if scope.kind == "class" and scope.parent is not None else scope
         child = _Scope(kind="function", parent=parent, module=scope.module)
         self._bind_arguments(node.args, child, node.lineno)
-        self._bind_runner_defaults(node.args, child, scope)
         self._collect_directives(node.body, child)
         self._symbols.append(node.name)
         self._hoist(node.body, child)
@@ -1620,24 +1915,6 @@ class _Analyzer:
         for name in names:
             scope.bind(line, 0, name, _UNKNOWN)
 
-    def _bind_runner_defaults(self, args: ast.arguments, child: _Scope, parent: _Scope) -> None:
-        """A helper parameter defaulted to a runner is that runner when called."""
-        if _is_hook_path(self.path):
-            return
-        positional = [*args.posonlyargs, *args.args]
-        offset = len(positional) - len(args.defaults)
-        paired = [
-            *zip(positional[offset:], args.defaults, strict=True),
-            *[
-                (arg, default)
-                for arg, default in zip(args.kwonlyargs, args.kw_defaults, strict=True)
-                if default is not None
-            ],
-        ]
-        for arg, default in paired:
-            binding = self._runner_binding_from_value(default, parent)
-            if binding is not None:
-                child.bind(arg.lineno, arg.col_offset, arg.arg, binding)
 
     def _collect_directives(self, body: list[ast.stmt], scope: _Scope) -> None:
         for stmt in body:
@@ -1668,17 +1945,6 @@ class _Analyzer:
     def _value_binding(self, node: ast.expr | None, scope: _Scope) -> _Binding:
         if node is None:
             return _UNKNOWN
-        runner = self._runner_binding_from_value(node, scope)
-        if runner is not None:
-            return runner
-        if self._is_loop_getter_call(node):
-            return _Binding("event_loop")
-        formatted = self._formatted_str(node, scope)
-        if formatted is not None:
-            return _Binding("const_str", (formatted,))
-        argv = self._static_argv(node, scope)
-        if argv is not None:
-            return _Binding("const_argv", argv=argv)
         if isinstance(node, (ast.Name, ast.Attribute)):
             return self._resolve(node, scope)
         if isinstance(node, ast.Constant) and isinstance(node.value, str):
@@ -1863,290 +2129,6 @@ class _Analyzer:
         # Runner calls are judged by the total walk, not here.
         return None
 
-    def _call_syntax_identity(self, node: ast.Call, scope: _Scope) -> str | None:
-        for binding in self._possible_runners(node.func, scope):
-            identity = _first_syntax_identity(self._runner_argvs(node, scope, binding))
-            if identity:
-                return identity
-        return None
-
-    def _match_syntax_identity(self, node: ast.MatchClass, scope: _Scope) -> str | None:
-        for binding in self._possible_runners(node.cls, scope):
-            identity = _first_syntax_identity(self._match_runner_argvs(node, scope, binding))
-            if identity:
-                return identity
-        return None
-
-    def _match_command_pattern(self, node: ast.MatchClass) -> ast.pattern | None:
-        for attr, pattern in zip(node.kwd_attrs, node.kwd_patterns, strict=True):
-            if attr == "args":
-                return pattern
-        if node.patterns:
-            return node.patterns[0]
-        return None
-
-    def _match_runner_argv(
-        self, node: ast.MatchClass, scope: _Scope, binding: _Binding
-    ) -> tuple[str | None, ...] | None:
-        """Argv of a class pattern, using the same shapes as ``_runner_argv``."""
-        family, func = binding.detail
-        if family == "subprocess" or func in OS_STRING_FUNCS or func in ASYNCIO_SHELL_FUNCS:
-            pattern = self._match_command_pattern(node)
-            if pattern is None:
-                return None
-            return self._static_pattern(pattern, scope)
-        if func in OS_ARGV_SECOND_FUNCS and len(node.patterns) >= 2:
-            argv = self._static_pattern(node.patterns[1], scope)
-            if argv is not None:
-                return argv
-            exe = self._pattern_element(node.patterns[0], scope)
-            return (exe,) if exe is not None else None
-        if func in OS_EXEC_LIST_FUNCS and node.patterns:
-            values = tuple(self._pattern_element(pattern, scope) for pattern in node.patterns)
-            if values[0] is None and all(item is None for item in values):
-                return None
-            return values
-        if func in OS_SPAWN_ARGV_FUNCS and len(node.patterns) >= 3:
-            argv = self._static_pattern(node.patterns[2], scope)
-            if argv is not None:
-                return argv
-            exe = self._pattern_element(node.patterns[1], scope)
-            return (exe,) if exe is not None else None
-        if func in OS_SPAWN_LIST_FUNCS and len(node.patterns) >= 2:
-            values = tuple(self._pattern_element(pattern, scope) for pattern in node.patterns[1:])
-            if values[0] is None and all(item is None for item in values):
-                return None
-            return values
-        if func == "subprocess_exec" and len(node.patterns) >= 2:
-            values = tuple(self._pattern_element(pattern, scope) for pattern in node.patterns[1:])
-            if values[0] is None and all(item is None for item in values):
-                return None
-            return values
-        if func == "subprocess_shell" and len(node.patterns) >= 2:
-            return self._static_pattern(node.patterns[1], scope)
-        if func in ASYNCIO_EXEC_FUNCS and node.patterns:
-            values = tuple(self._pattern_element(pattern, scope) for pattern in node.patterns)
-            if values[0] is None and all(item is None for item in values):
-                return None
-            return values
-        return None
-
-    def _static_pattern(self, pattern: ast.pattern, scope: _Scope) -> tuple[str | None, ...] | None:
-        if isinstance(pattern, ast.MatchAs):
-            if pattern.pattern is None:
-                return None
-            return self._static_pattern(pattern.pattern, scope)
-        if isinstance(pattern, ast.MatchOr):
-            fallback: tuple[str | None, ...] | None = None
-            for alternative in pattern.patterns:
-                found = self._static_pattern(alternative, scope)
-                if found is None:
-                    continue
-                if _syntax_identity(found) is not None:
-                    return found
-                if fallback is None:
-                    fallback = found
-            return fallback
-        if isinstance(pattern, ast.MatchSequence):
-            if any(isinstance(part, ast.MatchStar) for part in pattern.patterns):
-                return None
-            return tuple(self._pattern_element(part, scope) for part in pattern.patterns)
-        if isinstance(pattern, ast.MatchValue):
-            return self._static_command(pattern.value, scope)
-        return None
-
-    def _pattern_element(self, pattern: ast.pattern, scope: _Scope) -> str | None:
-        if isinstance(pattern, ast.MatchAs):
-            if pattern.pattern is None:
-                return None
-            return self._pattern_element(pattern.pattern, scope)
-        if not isinstance(pattern, ast.MatchValue):
-            return None
-        return self._const_str(pattern.value, scope)
-
-    def _runner_argvs(self, node: ast.Call, scope: _Scope, binding: _Binding) -> list[tuple[str | None, ...]]:
-        """Literal commands visible on a runner call.
-
-        The signature-specific argv stays first so an existing positional form
-        keeps its identity. Every other literal argument is then judged with
-        the same rules, whatever its keyword name is.
-        """
-        found: list[tuple[str | None, ...]] = []
-        specific = self._runner_argv(node, scope, binding)
-        if specific is not None:
-            found.append(specific)
-        for expr in self._call_argument_exprs(node, scope):
-            argv = self._static_command(expr, scope)
-            if argv is not None:
-                found.append(argv)
-        return found
-
-    def _match_runner_argvs(
-        self, node: ast.MatchClass, scope: _Scope, binding: _Binding
-    ) -> list[tuple[str | None, ...]]:
-        found: list[tuple[str | None, ...]] = []
-        specific = self._match_runner_argv(node, scope, binding)
-        if specific is not None:
-            found.append(specific)
-        for pattern in (*node.patterns, *node.kwd_patterns):
-            argv = self._static_pattern(pattern, scope)
-            if argv is not None:
-                found.append(argv)
-        return found
-
-    def _call_argument_exprs(self, node: ast.Call, scope: _Scope) -> list[ast.expr]:
-        """Positional arguments, keyword values, and visible starred literals."""
-        exprs: list[ast.expr] = []
-        for arg in node.args:
-            if isinstance(arg, ast.Starred):
-                exprs.extend(self._unpacked_literal(arg.value, scope))
-            else:
-                exprs.append(arg)
-        for keyword in node.keywords:
-            if keyword.value is None:
-                continue
-            if keyword.arg is None:
-                exprs.extend(self._unpacked_literal(keyword.value, scope))
-            else:
-                exprs.append(keyword.value)
-        return exprs
-
-    def _unpacked_literal(self, node: ast.expr, scope: _Scope) -> list[ast.expr]:
-        """Values inside a statically visible ``*`` or ``**`` literal.
-
-        A list or tuple is itself a literal argv, and its elements are values.
-        A dict exposes its values. A starred name is visible when that name is
-        bound once in the same scope to a literal list or string.
-        """
-        if isinstance(node, ast.Name):
-            binding = self._once_literal(scope, node.id, node.lineno, node.col_offset)
-            if binding is None:
-                return []
-            if binding.kind == "const_argv" and binding.argv is not None:
-                constants = [ast.Constant(value=part) for part in binding.argv]
-                return [ast.List(elts=constants, ctx=ast.Load())]
-            if binding.kind == "const_str":
-                return [ast.Constant(value=binding.detail[0])]
-            return []
-        if isinstance(node, (ast.List, ast.Tuple)):
-            values: list[ast.expr] = [node]
-            for elt in node.elts:
-                if not isinstance(elt, ast.Starred):
-                    values.append(elt)
-            return values
-        if isinstance(node, ast.Dict):
-            values = []
-            for key, value in zip(node.keys, node.values, strict=True):
-                if value is None:
-                    continue
-                if key is None:
-                    values.extend(self._unpacked_literal(value, scope))
-                else:
-                    values.append(value)
-            return values
-        return []
-
-    def _runner_argv(self, node: ast.Call, scope: _Scope, binding: _Binding) -> tuple[str | None, ...] | None:
-        family, func = binding.detail
-        if family == "subprocess" or func in OS_STRING_FUNCS or func in ASYNCIO_SHELL_FUNCS:
-            command = self._command_arg(node)
-            if command is None:
-                return None
-            return self._static_command(command, scope)
-        if func in OS_ARGV_SECOND_FUNCS and len(node.args) >= 2:
-            argv = self._static_command(node.args[1], scope)
-            if argv is not None:
-                return argv
-            exe = self._const_str(node.args[0], scope)
-            return (exe,) if exe is not None else None
-        if func in OS_EXEC_LIST_FUNCS and node.args:
-            values = tuple(self._element_str(arg, scope) for arg in node.args)
-            if values[0] is None and all(item is None for item in values):
-                return None
-            return values
-        if func in OS_SPAWN_ARGV_FUNCS and len(node.args) >= 3:
-            # ``spawnv(mode, path, argv)``: the mode is not the program.
-            argv = self._static_command(node.args[2], scope)
-            if argv is not None:
-                return argv
-            exe = self._const_str(node.args[1], scope)
-            return (exe,) if exe is not None else None
-        if func in OS_SPAWN_LIST_FUNCS and len(node.args) >= 2:
-            values = tuple(self._element_str(arg, scope) for arg in node.args[1:])
-            if values[0] is None and all(item is None for item in values):
-                return None
-            return values
-        if func == "subprocess_exec":
-            # ``loop.subprocess_exec(protocol_factory, program, *args)``.
-            positional = [arg for arg in node.args if not isinstance(arg, ast.Starred)]
-            if len(positional) < 2:
-                return None
-            values = tuple(self._element_str(arg, scope) for arg in positional[1:])
-            if values[0] is None and all(item is None for item in values):
-                return None
-            return values
-        if func == "subprocess_shell":
-            # ``loop.subprocess_shell(protocol_factory, cmd)``.
-            if len(node.args) >= 2 and not isinstance(node.args[1], ast.Starred):
-                return self._static_command(node.args[1], scope)
-            return None
-        if func in ASYNCIO_EXEC_FUNCS and node.args:
-            values = tuple(self._element_str(arg, scope) for arg in node.args)
-            if values[0] is None and all(item is None for item in values):
-                return None
-            return values
-        return None
-
-    def _command_arg(self, node: ast.Call) -> ast.expr | None:
-        for keyword in node.keywords:
-            if keyword.arg == "args":
-                return keyword.value
-        if node.args:
-            return node.args[0]
-        return None
-
-    def _static_command(self, node: ast.expr, scope: _Scope) -> tuple[str | None, ...] | None:
-        formatted = self._formatted_str(node, scope)
-        if formatted is not None:
-            return _split_command(formatted)
-        argv = self._static_argv(node, scope)
-        if argv is not None:
-            return argv
-        if isinstance(node, ast.Constant) and isinstance(node.value, str):
-            return _split_command(node.value)
-        if isinstance(node, ast.NamedExpr):
-            return self._static_command(node.value, scope)
-        return None
-
-    def _static_argv(self, node: ast.expr, scope: _Scope) -> tuple[str | None, ...] | None:
-        """Argv built by a literal, a concatenation, a star, or one binding."""
-        if isinstance(node, ast.Name):
-            binding = self._once_literal(scope, node.id, node.lineno, node.col_offset)
-            if binding is None:
-                return None
-            if binding.kind == "const_argv" and binding.argv is not None:
-                return binding.argv
-            if binding.kind == "const_str":
-                return _split_command(binding.detail[0])
-            return None
-        if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
-            left = self._static_argv(node.left, scope)
-            right = self._static_argv(node.right, scope)
-            if left is None or right is None:
-                return None
-            return left + right
-        if isinstance(node, (ast.List, ast.Tuple)):
-            parts: list[str | None] = []
-            for elt in node.elts:
-                if isinstance(elt, ast.Starred):
-                    starred = self._static_argv(elt.value, scope)
-                    if starred is None:
-                        return None
-                    parts.extend(starred)
-                    continue
-                parts.append(self._element_str(elt, scope))
-            return tuple(parts)
-        return None
 
     def _once_literal(self, scope: _Scope, name: str, line: int, column: int) -> _Binding | None:
         """The literal bound to ``name`` when that scope binds the name once.
@@ -2172,13 +2154,6 @@ class _Analyzer:
             return self._once_literal(scope.parent, name, line, column)
         return None
 
-    def _element_str(self, node: ast.expr, scope: _Scope) -> str | None:
-        text = self._const_str(node, scope)
-        if text is not None:
-            return text
-        if isinstance(node, (ast.JoinedStr, ast.BinOp, ast.Call)):
-            return self._formatted_str(node, scope)
-        return None
 
     def _const_str(self, node: ast.expr, scope: _Scope) -> str | None:
         if isinstance(node, ast.Constant) and isinstance(node.value, str):
@@ -2189,83 +2164,6 @@ class _Analyzer:
                 return binding.detail[0]
         return None
 
-    def _formatted_str(self, node: ast.expr, scope: _Scope) -> str | None:
-        """Literal text of ``%``, ``str.format``, or an f-string of literal parts."""
-        if isinstance(node, ast.JoinedStr):
-            parts: list[str] = []
-            for part in node.values:
-                if isinstance(part, ast.Constant) and isinstance(part.value, str):
-                    parts.append(part.value)
-                    continue
-                if not isinstance(part, ast.FormattedValue):
-                    return None
-                if part.conversion not in {-1, None} or part.format_spec is not None:
-                    return None
-                text = self._element_str(part.value, scope)
-                if text is None:
-                    return None
-                parts.append(text)
-            return "".join(parts)
-        if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Mod):
-            fmt = self._const_str(node.left, scope)
-            if fmt is None and isinstance(node.left, ast.JoinedStr):
-                fmt = self._formatted_str(node.left, scope)
-            operand = self._format_operand(node.right, scope)
-            if fmt is None or operand is None:
-                return None
-            try:
-                rendered = fmt % operand
-            except (TypeError, ValueError):
-                return None
-            return rendered if isinstance(rendered, str) else None
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "format":
-            fmt = self._element_str(node.func.value, scope)
-            if fmt is None:
-                return None
-            args: list[str] = []
-            for arg in node.args:
-                text = self._element_str(arg, scope)
-                if text is None:
-                    return None
-                args.append(text)
-            kwargs: dict[str, str] = {}
-            for keyword in node.keywords:
-                if keyword.arg is None or keyword.value is None:
-                    return None
-                text = self._element_str(keyword.value, scope)
-                if text is None:
-                    return None
-                kwargs[keyword.arg] = text
-            try:
-                return fmt.format(*args, **kwargs)
-            except (IndexError, KeyError, ValueError):
-                return None
-        return None
-
-    def _format_operand(self, node: ast.expr, scope: _Scope) -> str | tuple[str, ...] | dict[str, str] | None:
-        text = self._const_str(node, scope)
-        if text is not None:
-            return text
-        if isinstance(node, (ast.List, ast.Tuple)) and not any(isinstance(elt, ast.Starred) for elt in node.elts):
-            values: list[str] = []
-            for elt in node.elts:
-                item = self._element_str(elt, scope)
-                if item is None:
-                    return None
-                values.append(item)
-            return tuple(values)
-        if isinstance(node, ast.Dict):
-            mapping: dict[str, str] = {}
-            for key, value in zip(node.keys, node.values, strict=True):
-                if key is None or value is None:
-                    return None
-                key_text = self._const_str(key, scope)
-                value_text = self._element_str(value, scope)
-                if key_text is None or value_text is None:
-                    return None
-                mapping[key_text] = value_text
-            return mapping
-        return None
 
     def _resolve(self, node: ast.expr, scope: _Scope) -> _Binding:
         if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
@@ -2307,13 +2205,6 @@ def _resolve_attribute(base: _Binding, attr: str) -> _Binding:
     return _UNKNOWN
 
 
-def _split_command(command: str) -> tuple[str | None, ...] | None:
-    try:
-        return tuple(shlex.split(command, posix=True))
-    except ValueError:
-        return None
-
-
 def _iter_imports(node: ast.AST) -> list[ast.AST]:
     found: list[ast.AST] = []
 
@@ -2348,21 +2239,19 @@ def _iter_directives(node: ast.AST) -> list[ast.AST]:
 def analyze_source(
     path: str,
     source: str,
-    *,
-    reexports: _ReexportTables | None = None,
-) -> tuple[list[Site], list[Violation]]:
+) -> tuple[list[Site], list[Violation], list[ProcessFinding]]:
     record_sites = path not in BOUNDARY_PATHS
     enforce_exports = record_sites and path not in WHITE_BOX_TESTS
-    analyzer = _Analyzer(path, record_sites=record_sites, enforce_exports=enforce_exports, reexports=reexports)
+    analyzer = _Analyzer(path, record_sites=record_sites, enforce_exports=enforce_exports)
     if _is_deployed_oracle(path):
         analyzer.add_violation("test-only bash oracle", "deployed with production hooks")
     try:
         tree = ast.parse(source, filename=path)
     except SyntaxError as exc:
         analyzer.add_violation("syntax error", exc.msg or "syntax error")
-        return analyzer.sites, analyzer.violations
+        return analyzer.sites, analyzer.violations, analyzer.process_findings
     analyzer.analyze(tree)
-    return analyzer.sites, analyzer.violations
+    return analyzer.sites, analyzer.violations, analyzer.process_findings
 
 
 def _module_file(module: str, exists) -> str | None:
@@ -2479,360 +2368,6 @@ def _dotted_module_name(path: str) -> str:
     return stem.replace("/", ".")
 
 
-def _runner_family(module_kind: str) -> str:
-    """Runner-module family used by call recognition.
-
-    ``asyncio.subprocess`` is the asyncio family. Its final segment is not
-    the ``subprocess`` module.
-    """
-    if module_kind == "asyncio.subprocess":
-        return "asyncio"
-    return module_kind
-
-
-def _stdlib_module_kind(module: str) -> str | None:
-    """Standard runner module named by an import, or None."""
-    if not module:
-        return None
-    if _is_asyncio_subprocess_module(module):
-        return "asyncio.subprocess"
-    leaf = module.rsplit(".", 1)[-1]
-    if leaf == "subprocess":
-        return "subprocess"
-    if leaf == "os":
-        return "os"
-    if leaf == "asyncio":
-        return "asyncio"
-    return None
-
-
-def _stdlib_import_runner(module: str, name: str) -> tuple[str, str] | None:
-    """Runner pair ``from module import name`` binds, or None."""
-    if not module or name == "*":
-        return None
-    kind = _stdlib_module_kind(module)
-    if kind == "asyncio.subprocess" and name in ASYNCIO_RUNNER_FUNCS:
-        return ("asyncio", name)
-    if kind == "subprocess" and name in SUBPROCESS_FUNCS:
-        return ("subprocess", name)
-    if kind == "os" and name in OS_RUNNER_FUNCS:
-        return ("os", name)
-    if kind == "asyncio" and name in ASYNCIO_RUNNER_FUNCS:
-        return ("asyncio", name)
-    return None
-
-
-def _collect_runner_reexports(sources: dict[str, str]) -> _ReexportTables:
-    """Fixed point of module-level runner and runner-module re-exports.
-
-    Only unconditional module-level bindings count. A reached helper's
-    ``from subprocess import run as run_command`` or ``go = subprocess.run``
-    is that runner in a module that imports the name. The same binding of a
-    standard runner module (``import subprocess as sp``) is that module.
-    """
-    parsed: list[tuple[str, ast.Module]] = []
-    for path in sorted(sources):
-        try:
-            parsed.append((path, ast.parse(sources[path], filename=path)))
-        except SyntaxError:
-            continue
-    tables = _NO_REEXPORTS
-    for _ in range(len(parsed) + 1):
-        updated = _reexports_from_parsed(parsed, tables)
-        if updated == tables:
-            break
-        tables = updated
-    return tables
-
-
-def _reexports_from_parsed(
-    parsed: list[tuple[str, ast.Module]],
-    prior: _ReexportTables,
-) -> _ReexportTables:
-    runners: dict[tuple[str, str], tuple[str, str]] = {}
-    modules: dict[tuple[str, str], str] = {}
-    loop_getters: set[tuple[str, str]] = set()
-    policy_getters: set[tuple[str, str]] = set()
-    event_loops: set[tuple[str, str]] = set()
-    for path, tree in parsed:
-        dotted = _dotted_module_name(path)
-        for name, export in _module_level_exports(path, tree, prior).items():
-            key = (dotted, name)
-            kind = export[0]
-            if kind == "runner":
-                runners[key] = (export[1], export[2])
-            elif kind == "module":
-                modules[key] = export[1]
-            elif kind == "loop":
-                loop_getters.add(key)
-            elif kind == "policy":
-                policy_getters.add(key)
-            elif kind == "event_loop":
-                event_loops.add(key)
-    return _ReexportTables(
-        runners=runners,
-        modules=modules,
-        loop_getters=frozenset(loop_getters),
-        policy_getters=frozenset(policy_getters),
-        event_loops=frozenset(event_loops),
-    )
-
-
-def _module_level_exports(path: str, tree: ast.Module, prior: _ReexportTables) -> dict[str, tuple[str, ...]]:
-    """Unconditional module-level exports in source order. The last binding wins."""
-    state: dict[str, tuple[str, ...]] = {}
-    modules: dict[str, set[str]] = {}
-
-    def clear(name: str) -> None:
-        state.pop(name, None)
-        modules.pop(name, None)
-
-    def bind(name: str, export: tuple[str, ...] | None, bound_modules: set[str] | None = None) -> None:
-        if export is None:
-            state.pop(name, None)
-        else:
-            state[name] = export
-        if bound_modules is None:
-            modules.pop(name, None)
-        else:
-            modules[name] = bound_modules
-
-    for stmt in tree.body:
-        if isinstance(stmt, ast.Import):
-            for alias in stmt.names:
-                local = alias.asname or alias.name.split(".")[0]
-                bound = alias.name if alias.asname else alias.name.split(".")[0]
-                kind = _stdlib_module_kind(bound)
-                export = ("module", kind) if kind is not None else None
-                bind(local, export, {bound})
-            continue
-        if isinstance(stmt, ast.ImportFrom):
-            _bind_from_exports(path, stmt, prior, bind)
-            continue
-        if isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-            clear(stmt.name)
-            continue
-        if isinstance(stmt, ast.Assign):
-            export = _unique_export(_expr_exports(stmt.value, state, modules, prior))
-            for target in stmt.targets:
-                _bind_export_target(target, export, bind, clear)
-            continue
-        if isinstance(stmt, ast.AnnAssign) and isinstance(stmt.target, ast.Name) and stmt.value is not None:
-            export = _unique_export(_expr_exports(stmt.value, state, modules, prior))
-            bind(stmt.target.id, export)
-            continue
-        if isinstance(stmt, ast.AugAssign) and isinstance(stmt.target, ast.Name):
-            clear(stmt.target.id)
-            continue
-        if isinstance(stmt, ast.Delete):
-            for target in stmt.targets:
-                _bind_export_target(target, None, bind, clear)
-            continue
-        if isinstance(stmt, (ast.For, ast.AsyncFor)):
-            _bind_export_target(stmt.target, None, bind, clear)
-            continue
-        if isinstance(stmt, (ast.With, ast.AsyncWith)):
-            for item in stmt.items:
-                if item.optional_vars is not None:
-                    _bind_export_target(item.optional_vars, None, bind, clear)
-    return state
-
-
-def _bind_from_exports(path: str, stmt: ast.ImportFrom, prior: _ReexportTables, bind) -> None:
-    module = stmt.module or ""
-    resolved = _resolve_imported_module(path, stmt.module, stmt.level)
-    imported = module if stmt.level == 0 else (resolved or "")
-    if _is_asyncio_subprocess_module(imported) and any(alias.name == "*" for alias in stmt.names):
-        for func in sorted(ASYNCIO_RUNNER_FUNCS):
-            bind(func, ("runner", "asyncio", func))
-    for alias in stmt.names:
-        if alias.name == "*":
-            continue
-        local = alias.asname or alias.name
-        export = _from_import_export(imported, resolved, alias.name, prior)
-        bound_modules = None
-        if export is None and resolved is not None:
-            bound_modules = {f"{resolved}.{alias.name}"}
-        elif export is not None and export[0] == "module":
-            bound_modules = {export[1]}
-        bind(local, export, bound_modules)
-
-
-def _from_import_export(
-    imported: str,
-    resolved: str | None,
-    name: str,
-    prior: _ReexportTables,
-) -> tuple[str, ...] | None:
-    pair = _stdlib_import_runner(imported, name)
-    if pair is not None:
-        return ("runner", pair[0], pair[1])
-    if imported == "asyncio" and name == "subprocess":
-        return ("module", "asyncio.subprocess")
-    if resolved is None:
-        kind = _stdlib_module_kind(imported)
-        if kind is not None and name == kind.rsplit(".", 1)[-1]:
-            return ("module", kind)
-        return None
-    key = (resolved, name)
-    if key in prior.runners:
-        family, func = prior.runners[key]
-        return ("runner", family, func)
-    if key in prior.modules:
-        return ("module", prior.modules[key])
-    if key in prior.loop_getters:
-        return ("loop",)
-    if key in prior.policy_getters:
-        return ("policy",)
-    if key in prior.event_loops:
-        return ("event_loop",)
-    if _stdlib_module_kind(imported) == "asyncio" and name in LOOP_GETTERS:
-        return ("loop",)
-    if _stdlib_module_kind(imported) == "asyncio" and name == POLICY_GETTER:
-        return ("policy",)
-    return None
-
-
-def _bind_export_target(target: ast.AST, export: tuple[str, ...] | None, bind, clear) -> None:
-    if isinstance(target, ast.Name) and export is not None:
-        modules = {export[1]} if export[0] == "module" else None
-        bind(target.id, export, modules)
-        return
-    if isinstance(target, ast.Name):
-        clear(target.id)
-        return
-    if isinstance(target, (ast.Tuple, ast.List)):
-        for elt in target.elts:
-            _bind_export_target(elt, None, bind, clear)
-        return
-    if isinstance(target, ast.Starred):
-        _bind_export_target(target.value, None, bind, clear)
-
-
-def _unique_export(exports: list[tuple[str, ...]]) -> tuple[str, ...] | None:
-    unique = sorted(set(exports))
-    if len(unique) == 1:
-        return unique[0]
-    return None
-
-
-def _expr_exports(
-    expr: ast.expr | None,
-    state: dict[str, tuple[str, ...]],
-    modules: dict[str, set[str]],
-    prior: _ReexportTables,
-) -> list[tuple[str, ...]]:
-    if expr is None:
-        return []
-    if isinstance(expr, ast.Name):
-        found = state.get(expr.id)
-        return [found] if found is not None else []
-    if isinstance(expr, ast.Attribute):
-        return _attribute_exports(expr, state, modules, prior)
-    if isinstance(expr, ast.Call):
-        if _call_returns_event_loop(expr, state, modules, prior):
-            return [("event_loop",)]
-        return []
-    if isinstance(expr, ast.BoolOp) and isinstance(expr.op, ast.Or):
-        found: list[tuple[str, ...]] = []
-        for value in expr.values:
-            found.extend(_expr_exports(value, state, modules, prior))
-        return found
-    if isinstance(expr, ast.IfExp):
-        return [
-            *_expr_exports(expr.body, state, modules, prior),
-            *_expr_exports(expr.orelse, state, modules, prior),
-        ]
-    if isinstance(expr, ast.NamedExpr):
-        return _expr_exports(expr.value, state, modules, prior)
-    return []
-
-
-def _attribute_exports(
-    expr: ast.Attribute,
-    state: dict[str, tuple[str, ...]],
-    modules: dict[str, set[str]],
-    prior: _ReexportTables,
-) -> list[tuple[str, ...]]:
-    chain = _attribute_chain(expr)
-    if chain is None:
-        return []
-    root, attrs = chain
-    if not attrs:
-        return []
-    found: list[tuple[str, ...]] = []
-    func = attrs[-1]
-    extras = attrs[:-1]
-    for module in sorted(_module_ids(root.id, state, modules)):
-        target = module if not extras else f"{module}.{'.'.join(extras)}"
-        pair = _stdlib_import_runner(target, func)
-        if pair is not None:
-            found.append(("runner", pair[0], pair[1]))
-            continue
-        if target == "asyncio" and func == "subprocess":
-            found.append(("module", "asyncio.subprocess"))
-            continue
-        if _stdlib_module_kind(target) == "asyncio" and func in LOOP_GETTERS:
-            found.append(("loop",))
-            continue
-        if _stdlib_module_kind(target) == "asyncio" and func == POLICY_GETTER:
-            found.append(("policy",))
-            continue
-        key = (target, func)
-        if key in prior.runners:
-            family, runner_func = prior.runners[key]
-            found.append(("runner", family, runner_func))
-        elif key in prior.modules:
-            found.append(("module", prior.modules[key]))
-        elif key in prior.loop_getters:
-            found.append(("loop",))
-        elif key in prior.policy_getters:
-            found.append(("policy",))
-        elif key in prior.event_loops:
-            found.append(("event_loop",))
-    return found
-
-
-def _module_ids(name: str, state: dict[str, tuple[str, ...]], modules: dict[str, set[str]]) -> set[str]:
-    found = set(modules.get(name, ()))
-    export = state.get(name)
-    if export is not None and export[0] == "module":
-        found.add(export[1])
-    return found
-
-
-def _call_returns_event_loop(
-    expr: ast.Call,
-    state: dict[str, tuple[str, ...]],
-    modules: dict[str, set[str]],
-    prior: _ReexportTables,
-) -> bool:
-    """True when ``expr`` calls an asyncio event-loop getter."""
-    func = expr.func
-    if isinstance(func, ast.Name) and state.get(func.id) == ("loop",):
-        return True
-    if not isinstance(func, ast.Attribute) or func.attr not in LOOP_GETTERS:
-        return False
-    if isinstance(func.value, ast.Call) and func.attr in POLICY_LOOP_METHODS:
-        return _call_is_policy_getter(func.value, state, modules, prior)
-    exports = _expr_exports(func.value, state, modules, prior)
-    return ("module", "asyncio") in exports
-
-
-def _call_is_policy_getter(
-    expr: ast.Call,
-    state: dict[str, tuple[str, ...]],
-    modules: dict[str, set[str]],
-    prior: _ReexportTables,
-) -> bool:
-    func = expr.func
-    if isinstance(func, ast.Name) and state.get(func.id) == ("policy",):
-        return True
-    if isinstance(func, ast.Attribute) and func.attr == POLICY_GETTER:
-        return ("module", "asyncio") in _expr_exports(func.value, state, modules, prior)
-    return False
-
-
 def analyze_files(sources: dict[str, str], *, root: Path | None = None) -> Check:
     """Analyze an overlay of repo-relative sources. ``root`` fills helpers that are not overlaid."""
 
@@ -2883,9 +2418,7 @@ def analyze_files(sources: dict[str, str], *, root: Path | None = None) -> Check
     ordered_helpers = tuple(sorted(helpers))
     sites: list[Site] = []
     violations = list(extra)
-    reexports = _collect_runner_reexports(
-        {path: sources[path] for path in (*hook_files, *ordered_helpers) if path in sources}
-    )
+    findings: list[ProcessFinding] = []
     for path in (*hook_files, *ordered_helpers):
         if path not in sources:
             if root is None:
@@ -2895,10 +2428,14 @@ def analyze_files(sources: dict[str, str], *, root: Path | None = None) -> Check
             except (OSError, UnicodeError) as exc:
                 violations.append(Violation("unreadable hook file", path, "<module>", type(exc).__name__))
                 continue
-        file_sites, file_violations = analyze_source(path, sources[path], reexports=reexports)
+        file_sites, file_violations, file_findings = analyze_source(path, sources[path])
         sites.extend(file_sites)
         violations.extend(file_violations)
-    return Check(tuple(sites), tuple(violations), hook_files, ordered_helpers)
+        findings.extend(file_findings)
+    process_violations, stale = reconcile_process_findings(findings, ())
+    violations.extend(process_violations)
+    violations.extend(_stale_process_violation(item) for item in stale)
+    return Check(tuple(sites), tuple(violations), hook_files, ordered_helpers, tuple(findings), ())
 
 
 def discover_hook_files(root: Path) -> tuple[str, ...]:
@@ -2922,6 +2459,26 @@ def discover_hook_files(root: Path) -> tuple[str, ...]:
     return tuple(found)
 
 
+def _without_process_violations(violations: Iterable[Violation]) -> list[Violation]:
+    return [item for item in violations if item.kind not in {"process-start", "stale process exception"}]
+
+
+def apply_process_baseline(check: Check, baseline: Iterable[ProcessException]) -> Check:
+    """Replace unbaselined process violations with the result of ``baseline``."""
+    violations = _without_process_violations(check.violations)
+    process_violations, stale = reconcile_process_findings(check.process_findings, baseline)
+    violations.extend(process_violations)
+    violations.extend(_stale_process_violation(item) for item in stale)
+    return Check(
+        check.sites,
+        tuple(violations),
+        check.hook_files,
+        check.production_helpers,
+        check.process_findings,
+        tuple(baseline),
+    )
+
+
 def analyze_repository(root: Path = REPO_ROOT) -> Check:
     sources: dict[str, str] = {}
     violations: list[Violation] = []
@@ -2932,7 +2489,38 @@ def analyze_repository(root: Path = REPO_ROOT) -> Check:
         except (OSError, UnicodeError) as exc:
             violations.append(Violation("unreadable hook file", relative, "<module>", type(exc).__name__))
     check = analyze_files(sources, root=root)
-    return Check(check.sites, violations + list(check.violations), hook_files, check.production_helpers)
+    combined = Check(
+        check.sites,
+        tuple(violations) + check.violations,
+        hook_files,
+        check.production_helpers,
+        check.process_findings,
+        check.process_exceptions,
+    )
+    return apply_process_baseline(combined, load_process_baseline())
+
+
+def load_process_baseline(path: Path = PROCESS_FIXTURE_PATH) -> tuple[ProcessException, ...]:
+    """Pinned non-template calls. Missing fixture is an empty baseline, which fails the repo scan."""
+    if not path.is_file():
+        return ()
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("pinned_count_at_creation") != PROCESS_EXCEPTION_COUNT:
+        raise AssertionError(
+            f"process fixture pin {payload.get('pinned_count_at_creation')} != {PROCESS_EXCEPTION_COUNT}"
+        )
+    entries = []
+    for item in payload["exceptions"]:
+        entries.append(
+            ProcessException(
+                item["path"],
+                item["enclosing_symbol"],
+                item["multiplicity"],
+                item["normalized_ast"],
+                item["explanation"],
+            )
+        )
+    return tuple(entries)
 
 
 def load_baseline(path: Path = FIXTURE_PATH) -> tuple[Site, ...]:
@@ -3101,8 +2689,7 @@ def test_quote_and_join_only_pass() -> None:
         "    for arg in argv:\n"
         "        quoted.append(split(arg))\n"
         "    pattern = re.compile(r'[^ ]+')\n"
-        "    subprocess.run(['git', 'status'], check=False)\n"
-        "    subprocess.run(['make', '-n', 'preview'], check=False)\n"
+        "    subprocess.run(['git', 'rev-parse', '--git-dir'], check=False)\n"
         "    note = 'shlex.split is only mentioned here'\n"
         "    return shlex.join(quoted) + join_words(argv) + shlex.quote(argv[0]) + note + pattern.pattern\n"
     )
@@ -3232,28 +2819,6 @@ def test_full_baseline_shrink_passes() -> None:
     assert compare_baseline(analyze_files({path: source}), [], pinned_size=BASELINE_SIZE_AT_CREATION) == []
 
 
-def test_external_syntax_check_call_fails() -> None:
-    source = (
-        "import os\n"
-        "import subprocess\n"
-        "from subprocess import run\n"
-        "import subprocess as sp\n"
-        "\n"
-        "def check(path):\n"
-        "    subprocess.run(['bash', '-n', path])\n"
-        "    sp.call(('sh', '-n', path))\n"
-        "    run(['/usr/bin/bash', '--posix', '-n', path])\n"
-        "    os.system('bash -n hook.sh')\n"
-        "    argv = ['sh', '-n', 'hook.sh']\n"
-        "    subprocess.run(argv)\n"
-    )
-    reasons = _single(source)
-    assert any(reason.endswith("::check::syntax:bash -n") for reason in reasons)
-    assert any(reason.endswith("::check::syntax:sh -n") for reason in reasons)
-    assert sum(reason.endswith("::check::syntax:bash -n") for reason in reasons) >= 2
-    assert sum(reason.endswith("::check::syntax:sh -n") for reason in reasons) >= 2
-
-
 def test_unreadable_hook_file_fails(tmp_path: Path) -> None:
     target = tmp_path / "agents_extensions" / "shared" / "hooks" / "broken.py"
     target.parent.mkdir(parents=True)
@@ -3293,8 +2858,8 @@ def test_quote_only_helper_is_not_a_parser_site() -> None:
 
 def test_white_box_tests_may_import_private_names() -> None:
     source = "from shell_shlex import _expose_backtick_bodies\n"
-    allowed_sites, allowed_violations = analyze_source("tests/test_shell_shlex.py", source)
-    denied_sites, denied_violations = analyze_source("agents_extensions/shared/hooks/guard.py", source)
+    allowed_sites, allowed_violations, _allowed_findings = analyze_source("tests/test_shell_shlex.py", source)
+    denied_sites, denied_violations, _denied_findings = analyze_source("agents_extensions/shared/hooks/guard.py", source)
     assert allowed_sites == []
     assert allowed_violations == []
     assert any(violation.kind == "private import" for violation in denied_violations)
@@ -3426,25 +2991,6 @@ def test_getattr_alias_of_boundary_module_fails() -> None:
     assert any("_expose_backtick_bodies" in reason or "getattr shell_shlex" in reason for reason in reasons)
 
 
-def test_combined_short_option_syntax_check_fails() -> None:
-    source = (
-        "import subprocess\n"
-        "\n"
-        "def check(command):\n"
-        "    subprocess.run(['bash', '-nc', command])\n"
-        "    subprocess.run(['sh', '-nc', command])\n"
-        "    subprocess.run(['/usr/bin/bash', '-xn', command])\n"
-        "    subprocess.run(['dash', '--noexec', command])\n"
-        "    subprocess.run(['zsh', '-o', 'noexec', command])\n"
-    )
-    reasons = _single(source)
-    assert any(reason.endswith("::check::syntax:bash -n") for reason in reasons)
-    assert any(reason.endswith("::check::syntax:sh -n") for reason in reasons)
-    assert sum(reason.endswith("::check::syntax:bash -n") for reason in reasons) >= 2
-    assert any(reason.endswith("::check::syntax:dash -n") for reason in reasons)
-    assert any(reason.endswith("::check::syntax:zsh -n") for reason in reasons)
-
-
 def test_globals_subscript_names_boundary_module_fails() -> None:
     source = (
         "read = globals\n"
@@ -3470,85 +3016,6 @@ def test_function_local_same_package_helper_parser_site_fails() -> None:
     assert "scripts/parsing/review_helper.py" in check.production_helpers
     reasons = compare_baseline(check, [], pinned_size=BASELINE_SIZE_AT_CREATION)
     assert any(reason == "new parser site: scripts/parsing/review_helper.py::parse::shlex.split" for reason in reasons)
-
-
-def test_bash_command_string_is_not_a_syntax_check() -> None:
-    source = "import subprocess\n\ndef run(command):\n    subprocess.run(['bash', '-c', command])\n"
-    assert _single(source) == []
-
-
-def test_self_rebinding_runner_call_fails() -> None:
-    source = "import subprocess\nsubprocess = subprocess.run(['bash', '-n', '-c', 'true'])\n"
-    reasons = _single(source)
-    assert any(reason.endswith("::<module>::syntax:bash -n") for reason in reasons)
-
-
-def test_false_branch_runner_rebinding_fails() -> None:
-    source = (
-        "import subprocess\n"
-        "\n"
-        "def check():\n"
-        "    if False:\n"
-        "        subprocess = None\n"
-        "    subprocess.run(['bash', '-n', '-c', 'true'])\n"
-    )
-    reasons = _single(source)
-    assert any(reason.endswith("::check::syntax:bash -n") for reason in reasons)
-
-
-def test_runner_alias_after_function_definition_fails() -> None:
-    """Assigning a runner is an escape violation, which replaces the old alias site.
-
-    The call through ``runner`` is not a syntax site: the checker does not
-    follow the assignment. The assignment fails on its own.
-    """
-    source = "import subprocess\n\ndef check():\n    runner(['bash', '-n', '-c', 'true'])\n\nrunner = subprocess.run\n"
-    reasons = _single(source)
-    assert reasons == [_mutant_violation("runner used as a value", "subprocess.run")]
-    assert not any("syntax:" in reason for reason in reasons)
-
-
-def test_syntax_check_hidden_positions_fail() -> None:
-    source = (
-        "import subprocess\n"
-        "\n"
-        "def annotated(path: subprocess.run(['bash', '-n', path])):\n"
-        "    pass\n"
-        "\n"
-        "def returned() -> subprocess.run(['sh', '-n', 'hook.sh']):\n"
-        "    pass\n"
-        "\n"
-        "def defaulted(path=subprocess.run(['dash', '--noexec', path])):\n"
-        "    pass\n"
-        "\n"
-        "holder = {}\n"
-        "holder[subprocess.run(['zsh', '-o', 'noexec', 'hook.sh'])] = None\n"
-        "\n"
-        "def matched(command):\n"
-        "    match command:\n"
-        "        case subprocess.run(['bash', '-nc', command]):\n"
-        "            return command\n"
-    )
-    reasons = _single(source)
-    assert any(reason.endswith("::<module>::syntax:bash -n") for reason in reasons)
-    assert any(reason.endswith("::<module>::syntax:sh -n") for reason in reasons)
-    assert any(reason.endswith("::<module>::syntax:dash -n") for reason in reasons)
-    assert any(reason.endswith("::<module>::syntax:zsh -n") for reason in reasons)
-    assert any(reason.endswith("::matched::syntax:bash -n") for reason in reasons)
-    assert sum(reason.endswith("::syntax:bash -n") for reason in reasons) == 2
-
-
-def test_match_or_syntax_check_fails() -> None:
-    source = (
-        "import subprocess\n"
-        "\n"
-        "def matched(command):\n"
-        "    match command:\n"
-        "        case subprocess.run(['true'] | ['bash', '-n', 'hook.sh']):\n"
-        "            return command\n"
-    )
-    reasons = _single(source)
-    assert any(reason.endswith("::matched::syntax:bash -n") for reason in reasons)
 
 
 def test_quoted_annotation_stays_unevaluated() -> None:
@@ -3666,203 +3133,6 @@ def test_regrowth_after_shrink_fails() -> None:
     assert creation_set_gap(shrunk, shrunk) == []
 
 
-@pytest.mark.parametrize(
-    ("source", "ending"),
-    [
-        pytest.param(
-            "import os\n\ndef check():\n    os.posix_spawn('/usr/bin/bash', ['bash', '-n', 'hook.sh'], {})\n",
-            "::check::syntax:bash -n",
-            id="posix_spawn",
-        ),
-        pytest.param(
-            "import os\n\ndef check():\n    os.posix_spawnp('sh', ['sh', '-nc', 'hook.sh'], {})\n",
-            "::check::syntax:sh -n",
-            id="posix_spawnp",
-        ),
-        pytest.param(
-            "from os import posix_spawn\n"
-            "\n"
-            "def check():\n"
-            "    posix_spawn('/bin/bash', ['bash', '-xn', 'hook.sh'], {})\n",
-            "::check::syntax:bash -n",
-            id="from-posix_spawn",
-        ),
-        pytest.param(
-            "from os import posix_spawnp\n"
-            "\n"
-            "def check():\n"
-            "    posix_spawnp('dash', ['dash', '--noexec', 'hook.sh'], {})\n",
-            "::check::syntax:dash -n",
-            id="from-posix_spawnp",
-        ),
-        pytest.param(
-            "import os\n"
-            "\n"
-            "def matched(command):\n"
-            "    match command:\n"
-            "        case os.posix_spawn('/bin/bash', ['bash', '-n', 'hook.sh'], {}):\n"
-            "            return command\n",
-            "::matched::syntax:bash -n",
-            id="match-posix_spawn",
-        ),
-        pytest.param(
-            "import asyncio\n"
-            "\n"
-            "async def check():\n"
-            "    await asyncio.create_subprocess_shell('dash --noexec hook.sh')\n",
-            "::check::syntax:dash -n",
-            id="create_subprocess_shell",
-        ),
-        pytest.param(
-            "from asyncio import create_subprocess_shell\n"
-            "\n"
-            "async def check():\n"
-            "    await create_subprocess_shell('bash -n hook.sh')\n",
-            "::check::syntax:bash -n",
-            id="from-create_subprocess_shell",
-        ),
-        pytest.param(
-            "import asyncio\n"
-            "\n"
-            "def matched(command):\n"
-            "    match command:\n"
-            "        case asyncio.create_subprocess_shell('zsh -o noexec hook.sh'):\n"
-            "            return command\n",
-            "::matched::syntax:zsh -n",
-            id="match-create_subprocess_shell",
-        ),
-        pytest.param(
-            "import subprocess\n\ndef check():\n    subprocess.getoutput('bash -n hook.sh')\n",
-            "::check::syntax:bash -n",
-            id="getoutput",
-        ),
-        pytest.param(
-            "import subprocess\n\ndef check():\n    subprocess.getstatusoutput('zsh -o noexec hook.sh')\n",
-            "::check::syntax:zsh -n",
-            id="getstatusoutput",
-        ),
-        pytest.param(
-            "from subprocess import getoutput\n\ndef check():\n    getoutput('sh -nc hook.sh')\n",
-            "::check::syntax:sh -n",
-            id="from-getoutput",
-        ),
-        pytest.param(
-            "from subprocess import getstatusoutput\n\ndef check():\n    getstatusoutput('dash --noexec hook.sh')\n",
-            "::check::syntax:dash -n",
-            id="from-getstatusoutput",
-        ),
-        pytest.param(
-            "import os\n\ndef check():\n    os.popen('sh -n hook.sh')\n",
-            "::check::syntax:sh -n",
-            id="popen",
-        ),
-        pytest.param(
-            "from os import popen\n\ndef check():\n    popen('bash -xn hook.sh')\n",
-            "::check::syntax:bash -n",
-            id="from-popen",
-        ),
-        pytest.param(
-            "import os\n\ndef check():\n    os.system('bash -n hook.sh')\n",
-            "::check::syntax:bash -n",
-            id="system",
-        ),
-        pytest.param(
-            "import subprocess\n\ndef check():\n    subprocess.run('bash -n hook.sh', shell=True)\n",
-            "::check::syntax:bash -n",
-            id="run-shell",
-        ),
-        pytest.param(
-            "import subprocess\n\ndef check():\n    subprocess.call('sh -nc hook.sh', shell=True)\n",
-            "::check::syntax:sh -n",
-            id="call-shell",
-        ),
-        pytest.param(
-            "import subprocess\n\ndef check():\n    subprocess.check_call('dash --noexec hook.sh', shell=True)\n",
-            "::check::syntax:dash -n",
-            id="check_call-shell",
-        ),
-        pytest.param(
-            "import subprocess\n\ndef check():\n    subprocess.check_output('zsh -o noexec hook.sh', shell=True)\n",
-            "::check::syntax:zsh -n",
-            id="check_output-shell",
-        ),
-        pytest.param(
-            "import subprocess\n\ndef check():\n    subprocess.Popen(args='bash -xn hook.sh', shell=True)\n",
-            "::check::syntax:bash -n",
-            id="Popen-shell",
-        ),
-    ],
-)
-def test_literal_syntax_check_runners_fail(source: str, ending: str) -> None:
-    reasons = _single(source)
-    assert any(reason.endswith(ending) for reason in reasons)
-
-
-def test_runner_without_syntax_flag_passes() -> None:
-    sources = [
-        "import os\n\ndef check():\n    os.posix_spawn('/bin/bash', ['bash', '-c', 'true'], {})\n",
-        "import os\n\ndef check():\n    os.posix_spawnp('sh', ['sh', '-c', 'true'], {})\n",
-        "import asyncio\n\nasync def check():\n    await asyncio.create_subprocess_shell('bash -c true')\n",
-        "import subprocess\n\ndef check():\n    subprocess.getoutput('bash -c true')\n",
-        "import subprocess\n\ndef check():\n    subprocess.getstatusoutput('echo hi')\n",
-        "import os\n\ndef check():\n    os.popen('bash -c true')\n",
-        "import os\n\ndef check():\n    os.system('bash -c true')\n",
-        "import subprocess\n\ndef check():\n    subprocess.run('bash -c true', shell=True)\n",
-    ]
-    assert all(_single(source) == [] for source in sources)
-
-
-@pytest.mark.parametrize(
-    "source",
-    [
-        "import subprocess\n\ndef check():\n    subprocess.run(['bash', '-n'] + ['hook.sh'])\n",
-        "import subprocess\n\ndef check():\n    subprocess.run(['bash', *['-n', 'hook.sh']])\n",
-        "import subprocess\n\ndef check():\n    flags = ['-n', 'hook.sh']\n    subprocess.run(['bash', *flags])\n",
-        "import subprocess\n\ndef check():\n    argv = ['bash', '-n', 'hook.sh']\n    subprocess.run(argv)\n",
-        "import subprocess\n\ndef check():\n    argv = ['bash', '-n', 'hook.sh']\n    subprocess.run(*argv)\n",
-        "import os\n\ndef check():\n    os.system('bash -n {}'.format('hook.sh'))\n",
-        "import os\n\ndef check():\n    os.system('bash -n {hook}'.format(hook='hook.sh'))\n",
-        "import os\n\ndef check():\n    os.system('bash -n %s' % 'hook.sh')\n",
-        "import os\n\ndef check():\n    os.system('bash -n %s' % ('hook.sh',))\n",
-        "import os\n\ndef check():\n    os.system('%(exe)s -n %(hook)s' % {'exe': 'bash', 'hook': 'hook.sh'})\n",
-        "import os\n\ndef check():\n    os.system(f\"bash -n {'hook.sh'}\")\n",
-        "import os\n\ndef check():\n    hook = 'hook.sh'\n    os.system(f'bash -n {hook}')\n",
-        "import os\n\ndef check():\n    cmd = 'bash -n hook.sh'\n    os.system(cmd)\n",
-    ],
-)
-def test_computed_commands_are_syntax_sites(source: str) -> None:
-    reasons = _single(source)
-    assert any(reason.endswith("::check::syntax:bash -n") for reason in reasons)
-
-
-def test_computed_command_string_and_mutated_argv_stay_unresolved() -> None:
-    """Forms outside the covered command shapes stay unresolved.
-
-    String concatenation with ``+``, an f-string whose interpolation is not a
-    literal, an argv mutated after binding, and a name bound more than once
-    are not sites. The appended flag would be a syntax check if the mutation
-    were visible; the second binding would be a syntax check if the last
-    assignment won.
-    """
-    sources = [
-        "import os\n\ndef check():\n    os.system('bash' + ' -n hook.sh')\n",
-        'import os\n\ndef check(name):\n    os.system(f"bash -n {name}")\n',
-        "import subprocess\n"
-        "\n"
-        "def check():\n"
-        "    argv = ['bash', '-c', 'true']\n"
-        "    argv.append('-n')\n"
-        "    subprocess.run(argv)\n",
-        "import subprocess\n"
-        "\n"
-        "def check():\n"
-        "    argv = ['true']\n"
-        "    argv = ['bash', '-n', 'hook.sh']\n"
-        "    subprocess.run(argv)\n",
-    ]
-    assert all(_single(source) == [] for source in sources)
-
-
 _MUTANT = "agents_extensions/shared/hooks/mutant.py"
 
 
@@ -3872,54 +3142,6 @@ def _mutant_site(symbol: str, identity: str) -> str:
 
 def _mutant_violation(kind: str, detail: str, symbol: str = "<module>") -> str:
     return f"{kind}: {_MUTANT}::{symbol}::{detail}"
-
-
-@pytest.mark.parametrize(
-    ("source", "reason"),
-    [
-        pytest.param(
-            "import subprocess\nsubprocess.getstatusoutput(cmd='bash -n -c true')\n",
-            _mutant_site("<module>", "syntax:bash -n"),
-            id="getstatusoutput-cmd",
-        ),
-        pytest.param(
-            "import os\nos.spawnv(mode=os.P_WAIT, file='/bin/bash', args=['bash', '-n', '-c', 'true'])\n",
-            _mutant_site("<module>", "syntax:bash -n"),
-            id="spawnv-keywords",
-        ),
-        pytest.param(
-            "import asyncio\n\nasync def check():\n    await asyncio.create_subprocess_shell(cmd='bash -n -c true')\n",
-            _mutant_site("check", "syntax:bash -n"),
-            id="create_subprocess_shell-cmd",
-        ),
-        pytest.param(
-            "import subprocess\nsubprocess.run(['git', 'status'], cwd='bash -n hook.sh')\n",
-            _mutant_site("<module>", "syntax:bash -n"),
-            id="any-keyword-name",
-        ),
-        pytest.param(
-            "import subprocess\nsubprocess.run(*['bash', '-n', '-c', 'true'])\n",
-            _mutant_site("<module>", "syntax:bash -n"),
-            id="starred-literal",
-        ),
-        pytest.param(
-            "import subprocess\nsubprocess.getstatusoutput(**{'cmd': 'bash -n -c true'})\n",
-            _mutant_site("<module>", "syntax:bash -n"),
-            id="double-starred-literal",
-        ),
-    ],
-)
-def test_every_runner_argument_is_a_syntax_site(source: str, reason: str) -> None:
-    assert _single(source) == [reason]
-
-
-def test_keyword_without_syntax_flag_passes() -> None:
-    sources = [
-        "import subprocess\nsubprocess.getstatusoutput(cmd='echo hi')\n",
-        "import os\nos.spawnv(mode=os.P_WAIT, file='/bin/true', args=['true'])\n",
-        "import asyncio\n\nasync def check():\n    await asyncio.create_subprocess_shell(cmd='bash -c true')\n",
-    ]
-    assert all(_single(source) == [] for source in sources)
 
 
 @pytest.mark.parametrize("module", ["shlex", "subprocess", "os", "asyncio", "shell_shlex", "shell_redirects"])
@@ -3945,45 +3167,6 @@ def test_multi_bound_boundary_name_checks_every_module() -> None:
         assert _single(header + "shared.preprocess_shell_command('echo ok')\n") == expected
 
 
-def test_multi_bound_runner_name_checks_every_runner() -> None:
-    source = (
-        "import subprocess as shared\n"
-        "import os as shared\n"
-        "shared.getstatusoutput(cmd='bash -n -c true')\n"
-        "shared.system('sh -n hook.sh')\n"
-    )
-    reasons = _single(source)
-    assert reasons == [
-        _mutant_site("<module>", "syntax:bash -n"),
-        _mutant_site("<module>", "syntax:sh -n"),
-    ]
-
-
-def test_comprehension_runner_is_an_escape_violation() -> None:
-    source = "import subprocess\n[runner(['bash', '-n', '-c', 'true']) for runner in [subprocess.run]]\n"
-    reasons = _single(source)
-    assert reasons == [_mutant_violation("runner used as a value", "subprocess.run")]
-
-
-def test_unpacked_loop_runner_is_an_escape_violation() -> None:
-    source = (
-        "import subprocess\n"
-        "for runner, ignored in [(subprocess.run, 0), (subprocess.run, 1)]:\n"
-        "    runner(['bash', '-n', '-c', 'true'])\n"
-    )
-    reasons = _single(source)
-    assert reasons == [
-        _mutant_violation("runner used as a value", "subprocess.run"),
-        _mutant_violation("runner used as a value", "subprocess.run"),
-    ]
-
-
-def test_defaulted_runner_parameter_is_an_escape_violation() -> None:
-    source = "import subprocess\ndef check(runner=subprocess.run):\n    return runner(['bash', '-n', '-c', 'true'])\n"
-    reasons = _single(source)
-    assert reasons == [_mutant_violation("runner used as a value", "subprocess.run")]
-
-
 def test_qualified_boundary_import_private_attribute_fails() -> None:
     source = (
         "import agents_extensions.shared.hooks.shell_shlex\n"
@@ -3991,176 +3174,6 @@ def test_qualified_boundary_import_private_attribute_fails() -> None:
     )
     reasons = _single(source)
     assert _mutant_violation("private attribute", "shell_shlex.shlex") in reasons
-
-
-def test_runner_passed_as_argument_is_an_escape_violation() -> None:
-    source = "import subprocess\nfrom subprocess import run\ncall(subprocess.run)\ncall(run)\n"
-    reasons = _single(source)
-    assert reasons == [
-        _mutant_violation("runner used as a value", "subprocess.run"),
-        _mutant_violation("runner used as a value", "subprocess.run"),
-    ]
-
-
-def test_dotted_from_import_runner_is_a_direct_call() -> None:
-    source = "from lib.subprocess import run as go\ngo(['bash', '-n', '-c', 'true'])\ncall(go)\n"
-    assert _single(source) == [
-        _mutant_violation("runner used as a value", "subprocess.run"),
-        _mutant_site("<module>", "syntax:bash -n"),
-    ]
-
-
-def test_runner_stored_in_dict_is_an_escape_violation() -> None:
-    source = "import subprocess\nrunners = {'run': subprocess.run}\n"
-    assert _single(source) == [_mutant_violation("runner used as a value", "subprocess.run")]
-
-
-def test_runner_module_used_as_a_value_fails() -> None:
-    passed = _single("import subprocess\ngetattr(subprocess, 'run')\n")
-    stored = _single("import os as operating_system\nstored = operating_system\n")
-    shlex_module = _single("import shlex\nstored = shlex\n")
-    assert _mutant_violation("module used as a value", "subprocess") in passed
-    assert _mutant_violation("module used as a value", "os") in stored
-    assert _mutant_violation("module used as a value", "shlex") in shlex_module
-    assert any(reason.endswith("::<module>::shlex") for reason in shlex_module)
-    assert _single("import subprocess\nsubprocess.run(['git', 'status'])\n") == []
-
-
-@pytest.mark.parametrize(
-    ("source", "reason"),
-    [
-        pytest.param(
-            "import asyncio.subprocess\n"
-            "\n"
-            "async def check():\n"
-            "    await asyncio.subprocess.create_subprocess_exec('bash', '-n', 'hook.sh')\n",
-            _mutant_site("check", "syntax:bash -n"),
-            id="import",
-        ),
-        pytest.param(
-            "import asyncio.subprocess as asp\n"
-            "\n"
-            "async def check():\n"
-            "    await asp.create_subprocess_shell('sh -n hook.sh')\n",
-            _mutant_site("check", "syntax:sh -n"),
-            id="aliased-import",
-        ),
-        pytest.param(
-            "import asyncio\n"
-            "\n"
-            "async def check():\n"
-            "    await asyncio.subprocess.create_subprocess_exec('dash', '--noexec', 'hook.sh')\n",
-            _mutant_site("check", "syntax:dash -n"),
-            id="attribute",
-        ),
-        pytest.param(
-            "import asyncio as aio\n"
-            "\n"
-            "async def check():\n"
-            "    await aio.subprocess.create_subprocess_shell('zsh -o noexec hook.sh')\n",
-            _mutant_site("check", "syntax:zsh -n"),
-            id="attribute-alias",
-        ),
-        pytest.param(
-            "from asyncio.subprocess import create_subprocess_exec\n"
-            "\n"
-            "async def check():\n"
-            "    await create_subprocess_exec('bash', '-n', 'hook.sh')\n",
-            _mutant_site("check", "syntax:bash -n"),
-            id="from-import",
-        ),
-        pytest.param(
-            "from asyncio.subprocess import create_subprocess_shell as shell\n"
-            "\n"
-            "async def check():\n"
-            "    await shell(cmd='bash -n hook.sh')\n",
-            _mutant_site("check", "syntax:bash -n"),
-            id="from-import-alias",
-        ),
-        pytest.param(
-            "from asyncio import subprocess as aio_sub\n"
-            "\n"
-            "async def check():\n"
-            "    await aio_sub.create_subprocess_exec('bash', '-xn', 'hook.sh')\n",
-            _mutant_site("check", "syntax:bash -n"),
-            id="from-asyncio-import-subprocess",
-        ),
-    ],
-)
-def test_asyncio_subprocess_literal_argv_fails(source: str, reason: str) -> None:
-    assert _single(source) == [reason]
-
-
-@pytest.mark.parametrize(
-    ("source", "reasons"),
-    [
-        pytest.param(
-            "import asyncio.subprocess\n"
-            "spawn = asyncio.subprocess.create_subprocess_exec\n"
-            "stored = asyncio.subprocess\n",
-            [
-                _mutant_violation("runner used as a value", "asyncio.create_subprocess_exec"),
-                _mutant_violation("module used as a value", "asyncio"),
-            ],
-            id="import",
-        ),
-        pytest.param(
-            "import asyncio.subprocess as asp\nspawn = asp.create_subprocess_shell\nstored = asp\n",
-            [
-                _mutant_violation("runner used as a value", "asyncio.create_subprocess_shell"),
-                _mutant_violation("module used as a value", "asyncio"),
-            ],
-            id="aliased-import",
-        ),
-        pytest.param(
-            "import asyncio\nspawn = asyncio.subprocess.create_subprocess_exec\nstored = asyncio.subprocess\n",
-            [
-                _mutant_violation("runner used as a value", "asyncio.create_subprocess_exec"),
-                _mutant_violation("module used as a value", "asyncio"),
-            ],
-            id="attribute",
-        ),
-        pytest.param(
-            "from asyncio.subprocess import create_subprocess_exec as spawn, create_subprocess_shell\n"
-            "call(spawn)\n"
-            "call(create_subprocess_shell)\n",
-            [
-                _mutant_violation("runner used as a value", "asyncio.create_subprocess_exec"),
-                _mutant_violation("runner used as a value", "asyncio.create_subprocess_shell"),
-            ],
-            id="from-import-alias",
-        ),
-        pytest.param(
-            "from asyncio import subprocess\nspawn = subprocess.create_subprocess_shell\nstored = subprocess\n",
-            [
-                _mutant_violation("runner used as a value", "asyncio.create_subprocess_shell"),
-                _mutant_violation("module used as a value", "asyncio"),
-            ],
-            id="from-asyncio-import-subprocess",
-        ),
-    ],
-)
-def test_asyncio_subprocess_escape_fails(source: str, reasons: list[str]) -> None:
-    assert _single(source) == reasons
-
-
-def test_asyncio_subprocess_without_syntax_flag_passes() -> None:
-    sources = [
-        "import asyncio.subprocess\n"
-        "\n"
-        "async def check():\n"
-        "    await asyncio.subprocess.create_subprocess_exec('git', 'status')\n",
-        "import asyncio.subprocess as asp\n"
-        "\n"
-        "async def check():\n"
-        "    await asp.create_subprocess_shell('bash -c true')\n",
-        "import asyncio\n\nasync def check():\n    return asyncio.subprocess.PIPE\n",
-        "from asyncio.subprocess import create_subprocess_exec as spawn\n"
-        "\n"
-        "async def check():\n"
-        "    await spawn('git', 'status')\n",
-    ]
-    assert all(_single(source) == [] for source in sources)
 
 
 def test_dynamic_namespace_runner_stays_unresolved() -> None:
@@ -4174,123 +3187,6 @@ def test_dynamic_namespace_runner_stays_unresolved() -> None:
     assert all(_single(source) == [] for source in sources)
 
 
-def test_escape_rule_follows_helper_aliases_and_not_hook_aliases() -> None:
-    """A helper call through a runner alias is a site. The same alias in a hook is not followed."""
-    helper = "scripts/parsing/review_helper.py"
-    body = (
-        "import subprocess\n"
-        "import shlex\n"
-        "\n"
-        "def parse(command):\n"
-        "    runner = subprocess.run\n"
-        "    runner(['bash', '-n', '-c', 'true'])\n"
-        "    return shlex.split(command)\n"
-    )
-    reasons = _overlay_reasons(
-        {
-            "scripts/hooks/guard.py": "from ..parsing.review_helper import parse\n",
-            helper: body,
-        },
-        [],
-    )
-    assert reasons == [
-        f"new parser site: {helper}::parse::shlex.split",
-        f"new parser site: {helper}::parse::syntax:bash -n",
-    ]
-    hook_reasons = _single(body)
-    assert hook_reasons == [
-        _mutant_violation("runner used as a value", "subprocess.run", "parse"),
-        _mutant_site("parse", "shlex.split"),
-    ]
-
-
-def test_helper_runner_value_is_an_escape_violation() -> None:
-    helper = "scripts/parsing/review_helper.py"
-    body = "import subprocess\n\ndef check():\n    call(subprocess.run)\n    return subprocess.run\n"
-    reasons = _overlay_reasons(
-        {"scripts/hooks/guard.py": "from scripts.parsing.review_helper import check\n", helper: body},
-        [],
-    )
-    assert reasons == [
-        f"runner used as a value: {helper}::check::subprocess.run",
-        f"runner used as a value: {helper}::check::subprocess.run",
-    ]
-
-
-def test_helper_parameter_default_runner_is_followed() -> None:
-    helper = "scripts/parsing/review_helper.py"
-    body = (
-        "import subprocess\n"
-        "\n"
-        "def check(argv, reader=subprocess.run):\n"
-        "    return reader(['bash', '-n', '-c', 'true'])\n"
-    )
-    reasons = _overlay_reasons(
-        {"scripts/hooks/guard.py": "from scripts.parsing.review_helper import check\n", helper: body},
-        [],
-    )
-    assert reasons == [f"new parser site: {helper}::check::syntax:bash -n"]
-
-
-def test_helper_or_alias_is_followed_without_an_escape_violation() -> None:
-    helper = "scripts/parsing/review_helper.py"
-    body = (
-        "import subprocess\n"
-        "\n"
-        "def check(argv, runner=None):\n"
-        "    runner = runner or subprocess.run\n"
-        "    admit(reader=runner)\n"
-        "    return runner(['bash', '-n', '-c', 'true'])\n"
-    )
-    reasons = _overlay_reasons(
-        {"scripts/hooks/guard.py": "from scripts.parsing.review_helper import check\n", helper: body},
-        [],
-    )
-    assert reasons == [f"new parser site: {helper}::check::syntax:bash -n"]
-
-
-@pytest.mark.parametrize(
-    ("helper_body", "imported"),
-    [
-        ("from subprocess import run as run_command\n", "run_command"),
-        ("import subprocess\nrun_command = subprocess.run\n", "run_command"),
-        ("import subprocess as sp\nrun_command = sp.run\nalso = run_command\n", "also"),
-        ("import subprocess as sp\n", "sp"),
-        ("from asyncio.subprocess import create_subprocess_exec as spawn\n", "spawn"),
-    ],
-)
-def test_project_runner_reexport_is_a_site(helper_body: str, imported: str) -> None:
-    helper = "scripts/parsing/review_helper.py"
-    if imported == "spawn":
-        call = f"{imported}('bash', '-n', '-c', 'true')\n"
-    elif imported == "sp":
-        call = f"{imported}.run(['bash', '-n', '-c', 'true'])\n"
-    else:
-        call = f"{imported}(['bash', '-n', '-c', 'true'])\n"
-    hook = f"from scripts.parsing.review_helper import {imported}\n{call}stash = {imported}\n"
-    reasons = _overlay_reasons(
-        {"agents_extensions/shared/hooks/guard.py": hook, helper: helper_body},
-        [],
-    )
-    assert "new parser site: agents_extensions/shared/hooks/guard.py::<module>::syntax:bash -n" in reasons
-    assert any(
-        reason.startswith("runner used as a value:") or reason.startswith("module used as a value:")
-        for reason in reasons
-    )
-
-
-def test_reexport_chain_across_helpers_is_a_site() -> None:
-    reasons = _overlay_reasons(
-        {
-            "scripts/hooks/guard.py": "from scripts.parsing.wrapper import go\ngo(['bash', '-n', '-c', 'true'])\n",
-            "scripts/parsing/wrapper.py": "from scripts.parsing.base import run_command as go\n",
-            "scripts/parsing/base.py": "from subprocess import run as run_command\n",
-        },
-        [],
-    )
-    assert reasons == ["new parser site: scripts/hooks/guard.py::<module>::syntax:bash -n"]
-
-
 def test_internal_stdlib_reexport_stays_unresolved() -> None:
     """``asyncio.base_events`` and ``asyncio.events`` are internal re-exports."""
     sources = [
@@ -4300,72 +3196,6 @@ def test_internal_stdlib_reexport_stays_unresolved() -> None:
         "import asyncio.events as events\nevents.subprocess.run(['bash', '-n', '-c', 'true'])\n",
     ]
     assert all(_single(source) == [] for source in sources)
-
-
-def test_asyncio_subprocess_wildcard_is_a_violation_and_a_site() -> None:
-    source = (
-        "from asyncio.subprocess import *\n"
-        "\n"
-        "async def check():\n"
-        "    await create_subprocess_exec('bash', '-n', '-c', 'true')\n"
-    )
-    assert _single(source) == [
-        _mutant_violation("wildcard import", "asyncio.subprocess"),
-        _mutant_site("check", "syntax:bash -n"),
-    ]
-
-
-def test_popen_reentry_and_type_reconstruction_stay_unresolved() -> None:
-    source = (
-        "import subprocess\n"
-        "p = subprocess.Popen(['true'])\n"
-        "p.__init__(['bash', '-n', '-c', 'true'])\n"
-        "type(p)(['bash', '-n', '-c', 'true'])\n"
-    )
-    assert _single(source) == []
-
-
-@pytest.mark.parametrize(
-    "source",
-    [
-        "import asyncio\n"
-        "\n"
-        "def check():\n"
-        "    loop = asyncio.get_event_loop()\n"
-        "    loop.subprocess_exec(asyncio.SubprocessProtocol, 'bash', '-n', '-c', 'true')\n",
-        "import asyncio\n\ndef check():\n    asyncio.get_running_loop().subprocess_shell(None, 'sh -n hook.sh')\n",
-        "import asyncio\n"
-        "\n"
-        "def check():\n"
-        "    asyncio.new_event_loop().subprocess_exec(None, 'dash', '--noexec', 'hook.sh')\n",
-        "import asyncio\n"
-        "\n"
-        "def check():\n"
-        "    asyncio.get_event_loop_policy().get_event_loop().subprocess_shell(None, 'zsh -o noexec hook.sh')\n",
-        "from asyncio import get_event_loop\n"
-        "\n"
-        "def check():\n"
-        "    get_event_loop().subprocess_exec(None, 'bash', '-n', 'hook.sh')\n",
-        "import asyncio as aio\n\ndef check():\n    aio.get_event_loop().subprocess_shell(None, 'bash -n hook.sh')\n",
-    ],
-)
-def test_loop_subprocess_apis_are_syntax_sites(source: str) -> None:
-    reasons = _single(source)
-    assert any("::check::syntax:" in reason for reason in reasons)
-
-
-def test_unbound_loop_parameter_stays_unresolved() -> None:
-    source = (
-        "def check(loop):\n"
-        "    loop.subprocess_exec(None, 'bash', '-n', '-c', 'true')\n"
-        "    loop.subprocess_shell(None, 'bash -n hook.sh')\n"
-    )
-    assert _single(source) == []
-
-
-def test_asyncio_module_subprocess_exec_is_not_a_loop_api() -> None:
-    source = "import asyncio\n\ndef check():\n    asyncio.subprocess_exec(None, 'bash', '-n', '-c', 'true')\n"
-    assert _single(source) == []
 
 
 def test_function_local_cross_package_helper_parser_site_fails() -> None:
@@ -4454,8 +3284,482 @@ def test_repository_scan_and_multi_binding_probe_match_across_hash_seeds() -> No
     probe = (
         "import shell_shlex as shared\nimport shell_redirects as shared\nshared.preprocess_shell_command('echo ok')\n"
     )
-    seeded = [_seeded_scan(script, probe, seed) for seed in ("0", "1")]
-    assert seeded[0] == seeded[1]
+    seeded = [_seeded_scan(script, probe, seed) for seed in ("0", "1", "2", "777")]
+    assert all(item == seeded[0] for item in seeded[1:])
     assert seeded[0]["violations"] == []
     assert len(seeded[0]["sites"]) == BASELINE_SIZE_AT_CREATION
     assert seeded[0]["probe"] == [_mutant_violation("private attribute", "shell_redirects.preprocess_shell_command")]
+
+
+_MUTANT_PROCESS = "agents_extensions/shared/hooks/mutant.py"
+
+
+def _process(line: int, symbol: str, detail: str, path: str = _MUTANT_PROCESS) -> str:
+    return f"process-start: {path}:{line}::{symbol}::{detail}"
+
+
+def test_command_templates_are_pinned() -> None:
+    """Silent widening of a reviewed command is a test change, not a refresh."""
+    assert COMMAND_TEMPLATES == (
+        ("git", ("rev-parse", "--git-common-dir")),
+        ("git", ("rev-parse", "--git-dir")),
+        ("git", ("rev-parse", "--path-format=absolute", "--git-common-dir")),
+        ("git", ("rev-parse", "--path-format=absolute", "--show-toplevel")),
+        ("git", ("symbolic-ref", "--quiet", "--short", "HEAD")),
+        ("gh", ("api", None)),
+        ("gh", ("pr", "checks", None, "--json", "name,bucket,state")),
+    )
+
+
+def test_each_command_template_matches_a_call_on_main() -> None:
+    """Every pinned template is a conforming call in the scanned set."""
+    seen = [False] * len(COMMAND_TEMPLATES)
+    paths = discover_hook_files(REPO_ROOT)
+    check = analyze_files({path: _read(REPO_ROOT / path) for path in paths}, root=REPO_ROOT)
+    for relative in (*check.hook_files, *check.production_helpers):
+        tree = ast.parse(_read(REPO_ROOT / relative), filename=relative)
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            argv = _call_argv_expr(node)
+            if not isinstance(argv, (ast.List, ast.Tuple)) or not argv.elts:
+                continue
+            if any(isinstance(elt, ast.Starred) for elt in argv.elts):
+                continue
+            executable = argv.elts[0]
+            if not isinstance(executable, ast.Constant) or not isinstance(executable.value, str):
+                continue
+            rest = argv.elts[1:]
+            for index, (name, parts) in enumerate(COMMAND_TEMPLATES):
+                if executable.value != name or len(rest) != len(parts):
+                    continue
+                if all(_template_part_matches(elt, part) for elt, part in zip(rest, parts, strict=True)):
+                    seen[index] = True
+    missing = [COMMAND_TEMPLATES[index] for index, found in enumerate(seen) if not found]
+    assert missing == []
+
+
+@pytest.mark.parametrize(
+    "argv",
+    [
+        "['git', 'rev-parse', '--git-common-dir']",
+        "['git', 'rev-parse', '--git-dir']",
+        "['git', 'rev-parse', '--path-format=absolute', '--git-common-dir']",
+        "['git', 'rev-parse', '--path-format=absolute', '--show-toplevel']",
+        "['git', 'symbolic-ref', '--quiet', '--short', 'HEAD']",
+        "['gh', 'api', f'/repos/{name}']",
+        "['gh', 'pr', 'checks', pr, '--json', 'name,bucket,state']",
+    ],
+)
+def test_reviewed_command_template_passes(argv: str) -> None:
+    source = f"import subprocess\nname = 'origin'\npr = '1'\nsubprocess.run({argv}, check=False)\n"
+    assert _single(source) == []
+
+
+def test_process_exceptions_match_fixture() -> None:
+    loaded = load_process_baseline()
+    assert loaded == PROCESS_CREATION_EXCEPTIONS
+    assert sum(item.multiplicity for item in loaded) == PROCESS_EXCEPTION_COUNT == 13
+    assert len({item.path for item in loaded}) == 10
+    hooks = {path: _read(REPO_ROOT / path) for path in discover_hook_files(REPO_ROOT)}
+    bare = analyze_files(hooks, root=REPO_ROOT)
+    process = [item for item in bare.violations if item.kind == "process-start"]
+    assert len(process) == PROCESS_EXCEPTION_COUNT
+    assert Counter((item.path, item.enclosing_symbol) for item in process) == Counter(
+        (item.path, item.enclosing_symbol) for item in PROCESS_CREATION_EXCEPTIONS
+    )
+    assert [item.format() for item in analyze_repository().violations] == []
+
+
+def test_process_exception_replacement_fails() -> None:
+    findings = analyze_repository().process_findings
+    replaced = list(PROCESS_CREATION_EXCEPTIONS)
+    original = replaced[0]
+    replaced[0] = ProcessException(
+        original.path,
+        original.enclosing_symbol,
+        original.multiplicity,
+        original.normalized_ast + " ",
+        original.explanation,
+    )
+    violations, stale = reconcile_process_findings(findings, replaced)
+    assert any(item.path == original.path and item.detail == "argv-template" for item in violations)
+    assert any(item.startswith("stale process exception:") and original.path in item for item in stale)
+
+
+def test_process_exception_duplication_fails() -> None:
+    source = (
+        "import subprocess\n"
+        "\n"
+        "def check():\n"
+        "    subprocess.run(['git', 'status'])\n"
+        "    subprocess.run(['git', 'status'])\n"
+    )
+    check = analyze_files({_MUTANT_PROCESS: source})
+    assert len(check.process_findings) == 2
+    finding = check.process_findings[0]
+    once = ProcessException(_MUTANT_PROCESS, finding.enclosing_symbol, 1, finding.normalized_ast, "one call")
+    violations, stale = reconcile_process_findings(check.process_findings, (once,))
+    assert [item.detail for item in violations] == ["argv-template"]
+    assert stale == []
+    duplicated = (once, once)
+    violations, stale = reconcile_process_findings(check.process_findings[:1], duplicated)
+    assert violations == []
+    assert len(stale) == 1
+    assert stale[0].startswith("stale process exception:")
+
+
+def test_process_exception_regrowth_fails() -> None:
+    source = "import subprocess\nsubprocess.run(['git', 'status'])\n"
+    assert _single(source) == [_process(2, "<module>", "argv-template")]
+    extra = ProcessException("agents_extensions/shared/hooks/other.py", "main", 1, "Call()", "added")
+    violations, stale = reconcile_process_findings(
+        analyze_repository().process_findings,
+        (*PROCESS_CREATION_EXCEPTIONS, extra),
+    )
+    assert violations == []
+    assert any(item.startswith("stale process exception:") and "other.py::main::" in item for item in stale)
+
+
+def test_process_exception_does_not_waive_rule_one_or_three() -> None:
+    samples = [
+        "import subprocess\nsubprocess.run(['git', 'rev-parse', '--git-dir'], shell=True)\n",
+        "import subprocess\nsubprocess.Popen(['git', 'rev-parse', '--git-dir'])\n",
+        "import os\nos.system('true')\n",
+        "import subprocess\nsubprocess.run(['git', '-c', 'alias.x=!bash', 'status'])\n",
+        "import subprocess as sp\nsp.run(['git', 'rev-parse', '--git-dir'])\n",
+    ]
+    for source in samples:
+        check = analyze_files({_MUTANT_PROCESS: source})
+        assert check.process_findings
+        for finding in check.process_findings:
+            assert not finding.eligible
+            baseline = (
+                ProcessException(
+                    finding.path,
+                    finding.enclosing_symbol,
+                    1,
+                    finding.normalized_ast,
+                    "same ast must not waive this",
+                ),
+            )
+            violations, stale = reconcile_process_findings((finding,), baseline)
+            assert [item.detail for item in violations] == [finding.reason]
+            assert stale
+
+
+@pytest.mark.parametrize(
+    ("source", "reasons"),
+    [
+        pytest.param(
+            "import os\n\ndef check():\n    os.system('bash' + ' -n hook.sh')\n",
+            [_process(4, "check", "os-process:system")],
+            id="concatenation",
+        ),
+        pytest.param(
+            'import os\n\ndef check(name):\n    os.system(f"bash -n {name}")\n',
+            [_process(4, "check", "os-process:system")],
+            id="f-string",
+        ),
+        pytest.param(
+            "import os\n\ndef check(name):\n    os.system('bash -n {}'.format(name))\n",
+            [_process(4, "check", "os-process:system")],
+            id="format",
+        ),
+        pytest.param(
+            "import subprocess\n"
+            "\n"
+            "def check():\n"
+            "    argv = ['true']\n"
+            "    argv = ['bash', '-n', 'hook.sh']\n"
+            "    subprocess.run(argv)\n",
+            [_process(6, "check", "argv-template")],
+            id="rebinding",
+        ),
+        pytest.param(
+            "import subprocess\n"
+            "\n"
+            "def check():\n"
+            "    argv = ['bash', '-c', 'true']\n"
+            "    argv.append('-n')\n"
+            "    subprocess.run(argv)\n",
+            [_process(6, "check", "argv-template")],
+            id="argv-name",
+        ),
+        pytest.param(
+            "import asyncio\n"
+            "\n"
+            "async def check():\n"
+            "    await asyncio.create_subprocess_exec('bash', *['-n', 'hook.sh'])\n",
+            [_process(4, "check", "asyncio-subprocess")],
+            id="starred-create-subprocess-exec",
+        ),
+        pytest.param(
+            "import asyncio\n"
+            "\n"
+            "def check():\n"
+            "    asyncio.get_running_loop().subprocess_exec(None, 'bash', *['-n', 'hook.sh'])\n",
+            [_process(4, "check", "event-loop-subprocess")],
+            id="starred-loop-subprocess-exec",
+        ),
+        pytest.param(
+            "import asyncio\n"
+            "\n"
+            "def check(loop: asyncio.AbstractEventLoop):\n"
+            "    loop.subprocess_exec(None, 'bash', '-n', 'hook.sh')\n",
+            [_process(4, "check", "event-loop-subprocess")],
+            id="typed-loop",
+        ),
+        pytest.param(
+            "import asyncio\n"
+            "\n"
+            "def check(loop=asyncio.new_event_loop()):\n"
+            "    loop.subprocess_exec(None, 'bash', '-n', 'hook.sh')\n",
+            [_process(4, "check", "event-loop-subprocess")],
+            id="defaulted-loop",
+        ),
+        pytest.param(
+            "def check():\n    import subprocess as sp\n    sp.run(['git', 'rev-parse', '--git-dir'])\n",
+            [
+                _process(2, "check", "binding:function-local-import"),
+                _process(3, "check", "binding:untrusted"),
+            ],
+            id="function-local-module-alias",
+        ),
+        pytest.param(
+            "import subprocess\nsubprocess.Popen(['true'], -1, 'bash')\n",
+            [_process(2, "<module>", "subprocess-attribute:Popen")],
+            id="popen-positional-executable",
+        ),
+        pytest.param(
+            'import subprocess\nsubprocess.run(["git", "rev-parse", "--git-dir"], **{"executable": "bash"})\n',
+            [_process(2, "<module>", "call-shape:executable")],
+            id="starred-executable",
+        ),
+        pytest.param(
+            "import subprocess\nsubprocess.run(['git', '-c', 'alias.x=!bash -n hook.sh', 'status'])\n",
+            [_process(2, "<module>", "config-injection")],
+            id="git-config-alias",
+        ),
+        pytest.param(
+            "from concurrent.futures import ProcessPoolExecutor\nProcessPoolExecutor()\n",
+            [
+                _process(1, "<module>", "external-capability:ProcessPoolExecutor"),
+                _process(2, "<module>", "external-capability:ProcessPoolExecutor"),
+            ],
+            id="process-pool",
+        ),
+        pytest.param(
+            "import psutil\npsutil.Popen(['true'])\n",
+            [_process(2, "<module>", "external-capability:psutil.Popen")],
+            id="psutil-popen",
+        ),
+        pytest.param(
+            "import os\nos.startfile('hook.sh')\n",
+            [_process(2, "<module>", "os-process:startfile")],
+            id="os-startfile",
+        ),
+    ],
+)
+def test_held_out_process_start_probes_fail(source: str, reasons: list[str]) -> None:
+    assert _single(source) == reasons
+
+
+def test_helper_aliases_and_reexports_fail_at_the_definition() -> None:
+    """A helper binding is the violation. The checker does not follow the alias into a call."""
+    helper = "scripts/parsing/review_helper.py"
+    cases = [
+        (
+            {
+                "scripts/hooks/guard.py": "from ..parsing.review_helper import parse\n",
+                helper: (
+                    "import subprocess\n"
+                    "\n"
+                    "def parse(command):\n"
+                    "    runner = subprocess.run\n"
+                    "    return runner(['bash', '-n', '-c', 'true'])\n"
+                ),
+            },
+            [_process(4, "parse", "runner-reference", helper)],
+        ),
+        (
+            {
+                "agents_extensions/shared/hooks/guard.py": (
+                    "from scripts.parsing.review_helper import run_command\n"
+                    "run_command(['bash', '-n', '-c', 'true'])\n"
+                ),
+                helper: "from subprocess import run as run_command\n",
+            },
+            [_process(1, "<module>", "binding:from-import", helper)],
+        ),
+        (
+            {
+                "agents_extensions/shared/hooks/guard.py": "from scripts.parsing.review_helper import sp\n",
+                helper: "import subprocess as sp\n",
+            },
+            [_process(1, "<module>", "binding:aliased-import", helper)],
+        ),
+        (
+            {
+                "scripts/hooks/guard.py": "from scripts.parsing.wrapper import go\ngo(['bash', '-n', '-c', 'true'])\n",
+                "scripts/parsing/wrapper.py": "from scripts.parsing.base import run_command as go\n",
+                "scripts/parsing/base.py": "from subprocess import run as run_command\n",
+            },
+            [_process(1, "<module>", "binding:from-import", "scripts/parsing/base.py")],
+        ),
+    ]
+    for sources, expected in cases:
+        assert _overlay_reasons(sources, []) == expected
+
+
+def test_conditional_runner_reexport_fails_at_both_arms() -> None:
+    helper = "scripts/parsing/review_helper.py"
+    reasons = _overlay_reasons(
+        {
+            "agents_extensions/shared/hooks/guard.py": "from scripts.parsing.review_helper import pick\n",
+            helper: (
+                "import subprocess\n"
+                "\n"
+                "def pick(flag):\n"
+                "    go = subprocess.run if flag else subprocess.call\n"
+                "    return go\n"
+            ),
+        },
+        [],
+    )
+    assert reasons == [
+        _process(4, "pick", "runner-reference", helper),
+        _process(4, "pick", "runner-reference", helper),
+    ]
+
+
+def test_false_branch_subprocess_rebind_fails() -> None:
+    source = (
+        "import subprocess\n"
+        "\n"
+        "def check():\n"
+        "    if False:\n"
+        "        subprocess = None\n"
+        "    subprocess.run(['git', 'rev-parse', '--git-dir'])\n"
+    )
+    assert _single(source) == [
+        _process(5, "check", "binding:rebound"),
+        _process(6, "check", "binding:untrusted"),
+    ]
+
+
+def test_runner_stored_or_passed_fails_without_following_the_name() -> None:
+    stored = "import subprocess\nrunners = {'run': subprocess.run}\n"
+    passed = "import subprocess\ncall(subprocess.run)\n"
+    defaulted = "import subprocess\n\ndef check(runner=subprocess.run):\n    return runner(['bash', '-n', 'hook.sh'])\n"
+    assert _single(stored) == [_process(2, "<module>", "runner-reference")]
+    assert _single(passed) == [_process(2, "<module>", "runner-reference")]
+    assert _single(defaulted) == [_process(3, "check", "runner-reference")]
+
+
+def test_process_apis_fail_without_a_syntax_flag() -> None:
+    """The allowlist is not a bash -n detector. Any unlisted process start fails."""
+    cases = [
+        (
+            "import os\n\ndef check():\n    os.system('true')\n",
+            [_process(4, "check", "os-process:system")],
+        ),
+        (
+            "import os\nos.posix_spawn('/bin/bash', ['bash', '-c', 'true'], {})\n",
+            [_process(2, "<module>", "os-process:posix_spawn")],
+        ),
+        (
+            "import subprocess\nsubprocess.getoutput('echo hi')\n",
+            [_process(2, "<module>", "subprocess-attribute:getoutput")],
+        ),
+        (
+            "import subprocess\nsubprocess.run(['make', '-n', 'preview'])\n",
+            [_process(2, "<module>", "argv-template")],
+        ),
+        (
+            "import subprocess\nsubprocess.run('true', shell=True)\n",
+            [_process(2, "<module>", "call-shape:shell")],
+        ),
+        (
+            "import asyncio\n\nasync def check():\n    await asyncio.create_subprocess_shell('true')\n",
+            [_process(4, "check", "asyncio-subprocess")],
+        ),
+        (
+            "import asyncio\n\ndef check():\n    asyncio.subprocess_exec(None, 'true')\n",
+            [_process(4, "check", "event-loop-subprocess")],
+        ),
+        (
+            "def check(loop):\n    loop.subprocess_exec(None, 'true')\n    loop.subprocess_shell(None, 'true')\n",
+            [
+                _process(2, "check", "event-loop-subprocess"),
+                _process(3, "check", "event-loop-subprocess"),
+            ],
+        ),
+    ]
+    for source, expected in cases:
+        assert _single(source) == expected
+
+
+def test_non_launching_and_unresolved_forms_pass() -> None:
+    sources = [
+        "import subprocess\nsubprocess.run(['git', 'rev-parse', '--git-dir'], shell=False, stdout=subprocess.DEVNULL)\n",
+        "import subprocess\n\ndef annotate(done: subprocess.CompletedProcess[str]):\n    return done\n",
+        "import psutil\npsutil.Process(1)\n",
+        "import concurrent.futures\nconcurrent.futures.ThreadPoolExecutor()\n",
+        "import asyncio\nasyncio.subprocess.PIPE\n",
+        "import os\ngetattr(os, 'O_DIRECTORY', 0)\n",
+        "import subprocess\n\ndef check():\n    return globals()['subprocess'].run(['bash', '-n', 'hook.sh'])\n",
+        "import subprocess\nsubprocess.__dict__['run'](['bash', '-n', 'hook.sh'])\n",
+        "import sys\n\ndef check():\n    return sys.modules['subprocess'].run(['bash', '-n', 'hook.sh'])\n",
+        "from asyncio.base_events import subprocess as sp\nrunner = sp.run\n",
+        "import asyncio.events as events\nevents.subprocess.run(['bash', '-n', 'hook.sh'])\n",
+        'import subprocess\n\ndef f(v: "subprocess.run([\'bash\', \'-n\', \'a\'])"):\n    pass\n',
+    ]
+    assert all(_single(source) == [] for source in sources)
+
+
+def test_popen_reentry_reports_only_the_constructor() -> None:
+    source = (
+        "import subprocess\n"
+        "p = subprocess.Popen(['true'])\n"
+        "p.__init__(['bash', '-n', '-c', 'true'])\n"
+        "type(p)(['bash', '-n', '-c', 'true'])\n"
+    )
+    assert _single(source) == [_process(2, "<module>", "subprocess-attribute:Popen")]
+
+
+def test_star_import_is_not_expanded_into_a_process_start() -> None:
+    subprocess_star = "from subprocess import *\nrun(['bash', '-n', '-c', 'true'])\n"
+    asyncio_star = (
+        "from asyncio.subprocess import *\n"
+        "\n"
+        "async def check():\n"
+        "    await create_subprocess_exec('bash', '-n', '-c', 'true')\n"
+    )
+    assert _single(subprocess_star) == [_mutant_violation("wildcard import", "subprocess")]
+    assert _single(asyncio_star) == [_mutant_violation("wildcard import", "asyncio.subprocess")]
+
+
+def test_module_object_and_os_escape_fail() -> None:
+    assert _single("import subprocess\ngetattr(subprocess, 'run')\n") == [
+        _process(2, "<module>", "binding:module-value")
+    ]
+    assert _single("import os as operating_system\nstored = operating_system\n") == [
+        _process(2, "<module>", "os-escape")
+    ]
+    assert _single("import os\ngetattr(os, 'system')\n") == [_process(2, "<module>", "os-escape")]
+
+
+def test_syntax_check_tracker_is_gone() -> None:
+    """Slice 2a does not keep a bash -n, runner-alias, or computed-command tracker."""
+    source = Path(__file__).read_text(encoding="utf-8")
+    markers = (
+        "SYNTAX_CHECK_" + "SHELLS =",
+        "def _syntax_" + "identity",
+        "def _inspect_syntax_" + "check_calls",
+        "def _inspect_runner_" + "escape",
+        "def _collect_runner_" + "reexports",
+        "def _split_" + "command",
+    )
+    for marker in markers:
+        assert marker not in source
