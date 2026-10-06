@@ -828,8 +828,8 @@
         },
         "line_count": {
           "type": "integer",
-          "minimum": 30,
-          "maximum": 36
+          "minimum": 44,
+          "maximum": 48
         },
         "line_count_rationale": {
           "type": "string",
@@ -837,8 +837,8 @@
         },
         "instructions": {
           "type": "array",
-          "minItems": 30,
-          "maxItems": 36,
+          "minItems": 44,
+          "maxItems": 48,
           "uniqueItems": true,
           "items": {
             "oneOf": [
@@ -995,8 +995,8 @@
                   }
                 }
               },
-              "minContains": 10,
-              "maxContains": 12
+              "minContains": 24,
+              "maxContains": 24
             },
             {
               "contains": {
@@ -1014,8 +1014,8 @@
                   }
                 }
               },
-              "minContains": 6,
-              "maxContains": 6
+              "minContains": 12,
+              "maxContains": 12
             },
             {
               "contains": {
@@ -1033,8 +1033,8 @@
                   }
                 }
               },
-              "minContains": 6,
-              "maxContains": 6
+              "minContains": 12,
+              "maxContains": 12
             }
           ]
         },

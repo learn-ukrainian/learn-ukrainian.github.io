@@ -22,6 +22,14 @@ SCHEMA = json.loads((ASSETS / "instruction_catalog.schema.json").read_text())
 VALIDATOR = Draft202012Validator(SCHEMA)
 LINES = [line for entry in CATALOG["components"].values() for line in entry["instructions"]]
 SLOT_CASES = [(line, slot) for line in LINES for slot in line["slots"]]
+DECLARED_VARIANTS = [
+    (component, branch["properties"]["operation"]["const"], variant)
+    for component in CATALOG["components"]
+    for items in [SCHEMA["$defs"][component]["properties"]["instructions"]["items"]]
+    for branch in items.get("oneOf", [items])
+    for definition in [branch["properties"].get("sense_variant", {"const": None})]
+    for variant in definition.get("enum", [definition.get("const")])
+]
 C2_RECORD_VALIDATOR = Draft202012Validator({"$ref": "#/$defs/c2SourceRecord", "$defs": SCHEMA["$defs"]})
 C2_RECORD = {
     "lemma": "SOURCE_LEMMA",
@@ -58,7 +66,7 @@ def test_catalog_schema_counts_ids_and_plan_binding() -> None:
     VALIDATOR.validate(CATALOG)
     assert set(CATALOG["components"]) == {"C1", "C2", "C3", "C4", "C5", "C6", "C7", "C9"}
     assert len(CATALOG["components"]) == 8
-    assert len(LINES) == len({line["id"] for line in LINES}) == 144
+    assert len(LINES) == len({line["id"] for line in LINES}) == 156
     operations = set()
     for component, entry in CATALOG["components"].items():
         assert entry["line_count"] == len(entry["instructions"])
@@ -67,8 +75,8 @@ def test_catalog_schema_counts_ids_and_plan_binding() -> None:
             {
                 ("synonyms", None): 12,
                 ("antonyms", None): 12,
-                ("sense_definition", "with_citations"): 6,
-                ("sense_definition", "single_sense"): 6,
+                ("sense_definition", "with_citations"): 12,
+                ("sense_definition", "single_sense"): 12,
             }
             if component == "C3"
             else None
@@ -99,6 +107,19 @@ def test_catalog_schema_counts_ids_and_plan_binding() -> None:
     }
     plan = ROOT / CATALOG["plan"]["path"]
     assert hashlib.sha256(plan.read_bytes().split(b"-->\n", 1)[1]).hexdigest() == CATALOG["plan"]["body_sha256"]
+
+
+@pytest.mark.parametrize("component,operation,variant", DECLARED_VARIANTS)
+def test_every_declared_operation_variant_has_at_least_nine_lines(
+    component: str, operation: str, variant: str | None
+) -> None:
+    # Schema declarations keep a missing variant visible as a zero-line failure.
+    lines = [
+        line
+        for line in CATALOG["components"][component]["instructions"]
+        if (line["operation"], line.get("sense_variant")) == (operation, variant)
+    ]
+    assert len(lines) >= 9
 
 
 @pytest.mark.parametrize("line", LINES, ids=lambda line: line["id"])
@@ -252,7 +273,7 @@ def test_tokens_normalize_metric_only_and_mask_all_source_roles() -> None:
 
 
 def test_rb1_status_records_prior_reviews_and_predeclared_rereview_tasks() -> None:
-    assert CATALOG["version"] == "0.5.0-rb1"
+    assert CATALOG["version"] == "0.6.0-rb1"
     assert CATALOG["status"] == "rb1_approved"
     assert CATALOG["training_eligible"] is False
     reviews = CATALOG["review_status"]
@@ -260,23 +281,30 @@ def test_rb1_status_records_prior_reviews_and_predeclared_rereview_tasks() -> No
     assert reviews["pa6"]["reviewed_head"] == "17dbf1e7ee42f77191fbd52843c60da13b5a1de7"
     assert reviews["pa6"]["issue"] == 9611
     assert "E5" in reviews["pa6"]["remaining_gate"]
-    assert reviews["amendment"]["issue"] == 9818
+    assert reviews["amendment"]["issue"] == 9842
     assert reviews["amendment"]["status"] == "approved"
     assert reviews["amendment"]["reviewers"] == [
         {"seat": "claude-opus-5-5", "task": "rv-rb1-wpcat-opus-r2", "role": "code+ukrainian", "status": "approved"},
         {"seat": "gemini-3.8-flash-high", "task": "rv-rb1-wpcat-flash-r2", "role": "ukrainian", "status": "approved"},
+        {"seat": "claude-opus-5-5", "task": "rv-wpcat2-opus", "role": "code+ukrainian", "status": "approved"},
+        {"seat": "gemini-3.8-flash-high", "task": "rv-wpcat2-flash", "role": "ukrainian", "status": "approved"},
     ]
     bad = copy.deepcopy(CATALOG)
     del bad["review_status"]
     assert list(VALIDATOR.iter_errors(bad))
 
 
-@pytest.mark.parametrize("reviewer", [0, 1, 2])
+@pytest.mark.parametrize("reviewer", range(len(CATALOG["review_status"]["amendment"]["reviewers"]) + 1))
 @pytest.mark.parametrize("state", ["pending", "rejected", "missing"])
 def test_rb1_approved_requires_every_listed_review_approved(reviewer: int, state: str) -> None:
     bad = copy.deepcopy(CATALOG)
+    bad["status"] = "rb1_approved"
+    bad["review_status"]["amendment"]["status"] = "approved"
     entries = bad["review_status"]["amendment"]["reviewers"]
     entries.append({"seat": "OTHER_REVIEWER", "task": "OTHER_TASK", "role": "ukrainian", "status": "approved"})
+    for entry in entries:
+        entry["status"] = "approved"
+    VALIDATOR.validate(bad)
     if state == "missing":
         del entries[reviewer]["status"]
     else:
@@ -290,11 +318,19 @@ def test_rb1_approved_requires_every_listed_review_approved(reviewer: int, state
 
 def test_rb1_approved_cannot_have_pending_amendment_or_missing_reviewers() -> None:
     bad = copy.deepcopy(CATALOG)
+    bad["status"] = "rb1_approved"
     bad["review_status"]["amendment"]["status"] = "pending"
     assert list(VALIDATOR.iter_errors(bad))
     for index in (0, 1):
         bad = copy.deepcopy(CATALOG)
-        del bad["review_status"]["amendment"]["reviewers"][index]
+        bad["status"] = "rb1_approved"
+        bad["review_status"]["amendment"]["status"] = "approved"
+        for entry in bad["review_status"]["amendment"]["reviewers"]:
+            entry["status"] = "approved"
+        VALIDATOR.validate(bad)
+        entries = bad["review_status"]["amendment"]["reviewers"]
+        missing_seat = entries[index]["seat"]
+        entries[:] = [entry for entry in entries if entry["seat"] != missing_seat]
         assert list(VALIDATOR.iter_errors(bad))
 
 
@@ -324,7 +360,7 @@ def test_c3_definition_lines_render_only_the_verbatim_headword(headword: str) ->
     serialized = json.dumps(context, ensure_ascii=False, separators=(",", ":"))
     assert json.loads(serialized) == context
     lines = [line for line in CATALOG["components"]["C3"]["instructions"] if line["operation"] == "sense_definition"]
-    assert len(lines) == 12
+    assert len(lines) == 24
     assert "pos" not in CATALOG["components"]["C3"]["source_fields"]
     for line in lines:
         assert line["slots"] == ["headword"]
@@ -339,12 +375,19 @@ def test_c3_definition_lines_render_only_the_verbatim_headword(headword: str) ->
         )
         assert not any(
             phrase in line["template"].casefold()
-            for phrase in ("протлумач", "дослівне тлумачення", "визначення значення слова", "визначення для слова")
+            for phrase in (
+                "протлумач",
+                "дослівно",
+                "дослівне тлумачення",
+                "визначення значення",
+                "визначення для слова",
+            )
         )
         if line["sense_variant"] == "with_citations":
-            assert "приклади" in rendered and ("значенні" in rendered or "значення" in rendered)
+            literal = rendered.casefold()
+            assert "приклади" in literal and ("значенні" in literal or "значення" in literal)
         else:
-            assert "приклади" not in rendered
+            assert "приклади" not in rendered.casefold()
 
 
 @pytest.mark.parametrize("mutation", ["pos_slot", "gender_slot", "missing_variant", "wrong_variant", "count"])
@@ -413,9 +456,10 @@ def test_c9_exclusion_names_wp5_as_authenticated_heading_supplier() -> None:
 def test_balanced_catalog_and_two_line_drop_retain_prefix_slack() -> None:
     groups = defaultdict(list)
     for line in LINES:
-        variant = line.get("sense_variant") if line["id"].startswith("C2.") else None
+        variant = line.get("sense_variant")
         groups[line["id"].split(".")[0], line["operation"], variant].append(tokens(line["template"]))
-    assert len(groups) == 12
+    assert set(groups) == set(DECLARED_VARIANTS)
+    assert len(groups) == 13
     assert CATALOG["prefix_metric"]["prefix_lengths"] == [1, 4]
     assert Fraction(str(CATALOG["prefix_metric"]["top1_max"])) == Fraction("0.15")
     assert Fraction(str(CATALOG["prefix_metric"]["top5_max"])) == Fraction("0.60")
@@ -565,17 +609,21 @@ def test_c3_final_lines_have_one_sense_label_and_no_forward_reference() -> None:
             assert line["template"].endswith("Значення: {sense}")
 
 
-def test_c3_six_line_variants_report_diagnostics_without_lowering_export_bounds() -> None:
+def test_c3_variants_and_combined_operation_retain_unchanged_export_bounds() -> None:
     groups = defaultdict(list)
     for line in CATALOG["components"]["C3"]["instructions"]:
         if line["operation"] == "sense_definition":
             groups[line["sense_variant"]].append(tokens(line["template"]))
     assert set(groups) == {"with_citations", "single_sense"}
     for sequences in groups.values():
-        assert len(sequences) == 6
+        assert len(sequences) == 12
         for length in CATALOG["prefix_metric"]["prefix_lengths"]:
-            assert shares([seq[:length] for seq in sequences]) == (Fraction(1, 6), Fraction(5, 6))
+            assert shares([seq[:length] for seq in sequences]) == (Fraction(1, 12), Fraction(5, 12))
         assert max(repetition(sequences)) <= Fraction("0.60")
+    combined = [seq for sequences in groups.values() for seq in sequences]
+    for length in CATALOG["prefix_metric"]["prefix_lengths"]:
+        assert shares([seq[:length] for seq in combined]) == (Fraction(1, 24), Fraction(5, 24))
+    assert max(repetition(combined)) <= Fraction("0.60")
     applicability = CATALOG["components"]["C3"]["sense_definition_contract"]["applicability"]
     assert "sum20_citations" in applicability["with_citations"]
     assert "Exactly one unquarantined sense" in applicability["single_sense"]
