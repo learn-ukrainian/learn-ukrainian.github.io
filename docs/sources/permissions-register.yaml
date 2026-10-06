@@ -1648,8 +1648,8 @@ sources:
     shown_label: null
   removal:
     route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
-    scope: the Atlas/practice fields carrying this source's label; the stored copies listed in stored_in (deleted
-      only with the operator's authorisation).
+    scope: the Atlas/practice fields carrying this source's label; the same fields in the open dataset export;
+      the stored copies listed in stored_in (deleted only with the operator's authorisation).
   open_questions:
   - Does any textbook publisher grant a reuse licence (e.g. for NUS textbooks funded by the state budget)?
 - id: frazeolohichnyi

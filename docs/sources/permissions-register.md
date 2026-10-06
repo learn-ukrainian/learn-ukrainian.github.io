@@ -80,7 +80,7 @@ term of protection (Art. 31) and public domain (Art. 32(3)).
 | `course_authored` | Learn Ukrainian project (maintainer Krisztian Koos) | internal, site, dataset | CC BY-SA 4.0 (project content) | Learn Ukrainian |
 | `wikipedia` | Wikipedia contributors / Wikimedia Foundation | internal, site, dataset | CC BY-SA 4.0 (and GFDL) | Вікіпедія |
 | `esum` | Інститут мовознавства ім. О. О. Потебні НАН України (publisher Наукова думка); co-authored by many compilers | internal, site, dataset | In copyright (co-authored, vol. 6 published 2012 — Art. 31(4)); rights holder not confirmed (Institute and/or Наукова думка) | «Етимологічний словник української мови» (ЕСУМ, Ін-т мовознавства ім. О. О. Потебні НАН України; mphdict ODbL/DbCL) |
-| `textbooks` | Individual authors and publishers; PDFs via pidruchnyk.com.ua and lib.imzo.gov.ua | internal, site, dataset | In copyright (authors/publishers); free public access by law, no reuse licence | — |
+| `textbooks` | Individual authors and publishers (e.g. Заболотний, Авраменко, Вашуленко, Карман, Літвінова, Глазова); PDFs via pidruchnyk.com.ua and lib.imzo.gov.ua | internal, site, dataset | In copyright (authors/publishers); free public access by law, no reuse licence | — |
 | `frazeolohichnyi` | Compilers (Білоноженко В. М. та ін.) / publisher Наукова думка — rights holder not confirmed | internal, site, dataset | In copyright (co-authored, 2003); no licence found | Фразеологічний словник української мови |
 | `antonenko_style_guide` | Heirs of Борис Антоненко-Давидович (d. 9 May 1984) — no contact found | internal, site, dataset | In copyright until 31 Dec 2054 (Art. 31(2)); rights with the heirs | «Як ми говоримо» Антоненка-Давидовича |
 | `ulp_private` | Anna Ohoiko (Ukrainian Lessons) | internal | All rights reserved (Anna Ohoiko) | — |
@@ -599,7 +599,7 @@ Correcting those texts is #9000.
 - **Also searched:** https://shkola.in.ua/polityka/ (privacy policy only); https://zakon.rada.gov.ua/laws/show/2145-19/print (Law on Education, Art. 75(6)-(7))
 - **Statute referred to:** `law_art22_quotation`
 - **Citation:** Author(s), title, grade, publisher, year, page — for every quoted sentence. Label shown: not named on learner pages.
-- **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the Atlas/practice fields carrying this source's label; the stored copies listed in stored_in (deleted only with the operator's authorisation).
+- **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the stored copies listed in stored_in (deleted only with the operator's authorisation).
 - **Open questions:**
   - Does any textbook publisher grant a reuse licence (e.g. for NUS textbooks funded by the state budget)?
 
