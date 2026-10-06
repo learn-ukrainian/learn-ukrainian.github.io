@@ -122,6 +122,15 @@ dispatch worktree.
 
 ## Invariants
 
+- launchd opens each job's `StandardOutPath` and `StandardErrorPath` by name
+  when the job runs. Installer no-follow checks cannot prevent launchd from
+  following a link planted later; detection is the control (#9894).
+  The Monitor API supervisor's `status` and the worktree-cleanup integrity
+  watchdog safely read their installed plists and report live or dangling
+  symlinks in either log path (including parent directories) as unsafe.
+  Missing log files are allowed. A clean check describes the observed paths;
+  it cannot guarantee that they remain safe until launchd opens them.
+
 - Logs and receipts of scheduled jobs must live outside the repository so
   they survive a checkout loss and remain available for forensics.
   `worktree-cleanup` and `codex-archived-thread-cleanup` comply under

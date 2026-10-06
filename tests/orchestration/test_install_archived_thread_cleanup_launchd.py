@@ -151,6 +151,35 @@ def test_status_rejects_venv_python_as_program(tmp_path: Path, monkeypatch) -> N
     assert status["loaded"] is True
 
 
+def test_status_reports_a_truncated_xml_plist(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    destination = launchd.plist_path(home)
+    destination.parent.mkdir(parents=True)
+    payload = launchd.build_plist(
+        repo_root=tmp_path / "repo",
+        home=home,
+        codex_binary=tmp_path / "bin" / "codex",
+        weekday="sunday",
+        hour=3,
+    )
+    destination.write_bytes(plistlib.dumps(payload, fmt=plistlib.FMT_XML)[:-40])
+    assert destination.read_bytes().startswith(b"<?xml")
+
+    class Result:
+        returncode = 0
+        stdout = "loaded"
+        stderr = ""
+
+    monkeypatch.setattr(launchd, "_loaded_readback", lambda: Result())
+
+    status, return_code = launchd.status(home=home)
+
+    assert status["installed"] is True
+    assert status["valid_plist"] is False
+    assert status["parse_error"]
+    assert return_code == 1
+
+
 def test_wrapper_exits_78_without_repo_root() -> None:
     proc = subprocess.run(
         ["/bin/bash", "--noprofile", "--norc", str(_WRAPPER)],
