@@ -1408,3 +1408,98 @@ def test_frozen_manifest_kind_disagreement_refused(pilot):
     rehash(manifest, False)
     with pytest.raises(foundation.Refusal, match="kind disagrees"):
         foundation.manifest_check(manifest)
+
+
+def joint_fixture(pilot):
+    selection = golden_candidate(pilot)
+    # Separate source partitions, including intrinsic aliases and source-content evidence.
+    records = []
+    units = []
+    for number in range(220):
+        raw = dict(selection["source_records"][0]["raw_row"], id=number + 10000,
+                   normalized_query=f"Golden English {number}", canonical_headword=f"Golden English {number}",
+                   content_sha256=f"{number + 1:064x}", register_position=f"golden:{number}")
+        record = capture("ulif", "ulif_dictua_entries", raw)
+        records.append(record)
+        units.append(dict(selection["units"][0], unit_key=f"golden:case:{number}", anchor_locator=record["locator"],
+                          source_record_keys=[record["locator"]], atlas_slug=None))
+    selection.update(source_records=records, units=units,
+                     denominator=dict(units=220, source_records=220, atlas_articles=0))
+    return selection
+
+
+def golden_manifest(pilot):
+    manifest = json.loads(pilot["manifest"].read_bytes())
+    manifest.update(kind="golden", selection=joint_fixture(pilot), legacy_articles=[],
+                    counts=dict(units=220, source_records=220, atlas_articles=0, legacy_alias_rows=0))
+    manifest["admission"]["denominator"] = manifest["selection"]["denominator"]
+    rehash(manifest)
+    return manifest
+
+
+def test_joint_verify_both_orders_and_unknown_refusal(pilot, capsys):
+    prepared(pilot)
+    golden = pilot["root"] / "golden.json"
+    golden.write_text(json.dumps(golden_manifest(pilot), ensure_ascii=False, indent=2) + "\n")
+    member = pilot["root"] / "membership.json"
+    save(member, dict(heldout=["golden:case:0"], replay=["golden:case:1"]))
+    for paths in [(pilot["manifest"], golden), (golden, pilot["manifest"])]:
+        assert foundation.main(["verify", "--manifest", str(paths[0]), "--manifest", str(paths[1]),
+                                "--registry", str(pilot["registry"]), "--heldout-manifest", str(member)]) == 0
+        assert '"heldout_isolation": "checked"' in capsys.readouterr().out
+    assert foundation.main(["verify", "--manifest", str(golden), "--registry", str(pilot["registry"]),
+                            "--heldout-manifest", str(member)]) == 1
+    assert "requires the pilot manifest" in capsys.readouterr().err
+    save(member, dict(heldout=["unknown:case:0"], replay=["golden:case:1"]))
+    assert pilot["operation"]("verify", "--manifest", str(golden), "--heldout-manifest", str(member)) == 1
+    assert "Unresolved membership keys" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("fault", ["direct_pilot", "intrinsic", "content", "replay_alias", "adjudication"])
+def test_joint_isolation_refusals(pilot, fault):
+    manifest, registry = prepared(pilot)
+    golden = joint_fixture(pilot)
+    member = pilot["root"] / "membership.json"
+    held, replay = "golden:case:0", "golden:case:1"
+    if fault == "direct_pilot":
+        held = manifest["selection"]["units"][0]["unit_key"]
+    elif fault == "intrinsic":
+        row = manifest["selection"]["source_records"][0]["raw_row"]
+        golden["source_records"][0]["raw_row"].update({k: row[k] for k in
+                                                     ("normalized_query", "canonical_headword", "grammatical_label")})
+    elif fault == "content":
+        raw = golden["source_records"][0]["raw_row"]
+        raw["content_sha256"] = "a" * 64
+        golden["source_records"][0]["source_content_sha256"] = "a" * 64
+    elif fault == "replay_alias":
+        replay = foundation.aliases(golden["source_records"][0], golden["source_records"])[0]["key"]
+    elif fault == "adjudication":
+        golden["units"][0]["mapping"] = dict(note="English marked owner")
+    save(member, dict(heldout=[held], replay=[replay]))
+    with pytest.raises(foundation.Refusal, match=r"overlap|Held-out adjudicated"):
+        foundation.isolation([manifest, golden, registry], member, ("manifest", "registry"), pilot=manifest)
+
+
+def test_joint_verify_replay_may_share_literal_pilot_parent(pilot, capsys):
+    manifest, _ = prepared(pilot)
+    golden = golden_manifest(pilot)
+    records = golden["selection"]["source_records"]
+    parent = copy.deepcopy(manifest["selection"]["source_records"][0])
+    child = copy.deepcopy(manifest["selection"]["source_records"][-2])
+    # Metadata differences never create a second literal parent; every owner still contributes its closure.
+    parent["database"] = "sources"
+    records[0] = parent
+    records.append(child)
+    golden["selection"]["units"][0].update(anchor_locator=parent["locator"],
+                                          source_record_keys=[parent["locator"], child["locator"]])
+    golden["counts"]["source_records"] = golden["selection"]["denominator"]["source_records"] = 221
+    rehash(golden)
+    path = pilot["root"] / "golden-shared.json"
+    path.write_text(json.dumps(golden, ensure_ascii=False, indent=2) + "\n")
+    member = pilot["root"] / "membership.json"
+    save(member, dict(heldout=["golden:case:1"], replay=["golden:case:0"]))
+    assert pilot["operation"]("verify", "--manifest", str(path), "--heldout-manifest", str(member)) == 0
+    assert '"heldout_isolation": "checked"' in capsys.readouterr().out
+    save(member, dict(heldout=["golden:case:0"], replay=["golden:case:1"]))
+    assert pilot["operation"]("verify", "--manifest", str(path), "--heldout-manifest", str(member)) == 1
+    assert "Heldout/pilot overlap" in capsys.readouterr().err

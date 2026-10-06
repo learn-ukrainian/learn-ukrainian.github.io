@@ -180,7 +180,7 @@ def source_keys(entry):
     return {k["key"] for k in entry.get("key_at_creation", {}).get("source_keys", [])}
 
 
-def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the first, which has the manifest role.
+def isolation(inputs, heldout, roles=(), pilot=None):  # Roles name the inputs after the first, which has the manifest role.
     first = inputs[0]  # A first input without a selection object is itself read as the selection.
     places = [("manifest", () if isinstance(first, dict) and isinstance(first.get("selection"), dict) else
                ("selection",)), *((role, ()) for role in roles)] + [(None, ())] * len(inputs)
@@ -197,9 +197,13 @@ def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the fir
                 for v in membership.values()), "Membership keys must be unique nonempty strings")
     boundary, replay = set(membership["heldout"]), set(membership["replay"])
     require(boundary and not boundary & replay, "Heldout and replay must be disjoint")
-    groups, owners = [], {}
+    groups, owners, pilot_keys = [], {}, set()
+    pilot_objects = {id(v) for v, *_ in walk(pilot)} if pilot is not None else set()
     records = [r for v, *_ in objects if isinstance(v, dict) and isinstance(v.get("source_records"), list)
                for r in v["source_records"] if "raw_row" in r]
+    # Joint manifests may capture the same literal row. Keep every owner view below, but count a shared
+    # literal parent once for the typed dependency; distinct captures still fail the single-parent gate.
+    records = list({(r["source_id"], r["table"], canonical(r["raw_row"])): r for r in records}.values())
     def cited(value, keys, decoded=False, at=(None, ()), scan=False):  # Shared recogniser: every known key, nested too.
         texts = [t for t, *_ in walk(value, decoded, (), at, scan) if isinstance(t, str)]
         return {k for t in texts for k in keys if k in t and re.search(rf"(?<![\w:/#-]){re.escape(k)}(?![\w:/#-])", t)}
@@ -235,6 +239,8 @@ def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the fir
         if group:
             owners[id(value)] = len(groups), value, decoded
             groups.append((group - {None, ""}, notes, decoded))
+            if id(value) in pilot_objects:
+                pilot_keys |= group - {None, ""}
     known = set().union(*(g for g, *_ in groups))
     groups = [group | cited(notes, known, decoded) for group, notes, decoded in groups]
     require(boundary | replay <= known, "Unresolved membership keys; isolation cannot be checked")
@@ -244,6 +250,7 @@ def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the fir
             break
         boundary = expanded
     require(not boundary & replay, "Heldout/replay overlap after conservative alias closure")
+    require(not boundary & pilot_keys, "Heldout/pilot overlap after conservative alias closure")
     for value, decoded, trail, at in objects:  # Adjudication markers are scanned with the same recogniser, never linked.
         if not isinstance(value, dict):
             continue
@@ -742,25 +749,30 @@ def main(argv=None):
     epilog = (
         "Example (PROJECT_PYTHON = shared interpreter):\n"
         "  PROJECT_PYTHON -m scripts.atlas.word_card_foundation verify --manifest pilot.json --registry registry.json\n"
+        "  PROJECT_PYTHON -m scripts.atlas.word_card_foundation verify --manifest pilot.json --manifest golden.json "
+        "--registry registry.json --heldout-manifest pools.json\n"
         "Outputs: freeze writes an immutable manifest; allocate atomically replaces the registry; verify writes nothing.\n"
         "Sources are read-only; literal row hashes and main/WAL file hashes have separate evidential roles.\n"
         "Exit codes: 0 operation succeeded (never certification); 1 source/data refusal; 2 usage error.\n"
         "Related: docs/atlas/word-cards/migration.md, #9293; no default input/output paths."
     )
     parser = argparse.ArgumentParser(
-        description="Freeze admitted pilot inputs and allocate persistent identities; preparation only.",
+        description="Freeze admitted pilot/golden inputs and allocate pilot identities; preparation only, never evaluation.",
         epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
     commands = parser.add_subparsers(dest="operation", required=True)
     for operation in ("freeze", "allocate", "verify"):
         command = commands.add_parser(operation,
-            description=f"{operation.title()} pilot foundation inputs; normal data/source refusals exit 1.",
+            description=f"{operation.title()} foundation inputs; normal data/source refusals exit 1.",
             epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
         names = ("selection", "sources-db", "atlas-db", "vesum-db", "source-register", "rules-version",
                  "normaliser-version", "output") if operation == "freeze" else ("manifest", "registry")
         for name in names:
             detail = "VERSION (rules-v1-draft or norm-v1)" if name.endswith("version") else "FILE (explicit path, no default)"
             command.add_argument("--" + name, required=True, type=str if name.endswith("version") else Path,
-                help=f"{name}: {detail}; selection needs a sibling *source-admission-receipt.json with report hash/path")
+                **({"action": "append"} if operation == "verify" and name == "manifest" else {}),
+                help=("Repeat for pilot and golden together; golden membership requires the pilot closure" if
+                      operation == "verify" and name == "manifest" else
+                      f"{name}: {detail}; selection needs a sibling *source-admission-receipt.json with report hash/path"))
         command.add_argument("--heldout-manifest", type=Path,
             help='Optional membership JSON {"heldout":["source:key"],"replay":[]}; default absent means isolation unverified')
         if operation == "verify":
@@ -768,15 +780,36 @@ def main(argv=None):
                 help="Request evaluation admission (default false); refused pending authenticated operator authority and thresholds")
     args = parser.parse_args(argv)
     try:
-        manifest = freeze(args) if args.operation == "freeze" else load(args.manifest)
-        manifest_check(manifest, args.manifest if args.operation != "freeze" else None)
+        paths = args.manifest if args.operation == "verify" else []
+        manifests = [load(path) for path in paths]
+        for item, path in zip(manifests, paths, strict=True):
+            manifest_check(item, path)
+        if args.operation == "verify":
+            require(1 <= len(manifests) <= 2, "Verify requires one manifest or a pilot/golden pair")
+            kinds = [m.get("kind", "pilot") for m in manifests]
+            require(len(manifests) == 1 or set(kinds) == {"pilot", "golden"},
+                    "Joint verify requires exactly one pilot and one golden manifest")
+            require(not args.heldout_manifest or "golden" not in kinds or "pilot" in kinds,
+                    "Golden heldout verification requires the pilot manifest")
+        manifest = manifests[0] if manifests else (
+            freeze(args) if args.operation == "freeze" else load(args.manifest))
+        if args.operation != "verify":
+            manifest_check(manifest, args.manifest if args.operation != "freeze" else None)
+        require(args.operation != "allocate" or manifest.get("kind", "pilot") == "pilot",
+                "Golden cases are not pilot identity allocations")
         registry = allocate(args, manifest) if args.operation == "allocate" else (
             load(args.registry) if args.operation == "verify" else None)
         if args.operation == "verify":
-            allocation_check(manifest, registry)
+            registry_check(registry)
+            for item in manifests:
+                if item.get("kind", "pilot") == "pilot":
+                    allocation_check(item, registry)
             require(not args.for_evaluation, "Evaluation refused: authenticated operator authority/signature and "
                     "acceptance thresholds are not established; Gate 2 remains open")
-        checked = isolation([manifest, registry], args.heldout_manifest, ("registry",))
+        pilot = next((m for m in manifests if m.get("kind", "pilot") == "pilot"), None)
+        checked = isolation([*manifests, registry] if manifests else [manifest, registry], args.heldout_manifest,
+                            (*("manifest" for _ in manifests[1:]), "registry"),
+                            pilot=pilot if len(manifests) == 2 else None)
         unresolved = [u["unit_key"] for u in manifest["selection"]["units"] if not u["atlas_slug"]]
         # Only this build's identities are verified; other builds' events are retained, unverified history.
         foreign = None if registry is None else sum(
