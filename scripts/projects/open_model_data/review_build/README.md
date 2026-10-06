@@ -231,6 +231,10 @@ refuse inappropriate cardinality. Sense/article `one_group` rules with
   rows collapse as sets; missing, extra or divergent variants fail. This checks
   complete variant agreement independently of extraction, without replacing
   quotation or supporting-citation authentication.
+- `sequence_query_equal`: the same independently parameterized queries and
+  normalizers as `set_query_equal`, but order and multiplicity must also agree.
+  Queries declare their source ordering explicitly. Optional empty selections
+  still require an independently empty result.
 - `contrast_pair`: selectors `rejected`, `recommended`, `response` establish the
   visible direction. `book_rejected`/`book_recommended` cite one `book_source`
   row that contains both members as whole Unicode tokens (including apostrophes

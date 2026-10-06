@@ -3,7 +3,7 @@
 Selectors: {area: slots|context|response, slot: name, citation: 0,
             field: optional DB column}; absent field selects exact value text.
 Rules: equal, same_row, one_group, example_list, contiguous_pages, contrast_pair,
-       form_agreement, literal, set_query_equal. Unknown rules fail closed. A component owns the
+       form_agreement, literal, set_query_equal, sequence_query_equal. Unknown rules fail closed. A component owns the
 reviewed spec, not a callable validation hook.
 """
 
@@ -171,19 +171,22 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
                 bool(selectors) and all(operand(candidate, ref, reader) == rule["expected"] for ref in selectors),
                 "binding_literal",
             )
-        elif op == "set_query_equal":
+        elif op in {"set_query_equal", "sequence_query_equal"}:
             # An explicitly optional repeated slot may represent the empty set.
             # Every independent query must then also be empty; omission cannot
             # hide held source values. Scalar selectors remain mandatory.
             optional = any(s.get("match") == "all" and s.get("min") == 0 for s in rule.get("values", []))
             require((bool(selectors) or optional) and bool(rule.get("queries")), "binding_set")
             normalizer = rule["normalizer"]
-            expected = {normalize(operand(candidate, ref, reader), normalizer) for ref in selectors}
+            expected = [normalize(operand(candidate, ref, reader), normalizer) for ref in selectors]
             for definition in rule["queries"]:
                 query = dict(definition["query"])
                 query["parameters"] = [operand(candidate, ref, reader) for ref in definition.get("parameters", [])]
-                actual = {normalize(value, normalizer) for value in reader.query_values(query)}
-                require(actual == expected, "binding_set")
+                actual = [normalize(value, normalizer) for value in reader.query_values(query)]
+                if op == "set_query_equal":
+                    require(set(actual) == set(expected), "binding_set")
+                else:
+                    require(actual == expected, "binding_sequence")
         elif op == "same_row":
             citations = [citation_for(candidate, s) for s in selectors]
             require(len(citations) >= 2 and len({(c.store, c.table, c.row_key) for c in citations}) == 1, "binding_row")

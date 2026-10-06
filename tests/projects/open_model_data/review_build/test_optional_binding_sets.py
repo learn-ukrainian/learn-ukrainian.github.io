@@ -32,3 +32,23 @@ def test_optional_empty_set_requires_independent_empty_query(bundle):
         rule["values"] = []
         with pytest.raises(BuildError, match="binding_set"):
             bindings.check(candidate, spec, reader, {})
+
+
+def test_sequence_query_preserves_source_order_and_multiplicity(bundle):
+    candidate = bundle["candidates"][0]
+    selector = {"area": "context", "slot": "SYNTHETIC ordered", "match": "all", "min": 0}
+    query = {
+        "kind": "sql",
+        "store": "sources.db",
+        "sql": "SELECT target_field FROM units WHERE id IN (1,2) ORDER BY id",
+    }
+    rule = {"op": "sequence_query_equal", "values": [selector], "normalizer": "identity", "queries": [{"query": query}]}
+    spec = {"schema": "binding-spec.v1", "rules": [rule]}
+    parts = tuple(replace(c.response[0], slot="SYNTHETIC ordered") for c in bundle["candidates"][:2])
+    with SnapshotReader({"sources.db": bundle["db"]}) as reader:
+        assert bindings.check(replace(candidate, context=parts), spec, reader, {}) == {"sequence_query_equal"}
+        for context in ((), parts[::-1], parts[:1], (*parts, parts[0])):
+            with pytest.raises(BuildError, match="binding_sequence"):
+                bindings.check(replace(candidate, context=context), spec, reader, {})
+        query["sql"] = "SELECT target_field FROM units WHERE id=0"
+        assert bindings.check(candidate, spec, reader, {}) == {"sequence_query_equal"}
