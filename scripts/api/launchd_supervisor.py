@@ -23,6 +23,7 @@ from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from xml.parsers.expat import ExpatError
 
 from scripts.api.release_snapshot import build_release, prune_releases
 from scripts.common.safe_unit_install import (
@@ -388,7 +389,7 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
                 and WRAPPER_NAME in str(arguments)
                 and not any(".venv/bin/python" in str(part) for part in arguments)
             )
-        except (ValueError, plistlib.InvalidFileException) as exc:
+        except (ValueError, plistlib.InvalidFileException, ExpatError) as exc:
             parse_error = str(exc)
     result = {
         "action": "status",

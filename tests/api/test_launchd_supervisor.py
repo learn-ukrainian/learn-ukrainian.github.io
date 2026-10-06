@@ -291,6 +291,26 @@ def test_status_reports_an_unreadable_plist(tmp_path: Path, monkeypatch) -> None
     assert returncode == 1
 
 
+def test_status_reports_a_truncated_xml_plist(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    destination = supervisor.plist_path(home)
+    destination.parent.mkdir(parents=True)
+    destination.write_bytes(supervisor.render_plist(repo_root=tmp_path / "repo")[:-40])
+    assert destination.read_bytes().startswith(b"<?xml")
+    monkeypatch.setattr(
+        supervisor,
+        "_loaded_readback",
+        lambda: subprocess.CompletedProcess(["launchctl", "print"], 0, "", ""),
+    )
+
+    result, returncode = supervisor.status(home=home)
+
+    assert result["installed"] is True
+    assert result["valid_plist"] is False
+    assert result["parse_error"]
+    assert returncode == 1
+
+
 def test_uninstall_removes_the_plist_after_stopping(tmp_path: Path, monkeypatch) -> None:
     repo = _runtime_repo(tmp_path)
     home = tmp_path / "home"

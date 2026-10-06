@@ -33,6 +33,7 @@ import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from xml.parsers.expat import ExpatError
 
 
 def _load_sibling(module_name: str, filename: str):
@@ -189,7 +190,7 @@ def check_worktree_cleanup_integrity(
                 check_state_paths(files=(Path(raw),), home=home_root)
             except (InstallError, OSError) as exc:
                 return False, f"ALERT: unsafe worktree-cleanup job log {key}: {exc}"
-    except (ValueError, plistlib.InvalidFileException) as exc:
+    except (ValueError, plistlib.InvalidFileException, ExpatError) as exc:
         return False, f"ALERT: unsafe worktree-cleanup job plist: {exc}"
 
     observed_now = now or datetime.now(UTC)
