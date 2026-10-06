@@ -1,9 +1,11 @@
 """C1 sentence × annotator candidates from the held gec-only layer."""
 
+from copy import deepcopy
+
 from ..contract import Candidate
 from ..errors import require
 from ..gate import REASONING
-from .ua_gec_split import UaGecFileStore, cited_value, exclusion, parser_hashes
+from .ua_gec_split import COMPATIBILITY, CORPUS, UaGecFileStore, cited_value, exclusion, parser_hashes
 
 FROZEN_COUNT = 32_306
 SENTENCE = {"area": "slots", "slot": "sentence"}
@@ -27,6 +29,8 @@ REASONS = {
 
 def spec() -> dict:
     return {
+        "compatibility": deepcopy(COMPATIBILITY),
+        "corpus": deepcopy(CORPUS),
         "unit_query": {
             "kind": "official_reader",
             "store": "ua-gec",

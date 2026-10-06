@@ -143,13 +143,11 @@ def store(tmp_path, monkeypatch):
 def setup_gate(store, selected=("C1", "C6a")):
     modules = {"C1": c1_ua_gec, "C6a": c6a_calque}
     config = {
-        "schema": "omd-review-request.v1",
+        "schema": "omd-review-request.v2",
         "catalog": "SYNTHETIC-catalog",
         "register": "SYNTHETIC-register",
         "databases": {},
         "components": {name: modules[name].spec() for name in selected},
-        "compatibility": store.compatibility(),
-        "corpus": ua_gec_split.CORPUS,
         "ua_gec": {"root": str(store.root)},
     }
     candidates = [c for name in selected for c in modules[name].extract(store)]
@@ -159,8 +157,47 @@ def setup_gate(store, selected=("C1", "C6a")):
     data["components"].update(catalog_data("C6", "calque_correction")["components"])
     resolver = Resolver(register_data(sources=("ua_gec",)), {"ua_gec": SyntheticAdapter()})
     reader = SnapshotReader({}, {"ua-gec": store})
-    gate = Gate(reader, Catalog(data), resolver, config["components"], store.compatibility(), ua_gec_split.CORPUS)
+    gate = Gate(reader, Catalog(data), resolver, config["components"])
     return gate, candidates, config, data
+
+
+@pytest.mark.parametrize("component", ["C1", "C6a"])
+def test_registered_policy_is_static_detached_and_row_independent(store, component):
+    obj = components.load_components([component])[component]
+    spec = obj.spec
+    assert spec["compatibility"] == store.compatibility() == ua_gec_split.COMPATIBILITY
+    assert spec["corpus"] == ua_gec_split.CORPUS
+    assert {entry["table"] for entry in spec["compatibility"]} == {"data/gec-only", "data/gec-fluency"}
+    assert all(entry["role"] == "ua_gec" and entry["sensitive"] == "is_sensitive" for entry in spec["compatibility"])
+    spec["compatibility"][0]["source_values"].clear()
+    spec["corpus"]["table"] = "SYNTHETIC-unreviewed"
+    assert obj.spec["compatibility"] == ua_gec_split.COMPATIBILITY
+    assert obj.spec["corpus"] == ua_gec_split.CORPUS
+    store._corpus.clear()
+    assert store.compatibility() == obj.spec["compatibility"]
+
+
+@pytest.mark.parametrize("component", ["C1", "C6a"])
+@pytest.mark.parametrize("key", ["compatibility", "corpus", "components", "candidates"])
+def test_registered_cli_refuses_request_admission_policy(store, tmp_path, monkeypatch, capsys, component, key):
+    _, _, config, _ = setup_gate(store, (component,))
+    del config["components"]
+    config[key] = [] if key == "compatibility" else {}
+    path = tmp_path / "SYNTHETIC-request.json"
+    path.write_text(json.dumps(config))
+    monkeypatch.setattr(output, "filesystem", lambda _: "ext4")
+
+    def no_extraction(*args, **kwargs):
+        pytest.fail("request policy must be refused before extraction")
+
+    monkeypatch.setattr(cli, "execute", no_extraction)
+    assert (
+        cli.main(
+            ["build", "--config", str(path), "--out", str(tmp_path / "SYNTHETIC-build"), "--components", component]
+        )
+        == 1
+    )
+    assert json.loads(capsys.readouterr().err)["error"] == "request_policy_key"
 
 
 def admitted(store, component="C1"):
@@ -242,8 +279,6 @@ def test_registered_reader_root_uses_shared_repository():
     [
         ("root", "component_input"),
         ("other_root", "component_input"),
-        ("corpus", "component_corpus"),
-        ("compatibility", "source_compatibility"),
     ],
 )
 def test_registered_inputs_refuse_unreviewed_mappings(store, monkeypatch, fault, code):
@@ -254,15 +289,11 @@ def test_registered_inputs_refuse_unreviewed_mappings(store, monkeypatch, fault,
         config["ua_gec"]["root"] = "SYNTHETIC-relative"
     elif fault == "other_root":
         config["ua_gec"]["root"] = str(store.root / "SYNTHETIC-untrusted-reader")
-    elif fault == "corpus":
-        config["corpus"] = {}
-    else:
-        config["compatibility"] = []
     monkeypatch.setattr(ua_gec_component, "UaGecFileStore", lambda _: store)
     monkeypatch.setattr(ua_gec_component, "held_root", lambda: store.root)
     obj = components.load_components(["C1"])["C1"]
     with SnapshotReader({}, obj.files) as reader:
-        ctx = components.ComponentContext(reader, config)
+        ctx = components.ComponentContext(reader, {k: v for k, v in config.items() if k != "components"})
         with pytest.raises(BuildError, match=code):
             list(obj.iter_candidates(ctx))
 
@@ -451,7 +482,7 @@ def test_component_verification_fixtures_are_host_only(store, tmp_path, monkeypa
         objects = {
             name: ua_gec_component.UaGecComponent(module) for name, module in (("C1", c1_ua_gec), ("C6a", c6a_calque))
         }
-        ctx = ComponentContext(gate.reader, config)
+        ctx = ComponentContext(gate.reader, {k: v for k, v in config.items() if k != "components"})
         results = verify_component_mutations(objects, ctx, candidates, out, gate)
         assert results["C6a"]["mixed_edit"] == "mixed_edit" and results["C1"]["test_source"] == "test_source"
         assert sum(map(len, results.values())) == 13
@@ -490,7 +521,7 @@ def test_registered_cli_build_verify_and_input_tamper(store, tmp_path, monkeypat
     catalog_path.write_text(yaml.safe_dump(catalog))
     register_path.write_text(yaml.safe_dump(register_data(sources=("ua_gec",))))
     config.update(catalog=str(catalog_path), register=str(register_path))
-    config["components"] = {name: {} for name in selected}
+    del config["components"]
     config_path = tmp_path / "request.json"
     config_path.write_text(json.dumps(config))
     from scripts.projects.open_model_data.review_build.components import ua_gec_component
@@ -548,7 +579,17 @@ def test_cli_privacy_help_and_error_logs(tmp_path, monkeypatch, capsys):
     assert json.loads(captured.err)["error"] == "cli_usage"
     monkeypatch.setattr(output, "filesystem", lambda _: "ext4")
     config = tmp_path / "SYNTHETIC-request.json"
-    config.write_text(json.dumps({"components": {"C1": {}}}))
+    config.write_text(
+        json.dumps(
+            {
+                "schema": "omd-review-request.v2",
+                "catalog": "SYNTHETIC-catalog.yaml",
+                "register": "SYNTHETIC-register.yaml",
+                "databases": {},
+                "ua_gec": {"root": "SYNTHETIC-corpus"},
+            }
+        )
+    )
     monkeypatch.setattr(cli, "execute", lambda *args, **kwargs: {"status": "built", "count": 1})
     out = tmp_path / "SYNTHETIC-cli"
     args = ["build", "--config", str(config), "--out", str(out), "--components", "C1"]

@@ -15,6 +15,7 @@ import sys
 import unicodedata
 from bisect import bisect_left
 from collections import defaultdict
+from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -33,6 +34,25 @@ CORPUS = {
     "layer": "layer",
     "text": "source_sentence",
 }
+# Reviewed admission declarations are static component code, independent of
+# request data and observed corpus rows. Both components share the same policy.
+COMPATIBILITY = [
+    {
+        "store": "ua-gec",
+        "table": f"data/{layer}",
+        "source_id": "ua_gec",
+        "role": "ua_gec",
+        "source_column": "source_id",
+        "source_values": ["ua_gec"],
+        "sensitive": "is_sensitive",
+        "split": "split",
+        "document": "document",
+        "text": "source_sentence",
+        "layer": "layer",
+        "edits": "edits",
+    }
+    for layer in LAYERS
+]
 REGISTER_FORM = (
     "UA-GEC (Syvokon, Nahorna, Kuchmiichuk, Osidach, UNLP 2023), "
     "https://github.com/grammarly/ua-gec, CC BY 4.0, changes indicated."
@@ -427,23 +447,8 @@ class UaGecFileStore:
         return dict(sorted(self._hashes.items()))
 
     def compatibility(self) -> list[dict]:
-        return [
-            {
-                "store": "ua-gec",
-                "table": table,
-                "source_id": "ua_gec",
-                "role": "ua_gec",
-                "source_column": "source_id",
-                "source_values": ["ua_gec"],
-                "sensitive": "is_sensitive",
-                "split": "split",
-                "document": "document",
-                "text": "source_sentence",
-                "layer": "layer",
-                "edits": "edits",
-            }
-            for table in sorted({r["table"] for r in self._corpus})
-        ]
+        """Return a detached copy of the reviewed component admission policy."""
+        return deepcopy(COMPATIBILITY)
 
 
 def cited_value(row: dict, slot: str, field: str) -> Value:

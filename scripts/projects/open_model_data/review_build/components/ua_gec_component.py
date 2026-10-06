@@ -5,8 +5,7 @@ from pathlib import Path
 from scripts.common.repo_root import main_checkout_root
 
 from ..errors import require
-from . import ComponentContext
-from .ua_gec_split import CORPUS, UaGecAttribution, UaGecFileStore
+from .ua_gec_split import UaGecAttribution, UaGecFileStore
 
 FILES = {"ua-gec": UaGecFileStore()}
 ADAPTERS = {"ua_gec": UaGecAttribution()}
@@ -39,7 +38,6 @@ class UaGecComponent:
         return spec
 
     def iter_candidates(self, ctx):
-        require(ctx.request.get("corpus") == CORPUS, "component_corpus")
         root = ctx.request.get("ua_gec", {}).get("root")
         require(isinstance(root, str) and Path(root).is_absolute(), "component_input")
         approved_root = held_root().resolve()
@@ -49,9 +47,6 @@ class UaGecComponent:
             store = UaGecFileStore(approved_root)
             ctx.reader.files["ua-gec"] = store
         require(store.root == Path(root).resolve(), "component_input")
-        compatibility = [row for row in ctx.request["compatibility"] if row["store"] == "ua-gec"]
-        expected = ComponentContext(ctx.reader, {"compatibility": store.compatibility()}).request["compatibility"]
-        require(tuple(compatibility) == expected, "source_compatibility")
         query = self.module.spec()["unit_query"]
         for row in ctx.reader.all_rows("ua-gec", "corpus"):
             if row["split"] != query["split"] or row["layer"] != query["layer"]:
