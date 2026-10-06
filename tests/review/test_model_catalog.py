@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from scripts.review.model_catalog import load_model_catalog
+from scripts.review.role_resolution import expanded_legacy_view
 
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
 BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes()))
@@ -33,7 +34,7 @@ def test_frozen_hashes_and_matrix_denominator():
 
 
 def test_legacy_catalog_equals_untouched_base():
-    assert load_model_catalog() == BASELINE["catalog"]
+    assert expanded_legacy_view() == BASELINE["catalog"]
 
 
 def test_capture_encodes_structures_without_reordering_arrays():
