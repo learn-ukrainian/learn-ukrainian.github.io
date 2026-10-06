@@ -31,7 +31,12 @@ if str(SCRIPTS_DIR) not in sys.path:
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
     from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-except ImportError:  # loaded as a file: only scripts/ is on sys.path
+except ModuleNotFoundError as exc:
+    # File execution puts only scripts/ on sys.path, so the top-level package
+    # is absent (exc.name == "scripts"). A failure inside readonly_sqlite
+    # carries another name, or is not ModuleNotFoundError, and must propagate.
+    if exc.name != "scripts":
+        raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
     from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
