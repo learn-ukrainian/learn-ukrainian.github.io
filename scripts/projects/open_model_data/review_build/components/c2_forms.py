@@ -161,6 +161,29 @@ BINDING = {
 
 COMMON_PREDICATES = [{"query": HOMONYM_QUERY, "parameters": HOMONYM_PARAMS, "expected": [0]}]
 SPEC = {
+    "compatibility": [
+        {
+            "store": store,
+            "table": table,
+            "source_id": source,
+            "role": "modern",
+            "source_column": column,
+            "source_values": allowed,
+            "sensitive": None,
+        }
+        for store, table, source, column, allowed in (
+            (STORE, "ulif_forms", "ulif", "preposition", [""]),
+            (STORE, "ulif_dictua_entries", "ulif", "status", ["ok"]),
+            (STORE, "ulif_dictua_sections", "ulif", "kind", ["paradigm"]),
+            (
+                VESUM,
+                "forms_all",
+                "vesum",
+                "pos",
+                ["adj", "adv", "advp", "conj", "intj", "noninfl", "noun", "number", "numr", "part", "prep", "verb"],
+            ),
+        )
+    ],
     "operations": ["agreed_form"],
     "unit_grain": "ULIF entry × grammatical slot (all variants)",
     "reasons": {

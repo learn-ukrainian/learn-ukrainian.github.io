@@ -110,6 +110,16 @@ parsed spans, including markers split across newlines and unauthenticated stray
 braces, is withheld as `unparsed_annotation_markup`; parsed delimiters and learner
 braces inside authenticated source spans remain source text.
 
+C2's registered `COMPONENT` owns the modern-source mappings for ULIF entries,
+forms and paradigm sections, and VESUM forms. It authenticates ULIF's entry
+status, unbound form and paradigm kind, and VESUM's closed part-of-speech
+vocabulary from cited rows. Neither dictionary has a sensitivity or corpus-split
+mapping. C2 counts each ULIF entry × grammatical slot, including withheld units,
+and emits all ordered printed variants only when the source table headers and
+the complete ULIF/VESUM form sets agree. Attribution remains fail-closed against
+the located register; a missing or unmapped register form withholds otherwise
+eligible units as `attribution_unresolved`.
+
 Every component spec requires:
 
 - `unit_query`: `{kind: sql, store: ..., sql: SELECT ..., parameters: [...]}`;

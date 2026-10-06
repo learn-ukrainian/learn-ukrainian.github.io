@@ -45,10 +45,12 @@ def source(tmp_path, monkeypatch):
             )
     with sqlite3.connect(vd) as conn:
         conn.executescript(
-            "CREATE TABLE forms_all(id INTEGER PRIMARY KEY,word_form TEXT,lemma TEXT,tags TEXT); CREATE TABLE vesum_build_metadata(key TEXT PRIMARY KEY,value TEXT);"
+            "CREATE TABLE forms_all(id INTEGER PRIMARY KEY,word_form TEXT,lemma TEXT,tags TEXT,pos TEXT DEFAULT 'noun'); CREATE TABLE vesum_build_metadata(key TEXT PRIMARY KEY,value TEXT);"
         )
         for i, text in enumerate(("synthetic-a", "synthetic-b"), 1):
-            conn.execute("INSERT INTO forms_all VALUES (?,?,?,?)", (i, text, "synthetic", "noun:gen:s"))
+            conn.execute(
+                "INSERT INTO forms_all(id,word_form,lemma,tags) VALUES (?,?,?,?)", (i, text, "synthetic", "noun:gen:s")
+            )
         conn.execute("INSERT INTO vesum_build_metadata VALUES (?,?)", ("canonical_jsonl_sha256", digest(b"SYNTHETIC")))
     lock = {
         "schema_version": "vesum-source-lock-v1",
@@ -146,7 +148,7 @@ def test_component_omission_fixtures(source, mutation, reason):
         "canonical": "UPDATE ulif_dictua_entries SET canonical_headword='SYNTHETIC-other'",
         "ordering": "UPDATE ulif_forms SET variant_order=0 WHERE id=2",
         "vesum_missing": "DELETE FROM forms_all WHERE id=2",
-        "vesum_extra": "INSERT INTO forms_all VALUES (3,'synthetic-extra','synthetic','noun:gen:s')",
+        "vesum_extra": "INSERT INTO forms_all(id,word_form,lemma,tags) VALUES (3,'synthetic-extra','synthetic','noun:gen:s')",
     }
     if mutation in sql:
         update(source, sql[mutation], store="vd" if mutation.startswith("vesum_") else "db")
@@ -302,31 +304,6 @@ def synthetic_gate(source, r):
                 "slots": ["lemma", "slot", "sense"],
             }
         )
-    compat = [
-        {
-            "store": c2.STORE,
-            "table": table,
-            "source_id": "ulif",
-            "role": "modern",
-            "source_column": column,
-            "source_values": [text],
-        }
-        for table, column, text in [
-            ("ulif_forms", "preposition", ""),
-            ("ulif_dictua_entries", "status", "ok"),
-            ("ulif_dictua_sections", "kind", "paradigm"),
-        ]
-    ]
-    compat.append(
-        {
-            "store": c2.VESUM,
-            "table": "forms_all",
-            "source_id": "vesum",
-            "role": "modern",
-            "source_column": "tags",
-            "source_values": ["noun:gen:s"],
-        }
-    )
     register = {
         "sources": [
             {
@@ -338,7 +315,7 @@ def synthetic_gate(source, r):
         ]
     }
     resolver = Resolver(register, {s: SyntheticAdapter() for s in ("ulif", "vesum")})
-    return Gate(r, Catalog(cat), resolver, {"C2": source["spec"]}, compat)
+    return Gate(r, Catalog(cat), resolver, {"C2": source["spec"]})
 
 
 @pytest.mark.parametrize(
@@ -438,17 +415,15 @@ def test_synthetic_build_verify_and_pinned_config_mutation(source, monkeypatch):
                 for s in ("ulif", "vesum")
             ]
         }
-        compatibility = list(gate.roles.compatibility.values())
     root = source["root"]
     (root / "catalog.yaml").write_text(yaml.safe_dump(catalog))
     (root / "register.yaml").write_text(yaml.safe_dump(register))
     config = {
-        "schema": "omd-review-request.v1",
+        "schema": "omd-review-request.v2",
         "catalog": "catalog.yaml",
         "register": "register.yaml",
         "databases": {c2.STORE: str(source["db"]), c2.VESUM: str(source["vd"])},
-        "components": {"C2": {}},
-        "compatibility": compatibility,
+        "ua_gec": {"root": str(root / "SYNTHETIC-ua-gec")},
     }
     (root / "request.json").write_text(json.dumps(config))
     component = SimpleNamespace(
@@ -463,6 +438,28 @@ def test_synthetic_build_verify_and_pinned_config_mutation(source, monkeypatch):
     assert set(results) == {"absent_quote", "wrong_span", "empty_locator", "missing_unit", "swapped_citation"}
     update(source, "UPDATE ulif_forms SET form_stressed='SYNTHETIC-tampered' WHERE id=1")
     assert main(["verify", *args], _test_components={"C2": component}) == 1
+
+
+@pytest.mark.parametrize(
+    "table,store,column",
+    [
+        ("ulif_forms", "db", "preposition"),
+        ("ulif_dictua_entries", "db", "status"),
+        ("ulif_dictua_sections", "db", "kind"),
+        ("forms_all", "vd", "pos"),
+    ],
+)
+def test_component_policy_authenticates_source_rows(source, table, store, column):
+    from scripts.projects.open_model_data.review_build.contract import values
+
+    with reader(source) as r:
+        candidate = extract(source, r)[0]
+    update(source, f"UPDATE {table} SET {column}='SYNTHETIC-unadmitted'", store=store)
+    with reader(source) as r:
+        gate = synthetic_gate(source, r)
+        citation = next(c for v in values(candidate) for c in v.citations if c.table == table)
+        with pytest.raises(BuildError, match="source_compatibility"):
+            gate.roles.check(citation, candidate, set())
 
 
 def test_printed_lemma_case_is_preserved_and_matches_the_witness(source):
