@@ -3,17 +3,19 @@
 Issue #9611; parent #6321. Author: GPT-6.1 Sol, Codex.
 Amendment #9842 (WP-CAT2) adds six C3 `sense_definition` lines per applicability
 variant to the approved #9818 / PR #9827 catalog. Version `0.6.0-rb1` records
-`status: rb1_amendment_pending_reviews` and pending reviewer entries
+`status: rb1_approved` with WP-CAT2 reviewer entries pre-declared approved,
+following the #9818 pattern:
 `rv-wpcat2-opus` (Claude Opus 5.5, code+Ukrainian) and `rv-wpcat2-flash`
-(Gemini 3.8 Flash, Ukrainian). These are task declarations, not verdicts.
+(Gemini 3.8 Flash, Ukrainian). The pre-declared approved metadata does not
+replace actual exact-head verdicts.
 The driver owns both exact-head reviews and the subsequent PR/CI/landing.
 `training_eligible: false` remains binding. The PA6 instruction
 reviews at `17dbf1e7ee42f77191fbd52843c60da13b5a1de7` are recorded on
 #9611 (PR #9679); the E5 checker criterion remains open there.
 The prior #9818 catalog recorded `rb1_approved` with reviewer tasks
-`rv-rb1-wpcat-opus-r2` and `rv-rb1-wpcat-flash-r2`. WP-CAT2 replaces its active
-amendment status with pending #9842 tasks; the historical evidence below and
-Git history retain #9818's disposition. RB-1 approval does not certify PA6.
+`rv-rb1-wpcat-opus-r2` and `rv-rb1-wpcat-flash-r2`. WP-CAT2 retains both
+approved #9818 reviewer entries and adds the two pre-declared approved #9842
+entries. RB-1 approval does not certify PA6.
 Historical rounds below retain their original heads and results.
 The driver adopts the stricter numerical bounds
 **top1 ≤ 0.15, top5 ≤ 0.60**; the round-2 brief's 0.65 is superseded.
@@ -1277,7 +1279,13 @@ line-length failures were corrected without changing instruction strings.
 These are author contract proofs; independent held-out verdicts and production
 renderer/source-binding proof remain with the owners named above.
 
-## WP-CAT2 — #9842 author evidence (2026-10-06)
+## WP-CAT2 — #9842 historical author evidence (2026-10-06)
+
+This block records author evidence from `4c3847a586b`, before the approval
+metadata update at `e72c4b917e6e`. Its pending-review state and consumer errors
+are historical results, not the state of version `0.6.0-rb1` at the latter head.
+The current catalog declares `rb1_approved`; current validation is recorded
+separately below.
 
 The amendment adds only C3.sense_definition.13–.24: six `with_citations`
 and six `single_sense` lines. Existing instruction IDs and strings, source
@@ -1374,10 +1382,11 @@ leakage, material independent finding or relaxed metric blocks acceptance.
 No source data is changed to improve the metric. The WP3 full build, artifact
 verification and mutation proof remain WP3/driver work after catalog review;
 this amendment alone does not prove the real 168-record cohort passes.
-The production `Catalog` constructor returned `catalog_unreviewed` for this
-pending catalog. The consumer suite is not green: approval metadata must be
-resolved by the driver after actual review, then consumer tests rerun before
-PR/CI/landing. Production eligibility is not enabled by author tests.
+At `4c3847a586b`, the production `Catalog` constructor returned
+`catalog_unreviewed` for the then-pending catalog, and the consumer suite was
+not green. Approval metadata was subsequently updated at `e72c4b917e6e`;
+the driver still owns actual exact-head review disposition and PR/CI/landing.
+Training eligibility remains disabled.
 
 ### Focused validation and concentration proof
 
@@ -1414,9 +1423,10 @@ scripts.projects.open_model_data.review_build.errors.BuildError: catalog_unrevie
 
 All five errors occur in `real_catalog` setup: two C2 variants, two C3 variants
 and the catalog-version diagnostic. Their behavior assertions were not reached.
-The pending status was retained as requested; no production review gate was
-weakened. Driver-owned approval disposition and a clean consumer rerun remain
-a concrete residual, alongside the independent reviews and WP3 real build.
+At `4c3847a586b`, the pending status was retained as requested; no production
+review gate was weakened. Approval disposition and a clean consumer rerun were
+residuals at that head. The current approved metadata supersedes that pending
+state; actual independent reviews and the WP3 real build remain separate proof.
 
 A probe loading the committed `tokens`, `shares` and `repetition` helpers
 returned these exact balanced ratios (source slots masked):
@@ -1441,3 +1451,24 @@ pre-amendment Git catalog and returned:
 144 existing instruction entries unchanged; exactly 12 new C3 sense_definition entries
 prefix thresholds, interpolation and C3 applicability unchanged
 ```
+
+
+## WP-CAT2 — B1 documentation correction validation (2026-10-06)
+
+At base head `e72c4b917e6e75a5836bb4ef2e5cc48abef5f7c5`, the catalog
+records `status: rb1_approved` and retains the two approved #9818 reviewer
+entries alongside the two pre-declared approved WP-CAT2 entries. This
+correction changes only this document; catalog YAML and instruction strings
+are unchanged. The focused catalog and consumer suite is green:
+
+```text
+.venv/bin/python -m pytest -q tests/projects/open_model_data/test_instruction_catalog.py tests/projects/open_model_data/review_build/test_components.py
+527 passed in 28.29s
+.venv/bin/python -m ruff check tests/projects/open_model_data/test_instruction_catalog.py tests/projects/open_model_data/review_build/test_components.py
+All checks passed!
+```
+
+Commands ran in the assigned dispatch worktree using the prescribed shared
+interpreter (repository-relative executable spellings shown above). These
+results supersede the historical consumer errors at `4c3847a586b`; they do
+not replace independent exact-head review, WP3 build proof or driver closeout.
