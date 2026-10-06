@@ -48,11 +48,21 @@ The 22 source-only card mappings and supplementary correspondence stay unresolve
 Main-file and WAL digests are separate file provenance; selected-row digests identify literal captures, not logical whole-DB snapshots. DBs open read-only.
 Live-row and freeze-replay checks also compare canonical digests: `2.0` or `true` never equals a captured `2` or `1`.
 The pilot's sibling `pilot-v1.register-pin.json` pins the canonical JSON digest of
-the referenced register `sources` entries, sorted by id (#9643). Unrelated rows
+`{"sources": [...], "legal_references": [...]}`: the referenced register `sources`
+entries and every legal-reference object cited by their `terms.legal_refs`, each
+sorted by id (#9643). Missing or duplicate cited legal-reference ids refuse. Unrelated rows
 do not affect reuse; the manifest and admitted selection remain immutable.
-For an intentional referenced-entry change, append a new digest, reason and
-recorded date to `pins` in a reviewed PR; preserve prior pins. The last pin
-explicitly re-admits the register terms. Without a sidecar, the whole-register check remains binding.
+For an intentional referenced-entry or cited legal-reference change, obtain an
+independent source-admission review of the new entries digest from the Google
+family and a distinct author seat. Append a new digest, reason, recorded date
+and `admission` receipt to `pins` in a reviewed PR; preserve prior pins. The
+receipt requires `admission: APPROVE`, `candidate_sha256` equal to that pin's
+`entries_sha256`, `review_report_sha256`, `review_family: google`,
+`author_seat_distinct: true`, and `denominator` equal to the validated selection
+counts. Every later pin is validated, including historical receipts. The
+migration pin (`pins[0]`) has no admission object: it is justified by
+`legacy_source_register_sha256`, the admitted whole-register digest. Without a
+sidecar, the whole-register check remains binding.
 Locators contain local row IDs only. ULIF aliases use `ulif:register:`, actual
 `ulif:content:` digests, and `ulif:record:<query>#<headword>#<label>`; PULS uses
 `puls:record:<word>/<pos>/<level>`; phraseology uses `frazeolohichnyi:record:<word>`.

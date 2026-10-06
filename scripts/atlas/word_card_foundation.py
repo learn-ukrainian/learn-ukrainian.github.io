@@ -28,7 +28,10 @@ ROOT = Path(__file__).resolve().parents[2]
 REGISTER = ROOT / "docs/sources/permissions-register.yaml"
 ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"
 ROW_BASIS = "sha256 canonical UTF-8 JSON of entire literal selected row, not whole database"
-REGISTER_ENTRIES_BASIS = "sha256 canonical UTF-8 JSON of referenced register sources entries sorted by id"
+REGISTER_ENTRIES_BASIS = (
+    "sha256 canonical UTF-8 JSON of {sources: referenced register entries sorted by id, "
+    "legal_references: cited terms.legal_refs objects resolved by id and sorted by id}"
+)
 HEX = r"[0-9a-f]{64}"
 PROSE = ("note", "matched_by", "hold", "match_note")  # Provenance prose; attributes and scope labels never link.
 # Input role: (native paths whose whole field set a validator fixes, None meaning every object; excluded inventory
@@ -437,10 +440,15 @@ def register_entries_digest(register, source_ids):
     entries = [s for s in register["sources"] if s["id"] in ids]
     require(len(entries) == len(ids) and {s["id"] for s in entries} == ids,
             "Missing or duplicate referenced register source")
-    return digest(sorted(entries, key=lambda s: s["id"]))
+    legal_ids = {ref for entry in entries for ref in entry["terms"].get("legal_refs", [])}
+    legal_refs = [ref for ref in register["legal_references"] if ref["id"] in legal_ids]
+    require(len(legal_refs) == len(legal_ids) and {ref["id"] for ref in legal_refs} == legal_ids,
+            "Missing or duplicate cited register legal reference")
+    return digest({"sources": sorted(entries, key=lambda s: s["id"]),
+                   "legal_references": sorted(legal_refs, key=lambda ref: ref["id"])})
 
 
-def register_pin_check(manifest, register, manifest_path):
+def register_pin_check(manifest, register, manifest_path, counts):
     path = manifest_path.with_suffix(".register-pin.json") if manifest_path is not None else None
     if path is None or not path.exists():
         require(file_digest(REGISTER) == manifest["selection"]["source_register_sha256"],
@@ -457,10 +465,12 @@ def register_pin_check(manifest, register, manifest_path):
     source_ids = sorted({r["source_id"] for r in manifest["selection"]["source_records"]})
     require(pin["source_ids"] == source_ids, "Register pin source ids mismatch")
     require(isinstance(pin["pins"], list) and pin["pins"], "Invalid register pin history")
-    for entry in pin["pins"]:
-        fields(entry, {"entries_sha256", "reason", "recorded"})
+    for index, entry in enumerate(pin["pins"]):
+        fields(entry, {"entries_sha256", "reason", "recorded"} | ({"admission"} if index else set()))
         require(hex_digest(entry["entries_sha256"]) and nonempty(entry["reason"]) and nonempty(entry["recorded"]),
                 "Invalid register pin history")
+        if index:
+            admission_check(entry["admission"], counts, entry["entries_sha256"])
     require(register_entries_digest(register, source_ids) == pin["pins"][-1]["entries_sha256"],
             "Register fingerprint mismatch; re-admit and re-freeze before reuse")
 
@@ -474,11 +484,11 @@ def manifest_check(manifest, manifest_path=None):
             "Unapproved rules or normaliser version")
     register = yaml.safe_load(REGISTER.read_bytes())
     schema(register, "permissions-register.schema.json")
-    register_pin_check(manifest, register, manifest_path)
     require(digest(manifest["selection"]) == manifest["selection_content_sha256"], "Selection content fingerprint mismatch")
     original = (json.dumps(manifest["selection"], ensure_ascii=False, indent=2) + "\n").encode()
     require(hashlib.sha256(original).hexdigest() == manifest["selection_file_sha256"], "Admitted selection bytes changed")
     counts = selection_check(manifest["selection"], {s["id"] for s in register["sources"]})
+    register_pin_check(manifest, register, manifest_path, counts)
     admission_check(manifest["admission"], counts, manifest["selection_file_sha256"])
     inventory = manifest["legacy_articles"]
     require({a["metadata"]["slug"] for a in inventory} ==
