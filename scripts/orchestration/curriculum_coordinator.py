@@ -646,16 +646,21 @@ WAVE_MODELS_UNREADABLE = (
 )
 
 
-def _near_cap_credit(lane: str, record: Mapping[str, Any], now: datetime | None) -> dict[str, Any] | None:
+def _near_cap_credit(
+    lane: str, record: Mapping[str, Any], now: datetime | None, *, snapshot_stale: bool = False
+) -> dict[str, Any] | None:
     """Credit receipt for a near-cap lane from its published ``agents.<lane>.credit`` (#9517).
 
     :func:`credit_lane.published_credit_relief` re-checks the published state
-    against the local policy, the clock and the current shared runtime
-    rate-limit records; None when nothing could relax the
+    against the complete lane record (snapshot staleness, probe freshness,
+    age and stale flag; #9740 F6), the local policy, the clock and the current
+    shared runtime rate-limit records; None when nothing could relax the
     plan state (any published state other than ``credit_balance_present``, a
     lane outside the policy, or an unreadable policy).
     """
-    receipt = credit_lane.published_credit_relief(lane, record.get("credit"), None, now=now)
+    receipt = credit_lane.published_credit_relief(
+        lane, record.get("credit"), None, now=now, record=record, snapshot_stale=snapshot_stale
+    )
     if receipt is None:
         return None
     return {
@@ -678,44 +683,71 @@ def _health_assessment(
     A ``near_cap`` lane also counts when its published credit state is a fresh
     ``credit_balance_present`` (#9517); every other credit state, and a lane
     without one, keeps the plan status decision.
+
+    Status and health are the shared routing facts of the complete record
+    (:func:`credit_lane.routing_facts`, #9740). Only positively established
+    health counts: unknown health (a lane-health scan that could not run, or a
+    missing lane record) is not available, as an unhealthy lane is not. The
+    receipt keeps them distinct: ``healthy`` is True/False when established and
+    null with its ``health_basis`` when unknown (``healthLane``).
+
+    Freshness is the owner's qualifier too: a lane is stale when its probe is
+    (:func:`credit_lane.probe_freshness`), its receipt carries the owner's
+    ``observation_freshness``, and ``fresh`` needs the snapshot's
+    ``diagnostics.stale`` to be explicitly false. Missing staleness metadata is
+    unknown, never fresh.
     """
     agents = snapshot.get("agents")
     diagnostics = snapshot.get("diagnostics")
     if not isinstance(agents, Mapping) or not isinstance(diagnostics, Mapping):
         return False, {"reason": "invalid-health-snapshot", "groups": []}
-    snapshot_stale = bool(diagnostics.get("stale"))
+    snapshot_freshness, _ = credit_lane.snapshot_freshness(diagnostics)
+    snapshot_stale = snapshot_freshness == credit_lane.STALE
     acceptable = set(health_config["acceptable_statuses"])
     groups: list[dict[str, Any]] = []
     all_groups_pass = True
-    relevant_lane_stale = False
+    relevant_lanes_fresh = True
     for group in health_config["capability_groups"]:
         lanes: list[dict[str, Any]] = []
         available = 0
         for lane in group["lanes"]:
             record = agents.get(lane)
             if not isinstance(record, Mapping):
-                lanes.append({"lane": lane, "status": "missing", "healthy": False, "stale": True})
-                relevant_lane_stale = True
+                lanes.append(
+                    {
+                        "lane": lane,
+                        "status": "missing",
+                        "healthy": None,
+                        "health_basis": "lane record missing",
+                        "stale": True,
+                    }
+                )
+                relevant_lanes_fresh = False
                 continue
-            status = str(record.get("status", "unknown"))
-            health = record.get("health")
-            healthy = bool(health.get("healthy")) if isinstance(health, Mapping) else False
-            codexbar = record.get("codexbar")
-            stale = bool(codexbar.get("stale")) if isinstance(codexbar, Mapping) else False
-            relevant_lane_stale = relevant_lane_stale or stale
+            facts = credit_lane.routing_facts(lane, record, model=None, snapshot_metadata=diagnostics, now=now)
+            status = facts.status
+            healthy = facts.health == credit_lane.HEALTHY
+            # The lane's own evidence (probe freshness, age, stale flag); the snapshot
+            # layer is the gate-wide ``fresh`` below. With a fresh snapshot this is
+            # exactly the owner's observation freshness.
+            stale = facts.probe_freshness == credit_lane.STALE
+            relevant_lanes_fresh = relevant_lanes_fresh and not stale
             published = record.get("credit")
             entry: dict[str, Any] = {
                 "lane": lane,
                 "status": status,
-                "healthy": healthy,
+                "healthy": None if facts.health == credit_lane.UNKNOWN else healthy,
                 "stale": stale,
+                "freshness": facts.observation_freshness,
                 "credit_state": str(published["state"])
                 if isinstance(published, Mapping) and published.get("state")
                 else None,
             }
+            if facts.health == credit_lane.UNKNOWN:
+                entry["health_basis"] = facts.health_basis
             plan_ok = status in acceptable
             if status == "near_cap":
-                credit = _near_cap_credit(lane, record, now)
+                credit = _near_cap_credit(lane, record, now, snapshot_stale=snapshot_stale)
                 if credit is not None:
                     entry["credit_state"] = credit["state"]
                     entry["credit"] = credit
@@ -733,7 +765,7 @@ def _health_assessment(
                 "lanes": lanes,
             }
         )
-    fresh = not snapshot_stale and not relevant_lane_stale
+    fresh = snapshot_freshness == credit_lane.FRESH and relevant_lanes_fresh
     passed = all_groups_pass and (fresh or not health_config["require_fresh_snapshot"])
     return passed, {
         "reason": "accepted" if passed else "quota-or-health-unavailable",

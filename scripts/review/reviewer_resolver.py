@@ -562,14 +562,23 @@ def _near_cap_credit(candidate: ReviewerCandidate, snapshot: Mapping[str, object
     Only a full routing-budget snapshot carries the credit state its producer
     computed with :func:`credit_lane.lane_credit_state`; a flat health map has
     none. :func:`credit_lane.published_credit_relief` re-checks the published
-    state against the local policy, the clock and the current shared runtime
-    rate-limit records.
+    state against the complete lane record (snapshot staleness, probe
+    freshness, age and stale flag; #9740 F6), the local policy, the clock and
+    the current shared runtime rate-limit records.
     """
     agents = snapshot.get("agents") if isinstance(snapshot, Mapping) else None
     record = agents.get(candidate.route) if isinstance(agents, Mapping) else None
     if not isinstance(record, Mapping):
         return None
-    return credit_lane.published_credit_relief(candidate.route, record.get("credit"), candidate.concrete_model)
+    diagnostics = snapshot.get("diagnostics") if isinstance(snapshot, Mapping) else None
+    snapshot_stale = isinstance(diagnostics, Mapping) and diagnostics.get("stale") is True
+    return credit_lane.published_credit_relief(
+        candidate.route,
+        record.get("credit"),
+        candidate.concrete_model,
+        record=record,
+        snapshot_stale=snapshot_stale,
+    )
 
 
 def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs) -> str | None:
@@ -762,17 +771,19 @@ def evaluate_candidate(
             None,
         }
     ):
-        diagnostics = snapshot.get("diagnostics") or {}
-        deficit = credit_lane.pace_deficit_state(
+        # The owner's pace and hot-label reading (#9740): a weekly-pace hot label it
+        # clears (#9040) is cleared here too; one it keeps stays near cap.
+        diagnostics = snapshot.get("diagnostics")
+        facts = credit_lane.routing_facts(
             candidate.route,
             record,
             model=candidate.concrete_model,
-            snapshot_stale=bool(diagnostics.get("stale")),
+            snapshot_metadata=diagnostics if isinstance(diagnostics, Mapping) else None,
         )
-        if deficit["uncovered"] is True:
+        if facts.uncovered is True:
             health = "near_cap"
-        elif deficit["status"] in {"cool", "warm"}:
-            health = _normalize_health_status(deficit["status"], label=candidate.route)
+        elif facts.status in {"cool", "warm"}:
+            health = _normalize_health_status(facts.status, label=candidate.route)
 
     # Catalog validation protects the installed ladders; this independent gate
     # also protects explicit pins and custom candidates before any quality prior.

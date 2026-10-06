@@ -35,6 +35,7 @@ import logging
 import math
 import re
 import threading
+from collections.abc import Mapping
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
@@ -83,7 +84,7 @@ from .codexbar_usage import (
     trigger_background_refresh,
 )
 from .config import LEVELS
-from .lane_health import compute_lane_health
+from .lane_health import LaneHealthScan, scan_lane_health
 from .project_state_store import REPORT_TTL_SECONDS, get_freshest_lane_usage
 from .runtime_router import summarize_runtime_usage
 from .subscription_usage import (
@@ -155,6 +156,14 @@ CODE_IMPLEMENT_LANE_PRIORITY: dict[str, int] = {
     "kimi": 4,
     "gemini": 5,
 }
+
+
+def _probe_freshness_label(cb_data: Mapping[str, Any]) -> str:
+    """Published probe freshness: the probe's own label, never ``fresh`` for a missing one (#9740 A6)."""
+    freshness = cb_data.get("freshness")
+    if isinstance(freshness, str) and freshness:
+        return freshness
+    return "stale_last_good" if cb_data.get("stale") else "unavailable"
 
 
 def _capacity_used_pct(cb_data: dict[str, Any] | None) -> float | None:
@@ -592,17 +601,19 @@ def _snapshot_is_stale(
     return age > threshold_s, round(age, 1)
 
 
-def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int]:
+def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int] | None:
     """Count active delegate tasks, optionally scoped to a MonitorContext tasks dir.
 
     When *tasks_dir* is set, preserve the same PID-liveness semantics as
     ``delegate_api.active_delegate_tasks`` (dead ``running`` PIDs → zombie, not in-flight).
+    None when active work cannot be observed (missing tasks dir, read failure):
+    unknown load, never published as measured zeros (#9740 F5).
     """
     in_flight = {agent: 0 for agent in (*AGENT_NAMES, "deepseek")}
     try:
         if tasks_dir is not None:
-            if not tasks_dir.exists():
-                return in_flight
+            if not tasks_dir.is_dir():
+                return None
             for path in tasks_dir.glob("*.json"):
                 if path.name.endswith(".snapshots.json"):
                     continue
@@ -621,7 +632,7 @@ def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int]:
             return in_flight
         tasks = delegate_api.active_delegate_tasks()["tasks"]
     except Exception:
-        return in_flight
+        return None
     for task in tasks:
         agent = normalize_seat(str(task.get("agent") or ""))
         if agent:
@@ -656,14 +667,53 @@ def _attach_credit_states(
         )
 
 
-def _credit_backed(info: dict[str, Any] | None) -> bool:
-    """True when the lane's published credit state is ``credit_balance_present`` and it is logged in."""
-    info = info if isinstance(info, dict) else {}
-    credit = info.get("credit") if isinstance(info.get("credit"), dict) else {}
-    return credit.get("state") == credit_lane.CREDIT_BALANCE_PRESENT and "NEED_LOGIN" not in {
-        info.get("login_state"),
-        info.get("probe_state"),
-    }
+def _attach_routing_facts(
+    agents: dict[str, Any], *, current_time: datetime | None, snapshot_stale: bool, usage_dir: Path | None
+) -> None:
+    """Publish each lane's shared routing facts (lane inventory) as ``agents.<lane>.routing_facts`` (#9740).
+
+    Display and audit only: consumers recompute the facts from the record
+    through :func:`credit_lane.routing_facts` rather than trusting this copy.
+    """
+    for lane, info in agents.items():
+        if not isinstance(info, dict):
+            continue
+        info["routing_facts"] = credit_lane.routing_facts(
+            lane,
+            info,
+            model=None,
+            snapshot_metadata={"stale": snapshot_stale},
+            now=current_time,
+            usage_dir=usage_dir,
+        ).summary()
+
+
+def _credit_relief_models(
+    lane: str,
+    info: dict[str, Any] | None,
+    *,
+    current_time: datetime | None = None,
+    is_stale: bool | None = False,
+    usage_dir: Path | None = None,
+) -> tuple[str, ...] | None:
+    """The credit-period allowlist when the owner grants the lane credit relief as verified capacity, else None.
+
+    The decision is :func:`credit_lane.routing_facts` over the complete lane
+    record, never the published ``credit`` leaf (#9740): the raw balance and
+    its fetch time, probe freshness, runtime evidence, eligibility, health and
+    NEED_LOGIN all count, as they do for the picker, resolver and wave gate.
+    """
+    facts = credit_lane.routing_facts(
+        lane,
+        info if isinstance(info, dict) else None,
+        model=None,
+        snapshot_metadata={"stale": is_stale},
+        now=current_time,
+        usage_dir=usage_dir,
+    )
+    if facts.credit_relief and facts.capacity == credit_lane.CAPACITY_VERIFIED:
+        return facts.credit_models or ()
+    return None
 
 
 def _recommend_agent(
@@ -672,9 +722,10 @@ def _recommend_agent(
     *,
     current_time: datetime | None = None,
     reset_imminent_hours: int = 6,
-    is_stale: bool = False,
+    is_stale: bool | None = False,
     records_loaded: int = 0,
     authoritative_data_available: bool = False,
+    usage_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Generalized recommendation over subscription lanes + reset-aware + empty/stale guards.
 
@@ -685,6 +736,15 @@ def _recommend_agent(
     A lane past its plan cap whose published credit state is
     ``credit_balance_present`` is a candidate after every cool and warm
     plan-backed lane (#9517); its raw status is not rewritten.
+
+    Shared routing facts (#9740): a lane whose only evidence against it is a
+    pace deficit read from a stale snapshot is ``UNKNOWN — stale/advisory``
+    here (never ``hot``, never verified capacity); a hot label the owner
+    clears (#9040) takes the owner's status. Lanes with established
+    health are preferred; unknown health is used only when no lane has it,
+    with a warning, and is never reported as healthy. ``is_stale`` None is a
+    snapshot whose staleness is missing: the owner reads it as unknown, never
+    fresh.
     """
     # Hard admission failures cannot use the soft all-unhealthy budget fallback.
     agents = {lane: info for lane, info in agents.items() if info.get("eligible", True)}
@@ -698,14 +758,21 @@ def _recommend_agent(
             "warnings": [*warnings, "empty snapshot — no recommendation emitted"],
         }
 
+    def health_of(lane_name: str) -> str:
+        return credit_lane.health_fact(agents.get(lane_name))[0]
+
     def is_healthy(lane_name: str) -> bool:
-        agent_data = agents.get(lane_name)
-        if not agent_data:
-            return True
-        h = agent_data.get("health")
-        if not h:
-            return True
-        return h.get("healthy", True)
+        return health_of(lane_name) == credit_lane.HEALTHY
+
+    def owner_facts(lane_name: str) -> credit_lane.RoutingFacts:
+        return credit_lane.routing_facts(
+            lane_name,
+            agents.get(lane_name),
+            model=None,
+            snapshot_metadata={"stale": is_stale},
+            now=current_time,
+            usage_dir=usage_dir,
+        )
 
     # Build status/burn for core code lanes (claude special interactive, others flat); include grok/cursor if present
     core = ["claude", "codex", "gemini"]
@@ -725,7 +792,7 @@ def _recommend_agent(
         burn_by_agent[a] = br
         resets_by[a] = agents[a].get("resets_at")
 
-    # include extra subs if they have data
+    # include extra subs if they have data (stale-advisory relabelling below covers both)
     for a in SUBSCRIPTION_LANES:
         if a in core or a not in agents:
             continue
@@ -738,10 +805,28 @@ def _recommend_agent(
             burn_by_agent[a] = agents[a].get("burn_pct_7d")
             resets_by[a] = agents[a].get("resets_at")
 
+    for a in list(status_by_agent):
+        facts = owner_facts(a)
+        if is_stale and facts.capacity == credit_lane.CAPACITY_UNKNOWN_STALE:
+            # F2: the lane's pace verdict rests on stale evidence only.
+            status_by_agent[a] = "unknown"
+            warnings.append(f"lane {a}: {facts.capacity_reason}")
+        elif status_by_agent[a] == "hot" and facts.status != "hot":
+            # #9040 (A8): the owner cleared a weekly-pace hot label its pace reading does not confirm.
+            status_by_agent[a] = facts.status
+            warnings.append(f"lane {a}: hot label cleared ({facts.pace_reason})")
+
     # Only claim inline_orchestrator if at least one lane is actually observed AND all observed lanes are hot/near_cap.
     # An empty observation set (all unknown/unavailable) must NEVER satisfy this.
     observed_statuses = [s for s in status_by_agent.values() if s not in {"unknown", "unavailable"}]
-    credit_lanes = {a for a, s in status_by_agent.items() if s not in {"cool", "warm"} and _credit_backed(agents[a])}
+    credit_models: dict[str, tuple[str, ...]] = {}
+    for a, s in status_by_agent.items():
+        if s in {"cool", "warm"}:
+            continue
+        models = _credit_relief_models(a, agents[a], current_time=current_time, is_stale=is_stale, usage_dir=usage_dir)
+        if models is not None:
+            credit_models[a] = models
+    credit_lanes = set(credit_models)
     if observed_statuses and all(s in {"hot", "near_cap"} for s in observed_statuses) and not credit_lanes:
         warnings.append("all agents near cap — orchestrator inline-mode contingency may be needed soon")
         return {
@@ -781,7 +866,7 @@ def _recommend_agent(
         def credit_pick() -> dict[str, Any]:
             pool = [c for c in credit_candidates if c not in imminent] or credit_candidates
             recommended = min(pool, key=_sort_burn)
-            models = ", ".join(agents_dict[recommended]["credit"].get("allowed_models") or [])
+            models = ", ".join(credit_models[recommended])
             return {
                 "primary_agent_for_code": recommended,
                 "rationale": (
@@ -892,33 +977,44 @@ def _recommend_agent(
     # 1. Determine baseline budget-only recommendation (ignore health)
     budget_only_res = select_agent(agents, status_by_agent, burn_by_agent, resets_by)
 
-    # 2. Check health of candidate lanes
+    # 2. Check health of candidate lanes: established healthy, then unknown, never unhealthy
     candidate_lanes = list(status_by_agent.keys())
-    unhealthy_candidates = [lane for lane in candidate_lanes if not is_healthy(lane)]
+    unhealthy_candidates = [lane for lane in candidate_lanes if health_of(lane) == credit_lane.UNHEALTHY]
+    unknown_candidates = [lane for lane in candidate_lanes if health_of(lane) == credit_lane.UNKNOWN]
 
-    if not unhealthy_candidates:
+    def select_among(predicate) -> dict[str, Any]:
+        return select_agent(
+            {k: v for k, v in agents.items() if predicate(k)},
+            {k: v for k, v in status_by_agent.items() if predicate(k)},
+            {k: v for k, v in burn_by_agent.items() if predicate(k)},
+            {k: v for k, v in resets_by.items() if predicate(k)},
+        )
+
+    if not unhealthy_candidates and not unknown_candidates:
         res = budget_only_res
+    elif len(unhealthy_candidates) == len(candidate_lanes):
+        # Fall back to budget-only pick + warning
+        res = budget_only_res
+        warnings.append("all lanes unhealthy — recommendation is budget-only")
     else:
-        all_unhealthy = len(unhealthy_candidates) == len(candidate_lanes)
-        if all_unhealthy:
-            # Fall back to budget-only pick + warning
-            res = budget_only_res
-            warnings.append("all lanes unhealthy — recommendation is budget-only")
+        if any(is_healthy(lane) for lane in candidate_lanes):
+            res = select_among(is_healthy)
+            if unknown_candidates:
+                warnings.append(
+                    f"lane health unknown for {', '.join(unknown_candidates)} — preferring lanes with established health"
+                )
         else:
-            # At least one healthy candidate exists. Skip unhealthy lanes.
-            healthy_agents = {k: v for k, v in agents.items() if is_healthy(k)}
-            healthy_status = {k: v for k, v in status_by_agent.items() if is_healthy(k)}
-            healthy_burn = {k: v for k, v in burn_by_agent.items() if is_healthy(k)}
-            healthy_resets = {k: v for k, v in resets_by.items() if is_healthy(k)}
-
-            res = select_agent(healthy_agents, healthy_status, healthy_burn, healthy_resets)
-
-            # Append warning for each skipped unhealthy lane
-            for lane in unhealthy_candidates:
-                h = agents[lane].get("health", {})
-                cf = h.get("consecutive_failures", 0)
-                sm = h.get("span_minutes", 0)
-                warnings.append(f"lane {lane} skipped for recommendation: {cf} spawn failures in {sm}m")
+            res = select_among(lambda lane: health_of(lane) == credit_lane.UNKNOWN)
+            warnings.append(
+                f"no lane has established health ({', '.join(unknown_candidates)} unknown) — "
+                "recommendation is not health-verified"
+            )
+        # Append warning for each skipped unhealthy lane
+        for lane in unhealthy_candidates:
+            h = agents[lane].get("health", {})
+            cf = h.get("consecutive_failures", 0)
+            sm = h.get("span_minutes", 0)
+            warnings.append(f"lane {lane} skipped for recommendation: {cf} spawn failures in {sm}m")
 
     primary = res.get("primary_agent_for_code")
     if primary in credit_lanes:
@@ -1112,10 +1208,31 @@ def _api_lane_status_from_account(
     return "cool"
 
 
+def _lane_health_record(health: LaneHealthScan | Mapping[str, Any] | None, lane: str) -> dict[str, Any]:
+    """Published health for ``lane`` (#9740 A1).
+
+    A typed scan says whether an absent lane was observed idle (healthy) or
+    the scan could not run (unknown). A bare record map carries no scan
+    outcome, so an absent lane there is unknown too, never filled in as healthy.
+    """
+    if isinstance(health, LaneHealthScan):
+        return health.health_for(lane)
+    record = health.get(lane) if isinstance(health, Mapping) else None
+    if isinstance(record, Mapping):
+        return dict(record)
+    return LaneHealthScan(observed=False, error="no lane-health scan outcome").health_for(lane)
+
+
+def _health_rank(item: Mapping[str, Any]) -> int:
+    """Ranked-view order: established healthy first, unknown next, unhealthy last."""
+    health = item.get("health") if isinstance(item.get("health"), Mapping) else {}
+    return {True: 0, False: 2}.get(health.get("healthy"), 1)
+
+
 def _build_api_accounts_payload(
     *,
     fresh: bool = False,
-    health_records: dict[str, Any] | None = None,
+    health_records: LaneHealthScan | dict[str, Any] | None = None,
 ) -> dict[str, dict[str, Any]]:
     refreshed: dict[str, dict[str, Any]] = {}
     if fresh:
@@ -1129,15 +1246,13 @@ def _build_api_accounts_payload(
         # API lanes live outside the subscription ``agents`` dict, so their
         # lane-health record must be attached here or prepaid consumers
         # (capacity_pick) never see spawn-phase failures (#8514).
-        accounts[lane]["health"] = (health_records or {}).get(
-            lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0, "last_error": None}
-        )
+        accounts[lane]["health"] = _lane_health_record(health_records, lane)
     return accounts
 
 
 def _ranked_api_entries(
     api_accounts: dict[str, dict[str, Any]],
-    health_records: dict[str, Any],
+    health_records: LaneHealthScan | dict[str, Any],
     in_flight: dict[str, int] | None = None,
     budgets: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
@@ -1154,8 +1269,8 @@ def _ranked_api_entries(
                 "remaining_pct": None,
                 "remaining_usd": _round_money(remaining_usd) if remaining_usd is not None else None,
                 "resets_at": account.get("limit_reset") if lane == "openrouter" else None,
-                "in_flight": (in_flight or {}).get(lane, 0),
-                "health": health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
+                "in_flight": None if in_flight is None else in_flight.get(lane, 0),
+                "health": _lane_health_record(health_records, lane),
                 "probe_state": account.get("probe_state"),
             }
         )
@@ -1200,15 +1315,12 @@ def _compute_dispatch_routing_budget(
     nb_sourced_any = False
     nb_max_age_s: float | None = None
 
-    health_records = {}
     resolved_tasks_dir = tasks_dir if tasks_dir is not None else (resolved_batch_state / "tasks")
     try:
-        health_records = compute_lane_health(
-            resolved_tasks_dir,
-            now=current_time,
-        )
-    except Exception as exc:
+        health_records = scan_lane_health(resolved_tasks_dir, now=current_time)
+    except Exception as exc:  # health is then unknown, never filled in as healthy
         logging.getLogger("state_router").debug("Failed to compute lane health: %s", exc)
+        health_records = LaneHealthScan(observed=False, error=f"lane health scan failed: {type(exc).__name__}")
 
     in_flight_by_agent = _in_flight_by_agent(resolved_tasks_dir)
     api_accounts = _build_api_accounts_payload(fresh=fresh_codexbar, health_records=health_records)
@@ -1217,7 +1329,7 @@ def _compute_dispatch_routing_budget(
     if not budgets:
         agents = {}
         for lane in SUBSCRIPTION_LANES:
-            lane_health = health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0})
+            lane_health = health_records.health_for(lane)
             if lane == "claude":
                 agents[lane] = {
                     "interactive": {
@@ -1272,9 +1384,7 @@ def _compute_dispatch_routing_budget(
         ranked_apis = _ranked_api_entries(api_accounts, health_records, in_flight_by_agent, budgets)
         ranked = ranked_subs + ranked_apis
 
-        healthy_lanes = [x for x in ranked if x.get("health", {}).get("healthy", True)]
-        unhealthy_lanes = [x for x in ranked if not x.get("health", {}).get("healthy", True)]
-        ranked = healthy_lanes + unhealthy_lanes
+        ranked.sort(key=_health_rank)
 
         nb_sourced_any, nb_max_age_s = _overlay_notebook_lane_usage(
             agents,
@@ -1282,6 +1392,7 @@ def _compute_dispatch_routing_budget(
             budgets={},
         )
         _attach_credit_states(agents, current_time=current_time, snapshot_stale=False, usage_dir=usage_dir)
+        _attach_routing_facts(agents, current_time=current_time, snapshot_stale=False, usage_dir=usage_dir)
         if nb_sourced_any:
             ranked_subs = [
                 {
@@ -1295,10 +1406,7 @@ def _compute_dispatch_routing_budget(
                 }
                 for lane in SUBSCRIPTION_LANES
             ]
-            ranked = ranked_subs + ranked_apis
-            healthy_lanes = [x for x in ranked if x.get("health", {}).get("healthy", True)]
-            unhealthy_lanes = [x for x in ranked if not x.get("health", {}).get("healthy", True)]
-            ranked = healthy_lanes + unhealthy_lanes
+            ranked = sorted(ranked_subs + ranked_apis, key=_health_rank)
             rec = _recommend_agent(
                 agents,
                 warnings,
@@ -1445,9 +1553,7 @@ def _compute_dispatch_routing_budget(
             agents[lane]["age_s"] = cb_data.get("age_s")
             if cb_data.get("error_kind") == "need_login" or cb_data.get("failure_kind") == "need_login":
                 agents[lane]["probe_state"] = "NEED_LOGIN"
-            cb_freshness[lane] = str(
-                cb_data.get("freshness") or ("stale_last_good" if cb_data.get("stale") else "fresh")
-            )
+            cb_freshness[lane] = _probe_freshness_label(cb_data)
 
         if lane == "cursor" and isinstance(cb_data, dict):
             agents[lane]["login_state"] = cb_data.get("login_state")
@@ -1527,7 +1633,7 @@ def _compute_dispatch_routing_budget(
                 "headroom_pct": cb_data.get("headroom_pct"),
                 "deficit": cb_data.get("deficit"),
                 "stale": cb_data.get("stale", False),
-                "freshness": cb_data.get("freshness") or ("stale_last_good" if cb_data.get("stale") else "fresh"),
+                "freshness": _probe_freshness_label(cb_data),
                 "age_s": cb_data.get("age_s"),
                 "fetched_at": cb_data.get("fetched_at"),
                 "failure_kind": cb_data.get("failure_kind"),
@@ -1667,15 +1773,16 @@ def _compute_dispatch_routing_budget(
             runtime = summarize_lane_runtime(lane, usage_dir=usage_dir)
         except Exception as exc:  # never break routing-budget on telemetry I/O
             logging.getLogger("state_router").debug("lane runtime summary failed for %s: %s", lane, exc)
+            # Unreadable telemetry: outcome counts are unknown, never measured zeros (#9740 F5).
             runtime = {
                 "source": "agent_runtime_jsonl",
                 "window_s": 300,
-                "ok": 0,
-                "error": 0,
-                "rate_limited": 0,
-                "timeout": 0,
-                "other": 0,
-                "total": 0,
+                "ok": None,
+                "error": None,
+                "rate_limited": None,
+                "timeout": None,
+                "other": None,
+                "total": None,
                 "last_outcome_at": None,
                 "last_rate_limited_at": None,
                 "models_rate_limited": [],
@@ -1746,6 +1853,16 @@ def _compute_dispatch_routing_budget(
                 agents[lane]["status"] = deficit["status"]
                 if lane == "claude":
                     agents[lane]["interactive"]["status"] = deficit["status"]
+            if agents[lane].get("status") in {"cool", "warm", "hot"} and credit_lane.plan_window_exhausted(
+                lane, agents[lane]
+            ):
+                # #9740 F1: the owner's tightest plan window (weekly, 5-hour or Auto) is at or below
+                # the credit-lane threshold: near_cap, as every consumer reads it.
+                remaining, source = credit_lane.plan_remaining_reading(agents[lane])
+                agents[lane]["status"] = "near_cap"
+                if lane == "claude":
+                    agents[lane]["interactive"]["status"] = "near_cap"
+                warnings.append(f"lane {lane} plan window {source} at {remaining:g}% remaining — near_cap")
             cb = agents[lane].get("codexbar")
             if cb:
                 is_in_deficit = deficit["uncovered"] is True or (
@@ -1823,17 +1940,31 @@ def _compute_dispatch_routing_budget(
 
     # Map health information to all subscription lanes in the agents dict
     for lane in SUBSCRIPTION_LANES:
-        lane_health = health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0})
-        agents[lane]["health"] = lane_health
+        agents[lane]["health"] = health_records.health_for(lane)
 
     _attach_credit_states(agents, current_time=current_time, snapshot_stale=is_stale, usage_dir=usage_dir)
+    _attach_routing_facts(agents, current_time=current_time, snapshot_stale=is_stale, usage_dir=usage_dir)
     recommendation_agents = {lane: dict(info) for lane, info in agents.items()}
     codex_info = agents.get("codex", {})
     reset_reserve = load_reset_reserve(
         project_root or Path(__file__).resolve().parents[2], now=current_time, codex_info=codex_info
     )
+    # The reserve ranks Codex first only over capacity the owner verifies (#9740): a reserve whose
+    # resets the owner does not count as covering the deficit (e.g. they expire before run-out)
+    # never outvotes the owner's AVOID.
     reserve_relaxes_codex = codex_is_threatened(codex_info) and codex_reset_reserve_eligible(
-        reset_reserve, codex_info, now=current_time, snapshot_stale=is_stale
+        reset_reserve,
+        codex_info,
+        owner_capacity=credit_lane.routing_facts(
+            "codex",
+            codex_info,
+            model=None,
+            snapshot_metadata={"stale": is_stale},
+            now=current_time,
+            usage_dir=usage_dir,
+        ).capacity,
+        now=current_time,
+        snapshot_stale=is_stale,
     )
     if reserve_relaxes_codex:
         # Apply the reserve only to this recommendation calculation. The
@@ -1858,6 +1989,7 @@ def _compute_dispatch_routing_budget(
         is_stale=is_stale,
         records_loaded=len(records),
         authoritative_data_available=cb_sourced_any or fleet_burn_any,
+        usage_dir=usage_dir,
     )
     if reserve_relaxes_codex:
         rec["primary_agent_for_code"] = "codex"
@@ -1885,8 +2017,8 @@ def _compute_dispatch_routing_budget(
                 "burn_pct_7d": a.get("burn_pct_7d"),
                 "remaining_pct": a.get("remaining_pct"),
                 "resets_at": a.get("resets_at"),
-                "in_flight": in_flight_by_agent.get(lane, 0),
-                "health": a.get("health", {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
+                "in_flight": None if in_flight_by_agent is None else in_flight_by_agent.get(lane, 0),
+                "health": a.get("health") or _lane_health_record(None, lane),
             }
         )
     ranked_subs.sort(
@@ -1900,10 +2032,8 @@ def _compute_dispatch_routing_budget(
     # per one design note treat absent as full, but AC requires status unknown NOT cool for ranked view
     ranked = ranked_subs + ranked_apis
 
-    # Apply health demotion: unhealthy lanes are moved to the bottom of the list
-    healthy_lanes = [x for x in ranked if x.get("health", {}).get("healthy", True)]
-    unhealthy_lanes = [x for x in ranked if not x.get("health", {}).get("healthy", True)]
-    ranked = healthy_lanes + unhealthy_lanes
+    # Apply health demotion: unknown health after established healthy, unhealthy last
+    ranked.sort(key=_health_rank)
 
     # Runtime headroom-blocked subscription lanes sink after healthy free seats
     # (still above API-unknown if already ranked, but after non-blocked subs).
@@ -1997,11 +2127,20 @@ def compute_routing_budget(
         return budget
 
     dispatch_codex = budget["agents"].get("codex")
+    dispatch_stale = budget.get("diagnostics", {}).get("stale", False)
     reserve_relaxes_codex = codex_is_threatened(dispatch_codex) and codex_reset_reserve_eligible(
         budget.get("reset_reserve", {}),
         dispatch_codex,
+        owner_capacity=credit_lane.routing_facts(
+            "codex",
+            dispatch_codex,
+            model=None,
+            snapshot_metadata={"stale": dispatch_stale},
+            now=now,
+            usage_dir=batch_state_dir / "api_usage" if batch_state_dir is not None else None,
+        ).capacity,
         now=now,
-        snapshot_stale=budget.get("diagnostics", {}).get("stale", False),
+        snapshot_stale=dispatch_stale,
     )
     health = probe_acp_health(project_root or Path(__file__).resolve().parents[2])
     warnings = list(budget["recommendation"].get("warnings", []))
@@ -2026,6 +2165,12 @@ def compute_routing_budget(
         if not info["eligible"]:
             warnings.append(f"ACP lane {lane} excluded: {info['health']['failure_code']}")
     diagnostics = budget["diagnostics"]
+    _attach_routing_facts(
+        budget["agents"],
+        current_time=now,
+        snapshot_stale=bool(diagnostics.get("stale")),
+        usage_dir=batch_state_dir / "api_usage" if batch_state_dir is not None else None,
+    )
     budget["recommendation"] = _recommend_agent(
         budget["agents"],
         warnings,

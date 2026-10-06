@@ -21,7 +21,7 @@ def _snapshot(
         {
             "lanes": lanes
             if lanes is not None
-            else [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True}],
+            else [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True, "quota_ok": True}],
             "items": items
             if items is not None
             else [
@@ -69,14 +69,15 @@ def test_reminder_silent_when_nothing_actionable() -> None:
 
 
 def test_reminder_silent_when_lane_unhealthy_or_busy() -> None:
-    hot = _snapshot(lanes=[{"lane": "codex", "status": "hot", "in_flight": 0, "will_last": True}])
-    busy = _snapshot(lanes=[{"lane": "cursor", "status": "cool", "in_flight": 1, "will_last": True}])
+    hot = _snapshot(lanes=[{"lane": "codex", "status": "hot", "in_flight": 0, "will_last": True, "quota_ok": True}])
+    busy = _snapshot(lanes=[{"lane": "cursor", "status": "cool", "in_flight": 1, "will_last": True, "quota_ok": True}])
     deficit = _snapshot(
         lanes=[
             {
                 "lane": "kimi",
                 "status": "cool",
                 "in_flight": 0,
+                "quota_ok": True,
                 "will_last": False,
                 "will_last_to_reset": False,
                 "weekly_pace_delta_pct": 12.0,
@@ -168,8 +169,8 @@ def test_unknown_disposition_rejected() -> None:
 def test_compatible_lanes_must_intersect() -> None:
     snap = _snapshot(
         lanes=[
-            {"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True},
-            {"lane": "codex", "status": "hot", "in_flight": 0, "will_last": True},
+            {"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True, "quota_ok": True},
+            {"lane": "codex", "status": "hot", "in_flight": 0, "will_last": True, "quota_ok": True},
         ],
         items=[{"item_id": "issue:1", "compatible_lanes": ["codex"]}],
     )
@@ -366,6 +367,7 @@ def test_freshly_reset_lane_is_available() -> None:
                 "lane": "codex",
                 "status": "cool",
                 "in_flight": 0,
+                "quota_ok": True,
                 "will_last": False,
                 "will_last_to_reset": False,
                 "weekly_pace_delta_pct": 2.5,
@@ -381,7 +383,7 @@ def test_freshly_reset_lane_is_available() -> None:
     assert decision.eligible_lanes == ("codex",)
 
     from_capacity = idle.lanes_from_capacity_rows(
-        [{"lane": "codex", "status": "cool", "in_flight": 0, "will_last": False, "avoid": False}]
+        [{"lane": "codex", "status": "cool", "in_flight": 0, "will_last": False, "avoid": False, "quota_ok": True}]
     )
     assert from_capacity[0].is_healthy_available() is True
 
@@ -390,7 +392,7 @@ def test_lanes_from_capacity_rows_mark_avoid_as_quota_fail() -> None:
     lanes = idle.lanes_from_capacity_rows(
         [
             {"lane": "codex", "status": "hot", "in_flight": 0, "will_last": False, "avoid": True},
-            {"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True, "avoid": False},
+            {"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True, "avoid": False, "quota_ok": True},
         ]
     )
     assert lanes[0].is_healthy_available() is False
@@ -508,3 +510,69 @@ def test_load_events_preserves_unicode_separators(tmp_path, sep):
     path = tmp_path / "events.jsonl"
     path.write_text("\n".join(json.dumps(row, ensure_ascii=False) for row in events) + "\n", encoding="utf-8")
     assert idle.load_events(path) == events
+
+
+# --- #9740 F5: unknown quota and load are not availability ---------------------
+
+
+@pytest.mark.parametrize(
+    "row",
+    [
+        {"lane": "codex", "status": "cool", "in_flight": 0},
+        {"lane": "codex", "status": "cool", "quota_ok": True},
+        {"lane": "codex", "status": "cool", "in_flight": None, "quota_ok": True},
+        {"lane": "codex", "status": "cool", "in_flight": True, "quota_ok": True},
+    ],
+    ids=["quota-missing", "in-flight-missing", "in-flight-null", "in-flight-boolean"],
+)
+def test_missing_quota_or_load_is_not_available(row) -> None:
+    """The recon case ``{codex, cool, in_flight 0}`` without ``quota_ok`` is no longer available."""
+    snap = _snapshot(lanes=[row])
+    assert snap.lanes[0].is_healthy_available() is False
+    assert idle.evaluate_settle(snap).eligible is False
+
+
+def test_owner_established_capacity_row_counts_as_quota_permission() -> None:
+    """A5: a capacity_pick row whose capacity the owner established is quota permission; stale is not."""
+    from scripts.fleet import capacity_pick
+    from scripts.fleet.reset_reserve import unavailable_reserve
+
+    budget = {
+        "agents": {
+            "cursor": {"status": "cool", "remaining_pct": 90.0, "health": {"healthy": True}},
+            "codex": {
+                "status": "hot",
+                "status_source": "weekly_pace",
+                "remaining_pct": 60.0,
+                "freshness": "stale_last_good",
+                "codexbar": {"weekly_expected_pct": 25.0, "weekly_pace_delta_pct": 15.0, "will_last_to_reset": False},
+            },
+        },
+        "in_flight": {},
+        "diagnostics": {"stale": True},
+    }
+    rows = capacity_pick.build_lane_rows(budget, lanes=("cursor", "codex"), reset_reserve=unavailable_reserve())
+    lanes = {lane.lane: lane for lane in idle.lanes_from_capacity_rows(rows)}
+    assert lanes["cursor"].quota_ok is True and lanes["cursor"].is_healthy_available() is True
+    assert lanes["codex"].quota_ok is None and lanes["codex"].is_healthy_available() is False
+
+
+def test_idle_lane_with_no_recent_tasks_counts() -> None:
+    """A1 control: an idle, scan-observed lane (healthy, basis scan_observed_idle) is available."""
+    from scripts.fleet import capacity_pick
+    from scripts.fleet.reset_reserve import unavailable_reserve
+
+    budget = {
+        "agents": {
+            "kimi": {
+                "status": "cool",
+                "remaining_pct": 80.0,
+                "health": {"healthy": True, "basis": "scan_observed_idle"},
+            }
+        },
+        "in_flight": {},
+        "diagnostics": {"stale": False},
+    }
+    rows = capacity_pick.build_lane_rows(budget, lanes=("kimi",), reset_reserve=unavailable_reserve())
+    [lane] = idle.lanes_from_capacity_rows(rows)
+    assert lane.is_healthy_available() is True

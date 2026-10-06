@@ -265,7 +265,7 @@ def test_attach_idle_reminder_requires_disposition_when_eligible(tmp_path: Path)
     )
     snapshot = idle_settle.parse_snapshot(
         {
-            "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True}],
+            "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True, "quota_ok": True}],
             "items": [{"item_id": "issue:6976", "ready": True, "valuable": True, "independent": True}],
             "caps": {},
         }
@@ -277,6 +277,40 @@ def test_attach_idle_reminder_requires_disposition_when_eligible(tmp_path: Path)
     assert decision.reminder_fired is True
     assert event is not None
     assert event["outcome"] == "missing_action"
+
+
+def test_attach_idle_reminder_treats_missing_quota_as_ineligible(tmp_path: Path) -> None:
+    """A lane row without ``quota_ok`` has unknown quota, which is not permission (#9740 F5)."""
+    report = ds.SettleReport(
+        task_id="infra-6976",
+        status="done",
+        pid=None,
+        pid_alive=False,
+        worktree_path=None,
+        branch=None,
+        commits_ahead=0,
+        dirty=False,
+        pr_url=None,
+        pr_number=None,
+        actions=[],
+        closeout={},
+    )
+    snapshot = idle_settle.parse_snapshot(
+        {
+            "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True}],
+            "items": [{"item_id": "issue:6976", "ready": True, "valuable": True, "independent": True}],
+            "caps": {},
+        }
+    )
+    assert snapshot.lanes[0].quota_ok is None
+    assert idle_settle.eligible_pairs(snapshot) == ()
+    store = tmp_path / "idle.jsonl"
+    rc, decision, event = ds.attach_idle_reminder(report, snapshot=snapshot, store=store)
+    assert rc == 0
+    assert decision.outcome == "silent"
+    assert decision.reminder_fired is False
+    assert event is not None
+    assert event["outcome"] == "silent"
 
 
 def test_attach_idle_reminder_rejects_unknown_disposition() -> None:
@@ -335,7 +369,7 @@ def test_cmd_task_prints_reminder_and_accepts_disposition(
     snap.write_text(
         json.dumps(
             {
-                "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True}],
+                "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True, "quota_ok": True}],
                 "items": [{"item_id": "issue:6976"}],
             }
         ),

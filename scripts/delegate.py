@@ -186,7 +186,6 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
-from scripts.api.subscription_usage import pace_is_visible
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
@@ -12547,15 +12546,26 @@ def _budget_headroom_blocked(agent_info: dict[str, Any]) -> bool:
     return isinstance(runtime, dict) and bool(runtime.get("headroom_blocked"))
 
 
-def _pace_expected_pct(pace: dict[str, Any] | None) -> float | None:
-    if not isinstance(pace, dict):
-        return None
-    for key in ("expected_pct", "weekly_expected_pct", "expectedUsedPercent"):
-        value = pace.get(key)
-        if isinstance(value, bool) or not isinstance(value, (int, float)):
-            continue
-        return float(value)
-    return None
+def _budget_owner_facts(
+    lane: str,
+    info: dict[str, Any] | None,
+    *,
+    model: str | None,
+    is_stale: bool,
+    snapshot_metadata: Mapping[str, Any] | None = None,
+) -> credit_lane.RoutingFacts:
+    """The owner's reading (:func:`credit_lane.routing_facts`, #9740) of one lane for this dispatch.
+
+    No model resolves to the lane default; none at all is never on a
+    credit-period allowlist. ``snapshot_metadata`` is the snapshot's
+    ``diagnostics`` (absent: the stale flag alone).
+    """
+    return credit_lane.routing_facts(
+        lane,
+        info,
+        model=model or _lane_default_model(lane) or "",
+        snapshot_metadata=snapshot_metadata if snapshot_metadata is not None else {"stale": is_stale},
+    )
 
 
 def _budget_needs_hard_capacity_action(
@@ -12563,7 +12573,7 @@ def _budget_needs_hard_capacity_action(
     status: str | None,
     will_last: bool | None,
     is_stale: bool,
-    records_loaded: int,
+    snapshot_metadata: Mapping[str, Any] | None = None,
     pace: dict[str, Any] | None = None,
     headroom_blocked: bool = False,
     lane: str = "",
@@ -12572,38 +12582,43 @@ def _budget_needs_hard_capacity_action(
 ) -> tuple[bool, str]:
     """Return (needs_action, reason) for near_cap / hot / a real pace deficit.
 
-    ``near_cap`` is unchanged. ``status=hot`` still hard-acts, except when the
-    hot label is the early-window or on-pace false positive: a pace reading is
-    present and the deficit is covered, hidden or within the on-pace band,
-    and runtime headroom did not set the hot label. A bare ``will_last`` with no pace record still
-    counts only when no pace dict was supplied.
+    A stale snapshot is advisory (A2): never a hard action. Otherwise the
+    decision is the owner's (:func:`credit_lane.routing_facts`, #9740) over the
+    same lane record and snapshot ``diagnostics`` (``snapshot_metadata``):
+
+    * near cap (the ``near_cap`` status, the owner's effective status or
+      :func:`credit_lane.plan_window_exhausted`) hard-acts unless the owner
+      grants credit relief for ``model``, whether or not the USD cost ledger
+      has records;
+    * a hot label hard-acts unless the owner cleared it: a weekly-pace label
+      whose deficit is covered, whose pace is hidden below the visibility
+      floor, or whose fresh pace reading finds no deficit (#9040: the
+      early-window/on-pace false positive; A8). A hot label from any other
+      source (Cursor Auto, ledger burn, a source-less record), or one set by
+      runtime headroom, stays;
+    * an uncovered pace deficit hard-acts.
+
+    A bare ``will_last`` False still counts only when no pace dict was supplied.
+    No model (none requested, no lane default) is never on a credit-period
+    allowlist, so it gets no credit relief or coverage.
     """
     if is_stale:
         return False, ""
-    # Keep existing near_cap gate (fresh ledger) and extend to hot/deficit.
-    if status == "near_cap" and records_loaded > 0:
-        return True, "near_cap (>90% on FRESH snapshot)"
     if status == "hot" and headroom_blocked:
         return True, "status=hot"
-    decision = credit_lane.pace_deficit_state(
-        lane,
-        info,
-        pace=pace,
-        model=model if model is not None else (_lane_default_model(lane) or ""),
-        snapshot_stale=is_stale,
-    )
-    deficit = decision["uncovered"] if pace else None
-    if decision["covered_by"]:
-        print(f"⚠ lane {lane}: {decision['reason']}", file=sys.stderr)
-    expected = _pace_expected_pct(pace)
-    hidden = expected is not None and not pace_is_visible({"expected_pct": expected})
-    # Clear a pace-only hot label when the deficit is covered or the pace is
-    # hidden/on pace. Runtime headroom hot was returned above.
-    if status == "hot" and pace and deficit is not True and (deficit is False or hidden):
-        return False, ""
-    if deficit is True:
+    facts = _budget_owner_facts(lane, info, model=model, is_stale=is_stale, snapshot_metadata=snapshot_metadata)
+    if "near_cap" in {status, facts.status} or credit_lane.plan_window_exhausted(lane, info):
+        if facts.credit_relief:
+            return False, ""
+        remaining = facts.plan_remaining_pct
+        where = f"{remaining:g}% remaining" if remaining is not None else ">90% used"
+        return True, f"near_cap ({where} on FRESH snapshot)"
+    if facts.covered_by:
+        print(f"⚠ lane {lane}: {facts.pace_reason}", file=sys.stderr)
+    if facts.uncovered is True:
         return True, "codexbar will_last_to_reset=False (deficit)"
-    if status == "hot":
+    # The owner clears a qualifying weekly-pace hot label (#9040, A8); whatever it keeps hot hard-acts.
+    if facts.status == "hot":
         return True, "status=hot"
     if pace is None and will_last is False:
         return True, "codexbar will_last_to_reset=False (deficit)"
@@ -14672,14 +14687,20 @@ def _resolve_agent_with_budget_guard(
         )
         return requested
 
-    # Check for demoted lanes and print warnings
+    # Warn about demoted lanes and lanes whose health is unknown (#9740 F4: the owner's reading).
     for item in payload.get("ranked_by_headroom") or []:
-        h = item.get("health")
-        if h and not h.get("healthy", True):
-            lane = item.get("lane")
-            cf = h.get("consecutive_failures", 0)
-            sm = h.get("span_minutes", 0)
-            print(f"⚠ lane {lane} demoted: {cf} spawn failures in {sm}m", file=sys.stderr)
+        if not isinstance(item, dict) or not item.get("health"):
+            continue
+        lane = item.get("lane")
+        health, basis = credit_lane.health_fact(item)
+        if health == credit_lane.UNHEALTHY:
+            h = item["health"]
+            print(
+                f"⚠ lane {lane} demoted: {h.get('consecutive_failures')} spawn failures in {h.get('span_minutes')}m",
+                file=sys.stderr,
+            )
+        elif health == credit_lane.UNKNOWN:
+            print(f"⚠ lane {lane} health unknown ({basis}); not counted as healthy", file=sys.stderr)
 
     if records_loaded == 0:
         for warning in rec.get("warnings") or []:
@@ -14709,12 +14730,16 @@ def _resolve_agent_with_budget_guard(
     status = _budget_lane_status(requested, agent_dict)
     will_last = _budget_will_last_to_reset(agent_dict)
     reserve = _load_reset_reserve(_REPO_ROOT, codex_info=agents.get("codex", {}))
+    # The reserve never overrides the owner (#9740): it needs the owner's verified capacity.
     reserve_relaxes = (
         requested == "codex"
-        and _codex_is_threatened(agent_info if isinstance(agent_info, dict) else {})
+        and _codex_is_threatened(agent_dict)
         and _codex_reset_reserve_eligible(
             reserve,
-            agent_info if isinstance(agent_info, dict) else {},
+            agent_dict,
+            owner_capacity=_budget_owner_facts(
+                requested, agent_dict, model=requested_model, is_stale=is_stale, snapshot_metadata=diags
+            ).capacity,
             snapshot_stale=is_stale,
         )
     )
@@ -14729,8 +14754,6 @@ def _resolve_agent_with_budget_guard(
         # #9518: a lane with a credit balance present and no recent rate limit stays
         # usable (the credit-period model check runs on the admitted route); unknown,
         # stale or contradicted credit data, or an unreadable policy, keeps today's guard.
-        from scripts.fleet import credit_lane
-
         try:
             credit = credit_lane.lane_credit_state(
                 requested, agent_dict, credit_lane.load_policy(), snapshot_stale=is_stale
@@ -14757,7 +14780,7 @@ def _resolve_agent_with_budget_guard(
             status=status,
             will_last=will_last,
             is_stale=is_stale,
-            records_loaded=records_loaded,
+            snapshot_metadata=diags,
             pace=_budget_pace(agent_dict),
             headroom_blocked=_budget_headroom_blocked(agent_dict),
             lane=requested,
@@ -14793,7 +14816,7 @@ def _resolve_agent_with_budget_guard(
             status=_budget_lane_status(sub, sub_dict),
             will_last=_budget_will_last_to_reset(sub_dict),
             is_stale=is_stale,
-            records_loaded=records_loaded,
+            snapshot_metadata=diags,
             pace=_budget_pace(sub_dict),
             headroom_blocked=_budget_headroom_blocked(sub_dict),
             lane=sub,
@@ -14837,7 +14860,7 @@ def _resolve_agent_with_budget_guard(
                 fallbacks,
                 agents if isinstance(agents, dict) else {},
                 is_stale=is_stale,
-                records_loaded=records_loaded,
+                snapshot_metadata=diags,
                 reset_reserve=reserve,
                 requested_model=requested_model,
                 model_resolution=model_resolution,
@@ -14881,7 +14904,7 @@ def _language_lane_substitute(
     agents: dict[str, Any],
     *,
     is_stale: bool,
-    records_loaded: int,
+    snapshot_metadata: Mapping[str, Any] | None = None,
     reset_reserve: dict[str, Any] | None = None,
     requested_model: str | None = None,
     model_resolution: dict[str, Any] | None = None,
@@ -14900,7 +14923,14 @@ def _language_lane_substitute(
         reserve_relaxes = (
             seat == "codex"
             and _codex_is_threatened(info_dict)
-            and _codex_reset_reserve_eligible(reset_reserve or {}, info_dict, snapshot_stale=is_stale)
+            and _codex_reset_reserve_eligible(
+                reset_reserve or {},
+                info_dict,
+                owner_capacity=_budget_owner_facts(
+                    seat, info_dict, model=current_model, is_stale=is_stale, snapshot_metadata=snapshot_metadata
+                ).capacity,
+                snapshot_stale=is_stale,
+            )
         )
         needs, why = (
             (False, "")
@@ -14909,7 +14939,7 @@ def _language_lane_substitute(
                 status=status,
                 will_last=will_last,
                 is_stale=is_stale,
-                records_loaded=records_loaded,
+                snapshot_metadata=snapshot_metadata,
                 pace=_budget_pace(info_dict),
                 headroom_blocked=_budget_headroom_blocked(info_dict),
                 lane=seat,

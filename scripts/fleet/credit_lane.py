@@ -22,6 +22,13 @@ fetch time that is not an explicit fresh UTC timestamp, unreadable runtime
 usage records, or one or more ``rate_limited`` outcomes for the lane within
 ``rate_limit_window_s`` keep the lane in its plan state. A malformed policy
 file restricts only the lanes in :data:`DEFAULT_ALLOWED_MODELS`.
+
+:func:`routing_facts` is the one consumer-facing reading of a lane record
+(#9740): remaining allowance, snapshot and probe freshness, health, pace,
+credit and reset evidence, credit-period model permission and the lane's
+capacity class. Every capacity and admission consumer compares these facts
+before applying its own legitimate restrictions (role, risk, egress,
+retirement, transport, wave configuration). Missing data stays ``unknown``.
 """
 
 from __future__ import annotations
@@ -32,7 +39,8 @@ import os
 import sys
 import urllib.error
 import urllib.request
-from dataclasses import dataclass
+from collections.abc import Callable, Mapping
+from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -59,6 +67,34 @@ CREDIT_USE_UNCONFIRMED = "credit_use_unconfirmed"
 USE_RESET_NOW = "use_reset_now"
 HOLD_RESET = "hold_reset"
 NOT_APPLICABLE = "not_applicable"
+
+# Typed observation qualifiers shared by every routing consumer (#9740).
+FRESH = "fresh"
+STALE = "stale"
+UNKNOWN = "unknown"
+HEALTHY = "healthy"
+UNHEALTHY = "unhealthy"
+
+# Capacity classes of one lane record (lane inventory or a concrete route).
+# ``verified``: plan or credit allowance is established usable now.
+# ``unknown_stale``: the only evidence against the lane is a pace deficit (or a
+# weekly-pace hot label) read from a stale snapshot or probe; it is historical,
+# not a confirmed current condition, and never counts as verified capacity.
+# ``unknown``: no usable allowance evidence. ``avoid``: a hard or current reason.
+CAPACITY_VERIFIED = "verified"
+CAPACITY_UNKNOWN_STALE = "unknown_stale"
+CAPACITY_UNKNOWN = "unknown"
+CAPACITY_AVOID = "avoid"
+STALE_ADVISORY_LABEL = "UNKNOWN — stale/advisory"
+
+# Plan statuses below the cap (the producer's allowance rule, see
+# ``state_router._status_from_weekly_used``): near_cap at <= 10% remaining,
+# warm at <= 50% remaining when pace is unavailable, cool otherwise.
+_NEAR_CAP_REMAINING_PCT = 10.0
+_WARM_REMAINING_PCT = 50.0
+# Probe age limit when the policy file is unreadable: the routing-budget
+# ``stale_threshold_s`` (the shipped ``credit_max_age_s`` is the same value).
+UNREADABLE_POLICY_MAX_AGE_S = 900.0
 
 DRAW_NOT_VERIFIED = "credit balance present; draw not verified by the router"
 RATE_LIMIT_REASON = "recent rate limit while the plan window is exhausted: credit use not confirmed"
@@ -196,31 +232,163 @@ def _fresh_at(value: Any, now: datetime, max_age_s: float) -> datetime | None:
     return parsed
 
 
-def plan_remaining_pct(info: dict[str, Any]) -> float | None:
-    """Tightest reported plan window remaining-% (credits apply once any window is used up)."""
-    native = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
+def _auto_window(info: Mapping[str, Any]) -> Mapping[str, Any]:
+    """The Cursor Auto allowance window (``provider_windows.auto``), top-level or native."""
+    for source in (info, info.get("codexbar")):
+        windows = source.get("provider_windows") if isinstance(source, Mapping) else None
+        auto = windows.get("auto") if isinstance(windows, Mapping) else None
+        if isinstance(auto, Mapping):
+            return auto
+    return {}
+
+
+def plan_remaining_reading(info: Mapping[str, Any] | None) -> tuple[float | None, str | None]:
+    """Tightest reported plan window remaining-% and the window it came from.
+
+    Reads the record's ``remaining_pct``, the native weekly/primary/secondary
+    windows and the Cursor Auto allowance (``provider_windows.auto``). Booleans,
+    non-finite values and burn-only records establish nothing: ``(None, None)``.
+    Windows keep their identity; the API/on-demand pool is a separate allowance.
+    """
+    record = info if isinstance(info, Mapping) else {}
+    native = record.get("codexbar") if isinstance(record.get("codexbar"), Mapping) else {}
     candidates = [
-        _number(info.get("remaining_pct")),
+        ("remaining_pct", _number(record.get("remaining_pct"))),
         *(
-            _number(native.get(key))
+            (f"codexbar.{key}", _number(native.get(key)))
             for key in ("weekly_remaining_pct", "primary_remaining_pct", "secondary_remaining_pct")
         ),
+        ("provider_windows.auto.remaining_pct", _number(_auto_window(record).get("remaining_pct"))),
     ]
-    known = [value for value in candidates if value is not None]
-    return min(known) if known else None
+    known = [(value, source) for source, value in candidates if value is not None]
+    if not known:
+        return None, None
+    value, source = min(known, key=lambda item: item[0])
+    return value, source
+
+
+def plan_remaining_pct(info: Mapping[str, Any] | None) -> float | None:
+    """Tightest reported plan window remaining-% (credits apply once any window is used up)."""
+    return plan_remaining_reading(info)[0]
+
+
+def plan_window_exhausted(lane: str, info: Mapping[str, Any] | None, policy: CreditPolicy | None = None) -> bool:
+    """True when a credit-configured lane's tightest plan window is at or below the near-cap threshold.
+
+    The credit-lane rule: such a lane is near_cap/AVOID unless credit relief
+    applies, whichever window (weekly, 5-hour, Auto) is the tight one. Lanes
+    outside the policy keep the status-based near_cap (>= 90% weekly used).
+    An unreadable policy keeps the built-in credit lanes configured.
+    """
+    lane_key = lane.strip().lower()
+    if policy is None:
+        try:
+            policy = load_policy()
+        except ValueError:
+            policy = None
+    configured = policy.lane_models(lane_key) is not None if policy is not None else lane_key in DEFAULT_ALLOWED_MODELS
+    threshold = policy.near_cap_remaining_pct if policy is not None else _NEAR_CAP_REMAINING_PCT
+    remaining = plan_remaining_pct(info)
+    return configured and remaining is not None and remaining <= threshold
+
+
+def allowance_status(remaining: float | None) -> str:
+    """Plan status from remaining allowance alone (pace unavailable): the producer's allowance rule."""
+    if remaining is None:
+        return UNKNOWN
+    if remaining <= _NEAR_CAP_REMAINING_PCT:
+        return "near_cap"
+    return "warm" if remaining <= _WARM_REMAINING_PCT else "cool"
+
+
+def probe_freshness(info: Mapping[str, Any] | None, max_age_s: float) -> tuple[str, str]:
+    """``fresh`` / ``stale`` / ``unknown`` for the lane's own usage probe, with the reason.
+
+    ``fresh`` needs an explicit ``freshness="fresh"``, no ``stale`` flag and a
+    numeric ``age_s`` below ``max_age_s`` (the policy's ``credit_max_age_s``). A stale flag, a
+    ``stale*`` freshness or an over-age reading is ``stale``; a missing or
+    ``unavailable`` freshness or a missing age is ``unknown``, never fresh.
+    """
+    record = info if isinstance(info, Mapping) else {}
+    native = record.get("codexbar") if isinstance(record.get("codexbar"), Mapping) else {}
+    freshness = record.get("freshness", native.get("freshness"))
+    age = _number(record.get("age_s", native.get("age_s")))
+    flagged = native.get("stale") is True or record.get("stale") is True
+    if flagged or (isinstance(freshness, str) and freshness.startswith("stale")):
+        return STALE, f"credit probe freshness={freshness or 'missing'}"
+    if freshness != "fresh":
+        return UNKNOWN, f"credit probe freshness={freshness or 'missing'}"
+    age_reason = f"credit probe age_s={age if age is not None else 'missing'} (limit {max_age_s:g})"
+    if age is None or age < 0:
+        return UNKNOWN, age_reason
+    if age >= max_age_s:
+        return STALE, age_reason
+    return FRESH, ""
+
+
+def probe_max_age_s(policy: CreditPolicy | None = None) -> float:
+    """The probe age limit (``credit_max_age_s``); :data:`UNREADABLE_POLICY_MAX_AGE_S` when the policy is unreadable."""
+    if policy is not None:
+        return policy.credit_max_age_s
+    try:
+        return load_policy().credit_max_age_s
+    except ValueError:
+        return UNREADABLE_POLICY_MAX_AGE_S
+
+
+def snapshot_freshness(snapshot_metadata: Mapping[str, Any] | None) -> tuple[str, str]:
+    """``fresh`` / ``stale`` / ``unknown`` from routing-budget ``diagnostics.stale``; missing is unknown."""
+    stale = snapshot_metadata.get("stale") if isinstance(snapshot_metadata, Mapping) else None
+    if stale is True:
+        return STALE, "routing-budget snapshot is stale"
+    if stale is False:
+        return FRESH, ""
+    return UNKNOWN, "routing-budget snapshot staleness missing"
+
+
+def observation_freshness(
+    info: Mapping[str, Any] | None, snapshot_metadata: Mapping[str, Any] | None, max_age_s: float
+) -> tuple[str, str]:
+    """Freshness of the lane's quota/pace observation: stale if either layer is stale.
+
+    ``fresh`` needs a fresh snapshot and a probe that is not stale (a ledger-only
+    lane has no probe; the snapshot's own age covers it). An unknown snapshot
+    staleness is ``unknown``.
+    """
+    snapshot, snapshot_reason = snapshot_freshness(snapshot_metadata)
+    probe, probe_reason = probe_freshness(info, max_age_s)
+    if snapshot == STALE:
+        return STALE, snapshot_reason
+    if probe == STALE:
+        return STALE, probe_reason
+    if snapshot == UNKNOWN:
+        return UNKNOWN, snapshot_reason
+    return FRESH, ""
+
+
+def health_fact(info: Mapping[str, Any] | None) -> tuple[str, str]:
+    """``healthy`` / ``unhealthy`` / ``unknown`` from the lane's ``health`` record and its basis.
+
+    Only an explicit boolean ``healthy`` establishes anything; a missing record
+    or a scan that could not run (``healthy`` null) is unknown, never healthy.
+    """
+    record = info if isinstance(info, Mapping) else {}
+    health = record.get("health")
+    if not isinstance(health, Mapping):
+        return UNKNOWN, "lane health record missing"
+    basis = str(health.get("basis") or "")
+    if health.get("healthy") is True:
+        return HEALTHY, basis or "health record"
+    if health.get("healthy") is False:
+        return UNHEALTHY, str(health.get("last_error") or basis or "unhealthy lane")
+    return UNKNOWN, basis or "lane health unknown"
 
 
 def _fresh_probe(info: dict[str, Any], policy: CreditPolicy, *, snapshot_stale: bool) -> tuple[bool, str]:
-    native = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
-    freshness = info.get("freshness", native.get("freshness"))
-    age = _number(info.get("age_s", native.get("age_s")))
     if snapshot_stale:
         return False, "routing-budget snapshot is stale"
-    if freshness != "fresh" or native.get("stale") is True or info.get("stale") is True:
-        return False, f"credit probe freshness={freshness or 'missing'}"
-    if age is None or not 0 <= age < policy.credit_max_age_s:
-        return False, f"credit probe age_s={age if age is not None else 'missing'} (limit {policy.credit_max_age_s:g})"
-    return True, ""
+    state, reason = probe_freshness(info, policy.credit_max_age_s)
+    return state == FRESH, reason
 
 
 def read_recent_rate_limits(
@@ -245,8 +413,40 @@ def read_recent_rate_limits(
     }
 
 
+RateLimitReader = Callable[[], dict[str, Any]]
+
+
+def _shared_rate_limit_reader(
+    lane: str, policy: CreditPolicy, now: datetime, usage_dir: Path | None
+) -> RateLimitReader:
+    """One lazily read rate-limit observation for every decision of one :func:`routing_facts` call.
+
+    Credit state and pace coverage then cannot disagree because they sampled
+    the runtime records at different moments. A reader failure is replayed.
+    """
+    cache: dict[str, Any] = {}
+
+    def read() -> dict[str, Any]:
+        if "value" not in cache and "error" not in cache:
+            try:
+                cache["value"] = read_recent_rate_limits(lane, policy.rate_limit_window_s, now=now, usage_dir=usage_dir)
+            except Exception as exc:  # replayed below: unreadable evidence is not "no evidence"
+                cache["error"] = exc
+        if "error" in cache:
+            raise cache["error"]
+        return cache["value"]
+
+    return read
+
+
 def _rate_limit_evidence(
-    lane: str, record: dict[str, Any], policy: CreditPolicy, now: datetime, usage_dir: Path | None = None
+    lane: str,
+    record: dict[str, Any],
+    policy: CreditPolicy,
+    now: datetime,
+    usage_dir: Path | None = None,
+    *,
+    reader: RateLimitReader | None = None,
 ) -> tuple[int | None, str | None, dict[str, int] | None]:
     """Recent rate-limit count, newest time and unreadable-record counts.
 
@@ -256,9 +456,14 @@ def _rate_limit_evidence(
 
     The snapshot's own runtime summary counts as well when its window fits
     inside the policy window (it can come from another usage directory).
+    ``reader`` replays one shared observation (see :func:`routing_facts`).
     """
     try:
-        local = read_recent_rate_limits(lane, policy.rate_limit_window_s, now=now, usage_dir=usage_dir)
+        local = (
+            reader()
+            if reader is not None
+            else read_recent_rate_limits(lane, policy.rate_limit_window_s, now=now, usage_dir=usage_dir)
+        )
         count = local["count"]
         last = local["last_rate_limited_at"]
         unreadable = local.get("unreadable")
@@ -300,6 +505,7 @@ def lane_credit_state(
     snapshot_stale: bool = False,
     usage_dir: Path | None = None,
     for_pace_deficit: bool = False,
+    rate_limit_reader: RateLimitReader | None = None,
 ) -> dict[str, Any]:
     """Credit state of one routing-budget lane record; see the module docstring for fail-closed rules.
 
@@ -355,7 +561,7 @@ def lane_credit_state(
     result["credit_balance"] = balance
     if balance <= 0:
         return {**result, "state": CREDITS_EXHAUSTED, "reason": f"credit balance {balance:g}"}
-    count, last, unreadable = _rate_limit_evidence(lane, record, policy, current, usage_dir)
+    count, last, unreadable = _rate_limit_evidence(lane, record, policy, current, usage_dir, reader=rate_limit_reader)
     evidence["rate_limited_count"] = count
     evidence["last_rate_limited_at"] = last
     if unreadable is not None:
@@ -395,6 +601,7 @@ def pace_deficit_state(
     now: datetime | None = None,
     snapshot_stale: bool = False,
     usage_dir: Path | None = None,
+    rate_limit_reader: RateLimitReader | None = None,
 ) -> dict[str, Any]:
     """Shared uncovered-pace decision for routing, admission and review (#9615).
 
@@ -410,7 +617,7 @@ def pace_deficit_state(
     cool. Only hot labels identified by the producer as weekly pace may be relaxed.
     Missing lane identity or run-out projection leaves reset coverage unverified.
     """
-    from scripts.api.subscription_usage import _expected_pct_from_reset, _pace_number, pace_is_deficit, pace_is_visible
+    from scripts.api.subscription_usage import pace_expected_pct, pace_is_deficit, pace_is_visible
 
     record = info if isinstance(info, dict) else {}
     if pace is None:
@@ -430,9 +637,7 @@ def pace_deficit_state(
     if raw is not True:
         if not isinstance(pace, dict) or status not in {"cool", "warm"} or runtime.get("headroom_blocked"):
             return result
-        expected = _pace_number(pace, "expected_pct", "expectedUsedPercent", "weekly_expected_pct")
-        if expected is None:
-            expected = _expected_pct_from_reset(pace, now=current)
+        expected = pace_expected_pct(pace, now=current)
         if not pace_is_visible({"expected_pct": expected}) or remaining is None or remaining <= 10:
             return result
         will_last = pace.get("will_last_to_reset", pace.get("willLastToReset"))
@@ -461,13 +666,14 @@ def pace_deficit_state(
         snapshot_stale=snapshot_stale,
         usage_dir=usage_dir,
         for_pace_deficit=True,
+        rate_limit_reader=rate_limit_reader,
     )
     if credit["state"] == CREDIT_BALANCE_PRESENT and (model is None or model_allowed(policy, lane, model)):
         result["covered_by"].append("credits")
     live = _verified_inventory(record, policy, current, snapshot_stale=snapshot_stale)
     runout = _projected_runout(record, pace, current)
     if live and runout is not None and any(expiry is None or expiry > runout for expiry in live):
-        count, _, _ = _rate_limit_evidence(lane, record, policy, current, usage_dir)
+        count, _, _ = _rate_limit_evidence(lane, record, policy, current, usage_dir, reader=rate_limit_reader)
         if count == 0:
             result["covered_by"].append("free full reset")
     if result["covered_by"]:
@@ -630,9 +836,19 @@ def lane_credit_report(
     *,
     now: datetime | None = None,
     snapshot_stale: bool = False,
+    usage_dir: Path | None = None,
+    rate_limit_reader: RateLimitReader | None = None,
 ) -> dict[str, Any]:
     """Credit state plus reset advice for a configured lane; ``{"state": "not_configured"}`` otherwise."""
-    state = lane_credit_state(lane, info, policy, now=now, snapshot_stale=snapshot_stale)
+    state = lane_credit_state(
+        lane,
+        info,
+        policy,
+        now=now,
+        snapshot_stale=snapshot_stale,
+        usage_dir=usage_dir,
+        rate_limit_reader=rate_limit_reader,
+    )
     if state["state"] == NOT_CONFIGURED:
         return state
     return {
@@ -648,6 +864,8 @@ def published_credit_relief(
     *,
     policy: CreditPolicy | None = None,
     now: datetime | None = None,
+    record: Mapping[str, Any] | None = None,
+    snapshot_stale: bool = False,
 ) -> dict[str, Any] | None:
     """Re-check the credit state a routing-budget snapshot published for ``lane`` (``agents.<lane>.credit``).
 
@@ -658,6 +876,16 @@ def published_credit_relief(
     with the state, reason, evidence, the local allowlist and whether ``model``
     is on it; the state reads ``credits_unverified`` when the published balance
     fetch time is no longer fresh now (an old snapshot file proves nothing).
+
+    ``record`` is the complete published lane record (#9740 F6): relief then
+    needs the owner's own decision, :func:`lane_credit_state` over that record
+    now, to read ``credit_balance_present`` as well. The snapshot staleness, the
+    probe's freshness, age and stale flag, the raw balance and its fetch time,
+    the record's runtime evidence (``runtime.rate_limited``,
+    ``runtime.headroom_blocked``) and the current shared rate-limit records all
+    count, so a published label cannot override contradictory inputs; the
+    receipt carries the owner's state and reason otherwise. Without ``record``
+    only the leaf is re-checked; every routing consumer passes it.
 
     The published rate-limit evidence is as old as the snapshot, so the
     current evidence is re-read through :func:`read_recent_rate_limits` (the
@@ -688,11 +916,23 @@ def published_credit_relief(
         "model_allowed": _allowed(allowed, model),
         "draw": DRAW_NOT_VERIFIED,
     }
+    if record is None and snapshot_stale:
+        receipt["state"] = CREDITS_UNVERIFIED
+        receipt["reason"] = "published credit relief not re-verified: routing-budget snapshot is stale"
+        return receipt
     if _fresh_at(evidence.get("credit_fetched_at"), current, policy.credit_max_age_s) is None:
         receipt["state"] = CREDITS_UNVERIFIED
         receipt["reason"] = (
             f"published credit balance fetch time missing, not explicit UTC, or older than {policy.credit_max_age_s:g}s"
         )
+        return receipt
+    if record is not None:
+        owner = lane_credit_state(lane, dict(record), policy, now=current, snapshot_stale=snapshot_stale)
+        receipt["evidence"].update({**owner["evidence"], "rate_limits_checked_at": _iso(current)})
+        receipt["credit_balance"] = owner.get("credit_balance")
+        if owner["state"] != CREDIT_BALANCE_PRESENT:
+            receipt["state"] = owner["state"]
+            receipt["reason"] = f"published credit relief not re-verified: {owner.get('reason')}"
         return receipt
     count, last, unreadable = _rate_limit_evidence(lane, {}, policy, current)
     receipt["evidence"].update(
@@ -729,6 +969,280 @@ def refusal_text(lane: str, model: str | None, state: dict[str, Any], policy: Cr
         f"exists while the plan window is exhausted, so model {model or '(none)'} "
         f"is outside the credit-period allowlist [{', '.join(policy.lane_models(lane) or ())}] "
         f"({policy.path.name}). Dispatch an allowlisted model or another lane."
+    )
+
+
+@dataclass(frozen=True)
+class RoutingFacts:
+    """Typed routing facts of one lane record, compared by every consumer before its final action (#9740).
+
+    ``model`` None is lane inventory: credit coverage then reads "for the
+    allowlisted models" (``credit_models``) and ``model_permission`` stays
+    unresolved (None). A concrete model is a route-specific observation.
+    ``raw_deficit``/``uncovered`` are the owner's pace decision unchanged;
+    ``observation_freshness`` qualifies it, and ``capacity`` is the lane's
+    class for recommendation and capacity consumers (see ``CAPACITY_*``).
+    """
+
+    lane: str
+    model: str | None
+    observed_at: str
+    plan_remaining_pct: float | None
+    remaining_source: str | None
+    snapshot_freshness: str
+    probe_freshness: str
+    observation_freshness: str
+    freshness_reason: str
+    health: str
+    health_basis: str
+    pace_visible: bool | None
+    raw_deficit: bool | None
+    uncovered: bool | None
+    covered_by: tuple[str, ...]
+    pace_reason: str
+    status: str
+    status_source: str | None
+    capacity: str
+    capacity_reason: str
+    credit: dict[str, Any]
+    credit_models: tuple[str, ...] | None
+    model_permission: bool | None
+    refusal_reason: str | None
+
+    @property
+    def pace_deficit(self) -> dict[str, Any]:
+        """The :func:`pace_deficit_state` shape, with the effective status."""
+        return {
+            "raw_deficit": self.raw_deficit,
+            "uncovered": self.uncovered,
+            "covered_by": list(self.covered_by),
+            "status": self.status,
+            "reason": self.pace_reason,
+        }
+
+    @property
+    def credit_relief(self) -> bool:
+        """A fresh credit balance relaxes the plan state for this observation (lane or allowlisted model)."""
+        return self.credit.get("state") == CREDIT_BALANCE_PRESENT and self.model_permission is not False
+
+    def to_dict(self) -> dict[str, Any]:
+        payload = asdict(self)
+        payload["covered_by"] = list(self.covered_by)
+        payload["credit_models"] = None if self.credit_models is None else list(self.credit_models)
+        return payload
+
+    def summary(self) -> dict[str, Any]:
+        """:meth:`to_dict` without the credit report (published next to it as ``credit``)."""
+        payload = self.to_dict()
+        payload.pop("credit")
+        payload["credit_state"] = self.credit.get("state")
+        return payload
+
+
+def _need_login(record: Mapping[str, Any]) -> bool:
+    return (
+        "NEED_LOGIN" in {record.get("login_state"), record.get("probe_state")} or record.get("status") == "need_login"
+    )
+
+
+def _capacity_class(
+    record: Mapping[str, Any],
+    *,
+    status: str,
+    remaining: float | None,
+    near_cap_pct: float,
+    health: str,
+    freshness: str,
+    freshness_reason: str,
+    pace: dict[str, Any],
+    window_exhausted: bool,
+    credit_relief: bool,
+    credit_reason: str,
+) -> tuple[str, str]:
+    """Capacity class and reason; the ordering is the routing rule (A2, #9740).
+
+    Hard reasons (ineligible, unhealthy, NEED_LOGIN), near cap without credit
+    relief and runtime-blocked hot stay ``avoid`` whatever the freshness. Only
+    then does a stale observation turn a raw pace deficit or a weekly-pace hot
+    label into ``unknown_stale``. Near cap is the ``near_cap`` status or
+    :func:`plan_window_exhausted`.
+    """
+    if record.get("eligible") is False:
+        return CAPACITY_AVOID, "ineligible"
+    if health == UNHEALTHY:
+        return CAPACITY_AVOID, "unhealthy lane"
+    if _need_login(record):
+        return CAPACITY_AVOID, "NEED_LOGIN"
+    runtime = record.get("runtime") if isinstance(record.get("runtime"), Mapping) else {}
+    if status == "near_cap" or window_exhausted:
+        if credit_relief:
+            return CAPACITY_VERIFIED, f"near cap; {credit_reason}"
+        where = f"{remaining:g}% remaining" if remaining is not None else "status near_cap"
+        return CAPACITY_AVOID, f"near cap ({where}); {credit_reason}"
+    if status == "hot" and runtime.get("headroom_blocked"):
+        return CAPACITY_AVOID, "runtime headroom blocked"
+    if record.get("freshness") == "unavailable":
+        return CAPACITY_UNKNOWN, "usage probe unavailable"
+    # A hot label from any source other than weekly pace (ledger burn, Cursor
+    # Auto, a source-less record) is its own current reason and stays avoid.
+    pace_only = status != "hot" or record.get("status_source") == "weekly_pace"
+    pace_signal = pace["raw_deficit"] is True or status == "hot"
+    if freshness == STALE and pace_only and pace_signal and not pace["covered_by"]:
+        return (
+            CAPACITY_UNKNOWN_STALE,
+            f"{STALE_ADVISORY_LABEL}: pace deficit read from stale evidence ({freshness_reason})",
+        )
+    if status == "hot" or pace["uncovered"] is True:
+        return CAPACITY_AVOID, pace["reason"] if pace["uncovered"] is True else "status hot"
+    if status in {"cool", "warm", "idle"}:
+        return CAPACITY_VERIFIED, f"plan status {status}"
+    return CAPACITY_UNKNOWN, f"plan status {status}"
+
+
+def routing_facts(
+    lane: str,
+    record: Mapping[str, Any] | None,
+    *,
+    model: str | None,
+    snapshot_metadata: Mapping[str, Any] | None = None,
+    policy: CreditPolicy | None = None,
+    now: datetime | None = None,
+    usage_dir: Path | None = None,
+) -> RoutingFacts:
+    """The one consumer-facing reading of a complete routing-budget lane record (#9740).
+
+    Composes the owner's calculations over one clock and one shared
+    rate-limit observation: remaining allowance (:func:`plan_remaining_reading`),
+    snapshot/probe freshness, health, pace (:func:`pace_deficit_state`), credit
+    and reset evidence (:func:`lane_credit_report`) and credit-period model
+    permission. Published ``credit``/``pace_deficit`` conclusions in the record
+    are ignored: only their inputs count. ``snapshot_metadata`` is the
+    routing-budget ``diagnostics`` (missing staleness is unknown, not fresh).
+    ``model`` is required: None means lane inventory. ``policy`` None loads the
+    shipped policy; an unreadable one reads ``policy_error`` (plan state applies).
+
+    A weekly-pace hot label without a runtime block that the owner's own pace
+    reading does not confirm takes the remaining-allowance status, never a
+    default ``cool``: pace hidden below the visibility floor (A3), or a visible
+    reading with no deficit on a fresh observation (#9040, A8: the early-window
+    false positive). Fresh there means a fresh snapshot *and* a positively
+    fresh probe: a missing probe age or an unknown probe freshness keeps the
+    label hot. A hot label from any other source stays hot.
+    """
+    from scripts.api.subscription_usage import pace_expected_pct, pace_is_visible
+
+    lane_key = lane.strip().lower()
+    data: dict[str, Any] = dict(record) if isinstance(record, Mapping) else {}
+    current = (now or datetime.now(UTC)).astimezone(UTC)
+    policy_error = ""
+    if policy is None:
+        try:
+            policy = load_policy()
+        except ValueError as exc:
+            policy_error = str(exc)
+    near_cap_pct = policy.near_cap_remaining_pct if policy is not None else _NEAR_CAP_REMAINING_PCT
+    max_age_s = policy.credit_max_age_s if policy is not None else UNREADABLE_POLICY_MAX_AGE_S
+    snapshot, _ = snapshot_freshness(snapshot_metadata)
+    probe, _ = probe_freshness(data, max_age_s)
+    freshness, freshness_reason = observation_freshness(data, snapshot_metadata, max_age_s)
+    snapshot_stale = snapshot == STALE
+    health, health_basis = health_fact(data)
+    remaining, remaining_source = plan_remaining_reading(data)
+
+    reader = _shared_rate_limit_reader(lane_key, policy, current, usage_dir) if policy is not None else None
+    if policy is not None:
+        credit = lane_credit_report(
+            lane_key,
+            data,
+            policy,
+            now=current,
+            snapshot_stale=snapshot_stale,
+            usage_dir=usage_dir,
+            rate_limit_reader=reader,
+        )
+    else:
+        credit = policy_error_state(lane_key, policy_error)
+    pace_record = data.get("codexbar") or data.get("pace") or data
+    pace = pace_deficit_state(
+        lane_key,
+        data,
+        model=model,
+        policy=policy,
+        now=current,
+        snapshot_stale=snapshot_stale,
+        usage_dir=usage_dir,
+        rate_limit_reader=reader,
+    )
+    expected = pace_expected_pct(pace_record, now=current) if isinstance(pace_record, dict) else None
+    visible = None if expected is None else pace_is_visible({"expected_pct": expected})
+    status = str(pace["status"] or UNKNOWN)
+    runtime = data.get("runtime") if isinstance(data.get("runtime"), Mapping) else {}
+    if status == "hot" and data.get("status_source") == "weekly_pace" and not runtime.get("headroom_blocked"):
+        cleared_by = None
+        if pace["raw_deficit"] is None and visible is False:
+            cleared_by = "pace hidden below the visibility floor"
+        elif pace["raw_deficit"] is False and freshness == FRESH and probe == FRESH:
+            # The label is the probe's own pace reading: a fresh snapshot alone (which covers a
+            # probe-less ledger lane) does not verify it, so the probe must be positively fresh.
+            cleared_by = "no pace deficit on a fresh observation"
+        if cleared_by is not None:
+            status = allowance_status(remaining)
+            pace = {**pace, "status": status, "reason": f"{cleared_by}; status {status} from remaining allowance"}
+
+    allowed = policy.lane_models(lane_key) if policy is not None else DEFAULT_ALLOWED_MODELS.get(lane_key)
+    permission: bool | None = None
+    refusal: str | None = None
+    if model is not None:
+        permission = not allowlist_applies(credit) or allowed is None or _allowed(tuple(allowed), model)
+        if not permission:
+            refusal = (
+                refusal_text(lane_key, model, credit, policy)
+                if policy is not None
+                else f"{REFUSAL_CODE}: lane {lane_key} is {POLICY_ERROR}; model {model} is outside the built-in "
+                f"credit-period allowlist [{', '.join(allowed or ())}]"
+            )
+    credit_present = credit.get("state") == CREDIT_BALANCE_PRESENT
+    credit_models = (
+        tuple(allowed) if allowed is not None and (credit_present or "credits" in pace["covered_by"]) else None
+    )
+    capacity, capacity_reason = _capacity_class(
+        data,
+        status=status,
+        remaining=remaining,
+        near_cap_pct=near_cap_pct,
+        health=health,
+        freshness=freshness,
+        freshness_reason=freshness_reason,
+        pace=pace,
+        window_exhausted=plan_window_exhausted(lane_key, data, policy),
+        credit_relief=credit_present and permission is not False,
+        credit_reason=f"credit {credit.get('state')}: {credit.get('reason') or ''}".rstrip(": "),
+    )
+    return RoutingFacts(
+        lane=lane_key,
+        model=model,
+        observed_at=_iso(current),
+        plan_remaining_pct=remaining,
+        remaining_source=remaining_source,
+        snapshot_freshness=snapshot,
+        probe_freshness=probe,
+        observation_freshness=freshness,
+        freshness_reason=freshness_reason,
+        health=health,
+        health_basis=health_basis,
+        pace_visible=visible,
+        raw_deficit=pace["raw_deficit"],
+        uncovered=pace["uncovered"],
+        covered_by=tuple(pace["covered_by"]),
+        pace_reason=str(pace["reason"]),
+        status=status,
+        status_source=data.get("status_source"),
+        capacity=capacity,
+        capacity_reason=capacity_reason,
+        credit=credit,
+        credit_models=credit_models,
+        model_permission=permission,
+        refusal_reason=refusal,
     )
 
 
