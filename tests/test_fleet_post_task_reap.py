@@ -25,6 +25,42 @@ from typing import Any
 
 import pytest
 
+from tests.orchestration.test_interrupted_caller_matrix import hashes
+from tests.orchestration.test_interrupted_caller_matrix import interrupted_checkout as interrupted_checkout
+
+
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+def test_post_task_reap_interrupted_unique_work_retains_bytes(interrupted_checkout, monkeypatch, status):
+    repo, tree, tasks, record, result, output = interrupted_checkout
+    record.write_text(
+        json.dumps(
+            {
+                "task_id": "interrupted",
+                "status": status,
+                "run_nonce": "attempt",
+                "pid": 999_999_999,
+                "worktree_path": str(tree),
+                "worktree_branch": "codex/interrupted",
+                "worktree_reused": False,
+                "result_file": str(result),
+                "result_sha256": hashes([result])[0],
+            }
+        )
+    )
+    before = hashes([record, result, output])
+    for _ in range(2):
+        report = post_task_reap.post_task_reap(
+            "interrupted",
+            tasks_dir=tasks,
+            repo_root=repo,
+            apply=True,
+            include_acp_runtime=False,
+        )
+        assert report["main_worktree"]["action"] in {"skipped", "retained"}, report
+        assert report["main_worktree"]["reason"]
+        assert hashes([record, result, output]) == before and tree.exists()
+
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from scripts.fleet import post_task_reap

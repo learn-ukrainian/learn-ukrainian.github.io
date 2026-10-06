@@ -28,6 +28,7 @@ from scripts.work.relations import (
 from scripts.work.schema import admit_projection_filters
 from scripts.work.sources_public import (
     GH_ENUM_LIMIT,
+    PR_SNAPSHOT_FRESHNESS_S,
     SectionResult,
     admit_public_repository_id,
     allowlist_stream_names,
@@ -345,7 +346,7 @@ def _authority_from_section(domain: str, section: SectionResult | None) -> dict[
 
 
 def _section_source_ok(section: SectionResult | None) -> bool:
-    return section is not None and section.status not in _SOURCE_HARD_FAIL
+    return section is not None and section.status not in _SOURCE_HARD_FAIL | {"stale"}
 
 
 def _build_issue_item(
@@ -425,16 +426,18 @@ def _build_pr_item(
     number = int(raw["number"])
     is_draft = bool(raw.get("isDraft"))
     lifecycle = "draft" if is_draft else str(raw.get("state") or "open").lower()
-    ci_state = _pr_check_state(raw)
+    prs_section = section_times.get("prs")
+    current = prs_section is not None and prs_section.status in {"ok", "truncated"}
+    current = current and raw.get("detailReadComplete") is not False
+    ci_state = _pr_check_state(raw) if current else "unknown"
     review_proj = _match_reviews(reviews, pr_number=number, repository_id=repository_id)
-    review_proj["review_decision"] = raw.get("reviewDecision")
+    review_proj["review_decision"] = raw.get("reviewDecision") if current else "UNKNOWN"
     # Task rows stay on the call so the builder signature is unchanged. A PR
     # number inside a task name is not an association.
     if not isinstance(tasks, list):
         tasks = []
     del tasks
     dispatch = _dispatch_from_tasks([], unresolved=False)
-    prs_section = section_times.get("prs")
     reviews_section = section_times.get("fleet_reviews")
     return {
         "work_id": pr_work_id(repository_id, number),
@@ -459,7 +462,7 @@ def _build_pr_item(
                 "kind": "gh_checks",
                 "state": ci_state,
                 "ci_state": ci_state,
-                "merge_state_status": raw.get("mergeStateStatus"),
+                "merge_state_status": raw.get("mergeStateStatus") if current else None,
                 "head_sha": raw.get("headRefOid"),
                 "head_ref": raw.get("headRefName"),
             },
@@ -476,6 +479,7 @@ def _build_pr_item(
         "flags": {
             "is_draft": is_draft,
             "has_blocker": False,
+            "source_ok": current,
         },
     }
 
@@ -775,7 +779,7 @@ def build_projection(
         if kind == "issue":
             row_ok = _section_source_ok(issues_section)
         elif kind == "pr":
-            row_ok = _section_source_ok(prs_section)
+            row_ok = _section_source_ok(prs_section) and item.get("flags", {}).get("source_ok") is not False
         elif kind == "task":
             row_ok = _section_source_ok(tasks_section)
         elif kind == "review":
@@ -811,7 +815,7 @@ def build_projection(
                 "count": 0,
             }
         )
-    if prs_section.status in {"unavailable", "timeout", "degraded"}:
+    if prs_section.status in {"unavailable", "timeout", "degraded", "stale"}:
         omissions.append(
             {
                 "class": "prs",
@@ -902,6 +906,61 @@ def build_projection(
     if canonical_filters:
         payload["filters_applied"] = canonical_filters
     return payload
+
+
+def qualify_pr_snapshot_age(payload: dict[str, Any]) -> dict[str, Any]:
+    """Age PR evidence even when its enclosing projection cache is still warm.
+
+    The observation belongs to the PR refresh, not to a later projection build.
+    Other sections keep their independent qualification. Never mutate the cache.
+    """
+    out = copy.deepcopy(payload)
+    for source in out.get("sources") or []:
+        if source.get("source_id") != SOURCE_PUBLIC:
+            continue
+        section = (source.get("sections") or {}).get("prs") or {}
+        observed_at = section.get("observed_at")
+        if not observed_at:
+            continue
+        age = max(0.0, (datetime.now(UTC) - datetime.fromisoformat(observed_at)).total_seconds())
+        section["age_s"] = age
+        stale = section.get("status") == "stale" or age > PR_SNAPSHOT_FRESHNESS_S
+        if stale:
+            section["status"] = "stale"
+            section["reason"] = "gh_pr_snapshot_stale"
+            if source.get("status") in {"ok", "truncated"}:
+                source["status"] = "stale"
+            omissions = out.get("denominator", {}).get("omissions", [])
+            if not any(o.get("class") == "prs" and o.get("reason") == "gh_pr_snapshot_stale" for o in omissions):
+                omissions.append({"class": "prs", "reason": "gh_pr_snapshot_stale", "count": section.get("count", 0)})
+        for item in out.get("items") or []:
+            if item.get("resource_kind") != "pr":
+                continue
+            for authority in item.get("authority") or []:
+                if authority.get("domain") == "github":
+                    authority["age_s"] = age
+                    authority["stale"] = authority.get("stale", False) or stale
+            if stale:
+                item["flags"]["source_ok"] = False
+                item["flags"]["attention"] = False
+                item["health"] = "UNKNOWN"
+                item["safe_next_action"] = {
+                    "code": "INSPECT_UNKNOWN",
+                    "reason_codes": ["gh_pr_snapshot_stale"],
+                    "state": "unknown",
+                }
+                verification = item["projections"]["verification"]
+                verification.update(state="unknown", ci_state="unknown", merge_state_status=None)
+                verification["merge_evidence"] = {"state": "unknown", "reason": "gh_pr_snapshot_stale"}
+                item["projections"]["review"]["review_decision"] = "UNKNOWN"
+        if stale:
+            pr_ids = {item["work_id"]: item for item in out.get("items") or [] if item.get("resource_kind") == "pr"}
+            for row in out.get("attention") or []:
+                if row.get("work_id") in pr_ids:
+                    item = pr_ids[row["work_id"]]
+                    row["health"] = item["health"]
+                    row["safe_next_action"] = copy.deepcopy(item["safe_next_action"])
+    return out
 
 
 def build_public_projection(

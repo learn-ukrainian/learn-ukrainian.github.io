@@ -443,7 +443,7 @@ def test_open_pr_detail_is_conditional_and_bounded_to_open_pulls():
     assert all(etag for _, etag in calls[7:])
 
 
-def test_check_run_error_is_not_cached_as_a_successful_pr_list():
+def test_check_run_error_keeps_pr_membership_with_unknown_details():
     resources = _scripted_repo()
 
     def transport(path, headers, timeout):
@@ -453,10 +453,39 @@ def test_check_run_error_is_not_cached_as_a_successful_pr_list():
         return 200, {"etag": etag}, json.dumps(body).encode()
 
     cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
-    with pytest.raises(github_rest.GitHubRestError):
-        github_rest.list_open_prs(REPO, limit=10, timeout=2.0, cache=cache)
+    result = github_rest.list_open_prs(REPO, limit=10, timeout=2.0, cache=cache)
+    assert len(result) == 1
+    assert result[0]["number"] == 77
+    assert result[0]["detailReadComplete"] is False
+    assert result[0]["statusCheckRollup"] is None
+    assert result[0]["reviewDecision"] is None
+    assert result[0]["mergeStateStatus"] is None
     check_path = f"repos/{REPO}/commits/{SHA}/check-runs?per_page=100&page=1"
     assert cache.cached_body(check_path) is None
+
+
+@pytest.mark.parametrize("error", [github_rest.GitHubRestError("unavailable"), github_rest.GitHubRestTimeout(2)])
+def test_one_failed_pr_detail_does_not_discard_other_prs(error):
+    resources = _scripted_repo()
+    pull_list = f"repos/{REPO}/pulls?state=open&per_page=100&sort=created&direction=desc"
+    etag, pulls = resources[pull_list]
+    resources[pull_list] = (etag, [pulls[0], {**pulls[0], "number": 78}])
+
+    def transport(path, headers, timeout):
+        if path.endswith("/pulls/78"):
+            raise error
+        tag, body = resources[path]
+        return 200, {"etag": tag}, json.dumps(body).encode()
+
+    cache = github_rest.GitHubRestCache(transport=transport, identity="fixture")
+    result = github_rest.list_open_prs(REPO, limit=10, timeout=2, cache=cache)
+    assert [pr["number"] for pr in result] == [77, 78]
+    assert result.truncated is False
+    assert result[0]["detailReadComplete"] is True
+    assert result[0]["statusCheckRollup"] is not None
+    assert result[1]["detailReadComplete"] is False
+    assert result[1]["statusCheckRollup"] is None
+    assert result[1]["reviewDecision"] is None
 
 
 def test_fetch_open_issues_rest_timeout_is_not_a_successful_section(monkeypatch):
@@ -628,6 +657,10 @@ def test_work_projection_endpoint_contract(monkeypatch):
     )
 
     from scripts.work import sources_public
+
+    snapshot = sources_public._PRSnapshot(REPO, 1000)
+    snapshot._refresh(sources_public._iso_now())
+    monkeypatch.setattr(sources_public, "_pr_snapshot", lambda *_args: snapshot)
 
     monkeypatch.setattr(
         sources_public,

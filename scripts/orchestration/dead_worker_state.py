@@ -203,6 +203,7 @@ def mark_missing_worktree_failed(
             or worktree.is_dir()
             or (pid is not None and pid_alive(pid))
             or current.get("status") in TERMINAL_TASK_STATUSES
+            or current.get("status") == "needs_finalize"
             or current.get("run_nonce") != observed.get("run_nonce")
             or current.get("pid") != observed.get("pid")
             or current.get("started_at") != observed.get("started_at")

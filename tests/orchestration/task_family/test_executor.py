@@ -14,16 +14,51 @@ from uuid import UUID, uuid4
 
 import pytest
 
+from tests.orchestration.test_interrupted_caller_matrix import hashes
+from tests.orchestration.test_interrupted_caller_matrix import interrupted_checkout as interrupted_checkout
+
+
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+def test_family_cleanup_interrupted_work_preserves_bytes(interrupted_checkout, status):
+    repo, tree, _tasks, record, result, output = interrupted_checkout
+    record.write_text(
+        json.dumps(
+            {
+                "task_id": "interrupted",
+                "status": status,
+                "run_nonce": "attempt",
+                "worktree_path": str(tree),
+                "result_file": str(result),
+                "result_sha256": hashes([result])[0],
+                "keep_worktree": True,
+            }
+        )
+    )
+    original = json.loads(record.read_text())
+    before = hashes([record, result, output])
+    for _ in range(2):
+        with pytest.raises(git_safety.GitSafetyError):
+            git_safety.remove_unclaimed_worktree(repo, tree)
+        after = hashes([record, result, output])
+        assert after[1:] == before[1:] and tree.exists()
+        current = json.loads(record.read_text())
+        receipt = current.pop("preserved_artifacts", None)
+        assert current == original
+        if receipt:
+            assert after[0] != before[0]
+            assert receipt["owner"] == "interrupted" and receipt["next_condition"]
+            assert receipt["retention_disposition"] == "retained"
+            assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
+            copied = repo / receipt["location"] / ".cache/output.bin"
+            assert hashes([copied]) == (before[2],)
+
+
 from scripts.orchestration.task_family import codex_state, executor, git_safety
 from scripts.orchestration.task_family.storage import TaskFamilyStorage
 
 
 def _git_env() -> dict[str, str]:
-    return {
-        key: value
-        for key, value in os.environ.items()
-        if not key.startswith("GIT_") and key != "AGENT_NO_MERGE"
-    }
+    return {key: value for key, value in os.environ.items() if not key.startswith("GIT_") and key != "AGENT_NO_MERGE"}
 
 
 def git(cwd: Path, *args: str) -> str:
@@ -66,10 +101,7 @@ def write_threads(path: Path, rows: list[dict[str, Any]]) -> None:
     )
     connection.executemany(
         "INSERT INTO threads(id,title,cwd,archived,archived_at,host) VALUES (?,?,?,?,?,?)",
-        [
-            (row["id"], row["title"], row["cwd"], row["archived"], row["archived_at"], row["host"])
-            for row in rows
-        ],
+        [(row["id"], row["title"], row["cwd"], row["archived"], row["archived_at"], row["host"]) for row in rows],
     )
     connection.commit()
     connection.close()
@@ -198,8 +230,22 @@ def test_apply_requires_caller_digest_and_exact_persisted_selection(tmp_path: Pa
     repo = init_repo(tmp_path)
     task_id, other_id = str(uuid4()), str(uuid4())
     db = tmp_path / "state_5.sqlite"
-    write_threads(db, [{"id": task_id, "title": "A", "cwd": str(repo), "archived": 1, "archived_at": "2026-01-01Z", "host": "host-a"}])
-    approved = plan(repo, family="digest", mode="archive_only", task_targets=(task(task_id, title="A", cwd=repo, db_path=db),))
+    write_threads(
+        db,
+        [
+            {
+                "id": task_id,
+                "title": "A",
+                "cwd": str(repo),
+                "archived": 1,
+                "archived_at": "2026-01-01Z",
+                "host": "host-a",
+            }
+        ],
+    )
+    approved = plan(
+        repo, family="digest", mode="archive_only", task_targets=(task(task_id, title="A", cwd=repo, db_path=db),)
+    )
 
     unauthorized = replace(approved, persisted_plan_digest="f" * 64)
     rejected = executor.CleanupExecutor(repo, unauthorized).run()
@@ -215,12 +261,28 @@ def test_apply_requires_caller_digest_and_exact_persisted_selection(tmp_path: Pa
     assert "caller digest" in blocked["blocked"]["reason"]
 
 
-def test_archive_only_observes_native_archive_and_stops_at_tasks_archived(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_archive_only_observes_native_archive_and_stops_at_tasks_archived(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     repo = init_repo(tmp_path)
     task_id = str(uuid4())
     db = tmp_path / "state_5.sqlite"
-    write_threads(db, [{"id": task_id, "title": "A", "cwd": str(repo), "archived": 1, "archived_at": "2026-01-01Z", "host": "host-a"}])
-    approved = plan(repo, family="archive", mode="archive_only", task_targets=(task(task_id, title="A", cwd=repo, db_path=db),))
+    write_threads(
+        db,
+        [
+            {
+                "id": task_id,
+                "title": "A",
+                "cwd": str(repo),
+                "archived": 1,
+                "archived_at": "2026-01-01Z",
+                "host": "host-a",
+            }
+        ],
+    )
+    approved = plan(
+        repo, family="archive", mode="archive_only", task_targets=(task(task_id, title="A", cwd=repo, db_path=db),)
+    )
     monkeypatch.setattr(git_safety, "run_git", lambda *_args, **_kwargs: pytest.fail("archive-only called git"))
 
     result = executor.CleanupExecutor(repo, approved).run()
@@ -229,16 +291,20 @@ def test_archive_only_observes_native_archive_and_stops_at_tasks_archived(tmp_pa
     receipt = json.loads(executor.receipt_path(repo, approved).read_text(encoding="utf-8"))
     assert receipt["final_state"] == "tasks_archived"
     assert receipt["actual"][-1]["action"] == "archive"
-    assert receipt["final_resources"] == [{
-        "resource_type": "task",
-        "resource_id": task_id,
-        "task_ids": [task_id],
-        "action": "archived",
-        "reason": "final executor resource status: actual",
-        "error": "",
-        "recovery": "",
-    }]
-    assert "Final resources: task:" in executor.receipt_path(repo, approved).with_name("receipt.txt").read_text(encoding="utf-8")
+    assert receipt["final_resources"] == [
+        {
+            "resource_type": "task",
+            "resource_id": task_id,
+            "task_ids": [task_id],
+            "action": "archived",
+            "reason": "final executor resource status: actual",
+            "error": "",
+            "recovery": "",
+        }
+    ]
+    assert "Final resources: task:" in executor.receipt_path(repo, approved).with_name("receipt.txt").read_text(
+        encoding="utf-8"
+    )
 
 
 def test_advisory_lock_path_is_not_git_lock_but_git_worktree_lock_blocks(tmp_path: Path) -> None:
@@ -254,9 +320,7 @@ def test_advisory_lock_path_is_not_git_lock_but_git_worktree_lock_blocks(tmp_pat
         git_safety.verify_worktree_candidate(repo, worktree=worktree, branch="cleanup/locked")
 
 
-def test_executor_locks_each_resolved_worktree_path_once(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_executor_locks_each_resolved_worktree_path_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     shared_worktree = tmp_path / "shared-worktree"
     approved = plan(
@@ -282,7 +346,9 @@ def test_executor_locks_each_resolved_worktree_path_once(
     assert locked_paths == [shared_worktree.resolve()]
 
 
-def test_github_queries_use_valid_commands_and_normalize_merge_commit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_github_queries_use_valid_commands_and_normalize_merge_commit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     repo = init_repo(tmp_path)
     calls: list[list[str]] = []
 
@@ -306,15 +372,35 @@ def test_github_queries_use_valid_commands_and_normalize_merge_commit(tmp_path: 
         git_safety.assert_no_unknown_branch_mutation(repo, "--all")
 
 
-def test_finish_cleanup_preserves_unrelated_worktree_and_rechecks_pr_before_mutation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_finish_cleanup_preserves_unrelated_worktree_and_rechecks_pr_before_mutation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     repo = init_repo(tmp_path)
     target_branch, unrelated_branch = "cleanup/remove", "cleanup/keep"
     remove_worktree, keep_worktree = add_worktree(repo, target_branch), add_worktree(repo, unrelated_branch)
     task_id = str(uuid4())
     db = tmp_path / "state_5.sqlite"
-    write_threads(db, [{"id": task_id, "title": "A", "cwd": str(remove_worktree), "archived": 1, "archived_at": "2026-01-01Z", "host": "host-a"}])
+    write_threads(
+        db,
+        [
+            {
+                "id": task_id,
+                "title": "A",
+                "cwd": str(remove_worktree),
+                "archived": 1,
+                "archived_at": "2026-01-01Z",
+                "host": "host-a",
+            }
+        ],
+    )
     target = worktree_target(remove_worktree, target_branch, "scope", number=9)
-    approved = plan(repo, family="scope", mode="finish_and_clean", task_targets=(task(task_id, title="A", cwd=remove_worktree, db_path=db),), worktree_targets=(target,))
+    approved = plan(
+        repo,
+        family="scope",
+        mode="finish_and_clean",
+        task_targets=(task(task_id, title="A", cwd=remove_worktree, db_path=db),),
+        worktree_targets=(target,),
+    )
     stub_remote(monkeypatch)
     calls = {"count": 0}
     head = git(remove_worktree, "rev-parse", "HEAD")
@@ -333,14 +419,34 @@ def test_finish_cleanup_preserves_unrelated_worktree_and_rechecks_pr_before_muta
     assert not git_safety.local_branch_exists(repo, target_branch)
 
 
-def test_branch_delete_crash_resumes_from_verified_bundle_when_branch_is_already_absent(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_branch_delete_crash_resumes_from_verified_bundle_when_branch_is_already_absent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     repo = init_repo(tmp_path)
     branch, worktree = "cleanup/resume", add_worktree(repo, "cleanup/resume")
     task_id = str(uuid4())
     db = tmp_path / "state_5.sqlite"
-    write_threads(db, [{"id": task_id, "title": "A", "cwd": str(worktree), "archived": 1, "archived_at": "2026-01-01Z", "host": "host-a"}])
+    write_threads(
+        db,
+        [
+            {
+                "id": task_id,
+                "title": "A",
+                "cwd": str(worktree),
+                "archived": 1,
+                "archived_at": "2026-01-01Z",
+                "host": "host-a",
+            }
+        ],
+    )
     target = worktree_target(worktree, branch, "resume", number=10)
-    approved = plan(repo, family="resume", mode="finish_and_clean", task_targets=(task(task_id, title="A", cwd=worktree, db_path=db),), worktree_targets=(target,))
+    approved = plan(
+        repo,
+        family="resume",
+        mode="finish_and_clean",
+        task_targets=(task(task_id, title="A", cwd=worktree, db_path=db),),
+        worktree_targets=(target,),
+    )
     stub_remote(monkeypatch)
     head = git(worktree, "rev-parse", "HEAD")
     monkeypatch.setattr(git_safety, "query_pr_by_head", lambda *_args, **_kwargs: pr(branch, head, 10))
@@ -366,20 +472,43 @@ def test_branch_delete_crash_resumes_from_verified_bundle_when_branch_is_already
 
 def test_remote_lookup_failure_blocks_branch_delete(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
-    monkeypatch.setattr(git_safety, "run_git", lambda *_args, **_kwargs: subprocess.CompletedProcess([], 128, "", "network down"))
+    monkeypatch.setattr(
+        git_safety, "run_git", lambda *_args, **_kwargs: subprocess.CompletedProcess([], 128, "", "network down")
+    )
     with pytest.raises(git_safety.GitSafetyError, match="remote branch lookup failed"):
         git_safety.remote_branch_present(repo, "cleanup/x")
 
 
-def test_runtime_without_eligibility_or_proof_is_preserved_and_blocks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_runtime_without_eligibility_or_proof_is_preserved_and_blocks(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     repo = init_repo(tmp_path)
     branch, worktree = "cleanup/runtime", add_worktree(repo, "cleanup/runtime")
     task_id = str(uuid4())
     db = tmp_path / "state_5.sqlite"
-    write_threads(db, [{"id": task_id, "title": "A", "cwd": str(worktree), "archived": 1, "archived_at": "2026-01-01Z", "host": "host-a"}])
+    write_threads(
+        db,
+        [
+            {
+                "id": task_id,
+                "title": "A",
+                "cwd": str(worktree),
+                "archived": 1,
+                "archived_at": "2026-01-01Z",
+                "host": "host-a",
+            }
+        ],
+    )
     target = worktree_target(worktree, branch, "runtime", number=11)
     runtime = executor.RuntimeTarget(id=str(uuid4()), kind="handoff", eligible=False, proof=None)
-    approved = plan(repo, family="runtime", mode="finish_and_clean", task_targets=(task(task_id, title="A", cwd=worktree, db_path=db),), worktree_targets=(target,), runtime_targets=(runtime,))
+    approved = plan(
+        repo,
+        family="runtime",
+        mode="finish_and_clean",
+        task_targets=(task(task_id, title="A", cwd=worktree, db_path=db),),
+        worktree_targets=(target,),
+        runtime_targets=(runtime,),
+    )
     stub_remote(monkeypatch)
     head = git(worktree, "rev-parse", "HEAD")
     monkeypatch.setattr(git_safety, "query_pr_by_head", lambda *_args, **_kwargs: pr(branch, head, 11))
@@ -392,15 +521,36 @@ def test_runtime_without_eligibility_or_proof_is_preserved_and_blocks(tmp_path: 
     assert "preserved" in saved["reason"]
 
 
-def test_eligible_runtime_is_truthfully_preserved_when_native_retirement_is_unavailable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_eligible_runtime_is_truthfully_preserved_when_native_retirement_is_unavailable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     repo = init_repo(tmp_path)
     branch, worktree = "cleanup/runtime-deferred", add_worktree(repo, "cleanup/runtime-deferred")
     task_id = str(uuid4())
     db = tmp_path / "state_5.sqlite"
-    write_threads(db, [{"id": task_id, "title": "A", "cwd": str(worktree), "archived": 1, "archived_at": "2026-01-01Z", "host": "host-a"}])
+    write_threads(
+        db,
+        [
+            {
+                "id": task_id,
+                "title": "A",
+                "cwd": str(worktree),
+                "archived": 1,
+                "archived_at": "2026-01-01Z",
+                "host": "host-a",
+            }
+        ],
+    )
     target = worktree_target(worktree, branch, "runtime-deferred", number=12)
     runtime = executor.RuntimeTarget(id=str(uuid4()), kind="handoff", eligible=True, proof="replacement confirmed")
-    approved = plan(repo, family="runtime-deferred", mode="finish_and_clean", task_targets=(task(task_id, title="A", cwd=worktree, db_path=db),), worktree_targets=(target,), runtime_targets=(runtime,))
+    approved = plan(
+        repo,
+        family="runtime-deferred",
+        mode="finish_and_clean",
+        task_targets=(task(task_id, title="A", cwd=worktree, db_path=db),),
+        worktree_targets=(target,),
+        runtime_targets=(runtime,),
+    )
     stub_remote(monkeypatch)
     head = git(worktree, "rev-parse", "HEAD")
     monkeypatch.setattr(git_safety, "query_pr_by_head", lambda *_args, **_kwargs: pr(branch, head, 12))

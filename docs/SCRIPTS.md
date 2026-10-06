@@ -2149,3 +2149,23 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 ### Dispatch settle (Luna handoff)
 
 `.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m scripts.fleet.idle_settle evaluate|report|admission`. `idle_settle report --since-hours 24` includes events recorded in the last 24 hours and events without a valid timestamp; without the flag it includes all events. `driver_breadth_report --enforce` uses its `--since-hours` window for tasks and idle events, failing on in-window MISSING/DISHONEST dispositions (never raw idle seconds).
+
+## Private open-model-data review build (RB-1)
+
+`.venv/bin/python -m scripts.projects.open_model_data.review_build {build|verify} --config "$TMPDIR/request.json" --out "$TMPDIR/rb1"`
+
+Builds or re-verifies cited `review_only` records from host-local candidates and reviewed
+component specifications. The `omd-review-request.v1` JSON descriptor supplies candidate
+JSONL, catalog/register YAML paths, database store paths, per-component independent unit
+queries and frozen counts, declarative bindings, and citation compatibility/role mappings.
+See [the RB-1 design](projects/open-model-data/REVIEW_BUILD.md) and the `build.execute`,
+`bindings` and `roles` module contracts for the extension interface. Real extraction and
+attribution adapters ship with their components; the framework's synthetic adapter refuses
+unmarked sources. `--help` includes required flags, outputs and exit codes.
+
+All records, candidate accounting, attribution notices, metrics, manifest, README and error
+tracebacks stay under `--out` (directories `0700`, files `0600`); repository paths, symlinks,
+unsupported filesystems, unsafe ownership/modes and POSIX ACLs are refused. Console failures
+contain only reason codes, record ids, component ids and hashed row keys. `verify` re-runs
+all gates against pinned inputs and compares every artifact byte; it does not certify D2/D3,
+training readiness or RB-1 delivery. No network calls or database writes are performed.

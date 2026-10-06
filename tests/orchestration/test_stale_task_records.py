@@ -438,6 +438,41 @@ def _settle(tasks_dir: Path, repo: Path, pulls: list[dict[str, Any]], **kwargs: 
     return str_mod.settle_stale(tasks_dir, repo_checkouts={SLUG: repo}, pager=FakePager(pulls), now=NOW, **kwargs)
 
 
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+def test_stale_settle_existing_interrupted_tree_preserves_bytes(tasks_dir, repo, status):
+    import hashlib
+
+    tree = repo.parent / "interrupted-tree"
+    _git(repo, "worktree", "add", "-b", "codex/interrupted", str(tree), "main")
+    (tree / "work.txt").write_bytes(b"unique work\x00\xff")
+    _git(tree, "add", "work.txt")
+    _git(tree, "commit", "-m", "work")
+    _git(repo, "config", "core.excludesFile", str(repo.parent / "ignore"))
+    (repo.parent / "ignore").write_text(".cache/\n")
+    output = tree / ".cache/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    result = tasks_dir / "interrupted.result"
+    result.write_text("Український звіт\u2028result\n", encoding="utf-8")
+    record = _record(
+        tasks_dir,
+        "interrupted",
+        status=status,
+        run_nonce="attempt",
+        worktree_path=str(tree),
+        result_file=str(result),
+        result_sha256=hashlib.sha256(result.read_bytes()).hexdigest(),
+        final_branch_head_commit=_git(tree, "rev-parse", "HEAD"),
+        commits_ahead=1,
+    )
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)]
+    for _ in range(2):
+        report = _settle(tasks_dir, repo, [], apply=True)
+        assert all(row["action"] == "report" for row in report["records"])
+        assert tree.exists()
+        assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)] == before
+
+
 @pytest.mark.parametrize("head_field", ["final", "legacy", "neither"])
 def test_recorded_final_head_classifies_orphaned_work(tasks_dir, repo, head_field):
     sha = _orphan_commit(repo, f"head-{head_field}")
@@ -871,7 +906,6 @@ def test_task_state_lock_preserves_stable_lock_anchor_against_split_brain(tmp_pa
     with dead_worker_state.task_state_lock(record_path):
         inode_second = lock_path.stat().st_ino
         assert inode_first == inode_second
-
 
 
 def test_archive_selects_only_old_terminal_records_without_a_live_worktree(tasks_dir, tmp_path):
