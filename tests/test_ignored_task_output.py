@@ -42,7 +42,9 @@ def test_regenerable_patterns_skip_fingerprinting_and_cap(checkout, monkeypatch,
         tracked_lockfile(repo, parent)
     artifact(checkout, name, b"0123456789")
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
-    monkeypatch.setattr(output.artifacts, "_fingerprint", lambda _path: pytest.fail("regenerable bytes read"))
+    monkeypatch.setattr(
+        output.artifacts, "_fingerprint", lambda _path, **_kwargs: pytest.fail("regenerable bytes read")
+    )
     assert preserve(checkout, {"response": f"Generated `{name}`."}) == (True, "", None)
     assert not (primary / "batch_state/preserved").exists()
 
@@ -318,10 +320,10 @@ def test_failure_retains_sources(checkout, monkeypatch, failure):
     else:
         copy = output.artifacts._copy_verified
 
-        def faulty_copy(src, dst):
+        def faulty_copy(src, dst, **kwargs):
             if failure == "copy":
                 raise OSError("copy denied")
-            copy(src, dst)
+            copy(src, dst, **kwargs)
             if failure == "changed":
                 source.write_bytes(b"changed")
             else:
@@ -377,7 +379,11 @@ def test_retry_reuses_identical_copy_without_copying(checkout, monkeypatch):
     artifact(checkout, "ignored/report.txt", b"same attempt")
     ok, _, first = preserve(checkout, {"status": "done"})
     assert ok and not first["reused"]
-    monkeypatch.setattr(output.artifacts, "_copy_verified", lambda *_args: pytest.fail("identical output copied again"))
+    monkeypatch.setattr(
+        output.artifacts,
+        "_copy_verified",
+        lambda *_args, **_kwargs: pytest.fail("identical output copied again"),
+    )
     ok, _, second = preserve(checkout)
     assert ok and second["reused"] and second["location"] == first["location"]
     assert json.loads((checkout[2] / "output-task.json").read_text())["preserved_artifacts"] == second
@@ -442,8 +448,8 @@ def test_record_redispatched_during_copy_refuses_removal_without_updating_new_re
     replacement = {"worktree_path": str(other), "status": "running"}
     original = output.artifacts._copy_verified
 
-    def redispatch(src, dst):
-        original(src, dst)
+    def redispatch(src, dst, **kwargs):
+        original(src, dst, **kwargs)
         (tasks / "output-task.json").write_text(json.dumps(replacement))
 
     monkeypatch.setattr(output.artifacts, "_copy_verified", redispatch)
@@ -544,10 +550,10 @@ def test_vanished_output_is_rechecked_and_recorded_absent(checkout, monkeypatch,
         name = "_fingerprint" if stage == "fingerprint" else "_copy_verified"
         original = getattr(output.artifacts, name)
 
-        def disappear(src, *args):
+        def disappear(src, *args, **kwargs):
             if src == missing:
                 missing.unlink(missing_ok=True)
-            return original(src, *args)
+            return original(src, *args, **kwargs)
 
         monkeypatch.setattr(output.artifacts, name, disappear)
     ok, reason, receipt = preserve(checkout, {"status": "done"})
@@ -594,7 +600,7 @@ def test_disappearance_neighbours_refuse_removal(checkout, monkeypatch, failure)
     source = artifact(checkout, "ignored/report.txt", b"original")
     original = output.artifacts._copy_verified
 
-    def copy(src, dst):
+    def copy(src, dst, **kwargs):
         if failure == "changed_before_copy":
             source.write_bytes(b"modified")
         elif failure == "false_enoent":
@@ -604,7 +610,7 @@ def test_disappearance_neighbours_refuse_removal(checkout, monkeypatch, failure)
         else:
             source.unlink()
             raise FileNotFoundError("source vanished")
-        original(src, dst)
+        original(src, dst, **kwargs)
 
     monkeypatch.setattr(output.artifacts, "_copy_verified", copy)
     if failure == "reappeared":
@@ -817,13 +823,13 @@ def test_normal_removal_preserves_or_proves_absence_under_existing_lock(tmp_path
         transient.write_bytes(b"transient")
         original = output.artifacts._copy_verified
 
-        def copy(src, dst):
+        def copy(src, dst, **kwargs):
             if src == transient:
                 if case == "vanished_copy":
                     transient.unlink()
                 else:
                     transient.write_bytes(b"modified")
-            original(src, dst)
+            original(src, dst, **kwargs)
 
         monkeypatch.setattr(output.artifacts, "_copy_verified", copy)
     record_absence = output._record_absence

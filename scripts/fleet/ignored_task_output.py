@@ -313,7 +313,7 @@ def _path_inventory(
             _record_absence(root, name, absent)
             continue
         try:
-            size, digest = artifacts._fingerprint(path)
+            size, digest = artifacts._fingerprint(path, root=root)
         except FileNotFoundError:
             if absent is None:
                 raise
@@ -516,7 +516,7 @@ def _content_digest(root: Path, files: list[str]) -> str:
             source.resolve(strict=True) != source.absolute() or not stat.S_ISREG(status.st_mode)
         ):
             raise ValueError("preserved artifact is not a local regular file")
-        entries.append((name, *artifacts._fingerprint(source)))
+        entries.append((name, *artifacts._fingerprint(source, root=root)))
     return hashlib.sha256(json.dumps(entries, ensure_ascii=True).encode()).hexdigest()
 
 
@@ -636,7 +636,12 @@ def preserve_worktree_artifacts(
                     if destination.resolve() != destination.absolute():
                         raise ValueError("preserved artifact destination contains a symlink")
                     try:
-                        artifacts._copy_verified(worktree / name, destination)
+                        artifacts._copy_verified(
+                            worktree / name,
+                            destination,
+                            source_root=worktree,
+                            destination_root=location,
+                        )
                     except FileNotFoundError:
                         _record_absence(worktree, name, absent)
                         # A destination-side failure is not source absence proof.

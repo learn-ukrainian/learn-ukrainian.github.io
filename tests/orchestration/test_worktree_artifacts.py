@@ -75,9 +75,10 @@ def test_preserved_bytes_record_and_idempotency(checkout):
     ok, reason, metadata = guard(checkout, record=record)
     assert ok and not reason
     assert metadata["count"] == 1
-    copy = (checkout[1] / metadata["location"]) / "batch_state/sub/report.bin"
+    location = checkout[1] / metadata["location"]
+    copy = location / "batch_state/sub/report.bin"
     assert copy.read_bytes() == source.read_bytes()
-    assert wa._fingerprint(copy) == wa._fingerprint(source)
+    assert wa._fingerprint(copy, root=location) == wa._fingerprint(source, root=checkout[0])
     saved = json.loads((checkout[2] / "artifact-task.json").read_text())
     assert saved["preserved_artifacts"] == record["preserved_artifacts"] == metadata
     assert guard(checkout)[0]  # Repeated guard retains verified existing bytes.
@@ -201,7 +202,12 @@ def test_copy_refuses_symlink_swapped_in_between_check_and_copy(tmp_path, monkey
     _swap_regular_file_for_outside_symlink(monkeypatch, source, outside)
 
     with pytest.raises(ValueError, match="changed during preservation"):
-        wa._copy_verified(source, destination)
+        wa._copy_verified(
+            source,
+            destination,
+            source_root=source.parent,
+            destination_root=destination.parent,
+        )
 
     assert os.path.islink(source)
     assert os.readlink(source) == str(outside)
@@ -222,10 +228,122 @@ def test_fingerprint_refuses_symlink_swapped_in_between_check_and_open(tmp_path,
     _swap_regular_file_for_outside_symlink(monkeypatch, source, outside)
 
     with pytest.raises(ValueError, match="changed during preservation"):
-        wa._fingerprint(source)
+        wa._fingerprint(source, root=source.parent)
 
     assert os.path.islink(source)
     assert outside.read_bytes() == b"OUTSIDE-SECRET"
+
+
+_OUTSIDE_SECRET = b"OUTSIDE-SECRET"
+
+
+def _ancestor_swapped_file(tmp_path: Path) -> tuple[Path, Path, Path]:
+    """``worktree/batch_state/sub/report.bin`` whose ``batch_state`` is an outside symlink.
+
+    The leaf's parent on the outside is a real directory, so an open of the
+    full parent path follows the earlier link. ``O_NOFOLLOW`` on the last
+    component does not see it.
+    """
+    outside = tmp_path / "outside"
+    (outside / "sub").mkdir(parents=True)
+    outside_file = outside / "sub" / "report.bin"
+    outside_file.write_bytes(_OUTSIDE_SECRET)
+    worktree = tmp_path / "worktree"
+    source = worktree / "batch_state" / "sub" / "report.bin"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"inside-bytes")
+    batch = worktree / "batch_state"
+    os.rename(batch, tmp_path / "real-batch")
+    batch.symlink_to(outside, target_is_directory=True)
+    return worktree, source, outside_file
+
+
+def _preserved_outside_bytes(root: Path) -> list[Path]:
+    if not root.exists():
+        return []
+    return [path for path in root.rglob("*") if path.is_file() and _OUTSIDE_SECRET in path.read_bytes()]
+
+
+def _fingerprint_anchored(path: Path, *, root: Path) -> tuple[int, str]:
+    """Call the anchored fingerprint. The pre-fix signature had no root."""
+    try:
+        return wa._fingerprint(path, root=root)
+    except TypeError as exc:
+        if "root" not in str(exc):
+            raise
+        return wa._fingerprint(path)
+
+
+def _copy_anchored(source: Path, destination: Path, *, source_root: Path, destination_root: Path) -> None:
+    """Call the anchored copy. The pre-fix signature had no roots."""
+    try:
+        wa._copy_verified(source, destination, source_root=source_root, destination_root=destination_root)
+    except TypeError as exc:
+        if "source_root" not in str(exc):
+            raise
+        wa._copy_verified(source, destination)
+
+
+def test_fingerprint_refuses_ancestor_directory_symlink(tmp_path: Path) -> None:
+    worktree, source, outside_file = _ancestor_swapped_file(tmp_path)
+    try:
+        _fingerprint_anchored(source, root=worktree)
+    except ValueError as exc:
+        assert "symlink" in str(exc)
+    else:
+        pytest.fail("ancestor symlink was followed and outside bytes were read")
+    assert outside_file.read_bytes() == _OUTSIDE_SECRET
+    assert (tmp_path / "real-batch" / "sub" / "report.bin").read_bytes() == b"inside-bytes"
+
+
+def test_copy_verified_refuses_ancestor_directory_symlink(tmp_path: Path) -> None:
+    worktree, source, outside_file = _ancestor_swapped_file(tmp_path)
+    destination_root = tmp_path / "preserved"
+    destination = destination_root / "batch_state" / "sub" / "report.bin"
+    try:
+        _copy_anchored(source, destination, source_root=worktree, destination_root=destination_root)
+    except ValueError as exc:
+        assert "symlink" in str(exc)
+    else:
+        pytest.fail("ancestor symlink was followed and outside bytes were copied")
+    assert _preserved_outside_bytes(destination_root) == []
+    assert outside_file.read_bytes() == _OUTSIDE_SECRET
+
+
+def test_ancestor_swap_after_inventory_does_not_publish_outside_bytes(checkout, monkeypatch, tmp_path: Path) -> None:
+    """Swap an earlier directory after the inventory has seen a real file.
+
+    Refusal has to happen on the read. A later check that only blocks removal
+    still leaves the outside bytes in the preservation copy.
+    """
+    source = artifact(checkout)
+    outside = tmp_path / "outside"
+    (outside / "sub").mkdir(parents=True)
+    outside_file = outside / "sub" / "report.bin"
+    outside_file.write_bytes(_OUTSIDE_SECRET)
+    real_resolve = Path.resolve
+    swapped = False
+
+    def swapping_resolve(self: Path, *args: object, **kwargs: object) -> Path:
+        nonlocal swapped
+        resolved = real_resolve(self, *args, **kwargs)
+        if not swapped and self == source:
+            swapped = True
+            batch = checkout[0] / "batch_state"
+            os.rename(batch, tmp_path / "real-batch")
+            batch.symlink_to(outside, target_is_directory=True)
+        return resolved
+
+    monkeypatch.setattr(Path, "resolve", swapping_resolve)
+    ok, reason, _metadata = guard(checkout)
+
+    preserved = checkout[1] / "batch_state" / "preserved"
+    assert swapped
+    assert _preserved_outside_bytes(preserved) == []
+    assert not ok
+    assert "symlink" in reason
+    assert outside_file.read_bytes() == _OUTSIDE_SECRET
+    assert (tmp_path / "real-batch" / "sub" / "report.bin").read_bytes() == b"proof\x00\xff"
 
 
 def test_directory_walk_records_symlinks_without_following(checkout, tmp_path):
@@ -249,7 +367,7 @@ def test_directory_walk_records_symlinks_without_following(checkout, tmp_path):
         "ignored/out-link",
     }
     dest = tmp_path / "copy"
-    wa._copy_verified(root / "out-link", dest)
+    wa._copy_verified(root / "out-link", dest, source_root=root, destination_root=dest.parent)
     assert dest.is_file() and not dest.is_symlink()
     assert dest.read_bytes() != b"outside-only"
     assert os.fsencode(str(outside)) in dest.read_bytes()

@@ -15,6 +15,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component
 from scripts.orchestration import reaper_lifecycle as reaper_lifecycle
 from scripts.orchestration.dead_worker_state import task_state_lock as task_state_lock
 
@@ -113,20 +114,69 @@ def _symlink_record_bytes(target: str) -> bytes:
     return b"symlink\n" + os.fsencode(target)
 
 
-_DIRECTORY_FLAGS = os.O_RDONLY | os.O_CLOEXEC | os.O_DIRECTORY | os.O_NOFOLLOW
 _LEAF_FLAGS = os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK
 
 
-def _open_directory(path: Path) -> int:
-    """Open ``path`` without following a symlink at its final component."""
-    fd = os.open(path, _DIRECTORY_FLAGS)
+def _relative_parts(path: Path, root: Path) -> tuple[str, ...]:
+    """Lexical components of ``path`` below ``root``. ``..`` is outside the anchor."""
     try:
-        if not stat.S_ISDIR(os.fstat(fd).st_mode):
-            raise ValueError("artifact is not a regular file")
-    except (OSError, ValueError):
-        os.close(fd)
+        relative = path.relative_to(root)
+    except ValueError as exc:
+        raise ValueError("artifact path is outside the trusted root") from exc
+    parts = relative.parts
+    if not parts or any(part in {"", ".", ".."} for part in parts):
+        raise ValueError("artifact path is outside the trusted root")
+    return parts
+
+
+def _open_trusted_root(root: Path) -> int:
+    """Open the trusted anchor once. Components inside it are opened separately."""
+    try:
+        return open_directory_component(None, os.fspath(root))
+    except ComponentOpenError as exc:
+        raise ValueError(f"refusing {exc.kind} preservation root") from exc
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise ValueError("refusing symlinked preservation root") from exc
         raise
-    return fd
+
+
+def _open_parent(root_fd: int, dir_parts: tuple[str, ...]) -> tuple[int, bool]:
+    """Walk directory components from ``root_fd``. The caller closes an owned fd.
+
+    ``root_fd`` stays open. An empty walk returns that same descriptor and
+    ``owned`` is false.
+    """
+    if not dir_parts:
+        return root_fd, False
+    fd = root_fd
+    owned = False
+    try:
+        for name in dir_parts:
+            child = open_directory_component(fd, name)
+            if owned:
+                os.close(fd)
+            fd = child
+            owned = True
+        return fd, True
+    except BaseException:
+        if owned:
+            os.close(fd)
+        raise
+
+
+def _walk_parent(root_fd: int, dir_parts: tuple[str, ...]) -> tuple[int, bool]:
+    """Like :func:`_open_parent`, translating a symlink into a preservation refusal."""
+    try:
+        return _open_parent(root_fd, dir_parts)
+    except ComponentOpenError as exc:
+        if exc.kind == "changed":
+            raise ValueError("artifact changed during preservation") from exc
+        raise ValueError(f"refusing {exc.kind} path component during preservation") from exc
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise ValueError("refusing symlinked path component during preservation") from exc
+        raise
 
 
 def _read_regular(fd: int) -> bytes:
@@ -156,52 +206,60 @@ def _read_regular(fd: int) -> bytes:
     return payload
 
 
-def _read_preserved_bytes(path: Path) -> bytes:
+def _read_preserved_bytes(path: Path, *, root: Path) -> bytes:
     """Read a regular file, or a symlink's inert record, without following links.
 
-    The parent is a verified directory descriptor. The leaf is opened once,
-    relative to that descriptor, with ``O_NOFOLLOW``. ``fstat`` must show a
-    regular file, and both the fingerprint and the preserved bytes come from
-    that same descriptor. A symlink is not opened. Replacing a regular file
-    with a symlink after the type check refuses; the new target is not read.
+    ``root`` is opened once. Each directory below it is opened with
+    ``O_NOFOLLOW`` relative to the previous descriptor, and the leaf is opened
+    the same way. An ancestor symlink is refused before any byte is read.
+    ``fstat`` must show a regular file, and both the fingerprint and the
+    preserved bytes come from that same descriptor. A symlink leaf is not
+    opened. Replacing a regular file with a symlink after the type check
+    refuses; the new target is not read.
     """
-    parent_fd = _open_directory(path.parent)
+    parts = _relative_parts(path, root)
+    root_fd = _open_trusted_root(root)
     try:
-        name = path.name
-        # The check can go stale before the open. ``O_NOFOLLOW`` below refuses
-        # that replacement instead of following the new link.
-        if path.is_symlink():
+        parent_fd, parent_owned = _walk_parent(root_fd, parts[:-1])
+        try:
+            name = parts[-1]
+            # The check can go stale before the open. ``O_NOFOLLOW`` below refuses
+            # that replacement instead of following the new link.
+            if path.is_symlink():
+                try:
+                    target = os.readlink(name, dir_fd=parent_fd)
+                except FileNotFoundError:
+                    raise
+                except OSError as exc:
+                    raise ValueError("artifact changed during preservation") from exc
+                return _symlink_record_bytes(target)
             try:
-                target = os.readlink(name, dir_fd=parent_fd)
+                leaf_fd = os.open(name, _LEAF_FLAGS, dir_fd=parent_fd)
             except FileNotFoundError:
                 raise
             except OSError as exc:
-                raise ValueError("artifact changed during preservation") from exc
-            return _symlink_record_bytes(target)
-        try:
-            leaf_fd = os.open(name, _LEAF_FLAGS, dir_fd=parent_fd)
-        except FileNotFoundError:
-            raise
-        except OSError as exc:
-            if exc.errno == errno.ELOOP:
-                raise ValueError("artifact changed during preservation") from exc
-            raise
-        try:
-            return _read_regular(leaf_fd)
+                if exc.errno == errno.ELOOP:
+                    raise ValueError("artifact changed during preservation") from exc
+                raise
+            try:
+                return _read_regular(leaf_fd)
+            finally:
+                os.close(leaf_fd)
         finally:
-            os.close(leaf_fd)
+            if parent_owned:
+                os.close(parent_fd)
     finally:
-        os.close(parent_fd)
+        os.close(root_fd)
 
 
-def _fingerprint(path: Path) -> tuple[int, str]:
+def _fingerprint(path: Path, *, root: Path) -> tuple[int, str]:
     """Hash file bytes, or the inert link record when ``path`` is a symlink.
 
-    Regular-file bytes come from one ``O_NOFOLLOW`` descriptor. A symlink is
-    never opened, so a dangling link and a link out of the checkout contribute
-    only their target string.
+    ``root`` is the trusted directory. The read walks from that descriptor one
+    component at a time and never follows a symlink. A symlink leaf contributes
+    its target string, not the target's bytes.
     """
-    payload = _read_preserved_bytes(path)
+    payload = _read_preserved_bytes(path, root=root)
     return len(payload), hashlib.sha256(payload).hexdigest()
 
 
@@ -213,20 +271,28 @@ def _write_verified_bytes(payload: bytes, destination: Path) -> None:
         os.fsync(handle.fileno())
 
 
-def _copy_verified(source: Path, destination: Path) -> None:
+def _copy_verified(
+    source: Path,
+    destination: Path,
+    *,
+    source_root: Path,
+    destination_root: Path,
+) -> None:
     """Copy atomically, verifying size and SHA-256 and refusing conflicting evidence.
 
-    A symlink is written as an inert link record. The destination is never a
-    live symlink, and the source target is not opened or copied. Regular-file
-    bytes are read once from an ``O_NOFOLLOW`` descriptor and that buffer is
-    what gets written; the source path is not opened again.
+    Source and destination reads walk from ``source_root`` and
+    ``destination_root``. A symlink is written as an inert link record. The
+    destination file is never a live symlink, and a symlinked source component
+    is refused before any byte is published. Regular-file bytes are read once
+    from that walk and that buffer is what gets written.
     """
-    payload = _read_preserved_bytes(source)
+    payload = _read_preserved_bytes(source, root=source_root)
     before = (len(payload), hashlib.sha256(payload).hexdigest())
+    _relative_parts(destination, destination_root)
     destination.parent.mkdir(parents=True, exist_ok=True)
     # ``exists`` follows links, so a dangling destination symlink must be caught separately.
     if destination.exists() or destination.is_symlink():
-        if destination.is_symlink() or _fingerprint(destination) != before:
+        if destination.is_symlink() or _fingerprint(destination, root=destination_root) != before:
             raise ValueError("preserved artifact already exists with different bytes")
         return
     fd, temporary_name = tempfile.mkstemp(prefix=".preserve-", dir=destination.parent)
@@ -234,12 +300,12 @@ def _copy_verified(source: Path, destination: Path) -> None:
     try:
         os.close(fd)
         _write_verified_bytes(payload, temporary)
-        if _fingerprint(temporary) != before:
+        if _fingerprint(temporary, root=destination_root) != before:
             raise ValueError("artifact size or SHA-256 changed during preservation")
         # Another checkout of this task may preserve concurrently. Never replace
         # evidence it published after our initial existence check.
         os.link(temporary, destination)
-        if _fingerprint(destination) != before:
+        if _fingerprint(destination, root=destination_root) != before:
             raise ValueError("preserved artifact size or SHA-256 mismatch")
     finally:
         temporary.unlink(missing_ok=True)
