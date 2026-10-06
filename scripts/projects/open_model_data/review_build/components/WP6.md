@@ -61,7 +61,10 @@ The driver's extractor obtains these fields from the canonical
 `batch_state/tasks/<task_id>.json` and `.result` files, using
 `attestation_for(receipt, task, result)`. The digest covers the original result,
 including any JSON fence or surrounding text, rather than the extracted JSON
-file. Results may be a JSON document or contain exactly one `json` fenced block.
+file. Results may be a JSON document or contain multiple `json` fenced blocks.
+Exactly one fenced block must match the receipt's `batch_sha256`; zero or
+multiple matches refuse `adjudication_receipt`. The extracted receipt must equal
+that selected block's canonical JSON, without field normalization.
 The receipt store verifies the sidecar against that same dispatch record and
 result: exact task/model, `done`, completion timestamp, result digest and
 byte-derived JSON payload equality. It refuses missing sidecars or dispatch
