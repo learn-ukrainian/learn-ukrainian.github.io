@@ -11,12 +11,12 @@ import yaml
 from scripts.projects.open_model_data.review_build import __main__ as cli
 from scripts.projects.open_model_data.review_build import components, output
 from scripts.projects.open_model_data.review_build.attribution import Resolver, SyntheticAdapter
-from scripts.projects.open_model_data.review_build.build import artifacts
+from scripts.projects.open_model_data.review_build.build import artifacts, verify_component_mutations
 from scripts.projects.open_model_data.review_build.catalog import Catalog
 from scripts.projects.open_model_data.review_build.components import (
+    ComponentContext,
     c1_ua_gec,
     c6a_calque,
-    ua_gec_mutations,
     ua_gec_split,
 )
 from scripts.projects.open_model_data.review_build.errors import BuildError
@@ -108,12 +108,14 @@ def store(tmp_path, monkeypatch):
                 edits = [
                     SimpleNamespace(
                         start=start,
-                        end=start + 9,
+                        end=start + len(source_sentences[1]),
+                        suggestions=[target_sentences[1]],
                         meta={"error_type": "F/Calque" if layer == "gec-fluency" else "Grammar"},
                     )
                 ]
                 if row["id"] == "0019" and layer == "gec-fluency":
-                    edits.append(SimpleNamespace(start=start + 10, end=start + 11, meta={"error_type": "Grammar"}))
+                    end = start + len(source_sentences[1])
+                    edits.append(SimpleNamespace(start=end, end=end, suggestions=[""], meta={"error_type": "Grammar"}))
                 meta = SimpleNamespace(
                     doc_id=row["id"],
                     author_id=row["author_id"],
@@ -438,16 +440,22 @@ def test_framework_build_artifacts_with_real_component_specs(store):
 
 
 def test_component_verification_fixtures_are_host_only(store, tmp_path, monkeypatch):
-    _, candidates, config, data = setup_gate(store)
+    gate, candidates, config, data = setup_gate(store)
     (tmp_path / "SYNTHETIC-catalog.yaml").write_text(yaml.safe_dump(data))
     (tmp_path / "SYNTHETIC-register.yaml").write_text(yaml.safe_dump(register_data(sources=("ua_gec",))))
     config.update(catalog=str(tmp_path / "SYNTHETIC-catalog.yaml"), register=str(tmp_path / "SYNTHETIC-register.yaml"))
     monkeypatch.setattr(output, "filesystem", lambda _: "ext4")
-    monkeypatch.setattr(ua_gec_mutations, "UaGecAttribution", lambda _: SyntheticAdapter())
     with OutputGuard(tmp_path / "SYNTHETIC-output") as out:
-        results = ua_gec_mutations.verify_component_mutations(config, candidates, store, out)
-        assert results["mixed_edit"] == "mixed_edit" and results["test_source"] == "test_source"
-        assert json.loads(out.read("mutation-fixtures/wp1-results.json")) == results
+        from scripts.projects.open_model_data.review_build.components import ua_gec_component
+
+        objects = {
+            name: ua_gec_component.UaGecComponent(module) for name, module in (("C1", c1_ua_gec), ("C6a", c6a_calque))
+        }
+        ctx = ComponentContext(gate.reader, config)
+        results = verify_component_mutations(objects, ctx, candidates, out, gate)
+        assert results["C6a"]["mixed_edit"] == "mixed_edit" and results["C1"]["test_source"] == "test_source"
+        assert sum(map(len, results.values())) == 13
+        assert json.loads(out.read("mutation-fixtures/component-results.json")) == results
 
 
 def test_official_reader_loader_preserves_environment(tmp_path, monkeypatch):
@@ -520,6 +528,9 @@ def test_registered_cli_build_verify_and_input_tamper(store, tmp_path, monkeypat
         "missing_unit",
         "swapped_citation",
     }
+    fixtures = json.loads((out / "mutation-fixtures/component-results.json").read_bytes())
+    assert set(fixtures) == set(selected)
+    assert sum(map(len, fixtures.values())) == sum(8 if c == "C1" else 5 for c in selected)
     (out / "accounting.json").write_bytes(b"SYNTHETIC tamper")
     assert cli.main(["verify", *args]) == 1
     assert json.loads(capsys.readouterr().err)["error"] == "artifact_mismatch"
@@ -558,3 +569,111 @@ def test_cli_privacy_help_and_error_logs(tmp_path, monkeypatch, capsys):
     captured = capsys.readouterr()
     assert "SYNTHETIC PRIVATE RECORD TEXT" not in captured.out + captured.err
     assert json.loads(captured.err)["error"] == "error_log_unavailable"
+
+
+def test_equal_line_counts_with_deleted_sentence_shift_are_withheld():
+    sentences = ["SYNTHETIC first.", "SYNTHETIC second.", "SYNTHETIC third."]
+    original = "\n".join(sentences)
+    deleted = SimpleNamespace(start=0, end=len(sentences[0]), suggestions=[""], meta={"error_type": "Grammar"})
+    shifted = [sentences[1], sentences[2], "SYNTHETIC extra."]
+    assert len(sentences) == len(shifted)
+    assert ua_gec_split.replay_alignment(original, sentences, shifted, [deleted]) == ["unaligned"] * 3
+    assert ua_gec_split.replay_alignment(original, sentences, sentences, []) == [None] * 3
+
+
+@pytest.mark.parametrize(
+    "replacement,targets,expected",
+    [
+        ("!", ["SYNTHETIC one.!", "SYNTHETIC two."], [None, None]),
+        ("!", ["SYNTHETIC one.", "!SYNTHETIC two."], [None, None]),
+        ("!", ["SYNTHETIC one.?", "SYNTHETIC two."], ["boundary_ambiguous", None]),
+        ("word", ["SYNTHETIC one.", "SYNTHETIC two."], ["boundary_ambiguous"] * 2),
+    ],
+)
+def test_replay_tolerates_only_literal_punctuation_edits_in_gap(replacement, targets, expected):
+    sentences = ["SYNTHETIC one.", "SYNTHETIC two."]
+    original = " \n ".join(sentences)
+    ann = SimpleNamespace(
+        start=len(sentences[0]) + 1,
+        end=len(sentences[0]) + 2,
+        suggestions=[replacement],
+        meta={"error_type": "Punctuation"},
+    )
+    assert ua_gec_split.replay_alignment(original, sentences, targets, [ann]) == expected
+    # An unannotated punctuation difference is never tolerated.
+    assert ua_gec_split.replay_alignment(original, sentences, [sentences[0] + "!", sentences[1]], []) == [
+        "unaligned",
+        None,
+    ]
+
+
+def test_replay_whitespace_and_annotator_identity_and_crossing_boundary():
+    sentences = ["SYNTHETIC one.", "SYNTHETIC two."]
+    original = "SYNTHETIC  one. \n SYNTHETIC two."
+    ann = SimpleNamespace(start=11, end=14, suggestions=["fixed"], meta={"error_type": "Grammar"})
+    assert ua_gec_split.replay_alignment(original, sentences, ["SYNTHETIC fixed.", sentences[1]], [ann]) == [None, None]
+    assert ua_gec_split.replay_alignment(original, sentences, sentences, [ann]) == ["unaligned", None]
+    cross = SimpleNamespace(start=11, end=19, suggestions=[""], meta={"error_type": "Grammar"})
+    assert ua_gec_split.replay_alignment(original, sentences, sentences, [cross]) == ["boundary_ambiguous"] * 2
+
+
+@pytest.mark.parametrize("module", [c1_ua_gec, c6a_calque])
+def test_components_withhold_reasoning_and_precise_boundary_reason(store, module):
+    base = admitted(store, "C1" if module is c1_ua_gec else "C6a")
+    row = store.row(base.slots[0].citations[0].table, base.unit_id)
+    marked = {**row, "source_sentence": "SYNTHETIC <think>"}
+    assert module.candidate(marked, store.splits).reason == "reasoning_marker_in_source"
+    boundary = {**row, "aligned": False, "alignment_reason": "boundary_ambiguous", "edit_aligned": False}
+    assert module.candidate(boundary, store.splits).reason == "boundary_ambiguous"
+    if module is c6a_calque:
+        assert "unchanged" not in module.spec()["reference_multiplicity"]
+        boundary["edits"] = ["F/Calque", "Punctuation"]
+        assert module.candidate(boundary, store.splits).reason == "boundary_ambiguous"
+
+
+def test_replay_uses_learner_whitespace_and_unescapes_official_newline():
+    # Source splitting can remove whitespace; replay cannot silently put it back.
+    assert ua_gec_split.replay_alignment("SYNTHETIC a b.", ["SYNTHETIC ab."], ["SYNTHETIC a b."], []) == ["unaligned"]
+    ann = SimpleNamespace(start=10, end=13, suggestions=["a\\nb"], meta={"error_type": "Grammar"})
+    assert ua_gec_split.replay_alignment("SYNTHETIC a b.", ["SYNTHETIC a b."], ["SYNTHETIC a b."], [ann]) == [None]
+
+
+def test_replay_withholds_ambiguous_collapsed_whitespace_offsets():
+    edits = [SimpleNamespace(start=i, end=i + 1, suggestions=[""], meta={"error_type": "Grammar"}) for i in (1, 2)]
+    assert ua_gec_split.replay_alignment("A   B.", ["A B."], ["A B."], edits) == ["boundary_ambiguous"]
+
+
+def test_replay_preserves_space_after_a_replaced_word():
+    source = "SYNTHETIC one two."
+    edit = SimpleNamespace(start=10, end=13, suggestions=["fixed"], meta={"error_type": "Grammar"})
+    assert ua_gec_split.replay_alignment(source, [source], ["SYNTHETIC fixed two."], [edit]) == [None]
+    assert ua_gec_split.replay_alignment(source, [source], ["SYNTHETIC fixedtwo."], [edit]) == ["unaligned"]
+
+
+def test_file_store_rejects_deleted_sentence_shift_with_equal_line_counts(store):
+    base = admitted(store)
+    row = store.row(base.slots[0].citations[0].table, base.unit_id)
+    document = next(
+        d
+        for d in store.synthetic_documents["gec-only"]
+        if d.meta.doc_id == row["document"] and d.meta.annotator_id == row["annotator"]
+    )
+    document.annotated.edits = [
+        SimpleNamespace(
+            start=0, end=len(document.source_sentences[0]), suggestions=[""], meta={"error_type": "Grammar"}
+        )
+    ]
+    document.target_sentences = [document.source_sentences[1], "SYNTHETIC extra sentence."]
+    assert len(document.source_sentences) == len(document.target_sentences)
+    target_path = store.root / f"data/gec-only/train/target-sentences/{row['document']}.a{row['annotator']}.txt"
+    target_path.write_text("\n".join(document.target_sentences) + "\n")
+    rebuilt = ua_gec_split.UaGecFileStore(store.root)
+    units = [c for c in c1_ua_gec.extract(rebuilt) if f"/{row['document']}.a{row['annotator']}.ann;" in c.unit_id]
+    assert len(units) == 2
+    assert all(c.outcome == "withheld" and c.reason == "unaligned" for c in units)
+
+
+def test_replay_maps_equal_whitespace_runs_and_refuses_unequal_interiors():
+    edit = SimpleNamespace(start=2, end=3, suggestions=[""], meta={"error_type": "Grammar"})
+    assert ua_gec_split.replay_alignment("A   B.", ["A   B."], ["A  B."], [edit]) == [None]
+    assert ua_gec_split.replay_alignment("A   B.", ["A B."], ["AB."], [edit]) == ["boundary_ambiguous"]

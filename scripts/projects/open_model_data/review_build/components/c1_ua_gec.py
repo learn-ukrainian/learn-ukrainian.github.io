@@ -13,6 +13,7 @@ REASONS = {
     "rejected": [],
     "withheld": [
         "unaligned",
+        "boundary_ambiguous",
         "empty",
         "reasoning_marker_in_source",
         "attribution_unresolved",
@@ -61,7 +62,7 @@ def candidate(row: dict, splits) -> Candidate:
     reason = exclusion(row, splits)
     outcome = "excluded" if reason else "accepted"
     if not reason and not row["aligned"]:
-        outcome, reason = "withheld", "unaligned"
+        outcome, reason = "withheld", row.get("alignment_reason") or "unaligned"
     if not reason and (not row["source_sentence"].strip() or not row["target_sentence"].strip()):
         outcome, reason = "withheld", "empty"
     if not reason and any(REASONING.search(row[field]) for field in ("source_sentence", "target_sentence")):

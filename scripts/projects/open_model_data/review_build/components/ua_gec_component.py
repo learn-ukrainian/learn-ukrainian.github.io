@@ -5,6 +5,7 @@ from pathlib import Path
 from scripts.common.repo_root import main_checkout_root
 
 from ..errors import require
+from . import ComponentContext
 from .ua_gec_split import CORPUS, UaGecAttribution, UaGecFileStore
 
 FILES = {"ua-gec": UaGecFileStore()}
@@ -19,6 +20,12 @@ def held_root():
 class UaGecComponent:
     files = FILES
     adapters = ADAPTERS
+
+    def mutation_fixtures(self, ctx, candidates, gate):
+        """Generate this component's real-row fixtures only during verify."""
+        from .ua_gec_mutations import component_mutations
+
+        return component_mutations(ctx, candidates, gate)
 
     def __init__(self, module):
         self.module = module
@@ -43,7 +50,8 @@ class UaGecComponent:
             ctx.reader.files["ua-gec"] = store
         require(store.root == Path(root).resolve(), "component_input")
         compatibility = [row for row in ctx.request["compatibility"] if row["store"] == "ua-gec"]
-        require(compatibility == store.compatibility(), "source_compatibility")
+        expected = ComponentContext(ctx.reader, {"compatibility": store.compatibility()}).request["compatibility"]
+        require(tuple(compatibility) == expected, "source_compatibility")
         query = self.module.spec()["unit_query"]
         for row in ctx.reader.all_rows("ua-gec", "corpus"):
             if row["split"] != query["split"] or row["layer"] != query["layer"]:

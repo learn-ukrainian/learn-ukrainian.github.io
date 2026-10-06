@@ -12,6 +12,8 @@ import importlib.util
 import math
 import re
 import sys
+import unicodedata
+from bisect import bisect_left
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -71,13 +73,11 @@ def line_spans(raw: str, sentences: list[str]) -> list[tuple[int, int]]:
     return result
 
 
-def sentence_edits(original: str, sentences: list[str], annotations) -> tuple[list[list[str]], set[int]]:
-    """Bind character edits to sentences; ambiguous boundaries withhold both.
+def sentence_spans(original: str, sentences: list[str]) -> list[tuple[int, int]]:
+    """Map official sentence characters back to the complete annotated source.
 
-    Sentence splitting may change whitespace. Matching therefore compares only
-    non-whitespace characters in order and requires complete document coverage.
-    This normalization is exclusively an alignment check, never an export
-    transform. No fuzzy matching or ERRANT-generated corrections are used.
+    Upstream splitting changes whitespace; no non-whitespace character may
+    change or disappear. These offsets never change exported file bytes.
     """
     positions = [m.start() for m in re.finditer(r"\S", original)]
     compact = "".join(original[p] for p in positions)
@@ -94,6 +94,12 @@ def sentence_edits(original: str, sentences: list[str], annotations) -> tuple[li
         spans.append((positions[offset], positions[offset + len(text) - 1] + 1))
         offset += len(text)
     require(offset == len(compact), "annotation_sentence_binding")
+    return spans
+
+
+def sentence_edits(original: str, sentences: list[str], annotations) -> tuple[list[list[str]], set[int]]:
+    """Bind character edits to sentences; ambiguous boundaries withhold both."""
+    spans = sentence_spans(original, sentences)
     edits = [[] for _ in sentences]
     ambiguous = set()
     for annotation in annotations:
@@ -121,6 +127,98 @@ def sentence_edits(original: str, sentences: list[str], annotations) -> tuple[li
         for i in owners:
             edits[i].append(tag)
     return edits, ambiguous
+
+
+def replay_alignment(original: str, sentences: list[str], targets: list[str], annotations) -> list[str | None]:
+    """Authenticate each target against only this annotator's sentence edits.
+
+    Compare with upstream whitespace collapsed, never letters or punctuation
+    stripped. A gap-only punctuation edit may attach to either neighbour; only
+    that edit's literal replacement can be added at the corresponding edge.
+    Edits crossing sentence characters or non-punctuation gap edits are
+    boundary_ambiguous. Targets shifted by deletion are unaligned even if file
+    line counts agree. No replay text is exported.
+    """
+    spans = sentence_spans(original, sentences)
+    _, ambiguous = sentence_edits(original, sentences, annotations)
+    reasons = []
+    for i, (lo, hi) in enumerate(spans):
+        local, gaps = [], []
+        unsafe = False
+        for ann in annotations:
+            if lo <= ann.start <= ann.end <= hi:
+                local.append(ann)
+            elif i in ambiguous:
+                left = spans[i - 1][1] if i else 0
+                right = spans[i + 1][0] if i + 1 < len(spans) else len(original)
+                before = i > 0 and left <= ann.start <= ann.end <= lo
+                after = i + 1 < len(spans) and hi <= ann.start <= ann.end <= right
+                if not (before or after):
+                    # Ignore remote edits, but refuse an overlapping boundary.
+                    unsafe |= ann.start < hi and ann.end > lo
+                    continue
+                replacement = ann.suggestions[0] if ann.suggestions else original[ann.start : ann.end]
+
+                def punct(text):
+                    return all(c.isspace() or unicodedata.category(c).startswith("P") for c in text)
+
+                if not punct(original[ann.start : ann.end]) or not punct(replacement):
+                    unsafe = True
+                else:
+                    gaps.append((before, replacement))
+        if unsafe:
+            reasons.append("boundary_ambiguous")
+            continue
+        # Project annotation offsets onto the learner line's character map.
+        # Keep its whitespace unless an actual annotation replaces that region.
+        source = sentences[i]
+        original_positions = [m.start() + lo for m in re.finditer(r"\S", original[lo:hi])]
+        learner_positions = [m.start() for m in re.finditer(r"\S", source)]
+
+        def boundary(
+            position,
+            *,
+            original_positions=original_positions,
+            learner_positions=learner_positions,
+        ):
+            index = bisect_left(original_positions, position)
+            if index < len(original_positions) and original_positions[index] == position:
+                return learner_positions[index]
+            if index and position == original_positions[index - 1] + 1:
+                return learner_positions[index - 1] + 1
+            if 0 < index < len(original_positions):
+                original_gap = original_positions[index] - original_positions[index - 1]
+                learner_gap = learner_positions[index] - learner_positions[index - 1]
+                if original_gap == learner_gap:
+                    return learner_positions[index - 1] + position - original_positions[index - 1]
+                # Splitting collapsed a whitespace run; its interior offsets
+                # have no unique image on the learner line. Never choose one.
+                return None
+            return 0 if not original_positions else None
+
+        text, cursor = [], 0
+        mapped_ambiguous = False
+        for ann in sorted(local, key=lambda a: (a.start, a.end)):
+            start = boundary(ann.start)
+            end = start if ann.start == ann.end else boundary(ann.end)
+            if start is None or end is None or start < cursor:
+                mapped_ambiguous = True
+                break
+            text.append(source[cursor:start])
+            # The official reader unescapes newline suggestions after replay.
+            text.append(ann.suggestions[0].replace("\\n", "\n") if ann.suggestions else source[start:end])
+            cursor = end
+        if mapped_ambiguous:
+            reasons.append("boundary_ambiguous")
+            continue
+        text.append(source[cursor:])
+        variants = {"".join(text)}
+        for before, replacement in gaps:
+            variants |= {replacement + value if before else value + replacement for value in variants}
+        target = " ".join(targets[i].split()) if i < len(targets) else None
+        match = target is not None and any(" ".join(value.split()) == target for value in variants)
+        reasons.append(None if match else "boundary_ambiguous" if gaps else "unaligned")
+    return reasons
 
 
 @dataclass(frozen=True)
@@ -222,8 +320,9 @@ class UaGecFileStore:
         source_sentences, target_sentences = document.source_sentences, document.target_sentences
         source_spans = line_spans(source, source_sentences)
         target_spans = line_spans(target, target_sentences)
-        edits, ambiguous = sentence_edits(document.source, source_sentences, document.annotated.get_annotations())
-        aligned = len(source_sentences) == len(target_sentences)
+        annotations = document.annotated.get_annotations()
+        edits, ambiguous = sentence_edits(document.source, source_sentences, annotations)
+        alignment = replay_alignment(document.source, source_sentences, target_sentences, annotations)
         for i, sentence in enumerate(source_sentences):
             key = f"file={annotation_file};sentence={i}"
             row = {
@@ -242,11 +341,12 @@ class UaGecFileStore:
                 "source": source,
                 "target": target,
                 "source_sentence": sentence,
-                "target_sentence": target_sentences[i] if aligned else "",
+                "target_sentence": target_sentences[i] if i < len(target_sentences) else "",
                 "source_span": source_spans[i],
-                "target_span": target_spans[i] if aligned else None,
+                "target_span": target_spans[i] if i < len(target_spans) else None,
                 "edits": edits[i],
-                "aligned": aligned,
+                "aligned": alignment[i] is None,
+                "alignment_reason": alignment[i],
                 "edit_aligned": i not in ambiguous,
             }
             require((table, key) not in self._rows, "duplicate_unit_query")
