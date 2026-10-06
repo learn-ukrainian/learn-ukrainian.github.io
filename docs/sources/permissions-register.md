@@ -13,7 +13,9 @@ content. IP is the operator's responsibility (decisions below).
   the YAML; if they differ, the YAML wins.
 - **Spec:** #8979. This is the project's own record, not legal advice.
 
-## Operator decisions (2026-09-27, binding)
+**Register date:** 2026-10-06. Schema version: 2.
+
+## Operator decisions (binding)
 
 Recorded on [#8979](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8979):
 
@@ -21,6 +23,10 @@ Recorded on [#8979](https://github.com/learn-ukrainian/learn-ukrainian.github.io
 2. The teacher agrees to her material being used (site and dataset). (`d2_teacher_consent`)
 3. Takedown requests come as GitHub issues; no contact email. (`d3_takedown_via_issues`)
 4. No outreach: nothing is sent to rights holders; the outreach drafts are dropped. (`d4_no_outreach`)
+
+5. Plan v3.5.0 O1: verbatim use of in-copyright sources: YES, as the operator's IP responsibility. (2026-10-03; `o1_verbatim_use`; [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321))
+6. Plan v3.5.0 O3: school and university textbooks are used as record sources (component C9). (2026-10-03; `o3_textbooks_used`; [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321))
+7. Permissions for ULIF and СУМ-20 are being sought with help from Ukrainian experts. ULIF gave verbal permission in 2026-10, per the operator; written confirmation pending. This updates the practice described in d4_no_outreach only for these permissions. (2026-10-06; `d5_permissions_sought`; [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321))
 
 ## Removal on request
 
@@ -37,6 +43,7 @@ the site, the same fields in the dataset export, and the stored copies listed un
 | Fields | What we use from it. |
 | Appears in | `internal` (private stores and tooling), `site` (learner pages and their public data files), `dataset` (the open dataset export). |
 | Where from | Origin URL(s) and the retrieval date of our copy; when no date was recorded, the entry says so and gives the nearest evidence. |
+| Permission status | Recorded permission status; scope and pending confirmation appear in the permission note. Not a publication gate. |
 | Terms as found | Licence name, quoted terms with URL and read date; for openly licensed sources the licence text is quoted verbatim. |
 | Citation | The citation form we use and the label learner pages show. |
 
@@ -64,23 +71,23 @@ term of protection (Art. 31) and public domain (Art. 32(3)).
 | `goroh` | Горох (operator not named on the site) | internal, site, dataset | No reuse licence; ULIF names goroh.pp.ua as an unlawful СУМ copy | Горох (переклад) |
 | `mphdict` | uSofTrod (LinguisticAndInformationSystems/mphdict) | internal, site, dataset | ODbL 1.0 (database) / DbCL 1.0 (contents) as far as uSofTrod holds rights; ЕСУМ text rights stay with the Інститут мовознавства | mphdict (ODbL/DbCL): Словник синонімів української мови та Орфографічний словник |
 | `balla` | Author М. І. Балла and publishers (Освіта 1996; Чумацький Шлях 2007); digital copy via the bakustarver aggregator | internal, site, dataset | All rights reserved (in-print modern dictionary; editions of 1996 and 2007). | Українсько-англійський словник (М. Балла) |
-| `puls` | Школа української мови та культури УКУ (О. Синчак, В. Старко, М. Бурак, М. Свистун та ін.) | internal, site, dataset | All rights reserved | PULS CEFR |
+| `puls` | Школа української мови та культури УКУ (О. Синчак, В. Старко, М. Бурак, М. Свистун та ін.) | internal, site, dataset | CC BY-NC-SA 4.0 | PULS CEFR |
 | `ubertext_freq` | lang-uk (Дмитро Чаплинський) | internal | Not found | — |
 | `r2u_e2u` | Андрій Рисін, Василь Старко, Ю. Марченко, О. Телемко та ін. (constituent dictionaries by their own authors) | internal, site, dataset | All rights reserved (© r2u.org.ua; per-dictionary author permissions) | e2u.org.ua (Rysin, Starko et al.) |
 | `wikidata` | Wikidata contributors / Wikimedia Foundation | internal, site, dataset | CC0 1.0 | Wikidata |
-| `ukrainian_word_stress` | lang-uk | internal, site, dataset | MIT | ukrainian-word-stress |
+| `ukrainian_word_stress` | lang-uk (code); Український мовно-інформаційний фонд НАН України (ULIF, underlying stress data) | internal, site, dataset | Code: MIT; data: derived from ULIF «Словники України», follows ULIF rights; no licence in the stress data repository | ukrainian-word-stress |
 | `teacher_materials` | The operator's Ukrainian teacher (author); private DOCX supplied by the operator | internal, site, dataset | No licence; the teacher agrees to use on the site and in the dataset (operator decision 2, 2026-09-27). | — |
 | `course_authored` | Learn Ukrainian project (maintainer Krisztian Koos) | internal, site, dataset | CC BY-SA 4.0 (project content) | Learn Ukrainian |
 | `wikipedia` | Wikipedia contributors / Wikimedia Foundation | internal, site, dataset | CC BY-SA 4.0 (and GFDL) | Вікіпедія |
 | `esum` | Інститут мовознавства ім. О. О. Потебні НАН України (publisher Наукова думка); co-authored by many compilers | internal, site, dataset | In copyright (co-authored, vol. 6 published 2012 — Art. 31(4)); rights holder not confirmed (Institute and/or Наукова думка) | «Етимологічний словник української мови» (ЕСУМ, Ін-т мовознавства ім. О. О. Потебні НАН України; mphdict ODbL/DbCL) |
-| `textbooks` | Individual authors and publishers (e.g. Заболотний, Авраменко, Вашуленко, Карман, Літвінова, Глазова); PDFs via pidruchnyk.com.ua and lib.imzo.gov.ua | internal, site | In copyright (authors/publishers); free public access by law, no reuse licence | — |
+| `textbooks` | Individual authors and publishers; PDFs via pidruchnyk.com.ua and lib.imzo.gov.ua | internal, site, dataset | In copyright (authors/publishers); free public access by law, no reuse licence | — |
 | `frazeolohichnyi` | Compilers (Білоноженко В. М. та ін.) / publisher Наукова думка — rights holder not confirmed | internal, site, dataset | In copyright (co-authored, 2003); no licence found | Фразеологічний словник української мови |
 | `antonenko_style_guide` | Heirs of Борис Антоненко-Давидович (d. 9 May 1984) — no contact found | internal, site, dataset | In copyright until 31 Dec 2054 (Art. 31(2)); rights with the heirs | «Як ми говоримо» Антоненка-Давидовича |
 | `ulp_private` | Anna Ohoiko (Ukrainian Lessons) | internal | All rights reserved (Anna Ohoiko) | — |
 
 ## Open questions
 
-1. The open dataset's own licence. VESUM data is CC BY-NC-SA 4.0 and CC allows adaptations of it only under BY-NC-SA 4.0 or later; CC BY-SA inputs (Вікісловник, Kaikki, dmklinger, Ukrajinet, Вікіпедія) must stay BY-SA. Recommendation on #8979: CC BY-NC-SA 4.0 for the core, BY-SA-derived fields in separate CC BY-SA 4.0 files. Not decided.
+1. The open dataset's own licence. VESUM data is CC BY-NC-SA 4.0 and CC allows adaptations of it only under BY-NC-SA 4.0 or later; CC BY-SA inputs (Вікісловник, Kaikki, dmklinger, Ukrajinet, Вікіпедія) must stay BY-SA. Recommendation on #8979: CC BY-NC-SA 4.0 for the core, BY-SA-derived fields in separate CC BY-SA 4.0 files. Not decided. O1/O3 (2026-10-03, plan v3.5.0 on #6321) decided use, not the dataset's licence; plan step E6 (dataset licence choice) remains an operator decision.
 2. Sources shown in the Atlas with no entry here yet (labels from scripts/lexicon/source_attribution.py, counted in atlas.db public-route payloads of the 2026-09-11 manifest, published as the atlas-manifest release asset; counted 2026-09-28): Великий тлумачний словник сучасної української мови (ВТС, 8,422), Словник синонімів С. Караванського (2,727), Орфографічний словник української мови (5,534), Правописний словник Голоскевича (3,396), Орфоепічний словник української мови (1,912), Приповідки або українсько-народня філософія (555), МійКлас relation pairs (704), «Уроки державної мови» з газети «Хрещатик» (27), Словник чужослів Павла Штепи (33), Культура слова (3), and the literary corpus (literary_texts, e.g. izbornyk.org.ua, ukrlib.com.ua). Each needs its own entry.
 
 Per-source open questions are listed in each entry below.
@@ -98,6 +105,7 @@ Correcting those texts is #9000.
 
 ### «Словники України» online (DictUA) — paradigm, synonym, antonym and phraseology tabs — `ulif`
 
+- **Permission status:** `verbal-granted-written-pending` — ULIF gave verbal permission (2026-10, per the operator); written confirmation pending.
 - **Organisation:** Український мовно-інформаційний фонд НАН України (УМІФ / ULIF)
 - **Role:** Stress, paradigms, grammar labels, homonym/sense hints, synonyms, antonyms and phraseology for word cards; the harvest is #8400.
 - **Fields:** corroboration_reference, headword, stress, grammatical_label, paradigm, homonym_sense_gloss, synonym_groups, antonym_pairs, phraseology
@@ -117,6 +125,7 @@ Correcting those texts is #9000.
 
 ### «Словник української мови у 20 томах» (СУМ-20), official electronic edition — `sum20`
 
+- **Permission status:** `pending-expert-contact` — Permission is being sought; the operator is collecting it personally with help from Ukrainian experts.
 - **Organisation:** Український мовно-інформаційний фонд НАН України (publisher, © of sum20ua.com) with the Інститут мовознавства ім. О. О. Потебні НАН України (co-compiler). Not the Інститут української мови, as the #8979 brief assumed — see the quotes.
 - **Role:** Modern Ukrainian definitions, sense structure, stressed headwords and citations for cards.
 - **Fields:** definition_text, sense_structure, stressed_headword, literary_citations
@@ -137,6 +146,7 @@ Correcting those texts is #9000.
 
 ### ВЕСУМ — Великий електронний словник української мови (dict_uk) — `vesum`
 
+- **Permission status:** `open-licence`
 - **Organisation:** Андрій Рисін, Василь Старко, команда БрУК (brown-uk)
 - **Role:** Lemmas, all word forms, POS and grammatical tags — the open backbone of every card.
 - **Fields:** lemma, word_forms, pos, morph_tags, markers
@@ -184,6 +194,7 @@ Correcting those texts is #9000.
 
 ### slovnyk.me (aggregator of dictionaries incl. СУМ-11 and СУМ-20 copies) — `slovnyk_me`
 
+- **Permission status:** `none`
 - **Organisation:** Slovnyk.me (operator not named on the site)
 - **Role:** Verification, and the retrieval route for several dictionaries (СУМ-20, ВТС, synonyms, phraseology, proverbs, Балла, Штепа, orthography, orthoepy, Голоскевич, Антоненко-Давидович) shown under the underlying work's own label.
 - **Fields:** verification_outcome, definition_text, usage_essay, en_gloss_ukreng
@@ -200,6 +211,7 @@ Correcting those texts is #9000.
 
 ### «Словник синонімів української мови» as served by slovnyk.me (dictionary slug `synonyms`) — edition not established — `synonyms_dictionary`
 
+- **Permission status:** `unknown`
 - **Organisation:** Not established. slovnyk.me names no author, editor, publisher or year for this dictionary in any record we hold. The title matches the two-volume «Словник синонімів української мови» (1999–2000) that ULIF's system description names as the base of its own synonym module (docs/research/UKRAINIAN_DATA_FOUNDRY_LANGUAGE_SPAN_AND_LEXICAL_EVIDENCE.md § ULIF evidence, citing https://lcorp.ulif.org.ua/pdf/Pro_Systemu.pdf), and a 2026-06-11 brief lists that work as «А. А. Бурячок та ін., 2 т., 1999–2000» (docs/dispatch-briefs/2026-06-11-ua-lexicon-source-research.md, a seed list to verify, not a verification). Nothing we hold ties slovnyk.me's copy to that edition.
 - **Role:** Synonym chips and synonym groups (synsets with sense glosses) on Atlas word cards.
 - **Fields:** synonym_groups, sense_gloss
@@ -215,6 +227,7 @@ Correcting those texts is #9000.
 
 ### Грінченко Б. Д. «Словарь української мови» (1907–1909) — `grinchenko`
 
+- **Permission status:** `public-domain` — The digitiser's database right is unknown.
 - **Organisation:** Public domain (compiler Борис Грінченко, d. 1910). Our digital copy comes from the bakustarver/ukr-dictionaries-list-opensource aggregator; its digitiser is not named.
 - **Role:** Pre-Soviet attestation of words and senses.
 - **Fields:** headword, entry_text
@@ -236,6 +249,7 @@ Correcting those texts is #9000.
 
 ### «Словник української мови» в 11 томах (СУМ-11, 1970–1980) — `sum11`
 
+- **Permission status:** `none`
 - **Organisation:** Інститут мовознавства ім. О. О. Потебні НАН України (compiled by over 50 lexicographers; official electronic edition at inmo.org.ua)
 - **Role:** Russification evidence only (see usage_restriction).
 - **Usage restriction:** Rule #M-6 (operator 2026-09-27): СУМ-11 is used ONLY as evidence of russification — what it imposed, shown red-flagged beside the modern Ukrainian norm with both sources cited. It is never modern evidence: never a modern meaning, form, example or practice answer.
@@ -258,6 +272,7 @@ Correcting those texts is #9000.
 
 ### ГРАК — Генеральний регіонально анотований корпус української мови — `grac`
 
+- **Permission status:** `none`
 - **Organisation:** Марія Шведова, Ruprecht von Waldenfels, Сергій Яригін, Андрій Рисін, Василь Старко та ін. (Kyiv, Lviv, Jena)
 - **Role:** Modern example sentences and frequency for level gating.
 - **Fields:** example_sentence, frequency_count, frequency_tier
@@ -274,6 +289,7 @@ Correcting those texts is #9000.
 
 ### UA-GEC — Ukrainian grammatical error correction corpus — `ua_gec`
 
+- **Permission status:** `open-licence`
 - **Organisation:** Grammarly (Syvokon, Nahorna, Kuchmiichuk, Osidach)
 - **Role:** Error→correction pairs (calques, case, gender) for common-mistake notes.
 - **Fields:** error_text, correction_text, error_type
@@ -288,6 +304,7 @@ Correcting those texts is #9000.
 
 ### Ukrajinet (Ukrainian WordNet) — `ukrajinet`
 
+- **Permission status:** `open-licence`
 - **Organisation:** Melanie Siegel, Maksym Vakulenko (Hochschule Darmstadt)
 - **Role:** Synonym candidates (quality caveat — largely auto-translated from Open English WordNet).
 - **Fields:** synset_members
@@ -303,6 +320,7 @@ Correcting those texts is #9000.
 
 ### Вікісловник (Ukrainian Wiktionary) dumps — `wiktionary`
 
+- **Permission status:** `open-licence`
 - **Organisation:** Wiktionary contributors / Wikimedia Foundation
 - **Role:** Definitions, synonyms, antonyms, etymology hints.
 - **Fields:** definition_text, synonyms, antonyms, etymology_text
@@ -320,6 +338,7 @@ Correcting those texts is #9000.
 
 ### Kaikki.org Wiktextract extract (English Wiktionary, Ukrainian entries) — `kaikki`
 
+- **Permission status:** `open-licence`
 - **Organisation:** Tatu Ylonen (Wiktextract) / English Wiktionary contributors
 - **Role:** Second English-gloss source, IPA and fallback etymology (commit ca2c3a50e1).
 - **Fields:** en_gloss, ipa, etymology_text
@@ -335,6 +354,7 @@ Correcting those texts is #9000.
 
 ### dmklinger/ukrainian dictionary (UK→EN) — `dmklinger`
 
+- **Permission status:** `open-licence`
 - **Organisation:** GitHub user dmklinger
 - **Role:** First-choice English gloss for Atlas and lesson evidence.
 - **Fields:** en_gloss
@@ -346,13 +366,13 @@ Correcting those texts is #9000.
 - **Terms as found:**
   - «This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.» *(licence text, verbatim)* (https://github.com/dmklinger/ukrainian/blob/main/license.txt, read 2026-09-27)
   - «All data scraped from wiktionary and [dbnary]… Forms filled in from [here](https://lcorp.ulif.org.ua/dictua/dictua.aspx)» — Glosses come from Wiktionary/DBnary; word forms from ULIF (we do not use the forms) (https://github.com/dmklinger/ukrainian, read 2026-09-27)
+  - «Dbnary is derived from Wiktionary and is distributed under Creative Commons Attribution-ShareAlike 3.0» (https://kaiko.getalp.org/about-dbnary/, read 2026-10-06)
 - **Citation:** dmklinger/ukrainian (from Wiktionary and DBnary), https://github.com/dmklinger/ukrainian, CC BY-SA 3.0. Label shown: dmklinger.
 - **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the stored copies listed in stored_in (deleted only with the operator's authorisation).
-- **Open questions:**
-  - DBnary's own licence was not checked.
 
 ### Горох (goroh.pp.ua) — `goroh`
 
+- **Permission status:** `none`
 - **Organisation:** Горох (operator not named on the site)
 - **Role:** Live English-gloss fallback and a small etymology stub table.
 - **Fields:** en_gloss, etymology_text
@@ -370,6 +390,7 @@ Correcting those texts is #9000.
 
 ### mphdict — «Цифрові лексикографічні системи української мови» (etym.db, synsets_ua.db) — `mphdict`
 
+- **Permission status:** `open-licence` — The ODbL/DbCL grant covers the database structure; it does not license the ЕСУМ text inside it.
 - **Organisation:** uSofTrod (LinguisticAndInformationSystems/mphdict)
 - **Role:** Atlas etymology (ЕСУМ-derived database) and synonym chips (Словник синонімів).
 - **Fields:** etymology_text, synonym_groups
@@ -388,6 +409,7 @@ Correcting those texts is #9000.
 
 ### Балла М. І. «Англо-український словник» — `balla`
 
+- **Permission status:** `none`
 - **Organisation:** Author М. І. Балла and publishers (Освіта 1996; Чумацький Шлях 2007); digital copy via the bakustarver aggregator
 - **Role:** English-gloss fallback (reverse lookup) and EN→UK translation help.
 - **Fields:** en_uk_translation
@@ -403,22 +425,26 @@ Correcting those texts is #9000.
 
 ### ПУЛЬС — Профіль української лексики — `puls`
 
+- **Permission status:** `open-licence`
 - **Organisation:** Школа української мови та культури УКУ (О. Синчак, В. Старко, М. Бурак, М. Свистун та ін.)
 - **Role:** CEFR level per word for level gating.
 - **Fields:** cefr_level
 - **Appears in:** internal, site, dataset — 4,048 public payloads carry the PULS CEFR label (atlas.db public-route payloads of the 2026-09-11 manifest, published as the atlas-manifest release asset; counted 2026-09-28).
 - **Stored in:** data/sources.db puls_cefr, data/puls/entries.jsonl (scraped by scripts/rag/scrape_puls.py)
 - **Where from:** https://puls.peremova.org/ · Retrieval date not recorded; scripts/rag/scrape_puls.py was added in a905c72dfd (2026-03-24).
-- **Licence as found:** All rights reserved. Share-alike: not stated. Non-commercial: not stated.
+- **Licence as found:** CC BY-NC-SA 4.0. Share-alike: yes. Non-commercial: yes.
+  - For commercial use, contact the PULS team, School of Ukrainian Language and Culture at UCU.
+  - The homepage footer reads «© 2026 ПУЛЬС.» and links to the terms page, which grants CC BY-NC-SA 4.0 for the data.
 - **Terms as found:**
-  - «© 2026 Пульс. Всі права захищено.» (https://puls.peremova.org/, read 2026-09-27)
+  - «PULS data are distributed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).» *(licence text, verbatim)* (https://puls.peremova.org/terms, read 2026-10-06)
+  - «© 2026 ПУЛЬС.» (https://puls.peremova.org/, read 2026-10-06)
   - «Просимо посилатися на ПУЛЬС: Профіль української лексики (ПУЛЬС) / О. Синчак, В. Старко, М. Бурак, М. Свистун та ін. Львів: Школа української мови та культури УКУ, 2026. — puls.peremova.org» (https://puls.peremova.org/, read 2026-09-27)
-- **Also searched:** https://jakelawrence.xyz/research/ukrainian-frequency (secondhand "by permission, CC BY-NC-SA 4.0" for another project — not a grant to us)
 - **Citation:** PULS citation above. Label shown: PULS CEFR.
 - **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the stored copies listed in stored_in (deleted only with the operator's authorisation).
 
 ### UberText 2.0 frequency dictionary (ubertext_freq.csv.xz) — `ubertext_freq`
 
+- **Permission status:** `unknown`
 - **Organisation:** lang-uk (Дмитро Чаплинський)
 - **Role:** Frequency for level gating.
 - **Fields:** frequency_count, frequency_tier
@@ -434,6 +460,7 @@ Correcting those texts is #9000.
 
 ### r2u.org.ua / e2u.org.ua bilingual dictionary portals — `r2u_e2u`
 
+- **Permission status:** `none`
 - **Organisation:** Андрій Рисін, Василь Старко, Ю. Марченко, О. Телемко та ін. (constituent dictionaries by their own authors)
 - **Role:** Live RU/EN↔UK lookups and a short English-gloss fallback (e2u).
 - **Fields:** en_gloss
@@ -450,6 +477,7 @@ Correcting those texts is #9000.
 
 ### Wikidata (lexemes and items) — `wikidata`
 
+- **Permission status:** `open-licence`
 - **Organisation:** Wikidata contributors / Wikimedia Foundation
 - **Role:** English-gloss fallback.
 - **Fields:** en_gloss
@@ -464,23 +492,27 @@ Correcting those texts is #9000.
 
 ### lang-uk/ukrainian-word-stress (stress dictionary trie) — `ukrainian_word_stress`
 
-- **Organisation:** lang-uk
-- **Role:** Stress marks on forms where VESUM/ULIF are silent.
+- **Permission status:** `verbal-granted-written-pending` — The data is ULIF-derived and follows the ULIF permission: verbal permission in 2026-10, per the operator; written confirmation pending. lang-uk's MIT licence covers only the code.
+- **Organisation:** lang-uk (code); Український мовно-інформаційний фонд НАН України (ULIF, underlying stress data)
+- **Role:** ULIF-derived stress marks on forms via the bundled lang-uk trie.
 - **Fields:** stress
 - **Appears in:** internal, site, dataset — 19,613 public payloads carry the ukrainian-word-stress label (atlas.db public-route payloads of the 2026-09-11 manifest, published as the atlas-manifest release asset; counted 2026-09-28).
 - **Stored in:** installed Python package (bundled trie)
-- **Where from:** https://github.com/lang-uk/ukrainian-word-stress · Installed Python package; the version in use is the one pinned by the project environment.
-- **Licence as found:** MIT (`MIT`). Share-alike: no. Non-commercial: no.
+- **Where from:** https://github.com/lang-uk/ukrainian-word-stress; https://github.com/lang-uk/ukrainian-word-stress-dictionary; https://lcorp.ulif.org.ua/dictua/ · Installed Python package; the version in use is the one pinned by the project environment. The operator confirms that the project's stress data comes from the ULIF dictionary; upstream CONTRIBUTING.md and the data repository README document ULIF provenance.
+- **Licence as found:** Code: MIT; data: derived from ULIF «Словники України», follows ULIF rights; no licence in the stress data repository. Share-alike: not stated. Non-commercial: not stated.
+  - lang-uk's MIT licence covers only the code, not the ULIF-derived stress data.
+  - The data's rights and permission follow ULIF; verbal permission in 2026-10, per the operator; written confirmation pending.
 - **Terms as found:**
-  - «MIT License Copyright (c) 2022 lang-uk» *(licence text, verbatim)* (https://github.com/lang-uk/ukrainian-word-stress/blob/main/LICENSE, read 2026-09-27)
-- **Also searched:** README gives no origin for the bundled stress dictionary
-- **Citation:** ukrainian-word-stress (lang-uk), MIT licence notice. Label shown: ukrainian-word-stress.
+  - «MIT License Copyright (c) 2022 lang-uk» *(licence text, verbatim)* — MIT applies to lang-uk's code only. (https://github.com/lang-uk/ukrainian-word-stress/blob/main/LICENSE, read 2026-10-06)
+  - «The stress dictionary shipped with this package (`ukrainian_word_stress/data/stress.trie`) covers about 2.9 million word forms derived from the "Dictionaries of Ukraine" (https://lcorp.ulif.org.ua/dictua/) by ULIF.» (https://github.com/lang-uk/ukrainian-word-stress/blob/main/CONTRIBUTING.md, read 2026-10-06)
+  - «Словник наголосів сформовано на основі "Словників України" Українського мовно-інформаційного фонду НАН України» (https://github.com/lang-uk/ukrainian-word-stress-dictionary, read 2026-10-06)
+- **Also searched:** https://github.com/lang-uk/ukrainian-word-stress-dictionary (no licence found; licence audit 2026-10-06)
+- **Citation:** ULIF «Словники України» stress data, via ukrainian-word-stress / ukrainian-word-stress-dictionary (lang-uk); MIT notice for the code only. Label shown: ukrainian-word-stress.
 - **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the stored copies listed in stored_in (deleted only with the operator's authorisation).
-- **Open questions:**
-  - Where does the bundled stress data come from? If from a non-open dictionary, the MIT grant may not reach it.
 
 ### The operator's teacher's materials (Combined Master Vocabulary Table, lesson texts) — `teacher_materials`
 
+- **Permission status:** `granted` — Consent recorded in operator decision d2_teacher_consent; the licence is not yet named.
 - **Organisation:** The operator's Ukrainian teacher (author); private DOCX supplied by the operator
 - **Role:** Teacher vocabulary deck, the teacher's English meanings, reviewed lesson sentences for cloze.
 - **Fields:** vocabulary_list, en_meaning_teacher, lesson_sentence
@@ -500,6 +532,7 @@ Correcting those texts is #9000.
 
 ### Learn Ukrainian project — course-authored glosses, classifications and curation overlay — `course_authored`
 
+- **Permission status:** `open-licence`
 - **Organisation:** Learn Ukrainian project (maintainer Krisztian Koos)
 - **Role:** Headline English glosses from curriculum vocabulary files, CEFR/course usage, curation decisions, russification commentary.
 - **Fields:** en_gloss_course, course_usage, curation_overlay, russification_commentary
@@ -515,6 +548,7 @@ Correcting those texts is #9000.
 
 ### Українська Вікіпедія (cached articles) — `wikipedia`
 
+- **Permission status:** `open-licence`
 - **Organisation:** Wikipedia contributors / Wikimedia Foundation
 - **Role:** Background for encyclopedic words (listed in the current dataset attribution).
 - **Fields:** article_extract
@@ -529,6 +563,7 @@ Correcting those texts is #9000.
 
 ### «Етимологічний словник української мови» (ЕСУМ), vols 1–6 (1982–2012) — `esum`
 
+- **Permission status:** `none`
 - **Organisation:** Інститут мовознавства ім. О. О. Потебні НАН України (publisher Наукова думка); co-authored by many compilers
 - **Role:** Etymology notes and cognate forms on cards.
 - **Fields:** etymology_text, cognate_forms
@@ -549,10 +584,11 @@ Correcting those texts is #9000.
 
 ### Ukrainian school textbooks (grades 1–11) in sources.db — `textbooks`
 
+- **Permission status:** `none`
 - **Organisation:** Individual authors and publishers (e.g. Заболотний, Авраменко, Вашуленко, Карман, Літвінова, Глазова); PDFs via pidruchnyk.com.ua and lib.imzo.gov.ua
 - **Role:** Short modern example sentences (class B — short quotations only,
 - **Fields:** example_sentence, textbook_chunk
-- **Appears in:** internal, site — Short attributed example sentences (practice, a few Atlas attestations); chunks stay internal.
+- **Appears in:** internal, site, dataset — Short attributed example sentences (practice, a few Atlas attestations); O3 (2026-10-03, plan v3.5.0 on #6321) makes textbook sections component C9 of the dataset, as the operator's IP responsibility; no reuse licence.
 - **Stored in:** data/sources.db textbooks (public rows), textbook_sections; bulk root textbook_chunks/grade-*
 - **Where from:** https://lib.imzo.gov.ua/; https://pidruchnyk.com.ua/ · Retrieval dates are not stored per textbook; each row records its source_file.
 - **Licence as found:** In copyright (authors/publishers); free public access by law, no reuse licence. Share-alike: not stated. Non-commercial: not stated.
@@ -569,6 +605,7 @@ Correcting those texts is #9000.
 
 ### «Український фразеологічний словник» (aggregator copy; probably «Словник фразеологізмів української мови», Наукова думка 2003) — `frazeolohichnyi`
 
+- **Permission status:** `none`
 - **Organisation:** Compilers (Білоноженко В. М. та ін.) / publisher Наукова думка — rights holder not confirmed
 - **Role:** Idiom verification; ULIF phraseology is the planned idiom source (#8985).
 - **Fields:** idiom, idiom_definition
@@ -584,6 +621,7 @@ Correcting those texts is #9000.
 
 ### Антоненко-Давидович Б. «Як ми говоримо» — `antonenko_style_guide`
 
+- **Permission status:** `none`
 - **Organisation:** Heirs of Борис Антоненко-Давидович (d. 9 May 1984) — no contact found
 - **Role:** Authority on russianisms and calques for correction notes.
 - **Fields:** style_rule_quote, style_entry_text
@@ -603,6 +641,7 @@ Correcting those texts is #9000.
 
 ### Ukrainian Lessons Podcast notes and Anna Ohoiko's books (private references) — `ulp_private`
 
+- **Permission status:** `none`
 - **Organisation:** Anna Ohoiko (Ukrainian Lessons)
 - **Role:** Private reference for pedagogy only; never quoted and never a card field source.
 - **Fields:** reference_text
