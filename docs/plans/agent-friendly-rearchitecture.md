@@ -1,6 +1,6 @@
 # Agent-friendly rearchitecture — counted gaps against the approved delivery design
 
-Status: landing on operator direction (2026-10-06); supersedes PR #9803; the review of record belongs on the landing pull request; census figures remain frozen at `3e4bdb3dd9`. This document does not implement anything. It extends the approved design in [docs/plans/agent-friendly-delivery.md](agent-friendly-delivery.md) and the baseline in [docs/design/agent-friendly-delivery-baseline.md](../design/agent-friendly-delivery-baseline.md).
+Status: plan only; it implements nothing. On operator direction (2026-10-06) this text is the version of the PR #9803 proposal to keep. Census figures remain frozen at `3e4bdb3dd9`. This document does not implement anything. It extends the approved design in [docs/plans/agent-friendly-delivery.md](agent-friendly-delivery.md) and the baseline in [docs/design/agent-friendly-delivery-baseline.md](../design/agent-friendly-delivery-baseline.md).
 
 Frozen git head for every count below: `3e4bdb3dd9ecc57d1b519050bf64fa7a0ed9b737`. Machine-readable snapshot: [agent-friendly-rearchitecture-evidence.json](agent-friendly-rearchitecture-evidence.json). Refresh the git half with:
 
