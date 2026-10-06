@@ -2,8 +2,9 @@
 
 Use --check before installation; use --apply after the branch has merged.
 --enable starts the timer only when paired with --apply. The unit directory
-and unit files are never followed through symlinks: a symlinked directory or
-unit file is refused, and units are replaced by rename within the directory.
+and unit files are never followed through symlinks: a symlinked unit file, or
+a symlink anywhere from the home directory down to the unit directory, is
+refused, and units are replaced by rename within the directory.
 """
 
 from __future__ import annotations
@@ -37,15 +38,51 @@ def render_units(repo_root: Path) -> dict[str, str]:
     return rendered
 
 
-def open_unit_dir(unit_dir: Path) -> int | None:
-    """Open the unit directory without following a symlink; ``None`` when absent."""
-    try:
-        info = unit_dir.lstat()
-    except FileNotFoundError:
-        return None
+def _open_component(dir_fd: int | None, name: str, shown: Path) -> int:
+    """``lstat`` one path component, refuse a symlink or non-directory, then open it with ``O_NOFOLLOW``."""
+    info = os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
     if not stat.S_ISDIR(info.st_mode):
-        raise InstallError("unit directory must be a real directory, not a symlink or file")
-    return os.open(unit_dir, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | _NOFOLLOW)
+        kind = "symlinked" if stat.S_ISLNK(info.st_mode) else "non-directory"
+        raise InstallError(f"refusing {kind} path component {shown}: the unit directory must be a real directory")
+    fd = os.open(name, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | _NOFOLLOW, dir_fd=dir_fd)
+    if (os.fstat(fd).st_dev, os.fstat(fd).st_ino) != (info.st_dev, info.st_ino):
+        os.close(fd)
+        raise InstallError(f"path component changed while opening: {shown}")
+    return fd
+
+
+def open_unit_dir(unit_dir: Path, *, create: bool = False) -> int | None:
+    """Open the unit directory one component at a time, never through a symlink.
+
+    Every component from the home directory (or ``/`` for a unit directory
+    outside home) down to the unit directory is ``lstat``-ed and refused when
+    it is a symlink, then opened relative to its checked parent with
+    ``O_NOFOLLOW``. The returned descriptor is the walk's own, so no later
+    path lookup can be redirected. A missing component is created only with
+    ``create``; otherwise the result is ``None``.
+    """
+    target = Path(os.path.abspath(unit_dir))
+    home = Path(os.path.abspath(Path.home()))
+    anchor = home if target == home or home in target.parents else Path(target.anchor)
+    fd = _open_component(None, str(anchor), anchor)
+    current = anchor
+    try:
+        for name in target.relative_to(anchor).parts:
+            current /= name
+            if create:
+                with contextlib.suppress(FileExistsError):
+                    os.mkdir(name, dir_fd=fd)
+            try:
+                child = _open_component(fd, name, current)
+            except FileNotFoundError:
+                os.close(fd)
+                return None
+            os.close(fd)
+            fd = child
+    except BaseException:
+        os.close(fd)
+        raise
+    return fd
 
 
 def read_unit(dir_fd: int, name: str) -> tuple[str, int] | None:
@@ -102,8 +139,7 @@ def check(rendered: dict[str, str], unit_dir: Path) -> int:
 
 
 def apply(rendered: dict[str, str], unit_dir: Path, *, enable: bool) -> int:
-    unit_dir.mkdir(parents=True, exist_ok=True)
-    dir_fd = open_unit_dir(unit_dir)
+    dir_fd = open_unit_dir(unit_dir, create=True)
     if dir_fd is None:
         raise InstallError("unit directory vanished during installation")
     changed = 0
@@ -135,7 +171,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.orchestration.install_tmp_sweep_timer --apply\n"
             "  .venv/bin/python -m scripts.orchestration.install_tmp_sweep_timer --apply --enable\n"
             "Outputs: owner-only (0600) units in the user systemd directory, replaced by rename; a symlinked "
-            "unit directory or unit file is refused; --apply reloads the user manager, --enable starts the timer.\n"
+            "unit file, or a symlink in any directory from home down to the unit directory, is refused; "
+            "--apply reloads the user manager, --enable starts the timer.\n"
             "Exit codes: 0 = current or applied; 1 = drift or installation failure; 2 = invalid usage "
             "(--check with --apply, --enable without --apply, or a non-primary --repo-root).\n"
             "Related: issue #9737, docs/runbooks/tmp-retention.md and packaging/systemd/learn-ukrainian-tmp-sweep.*."
@@ -151,7 +188,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--unit-dir",
         type=Path,
         default=Path.home() / ".config/systemd/user",
-        help="User unit directory; must not be a symlink (default: ~/.config/systemd/user).",
+        help=(
+            "User unit directory; no directory from home down to it may be a symlink (default: ~/.config/systemd/user)."
+        ),
     )
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument(

@@ -41,6 +41,7 @@ def test_installer_check_apply_and_enable(tmp_path: Path, monkeypatch: pytest.Mo
     (linked / ".git").write_text("gitdir: linked")
     unit_dir = tmp_path / "units"
     calls = []
+    monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setattr(installer, "verify_units", lambda _rendered: None)
     monkeypatch.setattr(installer, "systemctl_user", lambda *args: calls.append(args))
     flags = ["--repo-root", str(primary), "--unit-dir", str(unit_dir)]
@@ -60,9 +61,42 @@ def test_installer_check_apply_and_enable(tmp_path: Path, monkeypatch: pytest.Mo
 def _installer_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> list[str]:
     primary = tmp_path / "primary"
     (primary / ".git").mkdir(parents=True)
+    monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setattr(installer, "verify_units", lambda _rendered: None)
     monkeypatch.setattr(installer, "systemctl_user", lambda *args: None)
     return ["--repo-root", str(primary)]
+
+
+@pytest.mark.parametrize("mode", ["--check", "--apply"])
+@pytest.mark.parametrize("existing", [True, False])
+def test_installer_refuses_unit_dir_beneath_a_symlinked_ancestor(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str, existing: bool
+) -> None:
+    """``~/.config`` links elsewhere: the real unit directory behind it is never written or created."""
+    flags = _installer_fixture(tmp_path, monkeypatch)
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    outside = tmp_path / "outside-config"
+    outside.mkdir()
+    if existing:
+        (outside / "systemd" / "user").mkdir(parents=True)
+    (home / ".config").symlink_to(outside, target_is_directory=True)
+    unit_dir = home / ".config" / "systemd" / "user"
+    before = sorted(str(path.relative_to(outside)) for path in outside.rglob("*"))
+    with pytest.raises(installer.InstallError, match=r"symlinked path component .*\.config"):
+        installer.main([*flags, "--unit-dir", str(unit_dir), mode])
+    assert sorted(str(path.relative_to(outside)) for path in outside.rglob("*")) == before
+    assert (home / ".config").is_symlink()
+
+
+def test_installer_creates_missing_unit_dirs_without_links(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    flags = _installer_fixture(tmp_path, monkeypatch)
+    unit_dir = tmp_path / ".config" / "systemd" / "user"
+    assert installer.main([*flags, "--unit-dir", str(unit_dir), "--check"]) == 1
+    assert not (tmp_path / ".config").exists()
+    assert installer.main([*flags, "--unit-dir", str(unit_dir), "--apply"]) == 0
+    assert sorted(path.name for path in unit_dir.iterdir()) == sorted(installer.UNITS)
 
 
 @pytest.mark.parametrize("mode", ["--check", "--apply"])
