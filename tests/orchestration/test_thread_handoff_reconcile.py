@@ -227,7 +227,7 @@ def test_sequence_zero_differing_tie_still_refuses(tied_bundle, capsys):
 # heuristic. Pure/read-only helpers are named; arbitrary helper calls fail closed.
 _BUNDLE_CALLS = {
     "_bundle_archive_local_lineage": {
-        "_bundle_json", "archived_state.get", "isinstance", "json.loads",
+        "BundleReconcileRefused", "_bundle_json", "archived_state.get", "isinstance", "json.loads",
         "remote_manifest.get", "replacement.get", "tree.exists", "tree.move",
         "tree.read_path", "tree.write_path", "utc_now", "utc_now().strftime",
     },
@@ -241,12 +241,13 @@ _BUNDLE_CALLS = {
         "preserved.as_posix", "target.with_name", "tree.exists", "utc_now", "utc_now().strftime",
     },
     "_bundle_commit_install": {
-        "(repo_root / superseded).as_posix", "Path", "_BundleReconcileTree",
+        "'; '.join",
+        "(repo_root / superseded).as_posix", "Path", "_BundleReconcileTree", "BundleReconcileRefused",
         "_bundle_archive_local_lineage", "_bundle_handoff_candidates_for_agent", "_bundle_json",
         "_bundle_preserved_path", "_bundle_preserved_path(Path(name), repo).as_posix",
         "archived.relative_to", "archived.relative_to(state_root).as_posix", "created_preserved.append",
         "int", "manifest.get", "normalize_agent_name", "normalize_lineage_id", "preserved.append",
-        "repo.read_path", "repo.remove_path", "repo.write_path", "repo_backups.items", "set", "sorted",
+        "repo.read_path", "repo.remove_path", "repo.write_path", "repo_backups.items", "rollback_errors.append", "set", "sorted",
         "source.relative_to", "source.relative_to(state_root).as_posix", "stage_root.relative_to",
         "stage_root.relative_to(state_root).as_posix", "staged_lineage.relative_to",
         "staged_lineage.relative_to(state_root).as_posix", "staged_repo.items", "str", "tree.copy_tree",
@@ -267,6 +268,119 @@ _BUNDLE_CALLS = {
         "normalize_lineage_id", "set", "str",
     },
 }
+# Explicit call sets for the recursively admitted local helpers. Imported
+# library helpers remain outside this module-level regression guard.
+_BUNDLE_HELPER_CALLS = {
+    '_bundle_member_path': {
+        'Path', 'ValueError', 'isinstance', 'path.as_posix', 'path.is_absolute',
+    },
+    'BundleReconcileRefused': {
+        'super', 'super().__init__',
+    },
+    'normalize_lineage_id': {
+        'LINEAGE_ID_RE.fullmatch', 'ValueError', 'value.strip', 'value.strip().lower',
+    },
+    'normalize_agent_name': {
+        '(value or DEFAULT_AGENT).strip', '(value or DEFAULT_AGENT).strip().lower', 'AGENT_NAME_RE.fullmatch',
+        'ValueError',
+    },
+    'isoformat_z': {
+        'value.astimezone', 'value.astimezone(UTC).isoformat', 'value.astimezone(UTC).isoformat().replace',
+    },
+    '_bundle_validate_lease_member': {
+        'ValueError', 'int', 'isinstance', 'json.loads', 'manifest.get', 'members.get', 'payload.decode',
+        'replacement.get', 'state.get', 'str', 'validate_live_lease',
+    },
+    'validate_live_lease': {
+        'LINEAGE_ID_RE.fullmatch', 'active.get', "active['thread_id'].strip", 'display.get',
+        'expected_paths.items', 'isinstance', 'lineage_id.startswith', 'native.get',
+        'normalize_identity_state', 'normalize_rollover_id', 'normalized_state.get', 're.fullmatch',
+        'replacement.get', "replacement['resumed_thread_id'].strip", 'replacement_packet_paths',
+        'source_checkout_binding_error', 'state.get', 'str', 'task_family_rollover.transition_identity',
+        'task_identity.validate_identity', 'task_identity.validate_title_transition', 'utc_now',
+    },
+    'utc_now': {
+        'datetime.now', 'datetime.now(UTC).replace',
+    },
+    'source_checkout_binding_error': {
+        'binding.get', 'full_head.strip', 'head_advanced.strip', 'isinstance', 'replacement.get', 'set',
+    },
+    'replacement_packet_paths': {
+        "(packet_dir / 'bootstrap.md').as_posix", "(packet_dir / 'canary-pass.json').as_posix",
+        "(packet_dir / 'handoff.md').as_posix", "(packet_dir / 'identity-receipt.json').as_posix",
+        "(packet_dir / 'semantic-snapshot.json').as_posix", "(packet_dir / 'strict-answers.json').as_posix",
+        "(packet_dir / 'strict-probe.json').as_posix", "(packet_dir / 'strict-questions.json').as_posix",
+        "(packet_dir / 'strict-verdict.json').as_posix", 'packet_dir.as_posix', 'runtime_dir',
+    },
+    'runtime_dir': {
+        'Path',
+    },
+    'normalize_rollover_id': {
+        'ROLLOVER_ID_RE.fullmatch', 'ValueError', 'value.strip', 'value.strip().lower',
+    },
+    'normalize_identity_state': {
+        'ValueError', '_retire_unsatisfiable_native_plan', 'dict', 'int', 'isoformat_z', 'normalized.get',
+        'replacement.setdefault', 'replacement_packet_paths', 'str', 'task_identity.backfill_legacy_identity',
+    },
+    '_retire_unsatisfiable_native_plan': {
+        'dict', 'isinstance', 'isoformat_z', 'native.get', 'replacement.get', 'state.get', 'transition.get',
+        'updated_replacement.pop',
+    },
+    '_bundle_text_member': {
+        'Path', 'Path(name).suffix.lower',
+    },
+    '_bundle_rewrite': {
+        'ROLLOVER_BUNDLE_REPO_TOKEN.encode', 'data.replace', 'repo_root.resolve', 'str',
+        'str(repo_root.resolve()).encode',
+    },
+    '_bundle_json': {
+        'json.dumps', "json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode",
+    },
+    '_bundle_order': {
+        'ValueError', '_bundle_replacement_status', 'int', 'manifest.get', 'normalize_rollover_id',
+        'parse_iso_datetime', 'str',
+    },
+    'parse_iso_datetime': {
+        'datetime.fromisoformat', 'parsed.astimezone', 'parsed.replace', 'str', 'str(value).replace',
+    },
+    '_bundle_replacement_status': {
+        'ValueError', 'replacement.get', 'str',
+    },
+    '_bundle_local_lineage_snapshot': {
+        'ValueError', '_bundle_local_members', '_bundle_state_manifest', 'int', 'lineage_root.exists',
+        'lineage_root.is_dir', 'lineage_root.is_symlink', 'load_state', 'receipt.get', 'receipt_path.is_file',
+        'validate_live_lease',
+    },
+    'load_state': {
+        'data.get', 'isinstance', 'json.loads', 'path.exists', 'path.read_text', 'type',
+    },
+    '_bundle_state_manifest': {
+        'ValueError', '_bundle_replacement_status', 'int', 'isinstance', 'isoformat_z', 'normalize_agent_name',
+        'normalize_lineage_id', 'normalize_rollover_id', 'parse_iso_datetime', 'replacement.get', 'state.get',
+        'str', 'utc_now',
+    },
+    '_bundle_local_members': {
+        '_bundle_source_members', 'load_state',
+    },
+    '_bundle_source_members': {
+        "(Path('.agent') / 'thread-rollovers' / agent / lineage_id / path.relative_to(lineage_root)).as_posix",
+        'Path', 'ValueError', '_bundle_handoff_candidates_for_agent', '_bundle_member_path',
+        '_bundle_text_member', '_bundle_tokenize', 'lineage_root.is_dir', 'lineage_root.rglob',
+        'normalize_lineage_id', 'path.is_file', 'path.is_symlink', 'path.name.endswith', 'path.read_bytes',
+        'path.relative_to', 'sorted', 'state.get', 'str',
+    },
+    '_bundle_tokenize': {
+        'data.decode', 'repo_root.resolve', 'state_root.resolve', 'str', 'text.encode', 'text.replace',
+    },
+    '_bundle_handoff_candidates_for_agent': {
+        '_bundle_handoff_candidates', 'agent.removeprefix', 'agent.startswith', 'candidates.append',
+        'dict.fromkeys', 'list', 'tuple',
+    },
+    '_bundle_handoff_candidates': {
+        'epic_handoff_map', 'epic_handoff_map(repo_root).get', 'tuple',
+    },
+}
+
 _PRIMITIVE_CALLS = {
     "BundleReconcileRefused", "_bundle_member_path", "_bundle_member_path(path).split",
     "handle.fileno", "handle.flush", "handle.read", "handle.write", "len", "os.close",
@@ -281,15 +395,38 @@ _PRIMITIVE_CALLS = {
 def _assert_bundle_containment(source):
     module = ast.parse(source)
     definitions = {node.name: node for node in module.body if isinstance(node, (ast.FunctionDef, ast.ClassDef))}
-    for name in {*_BUNDLE_CALLS, "_BundleReconcileTree"}:
+    parents = {child: parent for parent in ast.walk(module) for child in ast.iter_child_nodes(parent)}
+    pending = [*_BUNDLE_CALLS, "_BundleReconcileTree"]
+    checked = set()
+    while pending:
+        name = pending.pop()
+        if name in checked:
+            continue
+        checked.add(name)
         definition = definitions[name]
         primitive = name == "_BundleReconcileTree"
-        permitted = _PRIMITIVE_CALLS if primitive else _BUNDLE_CALLS[name]
+        if primitive:
+            permitted = _PRIMITIVE_CALLS
+        else:
+            assert name in _BUNDLE_CALLS or name in _BUNDLE_HELPER_CALLS, f"missing helper allowlist: {name}"
+            permitted = _BUNDLE_CALLS.get(name, _BUNDLE_HELPER_CALLS.get(name))
+        # Follow every admitted module-level helper, including helpers of helpers.
+        pending.extend(permitted & definitions.keys())
         for node in ast.walk(definition):
             # Write-capable flags outside the only audited writer are forbidden,
             # even if they are assigned to a variable before os.open is called.
             if not primitive and isinstance(node, ast.Attribute):
                 assert node.attr not in {"O_WRONLY", "O_RDWR", "O_TRUNC", "O_CREAT"}, "write flags outside primitive"
+            if (
+                isinstance(node, ast.Attribute)
+                and isinstance(node.value, ast.Name)
+                and node.value.id in {"os", "shutil"}
+                and not (node.value.id == "os" and node.attr.startswith("O_"))
+            ):
+                parent = parents.get(node)
+                assert isinstance(parent, ast.Call) and parent.func is node, (
+                    f"unchecked non-call function reference in {name}: {ast.unparse(node)}"
+                )
             if not isinstance(node, ast.Call):
                 continue
             call = ast.unparse(node.func)
@@ -357,7 +494,11 @@ def test_containment_rejects_all_six_writer_mutations(mutation, location):
     injected = "\n".join(indent + line for line in mutation.splitlines()) + "\n"
     source = source.replace(marker, marker + injected, 1)
     source += "\ndef _unchecked_bundle_writer():\n    shutil.copyfile('source', 'target')\n"
-    expected = "unsafe open flags" if location == "primitive" and mutation.startswith("os.open") else "unchecked call"
+    expected = "unchecked call"
+    if mutation.startswith("writer ="):
+        expected = "unchecked non-call function reference"
+    elif location == "primitive" and mutation.startswith("os.open"):
+        expected = "unsafe open flags"
     with pytest.raises(AssertionError, match=expected):
         _assert_bundle_containment(source)
 
@@ -563,6 +704,8 @@ def test_newer_install_archives_large_local_member_without_truncation(newer_bund
 def test_failed_rollback_retains_original_backup(newer_bundle, monkeypatch, capsys):
     b = newer_bundle
     original = _snapshot(b.lineage)
+    original_handoff = (b.root / HANDOFF_PATH).read_bytes()
+    original_receipt = b.receipt.read_bytes()
     native_move = th._BundleReconcileTree.move
 
     def move(tree, source, target):
@@ -572,10 +715,151 @@ def test_failed_rollback_retains_original_backup(newer_bundle, monkeypatch, caps
 
     monkeypatch.setattr(th._BundleReconcileTree, 'move', move)
     assert th.cmd_import_bundle(_import_args(b.root, b.bundle)) == 2
-    assert 'injected commit and rollback failure' in capsys.readouterr().out
+    output = json.loads(capsys.readouterr().out)
+    assert 'injected commit and rollback failure' in output['error']
     stages = list(b.lineage.parent.glob('.*.import-*'))
     assert len(stages) == 1
     assert _snapshot(stages[0] / 'original-lineage') == original
+    assert stages[0].relative_to(b.root).as_posix() in output['error']
+    assert (b.root / HANDOFF_PATH).read_bytes() == original_handoff
+    assert b.receipt.read_bytes() == original_receipt
+
+
+@pytest.mark.parametrize('rollback_failure', ['archive-removal', 'superseded-removal'])
+def test_two_failures_continue_independent_rollback_steps(newer_bundle, monkeypatch, capsys, rollback_failure):
+    b = newer_bundle
+    original_lineage = _snapshot(b.lineage)
+    original_handoff = (b.root / HANDOFF_PATH).read_bytes()
+    original_receipt = b.receipt.read_bytes()
+    native_move = th._BundleReconcileTree.move
+    native_remove = th._BundleReconcileTree.remove_path
+    failures = []
+
+    def move(tree, source, target):
+        if source.endswith('/lineage'):
+            failures.append('commit')
+            raise OSError('injected final lineage move failure')
+        return native_move(tree, source, target)
+
+    def remove(tree, path):
+        if (
+            (rollback_failure == 'archive-removal' and '/_archive/' in path)
+            or (rollback_failure == 'superseded-removal' and '.superseded' in path)
+        ):
+            failures.append('rollback')
+            raise OSError('injected ' + rollback_failure.replace('-', ' ') + ' failure')
+        return native_remove(tree, path)
+
+    monkeypatch.setattr(th._BundleReconcileTree, 'move', move)
+    monkeypatch.setattr(th._BundleReconcileTree, 'remove_path', remove)
+    assert th.cmd_import_bundle(_import_args(b.root, b.bundle)) == 2
+    output = json.loads(capsys.readouterr().out)
+    assert failures == ['commit', 'rollback']
+    assert _snapshot(b.lineage) == original_lineage
+    assert b.receipt.read_bytes() == original_receipt
+    assert (b.root / HANDOFF_PATH).read_bytes() == original_handoff
+    if rollback_failure == 'archive-removal':
+        assert not list(b.root.rglob('*.superseded*'))
+    else:
+        assert all(p.read_bytes() == original_handoff for p in b.root.rglob('*.superseded*'))
+    stages = list(b.lineage.parent.glob('.*.import-*'))
+    assert len(stages) == 1
+    assert output['status'] == 'refused'
+    assert output['code'] == 'reconcile_rollback_failed'
+    assert stages[0].relative_to(b.root).as_posix() in output['error']
+    assert 'injected final lineage move failure' in output['error']
+    assert 'injected ' + rollback_failure.replace('-', ' ') + ' failure' in output['error']
+
+
+@pytest.mark.parametrize('function,mutation', [
+    ('_bundle_commit_install', "sorted(['/outside/victim'], key=os.unlink)"),
+    ('_bundle_local_lineage_snapshot', "shutil.rmtree('/outside')"),
+    ('load_state', "shutil.rmtree('/outside')"),
+])
+def test_containment_checks_callbacks_and_recursive_helpers(function, mutation):
+    source = inspect.getsource(th)
+    _assert_bundle_containment(source)
+    definition = next(n for n in ast.parse(source).body if isinstance(n, ast.FunctionDef) and n.name == function)
+    lines = source.splitlines(keepends=True)
+    lines.insert(definition.body[0].lineno - 1, '    ' + mutation + '\n')
+    with pytest.raises(AssertionError):
+        _assert_bundle_containment(''.join(lines))
+
+
+@pytest.mark.parametrize('missing,code', [
+    ('local-lease', 'reconcile_local_lease_missing'),
+    ('staged-member', 'reconcile_staged_member_missing'),
+])
+def test_missing_install_payload_is_a_typed_refusal(newer_bundle, monkeypatch, capsys, missing, code):
+    b = newer_bundle
+    before = _snapshot(b.root)
+    native_read = th._BundleReconcileTree.read_path
+    original_lease = b.lineage.relative_to(b.root).as_posix() + '/lease.json'
+
+    def read(tree, path):
+        if missing == 'local-lease' and path == original_lease:
+            return None
+        if missing == 'staged-member' and '/repo/' in path:
+            return None
+        return native_read(tree, path)
+
+    monkeypatch.setattr(th._BundleReconcileTree, 'read_path', read)
+    assert th.cmd_import_bundle(_import_args(b.root, b.bundle)) == 2
+    output = json.loads(capsys.readouterr().out)
+    assert output['status'] == 'refused'
+    assert output['code'] == code
+    assert _snapshot(b.root) == before
+    assert not list(b.lineage.parent.glob('.*.import-*'))
+
+
+def test_rollback_archive_link_refuses_and_still_restores_original(newer_bundle, tmp_path, monkeypatch, capsys):
+    b = newer_bundle
+    original_lineage = _snapshot(b.lineage)
+    original_handoff = (b.root / HANDOFF_PATH).read_bytes()
+    original_receipt = b.receipt.read_bytes()
+    outside = tmp_path / 'outside'
+    outside.mkdir()
+    (outside / 'sentinel').write_bytes(b'untouched outside')
+    before = _snapshot(outside)
+    native_move = th._BundleReconcileTree.move
+
+    def move(tree, source, target):
+        if source.endswith('/lineage'):
+            archive = next((b.lineage.parent / '_archive').iterdir())
+            archive.rename(archive.with_name(archive.name + '-saved'))
+            archive.symlink_to(outside, target_is_directory=True)
+            raise OSError('injected final lineage move failure')
+        return native_move(tree, source, target)
+
+    monkeypatch.setattr(th._BundleReconcileTree, 'move', move)
+    assert th.cmd_import_bundle(_import_args(b.root, b.bundle)) == 2
+    output = json.loads(capsys.readouterr().out)
+    assert output['code'] == 'reconcile_rollback_failed'
+    assert 'reconcile_member_symlink' in output['error']
+    assert _snapshot(outside) == before
+    assert _snapshot(b.lineage) == original_lineage
+    assert (b.root / HANDOFF_PATH).read_bytes() == original_handoff
+    assert b.receipt.read_bytes() == original_receipt
+    stage = next(b.lineage.parent.glob('.*.import-*'))
+    assert stage.relative_to(b.root).as_posix() in output['error']
+
+
+def test_stage_cleanup_failure_reports_retained_stage(newer_bundle, monkeypatch, capsys):
+    b = newer_bundle
+    native_remove = th._BundleReconcileTree.remove_path
+
+    def remove(tree, path):
+        if '.import-' in path:
+            raise OSError('injected stage cleanup failure')
+        return native_remove(tree, path)
+
+    monkeypatch.setattr(th._BundleReconcileTree, 'remove_path', remove)
+    assert th.cmd_import_bundle(_import_args(b.root, b.bundle)) == 2
+    output = json.loads(capsys.readouterr().out)
+    assert output['code'] == 'reconcile_stage_cleanup_failed'
+    stage = next(b.lineage.parent.glob('.*.import-*'))
+    assert stage.relative_to(b.root).as_posix() in output['error']
+    assert json.loads(b.receipt.read_bytes())['upload_seq'] == 8
 
 
 @pytest.mark.parametrize('mutation', [

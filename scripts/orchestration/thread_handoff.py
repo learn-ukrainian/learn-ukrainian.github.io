@@ -854,7 +854,8 @@ def _bundle_archive_local_lineage(
         archive = f".agent/thread-rollovers/{agent}/_archive/{lineage_id}-{timestamp}-{suffix}"
         suffix += 1
     original_lease = tree.read_path(f"{lineage}/lease.json")
-    assert original_lease is not None
+    if original_lease is None:
+        raise BundleReconcileRefused("reconcile_local_lease_missing")
     tree.move(lineage, archive)
     try:
         archived_state = json.loads(original_lease)
@@ -1009,7 +1010,8 @@ def _bundle_commit_install(
                 old_payload = repo.read_path(name)
                 repo_backups[name] = old_payload
                 installed = tree.read_path(source.relative_to(state_root).as_posix())
-                assert installed is not None
+                if installed is None:
+                    raise BundleReconcileRefused("reconcile_staged_member_missing")
                 if name in handoff_candidates and old_payload is not None and old_payload != installed:
                     superseded = _bundle_preserved_path(Path(name), repo).as_posix()
                     repo.write_path(superseded, old_payload)
@@ -1028,31 +1030,62 @@ def _bundle_commit_install(
             lineage_replaced = True
             cleanup_stage = True
             return archived, preserved
-        except Exception:
+        except Exception as install_error:
+            rollback_errors: list[str] = []
             if lineage_replaced:
-                tree.remove_path(lineage)
+                try:
+                    tree.remove_path(lineage)
+                except Exception as exc:
+                    rollback_errors.append(f"remove installed lineage: {exc}")
             if archived is not None:
-                tree.remove_path(archived.relative_to(state_root).as_posix())
-            if backup_complete and not tree.exists(lineage):
-                tree.move(original_backup, lineage)
+                try:
+                    tree.remove_path(archived.relative_to(state_root).as_posix())
+                except Exception as exc:
+                    rollback_errors.append(f"remove archive: {exc}")
+            if backup_complete:
+                try:
+                    if not tree.exists(lineage):
+                        tree.move(original_backup, lineage)
+                except Exception as exc:
+                    rollback_errors.append(f"restore original lineage: {exc}")
             for name, old_payload in repo_backups.items():
-                if old_payload is None:
-                    repo.remove_path(name)
-                else:
-                    repo.write_path(name, old_payload, replace=True)
+                try:
+                    if old_payload is None:
+                        repo.remove_path(name)
+                    else:
+                        repo.write_path(name, old_payload, replace=True)
+                except Exception as exc:
+                    rollback_errors.append(f"restore repo member {name}: {exc}")
             for name in created_preserved:
-                repo.remove_path(name)
+                try:
+                    repo.remove_path(name)
+                except Exception as exc:
+                    rollback_errors.append(f"remove superseded member {name}: {exc}")
             if receipt_loaded:
-                if old_receipt is None:
-                    tree.remove_path(receipt)
-                else:
-                    tree.write_path(receipt, old_receipt, replace=True)
+                try:
+                    if old_receipt is None:
+                        tree.remove_path(receipt)
+                    else:
+                        tree.write_path(receipt, old_receipt, replace=True)
+                except Exception as exc:
+                    rollback_errors.append(f"restore receipt: {exc}")
+            if rollback_errors:
+                raise BundleReconcileRefused(
+                    "reconcile_rollback_failed",
+                    f"install failed: {install_error}; rollback failed: {'; '.join(rollback_errors)}; "
+                    f"retained stage: {stage}",
+                ) from install_error
             cleanup_stage = True
             raise
         finally:
             # A failed rollback must retain its original backup for recovery.
             if cleanup_stage:
-                tree.remove_path(stage)
+                try:
+                    tree.remove_path(stage)
+                except Exception as exc:
+                    raise BundleReconcileRefused(
+                        "reconcile_stage_cleanup_failed", f"stage cleanup failed: {exc}; retained stage: {stage}"
+                    ) from exc
 
 
 class RolloverBundleAPIUnavailable(RuntimeError):
@@ -5569,9 +5602,9 @@ def _bundle_import_error(reason: str) -> int:
 class BundleReconcileRefused(ValueError):
     """A typed refusal at a reconciliation filesystem boundary."""
 
-    def __init__(self, code: str) -> None:
+    def __init__(self, code: str, detail: str | None = None) -> None:
         self.code = code
-        super().__init__(code)
+        super().__init__(detail or code)
 
 
 class _BundleReconcileTree:
@@ -5637,6 +5670,12 @@ class _BundleReconcileTree:
 
     @staticmethod
     def existing(parent: int, name: str, *, temporary: bool = False) -> bytes | None:
+        """Read a validated local file in full, without the remote bundle cap.
+
+        Backups must preserve pre-existing local members of any size exactly.
+        A cap here would refuse recovery of valid large files; this local read
+        therefore has no byte bound and uses memory proportional to file size.
+        """
         try:
             info = os.stat(name, dir_fd=parent, follow_symlinks=False)
         except FileNotFoundError:
@@ -6030,7 +6069,7 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
                 )
             )
     except BundleReconcileRefused as exc:
-        print(json.dumps({"status": "refused", "code": exc.code, "action": "import-bundle"}))
+        print(json.dumps({"status": "refused", "code": exc.code, "error": str(exc), "action": "import-bundle"}))
         return 2
     except Exception as exc:
         return _bundle_import_error(str(exc))
