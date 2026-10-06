@@ -133,7 +133,7 @@ def admit_delegate_task_row(
             return None
         if admitted != allowed:
             return None
-    return {
+    admitted_row: dict[str, Any] = {
         "task_id": row.get("task_id"),
         "agent": row.get("agent"),
         "model": row.get("model"),
@@ -146,6 +146,22 @@ def admit_delegate_task_row(
         # Always the closed public singleton — never echo a foreign claim.
         "repository": admitted,
     }
+    # Present only when the delegate summary carried the DoR association.
+    # Absence stays unlinked; an empty list is an explicit non-match.
+    if "linked_issues" in row and isinstance(row.get("linked_issues"), list):
+        links: list[dict[str, Any]] = []
+        for entry in row["linked_issues"]:
+            if not isinstance(entry, dict):
+                continue
+            try:
+                number = int(entry.get("issue"))
+            except (TypeError, ValueError):
+                continue
+            repository = entry.get("repository")
+            if isinstance(repository, str) and repository and number > 0:
+                links.append({"issue": number, "repository": repository})
+        admitted_row["linked_issues"] = links
+    return admitted_row
 
 
 def filter_public_delegate_tasks(
@@ -452,7 +468,6 @@ def fetch_issue_states_batched(
     if runner is None:
         return _fetch_issue_states_rest(repo, unique_numbers, timeout_s)
 
-
     from scripts.work.relations import issue_work_id
 
     now = time.monotonic()
@@ -478,11 +493,14 @@ def fetch_issue_states_batched(
         return states
 
     from scripts.publish.github import read
+
     def transport(args, **kwargs):
         code, stdout, stderr = runner(args, kwargs["timeout"])
         return subprocess.CompletedProcess(args, code, stdout, stderr)
-    result = read("issue-states", repo=repo, numbers=needed, runner=transport,
-                  capture_output=True, text=True, timeout=timeout_s)
+
+    result = read(
+        "issue-states", repo=repo, numbers=needed, runner=transport, capture_output=True, text=True, timeout=timeout_s
+    )
     code, stdout = result.returncode, result.stdout
     if code == 124 or not stdout:
         return states
@@ -661,8 +679,18 @@ def fetch_streams_projection(
     # (residual #2) — never leave an unallowlisted map in the public payload.
     membership = _admit_open_stream_membership(payload)
     # Privacy hard gate: never forward private index keys even if a loader errs.
-    from scripts.orchestration.issue_stream_audit import PRIVATE_CACHE_KEYS
+    from scripts.orchestration.issue_stream_audit import PRIVATE_CACHE_KEYS, membership_report_is_complete
 
+    audit_keys = ("membership_complete", "incomplete_nodes", "effective_membership")
+    if any(key in payload for key in audit_keys) or "membership_certified" in payload:
+        # A complete fresh audit certifies the published map. Incomplete,
+        # unflagged, and stale observations stay explicitly uncertified so
+        # the projection cannot treat a dropped map as "everyone is homed".
+        payload["membership_certified"] = bool(
+            status == "ok"
+            and not payload.get("stale")
+            and (payload.get("membership_certified") is True or membership_report_is_complete(payload))
+        )
     for key in PRIVATE_CACHE_KEYS:
         payload.pop(key, None)
     if membership:

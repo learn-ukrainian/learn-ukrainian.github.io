@@ -392,8 +392,17 @@ def _resolve_review_target(
     family = resolve_family(concrete or "")
     # The seat's registered pin reviews too when no model is named (#9583).
     _refuse_non_review_models((requested_model,))
-    # Composer/Kimi never review. Grok is admitted only as the resolver's
-    # runtime-attested Cursor seat (#9488); native Grok is excluded there.
+    if attempt and seat in {"grok", "grok-build"}:
+        from .review_mcp import UNSUPPORTED_HARNESS_REASONS
+
+        # Native Grok model admission (#9769) does not prove the attempt
+        # boundary (#8517). Refuse before budget probes or attempt setup.
+        detail = UNSUPPORTED_HARNESS_REASONS[seat]
+        raise ReviewAdmissionRefused(
+            f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail} (#8517)"
+        )
+    # Composer/Kimi never review. Native and Cursor Grok require runtime
+    # attestation and cross-family eligibility at every risk (#9769).
     forbidden = {"moonshot"}
     if profile != "ukrainian":
         forbidden.add("google")

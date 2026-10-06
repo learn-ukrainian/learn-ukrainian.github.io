@@ -457,12 +457,12 @@ def invocation_model(invocation: str) -> str | None:
 
 
 def _validate_cursor_review_seats(catalog: dict[str, Any]) -> None:
-    """A Cursor seat on a formal pin is a last resort dispatched at its high-effort slug (#9488).
+    """A formal Cursor seat dispatches its runtime-attestable high-effort slug.
 
     Cursor reports the model the run actually used; ``record_cf_verdict`` maps
     only that high-effort report back to the catalog id, so the seat must
-    dispatch ``<model>-high`` (a bare id runs a different variant). Sol stays
-    the first seat, so the Cursor seat ranks after every eligible primary.
+    dispatch ``<model>-high`` (a bare id runs a different variant).
+    Operator decision 2026-10-05 (#9769) admits Grok as a regular reviewer.
     """
     endpoint = (catalog.get("review_scheduler") or {}).get("endpoints", {}).get("cursor") or {}
     if endpoint.get("formal_review_eligible") is not True:
@@ -471,10 +471,6 @@ def _validate_cursor_review_seats(catalog: dict[str, Any]) -> None:
     for name, candidate in catalog["review_candidates"].items():
         if candidate.get("route") != "cursor" or candidate["model_id"] not in pinned:
             continue
-        if candidate.get("last_resort") is not True:
-            raise ModelCatalogError(
-                f"review_candidates.{name} is a formal Cursor seat and must set last_resort: true (Sol stays first)"
-            )
         slug = f"{candidate['model_id']}-high"
         if invocation_model(candidate["invocation"]) != slug:
             raise ModelCatalogError(
@@ -681,6 +677,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         if model["family"] in {"openai", "xai"} and "hermes" in model["transports"]:
             raise ModelCatalogError(f"models.{model_id}.transports must not route GPT/Grok families through Hermes")
         aliases = model.get("aliases", [])
+        if "runtime_model_ids" in model:
+            _require_string_list(model["runtime_model_ids"], f"models.{model_id}.runtime_model_ids")
         if not isinstance(aliases, list) or not all(isinstance(alias, str) and alias.strip() for alias in aliases):
             raise ModelCatalogError(f"models.{model_id}.aliases must be a list of strings")
         for alias in aliases:
@@ -726,6 +724,29 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         if model_id not in models:
             raise ModelCatalogError(f"review_candidates.{name}.model_id references unknown model {model_id!r}")
         _require_routable_model(models, model_id, f"review_candidates.{name}.model_id")
+        runtime_ids = models[model_id].get("runtime_model_ids", [])
+        if any("fast" in runtime_id.casefold().replace("_", "-").split("-") for runtime_id in runtime_ids):
+            raise ModelCatalogError(f"models.{model_id}.runtime_model_ids must not admit fast review variants")
+        if "suitability_roles" in candidate:
+            suitability_roles = _require_string_list(
+                candidate["suitability_roles"], f"review_candidates.{name}.suitability_roles"
+            )
+            if not set(suitability_roles) <= set(models[model_id]["roles"]):
+                raise ModelCatalogError(f"review_candidates.{name}.suitability_roles must be held by its model")
+        if "transport_fallback_for" in candidate:
+            primary_name = _require_string(
+                candidate["transport_fallback_for"], f"review_candidates.{name}.transport_fallback_for"
+            )
+            primary = candidates.get(primary_name)
+            if (
+                not isinstance(primary, dict)
+                or primary.get("model_id") != model_id
+                or primary.get("transport") == transport_raw
+                or "transport_fallback_for" in primary
+            ):
+                raise ModelCatalogError(
+                    f"review_candidates.{name}.transport_fallback_for must reference a primary transport of the same model"
+                )
         if model_id.casefold().startswith("gemini-") or candidate.get("route") == "agy":
             raise ModelCatalogError(
                 f"review_candidates.{name} violates operator 2026-09-25: "
@@ -800,10 +821,6 @@ def validate_catalog(data: Any) -> dict[str, Any]:
     _validate_activity_role_holders(catalog)
     _validate_cursor_review_seats(catalog)
     _validate_formal_cf_defaults(catalog.get("formal_cf_defaults"), models)
-    cursor_endpoint = (catalog.get("review_scheduler") or {}).get("endpoints", {}).get("cursor") or {}
-    cursor_review_pins = (
-        set(cursor_endpoint.get("models", [])) if cursor_endpoint.get("formal_review_eligible") is True else set()
-    )
 
     ladders = _require_mapping(catalog.get("review_ladders"), "review_ladders")
     if set(ladders) != VALID_RISKS:
@@ -812,12 +829,14 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         if not isinstance(rungs, list) or not rungs:
             raise ModelCatalogError(f"review_ladders.{risk} must be a non-empty list")
         seen: set[str] = set()
+        seen_models: set[str] = set()
         previous_rank = (False, 0)
         floor_rank = tiers[risk_floor[risk]]
         for rung in rungs:
             if not isinstance(rung, list) or not rung:
                 raise ModelCatalogError(f"review_ladders.{risk} rungs must be non-empty lists")
             rung_ranks: set[tuple[bool, int]] = set()
+            rung_models: set[str] = set()
             for candidate_name in rung:
                 if candidate_name not in candidates:
                     raise ModelCatalogError(f"review_ladders.{risk} references unknown candidate {candidate_name!r}")
@@ -825,13 +844,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                     raise ModelCatalogError(f"review_ladders.{risk} repeats candidate {candidate_name!r}")
                 seen.add(candidate_name)
                 model_id = candidates[candidate_name]["model_id"]
-                if models[model_id]["family"] == "xai" and not (
-                    candidates[candidate_name]["route"] == "cursor" and model_id in cursor_review_pins
-                ):
-                    raise ModelCatalogError(
-                        f"review_ladders.{risk}: native Grok never judges code or infra; "
-                        "Grok reviews only through the attested Cursor seat (#9488)"
-                    )
+                rung_models.add(model_id)
                 if risk == "critical" and model_id.startswith("claude-sonnet-"):
                     raise ModelCatalogError(
                         f"review_ladders.{risk}: Sonnet is excluded from security review by core.md P2"
@@ -846,11 +859,16 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             if len(rung_ranks) != 1:
                 raise ModelCatalogError(f"review_ladders.{risk} mixes quality tiers in one rung")
             rung_rank = next(iter(rung_ranks))
-            if rung_rank < previous_rank:
+            # Transport fallbacks may follow another model's primary (#9769).
+            # Keep primary-model quality monotonic and check every rung's floor.
+            transport_fallback = rung_models <= seen_models
+            if rung_rank[0] < previous_rank[0] or (not transport_fallback and rung_rank < previous_rank):
                 raise ModelCatalogError(f"review_ladders.{risk} improves quality in a later rung")
             if rung_rank[1] > floor_rank:
                 raise ModelCatalogError(f"review_ladders.{risk} falls below its {risk_floor[risk]!r} quality floor")
-            previous_rank = rung_rank
+            if not transport_fallback:
+                previous_rank = rung_rank
+            seen_models.update(rung_models)
     _validate_budget_substitution_models(catalog.get("budget_substitution_models"), catalog)
     return catalog
 
@@ -999,6 +1017,21 @@ def resolve_catalog_model_id(model: Any, catalog: dict[str, Any] | None = None) 
     return canonical_model_id(model, catalog)
 
 
+def runtime_model_matches_requested(
+    requested_model: str, runtime_model: str, catalog: dict[str, Any] | None = None,
+) -> bool:
+    """Compare runtime attribution to an exact pin or its catalogued runtime IDs.
+
+    This classifies substitution telemetry only; it does not grant review
+    admission or replace the recorder's source-bound runtime attestation.
+    """
+    if requested_model == runtime_model:
+        return True
+    catalog = catalog or load_model_catalog()
+    model_id = resolve_catalog_model_id(requested_model, catalog)
+    return bool(model_id and runtime_model in catalog["models"][model_id].get("runtime_model_ids", []))
+
+
 def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
     """Refuse retired ids using the same canonical identity as review admission.
 
@@ -1053,7 +1086,7 @@ def activity_role_refusal(model: Any, activity: str, catalog: dict[str, Any] | N
 
 
 def risk_reviewer_refusal(model: Any, risk: Any, catalog: dict[str, Any] | None = None) -> str | None:
-    """Refuse a formal reviewer outside ``review_scheduler.risk_reviewer_models`` for ``risk`` (#9538).
+    """Refuse a formal reviewer outside ``review_scheduler.risk_reviewer_models`` for ``risk`` (#9538, #9769).
 
     A risk with no listed models admits every model; this gate only narrows.
     """
@@ -1067,7 +1100,7 @@ def risk_reviewer_refusal(model: Any, risk: Any, catalog: dict[str, Any] | None 
         return None
     return (
         f"a formal review at {risk_key} risk is performed only by {', '.join(allowed)} "
-        f"(operator decision 2026-10-02, #9538); got {model_id or model!r}"
+        f"(operator decisions #9538, #9769); got {model_id or model!r}"
     )
 
 

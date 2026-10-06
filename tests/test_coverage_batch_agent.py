@@ -2046,3 +2046,27 @@ class TestBatchDispatcherRunningTrackCleanup:
         d._update_track_states(scan)
         # RUNNING with no lock -> reset to PENDING then re-evaluated
         assert dstate["state"] in (TrackState.PENDING, TrackState.ELIGIBLE)
+
+
+class TestBatchDispatcherClaudeFixBackground:
+    def test_claude_fix_runs_without_background_work(self, monkeypatch):
+        """The headless Claude rebuild carries the #9690 controls from the adapter (#9750)."""
+        from agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+        from batch import batch_dispatcher_helpers as helpers
+
+        seen = {}
+
+        def fake_run(cmd, **kwargs):
+            seen.update(cmd=cmd, env=kwargs["env"])
+            return subprocess.CompletedProcess(cmd, 0, stdout="done", stderr="")
+
+        monkeypatch.setattr(helpers.subprocess, "run", fake_run)
+        monkeypatch.setattr(helpers, "supports_exclude_dynamic_system_prompt_sections", lambda _bin: False)
+
+        result = helpers.dispatch_claude_fix("a1", "greetings", 1)
+
+        assert result["success"] is True
+        cmd = seen["cmd"]
+        assert "bypassPermissions" in cmd
+        assert cmd[cmd.index("--disallowedTools") + 1].split(",") == list(HEADLESS_BACKGROUND_TOOL_DENIES)
+        assert seen["env"].items() >= HEADLESS_BACKGROUND_ENV.items()

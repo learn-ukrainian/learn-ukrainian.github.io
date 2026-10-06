@@ -95,6 +95,7 @@ def make_dispatcher(args: argparse.Namespace, worker_cwd: Path) -> Dispatcher:
         delegate=REPO_ROOT / "scripts" / "delegate.py",
         cwd=worker_cwd,
         hard_timeout=args.hard_timeout,
+        review_profile=getattr(args, "review_profile", None),
     )
 
 
@@ -240,6 +241,15 @@ def build_parser() -> argparse.ArgumentParser:
         default=list(KINDS),
         help="Comma list of task kinds: review,writing. Default: both.",
     )
+    run.add_argument(
+        "--review-profile",
+        choices=("ukrainian",),
+        default=None,
+        help="Dispatch review tasks as Ukrainian reviews (delegate --review-profile ukrainian "
+        "--require-review-verdict), so delegate's Ukrainian-review AGY permission profile applies; "
+        "review prompts then end with a VERDICT marker line. Writing tasks are unchanged. "
+        "Frozen in the manifest; a resume with another value is refused. Default: off.",
+    )
     _add_dispatch_args(run)
 
     score = commands.add_parser(
@@ -335,6 +345,7 @@ def _cmd_run(args: argparse.Namespace) -> int:
         run_tag,
         worker_cwd,
         block,
+        args.review_profile,
     )
     if plan["protocol_shortfalls"] and not args.smoke:
         raise HarnessError("plan below Protocol v2: " + "; ".join(plan["protocol_shortfalls"]) + " (--smoke to test)")

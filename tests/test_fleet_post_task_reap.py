@@ -252,6 +252,82 @@ def test_no_task_state(hermetic_reap):
     assert "no task state" in report["main_worktree"]["reason"]
 
 
+@pytest.mark.parametrize(
+    "tree_owner,tasks_owner", [("sibling", "public"), ("sibling", "sibling"), ("public", "sibling")]
+)
+@pytest.mark.parametrize("repo_hint", ["public", "sibling"])
+@pytest.mark.parametrize("cache_state", ["cold", "stale"])
+def test_retention_lookup_leaves_primaries_byte_identical(
+    hermetic_reap, tmp_path, monkeypatch, tree_owner, tasks_owner, repo_hint, cache_state
+):
+    public, _ = hermetic_reap
+    sibling = tmp_path / "sibling"
+    _init_repo(sibling)
+    roots = {"public": public, "sibling": sibling}
+    monkeypatch.setattr(post_task_reap.worktree_claims, "public_primary_root", lambda: public)
+    task_id = "retention-cache-9797"
+    worktree = _add_dispatch_worktree(roots[tree_owner], "codex", task_id)
+    tasks = roots[tasks_owner] / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    record = {
+        "task_id": task_id,
+        "status": "done",
+        "worktree_path": str(worktree),
+        "worktree_reused": False,
+        "run_nonce": "retention-cache-run",
+    }
+    (tasks / f"{task_id}.json").write_text(json.dumps(record))
+    cache = post_task_reap.ignored_task_output._identity_cache_path(tasks)
+    if cache_state == "stale":
+        cache.write_bytes(b"stale identity cache\n")
+    # Dispatch already owns this persistent lock; reap must not create it.
+    hint = roots[repo_hint]
+    with post_task_reap.worktree_claims.worktree_lock(
+        worktree, lock_dir=post_task_reap.worktree_claims.repository_lock_dir(hint)
+    ):
+        pass
+
+    def snapshot(root):
+        return {
+            str(path.relative_to(root)): (path.read_bytes(), path.stat().st_mtime_ns)
+            for path in root.rglob("*")
+            if path.is_file()
+        }
+
+    before = {name: snapshot(root) for name, root in roots.items()}
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=hint, apply=True, release_retention=True)
+    # The lookup ran, but missing retrieval proof still refuses release.
+    assert report["errors"] == ["retention release requires an existing passing retrieval receipt"]
+    assert report["main_worktree"]["action"] == "retained"
+    assert worktree.exists()
+    assert {name: snapshot(root) for name, root in roots.items()} == before
+
+
+def test_retention_lookup_publishes_for_public_tree_and_canonical_tasks(hermetic_reap, monkeypatch):
+    public, _ = hermetic_reap
+    monkeypatch.setattr(post_task_reap.worktree_claims, "public_primary_root", lambda: public)
+    task_id = "public-retention-cache-9797"
+    worktree = _add_dispatch_worktree(public, "codex", task_id)
+    tasks = public / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    (tasks / f"{task_id}.json").write_text(
+        json.dumps(
+            {
+                "task_id": task_id,
+                "status": "done",
+                "worktree_path": str(worktree),
+                "worktree_reused": False,
+                "run_nonce": "public-retention-run",
+            }
+        )
+    )
+    report = post_task_reap.post_task_reap(
+        task_id, tasks_dir=tasks, repo_root=public, apply=True, release_retention=True
+    )
+    assert report["errors"] == ["retention release requires an existing passing retrieval receipt"]
+    assert post_task_reap.ignored_task_output._identity_cache_path(tasks).is_file()
+
+
 @pytest.mark.parametrize("runtime", [False, True])
 @pytest.mark.parametrize("artifact_name", ["batch_state/report.txt", ".cache/transcriptions/page.txt"])
 def test_post_task_reap_preserves_ignored_artifacts(hermetic_reap, runtime, artifact_name):

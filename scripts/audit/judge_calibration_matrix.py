@@ -40,6 +40,11 @@ except ModuleNotFoundError:
         utc_timestamp,
     )
 
+try:
+    from agent_runtime.adapters.claude import headless_claude_argv, run_headless_claude
+except ModuleNotFoundError:
+    from scripts.agent_runtime.adapters.claude import headless_claude_argv, run_headless_claude
+
 REQUEST_TIMEOUT_S = 480
 HERMES_TIMEOUT_S = 600
 HERMES_BIN = "hermes"
@@ -241,20 +246,28 @@ def command_version(binary: str) -> str:
     return combined.splitlines()[0] if combined else f"rc={proc.returncode}; empty version output"
 
 
-def run_subprocess(cmd: list[str], *, timeout_s: int, stdin: str | None = None) -> HarnessCall:
-    """Run a provider CLI and capture bounded telemetry."""
-    display_cmd = tuple(cmd[:])
+def run_subprocess(
+    cmd: list[str], *, timeout_s: int, stdin: str | None = None, headless_claude: bool = False
+) -> HarnessCall:
+    """Run a provider CLI and capture bounded telemetry.
+
+    ``headless_claude`` runs a ``claude -p`` argv through the adapter, which
+    forces the background controls (#9750); other CLIs run directly.
+    """
+    display_cmd = tuple(headless_claude_argv(cmd) if headless_claude else cmd)
     t0 = time.time()
+    options: dict[str, Any] = {
+        "input": stdin,
+        "cwd": str(PROJECT_ROOT),
+        "capture_output": True,
+        "text": True,
+        "check": False,
+    }
     try:
-        proc = subprocess.run(
-            cmd,
-            input=stdin,
-            cwd=str(PROJECT_ROOT),
-            capture_output=True,
-            text=True,
-            timeout=timeout_s,
-            check=False,
-        )
+        if headless_claude:
+            proc = run_headless_claude(cmd, timeout=timeout_s, **options)
+        else:
+            proc = subprocess.run(cmd, timeout=timeout_s, **options)
     except FileNotFoundError as exc:
         return HarnessCall(False, "", "", None, time.time() - t0, display_cmd, error=str(exc))
     except subprocess.TimeoutExpired as exc:
@@ -349,7 +362,8 @@ def run_native_cli(cell: Cell, prompt: str) -> HarnessCall:
 
     transport = {"anthropic": "native_claude", "openai": "native_codex", "google": "native_gemini", "xai": "native_grok"}[cell.family]
     require_execution_model(cell.model, transport=transport)
-    return run_subprocess(cmd, timeout_s=REQUEST_TIMEOUT_S)
+    # A print-mode Claude run ends with its final turn; no background work may outlive it (#9750).
+    return run_subprocess(cmd, timeout_s=REQUEST_TIMEOUT_S, headless_claude=cell.family == "anthropic")
 
 
 def _read_effort_line(text: str) -> tuple[int, str] | None:

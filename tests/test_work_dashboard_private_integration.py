@@ -180,7 +180,8 @@ def _public_min() -> dict[str, Any]:
             }
         ],
         "omissions": [],
-        "flags": {"orphan": True, "has_blocker": False},
+        # Server stamps flags.attention (#9741). AT_RISK is pick-list work.
+        "flags": {"orphan": True, "has_blocker": False, "attention": True},
     }
     return {
         "schema_version": "work-projection.v1",
@@ -305,7 +306,8 @@ def _healthy_public_item(*, remote_id: str = "5922", title: str = "Healthy publi
             }
         ],
         "omissions": [],
-        "flags": {"orphan": False, "has_blocker": False},
+        # ON_TRACK + OPEN_GITHUB is not pick-list work; the server stamp is false.
+        "flags": {"orphan": False, "has_blocker": False, "attention": False},
     }
 
 
@@ -458,6 +460,7 @@ def _public_stale_with_unknown_items() -> dict[str, Any]:
         "code": "INSPECT_UNKNOWN",
         "reason_codes": ["stream_authority_stale"],
     }
+    item["flags"]["attention"] = False
     doc["attention"][0]["health"] = "UNKNOWN"
     doc["attention"][0]["safe_next_action"] = item["safe_next_action"]
     # Stale streams still count as denominator-complete on the public envelope;

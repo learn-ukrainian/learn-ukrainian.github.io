@@ -532,6 +532,24 @@ def public_primary_root() -> Path:
     return main_checkout_root(Path(__file__).resolve().parents[2])
 
 
+def identity_cache_publication_allowed(worktree: Path, tasks_dir: Path) -> bool:
+    """Publish only for the public repository's own tree and task directory.
+
+    Use the tree's Git metadata, never a caller's repo/control-root hint.
+    Sibling maintenance must leave even the public control plane unchanged
+    (#9797). Foreign or unresolvable task directories remain read-only.
+    """
+    try:
+        public = public_primary_root().resolve(strict=True)
+        return (
+            (public / ".git").is_dir()
+            and tasks_dir.resolve(strict=True) == public / "batch_state" / "tasks"
+            and main_checkout_root(worktree.resolve(strict=True)).resolve(strict=True) == public
+        )
+    except (OSError, ValueError, RuntimeError):
+        return False
+
+
 def control_plane_root(repo_root: Path) -> Path:
     """Return the checkout whose ``batch_state/`` and lock dir govern ``repo_root``'s worktrees.
 

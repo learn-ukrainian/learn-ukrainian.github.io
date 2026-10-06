@@ -214,3 +214,107 @@ def test_url_positional_arguments_allow_github_com(cmd):
 def test_dot_only_segments_in_job_flag_are_refused(cmd):
     with pytest.raises(PublishBlocked, match="dot-only segments refused"):
         admit(cmd, cwd=".", environment={})
+
+
+DIAGNOSTIC_PATHS = [
+    "code-scanning/alerts",
+    "code-scanning/alerts?pr=1&ref=refs%2Fpull%2F1%2Fmerge",
+    "code-scanning/alerts/1",
+    "code-scanning/alerts/1/instances",
+    "code-scanning/alerts/1/instances?ref=refs%2Fpull%2F1%2Fmerge",
+    "check-runs/123/annotations",
+    "check-runs/123/annotations?per_page=100&page=2",
+]
+
+
+def origin_reader(*args, **kwargs):
+    from subprocess import CompletedProcess
+
+    return CompletedProcess(args, 0, "https://github.com/unit/public.git\n", "")
+
+
+@pytest.mark.parametrize("suffix", DIAGNOSTIC_PATHS)
+@pytest.mark.parametrize("prefix", ["repos/unit/public/", "https://api.github.com/repos/unit/public/"])
+@pytest.mark.parametrize("method", [[], ["--method", "GET"], ["-X", "GET"]])
+def test_diagnostic_get_paths_are_admitted(suffix, prefix, method):
+    result = admit(["api", prefix + suffix, *method], cwd=".", environment={}, reader=origin_reader)
+    assert not result.write
+
+
+@pytest.mark.parametrize("suffix", DIAGNOSTIC_PATHS)
+@pytest.mark.parametrize("method", ["POST", "PATCH", "DELETE", "PUT", "HEAD", "OPTIONS"])
+@pytest.mark.parametrize("flag", ["--method", "-X"])
+def test_diagnostic_non_get_methods_are_refused(suffix, method, flag):
+    with pytest.raises(PublishBlocked):
+        admit(["api", "repos/unit/public/" + suffix, flag, method], cwd=".", environment={}, reader=origin_reader)
+
+
+@pytest.mark.parametrize(
+    "suffix",
+    [
+        "code-scanning/alerts",
+        "code-scanning/alerts/1",
+        "code-scanning/alerts/1/instances",
+        "check-runs/123/annotations",
+    ],
+)
+@pytest.mark.parametrize("flag", ["-f", "-F", "--field", "--raw-field", "--input"])
+@pytest.mark.parametrize("method", [[], ["--method", "GET"]])
+def test_diagnostic_field_flags_are_refused(suffix, flag, method):
+    value = "-" if flag == "--input" else "state=fixture"
+    with pytest.raises(PublishBlocked):
+        admit(
+            ["api", "repos/unit/public/" + suffix, *method, flag, value],
+            cwd=".",
+            environment={},
+            reader=origin_reader,
+        )
+
+
+@pytest.mark.parametrize(
+    "suffix",
+    [
+        "code-scanning",
+        "code-scanning/alerts/",
+        "code-scanning/alerts/1/../x",
+        "code-scanning/alerts/1/instances/extra",
+        "code-scanning/alerts/1/extra",
+        "code-scanning/alerts/abc",
+        "code-scanning/alerts/../instances",
+        "code-scanning/alerts/%31",
+        "code-scanning/alerts/1/%2e%2e/x",
+        "check-runs/123",
+        "check-runs/123/annotations/extra",
+        "check-runs/../annotations",
+        "check-runs/abc/annotations",
+        "check-runs/123/rerequest",
+    ],
+)
+def test_out_of_pattern_diagnostic_paths_are_refused(suffix):
+    with pytest.raises(PublishBlocked):
+        admit(["api", "repos/unit/public/" + suffix], cwd=".", environment={}, reader=origin_reader)
+
+
+@pytest.mark.parametrize("suffix", DIAGNOSTIC_PATHS)
+@pytest.mark.parametrize(
+    "prefix", ["repos/other/public/", "repos/unit/other/", "https://other.invalid/repos/unit/public/"]
+)
+def test_diagnostic_other_repository_or_host_is_refused(suffix, prefix):
+    with pytest.raises(PublishBlocked):
+        admit(["api", prefix + suffix], cwd=".", environment={}, reader=origin_reader)
+
+
+@pytest.mark.parametrize("suffix", DIAGNOSTIC_PATHS)
+def test_diagnostic_gh_repo_cannot_override_origin(suffix):
+    with pytest.raises(PublishBlocked):
+        admit(
+            ["api", "repos/other/public/" + suffix],
+            cwd=".",
+            environment={"GH_REPO": "other/public"},
+            reader=origin_reader,
+        )
+
+
+def test_diagnostic_unknown_origin_fails_closed():
+    with pytest.raises(PublishBlocked, match="repository refused"):
+        admit(["api", "repos/unit/public/code-scanning/alerts"], cwd=".", environment={}, reader=lambda *a, **k: None)
