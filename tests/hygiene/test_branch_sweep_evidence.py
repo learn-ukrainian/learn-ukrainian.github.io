@@ -37,12 +37,22 @@ def repo(tmp_path: Path) -> Path:
     return root
 
 
-def commit_files(repo: Path, branch: str, files: dict[str, str], message: str) -> str:
+def commit_files(
+    repo: Path,
+    branch: str,
+    files: dict[str, str],
+    message: str,
+    *,
+    when: str | None = None,
+) -> str:
     """Commit ``files`` on ``branch`` without checking it out."""
     index = repo / ".git" / "evidence-index"
     index.unlink(missing_ok=True)
     env = os.environ.copy()
     env["GIT_INDEX_FILE"] = str(index)
+    if when is not None:
+        env["GIT_AUTHOR_DATE"] = when
+        env["GIT_COMMITTER_DATE"] = when
 
     def run(*args: str) -> str:
         result = subprocess.run(
@@ -111,6 +121,10 @@ def ledger(repo: Path) -> Path:
     return sweep._ledger_file(repo)
 
 
+def ledger_rows(repo: Path) -> list[dict[str, object]]:
+    return [json.loads(line) for line in ledger(repo).read_text(encoding="utf-8").splitlines()]
+
+
 def same_change(repo: Path, name: str) -> str:
     """A branch commit whose patch-id is on main under a different SHA."""
     start(repo, name)
@@ -127,7 +141,15 @@ def http(body: object, *, status: str = "200 OK", link: str | None = None) -> st
     return "\r\n".join(headers) + "\r\n\r\n" + json.dumps(body)
 
 
-def timeline_pr(number: int, merged_at: str, title: str, body: str = "") -> dict[str, object]:
+def timeline_pr(
+    number: int,
+    merged_at: str,
+    title: str,
+    body: str = "",
+    *,
+    repository: str = "example/example",
+) -> dict[str, object]:
+    owner, _, name = repository.partition("/")
     return {
         "event": "cross-referenced",
         "source": {
@@ -136,10 +158,15 @@ def timeline_pr(number: int, merged_at: str, title: str, body: str = "") -> dict
                 "number": number,
                 "title": title,
                 "body": body,
+                "repository": {"full_name": repository, "name": name, "owner": {"login": owner}},
                 "pull_request": {"merged_at": merged_at},
             },
         },
     }
+
+
+def read_timeline(raw: str, issue: int = 1200) -> tuple[sweep.IssueClosure | None, str | None]:
+    return sweep._parse_issue_timeline(raw, issue, origin=("example", "example"))
 
 
 def test_patch_id_equivalent_branch_is_deleted_after_its_receipt(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -160,11 +187,17 @@ def test_patch_id_equivalent_branch_is_deleted_after_its_receipt(repo: Path, mon
     assert item.evidence_kind == "patch-id"
     assert item.remote_deleted and item.local_deleted
     assert seen
-    receipt = json.loads(ledger(repo).read_text(encoding="utf-8").splitlines()[0])
+    rows = ledger_rows(repo)
+    receipt, outcome = rows
     assert receipt["branch"] == "codex/impl-1001"
     assert receipt["tip_sha"] == tip
     assert receipt["evidence_kind"] == "patch-id"
     assert receipt["at"].endswith("Z")
+    assert "remote_deleted" not in receipt
+    assert outcome["branch"] == "codex/impl-1001"
+    assert outcome["remote_deleted"] is True
+    assert outcome["local_deleted"] is True
+    assert outcome["error"] is None
     assert not git(repo, "ls-remote", "--heads", "origin", "codex/impl-1001")
     assert not git(repo, "branch", "--list", "codex/impl-1001")
 
@@ -188,9 +221,12 @@ def test_superseded_branch_is_accepted_when_merged_pr_covers_its_files(repo: Pat
     assert item.classification == "delete-evidence"
     assert item.evidence_kind == "merged-pr"
     assert "4444" in item.reason
-    receipt = json.loads(ledger(repo).read_text(encoding="utf-8"))
-    assert receipt["tip_sha"] == tip
-    assert receipt["evidence_kind"] == "merged-pr"
+    rows = ledger_rows(repo)
+    assert rows[0]["tip_sha"] == tip
+    assert rows[0]["evidence_kind"] == "merged-pr"
+    assert rows[1]["remote_deleted"] is True
+    assert rows[1]["local_deleted"] is True
+    assert rows[1]["error"] is None
     assert not git(repo, "branch", "--list", "codex/impl-2002")
 
 
@@ -210,6 +246,103 @@ def test_unique_files_outside_the_merged_pr_are_refused(repo: Path) -> None:
     assert not ledger(repo).exists()
     assert git(repo, "ls-remote", "--heads", "origin", "codex/impl-2002")
     assert git(repo, "branch", "--list", "codex/impl-2002")
+
+
+def test_local_only_merged_pr_branch_is_refused(repo: Path) -> None:
+    start(repo, "codex/impl-2002")
+    commit_files(repo, "codex/impl-2002", {"alpha.txt": "branch\n"}, "rewrite the guard")
+    commit_files(repo, "main", {"alpha.txt": "landed\n"}, "land the guard (#4444)")
+    publish(repo, "main")
+    item = only(repo, "codex/impl-2002", apply=True, issues=closure(4444))
+    assert item.classification == "report-only"
+    assert item.reason == sweep._MERGED_PR_ABSENT
+    assert not ledger(repo).exists()
+    assert git(repo, "branch", "--list", "codex/impl-2002")
+    assert not git(repo, "ls-remote", "--heads", "origin", "codex/impl-2002")
+
+
+def test_merged_pr_evidence_refuses_a_remote_local_tip_mismatch(repo: Path) -> None:
+    start(repo, "codex/impl-2002")
+    remote = commit_files(
+        repo,
+        "codex/impl-2002",
+        {"alpha.txt": "branch\n"},
+        "first rewrite",
+        when="2019-06-01T00:00:00Z",
+    )
+    commit_files(repo, "main", {"alpha.txt": "landed\n"}, "land the guard (#4444)", when="2020-01-01T00:00:00Z")
+    publish(repo, "main", "codex/impl-2002")
+    local = commit_files(
+        repo,
+        "codex/impl-2002",
+        {"alpha.txt": "still covered\n"},
+        "local rewrite",
+        when="2019-07-01T00:00:00Z",
+    )
+    assert git(repo, "rev-parse", "refs/remotes/origin/codex/impl-2002") == remote
+    assert local != remote
+    decision = sweep._try_evidence(
+        repo,
+        sweep.Branch("codex/impl-2002", remote_sha=remote, local_sha=local),
+        local,
+        issue_lookup=closure(4444),
+        cache=sweep._EvidenceCache(),
+    )
+    assert decision is not None
+    assert decision.classification == "report-only"
+    assert decision.reason == sweep._MERGED_PR_MISMATCH
+    assert git(repo, "rev-parse", "refs/heads/codex/impl-2002") == local
+    assert git(repo, "rev-parse", "refs/remotes/origin/codex/impl-2002") == remote
+
+
+def test_branch_commit_newer_than_the_closing_merge_is_refused(repo: Path) -> None:
+    start(repo, "codex/impl-2002")
+    commit_files(repo, "main", {"alpha.txt": "landed\n"}, "land the guard (#4444)", when="2020-01-01T00:00:00Z")
+    commit_files(
+        repo,
+        "codex/impl-2002",
+        {"alpha.txt": "after the merge\n"},
+        "rewrite after merge",
+        when="2026-01-01T00:00:00Z",
+    )
+    publish(repo, "main", "codex/impl-2002")
+    item = only(repo, "codex/impl-2002", apply=True, issues=closure(4444))
+    assert item.classification == "report-only"
+    assert item.reason == sweep._MERGED_PR_NEWER
+    assert not ledger(repo).exists()
+    assert git(repo, "branch", "--list", "codex/impl-2002")
+    assert git(repo, "ls-remote", "--heads", "origin", "codex/impl-2002")
+
+
+def test_failed_delete_records_outcome_without_claiming_success(
+    repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    tip = same_change(repo, "codex/impl-1001")
+    original = sweep._git
+
+    def fail_push(root: Path, *args: str, timeout: int = 30) -> subprocess.CompletedProcess[str]:
+        if args and args[0] == "push":
+            return subprocess.CompletedProcess(list(args), 1, stdout="", stderr="rejected by test")
+        return original(root, *args, timeout=timeout)
+
+    monkeypatch.setattr(sweep, "_git", fail_push)
+    item = only(repo, "codex/impl-1001", apply=True)
+    assert item.classification == "report-only"
+    assert item.remote_deleted is False
+    assert item.local_deleted is False
+    assert "remote deletion failed" in item.reason
+    rows = ledger_rows(repo)
+    assert len(rows) == 2
+    assert rows[0]["tip_sha"] == tip
+    assert "remote_deleted" not in rows[0]
+    assert rows[1]["branch"] == "codex/impl-1001"
+    assert rows[1]["remote_deleted"] is False
+    assert rows[1]["local_deleted"] is False
+    assert isinstance(rows[1]["error"], str)
+    assert "remote deletion failed" in rows[1]["error"]
+    assert git(repo, "rev-parse", "refs/heads/codex/impl-1001") == tip
+    assert git(repo, "ls-remote", "--heads", "origin", "codex/impl-1001")
 
 
 def test_open_pr_worktree_and_running_task_refuse_patch_id_evidence(repo: Path, tmp_path: Path) -> None:
@@ -294,7 +427,7 @@ def test_rescue_branch_ignores_file_coverage_and_accepts_patch_id(repo: Path) ->
     assert accepted.classification == "delete-evidence"
     assert accepted.evidence_kind == "patch-id"
     assert calls == []
-    assert json.loads(ledger(repo).read_text(encoding="utf-8"))["tip_sha"] == tip
+    assert ledger_rows(repo)[0]["tip_sha"] == tip
 
 
 def test_issue_number_comes_from_the_commit_when_the_name_has_none(repo: Path) -> None:
@@ -362,7 +495,7 @@ def test_ancestor_and_merged_head_rules_stay_in_place(repo: Path) -> None:
     ancestor = only(repo, "agy/old", apply=True)
     assert ancestor.classification == "delete-ancestor"
     assert ancestor.evidence_kind == "ancestor"
-    assert json.loads(ledger(repo).read_text(encoding="utf-8"))["tip_sha"] == ancestor_sha
+    assert ledger_rows(repo)[0]["tip_sha"] == ancestor_sha
 
     parent = git(repo, "rev-parse", "main")
     tree = git(repo, "rev-parse", "main^{tree}")
@@ -377,8 +510,13 @@ def test_ancestor_and_merged_head_rules_stay_in_place(repo: Path) -> None:
     )
     assert merged.classification == "delete-merged"
     assert merged.evidence_kind == "merged-head"
-    lines = ledger(repo).read_text(encoding="utf-8").splitlines()
-    assert [json.loads(line)["tip_sha"] for line in lines] == [ancestor_sha, unique]
+    rows = ledger_rows(repo)
+    assert [row["tip_sha"] for row in rows if "tip_sha" in row] == [ancestor_sha, unique]
+    outcomes = [row for row in rows if "remote_deleted" in row]
+    assert [(row["remote_deleted"], row["local_deleted"], row["error"]) for row in outcomes] == [
+        (True, True, None),
+        (True, True, None),
+    ]
 
 
 def test_timeline_parser_selects_one_closing_pull_request() -> None:
@@ -386,14 +524,14 @@ def test_timeline_parser_selects_one_closing_pull_request() -> None:
     keyword = timeline_pr(44, "2026-10-01T00:00:08Z", "other", "Closes #1200.")
     titled = timeline_pr(55, "2026-10-01T00:00:09Z", "land the work (#1200)")
     later_keyword = timeline_pr(66, "2026-10-01T00:00:09Z", "also", "Fixes #1200")
-    closure, error = sweep._parse_issue_timeline(http([keyword, titled, closed]), 1200)
+    closure, error = read_timeline(http([keyword, titled, closed]))
     assert error is None
     assert closure is not None and closure.closing_pr == 44
-    closure, error = sweep._parse_issue_timeline(http([keyword, later_keyword, closed]), 1200)
+    closure, error = read_timeline(http([keyword, later_keyword, closed]))
     assert error is None
     assert closure is not None and closure.closing_pr == 66
     part_of = timeline_pr(77, "2026-10-01T00:00:08Z", "notes", "Part of #1200")
-    closure, error = sweep._parse_issue_timeline(http([part_of, titled, closed]), 1200)
+    closure, error = read_timeline(http([part_of, titled, closed]))
     assert error is None
     assert closure is not None and closure.closing_pr == 55
     reopened = [
@@ -402,7 +540,7 @@ def test_timeline_parser_selects_one_closing_pull_request() -> None:
         {"event": "reopened", "created_at": "2026-10-02T00:00:00Z"},
         {"event": "closed", "created_at": "2026-10-03T00:00:00Z"},
     ]
-    closure, error = sweep._parse_issue_timeline(http(reopened), 1200)
+    closure, error = read_timeline(http(reopened))
     assert error is None
     assert closure is not None and closure.closing_pr is None
     same_time = [
@@ -410,7 +548,40 @@ def test_timeline_parser_selects_one_closing_pull_request() -> None:
         timeline_pr(2, "2026-10-01T00:00:08Z", "b", "Fixes #1200"),
         closed,
     ]
-    closure, error = sweep._parse_issue_timeline(http(same_time), 1200)
+    closure, error = read_timeline(http(same_time))
+    assert error is None
+    assert closure is not None and closure.closing_pr is None
+
+
+def test_timeline_parser_ignores_a_fork_pull_request_that_names_the_issue() -> None:
+    closed = {"event": "closed", "created_at": "2026-10-01T00:00:10Z"}
+    fork = timeline_pr(
+        9600,
+        "2026-10-01T00:00:09Z",
+        "land it in a fork",
+        "Closes #9297",
+        repository="someone/fork",
+    )
+    closure, error = read_timeline(http([fork, closed]), 9297)
+    assert error is None
+    assert closure is not None and closure.closing_pr is None
+    same_repo = timeline_pr(44, "2026-10-01T00:00:08Z", "land it here", "Fixes #9297")
+    closure, error = read_timeline(http([fork, same_repo, closed]), 9297)
+    assert error is None
+    assert closure is not None and closure.closing_pr == 44
+    missing_repository = {
+        "event": "cross-referenced",
+        "source": {
+            "type": "issue",
+            "issue": {
+                "number": 77,
+                "title": "no repository field",
+                "body": "Closes #9297",
+                "pull_request": {"merged_at": "2026-10-01T00:00:09Z"},
+            },
+        },
+    }
+    closure, error = read_timeline(http([missing_repository, closed]), 9297)
     assert error is None
     assert closure is not None and closure.closing_pr is None
 
@@ -423,7 +594,7 @@ def test_timeline_parser_refuses_unreadable_payloads() -> None:
         "HTTP/2.0 200 OK\r\n\r\nnot-json",
         "not an http response",
     ):
-        closure, error = sweep._parse_issue_timeline(raw, 1200)
+        closure, error = read_timeline(raw)
         assert closure is None
         assert error is not None
 

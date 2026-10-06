@@ -28,6 +28,11 @@ _SQUASH_SUBJECT_RE = re.compile(r"\(#(\d+)\)\s*$")
 _HTTP_STATUS_RE = re.compile(r"HTTP/\d+(?:\.\d+)?\s+(\d+)")
 _CLOCK_SKEW = timedelta(seconds=10)
 LEDGER_PATH = Path("batch_state") / "branch-archive" / "evidence.jsonl"
+_MERGED_PR_ABSENT = (
+    "merged-pr evidence refused: branch tip is absent from origin; recovery needs the tip on GitHub"
+)
+_MERGED_PR_MISMATCH = "merged-pr evidence refused: remote tip does not equal the local tip"
+_MERGED_PR_NEWER = "merged-pr evidence refused: a branch commit is newer than the closing merge"
 PrLookup = Callable[[Path, str], tuple[list[reaper.PullRequestState], str | None]]
 
 
@@ -270,6 +275,28 @@ def _patch_equivalent(repo: Path, cache: _EvidenceCache, base: str, tip: str) ->
     return all(cache.patch_ids.get(sha) in main_ids for sha in unique)
 
 
+def _committer_timestamps(repo: Path, revision: str) -> list[int]:
+    result = _git(repo, "log", "--format=%ct", revision, timeout=60)
+    if result.returncode:
+        raise RuntimeError(f"git log failed: {(result.stderr or result.stdout).strip()}")
+    stamps: list[int] = []
+    for line in result.stdout.splitlines():
+        if not line.isdecimal():
+            raise RuntimeError("git log returned an unreadable committer date")
+        stamps.append(int(line))
+    return stamps
+
+
+def _merge_committer_timestamp(repo: Path, sha: str) -> int:
+    result = _git(repo, "log", "-1", "--format=%ct", sha, timeout=60)
+    if result.returncode:
+        raise RuntimeError(f"git log failed: {(result.stderr or result.stdout).strip()}")
+    lines = [line for line in result.stdout.splitlines() if line]
+    if len(lines) != 1 or not lines[0].isdecimal():
+        raise RuntimeError("closing merge committer date is unreadable")
+    return int(lines[0])
+
+
 def _commit_messages(repo: Path, base: str, tip: str) -> list[str]:
     result = _git(repo, "log", "--format=%B%x1e", f"{base}..{tip}", timeout=60)
     if result.returncode:
@@ -334,6 +361,38 @@ def _title_mentions(title: str, issue: int) -> bool:
     return re.search(rf"(?<!\d)#{issue}(?!\d)", title) is not None
 
 
+def _timeline_repository(item: dict[str, object]) -> str | None:
+    """Owner/name from a timeline issue, or ``None`` when the payload does not name one."""
+    repository = item.get("repository")
+    if not isinstance(repository, dict):
+        return None
+    full_name = repository.get("full_name")
+    if isinstance(full_name, str) and full_name.count("/") == 1:
+        owner, name = full_name.split("/", 1)
+        if owner and name:
+            return f"{owner}/{name}"
+    owner_field = repository.get("owner")
+    login = owner_field.get("login") if isinstance(owner_field, dict) else None
+    name = repository.get("name")
+    if (
+        isinstance(login, str)
+        and isinstance(name, str)
+        and login
+        and name
+        and "/" not in login
+        and "/" not in name
+    ):
+        return f"{login}/{name}"
+    return None
+
+
+def _same_origin_repository(item: dict[str, object], origin: tuple[str, str]) -> bool:
+    slug = _timeline_repository(item)
+    if slug is None:
+        return False
+    return slug.casefold() == f"{origin[0]}/{origin[1]}".casefold()
+
+
 def _split_http(raw: str) -> tuple[str, str] | None:
     for separator in ("\r\n\r\n", "\n\n"):
         index = raw.find(separator)
@@ -342,8 +401,17 @@ def _split_http(raw: str) -> tuple[str, str] | None:
     return None
 
 
-def _parse_issue_timeline(raw: str, issue: int) -> tuple[IssueClosure | None, str | None]:
-    """Map one timeline response to a closure. Incomplete or malformed input is unreadable."""
+def _parse_issue_timeline(
+    raw: str,
+    issue: int,
+    *,
+    origin: tuple[str, str],
+) -> tuple[IssueClosure | None, str | None]:
+    """Map one timeline response to a closure. Incomplete or malformed input is unreadable.
+
+    A closing pull request counts only when ``source.issue.repository`` is this
+    ``origin``. A fork can name the issue; that reference is not a closer.
+    """
     parts = _split_http(raw)
     if parts is None:
         return None, "issue timeline has no HTTP header"
@@ -388,6 +456,9 @@ def _parse_issue_timeline(raw: str, issue: int) -> tuple[IssueClosure | None, st
         source = event.get("source")
         item = source.get("issue") if isinstance(source, dict) else None
         if not isinstance(item, dict) or not isinstance(item.get("pull_request"), dict):
+            continue
+        # Forks cross-reference the same issue number. Only this repository can close it.
+        if not _same_origin_repository(item, origin):
             continue
         number = item.get("number")
         if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
@@ -455,7 +526,7 @@ def _query_issue_closure(repo: Path, issue: int) -> tuple[IssueClosure | None, s
     if proc.returncode:
         detail = (proc.stderr or proc.stdout or "").strip().splitlines()
         return None, f"issue evidence unreadable: {detail[-1] if detail else proc.returncode}"
-    closure, error = _parse_issue_timeline(proc.stdout or "", issue)
+    closure, error = _parse_issue_timeline(proc.stdout or "", issue, origin=(owner, name))
     if error is not None:
         return None, f"issue evidence unreadable: {error}"
     return closure, None
@@ -484,6 +555,8 @@ def _try_evidence(
 
     Returns ``None`` when this path does not apply, so the caller keeps its existing reason.
     A ``rescue/`` branch can match patch-ids only. The issue timeline is read at most once.
+    Merged-PR evidence also requires the tip on origin, a matching local tip when one
+    exists, and no branch commit newer than the closing merge.
     """
 
     def decided(kind: str, reason: str, *, evidence_kind: str | None = None) -> Decision:
@@ -521,6 +594,11 @@ def _try_evidence(
         return decided("report-only", f"evidence check failed: {exc}")
     if issue is None:
         return None
+    # File coverage is not enough when GitHub never had this tip, or the local ref moved.
+    if branch.remote_sha is None:
+        return decided("report-only", _MERGED_PR_ABSENT)
+    if tip != branch.remote_sha or (branch.local_sha is not None and branch.local_sha != branch.remote_sha):
+        return decided("report-only", _MERGED_PR_MISMATCH)
     closure, error = _issue_once(repo, cache, issue_lookup, issue)
     if error is not None:
         return decided("report-only", f"evidence unreadable: {error}")
@@ -554,6 +632,15 @@ def _try_evidence(
         return decided("report-only", f"evidence check failed: {exc}")
     if not branch_files <= pull_files:
         return decided("report-only", "merged PR files do not cover every branch file")
+    try:
+        # A later commit can change a covered file after the merge and still pass the file check.
+        branch_dates = _committer_timestamps(repo, f"{base}..{tip}")
+        if not branch_dates:
+            return decided("report-only", "merged-pr evidence refused: branch committer dates are unreadable")
+        if any(stamp > _merge_committer_timestamp(repo, merge) for stamp in branch_dates):
+            return decided("report-only", _MERGED_PR_NEWER)
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        return decided("report-only", f"evidence check failed: {exc}")
     return decided(
         "delete-evidence",
         f"issue #{issue} closed by merged pull request #{closure.closing_pr} at {merge[:12]}; branch files covered",
@@ -733,18 +820,8 @@ def _ledger_file(repo: Path) -> Path:
     return path
 
 
-def _append_receipt(repo: Path, branch: Branch, verdict: Decision) -> None:
-    """Append one receipt and flush it before the caller deletes either ref."""
-    tip = branch.remote_sha or branch.local_sha
-    if tip is None or not SHA_RE.fullmatch(tip):
-        raise RuntimeError("evidence receipt requires a tip SHA")
-    payload = {
-        "at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "branch": branch.name,
-        "evidence_detail": verdict.evidence_detail or verdict.reason,
-        "evidence_kind": verdict.evidence_kind or verdict.classification,
-        "tip_sha": tip,
-    }
+def _append_ledger_line(repo: Path, payload: dict[str, object]) -> None:
+    """Append one JSON line and flush it to disk."""
     encoded = (json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n").encode()
     path = _ledger_file(repo)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -760,6 +837,44 @@ def _append_receipt(repo: Path, branch: Branch, verdict: Decision) -> None:
         os.fsync(directory)
     finally:
         os.close(directory)
+
+
+def _append_receipt(repo: Path, branch: Branch, verdict: Decision) -> None:
+    """Append the intent receipt and flush it before the caller deletes either ref."""
+    tip = branch.remote_sha or branch.local_sha
+    if tip is None or not SHA_RE.fullmatch(tip):
+        raise RuntimeError("evidence receipt requires a tip SHA")
+    _append_ledger_line(
+        repo,
+        {
+            "at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "branch": branch.name,
+            "evidence_detail": verdict.evidence_detail or verdict.reason,
+            "evidence_kind": verdict.evidence_kind or verdict.classification,
+            "tip_sha": tip,
+        },
+    )
+
+
+def _append_outcome(
+    repo: Path,
+    branch: Branch,
+    *,
+    remote_deleted: bool,
+    local_deleted: bool,
+    error: str | None,
+) -> None:
+    """Append what the delete attempt actually did. The intent line does not claim success."""
+    _append_ledger_line(
+        repo,
+        {
+            "at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "branch": branch.name,
+            "error": error,
+            "local_deleted": local_deleted,
+            "remote_deleted": remote_deleted,
+        },
+    )
 
 
 def _apply(repo: Path, branch: Branch, verdict: Decision) -> Decision:
@@ -782,12 +897,33 @@ def _apply(repo: Path, branch: Branch, verdict: Decision) -> Decision:
             return replace(verdict, classification="report-only", reason=f"remote verification failed: {exc}")
         if live is not None and live != branch.remote_sha:
             return replace(verdict, classification="skipped-moved", reason="origin head changed")
+    if verdict.evidence_kind == "merged-pr":
+        # Re-check the live origin tip. A stale tracking ref must not delete the only local copy.
+        if branch.remote_sha is None or live != branch.remote_sha:
+            return replace(verdict, classification="report-only", reason=_MERGED_PR_ABSENT)
+        if branch.local_sha is not None and branch.local_sha != branch.remote_sha:
+            return replace(verdict, classification="report-only", reason=_MERGED_PR_MISMATCH)
     if live is None and not branch.local_sha:
         return replace(verdict, classification="already-absent", reason="remote head already absent; no local ref")
     try:
         _append_receipt(repo, branch, verdict)
     except (OSError, RuntimeError) as exc:
         return replace(verdict, classification="report-only", reason=f"evidence receipt failed: {exc}")
+
+    def finish(result: Decision, error: str | None) -> Decision:
+        try:
+            _append_outcome(
+                repo,
+                branch,
+                remote_deleted=result.remote_deleted,
+                local_deleted=result.local_deleted,
+                error=error,
+            )
+        except (OSError, RuntimeError) as exc:
+            note = f"outcome receipt failed: {exc}"
+            return replace(result, reason=f"{result.reason}; {note}")
+        return result
+
     if branch.remote_sha and live is not None:
         try:
             result = _git(
@@ -800,30 +936,38 @@ def _apply(repo: Path, branch: Branch, verdict: Decision) -> Decision:
                 timeout=60,
             )
         except (OSError, subprocess.TimeoutExpired) as exc:
-            return replace(verdict, classification="report-only", reason=f"remote verification failed: {exc}")
+            reason = f"remote verification failed: {exc}"
+            return finish(replace(verdict, classification="report-only", reason=reason), reason)
         if result.returncode:
             output = (result.stdout + "\n" + result.stderr).strip()
             if "[rejected]" in output and "(stale info)" in output:
-                return replace(verdict, classification="skipped-moved", reason="origin head changed during deletion")
-            return replace(verdict, classification="report-only", reason=f"remote deletion failed: {output}")
+                reason = "origin head changed during deletion"
+                return finish(replace(verdict, classification="skipped-moved", reason=reason), reason)
+            reason = f"remote deletion failed: {output}"
+            return finish(replace(verdict, classification="report-only", reason=reason), reason)
         verdict = replace(verdict, remote_deleted=True)
         try:
             if _origin_head(repo, name) is not None:
-                return replace(verdict, classification="report-only", reason="origin head remains after deletion")
+                reason = "origin head remains after deletion"
+                return finish(replace(verdict, classification="report-only", reason=reason), reason)
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
-            return replace(verdict, classification="report-only", reason=f"remote verification failed: {exc}")
+            reason = f"remote verification failed: {exc}"
+            return finish(replace(verdict, classification="report-only", reason=reason), reason)
     if branch.local_sha:
         # The reaper checks the exact local head again before deleting it.
         try:
             error = reaper._prune_branch(repo, name, force=True, expected_head=branch.local_sha)
         except Exception as exc:
-            return replace(verdict, classification="report-only", reason=f"local deletion failed: {exc}")
+            reason = f"local deletion failed: {exc}"
+            return finish(replace(verdict, classification="report-only", reason=reason), reason)
         if error:
-            return replace(verdict, classification="report-only", reason=f"local deletion failed: {error}")
+            reason = f"local deletion failed: {error}"
+            return finish(replace(verdict, classification="report-only", reason=reason), reason)
         verdict = replace(verdict, local_deleted=True)
     if not verdict.remote_deleted and not verdict.local_deleted:
-        return replace(verdict, classification="already-absent", reason="remote head already absent; no local ref")
-    return verdict
+        reason = "remote head already absent; no local ref"
+        return finish(replace(verdict, classification="already-absent", reason=reason), reason)
+    return finish(verdict, None)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -838,7 +982,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.hygiene.branch_sweep --json\n"
             "  .venv/bin/python -m scripts.hygiene.branch_sweep --apply --json\n"
             "Outputs: stdout decisions. --apply appends batch_state/branch-archive/evidence.jsonl on the\n"
-            "control-plane checkout before deleting qualifying remote and local refs, then prunes tracking refs.\n"
+            "control-plane checkout before deleting qualifying remote and local refs, then appends an outcome\n"
+            "line (remote_deleted, local_deleted, error) and prunes tracking refs.\n"
             "Exit codes: 0 = sweep succeeded; 1 = repository or probe failure.\n"
             "Related: issue #9129; issue #9909; docs/runbooks/worktree-cleanup.md; drive-epic §7a."
         ),
