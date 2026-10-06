@@ -67,16 +67,6 @@ def source(tmp_path):
             }
         ]
     }
-    compatibility = [
-        {
-            "store": "sources.db",
-            "table": TABLE,
-            "source_id": SOURCE,
-            "role": "modern",
-            "source_column": "source_id",
-            "source_values": [SOURCE],
-        }
-    ]
     catalog = catalog_data("C5", OPERATION)
     for line in catalog["components"]["C5"]["instructions"]:
         line["template"] = line["template"].replace("{sentence}", "{example}")
@@ -85,7 +75,6 @@ def source(tmp_path):
         "db": db,
         "vesum": vesum,
         "register": register,
-        "compatibility": compatibility,
         "catalog": catalog,
     }
 
@@ -98,7 +87,6 @@ def gate_and_candidates(source, reader):
         Catalog(source["catalog"]),
         Resolver(source["register"], COMPONENT.adapters),
         {"C5": spec},
-        source["compatibility"],
     )
     return gate, list(COMPONENT.iter_candidates(ComponentContext(reader, {}))), spec
 
@@ -313,12 +301,11 @@ def test_synthetic_cli_build_verify_and_real_mutation_generation(source, tmp_pat
     (tmp_path / "catalog.yaml").write_text(yaml.safe_dump(source["catalog"]))
     (tmp_path / "register.yaml").write_text(yaml.safe_dump(source["register"]))
     config = {
-        "schema": "omd-review-request.v1",
+        "schema": "omd-review-request.v2",
         "catalog": "catalog.yaml",
         "register": "register.yaml",
-        "components": {"C5": {}},
         "databases": {"sources.db": str(source["db"]), "vesum.db": str(source["vesum"])},
-        "compatibility": source["compatibility"],
+        "ua_gec": {"root": str(tmp_path / "SYNTHETIC-ua-gec")},
     }
     path = tmp_path / "request.json"
     path.write_text(json.dumps(config))

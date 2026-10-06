@@ -96,6 +96,16 @@ class PravopysAttribution:
 
 class PravopysComponent:
     spec: ClassVar[dict] = {
+        "compatibility": [
+            {
+                "store": STORE,
+                "table": TABLE,
+                "source_id": SOURCE,
+                "role": "modern",
+                "source_column": "source_id",
+                "source_values": [SOURCE],
+            }
+        ],
         "operations": [OPERATION],
         "operation_specs": {
             OPERATION: {
