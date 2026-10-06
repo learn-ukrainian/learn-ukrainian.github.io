@@ -21,6 +21,13 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
+
 from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, KimiAdmissionRefused
 from scripts.agent_runtime.target_admission import (
     AdmittedTarget,
@@ -1772,7 +1779,7 @@ class AuthorityService:
         if not path.is_file():
             raise AuthorityServiceError("legacy_source_db_not_found")
         source_name = _nonempty(source, field="source")
-        conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        conn = open_readonly(path)
         conn.row_factory = sqlite3.Row
         try:
             records: list[dict[str, Any]] = []
@@ -2420,7 +2427,7 @@ class AuthorityService:
         }
 
     @staticmethod
-    def _sqlite_table_exists(conn: sqlite3.Connection, name: str) -> bool:
+    def _sqlite_table_exists(conn: SQLiteConnection, name: str) -> bool:
         return conn.execute(
             "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", (name,)
         ).fetchone() is not None
@@ -2429,7 +2436,7 @@ class AuthorityService:
     def _split_legacy_csv(value: Any) -> tuple[str, ...]:
         return tuple(item.strip() for item in str(value or "").split(",") if item.strip())
 
-    def _legacy_delivery_map(self, conn: sqlite3.Connection) -> dict[str, tuple[str, ...]]:
+    def _legacy_delivery_map(self, conn: SQLiteConnection) -> dict[str, tuple[str, ...]]:
         if not self._sqlite_table_exists(conn, "deliveries"):
             return {}
         columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(deliveries)")}
