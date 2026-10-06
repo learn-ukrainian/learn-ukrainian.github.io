@@ -406,10 +406,16 @@ def test_needs_finalize_claim_proof_requires_a_proven_merge_of_the_recorded_head
     settled: bool,
 ) -> None:
     monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: (states, error))
-    record = {"task_id": "t1", "worktree_branch": "claude/x", "final_branch_head_commit": "abc", "pid": _dead_pid()}
+    record = {
+        "task_id": "t1",
+        "worktree_branch": "claude/x",
+        "final_branch_head_commit": "abc",
+        "pid": _dead_pid(),
+        "run_nonce": "proof-attempt",
+    }
 
     assert (rw._needs_finalize_claim_proven_settled(tmp_path, record) is not None) is settled
-    for missing in ("task_id", "worktree_branch", "final_branch_head_commit"):
+    for missing in ("task_id", "worktree_branch", "final_branch_head_commit", "run_nonce"):
         assert rw._needs_finalize_claim_proven_settled(tmp_path, {**record, missing: None}) is None
 
 
@@ -423,7 +429,12 @@ def test_needs_finalize_claim_proof_keeps_the_claim_without_a_valid_positive_dea
     monkeypatch.setattr(
         rw, "_query_pr_states", lambda _repo, _branch: ([rw.PullRequestState(1, "MERGED", "abc")], None)
     )
-    record: dict[str, Any] = {"task_id": "t1", "worktree_branch": "claude/x", "final_branch_head_commit": "abc"}
+    record: dict[str, Any] = {
+        "task_id": "t1",
+        "worktree_branch": "claude/x",
+        "final_branch_head_commit": "abc",
+        "run_nonce": "proof-attempt",
+    }
     if bad_pid != "missing":
         record["pid"] = bad_pid
 
@@ -453,6 +464,7 @@ def test_needs_finalize_pr_lookup_runs_before_the_dispatch_lock_is_taken(
         repo,
         "impl-9230-r3",
         status="needs_finalize",
+        run_nonce="proof-attempt",
         worktree_path=str(worktree),
         worktree_branch="claude/impl-9230",
         final_branch_head_commit=head,
@@ -474,9 +486,11 @@ def test_needs_finalize_pr_lookup_runs_before_the_dispatch_lock_is_taken(
     assert not any(lookups_under_lock)
 
 
+@pytest.mark.parametrize("changed_field", ["final_branch_head_commit", "run_nonce", "pid"])
 def test_needs_finalize_claim_changed_after_the_proof_keeps_the_claim(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    changed_field: str,
 ) -> None:
     """The record is re-validated against the precomputed proof under the lock; a changed head keeps the claim."""
     repo = init_repo(tmp_path)
@@ -485,20 +499,26 @@ def test_needs_finalize_claim_changed_after_the_proof_keeps_the_claim(
     patch_gh(monkeypatch, {"claude/impl-9230": [{"number": 9237, "state": "MERGED", "headRefOid": head}]})
     fields = {
         "status": "needs_finalize",
+        "run_nonce": "proof-attempt",
         "worktree_path": str(worktree),
         "worktree_branch": "claude/impl-9230",
         "final_branch_head_commit": head,
         "pid": _dead_pid(),
     }
     _write_task_record(repo, "impl-9230-r3", **fields)
-    real_query = rw._query_pr_states
+    from contextlib import contextmanager
 
-    def query_then_record_moves_on(repo_root: Path, branch: str) -> Any:
-        result = real_query(repo_root, branch)
-        _write_task_record(repo, "impl-9230-r3", **{**fields, "final_branch_head_commit": "f" * 40})
-        return result
+    real_lock = worktree_claims.worktree_lock
 
-    monkeypatch.setattr(rw, "_query_pr_states", query_then_record_moves_on)
+    @contextmanager
+    def lock_after_replacement(path, **kwargs):
+        if path == worktree:
+            replacement = _dead_pid() + 1 if changed_field == "pid" else "f" * 40
+            _write_task_record(repo, "impl-9230-r3", **{**fields, changed_field: replacement})
+        with real_lock(path, **kwargs):
+            yield
+
+    monkeypatch.setattr(worktree_claims, "worktree_lock", lock_after_replacement)
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
@@ -1398,6 +1418,102 @@ def test_class_b_settled_task_removed(
     assert result.action == "removed"
     assert "detached HEAD ancestor of origin/main; settled dispatch task-id=detached-task" in result.reason
     assert not worktree_path.exists()
+
+
+@pytest.mark.parametrize("status", ["done", "failed", "no_deliverable"])
+def test_class_b_unavailable_activity_probe_retains(tmp_path, monkeypatch, status):
+    import hashlib
+
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    worktree = repo / ".worktrees/dispatch/codex/unavailable-task"
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    (repo / ".git/info/exclude").write_text("batch_state/\n.cache/\n.worktrees/\n")
+    result_file = repo / "batch_state/tasks/unavailable-task.result"
+    result_file.parent.mkdir(parents=True)
+    result_file.write_text("Український звіт\u2028result\n", encoding="utf-8")
+    output = worktree / ".cache/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored\x00\xff")
+    _write_task_record(
+        repo,
+        "unavailable-task",
+        status=status,
+        run_nonce="attempt",
+        pid=_dead_pid(),
+        worktree_path=str(worktree),
+        worktree_reused=False,
+        result_file=str(result_file),
+        result_sha256=hashlib.sha256(result_file.read_bytes()).hexdigest(),
+    )
+    record = result_file.with_suffix(".json")
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result_file, output)]
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: None)
+    patch_gh(monkeypatch, {})
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), merged_pr_only=False), worktree)
+
+    assert result.action == "skipped", result
+    assert "probe unavailable" in result.reason, result.reason
+    assert worktree.exists()
+    assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result_file, output)] == before
+
+
+@pytest.mark.parametrize("caller", ["scheduled", "success", "guarded"])
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+def test_reap_callers_interrupted_retention_preserves_bytes(tmp_path, monkeypatch, caller, status):
+    import hashlib
+
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    tree = add_worktree(repo, "codex/interrupted", path=repo / ".worktrees/dispatch/codex/interrupted")
+    (repo / ".git/info/exclude").write_text("batch_state/\n.cache/\n.worktrees/\n")
+    output = tree / ".cache/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    _write_task_record(
+        repo,
+        "interrupted",
+        status=status,
+        run_nonce="attempt",
+        pid=_dead_pid(),
+        worktree_path=str(tree),
+        keep_worktree=True,
+    )
+    record = repo / "batch_state/tasks/interrupted.json"
+    result = record.with_suffix(".result")
+    result.write_text("Український звіт\u2028result\n", encoding="utf-8")
+    state = json.loads(record.read_text())
+    state.update(result_file=str(result), result_sha256=hashlib.sha256(result.read_bytes()).hexdigest())
+    record.write_text(json.dumps(state))
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)]
+    patch_gh(monkeypatch, {"codex/interrupted": []})
+    for _ in range(2):
+        if caller == "scheduled":
+            row = result_for(rw.reap_worktrees(repo_root=repo, apply=True), tree)
+        elif caller == "success":
+            row = rw.reap_success_worktree(repo_root=repo, worktree_path=tree, reason="settled dispatch", apply=True)
+        else:
+            row = worktree_claims.remove_unclaimed_worktree(
+                tree,
+                repo_root=repo,
+                reason="caller qualification",
+                owner_task_id=None,
+            )
+        assert row.action == "skipped", row
+        assert row.reason and tree.exists()
+        after = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)]
+        assert after[1:] == before[1:]
+        current = json.loads(record.read_text())
+        receipt = current.pop("preserved_artifacts", None)
+        assert current == state
+        if receipt:
+            assert after[0] != before[0]
+            assert receipt["retention_disposition"] == "retained"
+            assert receipt["owner"] == "interrupted" and receipt["next_condition"]
+            assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
+            copied = repo / receipt["location"] / ".cache/output.bin"
+            assert hashlib.sha256(copied.read_bytes()).hexdigest() == before[2]
 
 
 def test_class_b_fail_safe_skips(

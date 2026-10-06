@@ -6497,7 +6497,9 @@ def _auto_finalize_dirty_worktree(
     )
 
 
-_RESCUE_TERMINAL_STATUSES = frozenset({"crashed", "timeout", "failed", "no_deliverable", "needs_finalize"})
+_RESCUE_TERMINAL_STATUSES = frozenset(
+    {"crashed", "timeout", "failed", "no_deliverable", "needs_finalize", "cancelled", "rate_limited"}
+)
 _RESCUE_MAX_FILE_BYTES = 5 * 1024 * 1024
 
 
@@ -6689,8 +6691,19 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
             )
             if proc.returncode != 0 or _resolve_sha(worktree, f"refs/remotes/origin/{branch}") != head:
                 raise RuntimeError("rescue tracking ref verification failed")
-            state.update({"rescue_ref": branch, "rescue_head_commit": head, "rescue_status": "rescued"})
-            _write_state_atomic(state_path, state)
+            with task_state_lock(state_path):
+                current = _read_state(state_path)
+                if not current or current.get("run_nonce") != state.get("run_nonce"):
+                    row.update(
+                        action="skipped",
+                        reason="task attempt changed after rescue push; recovery ref preserved",
+                        owner=task_id,
+                        next_condition="rescue the current attempt from its own task record",
+                        head=head,
+                    )
+                    return row
+                current.update({"rescue_ref": branch, "rescue_head_commit": head, "rescue_status": "rescued"})
+                write_state_unlocked(state_path, current)
             row.update({"action": "rescued", "head": head})
             return row
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
@@ -6913,6 +6926,26 @@ def _settle_worktree_reap(
         ok, detail = _settled_worktree_ownership(worktree, created_by_this_dispatch=created_by_this_dispatch)
         if not ok or task_record is None:
             return ok, detail
+        if task_record.get("mode") == "read-only":
+            from scripts.orchestration.reap_worktrees import _is_head_reachable_from_remote
+
+            current = _read_state(_state_path(settling_task_id))
+            if current is None or (current.get("run_nonce"), current.get("pid")) != (
+                task_record.get("run_nonce"),
+                task_record.get("pid"),
+            ):
+                return False, (
+                    f"read-only settle attempt changed; retained for owner {settling_task_id}; "
+                    "next condition: settle the current attempt"
+                )
+            head = _resolve_sha(worktree)
+            if head is None or (
+                head != _recorded_base_sha(task_record) and not _is_head_reachable_from_remote(worktree, head)
+            ):
+                return False, (
+                    f"read-only HEAD moved or unknown; retained for owner {settling_task_id}; "
+                    "next condition: HEAD equals recorded base or is reachable from a remote ref"
+                )
         stopped, refusal = _stop_worker_background_jobs(task_record, task_id=settling_task_id)
         return (True, detail) if stopped else (False, refusal)
 

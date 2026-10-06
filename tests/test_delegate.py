@@ -2723,7 +2723,8 @@ def test_dispatch_force_new_refuses_live_running_or_spawning(tmp_tasks_dir, caps
     assert list(tmp_tasks_dir.glob(f"{task_id}.*.archived.result")) == []
 
 
-def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_dir, capsys):
+@pytest.mark.parametrize("status", ["done", "failed", "cancelled", "rate_limited", "needs_finalize"])
+def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_dir, capsys, status):
     """#6980: --force-new is the only reuse escape, and it must archive both
     the prior record and the prior result before writing a new spawn state.
     """
@@ -2731,7 +2732,7 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     result_path = path.with_suffix(".result")
     original = {
         "task_id": "force-new-task",
-        "status": "done",
+        "status": status,
         "initiator": "owner",
         "pid": None,
         "receipt": "keep-this-attestation",
@@ -2739,6 +2740,10 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     }
     delegate._write_state_atomic(path, original)
     result_path.write_text("completed receipt evidence\n", encoding="utf-8")
+    import hashlib
+
+    before_record = hashlib.sha256(path.read_bytes()).hexdigest()
+    before_result = hashlib.sha256(result_path.read_bytes()).hexdigest()
 
     with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()):
         rc = delegate.cmd_dispatch(_minimal_dispatch_args("force-new-task", force_new=True, initiator="owner"))
@@ -2749,6 +2754,8 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     assert len(archived_json) == 1
     assert len(archived_result) == 1
     assert json.loads(archived_json[0].read_text(encoding="utf-8")) == original
+    assert hashlib.sha256(archived_json[0].read_bytes()).hexdigest() == before_record
+    assert hashlib.sha256(archived_result[0].read_bytes()).hexdigest() == before_result
     assert archived_result[0].read_text(encoding="utf-8") == "completed receipt evidence\n"
     state = delegate._read_state(path)
     assert state is not None
@@ -2758,6 +2765,56 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     captured = capsys.readouterr()
     assert archived_json[0].name in captured.err
     assert archived_result[0].name in captured.err
+
+
+@pytest.mark.parametrize(
+    "case", ["cancelled", "unpushed", "needs_finalize", "retention", "unknown", "rate_limited", "retry", "late"]
+)
+def test_force_new_interrupted_matrix(tmp_path, monkeypatch, tmp_tasks_dir, case):
+    primary, tree, _origin, path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    (primary / ".git/info/exclude").write_text("batch_state/\n")
+    result = path.with_suffix(".result")
+    result.write_text("Український звіт\u2028prior attempt\n", encoding="utf-8")
+    output = tree / "batch_state/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    state = delegate._read_state(path)
+    state.update(
+        status=case if case in {"cancelled", "needs_finalize", "rate_limited"} else "needs_finalize",
+        initiator="foreign" if case == "late" else "owner",
+        run_nonce="old-attempt",
+        keep_worktree=case == "retention",
+        result_file=str(result),
+        result_sha256=hashlib.sha256(result.read_bytes()).hexdigest(),
+    )
+    if case == "unknown":
+        state["status"] = "unknown"
+    delegate._write_state_atomic(path, state)
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, result, output)]
+    head = delegate._resolve_sha(tree)
+    args = _minimal_dispatch_args("rescue-test", force_new=True, initiator="owner")
+    with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()) as spawn:
+        rc = delegate.cmd_dispatch(args)
+        if case in {"late", "unknown"}:
+            assert rc == 2 and spawn.call_count == 0
+            assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, result, output)] == before
+        else:
+            assert rc == 0 and spawn.call_count == 1
+            (archived_record,) = tmp_tasks_dir.glob("rescue-test.*.archived.json")
+            (archived_result,) = tmp_tasks_dir.glob("rescue-test.*.archived.result")
+            assert [
+                hashlib.sha256(p.read_bytes()).hexdigest() for p in (archived_record, archived_result, output)
+            ] == before
+            current = delegate._read_state(path)
+            assert current["status"] == "spawning" and current["run_nonce"] != state["run_nonce"]
+            # A second request sees the new nonterminal attempt and cannot spawn again.
+            saved = path.read_bytes()
+            assert delegate.cmd_dispatch(args) == 2
+            assert spawn.call_count == 1 and path.read_bytes() == saved
+            assert [
+                hashlib.sha256(p.read_bytes()).hexdigest() for p in (archived_record, archived_result, output)
+            ] == before
+    assert tree.exists() and delegate._resolve_sha(tree) == head
 
 
 def test_dispatch_refuses_task_id_held_by_an_archived_record(tmp_tasks_dir, capsys, monkeypatch):
@@ -9116,8 +9173,8 @@ def test_branch_holder_rejects_reaper_reservation(tmp_path, monkeypatch, tmp_tas
     assert reason == "reaper lifecycle reservation is pending"
 
 
-def test_branch_holder_releases_reaped_task_after_empty_activity_probes(tmp_path, monkeypatch, tmp_tasks_dir):
-    """A reaped task record is terminal but still requires empty probes."""
+def test_branch_holder_retains_reaped_task_after_empty_activity_probes(tmp_path, monkeypatch, tmp_tasks_dir):
+    """An unsupported historical status cannot release ownership."""
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "reaped"
     branch = "codex/reaped"
     _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
@@ -9130,8 +9187,8 @@ def test_branch_holder_releases_reaped_task_after_empty_activity_probes(tmp_path
 
     releasable, reason = delegate._stale_branch_holder_releasable(occupied, branch)
 
-    assert releasable is True
-    assert reason == "clean+synced; task status=reaped"
+    assert releasable is False
+    assert "reaped" in reason
 
 
 def test_branch_holder_refuses_needs_finalize_task(tmp_path, monkeypatch, tmp_tasks_dir):
@@ -12396,6 +12453,47 @@ def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tas
         assert repeated == {"task_id": "rescue-test", "action": "skipped", "reason": "already rescued at HEAD"}
 
 
+@pytest.mark.parametrize("status", ["failed", "cancelled", "rate_limited", "needs_finalize"])
+def test_rescue_admitted_interrupted_work_preserves_bytes(tmp_path, monkeypatch, tmp_tasks_dir, status):
+    """A6 prerequisite: exercise the existing rescue after admission, before widening its gate."""
+    import hashlib
+
+    _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    state = delegate._read_state(state_path)
+    state.update(status=status, run_nonce="interrupted-attempt")
+    delegate._write_state_atomic(state_path, state)
+    result_file = state_path.with_suffix(".result")
+    result_file.write_text("Український звіт\u2028interrupted report\n", encoding="utf-8")
+    state.update(result_file=str(result_file), result_sha256=hashlib.sha256(result_file.read_bytes()).hexdigest())
+    delegate._write_state_atomic(state_path, state)
+    before = hashlib.sha256(result_file.read_bytes()).hexdigest()
+    artifact = (worktree / "artifact.txt").read_bytes()
+    output = worktree / "batch_state/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    ignored_hash = hashlib.sha256(output.read_bytes()).hexdigest()
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert result["action"] == "rescued", result
+    retrieved = subprocess.run(
+        ["git", "--git-dir", str(origin), "show", f"{result['rescue_ref']}:artifact.txt"],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    ).stdout
+    assert hashlib.sha256(retrieved).digest() == hashlib.sha256(artifact).digest()
+    assert hashlib.sha256(result_file.read_bytes()).hexdigest() == before
+    assert hashlib.sha256(output.read_bytes()).hexdigest() == ignored_hash
+    current = delegate._read_state(state_path)
+    for key in ("rescue_status", "rescue_ref", "rescue_head_commit", "rescue_finished_at", "rescue_error"):
+        current.pop(key, None)
+    assert current == state
+    saved = state_path.read_bytes()
+    assert delegate._rescue_task(state_path, apply=True)["reason"] == "already rescued at HEAD"
+    assert state_path.read_bytes() == saved
+
+
 def test_rescue_unknown_ahead_count_is_reported(tmp_path, monkeypatch, tmp_tasks_dir):
     _primary, _worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
     monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_args, **_kwargs: None)
@@ -12404,6 +12502,187 @@ def test_rescue_unknown_ahead_count_is_reported(tmp_path, monkeypatch, tmp_tasks
 
     assert result["action"] == "skipped"
     assert result["reason"] == "ahead count unavailable"
+
+
+@pytest.mark.parametrize(
+    "case", ["cancelled", "unpushed", "needs_finalize", "retention", "unknown", "rate_limited", "retry", "late"]
+)
+def test_rescue_interrupted_matrix(tmp_path, monkeypatch, tmp_tasks_dir, case):
+    primary, tree, origin, path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    (primary / ".git/info/exclude").write_text("batch_state/\n")
+    output = tree / "batch_state/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    result = path.with_suffix(".result")
+    result.write_text("Український звіт\u2028rescue result\n", encoding="utf-8")
+    state = delegate._read_state(path)
+    state.update(
+        status=case if case in {"cancelled", "rate_limited"} else "needs_finalize",
+        run_nonce="current",
+        keep_worktree=case == "retention",
+        result_file=str(result),
+        result_sha256=hashlib.sha256(result.read_bytes()).hexdigest(),
+    )
+    if case == "unknown":
+        state["worktree_reused"] = None
+    delegate._write_state_atomic(path, state)
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, result, output)]
+    head = delegate._resolve_sha(tree)
+    if case == "late":
+        read_state = delegate._read_state
+        reads = 0
+
+        def stale_initial_read(candidate):
+            nonlocal reads
+            current = read_state(candidate)
+            reads += 1
+            return {**current, "run_nonce": "stale"} if reads % 2 == 1 else current
+
+        monkeypatch.setattr(delegate, "_read_state", stale_initial_read)
+    for attempt in range(2):
+        row = delegate._rescue_task(path, apply=True)
+        current = json.loads(path.read_text())
+        if case in {"unknown", "late"}:
+            assert row["action"] == "skipped" and row["reason"]
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == before[0]
+        else:
+            assert row["action"] == ("rescued" if attempt == 0 else "skipped"), row
+            if attempt == 1:
+                assert row["reason"] == "already rescued at HEAD"
+            rescued = current.copy()
+            for key in ("rescue_status", "rescue_ref", "rescue_head_commit"):
+                rescued.pop(key)
+            assert rescued == state
+            remote = subprocess.run(
+                ["git", "--git-dir", str(origin), "show", f"{current['rescue_ref']}:artifact.txt"],
+                capture_output=True,
+                check=True,
+                timeout=30,
+            ).stdout
+            assert hashlib.sha256(remote).digest() == hashlib.sha256((tree / "artifact.txt").read_bytes()).digest()
+        assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (result, output)] == before[1:]
+        assert tree.exists() and delegate._resolve_sha(tree) == head
+
+
+@pytest.mark.parametrize(
+    "case", ["cancelled", "unpushed", "needs_finalize", "retention", "unknown", "rate_limited", "retry", "late"]
+)
+def test_worker_finalizer_interrupted_matrix(tmp_path, monkeypatch, tmp_tasks_dir, case):
+    """Run the real exit pipeline once, then repeat only its cleanup callback."""
+    primary, tree, _origin, record = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    (primary / ".git/info/exclude").write_text("batch_state/\n")
+    output = tree / "batch_state/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    result = record.with_suffix(".result")
+    response = "Український звіт\u2028worker result\n"
+    result.write_text(response, encoding="utf-8")
+    state = delegate._read_state(record)
+    mode = "danger" if case in {"unpushed", "needs_finalize"} else "read-only"
+    state.update(
+        status="running",
+        run_nonce="attempt",
+        mode=mode,
+        worktree_base_sha=delegate._resolve_sha(primary),
+        worktree_reused=None if case == "unknown" else False,
+        result_file=str(result),
+        result_sha256=hashlib.sha256(result.read_bytes()).hexdigest(),
+    )
+    delegate._write_state_atomic(record, state)
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)]
+    head = delegate._resolve_sha(tree)
+    runtime_result = _finalize_mock_result()
+    runtime_result.response = response
+    runtime_result.rate_limited = case == "rate_limited"
+    runtime_result.ok = case != "rate_limited"
+    runtime_result.returncode = 1 if case == "rate_limited" else 0
+    with patch("agent_runtime.runner.invoke", return_value=runtime_result) as invoke:
+        if case == "cancelled":
+            invoke.side_effect = KeyboardInterrupt("cancelled")
+        delegate._run_worker(
+            task_id="rescue-test",
+            agent="cursor",
+            prompt="fixture",
+            mode=mode,
+            cwd_str=str(tree),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+            keep_worktree=case == "retention",
+        )
+        final = delegate._read_state(record)
+        expected = {
+            "cancelled": "cancelled",
+            "rate_limited": "rate_limited",
+            "unpushed": "needs_finalize",
+            "needs_finalize": "needs_finalize",
+        }.get(case, "done")
+        assert final["status"] == expected, final
+        assert final["run_nonce"] == state["run_nonce"] and final["final_branch_head_commit"] == head
+        assert hashlib.sha256(record.read_bytes()).hexdigest() != before[0]
+        assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (result, output)] == before[1:]
+        assert tree.exists() and delegate._resolve_sha(tree) == head
+        if final.get("result_file"):
+            assert Path(final["result_file"]) == result
+        if case == "late":
+            delegate._write_state_atomic(record, {**final, "status": "spawning", "run_nonce": "replacement"})
+        saved = record.read_bytes()
+        for _ in range(2):
+            if delegate._should_reap_settled_worktree(
+                mode=mode,
+                keep_worktree=case == "retention",
+                final_status=final["status"],
+                returncode=final["returncode"],
+                dirty_on_exit=final["worktree_dirty_on_exit"],
+            ):
+                row = delegate._settle_worktree_reap(
+                    tree,
+                    created_by_this_dispatch=True if state["worktree_reused"] is False else None,
+                    settling_task_id="rescue-test",
+                    task_record=final,
+                )
+                assert row["action"] == "skipped", row
+            assert record.read_bytes() == saved
+            assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (result, output)] == before[1:]
+            assert tree.exists() and delegate._resolve_sha(tree) == head
+        assert invoke.call_count == 1
+
+
+@pytest.mark.parametrize("replacement", [False, True])
+def test_rescue_final_write_preserves_current_record(tmp_path, monkeypatch, tmp_tasks_dir, replacement):
+    """Simulate a force-new replacement during the network push; stale rescue cannot overwrite it."""
+    import hashlib
+
+    _primary, worktree, _origin, path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    state = delegate._read_state(path)
+    state["run_nonce"] = "original"
+    delegate._write_state_atomic(path, state)
+    real_git = delegate._rescue_git
+    changed = []
+
+    def push_then_replace(cwd, *args, **kwargs):
+        proc = real_git(cwd, *args, **kwargs)
+        if args[0] == "push" and proc.returncode == 0:
+            current = delegate._read_state(path)
+            current["concurrent_note"] = "keep this"
+            if replacement:
+                delegate._archive_task_artifacts("rescue-test")
+                current.update(run_nonce="replacement", status="spawning")
+            delegate._write_state_atomic(path, current)
+            changed.append(hashlib.sha256(path.read_bytes()).hexdigest())
+        return proc
+
+    monkeypatch.setattr(delegate, "_rescue_git", push_then_replace)
+    row = delegate._rescue_task(path, apply=True)
+    current = delegate._read_state(path)
+    assert current["concurrent_note"] == "keep this"
+    assert worktree.exists()
+    if replacement:
+        assert row["action"] == "skipped" and "attempt changed" in row["reason"]
+        assert current["run_nonce"] == "replacement" and current.get("rescue_ref") is None
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == changed[0]
+    else:
+        assert row["action"] == "rescued" and current["rescue_status"] == "rescued"
 
 
 def test_rescue_push_failure_keeps_worktree(tmp_path, monkeypatch, tmp_tasks_dir):
@@ -12664,8 +12943,10 @@ def _run_settle_reap_worker(
     own_state: dict[str, Any] = {
         "task_id": task_id,
         "status": "running",
+        "mode": mode,
         "worktree_path": str(worktree),
         "worktree_base": "main",
+        "worktree_base_sha": delegate._resolve_sha(worktree),
         "worktree_branch": branch,
     }
     if worktree_reused is not None:
@@ -12876,6 +13157,76 @@ def test_read_only_clean_settle_removes_detached_worktree(tmp_tasks_dir, tmp_pat
     assert state["status"] == "done"
     assert state["worktree_reap"]["action"] == "removed"
     assert state["worktree_reap"]["branch"] is None
+    assert not worktree.exists()
+
+
+def test_read_only_worker_exit_settle_retains_detached_worker_commit(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Porcelain stays clean after the worker commits; HEAD must still be recoverable."""
+    real_invoke = delegate._run_worker
+    real_resolve = delegate._resolve_sha
+    heads = []
+
+    def worker_with_commit(**kwargs):
+        worktree = Path(kwargs["cwd_str"])
+        (worktree / "worker-output.txt").write_bytes(b"unique worker commit\x00\xff")
+        subprocess.run(["git", "add", "worker-output.txt"], cwd=worktree, check=True, capture_output=True, timeout=30)
+        subprocess.run(
+            ["git", "commit", "-m", "worker output"], cwd=worktree, check=True, capture_output=True, timeout=30
+        )
+        heads.append(real_resolve(worktree))
+        return real_invoke(**kwargs)
+
+    monkeypatch.setattr(delegate, "_run_worker", worker_with_commit)
+    _primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="worker-commit",
+        mode="read-only",
+        detached=True,
+    )
+    assert branch is None and state["worktree_reap"]["action"] == "skipped"
+    assert "HEAD moved or unknown" in state["worktree_reap"]["reason"]
+    assert real_resolve(worktree) == heads[0]
+    assert (worktree / "worker-output.txt").read_bytes() == b"unique worker commit\x00\xff"
+
+
+@pytest.mark.parametrize("proof", ["base", "remote", "unknown", "stale"])
+def test_read_only_settle_head_and_attempt_proof(tmp_tasks_dir, tmp_path, monkeypatch, proof):
+    _primary, worktree, _origin, path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    head = delegate._resolve_sha(worktree)
+    record = delegate._read_state(path)
+    record.update(mode="read-only", run_nonce="old", worktree_base_sha=head if proof == "base" else None)
+    delegate._write_state_atomic(path, record)
+    if proof == "remote":
+        subprocess.run(
+            ["git", "push", "origin", "HEAD:refs/heads/preserved"],
+            cwd=worktree,
+            check=True,
+            capture_output=True,
+            timeout=30,
+        )
+    if proof == "stale":
+        delegate._write_state_atomic(path, {**record, "run_nonce": "new"})
+    out = delegate._settle_worktree_reap(
+        worktree,
+        created_by_this_dispatch=True,
+        settling_task_id="rescue-test",
+        task_record=record,
+    )
+    assert out["action"] == ("removed" if proof in {"base", "remote"} else "skipped"), out
+    assert worktree.exists() == (proof not in {"base", "remote"})
+
+
+def test_settle_pre_spawn_review_refusal_removes_recordless_reservation(tmp_tasks_dir, tmp_path, monkeypatch):
+    _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="review-refusal")
+    assert not delegate._state_path("review-refusal").exists()
+    out = delegate._settle_worktree_reap(
+        worktree,
+        created_by_this_dispatch=True,
+        settling_task_id="review-refusal",
+    )
+    assert out["action"] == "removed", out
     assert not worktree.exists()
 
 
@@ -13290,7 +13641,7 @@ def test_active_legacy_claim_through_symlink_alias_blocks_reap(tmp_tasks_dir, tm
         (b'{"status": ["done"]}', True),
         (b'{"status": "d\\u006fne"}', True),
         (b'{"status": "done_later"}', True),
-        (b'{"status": "reaped"}', False),
+        (b'{"status": "reaped"}', True),
     ],
 )
 def test_claim_prefilter_keeps_active_and_statusless_records(raw, candidate):

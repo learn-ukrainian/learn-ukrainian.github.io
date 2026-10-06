@@ -73,6 +73,9 @@ def world(tmp_path, monkeypatch):
     git(primary, "worktree", "add", "--detach", str(protected_tree), "main")
     git(sibling, "clone", "--bare", "--no-hardlinks", str(sibling), str(upstream))
     git(sibling, "remote", "add", "origin", "git@github.com:fixture/sibling.git")
+    # Seed canonical fetched state through the isolated remote, as a real
+    # dispatch's base fetch would; a local main branch alone is insufficient.
+    git(sibling, "fetch", str(upstream), "refs/heads/*:refs/remotes/origin/*")
     (primary / ".venv/bin").mkdir(parents=True)
     (primary / ".venv/bin/python").symlink_to(sys.executable)
     (primary / "batch_state/tasks").mkdir(parents=True)
@@ -238,16 +241,20 @@ def test_repository_gh_credential_helpers_refused(world, scope, verb):
 def test_command_gh_credential_helpers_refused(world):
     with sg.git_session() as runner:
         # Exercise Git's real command-scope output, without caller inheritance.
-        runner.env.update({
-            "GIT_CONFIG_COUNT": "1",
-            "GIT_CONFIG_KEY_0": "credential.https://github.com.helper",
-            "GIT_CONFIG_VALUE_0": "!gh auth git-credential",
-        })
+        runner.env.update(
+            {
+                "GIT_CONFIG_COUNT": "1",
+                "GIT_CONFIG_KEY_0": "credential.https://github.com.helper",
+                "GIT_CONFIG_VALUE_0": "!gh auth git-credential",
+            }
+        )
         with pytest.raises(sg.Refusal, match="unsupported redirect, transport, or executable configuration"):
             sg._safe_config(runner, world[1])
 
 
-@pytest.mark.parametrize("key", ["include.path", "includeIf.gitdir:*/.path", "url.ssh://git@github.com/.insteadOf", "core.sshCommand"])
+@pytest.mark.parametrize(
+    "key", ["include.path", "includeIf.gitdir:*/.path", "url.ssh://git@github.com/.insteadOf", "core.sshCommand"]
+)
 @pytest.mark.parametrize("verb", ["status", "sync-main"])
 def test_global_unsafe_config_still_refused(world, tmp_path, key, verb):
     included = tmp_path / "included gitconfig"
@@ -277,13 +284,16 @@ def foreign(world, tmp_path):
     return checkout, sha, bundle
 
 
-@pytest.mark.parametrize("name", [
-    "git@github.com:fixture/sibling.git",
-    "ssh://git@github.com/fixture/sibling.git",
-    "github.com/fixture/sibling.git",
-    "github:fixture",
-    "sibling-git-canonical",
-])
+@pytest.mark.parametrize(
+    "name",
+    [
+        "git@github.com:fixture/sibling.git",
+        "ssh://git@github.com/fixture/sibling.git",
+        "github.com/fixture/sibling.git",
+        "github:fixture",
+        "sibling-git-canonical",
+    ],
+)
 def test_remote_names_cannot_redirect_fetch(world, foreign, tmp_path, name):
     sibling, upstream = world[1:]
     other, sha, _ = foreign
@@ -398,6 +408,85 @@ def test_remove_exactly_one_product(world, managed):
     assert not managed.exists() and other.exists()
     assert str(managed) not in git(world[1], "worktree", "list", "--porcelain")
     assert snapshot(world[0]) == before
+
+
+@pytest.mark.parametrize("ancestor", [False, True])
+def test_remove_clean_detached_pushed_commit(world, managed, ancestor):
+    head = commit(managed, "worker.txt", "pushed worker output\n")
+    if ancestor:
+        commit(managed, "later.txt", "pushed descendant\n")
+    git(managed, "push", str(world[2]), "HEAD:refs/heads/worker")
+    git(world[1], "fetch", str(world[2]), "refs/heads/worker:refs/remotes/origin/worker")
+    git(managed, "checkout", "--detach", head)
+    assert git(managed, "status", "--porcelain=v1", "--untracked-files=all") == ""
+    code, _, err = invoke("worktree-remove", managed)
+    assert code == 0, err
+    assert not managed.exists()
+    assert git(world[1], "for-each-ref", "--contains", head, "--format=%(refname)") == "refs/remotes/origin/worker"
+
+
+@pytest.mark.parametrize("ref", ["refs/heads/worker", "refs/tags/worker", "refs/remotes/other/worker"])
+def test_remove_local_or_other_remote_ref_does_not_prove_push(world, managed, ref):
+    head = commit(managed, "worker.txt", "unpushed work\n")
+    git(world[1], "update-ref", ref, head)
+    for _ in range(2):
+        code, _, err = invoke("worktree-remove", managed)
+        assert code == 2 and "unpushed" in err
+        assert managed.exists() and git(managed, "rev-parse", "HEAD") == head
+
+
+@pytest.mark.parametrize("binding", ["matching", "different", "malformed", "missing-object", "conflicting"])
+def test_remove_recorded_base_proof(world, managed, binding):
+    base = git(managed, "rev-parse", "HEAD")
+    head = commit(managed, "worker.txt", "unpushed work\n")
+    value = {"matching": head, "different": base, "malformed": None, "missing-object": "0" * 40}.get(binding, head)
+    tasks = world[0] / "batch_state/tasks"
+    record = tasks / "base-proof.json"
+    conflict = tasks / "conflicting-proof.json"
+    state = {"task_id": "base-proof", "status": "done", "worktree_path": str(managed), "worktree_base_sha": value}
+    record.write_text(json.dumps(state))
+    if binding == "conflicting":
+        conflict.write_text(json.dumps({**state, "task_id": "conflict", "worktree_base_sha": base}))
+    try:
+        code, _, err = invoke("worktree-remove", managed)
+        if binding == "matching":
+            assert code == 0, err
+            assert not managed.exists()
+        else:
+            assert code == 2 and ("unpushed" if binding == "different" else "reachability is unknown") in err
+            assert managed.exists() and git(managed, "rev-parse", "HEAD") == head
+    finally:
+        record.unlink()
+        if conflict.exists():
+            conflict.unlink()
+
+
+@pytest.mark.parametrize("probe", ["head", "refs", "records"])
+def test_remove_unreadable_reachability_retains_tree(world, managed, monkeypatch, probe):
+    before = snapshot(world[1])
+    original = sg.Git.text
+
+    def unreadable(self, path, *args):
+        if (probe == "refs" and args[0] == "for-each-ref") or (
+            probe == "head" and path == managed and args == ("rev-parse", "--verify", "HEAD^{commit}")
+        ):
+            raise sg.Refusal("cannot inspect Git state")
+        return original(self, path, *args)
+
+    monkeypatch.setattr(sg.Git, "text", unreadable)
+    original_iterdir = Path.iterdir
+
+    def unreadable_records(self):
+        if self == world[0] / "batch_state/tasks":
+            raise OSError("unreadable records")
+        return original_iterdir(self)
+
+    if probe == "records":
+        monkeypatch.setattr(Path, "iterdir", unreadable_records)
+    for _ in range(2):
+        code, _, err = invoke("worktree-remove", managed)
+        assert code == 2 and "local work preserved" in err
+        assert snapshot(world[1]) == before
 
 
 def test_remove_recorded_base_proof_matching_preserves_primaries(world, managed):
@@ -671,6 +760,57 @@ def test_swept_executable_keys_never_run(world, managed, tmp_path, key, refused,
         assert git(sibling, "rev-parse", "HEAD") == sha
     elif verb == "worktree-remove":
         assert not managed.exists()
+
+
+@pytest.mark.parametrize(
+    "status",
+    ["failed", "cancelled", "done", "unpushed", "needs_finalize", "rate_limited", "unknown", "retention", "retry"],
+)
+def test_sibling_remove_interrupted_work_preserves_bytes(world, managed, tmp_path, status):
+    import hashlib
+
+    primary, _sibling, _upstream = world
+    unique = managed / "unique-worker.bin"
+    unique.write_bytes(b"unique unpushed worker commit\x00\xff")
+    git(managed, "add", "--", unique.name)
+    git(managed, "-c", "core.hooksPath=/dev/null", "commit", "-m", "unique worker output")
+    head = git(managed, "rev-parse", "HEAD")
+    unique_sha256 = hashlib.sha256(unique.read_bytes()).hexdigest()
+    assert git(managed, "branch", "-r", "--contains", head) == ""
+    record = primary / "batch_state/tasks/interrupted.json"
+    result = tmp_path / "interrupted.result"
+    output = managed / "batch_state/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    result.write_text("Український звіт\u2028result\n", encoding="utf-8")
+    record.write_text(
+        json.dumps(
+            {
+                "task_id": "interrupted",
+                "status": "done" if status in {"retention", "unpushed", "retry"} else status,
+                "keep_worktree": status == "retention",
+                "run_nonce": "attempt",
+                "worktree_path": str(managed),
+                "final_branch_head_commit": head,
+                "result_file": str(result),
+                "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
+            }
+        )
+    )
+    # A clean detached HEAD must be retained solely because its commit is unpushed.
+    assert git(managed, "status", "--porcelain=v1", "--untracked-files=all") == ""
+    assert git(managed, "for-each-ref", "--contains", head, "--format=%(refname)") == ""
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)]
+    try:
+        for _ in range(2):
+            rc, _out, err = invoke("worktree-remove", managed)
+            assert rc == 2 and "unpushed" in err
+            assert managed.exists()
+            assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)] == before
+            assert git(managed, "rev-parse", "HEAD") == head
+            assert hashlib.sha256(unique.read_bytes()).hexdigest() == unique_sha256
+    finally:
+        record.unlink()
 
 
 @pytest.mark.parametrize("key", ["protocol.allow", "protocol.ext.allow", "protocol.file.allow", "protocol.ssh.allow"])
