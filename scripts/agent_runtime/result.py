@@ -24,10 +24,7 @@ from scripts.fleet_comms.contracts import ResponseEnvelope
 
 @dataclass(frozen=True)
 class AgyAttempt:
-    """Invocation-bound AGY evidence and native denial target (#8771).
-
-    Permission targets are local diagnostics, never public review evidence.
-    """
+    """Invocation-bound AGY evidence; denial targets are sanitized (#8771)."""
 
     completion_reason: str | None = None
     failure_code: str | None = None
@@ -45,6 +42,9 @@ class AgyAttempt:
     sources_tool_names: tuple[str, ...] = ()
     cli_version: str = "unknown"
     permission_target: str | None = None
+    permission_kind: str | None = None
+    denied_tool_name: str | None = None
+    permission_target_unknown_reason: str | None = None
 
 
 @dataclass(frozen=True)

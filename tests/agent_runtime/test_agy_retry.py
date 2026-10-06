@@ -656,6 +656,9 @@ def test_older_attempt_records_load_without_a_permission_target(new_counts):
         record.update(denied_file_read_count=1, denied_mcp_count=2)
     attempt = AgyAttempt(**json.loads(json.dumps(record)))
     assert attempt.permission_target is None
+    assert attempt.permission_kind is None
+    assert attempt.denied_tool_name is None
+    assert attempt.permission_target_unknown_reason is None
     fields = AgyTelemetry(attempts=(attempt,), accepted_attempt=1).task_fields()["agy_attempts"][0]
     assert fields["permission_target"] is None
     assert fields["permission_profile_id"] == record["permission_profile_id"]

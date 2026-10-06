@@ -1,0 +1,2 @@
+{"type":"USER_INPUT","status":"DONE","content":"Public fixture input."}
+{"step_index":1,"source":"MODEL","type":"PLANNER_RESPONSE","status":"DONE","tool_calls":[{"name":"view_file","args":{"AbsolutePath":"\"evidence.txt\"","EndLine":"100","StartLine":"1","toolAction":"\"Viewing file\""}}]}
