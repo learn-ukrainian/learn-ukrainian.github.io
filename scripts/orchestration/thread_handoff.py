@@ -868,9 +868,26 @@ def _bundle_archive_local_lineage(
                 "rollover_id": remote_manifest.get("rollover_id"),
             }
             tree.write_path(f"{archive}/lease.json", _bundle_json(archived_state), replace=True)
-    except Exception:
-        tree.write_path(f"{archive}/lease.json", original_lease, replace=True)
-        tree.move(archive, lineage)
+    except Exception as rewrite_error:
+        # The lineage directory already lives at `archive`. Put the original
+        # lease back, then move the directory home. If either step fails, the
+        # copy is left behind and the typed error names that relative path.
+        restore_error = None
+        try:
+            tree.write_path(f"{archive}/lease.json", original_lease, replace=True)
+        except Exception as exc:
+            restore_error = exc
+        if restore_error is None:
+            try:
+                tree.move(archive, lineage)
+            except Exception as exc:
+                restore_error = exc
+        if restore_error is not None:
+            raise BundleReconcileRefused(
+                "reconcile_archive_restore_failed",
+                f"archive lease rewrite failed: {rewrite_error}; archive restore failed: {restore_error}; "
+                f"leftover archive: {archive}",
+            ) from restore_error
         raise
     return state_root / archive
 
@@ -901,7 +918,8 @@ def _bundle_validate_lease_member(
     )
     if error:
         raise ValueError(f"bundle lease is invalid: {error}")
-    assert replacement is not None
+    if replacement is None:
+        raise ValueError("bundle lease replacement is missing")
     if state.get("lineage_id") != lineage_id or state.get("rollover_id") != manifest.get("rollover_id"):
         raise ValueError("bundle lease identity does not match its manifest")
     try:
@@ -976,7 +994,7 @@ def _bundle_commit_install(
     staged_repo: Mapping[str, Path],
     local_lineage_exists: bool,
     install_handoff: bool = True,
-) -> tuple[Path | None, list[str]]:
+) -> tuple[Path | None, list[str], dict[str, str] | None]:
     """Commit and roll back using only descriptor-relative file operations."""
     agent = normalize_agent_name(str(manifest["agent"]))
     lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
@@ -1028,8 +1046,18 @@ def _bundle_commit_install(
             )
             tree.move(staged_lineage.relative_to(state_root).as_posix(), lineage)
             lineage_replaced = True
-            cleanup_stage = True
-            return archived, preserved
+            # The install has committed. A later stage-removal failure must
+            # stay a warning on that success and must not report it as refused.
+            stage_cleanup_warning: dict[str, str] | None = None
+            try:
+                tree.remove_path(stage)
+            except Exception as exc:
+                stage_cleanup_warning = {
+                    "code": "reconcile_stage_cleanup_failed",
+                    "error": f"stage cleanup failed: {exc}; retained stage: {stage}",
+                    "stage": stage,
+                }
+            return archived, preserved, stage_cleanup_warning
         except Exception as install_error:
             rollback_errors: list[str] = []
             if lineage_replaced:
@@ -5743,8 +5771,10 @@ class _BundleReconcileTree:
     def parent(self, path: str, *, create: bool = False) -> Iterator[tuple[int, str]]:
         parts = _bundle_member_path(path).split("/")
         count = len(self.fds)
-        assert self.root_fd is not None
-        parent = self.root_fd
+        root_fd = self.root_fd
+        if root_fd is None:
+            raise BundleReconcileRefused("reconcile_tree_unopened")
+        parent = root_fd
         try:
             for component in parts[:-1]:
                 parent = self.directory(parent, component, "install_dir", create=create)
@@ -5961,7 +5991,7 @@ def _bundle_import_candidate(
         manifest=manifest,
         members=members,
     )
-    archived, preserved = _bundle_commit_install(
+    archived, preserved, stage_cleanup_warning = _bundle_commit_install(
         repo_root,
         state_root,
         manifest=manifest,
@@ -5971,7 +6001,7 @@ def _bundle_import_candidate(
         local_lineage_exists=local_lineage_exists,
         install_handoff=install_handoff,
     )
-    return {
+    result = {
         "status": "installed",
         "agent": agent,
         "lineage_id": lineage_id,
@@ -5983,6 +6013,9 @@ def _bundle_import_candidate(
         "upload_seq": manifest.get("upload_seq", 0),
         "install_handoff": install_handoff,
     }
+    if stage_cleanup_warning is not None:
+        result["cleanup_warning"] = stage_cleanup_warning
+    return result
 
 
 def cmd_import_bundle(args: argparse.Namespace) -> int:

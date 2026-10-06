@@ -7,6 +7,9 @@ import errno
 import inspect
 import json
 import os
+import subprocess
+import sys
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -393,6 +396,12 @@ _PRIMITIVE_CALLS = {
 
 
 def _assert_bundle_containment(source):
+    """Allowlist every call reachable from the bundle import writers.
+
+    Limits: the lint cannot trace a path built in a variable, an allowed
+    method called with an outside path, or an imported library helper.
+    Behavioural real-symlink tests are the containment proof.
+    """
     module = ast.parse(source)
     definitions = {node.name: node for node in module.body if isinstance(node, (ast.FunctionDef, ast.ClassDef))}
     parents = {child: parent for parent in ast.walk(module) for child in ast.iter_child_nodes(parent)}
@@ -465,7 +474,7 @@ def _assert_bundle_containment(source):
 
 
 def test_reconcile_writes_have_one_descriptor_primitive():
-    """Every import writer is confined to an explicit descriptor-call allowlist."""
+    """The allowlist lint accepts this module; its limits are on the helper."""
     _assert_bundle_containment(inspect.getsource(th))
 
 
@@ -610,6 +619,7 @@ def test_newer_install_preserves_archive_receipt_and_handoff(newer_bundle, capsy
     assert th.cmd_import_bundle(_import_args(b.root, b.bundle)) == 0
     output = json.loads(capsys.readouterr().out)
     assert output['status'] == 'installed'
+    assert 'cleanup_warning' not in output
     archive = b.root / output['archived']
     archived_lease = json.loads((archive / 'lease.json').read_bytes())
     assert archived_lease['replacement']['status'] == 'superseded'
@@ -844,22 +854,187 @@ def test_rollback_archive_link_refuses_and_still_restores_original(newer_bundle,
     assert stage.relative_to(b.root).as_posix() in output['error']
 
 
-def test_stage_cleanup_failure_reports_retained_stage(newer_bundle, monkeypatch, capsys):
+def test_stage_cleanup_failure_reports_installed_with_warning(newer_bundle, monkeypatch):
     b = newer_bundle
     native_remove = th._BundleReconcileTree.remove_path
+    captured = {}
+    real_candidate = th._bundle_import_candidate
 
     def remove(tree, path):
         if '.import-' in path:
             raise OSError('injected stage cleanup failure')
         return native_remove(tree, path)
 
+    def spy(*args, **kwargs):
+        result = real_candidate(*args, **kwargs)
+        captured['result'] = result
+        return result
+
     monkeypatch.setattr(th._BundleReconcileTree, 'remove_path', remove)
+    monkeypatch.setattr(th, '_bundle_import_candidate', spy)
+    monkeypatch.setattr(gate, '_import_thread_handoff', lambda: th)
+    monkeypatch.setattr(th, '_bundle_api_list', lambda *_a, **_kw: [{'manifest': b.manifest, 'upload_seq': 8}])
+    monkeypatch.setattr(th, '_bundle_api_by_seq', lambda *_a, **_kw: (b.manifest, b.blob))
+    surfaced = gate.phase_rollover_import(
+        SimpleNamespace(import_bundle=True, repo_root=str(b.root), agent=AGENT, stream=STREAM)
+    )
+    output = captured['result']
+    assert output['status'] == 'installed'
+    warning = output['cleanup_warning']
+    stage = next(b.lineage.parent.glob('.*.import-*'))
+    relative = stage.relative_to(b.root).as_posix()
+    assert warning['code'] == 'reconcile_stage_cleanup_failed'
+    assert warning['stage'] == relative
+    assert relative in warning['error']
+    assert 'injected stage cleanup failure' in warning['error']
+    assert str(b.root) not in warning['error']
+    assert json.loads(b.receipt.read_bytes())['upload_seq'] == 8
+    assert surfaced['status'] == 'issue'
+    assert surfaced['warning'].startswith('WARNING:')
+    assert relative in surfaced['warning']
+    assert 'reconcile_stage_cleanup_failed' in surfaced['warning']
+    assert 'skipped' not in surfaced['warning']
+    assert 'refused' not in surfaced['warning']
+    assert str(b.root) not in surfaced['warning']
+
+
+@pytest.mark.parametrize('restore_failure', ['lease-restore', 'move-back'])
+def test_archive_restore_failure_names_leftover_copy(newer_bundle, monkeypatch, capsys, restore_failure):
+    b = newer_bundle
+    original_lineage = _snapshot(b.lineage)
+    original_handoff = (b.root / HANDOFF_PATH).read_bytes()
+    original_receipt = b.receipt.read_bytes()
+    before = _snapshot(b.root)
+    native_write = th._BundleReconcileTree.write_path
+    native_move = th._BundleReconcileTree.move
+    archive_writes = 0
+
+    def write(tree, path, payload, **kwargs):
+        nonlocal archive_writes
+        if '/_archive/' in path and path.endswith('/lease.json'):
+            archive_writes += 1
+            if archive_writes == 1:
+                raise OSError('injected archive lease rewrite failure')
+            if restore_failure == 'lease-restore':
+                raise OSError('injected archive lease restore failure')
+        return native_write(tree, path, payload, **kwargs)
+
+    def move(tree, source, target):
+        if restore_failure == 'move-back' and '/_archive/' in source:
+            raise OSError('injected archive move-back failure')
+        return native_move(tree, source, target)
+
+    monkeypatch.setattr(th._BundleReconcileTree, 'write_path', write)
+    monkeypatch.setattr(th._BundleReconcileTree, 'move', move)
     assert th.cmd_import_bundle(_import_args(b.root, b.bundle)) == 2
     output = json.loads(capsys.readouterr().out)
-    assert output['code'] == 'reconcile_stage_cleanup_failed'
-    stage = next(b.lineage.parent.glob('.*.import-*'))
-    assert stage.relative_to(b.root).as_posix() in output['error']
-    assert json.loads(b.receipt.read_bytes())['upload_seq'] == 8
+    archives = [path for path in (b.lineage.parent / '_archive').iterdir() if path.is_dir()]
+    assert len(archives) == 1
+    leftover = archives[0].relative_to(b.root).as_posix()
+    assert output['status'] == 'refused'
+    assert output['code'] == 'reconcile_archive_restore_failed'
+    assert leftover in output['error']
+    assert not Path(leftover).is_absolute()
+    assert str(b.root) not in output['error']
+    assert 'injected archive lease rewrite failure' in output['error']
+    if restore_failure == 'move-back':
+        assert 'injected archive move-back failure' in output['error']
+    else:
+        assert 'injected archive lease restore failure' in output['error']
+    assert (archives[0] / 'lease.json').read_bytes() == original_lineage['lease.json']
+    assert _snapshot(b.lineage) == original_lineage
+    assert (b.root / HANDOFF_PATH).read_bytes() == original_handoff
+    assert b.receipt.read_bytes() == original_receipt
+    assert not list(b.lineage.parent.glob('.*.import-*'))
+    assert not list(b.root.rglob('.reconcile-*.tmp'))
+    extra = set(_snapshot(b.root)) - set(before)
+    assert extra
+    assert all(name.startswith(leftover + '/') for name in extra)
+
+
+def test_session_start_warns_for_each_installed_bundle_cleanup(monkeypatch):
+    stage = '.agent/thread-rollovers/claude-infra/.lineage-probe.import-abc'
+
+    class FakeTH:
+        @staticmethod
+        def main(argv):
+            del argv
+            print(json.dumps({
+                'status': 'installed',
+                'bundles': [
+                    {
+                        'status': 'installed',
+                        'cleanup_warning': {
+                            'code': 'reconcile_stage_cleanup_failed',
+                            'stage': stage,
+                            'error': f'stage cleanup failed; retained stage: {stage}',
+                        },
+                    },
+                    {'status': 'noop'},
+                ],
+            }))
+            return 0
+
+    monkeypatch.setattr(gate, '_import_thread_handoff', lambda: FakeTH)
+    surfaced = gate.phase_rollover_import(
+        SimpleNamespace(import_bundle=True, repo_root='.', agent=AGENT, stream=STREAM)
+    )
+    assert surfaced['status'] == 'issue'
+    assert surfaced['warning'].startswith('WARNING:')
+    assert stage in surfaced['warning']
+    assert 'reconcile_stage_cleanup_failed' in surfaced['warning']
+    assert 'skipped' not in surfaced['warning']
+    assert 'refused' not in surfaced['warning']
+
+
+def test_typed_checks_hold_under_optimize():
+    root = Path(__file__).resolve().parents[2]
+    script = """
+import sys
+from pathlib import Path
+from scripts.orchestration import thread_handoff as th
+
+if sys.flags.optimize < 1:
+    sys.exit("python -O did not set optimize")
+
+th.validate_live_lease = lambda *_args, **_kwargs: (None, None)
+try:
+    th._bundle_validate_lease_member(
+        Path("."),
+        agent="claude-infra",
+        lineage_id="lineage-probe",
+        manifest={},
+        members={
+            ".agent/thread-rollovers/claude-infra/lineage-probe/lease.json": b"{}",
+        },
+    )
+except ValueError as exc:
+    if "bundle lease replacement is missing" not in str(exc):
+        sys.exit("replacement check raised the wrong error: " + str(exc))
+else:
+    sys.exit("replacement check did not fire")
+
+tree = th._BundleReconcileTree(Path("."), "claude-infra", "lineage-probe")
+try:
+    with tree.parent("lease.json"):
+        sys.exit("closed tree parent yielded")
+except th.BundleReconcileRefused as exc:
+    if exc.code != "reconcile_tree_unopened":
+        sys.exit("root check raised the wrong code: " + exc.code)
+else:
+    sys.exit("root check did not fire")
+print("typed-checks-ok")
+"""
+    completed = subprocess.run(
+        [sys.executable, "-O", "-c", script],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert completed.stdout.strip() == "typed-checks-ok"
 
 
 @pytest.mark.parametrize('mutation', [
