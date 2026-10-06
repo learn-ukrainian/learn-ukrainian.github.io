@@ -25,6 +25,7 @@ import json
 import os
 import stat
 import sys
+from collections.abc import Callable
 from dataclasses import asdict
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
@@ -59,13 +60,22 @@ EXIT_ERROR = 3
 EXIT_DIGEST_MISMATCH = 4
 
 
-def _unlink_temp_file(root_fd: int, name: str, *, root: Path, expected_dev: int, expected_ino: int) -> None:
+def _unlink_temp_file(
+    root_fd: int,
+    name: str,
+    *,
+    root: Path,
+    expected_dev: int,
+    expected_ino: int,
+    before_delete: Callable[[], None] | None = None,
+) -> None:
     """Unlink one proven regular-file child of the temp root, by descriptor.
 
     Refuses identity drift, foreign ownership, extra hard links, a device
     change and bind-mount targets. In a sticky temp directory only the owner
     can replace the entry between this check and ``unlinkat``, and the owner
-    is the sweeping user.
+    is the sweeping user. ``before_delete`` runs last, immediately before
+    ``unlinkat``.
     """
     from scripts.common.task_scratch import ContainmentError, mount_points
 
@@ -85,6 +95,8 @@ def _unlink_temp_file(root_fd: int, name: str, *, root: Path, expected_dev: int,
         raise ContainmentError(f"{name!r} has other hard links")
     if info.st_dev != os.fstat(root_fd).st_dev:
         raise ContainmentError(f"{name!r} sits on a different device than the temp root")
+    if before_delete is not None:
+        before_delete()
     os.unlink(name, dir_fd=root_fd)
 
 
@@ -95,10 +107,14 @@ def reap_attributed_temp(
     repo_root: Path,
     expected_dev: int,
     expected_ino: int,
+    before_delete: Callable[[], None] | None = None,
 ) -> None:
     """Use the common descriptor-safe scratch reaper for a proven legacy child.
 
-    The caller owns attribution, age and live-process rechecks. This layer
+    The caller owns attribution, age and live-process rechecks and passes the
+    final one as ``before_delete``: it runs after every non-destructive
+    containment check and immediately before the first unlink, and any
+    exception it raises refuses the removal with nothing deleted. This layer
     enforces direct-child containment and recorded identity without introducing
     another recursive deletion implementation. Directories go through the
     task-scratch tree remover; a regular file (unattributed scratch, #9737)
@@ -117,7 +133,14 @@ def reap_attributed_temp(
     root_fd = os.open(root, _DIR_OPEN_FLAGS)
     try:
         if stat.S_ISREG(os.stat(path.name, dir_fd=root_fd, follow_symlinks=False).st_mode):
-            _unlink_temp_file(root_fd, path.name, root=root, expected_dev=expected_dev, expected_ino=expected_ino)
+            _unlink_temp_file(
+                root_fd,
+                path.name,
+                root=root,
+                expected_dev=expected_dev,
+                expected_ino=expected_ino,
+                before_delete=before_delete,
+            )
             return
         _remove_invocation_dir(
             root_fd,
@@ -125,6 +148,7 @@ def reap_attributed_temp(
             namespace=root,
             expected_dev=expected_dev,
             expected_ino=expected_ino,
+            before_delete=before_delete,
         )
     finally:
         os.close(root_fd)
@@ -523,37 +547,103 @@ def cmd_latest(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
-    sub = parser.add_subparsers(dest="command", required=True)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Plan, digest-check and apply worktree retention through the safe reaper (dry-run by default).\n"
+            "Use for dispatch-worktree retention evidence; not for temp scratch (use scripts.hygiene.tmp_sweep)."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/hygiene/retention_engine.py plan\n"
+            "  .venv/bin/python scripts/hygiene/retention_engine.py apply --plan batch_state/fleet-comms/retention/latest.json --dry-run\n"
+            "  .venv/bin/python scripts/hygiene/retention_engine.py latest\n"
+            "Outputs: plan writes plan-<stamp>-<digest>.json, latest.json and the Gate 5 observation log under "
+            "--plan-dir; apply writes <plan>.receipt.json and removes only digest-matching worktree candidates; "
+            "every subcommand prints JSON to stdout.\n"
+            "Exit codes: 0 success; 2 invalid usage; 3 unreadable plan or apply error; 4 plan digest mismatch "
+            "(nothing applied).\n"
+            "Related: Sol PR-L retention Gate 5; #9737; docs/runbooks/tmp-retention.md; "
+            "scripts/orchestration/reap_worktrees.py."
+        ),
+    )
+    sub = parser.add_subparsers(dest="command", required=True, metavar="{plan,apply,latest}")
 
-    plan = sub.add_parser("plan", help="Write a dry retention plan + digest")
-    plan.add_argument("--repo-root", default=None)
-    plan.add_argument("--plan-dir", type=Path, default=DEFAULT_PLAN_DIR)
-    plan.add_argument("--archive-root", type=Path, default=DEFAULT_ARCHIVE_ROOT)
-    plan.add_argument("--stale-hours", type=float, default=72.0)
-    plan.add_argument("--build-age-hours", type=float, default=DEFAULT_BUILD_AGE_HOURS)
-    plan.add_argument("--include-home", action="store_true")
+    plan = sub.add_parser(
+        "plan",
+        help="Write a dry retention plan and digest; never mutates worktrees.",
+        description="Write a content-addressed dry retention plan and record a Gate 5 observation day.",
+    )
+    plan.add_argument(
+        "--repo-root",
+        default=None,
+        help="Repository whose primary checkout is planned (default: this checkout; example: .).",
+    )
+    plan.add_argument(
+        "--plan-dir",
+        type=Path,
+        default=DEFAULT_PLAN_DIR,
+        help="Directory for plan files and the observation log (default: batch_state/fleet-comms/retention).",
+    )
+    plan.add_argument(
+        "--archive-root",
+        type=Path,
+        default=DEFAULT_ARCHIVE_ROOT,
+        help="Archive destination recorded in the plan (default: per-user retention-archives directory).",
+    )
+    plan.add_argument(
+        "--stale-hours",
+        type=float,
+        default=72.0,
+        help="Lane-scanner staleness threshold in hours (default: 72; example: 48).",
+    )
+    plan.add_argument(
+        "--build-age-hours",
+        type=float,
+        default=DEFAULT_BUILD_AGE_HOURS,
+        help=f"Minimum build-worktree age in hours (default: {DEFAULT_BUILD_AGE_HOURS}; example: 12).",
+    )
+    plan.add_argument(
+        "--include-home",
+        action="store_true",
+        help="Also list home-directory session hints (default: off; never deleted).",
+    )
     plan.add_argument(
         "--unsafe",
         action="store_true",
-        help="Allow reaper non-safe_only classification (still dry-run on plan)",
+        help="Allow reaper non-safe_only classification (default: off; the plan stays dry-run).",
     )
     plan.set_defaults(func=cmd_plan)
 
     apply_p = sub.add_parser(
         "apply",
-        help="Apply a plan only if digest still matches (worktree reaper only)",
+        help="Apply a plan only if its digest still matches (worktree reaper only).",
+        description="Recompute the plan and apply its worktree candidates only when the digest still matches.",
     )
-    apply_p.add_argument("--plan", type=Path, required=True, help="Path to plan JSON")
+    apply_p.add_argument(
+        "--plan",
+        type=Path,
+        required=True,
+        help="Plan JSON written by 'plan' (required; example: batch_state/fleet-comms/retention/latest.json).",
+    )
     apply_p.add_argument(
         "--dry-run",
         action="store_true",
-        help="Re-validate digest without mutating (default when no candidates)",
+        help="Re-validate the digest without mutating (default: off; implied when there are no candidates).",
     )
     apply_p.set_defaults(func=cmd_apply)
 
-    latest = sub.add_parser("latest", help="Print latest plan JSON if present")
-    latest.add_argument("--plan-dir", type=Path, default=DEFAULT_PLAN_DIR)
+    latest = sub.add_parser(
+        "latest",
+        help="Print the latest plan JSON, or a 'missing' marker.",
+        description="Print latest.json from the plan directory, or a JSON 'missing' marker when absent.",
+    )
+    latest.add_argument(
+        "--plan-dir",
+        type=Path,
+        default=DEFAULT_PLAN_DIR,
+        help="Directory holding latest.json (default: batch_state/fleet-comms/retention).",
+    )
     latest.set_defaults(func=cmd_latest)
 
     return parser

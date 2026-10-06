@@ -194,9 +194,11 @@ def test_task_loader_rejects_malformed_or_mismatched_records(tmp_path):
     (tmp_path / "bad.json").write_text("not json")
     (tmp_path / "wrong.json").write_text(json.dumps({"task_id": "someone-else"}))
     (tmp_path / "list.json").write_text("[]")
-    records = sweep.load_tasks(tmp_path)
-    assert set(records) == {"bad", "wrong", "list"}
-    assert all(record["status"] is None for record in records.values())
+    inventory = sweep.load_tasks(tmp_path)
+    assert set(inventory.records) == {"bad", "wrong", "list"}
+    assert all(record["status"] is None for record in inventory.records.values())
+    assert inventory.complete is False
+    assert sweep.load_tasks(tmp_path / "absent").complete is False
 
 
 def test_process_snapshot_cwd_fd_zombie_and_unknown(tmp_path):
@@ -356,7 +358,11 @@ def test_malformed_specific_run_never_falls_back_to_finished_parent(inventory):
 def test_socket_endpoint_is_preserved_even_without_fd_path_reference(inventory, monkeypatch):
     path = inventory.make()
     monkeypatch.chdir(path)
-    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as endpoint:
+    try:
+        endpoint = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    except PermissionError as error:
+        pytest.skip(f"this sandbox forbids AF_UNIX socket creation: {error}")
+    with endpoint:
         endpoint.bind("endpoint")
         report = inventory.run(apply=True)
         assert path.exists() and report["rows"][0]["reason"] == "special_file"

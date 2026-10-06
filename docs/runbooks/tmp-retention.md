@@ -15,6 +15,11 @@ never deletes anything.
 2. `scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary`: the
    sweep. It logs counts and byte totals only, never entry names.
 
+The service has no network: `RestrictAddressFamilies=AF_UNIX` refuses every
+IPv4 and IPv6 socket. `PrivateNetwork=yes` is not used, because the user
+manager accepts it without isolating anything. `IPAddressDeny=any` is set as
+well, but a user manager does not enforce it either.
+
 Install the units after merge, from the primary checkout:
 
 ```bash
@@ -36,8 +41,11 @@ of these hold:
   nothing inside it was written for `--scratch-quiet-hours` (default 24).
   Inode change time counts as a write. An archive extracted an hour ago
   therefore stays young, even though its files keep their old mtimes.
-- No inspectable live process has its working directory or an open file at
-  or below the entry.
+- Every live process could be inspected, and none has its working directory
+  or an open file at or below the entry.
+- Every current task record could be read. No unsettled task names the entry,
+  a path inside it, or the temp root itself in any path value, such as
+  `runtime_tmp_root`, `worktree_path`, `cwd` or an environment value.
 - The name does not start with `.`, `claude-`, `tmux-`, `ssh-` or
   `systemd-`, and it is not a harness runtime name (`codex-`, `gemini-` and
   the like).
@@ -51,12 +59,27 @@ overrides a task that is still unsettled.
 
 ### Process coverage
 
-The sweep reads `/proc/<pid>/cwd` and `/proc/<pid>/fd` for every process. The
-kernel refuses some of these reads, for example root daemons and non-dumpable
-session processes such as the user's systemd manager or SSH sessions. For the
-scratch class only, a refusal is tolerated, which matches what the operator's
-manual rule could see. Any other read failure stops the scratch class with
-`liveness_unknown`. Task-attributed entries still need a complete probe.
+The sweep reads `/proc/<pid>/cwd` and `/proc/<pid>/fd` for every process.
+The kernel refuses some of these reads. Examples are other users' processes,
+such as root daemons, and non-dumpable processes of the agent user, such as
+its systemd manager or SSH sessions. A process that cannot be read could hold
+any entry. Any refusal therefore makes the probe incomplete, and every
+candidate in both classes is kept as `liveness_unknown`.
+
+Consequence: an unprivileged user cannot read root's processes on a normal
+Linux host. The probe is then never complete, so the timer reports what it
+would remove and removes nothing. Reclaiming space needs a liveness probe
+that can read every process. Such a probe is a new privileged design, and it
+needs operator or advisor approval before anyone builds it.
+
+### Task coverage
+
+The sweep reads every `*.json` record in the task directory. Superseded
+`<task>.<stamp>.archived.json` runs claim nothing. If the directory is
+missing or unreadable, or a current record is unreadable, malformed,
+symlinked or names a different task, the inventory is incomplete. An
+otherwise removable entry is then kept as `task_inventory_unknown`. An entry
+that an unsettled task references by path is kept as `task_reference`.
 
 ### Safety mechanics
 
@@ -67,10 +90,16 @@ manual rule could see. Any other read failure stops the scratch class with
   with the descriptor-safe task-scratch remover. It unlinks files by
   descriptor after it rechecks device/inode identity, owner, hard-link count
   and mount state.
-- Before any removal, `--apply` reclassifies the entry. It then takes one
-  last process and task-record probe straight before the reaper. If anything
-  changed, the entry is kept (`proof_changed` or
-  `final_liveness_or_task_changed`).
+- Before any removal, `--apply` reclassifies the entry; any difference keeps
+  it as `proof_changed`. The common reaper then runs its own non-destructive
+  preflight. Only after that, immediately before the first unlink, it calls
+  back into the sweep for the final check. That check rescans the tree for any
+  write or change, rereads the task inventory and probes every process. If
+  any fact is no longer proven, nothing is deleted and the entry is kept as
+  `final_liveness_or_task_changed`.
+- Remaining window: a process that opens the entry while the unlinks are
+  already running is not detected. A userspace sweep cannot close this window
+  without freezing other processes.
 
 ### Run it by hand
 

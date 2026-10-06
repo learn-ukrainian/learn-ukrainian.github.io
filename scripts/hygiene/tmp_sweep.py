@@ -2,12 +2,15 @@
 
 The opt-in unattributed-scratch class (#9737, operator retention decision
 2026-10-06) also reaps hand-made top-level scratch that no task owns, once it
-is proven quiet and unreferenced by any inspectable process.
+is proven quiet and unreferenced by every process and every unsettled task.
+Every safety fact must be positively known at removal time: an uninspectable
+process, an unreadable task record or a path a live task names preserves.
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import math
@@ -18,6 +21,7 @@ import stat
 import subprocess
 import time
 from collections import Counter
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -31,6 +35,7 @@ from scripts.orchestration.tmp_leak_sweep import (
     _process_state,
     _process_vanished,
 )
+from scripts.orchestration.worktree_claims import _SUPERSEDED_RECORD_RE
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 # Unsettled deliverables (needs_finalize), blocked work and dry-run records are held.
@@ -59,26 +64,95 @@ class ScratchPolicy:
                 raise ValueError("scratch thresholds must be finite and positive")
 
 
-def load_tasks(root: Path) -> dict[str, dict[str, Any]]:
-    """Read only current task records; missing/invalid records never authorize removal."""
-    records = {}
-    for path in root.glob("*.json"):
+class ProofChanged(Exception):
+    """The removal-time recheck no longer proves the entry safe; nothing was deleted."""
+
+
+@dataclass(frozen=True)
+class TaskInventory:
+    """Current task records, paths named by unsettled tasks, and whether every record was read.
+
+    ``complete`` is False when the task directory or any current record is
+    unreadable, malformed or symlinked: such an inventory cannot prove that
+    no task owns or references an entry, so it never authorizes removal.
+    """
+
+    records: dict[str, dict[str, Any]]
+    references: frozenset[Path]
+    complete: bool
+
+
+def _absolute_paths(value: Any) -> Iterator[str]:
+    """Yield every absolute-path string anywhere in a JSON value (iteratively)."""
+    pending = [value]
+    while pending:
+        item = pending.pop()
+        if isinstance(item, dict):
+            pending.extend(item.values())
+        elif isinstance(item, list):
+            pending.extend(item)
+        elif isinstance(item, str) and item.startswith("/"):
+            yield item
+
+
+def _reference_forms(value: str) -> set[Path]:
+    """The lexical and resolved forms of a recorded path, so ``/tmp`` aliases still match."""
+    lexical = Path(os.path.normpath(value))
+    forms = {lexical}
+    # A looping alias keeps only its lexical form.
+    with contextlib.suppress(OSError, RuntimeError):
+        forms.add(lexical.resolve())
+    return forms
+
+
+def load_tasks(root: Path) -> TaskInventory:
+    """Read current task records and every absolute path an unsettled record names.
+
+    Missing/invalid records never authorize removal: each shadows its task ID
+    and marks the inventory incomplete. Superseded ``<task>.<stamp>.archived``
+    runs are history and claim nothing. Every path value of a record whose
+    status is not settled (``runtime_tmp_root``, ``worktree_path``, ``cwd``,
+    environment and argument values) is a reference.
+    """
+    records: dict[str, dict[str, Any]] = {}
+    references: set[Path] = set()
+    try:
+        with os.scandir(root) as entries:
+            names = sorted(entry.name for entry in entries if entry.name.endswith(".json"))
+    except OSError:
+        return TaskInventory({}, frozenset(), False)
+    complete = True
+    for name in names:
+        if _SUPERSEDED_RECORD_RE.search(name):
+            continue
+        stem = name.removesuffix(".json")
+        path = root / name
         # Even an unreadable/malformed newer run shadows an older parent ID.
-        records[path.stem] = {"status": None, "finished_at": None, "record_sha256": None}
+        records[stem] = {"status": None, "finished_at": None, "record_sha256": None}
         try:
             if path.is_symlink():
-                continue
+                raise ValueError("symlinked task record")
             raw = path.read_bytes()
             data = json.loads(raw)
-            if isinstance(data, dict) and data.get("task_id") == path.stem:
-                records[path.stem] = {
-                    "status": data.get("status"),
-                    "finished_at": data.get("finished_at"),
-                    "record_sha256": hashlib.sha256(raw).hexdigest(),
-                }
-        except (OSError, ValueError):
+            if not isinstance(data, dict) or data.get("task_id") != stem:
+                raise ValueError("not a current task record")
+        except (OSError, ValueError, RecursionError):
+            complete = False
             continue
-    return records
+        records[stem] = {
+            "status": data.get("status"),
+            "finished_at": data.get("finished_at"),
+            "record_sha256": hashlib.sha256(raw).hexdigest(),
+        }
+        if data.get("status") not in REAPABLE_STATES:
+            for value in _absolute_paths(data):
+                references.update(_reference_forms(value))
+    return TaskInventory(records, frozenset(references), complete)
+
+
+def task_referenced(path: Path, references: frozenset[Path]) -> bool:
+    """True when an unsettled task names ``path``, something inside it, or its temp root."""
+    return any(ref == path or path in ref.parents or ref == path.parent for ref in references)
 
 
 def task_attribution(name: str, records: dict[str, dict[str, Any]]) -> list[str]:
@@ -88,18 +162,14 @@ def task_attribution(name: str, records: dict[str, dict[str, Any]]) -> list[str]
     return sorted(matches, key=lambda key: (-len(key), key))[:1]
 
 
-def process_snapshot(
-    proc_root: Path = Path("/proc"), *, tolerate_uninspectable: bool = False
-) -> tuple[list[tuple[int, Path]], bool]:
+def process_snapshot(proc_root: Path = Path("/proc")) -> tuple[list[tuple[int, Path]], bool]:
     """Collect cwd/open-FD references for ALL users; unreadable live processes are unknown.
 
     The caller is included. Zombies and processes that vanish during inspection
     hold no references. No command lines, environment values or private paths
-    are emitted in reports. ``tolerate_uninspectable`` keeps the snapshot
-    complete when the kernel denies access (non-dumpable or foreign-user
-    processes): the unattributed-scratch rule covers every process the agent
-    user can inspect, as the operator's manual rule did. Any other read
-    failure still makes the snapshot incomplete.
+    are emitted in reports. A live process the kernel will not let us inspect
+    (another user's, or a same-user non-dumpable one) could hold anything, so
+    any such process makes the snapshot incomplete.
     """
     references: list[tuple[int, Path]] = []
     complete = True
@@ -123,9 +193,8 @@ def process_snapshot(
                     targets.append(os.readlink(fd))
                 except FileNotFoundError:
                     continue  # descriptor closed during the scan
-        except OSError as error:
-            denied = tolerate_uninspectable and isinstance(error, PermissionError)
-            if not denied and not _process_vanished(entry):
+        except OSError:
+            if not _process_vanished(entry):
                 complete = False
         for target in targets:
             if target.startswith("/"):
@@ -215,7 +284,7 @@ def protected_roots() -> set[Path]:
 def classify_path(
     path: Path,
     *,
-    records: dict[str, dict[str, Any]],
+    tasks: TaskInventory,
     references: list[tuple[int, Path]],
     process_complete: bool,
     worktrees: set[Path] | None,
@@ -223,15 +292,16 @@ def classify_path(
     now: float,
     min_age_s: float,
     scratch: ScratchPolicy | None = None,
-    scratch_process_complete: bool = False,
 ) -> dict[str, Any]:
     """Return a privacy-safe inventory row and the proof used by the apply recheck.
 
     Without ``scratch`` only directories attributed to a settled task can be
     reaped. With it, regular files are inventoried too, and an entry with no
     task attribution is reaped as ``unattributed_scratch`` when it is old,
-    quiet throughout, and unreferenced by every inspectable process.
+    quiet throughout, and unreferenced by every process and unsettled task.
+    Both classes require a complete process snapshot and task inventory.
     """
+    records = tasks.records
     row: dict[str, Any] = {"name": path.name, "decision": "preserve", "bytes": None, "task": None, "live_pids": []}
     info = path.lstat()
     row["identity"] = [info.st_dev, info.st_ino, info.st_uid]
@@ -258,7 +328,6 @@ def classify_path(
         row["task"] = matches[0]
         row["task_record"] = records[matches[0]]
     row["live_pids"] = sorted({pid for pid, ref in references if ref == resolved or resolved in ref.parents})
-    liveness_complete = scratch_process_complete if scratch and not matches else process_complete
     # Conservatively protect ancestors and descendants of registrations.
     if worktrees is None:
         reason = "git_registration_unknown"
@@ -270,7 +339,9 @@ def classify_path(
         reason = tree_reason
     elif row["live_pids"]:
         reason = "live_process"
-    elif not liveness_complete:
+    elif task_referenced(resolved, tasks.references):
+        reason = "task_reference"
+    elif not process_complete:
         reason = "liveness_unknown"
     elif not matches and scratch is None:
         reason = "unattributed"
@@ -279,6 +350,8 @@ def classify_path(
             reason = "too_young"
         elif now - changed < scratch.quiet_s:
             reason = "recent_deep_write"
+        elif not tasks.complete:
+            reason = "task_inventory_unknown"
         else:
             reason = "unattributed_scratch"
             row["decision"] = "would_reap"
@@ -294,8 +367,11 @@ def classify_path(
         except ValueError:
             reason = "task_completion_unknown"
         else:
-            reason = "dead_attributed_task"
-            row["decision"] = "would_reap"
+            if tasks.complete:
+                reason = "dead_attributed_task"
+                row["decision"] = "would_reap"
+            else:
+                reason = "task_inventory_unknown"
     row["reason"] = reason
     return row
 
@@ -305,26 +381,41 @@ def proof_digest(row: dict[str, Any]) -> str:
     return plan_digest({key: value for key, value in row.items() if key != "age_hours"})
 
 
-def liveness(scratch_enabled: bool) -> tuple[list[tuple[int, Path]], bool, bool]:
-    """Return references, strict completeness and scratch-scope completeness.
-
-    The strict probe is always taken; the tolerant one only when the
-    scratch class is enabled and the strict probe could not inspect every
-    process.
-    """
-    references, complete = process_snapshot()
-    if not scratch_enabled or complete:
-        return references, complete, complete
-    tolerant_refs, tolerant_complete = process_snapshot(tolerate_uninspectable=True)
-    return references + tolerant_refs, complete, tolerant_complete
-
-
 def attribution_changed(row: dict[str, Any], records: dict[str, dict[str, Any]]) -> bool:
     """True when the task owning ``row`` (or its absence) no longer holds byte-for-byte."""
     expected = [row["task"]] if row["task"] else []
     if task_attribution(row["name"], records) != expected:
         return True
     return bool(row["task"]) and records.get(row["task"]) != row.get("task_record")
+
+
+def removal_recheck(path: Path, row: dict[str, Any], task_root: Path) -> Callable[[], None]:
+    """Build the last check the common reaper runs before its first unlink.
+
+    It re-proves, in order, that the tree is byte-for-byte as recorded (no
+    write, change or new hazard since the proof), that the task inventory is
+    complete with unchanged attribution and no unsettled reference, and that
+    every process is inspectable and none holds the entry. Each probe that
+    ran earlier can go stale during the reaper's own preflight; this one ends
+    immediately before deletion starts. Raises :class:`ProofChanged`.
+    """
+
+    def recheck() -> None:
+        allocated, newest, changed, tree_reason = tree_facts(path)
+        if tree_reason or (allocated, newest, changed) != (row["bytes"], row["newest_mtime"], row["newest_change"]):
+            raise ProofChanged("tree written or changed since the proof")
+        inventory = load_tasks(task_root)
+        if (
+            not inventory.complete
+            or attribution_changed(row, inventory.records)
+            or task_referenced(path, inventory.references)
+        ):
+            raise ProofChanged("task inventory unknown, changed or referencing the entry")
+        references, complete = process_snapshot()
+        if not complete or any(ref == path or path in ref.parents for _, ref in references):
+            raise ProofChanged("process liveness unknown or entry held")
+
+    return recheck
 
 
 def sweep(
@@ -354,8 +445,8 @@ def sweep(
     ):
         raise ValueError("unattributed scratch runs only within the system temp area")
     tasks = task_root if task_root is not None else tasks_dir()
-    records = load_tasks(tasks)
-    references, complete, scratch_complete = liveness(scratch is not None)
+    inventory = load_tasks(tasks)
+    references, complete = process_snapshot()
     worktrees = registered_worktrees(repo_root)
     managed = protected_roots()
     rows = []
@@ -367,7 +458,7 @@ def sweep(
                 continue
             row = classify_path(
                 path,
-                records=records,
+                tasks=inventory,
                 references=references,
                 process_complete=complete,
                 worktrees=worktrees,
@@ -375,13 +466,12 @@ def sweep(
                 now=time.time(),
                 min_age_s=min_age_s,
                 scratch=scratch,
-                scratch_process_complete=scratch_complete,
             )
             if apply and row["decision"] == "would_reap":
-                fresh_refs, fresh_complete, fresh_scratch_complete = liveness(scratch is not None)
+                fresh_refs, fresh_complete = process_snapshot()
                 fresh = classify_path(
                     path,
-                    records=load_tasks(tasks),
+                    tasks=load_tasks(tasks),
                     references=fresh_refs,
                     process_complete=fresh_complete,
                     worktrees=registered_worktrees(repo_root),
@@ -389,29 +479,23 @@ def sweep(
                     now=time.time(),
                     min_age_s=min_age_s,
                     scratch=scratch,
-                    scratch_process_complete=fresh_scratch_complete,
                 )
                 if fresh["decision"] != "would_reap" or proof_digest(fresh) != proof_digest(row):
                     row = fresh | {"decision": "preserve", "reason": "proof_changed"}
                 else:
-                    # The full tree recheck can take time. Probe processes and
-                    # task bytes again AFTER it, immediately before the reaper.
-                    last_refs, strict_complete, last_scratch_complete = liveness(scratch is not None)
-                    last_complete = (
-                        last_scratch_complete if row["reason"] == "unattributed_scratch" else strict_complete
-                    )
-                    last_live = sorted({pid for pid, ref in last_refs if ref == path or path in ref.parents})
-                    if last_live or not last_complete or attribution_changed(row, load_tasks(tasks)):
-                        row.update(decision="preserve", reason="final_liveness_or_task_changed", live_pids=last_live)
+                    try:
+                        reap_attributed_temp(
+                            path,
+                            repo_root=repo_root,
+                            temp_root=root,
+                            expected_dev=row["identity"][0],
+                            expected_ino=row["identity"][1],
+                            before_delete=removal_recheck(path, row, tasks),
+                        )
+                    except ProofChanged:
+                        row.update(decision="preserve", reason="final_liveness_or_task_changed")
                         rows.append(row)
                         continue
-                    reap_attributed_temp(
-                        path,
-                        repo_root=repo_root,
-                        temp_root=root,
-                        expected_dev=row["identity"][0],
-                        expected_ino=row["identity"][1],
-                    )
                     if path.exists() or path.is_symlink():
                         raise OSError("common reaper left residue")
                     row["decision"] = "reaped"
@@ -443,7 +527,7 @@ def sweep(
         "files": sum(1 for row in rows if row.get("kind") == "file"),
         "errors": errors,
         "process_probe_complete": complete,
-        "scratch_process_probe_complete": scratch_complete if scratch is not None else None,
+        "task_inventory_complete": inventory.complete,
         "bytes_reclaimable": reclaimable,
         "bytes_reclaimed": reclaimed,
         "free_bytes": free,

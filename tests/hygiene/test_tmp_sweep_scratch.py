@@ -18,6 +18,24 @@ from scripts.hygiene.retention_engine import reap_attributed_temp
 DAY = 86400
 OLD = time.time() - 3 * DAY
 REAL_PROCESS_SNAPSHOT = sweep.process_snapshot
+HOLDER = "import sys, time; sys.stdout.write('ready\\n'); sys.stdout.flush(); time.sleep(60)"
+# A same-user process that makes itself non-dumpable (PR_SET_DUMPABLE = 4):
+# the kernel then refuses /proc/<pid>/cwd and /proc/<pid>/fd to its owner too.
+NON_DUMPABLE_HOLDER = (
+    "import ctypes, os, sys, time\n"
+    "if ctypes.CDLL(None, use_errno=True).prctl(4, 0, 0, 0, 0) != 0:\n"
+    "    sys.stdout.write('unsupported\\n'); sys.stdout.flush(); sys.exit(0)\n"
+    "if sys.argv[1] == 'cwd':\n"
+    "    os.chdir(sys.argv[2])\n"
+    "else:\n"
+    "    held = open(sys.argv[2], 'rb')\n"
+    "sys.stdout.write('ready\\n'); sys.stdout.flush(); time.sleep(60)\n"
+)
+
+
+def real_references_complete(*_args, **_kwargs):
+    """Real cwd/FD references with enumeration isolated from other users' processes."""
+    return REAL_PROCESS_SNAPSHOT()[0], True
 
 
 @pytest.fixture
@@ -133,7 +151,7 @@ def test_excluded_names_preserved(scratch, name):
 def test_live_process_cwd_or_open_file_preserved(scratch, monkeypatch, hold):
     directory = scratch.tree()
     monkeypatch.setattr(sweep, "process_snapshot", REAL_PROCESS_SNAPSHOT)
-    code = "import sys, time; sys.stdout.write('ready\\n'); sys.stdout.flush(); time.sleep(60)"
+    code = HOLDER
     if hold == "cwd":
         child = subprocess.Popen([sys.executable, "-c", code], cwd=directory / "deep", stdout=subprocess.PIPE)
     else:
@@ -152,20 +170,16 @@ def test_live_process_cwd_or_open_file_preserved(scratch, monkeypatch, hold):
         child.wait()
 
 
-def test_uninspectable_processes_tolerated_only_for_scratch(scratch, monkeypatch):
-    directory = scratch.tree()
-    monkeypatch.setattr(
-        sweep, "process_snapshot", lambda *a, tolerate_uninspectable=False: ([], tolerate_uninspectable)
-    )
-    report = scratch.run()
-    assert report["process_probe_complete"] is False and report["scratch_process_probe_complete"] is True
-    assert scratch.row(report, directory.name)["decision"] == "would_reap"
+def test_uninspectable_processes_preserve_scratch(scratch, monkeypatch):
+    directory, regular = scratch.tree(), scratch.file()
     monkeypatch.setattr(sweep, "process_snapshot", lambda *a, **kw: ([], False))
-    assert scratch.row(scratch.run(apply=True), directory.name)["reason"] == "liveness_unknown"
-    assert directory.exists()
+    report = scratch.run(apply=True)
+    assert report["process_probe_complete"] is False
+    assert {r["reason"] for r in report["rows"]} == {"liveness_unknown"}
+    assert directory.exists() and regular.exists() and report["bytes_reclaimed"] == 0
 
 
-def test_process_snapshot_tolerates_only_permission_denial(tmp_path, monkeypatch):
+def test_process_snapshot_permission_denial_is_incomplete(tmp_path, monkeypatch):
     proc = tmp_path / "proc"
     (proc / "21").mkdir(parents=True)
     (proc / "21" / "stat").write_text("21 (fixture) S 0")
@@ -178,9 +192,185 @@ def test_process_snapshot_tolerates_only_permission_denial(tmp_path, monkeypatch
 
     monkeypatch.setattr(sweep.os, "readlink", denied)
     assert sweep.process_snapshot(proc) == ([], False)
-    assert sweep.process_snapshot(proc, tolerate_uninspectable=True) == ([], True)
-    (proc / "22").mkdir()  # no stat file: unknown state, never tolerated
-    assert sweep.process_snapshot(proc, tolerate_uninspectable=True)[1] is False
+
+
+@pytest.mark.parametrize("hold", ["cwd", "fd"])
+def test_non_dumpable_holder_preserves_scratch(scratch, monkeypatch, tmp_path, hold):
+    """A real same-user process the kernel will not let us inspect keeps the entry."""
+    directory = scratch.tree()
+    target = directory / "deep" if hold == "cwd" else directory / "deep" / "payload"
+    child = subprocess.Popen(
+        [sys.executable, "-c", NON_DUMPABLE_HOLDER, hold, str(target)], stdout=subprocess.PIPE, cwd=tmp_path
+    )
+    try:
+        line = child.stdout.readline()
+        if line == b"unsupported\n":
+            pytest.skip("prctl(PR_SET_DUMPABLE, 0) is unavailable on this platform")
+        assert line == b"ready\n"
+        try:
+            os.readlink(f"/proc/{child.pid}/cwd")
+        except PermissionError:
+            pass
+        else:
+            pytest.skip("this user may inspect non-dumpable processes (privileged runner)")
+        # Enumerate only the holder; every read below is a real kernel check.
+        view = tmp_path / "proc-view"
+        view.mkdir()
+        (view / str(child.pid)).symlink_to(f"/proc/{child.pid}", target_is_directory=True)
+        monkeypatch.setattr(sweep, "process_snapshot", lambda *a, **kw: REAL_PROCESS_SNAPSHOT(view, **kw))
+        report = scratch.run(apply=True)
+        assert report["process_probe_complete"] is False
+        assert scratch.row(report, directory.name)["reason"] == "liveness_unknown"
+        assert target.exists() and child.poll() is None
+    finally:
+        child.kill()
+        child.wait()
+
+
+@pytest.mark.parametrize("field", ["runtime_tmp_root", "worktree_path", "cwd", "nested_env", "temp_root"])
+def test_unsettled_task_path_reference_preserves(scratch, field):
+    directory, regular = scratch.tree(), scratch.file()
+    record = {"task_id": "impl-unrelated", "status": "running"}
+    if field == "nested_env":
+        record["launch"] = {"env": {"TMPDIR": str(directory / "deep")}, "argv": ["tool", str(regular)]}
+    elif field == "temp_root":
+        record["runtime_tmp_root"] = str(scratch.root)
+    else:
+        record[field] = str(directory if field != "cwd" else directory / "deep")
+        record["log"] = str(regular)
+    (scratch.tasks / "impl-unrelated.json").write_text(json.dumps(record))
+    report = scratch.run(apply=True)
+    assert {r["name"]: r["reason"] for r in report["rows"]} == {
+        directory.name: "task_reference",
+        regular.name: "task_reference",
+    }
+    assert directory.exists() and regular.exists()
+    # The same references stop holding once the task has settled.
+    (scratch.tasks / "impl-unrelated.json").write_text(json.dumps(record | {"status": "done"}))
+    assert {r["decision"] for r in scratch.run(apply=True)["rows"]} == {"reaped"}
+
+
+def test_superseded_task_run_claims_nothing(scratch):
+    directory = scratch.tree()
+    superseded = {"task_id": "impl-old", "status": "running", "runtime_tmp_root": str(directory)}
+    (scratch.tasks / "impl-old.20260101T000000123456Z.archived.json").write_text(json.dumps(superseded))
+    report = scratch.run(apply=True)
+    assert report["task_inventory_complete"] is True
+    assert scratch.row(report, directory.name)["decision"] == "reaped"
+
+
+@pytest.mark.parametrize(
+    "state", ["missing_root", "unreadable_root", "malformed", "mismatched", "unreadable", "symlink"]
+)
+def test_unknown_task_inventory_preserves(scratch, tmp_path, state):
+    directory, regular = scratch.tree(), scratch.file()
+    task_root = scratch.tasks
+    record = scratch.tasks / "impl-other.json"
+    if state == "missing_root":
+        task_root = tmp_path / "absent-tasks"
+    elif state == "unreadable_root":
+        os.chmod(task_root, 0)
+    elif state == "malformed":
+        record.write_text("{truncated")
+    elif state == "mismatched":
+        record.write_text(json.dumps({"task_id": "someone-else", "status": "done"}))
+    elif state == "unreadable":
+        record.write_text(json.dumps({"task_id": "impl-other", "status": "done"}))
+        os.chmod(record, 0)
+    else:
+        (tmp_path / "real.json").write_text(json.dumps({"task_id": "impl-other", "status": "done"}))
+        record.symlink_to(tmp_path / "real.json")
+    try:
+        if state.startswith("unreadable") and os.access(task_root if state == "unreadable_root" else record, os.R_OK):
+            pytest.skip("this user reads files regardless of mode bits (privileged runner)")
+        report = sweep.sweep(
+            temp_root=scratch.root,
+            task_root=task_root,
+            repo_root=tmp_path,
+            scratch=sweep.ScratchPolicy(),
+            apply=True,
+        )
+    finally:
+        os.chmod(scratch.tasks, 0o700)
+        if record.exists() and not record.is_symlink():
+            os.chmod(record, 0o600)
+    assert report["task_inventory_complete"] is False
+    assert {r["reason"] for r in report["rows"]} == {"task_inventory_unknown"}
+    assert directory.exists() and regular.exists() and report["bytes_reclaimed"] == 0
+
+
+@pytest.mark.parametrize("race", ["holder", "write"])
+def test_holder_or_write_during_reaper_preflight_preserves(scratch, monkeypatch, race):
+    """Interleave a real holder or write with the common remover's own tree traversal."""
+    directory = scratch.tree()
+    monkeypatch.setattr(sweep, "process_snapshot", real_references_complete)
+    real_walk = task_scratch._walk_stats
+    children = []
+
+    def racing_walk(*args, **kwargs):
+        if not children and race == "holder":
+            children.append(
+                subprocess.Popen([sys.executable, "-c", HOLDER], cwd=directory / "deep", stdout=subprocess.PIPE)
+            )
+            assert children[0].stdout.readline() == b"ready\n"
+        elif not children:
+            children.append(None)
+            (directory / "deep" / "payload").write_bytes(b"fresh write")
+        return real_walk(*args, **kwargs)
+
+    monkeypatch.setattr(task_scratch, "_walk_stats", racing_walk)
+    try:
+        report = scratch.run(apply=True)
+        row = scratch.row(report, directory.name)
+        assert children, "the race hook never ran: the remover skipped its preflight"
+        assert (row["decision"], row["reason"]) == ("preserve", "final_liveness_or_task_changed")
+        assert (directory / "deep" / "payload").exists() and report["errors"] == 0
+    finally:
+        for child in children:
+            if child is not None:
+                child.kill()
+                child.wait()
+
+
+def test_write_during_file_reaper_checks_preserves(scratch, monkeypatch):
+    regular = scratch.file()
+    real_mounts = task_scratch.mount_points
+    raced = []
+
+    def racing_mounts():
+        if not raced:
+            raced.append(True)
+            regular.write_bytes(b"fresh write")
+        return real_mounts()
+
+    monkeypatch.setattr(task_scratch, "mount_points", racing_mounts)
+    row = scratch.row(scratch.run(apply=True), regular.name)
+    assert raced and (row["decision"], row["reason"]) == ("preserve", "final_liveness_or_task_changed")
+    assert regular.read_bytes() == b"fresh write"
+
+
+def test_removal_recheck_runs_after_reaper_preflight(scratch, monkeypatch):
+    """The final check is the last step before the first unlink, not before the reaper call."""
+    directory = scratch.tree()
+    events = []
+    real_walk, real_rmtree = task_scratch._walk_stats, task_scratch._rmtree_fd
+    real_recheck = sweep.removal_recheck
+
+    def recording_recheck(*args, **kwargs):
+        check = real_recheck(*args, **kwargs)
+        return lambda: (events.append("recheck"), check())
+
+    monkeypatch.setattr(sweep, "removal_recheck", recording_recheck)
+    monkeypatch.setattr(
+        task_scratch, "_walk_stats", lambda *a, **kw: (events.append("preflight"), real_walk(*a, **kw))[1]
+    )
+    monkeypatch.setattr(
+        task_scratch, "_rmtree_fd", lambda *a, **kw: (events.append("unlink"), real_rmtree(*a, **kw))[1]
+    )
+    assert scratch.row(scratch.run(apply=True), directory.name)["decision"] == "reaped"
+    # Both tree walkers recurse; collapse repeats to see the phase order.
+    phases = [event for index, event in enumerate(events) if index == 0 or events[index - 1] != event]
+    assert phases == ["preflight", "recheck", "unlink"]
 
 
 def test_symlink_entries_are_not_followed_or_removed(scratch, tmp_path):
@@ -254,6 +444,7 @@ def test_attributed_entries_keep_task_rules(scratch):
 
 
 def test_apply_rechecks_new_task_attribution(scratch, monkeypatch):
+    # Third read: the removal-time recheck inside the common reaper.
     directory = scratch.tree("impl-9737-probe")
     calls = 0
     original = sweep.load_tasks
@@ -261,7 +452,7 @@ def test_apply_rechecks_new_task_attribution(scratch, monkeypatch):
     def appearing(root):
         nonlocal calls
         calls += 1
-        if calls == 3:  # after the fresh reclassification, before the reaper
+        if calls == 3:  # after the fresh reclassification, inside the reaper
             (root / "impl-9737.json").write_text(json.dumps({"task_id": "impl-9737", "status": "running"}))
         return original(root)
 
