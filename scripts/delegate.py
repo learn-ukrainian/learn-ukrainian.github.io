@@ -7473,7 +7473,7 @@ def _rescue_commit(repo: _RescueRepo, tree: str, parent: str, *, agent: str, tas
 
 @contextlib.contextmanager
 def _rescue_publish_worktree(repo: _RescueRepo, head: str) -> Iterator[Path]:
-    """A fresh detached worktree at ``head`` that this rescue creates and always removes (#9878).
+    """A fresh detached worktree at ``head`` that this rescue creates and removes through the guard (#9878).
 
     It starts without a checkout, and as a new worktree it has no
     worktree-scoped configuration of its own: the main repository's
@@ -7482,6 +7482,14 @@ def _rescue_publish_worktree(repo: _RescueRepo, head: str) -> Iterator[Path]:
     :func:`_rescue_checkout` has put the rescued commit in it.
     """
     path = Path(tempfile.mkdtemp(prefix=f"{repo.worktree.name}.rescue-", dir=repo.worktree.parent))
+
+    def publish_is_dirty(target: Path) -> bool | None:
+        # --no-checkout leaves tracked deletions in the index, but no content to lose.
+        # Once populated, require the ordinary clean-tree proof under the removal lock.
+        if {entry.name for entry in target.iterdir()} == {".git"}:
+            return False
+        return worktree_claims.worktree_is_dirty(target)
+
     try:
         proc = repo.git("worktree", "add", "--detach", "--no-checkout", str(path), head)
         if proc.returncode != 0:
@@ -7490,9 +7498,23 @@ def _rescue_publish_worktree(repo: _RescueRepo, head: str) -> Iterator[Path]:
             )
         yield path
     finally:
-        if repo.git("worktree", "remove", "--force", str(path)).returncode != 0:
-            shutil.rmtree(path, ignore_errors=True)
-            repo.git("worktree", "prune")
+        removal = worktree_claims.remove_unclaimed_worktree(
+            path,
+            repo_root=_REPO_ROOT,
+            control_root=_REPO_ROOT,
+            reason="rescue publish worktree cleanup",
+            owner_task_id=None,
+            releasable=lambda: (True, "created by this rescue"),
+            force=True,
+            dirty_probe=publish_is_dirty,
+            tasks_dir=tasks_dir(),
+            lock_dir=_worktree_lock_dir(),
+        )
+        if removal.action != "removed":
+            raise _RescueFailure(
+                "cannot remove the rescue publish worktree",
+                _TypedCause("rescue_publish_worktree_failed", diagnostic=json.dumps(removal.as_record())),
+            )
 
 
 def _rescue_checkout(publish: Path, commit: str) -> None:

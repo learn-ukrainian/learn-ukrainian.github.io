@@ -203,12 +203,14 @@ exceptions:
   - {module: scripts/delegate.py, function: "_run_dor_preflight.check", program: "gh", category: non-claude, reason: "runs the GitHub CLI"}
   - {module: scripts/delegate.py, function: "_run_dor_preflight.check", program: "sys.executable", category: non-claude, reason: "runs a repository Python script; its own spawns are checked where it lives"}
   - {module: scripts/delegate.py, function: "_run_git_stdout", program: "git", category: non-claude, reason: "runs git"}
-  - {module: scripts/delegate.py, function: "_run_merge_base", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_run_merge_base_detail", program: "command", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_run_worktree_add", program: "add_command", category: non-claude, reason: "runs `git worktree add` (built by the caller)"}
   - {module: scripts/delegate.py, function: "_tracking_remote_for_current_branch", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_validate_existing_worktree", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_verify_origin_tracking_ref", program: "git", category: non-claude, reason: "runs git"}
-  - {module: scripts/delegate.py, function: "_worktree_diff_output", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_worktree_diff_read", program: "index_command", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_worktree_diff_read", program: "add_command", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_worktree_diff_read", program: "diff_command", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_worktree_is_clean", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_worktree_is_dirty", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_worktree_registration", program: "git", category: non-claude, reason: "runs git"}

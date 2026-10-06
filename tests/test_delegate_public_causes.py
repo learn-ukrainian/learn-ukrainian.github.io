@@ -24,6 +24,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
+from tests import test_delegate_rescue_kimi as rescue_fixtures
 
 # Autouse fixtures of the delegate unit suite that keep a ``_run_worker`` hermetic.
 from tests.test_delegate import (  # noqa: F401
@@ -42,6 +43,8 @@ from tests.test_delegate import (  # noqa: F401
     tmp_tasks_dir,
 )
 from tests.test_kimi_coding_only_admission import _FAKE_TOKEN, HOSTILE_GIT_ERRORS, assert_no_host_details
+
+kimi_rescue = rescue_fixtures.kimi_rescue
 
 pytestmark = pytest.mark.usefixtures("tmp_tasks_dir")
 
@@ -484,6 +487,73 @@ def test_an_auto_finalize_pr_error_never_reaches_its_error(tmp_path, monkeypatch
     assert result.error == "auto_finalize_pr_failed, exit 1"
     assert result.commit_sha  # pushed already: never reset after a PR error
     _assert_kept_locally(task_id, field="auto_finalize.error")
+
+
+def test_an_auto_finalize_policy_refusal_is_typed_and_kept_privately(tmp_path, monkeypatch):
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = "sink-af-policy"
+    worktree = _dirty_owned_worktree(tmp_path, task_id)
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a: None)
+
+    def refuse(*_args, **_kwargs):
+        raise delegate.PublishBlocked(HOSTILE)
+
+    monkeypatch.setattr(delegate, "request_run", refuse)
+    result = delegate._auto_finalize_dirty_worktree(
+        worktree=worktree,
+        task_id=task_id,
+        agent="claude",
+        branch=f"claude/{task_id}",
+        base_branch="main",
+        open_pr=True,
+        owned_paths=["scripts/"],
+    )
+
+    assert not result.ok
+    assert result.error == "auto_finalize_publish_blocked"
+    assert result.commit_sha  # pushed work survives a publication refusal
+    assert_no_host_details(result.error)
+    entry = _assert_kept_locally(task_id, field="auto_finalize.error")
+    assert entry["code"] == "auto_finalize_publish_blocked"
+    assert stat.S_IMODE(delegate._diagnostic_path(task_id).stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("refusal", ["claim", "preservation", "dirty"])
+def test_rescue_publish_cleanup_retains_worktree_when_the_guard_refuses(kimi_rescue, monkeypatch, refusal):
+    from scripts.fleet import ignored_task_output
+
+    worktree, _origin, _state_path, _write = kimi_rescue
+    repo = delegate._rescue_repo(worktree)
+    head, _branch = delegate._rescue_head(repo)
+    with pytest.raises(delegate._RescueFailure, match=r"^rescue_publish_worktree_failed$") as error:
+        with delegate._rescue_publish_worktree(repo, head) as publish:
+            delegate._rescue_checkout(publish, head)
+            if refusal == "claim":
+                delegate._write_state_atomic(
+                    delegate._state_path("attached-worker"),
+                    {"task_id": "attached-worker", "status": "running", "worktree_path": str(publish)},
+                )
+            elif refusal == "preservation":
+                monkeypatch.setattr(
+                    ignored_task_output,
+                    "preserve_worktree_artifacts",
+                    lambda *_a, **_k: (False, "artifact preservation failed: synthetic refusal", None),
+                )
+            else:
+                (publish / "untracked.txt").write_text("preserve me\n", encoding="utf-8")
+
+    assert publish.is_dir()
+    assert (publish / ".git").is_file()
+    assert str(publish) in repo.git("worktree", "list", "--porcelain").stdout
+    removal = json.loads(error.value.cause.diagnostic.partition(": ")[2])
+    assert removal["action"] in {"skipped", "error"}
+    assert removal["path"] == str(publish)
+    if refusal == "claim":
+        assert "attached-worker" in removal["reason"]
+    elif refusal == "preservation":
+        assert "synthetic refusal" in removal["reason"]
+    else:
+        assert (publish / "untracked.txt").read_text() == "preserve me\n"
 
 
 def _run_owned_worker(task_id: str, worktree: Path) -> dict:
