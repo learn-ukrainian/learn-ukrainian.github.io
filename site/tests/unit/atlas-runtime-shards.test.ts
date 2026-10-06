@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import {
+import fs, {
   copyFileSync,
   existsSync,
   mkdirSync,
@@ -8,7 +8,6 @@ import {
   readFileSync,
   readdirSync,
   rmSync,
-  statSync,
   writeFileSync,
 } from "node:fs";
 import { createHash } from "node:crypto";
@@ -159,25 +158,134 @@ async function withFixtureSqlite<T>(fn: (sqlite: SqliteAtlasDataSource) => Promi
   }
 }
 
-function canonicalSearchSnapshot() {
-  const dir = resolve(process.cwd(), "src/data");
+function canonicalSearchSnapshot(dir = resolve(process.cwd(), "src/data")) {
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
     .filter((name) => /^lexicon-search-(index|aliases)\.json/.test(name))
     .sort()
     .map((name) => {
       const path = resolve(dir, name);
-      const stat = statSync(path, { bigint: true });
-      return {
-        name,
-        bytes: stat.size.toString(),
-        mtimeNs: stat.mtimeNs.toString(),
-        sha256: createHash("sha256").update(readFileSync(path)).digest("hex"),
-      };
+      const fd = fs.openSync(path, "r");
+      try {
+        const stat = fs.fstatSync(fd, { bigint: true });
+        const contents = fs.readFileSync(fd);
+        const after = fs.fstatSync(fd, { bigint: true });
+        // One descriptor binds metadata and bytes across pathname replacement.
+        // It does not freeze same-inode writes: reject observable inconsistencies.
+        if (
+          stat.size !== after.size ||
+          stat.mtimeNs !== after.mtimeNs ||
+          stat.ctimeNs !== after.ctimeNs ||
+          BigInt(contents.length) !== stat.size
+        ) {
+          throw new Error(`Canonical search artifact changed while reading: ${name}`);
+        }
+        return {
+          name,
+          bytes: stat.size.toString(),
+          mtimeNs: stat.mtimeNs.toString(),
+          sha256: createHash("sha256").update(contents).digest("hex"),
+        };
+      } finally {
+        fs.closeSync(fd);
+      }
     });
 }
 
 describe("Atlas fixture input isolation", () => {
+  test("snapshots the opened artifact when its pathname is replaced and closes the descriptor", () => {
+    const root = mkdtempSync(resolve(tmpdir(), "atlas-snapshot-replace-"));
+    const name = "lexicon-search-index.json";
+    const path = resolve(root, name);
+    const replacement = resolve(root, "replacement.json");
+    const originalOpen = fs.openSync;
+    let openedFd: number | undefined;
+    let openSpy: ReturnType<typeof vi.spyOn> | undefined;
+    try {
+      writeFileSync(path, "original artifact");
+      fs.utimesSync(path, 1_600_000_000, 1_600_000_000);
+      writeFileSync(replacement, "replacement with different bytes and size");
+      const before = canonicalSearchSnapshot(root);
+      expect(before).toEqual([{
+        name,
+        bytes: "17",
+        mtimeNs: "1600000000000000000",
+        sha256: createHash("sha256").update("original artifact").digest("hex"),
+      }]);
+      openSpy = vi.spyOn(fs, "openSync").mockImplementationOnce((file, flags, mode) => {
+        openedFd = originalOpen(file, flags, mode);
+        fs.renameSync(replacement, path);
+        return openedFd;
+      });
+      expect(canonicalSearchSnapshot(root)).toEqual(before);
+      expect(openSpy).toHaveBeenCalledExactlyOnceWith(path, "r");
+      expect(readFileSync(path, "utf-8")).toBe("replacement with different bytes and size");
+      expect(() => fs.fstatSync(openedFd!)).toThrowError(expect.objectContaining({ code: "EBADF" }));
+    } finally {
+      openSpy?.mockRestore();
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  test.each(["stat", "final stat", "read", "size", "mtimeNs", "ctimeNs", "short read", "same-inode write"] as const)(
+    "rejects a snapshot on $0 failure or inconsistency and closes the descriptor",
+    (failure) => {
+      const root = mkdtempSync(resolve(tmpdir(), "atlas-snapshot-error-"));
+      const name = "lexicon-search-index.json";
+      const path = resolve(root, name);
+      const originalOpen = fs.openSync;
+      const originalStat = fs.fstatSync;
+      const originalRead = fs.readFileSync;
+      const injectedError = new Error(`injected ${failure} failure`);
+      let openedFd: number | undefined;
+      let openSpy: ReturnType<typeof vi.spyOn> | undefined;
+      let failureSpy: ReturnType<typeof vi.spyOn> | undefined;
+      try {
+        writeFileSync(path, "original artifact");
+        fs.utimesSync(path, 1_600_000_000, 1_600_000_000);
+        openSpy = vi.spyOn(fs, "openSync").mockImplementationOnce((file, flags, mode) => {
+          openedFd = originalOpen(file, flags, mode);
+          return openedFd;
+        });
+        if (failure === "read" || failure === "short read" || failure === "same-inode write") {
+          failureSpy = vi.spyOn(fs, "readFileSync").mockImplementationOnce((file) => {
+            if (failure === "read") throw injectedError;
+            if (failure === "same-inode write") {
+              const contents = originalRead(file);
+              writeFileSync(path, "modified artifact");
+              fs.utimesSync(path, 1_600_000_000, 1_600_000_001);
+              return contents;
+            }
+            return Buffer.from("short");
+          });
+        } else {
+          let statCalls = 0;
+          failureSpy = vi.spyOn(fs, "fstatSync").mockImplementation((fd) => {
+            statCalls += 1;
+            if (failure === "stat" || (failure === "final stat" && statCalls === 2)) throw injectedError;
+            const stat = originalStat(fd, { bigint: true });
+            if (failure === "final stat" || statCalls > 1) return stat;
+            // Change one metadata field independently; a same-size write must fail too.
+            stat[failure] += 1n;
+            return stat;
+          });
+        }
+        expect(() => canonicalSearchSnapshot(root)).toThrowError(
+          failure === "stat" || failure === "final stat" || failure === "read"
+            ? injectedError
+            : `Canonical search artifact changed while reading: ${name}`,
+        );
+        expect(openSpy).toHaveBeenCalledExactlyOnceWith(path, "r");
+        failureSpy.mockRestore();
+        expect(() => fs.fstatSync(openedFd!)).toThrowError(expect.objectContaining({ code: "EBADF" }));
+      } finally {
+        failureSpy?.mockRestore();
+        openSpy?.mockRestore();
+        rmSync(root, { recursive: true, force: true });
+      }
+    },
+  );
+
   test("instance search directories preserve the default and require both artifacts", async () => {
     const root = mkdtempSync(resolve(tmpdir(), "atlas-search-inputs-"));
     const defaultDir = resolve(root, "src/data");
