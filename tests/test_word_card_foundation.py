@@ -11,12 +11,14 @@ from contextlib import nullcontext
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.atlas import word_card_foundation as foundation
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTER = ROOT / "docs/sources/permissions-register.yaml"
 BASIS = "sha256 canonical UTF-8 JSON of entire literal selected row, not whole database"
+REGISTER_BASIS = "sha256 canonical UTF-8 JSON of referenced register sources entries sorted by id"
 
 
 def sha(value):
@@ -127,6 +129,144 @@ def prepared(pilot):
     return json.loads(pilot["manifest"].read_bytes()), json.loads(pilot["registry"].read_bytes())
 
 
+@pytest.fixture
+def pinned_pilot(pilot, monkeypatch):
+    manifest, _registry = prepared(pilot)
+    register_path = pilot["root"] / "register.yaml"
+    register_path.write_bytes(REGISTER.read_bytes())
+    register = yaml.safe_load(register_path.read_bytes())
+    source_ids = sorted({r["source_id"] for r in manifest["selection"]["source_records"]})
+    entries = sorted([s for s in register["sources"] if s["id"] in source_ids], key=lambda s: s["id"])
+    pin = dict(schema_version="atlas-pilot-register-pin.v1", manifest_sha256=manifest["manifest_sha256"],
+               legacy_source_register_sha256=manifest["selection"]["source_register_sha256"],
+               basis=REGISTER_BASIS, source_ids=source_ids,
+               pins=[dict(entries_sha256=sha(entries), reason="Fixture admitted-register migration", recorded="2026-01-01")])
+    pin_path = pilot["manifest"].with_suffix(".register-pin.json")
+    save(pin_path, pin)
+    monkeypatch.setattr(foundation, "REGISTER", register_path)
+    return pilot | dict(register_path=register_path, register=register, pin_path=pin_path, pin=pin)
+
+
+def test_register_pin_unrelated_addition_and_order(pinned_pilot):
+    p = pinned_pilot
+    before = [p[k].read_bytes() for k in ("manifest", "registry", "pin_path")]
+    unrelated = copy.deepcopy(p["register"]["sources"][0])
+    unrelated["id"] = "unrelated_fixture"
+    p["register"]["sources"].append(unrelated)
+    p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+    assert foundation.file_digest(p["register_path"]) != p["pin"]["legacy_source_register_sha256"]
+    assert p["operation"]("verify") == 0
+    p["register"]["sources"].reverse()
+    p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+    assert p["operation"]("verify") == 0
+    assert before == [p[k].read_bytes() for k in ("manifest", "registry", "pin_path")]
+
+
+def test_register_pin_referenced_terms_change_and_readmission(pinned_pilot, capsys):
+    p = pinned_pilot
+    before = [p[k].read_bytes() for k in ("manifest", "registry")]
+    original_pin = copy.deepcopy(p["pin"]["pins"][0])
+    for source_id in p["pin"]["source_ids"]:
+        source = next(s for s in p["register"]["sources"] if s["id"] == source_id)
+        source["terms"]["licence"]["name"] = "Revised fixture licence terms"
+        p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+        assert p["operation"]("verify") == 1
+        assert "Register fingerprint mismatch; re-admit and re-freeze before reuse" in capsys.readouterr().err
+        entries = sorted([s for s in p["register"]["sources"] if s["id"] in p["pin"]["source_ids"]],
+                         key=lambda s: s["id"])
+        p["pin"]["pins"].append(dict(entries_sha256=sha(entries), reason="Reviewed fixture terms correction",
+                                     recorded="2026-01-02"))
+        save(p["pin_path"], p["pin"])
+        assert p["operation"]("verify") == 0
+    assert p["pin"]["pins"][0] == original_pin
+    assert before == [p[k].read_bytes() for k in ("manifest", "registry")]
+
+
+@pytest.mark.parametrize("fault,reason", [
+    ("manifest", "Register pin binding mismatch"), ("legacy", "Register pin binding mismatch"),
+    ("ids", "Register pin source ids mismatch"), ("ids_order", "Register pin source ids mismatch"),
+    ("ids_duplicate", "Register pin source ids mismatch"), ("missing", "Missing or duplicate referenced register source"),
+    ("duplicate", "Missing or duplicate referenced register source"), ("version", "Invalid register pin metadata"),
+    ("basis", "Invalid register pin metadata"), ("hex", "Invalid register pin metadata"),
+    ("extra", "Invalid object fields"), ("absent", "Invalid object fields"),
+    ("pins_empty", "Invalid register pin history"), ("pins_object", "Invalid register pin history"),
+    ("entry_extra", "Invalid object fields"), ("entry_absent", "Invalid object fields"),
+    ("entry_hex", "Invalid register pin history"), ("reason", "Invalid register pin history"),
+    ("recorded", "Invalid register pin history"), ("old_entry", "Invalid register pin history")])
+def test_register_pin_refusals(pinned_pilot, fault, reason, capsys):
+    p, pin = pinned_pilot, pinned_pilot["pin"]
+    if fault in {"manifest", "legacy"}:
+        pin["manifest_sha256" if fault == "manifest" else "legacy_source_register_sha256"] = "0" * 64
+    if fault == "ids":
+        pin["source_ids"] = ["unrelated_fixture"]
+    if fault == "ids_order":
+        pin["source_ids"].reverse()
+    if fault == "ids_duplicate":
+        pin["source_ids"].append(pin["source_ids"][0])
+    if fault in {"missing", "duplicate"}:
+        source = next(s for s in p["register"]["sources"] if s["id"] == pin["source_ids"][0])
+        if fault == "missing":
+            p["register"]["sources"].remove(source)
+        else:
+            p["register"]["sources"].append(copy.deepcopy(source))
+        p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+    if fault in {"version", "basis", "hex"}:
+        pin[{"version": "schema_version", "basis": "basis", "hex": "manifest_sha256"}[fault]] = "invalid"
+    if fault == "extra":
+        pin["unexpected"] = "fixture"
+    if fault == "absent":
+        del pin["basis"]
+    if fault in {"pins_empty", "pins_object"}:
+        pin["pins"] = [] if fault == "pins_empty" else {}
+    if fault == "entry_extra":
+        pin["pins"][0]["unexpected"] = "fixture"
+    if fault == "entry_absent":
+        del pin["pins"][0]["reason"]
+    if fault in {"entry_hex", "reason", "recorded"}:
+        pin["pins"][0][{"entry_hex": "entries_sha256", "reason": "reason", "recorded": "recorded"}[fault]] = " "
+    if fault == "old_entry":  # A valid last pin cannot hide malformed earlier history.
+        pin["pins"].append(copy.deepcopy(pin["pins"][0]))
+        pin["pins"][0]["reason"] = ""
+    save(p["pin_path"], pin)
+    assert p["operation"]("verify") == 1
+    assert reason in capsys.readouterr().err
+
+
+def test_register_pin_legacy_fallback(pilot, monkeypatch, capsys):
+    prepared(pilot)
+    register = pilot["root"] / "register.yaml"
+    register.write_bytes(REGISTER.read_bytes() + b"\n# Unrelated fixture formatting\n")
+    monkeypatch.setattr(foundation, "REGISTER", register)
+    assert pilot["operation"]("verify") == 1
+    assert "Register fingerprint mismatch" in capsys.readouterr().err
+
+
+def test_committed_pin_each_referenced_entry_is_binding(tmp_path, monkeypatch, capsys):
+    manifest_path = tmp_path / "pilot.json"
+    manifest_path.write_bytes((ROOT / "registry/atlas/pilot/pilot-v1.json").read_bytes())
+    pin_path = manifest_path.with_suffix(".register-pin.json")
+    pin = json.loads((ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json").read_bytes())
+    save(pin_path, pin)
+    register_path = tmp_path / "register.yaml"
+    register = yaml.safe_load(REGISTER.read_bytes())
+    monkeypatch.setattr(foundation, "REGISTER", register_path)
+    manifest = json.loads(manifest_path.read_bytes())
+    source_ids = sorted({r["source_id"] for r in manifest["selection"]["source_records"]})
+    command = ["verify", "--manifest", str(manifest_path), "--registry",
+               str(ROOT / "registry/atlas/identity/registry.json")]
+    for source_id in source_ids:
+        source = next(s for s in register["sources"] if s["id"] == source_id)
+        source["terms"]["licence"]["name"] = "Revised fixture licence terms"
+        register_path.write_text(yaml.safe_dump(register, allow_unicode=True))
+        assert foundation.main(command) == 1
+        assert "Register fingerprint mismatch" in capsys.readouterr().err
+        entries = sorted([s for s in register["sources"] if s["id"] in source_ids], key=lambda s: s["id"])
+        pin["pins"].append(dict(entries_sha256=sha(entries), reason="Reviewed fixture terms correction",
+                                recorded="2026-01-02"))
+        save(pin_path, pin)
+        assert foundation.main(command) == 0
+
+
 def test_freeze_allocation_alias_oracles_replay_and_conservation(pilot, capsys):
     before = {k: p.read_bytes() for k, p in pilot["paths"].items()}
     manifest, registry = prepared(pilot)
@@ -163,7 +303,12 @@ def test_freeze_allocation_alias_oracles_replay_and_conservation(pilot, capsys):
     assert pilot["operation"]("freeze") == pilot["operation"]("allocate") == 0
     assert original == [p.read_bytes() for p in (pilot["manifest"], pilot["registry"])]
     fresh = pilot["root"] / "fresh-manifest.json"
-    command = [sys.executable, "-m", "scripts.atlas.word_card_foundation", *pilot["freeze"]]
+    # Propagate the fixture's lock-root isolation into the fresh process.
+    command = [sys.executable, "-c",
+               "import sys; from pathlib import Path; from scripts.atlas import word_card_foundation as f; "
+               "lock_root = Path(sys.argv.pop(1)); f.main_checkout_root = lambda root: lock_root; "
+               "raise SystemExit(f.main())",
+               str(pilot["root"]), *pilot["freeze"]]
     command[command.index("--output") + 1] = str(fresh)
     result = subprocess.run(command, cwd=ROOT, capture_output=True, check=False, timeout=60)
     assert result.returncode == 0 and fresh.read_bytes() == original[0], result.stderr
@@ -510,8 +655,16 @@ def test_wal_capture_and_mutation_refusal(pilot, monkeypatch, capsys):
 
 
 def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
-    paths = [ROOT / "registry/atlas/pilot/pilot-v1.json", ROOT / "registry/atlas/identity/registry.json"]
+    paths = [ROOT / "registry/atlas/pilot/pilot-v1.json", ROOT / "registry/atlas/identity/registry.json",
+             ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json"]
     before = [p.read_bytes() for p in paths]
+    manifest, pin = [json.loads(paths[i].read_bytes()) for i in (0, 2)]
+    source_ids = sorted({r["source_id"] for r in manifest["selection"]["source_records"]})
+    register = yaml.safe_load(REGISTER.read_bytes())
+    entries = sorted([s for s in register["sources"] if s["id"] in source_ids], key=lambda s: s["id"])
+    assert pin["manifest_sha256"] == manifest["manifest_sha256"]
+    assert pin["legacy_source_register_sha256"] == manifest["selection"]["source_register_sha256"]
+    assert pin["source_ids"] == source_ids and pin["pins"][-1]["entries_sha256"] == sha(entries)
     result = subprocess.run([sys.executable, "-m", "scripts.atlas.word_card_foundation", "verify",
                              "--manifest", str(paths[0]), "--registry", str(paths[1])],
                             cwd=ROOT, capture_output=True, text=True, check=False, timeout=60)
