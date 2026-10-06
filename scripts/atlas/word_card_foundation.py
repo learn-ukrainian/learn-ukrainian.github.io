@@ -1,4 +1,4 @@
-"""Pilot-only source freeze and legacy identity bootstrap (#9293).
+"""Pilot/golden source freeze and legacy identity bootstrap (#9293, #9862).
 
 Literal captures prove snapshot integrity; intrinsic aliases are evidence,
 never lexical equivalence. Changed snapshots need later correspondence.
@@ -338,6 +338,13 @@ def aliases(record, records):
 
 def selection_check(selection, registered):
     require(selection["schema_version"] == "atlas-pilot-selection-candidate.v2", "Unsupported selection schema")
+    kind = selection.get("kind", "pilot")
+    require(kind in {"pilot", "golden"}, "Unsupported manifest kind")
+    if kind == "golden":
+        require(type(selection.get("case_count")) is int and selection["case_count"] == 220,
+                "Golden denominator drift; require frozen case count 220")
+    else:
+        require("case_count" not in selection, "Pilot cannot declare a golden case count")
     records, units = selection["source_records"], selection["units"]
     require(isinstance(records, list) and isinstance(units, list), "Invalid selection inventory")
     locators = [r["locator"] for r in records]
@@ -390,7 +397,9 @@ def selection_check(selection, registered):
     counts = {"units": len(units), "source_records": len(records),
               "atlas_articles": len({u["atlas_slug"] for u in units if u["atlas_slug"]})}
     require(counts == selection["denominator"] and all(type(v) is int for v in selection["denominator"].values())
-            and counts["units"] == 150, "Pilot denominator drift; require exactly 150 admitted units")
+            and counts["units"] == (220 if kind == "golden" else 150),
+            "Golden denominator drift; require exactly 220 cases" if kind == "golden" else
+            "Pilot denominator drift; require exactly 150 admitted units")
     return counts
 
 
@@ -487,7 +496,9 @@ def register_pin_check(manifest, register, manifest_path, counts):
 
 
 def manifest_check(manifest, manifest_path=None):
-    fields(manifest, MANIFEST_FIELDS)
+    fields(manifest, MANIFEST_FIELDS, {"kind"})
+    require(manifest.get("kind", "pilot") == manifest["selection"].get("kind", "pilot"),
+            "Manifest kind disagrees with selection")
     require(manifest["schema_version"] == "atlas-word-card-foundation.v1", "Unsupported frozen manifest")
     require(manifest["manifest_sha256"] == digest({k: v for k, v in manifest.items() if k != "manifest_sha256"}),
             "Changed manifest bytes/content; restore admitted freeze")
@@ -570,6 +581,8 @@ def freeze(args):
                 "rules_version": args.rules_version, "normaliser_version": args.normaliser_version,
                 "counts": counts | {"legacy_alias_rows": sum(len(a["aliases"]) for a in inventory)},
                 "legacy_articles": inventory}
+    if selection.get("kind") is not None:
+        manifest["kind"] = selection["kind"]
     manifest["manifest_sha256"] = digest(manifest)
     manifest_check(manifest)
     isolation([manifest, receipt, register], args.heldout_manifest, ("receipt", "register"))

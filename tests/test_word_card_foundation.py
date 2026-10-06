@@ -1352,3 +1352,59 @@ def test_phraseology_contract_refusals(pilot, fault):
     raw["payload_json"] = json.dumps(payload)
     with pytest.raises(foundation.Refusal):
         foundation.intrinsic(records[-2], records)
+
+
+def golden_candidate(pilot):
+    candidate = copy.deepcopy(pilot["candidate"])
+    candidate.update(kind="golden", case_count=220)
+    for number in range(150, 220):
+        raw = dict(candidate["source_records"][0]["raw_row"], id=number, normalized_query=f"English {number}")
+        record = capture("ulif", "ulif_dictua_entries", raw)
+        candidate["source_records"].append(record)
+        unit = dict(candidate["units"][0], unit_key=f"golden:case:{number}",
+                    anchor_locator=record["locator"], source_record_keys=[record["locator"]], atlas_slug=None)
+        candidate["units"].append(unit)
+    candidate["denominator"].update(units=220, source_records=222)
+    return candidate
+
+
+def test_golden_denominator_counts_cases_before_expansion(pilot):
+    candidate = golden_candidate(pilot)
+    assert foundation.selection_check(candidate, {"ulif", "ukrainian_word_stress"}) == {
+        "units": 220, "source_records": 222, "atlas_articles": 2}
+    assert foundation.selection_check(pilot["candidate"], {"ulif", "ukrainian_word_stress"})["units"] == 150
+
+
+@pytest.mark.parametrize("fault", ["kind", "missing_count", "count_bool", "count_150", "count_221", "units_219",
+                                   "records_as_cases", "empty_case", "unknown_record", "duplicate_case", "pilot_220"])
+def test_golden_denominator_refusals(pilot, fault):
+    candidate = golden_candidate(pilot)
+    if fault == "kind":
+        candidate["kind"] = "other"
+    elif fault == "missing_count":
+        del candidate["case_count"]
+    elif fault.startswith("count_"):
+        candidate["case_count"] = {"count_bool": True, "count_150": 150, "count_221": 221}[fault]
+    elif fault == "units_219":
+        candidate["units"].pop()
+    elif fault == "records_as_cases":
+        candidate["denominator"]["units"] = 222
+    elif fault == "empty_case":
+        candidate["units"][0]["source_record_keys"] = []
+    elif fault == "unknown_record":
+        candidate["units"][0]["source_record_keys"].append("ulif:ulif_dictua_entries:id:999999")
+    elif fault == "duplicate_case":
+        candidate["units"][1]["unit_key"] = candidate["units"][0]["unit_key"]
+    elif fault == "pilot_220":
+        del candidate["kind"]
+        del candidate["case_count"]
+    with pytest.raises(foundation.Refusal):
+        foundation.selection_check(candidate, {"ulif", "ukrainian_word_stress"})
+
+
+def test_frozen_manifest_kind_disagreement_refused(pilot):
+    manifest, _ = prepared(pilot)
+    manifest["kind"] = "golden"
+    rehash(manifest, False)
+    with pytest.raises(foundation.Refusal, match="kind disagrees"):
+        foundation.manifest_check(manifest)
