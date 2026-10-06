@@ -97,17 +97,6 @@
     ]
   },
   {
-    "path": "scripts/analytics/vocab_progression.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(db_path))",
-      "sqlite3.connect(str(db_path))"
-    ]
-  },
-  {
     "path": "scripts/api/agent_monitor_router.py",
     "reference_count": 2,
     "kind": "writer",
@@ -227,16 +216,6 @@
     ]
   },
   {
-    "path": "scripts/atlas/export_runtime_shards.py",
-    "reference_count": 11,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(uri, uri=True)"
-    ]
-  },
-  {
     "path": "scripts/atlas/fill_local.py",
     "reference_count": 9,
     "kind": "writer",
@@ -271,80 +250,6 @@
     ]
   },
   {
-    "path": "scripts/atlas/teacher_vesum_attest.py",
-    "reference_count": 4,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{resolved.as_posix()}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/atlas/word_card_foundation.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/audit/_judge_eval_lib.py",
-    "reference_count": 5,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(db_path)",
-      "sqlite3.connect(db_path)",
-      "sqlite3.connect(db_path)",
-      "sqlite3.connect(db_path)",
-      "sqlite3.connect(db_path)"
-    ]
-  },
-  {
-    "path": "scripts/audit/atlas_source_census.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{source_db}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/audit/bio_readiness_ledger.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/audit/check_plan.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(sources_db))"
-    ]
-  },
-  {
-    "path": "scripts/audit/check_teacher_deck.py",
-    "reference_count": 10,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'{path.resolve().as_uri()}?mode=ro', uri=True)"
-    ]
-  },
-  {
     "path": "scripts/audit/checks/vocabulary.py",
     "reference_count": 2,
     "kind": "writer",
@@ -352,16 +257,6 @@
     "reason": "inserts vocabulary declarations",
     "calls": [
       "sqlite3.connect(db_path)",
-      "sqlite3.connect(db_path)"
-    ]
-  },
-  {
-    "path": "scripts/audit/generate_daily_pool.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
       "sqlite3.connect(db_path)"
     ]
   },
@@ -379,97 +274,6 @@
     ]
   },
   {
-    "path": "scripts/audit/generate_search_index.py",
-    "reference_count": 6,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(db_path)",
-      "sqlite3.connect(db_path)"
-    ]
-  },
-  {
-    "path": "scripts/audit/generate_sentence_inventory.py",
-    "reference_count": 4,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(sources_db)",
-      "sqlite3.connect(path)"
-    ]
-  },
-  {
-    "path": "scripts/audit/hramatka_qg_rules.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(db))"
-    ]
-  },
-  {
-    "path": "scripts/audit/ingest_ua_gec_gold.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(db_path)"
-    ]
-  },
-  {
-    "path": "scripts/audit/llm_qg_store.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/audit/plan_references_audit.py",
-    "reference_count": 6,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(args.db))"
-    ]
-  },
-  {
-    "path": "scripts/audit/practice_quality_gate.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{sources_db}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/audit/resolve_fixture_rights.py",
-    "reference_count": 11,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(sources_db)",
-      "sqlite3.connect(vesum_db)"
-    ]
-  },
-  {
-    "path": "scripts/audit/russianism_judge.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(DB)"
-    ]
-  },
-  {
     "path": "scripts/audit/sum11_sovietization_scan.py",
     "reference_count": 3,
     "kind": "writer",
@@ -477,17 +281,6 @@
     "reason": "backfills contextual Sovietization flags",
     "calls": [
       "sqlite3.connect(args.db)"
-    ]
-  },
-  {
-    "path": "scripts/audit/validate_atlas_conformance.py",
-    "reference_count": 5,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{self.db_path}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{self.db_path}?mode=ro', uri=True)"
     ]
   },
   {
@@ -513,79 +306,6 @@
     ]
   },
   {
-    "path": "scripts/build/alignment_manifest.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(db_uri, uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/build/enrich.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(_VESUM_DB))",
-      "sqlite3.connect(str(db_path))"
-    ]
-  },
-  {
-    "path": "scripts/build/linear_pipeline.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'{TEXTBOOK_SOURCES_DB_PATH.resolve().as_uri()}?mode=ro', uri=True)",
-      "sqlite3.connect(f'{TEXTBOOK_SOURCES_DB_PATH.resolve().as_uri()}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/build/module_memory.py",
-    "reference_count": 4,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/build/phases/vocab_coverage.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(db_path))"
-    ]
-  },
-  {
-    "path": "scripts/build/textbook_refs.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(SOURCES_DB))"
-    ]
-  },
-  {
-    "path": "scripts/build/vocab_gen.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(VESUM_DB))"
-    ]
-  },
-  {
     "path": "scripts/ci/data_tier.py",
     "reference_count": 2,
     "kind": "writer",
@@ -605,27 +325,6 @@
     "calls": [
       "sqlite3.connect(uri, uri=True, **sqlite_kwargs)",
       "sqlite3.connect(str(db_path), **sqlite_kwargs)"
-    ]
-  },
-  {
-    "path": "scripts/curriculum/evidence/sources.py",
-    "reference_count": 7,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(Path(path).resolve().as_uri() + '?mode=ro', uri=True)",
-      "sqlite3.connect(Path(path).resolve().as_uri() + '?mode=ro', uri=True, isolation_level=None)"
-    ]
-  },
-  {
-    "path": "scripts/dataset/audit_literary_poltava_candidate.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(uri, uri=True)"
     ]
   },
   {
@@ -666,26 +365,6 @@
     "calls": [
       "sqlite3.connect(self.db_path)",
       "sqlite3.connect(f'file:{self.db_path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/etymology/build_data_manifest.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(db_path)"
-    ]
-  },
-  {
-    "path": "scripts/etymology/build_vesum_vocab_lemmas.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(vesum_db)"
     ]
   },
   {
@@ -791,24 +470,6 @@
     "calls": []
   },
   {
-    "path": "scripts/generate_mdx/atlas_links.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{VESUM_DB_PATH}?mode=ro', uri=True, check_same_thread=False)"
-    ]
-  },
-  {
-    "path": "scripts/guardrails/delegate_ownership.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
     "path": "scripts/hygiene/codex_rollout_reconcile.py",
     "reference_count": 10,
     "kind": "writer",
@@ -819,14 +480,6 @@
       "sqlite3.connect(path, timeout=5.0)",
       "sqlite3.connect(path)"
     ]
-  },
-  {
-    "path": "scripts/ingest/_section_coverage.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
   },
   {
     "path": "scripts/ingest/antonenko_full_book_ingest.py",
@@ -869,26 +522,6 @@
     ]
   },
   {
-    "path": "scripts/ingest/build_a1_closed_class.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(db_path.resolve().as_uri() + '?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/ingest/build_ohoiko_a1_reference.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(db.resolve().as_uri() + '?mode=ro', uri=True)"
-    ]
-  },
-  {
     "path": "scripts/ingest/dictionary_ingest.py",
     "reference_count": 13,
     "kind": "writer",
@@ -896,16 +529,6 @@
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
       "sqlite3.connect(str(db_path))"
-    ]
-  },
-  {
-    "path": "scripts/ingest/esum_ingest.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'{db_path.resolve().as_uri()}?mode=ro', uri=True)"
     ]
   },
   {
@@ -1090,16 +713,6 @@
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
       "sqlite3.connect(db_path)"
-    ]
-  },
-  {
-    "path": "scripts/ingest/verify_stem_coverage.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(db_path.resolve().as_uri() + '?mode=ro', uri=True)"
     ]
   },
   {
@@ -1404,140 +1017,6 @@
     ]
   },
   {
-    "path": "scripts/practice/adjective_mechanics_engine.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(resolved_path)",
-      "sqlite3.connect(resolved_path)"
-    ]
-  },
-  {
-    "path": "scripts/practice/adverb_mechanics_engine.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(resolved_path))"
-    ]
-  },
-  {
-    "path": "scripts/practice/extract_textbook_error_corrections.py",
-    "reference_count": 8,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{args.db}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{Path(db_path)}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/practice/interjection_mechanics_engine.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(resolved_path))"
-    ]
-  },
-  {
-    "path": "scripts/practice/numeral_agreement_engine.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(vocab_db_path))"
-    ]
-  },
-  {
-    "path": "scripts/practice/numeral_mechanics_engine.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(resolved_path))"
-    ]
-  },
-  {
-    "path": "scripts/practice/pronoun_mechanics_engine.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(vesum_db)",
-      "sqlite3.connect(vesum_db)"
-    ]
-  },
-  {
-    "path": "scripts/practice/ulif_synonym_groups.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/practice/verb_mechanics_engine.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(resolved_path))",
-      "sqlite3.connect(str(resolved_path))"
-    ]
-  },
-  {
-    "path": "scripts/practice_deck/end_dictionaries.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{sources_db}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/practice_deck/recover_markup_osvita.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/practice_deck/zno.py",
-    "reference_count": 4,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/projects/open_model_data/admit_existing_corpus.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "implementation hash pinned by custody receipt build_phase3_p4_pilot.py; migrate only with a receipt rebinding by the open-model-data lane",
-    "calls": [
-      "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)"
-    ]
-  },
-  {
     "path": "scripts/projects/open_model_data/build_decolonization_cases.py",
     "reference_count": 1,
     "kind": "reader_pending_migration_9662",
@@ -1632,27 +1111,6 @@
     "calls": []
   },
   {
-    "path": "scripts/rag/activate_vesum_db.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{shadow_path}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{backup_path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/rag/benchmark_embeddings.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(SOURCES_DB_PATH))"
-    ]
-  },
-  {
     "path": "scripts/rag/convert_phase2.py",
     "reference_count": 1,
     "kind": "writer",
@@ -1670,16 +1128,6 @@
     "reason": "backfills literary source URLs",
     "calls": [
       "sqlite3.connect(str(db_path))"
-    ]
-  },
-  {
-    "path": "scripts/rag/query.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(db_path)"
     ]
   },
   {
@@ -1711,37 +1159,6 @@
     "reason": "persists article cache",
     "calls": [
       "sqlite3.connect(str(self.db_path), check_same_thread=False, isolation_level='DEFERRED')"
-    ]
-  },
-  {
-    "path": "scripts/readings/clean_text_resolver.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(uri, uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/readings/generate_readings.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(db_path)",
-      "sqlite3.connect(self.db_path)"
-    ]
-  },
-  {
-    "path": "scripts/readings/textbook_curation.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(uri, uri=True)"
     ]
   },
   {
@@ -1825,26 +1242,6 @@
     ]
   },
   {
-    "path": "scripts/tools/build_pidruchnyk_mapping.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(db_path))"
-    ]
-  },
-  {
-    "path": "scripts/tools/message_viewer.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(DB_PATH)"
-    ]
-  },
-  {
     "path": "scripts/verification/bench_check_text.py",
     "reference_count": 1,
     "kind": "reader_pending_migration_9662",
@@ -1893,16 +1290,6 @@
     "reason": "writes extracted vocabulary",
     "calls": [
       "sqlite3.connect(db_path)"
-    ]
-  },
-  {
-    "path": "scripts/vocab/extract_vocab_baseline.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(VESUM_DB))"
     ]
   },
   {
@@ -1972,34 +1359,6 @@
     ]
   },
   {
-    "path": "scripts/wiki/compiler.py",
-    "reference_count": 8,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/wiki/dense_rerank.py",
-    "reference_count": 9,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(db_path))"
-    ]
-  },
-  {
-    "path": "scripts/wiki/diagnostics/corpus_gaps/audit.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(SOURCES_DB_PATH))"
-    ]
-  },
-  {
     "path": "scripts/wiki/diagnostics/retrieval_bakeoff_9233.py",
     "reference_count": 10,
     "kind": "writer",
@@ -2009,16 +1368,6 @@
       "sqlite3.connect(f'{path.resolve().as_uri()}?mode=ro', uri=True)",
       "sqlite3.connect(destination)",
       "sqlite3.connect(target)"
-    ]
-  },
-  {
-    "path": "scripts/wiki/diagnostics/retrieval_playback.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(SOURCES_DB_PATH))"
     ]
   },
   {
@@ -2065,14 +1414,6 @@
     ]
   },
   {
-    "path": "scripts/wiki/historical_sources.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
     "path": "scripts/wiki/migrate_external_chunks.py",
     "reference_count": 6,
     "kind": "writer",
@@ -2080,17 +1421,6 @@
     "reason": "migrates external article chunks and FTS",
     "calls": [
       "sqlite3.connect(str(db_path))"
-    ]
-  },
-  {
-    "path": "scripts/wiki/pravopys_official.py",
-    "reference_count": 8,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'{vesum_db.resolve().as_uri()}?mode=ro', uri=True)",
-      "sqlite3.connect(f'{Path(db_path).resolve().as_uri()}?mode=ro', uri=True, check_same_thread=False)"
     ]
   },
   {
@@ -2124,34 +1454,6 @@
     ]
   },
   {
-    "path": "scripts/wiki/run_chunk_policy_bakeoff.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(SOURCES_DB_PATH))"
-    ]
-  },
-  {
-    "path": "scripts/wiki/slovnyk_me.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/wiki/source_attribution.py",
-    "reference_count": 11,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'{_effective_db_path().resolve().as_uri()}?mode=ro', uri=True)"
-    ]
-  },
-  {
     "path": "scripts/wiki/sources_db.py",
     "reference_count": 28,
     "kind": "writer",
@@ -2175,14 +1477,6 @@
       "sqlite3.connect(str(db))",
       "sqlite3.connect(str(db))"
     ]
-  },
-  {
-    "path": "scripts/wiki/sum20_official.py",
-    "reference_count": 7,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
   },
   {
     "path": "scripts/wiki/ukrainian_wiki_corpus.py",

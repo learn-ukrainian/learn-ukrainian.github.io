@@ -35,6 +35,24 @@ from typing import Any
 
 import yaml
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 LOGGER = logging.getLogger(__name__)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
@@ -2011,7 +2029,7 @@ def _textbook_source_year(source_file: str) -> int:
 
 
 def _source_files_for_textbook_reference(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     author: str,
     grade: int,
 ) -> list[str] | None:
@@ -2060,7 +2078,7 @@ def _lookup_textbook_reference_chunk(
         return None
 
     try:
-        with sqlite3.connect(f"{TEXTBOOK_SOURCES_DB_PATH.resolve().as_uri()}?mode=ro", uri=True) as conn:
+        with _open_readonly(TEXTBOOK_SOURCES_DB_PATH) as conn:
             conn.row_factory = sqlite3.Row
             source_files = _source_files_for_textbook_reference(conn, author, grade)
             if source_files is None:
@@ -15182,7 +15200,7 @@ def _lookup_textbook_metadata(source_file: str) -> dict[str, str] | None:
     if not TEXTBOOK_SOURCES_DB_PATH.exists():
         return None
     try:
-        with sqlite3.connect(f"{TEXTBOOK_SOURCES_DB_PATH.resolve().as_uri()}?mode=ro", uri=True) as conn:
+        with _open_readonly(TEXTBOOK_SOURCES_DB_PATH) as conn:
             row = conn.execute(
                 "SELECT author_uk, grade FROM textbooks WHERE source_file = ? LIMIT 1",
                 (source_file,),

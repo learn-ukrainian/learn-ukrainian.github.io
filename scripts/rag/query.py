@@ -20,6 +20,22 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
+try:
     from wiki import sources_db
 except ImportError:  # pragma: no cover - package import fallback
     from scripts.wiki import sources_db
@@ -188,7 +204,7 @@ def get_chunk_context(chunk_id: str, window: int = 2) -> list[dict[str, Any]]:
     db_path = sources_db.SOURCES_DB_PATH
     if not db_path.exists():
         return []
-    with sqlite3.connect(db_path) as conn:
+    with _open_readonly(db_path) as conn:
         conn.row_factory = sqlite3.Row
         row = conn.execute(
             "SELECT source_file, chunk_id FROM textbooks WHERE chunk_id = ?",

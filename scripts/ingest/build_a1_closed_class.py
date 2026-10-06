@@ -5,11 +5,28 @@ from __future__ import annotations
 import argparse
 import re
 import sqlite3
+import sys
 from pathlib import Path
 
 import yaml
 
 from scripts.curriculum.validate.a1_reference import CLOSED_CLASS_PATH, _closed_class_from_bytes, normalize
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 CLASSES = {"займенник": "pron", "сполучник": "conj", "прийменник": "prep", "частка": "part"}
 # PULS comma-separated rows attest each spelling with the row's class and level.
@@ -18,7 +35,7 @@ CLASSES = {"займенник": "pron", "сполучник": "conj", "прий
 def build_inventory(db_path: Path) -> dict:
     """Expand every A1 closed-class PULS row; retain no glosses or unit text."""
     words = {}
-    with sqlite3.connect(db_path.resolve().as_uri() + "?mode=ro", uri=True) as connection:
+    with _open_readonly(db_path) as connection:
         rows = connection.execute("SELECT word, level, pos FROM puls_cefr WHERE level = 'A1'").fetchall()
     for word, level, pos in rows:
         if pos not in CLASSES:

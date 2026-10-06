@@ -17,6 +17,24 @@ from typing import Any
 
 import yaml
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
@@ -822,7 +840,7 @@ def build_candidate_forms(variants: list[str]) -> list[str]:
 
 
 def query_table_for_concept(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     table: str,
     variants: list[str],
@@ -856,7 +874,7 @@ def query_table_for_concept(
     }
 
 
-def check_concept_coverage(conn: sqlite3.Connection, concept_entry: dict[str, Any]) -> dict[str, Any]:
+def check_concept_coverage(conn: SQLiteConnection, concept_entry: dict[str, Any]) -> dict[str, Any]:
     variants = [str(item) for item in concept_entry.get("variants", []) if str(item).strip()]
     textbooks = query_table_for_concept(conn, table="textbooks", variants=variants)
     external = query_table_for_concept(conn, table="external_articles", variants=variants)
@@ -1413,7 +1431,7 @@ def build_coverage_map(
     total_concepts = 0
     absent_concepts = 0
 
-    with sqlite3.connect(str(SOURCES_DB_PATH)) as conn:
+    with _open_readonly(str(SOURCES_DB_PATH)) as conn:
         for key in sorted(article_concepts.get("articles", {})):
             if allowed_keys is not None and key not in allowed_keys:
                 continue

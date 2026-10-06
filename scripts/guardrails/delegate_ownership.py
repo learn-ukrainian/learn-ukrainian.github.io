@@ -17,12 +17,29 @@ import json
 import os
 import posixpath
 import sqlite3
+import sys
 import time
 import unicodedata
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 # Anchor ledger + task-state to the PRIMARY checkout (not a worktree copy),
 # matching scripts/delegate.py (Claude CF #5649 r12 F001).
@@ -600,7 +617,7 @@ class OwnershipLedger:
         self.process_matches_task = process_matches_task
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
-    def _connect(self, *, read_only: bool = False) -> sqlite3.Connection:
+    def _connect(self, *, read_only: bool = False) -> SQLiteConnection:
         conn = cp_connect(
             StoreId.WRITE_OWNERSHIP,
             path=self.path,
@@ -636,7 +653,7 @@ class OwnershipLedger:
             )
         return conn
 
-    def _reconcile_stale(self, conn: sqlite3.Connection) -> list[str]:
+    def _reconcile_stale(self, conn: SQLiteConnection) -> list[str]:
         released: list[str] = []
         rows = conn.execute(
             "SELECT task_id, pid, MIN(created_at) AS created_at FROM write_claims GROUP BY task_id, pid"

@@ -16,6 +16,7 @@ import os
 import re
 import shutil
 import sqlite3
+import sys
 import time
 import unicodedata
 import urllib.error
@@ -37,6 +38,24 @@ from scripts.wiki.sources_db import normalize_ulif_dictua_query, using_connectio
 from scripts.wiki.sum20_official import live_article_predicate_for
 
 from . import codes, config, db_identity, tags
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 BATCH_SIZE = 500
 SOURCES_DB_SCHEME = "rows-v2"
@@ -739,20 +758,20 @@ def aggregate_digest(cited: Iterable[tuple[str, str]]) -> str:
     return hashlib.sha256(_canonical([list(pair) for pair in pairs])).hexdigest()
 
 
-def open_readonly(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True)
+def open_readonly(path: Path) -> SQLiteConnection:
+    conn = _open_readonly(Path(path))
     conn.row_factory = sqlite3.Row
     return conn
 
 
-def open_snapshot(path: Path) -> sqlite3.Connection:
+def open_snapshot(path: Path) -> SQLiteConnection:
     """Read-only connection pinned to one snapshot for its lifetime.
 
     isolation_level=None keeps Python's sqlite3 module from issuing its own
     BEGIN/COMMIT; the explicit deferred BEGIN plus the probe read is what fixes
     the read mark (a bare BEGIN pins nothing until the first read).
     """
-    conn = sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True, isolation_level=None)
+    conn = _open_readonly(Path(path), isolation_level=None)
     try:
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA busy_timeout=30000")
@@ -780,7 +799,7 @@ class Sources:
     ):
         self.sources_db = Path(sources_db) if sources_db is not None else _sources_path()
         self.kaikki_db = Path(kaikki_db) if kaikki_db is not None else _kaikki_path()
-        self._kaikki_conn: sqlite3.Connection | None = None
+        self._kaikki_conn: SQLiteConnection | None = None
         self._kaikki_content_sha256: str | None = None
         self.vesum_db = Path(vesum_db) if vesum_db is not None else VESUM_DB_PATH
         self.standard_path = (
@@ -794,7 +813,7 @@ class Sources:
         self.free_disk_floor_bytes = (
             int(free_disk_floor_bytes) if free_disk_floor_bytes is not None else config.free_disk_floor_bytes()
         )
-        self._conn: sqlite3.Connection | None = None
+        self._conn: SQLiteConnection | None = None
         self._fingerprints: dict[Path, tuple[tuple, str, dict]] = {}
         self._vesum_snapshot: tuple[tuple, str, dict] | None = None
         self.journal_mode: str | None = None
@@ -916,7 +935,7 @@ class Sources:
         except OSError as exc:
             raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: {str(self.sources_db)!r}") from exc
 
-    def _db(self) -> sqlite3.Connection:
+    def _db(self) -> SQLiteConnection:
         if self._conn is None:
             if not self.sources_db.is_file():
                 raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: {str(self.sources_db)!r}")
