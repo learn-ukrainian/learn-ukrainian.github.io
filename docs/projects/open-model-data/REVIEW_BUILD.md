@@ -1,7 +1,8 @@
-# Epic #6321 — private review build RB-1 (design v1.4)
+# Epic #6321 — private review build RB-1 (design v1.4.1)
 
 Status: APPROVED — v1.3 Sol APPROVE (`design-rb1-sol-r3`); v1.3.1 editorial tightenings; v1.4 records the operator
-decision of 2026-10-06 (word cards first, §6(b)), approved with the word-card data plan (`design-cards-plan-sol-r2`).
+decision of 2026-10-06 (word cards first, §6(b)), approved with the word-card data plan (`design-cards-plan-sol-r2`);
+v1.4.1 editorial: §5 scope note and work-package table annotations (no rule changes).
 Authority: operator decision 2026-10-06 on #6321 and its addendum (00:25Z): build the complete dataset (plan v3.5.0,
 C1–C7 + C9) as a **private review build** for Ukrainian researchers, on the project's own build host, against the local
 Sources MCP and `sources.db`; every value carries `source_id`, snapshot, locator, `licence_ref` and attribution; no
@@ -176,6 +177,10 @@ sentence; a dev document; a grade-0 / private textbook row; mixed-edit C6 unit; 
 reasoning text; a unit missing from the candidate stream.
 
 ## 5. Components — unit, binding, accept/withhold
+
+> **Scope since v1.4 (§6(b)):** C1, C5, C6 and C9 are built directly by RB-1 as written here. The C2, C3, C4 and C7
+> rules below (and their §4 gate checks, including the `sum11` role in §4.3) stay normative as the word cards'
+> acceptance rules and the card projections' gate (`WORD_CARDS_DATA_PLAN.md` §3); RB-1 does not extract them directly.
 - **Split manifest (WP1, E9 part).** Excluded from every component: UA-GEC test; the dev carve-out = whole authors
   ordered by sha256(`omd-rb1-dev` + author_id) until ≥ 10% of gec-only train documents (measured: 84 authors,
   171 documents, 10.02%), both layers; `is_sensitive` documents; train sentences whose hash occurs in test. Excluded
@@ -267,11 +272,11 @@ implementation) as that supplier; author Sol, reviewers Opus + Gemini 3.8 Flash
 | WP0 | contract, transform registry + property tests, snapshot reader, output guard, register/attribution resolver, catalog renderer + balanced assignment, writer, manifest + private manifest allowlist, gate §4 (quotation, binding-spec engine, roles, hygiene, prefix/repetition, accounting), synthetic must-fail fixtures, CLI `build`/`verify`, determinism test | GPT-6.1 Sol | Claude Opus 5.5 |
 | WP-CAT | catalog status + C7 context serialization | GPT-6.1 Sol | Opus + Flash |
 | WP1 | split manifest + C1 + C6(a) | Claude Opus 5.5 | GPT-6.1 Sol |
-| WP2 | C2 | GPT-6.1 Sol | Claude Opus 5.5 |
-| WP3 | C3 (ULIF relations + СУМ-20 meaning) + C4 | GPT-6.1 Sol | Claude Opus 5.5 |
+| WP2 | C2 → card ingestion since v1.4 (#9820) | GPT-6.1 Sol | Claude Opus 5.5 |
+| WP3 | C3 (ULIF relations + СУМ-20 meaning) + C4 → card ingestion since v1.4 (#9821) | GPT-6.1 Sol | Claude Opus 5.5 |
 | WP4 | C5 | Claude Opus 5.5 | GPT-6.1 Sol |
 | WP5 (#8341) | C9 (heading grammar, imprint metadata, detectors) | Claude Opus 5.5 | GPT-6.1 Sol |
-| WP6 | C6(b) + C7 candidates; adjudication tasks | GPT-6.1 Sol | Claude Opus 5.5 |
+| WP6 | C6(b) + adjudication tasks; C7 extractor kept as card input since v1.4 (#9823, #8982) | GPT-6.1 Sol | Claude Opus 5.5 |
 | WP7 | builds, D2, D3, README, rebuild comparison, delivery | driver; reviewers Sol + Opus | — |
 Order: WP0 and WP-CAT first; WP1–WP6 dispatch in parallel after WP0 merges. Routing is confirmed from live capacity at
 each dispatch. Kimi, Grok, Cursor and OpenRouter routes do no Ukrainian work (plan role map); Grok may critique

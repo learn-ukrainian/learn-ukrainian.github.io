@@ -1,8 +1,8 @@
-# Epic #6321 — word-card data, dataset-first (plan v1.1.1)
+# Epic #6321 — word-card data, dataset-first (plan v1.1.2)
 
 Status: APPROVED — designated approval: author Claude Opus 5.5 (open-model-data driver), GPT-6.1 Sol APPROVE on v1.1
 (`design-cards-plan-sol-r2`, sha256 0dd10f0d…) after v1 REQUEST_CHANGES (`design-cards-plan-sol`; §8 maps each finding).
-v1.1.1: editorial — §7 ВТС residual reworded to match §6 (the one non-blocking residual of round 2).
+v1.1.1: editorial — §7 ВТС residual reworded to match §6 (the one non-blocking residual of round 2). v1.1.2: §7 duplicate ВТС entry removed (doc-review residual).
 Authority: operator decisions 2026-10-06 on #6321 — (1) word-level dataset components come from the word cards,
 superseding RB-1 design §6(b); (2) the open-model-data lane owns word-card DATA end to end, the Atlas lane keeps
 presentation. No deadline ("no drift, no rush").
@@ -113,7 +113,7 @@ model-written Ukrainian in any card field.
 
 ## 7. Residuals and owners
 
-C2 MemoryError (W9, this lane); ВТС admission (W1a prerequisite for ВТС seeding, this lane); 46 % form disagreement (W2, this lane); ВТС admission — edition, register row, sense parsing — before it seeds senses (W1a prerequisite, this lane); acquisition of further authority books (#8791, operator);
+C2 MemoryError (W9, this lane); 46 % form disagreement (W2, this lane); ВТС admission — edition, register row, sense parsing — before it seeds senses (W1a prerequisite, this lane); acquisition of further authority books (#8791, operator);
 #8334 identity/URL sign-off (Atlas URL part stays Atlas; identity part this lane).
 
 ## 8. v1 review findings → where v1.1 closes them (Sol, `design-cards-plan-sol`)
