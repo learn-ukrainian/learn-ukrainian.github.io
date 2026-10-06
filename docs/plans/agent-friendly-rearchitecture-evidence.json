@@ -1,0 +1,1262 @@
+{
+  "git": {
+    "approved_plan_sample_window": {
+      "fix_path_buckets": {
+        "ci_yml": 1,
+        "curriculum": 1,
+        "delivery": 78,
+        "lexicon": 7,
+        "no_listed_bucket": 5,
+        "site_atlas": 2,
+        "site_other": 10,
+        "tests": 142,
+        "workflows_other": 1
+      },
+      "fix_prefix_commits": 151,
+      "fix_scopes": [
+        [
+          "review",
+          18
+        ],
+        [
+          "dispatch",
+          10
+        ],
+        [
+          "fresh",
+          9
+        ],
+        [
+          "runtime",
+          8
+        ],
+        [
+          "tests",
+          8
+        ],
+        [
+          "opsec",
+          7
+        ],
+        [
+          "build",
+          7
+        ],
+        [
+          "delegate",
+          7
+        ],
+        [
+          "routing",
+          6
+        ],
+        [
+          "agent-runtime",
+          5
+        ],
+        [
+          "evidence",
+          5
+        ],
+        [
+          "deps",
+          5
+        ],
+        [
+          "sources",
+          4
+        ],
+        [
+          "ulif",
+          3
+        ],
+        [
+          "lifecycle",
+          2
+        ],
+        [
+          "site",
+          2
+        ],
+        [
+          "launchers",
+          2
+        ],
+        [
+          "agy",
+          2
+        ],
+        [
+          "acp",
+          2
+        ],
+        [
+          "session-streams",
+          2
+        ],
+        [
+          "reaper",
+          2
+        ],
+        [
+          "ci",
+          2
+        ],
+        [
+          "fresh-build",
+          2
+        ],
+        [
+          "hooks",
+          2
+        ],
+        [
+          "stress",
+          2
+        ],
+        [
+          "fleet",
+          2
+        ],
+        [
+          "agents",
+          2
+        ],
+        [
+          "standard",
+          2
+        ],
+        [
+          "workflow",
+          1
+        ],
+        [
+          "path-safety",
+          1
+        ],
+        [
+          "orchestration",
+          1
+        ],
+        [
+          "eval",
+          1
+        ],
+        [
+          "security",
+          1
+        ],
+        [
+          "atlas",
+          1
+        ],
+        [
+          "jsonl",
+          1
+        ],
+        [
+          "rollover",
+          1
+        ],
+        [
+          "session-start",
+          1
+        ],
+        [
+          "agent_runtime",
+          1
+        ],
+        [
+          "docs",
+          1
+        ],
+        [
+          "hygiene",
+          1
+        ],
+        [
+          "mcp",
+          1
+        ],
+        [
+          "infra",
+          1
+        ],
+        [
+          "rag",
+          1
+        ],
+        [
+          "wiki",
+          1
+        ],
+        [
+          "cursor",
+          1
+        ],
+        [
+          "mdx",
+          1
+        ],
+        [
+          "pre-commit",
+          1
+        ],
+        [
+          "backup",
+          1
+        ],
+        [
+          "fresh-writer",
+          1
+        ]
+      ],
+      "fix_subject_class_hits": [
+        [
+          "source_evidence",
+          14
+        ],
+        [
+          "review_machinery",
+          13
+        ],
+        [
+          "opsec_path",
+          8
+        ],
+        [
+          "removal_or_reap",
+          5
+        ],
+        [
+          "routing_credit",
+          4
+        ],
+        [
+          "hook_guard",
+          2
+        ],
+        [
+          "test_isolation",
+          1
+        ]
+      ],
+      "missing_x_agent_trailer": 6,
+      "non_merge_commits": 281,
+      "revert_mention_commits": [],
+      "revert_prefix_commits": [],
+      "since": "2026-09-30",
+      "since_instant": "2026-09-30T00:00:00+00:00",
+      "until_exclusive": "2026-10-06",
+      "until_exclusive_instant": "2026-10-06T00:00:00+00:00"
+    },
+    "head": "3e4bdb3dd9ecc57d1b519050bf64fa7a0ed9b737",
+    "method": "Non-merge git history with explicit UTC-midnight window bounds and TZ=UTC for git. Monthly trailer figures use %cI and each commit's committer offset, independent of the host clock. fix() scope counts are the subject token with neutral internal-machine labels. Subject-class hits are regex matches and are not mutually exclusive. Path buckets count fix commits that touch at least one matching path. Structure lines are a source scan of this checkout.",
+    "primary_window": {
+      "fix_path_buckets": {
+        "ci_yml": 46,
+        "curriculum": 88,
+        "delivery": 424,
+        "lexicon": 120,
+        "no_listed_bucket": 51,
+        "site_atlas": 48,
+        "site_other": 243,
+        "site_practice": 109,
+        "tests": 1223,
+        "workflows_other": 30
+      },
+      "fix_prefix_commits": 1489,
+      "fix_scopes": [
+        [
+          "practice",
+          96
+        ],
+        [
+          "atlas",
+          69
+        ],
+        [
+          "ci",
+          65
+        ],
+        [
+          "review",
+          64
+        ],
+        [
+          "delegate",
+          53
+        ],
+        [
+          "tests",
+          48
+        ],
+        [
+          "lexicon",
+          48
+        ],
+        [
+          "bridge",
+          44
+        ],
+        [
+          "bio",
+          44
+        ],
+        [
+          "hooks",
+          38
+        ],
+        [
+          "runtime",
+          37
+        ],
+        [
+          "api",
+          35
+        ],
+        [
+          "build",
+          33
+        ],
+        [
+          "audit",
+          24
+        ],
+        [
+          "site",
+          23
+        ],
+        [
+          "orchestration",
+          23
+        ],
+        [
+          "routing",
+          23
+        ],
+        [
+          "folk",
+          23
+        ],
+        [
+          "security",
+          21
+        ],
+        [
+          "dispatch",
+          21
+        ],
+        [
+          "fleet",
+          20
+        ],
+        [
+          "harness",
+          20
+        ],
+        [
+          "monitor",
+          20
+        ],
+        [
+          "cycle007",
+          19
+        ],
+        [
+          "opsec",
+          17
+        ],
+        [
+          "acp",
+          17
+        ],
+        [
+          "agent-runtime",
+          16
+        ],
+        [
+          "launcher",
+          15
+        ],
+        [
+          "deploy",
+          15
+        ],
+        [
+          "codex",
+          15
+        ],
+        [
+          "upgrade",
+          14
+        ],
+        [
+          "open-model-data",
+          14
+        ],
+        [
+          "infra",
+          13
+        ],
+        [
+          "sources",
+          13
+        ],
+        [
+          "qg",
+          12
+        ],
+        [
+          "reaper",
+          11
+        ],
+        [
+          "corpus",
+          11
+        ],
+        [
+          "hygiene",
+          10
+        ],
+        [
+          "deps",
+          10
+        ],
+        [
+          "launchers",
+          9
+        ],
+        [
+          "fresh",
+          9
+        ],
+        [
+          "ulif",
+          9
+        ],
+        [
+          "backup",
+          9
+        ],
+        [
+          "phase3",
+          9
+        ],
+        [
+          "storage",
+          8
+        ],
+        [
+          "fleet-comms",
+          8
+        ],
+        [
+          "v4",
+          8
+        ],
+        [
+          "b2",
+          8
+        ],
+        [
+          "lifecycle",
+          7
+        ],
+        [
+          "work",
+          7
+        ],
+        [
+          "a1",
+          7
+        ],
+        [
+          "eval",
+          6
+        ],
+        [
+          "evidence",
+          6
+        ],
+        [
+          "agents",
+          6
+        ],
+        [
+          "<no-scope>",
+          6
+        ],
+        [
+          "practice-ux",
+          6
+        ],
+        [
+          "rules",
+          6
+        ],
+        [
+          "entire",
+          6
+        ],
+        [
+          "control-plane",
+          6
+        ],
+        [
+          "agy",
+          5
+        ],
+        [
+          "cursor",
+          5
+        ],
+        [
+          "acpx",
+          5
+        ],
+        [
+          "dashboards",
+          5
+        ],
+        [
+          "occupancy",
+          5
+        ],
+        [
+          "labeling",
+          5
+        ],
+        [
+          "guards",
+          5
+        ],
+        [
+          "rollover",
+          4
+        ],
+        [
+          "mcp",
+          4
+        ],
+        [
+          "stress",
+          4
+        ],
+        [
+          "kimicc",
+          4
+        ],
+        [
+          "activities",
+          4
+        ],
+        [
+          "ops-ui",
+          4
+        ],
+        [
+          "timeouts",
+          4
+        ],
+        [
+          "data",
+          4
+        ],
+        [
+          "kimi",
+          4
+        ],
+        [
+          "session-streams",
+          3
+        ],
+        [
+          "docs",
+          3
+        ],
+        [
+          "wiki",
+          3
+        ],
+        [
+          "sources-mcp",
+          3
+        ],
+        [
+          "test",
+          3
+        ],
+        [
+          "curriculum",
+          3
+        ],
+        [
+          "services",
+          3
+        ],
+        [
+          "open_model_data",
+          3
+        ],
+        [
+          "canary",
+          3
+        ],
+        [
+          "skills",
+          3
+        ],
+        [
+          "ops",
+          3
+        ],
+        [
+          "guardrails",
+          3
+        ],
+        [
+          "dashboard",
+          3
+        ],
+        [
+          "telemetry",
+          3
+        ],
+        [
+          "open-model",
+          3
+        ],
+        [
+          "fresh-build",
+          2
+        ],
+        [
+          "mdx",
+          2
+        ],
+        [
+          "pre-commit",
+          2
+        ],
+        [
+          "standard",
+          2
+        ],
+        [
+          "work-api",
+          2
+        ],
+        [
+          "checks",
+          2
+        ],
+        [
+          "verification",
+          2
+        ],
+        [
+          "alphabet",
+          2
+        ],
+        [
+          "scripts",
+          2
+        ],
+        [
+          "ops-api",
+          2
+        ],
+        [
+          "foundry",
+          2
+        ],
+        [
+          "transport",
+          2
+        ],
+        [
+          "fleet_comms",
+          2
+        ],
+        [
+          "comms",
+          2
+        ],
+        [
+          "wotd",
+          2
+        ],
+        [
+          "catalog",
+          2
+        ],
+        [
+          "process",
+          2
+        ],
+        [
+          "gitignore",
+          2
+        ],
+        [
+          "git",
+          2
+        ],
+        [
+          "trails",
+          2
+        ],
+        [
+          "devops",
+          2
+        ],
+        [
+          "session",
+          2
+        ],
+        [
+          "b1",
+          2
+        ],
+        [
+          "a2",
+          2
+        ],
+        [
+          "workflow",
+          1
+        ],
+        [
+          "path-safety",
+          1
+        ],
+        [
+          "jsonl",
+          1
+        ],
+        [
+          "session-start",
+          1
+        ],
+        [
+          "agent_runtime",
+          1
+        ],
+        [
+          "rag",
+          1
+        ],
+        [
+          "fresh-writer",
+          1
+        ],
+        [
+          "arc-landing",
+          1
+        ],
+        [
+          "settings",
+          1
+        ],
+        [
+          "streams",
+          1
+        ],
+        [
+          "privacy",
+          1
+        ],
+        [
+          "retention",
+          1
+        ],
+        [
+          "admission",
+          1
+        ],
+        [
+          "v7-build",
+          1
+        ],
+        [
+          "trailer",
+          1
+        ],
+        [
+          "thread_handoff",
+          1
+        ],
+        [
+          "deepseek",
+          1
+        ],
+        [
+          "issue-streams",
+          1
+        ],
+        [
+          "worktree-claims",
+          1
+        ],
+        [
+          "worktrees",
+          1
+        ],
+        [
+          "worktree",
+          1
+        ],
+        [
+          "inbox-watch",
+          1
+        ],
+        [
+          "grok",
+          1
+        ],
+        [
+          "typesafe",
+          1
+        ],
+        [
+          "unjumble",
+          1
+        ],
+        [
+          "pbr",
+          1
+        ],
+        [
+          "ui",
+          1
+        ],
+        [
+          "audio",
+          1
+        ],
+        [
+          "supervisor",
+          1
+        ],
+        [
+          "ingest",
+          1
+        ],
+        [
+          "issues",
+          1
+        ],
+        [
+          "taxonomy",
+          1
+        ],
+        [
+          "session-supervisor",
+          1
+        ],
+        [
+          "sync",
+          1
+        ],
+        [
+          "practice-deck",
+          1
+        ],
+        [
+          "internal-host",
+          1
+        ],
+        [
+          "cost",
+          1
+        ],
+        [
+          "admin",
+          1
+        ],
+        [
+          "artifacts",
+          1
+        ],
+        [
+          "registry",
+          1
+        ],
+        [
+          "venv",
+          1
+        ],
+        [
+          "runner",
+          1
+        ],
+        [
+          "drive-epic",
+          1
+        ],
+        [
+          "qg-store",
+          1
+        ],
+        [
+          "ruff",
+          1
+        ],
+        [
+          "cf",
+          1
+        ],
+        [
+          "reviews",
+          1
+        ],
+        [
+          "acp-ui",
+          1
+        ],
+        [
+          "rail",
+          1
+        ],
+        [
+          "channels",
+          1
+        ],
+        [
+          "schema",
+          1
+        ],
+        [
+          "statusline",
+          1
+        ],
+        [
+          "claudex",
+          1
+        ],
+        [
+          "layout",
+          1
+        ],
+        [
+          "track-completion",
+          1
+        ],
+        [
+          "readiness",
+          1
+        ],
+        [
+          "harness/llm_qg",
+          1
+        ],
+        [
+          "renderer",
+          1
+        ],
+        [
+          "gates",
+          1
+        ],
+        [
+          "api,bridge",
+          1
+        ],
+        [
+          "qg_bakeoff",
+          1
+        ],
+        [
+          "crawl",
+          1
+        ],
+        [
+          "pipeline",
+          1
+        ],
+        [
+          "validate",
+          1
+        ],
+        [
+          "activity",
+          1
+        ]
+      ],
+      "fix_subject_class_hits": [
+        [
+          "source_evidence",
+          65
+        ],
+        [
+          "review_machinery",
+          48
+        ],
+        [
+          "timeout_or_cache",
+          36
+        ],
+        [
+          "removal_or_reap",
+          29
+        ],
+        [
+          "hook_guard",
+          26
+        ],
+        [
+          "opsec_path",
+          20
+        ],
+        [
+          "test_isolation",
+          18
+        ],
+        [
+          "ci_selection",
+          17
+        ],
+        [
+          "routing_credit",
+          6
+        ]
+      ],
+      "missing_x_agent_trailer": 271,
+      "non_merge_commits": 3739,
+      "revert_mention_commits": [
+        {
+          "date": "2026-08-23",
+          "sha": "0afded20103043ae36bc56b4ccd288da8ec0cfa5",
+          "subject": "docs(autopsy): connector-built commit silently reverted merged main hunks (#7181) (#7190)"
+        }
+      ],
+      "revert_prefix_commits": [
+        {
+          "date": "2026-09-21",
+          "sha": "96fac6e1c7456f2739f53daa59d0be54a8f6a193",
+          "subject": "revert(a1): remove published sounds-letters-and-hello pending A1.1 replan (#8384)"
+        },
+        {
+          "date": "2026-09-20",
+          "sha": "f4c979f709edeacac7adf88679f9cdc4ec160f50",
+          "subject": "revert(a1): remove upgraded modules 1\u20139 from curriculum and site (#8356)"
+        }
+      ],
+      "since": "2026-07-01",
+      "since_instant": "2026-07-01T00:00:00+00:00",
+      "until_exclusive": "2026-10-06",
+      "until_exclusive_instant": "2026-10-06T00:00:00+00:00"
+    },
+    "structure_on_head": {
+      "git_worktree_remove_definitions": [
+        "scripts/orchestration/worktree_claims.py:588"
+      ],
+      "git_worktree_remove_production_calls": [
+        "scripts/orchestration/worktree_claims.py:786",
+        "scripts/orchestration/reap_worktrees.py:3548"
+      ],
+      "git_worktree_remove_test_calls": 6,
+      "remove_unclaimed_worktree_definitions": [
+        "scripts/orchestration/worktree_claims.py:685",
+        "scripts/orchestration/task_family/git_safety.py:737"
+      ]
+    },
+    "timezone": "UTC",
+    "x_agent_by_month": [
+      {
+        "missing_x_agent": 71,
+        "month": "2025-11",
+        "non_merge": 71
+      },
+      {
+        "missing_x_agent": 320,
+        "month": "2025-12",
+        "non_merge": 320
+      },
+      {
+        "missing_x_agent": 345,
+        "month": "2026-01",
+        "non_merge": 345
+      },
+      {
+        "missing_x_agent": 311,
+        "month": "2026-02",
+        "non_merge": 311
+      },
+      {
+        "missing_x_agent": 956,
+        "month": "2026-03",
+        "non_merge": 956
+      },
+      {
+        "missing_x_agent": 1045,
+        "month": "2026-04",
+        "non_merge": 1045
+      },
+      {
+        "missing_x_agent": 725,
+        "month": "2026-05",
+        "non_merge": 967
+      },
+      {
+        "missing_x_agent": 424,
+        "month": "2026-06",
+        "non_merge": 1445
+      },
+      {
+        "missing_x_agent": 138,
+        "month": "2026-07",
+        "non_merge": 1485
+      },
+      {
+        "missing_x_agent": 73,
+        "month": "2026-08",
+        "non_merge": 978
+      },
+      {
+        "missing_x_agent": 54,
+        "month": "2026-09",
+        "non_merge": 1070
+      },
+      {
+        "missing_x_agent": 6,
+        "month": "2026-10",
+        "non_merge": 211
+      }
+    ]
+  },
+  "github": {
+    "actions_failed_runs": {
+      "by_event": {
+        "dynamic": 67,
+        "issue_comment": 45,
+        "issues": 123,
+        "merge_group": 1074,
+        "pull_request": 2131,
+        "push": 407,
+        "schedule": 163,
+        "workflow_dispatch": 36,
+        "workflow_run": 86
+      },
+      "by_week": {
+        "2026-07-01..2026-07-07": 164,
+        "2026-07-08..2026-07-14": 125,
+        "2026-07-15..2026-07-21": 146,
+        "2026-07-22..2026-07-28": 297,
+        "2026-07-29..2026-08-04": 401,
+        "2026-08-05..2026-08-11": 366,
+        "2026-08-12..2026-08-18": 213,
+        "2026-08-19..2026-08-25": 136,
+        "2026-08-26..2026-09-01": 256,
+        "2026-09-02..2026-09-08": 296,
+        "2026-09-09..2026-09-15": 169,
+        "2026-09-16..2026-09-22": 338,
+        "2026-09-23..2026-09-29": 836,
+        "2026-09-30..2026-10-06": 389
+      },
+      "by_workflow_top": [
+        [
+          "CI",
+          2737
+        ],
+        [
+          "Hygiene (advisory)",
+          765
+        ],
+        [
+          "Issue task quality (advisory)",
+          123
+        ],
+        [
+          "Auto-arm merge queue",
+          100
+        ],
+        [
+          "Integration sweep",
+          89
+        ],
+        [
+          "Deploy to GitHub Pages",
+          45
+        ],
+        [
+          "CF attest on comment",
+          45
+        ],
+        [
+          "Content CI",
+          36
+        ],
+        [
+          "Rules Deployment Check",
+          28
+        ]
+      ],
+      "command": "gh api /repos/learn-ukrainian/learn-ukrainian.github.io/actions/runs?status=failure&per_page=100&created=START..END",
+      "total": 4132,
+      "window": "2026-07-01..2026-10-06"
+    },
+    "cf_issue_comment_scan": {
+      "comments_scanned": 13924,
+      "heading_verdict_without_strict_marker": 679,
+      "limitation": "The strict marker requires the attribute order emitted by scripts/review/record_cf_verdict.py. 679 further comments contained a VERDICT line that marker did not parse. Those 679 were not split by verdict word.",
+      "since": "2026-07-01T00:00:00Z",
+      "strict_marker_matches": 111,
+      "strict_marker_verdicts": {
+        "APPROVED": 110,
+        "CHANGES_REQUESTED": 1
+      }
+    },
+    "cf_text_search": {
+      "VERDICT: APPROVED": 603,
+      "VERDICT: BLOCKED": 37,
+      "VERDICT: CHANGES_REQUESTED": 101,
+      "cf-verdict v1": 85,
+      "kind": "GitHub issue search total_count for PRs whose searchable text contains the string. Not a count of review rounds.",
+      "window": "updated:2026-07-01..2026-10-06"
+    },
+    "ci_job_failures_in_approved_plan_window": {
+      "examples": {
+        "CI Gate": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/37388894492",
+        "Frontend": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/37271335317",
+        "pytest (1)": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/37358321354"
+      },
+      "failed_job_counts": {
+        "CI Gate": 146,
+        "Checks": 10,
+        "Dependency audit": 21,
+        "Fast checks": 1,
+        "Frontend": 3,
+        "Secret scan": 2,
+        "pytest report": 1,
+        "pytest shards combined": 290,
+        "run failed with no job conclusion=failure": 1
+      },
+      "failed_runs": 147,
+      "note": "Complete count of failed jobs on failed CI workflow runs in this window. One run can fail several jobs. A failed CI Gate job includes runs the gate refused.",
+      "pytest_shard_counts": {
+        "pytest (1)": 22,
+        "pytest (10)": 20,
+        "pytest (11)": 21,
+        "pytest (12)": 15,
+        "pytest (13)": 9,
+        "pytest (14)": 25,
+        "pytest (15)": 24,
+        "pytest (16)": 20,
+        "pytest (2)": 22,
+        "pytest (3)": 20,
+        "pytest (4)": 14,
+        "pytest (5)": 13,
+        "pytest (6)": 15,
+        "pytest (7)": 18,
+        "pytest (8)": 13,
+        "pytest (9)": 19
+      },
+      "window": "2026-09-30..2026-10-06",
+      "workflow": "CI"
+    },
+    "measured_on": "2026-10-05",
+    "note": "GitHub counts are a snapshot. The git section is the census script at this head. Re-run the script to refresh git. Re-run the commands below to refresh GitHub."
+  }
+}
