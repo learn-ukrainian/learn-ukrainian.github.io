@@ -1040,3 +1040,109 @@ def test_tool_state_excluded_but_cache_output_survives(checkout, cache):
     assert ok and receipt["count"] == 1 and receipt["bytes"] == len(b"task output")
     assert ((checkout[1] / receipt["location"]) / ".cache/out/answer.txt").read_bytes() == b"task output"
     assert not ((checkout[1] / receipt["location"]) / cache).exists()
+
+
+def _stub_path_limit(monkeypatch, reported):
+    real = os.pathconf
+
+    def fake(path, name):
+        if name != "PC_PATH_MAX":
+            return real(path, name)
+        if reported == "unavailable":
+            raise OSError("pathconf unavailable")
+        return reported
+
+    monkeypatch.setattr(os, "pathconf", fake)
+
+
+def test_regular_file_beginning_with_symlink_prefix_has_no_target(tmp_path):
+    payload = b"symlink\n" + b"x" * 100_000
+    (tmp_path / "note.txt").write_bytes(payload)
+    entry = output._path_inventory(tmp_path, ["note.txt"])[0]
+    assert entry == {
+        "path": "note.txt",
+        "size": len(payload),
+        "sha256": hashlib.sha256(payload).hexdigest(),
+    }
+
+
+def test_real_symlink_keeps_its_target(tmp_path):
+    (tmp_path / "link").symlink_to("inside-target")
+    record = b"symlink\n" + os.fsencode("inside-target")
+    entry = output._path_inventory(tmp_path, ["link"])[0]
+    assert entry == {
+        "path": "link",
+        "type": "symlink",
+        "target": "inside-target",
+        "size": len(record),
+        "sha256": hashlib.sha256(record).hexdigest(),
+    }
+
+
+def test_symlink_target_at_the_path_limit_is_kept(tmp_path, monkeypatch):
+    target = "abcd"
+    (tmp_path / "link").symlink_to(target)
+    _stub_path_limit(monkeypatch, len(os.fsencode(target)))
+    assert output._path_inventory(tmp_path, ["link"])[0]["target"] == target
+
+
+def test_symlink_target_longer_than_the_path_limit_is_refused(tmp_path, monkeypatch):
+    target = "too-long-target"
+    (tmp_path / "link").symlink_to(target)
+    _stub_path_limit(monkeypatch, 4)
+    with pytest.raises(output.artifacts.SymlinkTargetRefusal) as caught:
+        output._path_inventory(tmp_path, ["link"])
+    assert caught.value.kind == "target-too-long"
+    assert target not in str(caught.value)
+
+
+@pytest.mark.parametrize("reported", [-1, 0, "unavailable"])
+def test_unusable_path_limit_keeps_a_normal_symlink(tmp_path, monkeypatch, reported):
+    (tmp_path / "link").symlink_to("inside-target")
+    _stub_path_limit(monkeypatch, reported)
+    entry = output._path_inventory(tmp_path, ["link"])[0]
+    assert entry["type"] == "symlink"
+    assert entry["target"] == "inside-target"
+
+
+def test_longest_legal_symlink_target_is_kept(tmp_path):
+    target = "t" * 4095
+    (tmp_path / "link").symlink_to(target)
+    entry = output._path_inventory(tmp_path, ["link"])[0]
+    assert entry["type"] == "symlink"
+    assert entry["target"] == target
+    assert len(os.fsencode(entry["target"])) <= os.pathconf(tmp_path, "PC_PATH_MAX")
+
+
+def test_preserved_regular_file_with_symlink_prefix_stays_regular(checkout):
+    payload = b"symlink\n" + b"x" * 100_000
+    source = artifact(checkout, "ignored/note.txt", payload)
+    ok, reason, receipt = preserve(checkout, {"status": "done"})
+    assert ok and not reason, reason
+    entry = next(item for item in receipt["paths"] if item["path"] == "ignored/note.txt")
+    assert "type" not in entry and "target" not in entry
+    assert entry["size"] == len(payload)
+    assert entry["sha256"] == hashlib.sha256(payload).hexdigest()
+    copied = checkout[1] / receipt["location"] / "ignored/note.txt"
+    assert copied.is_file() and not copied.is_symlink()
+    assert copied.read_bytes() == source.read_bytes()
+    published = json.dumps(receipt) + (checkout[2] / "output-task.json").read_text()
+    assert "x" * 100 not in published
+    assert output.verify_retrieval(checkout[1], receipt) == receipt["retrieval_proof_sha256"]
+
+
+def test_preserved_overlong_symlink_target_is_refused(checkout, monkeypatch):
+    repo, _primary, tasks = checkout
+    link = repo / "ignored" / "link"
+    link.parent.mkdir()
+    target = "too-long-target"
+    link.symlink_to(target)
+    _stub_path_limit(monkeypatch, 4)
+    ok, reason, _metadata = preserve(checkout, {"status": "done"})
+    assert not ok
+    assert "target-too-long" in reason
+    assert target not in reason
+    published = (tasks / "output-task.json").read_text()
+    assert "target-too-long" in published
+    assert target not in published
+    assert link.is_symlink() and os.readlink(link) == target
