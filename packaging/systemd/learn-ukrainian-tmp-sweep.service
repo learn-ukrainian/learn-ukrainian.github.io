@@ -11,3 +11,7 @@ TimeoutStartSec=3600
 TimeoutStopSec=300
 Nice=15
 IOSchedulingClass=idle
+# No network. A user manager accepts PrivateNetwork= and IPAddressDeny=
+# without enforcing them; the seccomp address-family filter is enforced.
+RestrictAddressFamilies=AF_UNIX
+IPAddressDeny=any
