@@ -12,6 +12,7 @@ Tests exercise the hard guards without touching the real checkout:
 
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import os
@@ -216,7 +217,7 @@ def test_no_task_state(hermetic_reap):
     assert "no task state" in report["main_worktree"]["reason"]
 
 
-@pytest.mark.parametrize("contents", ["regenerable_only", "mixed", "oversized_output", "symlink"])
+@pytest.mark.parametrize("contents", ["regenerable_only", "mixed", "oversized_output", "symlink", "unpublished_manifest"])
 def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, tmp_path, contents):
     repo, tasks = hermetic_reap
     (repo / "site").mkdir()
@@ -225,7 +226,10 @@ def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, t
         "node_modules\n__pycache__/\n.pytest_cache/\n.ruff_cache/\n.mypy_cache/\n"
         "site/src/data/lexicon-manifest.json\nignored/\n"
     )
-    _run(["git", "add", "site/package-lock.json", ".gitignore"], cwd=repo)
+    pointer = repo / "site/src/data/lexicon-manifest.pointer.json"
+    pointer.parent.mkdir(parents=True)
+    pointer.write_text(json.dumps({"json_sha256": hashlib.sha256(b"x" * 64).hexdigest()}))
+    _run(["git", "add", "site/package-lock.json", ".gitignore", "site/src/data/lexicon-manifest.pointer.json"], cwd=repo)
     _run(["git", "commit", "-m", "fixture lock and ignored patterns"], cwd=repo)
     _run(["git", "push", "origin", "main"], cwd=repo)
     task_id = "regenerable-9828"
@@ -253,7 +257,10 @@ def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, t
     if contents in {"mixed", "oversized_output"}:
         (worktree / "ignored").mkdir()
         (worktree / "ignored/answer.txt").write_bytes(b"answer" if contents == "mixed" else b"x" * 32)
-    monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", 16)
+    unpublished = b'{"entries": ["promoted"]}'
+    if contents == "unpublished_manifest":
+        (worktree / "site/src/data/lexicon-manifest.json").write_bytes(unpublished)
+    monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", 32 if contents == "unpublished_manifest" else 16)
     _write_task_state(tasks, task_id, "done", worktree, agent="codex")
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     row = report["main_worktree"]
@@ -267,6 +274,12 @@ def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, t
         if contents == "regenerable_only":
             assert not row.get("preserved_artifacts")
             assert not (repo / "batch_state/preserved").exists()
+        elif contents == "unpublished_manifest":
+            receipt = row["preserved_artifacts"]
+            assert receipt["count"] == 1 and receipt["bytes"] == len(unpublished)
+            manifest = "site/src/data/lexicon-manifest.json"
+            assert [entry["path"] for entry in receipt["paths"]] == [manifest]
+            assert (repo / receipt["location"] / manifest).read_bytes() == unpublished
         else:
             receipt = row["preserved_artifacts"]
             assert receipt["count"] == 1 and receipt["bytes"] == 6

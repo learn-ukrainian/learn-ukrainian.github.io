@@ -349,6 +349,15 @@ def _ignored_output_files(
     named = artifacts._named_artifact_files(worktree, record, primary=primary)
     names = artifacts._git_paths(worktree, "--others", "--ignored", "--exclude-standard")
     tracked = set(artifacts._git_paths(worktree, "--cached"))
+    regenerable: dict[str, bool] = {}
+
+    def is_regenerable(name: str) -> bool:
+        # The same path can be ignored and named in the report. Hash the
+        # manifest once here; a subsequent inventory gets fresh release proof.
+        if name not in regenerable:
+            regenerable[name] = is_regenerable_ignored_path(name, worktree=worktree, tracked=tracked)
+        return regenerable[name]
+
     if not tracked:
         # --no-checkout leaves an empty index and no on-disk .gitignore.
         # Unignored scratch can be task output too; inventory both classes.
@@ -363,7 +372,7 @@ def _ignored_output_files(
             continue
         source = worktree / relative
         try:
-            if is_regenerable_ignored_path(name, worktree=worktree, tracked=tracked):
+            if is_regenerable(name):
                 continue
             status = source.lstat()
             if stat.S_ISLNK(status.st_mode):
@@ -400,7 +409,7 @@ def _ignored_output_files(
         name
         for name in files
         if not artifacts.is_disposable_path(Path(name), worktree=worktree, primary=primary)
-        and not is_regenerable_ignored_path(name, worktree=worktree, tracked=tracked)
+        and not is_regenerable(name)
     )
 
 

@@ -1,5 +1,6 @@
 """Ignored output inventory/copy boundaries, using only temporary repositories."""
 
+import hashlib
 import json
 import os
 import subprocess
@@ -24,6 +25,28 @@ def tracked_lockfile(repo, directory):
     return lock
 
 
+def published_manifest(checkout, payload=b'{"entries": []}'):
+    repo = checkout[0]
+    manifest = artifact(checkout, patterns.GENERATED_MANIFEST, payload)
+    ignore = repo / ".gitignore"
+    ignore.write_text(ignore.read_text() + patterns.GENERATED_MANIFEST + "\n")
+    pointer = artifact(
+        checkout,
+        patterns.MANIFEST_POINTER,
+        json.dumps({"json_sha256": hashlib.sha256(payload).hexdigest()}).encode(),
+    )
+    env = output.artifacts._safe_git_env()
+    subprocess.run(
+        ["git", "add", "--", patterns.MANIFEST_POINTER, ".gitignore"],
+        cwd=repo, env=env, check=True, capture_output=True, timeout=30,
+    )
+    subprocess.run(
+        ["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-m", "Release pointer"],
+        cwd=repo, env=env, check=True, capture_output=True, timeout=30,
+    )
+    return manifest, pointer
+
+
 @pytest.mark.parametrize(
     "name",
     [
@@ -41,6 +64,8 @@ def test_regenerable_patterns_skip_fingerprinting_and_cap(checkout, monkeypatch,
         parent = name.split("node_modules")[0]
         tracked_lockfile(repo, parent)
     artifact(checkout, name, b"0123456789")
+    if name == patterns.GENERATED_MANIFEST:
+        published_manifest(checkout, b"0123456789")
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
     monkeypatch.setattr(output.artifacts, "_fingerprint", lambda _path: pytest.fail("regenerable bytes read"))
     assert preserve(checkout, {"response": f"Generated `{name}`."}) == (True, "", None)
@@ -53,13 +78,110 @@ def test_mixed_regenerable_paths_preserve_only_output(checkout, monkeypatch):
     tracked_lockfile(repo, "site")
     artifact(checkout, "site/node_modules/package/index.js", b"x" * 100)
     artifact(checkout, "__pycache__/module.pyc", b"x" * 100)
-    artifact(checkout, patterns.GENERATED_MANIFEST, b"x" * 100)
+    published_manifest(checkout, b"x" * 100)
     artifact(checkout, "ignored/answer.txt", b"answer")
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 6)
     ok, reason, receipt = preserve(checkout)
     assert ok and not reason and receipt["bytes"] == 6
     assert [entry["path"] for entry in receipt["paths"]] == ["ignored/answer.txt"]
     assert (primary / receipt["location"] / "ignored/answer.txt").read_bytes() == b"answer"
+
+
+def test_published_manifest_is_regenerable_and_hashed_once_per_inventory(checkout, monkeypatch):
+    repo, primary, _ = checkout
+    manifest, _ = published_manifest(checkout)
+    original_digest = hashlib.file_digest
+    hashes = []
+
+    def count_hashes(handle, algorithm):
+        hashes.append(handle.name)
+        return original_digest(handle, algorithm)
+
+    monkeypatch.setattr(patterns.hashlib, "file_digest", count_hashes)
+    record = {"response": f"Generated `{patterns.GENERATED_MANIFEST}`."}
+    assert output._ignored_output_files(repo, primary, record) == []
+    assert hashes == [str(manifest)]
+    manifest.write_bytes(b'{"entries": ["promoted-by-task"]}')
+    assert output._ignored_output_files(repo, primary, record) == [patterns.GENERATED_MANIFEST]
+    assert hashes == [str(manifest), str(manifest)]
+
+
+@pytest.mark.parametrize("named", [False, True], ids=["unnamed", "named-in-report"])
+def test_differing_manifest_is_counted_and_preserved(checkout, monkeypatch, named):
+    manifest, _ = published_manifest(checkout)
+    payload = b'{"entries": ["promoted-by-task"]}'
+    manifest.write_bytes(payload)
+    record = {"response": f"Output `{patterns.GENERATED_MANIFEST}`."} if named else {}
+    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", len(payload) - 1)
+    ok, reason, receipt = preserve(checkout, record)
+    assert not ok and "cap" in reason
+    assert receipt["bytes"] == len(payload) and receipt["retention_disposition"] == "retained"
+    assert manifest.read_bytes() == payload
+    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", len(payload))
+    ok, reason, receipt = preserve(checkout, record)
+    assert ok and not reason and receipt["bytes"] == len(payload)
+    assert [entry["path"] for entry in receipt["paths"]] == [patterns.GENERATED_MANIFEST]
+    assert (checkout[1] / receipt["location"] / patterns.GENERATED_MANIFEST).read_bytes() == payload
+
+
+@pytest.mark.parametrize(
+    "pointer_kind",
+    ["modified", "staged", "staged-restored", "untracked", "absent", "symlink", "invalid-json", "invalid-shape", "missing-hash"],
+)
+def test_manifest_without_clean_tracked_pointer_is_preserved(checkout, pointer_kind):
+    repo, primary, _ = checkout
+    manifest, pointer = published_manifest(checkout)
+    env = output.artifacts._safe_git_env()
+    if pointer_kind in {"modified", "staged", "staged-restored"}:
+        published_pointer = pointer.read_bytes()
+        pointer.write_bytes(published_pointer + b"\n")
+        if pointer_kind in {"staged", "staged-restored"}:
+            subprocess.run(
+                ["git", "add", "--", patterns.MANIFEST_POINTER],
+                cwd=repo, env=env, check=True, capture_output=True, timeout=30,
+            )
+            if pointer_kind == "staged-restored":
+                pointer.write_bytes(published_pointer)
+    elif pointer_kind == "untracked":
+        subprocess.run(
+            ["git", "rm", "--cached", "--", patterns.MANIFEST_POINTER],
+            cwd=repo, env=env, check=True, capture_output=True, timeout=30,
+        )
+    elif pointer_kind == "absent":
+        pointer.unlink()
+    else:
+        if pointer_kind == "symlink":
+            target = repo.parent / "release-pointer.json"
+            target.write_bytes(pointer.read_bytes())
+            pointer.unlink()
+            pointer.symlink_to(target)
+        else:
+            pointer.write_text({"invalid-json": "{", "invalid-shape": "[]", "missing-hash": "{}"}[pointer_kind])
+        subprocess.run(
+            ["git", "add", "--", patterns.MANIFEST_POINTER],
+            cwd=repo, env=env, check=True, capture_output=True, timeout=30,
+        )
+        subprocess.run(
+            ["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-m", "Invalid pointer"],
+            cwd=repo, env=env, check=True, capture_output=True, timeout=30,
+        )
+    ok, reason, receipt = preserve(checkout)
+    assert ok and not reason
+    assert [entry["path"] for entry in receipt["paths"]] == [patterns.GENERATED_MANIFEST]
+    assert (primary / receipt["location"] / patterns.GENERATED_MANIFEST).read_bytes() == manifest.read_bytes()
+
+
+def test_symlinked_manifest_is_not_regenerable(checkout, monkeypatch):
+    repo = checkout[0]
+    manifest, _ = published_manifest(checkout)
+    target = repo / "tracked-manifest.json"
+    target.write_bytes(manifest.read_bytes())
+    manifest.unlink()
+    manifest.symlink_to(target)
+    monkeypatch.setattr(patterns.hashlib, "file_digest", lambda *_: pytest.fail("symlink target hashed"))
+    assert not patterns.is_regenerable_ignored_path(
+        patterns.GENERATED_MANIFEST, worktree=repo, tracked={patterns.MANIFEST_POINTER}
+    )
 
 
 @pytest.mark.parametrize("lock_kind", ["absent", "untracked", "symlink", "vanished"])
