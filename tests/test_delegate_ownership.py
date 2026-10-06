@@ -972,11 +972,15 @@ def _spawn_execd_sleeper(
     cwd: str | None = None,
     timeout_s: float = _EXEC_HANDSHAKE_TIMEOUT_S,
 ):
-    """Spawn a sleeper and return only after its ``execve`` has completed.
+    """Spawn a sleeper and return only after its new image is running.
 
-    #9808: ``Popen`` can return while ``/proc/<pid>/cmdline`` and ``environ``
-    still show the forked parent. The child writes one byte only after the
-    new image is running; this blocks on that byte with a bounded ``select``.
+    #9808: ``Popen`` returns only after its exec-status pipe closes. Linux
+    closes that close-on-exec descriptor in ``begin_new_exec``, before the
+    new image's argument and environment pointers are installed, so a live
+    pid can have a readable but empty ``/proc/<pid>/environ`` and ``cmdline``.
+    That window is unknown identity, not the parent image. The child writes
+    one byte only after the new image is running; this blocks on that byte
+    with a bounded ``select``.
     """
     import select
     import subprocess
@@ -1012,7 +1016,9 @@ def _spawn_execd_sleeper(
                 raise AssertionError(f"child pid {proc.pid} closed the exec handshake (returncode={proc.poll()})")
             got += chunk
         return proc
-    except Exception:
+    except BaseException:
+        # KeyboardInterrupt and other BaseExceptions skip ``except Exception``
+        # and used to leave the sleeper running.
         if proc is not None and proc.poll() is None:
             proc.kill()
             proc.wait(timeout=5)
@@ -1023,11 +1029,57 @@ def _spawn_execd_sleeper(
         os.close(read_fd)
 
 
+def test_spawn_execd_sleeper_interrupted_handshake_reaps_child(tmp_path: Path):
+    """#9808: KeyboardInterrupt or any BaseException in the handshake reaps the child.
+
+    ``except Exception`` does not catch ``select`` being interrupted. The
+    sleeper must be killed and waited on, then the original error propagates.
+    """
+    import signal
+    import subprocess
+    from unittest.mock import patch
+
+    class _HandshakeInterrupt(BaseException):
+        pass
+
+    clean_env = {key: value for key, value in os.environ.items() if "TASK_ID" not in key}
+    spawned: list[subprocess.Popen] = []
+    real_popen = subprocess.Popen
+
+    def tracking_popen(*args, **kwargs):
+        proc = real_popen(*args, **kwargs)
+        spawned.append(proc)
+        return proc
+
+    def assert_reaped(exc_type: type[BaseException]) -> None:
+        spawned.clear()
+        with patch("subprocess.Popen", tracking_popen), patch("select.select", side_effect=exc_type):
+            try:
+                _spawn_execd_sleeper(env=clean_env, cwd=str(tmp_path))
+            except exc_type:
+                pass
+            else:
+                raise AssertionError(f"{exc_type.__name__} did not propagate")
+        assert spawned, "handshake spawned no child"
+        proc = spawned[0]
+        try:
+            assert proc.poll() is not None, "child still alive"
+            assert proc.returncode == -signal.SIGKILL
+        finally:
+            if proc.poll() is None:
+                proc.kill()
+                proc.wait(timeout=5)
+
+    assert_reaped(KeyboardInterrupt)
+    assert_reaped(_HandshakeInterrupt)
+
+
 def test_pid_matches_task_real_process_identity(tmp_path: Path):
     """#8659 / CF r5 F1: Verify _pid_matches_task using real subprocesses with environ/cmdline.
 
-    #9808: both children are sampled only after they signal that exec has
-    finished. The parent image has no task marker, so an early sample is False.
+    #9808: both children are sampled only after the new image signals. The
+    window after ``Popen`` returns can show empty ``environ`` and ``cmdline``;
+    that is unknown identity, not a parent-image mismatch.
     """
     import sqlite3
     import time
@@ -1035,17 +1087,19 @@ def test_pid_matches_task_real_process_identity(tmp_path: Path):
     from scripts.guardrails.delegate_ownership import _pid_matches_task
 
     task_id = "real-worker-task"
-
-    # Spawn real worker subprocess carrying task identity in environ
-    worker = _spawn_execd_sleeper(
-        env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
-    )
-    # Spawn dummy subprocess carrying no task identity
-    dummy = _spawn_execd_sleeper(
-        env={k: v for k, v in os.environ.items() if "TASK_ID" not in k},
-    )
-
+    spawned: list = []
     try:
+        # Register each child before the next spawn so a failed handshake
+        # cannot leave the earlier child running.
+        worker = _spawn_execd_sleeper(
+            env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
+        )
+        spawned.append(worker)
+        dummy = _spawn_execd_sleeper(
+            env={k: v for k, v in os.environ.items() if "TASK_ID" not in k},
+        )
+        spawned.append(dummy)
+
         assert _pid_matches_task(worker.pid, task_id) is True
         assert _pid_matches_task(worker.pid, "other-task") is False
         assert _pid_matches_task(dummy.pid, task_id) is False
@@ -1095,10 +1149,9 @@ def test_pid_matches_task_real_process_identity(tmp_path: Path):
         assert challenger_blocked.admitted is False
         assert challenger_blocked.would_refuse is True
     finally:
-        worker.terminate()
-        worker.wait()
-        dummy.terminate()
-        dummy.wait()
+        for proc in spawned:
+            proc.terminate()
+            proc.wait()
 
 
 # Holds a grandchild between fork and execve, then lets it exec on "release".
@@ -1197,11 +1250,99 @@ def _read_helper_line(stream_fd: int, proc, timeout_s: float) -> bytes:
     return line
 
 
-def test_pid_matches_task_before_exec_is_parent_image(tmp_path: Path):
-    """#9808: a child held before execve still has the parent image, so the match is False.
+def _stub_task_proc(
+    root: Path,
+    pid: int,
+    *,
+    environ: bytes,
+    cmdline: bytes,
+    cwd: Path,
+) -> Path:
+    """A ``proc_root`` whose ``<pid>`` files are the supplied bytes and cwd symlink."""
+    proc_dir = root / str(pid)
+    proc_dir.mkdir(parents=True)
+    (proc_dir / "environ").write_bytes(environ)
+    (proc_dir / "cmdline").write_bytes(cmdline)
+    (proc_dir / "cwd").symlink_to(cwd)
+    return root
 
-    The old real-process assertion (``is True`` immediately after spawn) fails
-    on this image. After the child execs, the same pid matches.
+
+def test_pid_matches_task_empty_exec_window_is_unknown(tmp_path: Path):
+    """#9808: readable but empty environ/cmdline are unknown identity, not a mismatch.
+
+    Models the window ``Popen`` can observe. Linux closes the exec-status
+    pipe in ``begin_new_exec`` before the new image's argument and
+    environment pointers are installed, so a live pid's ``environ`` and
+    ``cmdline`` read back empty. That is unavailable evidence (``None``)
+    unless another probe matches. Populated non-matching evidence is still
+    a confirmed mismatch (``False``).
+    """
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "exec-window-9808"
+    pid = os.getpid()
+    neutral = tmp_path / "neutral-cwd"
+    neutral.mkdir()
+    matched = tmp_path / task_id
+    matched.mkdir()
+    assert task_id not in neutral.resolve().parts
+
+    empty = _stub_task_proc(tmp_path / "empty-proc", pid, environ=b"", cmdline=b"", cwd=neutral)
+    assert _pid_matches_task(pid, task_id, proc_root=empty) is None
+
+    # A cmdline of only NULs has no non-empty parts: same unavailable evidence.
+    nul_cmd = _stub_task_proc(tmp_path / "nul-cmd-proc", pid, environ=b"", cmdline=b"\0\0", cwd=neutral)
+    assert _pid_matches_task(pid, task_id, proc_root=nul_cmd) is None
+
+    # Each empty probe is unavailable on its own.
+    empty_env = _stub_task_proc(
+        tmp_path / "empty-env-proc",
+        pid,
+        environ=b"",
+        cmdline=b"sleeper\0--idle\0",
+        cwd=neutral,
+    )
+    assert _pid_matches_task(pid, task_id, proc_root=empty_env) is None
+    empty_cmd = _stub_task_proc(
+        tmp_path / "empty-cmd-proc",
+        pid,
+        environ=b"PATH=/usr/bin\0LANG=C\0",
+        cmdline=b"",
+        cwd=neutral,
+    )
+    assert _pid_matches_task(pid, task_id, proc_root=empty_cmd) is None
+
+    populated = _stub_task_proc(
+        tmp_path / "populated-proc",
+        pid,
+        environ=b"PATH=/usr/bin\0LANG=C\0",
+        cmdline=b"sleeper\0--idle\0",
+        cwd=neutral,
+    )
+    assert _pid_matches_task(pid, task_id, proc_root=populated) is False
+
+    # Empty identity probes do not hide a positive match from another probe.
+    by_cmd = _stub_task_proc(
+        tmp_path / "cmd-match-proc",
+        pid,
+        environ=b"",
+        cmdline=b"python\0--task-id\0" + task_id.encode() + b"\0",
+        cwd=neutral,
+    )
+    assert _pid_matches_task(pid, task_id, proc_root=by_cmd) is True
+    by_cwd = _stub_task_proc(tmp_path / "cwd-match-proc", pid, environ=b"", cmdline=b"", cwd=matched)
+    assert _pid_matches_task(pid, task_id, proc_root=by_cwd) is True
+
+
+def test_pid_matches_task_before_exec_is_parent_image(tmp_path: Path):
+    """#9808: models the matcher's response to a parent image, not the CI race.
+
+    A raw fork held before ``execve`` bypasses ``Popen``'s exec-status pipe,
+    so ``/proc`` still shows the parent image and the match is False. That is
+    not the state ``Popen`` observes: Linux closes the pipe in
+    ``begin_new_exec`` before the new argument and environment pointers are
+    installed, leaving a readable but empty ``environ`` and ``cmdline``.
+    After this child execs, the same pid matches.
     """
     import signal
     import subprocess
@@ -1352,13 +1493,17 @@ def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: P
 
     clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
 
-    # Spawn processes in each directory without task marker in env or cmdline.
-    # Wait for exec so cwd is the requested directory, not the parent's.
-    p_unrelated = _spawn_execd_sleeper(env=clean_env, cwd=str(unrelated_dir))
-    p_prefix = _spawn_execd_sleeper(env=clean_env, cwd=str(prefix_dir))
-    p_genuine = _spawn_execd_sleeper(env=clean_env, cwd=str(genuine_dir))
-
+    # The handshake returns only after the new image is running, so cwd is
+    # the requested directory. Register each child before the next spawn.
+    spawned: list = []
     try:
+        p_unrelated = _spawn_execd_sleeper(env=clean_env, cwd=str(unrelated_dir))
+        spawned.append(p_unrelated)
+        p_prefix = _spawn_execd_sleeper(env=clean_env, cwd=str(prefix_dir))
+        spawned.append(p_prefix)
+        p_genuine = _spawn_execd_sleeper(env=clean_env, cwd=str(genuine_dir))
+        spawned.append(p_genuine)
+
         # Direct _pid_matches_task checks
         assert _pid_matches_task(p_unrelated.pid, task_id) is False
         assert _pid_matches_task(p_prefix.pid, task_id) is False
@@ -1425,9 +1570,9 @@ def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: P
         assert ch_gen.admitted is False
         assert ch_gen.would_refuse is True
     finally:
-        for p in (p_unrelated, p_prefix, p_genuine):
-            p.terminate()
-            p.wait()
+        for proc in spawned:
+            proc.terminate()
+            proc.wait()
 
 
 def test_pid_matches_task_deleted_cwd_preserves_claim(tmp_path: Path):
