@@ -15,6 +15,7 @@ from scripts.projects.open_model_data.review_build.attribution import Resolver
 from scripts.projects.open_model_data.review_build.catalog import Catalog
 from scripts.projects.open_model_data.review_build.components import ComponentContext, load_components
 from scripts.projects.open_model_data.review_build.components.c9 import (
+    ALLOWLISTED_FILES,
     BINDING,
     FROZEN_COUNT,
     LINE_POLICY,
@@ -23,6 +24,7 @@ from scripts.projects.open_model_data.review_build.components.c9 import (
     TextbookAttribution,
     Textbooks,
     citation,
+    compatibility,
     headings,
     identity,
     ocr_damaged,
@@ -66,24 +68,10 @@ def write_pages(path, pages):
             connection.execute("INSERT INTO textbook_sections VALUES (?,?,?,?,?,?,?,?,?)", list(row.values()))
 
 
-def compatibility(pages):
-    return [
-        {
-            "store": "sources.db",
-            "table": "textbook_sections",
-            "source_id": source,
-            "role": "textbook",
-            "source_column": "source_file",
-            "source_values": books,
-            "allowlisted_files": books,
-            "sensitive": None,
-        }
-        for source, books in (
-            (SOURCE_SCHOOL, sorted({p["source_file"] for p in pages if not p["source_file"].startswith("uni-")})),
-            (SOURCE_UNIVERSITY, sorted({p["source_file"] for p in pages if p["source_file"].startswith("uni-")})),
-        )
-        if books
-    ]
+def component_for(pages):
+    component = Textbooks()
+    component.spec["compatibility"] = compatibility({p["source_file"] for p in pages})
+    return component
 
 
 @pytest.fixture
@@ -100,7 +88,7 @@ def source(tmp_path):
 
 
 def gate_for(reader, pages, count):
-    component = Textbooks()
+    component = component_for(pages)
     spec = copy.deepcopy(component.spec)
     spec["operation_specs"]["verbatim_section"]["frozen_count"] = count
     root = Path(__file__).resolve().parents[5]
@@ -117,11 +105,11 @@ def gate_for(reader, pages, count):
             for source in (SOURCE_SCHOOL, SOURCE_UNIVERSITY)
         ]
     }
-    return Gate(reader, catalog, Resolver(register, component.adapters), {"C9": spec}, compatibility(pages))
+    return Gate(reader, catalog, Resolver(register, component.adapters), {"C9": spec})
 
 
 def extract(reader, pages):
-    return list(Textbooks().iter_candidates(ComponentContext(reader, {"compatibility": compatibility(pages)})))
+    return list(component_for(pages).iter_candidates(ComponentContext(reader, {"schema": "omd-review-request.v2"})))
 
 
 def test_registered_component_and_frozen_spec():
@@ -129,6 +117,12 @@ def test_registered_component_and_frozen_spec():
     assert isinstance(obj, Textbooks)
     assert obj.spec["operation_specs"]["verbatim_section"]["frozen_count"] == FROZEN_COUNT == 11099
     assert obj.spec["operation_specs"]["verbatim_section"]["unit_query"] == UNIT_QUERY
+    assert len(ALLOWLISTED_FILES) == 184
+    policies = obj.spec["compatibility"]
+    assert policies == compatibility(ALLOWLISTED_FILES)
+    assert [len(p["source_values"]) for p in policies] == [163, 21]
+    assert all(p["sensitive"] is None and p["role"] == "textbook" for p in policies)
+    assert "corpus" not in obj.spec
 
 
 def test_accept_complete_multipage_body_and_gate(source):
@@ -381,7 +375,7 @@ def test_exact_allowlist_cannot_silently_shrink_denominator(source):
     path, _pages = source
     with SnapshotReader({"sources.db": path}) as reader:
         with pytest.raises(BuildError, match="textbook_allowlist"):
-            list(Textbooks().iter_candidates(ComponentContext(reader, {"compatibility": []})))
+            list(Textbooks().iter_candidates(ComponentContext(reader, {"schema": "omd-review-request.v2"})))
 
 
 def test_university_grade_zero_admitted_from_filename_with_printed_level(tmp_path):
@@ -506,7 +500,7 @@ def test_c9_synthetic_cli_build_verify_and_real_catalog_metrics(tmp_path, monkey
     ]
     db = tmp_path / "SYNTHETIC.db"
     write_pages(db, pages)
-    component = Textbooks()
+    component = component_for(pages)
     component.spec["operation_specs"]["verbatim_section"]["frozen_count"] = 12
     root = Path(__file__).resolve().parents[5]
     register = {
@@ -522,12 +516,11 @@ def test_c9_synthetic_cli_build_verify_and_real_catalog_metrics(tmp_path, monkey
     register_path = tmp_path / "SYNTHETIC-register.yaml"
     register_path.write_text(yaml.safe_dump(register))
     request = {
-        "schema": "omd-review-request.v1",
-        "components": {"C9": {}},
+        "schema": "omd-review-request.v2",
+        "ua_gec": {"root": str(tmp_path / "SYNTHETIC-ua-gec")},
         "catalog": str(root / "registry/projects/open_model_data/instruction_catalog.yaml"),
         "register": str(register_path),
         "databases": {"sources.db": str(db)},
-        "compatibility": compatibility(pages),
     }
     request_path = tmp_path / "SYNTHETIC-request.json"
     request_path.write_text(json.dumps(request))
@@ -540,3 +533,27 @@ def test_c9_synthetic_cli_build_verify_and_real_catalog_metrics(tmp_path, monkey
     assert manifest["accounting"]["C9"]["accepted"] == 12
     assert manifest["metrics"]["C9.verbatim_section"]["status"] == "PASS"
     assert len(json.loads((target / "mutation-fixtures/results.json").read_bytes())) == 5
+
+
+@pytest.mark.parametrize("mutation", ["missing", "extra", "wrong_partition"])
+def test_component_owned_allowlist_drift_refuses(source, mutation):
+    path, pages = source
+    component = component_for(pages)
+    entry = component.spec["compatibility"][0]
+    if mutation == "missing":
+        entry["allowlisted_files"] = []
+    elif mutation == "extra":
+        entry["allowlisted_files"].append("6-klas-SYNTHETIC-absent")
+    else:
+        entry["source_id"] = SOURCE_UNIVERSITY
+    with SnapshotReader({"sources.db": path}) as reader:
+        if mutation == "wrong_partition":
+            candidates = list(component.iter_candidates(ComponentContext(reader, {})))
+            original = gate_for(reader, pages, len(candidates))
+            component.spec["operation_specs"]["verbatim_section"]["frozen_count"] = len(candidates)
+            gate = Gate(reader, original.catalog, original.resolver, {"C9": component.spec})
+            with pytest.raises(BuildError, match="source_compatibility"):
+                gate.run(candidates)
+        else:
+            with pytest.raises(BuildError, match="textbook_allowlist"):
+                list(component.iter_candidates(ComponentContext(reader, {})))
