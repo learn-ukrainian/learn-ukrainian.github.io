@@ -9,6 +9,13 @@ Membership-reliant writes require a bounded live, repository-qualified ancestry
 read to the claimed registered root (#9794). GitHub has no parentage compare-and-
 swap: a re-parent after the final read and before the write remains a read/write
 race residual owned by claude-infra.
+
+An explicitly parentless target may instead use complete, exact body membership
+from the same invocation's live audit. These reads are fresh observations, not
+an atomic snapshot: the audit reads checklists across requests and timestamps
+the assembled report afterward. Observed contradictions are refused; unobserved
+checklist edits during traversal or between supporting reads and the write remain
+a concurrency residual owned by claude-infra, alongside the native-parent race.
 """
 
 from __future__ import annotations
@@ -233,7 +240,13 @@ class GhGitHubAdapter:
         ):
             raise task_lifecycle.LifecycleError("GitHub parent read repository does not match")
         issue = repository_doc.get("issue")
-        if not isinstance(issue, dict) or issue.get("number") != issue_number or "parent" not in issue:
+        if (
+            not isinstance(issue, dict)
+            or not isinstance(issue.get("number"), int)
+            or isinstance(issue["number"], bool)
+            or issue["number"] != issue_number
+            or "parent" not in issue
+        ):
             raise task_lifecycle.LifecycleError("GitHub parent issue is unread or malformed")
         parent = issue["parent"]
         if parent is None:
@@ -708,10 +721,15 @@ def record_unauthorized_mutation(
         }
 
 
-def _assert_live_memberships(adapter: GhGitHubAdapter, ledger: Mapping[str, Any]) -> None:
-    """Revalidate primary and transferred-scope targets with the same registry."""
+def _assert_live_memberships(
+    adapter: GhGitHubAdapter,
+    ledger: Mapping[str, Any],
+    *,
+    registered_epics: list[int] | None,
+    membership_report: Mapping[str, Any] | None,
+) -> None:
+    """Revalidate all targets using this invocation's registry and live audit."""
     identity = ledger["identity"]
-    registered_epics = adapter.registered_stream_epics()
     targets = [(identity["github_issue_number"], identity["stream_epic"])]
     remaining = ledger["remaining_scope"]
     if remaining["status"] == "transferred":
@@ -721,6 +739,7 @@ def _assert_live_memberships(adapter: GhGitHubAdapter, ledger: Mapping[str, Any]
             repository=identity["repository"], issue_number=issue_number,
             stream_epic=epic, registered_epics=registered_epics,
             read_parent=adapter.read_issue_parent,
+            membership_report=membership_report,
         )
         if not membership["valid"]:
             raise task_lifecycle.LifecycleError(
@@ -743,7 +762,11 @@ def perform_mutation(
         before = adapter.observe(ledger, now=now, branch=branch, worktree=worktree)
         operation_id = task_lifecycle.mutation_operation_id(ledger, action)
         try:
-            _assert_live_memberships(adapter, ledger)
+            _assert_live_memberships(
+                adapter, ledger,
+                registered_epics=before["github"].get("registered_stream_epics"),
+                membership_report=before["github"].get("membership_audit"),
+            )
         except task_lifecycle.LifecycleError as exc:
             _, failed = _record_failed_mutation(
                 state_file, ledger, operation_id=operation_id, action=action,
@@ -960,7 +983,10 @@ def cmd_init(args: argparse.Namespace) -> int:
         if existing["lifecycle_id"] != ledger["lifecycle_id"]:
             raise task_lifecycle.LifecycleError("existing lifecycle ledger belongs to another identity")
         ledger = existing
-    _assert_live_memberships(adapter, ledger)
+    _assert_live_memberships(
+        adapter, ledger, registered_epics=registered_epics,
+        membership_report=membership_report,
+    )
     return _write_and_print(path, ledger)
 
 

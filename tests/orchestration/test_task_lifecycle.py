@@ -2166,3 +2166,120 @@ def test_9794_live_ancestry_requires_typed_repository_and_registry(repository, e
     )
     assert result["valid"] is False
     assert reason in result["reason"]
+
+
+def _9794_body_report():
+    return {
+        "generated_at": time.time(), "membership_complete": True,
+        "incomplete_nodes": [], "warnings": [],
+        "effective_membership": {
+            "42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True},
+        },
+    }
+
+
+def test_9794_live_null_target_accepts_exact_body_evidence():
+    report = _9794_body_report()
+    reads = []
+
+    def read_parent(repository, number):
+        reads.append((repository, number))
+        return None  # Successful repository-qualified read returned parent: null.
+
+    result = task_lifecycle.resolve_live_ancestry(
+        repository="org/repo", issue_number=42, stream_epic=10,
+        registered_epics=[10, 20], read_parent=read_parent, membership_report=report,
+    )
+    assert reads == [("org/repo", 42)]
+    assert result == {
+        "valid": True, "method": "body", "epic": 10,
+        "generated_at": report["generated_at"],
+        "digest": task_lifecycle.digest(report["effective_membership"]), "reason": None,
+    }
+
+
+@pytest.mark.parametrize("patch", [
+    {"membership_complete": False},
+    {"incomplete_nodes": [20]},
+    {"warnings": [{"code": "traversal_incomplete", "issue": 20}]},
+    {"warnings": [{"code": "truncated_depth", "frontier": [20]}]},
+    {"warnings": [{"code": "unresolved_subissue", "issue": 20}]},
+    {"warnings": [{"code": "unresolved_subissue"}]},
+    {"generated_at": 0}, {"generated_at": "unread"},
+    {"effective_membership": {}},
+    {"effective_membership": {"42": {"epics": [20], "streams": ["infra"], "via": "body", "unique_stream": True}}},
+    {"effective_membership": {"42": {"epics": [10, 20], "streams": ["infra", "other"], "via": "body", "unique_stream": False}}},
+    {"effective_membership": {"42": {"epics": [10, 20], "streams": ["infra"], "via": "body", "unique_stream": False}}},
+    {"effective_membership": {"42": {"epics": [10], "streams": ["infra"], "via": "native", "unique_stream": True}}},
+    {"effective_membership": {"42": {"epics": [10], "streams": ["infra"], "via": [], "unique_stream": True}}},
+    {"effective_membership": {"42": {"epics": [10], "streams": ["infra"], "via": {}, "unique_stream": True}}},
+    {"effective_membership": {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": 1}}},
+], ids=["failed", "incomplete-nodes", "timeout", "depth", "unresolved-root", "untyped-unresolved",
+        "stale", "malformed-time", "missing-target", "wrong-epic", "two-streams", "two-epics-one-stream",
+        "native-evidence", "list-via", "dict-via", "untyped-unique"])
+def test_9794_live_body_refuses_incomplete_or_inexact_evidence(patch):
+    report = {**_9794_body_report(), **patch}
+    result = task_lifecycle.resolve_live_ancestry(
+        repository="org/repo", issue_number=42, stream_epic=10,
+        registered_epics=[10, 20], read_parent=lambda repo, number: None,
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert result["method"] is None
+    assert result["reason"]
+
+
+@pytest.mark.parametrize("parents,reason", [
+    ({42: (30, "org/repo"), 30: None}, "missing"),
+    ({42: (10, "foreign/repo")}, "repository boundary"),
+    ({42: (20, "org/repo")}, "different registered"),
+    ({42: (10, None)}, "identity is malformed"),
+])
+def test_9794_body_evidence_never_overrides_native_refusal(parents, reason):
+    def read_parent(repository, number):
+        parent = parents[number]
+        return None if parent is None else {"number": parent[0], "repository": parent[1]}
+
+    result = task_lifecycle.resolve_live_ancestry(
+        repository="org/repo", issue_number=42, stream_epic=10,
+        registered_epics=[10, 20], read_parent=read_parent, membership_report=_9794_body_report(),
+    )
+    assert result["valid"] is False
+    assert reason in result["reason"]
+
+
+@pytest.mark.parametrize("error", [
+    task_lifecycle.LifecycleError("partial or malformed identity"),
+    subprocess.TimeoutExpired("parent", 1),
+])
+def test_9794_unread_target_cannot_use_valid_body_evidence(error):
+    def unread(repository, number):
+        raise error
+
+    result = task_lifecycle.resolve_live_ancestry(
+        repository="org/repo", issue_number=42, stream_epic=10,
+        registered_epics=[10, 20], read_parent=unread, membership_report=_9794_body_report(),
+    )
+    assert result["valid"] is False
+    assert "could not be read" in result["reason"]
+
+
+def test_9794_native_precedence_does_not_consult_body_audit():
+    result = task_lifecycle.resolve_live_ancestry(
+        repository="org/repo", issue_number=42, stream_epic=10,
+        registered_epics=[10, 20], read_parent=lambda repo, number: {"number": 10, "repository": repo},
+        membership_report={"membership_complete": False},
+    )
+    assert result["valid"] is True
+    assert result["method"] == "native_chain"
+
+
+def test_9794_resolved_root_allows_unresolved_descendant_reporting():
+    report = _9794_body_report()
+    report["warnings"] = [{"code": "unresolved_subissue", "issue": 30}]
+    result = task_lifecycle.resolve_live_ancestry(
+        repository="org/repo", issue_number=42, stream_epic=10,
+        registered_epics=[10, 20], read_parent=lambda repo, number: None, membership_report=report,
+    )
+    assert result["valid"] is True
+    assert result["method"] == "body"

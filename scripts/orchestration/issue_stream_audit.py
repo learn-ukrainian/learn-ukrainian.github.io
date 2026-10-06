@@ -1437,7 +1437,7 @@ def _valid_membership_entry(entry: object) -> bool:
         return False
     if not isinstance(streams, list) or not streams or not all(isinstance(s, str) and s for s in streams):
         return False
-    if via not in _VALID_VIA:
+    if not isinstance(via, str) or via not in _VALID_VIA:
         return False
     if not isinstance(unique, bool):
         return False

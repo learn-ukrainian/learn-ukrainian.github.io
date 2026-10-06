@@ -258,11 +258,16 @@ def resolve_live_ancestry(
     stream_epic: int,
     registered_epics: list[int] | None,
     read_parent: Callable[[str, int], Mapping[str, Any] | None],
+    membership_report: Mapping[str, Any] | None = None,
+    max_age_s: int = 3600,
 ) -> dict[str, Any]:
     """Read at most eight qualified parents to the first registered root (#9794).
 
-    A read failure is a refusal, never permission to reuse snapshot evidence.
-    The injected reader returns a parent with ``number`` and ``repository``.
+    A read failure is a refusal. The injected reader returns a qualified parent
+    with ``number`` and ``repository``, or None only after a successful target
+    read explicitly returned ``parent: null``. Only that target null permits
+    body evidence from the same invocation's live audit, repository and registry.
+    Callers carry the in-memory report; this function never audits or reads a cache.
     """
     if not repository_identity_valid(repository):
         return _membership_refusal("live ancestry repository identity is malformed")
@@ -276,7 +281,34 @@ def resolve_live_ancestry(
         except (LifecycleError, OSError, ValueError, RuntimeError, subprocess.TimeoutExpired):
             return _membership_refusal(f"live ancestry parent of #{current} could not be read")
         if parent is None:
-            return _membership_refusal(f"live ancestry parent of #{current} is missing")
+            if current != issue_number or membership_report is None:
+                return _membership_refusal(f"live ancestry parent of #{current} is missing")
+            report, failure = _fresh_membership_audit(membership_report, max_age_s)
+            if report is None:
+                return _membership_refusal(str(failure))
+            # An unresolved root skipped its checklist. It cannot rule out a
+            # second body owner, even though the reporting audit stays complete.
+            for warning in report.get("warnings") or ():
+                if warning["code"] == "unresolved_subissue" and (
+                    warning.get("issue") in registered_epics
+                    or not isinstance(warning.get("issue"), int)
+                    or isinstance(warning.get("issue"), bool)
+                    or warning["issue"] < 1
+                ):
+                    return _membership_refusal("live body membership audit has an unresolved unread root checklist")
+            entry = report["effective_membership"].get(str(issue_number))
+            if not (
+                isinstance(entry, dict)
+                and entry.get("via") == "body"
+                and entry.get("epics") == [stream_epic]
+                and entry.get("unique_stream") is True
+            ):
+                return _membership_refusal("live body membership requires exact unique body evidence for the claimed epic")
+            return {
+                "valid": True, "method": "body", "epic": stream_epic,
+                "generated_at": report["generated_at"],
+                "digest": digest(report["effective_membership"]), "reason": None,
+            }
         if not isinstance(parent, Mapping) or not repository_identity_valid(parent.get("repository")):
             return _membership_refusal("live ancestry parent repository identity is malformed")
         if parent["repository"].casefold() != repository.casefold():
