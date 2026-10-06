@@ -7,9 +7,13 @@ usage, and the ledger-empty state must be stated, not read as "no data".
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+import json
+import os
+import time
+from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
+from scripts.agent_runtime import usage as usage_mod
 from scripts.api import state_router
 
 
@@ -96,11 +100,15 @@ def _configure(
             },
         },
     )
-    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
-        "source": "agent_runtime_jsonl",
-        "agent": agent,
-        "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
-    })
+    monkeypatch.setattr(
+        state_router,
+        "summarize_fleet_burn",
+        lambda agent, **kwargs: {
+            "source": "agent_runtime_jsonl",
+            "agent": agent,
+            "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
+        },
+    )
     monkeypatch.setattr(state_router, "summarize_lane_runtime", _empty_runtime)
     monkeypatch.setattr(
         state_router,
@@ -235,3 +243,158 @@ def test_routing_html_subscriptions_renders_cursor_windows_without_fabricating_z
     assert "NEED_PROBE" in out or "unknown" in out
     assert "0.0%" not in out
     assert "Fleet burn" in out or "5h:" in out
+
+
+def _stamp(now: float, age_s: float, *, utc: bool = True) -> str:
+    moment = datetime.fromtimestamp(now - age_s, tz=UTC).replace(microsecond=0)
+    if utc:
+        return moment.strftime("%Y-%m-%dT%H:%M:%SZ")
+    return moment.astimezone(timezone(timedelta(hours=2))).isoformat()
+
+
+def _append(path: Path, record: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(record) + "\n")
+
+
+def _available_quota(provider: str) -> dict:
+    resets = (datetime.now(UTC) + timedelta(days=6)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return {
+        "lane": provider,
+        "primary_used_pct": 12.0,
+        "weekly_used_pct": 12.0,
+        "primary_remaining_pct": 88.0,
+        "weekly_remaining_pct": 88.0,
+        "weekly_resets_at": resets,
+        "will_last_to_reset": True,
+        "source": "codexbar",
+        "fetched_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "stale": False,
+        "age_s": 1,
+        "freshness": "fresh",
+        "status": "cool",
+    }
+
+
+def test_gemini_subscription_row_counts_agy_activity_and_keeps_faults(monkeypatch, tmp_path):
+    """API row for Gemini shows AGY plus legacy rows once, faults included, controls unchanged."""
+    usage_mod._reset_rate_limit_cache_for_tests()
+    now = time.time()
+    day = datetime.fromtimestamp(now, tz=UTC).strftime("%Y-%m-%d")
+    batch = tmp_path / "batch_state"
+    usage = batch / "api_usage"
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    agy = usage / f"usage_agy-dispatch_{day}.jsonl"
+    gemini = usage / f"usage_gemini-dispatch_{day}.jsonl"
+    for record in (
+        {"ts": _stamp(now, 30), "outcome": "ok"},
+        {"ts": _stamp(now, 25), "outcome": "error"},
+        {"ts": _stamp(now, 40), "outcome": "timeout"},
+        {"ts": _stamp(now, 35), "outcome": "cancelled"},
+        {
+            "ts": _stamp(now, 10),
+            "outcome": "rate_limited",
+            "model": "gemini-3.8-flash-high",
+            "duration_s": 3600,
+        },
+        {"ts": _stamp(now, 6 * 3600 + 30), "outcome": "ok"},
+    ):
+        _append(agy, record)
+    _append(
+        gemini,
+        {
+            "ts": _stamp(now, 20, utc=False),
+            "outcome": "rate_limited",
+            "model": "gemini-3.5-flash",
+            "duration_s": 1800,
+        },
+    )
+    _append(gemini, {"ts": _stamp(now, 10 * 86400 + 30), "outcome": "error"})
+    _append(gemini, {"ts": _stamp(now, 40 * 86400), "outcome": "timeout"})
+    with gemini.open("a", encoding="utf-8") as handle:
+        handle.write("{not-json\n")
+    os.link(gemini, usage / f"usage_agy-alias_{day}.jsonl")
+    missing = usage / "missing-usage.jsonl"
+    for name in ("agy", "gemini"):
+        (usage / f"usage_{name}-missing_{day}.jsonl").symlink_to(missing)
+    stale = usage / f"usage_gemini-stale_{day}.jsonl"
+    _append(stale, {"ts": _stamp(now, 40 * 86400), "outcome": "rate_limited", "model": "stale-hidden"})
+    os.utime(stale, (now - 40 * 86400, now - 40 * 86400))
+    _append(usage / f"usage_codex-bridge_{day}.jsonl", {"ts": _stamp(now, 15), "outcome": "ok", "duration_s": 1800})
+    _append(usage / f"usage_claude-bridge_{day}.jsonl", {"ts": _stamp(now, 15), "outcome": "error"})
+    _append(usage / f"usage_grok-bridge_{day}.jsonl", {"ts": _stamp(now, 15), "outcome": "timeout"})
+    _append(usage / f"usage_glm-bridge_{day}.jsonl", {"ts": _stamp(now, 15), "outcome": "ok"})
+
+    budget_path = _write_budget_config(tmp_path)
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
+    monkeypatch.setattr(state_router, "get_provider_usage_data", _available_quota)
+    monkeypatch.setattr(
+        state_router,
+        "get_cursor_lane_usage",
+        lambda **kwargs: {
+            "lane": "cursor",
+            "login_state": "authenticated",
+            "probe_state": "NEED_PROBE",
+            "provider_windows": {
+                "auto": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+        },
+    )
+
+    data = state_router.compute_routing_budget(
+        datetime.now(UTC),
+        budget_config_path=budget_path,
+        tasks_dir=tasks,
+        batch_state_dir=batch,
+    )
+
+    assert "agy" not in data["agents"]
+    gemini_row = data["agents"]["gemini"]
+    runtime = gemini_row["runtime"]
+    assert runtime["ok"] == 1
+    assert runtime["error"] == 1
+    assert runtime["timeout"] == 1
+    assert runtime["other"] == 1
+    assert runtime["rate_limited"] == 2
+    assert runtime["total"] == 6
+    assert runtime["models_rate_limited"] == ["gemini-3.5-flash", "gemini-3.8-flash-high"]
+    assert runtime["headroom_blocked"] is True
+    assert runtime["unreadable"] == {"files": 1, "lines": 1, "records": 1, "total": 3}
+    assert gemini_row["codexbar"]["weekly_used_pct"] == 12.0
+    assert gemini_row["codexbar"]["weekly_remaining_pct"] == 88.0
+    assert gemini_row["status"] == "hot"
+    assert any("lane gemini" in warning and "rate_limited" in warning for warning in data["recommendation"]["warnings"])
+
+    burn = gemini_row["fleet_burn"]
+    assert burn["agent"] == "gemini"
+    assert burn["windows"]["5h"]["counts"] == {
+        "ok": 1,
+        "error": 1,
+        "rate_limited": 2,
+        "timeout": 1,
+        "other": 1,
+        "total": 6,
+    }
+    assert burn["windows"]["5h"]["hours"] == 1.5
+    assert burn["windows"]["7d"]["counts"]["ok"] == 2
+    assert burn["windows"]["7d"]["counts"]["total"] == 7
+    assert burn["windows"]["30d"]["counts"]["error"] == 2
+    assert burn["windows"]["30d"]["counts"]["total"] == 8
+
+    codex = data["agents"]["codex"]
+    claude = data["agents"]["claude"]
+    grok = data["agents"]["grok"]
+    assert (codex["runtime"]["ok"], codex["runtime"]["total"], codex["runtime"]["rate_limited"]) == (1, 1, 0)
+    assert codex["runtime"]["unreadable"]["total"] == 0
+    assert codex["fleet_burn"]["windows"]["5h"]["counts"]["total"] == 1
+    assert codex["fleet_burn"]["windows"]["5h"]["hours"] == 0.5
+    assert codex["status"] == "cool"
+    assert (claude["runtime"]["error"], claude["runtime"]["total"]) == (1, 1)
+    assert claude["fleet_burn"]["windows"]["7d"]["counts"]["total"] == 1
+    assert (grok["runtime"]["timeout"], grok["runtime"]["total"]) == (1, 1)
+    assert grok["fleet_burn"]["windows"]["30d"]["counts"]["total"] == 1
+    assert data["agents"]["cursor"]["runtime"]["total"] == 0
+    assert data["agents"]["kimi"]["runtime"]["total"] == 0

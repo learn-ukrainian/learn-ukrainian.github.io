@@ -32,6 +32,7 @@ builds; see ``_RATE_LIMIT_WINDOW_S`` for the full story.
 
 Issue: #1184. Supersedes standalone #1183.
 """
+
 from __future__ import annotations
 
 import contextlib
@@ -43,6 +44,11 @@ from pathlib import Path
 from typing import Any
 
 from secret_redactor import redact_text, redact_value
+
+try:
+    from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
+except ImportError:  # pragma: no cover - package import path
+    from agent_runtime.agent_identity import resolve_retired_agent_alias
 
 try:
     from scripts.common.repo_root import main_checkout_root
@@ -150,9 +156,7 @@ def write_record(record: dict[str, Any]) -> None:
             event_ts: float = time.time()  # safe fallback
             if ts_str:
                 with contextlib.suppress(ValueError, AttributeError):
-                    event_ts = datetime.fromisoformat(
-                        str(ts_str).replace("Z", "+00:00")
-                    ).timestamp()
+                    event_ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
             existing = _RATE_LIMIT_CACHE.get(key)
             if existing is None or event_ts > existing:
                 _RATE_LIMIT_CACHE[key] = event_ts
@@ -161,6 +165,7 @@ def write_record(record: dict[str, Any]) -> None:
         # call itself already succeeded or failed at this point; we're only
         # trying to persist a telemetry row.
         import sys
+
         safe_exc = redact_text(str(exc)) or ""
         print(
             f"[usage] WARNING: failed to write record: {type(exc).__name__}: {safe_exc}",
@@ -180,6 +185,60 @@ def _utc_timestamp(value: Any) -> datetime | None:
 # Window used by routing-budget hybrid overlay (CodexBar allotment + agent burn).
 # Matches has_headroom's operational window so dashboards and dispatch agree.
 LANE_RUNTIME_WINDOW_S = _RATE_LIMIT_WINDOW_S
+
+
+def _gemini_telemetry_names() -> tuple[str, ...]:
+    """File prefixes for the Gemini subscription row.
+
+    Routing-budget asks for ``gemini``. The live writer is ``agy`` because
+    ``resolve_retired_agent_alias('gemini')`` forwards the retired CLI there.
+    Older rows remain ``usage_gemini-*``. Other retired aliases stay separate
+    (``glm`` does not fold into ``cursor``).
+    """
+    names: list[str] = []
+    for name in ("agy", "gemini", resolve_retired_agent_alias("gemini")):
+        if isinstance(name, str) and name and name not in names:
+            names.append(name)
+    return tuple(names)
+
+
+def _usage_read_names(agent: str) -> tuple[str, ...]:
+    """Prefixes whose JSONL belongs to this summary request."""
+    names = _gemini_telemetry_names()
+    if str(agent).strip().lower() in names:
+        return names
+    return (agent,)
+
+
+def _usage_file_identity(file_path: Path) -> tuple[Any, ...]:
+    """Identity of one usage input so two alias names cannot count it twice.
+
+    Hard links share an inode. A symlink is the target inode after ``stat``
+    follows it. A missing target uses its resolved path, so two links to the
+    same absent file are one unreadable input.
+    """
+    try:
+        stat_result = file_path.stat()
+    except OSError:
+        try:
+            return ("unreachable", os.path.realpath(file_path))
+        except OSError:
+            return ("unreachable", os.path.normpath(str(file_path)))
+    return ("inode", stat_result.st_dev, stat_result.st_ino)
+
+
+def _lane_usage_files(root: Path, agent: str) -> list[Path]:
+    """JSONL inputs for ``agent``, each physical file at most once."""
+    seen: set[tuple[Any, ...]] = set()
+    found: list[Path] = []
+    for name in _usage_read_names(agent):
+        for file_path in root.glob(f"usage_{name}-*.jsonl"):
+            identity = _usage_file_identity(file_path)
+            if identity in seen:
+                continue
+            seen.add(identity)
+            found.append(file_path)
+    return found
 
 
 def summarize_lane_runtime(
@@ -202,6 +261,10 @@ def summarize_lane_runtime(
     records without an explicit-UTC timestamp), so "none found" stays distinct
     from "could not read". A missing file or directory is the empty case; a listed
     symlink with a missing target is unreadable.
+
+    The Gemini subscription name and the AGY writer are one read set
+    (``usage_agy-*`` and ``usage_gemini-*``). An input that both names reach
+    is counted once. Other lanes stay on their own prefix.
     """
     now_ts = time.time() if now is None else now
     cutoff = now_ts - float(window_s)
@@ -219,7 +282,7 @@ def summarize_lane_runtime(
     if root.is_dir():
         if not os.access(root, os.R_OK | os.X_OK):
             unreadable["files"] += 1
-        for file_path in root.glob(f"usage_{agent}-*.jsonl"):
+        for file_path in _lane_usage_files(root, agent):
             try:
                 if file_path.stat().st_mtime < cutoff:
                     continue
@@ -245,9 +308,7 @@ def summarize_lane_runtime(
                         if not ts_str:
                             continue
                         try:
-                            ts = datetime.fromisoformat(
-                                str(ts_str).replace("Z", "+00:00")
-                            ).timestamp()
+                            ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
                         except (ValueError, AttributeError, TypeError):
                             continue
                         if ts < cutoff:
@@ -272,9 +333,11 @@ def summarize_lane_runtime(
             except OSError:
                 unreadable["files"] += 1
 
-    # Merge in-process cache (may be ahead of disk).
+    # Merge in-process cache (may be ahead of disk). Alias writers (agy) share
+    # the Gemini subscription cache so a just-written rate limit is not dropped.
+    read_names = _usage_read_names(agent)
     for (cached_agent, cached_model), cached_ts in list(_RATE_LIMIT_CACHE.items()):
-        if cached_agent != agent:
+        if cached_agent not in read_names:
             continue
         if cached_ts >= cutoff:
             if cached_ts not in rate_limit_events:
@@ -293,8 +356,7 @@ def summarize_lane_runtime(
         if age_s < _RECENCY_BLOCK_THRESHOLD_S:
             headroom_blocked = True
             headroom_reason = (
-                f"rate_limited {age_s}s ago "
-                f"({len(rate_limit_events)} events in last {int(window_s) // 60}min)"
+                f"rate_limited {age_s}s ago ({len(rate_limit_events)} events in last {int(window_s) // 60}min)"
             )
 
     def _iso(ts: float | None) -> str | None:
@@ -335,7 +397,10 @@ def summarize_fleet_burn(
     usage_dir: Path | None = None,
     now: float | None = None,
 ) -> dict[str, Any]:
-    """Dispatch burn from our JSONL across 5h / 7d / 30d windows."""
+    """Dispatch burn from our JSONL across 5h / 7d / 30d windows.
+
+    Gemini and AGY share one read set, as in ``summarize_lane_runtime``.
+    """
     now_ts = time.time() if now is None else now
     windows_s = {
         "5h": 5 * 3600,
@@ -348,7 +413,7 @@ def summarize_fleet_burn(
 
     root = usage_dir if usage_dir is not None else _usage_dir()
     if root.is_dir():
-        for file_path in root.glob(f"usage_{agent}-*.jsonl"):
+        for file_path in _lane_usage_files(root, agent):
             try:
                 with open(file_path, encoding="utf-8") as handle:
                     for raw in handle:
@@ -363,9 +428,7 @@ def summarize_fleet_burn(
                         if not ts_str:
                             continue
                         try:
-                            ts = datetime.fromisoformat(
-                                str(ts_str).replace("Z", "+00:00")
-                            ).timestamp()
+                            ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
                         except (ValueError, AttributeError, TypeError):
                             continue
                         outcome = str(rec.get("outcome") or "other")
@@ -482,8 +545,7 @@ def has_headroom(agent: str, model: str) -> tuple[bool, str]:
         age_s = int(now - most_recent)
         if age_s < _RECENCY_BLOCK_THRESHOLD_S:
             return False, (
-                f"rate_limited {age_s}s ago "
-                f"({len(rate_limit_events)} events in last {_RATE_LIMIT_WINDOW_S // 60}min)"
+                f"rate_limited {age_s}s ago ({len(rate_limit_events)} events in last {_RATE_LIMIT_WINDOW_S // 60}min)"
             )
 
     return True, ""
