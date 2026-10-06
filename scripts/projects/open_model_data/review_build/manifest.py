@@ -9,7 +9,7 @@ from .errors import require
 
 def code_pins() -> dict:
     package = Path(__file__).parent
-    files = {p.name: digest(p.read_bytes()) for p in sorted(package.glob("*.py"))}
+    files = {p.relative_to(package).as_posix(): digest(p.read_bytes()) for p in sorted(package.rglob("*.py"))}
     root = next(p for p in package.parents if (p / ".git").exists())
     git = root / ".git"
     if git.is_file():
@@ -54,14 +54,16 @@ def private_manifest(data: dict) -> dict:
     require(set(data["versions"]) <= {"record", "framework", "catalog"}, "private_manifest_field")
     require(
         all(
-            isinstance(v, str) and re.fullmatch(r"(?:omd-review-record\.v1|[0-9]+(?:\.[0-9]+)*(?:-draft)?)", v)
+            isinstance(v, str) and re.fullmatch(r"(?:omd-review-record\.v1|[0-9]+(?:\.[0-9]+)*(?:-[a-z0-9.-]+)?)", v)
             for v in data["versions"].values()
         ),
         "private_manifest_string",
     )
     require(
         all(
-            re.fullmatch(r"C[1-79]\.(?:accepted|rejected|withheld|excluded|counted)", k) and type(v) is int and v >= 0
+            re.fullmatch(r"C(?:[1-79]|6[ab])\.(?:accepted|rejected|withheld|excluded|counted)", k)
+            and type(v) is int
+            and v >= 0
             for k, v in data["counts"].items()
         ),
         "private_manifest_field",

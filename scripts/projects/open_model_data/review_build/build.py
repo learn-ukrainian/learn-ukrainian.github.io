@@ -12,6 +12,7 @@ from scripts.common.jsonl import jsonl_lines
 from .attribution import AttributionAdapter, Resolver, SyntheticAdapter
 from .bindings import expand, select
 from .catalog import Catalog
+from .components import Component, ComponentContext, merge_adapters
 from .contract import Candidate, candidate_from_dict, canonical, digest, record_id, values
 from .errors import BuildError, require
 from .gate import Gate
@@ -254,12 +255,15 @@ def execute(
     adapters: dict[str, AttributionAdapter] | None = None,
     files: dict[str, FileStore] | None = None,
     components: list[str] | None = None,
+    component_objects: dict[str, Component] | None = None,
 ) -> dict:
     """Config is a host-local JSON descriptor, not executable component code.
 
-    Required keys: schema, candidates (JSONL), catalog (YAML), register (YAML),
+    Required keys: schema, catalog (YAML), register (YAML),
     databases {store:path}, components {C*: reviewed spec}, compatibility (roles).
-    Optional corpus (split field mapping), synthetic_sources (explicit test ids).
+    Staged-library mode also requires candidates (JSONL); registered objects extract
+    candidates through the shared reader. Optional corpus (split field mapping)
+    and synthetic_sources (explicit test ids).
     Component specs require unit_query, unit_id, frozen_count, reasons, operations, binding;
     optional transforms, applicability, context/response serializers. Bindings and
     roles schemas are documented in their modules and exercised by synthetic tests.
@@ -274,30 +278,56 @@ def execute(
 
     catalog_bytes = input_path(config["catalog"]).read_bytes()
     register_bytes = input_path(config["register"]).read_bytes()
-    candidates_bytes = input_path(config["candidates"]).read_bytes()
     catalog = Catalog(yaml.safe_load(catalog_bytes))
-    candidates = [
-        candidate_from_dict(json.loads(line)) for line in jsonl_lines(candidates_bytes.decode("utf-8")) if line.strip()
-    ]
     if components is not None:
         selected = set(components)
         require(bool(selected) and selected <= set(config["components"]), "component_selection")
         config["components"] = {c: spec for c, spec in config["components"].items() if c in selected}
-        candidates = [candidate for candidate in candidates if candidate.component in selected]
-    source_adapters = dict(adapters or {})
+    if component_objects is not None:
+        require(set(component_objects) == set(config["components"]), "component_selection")
+        config["components"] = {c: obj.spec for c, obj in component_objects.items()}
+    source_adapters = merge_adapters(adapters or {}, *(obj.adapters for obj in (component_objects or {}).values()))
     for source in config.get("synthetic_sources", []):
         require(source.startswith("synthetic"), "synthetic_adapter_source")
-        source_adapters[source] = SyntheticAdapter()
+        # An explicit adapter cannot be silently overwritten by request data.
+        if source not in source_adapters:
+            source_adapters[source] = SyntheticAdapter()
     resolver = Resolver(yaml.safe_load(register_bytes), source_adapters)
+    source_files = dict(files or {})
+    for obj in (component_objects or {}).values():
+        for store, adapter in getattr(obj, "files", {}).items():
+            require(store not in source_files or source_files[store] is adapter, "file_store_conflict")
+            source_files[store] = adapter
     pins = {
         "register": digest(register_bytes),
         "catalog": digest(catalog_bytes),
-        "candidates": digest(candidates_bytes),
         "spec": digest(config_bytes),
+        "component_specs": digest(canonical(config["components"])),
         "components": sorted(config["components"]),
         "code": code_pins(),
     }
-    with SnapshotReader({store: input_path(path) for store, path in config["databases"].items()}, files) as reader:
+    with SnapshotReader(
+        {store: input_path(path) for store, path in config["databases"].items()}, source_files
+    ) as reader:
+        if component_objects is not None:
+            candidates = []
+            ctx = ComponentContext(reader, config)
+            for component, obj in component_objects.items():
+                stream = list(obj.iter_candidates(ctx))
+                require(all(c.component == component for c in stream), "component_candidates")
+                candidates.extend(stream)
+            candidates.sort(key=record_id)
+            candidates_bytes = _jsonl([asdict(c) for c in candidates])
+        else:
+            candidates_bytes = input_path(config["candidates"]).read_bytes()
+            candidates = [
+                candidate_from_dict(json.loads(line))
+                for line in jsonl_lines(candidates_bytes.decode("utf-8"))
+                if line.strip()
+            ]
+            if components is not None:
+                candidates = [c for c in candidates if c.component in set(components)]
+        pins["candidates"] = digest(candidates_bytes)
         result = artifacts(config, candidates, reader, catalog, resolver, pins)
         if verify:
             require(out.read("manifest.json") == result["manifest.json"], "artifact_mismatch")

@@ -27,6 +27,29 @@ def synthetic_mount(monkeypatch):
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
 
 
+@pytest.fixture(autouse=True)
+def cli_test_component(bundle, monkeypatch):
+    from scripts.projects.open_model_data.review_build import components
+
+    class SyntheticComponent:
+        def __init__(self):
+            self.files = {}
+            self.adapters = {"synthetic": SyntheticAdapter()}
+
+        @property
+        def spec(self):
+            return bundle["spec"]
+
+        def iter_candidates(self, ctx):
+            return iter(bundle["candidates"])
+
+    monkeypatch.setattr(
+        cli,
+        "load_components",
+        lambda ids, **kwargs: components.load_components(ids, _test_overrides={c: SyntheticComponent() for c in ids}),
+    )
+
+
 def test_build_verify_determinism_and_tamper_refusal(bundle):
     results = []
     dirs = [bundle["root"] / name for name in ("SYNTHETIC-one", "SYNTHETIC-two")]
@@ -258,8 +281,7 @@ def assert_no_execution(source):
 
 def test_package_has_no_network_or_process_execution_imports():
     modules = [(framework.__name__, framework.__spec__)]
-    for info in pkgutil.iter_modules(framework.__path__, framework.__name__ + "."):
-        assert not info.ispkg, "Framework subpackages need recursive import-ban coverage"
+    for info in pkgutil.walk_packages(framework.__path__, framework.__name__ + "."):
         modules.append((info.name, info.module_finder.find_spec(info.name)))
     for name, spec in modules:
         assert spec is not None and hasattr(spec.loader, "get_source"), name

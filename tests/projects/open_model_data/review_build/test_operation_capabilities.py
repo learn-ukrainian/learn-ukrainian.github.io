@@ -368,6 +368,11 @@ def test_placeholder_fix_keeps_result_and_full_mapping_gates(bundle, bibliograph
     [
         ("1-klas-SYNTHETIC", True),
         ("11-klas-SYNTHETIC", True),
+        ("10-11-klas-SYNTHETIC", True),
+        ("9-11-klas-SYNTHETIC", False),
+        ("11-10-klas-SYNTHETIC", False),
+        ("10-12-klas-SYNTHETIC", False),
+        ("10-11-klas-", False),
         ("uni-SYNTHETIC", True),
         ("0-klas-SYNTHETIC", False),
         ("12-klas-SYNTHETIC", False),
@@ -408,12 +413,21 @@ def test_ua_gec_cannot_disable_sensitivity_and_dictionary_declares_none(bundle):
 
 
 def test_cli_default_config_repeatable_selection_and_verify(bundle, monkeypatch, capsys):
+    from types import SimpleNamespace
+
+    from scripts.projects.open_model_data.review_build.attribution import SyntheticAdapter
+
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
     default = bundle["root"] / "request.json"
     monkeypatch.setattr(cli, "default_config", lambda: default)
     args = ["--out", str(bundle["root"] / "SYNTHETIC-out"), "--components", "C1", "--components", "C1"]
+    component = SimpleNamespace(
+        spec=bundle["spec"],
+        adapters={"synthetic": SyntheticAdapter()},
+        iter_candidates=lambda ctx: iter(bundle["candidates"]),
+    )
     for command in ("build", "verify"):
-        assert cli.main([command, *args]) == 0
+        assert cli.main([command, *args], _test_components={"C1": component}) == 0
         assert json.loads(capsys.readouterr().out)["status"] == ("built" if command == "build" else "verified")
         with pytest.raises(SystemExit) as exc:
             cli.main([command, "--help"])

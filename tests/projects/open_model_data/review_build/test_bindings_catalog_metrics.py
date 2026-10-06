@@ -70,11 +70,11 @@ def test_c2_applicability_requires_source_supported_discrimination_and_safe_empt
     c = replace(c, component="C2", operation="agreed_form", slots=(*c.slots, sense))
     with pytest.raises(BuildError):
         catalog.applicable(c)
-    assert catalog.applicable(c, discriminating=True) == ("C2.agreed_form.with",)
+    assert catalog.applicable(c, variants={"with_sense"}) == ("C2.agreed_form.with",)
     c = replace(c, slots=(c.slots[0], replace(sense, text=" ")))
     with pytest.raises(BuildError):
         catalog.applicable(c)
-    assert catalog.applicable(c, empty_safe=True) == ("C2.agreed_form.without",)
+    assert catalog.applicable(c, variants={"without_sense"}) == ("C2.agreed_form.without",)
 
 
 def test_metrics_exact_shares_and_small_denominators(bundle):
@@ -398,16 +398,16 @@ def test_c2_header_cells_render_only_positional_source_text(bundle):
     serializers = {
         "slot": {"id": "c2-header-cells.v2", "section": ["header_section"], "row": "header_row", "column": []}
     }
-    assert catalog.applicable(candidate, empty_safe=True, serializers=serializers) == (line["id"],)
+    assert catalog.applicable(candidate, variants={"without_sense"}, serializers=serializers) == (line["id"],)
     assert catalog.render(candidate, line["id"], serializers).endswith('[["SYNTHETIC section"],"SYNTHETIC row",[]]')
     serializers["slot"]["row"] = None
     assert catalog.render(candidate, line["id"], serializers).endswith('[["SYNTHETIC section"],"",[]]')
     serializers["slot"]["section"] = []
     with pytest.raises(BuildError, match="catalog_inapplicable"):
-        catalog.applicable(candidate, empty_safe=True, serializers=serializers)
+        catalog.applicable(candidate, variants={"without_sense"}, serializers=serializers)
     serializers["slot"]["section"] = ["SYNTHETIC_missing"]
     with pytest.raises(BuildError, match="catalog_inapplicable"):
-        catalog.applicable(candidate, empty_safe=True, serializers=serializers)
+        catalog.applicable(candidate, variants={"without_sense"}, serializers=serializers)
 
 
 def test_gate_c2_applicability_reads_source_assertions(bundle):

@@ -17,7 +17,7 @@ from .transforms import transform
 REASONING = re.compile(
     r"<\s*(?:think|thought|reasoning)\b|\b(?:Step|Крок)\s+\d|(?:Міркування|Reasoning|Chain.of.thought)\s*:", re.I
 )
-COMPONENTS = frozenset({"C1", "C2", "C3", "C4", "C5", "C6", "C7", "C9"})
+COMPONENTS = frozenset({"C1", "C2", "C3", "C4", "C5", "C6", "C6a", "C6b", "C7", "C9"})
 
 
 def evidence_id(citation) -> str:
@@ -90,21 +90,34 @@ class Gate:
         spec = self.spec(candidate)
         # Applicability assertions are themselves selectors into source rows.
         applicability_spec = spec.get("applicability", {})
-        discriminating = empty_safe = False
         if candidate.component == "C2":
-            if any(v.slot == "sense" and v.text.strip() for v in candidate.slots):
-                discriminating = all(
-                    bindings.operand(candidate, s, self.reader) == expected
-                    for s, expected in applicability_spec.get("with_sense", [])
-                )
-                require(bool(applicability_spec.get("with_sense")), "applicability_spec")
-            else:
-                empty_safe = all(
-                    bindings.operand(candidate, s, self.reader) == expected
-                    for s, expected in applicability_spec.get("without_sense", [])
-                )
-                require(bool(applicability_spec.get("without_sense")), "applicability_spec")
-        return self.catalog.applicable(candidate, discriminating, empty_safe, spec.get("slot_serializers"))
+            require(bool(applicability_spec), "applicability_spec")
+        declared = self.catalog.variants(candidate)
+        serializers = spec.get("slot_serializers")
+        variants = set()
+        if declared:
+            require(set(applicability_spec) == declared, "applicability_spec")
+            for variant in self.catalog.variant_slots(candidate, serializers):
+                predicates = applicability_spec[variant]
+                require(isinstance(predicates, list) and bool(predicates), "applicability_spec")
+                results = []
+                for predicate in predicates:
+                    if isinstance(predicate, dict):
+                        require(set(predicate) == {"query", "parameters", "expected"}, "applicability_spec")
+                        query = dict(predicate["query"])
+                        query["parameters"] = [
+                            bindings.operand(candidate, s, self.reader) for s in predicate["parameters"]
+                        ]
+                        results.append(self.reader.query_values(query) == predicate["expected"])
+                    else:
+                        require(isinstance(predicate, list) and len(predicate) == 2, "applicability_spec")
+                        selector, expected = predicate
+                        results.append(bindings.operand(candidate, selector, self.reader) == expected)
+                    if not results[-1]:
+                        break
+                if all(results):
+                    variants.add(variant)
+        return self.catalog.applicable(candidate, serializers, variants=variants)
 
     def unit_id(self, candidate: Candidate) -> str:
         spec = self.spec(candidate).get("unit_id", {})
