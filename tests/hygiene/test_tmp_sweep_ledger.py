@@ -292,6 +292,12 @@ def test_restore_never_overwrites(box, capsys, monkeypatch):
     assert list(entry.iterdir()) == []
 
 
+def test_restore_unknown_id_creates_nothing(box):
+    with pytest.raises(SystemExit) as exc:
+        sweep.main(["restore", "000000000000"])
+    assert exc.value.code == 2 and not box.state.exists()
+
+
 def test_restore_unknown_id_and_busy_ledger(box, capsys):
     box.tree()
     box.run(apply=True)

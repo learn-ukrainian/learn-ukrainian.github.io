@@ -1138,8 +1138,11 @@ def restore(ledger: Ledger, entry_id: str) -> dict[str, Any]:
 
     Raises ``KeyError`` for an unknown ledger id and ``LedgerError`` while a
     sweep holds the ledger. The ``restore`` record precedes the rename; the
-    ``restored`` record carries the manifest verification.
+    ``restored`` record carries the manifest verification. An unknown id is
+    refused before the lock, so it never creates the ledger directory.
     """
+    if entry_id not in ledger.entries()[0]:
+        raise KeyError(entry_id)
     with ledger.exclusive(wait=False):
         entries, _ = ledger.entries()
         entry = entries[entry_id]
