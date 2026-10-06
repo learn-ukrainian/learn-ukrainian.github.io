@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import json
 import os
 import sys
@@ -179,6 +180,44 @@ def test_gemini_runtime_counts_agy_and_legacy_records_once(tmp_path: Path) -> No
     assert (grok["timeout"], grok["total"]) == (1, 1)
     assert cursor["total"] == 0
     assert glm["total"] == 1
+
+
+def test_gemini_telemetry_names_read_retired_alias_map(monkeypatch) -> None:
+    """The Gemini row reads the canonical alias map and never calls the admission resolver."""
+    source = Path(usage_mod.__file__).read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    banned = "resolve_retired_agent_alias"
+    seen: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom):
+            seen.extend(alias.name for alias in node.names if alias.name == banned)
+        elif isinstance(node, ast.Call):
+            func = node.func
+            called = func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else ""
+            if called == banned:
+                seen.append(f"call:{node.lineno}")
+    assert seen == []
+
+    from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
+
+    assert usage_mod.RETIRED_AGENT_ALIASES is RETIRED_AGENT_ALIASES
+    assert RETIRED_AGENT_ALIASES["gemini"] == "agy"
+    assert usage_mod._gemini_telemetry_names() == ("agy", "gemini")
+
+    monkeypatch.setattr(usage_mod, "RETIRED_AGENT_ALIASES", {"glm": "cursor"})
+    assert usage_mod._gemini_telemetry_names() == ("agy", "gemini")
+
+    monkeypatch.setattr(usage_mod, "RETIRED_AGENT_ALIASES", {"gemini": "", "glm": "cursor"})
+    assert usage_mod._gemini_telemetry_names() == ("agy", "gemini")
+
+    monkeypatch.setattr(usage_mod, "RETIRED_AGENT_ALIASES", {"gemini": None, "glm": "cursor"})
+    assert usage_mod._gemini_telemetry_names() == ("agy", "gemini")
+
+    monkeypatch.setattr(usage_mod, "RETIRED_AGENT_ALIASES", {"gemini": "gemini", "glm": "cursor"})
+    assert usage_mod._gemini_telemetry_names() == ("agy", "gemini")
+
+    monkeypatch.setattr(usage_mod, "RETIRED_AGENT_ALIASES", {"gemini": "map-successor", "glm": "cursor"})
+    assert usage_mod._gemini_telemetry_names() == ("agy", "gemini", "map-successor")
 
 
 def test_fleet_burn_counts_agy_and_gemini_across_windows_once(tmp_path: Path) -> None:

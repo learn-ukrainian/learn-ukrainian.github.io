@@ -47,9 +47,9 @@ from typing import Any
 from secret_redactor import redact_text, redact_value
 
 try:
-    from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
+    from scripts.agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
 except ImportError:  # pragma: no cover - package import path
-    from agent_runtime.agent_identity import resolve_retired_agent_alias
+    from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
 
 try:
     from scripts.common.repo_root import main_checkout_root
@@ -191,13 +191,16 @@ LANE_RUNTIME_WINDOW_S = _RATE_LIMIT_WINDOW_S
 def _gemini_telemetry_names() -> tuple[str, ...]:
     """File prefixes for the Gemini subscription row.
 
-    Routing-budget asks for ``gemini``. The live writer is ``agy`` because
-    ``resolve_retired_agent_alias('gemini')`` forwards the retired CLI there.
-    Older rows remain ``usage_gemini-*``. Other retired aliases stay separate
-    (``glm`` does not fold into ``cursor``).
+    Routing-budget asks for ``gemini``. Historical rows keep that prefix and
+    the live writer keeps ``agy``. ``RETIRED_AGENT_ALIASES`` is the read-only
+    fact for that retirement, the same map ``capacity_pick`` and the runtime
+    router already consult. This reader does not admit or resolve a dispatch
+    target. A map successor other than those two prefixes is included once.
+    Other retired aliases stay separate (``glm`` does not fold into ``cursor``).
     """
     names: list[str] = []
-    for name in ("agy", "gemini", resolve_retired_agent_alias("gemini")):
+    successor = RETIRED_AGENT_ALIASES.get("gemini")
+    for name in ("agy", "gemini", successor):
         if isinstance(name, str) and name and name not in names:
             names.append(name)
     return tuple(names)
