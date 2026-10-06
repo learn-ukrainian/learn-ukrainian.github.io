@@ -19,6 +19,53 @@ ARTICLE = "sum20_articles"
 SENSE = "sum20_senses"
 CITATION = "sum20_citations"
 
+# Reviewed WP3 source admission, formerly carried by the host request.
+# Dictionaries have no row-level sensitivity concept or UA-GEC corpus policy.
+ULIF_COMPATIBILITY = [
+    {
+        "store": STORE,
+        "table": ENTRY,
+        "source_id": "ulif",
+        "role": "modern",
+        "source_column": "status",
+        "source_values": ["ok"],
+        "sensitive": None,
+    },
+    {
+        "store": STORE,
+        "table": SECTION,
+        "source_id": "ulif",
+        "role": "modern",
+        "source_column": "kind",
+        "source_values": ["synonyms", "antonyms", "phraseology"],
+        "sensitive": None,
+    },
+]
+SUM20_COMPATIBILITY = [
+    {
+        "store": STORE,
+        "table": ARTICLE,
+        "source_id": "sum20",
+        "role": "modern",
+        "source_column": "quarantine_reason",
+        "source_values": [""],
+        "quarantine": "quarantine_reason",
+        "sensitive": None,
+    },
+    *[
+        {
+            "store": STORE,
+            "table": table,
+            "source_id": "sum20",
+            "role": "modern",
+            "source_column": "article_id",
+            "source_values": list(range(1, 90)),
+            "sensitive": None,
+        }
+        for table in (SENSE, CITATION)
+    ],
+]
+
 
 def query(sql, parameters=()):
     return {"kind": "sql", "store": STORE, "sql": sql, "parameters": list(parameters)}

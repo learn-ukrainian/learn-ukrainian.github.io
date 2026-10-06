@@ -5,14 +5,18 @@ import json
 import sqlite3
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
 
+from scripts.projects.open_model_data.review_build import __main__ as cli
+from scripts.projects.open_model_data.review_build import output
 from scripts.projects.open_model_data.review_build.attribution import Resolver, SyntheticAdapter
 from scripts.projects.open_model_data.review_build.catalog import Catalog
 from scripts.projects.open_model_data.review_build.components import (
     ComponentContext,
+    admission_policy,
     c3_relations,
     load_components,
     merge_adapters,
@@ -140,56 +144,12 @@ def gate(db, cs, operation, stream):
         {"id": s, "citation": {"form": "SYNTHETIC bibliography"}, "terms": {"licence": {"name": "SYNTHETIC licence"}}}
         for s in ("ulif", "sum20")
     ]
-    compatibility = [
-        {
-            "store": STORE,
-            "table": ENTRY,
-            "source_id": "ulif",
-            "role": "modern",
-            "source_column": "status",
-            "source_values": ["ok"],
-        },
-        {
-            "store": STORE,
-            "table": SECTION,
-            "source_id": "ulif",
-            "role": "modern",
-            "source_column": "kind",
-            "source_values": ["synonyms", "antonyms", "phraseology"],
-        },
-        {
-            "store": STORE,
-            "table": ARTICLE,
-            "source_id": "sum20",
-            "role": "modern",
-            "source_column": "quarantine_reason",
-            "source_values": [""],
-            "quarantine": "quarantine_reason",
-        },
-        {
-            "store": STORE,
-            "table": SENSE,
-            "source_id": "sum20",
-            "role": "modern",
-            "source_column": "article_id",
-            "source_values": [1, 2, 3],
-        },
-        {
-            "store": STORE,
-            "table": CITATION,
-            "source_id": "sum20",
-            "role": "modern",
-            "source_column": "article_id",
-            "source_values": [1, 2, 3],
-        },
-    ]
     with SnapshotReader({STORE: db}) as reader:
         g = Gate(
             reader,
             catalog,
             Resolver({"sources": entries}, {s: SyntheticAdapter() for s in ("ulif", "sum20")}),
             {stream[0].component: spec},
-            compatibility,
         )
         return g.run(stream)
 
@@ -282,7 +242,6 @@ def test_generic_must_fail_fixtures(sources, bad):
                 ),
                 Resolver({"sources": []}, {}),
                 {"C4": spec},
-                [],
             )
             with pytest.raises(BuildError, match="missing_unit"):
                 g.run([])
@@ -575,3 +534,80 @@ def test_independent_applicability_refuses_indistinguishable_source_context(sour
     first = replace(stream[0], outcome="accepted", reason="ok", evidence=())
     with pytest.raises(BuildError, match="catalog_inapplicable"):
         gate(sources, C3, "sense_definition", [first, *stream[1:]])
+
+
+def test_registered_policy_union_preserves_source_roles_and_quarantine():
+    policy, corpus = admission_policy({"C3": C3.spec, "C4": C4.spec})
+    assert corpus is None
+    assert len(policy) == 5
+    assert all(row["role"] == "modern" and row["sensitive"] is None for row in policy)
+    assert next(row for row in policy if row["table"] == ARTICLE)["quarantine"] == "quarantine_reason"
+    assert C4.spec["compatibility"] == [row for row in C3.spec["compatibility"] if row["source_id"] == "ulif"]
+
+
+def test_registered_cli_uses_v2_locations_and_component_policy(sources, tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
+    register = tmp_path / "SYNTHETIC-register.yaml"
+    register.write_text(
+        yaml.safe_dump(
+            {
+                "sources": [
+                    {
+                        "id": source,
+                        "citation": {"form": "SYNTHETIC bibliography"},
+                        "terms": {"licence": {"name": "SYNTHETIC licence"}},
+                    }
+                    for source in ("ulif", "sum20")
+                ]
+            }
+        )
+    )
+    request = tmp_path / "SYNTHETIC-request.json"
+    request.write_text(
+        json.dumps(
+            {
+                "schema": "omd-review-request.v2",
+                "databases": {STORE: str(sources)},
+                "catalog": str(
+                    Path(__file__).resolve().parents[5] / "registry/projects/open_model_data/instruction_catalog.yaml"
+                ),
+                "register": str(register),
+                "ua_gec": {"root": str(tmp_path / "SYNTHETIC-unused-corpus")},
+            }
+        )
+    )
+    loaded = {}
+    with SnapshotReader({STORE: sources}) as reader:
+        for component_id, component in (("C3", C3), ("C4", C4)):
+            spec = copy.deepcopy(component.spec)
+            for operation in spec["operation_specs"].values():
+                operation["frozen_count"] = len(reader.units(operation["unit_query"]))
+            loaded[component_id] = SimpleNamespace(
+                spec=spec,
+                files={},
+                adapters={source: SyntheticAdapter() for source in component.adapters},
+                iter_candidates=component.iter_candidates,
+            )
+    # Components sharing a source must use exactly one adapter object.
+    loaded["C4"].adapters["ulif"] = loaded["C3"].adapters["ulif"]
+    out = tmp_path / "SYNTHETIC-cli-output"
+    args = ["--config", str(request), "--out", str(out), "--components", "C3", "C4"]
+    for command, status in (("build", "built"), ("verify", "verified")):
+        assert cli.main([command, *args], _test_components=loaded) == 0
+        assert json.loads(capsys.readouterr().out)["status"] == status
+    manifest = json.loads((out / "manifest.json").read_bytes())
+    assert manifest["operation_accounting"]["C3.sense_definition"]["accepted"] == 3
+    assert manifest["operation_accounting"]["C4.idiom_definition"]["accepted"] == 1
+    assert len(json.loads((out / "mutation-fixtures/results.json").read_bytes())) == 5
+    for invalid in (
+        {"schema": "omd-review-request.v1"},
+        {"compatibility": C3.spec["compatibility"]},
+        {"corpus": {"store": STORE}},
+        {"components": {"C3": C3.spec}},
+    ):
+        original = json.loads(request.read_bytes())
+        request.write_text(json.dumps({**original, **invalid}))
+        assert cli.main(["build", *args], _test_components=loaded) == 1
+        error = json.loads(capsys.readouterr().err)["error"]
+        assert error == ("request_schema" if "schema" in invalid else "request_policy_key")
+        request.write_text(json.dumps(original))

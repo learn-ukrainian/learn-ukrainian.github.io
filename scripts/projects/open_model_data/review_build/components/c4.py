@@ -3,13 +3,14 @@
 from typing import ClassVar
 
 from .c4_phraseology import iter_candidates, operation_spec
-from .wp3_sources import REASONS, ULIF_ADAPTER
+from .wp3_sources import REASONS, ULIF_ADAPTER, ULIF_COMPATIBILITY
 
 
 class C4:
     files: ClassVar[dict] = {}
     adapters: ClassVar[dict] = {"ulif": ULIF_ADAPTER}
     spec: ClassVar[dict] = {
+        "compatibility": ULIF_COMPATIBILITY,
         "operations": ["idiom_definition"],
         "reasons": REASONS,
         "unit_grain": "ULIF phraseology section; standalone phraseology dictionary not admitted (authenticated edition-held-text evidence unavailable).",
