@@ -12,7 +12,7 @@ import shutil
 import stat
 import subprocess
 import tempfile
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 
@@ -96,17 +96,27 @@ def _safe_git_env() -> dict[str, str]:
     return env
 
 
-def _git_paths(worktree: Path, *args: str) -> list[str]:
-    """Read NUL-delimited paths, refusing an unavailable inventory."""
-    result = subprocess.run(
-        ["git", "ls-files", "-z", *args],
-        cwd=worktree,
-        env=_safe_git_env(),
-        capture_output=True,
-        check=True,
-        timeout=30,
+def _git_paths(
+    worktree: Path,
+    *args: str,
+    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+) -> list[str]:
+    """Read NUL-delimited paths, preserving a caller's execution-safe runner."""
+    result = (
+        git_runner(worktree, ["ls-files", "-z", *args])
+        if git_runner is not None
+        else subprocess.run(
+            ["git", "ls-files", "-z", *args],
+            cwd=worktree,
+            env=_safe_git_env(),
+            capture_output=True,
+            check=True,
+            timeout=30,
+        )
     )
-    return [os.fsdecode(path) for path in result.stdout.split(b"\0") if path]
+    result.check_returncode()
+    paths = os.fsencode(result.stdout) if isinstance(result.stdout, str) else result.stdout
+    return [os.fsdecode(path) for path in paths.split(b"\0") if path]
 
 
 def _fingerprint(path: Path) -> tuple[int, str]:
@@ -180,7 +190,13 @@ def _leaves_through_link(root: Path, parts: tuple[str, ...]) -> bool:
     return False
 
 
-def _named_artifact_files(worktree: Path, record: Mapping[str, Any], *, primary: Path) -> set[str]:
+def _named_artifact_files(
+    worktree: Path,
+    record: Mapping[str, Any],
+    *,
+    primary: Path,
+    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+) -> set[str]:
     """Inventory only explicitly named, non-empty ignored files outside caches.
 
     Tracked files survive in Git; directories are not evidence inventories.
@@ -232,7 +248,8 @@ def _named_artifact_files(worktree: Path, record: Mapping[str, Any], *, primary:
         if is_disposable_path(relative, worktree=worktree, primary=primary):
             continue
         name = relative.as_posix()
-        ignored = _git_paths(worktree, "--others", "--ignored", "--exclude-standard", "--", name)
+        runner_options = {} if git_runner is None else {"git_runner": git_runner}
+        ignored = _git_paths(worktree, "--others", "--ignored", "--exclude-standard", "--", name, **runner_options)
         if name in ignored:
             files.add(name)
     return files
