@@ -70,11 +70,37 @@ describe('Practice usage scope (#9652)', () => {
     expect(practiceHeritageBoxes(legacy).usageLabel.scope).toBe('unresolved');
   });
 
-  test('qualifies the full norm clause before reading a truncated glossClean', () => {
-    expect(practiceDisplayGloss(legacy, true)).toBe(cardData(legacy, 'B2', 'en').back);
-    // A clean meaning without the clause is also safe; raw commentary remains
-    // visible and qualified rather than being silently dropped.
-    expect(practiceDisplayGloss({ ...legacy, glossClean: 'Crimean' }, true)).toContain('обсяг застереження не встановлено');
+  test.each(['Russian calque', 'russianism', 'surzhyk', 'standard Ukrainian'])('qualifies a truncated %s clause without expanding to the full gloss', (claim) => {
+    const entry = lexeme({ glossClean: `Crimean (${claim}` });
+    const concise = practiceDisplayGloss(entry, true);
+    expect(concise).toContain(`примітка Атласу: «${claim}»`);
+    expect(concise).toContain('обсяг застереження не встановлено');
+    expect(concise).not.toContain('legacy suggestion');
+    expect(concise.length).toBeLessThan(cardData(entry, 'B2', 'en').back.length);
+    expect(isMeaningMcEligible(entry)).toBe(false);
+  });
+
+  test('keeps an eligible clean option concise while the flashcard retains the full qualified note', () => {
+    const entry = lexeme({ glossClean: 'Crimean', meaningMcEligible: true });
+    expect(isMeaningMcEligible(entry)).toBe(true);
+    expect(practiceDisplayGloss(entry, true)).toBe('Crimean');
+    expect(cardData(entry, 'B2', 'en').back).toContain('примітка Атласу: «Russian calque; standard Ukrainian: legacy suggestion»');
+  });
+
+  test('renders the clean meaning beside short distractors through the real choice consumer', async () => {
+    const entry = lexeme({ glossClean: 'Crimean', meaningMcEligible: true });
+    const garden = lexeme({ lemmaId: 'sad', lemma: 'сад', lemmaPlain: 'сад', gloss: 'garden', glossClean: 'garden', meaningMcEligible: true, heritage: 'native', severity: null });
+    const fixture = deck([entry, ordinary, positive, garden]);
+    fixture.index = fixture.index.filter((row) => row.lemmaId === entry.lemmaId);
+    render(<LexiconPractice initialDeck={fixture} deckLevel="B2" autoStart initialMode="choice" />);
+    const choice = await screen.findByTestId('practice-choice');
+    const labels = Array.from(choice.querySelectorAll('button span:not(.mc-key)'), (span) => span.textContent);
+    expect(new Set(labels)).toEqual(new Set(['Crimean', 'book', 'master', 'garden']));
+  });
+
+  test('keeps a clean first-sense fallback and an ordinary truncated parenthesis unchanged', () => {
+    expect(practiceDisplayGloss(lexeme({ gloss: 'Crimean; resident (Russian calque)', glossClean: undefined }), true)).toBe('Crimean');
+    expect(practiceDisplayGloss(lexeme({ glossClean: 'Crimean (resident' }), true)).toBe('Crimean (resident');
   });
 
   test('keeps ordinary meanings, raw provenance and A1 scaffolding unchanged', () => {
@@ -93,22 +119,44 @@ describe('Practice usage scope (#9652)', () => {
     expect(card.tagColor).toBe('var(--lu-teal)');
   });
 
-  test.each(['calque', 'avoid', 'russianism', 'historism', 'borrowed'])('keeps unscoped %s neutral, despite stored severity', (heritage) => {
+  test.each(['calque', 'avoid', 'russianism'])('qualifies unscoped %s, despite stored severity', (heritage) => {
     const entry = lexeme({ heritage, severity: 'russianism_red' });
     expect(cardData(entry, 'B2', 'en').heritageLabel).toContain('scope of caution not established');
     expect(cardData(entry, 'B2', 'en').tagColor).toBe('var(--lu-text-muted)');
   });
 
-  test.each(['sense_restricted', 'phrasal'] as const)('retains %s as a contextual caution, with unchecked authority qualified', (kind) => {
+  test.each(['en', 'uk'] as const)('keeps borrowed provenance neutral with its previous colour in %s', (locale) => {
+    const entry = lexeme({ heritage: 'borrowed', severity: 'russianism_red' });
+    expect(practiceHeritageBoxes(entry).usageLabel.scope).toBe('unresolved');
+    expect(cardData(entry, 'B2', locale)).toMatchObject({
+      heritageLabel: CHROME_STRINGS[locale]['practice.heritageBorrowed'], tagColor: 'var(--lu-purple)',
+    });
+  });
+
+  test.each([
+    ['loanword', 'borrowed', 'var(--lu-purple)'],
+    ['historism', 'historism', 'var(--lu-text-muted)'],
+    ['archaism', 'archaism', 'var(--lu-text-muted)'],
+    ['dialect', 'dialect', 'var(--lu-text-muted)'],
+    ['native', 'native', 'var(--lu-teal)'],
+    ['inherited', 'inherited', 'var(--lu-teal)'],
+    ['unknown', 'unknown', 'var(--lu-text-muted)'],
+  ])('preserves the raw %s chip and colour, despite stored severity', (heritage, heritageLabel, tagColor) => {
+    expect(cardData(lexeme({ heritage, severity: 'russianism_red' }), 'B2', 'en')).toMatchObject({ heritageLabel, tagColor });
+  });
+
+  test.each([
+    ['sense_restricted', 'en'], ['sense_restricted', 'uk'], ['phrasal', 'en'], ['phrasal', 'uk'],
+  ] as const)('retains %s as a contextual caution in %s, with unchecked authority qualified', (kind, locale) => {
     const entry = {
       ...legacy,
       heritage_status: { classification: 'calque', curated_calque: { kind, calque_sense: 'fixture context', source: ['unchecked-reference'] } },
     };
-    const card = cardData(entry, 'B2', 'en');
+    const card = cardData(entry, 'B2', locale);
     expect(practiceHeritageBoxes(entry).usageLabel.scope).toBe(kind === 'phrasal' ? 'phrase' : 'sense');
-    expect(card.heritageLabel).toContain(kind === 'phrasal' ? 'collocation' : 'one sense');
+    expect(card.heritageLabel).toContain(CHROME_STRINGS[locale][kind === 'phrasal' ? 'practice.heritageCalquePhrase' : 'practice.heritageCalqueSense']);
     expect(card.heritageLabel).toContain('fixture context');
-    expect(card.heritageLabel).toContain('no verified excerpt');
+    expect(card.heritageLabel).toContain(CHROME_STRINGS[locale]['practice.heritageNoVerifiedExcerpt']);
     expect(card.back).toContain('обсяг застереження не встановлено');
   });
 

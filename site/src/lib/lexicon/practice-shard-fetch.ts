@@ -46,11 +46,15 @@ export function practiceHeritageBoxes(entry: PracticeDisplayEntry) {
 /** Display only; never rewrite the shard, eligibility inputs or saved progress. */
 export function practiceDisplayGloss(entry: PracticeDisplayEntry, concise = false): string {
   const label = practiceHeritageBoxes(entry).usageLabel;
-  const full = displayGloss(entry.gloss, label);
-  // Qualify the complete clause before reading glossClean: legacy first-sense
-  // truncation can leave an opening parenthesis and half of a norm claim.
-  if (!concise || full?.note) return full?.text ?? "";
+  if (!concise) return displayGloss(entry.gloss, label)?.text ?? "";
   const clean = entry.glossClean?.trim() || entry.gloss.split(/[;,]/, 1)[0].replace(/\s+/g, " ").trim();
+  // A clean meaning stays concise even when the full gloss contains commentary.
+  // Close only a truncated norm clause so the shared qualifier can handle it;
+  // do not expand a choice label into the full gloss and its recommendations.
+  if (/\([^()]*\b(?:calque|russianism|surzhyk|standard Ukrainian)\b[^()]*$/iu.test(clean)) {
+    const qualified = displayGloss(`${clean})`, label);
+    if (qualified?.note) return qualified.text;
+  }
   return displayGloss(clean, label)?.text ?? "";
 }
 

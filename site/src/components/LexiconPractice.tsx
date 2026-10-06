@@ -981,19 +981,20 @@ function heritagePresentation(entry: PracticeLexeme, chromeLocale: 'en' | 'uk') 
   const label = boxes.usageLabel;
   const box = boxes.red ?? boxes.yellow ?? (label.scope !== 'unresolved' ? boxes.green : undefined);
   if (box) {
-    const registerTitles: Record<string, string> = { arch: 'Archaism', dial: 'Dialect word', hist: 'Historism', borr: 'Borrowing' };
-    const englishTitle = label.scope === 'sense' ? 'Calque caution for one sense'
-      : label.scope === 'phrase' ? 'Calque caution for a collocation'
-      : boxes.red ? 'Editorial warning'
-      : boxes.yellow ? 'Calque caution'
-      : (registerTitles[label.code ?? ''] ?? 'Attested Ukrainian form');
+    const registerTitleKeys: Record<string, ChromeKey> = {
+      arch: 'practice.heritageArchaism', dial: 'practice.heritageDialect',
+      hist: 'practice.heritageHistorism', borr: 'practice.heritageBorrowing',
+    };
+    const titleKey = label.scope === 'sense' ? 'practice.heritageCalqueSense'
+      : label.scope === 'phrase' ? 'practice.heritageCalquePhrase'
+      : boxes.red ? 'practice.heritageEditorialWarning'
+      : boxes.yellow ? 'practice.heritageCalqueCaution'
+      : (registerTitleKeys[label.code ?? ''] ?? 'practice.heritageAttestedForm');
     const context = label.scope === 'sense' || label.scope === 'phrase' ? label.evidence : null;
     const authority = label.authority.length > 0 ? label.authority.join(', ')
-      : boxes.yellow ? (chromeLocale === 'uk'
-        ? 'Перевіреного витягу з нормативного джерела запис не містить.'
-        : 'The record contains no verified excerpt from a normative source.') : null;
+      : boxes.yellow ? CHROME_STRINGS[chromeLocale]['practice.heritageNoVerifiedExcerpt'] : null;
     return {
-      text: [chromeLocale === 'uk' ? box.title : englishTitle, context, authority].filter(Boolean).join(' · '),
+      text: [CHROME_STRINGS[chromeLocale][titleKey], context, authority].filter(Boolean).join(' · '),
       color: boxes.red ? 'var(--lu-red)' : boxes.yellow ? 'var(--lu-orange)' : 'var(--lu-teal)',
     };
   }
@@ -1001,13 +1002,10 @@ function heritagePresentation(entry: PracticeLexeme, chromeLocale: 'en' | 'uk') 
   if (!heritage) return {};
   const key = HERITAGE_LABEL_KEYS[heritage];
   const rawLabel = key ? CHROME_STRINGS[chromeLocale][key] : entry.heritage;
-  // Raw classification is provenance. Unknown authority stays neutral, never
-  // a bare warning or a green defence (#9603); retain the original label.
-  if (label.scope === 'unresolved' || heritage === 'calque' || heritage === 'avoid') {
+  // Only norm claims need scope qualification; provenance keeps its raw chip.
+  if (heritage === 'calque' || heritage === 'avoid' || heritage === 'russianism') {
     return {
-      text: chromeLocale === 'uk'
-        ? `примітка Атласу: «${rawLabel}»; обсяг застереження не встановлено`
-        : `Atlas note: “${rawLabel}”; scope of caution not established`,
+      text: CHROME_STRINGS[chromeLocale]['practice.heritageUnresolvedNote'].replace('{label}', rawLabel ?? ''),
       color: 'var(--lu-text-muted)',
     };
   }
