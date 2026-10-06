@@ -1,0 +1,12 @@
+{
+  "role": "runtime argv validators, not exemptions",
+  "templates": [
+    ["git", ["rev-parse", "--git-common-dir"]],
+    ["git", ["rev-parse", "--git-dir"]],
+    ["git", ["rev-parse", "--path-format=absolute", "--git-common-dir"]],
+    ["git", ["rev-parse", "--path-format=absolute", "--show-toplevel"]],
+    ["git", ["symbolic-ref", "--quiet", "--short", "HEAD"]],
+    ["gh", ["api", null]],
+    ["gh", ["pr", "checks", null, "--json", "name,bucket,state"]]
+  ]
+}

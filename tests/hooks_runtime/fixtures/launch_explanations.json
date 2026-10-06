@@ -1,0 +1,256 @@
+{
+  "role": "runtime fixtures, not exemptions",
+  "note": "These launch explanations describe commands the removed static allowlist pinned. The runtime validator must not treat them as permission to start a process.",
+  "entries": [
+    {
+      "path": "agents_extensions/shared/hooks/guard-pr-merge.py",
+      "enclosing_symbol": "_check_states",
+      "explanation": "Spreads _repo_args(repo) before --json name,bucket,state."
+    },
+    {
+      "path": "agents_extensions/shared/hooks/guard-pr-merge.py",
+      "enclosing_symbol": "_check_states_from_status_rollup",
+      "explanation": "Spreads _repo_args(repo) before --json statusCheckRollup."
+    },
+    {
+      "path": "agents_extensions/shared/hooks/guard-pr-merge.py",
+      "enclosing_symbol": "_pr_meta",
+      "explanation": "Spreads _repo_args(repo) between the PR selector and --json."
+    },
+    {
+      "path": "agents_extensions/shared/hooks/heal-core-bare.py",
+      "enclosing_symbol": "main",
+      "explanation": "Executable is project_interpreter(); script is scripts/audit/check_core_bare.py."
+    },
+    {
+      "path": "scripts/guardrails/assert_primary_on_main.py",
+      "enclosing_symbol": "_git",
+      "explanation": "argv is ['git', *args] from the caller's git arguments, not a fixed template."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "_run_git",
+      "explanation": "argv is ['git', '-C', cwd, *args] from the caller's git arguments."
+    },
+    {
+      "path": "scripts/hooks/hook_timing.py",
+      "enclosing_symbol": "run_wrapped",
+      "explanation": "argv is the hook command passed into run_wrapped, not a displayed list."
+    },
+    {
+      "path": "scripts/hooks/measure_hook_stack.py",
+      "enclosing_symbol": "_time_one",
+      "explanation": "argv is the hook command passed into _time_one, not a displayed list."
+    },
+    {
+      "path": "scripts/lib/session_record.py",
+      "enclosing_symbol": "canonical_state_root",
+      "explanation": "command is the git -C rev-parse list built above and passed by name."
+    },
+    {
+      "path": "scripts/orchestration/thread_handoff.py",
+      "enclosing_symbol": "run_command",
+      "explanation": "args is caller-supplied; callers pass git, gh, ps, and the project interpreter."
+    },
+    {
+      "path": "agents_extensions/shared/hooks/guard-pr-merge.py",
+      "enclosing_symbol": "_check_states",
+      "explanation": "Calls _check_states_from_status_rollup, whose gh pr view argv is pinned separately."
+    },
+    {
+      "path": "agents_extensions/shared/hooks/heal-core-bare.py",
+      "enclosing_symbol": "<module>",
+      "explanation": "Module-level main() launches the pinned project-interpreter call."
+    },
+    {
+      "path": "scripts/guardrails/assert_primary_on_main.py",
+      "enclosing_symbol": "primary_head_state",
+      "explanation": "Passes git symbolic-ref --quiet --short HEAD through the pinned _git runner."
+    },
+    {
+      "path": "scripts/guardrails/assert_primary_on_main.py",
+      "enclosing_symbol": "primary_head_state",
+      "explanation": "Passes git rev-parse --short HEAD through the pinned _git runner."
+    },
+    {
+      "path": "scripts/guardrails/assert_primary_on_main.py",
+      "enclosing_symbol": "heal_primary_to_main",
+      "explanation": "Passes git show-ref --verify --quiet refs/heads/main through the pinned _git runner."
+    },
+    {
+      "path": "scripts/guardrails/assert_primary_on_main.py",
+      "enclosing_symbol": "heal_primary_to_main",
+      "explanation": "Passes git fetch origin main through the pinned _git runner."
+    },
+    {
+      "path": "scripts/guardrails/assert_primary_on_main.py",
+      "enclosing_symbol": "heal_primary_to_main",
+      "explanation": "Passes git checkout -B main origin/main through the pinned _git runner."
+    },
+    {
+      "path": "scripts/guardrails/assert_primary_on_main.py",
+      "enclosing_symbol": "heal_primary_to_main",
+      "explanation": "Passes git checkout main through the pinned _git runner."
+    },
+    {
+      "path": "scripts/guardrails/assert_primary_on_main.py",
+      "enclosing_symbol": "heal_primary_to_main",
+      "explanation": "Passes git pull --ff-only origin main through the pinned _git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "_resolve_main_root_or_none",
+      "explanation": "Passes git rev-parse --path-format=absolute --git-common-dir through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "_resolve_main_root_or_none",
+      "explanation": "Passes git rev-parse --show-toplevel through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "registered_worktrees",
+      "explanation": "Passes git worktree list --porcelain through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "is_tracked",
+      "explanation": "Passes git ls-files --error-unmatch and a relative path through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "is_ignored",
+      "explanation": "Passes git check-ignore -q and a relative path through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "current_branch",
+      "explanation": "Passes git symbolic-ref --quiet --short HEAD through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "heal_primary_bare_if_needed",
+      "explanation": "Passes git rev-parse --is-bare-repository through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "heal_primary_bare_if_needed",
+      "explanation": "Passes git config --get core.bare through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "heal_primary_bare_if_needed",
+      "explanation": "Passes git config core.bare false through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "heal_primary_bare_if_needed",
+      "explanation": "Passes git config extensions.worktreeConfig true through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "primary_checkout_dirty_status",
+      "explanation": "Passes git rev-parse HEAD through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/guardrails/worktree_containment.py",
+      "enclosing_symbol": "primary_checkout_dirty_status",
+      "explanation": "Spreads command[1:] through the pinned _run_git runner."
+    },
+    {
+      "path": "scripts/hooks/hook_timing.py",
+      "enclosing_symbol": "main",
+      "explanation": "Passes the hook command in cmd through the pinned run_wrapped runner."
+    },
+    {
+      "path": "scripts/hooks/measure_hook_stack.py",
+      "enclosing_symbol": "main",
+      "explanation": "Passes the hook argv into the pinned _time_one runner."
+    },
+    {
+      "path": "scripts/lib/session_record.py",
+      "enclosing_symbol": "sessions_dir",
+      "explanation": "sessions_dir calls canonical_state_root, whose git rev-parse command is pinned separately."
+    },
+    {
+      "path": "scripts/lib/session_record.py",
+      "enclosing_symbol": "_resolved_state_root",
+      "explanation": "_resolved_state_root calls canonical_state_root, whose git rev-parse command is pinned separately."
+    },
+    {
+      "path": "scripts/opsec/gh_snapshot.py",
+      "enclosing_symbol": "repository",
+      "explanation": "reader launches git remote get-url origin; the default reader is subprocess.run."
+    },
+    {
+      "path": "scripts/opsec/gh_snapshot.py",
+      "enclosing_symbol": "admit",
+      "explanation": "Forwards reader into repository, whose git remote get-url call is pinned separately."
+    },
+    {
+      "path": "scripts/opsec/gh_snapshot.py",
+      "enclosing_symbol": "admit",
+      "explanation": "reader launches git rev-parse --show-toplevel; the default reader is subprocess.run."
+    },
+    {
+      "path": "scripts/opsec/gh_snapshot.py",
+      "enclosing_symbol": "admit",
+      "explanation": "Forwards reader into repository with the last selector; the git remote call is pinned separately."
+    },
+    {
+      "path": "scripts/opsec/prepublish.py",
+      "enclosing_symbol": "checked_run",
+      "explanation": "Fallback runner(args) launches the caller's argv; the default runner is subprocess.run."
+    },
+    {
+      "path": "scripts/opsec/prepublish.py",
+      "enclosing_symbol": "checked_run",
+      "explanation": "Forwards runner into admit, whose git calls are pinned in gh_snapshot."
+    },
+    {
+      "path": "scripts/opsec/prepublish.py",
+      "enclosing_symbol": "checked_run",
+      "explanation": "runner launches gh plus the frozen argv from admit; the default runner is subprocess.run."
+    },
+    {
+      "path": "scripts/orchestration/thread_handoff.py",
+      "enclosing_symbol": "canonical_state_root",
+      "explanation": "run_command launches git rev-parse --path-format=absolute --git-common-dir."
+    },
+    {
+      "path": "scripts/orchestration/thread_handoff.py",
+      "enclosing_symbol": "git_output",
+      "explanation": "run_command launches git plus the caller's args."
+    },
+    {
+      "path": "scripts/orchestration/thread_handoff.py",
+      "enclosing_symbol": "gh_json",
+      "explanation": "run_command launches gh plus the caller's args."
+    },
+    {
+      "path": "scripts/orchestration/thread_handoff.py",
+      "enclosing_symbol": "require_checkout_continuity.is_ancestor",
+      "explanation": "run_command launches git merge-base --is-ancestor with the two heads."
+    },
+    {
+      "path": "scripts/orchestration/thread_handoff.py",
+      "enclosing_symbol": "_default_process_snapshot",
+      "explanation": "run_command launches ps -o ppid=,comm=,lstart= for one pid."
+    },
+    {
+      "path": "scripts/orchestration/thread_handoff.py",
+      "enclosing_symbol": "_default_machine_id",
+      "explanation": "run_command launches ioreg -rd1 -c IOPlatformExpertDevice."
+    },
+    {
+      "path": "scripts/orchestration/thread_handoff.py",
+      "enclosing_symbol": "_process_is_zombie",
+      "explanation": "run_command launches ps -o stat= for one pid."
+    },
+    {
+      "path": "scripts/orchestration/thread_handoff.py",
+      "enclosing_symbol": "request_claudex_rollover",
+      "explanation": "run_command launches the project interpreter on claudex_supervisor.py request-rollover."
+    }
+  ]
+}
