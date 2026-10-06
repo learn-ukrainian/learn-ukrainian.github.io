@@ -47,7 +47,11 @@ HEADING = re.compile(
     r"(?:(?:\.[ \t]*|[ \t]+)(?P<title>[^\r\n]*))?"
 )
 HEADING_LIKE = re.compile(
-    r"(?im)^[ \t]*(?:[0-9]*[ \t]*)?(?:§|Тема|Розділ|Параграф|Урок)\b|^[ \t]*§|^[ \t]*[0-9]+(?:\.[0-9]+)+[ \t]+[A-ZА-ЯІЇЄҐ]",
+    r"(?im)^[ \t]*(?:[0-9]*[ \t]*)?(?:§|Тема|Розділ|Параграф|Урок)\b|^[ \t]*§"
+    r"|(?-i:^[ \t]*[0-9]+(?:\.[0-9]+)+[ \t]+[A-ZА-ЯІЇЄҐ])"
+    # Single-number uppercase subsections are unresolved boundaries, not new
+    # census units. Case sensitivity keeps ordinary numbered prose distinct.
+    r"|(?-i:^[ \t]*[0-9]+\.[ \t]+[A-ZА-ЯІЇЄҐ][^a-zа-яіїєґ0-9.;:!?\n]*[ \t\r]*$)",
     re.I,
 )
 CONTENTS = re.compile(
@@ -55,7 +59,8 @@ CONTENTS = re.compile(
     r"|^[ \t]*[^\n]*[^\W\d_][ \t]+[0-9]{1,4}[ \t]*$"
 )
 EXERCISE = re.compile(
-    r"(?im)^[ \t]*(?:Вправ[аи]|Завдання|Запитання|Питання)\b"
+    r"(?im)^[ \t]*(?:[^\n:.;!?]+:[ \t]*)?(?:Практичні[ \t]+)?"
+    r"(?:Вправ[аи]|Завдання|Запитання|Питання)\b"
     r"|^[ \t]*[0-9]+[.)][ \t]*(?:Прочитайте|Перепишіть|Запишіть|Випишіть|"
     r"Визначте|Поясніть|Доведіть|Виконайте|Розгляньте|Порівняйте|Складіть|"
     r"Обчисліть|Знайдіть|Розв[’']яжіть|Дайте|Поміркуйте|Дослідіть|Назвіть|"
@@ -725,11 +730,14 @@ class Textbooks:
                 reason = "page_gap"
             else:
                 body = "\n".join(v.text for v in response)
+                marker = HEADING.fullmatch(heading.text.split("\n", 1)[0].strip())
                 if HEADING_LIKE.search(body):
                     reason = "unparsed_heading_in_body"
                 elif title_line(next((line.strip() for line in body.split("\n") if line.strip()), "")):
                     reason = "heading_continuation_unresolved"
-                elif running_head_ambiguous(pages, body):
+                elif running_head_ambiguous(pages, body) or (
+                    marker and not marker.group("title") and running_head_ambiguous(pages, heading.text)
+                ):
                     reason = "running_head_unresolved"
                 elif exercise_without_answer(body):
                     reason = "exercise_without_answer"

@@ -339,6 +339,94 @@ def test_printed_answer_is_kept_and_no_hyphenation_is_invented(tmp_path):
         assert len(gate_for(reader, pages, 2).run(extract(reader, pages))[0]) == 1
 
 
+@pytest.mark.parametrize("marker", ["Розділ І", "РОЗДІЛ 2", "Тема 3", "§ 4"])
+@pytest.mark.parametrize("recurring", [True, False])
+def test_bare_recurring_edge_marker_does_not_authenticate_adjacent_title(tmp_path, marker, recurring):
+    pages = [
+        page(1, imprint()),
+        page(2, marker + "\nSYNTHETIC Adjacent label\nSYNTHETIC first prose."),
+        page(3, (marker + "\n" if recurring else "") + "SYNTHETIC Different label\nSYNTHETIC later prose."),
+        page(4, "§ 9. SYNTHETIC Next\nSYNTHETIC final prose."),
+    ]
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        assert {c.unit_id for c in candidates} == set(reader.units(UNIT_QUERY))
+        first = candidates[0]
+        assert first.slots[-1].text == marker + "\nSYNTHETIC Adjacent label"
+        assert first.reason == ("running_head_unresolved" if recurring else "printed_heading")
+        records, _ = gate_for(reader, pages, len(candidates)).run(candidates)
+        assert bool(records) is not recurring
+
+
+@pytest.mark.parametrize(
+    "rubric",
+    ["Практичні завдання", "SYNTHETIC rubric: практичні завдання", "SYNTHETIC rubric: Запитання"],
+)
+@pytest.mark.parametrize("answered", [False, True])
+def test_embedded_labeled_activity_requires_its_own_printed_answer(tmp_path, rubric, answered):
+    body = "SYNTHETIC exposition.\n" + rubric + "\nSYNTHETIC external research task.\n"
+    if answered:
+        body += "Відповідь\nSYNTHETIC printed answer.\n"
+    body += "SYNTHETIC later exposition.\n"
+    pages = [page(1, imprint()), page(2, "§ 1. SYNTHETIC Heading\n" + body)]
+    pages.append(page(3, "§ 2. SYNTHETIC Next\nSYNTHETIC final prose."))
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        assert candidates[0].reason == ("printed_heading" if answered else "exercise_without_answer")
+        # Refusal retains the whole source unit; it never clips out the task.
+        assert candidates[0].response[0].text == "\n" + body
+        records, _ = gate_for(reader, pages, 2).run(candidates)
+        assert len(records) == int(answered)
+
+
+def test_one_printed_answer_does_not_answer_a_later_embedded_rubric(tmp_path):
+    pages = [
+        page(1, imprint()),
+        page(
+            2,
+            "§ 1. SYNTHETIC Heading\nЗавдання\nSYNTHETIC prompt.\nВідповідь\n"
+            "SYNTHETIC answer.\nSYNTHETIC rubric: практичні завдання\nSYNTHETIC unanswered task.",
+        ),
+        page(3, "§ 2. SYNTHETIC Next\nSYNTHETIC final prose."),
+    ]
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        assert extract(reader, pages)[0].reason == "exercise_without_answer"
+
+
+@pytest.mark.parametrize(
+    "line,reason",
+    [
+        ("3. SYNTHETIC SUBSECTION", "unparsed_heading_in_body"),
+        ("  12. SYNTHETIC SUBSECTION\r", "unparsed_heading_in_body"),
+        ("3. SYNTHETIC ordinary numbered narrative.", "printed_heading"),
+        ("3.14 is a SYNTHETIC decimal in prose.", "printed_heading"),
+        ("2025 SYNTHETIC narrative date.", "printed_heading"),
+        ("SYNTHETIC exposition describes практичні завдання in prose.", "printed_heading"),
+        ("SYNTHETIC exposition: завдання explained in prose.", "exercise_without_answer"),
+    ],
+)
+def test_numbered_subsection_refuses_whole_body_without_changing_census(tmp_path, line, reason):
+    body = "SYNTHETIC first exposition.\n" + line + "\nSYNTHETIC later exposition.\n"
+    pages = [page(1, imprint()), page(2, "§ 1. SYNTHETIC Heading\n" + body)]
+    pages.append(page(3, "§ 2. SYNTHETIC Next\nSYNTHETIC final prose."))
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        assert {c.unit_id for c in candidates} == set(reader.units(UNIT_QUERY))
+        assert len(candidates) == 2
+        assert candidates[0].reason == reason
+        assert candidates[0].response[0].text == "\n" + body
+        records, _ = gate_for(reader, pages, 2).run(candidates)
+        assert len(records) == int(reason == "printed_heading")
+
+
 @pytest.mark.parametrize("damaged,total,reason", [(3, 10, "ocr_damage"), (4, 10, "book_ocr_damage")])
 def test_book_ocr_threshold_is_strictly_more_than_thirty_percent(tmp_path, damaged, total, reason):
     pages = [page(1, imprint())] + [
