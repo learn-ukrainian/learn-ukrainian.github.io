@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import ast
 import builtins
+import json
 import sqlite3
 from contextlib import closing
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
@@ -19,7 +21,6 @@ READERS = (
     "scripts/ai_agent_bridge/_citation_check.py",
     "scripts/ai_agent_bridge/_inbox_watch.py",
     "scripts/ai_agent_bridge/_opencode.py",
-    "scripts/api/dashboard_comms.py",
     "scripts/api/fleet_router.py",
     "scripts/api/fleet_workers_collect.py",
     "scripts/api/runtime_router.py",
@@ -77,7 +78,6 @@ def test_helper_fallback_only_handles_missing_scripts(reader, missing):
 @pytest.mark.parametrize("reader, function", [
     ("scripts/ai_agent_bridge/_inbox_watch.py", "open_readonly_db"),
     ("scripts/fleet_comms/legacy_broker_report.py", "_open_read_only"),
-    ("scripts/api/dashboard_comms.py", "get_broker_db"),
 ])
 def test_reader_opens_exact_file_and_refuses_writes_and_attach(tmp_path, reader, function):
     """Exercise the actual opener without importing unrelated service dependencies."""
@@ -91,14 +91,10 @@ def test_reader_opens_exact_file_and_refuses_writes_and_attach(tmp_path, reader,
     definition = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == function)
     namespace = {
         "open_readonly": open_readonly, "sqlite3": sqlite3, "SQLiteConnection": SQLiteConnection,
-        "Path": Path, "resolve_context": lambda ctx: ctx, "MonitorContext": SimpleNamespace,
+        "Path": Path,
     }
     exec(compile(ast.Module(body=[definition], type_ignores=[]), reader, "exec"), namespace)
-    argument = (
-        SimpleNamespace(stores=SimpleNamespace(message_db=SimpleNamespace(path=db)))
-        if function == "get_broker_db" else db
-    )
-    with closing(namespace[function](argument)) as connection:
+    with closing(namespace[function](db)) as connection:
         assert connection.execute("PRAGMA database_list").fetchone()[2] == str(db)
         assert connection.execute("SELECT value FROM evidence").fetchone()[0] == "intended"
         assert connection.execute("PRAGMA query_only").fetchone()[0] == 1
@@ -111,3 +107,43 @@ def test_reader_opens_exact_file_and_refuses_writes_and_attach(tmp_path, reader,
         with pytest.raises(sqlite3.DatabaseError):
             connection.execute("ATTACH DATABASE ':memory:' AS attached")
     assert db.read_bytes() == before
+
+
+def test_dashboard_broker_is_excluded_from_helper_migration():
+    reader = "scripts/api/dashboard_comms.py"
+    assert reader not in READERS
+    tree = ast.parse((ROOT / reader).read_text())
+    assert not any(
+        isinstance(node, ast.ImportFrom)
+        and node.module in {"scripts.lib.readonly_sqlite", "lib.readonly_sqlite"}
+        for node in ast.walk(tree)
+    )
+    manifest = json.loads((ROOT / "scripts/hygiene/sqlite_reference_allowlist.json").read_text())
+    entries = [entry for entry in manifest if entry["path"] == reader]
+    assert len(entries) == 1
+    assert entries[0]["kind"] == "reader_pending_migration_9662"
+    assert entries[0]["reference_count"] == 1
+    assert entries[0]["calls"] == []
+
+
+def test_dashboard_broker_routes_through_monitor_context(tmp_path):
+    reader = "scripts/api/dashboard_comms.py"
+    tree = ast.parse((ROOT / reader).read_text())
+    definition = next(
+        node for node in tree.body
+        if isinstance(node, ast.FunctionDef) and node.name == "get_broker_db"
+    )
+    db = tmp_path / "broker.db"
+    db.touch()
+    connection = SimpleNamespace(row_factory=None)
+    connect = Mock(return_value=connection)
+    resolved = SimpleNamespace(stores=SimpleNamespace(message_db=SimpleNamespace(path=db, connect=connect)))
+    resolve_context = Mock(return_value=resolved)
+    namespace = {"sqlite3": sqlite3, "resolve_context": resolve_context, "MonitorContext": SimpleNamespace}
+    exec(compile(ast.Module(body=[definition], type_ignores=[]), reader, "exec"), namespace)
+    context = object()
+
+    assert namespace["get_broker_db"](context) is connection
+    resolve_context.assert_called_once_with(context)
+    connect.assert_called_once_with(read_only=True)
+    assert connection.row_factory is sqlite3.Row
