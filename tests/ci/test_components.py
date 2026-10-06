@@ -425,7 +425,7 @@ def test_cli_command_dispatch_and_no_artifact_certification(monkeypatch, capsys)
 
 
 def test_cli_help_and_required_build_arguments(capsys):
-    for operation in ([], ["build"], ["test"], ["verify"]):
+    for operation in ([], ["build"], ["test"], ["verify"], ["junit"]):
         with pytest.raises(SystemExit) as exit_info:
             c.parser().parse_args([*operation, "--help"])
         assert exit_info.value.code == 0
@@ -545,7 +545,127 @@ def test_complete_node_commands_have_bounded_parallel_execution(monkeypatch, man
     monkeypatch.setattr(c.subprocess, "run", run)
     assert c.collect_tests(["tests/test_fixture.py"], [], tmp_path)[1] == 0
     assert calls[-1]["timeout"] == 900
+    monkeypatch.setattr(c, "execute_command", lambda argv, **kw: (calls.append(kw) or 0, False))
     assert c.run_commands([command], tmp_path, None, {})[1] == 0
-    assert calls[-1]["timeout"] == 7200
-    assert c.run_commands([command | {"scope": "code-contract"}], tmp_path, None, {})[1] == 0
+    assert calls[-1]["timeout"] is None
+    assert c.run_commands([command | {"scope": "code-contract", "timeout": 1800}], tmp_path, None, {})[1] == 0
     assert calls[-1]["timeout"] == 1800
+
+
+@pytest.mark.parametrize('gap', ['unassigned', 'ambiguous', 'unmapped_test_files', 'selector_parity_gaps', 'missing_mandatory_edges'])
+def test_inventory_check_allows_unknown_imports_but_rejects_contract_gaps(monkeypatch, capsys, gap):
+    report = dict.fromkeys(('unassigned', 'ambiguous', 'unmapped_test_files', 'selector_parity_gaps'), 0)
+    report.update(dynamic_unresolved=239, import_graph={'missing_mandatory_edges': []})
+    monkeypatch.setattr(c, 'inventory', lambda m: report)
+    assert c.main(['inventory', '--check']) == 0
+    assert json.loads(capsys.readouterr().out)['dynamic_unresolved'] == 239
+    if gap == 'missing_mandatory_edges':
+        report['import_graph'][gap] = ['required-edge']
+    else:
+        report[gap] = 1
+    assert c.main(['inventory', '--check']) == 1
+
+
+def test_open_model_subprocess_test_prefix_is_owned(manifest):
+    path = 'tests/projects/open_model_data/test_direct_cli_help.py'
+    assert c.assign_path(path, manifest) == (['open-model-data', 'shared-core'], 'prefix')
+    assert path in c.test_files('open-model-data', manifest)
+
+
+def test_test_cli_forwards_workers_and_timeout(monkeypatch, capsys):
+    monkeypatch.setattr(c, 'test_files', lambda *a: ['tests/test_fixture.py'])
+    monkeypatch.setattr(c, 'vitest_files', lambda *a: [])
+    monkeypatch.setattr(c, 'collect_tests', lambda *a: (['tests/test_fixture.py::test_fixture'], 0))
+    commands = []
+    def run(rows, *a, **kw):
+        commands.extend(rows)
+        return [], 0
+    monkeypatch.setattr(c, 'run_commands', run)
+    assert c.main(['test', '--component', 'harness', '--workers', '1', '--timeout', '4']) == 0
+    assert commands[0]['argv'][4:6] == ['-n', '1']
+    assert commands[0]['timeout'] == 4
+    capsys.readouterr()
+    for args in (['--workers', '0'], ['--timeout', '0'], ['--timeout', 'nan']):
+        assert c.main(['test', '--component', 'harness', *args]) == 2
+        capsys.readouterr()
+
+
+def test_journal_counts_phases_and_ignores_worker_duplicates(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    path = tmp_path / 'results.jsonl'
+    monkeypatch.setenv('LU_COMPONENT_TEST_JOURNAL', str(path))
+    monkeypatch.delenv('PYTEST_XDIST_WORKER', raising=False)
+    c.pytest_runtest_logreport(SimpleNamespace(nodeid='pass', when='setup', outcome='passed'))
+    c.pytest_runtest_logreport(SimpleNamespace(nodeid='pass', when='call', outcome='passed'))
+    c.pytest_runtest_logreport(SimpleNamespace(nodeid='error', when='call', outcome='passed'))
+    c.pytest_runtest_logreport(SimpleNamespace(nodeid='error', when='teardown', outcome='failed'))
+    c.pytest_runtest_logreport(SimpleNamespace(nodeid='skip', when='setup', outcome='skipped'))
+    monkeypatch.setenv('PYTEST_XDIST_WORKER', 'gw0')
+    c.pytest_runtest_logreport(SimpleNamespace(nodeid='ignored', when='call', outcome='passed'))
+    assert c.partial_test_results(path) == {'passed': 1, 'failed': 1, 'skipped': 1, 'failing_test_ids': ['error']}
+    assert c.partial_test_results(tmp_path / 'missing')['passed'] == 0
+
+
+def test_timeout_retains_real_completed_pytest_results(tmp_path, monkeypatch):
+    monkeypatch.setattr(c, 'project_interpreter', lambda root: Path(sys.executable))
+    monkeypatch.delenv('PYTEST_XDIST_WORKER', raising=False)
+    path = tmp_path / 'test_partial.py'
+    path.write_text('import time\ndef test_pass():\n    assert True\ndef test_fail():\n    assert False\ndef test_wait():\n    time.sleep(60)\n')
+    command = {'argv': ['{python}', '-m', 'pytest', '-q', str(path)], 'cwd': '.',
+               'scope': 'complete-node-pytest', 'timeout': 15}
+    reports, code = c.run_commands([command], c.ROOT, None, {})
+    assert code == 124 and reports[0]['result'] == 'timeout'
+    assert reports[0]['partial_results'] is True
+    assert reports[0]['passed'] == reports[0]['failed'] == 1
+    assert reports[0]['failing_test_ids'] == ['test_partial.py::test_fail']
+
+
+def test_junit_coverage_fresh_sets_failures_skips_absence_and_duplicate_precedence(repo, manifest, monkeypatch):
+    git(repo, '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid',
+        'commit', '-m', 'fixture\n\nX-Agent: codex/impl-9884-d')
+    path = repo / 'full.xml'
+    path.write_text('''<testsuites><testsuite>
+      <testcase classname="tests.test_fixture" name="test_ok[dot.value]"/>
+      <testcase classname="tests.test_fixture.OtherClass" name="test_fail"><failure/></testcase>
+      <testcase classname="tests.test_fixture" name="test_skip"><skipped/></testcase>
+      </testsuite></testsuites>''')
+    duplicate = repo / 'duplicate.xml'
+    duplicate.write_text('<testsuite><testcase classname="tests.test_fixture.OtherClass" name="test_fail"/></testsuite>')
+    ids = ['tests/test_fixture.py::test_ok[dot.value]', 'tests/test_fixture.py::OtherClass::test_fail',
+           'tests/test_fixture.py::test_skip', 'tests/test_fixture.py::test_absent', 'tests/test_other.py::test_other']
+    monkeypatch.setattr(c, 'test_files', lambda *a: ['tests/test_fixture.py'])
+    calls = []
+    def collect(files, args, root):
+        calls.append((files, args))
+        return ids, 0
+    monkeypatch.setattr(c, 'collect_tests', collect)
+    report, code = c.junit_coverage([path, duplicate], manifest, ['atlas-data', 'harness'], repo)
+    assert len(calls) == 1
+    for row in report['nodes'].values():
+        assert {key: row[key] for key in ('collected', 'passed', 'failed', 'skipped', 'absent')} == {
+            'collected': 4, 'passed': 1, 'failed': 1, 'skipped': 1, 'absent': 1}
+        assert row['failing_test_ids'] == [ids[1]] and row['absent_test_ids'] == [ids[3]]
+    assert code == 1
+    assert report['junit_inputs'][0]['sha256'] == hashlib.sha256(path.read_bytes()).hexdigest()
+    monkeypatch.setattr(c, 'collect_tests', lambda *a: ([ids[0]], 0))
+    assert c.junit_coverage([path], manifest, ['harness'], repo)[1] == 0
+    monkeypatch.setattr(c, 'collect_tests', lambda *a: ([], 2))
+    report, code = c.junit_coverage([path], manifest, ['harness'], repo)
+    assert code == 2 and report['fallback_reason'] == 'collection-error'
+    with pytest.raises(ValueError):
+        c.junit_coverage([], manifest, ['harness'], repo)
+    path.write_text('<testsuite/>')
+    with pytest.raises(ValueError):
+        c.junit_coverage([path], manifest, ['harness'], repo)
+
+
+def test_junit_cli_dispatch(monkeypatch, tmp_path, capsys):
+    calls = []
+    def coverage(paths, manifest, components):
+        calls.append((paths, components))
+        return {'nodes': {}}, 0
+    monkeypatch.setattr(c, 'junit_coverage', coverage)
+    assert c.main(['junit', '--junit', str(tmp_path / 'full.xml')]) == 0
+    assert calls[-1][1] == c.NODE_IDS
+    assert c.main(['junit', '--component', 'harness', '--junit', str(tmp_path / 'full.xml')]) == 0
+    assert calls[-1][1] == ['harness']

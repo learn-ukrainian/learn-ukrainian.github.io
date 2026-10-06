@@ -10,8 +10,10 @@ import argparse
 import ast
 import hashlib
 import json
+import math
 import os
 import re
+import signal
 import subprocess
 import sys
 import tempfile
@@ -21,8 +23,10 @@ from functools import lru_cache
 from pathlib import Path, PurePosixPath
 
 from scripts.ci import frontend_change_scope
+from scripts.ci.junit_results import parse_junit
 from scripts.common.repo_root import project_interpreter
 from scripts.deploy import auto_deploy_eligibility
+from scripts.storage.test_baseline import nodeid_to_junit_id
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "scripts/ci/components.json"
@@ -435,18 +439,19 @@ def vitest_files(component: str, manifest: dict, root: Path = ROOT) -> list[str]
             and component in assign_path(path, manifest)[0]]
 
 
-def node_test_commands(component: str, manifest: dict, files: list[str], front_files: list[str]) -> list[dict]:
+def node_test_commands(component: str, manifest: dict, files: list[str], front_files: list[str],
+                       *, workers: int = 2, timeout: float | None = None) -> list[dict]:
     """Use pytest and existing site scripts; retain the built-output test tier."""
-    commands = [{"argv": ["{python}", "-m", "pytest", "-q", "-n", "2", *files,
+    commands = [{"argv": ["{python}", "-m", "pytest", "-q", "-n", str(workers), *files,
                            *manifest["components"][component]["test_args"]],
-                 "cwd": ".", "scope": "complete-node-pytest"}]
+                 "cwd": ".", "scope": "complete-node-pytest", "timeout": timeout}]
     if front_files:
         built = set(manifest["vitest"]["built_output_files"])
         for script, subset in (("test:unit", sorted(set(front_files) - built)),
                                ("test:built-output", sorted(set(front_files) & built))):
             if subset:
                 commands.append({"argv": ["npm", "run", script, "--", *(p.removeprefix("site/") for p in subset)],
-                                 "cwd": "site", "scope": "complete-node-vitest"})
+                                 "cwd": "site", "scope": "complete-node-vitest", "timeout": timeout})
     return commands
 
 
@@ -566,29 +571,72 @@ def expand_command(command: dict, root: Path, output_dir: Path | None, members: 
     return argv
 
 
+def pytest_runtest_logreport(report):
+    """Journal completed pytest phases on the controller, surviving wall timeouts."""
+    journal = os.environ.get("LU_COMPONENT_TEST_JOURNAL")
+    if journal and not os.environ.get("PYTEST_XDIST_WORKER"):
+        with Path(journal).open("a", encoding="utf-8") as stream:
+            stream.write(json.dumps({"id": report.nodeid, "when": report.when,
+                                     "outcome": report.outcome}) + "\n")
+
+
+def partial_test_results(journal: Path) -> dict:
+    """Count unique test outcomes; setup/teardown errors outrank call passes."""
+    outcomes = {}
+    if journal.is_file():
+        for line in journal.read_text(encoding="utf-8").splitlines():
+            row = json.loads(line)
+            if row["outcome"] == "failed" or outcomes.get(row["id"]) == "failed":
+                outcomes[row["id"]] = "failed"
+            elif row["outcome"] == "skipped" or row["when"] == "call":
+                outcomes[row["id"]] = row["outcome"]
+    return {**{key: sum(value == key for value in outcomes.values())
+               for key in ("passed", "failed", "skipped")},
+            "failing_test_ids": sorted(key for key, value in outcomes.items() if value == "failed")}
+
+
+def execute_command(argv: list[str], *, cwd: Path, env: dict, timeout: float | None) -> tuple[int, bool]:
+    """Wait in the foreground and reap the process group on a wall timeout."""
+    with subprocess.Popen(argv, cwd=cwd, env=env, stdout=sys.stderr, start_new_session=True) as process:
+        try:
+            return process.wait(timeout=timeout), False
+        except subprocess.TimeoutExpired:
+            os.killpg(process.pid, signal.SIGKILL)
+            process.wait()
+            return 124, True
+
+
 def run_commands(commands: list[dict], root: Path, output_dir: Path | None,
                  members: dict[str, Path], *, keep_going: bool = False) -> tuple[list[dict], int]:
-    """Wait for every command in the foreground; skipped checks are not passes."""
+    """Wait for every command; report timeout and retain partial pytest evidence."""
     reports = []
     overall_code = 0
     expanded = [(command, expand_command(command, root, output_dir, members)) for command in commands]
     for command, argv in expanded:
         with tempfile.TemporaryDirectory(prefix="component-check-") as scratch:
             junit = Path(scratch) / "junit.xml"
+            journal = Path(scratch) / "results.jsonl"
             is_pytest = "pytest" in argv
-            executed = [*argv, f"--junitxml={junit}"] if is_pytest else argv
-            timeout = 7200 if command["scope"].startswith("complete-node-") else 1800
-            result = subprocess.run(executed, cwd=root / command["cwd"], check=False,
-                                    env=os.environ | {"PYTHON": str(project_interpreter(root))},
-                                    stdout=sys.stderr, timeout=timeout)
-            skipped = 0
+            executed = [*argv, "-p", "scripts.ci.components", f"--junitxml={junit}"] if is_pytest else argv
+            timeout = command.get("timeout", None if command["scope"].startswith("complete-node-") else 1800)
+            env = os.environ | {"PYTHON": str(project_interpreter(root))}
+            if is_pytest:
+                env["LU_COMPONENT_TEST_JOURNAL"] = str(journal)
+            returncode, timed_out = execute_command(executed, cwd=root / command["cwd"], env=env, timeout=timeout)
+            stats = partial_test_results(journal)
+            # Existing verify commands also retain their JUnit totals when a
+            # plugin was not loaded (e.g. a separately installed pytest).
             if is_pytest and junit.is_file():
-                tree = ET.parse(junit)
-                skipped = len(tree.findall(".//testcase/skipped"))
-            code = result.returncode or (3 if skipped else 0)
+                results = parse_junit([junit])
+                stats = {**{key: sum(r.outcome == key or (key == "failed" and r.outcome == "error")
+                                    for r in results) for key in ("passed", "failed", "skipped")},
+                         "failing_test_ids": sorted(r.node_id for r in results if r.outcome in {"failed", "error"})}
+            code = returncode or (3 if stats["skipped"] else 0)
             reports.append({"argv": command["argv"], "cwd": command["cwd"], "scope": command["scope"],
-                            "exit_code": result.returncode, "skipped": skipped,
-                            "result": "fail" if result.returncode else "artifact-dependent" if skipped else "pass"})
+                            "exit_code": returncode, "timeout_seconds": timeout, **stats,
+                            "partial_results": timed_out,
+                            "result": "timeout" if timed_out else "fail" if returncode else
+                            "artifact-dependent" if stats["skipped"] else "pass"})
             if code:
                 overall_code = overall_code or code
                 if not keep_going:
@@ -596,20 +644,71 @@ def run_commands(commands: list[dict], root: Path, output_dir: Path | None,
     return reports, overall_code
 
 
+def junit_coverage(paths: list[Path], manifest: dict, components: Sequence[str], root: Path = ROOT) -> tuple[dict, int]:
+    """Compare freshly collected node IDs with full-run pytest JUnit outcomes."""
+    if not paths:
+        raise ValueError("JUnit input is required")
+    rows = parse_junit(paths)
+    if not rows:
+        raise ValueError("JUnit input has no test cases")
+    outcomes = {}
+    rank = {"passed": 0, "skipped": 1, "failed": 2, "error": 3}
+    for row in rows:
+        # Parameter values containing dots and classes without a Test prefix
+        # use pytest's own classname/name identity, not guessed file names.
+        identity = nodeid_to_junit_id(row.node_id)
+        if rank[row.outcome] >= rank.get(outcomes.get(identity), -1):
+            outcomes[identity] = row.outcome
+    files = {node: test_files(node, manifest, root) for node in components}
+    collected = {}
+    for node in components:
+        args = tuple(manifest["components"][node]["test_args"])
+        if args not in collected:
+            union = sorted({file for other in components
+                            if tuple(manifest["components"][other]["test_args"]) == args
+                            for file in files[other]})
+            ids, code = collect_tests(union, args, root)
+            if code:
+                return {"selection": list(NODE_IDS), "fallback_reason": "collection-error",
+                        "pytest_collection_exit": code}, code
+            collected[args] = ids
+    coverage = {}
+    for node in components:
+        selected_files = set(files[node])
+        ids = sorted({id for id in collected[tuple(manifest["components"][node]["test_args"])]
+                      if id.split("::", 1)[0] in selected_files})
+        groups = {key: [] for key in ("passed", "failed", "skipped", "absent")}
+        for id in ids:
+            outcome = outcomes.get(nodeid_to_junit_id(id), "absent")
+            groups["failed" if outcome == "error" else outcome].append(id)
+        coverage[node] = {"collected": len(ids), "pytest_files": len(selected_files),
+                          **{key: len(value) for key, value in groups.items()},
+                          "failing_test_ids": groups["failed"], "absent_test_ids": groups["absent"],
+                          "skipped_test_ids": groups["skipped"]}
+    report = {"schema": "component-junit-coverage.v1",
+              "head_sha": subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, check=True,
+                                         capture_output=True, text=True, timeout=30).stdout.strip(),
+              "junit_inputs": [{"name": path.name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+                               for path in paths], "nodes": coverage}
+    # Skips and absent IDs are evidence gaps, never passing proof.
+    return report, 1 if any(row[key] for row in coverage.values() for key in ("failed", "skipped", "absent")) else 0
+
+
 def parser() -> argparse.ArgumentParser:
     """Expose the complete wrapper contract in root and subcommand help."""
     examples = (
         "Examples:\n  .venv/bin/python -m scripts.ci.components inventory --check\n"
-        "  .venv/bin/python -m scripts.ci.components test --component atlas-data\n"
+        "  .venv/bin/python -m scripts.ci.components test --component atlas-data --workers 2\n"
+        "  .venv/bin/python -m scripts.ci.components junit --junit artifacts/pytest-shard-1.xml\n"
         "  .venv/bin/python -m scripts.ci.components test --component atlas-frontend --list\n"
         "  .venv/bin/python -m scripts.ci.components build --component atlas-frontend "
         "--inputs inputs.json --output-dir site/dist\n"
         "Defaults: complete-node pytest uses two workers; collection has a 15-minute timeout, "
-        "complete-node commands a two-hour timeout, other commands 30 minutes.\n"
+        "complete-node commands no wall timeout (pytest per-test timeouts apply), other commands 30 minutes.\n"
         "Outputs: JSON on stdout; test processes; builds write declared outputs, curriculum producers "
         "write canonical worktree files. No CI/Pages selection, network preparation or publication.\n"
-        "Exit codes: 0 checks passed; 1 inventory/command failure; 2 invalid arguments/input; "
-        "3 skipped/artifact-dependent checks; collection/producer exits propagated.\n"
+        "Exit codes: 0 checks passed; 1 inventory/command failure or JUnit failed/skipped/absent IDs; 2 invalid arguments/input; "
+        "3 skipped/artifact-dependent checks; 124 wall timeout with partial results; collection/producer exits propagated.\n"
         "Input wrapper: schema=component-inputs.v1, component=ID, identities=the identities object from\n"
         "inventory --component ID --identities, families=[{name, schema, version, members}]. Each member\n"
         "has a unique logical name, repository-relative path and sha256. Required families and exact\n"
@@ -623,23 +722,30 @@ def parser() -> argparse.ArgumentParser:
     )
     result = argparse.ArgumentParser(description=description, epilog=examples,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    subs = result.add_subparsers(dest="operation", required=True, help="Interface: list/test/build/verify/inventory/affected")
-    for operation in ("list", "test", "build", "verify", "inventory", "affected"):
+    subs = result.add_subparsers(dest="operation", required=True, help="Interface: list/test/build/verify/inventory/affected/junit")
+    for operation in ("list", "test", "build", "verify", "inventory", "affected", "junit"):
         sub = subs.add_parser(operation, help=f"{operation} component contracts", description=description,
                               epilog=examples, formatter_class=argparse.RawDescriptionHelpFormatter)
-        if operation in {"test", "build", "verify", "inventory"}:
+        if operation in {"test", "build", "verify", "inventory", "junit"}:
             sub.add_argument("--component", choices=NODE_IDS, required=operation in {"test", "build", "verify"},
-                             help="Node ID, e.g. atlas-data; inventory default: all nodes")
+                             help="Node ID, e.g. atlas-data; inventory/junit default: all nodes")
         if operation in {"build", "verify"}:
             sub.add_argument("--inputs", type=Path, required=operation == "build",
                              help="Prepared component-inputs.v1 JSON (e.g. inputs.json); verify default: code-contract checks only")
             sub.add_argument("--output-dir", type=Path, required=operation == "build",
                              help="Build output directory (e.g. site/dist); verify default: no output directory")
         if operation == "inventory":
-            sub.add_argument("--check", action="store_true", help="Fail on unassigned, ambiguous, unresolved or parity gaps; default: report only")
+            sub.add_argument("--check", action="store_true", help="Fail on unassigned/ambiguous paths, unmapped tests, parity gaps or missing mandatory edges; unresolved imports are reported and all-select; default: report only")
             sub.add_argument("--collect", action="store_true", help="Collect fresh contract-suite test IDs for --component (required); default: file census only")
             sub.add_argument("--identities", action="store_true", help="Include current input-binding identities for --component (required); default: omitted")
+        if operation == "junit":
+            sub.add_argument("--junit", nargs="+", type=Path, required=True,
+                             help="Full CI pytest JUnit XML paths, e.g. artifacts/shard-1.xml; required")
         if operation == "test":
+            sub.add_argument("--workers", type=int, default=2,
+                             help="Pytest worker count, e.g. 2; default: 2 (dispatch caps still apply)")
+            sub.add_argument("--timeout", type=float,
+                             help="Positive wall timeout in seconds, e.g. 7200; default: none (pytest per-test timeouts apply)")
             sub.add_argument("--list", action="store_true", help="List complete resolved pytest/Vitest file sets and counts without execution; default: run all")
         if operation == "affected":
             sub.add_argument("paths", nargs="*", help="Changed repository-relative paths, e.g. scripts/config.py; default: empty set")
@@ -660,9 +766,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             if args.paths_file:
                 paths += [path for path in args.paths_file.read_bytes().decode("utf-8", errors="surrogateescape").split("\0") if path]
             report = affected(paths, manifest)
+        elif args.operation == "junit":
+            report, code = junit_coverage(args.junit, manifest, [args.component] if args.component else NODE_IDS)
         elif args.operation == "inventory":
             report = inventory(manifest)
-            if args.check and any(report[key] for key in ("unassigned", "ambiguous", "dynamic_unresolved", "unmapped_test_files", "selector_parity_gaps")):
+            if args.check and any(report[key] for key in ("unassigned", "ambiguous", "unmapped_test_files", "selector_parity_gaps")):
                 code = 1
             if args.check and report.get("import_graph", {}).get("missing_mandatory_edges"):
                 code = 1
@@ -683,6 +791,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             node = manifest["components"][args.component]
             members = verify_inputs(args.inputs, args.component, manifest) if getattr(args, "inputs", None) else {}
             if args.operation == "test":
+                if args.workers < 1 or (args.timeout is not None and (args.timeout <= 0 or not math.isfinite(args.timeout))):
+                    raise ValueError("workers and timeout must be positive")
                 files = test_files(args.component, manifest)
                 front_files = vitest_files(args.component, manifest)
                 census = {"test_files": files + front_files, "test_file_count": len(files) + len(front_files),
@@ -702,7 +812,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                               "fallback_reason": "collection-error", "pytest_collection_exit": code,
                               "vitest_collection_exit": front_code}
                 else:
-                    commands = node_test_commands(args.component, manifest, files, front_files)
+                    commands = node_test_commands(args.component, manifest, files, front_files, workers=args.workers, timeout=args.timeout)
                     results, code = run_commands(commands, ROOT, None, {}, keep_going=True)
                     report = {"component": args.component, **census, "test_ids": ids, "vitest_ids": front_ids, "commands": results,
                               "artifact_dependent_test_ids": artifact_ids,
