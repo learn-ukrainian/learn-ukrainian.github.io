@@ -19,6 +19,7 @@ from scripts.projects.open_model_data.review_build.components import (
     c6a_calque,
     ua_gec_split,
 )
+from scripts.projects.open_model_data.review_build.contract import digest
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.gate import Gate
 from scripts.projects.open_model_data.review_build.output import OutputGuard
@@ -458,14 +459,16 @@ year = "2023"
 
 def test_framework_build_artifacts_with_real_component_specs(store):
     gate, candidates, config, _ = setup_gate(store)
+    register_bytes = yaml.safe_dump(register_data(sources=("ua_gec",))).encode()
     pins = {
-        "register": "a" * 64,
+        "register": digest(register_bytes),
         "catalog": "b" * 64,
         "candidates": "c" * 64,
         "spec": "d" * 64,
         "code": {"parser_sha256": "e" * 64, "code_sha": "f" * 40},
     }
-    files = artifacts(config, candidates, gate.reader, gate.catalog, gate.resolver, pins)
+    files = artifacts(config, candidates, gate.reader, gate.catalog, gate.resolver, pins, register_bytes)
+    assert files["permissions-register.yaml"] == register_bytes
     assert json.loads(files["accounting.json"])["C1"]["counted"] == 50
     assert b"gec-fluency" in files["README.md"] and b"Each annotator" in files["README.md"]
 
