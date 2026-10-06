@@ -192,7 +192,7 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
             citation = value.citations[0]
             _, field = reader.field(citation)
             require(isinstance(field, str) and value.span is not None, "binding_example")
-            source = transform(value.transform, field, policies.get(value.transform), reader).text
+            source = transform(value.transform, field, policies.get(value.transform), reader, value.citations[0]).text
             require(
                 value.span in example_items(source),
                 "binding_example",
@@ -207,7 +207,7 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
             value = select(candidate, selectors[0])
             _, field = reader.field(value.citations[0])
             require(isinstance(field, str) and value.span is not None, "binding_span")
-            source = transform(value.transform, field, policies.get(value.transform), reader).text
+            source = transform(value.transform, field, policies.get(value.transform), reader, value.citations[0]).text
             spans = set()
             for match in re.finditer(rule["pattern"], source, rule.get("flags", 0)):
                 start, end = match.span(rule["group"])

@@ -299,7 +299,32 @@ UA-GEC citations must be gec-fluency rows with nonempty all-`F/Calque` edits. WP
 and its metadata/annotation-unit bindings; no DB or corpus text is embedded here.
 
 `line_excision@1` requires full-line regular-expression `patterns`; it records
-1-based dropped line ranges. `dehyphenate@1` requires `{store: vesum.db, table:
+1-based dropped line ranges. C9 additionally supplies a reviewed `line_query`
+returning `(row_key, line_number, source_field)` JSON tuples in the pinned read transaction.
+The transform requires the matching citation store, table and field; removals
+are scoped to that cited row. The manifest records every occurrence separately
+as `running_head_occurrence` with its original 1-based line range, including
+occurrences in withheld sections. Each excision pins the original source field
+hash, even when nothing survives on that page.
+
+C9 counts printed section openings. A later identical heading on another
+page's first or last nonblank, nonnumeric line is a running head, so it neither
+opens a unit nor ends the preceding body. Contents-page occurrences do not
+establish the first real section opening. Interior repeats that open different
+bodies withhold those sections as `repeated_heading`; unrelated titles retain
+their own disposition. Non-marker running heads remain withheld when unresolved.
+The independent SQL census and body reconstruction apply these rules without
+calling the Python heading parser. The host census changes from 11,099 heading
+occurrences to 7,261 units plus 3,838 running-head excisions; source rows and
+their bytes remain unchanged.
+
+Imprints retain exact source spans, including printed `кл.` abbreviations and
+em/en/ASCII bibliography dashes. Missing or conflicting fields remain withheld;
+filenames and ingester metadata never supply bibliography fields. Register
+attribution admission and independent semantic certification remain separate
+from extraction and exact-byte checks.
+
+`dehyphenate@1` requires `{store: vesum.db, table:
 ..., field: ...}` and joins only a positively attested combined form whose
 hyphenated form is unattested, recording original offsets and each join. HTML
 text nodes retain document order; whitespace collapses without added words.

@@ -19,6 +19,7 @@ from .manifest import code_pins, private_manifest
 from .output import OutputGuard
 from .request import read_request
 from .snapshot import FileStore, SnapshotReader
+from .transforms import line_excision_records
 
 FRAMEWORK_VERSION = "1.0.0"
 
@@ -104,6 +105,11 @@ def artifacts(
         "pins": pins,
         **report,
         "files": {name: digest(content) for name, content in sorted(files.items())},
+    }
+    manifest["excisions"] = {
+        component: line_excision_records(policy, reader)
+        for component, spec in config["components"].items()
+        if "line_query" in (policy := spec.get("transforms", {}).get("line_excision@1", {}))
     }
     files["manifest.json"] = canonical(manifest) + b"\n"
     tallies = Counter()

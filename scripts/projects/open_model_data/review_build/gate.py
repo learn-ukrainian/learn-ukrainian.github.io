@@ -72,7 +72,7 @@ class Gate:
                 if index == 0:
                     require(isinstance(field, str), "quote_type")
                     transformed = transform(
-                        value.transform, field, spec.get("transforms", {}).get(value.transform), self.reader
+                        value.transform, field, spec.get("transforms", {}).get(value.transform), self.reader, citation
                     )
                     text = transformed.text
                     if value.span is not None:
@@ -146,6 +146,7 @@ class Gate:
                         field,
                         self.spec(candidate).get("transforms", {}).get(value.transform),
                         self.reader,
+                        citation,
                     ).text
                     require(
                         value.span is not None
@@ -269,6 +270,7 @@ class Gate:
                         field,
                         spec.get("transforms", {}).get(value.transform),
                         self.reader,
+                        citation,
                     )
                     item = {
                         **asdict(citation),

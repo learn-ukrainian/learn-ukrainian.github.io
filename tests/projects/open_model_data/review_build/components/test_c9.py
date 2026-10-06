@@ -115,7 +115,7 @@ def extract(reader, pages):
 def test_registered_component_and_frozen_spec():
     obj = load_components(["C9"])["C9"]
     assert isinstance(obj, Textbooks)
-    assert obj.spec["operation_specs"]["verbatim_section"]["frozen_count"] == FROZEN_COUNT == 11099
+    assert obj.spec["operation_specs"]["verbatim_section"]["frozen_count"] == FROZEN_COUNT
     assert obj.spec["operation_specs"]["verbatim_section"]["unit_query"] == UNIT_QUERY
     assert len(ALLOWLISTED_FILES) == 184
     policies = obj.spec["compatibility"]
@@ -337,8 +337,8 @@ def test_conflicting_imprint_and_running_head_withhold(tmp_path):
     assert identity(pages) is None
     pages = [
         page(1, imprint()),
-        page(2, "§ 1. SYNTHETIC Heading\nSYNTHETIC body"),
-        page(3, "§ 1. SYNTHETIC Heading\nSYNTHETIC other body"),
+        page(2, "SYNTHETIC preface\n§ 1. SYNTHETIC Heading\nSYNTHETIC body"),
+        page(3, "SYNTHETIC preface\n§ 1. SYNTHETIC Heading\nSYNTHETIC other body"),
     ]
     path = tmp_path / "SYNTHETIC.db"
     write_pages(path, pages)
@@ -420,7 +420,7 @@ def test_attribution_pins_imprint_and_all_required_fields(source):
 
 def test_page_number_removal_has_exact_trace_and_preserves_other_lines():
     text = "SYNTHETIC top\n  23 \r\nSYNTHETIC 24\nSYNTHETIC hy-\nphen"
-    result = transform("line_excision@1", text, LINE_POLICY)
+    result = transform("line_excision@1", text, {"patterns": LINE_POLICY["patterns"]})
     assert result.text == "SYNTHETIC top\nSYNTHETIC 24\nSYNTHETIC hy-\nphen"
     assert result.dropped_lines == ((2, 2),)
     assert not result.joins
@@ -557,3 +557,235 @@ def test_component_owned_allowlist_drift_refuses(source, mutation):
         else:
             with pytest.raises(BuildError, match="textbook_allowlist"):
                 list(component.iter_candidates(ComponentContext(reader, {})))
+
+
+@pytest.mark.parametrize("position", ["top", "bottom"])
+def test_later_edge_heading_is_excised_not_counted(tmp_path, position):
+    title = "§ 1. SYNTHETIC Heading"
+    later = (
+        f"  3\n  {title}  \nSYNTHETIC continuation\n"
+        if position == "top"
+        else f"SYNTHETIC continuation\n  {title}  \n3\n"
+    )
+    pages = [
+        page(1, imprint()),
+        page(2, title + "\nSYNTHETIC body\n2\n"),
+        page(3, later),
+        page(4, "§ 2. SYNTHETIC Next\nSYNTHETIC next body\n"),
+    ]
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        assert len(candidates) == 2
+        assert {c.unit_id for c in candidates} == set(reader.units(UNIT_QUERY))
+        records, _ = gate_for(reader, pages, 2).run(candidates)
+        assert len(records) == 2
+        assert candidates[0].response[1].text == "SYNTHETIC continuation\n"
+        trace = transform("line_excision@1", later, LINE_POLICY, reader, citation(pages[2]))
+        assert trace.dropped_lines == (((1, 1), (2, 2)) if position == "top" else ((2, 2), (3, 3)))
+        assert title == candidates[0].slots[-1].text
+        # Restoring a running head remains an authentic quote of the wrong transform.
+        damaged = replace(candidates[0].response[1], text=title + "\nSYNTHETIC continuation\n")
+        with pytest.raises(BuildError, match="quote_mismatch"):
+            gate_for(reader, pages, 2).quote(replace(candidates[0], response=(candidates[0].response[0], damaged)))
+
+
+def test_contents_occurrence_does_not_remove_real_section_opening(tmp_path):
+    title = "§ 1. SYNTHETIC Heading"
+    pages = [
+        page(1, imprint()),
+        page(2, "ЗМІСТ\n" + title + "\nSYNTHETIC ... 3\n"),
+        page(3, title + "\nSYNTHETIC body\n"),
+        page(4, title + "\nSYNTHETIC continuation\n"),
+    ]
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        assert [c.reason for c in candidates] == ["table_of_contents", "printed_heading"]
+        assert len(reader.units(UNIT_QUERY)) == 2
+        assert len(gate_for(reader, pages, 2).run(candidates)[0]) == 1
+
+
+@pytest.mark.parametrize("dash", ["—", "–", "-"])
+@pytest.mark.parametrize("level", ["5 кл.", "5 класу"])
+def test_printed_imprint_abbreviations_and_dash_variants(tmp_path, dash, level):
+    pages = [
+        page(1, imprint(grade=level).replace(" — ", f" {dash} ").replace("підручник", "підручн.")),
+        page(2, "§ 1. SYNTHETIC Heading\nSYNTHETIC body"),
+    ]
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        assert candidates[0].outcome == "accepted"
+        assert candidates[0].slots[1].text == level
+        assert len(gate_for(reader, pages, 1).run(candidates)[0]) == 1
+
+
+def test_row_scoped_excision_requires_authenticated_citation(source):
+    db, pages = source
+    with SnapshotReader({"sources.db": db}) as reader:
+        with pytest.raises(BuildError, match="transform_policy"):
+            transform("line_excision@1", pages[1]["full_text"], LINE_POLICY, reader)
+        with pytest.raises(BuildError, match="transform_policy"):
+            transform(
+                "line_excision@1",
+                pages[1]["full_text"],
+                LINE_POLICY,
+                reader,
+                replace(citation(pages[1]), table="other"),
+            )
+
+
+def test_same_text_in_different_books_keeps_both_first_occurrences(tmp_path):
+    pages = [
+        page(1, imprint()),
+        page(2, "§ 1. SYNTHETIC Heading\nSYNTHETIC body"),
+        page(3, imprint(), book="6-klas-SYNTHETIC-other"),
+        page(4, "§ 1. SYNTHETIC Heading\nSYNTHETIC other body", book="6-klas-SYNTHETIC-other"),
+    ]
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        assert len(candidates) == len(reader.units(UNIT_QUERY)) == 2
+        assert len(gate_for(reader, pages, 2).run(candidates)[0]) == 2
+
+
+def test_identical_interior_bodies_are_not_ambiguous(tmp_path):
+    body = "SYNTHETIC body\nSYNTHETIC next prefix\n"
+    pages = [
+        page(1, imprint()),
+        page(2, "SYNTHETIC prefix\n§ 1. SYNTHETIC Heading\n" + body),
+        page(3, "§ 2. SYNTHETIC Next\nSYNTHETIC divider\nSYNTHETIC prefix\n§ 1. SYNTHETIC Heading\n" + body),
+    ]
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        repeated = [c for c in candidates if c.slots[-1].text == "§ 1. SYNTHETIC Heading"]
+        assert len(repeated) == 2
+        assert {c.reason for c in repeated} == {"printed_heading"}
+        assert len(gate_for(reader, pages, 3).run(candidates)[0]) == 3
+
+
+def test_manifest_records_running_head_occurrences_even_when_withheld(tmp_path, source):
+    from scripts.projects.open_model_data.review_build.build import artifacts
+
+    _db, original = source
+    pages = [original[0], original[1], page(3, "§ 1. SYNTHETIC First\nSYNTHETIC continuation\n3\n"), original[3]]
+    write_pages(tmp_path / "SYNTHETIC-running.db", pages)
+    with SnapshotReader({"sources.db": tmp_path / "SYNTHETIC-running.db"}) as reader:
+        gate = gate_for(reader, pages, 2)
+        candidates = extract(reader, pages)
+        # The real host's unresolved register similarly withholds extraction successes.
+        gate.resolver.entries = {}
+        pins = {
+            "register": "a" * 64,
+            "catalog": "b" * 64,
+            "code": {"code_sha": "c" * 40, "parser_sha256": "d" * 64},
+            "candidates": "e" * 64,
+            "spec": "f" * 64,
+        }
+        files = artifacts({"components": gate.components}, candidates, reader, gate.catalog, gate.resolver, pins)
+        manifest = json.loads(files["manifest.json"])
+        assert manifest["excisions"]["C9"] == [
+            {
+                "kind": "running_head_occurrence",
+                "row_key": "section_id=3",
+                "line_ranges": [[1, 1]],
+                "store": "sources.db",
+                "table": "textbook_sections",
+                "field": "full_text",
+                "field_sha256": digest(pages[2]["full_text"].encode()),
+            }
+        ]
+
+
+def test_decimal_line_is_not_a_contents_page(tmp_path):
+    title = "§ 1. SYNTHETIC Heading"
+    pages = [
+        page(1, imprint()),
+        page(2, title + "\nSYNTHETIC body\n"),
+        page(3, title + "\nSYNTHETIC ... 1.2\nSYNTHETIC continuation\n"),
+    ]
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        assert len(candidates) == len(reader.units(UNIT_QUERY)) == 1
+        assert len(gate_for(reader, pages, 1).run(candidates)[0]) == 1
+
+
+def test_ambiguous_repeat_does_not_withhold_unrelated_title(tmp_path):
+    title = "§ 1. SYNTHETIC Heading"
+    pages = [
+        page(1, imprint()),
+        page(2, "SYNTHETIC prefix\n" + title + "\nSYNTHETIC body\n"),
+        page(3, "SYNTHETIC prefix\n" + title + "\nSYNTHETIC other body\n"),
+        page(4, "§ 2. SYNTHETIC Next\nSYNTHETIC unrelated body\n"),
+    ]
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        assert [c.reason for c in candidates] == ["repeated_heading", "repeated_heading", "printed_heading"]
+        assert len(gate_for(reader, pages, 3).run(candidates)[0]) == 1
+
+
+def test_running_head_only_page_is_pinned_with_original_range(tmp_path):
+    from scripts.projects.open_model_data.review_build.transforms import line_excision_records
+
+    title = "§ 1. SYNTHETIC Heading"
+    pages = [page(1, imprint()), page(2, title + "\nSYNTHETIC body\n"), page(3, title + "\n3\n")]
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        assert len(candidates) == len(reader.units(UNIT_QUERY)) == 1
+        assert candidates[0].reason == "printed_heading"
+        assert candidates[0].response[-1].text == ""
+        assert candidates[0].response[-1].span is None
+        assert len(gate_for(reader, pages, 1).run(candidates)[0]) == 1
+        records = line_excision_records(LINE_POLICY, reader)
+        assert records[0]["line_ranges"] == [[1, 1]]
+        expected_hash = digest(pages[2]["full_text"].encode())
+        assert records[0]["field_sha256"] == expected_hash
+        assert ("section_id=3", expected_hash) in reader.reads[("sources.db", "textbook_sections")]
+
+
+def test_excision_query_results_cannot_forge_source_field(source):
+    from scripts.projects.open_model_data.review_build.transforms import queried_lines
+
+    db, _pages = source
+    policy = {
+        **LINE_POLICY,
+        "line_query": {
+            "kind": "sql",
+            "store": "sources.db",
+            "sql": "SELECT json_array('section_id=2',1,'SYNTHETIC forged field')",
+            "parameters": [],
+        },
+    }
+    with SnapshotReader({"sources.db": db}) as reader:
+        with pytest.raises(BuildError, match="field_digest"):
+            queried_lines(policy, reader)
+
+
+def test_first_page_top_opening_and_later_interior_body_are_ambiguous(tmp_path):
+    # The first occurrence is the real opening, even when it is at page top.
+    # The later interior occurrence cannot be classified as a running head.
+    title = "§ 1. SYNTHETIC Heading"
+    pages = [
+        page(1, imprint()),
+        page(2, title + "\nSYNTHETIC body\n"),
+        page(3, "SYNTHETIC prefix\n" + title + "\nSYNTHETIC other body\n"),
+    ]
+    db = tmp_path / "SYNTHETIC.db"
+    write_pages(db, pages)
+    with SnapshotReader({"sources.db": db}) as reader:
+        candidates = extract(reader, pages)
+        assert len(candidates) == len(reader.units(UNIT_QUERY)) == 2
+        assert {c.reason for c in candidates} == {"repeated_heading"}

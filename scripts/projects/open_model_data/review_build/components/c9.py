@@ -6,14 +6,15 @@ headings and Roman-number headings require a separately reviewed grammar.
 Book identity is parsed from a single printed bibliographic entry, never from
 chunk titles, filenames, grade metadata or inferred author/publisher names.
 Missing or conflicting identity withholds the whole book. Source text is never
-repaired: only numeric whole-line excision is applied; hyphens are preserved.
+repaired: only page-number and authenticated running-head line excision is
+applied; hyphens are preserved.
 """
 
 import re
 import unicodedata
 from collections import Counter
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from weakref import WeakKeyDictionary
 
 from ..attribution import Attribution
@@ -22,26 +23,31 @@ from ..errors import require
 from ..gate import evidence_id
 from ..transforms import transform
 from . import ComponentContext
-from .c9_queries import BODY_QUERY, ELIGIBLE_SQL, END_QUERY, HEADING_QUERY, UNIT_QUERY
+from .c9_queries import BODY_QUERY, ELIGIBLE_SQL, END_QUERY, EXCISION_QUERY, HEADING_QUERY, UNIT_QUERY
 
 SOURCE_SCHOOL = "textbooks"
 SOURCE_UNIVERSITY = "university-textbooks"
-FROZEN_COUNT = 11099
+FROZEN_COUNT = 7261
 ALLOWED = re.compile(r"(?:[1-9]|1[01]|10-11)-klas-.+|uni-.+")
 PAGE_PATTERN = r"[ \t]*[0-9]+[ \t]*"
-LINE_POLICY = {"patterns": [PAGE_PATTERN]}
+LINE_POLICY = {
+    "patterns": [PAGE_PATTERN],
+    "line_query": EXCISION_QUERY,
+    "table": "textbook_sections",
+    "field": "full_text",
+}
 HEADING = re.compile(
     r"(?:§[ \t]*|(?:Тема|ТЕМА|Розділ|РОЗДІЛ) )"
     r"[0-9]{1,3}(?:\.[ \t]*|[ \t]+)[^\r\n]+"
 )
-GRADE = re.compile(r"\b(?:[1-9]|1[01])(?:[-–](?:[1-9]|1[01]))?[- ]?(?:го|й|х)?\s*клас[уаів]*\b")
+GRADE = re.compile(r"\b(?:[1-9]|1[01])(?:[-–](?:[1-9]|1[01]))?[- ]?(?:го|й|х)?\s*(?:клас[уаів]*\b|кл\.)", re.I)
 LEVEL = re.compile(r"\b(?:студентів|вищих навчальних закладів|закладів вищої освіти)\b", re.I)
 # A single bibliographic paragraph carries all five required fields, with
 # punctuation delimiting each verbatim span. Never infer missing fields.
 IMPRINT = re.compile(
     r"(?P<title>[^\n/:]{3,180}?)\s*:\s*"
-    r"(?P<level>(?:підручник|підруч\.|навчальний посібник|навч\.\s*посіб)[^/]{0,350})/\s*"
-    r"(?P<authors>[^—]{1,300}?)\s*—\s*[^:\n]{1,80}:\s*"
+    r"(?P<level>(?:підручник|підручн?\.|навчальний посібник|навч\.\s*посіб)[^/]{0,350})/\s*"
+    r"(?P<authors>[^—–]{1,300}?)\s*(?:[—–]|[ \t]+-[ \t]+)\s*[^:\n]{1,80}:\s*"
     r"(?P<publisher>[^,\n]{1,120}?),\s*(?P<year>(?:19|20)[0-9]{2})\b",
     re.I,
 )
@@ -138,7 +144,11 @@ def running_head_ambiguous(pages: list[Mapping]) -> bool:
         if not lines:
             continue
         edges.update(
-            {line for line in (lines[0], lines[-1]) if len(line) <= 180 and not re.fullmatch(PAGE_PATTERN, line)}
+            {
+                line
+                for line in (lines[0], lines[-1])
+                if len(line) <= 180 and not re.fullmatch(PAGE_PATTERN, line) and not HEADING.fullmatch(line)
+            }
         )
     return any(count >= 3 and 2 * count >= len(pages) for count in edges.values())
 
@@ -156,8 +166,10 @@ def citation(row: Mapping) -> Citation:
     )
 
 
-def value(row: Mapping, slot: str, span: tuple[int, int], name="verbatim") -> Value:
-    text = transform(name, row["full_text"], LINE_POLICY if name == "line_excision@1" else None).text
+def value(row: Mapping, slot: str, span: tuple[int, int], name="verbatim", reader=None) -> Value:
+    text = transform(
+        name, row["full_text"], LINE_POLICY if name == "line_excision@1" else None, reader, citation(row)
+    ).text
     return Value(slot, text[slice(*span)], (citation(row),), span, name)
 
 
@@ -482,7 +494,7 @@ class Textbooks:
         self.spec = {
             "compatibility": compatibility(ALLOWLISTED_FILES),
             "operations": ["verbatim_section"],
-            "unit_grain": "printed_heading_explicit_marker_v1",
+            "unit_grain": "printed_section_first_occurrence_v2",
             "context_serializer": "text",
             "response_serializer": "text",
             "transforms": {"line_excision@1": LINE_POLICY},
@@ -543,12 +555,34 @@ class Textbooks:
         ):
             pages_by_book.setdefault(row["source_file"], []).append(dict(row))
         for pages in pages_by_book.values():
-            yield from self._book(pages)
+            yield from self._book(pages, ctx.reader)
 
-    def _book(self, pages):
-        printed = [heading for row in pages for heading in headings(row)]
+    def _book(self, pages, reader):
+        printed, seen, section_openings = [], set(), set()
+        for row in pages:
+            contents = bool(CONTENTS.search(row["full_text"]))
+            edge_offsets, offset = [], 0
+            for found in re.finditer(r"[^\n]+\n?|\n", row["full_text"]):
+                line = found.group()
+                if line.strip(" \t\r\n") and not re.fullmatch(PAGE_PATTERN, line.strip(" \t\r\n")):
+                    edge_offsets.append(offset + len(line) - len(line.lstrip(" \t\r\n")))
+                offset += len(line)
+            previous = seen.copy()
+            for heading in headings(row):
+                if (
+                    not contents
+                    and heading.text in previous
+                    and edge_offsets
+                    and heading.span[0] in (edge_offsets[0], edge_offsets[-1])
+                ):
+                    continue
+                printed.append(heading)
+                if not contents:
+                    section_openings.add(unit_id(heading))
+                if not contents:
+                    seen.add(heading.text)
         imprint = identity(pages)
-        duplicates = Counter(h.text for h in printed)
+        candidates = []
         unresolved_head = running_head_ambiguous(pages)
         # Strictly greater than 30%, using integer arithmetic at the boundary.
         damaged_book = 10 * sum(ocr_damaged(p["full_text"]) for p in pages) > 3 * len(pages)
@@ -563,15 +597,31 @@ class Textbooks:
             if next_heading and next_heading.span[0] == 0:
                 selected = [p for p in selected if p["page_start"] < end_page]
             for page in selected:
-                cleaned = transform("line_excision@1", page["full_text"], LINE_POLICY).text
+                cleaned = transform("line_excision@1", page["full_text"], LINE_POLICY, reader, citation(page)).text
                 start = 0
                 if page["section_id"] == heading.row["section_id"]:
-                    start = len(transform("line_excision@1", page["full_text"][: heading.span[1]], LINE_POLICY).text)
+                    start = len(
+                        transform(
+                            "line_excision@1", page["full_text"][: heading.span[1]], LINE_POLICY, reader, citation(page)
+                        ).text
+                    )
                 end = len(cleaned)
                 if next_heading and page["section_id"] == next_heading.row["section_id"]:
-                    end = len(transform("line_excision@1", page["full_text"][: next_heading.span[0]], LINE_POLICY).text)
+                    end = len(
+                        transform(
+                            "line_excision@1",
+                            page["full_text"][: next_heading.span[0]],
+                            LINE_POLICY,
+                            reader,
+                            citation(page),
+                        ).text
+                    )
                 if start < end:
-                    response.append(value(page, "body", (start, end), "line_excision@1"))
+                    response.append(value(page, "body", (start, end), "line_excision@1", reader))
+                elif not cleaned:
+                    # A page containing only excised running heads/numbers is
+                    # still a contiguous source page, not an empty section.
+                    response.append(Value("body", "", (citation(page),), None, "line_excision@1"))
                 else:
                     reason = "empty_body"
             if imprint is None:
@@ -589,10 +639,6 @@ class Textbooks:
                 reason = "ocr_damage"
             elif any(CONTENTS.search(p["full_text"]) for p in selected):
                 reason = "table_of_contents"
-            elif any(n > 1 for n in duplicates.values()):
-                # Repeated marker lines can be running heads: withhold the book
-                # rather than let them truncate an earlier response silently.
-                reason = "repeated_heading"
             elif unresolved_head:
                 reason = "running_head_unresolved"
             elif selected and [p["page_start"] for p in selected] != list(
@@ -606,18 +652,46 @@ class Textbooks:
                 elif not body.strip():
                     reason = "empty_body"
             outcome = "accepted" if reason == "printed_heading" else "withheld"
-            yield Candidate(
-                "C9",
-                unit_id(heading),
-                outcome,
-                reason,
-                () if outcome == "accepted" else (evidence_id(slot_heading.citations[0]),),
-                "verbatim_section",
-                tuple(slots),
-                tuple(context),
-                tuple(response),
-                (),
+            candidates.append(
+                Candidate(
+                    "C9",
+                    unit_id(heading),
+                    outcome,
+                    reason,
+                    () if outcome == "accepted" else (evidence_id(slot_heading.citations[0]),),
+                    "verbatim_section",
+                    tuple(slots),
+                    tuple(context),
+                    tuple(response),
+                    (),
+                )
             )
+        groups = {}
+        for candidate in candidates:
+            if candidate.unit_id in section_openings:
+                title = next(v.text for v in candidate.slots if v.slot == "section_title")
+                groups.setdefault(title, []).append(candidate)
+        ambiguous = {
+            c.unit_id
+            for group in groups.values()
+            if len({"".join(v.text for v in c.response) for c in group}) > 1
+            for c in group
+        }
+        for candidate in candidates:
+            if candidate.unit_id in ambiguous and candidate.reason not in {
+                "book_identity_unresolved",
+                "book_ocr_damage",
+                "ocr_damage",
+                "table_of_contents",
+            }:
+                anchor = next(v for v in candidate.slots if v.slot == "section_title")
+                candidate = replace(
+                    candidate,
+                    outcome="withheld",
+                    reason="repeated_heading",
+                    evidence=(evidence_id(anchor.citations[0]),),
+                )
+            yield candidate
 
 
 COMPONENT = Textbooks()
