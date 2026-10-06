@@ -171,6 +171,7 @@ def init_repo(
         "scripts/common/repo_root.py",
         "scripts/lib/context_profiles.py",
         "scripts/lib/session_record.py",
+        "scripts/lib/readonly_sqlite.py",
         "scripts/config/context_profiles.yaml",
         "agents_extensions/shared/schemas/task-identity.v1.schema.json",
         "agents_extensions/shared/schemas/rollover-registry.v1.schema.json",

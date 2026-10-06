@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import sqlite3
 import sys
 import time
 from pathlib import Path
@@ -27,6 +26,13 @@ SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 for p in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
 from scripts.curriculum.evidence.sources import _sources_path
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS
@@ -87,7 +93,7 @@ def run_benchmark(
             sources_path = _sources_path()
             if not sources_path.is_file():
                 raise FileNotFoundError(f"Sources database not found at {sources_path}")
-            conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
+            conn = open_readonly(sources_path)
             try:
                 cur = conn.execute(
                     "SELECT text FROM textbooks WHERE chunk_id = ?",

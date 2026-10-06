@@ -951,13 +951,28 @@ def test_cursor_auto_writer_refuses_where_only_the_cursor_seat_could_review(boun
         (("--worktree",), delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN),
         (("--worktree", "--owned-path", SHARED_HOOK), delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN),
         (("--branch", "feature", "--owned-path", "docs/a.md"), delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN),
-        (("--branch", "absent", "--owned-path", "docs/a.md"), delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN),
+        (("--branch", "absent", "--owned-path", "docs/a.md"), "DISPATCH_BRANCH_NOT_FOUND"),
     ],
 )
 def test_unknown_scope_or_authorship_refuses_at_the_boundary(boundary, capsys, repo, tasks, extra, code):
     repo.commit(None)  # an unattributed commit on feature
     repo.publish()
-    assert_refused(boundary, capsys, repo, tasks, boundary(*extra), code)
+    result = boundary(*extra)
+    if code == "DISPATCH_BRANCH_NOT_FOUND":
+        # #9874: an absent branch is refused before authoring review admission.
+        rc, before = result
+        assert rc == 2
+        assert capsys.readouterr().err == (
+            "❌ DISPATCH_BRANCH_NOT_FOUND: --branch 'absent' does not exist on the canonical remote. "
+            "--branch continues an existing remote branch; for a new branch omit --branch "
+            "(default: <agent>/<task-id>), optionally with --base.\n"
+        )
+        assert boundary.calls == []
+        assert repo.snapshot() == before
+        assert list(tasks.rglob("*")) == []
+        assert not (repo.root / ".worktrees").exists()
+    else:
+        assert_refused(boundary, capsys, repo, tasks, result, code)
 
 
 def test_catalog_failure_keeps_its_own_reason(boundary, capsys, repo, tasks, monkeypatch):

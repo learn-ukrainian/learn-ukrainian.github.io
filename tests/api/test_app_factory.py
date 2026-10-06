@@ -7,6 +7,7 @@ import re
 import sqlite3
 import subprocess
 from contextlib import asynccontextmanager
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock
@@ -18,10 +19,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.testclient import TestClient
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from scripts.api import dashboard_comms
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context, production_context
 from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
-from scripts.api.resilience import resilience_middleware
+from scripts.api.resilience import TimedSQLiteConnection, resilience_middleware
 from tests.api.opsec_sweep import registry
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
@@ -31,6 +33,7 @@ DB_ACCESS_PATTERNS = (
     re.compile(r"\bsqlite3\.connect\("),
     re.compile(r"\bconnect_sqlite\("),
     re.compile(r"\bSessionStreamDatabase\("),
+    re.compile(r"\bopen_readonly\("),
 )
 
 # The exact pre-migration inventory from design §4.1: 22 access sites in 21
@@ -690,6 +693,32 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
         assert "Second dispatcher log line" not in first_client.get("/api/batch/dispatcher/logs").json()["lines"]
         assert "Second dispatcher log line" in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
         assert "First dispatcher log line" not in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
+
+
+def test_broker_reads_use_guarded_timed_readonly_context(tmp_path: Path) -> None:
+    context = fixture_context(tmp_path / "fixture")
+    handle = context.stores.message_db
+    assert handle is not None
+    handle.path.parent.mkdir(parents=True, exist_ok=True)
+    with sqlite3.connect(handle.path) as conn:
+        conn.execute("CREATE TABLE messages (body TEXT)")
+        conn.execute("INSERT INTO messages VALUES ('fixture message')")
+    conn = dashboard_comms.get_broker_db(context)
+    try:
+        assert isinstance(conn, TimedSQLiteConnection)
+        assert conn.row_factory is sqlite3.Row
+        assert conn.execute("SELECT body FROM messages").fetchone()["body"] == "fixture message"
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("INSERT INTO messages VALUES ('forbidden')")
+    finally:
+        conn.close()
+
+    outside = tmp_path / "outside.sqlite"
+    with sqlite3.connect(outside) as conn:
+        conn.execute("CREATE TABLE messages (body TEXT)")
+    context = replace(context, stores=replace(context.stores, message_db=replace(handle, path=outside)))
+    with pytest.raises(ValueError, match="escapes"):
+        dashboard_comms.get_broker_db(context)
 
 
 @pytest.mark.repo_wide

@@ -50,7 +50,7 @@ def get_broker_db(ctx: MonitorContext | None = None):
     handle = resolved.stores.message_db
     if handle is None or not handle.path.exists():
         return None
-    conn = handle.connect()
+    conn = handle.connect(read_only=True)
     conn.row_factory = sqlite3.Row
     return conn
 
