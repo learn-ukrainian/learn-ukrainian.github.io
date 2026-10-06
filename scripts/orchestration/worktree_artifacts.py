@@ -13,9 +13,9 @@ import subprocess
 import tempfile
 from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
-from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component
+from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component, open_leaf_descriptor
 from scripts.orchestration import reaper_lifecycle as reaper_lifecycle
 from scripts.orchestration.dead_worker_state import task_state_lock as task_state_lock
 
@@ -109,9 +109,69 @@ def _git_paths(worktree: Path, *args: str) -> list[str]:
     return [os.fsdecode(path) for path in result.stdout.split(b"\0") if path]
 
 
+# ``PC_PATH_MAX`` is a byte count. When the platform does not report one, a
+# symlink target still cannot grow without a bound.
+_PATH_LIMIT_FALLBACK = 4096
+
+
+class SymlinkTargetRefusal(ValueError):
+    """A symlink target is not recorded.
+
+    ``kind`` is the whole message. Preservation copies ``str(exc)`` into the
+    task record, so the message must not contain the target text.
+    """
+
+    def __init__(self, kind: str) -> None:
+        self.kind = kind
+        super().__init__(kind)
+
+
+class DescriptorWalk(NamedTuple):
+    """One leaf from the descriptor walk.
+
+    ``file_type`` is ``regular`` or ``symlink``, taken from ``fstat`` of the
+    opened descriptor. ``payload`` is the preserved bytes. ``target`` is set
+    only for a real symlink.
+    """
+
+    file_type: str
+    payload: bytes
+    target: str | None
+
+
 def _symlink_record_bytes(target: str) -> bytes:
     """Inert link record: the type and the raw target string, never the target's bytes."""
     return b"symlink\n" + os.fsencode(target)
+
+
+def _platform_path_limit(anchor: Path) -> int:
+    """Byte cap for one symlink target: ``PC_PATH_MAX``, else 4096."""
+    try:
+        limit = os.pathconf(anchor, "PC_PATH_MAX")
+    except (OSError, ValueError):
+        return _PATH_LIMIT_FALLBACK
+    if isinstance(limit, int) and limit > 0:
+        return limit
+    return _PATH_LIMIT_FALLBACK
+
+
+def _bounded_link_target(fd: int, identity: os.stat_result, limit: int) -> str:
+    """Read the target of the symlink ``fd`` refers to, refusing an over-long one.
+
+    ``readlink`` of an empty path on this ``O_PATH`` descriptor returns the
+    link text. The length check uses the filesystem encoding because
+    ``PC_PATH_MAX`` counts bytes. The refusal names only its kind.
+    """
+    try:
+        target = os.readlink("", dir_fd=fd)
+    except OSError as exc:
+        raise ValueError("artifact changed during preservation") from exc
+    after = os.fstat(fd)
+    if (after.st_dev, after.st_ino) != (identity.st_dev, identity.st_ino) or not stat.S_ISLNK(after.st_mode):
+        raise ValueError("artifact changed during preservation")
+    if len(os.fsencode(target)) > limit:
+        raise SymlinkTargetRefusal("target-too-long")
+    return target
 
 
 _LEAF_FLAGS = os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK
@@ -206,45 +266,71 @@ def _read_regular(fd: int) -> bytes:
     return payload
 
 
-def _read_preserved_bytes(path: Path, *, root: Path) -> bytes:
-    """Read a regular file, or a symlink's inert record, without following links.
+def _read_same_regular(parent_fd: int, name: str, identity: os.stat_result) -> bytes:
+    """Read the regular file ``identity`` names, refusing a replacement.
+
+    The classifying descriptor is ``O_PATH`` and cannot be read. This second
+    open uses ``O_NOFOLLOW`` and must be the same inode. A symlink planted in
+    its place is not followed.
+    """
+    try:
+        fd = os.open(name, _LEAF_FLAGS, dir_fd=parent_fd)
+    except FileNotFoundError:
+        raise
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise ValueError("artifact changed during preservation") from exc
+        raise
+    try:
+        info = os.fstat(fd)
+        if (info.st_dev, info.st_ino) != (identity.st_dev, identity.st_ino) or not stat.S_ISREG(info.st_mode):
+            raise ValueError("artifact changed during preservation")
+        return _read_regular(fd)
+    finally:
+        os.close(fd)
+
+
+def _read_leaf(parent_fd: int, name: str, limit: int) -> DescriptorWalk:
+    """Classify ``name`` from ``fstat`` of its ``O_PATH`` descriptor, then read it."""
+    try:
+        leaf_fd, info = open_leaf_descriptor(parent_fd, name)
+    except FileNotFoundError:
+        raise
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise ValueError("artifact changed during preservation") from exc
+        raise
+    try:
+        if stat.S_ISLNK(info.st_mode):
+            target = _bounded_link_target(leaf_fd, info, limit)
+            return DescriptorWalk("symlink", _symlink_record_bytes(target), target)
+        if not stat.S_ISREG(info.st_mode):
+            raise ValueError("artifact is not a regular file")
+        return DescriptorWalk("regular", _read_same_regular(parent_fd, name, info), None)
+    finally:
+        os.close(leaf_fd)
+
+
+def _read_preserved_bytes(path: Path, *, root: Path) -> DescriptorWalk:
+    """Walk one leaf from ``root`` and return its descriptor type with its bytes.
 
     ``root`` is opened once. Each directory below it is opened with
-    ``O_NOFOLLOW`` relative to the previous descriptor, and the leaf is opened
-    the same way. An ancestor symlink is refused before any byte is read.
-    ``fstat`` must show a regular file, and both the fingerprint and the
-    preserved bytes come from that same descriptor. A symlink leaf is not
-    opened. Replacing a regular file with a symlink after the type check
-    refuses; the new target is not read.
+    ``O_NOFOLLOW`` relative to the previous descriptor. The leaf is opened
+    with ``O_PATH`` and ``O_NOFOLLOW``, and the file type is ``fstat`` of that
+    descriptor, never a check of ``path``. An ancestor symlink is refused
+    before any byte is read. A symlink contributes its own target string,
+    capped at the platform path limit, not the bytes the target points at. A
+    regular file is read from a second descriptor for the same inode.
+    Replacing that file with a symlink after the type check refuses; the new
+    target is not read.
     """
     parts = _relative_parts(path, root)
+    limit = _platform_path_limit(root)
     root_fd = _open_trusted_root(root)
     try:
         parent_fd, parent_owned = _walk_parent(root_fd, parts[:-1])
         try:
-            name = parts[-1]
-            # The check can go stale before the open. ``O_NOFOLLOW`` below refuses
-            # that replacement instead of following the new link.
-            if path.is_symlink():
-                try:
-                    target = os.readlink(name, dir_fd=parent_fd)
-                except FileNotFoundError:
-                    raise
-                except OSError as exc:
-                    raise ValueError("artifact changed during preservation") from exc
-                return _symlink_record_bytes(target)
-            try:
-                leaf_fd = os.open(name, _LEAF_FLAGS, dir_fd=parent_fd)
-            except FileNotFoundError:
-                raise
-            except OSError as exc:
-                if exc.errno == errno.ELOOP:
-                    raise ValueError("artifact changed during preservation") from exc
-                raise
-            try:
-                return _read_regular(leaf_fd)
-            finally:
-                os.close(leaf_fd)
+            return _read_leaf(parent_fd, parts[-1], limit)
         finally:
             if parent_owned:
                 os.close(parent_fd)
@@ -253,14 +339,15 @@ def _read_preserved_bytes(path: Path, *, root: Path) -> bytes:
 
 
 def _fingerprint(path: Path, *, root: Path) -> tuple[int, str]:
-    """Hash file bytes, or the inert link record when ``path`` is a symlink.
+    """Hash file bytes, or the inert link record when the leaf is a symlink.
 
     ``root`` is the trusted directory. The read walks from that descriptor one
     component at a time and never follows a symlink. A symlink leaf contributes
-    its target string, not the target's bytes.
+    its target string, not the target's bytes. The hash is of those bytes; the
+    type label is not an input.
     """
-    payload = _read_preserved_bytes(path, root=root)
-    return len(payload), hashlib.sha256(payload).hexdigest()
+    walked = _read_preserved_bytes(path, root=root)
+    return len(walked.payload), hashlib.sha256(walked.payload).hexdigest()
 
 
 def _write_verified_bytes(payload: bytes, destination: Path) -> None:
@@ -286,7 +373,7 @@ def _copy_verified(
     is refused before any byte is published. Regular-file bytes are read once
     from that walk and that buffer is what gets written.
     """
-    payload = _read_preserved_bytes(source, root=source_root)
+    payload = _read_preserved_bytes(source, root=source_root).payload
     before = (len(payload), hashlib.sha256(payload).hexdigest())
     _relative_parts(destination, destination_root)
     destination.parent.mkdir(parents=True, exist_ok=True)
