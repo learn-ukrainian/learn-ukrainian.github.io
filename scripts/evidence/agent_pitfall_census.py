@@ -306,7 +306,7 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python scripts/evidence/agent_pitfall_census.py --pretty\n"
             "\n"
             "Outputs: JSON on stdout. Writes nothing.\n"
-            "Exit codes: 0 on success, 1 if git fails or times out.\n"
+            "Exit codes: 0 on success, 1 if git fails, times out, or output contains a host path.\n"
             "Related: docs/plans/agent-friendly-rearchitecture.md, "
             "docs/plans/agent-friendly-delivery.md, epic #9737.\n"
         ),
@@ -319,7 +319,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--root",
         default=".",
-        help="Repository root to scan for removal definitions. Default: .",
+        help="Repository root for the structure scan only; git reads the current directory. Default: .",
     )
     args = parser.parse_args(argv)
     root = Path(args.root).resolve()

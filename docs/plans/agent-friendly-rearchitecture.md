@@ -12,7 +12,7 @@ The census pins full UTC calendar days with explicit UTC-midnight bounds and git
 
 ## Relationship
 
-* **Adds.** A full count of fix commits, path buckets, reverts, and X-Agent trailers for 2026-07-01 through 2026-10-05, plus a complete failed-workflow census for that quarter and a complete failed-job census for the CI workflow in the approved plan's own window (2026-09-30 through 2026-10-05). Three gaps the approved plan's 200-commit sample did not rank: review-machinery repairs inside that same window, the quarter-long practice/atlas/lexicon repair mass, and hook-guard repairs that continued after a shared parser landed. A sequencing rule so those gaps do not collide with #9721, #9718, or the Atlas word-card work.
+* **Adds.** A full count of fix commits, path buckets, reverts, and X-Agent trailers for 2026-07-01 through 2026-10-05, plus a complete failed-workflow census for that quarter and a complete failed-job census for the CI workflow in the approved plan's own window (2026-09-30 through 2026-10-05). Three gaps the approved plan's sample of 200 recent non-merge commits (249 in the window at its head `c21043daa5`; 281 counted at the frozen head) did not rank: review-machinery repairs inside that same window, the quarter-long practice/atlas/lexicon repair mass, and hook-guard repairs that continued after a shared parser landed. A sequencing rule so those gaps do not collide with #9721, #9718, or the Atlas word-card work.
 * **Supersedes.** Two sentences in the approved plan's evidence section, and nothing in its architecture choice. See [What the counts force](#what-the-counts-force). The owner-interface recommendation, the rejection of a central advance-task facade, the seven stages, Phase 1's issue assignment, the baseline specification, the CI Gate, cross-family review, and the merge queue all stand.
 * **Leaves to #9737's driver.** Every implementation packet already under that epic, including the open pull requests and their branches. This plan does not edit those branches, does not open a second removal or review path, and does not take the infra-harness lease.
 
@@ -37,7 +37,7 @@ Method follows pstack `/correct` and `/architect` as a way of reading history: g
 
 **Counted** means a git token, a path prefix, a workflow name, a job name, or a search total. **Inferred** means a cause read off those counts. Inferences are marked.
 
-The approved plan sampled 200 of the 211 non-merge commits in its window and inspected eight diffs. This census counts that window as full UTC calendar days and finds 281 commits. That sample is a mechanism study. It is not a ranking of the 211, and it is not a ranking of the quarter. This document supplies those rankings. It does not replace the eight-diff mechanism study.
+The approved plan sampled 200 recent non-merge commits (249 in the window at its head `c21043daa5`; 281 counted at the frozen head) and inspected eight diffs. This census counts that window as full UTC calendar days and finds 281 commits. That sample is a mechanism study. It is not a ranking of the window, and it is not a ranking of the quarter. This document supplies those rankings. It does not replace the eight-diff mechanism study.
 
 A failed Actions run is not, by itself, an agent mistake. The CI Gate is supposed to go red when the head is not eligible. Advisory workflows are labeled advisory in their names.
 
@@ -114,7 +114,7 @@ The census script also counts fix subjects against fixed regexes. A subject can 
 
 ### Reverts
 
-Two commits in the primary window start with `revert`: [#8384](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/96fac6e1c7456f2739f53daa59d0be54a8f6a193) and [#8356](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/f4c979f709edeacac7adf88679f9cdc4ec160f50), both A1 curriculum rollbacks on 2026-09-20 and 2026-09-21. One further subject mentions a revert: the autopsy of a connector commit that silently reverted merged hunks, [#7190](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/0afded20103043ae36bc56b4ccd288da8ec0cfa5). Reverts are rare next to the 1,489 fix commits. **Inferred:** agents repair in place far more often than the project reverts a merge.
+Two commits in the primary window start with `revert`: [#8384](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/96fac6e1c7456f2739f53daa59d0be54a8f6a193) and [#8356](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/f4c979f709edeacac7adf88679f9cdc4ec160f50), both A1 curriculum rollbacks on 2026-09-21 and 2026-09-20. One further subject mentions a revert: the autopsy of a connector commit that silently reverted merged hunks, [#7190](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/0afded20103043ae36bc56b4ccd288da8ec0cfa5). Reverts are rare next to the 1,489 fix commits. **Inferred:** agents repair in place far more often than the project reverts a merge.
 
 ### CI failures, separate from the fix commits
 
