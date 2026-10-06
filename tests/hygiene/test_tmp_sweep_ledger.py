@@ -82,7 +82,7 @@ def box(tmp_path, monkeypatch, isolated_state_home):
         (path / "deep" / "empty").mkdir(parents=True)
         (path / "deep" / "payload").write_bytes(os.urandom(8192))
         (path / "run.sh").write_bytes(b"#!/bin/sh\necho hi\n")
-        os.chmod(path / "run.sh", 0o750)
+        os.chmod(path / "run.sh", 0o700)
         (path / "link").symlink_to("deep/payload")
         for entry in (path / "deep" / "payload", path / "deep" / "empty", path / "run.sh", path / "deep", path):
             os.utime(entry, (OLD, OLD))
@@ -177,7 +177,7 @@ def test_ledger_record_is_durable_before_the_rename(box, monkeypatch):
     assert (record["file_count"], record["total_bytes"]) == (2, 8192 + 18)
     manifest = {item["path"]: item for item in record["manifest"]}
     assert set(manifest) == {".", "deep", "deep/empty", "deep/payload", "link", "run.sh"}
-    assert manifest["link"]["target"] == "deep/payload" and manifest["run.sh"]["mode"] == 0o750
+    assert manifest["link"]["target"] == "deep/payload" and manifest["run.sh"]["mode"] == 0o700
     assert len(manifest["deep/payload"]["sha256"]) == 64
     row = next(r for r in report["rows"] if r["name"] == entry.name)
     assert (row["decision"], row["ledger_id"]) == ("quarantined", record["ledger_id"])
