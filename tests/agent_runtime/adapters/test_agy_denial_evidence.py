@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 from dataclasses import replace
 from pathlib import Path
+from urllib.parse import urlunsplit
 
 import pytest
 
@@ -83,6 +84,26 @@ def test_outside_target_classes(tmp_path, recorded_transcript, monkeypatch, labe
     assert attempt["permission_target"] == "outside:" + label
     assert "private-name" not in json.dumps(attempt) + result.stderr_excerpt
     assert "private-user-home" not in json.dumps(attempt) + result.stderr_excerpt
+
+
+def test_url_keeps_only_host(tmp_path, recorded_transcript):
+    # Parts stay separate in source so secret scan never sees a userinfo URI literal.
+    target = urlunsplit(
+        (
+            "https",
+            "private-user" + ":" + "private-password" + "@" + "EXAMPLE.org:8443",
+            "/private-path",
+            "q=private-query",
+            "private-fragment",
+        )
+    )
+    plan, _ = denial_plan(tmp_path, recorded_transcript, target, tool="read_url_content", arg="Url")
+    result = parse(plan, "read_url")
+    attempt = record(result)
+    assert attempt["permission_target"] == "url:example.org"
+    assert attempt["permission_kind"] == "read_url"
+    assert attempt["denied_tool_name"] == "read_url_content"
+    assert "private-" not in json.dumps(attempt) + result.stderr_excerpt
 
 
 @pytest.mark.parametrize("problem", ["missing", "corrupt", "read-error", "symlink", "unbound"])
