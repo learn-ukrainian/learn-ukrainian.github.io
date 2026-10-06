@@ -339,7 +339,8 @@ def execute(
                 for name, content in producer(ctx).items():
                     require(name not in extra_files, "artifact_conflict")
                     extra_files[name] = content
-        require(digest(canonical(config)) == pins["request"], "spec_mutated")
+        require(digest(canonical(request)) == pins["request"], "spec_mutated")
+        require(digest(canonical(config["components"])) == pins["component_specs"], "spec_mutated")
         require(
             component_objects is None
             or digest(canonical({c: obj.spec for c, obj in component_objects.items()})) == pins["component_specs"],

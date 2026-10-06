@@ -58,3 +58,17 @@ def test_component_artifacts_refuse_conflicts_and_unsafe_paths(bundle, monkeypat
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
         with pytest.raises(BuildError, match=code):
             execute(bundle["root"] / "request.json", guard, component_objects={"C1": SyntheticArtifacts(bundle, files)})
+
+
+def test_artifact_hook_cannot_change_component_policy(bundle, monkeypatch):
+    monkeypatch.setattr(output, "filesystem", lambda p: "ext4")
+    obj = SyntheticArtifacts(bundle, {})
+
+    def mutate(ctx):
+        obj.spec["compatibility"][0]["role"] = "forbidden"
+        return {}
+
+    obj.artifact_files = mutate
+    with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
+        with pytest.raises(BuildError, match="spec_mutated"):
+            execute(bundle["root"] / "request.json", guard, component_objects={"C1": obj})
