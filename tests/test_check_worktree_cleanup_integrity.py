@@ -252,3 +252,33 @@ def test_wrapper_execs_primary_interpreter(tmp_path: Path) -> None:
     assert marker.read_text(encoding="utf-8").strip().endswith("scheduled_worktree_cleanup.py")
     assert "--apply" in proc.stdout
     assert str(primary) in proc.stdout
+
+
+def test_live_and_dangling_plist_links_are_present_and_unsafe(tmp_path: Path) -> None:
+    home = tmp_path / "home"
+    destination = launchd.plist_path(home)
+    destination.parent.mkdir(parents=True)
+    outside = tmp_path / "outside.plist"
+    now = datetime(2026, 10, 6, tzinfo=UTC)
+    _write_receipt(home, now)
+    for live in (False, True):
+        if live:
+            outside.write_text("untouched")
+        destination.symlink_to(outside)
+        ok, message = check_worktree_cleanup_integrity(
+            tmp_path / "repo",
+            home=home,
+            state_dir=tmp_path / "state",
+            platform="darwin",
+            now=now,
+            launchctl_text="last exit code = 0",
+        )
+        assert ok is False
+        assert "unsafe" in message and "symlink" in message
+        assert "skipped" not in message
+        assert destination.is_symlink()
+        if live:
+            assert outside.read_text() == "untouched"
+        else:
+            assert not outside.exists()
+        destination.unlink()

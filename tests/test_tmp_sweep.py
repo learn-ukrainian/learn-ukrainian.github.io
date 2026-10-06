@@ -15,11 +15,13 @@ from scripts.hygiene.retention_engine import reap_attributed_temp
 
 
 @pytest.fixture
-def inventory(tmp_path, monkeypatch):
+def inventory(tmp_path, tmp_path_factory, monkeypatch):
     root = tmp_path / "system-temp"
     root.mkdir()
     tasks = tmp_path / "tasks"
     tasks.mkdir()
+    # Never the user's real ledger (#9887).
+    monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path_factory.mktemp("xdg-state")))
     monkeypatch.setattr(sweep, "process_snapshot", lambda: ([], True))
     monkeypatch.setattr(sweep, "registered_worktrees", lambda _: set())
     monkeypatch.setattr(sweep, "protected_roots", lambda: set())
@@ -49,12 +51,17 @@ def test_dead_task_dry_run_and_common_reap(inventory):
     assert report["mode"] == "dry-run" and report["bytes_reclaimed"] == 0
     assert report["rows"][0]["decision"] == "would_reap"
     assert report["bytes_reclaimable"] > 0
-    assert report["projected_free_bytes"] == report["free_bytes"] + report["bytes_reclaimable"]
+    assert report["projected_free_bytes"] == report["free_bytes"] + report["bytes_purgeable"]
     assert report["rows"][0]["identity"][:2] == [before.st_dev, before.st_ino]
     applied = inventory.run(apply=True)
     assert applied["errors"] == 0
-    assert applied["rows"][0]["decision"] == "reaped" and not path.exists()
-    assert applied["bytes_reclaimed"] == report["bytes_reclaimable"]
+    # Retained in quarantine (#9887): gone from its path, nothing reclaimed until the purge.
+    assert applied["rows"][0]["decision"] == "quarantined" and not path.exists()
+    assert applied["bytes_quarantined"] == report["bytes_reclaimable"] and applied["bytes_reclaimed"] == 0
+    purged = inventory.run(apply=True, quarantine_s=1e-6)
+    assert [row["decision"] for row in purged["rows"]] == ["purged"]
+    assert purged["bytes_reclaimed"] == report["bytes_reclaimable"]
+    assert not list(inventory.root.glob(sweep.QUARANTINE_PREFIX + "*"))
 
 
 @pytest.mark.parametrize("status", ["running", "spawning", "needs_finalize", "blocked", "dry_run", None])
@@ -184,8 +191,13 @@ def test_scan_error_and_reap_error_are_reported(inventory, monkeypatch):
         raise OSError("fixture error")
 
     monkeypatch.setattr(sweep, "reap_attributed_temp", broken)
-    report = inventory.run(apply=True)
-    assert report["errors"] == 1 and path.exists()
+    assert inventory.run(apply=True)["errors"] == 0 and not path.exists()
+    # The common reaper runs at purge; its failure keeps the entry and is ledgered.
+    report = inventory.run(apply=True, quarantine_s=1e-6)
+    assert report["errors"] == 1 and [row["reason"] for row in report["rows"]] == ["purge_refused"]
+    [quarantine] = inventory.root.glob(sweep.QUARANTINE_PREFIX + "*")
+    assert (quarantine / path.name / "payload").exists()
+    inventory.make(name="impl-8755-again")
     monkeypatch.setattr(sweep, "tree_facts", lambda _: (0, 0, 0, "tree_unknown"))
     assert inventory.run()["rows"][0]["reason"] == "tree_unknown"
 

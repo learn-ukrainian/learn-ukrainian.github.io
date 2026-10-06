@@ -93,8 +93,8 @@ def test_dry_run_lists_then_apply_removes_quiet_scratch(scratch):
     assert report["bytes_reclaimable"] > 0 and report["scratch_policy"] == {"min_age_hours": 24, "quiet_hours": 24}
     applied = scratch.run(apply=True)
     assert applied["errors"] == 0 and not directory.exists() and not regular.exists()
-    assert {r["decision"] for r in applied["rows"]} == {"reaped"}
-    assert applied["bytes_reclaimed"] == report["bytes_reclaimable"]
+    assert {r["decision"] for r in applied["rows"]} == {"quarantined"}
+    assert applied["bytes_quarantined"] == report["bytes_reclaimable"] and applied["bytes_reclaimed"] == 0
 
 
 def test_class_is_opt_in(scratch):
@@ -249,7 +249,7 @@ def test_unsettled_task_path_reference_preserves(scratch, field):
     assert directory.exists() and regular.exists()
     # The same references stop holding once the task has settled.
     (scratch.tasks / "impl-unrelated.json").write_text(json.dumps(record | {"status": "done"}))
-    assert {r["decision"] for r in scratch.run(apply=True)["rows"]} == {"reaped"}
+    assert {r["decision"] for r in scratch.run(apply=True)["rows"]} == {"quarantined"}
 
 
 def test_superseded_task_run_claims_nothing(scratch):
@@ -258,7 +258,7 @@ def test_superseded_task_run_claims_nothing(scratch):
     (scratch.tasks / "impl-old.20260101T000000123456Z.archived.json").write_text(json.dumps(superseded))
     report = scratch.run(apply=True)
     assert report["task_inventory_complete"] is True
-    assert scratch.row(report, directory.name)["decision"] == "reaped"
+    assert scratch.row(report, directory.name)["decision"] == "quarantined"
 
 
 @pytest.mark.parametrize(
@@ -507,7 +507,7 @@ def test_write_during_final_process_scan_is_never_lost(scratch, monkeypatch):
     if outcomes == ["written"]:
         assert payload.read_bytes() == b"fresh write"
     else:
-        assert scratch.row(report, entry.name)["decision"] == "reaped" and not entry.exists()
+        assert scratch.row(report, entry.name)["decision"] == "quarantined" and not entry.exists()
 
 
 def test_real_process_scan_reaps_unheld_entries(scratch, monkeypatch):
@@ -515,25 +515,29 @@ def test_real_process_scan_reaps_unheld_entries(scratch, monkeypatch):
     directory, regular = scratch.tree(), scratch.file()
     monkeypatch.setattr(sweep, "process_snapshot", real_references_complete)
     report = scratch.run(apply=True)
-    assert {r["name"]: r["decision"] for r in report["rows"]} == {directory.name: "reaped", regular.name: "reaped"}
+    assert {r["name"]: r["decision"] for r in report["rows"]} == {
+        directory.name: "quarantined",
+        regular.name: "quarantined",
+    }
     assert not directory.exists() and not regular.exists() and report["errors"] == 0
 
 
 def test_old_path_is_gone_once_quarantined(scratch, monkeypatch):
     entry, payload = _target(scratch, "directory")
-    real_reap = sweep.reap_attributed_temp
+    real_problem = sweep.quarantined_problem
     seen = []
 
-    def reap(path, **kwargs):
+    def problem(quarantined, *args):
         with pytest.raises(FileNotFoundError):
             payload.open("rb")
-        seen.append(path.parent.name)
-        return real_reap(path, **kwargs)
+        seen.append(quarantined.parent.name)
+        return real_problem(quarantined, *args)
 
-    monkeypatch.setattr(sweep, "reap_attributed_temp", reap)
+    monkeypatch.setattr(sweep, "quarantined_problem", problem)
     report = scratch.run(apply=True)
     assert seen and seen[0].startswith(sweep.QUARANTINE_PREFIX)
-    assert scratch.row(report, entry.name)["decision"] == "reaped" and not _quarantines(scratch.root)
+    assert scratch.row(report, entry.name)["decision"] == "quarantined"
+    assert (_quarantines(scratch.root)[0] / entry.name / "deep" / "payload").exists()
 
 
 HOLDER_BY_MODE = (
@@ -696,7 +700,10 @@ def test_crash_leftover_without_holder_goes_through_the_whole_boundary(scratch, 
     report = scratch.run(apply=True)
     # Restored first, then quarantined afresh and re-verified before removal.
     assert renames == [entry.name, entry.name] and report["quarantine_restored"] == 1
-    assert scratch.row(report, entry.name)["decision"] == "reaped" and not _quarantines(scratch.root)
+    assert scratch.row(report, entry.name)["decision"] == "quarantined"
+    # The crashed run's quarantine is gone; this run's holds the entry.
+    assert [q.name for q in _quarantines(scratch.root)] != [f"{sweep.QUARANTINE_PREFIX}crashed"]
+    assert [(q / entry.name).is_dir() for q in _quarantines(scratch.root)] == [True]
 
 
 def test_crash_leftover_with_taken_name_stays_quarantined(scratch):
@@ -741,7 +748,7 @@ def test_inner_symlink_is_not_followed(scratch, tmp_path):
     (directory / "deep" / "link").symlink_to(outside, target_is_directory=True)
     os.utime(directory / "deep" / "link", (OLD, OLD), follow_symlinks=False)
     os.utime(directory / "deep", (OLD, OLD))
-    assert scratch.row(scratch.run(apply=True), directory.name)["decision"] == "reaped"
+    assert scratch.row(scratch.run(apply=True), directory.name)["decision"] == "quarantined"
     assert (outside / "keep").exists()
 
 

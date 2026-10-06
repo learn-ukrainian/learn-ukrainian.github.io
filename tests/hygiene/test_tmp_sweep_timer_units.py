@@ -190,8 +190,15 @@ def test_rendered_units_pass_systemd_analyze(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
 
 
+@pytest.mark.skipif(
+    os.environ.get("LU_SYSTEMD_USER_PROBES") != "1",
+    reason="creates a transient unit in the real user service manager; opt in with LU_SYSTEMD_USER_PROBES=1",
+)
 def test_service_sandbox_refuses_network_sockets() -> None:
-    """Run the service's own network directives in a transient user unit and try to open sockets."""
+    """Run the service's own network directives in a transient user unit and try to open sockets.
+
+    This talks to the host's real systemd user manager, so it runs only on explicit opt-in.
+    """
     service = (installer.TEMPLATE_DIR / installer.UNITS[0]).read_text()
     properties = [
         line
