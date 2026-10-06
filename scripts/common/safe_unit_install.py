@@ -18,7 +18,9 @@ through this module:
 :func:`load_unit`, :func:`install_unit` and :func:`remove_unit` combine them for
 callers that work with one unit path at a time; :func:`check_unit_dir` refuses
 an unsafe directory before a caller does anything else (an uninstall checks it
-before unloading the service).
+before unloading the service). State directories and log files use the same
+descriptor walk via :func:`ensure_state_dirs` and :func:`open_state_log`;
+:func:`check_state_paths` validates a complete set before any creation (#9890).
 """
 
 from __future__ import annotations
@@ -49,7 +51,13 @@ def _open_component(dir_fd: int | None, name: str, shown: Path) -> int:
     return fd
 
 
-def open_unit_dir(unit_dir: Path, *, create: bool = False, home: Path | None = None) -> int | None:
+def open_unit_dir(
+    unit_dir: Path,
+    *,
+    create: bool = False,
+    home: Path | None = None,
+    directory_mode: int = 0o777,
+) -> int | None:
     """Open the unit directory one component at a time, never through a symlink.
 
     Every component from ``home`` (default: the current user's home; ``/`` for
@@ -78,7 +86,7 @@ def open_unit_dir(unit_dir: Path, *, create: bool = False, home: Path | None = N
             current /= name
             if create:
                 with contextlib.suppress(FileExistsError):
-                    os.mkdir(name, dir_fd=fd)
+                    os.mkdir(name, directory_mode, dir_fd=fd)
             try:
                 child = _open_component(fd, name, current)
             except FileNotFoundError:
@@ -90,6 +98,75 @@ def open_unit_dir(unit_dir: Path, *, create: bool = False, home: Path | None = N
         os.close(fd)
         raise
     return fd
+
+
+def check_state_paths(
+    *directories: Path,
+    files: tuple[Path, ...] = (),
+    home: Path | None = None,
+) -> None:
+    """Validate all existing state paths without creating or changing anything.
+
+    Missing entries are allowed; live and dangling links and special files
+    are refused. Creation still walks with no-follow descriptors, so this
+    preflight is not relied upon to prevent a subsequent symlink race.
+    """
+    for path in directories:
+        fd = open_unit_dir(path, home=home)
+        if fd is not None:
+            os.close(fd)
+    for path in files:
+        fd = open_unit_dir(path.parent, home=home)
+        if fd is None:
+            continue
+        try:
+            try:
+                info = os.stat(path.name, dir_fd=fd, follow_symlinks=False)
+            except FileNotFoundError:
+                continue
+            if not stat.S_ISREG(info.st_mode):
+                raise InstallError(f"refusing non-regular or symlinked state file: {path}")
+        finally:
+            os.close(fd)
+
+
+def ensure_state_dirs(*directories: Path, home: Path | None = None, mode: int = 0o700) -> None:
+    """Validate the whole set, then create/chmod directories through held descriptors.
+
+    Unlike pathname mkdir/chmod, a link swapped in after validation cannot
+    redirect either operation. Only requested directories have their existing
+    permissions changed; newly created ancestors use ``mode`` as well.
+    """
+    check_state_paths(*directories, home=home)
+    for path in directories:
+        fd = open_unit_dir(path, create=True, home=home, directory_mode=mode)
+        if fd is None:
+            raise InstallError(f"state directory vanished during creation: {path}")
+        try:
+            os.fchmod(fd, mode)
+        finally:
+            os.close(fd)
+
+
+def open_state_log(path: Path, *, home: Path | None = None) -> int:
+    """Open/create a regular append-only log through a checked parent descriptor."""
+    check_state_paths(files=(path,), home=home)
+    dir_fd = open_unit_dir(path.parent, create=True, home=home, directory_mode=0o700)
+    if dir_fd is None:
+        raise InstallError(f"state log directory vanished: {path.parent}")
+    try:
+        fd = os.open(
+            path.name,
+            os.O_WRONLY | os.O_APPEND | os.O_CREAT | os.O_NONBLOCK | _NOFOLLOW,
+            0o600,
+            dir_fd=dir_fd,
+        )
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            os.close(fd)
+            raise InstallError(f"refusing non-regular state log: {path}")
+        return fd
+    finally:
+        os.close(dir_fd)
 
 
 def read_unit(dir_fd: int, name: str) -> tuple[bytes, int] | None:
