@@ -298,31 +298,55 @@ def _baseline_entry_ok(entry: Mapping[str, Any]) -> bool:
     )
 
 
+# Same bytes ``_symlink_record_bytes`` returns for an empty target: the record is
+# this prefix plus the raw target. An empty target is still a link.
+_LINK_RECORD_PREFIX = artifacts._symlink_record_bytes("")
+
+
+def _link_target(payload: bytes) -> str | None:
+    """Return the raw target when ``payload`` is the descriptor-walk link record."""
+    if not payload.startswith(_LINK_RECORD_PREFIX):
+        return None
+    return os.fsdecode(payload[len(_LINK_RECORD_PREFIX) :])
+
+
+def _byte_identity(entries: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Name, size and hash.
+
+    A preserved link is a regular file of the link record, so reading it again
+    parses as a link. The byte check does not compare that label.
+    """
+    return [{key: entry[key] for key in ("path", "size", "sha256")} for entry in entries]
+
+
 def _path_inventory(
     root: Path, files: list[str], *, absent: list[dict[str, str]] | None = None
 ) -> list[dict[str, Any]]:
-    """Fingerprint each path. A symlink records its raw target and is not opened."""
+    """Fingerprint each path from one descriptor-walk read.
+
+    The link flag and the target both come from that read's record
+    (``b"symlink\\n"`` plus the raw target). This inventory does not stat the
+    path or read the link by path afterwards.
+    """
     entries = []
     for name in files:
         path = root / name
         try:
-            is_link = path.is_symlink()
+            payload = artifacts._read_preserved_bytes(path, root=root)
         except FileNotFoundError:
             if absent is None:
                 raise
             _record_absence(root, name, absent)
             continue
-        try:
-            size, digest = artifacts._fingerprint(path, root=root)
-        except FileNotFoundError:
-            if absent is None:
-                raise
-            _record_absence(root, name, absent)
-            continue
-        entry: dict[str, Any] = {"path": name, "size": size, "sha256": digest}
-        if is_link:
+        entry: dict[str, Any] = {
+            "path": name,
+            "size": len(payload),
+            "sha256": hashlib.sha256(payload).hexdigest(),
+        }
+        target = _link_target(payload)
+        if target is not None:
             entry["type"] = "symlink"
-            entry["target"] = os.readlink(path)
+            entry["target"] = target
         entries.append(entry)
     return entries
 
@@ -379,7 +403,7 @@ def verify_retrieval(primary: Path, receipt: Mapping[str, Any]) -> str:
         raise ValueError("linked retrieval entry")
     if sorted(entry.relative_to(location).as_posix() for entry in entries if not entry.is_dir()) != names:
         raise ValueError("retrieval inventory mismatch")
-    if _path_inventory(location, names) != [{key: entry[key] for key in ("path", "size", "sha256")} for entry in paths]:
+    if _byte_identity(_path_inventory(location, names)) != _byte_identity(paths):
         raise ValueError("retrieval bytes mismatch")
     digest = _content_digest(location, names)
     if digest != receipt["content_sha256"]:
@@ -652,9 +676,7 @@ def preserve_worktree_artifacts(
                 files = [entry["path"] for entry in paths]
                 metadata.update(count=len(files), bytes=sum(entry["size"] for entry in paths), paths=paths)
                 digest = _content_digest(location, files)
-                if _path_inventory(location, files) != [
-                    {key: entry[key] for key in ("path", "size", "sha256")} for entry in paths
-                ]:
+                if _byte_identity(_path_inventory(location, files)) != _byte_identity(paths):
                     raise ValueError("ignored output changed during preservation")
             metadata.update(
                 {"location": location.relative_to(primary).as_posix(), "content_sha256": digest, "reused": reused}

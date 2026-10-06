@@ -547,7 +547,8 @@ def test_vanished_output_is_rechecked_and_recorded_absent(checkout, monkeypatch,
 
         monkeypatch.setattr(Path, "resolve", vanish_after_lstat)
     else:
-        name = "_fingerprint" if stage == "fingerprint" else "_copy_verified"
+        # Inventory reads the descriptor-walk record, which is what the fingerprint hashes.
+        name = "_read_preserved_bytes" if stage == "fingerprint" else "_copy_verified"
         original = getattr(output.artifacts, name)
 
         def disappear(src, *args, **kwargs):
@@ -706,6 +707,50 @@ def test_ignored_output_symlink_is_a_link_record(checkout, monkeypatch, kind):
         assert not (location / "ignored/releases/current/file.txt").exists()
     else:
         assert receipt["absent_paths"] == []
+
+
+def test_swapped_ancestor_cannot_publish_an_outside_symlink_target(checkout, monkeypatch, tmp_path):
+    """After the safe read, swapping an ancestor must not change the stored target.
+
+    ``out/lnk`` points at ``inside-target``. Once the descriptor walk has returned
+    that record, replace ``out`` with a symlink to a directory whose ``lnk``
+    points at an outside target. The inventory may keep the inside target or
+    refuse; the outside target string must not reach the metadata or the task record.
+    """
+    repo, _primary, tasks = checkout
+    gitignore = repo / ".gitignore"
+    gitignore.write_text(gitignore.read_text() + "out/\n")
+    link = repo / "out" / "lnk"
+    link.parent.mkdir()
+    link.symlink_to("inside-target")
+    outside = tmp_path / "outside-dir"
+    outside.mkdir()
+    outside_target = "/OUTSIDE/secret-target"
+    (outside / "lnk").symlink_to(outside_target)
+    real_read = output.artifacts._read_preserved_bytes
+    swapped = False
+
+    def swap_after_read(path, *, root):
+        nonlocal swapped
+        payload = real_read(path, root=root)
+        if not swapped and path == link:
+            swapped = True
+            out = repo / "out"
+            os.rename(out, tmp_path / "real-out")
+            out.symlink_to(outside, target_is_directory=True)
+        return payload
+
+    monkeypatch.setattr(output.artifacts, "_read_preserved_bytes", swap_after_read)
+    _ok, _reason, metadata = preserve(checkout, {"status": "done"})
+    assert swapped
+    entry = next(item for item in metadata["paths"] if item["path"] == "out/lnk")
+    inside = b"symlink\n" + os.fsencode("inside-target")
+    assert entry["type"] == "symlink"
+    assert entry["target"] == "inside-target"
+    assert entry["size"] == len(inside)
+    assert entry["sha256"] == hashlib.sha256(inside).hexdigest()
+    published = json.dumps(metadata) + (tasks / "output-task.json").read_text()
+    assert outside_target not in published
 
 
 def test_removal_does_not_follow_symlink(tmp_path):
