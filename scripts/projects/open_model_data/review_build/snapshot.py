@@ -26,6 +26,7 @@ def open_readonly(path: Path) -> sqlite3.Connection:
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA query_only=ON")
         connection.execute("PRAGMA temp_store=MEMORY")
+        connection.create_function("omd_example_spans", 1, _example_spans, deterministic=True)
         connection.set_authorizer(
             lambda action, *_: (
                 sqlite3.SQLITE_DENY
@@ -43,6 +44,18 @@ def open_readonly(path: Path) -> sqlite3.Connection:
         connection.close()
         raise
     return connection
+
+
+def _example_spans(text: str) -> str:
+    """Expose the closed binding grammar to independent SQL unit queries.
+
+    Import lazily: bindings uses SnapshotReader for its source operands. No
+    request-defined callbacks or extractor output participate in this query.
+    """
+    from .bindings import example_items
+
+    require(isinstance(text, str), "unit_query")
+    return json.dumps(example_items(text), separators=(",", ":"))
 
 
 class FileStore(Protocol):

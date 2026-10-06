@@ -58,7 +58,10 @@ def _dehyphenate(text: str, policy: dict, reader: object) -> Result:
             return left + right
         return match.group()
 
-    result = re.sub(r"([^\W\d_]+)-\r?\n([^\W\d_]+)", join, text)
+    # Combining marks belong to a source token; never attest only its suffix.
+    token = r"[^\W\d_](?:[^\W\d_]|[\u0300-\u036f'’ʼ])*"
+    edge = r"[\w\u0300-\u036f'’ʼ]"
+    result = re.sub(rf"(?<!{edge})({token})-\r?\n({token})(?!{edge})", join, text)
     return Result(result, joins=tuple(joins))
 
 

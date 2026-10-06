@@ -215,6 +215,11 @@ refuse inappropriate cardinality. Sense/article `one_group` rules with
 - `equal`: `values` selectors must have equal source operands.
 - `literal`: one `values` selector must equal `expected` control metadata.
 - `same_row`: `values` citations share store, table and the real primary key.
+- `whole_field`: every selected primary value has no span and equals its entire
+  independently transformed source field. This refuses a correctly quoted
+  fragment substituted for a required complete paragraph.
+- `pattern_absent`: a nonempty reviewed regular expression must not match any
+  selected text operand (for example an unresolved printed line-end hyphen).
 - `one_group`: `values` operands are non-null and identify one group.
 - `example_list`: one `values` selector's span must equal a whole trimmed
   comma/semicolon-delimited item after an example-introducing colon. Regions end
@@ -249,12 +254,21 @@ refuse inappropriate cardinality. Sense/article `one_group` rules with
   book row key and whose `sol_field`/`opus_field` are APPROVE. WP6 owns receipt
   authenticity and the source-specific adjudication contract and tests.
 
+Optional rule-level `citation_field` pins the actual citation field, and
+`locator_field` names the held row column that must equal each citation's
+locator. Both constraints quantify over every expanded witness.
+
 Supporting citations must connect to their own primary citation through
 exact-field equality/form agreement, or the contrast rule's independently checked
 book/form witnesses. Mentioning a supporting row or comparing it with itself is
 insufficient. Structural binding is mechanism proof; D3 supplies semantic judgment.
 
 ## Citation roles and splits
+
+SQL unit queries may call `omd_example_spans(text)`, the closed `example_list`
+binding grammar exposed as a deterministic JSON array of `[start,end]` spans.
+`json_each` can then enumerate primary citation identities independently of a
+component's candidate stream. It never accepts request-defined parsers.
 
 Each compatibility row requires `store`, `table`, `source_id`, `role` (one of
 `modern`, `sum11`, `ua_gec`, `textbook`, `forbidden`). All citation triples must

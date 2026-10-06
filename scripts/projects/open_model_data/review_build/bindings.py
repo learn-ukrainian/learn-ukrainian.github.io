@@ -162,6 +162,17 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
     for rule in spec["rules"]:
         op = rule["op"]
         selectors = [ref for s in rule.get("values", []) for ref in expand(candidate, s)]
+        # Authenticate source column and locator for every expanded witness.
+        for ref in selectors:
+            citation = citation_for(candidate, ref)
+            if "citation_field" in rule:
+                require(citation.field == rule["citation_field"], "binding_field")
+            if "locator_field" in rule:
+                row = reader.row(citation)
+                require(
+                    rule["locator_field"] in row and citation.locator == row[rule["locator_field"]],
+                    "binding_locator",
+                )
         if op == "equal":
             operands = [operand(candidate, s, reader) for s in selectors]
             require(len(operands) >= 2 and all(o == operands[0] for o in operands), "binding_equal")
@@ -186,6 +197,25 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
         elif op == "one_group":
             operands = [operand(candidate, s, reader) for s in selectors]
             require(bool(operands) and all(o is not None and o == operands[0] for o in operands), "binding_group")
+        elif op == "pattern_absent":
+            require(
+                bool(selectors) and isinstance(rule.get("pattern"), str) and bool(rule["pattern"]), "binding_pattern"
+            )
+            require(
+                all(re.search(rule["pattern"], operand(candidate, ref, reader)) is None for ref in selectors),
+                "binding_pattern",
+            )
+        elif op == "whole_field":
+            require(bool(selectors), "binding_whole_field")
+            for ref in selectors:
+                value = select(candidate, ref)
+                require(ref.get("citation", 0) == 0 and "field" not in ref, "binding_whole_field")
+                _, field = reader.field(value.citations[0])
+                require(isinstance(field, str) and value.span is None, "binding_whole_field")
+                require(
+                    value.text == transform(value.transform, field, policies.get(value.transform), reader).text,
+                    "binding_whole_field",
+                )
         elif op == "example_list":
             require(len(selectors) == 1, "binding_example")
             value = select(candidate, selectors[0])
