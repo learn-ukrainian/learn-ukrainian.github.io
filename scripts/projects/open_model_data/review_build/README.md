@@ -359,6 +359,10 @@ not a signature against an owner who can rewrite the entire build and receipt.
 `permissions-register.yaml#<id>; <terms.licence.name>`), and `permission_status`
 (the register's recorded status). Quote an entire licence criterion containing
 spaces, for example `--include 'licence_ref=permissions-register.yaml#synthetic; SYNTHETIC licence'`.
+Every value must occur in the pinned register; unknown values refuse with
+`export_filter_unknown`, and surrounding whitespace refuses with
+`export_filter_value`. None-like strings are literal values, accepted only if
+recorded in that register.
 Values within one include key are alternatives; different include keys combine
 with AND. Any exclude match wins. Every provenance entry must pass: a record
 citing any excluded source is dropped whole, including its otherwise allowed
@@ -370,6 +374,9 @@ the first release.
 The output guard applies to both build and export directories. The destination
 must be empty, outside all checkouts, and neither overlap nor contain the input
 build. Export verifies the receipt and pinned bytes before writing records.
+A failed CLI export writes `logs/failure.txt` in the destination once the output
+guard succeeds, except for overlap or non-empty-destination refusals. That log
+makes the destination non-empty; retry with a clean destination.
 Selected records retain their original bytes and ordering; no-filter exports
 are byte-identical in every component's records. The export has its own
 `manifest.json` with input build hash, register hash, normalized filter,

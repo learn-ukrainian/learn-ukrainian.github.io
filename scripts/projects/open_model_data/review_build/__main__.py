@@ -31,7 +31,7 @@ Outputs: init-request creates a 0600 location-only request in a 0700 parent; bui
   Export writes unchanged selected record bytes, accounting, licence notices,
   a pinned register and its own manifest; it never reads live build inputs.
   Errors write tracebacks only to --out/logs after the output guard succeeds. No DB updates.
-Exit codes: 0 = build/verification succeeded; 1 = a gate or input failed; 2 = CLI usage refused.
+Exit codes: 0 = build/verification/export succeeded; 1 = a gate or input failed; 2 = CLI usage refused.
 Related: docs/projects/open-model-data/REVIEW_BUILD.md; issue #9817, epic #6321.
 """
 

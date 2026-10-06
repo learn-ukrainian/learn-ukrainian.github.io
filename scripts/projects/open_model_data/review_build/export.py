@@ -21,7 +21,8 @@ def parse_filters(criteria: list[str]) -> dict[str, list[str]]:
     result = defaultdict(set)
     for criterion in criteria:
         key, separator, value = criterion.partition("=")
-        require(separator == "=" and key in FILTER_KEYS and bool(value.strip()), "export_filter")
+        require(separator == "=" and key in FILTER_KEYS, "export_filter")
+        require(bool(value) and value == value.strip(), "export_filter_value")
         result[key].add(value)
     return {key: sorted(values) for key, values in sorted(result.items())}
 
@@ -117,6 +118,31 @@ def _fields(provenance: dict, sources: dict[str, dict]) -> dict:
     return {"source_id": source_id, "licence_ref": licence_ref, "permission_status": entry.get("permission_status")}
 
 
+def _validate_filters(filters: dict[str, dict[str, list[str]]], sources: dict[str, dict]) -> None:
+    """Every requested value must be recorded in the pinned register."""
+    allowed = {}
+    for key in sorted({key for group in filters.values() for key in group}):
+        values = set()
+        for source_id, entry in sources.items():
+            if key == "source_id":
+                value = source_id
+            elif key == "licence_ref":
+                try:
+                    licence = entry["terms"]["licence"]["name"]
+                except (KeyError, TypeError):
+                    raise BuildError("export_register") from None
+                require(isinstance(licence, str) and bool(licence.strip()), "export_register")
+                value = f"permissions-register.yaml#{source_id}; {licence}"
+            else:
+                value = entry.get("permission_status")
+            require(isinstance(value, str) and bool(value.strip()), "export_register")
+            values.add(value)
+        allowed[key] = values
+    for group in filters.values():
+        for key, values in group.items():
+            require(set(values) <= allowed[key], "export_filter_unknown")
+
+
 def export_build(
     build: Path, out: OutputGuard, *, include: list[str] | None = None, exclude: list[str] | None = None
 ) -> dict:
@@ -133,6 +159,7 @@ def export_build(
     with OutputGuard(build) as source:
         manifest, files, sha = _verified_files(source)
     sources = _sources(files["permissions-register.yaml"])
+    _validate_filters(filters, sources)
     accounting = {"components": {}, "sources": {}}
     notices = set()
     exported = {}

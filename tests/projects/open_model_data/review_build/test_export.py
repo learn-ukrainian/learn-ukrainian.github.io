@@ -178,6 +178,42 @@ def test_invalid_filters_refused(criterion):
 
 
 @pytest.mark.parametrize(
+    "key,known",
+    [
+        ("source_id", "synthetic"),
+        ("licence_ref", "permissions-register.yaml#synthetic; SYNTHETIC A"),
+        ("permission_status", "granted"),
+    ],
+)
+@pytest.mark.parametrize("direction", ["include", "exclude"])
+@pytest.mark.parametrize("unknown", ["SYNTHETIC typo", "None", "null", "NULL"])
+def test_unknown_filter_values_refused_before_writes(verified_build, key, known, direction, unknown):
+    with OutputGuard(verified_build.parent / "SYNTHETIC-export") as guard:
+        with pytest.raises(BuildError) as error:
+            export_build(verified_build, guard, **{direction: [f"{key}={known}", f"{key}={unknown}"]})
+        assert error.value.code == "export_filter_unknown"
+        assert not list(guard.path.iterdir())
+
+
+@pytest.mark.parametrize(
+    "key,value",
+    [
+        ("source_id", "synthetic"),
+        ("licence_ref", "permissions-register.yaml#synthetic; SYNTHETIC A"),
+        ("permission_status", "granted"),
+    ],
+)
+@pytest.mark.parametrize("direction", ["include", "exclude"])
+@pytest.mark.parametrize("padding", [" {}", "{} ", "\t{}", "{}\u00a0"])
+def test_padded_filter_values_refused_before_writes(verified_build, key, value, direction, padding):
+    with OutputGuard(verified_build.parent / "SYNTHETIC-export") as guard:
+        with pytest.raises(BuildError) as error:
+            export_build(verified_build, guard, **{direction: [f"{key}={padding.format(value)}"]})
+        assert error.value.code == "export_filter_value"
+        assert not list(guard.path.iterdir())
+
+
+@pytest.mark.parametrize(
     "name",
     [
         "C1/records.jsonl",
@@ -248,6 +284,7 @@ def test_export_help_and_private_usage_errors(capsys):
             "permission_status",
             "Outputs:",
             "Exit codes:",
+            "0 = build/verification/export succeeded",
         )
     )
     assert cli.main(["export", "--include", "SYNTHETIC PRIVATE CRITERION"]) == 2
@@ -269,6 +306,27 @@ def reseal_synthetic_fixture(build, changes):
         guard.write("manifest.json", raw)
         receipt["files"]["manifest.json"] = receipt["build_sha256"] = digest(raw)
         guard.write("verification.json", canonical(receipt) + b"\n")
+
+
+@pytest.mark.parametrize("key", ["source_id", "licence_ref", "permission_status"])
+@pytest.mark.parametrize("direction,kept", [("include", 0), ("exclude", 24)])
+@pytest.mark.parametrize("literal", ["None", "null", "NULL", "none"])
+def test_none_like_values_accepted_when_literally_recorded(verified_build, key, direction, kept, literal):
+    import yaml
+
+    register = yaml.safe_load((verified_build / "permissions-register.yaml").read_bytes())
+    entry = copy.deepcopy(register["sources"][0])
+    entry["id"] = entry["permission_status"] = entry["terms"]["licence"]["name"] = literal
+    register["sources"].append(entry)
+    reseal_synthetic_fixture(verified_build, {"permissions-register.yaml": yaml.safe_dump(register).encode()})
+    value = f"permissions-register.yaml#{literal}; {literal}" if key == "licence_ref" else literal
+    # A register entry need not appear in records to be a valid filter value.
+    with OutputGuard(verified_build.parent / "SYNTHETIC-export") as guard:
+        result = export_build(verified_build, guard, **{direction: [f"{key}={value}"]})
+        if key == "permission_status" and literal == "none":
+            # The original source-B entry also records this literal status.
+            kept = 12 if direction == "include" else 6
+        assert (result["kept"], result["dropped"]) == (kept, 24 - kept)
 
 
 @pytest.mark.parametrize(
@@ -348,6 +406,25 @@ def test_cli_refusals_preserve_input_and_existing_destination(verified_build, ca
     assert cli.main(["export", "--from", str(verified_build), "--out", str(target)]) == 1
     assert json.loads(capsys.readouterr().err)["error"] == "export_output_not_empty"
     assert list(p.name for p in target.iterdir()) == ["SYNTHETIC-existing"]
+
+
+def test_cli_unknown_filter_failure_log_requires_clean_retry_destination(verified_build, capsys):
+    target = verified_build.parent / "SYNTHETIC-export"
+    args = ["export", "--from", str(verified_build), "--out", str(target)]
+    assert cli.main([*args, "--exclude", "source_id=synthetic-bb"]) == 1
+    assert json.loads(capsys.readouterr().err)["error"] == "export_filter_unknown"
+    failure = (target / "logs/failure.txt").read_bytes()
+    assert b"export_filter_unknown" in failure
+    assert {p.relative_to(target).as_posix() for p in target.rglob("*") if p.is_file()} == {"logs/failure.txt"}
+    assert cli.main([*args, "--exclude", "source_id=synthetic-b"]) == 1
+    assert json.loads(capsys.readouterr().err)["error"] == "export_output_not_empty"
+    assert (target / "logs/failure.txt").read_bytes() == failure
+    clean = verified_build.parent / "SYNTHETIC-retry"
+    assert (
+        cli.main(["export", "--from", str(verified_build), "--out", str(clean), "--exclude", "source_id=synthetic-b"])
+        == 0
+    )
+    assert json.loads(capsys.readouterr().out)["kept"] == 6
 
 
 def test_cli_failed_request_invalidates_previous_verification(verified_build, bundle, capsys):
