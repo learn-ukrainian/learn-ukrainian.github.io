@@ -6,13 +6,18 @@ for targeted handling (e.g. backoff on RateLimitedError, alert on AgentStalledEr
 
 Issue: #1184
 """
+
 from __future__ import annotations
 
 from typing import Any
 
+from .result import AgyTelemetry
+
 
 class AgentRuntimeError(Exception):
     """Base class for all errors raised by the agent runtime."""
+
+    agy_telemetry: AgyTelemetry | None = None
 
 
 class AgentUnavailableError(AgentRuntimeError):
@@ -33,13 +38,12 @@ class RateLimitedError(AgentRuntimeError):
     Callers that want fail-fast should let it propagate.
     """
 
-    def __init__(self, agent: str, model: str, reason: str = ""):
+    def __init__(self, agent: str, model: str, reason: str = "", *, agy_telemetry: AgyTelemetry | None = None):
         self.agent = agent
         self.model = model
         self.reason = reason
-        super().__init__(
-            f"{agent}/{model} rate limited" + (f": {reason}" if reason else "")
-        )
+        self.agy_telemetry = agy_telemetry
+        super().__init__(f"{agent}/{model} rate limited" + (f": {reason}" if reason else ""))
 
 
 class AgentTimeoutError(AgentRuntimeError):
@@ -57,13 +61,13 @@ class AgentTimeoutError(AgentRuntimeError):
         hard_timeout: int,
         *,
         substitution: dict[str, Any] | None = None,
+        agy_telemetry: AgyTelemetry | None = None,
     ):
         self.agent = agent
         self.hard_timeout = hard_timeout
         self.substitution = substitution
-        super().__init__(
-            f"{agent} exceeded hard_timeout={hard_timeout}s"
-        )
+        self.agy_telemetry = agy_telemetry
+        super().__init__(f"{agent} exceeded hard_timeout={hard_timeout}s")
 
 
 class AgentStalledError(AgentRuntimeError):
@@ -88,13 +92,14 @@ class AgentStalledError(AgentRuntimeError):
         *,
         kind: str = "stall",
         substitution: dict[str, Any] | None = None,
+        agy_telemetry: AgyTelemetry | None = None,
     ):
         self.agent = agent
         self.stall_timeout = stall_timeout
         self.last_activity_age = last_activity_age
         self.kind = kind
         self.substitution = substitution
+        self.agy_telemetry = agy_telemetry
         super().__init__(
-            f"{agent} stalled: {last_activity_age:.0f}s since last activity "
-            f"(stall_timeout={stall_timeout}s)"
+            f"{agent} stalled: {last_activity_age:.0f}s since last activity (stall_timeout={stall_timeout}s)"
         )

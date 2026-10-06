@@ -83,6 +83,7 @@ def test_update_session_writes_private_atomic_sol_record(tmp_path: Path) -> None
     assert record["effective_profile_id"] == "sol_lead"
     assert record["effective_context_window_tokens"] == 272_000
     assert record["auto_compact_capacity_tokens"] == 258_400
+    assert record["rollover_mode"] == "continuation"
     assert record["actual_context_window_tokens"] == 272_000
     assert record["actual_context_window_provenance"] == "declared-profile"
     assert record["transcript_path"] == os.fspath(transcript)
@@ -109,6 +110,8 @@ def test_observed_statusline_window_wins_and_records_mismatch(tmp_path: Path) ->
     )
 
     assert record["expected_context_window_tokens"] == 1_000_000
+    assert record["rollover_mode"] == "operator_restart"
+    assert record["rollover_warning_percentages"] == [65.0, 70.0, 75.0]
     assert record["observed_context_window_tokens"] == 900_000
     assert record["actual_context_window_tokens"] == 900_000
     assert record["actual_context_window_provenance"].startswith("statusline.")
@@ -137,6 +140,7 @@ def test_missing_or_mismatched_route_fails_closed(tmp_path: Path) -> None:
     assert mismatch["effective_profile_id"] == "fallback"
     assert mismatch["expected_context_window_tokens"] == 1_000_000
     assert mismatch["effective_context_window_tokens"] == 0
+    assert mismatch["rollover_mode"] == "continuation"
     assert mismatch["actual_context_window_tokens"] is None
     assert mismatch["model_mismatch"]
 

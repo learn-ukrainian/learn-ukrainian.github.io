@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 import time
 from copy import deepcopy
 from pathlib import Path
@@ -182,6 +184,169 @@ class FakeAdapter:
         self.calls.append("close-issue")
         self.observation["github"]["issue"]["state"] = "CLOSED"
         self.observation["github"]["issue"]["closed_at"] = NOW
+
+
+@pytest.mark.parametrize("replacement_url", [REVIEW_URL, "https://github.com/org/repo/pull/77#issuecomment-999"])
+def test_cli_append_correction_and_reconcile_mistyped_url(tmp_path: Path, replacement_url: str) -> None:
+    path, ledger = _ledger(tmp_path, review=False)
+    ledger, old = task_lifecycle.add_evidence(
+        ledger, ac_id="AC-REVIEW", evidence_type="review", summary="mistyped review URL",
+        url="https://github.com/org/repo/pull/77", commit=HEAD,
+        details={"author_family": "codex", "reviewer_family": "claude", "verdict": "pass"}, recorded_at=NOW,
+    )
+    task_lifecycle.write_lifecycle(path, ledger)
+    original = deepcopy(ledger)
+    observation_path = tmp_path / "observation.json"
+    observation_path.write_text(json.dumps(_observation()), encoding="utf-8")
+    command = [sys.executable, "-m", "scripts.orchestration.task_closeout"]
+    reconcile_args = ["reconcile", "--state-file", str(path), "--observation-file", str(observation_path), "--now", NOW]
+    before = subprocess.run([*command, *reconcile_args], capture_output=True, text=True, timeout=60, check=True)
+    assert json.loads(before.stdout)["receipt"]["state"] == "BLOCKED_WITH_RECEIPT"
+    before_ledger = task_lifecycle.load_lifecycle(path)
+    append_args = [
+        "add-evidence", "--state-file", str(path), "--ac-id", "AC-REVIEW", "--type", "review",
+        "--summary", "corrected canonical review URL", "--url", replacement_url, "--commit", HEAD,
+        "--details", json.dumps({**old["details"], "supersedes_evidence_id": old["id"]}),
+        "--now", "2026-07-16T10:00:01Z",
+    ]
+    appended = subprocess.run([*command, *append_args], capture_output=True, text=True, timeout=60, check=True)
+    replacement = json.loads(appended.stdout)["evidence"]
+    assert replacement["details"]["supersedes_evidence_id"] == old["id"]
+    reconcile_args[-1] = "2026-07-16T12:00:00Z"
+    after = subprocess.run([*command, *reconcile_args], capture_output=True, text=True, timeout=60, check=True)
+    receipt = json.loads(after.stdout)["receipt"]
+    valid = replacement_url == REVIEW_URL
+    assert receipt["state"] == ("CI_PASSED" if valid else "BLOCKED_WITH_RECEIPT")
+    assert bool(receipt["hard_blockers"]) is (not valid)
+    persisted = task_lifecycle.load_lifecycle(path)
+    assert persisted["evidence"][:-1] == original["evidence"]
+    assert persisted["observation_receipts"][0] == before_ledger["observation_receipts"][0]
+    assert persisted["ac_snapshot"] == original["ac_snapshot"]
+    assert persisted["mutation_receipts"] == []
+    before_replay = path.read_bytes()
+    replay = subprocess.run([*command, *append_args], capture_output=True, text=True, timeout=60, check=True)
+    assert json.loads(replay.stdout)["evidence"] == replacement
+    assert path.read_bytes() == before_replay
+    print(json.dumps({
+        "before": json.loads(before.stdout), "append": json.loads(appended.stdout),
+        "after": json.loads(after.stdout), "replay": json.loads(replay.stdout),
+    }))
+
+
+@pytest.mark.parametrize("recorded_at,prior_update,error", [
+    (NOW, NOW, "strictly later than its target"),
+    ("2026-07-16T09:59:59Z", NOW, "must not predate ledger updated_at"),
+    ("2026-07-16T11:00:00+01:00", NOW, "strictly later than its target"),
+    ("2026-07-16T10:30:00Z", "2026-07-16T11:00:00Z", "must not predate ledger updated_at"),
+    ("2026-07-16T12:30:00+02:00", "2026-07-16T11:00:00Z", "must not predate ledger updated_at"),
+])
+def test_cli_refuses_backdated_correction_without_rewriting_ledger(
+    tmp_path: Path, recorded_at: str, prior_update: str, error: str,
+) -> None:
+    path, ledger = _ledger(tmp_path)
+    old = ledger["evidence"][-1]
+    observation_path = tmp_path / "observation.json"
+    observation_path.write_text(json.dumps(_observation()), encoding="utf-8")
+    command = [sys.executable, "-m", "scripts.orchestration.task_closeout"]
+    subprocess.run([
+        *command, "reconcile", "--state-file", str(path),
+        "--observation-file", str(observation_path), "--now", prior_update,
+    ], capture_output=True, text=True, timeout=60, check=True)
+    original = path.read_bytes()
+    refused = subprocess.run([
+        *command, "add-evidence", "--state-file", str(path), "--ac-id", "AC-REVIEW", "--type", "review",
+        "--summary", "backdated correction", "--url", REVIEW_URL, "--commit", HEAD,
+        "--details", json.dumps({**old["details"], "supersedes_evidence_id": old["id"]}),
+        "--now", recorded_at,
+    ], capture_output=True, text=True, timeout=60, check=False)
+    assert refused.returncode == 2
+    assert refused.stdout == ""
+    assert error in json.loads(refused.stderr)["error"]
+    assert path.read_bytes() == original
+    assert task_lifecycle.load_lifecycle(path)["evidence"] == ledger["evidence"]
+    print(json.dumps({"recorded_at": recorded_at, "prior_update": prior_update, "exit_code": refused.returncode,
+                      "stdout": refused.stdout, "stderr": refused.stderr}))
+
+
+@pytest.mark.parametrize("recorded_at,blocked", [
+    ("2026-07-16T11:00:00Z", True),
+    ("2026-07-16T08:00:00-03:00", True),
+    ("2026-07-16T10:30:00.5Z", True),
+    ("2026-07-16T08:15:00-02:00", False),
+    ("2026-07-16t10:15:00z", False),
+])
+def test_cli_review_correction_timing_controls(tmp_path: Path, recorded_at: str, blocked: bool) -> None:
+    path, ledger = _ledger(tmp_path)
+    old = ledger["evidence"][-1]
+    command = [sys.executable, "-m", "scripts.orchestration.task_closeout"]
+    append_command = [
+        *command, "add-evidence", "--state-file", str(path), "--ac-id", "AC-REVIEW", "--type", "review",
+        "--summary", "late correction", "--url", REVIEW_URL, "--commit", HEAD,
+        "--details", json.dumps({**old["details"], "supersedes_evidence_id": old["id"]}),
+        "--now", recorded_at,
+    ]
+    appended = subprocess.run(append_command, capture_output=True, text=True, timeout=60, check=True)
+    assert task_lifecycle.load_lifecycle(path)["evidence"][:-1] == ledger["evidence"]
+    observation = _observation()
+    observation["github"]["pr"]["auto_merge_enabled_at"] = "2026-07-16T10:30:00Z"
+    observation_path = tmp_path / "observation.json"
+    observation_path.write_text(json.dumps(observation), encoding="utf-8")
+    reconcile_command = [
+        *command, "reconcile", "--state-file", str(path),
+        "--observation-file", str(observation_path), "--now", "2026-07-16T11:01:00Z",
+    ]
+    reconciled = subprocess.run(reconcile_command, capture_output=True, text=True, timeout=60, check=True)
+    receipt = json.loads(reconciled.stdout)["receipt"]
+    assert receipt["state"] == ("BLOCKED_WITH_RECEIPT" if blocked else "CI_PASSED")
+    assert receipt["hard_blockers"] == (["auto-merge was armed before the verified review gate"] if blocked else [])
+    if blocked:
+        adapter = FakeAdapter(observation)
+        with pytest.raises(task_lifecycle.LifecycleError, match="armed before the verified review gate"):
+            task_closeout.perform_mutation(
+                path, adapter, action="arm-auto-merge", authorized_by="codex/9764",
+                branch="codex/42-closeout", worktree="/repo/.worktrees/dispatch/codex/42-closeout", now=NOW,
+            )
+        assert adapter.calls == []
+    persisted = task_lifecycle.load_lifecycle(path)
+    assert persisted["evidence"][:-1] == ledger["evidence"]
+    assert persisted["evidence"][-1]["recorded_at"] == recorded_at
+    assert persisted["ac_snapshot"] == ledger["ac_snapshot"]
+    assert all(row["id"] == task_lifecycle.digest(task_lifecycle._evidence_payload(row)) for row in persisted["evidence"])
+    if blocked:
+        assert persisted["mutation_receipts"][-1]["status"] == "failed"
+    else:
+        assert persisted["mutation_receipts"] == []
+    assert persisted["current_state"] == receipt["state"]
+    print(json.dumps({"recorded_at": recorded_at, "blocked": blocked,
+                      "append_command": append_command,
+                      "append_stdout": appended.stdout, "append_stderr": appended.stderr,
+                      "append_exit_code": appended.returncode,
+                      "reconcile_command": reconcile_command,
+                      "reconcile_stdout": reconciled.stdout, "reconcile_stderr": reconciled.stderr,
+                      "reconcile_exit_code": reconciled.returncode,
+                      "mutation_receipts": persisted["mutation_receipts"]}))
+
+
+@pytest.mark.parametrize("pr_state", ["OPEN", "MERGED"])
+@pytest.mark.parametrize("invalid_at", ["invalid", "2026-07-16T10:30:00"])
+def test_cli_invalid_arming_timestamp_refuses_reconcile_without_mutation(
+    tmp_path: Path, pr_state: str, invalid_at: str,
+) -> None:
+    path, _ = _ledger(tmp_path, merged=pr_state == "MERGED")
+    observation = _observation(pr_state=pr_state)
+    observation["github"]["pr"]["auto_merge_enabled_at"] = invalid_at
+    observation_path = tmp_path / "observation.json"
+    observation_path.write_text(json.dumps(observation), encoding="utf-8")
+    original = path.read_bytes()
+    command = [sys.executable, "-m", "scripts.orchestration.task_closeout", "reconcile",
+               "--state-file", str(path), "--observation-file", str(observation_path), "--now", NOW]
+    refused = subprocess.run(command, capture_output=True, text=True, timeout=60, check=False)
+    assert refused.returncode == 2
+    assert refused.stdout == ""
+    assert "timestamp" in json.loads(refused.stderr)["error"]
+    assert path.read_bytes() == original
+    print(json.dumps({"command": command, "exit_code": refused.returncode,
+                      "stdout": refused.stdout, "stderr": refused.stderr, "ledger_unchanged": True}))
 
 
 def test_sync_acs_checks_only_evidenced_criteria_and_replays(tmp_path: Path) -> None:
@@ -539,8 +704,16 @@ def test_github_observation_skips_audit_when_primary_and_follow_up_are_native(
         (None, 20),
         (10, None),
         (None, None),
+        (30, 20),
+        (10, 30),
     ],
-    ids=["primary-lacks-native", "follow-up-lacks-native", "both-lack-native"],
+    ids=[
+        "primary-lacks-native",
+        "follow-up-lacks-native",
+        "both-lack-native",
+        "primary-unregistered-native-parent",
+        "follow-up-unregistered-native-parent",
+    ],
 )
 def test_github_observation_fetches_audit_when_either_relevant_issue_lacks_native_parent(
     tmp_path: Path,
@@ -667,7 +840,9 @@ def test_cmd_init_rejects_wrong_native_parent_without_a_live_audit(
     stub below) mask the correct stream-membership error."""
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=99))
-    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+    # #99 is a different REGISTERED stream epic: conclusive without an audit.
+    # An unregistered native parent is the native-chain path (#9783) below.
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 99])
 
     def _fail_audit(self) -> dict:
         raise AssertionError("a wrong native parent must not trigger a live membership audit")
@@ -675,6 +850,50 @@ def test_cmd_init_rejects_wrong_native_parent_without_a_live_audit(
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", _fail_audit)
 
     with pytest.raises(task_lifecycle.LifecycleError, match="stream epic"):
+        task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+    assert not (tmp_path / "lifecycle.json").exists()
+
+
+def _native_chain_audit(issue_epics: list[int]) -> dict:
+    return {
+        "generated_at": time.time(),
+        "membership_complete": True,
+        "incomplete_nodes": [],
+        "effective_membership": {
+            "42": {"epics": issue_epics, "streams": ["infra"], "via": "native", "unique_stream": True},
+            "30": {"epics": issue_epics, "streams": ["infra"], "via": "native", "unique_stream": True},
+        },
+        "open_issue_numbers": [42, 30, 10],
+    }
+
+
+def test_cmd_init_accepts_native_chain_through_unregistered_sub_epic(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#9783: native parent #30 is an unregistered sub-epic of stream epic #10."""
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=30))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 20])
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: _native_chain_audit([10])
+    )
+
+    assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
+    ledger = task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")
+    assert ledger["identity"]["stream_epic"] == 10
+
+
+def test_cmd_init_rejects_native_chain_to_a_different_registered_epic(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=30))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 20])
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: _native_chain_audit([20])
+    )
+
+    with pytest.raises(task_lifecycle.LifecycleError, match="different registered epic"):
         task_closeout.cmd_init(_init_args(tmp_path, identity_path))
     assert not (tmp_path / "lifecycle.json").exists()
 

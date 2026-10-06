@@ -168,6 +168,7 @@ def resolve_and_admit(
     review_changed_paths: tuple[str, ...] | Callable[[], tuple[str, ...]] = (),
     review_subject_seats: frozenset[str] = frozenset(),
     review_subject_families: frozenset[str] = frozenset(),
+    review_facts: Any = None,
     **gate: Any,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
@@ -215,6 +216,10 @@ def resolve_and_admit(
     For code/infra profiles, ``review_changed_paths`` may collect paths lazily
     after original-request gates; its result is shared by every subsequent
     reviewer evaluation. Ukrainian content review never invokes the collector.
+    ``review_facts`` (a ``record_cf_verdict.BranchReviewFacts``, or a callable
+    returning one, collected at the same point) supplies the target's complete
+    authorship and protected scope; reviewer evaluation then excludes every
+    author family, not only ``review_author_model``'s (#9739).
     """
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
@@ -230,8 +235,11 @@ def resolve_and_admit(
     if (review_profile or "code") in {"code", "infra"}:
         if callable(review_changed_paths):
             review_changed_paths = review_changed_paths()
+        if callable(review_facts):
+            review_facts = review_facts()
     else:
         review_changed_paths = ()
+        review_facts = None
 
     fallbacks: Mapping[str, str] = {}
     if route is not None and fallbacks_path is not None:
@@ -286,6 +294,7 @@ def resolve_and_admit(
                 changed_paths=review_changed_paths,
                 subject_seats=review_subject_seats,
                 subject_families=review_subject_families,
+                facts=review_facts,
             )
             approved.add(selected)
             return selected
@@ -361,13 +370,16 @@ def _resolve_review_target(
     changed_paths: tuple[str, ...] = (),
     subject_seats: frozenset[str] = frozenset(),
     subject_families: frozenset[str] = frozenset(),
+    facts: Any = None,
 ) -> tuple[str, str | None]:
     """Keep an eligible reviewer or select the canonical cross-family seat, never a coding fallback.
 
     A snapshot means the budget guard requires a substitute. Without both trusted
     inputs, only intrinsic eligibility can be proven and the requested identity is
     retained. This does not attest cross-family independence for those legacy calls.
-    An existing attempt's seat AND model are immutable.
+    An existing attempt's seat AND model are immutable. ``facts`` (complete branch
+    authorship and scope, #9739) stand in for a single ``author_model``; a given
+    ``author_model`` is added to them, never substituted.
     """
     from scripts.review.model_catalog import risk_reviewer_refusal
     from scripts.review.reviewer_resolver import (
@@ -392,12 +404,23 @@ def _resolve_review_target(
     family = resolve_family(concrete or "")
     # The seat's registered pin reviews too when no model is named (#9583).
     _refuse_non_review_models((requested_model,))
-    # Composer/Kimi never review. Grok is admitted only as the resolver's
-    # runtime-attested Cursor seat (#9488); native Grok is excluded there.
+    if attempt and seat in {"grok", "grok-build"}:
+        from .review_mcp import UNSUPPORTED_HARNESS_REASONS
+
+        # Native Grok model admission (#9769) does not prove the attempt
+        # boundary (#8517). Refuse before budget probes or attempt setup.
+        detail = UNSUPPORTED_HARNESS_REASONS[seat]
+        raise ReviewAdmissionRefused(
+            f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail} (#8517)"
+        )
+    # Composer/Kimi never review. Native and Cursor Grok require runtime
+    # attestation and cross-family eligibility at every risk (#9769).
     forbidden = {"moonshot"}
     if profile != "ukrainian":
         forbidden.add("google")
-    trusted = bool(author_model and risk)
+    if profile == "ukrainian":
+        facts = None
+    trusted = bool((author_model or facts is not None) and risk)
     if profile != "code" and (author_model or risk):
         raise ReviewAdmissionRefused(
             "REVIEW_ROUTE_REFUSED: --review-author-model and --review-risk support the code profile only; "
@@ -419,21 +442,34 @@ def _resolve_review_target(
     )
     if subject.fail_closed_reason:
         raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {subject.fail_closed_reason}")
-    inputs = ResolverInputs(
-        author_model=author_model or "",
-        review_profile=profile,
-        domain=profile,
-        risk=effective_review_risk(risk or "medium", changed_paths, owned_paths, profile=profile),
-        routing_snapshot=snapshot if trusted else None,
-        owned_paths=owned_paths,
-        changed_paths=changed_paths,
-        subject_seats=subject.seats,
-        subject_families=subject.families,
-        subject_evidence=subject.evidence,
-    )
-    author_family = resolve_author_family(author_model or "") if trusted else UNKNOWN_AUTHOR_FAMILY
-    if trusted and author_family in UNRESOLVED_AUTHOR_FAMILIES:
+    if facts is not None:
+        # The shared calculation already holds the declared owned paths and
+        # explicit subjects it was collected with, plus every changed path.
+        inputs = facts.resolver_inputs(
+            risk=effective_review_risk(risk or "medium", facts.changed_paths, facts.scope_paths, profile=profile),
+            review_profile=profile,
+            author_model=author_model or "",
+            routing_snapshot=snapshot if trusted else None,
+        )
+    else:
+        inputs = ResolverInputs(
+            author_model=author_model or "",
+            review_profile=profile,
+            domain=profile,
+            risk=effective_review_risk(risk or "medium", changed_paths, owned_paths, profile=profile),
+            routing_snapshot=snapshot if trusted else None,
+            owned_paths=owned_paths,
+            changed_paths=changed_paths,
+            subject_seats=subject.seats,
+            subject_families=subject.families,
+            subject_evidence=subject.evidence,
+        )
+    author_family = resolve_author_family(author_model or "") if trusted and author_model else UNKNOWN_AUTHOR_FAMILY
+    if trusted and author_model and author_family in UNRESOLVED_AUTHOR_FAMILIES:
         raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: author's concrete model family cannot be resolved")
+    if facts is not None:
+        # evaluate_candidate reads the complete set from ``inputs``.
+        author_family = None
     if profile == "ukrainian":
         eligible = seat in {"claude", "codex", "agy"} and family in {"anthropic", "openai", "google"}
     else:
@@ -633,7 +669,8 @@ def _slot_holder(
     except Exception as exc:
         _warn(
             warnings,
-            f"⚠️ channel-bridge: slot resolver failed for '{agent}' ({type(exc).__name__}: {exc}) — queued at identity",
+            f"⚠️ channel-bridge: slot resolver failed for the {_slot_label(agent, static_agents)} "
+            f"({type(exc).__name__}: {exc}) — queued at its identity",
         )
         return agent
     if res.has_holder:
@@ -641,9 +678,23 @@ def _slot_holder(
     if warn_if_unheld:
         _warn(
             warnings,
-            f"⚠️ channel-bridge: recipient slot '{agent}' has no live holder (queued at {res.queue_location})",
+            f"⚠️ channel-bridge: recipient {_slot_label(agent, static_agents, res.area_id)} has no live holder "
+            f"({res.reason or 'no-live-holder'}); queued in its channels DB delivery queue",
         )
     return agent
+
+
+def _slot_label(agent: str, static_agents: Collection[str], area_id: str | None = None) -> str:
+    """A slot's name for log text, built from trusted tables only (#9739).
+
+    The seat prefix comes from ``static_agents`` and the area from the fleet
+    taxonomy (``resolve_slot_holder``), so ``grok-infra`` reads ``grok slot in
+    area 'infra'``. The caller's slot string itself never reaches a log, which
+    CodeQL's ``py/clear-text-logging-sensitive-data`` flagged as secret data.
+    """
+    seat = max((name for name in static_agents if agent.startswith(f"{name}-")), key=len, default=None)
+    label = f"{seat} slot" if seat else "slot with an unregistered seat prefix"
+    return f"{label} in area '{area_id}'" if area_id else label
 
 
 def _warn(warnings: list[str] | None, message: str) -> None:

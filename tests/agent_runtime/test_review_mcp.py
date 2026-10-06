@@ -46,7 +46,7 @@ from scripts.agent_runtime.review_mcp import (
     verify_codex_review_effective_mcp,
     verify_review_attempt_paths,
 )
-from scripts.agent_runtime.sources_read_only import SERVER_PATH
+from scripts.agent_runtime.sources_read_only import SERVER_PATH, sources_tool_sets
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.review import render_contract
@@ -75,6 +75,95 @@ def fake_agy_user_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     (app_data / "antigravity-oauth-token").write_text('{"fixture": true}\n', encoding="utf-8")
     monkeypatch.setenv("AGY_APP_DATA_DIR", str(app_data))
     return app_data
+
+
+def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_agy_user_home):
+    root = tmp_path / "lease"
+    root.mkdir()
+    home = review_mcp_module.prepare_agy_permission_home(root)
+    config = json.loads((home / ".gemini" / "config" / "mcp_config.json").read_text())
+    assert set(config["mcpServers"]) == {"sources"}
+    assert "LU_REVIEW_LEDGER_PATH" not in config["mcpServers"]["sources"].get("env", {})
+    settings = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())
+    readers, writers = sources_tool_sets()
+    assert settings["permissions"]["allow"] == [f"mcp(sources/{name})" for name in sorted(REVIEW_TOOLS)]
+    assert settings["permissions"]["deny"] == [
+        "command(*)",
+        "write_file(*)",
+        *[f"mcp(sources/{name})" for name in sorted((set(readers) | set(writers)) - REVIEW_TOOLS)],
+    ]
+    assert not any("*" in rule for rule in settings["permissions"]["allow"])
+    assert not set(settings["permissions"]["allow"]) & {f"mcp(sources/{name})" for name in writers}
+    assert (home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token").resolve() == (
+        fake_agy_user_home / "antigravity-oauth-token"
+    )
+    assert not list(root.glob("*.jsonl"))
+    with pytest.raises(FileExistsError):
+        review_mcp_module.prepare_agy_permission_home(root)
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_receipt_attempt_allow_contract_unchanged(manifest_file, tmp_path, access):
+    plan = prepare_review_attempt(
+        "rev-test-001",
+        "att-agy-001",
+        manifest_file,
+        "agy",
+        receipts_root=tmp_path / "receipts",
+        review_access=access,
+    )
+    # Frozen pre-fix contract; do not derive this expectation from review_tools.
+    names = [
+        "check_russian_shadow",
+        "check_text",
+        "inspect_word",
+        "inspect_words",
+        "query_cefr_level",
+        "query_grac",
+        "query_pravopys",
+        "query_r2u",
+        "query_sum20",
+        "search_heritage",
+        "search_style_guide",
+        "search_text",
+        "search_ua_gec_errors",
+        "verify_quote",
+        "verify_stress",
+        "verify_words",
+    ]
+    if access == "full":
+        names.append("search_resources")
+    expected = {
+        "permissions": {
+            "allow": [f"mcp(sources/{name})" for name in sorted(names)],
+            "deny": [
+                "command(*)",
+                "write_file(*)",
+                *[f"mcp(sources/{name})" for name in sorted(set().union(*sources_tool_sets()) - set(names))],
+            ],
+        }
+    }
+    assert (agy_review_app_data_dir(plan.agy_home) / "settings.json").read_bytes() == json.dumps(expected).encode()
+
+
+def test_permission_home_refuses_missing_token_and_symlink_root(tmp_path, monkeypatch):
+    monkeypatch.setattr(review_mcp_module, "_real_agy_token", lambda: tmp_path / "missing-token")
+    with pytest.raises(ValueError, match="require_scoped_home"):
+        review_mcp_module.prepare_agy_permission_home(tmp_path)
+    token = tmp_path / "token"
+    token.write_text("fixture")
+    monkeypatch.setattr(review_mcp_module, "_real_agy_token", lambda: token)
+    link = tmp_path / "root-link"
+    link.symlink_to(tmp_path, target_is_directory=True)
+    with pytest.raises((OSError, review_mcp_module.ReviewDirectoryError)):
+        review_mcp_module.prepare_agy_permission_home(link)
+    assert not (tmp_path / "agy-review-home").exists()
+
+
+def test_review_ledger_path_pairs_attempt_and_refuses_other_suffix():
+    assert review_mcp_module.review_ledger_path("attempt.mcp.json") == Path("attempt.jsonl")
+    with pytest.raises(ValueError, match="invalid_review_attempt_config"):
+        review_mcp_module.review_ledger_path("other.json")
 
 
 @pytest.fixture(autouse=True)
@@ -460,11 +549,27 @@ def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> No
 
 @pytest.mark.parametrize("seat", ["cursor", "claude"])
 def test_delegate_dispatch_review_refuses_primary_checkout(
-    code_review_manifest: Path, capsys: pytest.CaptureFixture[str], seat: str
+    code_review_manifest: Path,
+    ordinary_review_scope: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    seat: str,
 ) -> None:
     # Cursor identity admission now precedes its dispatch worktree guard.
     # Keep that refusal covered, and exercise primary-checkout protection with
     # an eligible write-capable review seat. The Cursor adapter guard is tested above.
+    # Write-dispatch review admission (#9739) reads the target checkout's branch
+    # first, so the dispatch declares its scope and targets the fixture primary,
+    # which is on main in sync with origin/main.
+    primary = ordinary_review_scope
+    subprocess.run(
+        ["git", "-C", str(primary), "update-ref", "refs/remotes/origin/main", "HEAD"],
+        check=True,
+        capture_output=True,
+        env=delegate_cli._sanitized_git_env(),
+        timeout=30,
+    )
+    monkeypatch.setattr(delegate_cli, "_REPO_ROOT", primary)
     rc = delegate_cli.main(
         [
             "dispatch",
@@ -477,7 +582,9 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
             "--task-id",
             "review-task-primary",
             "--cwd",
-            str(delegate_cli._REPO_ROOT),
+            str(primary),
+            "--owned-path",
+            "ordinary.py",
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
             "--review-access",

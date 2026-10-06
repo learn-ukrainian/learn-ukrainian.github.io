@@ -151,8 +151,70 @@ def _dispatch_fix_prompt_file(
     return _write_dispatch_fix_auto_brief(task_id, prompt_directory)
 
 
+_OWNED_PATHS_HEADING = re.compile(r"(?im)^(#{1,6})\s*owned paths\b[^\n]*$")
+_ANY_HEADING = re.compile(r"(?m)^(#{1,6})\s")
+_BRIEF_PATH = re.compile(r"[\w.*/-]+")
+_BRIEF_RISK = re.compile(r"(?im)^\W*risk\W*:\W*(low|medium|high|critical)\b")
+
+
+class DispatchFixScopeError(ValueError):
+    """A fix brief names no owned paths, so its write dispatch would be unscoped (#9739)."""
+
+
+def brief_owned_paths(text: str) -> tuple[str, ...]:
+    """Repo-relative paths listed under the brief's ``Owned paths`` heading.
+
+    Paths are the backticked tokens of that section, or the lines of a fenced
+    block in it, including repository-root files. Absolute paths, ``..``
+    segments and bare words are dropped; ``delegate.py`` validates the rest.
+    """
+    match = _OWNED_PATHS_HEADING.search(text)
+    if match is None:
+        return ()
+    level = len(match.group(1))
+    end = len(text)
+    for heading in _ANY_HEADING.finditer(text, match.end()):
+        if len(heading.group(1)) <= level:
+            end = heading.start()
+            break
+    section = text[match.end() : end]
+    tokens = re.findall(r"`([^`\n]+)`", section.replace("```", "\n"))
+    for block in re.findall(r"```[^\n]*\n(.*?)```", section, flags=re.S):
+        tokens.extend(line.strip() for line in block.splitlines())
+    paths = [token for token in (raw.strip() for raw in tokens) if _is_brief_owned_path(token)]
+    return tuple(dict.fromkeys(paths))
+
+
+def _is_brief_owned_path(token: str) -> bool:
+    """Whether a backticked token is a repo-relative path rather than a word.
+
+    A token with a ``/`` is a path. A token without one is a repository-root
+    file (``pyproject.toml``, ``start-codex-driver.sh``, ``.gitignore``) when it
+    has a name with a dot, or names a file at the repository root
+    (``Makefile``); a bare word such as ``codex`` is not a path.
+    """
+    if not _BRIEF_PATH.fullmatch(token) or token.startswith(("/", "-")) or ".." in token.split("/"):
+        return False
+    if "/" in token:
+        return True
+    return ("." in token and token.strip(".") != "") or (REPO_ROOT / token).is_file()
+
+
 def build_dispatch_fix_command(task_id: str, prompt_file: Path) -> list[str]:
-    return [
+    """The write dispatch for a fix brief, scoped by the brief's own ``Owned paths`` (#9739).
+
+    Raises ``DispatchFixScopeError`` when the brief names none; a single
+    ``Risk: <level>`` line becomes ``--authoring-review-risk``.
+    """
+    text = prompt_file.read_text(encoding="utf-8")
+    owned = brief_owned_paths(text)
+    if not owned:
+        raise DispatchFixScopeError(
+            f"dispatch-fix refused for {task_id}: the brief has no '## Owned paths' section listing "
+            "repo-relative paths, so the write dispatch would be unscoped. Add one (or pass --brief-file "
+            "with it) and retry."
+        )
+    command = [
         PYTHON,
         "scripts/delegate.py",
         "dispatch",
@@ -171,6 +233,12 @@ def build_dispatch_fix_command(task_id: str, prompt_file: Path) -> list[str]:
         "--prompt-file",
         str(prompt_file),
     ]
+    for path in owned:
+        command.extend(["--owned-path", path])
+    risks = {risk.casefold() for risk in _BRIEF_RISK.findall(text)}
+    if len(risks) == 1:
+        command.extend(["--authoring-review-risk", risks.pop()])
+    return command
 
 
 def _serialize_files(files: Any) -> str:
@@ -351,7 +419,11 @@ def handle_dispatch_fix(args: Any) -> int:
             args.brief_file,
             prompt_directory,
         )
-        command = build_dispatch_fix_command(args.task_id, prompt_file)
+        try:
+            command = build_dispatch_fix_command(args.task_id, prompt_file)
+        except DispatchFixScopeError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
         return _run_dispatch(command, args.dry_run, prompt_file)
 
 
@@ -435,12 +507,47 @@ def build_ask_review_wait_command(task_id: str, *, timeout: int) -> list[str]:
 
 _ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800
 
+_NATIVE_CODE_REVIEW_OUTPUT = """## Existing code-review output and exact-target evidence contract
+
+In your first completed reply, include a plain, unfenced verdict line using
+the label VERDICT, a colon, then APPROVE, REQUEST_CHANGES, or BLOCKED, as warranted
+by your independent judgment. Also include one native JSON object, unfenced, conforming to
+schemas/code-review-findings.v1.schema.json (schema_version: code-review-findings.v1).
+Read that schema: overall requires correctness, explanation, confidence; each
+finding requires id, title, body, priority, confidence, category, location,
+verbatim, why_wrong, smallest_fix, sources. Do not add fields or wrap the object
+in another object. Retain every material and nonblocking finding, including
+nonblocking findings with an approving verdict; choose judgment and confidence
+independently.
+
+For each finding, use a repository-relative location.path and complete literal
+source lines from the exact reviewed target in verbatim, including all leading
+indentation, tabs, trailing spaces and intervening blank lines. Use JSON escapes
+for newlines and tabs; do not strip whitespace, quote only a substring, add line
+numbers, diff prefixes, backticks or ellipses. Only line endings are normalized.
+The 1-based start_line/end_line are inclusive and must exactly cover those lines:
+end_line = start_line + number of quoted source lines - 1.
+
+The primary location must be in a changed file. For claim_type "present", the
+quoted span must intersect an actual changed new-side line. Put unchanged
+consumers and supporting references in body/sources, anchoring the finding to
+the relevant changed source. For claim_type "missing", quote real contextual
+evidence in a changed file (which may be an unchanged line); explain the absence
+in body/why_wrong, never invent a line for absent code.
+
+Before replying, locally reread each quote at the exact target (git show at the
+pinned head for committed reviews), compare every character and inclusive span,
+and check the target diff for present anchors. Return the findings JSON yourself;
+the existing strict verifier remains authoritative.
+"""
+
 
 def run_ask_review_dispatch(
     agent: str,
     content: str,
     *,
     task_id: str,
+    data: str | None = None,
     model: str | None = None,
     effort: str | None = None,
     hard_timeout: int | None = None,
@@ -458,6 +565,10 @@ def run_ask_review_dispatch(
     wait output could not be parsed — callers turn that into a hard failure,
     never a silent fallback to ACP. Raises ``KimiAdmissionRefused`` for a
     Kimi seat before anything is written.
+
+    ``content`` is caller instruction text; ``data`` stays a separate inert
+    attachment and cannot opt into the code-review contract. Compose active
+    guidance before the attachment without interpreting or rewriting either.
     """
     # Kimi seats never review: the seat is admitted before the temporary prompt is written.
     from agent_runtime.kimi_admission import REVIEW_MODE
@@ -467,7 +578,12 @@ def run_ask_review_dispatch(
     timeout = hard_timeout or _ASK_REVIEW_DEFAULT_TIMEOUT_S
     with _prompt_directory() as prompt_directory:
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"
-        prompt_path.write_text(content, encoding="utf-8")
+        prompt = content
+        if review_profile in {"code", "infra"} or re.search(r"\bcode-review-findings\.v1\b", content):
+            prompt += "\n\n" + _NATIVE_CODE_REVIEW_OUTPUT
+        if data:
+            prompt += "\n\n--- attached inert text ---\n" + data
+        prompt_path.write_text(prompt, encoding="utf-8")
         dispatch_command = build_ask_review_dispatch_command(
             target,
             task_id,

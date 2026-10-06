@@ -400,6 +400,40 @@ def test_remove_exactly_one_product(world, managed):
     assert snapshot(world[0]) == before
 
 
+def test_remove_recorded_base_proof_matching_preserves_primaries(world, managed):
+    # Equivalent to #9742's matching-base case: a finished record forces the
+    # identity lookup to populate a cold cache unless publication is disabled.
+    primary, sibling, _ = world
+    head = commit(managed, "worker.txt", "unpushed work\n")
+    record = primary / "batch_state/tasks/base-proof.json"
+    record.write_text(
+        json.dumps(
+            {
+                "task_id": "base-proof",
+                "status": "done",
+                "worktree_path": str(managed),
+                "worktree_base_sha": head,
+            }
+        )
+    )
+    before = snapshot(primary)
+    sibling_before = {
+        key: value for key, value in snapshot(sibling).items() if not key.startswith((".worktrees", ".git/worktrees"))
+    }
+    try:
+        code, _, err = invoke("worktree-remove", managed)
+        assert code == 0, err
+        assert not managed.exists()
+        assert snapshot(primary) == before
+        assert {
+            key: value
+            for key, value in snapshot(sibling).items()
+            if not key.startswith((".worktrees", ".git/worktrees"))
+        } == sibling_before
+    finally:
+        record.unlink()
+
+
 @pytest.mark.parametrize("repo", ["public", "unknown", "", "../sibling"])
 def test_registry_refusals(world, repo):
     assert invoke("status", repo=repo)[0] == 2

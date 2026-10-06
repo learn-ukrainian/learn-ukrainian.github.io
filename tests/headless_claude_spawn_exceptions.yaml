@@ -1,0 +1,277 @@
+# Reviewed exceptions to the headless-Claude spawn rule (#9750).
+#
+# tests/test_headless_claude_background_controls.py checks every Claude-referencing
+# module under scripts/: each process-spawn API reference and InvocationPlan
+# construction must be one of the adapter wrappers' own spawns or match an entry
+# here by (module, function, program). `program` is the spawn's program as
+# written: a literal's first word, otherwise the expression's source.
+# `<argv-holder>` entries clear a function that holds a Claude program token and
+# a print flag without calling a wrapper.
+#
+# Categories:
+#   non-claude      runs a program other than Claude Code (program must not name Claude)
+#   claude-probe    fixed non-headless probe of a CLI that may be Claude; clears only a literal
+#                   `[program, *words, --version|--help]` argv (optionally behind a listed
+#                   sandbox prefixer), never a computed one
+#   runtime         the tested agent-runtime path: Claude/KimiCC plans and the shared runner
+#                   (module must be the runner or a harness in _CLAUDE_CODE_HARNESSES)
+#   generic-runner  spawns an argv the rule cannot see; the reason names what reaches it.
+#                   Not proven safe by this rule: an opaque-helper limit.
+#   argv-builder    builds a headless Claude argv that `spawned_by` (same module) runs
+#                   through a wrapper; the test checks that function calls one.
+#
+# A stale entry (one matching no site) fails the test. Add an entry only after
+# reading the spawn; never to silence a Claude print-mode run.
+exceptions:
+  # scripts/agent_runtime/adapters/acpx.py
+  - {module: scripts/agent_runtime/adapters/acpx.py, function: "<module>", program: "<argv-holder>", category: non-claude, reason: "module-level ACP option tables hold `--print` for acpx and name the Claude participant; no Claude argv"}
+  - {module: scripts/agent_runtime/adapters/acpx.py, function: "AcpxAdapter.build_invocation", program: "cmd", category: non-claude, reason: "plan runs the acpx ACP client (`acpx` argv from _confinement_prefix_argv), not `claude -p`"}
+  - {module: scripts/agent_runtime/adapters/acpx.py, function: "AcpxGrokShadowAdapter.build_invocation", program: "cmd", category: non-claude, reason: "plan runs the acpx ACP client for the Grok shadow lane"}
+  - {module: scripts/agent_runtime/adapters/acpx.py, function: "_AcpxDiscussionAdapter.build_invocation", program: "cmd", category: non-claude, reason: "plan runs the acpx ACP client, not `claude -p`"}
+  - {module: scripts/agent_runtime/adapters/acpx.py, function: "_probe_acpx_version", program: "*_acpx_spawn_argv(binary)", category: non-claude, reason: "version probe of the acpx binary"}
+  - {module: scripts/agent_runtime/adapters/acpx.py, function: "_probe_cli_help", program: "*_acpx_spawn_argv(binary)", category: non-claude, reason: "help probe of the acpx binary"}
+  - {module: scripts/agent_runtime/adapters/acpx.py, function: "_probe_grok_version", program: "binary", category: non-claude, reason: "version probe of the Grok binary"}
+  - {module: scripts/agent_runtime/adapters/acpx.py, function: "_probe_node_semver", program: "str(candidate)", category: non-claude, reason: "version probe of a Node.js candidate"}
+  - {module: scripts/agent_runtime/adapters/acpx.py, function: "_probe_participant_cli_version", program: "binary", category: claude-probe, reason: "fixed `<participant> --version` probe; a Claude participant is probed for its version only, never in print mode"}
+  - {module: scripts/agent_runtime/adapters/acpx.py, function: "_require_codex_cli", program: "binary", category: non-claude, reason: "version probe of the resolved Codex binary"}
+  # scripts/agent_runtime/adapters/agy.py
+  - {module: scripts/agent_runtime/adapters/agy.py, function: "<module>", program: "<argv-holder>", category: non-claude, reason: "module-level git allowlists hold `git log -p`; the `Claude …` strings are AGY model display labels"}
+  - {module: scripts/agent_runtime/adapters/agy.py, function: "AgyAdapter.build_invocation", program: "cmd", category: non-claude, reason: "plan runs the AGY CLI"}
+  - {module: scripts/agent_runtime/adapters/agy.py, function: "_agy_version", program: "agy_bin", category: non-claude, reason: "version probe of the AGY CLI"}
+  # scripts/agent_runtime/adapters/claude.py
+  - {module: scripts/agent_runtime/adapters/claude.py, function: "ClaudeAdapter.build_invocation", program: "<argv-holder>", category: runtime, reason: "builds the runtime Claude plan argv; the shared runner launches it (runner-tested harness)"}
+  - {module: scripts/agent_runtime/adapters/claude.py, function: "ClaudeAdapter.build_invocation", program: "cmd", category: runtime, reason: "Claude plan; the shared runner launches it with the plan's HEADLESS_BACKGROUND_ENV and settings denies (tests/agent_runtime/test_claude_no_background.py)"}
+  # scripts/agent_runtime/adapters/grok_build.py
+  - {module: scripts/agent_runtime/adapters/grok_build.py, function: "GrokBuildAdapter.build_invocation", program: "cmd", category: non-claude, reason: "plan runs the Grok Build CLI"}
+  # scripts/agent_runtime/adapters/kimicc.py
+  - {module: scripts/agent_runtime/adapters/kimicc.py, function: "KimiccHarness.build_invocation", program: "cmd", category: runtime, reason: "KimiCC plan runs kimicc_headless.sh with the switch and denies (runner-tested harness)"}
+  # scripts/agent_runtime/attempt_boundary.py
+  - {module: scripts/agent_runtime/attempt_boundary.py, function: "AttemptBoundary.verify_seat", program: "version_cmd", category: claude-probe, reason: "literal `<seat binary> --version` probe, wrapped by self.wrap in the statement just before the spawn"}
+  - {module: scripts/agent_runtime/attempt_boundary.py, function: "SourcesConnection._serve", program: "self.server['command']", category: non-claude, reason: "starts the sources MCP server (project interpreter) for a boundary check"}
+  - {module: scripts/agent_runtime/attempt_boundary.py, function: "full_review_reads", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/agent_runtime/attempt_boundary.py, function: "verify_full_review_tree", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/agent_runtime/env_sanitize.py
+  - {module: scripts/agent_runtime/env_sanitize.py, function: "_isolated_git_env", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/agent_runtime/grok_hook_bridge.py
+  - {module: scripts/agent_runtime/grok_hook_bridge.py, function: "main", program: "argv", category: non-claude, reason: "runs a pinned guard hook (guard_argv) for Grok; never a Claude CLI"}
+  # scripts/agent_runtime/kimi_admission.py
+  - {module: scripts/agent_runtime/kimi_admission.py, function: "CommitTree._git", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/agent_runtime/kimi_admission.py, function: "worktree_trees", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/agent_runtime/review_mcp.py
+  - {module: scripts/agent_runtime/review_mcp.py, function: "verify_agy_review_effective_mcp", program: "probe", category: non-claude, reason: "`agy mcp list` probe"}
+  - {module: scripts/agent_runtime/review_mcp.py, function: "verify_codex_review_effective_mcp", program: "probe", category: non-claude, reason: "`codex mcp list` probe"}
+  # scripts/agent_runtime/runner.py
+  - {module: scripts/agent_runtime/runner.py, function: "_agy_git_state", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/agent_runtime/runner.py, function: "_spawn_pipe_subprocess", program: "list(cmd)", category: runtime, reason: "the shared runner launches InvocationPlan argv and env; Claude plans come only from runner-tested harnesses"}
+  - {module: scripts/agent_runtime/runner.py, function: "_spawn_pty_subprocess", program: "list(cmd)", category: runtime, reason: "the shared runner launches InvocationPlan argv and env; Claude plans come only from runner-tested harnesses (this file's runtime entries)"}
+  # scripts/agent_runtime/telemetry.py
+  - {module: scripts/agent_runtime/telemetry.py, function: "<module>", program: "<reference>", category: non-claude, reason: "keeps a reference to the original Popen to recognise it; spawns nothing"}
+  # scripts/agent_runtime/tool_config.py
+  - {module: scripts/agent_runtime/tool_config.py, function: "_run_agy_mcp", program: "cmd", category: non-claude, reason: "`agy mcp ...` configuration command"}
+  # scripts/ai_agent_bridge/_agy.py
+  - {module: scripts/ai_agent_bridge/_agy.py, function: "_run_changed_path_command", program: "command", category: generic-runner, reason: "in-module callers pass gh/git changed-path listings only"}
+  # scripts/ai_agent_bridge/_ask_lifecycle.py
+  - {module: scripts/ai_agent_bridge/_ask_lifecycle.py, function: "launch_background_ask", program: "str(project_interpreter())", category: non-claude, reason: "runs the ai_agent_bridge entry point; the bridge's own spawns are checked by this rule"}
+  # scripts/ai_agent_bridge/_broker.py
+  - {module: scripts/ai_agent_bridge/_broker.py, function: "_check_stale_lock", program: "<argv-holder>", category: non-claude, reason: "`ps -p <pid>` holds the flag; `claude` is a process name it compares against"}
+  - {module: scripts/ai_agent_bridge/_broker.py, function: "_check_stale_lock", program: "ps", category: non-claude, reason: "runs ps"}
+  - {module: scripts/ai_agent_bridge/_broker.py, function: "_git_status_snapshot", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/ai_agent_bridge/_channels_cli.py
+  - {module: scripts/ai_agent_bridge/_channels_cli.py, function: "_git_output", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/ai_agent_bridge/_channels_cli.py, function: "_handle_channel_context", program: "*editor_argv", category: non-claude, reason: "opens $EDITOR (default vi) on a context file"}
+  # scripts/ai_agent_bridge/_claude.py
+  - {module: scripts/ai_agent_bridge/_claude.py, function: "_launch_claude_background", program: "bridge_cmd", category: non-claude, reason: "runs the bridge's `process-claude` entry point under the project interpreter; that path's Claude run is the runtime plan"}
+  # scripts/ai_agent_bridge/_cli.py
+  - {module: scripts/ai_agent_bridge/_cli.py, function: "_resolve_same_repo_pr_head", program: "cmd", category: non-claude, reason: "`gh pr view` lookup"}
+  # scripts/ai_agent_bridge/_cursor.py
+  - {module: scripts/ai_agent_bridge/_cursor.py, function: "_invoke_cursor", program: "argv", category: non-claude, reason: "runs cursor-agent (`agent -p`), not Claude Code"}
+  # scripts/ai_agent_bridge/_dispatch_wrappers.py
+  - {module: scripts/ai_agent_bridge/_dispatch_wrappers.py, function: "_run_dispatch", program: "command", category: generic-runner, reason: "runs a scripts/delegate.py dispatch command built in this module"}
+  - {module: scripts/ai_agent_bridge/_dispatch_wrappers.py, function: "_run_json_command", program: "cmd", category: generic-runner, reason: "in-module callers pass `gh issue view` / `gh pr view` only"}
+  - {module: scripts/ai_agent_bridge/_dispatch_wrappers.py, function: "_run_text_command", program: "cmd", category: generic-runner, reason: "helper for gh/delegate text commands; no in-module caller passes a Claude argv"}
+  - {module: scripts/ai_agent_bridge/_dispatch_wrappers.py, function: "run_ask_review_dispatch", program: "dispatch_command", category: non-claude, reason: "runs scripts/delegate.py dispatch (build_ask_review_dispatch_command)"}
+  - {module: scripts/ai_agent_bridge/_dispatch_wrappers.py, function: "run_ask_review_dispatch", program: "wait_command", category: non-claude, reason: "runs scripts/delegate.py wait (build_ask_review_wait_command)"}
+  # scripts/ai_agent_bridge/_gemini.py
+  - {module: scripts/ai_agent_bridge/_gemini.py, function: "_launch_gemini_background", program: "bridge_cmd", category: non-claude, reason: "runs the bridge's Gemini `process` entry point under the project interpreter"}
+  # scripts/ai_agent_bridge/_inbox_watch.py
+  - {module: scripts/ai_agent_bridge/_inbox_watch.py, function: "run_supervisory_wake_watcher", program: "bash", category: non-claude, reason: "sources handoff_identity.sh to resolve a stream selector"}
+  - {module: scripts/ai_agent_bridge/_inbox_watch.py, function: "wake_driver_once", program: "<reference>", category: non-claude, reason: "runs the configured supervisory launcher script (`<launcher> --epic`); shell launchers that run claude -p are checked by test_shell_launchers_are_proven_by_a_runner_test"}
+  # scripts/ai_agent_bridge/_messaging.py
+  - {module: scripts/ai_agent_bridge/_messaging.py, function: "_insert_message", program: "osascript", category: non-claude, reason: "posts a macOS notification"}
+  # scripts/ai_agent_bridge/_opencode.py
+  - {module: scripts/ai_agent_bridge/_opencode.py, function: "_run_opencode", program: "argv", category: non-claude, reason: "runs the opencode CLI"}
+  # scripts/ai_agent_bridge/_review_worktree.py
+  - {module: scripts/ai_agent_bridge/_review_worktree.py, function: "_base_blob_bytes", program: "*common", category: non-claude, reason: "runs git"}
+  - {module: scripts/ai_agent_bridge/_review_worktree.py, function: "_changed_line_numbers_for_snapshot", program: "str(git_bin)", category: non-claude, reason: "runs git"}
+  - {module: scripts/ai_agent_bridge/_review_worktree.py, function: "_changed_lines_between_bytes", program: "str(git_bin)", category: non-claude, reason: "runs git"}
+  - {module: scripts/ai_agent_bridge/_review_worktree.py, function: "_run_command", program: "command", category: generic-runner, reason: "in-module callers pass gh/git commands only"}
+  # scripts/ai_agent_bridge/_ui_codex.py
+  - {module: scripts/ai_agent_bridge/_ui_codex.py, function: "send", program: "codex", category: non-claude, reason: "runs the Codex CLI"}
+  # scripts/ai_agent_bridge/openai_proxy.py
+  - {module: scripts/ai_agent_bridge/openai_proxy.py, function: "_claude_backend", program: "<argv-holder>", category: argv-builder, reason: "builds the claude backend argv; _run_backend_command runs it through run_headless_claude", spawned_by: _run_backend_command}
+  - {module: scripts/ai_agent_bridge/openai_proxy.py, function: "_run_backend_command", program: "argv", category: generic-runner, reason: "codex, agy and hermes backends; the claude backend takes run_headless_claude in the same function (test_openai_proxy_claude_child_is_controlled)"}
+  # scripts/api/agent_router.py
+  - {module: scripts/api/agent_router.py, function: "_execute_command", program: "args", category: generic-runner, reason: "in-module callers pass ps and git status only"}
+  # scripts/api/blue_router.py
+  - {module: scripts/api/blue_router.py, function: "get_audit_status", program: "str(audit_script)", category: non-claude, reason: "runs the module audit script"}
+  # scripts/api/comms_router.py
+  - {module: scripts/api/comms_router.py, function: "_check_build_processes", program: "ps", category: non-claude, reason: "runs ps"}
+  # scripts/api/subscription_usage.py
+  - {module: scripts/api/subscription_usage.py, function: "_load_claude_oauth_token", program: "str(security)", category: non-claude, reason: "reads a keychain item with the macOS security tool"}
+  - {module: scripts/api/subscription_usage.py, function: "_probe_antigravity_native", program: "agy_bin", category: non-claude, reason: "AGY `/usage` probe"}
+  # scripts/audit/bakeoff_run.py
+  - {module: scripts/audit/bakeoff_run.py, function: "run_command", program: "list(argv)", category: generic-runner, reason: "in-module callers run v7_build.py and audit scripts under the project interpreter"}
+  # scripts/audit/code_review_benchmark.py
+  - {module: scripts/audit/code_review_benchmark.py, function: "build_native_command", program: "<argv-holder>", category: argv-builder, reason: "builds the native Claude argv; run_subprocess runs it through run_headless_claude", spawned_by: run_subprocess}
+  - {module: scripts/audit/code_review_benchmark.py, function: "command_version", program: "binary", category: claude-probe, reason: "fixed `<binary> --version` probe"}
+  - {module: scripts/audit/code_review_benchmark.py, function: "run_subprocess", program: "cmd", category: generic-runner, reason: "codex, gemini and hermes routes; the anthropic route passes headless_claude=True and takes run_headless_claude (test_native_claude_benchmark_child_is_controlled)"}
+  # scripts/audit/judge_calibration_matrix.py
+  - {module: scripts/audit/judge_calibration_matrix.py, function: "build_native_command", program: "<argv-holder>", category: argv-builder, reason: "builds the native Claude argv; run_subprocess runs it through run_headless_claude", spawned_by: run_subprocess}
+  - {module: scripts/audit/judge_calibration_matrix.py, function: "command_version", program: "binary", category: claude-probe, reason: "fixed `<binary> --version` probe"}
+  - {module: scripts/audit/judge_calibration_matrix.py, function: "run_subprocess", program: "cmd", category: generic-runner, reason: "codex, gemini and hermes routes; the anthropic route passes headless_claude=True and takes run_headless_claude (test_native_claude_benchmark_child_is_controlled)"}
+  # scripts/audit/lint_agent_trailer.py
+  - {module: scripts/audit/lint_agent_trailer.py, function: "_git", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/audit/llm_reviewer_dispatch.py
+  - {module: scripts/audit/llm_reviewer_dispatch.py, function: "_http_endpoint_responds", program: "curl", category: non-claude, reason: "probes an HTTP endpoint with curl"}
+  - {module: scripts/audit/llm_reviewer_dispatch.py, function: "_invoke_output_path_bridge", program: "argv", category: non-claude, reason: "runs the legacy ai_agent_bridge ask-agy review command under the project interpreter"}
+  - {module: scripts/audit/llm_reviewer_dispatch.py, function: "_lineage_from_git", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/audit/llm_reviewer_dispatch.py, function: "live_batch_preflight", program: "opencode", category: non-claude, reason: "`opencode models` preflight"}
+  # scripts/audit/naturalness_check.py
+  - {module: scripts/audit/naturalness_check.py, function: "call_agy", program: "str(VENV_PYTHON)", category: non-claude, reason: "runs the ai_agent_bridge ask-agy entry point"}
+  - {module: scripts/audit/naturalness_check.py, function: "call_claude_headless", program: "str(VENV_PYTHON)", category: non-claude, reason: "runs the ai_agent_bridge ask-claude entry point; the bridge's Claude run is the runtime plan"}
+  # scripts/audit/run_subscription_1x17_sweep.py
+  - {module: scripts/audit/run_subscription_1x17_sweep.py, function: "_run_cell", program: "str(PY)", category: non-claude, reason: "runs a repository module under the project interpreter"}
+  # scripts/audit/russianism_eval.py
+  - {module: scripts/audit/russianism_eval.py, function: "BridgeCaller.__call__", program: "call.argv", category: non-claude, reason: "runs ai_agent_bridge ask-claude/ask-codex/ask-agy under the project interpreter"}
+  # scripts/audit/russianism_judge.py
+  - {module: scripts/audit/russianism_judge.py, function: "call_judge", program: "argv", category: non-claude, reason: "runs ai_agent_bridge ask-claude/ask-codex/ask-gemini under the project interpreter"}
+  # scripts/batch/batch_dispatcher_helpers.py
+  - {module: scripts/batch/batch_dispatcher_helpers.py, function: "dispatch_track", program: "cmd", category: non-claude, reason: "runs the batch runner under the project interpreter"}
+  # scripts/batch/batch_otaman.py
+  - {module: scripts/batch/batch_otaman.py, function: "dispatch_otaman", program: "cmd", category: non-claude, reason: "runs ai_agent_bridge ask-gemini under the project interpreter"}
+  # scripts/build/build_module_direct.py
+  - {module: scripts/build/build_module_direct.py, function: "phase_enrich", program: "args", category: non-claude, reason: "runs ai_agent_bridge ask-gemini under the project interpreter"}
+  - {module: scripts/build/build_module_direct.py, function: "phase_mdx", program: "args", category: non-claude, reason: "runs generate_mdx_direct.py under the project interpreter"}
+  # scripts/build/fresh/writer.py
+  - {module: scripts/build/fresh/writer.py, function: "_run_harness", program: "cmd", category: generic-runner, reason: "in-module callers pass scripts/delegate.py dispatch, status and wait commands"}
+  # scripts/build/linear_pipeline.py
+  - {module: scripts/build/linear_pipeline.py, function: "_wiki_roots", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/build/v7_build.py
+  - {module: scripts/build/v7_build.py, function: "_persist_build_artifacts", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/build/v7_build.py, function: "_run_git", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/build/v7_build.py, function: "_run_in_worktree", program: "command", category: non-claude, reason: "re-runs v7_build.py in the worktree under the project interpreter"}
+  # scripts/curriculum/evidence/sense_bindings.py
+  - {module: scripts/curriculum/evidence/sense_bindings.py, function: "git", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/delegate.py
+  - {module: scripts/delegate.py, function: "_advisory_worker_diff", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_apply_dispatch_sparse_checkout._run_git", program: "args", category: non-claude, reason: "runs git sparse-checkout"}
+  - {module: scripts/delegate.py, function: "_authoring_commit_available", program: "git", category: non-claude, reason: "runs `git cat-file -e`"}
+  - {module: scripts/delegate.py, function: "_authoring_default_branch", program: "git", category: non-claude, reason: "runs `git ls-remote --symref <remote> HEAD`"}
+  - {module: scripts/delegate.py, function: "_authoring_gh_json", program: "command", category: non-claude, reason: "runs the GitHub CLI: both in-module callers pass a literal `gh pr list` / `gh pr view` argv"}
+  - {module: scripts/delegate.py, function: "_auto_finalize_changed_files", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_auto_finalize_dirty_worktree", program: "*git_prefix", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_auto_finalize_dirty_worktree", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_branch_ref_exists", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_branch_worktree_paths", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_checked_out_branch_names", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_commit_is_durably_contained", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_count_unpushed_commits", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_current_branch", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_delete_local_branch", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_dispatch", program: "<reference>", category: runtime, reason: "hands subprocess.Popen to the agent runtime launch of the worker plan; Claude plans come only from runner-tested harnesses"}
+  - {module: scripts/delegate.py, function: "_dispatch_worktree_components", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_ensure_sibling_repo_worktree", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_ensure_worktree", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_fetch_existing_branch", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_fetch_remote_branch", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_git_common_dir_identity", program: "git", category: non-claude, reason: "runs `git rev-parse --git-common-dir`"}
+  - {module: scripts/delegate.py, function: "_git_is_ancestor", program: "git", category: non-claude, reason: "runs `git merge-base --is-ancestor`"}
+  - {module: scripts/delegate.py, function: "_git_rev_count", program: "git", category: non-claude, reason: "runs `git rev-list --count`"}
+  - {module: scripts/delegate.py, function: "_is_ancestor_of_head", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_list_worktree_dirs", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_live_origin_branch_shas", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_ls_remote_branch_sha", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_push_auto_finalize_branch", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_read_only_checkout_snapshot", program: "command", category: non-claude, reason: "runs git status"}
+  - {module: scripts/delegate.py, function: "_require_local_branch_is_ancestor_of_origin", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_rescue_git", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_resolve_commit", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_resolve_local_base_sha", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_resolve_sha", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_review_attempt_marker_path", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_run_count_ahead", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_run_dor_preflight.check", program: "gh", category: non-claude, reason: "runs the GitHub CLI"}
+  - {module: scripts/delegate.py, function: "_run_dor_preflight.check", program: "sys.executable", category: non-claude, reason: "runs a repository Python script; its own spawns are checked where it lives"}
+  - {module: scripts/delegate.py, function: "_run_git_stdout", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_run_merge_base", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_run_worktree_add", program: "add_command", category: non-claude, reason: "runs `git worktree add` (built by the caller)"}
+  - {module: scripts/delegate.py, function: "_tracking_remote_for_current_branch", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_validate_existing_worktree", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_verify_origin_tracking_ref", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_worktree_diff_output", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_worktree_is_clean", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_worktree_is_dirty", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_worktree_registration", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/eval/zno_nmt/adapters.py
+  - {module: scripts/eval/zno_nmt/adapters.py, function: "_claude_capabilities", program: "binary", category: claude-probe, reason: "literal `<binary> --help` and `<binary> --version` capability probes"}
+  - {module: scripts/eval/zno_nmt/adapters.py, function: "run_claude", program: "<argv-holder>", category: argv-builder, reason: "builds the restricted ZNO Claude argv; _run_claude_process runs it through popen_headless_claude", spawned_by: _run_claude_process}
+  # scripts/hooks/measure_hook_stack.py
+  - {module: scripts/hooks/measure_hook_stack.py, function: "_time_one", program: "argv", category: non-claude, reason: "times repository hook scripts (bash) from the STACK table"}
+  # scripts/hygiene/branch_sweep.py
+  - {module: scripts/hygiene/branch_sweep.py, function: "_git", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/hygiene/tmp_sweep.py
+  - {module: scripts/hygiene/tmp_sweep.py, function: "registered_worktrees", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/lib/session_record.py
+  - {module: scripts/lib/session_record.py, function: "canonical_state_root", program: "command", category: non-claude, reason: "runs git rev-parse"}
+  # scripts/orchestration/claudex_supervisor.py
+  - {module: scripts/orchestration/claudex_supervisor.py, function: "ClaudexSupervisor._launch", program: "gate_command", category: non-claude, reason: "runs this supervisor's own launch gate under the project interpreter"}
+  - {module: scripts/orchestration/claudex_supervisor.py, function: "_launch_child_gate", program: "command[0]", category: generic-runner, reason: "execs the launcher script the supervisor was started with; shell launchers that run claude -p are checked by test_shell_launchers_are_proven_by_a_runner_test"}
+  # scripts/orchestration/observer_heartbeat.py
+  - {module: scripts/orchestration/observer_heartbeat.py, function: "_list_running_processes", program: "/bin/ps", category: non-claude, reason: "runs ps"}
+  # scripts/orchestration/orchestrator_control.py
+  - {module: scripts/orchestration/orchestrator_control.py, function: "cmd_dispatch", program: "command", category: non-claude, reason: "runs scripts/delegate.py dispatch (build_delegate_command)"}
+  # scripts/orchestration/reap_worktrees.py
+  - {module: scripts/orchestration/reap_worktrees.py, function: "_run", program: "args", category: generic-runner, reason: "in-module callers pass git commands only"}
+  # scripts/orchestration/scheduled_worktree_cleanup.py
+  - {module: scripts/orchestration/scheduled_worktree_cleanup.py, function: "_repo_result_unlocked", program: "sys.executable", category: non-claude, reason: "runs a repository Python script; its own spawns are checked where it lives"}
+  - {module: scripts/orchestration/scheduled_worktree_cleanup.py, function: "_run_git", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/orchestration/thread_handoff.py
+  - {module: scripts/orchestration/thread_handoff.py, function: "run_command", program: "args", category: generic-runner, reason: "in-module callers pass git, gh, ps, ioreg and the claudex supervisor under the project interpreter"}
+  # scripts/orchestration/worker_leftovers.py
+  - {module: scripts/orchestration/worker_leftovers.py, function: "_systemctl_stop", program: "systemctl", category: non-claude, reason: "stops a systemd user scope"}
+  # scripts/pipeline/core.py
+  - {module: scripts/pipeline/core.py, function: "_check_archive_fits_outline", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/pipeline/core.py, function: "detect_archived_prose", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/pipeline/core.py, function: "restore_from_archive", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/pipeline/core.py, function: "run_script", program: "cmd", category: non-claude, reason: "runs a repository script under the project interpreter"}
+  - {module: scripts/pipeline/core.py, function: "run_verify", program: "cmd", category: non-claude, reason: "runs the module audit script"}
+  - {module: scripts/pipeline/core.py, function: "run_verify_prose_only", program: "audit_script", category: non-claude, reason: "runs the module audit script"}
+  # scripts/pipeline/dispatch.py
+  - {module: scripts/pipeline/dispatch.py, function: "run_with_heartbeat", program: "cmd", category: generic-runner, reason: "runs the AGY route; dispatch_claude_phase takes run_headless_claude instead (test_pipeline_phase_child_is_controlled)"}
+  # scripts/projects/ua_open_weight_eval/suite_cli.py
+  - {module: scripts/projects/ua_open_weight_eval/suite_cli.py, function: "run_local", program: "command", category: generic-runner, reason: "runs the local open-weight model command from the suite config"}
+  # scripts/review/closeout_cli.py
+  - {module: scripts/review/closeout_cli.py, function: "_checkout_git", program: "git", category: non-claude, reason: "runs `git -C <repo> ...`"}
+  # scripts/review/isolation.py
+  - {module: scripts/review/isolation.py, function: "_probe_sealed_read_mcp", program: "command", category: non-claude, reason: "runs the sealed-read MCP helper under Python in the sandbox"}
+  - {module: scripts/review/isolation.py, function: "_sealed_reader_python_runtime", program: "str(python_bin)", category: non-claude, reason: "probes the sealed reader's Python runtime"}
+  - {module: scripts/review/isolation.py, function: "prepare_host_sandbox", program: "cmd", category: non-claude, reason: "sandbox probe running /bin/cat"}
+  - {module: scripts/review/isolation.py, function: "prepare_host_sandbox", program: "/bin/cat", category: non-claude, reason: "sandbox read-denial probe running /bin/cat behind wrap_argv_with_sandbox"}
+  - {module: scripts/review/isolation.py, function: "prepare_host_sandbox", program: "/bin/sh", category: non-claude, reason: "sandbox write-denial and write probes running /bin/sh printf behind wrap_argv_with_sandbox"}
+  - {module: scripts/review/isolation.py, function: "probe_engine_help", program: "program", category: claude-probe, reason: "literal `<engine> --help`, `--version` and `exec --help` probes, optionally behind wrap_argv_with_sandbox"}
+  - {module: scripts/review/isolation.py, function: "stage_engine_auth", program: "str(security)", category: non-claude, reason: "reads a keychain item with the macOS security tool"}
+  - {module: scripts/review/isolation.py, function: "verify_macos_sandbox", program: "str(sandbox_exec)", category: non-claude, reason: "sandbox-exec probe running /bin/cat"}
+  # scripts/review/record_cf_verdict.py
+  - {module: scripts/review/record_cf_verdict.py, function: "_facts_git", program: "command", category: non-claude, reason: "runs git: the argv is the literal `git -C <repo> -c core.commitGraph=false --no-replace-objects` list built in the function"}
+  - {module: scripts/review/record_cf_verdict.py, function: "_is_clean_base_merge", program: "*git", category: non-claude, reason: "runs git"}
+  - {module: scripts/review/record_cf_verdict.py, function: "_repo_root", program: "git", category: non-claude, reason: "runs git"}
+  # scripts/tools/agent_watcher.py
+  - {module: scripts/tools/agent_watcher.py, function: "_capture_login_env", program: "bash", category: non-claude, reason: "captures a login shell's env"}
+  - {module: scripts/tools/agent_watcher.py, function: "is_any_agent_active", program: "pgrep", category: non-claude, reason: "runs pgrep"}
+  - {module: scripts/tools/agent_watcher.py, function: "notify_human", program: "osascript", category: non-claude, reason: "posts a macOS notification"}
+  - {module: scripts/tools/agent_watcher.py, function: "trigger_agent", program: "cmd", category: non-claude, reason: "runs an ai_agent_bridge process command under the project interpreter"}
+  # scripts/tools/upgrade_activity_hints.py
+  - {module: scripts/tools/upgrade_activity_hints.py, function: "call_agy", program: "*command", category: non-claude, reason: "runs ai_agent_bridge ask-agy"}
+  # scripts/utils/claude_version.py
+  - {module: scripts/utils/claude_version.py, function: "run_version_probe", program: "cmd_prefix[0]", category: claude-probe, reason: "literal `<program> --version` probe shared by the version gates, the lane probe and the proxy health probes"}
+  - {module: scripts/utils/claude_version.py, function: "run_version_probe", program: "npx", category: claude-probe, reason: "literal `npx @anthropic-ai/claude-code@latest --version` probe of the npx fallback"}

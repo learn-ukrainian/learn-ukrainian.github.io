@@ -125,8 +125,10 @@ class ReadyItem:
     item_id: str
     kind: str = "issue"
     ready: bool = True
-    valuable: bool = True
-    independent: bool = True
+    # Work-sourced rows must not become fillable because these defaulted true.
+    # Eligibility snapshots still pass an explicit value.
+    valuable: bool = False
+    independent: bool = False
     compatible_lanes: tuple[str, ...] | None = None
     dependency_blocked: bool = False
 
@@ -427,9 +429,11 @@ def items_from_work_next_queue(queue: list[dict[str, Any]] | None) -> tuple[Read
             ReadyItem(
                 item_id=item_id,
                 kind=str(row.get("resource_kind") or row.get("kind") or "issue"),
-                ready=True,
-                valuable=True,
-                independent=True,
+                # Queue membership is not admission. Work does not supply
+                # fillable items until an admission owner provides them.
+                ready=False,
+                valuable=False,
+                independent=False,
                 compatible_lanes=None,
                 dependency_blocked=dep_blocked,
             )

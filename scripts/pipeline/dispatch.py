@@ -10,11 +10,15 @@ import shutil
 import subprocess
 import threading
 import time
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 try:
+    from agent_runtime.adapters.claude import run_headless_claude
     from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 except ModuleNotFoundError:
+    from scripts.agent_runtime.adapters.claude import run_headless_claude
     from scripts.utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 
 # Late imports to avoid circular dependencies
@@ -59,11 +63,9 @@ def _flash_lite_model() -> str:
 # Heartbeat subprocess runner
 # ---------------------------------------------------------------------------
 
-def run_with_heartbeat(
-    cmd: list[str], label: str, timeout: int = 1800,
-    heartbeat_interval: int = 30, **kwargs,
-) -> subprocess.CompletedProcess:
-    """Run a subprocess with periodic heartbeat logging."""
+@contextmanager
+def heartbeat(label: str, heartbeat_interval: int = 30) -> Iterator[None]:
+    """Log elapsed time every ``heartbeat_interval`` seconds until the block exits."""
     stop_event = threading.Event()
     t0 = time.time()
 
@@ -76,11 +78,19 @@ def run_with_heartbeat(
     thread = threading.Thread(target=_heartbeat, daemon=True)
     thread.start()
     try:
-        result = subprocess.run(cmd, timeout=timeout, **kwargs)
-        return result
+        yield
     finally:
         stop_event.set()
         thread.join(timeout=2)
+
+
+def run_with_heartbeat(
+    cmd: list[str], label: str, timeout: int = 1800,
+    heartbeat_interval: int = 30, **kwargs,
+) -> subprocess.CompletedProcess:
+    """Run a subprocess with periodic heartbeat logging."""
+    with heartbeat(label, heartbeat_interval):
+        return subprocess.run(cmd, timeout=timeout, **kwargs)
 
 
 # ---------------------------------------------------------------------------
@@ -368,14 +378,16 @@ def dispatch_claude_phase(
                      "is automatically discarded. Do NOT summarize — produce the FULL output requested."])
 
     try:
-        result = run_with_heartbeat(
-            cmd,
-            label=f"Claude {phase_label}",
-            timeout=timeout,
-            capture_output=True, text=True,
-            input=prompt,
-            cwd=str(_PROJECT_ROOT), env=env,
-        )
+        # The run ends with its final turn; no background work may outlive it (#9750).
+        with heartbeat(f"Claude {phase_label}"):
+            result = run_headless_claude(
+                cmd,
+                base_env=env,
+                timeout=timeout,
+                capture_output=True, text=True,
+                input=prompt,
+                cwd=str(_PROJECT_ROOT),
+            )
         if result.returncode != 0:
             err = (result.stderr or "").strip()
             _log(f"  Claude CLI error (rc={result.returncode}): {err[:300]}")

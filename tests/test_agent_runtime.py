@@ -1299,6 +1299,25 @@ def test_codex_check_early_reap_fires_once_the_final_file_is_stable(tmp_path, mo
         plan.output_file.unlink(missing_ok=True)
 
 
+def test_codex_check_early_reap_late_stdout_needs_advancing_clock(tmp_path, monkeypatch):
+    """#9761: completion delivered after the clock freezes cannot become stable."""
+    adapter = CodexAdapter()
+    plan = _codex_reap_plan(adapter, tmp_path)
+    try:
+        plan.output_file.write_text("The complete audit response.")
+        assert _reap_checks(adapter, plan, "", monkeypatch, times=[20.0]) == [False]
+        stream = completed_stream()
+        assert _reap_checks(adapter, plan, stream, monkeypatch, times=[20.0] * 10) == [False] * 10
+        assert _reap_checks(adapter, plan, stream, monkeypatch, times=[22.0, 24.0]) == [False, True]
+        result = adapter.parse_response(
+            stdout=stream, stderr="", returncode=-9, output_file=plan.output_file, plan=plan
+        )
+        assert result.ok is True
+        assert result.response == "The complete audit response."
+    finally:
+        plan.output_file.unlink(missing_ok=True)
+
+
 def test_codex_check_early_reap_never_fires_before_the_final_file_is_written(tmp_path, monkeypatch):
     """``turn.completed`` precedes exec's -o write: completion alone never reaps."""
     adapter = CodexAdapter()
@@ -1897,16 +1916,20 @@ def _agent_only_popen(agent_popen):
     return _wrapper
 
 
-def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
+@pytest.mark.parametrize("stdout_delay_ticks", [0, 10], ids=["immediate-stdout", "late-stdout"])
+def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, stdout_delay_ticks):
     """Regression pin (2026-04-10, reworked for #9532): when Codex hangs after
     finishing its turn, the runner hands check_early_reap the captured
     ``--json`` stream; once the turn completed and its ``-o`` bytes are stable
     the runner kills the process and parse_response returns those bytes.
 
-    The mock process emits the completed stream on stdout (pipe mode) and
-    writes -o on its first poll, then never exits on its own.
+    The mock process writes -o on its first poll, then never exits on its own.
+    Deliver stdout synchronously through the real reader function on a controlled poll tick,
+    including after the old fixture's finite clock sequence would freeze.
     """
     from unittest.mock import MagicMock
+
+    from agent_runtime.watchdog import _stdout_streamer
 
     monkeypatch.setenv("DELEGATE_DISABLE_PTY", "1")
     stream_lines = iter(completed_stream().splitlines(keepends=True))
@@ -1948,27 +1971,34 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     # without actually sending signals.
     mock_kill_tree = MagicMock(side_effect=lambda p: fake_kill())
 
-    # Pass the 5s warmup and the 2s stability gap: the call is 10s old on
-    # the first check, and time then advances to a constant 20s.
-    import time as _time
-
-    base_time = _time.monotonic()
-    monotonic_values = iter(
-        [
-            base_time,  # start_time capture in runner
-            base_time + 10,
-            base_time + 11,
-            base_time + 12,
-            base_time + 13,
-            base_time + 14,
-        ]
-    )
+    # Advance per poll, not per monotonic read: reader/activity observations
+    # must not consume a finite sequence and leave late stdout at frozen time.
+    base_time = 1000.0
+    simulated_now = base_time
 
     def fake_monotonic():
-        try:
-            return next(monotonic_values)
-        except StopIteration:
-            return base_time + 20
+        return simulated_now
+
+    watchdog_state = WatchdogState(start_time=base_time, last_activity=base_time)
+    poll_ticks = 0
+
+    def fake_start_watchdog(proc, *args, **kwargs):
+        nonlocal simulated_now
+        simulated_now += 10.0  # Past the 5s warmup before the first check.
+        if stdout_delay_ticks == 0:
+            _stdout_streamer(proc, watchdog_state)
+        return watchdog_state, []
+
+    def poll_tick(_interval):
+        nonlocal poll_ticks, simulated_now
+        poll_ticks += 1
+        # A broken fixture must fail in bounded simulated ticks, never hang CI.
+        assert poll_ticks <= stdout_delay_ticks + 3, "early reap exceeded bounded poll ticks"
+        simulated_now += 2.0  # Continue beyond delivery for the stable-byte observation.
+        if poll_ticks == stdout_delay_ticks:
+            assert not state["killed"]
+            assert watchdog_state.stdout_lines == []
+            _stdout_streamer(mock_proc, watchdog_state)
 
     with (
         patch(
@@ -1983,8 +2013,12 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
             _agent_only_popen(MagicMock(side_effect=agent_popen)),
         ),
         patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
-            0.01,
+            "agent_runtime.runner.start_watchdog",
+            side_effect=fake_start_watchdog,
+        ),
+        patch(
+            "agent_runtime.runner.time.sleep",
+            side_effect=poll_tick,
         ),
         patch(
             "agent_runtime.runner.time.monotonic",
@@ -2007,6 +2041,8 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
 
     # Runner must have killed the proc via _kill_process_tree (early reap)
     mock_kill_tree.assert_called_once()
+    assert poll_ticks == stdout_delay_ticks + 1
+    assert "".join(watchdog_state.stdout_lines) == completed_stream()
     # And returned a successful Result with the recovered response
     assert result.ok is True, (
         f"early-reap recovery should produce ok=True, got stderr_excerpt={result.stderr_excerpt!r}"

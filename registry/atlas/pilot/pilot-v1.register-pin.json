@@ -1,0 +1,19 @@
+{
+  "schema_version": "atlas-pilot-register-pin.v1",
+  "manifest_sha256": "7e95dbc7d5b0b5dcf2df329bfc319abf699a16d1ae4ce92706eb994acda97197",
+  "legacy_source_register_sha256": "eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873",
+  "basis": "sha256 canonical UTF-8 JSON of {sources: referenced register entries sorted by id, legal_references: cited terms.legal_refs objects resolved by id and sorted by id}",
+  "source_ids": [
+    "frazeolohichnyi",
+    "puls",
+    "ukrainian_word_stress",
+    "ulif"
+  ],
+  "pins": [
+    {
+      "entries_sha256": "912713e18fff712fd2dec8f5300e037a8b276e5fd048b69cfc926a348e7ecb38",
+      "reason": "#9643 migration: entries digest of the admitted register (whole-file digest unchanged at migration)",
+      "recorded": "2026-10-06"
+    }
+  ]
+}

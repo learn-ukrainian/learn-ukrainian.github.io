@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts.orchestration import orchestrator_control as oc
 
 
@@ -126,9 +128,7 @@ def test_inbox_marks_no_deliverable_for_operator_attention(tmp_path: Path, capsy
     assert rc == 0
     assert payload["tasks"][0]["status"] == "no_deliverable"
     assert "no_deliverable" in payload["tasks"][0]["attention"]
-    assert payload["tasks"][0]["no_deliverable_reason"] == (
-        "write_capable_clean_worktree_zero_commits_short_response"
-    )
+    assert payload["tasks"][0]["no_deliverable_reason"] == ("write_capable_clean_worktree_zero_commits_short_response")
 
 
 def test_inbox_json_reports_missing_recorded_task(tmp_path: Path, capsys):
@@ -172,6 +172,12 @@ def test_dispatch_dry_run_builds_delegate_command(tmp_path: Path, capsys):
             "--worktree",
             "--prompt-file",
             str(prompt),
+            "--owned-path",
+            "scripts/one.py",
+            "--owned-path",
+            "tests/test_one.py",
+            "--authoring-review-risk",
+            "medium",
             "--dry-run",
         ]
     )
@@ -186,6 +192,38 @@ def test_dispatch_dry_run_builds_delegate_command(tmp_path: Path, capsys):
     assert _option(command, "--prompt-file") == str(prompt)
     assert "--worktree" in command
     assert _option(command, "--base") == "main"
+    # #9739: delegate.py checks the writer's review scope and planned risk from these.
+    owned = [command[i + 1] for i, item in enumerate(command) if item == "--owned-path"]
+    assert owned == ["scripts/one.py", "tests/test_one.py"]
+    assert _option(command, "--authoring-review-risk") == "medium"
+    assert not oc.run_state_path(tmp_path, "a1-policy").exists()
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_write_dispatch_without_owned_paths_refuses_before_any_prompt_or_delegate(tmp_path: Path, capsys, mode):
+    """#9739: a write dispatch is scoped; refuse here instead of handing delegate an unscoped writer."""
+    rc = oc.main(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "dispatch",
+            "--run-id",
+            "a1-policy",
+            "--task-id",
+            "worker-4",
+            "--agent",
+            "codex",
+            "--mode",
+            mode,
+            "--worktree",
+            "--prompt",
+            "Do the worker task.",
+        ]
+    )
+
+    assert rc == 2
+    assert "requires --owned-path" in json.loads(capsys.readouterr().out)["error"]
+    assert not (oc.runs_dir(tmp_path) / "prompts").exists()
     assert not oc.run_state_path(tmp_path, "a1-policy").exists()
 
 

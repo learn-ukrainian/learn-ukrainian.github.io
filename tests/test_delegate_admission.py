@@ -88,11 +88,30 @@ def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str = "ad
         *extra,
     ]
     if mode != "read-only":
-        argv.append("--worktree")
+        # A write dispatch declares its scope (#9739); an ordinary path keeps a new branch unprotected.
+        argv.extend(("--worktree", "--owned-path", "scripts/example.py"))
     return delegate.build_parser().parse_args(argv)
 
 
+def _pin_origin_main_to_head(monkeypatch) -> None:
+    """Give write-dispatch review admission (#9739) a canonical default branch at the checkout's own HEAD.
+
+    Admission observes the default branch and the open PRs on GitHub (A7);
+    here that is HEAD and none, so the dispatch is a fresh branch with no
+    commits of its own and these tests check host admission, not the network
+    or the runner's clone depth (tests/test_authoring_review_feasibility.py
+    covers authored branches against a real remote). The dry-run worktree base
+    is that HEAD too.
+    """
+    from tests.test_authoring_review_feasibility import pin_review_target
+
+    head = _git(delegate._REPO_ROOT, "rev-parse", "HEAD")
+    pin_review_target(monkeypatch, head)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head)
+
+
 def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
 
     rc = delegate.cmd_dispatch(_dry_run_args())
@@ -108,6 +127,7 @@ def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(tasks_dir, mon
 
 
 def test_dispatch_refuses_on_low_memory_and_high_load(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     monkeypatch.setattr(
         dispatch_admission,
         "probe_host",
@@ -173,6 +193,7 @@ def test_admission_sweeps_dead_workers_to_crashed_and_frees_their_slot(tasks_dir
 
 
 def test_dry_run_reports_dead_workers_without_marking_them(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     dead = _running_record(tasks_dir, "dead-writer", pid=424242)
     monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: False)
 
@@ -210,6 +231,7 @@ def _live_danger_args(tasks: Path, task_id: str):
         worktree=str(_dispatch_worktree(tasks)),
         base="main",
         hard_timeout=3600,
+        owned_path=["scripts/example.py"],
     )
 
 
@@ -239,6 +261,9 @@ def _stub_worktree(monkeypatch, tasks: Path):
         lambda **_kwargs: (wt, "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}),
     )
     monkeypatch.setattr(delegate, "_resolve_sha", lambda *_args, **_kwargs: "abc1234")
+    # Git is stubbed, so branch authorship cannot be enumerated; these tests
+    # cover host admission. Authoring-review admission has its own tests (#9739).
+    monkeypatch.setattr(delegate, "_authoring_review_admission", lambda *_args, **_kwargs: None)
 
 
 def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, capsys):
