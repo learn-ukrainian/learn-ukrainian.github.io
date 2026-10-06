@@ -106,7 +106,7 @@ def update(source, **fields):
 
 def test_registry_and_independent_span_accounting(source):
     assert load_components(["C5"])["C5"] is COMPONENT
-    assert COMPONENT.spec["operation_specs"][OPERATION]["frozen_count"] == FROZEN_COUNT == 6711
+    assert COMPONENT.spec["operation_specs"][OPERATION]["frozen_count"] == FROZEN_COUNT == 6196
     with reader_for(source) as reader:
         gate, candidates, _ = gate_and_candidates(source, reader)
         assert sorted(c.unit_id for c in candidates) == reader.units(UNIT_QUERY)

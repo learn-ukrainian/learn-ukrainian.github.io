@@ -376,7 +376,10 @@ binding; its catalog target is the complete paragraph with the resolved reading.
 Its boundary grammar preserves balanced quotes and parentheses. Numbered or
 lettered prose needs an explicit example introduction; numbering also occurs
 in rule conditions and multi-example groups, so it cannot alone admit prose.
-Numbered comma groups consisting of multiple orthographic examples are withheld. Commas split only groups whose parts are each a single orthographic
+Numbered comma groups consisting of multiple orthographic examples are withheld.
+Capitalized parenthetical labels can cite a larger printed example sentence;
+without typography establishing their role, the entire colon region is withheld,
+including earlier comma and semicolon parts. Commas split only groups whose parts are each a single orthographic
 example (with optional printed annotations); semicolons delimit groups. Printed
 line breaks inside an item remain verbatim, including wrapped hyphens. Unmarked
 multiword lists, prose continuations and unbalanced punctuation are counted as
@@ -385,7 +388,7 @@ or emitted as fragments. A capitalized continuation after a dot does not prove
 a sentence boundary: it may follow an abbreviation. Later colon introductions
 also withhold the preceding unresolved group. The binding gate refuses promotion
 of such a group.
-The measured denominator is 6,711 units across 168 paragraphs, including those
+The measured denominator is 6,196 units across 168 paragraphs, including those
 unresolved groups; the former generic comma/semicolon grammar counted 11,926
 fragments. These counts are different inventories, not a change in source bytes.
 Paragraph reasons are `paragraph_hyphenation_unresolved`, `source_text_defect`

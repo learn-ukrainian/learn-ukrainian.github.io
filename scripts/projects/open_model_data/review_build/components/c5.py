@@ -21,7 +21,7 @@ REGISTER_ID = "pravopys_2019"
 STORE = "sources.db"
 TABLE = "pravopys_paragraphs"
 OPERATION = "printed_spelling_rule"
-FROZEN_COUNT = 6711
+FROZEN_COUNT = 6196
 UNIT_QUERY = {
     "kind": "sql",
     "store": STORE,
@@ -189,7 +189,7 @@ class PravopysComponent:
         "transforms": {"dehyphenate@2": DEHYPHENATION},
         "unit_grain": (
             "Printed colon-list example span, or one unresolved list group withheld for boundary ambiguity; "
-            "measured 6711 in 168 paragraphs."
+            "measured 6196 in 168 paragraphs."
         ),
         "reference_multiplicity": "One complete source paragraph and its held locator per printed example span.",
     }

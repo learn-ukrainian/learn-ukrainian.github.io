@@ -189,6 +189,16 @@ def _quoted_example(text: str) -> bool:
     return bool(text and balanced and not outer and text[0] in "«“\"'‘" and text[-1] in "»”\"'’")
 
 
+def _annotation_role_ambiguous(text: str) -> bool:
+    """Capitalized parenthetical labels may cite a larger printed example.
+
+    Flat paragraph text does not retain the typography distinguishing an author
+    label from a lexical annotation. Withhold the entire colon region: earlier
+    semicolon groups can also belong to the same cited sentence.
+    """
+    return any(any(char.isupper() for char in match.group()) for match in re.finditer(r"\([^)]*\)", text))
+
+
 def example_boundaries(text: str) -> list[tuple[tuple[int, int], str]]:
     """Enumerate safe examples and unresolved list spans without editing text.
 
@@ -200,7 +210,7 @@ def example_boundaries(text: str) -> list[tuple[tuple[int, int], str]]:
     items = []
     for start, end in example_regions(text):
         outer, balanced = _list_punctuation(text[start:end])
-        if not balanced:
+        if not balanced or _annotation_role_ambiguous(text[start:end]):
             items.append((_trim_span(text, start, end), "example_boundary_ambiguous"))
             continue
         separators = [start - 1, *(start + p for p, c in outer.items() if c == ";"), end]

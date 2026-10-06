@@ -105,6 +105,21 @@ def test_numbered_rule_conditions_and_multi_example_groups_are_withheld(text, ex
     assert all(reason == "example_boundary_ambiguous" for _, reason in decisions)
 
 
+@pytest.mark.parametrize(
+    "body",
+    [
+        "FIRST, SECOND, THIRD (A. Writer)",
+        "FIRST, SECOND; THIRD, FOURTH (A. Writer)",
+        "FIRST, SECOND (Writer)",
+        "FIRST (Capitalized label), SECOND",
+    ],
+)
+def test_word_lists_inside_a_cited_sentence_are_not_standalone_examples(body):
+    text = "SYNTHETIC example sentence: " + body + "."
+    decisions = bindings.example_boundaries(text)
+    assert decisions == [((text.index(body), text.index(body) + len(body)), "example_boundary_ambiguous")]
+
+
 def test_sql_span_query_is_independent_of_candidate_stream(bundle):
     text = "SYNTHETIC examples: FIRST, SECOND. Rule ends here."
     with sqlite3.connect(bundle["db"]) as writer:
