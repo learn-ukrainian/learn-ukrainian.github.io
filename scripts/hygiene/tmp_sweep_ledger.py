@@ -61,6 +61,30 @@ class LedgerError(Exception):
     """The ledger cannot be read, written or locked; nothing may leave its path."""
 
 
+class DurabilityError(LedgerError):
+    """A directory could not be synced, so a step cannot be recorded as complete; the run stops."""
+
+
+def sync_directory(directory: Path | int) -> None:
+    """``fsync`` a directory (a path or an open descriptor) so its entries survive power loss.
+
+    Creating, renaming or removing an entry changes its parent directory, and
+    ``fsync(2)`` on the file alone does not persist that change; the directory
+    itself must be synced. Raises ``DurabilityError`` when the sync fails.
+    """
+    try:
+        if isinstance(directory, int):
+            os.fsync(directory)
+            return
+        fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+    except OSError as error:
+        raise DurabilityError(f"directory sync failed: {error.strerror}") from error
+
+
 def default_state_dir() -> Path:
     """``$XDG_STATE_HOME/learn-ukrainian/tmp-sweep``; a relative or empty value is ignored per the XDG spec."""
     configured = os.environ.get("XDG_STATE_HOME", "")
@@ -130,8 +154,19 @@ class Ledger:
         self.path = directory / LEDGER_NAME
 
     def ensure_directory(self) -> None:
+        """Create the directory (owner-only) and any missing ancestor, syncing each new entry's parent."""
         try:
-            self.directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+            missing = []
+            directory = self.directory
+            while not os.path.lexists(directory):
+                missing.append(directory)
+                directory = directory.parent
+            for created in reversed(missing):
+                # Ancestors take the default mode, as ``mkdir -p`` would; the ledger directory is 0700.
+                with contextlib.suppress(FileExistsError):
+                    os.mkdir(created, 0o700 if created == self.directory else 0o777)
+                # Synced even when a concurrent writer won the race: its sync may not have happened yet.
+                sync_directory(created.parent)
             info = os.lstat(self.directory)
         except OSError as error:
             raise LedgerError(f"ledger directory unavailable: {error.strerror}") from error
@@ -185,11 +220,7 @@ class Ledger:
         finally:
             os.close(fd)
         if created:
-            dir_fd = os.open(self.directory, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
-            try:
-                os.fsync(dir_fd)
-            finally:
-                os.close(dir_fd)
+            sync_directory(self.directory)
         return record
 
     def read(self) -> tuple[list[dict[str, Any]], int]:
@@ -269,17 +300,19 @@ def _read_digest(path: Path, info: os.stat_result) -> str:
         os.close(fd)
 
 
-def build_manifest(path: Path, *, digest_limit: int = DEFAULT_DIGEST_LIMIT) -> dict[str, Any]:
+def build_manifest(path: Path, *, digest_limit: int = DEFAULT_DIGEST_LIMIT, ctime: bool = False) -> dict[str, Any]:
     """Describe every node below ``path`` (``.`` is the entry itself), sorted by relative path.
 
     Each node has its type, permission bits and mtime (ns); regular files add
     size and, up to ``digest_limit`` bytes, a SHA-256 (larger ones carry
-    ``digest_skipped_size``); symlinks add their target. Symlinks are never
+    ``digest_skipped_size`` and are counted in ``digest_skipped_files``);
+    symlinks add their target. With ``ctime`` each node also carries
+    ``ctime_ns``, for comparisons that are never recorded. Symlinks are never
     followed and devices never crossed; raises ``OSError`` when a node cannot
     be read.
     """
     nodes: list[dict[str, Any]] = []
-    total = files = 0
+    total = files = skipped = 0
     newest_m = newest_c = 0.0
     device = path.lstat().st_dev
     pending = [(path, ".")]
@@ -290,6 +323,8 @@ def build_manifest(path: Path, *, digest_limit: int = DEFAULT_DIGEST_LIMIT) -> d
             raise OSError(f"{relative} is on another device")
         newest_m, newest_c = max(newest_m, info.st_mtime), max(newest_c, info.st_ctime)
         item: dict[str, Any] = {"path": relative, "mode": stat.S_IMODE(info.st_mode), "mtime_ns": info.st_mtime_ns}
+        if ctime:
+            item["ctime_ns"] = info.st_ctime_ns
         if stat.S_ISDIR(info.st_mode):
             item["type"] = "directory"
             prefix = "" if relative == "." else relative + "/"
@@ -302,6 +337,7 @@ def build_manifest(path: Path, *, digest_limit: int = DEFAULT_DIGEST_LIMIT) -> d
                 item["sha256"] = _read_digest(node, info)
             else:
                 item["digest_skipped_size"] = True
+                skipped += 1
         elif stat.S_ISLNK(info.st_mode):
             item |= {"type": "symlink", "target": os.readlink(node)}
         else:
@@ -314,6 +350,7 @@ def build_manifest(path: Path, *, digest_limit: int = DEFAULT_DIGEST_LIMIT) -> d
         "newest_mtime": utc_iso(newest_m),
         "newest_ctime": utc_iso(newest_c),
         "digest_limit_bytes": digest_limit,
+        "digest_skipped_files": skipped,
         "manifest": nodes,
     }
 
@@ -323,3 +360,41 @@ def manifest_mismatches(recorded: list[dict[str, Any]], current: list[dict[str, 
     before = {item["path"]: item for item in recorded}
     after = {item["path"]: item for item in current}
     return sorted(path for path in before.keys() | after.keys() if before.get(path) != after.get(path))
+
+
+def digest_unverified(recorded: list[dict[str, Any]], mismatches: list[str]) -> list[str]:
+    """Recorded files above the digest limit that matched only by size and mtime, so their bytes are unproven."""
+    changed = set(mismatches)
+    return [item["path"] for item in recorded if item.get("digest_skipped_size") and item["path"] not in changed]
+
+
+def _parent(relative: str) -> str:
+    return relative.rsplit("/", 1)[0] if "/" in relative else "."
+
+
+def surviving_mismatches(
+    recorded: list[dict[str, Any]], current: list[dict[str, Any]], *, changed_by: float
+) -> list[str]:
+    """Nodes an interrupted deletion left that are new, changed, or changed after ``changed_by`` (epoch seconds).
+
+    ``current`` comes from ``build_manifest(..., ctime=True)``. A recorded node
+    may be missing: the deletion already removed it. Removing a child sets its
+    directory's mtime and ctime, so a directory that lost a recorded child is
+    compared by type and mode only; any other surviving node must equal its
+    record exactly and have no ctime after ``changed_by``.
+    """
+    before = {item["path"]: item for item in recorded}
+    after = {item["path"]: item for item in current}
+    emptied = {_parent(path) for path in before.keys() - after.keys()}
+    unexpected = []
+    for path, item in after.items():
+        node = {key: value for key, value in item.items() if key != "ctime_ns"}
+        old = before.get(path)
+        if old is None:
+            unexpected.append(path)
+        elif path in emptied and node["type"] == "directory":
+            if node | {"mtime_ns": None} != old | {"mtime_ns": None}:
+                unexpected.append(path)
+        elif node != old or item["ctime_ns"] / 1e9 > changed_by:
+            unexpected.append(path)
+    return sorted(unexpected)

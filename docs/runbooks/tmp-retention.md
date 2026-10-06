@@ -183,6 +183,15 @@ one malformed line (`ledger_malformed_lines`) and never merges with a new
 record. Apply runs and restores hold `ledger.lock`, so only one writer runs
 at a time; a restore during a sweep is refused with exit code 1.
 
+**Durability.** `fsync` on a file does not persist the directory entry that
+names it, so every change to a directory entry is followed by an `fsync` of
+the directory before any record says it happened: each newly created ledger
+directory or ancestor (its parent is synced), the ledger file on creation,
+each new quarantine directory (the temp root), every rename (its source
+directory, then its destination), and every purge (the quarantine directory).
+If a sync fails, the run stops with exit code 1 and the step stays
+unconfirmed in the ledger; the next run reconciles it as below.
+
 **What a removal records.** The `quarantine` record is written and synced
 before the rename. It holds:
 
@@ -194,7 +203,7 @@ before the rename. It holds:
 | `kind`, `reason`, `task` | File or directory, why it was proven removable, owning task if any |
 | `allocated_bytes`, `total_bytes`, `file_count` | Disk use, sum of file sizes, number of regular files |
 | `newest_mtime`, `newest_ctime` | Latest write and change anywhere inside (UTC) |
-| `digest_limit_bytes`, `manifest` | Per node: relative path (`.` is the entry), type, mode, mtime (ns); files add size and SHA-256, or `digest_skipped_size` above the limit (default 64 MiB, `--digest-limit-mib`); symlinks add their target |
+| `digest_limit_bytes`, `digest_skipped_files`, `manifest` | Per node: relative path (`.` is the entry), type, mode, mtime (ns); files add size and SHA-256, or `digest_skipped_size` above the limit (default 64 MiB, `--digest-limit-mib`; counted in `digest_skipped_files`); symlinks add their target |
 
 Every later step appends a short record with the same `ledger_id`:
 `quarantined` (re-verified after the rename, retained), `returned` (the
@@ -212,7 +221,7 @@ inode actually is, and the result is appended:
   re-verified after the rename, so it is renamed back, `reconciled` /
   `returned` (or `return_blocked` while the name is taken; retried each run).
 - `purge` record and the inode is gone: `reconciled` / `purged`. If it is
-  still there, the purge pass finishes it after re-checking holders and tasks.
+  still there, the purge pass retries it (see Purge).
 - `restore` record: `restored` (verified now) if it is back at its path,
   otherwise `restore_failed`.
 - A retained entry that vanished (for example, a reboot cleared a tmpfs
@@ -231,15 +240,36 @@ record follows. Anything else keeps it with a typed reason
 (`purge_live_process`, `purge_liveness_unknown`, `purge_task_reference`,
 `purge_task_inventory_unknown`, `purge_recent_write`,
 `purge_manifest_changed`, `purge_<tree reason>`, `purge_refused`). A dry
-run reports what would go as `would_purge`.
+run reports what would go as `would_purge`. Files above the digest limit
+pass the manifest check on size and mtime; together with the change-time
+check that is the purge's evidence for them.
+
+A purge that stopped part-way (`purge_failed`, or a crash after the `purge`
+record) is retried under the same holder and task checks, but its tree may
+already have lost nodes. The retry therefore checks what survives: every
+remaining node must be in the manifest, equal to its record and have no
+change time after the `quarantined` record. A node may be missing, because
+the interrupted deletion removed it; a directory that lost a child is
+compared by type and mode only, because that removal set its mtime. Any new,
+changed or rewritten node keeps the whole entry as `purge_retry_changed`,
+which counts as an error until someone restores it (`restore` accepts such
+an entry and lists what is missing) or removes it by hand.
 
 **Restore.** `restore <ledger-id>` works for a retained entry. It refuses if
 anything exists at the original path, then renames the entry back with
 `renameat2(RENAME_NOREPLACE)`, so a path created in between is never
 replaced (`restore_failed`, `EEXIST`). It then compares the restored tree
-with the manifest. Exit code 0 means restored and byte-identical; exit code
-1 means refused, failed, or restored but different (`mismatches` lists the
-paths).
+with the manifest and reports `verification`, which the `restored` ledger
+record carries too:
+
+| `verification` | Meaning | Exit code |
+| --- | --- | --- |
+| `verified` | Every node matches and every file was hashed: byte-identical | 0 |
+| `unverified_digest_skipped` | Every node matches, but files above the digest limit matched by size and mtime only, which cannot prove their bytes (`digest_unverified` lists them); `verified` is false | 3 |
+| `mismatch` | Restored, but different (`mismatches` lists the paths) | 1 |
+| `unreadable` | Restored, but the tree could not be read | 1 |
+
+A refused or failed restore also exits 1; an unknown ledger id exits 2.
 
 **Report fields.** `ledger_path`, `quarantined_entries` and
 `bytes_quarantined` (this run), `quarantine_held_entries` and
@@ -253,8 +283,10 @@ until its purge.
 quarantine together with everything else in `/tmp`; the ledger survives and
 records those entries as `missing`. A rewrite with identical bytes and the
 mtime put back, within one kernel clock tick after the `quarantined` record,
-leaves no trace, but by definition it leaves the content unchanged; above the
-digest limit, a same-size rewrite with the mtime put back is not detected.
+leaves no trace, but by definition it leaves the content unchanged. Above the
+digest limit, a same-size rewrite with the mtime put back is not detected by
+the manifest; the purge still sees its change time, and a restore reports
+such files as unverified rather than identical.
 The ledger is never compacted.
 
 ### Run it by hand

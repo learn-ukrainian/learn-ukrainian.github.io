@@ -58,10 +58,13 @@ from scripts.hygiene.tmp_sweep_ledger import (
     LedgerError,
     build_manifest,
     default_state_dir,
+    digest_unverified,
     manifest_mismatches,
     new_id,
     new_run_id,
     parse_iso,
+    surviving_mismatches,
+    sync_directory,
     utc_iso,
     validate_state_dir,
 )
@@ -82,6 +85,8 @@ SYSTEM_TEMP_AREAS = (Path("/tmp"), Path("/private/tmp"), Path("/var/tmp"))
 # them out of candidacy; recovery, not the main scan, reports their entries.
 QUARANTINE_PREFIX = ".lu-tmp-sweep-quarantine-"
 _RENAME_NOREPLACE = 1
+# Manifest comparison outcomes that permit a purge; only "verified" proves byte identity.
+MANIFEST_MATCHES = frozenset({"verified", "unverified_digest_skipped"})
 _DIR_FLAGS = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0)
 
 
@@ -531,6 +536,7 @@ def open_quarantine(root: Path, root_fd: int) -> Quarantine:
     """Create and lock a fresh per-run quarantine directory on the temp root's filesystem."""
     name = QUARANTINE_PREFIX + secrets.token_hex(8)
     os.mkdir(name, 0o700, dir_fd=root_fd)
+    sync_directory(root_fd)
     fd = os.open(name, _DIR_FLAGS, dir_fd=root_fd)
     try:
         fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -567,13 +573,26 @@ def _identity_at(path: Path, identity: list[int]) -> bool:
     return [info.st_dev, info.st_ino] == list(identity[:2])
 
 
+def _sync_rename(src_dir_fd: int, dst_dir_fd: int) -> None:
+    """Persist a completed rename: sync its source directory, then its destination (``DurabilityError`` on failure)."""
+    sync_directory(src_dir_fd)
+    if os.path.samestat(os.fstat(src_dir_fd), os.fstat(dst_dir_fd)):
+        return
+    sync_directory(dst_dir_fd)
+
+
 def _rename_path(src: Path, dst: Path) -> None:
-    """``rename_noreplace`` between two absolute paths, through descriptors of their parent directories."""
+    """``rename_noreplace`` between two absolute paths, through descriptors of their parent directories.
+
+    A refused rename raises ``OSError``; a rename that happened but could not
+    be synced raises ``DurabilityError``, so callers never record it as failed.
+    """
     src_fd = os.open(src.parent, _DIR_FLAGS)
     try:
         dst_fd = os.open(dst.parent, _DIR_FLAGS)
         try:
             rename_noreplace(src_fd, src.name, dst_fd, dst.name)
+            _sync_rename(src_fd, dst_fd)
         finally:
             os.close(dst_fd)
     finally:
@@ -601,13 +620,30 @@ def _entry_row(entry: Entry, decision: str, reason: str, **extra: Any) -> dict[s
 
 
 def verify_restored(entry: Entry, path: Path) -> dict[str, Any]:
-    """Compare ``path`` with the entry's recorded manifest, at the digest limit it was recorded with."""
+    """Compare ``path`` with the entry's recorded manifest, at the digest limit it was recorded with.
+
+    ``verification`` is ``verified`` only when every node matches and every
+    file was hashed. Files above the digest limit match by size and mtime
+    alone, which cannot prove their bytes: a matching tree that has any is
+    ``unverified_digest_skipped``, listed in ``digest_unverified``, and
+    ``verified`` stays False. Otherwise ``mismatch`` or ``unreadable``.
+    """
     try:
         current = build_manifest(path, digest_limit=entry.intent["digest_limit_bytes"])
     except OSError as error:
-        return {"verified": False, "verify_error": _errno_name(error)}
-    mismatches = manifest_mismatches(entry.intent["manifest"], current["manifest"])
-    return {"verified": not mismatches, "mismatch_count": len(mismatches), "mismatches": mismatches[:20]}
+        return {"verified": False, "verification": "unreadable", "verify_error": _errno_name(error)}
+    recorded = entry.intent["manifest"]
+    mismatches = manifest_mismatches(recorded, current["manifest"])
+    unhashed = digest_unverified(recorded, mismatches)
+    verification = "mismatch" if mismatches else "unverified_digest_skipped" if unhashed else "verified"
+    return {
+        "verified": verification == "verified",
+        "verification": verification,
+        "mismatch_count": len(mismatches),
+        "mismatches": mismatches[:20],
+        "digest_unverified_count": len(unhashed),
+        "digest_unverified": unhashed[:20],
+    }
 
 
 def reconcile_ledger(
@@ -714,10 +750,12 @@ def recover_quarantines(
                     continue
                 try:
                     rename_noreplace(fd, entry, root_fd, entry)
-                    restored += 1
                 except OSError as error:
                     rows.append(_bare_row(entry, "restore_blocked", quarantine=name, error=_errno_name(error)))
                     errors += 1
+                    continue
+                _sync_rename(fd, root_fd)
+                restored += 1
             if apply:
                 with contextlib.suppress(OSError):
                     os.rmdir(name, dir_fd=root_fd)
@@ -803,6 +841,8 @@ def quarantine_entry(
     except OSError as error:
         ledger.append(_event(entry_id, run_id, "quarantine_failed", error=_errno_name(error)))
         return row | marks | {"decision": "preserve", "reason": "quarantine_failed", "error": _errno_name(error)}
+    # Durable before anything is recorded about it; a failed sync stops the run with the entry pending.
+    _sync_rename(root_fd, quarantine.fd)
     reason = quarantined_problem(quarantined, path, row, before, task_root)
     if reason is None:
         ledger.append(_event(entry_id, run_id, "quarantined"))
@@ -816,6 +856,7 @@ def quarantine_entry(
             | marks
             | {"decision": "preserve", "reason": "restore_blocked", "found": reason, "error": _errno_name(error)}
         )
+    _sync_rename(quarantine.fd, root_fd)
     ledger.append(_event(entry_id, run_id, "returned", found=reason))
     return row | marks | {"decision": "preserve", "reason": reason}
 
@@ -827,8 +868,8 @@ def purge_problem(entry: Entry, task_root: Path) -> str | None:
     location: a complete task inventory naming neither path, a complete
     process scan with no holder, the tree's safety facts, then the write
     check: no change after the entry was confirmed and a manifest equal to
-    the recorded one. An interrupted purge has already lost part of its
-    tree, so it skips only the write check.
+    the recorded one. An interrupted purge (``purging``) may have lost part
+    of its tree, so ``purge_retry_problem`` checks what survives instead.
     """
     location = entry.location
     inventory = load_tasks(task_root)
@@ -844,13 +885,34 @@ def purge_problem(entry: Entry, task_root: Path) -> str | None:
     _allocated, _newest, changed, tree_reason = tree_facts(location)
     if tree_reason:
         return f"purge_{tree_reason}"
-    if entry.state == "purging":
-        return None
     confirmed = entry.confirmed_at
-    if confirmed is None or changed > confirmed:
+    if confirmed is None:
         return "purge_recent_write"
-    if not verify_restored(entry, location)["verified"]:
+    if entry.state == "purging":
+        return purge_retry_problem(entry, confirmed)
+    if changed > confirmed:
+        return "purge_recent_write"
+    # Size, mtime and the ctime check above stand in for files above the digest limit.
+    if verify_restored(entry, location)["verification"] not in MANIFEST_MATCHES:
         return "purge_manifest_changed"
+    return None
+
+
+def purge_retry_problem(entry: Entry, confirmed: float) -> str | None:
+    """Re-prove what an interrupted purge left; ``purge_retry_changed`` when anything survives that it did not record.
+
+    Every surviving node must be in the recorded manifest, equal to it and
+    unchanged since the ``quarantined`` record (``surviving_mismatches``); a
+    node may be missing, because the interrupted deletion removed it. A new,
+    changed or rewritten node, or a tree that cannot be read, keeps the whole
+    entry.
+    """
+    try:
+        current = build_manifest(entry.location, digest_limit=entry.intent["digest_limit_bytes"], ctime=True)
+    except OSError:
+        return "purge_retry_changed"
+    if surviving_mismatches(entry.intent["manifest"], current["manifest"], changed_by=confirmed):
+        return "purge_retry_changed"
     return None
 
 
@@ -868,7 +930,8 @@ def purge_quarantine(
     """Delete retained entries past the window that pass ``purge_problem``; returns ``(rows, errors)``.
 
     Each deletion is bracketed by a ``purge`` record before it and a
-    ``purged`` record after it. Entries inside the window get no row.
+    ``purged`` record after it, written once the quarantine directory is
+    synced. Entries inside the window get no row.
     """
     rows: list[dict[str, Any]] = []
     errors = 0
@@ -884,6 +947,8 @@ def purge_quarantine(
         reason = purge_problem(entry, task_root)
         if reason:
             rows.append(_entry_row(entry, "preserve", reason))
+            # A half-deleted entry whose survivors changed needs a person: restore it or remove it by hand.
+            errors += reason == "purge_retry_changed"
             continue
         if not apply:
             rows.append(_entry_row(entry, "would_purge", "quarantine_expired"))
@@ -905,6 +970,7 @@ def purge_quarantine(
             rows.append(_entry_row(entry, "preserve", "purge_refused", error=detail))
             errors += 1
             continue
+        sync_directory(entry.location.parent)
         ledger.append(_event(entry.ledger_id, run_id, "purged"))
         _drop_empty_quarantine(entry.location)
         rows.append(_entry_row(entry, "purged", "quarantine_expired"))
@@ -1138,8 +1204,11 @@ def restore(ledger: Ledger, entry_id: str) -> dict[str, Any]:
 
     Raises ``KeyError`` for an unknown ledger id and ``LedgerError`` while a
     sweep holds the ledger. The ``restore`` record precedes the rename; the
-    ``restored`` record carries the manifest verification. An unknown id is
-    refused before the lock, so it never creates the ledger directory.
+    ``restored`` record, written once both directories are synced, carries
+    the manifest verification. An unknown id is refused before the lock, so
+    it never creates the ledger directory. A ``purging`` entry (a purge that
+    stopped part-way) can be restored too: what survives comes back, and the
+    verification lists what is missing.
     """
     if entry_id not in ledger.entries()[0]:
         raise KeyError(entry_id)
@@ -1147,7 +1216,7 @@ def restore(ledger: Ledger, entry_id: str) -> dict[str, Any]:
         entries, _ = ledger.entries()
         entry = entries[entry_id]
         result: dict[str, Any] = {"ledger_id": entry_id, "original_path": str(entry.original), "restored": False}
-        if entry.state not in {"pending", "quarantined", "return_blocked"}:
+        if entry.state not in {"pending", "quarantined", "return_blocked", "purging"}:
             return result | {"reason": f"state_{entry.state}"}
         if not _identity_at(entry.location, entry.intent["identity"]):
             return result | {"reason": "quarantine_location_missing"}
@@ -1280,8 +1349,9 @@ def build_ledger_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.hygiene.tmp_sweep quarantine --json\n"
             "  .venv/bin/python -m scripts.hygiene.tmp_sweep restore 3f9c2a7b1d04\n"
             "Outputs: stdout table or JSON; restore renames one entry back and appends ledger records.\n"
-            "Exit codes: 0 success; 1 restore refused, failed or unverified, or ledger unavailable; "
-            "2 invalid arguments or unknown ledger id.\n"
+            "Exit codes: 0 success; 1 restore refused, failed or different, or ledger unavailable; "
+            "2 invalid arguments or unknown ledger id; 3 restored, but files above the digest limit "
+            "matched by size and mtime only (unverified).\n"
             "Related: #9887; docs/runbooks/tmp-retention.md; scripts.hygiene.tmp_sweep_ledger."
         ),
     )
@@ -1289,11 +1359,17 @@ def build_ledger_parser() -> argparse.ArgumentParser:
     ledger = commands.add_parser(
         "ledger",
         help="List ledger records, filtered by path, date or run.",
-        description="List ledger records in file order; every filter given must match.",
+        description=(
+            "List ledger records in file order; every filter given must match.\n"
+            "Use to find what the sweep moved, returned, purged or restored; read-only, it never changes "
+            "the ledger or the quarantine (use `restore` for that)."
+        ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep ledger --run-id 20261006T053012Z-a1b2c3 --json\n"
-            "Outputs: stdout table or JSON records (manifests only with --manifest). Exit codes: 0; 1 ledger unreadable."
+            "Outputs: stdout table or JSON records (manifests only with --manifest). Exit codes: 0; 1 ledger unreadable.\n"
+            "Related: #9887; docs/runbooks/tmp-retention.md (Deletion ledger and quarantine); "
+            "scripts.hygiene.tmp_sweep_ledger."
         ),
     )
     ledger.add_argument("--path", help="Substring of the original path (example: hand-made-scratch).")
@@ -1309,11 +1385,16 @@ def build_ledger_parser() -> argparse.ArgumentParser:
     quarantine = commands.add_parser(
         "quarantine",
         help="List entries held in quarantine, with age and size.",
-        description="List every entry the ledger holds in quarantine, oldest first, with its purge date.",
+        description=(
+            "List every entry the ledger holds in quarantine, oldest first, with its purge date.\n"
+            "Use to see what is still recoverable and when it may be purged; read-only, it neither purges "
+            "nor restores (the sweep's --apply purges, `restore` restores)."
+        ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep quarantine --quarantine-days 7\n"
-            "Outputs: stdout table or JSON. Exit codes: 0; 1 ledger unreadable."
+            "Outputs: stdout table or JSON. Exit codes: 0; 1 ledger unreadable.\n"
+            "Related: #9887; docs/runbooks/tmp-retention.md (Purge); scripts.hygiene.tmp_sweep_ledger."
         ),
     )
     quarantine.add_argument("--json", action="store_true", help="Print JSON instead of a table (default table).")
@@ -1324,14 +1405,19 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         help="Rename one quarantined entry back to its original path.",
         description=(
             "Rename a quarantined entry back atomically, never replacing an existing path, "
-            "then verify it against its recorded manifest."
+            "then verify it against its recorded manifest.\n"
+            "Use for an entry still held in quarantine (see `quarantine`); not for purged entries, "
+            "which are gone, or for anything the sweep never moved."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep restore 3f9c2a7b1d04\n"
-            "Outputs: stdout JSON result; ledger records restore and restored (or restore_failed).\n"
-            "Exit codes: 0 restored and verified; 1 refused, failed, unverified or a sweep holds the ledger; "
-            "2 unknown ledger id."
+            "Outputs: stdout JSON result with `verification` (verified, unverified_digest_skipped, mismatch "
+            "or unreadable); ledger records restore and restored (or restore_failed).\n"
+            "Exit codes: 0 restored and byte-verified; 1 refused, failed, restored but different, or a sweep "
+            "holds the ledger; 2 unknown ledger id; 3 restored, but files above the digest limit matched "
+            "by size and mtime only (listed in digest_unverified).\n"
+            "Related: #9887; docs/runbooks/tmp-retention.md (Restore); scripts.hygiene.tmp_sweep_ledger."
         ),
     )
     restore_parser.add_argument("ledger_id", help="Ledger id from `ledger` or `quarantine` (example 3f9c2a7b1d04).")
@@ -1350,7 +1436,9 @@ def ledger_main(argv: list[str]) -> int:
             except KeyError:
                 parser.error(f"unknown ledger id {args.ledger_id!r}")
             print(json.dumps(result, sort_keys=True, indent=2))
-            return 0 if result["restored"] and result.get("verified") else 1
+            if not result["restored"]:
+                return 1
+            return {"verified": 0, "unverified_digest_skipped": 3}.get(result.get("verification", ""), 1)
         if args.command == "quarantine":
             if not math.isfinite(args.quarantine_days) or args.quarantine_days <= 0:
                 parser.error("--quarantine-days must be finite and positive")
@@ -1373,7 +1461,7 @@ def ledger_main(argv: list[str]) -> int:
             )
             columns = ("at", "event", "ledger_id", "run_id", "original_path", "reason", "outcome", "found", "error")
     except LedgerError as error:
-        print(f"ledger unavailable: {error}", file=sys.stderr)
+        print(f"ledger unavailable or not durable: {error}", file=sys.stderr)
         return 1
     if args.json:
         print(json.dumps(rows, sort_keys=True, indent=2))
@@ -1454,7 +1542,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--digest-limit-mib",
         type=float,
         default=DEFAULT_DIGEST_LIMIT / (1 << 20),
-        help="Manifest SHA-256 only for regular files up to this size (MiB; default 64; larger: size and mtime).",
+        help=(
+            "Manifest SHA-256 only for regular files up to this size (MiB; default 64; larger files are "
+            "recorded by size and mtime and reported unverified on restore)."
+        ),
     )
     _state_dir_argument(parser)
     parser.add_argument(
@@ -1499,7 +1590,8 @@ def main(argv: list[str] | None = None) -> int:
             digest_limit=int(args.digest_limit_mib * (1 << 20)),
         )
     except LedgerError as error:
-        print(f"ledger unavailable, nothing removed: {error}", file=sys.stderr)
+        # The step in progress stays unconfirmed in the ledger, and the next run reconciles it.
+        print(f"ledger unavailable or not durable, run stopped: {error}", file=sys.stderr)
         return 1
     except (ValueError, OSError):
         parser.error("invalid or unreadable temporary/task area; no deletion authorized")
