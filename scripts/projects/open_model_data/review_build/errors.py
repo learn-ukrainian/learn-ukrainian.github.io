@@ -18,7 +18,7 @@ class BuildError(Exception):
         return {
             "error": self.code if re.fullmatch(r"[a-z_]+", self.code) else "build_failure",
             "record_id": self.record_id if re.fullmatch(r"[0-9a-f]{64}", self.record_id) else "",
-            "component": self.component if re.fullmatch(r"C[1-79]", self.component) else "",
+            "component": self.component if re.fullmatch(r"C(?:[1-79]|6[ab])", self.component) else "",
             "row_key": digest(self.row_key.encode()) if self.row_key else "",
         }
 

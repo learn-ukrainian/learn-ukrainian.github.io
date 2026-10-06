@@ -106,7 +106,7 @@ class SourceRoles:
             require(split == "train", "test_source")
             require(str(row[spec["document"]]) not in self.dev_documents, "dev_source")
             require(sentence_hash(row[spec["text"]]) not in self.test_hashes, "ruler_overlap")
-            if candidate.component == "C6":
+            if candidate.component in {"C6", "C6a", "C6b"}:
                 edits = row[spec["edits"]]
                 edits = json.loads(edits) if isinstance(edits, str) else edits
                 require(
@@ -116,7 +116,7 @@ class SourceRoles:
         if spec["role"] == "textbook":
             require(source_file in spec["allowlisted_files"], "textbook_allowlist")
             require(
-                bool(re.fullmatch(r"(?:[1-9]|1[01])-klas-.+|uni-.+", source_file)),
+                bool(re.fullmatch(r"(?:[1-9]|1[01]|10-11)-klas-.+|uni-.+", source_file)),
                 "textbook_grade",
             )
         if "quarantine" in spec:

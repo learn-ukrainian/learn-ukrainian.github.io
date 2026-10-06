@@ -1,15 +1,16 @@
 # RB-1 framework interface
 
 This package implements the approved [review-build design](../../../../docs/projects/open-model-data/REVIEW_BUILD.md).
-It contains no component extractor, real attribution adapter or real dataset fixture.
-Call `execute(config_path, guarded_output, adapters=..., files=...)` from component
-integration code, or use the module CLI for a JSON request. Adapters are passed as
-objects implementing the published protocols; request files cannot import code.
+The CLI loads extractors and attribution adapters only through the closed, lazy
+registry in `components/__init__.py`. Component modules expose one `COMPONENT`
+object. Request files supply host-local data paths, never executable import names.
+The library also supports staged candidate files through
+`execute(config_path, guarded_output, adapters=..., files=...)`.
 
 The CLI defaults to the host-local `batch_state/review_build/request.json` in the
 shared repository, resolved through Git's common directory in a worktree.
-Component integration stages the reviewed request and candidates there. A
-component developer then uses that default without writing another config:
+Component integration stages the reviewed request there. A component developer
+then uses that default without writing another config:
 
 ```bash
 .venv/bin/python -m scripts.projects.open_model_data.review_build build --out "$TMPDIR/rb1-c9" --components C9
@@ -20,18 +21,58 @@ component developer then uses that default without writing another config:
 in the request. Unknown or unstaged components fail closed. `--config` overrides
 the default. Build and verify must use the same selection, pinned in the manifest.
 The default does not invent extractors or reviewed specs for unfinished packets.
-Real component callers pass their adapter objects to
-`execute(..., components=["C9"])`.
+Only selected component modules are imported. Unknown ids refuse; an unfinished
+module returns `component_unavailable` with that id alone. Competing adapters for
+one source refuse `adapter_conflict`; components sharing a source must share the
+same adapter object. C6a/C6b are separate build/accounting components using the
+catalog's shared C6 instructions; both retain C6's UA-GEC admission rules.
+
+## Adding a component
+
+1. Implement only the module mapped to your assigned id in the literal registry
+   (`C1` → `c1.py`, through C9; C6a/C6b have their own modules). Export one
+   `COMPONENT` object implementing the protocol in `components/__init__.py`:
+   `spec`, `adapters`, and `iter_candidates(ctx)`; optional `files` maps file-store
+   names to `FileStore` adapters. The framework refuses request-defined imports.
+2. Put reviewed common policy in `spec` and each operation's binding, independent
+   unit query, measured frozen count and primary unit identity in
+   `spec["operation_specs"]`. Keep the existing closed `operations` and `reasons`
+   declarations. Attribution adapters are keyed by register `source_id` and
+   authenticate complete bibliography mapping. Reuse a shared adapter instance
+   when several components cite the same source.
+3. Iterate source rows using `ctx.reader` (the same pinned read transaction used
+   by the gate). `ctx.request` supplies a detached, deeply read-only snapshot of
+   host-local input configuration; mappings are read-only and sequences are tuples.
+   Mutation raises. The framework copies component specs before extraction and
+   refuses changes to their pinned digests as `spec_mutated`. Return
+   `Candidate` objects for every independently counted unit, including withheld,
+   rejected and excluded ones. Never open writable databases or import code from
+   request paths. Component file adapters are installed before this reader opens.
+4. Stage a request listing the selected ids, catalog, register, source stores and
+   reviewed citation compatibility. Run CLI build then verify with the same
+   selection. The manifest pins component specs, generated candidates and all
+   package source files, including registry and component code. Generic mutations
+   must refuse; the component owns additional semantic must-fail cases.
+
+Tests can pass in-process objects through `main(..., _test_components={...})` or
+`load_components(..., _test_overrides={...})`. These seams have no CLI flag or
+request-file representation and cannot add ids outside the closed registry.
+`test_components.py` proves extraction, adapter wiring, operation accounting,
+all five verify mutations and tamper refusal using synthetic SQLite rows.
 
 ## Request and component specs
 
-`omd-review-request.v1` requires `candidates` (JSONL of the frozen `Candidate`
-contract), `catalog` and `register` (YAML), `databases` (`store` to path),
-`components` (component id to spec), and `compatibility` (citation role rows).
+`omd-review-request.v1` requires `catalog` and `register` (YAML), `databases`
+(`store` to path), `components` (selected ids), and `compatibility` (citation role
+rows). For CLI extraction, `components` values may be empty objects: registered
+modules supply their reviewed specs. `candidates` (JSONL of the frozen `Candidate`
+contract) is required only by the library's staged-candidate path. The CLI always
+extracts through registered modules, ignoring any staged candidate file.
 Relative input paths resolve against the request's directory. `synthetic_sources`
 permits only ids starting with `synthetic` and register forms starting with
 `SYNTHETIC `. Real callers supply `AttributionAdapter` and `FileStore` objects.
-Input file bytes, component declarations, framework source files, checkout SHA,
+Input file bytes, the effective request with copied component specs, component
+declarations, framework source files, checkout SHA,
 and file-store digests are pinned in the manifest. DB snapshots pin cited columns'
 bytes as `(row_key, field_sha256)` pairs, not entire rows. `verify` re-runs the gate
 against the live DB and compares all expected output bytes, including provenance
@@ -91,12 +132,29 @@ remain positional empty arrays/strings, and all-empty cells withhold.
 Other optional keys: `transforms` (closed transform id to policy),
 `context_serializer` and `response_serializer` (`text` joins exact parts with LF;
 `json_array` uses canonical JSON string arrays), `unit_grain`, `annotation_layer`,
-`reference_multiplicity` (reviewed README metadata), and `applicability` for C2.
-C2 `with_sense`/`without_sense` are arrays of `[selector, expected_source_value]`
-assertions. These must authenticate discrimination, equal homonym forms and the
-absence of group parse errors from source rows, never candidate flags. Source
-cell authentication and complete variant-group agreement belong to WP2's binding
-spec and component tests; this framework does not infer them from model text.
+`reference_multiplicity` (reviewed README metadata), and `applicability` for each variant operation.
+The catalog's `sense_variant` declarations supply variant names; operation
+contracts' applicability declarations must include every referenced variant.
+Template slot differences supply presence predicates: populated varying slots
+must remain visible, and omitted varying slots must still exist as empty strings.
+No variant names are embedded in the framework. Every declared variant also
+requires nonempty component-owned source predicates keyed by that exact name:
+
+- `[selector, expected_source_value]` compares an independently read source operand.
+- `{query: unit_query, parameters: [selectors...], expected: [values...]}` compares
+  the exact one-column query result, with parameters derived from cited rows.
+
+The gate evaluates predicates for slot-compatible variants and requires exactly
+one variant to pass. Missing declarations are mechanism failures
+(`applicability_spec`). A component must classify a unit with no eligible variant
+as withheld (`catalog_inapplicable`); an accepted candidate with no passing variant
+aborts the build.
+C2 predicates authenticate discrimination, equal homonym forms and absence of
+parse errors. C3 predicates authenticate the selected article's unquarantined
+sense count and that sense's citations, including model-visible same-sense
+context for the citation variant. The catalog's prose states those semantic
+requirements; component-owned selectors, queries, bindings and tests implement
+them. The framework never interprets prose as code or trusts candidate flags.
 
 `record_id` includes every slot, context and response value, in contract order;
 quotation and attribution are rechecked for each citation. Rejected candidates
@@ -182,7 +240,10 @@ UA-GEC always requires sensitivity (default column `is_sensitive`); null cannot
 disable it. Other sources default to none. Any declared sensitivity column must
 be present with a known 0/1 value: unknown fails `sensitivity_unavailable`, and
 1 fails `sensitive_source`. Textbooks require exact `allowlisted_files`, and the
-cited `source_file` must match `N-klas-*` for N=1–11 or `uni-*`. Grade metadata
+cited `source_file` must match `N-klas-*` for N=1–11, `10-11-klas-*`, or `uni-*`.
+The combined-grade pattern follows the two measured source filenames; other
+grade ranges are refused until authenticated. Admission is re-derived from each
+cited row, even when grade metadata is zero or misleading. Grade metadata
 does not control admission; university grade-0 rows are admitted by allowlisted
 filenames. СУМ-11 requires
 `risk` and `keywords` (defaults `sovietization_risk`, `sovietization_keywords`),

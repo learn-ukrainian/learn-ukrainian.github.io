@@ -27,6 +27,29 @@ def synthetic_mount(monkeypatch):
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
 
 
+@pytest.fixture(autouse=True)
+def cli_test_component(bundle, monkeypatch):
+    from scripts.projects.open_model_data.review_build import components
+
+    class SyntheticComponent:
+        def __init__(self):
+            self.files = {}
+            self.adapters = {"synthetic": SyntheticAdapter()}
+
+        @property
+        def spec(self):
+            return bundle["spec"]
+
+        def iter_candidates(self, ctx):
+            return iter(bundle["candidates"])
+
+    monkeypatch.setattr(
+        cli,
+        "load_components",
+        lambda ids, **kwargs: components.load_components(ids, _test_overrides={c: SyntheticComponent() for c in ids}),
+    )
+
+
 def test_build_verify_determinism_and_tamper_refusal(bundle):
     results = []
     dirs = [bundle["root"] / name for name in ("SYNTHETIC-one", "SYNTHETIC-two")]
@@ -193,6 +216,36 @@ def test_private_manifest_allowlist_and_string_refusals(bundle):
             private_manifest(bad)
 
 
+@pytest.mark.parametrize(
+    "version,valid",
+    [
+        ("0.5.0-rb1", True),
+        ("0.5.0-rb1.2", True),
+        ("1.0.0", True),
+        ("0.5.0-", False),
+        ("0.5.0-rb1-", False),
+        ("0.5.0-rb1.", False),
+        ("0.5.0-.rb1", False),
+        ("0.5.0-rb1..2", False),
+        ("0.5.0-rb-1", False),
+        ("0.5.0-RB1", False),
+    ],
+)
+def test_private_manifest_version_suffix(version, valid):
+    data = {
+        "hashes": {},
+        "counts": {},
+        "versions": {"catalog": version},
+        "code_sha": "b" * 40,
+        "reason_code_tallies": {},
+    }
+    if valid:
+        assert private_manifest(data) == data
+    else:
+        with pytest.raises(BuildError, match="private_manifest_string"):
+            private_manifest(data)
+
+
 BANNED_MODULES = {"requests", "httpx", "urllib.request", "http.client", "socket", "huggingface_hub", "subprocess"}
 BANNED_CALLS = {"os.system", "builtins.__import__", "builtins.eval", "builtins.exec"}
 
@@ -258,8 +311,7 @@ def assert_no_execution(source):
 
 def test_package_has_no_network_or_process_execution_imports():
     modules = [(framework.__name__, framework.__spec__)]
-    for info in pkgutil.iter_modules(framework.__path__, framework.__name__ + "."):
-        assert not info.ispkg, "Framework subpackages need recursive import-ban coverage"
+    for info in pkgutil.walk_packages(framework.__path__, framework.__name__ + "."):
         modules.append((info.name, info.module_finder.find_spec(info.name)))
     for name, spec in modules:
         assert spec is not None and hasattr(spec.loader, "get_source"), name

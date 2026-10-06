@@ -7,8 +7,8 @@ import traceback
 from pathlib import Path
 
 from .build import execute
-from .errors import BuildError
-from .gate import COMPONENTS
+from .components import REGISTRY, load_components, merge_adapters
+from .errors import BuildError, require
 from .output import OutputGuard
 
 
@@ -75,7 +75,7 @@ def parser() -> Parser:
             "--components",
             nargs="+",
             action="extend",
-            choices=sorted(COMPONENTS),
+            choices=sorted(REGISTRY),
             help="Component ids to build/verify, e.g. C3 C4; repeatable (default: all in config). Use the same selection for verify.",
         )
         command.add_argument(
@@ -87,12 +87,24 @@ def parser() -> Parser:
     return result
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, *, _test_components=None) -> int:
     output = None
     try:
         args = parser().parse_args(argv)
         output = OutputGuard(args.out, (Path(__file__).resolve().parents[4],))
-        result = execute(args.config, output, verify=args.command == "verify", components=args.components)
+        request = json.loads(args.config.read_bytes())
+        selected = args.components if args.components is not None else list(request["components"])
+        require(bool(selected) and set(selected) <= set(request["components"]), "component_selection")
+        loaded = load_components(selected, _test_overrides=_test_components)
+        adapters = merge_adapters(*(component.adapters for component in loaded.values()))
+        result = execute(
+            args.config,
+            output,
+            verify=args.command == "verify",
+            components=selected,
+            adapters=adapters,
+            component_objects=loaded,
+        )
         print(json.dumps(result, sort_keys=True))
         return 0
     except Exception as exc:
