@@ -110,11 +110,11 @@ def test_descriptor_relative_writes_refuse_unsafe_existing_entries(tmp_path, kin
             os.link(victim, file)
         elif kind == "file-mode":
             file.write_bytes(b"SYNTHETIC untouched")
-            file.chmod(0o644)
+            file.chmod(0o640)
         elif kind == "symlink-dir":
             (target / "alias").symlink_to(child)
         elif kind == "dir-mode":
-            child.chmod(0o755)
+            child.chmod(0o750)
         else:
             (child / ".git").write_text("SYNTHETIC gitdir")
         name = "alias/records.jsonl" if kind == "symlink-dir" else "C1/records.jsonl"
@@ -153,7 +153,7 @@ def test_filesystem_parser_longest_mount_and_escaped_path(tmp_path, monkeypatch)
         lambda path, *a, **kw: (
             SimpleNamespace(st_dev=os.makedev(0, 2), st_mode=0o40700)
             if path == tmp_path
-            else SimpleNamespace(st_dev=os.makedev(0, 1), st_mode=0o40755)
+            else SimpleNamespace(st_dev=os.makedev(0, 1), st_mode=0o40750)
             if path == Path("/")
             else real_stat(path, *a, **kw)
         ),

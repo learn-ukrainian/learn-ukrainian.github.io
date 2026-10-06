@@ -94,8 +94,8 @@ def test_init_request_private_location_only_defaults(tmp_path, monkeypatch, caps
 def test_init_request_refuses_symlinks_and_public_parent(tmp_path, monkeypatch):
     monkeypatch.setattr(request, "repository_root", lambda: tmp_path)
     public = tmp_path / "public"
-    public.mkdir(mode=0o755)
-    os.chmod(public, 0o755)
+    public.mkdir(mode=0o750)
+    os.chmod(public, 0o750)
     with pytest.raises(BuildError, match="request_parent_mode"):
         request.init_request(public / "request.json")
     assert not (public / "request.json").exists()
