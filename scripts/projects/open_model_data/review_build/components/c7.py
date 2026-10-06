@@ -49,6 +49,10 @@ BINDING = {
         },
         {"op": "equal", "values": [RECOMMENDED, {**RECEIPT, "field": "recommended_form"}]},
         {"op": "equal", "values": [TARGET, RECOMMENDED]},
+        {
+            "op": "equal",
+            "values": [{**selector("slots", "accounting_unit"), "field": "id"}, {**RECEIPT, "field": "id"}],
+        },
         {"op": "equal", "values": [REJECTED, {**RECEIPT, "field": "rejected_form"}]},
         {"op": "span_equal", "value": REJECTED, "receipt": {**RECEIPT, "field": "rejected_span"}},
         {"op": "span_equal", "value": RECOMMENDED, "receipt": {**RECEIPT, "field": "recommended_span"}},
@@ -105,7 +109,9 @@ class ContrastComponent:
             OPERATION,
             {
                 "separator": ";",
-                "primary": [{"selector": REJECTED, "store": "sources.db", "table": "style_guide", "key": "id"}],
+                "primary": [
+                    {"selector": selector("slots", "accounting_unit"), "store": STORE, "table": "C7", "key": "id"}
+                ],
             },
         )
         self.spec["operation_specs"][OPERATION]["binding"] = BINDING
@@ -116,11 +122,11 @@ class ContrastComponent:
     def iter_candidates(self, ctx):
         RECEIPTS.configure(ctx)
         for row in ctx.reader.iter_rows("sources.db", "style_guide"):
-            decision = RECEIPTS.get(row)
-            if decision["reason"] != "ok":
-                yield candidate("C7", OPERATION, row, (), (quoted(row, "rejected"),), (), decision["reason"])
-                continue
-            for left, right in decision["pairs"]:
+            for unit in RECEIPTS.row_units(row):
+                if unit["reason"] != "ok":
+                    yield candidate("C7", OPERATION, row, (), (), (), unit["reason"], unit)
+                    continue
+                left, right = unit["rejected_span"], unit["recommended_span"]
                 receipt = RECEIPTS.admit(row, left, right)
                 rejected = quoted(row, "rejected", left)
                 left_witness = witnesses(ctx, rejected.text)[0]
@@ -150,7 +156,7 @@ class ContrastComponent:
                         sorted((rejected, recommended), key=lambda v: digest((receipt["id"] + "\0" + v.text).encode()))
                     )
                     response = (replace(recommended, slot="modern_form", citations=(recommended.citations[0],)),)
-                yield candidate("C7", OPERATION, row, (), context, response, reason)
+                yield candidate("C7", OPERATION, row, (), context, response, reason, unit)
 
     def artifact_files(self, ctx):
         return packet_files(ctx, "C7")

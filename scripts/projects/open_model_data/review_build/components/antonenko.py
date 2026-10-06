@@ -4,16 +4,19 @@ import json
 import re
 from pathlib import Path
 
+from scripts.common.repo_root import main_checkout_root
+
 from ..attribution import Attribution
 from ..bindings import normalize
 from ..contract import Candidate, Citation, Value, canonical, digest
-from ..errors import require
+from ..errors import BuildError, require
 from ..output import OutputGuard
 
 SOURCE = "antonenko_style_guide"
 STORE = "antonenko-adjudication"
 MODELS = {"sol": "gpt-6.1-sol", "opus": "claude-opus-5-5"}
 BATCH_SIZE = 20
+TASKS_ROOT = main_checkout_root(Path(__file__).resolve().parents[5]) / "batch_state" / "tasks"
 
 
 def selector(area, slot, **kwargs):
@@ -99,13 +102,8 @@ def _pairs(pairs, text):
     return sorted(result)
 
 
-def validate_receipts(batch, receipts):
-    """Validate both seat artifacts, then reconcile each row without writing text.
-
-    Valid selection differences withhold the whole row; malformed/single-seat
-    submissions refuse. Model/task identifiers are driver-controlled provenance,
-    not cryptographic proof of execution.
-    """
+def validate_receipts(batch, receipts, reconciliation=None):
+    """Validate complete seat selections; retain the union and agreed subset per row."""
     require(batch.get("schema") == "antonenko-span-batch.v1", "adjudication_batch")
     body = {k: v for k, v in batch.items() if k != "batch_sha256"}
     require(digest(canonical(body)) == batch.get("batch_sha256") and batch.get("seats") == MODELS, "adjudication_stale")
@@ -152,19 +150,145 @@ def validate_receipts(batch, receipts):
         selections[seat] = selected
         tasks.append(receipt["task_id"])
     require(len(set(tasks)) == 2, "adjudication_provenance")
+    decisions = {}
+    for key in rows:
+        sol, opus = set(selections["sol"][key]), set(selections["opus"][key])
+        decisions[key] = {
+            "pairs": sorted(sol & opus),
+            "disputed": sorted(sol ^ opus),
+            "reason": "ok" if sol | opus else "no_pair_named",
+        }
+    if reconciliation:
+        accepted = validate_reconciliation(batch, decisions, reconciliation)
+        for key, pairs in accepted.items():
+            decisions[key]["pairs"] = sorted(set(decisions[key]["pairs"]) | pairs)
+            decisions[key]["disputed"] = sorted(set(decisions[key]["disputed"]) - pairs)
+    return decisions
+
+
+def validate_reconciliation(batch, decisions, receipts):
+    """Only two explicit accepts admit an originally disputed, direction-bound pair."""
+    require(set(receipts) == set(MODELS), "adjudication_seats")
+    rows = {row["row_id"]: row for row in batch["rows"]}
+    expected = {(key, pair) for key, row in decisions.items() for pair in row["disputed"]}
+    selections, tasks = {}, []
+    for seat, model in MODELS.items():
+        receipt = receipts[seat]
+        require(
+            isinstance(receipt, dict) and set(receipt) == {"schema", "model", "task_id", "batch_sha256", "pairs"},
+            "adjudication_receipt",
+        )
+        require(
+            receipt["schema"] == "antonenko-reconcile-receipt.v1" and receipt["model"] == model,
+            "adjudication_provenance",
+        )
+        require(isinstance(receipt["task_id"], str) and bool(receipt["task_id"].strip()), "adjudication_provenance")
+        require(receipt["batch_sha256"] == batch["batch_sha256"], "adjudication_stale")
+        require(isinstance(receipt["pairs"], list), "adjudication_pairs")
+        selected = {}
+        for item in receipt["pairs"]:
+            require(
+                isinstance(item, dict) and set(item) == {"row_id", "rejected", "recommended", "decision"},
+                "adjudication_pairs",
+            )
+            key = item["row_id"]
+            require(type(key) is int and key in rows, "adjudication_rows")
+            pair = _pairs([{role: item[role] for role in ("rejected", "recommended")}], rows[key]["text"])[0]
+            identity = (key, pair)
+            require(identity in expected and identity not in selected, "adjudication_pairs")
+            require(
+                isinstance(item["decision"], str) and item["decision"] in {"accept", "reject"}, "adjudication_decision"
+            )
+            selected[identity] = item["decision"]
+        require(set(selected) == expected, "adjudication_pairs")
+        selections[seat] = selected
+        tasks.append(receipt["task_id"])
+    require(len(set(tasks)) == 2, "adjudication_provenance")
     return {
         key: {
-            "pairs": selections["sol"][key] if selections["sol"][key] == selections["opus"][key] else [],
-            "reason": "adjudication_disagreement"
-            if selections["sol"][key] != selections["opus"][key]
-            else ("ok" if selections["sol"][key] else "no_pair_named"),
+            pair
+            for row_id, pair in expected
+            if row_id == key and all(selections[seat][(key, pair)] == "accept" for seat in MODELS)
         }
         for key in rows
     }
 
 
+def read_json(raw):
+    try:
+        return json.loads(raw)
+    except (ValueError, UnicodeError):
+        raise BuildError("adjudication_receipt") from None
+
+
+def result_receipt(raw):
+    """Accept one JSON result, optionally in a single JSON fence; never normalize fields."""
+    try:
+        text = raw.decode("utf-8").strip()
+    except UnicodeError:
+        raise BuildError("adjudication_receipt") from None
+    blocks = re.findall(r"```json\s*\n(.*?)\n```", text, re.S)
+    require(len(blocks) <= 1, "adjudication_receipt")
+    return read_json(blocks[0] if blocks else text)
+
+
+def attestation_for(receipt, task, result):
+    """Driver extractor helper: bind the extracted object to the settled dispatch output."""
+    require(isinstance(receipt, dict) and isinstance(task, dict), "adjudication_provenance")
+    require(
+        task.get("task_id") == receipt.get("task_id") and task.get("model") == receipt.get("model"),
+        "adjudication_provenance",
+    )
+    require(task.get("status") == "done", "adjudication_provenance")
+    require(task.get("result_sha256") == digest(result), "adjudication_stale")
+    require(canonical(result_receipt(result)) == canonical(receipt), "adjudication_stale")
+    require(isinstance(task.get("finished_at"), str) and bool(task["finished_at"].strip()), "adjudication_provenance")
+    return {key: task[key] for key in ("task_id", "model", "status", "result_sha256", "finished_at")}
+
+
+def pair_id(row_id, left=None, right=None):
+    return digest(canonical([row_id, left, right]))
+
+
+def write_reconciliation_packets(rows, receipt_root, root):
+    """Write only source-bound disputed pairs, host-only, without invoking either seat."""
+    rows = list(rows)
+    store = ReceiptStore()
+
+    class Reader:
+        def iter_rows(self, source, table):
+            return iter(rows)
+
+    from . import ComponentContext
+
+    ctx = ComponentContext(Reader(), {"antonenko_receipts": str(receipt_root)})
+    store.configure(ctx)
+    packets = []
+    for batch, _, _ in store.documents.values():
+        disputed = []
+        for row in batch["rows"]:
+            for left, right in store.decisions[row["row_id"]]["disputed"]:
+                disputed.append(
+                    {
+                        **row,
+                        "rejected": {"start": left[0], "end": left[1]},
+                        "recommended": {"start": right[0], "end": right[1]},
+                        "rejected_text": row["text"][slice(*left)],
+                        "recommended_text": row["text"][slice(*right)],
+                    }
+                )
+        if disputed:
+            packets.append(
+                {"schema": "antonenko-reconcile-packet.v1", "batch_sha256": batch["batch_sha256"], "pairs": disputed}
+            )
+    with OutputGuard(Path(root)) as guard:
+        for packet in packets:
+            guard.write(f"{packet['batch_sha256']}.json", canonical(packet) + b"\n")
+    return {"batches": len(packets), "pairs": sum(len(p["pairs"]) for p in packets)}
+
+
 class ReceiptStore:
-    """Pin raw seat bytes, revalidate both selections against cited rows on every read."""
+    """Pin selections, dispatch attestations and reconciliation; reconstruct every unit."""
 
     def __init__(self):
         self.reader = None
@@ -174,85 +298,168 @@ class ReceiptStore:
         self.documents = {}
         self.records = {}
 
+    def _load(self, guard, batch, reconciliation=False):
+        raw = {}
+        prefix = batch["batch_sha256"] + (".reconcile" if reconciliation else "")
+        for seat in MODELS:
+            name = f"{prefix}.{seat}.json"
+            if not (guard.path / name).exists():
+                continue
+            content = guard.read(name)
+            receipt = read_json(content)
+            require(isinstance(receipt, dict), "adjudication_receipt")
+            sidecar_name = f"{prefix}.{seat}.attestation.json"
+            require((guard.path / sidecar_name).exists(), "adjudication_attestation")
+            sidecar_raw = guard.read(sidecar_name)
+            sidecar = read_json(sidecar_raw)
+            require(
+                isinstance(sidecar, dict)
+                and set(sidecar) == {"task_id", "model", "status", "result_sha256", "finished_at"},
+                "adjudication_attestation",
+            )
+            require(
+                sidecar["task_id"] == receipt.get("task_id")
+                and sidecar["model"] == MODELS[seat]
+                and sidecar["model"] == receipt.get("model")
+                and sidecar["status"] == "done",
+                "adjudication_provenance",
+            )
+            task_id = sidecar["task_id"]
+            require(isinstance(task_id, str) and re.fullmatch(r"[A-Za-z0-9_-]+", task_id), "adjudication_provenance")
+            try:
+                task_raw = (TASKS_ROOT / f"{task_id}.json").read_bytes()
+                result = (TASKS_ROOT / f"{task_id}.result").read_bytes()
+            except OSError:
+                raise BuildError("adjudication_attestation") from None
+            require(attestation_for(receipt, read_json(task_raw), result) == sidecar, "adjudication_provenance")
+            raw[seat] = content
+            for filename, data in (
+                (name, content),
+                (sidecar_name, sidecar_raw),
+                (f"dispatch/{task_id}.json", task_raw),
+                (f"dispatch/{task_id}.result", result),
+            ):
+                actual = digest(data)
+                require(filename not in self.inputs or self.inputs[filename] == actual, "adjudication_stale")
+                self.inputs[filename] = actual
+        return raw
+
     def configure(self, ctx):
         if self.reader is ctx.reader:
             return
         self.reader, self.root = ctx.reader, ctx.request.get("antonenko_receipts")
         self.inputs, self.decisions, self.documents, self.records = {}, {}, {}, {}
-        for batch in batches(ctx.reader.iter_rows("sources.db", "style_guide")):
+        rows = list(ctx.reader.iter_rows("sources.db", "style_guide"))
+        for batch in batches(rows):
             sha = batch["batch_sha256"]
-            raw = {}
+            raw, reconciliation = {}, {}
             if self.root is not None:
                 with OutputGuard(Path(self.root)) as guard:
-                    for seat in MODELS:
-                        name = f"{sha}.{seat}.json"
-                        if (guard.path / name).exists():
-                            raw[seat] = guard.read(name)
-                            self.inputs[name] = digest(raw[seat])
+                    raw = self._load(guard, batch)
+                    reconciliation = self._load(guard, batch, reconciliation=True)
+            require(not reconciliation or bool(raw), "adjudication_seats")
             if not raw:
                 for row in batch["rows"]:
-                    self.decisions[row["row_id"]] = {"reason": "adjudication_pending", "pairs": []}
+                    self.decisions[row["row_id"]] = {"reason": "adjudication_pending", "pairs": [], "disputed": []}
                 continue
-            receipts = {seat: json.loads(content) for seat, content in raw.items()}
-            self.decisions.update(validate_receipts(batch, receipts))
-            self.documents[sha] = (batch, raw)
+            self.decisions.update(
+                validate_receipts(
+                    batch,
+                    {s: read_json(b) for s, b in raw.items()},
+                    {s: read_json(b) for s, b in reconciliation.items()},
+                )
+            )
+            self.documents[sha] = (batch, raw, reconciliation)
+        for row in rows:
+            decision = self.get(row)
+            pairs = [(left, right, "ok") for left, right in decision["pairs"]]
+            pairs += [(left, right, "adjudication_disagreement") for left, right in decision["disputed"]]
+            if not pairs:
+                pairs = [(None, None, decision["reason"])]
+            for left, right, reason in pairs:
+                key = pair_id(row["id"], left, right)
+                record = {
+                    "id": key,
+                    "book_id": row["id"],
+                    "pair": f"id={row['id']}",
+                    "source": row["source"],
+                    "reason": reason,
+                    "rejected_span": left,
+                    "recommended_span": right,
+                }
+                if left is not None:
+                    batch, raw, reconciliation = next(
+                        doc for doc in self.documents.values() if any(r["row_id"] == row["id"] for r in doc[0]["rows"])
+                    )
+                    record.update(
+                        {
+                            "rejected_form": row["text"][slice(*left)],
+                            "recommended_form": row["text"][slice(*right)],
+                            "rejected_key": normalize(row["text"][slice(*left)], "unstress_nfc"),
+                            "recommended_key": normalize(row["text"][slice(*right)], "unstress_nfc"),
+                            "sol": "APPROVE" if reason == "ok" else "WITHHOLD",
+                            "opus": "APPROVE" if reason == "ok" else "WITHHOLD",
+                            "batch_sha256": batch["batch_sha256"],
+                            "row_text_sha256": digest(row["text"].encode()),
+                            **{f"{seat}_sha256": digest(content) for seat, content in raw.items()},
+                            **{f"reconcile_{seat}_sha256": digest(content) for seat, content in reconciliation.items()},
+                        }
+                    )
+                self.records[key] = record
 
     def get(self, row):
-        return self.decisions.get(row["id"], {"reason": "locator_unavailable", "pairs": []})
+        return self.decisions.get(row["id"], {"reason": "locator_unavailable", "pairs": [], "disputed": []})
+
+    def row_units(self, row):
+        return [record for record in self.records.values() if record["book_id"] == row["id"]]
 
     def admit(self, row, left, right):
-        key = digest(canonical([row["id"], left, right]))
-        batch, raw = next(
-            (b, raw) for b, raw in self.documents.values() if any(r["row_id"] == row["id"] for r in b["rows"])
-        )
-        receipt = {
-            "id": key,
-            "pair": f"id={row['id']}",
-            "book_id": row["id"],
-            "source": row["source"],
-            "rejected_form": row["text"][slice(*left)],
-            "recommended_form": row["text"][slice(*right)],
-            "rejected_key": normalize(row["text"][slice(*left)], "unstress_nfc"),
-            "recommended_key": normalize(row["text"][slice(*right)], "unstress_nfc"),
-            "rejected_span": left,
-            "recommended_span": right,
-            "sol": "APPROVE",
-            "opus": "APPROVE",
-            "batch_sha256": batch["batch_sha256"],
-            "row_text_sha256": digest(row["text"].encode()),
-            **{f"{seat}_sha256": digest(content) for seat, content in raw.items()},
-        }
-        self.records[key] = receipt
+        receipt = self.records[pair_id(row["id"], left, right)]
+        require(receipt["reason"] == "ok", "adjudication_direction")
         return receipt
 
     def row(self, table, row_key):
         require(table in {"C6b", "C7"} and row_key.startswith("id="), "row_unavailable")
         result = self.records.get(row_key[3:])
         require(result is not None, "row_unavailable")
-        batch, raw = self.documents[result["batch_sha256"]]
+        if "batch_sha256" not in result:
+            return result
+        batch, raw, reconciliation = self.documents[result["batch_sha256"]]
         require(all(digest(content) == result[f"{seat}_sha256"] for seat, content in raw.items()), "adjudication_stale")
-        # Reconstruct packet rows from this transaction, independently of derived values.
+        require(
+            all(digest(content) == result[f"reconcile_{seat}_sha256"] for seat, content in reconciliation.items()),
+            "adjudication_stale",
+        )
+        with OutputGuard(Path(self.root)) as guard:
+            require(
+                self._load(guard, batch) == raw and self._load(guard, batch, True) == reconciliation,
+                "adjudication_stale",
+            )
         live = {r["id"]: r for r in self.reader.iter_rows("sources.db", "style_guide")}
         require(
             all(
-                r["text"] == live[r["row_id"]]["text"] and r["locator"] == book_locator(live[r["row_id"]])
+                r["row_id"] in live
+                and r["text"] == live[r["row_id"]]["text"]
+                and r["locator"] == book_locator(live[r["row_id"]])
                 for r in batch["rows"]
             ),
             "adjudication_stale",
         )
-        decisions = validate_receipts(batch, {s: json.loads(b) for s, b in raw.items()})
+        decisions = validate_receipts(
+            batch, {s: read_json(b) for s, b in raw.items()}, {s: read_json(b) for s, b in reconciliation.items()}
+        )
         row = live[result["book_id"]]
         require(result["row_text_sha256"] == digest(row["text"].encode()), "adjudication_stale")
         require(result["pair"] == f"id={row['id']}" and result["source"] == row["source"], "adjudication_stale")
-        require(result["sol"] == result["opus"] == "APPROVE", "adjudication_provenance")
-        require(
-            (result["rejected_span"], result["recommended_span"]) in decisions[result["book_id"]]["pairs"],
-            "adjudication_direction",
-        )
+        pairs = decisions[result["book_id"]]["pairs" if result["reason"] == "ok" else "disputed"]
+        require((result["rejected_span"], result["recommended_span"]) in pairs, "adjudication_direction")
+        if result["reason"] == "ok":
+            require(result["sol"] == result["opus"] == "APPROVE", "adjudication_provenance")
         return result
 
     def units(self, query):
-        require(False, "unit_query")
+        require(query == {"kind": "antonenko_pairs", "store": STORE}, "unit_query")
+        return list(self.records)
 
     def all_rows(self, table):
         return [self.row(table, f"id={key}") for key in self.records]
@@ -293,15 +500,16 @@ def common_spec(operation, unit):
         "operations": [operation],
         "operation_specs": {
             operation: {
-                "unit_query": {"kind": "sql", "store": "sources.db", "sql": "SELECT id FROM style_guide"},
+                "unit_query": {"kind": "antonenko_pairs", "store": STORE},
+                "census_query": {"kind": "sql", "store": "sources.db", "sql": "SELECT id FROM style_guide"},
                 "frozen_count": 342,
                 "unit_id": unit,
             }
         },
-        "unit_grain": "style_guide row; C7 records derive only from jointly selected pairs",
+        "unit_grain": "selected offset pair union; one placeholder per unresolved or unlocated row",
         "annotation_layer": "source_text_and_dual_adjudication",
         "reference_multiplicity": "one record per agreed offset pair in a row",
-        "unit_multiplicity": "records",
+        "unit_multiplicity": "one",
         "reasons": {
             "accepted": ["ok"],
             "rejected": [],
@@ -321,16 +529,18 @@ def common_spec(operation, unit):
     }
 
 
-def candidate(component, operation, row, slots, context, response, reason="ok"):
+def candidate(component, operation, row, slots, context, response, reason="ok", unit=None):
     outcome = "accepted" if reason == "ok" else ("excluded" if reason == "not_sum11_headword" else "withheld")
+    require(unit is not None, "unit_id_spec")
+    accounting = Value("accounting_unit", unit["id"], (receipt_citation(unit, component, "id"),), None, "verbatim")
     return Candidate(
         component,
-        str(row["id"]),
+        unit["id"],
         outcome,
         reason,
         () if outcome == "accepted" else (reason,),
         operation,
-        tuple(slots),
+        (*slots, accounting),
         tuple(context),
         tuple(response),
         ("c7_opt_in", "soviet_colonization_context") if component == "C7" else (),

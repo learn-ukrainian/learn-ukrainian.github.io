@@ -180,7 +180,10 @@ class Gate:
             for operation, overrides in domains.items():
                 domain = {**spec, **overrides}
                 independent = self.reader.units(domain["unit_query"])
-                require(len(independent) == domain["frozen_count"], "frozen_count")
+                # Derived units may expand a frozen source census (e.g. pairs
+                # within rows). Freeze that census while accounting every unit.
+                census = self.reader.units(domain["census_query"]) if "census_query" in domain else independent
+                require(len(census) == domain["frozen_count"], "frozen_count")
                 subset = [c for c in stream if operation is None or c.operation == operation]
                 units = [c.unit_id for c in subset]
                 multiplicity = domain.get("unit_multiplicity", "one")
