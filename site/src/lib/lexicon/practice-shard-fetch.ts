@@ -19,6 +19,40 @@ import type {
 } from "./srs";
 import { isPracticeModeEnabled } from "./srs";
 import practiceDeckPointer from "../../data/lexicon-practice-deck.pointer.json";
+import {
+  displayGloss,
+  resolveHeritageBoxes,
+  type LexiconEntryForSeverity,
+} from "./heritage-severity";
+
+/** Optional Atlas evidence stays optional: legacy practice shards carry only provenance. */
+type PracticeDisplayEntry = LexiconEntryForSeverity & {
+  lemma: string;
+  gloss: string;
+  glossClean?: string;
+  heritage?: string | null;
+};
+
+export function practiceHeritageBoxes(entry: PracticeDisplayEntry) {
+  const raw = entry.heritage?.toLowerCase();
+  const classification = raw === "borrowed" || raw === "loanword" ? "borrowing"
+    : raw === "avoid" ? "russianism" : raw;
+  return resolveHeritageBoxes({
+    ...entry,
+    heritage_status: entry.heritage_status ?? { classification },
+  });
+}
+
+/** Display only; never rewrite the shard, eligibility inputs or saved progress. */
+export function practiceDisplayGloss(entry: PracticeDisplayEntry, concise = false): string {
+  const label = practiceHeritageBoxes(entry).usageLabel;
+  const full = displayGloss(entry.gloss, label);
+  // Qualify the complete clause before reading glossClean: legacy first-sense
+  // truncation can leave an opening parenthesis and half of a norm claim.
+  if (!concise || full?.note) return full?.text ?? "";
+  const clean = entry.glossClean?.trim() || entry.gloss.split(/[;,]/, 1)[0].replace(/\s+/g, " ").trim();
+  return displayGloss(clean, label)?.text ?? "";
+}
 
 export type ShardJsonCache = Map<string, Promise<unknown>>;
 
