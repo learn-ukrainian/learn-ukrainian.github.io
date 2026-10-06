@@ -704,8 +704,16 @@ def test_github_observation_skips_audit_when_primary_and_follow_up_are_native(
         (None, 20),
         (10, None),
         (None, None),
+        (30, 20),
+        (10, 30),
     ],
-    ids=["primary-lacks-native", "follow-up-lacks-native", "both-lack-native"],
+    ids=[
+        "primary-lacks-native",
+        "follow-up-lacks-native",
+        "both-lack-native",
+        "primary-unregistered-native-parent",
+        "follow-up-unregistered-native-parent",
+    ],
 )
 def test_github_observation_fetches_audit_when_either_relevant_issue_lacks_native_parent(
     tmp_path: Path,
@@ -832,7 +840,9 @@ def test_cmd_init_rejects_wrong_native_parent_without_a_live_audit(
     stub below) mask the correct stream-membership error."""
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=99))
-    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+    # #99 is a different REGISTERED stream epic: conclusive without an audit.
+    # An unregistered native parent is the native-chain path (#9783) below.
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 99])
 
     def _fail_audit(self) -> dict:
         raise AssertionError("a wrong native parent must not trigger a live membership audit")
@@ -840,6 +850,50 @@ def test_cmd_init_rejects_wrong_native_parent_without_a_live_audit(
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", _fail_audit)
 
     with pytest.raises(task_lifecycle.LifecycleError, match="stream epic"):
+        task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+    assert not (tmp_path / "lifecycle.json").exists()
+
+
+def _native_chain_audit(issue_epics: list[int]) -> dict:
+    return {
+        "generated_at": time.time(),
+        "membership_complete": True,
+        "incomplete_nodes": [],
+        "effective_membership": {
+            "42": {"epics": issue_epics, "streams": ["infra"], "via": "native", "unique_stream": True},
+            "30": {"epics": issue_epics, "streams": ["infra"], "via": "native", "unique_stream": True},
+        },
+        "open_issue_numbers": [42, 30, 10],
+    }
+
+
+def test_cmd_init_accepts_native_chain_through_unregistered_sub_epic(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#9783: native parent #30 is an unregistered sub-epic of stream epic #10."""
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=30))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 20])
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: _native_chain_audit([10])
+    )
+
+    assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
+    ledger = task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")
+    assert ledger["identity"]["stream_epic"] == 10
+
+
+def test_cmd_init_rejects_native_chain_to_a_different_registered_epic(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=30))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 20])
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: _native_chain_audit([20])
+    )
+
+    with pytest.raises(task_lifecycle.LifecycleError, match="different registered epic"):
         task_closeout.cmd_init(_init_args(tmp_path, identity_path))
     assert not (tmp_path / "lifecycle.json").exists()
 

@@ -830,7 +830,9 @@ def test_9312_budget_substitute_excludes_governed_seat(monkeypatch, subject):
         "critical",
         *subject,
     )
-    (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap", codex="cool"))
+    budget = _budget(claude="near_cap", codex="cool")
+    budget["agents"].update({"grok": {"status": "near_cap"}, "cursor": {"status": "near_cap"}})
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
     assert refusal and "REVIEW_ROUTE_REFUSED" in refusal
     assert target is None and routing.substitution is None
 
@@ -927,19 +929,11 @@ def test_review_budget_uses_exact_resolver_choice_and_author_identity(monkeypatc
     args = _args("--check-budget", "--review-author-model", "claude-opus-5-5", "--review-risk", risk)
     (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap"))
     assert calls and all(inputs.author_model == "claude-opus-5-5" and inputs.risk == risk for inputs, _ in calls)
-    if risk in {"critical", "high"}:
-        # Author family is excluded and both native seats are exhausted. The
-        # Cursor Grok seat has no critical_review role (#9488) and is off the
-        # high ladder (#9538), so nothing may substitute.
-        assert refusal and target is None
-        assert routing.substitution is None
-        assert calls[-1][1].selected is None
-        return
-    # #9488: the Sol-spared substitute is the attested Cursor Grok seat, sent its exact slug.
+    # #9769: the resolver may select either admitted Grok transport at every risk.
     assert refusal is None
-    assert (target.recipient, target.model) == ("cursor", "grok-4.7-high")
+    assert (target.recipient, target.model) in {("grok", "grok-4.7"), ("cursor", "grok-4.7-high")}
     assert routing.substitution["source"] == "reviewer-resolver"
-    assert calls[-1][1].selected.name == "grok-4.7-cursor-fallback"
+    assert calls[-1][1].selected.concrete_model == "grok-4.7"
 
 
 def _admit_cursor_review(model, author, risk):
@@ -954,14 +948,15 @@ def _admit_cursor_review(model, author, risk):
     return refusal, target, routing
 
 
-def test_review_dispatch_keeps_the_cursor_grok_seat_at_its_attested_slug(monkeypatch):
-    """#9488: the eligible requested Cursor Grok seat keeps its identity and exact slug below high risk."""
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+def test_review_dispatch_keeps_the_cursor_grok_seat_at_its_attested_slug(monkeypatch, risk):
+    """#9769: the eligible requested Cursor seat keeps its exact slug at every risk."""
 
     def fail():
         pytest.fail("an eligible requested reviewer must not probe budget without --check-budget")
 
     monkeypatch.setattr(delegate, "_fetch_routing_budget", fail)
-    refusal, target, routing = _admit_cursor_review("grok-4.7-high", "claude-opus-5-5", "medium")
+    refusal, target, routing = _admit_cursor_review("grok-4.7-high", "claude-opus-5-5", risk)
     assert refusal is None and (target.recipient, target.model) == ("cursor", "grok-4.7-high")
     assert routing.substitution is None
 
@@ -977,8 +972,6 @@ def test_review_dispatch_keeps_the_cursor_grok_seat_at_its_attested_slug(monkeyp
         ("grok-4.7-high ", "claude-opus-5-5", "medium"),
         ("GROK-4.7-HIGH", "claude-opus-5-5", "medium"),
         ("grok-4.7-high", "cursor:grok-4.7", "medium"),  # Grok never reviews Grok
-        ("grok-4.7-high", "claude-opus-5-5", "high"),  # high is Sol or Opus only (#9538)
-        ("grok-4.7-high", "claude-opus-5-5", "critical"),  # no critical_review role
     ],
 )
 def test_review_dispatch_replaces_a_cursor_grok_request_outside_policy(model, author, risk):
@@ -1221,10 +1214,10 @@ HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol,
         pytest.param((), id="author-and-risk-only"),
     ],
 )
-def test_high_risk_review_never_admits_a_seat_outside_sol_and_opus(
+def test_high_risk_review_admits_grok_and_substitutes_ineligible_sonnet(
     monkeypatch, capsys, seat, model, author, expected, flags, typing
 ):
-    """#9538: every review-typed dispatch, not only a verdict-gated one, applies the high-risk reviewer rule."""
+    """#9769: review typing admits Grok and keeps the high-risk eligibility gate."""
     args = _args(
         "--agent",
         seat,
@@ -1241,10 +1234,15 @@ def test_high_risk_review_never_admits_a_seat_outside_sol_and_opus(
     assert delegate._dispatch_is_review_typed(args)
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
     assert refusal is None
-    assert (target.recipient, target.model) == expected
-    assert routing.substitution["source"] == "reviewer-resolver"
-    assert routing.substitution["requested_model"] == model
-    assert "REVIEW_IDENTITY_SUBSTITUTED:" in capsys.readouterr().err
+    if seat == "cursor":
+        assert (target.recipient, target.model) == ("cursor", "grok-4.7-high")
+        assert routing.substitution is None
+        assert "REVIEW_IDENTITY_SUBSTITUTED:" not in capsys.readouterr().err
+    else:
+        assert (target.recipient, target.model) == expected
+        assert routing.substitution["source"] == "reviewer-resolver"
+        assert routing.substitution["requested_model"] == model
+        assert "REVIEW_IDENTITY_SUBSTITUTED:" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
@@ -1276,7 +1274,7 @@ def test_high_risk_review_without_an_author_refuses_with_the_rule(monkeypatch, v
     assert HIGH_RISK_RULE in refusal
 
 
-@pytest.mark.parametrize("seat,model", [("claude", "claude-sonnet-5-5"), ("cursor", "grok-4.7-high")])
+@pytest.mark.parametrize("seat,model", [("claude", "claude-sonnet-5-5")])
 def test_high_risk_review_attempt_refuses_with_the_rule(seat, model):
     with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED") as refused:
         _review_target(
@@ -1288,6 +1286,8 @@ def test_high_risk_review_attempt_refuses_with_the_rule(seat, model):
 def test_pace_only_retention_at_high_keeps_opus_never_the_requested_sonnet(monkeypatch, capsys):
     """#9538: with no permitted substitute, pace-only retention keeps an Opus seat, not Sonnet."""
     budget = _budget()
+    # Keep this a sole-reviewer retention/refusal test after Grok admission.
+    budget["agents"].update({"grok": {"status": "near_cap"}, "cursor": {"status": "near_cap"}})
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -1304,6 +1304,8 @@ def test_pace_only_retention_at_high_keeps_opus_never_the_requested_sonnet(monke
         "--review-risk",
         "high",
         "--dry-run",
+        "--subject-seat",
+        "grok",
     )
     (refusal, target), _ = _admit(args, monkeypatch, budget)
     assert refusal is None
@@ -1330,7 +1332,7 @@ def test_eligible_reviewer_is_substituted_when_budget_requires_it(monkeypatch, c
 
 
 @pytest.mark.parametrize("flags", [(), ("--force-agent",)])
-@pytest.mark.parametrize("seat,model", [("codex", "gpt-6.1-sol"), ("grok", "grok-4.7")])
+@pytest.mark.parametrize("seat,model", [("codex", "gpt-6.1-sol")])
 def test_admission_identity_swap_always_prints_typed_note(monkeypatch, capsys, flags, seat, model):
     args = _args(
         "--agent",
@@ -1426,6 +1428,8 @@ def test_review_budget_substitute_pins_resolver_model(monkeypatch):
 
 def test_review_admits_sole_cross_family_seat_in_pace_deficit(monkeypatch, capsys):
     budget = _budget()
+    # Keep this a sole-reviewer retention/refusal test after Grok admission.
+    budget["agents"].update({"grok": {"status": "near_cap"}, "cursor": {"status": "near_cap"}})
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -1449,6 +1453,8 @@ def test_review_admits_sole_cross_family_seat_in_pace_deficit(monkeypatch, capsy
 )
 def test_retained_reviewer_only_hints_about_missing_trusted_inputs(monkeypatch, capsys, inputs):
     budget = _budget()
+    # Keep this a sole-reviewer retention/refusal test after Grok admission.
+    budget["agents"].update({"grok": {"status": "near_cap"}, "cursor": {"status": "near_cap"}})
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -1477,7 +1483,7 @@ def test_explicit_reviewer_context_window_keeps_its_model(monkeypatch):
 
 @pytest.mark.parametrize(
     "seat,model",
-    [("grok", "grok-4.7"), ("cursor", "grok-4.7"), ("agy", "gemini-3.8-flash-high"), ("kimi", "kimi-code/k3")],
+    [("cursor", "grok-4.7"), ("agy", "gemini-3.8-flash-high"), ("kimi", "kimi-code/k3")],
 )
 def test_ineligible_review_refuses_before_budget_probe(monkeypatch, seat, model):
     def fail():
@@ -1605,6 +1611,8 @@ def test_branch_pin_is_exact_for_new_and_reused_worktrees(monkeypatch, tmp_path,
 )
 def test_pace_exception_never_overrides_hard_capacity_or_health(monkeypatch, lane):
     budget = _budget(codex="cool")
+    # Keep this a sole-reviewer retention/refusal test after Grok admission.
+    budget["agents"].update({"grok": {"status": "near_cap"}, "cursor": {"status": "near_cap"}})
     budget["agents"]["claude"] = dict(
         lane,
         codexbar={
@@ -1785,4 +1793,15 @@ def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_
     )
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
     assert refusal is None and (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
+    assert routing.substitution is None
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+def test_native_grok_review_keeps_requested_identity_without_budget_probe(monkeypatch, risk):
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("no budget probe requested"))
+    args = _args("--agent", "grok", "--model", "grok-4.7", "--review-author-model", "gpt-6.1-sol", "--review-risk", risk)
+    routing = delegate._DispatchRouting()
+    refusal, target = delegate._admit_dispatch_target(args, agent="grok", trees=None, route=delegate._dispatch_route(args, routing, language_lane=False, review_attempt=None))
+    assert refusal is None
+    assert (target.recipient, target.model) == ("grok", "grok-4.7")
     assert routing.substitution is None

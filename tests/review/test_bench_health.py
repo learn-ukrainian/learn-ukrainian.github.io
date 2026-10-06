@@ -21,17 +21,18 @@ from scripts.review.reviewer_resolver import (
     resolve_reviewer,
 )
 
-# #9488: the runtime-attested Cursor Grok seat counts for every author family
-# outside {xAI, Moonshot}; it closes the Anthropic shortfall below critical.
+# #9769: native Grok counts outside xAI at every risk; the runtime-attested
+# Cursor fallback additionally excludes Moonshot authors.
+NATIVE_GROK = "grok-4.7"
 GROK = "grok-4.7-cursor-fallback"
 DEFAULT_COUNTS = {
-    "anthropic": ["openai_frontier", GROK],
-    "google": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
-    "openai": [GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
-    "moonshot": ["openai_frontier", "claude-opus-5-5", "claude-sonnet-5-5"],
-    "zhipu": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "anthropic": ["openai_frontier", NATIVE_GROK, GROK],
+    "google": ["openai_frontier", NATIVE_GROK, GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "openai": [NATIVE_GROK, GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "moonshot": ["openai_frontier", NATIVE_GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "zhipu": ["openai_frontier", NATIVE_GROK, GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
     "xai": ["openai_frontier", "claude-opus-5-5", "claude-sonnet-5-5"],
-    "deepseek": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "deepseek": ["openai_frontier", NATIVE_GROK, GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
 }
 
 
@@ -51,11 +52,11 @@ def test_bench_health_default_snapshot_closes_the_anthropic_shortfall_below_crit
     for family in AUTHOR_FAMILIES:
         assert len(results[family]) >= 2, f"Family {family} has < 2 eligible seats: {results[family]}"
         assert all(REVIEW_CANDIDATES[name].family != family for name in results[family])
-        assert not set(results[family]) & {"grok-4.7", "composer-2.5", "pool", "pool-xs"}
-    # Grok has no critical_review role, so the critical Anthropic bench is still Sol alone.
+        assert not set(results[family]) & {"composer-2.5", "pool", "pool-xs"}
+    # Both Grok transports now have critical_review suitability.
     critical = check_bench_health(routing_snapshot=snapshot, data_egress_policy="local_interactive", risk="critical")
-    assert critical["anthropic"] == ["openai_frontier"]
-    assert len(critical["anthropic"]) < bench_health.MIN_ELIGIBLE_SEATS
+    assert critical["anthropic"] == ["openai_frontier", NATIVE_GROK, GROK]
+    assert len(critical["anthropic"]) >= bench_health.MIN_ELIGIBLE_SEATS
     automatic = resolve_reviewer(ResolverInputs(author_model="claude", data_egress_policy="local_interactive"))
     assert automatic.selected.name == "openai_frontier"
     assert "glm-5.3" not in {entry.name for entry in automatic.trace}
@@ -72,7 +73,7 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
     captured = capsys.readouterr()
     assert captured.err == ""
     assert "BENCH HEALTH PASS" in captured.out
-    assert captured.out.count("[EXPECTED single seat]") == (2 if risk in {"high", "critical"} else 0)
+    assert captured.out.count("[EXPECTED single seat]") == 0
     for family, seats in results.items():
         resolution = resolve_reviewer(
             ResolverInputs(
@@ -87,28 +88,26 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
         assert set(seats) == {entry.name for entry in resolution.trace if entry.status in {"selected", "eligible"}}
     if risk == "high":
         assert {family: results[family] for family in ("anthropic", "openai")} == {
-            "anthropic": ["openai_frontier"],
-            "openai": ["claude-opus-5-5"],
+            "anthropic": ["openai_frontier", NATIVE_GROK, GROK],
+            "openai": [NATIVE_GROK, GROK, "claude-opus-5-5"],
         }
         for family in set(AUTHOR_FAMILIES) - {"anthropic", "openai"}:
-            assert results[family] == ["openai_frontier", "claude-opus-5-5"]
+            grok_seats = [] if family == "xai" else [NATIVE_GROK] if family == "moonshot" else [NATIVE_GROK, GROK]
+            assert results[family] == ["openai_frontier", *grok_seats, "claude-opus-5-5"]
         # The resolver names the single eligibility rule, not a bench-local list.
-        rule = "performed only by gpt-6.1-sol, claude-opus-5-5"
-        assert rule in exclusions["anthropic"][GROK]
-        assert rule in exclusions["openai"][GROK]
+        rule = "performed only by gpt-6.1-sol, claude-opus-5-5, grok-4.7"
+        assert not {NATIVE_GROK, GROK}.intersection(exclusions["anthropic"])
+        assert not {NATIVE_GROK, GROK}.intersection(exclusions["openai"])
         assert rule in exclusions["openai"]["claude-sonnet-5-5"]
         return
     if risk != "critical":
         return
-    assert results["anthropic"] == ["openai_frontier"]
-    assert results["openai"] == ["claude-opus-5-5"]
-    assert set(exclusions["anthropic"]) == set(REVIEW_CANDIDATES) - {"openai_frontier"}
+    assert results["anthropic"] == ["openai_frontier", NATIVE_GROK, GROK]
+    assert results["openai"] == [NATIVE_GROK, GROK, "claude-opus-5-5"]
+    assert set(exclusions["anthropic"]) == set(REVIEW_CANDIDATES) - {"openai_frontier", NATIVE_GROK, GROK}
     assert exclusions["anthropic"]["glm-5.3"] == "retired→cursor"
     assert exclusions["anthropic"]["composer-2.5"] == "sealed endpoint 'cursor' is not pinned for model 'composer-2.5'"
-    assert (
-        exclusions["anthropic"][GROK]
-        == f"missing required review role suitability: {profile}/critical catalog suitability"
-    )
+    assert not {NATIVE_GROK, GROK}.intersection(exclusions["anthropic"])
     for name in ("pool", "pool-xs"):
         assert exclusions["anthropic"][name] == "ACP participant does not yet pin and attest the concrete Laguna model"
 
@@ -167,7 +166,7 @@ def test_composer_and_pool_exclusions_are_resolver_gates(risk, snapshot):
         assert evaluation.status == "excluded"
         assert evaluation.reason == excluded["anthropic"][name] == reason
         if risk == "high":
-            # High's ladder only contains Sol and Opus; these seats are never attempted.
+            # High's ladder contains Sol, Opus and Grok; these seats are never attempted.
             assert name not in {entry.name for entry in resolution.trace}
         else:
             trace = next(entry for entry in resolution.trace if entry.name == name)
@@ -191,9 +190,15 @@ def test_retired_route_never_counts_even_if_pin_eligible_on_ladder(monkeypatch, 
     assert pinned.status == "eligible"
     results = check_bench_health(routing_snapshot={"glm": "healthy"})
     assert all("glm-5.3" not in seats for seats in results.values())
-    assert results["anthropic"] == ["openai_frontier", GROK]
-    # Removing Sol leaves zero seats; the finding must still list the retired route.
-    assert main(["--risk", "critical"], routing_snapshot={"glm": "healthy", "codex": "unhealthy"}) == 1
+    assert results["anthropic"] == ["openai_frontier", NATIVE_GROK, GROK]
+    # Removing Sol and both Grok routes leaves zero seats; still list the retired route.
+    assert (
+        main(
+            ["--risk", "critical"],
+            routing_snapshot={"glm": "healthy", "codex": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"},
+        )
+        == 1
+    )
     assert _findings(capsys.readouterr())[0]["excluded_seats"]["glm-5.3"] == "retired→cursor"
 
 
@@ -211,7 +216,7 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
     results = check_bench_health(routing_snapshot={}, data_egress_policy=policy)
     assert all("glm-5.3" not in seats for seats in results.values())
     assert all("openai_frontier" not in seats for seats in results.values())
-    assert results["anthropic"] == [GROK]
+    assert results["anthropic"] == [NATIVE_GROK, GROK]
     pinned = evaluate_candidate(
         REVIEW_CANDIDATES["glm-5.3"],
         ResolverInputs(
@@ -241,12 +246,23 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
 def test_bench_health_preserves_capacity_gate(status, reason, route, names, capsys):
     results = check_bench_health(routing_snapshot={route: status})
     assert all(not names.intersection(seats) for seats in results.values())
-    assert main([], routing_snapshot={route: status}) == 1
+    # Native Grok supplies the second Anthropic seat when Codex is unavailable.
+    assert main([], routing_snapshot={route: status}) == (0 if route == "codex" else 1)
     for finding in _findings(capsys.readouterr()):
         for name in names:
             if REVIEW_CANDIDATES[name].family != finding["author_family"]:
                 assert finding["excluded_seats"][name] == reason
-    assert results["anthropic"] == ([GROK] if route == "codex" else ["openai_frontier", GROK])
+    assert results["anthropic"] == (
+        [NATIVE_GROK, GROK] if route == "codex" else ["openai_frontier", NATIVE_GROK, GROK]
+    )
+    # Check exclusion reasons even when Grok admission prevents a CLI shortfall.
+    _, excluded = bench_health._bench_inventory(
+        {route: status}, data_egress_policy="local_interactive", review_profile="code", risk="medium"
+    )
+    for family in AUTHOR_FAMILIES:
+        for name in names:
+            if REVIEW_CANDIDATES[name].family != family:
+                assert excluded[family][name] == reason
 
 
 def test_bench_health_preserves_critical_role_gate():
@@ -258,7 +274,8 @@ def test_bench_health_preserves_critical_role_gate():
 @pytest.mark.parametrize("status", ["unhealthy", "near_cap"])
 @pytest.mark.parametrize("route,family", [("codex", "anthropic"), ("claude", "openai")])
 def test_accepted_single_seat_still_requires_available_reviewer(risk, status, route, family, capsys):
-    assert main(["--risk", risk], routing_snapshot={route: status}) == 1
+    # Disable both newly admitted Grok routes to keep exercising the zero-seat invariant.
+    assert main(["--risk", risk], routing_snapshot={route: status, "grok": status, "cursor": status}) == 1
     captured = capsys.readouterr()
     finding = next(item for item in _findings(captured) if item["author_family"] == family)
     assert finding["minimum"] == 1

@@ -56,7 +56,14 @@ from .common import (
 )
 from .dataset import EvalSet, Variant, protocol_shortfalls
 from .dispatch import PAIRED_FIELDS, Dispatcher, DispatchError, TaskOutcome, condition_problems, frame
-from .prompts import build_prompt, review_payload, template_fingerprint, validate_response, writing_payload
+from .prompts import (
+    build_prompt,
+    review_gate_marker_sha256,
+    review_payload,
+    template_fingerprint,
+    validate_response,
+    writing_payload,
+)
 
 KINDS = PROTOCOL_KINDS
 TASK_PREFIX = "uk9623"
@@ -146,13 +153,18 @@ def frozen_plan(
     run_tag: str,
     worker_cwd: Path,
     block: str,
+    review_profile: str | None = None,
 ) -> dict[str, Any]:
     """Every term that defines the run and its denominator; frozen in the manifest, read by score and report.
+
+    ``review_profile`` and the digest of the review-gate marker text (part of a profiled run's review prompts,
+    outside ``templates_sha256``) are frozen only when the profile is set, so a default plan keeps its manifest
+    unchanged.
 
     ``composition`` (delegate's frame around the prompts, see ``composition_frame``) and
     ``dispatch_args_sha256`` (see ``dispatch_args_frame``) are added once the candidate prompts are planned.
     """
-    return {
+    plan = {
         "harness": HARNESS_VERSION,
         "scoring": SCORING_VERSION,
         "set_id": eval_set.set_id,
@@ -172,6 +184,10 @@ def frozen_plan(
         "worker_cwd": str(worker_cwd),
         "protocol_shortfalls": plan_shortfalls(eval_set, repeats, kinds),
     }
+    if review_profile:
+        plan["review_profile"] = review_profile
+        plan["review_gate_marker_sha256"] = review_gate_marker_sha256()
+    return plan
 
 
 def dispatch_args_refusal(changed: Sequence[str]) -> str:
@@ -465,7 +481,8 @@ def plan_candidate_tasks(
             payload = review_payload([reviews[item_id] for item_id in slot.item_ids])
         else:
             payload = writing_payload([writings[item_id] for item_id in slot.item_ids])
-        prompt = render(build_prompt(slot.kind, payload, preambles[slot.variant]), block)
+        review_profile = plan.get("review_profile")
+        prompt = render(build_prompt(slot.kind, payload, preambles[slot.variant], review_profile=review_profile), block)
         tasks.append(TaskSpec(slot.task_id, slot.seat, slot.kind, slot.variant, slot.repeat, slot.item_ids, prompt))
     return tasks
 

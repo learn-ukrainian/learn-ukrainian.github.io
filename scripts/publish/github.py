@@ -16,6 +16,7 @@ import sys
 import tempfile
 import threading
 from pathlib import Path
+from urllib.parse import quote
 
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import repository
@@ -547,7 +548,7 @@ def main(argv=None, *, runner=None):
     parser = PublisherParser(
         description="Publish GitHub changes through closed, scanned fields.\nUse for public writes; raw gh is reserved for allowlisted reads.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  python -m scripts.publish issue-comment --repo unit/public --number 1 --body-file reply.md\n  python -m scripts.publish pr-merge --repo unit/public --number 1\nOutputs: GitHub mutation; temporary snapshots removed on exit.\nExit codes: 0 success; 1 gh failure; 2 schema or publishing refusal.\nRelated: docs/dev/agent-public-text.md; #9297",
+        epilog="Examples:\n  .venv/bin/python -m scripts.publish issue-comment --repo unit/public --number 1 --body-file reply.md\n  .venv/bin/python -m scripts.publish read code-scanning-alerts --number 9781\n  .venv/bin/python -m scripts.publish read check-annotations --number 112001533549\nOutputs: GitHub mutation for write verbs; JSON on stdout for reads; temporary snapshots removed on exit.\nExit codes: 0 success; 1 gh failure; 2 schema or publishing refusal.\nRelated: docs/dev/agent-public-text.md; #9297; #9792",
         allow_abbrev=False,
     )
     verbs = parser.add_subparsers(dest="verb", required=True)
@@ -575,22 +576,51 @@ def main(argv=None, *, runner=None):
             if kind in ENUMS:
                 kwargs["choices"] = sorted(ENUMS[kind])
             sub.add_argument("--" + key.replace("_", "-"), **kwargs)
-    read_parser = verbs.add_parser("read", help="Named REST and GraphQL reads", allow_abbrev=False)
+    read_parser = verbs.add_parser(
+        "read",
+        help="Named REST and GraphQL reads",
+        allow_abbrev=False,
+        description="Read named GitHub resources. Diagnostic reads return JSON arrays per page; code-scanning-alerts lists open alerts for a PR (--number) or Git ref (--ref).",
+    )
     read_parser.add_argument(
         "name",
         choices=sorted(
             set(REST_READS) | set(GQL_READS) | {"queue-snapshot", "subissue-batch", "issue-states", "merge-facts"}
         ),
     )
-    read_parser.add_argument("--repo")
+    read_parser.add_argument("--repo", help="Repository owner/name; defaults to GH_REPO or Git origin")
     for key in ("number",):
-        read_parser.add_argument("--" + key, type=int, default=argparse.SUPPRESS)
-    for key in ("sha", "start", "end", "branch", "cursor"):
-        read_parser.add_argument("--" + key, default=argparse.SUPPRESS)
+        read_parser.add_argument(
+            "--" + key,
+            type=int,
+            default=argparse.SUPPRESS,
+            help="Positive issue, PR, run or check-run ID; omitted by default",
+        )
+    for key in ("sha", "start", "end", "branch", "cursor", "ref"):
+        read_parser.add_argument(
+            "--" + key,
+            default=argparse.SUPPRESS,
+            help=(
+                "Git ref for code-scanning-alerts (e.g. refs/heads/main); use either --ref or --number"
+                if key == "ref"
+                else f"{key} selector; omitted by default"
+            ),
+        )
     for key in ("branches", "cursors", "body_roots", "numbers", "batch"):
-        read_parser.add_argument("--" + key.replace("_", "-"), type=json.loads, default=argparse.SUPPRESS)
-    read_parser.add_argument("--paginate", action="store_true")
-    read_parser.add_argument("--slurp", action="store_true")
+        read_parser.add_argument(
+            "--" + key.replace("_", "-"),
+            type=json.loads,
+            default=argparse.SUPPRESS,
+            help=f"{key} as JSON; omitted by default",
+        )
+    read_parser.add_argument(
+        "--paginate", action="store_true", help="Read all pages (default off; diagnostic reads always paginate)"
+    )
+    read_parser.add_argument(
+        "--slurp",
+        action="store_true",
+        help="Wrap paginated pages in an array (default off; unsupported for shaped diagnostic reads)",
+    )
     args = vars(parser.parse_args(argv))
     verb = args.pop("verb")
     try:
@@ -633,11 +663,38 @@ REST_READS = {
     "commits": ("repos/{repo}/pulls/{number}/commits", {"number": "number"}),
     "comment": ("repos/{repo}/issues/comments/{number}", {"number": "number"}),
     "checks": ("repos/{repo}/commits/{sha}/check-runs", {"sha": "sha"}),
+    "code-scanning-alerts": ("repos/{repo}/code-scanning/alerts?state=open&ref={ref}", {"ref": "ref"}),
+    "check-annotations": ("repos/{repo}/check-runs/{number}/annotations", {"number": "number"}),
     "jobs": ("repos/{repo}/actions/runs/{number}/jobs", {"number": "number"}),
     "issues": ("repos/{repo}/issues?state=open&labels=infra", {}),
     "runs": ("repos/{repo}/actions/runs?event=merge_group&created={start}..{end}", {"start": "date", "end": "date"}),
     "deployments": ("repos/{repo}/deployments?sha={sha}", {"sha": "sha"}),
     "deployment-statuses": ("repos/{repo}/deployments/{number}/statuses", {"number": "number"}),
+}
+# Fixed projections omit account/host metadata and refuse non-relative file paths.
+# gh applies --jq to each page; diagnostic reads emit one JSON array per page.
+_RELATIVE_PATH_JQ = r"""def relative_path:
+    if type == "string" and length > 0
+       and (test("(^/|[\\\\:\\x00-\\x1f\\x7f]|(^|/)\\.\\.?(/|$)|//)") | not)
+    then . else error("OPSEC: diagnostic file path is not repository-relative") end;
+"""
+DIAGNOSTIC_READS = {
+    "code-scanning-alerts": _RELATIVE_PATH_JQ
+    + """
+        map({rule_id: .rule.id,
+            severity: (.rule.security_severity_level // .rule.severity),
+            state: (.most_recent_instance.state // .state),
+            file: (.most_recent_instance.location.path | relative_path),
+            start_line: .most_recent_instance.location.start_line,
+            message: .most_recent_instance.message.text,
+            html_path: (.html_url |
+                if test("^https://github[.]com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/(security/)?code-scanning/[0-9]+$")
+                then split("/")[5:] | join("/") | relative_path
+                else error("OPSEC: invalid diagnostic html path") end)})""",
+    "check-annotations": _RELATIVE_PATH_JQ
+    + """
+        map({path: (.path | relative_path), line: .start_line,
+            level: .annotation_level, message: .message})""",
 }
 GQL_READS = {
     "budget": "query { rateLimit { limit remaining used resetAt } }",
@@ -685,18 +742,30 @@ def read(
             raise gate.PublishBlocked("OPSEC: invalid read identifier.")
     if operation in REST_READS:
         endpoint, schema = REST_READS[operation]
+        if operation == "code-scanning-alerts" and set(fields) == {"number"}:
+            # PR filtering covers analyses uploaded to either head or merge refs.
+            endpoint = "repos/{repo}/code-scanning/alerts?state=open&pr={number}"
+            schema = {"number": "number"}
         if set(fields) != set(schema):
             raise gate.PublishBlocked("OPSEC: invalid read fields.")
         for key, kind in schema.items():
             pattern = r"\d{4}-\d{2}-\d{2}" if kind == "date" else PATTERNS.get(kind)
             if pattern and (not isinstance(fields[key], str) or not re.fullmatch(pattern, fields[key])):
                 raise gate.PublishBlocked("OPSEC: invalid read selector.")
+        if operation == "code-scanning-alerts" and "ref" in fields:
+            if any(segment in {"", ".", ".."} for segment in fields["ref"].split("/")):
+                raise gate.PublishBlocked("OPSEC: invalid read selector.")
+            fields = {"ref": quote(fields["ref"], safe="")}
         endpoint = endpoint.format(repo=gh_repo, **fields)
         endpoint += ("&" if "?" in endpoint else "?") + "per_page=100"
         argv = ["gh", "api", "--method", "GET", endpoint]
-        if paginate:
+        if operation in DIAGNOSTIC_READS:
+            if slurp:
+                raise gate.PublishBlocked("OPSEC: diagnostic reads return JSON arrays per page; slurp is unsupported.")
+            argv += ["--paginate", "--jq", DIAGNOSTIC_READS[operation]]
+        elif paginate:
             argv.append("--paginate")
-        if slurp:
+        if slurp and operation not in DIAGNOSTIC_READS:
             if not paginate:
                 raise gate.PublishBlocked("OPSEC: slurp requires pagination.")
             argv.append("--slurp")

@@ -13,6 +13,7 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
+from agent_runtime.adapters.claude import run_headless_claude
 from audit.status_cache import get_source_paths, read_status
 from batch.batch_dispatcher_config import (
     COST_ESTIMATES,
@@ -353,7 +354,8 @@ def dispatch_claude_fix(track_name: str, slug: str, module_num: int,
 
     start = time.monotonic()
     try:
-        result = subprocess.run(
+        # The run ends with its final turn; no background work may outlive it (#9750).
+        result = run_headless_claude(
             cmd, capture_output=True, text=True,
             timeout=timeout, cwd=str(PROJECT_ROOT),
         )
