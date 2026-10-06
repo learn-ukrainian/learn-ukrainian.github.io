@@ -75,7 +75,7 @@ def _has_ulif() -> bool:
     if not DEFAULT_ULIF_DB.is_file() or DEFAULT_ULIF_DB.stat().st_size < 1_000_000:
         return False
     try:
-        with sqlite3.connect(f"file:{DEFAULT_ULIF_DB}?mode=ro", uri=True) as conn:
+        with sqlite3.connect(f"{Path(DEFAULT_ULIF_DB).resolve().as_uri()}?mode=ro", uri=True) as conn:
             r = conn.execute(
                 "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name IN ('ulif_dictua_sections', 'ulif_entries')"
             ).fetchone()
@@ -88,7 +88,7 @@ def _has_sources() -> bool:
     if not DEFAULT_SOURCES_DB.is_file() or DEFAULT_SOURCES_DB.stat().st_size < 1_000_000:
         return False
     try:
-        with sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True) as conn:
+        with sqlite3.connect(f"{Path(DEFAULT_SOURCES_DB).resolve().as_uri()}?mode=ro", uri=True) as conn:
             r = conn.execute("SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='frazeolohichnyi'").fetchone()
             return r is not None
     except Exception:
@@ -99,7 +99,7 @@ def _has_vesum() -> bool:
     if not DEFAULT_VESUM_DB.is_file() or DEFAULT_VESUM_DB.stat().st_size < 1_000_000:
         return False
     try:
-        with sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True) as conn:
+        with sqlite3.connect(f"{Path(DEFAULT_VESUM_DB).resolve().as_uri()}?mode=ro", uri=True) as conn:
             r = conn.execute("SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='forms_all'").fetchone()
             return r is not None
     except Exception:
@@ -617,7 +617,7 @@ def test_verify_receipt_invariants_real_checks():
 
 @requires_vesum
 def test_live_vesum_attestation():
-    with sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True) as conn:
+    with sqlite3.connect(f"{Path(DEFAULT_VESUM_DB).resolve().as_uri()}?mode=ro", uri=True) as conn:
         cur = conn.cursor()
         assert verify_phrase_in_vesum("брати участь", cur) is True
         assert verify_phrase_in_vesum("впадати в око", cur) is True

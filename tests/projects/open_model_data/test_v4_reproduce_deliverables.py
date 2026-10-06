@@ -40,7 +40,7 @@ def _has_full_sources_db() -> bool:
     for cand in candidates:
         if cand.is_file():
             try:
-                conn = sqlite3.connect(f"file:{cand.resolve()}?mode=ro", uri=True)
+                conn = sqlite3.connect(f"{cand.resolve().as_uri()}?mode=ro", uri=True)
                 cur = conn.cursor()
                 cur.execute(
                     "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('literary_texts', 'textbooks')"

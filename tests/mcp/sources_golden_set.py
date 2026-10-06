@@ -197,7 +197,7 @@ async def _capture(server: Any) -> dict[str, Any]:
         raise FileNotFoundError(SOURCES_DB_PATH)
     if not Path(VESUM_DB_PATH).is_file():
         raise FileNotFoundError(VESUM_DB_PATH)
-    uri = f"file:{SOURCES_DB_PATH}?mode=ro"
+    uri = f"{Path(SOURCES_DB_PATH).resolve().as_uri()}?mode=ro"
     conn = sqlite3.connect(uri, uri=True, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA query_only = ON")

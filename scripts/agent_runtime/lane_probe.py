@@ -12,7 +12,6 @@ startup budget.  See #4879.
 from __future__ import annotations
 
 import argparse
-import importlib
 import json
 import os
 import subprocess
@@ -21,6 +20,13 @@ import tempfile
 import time
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import import_named_module
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
 from scripts.orchestration.handoff_slot_registry import registered_slots
 from scripts.utils.claude_version import run_version_probe
@@ -73,7 +79,7 @@ def _load_adapter(agent: str) -> Any:
     """
     entry = get_agent_entry(agent)
     module_name, class_name = entry["adapter"].split(":", 1)
-    adapter_class = getattr(importlib.import_module(module_name), class_name)
+    adapter_class = getattr(import_named_module(module_name), class_name)
     return adapter_class()
 
 

@@ -79,7 +79,7 @@ def requires_sources_db() -> Path:
     if not DEFAULT_SOURCES_DB.is_file() or DEFAULT_SOURCES_DB.stat().st_size < 1_000_000:
         pytest.skip(f"requires {DEFAULT_SOURCES_DB} (not provisioned in CI)")
     try:
-        with sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True) as conn:
+        with sqlite3.connect(f"{Path(DEFAULT_SOURCES_DB).resolve().as_uri()}?mode=ro", uri=True) as conn:
             tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")}
             required = {"ua_gec_errors", "zno_tasks", "style_guide", "textbooks"}
             missing = sorted(required - tables)
@@ -96,7 +96,7 @@ def requires_vesum_db() -> Path:
     if not DEFAULT_VESUM_DB.is_file() or DEFAULT_VESUM_DB.stat().st_size < 1_000_000:
         pytest.skip(f"requires {DEFAULT_VESUM_DB} (not provisioned in CI)")
     try:
-        with sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True) as conn:
+        with sqlite3.connect(f"{Path(DEFAULT_VESUM_DB).resolve().as_uri()}?mode=ro", uri=True) as conn:
             tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")}
             required = {"forms_all"}
             missing = sorted(required - tables)

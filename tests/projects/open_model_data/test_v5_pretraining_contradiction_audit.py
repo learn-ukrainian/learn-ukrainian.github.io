@@ -147,8 +147,8 @@ def test_verify_replacement_attestation_real_databases() -> None:
         pytest.skip("Local data/sources.db or data/vesum.db not present (CI-normal)")
 
     with (
-        sqlite3.connect(f"file:{sources_p.resolve()}?mode=ro", uri=True) as sources_conn,
-        sqlite3.connect(f"file:{vesum_p.resolve()}?mode=ro", uri=True) as vesum_conn,
+        sqlite3.connect(f"{sources_p.resolve().as_uri()}?mode=ro", uri=True) as sources_conn,
+        sqlite3.connect(f"{vesum_p.resolve().as_uri()}?mode=ro", uri=True) as vesum_conn,
     ):
         # Attested Ukrainian words/phrases must return True
         assert verify_replacement_attestation("принаймні", vesum_conn, sources_conn) is True

@@ -96,7 +96,7 @@ def _has_textbooks() -> bool:
         return False
     try:
         import sqlite3
-        with sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True) as conn:
+        with sqlite3.connect(f"{Path(DEFAULT_SOURCES_DB).resolve().as_uri()}?mode=ro", uri=True) as conn:
             r = conn.execute("SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='textbooks'").fetchone()
             return r is not None
     except Exception:
@@ -108,7 +108,7 @@ def _has_vesum() -> bool:
         return False
     try:
         import sqlite3
-        with sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True) as conn:
+        with sqlite3.connect(f"{Path(DEFAULT_VESUM_DB).resolve().as_uri()}?mode=ro", uri=True) as conn:
             r = conn.execute("SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='forms_all'").fetchone()
             return r is not None
     except Exception:

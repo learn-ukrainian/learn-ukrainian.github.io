@@ -768,7 +768,7 @@ def _load_textbook_fixture() -> tuple[str, str] | None:
     sources_path = _sources_path()
     if not sources_path.is_file() or not Path(VESUM_DB_PATH).is_file():
         return None
-    conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(sources_path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         # Minor 7: Pin by chunk_id
         cur = conn.execute(
@@ -802,7 +802,7 @@ def test_acceptance_textbook_fixture_correctness_and_planted(requires_vesum_db, 
     assert res_clean.get("status") != "error"
 
     # Provenance check (Minor 6: canonical VESUM metadata digest)
-    conn_v = sqlite3.connect(f"file:{requires_vesum_db}?mode=ro", uri=True)
+    conn_v = sqlite3.connect(f"{Path(requires_vesum_db).resolve().as_uri()}?mode=ro", uri=True)
     cur_v = conn_v.execute("SELECT value FROM vesum_build_metadata WHERE key = 'canonical_jsonl_sha256'")
     expected_vesum_digest = cur_v.fetchone()[0]
     conn_v.close()
@@ -852,7 +852,7 @@ def test_acceptance_textbook_fixture_correctness_and_planted(requires_vesum_db, 
     planted_vesum_1, planted_vesum_2 = selected_absent
 
     # Deterministic multi-word UA-GEC row 3010 (F/Calque: 'написання постів')
-    conn = sqlite3.connect(f"file:{requires_sources_db}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(requires_sources_db).resolve().as_uri()}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     try:
         cur = conn.execute("SELECT id, error, correct FROM ua_gec_errors WHERE id = 3010")

@@ -36,7 +36,7 @@ SOURCE_DB_REQUIRED_COLUMNS = {
 
 
 def _source_db_has_textbooks_schema(path: Path) -> bool:
-    connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    connection = sqlite3.connect(f"{Path(path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         columns = {str(row[1]) for row in connection.execute("PRAGMA table_info(textbooks)")}
         return columns >= SOURCE_DB_REQUIRED_COLUMNS

@@ -63,7 +63,7 @@ def _discussion_roots(fleet_root: Path) -> list[tuple[str, str]]:
     db_path = fleet_root / "comms.sqlite3"
     if not db_path.is_file():
         return []
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     try:
         rows = conn.execute(

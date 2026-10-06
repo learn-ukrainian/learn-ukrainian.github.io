@@ -602,7 +602,7 @@ def get_vesum_cursor(vesum_db: Path = DEFAULT_VESUM_DB) -> sqlite3.Cursor | None
         return _GLOBAL_VESUM_CUR
     if vesum_db.is_file():
         try:
-            _GLOBAL_VESUM_CONN = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
+            _GLOBAL_VESUM_CONN = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
             _GLOBAL_VESUM_CUR = _GLOBAL_VESUM_CONN.cursor()
             return _GLOBAL_VESUM_CUR
         except Exception as e:
@@ -1486,7 +1486,7 @@ def is_clean_content_chunk(chunk: TextbookChunk, cur_ves: sqlite3.Cursor | None 
 def load_textbook_chunks(db_path: Path) -> tuple[list[TextbookChunk], list[TextbookChunk]]:
     """Load textbook chunks from sources.db, partitioned into eval pool and train pool with strict text firewall."""
     cur_ves = get_vesum_cursor()
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     cur = conn.cursor()
     cur.execute("""
         SELECT chunk_id, title, text, source_file, grade, coalesce(author_uk, author, ''), subject, char_count
@@ -2456,7 +2456,7 @@ def get_textbook_lemma_freq(db_path: Path | None = None) -> Counter:
     db_p = db_path or DEFAULT_SOURCES_DB
     counts = Counter()
     try:
-        conn = sqlite3.connect(f"file:{db_p}?mode=ro", uri=True)
+        conn = sqlite3.connect(f"{Path(db_p).resolve().as_uri()}?mode=ro", uri=True)
         cur = conn.cursor()
         cur.execute("SELECT text FROM textbooks")
         for row in cur:
