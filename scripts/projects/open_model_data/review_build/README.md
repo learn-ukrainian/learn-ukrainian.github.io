@@ -54,6 +54,11 @@ catalog's shared C6 instructions; both retain C6's UA-GEC admission rules.
    package source files, including registry and component code. Generic mutations
    must refuse; the component owns additional semantic must-fail cases.
 
+Components may expose `artifact_files(ctx)` to return deterministic private
+packet bytes keyed by relative output names. The framework alone writes them
+through `OutputGuard`, includes their digests in the manifest, and compares them
+in `verify`. Output-name conflicts and changes to the pinned spec refuse.
+
 Tests can pass in-process objects through `main(..., _test_components={...})` or
 `load_components(..., _test_overrides={...})`. These seams have no CLI flag or
 request-file representation and cannot add ids outside the closed registry.
