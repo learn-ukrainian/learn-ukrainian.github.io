@@ -8,8 +8,10 @@ entries, or designated-approval policy.
 The release operator can prepare an immutable evaluation now. Candidate
 qualification waits for an actual provider-listed identity and all four AGY
 prerequisites below. Passing a benchmark supplies capability-specific evidence;
-it does not authorize admission. Keep #9619 open for unavailable candidate
-qualification and the #9302 migration.
+it does not authorize admission. Issue #9619 closes only after all its readiness
+criteria are verified. Actual new-candidate qualification is a separately
+tracked release-dependent residual owned by devops, not a readiness-closeout
+requirement.
 
 ## Authority, responsibilities and completion terms
 
@@ -259,7 +261,11 @@ and the verification/proof procedures in
 make provider calls: execute only in the separately authorized readiness run.
 Record exact commands and outputs for the tested route. A full-mode content
 fixture cannot discharge native formal code-review isolation; a permission
-canary's fixed token cannot prove semantic review competence. Current identity
+canary's fixed token cannot prove semantic review competence. The linked driver
+canary hardcodes `gemini-3.8-flash-high` and its forced-reader probe calls
+`verify_words` on one word; it supports only that limited probe. Release
+prerequisite proof requires the actual candidate and every required Sources
+facet, with independently verified invocation-bound receipts. Current identity
 and effort gaps require reviewed implementation and real attestation proof;
 there is no existing command in this runbook that claims to fill them.
 
@@ -394,16 +400,26 @@ counts against the frozen denominator, uncertainty and held-out judgment
 receipt, exact reviewed artifact, admission/policy decision or explicit lack
 of one, and every residual's owner and concrete unblock condition:
 
-- **Devops:** candidate not provider-listed or prerequisites unknown → wait for
-  a concrete listing and reviewed, invocation-bound positive/negative proof;
-  then separately authorize and execute qualification.
+- **Devops:** separately tracked release-dependent actual qualification → wait
+  for actual provider availability, all four AGY prerequisite proofs and
+  required policy clearance; then separately authorize and execute qualification.
 - **Infra, #9302:** generic role migration not delivered → complete its approved
-  migration and equivalence evidence before production role admission.
+  migration and equivalence evidence before #9619 readiness closeout and
+  production role admission.
 - **Devops driver of record:** protocol branch awaiting independent exact-head
   CF, same-head CI and landing → finish those gates and hygiene; no worker
   self-approval or PR/merge action.
 
-Keep #9619 open while migration or actual qualification remains outstanding.
+Close #9619 only when all readiness criteria are verified: completed #9302
+migration, full authority-reference inventory disposition, placeholder
+test-catalog fixture proof through resolver, admission and approval discovery
+without family-specific code changes or changes to existing production routing
+and eligibility, an independently reviewed protocol, exact-head cross-family
+approval, same-head green CI, merged behavior/fixture or artifact proof, and
+common worktree/branch hygiene. Issue #9619 remains open because migration and
+readiness proof are incomplete; actual new-candidate qualification remains the
+separately tracked devops residual above.
+
 Preparation, fixture tests, transport completion, synthetic catalog discovery,
 CI success and this runbook's merge are not proof that a candidate is qualified
 or admitted.
