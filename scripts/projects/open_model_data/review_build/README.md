@@ -323,6 +323,14 @@ em/en/ASCII bibliography dashes. Missing or conflicting fields remain withheld;
 filenames and ingester metadata never supply bibliography fields. Register
 attribution admission and independent semantic certification remain separate
 from extraction and exact-byte checks.
+C9 maps the register's `textbooks` grade form and `textbooks_university` level
+form separately. Author, title, grade/level, publisher and year retain printed
+imprint spans; the page placeholder uses each cited source row's page number.
+Unknown templates, mismatched source identities and unresolved pages refuse
+attribution rather than supplying inferred metadata.
+C9 withholds otherwise admissible sections containing the framework's forbidden
+reasoning markers as `reasoning_marker_in_source`, retaining their exact bytes
+in private accounting. The gate still refuses any such accepted candidate.
 
 `dehyphenate@1` requires `{store: vesum.db, table:
 ..., field: ...}` and joins only a positively attested combined form whose

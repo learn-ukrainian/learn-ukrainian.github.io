@@ -15,18 +15,19 @@ import unicodedata
 from collections import Counter
 from collections.abc import Mapping
 from dataclasses import dataclass, replace
+from typing import ClassVar
 from weakref import WeakKeyDictionary
 
 from ..attribution import Attribution
-from ..contract import Candidate, Citation, Value, canonical, digest
+from ..contract import Candidate, Citation, Value, canonical, digest, values
 from ..errors import require
-from ..gate import evidence_id
+from ..gate import REASONING, evidence_id
 from ..transforms import transform
 from . import ComponentContext
 from .c9_queries import BODY_QUERY, ELIGIBLE_SQL, END_QUERY, EXCISION_QUERY, HEADING_QUERY, UNIT_QUERY
 
 SOURCE_SCHOOL = "textbooks"
-SOURCE_UNIVERSITY = "university-textbooks"
+SOURCE_UNIVERSITY = "textbooks_university"
 FROZEN_COUNT = 7261
 ALLOWED = re.compile(r"(?:[1-9]|1[01]|10-11)-klas-.+|uni-.+")
 PAGE_PATTERN = r"[ \t]*[0-9]+[ \t]*"
@@ -182,18 +183,22 @@ def unit_id(heading: Heading) -> str:
 class TextbookAttribution:
     """Only maps an explicit bibliographic template; instruction prose refuses."""
 
-    FORM = "{authors}. {title}. {grade}. {publisher}, {year}."
+    FORMS: ClassVar[dict[str, str]] = {
+        SOURCE_SCHOOL: "<author(s)>. <title>. <grade>. <publisher>, <year>. С. <page>.",
+        SOURCE_UNIVERSITY: "<author(s)>. <title>. <level>. <publisher>, <year>. С. <page>.",
+    }
 
     def __init__(self):
         self._cache = WeakKeyDictionary()
 
     def resolve(self, form, source, row, reader):
-        require(form == self.FORM, "attribution_unresolved")
         cache = self._cache.setdefault(reader, {})
         book = row["source_file"]
         require(bool(ALLOWED.fullmatch(book)), "attribution_unresolved")
         expected_source = SOURCE_UNIVERSITY if book.startswith("uni-") else SOURCE_SCHOOL
         require(source.source_id == expected_source, "attribution_unresolved")
+        require(form == self.FORMS[expected_source], "attribution_unresolved")
+        require(type(row["page_start"]) is int and row["page_start"] >= 0, "attribution_unresolved")
         if book not in cache:
             connection = reader.connections["sources.db"]
             pages = [
@@ -207,7 +212,16 @@ class TextbookAttribution:
         require(item is not None, "attribution_unresolved")
         # Pin the actual imprint column, including on response-page citations.
         reader.field(citation(item.row))
-        return Attribution(form.format(**{key: item.text(key) for key in item.fields}), form)
+        replacements = {
+            "author(s)": item.text("authors"),
+            "title": item.text("title"),
+            "grade" if expected_source == SOURCE_SCHOOL else "level": item.text("grade"),
+            "publisher": item.text("publisher"),
+            "year": item.text("year"),
+            "page": str(row["page_start"]),
+        }
+        bibliography = re.sub(r"<([^>]+)>", lambda match: replacements[match.group(1)], form)
+        return Attribution(bibliography, form)
 
 
 def selector(area, slot, **extra):
@@ -515,6 +529,7 @@ class Textbooks:
                     "attribution_unresolved",
                     "locator_unavailable",
                     "catalog_inapplicable",
+                    "reasoning_marker_in_source",
                 ],
             },
             "operation_specs": {
@@ -689,6 +704,14 @@ class Textbooks:
                     candidate,
                     outcome="withheld",
                     reason="repeated_heading",
+                    evidence=(evidence_id(anchor.citations[0]),),
+                )
+            if candidate.outcome == "accepted" and any(REASONING.search(v.text) for v in values(candidate)):
+                anchor = next(v for v in candidate.slots if v.slot == "section_title")
+                candidate = replace(
+                    candidate,
+                    outcome="withheld",
+                    reason="reasoning_marker_in_source",
                     evidence=(evidence_id(anchor.citations[0]),),
                 )
             yield candidate

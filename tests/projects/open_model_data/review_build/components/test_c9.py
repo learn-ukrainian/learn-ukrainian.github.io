@@ -99,7 +99,7 @@ def gate_for(reader, pages, count):
         "sources": [
             {
                 "id": source,
-                "citation": {"form": TextbookAttribution.FORM},
+                "citation": {"form": TextbookAttribution.FORMS[source]},
                 "terms": {"licence": {"name": "SYNTHETIC licence"}},
             }
             for source in (SOURCE_SCHOOL, SOURCE_UNIVERSITY)
@@ -399,6 +399,8 @@ def test_university_grade_zero_admitted_from_filename_with_printed_level(tmp_pat
         "Author(s), title, grade, publisher, year, page — for every quoted sentence.",
         "{authors}. {title}. {grade}. {publisher}, <year>.",
         "SYNTHETIC insert citation",
+        "{authors}. {title}. {grade}. {publisher}, {year}.",
+        "<author(s)>. <title>. <level>. <publisher>, <year>. С. <page>.",
     ],
 )
 def test_instruction_style_or_unmapped_attribution_must_fail(source, form):
@@ -411,11 +413,92 @@ def test_instruction_style_or_unmapped_attribution_must_fail(source, form):
 def test_attribution_pins_imprint_and_all_required_fields(source):
     path, pages = source
     with SnapshotReader({"sources.db": path}) as reader:
-        result = TextbookAttribution().resolve(TextbookAttribution.FORM, citation(pages[2]), pages[2], reader)
-        assert result.bibliography == "SYNTHETIC Author. SYNTHETIC Book. 5 класу. SYNTHETIC Publisher, 2025."
+        form = TextbookAttribution.FORMS[SOURCE_SCHOOL]
+        result = TextbookAttribution().resolve(form, citation(pages[2]), pages[2], reader)
+        assert result.mapped_form == form
+        assert result.bibliography == "SYNTHETIC Author. SYNTHETIC Book. 5 класу. SYNTHETIC Publisher, 2025. С. 3."
         assert ("section_id=1", digest(pages[0]["full_text"].encode())) in reader.reads[
             ("sources.db", "textbook_sections")
         ]
+
+
+@pytest.mark.parametrize(
+    "book,level,source_id,form",
+    [
+        (
+            "5-klas-SYNTHETIC-book",
+            "5 класу",
+            "textbooks",
+            "<author(s)>. <title>. <grade>. <publisher>, <year>. С. <page>.",
+        ),
+        (
+            "uni-SYNTHETIC-book",
+            "студентів",
+            "textbooks_university",
+            "<author(s)>. <title>. <level>. <publisher>, <year>. С. <page>.",
+        ),
+    ],
+)
+def test_register_forms_resolve_every_cited_page(tmp_path, book, level, source_id, form):
+    pages = [page(1, imprint(grade=level), book)] + [
+        page(i, f"§ {i}. SYNTHETIC Heading\nSYNTHETIC body", book) for i in (2, 3)
+    ]
+    path = tmp_path / "SYNTHETIC.db"
+    write_pages(path, pages)
+    root = Path(__file__).resolve().parents[5]
+    register = yaml.safe_load((root / "docs/sources/permissions-register.yaml").read_bytes())
+    entry = next(entry for entry in register["sources"] if entry["id"] == source_id)
+    assert entry["citation"]["form"] == form
+    with SnapshotReader({"sources.db": path}) as reader:
+        resolver = Resolver(register, component_for(pages).adapters)
+        for row in pages:
+            licence, attribution = resolver.resolve(citation(row), reader)
+            assert f"permissions-register.yaml#{source_id};" in licence
+            assert attribution == (
+                f"SYNTHETIC Author. SYNTHETIC Book. {level}. SYNTHETIC Publisher, 2025. "
+                f"С. {row['page_start']}.; page {row['page_start']}"
+            )
+        with pytest.raises(BuildError, match="attribution_unresolved"):
+            TextbookAttribution().resolve(form, replace(citation(pages[1]), source_id="obsolete"), pages[1], reader)
+
+
+@pytest.mark.parametrize("number", [None, -1, "3", True])
+def test_attribution_refuses_unresolved_page(source, number):
+    path, pages = source
+    with SnapshotReader({"sources.db": path}) as reader:
+        with pytest.raises(BuildError, match="attribution_unresolved"):
+            TextbookAttribution().resolve(
+                TextbookAttribution.FORMS[SOURCE_SCHOOL], citation(pages[2]), {**pages[2], "page_start": number}, reader
+            )
+
+
+@pytest.mark.parametrize("area", ["heading", "body", "imprint"])
+def test_source_reasoning_markers_withhold_without_rewriting(tmp_path, area):
+    pages = [
+        page(1, imprint(book="SYNTHETIC Step 1 Book" if area == "imprint" else "SYNTHETIC Book")),
+        page(
+            2,
+            "§ 1. SYNTHETIC Heading"
+            + (" Step 1" if area == "heading" else "")
+            + "\nSYNTHETIC body"
+            + (" Step 1" if area == "body" else ""),
+        ),
+    ]
+    path = tmp_path / "SYNTHETIC.db"
+    write_pages(path, pages)
+    with SnapshotReader({"sources.db": path}) as reader:
+        candidate = extract(reader, pages)[0]
+        assert candidate.outcome == "withheld"
+        assert candidate.reason == "reasoning_marker_in_source"
+        assert candidate.evidence
+        assert candidate.response[0].text == pages[1]["full_text"][headings(pages[1])[0].span[1] :]
+        records, report = gate_for(reader, pages, 1).run([candidate])
+        assert records == []
+        assert report["accounting"]["C9"]["reasons"] == {"reasoning_marker_in_source": 1}
+        with pytest.raises(BuildError, match="reasoning_text"):
+            gate_for(reader, pages, 1).run(
+                [replace(candidate, outcome="accepted", reason="printed_heading", evidence=())]
+            )
 
 
 def test_page_number_removal_has_exact_trace_and_preserves_other_lines():
@@ -507,7 +590,7 @@ def test_c9_synthetic_cli_build_verify_and_real_catalog_metrics(tmp_path, monkey
         "sources": [
             {
                 "id": source,
-                "citation": {"form": TextbookAttribution.FORM},
+                "citation": {"form": TextbookAttribution.FORMS[source]},
                 "terms": {"licence": {"name": "SYNTHETIC licence"}},
             }
             for source in (SOURCE_SCHOOL, SOURCE_UNIVERSITY)
