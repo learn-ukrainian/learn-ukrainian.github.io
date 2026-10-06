@@ -174,6 +174,13 @@ def _run(
     env = sanitized_git_env()
     if env_overrides:
         env.update(env_overrides)
+    if args and Path(args[0]).name == "gh":
+        # FORCE_COLOR and CLICOLOR_FORCE beat NO_COLOR and make gh wrap piped
+        # JSON in ANSI. That is not JSON, and a parse error must stay fail-closed,
+        # so every JSON gh call is uncolored instead of being repaired later.
+        env.pop("FORCE_COLOR", None)
+        env["NO_COLOR"] = "1"
+        env["CLICOLOR_FORCE"] = "0"
     timeout = _effective_timeout(timeout)
     if timeout is not None and timeout <= 0:
         raise subprocess.TimeoutExpired(args, 0)
@@ -456,8 +463,12 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
         return [], f"REST PR lookup failed: {exc}"
     if proc.returncode != 0:
         return [], f"REST PR lookup failed: {_format_failure(proc)}"
+    # Empty stdout is not the empty list. ``[]`` is a real "no PR" answer;
+    # a blank body is an unknown guard and must not license removal.
+    if not proc.stdout:
+        return [], "REST PR lookup returned empty output"
     try:
-        raw_items = json.loads(proc.stdout or "[]")
+        raw_items = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
         return [], f"REST PR lookup returned invalid JSON: {exc}"
     if not isinstance(raw_items, list) or any(not isinstance(page, list) for page in raw_items):
@@ -509,8 +520,12 @@ def _query_pr_states_graphql(repo_root: Path, branch: str) -> tuple[list[PullReq
         return [], f"gh pr list failed: {exc}"
     if proc.returncode != 0:
         return [], f"gh pr list failed: {_format_failure(proc)}"
+    # Empty stdout is not the empty list. ``[]`` is a real "no PR" answer;
+    # a blank body is an unknown guard and must not license removal.
+    if not proc.stdout:
+        return [], "gh pr list returned empty output"
     try:
-        raw_items = json.loads(proc.stdout or "[]")
+        raw_items = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
         return [], f"gh pr list returned invalid JSON: {exc}"
     if not isinstance(raw_items, list):
@@ -874,8 +889,12 @@ def _query_prs_by_head_sha(
         return [], f"{_PR_LOOKUP_FAILED} (gh search prs: {type(exc).__name__})"
     if proc.returncode != 0:
         return [], f"{_PR_LOOKUP_FAILED} (gh search prs exit {proc.returncode})"
+    # Empty stdout is not the empty list. ``[]`` is a real "no PR" answer;
+    # a blank body is an unknown guard and must not license removal.
+    if not proc.stdout:
+        return [], f"{_PR_LOOKUP_FAILED} (gh search prs returned empty output)"
     try:
-        raw_items = json.loads(proc.stdout or "[]")
+        raw_items = json.loads(proc.stdout)
     except json.JSONDecodeError:
         return [], f"{_PR_LOOKUP_FAILED} (gh search prs returned malformed JSON)"
     if not isinstance(raw_items, list):
@@ -883,20 +902,31 @@ def _query_prs_by_head_sha(
 
     states: list[PullRequestState] = []
     for item in raw_items:
-        if not isinstance(item, dict):
-            continue
-        state = str(item.get("state") or "").upper()
-        if not state:
-            continue
-        number = item.get("number")
-        states.append(
-            PullRequestState(
-                number=number if isinstance(number, int) else None,
-                state=state,
-                head_sha=head_sha,
-            )
-        )
+        # ``[null]`` and ``[{}]`` used to be skipped, which is an empty list,
+        # and an empty list is permission to delete. Any row that is not a PR
+        # object makes the whole answer unknown.
+        parsed, err = _parse_search_pr_item(item, head_sha)
+        if err is not None or parsed is None:
+            return [], err or f"{_PR_LOOKUP_FAILED} (gh search prs returned an unusable row)"
+        states.append(parsed)
     return states, None
+
+
+def _parse_search_pr_item(item: Any, head_sha: str) -> tuple[PullRequestState | None, str | None]:
+    """Map one ``gh search prs`` row; anything else is an unknown, not an absence."""
+    if not isinstance(item, dict):
+        return None, f"{_PR_LOOKUP_FAILED} (gh search prs row is not an object)"
+    raw_state = item.get("state")
+    state = str(raw_state).upper() if isinstance(raw_state, str) else ""
+    if state not in _PR_STATES:
+        return None, f"{_PR_LOOKUP_FAILED} (gh search prs row has an unusable state)"
+    number = item.get("number")
+    if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
+        return None, f"{_PR_LOOKUP_FAILED} (gh search prs row has no usable PR number)"
+    return (
+        PullRequestState(number=number, state=state, head_sha=head_sha),
+        None,
+    )
 
 
 def _pr_dict(pr_state: PullRequestState | None) -> dict[str, Any] | None:
