@@ -177,6 +177,16 @@ def literal_target(node: ast.AST, bindings: dict, file: str, seen: frozenset = f
     return None
 
 
+def call_name(node: ast.AST) -> str:
+    """Read a dotted callee without serializing arbitrary call expressions."""
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        base = call_name(node.value)
+        return f"{base}.{node.attr}" if base else ""
+    return ""
+
+
 def scan_imports(sources: dict[str, bytes]) -> dict:
     """Compute local import/load edges, retaining each unprovable target."""
     modules = {path[:-3].replace("/", ".").removesuffix(".__init__"): path for path in sources}
@@ -184,10 +194,28 @@ def scan_imports(sources: dict[str, bytes]) -> dict:
                 for index in range(1, len(name.split(".")))}
     edges = set()
     unresolved = set()
+    bare_packages = {name.split(".")[1] for name in packages if name.startswith("scripts.")}
 
     def resolve(module):
         # Legacy sys.path entries expose scripts packages without scripts.*.
         return modules.get(module) or modules.get("scripts." + module)
+
+    def add_import(importer, module, *, required, line):
+        target = resolve(module)
+        if target:
+            edges.add((importer, target))
+            # Python imports execute each regular parent package as well.
+            canonical = target[:-3].replace("/", ".").removesuffix(".__init__")
+            for index in range(1, len(canonical.split("."))):
+                parent = modules.get(".".join(canonical.split(".")[:index]))
+                if parent and parent.endswith("/__init__.py"):
+                    edges.add((importer, parent))
+        elif required and module not in packages and "scripts." + module not in packages and (
+            module == "scripts" or module.startswith("scripts.")
+            or "scripts." + module in packages
+            or module.split(".")[0] in bare_packages
+        ):
+            unresolved.add((importer, line, "missing-local-import"))
 
     for path, source in sources.items():
         try:
@@ -196,13 +224,15 @@ def scan_imports(sources: dict[str, bytes]) -> dict:
             unresolved.add((path, 0, "parse-error"))
             continue
         bindings = {}
+        nodes = list(ast.walk(tree))
         has_specs = b"spec_from_file_location" in source
         loaders = {"__import__": ("module", 0)}
         wrappers = set()
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Assign):
-                for target in node.targets:
-                    if isinstance(target, ast.Name):
+        for node in nodes:
+            if isinstance(node, (ast.Assign, ast.AnnAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                for target in targets:
+                    if isinstance(target, ast.Name) and node.value is not None:
                         bindings.setdefault(target.id, []).append(node.value)
             if isinstance(node, ast.ImportFrom) and node.module in {"importlib", "importlib.util", "runpy"}:
                 for alias in node.names:
@@ -218,28 +248,20 @@ def scan_imports(sources: dict[str, bytes]) -> dict:
                 for child in ast.walk(node)
             )):
                 wrappers.add(node.name)
-        for node in ast.walk(tree):
+        for node in nodes:
             if isinstance(node, ast.Import):
-                names = [alias.name for alias in node.names]
+                for alias in node.names:
+                    add_import(path, alias.name, required=True, line=node.lineno)
             elif isinstance(node, ast.ImportFrom):
-                package = path[:-3].replace("/", ".").split(".")
-                package.pop()
+                package = path[:-3].replace("/", ".").split(".")[:-1]
                 base = ".".join(package[:len(package) - node.level + 1]) if node.level else ""
                 base = ".".join(filter(None, (base, node.module)))
-                names = [base, *(base + "." + alias.name for alias in node.names)]
-            else:
-                names = []
-            for name in names:
-                target = resolve(name)
-                if target:
-                    edges.add((path, target))
-                elif (name.startswith("scripts.") and name not in packages
-                      and (isinstance(node, ast.Import) or name == getattr(node, "module", None))):
-                    # Imported attributes are not modules; only fail missing base modules.
-                    unresolved.add((path, node.lineno, "missing-local-import"))
+                add_import(path, base, required=True, line=node.lineno)
+                for alias in node.names:
+                    add_import(path, base + "." + alias.name, required=False, line=node.lineno)
             if not isinstance(node, ast.Call):
                 continue
-            name = ast.unparse(node.func)
+            name = call_name(node.func)
             leaf = name.split(".")[-1]
             kind, index = loaders.get(name, (None, 0))
             if leaf in {"import_module", "spec_from_file_location", "run_path", "run_module"}:
@@ -251,11 +273,17 @@ def scan_imports(sources: dict[str, bytes]) -> dict:
             if not kind:
                 continue
             expression = node.args[index] if len(node.args) > index else next(
-                (kw.value for kw in node.keywords if kw.arg in {"name", "location"}), None)
+                (kw.value for kw in node.keywords if kw.arg == (
+                    "location" if kind == "file" and index == 1 else
+                    "path_name" if kind == "file" else "mod_name" if leaf == "run_module" else "name"
+                )), None)
             value = literal_target(expression, bindings, path) if expression is not None else None
             target = resolve(str(value)) if kind == "module" and value is not None else str(value)
             if target in sources:
-                edges.add((path, target))
+                if kind == "module":
+                    add_import(path, str(value), required=True, line=node.lineno)
+                else:
+                    edges.add((path, target))
             elif value is None or kind == "file" or str(value).startswith("scripts."):
                 unresolved.add((path, node.lineno, "nonliteral-or-missing-load"))
     return {"file_edges": sorted(edges), "unresolved_edges": [
@@ -555,7 +583,7 @@ def run_commands(commands: list[dict], root: Path, output_dir: Path | None,
             code = result.returncode or (3 if skipped else 0)
             reports.append({"argv": command["argv"], "cwd": command["cwd"], "scope": command["scope"],
                             "exit_code": result.returncode, "skipped": skipped,
-                            "result": "pass" if code == 0 else "artifact-dependent" if skipped else "fail"})
+                            "result": "fail" if result.returncode else "artifact-dependent" if skipped else "pass"})
             if code:
                 overall_code = overall_code or code
                 if not keep_going:

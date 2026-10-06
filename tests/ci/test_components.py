@@ -450,3 +450,38 @@ def test_known_failures_are_owned_and_never_verify_commands(manifest):
         argv = manifest["components"][frontend]["build"][0]["argv"]
         assert argv[:3] == ["npm", "run", "build:shell"]
         assert "hydrate" not in " ".join(argv)
+
+
+def test_imported_parent_initializers_relative_missing_and_keyword_loads():
+    sources = {
+        "scripts/__init__.py": b"",
+        "scripts/lexicon/__init__.py": b"from . import source\n",
+        "scripts/lexicon/source.py": b"X = 1\n",
+        "scripts/lexicon/consumer.py": b"from .missing import X\nfrom lexicon.absent import Y\n",
+        "tests/test_use.py": b"import scripts.lexicon.source\n",
+        "tests/test_load.py": b"from importlib.util import spec_from_file_location as load\nload(name='x', location='scripts/lexicon/source.py')\n",
+    }
+    graph = c.scan_imports(sources)
+    assert ("scripts/lexicon/__init__.py", "scripts/lexicon/source.py") in graph["file_edges"]
+    assert ("tests/test_use.py", "scripts/lexicon/__init__.py") in graph["file_edges"]
+    assert ("tests/test_use.py", "scripts/__init__.py") in graph["file_edges"]
+    assert ("tests/test_load.py", "scripts/lexicon/source.py") in graph["file_edges"]
+    assert graph["unresolved_edges"] == [
+        {"path": "scripts/lexicon/consumer.py", "line": line, "reason": "missing-local-import"}
+        for line in (1, 2)
+    ]
+
+
+def test_call_name_only_reads_dotted_names():
+    assert c.call_name(c.ast.parse("util.spec_from_file_location", mode="eval").body) == "util.spec_from_file_location"
+    assert c.call_name(c.ast.parse("factory().loader", mode="eval").body) == ""
+
+
+def test_skips_never_hide_a_failed_command(repo, monkeypatch):
+    monkeypatch.setattr(c, "project_interpreter", lambda root: Path(sys.executable))
+    (repo / "tests/test_fixture.py").write_text(
+        "import pytest\ndef test_skip():\n    pytest.skip('artifact absent')\ndef test_fail():\n    assert False\n"
+    )
+    command = {"argv": ["{python}", "-m", "pytest", "-q", "tests/test_fixture.py"], "cwd": ".", "scope": "code-contract"}
+    reports, code = c.run_commands([command], repo, None, {})
+    assert code == 1 and reports[0]["skipped"] == 1 and reports[0]["result"] == "fail"
