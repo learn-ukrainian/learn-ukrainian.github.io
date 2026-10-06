@@ -29,6 +29,8 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data import source_work_locator_index as locators
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
@@ -132,10 +134,10 @@ def _normalized(value: Any) -> str | None:
     return str(value).strip()
 
 
-def _connect(path: Path) -> sqlite3.Connection:
+def _connect(path: Path) -> SQLiteConnection:
     if not path.is_file() or path.stat().st_size == 0:
         raise RestorationError(f"missing SQLite input: {path}")
-    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
+    connection = _open_readonly(path.resolve())
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only=ON")
     return connection
@@ -249,7 +251,7 @@ def _acquisition_plan(cohort: Mapping[str, Any], ledger: Mapping[str, dict[str, 
 
 
 def _column_classification(
-    connection: sqlite3.Connection,
+    connection: SQLiteConnection,
     cohort: Mapping[str, Any],
     bindings: Mapping[str, Mapping[str, Any]],
     snapshot_groups: set[tuple[str, str]],
@@ -528,7 +530,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
     selected_by_cohort, cohort_summaries, exclusions = _select_eligible_rows(config, snapshot_rows)
 
     database_path = resolve_open_model_path(config["inputs"]["database"], repo=input_root)
-    connection: sqlite3.Connection | None = None
+    connection: SQLiteConnection | None = None
     column_evidence: dict[str, dict[str, str | None]] = {}
     try:
         for cohort in config["cohorts"]:

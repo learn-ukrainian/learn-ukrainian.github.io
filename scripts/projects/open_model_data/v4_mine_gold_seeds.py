@@ -34,6 +34,8 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.gold_seeds_data import RAW_GOLD_SEEDS
 from scripts.projects.open_model_data.gold_seeds_types import CATEGORY_QUOTAS, RawGoldSeedSpec
 from scripts.storage.artifacts import write_artifact_set
@@ -212,7 +214,7 @@ def _check_vesum_single_word(w: str, cur: sqlite3.Cursor) -> tuple[int, bool, li
 def check_vesum_lemma(
     lemma: str,
     tier: str,
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
 ) -> tuple[int, bool, list[str]]:
     """Query local VESUM database for paradigm form counts and morphology tags.
 
@@ -256,7 +258,7 @@ def check_vesum_lemma(
 
 def build_gold_records(
     specs: list[RawGoldSeedSpec],
-    vesum_conn: sqlite3.Connection,
+    vesum_conn: SQLiteConnection,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Synthesize validated trajectory and DPO pair records from curated specs."""
     trajectories: list[dict[str, Any]] = []
@@ -472,7 +474,7 @@ def main() -> None:
     if not args.vesum_db.is_file():
         raise FileNotFoundError(f"Missing vesum.db at {args.vesum_db}")
 
-    vesum_conn = sqlite3.connect(f"file:{args.vesum_db.resolve()}?mode=ro", uri=True)
+    vesum_conn = _open_readonly(args.vesum_db.resolve())
     try:
         print(f"Generating 150 Human Gold Seeds across {len(CATEGORY_QUOTAS)} categories...")
         trajectories, dpo_pairs = build_gold_records(RAW_GOLD_SEEDS, vesum_conn)

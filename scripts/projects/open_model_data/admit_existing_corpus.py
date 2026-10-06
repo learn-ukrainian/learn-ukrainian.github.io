@@ -30,6 +30,8 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.inventory_existing_assets import WORD_RE
 from scripts.projects.open_model_data.model_view_exporter import (
     build_exclusion_registry,
@@ -137,10 +139,10 @@ def _identifier(value: str) -> str:
     return f'"{value}"'
 
 
-def _connect_read_only(path: Path) -> sqlite3.Connection:
+def _connect_read_only(path: Path) -> SQLiteConnection:
     if not path.is_file() or path.stat().st_size == 0:
         raise FileNotFoundError(path)
-    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
+    connection = _open_readonly(path.resolve())
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only=ON")
     return connection

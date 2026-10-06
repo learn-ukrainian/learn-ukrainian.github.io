@@ -11,13 +11,15 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import sqlite3
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import Any
 
 import yaml
 from jsonschema import Draft202012Validator
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_university_reconciliation_v3.schema.json"
@@ -108,11 +110,11 @@ def _rejected_source_ids(denominator: Mapping[str, Any]) -> set[str]:
     }
 
 
-def _table_names(connection: sqlite3.Connection) -> set[str]:
+def _table_names(connection: SQLiteConnection) -> set[str]:
     return {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type IN ('table','view')")}
 
 
-def _observed_sources(connection: sqlite3.Connection) -> list[dict[str, Any]]:
+def _observed_sources(connection: SQLiteConnection) -> list[dict[str, Any]]:
     query = """
         SELECT
             t.source_file,
@@ -143,11 +145,11 @@ def _observed_sources(connection: sqlite3.Connection) -> list[dict[str, Any]]:
     ]
 
 
-def _count_rows(connection: sqlite3.Connection, table: str) -> int:
+def _count_rows(connection: SQLiteConnection, table: str) -> int:
     return int(connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0])
 
 
-def _foreign_key_failure_count(connection: sqlite3.Connection) -> int:
+def _foreign_key_failure_count(connection: SQLiteConnection) -> int:
     return sum(1 for _ in connection.execute("PRAGMA foreign_key_check"))
 
 
@@ -183,7 +185,7 @@ def reconcile(*, denominator_path: Path, database_path: Path, as_of: str) -> dic
     rejected_ids = _rejected_source_ids(denominator)
     _require(database_path.is_file(), f"sources database is missing: {database_path}")
 
-    connection = sqlite3.connect(f"file:{database_path.resolve()}?mode=ro", uri=True)
+    connection = _open_readonly(database_path.resolve())
     try:
         tables = _table_names(connection)
         required_tables = {

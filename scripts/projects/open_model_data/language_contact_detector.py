@@ -41,6 +41,8 @@ from scripts.lexicon.calque_corrections import (
     PHRASAL_CALQUES,
 )
 from scripts.lexicon.load_relation_candidates import RelationHeritageLookup
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.inventory_existing_assets import WORD_RE
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.verification.check_ru_morph import get_ru_confidence
@@ -263,16 +265,16 @@ def _identifier(value: str) -> str:
     return f'"{value}"'
 
 
-def _connect_read_only(path: Path) -> sqlite3.Connection:
+def _connect_read_only(path: Path) -> SQLiteConnection:
     if not path.is_file():
         raise FileNotFoundError(path)
-    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
+    connection = _open_readonly(path.resolve())
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only=ON")
     return connection
 
 
-def _table_columns(connection: sqlite3.Connection, table: str) -> set[str]:
+def _table_columns(connection: SQLiteConnection, table: str) -> set[str]:
     return {str(row[1]) for row in connection.execute(f"PRAGMA table_info({_identifier(table)})")}
 
 
@@ -1492,7 +1494,7 @@ def stream_detector(
             for source in config["sources"]:
                 database_path = input_root / source["adapter"]["database"]
                 source_rows = source_words = 0
-                connection: sqlite3.Connection | None = None
+                connection: SQLiteConnection | None = None
                 try:
                     connection = _connect_read_only(database_path)
                     query, parameters = _source_query(source, _table_columns(connection, source["adapter"]["table"]))

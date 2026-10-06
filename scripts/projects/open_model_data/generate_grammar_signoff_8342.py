@@ -23,6 +23,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.build_grammar_component_8342 import (
     DEFAULT_FIREWALL_MANIFEST,
     DEFAULT_UA_GEC_TEST_M2,
@@ -394,7 +395,7 @@ def generate_signoff_and_receipt(
     all_test = test_sources | test_targets
     is_near_dup = build_jaccard_firewall_matcher(all_test, threshold=0.80)
 
-    conn = sqlite3.connect(f"file:{VESUM_DB}?mode=ro", uri=True)
+    conn = _open_readonly(VESUM_DB)
     cur = conn.cursor()
 
     reviewed_items: list[dict[str, Any]] = []

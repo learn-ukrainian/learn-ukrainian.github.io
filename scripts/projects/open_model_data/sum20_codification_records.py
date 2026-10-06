@@ -9,8 +9,9 @@ and clean checkouts without relying on untracked, local modifications to host da
 
 from __future__ import annotations
 
-import sqlite3
 from typing import Any
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
 
 # Authentic СУМ-20 & ВТС entries with exact provenance from published academic codifications (slovnyk.me/dict/newsum / slovnyk.me/dict/vts)
 COMMITTED_SUM20_RECORDS: dict[str, dict[str, Any]] = {
@@ -197,7 +198,7 @@ COMMITTED_SUM20_RECORDS: dict[str, dict[str, Any]] = {
 }
 
 
-def ensure_reproducible_sum20_table(conn: sqlite3.Connection) -> None:
+def ensure_reproducible_sum20_table(conn: SQLiteConnection) -> None:
     """Ensure in-memory temp table containing authentic committed СУМ-20 entries.
 
     Guarantees that database-backed phrase attestation lookups are 100% reproducible

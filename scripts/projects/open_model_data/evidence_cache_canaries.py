@@ -20,6 +20,8 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.lexicon import ulif_raw_cache
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = ROOT / "registry/projects/open_model_data/contracts/correction_protection_adapter_receipt_v1.schema.json"
@@ -74,7 +76,7 @@ def require(condition: bool, message: str) -> None:
         raise AdapterError(message)
 
 
-def table_columns(connection: sqlite3.Connection, table: str) -> tuple[str, ...]:
+def table_columns(connection: SQLiteConnection, table: str) -> tuple[str, ...]:
     return tuple(str(row[1]) for row in connection.execute(f"PRAGMA table_info({table})"))
 
 
@@ -83,7 +85,7 @@ def schema_hash(columns: tuple[str, ...]) -> str:
 
 
 def audit_database(database: Path, *, logical_path: str = "data/sources.db") -> dict[str, Any]:
-    connection = sqlite3.connect(f"file:{database}?mode=ro", uri=True)
+    connection = _open_readonly(database)
     connection.row_factory = sqlite3.Row
     try:
         tables = {str(row[0]) for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
