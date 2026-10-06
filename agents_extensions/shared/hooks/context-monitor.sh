@@ -5,6 +5,8 @@
 # authoritative. Latest assistant input/cache usage is preferred; transcript
 # size is a compatibility estimate only. Unknown capacity suppresses percentage
 # warnings rather than fabricating a 1M or auto-compaction denominator.
+# A profile with rollover_mode operator_restart gets hand-off-and-wait texts at
+# its critical and final tiers instead of the continuation texts (#8511).
 
 # Native Codex owns context compaction. A PostToolUse warning is injected as
 # higher-priority context, so imperative rollover text can trap the agent:
@@ -33,6 +35,8 @@ if [ -n "${GROK_AGENT:-}" ] || [ "${SESSION_HANDOFF_AGENT:-}" = "grok" ] \
 fi
 
 command -v jq >/dev/null 2>&1 || exit 0
+# shellcheck source=agents_extensions/shared/hooks/context-rollover-lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/context-rollover-lib.sh" 2>/dev/null || exit 0
 
 INPUT=$(cat)
 SESSION_ID=$(printf '%s' "$INPUT" | jq -r '.session_id // empty' 2>/dev/null)
@@ -45,17 +49,10 @@ TRANSCRIPT=$(printf '%s' "$INPUT" | jq -r '.transcript_path // empty' 2>/dev/nul
 
 # Prefer the latest assistant input/cache usage. Output tokens are not current
 # context usage and therefore are deliberately excluded.
-TOKENS=0
 USAGE_SOURCE="transcript-size estimate"
-USAGE_JSON=$(tail -200 "$TRANSCRIPT" 2>/dev/null \
-  | jq -s '[.[] | select(.type == "assistant" and (.message.usage | type) == "object")] | last | .message.usage // empty' 2>/dev/null)
-if [ -n "$USAGE_JSON" ] && [ "$USAGE_JSON" != "null" ]; then
-  INPUT_TOKENS=$(printf '%s' "$USAGE_JSON" | jq -r '.input_tokens // 0' 2>/dev/null)
-  CACHE_READ=$(printf '%s' "$USAGE_JSON" | jq -r '.cache_read_input_tokens // 0' 2>/dev/null)
-  CACHE_CREATE=$(printf '%s' "$USAGE_JSON" | jq -r '.cache_creation_input_tokens // 0' 2>/dev/null)
-  TOKENS=$(( ${INPUT_TOKENS:-0} + ${CACHE_READ:-0} + ${CACHE_CREATE:-0} ))
-  [ "$TOKENS" -gt 0 ] && USAGE_SOURCE="latest assistant input/cache usage"
-fi
+TOKENS=$(context_latest_usage_tokens "$TRANSCRIPT")
+case "$TOKENS" in ''|*[!0-9]*) TOKENS=0 ;; esac
+[ "$TOKENS" -gt 0 ] && USAGE_SOURCE="latest assistant input/cache usage"
 if [ "$TOKENS" -le 0 ]; then
   RAW_SIZE=$(LC_ALL=C wc -c < "$TRANSCRIPT" 2>/dev/null) || RAW_SIZE=0
   B64_EXCESS=$(LC_ALL=C tr -cs 'A-Za-z0-9+/=' '\n' < "$TRANSCRIPT" 2>/dev/null \
@@ -70,33 +67,25 @@ fi
 WINDOW=""
 WINDOW_PROVENANCE="unavailable"
 WARNING_TIERS=""
+ROLLOVER_MODE=""
 # The session record is plain JSON at <canonical>/.agent/sessions/<id>.json —
 # read it with jq directly instead of spawning a ~130 ms interpreter on
 # EVERY tool call (PR #6413 finding #3). This also fixes worktree sessions,
 # where the old $PROJECT_DIR/.venv interpreter check silently disabled the monitor
 # (linked worktrees carry no venv — F001 r5 class).
-RECORD_FILE="${LEARN_UKRAINIAN_SESSION_RECORD:-}"
-if [ -z "$RECORD_FILE" ] || [ ! -f "$RECORD_FILE" ]; then
-  if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
-    CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
-  else
-    GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
-    if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
-      CANONICAL_ROOT=$(dirname "$GIT_COMMON_DIR")
-    else
-      CANONICAL_ROOT="$PROJECT_DIR"
-    fi
-  fi
-  RECORD_FILE="$CANONICAL_ROOT/.agent/sessions/$SESSION_ID.json"
-fi
+# rollover_mode counts only from a record that names this session, the same rule
+# context-rollover-guard.sh applies; a foreign, missing or unreadable record (or
+# the environment alone) keeps the continuation behaviour.
+RECORD_FILE=$(context_session_record_file "$PROJECT_DIR" "$SESSION_ID")
 if [ -f "$RECORD_FILE" ] && [ ! -L "$RECORD_FILE" ]; then
-  RECORD_ROW=$(jq -r '
+  RECORD_ROW=$(jq -r --arg sid "$SESSION_ID" '
     [ (.actual_context_window_tokens // "" | tostring),
       (.actual_context_window_provenance // "unavailable"),
-      (.rollover_warning_percentages | if type == "array" and length == 3 then join(" ") else "" end)
+      (.rollover_warning_percentages | if type == "array" and length == 3 then join(" ") else "" end),
+      (if .session_id == $sid then .rollover_mode // "" else "" end)
     ] | join("\u0001")' "$RECORD_FILE" 2>/dev/null || true)
   if [ -n "$RECORD_ROW" ]; then
-    IFS=$'\001' read -r WINDOW WINDOW_PROVENANCE WARNING_TIERS <<< "$RECORD_ROW"
+    IFS=$'\001' read -r WINDOW WINDOW_PROVENANCE WARNING_TIERS ROLLOVER_MODE <<< "$RECORD_ROW"
   fi
   unset RECORD_ROW
 fi
@@ -123,6 +112,7 @@ if [ "$WINDOW_VALID" -eq 0 ]; then
   WINDOW_PROVENANCE="declared-profile"
   WARNING_TIERS="${LEARN_UKRAINIAN_ROLLOVER_WARNING_PERCENTAGES:-}"
 fi
+ROLLOVER_MODE=$(context_effective_rollover_mode "$ROLLOVER_MODE")
 
 case "$WINDOW" in
   ""|*[!0-9]*) exit 0 ;;
@@ -157,9 +147,33 @@ if [ -n "${SESSION_EPIC:-}" ] && declare -f launcher_selector_stream >/dev/null 
     *) ROLLOVER_STREAM=""; ROLLOVER_STREAM_EPIC="" ;;
   esac
 fi
-PREPARE_CMD=".venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent ${HANDOFF_AGENT} --context-percent ${PCT}"
-[ -n "$ROLLOVER_STREAM" ] && PREPARE_CMD="$PREPARE_CMD --stream $ROLLOVER_STREAM --stream-epic $ROLLOVER_STREAM_EPIC"
-unset HANDOFF_IDENTITY_SH ROLLOVER_STREAM ROLLOVER_STREAM_EPIC
+# The prepare command follows the thread-rollover skill (references/prepare.md):
+# the shared project interpreter (the primary checkout's, never a worktree
+# .venv), the actual harness, and this session as the exact active thread, so
+# context-rollover-guard.sh can match the prepared lease to this session.
+# Task-identity values only the agent knows stay as <placeholders>.
+PREPARE_PY="<project interpreter>"
+if [ -f "$PROJECT_DIR/scripts/lib/project_interpreter.sh" ]; then
+  # shellcheck source=scripts/lib/project_interpreter.sh
+  source "$PROJECT_DIR/scripts/lib/project_interpreter.sh"
+  if PREPARE_PY_RESOLVED=$(project_interpreter_resolve "$PROJECT_DIR" 2>/dev/null); then
+    PREPARE_PY=$(printf '%q' "$PREPARE_PY_RESOLVED")
+  fi
+  unset PREPARE_PY_RESOLVED
+fi
+if [[ "${0:-}" == *"/.gemini/"* ]]; then
+  PREPARE_HARNESS="agy"
+else
+  PREPARE_HARNESS="claude-code"
+fi
+PREPARE_CMD="${PREPARE_PY} scripts/orchestration/thread_handoff.py prepare --agent ${HANDOFF_AGENT} --harness ${PREPARE_HARNESS} --active-thread-id $(printf '%q' "$SESSION_ID")"
+if [ -n "$ROLLOVER_STREAM" ]; then
+  PREPARE_CMD="$PREPARE_CMD --stream $ROLLOVER_STREAM --stream-epic $ROLLOVER_STREAM_EPIC"
+else
+  PREPARE_CMD="$PREPARE_CMD --stream-epic <epic-number>"
+fi
+PREPARE_CMD="$PREPARE_CMD --semantic-title \"<specific semantic task title>\" --task-family <task-family> --role \"<role>\" --terminal-goal <merge|deploy|certify> --context-percent ${PCT} (fill each <placeholder>; add --issue-number <issue-number> when an issue scopes the work)"
+unset HANDOFF_IDENTITY_SH ROLLOVER_STREAM ROLLOVER_STREAM_EPIC PREPARE_PY PREPARE_HARNESS
 BOOTSTRAP_FILE=".agent/${HANDOFF_AGENT}-thread-bootstrap.md"
 HANDOFF_FILE=".agent/${HANDOFF_AGENT}-thread-handoff.md"
 CONTEXT_FACT="${PCT}% of the ${WINDOW}-token context window [~${TOKENS}/${WINDOW}; ${USAGE_SOURCE}; capacity: ${WINDOW_PROVENANCE}]"
@@ -195,7 +209,28 @@ fi
 [ "$TIER" -gt "$LAST_TIER" ] || exit 0
 mkdir -p "$TIER_STATE_DIR" 2>/dev/null && printf '%s %s\n' "$TIER" "$TOKENS" > "$TIER_STATE_FILE" 2>/dev/null
 
-if [ "$PCT" -ge "$TIER3_PCT" ]; then
+# operator_restart (#8511): the session never continues itself. It hands off,
+# tells the operator it is ready for a restart, and waits; context-rollover-guard.sh
+# reminds on later prompts. Nothing blocks Claude Code's own auto-compaction
+# (holding it for a prepared handoff is #9790).
+RESTART_HINT=""
+[ -n "${SESSION_EPIC:-}" ] && RESTART_HINT=" (./start-claude-driver.sh --epic ${SESSION_EPIC})"
+if [ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER3_PCT" ]; then
+  MSG=$(printf '%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
+    "EMERGENCY: Context is at ${CONTEXT_FACT}. The profile's final rollover tier is ${TIER3_PCT}%: this session hands off and waits for the operator to restart it." \
+    "" \
+    "STOP all current work THIS TURN. Do not dispatch, start new work, or start a continuation thread. Only:" \
+    "1. Refresh your lane handoff file with current state, in-flight work, and next steps." \
+    "2. Follow the thread-rollover skill's prepare phase (references/prepare.md): run ${PREPARE_CMD}. This writes the gitignored rollover lease plus its handoff and bootstrap packet under .agent/thread-rollovers/." \
+    "3. Tell the operator in one plain message that the handoff is ready and they should restart this session${RESTART_HINT}." \
+    "4. END THE TURN and wait for the operator to restart the session. If the session keeps going instead, Claude Code may still compact it automatically near its own limit.")
+elif [ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER2_PCT" ]; then
+  MSG=$(printf '%s\n%s\n%s\n%s\n' \
+    "CRITICAL: Context is at ${CONTEXT_FACT}. The profile's critical rollover tier is ${TIER2_PCT}%." \
+    "" \
+    "Finish the current logical unit. Do not start new multi-step work, dispatches, or large operations." \
+    "At ${TIER3_PCT}% this session refreshes its handoff, prepares the rollover (${PREPARE_CMD}), tells the operator it is ready for a restart, and waits.")
+elif [ "$PCT" -ge "$TIER3_PCT" ]; then
   MSG=$(printf '%s\n%s\n%s\n%s\n%s\n%s\n' \
     "EMERGENCY: Context is at ${CONTEXT_FACT}. The profile's final rollover tier is ${TIER3_PCT}%." \
     "" \
