@@ -134,15 +134,40 @@ describe('Practice usage scope (#9652)', () => {
   });
 
   test.each([
-    ['loanword', 'borrowed', 'var(--lu-purple)'],
-    ['historism', 'historism', 'var(--lu-text-muted)'],
-    ['archaism', 'archaism', 'var(--lu-text-muted)'],
-    ['dialect', 'dialect', 'var(--lu-text-muted)'],
-    ['native', 'native', 'var(--lu-teal)'],
-    ['inherited', 'inherited', 'var(--lu-teal)'],
-    ['unknown', 'unknown', 'var(--lu-text-muted)'],
-  ])('preserves the raw %s chip and colour, despite stored severity', (heritage, heritageLabel, tagColor) => {
-    expect(cardData(lexeme({ heritage, severity: 'russianism_red' }), 'B2', 'en')).toMatchObject({ heritageLabel, tagColor });
+    ['loanword', 'practice.heritageBorrowed', 'var(--lu-purple)'],
+    ['native', 'practice.heritageNative', 'var(--lu-teal)'],
+    ['inherited', 'practice.heritageInherited', 'var(--lu-teal)'],
+  ] as const)('preserves the localized %s chip and colour, despite stored severity', (heritage, key, tagColor) => {
+    for (const locale of ['en', 'uk'] as const) {
+      const card = cardData(lexeme({ heritage, severity: 'russianism_red' }), 'B2', locale);
+      expect(card).toMatchObject({ heritageLabel: CHROME_STRINGS[locale][key], tagColor });
+      if (locale === 'uk') expect(card.heritageLabel).not.toMatch(/[a-z]/i);
+    }
+  });
+
+  test.each(['standard', 'unknown', 'authentic-archaism', 'historism', 'archaism', 'dialect'])('omits the keyless %s chip in both locales, despite stored severity', (heritage) => {
+    for (const locale of ['en', 'uk'] as const) {
+      const card = cardData(lexeme({ heritage, severity: 'russianism_red' }), 'B2', locale);
+      expect(card.heritageLabel).toBeUndefined();
+      expect(card.tagColor).toBe('var(--lu-text-muted)');
+    }
+  });
+
+  test.each([
+    ['calque', 'калька'], ['avoid', 'уникай'], ['russianism', 'русизм'],
+  ])('renders a localized Ukrainian %s chip without a Latin-script data token', async (heritage, label) => {
+    document.documentElement.lang = 'uk';
+    document.documentElement.dataset.chromeLocale = 'uk';
+    const entry = lexeme({ heritage, severity: 'russianism_red' });
+    const expected = `примітка Атласу: «${label}»; обсяг застереження не встановлено`;
+    expect(cardData(entry, 'B2', 'uk').heritageLabel).toBe(expected);
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice initialDeck={deck([entry])} deckLevel="B2" autoStart initialMode="flashcards" />);
+    await screen.findByTestId('practice-stage-shell');
+    await user.click(container.querySelector<HTMLElement>('[data-activity="flashcard"]')!);
+    const chip = container.querySelector('.flashcard-heritage-chip');
+    expect(chip?.textContent).toBe(expected);
+    expect(chip?.textContent).not.toMatch(/[a-z]/i);
   });
 
   test.each([

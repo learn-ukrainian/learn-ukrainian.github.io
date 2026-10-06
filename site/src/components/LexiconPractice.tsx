@@ -974,6 +974,7 @@ const HERITAGE_LABEL_KEYS: Record<string, ChromeKey> = {
   loanword: 'practice.heritageBorrowed',
   calque: 'practice.heritageCalque',
   avoid: 'practice.heritageAvoid',
+  russianism: 'practice.heritageRussianism',
 };
 
 function heritagePresentation(entry: PracticeLexeme, chromeLocale: 'en' | 'uk') {
@@ -1001,15 +1002,15 @@ function heritagePresentation(entry: PracticeLexeme, chromeLocale: 'en' | 'uk') 
   const heritage = entry.heritage?.toLowerCase();
   if (!heritage) return {};
   const key = HERITAGE_LABEL_KEYS[heritage];
-  const rawLabel = key ? CHROME_STRINGS[chromeLocale][key] : entry.heritage;
+  const rawLabel = key ? CHROME_STRINGS[chromeLocale][key] : undefined;
   // Only norm claims need scope qualification; provenance keeps its raw chip.
-  if (heritage === 'calque' || heritage === 'avoid' || heritage === 'russianism') {
+  if (rawLabel && (heritage === 'calque' || heritage === 'avoid' || heritage === 'russianism')) {
     return {
-      text: CHROME_STRINGS[chromeLocale]['practice.heritageUnresolvedNote'].replace('{label}', rawLabel ?? ''),
+      text: CHROME_STRINGS[chromeLocale]['practice.heritageUnresolvedNote'].replace('{label}', rawLabel),
       color: 'var(--lu-text-muted)',
     };
   }
-  return { text: rawLabel ?? undefined, color: heritageTagColor(entry.heritage) };
+  return { text: rawLabel, color: heritageTagColor(entry.heritage) };
 }
 
 function displayPracticeForm(value: string, learnerLevel: CefrLevel): string {
