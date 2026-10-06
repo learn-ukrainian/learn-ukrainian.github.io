@@ -27,7 +27,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.fleet import post_task_reap
+from scripts.fleet import ignored_task_output, post_task_reap
 from tests import _worktree_artifact_links as links
 from tests.worktree_prep_helpers import half_built_prep, leave_half_built
 
@@ -214,6 +214,64 @@ def test_no_task_state(hermetic_reap):
     assert report["task_status"] is None
     assert report["main_worktree"]["action"] == "retained"
     assert "no task state" in report["main_worktree"]["reason"]
+
+
+@pytest.mark.parametrize("contents", ["regenerable_only", "mixed", "oversized_output", "symlink"])
+def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, tmp_path, contents):
+    repo, tasks = hermetic_reap
+    (repo / "site").mkdir()
+    (repo / "site/package-lock.json").write_text('{"lockfileVersion": 3}')
+    (repo / ".gitignore").write_text(
+        "node_modules\n__pycache__/\n.pytest_cache/\n.ruff_cache/\n.mypy_cache/\n"
+        "site/src/data/lexicon-manifest.json\nignored/\n"
+    )
+    _run(["git", "add", "site/package-lock.json", ".gitignore"], cwd=repo)
+    _run(["git", "commit", "-m", "fixture lock and ignored patterns"], cwd=repo)
+    _run(["git", "push", "origin", "main"], cwd=repo)
+    task_id = "regenerable-9828"
+    worktree = _add_dispatch_worktree(repo, "codex", task_id)
+    outside = tmp_path / "outside-output"
+    outside.mkdir()
+    (outside / "unique.txt").write_bytes(b"unique outside output")
+    if contents == "symlink":
+        (worktree / "site/node_modules").symlink_to(outside)
+    else:
+        for name in [
+            "site/node_modules/package/index.js",
+            "nested/__pycache__/module.pyc",
+            "nested/.pytest_cache/cache.bin",
+            ".ruff_cache/cache.bin",
+            ".mypy_cache/cache.bin",
+            "site/src/data/lexicon-manifest.json",
+        ]:
+            path = worktree / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"x" * 64)
+        # Dependency links are skipped with the real dependency directory;
+        # removing the worktree unlinks them without deleting their targets.
+        (worktree / "site/node_modules/outside-link").symlink_to(outside)
+    if contents in {"mixed", "oversized_output"}:
+        (worktree / "ignored").mkdir()
+        (worktree / "ignored/answer.txt").write_bytes(b"answer" if contents == "mixed" else b"x" * 32)
+    monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", 16)
+    _write_task_state(tasks, task_id, "done", worktree, agent="codex")
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    row = report["main_worktree"]
+    assert (outside / "unique.txt").read_bytes() == b"unique outside output"
+    if contents in {"oversized_output", "symlink"}:
+        assert row["action"] == "skipped" and worktree.exists(), row
+        assert ("exceeds preservation cap" if contents == "oversized_output" else "links outside") in row["reason"]
+        assert not (repo / "batch_state/preserved").exists()
+    else:
+        assert row["action"] == "removed" and not worktree.exists(), row
+        if contents == "regenerable_only":
+            assert not row.get("preserved_artifacts")
+            assert not (repo / "batch_state/preserved").exists()
+        else:
+            receipt = row["preserved_artifacts"]
+            assert receipt["count"] == 1 and receipt["bytes"] == 6
+            assert [entry["path"] for entry in receipt["paths"]] == ["ignored/answer.txt"]
+            assert (repo / receipt["location"] / "ignored/answer.txt").read_bytes() == b"answer"
 
 
 @pytest.mark.parametrize("runtime", [False, True])
