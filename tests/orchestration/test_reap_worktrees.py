@@ -2779,6 +2779,23 @@ def test_gh_json_calls_drop_force_color(monkeypatch, tmp_path: Path) -> None:
     assert states == []
 
 
+@pytest.mark.parametrize(
+    ("stdout", "unknown"),
+    [("", True), ("[]", False)],
+    ids=["empty-stdout", "empty-list"],
+)
+def test_graphql_pr_list_empty_stdout_is_unknown(monkeypatch, tmp_path: Path, stdout: str, unknown: bool) -> None:
+    """A blank ``gh pr list`` body is not ``[]``. Only a JSON list is "no PR"."""
+    monkeypatch.setattr(rw, "_run", lambda *_args, **_kwargs: _gh_stdout(stdout))
+
+    states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
+
+    assert states == []
+    assert (error is not None) is unknown
+    if unknown:
+        assert error is not None and "empty" in error
+
+
 def test_colored_gh_json_stays_fail_closed(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setenv("FORCE_COLOR", "1")
     monkeypatch.setenv("CLICOLOR_FORCE", "1")
@@ -2822,6 +2839,46 @@ def _patch_gh_transports(
 
     monkeypatch.setattr(rw, "_run", fake_run)
     return gh_calls
+
+
+@pytest.mark.parametrize(
+    ("stdout", "unknown"),
+    [
+        ("", True),
+        ("[]", False),
+        ("[[]]", False),
+        ("[[null]]", True),
+        ("[[{}]]", True),
+        ('[[null], [{"number": 1, "state": "open", "merged_at": None, "head": {"sha": "abc"}}]]', True),
+    ],
+    ids=["empty-stdout", "no-pages", "empty-page", "null-row", "empty-object", "null-then-object"],
+)
+def test_rest_pr_lookup_empty_stdout_and_unusable_rows_are_unknown(
+    monkeypatch, tmp_path: Path, stdout: str, unknown: bool
+) -> None:
+    """Blank REST output, ``null`` and a non-object are unknown, not "no PR"."""
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: ("owner", "repo"))
+    monkeypatch.setattr(rw, "_run", lambda *_args, **_kwargs: _gh_stdout(stdout))
+
+    states, error = rw._query_pr_states_rest(tmp_path, "codex/task")
+
+    assert (error is not None) is unknown
+    if unknown:
+        assert states == []
+        assert error is not None
+    else:
+        assert error is None
+        assert states == []
+
+
+def test_both_pr_transports_empty_stdout_fail_closed(monkeypatch) -> None:
+    _patch_gh_transports(monkeypatch, rest=_gh_stdout(""), graphql=_gh_stdout(""))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "codex/task")
+
+    assert states == []
+    assert error is not None
+    assert "empty" in error
 
 
 def test_query_pr_states_rest_answer_is_used_when_graphql_is_down(monkeypatch) -> None:
@@ -6983,6 +7040,36 @@ def test_sha_search_failures_are_reported_not_swallowed(
     search: _GhSearch,
 ) -> None:
     monkeypatch.setattr(rw, "_run", search)
+
+    states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
+
+    assert states == []
+    assert error is not None
+    assert rw._PR_LOOKUP_FAILED in error
+
+
+def test_sha_search_empty_stdout_is_unknown(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A blank ``gh search`` body is not ``[]`` and must not license removal."""
+    monkeypatch.setattr(rw, "_run", _GhSearch(stdout=""))
+
+    states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
+
+    assert states == []
+    assert error is not None
+    assert rw._PR_LOOKUP_FAILED in error
+    assert "empty" in error
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    ["[null]", "[{}]", "[null, {}]", '[{"number": 7, "state": "open"}, null]', "null", "{}"],
+    ids=["null", "empty-object", "null-and-empty-object", "valid-then-null", "null-payload", "object-payload"],
+)
+def test_sha_search_null_and_empty_objects_are_unknown(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stdout: str
+) -> None:
+    """``[null, {}]`` used to be skipped and read as no PR. Any other shape is unknown."""
+    monkeypatch.setattr(rw, "_run", _GhSearch(stdout=stdout))
 
     states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
 
