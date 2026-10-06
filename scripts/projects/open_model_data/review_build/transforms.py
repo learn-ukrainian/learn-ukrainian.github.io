@@ -105,7 +105,7 @@ def _lines(text: str, policy: dict, reader: object, citation=None) -> Result:
         )
         selected = queried_lines(policy, reader).get(citation.row_key, set())
     kept, dropped = [], []
-    for index, line in enumerate(text.splitlines(keepends=True), 1):
+    for index, line in enumerate(re.findall(r"[^\n]+\n?|\n", text), 1):
         if index in selected or any(re.fullmatch(p, line.rstrip("\r\n")) for p in patterns):
             dropped.append((index, index))
         else:

@@ -1,20 +1,22 @@
 """C9: authenticated printed headings and complete verbatim headed bodies.
 
 This is a precision-first grammar, not a claim of exhaustive heading recall.
-It admits explicit section markers only. Ambiguous numbered lines, multiline
-headings and Roman-number headings require a separately reviewed grammar.
-Book identity is parsed from a single printed bibliographic entry, never from
-chunk titles, filenames, grade metadata or inferred author/publisher names.
+It admits explicit markers, numeric ranges, Roman numbers and adjacent printed
+title lines. Other heading-like lines cause refusal. Book identity comes from
+a designated per-book title/imprint profile, with every field reauthenticated
+as a verbatim span; chunk labels and bibliography searches never supply identity.
 Missing or conflicting identity withholds the whole book. Source text is never
 repaired: only page-number and authenticated running-head line excision is
 applied; hyphens are preserved.
 """
 
+import json
 import re
 import unicodedata
 from collections import Counter
 from collections.abc import Mapping
 from dataclasses import dataclass, replace
+from pathlib import Path
 from typing import ClassVar
 from weakref import WeakKeyDictionary
 
@@ -24,11 +26,12 @@ from ..errors import require
 from ..gate import REASONING, evidence_id
 from ..transforms import transform
 from . import ComponentContext
+from .c9_identity import identity, load_profiles, profile_binding
 from .c9_queries import BODY_QUERY, ELIGIBLE_SQL, END_QUERY, EXCISION_QUERY, HEADING_QUERY, UNIT_QUERY
 
 SOURCE_SCHOOL = "textbooks"
 SOURCE_UNIVERSITY = "textbooks_university"
-FROZEN_COUNT = 7261
+FROZEN_COUNT = 9735
 ALLOWED = re.compile(r"(?:[1-9]|1[01]|10-11)-klas-.+|uni-.+")
 PAGE_PATTERN = r"[ \t]*[0-9]+[ \t]*"
 LINE_POLICY = {
@@ -37,24 +40,86 @@ LINE_POLICY = {
     "table": "textbook_sections",
     "field": "full_text",
 }
+# A marker is a complete number/range/Roman token, never a table of markers.
 HEADING = re.compile(
-    r"(?:§[ \t]*|(?:Тема|ТЕМА|Розділ|РОЗДІЛ) )"
-    r"[0-9]{1,3}(?:\.[ \t]*|[ \t]+)[^\r\n]+"
+    r"(?:§[ \t]*|(?:Тема|ТЕМА|Розділ|РОЗДІЛ)[ \t]+)"
+    r"(?P<number>[0-9]{1,3}(?:[–—-][0-9]{1,3})?|[IVXLCDMІХ]{1,8})"
+    r"(?:(?:\.[ \t]*|[ \t]+)(?P<title>[^\r\n]*))?"
 )
-GRADE = re.compile(r"\b(?:[1-9]|1[01])(?:[-–](?:[1-9]|1[01]))?[- ]?(?:го|й|х)?\s*(?:клас[уаів]*\b|кл\.)", re.I)
-LEVEL = re.compile(r"\b(?:студентів|вищих навчальних закладів|закладів вищої освіти)\b", re.I)
-# A single bibliographic paragraph carries all five required fields, with
-# punctuation delimiting each verbatim span. Never infer missing fields.
-IMPRINT = re.compile(
-    r"(?P<title>[^\n/:]{3,180}?)\s*:\s*"
-    r"(?P<level>(?:підручник|підручн?\.|навчальний посібник|навч\.\s*посіб)[^/]{0,350})/\s*"
-    r"(?P<authors>[^—–]{1,300}?)\s*(?:[—–]|[ \t]+-[ \t]+)\s*[^:\n]{1,80}:\s*"
-    r"(?P<publisher>[^,\n]{1,120}?),\s*(?P<year>(?:19|20)[0-9]{2})\b",
+HEADING_LIKE = re.compile(
+    r"(?im)^[ \t]*(?:[0-9]*[ \t]*)?(?:§|Тема|Розділ|Параграф|Урок)\b|^[ \t]*§|^[ \t]*[0-9]+(?:\.[0-9]+)+[ \t]+[A-ZА-ЯІЇЄҐ]",
     re.I,
 )
-CONTENTS = re.compile(r"(?m)^[ \t]*(?:ЗМІСТ|Зміст)[ \t]*$|\.{3,}[ \t]*[0-9]+[ \t]*$")
-EXERCISE = re.compile(r"(?im)^[ \t]*(?:Вправа|Вправи|Завдання|Запитання)\b")
+CONTENTS = re.compile(
+    r"(?m)^[ \t]*(?:ЗМІСТ|Зміст)[ \t]*$|(?:\.[ \t]*){3,}[0-9]+[ \t]*$"
+    r"|^[ \t]*[^\n]*[^\W\d_][ \t]+[0-9]{1,4}[ \t]*$"
+)
+EXERCISE = re.compile(
+    r"(?im)^[ \t]*(?:Вправ[аи]|Завдання|Запитання|Питання)\b"
+    r"|^[ \t]*[0-9]+[.)][ \t]*(?:Прочитайте|Перепишіть|Запишіть|Випишіть|"
+    r"Визначте|Поясніть|Доведіть|Виконайте|Розгляньте|Порівняйте|Складіть|"
+    r"Обчисліть|Знайдіть|Розв[’']яжіть|Дайте|Поміркуйте|Дослідіть|Назвіть|"
+    r"Пригадайте|Укажіть|Доберіть|Заповніть|Утворіть|Побудуйте|Перевірте|"
+    r"Обговоріть|Виправте|Підкресліть|Установіть|Працюйте)\b"
+)
 ANSWER = re.compile(r"(?im)^[ \t]*(?:Відповідь|Відповіді|Розв'язання|Розв’язання)\b")
+# Conservative refusal, never truncation. The recovered clean-screen probe
+# has a maximum of 10,952 characters / 6 pages; 16,000 / 8 leaves headroom
+# while refusing the reported 167,808-character / 91-page boundary failure.
+# The host-only round4 size-bound evidence records the measured distribution.
+MAX_BODY_CHARS = 16000
+MAX_BODY_PAGES = 8
+
+
+def contents_page(text):
+    for line in text.split("\n"):
+        marker = HEADING.fullmatch(line.strip())
+        if (marker and not marker.group("title")) or EXERCISE.match(line):
+            continue
+        if CONTENTS.search(line):
+            return True
+    return False
+
+
+def exercise_without_answer(body):
+    exercises = list(EXERCISE.finditer(body))
+    answers = list(ANSWER.finditer(body))
+    for index, exercise in enumerate(exercises):
+        end = exercises[index + 1].start() if index + 1 < len(exercises) else len(body)
+        if not any(exercise.end() < answer.start() < end for answer in answers):
+            return True
+    return False
+
+
+def bare_title_line(text):
+    return bool(
+        text
+        and len(text) <= 100
+        and re.match(r"[A-ZА-ЯІЇЄҐ]", text)
+        and not re.search(r"[.;:!?§]", text)
+        and not HEADING_LIKE.match(text)
+    )
+
+
+def title_line(text):
+    return bool(
+        text and len(text) <= 100 and re.search(r"[A-ZА-ЯІЇЄҐ]", text) and not re.search(r"[a-zа-яіїєґ0-9.;:!?§]", text)
+    )
+
+
+def printed_page(row):
+    """Unique number on a first/last nonblank line, including fused running heads."""
+    lines = [line.strip() for line in row["full_text"].split("\n") if line.strip()]
+    numbers = set()
+    for line in lines[:1] + lines[-1:]:
+        if re.fullmatch(r"[0-9]{1,4}", line):
+            numbers.add(int(line))
+        else:
+            for pattern in (r"^([0-9]{1,4})(?=[A-Za-zА-Яа-яІіЇїЄєҐґ])", r"(?<=[A-Za-zА-Яа-яІіЇїЄєҐґ])([0-9]{1,4})$"):
+                match = re.search(pattern, line)
+                if match:
+                    numbers.add(int(match.group(1)))
+    return next(iter(numbers)) if len(numbers) == 1 and next(iter(numbers)) > 0 else None
 
 
 @dataclass(frozen=True)
@@ -64,59 +129,32 @@ class Heading:
     text: str
 
 
-@dataclass(frozen=True)
-class Identity:
-    row: Mapping
-    fields: Mapping[str, tuple[int, int]]
-    span: tuple[int, int]
-
-    def text(self, key):
-        start, end = self.fields[key]
-        return self.row["full_text"][start:end]
-
-
 def headings(row: Mapping) -> list[Heading]:
-    """Explicit markers on physical lines; ingester labels are never examined."""
-    result, offset = [], 0
-    # split on LF only, agreeing with the independent SQL page-line reader.
-    for found in re.finditer(r"[^\n]+\n?|\n", row["full_text"]):
+    """One or two adjacent printed lines; preserve all intervening source bytes."""
+    lines = list(re.finditer(r"[^\n]+\n?|\n", row["full_text"]))
+    result = []
+    for index, found in enumerate(lines):
         line = found.group()
-        title = line.strip(" \t\r\n")
-        match = HEADING.fullmatch(title)
-        if match and len(title) <= 180:
-            tail = re.sub(r"^(?:§[ \t]*|(?:Тема|ТЕМА|Розділ|РОЗДІЛ) )", "", title)
-            number = re.match(r"[0-9]+", tail)
-            after = tail[number.end() :]
-            body = after[1:] if after.startswith(".") else after
-            if int(number.group()) > 0 and body.strip(" \t"):
-                start = offset + len(line) - len(line.lstrip(" \t\r\n"))
-                result.append(Heading(row, (start, start + len(title)), title))
-        offset += len(line)
+        text = line.strip(" \t\r\n")
+        match = HEADING.fullmatch(text)
+        if match is None:
+            continue
+        number, title = match.group("number"), match.group("title") or ""
+        if number[0].isdigit() and any(int(n) == 0 for n in re.split("[–—-]", number)):
+            continue
+        if re.search(r"§|Тема|ТЕМА|Розділ|РОЗДІЛ", title):
+            continue
+        start = found.start() + len(line) - len(line.lstrip(" \t\r\n"))
+        end = found.start() + len(line.rstrip(" \t\r\n"))
+        if index + 1 < len(lines):
+            following = lines[index + 1]
+            next_title = following.group().strip(" \t\r\n")
+            if (not title and bare_title_line(next_title)) or (title_line(next_title) and title_line(title)):
+                end = following.start() + len(following.group().rstrip(" \t\r\n"))
+                title = next_title
+        if title and end - start <= 180:
+            result.append(Heading(row, (start, end), row["full_text"][start:end]))
     return result
-
-
-def identity(pages: list[Mapping]) -> Identity | None:
-    """Resolve one consistent source-printed imprint in the book's edge pages."""
-    if not pages:
-        return None
-    matches = []
-    for row in pages[:8] + pages[-8:]:
-        for match in IMPRINT.finditer(row["full_text"]):
-            fields = {key: match.span(key) for key in ("title", "authors", "publisher", "year")}
-            # Trim only span boundaries; no source bytes are rewritten.
-            for key, (start, end) in fields.items():
-                raw = row["full_text"][start:end]
-                fields[key] = (start + len(raw) - len(raw.lstrip()), end - len(raw) + len(raw.rstrip()))
-            level = match.group("level")
-            grade = LEVEL.search(level) if row["source_file"].startswith("uni-") else GRADE.search(level)
-            if grade is None:
-                continue
-            fields["grade"] = tuple(n + match.start("level") for n in grade.span())
-            if any(not row["full_text"][s:e].strip() for s, e in fields.values()):
-                continue
-            matches.append(Identity(row, fields, match.span()))
-    fingerprints = {tuple(item.text(k) for k in sorted(item.fields)) for item in matches}
-    return matches[0] if len(fingerprints) == 1 else None
 
 
 def ocr_damaged(text: str) -> bool:
@@ -127,31 +165,33 @@ def ocr_damaged(text: str) -> bool:
     """
     return (
         "\ufffd" in text
-        or any(unicodedata.category(c) in {"Cc", "Cs"} and c not in "\n\r\t" for c in text)
+        or any(unicodedata.category(c) in {"Cc", "Cs", "Co"} and c not in "\n\r\t" for c in text)
         or bool(re.search(r"\?{3,}|([@#$%])\1{4,}", text))
     )
 
 
-def running_head_ambiguous(pages: list[Mapping]) -> bool:
-    """Refuse recurring nonnumeric edge lines instead of deleting guessed text.
+def edge_key(line):
+    line = re.sub(r"^[0-9]+(?=[A-Za-zА-Яа-яІіЇїЄєҐґ])", "", line)
+    return re.sub(r"(?<=[A-Za-zА-Яа-яІіЇїЄєҐґ])[0-9]+$", "", line)
 
-    A line must occur on at least three distinct pages and at least half the
-    book. Only the first/last nonempty line, at most 180 characters, counts.
-    Repeated prose may also trigger this conservative withholding screen.
-    """
+
+def recurring_edges(pages):
     edges = Counter()
     for page in pages:
-        lines = [line.strip() for line in page["full_text"].split("\n") if line.strip()]
-        if not lines:
-            continue
-        edges.update(
-            {
-                line
-                for line in (lines[0], lines[-1])
-                if len(line) <= 180 and not re.fullmatch(PAGE_PATTERN, line) and not HEADING.fullmatch(line)
-            }
-        )
-    return any(count >= 3 and 2 * count >= len(pages) for count in edges.values())
+        lines = [
+            line.strip()
+            for line in page["full_text"].split("\n")
+            if line.strip() and not re.fullmatch(PAGE_PATTERN, line.strip())
+        ]
+        if lines:
+            edges.update({edge_key(line) for line in (lines[0], lines[-1]) if 0 < len(edge_key(line)) <= 180})
+    return {line for line, count in edges.items() if count >= 2}
+
+
+def running_head_ambiguous(pages, body=None):
+    """Any recurring edge text left in a section is unresolved, even chapter-local."""
+    edges = recurring_edges(pages)
+    return bool(edges) if body is None else any(line in body for line in edges)
 
 
 def citation(row: Mapping) -> Citation:
@@ -162,7 +202,7 @@ def citation(row: Mapping) -> Citation:
         "textbook_sections",
         f"section_id={row['section_id']}",
         "full_text",
-        f"page {row['page_start']}",
+        f"printed page {printed_page(row)}" if printed_page(row) else f"ingest page {row['page_start']}",
         digest(row["full_text"].encode("utf-8")),
     )
 
@@ -188,7 +228,8 @@ class TextbookAttribution:
         SOURCE_UNIVERSITY: "<author(s)>. <title>. <level>. <publisher>, <year>. С. <page>.",
     }
 
-    def __init__(self):
+    def __init__(self, profiles=None):
+        self.profiles = profiles
         self._cache = WeakKeyDictionary()
 
     def resolve(self, form, source, row, reader):
@@ -207,9 +248,12 @@ class TextbookAttribution:
                     "SELECT * FROM textbook_sections WHERE source_file=? ORDER BY page_start", (book,)
                 )
             ]
-            cache[book] = identity(pages)
+            cache[book] = identity(pages, self.profiles if self.profiles is not None else load_profiles(reader))
         item = cache[book]
         require(item is not None, "attribution_unresolved")
+        page_number = printed_page(row)
+        identity_page = row["section_id"] == item.row["section_id"]
+        require(page_number is not None or identity_page, "attribution_unresolved")
         # Pin the actual imprint column, including on response-page citations.
         reader.field(citation(item.row))
         replacements = {
@@ -218,9 +262,15 @@ class TextbookAttribution:
             "grade" if expected_source == SOURCE_SCHOOL else "level": item.text("grade"),
             "publisher": item.text("publisher"),
             "year": item.text("year"),
-            "page": str(row["page_start"]),
+            "page": str(page_number),
         }
-        bibliography = re.sub(r"<([^>]+)>", lambda match: replacements[match.group(1)], form)
+        rendered_form = (
+            form
+            if page_number is not None
+            else form.replace(" С. <page>.", " [identity page; printed page unresolved].")
+        )
+        bibliography = re.sub(r"<([^>]+)>", lambda match: replacements[match.group(1)], rendered_form)
+        bibliography = re.sub(r"\.{2,}", ".", bibliography)
         return Attribution(bibliography, form)
 
 
@@ -272,22 +322,6 @@ BINDING = {
         },
     ],
 }
-
-# The gate parses these declarative captures independently. Same-book and
-# same-row checks alone would admit a title replaced by its publisher's span.
-for _slot, _group in (("book_title", "title"), ("grade", "level")):
-    _rule = {
-        "op": "regex_span",
-        "values": [selector("slots", _slot)],
-        "pattern": IMPRINT.pattern,
-        "flags": int(IMPRINT.flags),
-        "group": _group,
-        "trim": True,
-    }
-    if _slot == "grade":
-        _rule["nested"] = {"pattern": f"(?:{GRADE.pattern})|(?:{LEVEL.pattern})", "flags": int(re.I)}
-    BINDING["rules"].append(_rule)
-
 
 # Frozen filename-only admission inventory, measured with the independent census.
 # These source identifiers are metadata; no textbook page text is embedded.
@@ -501,14 +535,20 @@ def compatibility(books):
 
 
 class Textbooks:
-    def __init__(self):
+    def __init__(self, profiles=None):
         self.files = {}
-        adapter = TextbookAttribution()
+        self.profiles = (
+            profiles
+            if profiles is not None
+            else json.loads(Path(__file__).with_name("c9_profiles.json").read_bytes())["books"]
+        )
+        self.explicit_profiles = profiles is not None
+        adapter = TextbookAttribution(profiles)
         self.adapters = {SOURCE_SCHOOL: adapter, SOURCE_UNIVERSITY: adapter}
         self.spec = {
             "compatibility": compatibility(ALLOWLISTED_FILES),
             "operations": ["verbatim_section"],
-            "unit_grain": "printed_section_first_occurrence_v2",
+            "unit_grain": "printed_section_first_occurrence_v3",
             "context_serializer": "text",
             "response_serializer": "text",
             "transforms": {"line_excision@1": LINE_POLICY},
@@ -523,6 +563,11 @@ class Textbooks:
                     "table_of_contents",
                     "exercise_without_answer",
                     "page_gap",
+                    "next_heading_unresolved",
+                    "unparsed_heading_in_body",
+                    "heading_continuation_unresolved",
+                    "body_size_bound",
+                    "printed_page_unresolved",
                     "empty_body",
                     "repeated_heading",
                     "running_head_unresolved",
@@ -536,7 +581,10 @@ class Textbooks:
                 "verbatim_section": {
                     "unit_query": UNIT_QUERY,
                     "frozen_count": FROZEN_COUNT,
-                    "binding": BINDING,
+                    "binding": {
+                        "schema": BINDING["schema"],
+                        "rules": BINDING["rules"] + profile_binding(self.profiles),
+                    },
                     "unit_id": {
                         "format": "citation.v1",
                         "primary": [
@@ -553,6 +601,8 @@ class Textbooks:
         }
 
     def iter_candidates(self, ctx: ComponentContext):
+        if not self.explicit_profiles:
+            require(load_profiles(ctx.reader) == self.profiles, "identity_profiles")
         connection = ctx.reader.connections["sources.db"]
         # Only filenames (never text) are read to authenticate the component's
         # frozen allowlist. The independent query's domain must equal that allowlist.
@@ -575,7 +625,7 @@ class Textbooks:
     def _book(self, pages, reader):
         printed, seen, section_openings = [], set(), set()
         for row in pages:
-            contents = bool(CONTENTS.search(row["full_text"]))
+            contents = contents_page(row["full_text"])
             edge_offsets, offset = [], 0
             for found in re.finditer(r"[^\n]+\n?|\n", row["full_text"]):
                 line = found.group()
@@ -596,9 +646,8 @@ class Textbooks:
                     section_openings.add(unit_id(heading))
                 if not contents:
                     seen.add(heading.text)
-        imprint = identity(pages)
+        imprint = identity(pages, self.profiles)
         candidates = []
-        unresolved_head = running_head_ambiguous(pages)
         # Strictly greater than 30%, using integer arithmetic at the boundary.
         damaged_book = 10 * sum(ocr_damaged(p["full_text"]) for p in pages) > 3 * len(pages)
         for index, heading in enumerate(printed):
@@ -648,22 +697,34 @@ class Textbooks:
                     slot_heading,
                 ]
                 context = [value(imprint.row, "textbook_identity_attestation", imprint.span)]
-            if damaged_book:
+            if imprint is None:
+                reason = "book_identity_unresolved"
+            elif damaged_book:
                 reason = "book_ocr_damage"
             elif any(ocr_damaged(p["full_text"]) for p in selected):
                 reason = "ocr_damage"
-            elif any(CONTENTS.search(p["full_text"]) for p in selected):
+            elif any(contents_page(p["full_text"]) for p in selected):
                 reason = "table_of_contents"
-            elif unresolved_head:
-                reason = "running_head_unresolved"
             elif selected and [p["page_start"] for p in selected] != list(
                 range(start_page, selected[-1]["page_start"] + 1)
             ):
                 reason = "page_gap"
             else:
                 body = "\n".join(v.text for v in response)
-                if EXERCISE.search(body) and not ANSWER.search(body):
+                if HEADING_LIKE.search(body):
+                    reason = "unparsed_heading_in_body"
+                elif title_line(next((line.strip() for line in body.split("\n") if line.strip()), "")):
+                    reason = "heading_continuation_unresolved"
+                elif running_head_ambiguous(pages, body):
+                    reason = "running_head_unresolved"
+                elif exercise_without_answer(body):
                     reason = "exercise_without_answer"
+                elif next_heading is None:
+                    reason = "next_heading_unresolved"
+                elif len(body) > MAX_BODY_CHARS or len(response) > MAX_BODY_PAGES:
+                    reason = "body_size_bound"
+                elif any(printed_page(p) is None for p in selected):
+                    reason = "printed_page_unresolved"
                 elif not body.strip():
                     reason = "empty_body"
             outcome = "accepted" if reason == "printed_heading" else "withheld"

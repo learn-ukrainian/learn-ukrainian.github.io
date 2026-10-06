@@ -1,0 +1,6811 @@
+{
+  "schema": "c9-book-profiles.v1",
+  "books": {
+    "1-klas-mystetstvo-rublia-2024": {
+      "page_index": 3,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            0,
+            13
+          ],
+          "text": "Р82 Мистецтво"
+        },
+        "authors": {
+          "lines": [
+            25,
+            25
+          ],
+          "columns": [
+            23,
+            61
+          ],
+          "text": "Т. Є. Рубля, Т. Л. Щеглова, І. Л. Мед."
+        },
+        "publisher": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            5,
+            19
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            21,
+            25
+          ],
+          "text": "2024"
+        },
+        "grade": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            48,
+            53
+          ],
+          "text": "1 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          578,
+          591
+        ],
+        "authors": [
+          661,
+          699
+        ],
+        "publisher": [
+          706,
+          720
+        ],
+        "year": [
+          722,
+          726
+        ],
+        "grade": [
+          626,
+          631
+        ]
+      }
+    },
+    "1-klas-ya-doslidzhuiu-svit-zharkova-2024-1": {
+      "page_index": 5,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            21,
+            21
+          ],
+          "columns": [
+            0,
+            16
+          ],
+          "text": "Я досліджую світ"
+        },
+        "authors": {
+          "lines": [
+            22,
+            23
+          ],
+          "columns": [
+            42,
+            13
+          ],
+          "text": "І. Жаркова, Л. Мечник,\nЛ. Роговська."
+        },
+        "publisher": {
+          "lines": [
+            23,
+            23
+          ],
+          "columns": [
+            28,
+            50
+          ],
+          "text": "Підручники і посібники"
+        },
+        "year": {
+          "lines": [
+            23,
+            23
+          ],
+          "columns": [
+            52,
+            56
+          ],
+          "text": "2024"
+        },
+        "grade": {
+          "lines": [
+            21,
+            21
+          ],
+          "columns": [
+            51,
+            56
+          ],
+          "text": "1 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          612,
+          628
+        ],
+        "authors": [
+          711,
+          747
+        ],
+        "publisher": [
+          762,
+          784
+        ],
+        "year": [
+          786,
+          790
+        ],
+        "grade": [
+          663,
+          668
+        ]
+      }
+    },
+    "1-klas-ya-doslidzhuiu-svit-zharkova-2024-2": {
+      "page_index": 5,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            21,
+            21
+          ],
+          "columns": [
+            0,
+            16
+          ],
+          "text": "Я досліджую світ"
+        },
+        "authors": {
+          "lines": [
+            22,
+            23
+          ],
+          "columns": [
+            42,
+            13
+          ],
+          "text": "І. Жаркова, Л. Мечник,\nЛ. Роговська."
+        },
+        "publisher": {
+          "lines": [
+            23,
+            23
+          ],
+          "columns": [
+            28,
+            50
+          ],
+          "text": "Підручники і посібники"
+        },
+        "year": {
+          "lines": [
+            23,
+            23
+          ],
+          "columns": [
+            52,
+            56
+          ],
+          "text": "2024"
+        },
+        "grade": {
+          "lines": [
+            21,
+            21
+          ],
+          "columns": [
+            51,
+            56
+          ],
+          "text": "1 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          612,
+          628
+        ],
+        "authors": [
+          711,
+          747
+        ],
+        "publisher": [
+          762,
+          784
+        ],
+        "year": [
+          786,
+          790
+        ],
+        "grade": [
+          663,
+          668
+        ]
+      }
+    },
+    "10-11-klas-tekhnolohiyi-khodzycka-2019": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            0,
+            33
+          ],
+          "text": "Т38 Технології (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            9,
+            10
+          ],
+          "columns": [
+            88,
+            36
+          ],
+          "text": "І. Ю. Ходзицька,\nН. І. Боринець, В. М. Гащак та інші."
+        },
+        "publisher": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            48,
+            62
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            64,
+            68
+          ],
+          "text": "2019"
+        },
+        "grade": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            47,
+            58
+          ],
+          "text": "10 (11) кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          394,
+          427
+        ],
+        "authors": [
+          482,
+          535
+        ],
+        "publisher": [
+          547,
+          561
+        ],
+        "year": [
+          563,
+          567
+        ],
+        "grade": [
+          441,
+          452
+        ]
+      }
+    },
+    "10-klas-angliiska-mova-burenko-2018": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            0,
+            53
+          ],
+          "text": "Англійська мова (10-й рік навчання, рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            24,
+            38
+          ],
+          "text": "В. М. Буренко."
+        },
+        "publisher": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            50,
+            64
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            66,
+            70
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            68,
+            74
+          ],
+          "text": "10 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          383,
+          436
+        ],
+        "authors": [
+          492,
+          506
+        ],
+        "publisher": [
+          518,
+          532
+        ],
+        "year": [
+          534,
+          538
+        ],
+        "grade": [
+          451,
+          457
+        ]
+      }
+    },
+    "10-klas-biologija-i-ekologija-zadorozhnij-2018-stand": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            0,
+            38
+          ],
+          "text": "Біологія і екологія (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            16,
+            33
+          ],
+          "text": "К. М. Задорожний."
+        },
+        "publisher": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            45,
+            59
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            61,
+            65
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            53,
+            59
+          ],
+          "text": "10 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          225,
+          263
+        ],
+        "authors": [
+          314,
+          331
+        ],
+        "publisher": [
+          343,
+          357
+        ],
+        "year": [
+          359,
+          363
+        ],
+        "grade": [
+          278,
+          284
+        ]
+      }
+    },
+    "10-klas-fizyka-barjakhtar-2018": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            24,
+            25
+          ],
+          "columns": [
+            0,
+            36
+          ],
+          "text": "Ф50 Фізика (рівень стандарту, за навчальною програмою авторського колек-\nтиву під керівництвом Локтєва В. М.)"
+        },
+        "authors": {
+          "lines": [
+            26,
+            27
+          ],
+          "columns": [
+            9,
+            40
+          ],
+          "text": "[В. Г. Бар’яхтар, С. О. Дов гий, Ф. Я. Божинова, О. О. Кірюхіна] ;\nза ред. В. Г. Бар’яхтара, С. О. Довгого."
+        },
+        "publisher": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            52,
+            66
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            68,
+            72
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            25,
+            25
+          ],
+          "columns": [
+            51,
+            57
+          ],
+          "text": "10 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          1264,
+          1373
+        ],
+        "authors": [
+          1424,
+          1531
+        ],
+        "publisher": [
+          1543,
+          1557
+        ],
+        "year": [
+          1559,
+          1563
+        ],
+        "grade": [
+          1388,
+          1394
+        ]
+      }
+    },
+    "10-klas-geometrija-ister-2018": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            0,
+            32
+          ],
+          "text": "1-89 Геометрія: (профіл. рівень)"
+        },
+        "authors": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            27,
+            51
+          ],
+          "text": "О.С. Істер, О.В. Єргіна."
+        },
+        "publisher": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            7,
+            13
+          ],
+          "text": "Генеза"
+        },
+        "year": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            15,
+            19
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            47,
+            56
+          ],
+          "text": "10-го кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          201,
+          233
+        ],
+        "authors": [
+          285,
+          309
+        ],
+        "publisher": [
+          319,
+          325
+        ],
+        "year": [
+          327,
+          331
+        ],
+        "grade": [
+          248,
+          257
+        ]
+      }
+    },
+    "10-klas-himija-grygorovych-2018": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            0,
+            24
+          ],
+          "text": "Хімія (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            9,
+            29
+          ],
+          "text": "О. В. Гри го ро вич."
+        },
+        "publisher": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            41,
+            55
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            57,
+            61
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            39,
+            47
+          ],
+          "text": "10 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          219,
+          243
+        ],
+        "authors": [
+          297,
+          317
+        ],
+        "publisher": [
+          329,
+          343
+        ],
+        "year": [
+          345,
+          349
+        ],
+        "grade": [
+          258,
+          266
+        ]
+      }
+    },
+    "10-klas-informatika-rudenko-2018-stand": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            0,
+            30
+          ],
+          "text": "Інформатика (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            16,
+            59
+          ],
+          "text": "В. Д. Руденко, Н. В. Речич, В. О. Потієнко."
+        },
+        "publisher": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            2,
+            16
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            18,
+            22
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            45,
+            56
+          ],
+          "text": "10 (11) кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          241,
+          271
+        ],
+        "authors": [
+          327,
+          370
+        ],
+        "publisher": [
+          384,
+          398
+        ],
+        "year": [
+          400,
+          404
+        ],
+        "grade": [
+          286,
+          297
+        ]
+      }
+    },
+    "10-klas-istorija-ukrajiny-gisem-2018": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            0,
+            34
+          ],
+          "text": "Історія України (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            23,
+            51
+          ],
+          "text": "О. В. Гісем, О. О. Мартинюк."
+        },
+        "publisher": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            0,
+            14
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            16,
+            20
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            49,
+            55
+          ],
+          "text": "10 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          218,
+          252
+        ],
+        "authors": [
+          303,
+          331
+        ],
+        "publisher": [
+          343,
+          357
+        ],
+        "year": [
+          359,
+          363
+        ],
+        "grade": [
+          267,
+          273
+        ]
+      }
+    },
+    "10-klas-matematika-merzljak-2018": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            11,
+            12
+          ],
+          "columns": [
+            0,
+            16
+          ],
+          "text": "Математика : алгебра і початки аналізу та геометрія,\nрівень стандарту"
+        },
+        "authors": {
+          "lines": [
+            13,
+            14
+          ],
+          "columns": [
+            19,
+            29
+          ],
+          "text": "А. Г. Мерзляк, Д. А. Номіровський,\nВ. Б. Полонський, М. С. Якір."
+        },
+        "publisher": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            37,
+            45
+          ],
+          "text": "Гімназія"
+        },
+        "year": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            47,
+            51
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            31,
+            37
+          ],
+          "text": "10 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          232,
+          301
+        ],
+        "authors": [
+          361,
+          425
+        ],
+        "publisher": [
+          433,
+          441
+        ],
+        "year": [
+          443,
+          447
+        ],
+        "grade": [
+          316,
+          322
+        ]
+      }
+    },
+    "10-klas-ukrajinska-mova-avramenko-2018": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            0,
+            34
+          ],
+          "text": "Українська мова (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            26,
+            46
+          ],
+          "text": "Олександр Авраменко."
+        },
+        "publisher": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            54,
+            61
+          ],
+          "text": "Грамота"
+        },
+        "year": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            49,
+            55
+          ],
+          "text": "10 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          360,
+          394
+        ],
+        "authors": [
+          448,
+          468
+        ],
+        "publisher": [
+          476,
+          483
+        ],
+        "year": [
+          485,
+          489
+        ],
+        "grade": [
+          409,
+          415
+        ]
+      }
+    },
+    "10-klas-ukrmova-glazova-2018": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            0,
+            34
+          ],
+          "text": "Українська мова (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            14,
+            28
+          ],
+          "text": "О. П. Глазова."
+        },
+        "publisher": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            40,
+            54
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            56,
+            60
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            49,
+            55
+          ],
+          "text": "10 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          422,
+          456
+        ],
+        "authors": [
+          509,
+          523
+        ],
+        "publisher": [
+          535,
+          549
+        ],
+        "year": [
+          551,
+          555
+        ],
+        "grade": [
+          471,
+          477
+        ]
+      }
+    },
+    "10-klas-vsesvitnia-istoriia-gisem-2018-stand": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            0,
+            36
+          ],
+          "text": "Всесвітня історія (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            23,
+            51
+          ],
+          "text": "О. В. Гісем, О. О. Мартинюк."
+        },
+        "publisher": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            0,
+            14
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            16,
+            20
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            51,
+            57
+          ],
+          "text": "10 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          213,
+          249
+        ],
+        "authors": [
+          300,
+          328
+        ],
+        "publisher": [
+          340,
+          354
+        ],
+        "year": [
+          356,
+          360
+        ],
+        "grade": [
+          264,
+          270
+        ]
+      }
+    },
+    "10-klas-zakhyst-fuka-2023": {
+      "page_index": 3,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            0,
+            20
+          ],
+          "text": "З-380 Захист України"
+        },
+        "authors": {
+          "lines": [
+            10,
+            12
+          ],
+          "columns": [
+            48,
+            27
+          ],
+          "text": "М. М. Фука,\nК. О. Пашко, І. М. Гарасимів, А. А. Гудима, С. І. Чуткий,\nР. М. Мельник, Б. І. Білах."
+        },
+        "publisher": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            42,
+            47
+          ],
+          "text": "Астон"
+        },
+        "year": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            49,
+            53
+          ],
+          "text": "2023"
+        },
+        "grade": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            37,
+            45
+          ],
+          "text": "10 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          321,
+          341
+        ],
+        "authors": [
+          424,
+          521
+        ],
+        "publisher": [
+          536,
+          541
+        ],
+        "year": [
+          543,
+          547
+        ],
+        "grade": [
+          358,
+          366
+        ]
+      }
+    },
+    "10-klas-zarubizhna-literatura-voloshhuk-2018": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            0,
+            35
+          ],
+          "text": "Зарубіжна література (проф. рівень)"
+        },
+        "authors": {
+          "lines": [
+            11,
+            12
+          ],
+          "columns": [
+            37,
+            42
+          ],
+          "text": "Євгенія Волощук,\nВолодимир Звиняцьковський, Оксана Філенко."
+        },
+        "publisher": {
+          "lines": [
+            13,
+            13
+          ],
+          "columns": [
+            7,
+            13
+          ],
+          "text": "Генеза"
+        },
+        "year": {
+          "lines": [
+            13,
+            13
+          ],
+          "columns": [
+            15,
+            19
+          ],
+          "text": "2018"
+        },
+        "grade": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            0,
+            9
+          ],
+          "text": "10-го кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          276,
+          311
+        ],
+        "authors": [
+          363,
+          422
+        ],
+        "publisher": [
+          432,
+          438
+        ],
+        "year": [
+          440,
+          444
+        ],
+        "grade": [
+          326,
+          335
+        ]
+      }
+    },
+    "11-klas-algebra-ister-2019-prof": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            0,
+            44
+          ],
+          "text": "Алгебра і початки аналізу : (профіл. рівень)"
+        },
+        "authors": {
+          "lines": [
+            10,
+            11
+          ],
+          "columns": [
+            42,
+            14
+          ],
+          "text": "Олександр Істер,\nОксана Єргіна."
+        },
+        "publisher": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            24,
+            30
+          ],
+          "text": "Генеза"
+        },
+        "year": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            32,
+            36
+          ],
+          "text": "2019"
+        },
+        "grade": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            4,
+            14
+          ],
+          "text": "11 -го кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          206,
+          250
+        ],
+        "authors": [
+          303,
+          334
+        ],
+        "publisher": [
+          344,
+          350
+        ],
+        "year": [
+          352,
+          356
+        ],
+        "grade": [
+          265,
+          275
+        ]
+      }
+    },
+    "11-klas-astronomiya-pryshliak-2019": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            8,
+            9
+          ],
+          "columns": [
+            0,
+            50
+          ],
+          "text": "Астрономія (рівень стандарту, за навчальною програмою ав-\nторського колективу під керівництвом Яцківа Я. С.)"
+        },
+        "authors": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            36,
+            51
+          ],
+          "text": "Микола Пришляк."
+        },
+        "publisher": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            0,
+            14
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            16,
+            20
+          ],
+          "text": "2019"
+        },
+        "grade": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            0,
+            6
+          ],
+          "text": "11 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          215,
+          323
+        ],
+        "authors": [
+          374,
+          389
+        ],
+        "publisher": [
+          400,
+          414
+        ],
+        "year": [
+          416,
+          420
+        ],
+        "grade": [
+          338,
+          344
+        ]
+      }
+    },
+    "11-klas-biologiia-i-ekologia-shalamov-2019": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            0,
+            42
+          ],
+          "text": "Б63 Біологія і екологія (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            9,
+            10
+          ],
+          "columns": [
+            33,
+            4
+          ],
+          "text": "Р. В. Шаламов, М. С. Каліберда, Г. А. Но-\nсов."
+        },
+        "publisher": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            15,
+            23
+          ],
+          "text": "Соняшник"
+        },
+        "year": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            25,
+            29
+          ],
+          "text": "2019"
+        },
+        "grade": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            58,
+            66
+          ],
+          "text": "11 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          257,
+          299
+        ],
+        "authors": [
+          364,
+          410
+        ],
+        "publisher": [
+          421,
+          429
+        ],
+        "year": [
+          431,
+          435
+        ],
+        "grade": [
+          315,
+          323
+        ]
+      }
+    },
+    "11-klas-fizika-astronomiia-zasekina-2019-standart": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            7,
+            9
+          ],
+          "columns": [
+            0,
+            14
+          ],
+          "text": "Фізика і астрономія (рівень стандарту, за навчаль-\nною програмою авторського колективу під керівництвом\nЛяшенка О. І.)"
+        },
+        "authors": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            19,
+            49
+          ],
+          "text": "Т. М. Засєкіна, Д. О. Засєкін."
+        },
+        "publisher": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            0,
+            12
+          ],
+          "text": "УОВЦ «Оріон»"
+        },
+        "year": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            14,
+            18
+          ],
+          "text": "2019"
+        },
+        "grade": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            28,
+            34
+          ],
+          "text": "11 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          218,
+          336
+        ],
+        "authors": [
+          395,
+          425
+        ],
+        "publisher": [
+          433,
+          445
+        ],
+        "year": [
+          447,
+          451
+        ],
+        "grade": [
+          350,
+          356
+        ]
+      }
+    },
+    "11-klas-himia-grygorovych-2019": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            0,
+            24
+          ],
+          "text": "Хімія (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            0,
+            25
+          ],
+          "text": "Олексій Гри­ го­ ро­ вич."
+        },
+        "publisher": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            37,
+            51
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            53,
+            57
+          ],
+          "text": "2019"
+        },
+        "grade": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            39,
+            45
+          ],
+          "text": "11 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          216,
+          240
+        ],
+        "authors": [
+          293,
+          318
+        ],
+        "publisher": [
+          330,
+          344
+        ],
+        "year": [
+          346,
+          350
+        ],
+        "grade": [
+          255,
+          261
+        ]
+      }
+    },
+    "11-klas-istoriya-ukr-hlibovska-2024": {
+      "page_index": 3,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            0,
+            33
+          ],
+          "text": "Історія України. Рівень стандарту"
+        },
+        "authors": {
+          "lines": [
+            13,
+            14
+          ],
+          "columns": [
+            38,
+            25
+          ],
+          "text": "Г. М. Хлібовська, М. Є. Кри-\nжановська, О. В. Наумчук,"
+        },
+        "publisher": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            40,
+            45
+          ],
+          "text": "Астон"
+        },
+        "year": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            47,
+            51
+          ],
+          "text": "2024"
+        },
+        "grade": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            50,
+            58
+          ],
+          "text": "11 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          427,
+          460
+        ],
+        "authors": [
+          524,
+          578
+        ],
+        "publisher": [
+          593,
+          598
+        ],
+        "year": [
+          600,
+          604
+        ],
+        "grade": [
+          477,
+          485
+        ]
+      }
+    },
+    "11-klas-pravoznavstvo-narovlianskyi-2019": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            0,
+            33
+          ],
+          "text": "Правознавство (профільний рівень)"
+        },
+        "authors": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            25,
+            49
+          ],
+          "text": "Олександр Наровлянський."
+        },
+        "publisher": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            57,
+            64
+          ],
+          "text": "Грамота"
+        },
+        "year": {
+          "lines": [
+            20,
+            20
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2019"
+        },
+        "grade": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            48,
+            54
+          ],
+          "text": "11 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          395,
+          428
+        ],
+        "authors": [
+          481,
+          505
+        ],
+        "publisher": [
+          513,
+          520
+        ],
+        "year": [
+          522,
+          526
+        ],
+        "grade": [
+          443,
+          449
+        ]
+      }
+    },
+    "11-klas-ukrajinska-mova-avramenko-2019": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            0,
+            34
+          ],
+          "text": "Українська мова (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            26,
+            46
+          ],
+          "text": "Олександр Авраменко."
+        },
+        "publisher": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            54,
+            61
+          ],
+          "text": "Грамота"
+        },
+        "year": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2019"
+        },
+        "grade": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            49,
+            55
+          ],
+          "text": "11 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          384,
+          418
+        ],
+        "authors": [
+          472,
+          492
+        ],
+        "publisher": [
+          500,
+          507
+        ],
+        "year": [
+          509,
+          513
+        ],
+        "grade": [
+          433,
+          439
+        ]
+      }
+    },
+    "11-klas-ukrajinska-mova-glazova-2019": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            0,
+            34
+          ],
+          "text": "Українська мова (рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            9,
+            28
+          ],
+          "text": "Олександра Глазова."
+        },
+        "publisher": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            40,
+            54
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            56,
+            60
+          ],
+          "text": "2019"
+        },
+        "grade": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            49,
+            55
+          ],
+          "text": "11 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          411,
+          445
+        ],
+        "authors": [
+          496,
+          515
+        ],
+        "publisher": [
+          527,
+          541
+        ],
+        "year": [
+          543,
+          547
+        ],
+        "grade": [
+          460,
+          466
+        ]
+      }
+    },
+    "2-klas-mystetstvo-rublia-2024": {
+      "page_index": 3,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            25,
+            25
+          ],
+          "columns": [
+            0,
+            13
+          ],
+          "text": "Р82 Мистецтво"
+        },
+        "authors": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            23,
+            63
+          ],
+          "text": "Т. Є. Руб­ ля, Т. Л. Щеглова, І. Л. Мед."
+        },
+        "publisher": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            5,
+            19
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            21,
+            25
+          ],
+          "text": "2024"
+        },
+        "grade": {
+          "lines": [
+            25,
+            25
+          ],
+          "columns": [
+            48,
+            53
+          ],
+          "text": "2 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          586,
+          599
+        ],
+        "authors": [
+          669,
+          709
+        ],
+        "publisher": [
+          717,
+          731
+        ],
+        "year": [
+          733,
+          737
+        ],
+        "grade": [
+          634,
+          639
+        ]
+      }
+    },
+    "2-klas-ukrmova-vashulenko-2019-2": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            16,
+            16
+          ],
+          "columns": [
+            0,
+            26
+          ],
+          "text": "Українська мова та читання"
+        },
+        "authors": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            7,
+            23
+          ],
+          "text": "О. В. Вашуленко."
+        },
+        "publisher": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            31,
+            54
+          ],
+          "text": "Видавничий дім «Освіта»"
+        },
+        "year": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2019"
+        },
+        "grade": {
+          "lines": [
+            16,
+            16
+          ],
+          "columns": [
+            41,
+            48
+          ],
+          "text": "2 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          440,
+          466
+        ],
+        "authors": [
+          550,
+          566
+        ],
+        "publisher": [
+          574,
+          597
+        ],
+        "year": [
+          599,
+          603
+        ],
+        "grade": [
+          481,
+          488
+        ]
+      }
+    },
+    "2-klas-ya-doslidzhuiu-svit-morze-2019": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            45,
+            45
+          ],
+          "columns": [
+            0,
+            18
+          ],
+          "text": "«Я досліджую світ»"
+        },
+        "authors": {
+          "lines": [
+            46,
+            46
+          ],
+          "columns": [
+            20,
+            45
+          ],
+          "text": "Н. В. Морзе, О. В. Барна."
+        },
+        "publisher": {
+          "lines": [
+            46,
+            46
+          ],
+          "columns": [
+            53,
+            65
+          ],
+          "text": "УОВЦ «Оріон»"
+        },
+        "year": {
+          "lines": [
+            46,
+            46
+          ],
+          "columns": [
+            67,
+            71
+          ],
+          "text": "2019"
+        },
+        "grade": {
+          "lines": [
+            45,
+            45
+          ],
+          "columns": [
+            33,
+            38
+          ],
+          "text": "2 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          1290,
+          1308
+        ],
+        "authors": [
+          1378,
+          1403
+        ],
+        "publisher": [
+          1411,
+          1423
+        ],
+        "year": [
+          1425,
+          1429
+        ],
+        "grade": [
+          1323,
+          1328
+        ]
+      }
+    },
+    "3-klas-matematyka-lystopad-2020-1": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            0,
+            10
+          ],
+          "text": "Математика"
+        },
+        "authors": {
+          "lines": [
+            18,
+            19
+          ],
+          "columns": [
+            48,
+            4
+          ],
+          "text": "Н. П. Листо-\nпад."
+        },
+        "publisher": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            14,
+            26
+          ],
+          "text": "УОВЦ «Оріон»"
+        },
+        "year": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            28,
+            32
+          ],
+          "text": "2020"
+        },
+        "grade": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            24,
+            29
+          ],
+          "text": "3 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          451,
+          461
+        ],
+        "authors": [
+          548,
+          565
+        ],
+        "publisher": [
+          575,
+          587
+        ],
+        "year": [
+          589,
+          593
+        ],
+        "grade": [
+          475,
+          480
+        ]
+      }
+    },
+    "3-klas-matematyka-lystopad-2020-2": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            0,
+            10
+          ],
+          "text": "Математика"
+        },
+        "authors": {
+          "lines": [
+            18,
+            19
+          ],
+          "columns": [
+            48,
+            4
+          ],
+          "text": "Н. П. Листо-\nпад."
+        },
+        "publisher": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            14,
+            26
+          ],
+          "text": "УОВЦ «Оріон»"
+        },
+        "year": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            28,
+            32
+          ],
+          "text": "2020"
+        },
+        "grade": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            24,
+            29
+          ],
+          "text": "3 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          451,
+          461
+        ],
+        "authors": [
+          548,
+          565
+        ],
+        "publisher": [
+          575,
+          587
+        ],
+        "year": [
+          589,
+          593
+        ],
+        "grade": [
+          475,
+          480
+        ]
+      }
+    },
+    "4-klas-angliiska-mova-hubarieva-2021": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            0,
+            15
+          ],
+          "text": "Англійська мова"
+        },
+        "authors": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            0,
+            33
+          ],
+          "text": "С. С. Губарєва, О. М. Павліченко."
+        },
+        "publisher": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            45,
+            60
+          ],
+          "text": "Вид-во « Ранок»"
+        },
+        "year": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            62,
+            66
+          ],
+          "text": "2021"
+        },
+        "grade": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            30,
+            35
+          ],
+          "text": "4 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          384,
+          399
+        ],
+        "authors": [
+          469,
+          502
+        ],
+        "publisher": [
+          514,
+          529
+        ],
+        "year": [
+          531,
+          535
+        ],
+        "grade": [
+          414,
+          419
+        ]
+      }
+    },
+    "4-klas-informatyka-vorontsova-2021": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            0,
+            15
+          ],
+          "text": "І11 Інформатика"
+        },
+        "authors": {
+          "lines": [
+            11,
+            12
+          ],
+          "columns": [
+            9,
+            31
+          ],
+          "text": "Т. В. Воронцова, В. С. Пономаренко, Л. В. Пономаренко,\nО. Л. Хомич, І. В. Лаврентьєва."
+        },
+        "publisher": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            41,
+            61
+          ],
+          "text": "Видавництво «Алатон»"
+        },
+        "year": {
+          "lines": [
+            13,
+            13
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2021"
+        },
+        "grade": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            32,
+            37
+          ],
+          "text": "4 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          301,
+          316
+        ],
+        "authors": [
+          374,
+          460
+        ],
+        "publisher": [
+          470,
+          490
+        ],
+        "year": [
+          492,
+          496
+        ],
+        "grade": [
+          333,
+          338
+        ]
+      }
+    },
+    "4-klas-mystetstvo-rublia-2021": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            13,
+            13
+          ],
+          "columns": [
+            0,
+            9
+          ],
+          "text": "Мистецтво"
+        },
+        "authors": {
+          "lines": [
+            13,
+            14
+          ],
+          "columns": [
+            79,
+            25
+          ],
+          "text": "Т. Є. Руб­ ля,\nІ. Л. Мед, Т. Л. Щеглова."
+        },
+        "publisher": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            37,
+            51
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            53,
+            57
+          ],
+          "text": "2021"
+        },
+        "grade": {
+          "lines": [
+            13,
+            13
+          ],
+          "columns": [
+            44,
+            49
+          ],
+          "text": "4 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          348,
+          357
+        ],
+        "authors": [
+          427,
+          467
+        ],
+        "publisher": [
+          479,
+          493
+        ],
+        "year": [
+          495,
+          499
+        ],
+        "grade": [
+          392,
+          397
+        ]
+      }
+    },
+    "4-klas-ukrayinska-mova-kravtsova-2021-1": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            0,
+            26
+          ],
+          "text": "Українська мова та читання"
+        },
+        "authors": {
+          "lines": [
+            11,
+            12
+          ],
+          "columns": [
+            29,
+            12
+          ],
+          "text": "Н. Кравцова, О. Придаток,\nВ. Романова."
+        },
+        "publisher": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            27,
+            49
+          ],
+          "text": "Підручники і посібники"
+        },
+        "year": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            51,
+            55
+          ],
+          "text": "2021"
+        },
+        "grade": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            41,
+            46
+          ],
+          "text": "4 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          315,
+          341
+        ],
+        "authors": [
+          404,
+          442
+        ],
+        "publisher": [
+          457,
+          479
+        ],
+        "year": [
+          481,
+          485
+        ],
+        "grade": [
+          356,
+          361
+        ]
+      }
+    },
+    "4-klas-ukrayinska-mova-ponomarova-2021-1": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            29,
+            29
+          ],
+          "columns": [
+            0,
+            26
+          ],
+          "text": "Українська мова та читання"
+        },
+        "authors": {
+          "lines": [
+            30,
+            31
+          ],
+          "columns": [
+            37,
+            13
+          ],
+          "text": "К. І. Пономарьова,\nЛ. А. Гайова."
+        },
+        "publisher": {
+          "lines": [
+            31,
+            31
+          ],
+          "columns": [
+            23,
+            35
+          ],
+          "text": "УОВЦ «Оріон»"
+        },
+        "year": {
+          "lines": [
+            31,
+            31
+          ],
+          "columns": [
+            37,
+            41
+          ],
+          "text": "2021"
+        },
+        "grade": {
+          "lines": [
+            29,
+            29
+          ],
+          "columns": [
+            43,
+            50
+          ],
+          "text": "4 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          947,
+          973
+        ],
+        "authors": [
+          1035,
+          1067
+        ],
+        "publisher": [
+          1077,
+          1089
+        ],
+        "year": [
+          1091,
+          1095
+        ],
+        "grade": [
+          990,
+          997
+        ]
+      }
+    },
+    "4-klas-ukrayinska-mova-savchenko-2021-2": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            22,
+            22
+          ],
+          "columns": [
+            0,
+            26
+          ],
+          "text": "Українська мова та читання"
+        },
+        "authors": {
+          "lines": [
+            23,
+            23
+          ],
+          "columns": [
+            32,
+            64
+          ],
+          "text": "О. Я. Савченко, І. В. Красуцька."
+        },
+        "publisher": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            7,
+            19
+          ],
+          "text": "УОВЦ «Оріон»"
+        },
+        "year": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            21,
+            25
+          ],
+          "text": "2021"
+        },
+        "grade": {
+          "lines": [
+            22,
+            22
+          ],
+          "columns": [
+            43,
+            50
+          ],
+          "text": "4 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          587,
+          613
+        ],
+        "authors": [
+          675,
+          707
+        ],
+        "publisher": [
+          717,
+          729
+        ],
+        "year": [
+          731,
+          735
+        ],
+        "grade": [
+          630,
+          637
+        ]
+      }
+    },
+    "4-klas-ukrayinska-mova-zaharijchuk-2021-1": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            0,
+            26
+          ],
+          "text": "Українська мова та читання"
+        },
+        "authors": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            14,
+            33
+          ],
+          "text": "Мар’яна Захарійчук."
+        },
+        "publisher": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            43,
+            50
+          ],
+          "text": "Грамота"
+        },
+        "year": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2021"
+        },
+        "grade": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            41,
+            46
+          ],
+          "text": "4 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          536,
+          562
+        ],
+        "authors": [
+          659,
+          678
+        ],
+        "publisher": [
+          688,
+          695
+        ],
+        "year": [
+          697,
+          701
+        ],
+        "grade": [
+          577,
+          582
+        ]
+      }
+    },
+    "5-klas-informatyka-morze-2022": {
+      "page_index": 3,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            0,
+            11
+          ],
+          "text": "Інформатика"
+        },
+        "authors": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            19,
+            44
+          ],
+          "text": "Н. В. Морзе, О. В. Барна."
+        },
+        "publisher": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            0,
+            12
+          ],
+          "text": "УОВЦ «Оріон»"
+        },
+        "year": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            14,
+            18
+          ],
+          "text": "2022"
+        },
+        "grade": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            27,
+            32
+          ],
+          "text": "5 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          276,
+          287
+        ],
+        "authors": [
+          347,
+          372
+        ],
+        "publisher": [
+          381,
+          393
+        ],
+        "year": [
+          395,
+          399
+        ],
+        "grade": [
+          303,
+          308
+        ]
+      }
+    },
+    "5-klas-ukrlit-avramenko-2022": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            22,
+            22
+          ],
+          "columns": [
+            0,
+            21
+          ],
+          "text": "Українська література"
+        },
+        "authors": {
+          "lines": [
+            23,
+            23
+          ],
+          "columns": [
+            17,
+            37
+          ],
+          "text": "Олександр Авраменко."
+        },
+        "publisher": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            0,
+            7
+          ],
+          "text": "Грамота"
+        },
+        "year": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            9,
+            13
+          ],
+          "text": "2022"
+        },
+        "grade": {
+          "lines": [
+            22,
+            22
+          ],
+          "columns": [
+            36,
+            41
+          ],
+          "text": "5 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          275,
+          296
+        ],
+        "authors": [
+          349,
+          369
+        ],
+        "publisher": [
+          379,
+          386
+        ],
+        "year": [
+          388,
+          392
+        ],
+        "grade": [
+          311,
+          316
+        ]
+      }
+    },
+    "5-klas-ukrmova-golub-2022": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            0,
+            15
+          ],
+          "text": "Українська мова"
+        },
+        "authors": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            19,
+            48
+          ],
+          "text": "Н. Б. Голуб, О. М. Горошкіна."
+        },
+        "publisher": {
+          "lines": [
+            20,
+            20
+          ],
+          "columns": [
+            0,
+            23
+          ],
+          "text": "Видавничий дім «Освіта»"
+        },
+        "year": {
+          "lines": [
+            20,
+            20
+          ],
+          "columns": [
+            25,
+            29
+          ],
+          "text": "2022"
+        },
+        "grade": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            30,
+            37
+          ],
+          "text": "5 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          536,
+          551
+        ],
+        "authors": [
+          612,
+          641
+        ],
+        "publisher": [
+          649,
+          672
+        ],
+        "year": [
+          674,
+          678
+        ],
+        "grade": [
+          566,
+          573
+        ]
+      }
+    },
+    "5-klas-ukrmova-zabolotnyi-2023": {
+      "page_index": 5,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            0,
+            15
+          ],
+          "text": "Українська мова"
+        },
+        "authors": {
+          "lines": [
+            20,
+            21
+          ],
+          "columns": [
+            16,
+            4
+          ],
+          "text": "Олександр Заболотний, Віктор Заболот-\nний."
+        },
+        "publisher": {
+          "lines": [
+            21,
+            21
+          ],
+          "columns": [
+            14,
+            20
+          ],
+          "text": "Генеза"
+        },
+        "year": {
+          "lines": [
+            21,
+            21
+          ],
+          "columns": [
+            22,
+            26
+          ],
+          "text": "2022"
+        },
+        "grade": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            30,
+            38
+          ],
+          "text": "5-го кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          593,
+          608
+        ],
+        "authors": [
+          659,
+          701
+        ],
+        "publisher": [
+          711,
+          717
+        ],
+        "year": [
+          719,
+          723
+        ],
+        "grade": [
+          623,
+          631
+        ]
+      }
+    },
+    "6-klas-angliiska-mova-pakhomova-2023": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            0,
+            35
+          ],
+          "text": "Англійська мова (2-й рік навчання),"
+        },
+        "authors": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            49,
+            64
+          ],
+          "text": "Т. Г. Пахомова,"
+        },
+        "publisher": {
+          "lines": [
+            28,
+            28
+          ],
+          "columns": [
+            5,
+            23
+          ],
+          "text": "Методика Паблішинг"
+        },
+        "year": {
+          "lines": [
+            28,
+            28
+          ],
+          "columns": [
+            25,
+            29
+          ],
+          "text": "2023"
+        },
+        "grade": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            50,
+            57
+          ],
+          "text": "6 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          1101,
+          1136
+        ],
+        "authors": [
+          1217,
+          1232
+        ],
+        "publisher": [
+          1240,
+          1258
+        ],
+        "year": [
+          1260,
+          1264
+        ],
+        "grade": [
+          1151,
+          1158
+        ]
+      }
+    },
+    "6-klas-heohrafiya-zapotockyi-2023": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            0,
+            16
+          ],
+          "text": "З-3310 Географія"
+        },
+        "authors": {
+          "lines": [
+            16,
+            18
+          ],
+          "columns": [
+            19,
+            46
+          ],
+          "text": "С. П. Запотоцький, М. В. Зінкевич,\nО. М. Романишин, Н. М. Титар, О. В. Горовий, І. М. Мико-\nлів; наук. ред. К. В. Мезенцев, І. С. Круглов."
+        },
+        "publisher": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            0,
+            5
+          ],
+          "text": "Астон"
+        },
+        "year": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            7,
+            11
+          ],
+          "text": "2023"
+        },
+        "grade": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            33,
+            40
+          ],
+          "text": "6 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          640,
+          656
+        ],
+        "authors": [
+          719,
+          857
+        ],
+        "publisher": [
+          872,
+          877
+        ],
+        "year": [
+          879,
+          883
+        ],
+        "grade": [
+          673,
+          680
+        ]
+      }
+    },
+    "6-klas-istoriia-shchupak-2023": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            38,
+            38
+          ],
+          "columns": [
+            0,
+            38
+          ],
+          "text": "Щ96 Історія України. Всесвітня історія"
+        },
+        "authors": {
+          "lines": [
+            39,
+            40
+          ],
+          "columns": [
+            38,
+            47
+          ],
+          "text": "І. Я. Щупак,\nО. В. Бурлака, Н. С. Власова, І. О. Піскарьова."
+        },
+        "publisher": {
+          "lines": [
+            43,
+            43
+          ],
+          "columns": [
+            0,
+            12
+          ],
+          "text": "УОВЦ «Оріон»"
+        },
+        "year": {
+          "lines": [
+            43,
+            43
+          ],
+          "columns": [
+            14,
+            18
+          ],
+          "text": "2023"
+        },
+        "grade": {
+          "lines": [
+            38,
+            38
+          ],
+          "columns": [
+            53,
+            58
+          ],
+          "text": "6 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          1485,
+          1523
+        ],
+        "authors": [
+          1582,
+          1642
+        ],
+        "publisher": [
+          1652,
+          1664
+        ],
+        "year": [
+          1666,
+          1670
+        ],
+        "grade": [
+          1538,
+          1543
+        ]
+      }
+    },
+    "6-klas-istoriya-gisem-2023": {
+      "page_index": 3,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            0,
+            34
+          ],
+          "text": "Історія України. Всесвітня історія"
+        },
+        "authors": {
+          "lines": [
+            16,
+            16
+          ],
+          "columns": [
+            29,
+            54
+          ],
+          "text": "О. В. Гісем, О. О. Гісем."
+        },
+        "publisher": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            9,
+            23
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            25,
+            29
+          ],
+          "text": "2023"
+        },
+        "grade": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            49,
+            54
+          ],
+          "text": "6 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          475,
+          509
+        ],
+        "authors": [
+          559,
+          584
+        ],
+        "publisher": [
+          596,
+          610
+        ],
+        "year": [
+          612,
+          616
+        ],
+        "grade": [
+          524,
+          529
+        ]
+      }
+    },
+    "6-klas-matematyka-tarasenkova-2023-1": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            2,
+            12
+          ],
+          "text": "Математика"
+        },
+        "authors": {
+          "lines": [
+            26,
+            28
+          ],
+          "columns": [
+            48,
+            16
+          ],
+          "text": "Н. А. Тара-\nсенкова, І. М. Богатирьова, О. М. Коломієць, З. О. Сердюк, \nЮ. В. Рудніцька."
+        },
+        "publisher": {
+          "lines": [
+            28,
+            28
+          ],
+          "columns": [
+            26,
+            38
+          ],
+          "text": "УОВЦ «Оріон»"
+        },
+        "year": {
+          "lines": [
+            28,
+            28
+          ],
+          "columns": [
+            40,
+            44
+          ],
+          "text": "2023"
+        },
+        "grade": {
+          "lines": [
+            25,
+            25
+          ],
+          "columns": [
+            14,
+            19
+          ],
+          "text": "6 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          515,
+          525
+        ],
+        "authors": [
+          616,
+          704
+        ],
+        "publisher": [
+          714,
+          726
+        ],
+        "year": [
+          728,
+          732
+        ],
+        "grade": [
+          541,
+          546
+        ]
+      }
+    },
+    "6-klas-tekhnolohiyi-bilenko-2023": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            0,
+            10
+          ],
+          "text": "Технології"
+        },
+        "authors": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            0,
+            34
+          ],
+          "text": "О. В. Біленко, М. Л. Пелагейченко."
+        },
+        "publisher": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            49,
+            54
+          ],
+          "text": "Астон"
+        },
+        "year": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            56,
+            60
+          ],
+          "text": "2023"
+        },
+        "grade": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            27,
+            34
+          ],
+          "text": "6 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          227,
+          237
+        ],
+        "authors": [
+          300,
+          334
+        ],
+        "publisher": [
+          349,
+          354
+        ],
+        "year": [
+          356,
+          360
+        ],
+        "grade": [
+          254,
+          261
+        ]
+      }
+    },
+    "6-klas-ukrlit-avramenko-2023": {
+      "page_index": 3,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            25,
+            25
+          ],
+          "columns": [
+            0,
+            21
+          ],
+          "text": "Українська література"
+        },
+        "authors": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            9,
+            29
+          ],
+          "text": "Олександр Авраменко."
+        },
+        "publisher": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            39,
+            46
+          ],
+          "text": "Грамота"
+        },
+        "year": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            48,
+            52
+          ],
+          "text": "2023"
+        },
+        "grade": {
+          "lines": [
+            25,
+            25
+          ],
+          "columns": [
+            36,
+            41
+          ],
+          "text": "6 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          366,
+          387
+        ],
+        "authors": [
+          441,
+          461
+        ],
+        "publisher": [
+          471,
+          478
+        ],
+        "year": [
+          480,
+          484
+        ],
+        "grade": [
+          402,
+          407
+        ]
+      }
+    },
+    "6-klas-ukrmova-avramenko-2023": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            20,
+            20
+          ],
+          "columns": [
+            0,
+            15
+          ],
+          "text": "Українська мова"
+        },
+        "authors": {
+          "lines": [
+            21,
+            22
+          ],
+          "columns": [
+            17,
+            3
+          ],
+          "text": "Олександр Авраменко, Зара Тищен-\nко."
+        },
+        "publisher": {
+          "lines": [
+            22,
+            22
+          ],
+          "columns": [
+            13,
+            20
+          ],
+          "text": "Грамота"
+        },
+        "year": {
+          "lines": [
+            22,
+            22
+          ],
+          "columns": [
+            22,
+            26
+          ],
+          "text": "2023"
+        },
+        "grade": {
+          "lines": [
+            20,
+            20
+          ],
+          "columns": [
+            30,
+            35
+          ],
+          "text": "6 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          426,
+          441
+        ],
+        "authors": [
+          494,
+          530
+        ],
+        "publisher": [
+          540,
+          547
+        ],
+        "year": [
+          549,
+          553
+        ],
+        "grade": [
+          456,
+          461
+        ]
+      }
+    },
+    "6-klas-ukrmova-litvinova-2023": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            0,
+            15
+          ],
+          "text": "Українська мова"
+        },
+        "authors": {
+          "lines": [
+            16,
+            16
+          ],
+          "columns": [
+            14,
+            30
+          ],
+          "text": "І. М. Літвінова."
+        },
+        "publisher": {
+          "lines": [
+            16,
+            16
+          ],
+          "columns": [
+            42,
+            56
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2023"
+        },
+        "grade": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            30,
+            35
+          ],
+          "text": "6 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          428,
+          443
+        ],
+        "authors": [
+          495,
+          511
+        ],
+        "publisher": [
+          523,
+          537
+        ],
+        "year": [
+          539,
+          543
+        ],
+        "grade": [
+          458,
+          463
+        ]
+      }
+    },
+    "7-klas-algebra-merzliak-2024": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            0,
+            7
+          ],
+          "text": "Алгебра"
+        },
+        "authors": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            2,
+            28
+          ],
+          "text": "А. Г. Мерзляк, М. С. Якір."
+        },
+        "publisher": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            5,
+            13
+          ],
+          "text": "Гімназія"
+        },
+        "year": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            15,
+            19
+          ],
+          "text": "2024"
+        },
+        "grade": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            22,
+            27
+          ],
+          "text": "7 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          397,
+          404
+        ],
+        "authors": [
+          457,
+          483
+        ],
+        "publisher": [
+          491,
+          499
+        ],
+        "year": [
+          501,
+          505
+        ],
+        "grade": [
+          419,
+          424
+        ]
+      }
+    },
+    "7-klas-biolohiya-sobol-2024": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            4,
+            4
+          ],
+          "columns": [
+            0,
+            8
+          ],
+          "text": "Біологія"
+        },
+        "authors": {
+          "lines": [
+            5,
+            5
+          ],
+          "columns": [
+            29,
+            44
+          ],
+          "text": "Валерій Соболь."
+        },
+        "publisher": {
+          "lines": [
+            6,
+            6
+          ],
+          "columns": [
+            24,
+            42
+          ],
+          "text": "Видавництво Абетка"
+        },
+        "year": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2024"
+        },
+        "grade": {
+          "lines": [
+            4,
+            4
+          ],
+          "columns": [
+            25,
+            32
+          ],
+          "text": "7 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          34,
+          42
+        ],
+        "authors": [
+          106,
+          121
+        ],
+        "publisher": [
+          149,
+          167
+        ],
+        "year": [
+          170,
+          174
+        ],
+        "grade": [
+          59,
+          66
+        ]
+      }
+    },
+    "7-klas-heometriya-merzliak-2024": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            0,
+            9
+          ],
+          "text": "Геометрія"
+        },
+        "authors": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            10,
+            36
+          ],
+          "text": "А. Г. Мерзляк, М. С. Якір."
+        },
+        "publisher": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            5,
+            13
+          ],
+          "text": "Гімназія"
+        },
+        "year": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2024"
+        },
+        "grade": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            24,
+            29
+          ],
+          "text": "7 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          399,
+          408
+        ],
+        "authors": [
+          460,
+          486
+        ],
+        "publisher": [
+          494,
+          502
+        ],
+        "year": [
+          504,
+          508
+        ],
+        "grade": [
+          423,
+          428
+        ]
+      }
+    },
+    "7-klas-istoria-ukr-hlibovska-2024": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            41,
+            56
+          ],
+          "text": "Історія України"
+        },
+        "authors": {
+          "lines": [
+            11,
+            12
+          ],
+          "columns": [
+            19,
+            14
+          ],
+          "text": "Г. М. Хлібовська, М. Є. Крижановська,\nО. В. Наумчук."
+        },
+        "publisher": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            29,
+            34
+          ],
+          "text": "Астон"
+        },
+        "year": {
+          "lines": [
+            12,
+            12
+          ],
+          "columns": [
+            36,
+            40
+          ],
+          "text": "2024"
+        },
+        "grade": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            73,
+            80
+          ],
+          "text": "7 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          471,
+          486
+        ],
+        "authors": [
+          549,
+          601
+        ],
+        "publisher": [
+          616,
+          621
+        ],
+        "year": [
+          623,
+          627
+        ],
+        "grade": [
+          503,
+          510
+        ]
+      }
+    },
+    "7-klas-mystetstvo-masol-2024": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            42,
+            42
+          ],
+          "columns": [
+            0,
+            9
+          ],
+          "text": "Мистецтво"
+        },
+        "authors": {
+          "lines": [
+            43,
+            44
+          ],
+          "columns": [
+            36,
+            8
+          ],
+          "text": "Л. М. Масол, О. В. Калі-\nніченко."
+        },
+        "publisher": {
+          "lines": [
+            44,
+            44
+          ],
+          "columns": [
+            16,
+            39
+          ],
+          "text": "Видавничий дім «Освіта»"
+        },
+        "year": {
+          "lines": [
+            44,
+            44
+          ],
+          "columns": [
+            41,
+            45
+          ],
+          "text": "2024"
+        },
+        "grade": {
+          "lines": [
+            42,
+            42
+          ],
+          "columns": [
+            44,
+            51
+          ],
+          "text": "7 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          1464,
+          1473
+        ],
+        "authors": [
+          1556,
+          1589
+        ],
+        "publisher": [
+          1597,
+          1620
+        ],
+        "year": [
+          1622,
+          1626
+        ],
+        "grade": [
+          1508,
+          1515
+        ]
+      }
+    },
+    "7-klas-tekhnolohiyi-bilenko-2024": {
+      "page_index": 3,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            6,
+            6
+          ],
+          "columns": [
+            0,
+            10
+          ],
+          "text": "Технології"
+        },
+        "authors": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            0,
+            34
+          ],
+          "text": "О. В. Біленко, М. Л. Пелагейченко."
+        },
+        "publisher": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            49,
+            54
+          ],
+          "text": "Астон"
+        },
+        "year": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            56,
+            60
+          ],
+          "text": "2023"
+        },
+        "grade": {
+          "lines": [
+            6,
+            6
+          ],
+          "columns": [
+            27,
+            34
+          ],
+          "text": "7 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          172,
+          182
+        ],
+        "authors": [
+          245,
+          279
+        ],
+        "publisher": [
+          294,
+          299
+        ],
+        "year": [
+          301,
+          305
+        ],
+        "grade": [
+          199,
+          206
+        ]
+      }
+    },
+    "7-klas-ukrlit-zabolotnyi-2024": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            0,
+            21
+          ],
+          "text": "Українська література"
+        },
+        "authors": {
+          "lines": [
+            25,
+            26
+          ],
+          "columns": [
+            33,
+            54
+          ],
+          "text": "В. В. Заболотний,\nО. В. Заболотний, О. В. Слоньовська, І. В. Ярмульська."
+        },
+        "publisher": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            7,
+            17
+          ],
+          "text": "Літера ЛТД"
+        },
+        "year": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            19,
+            23
+          ],
+          "text": "2024"
+        },
+        "grade": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            38,
+            45
+          ],
+          "text": "7 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          705,
+          726
+        ],
+        "authors": [
+          791,
+          863
+        ],
+        "publisher": [
+          873,
+          883
+        ],
+        "year": [
+          885,
+          889
+        ],
+        "grade": [
+          743,
+          750
+        ]
+      }
+    },
+    "8-klas-biolohiya-anderson-2025": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            0,
+            8
+          ],
+          "text": "Біологія"
+        },
+        "authors": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            0,
+            62
+          ],
+          "text": "О.А. Андерсон, А.О. Чернінський, М.А. Вихренко, А.О. Андерсон."
+        },
+        "publisher": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            6,
+            12
+          ],
+          "text": "Школяр"
+        },
+        "year": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            14,
+            18
+          ],
+          "text": "2025"
+        },
+        "grade": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            22,
+            27
+          ],
+          "text": "8 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          446,
+          454
+        ],
+        "authors": [
+          506,
+          568
+        ],
+        "publisher": [
+          577,
+          583
+        ],
+        "year": [
+          585,
+          589
+        ],
+        "grade": [
+          468,
+          473
+        ]
+      }
+    },
+    "8-klas-heohrafiya-hilberh-2025": {
+      "page_index": 6,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            28,
+            28
+          ],
+          "columns": [
+            0,
+            9
+          ],
+          "text": "Географія"
+        },
+        "authors": {
+          "lines": [
+            29,
+            29
+          ],
+          "columns": [
+            9,
+            54
+          ],
+          "text": "Тетяна Гільберг, Андрій Довгань, Іван Савчук."
+        },
+        "publisher": {
+          "lines": [
+            30,
+            30
+          ],
+          "columns": [
+            9,
+            15
+          ],
+          "text": "Генеза"
+        },
+        "year": {
+          "lines": [
+            30,
+            30
+          ],
+          "columns": [
+            17,
+            21
+          ],
+          "text": "2025"
+        },
+        "grade": {
+          "lines": [
+            28,
+            28
+          ],
+          "columns": [
+            24,
+            32
+          ],
+          "text": "8-го кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          859,
+          868
+        ],
+        "authors": [
+          919,
+          964
+        ],
+        "publisher": [
+          974,
+          980
+        ],
+        "year": [
+          982,
+          986
+        ],
+        "grade": [
+          883,
+          891
+        ]
+      }
+    },
+    "8-klas-hromadianska-osvita-vasylkiv-2025": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            28,
+            47
+          ],
+          "text": "Громадянська освіта"
+        },
+        "authors": {
+          "lines": [
+            12,
+            13
+          ],
+          "columns": [
+            30,
+            13
+          ],
+          "text": "І. Д. Васильків, В. М. Кравчук,\nІ. З. Танчин."
+        },
+        "publisher": {
+          "lines": [
+            13,
+            13
+          ],
+          "columns": [
+            28,
+            33
+          ],
+          "text": "Астон"
+        },
+        "year": {
+          "lines": [
+            13,
+            13
+          ],
+          "columns": [
+            35,
+            39
+          ],
+          "text": "2025"
+        },
+        "grade": {
+          "lines": [
+            11,
+            11
+          ],
+          "columns": [
+            64,
+            71
+          ],
+          "text": "8 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          497,
+          516
+        ],
+        "authors": [
+          580,
+          625
+        ],
+        "publisher": [
+          640,
+          645
+        ],
+        "year": [
+          647,
+          651
+        ],
+        "grade": [
+          533,
+          540
+        ]
+      }
+    },
+    "8-klas-informatyka-ryvkind-2025": {
+      "page_index": 5,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            0,
+            16
+          ],
+          "text": "І-74 Інформатика"
+        },
+        "authors": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            9,
+            26
+          ],
+          "text": "Й. Ривкінд та ін."
+        },
+        "publisher": {
+          "lines": [
+            20,
+            20
+          ],
+          "columns": [
+            7,
+            13
+          ],
+          "text": "Генеза"
+        },
+        "year": {
+          "lines": [
+            20,
+            20
+          ],
+          "columns": [
+            15,
+            19
+          ],
+          "text": "2025"
+        },
+        "grade": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            31,
+            39
+          ],
+          "text": "8-го кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          678,
+          694
+        ],
+        "authors": [
+          745,
+          762
+        ],
+        "publisher": [
+          772,
+          778
+        ],
+        "year": [
+          780,
+          784
+        ],
+        "grade": [
+          709,
+          717
+        ]
+      }
+    },
+    "8-klas-istoria-vsesvitnia-ladychenko-2025": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            0,
+            17
+          ],
+          "text": "Всесвітня історія"
+        },
+        "authors": {
+          "lines": [
+            20,
+            21
+          ],
+          "columns": [
+            21,
+            14
+          ],
+          "text": "Тетяна Ладиченко, Ілона Лукач,\nОльга Івченко."
+        },
+        "publisher": {
+          "lines": [
+            23,
+            23
+          ],
+          "columns": [
+            7,
+            13
+          ],
+          "text": "Генеза"
+        },
+        "year": {
+          "lines": [
+            23,
+            23
+          ],
+          "columns": [
+            15,
+            19
+          ],
+          "text": "2025"
+        },
+        "grade": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            32,
+            40
+          ],
+          "text": "8-го кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          687,
+          704
+        ],
+        "authors": [
+          755,
+          800
+        ],
+        "publisher": [
+          810,
+          816
+        ],
+        "year": [
+          818,
+          822
+        ],
+        "grade": [
+          719,
+          727
+        ]
+      }
+    },
+    "8-klas-pryrodnychi-nauky-mandrenko-2025": {
+      "page_index": 5,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            16,
+            16
+          ],
+          "columns": [
+            0,
+            16
+          ],
+          "text": "Природничі науки"
+        },
+        "authors": {
+          "lines": [
+            17,
+            18
+          ],
+          "columns": [
+            39,
+            46
+          ],
+          "text": "[Ю. І. Мандренко,\nТ. В. Лісіцкая, Ю. О. Омелянчук, Я. Ю. Шуляк]."
+        },
+        "publisher": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            0,
+            14
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            16,
+            20
+          ],
+          "text": "2025"
+        },
+        "grade": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            4,
+            9
+          ],
+          "text": "8 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          560,
+          576
+        ],
+        "authors": [
+          646,
+          710
+        ],
+        "publisher": [
+          722,
+          736
+        ],
+        "year": [
+          738,
+          742
+        ],
+        "grade": [
+          611,
+          616
+        ]
+      }
+    },
+    "8-klas-tekhnolohiyi-bilenko-2025": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            0,
+            10
+          ],
+          "text": "Технології"
+        },
+        "authors": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            0,
+            34
+          ],
+          "text": "О. В. Біленко, М. Л. Пелагейченко."
+        },
+        "publisher": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            49,
+            54
+          ],
+          "text": "Астон"
+        },
+        "year": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            56,
+            60
+          ],
+          "text": "2025"
+        },
+        "grade": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            26,
+            33
+          ],
+          "text": "8 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          227,
+          237
+        ],
+        "authors": [
+          299,
+          333
+        ],
+        "publisher": [
+          348,
+          353
+        ],
+        "year": [
+          355,
+          359
+        ],
+        "grade": [
+          253,
+          260
+        ]
+      }
+    },
+    "8-klas-ukrlit-avramenko-2025": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            13,
+            34
+          ],
+          "text": "Українська література"
+        },
+        "authors": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            88,
+            108
+          ],
+          "text": "Олександр Авраменко."
+        },
+        "publisher": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            118,
+            125
+          ],
+          "text": "Грамота"
+        },
+        "year": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2025"
+        },
+        "grade": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            49,
+            54
+          ],
+          "text": "8 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          187,
+          208
+        ],
+        "authors": [
+          262,
+          282
+        ],
+        "publisher": [
+          292,
+          299
+        ],
+        "year": [
+          301,
+          305
+        ],
+        "grade": [
+          223,
+          228
+        ]
+      }
+    },
+    "8-klas-ukrlit-zabolotnyi-2025": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            0,
+            21
+          ],
+          "text": "Українська література"
+        },
+        "authors": {
+          "lines": [
+            25,
+            26
+          ],
+          "columns": [
+            33,
+            54
+          ],
+          "text": "В. В. Заболотний,\nО. В. Заболотний, О. В. Слоньовська, І. В. Ярмульська."
+        },
+        "publisher": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            7,
+            17
+          ],
+          "text": "Літера ЛТД"
+        },
+        "year": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            19,
+            23
+          ],
+          "text": "2025"
+        },
+        "grade": {
+          "lines": [
+            24,
+            24
+          ],
+          "columns": [
+            38,
+            45
+          ],
+          "text": "8 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          735,
+          756
+        ],
+        "authors": [
+          821,
+          893
+        ],
+        "publisher": [
+          903,
+          913
+        ],
+        "year": [
+          915,
+          919
+        ],
+        "grade": [
+          773,
+          780
+        ]
+      }
+    },
+    "9-klas-algebra-merzliak-2017": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            25,
+            25
+          ],
+          "columns": [
+            0,
+            7
+          ],
+          "text": "Алгебра"
+        },
+        "authors": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            2,
+            46
+          ],
+          "text": "А. Г. Мерзляк, В. Б. Полонський, М. С. Якір."
+        },
+        "publisher": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            5,
+            13
+          ],
+          "text": "Гімназія"
+        },
+        "year": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            15,
+            19
+          ],
+          "text": "2017"
+        },
+        "grade": {
+          "lines": [
+            25,
+            25
+          ],
+          "columns": [
+            22,
+            27
+          ],
+          "text": "9 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          827,
+          834
+        ],
+        "authors": [
+          887,
+          931
+        ],
+        "publisher": [
+          939,
+          947
+        ],
+        "year": [
+          949,
+          953
+        ],
+        "grade": [
+          849,
+          854
+        ]
+      }
+    },
+    "9-klas-geografiia-boiko-2026": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            0,
+            9
+          ],
+          "text": "Географія"
+        },
+        "authors": {
+          "lines": [
+            15,
+            17
+          ],
+          "columns": [
+            33,
+            10
+          ],
+          "text": "В. Бойко,\nМ. Барановський, Ю. Коваль, Т. Гринюк,\nЛ. Атаман."
+        },
+        "publisher": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            20,
+            30
+          ],
+          "text": "Літера ЛТД"
+        },
+        "year": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            32,
+            36
+          ],
+          "text": "2026"
+        },
+        "grade": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            26,
+            33
+          ],
+          "text": "9 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          483,
+          492
+        ],
+        "authors": [
+          557,
+          616
+        ],
+        "publisher": [
+          626,
+          636
+        ],
+        "year": [
+          638,
+          642
+        ],
+        "grade": [
+          509,
+          516
+        ]
+      }
+    },
+    "9-klas-heometriya-merzliak-2017": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            0,
+            9
+          ],
+          "text": "Геометрія"
+        },
+        "authors": {
+          "lines": [
+            28,
+            28
+          ],
+          "columns": [
+            2,
+            46
+          ],
+          "text": "А. Г. Мерзляк, В. Б. Полонський, М. С. Якір."
+        },
+        "publisher": {
+          "lines": [
+            29,
+            29
+          ],
+          "columns": [
+            5,
+            13
+          ],
+          "text": "Гімназія"
+        },
+        "year": {
+          "lines": [
+            29,
+            29
+          ],
+          "columns": [
+            15,
+            19
+          ],
+          "text": "2017"
+        },
+        "grade": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            24,
+            29
+          ],
+          "text": "9 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          956,
+          965
+        ],
+        "authors": [
+          1018,
+          1062
+        ],
+        "publisher": [
+          1070,
+          1078
+        ],
+        "year": [
+          1080,
+          1084
+        ],
+        "grade": [
+          980,
+          985
+        ]
+      }
+    },
+    "9-klas-khimiya-popel-2017": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            0,
+            5
+          ],
+          "text": "Хімія"
+        },
+        "authors": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            0,
+            27
+          ],
+          "text": "П. П. Попель, Л. С. Крикля."
+        },
+        "publisher": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            37,
+            50
+          ],
+          "text": "ВЦ «Академія»"
+        },
+        "year": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2017"
+        },
+        "grade": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            20,
+            25
+          ],
+          "text": "9 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          208,
+          213
+        ],
+        "authors": [
+          263,
+          290
+        ],
+        "publisher": [
+          300,
+          313
+        ],
+        "year": [
+          315,
+          319
+        ],
+        "grade": [
+          228,
+          233
+        ]
+      }
+    },
+    "9-klas-mystetstvo-masol-2017": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            20,
+            20
+          ],
+          "columns": [
+            0,
+            13
+          ],
+          "text": "М31 Мистецтво"
+        },
+        "authors": {
+          "lines": [
+            21,
+            21
+          ],
+          "columns": [
+            0,
+            12
+          ],
+          "text": "Л. М. Масол."
+        },
+        "publisher": {
+          "lines": [
+            21,
+            21
+          ],
+          "columns": [
+            19,
+            42
+          ],
+          "text": "Видавничий дім «Освіта»"
+        },
+        "year": {
+          "lines": [
+            21,
+            21
+          ],
+          "columns": [
+            44,
+            48
+          ],
+          "text": "2017"
+        },
+        "grade": {
+          "lines": [
+            20,
+            20
+          ],
+          "columns": [
+            28,
+            33
+          ],
+          "text": "9 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          937,
+          950
+        ],
+        "authors": [
+          1000,
+          1012
+        ],
+        "publisher": [
+          1019,
+          1042
+        ],
+        "year": [
+          1044,
+          1048
+        ],
+        "grade": [
+          965,
+          970
+        ]
+      }
+    },
+    "9-klas-pravoznavstvo-berendieiev-2026": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            13,
+            13
+          ],
+          "columns": [
+            0,
+            17
+          ],
+          "text": "Б48 Правознавство"
+        },
+        "authors": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            9,
+            42
+          ],
+          "text": "С. О. Берендєєв, В. С. Сергієнко."
+        },
+        "publisher": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            0,
+            14
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            15,
+            15
+          ],
+          "columns": [
+            16,
+            20
+          ],
+          "text": "2026"
+        },
+        "grade": {
+          "lines": [
+            13,
+            13
+          ],
+          "columns": [
+            32,
+            37
+          ],
+          "text": "9 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          515,
+          532
+        ],
+        "authors": [
+          582,
+          615
+        ],
+        "publisher": [
+          627,
+          641
+        ],
+        "year": [
+          643,
+          647
+        ],
+        "grade": [
+          547,
+          552
+        ]
+      }
+    },
+    "9-klas-ukrajinska-literatura-avramenko-2017": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            0,
+            21
+          ],
+          "text": "Українська література"
+        },
+        "authors": {
+          "lines": [
+            28,
+            28
+          ],
+          "columns": [
+            8,
+            28
+          ],
+          "text": "Олександр Авраменко."
+        },
+        "publisher": {
+          "lines": [
+            28,
+            28
+          ],
+          "columns": [
+            36,
+            43
+          ],
+          "text": "Грамота"
+        },
+        "year": {
+          "lines": [
+            28,
+            28
+          ],
+          "columns": [
+            45,
+            49
+          ],
+          "text": "2017"
+        },
+        "grade": {
+          "lines": [
+            27,
+            27
+          ],
+          "columns": [
+            36,
+            41
+          ],
+          "text": "9 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          888,
+          909
+        ],
+        "authors": [
+          959,
+          979
+        ],
+        "publisher": [
+          987,
+          994
+        ],
+        "year": [
+          996,
+          1000
+        ],
+        "grade": [
+          924,
+          929
+        ]
+      }
+    },
+    "9-klas-ukrajinska-mova-avramenko-2017": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            16,
+            16
+          ],
+          "columns": [
+            0,
+            15
+          ],
+          "text": "Українська мова"
+        },
+        "authors": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            8,
+            28
+          ],
+          "text": "Олександр Авраменко."
+        },
+        "publisher": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            36,
+            43
+          ],
+          "text": "Грамота"
+        },
+        "year": {
+          "lines": [
+            17,
+            17
+          ],
+          "columns": [
+            45,
+            49
+          ],
+          "text": "2017"
+        },
+        "grade": {
+          "lines": [
+            16,
+            16
+          ],
+          "columns": [
+            30,
+            35
+          ],
+          "text": "9 кл."
+        }
+      },
+      "field_offsets": {
+        "title": [
+          775,
+          790
+        ],
+        "authors": [
+          840,
+          860
+        ],
+        "publisher": [
+          868,
+          875
+        ],
+        "year": [
+          877,
+          881
+        ],
+        "grade": [
+          805,
+          810
+        ]
+      }
+    },
+    "9-klas-ukrlit-zabolotnyi-2026": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            23,
+            23
+          ],
+          "columns": [
+            0,
+            21
+          ],
+          "text": "Українська література"
+        },
+        "authors": {
+          "lines": [
+            24,
+            25
+          ],
+          "columns": [
+            39,
+            54
+          ],
+          "text": "В. В. Заболотний,\nО. В. Заболотний, О. В. Слоньовська, І. В. Ярмульська."
+        },
+        "publisher": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            7,
+            17
+          ],
+          "text": "Літера ЛТД"
+        },
+        "year": {
+          "lines": [
+            26,
+            26
+          ],
+          "columns": [
+            19,
+            23
+          ],
+          "text": "2026"
+        },
+        "grade": {
+          "lines": [
+            23,
+            23
+          ],
+          "columns": [
+            38,
+            45
+          ],
+          "text": "9 класу"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          680,
+          701
+        ],
+        "authors": [
+          765,
+          837
+        ],
+        "publisher": [
+          847,
+          857
+        ],
+        "year": [
+          859,
+          863
+        ],
+        "grade": [
+          718,
+          725
+        ]
+      }
+    },
+    "10-klas-ukrmova-karaman-2018": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            0,
+            39
+          ],
+          "text": "У45 Українська мова (профільний рівень)"
+        },
+        "authors": {
+          "lines": [
+            19,
+            19
+          ],
+          "columns": [
+            9,
+            70
+          ],
+          "text": "С. О. Караман, О. М. Горош кіна, О. В. Караман, Л. О. Попова."
+        },
+        "grade": {
+          "lines": [
+            18,
+            18
+          ],
+          "columns": [
+            54,
+            60
+          ],
+          "text": "10 кл."
+        },
+        "publisher": {
+          "lines": [
+            19,
+            20
+          ],
+          "columns": [
+            82,
+            7
+          ],
+          "text": "Вид-во\n«Ранок»"
+        },
+        "year": {
+          "lines": [
+            20,
+            20
+          ],
+          "columns": [
+            9,
+            13
+          ],
+          "text": "2018"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          959,
+          998
+        ],
+        "authors": [
+          1049,
+          1110
+        ],
+        "grade": [
+          1013,
+          1019
+        ],
+        "publisher": [
+          1122,
+          1136
+        ],
+        "year": [
+          1138,
+          1142
+        ]
+      }
+    },
+    "10-klas-hromadianska-gisem-2018": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            0,
+            57
+          ],
+          "text": "Громадянська освіта (інтегрований курс, рівень стандарту)"
+        },
+        "authors": {
+          "lines": [
+            8,
+            9
+          ],
+          "columns": [
+            45,
+            6
+          ],
+          "text": "О. О. Гісем, О. О. Мар-\nтинюк."
+        },
+        "grade": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            9,
+            15
+          ],
+          "text": "10 кл."
+        },
+        "publisher": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            18,
+            32
+          ],
+          "text": "Вид-во «Ранок»"
+        },
+        "year": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            34,
+            38
+          ],
+          "text": "2018"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          214,
+          271
+        ],
+        "authors": [
+          324,
+          354
+        ],
+        "grade": [
+          288,
+          294
+        ],
+        "publisher": [
+          366,
+          380
+        ],
+        "year": [
+          382,
+          386
+        ]
+      }
+    },
+    "11-klas-ekonomika-homiak-2019": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            0,
+            29
+          ],
+          "text": "Економіка (профільний рівень)"
+        },
+        "authors": {
+          "lines": [
+            6,
+            6
+          ],
+          "columns": [
+            4,
+            66
+          ],
+          "text": "Криховець-Хом’як Л. Я., Длугопольський О. В., Вірковська А. А."
+        },
+        "grade": {
+          "lines": [
+            7,
+            7
+          ],
+          "columns": [
+            46,
+            54
+          ],
+          "text": "11 класу"
+        },
+        "publisher": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            32,
+            37
+          ],
+          "text": "Астон"
+        },
+        "year": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            39,
+            43
+          ],
+          "text": "2019"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          258,
+          287
+        ],
+        "authors": [
+          195,
+          257
+        ],
+        "grade": [
+          304,
+          312
+        ],
+        "publisher": [
+          364,
+          369
+        ],
+        "year": [
+          371,
+          375
+        ]
+      }
+    },
+    "7-klas-zdorovia-guschyna-2024": {
+      "page_index": 1,
+      "identity_source": "title_page",
+      "fields": {
+        "title": {
+          "lines": [
+            3,
+            4
+          ],
+          "columns": [
+            0,
+            19
+          ],
+          "text": "ЗДОРОв’я,\nБезпека та ДОБРОБУТ"
+        },
+        "authors": {
+          "lines": [
+            1,
+            1
+          ],
+          "columns": [
+            0,
+            31
+          ],
+          "text": "Наталія Гущина, Ірина Василашко"
+        },
+        "grade": {
+          "lines": [
+            5,
+            5
+          ],
+          "columns": [
+            34,
+            41
+          ],
+          "text": "7 класу"
+        },
+        "publisher": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            0,
+            23
+          ],
+          "text": "Видавничий дім «Освіта»"
+        },
+        "year": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2024"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          61,
+          90
+        ],
+        "authors": [
+          0,
+          31
+        ],
+        "grade": [
+          125,
+          132
+        ],
+        "publisher": [
+          225,
+          248
+        ],
+        "year": [
+          249,
+          253
+        ]
+      }
+    },
+    "11-klas-istoriya-ukr-gisem-2024": {
+      "page_index": 3,
+      "identity_source": "title_page",
+      "fields": {
+        "title": {
+          "lines": [
+            3,
+            4
+          ],
+          "columns": [
+            0,
+            17
+          ],
+          "text": "Історія України\nПрофільний рівень"
+        },
+        "authors": {
+          "lines": [
+            1,
+            2
+          ],
+          "columns": [
+            0,
+            27
+          ],
+          "text": "Олександр Гісем, Олександр Мартинюк,\nОльга Сирцова, Акім Галімов"
+        },
+        "grade": {
+          "lines": [
+            5,
+            5
+          ],
+          "columns": [
+            14,
+            22
+          ],
+          "text": "11 класу"
+        },
+        "publisher": {
+          "lines": [
+            13,
+            13
+          ],
+          "columns": [
+            0,
+            19
+          ],
+          "text": "Видавництво «Ранок»"
+        },
+        "year": {
+          "lines": [
+            14,
+            14
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2024"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          65,
+          98
+        ],
+        "authors": [
+          0,
+          64
+        ],
+        "grade": [
+          113,
+          121
+        ],
+        "publisher": [
+          289,
+          308
+        ],
+        "year": [
+          309,
+          313
+        ]
+      }
+    },
+    "uni-ukrlit-dvulychanska-2017": {
+      "page_index": 2,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            5,
+            5
+          ],
+          "columns": [
+            19,
+            68
+          ],
+          "text": "Історія української літератури: інтегрований курс"
+        },
+        "authors": {
+          "lines": [
+            5,
+            5
+          ],
+          "columns": [
+            0,
+            18
+          ],
+          "text": "Двуличанська О. А."
+        },
+        "grade": {
+          "lines": [
+            28,
+            28
+          ],
+          "columns": [
+            24,
+            33
+          ],
+          "text": "студентів"
+        },
+        "publisher": {
+          "lines": [
+            8,
+            9
+          ],
+          "columns": [
+            65,
+            10
+          ],
+          "text": "Вид-во \n„Богдан-М”"
+        },
+        "year": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            12,
+            16
+          ],
+          "text": "2017"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          87,
+          136
+        ],
+        "authors": [
+          68,
+          86
+        ],
+        "grade": [
+          1110,
+          1119
+        ],
+        "publisher": [
+          353,
+          371
+        ],
+        "year": [
+          373,
+          377
+        ]
+      }
+    }
+  }
+}
