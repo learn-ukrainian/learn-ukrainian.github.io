@@ -33,6 +33,7 @@ state_router._status_from_weekly_used                  A    owner ``pace_deficit
 state_router._attach_credit_states                     A    owner ``lane_credit_state``
 state_router._recommend_agent                          R    F2 stale label, F4 health, #9040 owner hot
 state_router.compute_routing_budget (health fill-in)   R    A1 typed scan; A6 freshness labels
+state_router.compute_routing_budget (reserve override) R    owner-verified capacity only (round 6)
 state_router._api_lane_status_from_account             A    F8 duplicate, agrees (prepaid)
 lane_health.compute_lane_health                        R    A1 ``scan_lane_health``
 subscription_usage.pace_is_deficit                     R    F3 one alias reader ``pace_expected_pct``
@@ -73,7 +74,7 @@ import pytest
 from scripts import delegate
 from scripts.api import state_router
 from scripts.fleet import capacity_pick, credit_lane, idle_settle
-from scripts.fleet.reset_reserve import unavailable_reserve
+from scripts.fleet.reset_reserve import RESERVE_RELATIVE_PATH, SCHEMA_VERSION, unavailable_reserve
 from scripts.orchestration import curriculum_coordinator as coordinator
 from scripts.review import reviewer_scheduler
 from scripts.review.model_catalog import retired_model_refusal
@@ -184,6 +185,18 @@ NEAR_CAP_CREDIT = {
 CREDIT_ONLY_SEAT = {**NEAR_CAP_CREDIT, "claude": {**CLAUDE, "weekly_used_pct": 95.0, "weekly_remaining_pct": 5.0}}
 # #9040 controls: Claude near cap, so the recommendation picks Codex exactly when the owner clears its hot label.
 CLAUDE_NEAR_CAP = {**CLAUDE, "weekly_used_pct": 95.0, "weekly_remaining_pct": 5.0}
+# Free full resets (no credit balance). The ``_deficit`` payload runs out about 2026-10-07T12:00Z:
+# never-expiring resets outlast that and cover the deficit; one expiring a day earlier does not.
+RESETS_OUTLAST_RUNOUT = {"available_count": 2, "expires_at": [None, None], "fetched_at": FETCHED}
+RESET_BEFORE_RUNOUT = {"available_count": 1, "expires_at": ["2026-10-06T12:00:00Z"], "fetched_at": FETCHED}
+# An operator-confirmed reset reserve on file (``reset_reserve.RESERVE_RELATIVE_PATH``).
+OPERATOR_RESERVE = {
+    "schema_version": SCHEMA_VERSION,
+    "provider": "codex",
+    "remaining_resets": 2,
+    "confirmed_at": "2026-10-05T11:00:00Z",
+    "expires_at": "2026-10-12T00:00:00Z",
+}
 
 
 @dataclass(frozen=True)
@@ -191,7 +204,7 @@ class Case:
     """One producer snapshot from external seams; ``tasks`` is ``idle`` (scan ran, nothing recent) or ``missing``.
 
     ``removed`` names a freshness input dropped from the published snapshot after ``mutate``
-    (see :data:`REMOVED_INPUTS`).
+    (see :data:`REMOVED_INPUTS`). ``reserve`` puts :data:`OPERATOR_RESERVE` on file.
     """
 
     name: str
@@ -200,6 +213,7 @@ class Case:
     runtime_blocked: frozenset[str] = frozenset()
     mutate: str | None = None
     removed: str | None = None
+    reserve: bool = False
 
 
 CASES: tuple[Case, ...] = (
@@ -282,6 +296,25 @@ CASES: tuple[Case, ...] = (
             removed=removed,
         )
         for removed in ("probe_age", "probe_freshness", "snapshot_staleness")
+    ),
+    # Held-out round-6 controls (CI regression on 3517f733f0): a pace deficit covered by free full
+    # resets with an operator reserve on file, with established and with unknown lane health, and the
+    # same reserve over resets that expire before run-out (the owner leaves that deficit uncovered).
+    Case(
+        "reset_covered_deficit",
+        {"codex": _deficit(credit_balance=0.0, reset_credits=RESETS_OUTLAST_RUNOUT), "claude": CLAUDE_NEAR_CAP},
+        reserve=True,
+    ),
+    Case(
+        "reset_covered_deficit_health_unknown",
+        {"codex": _deficit(credit_balance=0.0, reset_credits=RESETS_OUTLAST_RUNOUT), "claude": CLAUDE_NEAR_CAP},
+        tasks="missing",
+        reserve=True,
+    ),
+    Case(
+        "reset_before_runout",
+        {"codex": _deficit(credit_balance=0.0, reset_credits=RESET_BEFORE_RUNOUT), "claude": CLAUDE_NEAR_CAP},
+        reserve=True,
     ),
 )
 
@@ -368,6 +401,10 @@ def produce(case: Case, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict
     monkeypatch.setattr(
         state_router, "summarize_lane_runtime", lambda lane, **_k: _runtime(lane, lane in case.runtime_blocked)
     )
+    if case.reserve:
+        reserve_path = tmp_path / RESERVE_RELATIVE_PATH
+        reserve_path.parent.mkdir(parents=True)
+        reserve_path.write_text(json.dumps(OPERATOR_RESERVE), encoding="utf-8")
     budget = state_router.compute_routing_budget(
         NOW,
         budget_config_path=budget_path,
@@ -722,6 +759,9 @@ EXPECTED_CODEX = {
         credit_lane.HEALTHY,
         credit_lane.UNKNOWN,
     ),
+    "reset_covered_deficit": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
+    "reset_covered_deficit_health_unknown": (credit_lane.CAPACITY_VERIFIED, credit_lane.UNKNOWN, credit_lane.FRESH),
+    "reset_before_runout": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
 }
 
 
@@ -932,3 +972,59 @@ def test_weekly_pace_hot_label_without_verified_freshness_stays_hot_for_every_co
     if case.removed == "snapshot_staleness":
         # Discrimination: coercing the missing staleness to fresh would clear the label and pick codex.
         assert recommend(budget, is_stale=False)["primary_agent_for_code"] == "codex"
+
+
+RESET_CONTROLS = [pytest.param(case, id=case.name) for case in CASES if case.reserve]
+
+
+@pytest.mark.parametrize("snapshot", RESET_CONTROLS, indirect=True)
+def test_reset_covered_deficit_is_decided_by_the_owner_for_every_consumer(snapshot, monkeypatch):
+    """A pace deficit covered by free full resets (#9615) is cool for every consumer exactly when the owner
+    covers it, whatever the lane health; an operator reserve on file never outvotes the owner.
+
+    Claude is near cap, so the recommendation picks Codex exactly when the owner verifies its capacity:
+    the published one (which applies the operator reserve) and the recomputed one alike.
+    """
+    case, budget = snapshot
+    assert budget["diagnostics"]["stale"] is False
+    record = budget["agents"]["codex"]
+    facts = owner(budget, model=ROUTE_MODEL)
+    assert facts.raw_deficit is True and facts.observation_freshness == credit_lane.FRESH
+    assert not facts.credit_relief and "credits" not in facts.covered_by
+    covered = case.name != "reset_before_runout"
+    if covered:
+        assert facts.covered_by == ("free full reset",) and facts.uncovered is False
+        assert facts.status == record["status"] == "cool"
+        assert record["pace_deficit"]["covered_by"] == ["free full reset"]
+        assert facts.capacity == credit_lane.CAPACITY_VERIFIED, facts.capacity_reason
+    else:
+        assert facts.covered_by == () and facts.uncovered is True
+        assert facts.capacity == credit_lane.CAPACITY_AVOID, facts.capacity_reason
+    # The operator reserve is valid on file in every control; only the owner's verdict differs.
+    assert budget["reset_reserve"]["available"] is True
+
+    rows = _rows(budget)
+    assert rows["codex"]["avoid"] is not covered
+    assert ("codex" in capacity_pick.cooler_lanes(list(rows.values()))) is covered
+
+    result = evaluate_candidate(
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
+    )
+    assert (result.status != "excluded") is covered, result.reason
+
+    config = coordinator.load_config()["health"]
+    _passed, assessment = coordinator._health_assessment(budget, config, now=NOW)
+    group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
+    [lane] = group["lanes"]
+    assert lane["status"] == facts.status
+    # Legitimate wave restriction: only established health is counted.
+    assert (group["available"] == 1) is (
+        facts.health == credit_lane.HEALTHY and facts.status in config["acceptable_statuses"]
+    )
+
+    assert (recommend(budget)["primary_agent_for_code"] == "codex") is covered
+    assert (budget["recommendation"]["primary_agent_for_code"] == "codex") is covered
+    reserve_applied = any("Codex reset reserve active" in w for w in budget["recommendation"]["warnings"])
+    # The reserve is applied only over owner-verified capacity on an established-healthy lane.
+    assert reserve_applied is (covered and facts.health == credit_lane.HEALTHY)
+    assert _guard(budget, monkeypatch, ROUTE_MODEL) == ("codex" if covered else "claude")

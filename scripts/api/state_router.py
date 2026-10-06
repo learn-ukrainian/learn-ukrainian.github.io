@@ -1949,8 +1949,21 @@ def _compute_dispatch_routing_budget(
     reset_reserve = load_reset_reserve(
         project_root or Path(__file__).resolve().parents[2], now=current_time, codex_info=codex_info
     )
-    reserve_relaxes_codex = codex_is_threatened(codex_info) and codex_reset_reserve_eligible(
-        reset_reserve, codex_info, now=current_time, snapshot_stale=is_stale
+    # The reserve ranks Codex first only over capacity the owner verifies (#9740): a reserve whose
+    # resets the owner does not count as covering the deficit (e.g. they expire before run-out)
+    # never outvotes the owner's AVOID.
+    reserve_relaxes_codex = (
+        codex_is_threatened(codex_info)
+        and codex_reset_reserve_eligible(reset_reserve, codex_info, now=current_time, snapshot_stale=is_stale)
+        and credit_lane.routing_facts(
+            "codex",
+            codex_info,
+            model=None,
+            snapshot_metadata={"stale": is_stale},
+            now=current_time,
+            usage_dir=usage_dir,
+        ).capacity
+        == credit_lane.CAPACITY_VERIFIED
     )
     if reserve_relaxes_codex:
         # Apply the reserve only to this recommendation calculation. The
