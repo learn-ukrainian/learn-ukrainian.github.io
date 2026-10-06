@@ -518,44 +518,6 @@ def test_an_auto_finalize_policy_refusal_is_typed_and_kept_privately(tmp_path, m
     assert stat.S_IMODE(delegate._diagnostic_path(task_id).stat().st_mode) == 0o600
 
 
-@pytest.mark.parametrize("refusal", ["claim", "preservation", "dirty"])
-def test_rescue_publish_cleanup_retains_worktree_when_the_guard_refuses(kimi_rescue, monkeypatch, refusal):
-    from scripts.fleet import ignored_task_output
-
-    worktree, _origin, _state_path, _write = kimi_rescue
-    repo = delegate._rescue_repo(worktree)
-    head, _branch = delegate._rescue_head(repo)
-    with pytest.raises(delegate._RescueFailure, match=r"^rescue_publish_worktree_failed$") as error:
-        with delegate._rescue_publish_worktree(repo, head) as publish:
-            delegate._rescue_checkout(publish, head)
-            if refusal == "claim":
-                delegate._write_state_atomic(
-                    delegate._state_path("attached-worker"),
-                    {"task_id": "attached-worker", "status": "running", "worktree_path": str(publish)},
-                )
-            elif refusal == "preservation":
-                monkeypatch.setattr(
-                    ignored_task_output,
-                    "preserve_worktree_artifacts",
-                    lambda *_a, **_k: (False, "artifact preservation failed: synthetic refusal", None),
-                )
-            else:
-                (publish / "untracked.txt").write_text("preserve me\n", encoding="utf-8")
-
-    assert publish.is_dir()
-    assert (publish / ".git").is_file()
-    assert str(publish) in repo.git("worktree", "list", "--porcelain").stdout
-    removal = json.loads(error.value.cause.diagnostic.partition(": ")[2])
-    assert removal["action"] in {"skipped", "error"}
-    assert removal["path"] == str(publish)
-    if refusal == "claim":
-        assert "attached-worker" in removal["reason"]
-    elif refusal == "preservation":
-        assert "synthetic refusal" in removal["reason"]
-    else:
-        assert (publish / "untracked.txt").read_text() == "preserve me\n"
-
-
 def _run_owned_worker(task_id: str, worktree: Path) -> dict:
     with patch("agent_runtime.runner.invoke", return_value=_bg_mock_result("")):
         delegate._run_worker(

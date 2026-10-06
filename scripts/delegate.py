@@ -7457,6 +7457,14 @@ def _clean_rescue_junk(repo: _RescueRepo, context: SafeGitContext, head: str, ch
             path.unlink()
         else:
             return False
+    # The source index may still stage classified residue after its files
+    # are restored/deleted. Reset only those paths through the fresh context.
+    staged = _rescue_git(
+        context, "--literal-pathspecs", "reset", head, "--", *changed,
+        work_tree=repo.worktree, index=repo.admin_dir / "index",
+    )
+    if staged.returncode:
+        return False
     return context.capture(repo.worktree, head, worker_index=repo.admin_dir / "index", exclude_file=repo.git_dir / "info/exclude") == context.checked("rev-parse", f"{head}^{{tree}}")
 
 

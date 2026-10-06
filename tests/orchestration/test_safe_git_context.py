@@ -96,6 +96,34 @@ def test_only_one_driver_written_config_and_no_inherited_environment(source, tmp
     assert not marker.exists()
 
 
+@pytest.mark.parametrize("failed", [False, True])
+def test_scratch_cleanup_does_not_follow_links_or_replace_the_failure(source, tmp_path, failed):
+    outside = tmp_path / "retained"
+    outside.mkdir()
+    sentinel = outside / "artifact"
+    sentinel.write_bytes(b"preserve me\x00\xff")
+    failure = SnapshotRefusal("rescue_input_changed")
+
+    def run():
+        with context(source, tmp_path) as safe:
+            roots.append(safe.root)
+            (safe.root / "linked-directory").symlink_to(outside, target_is_directory=True)
+            (safe.git_dir / "linked-file").symlink_to(sentinel)
+            if failed:
+                raise failure
+
+    roots = []
+    if failed:
+        with pytest.raises(SnapshotRefusal) as error:
+            run()
+        assert error.value is failure
+        assert error.value.code == "rescue_input_changed"
+    else:
+        run()
+    assert len(roots) == 1 and not roots[0].exists()
+    assert outside.is_dir() and sentinel.read_bytes() == b"preserve me\x00\xff"
+
+
 @pytest.mark.parametrize("dirty", [False, True])
 def test_full_flow_canary_and_exact_checked_remote_commit(source, tmp_path, monkeypatch, dirty):
     repo, remote, base = source

@@ -12527,6 +12527,7 @@ def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
 
 def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True):
     from scripts.orchestration import reap_worktrees
+    from scripts.orchestration.safe_git_context import SafeGitContext
 
     primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="rescue-test")
     origin = tmp_path / "origin.git"
@@ -12536,6 +12537,13 @@ def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True):
     )
     subprocess.run(
         ["git", "push", "origin", "HEAD:refs/heads/main"], cwd=primary, check=True, capture_output=True, timeout=30
+    )
+    monkeypatch.setattr(
+        delegate,
+        "_rescue_execution_context",
+        lambda repo: SafeGitContext(
+            objects=repo.git_dir / "objects", temp_root=tmp_path, origin=str(origin), local_remote=True
+        ),
     )
     if dirty:
         (worktree / "artifact.txt").write_text("work to preserve\n", encoding="utf-8")
@@ -12626,7 +12634,14 @@ def test_rescue_admitted_interrupted_work_preserves_bytes(tmp_path, monkeypatch,
 
 def test_rescue_unknown_ahead_count_is_reported(tmp_path, monkeypatch, tmp_tasks_dir):
     _primary, _worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
-    monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_args, **_kwargs: None)
+    original = delegate._rescue_git
+
+    def fail_count(context, *args, **kwargs):
+        if args[0] == "rev-list":
+            return subprocess.CompletedProcess(["git", *args], 1, "", "count unavailable")
+        return original(context, *args, **kwargs)
+
+    monkeypatch.setattr(delegate, "_rescue_git", fail_count)
 
     result = delegate._rescue_task(state_path, apply=False)
 
@@ -12844,13 +12859,15 @@ def test_rescue_large_file_and_live_task_are_preserved(tmp_path, monkeypatch, tm
     assert delegate._rescue_task(state_path, apply=True)["reason"] == "task is not terminal non-success"
 
 
-def test_rescue_cleans_junk_only_without_publishing(tmp_path, monkeypatch, tmp_tasks_dir):
+@pytest.mark.parametrize("staged", [False, True])
+def test_rescue_cleans_junk_only_without_publishing(tmp_path, monkeypatch, tmp_tasks_dir, staged):
     _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
     (worktree / "artifact.txt").unlink()
     junk = worktree / "__pycache__" / "scratch.pyc"
     junk.parent.mkdir()
     junk.write_bytes(b"scratch")
-    subprocess.run(["git", "add", "-f", str(junk)], cwd=worktree, check=True, capture_output=True, timeout=30)
+    if staged:
+        subprocess.run(["git", "add", "-f", str(junk)], cwd=worktree, check=True, capture_output=True, timeout=30)
 
     result = delegate._rescue_task(state_path, apply=True)
     assert result["action"] == "cleaned", result
@@ -12865,18 +12882,49 @@ def test_rescue_cleans_junk_only_without_publishing(tmp_path, monkeypatch, tmp_t
     ).stdout
 
 
-def test_rescue_cleans_junk_then_preserves_unpushed_commit(tmp_path, monkeypatch, tmp_tasks_dir):
+@pytest.mark.parametrize("staged", [False, True])
+def test_rescue_cleans_junk_then_preserves_unpushed_commit(tmp_path, monkeypatch, tmp_tasks_dir, staged):
     _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
     junk = worktree / "__pycache__" / "scratch.pyc"
     junk.parent.mkdir()
     junk.write_bytes(b"scratch")
-    subprocess.run(["git", "add", "-f", str(junk)], cwd=worktree, check=True, capture_output=True, timeout=30)
+    if staged:
+        subprocess.run(["git", "add", "-f", str(junk)], cwd=worktree, check=True, capture_output=True, timeout=30)
 
     result = delegate._rescue_task(state_path, apply=True)
     assert result["action"] == "rescued", result
     assert not junk.exists()
     assert delegate._worktree_is_dirty(worktree) is False
     assert delegate._read_state(state_path)["rescue_head_commit"] == result["head"]
+
+
+def test_rescue_junk_cleanup_preserves_unrelated_staging_and_runs_no_worker_program(
+    tmp_path, monkeypatch, tmp_tasks_dir,
+):
+    from tests.orchestration.test_safe_git_context import plant_programs
+
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    (worktree / "artifact.txt").unlink()
+    readme = worktree / "README"
+    original = readme.read_bytes()
+    readme.write_bytes(b"user's staged work\n")
+    subprocess.run(["git", "add", "README"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    readme.write_bytes(original)
+    junk = worktree / "__pycache__/scratch.pyc"
+    junk.parent.mkdir()
+    junk.write_bytes(b"scratch")
+    subprocess.run(["git", "add", "-f", str(junk)], cwd=worktree, check=True, capture_output=True, timeout=30)
+    repo = delegate._rescue_repo(worktree)
+    marker = plant_programs(worktree, tmp_path, monkeypatch=monkeypatch)
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert result["action"] == "cleaned", result
+    assert not junk.exists() and readme.read_bytes() == original
+    with delegate._rescue_execution_context(repo) as context:
+        assert context.checked("show", ":README", index=repo.admin_dir / "index") == "user's staged work"
+        assert context.run("ls-files", "--error-unmatch", "__pycache__/scratch.pyc", index=repo.admin_dir / "index").returncode != 0
+    assert not marker.exists()
 
 
 def test_rescue_refuses_branch_changed_since_task_exit(tmp_path, monkeypatch, tmp_tasks_dir):

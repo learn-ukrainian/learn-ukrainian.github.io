@@ -274,6 +274,51 @@ def test_rescue_runs_no_hook_of_the_worker_worktree(kimi_rescue, tmp_path, commi
         _assert_push_block_intact(worktree)
 
 
+@pytest.mark.parametrize("condition", ["claim", "preservation", "dirty"])
+def test_rescue_retains_source_without_calling_worktree_removal(kimi_rescue, monkeypatch, condition):
+    from scripts.fleet import ignored_task_output
+    from scripts.orchestration import worktree_claims
+
+    worktree, origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n")
+    if condition == "claim":
+        claim = {"task_id": "attached-worker", "status": "running", "worktree_path": str(worktree)}
+        delegate._write_state_atomic(delegate._state_path("attached-worker"), claim)
+    elif condition == "preservation":
+        exclude = delegate._rescue_repo(worktree).git_dir / "info/exclude"
+        exclude.write_text(exclude.read_text() + "\nbatch_state/\n")
+        output = worktree / "batch_state/output.bin"
+        output.parent.mkdir()
+        output.write_bytes(b"preserve me\x00\xff")
+    else:
+        (worktree / "untracked.txt").write_text("preserve me\n")
+    before, registered = _worker_snapshot(worktree), _registered_worktrees(worktree)
+
+    def forbidden(*_args, **_kwargs):
+        pytest.fail("rescue must retain its source without attempting preservation or worktree removal")
+
+    monkeypatch.setattr(worktree_claims, "remove_unclaimed_worktree", forbidden)
+    monkeypatch.setattr(worktree_claims, "git_worktree_remove", forbidden)
+    monkeypatch.setattr(ignored_task_output, "preserve_worktree_artifacts", forbidden)
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert result["action"] == "rescued", result
+    assert _remote_heads(origin)[RESCUE_REF] == result["head"]
+    assert worktree.is_dir() and (worktree / ".git").is_file()
+    assert _worker_snapshot(worktree) == before
+    assert _registered_worktrees(worktree) == registered
+    if condition == "claim":
+        assert delegate._read_state(delegate._state_path("attached-worker")) == claim
+    elif condition == "preservation":
+        assert output.read_bytes() == b"preserve me\x00\xff"
+        assert _git_proc(origin, "cat-file", "-e", f"{result['head']}:batch_state/output.bin").returncode != 0
+    else:
+        assert (worktree / "untracked.txt").read_text() == "preserve me\n"
+        assert _git(origin, "show", f"{result['head']}:untracked.txt") == "preserve me\n"
+    _assert_push_block_intact(worktree)
+
+
 @pytest.mark.parametrize("committed", [False, True])
 def test_a_worktree_url_rewrite_receives_nothing(kimi_rescue, tmp_path, committed):
     worktree, origin, state_path, write = kimi_rescue
