@@ -26,6 +26,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 
@@ -915,11 +916,11 @@ def run_miner(
         except Exception:
             r2u_cache = {}
 
-    conn = sqlite3.connect(f"file:{sources_db_path.resolve()}?mode=ro", uri=True)
+    conn = _open_readonly(sources_db_path.resolve())
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    vesum_conn = sqlite3.connect(f"file:{vesum_db_path.resolve()}?mode=ro", uri=True)
+    vesum_conn = _open_readonly(vesum_db_path.resolve())
     vesum_cursor = vesum_conn.cursor()
 
     try:

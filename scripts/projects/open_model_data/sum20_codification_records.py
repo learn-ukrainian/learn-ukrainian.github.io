@@ -8,10 +8,10 @@ held provenance URLs without modifying persistent source records.
 
 from __future__ import annotations
 
-import sqlite3
 from typing import Any
 from urllib.parse import urlsplit
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.wiki.sum20_official import live_article_predicate, normalize_sum20_lookup
 
 # Authentic СУМ-20 & ВТС entries with exact provenance from published academic codifications (slovnyk.me/dict/newsum / slovnyk.me/dict/vts)
@@ -224,7 +224,7 @@ def _quarantined_headwords(conn: Any) -> set[str]:
     return {normalize_sum20_lookup(value) for row in rows for value in row if value}
 
 
-def ensure_reproducible_sum20_table(conn: sqlite3.Connection) -> None:
+def ensure_reproducible_sum20_table(conn: SQLiteConnection) -> None:
     """Populate a temporary table with provenance-backed, non-quarantined entries.
 
     Entries lacking recognized provenance are withheld. Headwords excluded by the

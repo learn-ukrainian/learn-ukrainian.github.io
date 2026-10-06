@@ -29,6 +29,8 @@ from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 from tokenizers import Tokenizer
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data import model_view_exporter as exporter
 from scripts.projects.open_model_data import silver_evidence_factory as silver
 from scripts.projects.open_model_data import validate_source_records as source_record_contract
@@ -283,9 +285,9 @@ def operational_partition(text: str, signals: Sequence[MaskSignal]) -> list[dict
     return spans
 
 
-def connect_read_only(path: Path) -> sqlite3.Connection:
+def connect_read_only(path: Path) -> SQLiteConnection:
     require(path.is_file(), f"source database is missing: {path}")
-    connection = sqlite3.connect(f"file:{path.resolve()}?mode=ro", uri=True)
+    connection = _open_readonly(path.resolve())
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only = ON")
     return connection

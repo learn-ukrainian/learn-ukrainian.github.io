@@ -35,6 +35,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     AUTHORITY_PROFILES,
     CONTROL_PROFILE,
@@ -463,7 +465,7 @@ ACTIVE_PARTICIPLE_EXCEPTIONS = {
 }
 
 
-_VESUM_CONN: sqlite3.Connection | None = None
+_VESUM_CONN: SQLiteConnection | None = None
 
 
 def _get_vesum_cur() -> sqlite3.Cursor | None:
@@ -477,7 +479,7 @@ def _get_vesum_cur() -> sqlite3.Cursor | None:
             db_path = PROJECT_ROOT / "data" / "vesum.db"
         if db_path.is_file():
             try:
-                _VESUM_CONN = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+                _VESUM_CONN = _open_readonly(db_path)
             except Exception:
                 _VESUM_CONN = None
     return _VESUM_CONN.cursor() if _VESUM_CONN is not None else None
@@ -4217,7 +4219,7 @@ def _build_grammar_dataset_direct(
     )
 
     vesum_db_path = resolve_data_path("data/vesum.db")
-    vesum_conn = sqlite3.connect(f"file:{vesum_db_path}?mode=ro", uri=True)
+    vesum_conn = _open_readonly(vesum_db_path)
     vesum_cur = vesum_conn.cursor()
 
     # 2. Load Brown-UK pristine controls

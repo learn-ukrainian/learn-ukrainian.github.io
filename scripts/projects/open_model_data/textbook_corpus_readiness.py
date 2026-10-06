@@ -54,7 +54,6 @@ from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
 
 import yaml
 
@@ -72,6 +71,8 @@ except ModuleNotFoundError:
         normalize_subject_slug,
         subject_for_source_file,
     )
+
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 SCHEMA_VERSION = "textbook_corpus_readiness_v1"
 HASH_BLOCK_SIZE = 1024 * 1024
@@ -477,9 +478,8 @@ def _read_db(path: Path) -> dict[str, Any]:
         result["error"] = "database_missing"
         return result
 
-    uri = f"file:{quote(str(path.resolve()), safe='/')}?mode=ro"
     try:
-        connection = sqlite3.connect(uri, uri=True)
+        connection = _open_readonly(path.resolve())
     except (OSError, sqlite3.Error):
         result["error"] = "database_unreadable"
         return result
