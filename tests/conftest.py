@@ -215,8 +215,14 @@ def _stub_claude_cli_version_gate(request: pytest.FixtureRequest, monkeypatch: p
 
     ``scripts.agent_runtime.adapters.claude`` and ``agent_runtime.adapters.claude``
     are two module objects, each with its own process-cached
-    ``_probe_claude_cli_version``; ``kimicc`` binds the gate by name too. Clear
-    every probe cache and stub the gate on every alias that is importable here.
+    ``_probe_claude_cli_version``. Both ``kimicc`` aliases bind
+    ``_ensure_supported_claude_cli_version`` with ``from .claude import`` at
+    first import, which copies the function object currently on the Claude module.
+    Import every alias that binds the gate before patching any of them, then
+    patch the ``kimicc`` bindings explicitly so teardown restores the real
+    gate. Patching Claude first would make that first import capture the stub,
+    and teardown would put the stub back.
+
     Tests marked ``real_claude_cli_gate`` keep the real gate (with their own
     fakes) and only get fresh caches. A test that patches the gate itself runs
     after this fixture, so its patch wins.
@@ -229,10 +235,15 @@ def _stub_claude_cli_version_gate(request: pytest.FixtureRequest, monkeypatch: p
     def _stub(_cmd_prefix: tuple[str, ...]) -> tuple[int, int, int]:
         return _STUBBED_CLAUDE_CLI_VERSION
 
+    # Import first. A later patch of the Claude module does not update the
+    # object kimicc already copied in with ``from .claude import``.
+    modules: list[Any] = []
     for alias in _CLAUDE_ADAPTER_ALIASES + _KIMICC_ADAPTER_ALIASES:
         if alias not in sys.modules and importlib.util.find_spec(alias.split(".")[0]) is None:
             continue
-        module = importlib.import_module(alias)
+        modules.append(importlib.import_module(alias))
+
+    for module in modules:
         probe = getattr(module, "_probe_claude_cli_version", None)
         if probe is not None:
             probe.cache_clear()
