@@ -84,6 +84,7 @@ from __future__ import annotations
 import contextlib
 import dataclasses
 import functools
+import ipaddress
 import json
 import logging
 import os
@@ -1055,6 +1056,22 @@ class AgyAdapter:
         )
         if denial is not None:
             attempt = _headless_denial_evidence(bound, plan, denial.permission_kind, read_reason=read_reason)
+            if denial.permission_target is not None and attempt.permission_target_unknown_reason in {
+                "transcript_read_refused",
+                "transcript_corrupt",
+                "transcript_unbound_or_unreadable",
+                "trigger_ambiguous",
+                "trigger_missing",
+                "tool_unknown",
+                "tool_kind_unverified",
+                "target_missing",
+            }:
+                target, reason, via_symlink = _sanitized_denial_target(
+                    denial.permission_target, denial.permission_kind, plan
+                )
+                attempt = dataclasses.replace(
+                    attempt, permission_target=target, permission_target_unknown_reason=reason, via_symlink=via_symlink
+                )
             result = dataclasses.replace(
                 result,
                 agy_attempt=attempt,
@@ -1274,6 +1291,7 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         permission_target_unknown_reason=result.agy_attempt.permission_target_unknown_reason
         if result.agy_attempt
         else None,
+        via_symlink=result.agy_attempt.via_symlink if result.agy_attempt else False,
     )
     if bound is None or bound.unreadable_lines:
         return base
@@ -1393,38 +1411,71 @@ _DENIAL_TARGET_ARGS = {
 }
 
 
-def _sanitized_denial_target(target: Any, kind: str, plan: InvocationPlan | None) -> tuple[str, str | None]:
-    """Keep only workspace-relative paths, fixed outside classes or URL hosts."""
+def _sanitized_denial_target(target: Any, kind: str, plan: InvocationPlan | None) -> tuple[str, str | None, bool]:
+    """Keep requested workspace paths, fixed outside classes or public URL hosts.
+
+    Private names under public suffixes cannot be detected in general. File
+    classification describes the requested path; symlink resolution only sets
+    the boolean marker and is never recorded.
+    """
     target = _decode_jsonish(target)
     if not isinstance(target, str) or not target or len(target) > 4096:
-        return "unknown", "target_missing"
+        return "unknown", "target_missing", False
     if any(unicodedata.category(char) in {"Cc", "Cf", "Zl", "Zp"} for char in target):
-        return "unknown", "target_unsafe"
+        return "unknown", "target_unsafe", False
     if kind == "read_url":
         try:
             url = urllib.parse.urlsplit(target)
             host = url.hostname
-            if url.scheme not in {"http", "https"} or not host or not re.fullmatch(r"[a-zA-Z0-9.-]+", host):
-                return "unknown", "url_invalid"
-            # Numeric hosts are infrastructure details, not publishable domains.
-            if re.fullmatch(r"[0-9.]+", host):
-                return "unknown", "url_host_private"
-            return "url:" + host.lower(), None
+            if url.scheme not in {"http", "https"} or not host:
+                return "unknown", "url_invalid", False
+            host = host.lower().removesuffix(".")
+            # All IP literals are infrastructure details, including IPv6.
+            try:
+                ipaddress.ip_address(host)
+            except ValueError:
+                pass
+            else:
+                return "unknown", "url_host_private", False
+            if len(host) > 253 or not re.fullmatch(
+                r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*", host
+            ):
+                return "unknown", "url_invalid", False
+            private_suffixes = (
+                "local",
+                "localhost",
+                "internal",
+                "lan",
+                "home.arpa",
+                "test",
+                "invalid",
+                "example",
+                "onion",
+            )
+            if (
+                "." not in host
+                or re.fullmatch(r"[0-9.]+", host)
+                or any(host == suffix or host.endswith("." + suffix) for suffix in private_suffixes)
+            ):
+                return "unknown", "url_host_private", False
+            return "url:" + host, None, False
         except ValueError:
-            return "unknown", "url_invalid"
+            return "unknown", "url_invalid", False
     if kind != "read_file" or plan is None:
-        return "unknown", "target_kind_unsupported"
+        return "unknown", "target_kind_unsupported", False
     if "?" in target or "#" in target or "://" in target or target.startswith("~"):
-        return "unknown", "file_target_invalid"
+        return "unknown", "file_target_invalid", False
     try:
-        workspace = plan.cwd.resolve()
+        workspace = Path(os.path.abspath(plan.cwd))
         path = Path(target)
-        path = (path if path.is_absolute() else workspace / path).resolve()
+        requested = path if path.is_absolute() else workspace / path
+        path = Path(os.path.abspath(requested))
+        via_symlink = requested.resolve() != path
         if path.is_relative_to(workspace):
             relative = path.relative_to(workspace).as_posix()
             if redact_text(relative) != relative:
-                return "unknown", "target_unsafe"
-            return "workspace:" + relative, None
+                return "unknown", "target_unsafe", False
+            return "workspace:" + relative, None, via_symlink
         # Dispatch worktrees identify the enclosing repository without a Git call.
         repo_root = next((parent.parent for parent in workspace.parents if parent.name == ".worktrees"), None)
         roots = [
@@ -1440,11 +1491,11 @@ def _sanitized_denial_target(target: Any, kind: str, plan: InvocationPlan | None
             for root in ("/etc", "/usr", "/bin", "/sbin", "/lib", "/lib64", "/proc", "/sys", "/dev", "/run", "/var")
         )
         for label, root in roots:
-            if root is not None and path.is_relative_to(root.resolve()):
-                return "outside:" + label, None
-        return "outside:other", None
+            if root is not None and path.is_relative_to(Path(os.path.abspath(root))):
+                return "outside:" + label, None, via_symlink
+        return "outside:other", None, via_symlink
     except (OSError, RuntimeError, ValueError):
-        return "unknown", "file_target_invalid"
+        return "unknown", "file_target_invalid", False
 
 
 def _headless_denial_evidence(
@@ -1511,7 +1562,7 @@ def _headless_denial_evidence(
     if not arg_key and (kind, name) not in {("command", "run_command"), ("mcp", "call_mcp_tool")}:
         return dataclasses.replace(base, permission_target_unknown_reason="tool_kind_unverified")
     args = call.get("args")
-    target, reason = _sanitized_denial_target(
+    target, reason, via_symlink = _sanitized_denial_target(
         native_target
         if native_target is not None
         else args.get(arg_key)
@@ -1521,7 +1572,11 @@ def _headless_denial_evidence(
         plan,
     )
     return dataclasses.replace(
-        base, denied_tool_name=name, permission_target=target, permission_target_unknown_reason=reason
+        base,
+        denied_tool_name=name,
+        permission_target=target,
+        permission_target_unknown_reason=reason,
+        via_symlink=via_symlink,
     )
 
 
@@ -1534,7 +1589,7 @@ def _headless_permission_denial(stderr_text: str) -> AgyHeadlessPermissionDenial
     """
     notice = re.search(
         r'^jetski: no output produced — a tool required the "(?P<kind>[a-z][a-z0-9_]*)'
-        r'(?:\((?P<target>[^"\r\n]*)\))?" permission that headless mode cannot prompt for, '
+        r'(?:\((?P<target>[^"]*)\))?" permission that headless mode cannot prompt for, '
         r"so it was auto-denied\.(?P<advice>[^\r\n]*)$",
         stderr_text,
         re.MULTILINE,

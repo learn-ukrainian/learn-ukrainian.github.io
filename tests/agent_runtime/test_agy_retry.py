@@ -659,8 +659,10 @@ def test_older_attempt_records_load_without_a_permission_target(new_counts):
     assert attempt.permission_kind is None
     assert attempt.denied_tool_name is None
     assert attempt.permission_target_unknown_reason is None
+    assert attempt.via_symlink is False
     fields = AgyTelemetry(attempts=(attempt,), accepted_attempt=1).task_fields()["agy_attempts"][0]
     assert fields["permission_target"] is None
+    assert fields["via_symlink"] is False
     assert fields["permission_profile_id"] == record["permission_profile_id"]
     assert fields["denied_file_read_count"] == record.get("denied_file_read_count")
 

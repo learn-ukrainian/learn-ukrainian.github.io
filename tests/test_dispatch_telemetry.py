@@ -23,7 +23,19 @@ from agent_runtime.usage import _reset_rate_limit_cache_for_tests
 
 
 @pytest.mark.parametrize(
-    "outcome", ["success", "failure", "timeout", "profiled", "profile-refused", "recon-profiled", "headless-denial"]
+    "outcome",
+    [
+        "success",
+        "failure",
+        "timeout",
+        "profiled",
+        "profile-refused",
+        "recon-profiled",
+        "headless-denial",
+        "headless-symlink",
+        "headless-private-url",
+        "headless-cli-fallback",
+    ],
 )
 def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypatch, outcome):
     import delegate
@@ -40,6 +52,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
     monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
     profile = "ukrainian" if outcome in {"profiled", "profile-refused", "recon-profiled"} else None
     successful = outcome in {"success", "profiled", "recon-profiled"}
+    headless = outcome.startswith("headless-")
     task_id = "agy-record"
     state_path = delegate._state_path(task_id)
     delegate._write_state_atomic(
@@ -102,6 +115,13 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
         from tests.agent_runtime.adapters.test_agy_adapter import _FINISHED_CONVERSATION_ID, _background_plan, _event
         from tests.agent_runtime.adapters.test_agy_review_permissions import auto_denial
 
+        tool_call = {"name": "view_file", "args": {"AbsolutePath": '"evidence.txt"'}}
+        kind = "read_file"
+        if outcome == "headless-private-url":
+            kind = "read_url"
+            tool_call = {"name": "read_url_content", "args": {"Url": '"https://fixture.internal/private"'}}
+        elif outcome == "headless-symlink":
+            (repo / "evidence.txt").symlink_to(lease / "resolved-private-name.txt")
         plan = _background_plan(
             lease,
             _FINISHED_CONVERSATION_ID,
@@ -110,9 +130,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
                     "PLANNER_RESPONSE",
                     "",
                     source="MODEL",
-                    tool_calls=[
-                        {"name": "view_file", "args": {"AbsolutePath": '"evidence.txt"'}},
-                    ],
+                    tool_calls=[] if outcome == "headless-cli-fallback" else [tool_call],
                 ),
             ],
         )
@@ -120,9 +138,15 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
         transcript = agy._transcript_path_from_plan(plan)
         assert transcript.is_file()
         parsed = agy.AgyAdapter().parse_response(
-            stdout="", stderr=auto_denial("read_file"), returncode=1, output_file=None, plan=plan
+            stdout="",
+            stderr=auto_denial("read_file(evidence.txt)" if outcome == "headless-cli-fallback" else kind),
+            returncode=1,
+            output_file=None,
+            plan=plan,
         )
-        assert parsed.agy_attempt.permission_target == "workspace:evidence.txt"
+        assert parsed.agy_attempt.permission_target == (
+            "unknown" if outcome == "headless-private-url" else "workspace:evidence.txt"
+        )
         result.agy_telemetry = AgyTelemetry(attempts=(parsed.agy_attempt,), parent_task_id=task_id)
         result.failure_code = parsed.failure_code
         result.stderr_excerpt = parsed.stderr_excerpt
@@ -131,7 +155,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
         return result
 
     def reap(*args):
-        if outcome == "headless-denial":
+        if headless:
             # Simulate the common reaper removing the invocation store. The
             # real adapter must have extracted evidence before this callback.
             assert ordering == ["extracted"]
@@ -145,7 +169,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
     original_write = delegate._write_state_atomic
 
     def capture(path, state):
-        if outcome == "headless-denial" and state.get("status") == "failed":
+        if headless and state.get("status") == "failed":
             assert ordering == ["extracted", "reaped"]
             assert not transcript.exists()
         writes.append(dict(state))
@@ -156,7 +180,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
         "agent_runtime.runner.invoke",
         return_value=result,
         side_effect=invoke_denial
-        if outcome == "headless-denial"
+        if headless
         else (AgentTimeoutError("agy", 30, agy_telemetry=telemetry) if outcome == "timeout" else None),
     ) as runtime:
         delegate._run_worker(
@@ -170,14 +194,30 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
             runtime_tmp_root=str(lease),
         )
     terminal = next(state for state in writes if state.get("status") in {"done", "failed", "timeout"})
-    if outcome == "headless-denial":
+    if headless:
         assert terminal["status"] == "failed"
         assert terminal["agy_attempt_count"] == 1
-        assert terminal["agy_attempts"][0]["permission_kind"] == "read_file"
-        assert terminal["agy_attempts"][0]["denied_tool_name"] == "view_file"
-        assert terminal["agy_attempts"][0]["permission_target"] == "workspace:evidence.txt"
+        attempt = terminal["agy_attempts"][0]
+        assert attempt["permission_kind"] == ("read_url" if outcome == "headless-private-url" else "read_file")
+        assert attempt["denied_tool_name"] == (
+            None
+            if outcome == "headless-cli-fallback"
+            else "read_url_content"
+            if outcome == "headless-private-url"
+            else "view_file"
+        )
+        assert attempt["permission_target"] == (
+            "unknown" if outcome == "headless-private-url" else "workspace:evidence.txt"
+        )
+        assert attempt["via_symlink"] is (outcome == "headless-symlink")
         assert terminal["agy_attempts"][0]["failure_code"] == "provider_policy_refusal"
-        assert terminal["agy_attempts"][0]["permission_target_unknown_reason"] is None
+        assert attempt["permission_target_unknown_reason"] == (
+            "url_host_private" if outcome == "headless-private-url" else None
+        )
+        import json
+
+        assert "fixture.internal" not in json.dumps(terminal)
+        assert "resolved-private-name" not in json.dumps(terminal)
         assert terminal["agy_retry_disposition"] == "no_retry"
         return
     if outcome == "profile-refused":

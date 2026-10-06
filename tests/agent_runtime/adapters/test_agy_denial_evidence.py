@@ -61,6 +61,7 @@ def test_workspace_target_survives_json_record(tmp_path, recorded_transcript, ab
     assert attempt["denied_tool_name"] == "view_file"
     assert attempt["permission_kind"] == "read_file"
     assert attempt["permission_target_unknown_reason"] is None
+    assert attempt["via_symlink"] is False
     assert str(tmp_path) not in json.dumps(attempt) + result.stderr_excerpt
 
 
@@ -234,11 +235,39 @@ def test_resumed_transcript_cannot_supply_previous_trigger(tmp_path, recorded_tr
     assert attempt["denied_tool_name"] is None
 
 
-@pytest.mark.parametrize("target", ["../outside.txt", "evidence.txt"])
-def test_symlink_and_parent_traversal_are_classified_outside(tmp_path, recorded_transcript, target):
-    plan, _ = denial_plan(tmp_path, recorded_transcript, target)
-    (plan.cwd / "evidence.txt").symlink_to(tmp_path / "repo" / "outside.txt")
-    assert record(parse(plan))["permission_target"] == "outside:repo-root"
+def test_parent_traversal_is_classified_outside(tmp_path, recorded_transcript):
+    plan, _ = denial_plan(tmp_path, recorded_transcript, "../outside.txt")
+    attempt = record(parse(plan))
+    assert attempt["permission_target"] == "outside:repo-root"
+    assert attempt["via_symlink"] is False
+
+
+@pytest.mark.parametrize("direction", ["outward", "inward", "within", "parent"])
+def test_symlink_preserves_requested_classification(tmp_path, recorded_transcript, direction):
+    plan, events = denial_plan(tmp_path, recorded_transcript, "evidence.txt")
+    if direction == "inward":
+        requested = tmp_path / "repo" / "evidence.txt"
+        resolved = plan.cwd / "resolved-private-name.txt"
+        expected = "outside:repo-root"
+    elif direction == "parent":
+        (plan.cwd / "inputs").symlink_to(tmp_path / "repo", target_is_directory=True)
+        requested = plan.cwd / "inputs" / "evidence.txt"
+        resolved = tmp_path / "repo" / "evidence.txt"
+        expected = "workspace:inputs/evidence.txt"
+    else:
+        requested = plan.cwd / "evidence.txt"
+        resolved = (plan.cwd if direction == "within" else tmp_path / "repo") / "resolved-private-name.txt"
+        expected = "workspace:evidence.txt"
+    if direction != "parent":
+        requested.symlink_to(resolved)
+    events[-1]["tool_calls"][0]["args"]["AbsolutePath"] = json.dumps(str(requested))
+    agy._transcript_path_from_plan(plan).write_text("\n".join(json.dumps(event) for event in events))
+    result = parse(plan)
+    attempt = record(result)
+    assert attempt["permission_target"] == expected
+    assert attempt["via_symlink"] is True
+    assert str(resolved) not in json.dumps(attempt) + result.stderr_excerpt
+    assert "resolved-private-name" not in json.dumps(attempt) + result.stderr_excerpt
 
 
 @pytest.mark.parametrize(
@@ -246,14 +275,128 @@ def test_symlink_and_parent_traversal_are_classified_outside(tmp_path, recorded_
     [
         ("read_file", "bad\nname", "target_unsafe"),
         ("read_file", "file:///private/file", "file_target_invalid"),
-        ("read_url", "https://[::1]/private?q=x", "url_invalid"),
+        ("read_url", "https://[::1]/private?q=x", "url_host_private"),
         ("read_url", "https://127.0.0.1/private", "url_host_private"),
         ("read_url", "not-a-url", "url_invalid"),
+        pytest.param("read_url", "https://fixture.internal../private", "url_invalid", id="invalid-empty-label"),
+        pytest.param("read_url", "https://%66ixture.internal/private", "url_invalid", id="encoded-host"),
+        pytest.param("read_url", "https://éxample.org/private", "url_invalid", id="unicode-host"),
+        *[
+            pytest.param("read_url", f"https://{host}/private?q=x", "url_host_private", id=label)
+            for label, host in [
+                ("single-label", "fixture"),
+                ("single-hex-label", "0x7f000001"),
+                ("single-decimal-label", "2130706433"),
+                ("localhost", "localhost"),
+                ("ipv4-private-10", ".".join(map(str, (10, 0, 0, 1)))),
+                ("ipv4-private-172", ".".join(map(str, (172, 16, 0, 1)))),
+                ("ipv4-private-192", ".".join(map(str, (192, 168, 0, 1)))),
+                ("ipv4-public", ".".join(map(str, (200, 1, 2, 3)))),
+                ("ipv4-unspecified", "0.0.0.0"),
+                ("ipv4-short", "127.1"),
+                ("ipv6-private", "[fd00::1]"),
+                ("ipv6-link-local", "[fe80::1]"),
+                ("ipv6-public", "[2000::1]"),
+                ("ipv6-mapped", "[::ffff:127.0.0.1]"),
+                ("ipv6-unspecified", "[::]"),
+                *[
+                    ("suffix-" + suffix, "fixture." + suffix)
+                    for suffix in (
+                        "local",
+                        "localhost",
+                        "internal",
+                        "lan",
+                        "home.arpa",
+                        "test",
+                        "invalid",
+                        "example",
+                        "onion",
+                    )
+                ],
+                ("suffix-uppercase-root-dot", "FIXTURE.INTERNAL."),
+                ("localhost-root-dot", "LOCALHOST."),
+                ("home-arpa-apex", "home.arpa"),
+            ]
+        ],
     ],
 )
-def test_unsafe_or_invalid_target_is_not_persisted(tmp_path, recorded_transcript, kind, target, reason):
+@pytest.mark.parametrize("source", ["transcript", "cli"])
+def test_unsafe_or_invalid_target_is_not_persisted(tmp_path, recorded_transcript, kind, target, reason, source):
     tool, arg = ("view_file", "AbsolutePath") if kind == "read_file" else ("read_url_content", "Url")
-    plan, _ = denial_plan(tmp_path, recorded_transcript, target, tool=tool, arg=arg)
-    attempt = record(parse(plan, kind))
+    plan, events = denial_plan(tmp_path, recorded_transcript, target, tool=tool, arg=arg)
+    if source == "cli":
+        events[-1]["tool_calls"] = []
+        agy._transcript_path_from_plan(plan).write_text("\n".join(json.dumps(event) for event in events))
+        result = agy.AgyAdapter().parse_response(
+            stdout="", stderr=auto_denial(f"{kind}({target})"), returncode=1, output_file=None, plan=plan
+        )
+    else:
+        result = parse(plan, kind)
+    attempt = record(result)
     assert attempt["permission_target"] == "unknown"
     assert attempt["permission_target_unknown_reason"] == reason
+    assert attempt["via_symlink"] is False
+    assert target not in json.dumps(attempt) + result.stderr_excerpt
+
+
+@pytest.mark.parametrize(
+    "problem", ["unbound", "corrupt", "read-refused", "missing-trigger", "ambiguous", "missing-arg"]
+)
+@pytest.mark.parametrize("kind", ["read_file", "read_url"])
+def test_cli_notice_target_fills_missing_transcript_target(tmp_path, recorded_transcript, monkeypatch, problem, kind):
+    tool, arg = ("view_file", "AbsolutePath") if kind == "read_file" else ("read_url_content", "Url")
+    plan, events = denial_plan(tmp_path, recorded_transcript, "unused", tool=tool, arg=arg)
+    transcript = agy._transcript_path_from_plan(plan)
+    if problem == "unbound":
+        Path(plan.env_overrides[agy._AGY_LOG_ENV]).write_text("no conversation bound")
+    elif problem == "corrupt":
+        transcript.write_text("{truncated\n")
+    elif problem == "read-refused":
+
+        def refuse(*args, **kwargs):
+            raise agy.AttemptReadError("attempt_read_symlink")
+
+        monkeypatch.setattr(agy, "safe_read_attempt_file", refuse)
+    else:
+        if problem == "missing-trigger":
+            events[-1]["tool_calls"] = []
+        elif problem == "ambiguous":
+            events[-1]["tool_calls"] *= 2
+            events[-1]["tool_calls"][1] = {"name": tool, "args": {arg: '"other"'}}
+        else:
+            events[-1]["tool_calls"][0]["args"] = {}
+        transcript.write_text("\n".join(json.dumps(event) for event in events))
+    target = "evidence.txt" if kind == "read_file" else "https://example.org/private?q=x"
+    result = agy.AgyAdapter().parse_response(
+        stdout="", stderr=auto_denial(f"{kind}({target})"), returncode=1, output_file=None, plan=plan
+    )
+    attempt = record(result)
+    assert attempt["permission_target"] == ("workspace:evidence.txt" if kind == "read_file" else "url:example.org")
+    assert attempt["permission_target_unknown_reason"] is None
+    assert attempt["via_symlink"] is False
+    assert "private?q=x" not in json.dumps(attempt) + result.stderr_excerpt
+
+
+@pytest.mark.parametrize("target", ["transcript.txt", "https://fixture.internal/private"])
+def test_cli_fallback_does_not_override_transcript_target(tmp_path, recorded_transcript, target):
+    kind = "read_url" if "://" in target else "read_file"
+    tool, arg = ("view_file", "AbsolutePath") if kind == "read_file" else ("read_url_content", "Url")
+    plan, _ = denial_plan(tmp_path, recorded_transcript, target, tool=tool, arg=arg)
+    result = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr=auto_denial(f"{kind}(https://example.org/fallback)"),
+        returncode=1,
+        output_file=None,
+        plan=plan,
+    )
+    attempt = record(result)
+    assert attempt["permission_target"] == ("workspace:transcript.txt" if kind == "read_file" else "unknown")
+    assert attempt["permission_target_unknown_reason"] == (None if kind == "read_file" else "url_host_private")
+
+
+@pytest.mark.parametrize("host", ["EXAMPLE.ORG.", "fixture.locality.org", "local.example.org", "example.org"])
+def test_public_domain_is_not_confused_with_private_suffix(tmp_path, recorded_transcript, host):
+    plan, _ = denial_plan(tmp_path, recorded_transcript, f"https://{host}/private", tool="read_url_content", arg="Url")
+    attempt = record(parse(plan, "read_url"))
+    assert attempt["permission_target"] == "url:" + host.lower().removesuffix(".")
+    assert attempt["permission_target_unknown_reason"] is None
