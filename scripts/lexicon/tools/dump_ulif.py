@@ -23,6 +23,9 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 try:

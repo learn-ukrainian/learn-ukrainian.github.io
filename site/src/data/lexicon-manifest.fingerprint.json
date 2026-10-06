@@ -147,7 +147,7 @@
       },
       {
         "path": "scripts/lexicon/curated_membership_evidence.py",
-        "sha256": "81f0c5fdc19f37f7ec1078c096829d49455327d048ba16234969df060a47a5c6"
+        "sha256": "f1f75875f5264a7195edef3c380b2e46ecaa140a37084959e47c9c932caa9e3d"
       },
       {
         "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
@@ -215,7 +215,7 @@
       },
       {
         "path": "scripts/lexicon/generate_antonym_candidates.py",
-        "sha256": "541f0eddf8248ff804adea597a9ad8e7598e70832c0d2181c4b4c6255c44b088"
+        "sha256": "02777d9dd37af83758bc620e455eff5b773485dc4f8698d7c2ce3599a64c813f"
       },
       {
         "path": "scripts/lexicon/generate_needs_review_ledger.py",
@@ -283,7 +283,7 @@
       },
       {
         "path": "scripts/lexicon/mine_wikipedia_relations.py",
-        "sha256": "4c47f34db2e650f5e98e1403f48d9ead4f528b685b27a71edf7a7c28a9be8ad4"
+        "sha256": "c5e15c0fd6da801153279559c42a9718608bcbe147c96c5782c7be1f9eb104bf"
       },
       {
         "path": "scripts/lexicon/miyklas_relation_miner.py",

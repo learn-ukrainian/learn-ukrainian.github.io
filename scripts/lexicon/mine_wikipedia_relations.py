@@ -13,6 +13,7 @@ import html
 import json
 import re
 import sqlite3
+import sys
 import time
 import unicodedata
 import urllib.error
@@ -22,9 +23,12 @@ from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
-ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT / "data" / "lexicon" / "cache" / "wikipedia_relation_candidates.json"
 WIKIPEDIA_API = "https://uk.wikipedia.org/w/api.php"
 USER_AGENT = "learn-ukrainian-relation-miner/1.0 (https://learn-ukrainian.github.io)"

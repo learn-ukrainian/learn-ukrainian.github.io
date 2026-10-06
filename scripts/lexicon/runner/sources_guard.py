@@ -7,7 +7,8 @@ Hardening (PR #5365 review delta):
 - SQLite URI / query-string forms are parsed with URI semantics before checks
 - Case-insensitive substring match on the resolved path target
 - Inode comparison against the configured ``sources.db`` path (hardlink defense)
-- SQLite authorizer denying ``ATTACH`` of any sources.db on network connections
+- SQLite authorizer denying ``ATTACH`` of any sources.db, composed with the
+  read-only helper's blanket ``ATTACH``/``DETACH`` refusal
 """
 
 from __future__ import annotations
@@ -156,17 +157,42 @@ def assert_not_sources_db(path: Path | str) -> None:
         raise SourcesDbForbiddenError(f"network workers cannot open sources.db (refused path={path})")
 
 
+def _helper_attachment_decision(action: int) -> int:
+    """Blanket ATTACH/DETACH refusal installed by ``open_readonly``.
+
+    ``Connection.set_authorizer`` replaces that callback, so a later network
+    authorizer has to keep the same refusal itself.
+    """
+    if action in (sqlite3.SQLITE_ATTACH, sqlite3.SQLITE_DETACH):
+        return sqlite3.SQLITE_DENY
+    return sqlite3.SQLITE_OK
+
+
+def _sources_attach_decision(action: int, arg1: str | None) -> int:
+    """Deny ATTACH whose target is sources.db, including URI and hardlink forms."""
+    if action == sqlite3.SQLITE_ATTACH:
+        target = arg1 if arg1 is not None else ""
+        if _looks_like_sources_db(target) or _inode_matches_configured_sources(target):
+            return sqlite3.SQLITE_DENY
+    return sqlite3.SQLITE_OK
+
+
 def install_network_authorizer(
     conn: SQLiteConnection,
     *,
     force: bool = False,
 ) -> None:
-    """Deny ATTACH of sources.db on a network-side SQLite connection.
+    """Install the network authorizer without dropping read-only ATTACH refusal.
 
     Applied by every network-side connection factory after ``sqlite3.connect``.
     When *force* is False (default), installs only while the network-worker
     guard is active so offline openers are unaffected. Network-only factories
     (e.g. ``NetworkCache``) pass ``force=True``.
+
+    The callback composes two policies and denies when either denies: the
+    helper's blanket ATTACH/DETACH refusal, and this guard's sources.db ATTACH
+    refusal. Replacing the helper authorizer must not allow other databases to
+    be attached.
     """
     if not force and not _flag_active():
         return
@@ -178,10 +204,11 @@ def install_network_authorizer(
         _dbname: str | None,
         _source: str | None,
     ) -> int:
-        if action == sqlite3.SQLITE_ATTACH:
-            target = arg1 if arg1 is not None else ""
-            if _looks_like_sources_db(target) or _inode_matches_configured_sources(target):
-                return sqlite3.SQLITE_DENY
+        if (
+            _helper_attachment_decision(action) == sqlite3.SQLITE_DENY
+            or _sources_attach_decision(action, arg1) == sqlite3.SQLITE_DENY
+        ):
+            return sqlite3.SQLITE_DENY
         return sqlite3.SQLITE_OK
 
     conn.set_authorizer(_authorizer)

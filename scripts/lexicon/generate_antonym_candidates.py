@@ -9,13 +9,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
-ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT / "data" / "lexicon" / "cache" / "morphological_antonym_candidates.json"
 PREFIXES = ("не", "без", "анти", "проти")
 ALLOWED_POS = ("adj", "adv", "noun")
