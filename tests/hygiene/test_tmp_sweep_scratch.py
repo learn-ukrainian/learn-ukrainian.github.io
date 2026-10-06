@@ -401,6 +401,8 @@ def test_write_during_final_process_scan_is_never_lost(scratch, monkeypatch):
     With the rename boundary the old path no longer exists at that scan, so
     the write either fails with ENOENT (nothing was written and removal is
     correct) or lands and the entry survives. Removing a landed write fails.
+    The writer is this test process, which the scan therefore leaves out, as
+    the reviewer's out-of-process writer would be absent from it.
     """
     entry, payload = _target(scratch, "directory")
     outcomes = []
@@ -414,7 +416,7 @@ def test_write_during_final_process_scan_is_never_lost(scratch, monkeypatch):
                 outcomes.append("written")
             except FileNotFoundError:
                 outcomes.append("enoent")
-        return real_references_complete()
+        return [(pid, ref) for pid, ref in real_references_complete()[0] if pid != os.getpid()], True
 
     monkeypatch.setattr(sweep, "process_snapshot", scan)
     report = scratch.run(apply=True)
@@ -423,6 +425,15 @@ def test_write_during_final_process_scan_is_never_lost(scratch, monkeypatch):
         assert payload.read_bytes() == b"fresh write"
     else:
         assert scratch.row(report, entry.name)["decision"] == "reaped" and not entry.exists()
+
+
+def test_real_process_scan_reaps_unheld_entries(scratch, monkeypatch):
+    """Under the real scan, the sweep's own descriptors never count as a holder of the entry."""
+    directory, regular = scratch.tree(), scratch.file()
+    monkeypatch.setattr(sweep, "process_snapshot", real_references_complete)
+    report = scratch.run(apply=True)
+    assert {r["name"]: r["decision"] for r in report["rows"]} == {directory.name: "reaped", regular.name: "reaped"}
+    assert not directory.exists() and not regular.exists() and report["errors"] == 0
 
 
 def test_old_path_is_gone_once_quarantined(scratch, monkeypatch):
