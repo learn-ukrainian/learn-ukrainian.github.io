@@ -14,6 +14,13 @@ from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME as TASK_ARCHIVE_DIR_NAME
 from scripts.orchestration.task_record_store import iter_task_records
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
@@ -189,7 +196,7 @@ def _task_cache_db_path(tasks_dir_str: str) -> Path:
     return Path(tasks_dir_str) / ".task_cache.sqlite3"
 
 
-def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> sqlite3.Connection | None:
+def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> SQLiteConnection | None:
     try:
         conn = resolve_context(ctx)._open_db(db_path)
         conn.execute(

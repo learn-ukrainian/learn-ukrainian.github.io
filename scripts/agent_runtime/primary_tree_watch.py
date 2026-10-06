@@ -88,14 +88,15 @@ def _interval_from_env() -> float:
 
 
 def _load_containment():
-    for candidate in ("scripts.guardrails.worktree_containment", "guardrails.worktree_containment"):
-        try:
-            import importlib
+    import importlib
 
-            return importlib.import_module(candidate)
+    try:
+        return importlib.import_module("scripts.guardrails.worktree_containment")
+    except ImportError:
+        try:
+            return importlib.import_module("guardrails.worktree_containment")
         except ImportError:
-            continue
-    return None
+            return None
 
 
 def _tracked_dirty_paths(main_root: Path) -> set[str] | None:
