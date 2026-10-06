@@ -187,27 +187,13 @@ CONTEXT_FACT="${PCT}% of the ${WINDOW}-token context window [~${TOKENS}/${WINDOW
 # below 60% of the level at the last announcement - re-arms the tiers, so a fresh
 # climb after compaction is announced again. State lives in gitignored runtime
 # storage as "<tier> <tokens>".
-TIER_STATE_DIR="$PROJECT_DIR/batch_state/context_monitor"
-TIER_STATE_FILE="$TIER_STATE_DIR/${SESSION_ID}.tier"
-LAST_TIER=0
-LAST_TOKENS=0
-if [ -f "$TIER_STATE_FILE" ]; then
-  read -r LAST_TIER LAST_TOKENS < "$TIER_STATE_FILE" 2>/dev/null || true
-fi
-case "$LAST_TIER" in ''|*[!0-9]*) LAST_TIER=0 ;; esac
-case "$LAST_TOKENS" in ''|*[!0-9]*) LAST_TOKENS=0 ;; esac
-if [ "$LAST_TIER" -gt 0 ] && [ $((TOKENS * 100)) -lt $((LAST_TOKENS * 60)) ]; then
-  rm -f "$TIER_STATE_FILE" 2>/dev/null
-  LAST_TIER=0
-  LAST_TOKENS=0
-fi
 if [ "$PCT" -ge "$TIER3_PCT" ]; then TIER=3
 elif [ "$PCT" -ge "$TIER2_PCT" ]; then TIER=2
 elif [ "$PCT" -ge "$TIER1_PCT" ]; then TIER=1
 else TIER=0
 fi
-[ "$TIER" -gt "$LAST_TIER" ] || exit 0
-mkdir -p "$TIER_STATE_DIR" 2>/dev/null && printf '%s %s\n' "$TIER" "$TOKENS" > "$TIER_STATE_FILE" 2>/dev/null
+# One locked read/reset/replace transaction; refusal is silent and fail open.
+[ "$(context_hook_state claim "$PROJECT_DIR" "$SESSION_ID" "$TIER" "$TOKENS")" = "claimed" ] || exit 0
 
 # operator_restart (#8511): the session never continues itself. It hands off,
 # tells the operator it is ready for a restart, and waits; context-rollover-guard.sh
