@@ -44,8 +44,7 @@ BINDING = {
         },
         {"op": "span_equal", "value": EXPRESSION, "receipt": {**RECEIPT, "field": "rejected_span"}},
         {"op": "span_equal", "value": TARGET, "receipt": {**RECEIPT, "field": "recommended_span"}},
-        {"op": "literal", "values": [{**RECEIPT, "field": "sol"}], "expected": "APPROVE"},
-        {"op": "literal", "values": [{**RECEIPT, "field": "opus"}], "expected": "APPROVE"},
+        {"op": "literal", "values": [{**RECEIPT, "field": "eligible"}], "expected": True},
     ],
 }
 
@@ -79,8 +78,55 @@ class BookCalqueComponent:
                 target = quoted(row, "replacement", right, (receipt_citation(receipt, "C6b", "recommended_form"),))
                 yield candidate("C6b", OPERATION, row, (expression,), (), (target,), unit=unit)
 
+    def mutation_fixtures(self, ctx, candidates, gate):
+        from dataclasses import asdict
+
+        from ..contract import canonical
+        from ..errors import require
+        from . import MutationFixture
+
+        require(gate.reader is ctx.reader, "mutation_context")
+        # Remove a complete source row from both the adapter and candidate
+        # domains. Equal derived domains must not hide missing census coverage.
+        book_id = next(iter(RECEIPTS.records.values()))["book_id"]
+        removed = {key: row for key, row in RECEIPTS.records.items() if row["book_id"] == book_id}
+        remaining = [c for c in candidates if c.unit_id not in removed]
+
+        def missing_row():
+            try:
+                for key in removed:
+                    del RECEIPTS.records[key]
+                gate.run(remaining)
+            finally:
+                RECEIPTS.records.update(removed)
+
+        yield MutationFixture(
+            "missing_source_row", canonical([asdict(c) for c in remaining]), "census_coverage", missing_row
+        )
+        for reason in ("inverse_pair_in_row", "duplicate_in_row", "subsumed_span", "recommended_unattested"):
+            unit = next((row for row in RECEIPTS.records.values() if row["reason"] == reason), None)
+            if unit is None:
+                continue
+
+            row = next(r for r in ctx.reader.iter_rows("sources.db", "style_guide") if r["id"] == unit["book_id"])
+            expression = quoted(
+                row, "expression", unit["rejected_span"], (receipt_citation(unit, "C6b", "rejected_form"),)
+            )
+            target = quoted(
+                row, "replacement", unit["recommended_span"], (receipt_citation(unit, "C6b", "recommended_form"),)
+            )
+            forged = candidate("C6b", OPERATION, row, (expression,), (), (target,), "agreed", unit)
+            stream = [forged if c.unit_id == unit["id"] else c for c in candidates]
+
+            def unsafe_admission(stream=stream):
+                gate.run(stream)
+
+            yield MutationFixture(reason, canonical(asdict(forged)), "binding_literal", unsafe_admission)
+
     def artifact_files(self, ctx):
-        return packet_files(ctx, "C6b")
+        from ..contract import canonical
+
+        return {**packet_files(ctx, "C6b"), "C6b/recommended-lookups.json": canonical(RECEIPTS.lookups) + b"\n"}
 
 
 COMPONENT = BookCalqueComponent()

@@ -22,6 +22,9 @@ from scripts.projects.open_model_data.review_build.components.antonenko import (
     batches,
     book_locator,
     citation,
+    filtered_pairs,
+    pin_dispatch_files,
+    recommended_lookup,
     validate_receipts,
     write_packets,
     write_reconciliation_packets,
@@ -61,7 +64,19 @@ def source(tmp_path, monkeypatch):
     receipt_root = tmp_path / "SYNTHETIC-receipts"
     with OutputGuard(receipt_root):
         pass
-    return {"rows": rows, "db": db, "receipts": receipt_root}
+    vesum = tmp_path / "SYNTHETIC-vesum.db"
+    with sqlite3.connect(vesum) as vesum_connection:
+        vesum_connection.execute(
+            "CREATE TABLE forms_all(id INTEGER PRIMARY KEY, word_form TEXT, word_form_folded TEXT)"
+        )
+        vesum_connection.executemany(
+            "INSERT INTO forms_all VALUES (?, ?, ?)",
+            [
+                (i, word, word.casefold())
+                for i, word in enumerate(("SYNTHETIC", "wrong", "right", "other", "better", "long", "target"), 1)
+            ],
+        )
+    return {"rows": rows, "db": db, "receipts": receipt_root, "vesum": vesum}
 
 
 def pair_for(row, left=None, right=None):
@@ -115,8 +130,12 @@ def write_attested(guard, prefix, receipt):
     }
     # Malformed receipt fixtures still get dispatch metadata so the receipt validator decides.
     safe_id = receipt["task_id"] or "SYNTHETIC-empty"
-    (antonenko.tasks_dir() / f"{safe_id}.json").write_bytes(canonical(task))
-    (antonenko.tasks_dir() / f"{safe_id}.result").write_bytes(raw)
+    guard.write(f"dispatch/{safe_id}.json", canonical(task))
+    guard.write(f"dispatch/{safe_id}.result", raw)
+    hashes_path = guard.path / "dispatch/hashes.json"
+    hashes = json.loads(guard.read("dispatch/hashes.json")) if hashes_path.exists() else {}
+    hashes.update({f"dispatch/{safe_id}.json": digest(canonical(task)), f"dispatch/{safe_id}.result": digest(raw)})
+    guard.write("dispatch/hashes.json", canonical(hashes))
     guard.write(f"{prefix}.json", raw)
     guard.write(f"{prefix}.attestation.json", canonical(task))
 
@@ -130,7 +149,7 @@ def component_for(component, count=2):
 
 
 def context(source):
-    reader = SnapshotReader({"sources.db": source["db"]}, {STORE: RECEIPTS})
+    reader = SnapshotReader({"sources.db": source["db"], "vesum.db": source["vesum"]}, {STORE: RECEIPTS})
     return ComponentContext(reader, {"antonenko_receipts": str(source["receipts"])})
 
 
@@ -266,10 +285,15 @@ def test_selection_disagreement_or_no_pair_withholds(source, component, mode):
     ctx, obj = context(source), component_for(component)
     with ctx.reader:
         cs = list(obj.iter_candidates(ctx))
-        reason = "no_pair_named" if mode == "both_empty" else "adjudication_disagreement"
+        reason = {
+            "both_empty": "no_pair_named",
+            "swapped": "inverse_pair_in_row",
+            "different": "recommended_unattested",
+            "single_empty": "adjudication_disagreement",
+        }[mode]
         assert cs[0].outcome == "withheld" and cs[0].reason == reason
         report = gate(ctx, obj, component).run(cs)[1]
-        assert report["accounting"][component]["reasons"][reason] == (2 if mode in {"different", "swapped"} else 1)
+        assert report["accounting"][component]["reasons"][reason] == (2 if mode == "swapped" else 1)
 
 
 @pytest.mark.parametrize("component", ["C6b"])
@@ -420,7 +444,7 @@ def test_packet_writer_batches_only_located_rows_and_keeps_unicode_offsets(sourc
 
 
 def test_no_receipt_root_never_approves_and_shared_store_does_not_leak_sessions(source):
-    with SnapshotReader({"sources.db": source["db"]}, {STORE: RECEIPTS}) as reader:
+    with SnapshotReader({"sources.db": source["db"], "vesum.db": source["vesum"]}, {STORE: RECEIPTS}) as reader:
         ctx = ComponentContext(reader, {})
         assert next(component_for("C6b").iter_candidates(ctx)).reason == "adjudication_pending"
         assert RECEIPTS.file_hashes() == {}
@@ -449,7 +473,7 @@ def test_source_bound_packet_build_verify_and_tamper_refusal(source, component, 
         "schema": "omd-review-request.v2",
         "catalog": "SYNTHETIC-catalog.yaml",
         "register": "SYNTHETIC-register.yaml",
-        "databases": {"sources.db": str(source["db"])},
+        "databases": {"sources.db": str(source["db"]), "vesum.db": str(source["vesum"])},
         "ua_gec": {"root": "SYNTHETIC-unused"},
         "antonenko_receipts": str(source["receipts"]),
     }
@@ -683,14 +707,18 @@ def test_sidecar_binds_each_receipt_to_settled_dispatch(source, reconciliation, 
     prefix = sha + (".reconcile" if reconciliation else "") + ".sol"
     sidecar_path = source["receipts"] / f"{prefix}.attestation.json"
     sidecar = json.loads(sidecar_path.read_bytes())
-    task_path = antonenko.tasks_dir() / f"{sidecar['task_id']}.json"
-    result_path = antonenko.tasks_dir() / f"{sidecar['task_id']}.result"
+    task_path = source["receipts"] / f"dispatch/{sidecar['task_id']}.json"
+    result_path = source["receipts"] / f"dispatch/{sidecar['task_id']}.result"
     if mutation == "missing":
         sidecar_path.unlink()
     elif mutation in {"dispatch_status", "dispatch_model"}:
         task = json.loads(task_path.read_bytes())
         task[mutation.removeprefix("dispatch_")] = "running" if mutation.endswith("status") else MODELS["opus"]
         task_path.write_bytes(canonical(task))
+        hashes_path = source["receipts"] / "dispatch/hashes.json"
+        hashes = json.loads(hashes_path.read_bytes())
+        hashes[f"dispatch/{sidecar['task_id']}.json"] = digest(canonical(task))
+        hashes_path.write_bytes(canonical(hashes))
     elif mutation == "result":
         result_path.write_bytes(b"SYNTHETIC changed result")
     elif mutation == "different_receipt":
@@ -854,3 +882,143 @@ def test_dispatch_payload_binding_does_not_coerce_boolean_offsets(source):
     }
     with pytest.raises(BuildError, match="adjudication_stale"):
         attestation_for(receipt, task, raw)
+
+
+def test_receipt_reads_need_no_live_tasks_and_pinned_dispatch_tamper_refuses(source, monkeypatch):
+    write_receipt(source)
+    monkeypatch.setattr(antonenko, "tasks_dir", lambda: (_ for _ in ()).throw(AssertionError("live read")))
+    ctx, obj = context(source), component_for("C6b")
+    with ctx.reader:
+        cs = list(obj.iter_candidates(ctx))
+        assert len(gate(ctx, obj, "C6b").run(cs)[0]) == 2
+        path = next((source["receipts"] / "dispatch").glob("*.result"))
+        path.write_bytes(path.read_bytes() + b"changed")
+        with pytest.raises(BuildError, match="adjudication_stale"):
+            gate(ctx, obj, "C6b").run(cs)
+
+
+def test_pin_dispatch_copies_once_and_reuses_hashes_without_live_store(source, monkeypatch):
+    write_receipt(source)
+    task_root = antonenko.tasks_dir()
+    for path in (source["receipts"] / "dispatch").glob("*"):
+        if path.name != "hashes.json":
+            (task_root / path.name).write_bytes(path.read_bytes())
+        path.unlink()
+    assert pin_dispatch_files(source["receipts"]) == {"files": 4}
+    monkeypatch.setattr(antonenko, "tasks_dir", lambda: (_ for _ in ()).throw(AssertionError("live read")))
+    assert pin_dispatch_files(source["receipts"]) == {"files": 4}
+    path = next((source["receipts"] / "dispatch").glob("*.result"))
+    path.write_bytes(b"changed")
+    with pytest.raises(BuildError, match="adjudication_stale"):
+        pin_dispatch_files(source["receipts"])
+
+
+def test_missing_source_row_fails_even_when_derived_query_and_candidates_agree(source):
+    write_receipt(source)
+    ctx, obj = context(source), component_for("C6b")
+    with ctx.reader:
+        cs = list(obj.iter_candidates(ctx))
+        del RECEIPTS.records[cs[1].unit_id]
+        with pytest.raises(BuildError, match="census_coverage"):
+            gate(ctx, obj, "C6b").run(cs[:1])
+
+
+def test_recommended_lookup_cites_each_token_and_preserves_missing_evidence(source):
+    ctx = context(source)
+    with ctx.reader:
+        lookups = recommended_lookup("RIGHT, better; unknown.", ctx.reader)
+        assert [x["token"] for x in lookups] == ["RIGHT", "better", "unknown"]
+        assert [bool(x["citations"]) for x in lookups] == [True, True, False]
+        assert ctx.reader.snapshots()["vesum.db:forms_all"]
+
+
+@pytest.mark.parametrize(
+    "decision", ["agreed", "reconciled_accepted", "reconciled_rejected", "adjudication_disagreement"]
+)
+def test_nested_pair_is_subsumed_regardless_of_reconciliation(decision):
+    text = "long wrong long right"
+    big, small = ((0, 10), (11, 21)), ((5, 10), (16, 21))
+    pairs = [(*big, "agreed"), (*small, decision)]
+    lookups = {pair: [{"citations": ["SYNTHETIC witness"]}] for pair in (big, small)}
+    assert filtered_pairs(pairs, text, lookups) == {big: "agreed", small: "subsumed_span"}
+
+
+def test_inverse_union_includes_nonadmitted_inverse_and_duplicates_keep_first():
+    text = "wrong right wrong right"
+    first, repeated, inverse = ((0, 5), (6, 11)), ((12, 17), (18, 23)), ((6, 11), (0, 5))
+    lookups = {pair: [{"citations": ["SYNTHETIC witness"]}] for pair in (first, repeated, inverse)}
+    pairs = [(*repeated, "agreed"), (*first, "agreed")]
+    assert filtered_pairs(pairs, text, lookups) == {first: "agreed", repeated: "duplicate_in_row"}
+    pairs.append((*inverse, "reconciled_rejected"))
+    assert set(filtered_pairs(pairs, text, lookups).values()) == {"inverse_pair_in_row"}
+
+
+def test_unattested_recommended_pair_withholds_and_cannot_bypass_receipt_gate(source):
+    source["rows"][0]["text"] = "SYNTHETIC wrong unknown."
+    with sqlite3.connect(source["db"]) as db:
+        db.execute("UPDATE style_guide SET text=? WHERE id=1", (source["rows"][0]["text"],))
+    write_receipt(source)
+    ctx, obj = context(source), component_for("C6b")
+    with ctx.reader:
+        cs = list(obj.iter_candidates(ctx))
+        records, report = gate(ctx, obj, "C6b").run(cs)
+        assert len(records) == 1
+        assert report["accounting"]["C6b"]["reasons"] == {"agreed": 1, "recommended_unattested": 1}
+        unit = next(u for u in RECEIPTS.records.values() if u["reason"] == "recommended_unattested")
+        assert RECEIPTS.lookups[unit["id"]][0]["citations"] == []
+        unit["reason"] = "agreed"
+        with pytest.raises(BuildError, match="adjudication_direction"):
+            RECEIPTS.row("C6b", "id=" + unit["id"])
+
+
+def test_all_filter_fixtures_reject_actual_forced_candidates(source):
+    source["rows"][1]["text"] = "SYNTHETIC wrong right. wrong right."
+    source["rows"] += [
+        {**source["rows"][0], "id": 3, "text": "SYNTHETIC long wrong long right."},
+        {**source["rows"][0], "id": 4, "text": "SYNTHETIC wrong unknown."},
+    ]
+    with sqlite3.connect(source["db"]) as db:
+        db.executemany(
+            "INSERT OR REPLACE INTO style_guide VALUES (:id,:word,:text,:source,:page,:section)", source["rows"]
+        )
+
+    def select(receipts):
+        for receipt in receipts.values():
+            row = receipt["rows"][0]
+            pair = row["pairs"][0]
+            row["pairs"].append({"rejected": pair["recommended"], "recommended": pair["rejected"]})
+            text = source["rows"][1]["text"]
+            receipt["rows"][1]["pairs"] = [
+                pair_for(source["rows"][1], "wrong", "right"),
+                {
+                    role: {"start": text.rindex(word), "end": text.rindex(word) + len(word)}
+                    for role, word in (("rejected", "wrong"), ("recommended", "right"))
+                },
+            ]
+            receipt["rows"][2]["pairs"] = [
+                pair_for(source["rows"][2], "long wrong", "long right"),
+                pair_for(source["rows"][2], "wrong", "right"),
+            ]
+
+    write_receipt(source, select)
+    ctx, obj = context(source), component_for("C6b", count=4)
+    with ctx.reader:
+        cs = list(obj.iter_candidates(ctx))
+        g = gate(ctx, obj, "C6b")
+        records, report = g.run(cs)
+        assert len(records) == 2
+        assert report["accounting"]["C6b"]["reasons"] == {
+            "agreed": 2,
+            "inverse_pair_in_row": 2,
+            "duplicate_in_row": 1,
+            "subsumed_span": 1,
+            "recommended_unattested": 1,
+        }
+        fixtures = list(obj.mutation_fixtures(ctx, cs, g))
+        assert len(fixtures) == 5
+        for fixture in fixtures:
+            with pytest.raises(BuildError, match=fixture.expected_code):
+                fixture.check()
+        restored = g.run(cs)[1]
+        assert restored["accounting"] == report["accounting"]
+        assert restored["metrics"] == report["metrics"]

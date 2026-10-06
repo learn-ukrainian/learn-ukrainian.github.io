@@ -160,7 +160,8 @@ def test_genuine_quotes_wrong_relationship_fail(bundle, fixture):
 
 
 def test_derived_units_keep_independent_source_census_frozen(bundle):
-    bundle["spec"]["census_query"] = {**bundle["spec"]["unit_query"], "sql": "SELECT id FROM units WHERE id=1"}
+    bundle["spec"]["census_query"] = {**bundle["spec"]["unit_query"], "sql": "SELECT DISTINCT group_id FROM units"}
+    bundle["spec"]["census_id"] = selector(field="group_id")
     bundle["spec"]["frozen_count"] = 1
     records, report = run_gate(bundle)
     assert len(records) == report["accounting"]["C1"]["counted"] == 12

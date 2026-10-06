@@ -129,7 +129,9 @@ Every component spec requires:
   withheld/excluded accounting rows.
 - `frozen_count`: exact measured count at that unit grain.
 - Optional `census_query` freezes the source census separately from derived
-  units. Each pair has one unique unit; duplicates always refuse.
+  units. Its required `census_id` source-field selector maps each candidate
+  to a census row; the gate requires exact census coverage, not only a count.
+  Each pair has one unique unit; duplicates always refuse.
   Per-operation `records_counted` and `record_reasons` expose the same counts.
   Generic missing-unit verification removes the entire unit.
 - Binding `span_equal` compares a selected value's offsets with the cited

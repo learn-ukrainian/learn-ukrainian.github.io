@@ -2,9 +2,11 @@
 
 import json
 import re
+from dataclasses import asdict
 from pathlib import Path
 
 from scripts.common.task_store_paths import tasks_dir
+from scripts.rag.word_identity import normalize_evidence_form
 
 from ..attribution import Attribution
 from ..bindings import normalize
@@ -271,7 +273,7 @@ def write_reconciliation_packets(rows, receipt_root, root):
     from . import ComponentContext
 
     ctx = ComponentContext(Reader(), {"antonenko_receipts": str(receipt_root)})
-    store.configure(ctx)
+    store.configure(ctx, apply_filters=False)
     packets = []
     for batch, _, _ in store.documents.values():
         disputed = []
@@ -296,6 +298,106 @@ def write_reconciliation_packets(rows, receipt_root, root):
     return {"batches": len(packets), "pairs": sum(len(p["pairs"]) for p in packets)}
 
 
+def pin_dispatch_files(root):
+    """Copy canonical dispatch bytes once; later reads need no live task store."""
+    with OutputGuard(Path(root)) as guard:
+        if (guard.path / "dispatch/hashes.json").exists():
+            hashes = read_json(guard.read("dispatch/hashes.json"))
+            require(isinstance(hashes, dict), "adjudication_attestation")
+            for name, expected in hashes.items():
+                require(digest(guard.read(name)) == expected, "adjudication_stale")
+            return {"files": len(hashes)}
+        files = {}
+        for path in sorted(guard.path.glob("*.attestation.json")):
+            sidecar = read_json(guard.read(path.name))
+            task_id = sidecar.get("task_id")
+            require(isinstance(task_id, str) and re.fullmatch(r"[A-Za-z0-9_-]+", task_id), "adjudication_provenance")
+            for suffix in ("json", "result"):
+                name = f"dispatch/{task_id}.{suffix}"
+                try:
+                    content = (tasks_dir() / f"{task_id}.{suffix}").read_bytes()
+                except OSError:
+                    raise BuildError("adjudication_attestation") from None
+                if name in files:
+                    require(files[name] == content, "adjudication_stale")
+                files[name] = content
+        require(bool(files), "adjudication_attestation")
+        for name, content in sorted(files.items()):
+            if (guard.path / name).exists():
+                require(guard.read(name) == content, "adjudication_stale")
+            else:
+                guard.write(name, content)
+        guard.write("dispatch/hashes.json", canonical({name: digest(data) for name, data in sorted(files.items())}))
+    return {"files": len(files)}
+
+
+# Keep internal apostrophes, hyphens and combining stress inside a word token.
+WORD_TOKEN = re.compile(r"[^\W\d_](?:[^\W\d_]|[\u0300\u0301])*(?:['’ʼ‘`-][^\W\d_](?:[^\W\d_]|[\u0300\u0301])*)*")
+
+
+def recommended_lookup(text, reader):
+    """Cite a real VESUM form for every token, without changing exported bytes."""
+    lookups = []
+    for match in WORD_TOKEN.finditer(text):
+        token = match.group()
+        key = normalize_evidence_form(normalize(token, "unstress_nfc"))
+        found = reader.query_values(
+            {
+                "kind": "sql",
+                "store": "vesum.db",
+                "sql": "SELECT json_array(id, word_form) FROM forms_all WHERE word_form_folded=? ORDER BY id LIMIT 1",
+                "parameters": [key],
+            }
+        )
+        witnesses = []
+        for raw in found:
+            row_id, form = json.loads(raw)
+            cited = Citation(
+                "vesum",
+                "vesum.db",
+                "forms_all",
+                f"id={row_id}",
+                "word_form",
+                f"VESUM form {row_id}",
+                digest(form.encode()),
+            )
+            reader.field(cited)
+            witnesses.append(asdict(cited))
+        lookups.append({"token": token, "key": key, "citations": witnesses})
+    return lookups
+
+
+def filtered_pairs(pairs, text, lookups):
+    """Apply row-local safety rules to the complete union, preserving every unit."""
+    ordered = sorted(pairs)
+    forms = {(left, right): (text[slice(*left)], text[slice(*right)]) for left, right, _ in ordered}
+    all_forms = set(forms.values())
+    seen, result = set(), {}
+    for left, right, reason in ordered:
+        pair = (left, right)
+        rejected, recommended = forms[pair]
+        if (recommended, rejected) in all_forms:
+            reason = "inverse_pair_in_row"
+        elif (rejected, recommended) in seen:
+            reason = "duplicate_in_row"
+        elif not lookups[pair] or any(not item["citations"] for item in lookups[pair]):
+            reason = "recommended_unattested"
+        seen.add((rejected, recommended))
+        result[pair] = reason
+    admitted = [pair for pair, reason in result.items() if reason in ACCEPTED_REASONS]
+    for pair in result:
+        # Also classify a reconciliation-rejected shorter pair as subsumed.
+        if result[pair] in {"inverse_pair_in_row", "duplicate_in_row", "recommended_unattested"}:
+            continue
+        if any(
+            pair != longer
+            and all(big[0] <= small[0] < small[1] <= big[1] for small, big in zip(pair, longer, strict=True))
+            for longer in admitted
+        ):
+            result[pair] = "subsumed_span"
+    return result
+
+
 class ReceiptStore:
     """Pin selections, dispatch attestations and reconciliation; reconstruct every unit."""
 
@@ -306,6 +408,7 @@ class ReceiptStore:
         self.decisions = {}
         self.documents = {}
         self.records = {}
+        self.lookups = {}
 
     def _load(self, guard, batch, reconciliation=False):
         raw = {}
@@ -335,14 +438,17 @@ class ReceiptStore:
             )
             task_id = sidecar["task_id"]
             require(isinstance(task_id, str) and re.fullmatch(r"[A-Za-z0-9_-]+", task_id), "adjudication_provenance")
-            try:
-                task_raw = (tasks_dir() / f"{task_id}.json").read_bytes()
-                result = (tasks_dir() / f"{task_id}.result").read_bytes()
-            except OSError:
-                raise BuildError("adjudication_attestation") from None
+            hashes_raw = guard.read("dispatch/hashes.json")
+            hashes = read_json(hashes_raw)
+            require(isinstance(hashes, dict), "adjudication_attestation")
+            task_raw = guard.read(f"dispatch/{task_id}.json")
+            result = guard.read(f"dispatch/{task_id}.result")
+            for suffix, data in (("json", task_raw), ("result", result)):
+                require(hashes.get(f"dispatch/{task_id}.{suffix}") == digest(data), "adjudication_stale")
             require(attestation_for(receipt, read_json(task_raw), result) == sidecar, "adjudication_provenance")
             raw[seat] = content
             for filename, data in (
+                ("dispatch/hashes.json", hashes_raw),
                 (name, content),
                 (sidecar_name, sidecar_raw),
                 (f"dispatch/{task_id}.json", task_raw),
@@ -353,11 +459,11 @@ class ReceiptStore:
                 self.inputs[filename] = actual
         return raw
 
-    def configure(self, ctx):
+    def configure(self, ctx, *, apply_filters=True):
         if self.reader is ctx.reader:
             return
         self.reader, self.root = ctx.reader, ctx.request.get("antonenko_receipts")
-        self.inputs, self.decisions, self.documents, self.records = {}, {}, {}, {}
+        self.inputs, self.decisions, self.documents, self.records, self.lookups = {}, {}, {}, {}, {}
         rows = list(ctx.reader.iter_rows("sources.db", "style_guide"))
         for batch in batches(rows):
             sha = batch["batch_sha256"]
@@ -394,7 +500,14 @@ class ReceiptStore:
             pairs += [(left, right, "reconciled_rejected") for left, right in decision.get("reconciled_rejected", [])]
             if not pairs:
                 pairs = [(None, None, decision["reason"])]
-            for left, right, reason in pairs:
+            lookups = {
+                (left, right): recommended_lookup(row["text"][slice(*right)], ctx.reader)
+                for left, right, _ in pairs
+                if left is not None and apply_filters
+            }
+            reasons = filtered_pairs(pairs, row["text"], lookups) if lookups else {}
+            for left, right, selection_reason in pairs:
+                reason = reasons.get((left, right), selection_reason)
                 key = pair_id(row["id"], left, right)
                 record = {
                     "id": key,
@@ -402,6 +515,8 @@ class ReceiptStore:
                     "pair": f"id={row['id']}",
                     "source": row["source"],
                     "reason": reason,
+                    "selection_reason": selection_reason,
+                    "eligible": reason in ACCEPTED_REASONS,
                     "rejected_span": left,
                     "recommended_span": right,
                 }
@@ -415,8 +530,6 @@ class ReceiptStore:
                             "recommended_form": row["text"][slice(*right)],
                             "rejected_key": normalize(row["text"][slice(*left)], "unstress_nfc"),
                             "recommended_key": normalize(row["text"][slice(*right)], "unstress_nfc"),
-                            "sol": "APPROVE" if reason in ACCEPTED_REASONS else "WITHHOLD",
-                            "opus": "APPROVE" if reason in ACCEPTED_REASONS else "WITHHOLD",
                             "batch_sha256": batch["batch_sha256"],
                             "row_text_sha256": digest(row["text"].encode()),
                             **{f"{seat}_sha256": digest(content) for seat, content in raw.items()},
@@ -424,6 +537,8 @@ class ReceiptStore:
                         }
                     )
                 self.records[key] = record
+                if left is not None and apply_filters:
+                    self.lookups[key] = lookups[(left, right)]
 
     def get(self, row):
         return self.decisions.get(
@@ -472,14 +587,31 @@ class ReceiptStore:
         require(result["row_text_sha256"] == digest(row["text"].encode()), "adjudication_stale")
         require(result["pair"] == f"id={row['id']}" and result["source"] == row["source"], "adjudication_stale")
         kind = (
-            result["reason"]
-            if result["reason"] in ACCEPTED_REASONS
-            else ("reconciled_rejected" if result["reason"] == "reconciled_rejected" else "disputed")
+            result["selection_reason"]
+            if result["selection_reason"] in ACCEPTED_REASONS
+            else ("reconciled_rejected" if result["selection_reason"] == "reconciled_rejected" else "disputed")
         )
         pairs = decisions[result["book_id"]][kind]
         require((result["rejected_span"], result["recommended_span"]) in pairs, "adjudication_direction")
-        if result["reason"] in ACCEPTED_REASONS:
-            require(result["sol"] == result["opus"] == "APPROVE", "adjudication_provenance")
+        selected = decisions[result["book_id"]]
+        all_pairs = [
+            (left, right, kind)
+            for kind in ("agreed", "reconciled_accepted", "reconciled_rejected", "disputed")
+            for left, right in selected[kind]
+        ]
+        lookups = {
+            (left, right): recommended_lookup(row["text"][slice(*right)], self.reader) for left, right, _ in all_pairs
+        }
+        # Unreconciled pairs retain their public accounting reason.
+        all_pairs = [
+            (left, right, "adjudication_disagreement" if kind == "disputed" else kind)
+            for left, right, kind in all_pairs
+        ]
+        reasons = filtered_pairs(all_pairs, row["text"], lookups)
+        require(
+            result["reason"] == reasons[(result["rejected_span"], result["recommended_span"])], "adjudication_direction"
+        )
+        require(result["eligible"] == (result["reason"] in ACCEPTED_REASONS), "adjudication_direction")
         return result
 
     def units(self, query):
@@ -552,6 +684,7 @@ def common_spec(operation, unit):
             operation: {
                 "unit_query": {"kind": "antonenko_pairs", "store": STORE},
                 "census_query": {"kind": "sql", "store": "sources.db", "sql": "SELECT id FROM style_guide"},
+                "census_id": selector("slots", "accounting_unit", field="book_id"),
                 "frozen_count": 342,
                 "unit_id": unit,
             }
@@ -566,6 +699,10 @@ def common_spec(operation, unit):
                 "adjudication_pending",
                 "adjudication_disagreement",
                 "reconciled_rejected",
+                "inverse_pair_in_row",
+                "duplicate_in_row",
+                "subsumed_span",
+                "recommended_unattested",
                 "no_pair_named",
                 "locator_unavailable",
                 "attribution_unresolved",

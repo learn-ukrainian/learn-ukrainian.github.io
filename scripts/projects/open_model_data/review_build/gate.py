@@ -186,6 +186,12 @@ class Gate:
                 units = [c.unit_id for c in subset]
                 require(len(units) == len(set(units)), "duplicate_unit")
                 require(set(units) == set(independent), "missing_unit")
+                if "census_query" in domain:
+                    require(isinstance(domain.get("census_id"), dict), "census_id_spec")
+                    for candidate in subset:
+                        require(candidate.unit_id == self.unit_id(candidate), "unit_id_mismatch")
+                    covered = {str(bindings.operand(c, domain["census_id"], self.reader)) for c in subset}
+                    require(covered == set(census), "census_coverage")
                 outcomes = Counter(c.outcome for c in subset)
                 require({c.outcome for c in subset} <= {"accepted", "rejected", "withheld", "excluded"}, "outcome")
                 require(sum(outcomes.values()) == len(independent), "accounting")

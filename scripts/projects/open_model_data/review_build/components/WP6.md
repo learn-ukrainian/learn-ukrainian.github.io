@@ -65,8 +65,13 @@ file. Results may be a JSON document or contain multiple `json` fenced blocks.
 Exactly one fenced block must match the receipt's `batch_sha256`; zero or
 multiple matches refuse `adjudication_receipt`. The extracted receipt must equal
 that selected block's canonical JSON, without field normalization.
-The receipt store verifies the sidecar against that same dispatch record and
-result: exact task/model, `done`, completion timestamp, result digest and
+The driver runs `pin_dispatch_files(receipt_root)` once to copy the original
+dispatch records and results beneath `dispatch/` in the request's receipt
+directory, with `dispatch/hashes.json`. Existing copies are verified, never
+refreshed from live tasks. The receipt store reads only these pinned copies;
+reaping the original tasks cannot invalidate reproduction. It verifies the
+sidecar against the pinned dispatch record and result: exact task/model, `done`,
+completion timestamp, result digest and
 byte-derived JSON payload equality. It refuses missing sidecars or dispatch
 files, incomplete execution and mismatches. Receipt, sidecar, dispatch-record
 and result bytes are pinned and revalidated on pair reads. These are trusted
@@ -126,7 +131,37 @@ rejected expression in its slot and the recommended expression as response.
 Its model-visible context is empty: the answer-bearing book passage remains
 in citation provenance only. Both quoted spans use the same row and locator.
 The binding checks the selected offsets and the accounting-unit receipt.
+The redundant derived `sol`/`opus` APPROVE fields and literal checks are removed;
+authority remains validation of the actual selection/reconciliation receipts.
+A single `eligible` policy field is recomputed and checked on receipt reads;
+the binding requires it to be true, so a candidate cannot promote a withheld
+receipt merely by changing its outcome or accounting reason.
 There is no additional inferred calque label.
+
+Before emission, row-local filters cover the complete candidate union, including
+reconciliation-rejected pairs. Precedence is `inverse_pair_in_row`, then
+`duplicate_in_row`, then `recommended_unattested`, then `subsumed_span`:
+
+- Withhold both directions whenever the inverse text pair exists in the row's
+  union. No sense context is added.
+- Identical ordered text pairs keep only the first offset occurrence; later
+  occurrences remain counted as `duplicate_in_row`. Selection authority is
+  never transferred to an earlier rejected occurrence.
+- Every recommended word token requires a cited VESUM `forms_all` lookup.
+  Case, stress and apostrophe folding affect lookup identity only; source and
+  output text stay verbatim. Internal hyphens remain part of the token.
+  Missing tokens withhold the unit as `recommended_unattested`; absence is not
+  a linguistic verdict. `C6b/recommended-lookups.json` retains each token and
+  its actual VESUM form citation or an empty witness list. Cited field bytes
+  are pinned by the shared snapshot reader. The request must locate `vesum.db`.
+- If both spans of a shorter pair are contained in a longer eligible pair,
+  withhold the shorter as `subsumed_span`, regardless of its reconciliation
+  disposition. All original units remain in accounting.
+
+Receipt reads recompute these reasons from source rows and validated decisions,
+so relabelling a withheld unit as admitted fails the gate. C6b verify probes
+unsafe admission for each observed filter reason and removes an entire source
+row from both derived domains to prove that census coverage still refuses.
 
 Every pair or placeholder has one accounting unit and one candidate. Therefore
 accepted counts equal emitted records, including a row with both an accepted
@@ -135,7 +170,11 @@ and an unattested pair. `operation_accounting.records_counted` and
 a complete semantic census of the book. The receipt store independently
 reconstructs these units; the gate checks coverage and uniqueness against it.
 The generic optional `census_query` freezes the underlying row count separately
-from the derived unit count. Other components retain their existing accounting.
+from the derived unit count. Its required `census_id` selector maps every
+candidate to its cited source-row identity; the gate requires those identities
+to equal the census, proving at least one unit per source row even when the
+extractor and independent derived query omit the same row. Other components
+retain their existing accounting.
 
 C6b owns its reviewed compatibility and citation-role mappings in COMPONENT.
 The location-only v2 request may name the private `antonenko_receipts` directory.
