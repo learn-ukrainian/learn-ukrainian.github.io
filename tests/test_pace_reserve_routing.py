@@ -432,7 +432,7 @@ def test_missing_lane_never_covers_deficit(reserve_case, lane):
     assert capacity_pick.is_avoid_lane(info, lane=lane) is not stale
     assert state_router._status_from_weekly_used(13.0, info["codexbar"], info=info, now=now) == "hot"
     needs_action, _ = delegate._budget_needs_hard_capacity_action(
-        status="hot", will_last=False, is_stale=False, records_loaded=1, pace=info["codexbar"], info=info
+        status="hot", will_last=False, is_stale=False, pace=info["codexbar"], info=info
     )
     assert needs_action
 

@@ -9,8 +9,8 @@ rate-limit records reader. The same object goes to every consumer:
 * budget producer and recommendation (``agents.<lane>.routing_facts``, ``recommendation``);
 * picker rows, order and CLI (:mod:`scripts.fleet.capacity_pick`);
 * budget guard and final admission (``delegate._resolve_agent_with_budget_guard``,
-  :func:`credit_lane.dispatch_refusal`) — owned by #9739, round 2;
-* reviewer resolver (#9739, round 2) and scheduler;
+  :func:`credit_lane.dispatch_refusal`);
+* reviewer resolver and scheduler;
 * curriculum wave gate (``curriculum_coordinator._health_assessment``);
 * idle assembly (``idle_settle.assemble_snapshot`` over the picker rows).
 
@@ -19,12 +19,11 @@ for the same record before its final action. Legitimate restrictions keep their
 own asserted reasons: the wave's acceptable statuses, positive-health and
 freshness requirement; retirement in the picker; the resolver's near-cap
 exclusion of a stale deficit; delegate's stale-advisory no-hard-substitution.
-Consumers that still disagree are present and marked ``xfail(strict=True)``
-until round 2. No case reaches a provider: every provider seam is captured and
-must record zero calls.
+No case reaches a provider: every provider seam is captured and must record
+zero calls.
 
 Recon inventory disposition (``recon-9740``; R = repaired here, A = agrees,
-D = different question, 2 = round 2 after #9739):
+D = different question):
 
 =====================================================  ===  =========================================
 consumer                                               disp evidence in this module / owned tests
@@ -43,15 +42,15 @@ prepaid_status.api_lane_status_from_account            A    F8 duplicate, agrees
 capacity_pick.remaining_pct                            R    F1 owner ``plan_remaining_pct``
 capacity_pick.is_avoid_lane / build_lane_rows          R    F2/F3/F4/F7 owner ``routing_facts``
 capacity_pick.build_pick_order / cooler_lanes          R    A5 stale rank, strict
-delegate._budget_needs_hard_capacity_action            2    F3 alias/source split (xfail below)
-delegate._resolve_agent_with_budget_guard              2    agreement asserted; xfail where split
+delegate._budget_needs_hard_capacity_action            R    F1/F6 owner near cap, F3 owner hot source
+delegate._resolve_agent_with_budget_guard              R    agreement asserted; F4 unknown health text
 delegate._credit_period_refusal / dispatch_refusal     A    A4 CREDIT_PERIOD_MODEL_REFUSED
-delegate._budget_cooler_lanes                          2    no model/staleness forwarding (A4: dropped)
+delegate._budget_cooler_lanes                          D    refusal hint text only (A4)
 delegate._check_capacity_hint                          D    in-flight hint only
 idle_settle._lane_quota_ok / LaneState                 R    F5 unknown quota and load
 fleet.usage._credit_state_text                         D    display of the published state
 curriculum_coordinator._health_assessment              R    F4 owner health, F6 full-record relief
-reviewer_resolver.evaluate_candidate                   2    F6 leaf-only relief (xfail below)
+reviewer_resolver.evaluate_candidate                   R    F6 full-record relief
 reviewer_scheduler.metrics_for                         R    F1 remaining, F5 freshness/counts
 bench_health._bench_inventory                          A    forwards ``evaluate_candidate``
 agent_runtime.usage.has_headroom                       D    pre-call 429 block, own window
@@ -64,7 +63,7 @@ import copy
 import json
 import subprocess
 import urllib.request
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -86,11 +85,6 @@ FETCHED = "2026-10-05T11:59:30Z"
 RESETS = "2026-10-09T12:00:00Z"
 ROUTE_MODEL = "gpt-6.1-sol"
 OFF_ALLOWLIST_MODEL = "gpt-5-codex"
-ROUND_2 = "#9740 round 2 after #9739"
-NEAR_CAP_LEDGER_GATE = (
-    "delegate hard-acts on near_cap only with a non-empty USD ledger (records_loaded > 0); "
-    "a CodexBar-only near_cap lane is kept"
-)
 
 
 def _codex(**overrides: Any) -> dict[str, Any]:
@@ -170,7 +164,6 @@ class Case:
     tasks: str = "idle"
     runtime_blocked: frozenset[str] = frozenset()
     mutate: str | None = None
-    xfail: dict[str, str] = field(default_factory=dict)
 
 
 CASES: tuple[Case, ...] = (
@@ -188,7 +181,6 @@ CASES: tuple[Case, ...] = (
     Case(
         "f1_conflicting_windows",
         {"codex": _codex(primary_used_pct=97.0, primary_remaining_pct=3.0), "claude": CLAUDE},
-        xfail={"budget_guard": NEAR_CAP_LEDGER_GATE},
     ),
     Case(
         "f2_stale_near_cap_credit",
@@ -217,18 +209,11 @@ CASES: tuple[Case, ...] = (
     Case(
         "f3_hidden_pace_non_pace_source",
         {"codex": _codex(), "claude": CLAUDE, "cursor": CURSOR_HOT_HIDDEN},
-        xfail={
-            "budget_guard_cursor": "F3: delegate clears a hidden-pace hot label without checking status_source",
-        },
     ),
     Case(
         "f6_contradictory_relief",
         {"codex": _codex(weekly_used_pct=95.0, weekly_remaining_pct=5.0, credit_balance=62500.0), "claude": CLAUDE},
         mutate="probe_relabelled_stale_after_publication",
-        xfail={
-            "resolver": "F6: the resolver still re-checks only the published credit leaf",
-            "budget_guard": NEAR_CAP_LEDGER_GATE,
-        },
     ),
     Case(
         "f7_near_cap_credit",
@@ -236,6 +221,7 @@ CASES: tuple[Case, ...] = (
     ),
 )
 CASE_IDS = [case.name for case in CASES]
+CASE_PARAMS = [pytest.param(case, id=case.name) for case in CASES]
 
 
 class ProviderCalls(list):
@@ -335,15 +321,6 @@ def owner(budget: dict[str, Any], lane: str = "codex", *, model: str | None = No
     )
 
 
-def _case_marks(case: Case, consumer: str) -> list[Any]:
-    reason = case.xfail.get(consumer)
-    return [pytest.mark.xfail(strict=True, reason=f"{ROUND_2}: {reason}")] if reason else []
-
-
-def _params(consumer: str) -> list[Any]:
-    return [pytest.param(case, id=case.name, marks=_case_marks(case, consumer)) for case in CASES]
-
-
 @pytest.fixture
 def snapshot(request, monkeypatch, tmp_path, provider_calls):
     budget = produce(request.param, monkeypatch, tmp_path)
@@ -354,7 +331,7 @@ def snapshot(request, monkeypatch, tmp_path, provider_calls):
 # --- shared facts in the producer ---------------------------------------------------
 
 
-@pytest.mark.parametrize("snapshot", _params("producer"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_producer_publishes_the_owner_facts(snapshot):
     case, budget = snapshot
     if case.mutate is not None:
@@ -373,7 +350,7 @@ def test_producer_publishes_the_owner_facts(snapshot):
         assert published["plan_remaining_pct"] == facts.plan_remaining_pct, lane
 
 
-@pytest.mark.parametrize("snapshot", _params("recommendation"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_recommendation_agrees_with_owner_capacity(snapshot):
     _case, budget = snapshot
     rec = budget["recommendation"]
@@ -394,7 +371,7 @@ def _rows(budget: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {row["lane"]: row for row in rows}
 
 
-@pytest.mark.parametrize("snapshot", _params("picker"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_picker_rows_agree_with_owner_facts(snapshot):
     _case, budget = snapshot
     rows = _rows(budget)
@@ -413,7 +390,7 @@ def test_picker_rows_agree_with_owner_facts(snapshot):
         assert f"retired→{target}" in rows[retired]["notes"]
 
 
-@pytest.mark.parametrize("snapshot", _params("picker_cli"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_picker_cli_reports_the_same_rows(snapshot, monkeypatch, capsys):
     _case, budget = snapshot
     from scripts.fleet import usage
@@ -437,7 +414,7 @@ def test_picker_cli_reports_the_same_rows(snapshot, monkeypatch, capsys):
         assert all(order.index(lane) > order.index(other) for other in verified)
 
 
-# --- budget guard and final admission (round 2) -------------------------------------
+# --- budget guard and final admission ------------------------------------------------
 
 
 def _guard(budget: dict[str, Any], monkeypatch: pytest.MonkeyPatch, model: str) -> str:
@@ -446,7 +423,7 @@ def _guard(budget: dict[str, Any], monkeypatch: pytest.MonkeyPatch, model: str) 
     return delegate._resolve_agent_with_budget_guard("codex", requested_model=model, fallbacks={"codex": "claude"})
 
 
-@pytest.mark.parametrize("snapshot", _params("budget_guard"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_budget_guard_agrees_with_owner_route_facts(snapshot, monkeypatch):
     _case, budget = snapshot
     facts = owner(budget, model=ROUTE_MODEL)
@@ -460,7 +437,7 @@ def test_budget_guard_agrees_with_owner_route_facts(snapshot, monkeypatch):
         assert chosen == "codex"
 
 
-@pytest.mark.parametrize("snapshot", _params("budget_guard_cursor"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_budget_guard_honours_the_hot_label_source(snapshot, monkeypatch):
     """F3 source restriction: only a weekly-pace hot label may be cleared by hidden pace (A3)."""
     _case, budget = snapshot
@@ -474,7 +451,7 @@ def test_budget_guard_honours_the_hot_label_source(snapshot, monkeypatch):
         assert chosen == "claude", facts.capacity_reason
 
 
-@pytest.mark.parametrize("snapshot", _params("final_admission"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_final_admission_refuses_off_allowlist_models_exactly_when_the_owner_does(snapshot, monkeypatch):
     """A4/F7: an off-allowlist model with credit present ends in CREDIT_PERIOD_MODEL_REFUSED, never a substitution."""
     _case, budget = snapshot
@@ -487,7 +464,7 @@ def test_final_admission_refuses_off_allowlist_models_exactly_when_the_owner_doe
     assert credit_lane.dispatch_refusal("codex", ROUTE_MODEL) is None
 
 
-@pytest.mark.parametrize("snapshot", _params("catalog"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_catalog_disallowed_route_is_refused_before_any_provider_call(snapshot):
     """Healthy capacity never admits a retired route: the catalog refuses first (zero provider calls)."""
     _case, budget = snapshot
@@ -497,10 +474,10 @@ def test_catalog_disallowed_route_is_refused_before_any_provider_call(snapshot):
     assert rows["gemini"]["avoid"] is True and rows["gemini"]["capacity"]["state"] == credit_lane.CAPACITY_AVOID
 
 
-# --- reviewer resolver (round 2) and scheduler ----------------------------------------
+# --- reviewer resolver and scheduler ------------------------------------------------
 
 
-@pytest.mark.parametrize("snapshot", _params("resolver"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_resolver_agrees_with_owner_route_facts(snapshot):
     _case, budget = snapshot
     facts = owner(budget, model=OPENAI_FRONTIER.concrete_model)
@@ -517,7 +494,7 @@ def test_resolver_agrees_with_owner_route_facts(snapshot):
         assert result.status != "excluded", result.reason
 
 
-@pytest.mark.parametrize("snapshot", _params("scheduler"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_scheduler_metrics_are_the_owner_readings(snapshot):
     _case, budget = snapshot
     facts = owner(budget)
@@ -532,7 +509,7 @@ def test_scheduler_metrics_are_the_owner_readings(snapshot):
 # --- wave gate and idle assembly -----------------------------------------------------------
 
 
-@pytest.mark.parametrize("snapshot", _params("wave"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_wave_gate_counts_only_what_the_owner_establishes(snapshot):
     _case, budget = snapshot
     config = coordinator.load_config()["health"]
@@ -558,7 +535,7 @@ def test_wave_gate_counts_only_what_the_owner_establishes(snapshot):
         assert not passed and assessment["fresh"] is False
 
 
-@pytest.mark.parametrize("snapshot", _params("idle"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_idle_assembly_requires_established_capacity_and_load(snapshot):
     _case, budget = snapshot
     rows = list(_rows(budget).values())
@@ -599,7 +576,7 @@ EXPECTED_CODEX = {
 }
 
 
-@pytest.mark.parametrize("snapshot", _params("owner"), indirect=True)
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_owner_facts_per_case(snapshot):
     case, budget = snapshot
     facts = owner(budget)

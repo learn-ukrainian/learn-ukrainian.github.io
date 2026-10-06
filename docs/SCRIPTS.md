@@ -34,9 +34,9 @@ For the Composer and pool exclusion evidence (AC-01), see [#9423](https://github
 
 `scripts.fleet.credit_lane.routing_facts(lane, record, *, model, snapshot_metadata=None, policy=None, now=None, usage_dir=None)`
 is the one reading of a routing-budget lane record (#9740). `capacity_pick`,
-`idle_settle` and the curriculum wave gate use its facts before adding their own
-restrictions (role, risk, egress, transport, wave config). The reviewer scheduler
-uses the same plan-window reader.
+`idle_settle`, the curriculum wave gate and the `delegate.py` budget guard use its
+facts before adding their own restrictions (role, risk, egress, transport, wave
+config). The reviewer scheduler uses the same plan-window reader.
 Pass `model=None` for lane inventory. It returns the tightest plan window and its
 source, snapshot/probe freshness, `health` (`healthy`, `unhealthy` or `unknown`,
 with `health_basis`), the pace deficit, credit evidence and a `capacity` class:
@@ -62,6 +62,18 @@ fresh or healthy.
 - **Wave receipts:** the coordinator ledger `healthLane` records `healthy` as
   `true`/`false` when known, or `null` with a required `health_basis` when unknown,
   such as a scan error or a missing lane record.
+- **Budget guard (`delegate.py --check-budget`):** on a fresh snapshot it
+  substitutes or refuses a near-cap lane (the `near_cap` status, or a credit lane's
+  tightest plan window at or below the threshold) unless the owner grants credit
+  relief for the model, whether or not the USD cost ledger has records. A
+  hidden-pace hot label is cleared only when its source is weekly pace; a hot label
+  the owner's own pace reading contradicts (no deficit, #9040) is also cleared. A
+  stale snapshot stays advisory. Lane health warnings print `demoted` for an
+  unhealthy lane and `health unknown (<basis>)` when health is unknown.
+- **Reviewer resolver:** a near-cap candidate keeps credit relief only when
+  `credit_lane.published_credit_relief` re-checks the complete published lane
+  record (snapshot staleness, probe freshness, age and stale flag), as the wave
+  gate does; a published `credit_balance_present` leaf alone is not enough.
 
 ## Git hooks
 

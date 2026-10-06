@@ -881,7 +881,7 @@ def published_credit_relief(
     staleness and the probe's ``freshness``, ``age_s`` and ``stale`` flag are
     re-checked as :func:`lane_credit_state` would, so a published label cannot
     override contradictory probe evidence. Without it only the leaf is
-    re-checked (the reviewer resolver until it passes the record).
+    re-checked; every routing consumer passes it.
 
     The published rate-limit evidence is as old as the snapshot, so the
     current evidence is re-read through :func:`read_recent_rate_limits` (the

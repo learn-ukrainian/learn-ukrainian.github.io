@@ -562,14 +562,23 @@ def _near_cap_credit(candidate: ReviewerCandidate, snapshot: Mapping[str, object
     Only a full routing-budget snapshot carries the credit state its producer
     computed with :func:`credit_lane.lane_credit_state`; a flat health map has
     none. :func:`credit_lane.published_credit_relief` re-checks the published
-    state against the local policy, the clock and the current shared runtime
-    rate-limit records.
+    state against the complete lane record (snapshot staleness, probe
+    freshness, age and stale flag; #9740 F6), the local policy, the clock and
+    the current shared runtime rate-limit records.
     """
     agents = snapshot.get("agents") if isinstance(snapshot, Mapping) else None
     record = agents.get(candidate.route) if isinstance(agents, Mapping) else None
     if not isinstance(record, Mapping):
         return None
-    return credit_lane.published_credit_relief(candidate.route, record.get("credit"), candidate.concrete_model)
+    diagnostics = snapshot.get("diagnostics") if isinstance(snapshot, Mapping) else None
+    snapshot_stale = isinstance(diagnostics, Mapping) and diagnostics.get("stale") is True
+    return credit_lane.published_credit_relief(
+        candidate.route,
+        record.get("credit"),
+        candidate.concrete_model,
+        record=record,
+        snapshot_stale=snapshot_stale,
+    )
 
 
 def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs) -> str | None:

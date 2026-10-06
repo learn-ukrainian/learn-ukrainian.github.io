@@ -1747,3 +1747,87 @@ def test_worker_keeps_budget_substitution_beside_runtime_attribution(monkeypatch
     assert state["substitution"]["runtime_attribution"]["source"] == "cursor-stream-json"
     assert state["resolved_model"] == "grok-4.7"
     assert state["resolved_model_source"] == "cursor-stream-json"
+
+
+# --- #9740 round 2: the budget guard acts on the owner's routing facts -----------------
+
+
+def _fresh_lane(**overrides) -> dict:
+    """A healthy lane record with a fresh probe, as the routing-budget producer publishes it."""
+    record = {"health": {"healthy": True}, "freshness": "fresh", "age_s": 30.0, **overrides}
+    record["codexbar"] = {"freshness": "fresh", "age_s": 30.0, **record.get("codexbar", {})}
+    return record
+
+
+def _owner_guard(monkeypatch, lane: str, record: dict, *, model: str | None = None, **budget) -> str:
+    snapshot = {
+        "recommendation": {"primary_agent_for_code": None, "warnings": []},
+        "agents": {lane: record, "claude": _fresh_lane(status="cool", codexbar={"weekly_remaining_pct": 90.0})},
+        "diagnostics": {"records_loaded": 0, "stale": False, "codexbar_data_available": True},
+        **budget,
+    }
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: snapshot)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
+    return delegate._resolve_agent_with_budget_guard(lane, requested_model=model, fallbacks={lane: "claude"})
+
+
+def test_near_cap_hard_acts_without_cost_ledger_records(monkeypatch, capsys):
+    """F1/F6: a CodexBar near_cap lane is substituted even when the USD ledger is empty."""
+    codex = _fresh_lane(
+        status="near_cap",
+        codexbar={"weekly_remaining_pct": 80.0, "primary_remaining_pct": 3.0, "will_last_to_reset": True},
+    )
+    assert _owner_guard(monkeypatch, "codex", codex, model="gpt-6.1-sol") == "claude"
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" in err and "near_cap (3% remaining on FRESH snapshot)" in err
+
+
+def test_near_cap_on_a_stale_snapshot_stays_advisory(monkeypatch):
+    """A2: the stale-snapshot advisory is unchanged."""
+    codex = _fresh_lane(status="near_cap", codexbar={"primary_remaining_pct": 3.0})
+    stale = {"diagnostics": {"records_loaded": 0, "stale": True, "codexbar_data_available": True}}
+    assert _owner_guard(monkeypatch, "codex", codex, model="gpt-6.1-sol", **stale) == "codex"
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"), [("weekly_pace", "cursor"), ("cursor_auto", "claude"), (None, "claude")]
+)
+def test_hidden_pace_clears_only_a_weekly_pace_hot_label(monkeypatch, source, expected):
+    """F3/A3: hidden pace clears a hot label only when the owner says it came from weekly pace."""
+    cursor = _fresh_lane(
+        status="hot",
+        status_source=source,
+        codexbar={
+            "weekly_used_pct": 30.0,
+            "weekly_remaining_pct": 70.0,
+            "weekly_expected_pct": 0.1,
+            "weekly_pace_delta_pct": 20.0,
+            "will_last_to_reset": False,
+        },
+    )
+    assert _owner_guard(monkeypatch, "cursor", cursor) == expected
+
+
+def test_demoted_message_prints_unknown_health_as_unknown(monkeypatch, capsys):
+    from scripts.api.lane_health import BASIS_SCAN_UNAVAILABLE
+
+    ranked = [
+        {
+            "lane": "kimi",
+            "health": {
+                "healthy": None,
+                "consecutive_failures": None,
+                "span_minutes": None,
+                "basis": BASIS_SCAN_UNAVAILABLE,
+            },
+        },
+        {"lane": "grok", "health": {"healthy": False, "consecutive_failures": 3, "span_minutes": 12}},
+        {"lane": "agy", "health": {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}},
+    ]
+    codex = _fresh_lane(status="cool", codexbar={"weekly_remaining_pct": 80.0, "will_last_to_reset": True})
+    assert _owner_guard(monkeypatch, "codex", codex, model="gpt-6.1-sol", ranked_by_headroom=ranked) == "codex"
+    err = capsys.readouterr().err
+    assert f"⚠ lane kimi health unknown ({BASIS_SCAN_UNAVAILABLE}); not counted as healthy" in err
+    assert "⚠ lane grok demoted: 3 spawn failures in 12m" in err
+    assert "None spawn failures" not in err
+    assert "lane agy" not in err
