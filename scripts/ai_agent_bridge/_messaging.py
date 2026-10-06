@@ -21,7 +21,7 @@ def check_inbox(for_llm: str = "gemini"):
 
     Dual-READ permanent aliases (e.g. ``grok-build`` ↔ ``grok``) so historical
     rows are not orphaned after the seat rename. Phantom launcher-minted
-    ``{provider}-{empty-slots-area}`` names (e.g. ``grok-open-model-data``)
+    ``{provider}-{empty-slots-area}`` names (e.g. ``grok-monitor``)
     resolve to the provider inbox (#7597).
     """
     from ._channels import resolve_recipient_alias

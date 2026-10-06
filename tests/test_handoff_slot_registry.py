@@ -245,7 +245,10 @@ def test_generic_registry_keys_are_registered_or_refused_for_every_provider() ->
 
 
 @pytest.mark.parametrize("provider", ("grok", "kimi", "cursor"))
-@pytest.mark.parametrize("selector, lane", (("folk", "folk"), ("bio", "bio"), ("hramatka", "hramatka")))
+@pytest.mark.parametrize(
+    "selector, lane",
+    (("folk", "folk"), ("bio", "bio"), ("hramatka", "hramatka"), ("open-model-data", "open-model-data")),
+)
 def test_removed_content_slot_refused_by_operator_order(provider: str, selector: str, lane: str) -> None:
     result = _gate(provider, selector)
     assert result.returncode == 1, result.stdout + result.stderr

@@ -204,10 +204,10 @@ def test_inbox_watcher_watchdog_failure_warns_and_continues(
 
 def test_recipients_for_agent_resolves_phantom_empty_roster_identity():
     """A phantom {provider}-{empty-slots-area} identity resolves to provider aliases (#7597)."""
-    recipients = _inbox_watch.recipients_for_agent("grok-open-model-data")
+    recipients = _inbox_watch.recipients_for_agent("grok-monitor")
     assert recipients == ("grok", "grok-build")
-    assert "grok-open-model-data" not in recipients
-    assert _inbox_watch.canonical_slot("grok-open-model-data") == "grok"
+    assert "grok-monitor" not in recipients
+    assert _inbox_watch.canonical_slot("grok-monitor") == "grok"
 
 
 def test_poll_once_surfaces_messages_for_phantom_empty_roster_identity(isolate_db: Path):
@@ -217,7 +217,7 @@ def test_poll_once_surfaces_messages_for_phantom_empty_roster_identity(isolate_d
 
     conn = _inbox_watch.open_readonly_db(isolate_db)
     try:
-        events = _inbox_watch.poll_once(conn, "grok-open-model-data", last_seen=0)
+        events = _inbox_watch.poll_once(conn, "grok-monitor", last_seen=0)
     finally:
         conn.close()
 
