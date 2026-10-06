@@ -12,7 +12,7 @@ import subprocess
 import sys
 import tempfile
 import uuid
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 
@@ -355,17 +355,23 @@ def verify_retrieval(primary: Path, receipt: Mapping[str, Any]) -> str:
 
 
 def _ignored_output_files(
-    worktree: Path, primary: Path, record: Mapping[str, Any], *, absent: list[dict[str, str]] | None = None
+    worktree: Path,
+    primary: Path,
+    record: Mapping[str, Any],
+    *,
+    absent: list[dict[str, str]] | None = None,
+    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
 ) -> list[str]:
     """Inventory output, including unignored files when no index was checked out."""
     # Retain the existing named-link safety checks and nested-repository gates.
-    named = artifacts._named_artifact_files(worktree, record, primary=primary)
-    names = artifacts._git_paths(worktree, "--others", "--ignored", "--exclude-standard")
-    tracked = set(artifacts._git_paths(worktree, "--cached"))
+    runner_options = {} if git_runner is None else {"git_runner": git_runner}
+    named = artifacts._named_artifact_files(worktree, record, primary=primary, **runner_options)
+    names = artifacts._git_paths(worktree, "--others", "--ignored", "--exclude-standard", **runner_options)
+    tracked = set(artifacts._git_paths(worktree, "--cached", **runner_options))
     if not tracked:
         # --no-checkout leaves an empty index and no on-disk .gitignore.
         # Unignored scratch can be task output too; inventory both classes.
-        names += artifacts._git_paths(worktree, "--others", "--exclude-standard")
+        names += artifacts._git_paths(worktree, "--others", "--exclude-standard", **runner_options)
     files: set[str] = set()
     root = worktree.resolve(strict=True)
     for name in names:
@@ -528,6 +534,7 @@ def preserve_worktree_artifacts(
     tasks_dir: Path,
     task_record: Mapping[str, Any] | None = None,
     repo_root: Path | None = None,
+    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
 ) -> tuple[bool, str, dict[str, Any] | None]:
     """Mandatory preservation and retention gate, under the remover's lock.
 
@@ -536,6 +543,7 @@ def preserve_worktree_artifacts(
     oversized output, failed retrieval, or explicit retention refuses removal.
     Vanished paths require fresh lstat absence proof; byte changes still refuse.
     Caller records and task IDs are hints, never retention authority.
+    A supplied ``git_runner`` applies to every Git inventory and its recheck.
     """
     from scripts.orchestration.worktree_claims import identity_cache_publication_allowed
 
@@ -548,6 +556,7 @@ def preserve_worktree_artifacts(
         "next_condition": "establish canonical task attribution and verified retrieval",
     }
     absent: list[dict[str, str]] = []
+    runner_options = {} if git_runner is None else {"git_runner": git_runner}
     try:
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
@@ -557,7 +566,7 @@ def preserve_worktree_artifacts(
             repo_root=repo_root,
             publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
         )
-        files = _ignored_output_files(worktree, primary, record, absent=absent)
+        files = _ignored_output_files(worktree, primary, record, absent=absent, **runner_options)
         if not files and not absent and not record.get("keep_worktree"):
             return True, "", None
         identity = record.get("task_id")
@@ -631,7 +640,7 @@ def preserve_worktree_artifacts(
             metadata["next_condition"] = "owner repairs failed retrieval and verifies all bytes"
             metadata["retrieval_proof_sha256"] = verify_retrieval(primary, metadata)
             if (
-                files != _ignored_output_files(worktree, primary, record, absent=absent)
+                files != _ignored_output_files(worktree, primary, record, absent=absent, **runner_options)
                 or _content_digest(worktree, files) != digest
             ):
                 raise ValueError("ignored output changed during preservation")

@@ -669,6 +669,7 @@ def git_worktree_remove(
 
     try:
         primary = control_root if control_root is not None else control_plane_root(repo_root)
+        runner_options = {} if git_runner is None else {"git_runner": git_runner}
         ok, refusal, metadata = preserve_worktree_artifacts(
             target,
             primary=primary,
@@ -676,6 +677,7 @@ def git_worktree_remove(
             tasks_dir=tasks_dir if tasks_dir is not None else primary / "batch_state" / "tasks",
             task_record=task_record,
             repo_root=repo_root,
+            **runner_options,
         )
     except (ControlPlaneError, OSError, ValueError) as exc:
         return f"artifact preservation failed: {exc}; refusing worktree removal"

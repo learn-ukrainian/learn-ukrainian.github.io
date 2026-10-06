@@ -252,6 +252,47 @@ def preserve(checkout, record=None, task_id="output-task"):
     )
 
 
+@pytest.mark.parametrize("empty_index", [False, True])
+@pytest.mark.parametrize("returncode", [0, 128])
+def test_preservation_uses_supplied_runner_for_all_inventory(checkout, monkeypatch, empty_index, returncode):
+    repo, primary, tasks = checkout
+    name = "ignored/answer.txt"
+    payload = b"preserved answer"
+    artifact(checkout, name, payload)
+    if empty_index:
+        subprocess.run(["git", "read-tree", "--empty"], cwd=repo, check=True, timeout=30)
+    record = {"task_id": "output-task", "worktree_path": str(repo), "response": f"Saved `{name}`."}
+    (tasks / "output-task.json").write_text(json.dumps(record))
+    run = subprocess.run
+    calls = []
+
+    def runner(cwd, args):
+        calls.append((cwd, args))
+        if returncode:
+            return subprocess.CompletedProcess(["git", *args], returncode, "", "inventory unavailable")
+        return run(["git", *args], cwd=cwd, env=output.artifacts._safe_git_env(), capture_output=True, timeout=30)
+
+    def ordinary_git(*_args, **_kwargs):
+        pytest.fail("preservation must use the supplied runner for every Git probe")
+
+    monkeypatch.setattr(output.artifacts.subprocess, "run", ordinary_git)
+    ok, reason, receipt = output.preserve_worktree_artifacts(
+        repo, primary=primary, task_id="output-task", tasks_dir=tasks, git_runner=runner
+    )
+    assert calls and all(cwd == repo for cwd, _ in calls)
+    if returncode:
+        assert not ok and "non-zero exit status 128" in reason
+        assert (repo / name).read_bytes() == payload
+        assert not (primary / "batch_state/preserved").exists()
+    else:
+        assert ok and not reason
+        assert (primary / receipt["location"] / name).read_bytes() == payload
+        named_probe = ["ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name]
+        assert sum(args == named_probe for _, args in calls) == 2  # Initial inventory and post-copy recheck.
+        if empty_index:
+            assert (primary / receipt["location"] / ".gitignore").read_bytes() == (repo / ".gitignore").read_bytes()
+
+
 @pytest.mark.parametrize("status", ["done", "no_deliverable", "failed"])
 def test_all_ignored_output_preserved_without_response_names(checkout, status):
     repo, _, tasks = checkout
