@@ -864,7 +864,10 @@ def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> No
     assert job_id == "pytest" and telemetry["continue-on-error"] is True
     assert telemetry["uses"].startswith("actions/download-artifact@")
     assert telemetry["with"]["name"] == "pytest-duration-snapshot"
-    assert all("continue-on-error" not in job for job in _jobs_of_ci().values())
+    # Only the report-only component shadow may tolerate a whole-job failure.
+    assert {
+        job_id: job["continue-on-error"] for job_id, job in _jobs_of_ci().items() if "continue-on-error" in job
+    } == {"component-shadow": True}
     for job_id, job in _jobs_of_ci().items():
         for step in job.get("steps", []):
             uses = step.get("uses")
