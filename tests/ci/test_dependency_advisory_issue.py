@@ -3,11 +3,17 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
+import yaml
 
 from scripts.ci import dependency_advisory_issue as helper
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "security-audit.yml"
 
 
 def _pip_report() -> dict:
@@ -141,6 +147,156 @@ def test_build_issue_body_escapes_pipes_and_newlines() -> None:
     )
     assert "pkg\\|evil name" in body
     assert "\nname" not in body
+
+
+def test_collect_npm_findings_reports_effective_package_severity() -> None:
+    """The issue body shows the effective package severity, not one via entry's."""
+    vulns = {
+        "minimist": {
+            "severity": "critical",
+            "fixAvailable": {"name": "minimist", "version": "1.2.8"},
+            "via": [
+                {
+                    "source": 1067342,
+                    "name": "minimist",
+                    "title": "Prototype Pollution in minimist",
+                    "url": "https://github.com/advisories/GHSA-xvch-5gv4-984h",
+                    "severity": "critical",
+                }
+            ],
+        },
+        # Own advisory is High, but the transitive link to critical minimist
+        # raises the effective package severity to Critical.
+        "wrapper": {
+            "severity": "high",
+            "fixAvailable": False,
+            "via": [
+                {
+                    "source": 7,
+                    "name": "wrapper",
+                    "title": "Wrapper issue",
+                    "url": "https://github.com/advisories/GHSA-0000-0000-0002",
+                    "severity": "high",
+                },
+                "minimist",
+            ],
+        },
+    }
+    findings = helper.collect_npm_findings(vulns, [], target="root")
+    wrapper_rows = [f for f in findings if f["package"] == "wrapper"]
+    assert wrapper_rows
+    assert all(f["severity"] == "critical" for f in wrapper_rows)
+
+
+def _completed(returncode: int, stdout: str, stderr: str = "") -> subprocess.CompletedProcess:
+    return subprocess.CompletedProcess(args=[], returncode=returncode, stdout=stdout, stderr=stderr)
+
+
+def _fake_repo(root: Path, *, site_lock: bool = True) -> Path:
+    root.mkdir()
+    (root / "requirements-lock.txt").write_text("requests==2.31.0\n", encoding="utf-8")
+    (root / "package.json").write_text("{}\n", encoding="utf-8")
+    (root / "package-lock.json").write_text("{}\n", encoding="utf-8")
+    (root / "site").mkdir()
+    (root / "site" / "package.json").write_text("{}\n", encoding="utf-8")
+    if site_lock:
+        (root / "site" / "package-lock.json").write_text("{}\n", encoding="utf-8")
+    return root
+
+
+def _stub_audits(pip: subprocess.CompletedProcess, npm: subprocess.CompletedProcess):
+    def fake_run(cmd: list[str], **_kwargs: object) -> subprocess.CompletedProcess:
+        if "pip_audit" in cmd:
+            return pip
+        return npm
+
+    return fake_run
+
+
+_CLEAN_PIP = _completed(0, json.dumps({"dependencies": []}))
+_CLEAN_NPM = _completed(0, json.dumps({"vulnerabilities": {}}))
+
+
+def test_run_collect_clean_audit_returns_no_findings(tmp_path: Path) -> None:
+    repo = _fake_repo(tmp_path / "repo")
+    with patch.object(helper.subprocess, "run", side_effect=_stub_audits(_CLEAN_PIP, _CLEAN_NPM)):
+        assert helper.run_collect(repo) == []
+
+
+def test_run_collect_pip_audit_exit_2_raises(tmp_path: Path) -> None:
+    repo = _fake_repo(tmp_path / "repo")
+    pip = _completed(2, json.dumps({"dependencies": []}))
+    with patch.object(helper.subprocess, "run", side_effect=_stub_audits(pip, _CLEAN_NPM)):
+        with pytest.raises(RuntimeError, match=r"pip-audit failed with exit code 2"):
+            helper.run_collect(repo)
+
+
+def test_run_json_command_unparseable_json_raises(tmp_path: Path) -> None:
+    with patch.object(helper.subprocess, "run", return_value=_completed(0, "not json")):
+        with pytest.raises(RuntimeError, match=r"pip-audit: failed to parse JSON output"):
+            helper._run_json_command(["pip_audit"], cwd=tmp_path, timeout=1, label="pip-audit")
+
+
+def test_run_json_command_non_object_json_raises(tmp_path: Path) -> None:
+    with patch.object(helper.subprocess, "run", return_value=_completed(0, "[1, 2]")):
+        with pytest.raises(RuntimeError, match=r"unexpected report format"):
+            helper._run_json_command(["npm"], cwd=tmp_path, timeout=1, label="npm audit (root)")
+
+
+def test_run_collect_unparseable_tool_output_raises(tmp_path: Path) -> None:
+    repo = _fake_repo(tmp_path / "repo")
+    pip = _completed(1, "traceback, not json")
+    with patch.object(helper.subprocess, "run", side_effect=_stub_audits(pip, _CLEAN_NPM)):
+        with pytest.raises(RuntimeError, match=r"failed to parse JSON output"):
+            helper.run_collect(repo)
+
+
+def test_run_collect_npm_error_payload_raises(tmp_path: Path) -> None:
+    repo = _fake_repo(tmp_path / "repo")
+    npm = _completed(1, json.dumps({"error": {"summary": "audit endpoint exploded"}}))
+    with patch.object(helper.subprocess, "run", side_effect=_stub_audits(_CLEAN_PIP, npm)):
+        with pytest.raises(RuntimeError, match=r"npm audit reported an error"):
+            helper.run_collect(repo)
+
+
+def test_run_collect_missing_lockfile_raises(tmp_path: Path) -> None:
+    repo = _fake_repo(tmp_path / "repo", site_lock=False)
+    with patch.object(helper.subprocess, "run", side_effect=_stub_audits(_CLEAN_PIP, _CLEAN_NPM)):
+        with pytest.raises(RuntimeError, match=r"package\.json or package-lock\.json missing"):
+            helper.run_collect(repo)
+
+
+def test_daily_schedule_runs_only_the_advisory_issue_job() -> None:
+    """The daily cron refreshes only the tracking issue; blocking jobs stay weekly (#9871)."""
+    workflow = yaml.safe_load(_WORKFLOW.read_text(encoding="utf-8"))
+    triggers = workflow.get("on", workflow.get(True))
+    crons = [entry["cron"] for entry in triggers["schedule"]]
+    assert "23 4 * * *" in crons  # daily advisory refresh
+    assert "0 9 * * 1" in crons  # weekly blocking audit
+    jobs = workflow["jobs"]
+    for name in ("pip-audit", "npm-audit"):
+        assert "github.event.schedule != '23 4 * * *'" in jobs[name]["if"], name
+    advisory_condition = jobs["advisory-issue"]["if"]
+    assert "github.event.schedule == '23 4 * * *'" in advisory_condition
+
+
+def test_help_follows_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as exc:
+        helper.main(["--help"])
+    assert exc.value.code == 0
+    out = capsys.readouterr().out
+    for heading in ("Examples:", "Outputs:", "Exit codes:", "Related:"):
+        assert heading in out
+    assert ".venv/bin/python" in out
+
+
+def test_collect_help_documents_repo_root_default(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as exc:
+        helper.main(["collect", "--help"])
+    assert exc.value.code == 0
+    out = capsys.readouterr().out
+    assert "--repo-root" in out
+    assert "default:" in out
 
 
 def test_decide_action() -> None:

@@ -124,7 +124,10 @@ def collect_npm_findings(vulns: dict, ignored_ids: list[str], *, target: str) ->
                     "ecosystem": f"npm ({target})",
                     "package": package,
                     "advisory_id": _advisory_id(advisory),
-                    "severity": str(advisory.get("severity", severity)).lower() or severity,
+                    # Report the effective package severity (transitive-max from
+                    # filter_npm_audit_vulnerabilities), not the severity of this
+                    # one via entry, which can be lower.
+                    "severity": severity,
                     "fixed_version": fixed_version or "see advisory",
                 }
             )
@@ -273,21 +276,70 @@ def _load_findings(path: Path) -> list[Finding]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Maintain the scheduled dependency-advisory tracking issue from audit findings.\n"
+            "Use from the security-audit.yml advisory-issue job; not for the blocking per-PR audit."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.ci.dependency_advisory_issue collect --out ci-artifacts/dependency-findings.json\n"
+            "  .venv/bin/python -m scripts.ci.dependency_advisory_issue plan --findings ci-artifacts/dependency-findings.json --issue-number 123 --body-out ci-artifacts/advisory-issue-body.md\n"
+            "\n"
+            "Outputs:\n"
+            "  collect: writes a {\"findings\": [...]} JSON file to --out.\n"
+            "  plan: writes the rendered issue body to --body-out for create/update and appends\n"
+            "  action=<create|update|close|none> and issue_number=<n> to $GITHUB_OUTPUT.\n"
+            "\n"
+            "Exit codes:\n"
+            "  0 on success (a clean audit is success). Non-zero when pip-audit or npm audit\n"
+            "  fails, is missing inputs, or returns unparseable output, so a broken audit can\n"
+            "  never close the tracking issue.\n"
+            "\n"
+            "Related:\n"
+            "  Suppression logic: scripts/ci/audit_dependencies.py with\n"
+            "  scripts/config/pip-audit-ignore.yaml and scripts/config/npm-audit-ignore.yaml.\n"
+            "  Workflow: the advisory-issue job in .github/workflows/security-audit.yml (#9871)."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     sub = parser.add_subparsers(dest="command", required=True)
 
     collect_parser = sub.add_parser("collect", help="run audits and write unsuppressed findings JSON")
-    collect_parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[2])
-    collect_parser.add_argument("--out", type=Path, required=True, help="findings JSON output path")
+    collect_parser.add_argument(
+        "--repo-root",
+        type=Path,
+        default=Path(__file__).resolve().parents[2],
+        help=(
+            "repository root holding requirements-lock.txt plus root and site/ npm manifests "
+            "(default: %(default)s)"
+        ),
+    )
+    collect_parser.add_argument(
+        "--out",
+        type=Path,
+        required=True,
+        help="findings JSON output path, e.g. ci-artifacts/dependency-findings.json (required)",
+    )
 
     plan_parser = sub.add_parser("plan", help="decide the tracking-issue action and render its body")
-    plan_parser.add_argument("--findings", type=Path, required=True, help="findings JSON from collect")
+    plan_parser.add_argument(
+        "--findings",
+        type=Path,
+        required=True,
+        help="findings JSON written by collect (required)",
+    )
     plan_parser.add_argument(
         "--issue-number",
         default="",
-        help="number of the currently open tracking issue, or empty when none is open",
+        help="number of the currently open tracking issue, or empty when none is open (default: '')",
     )
-    plan_parser.add_argument("--body-out", type=Path, required=True, help="path to write the issue body")
+    plan_parser.add_argument(
+        "--body-out",
+        type=Path,
+        required=True,
+        help="path to write the rendered issue body for create/update actions (required)",
+    )
 
     args = parser.parse_args(argv)
 

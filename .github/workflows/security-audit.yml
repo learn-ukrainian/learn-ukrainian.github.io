@@ -33,6 +33,9 @@ on:
 jobs:
   pip-audit:
     name: pip-audit (blocking)
+    # Weekly Monday schedule, PRs and dispatch only: the daily 04:23 UTC run
+    # exists solely to refresh the advisory tracking issue (#9871).
+    if: ${{ github.event.schedule != '23 4 * * *' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -53,6 +56,9 @@ jobs:
 
   npm-audit:
     name: npm-audit (blocking)
+    # Weekly Monday schedule, PRs and dispatch only: the daily 04:23 UTC run
+    # exists solely to refresh the advisory tracking issue (#9871).
+    if: ${{ github.event.schedule != '23 4 * * *' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -82,10 +88,11 @@ jobs:
 
   advisory-issue:
     name: Dependency advisory tracking issue
-    # Scheduled/dispatch runs on the default branch maintain a single issue
-    # labelled dependency-advisory with unsuppressed findings, closing it when
-    # the audit comes back clean (#9871). PR runs never touch issues.
-    if: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' }}
+    # The daily 04:23 UTC schedule (and manual dispatch) on the default branch
+    # maintains a single issue labelled dependency-advisory with unsuppressed
+    # findings, closing it when the audit comes back clean (#9871). The weekly
+    # schedule and PR runs never touch issues.
+    if: ${{ github.ref == 'refs/heads/main' && (github.event.schedule == '23 4 * * *' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:

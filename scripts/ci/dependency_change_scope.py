@@ -272,30 +272,60 @@ def decide_from_changed(
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Decide whether a diff touches a declared dependency input and emit run=true|false.\n"
+            "Use from the CI dependency-audit scope step before the full audit; not a general diff tool."
+        ),
+        epilog=(
+            "Examples:\n"
+            '  .venv/bin/python scripts/ci/dependency_change_scope.py --event pull_request --base "$BASE_SHA" --head "$HEAD_SHA"\n'
+            '  .venv/bin/python scripts/ci/dependency_change_scope.py --event push --base "$PUSH_BEFORE"\n'
+            "\n"
+            "Outputs:\n"
+            "  Prints a dependency-scope decision line on stdout; appends run=true|false to\n"
+            "  $GITHUB_OUTPUT and a summary section to $GITHUB_STEP_SUMMARY when those are set.\n"
+            "\n"
+            "Exit codes:\n"
+            "  Always 0. Any uncertainty (missing base SHA, unresolvable merge-base, git diff\n"
+            "  failure or timeout) fails closed to run=true so the full audit still executes.\n"
+            "\n"
+            "Related:\n"
+            "  Denominator: scripts/ci/dependency_change_denominator.json (#9871).\n"
+            "  Consumer: the dependency-audit job in .github/workflows/ci.yml.\n"
+            "  Sibling: scripts/ci/frontend_change_scope.py (#6917 / #6930) uses the same pattern."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument(
         "--base",
         default="",
-        help="base SHA/ref (pull_request.base.sha || merge_group.base_sha || before)",
+        help=(
+            "base SHA/ref to diff against (pull_request.base.sha || merge_group.base_sha || "
+            "push before). Default: '' — an empty or all-zero base fails closed to run=true."
+        ),
     )
     parser.add_argument(
         "--head",
         default="HEAD",
         help=(
-            "head SHA/ref (pull_request.head.sha || merge_group.head_sha || github.sha). "
-            "Must be the event head — not the PR merge commit checkout HEAD."
+            "head SHA/ref (pull_request.head.sha || merge_group.head_sha || github.sha); "
+            "must be the event head, not the PR merge-commit checkout HEAD. Default: HEAD."
         ),
     )
     parser.add_argument(
         "--event",
         default="",
-        help="github.event_name: pull_request|merge_group → merge-base; push → two-dot",
+        help=(
+            "github.event_name: pull_request|merge_group use merge-base range semantics, "
+            "anything else uses linear two-dot. Default: '' (treated as push)."
+        ),
     )
     parser.add_argument(
         "--denominator",
         type=Path,
         default=None,
-        help=f"denominator JSON (default: {DENOMINATOR_REL})",
+        help=f"denominator JSON listing dependency inputs. Default: {DENOMINATOR_REL}.",
     )
     args = parser.parse_args(argv)
 
