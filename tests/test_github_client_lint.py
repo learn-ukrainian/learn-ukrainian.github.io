@@ -10,8 +10,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUSIONS = {
-    "scripts/delegate.py": "#9878: accountable driver migrates after concurrent edit settles",
-    "scripts/orchestration/reap_worktrees.py": "#9889: accountable driver migrates after merge",
+    "scripts/delegate.py": (2, "#9878: accountable driver migrates after concurrent edit settles"),
+    "scripts/orchestration/reap_worktrees.py": (1, "#9889: accountable driver migrates after merge"),
 }
 CLIENT = "scripts/common/github_client.py"
 
@@ -181,9 +181,15 @@ def inventory_violations(root):
     violations = []
     for path in (root / "scripts").rglob("*.py"):
         relative = path.relative_to(root).as_posix()
-        if relative in EXCLUSIONS or relative == CLIENT:
+        if relative == CLIENT:
             continue
-        violations.extend(bypasses(path.read_text(encoding="utf-8"), relative))
+        found = bypasses(path.read_text(encoding="utf-8"), relative)
+        if relative in EXCLUSIONS:
+            count, owner = EXCLUSIONS[relative]
+            if len(found) != count:
+                violations.append(f"{relative}: expected {count} deferred sites ({owner}), found {len(found)}")
+        else:
+            violations.extend(found)
     return violations
 
 
@@ -225,6 +231,19 @@ def test_shared_client_is_allowed():
         'from scripts.common.github_client import run\ndef probe():\n return run(["gh","pr","list"])',
         "scripts/probe.py",
     )
+
+
+@pytest.mark.parametrize("path,count", [(path, entry[0]) for path, entry in EXCLUSIONS.items()])
+def test_deferred_file_rejects_added_raw_call(tmp_path, path, count):
+    target = tmp_path / path
+    target.parent.mkdir(parents=True)
+    target.write_text(
+        "import subprocess\n"
+        + "\n".join(f'def bypass_{i}():\n return subprocess.run(["gh", "pr", "list"])' for i in range(count))
+    )
+    assert inventory_violations(tmp_path) == []
+    target.write_text(target.read_text() + '\nsubprocess.run(["gh", "api", "user"])\n')
+    assert len(inventory_violations(tmp_path)) == 1
 
 
 @pytest.mark.parametrize("name", ["guard-pr-merge.py", "guard-admin-merge.py"])

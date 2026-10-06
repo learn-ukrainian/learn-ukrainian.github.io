@@ -3,6 +3,9 @@
 All GitHub I/O belongs here. Publishing admission still belongs to
 ``scripts.publish``; this module does not grant permission to publish.
 Conditional GETs follow GitHub's documented ETag protocol. No request is retried.
+Only fully modelled argv/JSON fields translate; other commands retain their
+native gh semantics through the same bounded, colour-safe process transport.
+Stale JSON reads require allow_stale=True; binary responses are never cached.
 """
 
 from __future__ import annotations
@@ -198,12 +201,14 @@ class GitHubClient:
         runner=None,
         clock=time.time,
         max_response_bytes=None,
+        allow_stale=False,
     ):
         self.env = colour_safe_environment(env)
         self.cwd = cwd
         self.transport = transport
         self.runner = runner
         self.clock = clock
+        self.allow_stale = allow_stale
         if max_response_bytes is not None and (type(max_response_bytes) is not int or max_response_bytes < 0):
             raise ValueError("invalid GitHub response byte limit")
         self.max_response_bytes = max_response_bytes
@@ -293,8 +298,20 @@ class GitHubClient:
             return Response(413, response.headers, b'{"message":"github_response_too_large"}')
         return response
 
-    def request(self, method, endpoint, *, payload=None, timeout=30, fresh=False, headers=None, raw_response=False):
+    def request(
+        self,
+        method,
+        endpoint,
+        *,
+        payload=None,
+        timeout=30,
+        fresh=False,
+        allow_stale=None,
+        headers=None,
+        raw_response=False,
+    ):
         method = method.upper()
+        allow_stale = self.allow_stale if allow_stale is None else allow_stale
         if endpoint.startswith("https://"):
             parsed = urlparse(endpoint)
             allowed = (
@@ -329,12 +346,27 @@ class GitHubClient:
             ).encode()
             + (raw or b"")
         ).hexdigest()
+        cacheable = (
+            read
+            and not raw_response
+            and not any(
+                name.lower() == "accept" and value == "application/octet-stream"
+                for name, value in (headers or {}).items()
+            )
+            and not re.search(r"/(?:releases/assets/\d+|artifacts/\d+/zip)$", resource_path)
+        )
         now = self.clock()
         with self._db() as db:
-            cached = db.execute(
-                "SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND (? IS NULL OR length(body)<=?)",
-                (self.scope, key, self.max_response_bytes, self.max_response_bytes),
-            ).fetchone()
+            cached = (
+                db.execute(
+                    "SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND (? IS NULL OR length(body)<=?)",
+                    (self.scope, key, self.max_response_bytes, self.max_response_bytes),
+                ).fetchone()
+                if cacheable
+                else None
+            )
+            if not cacheable or (cached and json.loads(cached[1]).get("_github_binary")):
+                cached = None
             budget = db.execute(
                 "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (?, 'secondary') ORDER BY reset DESC",
                 (self.scope, resource),
@@ -342,7 +374,7 @@ class GitHubClient:
         limited = next((reset for remaining, reset in budget if remaining <= RESERVE and reset > now), None)
 
         def deferred(reset):
-            if read and cached and not fresh:
+            if allow_stale and cached and not fresh:
                 return Result(
                     _cached_value(cached),
                     stale=True,
@@ -397,14 +429,10 @@ class GitHubClient:
                 )
                 return Result(_cached_value(cached), status=304, headers=h)
             if 200 <= response.status < 300 and (raw_response or headers.get("Accept") == "application/octet-stream"):
-                if read:
-                    _store_cache(db, self.scope, key, response.body, {**h, "_github_binary": True}, now)
                 return Result(response.body, status=response.status, headers=h)
             try:
                 value = json.loads(response.body) if response.body else None
             except ValueError:
-                if read and 200 <= response.status < 300:
-                    _store_cache(db, self.scope, key, response.body, {**h, "_github_binary": True}, now)
                 return Result(
                     response.body,
                     status=response.status,
@@ -431,7 +459,7 @@ class GitHubClient:
                 for name, rate in value.get("resources", {}).items():
                     if isinstance(rate, dict) and type(rate.get("remaining")) is int and type(rate.get("reset")) is int:
                         _store_budget(db, self.scope, name, rate["remaining"], rate["reset"])
-            if read:
+            if cacheable:
                 _store_cache(db, self.scope, key, response.body, h, now)
             else:
                 # Any write can affect list/detail cache entries. Retain them
@@ -503,6 +531,10 @@ def _options(args):
         "-S",
         "-A",
         "-a",
+        "-w",
+        "-b",
+        "-e",
+        "-c",
     }
     iterator = iter(args)
     for arg in iterator:
@@ -538,17 +570,22 @@ def _next_link(headers):
     return next((m.group(1) for m in re.finditer(r'<([^>]+)>;\s*rel="next"', headers.get("link", ""))), None)
 
 
-def _pages(client, endpoint, *, timeout, fresh, paginate):
+def _pages(client, endpoint, *, timeout, fresh, paginate, limit=None, items=lambda value: value):
     pages = []
+    count = 0
     for _ in range(100):
         result = client.request("GET", endpoint, timeout=timeout, fresh=fresh)
         if result.error:
             return result
         pages.append(result)
+        if limit is not None:
+            count += len(items(result.value))
+            if count >= limit:
+                return pages
         endpoint = _next_link(result.headers) if paginate else None
         if not endpoint:
             return pages
-    raise RuntimeError("GitHub pagination exceeds safety bound")
+    return Result(error="github_pagination_limit")
 
 
 def _merge_observation(result, *observations):
@@ -587,6 +624,15 @@ def _project(row, kind):
     if kind in {"pr", "issue"}:
         value["state"] = "MERGED" if row.get("merged_at") else str(row.get("state", "")).upper()
         value["author"] = row.get("user")
+        value["labels"] = [
+            {
+                "id": label.get("node_id", ""),
+                "name": label.get("name", ""),
+                "description": label.get("description") or "",
+                "color": label.get("color", ""),
+            }
+            for label in row.get("labels", [])
+        ]
     if kind == "pr":
         head, base = row.get("head") or {}, row.get("base") or {}
         value.update(
@@ -617,6 +663,9 @@ def _project(row, kind):
         }.get(row.get("mergeable_state"), "UNKNOWN")
     if kind == "run":
         value["workflowName"] = row.get("name")
+        value["workflowDatabaseId"] = row.get("workflow_id")
+        value["startedAt"] = row.get("run_started_at")
+        value["attempt"] = row.get("run_attempt")
     if kind == "release":
         value["assets"] = [
             {**asset, "url": asset.get("browser_download_url"), "size": asset.get("size")}
@@ -654,6 +703,10 @@ def _read_command(client, kind, action, options, positional, *, timeout, fresh):
         head = _opt(options, "--head")
         query["head"] = head if ":" in head else repo.split("/")[0] + ":" + head
     limit = int(_opt(options, "--limit", "-L", default=30))
+    if limit <= 0:
+        raise ValueError("invalid GitHub list limit")
+    if action == "list":
+        query["per_page"] = min(limit, 100)
     if kind == "pr" and action in {"view", "checks", "diff"}:
         if not number or not str(number).isdigit():
             head = (
@@ -765,7 +818,24 @@ def _read_command(client, kind, action, options, positional, *, timeout, fresh):
                 terms.append("is:merged" if state == "merged" else f"state:{state}")
             terms.extend("label:" + json.dumps(label) for label in options.get("--label", []))
             endpoint = "search/issues?" + urlencode({"q": " ".join(terms), "per_page": 100})
-        pages = _pages(client, endpoint, timeout=timeout, fresh=fresh, paginate=action == "list")
+
+        def matching(value):
+            rows = value["items"] if searching else value
+            if kind == "issue":
+                rows = [r for r in rows if "pull_request" not in r]
+            if _opt(options, "--state") == "merged" and not searching:
+                rows = [r for r in rows if r.get("merged_at")]
+            return rows
+
+        pages = _pages(
+            client,
+            endpoint,
+            timeout=timeout,
+            fresh=fresh,
+            paginate=action == "list",
+            limit=limit if action == "list" else None,
+            items=matching,
+        )
         if isinstance(pages, Result):
             return pages
         result = pages[0]
@@ -852,11 +922,27 @@ def _read_command(client, kind, action, options, positional, *, timeout, fresh):
                 else f"{root}/actions/runs"
             )
             endpoint = runs_root + ("/" + str(number) if action == "view" else "?" + urlencode(query))
-        result = client.request("GET", endpoint, timeout=timeout, fresh=fresh)
-        if result.error:
-            return result
+        if action == "list":
+            pages = _pages(
+                client,
+                endpoint,
+                timeout=timeout,
+                fresh=fresh,
+                paginate=True,
+                limit=limit,
+                items=lambda value: value["workflow_runs"],
+            )
+            if isinstance(pages, Result):
+                return pages
+            result = pages[0]
+            rows = [r for page in pages for r in page.value["workflow_runs"]]
+            _merge_observation(result, *pages)
+        else:
+            result = client.request("GET", endpoint, timeout=timeout, fresh=fresh)
+            if result.error:
+                return result
         value = (
-            [_project(r, "run") for r in result.value.get("workflow_runs", [])[:limit]]
+            [_project(r, "run") for r in rows[:limit]]
             if action == "list"
             else _project(result.value, "run")
             if isinstance(result.value, dict)
@@ -1212,7 +1298,286 @@ def _format_value(value, options, *, api=False):
     return json.dumps(value, ensure_ascii=False).encode()
 
 
-def _run_command(args, *, runner=None, client=None, fresh=False, **kwargs):
+def _translation_options(args):
+    """Closed translation shapes; all other argv stays intact for real gh.
+
+    Admission is separate. In particular -H means head in pr list, while
+    -s means status in run list. Never guess at flags or requested fields.
+    """
+    repo = {"--repo", "-R"}
+    formatting = {"--json", "--jq", "-q"}
+    listing = formatting | repo | {"--limit", "-L"}
+    basic = {"id", "number", "title", "body", "url", "state", "createdAt", "updatedAt", "closedAt", "labels"}
+    pr = basic | {
+        "headRefOid",
+        "headRefName",
+        "baseRefOid",
+        "baseRefName",
+        "isDraft",
+        "mergedAt",
+        "mergeCommit",
+        "mergeable",
+        "mergeStateStatus",
+        "isCrossRepository",
+        "additions",
+        "deletions",
+        "changedFiles",
+        "files",
+        "autoMergeRequest",
+        "reviewDecision",
+        "closingIssuesReferences",
+    }
+    run = {
+        "databaseId",
+        "number",
+        "displayTitle",
+        "headSha",
+        "headBranch",
+        "status",
+        "conclusion",
+        "event",
+        "url",
+        "createdAt",
+        "updatedAt",
+        "workflowName",
+        "workflowDatabaseId",
+        "startedAt",
+        "attempt",
+    }
+    shapes = {
+        ("pr", "list"): (
+            listing | {"--state", "-s"},
+            pr - {"autoMergeRequest", "reviewDecision", "closingIssuesReferences"},
+            0,
+            0,
+        ),
+        ("pr", "view"): (formatting | repo, pr, 0, 1),
+        ("issue", "list"): (listing | {"--state", "-s"}, basic, 0, 0),
+        ("issue", "view"): (formatting | repo, basic, 1, 1),
+        ("repo", "view"): (
+            formatting,
+            {"nameWithOwner", "isPrivate", "viewerPermission", "visibility", "defaultBranchRef"},
+            0,
+            1,
+        ),
+        ("run", "list"): (
+            listing
+            | {"--workflow", "-w", "--branch", "-b", "--event", "-e", "--status", "-s", "--commit", "-c", "--created"},
+            run,
+            0,
+            0,
+        ),
+        ("run", "view"): (formatting | repo, run | {"jobs"}, 1, 1),
+    }
+    # Only these publishing flags have exact implementations. Unknown write
+    # shapes also use the admitted native transport, without granting admission.
+    text = {"--title", "--body", "--body-file"}
+    for kind in ("pr", "issue"):
+        shapes[(kind, "comment")] = (repo | {"--body", "--body-file"}, None, 1, 1)
+        shapes[(kind, "create")] = (
+            repo | text | {"--label", "--milestone"} | ({"--head", "--base", "--draft"} if kind == "pr" else set()),
+            None,
+            0,
+            0,
+        )
+        shapes[(kind, "edit")] = (
+            repo
+            | text
+            | {"--add-label", "--remove-label", "--milestone", "--remove-milestone"}
+            | ({"--base"} if kind == "pr" else set()),
+            None,
+            1,
+            1,
+        )
+        shapes[(kind, "close")] = (repo | {"--comment"} | ({"--reason"} if kind == "issue" else set()), None, 1, 1)
+        shapes[(kind, "reopen")] = (repo, None, 1, 1)
+    shapes[("pr", "merge")] = (
+        repo | {"--squash", "--match-head-commit", "--subject", "--body", "--disable-auto"},
+        None,
+        1,
+        1,
+    )
+    shapes[("pr", "ready")] = (repo, None, 1, 1)
+    shapes[("pr", "update-branch")] = (repo, None, 1, 1)
+    shapes[("run", "rerun")] = (repo | {"--failed"}, None, 1, 1)
+    if len(args) < 3:
+        return None
+    api = args[1] == "api"
+    tokens = args[2:] if api else args[3:]
+    shape = (
+        (
+            {
+                "--method",
+                "-X",
+                "--input",
+                "--header",
+                "-H",
+                "--field",
+                "-F",
+                "--raw-field",
+                "-f",
+                "--paginate",
+                "--slurp",
+                "--jq",
+                "-q",
+            },
+            None,
+            1,
+            1,
+        )
+        if api
+        else shapes.get(tuple(args[1:3]))
+    )
+    if shape is None:
+        return None
+    allowed, fields, minimum, maximum = shape
+    # Preflight before parsing: an unknown valued flag must not steal a
+    # positional argument or be silently treated as a boolean.
+    iterator = iter(tokens)
+    for token in iterator:
+        if token == "--":
+            break
+        if token.startswith("-"):
+            flag, eq, value = token.partition("=")
+            if flag not in allowed:
+                return None
+            boolean = flag in {
+                "--draft",
+                "--remove-milestone",
+                "--squash",
+                "--disable-auto",
+                "--failed",
+                "--paginate",
+                "--slurp",
+            }
+            if boolean and eq:
+                return None
+            if not eq and not boolean and next(iterator, None) is None:
+                return None
+    options, positional = _options(tokens)
+    if any(
+        short in options and long in options
+        for short, long in {
+            "-R": "--repo",
+            "-L": "--limit",
+            "-q": "--jq",
+            "-X": "--method",
+            "-s": "--status" if args[1] == "run" else "--state",
+            "-w": "--workflow",
+            "-b": "--branch",
+            "-e": "--event",
+            "-c": "--commit",
+            "-f": "--raw-field",
+            "-F": "--field",
+            "-H": "--header",
+        }.items()
+    ):
+        return None
+    if not minimum <= len(positional) <= maximum:
+        return None
+    if any(
+        len(values) > 1
+        for flag, values in options.items()
+        if flag
+        not in {"--label", "--add-label", "--remove-label", "-H", "--header", "-f", "--raw-field", "-F", "--field"}
+    ):
+        return None
+    if fields is not None:
+        requested = set(str(_opt(options, "--json", default="")).split(","))
+        if "--json" not in options or not requested <= fields:
+            return None
+    if api:
+        if set(options) & {"--field", "-F"} and set(options) & {"--raw-field", "-f"}:
+            return None
+        if "--input" in options and set(options) & {"--field", "-F", "--raw-field", "-f"}:
+            return None
+        if "{" in positional[0] or "}" in positional[0]:
+            return None
+        if "--slurp" in options and "--paginate" not in options:
+            return None
+        if "--paginate" in options and _opt(options, "--method", "-X", default="GET").upper() != "GET":
+            return None
+        if "--paginate" in options and (
+            set(options) & {"--header", "-H", "--input", "--field", "-F", "--raw-field", "-f"}
+        ):
+            return None
+        for flag in ("--field", "-F", "--raw-field", "-f"):
+            for entry in options.get(flag, []):
+                key, eq, value = entry.partition("=")
+                if not eq or "[" in key or (flag in {"--field", "-F"} and value.startswith("@")):
+                    return None
+                if flag in {"--field", "-F"} and (re.fullmatch(r"[+-]\d+|0\d+", value) or "{" in value or "}" in value):
+                    return None
+    return options, positional
+
+
+def _native_command(args, client, runner, kwargs):
+    """Fall through once using the bounded, colour-safe native transport."""
+    with client._db() as db:
+        budgets = db.execute("SELECT remaining,reset FROM budget WHERE scope=?", (client.scope,)).fetchall()
+    reset = next((reset for remaining, reset in budgets if remaining <= RESERVE and reset > client.clock()), None)
+    if reset is not None:
+        return _result_process(args, Result(error="github_rate_limited", reset_at=reset), {}, kwargs)
+    executable = client.env.get("AGENT_REAL_GH", "gh")
+    executor = runner or client.runner
+    if executor is None:
+        from scripts.opsec.prepublish import PublishBlocked, real_gh
+
+        try:
+            executable = real_gh({**client.env, "AGENT_ORIGINAL_PATH": client.env.get("PATH", os.defpath)})
+        except PublishBlocked:
+            return _result_process(args, Result(error="github_transport_unavailable"), {}, kwargs)
+    call = dict(
+        input=kwargs.get("input").encode() if isinstance(kwargs.get("input"), str) else kwargs.get("input"),
+        env=client.env,
+        cwd=client.cwd,
+        timeout=kwargs.get("timeout") or 30,
+        capture_output=True,
+        check=False,
+    )
+    if executor is None and client.max_response_bytes is not None:
+        import tempfile
+
+        with tempfile.TemporaryFile() as output_file:
+            native = _transport_process([executable, *args[1:]], output_file=output_file, **call)
+            output_file.seek(0)
+            native.stdout = output_file.read(client.max_response_bytes + 1)
+    else:
+        native = (executor or _transport_process)([executable, *args[1:]], **call)
+    output, error = native.stdout or b"", native.stderr or b""
+    raw_error = error.encode() if isinstance(error, str) else error
+    if native.returncode and b"rate limit" in raw_error.lower():
+        reset = int(client.clock() + 60)
+        with client._db() as db:
+            _store_budget(db, client.scope, "secondary", 0, reset)
+        return _result_process(args, Result(error="github_rate_limited", reset_at=reset), {}, kwargs)
+    if client.max_response_bytes is not None and len(output) > client.max_response_bytes:
+        return _result_process(args, Result(error="github_response_too_large"), {}, kwargs)
+    text = kwargs.get("text") or kwargs.get("universal_newlines") or kwargs.get("encoding")
+    for key, value in (("stdout", output), ("stderr", error)):
+        value = (
+            value.decode(kwargs.get("encoding") or "utf-8", errors=kwargs.get("errors") or "strict")
+            if text and isinstance(value, bytes)
+            else value.encode()
+            if not text and isinstance(value, str)
+            else value
+        )
+        setattr(native, key, value)
+        target = kwargs.get(key)
+        if target not in (None, subprocess.PIPE, subprocess.DEVNULL, subprocess.STDOUT):
+            target.write(value)
+        elif target is None and not kwargs.get("capture_output"):
+            import sys
+
+            stream = getattr(sys, key)
+            (stream.buffer if isinstance(value, bytes) else stream).write(value)
+    native.args = args
+    if kwargs.get("check") and native.returncode:
+        raise subprocess.CalledProcessError(native.returncode, args, output=native.stdout, stderr=native.stderr)
+    return native
+
+
+def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=False, **kwargs):
     """subprocess.run-compatible seam; non-GitHub commands pass through.
 
     A CompletedProcess carries ``github_result``. Stale reads also emit a
@@ -1246,21 +1611,33 @@ def _run_command(args, *, runner=None, client=None, fresh=False, **kwargs):
     client = client or GitHubClient(
         env=kwargs.get("env"), cwd=kwargs.get("cwd"), runner=runner, max_response_bytes=limit
     )
+    if allow_stale:
+        from copy import copy
+
+        client = copy(client)
+        client.allow_stale = True
     timeout = kwargs.get("timeout") or 30
-    if args[1:3] == ["auth", "status"]:
-        # Authentication health is a conditional identity read, not an opaque
-        # CLI network request whose response headers cannot be observed.
-        result = client.request("GET", "user", timeout=timeout, fresh=fresh)
-        return _result_process(args, result, {}, kwargs)
-    options, positional = _options(args[2:] if args[1] == "api" else args[3:])
-    for short, long in {
-        "-s": "--state",
+    if (
+        client.env.get("AGENT_NO_MERGE") == "1"
+        and args[1:3] in (["pr", "merge"], ["pr", "review"])
+        and (args[2] == "merge" or any(a.split("=", 1)[0] in {"--approve", "-a"} for a in args[3:]))
+    ):
+        return _result_process(args, Result(error="github_worker_write_forbidden"), {}, kwargs)
+    translation = _translation_options(args)
+    if translation is None:
+        return _native_command(args, client, runner, kwargs)
+    options, positional = translation
+    aliases = {
+        "-s": "--status" if args[1] == "run" else "--state",
         "-B": "--base",
         "-l": "--label",
         "-S": "--search",
         "-A": "--author",
         "-a": "--assignee",
-    }.items():
+    }
+    if args[1] == "run":
+        aliases.update({"-w": "--workflow", "-b": "--branch", "-e": "--event", "-c": "--commit"})
+    for short, long in aliases.items():
         if short in options and long not in options:
             options[long] = options[short]
     if "--hostname" in options:
@@ -1329,10 +1706,10 @@ def _run_command(args, *, runner=None, client=None, fresh=False, **kwargs):
     return _result_process(args, result, options, kwargs, api=args[1] == "api")
 
 
-def run(args, *, runner=None, client=None, fresh=False, **kwargs):
+def run(args, *, runner=None, client=None, fresh=False, allow_stale=False, **kwargs):
     """Return command/configuration errors through the subprocess contract."""
     try:
-        return _run_command(args, runner=runner, client=client, fresh=fresh, **kwargs)
+        return _run_command(args, runner=runner, client=client, fresh=fresh, allow_stale=allow_stale, **kwargs)
     except ValueError:
         return _result_process(args, Result(error="github_invalid_command"), {}, kwargs)
 
@@ -1589,26 +1966,20 @@ def queue_read(operation, repo, fields, *, env=None, cwd=None, **kwargs):
     owner, name = repo.split("/", 1)
     observations = []
     if operation == "queue-snapshot":
-        proc = run(
-            [
-                "gh",
-                "pr",
-                "list",
-                "--repo",
-                repo,
-                "--state",
-                "open",
-                "--limit",
-                "1000",
-                "--json",
-                "id,number,title,isDraft,headRefOid,baseRefName,mergeStateStatus,labels",
-            ],
-            client=client,
-            capture_output=True,
-            text=True,
+        ordinary = _read_command(
+            client,
+            "pr",
+            "list",
+            {
+                "--repo": [repo],
+                "--state": ["open"],
+                "--limit": ["1000"],
+                "--json": ["id,number,title,isDraft,headRefOid,baseRefName,mergeStateStatus,labels"],
+            },
+            [],
             timeout=timeout,
+            fresh=True,
         )
-        ordinary = proc.github_result
         observations.append(ordinary)
         if ordinary.error:
             return _result_process(["github", operation], ordinary, {}, kwargs)
@@ -1643,23 +2014,20 @@ def queue_read(operation, repo, fields, *, env=None, cwd=None, **kwargs):
         repository["pullRequests"] = {"totalCount": len(rows), "pageInfo": {"hasNextPage": False}, "nodes": rows}
         value = response.value
     elif operation == "queue-status":
-        proc = run(
-            [
-                "gh",
-                "pr",
-                "view",
-                str(fields["number"]),
-                "--repo",
-                repo,
-                "--json",
-                "number,title,state,merged,mergeable,mergeStateStatus,headRefName,headRefOid,baseRefName",
-            ],
-            client=client,
-            capture_output=True,
-            text=True,
+        # These are internal REST facts, including the derived merged
+        # boolean; they are not a gh --json command vocabulary.
+        ordinary = _read_command(
+            client,
+            "pr",
+            "view",
+            {
+                "--repo": [repo],
+                "--json": ["number,title,state,merged,mergeable,mergeStateStatus,headRefName,headRefOid,baseRefName"],
+            },
+            [str(fields["number"])],
             timeout=timeout,
+            fresh=True,
         )
-        ordinary = proc.github_result
         if ordinary.error:
             return _result_process(["github", operation], ordinary, {}, kwargs)
         observations.append(ordinary)
