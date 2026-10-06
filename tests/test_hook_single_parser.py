@@ -1,52 +1,70 @@
 """Fail the build when a hook grows a second shell parser (#9807).
 
-The check is structural and does not follow assignment flow. Over the whole
-module it collects every binding of each name: imports, assignments, augmented
-and annotated assignments, unpacking, ``for`` / ``with`` / ``except`` targets,
-walrus expressions, function and class definitions, and ``global`` /
-``nonlocal``. If a name is ever bound to the ``shlex`` module, a boundary
-module, or a process runner, every use of that name may be that object. A
-later, earlier, or untaken assignment does not remove that binding.
+The check is structural. Over the whole module it collects every binding of
+each name to the ``shlex`` module or a boundary module: imports, assignments,
+augmented and annotated assignments, unpacking, ``for`` / ``with`` /
+``except`` targets, walrus expressions, function and class definitions, and
+``global`` / ``nonlocal``. If a name is ever bound to one of those modules,
+every use of that name may be that module. A later, earlier, or untaken
+assignment does not remove that binding. Process runners are not copied
+through those bindings.
 
 A name bound to the ``shlex`` module may appear only as ``quote`` or ``join``
 attribute access in load context; every other use of that name is a parser
 site. ``from shlex import split`` and ``from shlex import shlex`` are always
-sites. Imports and references of ``bashlex`` and ``tree_sitter_bash`` are
-sites. A literal argv whose program is ``bash``, ``sh``, ``dash``, or ``zsh``
-(or a path ending in one of those) and that requests a syntax check (``-n``,
-a short-option cluster containing ``n``, ``--noexec``, or ``-o noexec``) is a
-site. A literal shell command string beginning with one of those programs
-plus a ``-n``-class flag is the same site on ``os.system``, ``os.popen``,
+sites. ``shlex.split`` and ``shlex.shlex`` are parser sites in every
+position, including when they are not the function of a call. Imports and
+references of ``bashlex`` and ``tree_sitter_bash`` are sites. A literal argv
+whose program is ``bash``, ``sh``, ``dash``, or ``zsh`` (or a path ending in
+one of those) and that requests a syntax check (``-n``, a short-option
+cluster containing ``n``, ``--noexec``, or ``-o noexec``) is a site. A
+literal shell command string beginning with one of those programs plus a
+``-n``-class flag is the same site on ``os.system``, ``os.popen``,
 ``asyncio.create_subprocess_shell``, ``subprocess.getoutput``,
 ``subprocess.getstatusoutput``, and ``subprocess.*`` with ``shell=True``.
 ``shlex.quote`` and ``shlex.join`` are output quoting and are allowed.
 Generic regexes, loops, and subprocess calls are not parsers.
 
-Process runners are the ``subprocess`` module and its ``run``, ``Popen``,
-``call``, ``check_call``, ``check_output``, ``getoutput``, and
-``getstatusoutput`` attributes; ``os.system`` and ``os.popen``; ``os.exec*``;
-``os.spawn*``; ``os.posix_spawn`` and ``os.posix_spawnp``; and
-``asyncio.create_subprocess_exec`` and ``asyncio.create_subprocess_shell``.
+In a hook module outside the boundary, a process runner may appear only as
+the ``func`` of a call, or as the class of a match pattern (a call written
+in a pattern). Every other use — assignment value, argument, return,
+default, annotation, collection element, comprehension or loop iterable,
+unpacking source, or attribute of something else — is a violation,
+``runner used as a value``. The runner is not followed into the name that
+received it. A direct call keeps the literal argv and literal command-string
+checks over every argument, positional or keyword.
 
-A call whose callee may be one of those runners is judged from every argument
-value, not from a chosen parameter. Positional arguments, keyword values under
-any name, and starred or double-starred list, tuple, and dict literals that
-are statically visible all use the literal-argv and literal command-string
-rules. A match class pattern is judged the same way.
+A process runner is ``subprocess.run``, ``Popen``, ``call``, ``check_call``,
+``check_output``, ``getoutput``, or ``getstatusoutput``; ``os.system``,
+``os.popen``, ``os.exec*``, ``os.spawn*``, ``os.posix_spawn``, or
+``os.posix_spawnp``; or ``asyncio.create_subprocess_exec`` or
+``asyncio.create_subprocess_shell``. The reference may be ``module.attr`` on
+any import of that module, including a dotted import whose final segment is
+the module, or a name brought in by ``from module import attr``.
+
+The module objects ``subprocess``, ``os``, ``asyncio``, and ``shlex`` follow
+the same shape when they are passed, assigned, or stored instead of used as
+the base of an attribute (``module used as a value``). A ``shlex`` module
+used that way is also a parser site. ``getattr(subprocess, 'run')`` passes
+the module and is that violation; it is not a separate hole.
 
 In a hook module outside the boundary, ``from shlex import *``,
 ``from subprocess import *``, ``from os import *``, ``from asyncio import *``,
 and a wildcard import of either boundary module are violations by themselves.
+Star-imports are not expanded.
 
-A name keeps every module and every runner it may bind. Each binding is
-checked. Iteration over those sets is sorted.
+A name keeps every module it is imported as. Each binding is checked.
+Iteration over those sets is sorted.
+
+Boundary modules are recognized by the final segment of every import form:
+a plain import, an alias, a dotted import (``import package.shell_shlex``),
+and a relative import. Attribute access on the resolved module must be a
+public export.
 
 Name use is not a list of statement kinds. A parent map over ``ast.walk``
-inspects every name, and every attribute whose value is a bound module name,
-wherever that name sits. External syntax-check calls use that same walk:
-every ``ast.Call`` is inspected, so the position of the call cannot hide it.
-A match class pattern is the grammar's form of a call written in a pattern,
-and it is judged with the same argv rules.
+inspects every name and every attribute chain, wherever it sits. External
+syntax-check calls use that same walk: every ``ast.Call`` is inspected, so
+the position of the call cannot hide it.
 
 Accepted limitations (owner: claude-infra, slice 2b):
 
@@ -57,7 +75,8 @@ Accepted limitations (owner: claude-infra, slice 2b):
   module does not.
 - Execution and import machinery is not run: ``exec``, ``eval``, ``compile``,
   computed ``importlib`` / ``__import__``, and ``typing.get_type_hints`` on
-  quoted annotations.
+  quoted annotations. A runner reached only through that machinery, with no
+  direct reference to the module or the callable, stays unresolved.
 - Quoted (string) annotations stay source text.
 - A function-local absolute import that leaves a helper's package is not
   followed. The session-start hook reaches application modules that already
@@ -65,7 +84,6 @@ Accepted limitations (owner: claude-infra, slice 2b):
 - Computed argv is not a literal command. List concatenation and starred
   elements stay unresolved. Computed command strings (string concatenation
   or formatting) and argv lists mutated after binding stay unresolved.
-- Dynamic runner access is not resolved: ``getattr(subprocess, 'run')``.
 
 ``shell_shlex.py`` and ``shell_redirects.py`` are the shared parser boundary.
 Outside those modules a name bound to either may appear only as a public
@@ -191,9 +209,16 @@ ASYNCIO_SHELL_FUNCS = frozenset({"create_subprocess_shell"})
 ASYNCIO_RUNNER_FUNCS = ASYNCIO_EXEC_FUNCS | ASYNCIO_SHELL_FUNCS
 # Star-imports of these modules are refused outside the boundary. They are not expanded.
 WILDCARD_IMPORT_MODULES = frozenset({"asyncio", "os", "shlex", "subprocess"})
-_MAY_BIND_KINDS = frozenset(
-    {"shlex_module", "boundary_module", "subprocess_module", "os_module", "asyncio_module", "runner"}
-)
+# Runner alias tracking is gone. May-bind is only the shlex module and the
+# boundary modules; a runner reference is judged where it is written.
+_MAY_BIND_KINDS = frozenset({"shlex_module", "boundary_module"})
+RUNNER_MODULE_FAMILIES = frozenset({"asyncio", "os", "subprocess"})
+VALUE_MODULE_FAMILIES = frozenset({"asyncio", "os", "shlex", "subprocess"})
+_RUNNER_FUNCS_BY_FAMILY = {
+    "asyncio": ASYNCIO_RUNNER_FUNCS,
+    "os": OS_RUNNER_FUNCS,
+    "subprocess": SUBPROCESS_FUNCS,
+}
 SHLEX_EXPORTS = frozenset({"split", "shlex", "quote", "join"})
 PARSER_SHLEX_ATTRS = frozenset({"split", "shlex"})
 
@@ -375,6 +400,55 @@ class _Scope:
         return None
 
 
+def _classify_leaf(leaf: str) -> tuple[str, str] | None:
+    """Closed module named by an import's final segment.
+
+    The pair is ``(family, leaf)``. ``family`` is ``boundary``, ``shlex``,
+    ``subprocess``, ``os``, or ``asyncio``.
+    """
+    if leaf in PUBLIC_EXPORTS:
+        return ("boundary", leaf)
+    if leaf == "shlex":
+        return ("shlex", "shlex")
+    if leaf in RUNNER_MODULE_FAMILIES:
+        return (leaf, leaf)
+    return None
+
+
+def _attribute_chain(node: ast.AST) -> tuple[ast.Name, tuple[str, ...]] | None:
+    """Root name and attribute segments of a static chain, or None."""
+    attrs: list[str] = []
+    current = node
+    while isinstance(current, ast.Attribute):
+        attrs.append(current.attr)
+        current = current.value
+    if not isinstance(current, ast.Name):
+        return None
+    attrs.reverse()
+    return current, tuple(attrs)
+
+
+def _parent_map(tree: ast.AST) -> dict[ast.AST, ast.AST]:
+    parents: dict[ast.AST, ast.AST] = {}
+    for node in ast.walk(tree):
+        for child in ast.iter_child_nodes(node):
+            parents[child] = node
+    return parents
+
+
+def _is_runner_head(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> bool:
+    """True when ``node`` is the callable head of a call or match pattern."""
+    parent = parents.get(node)
+    if isinstance(parent, ast.Call) and parent.func is node:
+        return True
+    return isinstance(parent, ast.MatchClass) and parent.cls is node
+
+
+def _is_attribute_base(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> bool:
+    parent = parents.get(node)
+    return isinstance(parent, ast.Attribute) and parent.value is node
+
+
 def _is_hook_path(path: str) -> bool:
     parts = path.split("/")
     if path.startswith("scripts/hooks/") and path.endswith(".py") and ".." not in parts:
@@ -543,6 +617,11 @@ class _Analyzer:
         self._shlex_module_names: set[str] = set()
         self._boundary_names: dict[str, set[str]] = {}
         self._dynamic_aliases: dict[str, str] = {}
+        # Import bindings only. Assignment does not copy a runner or a module
+        # object into another name; that use is an escape violation.
+        self._module_aliases: dict[str, set[str]] = {}
+        self._imported_runners: dict[str, set[tuple[str, str]]] = {}
+        self._dotted_modules: dict[str, set[tuple[tuple[str, ...], str, str]]] = {}
         self._node_scopes: dict[int, _Scope] = {}
         self._module_scope: _Scope | None = None
 
@@ -571,6 +650,7 @@ class _Analyzer:
         for stmt in tree.body:
             self._visit_stmt(stmt, module)
         self._inspect_syntax_check_calls(tree)
+        self._inspect_runner_escape(tree)
 
     def _scope_for(self, node: ast.AST, parents: dict[ast.AST, ast.AST]) -> _Scope:
         """Lexical scope of ``node``.
@@ -594,10 +674,7 @@ class _Analyzer:
         """Judge every call for an external syntax check, not a statement list."""
         if not self.record_sites:
             return
-        parents: dict[ast.AST, ast.AST] = {}
-        for node in ast.walk(tree):
-            for child in ast.iter_child_nodes(node):
-                parents[child] = node
+        parents = _parent_map(tree)
         for node in ast.walk(tree):
             if isinstance(node, ast.Call):
                 identity = self._call_syntax_identity(node, self._scope_for(node, parents))
@@ -623,16 +700,14 @@ class _Analyzer:
         """Judge every bound module name from a parent map, not a node-type list."""
         if not self.record_sites and not self.enforce_exports:
             return
-        parents: dict[ast.AST, ast.AST] = {}
-        for node in ast.walk(tree):
-            for child in ast.iter_child_nodes(node):
-                parents[child] = node
+        parents = _parent_map(tree)
         judged: set[int] = set()
         for node in ast.walk(tree):
             if isinstance(node, ast.Name):
                 self._inspect_bound_name(node, parents, judged)
             elif isinstance(node, ast.Attribute):
                 self._inspect_bound_attribute(node, parents, judged)
+                self._inspect_dotted_attribute(node, parents, judged)
             elif isinstance(node, (ast.Global, ast.Nonlocal)):
                 self._inspect_bare_name_strings(node, node.names, parents)
             elif isinstance(node, (ast.MatchAs, ast.MatchStar)) and node.name:
@@ -663,6 +738,34 @@ class _Analyzer:
         judged.add(id(node))
         for kind in kinds:
             self._judge_bound_attribute(node, kind, parents)
+
+    def _inspect_dotted_attribute(self, node: ast.Attribute, parents: dict[ast.AST, ast.AST], judged: set[int]) -> None:
+        """Judge a boundary or shlex module reached by an unaliased dotted import.
+
+        ``import package.shell_shlex`` binds the name ``package``. The chain
+        ``package.shell_shlex`` is the boundary module, and the next attribute
+        follows the public-export rule. A runner module on the same shape is
+        left to the escape rule.
+        """
+        if id(node) in judged:
+            return
+        if isinstance(node.value, ast.Attribute):
+            bases = self._dotted_exact(node.value)
+            sensitive = [(family, leaf) for family, leaf in bases if family in {"shlex", "boundary"}]
+            if sensitive:
+                judged.add(id(node))
+                for family, leaf in sensitive:
+                    self._judge_bound_attribute(node, (family, leaf), parents)
+                return
+        modules = [(family, leaf) for family, leaf in self._dotted_exact(node) if family in {"shlex", "boundary"}]
+        if not modules:
+            return
+        parent = parents.get(node)
+        if isinstance(parent, ast.Attribute) and parent.value is node:
+            return
+        for family, leaf in modules:
+            kind = ("shlex", "shlex") if family == "shlex" else ("boundary", leaf)
+            self._reject_bare_bound_name(node, kind, parents)
 
     def _inspect_bare_name_strings(
         self,
@@ -708,22 +811,26 @@ class _Analyzer:
         self.violations.append(Violation(kind, self.path, _enclosing_symbol(node, parents), detail))
 
     def _prepare_closed_names(self, tree: ast.AST) -> None:
-        """Bind module and runner names for the whole file.
+        """Bind shlex and boundary names for the whole file.
 
         Every binding of a name is collected, and a sensitive binding is kept
         wherever the name occurs. Later, earlier, or untaken rebinding does
-        not remove ``shlex``, a boundary module, or a process runner. This is
-        syntactic; it does not track which branch runs.
+        not remove ``shlex`` or a boundary module. Process runners are not
+        part of this map: a runner reference is allowed only as a call.
+        This is syntactic; it does not track which branch runs.
         """
         self._may = {}
         self._shlex_module_names = set()
         self._boundary_names = {}
+        self._module_aliases = {}
+        self._imported_runners = {}
+        self._dotted_modules = {}
         self._dynamic_aliases = {name: name for name in DYNAMIC_MODULE_FUNCS}
         pairs: list[tuple[str, str]] = []
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
                 for alias in node.names:
-                    self._seed_import_alias(alias)
+                    self._remember_module_import(alias)
             elif isinstance(node, ast.ImportFrom):
                 self._seed_import_from(node)
             elif isinstance(node, ast.Assign):
@@ -750,21 +857,57 @@ class _Analyzer:
         found.add(binding)
         return True
 
-    def _seed_import_alias(self, alias: ast.alias) -> None:
-        full = alias.name
-        local = alias.asname or full.split(".")[0]
-        meaning = full if alias.asname else full.split(".")[0]
-        if meaning == "shlex":
-            self._add_may(local, _Binding("shlex_module"))
-        leaf = full.split(".")[-1]
-        if leaf in PUBLIC_EXPORTS and (alias.asname or full == leaf):
-            self._add_may(alias.asname or leaf, _Binding("boundary_module", (leaf,)))
-        if meaning == "subprocess":
-            self._add_may(local, _Binding("subprocess_module"))
-        if meaning == "os":
-            self._add_may(local, _Binding("os_module"))
-        if meaning == "asyncio":
-            self._add_may(local, _Binding("asyncio_module"))
+    def _remember_module_import(self, alias: ast.alias) -> None:
+        """Record an ``import`` by the module's final segment.
+
+        ``import module as name`` binds ``name`` to that module. ``import
+        package.module`` binds ``package`` to the top package and the attribute
+        chain to the module. A runner module is remembered only so a direct
+        reference can be recognized; it is not copied through assignment.
+        """
+        parts = tuple(alias.name.split("."))
+        leaf = parts[-1]
+        root = parts[0]
+        if alias.asname:
+            classified = _classify_leaf(leaf)
+            if classified is not None:
+                family, name = classified
+                self._bind_direct_module(alias.asname, family, name)
+            return
+        root_classified = _classify_leaf(root)
+        if root_classified is not None:
+            family, name = root_classified
+            self._bind_direct_module(root, family, name)
+        if len(parts) > 1:
+            classified = _classify_leaf(leaf)
+            if classified is not None:
+                family, name = classified
+                self._dotted_modules.setdefault(root, set()).add((parts[1:], family, name))
+
+    def _bind_direct_module(self, name: str, family: str, leaf: str) -> None:
+        if family == "shlex":
+            self._add_may(name, _Binding("shlex_module"))
+        elif family == "boundary":
+            self._add_may(name, _Binding("boundary_module", (leaf,)))
+        if family in VALUE_MODULE_FAMILIES:
+            self._module_aliases.setdefault(name, set()).add(family)
+
+    def _dotted_rows(self, root: str) -> list[tuple[tuple[str, ...], str, str]]:
+        return sorted(self._dotted_modules.get(root, ()), key=lambda row: (row[0], row[1], row[2]))
+
+    def _dotted_exact(self, node: ast.AST) -> list[tuple[str, str]]:
+        """``(family, leaf)`` when ``node`` is exactly a dotted import's module."""
+        chain = _attribute_chain(node)
+        if chain is None:
+            return []
+        root, attrs = chain
+        if not attrs:
+            return []
+        found: list[tuple[str, str]] = []
+        for remaining, family, leaf in self._dotted_rows(root.id):
+            if attrs == remaining:
+                found.append((family, leaf))
+        return found
 
     def _seed_import_from(self, node: ast.ImportFrom) -> None:
         module = node.module or ""
@@ -779,30 +922,35 @@ class _Analyzer:
             for alias in node.names:
                 if alias.name == "*":
                     continue
-                imported = _boundary_module_name(alias.name)
-                if imported is not None:
-                    self._add_may(alias.asname or alias.name, _Binding("boundary_module", (imported,)))
-        if module == "subprocess":
+                classified = _classify_leaf(alias.name)
+                if classified is None:
+                    continue
+                family, name = classified
+                self._bind_direct_module(alias.asname or alias.name, family, name)
+        if module_leaf == "subprocess":
             funcs = SUBPROCESS_FUNCS
             family = "subprocess"
-        elif module == "os":
+        elif module_leaf == "os":
             funcs = OS_RUNNER_FUNCS
             family = "os"
-        elif module == "asyncio":
+        elif module_leaf == "asyncio":
             funcs = ASYNCIO_RUNNER_FUNCS
             family = "asyncio"
         else:
             return
         for alias in node.names:
-            if alias.name in funcs:
-                self._add_may(alias.asname or alias.name, _Binding("runner", (family, alias.name)))
+            if alias.name == "*" or alias.name not in funcs:
+                continue
+            local = alias.asname or alias.name
+            self._imported_runners.setdefault(local, set()).add((family, alias.name))
 
     def _propagate_may_bind(self, tree: ast.AST) -> None:
-        """Copy a sensitive binding through every later alias of that name.
+        """Copy a shlex or boundary binding through every alias of that name.
 
         ``for``, ``with``, ``except``, ``global``, ``nonlocal``, and function
-        or class definitions are bindings. Only a value that may itself be a
-        module or a runner adds one; the other forms do not clear one.
+        or class definitions are bindings. Only a value that may itself be the
+        ``shlex`` module or a boundary module adds one; the other forms do
+        not clear one. A process runner is not copied.
         """
         nodes = list(ast.walk(tree))
         changed = True
@@ -864,6 +1012,14 @@ class _Analyzer:
         return False
 
     def _may_values(self, expr: ast.expr) -> set[_Binding]:
+        dotted: set[_Binding] = set()
+        for family, leaf in self._dotted_exact(expr):
+            if family == "boundary":
+                dotted.add(_Binding("boundary_module", (leaf,)))
+            elif family == "shlex":
+                dotted.add(_Binding("shlex_module"))
+        if dotted:
+            return dotted
         if isinstance(expr, ast.Name):
             return set(_sorted_bindings(self._may.get(expr.id, ())))
         if isinstance(expr, ast.Attribute):
@@ -893,8 +1049,65 @@ class _Analyzer:
                     self._boundary_names.setdefault(name, set()).add(binding.detail[0])
 
     def _possible_runners(self, func: ast.expr) -> list[_Binding]:
-        """Every runner ``func`` may be, in binding order, ignoring which assignment wins."""
-        return [binding for binding in _sorted_bindings(self._may_values(func)) if binding.kind == "runner"]
+        """Runners ``func`` names directly. An assigned alias is not a runner."""
+        return [_Binding("runner", pair) for pair in self._direct_runner_bindings(func)]
+
+    def _direct_runner_bindings(self, node: ast.AST) -> list[tuple[str, str]]:
+        """``(family, func)`` for a runner written as ``module.attr`` or an import name."""
+        found: set[tuple[str, str]] = set()
+        if isinstance(node, ast.Name):
+            found.update(self._imported_runners.get(node.id, ()))
+        elif isinstance(node, ast.Attribute):
+            for family in self._runner_families(node.value):
+                funcs = _RUNNER_FUNCS_BY_FAMILY.get(family)
+                if funcs is not None and node.attr in funcs:
+                    found.add((family, node.attr))
+        return sorted(found)
+
+    def _runner_families(self, node: ast.AST) -> list[str]:
+        """Runner-module families ``node`` is, from imports only."""
+        found: set[str] = set()
+        if isinstance(node, ast.Name):
+            found.update(self._module_aliases.get(node.id, ()))
+        else:
+            for family, _leaf in self._dotted_exact(node):
+                found.add(family)
+        return sorted(family for family in found if family in RUNNER_MODULE_FAMILIES)
+
+    def _direct_value_modules(self, node: ast.AST) -> list[str]:
+        """``subprocess``, ``os``, ``asyncio``, or ``shlex`` when ``node`` is that module."""
+        found: set[str] = set()
+        if isinstance(node, ast.Name):
+            found.update(self._module_aliases.get(node.id, ()))
+        else:
+            for family, _leaf in self._dotted_exact(node):
+                if family in VALUE_MODULE_FAMILIES:
+                    found.add(family)
+        return sorted(family for family in found if family in VALUE_MODULE_FAMILIES)
+
+    def _inspect_runner_escape(self, tree: ast.AST) -> None:
+        """A runner or runner module used as a value is a violation.
+
+        Hook modules outside the boundary only. Helpers stay on the parser
+        scan; passing a runner there is not this violation. The reference
+        itself is judged, and the name it is assigned to is not a runner.
+        """
+        if not self.enforce_exports or not _is_hook_path(self.path):
+            return
+        parents = _parent_map(tree)
+        for node in ast.walk(tree):
+            if not isinstance(node, (ast.Name, ast.Attribute)):
+                continue
+            runners = self._direct_runner_bindings(node)
+            if runners:
+                if not _is_runner_head(node, parents):
+                    detail = ", ".join(f"{family}.{func}" for family, func in runners)
+                    self._record_violation(node, "runner used as a value", detail, parents)
+                continue
+            if _is_attribute_base(node, parents):
+                continue
+            for module in self._direct_value_modules(node):
+                self._record_violation(node, "module used as a value", module, parents)
 
     def _hoist(self, body: list[ast.stmt], scope: _Scope) -> None:
         for stmt in body:
@@ -924,21 +1137,22 @@ class _Analyzer:
         self._bind_twice(scope, node, local, self._module_binding(meaning, full))
 
     def _module_binding(self, meaning: str, full: str) -> _Binding:
-        library = _is_parser_library(full) or _is_parser_library(meaning)
-        boundary = _boundary_module_name(full) or _boundary_module_name(meaning)
-        if boundary is not None and (full == boundary or full.endswith("." + boundary) or meaning == boundary):
+        """Binding of the name an ``import`` actually assigns.
+
+        ``meaning`` is the module that name refers to: the full module when
+        the import is aliased, and only the first segment when it is not.
+        A dotted ``import package.shell_shlex`` therefore does not make
+        ``package`` the boundary module. The attribute chain resolves that.
+        """
+        library = _is_parser_library(meaning) or _is_parser_library(full)
+        boundary = _boundary_module_name(meaning)
+        if boundary is not None:
             return _Binding("boundary_module", (boundary,))
         if library is not None:
             return _Binding("parser_lib", (library,))
-        if meaning == "shlex":
+        if meaning == "shlex" or meaning.endswith(".shlex"):
             return _Binding("shlex_module")
-        if meaning == "subprocess":
-            return _Binding("subprocess_module")
-        if meaning == "os":
-            return _Binding("os_module")
-        if meaning == "asyncio":
-            return _Binding("asyncio_module")
-        if meaning == "importlib":
+        if meaning == "importlib" or meaning.endswith(".importlib"):
             return _Binding("importlib_module")
         return _UNKNOWN
 
@@ -964,15 +1178,6 @@ class _Analyzer:
                     continue
                 local = alias.asname or alias.name
                 self._bind_twice(scope, node, local, _Binding("parser_attr", (library, alias.name)))
-            return
-        if module == "subprocess":
-            self._bind_runner_from(node, scope, "subprocess", SUBPROCESS_FUNCS)
-            return
-        if module == "os":
-            self._bind_runner_from(node, scope, "os", OS_RUNNER_FUNCS)
-            return
-        if module == "asyncio":
-            self._bind_runner_from(node, scope, "asyncio", ASYNCIO_RUNNER_FUNCS)
             return
         if module == "importlib":
             for alias in node.names:
@@ -1040,16 +1245,6 @@ class _Analyzer:
             else:
                 self._bind_twice(scope, node, local, _UNKNOWN)
 
-    def _bind_runner_from(self, node: ast.ImportFrom, scope: _Scope, family: str, funcs: frozenset[str]) -> None:
-        for alias in node.names:
-            if alias.name == "*":
-                continue
-            local = alias.asname or alias.name
-            if alias.name in funcs:
-                self._bind_twice(scope, node, local, _Binding("runner", (family, alias.name)))
-            else:
-                self._bind_twice(scope, node, local, _UNKNOWN)
-
     def _bind_unknown_aliases(self, node: ast.ImportFrom, scope: _Scope) -> None:
         for alias in node.names:
             if alias.name == "*":
@@ -1064,8 +1259,8 @@ class _Analyzer:
 
     def _bind_twice(self, scope: _Scope, node: ast.AST, name: str, binding: _Binding) -> None:
         # (0, 1) makes a function-local import visible to earlier uses in that
-        # function for literal argv and imported callables. Module names and
-        # process runners do not use this position: may-bind keeps every one.
+        # function for literal argv and imported callables. Module names do
+        # not use this position: may-bind keeps every one.
         self._bind_at(scope, 0, 1, name, binding)
         self._bind_at(scope, getattr(node, "lineno", 0), getattr(node, "col_offset", 0), name, binding)
 
@@ -1457,9 +1652,7 @@ class _Analyzer:
             return None
         return self._const_str(pattern.value, scope)
 
-    def _runner_argvs(
-        self, node: ast.Call, scope: _Scope, binding: _Binding
-    ) -> list[tuple[str | None, ...]]:
+    def _runner_argvs(self, node: ast.Call, scope: _Scope, binding: _Binding) -> list[tuple[str | None, ...]]:
         """Literal commands visible on a runner call.
 
         The signature-specific argv stays first so an existing positional form
@@ -1642,12 +1835,6 @@ def _resolve_attribute(base: _Binding, attr: str) -> _Binding:
         return _Binding("parser_attr", (base.detail[0], attr))
     if base.kind == "boundary_module":
         return _Binding("boundary_attr", (base.detail[0], attr))
-    if base.kind == "subprocess_module" and attr in SUBPROCESS_FUNCS:
-        return _Binding("runner", ("subprocess", attr))
-    if base.kind == "os_module" and attr in OS_RUNNER_FUNCS:
-        return _Binding("runner", ("os", attr))
-    if base.kind == "asyncio_module" and attr in ASYNCIO_RUNNER_FUNCS:
-        return _Binding("runner", ("asyncio", attr))
     if base.kind == "importlib_module" and attr == "import_module":
         return _Binding("import_module")
     return _UNKNOWN
@@ -2468,9 +2655,15 @@ def test_false_branch_runner_rebinding_fails() -> None:
 
 
 def test_runner_alias_after_function_definition_fails() -> None:
+    """Assigning a runner is an escape violation, which replaces the old alias site.
+
+    The call through ``runner`` is not a syntax site: the checker does not
+    follow the assignment. The assignment fails on its own.
+    """
     source = "import subprocess\n\ndef check():\n    runner(['bash', '-n', '-c', 'true'])\n\nrunner = subprocess.run\n"
     reasons = _single(source)
-    assert any(reason.endswith("::check::syntax:bash -n") for reason in reasons)
+    assert reasons == [_mutant_violation("runner used as a value", "subprocess.run")]
+    assert not any("syntax:" in reason for reason in reasons)
 
 
 def test_syntax_check_hidden_positions_fail() -> None:
@@ -2890,6 +3083,73 @@ def test_multi_bound_runner_name_checks_every_runner() -> None:
     ]
 
 
+def test_comprehension_runner_is_an_escape_violation() -> None:
+    source = "import subprocess\n[runner(['bash', '-n', '-c', 'true']) for runner in [subprocess.run]]\n"
+    reasons = _single(source)
+    assert reasons == [_mutant_violation("runner used as a value", "subprocess.run")]
+
+
+def test_unpacked_loop_runner_is_an_escape_violation() -> None:
+    source = (
+        "import subprocess\n"
+        "for runner, ignored in [(subprocess.run, 0), (subprocess.run, 1)]:\n"
+        "    runner(['bash', '-n', '-c', 'true'])\n"
+    )
+    reasons = _single(source)
+    assert reasons == [
+        _mutant_violation("runner used as a value", "subprocess.run"),
+        _mutant_violation("runner used as a value", "subprocess.run"),
+    ]
+
+
+def test_defaulted_runner_parameter_is_an_escape_violation() -> None:
+    source = "import subprocess\ndef check(runner=subprocess.run):\n    return runner(['bash', '-n', '-c', 'true'])\n"
+    reasons = _single(source)
+    assert reasons == [_mutant_violation("runner used as a value", "subprocess.run")]
+
+
+def test_qualified_boundary_import_private_attribute_fails() -> None:
+    source = (
+        "import agents_extensions.shared.hooks.shell_shlex\n"
+        "agents_extensions.shared.hooks.shell_shlex.shlex.split(\"echo 'a b'\")\n"
+    )
+    reasons = _single(source)
+    assert _mutant_violation("private attribute", "shell_shlex.shlex") in reasons
+
+
+def test_runner_passed_as_argument_is_an_escape_violation() -> None:
+    source = "import subprocess\nfrom subprocess import run\ncall(subprocess.run)\ncall(run)\n"
+    reasons = _single(source)
+    assert reasons == [
+        _mutant_violation("runner used as a value", "subprocess.run"),
+        _mutant_violation("runner used as a value", "subprocess.run"),
+    ]
+
+
+def test_dotted_from_import_runner_is_a_direct_call() -> None:
+    source = "from lib.subprocess import run as go\ngo(['bash', '-n', '-c', 'true'])\ncall(go)\n"
+    assert _single(source) == [
+        _mutant_violation("runner used as a value", "subprocess.run"),
+        _mutant_site("<module>", "syntax:bash -n"),
+    ]
+
+
+def test_runner_stored_in_dict_is_an_escape_violation() -> None:
+    source = "import subprocess\nrunners = {'run': subprocess.run}\n"
+    assert _single(source) == [_mutant_violation("runner used as a value", "subprocess.run")]
+
+
+def test_runner_module_used_as_a_value_fails() -> None:
+    passed = _single("import subprocess\ngetattr(subprocess, 'run')\n")
+    stored = _single("import os as operating_system\nstored = operating_system\n")
+    shlex_module = _single("import shlex\nstored = shlex\n")
+    assert _mutant_violation("module used as a value", "subprocess") in passed
+    assert _mutant_violation("module used as a value", "os") in stored
+    assert _mutant_violation("module used as a value", "shlex") in shlex_module
+    assert any(reason.endswith("::<module>::shlex") for reason in shlex_module)
+    assert _single("import subprocess\nsubprocess.run(['git', 'status'])\n") == []
+
+
 def _seeded_scan(script: str, probe: str, seed: str) -> dict[str, object]:
     env = os.environ.copy()
     env["PYTHONHASHSEED"] = seed
@@ -2922,14 +3182,10 @@ def test_repository_scan_and_multi_binding_probe_match_across_hash_seeds() -> No
         "}, sys.stdout)\n"
     )
     probe = (
-        "import shell_shlex as shared\n"
-        "import shell_redirects as shared\n"
-        "shared.preprocess_shell_command('echo ok')\n"
+        "import shell_shlex as shared\nimport shell_redirects as shared\nshared.preprocess_shell_command('echo ok')\n"
     )
     seeded = [_seeded_scan(script, probe, seed) for seed in ("0", "1")]
     assert seeded[0] == seeded[1]
     assert seeded[0]["violations"] == []
     assert len(seeded[0]["sites"]) == BASELINE_SIZE_AT_CREATION
-    assert seeded[0]["probe"] == [
-        _mutant_violation("private attribute", "shell_redirects.preprocess_shell_command")
-    ]
+    assert seeded[0]["probe"] == [_mutant_violation("private attribute", "shell_redirects.preprocess_shell_command")]
