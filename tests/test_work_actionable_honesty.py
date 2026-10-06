@@ -44,7 +44,7 @@ def test_actionable_view_behavioral_js_filtering_and_counts():
     const html = fs.readFileSync(__HTML_PATH__, 'utf8');
 
     // Extract constants and functions
-    const codeStart = html.indexOf('const NON_ACTIONABLE_ACTION_CODES');
+    const codeStart = html.indexOf('function isActionable(');
     const codeEnd = html.indexOf('function railClasses(');
     if (codeStart < 0 || codeEnd <= codeStart) {
       throw new Error('Required JS functions not found in work.html');
@@ -62,6 +62,7 @@ def test_actionable_view_behavioral_js_filtering_and_counts():
           remote_id: '1',
           health: 'AT_RISK',
           safe_next_action: { code: 'FIX_CI' },
+          flags: { attention: true },
         },
         {
           work_id: 'wp1:public-monitor:repo:issue:7073',
@@ -69,6 +70,7 @@ def test_actionable_view_behavioral_js_filtering_and_counts():
           remote_id: '7073',
           health: 'ON_TRACK',
           safe_next_action: { code: 'OPEN_GITHUB' },
+          flags: { attention: false },
         },
         {
           work_id: 'wp1:public-monitor:repo:issue:7074',
@@ -76,6 +78,7 @@ def test_actionable_view_behavioral_js_filtering_and_counts():
           remote_id: '7074',
           health: 'ON_TRACK',
           safe_next_action: { code: 'OPEN_GITHUB' },
+          flags: { attention: false },
         },
         {
           work_id: 'wp1:public-monitor:repo:task:100',
@@ -83,6 +86,7 @@ def test_actionable_view_behavioral_js_filtering_and_counts():
           remote_id: '100',
           health: 'UNKNOWN',
           safe_next_action: { code: 'INSPECT_UNKNOWN' },
+          flags: { attention: false },
         },
       ],
       attention: [
@@ -102,8 +106,8 @@ def test_actionable_view_behavioral_js_filtering_and_counts():
     // Scenario 3: all items non-actionable
     const nonActProjection = {
       items: [
-        { work_id: 'wp1:a', health: 'ON_TRACK', safe_next_action: { code: 'OPEN_GITHUB' } },
-        { work_id: 'wp1:b', health: 'ON_TRACK', safe_next_action: { code: 'OPEN_GITHUB' } },
+        { work_id: 'wp1:a', health: 'ON_TRACK', safe_next_action: { code: 'OPEN_GITHUB' }, flags: { attention: false } },
+        { work_id: 'wp1:b', health: 'ON_TRACK', safe_next_action: { code: 'OPEN_GITHUB' }, flags: { attention: false } },
       ],
       attention: [
         { work_id: 'wp1:a', health: 'ON_TRACK' },

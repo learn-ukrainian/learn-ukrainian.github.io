@@ -317,6 +317,24 @@ def test_infer_review_kind() -> None:
     assert idle.infer_settle_kind("infra-6976") == "dispatch"
 
 
+def test_idle_settle_work_queue_is_not_fillable() -> None:
+    """Work no longer supplies fillable items. Defaults cannot turn a row on."""
+    from_queue = idle.items_from_work_next_queue(
+        [
+            {
+                "work_id": "issue:9",
+                "resource_kind": "issue",
+                "safe_next_action": {"code": "MERGE_WHEN_READY", "state": "ready"},
+            }
+        ]
+    )
+    assert from_queue[0].is_fillable() is False
+    bare = idle.ReadyItem(item_id="work-sourced")
+    assert bare.valuable is False
+    assert bare.independent is False
+    assert bare.is_fillable() is False
+
+
 def test_items_from_work_next_marks_blockers() -> None:
     items = idle.items_from_work_next_queue(
         [
@@ -330,7 +348,12 @@ def test_items_from_work_next_marks_blockers() -> None:
     )
     assert items[0].dependency_blocked is True
     assert items[1].dependency_blocked is False
-    assert items[1].is_fillable() is True
+    # Work queue membership is not admission. Neither row is fillable.
+    assert items[0].is_fillable() is False
+    assert items[1].is_fillable() is False
+    assert items[1].ready is False
+    assert items[1].valuable is False
+    assert items[1].independent is False
 
 
 def test_freshly_reset_lane_is_available() -> None:
