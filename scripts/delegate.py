@@ -186,7 +186,6 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
-from scripts.api.subscription_usage import pace_is_visible
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
@@ -3523,13 +3522,14 @@ def _fetch_remote_branch(remote: str, branch: str) -> subprocess.CompletedProces
         return None
 
 
-def _ls_remote_branch_sha(remote: str, branch: str) -> str | None:
+def _ls_remote_branch_sha(remote: str, branch: str, *, strict: bool = False) -> str | None:
     """Probe the SHA ``remote`` serves for ``branch`` without touching refs.
 
     ``git ls-remote`` answers from the remote directly, so a lagging mirror
     can be detected (#7522) while ``refs/remotes/origin/<branch>`` is written
     only by the canonical fetch. Best-effort: a spawn failure, timeout, or
-    unresolved ref yields None.
+    unresolved ref yields None. With ``strict``, read failures raise instead
+    of being confused with an absent branch; diagnostics omit remote URLs.
     """
     try:
         proc = subprocess.run(
@@ -3541,9 +3541,20 @@ def _ls_remote_branch_sha(remote: str, branch: str) -> str | None:
             env=_sanitized_git_env(),
             timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except subprocess.TimeoutExpired as exc:
+        if strict:
+            raise _AuthoringObservationUnknown("canonical remote branch lookup (git ls-remote) timed out") from exc
+        return None
+    except OSError as exc:
+        if strict:
+            raise _AuthoringObservationUnknown("canonical remote branch lookup (git ls-remote) could not run") from exc
         return None
     if proc.returncode != 0:
+        if strict:
+            raise _AuthoringObservationUnknown(
+                f"canonical remote branch lookup (git ls-remote) failed (exit {proc.returncode}); "
+                "check network/authentication and remote access, then retry"
+            )
         return None
     for line in (proc.stdout or "").splitlines():
         sha, sep, ref = line.partition("\t")
@@ -10591,10 +10602,42 @@ def _dispatch(
         print(f"❌ review attempt refused: {exc}", file=sys.stderr)
         return 2
 
+    # #9874: --branch only continues a remote branch. Observe it before any
+    # content scan or launch routing, using the same canonical read as authoring
+    # admission. Reuse the observation at initial admission, never at a recheck.
+    observed_branch_head: str | None = None
+    if args.mode in _WRITE_CAPABLE_MODES and getattr(args, "branch", None) and fleet_repo.default:
+        cross_repo_error = _resolve_cross_repo_binding_error(
+            worktree_arg=worktree_arg or "auto",
+            cwd_arg=args.cwd,
+            requested_branch=args.branch,
+            target_repo_root=target_repo_root,
+        )
+        if cross_repo_error:
+            print(cross_repo_error, file=sys.stderr)
+            return 2
+        try:
+            args.branch = _validate_branch_reuse_name(args.branch)
+            observed_branch_head = _ls_remote_branch_sha(_authoring_canonical_remote(), args.branch, strict=True)
+        except ValueError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+        except _AuthoringObservationUnknown as exc:
+            print(f"❌ DISPATCH_BRANCH_REMOTE_READ_FAILED: {exc}", file=sys.stderr)
+            return 2
+        if observed_branch_head is None:
+            print(
+                f"❌ DISPATCH_BRANCH_NOT_FOUND: --branch {args.branch!r} does not exist on the canonical remote. "
+                "--branch continues an existing remote branch; for a new branch omit --branch "
+                "(default: <agent>/<task-id>), optionally with --base.",
+                file=sys.stderr,
+            )
+            return 2
+
     # The single Kimi gate runs on the original request (--agent, --model and their aliases)
     # before the launch route probes the budget or a model, and on the route it resolves —
     # the retired-CLI alias and any budget substitution — on the validated paths, before any
-    # other check that can run an external command, write a record, sweep runtime tmp,
+    # later preflight that can run an external command, write a record, sweep runtime tmp,
     # archive a task or create a worktree. Owned paths are read in the tree the worker
     # starts from: a reused worktree on disk and at its commit, a new one at its creation
     # base commit (fetched and read with git plumbing). The worktree must start from
@@ -10950,7 +10993,7 @@ def _dispatch(
     # runtime cleanup, forwarding, any rebase, worktree or provider. A forwarded
     # dispatch runs this again on its host; a checkout reaped while dispatch
     # waits for its lock is admitted again under that lock (#8610).
-    def admit_authoring() -> _AuthoringAdmission | None:
+    def admit_authoring(branch_head: str | None = None) -> _AuthoringAdmission | None:
         return _authoring_review_admission(
             args,
             dispatch_agent=dispatch_agent,
@@ -10962,10 +11005,11 @@ def _dispatch(
             target_repo_root=target_repo_root,
             repository=fleet_repo.github,
             default_repo=bool(fleet_repo.default),
+            observed_branch_head=branch_head,
         )
 
     try:
-        authoring_admission = admit_authoring()
+        authoring_admission = admit_authoring(observed_branch_head)
     except _AuthoringReviewRefused as exc:
         print(exc.render(), file=sys.stderr)
         return 2
@@ -12547,15 +12591,26 @@ def _budget_headroom_blocked(agent_info: dict[str, Any]) -> bool:
     return isinstance(runtime, dict) and bool(runtime.get("headroom_blocked"))
 
 
-def _pace_expected_pct(pace: dict[str, Any] | None) -> float | None:
-    if not isinstance(pace, dict):
-        return None
-    for key in ("expected_pct", "weekly_expected_pct", "expectedUsedPercent"):
-        value = pace.get(key)
-        if isinstance(value, bool) or not isinstance(value, (int, float)):
-            continue
-        return float(value)
-    return None
+def _budget_owner_facts(
+    lane: str,
+    info: dict[str, Any] | None,
+    *,
+    model: str | None,
+    is_stale: bool,
+    snapshot_metadata: Mapping[str, Any] | None = None,
+) -> credit_lane.RoutingFacts:
+    """The owner's reading (:func:`credit_lane.routing_facts`, #9740) of one lane for this dispatch.
+
+    No model resolves to the lane default; none at all is never on a
+    credit-period allowlist. ``snapshot_metadata`` is the snapshot's
+    ``diagnostics`` (absent: the stale flag alone).
+    """
+    return credit_lane.routing_facts(
+        lane,
+        info,
+        model=model or _lane_default_model(lane) or "",
+        snapshot_metadata=snapshot_metadata if snapshot_metadata is not None else {"stale": is_stale},
+    )
 
 
 def _budget_needs_hard_capacity_action(
@@ -12563,7 +12618,7 @@ def _budget_needs_hard_capacity_action(
     status: str | None,
     will_last: bool | None,
     is_stale: bool,
-    records_loaded: int,
+    snapshot_metadata: Mapping[str, Any] | None = None,
     pace: dict[str, Any] | None = None,
     headroom_blocked: bool = False,
     lane: str = "",
@@ -12572,38 +12627,43 @@ def _budget_needs_hard_capacity_action(
 ) -> tuple[bool, str]:
     """Return (needs_action, reason) for near_cap / hot / a real pace deficit.
 
-    ``near_cap`` is unchanged. ``status=hot`` still hard-acts, except when the
-    hot label is the early-window or on-pace false positive: a pace reading is
-    present and the deficit is covered, hidden or within the on-pace band,
-    and runtime headroom did not set the hot label. A bare ``will_last`` with no pace record still
-    counts only when no pace dict was supplied.
+    A stale snapshot is advisory (A2): never a hard action. Otherwise the
+    decision is the owner's (:func:`credit_lane.routing_facts`, #9740) over the
+    same lane record and snapshot ``diagnostics`` (``snapshot_metadata``):
+
+    * near cap (the ``near_cap`` status, the owner's effective status or
+      :func:`credit_lane.plan_window_exhausted`) hard-acts unless the owner
+      grants credit relief for ``model``, whether or not the USD cost ledger
+      has records;
+    * a hot label hard-acts unless the owner cleared it: a weekly-pace label
+      whose deficit is covered, whose pace is hidden below the visibility
+      floor, or whose fresh pace reading finds no deficit (#9040: the
+      early-window/on-pace false positive; A8). A hot label from any other
+      source (Cursor Auto, ledger burn, a source-less record), or one set by
+      runtime headroom, stays;
+    * an uncovered pace deficit hard-acts.
+
+    A bare ``will_last`` False still counts only when no pace dict was supplied.
+    No model (none requested, no lane default) is never on a credit-period
+    allowlist, so it gets no credit relief or coverage.
     """
     if is_stale:
         return False, ""
-    # Keep existing near_cap gate (fresh ledger) and extend to hot/deficit.
-    if status == "near_cap" and records_loaded > 0:
-        return True, "near_cap (>90% on FRESH snapshot)"
     if status == "hot" and headroom_blocked:
         return True, "status=hot"
-    decision = credit_lane.pace_deficit_state(
-        lane,
-        info,
-        pace=pace,
-        model=model if model is not None else (_lane_default_model(lane) or ""),
-        snapshot_stale=is_stale,
-    )
-    deficit = decision["uncovered"] if pace else None
-    if decision["covered_by"]:
-        print(f"⚠ lane {lane}: {decision['reason']}", file=sys.stderr)
-    expected = _pace_expected_pct(pace)
-    hidden = expected is not None and not pace_is_visible({"expected_pct": expected})
-    # Clear a pace-only hot label when the deficit is covered or the pace is
-    # hidden/on pace. Runtime headroom hot was returned above.
-    if status == "hot" and pace and deficit is not True and (deficit is False or hidden):
-        return False, ""
-    if deficit is True:
+    facts = _budget_owner_facts(lane, info, model=model, is_stale=is_stale, snapshot_metadata=snapshot_metadata)
+    if "near_cap" in {status, facts.status} or credit_lane.plan_window_exhausted(lane, info):
+        if facts.credit_relief:
+            return False, ""
+        remaining = facts.plan_remaining_pct
+        where = f"{remaining:g}% remaining" if remaining is not None else ">90% used"
+        return True, f"near_cap ({where} on FRESH snapshot)"
+    if facts.covered_by:
+        print(f"⚠ lane {lane}: {facts.pace_reason}", file=sys.stderr)
+    if facts.uncovered is True:
         return True, "codexbar will_last_to_reset=False (deficit)"
-    if status == "hot":
+    # The owner clears a qualifying weekly-pace hot label (#9040, A8); whatever it keeps hot hard-acts.
+    if facts.status == "hot":
         return True, "status=hot"
     if pace is None and will_last is False:
         return True, "codexbar will_last_to_reset=False (deficit)"
@@ -13334,19 +13394,26 @@ def _authoring_require_commit(sha: str, *, fetch: Callable[[], object], what: st
 
 
 def _authoring_attach_head(
-    *, kind: str, checkout: Path | None, branch: str | None, pinned_head: str | None, remote: str
+    *,
+    kind: str,
+    checkout: Path | None,
+    branch: str | None,
+    pinned_head: str | None,
+    remote: str,
+    observed_branch_head: str | None = None,
 ) -> str:
     """The head an attaching writer continues: the checkout's commit, or the branch on the canonical remote.
 
     A branch head is observed on the remote, never read from a possibly stale
     tracking ref (M2); a pinned head is the commit the dispatch was pinned to.
+    Initial admission may reuse the early branch observation; rechecks omit it.
     """
     if kind == "existing-worktree":
         head = _resolve_sha(checkout) if checkout is not None and checkout.is_dir() else None
         if not head:
             raise _AuthoringObservationUnknown("the checkout's HEAD is unreadable")
         return head
-    head = pinned_head or (_ls_remote_branch_sha(remote, branch) if branch else None)
+    head = pinned_head or observed_branch_head or (_ls_remote_branch_sha(remote, branch) if branch else None)
     if not head:
         raise _AuthoringObservationUnknown(f"branch {branch} is not readable on the canonical remote")
     return head
@@ -13394,6 +13461,7 @@ def _authoring_review_admission(
     target_repo_root: Path,
     repository: str,
     default_repo: bool,
+    observed_branch_head: str | None = None,
 ) -> _AuthoringAdmission | None:
     """Admit a writer only if a qualified independent reviewer remains (#9739).
 
@@ -13519,7 +13587,12 @@ def _authoring_review_admission(
             head = creation_sha
         else:
             head = _authoring_attach_head(
-                kind=kind, checkout=checkout, branch=requested_branch, pinned_head=pinned_head, remote=remote
+                kind=kind,
+                checkout=checkout,
+                branch=requested_branch,
+                pinned_head=pinned_head,
+                remote=remote,
+                observed_branch_head=observed_branch_head,
             )
             _authoring_require_commit(
                 head, fetch=lambda: _fetch_existing_branch(head_branch), what="the branch head commit"
@@ -14672,14 +14745,20 @@ def _resolve_agent_with_budget_guard(
         )
         return requested
 
-    # Check for demoted lanes and print warnings
+    # Warn about demoted lanes and lanes whose health is unknown (#9740 F4: the owner's reading).
     for item in payload.get("ranked_by_headroom") or []:
-        h = item.get("health")
-        if h and not h.get("healthy", True):
-            lane = item.get("lane")
-            cf = h.get("consecutive_failures", 0)
-            sm = h.get("span_minutes", 0)
-            print(f"⚠ lane {lane} demoted: {cf} spawn failures in {sm}m", file=sys.stderr)
+        if not isinstance(item, dict) or not item.get("health"):
+            continue
+        lane = item.get("lane")
+        health, basis = credit_lane.health_fact(item)
+        if health == credit_lane.UNHEALTHY:
+            h = item["health"]
+            print(
+                f"⚠ lane {lane} demoted: {h.get('consecutive_failures')} spawn failures in {h.get('span_minutes')}m",
+                file=sys.stderr,
+            )
+        elif health == credit_lane.UNKNOWN:
+            print(f"⚠ lane {lane} health unknown ({basis}); not counted as healthy", file=sys.stderr)
 
     if records_loaded == 0:
         for warning in rec.get("warnings") or []:
@@ -14709,12 +14788,16 @@ def _resolve_agent_with_budget_guard(
     status = _budget_lane_status(requested, agent_dict)
     will_last = _budget_will_last_to_reset(agent_dict)
     reserve = _load_reset_reserve(_REPO_ROOT, codex_info=agents.get("codex", {}))
+    # The reserve never overrides the owner (#9740): it needs the owner's verified capacity.
     reserve_relaxes = (
         requested == "codex"
-        and _codex_is_threatened(agent_info if isinstance(agent_info, dict) else {})
+        and _codex_is_threatened(agent_dict)
         and _codex_reset_reserve_eligible(
             reserve,
-            agent_info if isinstance(agent_info, dict) else {},
+            agent_dict,
+            owner_capacity=_budget_owner_facts(
+                requested, agent_dict, model=requested_model, is_stale=is_stale, snapshot_metadata=diags
+            ).capacity,
             snapshot_stale=is_stale,
         )
     )
@@ -14729,8 +14812,6 @@ def _resolve_agent_with_budget_guard(
         # #9518: a lane with a credit balance present and no recent rate limit stays
         # usable (the credit-period model check runs on the admitted route); unknown,
         # stale or contradicted credit data, or an unreadable policy, keeps today's guard.
-        from scripts.fleet import credit_lane
-
         try:
             credit = credit_lane.lane_credit_state(
                 requested, agent_dict, credit_lane.load_policy(), snapshot_stale=is_stale
@@ -14757,7 +14838,7 @@ def _resolve_agent_with_budget_guard(
             status=status,
             will_last=will_last,
             is_stale=is_stale,
-            records_loaded=records_loaded,
+            snapshot_metadata=diags,
             pace=_budget_pace(agent_dict),
             headroom_blocked=_budget_headroom_blocked(agent_dict),
             lane=requested,
@@ -14793,7 +14874,7 @@ def _resolve_agent_with_budget_guard(
             status=_budget_lane_status(sub, sub_dict),
             will_last=_budget_will_last_to_reset(sub_dict),
             is_stale=is_stale,
-            records_loaded=records_loaded,
+            snapshot_metadata=diags,
             pace=_budget_pace(sub_dict),
             headroom_blocked=_budget_headroom_blocked(sub_dict),
             lane=sub,
@@ -14837,7 +14918,7 @@ def _resolve_agent_with_budget_guard(
                 fallbacks,
                 agents if isinstance(agents, dict) else {},
                 is_stale=is_stale,
-                records_loaded=records_loaded,
+                snapshot_metadata=diags,
                 reset_reserve=reserve,
                 requested_model=requested_model,
                 model_resolution=model_resolution,
@@ -14881,7 +14962,7 @@ def _language_lane_substitute(
     agents: dict[str, Any],
     *,
     is_stale: bool,
-    records_loaded: int,
+    snapshot_metadata: Mapping[str, Any] | None = None,
     reset_reserve: dict[str, Any] | None = None,
     requested_model: str | None = None,
     model_resolution: dict[str, Any] | None = None,
@@ -14900,7 +14981,14 @@ def _language_lane_substitute(
         reserve_relaxes = (
             seat == "codex"
             and _codex_is_threatened(info_dict)
-            and _codex_reset_reserve_eligible(reset_reserve or {}, info_dict, snapshot_stale=is_stale)
+            and _codex_reset_reserve_eligible(
+                reset_reserve or {},
+                info_dict,
+                owner_capacity=_budget_owner_facts(
+                    seat, info_dict, model=current_model, is_stale=is_stale, snapshot_metadata=snapshot_metadata
+                ).capacity,
+                snapshot_stale=is_stale,
+            )
         )
         needs, why = (
             (False, "")
@@ -14909,7 +14997,7 @@ def _language_lane_substitute(
                 status=status,
                 will_last=will_last,
                 is_stale=is_stale,
-                records_loaded=records_loaded,
+                snapshot_metadata=snapshot_metadata,
                 pace=_budget_pace(info_dict),
                 headroom_blocked=_budget_headroom_blocked(info_dict),
                 lane=seat,
@@ -15834,8 +15922,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="EXISTING",
         help=(
-            "Attach the dispatch to this existing remote branch instead of creating "
-            "{agent}/{task}. Fetches and validates the branch from the primary "
+            "Continue an existing remote branch, e.g. codex/fix-123. "
+            "For a new branch omit --branch (default: <agent>/<task-id>), optionally with --base. "
+            "Fetches and validates the branch from the primary "
             "checkout, then creates/reuses an isolated worktree on it (--branch "
             "implies --worktree). Refuses protected branches (main/master), "
             "branches checked out in another worktree, and invocation from a "

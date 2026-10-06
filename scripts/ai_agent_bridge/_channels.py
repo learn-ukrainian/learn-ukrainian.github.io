@@ -212,7 +212,7 @@ def resolve_recipient_alias(agent: str, *, assignments_path: Path | None = None)
     """Resolve a phantom ``{provider}-{empty-slots-area}`` identity to its provider.
 
     Launchers used to mint SESSION_HANDOFF_AGENT names like
-    ``grok-open-model-data`` for areas whose area_assignments.yaml slots
+    ``grok-monitor`` for areas whose area_assignments.yaml slots
     roster is empty; those names were never valid inbox recipients, so
     argparse rejected them and stranded the live session (#7597). Treat such
     an already-minted name as an alias of the bare provider so the session

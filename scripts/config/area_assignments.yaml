@@ -41,9 +41,17 @@ assignments:
       - kimi-corpus
       - cursor-corpus
   open-model-data:
+    # Ownership split 2026-10-06 (#6321): this lane owns word-card data
+    # (store, ingestion, identities, citations, sense binding, Russification
+    # data, gates, dataset projection); Atlas owns presentation.
+    # Same Ukrainian-language provider restriction as seminars and hramatka.
     driver_agent_type: infra-orchestrator
-    slots: []
+    slots:
+      - claude-open-model-data
+      - codex-open-model-data
   atlas:
+    # Ownership split 2026-10-06 (#6321): Atlas owns word-card presentation;
+    # open-model-data owns the underlying word-card data and gates.
     driver_agent_type: infra-orchestrator
     slots:
       - claude-atlas

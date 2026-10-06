@@ -27,18 +27,38 @@ Regenerate the bundled Culture-of-Speech deck (and the audited registry copy):
 Pairs a language reviewer rejected are withheld by their text through the committed,
 reviewed list ``registry/practice/error-correction-withheld.yaml``.
 """
-
 import argparse
 import hashlib
 import json
 import re
-import sqlite3
+import sys
 import unicodedata
 from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any
 
 import yaml
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 # Trigger patterns that identify deliberate pedagogical error prompts/tables
 ERROR_CONTEXT_PATTERNS = [
@@ -125,7 +145,7 @@ class VesumLookup:
     _ERROR_MARKERS = ("bad", "subst")
 
     def __init__(self, db_path: Path | str):
-        self._conn = sqlite3.connect(f"file:{Path(db_path)}?mode=ro", uri=True)
+        self._conn = _open_readonly(Path(db_path))
         self._cache: dict[str, list[tuple[str, str, bool]]] = {}
 
     def _analyses(self, word: str) -> list[tuple[str, str, bool]]:
@@ -907,7 +927,7 @@ def source_ref_problem(ref: Any) -> str | None:
     return None
 
 
-def load_source_row(conn: sqlite3.Connection, row_id: str) -> str | None:
+def load_source_row(conn: SQLiteConnection, row_id: str) -> str | None:
     """Text of the sources.db row ``row_id`` (``textbooks:<id>`` / ``style_guide:<id>``), or None."""
     match = _ROW_ID_RE.match(row_id or "")
     if not match:
@@ -928,7 +948,7 @@ def _style_guide_source(word: str, section: str) -> str:
     return f"Antonenko-Davydovych: {word} ({section})"
 
 
-def source_label_for_row(conn: sqlite3.Connection, row_id: str) -> str | None:
+def source_label_for_row(conn: SQLiteConnection, row_id: str) -> str | None:
     """Learner-visible source label derived from the bound row's metadata."""
     match = _ROW_ID_RE.fullmatch(row_id or "")
     if not match:
@@ -959,7 +979,7 @@ def _source_ref(table: str, row_id: int, pair: dict[str, Any]) -> dict[str, Any]
 
 
 def parse_contrastive_textbook_tables(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     vesum: VesumLookup | None = None,
     withheld: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
@@ -988,7 +1008,7 @@ def parse_contrastive_textbook_tables(
 
 
 def parse_style_guide_entries(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     vesum: VesumLookup | None = None,
     withheld: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
@@ -1140,7 +1160,7 @@ def build_culture_deck(drills: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def extract_error_correction_deck(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     vesum: VesumLookup | None = None,
     withheld: list[dict[str, Any]] | None = None,
     *,
@@ -1176,7 +1196,7 @@ def extract_error_correction_deck(
     return build_culture_deck(drills)
 
 
-def build_evidence_snapshot(deck: dict[str, Any], conn: sqlite3.Connection) -> dict[str, Any]:
+def build_evidence_snapshot(deck: dict[str, Any], conn: SQLiteConnection) -> dict[str, Any]:
     """Per-drill source evidence, read from sources.db, that the gate checks without the database.
 
     Each drill id maps to its source ``rowId``, the SHA-256 of that row's text,
@@ -1255,7 +1275,7 @@ def main():
     if not args.vesum_db.exists():
         parser.error(f"VESUM database not found: {args.vesum_db} (required to corroborate single-word claims)")
 
-    conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
+    conn = _open_readonly(args.db)
     withheld: list[dict[str, Any]] = []
     deck = extract_error_correction_deck(
         conn, VesumLookup(args.vesum_db), withheld, reviewed=load_reviewed_withholds(args.reviewed_withheld)

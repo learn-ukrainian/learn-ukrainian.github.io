@@ -12,13 +12,31 @@ import html
 import json
 import re
 import sqlite3
+import sys
 import time
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from html.parser import HTMLParser
+from pathlib import Path
 
 import requests
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 SUM20_SOURCE_ID = "sum20_official"
 SUM20_OFFICIAL_BASE_URL = "https://sum20ua.com"
@@ -345,14 +363,14 @@ CREATE TABLE IF NOT EXISTS sum20_crawl_outcomes (
 """
 
 
-def ensure_sum20_official_schema(conn: sqlite3.Connection) -> None:
+def ensure_sum20_official_schema(conn: SQLiteConnection) -> None:
     """Create the official СУМ-20 collection and resumable-crawl metadata."""
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(SUM20_SCHEMA_SQL)
     ensure_sum20_quarantine_column(conn)
 
 
-def ensure_sum20_quarantine_column(conn: sqlite3.Connection) -> bool:
+def ensure_sum20_quarantine_column(conn: SQLiteConnection) -> bool:
     """Add ``sum20_articles.quarantine_reason`` to a table created before #9609; return whether it was added."""
     columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(sum20_articles)")}
     if not columns or QUARANTINE_COLUMN in columns:
@@ -378,7 +396,7 @@ def live_article_predicate(columns: Iterable[str], alias: str = "") -> str:
     return " AND ".join(predicates) or "1 = 1"
 
 
-def live_article_predicate_for(conn: sqlite3.Connection | sqlite3.Cursor, alias: str = "") -> str:
+def live_article_predicate_for(conn: SQLiteConnection | sqlite3.Cursor, alias: str = "") -> str:
     """``live_article_predicate`` for the ``sum20_articles`` table behind a connection or cursor."""
     rows = conn.execute("PRAGMA table_info(sum20_articles)").fetchall()
     return live_article_predicate((str(row[1]) for row in rows), alias)
@@ -389,7 +407,7 @@ def utc_now() -> str:
     return datetime.now(UTC).replace(microsecond=0).isoformat()
 
 
-def upsert_sum20_article(conn: sqlite3.Connection, article: Sum20Article, *, fetched_at: str | None = None) -> bool:
+def upsert_sum20_article(conn: SQLiteConnection, article: Sum20Article, *, fetched_at: str | None = None) -> bool:
     """Store one parsed article; return whether its content changed."""
     fetched_at = fetched_at or utc_now()
     content_sha256 = article.content_sha256
@@ -476,7 +494,7 @@ def upsert_sum20_article(conn: sqlite3.Connection, article: Sum20Article, *, fet
 
 
 def record_crawl_outcome(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     wordid: int,
     status: str,
@@ -500,7 +518,7 @@ def record_crawl_outcome(
     )
 
 
-def advance_crawl_checkpoint(conn: sqlite3.Connection, wordid: int) -> None:
+def advance_crawl_checkpoint(conn: SQLiteConnection, wordid: int) -> None:
     """Advance only after an unambiguous terminal outcome."""
     conn.execute(
         """
@@ -512,7 +530,7 @@ def advance_crawl_checkpoint(conn: sqlite3.Connection, wordid: int) -> None:
     )
 
 
-def crawl_resume_wordid(conn: sqlite3.Connection) -> int:
+def crawl_resume_wordid(conn: SQLiteConnection) -> int:
     """Return the next safe wordid after the durable terminal checkpoint."""
     row = conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint WHERE singleton = 1").fetchone()
     last_wordid = int(row[0]) if row else 0

@@ -834,11 +834,11 @@ def test_detect_caller_identity_honors_session_handoff_agent(monkeypatch):
 
 
 def test_detect_caller_identity_phantom_handoff_agent_aliased_to_provider(monkeypatch):
-    # #7597: a pre-fix launcher exported SESSION_HANDOFF_AGENT=grok-open-model-data.
+    # #7597: a pre-fix launcher exported SESSION_HANDOFF_AGENT=grok-monitor.
     # The explicit marker must still win (aliased to the provider), not fall
     # through to the soft CLAUDE_PROJECT_DIR heuristic.
     _clear_identity_env(monkeypatch)
-    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "grok-open-model-data")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "grok-monitor")
     monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
 
     assert _cli._detect_caller_identity_from_env() == "grok"
@@ -1002,18 +1002,45 @@ def test_recipient_choices_reject_removed_cursor_content_seats(lane):
     assert f"cursor-{lane}" not in _channels.get_valid_recipient_agents()
 
 
+@pytest.mark.parametrize("provider", ("claude", "codex"))
+def test_open_model_data_slot_bridge_round_trip(provider, isolate_db, capsys):
+    """Exercise the real CLI and isolated SQLite store, including inbox separation."""
+    slot = f"{provider}-open-model-data"
+    other_slot = "codex-open-model-data" if provider == "claude" else "claude-open-model-data"
+    assert _channels.resolve_recipient_alias(slot) == slot
+    assert _run_cli(["send", "bare inbox control", "--to", provider, "--from", "claude-atlas"]) == 0
+    assert _run_cli(["send", "lane inbox proof", "--to", slot, "--from", "claude-atlas"]) == 0
+    capsys.readouterr()
+
+    with sqlite3.connect(isolate_db) as conn:
+        rows = conn.execute("SELECT to_llm, content FROM messages ORDER BY id").fetchall()
+    assert rows == [(provider, "bare inbox control"), (slot, "lane inbox proof")]
+
+    assert _run_cli(["inbox", "--for", slot]) == 0
+    lane_inbox = capsys.readouterr().out
+    assert f"Inbox for {slot}: 1 unread" in lane_inbox
+    assert "lane inbox proof" in lane_inbox
+    assert "bare inbox control" not in lane_inbox
+
+    assert _run_cli(["inbox", "--for", provider]) == 0
+    bare_inbox = capsys.readouterr().out
+    assert "bare inbox control" in bare_inbox
+    assert "lane inbox proof" not in bare_inbox
+
+    assert _run_cli(["inbox", "--for", other_slot]) == 0
+    assert f"No messages for {other_slot}" in capsys.readouterr().out
+
+
 # ── #7597: phantom {provider}-{empty-slots-area} aliases ──────────────
 
 
 def test_resolve_recipient_alias_maps_empty_roster_phantoms_to_provider():
-    # open-model-data and monitor both carry `slots: []` in
-    # area_assignments.yaml, so launchers never mint a per-lane slot for them;
+    # monitor still carries `slots: []` in area_assignments.yaml;
     # already-minted SESSION_HANDOFF_AGENT names must drain via the provider.
-    assert _channels.resolve_recipient_alias("grok-open-model-data") == "grok"
+    assert _channels.resolve_recipient_alias("grok-monitor") == "grok"
     assert _channels.resolve_recipient_alias("claude-monitor") == "claude"
-    assert _channels.resolve_recipient_alias("kimi-open-model-data") == "kimi"
+    assert _channels.resolve_recipient_alias("kimi-monitor") == "kimi"
     assert _channels.resolve_recipient_alias("cursor-monitor") == "cursor"
-    assert _channels.resolve_recipient_alias("cursor-open-model-data") == "cursor"
 
 
 def test_resolve_recipient_alias_keeps_registered_and_static_identities():
@@ -1045,13 +1072,13 @@ def test_resolve_recipient_alias_rejects_typos_and_unknown_providers():
 
 def test_inbox_for_accepts_phantom_empty_roster_identity():
     parser = _cli._build_parser()
-    assert parser.parse_args(["inbox", "--for", "grok-open-model-data"]).for_llm == "grok"
-    assert parser.parse_args(["ack-all", "grok-open-model-data"]).agent == "grok"
-    assert parser.parse_args(["send", "hi", "--to", "grok-open-model-data"]).to_llm == "grok"
-    assert parser.parse_args(["inbox", "show", "grok-open-model-data"]).agent == "grok"
-    assert parser.parse_args(["inbox", "run", "grok-open-model-data", "--once"]).agent == "grok"
+    assert parser.parse_args(["inbox", "--for", "grok-monitor"]).for_llm == "grok"
+    assert parser.parse_args(["ack-all", "grok-monitor"]).agent == "grok"
+    assert parser.parse_args(["send", "hi", "--to", "grok-monitor"]).to_llm == "grok"
+    assert parser.parse_args(["inbox", "show", "grok-monitor"]).agent == "grok"
+    assert parser.parse_args(["inbox", "run", "grok-monitor", "--once"]).agent == "grok"
     assert parser.parse_args(["inbox", "--for", "cursor-monitor"]).for_llm == "cursor"
-    assert parser.parse_args(["send", "hi", "--to", "cursor-open-model-data"]).to_llm == "cursor"
+    assert parser.parse_args(["send", "hi", "--to", "cursor-monitor"]).to_llm == "cursor"
 
 
 def test_inbox_for_still_rejects_unknown_identities():
@@ -1070,12 +1097,12 @@ def test_inbox_for_still_rejects_unknown_identities():
 
 def test_check_inbox_phantom_identity_drains_provider_inbox(capsys):
     # A live session launched before #7597 carries
-    # SESSION_HANDOFF_AGENT=grok-open-model-data; its inbox drain must read the
+    # SESSION_HANDOFF_AGENT=grok-monitor; its inbox drain must read the
     # grok inbox without a relaunch.
     _messaging.send_message("hello grok", from_llm="claude", to_llm="grok", quiet=True)
     capsys.readouterr()
 
-    _messaging.check_inbox("grok-open-model-data")
+    _messaging.check_inbox("grok-monitor")
 
     captured = capsys.readouterr()
     assert "Inbox for grok" in captured.out
@@ -1086,7 +1113,7 @@ def test_acknowledge_all_phantom_identity_acks_provider_inbox(capsys):
     _messaging.send_message("ack me", from_llm="claude", to_llm="grok", quiet=True)
     capsys.readouterr()
 
-    _messaging.acknowledge_all("grok-open-model-data")
+    _messaging.acknowledge_all("grok-monitor")
 
     captured = capsys.readouterr()
     assert "Acknowledged 1 messages" in captured.out

@@ -37,6 +37,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 
@@ -1302,7 +1304,7 @@ def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None
     return False
 
 
-_GLOBAL_VESUM_CONN: sqlite3.Connection | None = None
+_GLOBAL_VESUM_CONN: SQLiteConnection | None = None
 _GLOBAL_VESUM_CUR: sqlite3.Cursor | None = None
 
 
@@ -1315,7 +1317,7 @@ def get_vesum_cursor(cur_ves: sqlite3.Cursor | None = None) -> sqlite3.Cursor | 
         return _GLOBAL_VESUM_CUR
     if DEFAULT_VESUM_DB.is_file():
         try:
-            _GLOBAL_VESUM_CONN = sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True)
+            _GLOBAL_VESUM_CONN = _open_readonly(DEFAULT_VESUM_DB)
             _GLOBAL_VESUM_CUR = _GLOBAL_VESUM_CONN.cursor()
             return _GLOBAL_VESUM_CUR
         except Exception:
@@ -5220,7 +5222,7 @@ def main() -> int:
     vesum_path: Path = args.vesum_db
     if not vesum_path.is_file():
         raise FileNotFoundError(f"VESUM database not found at {vesum_path} (required for release certification)")
-    conn_ves = sqlite3.connect(f"file:{vesum_path}?mode=ro", uri=True)
+    conn_ves = _open_readonly(vesum_path)
     cur_ves = conn_ves.cursor()
     print(f"Connected to VESUM database: {vesum_path}")
 

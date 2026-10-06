@@ -11,6 +11,9 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Protocol
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from .contract import Citation, canonical, digest
 from .errors import require
 from .transforms import fold_word
@@ -21,8 +24,8 @@ def identifier(name: str) -> str:
     return '"' + name + '"'
 
 
-def open_readonly(path: Path) -> sqlite3.Connection:
-    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True, isolation_level=None)
+def open_readonly(path: Path) -> SQLiteConnection:
+    connection = _open_readonly(path.resolve(), isolation_level=None)
     try:
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA query_only=ON")
@@ -76,7 +79,7 @@ class SnapshotReader:
         *,
         repository_root: Path | None = None,
     ):
-        self.connections: dict[str, sqlite3.Connection] = {}
+        self.connections: dict[str, SQLiteConnection] = {}
         self.files = dict(files or {})
         self.reads: dict[tuple[str, str], set[tuple[str, str]]] = {}
         self.repository_root = (repository_root or Path(__file__).resolve().parents[4]).resolve()

@@ -120,7 +120,7 @@ LEXICON_CONTEXT_LINES = {
         '_sum11_sovietization_risk(',
         'cols = {row[1] for row in conn.execute("PRAGMA table_info(sum11);").fetchall()}',
         'def _source_sum11_has_flag_columns(db_path: str | Path | None = None) -> bool:',
-        'def _sum11_has_flag_columns(conn: sqlite3.Connection) -> bool:',
+        'def _sum11_has_flag_columns(conn: SQLiteConnection) -> bool:',
         'def _sum11_has_flag_columns_for_db(',
         'def _sum11_sovietization_risk(definition: str, text: str) -> int:',
         'def _sum11_sovietization_risk_for_term(',

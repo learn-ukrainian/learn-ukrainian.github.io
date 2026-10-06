@@ -1,7 +1,23 @@
 #!/bin/bash
 # Shared helpers for context-monitor.sh and context-rollover-guard.sh (#8511).
 # Sourced, never registered as a hook; executing it directly does nothing.
-# Read-only: these helpers never write files.
+# State I/O is delegated to the descriptor-relative Python helper (#9791).
+
+# Match the existing rollover hooks' explicit interpreter override; otherwise
+# use the shared project interpreter resolver. Never fall back to PATH Python.
+context_hook_state() {
+  local operation="$1" project_dir="$2" session_id="$3" interpreter helper
+  shift 3
+  interpreter="${THREAD_ROLLOVER_PYTHON:-}"
+  if [ -z "$interpreter" ]; then
+    # shellcheck source=scripts/lib/project_interpreter.sh
+    source "$project_dir/scripts/lib/project_interpreter.sh" 2>/dev/null || return 0
+    interpreter=$(project_interpreter_resolve "$project_dir" 2>/dev/null) || return 0
+  fi
+  [ -x "$interpreter" ] || return 0
+  helper="$(dirname "${BASH_SOURCE[0]}")/context-hook-state.py"
+  "$interpreter" "$helper" "$operation" "$project_dir" "$session_id" "$@" 2>/dev/null || true
+}
 
 # Latest assistant input/cache usage from a Claude Code transcript, or 0.
 # Output tokens are not current context usage and are deliberately excluded.

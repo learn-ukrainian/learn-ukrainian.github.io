@@ -33,6 +33,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.lib.readonly_sqlite import is_sqlite_connection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.audit_dataset_acceptance import PROJECT_ROOT, _resolve_db_path
 from scripts.projects.open_model_data.decolonization_cases_data import (
     LEXICAL_CALQUES,
@@ -397,6 +399,7 @@ def query_source_evidence(
             )
 
     source_record = None
+    record_source = None
     if "UA-GEC" in auth or "gec" in auth.lower():
         rec_meta = UA_GEC_RECORD_MAP.get(case_id)
         if not rec_meta:
@@ -543,7 +546,7 @@ def query_source_evidence(
             )
     elif "СУМ-20" in auth or "ВТС" in auth:
         conn = getattr(s_cur, "connection", None)
-        if conn is not None and isinstance(conn, sqlite3.Connection):
+        if conn is not None and is_sqlite_connection(conn):
             ensure_reproducible_sum20_table(conn)
 
         art = (ev.get("article") or term).strip()
@@ -557,8 +560,9 @@ def query_source_evidence(
         for tbl in ("reproducible_sum20_articles", "sum20_articles"):
             try:
                 live = live_article_predicate_for(s_cur) if tbl == "sum20_articles" else "1 = 1"
+                source_column = "source" if tbl == "reproducible_sum20_articles" else "'СУМ-20'"
                 s_cur.execute(
-                    f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM {tbl} WHERE (headword IN ({placeholders}) OR normalized_lookup_key IN ({placeholders})) AND {live} LIMIT 1",
+                    f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text), {source_column} FROM {tbl} WHERE (headword IN ({placeholders}) OR normalized_lookup_key IN ({placeholders})) AND {live} LIMIT 1",
                     (*sum20_keys, *sum20_keys),
                 )
                 source_record = s_cur.fetchone()
@@ -572,8 +576,9 @@ def query_source_evidence(
             for tbl in ("reproducible_sum20_articles", "sum20_articles"):
                 try:
                     live = live_article_predicate_for(s_cur) if tbl == "sum20_articles" else "1 = 1"
+                    source_column = "source" if tbl == "reproducible_sum20_articles" else "'СУМ-20'"
                     s_cur.execute(
-                        f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM {tbl} WHERE (article_text LIKE ? OR definition_text LIKE ?) AND {live} LIMIT 1",
+                        f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text), {source_column} FROM {tbl} WHERE (article_text LIKE ? OR definition_text LIKE ?) AND {live} LIMIT 1",
                         (f"%{t_clean}%", f"%{t_clean}%"),
                     )
                     source_record = s_cur.fetchone()
@@ -581,6 +586,8 @@ def query_source_evidence(
                         break
                 except sqlite3.OperationalError:
                     continue
+
+        dictionary_record = source_record
 
         # 2. Modern normative fallback: ULIF (sources.db:ulif_dictua_entries), NEVER Soviet СУМ-11
         if not source_record:
@@ -654,6 +661,8 @@ def query_source_evidence(
             raise ValueError(
                 f"Retrieved lexical record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (does not substantiate cited entry '{art}' or phrase '{term}')"
             )
+        if dictionary_record is not None:
+            record_source = dictionary_record[3]
     elif "правопис" in auth.lower():
         s_cur.execute(
             "SELECT id, title, text FROM external_articles WHERE (title LIKE '%Правопис%' OR text LIKE '%правопис%') AND text LIKE ? LIMIT 1",
@@ -804,7 +813,7 @@ def query_source_evidence(
             )
 
     return {
-        "source": ev["source"],
+        "source": record_source or ev["source"],
         "section": ev.get("section"),
         "article": ev.get("article"),
         "page": ev.get("page"),
@@ -1067,8 +1076,8 @@ def build_all_cases() -> list[DecolonizationCase]:
     vesum_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
     sources_path = _resolve_db_path("sources.db", PROJECT_ROOT)
 
-    v_conn = sqlite3.connect(f"file:{vesum_path}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
+    v_conn = _open_readonly(vesum_path)
+    s_conn = sqlite3.connect(sources_path.resolve().as_uri() + "?mode=ro", uri=True)
     ensure_reproducible_sum20_table(s_conn)
 
     v_cur = v_conn.cursor()

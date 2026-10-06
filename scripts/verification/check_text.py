@@ -15,6 +15,13 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from scripts.curriculum.evidence.sources import _signature
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS
 from scripts.curriculum.resolver.tokenize import (
@@ -86,7 +93,7 @@ def _vesum_version() -> str:
             key = (stat.st_size, stat.st_mtime_ns)
             if _VESUM_VERSION_CACHE is not None and _VESUM_VERSION_CACHE[0] == key:
                 return _VESUM_VERSION_CACHE[1]
-            conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+            conn = open_readonly(path)
             try:
                 cur = conn.execute("SELECT value FROM vesum_build_metadata WHERE key = 'canonical_jsonl_sha256'")
                 row = cur.fetchone()
@@ -154,7 +161,7 @@ def _get_ua_gec_index() -> tuple[dict[tuple[str, ...], list[dict[str, Any]]], in
     index: dict[tuple[str, ...], list[dict[str, Any]]] = {}
     max_len = 1
     dropped_count = 0
-    conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
+    conn = open_readonly(sources_path)
     conn.row_factory = sqlite3.Row
     try:
         rows = conn.execute("SELECT id, error, correct, error_type, doc_id, is_native FROM ua_gec_errors").fetchall()

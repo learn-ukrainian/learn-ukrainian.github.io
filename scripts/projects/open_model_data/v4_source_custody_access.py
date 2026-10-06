@@ -20,7 +20,6 @@ import argparse
 import hashlib
 import json
 import os
-import sqlite3
 import sys
 import time
 from collections.abc import Container, Mapping, Sequence
@@ -30,6 +29,8 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.storage.topology import BULK_LEAF_NAME, resolve_bulk_root
 
@@ -370,13 +371,12 @@ class BoundedCustodyReader:
         if not self.database_path.is_file():
             raise CustodyAccessError(f"Database file not found: {self.database_path}")
 
-        uri = f"file:{self.database_path.resolve()}?mode=ro"
         start_time = time.monotonic()
         records_streamed = 0
         chars_streamed = 0
         digest = hashlib.sha256()
 
-        conn = sqlite3.connect(uri, uri=True)
+        conn = _open_readonly(self.database_path.resolve())
         try:
             cursor = conn.cursor()
             cursor.execute("PRAGMA query_only = ON;")
@@ -449,7 +449,7 @@ class BoundedCustodyReader:
 
 
 def _precompute_table_source_metrics(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     table: str,
     selected_source_files: Container[str] | set[str] | None = None,
 ) -> tuple[dict[str, tuple[int, int, str]], dict[str, tuple[int, str]]]:
@@ -713,7 +713,7 @@ def resolve_source_access(
     source_family: str,
     cohort_cfg: dict[str, Any],
     input_root: Path,
-    db_conn: sqlite3.Connection,
+    db_conn: SQLiteConnection,
     chunks_map: Mapping[str, Path],
     unmounted_archive_owner: str = "existing custody/source-access owner",
     archive_cache_map: Mapping[str, Path] | None = None,
@@ -998,8 +998,7 @@ def build(
         )
 
     # Connect to database read-only
-    db_uri = f"file:{db_path.resolve()}?mode=ro"
-    conn = sqlite3.connect(db_uri, uri=True)
+    conn = _open_readonly(db_path.resolve())
     access_records = []
     missing_items = []
 
@@ -1287,10 +1286,9 @@ def verify(
     if require_database and (db_path is None or not db_path.is_file()):
         raise CustodyAccessError(f"Database missing or not found on host: {db_path}")
 
-    db_conn: sqlite3.Connection | None = None
+    db_conn: SQLiteConnection | None = None
     if db_path is not None and db_path.is_file():
-        db_uri = f"file:{db_path.resolve()}?mode=ro"
-        conn_candidate = sqlite3.connect(db_uri, uri=True)
+        conn_candidate = _open_readonly(db_path.resolve())
         cur = conn_candidate.cursor()
         cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
         existing_tables = {r[0] for r in cur.fetchall()}

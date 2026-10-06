@@ -18,6 +18,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection, open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection, open_readonly  # type: ignore[no-redef]
+
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneError,
@@ -53,9 +60,9 @@ _RETIRED_AGENTS = frozenset({"gemini"})
 
 
 @contextmanager
-def _connect_legacy(db_path: Path) -> Iterator[sqlite3.Connection]:
+def _connect_legacy(db_path: Path) -> Iterator[SQLiteConnection]:
     """Open a read path connection and always close it (sqlite3 `with` only commits)."""
-    conn = sqlite3.connect(str(db_path))
+    conn = open_readonly(str(db_path))
     conn.row_factory = sqlite3.Row
     try:
         yield conn
@@ -81,7 +88,11 @@ def _connect_ro(db_path: Path) -> Iterator[Any]:
     authority = assert_component_supported(StoreId.FLEET_COMMS, "efficiency_metrics")
     if authority is not Authority.PG and not db_path.is_file():
         raise FileNotFoundError(db_path)
-    conn = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
+    conn = (
+        cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
+        if authority is Authority.PG
+        else open_readonly(db_path)
+    )
     try:
         if authority is Authority.PG:
             conn.row_factory = dict_row
@@ -97,22 +108,22 @@ def _connect_ro(db_path: Path) -> Iterator[Any]:
 
 
 def _placeholder(conn: Any) -> str:
-    return "?" if isinstance(conn, sqlite3.Connection) else "%s"
+    return "?" if is_sqlite_connection(conn) else "%s"
 
 
 def _table_exists(conn: Any, name: str) -> bool:
-    if isinstance(conn, sqlite3.Connection):
+    if is_sqlite_connection(conn):
         query = "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?"
     else:
         query = "SELECT 1 FROM pg_class WHERE oid = to_regclass(%s) AND relkind IN ('r', 'p')"
     exists = conn.execute(query, (name,)).fetchone() is not None
-    if not exists and not isinstance(conn, sqlite3.Connection):
+    if not exists and not is_sqlite_connection(conn):
         raise EfficiencyMetricsReadError("control-plane store 'fleet_comms' metrics table unavailable")
     return exists
 
 
 def _column_names(conn: Any, table: str) -> set[str]:
-    if isinstance(conn, sqlite3.Connection):
+    if is_sqlite_connection(conn):
         return {str(r[1]) for r in conn.execute(f"PRAGMA table_info({table})").fetchall()}
     return {
         str(r["attname"])
@@ -128,7 +139,7 @@ def _delivery_latency(
     conn: Any, *, table: str, start: str, end: str, delivered_only: bool = False,
 ) -> dict[str, Any] | None:
     """Aggregate durable timestamps; identifiers are collector-owned constants."""
-    if isinstance(conn, sqlite3.Connection):
+    if is_sqlite_connection(conn):
         duration = f"(julianday({end}) - julianday({start})) * 86400.0"
     else:
         duration = f"EXTRACT(EPOCH FROM ({end}::timestamptz - {start}::timestamptz))"

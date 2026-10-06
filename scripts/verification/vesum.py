@@ -26,13 +26,20 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
+
 from scripts.rag.config import VESUM_DB_PATH
 
 _vesum_conn = None
 _vesum_conn_path: Path | None = None
 _vesum_conn_stat: tuple[int, int] | None = None
 _CONN_LOCK = threading.Lock()
-_ACTIVE_CONNS: dict[sqlite3.Connection, int] = {}
+_ACTIVE_CONNS: dict[SQLiteConnection, int] = {}
 
 
 class InspectionStatus(StrEnum):
@@ -111,7 +118,7 @@ def _resolve_vesum_db_path(db_path: str | Path | None = None) -> Path:
     return VESUM_DB_PATH
 
 
-def _get_or_create_conn_locked(resolved_path: Path, current_stat: tuple[int, int] | None) -> sqlite3.Connection:
+def _get_or_create_conn_locked(resolved_path: Path, current_stat: tuple[int, int] | None) -> SQLiteConnection:
     """Internal helper: return or create the cached SQLite connection under _CONN_LOCK."""
     global _vesum_conn, _vesum_conn_path, _vesum_conn_stat
     if (
@@ -121,7 +128,7 @@ def _get_or_create_conn_locked(resolved_path: Path, current_stat: tuple[int, int
         or _vesum_conn_stat != current_stat
     ):
         # VESUM is a reference dictionary: every reader opens it read-only.
-        new_conn = sqlite3.connect(f"{resolved_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)
+        new_conn = open_readonly(resolved_path.resolve(), check_same_thread=False)
         new_conn.row_factory = sqlite3.Row
 
         old_conn = _vesum_conn
@@ -138,7 +145,7 @@ def _get_or_create_conn_locked(resolved_path: Path, current_stat: tuple[int, int
     return _vesum_conn
 
 
-def _release_conn(conn: sqlite3.Connection) -> None:
+def _release_conn(conn: SQLiteConnection) -> None:
     """Release a reader on connection, closing it if superseded and idle."""
     global _vesum_conn
     with _CONN_LOCK:
@@ -152,7 +159,7 @@ def _release_conn(conn: sqlite3.Connection) -> None:
 
 
 @contextlib.contextmanager
-def get_vesum_connection(db_path: str | Path | None = None) -> Iterator[sqlite3.Connection]:
+def get_vesum_connection(db_path: str | Path | None = None) -> Iterator[SQLiteConnection]:
     """Context manager guaranteeing connection retention across the reader's lifetime."""
     resolved_path = _resolve_vesum_db_path(db_path)
     if not resolved_path.exists():
@@ -179,7 +186,7 @@ def get_vesum_connection(db_path: str | Path | None = None) -> Iterator[sqlite3.
         _release_conn(conn)
 
 
-def get_vesum_conn(db_path: str | Path | None = None) -> sqlite3.Connection:
+def get_vesum_conn(db_path: str | Path | None = None) -> SQLiteConnection:
     """Lazy-load SQLite connection to VESUM dictionary with automatic replacement detection."""
     resolved_path = _resolve_vesum_db_path(db_path)
     if not resolved_path.exists():
@@ -200,7 +207,7 @@ def get_vesum_conn(db_path: str | Path | None = None) -> sqlite3.Connection:
         return _get_or_create_conn_locked(resolved_path, current_stat)
 
 
-def close_vesum_conn(conn: sqlite3.Connection | None = None) -> None:
+def close_vesum_conn(conn: SQLiteConnection | None = None) -> None:
     """Close and reset cached SQLite connection, or close an explicitly provided connection."""
     global _vesum_conn, _vesum_conn_path, _vesum_conn_stat
     with _CONN_LOCK:
@@ -293,7 +300,7 @@ _REQUIRED_FORMS_ALL_COLS = frozenset(
 _REQUIRED_FORM_MARKERS_COLS = frozenset({"form_id", "marker", "origin", "marker_class"})
 
 
-def _has_inspection_schema(conn: sqlite3.Connection) -> bool:
+def _has_inspection_schema(conn: SQLiteConnection) -> bool:
     """Check if connection has the marker-preserving forms_all and form_markers schema with required columns."""
     try:
         tables = {
@@ -315,7 +322,7 @@ def _has_inspection_schema(conn: sqlite3.Connection) -> bool:
         return False
 
 
-def _get_metadata_and_version(conn: sqlite3.Connection) -> tuple[str, dict[str, Any]]:
+def _get_metadata_and_version(conn: SQLiteConnection) -> tuple[str, dict[str, Any]]:
     """Retrieve build metadata and version identifier if present."""
     try:
         has_meta = conn.execute(

@@ -1076,7 +1076,9 @@ def _tree_membership(
     and a child node whose ``repository.nameWithOwner`` differs from
     ``repo_slug`` is a cross-repo sub-issue — reported as a warning, never
     followed (its number belongs to another repository's namespace). Both keep
-    the audit green. A node that comes back ``INCOMPLETE_NODE`` was NEVER
+    the audit green for repository-scoped reporting; membership-reliant writes
+    separately refuse any foreign ancestry through live qualified parent reads
+    (#9794). A node that comes back ``INCOMPLETE_NODE`` was NEVER
     read (transport/timeout/JSON/GraphQL failure); it is recorded as
     ``traversal_incomplete`` and the caller must fail the audit closed — an
     unread subtree can hide a duplicate membership.
@@ -1334,6 +1336,7 @@ def run_audit(
     module's own repo instead.
     """
     root = repo_root.resolve() if repo_root is not None else ROOT
+    repository = "/".join(_repo_owner_name(root))
     registry_path = root / "scripts" / "config" / "issue_streams.yaml"
     registry = load_registry(registry_path, audit_only=True)
     closed_epics = load_closed_epics(registry_path)
@@ -1344,6 +1347,7 @@ def run_audit(
     )
     incomplete_nodes = sorted(_unread_warning_nodes(traversal_warnings))
     report = classify(open_issues, registry, membership, incomplete_nodes=incomplete_nodes)
+    report["repository"] = repository
     if incomplete_nodes:
         # Fail closed (#8661): an unread subtree can hide a duplicate
         # membership, so an incomplete traversal must not be green even when
@@ -1435,7 +1439,7 @@ def _valid_membership_entry(entry: object) -> bool:
         return False
     if not isinstance(streams, list) or not streams or not all(isinstance(s, str) and s for s in streams):
         return False
-    if via not in _VALID_VIA:
+    if not isinstance(via, str) or via not in _VALID_VIA:
         return False
     if not isinstance(unique, bool):
         return False
@@ -1506,6 +1510,9 @@ def membership_report_is_complete(report: object) -> bool:
     unread-frontier warning (``traversal_incomplete`` or ``truncated_depth``)
     may be present — even one whose node list is malformed — and nothing may
     name an unread issue.
+
+    Warning entries and their codes must be typed; malformed codes refuse
+    membership evidence rather than raising during set lookup (#9794).
     """
     if not isinstance(report, dict):
         return False
@@ -1516,7 +1523,12 @@ def membership_report_is_complete(report: object) -> bool:
     warnings = report.get("warnings")
     if warnings is not None and not isinstance(warnings, list):
         return False
-    if any(isinstance(w, dict) and w.get("code") in _UNREAD_WARNING_CODES for w in warnings or ()):
+    if any(
+        not isinstance(w, dict)
+        or not isinstance(w.get("code"), str)
+        or w["code"] in _UNREAD_WARNING_CODES
+        for w in warnings or ()
+    ):
         return False
     return not unread_membership_nodes(report)
 

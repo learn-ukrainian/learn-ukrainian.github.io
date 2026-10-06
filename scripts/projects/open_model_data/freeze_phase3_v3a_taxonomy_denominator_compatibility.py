@@ -24,6 +24,7 @@ from jsonschema import Draft202012Validator
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.frozen_k_outputs import publish_frozen_k_bundle
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -208,7 +209,7 @@ def _walk_forbidden(value: Any, path: str = "artifact") -> None:
 def verify_source_db(path: Path) -> None:
     require(path.is_file(), f"source DB missing: {path}")
     try:
-        connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        connection = _open_readonly(path)
         try:
             rows = connection.execute(
                 "SELECT chunk_id,title,text,parent_section_id FROM textbooks WHERE source_file=? ORDER BY chunk_id",

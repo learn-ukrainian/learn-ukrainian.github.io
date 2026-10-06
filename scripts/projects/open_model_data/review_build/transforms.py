@@ -132,8 +132,8 @@ def _dehyphenate_v2(text: str, policy: dict, reader: object) -> Result:
         evidence.append((start, end, replacement, kind))
         edits.append((start, end, replacement))
 
-    # Printed splits take precedence over unrelated inline occurrences of the
-    # same alternative. Consume each stored occurrence once.
+    # Alternatives describe printed line-break splits only. Inline hyphens
+    # cannot consume them; unused stored occurrences remain unresolved.
     printed = list(LINE_BREAK.finditer(text))
     for match in printed:
         resolve(match.start(), match.end(), match[1], match[2], printed)
@@ -141,14 +141,6 @@ def _dehyphenate_v2(text: str, policy: dict, reader: object) -> Result:
     for match in BREAK_SIGNAL.finditer(text):
         if not any(p.start() <= match.start() and p.end() >= match.end() for p in printed):
             unresolved.append((match.start(), match.end(), match[0]))
-    inline = re.compile(rf"(?<!{EDGE})({TOKEN})-({TOKEN})(?!{EDGE})")
-    inline_positions = list(inline.finditer(text))
-    for match in inline_positions:
-        if any(
-            index not in covered and fold_word(alt) in {fold_word(match[1] + match[2]), fold_word(match[0])}
-            for index, alt in enumerate(alternatives)
-        ):
-            resolve(match.start(), match.end(), match[1], match[2], inline_positions)
     result = text
     for start, end, replacement in sorted(edits, reverse=True):
         result = result[:start] + replacement + result[end:]

@@ -123,7 +123,7 @@ def _observation(
                 "body": body if body is not None else _body(),
                 "url": "https://github.com/org/repo/issues/42",
                 "closed_at": NOW if issue_state == "CLOSED" else None,
-                "parent_epic": 10,
+                "parent_epic": 10, "parent_repository": "org/repo",
             },
             "pr": {
                 "number": 77,
@@ -168,6 +168,17 @@ class FakeAdapter:
     def __init__(self, observation: dict) -> None:
         self.observation = deepcopy(observation)
         self.calls: list[str] = []
+
+    def registered_stream_epics(self, repository: str) -> list[int]:
+        return self.observation["github"]["registered_stream_epics"]
+
+    def read_issue_parent(self, repository: str, issue_number: int) -> dict | None:
+        issue = self.observation["github"]["issue"]
+        if issue_number != issue["number"]:
+            issue = self.observation["github"].get("follow_up") or {}
+        if issue.get("parent_epic") is None:
+            return None
+        return {"number": issue["parent_epic"], "repository": issue.get("parent_repository")}
 
     def observe(self, _ledger: dict, **_kwargs: object) -> dict:
         return deepcopy(self.observation)
@@ -561,7 +572,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
                 }
             )
         if "graphql" in args:
-            return json.dumps({"data": {"repository": {"issue": {"parent": {"number": 10}}}}})
+            return json.dumps({"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42, "parent": {"number": 10, "repository": {"nameWithOwner": "org/repo"}}}}}})
         if "pr view" in command:
             return json.dumps(
                 {
@@ -610,7 +621,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
         raise AssertionError(f"unexpected command: {args}")
 
     adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=runner)
-    adapter.registered_stream_epics = lambda: [10]
+    adapter.registered_stream_epics = lambda repository: [10]
     _, ledger = _ledger(tmp_path)
     ledger["terminal_goal"] = "deploy"
     ledger["identity"]["terminal_goal"] = "deploy"
@@ -664,7 +675,7 @@ def _transferred_ledger_and_reader(
             "body": f"Refs #{follow_up_issue}" if issue_number == 42 else "Refs #42",
             "url": f"https://github.com/{repository}/issues/{issue_number}",
             "closed_at": None,
-            "parent_epic": parents[issue_number],
+            "parent_epic": parents[issue_number], "parent_repository": repository,
         }
 
     return ledger, calls, _read_issue
@@ -686,7 +697,7 @@ def test_github_observation_skips_audit_when_primary_and_follow_up_are_native(
 
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", _fail_audit)
     adapter = task_closeout.GhGitHubAdapter(tmp_path)
-    monkeypatch.setattr(adapter, "registered_stream_epics", lambda: [10, 20])
+    monkeypatch.setattr(adapter, "registered_stream_epics", lambda repository: [10, 20])
     monkeypatch.setattr(adapter, "_read_pr", lambda repository, pr_number: {"number": pr_number, "checks": []})
     monkeypatch.setattr(adapter, "_comments", lambda repository, pr_number: [])
 
@@ -736,7 +747,7 @@ def test_github_observation_fetches_audit_when_either_relevant_issue_lacks_nativ
         lambda self: {"sentinel": True},
     )
     adapter = task_closeout.GhGitHubAdapter(tmp_path)
-    monkeypatch.setattr(adapter, "registered_stream_epics", lambda: [10, 20])
+    monkeypatch.setattr(adapter, "registered_stream_epics", lambda repository: [10, 20])
     monkeypatch.setattr(adapter, "_read_pr", lambda repository, pr_number: {"number": pr_number, "checks": []})
     monkeypatch.setattr(adapter, "_comments", lambda repository, pr_number: [])
 
@@ -807,10 +818,109 @@ def _stub_read_issue(*, parent_epic: int | None) -> object:
             "body": "- [ ] **AC-IMPL** — Implementation is verified.\n",
             "url": f"https://github.com/{repository}/issues/{issue_number}",
             "closed_at": None,
-            "parent_epic": parent_epic,
+            "parent_epic": parent_epic, "parent_repository": repository,
         }
 
     return _read_issue
+
+
+@pytest.mark.parametrize("parent_epic", [10, 30, None], ids=["native-root", "native-chain", "body"])
+@pytest.mark.parametrize(
+    "document,valid,reason",
+    [
+        ({"nameWithOwner": "other/repo"}, False, "does not match"),
+        ({}, False, "missing or malformed"),
+        ({"nameWithOwner": None}, False, "missing or malformed"),
+        ({"nameWithOwner": "repo"}, False, "missing or malformed"),
+        (None, False, "missing or malformed"),
+        ({"nameWithOwner": "ORG/Repo"}, True, None),
+        ({"nameWithOwner": "org/repo"}, True, None),
+    ],
+)
+def test_9852_init_binds_registry_to_identity_repository(tmp_path, monkeypatch, parent_epic, document, valid, reason):
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    registry_path = tmp_path / "scripts" / "config" / "issue_streams.yaml"
+    registry_path.parent.mkdir(parents=True)
+    registry_path.write_text("streams:\n  infra:\n    epics: [10]\n")
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=parent_epic))
+
+    def repository_read(self, command, stdin=None):
+        assert command == ["gh", "repo", "view", "--json", "nameWithOwner"]
+        return document
+
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "_json", repository_read)
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "membership_audit_report",
+        lambda self: _body_audit() if parent_epic is None else _native_chain_audit([10]),
+    )
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "read_issue_parent",
+        lambda self, repo, number: None if parent_epic is None else {
+            "number": 30 if number == 42 and parent_epic == 30 else 10, "repository": repo,
+        },
+    )
+    if valid:
+        assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
+        assert task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")["identity"]["repository"] == "org/repo"
+    else:
+        with pytest.raises(task_lifecycle.LifecycleError, match=reason):
+            task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+        assert not (tmp_path / "lifecycle.json").exists()
+
+
+def test_9852_registry_repository_resolution_failure_is_typed(tmp_path):
+    def failed_read(command, stdin):
+        raise task_lifecycle.LifecycleError("repository could not be resolved")
+
+    adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=failed_read)
+    with pytest.raises(task_lifecycle.LifecycleError, match="repository could not be resolved"):
+        adapter.registered_stream_epics("org/repo")
+
+
+@pytest.mark.parametrize("error", [KeyError("owner"), TypeError("repository missing"), RuntimeError("unresolved")])
+def test_9852_audit_repository_resolution_failure_is_typed(tmp_path, monkeypatch, error):
+    def failed_audit(repo_root):
+        raise error
+
+    monkeypatch.setattr(issue_stream_audit, "run_audit", failed_audit)
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
+    with pytest.raises(task_lifecycle.LifecycleError, match="cannot run the issue-stream membership audit"):
+        adapter.membership_audit_report()
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
+@pytest.mark.parametrize("source", ["registry", "body"])
+def test_9852_mutation_refuses_foreign_repository_before_writing(tmp_path, monkeypatch, action, source):
+    path, ledger = _ledger(tmp_path)
+    if source == "registry":
+        adapter = task_closeout.GhGitHubAdapter(tmp_path)
+        monkeypatch.setattr(adapter, "read_issue", lambda repo, number: _stub_read_issue(parent_epic=10)(adapter, repo, number))
+        monkeypatch.setattr(adapter, "_json", lambda command, stdin=None: {"nameWithOwner": "other/repo"})
+        # Observe is the production path: its typed registry refusal leaves
+        # no usable epics for the final write gate.
+        with pytest.raises(task_lifecycle.LifecycleError, match="registry repository does not match"):
+            adapter._github_observation(ledger)
+        monkeypatch.setattr(task_lifecycle, "observe_local_git", lambda *args, **kwargs: _observation()["local"])
+    else:
+        observation = _observation()
+        observation["github"]["issue"]["parent_epic"] = None
+        observation["github"]["membership_audit"] = {**_body_audit(), "repository": "other/repo"}
+        adapter = FakeAdapter(observation)
+    writes = []
+    monkeypatch.setattr(adapter, "update_issue_body", lambda *args: writes.append("sync"))
+    monkeypatch.setattr(adapter, "enqueue_pr", lambda *args: writes.append("enqueue"))
+    monkeypatch.setattr(adapter, "close_issue", lambda *args: writes.append("close"))
+    reason = "registry repository does not match" if source == "registry" else "live body membership audit repository does not match"
+    with pytest.raises(task_lifecycle.LifecycleError, match=reason):
+        task_closeout.perform_mutation(
+            path, adapter, action=action, authorized_by="codex/impl-9852",
+            branch=None, worktree=None, now=NOW,
+        )
+    assert writes == []
+    failed = task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]
+    assert failed["status"] == "failed"
+    assert reason in failed["detail"]
+    assert "identity stream epic is absent" not in failed["detail"]
 
 
 def test_cmd_init_accepts_native_membership_without_a_live_audit(
@@ -818,12 +928,15 @@ def test_cmd_init_accepts_native_membership_without_a_live_audit(
 ) -> None:
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=10))
-    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10])
 
     def _fail_audit(self) -> dict:
         raise AssertionError("native membership must not trigger a live membership audit")
 
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", _fail_audit)
+
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent",
+                        lambda self, repo, number: {"number": 10, "repository": repo})
 
     assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
     ledger = task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")
@@ -842,7 +955,7 @@ def test_cmd_init_rejects_wrong_native_parent_without_a_live_audit(
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=99))
     # #99 is a different REGISTERED stream epic: conclusive without an audit.
     # An unregistered native parent is the native-chain path (#9783) below.
-    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 99])
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10, 99])
 
     def _fail_audit(self) -> dict:
         raise AssertionError("a wrong native parent must not trigger a live membership audit")
@@ -856,6 +969,7 @@ def test_cmd_init_rejects_wrong_native_parent_without_a_live_audit(
 
 def _native_chain_audit(issue_epics: list[int]) -> dict:
     return {
+        "repository": "org/repo",
         "generated_at": time.time(),
         "membership_complete": True,
         "incomplete_nodes": [],
@@ -867,16 +981,31 @@ def _native_chain_audit(issue_epics: list[int]) -> dict:
     }
 
 
+def _body_audit() -> dict:
+    return {
+        "repository": "org/repo",
+        "generated_at": time.time(), "membership_complete": True,
+        "incomplete_nodes": [], "warnings": [],
+        "effective_membership": {
+            "42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True},
+        },
+        "open_issue_numbers": [42, 10, 20],
+    }
+
+
 def test_cmd_init_accepts_native_chain_through_unregistered_sub_epic(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """#9783: native parent #30 is an unregistered sub-epic of stream epic #10."""
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=30))
-    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 20])
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10, 20])
     monkeypatch.setattr(
         task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: _native_chain_audit([10])
     )
+
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent",
+                        lambda self, repo, number: {"number": 30 if number == 42 else 10, "repository": repo})
 
     assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
     ledger = task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")
@@ -888,7 +1017,7 @@ def test_cmd_init_rejects_native_chain_to_a_different_registered_epic(
 ) -> None:
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=30))
-    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 20])
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10, 20])
     monkeypatch.setattr(
         task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: _native_chain_audit([20])
     )
@@ -901,28 +1030,29 @@ def test_cmd_init_rejects_native_chain_to_a_different_registered_epic(
 def test_cmd_init_accepts_unique_body_membership(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None))
-    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10])
+    audits = []
+
+    def live_audit(self):
+        audits.append(1)
+        return _body_audit()
+
     monkeypatch.setattr(
         task_closeout.GhGitHubAdapter,
         "membership_audit_report",
-        lambda self: {
-            "generated_at": time.time(),
-            "membership_complete": True,
-            "incomplete_nodes": [],
-            "effective_membership": {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
-            "open_issue_numbers": [42, 10],
-        },
+        live_audit,
     )
 
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent", lambda self, repo, number: None)
     assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
-    ledger = task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")
-    assert ledger["identity"]["stream_epic"] == 10
+    assert task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")["identity"]["stream_epic"] == 10
+    assert audits == [1]
 
 
 def test_cmd_init_rejects_orphaned_issue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None))
-    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10])
     monkeypatch.setattr(
         task_closeout.GhGitHubAdapter,
         "membership_audit_report",
@@ -945,7 +1075,7 @@ def test_cmd_init_rejects_incomplete_membership_audit(tmp_path: Path, monkeypatc
     naming the unread nodes when the membership audit is incomplete."""
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None))
-    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 20])
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10, 20])
     monkeypatch.setattr(
         task_closeout.GhGitHubAdapter,
         "membership_audit_report",
@@ -1118,3 +1248,411 @@ def test_cross_workflow_in_progress_is_not_green():
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
+@pytest.mark.parametrize("parents,reason", [
+    ({42: (10, "foreign/repo")}, "repository boundary"),
+    ({42: (31, "org/repo"), 31: (20, "org/repo")}, "different registered"),
+    ({42: (30, "org/repo"), 30: (31, "org/repo"), 31: (20, "org/repo")}, "different registered"),
+    ({42: (30, "org/repo"), 30: (40, "foreign/repo"), 40: (10, "org/repo")}, "repository boundary"),
+    ({42: None}, "exact unique body evidence"),
+], ids=["foreign-number-collision", "intermediate-reparent", "unchanged-immediate-parent", "returning-local-descendant", "missing"])
+def test_9794_each_mutation_refuses_live_drift_despite_valid_snapshot(tmp_path, action, parents, reason):
+    path, _ = _ledger(tmp_path)
+    observation = _observation()
+    observation["github"]["registered_stream_epics"] = [10, 20]
+    observation["github"]["issue"]["parent_epic"] = 30
+    observation["github"]["membership_audit"] = _native_chain_audit([10])
+    adapter = FakeAdapter(observation)
+    reads = []
+
+    def live_parent(repository, number):
+        reads.append(number)
+        parent = parents[number]
+        return None if parent is None else {"number": parent[0], "repository": parent[1]}
+
+    adapter.read_issue_parent = live_parent
+    with pytest.raises(task_lifecycle.LifecycleError, match=reason):
+        task_closeout.perform_mutation(
+            path, adapter, action=action, authorized_by="codex/impl-9794",
+            branch=None, worktree=None, now=NOW,
+        )
+    assert adapter.calls == []
+    assert reads
+    assert 40 not in reads  # Never fetch a foreign namespace as a local number.
+    failed = task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]
+    assert failed["status"] == "failed"
+    assert failed["remote_mutation_performed"] is False
+    assert reason in failed["detail"]
+
+
+def test_9794_mutation_accepts_same_epic_sibling_reparent_and_rechecks_replay(tmp_path):
+    path, _ = _ledger(tmp_path)
+    observation = _observation()
+    observation["github"]["issue"]["parent_epic"] = 30
+    observation["github"]["membership_audit"] = _native_chain_audit([10])
+    adapter = FakeAdapter(observation)
+    reads = []
+
+    def live_parent(repository, number):
+        reads.append(number)
+        return {"number": 32 if number == 42 else 10, "repository": "ORG/REPO"}
+
+    adapter.read_issue_parent = live_parent
+    args = dict(action="sync-acs", authorized_by="codex/impl-9794", branch=None, worktree=None, now=NOW)
+    result = task_closeout.perform_mutation(path, adapter, **args)
+    assert result["remote_mutation_performed"] is True
+    assert adapter.calls == ["sync-acs"]
+    assert reads == [42, 32]
+    result = task_closeout.perform_mutation(path, adapter, **args)
+    assert result["replayed"] is True
+    assert reads == [42, 32, 42, 32]
+    assert adapter.calls == ["sync-acs"]
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
+def test_9794_transferred_follow_up_gets_live_check_before_each_mutation(tmp_path, action):
+    path, ledger = _ledger(tmp_path)
+    ledger, evidence = task_lifecycle.add_evidence(
+        ledger, ac_id="AC-IMPL", evidence_type="follow_up", summary="Scope transferred",
+        url="https://github.com/org/repo/issues/43", commit=None, details={}, recorded_at=NOW,
+    )
+    ledger = task_lifecycle.set_remaining_scope(
+        ledger, status="transferred", summary="Scope transferred", follow_up_issue=43,
+        follow_up_stream_epic=20, evidence_ids=[evidence["id"]], now=NOW,
+    )
+    task_lifecycle.write_lifecycle(path, ledger)
+    observation = _observation()
+    observation["github"]["registered_stream_epics"] = [10, 20]
+    observation["github"]["follow_up"] = {
+        "number": 43, "parent_epic": 20, "parent_repository": "org/repo",
+        "reciprocal_links_verified": True,
+    }
+    adapter = FakeAdapter(observation)
+    reads = []
+
+    def live_parent(repository, number):
+        reads.append(number)
+        return {"number": 10 if number == 42 else 20, "repository": repository if number == 42 else "foreign/repo"}
+
+    adapter.read_issue_parent = live_parent
+    with pytest.raises(task_lifecycle.LifecycleError, match=r"#43.*repository boundary"):
+        task_closeout.perform_mutation(
+            path, adapter, action=action, authorized_by="codex/impl-9794",
+            branch=None, worktree=None, now=NOW,
+        )
+    assert reads == [42, 43]
+    assert adapter.calls == []
+    assert task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]["status"] == "failed"
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
+@pytest.mark.parametrize("evidence_repository", ["other/repo", None], ids=["foreign", "unknown"])
+def test_9866_transferred_follow_up_refuses_foreign_audit_without_writes(tmp_path, action, evidence_repository):
+    path, ledger = _ledger(tmp_path)
+    ledger, evidence = task_lifecycle.add_evidence(
+        ledger, ac_id="AC-IMPL", evidence_type="follow_up", summary="Scope transferred",
+        url="https://github.com/org/repo/issues/43", commit=None, details={}, recorded_at=NOW,
+    )
+    ledger = task_lifecycle.set_remaining_scope(
+        ledger, status="transferred", summary="Scope transferred", follow_up_issue=43,
+        follow_up_stream_epic=20, evidence_ids=[evidence["id"]], now=NOW,
+    )
+    task_lifecycle.write_lifecycle(path, ledger)
+    observation = _observation()
+    observation["github"]["registered_stream_epics"] = [10, 20]
+    observation["github"]["follow_up"] = {
+        "number": 43, "parent_epic": None, "reciprocal_links_verified": True,
+    }
+    report = _body_audit()
+    report["effective_membership"]["43"] = {
+        "epics": [20], "streams": ["other"], "via": "body", "unique_stream": True,
+    }
+    if evidence_repository is None:
+        report.pop("repository")
+        reason = "is missing or malformed"
+    else:
+        report["repository"] = evidence_repository
+        reason = "does not match"
+    observation["github"]["membership_audit"] = report
+    adapter = FakeAdapter(observation)
+    reads = []
+
+    def live_parent(repository, number):
+        reads.append(number)
+        return {"number": 10, "repository": repository} if number == 42 else None
+
+    adapter.read_issue_parent = live_parent
+    with pytest.raises(task_lifecycle.LifecycleError, match=rf"#43.*membership audit repository.*{reason}"):
+        task_closeout.perform_mutation(
+            path, adapter, action=action, authorized_by="codex/impl-9866",
+            branch=None, worktree=None, now=NOW,
+        )
+    assert reads == [42, 43]
+    assert adapter.calls == []
+    failed = task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]
+    assert failed["status"] == "failed"
+    assert failed["remote_mutation_performed"] is False
+    assert f"live stream epic membership refused for #43: live body membership audit repository {reason}" in failed["detail"]
+
+
+@pytest.mark.parametrize("parents,reason", [
+    ({42: (10, "foreign/repo")}, "repository boundary"),
+    ({42: (30, "org/repo"), 30: (20, "org/repo")}, "different registered"),
+    ({42: None}, "missing"),
+    ({42: (30, "org/repo"), 30: (42, "org/repo")}, "cyclic"),
+    ({n: (n + 1, "org/repo") for n in range(42, 51)}, "maximum sub-issue depth"),
+])
+def test_9794_init_revalidates_live_ancestry_at_ledger_write(tmp_path, monkeypatch, parents, reason):
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=10))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10, 20])
+    reads = []
+
+    def live_parent(self, repository, number):
+        reads.append(number)
+        parent = parents[number]
+        return None if parent is None else {"number": parent[0], "repository": parent[1]}
+
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent", live_parent)
+    with pytest.raises(task_lifecycle.LifecycleError, match=reason):
+        task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+    assert reads
+    assert len(reads) <= 8
+    assert not (tmp_path / "lifecycle.json").exists()
+
+
+@pytest.mark.parametrize("patch", [
+    {"errors": [{"message": "unread"}]}, {"data": None},
+    {"data": {"repository": None}},
+    {"data": {"repository": {"nameWithOwner": "foreign/repo", "issue": {"number": 42, "parent": None}}}},
+    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": None}}},
+    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42}}}},
+    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42, "parent": {"number": 10, "url": "unparseable"}}}}},
+    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42, "parent": {"number": True, "repository": {"nameWithOwner": "org/repo"}}}}}},
+])
+def test_9794_parent_reader_refuses_untyped_or_unread_response(tmp_path, patch):
+    adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=lambda args, stdin: json.dumps(patch))
+    with pytest.raises(task_lifecycle.LifecycleError):
+        adapter.read_issue_parent("org/repo", 42)
+
+
+@pytest.mark.parametrize("parent", [None, {"number": 10, "repository": {"nameWithOwner": "ORG/Repo"}}])
+def test_9794_parent_reader_preserves_typed_repository_identity(tmp_path, parent):
+    document = {"data": {"repository": {"nameWithOwner": "ORG/Repo", "issue": {"number": 42, "parent": parent}}}}
+    adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=lambda args, stdin: json.dumps(document))
+    result = adapter.read_issue_parent("org/repo", 42)
+    assert result == (None if parent is None else {"number": 10, "repository": "ORG/Repo"})
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
+def test_9794_failed_live_read_never_falls_back_to_valid_snapshot(tmp_path, action):
+    path, _ = _ledger(tmp_path)
+    adapter = FakeAdapter(_observation())
+
+    def unread(repository, number):
+        raise task_lifecycle.LifecycleError("parent read unavailable")
+
+    adapter.read_issue_parent = unread
+    with pytest.raises(task_lifecycle.LifecycleError, match="could not be read"):
+        task_closeout.perform_mutation(
+            path, adapter, action=action, authorized_by="codex/impl-9794",
+            branch=None, worktree=None, now=NOW,
+        )
+    assert adapter.calls == []
+    assert task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]["status"] == "failed"
+
+
+def test_9794_init_accepts_same_epic_sibling_reparent(tmp_path, monkeypatch):
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=30))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10, 20])
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: _native_chain_audit([10]))
+    reads = []
+
+    def live_parent(self, repository, number):
+        reads.append(number)
+        return {"number": 32 if number == 42 else 10, "repository": repository}
+
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent", live_parent)
+    assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
+    assert reads == [42, 32]
+    assert task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")["identity"]["stream_epic"] == 10
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
+@pytest.mark.parametrize("transferred", [False, True], ids=["primary-body", "transferred-body"])
+def test_9794_body_membership_permits_each_mutation_with_shared_audit(tmp_path, monkeypatch, action, transferred):
+    closing = action == "close-issue"
+    path, ledger = _ledger(tmp_path, merged=closing)
+    observation = _observation(body=_body(checked=closing), pr_state="MERGED" if closing else "OPEN")
+    github = observation["github"]
+    github["registered_stream_epics"] = [10, 20]
+    github["issue"]["parent_epic"] = None
+    github["membership_audit"] = _body_audit()
+    if transferred:
+        ledger, evidence = task_lifecycle.add_evidence(
+            ledger, ac_id="AC-IMPL", evidence_type="follow_up", summary="Scope transferred",
+            url="https://github.com/org/repo/issues/43", commit=None, details={}, recorded_at=NOW,
+        )
+        ledger = task_lifecycle.set_remaining_scope(
+            ledger, status="transferred", summary="Scope transferred", follow_up_issue=43,
+            follow_up_stream_epic=20, evidence_ids=[evidence["id"]], now=NOW,
+        )
+        task_lifecycle.write_lifecycle(path, ledger)
+        github["follow_up"] = {"number": 43, "parent_epic": None, "reciprocal_links_verified": True}
+        github["membership_audit"]["effective_membership"]["43"] = {
+            "epics": [20], "streams": ["other"], "via": "body", "unique_stream": True,
+        }
+    adapter = FakeAdapter(observation)
+    # The gate must consume observe's object, not fetch another registry/audit.
+    adapter.registered_stream_epics = lambda repository: pytest.fail("duplicate registry read")
+    adapter.membership_audit_report = lambda: pytest.fail("duplicate audit")
+    observed = []
+    original_observe = adapter.observe
+
+    def observe(*args, **kwargs):
+        result = original_observe(*args, **kwargs)
+        observed.append(result)
+        return result
+
+    adapter.observe = observe
+    resolver = task_lifecycle.resolve_live_ancestry
+    checked = []
+
+    def resolve(**kwargs):
+        assert kwargs["membership_report"] is observed[0]["github"]["membership_audit"]
+        assert kwargs["registered_epics"] is observed[0]["github"]["registered_stream_epics"]
+        checked.append(kwargs["issue_number"])
+        return resolver(**kwargs)
+
+    monkeypatch.setattr(task_lifecycle, "resolve_live_ancestry", resolve)
+    result = task_closeout.perform_mutation(
+        path, adapter, action=action, authorized_by="codex/impl-9794-b",
+        branch=None, worktree=None, now=NOW,
+    )
+    assert result["remote_mutation_performed"] is True
+    assert result["mutation_receipt"]["status"] == "complete"
+    assert adapter.calls == [action]
+    assert checked == ([42, 43] if transferred else [42])
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
+@pytest.mark.parametrize("failure", [
+    "unread-parent", "parent-timeout", "incomplete", "audit-timeout", "wrong-epic",
+    "two-owners", "two-epics-one-stream", "unresolved-root", "missing-target", "stale", "malformed",
+])
+def test_9794_each_body_write_refuses_missing_authority(tmp_path, action, failure):
+    path, _ = _ledger(tmp_path)
+    observation = _observation()
+    github = observation["github"]
+    github["registered_stream_epics"] = [10, 20]
+    github["issue"]["parent_epic"] = None
+    report = _body_audit()
+    github["membership_audit"] = report
+    entry = report["effective_membership"]["42"]
+    if failure == "incomplete":
+        report["membership_complete"] = False
+        report["incomplete_nodes"] = [20]
+    elif failure == "audit-timeout":
+        report["warnings"] = [{"code": "traversal_incomplete", "issue": 20}]
+    elif failure == "wrong-epic":
+        entry["epics"] = [20]
+    elif failure in {"two-owners", "two-epics-one-stream"}:
+        entry["epics"] = [10, 20]
+        entry["unique_stream"] = False
+        entry["streams"] = ["infra", "other"] if failure == "two-owners" else ["infra"]
+    elif failure == "unresolved-root":
+        report["warnings"] = [{"code": "unresolved_subissue", "issue": 20}]
+    elif failure == "missing-target":
+        report["effective_membership"] = {}
+    elif failure == "stale":
+        report["generated_at"] = 0
+    elif failure == "malformed":
+        entry["via"] = []
+    adapter = FakeAdapter(observation)
+    if failure in {"unread-parent", "parent-timeout"}:
+        def unread(repository, number):
+            if failure == "parent-timeout":
+                raise subprocess.TimeoutExpired("parent", 1)
+            raise task_lifecycle.LifecycleError("parent field unread")
+
+        adapter.read_issue_parent = unread
+    with pytest.raises(task_lifecycle.LifecycleError, match="mutation blocked with durable receipt"):
+        task_closeout.perform_mutation(
+            path, adapter, action=action, authorized_by="codex/impl-9794-b",
+            branch=None, worktree=None, now=NOW,
+        )
+    assert adapter.calls == []
+    receipt = task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]
+    assert receipt["status"] == "failed"
+    assert receipt["remote_mutation_performed"] is False
+
+
+@pytest.mark.parametrize("change", ["removed", "duplicated"], ids=["checklist-removal", "checklist-duplication"])
+@pytest.mark.parametrize("transferred", [False, True], ids=["primary", "follow-up"])
+def test_9794_second_invocation_refuses_changed_checklist(tmp_path, change, transferred):
+    path, ledger = _ledger(tmp_path)
+    observation = _observation()
+    github = observation["github"]
+    github["registered_stream_epics"] = [10, 20]
+    github["issue"]["parent_epic"] = None
+    github["membership_audit"] = _body_audit()
+    target = "42"
+    if transferred:
+        ledger, evidence = task_lifecycle.add_evidence(
+            ledger, ac_id="AC-IMPL", evidence_type="follow_up", summary="Scope transferred",
+            url="https://github.com/org/repo/issues/43", commit=None, details={}, recorded_at=NOW,
+        )
+        ledger = task_lifecycle.set_remaining_scope(
+            ledger, status="transferred", summary="Scope transferred", follow_up_issue=43,
+            follow_up_stream_epic=20, evidence_ids=[evidence["id"]], now=NOW,
+        )
+        task_lifecycle.write_lifecycle(path, ledger)
+        github["follow_up"] = {"number": 43, "parent_epic": None, "reciprocal_links_verified": True}
+        target = "43"
+        github["membership_audit"]["effective_membership"][target] = {
+            "epics": [20], "streams": ["infra"], "via": "body", "unique_stream": True,
+        }
+    adapter = FakeAdapter(observation)
+    args = dict(action="sync-acs", authorized_by="codex/impl-9794-b", branch=None, worktree=None, now=NOW)
+    first = task_closeout.perform_mutation(path, adapter, **args)
+    assert first["remote_mutation_performed"] is True
+    # Model a fresh assembled live audit after the epic checklist was edited.
+    fresh = deepcopy(github["membership_audit"])
+    fresh["generated_at"] = time.time()
+    if change == "removed":
+        del fresh["effective_membership"][target]
+    else:
+        fresh["effective_membership"][target].update(epics=[10, 20], unique_stream=False)
+    adapter.observation["github"]["membership_audit"] = fresh
+    with pytest.raises(task_lifecycle.LifecycleError, match="exact unique body evidence"):
+        task_closeout.perform_mutation(path, adapter, **args)
+    assert adapter.calls == ["sync-acs"]
+    receipt = task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]
+    assert receipt["status"] == "failed"
+    assert receipt["remote_mutation_performed"] is False
+
+
+def test_9794_init_refuses_unresolved_unread_root_checklist(tmp_path, monkeypatch):
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent", lambda self, repo, number: None)
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10, 20])
+    report = _body_audit()
+    report["warnings"] = [{"code": "unresolved_subissue", "issue": 20}]
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: report)
+    with pytest.raises(task_lifecycle.LifecycleError, match="unresolved unread root checklist"):
+        task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+    assert not (tmp_path / "lifecycle.json").exists()
+
+
+@pytest.mark.parametrize("number", [True, 1.0, "1"])
+def test_9794_null_parent_requires_typed_target_identity(tmp_path, number):
+    document = {"data": {"repository": {
+        "nameWithOwner": "org/repo", "issue": {"number": number, "parent": None},
+    }}}
+    adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=lambda args, stdin: json.dumps(document))
+    with pytest.raises(task_lifecycle.LifecycleError, match="issue is unread or malformed"):
+        adapter.read_issue_parent("org/repo", 1)

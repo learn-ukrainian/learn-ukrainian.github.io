@@ -24,6 +24,22 @@ from scripts.curriculum.evidence.lock import atomic_write
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.promote_teacher_lesson_intake import _POS_MAP
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 ROOT = Path(__file__).resolve().parents[2]
 REGISTER = ROOT / "docs/sources/permissions-register.yaml"
 ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"
@@ -131,7 +147,7 @@ def hex_digest(value):
 
 def readonly(stack, path):
     require(path.is_absolute() and path.is_file(), "Source DB must be an existing absolute file")
-    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
+    connection = _open_readonly(path)
     stack.callback(connection.close)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only = ON")

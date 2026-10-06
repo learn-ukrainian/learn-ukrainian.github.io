@@ -12,9 +12,30 @@ import argparse
 import datetime as dt
 import json
 import re
-import sqlite3
+import sys
 import unicodedata
 from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 DEFAULT_CONTENT_ROOT = Path("site/src/content/docs")
 DEFAULT_MANIFEST = Path("site/src/data/etymology-manifest.json")
@@ -185,7 +206,7 @@ def strip_reflexive_suffix(value: str) -> str:
 
 
 def choose_unambiguous_manifest_lemma(
-    conn: sqlite3.Connection, form: str, manifest_lemma_keys: set[str]
+    conn: SQLiteConnection, form: str, manifest_lemma_keys: set[str]
 ) -> str | None:
     rows = conn.execute("SELECT DISTINCT lemma FROM forms WHERE word_form = ?", (form,)).fetchall()
     if not rows:
@@ -215,7 +236,7 @@ def build_vesum_vocab_lemmas(
     direct_manifest_matches = 0
     ambiguous_or_missing = 0
 
-    conn = sqlite3.connect(vesum_db)
+    conn = _open_readonly(vesum_db)
     try:
         for word in sorted(words, key=normalize_lemma):
             normalized_word = normalize_lemma(word)

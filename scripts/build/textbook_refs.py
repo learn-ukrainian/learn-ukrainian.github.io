@@ -19,9 +19,26 @@ from __future__ import annotations
 
 import re
 import sqlite3
+import sys
 from pathlib import Path
 
 from wiki.sources_schema import load_sources_registry, registry_path_for
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
@@ -159,7 +176,7 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
         return _refs_from_plan(level, slug)
 
     # Resolve chunk_ids to PDF URLs
-    conn = sqlite3.connect(str(SOURCES_DB))
+    conn = _open_readonly(str(SOURCES_DB))
     conn.row_factory = sqlite3.Row
     seen_books: dict[str, dict] = {}  # source_file → best ref
 

@@ -105,18 +105,33 @@ def test_every_decision_branch_and_join_refusal(held, forms, witnesses, expected
     [
         ("SYNTHETIC-\nmore", "SYNTHETIC-more"),
         ("SYNTHETIC- \r\n more", "SYNTHETICmore"),
-        ("SYNTHETIC-more", "SYNTHETICmore"),
-        ("SYNTHETIC-more", "SYNTHETIC-more"),
         ("SYŃTHETIC-\nmore", "SYNTHETIC-more"),
         ("SYN’THETIC-\nmore", "SYN’THETIC-more"),
     ],
 )
-def test_stored_inline_and_printed_alternatives_stress_and_apostrophes(held, raw, alternative):
+def test_stored_printed_alternatives_stress_and_apostrophes(held, raw, alternative):
     target = raw.replace("- \r\n ", "").replace("-\n", "").replace("-", "")
     result, _, _ = held(raw, [fold_word(target)], [], [alternative])
     assert result.text == target
     assert not result.unresolved
     assert result.join_evidence[0][3] == "vesum_form"
+
+
+@pytest.mark.parametrize(
+    "probe,raw,alternative,unresolved_count",
+    [
+        ("I1", "alpha-beta here", "alphabeta", 1),
+        ("I2", "7alpha-\nbeta alpha-beta here", "alphabeta", 2),
+        ("I3", "alpha-beta here", "alpha-beta", 1),
+    ],
+)
+def test_inline_hyphens_never_consume_stored_line_break_alternatives(held, probe, raw, alternative, unresolved_count):
+    result, _, _ = held(raw, ["alphabeta"], alternatives=[alternative])
+    assert result.text == raw, probe
+    assert not result.joins and not result.join_evidence, probe
+    assert len(result.unresolved) == unresolved_count, probe
+    assert (-1, -1, alternative) in result.unresolved, probe
+    assert unresolved_overlaps(result, None), probe
 
 
 def test_proper_name_form_case_is_attested_by_folded_index(held):

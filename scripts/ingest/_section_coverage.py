@@ -53,8 +53,25 @@ The helper does NOT commit; the caller controls transactions.
 
 from __future__ import annotations
 
-import sqlite3
+import sys
 from dataclasses import dataclass
+from pathlib import Path
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 # Sentinel grade for non-school reference material (Anna Ohoiko books,
 # Ukrainian Lessons Podcast lesson notes, etc.). School-textbook
@@ -74,7 +91,7 @@ class LessonSection:
 
 
 def link_lesson_sections(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     source_file: str,
     sections: list[LessonSection],
@@ -135,7 +152,7 @@ def link_lesson_sections(
     return inserted_count, linked_count
 
 
-def ensure_section_schema(conn: sqlite3.Connection) -> None:
+def ensure_section_schema(conn: SQLiteConnection) -> None:
     """Create textbook_sections + parent_section_id column if missing.
 
     Defensive — the schema is normally provisioned by

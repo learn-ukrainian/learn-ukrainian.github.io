@@ -16,6 +16,7 @@ import os
 import random
 import sqlite3
 import subprocess
+import sys
 import time
 from collections import Counter
 from collections.abc import Mapping, Sequence
@@ -29,6 +30,22 @@ from uuid import uuid4
 from scripts.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
 from scripts.api.resilience import connect_sqlite
 from scripts.common.git_context import sanitized_git_env
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 DB_ENV_VAR = "LEARN_UKRAINIAN_LLM_QG_DB"
 DEFAULT_CIRCUIT_STATE_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_qg_live_circuit.json"
@@ -56,7 +73,7 @@ _LOCK_RETRY_BASE_S = 0.25
 _LOCK_RETRY_CAP_S = 4.0
 
 
-def _connect_sqlite_db(path: Path, *, writable: bool = False, timeout: float = 5.0) -> sqlite3.Connection:
+def _connect_sqlite_db(path: Path, *, writable: bool = False, timeout: float = 5.0) -> SQLiteConnection:
     conn = connect_sqlite(str(path), timeout=timeout)
     conn.execute("PRAGMA busy_timeout = 5000")
     if writable:
@@ -825,7 +842,7 @@ def _circuit_open_message(status: Mapping[str, Any]) -> str:
     )
 
 
-def _ensure_composite_columns(conn: sqlite3.Connection) -> None:
+def _ensure_composite_columns(conn: SQLiteConnection) -> None:
     """Backfill optional composite-key columns on older local stores."""
     rows = conn.execute("PRAGMA table_info(llm_qg_runs)").fetchall()
     existing = {str(row[1]) for row in rows}

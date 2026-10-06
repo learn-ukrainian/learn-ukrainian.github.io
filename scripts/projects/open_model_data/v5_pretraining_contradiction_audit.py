@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -30,6 +29,8 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.wiki.sum20_official import live_article_predicate_for
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -93,8 +94,8 @@ def normalize_token(token: str) -> str:
 
 def verify_replacement_attestation(
     replacement: str,
-    vesum_conn: sqlite3.Connection,
-    sources_conn: sqlite3.Connection,
+    vesum_conn: SQLiteConnection,
+    sources_conn: SQLiteConnection,
 ) -> bool:
     """Check if all tokens of the replacement word/phrase are attested in approved Ukrainian authorities."""
     clean = replacement.strip().strip("–—\"'«» .,")
@@ -1059,11 +1060,9 @@ def run_pretraining_audit(
     surzhyk_valid = True
     surzhyk_anomalies: list[dict[str, Any]] = []
 
-    sources_uri = f"file:{resolved_sources.resolve()}?mode=ro"
-    vesum_uri = f"file:{resolved_vesum.resolve()}?mode=ro"
     with (
-        sqlite3.connect(sources_uri, uri=True) as sources_conn,
-        sqlite3.connect(vesum_uri, uri=True) as vesum_conn,
+        _open_readonly(resolved_sources.resolve()) as sources_conn,
+        _open_readonly(resolved_vesum.resolve()) as vesum_conn,
     ):
         for sc in surzhyk_cases:
             action = sc.get("expected_action")

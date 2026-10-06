@@ -10,9 +10,28 @@ from __future__ import annotations
 
 import re
 import sqlite3
+import sys
 from collections.abc import Iterable
 from pathlib import Path
 from typing import TypedDict
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_VESUM_DB = ROOT / "data" / "vesum.db"
@@ -40,16 +59,16 @@ def content_tokens(value: str) -> list[str]:
     return [normalize_lemma(token) for token in _WORD_RE.findall(normalize_lemma(value))]
 
 
-def _open_read_only(path: Path) -> sqlite3.Connection:
+def _open_read_only(path: Path) -> SQLiteConnection:
     resolved = path.expanduser().resolve()
     if not resolved.is_file():
         raise FileNotFoundError(f"VESUM database not found: {resolved}")
-    connection = sqlite3.connect(f"file:{resolved.as_posix()}?mode=ro", uri=True)
+    connection = _open_readonly(resolved)
     connection.row_factory = sqlite3.Row
     return connection
 
 
-def _lookup(connection: sqlite3.Connection, term: str) -> tuple[list[str], list[str]]:
+def _lookup(connection: SQLiteConnection, term: str) -> tuple[list[str], list[str]]:
     """Look up a normalized term as either an attested form or a lemma.
 
     VESUM's stored lexical values are normalized lowercase. Normalizing the
@@ -71,7 +90,7 @@ def _lookup(connection: sqlite3.Connection, term: str) -> tuple[list[str], list[
     )
 
 
-def _attest_with_connection(lemma: str, connection: sqlite3.Connection) -> VesumAttestation:
+def _attest_with_connection(lemma: str, connection: SQLiteConnection) -> VesumAttestation:
     """Attest one lemma using an already-open read-only VESUM connection."""
     normalized = normalize_lemma(lemma)
     if not normalized:

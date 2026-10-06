@@ -70,6 +70,24 @@ from typing import Any
 
 import numpy as np
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
@@ -246,13 +264,13 @@ def policy_for_period(period: str, cell: CellConfig) -> ChunkingPolicy:
 # --- DB sampling (mirrors benchmark_embeddings) --------------------------
 
 
-def get_db_connection() -> sqlite3.Connection:
+def get_db_connection() -> SQLiteConnection:
     if not SOURCES_DB_PATH.exists():
         raise FileNotFoundError(
             f"Sources database not found at {SOURCES_DB_PATH}. "
             "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    conn = sqlite3.connect(str(SOURCES_DB_PATH))
+    conn = _open_readonly(str(SOURCES_DB_PATH))
     conn.row_factory = sqlite3.Row
     return conn
 

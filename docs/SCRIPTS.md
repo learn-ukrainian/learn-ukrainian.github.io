@@ -30,6 +30,64 @@ This diagnostic exception changes neither eligibility nor routing policy.
 
 For the Composer and pool exclusion evidence (AC-01), see [#9423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9423).
 
+## Routing facts (capacity and admission)
+
+`scripts.fleet.credit_lane.routing_facts(lane, record, *, model, snapshot_metadata=None, policy=None, now=None, usage_dir=None)`
+is the one reading of a routing-budget lane record (#9740). `capacity_pick`,
+`idle_settle`, the curriculum wave gate and the `delegate.py` budget guard use its
+facts before adding their own restrictions (role, risk, egress, transport, wave
+config). The reviewer scheduler uses the same plan-window reader.
+Pass `model=None` for lane inventory. It returns the tightest plan window and its
+source, snapshot/probe freshness, `health` (`healthy`, `unhealthy` or `unknown`,
+with `health_basis`), the pace deficit, credit evidence and a `capacity` class:
+`verified`, `unknown`, `unknown_stale` or `avoid`. Missing data stays `unknown`, never
+fresh or healthy.
+
+- **`UNKNOWN — stale/advisory`:** a pace deficit or weekly-pace hot label read
+  from a stale snapshot or probe is `unknown_stale`. It is history, not a current
+  refusal. `capacity_pick` ranks these rows after every row with verified capacity
+  and before AVOID rows. They never appear in `cooler_lanes` and never satisfy
+  `--strict`. Near cap, runtime-blocked hot, unhealthy, `NEED_LOGIN` and ineligible
+  lanes stay AVOID.
+- **Lane health scan:** `scripts.api.lane_health.scan_lane_health` returns a typed
+  `LaneHealthScan`. Each lane's `health_for(lane)` record carries a `basis`:
+  `recent_tasks` (computed from tasks in the window), `scan_observed_idle` (scan ran,
+  no tasks, so healthy) or `scan_unavailable` (scan failed; `healthy` and failure
+  counts are null).
+- **Unobservable load:** if the task directory cannot be read, the routing budget
+  publishes `in_flight: null` (`—` in the picker). It never publishes `0`. Unknown
+  load is not idle: `idle_settle` needs `in_flight == 0` and explicit quota
+  permission (`quota_ok: true` or a `verified` class) before it counts a lane as
+  available.
+- **Wave receipts:** the coordinator ledger `healthLane` records `healthy` as
+  `true`/`false` when known, or `null` with a required `health_basis` when unknown,
+  such as a scan error or a missing lane record. It also records the owner's
+  `freshness` (`fresh`, `stale` or `unknown`). The wave is `fresh` only when
+  `diagnostics.stale` is explicitly `false` and no relevant lane probe is stale;
+  missing staleness metadata is unknown, never fresh.
+- **Budget guard (`delegate.py --check-budget`):** on a fresh snapshot it
+  substitutes or refuses a near-cap lane (the `near_cap` status, or a credit lane's
+  tightest plan window at or below the threshold) unless the owner grants credit
+  relief for the model, whether or not the USD cost ledger has records. It
+  substitutes or refuses whenever the owner (`credit_lane.routing_facts`) keeps
+  the lane `hot`; it never clears a label itself. The owner clears a hot label
+  only when its source is weekly pace and no runtime headroom block set it:
+  either its pace is hidden below the visibility floor, or its pace reading on a
+  fresh observation finds no deficit (#9040). The status then comes from
+  remaining allowance, and the picker, reviewer resolver, wave gate and routing
+  recommendation read the same cleared status. A hot label from Cursor Auto, the
+  ledger or no source stays hot. A stale snapshot stays advisory. Lane health warnings print `demoted` for an
+  unhealthy lane and `health unknown (<basis>)` when health is unknown.
+- **Reviewer resolver and wave gate:** a near-cap candidate keeps credit relief
+  only when `credit_lane.published_credit_relief` re-decides it with
+  `lane_credit_state` over the complete published lane record: snapshot
+  staleness, probe freshness, age and stale flag, the raw balance and its fetch
+  time, and runtime rate-limit evidence. A published `credit_balance_present`
+  leaf alone is not enough.
+- **Routing recommendation:** a past-cap lane is a credit candidate only when
+  the owner's `routing_facts` for the record grant credit relief as verified
+  capacity; the published `credit` leaf is not read.
+
 ## Git hooks
 
 Run `scripts/install_git_hooks.sh` once after cloning to install delegators in

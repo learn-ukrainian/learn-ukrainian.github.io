@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import re
+from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -50,7 +51,9 @@ def sanitize_error_excerpt(raw: Any) -> str | None:
     return text[:MAX_ERROR_EXCERPT_CHARS]
 
 
-def is_spawn_phase_failure(record: dict[str, Any], duration_threshold_s: int = DEFAULT_SPAWN_DURATION_THRESHOLD_S) -> bool:
+def is_spawn_phase_failure(
+    record: dict[str, Any], duration_threshold_s: int = DEFAULT_SPAWN_DURATION_THRESHOLD_S
+) -> bool:
     """Determine if a task record represents a spawn-phase failure.
 
     A spawn-phase failure is defined as:
@@ -92,6 +95,55 @@ def normalize_agent_name(raw_agent: str | None) -> str | None:
     return canonical or agent
 
 
+# ``basis`` values of a published lane-health record (#9740 A1).
+BASIS_RECENT_TASKS = "recent_tasks"
+BASIS_SCAN_OBSERVED_IDLE = "scan_observed_idle"
+BASIS_SCAN_UNAVAILABLE = "scan_unavailable"
+
+
+@dataclass(frozen=True)
+class LaneHealthScan:
+    """Typed outcome of one task-record scan (#9740 A1).
+
+    ``observed`` is True when the scan ran; ``records`` holds the lanes that
+    ran tasks in the window (the :func:`compute_lane_health` dict contract).
+    """
+
+    observed: bool
+    records: dict[str, dict[str, Any]] = field(default_factory=dict)
+    window_minutes: int = DEFAULT_WINDOW_MINUTES
+    error: str | None = None
+
+    def health_for(self, lane: str) -> dict[str, Any]:
+        """Health record for ``lane`` with its ``basis``.
+
+        A lane with recent tasks keeps its computed record. After a successful
+        scan, a lane with no tasks in the window is observed healthy (nothing
+        failed). A scan error or missing directory is unknown: ``healthy`` and
+        the failure counts are null, never filled in as healthy.
+        """
+        record = self.records.get(lane)
+        if record is not None:
+            return {**record, "basis": BASIS_RECENT_TASKS}
+        if self.observed:
+            return {
+                "healthy": True,
+                "consecutive_failures": 0,
+                "span_minutes": 0,
+                "last_error": None,
+                "basis": BASIS_SCAN_OBSERVED_IDLE,
+                "window_minutes": self.window_minutes,
+            }
+        return {
+            "healthy": None,
+            "consecutive_failures": None,
+            "span_minutes": None,
+            "last_error": None,
+            "basis": BASIS_SCAN_UNAVAILABLE,
+            "error": self.error,
+        }
+
+
 def compute_lane_health(
     batch_state_dir: Path | str,
     now: datetime | None = None,
@@ -101,8 +153,29 @@ def compute_lane_health(
 ) -> dict[str, dict[str, Any]]:
     """Scan recent batch task records to compute health status per lane.
 
-    FAIL-OPEN: any error reading/parsing records yields an empty/healthy result,
-    preserving the original behavior/ranking.
+    Lanes without tasks in the window are absent. A scan error yields an empty
+    result; :func:`scan_lane_health` tells the two apart.
+    """
+    return scan_lane_health(
+        batch_state_dir,
+        now=now,
+        window_minutes=window_minutes,
+        failures_threshold=failures_threshold,
+        spawn_duration_threshold_s=spawn_duration_threshold_s,
+    ).records
+
+
+def scan_lane_health(
+    batch_state_dir: Path | str,
+    now: datetime | None = None,
+    window_minutes: int = DEFAULT_WINDOW_MINUTES,
+    failures_threshold: int = DEFAULT_FAILURES_THRESHOLD,
+    spawn_duration_threshold_s: int = DEFAULT_SPAWN_DURATION_THRESHOLD_S,
+) -> LaneHealthScan:
+    """Scan recent batch task records; the typed outcome says whether the scan ran.
+
+    Unreadable individual records are skipped (the scan still ran). A missing
+    tasks directory or a directory scan error is ``observed=False``.
     """
     if now is None:
         now = datetime.now(UTC)
@@ -115,7 +188,7 @@ def compute_lane_health(
     tasks_path = Path(batch_state_dir)
     if not tasks_path.exists() or not tasks_path.is_dir():
         logger.debug("Tasks directory does not exist: %s", tasks_path)
-        return health_data
+        return LaneHealthScan(observed=False, window_minutes=window_minutes, error="tasks directory missing")
 
     # Bounded by mtime cutoff
     cutoff_dt = now - timedelta(minutes=window_minutes)
@@ -169,9 +242,11 @@ def compute_lane_health(
                 logger.debug("Skipping invalid task record %s: %s", entry.name, e)
 
     except Exception as e:
-        # Fail-open per directory scan: log debug note, return empty health
+        # The scan did not run: health is unknown, not healthy.
         logger.debug("Error scanning task records: %s", e)
-        return health_data
+        return LaneHealthScan(
+            observed=False, window_minutes=window_minutes, error=f"task record scan failed: {type(e).__name__}"
+        )
 
     # Compute health per lane
     for lane, tasks in lane_tasks.items():
@@ -210,4 +285,4 @@ def compute_lane_health(
             "last_error": last_error,
         }
 
-    return health_data
+    return LaneHealthScan(observed=True, records=health_data, window_minutes=window_minutes)

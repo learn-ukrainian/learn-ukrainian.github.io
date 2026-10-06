@@ -246,11 +246,15 @@
       "properties": {
         "lane": {"$ref": "#/$defs/identifier"},
         "status": {"type": "string", "minLength": 1},
-        "healthy": {"type": "boolean"},
+        "healthy": {"type": ["boolean", "null"]},
+        "health_basis": {"type": "string", "minLength": 1},
         "stale": {"type": "boolean"},
+        "freshness": {"enum": ["fresh", "stale", "unknown"]},
         "credit_state": {"type": ["string", "null"], "minLength": 1},
         "credit": {"$ref": "#/$defs/healthLaneCredit"}
-      }
+      },
+      "if": {"properties": {"healthy": {"type": "null"}}, "required": ["healthy"]},
+      "then": {"required": ["health_basis"]}
     },
     "healthLaneCredit": {
       "type": "object",

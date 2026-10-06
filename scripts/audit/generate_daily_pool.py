@@ -21,7 +21,7 @@ import argparse
 import hashlib
 import json
 import re
-import sqlite3
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -34,6 +34,22 @@ from scripts.audit.lexeme_filter import (
     is_lexeme_entry,
     is_surface_admitted,
 )
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_OUT = Path("site/src/data/lexicon-daily-pool.json")
@@ -502,7 +518,7 @@ def load_db_entries(db_path: Path) -> list[dict[str, Any]]:
     resolvers, never Word-of-the-Day candidates). Each ``article_payloads`` row
     stores the manifest-shaped public payload, so ``build_pool`` runs unchanged.
     """
-    conn = sqlite3.connect(db_path)
+    conn = _open_readonly(db_path)
     try:
         # Fail loudly on a stale/hand-edited DB before selecting candidates —
         # the same count/target gates the search-artifact builder runs (#4385 §CI).

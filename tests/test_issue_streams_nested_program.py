@@ -50,7 +50,9 @@ def _audit_report(edges: dict[int, list[int]], open_numbers: list[int]) -> dict:
 
     membership = _tree_membership(roots, fetch_batch)
     issues = [{"number": n, "title": f"issue {n}"} for n in sorted(set(open_numbers) | roots)]
-    return classify(issues, registry, membership)
+    report = classify(issues, registry, membership)
+    report["repository"] = "org/repo"
+    return report
 
 
 def test_registry_lists_both_epics_in_one_stream_and_no_epic_in_two_streams():
@@ -107,6 +109,8 @@ def test_lifecycle_resolves_program_child_to_registered_epic_natively():
         issue_number=CHILD,
         stream_epic=PROGRAM,
         native_parent_epic=PROGRAM,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=registered,
         membership_report=None,
     )
@@ -117,6 +121,8 @@ def test_lifecycle_resolves_program_child_to_registered_epic_natively():
         issue_number=CHILD,
         stream_epic=PARENT,
         native_parent_epic=PROGRAM,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=registered,
         membership_report=None,
     )
@@ -138,6 +144,8 @@ def test_lifecycle_resolves_program_child_through_audit_body_evidence():
         issue_number=CHILD,
         stream_epic=PROGRAM,
         native_parent_epic=None,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=registered,
         membership_report=report,
     )
@@ -147,6 +155,8 @@ def test_lifecycle_resolves_program_child_through_audit_body_evidence():
         issue_number=CHILD,
         stream_epic=PARENT,
         native_parent_epic=None,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=registered,
         membership_report=report,
     )
@@ -171,6 +181,8 @@ def test_lifecycle_accepts_native_grandchild_through_unregistered_sub_epic():
         issue_number=GRANDCHILD,
         stream_epic=PARENT,
         native_parent_epic=SUB_EPIC,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=registered,
         membership_report=report,
     )
@@ -183,6 +195,8 @@ def test_lifecycle_accepts_native_grandchild_through_unregistered_sub_epic():
         issue_number=GRANDCHILD,
         stream_epic=PROGRAM,
         native_parent_epic=SUB_EPIC,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=registered,
         membership_report=report,
     )
@@ -202,6 +216,8 @@ def test_lifecycle_refuses_chain_that_reaches_a_different_registered_epic():
         issue_number=GRANDCHILD,
         stream_epic=PARENT,
         native_parent_epic=SUB_EPIC,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=_registered(),
         membership_report=report,
     )
@@ -217,6 +233,8 @@ def test_lifecycle_refuses_native_cycle_that_never_reaches_a_registered_epic():
         issue_number=GRANDCHILD,
         stream_epic=PARENT,
         native_parent_epic=SUB_EPIC,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=_registered(),
         membership_report=report,
     )

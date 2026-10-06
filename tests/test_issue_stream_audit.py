@@ -954,6 +954,21 @@ def test_run_audit_scopes_registry_gh_execution_and_cache_to_explicit_root(tmp_p
     assert not (other_root / "batch_state" / "issue_stream_audit.json").exists()
 
 
+def test_9852_audit_records_resolved_repository_in_report_and_cache(tmp_path, monkeypatch):
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    _make_repo(tmp_path, epics=[100])
+    calls = []
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess, "run",
+        _fake_gh_run(calls, owner="Acme", name="Target-Repo", open_issues=[]),
+    )
+    report = run_audit(tmp_path)
+    cached = json.loads((tmp_path / "batch_state" / "issue_stream_audit.json").read_text())
+    assert report["repository"] == cached["repository"] == "Acme/Target-Repo"
+    assert {cwd for _args, cwd in calls} == {tmp_path.resolve()}
+    assert len([args for args, _cwd in calls if args[1:3] == ("repo", "view")]) == 1
+
+
 def test_run_audit_default_root_preserves_module_root_behavior(tmp_path, monkeypatch):
     """Calling ``run_audit()`` with no argument must still resolve against the
     module's own ``ROOT`` — the fix must not change plain CLI behavior."""
@@ -1970,6 +1985,8 @@ def test_run_audit_incomplete_node_refuses_membership_and_entire_context(tmp_pat
         issue_number=500,
         stream_epic=10,
         native_parent_epic=None,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
         registered_epics=[10, 20],
         membership_report=report,
     )
@@ -1988,6 +2005,7 @@ def test_run_audit_incomplete_report_has_completeness_flag_and_fails_closed(tmp_
     """Finding 1 (issue #8661): run_audit with incomplete nodes writes membership_complete=False
     and incomplete_nodes, and the resulting cache fails closed."""
     monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
     root = tmp_path / "repo"
     _make_repo(root, epics=[100])
 
@@ -2030,6 +2048,7 @@ def _deep_chain_edges(chain: list[int]) -> dict[int, list[int]]:
 
 def _run_deep_chain_audit(tmp_path, monkeypatch, chain: list[int], *, body_refs: dict[int, str] | None = None):
     monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
     root = tmp_path / "repo"
     _make_repo(root, epics=[10, 20])
     edges = _deep_chain_edges(chain)
@@ -2071,6 +2090,8 @@ def test_depth_truncated_audit_is_incomplete_and_refuses_native_chain(tmp_path, 
         issue_number=42,
         stream_epic=10,
         native_parent_epic=30,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
         registered_epics=[10, 20],
         membership_report=report,
     )
@@ -2090,6 +2111,8 @@ def test_depth_truncated_audit_is_incomplete_and_refuses_native_chain(tmp_path, 
         issue_number=42,
         stream_epic=10,
         native_parent_epic=30,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
         registered_epics=[10, 20],
         membership_report=complete,
     )
@@ -2114,6 +2137,8 @@ def test_depth_truncated_audit_refuses_body_path(tmp_path, monkeypatch):
         issue_number=500,
         stream_epic=10,
         native_parent_epic=None,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
         registered_epics=[10, 20],
         membership_report=report,
     )
@@ -2201,3 +2226,23 @@ def _inspect_frozen_query(args):
     if "graphql" in args and "--input" in args:
         return ["gh", "api", "graphql", "query=" + _query_arg(args)]
     return args
+
+
+@pytest.mark.parametrize("code", [[], {}, None, 1, True])
+def test_9794_malformed_warning_code_is_typed_membership_refusal(code):
+    from scripts.orchestration import task_lifecycle
+
+    report = {
+        "generated_at": time.time(), "membership_complete": True,
+        "incomplete_nodes": [], "warnings": [{"code": code}],
+        "effective_membership": {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
+    }
+    assert issue_stream_audit.membership_report_is_complete(report) is False
+    assert issue_stream_audit.validate_membership_report(report, 3600) is None
+    result = task_lifecycle.resolve_membership(
+        issue_number=42, stream_epic=10, native_parent_epic=None,
+        repository="acme/repo", native_parent_repository=None,
+        registered_epics=[10], membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "incomplete" in result["reason"]

@@ -28,6 +28,8 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+
 try:
     from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
     from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
@@ -532,15 +534,14 @@ def build_heteronyms_for_lemma(lemma: str) -> list[dict[str, Any]] | None:
     # Decolonized lookup: modern authoritative СУМ-20 / ВТС + Soviet colonization context
     try:
         from scripts.lexicon.sum20_lookup import lookup_decolonized_heteronym_evidence
+
         ev = lookup_decolonized_heteronym_evidence(lemma)
         s20 = ev.get("modern_sum20", [])
         if len(s20) >= 2:
             # Check unique stress patterns across articles. If there are at least two distinct
             # stress patterns, this is a genuine heteronym pair/set.
             unique_stresses = {
-                _clean_stressed_headword(s.get("stressed_headword", ""))
-                for s in s20
-                if s.get("stressed_headword")
+                _clean_stressed_headword(s.get("stressed_headword", "")) for s in s20 if s.get("stressed_headword")
             }
             unique_stresses.discard("")
             if len(unique_stresses) >= 2:
@@ -654,10 +655,7 @@ def apply_heteronyms(
                     for sec_key, sec_val in primary_het["sections"].items():
                         payload["sections"][sec_key] = sec_val
 
-                heritage_cls = (
-                    primary_het.get("heritage_status", {}).get("classification")
-                    or "standard"
-                )
+                heritage_cls = primary_het.get("heritage_status", {}).get("classification") or "standard"
                 cur.execute(
                     "UPDATE articles SET display_head = ?, gloss = ?, heritage_classification = ? WHERE slug = ?",
                     (primary_het.get("headword", lemma), payload.get("gloss"), heritage_cls, lemma),
@@ -746,7 +744,7 @@ def main() -> int:
     if args.scan:
         sources_db = _resolve_sources_db()
         print(f"Scanning {sources_db}...")
-        conn = sqlite3.connect(sources_db)
+        conn = _shared_open_readonly(Path(sources_db).resolve())
         cur = conn.cursor()
         rows = cur.execute("SELECT word, definition FROM sum11").fetchall()
         heteronym_count = 0
