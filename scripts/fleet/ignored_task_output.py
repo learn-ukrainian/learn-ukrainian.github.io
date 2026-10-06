@@ -16,6 +16,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from scripts.fleet.regenerable_output import is_regenerable_ignored_path
 from scripts.orchestration import worktree_artifacts as artifacts
 from scripts.orchestration.task_record_store import task_record_path
 
@@ -85,8 +86,44 @@ def _write_identity_cache(path: Path, entries: dict[str, Any]) -> None:
                 temporary.unlink()
 
 
+class _InventoryReadError(ValueError):
+    def __init__(self, path: Path, *, missing: bool = False):
+        super().__init__("task identity inventory unreadable")
+        self.path = path
+        self.missing = missing
+
+
 def resolve_worktree_record(
     worktree: Path, tasks_dir: Path, *, repo_root: Path, publish_cache: bool = True
+) -> tuple[Path | None, dict[str, Any]]:
+    """Retry one complete inventory after a concurrent record move or rewrite.
+
+    Atomic replacement at the same name does not expose partial JSON, but
+    delegate's redispatch archive and stale_task_records' staging move can
+    remove a filename between glob and open. Never simply omit a failed read.
+    A vanished name needs a visible archive counterpart before retrying.
+    ``publish_cache=False`` suppresses publication on both inventory attempts.
+    """
+    try:
+        return _resolve_worktree_record_once(worktree, tasks_dir, repo_root=repo_root, publish_cache=publish_cache)
+    except _InventoryReadError as exc:
+        print("Task identity inventory read failed; retrying complete inventory once", file=sys.stderr)
+        return _resolve_worktree_record_once(
+            worktree,
+            tasks_dir,
+            repo_root=repo_root,
+            publish_cache=publish_cache,
+            missing_path=exc.path if exc.missing else None,
+        )
+
+
+def _resolve_worktree_record_once(
+    worktree: Path,
+    tasks_dir: Path,
+    *,
+    repo_root: Path,
+    publish_cache: bool = True,
+    missing_path: Path | None = None,
 ) -> tuple[Path | None, dict[str, Any]]:
     """Resolve identity from canonical records, never from a caller's hint.
 
@@ -114,13 +151,26 @@ def resolve_worktree_record(
     cached = _read_identity_cache(cache_path)
     identities = {}
     changed = False
-    for prefix, path in [("", path) for path in sorted(tasks_dir.glob("*.json"))] + [
+    inventory = [("", path) for path in sorted(tasks_dir.glob("*.json"))] + [
         ("archive/", path) for path in sorted((tasks_dir / "archive").glob("*.json"))
-    ]:
+    ]
+    if missing_path is not None and not any(
+        path == missing_path
+        or (prefix == "archive/" and path.name == missing_path.name)
+        or (
+            prefix == ""
+            and re.fullmatch(
+                re.escape(missing_path.stem) + r"\.\d{8}T\d{6}\d*Z(?:\.\d+)?\.archived\.json", path.name
+            )
+        )
+        for prefix, path in inventory
+    ):
+        raise _InventoryReadError(missing_path, missing=True)
+    for prefix, path in inventory:
         try:
             raw = path.read_bytes()
-        except OSError:
-            raise ValueError("task identity inventory unreadable") from None
+        except OSError as exc:
+            raise _InventoryReadError(path, missing=isinstance(exc, FileNotFoundError)) from None
         digest = hashlib.sha256(raw).hexdigest()
         name = prefix + path.name
         entry = cached.get(name)
@@ -137,7 +187,7 @@ def resolve_worktree_record(
             # corrupt records with no possible retention key. Valid records,
             # including released symlink aliases, are always resolved below.
             if record_may_claim_worktree(raw, needles) or b'"keep_worktree"' in raw:
-                raise ValueError("task identity inventory unreadable") from None
+                raise _InventoryReadError(path) from None
             continue
         identity = (
             {key: record.get(key) for key in _IDENTITY_KEYS}
@@ -311,7 +361,8 @@ def _ignored_output_files(
     # Retain the existing named-link safety checks and nested-repository gates.
     named = artifacts._named_artifact_files(worktree, record, primary=primary)
     names = artifacts._git_paths(worktree, "--others", "--ignored", "--exclude-standard")
-    if not artifacts._git_paths(worktree, "--cached"):
+    tracked = set(artifacts._git_paths(worktree, "--cached"))
+    if not tracked:
         # --no-checkout leaves an empty index and no on-disk .gitignore.
         # Unignored scratch can be task output too; inventory both classes.
         names += artifacts._git_paths(worktree, "--others", "--exclude-standard")
@@ -325,6 +376,8 @@ def _ignored_output_files(
             continue
         source = worktree / relative
         try:
+            if is_regenerable_ignored_path(name, worktree=worktree, tracked=tracked):
+                continue
             status = source.lstat()
             if stat.S_ISLNK(status.st_mode):
                 try:
@@ -357,7 +410,10 @@ def _ignored_output_files(
             _record_absence(worktree, name, absent)
     files.update(named)
     return sorted(
-        name for name in files if not artifacts.is_disposable_path(Path(name), worktree=worktree, primary=primary)
+        name
+        for name in files
+        if not artifacts.is_disposable_path(Path(name), worktree=worktree, primary=primary)
+        and not is_regenerable_ignored_path(name, worktree=worktree, tracked=tracked)
     )
 
 

@@ -5857,11 +5857,16 @@ def test_agy_interim_language_warning_is_not_an_incomplete_run():
 @pytest.mark.parametrize(
     ("path", "expected"),
     [
+        ("", True),
         (".venv", True),
         (".venv/bin/python", True),
         ("node_modules/example/index.js", True),
         ("package/__pycache__/module.cpython-312.pyc", True),
         (".pytest_cache/v/cache/nodeids", True),
+        (r"package\__pycache__\module.pyc", True),
+        (".ruff_cache/state.bin", False),
+        (".mypy_cache/state.bin", False),
+        ("site/src/data/lexicon-manifest.json", False),
         ("generated.pyc", True),
         ("scripts/delegate.py", False),
         ("docs/decision.md", False),
