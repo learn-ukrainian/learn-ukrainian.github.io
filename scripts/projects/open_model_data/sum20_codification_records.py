@@ -213,7 +213,7 @@ def _record_source(url: str) -> str | None:
     return None
 
 
-def _quarantined_headwords(conn: sqlite3.Connection) -> set[str]:
+def _quarantined_headwords(conn: Any) -> set[str]:
     """Apply the shared live-row rule to both headwords and lookup keys."""
     columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(sum20_articles)")}
     keys = [key for key in ("headword", "normalized_lookup_key") if key in columns]
