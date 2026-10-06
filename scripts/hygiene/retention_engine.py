@@ -23,6 +23,7 @@ import contextlib
 import hashlib
 import json
 import os
+import stat
 import sys
 from dataclasses import asdict
 from datetime import UTC, date, datetime, timedelta
@@ -58,6 +59,35 @@ EXIT_ERROR = 3
 EXIT_DIGEST_MISMATCH = 4
 
 
+def _unlink_temp_file(root_fd: int, name: str, *, root: Path, expected_dev: int, expected_ino: int) -> None:
+    """Unlink one proven regular-file child of the temp root, by descriptor.
+
+    Refuses identity drift, foreign ownership, extra hard links, a device
+    change and bind-mount targets. In a sticky temp directory only the owner
+    can replace the entry between this check and ``unlinkat``, and the owner
+    is the sweeping user.
+    """
+    from scripts.common.task_scratch import ContainmentError, mount_points
+
+    mounts = mount_points()
+    if mounts is None:
+        raise ContainmentError("mount information unavailable (/proc/self/mountinfo); refusing to delete")
+    if str(root / name) in mounts:
+        raise ContainmentError(f"{name!r} is a mount point")
+    info = os.stat(name, dir_fd=root_fd, follow_symlinks=False)
+    if not stat.S_ISREG(info.st_mode):
+        raise ContainmentError(f"{name!r} is not a regular file")
+    if (info.st_dev, info.st_ino) != (expected_dev, expected_ino):
+        raise ContainmentError(f"{name!r} no longer matches its recorded device/inode")
+    if info.st_uid != os.geteuid():
+        raise ContainmentError(f"{name!r} is not owned by uid {os.geteuid()}")
+    if info.st_nlink != 1:
+        raise ContainmentError(f"{name!r} has other hard links")
+    if info.st_dev != os.fstat(root_fd).st_dev:
+        raise ContainmentError(f"{name!r} sits on a different device than the temp root")
+    os.unlink(name, dir_fd=root_fd)
+
+
 def reap_attributed_temp(
     path: Path,
     *,
@@ -70,7 +100,9 @@ def reap_attributed_temp(
 
     The caller owns attribution, age and live-process rechecks. This layer
     enforces direct-child containment and recorded identity without introducing
-    another recursive deletion implementation.
+    another recursive deletion implementation. Directories go through the
+    task-scratch tree remover; a regular file (unattributed scratch, #9737)
+    is unlinked by descriptor after the same identity checks.
     """
     from scripts.common.task_scratch import _DIR_OPEN_FLAGS, _remove_invocation_dir
 
@@ -84,6 +116,9 @@ def reap_attributed_temp(
         raise ValueError("temporary target changed during containment check")
     root_fd = os.open(root, _DIR_OPEN_FLAGS)
     try:
+        if stat.S_ISREG(os.stat(path.name, dir_fd=root_fd, follow_symlinks=False).st_mode):
+            _unlink_temp_file(root_fd, path.name, root=root, expected_dev=expected_dev, expected_ino=expected_ino)
+            return
         _remove_invocation_dir(
             root_fd,
             path.name,

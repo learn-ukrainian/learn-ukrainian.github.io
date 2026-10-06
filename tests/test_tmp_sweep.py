@@ -186,7 +186,7 @@ def test_scan_error_and_reap_error_are_reported(inventory, monkeypatch):
     monkeypatch.setattr(sweep, "reap_attributed_temp", broken)
     report = inventory.run(apply=True)
     assert report["errors"] == 1 and path.exists()
-    monkeypatch.setattr(sweep, "tree_facts", lambda _: (0, 0, "tree_unknown"))
+    monkeypatch.setattr(sweep, "tree_facts", lambda _: (0, 0, 0, "tree_unknown"))
     assert inventory.run()["rows"][0]["reason"] == "tree_unknown"
 
 
@@ -258,7 +258,7 @@ def test_cli_dry_run_json_table_and_errors(inventory, capsys):
     assert sweep.main([*argv, "--json"]) == 0
     assert json.loads(capsys.readouterr().out)["bytes_reclaimed"] == 0
     assert sweep.main(argv) == 0
-    assert "| Directory |" in capsys.readouterr().out
+    assert "| Entry |" in capsys.readouterr().out
     with pytest.raises(SystemExit) as exc:
         sweep.main([*argv, "--min-age-hours", "0"])
     assert exc.value.code == 2
@@ -290,7 +290,7 @@ def test_tree_read_error_is_unknown(inventory, monkeypatch):
         return original(self)
 
     monkeypatch.setattr(Path, "iterdir", unreadable)
-    assert sweep.tree_facts(path)[2] == "tree_unknown"
+    assert sweep.tree_facts(path)[3] == "tree_unknown"
 
 
 def test_common_reaper_refuses_unknown_mounts(inventory, monkeypatch):
