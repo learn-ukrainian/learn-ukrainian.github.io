@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -81,6 +82,7 @@ def _run(
         {
             "CLAUDE_PROJECT_DIR": os.fspath(project),
             "LEARN_UKRAINIAN_SESSION_RECORD": os.fspath(record_path),
+            "THREAD_ROLLOVER_PYTHON": sys.executable,
             **extra_env,
         }
     )
