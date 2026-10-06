@@ -24,8 +24,8 @@ formal_review_eligibility_source: scripts/config/model_catalog.yaml#review_sched
 #   codex → gpt-6.1-sol @ high · claude → claude-sonnet-5-5 @ high · glm → glm-5.3 @ high (advisory max)
 #   claude formal pins also: claude-opus-5-5
 #   pool volume → Laguna S 2.1 (laguna-s-2.1); also XS 2.1 / M.1 in catalog
-#   grok → daily driver only; native Grok never reviews or judges (Grok reviews code/infra
-#          only as the attested cursor grok-4.7-high seat below critical, #9488)
+#   grok → daily driver and regular code/infra reviewer at every risk with runtime
+#     attestation, native CLI or Cursor (operator decision 2026-10-05, #9769)
 #   agy → gemini-3.8-flash-high @ high (catalog seat for bounded work and Ukrainian content review;
 #         not a planning, design or driver seat, #9584; text-only ACP wrapper is not a formal-review route)
 # Codex advisory escalation: gpt-6.1-sol @ high; routine reviewer stays high.
@@ -92,9 +92,9 @@ endpoints:
     retry_class: standard
     concurrency_limit: 1
     # Native Grok uses the hash-pinned sealed-review profile only when the
-    # parent supplies a validated exact-head MCP config. Policy still refuses
-    # native Grok as a code/infra reviewer; Grok reviews only through the
-    # runtime-attested Cursor seat (#9488).
+    # parent supplies a validated exact-head MCP config. Native and Cursor
+    # Grok are code/infra reviewers at every risk with runtime attestation
+    # and cross-family eligibility (#9769).
     formal_review_eligible: true
     model_family_resolver: canonical-reviewer-resolver
   - name: kimi

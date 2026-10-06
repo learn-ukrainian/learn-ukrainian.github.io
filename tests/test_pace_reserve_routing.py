@@ -280,19 +280,35 @@ def test_idle_settle_covered_deficit(reserve_case):
     assert lanes[0].status == snapshot.lanes[0].status
 
 
-def test_reviewer_resolver_covered_deficit(reserve_case):
+@pytest.mark.parametrize("grok_status", [None, "healthy", "unhealthy"])
+def test_reviewer_resolver_covered_deficit(reserve_case, grok_status):
     info, covered, _ = reserve_case
+    agents = {"codex": info, "cursor": {"status": "unhealthy"}}
+    if grok_status is not None:
+        agents["grok"] = {"status": grok_status}
     result = resolve_reviewer(
         ResolverInputs(
             author_model="claude-opus-5-5",
             review_profile="code",
             risk="critical",
-            routing_snapshot={"agents": {"codex": info}},
+            routing_snapshot={"agents": agents},
         )
     )
-    assert (result.selected is not None) is covered
+    sol = next(candidate for candidate in result.trace if candidate.name == "openai_frontier")
+    assert sol.status == ("selected" if covered else "excluded")
     if covered:
+        # An eligible Sol still precedes native Grok, even with credit relief.
         assert result.selected.concrete_model == "gpt-6.1-sol"
+    else:
+        # #9769 admits native Grok after Sol's uncovered deficit excludes it.
+        # Same-family Opus cannot review this author; Cursor is unavailable.
+        assert "quota bucket is near cap" in sol.reason
+        if grok_status == "unhealthy":
+            assert result.selected is None
+        else:
+            assert result.selected.name == "grok-4.7"
+            assert result.selected.transport == "native_grok"
+            assert result.selected.health == grok_status
 
 
 @pytest.mark.parametrize("native_only", [False, True])

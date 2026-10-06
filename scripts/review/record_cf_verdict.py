@@ -24,6 +24,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
 
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
@@ -39,7 +40,12 @@ from scripts.orchestration.integration_sweep import (
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.publish.github import Request, request_run
-from scripts.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal, resolve_catalog_model_id
+from scripts.review.model_catalog import (
+    REVIEW_ACTIVITY,
+    activity_role_refusal,
+    load_model_catalog,
+    resolve_catalog_model_id,
+)
 from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_UNION_FAMILIES,
     CURSOR_AUTO_UNION_FAMILY,
@@ -76,8 +82,7 @@ SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
 # The ``unattested-harness`` / ``pending`` / ``unknown`` fallbacks and any other
 # value are not runtime reports, so a receipt carrying them proves no model.
 RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transcript", "cursor-stderr-json"})
-# Families the resolver never selects through a native harness: Grok reviews
-# only through the attested Cursor seat and Kimi never reviews (core.md P2).
+# Kimi never reviews. Native Grok requires its own runtime attestation (#9769).
 NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
 
 
@@ -703,7 +708,8 @@ def _require_qualified_reviewer(facts: BranchReviewFacts, *, task: dict[str, Any
     path inference only raises it.
     """
     profile = str(task.get("review_profile") or "code").strip().casefold()
-    agent = str(task.get("agent") or "").strip().lower()
+    # Seat aliases (``grok-build``) name the canonical route the catalog lists.
+    agent = normalize_seat(str(task.get("agent") or "")) or ""
     if profile == "ukrainian":
         if agent not in {"claude", "codex", "agy"} or family not in {"anthropic", "openai", "google"}:
             raise RecordError("reviewer not qualified: Ukrainian review needs a Claude, GPT or Gemini seat")
@@ -886,20 +892,23 @@ def _pr(repository: str, branch: str, number: int | None) -> dict[str, Any]:
     return data
 
 
-def _require_formal_reviewer(*, cursor: bool, reported: object, model: str, family: str) -> None:
+def _require_formal_reviewer(
+    *, cursor: bool, reported: object, model: str, family: str, native_grok: bool = False
+) -> None:
     """Refuse a verdict from an identity the reviewer resolver never selects (#9488).
 
     Through Cursor only a pinned formal seat counts, and only when the runtime
     reported its display name (``"Grok 4.7 256K High"``): a bare or other-variant
     slug (``grok-4.7``, ``grok-4.7-high-fast``) attests no variant, and Composer,
-    Auto and Cursor-routed Claude are unpinned. Through any other harness Grok
-    never judges and Kimi never reviews. On every harness the model must also
+    Auto and Cursor-routed Claude are unpinned. Native Grok requires an attested
+    runtime model (operator decision 2026-10-05, #9769); Kimi never reviews.
+    On every harness the model must also
     hold a catalog review role (#9583), so Fable and retired models never approve.
     """
     if cursor:
         admitted = model in FORMAL_CURSOR_REVIEW_MODELS and reported != model
     else:
-        admitted = family not in NATIVE_NON_REVIEWER_FAMILIES
+        admitted = family not in NATIVE_NON_REVIEWER_FAMILIES or (native_grok and model == "grok-4.7")
     if not admitted:
         raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
     # #9583: a model the catalog gives no review role never approves, on any harness.
@@ -923,20 +932,28 @@ def record(
     if not isinstance(sha, str) or not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA missing or invalid")
     cursor = task.get("agent") == "cursor"
-    reported = task.get("resolved_model") if cursor else task.get("model")
+    native_grok = task.get("agent") in {"grok", "grok-build"}
+    reported = task.get("resolved_model") if cursor or native_grok else task.get("model")
     if cursor and task.get("resolved_model_known") is not True:
         raise RecordError("Cursor reviewer model unknown")
     source = task.get("resolved_model_source")
     if cursor and not (isinstance(source, str) and source in RUNTIME_REPORTED_MODEL_SOURCES):
         raise RecordError("Cursor reviewer model unattested: its source is not a runtime report")
+    if native_grok and (task.get("resolved_model_known") is not True or source != "grok-model-usage"):
+        raise RecordError("native Grok reviewer model unattested: modelUsage runtime report required")
     # Only Cursor's runtime reports display names; record its catalog id.
     model = canonical_cursor_model(reported) if cursor and isinstance(reported, str) else reported
+    if native_grok:
+        admitted_runtime_ids = load_model_catalog()["models"]["grok-4.7"].get("runtime_model_ids", [])
+        if not isinstance(reported, str) or reported not in admitted_runtime_ids:
+            raise RecordError("native Grok reviewer model unknown: runtime model is not admitted")
+        model = "grok-4.7"
     if not isinstance(model, str) or not model or re.search(r"\s", model):
         raise RecordError("reviewer model unknown")
     family = resolve_family(model)
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
-    _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family)
+    _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok)
     verdict = normalize_verdict(reply)
     started_dt = datetime.fromisoformat(str(task.get("started_at") or "").replace("Z", "+00:00"))
     if started_dt.tzinfo is None:

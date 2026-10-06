@@ -316,7 +316,7 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
             assert "subject exclusion" in grok["reason"]
             assert "grok_build.py" in grok["reason"]
     else:
-        assert [entry["name"] for entry in grok_entries] == ["grok-4.7-cursor-fallback"]
+        assert [entry["name"] for entry in grok_entries] == ["grok-4.7", "grok-4.7-cursor-fallback"]
         assert grok_entries[0]["status"] == "excluded"
         assert "subject exclusion" in grok_entries[0]["reason"]
         assert "grok_build.py" in grok_entries[0]["reason"]
@@ -784,7 +784,7 @@ def test_record_cycle_rejects_negative_outstanding_count(tmp_path):
 
 def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recorder(tmp_path, monkeypatch):
     from scripts.review import record_cf_verdict as recorder
-    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+    from tests.test_authoring_review_feasibility import GROK, OPUS, REPOSITORY, SOL, mini_repo
 
     repo = mini_repo(tmp_path, monkeypatch)
     tasks = tmp_path / "tasks"
@@ -811,7 +811,7 @@ def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recor
 
     # The latest author alone (GPT) would select Opus; the earlier Claude author excludes it.
     assert medium.returncode == 0, medium.stdout
-    assert payload["selected"]["name"] == "grok-4.7-cursor-fallback"
+    assert payload["selected"]["name"] == "grok-4.7"
     assert payload["branch_facts"]["existing_families"] == ["anthropic", "openai"]
     trace = {entry["name"]: entry["reason"] for entry in payload["trace"]}
     assert "same family as author (anthropic)" in trace["claude-opus-5-5"]
@@ -832,6 +832,21 @@ def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recor
             facts, task={"agent": "claude", "review_risk": "medium"}, model="claude-opus-5-5", family="anthropic"
         )
 
+    # Grok reviews at every risk (#9769); an xAI author leaves no reviewer at all.
+    repo.commit(GROK, message="third author")
+    retarget = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+    assert retarget.returncode == 0, retarget.stderr
     critical = _run_cli(state, "resolve-reviewer", *common, "--risk", "critical")
     assert critical.returncode == 1 and json.loads(critical.stdout)["selected"] is None
 

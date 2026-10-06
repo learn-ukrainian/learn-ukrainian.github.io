@@ -29,6 +29,9 @@ CLAUDE_ADAPTER = "scripts/agent_runtime/adapters/claude.py"
 SHARED_HOOK = "agents_extensions/shared/hooks/guard-reviewer-publish.py"
 OPUS = "claude/claude-opus-5-5"
 SOL = "codex/gpt-6.1-sol"
+# Native and Cursor Grok review at every risk (#9769), so exhausting the reviewers takes an xAI author too.
+GROK = "grok/grok-4.7"
+GROK_ADAPTER = "scripts/agent_runtime/adapters/grok_build.py"
 
 
 CANONICAL_URL = f"https://github.com/{REPOSITORY}.git"
@@ -351,11 +354,12 @@ def test_fresh_branch_with_one_family_has_a_reviewer(repo, tasks):
 @pytest.mark.parametrize("order", [(OPUS, SOL), (SOL, OPUS)])
 @pytest.mark.parametrize("writer", [OPUS, SOL])
 def test_mixed_family_critical_branch_has_no_reviewer_whatever_the_order_or_writer(repo, tasks, order, writer):
+    repo.commit(GROK, message="xai commit")
     for index, trailer in enumerate(order):
         repo.commit(trailer, message=f"commit {index}")
     fact = facts(repo, tasks, writer=writer)
 
-    assert fact.existing_families == {"anthropic", "openai"}
+    assert fact.existing_families == {"anthropic", "openai", "xai"}
     assert selected(fact, "critical") is None
 
 
@@ -365,7 +369,7 @@ def test_mixed_family_at_lower_risk_keeps_a_third_family(repo, tasks, monkeypatc
     repo.publish()
     fact = facts(repo, tasks, writer=OPUS)
 
-    assert selected(fact, "medium") == "grok-4.7-cursor-fallback"
+    assert selected(fact, "medium") == "grok-4.7"
     receipt = record_verdict(
         monkeypatch, tmp_path, repo, agent="cursor", model="auto", review_risk="medium", **GROK_RECEIPT
     )
@@ -377,13 +381,17 @@ def test_mixed_family_at_lower_risk_keeps_a_third_family(repo, tasks, monkeypatc
 
 
 def test_recorder_holds_a_below_critical_reviewer_to_the_recorded_risk(repo, tasks, monkeypatch, tmp_path):
-    repo.commit(OPUS)
     repo.commit(SOL)
     repo.publish()
+    # Sonnet reviews this branch at medium but not at the recorded critical risk.
+    assert (
+        record_verdict(monkeypatch, tmp_path, repo, agent="claude", model="claude-sonnet-5-5", review_risk="medium")[
+            "verdict"
+        ]
+        == "APPROVED"
+    )
     with pytest.raises(recorder.RecordError, match="not qualified"):
-        record_verdict(
-            monkeypatch, tmp_path, repo, agent="cursor", model="auto", review_risk="critical", **GROK_RECEIPT
-        )
+        record_verdict(monkeypatch, tmp_path, repo, agent="claude", model="claude-sonnet-5-5", review_risk="critical")
 
 
 # --- 3. incoming-family exclusion ----------------------------------------------------------------
@@ -391,6 +399,7 @@ def test_recorder_holds_a_below_critical_reviewer_to_the_recorded_risk(repo, tas
 
 def test_incoming_family_joins_the_authors(repo, tasks):
     repo.commit(OPUS)
+    repo.commit(GROK)
     assert selected(facts(repo, tasks, writer=SOL), "critical") is None
     assert selected(facts(repo, tasks, writer="claude/claude-sonnet-5-5"), "critical") == "openai_frontier"
 
@@ -403,7 +412,7 @@ def test_cursor_auto_incoming_writer_is_the_xai_moonshot_union(repo, tasks):
     assert auto.incoming_family == "cursor-auto-union"
     assert auto.excluded_families == {"anthropic", "openai", "xai", "moonshot"}
     # Without Auto the Cursor Grok seat reviews at medium; with it, nothing remains.
-    assert selected(facts(repo, tasks, writer=OPUS), "medium") == "grok-4.7-cursor-fallback"
+    assert selected(facts(repo, tasks, writer=OPUS), "medium") == "grok-4.7"
     assert selected(auto, "medium") is None
 
 
@@ -429,6 +438,7 @@ def test_committed_cursor_authorship_needs_a_runtime_attested_model(repo, tasks,
 
 
 def test_claude_adapter_raises_risk_and_excludes_every_claude_reviewer(repo, tasks):
+    repo.commit(GROK)
     repo.commit(SOL, path=CLAUDE_ADAPTER)
     fact = facts(repo, tasks, writer=SOL, owned=(CLAUDE_ADAPTER,))
     resolution = recorder.structural_review_route(fact, risk="low")
@@ -442,6 +452,7 @@ def test_claude_adapter_raises_risk_and_excludes_every_claude_reviewer(repo, tas
 
 @pytest.mark.parametrize("kind", ["earlier-commit", "rename-source", "deletion"])
 def test_protected_changes_stay_in_scope_beyond_a_narrow_latest_packet(repo, tasks, kind):
+    repo.commit(GROK, path="src/app.py")
     if kind == "earlier-commit":
         repo.commit(SOL, path=CLAUDE_ADAPTER)
     elif kind == "rename-source":
@@ -457,7 +468,7 @@ def test_protected_changes_stay_in_scope_beyond_a_narrow_latest_packet(repo, tas
 
 def test_explicit_subjects_and_ambiguous_shared_hooks(repo, tasks):
     repo.commit(OPUS)
-    assert selected(facts(repo, tasks, writer=OPUS, seats=("codex",)), "critical") is None
+    assert selected(facts(repo, tasks, writer=OPUS, seats=("codex", "grok")), "critical") is None
     with pytest.raises(recorder.BranchFactsError, match="ambiguous subject-seat") as refused:
         facts(repo, tasks, writer=OPUS, owned=(SHARED_HOOK,))
     assert refused.value.code == recorder.FACTS_SCOPE_UNKNOWN
@@ -725,6 +736,7 @@ def assert_refused(boundary, capsys, repo, tasks, result, code, *, reused: bool 
 def test_mixed_branch_refuses_a_writer_and_no_flag_overrides_it(boundary, capsys, repo, tasks, override):
     repo.commit(OPUS)
     repo.commit(SOL)
+    repo.commit(GROK)
     repo.publish()
     receipt = assert_refused(
         boundary,
@@ -734,7 +746,7 @@ def test_mixed_branch_refuses_a_writer_and_no_flag_overrides_it(boundary, capsys
         boundary("--branch", "feature", "--owned-path", "docs/a.md", *override),
         delegate.AUTHORING_REVIEW_NO_ROUTE,
     )
-    assert receipt["existing_families"] == ["anthropic", "openai"] and receipt["risk"] == "critical"
+    assert receipt["existing_families"] == ["anthropic", "openai", "xai"] and receipt["risk"] == "critical"
 
 
 @pytest.mark.parametrize(
@@ -747,6 +759,7 @@ def test_caller_base_never_erases_existing_authors(boundary, capsys, repo, tasks
     an OpenAI reviewer the recorder (which reads the PR base) then rejects. Authors come from the review base."""
     repo.commit(OPUS)
     repo.commit(SOL)
+    repo.commit(GROK)
     repo.publish()
     receipt = assert_refused(
         boundary,
@@ -756,7 +769,7 @@ def test_caller_base_never_erases_existing_authors(boundary, capsys, repo, tasks
         boundary(*target, "--owned-path", CLAUDE_ADAPTER),
         delegate.AUTHORING_REVIEW_NO_ROUTE,
     )
-    assert receipt["existing_families"] == ["anthropic", "openai"]
+    assert receipt["existing_families"] == ["anthropic", "openai", "xai"]
     assert receipt["review_base"] == {
         "repository": REPOSITORY,
         "branch": "main",
@@ -853,8 +866,9 @@ def test_undeterminable_review_base_is_unknown_authorship(boundary, github, caps
     assert receipt["head_branch"] == "feature" and "api.github.com" not in json.dumps(receipt)
 
 
-def test_adding_openai_to_an_anthropic_branch_refuses(boundary, capsys, repo, tasks):
+def test_adding_openai_to_an_anthropic_and_xai_branch_refuses(boundary, capsys, repo, tasks):
     repo.commit(OPUS)
+    repo.commit(GROK)
     repo.publish()
     receipt = assert_refused(
         boundary,
@@ -869,6 +883,7 @@ def test_adding_openai_to_an_anthropic_branch_refuses(boundary, capsys, repo, ta
 
 def test_budget_substitution_checks_the_substituted_writer(boundary, capsys, repo, tasks, monkeypatch):
     repo.commit(OPUS)
+    repo.commit(GROK)
     repo.publish()
     monkeypatch.setattr(
         delegate,
@@ -897,10 +912,10 @@ def test_new_protected_branch_refuses_an_author_whose_reviewer_is_the_governed_s
         capsys,
         repo,
         tasks,
-        boundary("--worktree", "--owned-path", CLAUDE_ADAPTER, writer=SOL),
+        boundary("--worktree", "--owned-path", CLAUDE_ADAPTER, "--owned-path", GROK_ADAPTER, writer=SOL),
         delegate.AUTHORING_REVIEW_NO_ROUTE,
     )
-    assert receipt["target"] == "new-branch" and receipt["subject_seats"] == ["claude"]
+    assert receipt["target"] == "new-branch" and receipt["subject_seats"] == ["claude", "grok"]
 
 
 def test_cursor_auto_writer_refuses_where_only_the_cursor_seat_could_review(boundary, capsys, repo, tasks, monkeypatch):
@@ -1007,6 +1022,7 @@ def test_dry_run_evaluates_the_check_without_side_effects(boundary, capsys, repo
 def test_dry_run_refusal_writes_nothing(boundary, capsys, repo, tasks):
     repo.commit(OPUS)
     repo.commit(SOL)
+    repo.commit(GROK)
     repo.publish()
     assert_refused(
         boundary,
@@ -1104,7 +1120,8 @@ def test_attach_without_pr_enumerates_from_the_open_prs_older_release_base(
     repo.commit(SOL, path="src/app.py", message="main moves on")
     repo.publish("trunk", to="main")
     repo.git("checkout", "-q", "-B", "feature", "trunk")
-    head = repo.commit(OPUS, message="feature work")
+    repo.commit(OPUS, message="feature work")
+    head = repo.commit(GROK, message="more feature work")
     repo.publish()
     github.prs = [pr_row(42, "release", release)]
 
@@ -1116,7 +1133,7 @@ def test_attach_without_pr_enumerates_from_the_open_prs_older_release_base(
         boundary("--branch", "feature", "--owned-path", "docs/a.md", *mode),
         delegate.AUTHORING_REVIEW_NO_ROUTE,
     )
-    assert receipt["existing_families"] == ["anthropic", "openai"] and receipt["risk"] == "critical"
+    assert receipt["existing_families"] == ["anthropic", "openai", "xai"] and receipt["risk"] == "critical"
     assert receipt["review_base"] == {"repository": REPOSITORY, "branch": "release", "pr": 42, "source": "open-pr"}
     assert (receipt["review_base_sha"], receipt["base_tip_sha"], receipt["head_sha"]) == (release, release, head)
 
@@ -1124,7 +1141,7 @@ def test_attach_without_pr_enumerates_from_the_open_prs_older_release_base(
     monkeypatch.setattr(recorder, "_run_json", lambda _args: {"baseRefOid": release, "headRefOid": head})
     monkeypatch.setattr(recorder, "_pages", lambda _request: github_listing(repo, release, head))
     pr_facts = recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tasks, repo_root=repo.root)
-    assert pr_facts.existing_families == {"anthropic", "openai"}
+    assert pr_facts.existing_families == {"anthropic", "openai", "xai"}
     assert selected(pr_facts, "critical") is None
 
 
@@ -1134,7 +1151,8 @@ def test_new_branch_enumerates_the_custom_base_it_starts_at_not_a_stale_local_co
     while the canonical ``custom`` carries an Anthropic commit. Admission used to read the local copy and the
     resolver then started the branch at the fetched tip. Admission now observes and enumerates that tip."""
     repo.publish("trunk", to="custom")
-    tip = repo.advance_remote("custom", OPUS)
+    repo.advance_remote("custom", OPUS)
+    tip = repo.advance_remote("custom", GROK)
     assert repo.sha("origin/custom") != tip
 
     receipt = assert_refused(
@@ -1147,7 +1165,7 @@ def test_new_branch_enumerates_the_custom_base_it_starts_at_not_a_stale_local_co
     )
     assert receipt["target"] == "new-branch" and receipt["creation_base"] == "custom"
     assert receipt["creation_sha"] == receipt["head_sha"] == tip
-    assert receipt["existing_families"] == ["anthropic"] and receipt["incoming_family"] == "openai"
+    assert receipt["existing_families"] == ["anthropic", "xai"] and receipt["incoming_family"] == "openai"
 
 
 def test_the_stale_custom_base_alone_would_have_been_feasible(repo, tasks):
@@ -1192,6 +1210,7 @@ def test_a_checkout_reaped_before_the_lock_is_admitted_again_at_its_actual_start
         repo.git("worktree", "remove", "--force", str(checkout))
         repo.git("branch", "-q", "-D", "codex/writer-1")
         repo.advance_remote("custom", OPUS)
+        repo.advance_remote("custom", GROK)
 
     with _admitted_host(monkeypatch, on_admission=reap_and_advance):
         rc, _ = boundary("--worktree", "--base", "custom", "--owned-path", CODEX_ADAPTER, "--dry-run", writer=SOL)
@@ -1200,7 +1219,7 @@ def test_a_checkout_reaped_before_the_lock_is_admitted_again_at_its_actual_start
     assert f"❌ {delegate.AUTHORING_REVIEW_NO_ROUTE}:" in err and "provider_calls=0" in err
     receipt = last_receipt(err)
     assert receipt["target"] == "new-branch" and receipt["creation_sha"] == repo.remote_sha("custom")
-    assert receipt["existing_families"] == ["anthropic"]
+    assert receipt["existing_families"] == ["anthropic", "xai"]
     assert list(tasks.rglob("*")) == [] and boundary.calls == []
 
 
@@ -1271,6 +1290,7 @@ def test_a_stale_tracking_ref_is_observed_on_the_remote_and_not_reported_as_move
 def test_admission_observes_the_canonical_remote_not_a_lagging_mirror(boundary, capsys, repo, tasks, tmp_path):
     """M2/M6 (#7522): ``origin`` is a mirror that lags; the canonical GitHub remote carries an OpenAI commit."""
     repo.commit(OPUS)
+    repo.commit(GROK)
     repo.publish()
     mirror = bare_remote(tmp_path / "mirror.git")
     repo.publish("trunk", to="main", remote=mirror)
@@ -1288,7 +1308,7 @@ def test_admission_observes_the_canonical_remote_not_a_lagging_mirror(boundary, 
         boundary("--branch", "feature", "--owned-path", "docs/a.md"),
         delegate.AUTHORING_REVIEW_NO_ROUTE,
     )
-    assert receipt["head_sha"] == head and receipt["existing_families"] == ["anthropic", "openai"]
+    assert receipt["head_sha"] == head and receipt["existing_families"] == ["anthropic", "openai", "xai"]
 
 
 @pytest.mark.parametrize("repo", ["develop"], indirect=True)
@@ -1381,18 +1401,18 @@ def reused_worktree_behind_main(repo: MiniRepo, github: FakeGitHub, *, main_trai
 def test_an_auto_rebase_that_would_add_another_family_refuses_before_the_branch_is_touched(
     boundary, github, capsys, repo, tasks, monkeypatch
 ):
-    """Round-6 probe 1 (#9739): admission saw only Anthropic over the PR's release base and selected OpenAI; the
+    """Round-6 probe 1 (#9739): admission saw Anthropic and xAI over the PR's release base and selected OpenAI; the
     auto-rebase onto main then added an OpenAI commit the recorder enumerates. The planned rebase is now admitted
     first and refused, with the rebase helpers never run and the branch untouched."""
     checkout, release, main = reused_worktree_behind_main(repo, github, main_trailer=SOL)
-    head = MiniRepo(checkout).sha("HEAD")
+    head = MiniRepo(checkout).commit(GROK, message="more feature work")
     admitted_dispatch_cleanup(monkeypatch)
     with _admitted_host(monkeypatch):
         result = boundary("--worktree", "--owned-path", "docs/a.md")
     receipt = assert_refused(boundary, capsys, repo, tasks, result, delegate.AUTHORING_REVIEW_NO_ROUTE, reused=True)
-    assert receipt["existing_families"] == ["anthropic"] and receipt["review_base_sha"] == release
+    assert receipt["existing_families"] == ["anthropic", "xai"] and receipt["review_base_sha"] == release
     assert (receipt["rebase_onto"], receipt["rebase_planned"]) == (main, True)
-    assert receipt["rebase_existing_families"] == ["anthropic", "openai"] and receipt["reviewer"] is None
+    assert receipt["rebase_existing_families"] == ["anthropic", "openai", "xai"] and receipt["reviewer"] is None
     assert MiniRepo(checkout).sha("HEAD") == head  # never rebased
 
     # The recorder, run on the history the rebase would have produced, sees both families and qualifies no one.
@@ -1407,7 +1427,7 @@ def test_an_auto_rebase_that_would_add_another_family_refuses_before_the_branch_
         incoming_model="claude-opus-5-5",
         owned_paths=("docs/a.md",),
     )
-    assert rebased.existing_families == {"anthropic", "openai"} and selected(rebased, "critical") is None
+    assert rebased.existing_families == {"anthropic", "openai", "xai"} and selected(rebased, "critical") is None
 
 
 def test_an_auto_rebase_that_adds_only_same_family_commits_still_admits(

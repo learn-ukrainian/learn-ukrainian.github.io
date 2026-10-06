@@ -110,6 +110,7 @@ import re
 import shlex
 import shutil
 import subprocess
+from collections.abc import Mapping, Sequence
 from functools import cache
 from pathlib import Path
 from typing import Any
@@ -176,9 +177,88 @@ _MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 # under it and still start or schedule work past the turn, so they are denied
 # by name; a settings deny removes them in dontAsk, bypass and default modes.
 # env_sanitize allowlists the variable for the claude provider, and for kimi
-# only from adapter overrides. KimiccHarness reuses both constants.
+# only from adapter overrides. KimiccHarness reuses both constants; every
+# other headless run is spawned by ``run_headless_claude``/``popen_headless_claude``.
 HEADLESS_BACKGROUND_ENV = {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
 HEADLESS_BACKGROUND_TOOL_DENIES = ("Monitor", "ScheduleWakeup", "CronCreate", "Workflow")
+_DISALLOWED_TOOLS_FLAGS = ("--disallowedTools", "--disallowed-tools")
+# The wrappers build the child environment and run the argv directly.
+_WRAPPER_OWNED_KWARGS = frozenset({"env", "shell", "executable"})
+
+
+def _with_background_denies(value: str) -> str:
+    denied = [tool.strip() for tool in value.split(",") if tool.strip()]
+    return ",".join([*denied, *(tool for tool in HEADLESS_BACKGROUND_TOOL_DENIES if tool not in denied)])
+
+
+def headless_claude_argv(argv: Sequence[str]) -> list[str]:
+    """Return a copy of a headless ``claude -p`` argv with the background tools denied (#9750).
+
+    Each existing ``--disallowedTools`` list keeps its entries and gains the
+    background denies; without one, a list is added before the ``--``
+    end-of-options marker (the option is variadic, so it must not precede a
+    positional prompt). Idempotent. Pure: it spawns nothing, so a caller that
+    needs the argv alone (to report or digest it) can use it; the run itself
+    goes through ``run_headless_claude`` or ``popen_headless_claude``.
+    """
+    cmd = list(argv)
+    end = cmd.index("--") if "--" in cmd else len(cmd)
+    merged = False
+    for index in range(end):
+        token = cmd[index]
+        if token in _DISALLOWED_TOOLS_FLAGS and index + 1 < end:
+            cmd[index + 1] = _with_background_denies(cmd[index + 1])
+            merged = True
+        elif token.startswith(tuple(f"{flag}=" for flag in _DISALLOWED_TOOLS_FLAGS)):
+            flag, value = token.split("=", 1)
+            cmd[index] = f"{flag}={_with_background_denies(value)}"
+            merged = True
+    if not merged:
+        cmd[end:end] = ["--disallowedTools", ",".join(HEADLESS_BACKGROUND_TOOL_DENIES)]
+    return cmd
+
+
+def _headless_spawn_args(
+    argv: Sequence[str], base_env: Mapping[str, str] | None, kwargs: Mapping[str, Any]
+) -> tuple[list[str], dict[str, str]]:
+    owned = sorted(_WRAPPER_OWNED_KWARGS & kwargs.keys())
+    if owned:
+        raise TypeError(f"headless Claude wrappers own {', '.join(owned)}; pass the base environment as base_env")
+    if isinstance(argv, (str, bytes)) or not all(isinstance(arg, str) for arg in argv):
+        raise TypeError("headless Claude argv must be a sequence of str, never a shell command")
+    env = dict(os.environ if base_env is None else base_env)
+    env.update(HEADLESS_BACKGROUND_ENV)
+    return headless_claude_argv(argv), env
+
+
+def run_headless_claude(
+    argv: Sequence[str], *, timeout: float, base_env: Mapping[str, str] | None = None, **kwargs: Any
+) -> subprocess.CompletedProcess[Any]:
+    """``subprocess.run`` a headless ``claude -p`` argv with the background controls forced (#9690, #9750).
+
+    A print-mode run ends with its final turn, so background work it started
+    would be lost. The child environment is a copy of ``base_env`` exactly
+    (the ambient environment only when it is omitted, so a caller's
+    exclusions hold), with ``CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1`` set
+    last; the argv gains the background-tool denies. ``env``, ``shell`` and
+    ``executable`` are refused: the argv runs directly. ``timeout`` is
+    required, so every run is bounded; every other keyword passes to
+    ``subprocess.run`` unchanged.
+    """
+    cmd, env = _headless_spawn_args(argv, base_env, kwargs)
+    return subprocess.run(cmd, env=env, timeout=timeout, **kwargs)
+
+
+def popen_headless_claude(
+    argv: Sequence[str], *, base_env: Mapping[str, str] | None = None, **kwargs: Any
+) -> subprocess.Popen[Any]:
+    """``subprocess.Popen`` counterpart of ``run_headless_claude``, with the same controls and refusals.
+
+    The caller bounds the process through ``communicate``/``wait`` timeouts.
+    """
+    cmd, env = _headless_spawn_args(argv, base_env, kwargs)
+    return subprocess.Popen(cmd, env=env, **kwargs)
+
 
 # Reader and writer tools come from the sources server's annotations
 # (``sources_read_only.sources_tool_sets``). tests/mcp/test_sources_tool_side_effects.py
@@ -421,19 +501,15 @@ def _discussion_readonly_requested(tool_config: dict | None) -> bool:
 def _probe_claude_cli_version(cmd_prefix: tuple[str, ...]) -> tuple[int, int, int] | None:
     """Probe ``claude --version`` once per binary prefix for this process."""
     try:
-        from utils.claude_version import _parse_claude_semver
+        from utils.claude_version import _parse_claude_semver, run_version_probe
     except ImportError:
         return None
 
     try:
-        result = subprocess.run(
-            [*cmd_prefix, "--version"],
-            capture_output=True,
-            text=True,
-            timeout=5,
-            check=False,
-        )
+        result = run_version_probe(cmd_prefix, timeout=5)
     except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+        return None
+    if result is None:
         return None
 
     combined = f"{result.stdout or ''}\n{result.stderr or ''}".strip()

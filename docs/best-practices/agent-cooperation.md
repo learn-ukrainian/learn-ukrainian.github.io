@@ -904,8 +904,9 @@ Formal CF and auto-merge stay with the orchestrator.
 ### Formal CF budget rotation (Codex-authored PRs)
 Current formal reviewer endpoints are `codex|claude|glm|grok|cursor`; the canonical
 `review_scheduler.endpoints` catalog remains authoritative. Native `grok` is
-transport-eligible but policy-refused (native Grok never judges); `cursor` is
-formal only for its pinned, runtime-attested `grok-4.7-high` seat (#9488). `agy` is a
+a regular reviewer at every risk with runtime modelUsage attestation; `cursor` is
+formal for its pinned, runtime-attested `grok-4.7-high` seat at every risk
+(operator decision 2026-10-05, #9769). `agy` is a
 recognized request identity that is not formally eligible. Kimi is not a
 reviewer: Kimi seats take web, UI and backend coding only.
 For **Codex/Luna-authored** PRs, use the deterministic routing budget rather

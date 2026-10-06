@@ -14,11 +14,11 @@ demote a model into a lower-quality rung.
 The model inventory, candidate routes, and risk ladders are loaded from the
 versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 (``REVIEW_CANDIDATES`` / ``REVIEW_LADDERS`` via ``_catalog_candidate`` /
-``_catalog_ladder``). Policy changes belong in YAML: critical prefers Sol / Opus;
-Fable holds no review role (#9583), routine ladders keep practical seats, native Grok never
-judges, and the runtime-attested Cursor Grok seat is the Sol-spared last resort
-below critical (#9488). A formal review at high risk is performed only by the
-models ``review_scheduler.risk_reviewer_models`` lists (#9538); that is an
+``_catalog_ladder``). Policy changes belong in YAML: critical admits Sol / Opus / Grok;
+Fable holds no review role (#9583); native and runtime-attested Cursor Grok are
+regular code/infra reviewers at every risk (operator decision 2026-10-05, #9769).
+A formal review at high or critical risk is performed only by the models
+``review_scheduler.risk_reviewer_models`` lists; that is an
 eligibility gate, so it binds explicit pins and custom ladders too.
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
@@ -151,6 +151,10 @@ class ReviewerCandidate:
     quality_tier: str
     last_resort: bool = False
     model_roles: frozenset[str] = field(default_factory=frozenset)
+    # Optional subset for semantic ranking, never a grant of activity roles.
+    suitability_roles: frozenset[str] = field(default_factory=frozenset)
+    # Same-model route preference; other models retain their resource ranking.
+    transport_fallback_for: str | None = None
     health_keys: frozenset[str] = field(default_factory=frozenset)
     requires_silence_timeout: bool = False
     # Fail-closed data-egress gate: eligible only when the caller's
@@ -207,6 +211,8 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         quality_tier=model["tier"],
         last_resort=raw.get("last_resort", False),
         model_roles=frozenset(model["roles"]),
+        suitability_roles=frozenset(raw.get("suitability_roles", [])),
+        transport_fallback_for=raw.get("transport_fallback_for"),
         health_keys=frozenset(raw.get("health_keys", [])),
         requires_silence_timeout=bool(raw.get("requires_silence_timeout", False)),
         requires_data_egress_policy=raw.get("requires_data_egress_policy"),
@@ -647,7 +653,8 @@ def _suitability_rank(candidate: ReviewerCandidate, inputs: ResolverInputs) -> i
         ordered_roles = _SCHEDULER_POLICY["profile_risk_role_order"][profile][risk]
     except (KeyError, TypeError):
         return None
-    rank = next((rank for rank, role in enumerate(ordered_roles) if role in candidate.model_roles), None)
+    roles = candidate.suitability_roles or candidate.model_roles
+    rank = next((rank for rank, role in enumerate(ordered_roles) if role in roles), None)
     requested_role = (inputs.requested_role or "").strip()
     if requested_role:
         return 0 if rank is not None and requested_role in candidate.model_roles else None
@@ -806,10 +813,14 @@ def evaluate_candidate(
             health=health,
         )
     if inputs.subject_seats or inputs.subject_families:
+        # The Grok model governs both admitted transports (#9769).
+        subject_families = inputs.subject_families
+        if "cursor" in inputs.subject_seats:
+            subject_families = frozenset((*subject_families, "xai"))
         subject_reason = subject_exclusion_reason(
             candidate,
             seats=inputs.subject_seats,
-            families=inputs.subject_families,
+            families=subject_families,
             evidence=inputs.subject_evidence,
         )
         if subject_reason:
@@ -826,29 +837,6 @@ def evaluate_candidate(
                 reason=subject_reason,
                 health=health,
             )
-
-    # Operator decision 2026-10-02 (#9488): Grok reviews code and infra only
-    # through the Cursor seat whose runtime attests the concrete model. Every
-    # other gate below (independence, suitability, health) still applies to it.
-    if (candidate.family == "xai" or model_family == "xai") and not (
-        candidate.transport == "cursor" and candidate.route == "cursor"
-    ):
-        return CandidateResult(
-            name=candidate.name,
-            concrete_model=candidate.concrete_model,
-            family=candidate.family,
-            route=candidate.route,
-            transport=candidate.transport,
-            invocation=candidate.invocation,
-            quality_tier=candidate.quality_tier,
-            requires_silence_timeout=candidate.requires_silence_timeout,
-            status="excluded",
-            reason=(
-                "native Grok never judges: Grok reviews code and infra only through the "
-                "runtime-attested Cursor seat (core.md P2, #9488)"
-            ),
-            health=health,
-        )
 
     # Operator 2026-09-25: Gemini reviews Ukrainian only, never code. Keep this
     # hard gate even for injected ladders and explicitly pinned candidates.
@@ -1046,11 +1034,20 @@ def _best_eligible(
     """Pick the best eligible entry: primary before last resort, then suitability and tier,
     plan-backed before credit-backed, deterministic selection_score inside it. ``exclude_families`` lets the
     dual-family quorum path pick a second seat outside the first seat's
-    family without relaxing the fit-before-pressure ordering."""
+    family without relaxing the fit-before-pressure ordering. An eligible
+    same-model primary transport precedes its declared fallback."""
     filtered = {
         fit_key: kept
         for fit_key, entries in eligible_by_fit_and_tier.items()
         if (kept := [item for item in entries if item[0].family not in exclude_families])
+    }
+    # A same-model transport fallback cannot compete with its eligible primary
+    # on resource scores or head hashes. Other candidates keep their exact order.
+    primary_names = {candidate.name for entries in filtered.values() for candidate, _, _ in entries}
+    filtered = {
+        fit_key: kept
+        for fit_key, entries in filtered.items()
+        if (kept := [item for item in entries if item[0].transport_fallback_for not in primary_names])
     }
     if not filtered:
         return None

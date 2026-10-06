@@ -310,11 +310,13 @@ class DelegateDispatcher:
         delegate: Path,
         cwd: Path,
         hard_timeout: int = 3600,
+        review_profile: str | None = None,
     ) -> None:
         self.python = python
         self.delegate = delegate
         self.cwd = cwd
         self.hard_timeout = hard_timeout
+        self.review_profile = review_profile
         self.wait_timeout = hard_timeout + WAIT_MARGIN
         self._composer: DelegateComposer | None = None
 
@@ -336,6 +338,9 @@ class DelegateDispatcher:
         args += ["--research-task-family", task_family(kind)]
         if seat.effort:
             args += ["--effort", seat.effort]
+        if self.review_profile and kind == "review":
+            # A target-less review: --require-review-verdict types it as a review for delegate's AGY tool-config path.
+            args += ["--review-profile", self.review_profile, "--require-review-verdict"]
         return args
 
     def expected_args_sha256(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> str:

@@ -143,6 +143,102 @@ def lifecycle_id(identity: Mapping[str, Any]) -> str:
     )
 
 
+def membership_needs_audit(native_parent_epic: int | None, registered_epics: list[int] | None) -> bool:
+    """Whether :func:`resolve_membership` must consult the live audit (#9783).
+
+    A native parent that is itself a registered stream epic decides alone
+    (accept when it is the identity's epic, refuse otherwise), so fetching a
+    live audit there would only let an unrelated audit failure mask that
+    decision. No native parent (body path) or an unregistered native parent
+    (native-chain path) can only be decided by the fresh audit.
+    """
+    if native_parent_epic is None:
+        return True
+    return isinstance(registered_epics, list) and native_parent_epic not in registered_epics
+
+
+def _fresh_membership_audit(
+    membership_report: Mapping[str, Any] | None, max_age_s: int
+) -> tuple[Mapping[str, Any] | None, str | None]:
+    """Return ``(validated_report, None)`` or ``(None, refusal_reason)``."""
+    if isinstance(membership_report, dict) and not issue_stream_audit.membership_report_is_complete(membership_report):
+        # Same predicate as validate_membership_report (#8661): the flag must
+        # be boolean True and incomplete_nodes must be a list. A missing flag
+        # or the string "false" is unverified, not a finished traversal.
+        unread = issue_stream_audit.unread_membership_nodes(membership_report)
+        nodes_desc = ", ".join(f"#{n}" for n in sorted(unread)) if unread else "unknown"
+        return None, f"fresh issue-stream membership audit traversal is incomplete (unread nodes: {nodes_desc})"
+    validated_report = issue_stream_audit.validate_membership_report(membership_report, max_age_s)
+    if validated_report is None:
+        return None, "fresh issue-stream membership audit evidence is missing, stale, or malformed"
+    return validated_report, None
+
+
+def _resolve_native_chain(
+    *,
+    issue_number: int,
+    stream_epic: int,
+    native_parent_epic: int,
+    membership_report: Mapping[str, Any] | None,
+    max_age_s: int,
+) -> dict[str, Any]:
+    """Accept a native descendant reached through unregistered epics (#9783).
+
+    Reuses the audit's own native-chain resolution: ``issue_stream_audit``
+    walks native sub-issues down from every registered epic (stopping at other
+    registered epics) and records ``via: "native"`` for each descendant. The
+    issue must resolve that way to exactly the identity's epic, and its live
+    native parent must resolve the same way, so the audit and the current
+    GitHub parentage agree on the chain.
+    """
+    prefix = f"native parent #{native_parent_epic} is not a registered stream epic and "
+    validated_report, failure = _fresh_membership_audit(membership_report, max_age_s)
+    if validated_report is None:
+        return {
+            "valid": False,
+            "method": None,
+            "epic": None,
+            "generated_at": None,
+            "digest": None,
+            "reason": prefix + str(failure),
+        }
+    generated_at = validated_report.get("generated_at")
+    index = validated_report.get("effective_membership") or {}
+    evidence_digest = digest(index)
+    entry = index.get(str(issue_number))
+    parent_entry = index.get(str(native_parent_epic))
+    reason: str | None = None
+    if not isinstance(entry, dict) or entry.get("via") != "native":
+        reason = "the fresh membership audit does not resolve the issue through a native sub-issue chain"
+    elif not entry.get("unique_stream"):
+        reason = "the native sub-issue chain is multi-homed across more than one registered epic"
+    elif entry.get("epics") != [stream_epic]:
+        reason = "the native sub-issue chain reaches a different registered epic than the identity's stream epic"
+    elif not (
+        isinstance(parent_entry, dict)
+        and parent_entry.get("via") == "native"
+        and parent_entry.get("epics") == [stream_epic]
+    ):
+        reason = "the native parent is not itself a native descendant of the identity's stream epic in the fresh audit"
+    if reason is not None:
+        return {
+            "valid": False,
+            "method": None,
+            "epic": None,
+            "generated_at": generated_at,
+            "digest": evidence_digest,
+            "reason": prefix + reason,
+        }
+    return {
+        "valid": True,
+        "method": "native_chain",
+        "epic": stream_epic,
+        "generated_at": generated_at,
+        "digest": evidence_digest,
+        "reason": None,
+    }
+
+
 def resolve_membership(
     *,
     issue_number: int,
@@ -162,26 +258,32 @@ def resolve_membership(
 
     Native GitHub sub-issue parentage is authoritative and takes precedence
     over any body-derived evidence: if ``native_parent_epic`` is set at all,
-    it alone decides the outcome — a native parent that differs from
-    ``stream_epic`` is a hard rejection, never a fall-through to body
-    evidence. Only when there is NO native parent does a fresh
-    ``issue_stream_audit`` effective-membership proof get consulted, and only
-    when it resolves this exact issue to exactly one effective epic equal to
-    ``stream_epic``. That proof is sourced entirely from the epic-side
-    checklist/reference ``issue_stream_audit`` already interprets — never from
-    the child issue's own body, so a child's own ``Refs #<epic>`` prose can
-    never establish membership here.
+    the native chain alone decides the outcome, never a fall-through to body
+    evidence. A native parent equal to ``stream_epic`` is accepted; a native
+    parent that is a different registered stream epic is a hard rejection. A
+    native parent that is NOT a registered stream epic (#9783) is accepted
+    only when the fresh, complete audit resolves this exact issue — and the
+    parent — ``via: "native"`` to exactly ``stream_epic``. Only when there is
+    NO native parent does a fresh ``issue_stream_audit`` effective-membership
+    proof get consulted for body evidence, and only when it resolves this
+    exact issue to exactly one effective epic equal to ``stream_epic``. That
+    proof is sourced entirely from the epic-side checklist/reference
+    ``issue_stream_audit`` already interprets — never from the child issue's
+    own body, so a child's own ``Refs #<epic>`` prose can never establish
+    membership here.
 
     Fails **closed** — ``valid: False`` — for every failure mode: the
     identity's stream epic absent from the registry, a native parent that
-    disagrees, and (for the body path) audit evidence that is missing, stale,
-    malformed, orphaned, wrong-epic, multi-homed, or otherwise ambiguous.
+    disagrees, and (for the native-chain and body paths) audit evidence that
+    is missing, stale, malformed, incomplete, orphaned, wrong-epic,
+    multi-homed, or otherwise ambiguous.
 
     The return value always carries the four AC-PROVENANCE fields — method
-    (``"native"`` / ``"body"`` / ``None``), epic, the audit's
-    ``generated_at``, and a deterministic digest of the effective-membership
-    index that was consulted — so every caller can persist identical
-    provenance regardless of which path accepted (or rejected) the proof.
+    (``"native"`` / ``"native_chain"`` / ``"body"`` / ``None``), epic, the
+    audit's ``generated_at``, and a deterministic digest of the
+    effective-membership index that was consulted — so every caller can
+    persist identical provenance regardless of which path accepted (or
+    rejected) the proof.
     """
     if not isinstance(registered_epics, list) or stream_epic not in registered_epics:
         return {
@@ -202,29 +304,25 @@ def resolve_membership(
                 "digest": None,
                 "reason": None,
             }
-        return {
-            "valid": False,
-            "method": None,
-            "epic": native_parent_epic,
-            "generated_at": None,
-            "digest": None,
-            "reason": ("issue has a native parent epic that differs from the identity's exact registered stream epic"),
-        }
-    if isinstance(membership_report, dict) and not issue_stream_audit.membership_report_is_complete(membership_report):
-        # Same predicate as validate_membership_report (#8661): the flag must
-        # be boolean True and incomplete_nodes must be a list. A missing flag
-        # or the string "false" is unverified, not a finished traversal.
-        unread = issue_stream_audit.unread_membership_nodes(membership_report)
-        nodes_desc = ", ".join(f"#{n}" for n in sorted(unread)) if unread else "unknown"
-        return {
-            "valid": False,
-            "method": None,
-            "epic": None,
-            "generated_at": None,
-            "digest": None,
-            "reason": (f"fresh issue-stream membership audit traversal is incomplete (unread nodes: {nodes_desc})"),
-        }
-    validated_report = issue_stream_audit.validate_membership_report(membership_report, max_age_s)
+        if native_parent_epic in registered_epics:
+            return {
+                "valid": False,
+                "method": None,
+                "epic": native_parent_epic,
+                "generated_at": None,
+                "digest": None,
+                "reason": (
+                    "issue has a native parent epic that differs from the identity's exact registered stream epic"
+                ),
+            }
+        return _resolve_native_chain(
+            issue_number=issue_number,
+            stream_epic=stream_epic,
+            native_parent_epic=native_parent_epic,
+            membership_report=membership_report,
+            max_age_s=max_age_s,
+        )
+    validated_report, failure = _fresh_membership_audit(membership_report, max_age_s)
     if validated_report is None:
         return {
             "valid": False,
@@ -232,7 +330,7 @@ def resolve_membership(
             "epic": None,
             "generated_at": None,
             "digest": None,
-            "reason": "fresh issue-stream membership audit evidence is missing, stale, or malformed",
+            "reason": failure,
         }
     generated_at = validated_report.get("generated_at")
     index = validated_report.get("effective_membership") or {}
