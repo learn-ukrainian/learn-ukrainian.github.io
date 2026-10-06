@@ -56,15 +56,32 @@ class Component(Protocol):
 def admission_policy(specs: Mapping[str, dict]) -> tuple[list[dict], dict | None]:
     """Union copied component policies; competing table or corpus mappings refuse."""
     entries = {}
+    tables = {}
     corpus = None
     for component in sorted(specs):
         spec = specs[component]
         require(isinstance(spec.get("compatibility"), list), "component_policy")
         for entry in spec["compatibility"]:
-            require(isinstance(entry, dict) and {"store", "table"} <= entry.keys(), "component_policy")
-            key = (entry["store"], entry["table"])
+            require(isinstance(entry, dict) and {"store", "table", "source_id"} <= entry.keys(), "component_policy")
+            table = (entry["store"], entry["table"])
+            key = (*table, entry["source_id"])
             require(key not in entries or entries[key] == entry, "compatibility_conflict")
-            entries[key] = entry
+            if key not in entries:
+                for other in tables.get(table, []):
+                    # Separate register identities may partition one physical table.
+                    # The same source column must prove disjoint row membership;
+                    # overlapping or differently classified rows remain conflicts.
+                    require(
+                        entry.get("source_column") == other.get("source_column")
+                        and isinstance(entry.get("source_values"), list)
+                        and isinstance(other.get("source_values"), list)
+                        and bool(entry["source_values"])
+                        and bool(other["source_values"])
+                        and not set(entry["source_values"]) & set(other["source_values"]),
+                        "compatibility_conflict",
+                    )
+                tables.setdefault(table, []).append(entry)
+                entries[key] = entry
         mapping = spec.get("corpus")
         if mapping is not None:
             require(isinstance(mapping, dict) and bool(mapping), "component_policy")

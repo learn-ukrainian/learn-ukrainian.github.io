@@ -467,6 +467,16 @@ def test_cli_default_config_repeatable_selection_and_verify(bundle, monkeypatch,
         assert all(
             s in help_text for s in ("--components", "default:", "Examples:", "Outputs:", "Exit codes:", "Related:")
         )
+    from scripts.projects.open_model_data.review_build import components
+
+    import_module = components.import_module
+
+    def unavailable(target):
+        if target.endswith(".c9"):
+            raise ModuleNotFoundError(name=target)
+        return import_module(target)
+
+    monkeypatch.setattr(components, "import_module", unavailable)
     assert cli.main(["build", "--out", str(bundle["root"] / "SYNTHETIC-other"), "--components", "C9"]) == 1
     assert json.loads(capsys.readouterr().err)["error"] == "component_unavailable"
 

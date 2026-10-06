@@ -213,3 +213,27 @@ def test_library_build_loads_registered_policy_without_request_specs(bundle, mon
 def test_incomplete_component_policy_refuses(policy):
     with pytest.raises(BuildError, match="component_policy"):
         admission_policy({"C1": policy})
+
+
+@pytest.mark.parametrize("mutation", [None, "overlap", "different_column", "missing_values"])
+def test_distinct_sources_partition_one_table_without_relabeling(bundle, mutation):
+    original = copy.deepcopy(bundle["spec"]["compatibility"][0])
+    partition = {**original, "source_id": "synthetic_other", "source_values": ["SYNTHETIC other partition"]}
+    if mutation == "overlap":
+        partition["source_values"] = original["source_values"]
+    elif mutation == "different_column":
+        partition["source_column"] = "SYNTHETIC other column"
+    elif mutation == "missing_values":
+        del partition["source_values"]
+    specs = {"C1": {"compatibility": [original, partition]}, "C9": {"compatibility": [original]}}
+    if mutation:
+        with pytest.raises(BuildError, match="compatibility_conflict"):
+            admission_policy(specs)
+    else:
+        policies, corpus = admission_policy(specs)
+        assert policies == sorted([original, partition], key=lambda entry: entry["source_id"])
+        assert corpus is None
+        # Disjoint source ids do not permit conflicting policy for the same id.
+        specs["C9"]["compatibility"] = [{**partition, "role": "forbidden"}]
+        with pytest.raises(BuildError, match="compatibility_conflict"):
+            admission_policy(specs)

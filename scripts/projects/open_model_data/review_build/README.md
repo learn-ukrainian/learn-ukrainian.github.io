@@ -42,8 +42,11 @@ catalog's shared C6 instructions; both retain C6's UA-GEC admission rules.
    and quarantine mappings). Declare `spec["corpus"]` when using UA-GEC, with the
    split/document/author/layer/text column mapping. These declarations are copied
    and pinned with the spec; the gate unions only selected component policies.
-   Identical table entries are deduplicated; different entries for one
-   `(store, table)` refuse `compatibility_conflict`. Competing corpus mappings
+   Identical citation-role entries are deduplicated; different entries for one
+   `(store, table, source_id)` refuse `compatibility_conflict`. Separate source ids
+   may share a table only when the same source column proves disjoint
+   `source_values`; overlapping row membership refuses `compatibility_conflict`.
+   Competing corpus mappings
    refuse `corpus_conflict`. Attribution adapters are keyed by register `source_id` and
    authenticate complete bibliography mapping. Reuse a shared adapter instance
    when several components cite the same source.
