@@ -1,20 +1,28 @@
 """Fail the build when a hook grows a second shell parser (#9807).
 
-The check is structural. It resolves aliases to ``shlex.split`` and ``shlex.shlex``,
-imports and references of the explicit shell-parser libraries ``bashlex`` and
-``tree_sitter_bash``, and statically resolved ``bash -n`` / ``sh -n`` calls.
-``shlex.quote`` and ``shlex.join`` are output quoting and are allowed. Generic
-regexes, loops, and subprocess calls are not parsers.
+The check is structural and does not follow assignment flow. A name bound to
+the ``shlex`` module may appear only as ``quote`` or ``join`` attribute access;
+every other use of that name is a parser site. ``from shlex import split`` and
+``from shlex import shlex`` are always sites. Imports and references of
+``bashlex`` and ``tree_sitter_bash`` are sites. A literal argv whose program is
+``bash``, ``sh``, ``dash``, or ``zsh`` (or a path ending in one of those) and
+that requests a syntax check (``-n``, a short-option cluster containing ``n``,
+``--noexec``, or ``-o noexec``) is a site. ``shlex.quote`` and ``shlex.join``
+are output quoting and are allowed. Generic regexes, loops, and subprocess
+calls are not parsers.
 
 Handwritten scanners are not detected. The quote tracker in
 ``agents_extensions/shared/hooks/guard-secret-print.py`` (``_strip_shell_comments``
 and the sibling scanners listed in the slice-2b residual) is outside this
-guarantee. Slice 2b migrates those scanners; this module does not.
+guarantee. Slice 2b migrates those scanners; this module does not. ``exec``,
+``eval``, ``compile``, and ``importlib`` / ``__import__`` with a computed
+string are outside this guarantee.
 
 ``shell_shlex.py`` and ``shell_redirects.py`` are the shared parser boundary.
-Their private names are not importable outside that boundary. This module is a
-test: production hooks must not import it, and it is not a bash oracle deployed
-with them. There is no ``bash -n`` subprocess in this check.
+Outside those modules a name bound to either may appear only as a public
+export. This module is a test: production hooks must not import it, and it is
+not a bash oracle deployed with them. There is no ``bash -n`` subprocess in
+this check.
 """
 
 from __future__ import annotations
@@ -31,8 +39,10 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_PATH = REPO_ROOT / "tests" / "fixtures" / "hook_parser_sites_baseline.json"
 
-# Creation count. The frozen list may shrink as slice 2b deletes sites. It may
-# not grow: raising this constant is a policy change, not a refresh.
+# Creation count. The on-disk fixture may shrink as slice 2b deletes sites.
+# It may not grow or be replaced. ``CREATION_SITES``, below, is that frozen
+# set: a fixture site outside it fails even when the count stays at or below
+# this pin. Editing the constant is a policy change, not a refresh.
 BASELINE_SIZE_AT_CREATION = 6
 
 BOUNDARY_PATHS = frozenset(
@@ -103,19 +113,20 @@ WHITE_BOX_TESTS = frozenset(
 
 # Closed list. A new shell-parser dependency is a new site, not a silent miss.
 SHELL_PARSER_LIBRARIES = frozenset({"bashlex", "tree_sitter_bash"})
-SYNTAX_CHECK_SHELLS = frozenset({"bash", "sh"})
-SUBPROCESS_FUNCS = frozenset(
-    {"run", "call", "check_call", "check_output", "Popen", "getoutput", "getstatusoutput"}
-)
+SYNTAX_CHECK_SHELLS = frozenset({"bash", "sh", "dash", "zsh"})
+SHLEX_MODULE_ALLOWED_ATTRS = frozenset({"quote", "join"})
+DYNAMIC_MODULE_FUNCS = frozenset({"getattr", "vars", "globals", "__import__"})
+SUBPROCESS_FUNCS = frozenset({"run", "call", "check_call", "check_output", "Popen", "getoutput", "getstatusoutput"})
 OS_STRING_FUNCS = frozenset({"system", "popen"})
 OS_EXEC_LIST_FUNCS = frozenset({"execl", "execlp", "execle"})
 OS_EXEC_ARGV_FUNCS = frozenset({"execv", "execvp", "execvpe"})
 SHLEX_EXPORTS = frozenset({"split", "shlex", "quote", "join"})
 PARSER_SHLEX_ATTRS = frozenset({"split", "shlex"})
 
-# Helpers the hook trees import today. The scan must keep reaching them so a
-# parser site added there fails the baseline. Extras (package ``__init__`` files
-# loaded with those imports) are allowed.
+# Helpers the hook trees import today. The scan must keep reaching them, and
+# the modules they import at load time, so a parser site on that chain fails
+# the baseline. Extras (package ``__init__`` files loaded with those imports)
+# are allowed.
 REQUIRED_PRODUCTION_HELPERS = frozenset(
     {
         "scripts/common/repo_root.py",
@@ -140,6 +151,42 @@ class Site:
 
     def format(self) -> str:
         return f"{self.path}::{self.enclosing_symbol}::{self.site_identity}"
+
+
+# The six parser sites present when this check was created. The fixture must
+# stay a subset of this tuple. Replacement or regrowth requires editing it.
+CREATION_SITES: tuple[Site, ...] = (
+    Site(
+        "agents_extensions/shared/hooks/guard-primary-checkout-write.py",
+        "_sibling_git_invocation",
+        "shlex.split",
+    ),
+    Site(
+        "agents_extensions/shared/hooks/guard-primary-checkout-write.py",
+        "_tokenize",
+        "shlex.shlex",
+    ),
+    Site(
+        "agents_extensions/shared/hooks/guard-primary-checkout-write.py",
+        "main",
+        "shlex.split",
+    ),
+    Site(
+        "agents_extensions/shared/hooks/guard-public-github-text.py",
+        "invokes_gh",
+        "shlex.shlex",
+    ),
+    Site(
+        "agents_extensions/shared/hooks/guard-secret-print.py",
+        "_shell_script.decode",
+        "shlex.split",
+    ),
+    Site(
+        "agents_extensions/shared/hooks/heal-core-bare.py",
+        "_is_git_command",
+        "shlex.split",
+    ),
+)
 
 
 @dataclass(frozen=True)
@@ -248,9 +295,7 @@ def _is_parser_library(module: str | None) -> str | None:
 
 def _is_deployed_oracle(path: str) -> bool:
     name = path.rsplit("/", 1)[-1]
-    return _is_hook_path(path) and (
-        "bash_oracle" in name or "shell_oracle" in name or "syntax_oracle" in name
-    )
+    return _is_hook_path(path) and ("bash_oracle" in name or "shell_oracle" in name or "syntax_oracle" in name)
 
 
 def _executable_name(token: str) -> str:
@@ -281,9 +326,45 @@ def _syntax_identity(argv: tuple[str | None, ...]) -> str | None:
             return None
     if exe not in SYNTAX_CHECK_SHELLS:
         return None
-    if "-n" in rest:
+    if _argv_requests_syntax_check(rest):
         return f"syntax:{exe} -n"
     return None
+
+
+def _argv_requests_syntax_check(argv: list[str | None]) -> bool:
+    """True when a literal argv asks a shell not to execute.
+
+    A short-option cluster containing ``n`` (``-n``, ``-nc``, ``-xn``),
+    ``--noexec``, or ``-o noexec`` is a syntax check. This is syntactic: the
+    tokens are not interpreted as a shell command line.
+    """
+    for index, token in enumerate(argv):
+        if token is None:
+            continue
+        if token == "--noexec":
+            return True
+        if token == "-o" and index + 1 < len(argv) and argv[index + 1] == "noexec":
+            return True
+        if token.startswith("-") and not token.startswith("--") and "n" in token[1:]:
+            return True
+    return False
+
+
+def _direct_alias_pairs(target: ast.AST, value: ast.AST) -> list[tuple[str, str]]:
+    """Name-to-name aliases, including matching unpacks. No value flow."""
+    if isinstance(target, ast.Name) and isinstance(value, ast.Name):
+        return [(target.id, value.id)]
+    if (
+        isinstance(target, (ast.Tuple, ast.List))
+        and isinstance(value, (ast.Tuple, ast.List))
+        and len(target.elts) == len(value.elts)
+        and not any(isinstance(elt, ast.Starred) for elt in (*target.elts, *value.elts))
+    ):
+        pairs: list[tuple[str, str]] = []
+        for left, right in zip(target.elts, value.elts, strict=True):
+            pairs.extend(_direct_alias_pairs(left, right))
+        return pairs
+    return []
 
 
 def public_definitions(source: str) -> frozenset[str]:
@@ -297,7 +378,9 @@ def public_definitions(source: str) -> frozenset[str]:
         elif isinstance(node, ast.Assign):
             for target in node.targets:
                 names.update(_public_store_names(target))
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and not node.target.id.startswith("_"):
+        elif (
+            isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and not node.target.id.startswith("_")
+        ):
             names.add(node.target.id)
     return frozenset(names)
 
@@ -339,6 +422,9 @@ class _Analyzer:
         self.sites: list[Site] = []
         self.violations: list[Violation] = []
         self._symbols: list[str] = []
+        self._shlex_module_names: set[str] = set()
+        self._boundary_names: dict[str, str] = {}
+        self._dynamic_aliases: dict[str, str] = {}
 
     def symbol(self) -> str:
         return ".".join(self._symbols) if self._symbols else "<module>"
@@ -351,11 +437,69 @@ class _Analyzer:
         self.violations.append(Violation(kind, self.path, self.symbol(), detail))
 
     def analyze(self, tree: ast.Module) -> None:
+        self._prepare_closed_names(tree)
         module = _Scope(kind="module", parent=None, module=None)  # type: ignore[arg-type]
         module.module = module
         self._hoist(tree.body, module)
         for stmt in tree.body:
             self._visit_stmt(stmt, module)
+
+    def _prepare_closed_names(self, tree: ast.AST) -> None:
+        """Bind module and dynamic-call names for the whole file.
+
+        An assignment anywhere binds the name everywhere. Later or conditional
+        rebinding does not remove it, and a use before the assignment still
+        counts. This is syntactic; it does not track which branch runs.
+        """
+        self._shlex_module_names = set()
+        self._boundary_names = {}
+        self._dynamic_aliases = {name: name for name in DYNAMIC_MODULE_FUNCS}
+        pairs: list[tuple[str, str]] = []
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    self._note_closed_import(alias)
+            elif isinstance(node, ast.ImportFrom):
+                self._note_closed_import_from(node)
+            elif isinstance(node, ast.Assign):
+                for target in node.targets:
+                    pairs.extend(_direct_alias_pairs(target, node.value))
+            elif (isinstance(node, ast.AnnAssign) and node.value is not None) or isinstance(node, ast.NamedExpr):
+                pairs.extend(_direct_alias_pairs(node.target, node.value))
+        changed = True
+        while changed:
+            changed = False
+            for new_name, source_name in pairs:
+                if source_name in self._shlex_module_names and new_name not in self._shlex_module_names:
+                    self._shlex_module_names.add(new_name)
+                    changed = True
+                if source_name in self._boundary_names and new_name not in self._boundary_names:
+                    self._boundary_names[new_name] = self._boundary_names[source_name]
+                    changed = True
+                if source_name in self._dynamic_aliases and new_name not in self._dynamic_aliases:
+                    self._dynamic_aliases[new_name] = self._dynamic_aliases[source_name]
+                    changed = True
+
+    def _note_closed_import(self, alias: ast.alias) -> None:
+        if alias.name == "shlex":
+            self._shlex_module_names.add(alias.asname or "shlex")
+        elif alias.asname is None and alias.name.startswith("shlex."):
+            self._shlex_module_names.add("shlex")
+        leaf = alias.name.split(".")[-1]
+        if leaf not in PUBLIC_EXPORTS:
+            return
+        if alias.asname:
+            self._boundary_names[alias.asname] = leaf
+        elif alias.name == leaf:
+            self._boundary_names[leaf] = leaf
+
+    def _note_closed_import_from(self, node: ast.ImportFrom) -> None:
+        module_leaf = node.module.split(".")[-1] if node.module else ""
+        if module_leaf in PUBLIC_EXPORTS:
+            return
+        for alias in node.names:
+            if alias.name in PUBLIC_EXPORTS:
+                self._boundary_names[alias.asname or alias.name] = alias.name
 
     def _hoist(self, body: list[ast.stmt], scope: _Scope) -> None:
         for stmt in body:
@@ -498,7 +642,13 @@ class _Analyzer:
         for alias in node.names:
             if alias.name == "*":
                 continue
-            self._bind_twice(scope, node, alias.asname or alias.name, _UNKNOWN)
+            local = alias.asname or alias.name
+            # ``from package import shell_shlex as shared`` binds the module.
+            # ``from shell_shlex import name`` is handled before this method.
+            if alias.name in PUBLIC_EXPORTS:
+                self._bind_twice(scope, node, local, _Binding("boundary_module", (alias.name,)))
+            else:
+                self._bind_twice(scope, node, local, _UNKNOWN)
 
     def _bind_twice(self, scope: _Scope, node: ast.AST, name: str, binding: _Binding) -> None:
         # (0, 1) makes a function-local import visible to earlier uses in that
@@ -511,7 +661,9 @@ class _Analyzer:
             self._visit_function(node, scope)
         elif isinstance(node, ast.ClassDef):
             self._visit_class(node, scope)
-        elif isinstance(node, (ast.Import, ast.ImportFrom, ast.Global, ast.Nonlocal, ast.Pass, ast.Break, ast.Continue)):
+        elif isinstance(
+            node, (ast.Import, ast.ImportFrom, ast.Global, ast.Nonlocal, ast.Pass, ast.Break, ast.Continue)
+        ):
             return
         elif isinstance(node, ast.Assign):
             self._visit_assign(node, scope)
@@ -619,13 +771,25 @@ class _Analyzer:
             return _Binding("const_argv", argv=tuple(self._element_str(elt, scope) for elt in node.elts))
         return _UNKNOWN
 
-    def _visit_expr(self, node: ast.expr, scope: _Scope, *, as_call_func: bool = False) -> None:
+    def _visit_expr(
+        self,
+        node: ast.expr,
+        scope: _Scope,
+        *,
+        as_call_func: bool = False,
+        as_attribute_base: bool = False,
+    ) -> None:
         if isinstance(node, ast.Call):
             self._visit_call(node, scope)
         elif isinstance(node, ast.Attribute):
             self._visit_attribute(node, scope, as_call_func=as_call_func)
         elif isinstance(node, ast.Name):
-            self._visit_name(node, scope, as_call_func=as_call_func)
+            self._visit_name(
+                node,
+                scope,
+                as_call_func=as_call_func,
+                as_attribute_base=as_attribute_base,
+            )
         elif isinstance(node, ast.Lambda):
             self._visit_defaults(node.args, scope)
             child = _Scope(kind="function", parent=scope, module=scope.module)
@@ -637,6 +801,9 @@ class _Analyzer:
             self._visit_expr(node.value, scope)
             if isinstance(node.target, ast.Name):
                 scope.bind(node.lineno, node.target.col_offset, node.target.id, self._value_binding(node.value, scope))
+        elif isinstance(node, ast.Subscript):
+            self._note_mapping_boundary_lookup(node, scope)
+            self._generic(node, scope)
         else:
             self._generic(node, scope)
 
@@ -653,34 +820,100 @@ class _Analyzer:
                 self._visit_expr(keyword.value, scope)
 
     def _visit_attribute(self, node: ast.Attribute, scope: _Scope, *, as_call_func: bool) -> None:
+        if isinstance(node.value, ast.Name):
+            self._flag_shlex_module_value(node.value, scope, node.attr)
         self._note_boundary_attribute(node, scope)
         if not as_call_func:
             identity = _callable_identity(self._resolve(node, scope))
             if identity:
                 self.add_site(identity)
-        self._visit_expr(node.value, scope)
+        self._visit_expr(node.value, scope, as_attribute_base=True)
 
-    def _visit_name(self, node: ast.Name, scope: _Scope, *, as_call_func: bool) -> None:
+    def _visit_name(
+        self,
+        node: ast.Name,
+        scope: _Scope,
+        *,
+        as_call_func: bool,
+        as_attribute_base: bool = False,
+    ) -> None:
+        if isinstance(node.ctx, ast.Load) and not as_attribute_base:
+            self._flag_shlex_module_value(node, scope, None)
+            if self.enforce_exports and node.id in self._boundary_names:
+                self.add_violation("dynamic access", f"module {self._boundary_names[node.id]}")
         if as_call_func or not isinstance(node.ctx, ast.Load):
             return
         identity = _callable_identity(self._resolve(node, scope))
         if identity:
             self.add_site(identity)
 
+    def _flag_shlex_module_value(self, node: ast.Name, scope: _Scope, attr: str | None) -> None:
+        if not self.record_sites or node.id not in self._shlex_module_names:
+            return
+        if attr in SHLEX_MODULE_ALLOWED_ATTRS:
+            return
+        if attr is not None:
+            resolved = _resolve_attribute(self._resolve(node, scope), attr)
+            if _callable_identity(resolved):
+                return
+        self.add_site(f"shlex.{attr}" if attr else "shlex")
+
+    def _boundary_of(self, node: ast.expr, scope: _Scope) -> str | None:
+        if isinstance(node, ast.Name) and node.id in self._boundary_names:
+            return self._boundary_names[node.id]
+        binding = self._resolve(node, scope)
+        if binding.kind == "boundary_module":
+            return binding.detail[0]
+        return None
+
     def _note_boundary_attribute(self, node: ast.Attribute, scope: _Scope) -> None:
         if not self.enforce_exports:
             return
-        base = self._resolve(node.value, scope)
-        if base.kind != "boundary_module":
+        module = self._boundary_of(node.value, scope)
+        if module is None:
             return
-        module = base.detail[0]
         if node.attr.startswith("__") and node.attr.endswith("__"):
             self.add_violation("dynamic access", f"{module}.{node.attr}")
         elif node.attr not in PUBLIC_EXPORTS[module]:
             self.add_violation("private attribute", f"{module}.{node.attr}")
 
+    def _dynamic_canonical(self, node: ast.expr) -> str | None:
+        if isinstance(node, ast.Name) and node.id in self._dynamic_aliases:
+            return self._dynamic_aliases[node.id]
+        return None
+
+    def _argument_names_boundary(self, node: ast.expr, scope: _Scope) -> str | None:
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            leaf = node.value.rsplit(".", 1)[-1]
+            if leaf in PUBLIC_EXPORTS:
+                return leaf
+            return None
+        return self._boundary_of(node, scope)
+
+    def _note_mapping_boundary_lookup(self, node: ast.Subscript, scope: _Scope) -> None:
+        """``globals()['shell_shlex']`` and ``vars()['shell_redirects']`` name the module."""
+        if not self.enforce_exports or not isinstance(node.value, ast.Call):
+            return
+        canonical = self._dynamic_canonical(node.value.func)
+        if canonical not in {"globals", "vars"}:
+            return
+        module = self._argument_names_boundary(node.slice, scope)
+        if module is not None:
+            self.add_violation("dynamic access", f"{canonical} {module}")
+
+    def _note_dynamic_boundary_arguments(self, node: ast.Call, scope: _Scope, canonical: str) -> None:
+        if not self.enforce_exports:
+            return
+        values = list(node.args)
+        values.extend(keyword.value for keyword in node.keywords if keyword.value is not None)
+        for value in values:
+            module = self._argument_names_boundary(value, scope)
+            if module is not None:
+                self.add_violation("dynamic access", f"{canonical} {module}")
+
     def _special_call(self, node: ast.Call, scope: _Scope) -> str | None:
-        if self._is_unbound_name(node.func, scope, "getattr") and node.args:
+        canonical = self._dynamic_canonical(node.func)
+        if canonical == "getattr" and node.args:
             target = self._resolve(node.args[0], scope)
             attr = self._const_str(node.args[1], scope) if len(node.args) > 1 else None
             if target.kind == "boundary_module" and self.enforce_exports:
@@ -691,6 +924,12 @@ class _Analyzer:
             elif target.kind == "parser_lib":
                 library = target.detail[0]
                 return f"{library}.{attr}" if attr else f"import:{library}"
+            self._note_dynamic_boundary_arguments(node, scope, "getattr")
+            return None
+        if canonical in {"vars", "globals", "__import__"}:
+            self._note_dynamic_boundary_arguments(node, scope, canonical)
+            if canonical == "__import__" and node.args:
+                self._note_imported_string(self._const_str(node.args[0], scope))
             return None
         if self._is_unbound_name(node.func, scope, "__import__") and node.args:
             self._note_imported_string(self._const_str(node.args[0], scope))
@@ -900,16 +1139,71 @@ def _module_file(module: str, exists) -> str | None:
     return None
 
 
-def _imported_modules(tree: ast.AST) -> list[tuple[str | None, tuple[str, ...], int]]:
-    found: list[tuple[str | None, tuple[str, ...], int]] = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
-            for alias in node.names:
-                found.append((alias.name, (), 0))
-        elif isinstance(node, ast.ImportFrom):
-            names = tuple(alias.name for alias in node.names if alias.name != "*")
-            found.append((node.module, names, node.level))
+def _import_facts(tree: ast.AST) -> list[tuple[str | None, tuple[str, ...], int, bool]]:
+    """Imports as ``(module, names, level, inside_function)``.
+
+    Class bodies run at import time, so they are not marked as function-local.
+    """
+    found: list[tuple[str | None, tuple[str, ...], int, bool]] = []
+
+    def walk(node: ast.AST, inside_function: bool) -> None:
+        for child in ast.iter_child_nodes(node):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+                walk(child, True)
+                continue
+            if isinstance(child, ast.ClassDef):
+                walk(child, inside_function)
+                continue
+            if isinstance(child, ast.Import):
+                for alias in child.names:
+                    found.append((alias.name, (), 0, inside_function))
+                continue
+            if isinstance(child, ast.ImportFrom):
+                names = tuple(alias.name for alias in child.names if alias.name != "*")
+                found.append((child.module, names, child.level, inside_function))
+                continue
+            walk(child, inside_function)
+
+    walk(tree, False)
     return found
+
+
+def _package_directory(path: str) -> str:
+    return path.rsplit("/", 1)[0] if "/" in path else ""
+
+
+def _resolve_imported_module(importer: str, module: str | None, level: int) -> str | None:
+    """Resolve ``module`` from ``importer``, applying a relative import level."""
+    if level <= 0:
+        return module
+    parts = importer.split("/")[:-1]
+    keep = len(parts) - level + 1
+    if keep < 0:
+        return None
+    base = parts[:keep]
+    if module:
+        base.extend(module.split("."))
+    if not base:
+        return None
+    return ".".join(base)
+
+
+def _follow_helper_import(importer: str, helper: str, *, inside_function: bool, level: int) -> bool:
+    """Decide whether a helper import extends the hook's parser chain.
+
+    Hook files start a chain from every import, including imports written
+    inside functions. A reached helper then follows its import-time imports
+    and its relative or same-package imports, transitively and cycle-safe.
+    A function-local absolute import that leaves the helper's package is not
+    followed: the session-start hook reaches application modules that already
+    call ``shlex.split``, and those calls are not hook parsers.
+    """
+    if _is_hook_path(importer):
+        return True
+    if not inside_function or level > 0:
+        return True
+    package = _package_directory(importer)
+    return bool(package) and helper.startswith(package + "/")
 
 
 def _helper_paths(module: str | None, names: tuple[str, ...], exists) -> list[str]:
@@ -951,22 +1245,39 @@ def analyze_files(sources: dict[str, str], *, root: Path | None = None) -> Check
     helpers: set[str] = set()
     extra: list[Violation] = []
     seen = set(hook_files)
-    for path in hook_files:
+    queue = list(hook_files)
+    while queue:
+        path = queue.pop(0)
         source = sources.get(path)
+        if source is None and root is not None and exists(path):
+            try:
+                source = _read(root / path)
+            except (OSError, UnicodeError):
+                continue
+            sources[path] = source
         if source is None:
             continue
         try:
             tree = ast.parse(source, filename=path)
         except SyntaxError:
             continue
-        for module, names, _level in _imported_modules(tree):
-            for helper in _helper_paths(module, names, exists):
+        for module, names, level, inside_function in _import_facts(tree):
+            resolved = _resolve_imported_module(path, module, level)
+            if resolved is None or _is_test_module(resolved):
+                continue
+            for helper in _helper_paths(resolved, names, exists):
                 if helper in seen or helper in BOUNDARY_PATHS:
                     continue
-                # Direct imports only. Following every helper import would treat
-                # unrelated production modules as hook parsers.
+                if not _follow_helper_import(
+                    path,
+                    helper,
+                    inside_function=inside_function,
+                    level=level,
+                ):
+                    continue
                 seen.add(helper)
                 helpers.add(helper)
+                queue.append(helper)
     ordered_helpers = tuple(sorted(helpers))
     sites: list[Site] = []
     violations = list(extra)
@@ -1022,15 +1333,25 @@ def analyze_repository(root: Path = REPO_ROOT) -> Check:
 def load_baseline(path: Path = FIXTURE_PATH) -> tuple[Site, ...]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if payload.get("pinned_size_at_creation") != BASELINE_SIZE_AT_CREATION:
-        raise AssertionError(
-            f"fixture pin {payload.get('pinned_size_at_creation')} != {BASELINE_SIZE_AT_CREATION}"
-        )
+        raise AssertionError(f"fixture pin {payload.get('pinned_size_at_creation')} != {BASELINE_SIZE_AT_CREATION}")
     if frozenset(payload.get("boundary", ())) != BOUNDARY_PATHS:
         raise AssertionError(f"fixture boundary {payload.get('boundary')} != {sorted(BOUNDARY_PATHS)}")
     sites = []
     for item in payload["sites"]:
         sites.append(Site(item["path"], item["enclosing_symbol"], item["site_identity"]))
     return tuple(sites)
+
+
+def outside_creation_set(baseline: tuple[Site, ...] | list[Site]) -> list[str]:
+    """Sites a rewritten fixture may not introduce without editing ``CREATION_SITES``."""
+    creation = Counter(site.key() for site in CREATION_SITES)
+    found = Counter(site.key() for site in baseline)
+    reasons: list[str] = []
+    for key in sorted(found - creation):
+        count = found[key] - creation[key]
+        site = Site(*key)
+        reasons.extend([f"outside creation set: {site.format()}"] * count)
+    return reasons
 
 
 def compare_baseline(check: Check, baseline: tuple[Site, ...] | list[Site], *, pinned_size: int) -> list[str]:
@@ -1050,11 +1371,15 @@ def compare_baseline(check: Check, baseline: tuple[Site, ...] | list[Site], *, p
     return reasons
 
 
-def _overlay_reasons(sources: dict[str, str], baseline: list[Site], *, pinned_size: int = BASELINE_SIZE_AT_CREATION) -> list[str]:
+def _overlay_reasons(
+    sources: dict[str, str], baseline: list[Site], *, pinned_size: int = BASELINE_SIZE_AT_CREATION
+) -> list[str]:
     return compare_baseline(analyze_files(sources), baseline, pinned_size=pinned_size)
 
 
-def _single(source: str, baseline: list[Site] | None = None, *, path: str = "agents_extensions/shared/hooks/mutant.py") -> list[str]:
+def _single(
+    source: str, baseline: list[Site] | None = None, *, path: str = "agents_extensions/shared/hooks/mutant.py"
+) -> list[str]:
     return _overlay_reasons({path: source}, [] if baseline is None else baseline)
 
 
@@ -1066,8 +1391,11 @@ def test_observed_sites_match_frozen_baseline() -> None:
     check = analyze_repository()
     baseline = load_baseline()
     reasons = compare_baseline(check, baseline, pinned_size=BASELINE_SIZE_AT_CREATION)
+    reasons.extend(outside_creation_set(baseline))
     observed = "\n".join(site.format() for site in check.sites)
     assert reasons == [], "\n".join(reasons) + "\nobserved:\n" + observed
+    assert len(CREATION_SITES) == BASELINE_SIZE_AT_CREATION
+    assert Counter(site.key() for site in baseline) <= Counter(site.key() for site in CREATION_SITES)
     assert len(baseline) <= BASELINE_SIZE_AT_CREATION
     assert not any(site.path in BOUNDARY_PATHS for site in check.sites)
 
@@ -1234,7 +1562,9 @@ def test_same_count_replacement_fails() -> None:
     assert len(check.sites) == len(baseline)
     reasons = compare_baseline(check, baseline, pinned_size=BASELINE_SIZE_AT_CREATION)
     assert any(reason.endswith("::parse::shlex.shlex") and reason.startswith("new parser site") for reason in reasons)
-    assert any(reason.endswith("::parse::shlex.split") and reason.startswith("stale baseline site") for reason in reasons)
+    assert any(
+        reason.endswith("::parse::shlex.split") and reason.startswith("stale baseline site") for reason in reasons
+    )
     assert not any(reason.startswith("baseline growth") for reason in reasons)
 
 
@@ -1269,7 +1599,9 @@ def test_baseline_growth_fails() -> None:
     check = analyze_files(sources)
     assert len(check.sites) == len(baseline) == BASELINE_SIZE_AT_CREATION + 1
     reasons = compare_baseline(check, baseline, pinned_size=BASELINE_SIZE_AT_CREATION)
-    assert reasons == [f"baseline growth: {BASELINE_SIZE_AT_CREATION + 1} sites exceed pinned creation size {BASELINE_SIZE_AT_CREATION}"]
+    assert reasons == [
+        f"baseline growth: {BASELINE_SIZE_AT_CREATION + 1} sites exceed pinned creation size {BASELINE_SIZE_AT_CREATION}"
+    ]
 
 
 def test_full_baseline_shrink_passes() -> None:
@@ -1305,7 +1637,10 @@ def test_unreadable_hook_file_fails(tmp_path: Path) -> None:
     target.parent.mkdir(parents=True)
     target.write_bytes(b"\xff\xfe not utf-8")
     check = analyze_repository(tmp_path)
-    assert any(violation.kind == "unreadable hook file" and violation.path.endswith("broken.py") for violation in check.violations)
+    assert any(
+        violation.kind == "unreadable hook file" and violation.path.endswith("broken.py")
+        for violation in check.violations
+    )
 
 
 def test_syntax_error_fails() -> None:
@@ -1374,3 +1709,156 @@ def test_assignment_alias_of_split_fails_and_quote_alias_passes() -> None:
 def test_shell_parser_library_reference_fails(source: str) -> None:
     reasons = _single(source)
     assert any(reason.startswith("new parser site:") for reason in reasons)
+
+
+def test_shlex_module_used_before_assignment_fails() -> None:
+    source = "import shlex\n\ndef parse(command):\n    return lexer.split(command)\n\nlexer = shlex\n"
+    reasons = _single(source)
+    assert any(reason.endswith("::parse::shlex.split") for reason in reasons)
+
+
+def test_unpacked_shlex_module_fails() -> None:
+    source = "import shlex\n\nlexer, = (shlex,)\n\ndef parse(command):\n    return lexer.split(command)\n"
+    reasons = _single(source)
+    assert any(reason.endswith("::parse::shlex.split") for reason in reasons)
+
+
+def test_conditional_rebinding_of_shlex_module_fails() -> None:
+    source = (
+        "import shlex\n"
+        "\n"
+        "def parse(command):\n"
+        "    lexer = shlex\n"
+        "    if command is None:\n"
+        "        lexer = None\n"
+        "    else:\n"
+        "        return lexer.split(command)\n"
+    )
+    reasons = _single(source)
+    assert any(reason.endswith("::parse::shlex.split") for reason in reasons)
+
+
+def test_relative_production_helper_parser_site_fails() -> None:
+    sources = {
+        "scripts/hooks/guard.py": "from ..parsing.review_helper import parse\n",
+        "scripts/parsing/review_helper.py": ("import shlex\n\ndef parse(command):\n    return shlex.split(command)\n"),
+    }
+    check = analyze_files(sources)
+    assert "scripts/parsing/review_helper.py" in check.production_helpers
+    reasons = compare_baseline(check, [], pinned_size=BASELINE_SIZE_AT_CREATION)
+    assert any(reason == "new parser site: scripts/parsing/review_helper.py::parse::shlex.split" for reason in reasons)
+
+
+def test_transitive_helper_wrapper_parser_site_fails() -> None:
+    sources = {
+        "scripts/hooks/guard.py": "from ..parsing.wrapper import parse\n",
+        "scripts/parsing/wrapper.py": "from scripts.parsing.review_helper import parse\n",
+        "scripts/parsing/review_helper.py": ("import shlex\n\ndef parse(command):\n    return shlex.split(command)\n"),
+    }
+    check = analyze_files(sources)
+    assert "scripts/parsing/wrapper.py" in check.production_helpers
+    assert "scripts/parsing/review_helper.py" in check.production_helpers
+    reasons = compare_baseline(check, [], pinned_size=BASELINE_SIZE_AT_CREATION)
+    assert any(reason == "new parser site: scripts/parsing/review_helper.py::parse::shlex.split" for reason in reasons)
+
+
+def test_package_import_of_boundary_module_private_attribute_fails() -> None:
+    source = (
+        "from agents_extensions.shared.hooks import shell_shlex as shared\n"
+        "\n"
+        "def hidden(command):\n"
+        "    return shared._expose_backtick_bodies(command)\n"
+    )
+    reasons = _single(source)
+    assert any(
+        "private attribute: " in reason and "shell_shlex._expose_backtick_bodies" in reason for reason in reasons
+    )
+
+
+def test_vars_of_boundary_module_fails() -> None:
+    source = (
+        "from agents_extensions.shared.hooks import shell_shlex as shared\n"
+        "\n"
+        "def hidden(command):\n"
+        "    return vars(shared)['_expose_backtick_bodies'](command)\n"
+    )
+    reasons = _single(source)
+    assert any("dynamic access: " in reason and "shell_shlex" in reason for reason in reasons)
+    assert any(
+        "_expose_backtick_bodies" in reason or "vars shell_shlex" in reason or "module shell_shlex" in reason
+        for reason in reasons
+    )
+
+
+def test_getattr_alias_of_boundary_module_fails() -> None:
+    source = (
+        "from agents_extensions.shared.hooks import shell_shlex as shared\n"
+        "\n"
+        "lookup = getattr\n"
+        "\n"
+        "def hidden(command):\n"
+        "    return lookup(shared, '_expose_backtick_bodies')(command)\n"
+    )
+    reasons = _single(source)
+    assert any("dynamic access: " in reason and "shell_shlex" in reason for reason in reasons)
+    assert any("_expose_backtick_bodies" in reason or "getattr shell_shlex" in reason for reason in reasons)
+
+
+def test_combined_short_option_syntax_check_fails() -> None:
+    source = (
+        "import subprocess\n"
+        "\n"
+        "def check(command):\n"
+        "    subprocess.run(['bash', '-nc', command])\n"
+        "    subprocess.run(['sh', '-nc', command])\n"
+        "    subprocess.run(['/usr/bin/bash', '-xn', command])\n"
+        "    subprocess.run(['dash', '--noexec', command])\n"
+        "    subprocess.run(['zsh', '-o', 'noexec', command])\n"
+    )
+    reasons = _single(source)
+    assert any(reason.endswith("::check::syntax:bash -n") for reason in reasons)
+    assert any(reason.endswith("::check::syntax:sh -n") for reason in reasons)
+    assert sum(reason.endswith("::check::syntax:bash -n") for reason in reasons) >= 2
+    assert any(reason.endswith("::check::syntax:dash -n") for reason in reasons)
+    assert any(reason.endswith("::check::syntax:zsh -n") for reason in reasons)
+
+
+def test_globals_subscript_names_boundary_module_fails() -> None:
+    source = (
+        "read = globals\n"
+        "\n"
+        "def hidden():\n"
+        "    return read()['shell_shlex']._tokenize('a')\n"
+        "\n"
+        "def other():\n"
+        "    return vars()['shell_redirects']\n"
+    )
+    reasons = _single(source)
+    assert any("dynamic access: " in reason and "globals shell_shlex" in reason for reason in reasons)
+    assert any("dynamic access: " in reason and "vars shell_redirects" in reason for reason in reasons)
+
+
+def test_function_local_same_package_helper_parser_site_fails() -> None:
+    sources = {
+        "scripts/hooks/guard.py": "from ..parsing.wrapper import parse\n",
+        "scripts/parsing/wrapper.py": ("def load():\n    from .review_helper import parse\n    return parse\n"),
+        "scripts/parsing/review_helper.py": ("import shlex\n\ndef parse(command):\n    return shlex.split(command)\n"),
+    }
+    check = analyze_files(sources)
+    assert "scripts/parsing/review_helper.py" in check.production_helpers
+    reasons = compare_baseline(check, [], pinned_size=BASELINE_SIZE_AT_CREATION)
+    assert any(reason == "new parser site: scripts/parsing/review_helper.py::parse::shlex.split" for reason in reasons)
+
+
+def test_bash_command_string_is_not_a_syntax_check() -> None:
+    source = "import subprocess\n\ndef run(command):\n    subprocess.run(['bash', '-c', command])\n"
+    assert _single(source) == []
+
+
+def test_fixture_replacement_outside_creation_set_fails() -> None:
+    rewritten = list(CREATION_SITES)
+    rewritten[0] = _site("agents_extensions/shared/hooks/other.py", "parse", "shlex.split")
+    assert len(rewritten) == BASELINE_SIZE_AT_CREATION
+    reasons = outside_creation_set(rewritten)
+    assert any(reason.startswith("outside creation set:") for reason in reasons)
+    assert not any(reason.startswith("baseline growth") for reason in reasons)
