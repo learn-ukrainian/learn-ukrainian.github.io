@@ -9,6 +9,7 @@ from pathlib import Path
 from .build import execute
 from .components import REGISTRY, load_components, merge_adapters
 from .errors import BuildError
+from .export import export_build
 from .output import OutputGuard
 from .request import init_request, read_request, repository_root
 
@@ -23,9 +24,12 @@ EPILOG = """Examples:
   .venv/bin/python -m scripts.projects.open_model_data.review_build build --out "$TMPDIR/rb1" --components C9
   .venv/bin/python -m scripts.projects.open_model_data.review_build build --config "$TMPDIR/request.json" --out "$TMPDIR/rb1"
   .venv/bin/python -m scripts.projects.open_model_data.review_build verify --config "$TMPDIR/request.json" --out "$TMPDIR/rb1"
+  .venv/bin/python -m scripts.projects.open_model_data.review_build export --from "$TMPDIR/rb1" --out "$TMPDIR/rb1-subset" --include source_id=ulif
 Outputs: init-request creates a 0600 location-only request in a 0700 parent; build writes private JSONL records, candidates, attribution notices, accounting,
   metrics, manifest and README under --out only; verify compares all pinned artifacts
   and generates private generic must-fail inputs under --out/mutation-fixtures.
+  Export writes unchanged selected record bytes, accounting, licence notices,
+  a pinned register and its own manifest; it never reads live build inputs.
   Errors write tracebacks only to --out/logs after the output guard succeeds. No DB updates.
 Exit codes: 0 = build/verification succeeded; 1 = a gate or input failed; 2 = CLI usage refused.
 Related: docs/projects/open-model-data/REVIEW_BUILD.md; issue #9817, epic #6321.
@@ -45,7 +49,9 @@ def parser() -> Parser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     commands = result.add_subparsers(
-        dest="command", required=True, help="init-request (locations), build (write) or verify (re-read and compare)"
+        dest="command",
+        required=True,
+        help="init-request (locations), build (write), verify (compare) or export (filter)",
     )
     initialize = commands.add_parser(
         "init-request",
@@ -88,6 +94,37 @@ def parser() -> Parser:
             type=Path,
             help="Required host-only output directory outside all checkouts, e.g. $TMPDIR/rb1 (0700)",
         )
+    export = commands.add_parser(
+        "export",
+        description="Export a subset of an already verified private build.\n"
+        "Use the build's pinned register; never for uploads or live source extraction.",
+        epilog=EPILOG,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        help="Filter a verified build by source, licence reference or permission status",
+    )
+    export.add_argument(
+        "--from",
+        dest="build",
+        required=True,
+        type=Path,
+        help="Verified build directory, e.g. $TMPDIR/rb1; requires a matching verification receipt",
+    )
+    export.add_argument(
+        "--out",
+        required=True,
+        type=Path,
+        help="Empty private export directory outside checkouts and the input build, e.g. $TMPDIR/rb1-subset",
+    )
+    for flag in ("include", "exclude"):
+        export.add_argument(
+            f"--{flag}",
+            action="append",
+            default=[],
+            metavar="KEY=VALUE",
+            help=f"Repeatable {flag} criterion: source_id, licence_ref or permission_status; "
+            "e.g. source_id=ulif (default: none). Values within a key are alternatives; "
+            "include keys combine with AND; any exclude match drops the whole record.",
+        )
     return result
 
 
@@ -99,7 +136,15 @@ def main(argv: list[str] | None = None, *, _test_components=None) -> int:
             init_request(args.path)
             print(json.dumps({"status": "request_initialized"}, sort_keys=True))
             return 0
-        output = OutputGuard(args.out, (Path(__file__).resolve().parents[4],))
+        protected = (Path(__file__).resolve().parents[4],)
+        if args.command == "export":
+            protected += (args.build.resolve(),)
+        output = OutputGuard(args.out, protected)
+        if args.command == "export":
+            result = export_build(args.build, output, include=args.include, exclude=args.exclude)
+            print(json.dumps(result, sort_keys=True))
+            return 0
+        output.write("verification.json", b'{"schema":"omd-review-verification.v1","status":"unverified"}\n')
         read_request(args.config)
         selected = args.components if args.components is not None else sorted(REGISTRY)
         loaded = load_components(selected, _test_overrides=_test_components)
@@ -116,7 +161,7 @@ def main(argv: list[str] | None = None, *, _test_components=None) -> int:
         return 0
     except Exception as exc:
         error = exc if isinstance(exc, BuildError) else BuildError("build_failure")
-        if output is not None:
+        if output is not None and error.code not in {"export_overlap", "export_output_not_empty"}:
             try:
                 output.write("logs/failure.txt", traceback.format_exc().encode())
             except Exception:

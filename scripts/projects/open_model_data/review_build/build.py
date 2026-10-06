@@ -50,12 +50,21 @@ def prepare(candidates: list[Candidate], gate: Gate) -> list[Candidate]:
 
 
 def artifacts(
-    config: dict, candidates: list[Candidate], reader: SnapshotReader, catalog: Catalog, resolver: Resolver, pins: dict
+    config: dict,
+    candidates: list[Candidate],
+    reader: SnapshotReader,
+    catalog: Catalog,
+    resolver: Resolver,
+    pins: dict,
+    register_bytes: bytes,
 ) -> dict[str, bytes]:
     gate = Gate(reader, catalog, resolver, config["components"])
     effective = prepare(candidates, gate)
     records, report = gate.run(effective)
-    files = {"candidates.jsonl": _jsonl([asdict(c) for c in sorted(effective, key=record_id)])}
+    files = {
+        "candidates.jsonl": _jsonl([asdict(c) for c in sorted(effective, key=record_id)]),
+        "permissions-register.yaml": register_bytes,
+    }
     by_component = defaultdict(list)
     for record in records:
         by_component[record["component"]].append(record)
@@ -258,6 +267,8 @@ def execute(
     component_objects: dict[str, Component] | None = None,
 ) -> dict:
     """Read location-only v2 input and copy policy exclusively from component objects."""
+    # An interrupted rebuild or failed re-verification cannot retain old proof.
+    out.write("verification.json", canonical({"schema": "omd-review-verification.v1", "status": "unverified"}) + b"\n")
     config_bytes, request = read_request(config_path)
     root = config_path.parent
 
@@ -316,7 +327,7 @@ def execute(
         require(digest(canonical(config["components"])) == pins["component_specs"], "spec_mutated")
         require(digest(canonical(request)) == pins["request"], "spec_mutated")
         pins["candidates"] = digest(candidates_bytes)
-        result = artifacts(config, candidates, reader, catalog, resolver, pins)
+        result = artifacts(config, candidates, reader, catalog, resolver, pins, register_bytes)
         if verify:
             require(out.read("manifest.json") == result["manifest.json"], "artifact_mismatch")
             for name, content in sorted(result.items()):
@@ -338,6 +349,17 @@ def execute(
                 candidates,
                 out,
                 Gate(reader, catalog, resolver, config["components"]),
+            )
+            out.write(
+                "verification.json",
+                canonical(
+                    {
+                        "schema": "omd-review-verification.v1",
+                        "build_sha256": digest(result["manifest.json"]),
+                        "files": {name: digest(content) for name, content in sorted(result.items())},
+                    }
+                )
+                + b"\n",
             )
         else:
             for name, content in sorted(result.items()):

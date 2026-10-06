@@ -335,3 +335,48 @@ with a private payload, stable name, expected error code and gate probe. CLI
 success, a different refusal, duplicate names or an empty generator fail verification.
 Payloads and `component-results.json` stay under the guarded host-only output.
 Component-specific fixture definitions stay with WP1–WP6.
+
+## Exporting by source, licence or permission status
+
+`export` consumes an existing verified build, without reading its request,
+databases or live register. New builds retain the exact register bytes as
+`permissions-register.yaml`, pinned in `manifest.json`. A successful `verify`
+writes `verification.json` with the manifest hash and every verified artifact's
+hash (including the private manifest). Starting a build or another verification
+invalidates the previous receipt; failed or interrupted runs cannot leave
+usable old proof. Older builds without a pinned register and receipt must be
+rebuilt and verified before export. The receipt is local verification evidence,
+not a signature against an owner who can rewrite the entire build and receipt.
+
+```bash
+.venv/bin/python -m scripts.projects.open_model_data.review_build export --from "$TMPDIR/rb1-c9" --out "$TMPDIR/rb1-copy"
+.venv/bin/python -m scripts.projects.open_model_data.review_build export --from "$TMPDIR/rb1" --out "$TMPDIR/rb1-subset" --include source_id=ulif
+.venv/bin/python -m scripts.projects.open_model_data.review_build export --from "$TMPDIR/rb1" --out "$TMPDIR/rb1-subset" --exclude permission_status=none
+```
+
+`--include KEY=VALUE` and `--exclude KEY=VALUE` are repeatable. The three keys are
+`source_id` (register `id`), `licence_ref` (the exact provenance reference,
+`permissions-register.yaml#<id>; <terms.licence.name>`), and `permission_status`
+(the register's recorded status). Quote an entire licence criterion containing
+spaces, for example `--include 'licence_ref=permissions-register.yaml#synthetic; SYNTHETIC licence'`.
+Values within one include key are alternatives; different include keys combine
+with AND. Any exclude match wins. Every provenance entry must pass: a record
+citing any excluded source is dropped whole, including its otherwise allowed
+values. Unknown source identity, inconsistent licence references, or missing
+metadata for a requested filter refuse export. No licence or permission rules
+apply unless explicitly requested; this does not choose licence tiers or alter
+the first release.
+
+The output guard applies to both build and export directories. The destination
+must be empty, outside all checkouts, and neither overlap nor contain the input
+build. Export verifies the receipt and pinned bytes before writing records.
+Selected records retain their original bytes and ordering; no-filter exports
+are byte-identical in every component's records. The export has its own
+`manifest.json` with input build hash, register hash, normalized filter,
+kept/dropped/counted record totals per component and source, and output hashes.
+`accounting.json` carries those export counts rather than original unit admission
+counts. Each record counts once per cited source, so mixed-source records count
+toward several source totals. `licence-notices.jsonl` covers only kept records'
+sources and attribution variants; a full pinned register remains available for
+provenance. No candidates or unfiltered build metrics are copied. The exported
+artifact remains `review_only`, with no new training-readiness claim.
