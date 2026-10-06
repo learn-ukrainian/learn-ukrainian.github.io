@@ -1,48 +1,82 @@
-# WP6 private extraction and receipts
+# WP6: dual book-row span selection (private review only)
 
-C6b accounts for all 342 `style_guide` rows. Missing positive page and section
-withholds as `locator_unavailable`. No automatic semantic pair parser is used:
-the packet contains a reference to the complete cited passage, and the two seats
-select exact rejected/recommended spans. Without a receipt the row is pending.
-Only a jointly approved, explicitly calque-marked pair can be accepted.
+The CLI-independent helpers `batches(rows)`, `write_packets(rows, root)` and
+`validate_receipts(batch, receipts)` live in `antonenko.py`. The driver runs the
+seats; extractors never call a model or write Ukrainian text.
 
-C7's initial **candidate** census contains 20,162 distinct exact SUM-11
-headwords per book row, anchored at their first whole-token occurrence. It scans
-the entire passage, rather than only its title. This is a conservative superset,
-not the approved design's semantic denominator of forms the book names as wrong.
-That denominator remains unknown until the driver adjudicates and reconciles the
-census. Neither the candidate count nor a passing structural gate establishes
-C7 semantic completeness. No records are admitted on headword matching alone.
+The frozen accounting census is 342 `style_guide` rows. Only the 279 with a
+positive printed page or nonempty section enter packets; the other 63 remain
+withheld `locator_unavailable`. Packet batches contain at most 20 located rows,
+ordered by row id. Each row includes its id, locator, complete verbatim text and
+UTF-8 text SHA-256. `batch_sha256` hashes canonical JSON excluding that member.
+The output guard requires a private directory outside every Git checkout.
 
-Both ids are already registered in the framework's closed registry. Each exports
-`COMPONENT`; shared objects in `antonenko.py` prevent competing book adapters.
-The integration owner must reconcile the ULIF/VESUM adapter objects with the
-other work packages before a combined build. Current book and SUM-11 register
-forms contain unresolved bibliography placeholders; the adapters withhold them.
-They accept only a complete exact `bibliography` with held
-`bibliography_evidence`, never an invented edition, year, volume or page.
+Each seat returns a separate JSON file named `<batch-sha256>.sol.json` or
+`<batch-sha256>.opus.json` in the driver's `antonenko_receipts` directory. The
+receipt contains exactly:
 
-`artifact_files(ctx)` emits private `C6b/` or `C7/adjudication-packets/` files
-and shared per-component `passages/` files through the framework output guard.
-Packet names use SHA-256 of the UTF-8 unit id. Each packet pins its schema,
-component, unit, source row, complete source-field digest and review requirements.
+```json
+{
+  "schema": "antonenko-span-receipt.v1",
+  "model": "gpt-6.1-sol",
+  "task_id": "unique-driver-seat-task",
+  "batch_sha256": "<batch digest>",
+  "rows": [
+    {
+      "row_id": 1,
+      "row_text_sha256": "<row digest>",
+      "pairs": [
+        {
+          "rejected": {"start": 10, "end": 15},
+          "recommended": {"start": 16, "end": 21}
+        }
+      ]
+    }
+  ]
+}
+```
 
-The optional request key `antonenko_receipts` names a private driver-controlled
-directory. Its files are `<component>/<unit-id-sha256>.json`. The receipt schema
-is `antonenko-adjudication-receipt.v1`, with `component`, `unit_id`, `pair_id`
-(the actual `style_guide` key), `packet_sha256`, `source_text_sha256`,
-`rejected_span`, `recommended_span`, `calque`, and `sol`/`opus` objects. Each seat
-object contains `model`, `family`, `harness`, `task_id`, `session_id`, `verdict`,
-`packet_sha256`, both spans, and nonempty `tool_evidence`; C6b also requires each
-seat's `calque` to agree. Verdicts are `APPROVE`, `REJECT`, or `UNSUPPORTED`.
-Distinct fresh sessions and both `APPROVE` are mandatory. Missing or unsupported
-adjudication withholds; malformed, stale, self-reviewed or swapped receipts refuse.
+The other seat's model is `claude-opus-5-5`. Every batch row must appear exactly
+once per seat. Offsets count Unicode characters, start inclusive and end
+exclusive, into that row's text. Select only a form that the row itself names
+as wrong and its named replacement. Return `pairs: []` otherwise. No text,
+paraphrase, verdict or extra field is accepted. Both receipts must carry distinct
+nonempty task ids. The driver supplies authentic routing and execution evidence;
+these fields do not cryptographically attest model execution.
 
-Receipt files are trusted only as driver-controlled review artifacts. Their
-hashes and exact selected fields are pinned; this format does not cryptographically
-attest model execution. The driver supplies the authentic fleet task/model/tool
-provenance. No review seats are run by these extractors.
+The pair sets must agree exactly in both directions; order is immaterial. Any
+selection difference withholds the whole row as `adjudication_disagreement`.
+Two empty lists withhold as `no_pair_named`. No receipts means
+`adjudication_pending`; a single seat, wrong model, malformed offsets, duplicate
+rows/pairs, incomplete row coverage or stale hash refuses the build.
 
-An all-withheld build has `missing_coverage` metrics. The current framework
-`verify` refuses generic accepted-record mutation proof as `mutation_unavailable`;
-this limitation is reported, not converted into a pass.
+C6b emits one `book_calque_replacement` record per agreed pair, with the rejected
+expression in its slot and the recommended expression as response. Both quote
+the same book row and locator. There is no additional inferred calque label.
+The binding checks the exact selected offsets; the receipt store revalidates
+both pinned raw receipts against the cited rows and their hashes on each read.
+
+C7 derives records only from those pairs. The unstressed rejected expression
+must match a SUM-11 headword; an absent match is `not_sum11_headword` (excluded).
+The recommended expression needs checked, successful ULIF and VESUM witnesses.
+SUM-11 is cited only on the rejected side as `soviet_colonization_context`, with
+risk and keywords; `c7_opt_in` and the existing contrast-pair binding remain.
+Missing attestation or markers withholds the pair. No headword inventory is
+queried until a row has dual-selected pairs.
+
+Accounting stays row-grained, including unresolved rows whose semantic pair
+count is unknown. A row with any withheld pair is withheld; otherwise one or
+more accepted pairs accept the row, and a row whose pairs are all ineligible for
+C7 is excluded. `operation_accounting.records_counted` and `record_reasons`
+report individual candidates separately. They include one placeholder for each
+unresolved row and therefore are not a semantic rejected-form census.
+The gate's opt-in `unit_multiplicity: records` supports this without duplicate
+row accounting; all record identities must still be unique. Other components
+retain one-record-per-unit enforcement.
+
+Component exports, adapters and receipt store are shared as before. Complete
+held bibliography remains required; placeholder forms withhold rather than
+invent an edition, year or volume. Source compatibility uses the framework's
+current integration contract. An all-withheld build reports `missing_coverage`;
+`verify` cannot prove accepted-record mutations and returns
+`mutation_unavailable`. Passing structural tests is not semantic completeness.

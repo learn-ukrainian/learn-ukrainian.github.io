@@ -127,6 +127,13 @@ Every component spec requires:
   query's unit id. Swapped citations fail `unit_id_mismatch`, including on
   withheld/excluded accounting rows.
 - `frozen_count`: exact measured count at that unit grain.
+- `unit_multiplicity`: defaults to `one`; reviewed `records` permits multiple
+  distinct records per accounting unit. Counts remain unit-grained: a withheld
+  record withholds its unit, otherwise an accepted record accepts it.
+  Per-operation `records_counted` and `record_reasons` also expose record counts.
+  Generic missing-unit verification removes the entire unit.
+- Binding `span_equal` compares a selected value's offsets with the cited
+  receipt's offset field, independently of quoted text equality.
 - `reasons`: closed arrays for `accepted`, `rejected`, `withheld`, `excluded`.
   Include framework withholding codes `attribution_unresolved`,
   `locator_unavailable`, `catalog_inapplicable` where applicable. Reason codes
