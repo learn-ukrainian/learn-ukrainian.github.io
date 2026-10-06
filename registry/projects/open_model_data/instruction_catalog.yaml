@@ -1,8 +1,8 @@
 ---
-# RB-1 reviewer entries predeclared per #9818; exact-head verdicts are recorded on the PR.
+# WP-CAT2 reviews pending per #9842; exact-head verdicts remain the driver's gate.
 schema_version: instruction-catalog.v1
-version: 0.5.0-rb1
-status: rb1_approved
+version: 0.6.0-rb1
+status: rb1_amendment_pending_reviews
 training_eligible: false
 issue: 9611
 review_status:
@@ -16,18 +16,18 @@ review_status:
       - gemini-3.8-flash-high
     remaining_gate: E5 checker proof; PA6 certification and training eligibility are not claimed.
   amendment:
-    issue: 9818
-    status: approved
+    issue: 9842
+    status: pending
     author: gpt-6.1-sol
     reviewers:
       - seat: claude-opus-5-5
-        task: rv-rb1-wpcat-opus-r2
+        task: rv-wpcat2-opus
         role: code+ukrainian
-        status: approved
+        status: pending
       - seat: gemini-3.8-flash-high
-        task: rv-rb1-wpcat-flash-r2
+        task: rv-wpcat2-flash
         role: ukrainian
-        status: approved
+        status: pending
 plan:
   path: docs/projects/open-model-data/PLAN.md
   version: 3.5.0
@@ -397,11 +397,12 @@ components:
       - For sense_definition, quarantined articles, missing stressed headword/definition, multi-sense articles
         without citations for the selected sense, or context that does not distinguish conflicting definitions
         for the same model-visible headword.
-    line_count: 36
-    line_count_rationale: Synonyms and antonyms each retain twelve lines. Sense definition has six with_citations
-      and six single_sense lines, each with six distinct starts; balanced variant prefix top1=1/6 and top5=5/6
-      are diagnostics, not PASS under 0.15/0.60 export bounds. Combined operation has twelve distinct starts
-      and balanced top1=1/12, top5=5/12. Production scheduling must satisfy unchanged operation/split bounds.
+    line_count: 48
+    line_count_rationale: Synonyms and antonyms each retain twelve lines. Sense definition has twelve with_citations
+      and twelve single_sense lines, each with twelve distinct starts; balanced variant prefix top1=1/12
+      and top5=5/12 satisfy unchanged 0.15/0.60 bounds even when all records use one variant. Dropping two
+      disputed lines leaves ten starts and 0.10/0.50 shares. Every operation variant has at least nine lines;
+      production scheduling must still satisfy unchanged operation/split prefix and repetition bounds.
     instructions:
       - id: C3.synonyms.01
         operation: synonyms
@@ -621,6 +622,84 @@ components:
         operation: sense_definition
         sense_variant: single_sense
         template: 'Зі словника випиши тлумачення слова «{headword}», зберігаючи його без змін.'
+        slots:
+          - headword
+      - id: C3.sense_definition.13
+        operation: sense_definition
+        sense_variant: with_citations
+        template: 'Випиши без змін зі словника тлумачення слова «{headword}» у значенні, яке ілюструють наведені
+          приклади.'
+        slots:
+          - headword
+      - id: C3.sense_definition.14
+        operation: sense_definition
+        sense_variant: with_citations
+        template: 'Збережи текст словникового тлумачення без змін і наведи його для слова «{headword}» у значенні,
+          яке показують подані приклади.'
+        slots:
+          - headword
+      - id: C3.sense_definition.15
+        operation: sense_definition
+        sense_variant: with_citations
+        template: 'Для слова «{headword}» наведи без змін тлумачення зі словника у значенні, яке ілюструють подані
+          приклади.'
+        slots:
+          - headword
+      - id: C3.sense_definition.16
+        operation: sense_definition
+        sense_variant: with_citations
+        template: 'Значення слова «{headword}» показують наведені приклади. Запиши відповідне словникове тлумачення
+          без змін.'
+        slots:
+          - headword
+      - id: C3.sense_definition.17
+        operation: sense_definition
+        sense_variant: with_citations
+        template: 'Приклади ілюструють значення слова «{headword}». Подай тлумачення цього значення так, як його
+          подає словник.'
+        slots:
+          - headword
+      - id: C3.sense_definition.18
+        operation: sense_definition
+        sense_variant: with_citations
+        template: 'Потрібне тлумачення слова «{headword}» стосується значення, яке показують подані приклади.
+          Процитуй його зі словника.'
+        slots:
+          - headword
+      - id: C3.sense_definition.19
+        operation: sense_definition
+        sense_variant: single_sense
+        template: 'Відповідь подай як незмінений текст словникового тлумачення слова «{headword}».'
+        slots:
+          - headword
+      - id: C3.sense_definition.20
+        operation: sense_definition
+        sense_variant: single_sense
+        template: 'Слово «{headword}» має тлумачення у словнику. Наведи це тлумачення без змін.'
+        slots:
+          - headword
+      - id: C3.sense_definition.21
+        operation: sense_definition
+        sense_variant: single_sense
+        template: 'Надай тлумачення слова «{headword}» так, як його подає словник, без змін.'
+        slots:
+          - headword
+      - id: C3.sense_definition.22
+        operation: sense_definition
+        sense_variant: single_sense
+        template: 'Текст словникового тлумачення слова «{headword}» запиши без змін.'
+        slots:
+          - headword
+      - id: C3.sense_definition.23
+        operation: sense_definition
+        sense_variant: single_sense
+        template: 'Поверни тлумачення слова «{headword}» зі словника, не змінюючи його тексту.'
+        slots:
+          - headword
+      - id: C3.sense_definition.24
+        operation: sense_definition
+        sense_variant: single_sense
+        template: 'Потрібно навести без змін тлумачення слова «{headword}» зі словника.'
         slots:
           - headword
   C4:

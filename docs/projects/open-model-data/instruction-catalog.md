@@ -1,17 +1,19 @@
-# E10 instruction catalog — RB-1 amendment 0.5.0
+# E10 instruction catalog — RB-1 amendment 0.6.0
 
 Issue #9611; parent #6321. Author: GPT-6.1 Sol, Codex.
-Amendment #9818 implements the approved RB-1 WP-CAT scope. The PA6 instruction
+Amendment #9842 (WP-CAT2) adds six C3 `sense_definition` lines per applicability
+variant to the approved #9818 / PR #9827 catalog. Version `0.6.0-rb1` records
+`status: rb1_amendment_pending_reviews` and pending reviewer entries
+`rv-wpcat2-opus` (Claude Opus 5.5, code+Ukrainian) and `rv-wpcat2-flash`
+(Gemini 3.8 Flash, Ukrainian). These are task declarations, not verdicts.
+The driver owns both exact-head reviews and the subsequent PR/CI/landing.
+`training_eligible: false` remains binding. The PA6 instruction
 reviews at `17dbf1e7ee42f77191fbd52843c60da13b5a1de7` are recorded on
 #9611 (PR #9679); the E5 checker criterion remains open there.
-Round 2 sets `status: rb1_approved` and predeclares the two approved reviewer
-entries under the driver's #9818 disposition. These entries are not evidence
-that the forthcoming re-reviews have run: the driver runs
-`rv-rb1-wpcat-opus-r2` (code+Ukrainian) and `rv-rb1-wpcat-flash-r2`
-(Ukrainian) on the pushed head and records their actual verdicts on the PR.
-Either failure returns this branch to the fix loop. No approval-only follow-up
-commit is needed, so both verdicts can bind the final catalog bytes.
-`training_eligible: false` remains binding; RB-1 approval does not certify PA6.
+The prior #9818 catalog recorded `rb1_approved` with reviewer tasks
+`rv-rb1-wpcat-opus-r2` and `rv-rb1-wpcat-flash-r2`. WP-CAT2 replaces its active
+amendment status with pending #9842 tasks; the historical evidence below and
+Git history retain #9818's disposition. RB-1 approval does not certify PA6.
 Historical rounds below retain their original heads and results.
 The driver adopts the stricter numerical bounds
 **top1 ≤ 0.15, top5 ≤ 0.60**; the round-2 brief's 0.65 is superseded.
@@ -32,15 +34,15 @@ No answer text, explanation or worked solution is authored here.
 | --- | ---: | --- |
 | C1 | 12 | Sentence correction including unchanged no-edit pairs. |
 | C2 | 24 | 12 with-sense and 12 sense-less agreed-form lines; fixed source-header serialization. |
-| C3 | 36 | 12 synonym, 12 antonym and 12 СУМ-20 sense-definition lines. |
+| C3 | 48 | 12 synonym, 12 antonym and 24 СУМ-20 sense-definition lines (12 per variant). |
 | C4 | 12 | Dictionary definition **and citation from the same entry**. |
 | C5 | 12 | Full Правопис § containing its printed example. |
 | C6 | 24 | 12 calque-only sentence lines and 12 signed book-replacement lines. |
 | C7 | 12 | Modern-attested side of an admitted opt-in contrast pair; both forms visible in context. |
 | C9 | 12 | Complete text under an authenticated printed textbook heading. |
-| **Total** | **144** | **8 components, 11 operations; C2 has two 12-line variants; C3 meaning has two 6-line variants.** |
+| **Total** | **156** | **8 components, 11 operations, 13 applicability sets; C2 and C3 meaning each have two 12-line variants.** |
 
-Twelve distinct starts per twelve-line operation or C2 variant give balanced
+Twelve distinct starts per operation variant give balanced
 top1 = 1/12 (8.33%) and
 top5 = 5/12 (41.67%). Dropping two disputed lines leaves ten starts:
 0.10/0.50. Both retain slack under the proposed 0.15/0.60 prefix bounds.
@@ -95,10 +97,10 @@ template patterns, with six source-value fixtures and quotation mutations.
 - **C3 sense_definition:** the verbatim СУМ-20 stressed headword belongs
   to the same unquarantined article as the selected sense's definition.
   The only slot is `headword`; no POS or gender label is interpolated.
-  The six `with_citations` lines refer to the sense illustrated by that
-  sense's own examples. The six `single_sense` lines require exactly one
+  The twelve `with_citations` lines refer to the sense illustrated by that
+  sense's own examples. The twelve `single_sense` lines require exactly one
   unquarantined sense and no citations. Multi-sense articles without citations
-  for the selected sense are withheld. The contract below binds all 12 lines.
+  for the selected sense are withheld. The contract below binds all 24 lines.
 - **C4:** **citation stays in the target**, together with the definition from
   that same dictionary entry. Every instruction requests both explicitly.
   Never invent an example; exclude ruler-overlapping citations.
@@ -146,7 +148,7 @@ The catalog declares these contracts; WP0 implements rendering and WP3/WP6
 authenticate their source bindings. Author fixtures do not prove those engines
 or replace independent exact-head reviews.
 
-**AC2 — C3 `sense_definition`.** All 12 lines have exactly `[headword]`
+**C3 `sense_definition` contract.** All 24 lines have exactly `[headword]`
 as their slot list: the **verbatim СУМ-20 stressed headword**.
 WP3 authenticates the article and field locator. No synthesized stress,
 POS/gender slot, VESUM code or authored sense label is allowed.
@@ -158,20 +160,22 @@ explanations or other senses appended.
 
 Applicability is mutually exclusive:
 
-- `with_citations` (.01–.06): at least one of the selected sense's own
+- `with_citations` (.01–.06 and .13–.18): at least one of the selected sense's own
   `sum20_citations` is in model-visible context. Each line asks for the
   definition in the sense illustrated by those examples.
-- `single_sense` (.07–.12): exactly one unquarantined sense in the article,
+- `single_sense` (.07–.12 and .19–.24): exactly one unquarantined sense in the article,
   with no citations; citations are not required to identify that sole sense.
 - Withhold a sense of a multi-sense article with no citations of its own,
   even when register labels exist. Conflicting model-visible bindings withhold.
 
-Each variant has six distinct starts. Balanced prefix, ID and whole-template
-shares are `top1=1/6`, `top5=5/6`; these are diagnostic expectations and
-cannot PASS the unchanged 0.15/0.60 export bounds. Each six-line set also
-expects suffix and 8-gram record prevalence ≤0.60. Combined C3 meaning has
-12 distinct starts and balanced `1/12`, `5/12`; the twelve-line set and
-its ten-line drop retain the existing bounds. Source applicability restricts
+Each variant has twelve distinct starts. Balanced prefix, ID and whole-template
+shares are `top1=1/12`, `top5=5/12`, below the unchanged 0.15/0.60 bounds.
+Each twelve-line set also requires suffix and 8-gram record prevalence ≤0.60.
+Combined C3 meaning has 24 distinct starts and balanced `1/24`, `5/24`;
+each variant's ten-line drop retains the existing bounds. Every declared
+operation variant must have at least nine lines: `1/9 ≤ 0.15` and
+`5/9 ≤ 0.60`. This minimum is necessary scheduling capacity, not proof
+that actual record counts or repetition pass. Source applicability restricts
 line selection; production scheduling must meet the unchanged operation/split
 metric or withhold the build. Counts do not prove semantic diversity.
 
@@ -483,7 +487,7 @@ These are anti-concentration limits, not confidence intervals or held-out proof.
 Check feasibility against admitted records and fields before building, without
 reading the sealed final ruler. Schedule semantically eligible instructions
 under the frozen version. Never rewrite, duplicate or rebind sources to pass.
-Infeasible integer counts or fewer than ten eligible lines withhold the bucket
+Infeasible integer counts or fewer than ten eligible records withhold the bucket
 and return it to the driver; dropping a disputed line never licenses relaxation.
 
 ## Round 4 concentration diagnostics
@@ -1272,3 +1276,168 @@ YAML line wrapping was checked for parsed-catalog equality. Earlier YAML lint
 line-length failures were corrected without changing instruction strings.
 These are author contract proofs; independent held-out verdicts and production
 renderer/source-binding proof remain with the owners named above.
+
+## WP-CAT2 — #9842 author evidence (2026-10-06)
+
+The amendment adds only C3.sense_definition.13–.24: six `with_citations`
+and six `single_sense` lines. Existing instruction IDs and strings, source
+bindings, applicability, quoting rules and metric thresholds remain unchanged.
+The schema admits 48 C3 lines and requires 12 meaning lines per variant.
+The catalog contains 156 lines across 13 applicability sets. The new minimum
+check enumerates variants from schema declarations, so deleting an entire
+variant produces a zero-line failure rather than removing the denominator.
+Prefix checks now group C3 by variant as well as checking the combined operation.
+
+### Sources canary and lexical evidence
+
+`sources.verify_word(word="апостроф")` returned:
+
+```text
+2 analyses (1 distinct lemma)
+'апостроф' — matches in VESUM:
+lemma: апостроф | pos: noun | tags: noun:inanim:m:v_naz | is_archaic: False
+lemma: апостроф | pos: noun | tags: noun:inanim:m:v_zna | is_archaic: False
+```
+
+Every new line received `sources.verify_words` with the exact distinct,
+lowercase project-written words below, excluding `{headword}`. The aggregate
+call returned `Batch verification: 48 words`, `Found: 48/48`,
+`144 analyses (47 distinct lemmas)`. Per-word `sources.check_russian_shadow`
+results cover every word in every row; shared words were checked once.
+
+| Line | Exact verify_words input | Raw result | Shadow results |
+| --- | --- | --- | --- |
+| C3.sense_definition.13 | `["випиши","без","змін","зі","словника","тлумачення","слова","у","значенні","яке","ілюструють","наведені","приклади"]` | `Found: 13/13` | `яке` exception below; all others false |
+| C3.sense_definition.14 | `["збережи","текст","словникового","тлумачення","без","змін","і","наведи","його","для","слова","у","значенні","яке","показують","подані","приклади"]` | `Found: 17/17` | `яке` exception below; all others false |
+| C3.sense_definition.15 | `["для","слова","наведи","без","змін","тлумачення","зі","словника","у","значенні","яке","ілюструють","подані","приклади"]` | `Found: 14/14` | `яке` exception below; all others false |
+| C3.sense_definition.16 | `["значення","слова","показують","наведені","приклади","запиши","відповідне","словникове","тлумачення","без","змін"]` | `Found: 11/11` | All false |
+| C3.sense_definition.17 | `["приклади","ілюструють","значення","слова","подай","тлумачення","цього","так","як","його","подає","словник"]` | `Found: 12/12` | All false |
+| C3.sense_definition.18 | `["потрібне","тлумачення","слова","стосується","значення","яке","показують","подані","приклади","процитуй","його","зі","словника"]` | `Found: 13/13` | `яке` exception below; all others false |
+| C3.sense_definition.19 | `["відповідь","подай","як","незмінений","текст","словникового","тлумачення","слова"]` | `Found: 8/8` | All false |
+| C3.sense_definition.20 | `["слово","має","тлумачення","у","словнику","наведи","це","без","змін"]` | `Found: 9/9` | All false |
+| C3.sense_definition.21 | `["надай","тлумачення","слова","так","як","його","подає","словник","без","змін"]` | `Found: 10/10` | All false |
+| C3.sense_definition.22 | `["текст","словникового","тлумачення","слова","запиши","без","змін"]` | `Found: 7/7` | All false |
+| C3.sense_definition.23 | `["поверни","тлумачення","слова","зі","словника","не","змінюючи","його","тексту"]` | `Found: 9/9` | All false |
+| C3.sense_definition.24 | `["потрібно","навести","без","змін","тлумачення","слова","зі","словника"]` | `Found: 8/8` | All false |
+
+For 47 of the 48 distinct words, the raw shadow result was:
+
+```json
+{
+  "matches_russian": false,
+  "russian_lemma": null,
+  "ukrainian_alternative": null,
+  "confidence": 0.0
+}
+```
+
+For `яке`, the raw result was:
+
+```json
+{
+  "matches_russian": true,
+  "russian_lemma": "як",
+  "ukrainian_alternative": null,
+  "confidence": 1.0
+}
+```
+
+VESUM returned `яке — FOUND (2 analyses (1 distinct lemma)): який(adj), який(adj)`
+with `adj:n:v_naz:pron:int:rel:def` and `adj:n:v_zna:pron:int:rel:def`.
+This positive Ukrainian attestation defeats the shadow heuristic suspicion;
+the hit remains disclosed and is not a Russianism verdict.
+
+Each new line also received both `sources.search_style_guide` and
+`sources.search_text(source_file='antonenko-davydovych-yak-my-hovorymo', limit=1)`.
+The query was its exact word list above joined with spaces. All 12 structured
+queries returned `No results in Антоненко-Давидович`; all 12 full-book queries
+returned `Found 1 results`. These are broad retrieval diagnostics, not sentence
+attestation or semantic approval; no source passages are reproduced.
+The initial concurrent per-line verification batch returned four
+`Tool call failed: verify_words.` responses and two empty batches despite the
+successful aggregate attestation. Sequential retries verified all 12 lines;
+no failed or empty response was counted as proof.
+
+### Acceptance, stopping rule and ownership
+
+The author denominator is 12 new lines and all 13 schema-declared operation
+variants. All new instructions request unchanged dictionary text; cited variants
+identify the meaning illustrated by the selected sense's own examples.
+The only interpolated slot remains the verbatim stressed headword in guillemets.
+Author arithmetic and lexical checks do not certify independent semantic quality.
+Pending held-out proof belongs to `rv-wpcat2-opus` and `rv-wpcat2-flash`;
+the accountable `claude-open-model-data` driver owns review disposition,
+PR/CI/landing and #9842 closure. No PR or provider review is opened by this packet.
+
+Any unattested form, wrong sense selection, changed dictionary bytes, answer
+leakage, material independent finding or relaxed metric blocks acceptance.
+No source data is changed to improve the metric. The WP3 full build, artifact
+verification and mutation proof remain WP3/driver work after catalog review;
+this amendment alone does not prove the real 168-record cohort passes.
+The production `Catalog` constructor returned `catalog_unreviewed` for this
+pending catalog. The consumer suite is not green: approval metadata must be
+resolved by the driver after actual review, then consumer tests rerun before
+PR/CI/landing. Production eligibility is not enabled by author tests.
+
+### Focused validation and concentration proof
+
+All commands ran in the assigned dispatch worktree with the task-prescribed
+shared interpreter; repository-relative executable spellings are shown below.
+
+```text
+.venv/bin/python -m pytest -q tests/projects/open_model_data/test_instruction_catalog.py
+495 passed in 24.55s (no skips)
+.venv/bin/python -m ruff check tests/projects/open_model_data/test_instruction_catalog.py
+All checks passed!
+.venv/bin/python -m ruff format --check tests/projects/open_model_data/test_instruction_catalog.py
+1 file already formatted
+.venv/bin/python -m yamllint registry/projects/open_model_data/instruction_catalog.yaml
+exit 0, no output
+git diff --check
+exit 0, no output
+```
+
+The first collection skipped all 495 cases because sparse-checkout omitted
+`data/projects`. `git sparse-checkout add data/projects` restored the required
+tree. The first executable run returned `2 failed, 493 passed`: the lexical
+context assertion searched case-sensitively even when `Значення` or `Приклади`
+started a sentence. Casefolding that assertion preserved the same required
+words and fixed the failure. No instruction was changed to satisfy the test.
+
+The additional consumer check ran because its fixture reads the changed catalog:
+
+```text
+.venv/bin/python -m pytest -q tests/projects/open_model_data/review_build/test_components.py
+21 passed, 5 errors in 2.80s
+scripts.projects.open_model_data.review_build.errors.BuildError: catalog_unreviewed
+```
+
+All five errors occur in `real_catalog` setup: two C2 variants, two C3 variants
+and the catalog-version diagnostic. Their behavior assertions were not reached.
+The pending status was retained as requested; no production review gate was
+weakened. Driver-owned approval disposition and a clean consumer rerun remain
+a concrete residual, alongside the independent reviews and WP3 real build.
+
+A probe loading the committed `tokens`, `shares` and `repetition` helpers
+returned these exact balanced ratios (source slots masked):
+
+| C3 sense_definition set | N | Prefix1 top1/top5 | Prefix4 top1/top5 | Suffix8 top1 | 8-gram record prevalence |
+| --- | ---: | --- | --- | --- | --- |
+| with_citations | 12 | 1/12, 5/12 | 1/12, 5/12 | 1/6 | 1/6 |
+| single_sense | 12 | 1/12, 5/12 | 1/12, 5/12 | 1/12 | 1/12 |
+| Combined | 24 | 1/24, 5/24 | 1/24, 5/24 | 1/12 | 1/12 |
+
+Every one of the 13 declared applicability sets has 12 lines; the committed
+check tests the ≥9 floor even for schema-declared variants with no catalog rows.
+The balanced-prefix regression also checks each variant after two lines are
+dropped. These are author arithmetic fixtures, not a successful WP3 build.
+The numerical specification's `N<10` condition refers to eligible records,
+consistent with its record denominator; it is not a ten-template minimum.
+
+The preservation probe compared every parsed instruction entry against the
+pre-amendment Git catalog and returned:
+
+```text
+144 existing instruction entries unchanged; exactly 12 new C3 sense_definition entries
+prefix thresholds, interpolation and C3 applicability unchanged
+```
