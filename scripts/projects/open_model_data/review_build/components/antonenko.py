@@ -511,7 +511,17 @@ class BookAttributionAdapter:
         require(cited.source_id == SOURCE and form == BOOK_REGISTER_FORM, "attribution_unresolved")
         if cited.store == STORE and cited.table == "C6b":
             require(type(row.get("book_id")) is int, "attribution_unresolved")
-            book = reader.row(Citation(SOURCE, "sources.db", "style_guide", f"id={row['book_id']}", "text", "", ""))
+            book = reader.row(
+                Citation(
+                    SOURCE,
+                    "sources.db",
+                    "style_guide",
+                    f"id={row['book_id']}",
+                    "text",
+                    f"adjudication {row['pair']}",
+                    row["row_text_sha256"],
+                )
+            )
             require(row.get("source") == book.get("source"), "attribution_unresolved")
         else:
             require(cited.store == "sources.db" and cited.table == "style_guide", "attribution_unresolved")

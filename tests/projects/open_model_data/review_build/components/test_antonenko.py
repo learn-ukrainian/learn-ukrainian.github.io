@@ -355,7 +355,12 @@ def test_receipt_attribution_uses_held_book_locator_and_checks_source(source):
     from types import SimpleNamespace
 
     book = {**source["rows"][0], "source": "Антоненко-Давидович"}
-    row = {"book_id": book["id"], "source": book["source"]}
+    row = {
+        "book_id": book["id"],
+        "source": book["source"],
+        "pair": "id=1",
+        "row_text_sha256": digest(book["text"].encode()),
+    }
     observed = []
 
     def lookup(cited):
@@ -369,9 +374,26 @@ def test_receipt_attribution_uses_held_book_locator_and_checks_source(source):
         == BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, citation(book), book, reader).bibliography
     )
     assert observed[0].store == "sources.db" and observed[0].row_key == "id=1"
+    assert observed[0].field_sha256 == digest(book["text"].encode())
     row["source"] = "SYNTHETIC wrong source"
     with pytest.raises(BuildError, match="attribution_unresolved"):
         BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, cited, row, reader)
+
+
+def test_receipt_book_attribution_uses_real_snapshot_digest_validation(source):
+    write_receipt(source)
+    with sqlite3.connect(source["db"]) as writer:
+        writer.execute("UPDATE style_guide SET source=?", (COMPATIBILITY[0]["source_values"][0],))
+    ctx = context(source)
+    with ctx.reader:
+        candidates = list(component_for("C6b").iter_candidates(ctx))
+        cited = candidates[0].slots[0].citations[1]
+        row = ctx.reader.row(cited)
+        result = BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, cited, row, ctx.reader)
+        assert source["rows"][0]["section"] in result.bibliography
+        row["row_text_sha256"] = "0" * 64
+        with pytest.raises(BuildError, match="field_digest"):
+            BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, cited, row, ctx.reader)
 
 
 def test_c6b_policy_is_component_owned_and_detached_from_other_builds():
