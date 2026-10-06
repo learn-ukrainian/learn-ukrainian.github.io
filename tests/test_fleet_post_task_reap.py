@@ -30,25 +30,22 @@ from tests.orchestration.test_interrupted_caller_matrix import hashes
 from tests.orchestration.test_interrupted_caller_matrix import interrupted_checkout as interrupted_checkout
 
 
-@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
-@pytest.mark.parametrize("regenerable", [False, True])
-def test_post_task_reap_interrupted_unique_work_retains_bytes(interrupted_checkout, monkeypatch, status, regenerable):
+@pytest.fixture
+def interrupted_reap(interrupted_checkout, monkeypatch):
+    """Bind the interrupted checkout to the real post-task reap guards."""
     repo, tree, tasks, record, result, output = interrupted_checkout
-    if regenerable:
-        (tree / "package-lock.json").write_text('{"lockfileVersion": 3}')
-        (tree / ".gitignore").write_text("node_modules/\n__pycache__/\n")
-        _run(["git", "add", "package-lock.json", ".gitignore"], cwd=tree)
-        _run(["git", "commit", "-m", "unpushed regenerable fixture"], cwd=tree)
-        for name in ["node_modules/package/index.js", "__pycache__/module.pyc"]:
-            path = tree / name
-            path.parent.mkdir(parents=True)
-            path.write_bytes(b"regenerable")
-    head = _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip()
+    monkeypatch.setattr(post_task_reap, "ROOT", repo)
+    monkeypatch.setattr(post_task_reap, "_DISPATCH_WORKTREES_ROOT", repo / ".worktrees/dispatch")
+    monkeypatch.setattr(post_task_reap, "_ACP_RUNTIME_ROOT", repo / ".worktrees/dispatch/acp")
+    monkeypatch.setattr(post_task_reap, "_pid_alive", lambda _pid: False)
+    monkeypatch.setattr(post_task_reap.pr_identity, "resolve_repo_slug", lambda _root: "octo/hermetic")
+    monkeypatch.setattr(post_task_reap.pr_identity, "probe_open_pr_for_branch", lambda **_kwargs: (False, None))
     record.write_text(
         json.dumps(
             {
                 "task_id": "interrupted",
-                "status": status,
+                "agent": "codex",
+                "status": "done",
                 "run_nonce": "attempt",
                 "pid": 999_999_999,
                 "worktree_path": str(tree),
@@ -59,6 +56,30 @@ def test_post_task_reap_interrupted_unique_work_retains_bytes(interrupted_checko
             }
         )
     )
+    return repo, tree, tasks, record, result, output
+
+
+def _leave_regenerable_output(tree):
+    (tree / "package-lock.json").write_text('{"lockfileVersion": 3}')
+    (tree / ".gitignore").write_text("node_modules/\n__pycache__/\n")
+    _run(["git", "add", "package-lock.json", ".gitignore"], cwd=tree)
+    _run(["git", "commit", "-m", "regenerable fixture"], cwd=tree)
+    for name in ["node_modules/package/index.js", "__pycache__/module.pyc"]:
+        path = tree / name
+        path.parent.mkdir(parents=True)
+        path.write_bytes(b"regenerable")
+
+
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+@pytest.mark.parametrize("regenerable", [False, True])
+def test_post_task_reap_interrupted_unique_work_retains_bytes(interrupted_reap, status, regenerable):
+    repo, tree, tasks, record, result, output = interrupted_reap
+    if regenerable:
+        _leave_regenerable_output(tree)
+    head = _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip()
+    state = json.loads(record.read_text())
+    state["status"] = status
+    record.write_text(json.dumps(state))
     before = hashes([record, result, output])
     for _ in range(2):
         report = post_task_reap.post_task_reap(
@@ -69,9 +90,31 @@ def test_post_task_reap_interrupted_unique_work_retains_bytes(interrupted_checko
             include_acp_runtime=False,
         )
         assert report["main_worktree"]["action"] in {"skipped", "retained"}, report
-        assert report["main_worktree"]["reason"]
+        assert report["main_worktree"]["reason"] == (
+            "task status not terminal (status=unknown)" if status == "unknown" else "unpushed_head"
+        ), report
         assert hashes([record, result, output]) == before and tree.exists()
         assert _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip() == head
+
+
+def test_post_task_reap_interrupted_pushed_regenerable_work_is_removed(interrupted_reap, monkeypatch):
+    repo, tree, tasks, _record, _result, output = interrupted_reap
+    _leave_regenerable_output(tree)
+    output.unlink()
+    _run(["git", "push", "-u", "origin", "codex/interrupted"], cwd=tree)
+    # Misclassifying either cache as unique output must block removal rather
+    # than silently copying it and allowing the control to pass.
+    monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", 1)
+
+    report = post_task_reap.post_task_reap(
+        "interrupted", tasks_dir=tasks, repo_root=repo, apply=True, include_acp_runtime=False
+    )
+
+    assert report["main_worktree"]["action"] == "removed", report
+    assert report["main_worktree"]["reason"] == "HEAD matches origin/codex/interrupted", report
+    assert not tree.exists()
+    assert not report["main_worktree"].get("preserved_artifacts")
+    assert not (repo / "batch_state/preserved").exists()
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
