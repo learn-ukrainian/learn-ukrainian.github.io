@@ -1,9 +1,4 @@
-"""C7 opt-in candidate census. Semantic rejection requires both review seats.
-
-The frozen pre-adjudication count is a candidate denominator; it does not claim
-to measure the subset of forms the book actually rejects. That subset is unknown
-until adjudication. No SUM-11-only candidate is shipped as modern evidence.
-"""
+"""C7: derive opt-in contrasts exclusively from dual-selected book pairs."""
 
 from dataclasses import replace
 
@@ -20,17 +15,13 @@ from .antonenko import (
     candidate,
     citation,
     common_spec,
-    form_unit,
     packet_files,
     quoted,
     receipt_citation,
     selector,
-    token_spans,
 )
 
 OPERATION = "modern_norm_selection"
-UNIT_QUERY = {"kind": "antonenko_candidate_headwords.v1", "store": STORE}
-FROZEN_COUNT = 20162  # Read-only source-token × row candidate census, 2026-10-06.
 REJECTED = selector("context", "rejected")
 RECOMMENDED = selector("context", "recommended")
 TARGET = selector("response", "modern_form")
@@ -59,18 +50,12 @@ BINDING = {
         {"op": "equal", "values": [RECOMMENDED, {**RECEIPT, "field": "recommended_form"}]},
         {"op": "equal", "values": [TARGET, RECOMMENDED]},
         {"op": "equal", "values": [REJECTED, {**RECEIPT, "field": "rejected_form"}]},
+        {"op": "span_equal", "value": REJECTED, "receipt": {**RECEIPT, "field": "rejected_span"}},
+        {"op": "span_equal", "value": RECOMMENDED, "receipt": {**RECEIPT, "field": "recommended_span"}},
         # The target quotes the book's exact span; it is not backed by SUM-11.
         {"op": "same_row", "values": [RECOMMENDED, TARGET]},
     ],
 }
-
-
-def form_rows(ctx):
-    headwords = set(ctx.reader.query_values({"kind": "sql", "store": "sources.db", "sql": "SELECT word FROM sum11"}))
-    for row in ctx.reader.iter_rows("sources.db", "style_guide"):
-        for form, span in token_spans(row["text"]).items():
-            if form in headwords:
-                yield row, span
 
 
 def witnesses(ctx, form):
@@ -83,11 +68,14 @@ def witnesses(ctx, form):
     )
     result = []
     for store, table, column, value, source, field in queries:
+        lookup = f'"{column}"'
+        if table == "sum11":
+            lookup = f"replace(\"{column}\", char(769), '')"
         ids = ctx.reader.query_values(
             {
                 "kind": "sql",
                 "store": store,
-                "sql": f'SELECT id FROM "{table}" WHERE "{column}"=? ORDER BY id',
+                "sql": f'SELECT id FROM "{table}" WHERE {lookup}=? ORDER BY id',
                 "parameters": [value],
             }
         )
@@ -115,11 +103,9 @@ class ContrastComponent:
     def __init__(self):
         self.spec = common_spec(
             OPERATION,
-            UNIT_QUERY,
-            FROZEN_COUNT,
             {
-                "format": "citation.v1",
-                "primary": [{"selector": REJECTED, "store": "sources.db", "table": "style_guide", "span": True}],
+                "separator": ";",
+                "primary": [{"selector": REJECTED, "store": "sources.db", "table": "style_guide", "key": "id"}],
             },
         )
         self.spec["operation_specs"][OPERATION]["binding"] = BINDING
@@ -129,45 +115,45 @@ class ContrastComponent:
 
     def iter_candidates(self, ctx):
         RECEIPTS.configure(ctx)
-        for row, span in form_rows(ctx):
-            unit = form_unit(row, span)
-            receipt = RECEIPTS.get(row, "C7", span)
-            rejected = quoted(row, "rejected", span)
-            context, response = (rejected,), ()
-            missing = None
-            if receipt is not None:
-                right = row["text"][slice(*receipt["recommended_span"])]
+        for row in ctx.reader.iter_rows("sources.db", "style_guide"):
+            decision = RECEIPTS.get(row)
+            if decision["reason"] != "ok":
+                yield candidate("C7", OPERATION, row, (), (quoted(row, "rejected"),), (), decision["reason"])
+                continue
+            for left, right in decision["pairs"]:
+                receipt = RECEIPTS.admit(row, left, right)
+                rejected = quoted(row, "rejected", left)
                 left_witness = witnesses(ctx, rejected.text)[0]
-                _, ulif, vesum = witnesses(ctx, right)
-                if ulif is None:
-                    missing = "ulif_unattested"
+                _, ulif, vesum = witnesses(ctx, row["text"][slice(*right)])
+                reason = "ok"
+                context, response = (rejected,), ()
+                if left_witness is None:
+                    reason = "not_sum11_headword"
+                elif ulif is None:
+                    reason = "ulif_unattested"
                 elif vesum is None:
-                    missing = "vesum_unattested"
+                    reason = "vesum_unattested"
                 elif (
-                    left_witness is None
-                    or left_witness[0].get("sovietization_risk") is None
+                    left_witness[0].get("sovietization_risk") is None
                     or left_witness[0].get("sovietization_keywords") is None
                 ):
-                    missing = "sum11_markers_unavailable"
+                    reason = "sum11_markers_unavailable"
                 else:
                     rejected = replace(rejected, citations=(*rejected.citations, left_witness[1]))
                     recommended = quoted(
                         row,
                         "recommended",
-                        receipt["recommended_span"],
+                        right,
                         (ulif[1], vesum[1], receipt_citation(receipt, "C7", "recommended_form")),
                     )
                     context = tuple(
-                        sorted((rejected, recommended), key=lambda v: digest((unit + "\0" + v.text).encode()))
+                        sorted((rejected, recommended), key=lambda v: digest((receipt["id"] + "\0" + v.text).encode()))
                     )
                     response = (replace(recommended, slot="modern_form", citations=(recommended.citations[0],)),)
-            c = candidate("C7", unit, OPERATION, row, (), context, response, receipt)
-            if missing is not None and c.outcome == "accepted":
-                c = replace(c, outcome="withheld", reason=missing, evidence=(missing,))
-            yield c
+                yield candidate("C7", OPERATION, row, (), context, response, reason)
 
     def artifact_files(self, ctx):
-        return packet_files(ctx, "C7", form_rows(ctx))
+        return packet_files(ctx, "C7")
 
 
 COMPONENT = ContrastComponent()

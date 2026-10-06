@@ -13,17 +13,15 @@ from scripts.projects.open_model_data.review_build.catalog import Catalog
 from scripts.projects.open_model_data.review_build.components import ComponentContext
 from scripts.projects.open_model_data.review_build.components.antonenko import (
     BOOK_ADAPTER,
-    FAMILIES,
     MODELS,
     RECEIPTS,
     SOURCE,
     STORE,
+    batches,
     book_locator,
     citation,
-    form_unit,
-    packet,
-    scan_tokens,
-    token_spans,
+    validate_receipts,
+    write_packets,
 )
 from scripts.projects.open_model_data.review_build.components.c6b import BookCalqueComponent
 from scripts.projects.open_model_data.review_build.components.c7 import ContrastComponent
@@ -77,40 +75,44 @@ def source(tmp_path, monkeypatch):
     return {"rows": rows, "db": db, "vesum": vesum, "receipts": receipt_root}
 
 
-def write_receipt(source, row, component, mutate=None):
-    left, right = list(token_spans(row["text"]).values())[1:3]
-    p = packet(row, component, form_span=left if component == "C7" else None)
-    raw = {
-        "schema": "antonenko-adjudication-receipt.v1",
-        "component": component,
-        "unit_id": p["unit_id"],
-        "pair_id": p["pair_id"],
-        "packet_sha256": p["packet_sha256"],
-        "source_text_sha256": p["source_text_sha256"],
-        "rejected_span": list(left),
-        "recommended_span": list(right),
-        "calque": True,
+def pair_for(row, left=None, right=None):
+    words = row["text"].split()
+    left, right = left or words[1], right or words[2].rstrip(".")
+    return {
+        role: {"start": row["text"].index(word), "end": row["text"].index(word) + len(word)}
+        for role, word in (("rejected", left), ("recommended", right))
     }
-    for seat, model in MODELS.items():
-        raw[seat] = {
+
+
+def selection_receipts(batch):
+    return {
+        seat: {
+            "schema": "antonenko-span-receipt.v1",
             "model": model,
-            "family": FAMILIES[seat],
-            "harness": "SYNTHETIC harness",
             "task_id": f"SYNTHETIC {seat} task",
-            "session_id": f"SYNTHETIC {seat} session",
-            "verdict": "APPROVE",
-            "packet_sha256": p["packet_sha256"],
-            "rejected_span": list(left),
-            "recommended_span": list(right),
-            "calque": True,
-            "tool_evidence": ["SYNTHETIC tool receipt"],
+            "batch_sha256": batch["batch_sha256"],
+            "rows": [
+                {
+                    "row_id": row["row_id"],
+                    "row_text_sha256": row["row_text_sha256"],
+                    "pairs": [pair_for({"text": row["text"]})],
+                }
+                for row in batch["rows"]
+            ],
         }
+        for seat, model in MODELS.items()
+    }
+
+
+def write_receipt(source, mutate=None):
+    batch = batches(source["rows"])[0]
+    receipts = selection_receipts(batch)
     if mutate:
-        mutate(raw)
-    name = f"{component}/{digest(p['unit_id'].encode())}.json"
+        mutate(receipts)
     with OutputGuard(source["receipts"]) as guard:
-        guard.write(name, canonical(raw))
-    return raw
+        for seat, receipt in receipts.items():
+            guard.write(f"{batch['batch_sha256']}.{seat}.json", canonical(receipt))
+    return receipts
 
 
 def component_for(component, count=2):
@@ -189,8 +191,7 @@ def gate(ctx, obj, component):
 
 @pytest.mark.parametrize("component", ["C6b", "C7"])
 def test_accept_paths_and_complete_accounting(source, component):
-    for row in source["rows"]:
-        write_receipt(source, row, component)
+    write_receipt(source)
     obj, ctx = component_for(component), context(source)
     with ctx.reader:
         candidates = list(obj.iter_candidates(ctx))
@@ -215,12 +216,11 @@ def test_pending_receipts_ship_no_records_and_packets_remain_source_bound(source
         assert report["accounting"][component]["reasons"] == {"adjudication_pending": 2}
         files = obj.artifact_files(ctx)
         packets = [json.loads(v) for k, v in files.items() if "adjudication-packets" in k]
-        assert len(packets) == 2
+        assert len(packets) == 1
         for p in packets:
-            sha = p.pop("packet_sha256")
+            sha = p.pop("batch_sha256")
             assert digest(canonical(p)) == sha
-            row = source["rows"][int(p["pair_id"].split("=")[1]) - 1]
-            assert p["source_text_sha256"] == digest(row["text"].encode())
+            assert [r["text"] for r in p["rows"]] == [r["text"] for r in source["rows"]]
 
 
 @pytest.mark.parametrize(
@@ -249,31 +249,49 @@ def test_missing_locator_is_withheld(source):
 @pytest.mark.parametrize(
     "change,code",
     [
-        (lambda r: r.update(pair_id="id=2"), "adjudication_stale"),
-        (lambda r: r.update(packet_sha256="0" * 64), "adjudication_stale"),
-        (lambda r: r.update(source_text_sha256="0" * 64), "adjudication_stale"),
-        (lambda r: r.update(rejected_span=[-1, 2]), "adjudication_span"),
-        (lambda r: r["sol"].update(model="SYNTHETIC impostor"), "adjudication_provenance"),
-        (lambda r: r["sol"].update(tool_evidence=[]), "adjudication_provenance"),
-        (lambda r: r["sol"].update(task_id="codex/impl-rb1-wp6c"), "self_review_detected"),
-        (lambda r: r["sol"].update(session_id=r["opus"]["session_id"]), "self_review_detected"),
-        (lambda r: r["opus"].update(recommended_span=[0, 9]), "adjudication_provenance"),
-        (lambda r: r.update(calque=False), "adjudication_provenance"),
+        (lambda r: r["sol"].update(batch_sha256="0" * 64), "adjudication_stale"),
+        (lambda r: r["opus"]["rows"][0].update(row_text_sha256="0" * 64), "adjudication_stale"),
+        (lambda r: r["sol"]["rows"][0]["pairs"][0]["rejected"].update(start=-1), "adjudication_span"),
+        (lambda r: r["sol"]["rows"][0]["pairs"][0]["recommended"].update(end=9999), "adjudication_span"),
+        (lambda r: r["sol"]["rows"][0]["pairs"][0]["rejected"].update(start=True), "adjudication_span"),
+        (lambda r: r["sol"].update(model=MODELS["opus"]), "adjudication_provenance"),
+        (lambda r: r["sol"].update(task_id=""), "adjudication_provenance"),
+        (lambda r: r["sol"].update(task_id=r["opus"]["task_id"]), "adjudication_provenance"),
+        (lambda r: r.pop("opus"), "adjudication_seats"),
+        (lambda r: r["sol"]["rows"].pop(), "adjudication_rows"),
+        (lambda r: r["sol"]["rows"].append(r["sol"]["rows"][0]), "adjudication_rows"),
+        (lambda r: r["sol"]["rows"][0]["pairs"][0].update(text="SYNTHETIC authored"), "adjudication_direction"),
     ],
 )
 def test_receipt_must_fail_authentication(source, change, code):
-    write_receipt(source, source["rows"][0], "C6b", change)
+    write_receipt(source, change)
     ctx = context(source)
     with ctx.reader, pytest.raises(BuildError, match=code):
         list(component_for("C6b").iter_candidates(ctx))
 
 
-@pytest.mark.parametrize("seat,verdict", [("sol", "REJECT"), ("opus", "UNSUPPORTED")])
-def test_nonapprovals_withhold(source, seat, verdict):
-    write_receipt(source, source["rows"][0], "C6b", lambda r: r[seat].update(verdict=verdict))
-    ctx = context(source)
+@pytest.mark.parametrize("component", ["C6b", "C7"])
+@pytest.mark.parametrize("mode", ["different", "swapped", "single_empty", "both_empty"])
+def test_selection_disagreement_or_no_pair_withholds(source, component, mode):
+    def change(receipts):
+        pair = receipts["opus"]["rows"][0]["pairs"][0]
+        if mode == "different":
+            pair["recommended"]["end"] -= 1
+        elif mode == "swapped":
+            pair["rejected"], pair["recommended"] = pair["recommended"], pair["rejected"]
+        else:
+            receipts["opus"]["rows"][0]["pairs"] = []
+            if mode == "both_empty":
+                receipts["sol"]["rows"][0]["pairs"] = []
+
+    write_receipt(source, change)
+    ctx, obj = context(source), component_for(component)
     with ctx.reader:
-        assert next(component_for("C6b").iter_candidates(ctx)).reason == "adjudication_unsupported"
+        cs = list(obj.iter_candidates(ctx))
+        reason = "no_pair_named" if mode == "both_empty" else "adjudication_disagreement"
+        assert cs[0].outcome == "withheld" and cs[0].reason == reason
+        report = gate(ctx, obj, component).run(cs)[1]
+        assert report["accounting"][component]["reasons"][reason] == 1
 
 
 @pytest.mark.parametrize("component", ["C6b", "C7"])
@@ -289,8 +307,7 @@ def test_nonapprovals_withhold(source, seat, verdict):
     ],
 )
 def test_component_generic_must_fail_fixtures(source, component, mutation, code):
-    for row in source["rows"]:
-        write_receipt(source, row, component)
+    write_receipt(source)
     ctx, obj = context(source), component_for(component)
     with ctx.reader:
         cs = list(obj.iter_candidates(ctx))
@@ -314,14 +331,12 @@ def test_component_generic_must_fail_fixtures(source, component, mutation, code)
         else:
             parts[index] = v
             cs[0] = replace(c, **{area: tuple(parts)})
-        expected = "unit_id_mismatch" if component == "C7" and mutation == "span" else code
-        with pytest.raises(BuildError, match=expected):
+        with pytest.raises(BuildError, match=code):
             gate(ctx, obj, component).run(cs)
 
 
 def test_swapped_recommendation_and_sum11_alone_fail(source):
-    for row in source["rows"]:
-        write_receipt(source, row, "C7")
+    write_receipt(source)
     ctx, obj = context(source), component_for("C7")
     with ctx.reader:
         cs = list(obj.iter_candidates(ctx))
@@ -359,11 +374,19 @@ def test_attribution_maps_only_complete_held_bibliography(source):
     assert BOOK_ADAPTER.resolve(row["bibliography"], citation(row), row, None).bibliography == row["bibliography"]
 
 
-def test_independent_unit_scanner_and_extractor_agree_and_preserve_tokens():
-    text = "SYNTHETIC apost'rophe apost’rophe apostʼrophe repeat repeat digit9lower"
-    assert scan_tokens(text) == token_spans(text)
-    assert list(scan_tokens(text)).count("repeat") == 1
-    assert form_unit({"id": 1}, (10, 15)) != form_unit({"id": 1}, (16, 20))
+def test_packet_writer_batches_only_located_rows_and_keeps_unicode_offsets(source, tmp_path):
+    rows = [{**source["rows"][0], "id": i, "text": "SYNTHETIC α wrong right."} for i in range(43)]
+    rows[-1]["section"] = ""
+    stats = write_packets(rows, tmp_path / "SYNTHETIC-packets")
+    assert stats == {"batches": 3, "rows": 42}
+    for batch in batches(rows):
+        receipts = selection_receipts(batch)
+        for receipt in receipts.values():
+            for item in receipt["rows"]:
+                item["pairs"] = [pair_for({"text": rows[0]["text"]}, "wrong", "right")]
+        assert all(r["reason"] == "ok" for r in validate_receipts(batch, receipts).values())
+    with pytest.raises(BuildError, match="adjudication_batch_size"):
+        batches(rows, 0)
 
 
 @pytest.mark.parametrize(
@@ -376,7 +399,7 @@ def test_independent_unit_scanner_and_extractor_agree_and_preserve_tokens():
     ],
 )
 def test_missing_or_ineligible_attestation_withholds(source, table, mutation, reason):
-    write_receipt(source, source["rows"][0], "C7")
+    write_receipt(source)
     path = source["vesum"] if table == "forms_all" else source["db"]
     with sqlite3.connect(path) as c:
         c.execute(f"UPDATE {table} SET {mutation} WHERE id=1")
@@ -385,33 +408,22 @@ def test_missing_or_ineligible_attestation_withholds(source, table, mutation, re
         cs = list(obj.iter_candidates(ctx))
         assert cs[0].reason == reason
         assert cs[0].outcome == "withheld"
-        assert gate(ctx, obj, "C7").run(cs)[0] == []
+        records, report = gate(ctx, obj, "C7").run(cs)
+        assert len(records) == 1
+        assert report["accounting"]["C7"]["reasons"][reason] == 1
 
 
 def test_changed_pair_form_keys_fail_independent_gate(source):
-    for row in source["rows"]:
-        write_receipt(source, row, "C7")
+    write_receipt(source)
     ctx, obj = context(source), component_for("C7")
     with ctx.reader:
         cs = list(obj.iter_candidates(ctx))
         rec = next(v for v in cs[0].context if v.slot == "recommended")
         stored = ctx.reader.row(rec.citations[3])
         stored["recommended_key"] = "SYNTHETIC unrelated key"
-        RECEIPTS.cache[("C7", stored["id"])] = stored
+        RECEIPTS.records[stored["id"]] = stored
         with pytest.raises(BuildError, match="binding_contrast"):
             gate(ctx, obj, "C7").run(cs)
-
-
-def test_c6b_not_calque_withheld_even_when_both_seats_approve_pair(source):
-    def no_calque(r):
-        r["calque"] = False
-        for seat in MODELS:
-            r[seat]["calque"] = False
-
-    write_receipt(source, source["rows"][0], "C6b", no_calque)
-    ctx = context(source)
-    with ctx.reader:
-        assert next(component_for("C6b").iter_candidates(ctx)).reason == "not_calque"
 
 
 def test_no_receipt_root_never_approves_and_shared_store_does_not_leak_sessions(source):
@@ -430,8 +442,7 @@ def test_source_bound_packet_build_verify_and_tamper_refusal(source, component, 
 
     from scripts.projects.open_model_data.review_build.build import execute
 
-    for row in source["rows"]:
-        write_receipt(source, row, component)
+    write_receipt(source)
     obj = component_for(component)
     ctx = context(source)
     with ctx.reader:
@@ -461,3 +472,106 @@ def test_source_bound_packet_build_verify_and_tamper_refusal(source, component, 
         guard.write(packet_name, b"SYNTHETIC changed packet")
         with pytest.raises(BuildError, match="artifact_mismatch"):
             execute(config, guard, verify=True, component_objects={component: obj})
+
+
+@pytest.mark.parametrize("component", ["C6b", "C7"])
+def test_multiple_pairs_per_row_preserve_row_denominator_and_all_records(source, component):
+    row = source["rows"][0]
+    row["text"] += " other better."
+    with sqlite3.connect(source["db"]) as c:
+        c.execute("UPDATE style_guide SET text=? WHERE id=1", (row["text"],))
+
+    def add_pair(receipts):
+        for seat in MODELS:
+            receipts[seat]["rows"][0]["pairs"].append(pair_for(row, "other", "better"))
+        receipts["opus"]["rows"][0]["pairs"].reverse()
+
+    write_receipt(source, add_pair)
+    ctx, obj = context(source), component_for(component)
+    with ctx.reader:
+        cs = list(obj.iter_candidates(ctx))
+        records, report = gate(ctx, obj, component).run(cs)
+        assert len(records) == 3
+        assert report["accounting"][component]["accepted"] == 2
+        assert report["operation_accounting"][f"{component}.{obj.spec['operations'][0]}"]["records_counted"] == 3
+        with pytest.raises(BuildError, match="duplicate_record"):
+            gate(ctx, obj, component).run([*cs, cs[0]])
+
+
+@pytest.mark.parametrize("component", ["C6b", "C7"])
+def test_same_quote_at_other_offset_does_not_replace_selected_span(source, component):
+    row = source["rows"][0]
+    row["text"] += " wrong"
+    with sqlite3.connect(source["db"]) as c:
+        c.execute("UPDATE style_guide SET text=? WHERE id=1", (row["text"],))
+    write_receipt(source)
+    ctx, obj = context(source), component_for(component)
+    with ctx.reader:
+        cs = list(obj.iter_candidates(ctx))
+        area = "slots" if component == "C6b" else "context"
+        parts = list(getattr(cs[0], area))
+        i = next(i for i, v in enumerate(parts) if v.slot in {"expression", "rejected"})
+        parts[i] = replace(parts[i], span=(row["text"].rindex("wrong"), len(row["text"])))
+        cs[0] = replace(cs[0], **{area: tuple(parts)})
+        with pytest.raises(BuildError, match="binding_span"):
+            gate(ctx, obj, component).run(cs)
+
+
+@pytest.mark.parametrize("seat", ["sol", "opus"])
+def test_binding_rechecks_each_raw_receipt_digest(source, seat):
+    write_receipt(source)
+    ctx, obj = context(source), component_for("C6b")
+    with ctx.reader:
+        cs = list(obj.iter_candidates(ctx))
+        sha = next(iter(RECEIPTS.documents))
+        RECEIPTS.documents[sha][1][seat] += b"\n"
+        with pytest.raises(BuildError, match="adjudication_stale"):
+            gate(ctx, obj, "C6b").run(cs)
+
+
+def test_packet_digest_refuses_changed_batch():
+    row = {"id": 1, "text": "SYNTHETIC wrong right.", "section": "SYNTHETIC section"}
+    batch = batches([row])[0]
+    receipts = selection_receipts(batch)
+    batch["rows"][0]["text"] += " changed"
+    with pytest.raises(BuildError, match="adjudication_stale"):
+        validate_receipts(batch, receipts)
+
+
+def test_pending_c7_never_queries_headword_inventory(source, monkeypatch):
+    ctx = context(source)
+    with ctx.reader:
+        monkeypatch.setattr(
+            ctx.reader, "query_values", lambda q: pytest.fail("unexpected witness query before adjudication")
+        )
+        assert [c.reason for c in component_for("C7").iter_candidates(ctx)] == ["adjudication_pending"] * 2
+
+
+def test_non_headword_pair_is_c6b_record_but_excluded_from_c7(source):
+    write_receipt(source)
+    with sqlite3.connect(source["db"]) as c:
+        c.execute("DELETE FROM sum11 WHERE id=1")
+    ctx = context(source)
+    with ctx.reader:
+        assert next(component_for("C6b").iter_candidates(ctx)).outcome == "accepted"
+        assert next(component_for("C7").iter_candidates(ctx)).reason == "not_sum11_headword"
+
+
+def test_c7_unstresses_comparison_without_changing_cited_text(source):
+    row = source["rows"][0]
+    row["text"] = "SYNTHETIC wro\u0301ng right."
+    with sqlite3.connect(source["db"]) as c:
+        c.execute("UPDATE style_guide SET text=? WHERE id=1", (row["text"],))
+        c.execute("UPDATE sum11 SET word='wróng' WHERE id=1")
+    write_receipt(source)
+    ctx, obj = context(source), component_for("C7")
+    with ctx.reader:
+        cs = list(obj.iter_candidates(ctx))
+        assert cs[0].outcome == "accepted"
+        assert next(v.text for v in cs[0].context if v.slot == "rejected") == "wróng"
+        assert len(gate(ctx, obj, "C7").run(cs)[0]) == 2
+
+
+def test_receipt_store_refuses_unreviewed_unit_queries():
+    with pytest.raises(BuildError, match="unit_query"):
+        RECEIPTS.units({"kind": "antonenko_candidate_headwords.v1"})

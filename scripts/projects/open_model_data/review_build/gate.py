@@ -183,20 +183,33 @@ class Gate:
                 require(len(independent) == domain["frozen_count"], "frozen_count")
                 subset = [c for c in stream if operation is None or c.operation == operation]
                 units = [c.unit_id for c in subset]
-                require(len(units) == len(set(units)), "duplicate_unit")
+                multiplicity = domain.get("unit_multiplicity", "one")
+                require(multiplicity in {"one", "records"}, "unit_multiplicity")
+                require(multiplicity == "records" or len(units) == len(set(units)), "duplicate_unit")
                 require(set(units) == set(independent), "missing_unit")
-                outcomes = Counter(c.outcome for c in subset)
-                require(set(outcomes) <= {"accepted", "rejected", "withheld", "excluded"}, "outcome")
+                grouped = defaultdict(list)
+                for c in subset:
+                    grouped[c.unit_id].append(c)
+                # Accounting remains row-grained. Any withheld pair leaves that
+                # row withheld; otherwise at least one admitted pair accepts it.
+                priority = {"withheld": 0, "rejected": 1, "accepted": 2, "excluded": 3}
+                representatives = [
+                    min(group, key=lambda c: (priority.get(c.outcome, 4), c.reason)) for group in grouped.values()
+                ]
+                outcomes = Counter(c.outcome for c in representatives)
+                require({c.outcome for c in subset} <= {"accepted", "rejected", "withheld", "excluded"}, "outcome")
                 require(sum(outcomes.values()) == len(independent), "accounting")
                 require(all(c.reason in domain["reasons"][c.outcome] for c in subset), "reason_code")
                 total += len(independent)
                 counts.update(outcomes)
-                reasons.update(c.reason for c in subset)
+                reasons.update(c.reason for c in representatives)
                 if operation is not None:
                     operation_accounting[f"{component}.{operation}"] = {
                         "counted": len(independent),
+                        "records_counted": len(subset),
+                        "record_reasons": dict(sorted(Counter(c.reason for c in subset).items())),
                         **{o: outcomes[o] for o in ("accepted", "rejected", "withheld", "excluded")},
-                        "reasons": dict(sorted(Counter(c.reason for c in subset).items())),
+                        "reasons": dict(sorted(Counter(c.reason for c in representatives).items())),
                     }
             accounting[component] = {
                 "counted": total,

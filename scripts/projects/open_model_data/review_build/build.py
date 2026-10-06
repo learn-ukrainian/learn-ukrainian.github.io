@@ -185,7 +185,11 @@ def verify_mutations(
         "empty_locator": changed_value(
             replace(value, citations=(replace(value.citations[0], locator=""), *value.citations[1:]))
         ),
-        "missing_unit": candidates[:i] + candidates[i + 1 :],
+        "missing_unit": [
+            c
+            for c in candidates
+            if (c.component, c.operation, c.unit_id) != (candidate.component, candidate.operation, candidate.unit_id)
+        ],
     }
     # Find an observable swap: a heading's span can quote the same prefix from
     # two different fields, in which case that particular swap is no mutation.

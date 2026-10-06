@@ -166,6 +166,10 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
             operands = [operand(candidate, s, reader) for s in selectors]
             require(len(operands) >= 2 and all(o == operands[0] for o in operands), "binding_equal")
             agreements.append(selectors)
+        elif op == "span_equal":
+            value = select(candidate, rule["value"])
+            expected = operand(candidate, rule["receipt"], reader)
+            require(value.span is not None and tuple(expected) == value.span, "binding_span")
         elif op == "literal":
             require(
                 bool(selectors) and all(operand(candidate, ref, reader) == rule["expected"] for ref in selectors),
