@@ -1169,3 +1169,27 @@ def test_bare_marker_does_not_join_heading_like_uppercase_line(tmp_path, label):
     assert headings(pages[0]) == []
     with SnapshotReader({"sources.db": path}) as reader:
         assert reader.units(UNIT_QUERY) == []
+
+
+@pytest.mark.parametrize(
+    "verb",
+    ["Поцікавтеся", "Поділіться", "Ознайомтеся", "Зверніться", "Переконайтеся",
+     "Проаналізуйте", "Відредагуйте", "Презентуйте", "Перекажіть", "Опишіть",
+     "Розкажіть", "Сформулюйте", "Поставте", "Продовжте", "Виберіть", "Уявіть",
+     "Одягніть", "Зафіксуйте", "Закручуйте", "Обгорніть", "Протягніть",
+     "Напишіть", "Обґрунтуйте", "Наведіть", "Схарактеризуйте"],
+)
+def test_numbered_verified_imperatives_require_their_own_printed_answer(tmp_path, verb):
+    from scripts.projects.open_model_data.review_build.components.c9 import exercise_without_answer
+
+    assert exercise_without_answer("12. " + verb + " SYNTHETIC prompt")
+    assert not exercise_without_answer("12. " + verb + " SYNTHETIC prompt\nВідповідь\nSYNTHETIC answer")
+    pages = [
+        page(1, imprint()),
+        page(2, "§ 1. SYNTHETIC Heading\n12. " + verb + " SYNTHETIC prompt"),
+        page(3, "§ 2. SYNTHETIC Next\nSYNTHETIC final prose"),
+    ]
+    path = tmp_path / "SYNTHETIC.db"
+    write_pages(path, pages)
+    with SnapshotReader({"sources.db": path}) as reader:
+        assert extract(reader, pages)[0].reason == "exercise_without_answer"
