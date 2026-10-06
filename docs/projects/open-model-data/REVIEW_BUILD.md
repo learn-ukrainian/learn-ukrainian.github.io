@@ -1,6 +1,7 @@
-# Epic #6321 — private review build RB-1 (design v1.3.1)
+# Epic #6321 — private review build RB-1 (design v1.4)
 
-Status: APPROVED — v1.3 Sol APPROVE (`design-rb1-sol-r3`); v1.3.1 editorial tightenings.
+Status: APPROVED — v1.3 Sol APPROVE (`design-rb1-sol-r3`); v1.3.1 editorial tightenings; v1.4 records the operator
+decision of 2026-10-06 (word cards first, §6(b)), approved with the word-card data plan (`design-cards-plan-sol-r2`).
 Authority: operator decision 2026-10-06 on #6321 and its addendum (00:25Z): build the complete dataset (plan v3.5.0,
 C1–C7 + C9) as a **private review build** for Ukrainian researchers, on the project's own build host, against the local
 Sources MCP and `sources.db`; every value carries `source_id`, snapshot, locator, `licence_ref` and attribution; no
@@ -227,9 +228,13 @@ reasoning text; a unit missing from the candidate stream.
 - Every component: `split` is not asserted — all records are `status: review_only`.
 
 ## 6. Deviation from plan sequencing (versioned amendment, needs this approval)
-Changed for RB-1 only: (a) no E13 gate before C2–C9 (no training claim; D4 stays open); (b) C3, C4, C7 built directly
-from the same held sources with the plan's P5 bindings instead of the Atlas word cards (#8981/#8982 open); when cards
-land, #8988/#8989 either replace these extractors or prove record equivalence. Unchanged: P1–P6, PA3-style gate (§4),
+Changed for RB-1 only: (a) no E13 gate before C2–C9 (no training claim; D4 stays open); (b) **withdrawn in v1.4** by the operator
+decision of 2026-10-06 on #6321 ("word-level data comes from the word cards — no drift, no rush"): C2 (forms,
+stress), C3 (relations and СУМ-20 meaning), C4 (phraseology) and C7 (Russification contrast) are projections of the
+word cards (#8988, #8989), built after the cards pass their gates, per
+[`WORD_CARDS_DATA_PLAN.md`](WORD_CARDS_DATA_PLAN.md). Their §5 unit and binding rules stay normative: they become the
+cards' acceptance rules and the projections' gate. The reviewed WP2/WP3 extraction and the WP6 C7 extractor are reused
+as card ingestion, not merged as RB-1 components. C1, C5, C6 and C9 continue directly as designed. Unchanged: P1–P6, PA3-style gate (§4),
 catalog-only project text, D1–D3 for RB-1, ruler exclusions above, every PA gate before any training build.
 **Catalog amendment (WP-CAT)** before rendering: set catalog status from `draft` to reviewed for RB-1 use (PA6 reviews
 recorded on #9611) add the `context` serialization for C7's pair, and add a C3 `sense_definition` operation for
