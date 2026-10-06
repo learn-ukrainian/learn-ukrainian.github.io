@@ -2,16 +2,18 @@ import ast
 import copy
 import json
 import pkgutil
-from dataclasses import replace
+import sqlite3
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import pytest
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.projects.open_model_data import review_build as framework
 from scripts.projects.open_model_data.review_build import __main__ as cli
 from scripts.projects.open_model_data.review_build import output
 from scripts.projects.open_model_data.review_build.attribution import Attribution, Resolver, SyntheticAdapter
-from scripts.projects.open_model_data.review_build.build import execute
+from scripts.projects.open_model_data.review_build.build import _jsonl, execute
 from scripts.projects.open_model_data.review_build.contract import canonical, digest
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.manifest import private_manifest
@@ -48,6 +50,28 @@ def test_build_verify_determinism_and_tamper_refusal(bundle):
             execute(bundle["root"] / "request.json", guard, verify=True)
     for path in dirs:
         assert all(p.stat().st_mode & 0o777 == (0o700 if p.is_dir() else 0o600) for p in path.rglob("*"))
+
+
+@pytest.mark.parametrize("separator", ["\u2028", "\u2029", "\u0085"])
+def test_unicode_separators_round_trip_write_read_verify(bundle, separator):
+    candidate = bundle["candidates"][0]
+    value = candidate.slots[0]
+    text = value.text + separator + "SYNTHETIC continuation"
+    citation = replace(value.citations[0], field_sha256=digest(text.encode("utf-8")))
+    bundle["candidates"][0] = replace(candidate, slots=(replace(value, text=text, citations=(citation,)),))
+    with sqlite3.connect(bundle["db"]) as writer:
+        writer.execute("UPDATE units SET source_field=? WHERE id=1", (text,))
+    raw = _jsonl([asdict(c) for c in bundle["candidates"]])
+    assert separator.encode("utf-8") in raw
+    (bundle["root"] / "input.jsonl").write_bytes(raw)
+    with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
+        execute(bundle["root"] / "request.json", guard)
+        emitted = guard.read("C1/records.jsonl")
+        assert separator.encode("utf-8") in emitted
+        records = [json.loads(line) for line in jsonl_lines(emitted.decode("utf-8")) if line.strip()]
+        assert len(records) == len(bundle["candidates"])
+        assert [v["text"] for r in records for v in r["values"] if v["slot"] == "sentence"].count(text) == 1
+        assert execute(bundle["root"] / "request.json", guard, verify=True)["status"] == "verified"
 
 
 @pytest.mark.parametrize(
@@ -347,7 +371,8 @@ def test_verify_generates_five_private_generic_mutation_fixtures(bundle):
         for name, code in results.items():
             stream = [
                 candidate_from_dict(json.loads(line))
-                for line in guard.read(f"mutation-fixtures/{name}.jsonl").splitlines()
+                for line in jsonl_lines(guard.read(f"mutation-fixtures/{name}.jsonl").decode("utf-8"))
+                if line.strip()
             ]
             with pytest.raises(BuildError, match=code):
                 run_gate(bundle, stream)

@@ -169,6 +169,7 @@ class SnapshotReader:
         require(bool(keys), "invalid_row_key")
         for item in conn.execute(query, (word,)):
             row = dict(item)
+            require(isinstance(row[policy["field"]], str), "field_unavailable")
             row_key = ";".join(f"{key}={row[key]}" for key in keys)
             self.reads.setdefault((policy["store"], policy["table"]), set()).add(
                 (row_key, digest(row[policy["field"]].encode("utf-8")))

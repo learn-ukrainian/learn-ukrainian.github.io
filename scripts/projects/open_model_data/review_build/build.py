@@ -7,6 +7,8 @@ from pathlib import Path
 
 import yaml
 
+from scripts.common.jsonl import jsonl_lines
+
 from .attribution import AttributionAdapter, Resolver, SyntheticAdapter
 from .bindings import select
 from .catalog import Catalog
@@ -242,7 +244,9 @@ def execute(
     register_bytes = input_path(config["register"]).read_bytes()
     candidates_bytes = input_path(config["candidates"]).read_bytes()
     catalog = Catalog(yaml.safe_load(catalog_bytes))
-    candidates = [candidate_from_dict(json.loads(line)) for line in candidates_bytes.splitlines() if line.strip()]
+    candidates = [
+        candidate_from_dict(json.loads(line)) for line in jsonl_lines(candidates_bytes.decode("utf-8")) if line.strip()
+    ]
     source_adapters = dict(adapters or {})
     for source in config.get("synthetic_sources", []):
         require(source.startswith("synthetic"), "synthetic_adapter_source")

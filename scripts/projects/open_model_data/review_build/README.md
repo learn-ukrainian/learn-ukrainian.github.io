@@ -15,8 +15,10 @@ Relative input paths resolve against the request's directory. `synthetic_sources
 permits only ids starting with `synthetic` and register forms starting with
 `SYNTHETIC `. Real callers supply `AttributionAdapter` and `FileStore` objects.
 Input file bytes, component declarations, framework source files, checkout SHA,
-read rows and file-store digests are pinned in the manifest. Verification reruns
-all gates and compares all expected output bytes, including provenance and pins.
+and file-store digests are pinned in the manifest. DB snapshots pin cited columns'
+bytes as `(row_key, field_sha256)` pairs, not entire rows. `verify` re-runs the gate
+against the live DB and compares all expected output bytes, including provenance
+and pins.
 It then generates and checks generic mutation fixtures under `--out/mutation-fixtures/`.
 Those private fixtures are not committed or included in the build manifest.
 

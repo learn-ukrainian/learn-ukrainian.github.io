@@ -108,6 +108,28 @@ def test_vesum_transform_queries_pinned_form_set(bundle, tmp_path):
             reader.is_word("SYNTHETIC", {**policy, "store": "sources.db"})
 
 
+@pytest.mark.parametrize("field", [None, 1, b"SYNTHETIC"])
+def test_word_check_non_text_field_fails_closed(tmp_path, field):
+    db = tmp_path / "synthetic-vesum.db"
+    with sqlite3.connect(db) as writer:
+        writer.execute("CREATE TABLE forms(id INTEGER PRIMARY KEY, form TEXT)")
+        writer.execute("INSERT INTO forms VALUES(1, 'SYNTHETIC')")
+
+    def malformed_row(cursor, values):
+        row = dict(zip((column[0] for column in cursor.description), values, strict=True))
+        # Simulate a malformed word-check result; PRAGMA schema rows stay intact.
+        if "form" in row:
+            row["form"] = field
+        return row
+
+    with SnapshotReader({"vesum.db": db}) as reader:
+        reader.connections["vesum.db"].row_factory = malformed_row
+        with pytest.raises(BuildError, match=r"^field_unavailable$") as error:
+            reader.is_word("SYNTHETIC", {"store": "vesum.db", "table": "forms", "field": "form"})
+        assert error.value.code == "field_unavailable"
+        assert reader.snapshots() == {}
+
+
 def test_file_store_interface():
     class SyntheticStore:
         def row(self, table, key):
