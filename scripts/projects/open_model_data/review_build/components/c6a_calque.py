@@ -15,6 +15,7 @@ REASONS = {
     "accepted": ["calque_only"],
     "rejected": [],
     "withheld": [
+        "unparsed_annotation_markup",
         "unaligned",
         "boundary_ambiguous",
         "empty",
@@ -55,6 +56,8 @@ def candidate(row: dict, splits) -> Candidate:
     require(row["layer"] == "gec-fluency" and "F/Calque" in row["edits"], "component_layer")
     reason = exclusion(row, splits)
     outcome = "excluded" if reason else "accepted"
+    if not reason and row["unparsed_annotation_markup"]:
+        outcome, reason = "withheld", "unparsed_annotation_markup"
     if not reason and not row["edit_aligned"]:
         outcome, reason = "withheld", "boundary_ambiguous"
     if not reason and any(tag != "F/Calque" for tag in row["edits"]):

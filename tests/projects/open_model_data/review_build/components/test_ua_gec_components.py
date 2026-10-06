@@ -677,3 +677,93 @@ def test_replay_maps_equal_whitespace_runs_and_refuses_unequal_interiors():
     edit = SimpleNamespace(start=2, end=3, suggestions=[""], meta={"error_type": "Grammar"})
     assert ua_gec_split.replay_alignment("A   B.", ["A   B."], ["A  B."], [edit]) == [None]
     assert ua_gec_split.replay_alignment("A   B.", ["A B."], ["AB."], [edit]) == ["boundary_ambiguous"]
+
+
+@pytest.mark.parametrize(
+    "raw,expected",
+    [
+        ("SYNTHETIC {bad=>fixed\ncontinued\nend} text.\nSYNTHETIC normal.", {0, 1, 2}),
+        ("SYNTHETIC {fragment} text.\nSYNTHETIC normal.", {0}),
+        ("SYNTHETIC stray} text.\nSYNTHETIC normal.", {0}),
+        ("SYNTHETIC {unterminated=> text.\nSYNTHETIC normal.", {0}),
+        ("SYNTHETIC normal.\nSYNTHETIC normal too.", set()),
+        ("SYNTHETIC first.\\nSYNTHETIC {fragment}.", {1}),
+    ],
+)
+def test_raw_markup_scan_covers_every_touched_sentence(raw, expected):
+    import re
+
+    annotated = SyntheticAnnotation(raw, [])
+    annotated.ANNOTATION_PATTERN = re.compile(r"\{([^{]*)=>(.*?)(:::[^:][^}]*)?\}")
+    original = raw.replace("\\n", "\n")
+    assert ua_gec_split.unparsed_annotation_sentences(raw, original, original.split("\n"), annotated) == expected
+
+
+def test_raw_markup_scan_masks_parsed_annotations_and_authenticated_learner_braces():
+    import re
+
+    raw = "SYNTHETIC {learner}=>fixed:::error_type=Grammar}.\nSYNTHETIC normal."
+    original = "SYNTHETIC learner}.\nSYNTHETIC normal."
+    annotated = SyntheticAnnotation(raw, [SimpleNamespace(source_text="learner}")])
+    annotated.ANNOTATION_PATTERN = re.compile(r"\{([^{]*)=>(.*?)(:::[^:][^}]*)?\}")
+    assert ua_gec_split.unparsed_annotation_sentences(raw, original, original.split("\n"), annotated) == set()
+    with pytest.raises(BuildError, match="annotation_file_binding"):
+        ua_gec_split.unparsed_annotation_sentences(raw, original + "SYNTHETIC", original.split("\n"), annotated)
+
+
+@pytest.mark.parametrize("module", [c1_ua_gec, c6a_calque])
+@pytest.mark.parametrize("broken", ["{bad=>fixed\ncontinued}", "{fragment}", "stray}"])
+def test_file_store_withholds_raw_markup_per_annotator_and_preserves_normal_sentence(store, module, broken):
+    import re
+
+    layer = "gec-only" if module is c1_ua_gec else "gec-fluency"
+    document = next(
+        d
+        for d in store.synthetic_documents[layer]
+        if d.meta.doc_id not in store.splits.dev_documents
+        and d.meta.partition == "train"
+        and not d.meta.is_sensitive
+        and d.meta.doc_id != "0001"
+    )
+    document.source_sentences = ("SYNTHETIC " + broken + " text.\nSYNTHETIC normal.").split("\n")
+    document.source = "\n".join(document.source_sentences) + "\n"
+    document.target_sentences = list(document.source_sentences)
+    tag = "Grammar" if layer == "gec-only" else "F/Calque"
+    marker = "{=>:::error_type=" + tag + "}"
+    raw = "\n".join(marker + s for s in document.source_sentences) + "\n"
+    offset, edits = 0, []
+    for sentence in document.source_sentences:
+        edits.append(
+            SimpleNamespace(start=offset, end=offset, source_text="", suggestions=[""], meta={"error_type": tag})
+        )
+        offset += len(sentence) + 1
+    document.annotated = SyntheticAnnotation(raw, edits)
+    document.annotated.ANNOTATION_PATTERN = re.compile(r"\{([^{]*)=>(.*?)(:::[^:][^}]*)?\}")
+    base = store.root / f"data/{layer}/train"
+    doc_id, annotator = document.meta.doc_id, document.meta.annotator_id
+    (base / f"annotated/{doc_id}.a{annotator}.ann").write_text(raw)
+    (base / f"source-sentences/{doc_id}.src.txt").write_text(document.source)
+    (base / f"target-sentences/{doc_id}.a{annotator}.txt").write_text(document.source)
+    rebuilt = ua_gec_split.UaGecFileStore(store.root)
+    candidates = [c for c in module.extract(rebuilt) if f"/{doc_id}.a{annotator}.ann;" in c.unit_id]
+    assert len(candidates) == len(document.source_sentences)
+    assert all(c.outcome == "withheld" and c.reason == "unparsed_annotation_markup" for c in candidates[:-1])
+    assert all(c.evidence == ("unparsed_annotation_markup",) for c in candidates[:-1])
+    assert candidates[-1].outcome == "accepted"
+    assert "unparsed_annotation_markup" in module.spec()["reasons"]["withheld"]
+    # Markup takes precedence over replay and mixed-edit classifications.
+    row = rebuilt.row(candidates[0].slots[0].citations[0].table, candidates[0].unit_id)
+    row.update(aligned=False, edit_aligned=False)
+    if module is c6a_calque:
+        row["edits"].append("Grammar")
+    assert module.candidate(row, rebuilt.splits).reason == "unparsed_annotation_markup"
+
+
+@pytest.mark.parametrize("component", ["C1", "C6a"])
+def test_gate_refuses_forced_admission_of_unparsed_markup(store, component):
+    gate, candidates, _, _ = setup_gate(store, (component,))
+    base = admitted(store, component)
+    citation = base.slots[0].citations[0]
+    store._rows[citation.table, citation.row_key]["unparsed_annotation_markup"] = True
+    with pytest.raises(BuildError, match="binding_literal"):
+        gate.run(candidates)

@@ -129,6 +129,42 @@ def sentence_edits(original: str, sentences: list[str], annotations) -> tuple[li
     return edits, ambiguous
 
 
+def unparsed_annotation_sentences(raw: str, original: str, sentences: list[str], annotated) -> set[int]:
+    """Locate residual raw markup independently of edit replay.
+
+    Mask only spans the official reader actually parsed, projecting their
+    decoded learner-text length onto source offsets. Scan the remaining raw
+    regions across LF boundaries; a marker withholds every sentence it touches.
+    Unparsed braces have no authenticated learner-text provenance, so withhold
+    them too. Learner braces inside parsed source spans are outside this residual scan.
+    """
+    if not any(c in raw for c in "{}"):
+        return set()
+    matches = list(annotated.ANNOTATION_PATTERN.finditer(raw))
+    annotations = annotated.get_annotations()
+    require(len(matches) == len(annotations), "annotation_file_binding")
+    projected, decoded, cursor = [], [], 0
+    for match, annotation in zip(matches, annotations, strict=True):
+        # get_original_text() also unescapes literal LF escapes outside parsed
+        # annotations. Project onto those final source offsets, not raw bytes.
+        gap = raw[cursor : match.start()].replace("\\n", "\n")
+        learner = annotation.source_text.replace("\\n", "\n")
+        projected.extend((gap, " " * len(learner)))
+        decoded.extend((gap, learner))
+        cursor = match.end()
+    projected.append(raw[cursor:].replace("\\n", "\n"))
+    decoded.append(raw[cursor:].replace("\\n", "\n"))
+    require("".join(decoded) == original, "annotation_file_binding")
+    residual = "".join(projected)
+    regions = [(m.start(), m.end()) for m in re.finditer(r"\{[^{}]*=>[^{}]*\}", residual, re.S)]
+    regions.extend((m.start(), m.end()) for m in re.finditer(r"[{}]", residual))
+    return {
+        i
+        for i, (lo, hi) in enumerate(sentence_spans(original, sentences))
+        if any(start < hi and end > lo for start, end in regions)
+    }
+
+
 def replay_alignment(original: str, sentences: list[str], targets: list[str], annotations) -> list[str | None]:
     """Authenticate each target against only this annotator's sentence edits.
 
@@ -323,6 +359,7 @@ class UaGecFileStore:
         annotations = document.annotated.get_annotations()
         edits, ambiguous = sentence_edits(document.source, source_sentences, annotations)
         alignment = replay_alignment(document.source, source_sentences, target_sentences, annotations)
+        unparsed = unparsed_annotation_sentences(annotation, document.source, source_sentences, document.annotated)
         for i, sentence in enumerate(source_sentences):
             key = f"file={annotation_file};sentence={i}"
             row = {
@@ -348,6 +385,7 @@ class UaGecFileStore:
                 "aligned": alignment[i] is None,
                 "alignment_reason": alignment[i],
                 "edit_aligned": i not in ambiguous,
+                "unparsed_annotation_markup": i in unparsed,
             }
             require((table, key) not in self._rows, "duplicate_unit_query")
             self._rows[table, key] = row

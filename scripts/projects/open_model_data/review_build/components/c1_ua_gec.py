@@ -12,6 +12,7 @@ REASONS = {
     "accepted": ["aligned_pair"],
     "rejected": [],
     "withheld": [
+        "unparsed_annotation_markup",
         "unaligned",
         "boundary_ambiguous",
         "empty",
@@ -52,6 +53,7 @@ def spec() -> dict:
                 {"op": "equal", "values": [TARGET, {**TARGET, "field": "target_sentence"}]},
                 {"op": "literal", "values": [{**SENTENCE, "field": "layer"}], "expected": "gec-only"},
                 {"op": "literal", "values": [{**SENTENCE, "field": "aligned"}], "expected": True},
+                {"op": "literal", "values": [{**SENTENCE, "field": "unparsed_annotation_markup"}], "expected": False},
             ],
         },
     }
@@ -61,6 +63,8 @@ def candidate(row: dict, splits) -> Candidate:
     require(row["layer"] == "gec-only", "component_layer")
     reason = exclusion(row, splits)
     outcome = "excluded" if reason else "accepted"
+    if not reason and row["unparsed_annotation_markup"]:
+        outcome, reason = "withheld", "unparsed_annotation_markup"
     if not reason and not row["aligned"]:
         outcome, reason = "withheld", row.get("alignment_reason") or "unaligned"
     if not reason and (not row["source_sentence"].strip() or not row["target_sentence"].strip()):

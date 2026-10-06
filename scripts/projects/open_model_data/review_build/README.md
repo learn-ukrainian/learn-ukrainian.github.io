@@ -100,6 +100,16 @@ included in the build manifest.
 
 ## Component specs
 
+C1 and C6a use the held official UA-GEC reader. Their registered component
+specs own the UA-GEC compatibility, sensitivity and corpus mappings; the request
+supplies only `ua_gec.root`. The root must match the shared repository's
+`data/ua-gec`, so request data cannot select another executable reader package.
+Each build/verify opens a fresh file store. Authentic reasoning-marker sentences
+are withheld as `reasoning_marker_in_source`. Raw markup outside the reader's
+parsed spans, including markers split across newlines and unauthenticated stray
+braces, is withheld as `unparsed_annotation_markup`; parsed delimiters and learner
+braces inside authenticated source spans remain source text.
+
 Every component spec requires:
 
 - `unit_query`: `{kind: sql, store: ..., sql: SELECT ..., parameters: [...]}`;
