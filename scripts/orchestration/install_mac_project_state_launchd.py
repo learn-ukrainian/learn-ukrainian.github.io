@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Install the Mac project-state reporter LaunchAgent on macOS (#7188)."""
+"""Install the Mac project-state reporter LaunchAgent on macOS (#7188).
+
+The plist is written to a temporary file and renamed into place; a symlinked
+plist, or a symlink in any directory from the home directory down to
+``Library/LaunchAgents``, is refused, including under --dry-run.
+"""
 
 from __future__ import annotations
 
@@ -8,10 +13,15 @@ import os
 import plistlib
 import subprocess
 import sys
-import tempfile
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.common.safe_unit_install import InstallError, install_unit, load_unit
 
 LABEL = "com.learn-ukrainian.project-state-reporter"
 DEFAULT_INTERVAL_MINUTES = 5
@@ -100,12 +110,10 @@ def main(argv: list[str] | None = None) -> int:
     plist_bytes = plistlib.dumps(plist, fmt=plistlib.FMT_XML, sort_keys=True)
     target = plist_path(args.home)
     if args.dry_run:
+        load_unit(target, home=args.home)
         print(plist_bytes.decode("utf-8"))
         return 0
-    with tempfile.NamedTemporaryFile(delete=False) as tmp:
-        tmp.write(plist_bytes)
-        tmp_path = tmp.name
-    os.replace(tmp_path, target)
+    install_unit(target, plist_bytes, mode=0o600, home=args.home)
     _launchctl(["bootout", _service_target()], check=False)
     _launchctl(["bootstrap", _domain(), str(target)], check=True)
     _launchctl(["enable", _service_target()], check=True)
@@ -116,6 +124,6 @@ def main(argv: list[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except LaunchdError as exc:
+    except (LaunchdError, InstallError) as exc:
         print(exc, file=sys.stderr)
         raise SystemExit(2) from None

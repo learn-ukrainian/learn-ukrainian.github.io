@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.api.release_snapshot import build_release, prune_releases
+from scripts.common.safe_unit_install import InstallError, install_unit, load_unit, remove_unit
 
 LABEL = "com.learn-ukrainian.monitor-api"
 PORT = 8765
@@ -187,11 +188,16 @@ def _validate_runtime(repo_root: Path) -> None:
 
 
 def install(*, repo_root: Path, home: Path) -> dict[str, object]:
-    """Write or reconcile the LaunchAgent plist without starting the service."""
+    """Write or reconcile the LaunchAgent plist without starting the service.
+
+    The plist goes through the shared unit helper, which refuses a symlinked
+    plist or a symlink in any directory from ``home`` down to
+    ``Library/LaunchAgents`` (#9875).
+    """
     root = repo_root.resolve()
     _validate_runtime(root)
     destination = plist_path(home)
-    changed = atomic_write(destination, render_plist(repo_root=root))
+    changed = install_unit(destination, render_plist(repo_root=root), mode=0o600, home=home)
     return {
         "action": "install",
         "changed": changed,
@@ -325,13 +331,17 @@ def stop(*, home: Path) -> dict[str, object]:
 
 
 def uninstall(*, home: Path) -> dict[str, object]:
-    """Disable, unload, and remove the plist while preserving crash evidence."""
-    result = stop(home=home)
+    """Disable, unload, and remove the plist while preserving crash evidence.
+
+    The destination is checked before launchd is touched: a symlink anywhere
+    from ``home`` down to the plist is refused, so neither the service nor the
+    link target changes. The plist then goes through the unit helper's
+    descriptor-relative removal (#9875).
+    """
     destination = plist_path(home)
-    existed = destination.exists()
-    if existed:
-        destination.unlink()
-        _fsync_directory(destination.parent)
+    load_unit(destination, home=home)
+    result = stop(home=home)
+    existed = remove_unit(destination, home=home)
     return {
         **result,
         "action": "uninstall",
@@ -341,15 +351,24 @@ def uninstall(*, home: Path) -> dict[str, object]:
 
 
 def status(*, home: Path) -> tuple[dict[str, object], int]:
-    """Report persisted configuration and launchd state."""
+    """Report persisted configuration and launchd state.
+
+    The plist is read through the unit helper, which refuses a symlink anywhere
+    from ``home`` down to the plist before launchd is queried (#9875).
+    """
     destination = plist_path(home)
-    loaded = _loaded_readback()
-    installed = destination.is_file()
-    valid_plist = False
     parse_error: str | None = None
-    if installed:
+    try:
+        unit = load_unit(destination, home=home)
+    except OSError as exc:
+        # Present but unreadable (a permission error, say): report it, as a failed parse is.
+        unit, parse_error = None, str(exc)
+    loaded = _loaded_readback()
+    installed = unit is not None or parse_error is not None
+    valid_plist = False
+    if unit is not None:
         try:
-            payload = plistlib.loads(destination.read_bytes())
+            payload = plistlib.loads(unit[0])
             arguments = payload.get("ProgramArguments") if isinstance(payload, dict) else None
             valid_plist = (
                 isinstance(payload, dict)
@@ -363,7 +382,7 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
                 and WRAPPER_NAME in str(arguments)
                 and not any(".venv/bin/python" in str(part) for part in arguments)
             )
-        except (OSError, ValueError, plistlib.InvalidFileException) as exc:
+        except (ValueError, plistlib.InvalidFileException) as exc:
             parse_error = str(exc)
     result = {
         "action": "status",
@@ -614,7 +633,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    home = getattr(args, "home", default_home()).expanduser().resolve()
+    # Unresolved: the unit helper must see a symlinked home to refuse it (#9875).
+    home = Path(os.path.abspath(getattr(args, "home", default_home()).expanduser()))
     try:
         if args.command in {"install", "render"}:
             root = args.repo_root.expanduser().resolve()
@@ -646,7 +666,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             return returncode
         if args.command == "run":
             return run_managed_api(repo_root=args.repo_root.expanduser().resolve())
-    except LaunchdError as exc:
+    except (LaunchdError, InstallError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
     return 1

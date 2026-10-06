@@ -10,19 +10,17 @@ refused, and units are replaced by rename within the directory.
 from __future__ import annotations
 
 import argparse
-import contextlib
 import os
-import stat
 import subprocess
 import sys
 from pathlib import Path
 
-from scripts.orchestration.install_data_tier_timer import InstallError, systemctl_user, verify_units
+from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
+from scripts.orchestration.install_data_tier_timer import systemctl_user, verify_units
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE_DIR = PROJECT_ROOT / "packaging" / "systemd"
 UNITS = ("learn-ukrainian-tmp-sweep.service", "learn-ukrainian-tmp-sweep.timer")
-_NOFOLLOW = getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0)
 
 
 def render_units(repo_root: Path) -> dict[str, str]:
@@ -38,91 +36,6 @@ def render_units(repo_root: Path) -> dict[str, str]:
     return rendered
 
 
-def _open_component(dir_fd: int | None, name: str, shown: Path) -> int:
-    """``lstat`` one path component, refuse a symlink or non-directory, then open it with ``O_NOFOLLOW``."""
-    info = os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
-    if not stat.S_ISDIR(info.st_mode):
-        kind = "symlinked" if stat.S_ISLNK(info.st_mode) else "non-directory"
-        raise InstallError(f"refusing {kind} path component {shown}: the unit directory must be a real directory")
-    fd = os.open(name, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | _NOFOLLOW, dir_fd=dir_fd)
-    if (os.fstat(fd).st_dev, os.fstat(fd).st_ino) != (info.st_dev, info.st_ino):
-        os.close(fd)
-        raise InstallError(f"path component changed while opening: {shown}")
-    return fd
-
-
-def open_unit_dir(unit_dir: Path, *, create: bool = False) -> int | None:
-    """Open the unit directory one component at a time, never through a symlink.
-
-    Every component from the home directory (or ``/`` for a unit directory
-    outside home) down to the unit directory is ``lstat``-ed and refused when
-    it is a symlink, then opened relative to its checked parent with
-    ``O_NOFOLLOW``. The returned descriptor is the walk's own, so no later
-    path lookup can be redirected. A missing component is created only with
-    ``create``; otherwise the result is ``None``.
-    """
-    target = Path(os.path.abspath(unit_dir))
-    home = Path(os.path.abspath(Path.home()))
-    anchor = home if target == home or home in target.parents else Path(target.anchor)
-    fd = _open_component(None, str(anchor), anchor)
-    current = anchor
-    try:
-        for name in target.relative_to(anchor).parts:
-            current /= name
-            if create:
-                with contextlib.suppress(FileExistsError):
-                    os.mkdir(name, dir_fd=fd)
-            try:
-                child = _open_component(fd, name, current)
-            except FileNotFoundError:
-                os.close(fd)
-                return None
-            os.close(fd)
-            fd = child
-    except BaseException:
-        os.close(fd)
-        raise
-    return fd
-
-
-def read_unit(dir_fd: int, name: str) -> tuple[str, int] | None:
-    """Return an installed unit's text and permission bits; refuse anything but a regular file."""
-    try:
-        info = os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
-    except FileNotFoundError:
-        return None
-    if not stat.S_ISREG(info.st_mode):
-        raise InstallError(f"refusing non-regular or symlinked unit file: {name}")
-    fd = os.open(name, os.O_RDONLY | os.O_NONBLOCK | _NOFOLLOW, dir_fd=dir_fd)
-    with os.fdopen(fd, encoding="utf-8") as handle:
-        held = os.fstat(handle.fileno())
-        if (held.st_dev, held.st_ino) != (info.st_dev, info.st_ino):
-            raise InstallError(f"unit file changed while reading: {name}")
-        return handle.read(), stat.S_IMODE(info.st_mode)
-
-
-def write_unit(dir_fd: int, name: str, content: str) -> None:
-    """Write an owner-only temporary file beside the unit and rename it into place.
-
-    ``O_EXCL | O_NOFOLLOW`` never opens an existing path, and the rename
-    replaces the directory entry itself, so a link planted at the unit name
-    is never written through.
-    """
-    temporary = f".{name}.{os.getpid()}.tmp"
-    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | _NOFOLLOW, 0o600, dir_fd=dir_fd)
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            os.fchmod(handle.fileno(), 0o600)
-            handle.write(content)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, name, src_dir_fd=dir_fd, dst_dir_fd=dir_fd)
-    except BaseException:
-        with contextlib.suppress(FileNotFoundError):
-            os.unlink(temporary, dir_fd=dir_fd)
-        raise
-
-
 def check(rendered: dict[str, str], unit_dir: Path) -> int:
     dir_fd = open_unit_dir(unit_dir)
     try:
@@ -130,7 +43,7 @@ def check(rendered: dict[str, str], unit_dir: Path) -> int:
     finally:
         if dir_fd is not None:
             os.close(dir_fd)
-    differences = [name for name, content in rendered.items() if (installed[name] or ("",))[0] != content]
+    differences = [name for name, content in rendered.items() if (installed[name] or (b"",))[0] != content.encode()]
     if differences:
         print("unit drift: " + ", ".join(differences))
         return 1
@@ -145,9 +58,9 @@ def apply(rendered: dict[str, str], unit_dir: Path, *, enable: bool) -> int:
     changed = 0
     try:
         for name, content in rendered.items():
-            if read_unit(dir_fd, name) == (content, 0o600):
+            if read_unit(dir_fd, name) == (content.encode(), 0o600):
                 continue
-            write_unit(dir_fd, name, content)
+            write_unit(dir_fd, name, content.encode(), mode=0o600)
             changed += 1
     finally:
         os.close(dir_fd)
