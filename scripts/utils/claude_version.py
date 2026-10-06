@@ -41,6 +41,7 @@ See issue #1179.
 """
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import threading
@@ -56,6 +57,50 @@ _MIN_VERSION: tuple[int, int, int] = (2, 1, 98)
 # independent entries — one may be 2.1.98, the other may not.
 _CACHE: dict[tuple[str, ...], bool] = {}
 _CACHE_LOCK = threading.Lock()
+
+# The npx fallback prefix the bridge and the Claude adapter run when no native
+# binary is installed.
+CLAUDE_NPX_PREFIX: tuple[str, str] = ("npx", "@anthropic-ai/claude-code@latest")
+
+
+def run_version_probe(
+    cmd_prefix: Sequence[str],
+    *,
+    timeout: float,
+    cwd: str | os.PathLike[str] | None = None,
+    env: dict[str, str] | None = None,
+    stdin: int | None = None,
+) -> subprocess.CompletedProcess[str] | None:
+    """Run ``<program> --version`` for a one-word prefix or the Claude npx prefix.
+
+    Each argv is a literal, so the headless-spawn rule (#9750) can see that only
+    the fixed ``--version`` flag reaches the CLI. Any other prefix shape is not
+    probed: the return is ``None``. Spawn errors propagate to the caller.
+    """
+    if len(cmd_prefix) == 1:
+        return subprocess.run(
+            [cmd_prefix[0], "--version"],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            cwd=cwd,
+            env=env,
+            stdin=stdin,
+            check=False,
+        )
+    if tuple(cmd_prefix) == CLAUDE_NPX_PREFIX:
+        return subprocess.run(
+            ["npx", "@anthropic-ai/claude-code@latest", "--version"],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            cwd=cwd,
+            env=env,
+            stdin=stdin,
+            check=False,
+        )
+    return None
+
 
 # Strict semver regex: three dot-separated numeric parts, each up to 4 digits,
 # NOT surrounded by additional dot-number segments (so "1.2.3.4" does not
@@ -162,19 +207,15 @@ def supports_exclude_dynamic_system_prompt_sections(
     ok = False
     should_cache = True  # Only cache definitive outcomes (see docstring).
     try:
-        result = subprocess.run(
-            [*cmd_prefix, "--version"],
-            capture_output=True,
-            text=True,
-            timeout=5,
-            check=False,
-        )
-        # Concatenate stdout and stderr explicitly — `stdout or stderr`
-        # short-circuits when stdout is a bare newline (truthy but empty
-        # after strip), which would silently discard stderr. Gemini #1.
-        combined = f"{result.stdout or ''}\n{result.stderr or ''}".strip()
-        version = _parse_claude_semver(combined)
-        ok = bool(version and version >= _MIN_VERSION)
+        # An unprobeable prefix shape is a definitive unsupported (cached).
+        result = run_version_probe(cmd_prefix, timeout=5)
+        if result is not None:
+            # Concatenate stdout and stderr explicitly — `stdout or stderr`
+            # short-circuits when stdout is a bare newline (truthy but empty
+            # after strip), which would silently discard stderr. Gemini #1.
+            combined = f"{result.stdout or ''}\n{result.stderr or ''}".strip()
+            version = _parse_claude_semver(combined)
+            ok = bool(version and version >= _MIN_VERSION)
     except FileNotFoundError:
         # Binary genuinely not on PATH — definitive outcome, cache it.
         ok = False

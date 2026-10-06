@@ -19,10 +19,12 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
+from scripts.agent_runtime.adapters.claude import popen_headless_claude
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter
 
@@ -187,16 +189,20 @@ def _condition_policy(config: Mapping[str, Any], condition: str, sources_url: st
         raise AdapterError("sources condition requires nonempty sources URL and tools")
 
 
-def _run_checked(argv: list[str], *, timeout: int) -> subprocess.CompletedProcess[str]:
+@contextmanager
+def _capability_probe() -> Iterator[None]:
     try:
-        return subprocess.run(argv, capture_output=True, text=True, check=False, timeout=timeout)
+        yield
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise AdapterError("CLI capability probe failed") from exc
 
 
 def _claude_capabilities(config: Mapping[str, Any], *, needs_sources: bool = False) -> tuple[str, str]:
     binary = str(config.get("claude_bin", "claude"))
-    help_result = _run_checked([binary, "--help"], timeout=min(15, int(config["timeout_seconds"])))
+    timeout = min(15, int(config["timeout_seconds"]))
+    # Literal --help/--version argvs: the headless-spawn rule (#9750) clears only fixed probes.
+    with _capability_probe():
+        help_result = subprocess.run([binary, "--help"], capture_output=True, text=True, check=False, timeout=timeout)
     if help_result.returncode != 0:
         raise AdapterError("CLI capability probe failed")
     help_text = (help_result.stdout or "") + "\n" + (help_result.stderr or "")
@@ -205,7 +211,10 @@ def _claude_capabilities(config: Mapping[str, Any], *, needs_sources: bool = Fal
         raise AdapterError("CLI isolation capability unavailable")
     if needs_sources and "--allowedtools" not in help_text.lower():
         raise AdapterError("CLI Sources tool capability unavailable")
-    version_result = _run_checked([binary, "--version"], timeout=min(15, int(config["timeout_seconds"])))
+    with _capability_probe():
+        version_result = subprocess.run(
+            [binary, "--version"], capture_output=True, text=True, check=False, timeout=timeout
+        )
     if version_result.returncode != 0:
         raise AdapterError("CLI version unavailable")
     version = (version_result.stdout or "").strip().splitlines()[0] if version_result.stdout else "unknown"
@@ -598,9 +607,13 @@ def _nonnegative_number(value: Any) -> int | float | None:
 
 
 def _run_claude_process(argv: list[str], *, cwd: Path, env: Mapping[str, str], prompt: str, timeout: int) -> subprocess.CompletedProcess[str]:
-    """Kill the whole CLI process group so an MCP proxy cannot survive a timeout."""
+    """Kill the whole CLI process group so an MCP proxy cannot survive a timeout.
+
+    ``env`` is the child's exact base environment; the adapter adds only the
+    background controls, since the run ends with its final turn (#9750).
+    """
     try:
-        process = subprocess.Popen(argv, cwd=str(cwd), env=dict(env), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True)
+        process = popen_headless_claude(argv, base_env=env, cwd=str(cwd), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True)
         stdout, stderr = process.communicate(prompt, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
         try:
