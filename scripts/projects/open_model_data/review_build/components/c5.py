@@ -1,7 +1,7 @@
 """C5: printed colon-list examples bound to complete Правопис paragraphs.
 
 Raw spans define the frozen units. Only the reviewed dehyphenation transform
-can change paragraph bytes; unresolved readings withhold the whole paragraph.
+can change paragraph bytes; unresolved readings withhold records carrying them.
 Raw example quotes and spans retain their printed identity; targets resolve splits.
 """
 
@@ -13,10 +13,11 @@ from ..bindings import example_items
 from ..contract import Candidate, Citation, Value, canonical, digest
 from ..errors import BuildError, require
 from ..gate import evidence_id
-from ..transforms import source_text_defects, transform
+from ..transforms import Result, source_text_defects, transform, unresolved_overlaps
 from . import ComponentContext
 
 SOURCE = "pravopys_2019_official"
+REGISTER_ID = "pravopys_2019"
 STORE = "sources.db"
 TABLE = "pravopys_paragraphs"
 OPERATION = "printed_spelling_rule"
@@ -54,7 +55,7 @@ DEHYPHENATION = {
 def primary_citation(row: Mapping, field: str = "text") -> Citation:
     """Authenticate the actual composite primary key and whole-column bytes."""
     return Citation(
-        SOURCE,
+        REGISTER_ID,
         STORE,
         TABLE,
         f"source_id={row['source_id']};number={row['number']}",
@@ -73,16 +74,45 @@ class PravopysAttribution:
     """Accept only a complete register form authenticated by held bibliography."""
 
     def resolve(self, form, citation, row, reader) -> Attribution:
-        require(row["source_id"] == SOURCE and citation.source_id == SOURCE, "attribution_unresolved")
+        require(row["source_id"] == SOURCE and citation.source_id == REGISTER_ID, "attribution_unresolved")
         metadata = [r for r in reader.iter_rows(STORE, "pravopys_sources") if r["source_id"] == SOURCE]
         require(len(metadata) == 1, "attribution_unresolved")
         metadata = metadata[0]
         bibliography = metadata.get("citation")
         require(isinstance(bibliography, str) and bool(bibliography.strip()), "attribution_unresolved")
-        require(form == bibliography, "attribution_unresolved")
+        if form == bibliography:
+            require(bibliography.startswith("SYNTHETIC "), "attribution_unresolved")
+            rendered = bibliography
+        else:
+            # The register's edition statement and paragraph placeholder map to
+            # the held official edition, not to a second database source id.
+            suffix = " § <номер>."
+            require(form.startswith(bibliography + ". ") and form.endswith(suffix), "attribution_unresolved")
+            edition = form.removesuffix(suffix).rstrip(".")
+            document = reader.read_repository_config("docs/sources/pravopys-2019-official-source.md").decode("utf-8")
+            require(edition in " ".join(document.split()), "attribution_unresolved")
+            file_sha256 = metadata.get("file_sha256")
+            require(
+                isinstance(file_sha256, str) and len(file_sha256) == 64 and file_sha256 in document,
+                "attribution_unresolved",
+            )
+            number = row.get("number")
+            require(type(number) is int and 1 <= number <= 168, "attribution_unresolved")
+            rendered = form.replace("<номер>", str(number))
+            reader.field(
+                Citation(
+                    REGISTER_ID,
+                    STORE,
+                    "pravopys_sources",
+                    f"source_id={SOURCE}",
+                    "file_sha256",
+                    citation.locator,
+                    digest(file_sha256.encode("utf-8")),
+                )
+            )
         # This additional read pins the complete bibliography in the snapshot.
         held = Citation(
-            SOURCE,
+            REGISTER_ID,
             STORE,
             "pravopys_sources",
             f"source_id={SOURCE}",
@@ -91,7 +121,7 @@ class PravopysAttribution:
             digest(bibliography.encode("utf-8")),
         )
         reader.field(held)
-        return Attribution(bibliography, form)
+        return Attribution(rendered, form)
 
 
 class PravopysComponent:
@@ -100,7 +130,7 @@ class PravopysComponent:
             {
                 "store": STORE,
                 "table": TABLE,
-                "source_id": SOURCE,
+                "source_id": REGISTER_ID,
                 "role": "modern",
                 "source_column": "source_id",
                 "source_values": [SOURCE],
@@ -159,7 +189,7 @@ class PravopysComponent:
         "unit_grain": "Printed colon-list example span in its own paragraph; measured 11926 in 168 paragraphs.",
         "reference_multiplicity": "One complete source paragraph and its held locator per printed example span.",
     }
-    adapters: ClassVar[dict] = {SOURCE: PravopysAttribution()}
+    adapters: ClassVar[dict] = {REGISTER_ID: PravopysAttribution()}
     files: ClassVar[dict] = {}
 
     def iter_candidates(self, ctx: ComponentContext):
@@ -174,9 +204,7 @@ class PravopysComponent:
             try:
                 resolved = transform("dehyphenate@2", raw, DEHYPHENATION, ctx.reader)
                 normalized = resolved.text
-                if resolved.unresolved:
-                    reason = "paragraph_hyphenation_unresolved"
-                elif source_text_defects(normalized, DEHYPHENATION, ctx.reader, original=raw):
+                if source_text_defects(normalized, DEHYPHENATION, ctx.reader, original=raw):
                     reason = "source_text_defect"
             except BuildError as exc:
                 if exc.code != "hyphen_metadata_unavailable":
@@ -185,6 +213,14 @@ class PravopysComponent:
             for span in example_items(raw):
                 example = raw[span[0] : span[1]]
                 unit_reason = reason
+                # Inspect what this unit actually carries. The catalog currently
+                # requires the complete paragraph; therefore other examples in
+                # that response are visible too. Raw example spans keep identity.
+                if reason == "ok" and (
+                    unresolved_overlaps(resolved, None)
+                    or unresolved_overlaps(Result(raw, unresolved=resolved.unresolved), span)
+                ):
+                    unit_reason = "paragraph_hyphenation_unresolved"
                 response_transform = "dehyphenate@2"
                 yield Candidate(
                     "C5",

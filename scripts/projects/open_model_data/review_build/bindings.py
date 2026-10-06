@@ -13,7 +13,7 @@ import unicodedata
 from .contract import Candidate, Value
 from .errors import BuildError, require
 from .snapshot import SnapshotReader
-from .transforms import source_text_defects, transform
+from .transforms import source_text_defects, transform, unresolved_overlaps
 
 
 def select(candidate: Candidate, selector: dict) -> Value:
@@ -212,7 +212,7 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
             for ref in selectors:
                 _, field = reader.field(citation_for(candidate, ref))
                 resolved = transform(rule["transform"], field, policy, reader)
-                require(not resolved.unresolved, "binding_hyphenation")
+                require(not unresolved_overlaps(resolved, select(candidate, ref).span), "binding_hyphenation")
                 require(
                     not source_text_defects(resolved.text, policy, reader, original=field), "binding_source_text_defect"
                 )

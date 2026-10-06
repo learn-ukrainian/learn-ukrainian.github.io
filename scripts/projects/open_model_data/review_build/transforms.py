@@ -3,6 +3,8 @@
 import re
 import unicodedata
 from dataclasses import dataclass
+from difflib import SequenceMatcher
+from functools import lru_cache
 from html.parser import HTMLParser
 from types import MappingProxyType
 
@@ -149,33 +151,50 @@ def _dehyphenate_v2(text: str, policy: dict, reader: object) -> Result:
     )
 
 
-def source_text_defects(text: str, policy: dict, reader: object, *, original: str | None = None) -> tuple[str, ...]:
-    """Withhold suspected fused words, never silently insert a guessed space.
+def unresolved_overlaps(result: Result, span: tuple[int, int] | None) -> bool:
+    """Check only unresolved positions carried by a transformed value.
 
-    A whole form must be absent from VESUM and other held paragraphs. Each
-    side of a possible split must be an attested form AND an unhyphenated held
-    word. This is a conservative defect signal, not an editorial correction.
+    Decision offsets refer to the original field. Project them through earlier
+    resolved edits before comparing with model-visible spans. Unlocated metadata
+    cannot prove absence and fails closed. A whole-field value carries every
+    position; an empty unresolved set never withholds anything.
     """
+    for start, end, _ in result.unresolved:
+        if start < 0 or span is None:
+            return True
+        shift = sum(len(text) - (b - a) for a, b, text, _ in result.join_evidence if b <= start)
+        if start + shift < span[1] and end + shift > span[0]:
+            return True
+    return False
+
+
+@lru_cache(maxsize=256)
+def _boundary_defects(original: str, text: str) -> tuple[str, ...]:
+    """Locate actual whitespace deletion, rather than unrelated split witnesses."""
     defects = []
-    for match in WORDS.finditer(text):
-        token = match[0]
-        if (
-            "-" in token
-            or reader.is_word(token, policy)
-            or reader.has_text_word(token, policy, exclude=original or text)
-        ):
+    for tag, start, end, visible, _ in SequenceMatcher(None, original, text, autojunk=False).get_opcodes():
+        if tag != "delete" or not original[start:end].isspace():
             continue
-        for index in range(2, len(token) - 1):
-            left, right = token[:index], token[index:]
-            if (
-                reader.has_text_word(left, policy)
-                and reader.has_text_word(right, policy)
-                and reader.is_word(left, policy)
-                and reader.is_word(right, policy)
-            ):
-                defects.append(token)
+        # Only a deletion strictly inside the resulting whole token loses a
+        # word boundary. A retained hyphen still separates printed components.
+        for match in WORDS.finditer(text):
+            if match.start() < visible < match.end() and "-" not in match[0]:
+                defects.append(match[0])
                 break
     return tuple(defects)
+
+
+def source_text_defects(text: str, policy: dict, reader: object, *, original: str | None = None) -> tuple[str, ...]:
+    """Detect lost source word boundaries, never infer errors from rare words.
+
+    Dictionary absence and separately attested pieces cannot establish a defect
+    in a token printed by the source. Require positive boundary evidence in the
+    cited original: two consecutive whitespace-separated words fused in output.
+    No original means no evidence, rather than an invented negative attestation.
+    """
+    if original is None or text == original:
+        return ()
+    return _boundary_defects(original, text)
 
 
 REGISTRY = MappingProxyType(

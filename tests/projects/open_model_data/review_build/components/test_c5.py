@@ -18,6 +18,7 @@ from scripts.projects.open_model_data.review_build.components.c5 import (
     COMPONENT,
     FROZEN_COUNT,
     OPERATION,
+    REGISTER_ID,
     SOURCE,
     TABLE,
     UNIT_QUERY,
@@ -61,7 +62,7 @@ def source(tmp_path):
     register = {
         "sources": [
             {
-                "id": SOURCE,
+                "id": REGISTER_ID,
                 "citation": {"form": "SYNTHETIC bibliography"},
                 "terms": {"licence": {"name": "SYNTHETIC licence"}},
             }
@@ -279,12 +280,17 @@ def test_unresolved_attribution_withholds_and_authenticates_metadata(source, fai
         assert gate.run(effective)[1]["accounting"]["C5"]["withheld"] == 24
 
 
-def test_reasoning_and_source_digest_fail(source):
+def test_reasoning_source_fails(source):
     update(source, text="SYNTHETIC Reasoning: FIRST, SECOND.")
     with reader_for(source) as reader:
         gate, candidates, _ = gate_and_candidates(source, reader)
         with pytest.raises(BuildError, match="reasoning_text"):
             gate.run(candidates)
+
+
+def test_source_digest_fails(source):
+    with reader_for(source) as reader:
+        gate, candidates, _ = gate_and_candidates(source, reader)
         first = candidates[0]
         bad = replace(first.slots[0].citations[0], field_sha256=digest(b"SYNTHETIC wrong"))
         candidates[0] = replace(first, slots=(replace(first.slots[0], citations=(bad,)),))
@@ -335,7 +341,7 @@ def test_per_hyphen_resolution_withholds_only_remaining_ambiguity(source):
         assert gate.run(candidates)[1]["accounting"]["C5"]["withheld"] == 2
 
 
-def test_source_text_defect_withholding_cannot_be_forced_through_gate(source):
+def test_printed_token_is_not_a_defect_merely_because_its_pieces_are_words(source):
     update(source, text="SYNTHETIC rule ALPHABETA examples: FIRST, SECOND.")
     with sqlite3.connect(source["db"]) as writer:
         writer.execute(
@@ -345,11 +351,96 @@ def test_source_text_defect_withholding_cannot_be_forced_through_gate(source):
         writer.executemany("INSERT INTO forms_all VALUES(?,?,?)", [(2, "ALPHA", "alpha"), (3, "BETA", "beta")])
     with reader_for(source) as reader:
         gate, candidates, _ = gate_and_candidates(source, reader)
-        assert candidates[0].reason == "source_text_defect"
-        assert gate.run(candidates)[1]["accounting"]["C5"]["withheld"] == 2
-        candidates[0] = replace(candidates[0], outcome="accepted", reason="ok", evidence=())
-        with pytest.raises(BuildError, match="binding_source_text_defect"):
+        assert candidates[0].reason == "ok"
+        assert gate.run(candidates)[1]["accounting"]["C5"]["withheld"] == 0
+
+
+def test_word_boundary_loss_cannot_be_forced_through_gate(source):
+    update(source, text="SYNTHETIC rule ALPHA BETA examples: FIRST, SECOND.")
+    with reader_for(source) as reader:
+        gate, candidates, _ = gate_and_candidates(source, reader)
+        first = candidates[0]
+        target = first.response[0]
+        candidates[0] = replace(
+            first, response=(replace(target, text=target.text.replace("ALPHA BETA", "ALPHABETA")), first.response[1])
+        )
+        with pytest.raises(BuildError, match="quote_mismatch"):
             gate.run(candidates)
+
+
+@pytest.mark.parametrize("in_example", [False, True])
+def test_unresolved_hyphen_in_carried_complete_paragraph_affects_each_record(source, in_example):
+    text = (
+        "SYNTHETIC rule examples: UNKNOWN-\nmore, SECOND."
+        if in_example
+        else "SYNTHETIC rule UNKNOWN-\nmore examples: FIRST, SECOND."
+    )
+    update(source, text=text)
+    with reader_for(source) as reader:
+        gate, candidates, _ = gate_and_candidates(source, reader)
+        assert {c.reason for c in candidates[:2]} == {"paragraph_hyphenation_unresolved"}
+        assert all("UNKNOWN-\nmore" in c.response[0].text for c in candidates[:2])
+        assert gate.run(candidates)[1]["accounting"]["C5"]["withheld"] == 2
+
+
+def test_resolution_binding_only_checks_the_carried_span(source):
+    from scripts.projects.open_model_data.review_build.bindings import check
+
+    update(source, text="SYNTHETIC rule examples: FIRST, SECOND. UNKNOWN-\nmore")
+    rule = {
+        "schema": "binding-spec.v1",
+        "rules": [
+            {
+                "op": "transform_resolved",
+                "values": [{"area": "response", "slot": "paragraph"}],
+                "transform": "dehyphenate@2",
+            }
+        ],
+    }
+    with reader_for(source) as reader:
+        gate, candidates, _ = gate_and_candidates(source, reader)
+        first = candidates[0]
+        target = first.response[0]
+        carried = replace(first, response=(replace(target, text=target.text[:9], span=(0, 9)), first.response[1]))
+        assert check(carried, rule, reader, gate.spec(first)["transforms"]) == {"transform_resolved"}
+        with pytest.raises(BuildError, match="binding_hyphenation"):
+            check(first, rule, reader, gate.spec(first)["transforms"])
+
+
+@pytest.mark.parametrize("failure", [None, "wrong_edition", "wrong_hash", "wrong_source", "bad_number"])
+def test_register_alias_and_paragraph_placeholder_are_authenticated(source, tmp_path, failure):
+    from scripts.projects.open_model_data.review_build.components.c5 import PravopysAttribution
+
+    bibliography = "SYNTHETIC bibliography"
+    form = bibliography + ". 392 с. ISBN 978-966-00-1728-3. § <номер>."
+    file_hash = "a" * 64
+    document = tmp_path / "docs/sources/pravopys-2019-official-source.md"
+    document.parent.mkdir(parents=True)
+    document.write_text(bibliography + ". 392 с.\nISBN 978-966-00-1728-3 " + file_hash)
+    with sqlite3.connect(source["db"]) as writer:
+        writer.execute("ALTER TABLE pravopys_sources ADD COLUMN file_sha256 TEXT")
+        writer.execute(
+            "UPDATE pravopys_sources SET file_sha256=?", ("b" * 64 if failure == "wrong_hash" else file_hash,)
+        )
+    if failure == "wrong_edition":
+        form = form.replace("392", "391")
+    with SnapshotReader({"sources.db": source["db"]}, repository_root=tmp_path) as reader:
+        row = next(reader.iter_rows("sources.db", TABLE))
+        if failure == "bad_number":
+            row["number"] = 0
+        citation = primary_citation(row)
+        if failure == "wrong_source":
+            citation = replace(citation, source_id=SOURCE)
+        if failure:
+            with pytest.raises(BuildError, match="attribution_unresolved"):
+                PravopysAttribution().resolve(form, citation, row, reader)
+        else:
+            result = PravopysAttribution().resolve(form, citation, row, reader)
+            assert result.mapped_form == form
+            assert result.bibliography == form.replace("<номер>", "1")
+            assert citation.source_id == REGISTER_ID and row["source_id"] == SOURCE
+            assert reader.repository_config_hashes()
+            assert len(reader.reads[("sources.db", "pravopys_sources")]) == 2
 
 
 def test_v2_provenance_has_evidence_kind_and_pins_text_witness(source):

@@ -362,12 +362,22 @@ records its raw offsets, resulting form and evidence kind in `join_evidence`;
 `joins` continues to record actual hyphen removals. Held text and metadata reads
 are pinned in the source snapshot. No word lists or source edits participate.
 
-The `transform_resolved` binding recomputes `dehyphenate@2` from the complete
-held paragraph and rejects unresolved readings or suspected fused tokens.
-A suspected fused token has no whole-form VESUM attestation or occurrence in
-another held paragraph, but admits a split into two VESUM forms each occurring
-as a whole unhyphenated word in the held text. It is withheld, never repaired.
+The `transform_resolved` binding recomputes `dehyphenate@2` from the cited
+field and checks unresolved positions only where the value's visible span
+carries them, projecting original offsets through earlier resolved edits.
+Unlocated metadata fails closed. Whole-field responses carry every position.
+`source_text_defect` requires positive lost-boundary evidence in the cited
+original text; dictionary absence and possible splits into dictionary forms
+do not establish that a word printed by the source is defective. Detected
+boundary loss is withheld, never repaired. This check does not certify a PDF
+extraction: comparison with the printed source remains separate evidence.
 C5 retains raw printed example spans and quotes for identity and `example_list`
 binding; its catalog target is the complete paragraph with the resolved reading.
 Paragraph reasons are `paragraph_hyphenation_unresolved`, `source_text_defect`
 or unavailable metadata. Bibliographic attribution remains a separate gate.
+C5 uses register id `pravopys_2019` while its source-row keys retain
+`pravopys_2019_official`. Its adapter authenticates the register's edition
+statement against the held bibliography, file digest and pinned official-source
+document, and substitutes the cited paragraph number in the register placeholder.
+The catalog requires complete § responses, so an unresolved hyphen in any
+included example is also visible in every other record carrying that §.

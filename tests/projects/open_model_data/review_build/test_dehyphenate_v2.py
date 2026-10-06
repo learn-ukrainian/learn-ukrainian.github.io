@@ -7,7 +7,13 @@ import pytest
 
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.snapshot import SnapshotReader
-from scripts.projects.open_model_data.review_build.transforms import fold_word, source_text_defects, transform
+from scripts.projects.open_model_data.review_build.transforms import (
+    Result,
+    fold_word,
+    source_text_defects,
+    transform,
+    unresolved_overlaps,
+)
 
 
 @pytest.fixture
@@ -139,15 +145,44 @@ def test_mixed_resolved_and_unresolved_splits(held):
     "forms,witnesses,defect",
     [
         (["ALPHA", "BETA"], ["ALPHA BETA"], True),
-        (["ALPHA", "BETA", "ALPHABETA"], ["ALPHA BETA"], False),
+        (["ALPHA", "BETA", "ALPHABETA"], ["ALPHA BETA"], True),
         (["ALPHA", "BETA"], ["ALPHA BETA ALPHABETA"], False),
         (["ALPHA", "BETA"], [], False),
-        (["ALPHA"], ["ALPHA BETA"], False),
+        (["ALPHA"], ["ALPHA BETA"], True),
     ],
 )
-def test_source_defect_signal_requires_both_lexical_and_text_evidence(held, forms, witnesses, defect):
-    _, defects, _ = held("ALPHABETA", forms, witnesses)
-    assert bool(defects) == defect
+def test_source_defect_signal_requires_positive_original_boundary_evidence(held, forms, witnesses, defect):
+    held("SYNTHETIC unrelated", forms, witnesses)
+    with SnapshotReader({"sources.db": held.source, "vesum.db": held.vesum}) as reader:
+        assert not source_text_defects("ALPHABETA", held.policy, reader, original="ALPHABETA")
+        original = witnesses[0] if witnesses else "SYNTHETIC other text"
+        defects = source_text_defects("ALPHABETA", held.policy, reader, original=original)
+        assert bool(defects) == defect
+        assert not source_text_defects("ALPHABETA", held.policy, reader)
+
+
+@pytest.mark.parametrize("span,expected", [(None, True), ((0, 3), False), ((3, 8), True), ((8, 12), False)])
+def test_unresolved_visibility_uses_transformed_offsets_and_half_open_spans(span, expected):
+    result = Result("SYNTHETIC", join_evidence=((0, 5, "ABC", "held_text"),), unresolved=((5, 10, "UNKNOWN"),))
+    assert unresolved_overlaps(result, span) is expected
+
+
+def test_unlocated_metadata_is_unknown_for_every_carried_span():
+    assert unresolved_overlaps(Result("SYNTHETIC", unresolved=((-1, -1, "UNKNOWN"),)), (0, 3))
+    assert not unresolved_overlaps(Result("SYNTHETIC"), None)
+
+
+@pytest.mark.parametrize(
+    "original,text,expected",
+    [
+        ("SYNTHETIC PART MORE and PART-\nMORE", "SYNTHETIC PART MORE and PARTMORE", ()),
+        ("SYNTHETIC PART-\nMORE", "SYNTHETIC PART-MORE", ()),
+        ("SYNTHETIC PART\nMORE", "SYNTHETIC PARTMORE", ("PARTMORE",)),
+        ("SYNTHETIC PART MORE and PARTMORE", "SYNTHETIC PARTMORE and PARTMORE", ("PARTMORE",)),
+    ],
+)
+def test_boundary_detector_requires_a_lost_separator_at_the_actual_position(original, text, expected):
+    assert source_text_defects(text, {}, None, original=original) == expected
 
 
 def test_v2_requires_held_reader():
