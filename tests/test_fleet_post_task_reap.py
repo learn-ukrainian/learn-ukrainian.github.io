@@ -352,14 +352,25 @@ def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, t
         (worktree / "site/src/data/lexicon-manifest.json").write_bytes(
             unpublished if contents == "unpublished_manifest" else b"x" * 64
         )
-    monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", 32 if contents == "unpublished_manifest" else 16)
+    cap = {"unpublished_manifest": 32, "symlink": 4096}.get(contents, 16)
+    monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", cap)
     _write_task_state(tasks, task_id, "done", worktree, agent="codex")
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     row = report["main_worktree"]
     assert (outside / "unique.txt").read_bytes() == b"unique outside output"
-    if contents in {"oversized_output", "oversized_manifest", "symlink"}:
+    if contents == "symlink":
+        assert row["action"] == "removed" and not worktree.exists(), row
+        receipt = row["preserved_artifacts"]
+        entry = next(item for item in receipt["paths"] if item["path"] == "site/node_modules")
+        assert entry["type"] == "symlink"
+        assert entry["target"] == str(outside)
+        copied = repo / receipt["location"] / entry["path"]
+        assert copied.is_file() and not copied.is_symlink()
+        assert b"unique outside output" not in copied.read_bytes()
+        return
+    if contents in {"oversized_output", "oversized_manifest"}:
         assert row["action"] == "skipped" and worktree.exists(), row
-        assert ("exceeds preservation cap" if contents != "symlink" else "links outside") in row["reason"]
+        assert "exceeds preservation cap" in row["reason"]
         assert not (repo / "batch_state/preserved").exists()
     else:
         assert row["action"] == "removed" and not worktree.exists(), row
@@ -1202,8 +1213,17 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
     assert row["action"] == "removed", row
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
-    if preserved is None:
+    if scenario == "outbound_batch_state":
+        entry = next(item for item in state["preserved_artifacts"]["paths"] if item.get("type") == "symlink")
+        assert entry["path"] == "ignored/link" and entry["target"] == str(target)
+        copied = location / entry["path"]
+        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
+        assert state["preserved_artifacts"]["count"] == 1
+    elif preserved is None:
         assert not location.exists()
     else:
+        link_path, link_target = links.IGNORED_LINK[scenario]
         assert (location / preserved).read_bytes() == links.PAYLOAD
-        assert state["preserved_artifacts"]["count"] == 1
+        entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
+        assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
+        assert state["preserved_artifacts"]["count"] == 2

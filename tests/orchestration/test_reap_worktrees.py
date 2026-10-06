@@ -7067,8 +7067,17 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
     assert result.action == "removed", result
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
-    if preserved is None:
+    if scenario == "outbound_batch_state":
+        entry = next(item for item in state["preserved_artifacts"]["paths"] if item.get("type") == "symlink")
+        assert entry["path"] == "ignored/link" and entry["target"] == str(target)
+        copied = location / entry["path"]
+        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
+        assert state["preserved_artifacts"]["count"] == 1
+    elif preserved is None:
         assert not location.exists()
     else:
+        link_path, link_target = links.IGNORED_LINK[scenario]
         assert (location / preserved).read_bytes() == links.PAYLOAD
-        assert state["preserved_artifacts"]["count"] == 1
+        entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
+        assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
+        assert state["preserved_artifacts"]["count"] == 2

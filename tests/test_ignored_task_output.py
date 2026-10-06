@@ -139,7 +139,7 @@ def test_dependencies_without_local_tracked_lock_remain_output(checkout, lock_ki
 
 @pytest.mark.parametrize("name", ["node_modules", "site/node_modules", "site/src/data/lexicon-manifest.json"])
 def test_ignored_symlinks_never_read_outside(checkout, monkeypatch, name):
-    repo, _, _ = checkout
+    repo, primary, _ = checkout
     (repo / ".gitignore").write_text("node_modules\nsite/src/data/lexicon-manifest.json\n")
     outside = repo.parent / "outside"
     outside.mkdir()
@@ -157,8 +157,14 @@ def test_ignored_symlinks_never_read_outside(checkout, monkeypatch, name):
         return original_open(path, *args, **kwargs)
 
     monkeypatch.setattr(Path, "open", no_outside_read)
-    ok, reason, _ = preserve(checkout)
-    assert not ok and "links outside" in reason
+    ok, reason, receipt = preserve(checkout)
+    assert ok and not reason, reason
+    relative = link.relative_to(repo).as_posix()
+    entry = next(item for item in receipt["paths"] if item["path"] == relative)
+    assert entry["type"] == "symlink" and entry["target"] == os.readlink(link)
+    copied = primary / receipt["location"] / relative
+    assert copied.is_file() and not copied.is_symlink()
+    assert b"unique outside output" not in copied.read_bytes()
     assert link.is_symlink() and source.stat().st_size == len(b"unique outside output")
 
 
@@ -619,16 +625,133 @@ def test_disappearance_neighbours_refuse_removal(checkout, monkeypatch, failure)
     assert source.exists()
 
 
+@pytest.mark.parametrize("kind", ["directory-inside", "file-inside", "relative", "dangling", "outside"])
+def test_ignored_output_symlink_is_a_link_record(checkout, monkeypatch, kind):
+    """Inventory, copy, digest and retrieval keep the raw target and never follow it."""
+    repo, primary, _ = checkout
+    payload = b"payload-not-copied-through-link"
+    outside = repo.parent / "outside-target"
+    if kind == "outside":
+        outside.write_bytes(payload)
+        link = repo / "ignored/outside-link"
+        link.parent.mkdir(parents=True, exist_ok=True)
+        link.symlink_to(outside)
+        expected = str(outside)
+    elif kind == "dangling":
+        link = repo / "ignored/dangling"
+        link.parent.mkdir(parents=True, exist_ok=True)
+        link.symlink_to("missing-target")
+        expected = "missing-target"
+    elif kind == "relative":
+        (repo / "ignored/releases/sha").mkdir(parents=True)
+        (repo / "ignored/releases/sha/file.txt").write_bytes(b"snapshot")
+        link = repo / "ignored/releases/current"
+        link.symlink_to("sha", target_is_directory=True)
+        expected = "sha"
+    elif kind == "file-inside":
+        target = repo / "ignored/note.txt"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(payload)
+        link = repo / "ignored/note-link"
+        link.symlink_to("note.txt")
+        expected = "note.txt"
+    else:
+        target_dir = repo / "ignored/site"
+        target_dir.mkdir(parents=True)
+        (target_dir / "marker.txt").write_bytes(payload)
+        link = repo / "ignored/site-link"
+        link.symlink_to(target_dir, target_is_directory=True)
+        expected = str(target_dir)
+    outside_before = outside.read_bytes() if kind == "outside" else None
+    if kind == "outside":
+        original_open = Path.open
+
+        def no_outside_read(path, *args, **kwargs):
+            assert not Path(path).is_relative_to(outside), "followed symlink"
+            return original_open(path, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "open", no_outside_read)
+    ok, reason, receipt = preserve(checkout, {"status": "done"})
+    if kind == "outside":
+        monkeypatch.undo()
+    assert ok and not reason, reason
+    relative = link.relative_to(repo).as_posix()
+    entry = next(item for item in receipt["paths"] if item["path"] == relative)
+    assert entry["type"] == "symlink" and entry["target"] == expected == os.readlink(link)
+    location = primary / receipt["location"]
+    copied = location / relative
+    assert copied.is_file() and not copied.is_symlink()
+    assert os.fsencode(expected) in copied.read_bytes()
+    assert hashlib.sha256(copied.read_bytes()).hexdigest() == entry["sha256"]
+    assert entry["size"] == copied.stat().st_size
+    assert not any(path.is_symlink() for path in location.rglob("*"))
+    assert output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+    if kind == "outside":
+        assert outside.read_bytes() == outside_before == payload
+        assert copied.read_bytes() != payload
+    elif kind == "directory-inside":
+        assert (location / "ignored/site/marker.txt").read_bytes() == payload
+        assert not (location / "ignored/site-link/marker.txt").exists()
+    elif kind == "file-inside":
+        assert (location / "ignored/note.txt").read_bytes() == payload
+        assert copied.read_bytes() != payload
+    elif kind == "relative":
+        assert (location / "ignored/releases/sha/file.txt").read_bytes() == b"snapshot"
+        assert not (location / "ignored/releases/current/file.txt").exists()
+    else:
+        assert receipt["absent_paths"] == []
+
+
+def test_removal_does_not_follow_symlink(tmp_path):
+    from scripts.orchestration import worktree_claims as claims
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary, _record
+
+    primary = _primary(tmp_path)
+    tree = _linked(primary, "codex/output-task")
+    (primary / ".git/info/exclude").write_text("ignored/\n")
+    outside = tmp_path / "outside-dir"
+    outside.mkdir()
+    marker = outside / "marker.txt"
+    marker.write_bytes(b"do-not-follow")
+    identity = marker.stat().st_ino
+    link = tree / "ignored/outside"
+    link.parent.mkdir()
+    link.symlink_to(outside, target_is_directory=True)
+    (tree / "ignored/report.txt").write_bytes(b"preserve me")
+    _record(primary, "output-task", status="done", worktree_path=str(tree), worktree_reused=True)
+    result = claims.remove_unclaimed_worktree(
+        tree, repo_root=primary, reason="test #9889", owner_task_id=None, force=True
+    )
+    assert result.action == "removed", result.reason
+    assert not tree.exists()
+    assert outside.is_dir() and marker.read_bytes() == b"do-not-follow" and marker.stat().st_ino == identity
+    record = json.loads((primary / "batch_state/tasks/output-task.json").read_text())
+    receipt = record["preserved_artifacts"]
+    entry = next(item for item in receipt["paths"] if item["path"] == "ignored/outside")
+    assert entry["type"] == "symlink" and entry["target"] == str(outside)
+    copied = primary / receipt["location"] / "ignored/outside"
+    assert copied.is_file() and not copied.is_symlink()
+    assert copied.read_bytes() != b"do-not-follow"
+    assert not (primary / receipt["location"] / "ignored/outside/marker.txt").exists()
+    assert (primary / receipt["location"] / "ignored/report.txt").read_bytes() == b"preserve me"
+
+
 def test_dangling_link_is_not_absence_proof(checkout):
-    repo, _, _ = checkout
+    repo, primary, _ = checkout
     (repo / ".gitignore").write_text(".pids\n")
-    (repo / ".pids").symlink_to(repo.parent / "missing-outside-target")
-    ok, reason, _ = preserve(checkout, {"status": "done"})
-    assert not ok and "changed during preservation" in reason
-    assert (repo / ".pids").is_symlink()
+    link = repo / ".pids"
+    link.symlink_to("missing-outside-target")
+    ok, reason, receipt = preserve(checkout, {"status": "done"})
+    assert ok and not reason, reason
+    assert receipt["absent_paths"] == []
+    entry = receipt["paths"][0]
+    assert entry["path"] == ".pids" and entry["type"] == "symlink" and entry["target"] == "missing-outside-target"
+    copied = primary / receipt["location"] / ".pids"
+    assert copied.is_file() and not copied.is_symlink()
+    assert link.is_symlink()
 
 
-def test_internal_release_link_to_vanished_pids_records_target_absence(checkout):
+def test_internal_release_link_to_vanished_pids_preserves_the_link(checkout):
     repo, primary, _ = checkout
     (repo / ".gitignore").write_text(".runtime/\nignored/\n")
     release = repo / ".runtime/api/releases/test-release"
@@ -637,8 +760,12 @@ def test_internal_release_link_to_vanished_pids_records_target_absence(checkout)
     link.symlink_to(repo / ".pids")
     source = artifact(checkout, "ignored/report.txt", b"preserve this")
     ok, reason, receipt = preserve(checkout, {"status": "done"})
-    assert ok and not reason and receipt["count"] == 1
-    assert receipt["absent_paths"] == [{"path": ".pids", "proof": "lstat_enoent"}]
+    assert ok and not reason and receipt["count"] == 2
+    assert receipt["absent_paths"] == []
+    entry = next(item for item in receipt["paths"] if item["path"].endswith("/.pids"))
+    assert entry["type"] == "symlink" and entry["target"] == str(repo / ".pids")
+    copied = primary / receipt["location"] / entry["path"]
+    assert copied.is_file() and not copied.is_symlink()
     assert link.is_symlink() and source.exists()
     assert output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
 
@@ -723,7 +850,11 @@ def test_normal_removal_preserves_or_proves_absence_under_existing_lock(tmp_path
     if case == "vanished_copy":
         assert receipt["absent_paths"] == [{"path": "ignored/transient.txt", "proof": "lstat_enoent"}]
     elif case == "internal_link":
-        assert receipt["absent_paths"] == [{"path": ".pids", "proof": "lstat_enoent"}]
+        assert receipt["absent_paths"] == []
+        entry = next(item for item in receipt["paths"] if item["path"].endswith("/.pids"))
+        assert entry["type"] == "symlink" and entry["target"] == str(tree / ".pids")
+        copied = primary / receipt["location"] / entry["path"]
+        assert copied.is_file() and not copied.is_symlink()
 
 
 @pytest.mark.parametrize("change", ["corrupt", "extra", "symlink", "other_worktree", "invalid_manifest"])

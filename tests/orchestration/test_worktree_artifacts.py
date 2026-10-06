@@ -145,28 +145,60 @@ def test_different_existing_copy_is_never_overwritten(checkout):
     assert (checkout[1] / receipt["location"] / "batch_state/sub/report.bin").read_bytes() == b"proof\x00\xff"
 
 
-@pytest.mark.parametrize("destination", [False, True])
-def test_symlink_paths_block_preservation(checkout, destination):
+def test_preservation_root_symlink_blocks_copy(checkout):
     source = artifact(checkout)
     elsewhere = checkout[1] / "elsewhere"
     elsewhere.mkdir()
-    if destination:
-        (checkout[1] / "batch_state/preserved").symlink_to(elsewhere, target_is_directory=True)
-    else:
-        source.unlink()
-        external = checkout[1] / "external.bin"
-        external.write_bytes(b"external bytes")
-        source.symlink_to(external)
+    (checkout[1] / "batch_state/preserved").symlink_to(elsewhere, target_is_directory=True)
     ok, reason, _ = guard(checkout)
-    assert not ok and (
-        "symlink" in reason
-        or "regular file" in reason
-        or "retrieval location" in reason
-        or "links outside the checkout" in reason
-    )
+    assert not ok and ("symlink" in reason or "retrieval location" in reason)
     assert not any(entry.is_file() for entry in elsewhere.rglob("*"))
-    if not destination:
-        assert external.read_bytes() == b"external bytes"
+    assert source.read_bytes() == b"proof\x00\xff"
+
+
+def test_source_symlink_is_preserved_as_link_record(checkout):
+    source = artifact(checkout)
+    source.unlink()
+    external = checkout[1] / "external.bin"
+    external.write_bytes(b"external bytes")
+    source.symlink_to(external)
+    ok, reason, metadata = guard(checkout)
+    assert ok and not reason, reason
+    entry = metadata["paths"][0]
+    assert entry["type"] == "symlink" and entry["target"] == str(external)
+    copied = checkout[1] / metadata["location"] / entry["path"]
+    assert copied.is_file() and not copied.is_symlink()
+    assert copied.read_bytes() != b"external bytes"
+    assert os.fsencode(str(external)) in copied.read_bytes()
+    assert external.read_bytes() == b"external bytes"
+
+
+def test_directory_walk_records_symlinks_without_following(checkout, tmp_path):
+    repo = checkout[0]
+    root = repo / "ignored"
+    root.mkdir()
+    (root / "real.txt").write_bytes(b"real")
+    (root / "file-link").symlink_to("real.txt")
+    (root / "sub").mkdir()
+    (root / "dir-link").symlink_to("sub", target_is_directory=True)
+    (root / "dangling").symlink_to("missing")
+    outside = tmp_path / "outside.txt"
+    outside.write_bytes(b"outside-only")
+    (root / "out-link").symlink_to(outside)
+    names = wa._inspect_directory_artifact(root, "ignored", worktree=repo)
+    assert set(names) == {
+        "ignored/real.txt",
+        "ignored/file-link",
+        "ignored/dir-link",
+        "ignored/dangling",
+        "ignored/out-link",
+    }
+    dest = tmp_path / "copy"
+    wa._copy_verified(root / "out-link", dest)
+    assert dest.is_file() and not dest.is_symlink()
+    assert dest.read_bytes() != b"outside-only"
+    assert os.fsencode(str(outside)) in dest.read_bytes()
+    assert outside.read_bytes() == b"outside-only"
 
 
 def test_primary_task_sidecar_is_not_copied(checkout):
@@ -175,7 +207,13 @@ def test_primary_task_sidecar_is_not_copied(checkout):
     source = artifact(checkout)
     source.unlink()
     source.symlink_to(shared)
-    assert guard(checkout) == (True, "", None)
+    ok, reason, metadata = guard(checkout)
+    assert ok and not reason, reason
+    entry = metadata["paths"][0]
+    assert entry["type"] == "symlink" and entry["target"] == str(shared)
+    copied = checkout[1] / metadata["location"] / entry["path"]
+    assert copied.is_file() and not copied.is_symlink()
+    assert b"already durable" not in copied.read_bytes()
     assert shared.read_bytes() == b"already durable"
 
 
@@ -237,13 +275,17 @@ def test_batch_state_symlink_cannot_hide_local_artifacts(checkout):
     assert source.exists()
 
 
-def test_batch_state_link_loop_is_a_recorded_refusal(checkout):
+def test_batch_state_link_loop_is_preserved_without_resolving(checkout):
     bound_record(checkout, {"status": "done"})
     (checkout[0] / "batch_state").mkdir()
     (checkout[0] / "batch_state/loop").symlink_to("loop")
     ok, reason, metadata = guard(checkout)
-    assert not ok and "Symlink loop" in reason and metadata["retention_disposition"] == "retained"
-    assert reason == json.loads((checkout[2] / "artifact-task.json").read_text())["artifact_preservation_error"]
+    assert ok and not reason, reason
+    entry = metadata["paths"][0]
+    assert entry == {**entry, "path": "batch_state/loop", "type": "symlink", "target": "loop"}
+    copied = checkout[1] / metadata["location"] / "batch_state/loop"
+    assert copied.is_file() and not copied.is_symlink()
+    assert copied.read_bytes() == b"symlink\nloop"
 
 
 @pytest.mark.parametrize(
@@ -267,7 +309,10 @@ def test_outbound_refusal_needs_a_link_inside_the_checkout(checkout, tmp_path, r
     if refused:
         assert metadata["retention_disposition"] == "retained"
     else:
-        assert metadata is None
+        assert ok and metadata["count"] == 1
+        assert metadata["paths"][0]["type"] == "symlink"
+        assert metadata["paths"][0]["path"] == "ignored/dir"
+        assert metadata["paths"][0]["target"] == "sub"
     assert (links.REFUSAL in reason) is refused
     assert outside.read_bytes() == b"lives outside the checkout"
 
@@ -346,13 +391,25 @@ def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
         assert not ok and links.REFUSALS[scenario] in reason
         assert links.REFUSALS[scenario] in saved["artifact_preservation_error"]
         assert "\x00" not in reason and "x" * 300 not in reason
+    elif scenario == "outbound_batch_state":
+        assert ok and not reason and metadata["count"] == 1
+        entry = metadata["paths"][0]
+        assert entry["type"] == "symlink" and entry["path"] == "ignored/link" and entry["target"] == str(target)
+        copied = primary / metadata["location"] / "ignored/link"
+        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
+        assert saved["preserved_artifacts"] == metadata
     elif preserved is None:
         assert (ok, reason, metadata) == (True, "", None)
         assert not (primary / "batch_state/preserved").exists()
         assert "artifact_preservation_error" not in saved
     else:
-        assert ok and not reason and metadata["count"] == 1
-        assert ((checkout[1] / metadata["location"]) / preserved).read_bytes() == links.PAYLOAD
+        link_path, link_target = links.IGNORED_LINK[scenario]
+        assert ok and not reason and metadata["count"] == 2
+        copied_root = checkout[1] / metadata["location"]
+        assert (copied_root / preserved).read_bytes() == links.PAYLOAD
+        entry = next(item for item in metadata["paths"] if item["path"] == link_path)
+        assert entry["type"] == "symlink" and entry["target"] == link_target
+        assert (copied_root / link_path).is_file() and not (copied_root / link_path).is_symlink()
         assert saved["preserved_artifacts"] == metadata
 
 

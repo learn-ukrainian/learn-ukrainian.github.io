@@ -274,19 +274,56 @@ def _record_absence(root: Path, name: str, absent: list[dict[str, str]]) -> None
     raise ValueError("ignored output changed during preservation")
 
 
+def _baseline_entry_ok(entry: Mapping[str, Any]) -> bool:
+    """Accept a regular-file fingerprint or a symlink link record."""
+    if not isinstance(entry, Mapping):
+        return False
+    keys = set(entry)
+    size = entry.get("size")
+    digest = entry.get("sha256")
+    if (
+        not isinstance(entry.get("path"), str)
+        or not isinstance(size, int)
+        or size < 0
+        or not isinstance(digest, str)
+        or re.fullmatch(r"[a-f0-9]{64}", digest) is None
+    ):
+        return False
+    if keys == {"path", "size", "sha256"}:
+        return True
+    return (
+        keys == {"path", "type", "target", "size", "sha256"}
+        and entry.get("type") == "symlink"
+        and isinstance(entry.get("target"), str)
+    )
+
+
 def _path_inventory(
     root: Path, files: list[str], *, absent: list[dict[str, str]] | None = None
 ) -> list[dict[str, Any]]:
+    """Fingerprint each path. A symlink records its raw target and is not opened."""
     entries = []
     for name in files:
+        path = root / name
         try:
-            size, digest = artifacts._fingerprint(root / name)
+            is_link = path.is_symlink()
         except FileNotFoundError:
             if absent is None:
                 raise
             _record_absence(root, name, absent)
             continue
-        entries.append({"path": name, "size": size, "sha256": digest})
+        try:
+            size, digest = artifacts._fingerprint(path)
+        except FileNotFoundError:
+            if absent is None:
+                raise
+            _record_absence(root, name, absent)
+            continue
+        entry: dict[str, Any] = {"path": name, "size": size, "sha256": digest}
+        if is_link:
+            entry["type"] = "symlink"
+            entry["target"] = os.readlink(path)
+        entries.append(entry)
     return entries
 
 
@@ -310,11 +347,7 @@ def _classified_inventory(
         try:
             before = {entry["path"]: entry for entry in baseline["paths"]}
             if len(before) != len(baseline["paths"]) or any(
-                set(entry) != {"path", "size", "sha256"}
-                or not isinstance(entry["size"], int)
-                or entry["size"] < 0
-                or not re.fullmatch(r"[a-f0-9]{64}", entry["sha256"])
-                for entry in before.values()
+                not _baseline_entry_ok(entry) for entry in before.values()
             ):
                 trusted = False
         except (KeyError, TypeError):
@@ -367,7 +400,6 @@ def _ignored_output_files(
         # Unignored scratch can be task output too; inventory both classes.
         names += artifacts._git_paths(worktree, "--others", "--exclude-standard")
     files: set[str] = set()
-    root = worktree.resolve(strict=True)
     for name in names:
         relative = Path(name)
         if relative.is_absolute() or ".." in relative.parts:
@@ -380,21 +412,12 @@ def _ignored_output_files(
                 continue
             status = source.lstat()
             if stat.S_ISLNK(status.st_mode):
-                try:
-                    resolved = source.resolve(strict=True)
-                except FileNotFoundError:
-                    resolved = source.resolve(strict=False)
-                    if absent is None or not resolved.is_relative_to(root):
-                        raise
-                    # Internal links already defer to their separately inventoried
-                    # targets. A vanished target needs the same lstat proof.
-                    _record_absence(worktree, resolved.relative_to(root).as_posix(), absent)
-                    continue
-                if resolved.is_relative_to(primary / "batch_state") and not resolved.is_relative_to(root):
-                    continue  # Shared state survives removal of the link.
-                if resolved.is_relative_to(root):
-                    continue  # Local target is inventoried independently or tracked.
-                raise ValueError("ignored output links outside the checkout")
+                # The link is the output. Resolving it follows the target: an
+                # internal link was dropped, and a dangling link raised
+                # FileNotFoundError that _record_absence then contradicted with
+                # lstat ("changed during preservation").
+                files.add(name)
+                continue
             if source.resolve(strict=True) != source.absolute():
                 raise ValueError("ignored output is not a local regular file")
             if stat.S_ISDIR(status.st_mode):
@@ -484,11 +507,14 @@ def _update_bound_task_record(
 
 
 def _content_digest(root: Path, files: list[str]) -> str:
-    """Hash the ordered file names, sizes and bytes, refusing linked copy paths."""
+    """Hash ordered names, sizes and bytes. A symlink contributes its link record only."""
     entries = []
     for name in files:
         source = root / name
-        if source.resolve(strict=True) != source.absolute() or not stat.S_ISREG(source.lstat().st_mode):
+        status = source.lstat()
+        if not stat.S_ISLNK(status.st_mode) and (
+            source.resolve(strict=True) != source.absolute() or not stat.S_ISREG(status.st_mode)
+        ):
             raise ValueError("preserved artifact is not a local regular file")
         entries.append((name, *artifacts._fingerprint(source)))
     return hashlib.sha256(json.dumps(entries, ensure_ascii=True).encode()).hexdigest()

@@ -109,17 +109,34 @@ def _git_paths(worktree: Path, *args: str) -> list[str]:
     return [os.fsdecode(path) for path in result.stdout.split(b"\0") if path]
 
 
+def _symlink_record_bytes(target: str) -> bytes:
+    """Inert link record: the type and the raw target string, never the target's bytes."""
+    return b"symlink\n" + os.fsencode(target)
+
+
 def _fingerprint(path: Path) -> tuple[int, str]:
-    """Verify copied bytes independently of the copy operation."""
+    """Hash file bytes, or the inert link record when ``path`` is a symlink.
+
+    ``lstat`` decides. A symlink is never opened, so a dangling link and a link
+    out of the checkout contribute only their target string.
+    """
+    if path.is_symlink():
+        payload = _symlink_record_bytes(os.readlink(path))
+        return len(payload), hashlib.sha256(payload).hexdigest()
     with path.open("rb") as handle:
         return os.fstat(handle.fileno()).st_size, hashlib.file_digest(handle, "sha256").hexdigest()
 
 
 def _copy_verified(source: Path, destination: Path) -> None:
-    """Copy atomically, verifying size and SHA-256 and refusing conflicting evidence."""
+    """Copy atomically, verifying size and SHA-256 and refusing conflicting evidence.
+
+    A symlink is written as an inert link record. The destination is never a
+    live symlink, and the source target is not opened or copied.
+    """
     before = _fingerprint(source)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    if destination.exists():
+    # ``exists`` follows links, so a dangling destination symlink must be caught separately.
+    if destination.exists() or destination.is_symlink():
         if destination.is_symlink() or _fingerprint(destination) != before:
             raise ValueError("preserved artifact already exists with different bytes")
         return
@@ -127,7 +144,10 @@ def _copy_verified(source: Path, destination: Path) -> None:
     temporary = Path(temporary_name)
     try:
         os.close(fd)
-        shutil.copyfile(source, temporary)
+        if source.is_symlink():
+            temporary.write_bytes(_symlink_record_bytes(os.readlink(source)))
+        else:
+            shutil.copyfile(source, temporary)
         if _fingerprint(temporary) != before or _fingerprint(source) != before:
             raise ValueError("artifact size or SHA-256 changed during preservation")
         with temporary.open("rb") as handle:
@@ -244,7 +264,8 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
     If it contains a nested git repository or linked worktree, verifies commit
     and pointer safety, failing closed with actionable diagnostics or refusing
     discard of unpushed commits. If it is a directory of ordinary files, yields
-    the non-empty regular files inside it. Symlinks and escapes fail closed.
+    the non-empty regular files inside it. Symlinks are collected as links and
+    not followed. Any other non-regular file fails closed.
     """
     clean_name = name.rstrip("/")
     dot_git = source / ".git"
@@ -680,18 +701,30 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
             f"clear with: rm -rf {quoted_clean_name}"
         )
 
-    # Directory of ordinary regular files (no .git)
+    # Directory of ordinary files (no .git). Never descend through a symlink:
+    # os.walk classifies a directory link as a directory, so drop those names
+    # from ``dirs`` before the walk continues.
     collected: list[str] = []
-    for root_dir, dirs, filenames in os.walk(source):
-        dirs[:] = [
-            d for d in dirs if not is_disposable_path((Path(root_dir) / d).relative_to(worktree), worktree=worktree)
-        ]
+    for root_dir, dirs, filenames in os.walk(source, followlinks=False):
+        root_path = Path(root_dir)
+        kept_dirs: list[str] = []
+        for directory in dirs:
+            child = root_path / directory
+            relative = child.relative_to(worktree)
+            if child.is_symlink():
+                collected.append(relative.as_posix())
+                continue
+            if not is_disposable_path(relative, worktree=worktree):
+                kept_dirs.append(directory)
+        dirs[:] = kept_dirs
         for fname in filenames:
-            fpath = Path(root_dir) / fname
-            f_resolved = fpath.resolve()
-            if f_resolved != fpath.absolute() or not stat.S_ISREG(fpath.lstat().st_mode):
-                rel_path = fpath.relative_to(worktree).as_posix()
-                raise ValueError(f"artifact is not a local regular file: {rel_path}")
+            fpath = root_path / fname
+            relative = fpath.relative_to(worktree)
+            if fpath.is_symlink():
+                collected.append(relative.as_posix())
+                continue
+            if fpath.resolve() != fpath.absolute() or not stat.S_ISREG(fpath.lstat().st_mode):
+                raise ValueError(f"artifact is not a local regular file: {relative.as_posix()}")
             if fpath.stat().st_size:
-                collected.append(fpath.relative_to(worktree).as_posix())
+                collected.append(relative.as_posix())
     return collected
