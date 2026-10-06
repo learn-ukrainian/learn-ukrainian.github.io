@@ -24,7 +24,7 @@ from tests.projects.open_model_data.review_build.conftest import citation, save_
 
 
 def test_registry_is_closed_lazy_and_reports_only_selected_missing_id(monkeypatch):
-    assert {c: c.lower() for c in ("C1", "C2", "C3", "C4", "C5", "C6a", "C6b", "C7", "C9")} == components.REGISTRY
+    assert {c: c.lower() for c in ("C1", "C2", "C3", "C4", "C5", "C6a", "C6b", "C9")} == components.REGISTRY
     calls = []
     obj = object()
 
@@ -37,7 +37,7 @@ def test_registry_is_closed_lazy_and_reports_only_selected_missing_id(monkeypatc
     monkeypatch.setattr(components, "import_module", load)
     assert components.load_components(["C1"]) == {"C1": obj}
     assert len(calls) == 1
-    for unknown in ("C8", "C6", "socket", "../c1"):
+    for unknown in ("C7", "C8", "C6", "socket", "../c1"):
         with pytest.raises(BuildError, match="unknown_component"):
             components.load_components([unknown])
     assert len(calls) == 1

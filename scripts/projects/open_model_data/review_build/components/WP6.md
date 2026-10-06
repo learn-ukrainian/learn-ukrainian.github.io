@@ -127,15 +127,6 @@ in citation provenance only. Both quoted spans use the same row and locator.
 The binding checks the selected offsets and the accounting-unit receipt.
 There is no additional inferred calque label.
 
-C7 derives records only from admitted pairs and retains its pair context.
-The unstressed rejected expression must match a SUM-11 headword; an absent
-match excludes that pair as `not_sum11_headword`. The recommended expression
-needs checked, successful ULIF (`homonym_checked=1`, `status=ok`) and VESUM
-witnesses. SUM-11 is cited only on the rejected side as
-`soviet_colonization_context`, with risk and keywords; `c7_opt_in` and the
-contrast-pair binding remain. Missing attestation or markers withholds that
-pair alone. No headword inventory is queried before an admitted pair exists.
-
 Every pair or placeholder has one accounting unit and one candidate. Therefore
 accepted counts equal emitted records, including a row with both an accepted
 and an unattested pair. `operation_accounting.records_counted` and
@@ -145,10 +136,10 @@ reconstructs these units; the gate checks coverage and uniqueness against it.
 The generic optional `census_query` freezes the underlying row count separately
 from the derived unit count. Other components retain their existing accounting.
 
-Component exports, adapters and receipt store are shared as before. Complete
-held bibliography remains required; placeholder forms withhold rather than
-invent an edition, year or volume. Until WP0d request v2 is integrated, source
-compatibility and `antonenko_receipts` use the current host-local request v1
-contract, including the ULIF `ok` admission policy. An all-withheld build reports
-`missing_coverage`; `verify` cannot prove accepted-record mutations and returns
-`mutation_unavailable`. Structural tests do not establish semantic completeness.
+C6b owns its reviewed compatibility and citation-role mappings in COMPONENT.
+The location-only v2 request may name the private `antonenko_receipts` directory.
+Russification contrast is a word-card projection (#8982/#8989), not a dataset
+component; its predecessor extractor is preserved on the C7 input branch.
+An all-withheld build reports `missing_coverage`; accepted records are required
+for real generic mutation verification. Structural tests do not establish
+semantic completeness.

@@ -1,5 +1,7 @@
 """C6b: one accounting unit per selected pair, with no answer-bearing context."""
 
+from copy import deepcopy
+
 from .antonenko import (
     BOOK_ADAPTER,
     RECEIPTS,
@@ -14,6 +16,17 @@ from .antonenko import (
 )
 
 OPERATION = "book_calque_replacement"
+COMPATIBILITY = [
+    {
+        "store": store,
+        "table": table,
+        "source_id": SOURCE,
+        "role": "modern",
+        "source_column": "source",
+        "source_values": ["Антоненко-Давидович"],
+    }
+    for store, table in (("sources.db", "style_guide"), (STORE, "C6b"))
+]
 EXPRESSION = selector("slots", "expression")
 TARGET = selector("response", "replacement")
 RECEIPT = selector("slots", "expression", citation=1)
@@ -48,6 +61,7 @@ class BookCalqueComponent:
             },
         )
         self.spec["operation_specs"][OPERATION]["binding"] = BINDING
+        self.spec["compatibility"] = deepcopy(COMPATIBILITY)
         self.adapters = {SOURCE: BOOK_ADAPTER}
         self.files = {STORE: RECEIPTS}
 

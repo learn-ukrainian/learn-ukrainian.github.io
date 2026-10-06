@@ -18,7 +18,7 @@ from .transforms import transform
 REASONING = re.compile(
     r"<\s*(?:think|thought|reasoning)\b|\b(?:Step|Крок)\s+\d|(?:Міркування|Reasoning|Chain.of.thought)\s*:", re.I
 )
-COMPONENTS = frozenset({"C1", "C2", "C3", "C4", "C5", "C6", "C6a", "C6b", "C7", "C9"})
+COMPONENTS = frozenset({"C1", "C2", "C3", "C4", "C5", "C6", "C6a", "C6b", "C9"})
 
 
 def evidence_id(citation) -> str:
@@ -26,9 +26,7 @@ def evidence_id(citation) -> str:
 
 
 def serialize(parts, mode: str) -> str:
-    require(mode in {"text", "json_array"}, "serializer")
-    if mode == "json_array":
-        return canonical([part.text for part in parts]).decode("utf-8")
+    require(mode == "text", "serializer")
     return "\n".join(part.text for part in parts)
 
 
@@ -234,12 +232,9 @@ class Gate:
                 require(bool(candidate.response) and any(v.text.strip() for v in candidate.response), "empty_response")
                 spec = self.spec(candidate)
                 passed = bindings.check(candidate, spec["binding"], self.reader, spec.get("transforms", {}))
-                contrast = [rule for rule in spec["binding"]["rules"] if rule["op"] == "contrast_pair"]
-                require(candidate.component != "C7" or len(contrast) == 1, "binding_contrast")
-                rejected_slot = contrast[0]["rejected"]["slot"] if contrast else ""
                 for value in values(candidate):
                     for citation in value.citations:
-                        self.roles.check(citation, candidate, passed, rejected_slot)
+                        self.roles.check(citation, candidate, passed)
                 require(not any(REASONING.search(v.text) for v in values(candidate)), "reasoning_text")
                 applicability[rid] = self.applicable(candidate)
                 accepted.append(candidate)

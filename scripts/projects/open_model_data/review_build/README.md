@@ -172,8 +172,8 @@ column: [source slot names]}`. It emits the catalog's positional three-element
 JSON header array using only cited cell text and fixed separators; absent levels
 remain positional empty arrays/strings, and all-empty cells withhold.
 Other optional keys: `transforms` (closed transform id to policy),
-`context_serializer` and `response_serializer` (`text` joins exact parts with LF;
-`json_array` uses canonical JSON string arrays), `unit_grain`, `annotation_layer`,
+`context_serializer` and `response_serializer` (`text` joins exact parts with LF),
+`unit_grain`, `annotation_layer`,
 `reference_multiplicity` (reviewed README metadata), and `applicability` for each variant operation.
 The catalog's `sense_variant` declarations supply variant names; operation
 contracts' applicability declarations must include every referenced variant.
@@ -251,19 +251,9 @@ refuse inappropriate cardinality. Sense/article `one_group` rules with
   rows collapse as sets; missing, extra or divergent variants fail. This checks
   complete variant agreement independently of extraction, without replacing
   quotation or supporting-citation authentication.
-- `contrast_pair`: selectors `rejected`, `recommended`, `response` establish the
-  visible direction. `book_rejected`/`book_recommended` cite one `book_source`
-  row that contains both members as whole Unicode tokens (including apostrophes
-  and combining marks); `rejected_key`/`recommended_key` bind their separate forms.
-  `sum11_source` must equal the rejected member after unstressing;
-  `ulif_source` and `vesum_source` independently attest the recommended form.
-  `receipt` selects a cited adjudication row whose `pair_field` names the shared
-  book row key and whose `sol_field`/`opus_field` are APPROVE. WP6 owns receipt
-  authenticity and the source-specific adjudication contract and tests.
 
 Supporting citations must connect to their own primary citation through
-exact-field equality/form agreement, or the contrast rule's independently checked
-book/form witnesses. Mentioning a supporting row or comparing it with itself is
+exact-field equality/form agreement. Mentioning a supporting row or comparing it with itself is
 insufficient. Structural binding is mechanism proof; D3 supplies semantic judgment.
 
 ## Citation roles and splits
@@ -287,10 +277,8 @@ The combined-grade pattern follows the two measured source filenames; other
 grade ranges are refused until authenticated. Admission is re-derived from each
 cited row, even when grade metadata is zero or misleading. Grade metadata
 does not control admission; university grade-0 rows are admitted by allowlisted
-filenames. СУМ-11 requires
-`risk` and `keywords` (defaults `sovietization_risk`, `sovietization_keywords`),
-an admitted C7 contrast, opt-in/context flags, and use only in the rejected
-model-visible member. Risk and keywords are copied from the source to provenance.
+filenames. SUM-11 citations are refused as `sum11_role`; Russification contrast
+is a word-card projection, not a direct dataset component.
 
 The component spec's `corpus` mapping supplies `store`, `table`, `split`, `document`,
 `author`, `layer`, `text`. The gate independently scans that corpus, orders whole

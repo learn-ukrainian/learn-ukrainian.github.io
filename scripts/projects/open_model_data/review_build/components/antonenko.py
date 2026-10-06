@@ -422,7 +422,7 @@ class ReceiptStore:
         return receipt
 
     def row(self, table, row_key):
-        require(table in {"C6b", "C7"} and row_key.startswith("id="), "row_unavailable")
+        require(table == "C6b" and row_key.startswith("id="), "row_unavailable")
         result = self.records.get(row_key[3:])
         require(result is not None, "row_unavailable")
         if "batch_sha256" not in result:
@@ -493,9 +493,6 @@ class HeldBibliographyAdapter:
 
 
 BOOK_ADAPTER = HeldBibliographyAdapter()
-SUM11_ADAPTER = HeldBibliographyAdapter()
-ULIF_ADAPTER = HeldBibliographyAdapter()
-VESUM_ADAPTER = HeldBibliographyAdapter()
 
 
 def common_spec(operation, unit):
@@ -512,7 +509,6 @@ def common_spec(operation, unit):
         "unit_grain": "selected offset pair union; one placeholder per unresolved or unlocated row",
         "annotation_layer": "source_text_and_dual_adjudication",
         "reference_multiplicity": "one record per agreed offset pair in a row",
-        "unit_multiplicity": "one",
         "reasons": {
             "accepted": ["ok"],
             "rejected": [],
@@ -523,17 +519,14 @@ def common_spec(operation, unit):
                 "locator_unavailable",
                 "attribution_unresolved",
                 "catalog_inapplicable",
-                "ulif_unattested",
-                "vesum_unattested",
-                "sum11_markers_unavailable",
             ],
-            "excluded": ["not_sum11_headword"],
+            "excluded": [],
         },
     }
 
 
 def candidate(component, operation, row, slots, context, response, reason="ok", unit=None):
-    outcome = "accepted" if reason == "ok" else ("excluded" if reason == "not_sum11_headword" else "withheld")
+    outcome = "accepted" if reason == "ok" else "withheld"
     require(unit is not None, "unit_id_spec")
     accounting = Value("accounting_unit", unit["id"], (receipt_citation(unit, component, "id"),), None, "verbatim")
     return Candidate(
@@ -546,7 +539,7 @@ def candidate(component, operation, row, slots, context, response, reason="ok", 
         (*slots, accounting),
         tuple(context),
         tuple(response),
-        ("c7_opt_in", "soviet_colonization_context") if component == "C7" else (),
+        (),
     )
 
 
