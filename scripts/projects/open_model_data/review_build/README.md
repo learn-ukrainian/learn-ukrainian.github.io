@@ -222,6 +222,12 @@ refuse inappropriate cardinality. Sense/article `one_group` rules with
   later colon, or a line boundary before a numbered/rule line. Each colon is
   considered independently. Explicit example introductions permit one item;
   otherwise a comma/semicolon list is required. Ambiguous prose is refused.
+- `regex_span`: one primary `values` selector (no `field`) must have a span equal to the named `group` of a
+  source-field `pattern` match (optional integer regex `flags`). `trim: true`
+  trims only capture boundaries. Optional `nested: {pattern, group, flags}`
+  captures within that group before comparing offsets. This authenticates a
+  structural field inside a quoted source, such as a printed imprint's title,
+  instead of admitting any substring of the same row.
 - `contiguous_pages`: `values` page columns equal `range(first, next_heading)`
   and their `source_field` columns name one book. Bounds can be integers, source
   selectors, or `{query: unit_query, parameters: [selectors...]}` producing one

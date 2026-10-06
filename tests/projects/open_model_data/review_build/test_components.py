@@ -249,6 +249,15 @@ def test_cli_conflicting_components_fail_before_extraction(bundle, monkeypatch, 
 
 def test_cli_unavailable_unselected_component_does_not_poison_selected_build(bundle, monkeypatch, capsys):
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
+    # Availability is part of this fixture, independent of real component WPs.
+    import_module = components.import_module
+
+    def unavailable(target):
+        if target.endswith(".c9"):
+            raise ModuleNotFoundError(name=target)
+        return import_module(target)
+
+    monkeypatch.setattr(components, "import_module", unavailable)
     bundle["specs"]["C9"] = {}
     save_bundle(bundle)
     obj = SimpleNamespace(

@@ -197,6 +197,33 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
                 value.span in example_items(source),
                 "binding_example",
             )
+        elif op == "regex_span":
+            # Authenticate the field's structural capture, not merely that the
+            # candidate quotes some substring of the right source row.
+            require(
+                len(selectors) == 1 and selectors[0].get("citation", 0) == 0 and "field" not in selectors[0],
+                "binding_span",
+            )
+            value = select(candidate, selectors[0])
+            _, field = reader.field(value.citations[0])
+            require(isinstance(field, str) and value.span is not None, "binding_span")
+            source = transform(value.transform, field, policies.get(value.transform), reader).text
+            spans = set()
+            for match in re.finditer(rule["pattern"], source, rule.get("flags", 0)):
+                start, end = match.span(rule["group"])
+                if "nested" in rule:
+                    nested = rule["nested"]
+                    inner = re.search(nested["pattern"], source[start:end], nested.get("flags", 0))
+                    if inner is None:
+                        continue
+                    left, right = inner.span(nested.get("group", 0))
+                    start, end = start + left, start + right
+                if rule.get("trim", False):
+                    text = source[start:end]
+                    start += len(text) - len(text.lstrip())
+                    end -= len(text) - len(text.rstrip())
+                spans.add((start, end))
+            require(value.span in spans, "binding_span")
         elif op == "contiguous_pages":
             pages = [operand(candidate, s, reader) for s in selectors]
             require(
