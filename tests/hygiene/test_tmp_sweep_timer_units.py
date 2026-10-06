@@ -106,11 +106,11 @@ def test_installer_refuses_symlinked_unit_file(tmp_path: Path, monkeypatch: pyte
     unit_dir.mkdir()
     outside = tmp_path / "outside.service"
     outside.write_text("outside content")
-    os.chmod(outside, 0o644)
+    os.chmod(outside, 0o400)
     (unit_dir / installer.UNITS[0]).symlink_to(outside)
     with pytest.raises(installer.InstallError, match="symlinked unit file"):
         installer.main([*flags, "--unit-dir", str(unit_dir), mode])
-    assert outside.read_text() == "outside content" and outside.stat().st_mode & 0o777 == 0o644
+    assert outside.read_text() == "outside content" and outside.stat().st_mode & 0o777 == 0o400
     assert (unit_dir / installer.UNITS[0]).is_symlink()
     assert sorted(path.name for path in unit_dir.iterdir()) == [installer.UNITS[0]]
 
