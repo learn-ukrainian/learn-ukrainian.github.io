@@ -10,6 +10,8 @@ from pathlib import Path
 
 import yaml
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 VESUM_DB_PATH = PROJECT_ROOT / "data" / "vesum.db"
 _TRAILING_PUNCTUATION = "?!."
@@ -39,11 +41,7 @@ def _load_required_terms(plan_path: Path) -> tuple[str, ...]:
     payload = yaml.safe_load(plan_path.read_text("utf-8")) or {}
     vocabulary_hints = payload.get("vocabulary_hints") or {}
     required = vocabulary_hints.get("required") or []
-    return tuple(
-        term
-        for item in required
-        if (term := _extract_ukrainian_term(str(item)))
-    )
+    return tuple(term for item in required if (term := _extract_ukrainian_term(str(item))))
 
 
 def _load_vocab_words(vocab_yaml_path: Path) -> tuple[str, ...]:
@@ -71,7 +69,7 @@ def _vesum_lemma_lookup(term: str, db_path: Path = VESUM_DB_PATH) -> str | None:
         return None
 
     try:
-        with sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True) as db:
+        with _open_readonly(Path(db_path).resolve()) as db:
             # Current contract for this validator: data/vesum.db exposes
             # vesum(form, lemma). Older local imports used forms(word_form, lemma),
             # so keep that fallback to avoid making the validator environment-fragile.

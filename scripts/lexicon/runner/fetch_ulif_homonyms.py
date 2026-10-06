@@ -46,6 +46,7 @@ from scripts.lexicon.runner.ulif_dictua_parse import (
     parse_ulif_paradigm,
     parse_ulif_relation_groups,
 )
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 MIN_DELAY_SECONDS = 1.0
 REQUEST_TIMEOUT_SECONDS = 30
@@ -874,9 +875,12 @@ def _walk_completion_errors(ledger: SpellingLedger, printed_size: int) -> list[s
         errors.append(f"stored register ends at {observed_end}, before printed size {printed_size}")
     if ledger.meta("terminal_position") != str(observed_end):
         errors.append("terminal position missing or differs from stored rows")
-    actual = [tuple(row) for row in ledger.conn.execute(
-        "SELECT position, stressed_headword, printed_size, reason FROM register_size_discrepancies ORDER BY position"
-    )]
+    actual = [
+        tuple(row)
+        for row in ledger.conn.execute(
+            "SELECT position, stressed_headword, printed_size, reason FROM register_size_discrepancies ORDER BY position"
+        )
+    ]
     expected = _expected_size_discrepancies(ledger, observed_end, printed_size)
     if actual != expected or len(expected) != abs(observed_end - printed_size):
         errors.append("printed-size differences are not fully itemised")
@@ -889,7 +893,8 @@ def _discrepancy_lines(ledger: SpellingLedger) -> list[str]:
     ).fetchall()
     return [f"size_discrepancies={len(rows)}"] + [
         f"discrepancy position={row['position']} stressed_headword={row['stressed_headword'] or 'unknown'} "
-        f"printed_size={row['printed_size']} reason={row['reason']}" for row in rows
+        f"printed_size={row['printed_size']} reason={row['reason']}"
+        for row in rows
     ]
 
 
@@ -1839,8 +1844,10 @@ def _write_group(
     if existing:
         same_count = len(existing) == len(parsed_rows)
         same_hashes = same_count and all(
-            str(ex[1] or "") == str(pr["content_sha256"]) and str(ex[1] or "") != ""
-            and bool(str(ex[2] or "").strip()) and bool(pr["canonical_headword"])
+            str(ex[1] or "") == str(pr["content_sha256"])
+            and str(ex[1] or "") != ""
+            and bool(str(ex[2] or "").strip())
+            and bool(pr["canonical_headword"])
             for ex, pr in zip(existing, parsed_rows, strict=True)
         )
         if same_hashes:
@@ -2106,8 +2113,10 @@ def _commit_spelling_group(
         "SELECT entry_count FROM spellings WHERE spelling = ? AND state = 'stored'",
         (normalized_spelling,),
     ).fetchone()
-    if stored is not None and int(stored[0]) == len(completed_rows) and all(
-        row["homonym_index"] is not None for row in completed_rows
+    if (
+        stored is not None
+        and int(stored[0]) == len(completed_rows)
+        and all(row["homonym_index"] is not None for row in completed_rows)
     ):
         return 0
 
@@ -2931,7 +2940,7 @@ def verify_ledger_continuity(path: Path, *, warn_on_overlap: bool = False) -> in
     This check can compare recorded spellings with entry response metadata; it
     cannot independently reconstruct ULIF's listing or verify response bytes.
     """
-    with contextlib.closing(sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)) as conn:
+    with contextlib.closing(_shared_open_readonly(path.resolve())) as conn:
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA query_only=ON")
         pages = conn.execute("SELECT * FROM register_pages ORDER BY page_num").fetchall()
@@ -3603,8 +3612,7 @@ def _walk_shifted_windows(
                 }
             )
             at_register_end = (
-                register_size is not None
-                and ledger.register_offset_for_grid(start_global) + len(rows) >= register_size
+                register_size is not None and ledger.register_offset_for_grid(start_global) + len(rows) >= register_size
             )
             has_next = _has_control(html, PAGE_BUTTONS["next"])
             probed_next_html: str | None = None
@@ -4497,7 +4505,7 @@ def verify_complete(
 
     ledger = SpellingLedger(ledger_path)
     try:
-        cache = sqlite3.connect(f"file:{db_path.resolve()}?mode=ro", uri=True)
+        cache = _shared_open_readonly(db_path.resolve())
         try:
             reg_size_str = ledger.meta("register_size")
             if expected_size is not None:
@@ -4654,7 +4662,10 @@ def verify_complete(
                 and not missing_db_entries
                 and entries_count >= stored_rows_count
             ):
-                print("Status: VERIFIED_COMPLETE (observed register stored; printed-size differences itemised)", file=sys.stderr)
+                print(
+                    "Status: VERIFIED_COMPLETE (observed register stored; printed-size differences itemised)",
+                    file=sys.stderr,
+                )
                 return EXIT_OK
             else:
                 print("Status: INCOMPLETE", file=sys.stderr)
@@ -4672,8 +4683,8 @@ def build_a1_a2_spellings(
     stored: set[str],
 ) -> list[str]:
     """PULS A1/A2 lemmas, lemmatised through VESUM, minus spellings already stored."""
-    sources = sqlite3.connect(f"file:{sources_db.resolve()}?mode=ro", uri=True)
-    vesum = sqlite3.connect(f"file:{vesum_db.resolve()}?mode=ro", uri=True)
+    sources = _shared_open_readonly(sources_db.resolve())
+    vesum = _shared_open_readonly(vesum_db.resolve())
     try:
         words = [
             str(row[0])

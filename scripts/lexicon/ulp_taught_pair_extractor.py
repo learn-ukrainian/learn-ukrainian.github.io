@@ -31,6 +31,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.guardrails.worktree_containment import resolve_main_root
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
 
@@ -308,14 +309,13 @@ def measure_taught_pairs_from_sources(
     manifest_path: Path = DEFAULT_MANIFEST,
 ) -> dict[str, Any]:
     """Extract and measure taught pairs from textbooks in sources.db."""
-    import sqlite3
 
     db_file = _resolve_repo_path(sources_db_path)
     if not db_file.is_file():
         return {"error": f"sources.db not found at {db_file}"}
 
     atlas_keys = load_atlas_lemma_keys(manifest_path)
-    conn = sqlite3.connect(f"{Path(db_file).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(db_file).resolve())
     cur = conn.cursor()
 
     per_season = {}

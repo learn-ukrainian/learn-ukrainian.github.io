@@ -29,6 +29,7 @@ from uuid import uuid4
 from scripts.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
 from scripts.api.resilience import connect_sqlite
 from scripts.common.git_context import sanitized_git_env
+from scripts.lib.readonly_sqlite import SQLiteConnection
 
 DB_ENV_VAR = "LEARN_UKRAINIAN_LLM_QG_DB"
 DEFAULT_CIRCUIT_STATE_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_qg_live_circuit.json"
@@ -56,7 +57,7 @@ _LOCK_RETRY_BASE_S = 0.25
 _LOCK_RETRY_CAP_S = 4.0
 
 
-def _connect_sqlite_db(path: Path, *, writable: bool = False, timeout: float = 5.0) -> sqlite3.Connection:
+def _connect_sqlite_db(path: Path, *, writable: bool = False, timeout: float = 5.0) -> SQLiteConnection:
     conn = connect_sqlite(str(path), timeout=timeout)
     conn.execute("PRAGMA busy_timeout = 5000")
     if writable:
@@ -145,7 +146,6 @@ def _repository_root(checkout_root: Path | None = None) -> Path:
         with suppress(OSError):
             checkout = checkout.resolve()
 
-
     try:
         result = subprocess.run(
             [
@@ -163,15 +163,11 @@ def _repository_root(checkout_root: Path | None = None) -> Path:
             env=sanitized_git_env(),
         )
     except (OSError, subprocess.SubprocessError) as exc:
-        raise RuntimeError(
-            f"Could not resolve the repository-owned LLM-QG store for {checkout}: {exc}"
-        ) from exc
+        raise RuntimeError(f"Could not resolve the repository-owned LLM-QG store for {checkout}: {exc}") from exc
 
     if result.returncode != 0:
         stderr = result.stderr.strip() or "git rev-parse failed"
-        raise RuntimeError(
-            f"Could not resolve the repository-owned LLM-QG store for {checkout}: {stderr}"
-        )
+        raise RuntimeError(f"Could not resolve the repository-owned LLM-QG store for {checkout}: {stderr}")
 
     common_dir_text = result.stdout.strip()
     if not common_dir_text:
@@ -206,10 +202,7 @@ def _repository_root(checkout_root: Path | None = None) -> Path:
     except (OSError, subprocess.SubprocessError):
         pass
 
-    raise RuntimeError(
-        f"Git common directory must be the primary checkout's .git directory: {common_dir}"
-    )
-
+    raise RuntimeError(f"Git common directory must be the primary checkout's .git directory: {common_dir}")
 
 
 def circuit_state_path(path: Path | None = None) -> Path:
@@ -465,9 +458,7 @@ def migrate_worktree_dbs(
 
     valid_sources = [p for p in source_paths if p.is_file() and p != target_resolved]
     skipped_sources: list[str] = [
-        str(p)
-        for p in source_paths
-        if (not p.is_file() or p == target_resolved) and p != target_resolved
+        str(p) for p in source_paths if (not p.is_file() or p == target_resolved) and p != target_resolved
     ]
 
     stats: dict[str, Any] = {
@@ -484,6 +475,7 @@ def migrate_worktree_dbs(
     candidates_by_run_id: dict[str, dict[str, Any]] = {}
 
     for src_path in valid_sources:
+
         def _read_source(path: Path = src_path) -> tuple[list[dict[str, Any]], dict[str, list[dict[str, Any]]]] | None:
             with closing(_connect_sqlite_db(path, writable=False)) as src_conn:
                 src_conn.row_factory = sqlite3.Row
@@ -656,7 +648,6 @@ def migrate_worktree_dbs(
     return stats
 
 
-
 def live_tier2_circuit_status(path: Path | None = None) -> dict[str, Any]:
     """Return deterministic live Tier-2 circuit state from the sidecar file."""
     state = _read_circuit_state(path)
@@ -825,7 +816,7 @@ def _circuit_open_message(status: Mapping[str, Any]) -> str:
     )
 
 
-def _ensure_composite_columns(conn: sqlite3.Connection) -> None:
+def _ensure_composite_columns(conn: SQLiteConnection) -> None:
     """Backfill optional composite-key columns on older local stores."""
     rows = conn.execute("PRAGMA table_info(llm_qg_runs)").fetchall()
     existing = {str(row[1]) for row in rows}
@@ -881,11 +872,7 @@ def _iter_findings(payload: dict[str, Any]) -> list[dict[str, Any]]:
 
 def _finding_category(item: dict[str, Any]) -> Any:
     return (
-        item.get("category")
-        or item.get("issue_id")
-        or item.get("issue_type")
-        or item.get("type")
-        or item.get("kind")
+        item.get("category") or item.get("issue_id") or item.get("issue_type") or item.get("type") or item.get("kind")
     )
 
 
@@ -939,9 +926,7 @@ def record_llm_qg(
     normalized_tool_events = _normalize_tool_events(tool_events)
     normalized_dispatch = dict(dispatch_metadata) if isinstance(dispatch_metadata, Mapping) else None
     normalized_history = (
-        [dict(item) for item in retry_history if isinstance(item, Mapping)]
-        if retry_history is not None
-        else None
+        [dict(item) for item in retry_history if isinstance(item, Mapping)] if retry_history is not None else None
     )
     normalized_gate_outcomes = dict(gate_outcomes) if isinstance(gate_outcomes, Mapping) else None
 
@@ -1044,7 +1029,6 @@ def record_llm_qg(
             conn.commit()
 
     _run_with_lock_retry(_do_record)
-
 
     return StoredQG(
         run_id=clean_run_id,
@@ -1213,7 +1197,6 @@ def latest_llm_qg(
         return _run_with_lock_retry(_do_query)
     except (json.JSONDecodeError, OSError, sqlite3.DatabaseError, RuntimeError, ValueError):
         return None
-
 
 
 def current_llm_qg_for_module(

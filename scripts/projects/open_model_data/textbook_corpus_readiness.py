@@ -54,7 +54,6 @@ from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
 
 import yaml
 
@@ -73,6 +72,8 @@ except ModuleNotFoundError:
         subject_for_source_file,
     )
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 SCHEMA_VERSION = "textbook_corpus_readiness_v1"
 HASH_BLOCK_SIZE = 1024 * 1024
 SUSPECT_MAX_ROWS = 2
@@ -81,12 +82,8 @@ SUSPECT_ROWS_PER_PAGE = 0.05
 PDF_SUFFIX = ".pdf"
 JSONL_SUFFIX = ".jsonl"
 
-_COMPONENT_RE = re.compile(
-    r"(?i)^(?P<base>.+?)(?:[-_](?:(?:part|volume|vol|p)[-_]?)?(?P<number>[12]))$"
-)
-_MOJIBAKE_RE = re.compile(
-    r"[À-ÿ]{2,}|(?:Р[°µЅ])|(?:С[Ѓ‚])|â€�"
-)
+_COMPONENT_RE = re.compile(r"(?i)^(?P<base>.+?)(?:[-_](?:(?:part|volume|vol|p)[-_]?)?(?P<number>[12]))$")
+_MOJIBAKE_RE = re.compile(r"[À-ÿ]{2,}|(?:Р[°µЅ])|(?:С[Ѓ‚])|â€�")
 _LOCATOR_KEYS = frozenset(
     {
         "url",
@@ -128,20 +125,14 @@ _STATUS_ORDER = (
     "missing_selected_source",
 )
 _PREDICATES = {
-    "ready": (
-        "pdf_present and chunks_present and db_row_count == chunk_row_count and not suspect_extraction"
-    ),
+    "ready": ("pdf_present and chunks_present and db_row_count == chunk_row_count and not suspect_extraction"),
     "pdf_without_chunks": "pdf_present and not chunks_present",
     "chunks_without_pdf": "chunks_present and not pdf_present",
     "chunks_not_ingested": "chunks_present and db_row_count == 0",
     "partial_db_ingest": "chunks_present and 0 < db_row_count != chunk_row_count",
     "db_without_chunks": "db_row_count > 0 and not chunks_present",
-    "suspect_extraction": (
-        "any chunk file has <= 2 rows, or known_pdf_pages >= 20 and rows/pages < 0.05"
-    ),
-    "missing_selected_source": (
-        "selected and not pdf_present and not chunks_present and db_row_count == 0"
-    ),
+    "suspect_extraction": ("any chunk file has <= 2 rows, or known_pdf_pages >= 20 and rows/pages < 0.05"),
+    "missing_selected_source": ("selected and not pdf_present and not chunks_present and db_row_count == 0"),
 }
 
 
@@ -277,9 +268,7 @@ def _selection_source(
     if author:
         metadata["author"] = author
         metadata["author_tokens"] = sorted(
-            latin.casefold()
-            for latin, cyrillic in AUTHOR_UK_BY_TRANSLIT.items()
-            if cyrillic.casefold() in author
+            latin.casefold() for latin, cyrillic in AUTHOR_UK_BY_TRANSLIT.items() if cyrillic.casefold() in author
         )
     return display, selection_id, aliases, metadata
 
@@ -333,9 +322,7 @@ class _SourceIndex:
                 continue
             if not _source_covers_grade(raw_key, int(grade)):
                 continue
-            if raw_subject != subject and not (
-                int(grade) == 1 and subject == "ukrmova" and raw_subject == "bukvar"
-            ):
+            if raw_subject != subject and not (int(grade) == 1 and subject == "ukrmova" and raw_subject == "bukvar"):
                 continue
             if not any(re.search(rf"(?:^|-){re.escape(token)}(?:-|$)", raw_key) for token in author_tokens):
                 continue
@@ -477,16 +464,13 @@ def _read_db(path: Path) -> dict[str, Any]:
         result["error"] = "database_missing"
         return result
 
-    uri = f"file:{quote(str(path.resolve()), safe='/')}?mode=ro"
     try:
-        connection = sqlite3.connect(uri, uri=True)
+        connection = _open_readonly(path)
     except (OSError, sqlite3.Error):
         result["error"] = "database_unreadable"
         return result
     try:
-        table = connection.execute(
-            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'textbooks'"
-        ).fetchone()
+        table = connection.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'textbooks'").fetchone()
         if table is None:
             result["error"] = "textbooks_table_missing"
             return result
@@ -605,8 +589,7 @@ def _duplicate_payload_groups(occurrences: Mapping[str, list[tuple[str, int]]]) 
                 "sha256": digest,
                 "count": len(values),
                 "occurrences": [
-                    {"path": path, "row_numbers": sorted(numbers)}
-                    for path, numbers in sorted(by_path.items())
+                    {"path": path, "row_numbers": sorted(numbers)} for path, numbers in sorted(by_path.items())
                 ],
             }
         )
@@ -676,11 +659,7 @@ def build_report(
     # Restrict a normal project layout to its two textbook stores; retain the
     # direct-root fallback for small standalone fixtures and explicit stores.
     pdf_root = root / "textbooks" if (root / "textbooks").is_dir() else root
-    chunks_root = (
-        root / "textbook_chunks"
-        if (root / "textbook_chunks").is_dir()
-        else root
-    )
+    chunks_root = root / "textbook_chunks" if (root / "textbook_chunks").is_dir() else root
 
     selection = _read_yaml_or_json(Path(selection_path))
     selection_items = _selection_items(selection)
@@ -702,9 +681,7 @@ def build_report(
                 "db_rows": 0,
                 "db_sources": [],
                 "payload_hashes": set(),
-                "components": defaultdict(
-                    lambda: {"pdfs": [], "chunks": [], "db_rows": 0, "db_sources": []}
-                ),
+                "components": defaultdict(lambda: {"pdfs": [], "chunks": [], "db_rows": 0, "db_sources": []}),
             },
         )
         if source < bucket["source"]:
@@ -747,9 +724,7 @@ def build_report(
 
     db = _read_db(Path(db_path).expanduser())
     if not db["available"] or db["error"] is not None or not db["table_present"]:
-        raise ReadinessError(
-            f"textbook database is not readable: {db['error'] or 'unknown_database_error'}"
-        )
+        raise ReadinessError(f"textbook database is not readable: {db['error'] or 'unknown_database_error'}")
     for raw_source, row_count in sorted(db["rows_by_source"].items()):
         key, source, component = index.resolve(raw_source)
         index.ensure_discovered(key, source)
@@ -782,8 +757,7 @@ def build_report(
         suspect = any(int(record["row_count"]) <= SUSPECT_MAX_ROWS for record in chunks)
         if page_counts and total_rows:
             suspect = suspect or any(
-                pages >= SUSPECT_MIN_PAGES and total_rows / pages < SUSPECT_ROWS_PER_PAGE
-                for pages in page_counts
+                pages >= SUSPECT_MIN_PAGES and total_rows / pages < SUSPECT_ROWS_PER_PAGE for pages in page_counts
             )
         elif page_counts and chunks and total_rows == 0:
             suspect = True
@@ -810,12 +784,7 @@ def build_report(
                 }
             )
 
-        locators = sorted(
-            set(
-                (int(item["map_index"]), str(item["locator"]))
-                for item in locator_data.get(key, [])
-            )
-        )
+        locators = sorted(set((int(item["map_index"]), str(item["locator"])) for item in locator_data.get(key, [])))
         source_record = {
             "source": bucket["source"],
             "selected": selected is not None,
@@ -839,10 +808,7 @@ def build_report(
             },
             "db": {"row_count": db_rows, "source_files": sorted(set(bucket["db_sources"]))},
             "components": components,
-            "acquisition_locators": [
-                {"map_index": map_index, "locator": locator}
-                for map_index, locator in locators
-            ],
+            "acquisition_locators": [{"map_index": map_index, "locator": locator} for map_index, locator in locators],
         }
         sources.append(source_record)
 
@@ -855,8 +821,7 @@ def build_report(
         "schema_version": SCHEMA_VERSION,
         "predicates": dict(_PREDICATES),
         "split_volume_rule": (
-            "terminal -1/-2, _1/_2, -part-1/-part-2, -part1/-part2, "
-            "-vol1/-vol2, -volume-1/-volume-2, or -p1/-p2 only"
+            "terminal -1/-2, _1/_2, -part-1/-part-2, -part1/-part2, -vol1/-vol2, -volume-1/-volume-2, or -p1/-p2 only"
         ),
         "selection": {
             "selected_count": len(index.selected),

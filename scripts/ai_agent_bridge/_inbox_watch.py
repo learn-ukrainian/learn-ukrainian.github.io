@@ -25,6 +25,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING, TextIO
 
 from agent_runtime.agent_identity import seat_read_aliases
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from secret_redactor import redact_text
 
 from . import _config
@@ -57,8 +59,10 @@ class SupervisoryRequest:
 
     @property
     def prepared_body(self) -> str:
-        return (f"Supervisory restart {self.delivery_id} prepared for generation {self.generation}. "
-                "Resume from the durable stream digest and reconcile outstanding work before dispatch.")
+        return (
+            f"Supervisory restart {self.delivery_id} prepared for generation {self.generation}. "
+            "Resume from the durable stream digest and reconcile outstanding work before dispatch."
+        )
 
     @property
     def successor_session_id(self) -> str:
@@ -78,8 +82,10 @@ def supervisory_recipient(stream_id: str) -> str:
 def require_supervisory_api(service: AuthorityService) -> None:
     """Never replace generation-bound consumption with a generic acknowledgment."""
     for name in (
-        "record_supervisory_consumption", "act_on_supervisory_delivery",
-        "refuse_supervisory_delivery", "supervisory_delivery_status",
+        "record_supervisory_consumption",
+        "act_on_supervisory_delivery",
+        "refuse_supervisory_delivery",
+        "supervisory_delivery_status",
     ):
         if not callable(getattr(service, name, None)):
             raise RuntimeError("generation-bound supervisory consumption API is unavailable")
@@ -121,7 +127,10 @@ def pending_supervisory_delivery(service: AuthorityService, stream_id: str) -> A
 
 
 def supervisory_launch_plan(
-    service: AuthorityService, remote: RemoteEpicClient, delivery_id: str, stream_id: str,
+    service: AuthorityService,
+    remote: RemoteEpicClient,
+    delivery_id: str,
+    stream_id: str,
 ) -> SupervisoryRequest | None:
     """Return a fenced successor identity only when the event can still act.
 
@@ -166,7 +175,11 @@ MONITOR_NOT_CONTACTED = MonitorNotContacted()
 
 
 def consume_supervisory_event(
-    service: AuthorityService, supervisor: SessionSupervisor, lease: Lease, *, now: str | None = None,
+    service: AuthorityService,
+    supervisor: SessionSupervisor,
+    lease: Lease,
+    *,
+    now: str | None = None,
 ) -> SupervisoryRequest | MonitorNotContacted | None:
     """Consume under the live envelope; prepare restart or reconcile its successor.
 
@@ -194,18 +207,26 @@ def consume_supervisory_event(
             delivery = None
     if delivery is None or delivery.state == "queued":
         claimed = service.claim_next_delivery(
-            supervisory_recipient(lease.stream_id), worker_id,
-            lease_seconds=SUPERVISORY_DELIVERY_SECONDS, max_attempts=3, now=now,
+            supervisory_recipient(lease.stream_id),
+            worker_id,
+            lease_seconds=SUPERVISORY_DELIVERY_SECONDS,
+            max_attempts=3,
+            now=now,
         )
         if claimed is None:
             return None
         delivery = claimed.delivery
     args = {"worker_id": worker_id, "fence_token": delivery.fence_token, "now": now}
-    generation_identity = hashlib.sha256(json.dumps(
-        supervisor.remote._lease_payload(lease), sort_keys=True,
-    ).encode()).hexdigest()
+    generation_identity = hashlib.sha256(
+        json.dumps(
+            supervisor.remote._lease_payload(lease),
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
     service.record_supervisory_consumption(
-        delivery.delivery_id, driver_generation=generation_identity, **args,
+        delivery.delivery_id,
+        driver_generation=generation_identity,
+        **args,
     )
     # Consumption is intent. Reconcile authority again before preparing any exit.
     supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
@@ -225,9 +246,12 @@ def consume_supervisory_event(
         service.act_on_supervisory_delivery(delivery.delivery_id, acknowledgment=b"already-live", **args)
     else:
         supervisor.handoff_driver(
-            role="driver", lease=lease, entry_type="state",
+            role="driver",
+            lease=lease,
+            entry_type="state",
             body=request.prepared_body,
-            idempotency_key="supervisory-restart-" + hashlib.sha256(
+            idempotency_key="supervisory-restart-"
+            + hashlib.sha256(
                 f"{delivery.delivery_id}:{lease.generation}".encode(),
             ).hexdigest()[:32],
         )
@@ -237,7 +261,13 @@ def consume_supervisory_event(
 
 
 def wake_driver_once(
-    service: AuthorityService, remote: RemoteEpicClient, *, stream_id: str, launcher: Path, epic: str, run=None,
+    service: AuthorityService,
+    remote: RemoteEpicClient,
+    *,
+    stream_id: str,
+    launcher: Path,
+    epic: str,
+    run=None,
 ) -> bool:
     """Bridge one durable event to the existing launcher, without claiming a lease."""
     require_supervisory_api(service)
@@ -263,7 +293,9 @@ def wake_driver_once(
     # Provider/model/approval settings come only from the existing launcher and
     # operator environment. The message cannot supply argv, paths, or shell code.
     result = (run or subprocess.run)(
-        [str(launcher), "--epic", epic], env=environment, check=False,
+        [str(launcher), "--epic", epic],
+        env=environment,
+        check=False,
     )
     if result.returncode != 0:
         raise RuntimeError("supervisory launcher failed; event retained for reconciliation")
@@ -319,9 +351,18 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
 
     repo_root = Path(__file__).resolve().parents[2]
     resolved = subprocess.run(
-        ["bash", "-c", 'source "$1/scripts/lib/handoff_identity.sh"; launcher_selector_stream "$2"',
-         "supervisory-selector", str(repo_root), epic],
-        check=True, capture_output=True, text=True, timeout=30,
+        [
+            "bash",
+            "-c",
+            'source "$1/scripts/lib/handoff_identity.sh"; launcher_selector_stream "$2"',
+            "supervisory-selector",
+            str(repo_root),
+            epic,
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     stream_id = resolved.stdout.strip()
     supervisory_recipient(stream_id)
@@ -407,7 +448,7 @@ def build_poll_query(recipients: tuple[str, ...]) -> str:
 
 
 def poll_once(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     agent: str,
     last_seen: int = 0,
 ) -> list[InboxEvent]:
@@ -438,10 +479,9 @@ def emit_notifications(events: list[InboxEvent], last_seen: int, output: TextIO)
     return last_seen
 
 
-def open_readonly_db(db_path: Path) -> sqlite3.Connection:
+def open_readonly_db(db_path: Path) -> SQLiteConnection:
     """Open the broker database without running migrations or taking a write lock."""
-    database_uri = f"{db_path.resolve().as_uri()}?mode=ro"
-    conn = sqlite3.connect(database_uri, uri=True, isolation_level=None)
+    conn = _open_readonly(db_path.resolve(), isolation_level=None)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA busy_timeout = 5000")
     return conn
@@ -527,7 +567,7 @@ def run_watcher(
         raise ValueError("poll interval must be greater than zero")
 
     lock = acquire_watcher_lock(agent, lock_dir)
-    conn: sqlite3.Connection | None = None
+    conn: SQLiteConnection | None = None
     last_seen = 0
     watchdog_warned = False
     try:
@@ -592,7 +632,8 @@ def _pid_is_running(pid: int) -> bool:
 def build_parser() -> argparse.ArgumentParser:
     """Build the one-command watcher interface used by harness Monitor tools."""
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
   scripts/ai_agent_bridge/inbox_watch.sh grok-infra
   scripts/ai_agent_bridge/inbox_watch.sh grok-infra --wake-driver grok --epic infra
@@ -614,13 +655,22 @@ Related: docs/runbooks/session-supervisor.md; scripts.session_supervisor.
     parser.add_argument("--once", action="store_true", help=argparse.SUPPRESS)
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument("--stop", action="store_true", help="request a clean stop for this slot's watcher")
-    modes.add_argument("--wake-driver", choices=("grok", "gemini", "claude", "codex"),
-                       help="bridge durable events to this existing driver launcher (default: notifications only)")
-    modes.add_argument("--live-supervisory", action="store_true",
-                       help="launcher-owned consumption under the inherited live lease (default: off)")
+    modes.add_argument(
+        "--wake-driver",
+        choices=("grok", "gemini", "claude", "codex"),
+        help="bridge durable events to this existing driver launcher (default: notifications only)",
+    )
+    modes.add_argument(
+        "--live-supervisory",
+        action="store_true",
+        help="launcher-owned consumption under the inherited live lease (default: off)",
+    )
     parser.add_argument("--notify-parent", action="store_true", help=argparse.SUPPRESS)
-    modes.add_argument("--launch-plan", metavar="DELIVERY_ID",
-                       help="validate one event before launcher claim; emits its fenced identity (default: off)")
+    modes.add_argument(
+        "--launch-plan",
+        metavar="DELIVERY_ID",
+        help="validate one event before launcher claim; emits its fenced identity (default: off)",
+    )
     parser.add_argument("--epic", help="existing launcher selector for --wake-driver, for example infra or atlas")
     parser.add_argument("--stream", help="exact numeric stream for --launch-plan, for example epic:6943")
     return parser
@@ -661,8 +711,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.wake_driver:
             if not args.epic:
                 raise ValueError("--wake-driver requires --epic")
-            run_supervisory_wake_watcher(args.agent, args.wake_driver, args.epic,
-                                         interval_seconds=args.interval, once=args.once)
+            run_supervisory_wake_watcher(
+                args.agent, args.wake_driver, args.epic, interval_seconds=args.interval, once=args.once
+            )
             return 0
         if args.stop:
             print(stop_watcher(args.agent), file=sys.stderr)

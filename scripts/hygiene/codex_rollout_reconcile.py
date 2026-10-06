@@ -21,7 +21,6 @@ import time
 import uuid
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
 
 try:
     from scripts.path_safety import assert_delete_target
@@ -45,17 +44,23 @@ CLASSIFICATIONS = (
     "suspicious_path",
     "suspicious_schema",
 )
+
+
 class ReconcileError(RuntimeError):
     """A fail-closed discovery, schema, or database error."""
+
 
 def _json(payload: dict[str, Any]) -> str:
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
+
 def _home(value: Path | str | None) -> Path:
     return (Path(value).expanduser() if value is not None else Path.home() / ".codex").resolve()
 
+
 def _db_uri(path: Path) -> str:
-    return f"file:{quote(str(path.resolve()), safe='/')}?mode=ro"
+    return Path(str(path.resolve())).resolve().as_uri() + "?mode=ro"
+
 
 def _open_readonly(path: Path) -> sqlite3.Connection:
     connection = sqlite3.connect(_db_uri(path), uri=True, timeout=5.0)
@@ -64,6 +69,7 @@ def _open_readonly(path: Path) -> sqlite3.Connection:
     connection.execute("PRAGMA busy_timeout = 5000")
     return connection
 
+
 def _open_writable(path: Path) -> sqlite3.Connection:
     connection = sqlite3.connect(path, timeout=5.0)
     connection.row_factory = sqlite3.Row
@@ -71,14 +77,14 @@ def _open_writable(path: Path) -> sqlite3.Connection:
     connection.execute("PRAGMA busy_timeout = 5000")
     return connection
 
+
 def _tables(connection: sqlite3.Connection) -> set[str]:
-    return {
-        str(row[0])
-        for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
-    }
+    return {str(row[0]) for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+
 
 def _columns(connection: sqlite3.Connection, table: str) -> set[str]:
     return {str(row[1]) for row in connection.execute(f"PRAGMA table_info({table})")}
+
 
 def _schema_issues(connection: sqlite3.Connection) -> tuple[set[str], set[str], list[str]]:
     tables = _tables(connection)
@@ -90,30 +96,38 @@ def _schema_issues(connection: sqlite3.Connection) -> tuple[set[str], set[str], 
     issues: list[str] = []
     if "is_pinned" not in thread_columns:
         issues.append("threads.is_pinned is missing; missing rollouts are protected")
-    if "thread_spawn_edges" in tables and not {"parent_thread_id", "child_thread_id"}.issubset(_columns(connection, "thread_spawn_edges")):
+    if "thread_spawn_edges" in tables and not {"parent_thread_id", "child_thread_id"}.issubset(
+        _columns(connection, "thread_spawn_edges")
+    ):
         issues.append("thread_spawn_edges has no parent_thread_id/child_thread_id columns")
     for table in tables:
         foreign_keys = connection.execute(f"PRAGMA foreign_key_list({table})").fetchall()
         for foreign_key in foreign_keys:
             parent, child, referenced, action = (
-                str(foreign_key[2]), str(foreign_key[3]), str(foreign_key[4]), str(foreign_key[6]).upper()
+                str(foreign_key[2]),
+                str(foreign_key[3]),
+                str(foreign_key[4]),
+                str(foreign_key[6]).upper(),
             )
             if parent != "threads":
                 continue
-            dynamic_tools = table == "thread_dynamic_tools" and (
-                child, referenced, action
-            ) == ("thread_id", "id", "CASCADE")
-            spawn_edge = table == "thread_spawn_edges" and child in {
-                "parent_thread_id", "child_thread_id"
-            } and referenced == "id"
+            dynamic_tools = table == "thread_dynamic_tools" and (child, referenced, action) == (
+                "thread_id",
+                "id",
+                "CASCADE",
+            )
+            spawn_edge = (
+                table == "thread_spawn_edges"
+                and child in {"parent_thread_id", "child_thread_id"}
+                and referenced == "id"
+            )
             if not (dynamic_tools or spawn_edge):
                 issues.append(f"unsupported foreign key to threads: {table}.{child}")
     if "thread_dynamic_tools" in tables:
         dynamic_columns = _columns(connection, "thread_dynamic_tools")
         dynamic_fks = connection.execute("PRAGMA foreign_key_list(thread_dynamic_tools)").fetchall()
         has_cascade = any(
-            (str(row[3]), str(row[4]), str(row[6]).upper()) == ("thread_id", "id", "CASCADE")
-            for row in dynamic_fks
+            (str(row[3]), str(row[4]), str(row[6]).upper()) == ("thread_id", "id", "CASCADE") for row in dynamic_fks
         )
         if "thread_id" not in dynamic_columns or not has_cascade:
             issues.append("thread_dynamic_tools lacks its declared threads CASCADE foreign key")
@@ -124,6 +138,7 @@ def _schema_issues(connection: sqlite3.Connection) -> tuple[set[str], set[str], 
             break
     return tables, thread_columns, issues
 
+
 def _compatible(path: Path) -> bool:
     try:
         with _open_readonly(path) as connection:
@@ -131,6 +146,7 @@ def _compatible(path: Path) -> bool:
         return True
     except (OSError, ReconcileError, sqlite3.Error):
         return False
+
 
 def discover_database(codex_home: Path | str, explicit: Path | str | None = None) -> Path:
     """Find an exact compatible ``state_*.sqlite`` without writing to it."""
@@ -166,6 +182,7 @@ def discover_database(codex_home: Path | str, explicit: Path | str | None = None
         raise ReconcileError("newest compatible state DB is ambiguous")
     return candidates[0]
 
+
 def _load_pins(home: Path) -> tuple[set[str], list[str]]:
     path = home / ".codex-global-state.json"
     if not path.exists():
@@ -181,6 +198,7 @@ def _load_pins(home: Path) -> tuple[set[str], list[str]]:
         return set(), ["pinned-thread-ids is not a list of strings"]
     return set(values), []
 
+
 def _integer(value: Any) -> int | None:
     if isinstance(value, bool):
         return None
@@ -190,9 +208,11 @@ def _integer(value: Any) -> int | None:
         return int(value)
     return None
 
+
 def _pinned(value: Any) -> bool | None:
     number = _integer(value)
     return bool(number) if number in (0, 1) else None
+
 
 def _path_state(raw: Any, home: Path, thread_id: str, archived: bool) -> tuple[str, Path | None]:
     if not isinstance(raw, str) or not raw or not Path(raw).is_absolute():
@@ -224,6 +244,7 @@ def _path_state(raw: Any, home: Path, thread_id: str, archived: bool) -> tuple[s
     except (OSError, RuntimeError, ValueError):
         return "invalid", None
 
+
 def _uuid_id(value: Any) -> str | None:
     if not isinstance(value, str):
         return None
@@ -233,10 +254,12 @@ def _uuid_id(value: Any) -> str | None:
         return None
     return value if str(parsed) == value else None
 
+
 def _finite(value: Any, name: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
         raise ReconcileError(f"{name} must be finite")
     return float(value)
+
 
 def _row_report(
     row: sqlite3.Row,
@@ -260,7 +283,13 @@ def _row_report(
         "pinned": pinned_column if pinned_column is not None else str(thread_id) in pins,
         "archived": archived,
     }
-    if canonical_id is None or not isinstance(raw_path, str) or updated_at is None or updated_at < 0 or archived is None:
+    if (
+        canonical_id is None
+        or not isinstance(raw_path, str)
+        or updated_at is None
+        or updated_at < 0
+        or archived is None
+    ):
         base.update(classification="suspicious_schema", reason="invalid thread row types")
         return base
     path_state, _ = _path_state(raw_path, home, canonical_id, bool(archived))
@@ -279,6 +308,7 @@ def _row_report(
     base.update(classification=classification, reason=reason)
     return base
 
+
 def _scan_with_connection(
     connection: sqlite3.Connection,
     *,
@@ -289,12 +319,17 @@ def _scan_with_connection(
     _tables, columns, schema_issues = _schema_issues(connection)
     pins, pin_issues = _load_pins(home)
     schema_issues = [*schema_issues, *pin_issues]
-    selected = ["id", "rollout_path", "created_at", "updated_at", "archived",
-                "is_pinned" if "is_pinned" in columns else "NULL AS is_pinned"]
+    selected = [
+        "id",
+        "rollout_path",
+        "created_at",
+        "updated_at",
+        "archived",
+        "is_pinned" if "is_pinned" in columns else "NULL AS is_pinned",
+    ]
     rows = connection.execute(f"SELECT {', '.join(selected)} FROM threads ORDER BY id").fetchall()
     reports = [
-        _row_report(row, home=home, pins=pins, schema_issues=schema_issues,
-                    now=now, min_age_seconds=min_age_seconds)
+        _row_report(row, home=home, pins=pins, schema_issues=schema_issues, now=now, min_age_seconds=min_age_seconds)
         for row in rows
     ]
     counts = {classification: 0 for classification in CLASSIFICATIONS}
@@ -312,6 +347,7 @@ def _scan_with_connection(
         "eligible_digest": _eligible_digest(reports),
         "rows": reports,
     }
+
 
 def scan(
     *,
@@ -336,6 +372,7 @@ def scan(
         )
     report["database"] = str(database)
     return report
+
 
 def _create_backup(database: Path, backup_dir: Path) -> Path:
     if os.path.lexists(backup_dir):
@@ -369,12 +406,14 @@ def _create_backup(database: Path, backup_dir: Path) -> Path:
         raise
     return path
 
+
 def _fingerprints(rows: list[dict[str, Any]]) -> dict[str, tuple[Any, ...]]:
     return {
         row["id"]: (row["rollout_path"], row["updated_at"], row["pinned"], row["archived"])
         for row in rows
         if row["id"] is not None
     }
+
 
 def _eligible_digest(rows: list[dict[str, Any]]) -> str:
     fingerprints = [
@@ -388,9 +427,12 @@ def _eligible_digest(rows: list[dict[str, Any]]) -> str:
         for row in rows
         if row["classification"] == "eligible_stale"
     ]
-    fingerprints.sort(key=lambda row: tuple(str(row[key]) for key in ("id", "rollout_path", "updated_at", "pinned", "archived")))
+    fingerprints.sort(
+        key=lambda row: tuple(str(row[key]) for key in ("id", "rollout_path", "updated_at", "pinned", "archived"))
+    )
     payload = json.dumps(fingerprints, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
 
 def apply(
     *,
@@ -431,27 +473,41 @@ def apply(
         if initial["schema_issues"]:
             connection.rollback()
             return {
-                "schema": SCHEMA, "mode": "apply", "database": str(database),
-                "error": "unsafe_schema", "schema_issues": initial["schema_issues"], "backup_path": None,
-                "deleted_ids": [], "counts": {"deleted": 0, "skipped": 0, "spawn_edges_deleted": 0},
+                "schema": SCHEMA,
+                "mode": "apply",
+                "database": str(database),
+                "error": "unsafe_schema",
+                "schema_issues": initial["schema_issues"],
+                "backup_path": None,
+                "deleted_ids": [],
+                "counts": {"deleted": 0, "skipped": 0, "spawn_edges_deleted": 0},
                 "mutation_committed": False,
             }
         if len(eligible) != expected_eligible_stale:
             connection.rollback()
             return {
-                "schema": SCHEMA, "mode": "apply", "error": "expected_count_mismatch",
+                "schema": SCHEMA,
+                "mode": "apply",
+                "error": "expected_count_mismatch",
                 "expected_eligible_stale": expected_eligible_stale,
-                "observed_eligible_stale": len(eligible), "counts": initial["counts"],
-                "eligible_digest": observed_digest, "backup_path": None, "deleted_ids": [],
+                "observed_eligible_stale": len(eligible),
+                "counts": initial["counts"],
+                "eligible_digest": observed_digest,
+                "backup_path": None,
+                "deleted_ids": [],
                 "mutation_committed": False,
             }
         if observed_digest != expected_eligible_digest:
             connection.rollback()
             return {
-                "schema": SCHEMA, "mode": "apply", "error": "expected_digest_mismatch",
+                "schema": SCHEMA,
+                "mode": "apply",
+                "error": "expected_digest_mismatch",
                 "expected_eligible_digest": expected_eligible_digest,
                 "observed_eligible_digest": observed_digest,
-                "counts": initial["counts"], "backup_path": None, "deleted_ids": [],
+                "counts": initial["counts"],
+                "backup_path": None,
+                "deleted_ids": [],
                 "mutation_committed": False,
             }
         if eligible:
@@ -481,8 +537,12 @@ def apply(
                     skipped.append({"id": candidate["id"], "reason": "row_changed"})
                     continue
                 check = _row_report(
-                    current, home=home, pins=pins, schema_issues=schema_issues,
-                    now=clock, min_age_seconds=age,
+                    current,
+                    home=home,
+                    pins=pins,
+                    schema_issues=schema_issues,
+                    now=clock,
+                    min_age_seconds=age,
                 )
                 if check["classification"] != "eligible_stale":
                     skipped.append({"id": candidate["id"], "reason": check["classification"]})
@@ -492,9 +552,7 @@ def apply(
                         "DELETE FROM thread_spawn_edges WHERE parent_thread_id = ? OR child_thread_id = ?",
                         (candidate["id"], candidate["id"]),
                     ).rowcount
-                deleted_count = connection.execute(
-                    "DELETE FROM threads WHERE id = ?", (candidate["id"],)
-                ).rowcount
+                deleted_count = connection.execute("DELETE FROM threads WHERE id = ?", (candidate["id"],)).rowcount
                 if deleted_count != 1:
                     skipped.append({"id": candidate["id"], "reason": "delete_race"})
                     continue
@@ -521,17 +579,24 @@ def apply(
                 and not after["schema_issues"]
                 and remaining_edges == 0
                 and all(
-                    thread_id not in after_fingerprints if thread_id in deleted else
-                    thread_id in after_fingerprints if thread_id in skipped_ids else
-                    after_fingerprints.get(thread_id) == fingerprint
+                    thread_id not in after_fingerprints
+                    if thread_id in deleted
+                    else thread_id in after_fingerprints
+                    if thread_id in skipped_ids
+                    else after_fingerprints.get(thread_id) == fingerprint
                     for thread_id, fingerprint in before_fingerprints.items()
                 )
             )
             receipt = {
-                "schema": SCHEMA, "mode": "apply", "database": str(database),
-                "backup_path": str(backup_path) if backup_path else None, "deleted_ids": deleted,
+                "schema": SCHEMA,
+                "mode": "apply",
+                "database": str(database),
+                "backup_path": str(backup_path) if backup_path else None,
+                "deleted_ids": deleted,
                 "counts": {"deleted": len(deleted), "skipped": len(skipped), "spawn_edges_deleted": edge_count},
-                "skipped": skipped, "integrity_check": integrity, "post_apply_parity": parity,
+                "skipped": skipped,
+                "integrity_check": integrity,
+                "post_apply_parity": parity,
                 "mutation_committed": True,
                 "remaining": {"counts": after["counts"], "rows": after["rows"]},
             }
@@ -540,25 +605,35 @@ def apply(
             return receipt
         except (OSError, sqlite3.Error, ReconcileError, KeyError, TypeError, ValueError) as exc:
             return {
-                "schema": SCHEMA, "mode": "apply", "database": str(database),
+                "schema": SCHEMA,
+                "mode": "apply",
+                "database": str(database),
                 "backup_path": str(backup_path) if backup_path else None,
-                "error": "post_commit_verification_failed", "verification_error": str(exc),
+                "error": "post_commit_verification_failed",
+                "verification_error": str(exc),
                 "deleted_ids": deleted,
                 "counts": {"deleted": len(deleted), "skipped": len(skipped), "spawn_edges_deleted": edge_count},
-                "skipped": skipped, "mutation_committed": True,
+                "skipped": skipped,
+                "mutation_committed": True,
             }
     except (OSError, sqlite3.Error, ReconcileError) as exc:
         if connection is not None:
             connection.rollback()
         return {
-            "schema": SCHEMA, "mode": "apply", "database": str(database),
-            "backup_path": str(backup_path) if backup_path else None, "error": f"apply_failed: {exc}",
-            "deleted_ids": [], "counts": {"deleted": 0, "skipped": len(skipped), "spawn_edges_deleted": 0},
-            "skipped": skipped, "mutation_committed": mutation_committed,
+            "schema": SCHEMA,
+            "mode": "apply",
+            "database": str(database),
+            "backup_path": str(backup_path) if backup_path else None,
+            "error": f"apply_failed: {exc}",
+            "deleted_ids": [],
+            "counts": {"deleted": 0, "skipped": len(skipped), "spawn_edges_deleted": 0},
+            "skipped": skipped,
+            "mutation_committed": mutation_committed,
         }
     finally:
         if connection is not None:
             connection.close()
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -569,12 +644,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--now", type=float, default=None, help=argparse.SUPPRESS)
     parser.add_argument("--fail-on-stale", action="store_true")
     parser.add_argument("--confirm-stale", "--acknowledge", dest="acknowledge", action="store_true")
-    parser.add_argument(
-        "--expected-eligible-stale", "--expected-count", dest="expected_count", type=int, default=None
-    )
+    parser.add_argument("--expected-eligible-stale", "--expected-count", dest="expected_count", type=int, default=None)
     parser.add_argument("--expected-eligible-digest", dest="expected_digest", default=None)
     parser.add_argument("--backup-dir", type=Path, default=None)
     return parser
+
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
@@ -603,10 +677,18 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(_json(receipt), end="")
         if receipt.get("error"):
-            return 3 if receipt["error"] in {
-                "acknowledgement_required", "expected_count_required", "expected_digest_required",
-                "expected_count_mismatch", "expected_digest_mismatch"
-            } else 2
+            return (
+                3
+                if receipt["error"]
+                in {
+                    "acknowledgement_required",
+                    "expected_count_required",
+                    "expected_digest_required",
+                    "expected_count_mismatch",
+                    "expected_digest_mismatch",
+                }
+                else 2
+            )
         return 0 if receipt.get("post_apply_parity") else 2
     except (OSError, ReconcileError, sqlite3.Error) as exc:
         print(_json({"schema": SCHEMA, "mode": args.command, "error": str(exc)}), end="")

@@ -41,6 +41,8 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 try:
     from scripts.verification.vesum import verify_word
 except ImportError:
@@ -301,7 +303,7 @@ class _SourceRows:
     def __init__(self, sources_db: Path, vesum: VesumLookup | None):
         import sqlite3
 
-        self._conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+        self._conn = _open_readonly(sources_db)
         try:
             self._conn.execute("SELECT id, grade, author, title, text FROM textbooks LIMIT 0")
             self._conn.execute("SELECT id, word, section, text FROM style_guide LIMIT 0")
@@ -1249,19 +1251,46 @@ def main() -> int:
             "Related: Issues #7944, #8276, #8723; committed error-correction evidence snapshot."
         ),
     )
-    parser.add_argument("--teacher-cloze", default=str(DEFAULT_TEACHER_CLOZE), help="Teacher cloze JSON (default: bundled deck)")
-    parser.add_argument("--error-corrections", default=str(DEFAULT_ERROR_CORRECTIONS), help="Error-correction JSON (default: registry deck)")
-    parser.add_argument("--sentence-inventory", default=str(DEFAULT_SENTENCE_INVENTORY), help="Sentence inventory JSON (default: bundled inventory)")
-    parser.add_argument("--shards-dir", default=str(DEFAULT_SHARDS_DIR), help="Practice shard directory (default: site/public/lexicon)")
-    parser.add_argument("--vesum-db", default=str(DEFAULT_VESUM_DB), help="VESUM database (default: data/vesum.db; used with --verify-vesum)")
-    parser.add_argument("--sources-db", type=Path, help="Verify error-correction rows against this sources.db (default: snapshot-only)")
-    parser.add_argument("--all-modes", action="store_true", help="Audit all 10 practice-shard modes (default: off)")
-    parser.add_argument("--verify-vesum", action="store_true", help="Verify morphological attestation in VESUM (default: off)")
-    parser.add_argument("--check-ambiguity", action="store_true", help="Validate sample cards with TypeSafe System One (default: off)")
     parser.add_argument(
-        "--sample-ambiguity", type=int, default=5, help="Number of cards to sample for ambiguity validation (default: 5)"
+        "--teacher-cloze", default=str(DEFAULT_TEACHER_CLOZE), help="Teacher cloze JSON (default: bundled deck)"
     )
-    parser.add_argument("--strict-ambiguity", action="store_true", help="Treat fail_ambiguous as a hard failure (default: off)")
+    parser.add_argument(
+        "--error-corrections",
+        default=str(DEFAULT_ERROR_CORRECTIONS),
+        help="Error-correction JSON (default: registry deck)",
+    )
+    parser.add_argument(
+        "--sentence-inventory",
+        default=str(DEFAULT_SENTENCE_INVENTORY),
+        help="Sentence inventory JSON (default: bundled inventory)",
+    )
+    parser.add_argument(
+        "--shards-dir", default=str(DEFAULT_SHARDS_DIR), help="Practice shard directory (default: site/public/lexicon)"
+    )
+    parser.add_argument(
+        "--vesum-db",
+        default=str(DEFAULT_VESUM_DB),
+        help="VESUM database (default: data/vesum.db; used with --verify-vesum)",
+    )
+    parser.add_argument(
+        "--sources-db", type=Path, help="Verify error-correction rows against this sources.db (default: snapshot-only)"
+    )
+    parser.add_argument("--all-modes", action="store_true", help="Audit all 10 practice-shard modes (default: off)")
+    parser.add_argument(
+        "--verify-vesum", action="store_true", help="Verify morphological attestation in VESUM (default: off)"
+    )
+    parser.add_argument(
+        "--check-ambiguity", action="store_true", help="Validate sample cards with TypeSafe System One (default: off)"
+    )
+    parser.add_argument(
+        "--sample-ambiguity",
+        type=int,
+        default=5,
+        help="Number of cards to sample for ambiguity validation (default: 5)",
+    )
+    parser.add_argument(
+        "--strict-ambiguity", action="store_true", help="Treat fail_ambiguous as a hard failure (default: off)"
+    )
     args = parser.parse_args()
 
     # When --all-modes is passed, default verify_vesum to True if not explicitly overridden

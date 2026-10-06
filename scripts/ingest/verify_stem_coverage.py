@@ -9,8 +9,16 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 SUBJECTS = (
-    "algebra", "fizyka", "khimiya", "matematyka", "informatyka", "biolohiya", "heohrafiya",
+    "algebra",
+    "fizyka",
+    "khimiya",
+    "matematyka",
+    "informatyka",
+    "biolohiya",
+    "heohrafiya",
 )
 PROBES = ("алгоритм", "рівняння", "фотосинтез", "валентність", "прискорення")
 
@@ -23,7 +31,7 @@ def census(db_path: Path) -> dict:
     subject start grades and integrated alternatives belong to the curriculum
     denominator, not to an observed SQLite row count.
     """
-    conn = sqlite3.connect(db_path.resolve().as_uri() + "?mode=ro", uri=True)
+    conn = _open_readonly(db_path.resolve())
     try:
         conn.execute("BEGIN")
         total = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
@@ -46,17 +54,15 @@ def census(db_path: Path) -> dict:
                 "chunks": sum(row[2] for row in rows),
                 "grades_5_11": grades,
                 "absent_grades_5_11": [int(g) for g, counts in grades.items() if not counts["chunks"]],
-                "sources": [
-                    {"source_file": source, "grade": grade, "chunks": count}
-                    for source, grade, count in rows
-                ],
+                "sources": [{"source_file": source, "grade": grade, "chunks": count} for source, grade, count in rows],
             }
         probes = {}
         placeholders = ",".join("?" for _ in SUBJECTS)
         for term in PROBES:
             probes[term] = {
                 "all_textbooks": conn.execute(
-                    "SELECT COUNT(*) FROM textbooks_fts WHERE textbooks_fts MATCH ?", (term,),
+                    "SELECT COUNT(*) FROM textbooks_fts WHERE textbooks_fts MATCH ?",
+                    (term,),
                 ).fetchone()[0],
                 "stem_grades_5_11": conn.execute(
                     "SELECT COUNT(*) FROM textbooks_fts JOIN textbooks t ON t.id = textbooks_fts.rowid "
@@ -96,7 +102,9 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
     parser.add_argument(
-        "--db", type=Path, required=True,
+        "--db",
+        type=Path,
+        required=True,
         help="Existing SQLite sources database; required, no implicit worktree copy (e.g. /path/to/sources.db)",
     )
     args = parser.parse_args(argv)

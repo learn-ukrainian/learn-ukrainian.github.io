@@ -62,6 +62,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import NamedTuple
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 logger = logging.getLogger(__name__)
 
 
@@ -106,11 +108,7 @@ class CitationCheckResult:
 
     @property
     def unverified(self) -> list[VerificationResult]:
-        return [
-            v
-            for v in self.verifications
-            if not v.verified and not v.is_skipped
-        ]
+        return [v for v in self.verifications if not v.verified and not v.is_skipped]
 
     @property
     def has_unverified(self) -> bool:
@@ -137,14 +135,7 @@ def _has_cyrillic(text: str) -> bool:
 
 def _normalize_word(word: str) -> str:
     """Lower-case + strip stress marks + normalize apostrophe variants."""
-    return (
-        word.replace("́", "")
-        .replace("’", "'")
-        .replace("‘", "'")
-        .replace("ʼ", "'")
-        .strip("-'")
-        .lower()
-    )
+    return word.replace("́", "").replace("’", "'").replace("‘", "'").replace("ʼ", "'").strip("-'").lower()
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -259,10 +250,7 @@ def _verify_via_lookup(
     return VerificationResult(
         citation,
         verified=False,
-        detail=(
-            f"no entry for «{citation.headword}» in {source_label} "
-            f"(verified via direct lookup)"
-        ),
+        detail=(f"no entry for «{citation.headword}» in {source_label} (verified via direct lookup)"),
     )
 
 
@@ -285,9 +273,8 @@ def _body_text_has(db_path: Path, table: str, column: str, term: str) -> bool:
     """
     if not db_path.exists():
         return False
-    uri = f"file:{db_path}?mode=ro"
     try:
-        conn = sqlite3.connect(uri, uri=True)
+        conn = _open_readonly(db_path)
     except sqlite3.OperationalError as exc:
         logger.debug("citation-check: read-only connect to %s failed: %s", db_path, exc)
         return False
@@ -297,9 +284,7 @@ def _body_text_has(db_path: Path, table: str, column: str, term: str) -> bool:
             (f"%{term}%",),
         ).fetchall()
     except sqlite3.OperationalError as exc:
-        logger.debug(
-            "citation-check: body scan on %s.%s failed: %s", table, column, exc
-        )
+        logger.debug("citation-check: body scan on %s.%s failed: %s", table, column, exc)
         return False
     finally:
         conn.close()
@@ -338,9 +323,7 @@ def _verify_antonenko(citation: Citation) -> VerificationResult:
     except Exception as exc:  # pragma: no cover - defensive
         logger.warning("citation-check: AD word lookup raised: %s", exc)
     # Body-text scan — AD has 279 entries, fast.
-    if _body_text_has(
-        db.SOURCES_DB_PATH, "style_guide", "text", word
-    ):
+    if _body_text_has(db.SOURCES_DB_PATH, "style_guide", "text", word):
         return VerificationResult(citation, verified=True)
     return VerificationResult(
         citation,
@@ -355,9 +338,7 @@ def _verify_antonenko(citation: Citation) -> VerificationResult:
 def _verify_hrinchenko(citation: Citation) -> VerificationResult:
     db = _try_load_sources_db()
     lookup = db.search_grinchenko_1907 if db is not None else None
-    return _verify_via_lookup(
-        citation, lookup=lookup, source_label="Грінченко 1907"
-    )
+    return _verify_via_lookup(citation, lookup=lookup, source_label="Грінченко 1907")
 
 
 def _verify_sum11(citation: Citation) -> VerificationResult:
@@ -690,15 +671,11 @@ def _format_annotation(verification: VerificationResult) -> str:
     citation = verification.citation
     headword = citation.headword or "(no headword extracted)"
     return (
-        f"<!-- CITATION-UNVERIFIED: source={citation.source} "
-        f'headword="{headword}" '
-        f'reason="{verification.detail}" -->'
+        f'<!-- CITATION-UNVERIFIED: source={citation.source} headword="{headword}" reason="{verification.detail}" -->'
     )
 
 
-def annotate_body(
-    body: str, verifications: list[VerificationResult]
-) -> str:
+def annotate_body(body: str, verifications: list[VerificationResult]) -> str:
     """Insert annotations for each unverified citation.
 
     Annotations go on their own lines, BEFORE any trailing
@@ -715,7 +692,7 @@ def annotate_body(
     tail_match = _TAIL_MARKER_RE.search(body)
     if tail_match:
         head = body[: tail_match.start()].rstrip()
-        tail = body[tail_match.start():].strip()
+        tail = body[tail_match.start() :].strip()
         return f"{head}\n\n{annotations}\n\n{tail}"
     return f"{body.rstrip()}\n\n{annotations}\n"
 

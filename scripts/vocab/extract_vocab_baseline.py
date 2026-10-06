@@ -15,12 +15,14 @@ Usage:
 
 import argparse
 import re
-import sqlite3
 import sys
 from collections import Counter
 from pathlib import Path
 
 import yaml
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 # ---------------------------------------------------------------------------
 # Setup project paths
@@ -65,7 +67,7 @@ def tokenize_ukrainian(text: str) -> list[str]:
     return [t.lower() for t in tokens if len(t) >= MIN_WORD_LEN]
 
 
-def lookup_vesum(conn: sqlite3.Connection, word_forms: list[str]) -> dict[str, dict]:
+def lookup_vesum(conn: SQLiteConnection, word_forms: list[str]) -> dict[str, dict]:
     """
     Batch-lookup word forms in VESUM. Returns lemma → {pos, count} for content words.
 
@@ -76,9 +78,7 @@ def lookup_vesum(conn: sqlite3.Connection, word_forms: list[str]) -> dict[str, d
     lemma_pos: dict[str, Counter] = {}
 
     for wf in word_forms:
-        cursor.execute(
-            "SELECT DISTINCT lemma, pos FROM forms WHERE word_form = ?", (wf,)
-        )
+        cursor.execute("SELECT DISTINCT lemma, pos FROM forms WHERE word_form = ?", (wf,))
         rows = cursor.fetchall()
         for lemma, pos in rows:
             if pos not in KEEP_POS:
@@ -121,8 +121,11 @@ def is_valid_vocab(vocab_path: Path) -> bool:
 
 
 def process_module(
-    md_path: Path, vocab_dir: Path, conn: sqlite3.Connection,
-    force: bool = False, dry_run: bool = False,
+    md_path: Path,
+    vocab_dir: Path,
+    conn: SQLiteConnection,
+    force: bool = False,
+    dry_run: bool = False,
 ) -> str:
     """Process a single module. Returns status string."""
     slug = md_path.stem
@@ -185,7 +188,7 @@ def main():
         sys.exit(1)
 
     vocab_dir = level_dir / "vocabulary"
-    conn = sqlite3.connect(f"{Path(VESUM_DB).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(VESUM_DB).resolve())
 
     wrote = 0
     skipped = 0

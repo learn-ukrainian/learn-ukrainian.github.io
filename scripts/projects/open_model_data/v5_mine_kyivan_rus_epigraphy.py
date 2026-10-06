@@ -51,6 +51,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 
@@ -344,9 +345,8 @@ def detect_features(text: str) -> tuple[str, list[str]]:
 
 def load_epigraphy_records(sources_db: Path) -> list[EpigraphyRecord]:
     """Load and diplomatically clean Saint Sophia Cathedral inscriptions."""
-    import sqlite3
 
-    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(sources_db).resolve())
     cur = conn.cursor()
     query = """
     SELECT id, source_record_id, title, original_transcription, interpretative_edition,
@@ -408,12 +408,11 @@ def load_epigraphy_records(sources_db: Path) -> list[EpigraphyRecord]:
 
 def load_chronicle_records(sources_db: Path) -> list[ChronicleRecord]:
     """Load Old East Slavic chronicle text chunks, strictly excluding modern translations and editorial prefaces."""
-    import sqlite3
 
     excluded_files = tuple(EXCLUDED_CHRONICLE_SOURCE_FILES)
     placeholders = ",".join("?" for _ in excluded_files)
 
-    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(sources_db).resolve())
     cur = conn.cursor()
     query = f"""
     SELECT chunk_id, work, author, year, text, source_file
@@ -640,7 +639,6 @@ def build_sft_dataset(
     seed: int = 42,
 ) -> list[dict[str, Any]]:
     """Build SFT trajectories teaching Kyivan Rus epigraphy, diglossia, and proto-Ukrainian features."""
-    import sqlite3
 
     rng = random.Random(seed)
     trajectories: list[dict[str, Any]] = []
@@ -657,7 +655,7 @@ def build_sft_dataset(
             if norm:
                 eval_normalized_snippets.add(norm)
 
-    con_ves = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+    con_ves = _open_readonly(Path(vesum_db).resolve())
     cur_ves = con_ves.cursor()
 
     # 1. Training graffiti (strictly excluding held-out rooms 121, 110 and all eval normalized texts)

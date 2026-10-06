@@ -12,14 +12,14 @@ import os
 import sqlite3
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+
 from .monitor_context import MonitorContext, resolve_context
 
 # Schema column check cache for backward compat
 _BROKER_COLS: set | None = None
 
 _BROKER_DIR = Path(".mcp") / "servers" / "message-broker"
-
-
 
 
 def _broker_dir(ctx: MonitorContext | None = None) -> Path:
@@ -34,7 +34,7 @@ def _watcher_log_file(ctx: MonitorContext | None = None) -> Path:
     return _broker_dir(ctx) / "watcher.log"
 
 
-def ensure_broker_cols(conn: sqlite3.Connection) -> set:
+def ensure_broker_cols(conn: SQLiteConnection) -> set:
     """Cache the column names of the messages table."""
     global _BROKER_COLS
     if _BROKER_COLS is None:
@@ -81,11 +81,13 @@ def collect_stuck_tasks(ctx: MonitorContext | None = None) -> list[dict]:
         for f in sorted(stuck_dir.glob("*.md")):
             try:
                 text = f.read_text()
-                stuck_tasks.append({
-                    "file": f.name,
-                    "task_id": f.stem,
-                    "preview": text[:300],
-                })
+                stuck_tasks.append(
+                    {
+                        "file": f.name,
+                        "task_id": f.stem,
+                        "preview": text[:300],
+                    }
+                )
             except Exception:
                 pass
 
@@ -96,11 +98,13 @@ def collect_stuck_tasks(ctx: MonitorContext | None = None) -> list[dict]:
                 for f in sorted(stuck_sub.glob("*.md")):
                     try:
                         text = f.read_text()
-                        stuck_tasks.append({
-                            "file": f"{track_dir.name}/{f.name}",
-                            "task_id": f.stem,
-                            "preview": text[:300],
-                        })
+                        stuck_tasks.append(
+                            {
+                                "file": f"{track_dir.name}/{f.name}",
+                                "task_id": f.stem,
+                                "preview": text[:300],
+                            }
+                        )
                     except Exception:
                         pass
 

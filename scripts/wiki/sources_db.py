@@ -58,6 +58,8 @@ _SCRIPTS_DIR = str(Path(__file__).resolve().parents[1])
 if _SCRIPTS_DIR not in sys.path:
     sys.path.insert(0, _SCRIPTS_DIR)
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+
 from . import slovnyk_me
 from .channels import rank_external_hits
 from .chunking import ChunkedPiece, chunk_text, policy_for
@@ -104,9 +106,7 @@ def using_connection(conn: sqlite3.Connection) -> Iterator[sqlite3.Connection]:
 
 ULIF_DICTUA_SOURCE_ID = "ulif_dictua"
 ULIF_DICTUA_OFFICIAL_URL = "https://lcorp.ulif.org.ua/dictua"
-ULIF_DICTUA_ATTRIBUTION_LABEL = (
-    "«Словники України» (Український мовно-інформаційний фонд НАН України)"
-)
+ULIF_DICTUA_ATTRIBUTION_LABEL = "«Словники України» (Український мовно-інформаційний фонд НАН України)"
 ULIF_DICTUA_SECTION_KINDS = ("paradigm", "synonyms", "antonyms", "phraseology")
 ULIF_DICTUA_MIGRATE_MESSAGE = (
     "ulif_dictua_entries is not on the homonym-safe schema; "
@@ -177,14 +177,16 @@ CREATE TABLE IF NOT EXISTS ulif_forms_build (
 );
 """
 
-_ULIF_ENTRY_MIGRATION_COLUMNS = frozenset({
-    "homonym_index",
-    "grammatical_label",
-    "sense_gloss",
-    "content_sha256",
-    "register_position",
-    "homonym_checked",
-})
+_ULIF_ENTRY_MIGRATION_COLUMNS = frozenset(
+    {
+        "homonym_index",
+        "grammatical_label",
+        "sense_gloss",
+        "content_sha256",
+        "register_position",
+        "homonym_checked",
+    }
+)
 
 
 def normalize_ulif_dictua_query(word: str) -> str:
@@ -193,10 +195,13 @@ def normalize_ulif_dictua_query(word: str) -> str:
 
 
 def _ulif_table_exists(conn: sqlite3.Connection, name: str) -> bool:
-    return conn.execute(
-        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
-        (name,),
-    ).fetchone() is not None
+    return (
+        conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+            (name,),
+        ).fetchone()
+        is not None
+    )
 
 
 def _ulif_entry_columns(conn: sqlite3.Connection) -> set[str]:
@@ -262,10 +267,7 @@ def migrate_ulif_dictua_entries(conn: sqlite3.Connection) -> bool:
             if name not in columns:
                 return fallback
             if name == "content_sha256":
-                return (
-                    "CASE WHEN content_sha256 != '' THEN content_sha256 "
-                    "ELSE response_sha256 END"
-                )
+                return "CASE WHEN content_sha256 != '' THEN content_sha256 ELSE response_sha256 END"
             if name == "homonym_index":
                 return "COALESCE(homonym_index, 1)"
             if name == "homonym_checked":
@@ -390,7 +392,9 @@ def _ulif_dictua_payloads(payload: object) -> list[dict]:
 
 def _ulif_dictua_provenance(row: sqlite3.Row) -> dict:
     keys = row.keys()
-    content_sha256 = row["content_sha256"] if "content_sha256" in keys and row["content_sha256"] else row["response_sha256"]
+    content_sha256 = (
+        row["content_sha256"] if "content_sha256" in keys and row["content_sha256"] else row["response_sha256"]
+    )
     return {
         "source_id": ULIF_DICTUA_SOURCE_ID,
         "official_url": ULIF_DICTUA_OFFICIAL_URL,
@@ -484,21 +488,25 @@ def _load_ulif_dictua_rows(conn: sqlite3.Connection, normalized: str) -> list[sq
     if not _ulif_table_exists(conn, "ulif_dictua_entries"):
         return []
     if "homonym_index" in _ulif_entry_columns(conn):
-        return list(conn.execute(
-            """
+        return list(
+            conn.execute(
+                """
             SELECT * FROM ulif_dictua_entries
             WHERE normalized_query = ?
             ORDER BY homonym_index
             """,
-            (normalized,),
-        ))
-    return list(conn.execute(
-        """
+                (normalized,),
+            )
+        )
+    return list(
+        conn.execute(
+            """
         SELECT * FROM ulif_dictua_entries
         WHERE normalized_query = ?
         """,
-        (normalized,),
-    ))
+            (normalized,),
+        )
+    )
 
 
 def _ulif_dictua_ambiguous(normalized: str, rows: list[sqlite3.Row]) -> dict:
@@ -527,10 +535,7 @@ def get_ulif_dictua_entries(
     if conn is None:
         return []
     try:
-        return [
-            _materialize_ulif_dictua_entry(conn, row)
-            for row in _load_ulif_dictua_rows(conn, normalized)
-        ]
+        return [_materialize_ulif_dictua_entry(conn, row) for row in _load_ulif_dictua_rows(conn, normalized)]
     finally:
         conn.close()
 
@@ -583,22 +588,51 @@ def compute_ulif_entry_fingerprint(
     keys = entry_row.keys() if hasattr(entry_row, "keys") else ()
     h.update(str(entry_row["id"] if "id" in keys and entry_row["id"] is not None else 0).encode("utf-8"))
     h.update(b"\x00")
-    h.update(str(entry_row["normalized_query"] if "normalized_query" in keys and entry_row["normalized_query"] else "").encode("utf-8"))
+    h.update(
+        str(
+            entry_row["normalized_query"] if "normalized_query" in keys and entry_row["normalized_query"] else ""
+        ).encode("utf-8")
+    )
     h.update(b"\x00")
-    h.update(str(entry_row["canonical_headword"] if "canonical_headword" in keys and entry_row["canonical_headword"] else "").encode("utf-8"))
+    h.update(
+        str(
+            entry_row["canonical_headword"] if "canonical_headword" in keys and entry_row["canonical_headword"] else ""
+        ).encode("utf-8")
+    )
     h.update(b"\x00")
-    h.update(str(entry_row["grammatical_label"] if "grammatical_label" in keys and entry_row["grammatical_label"] else "").encode("utf-8"))
+    h.update(
+        str(
+            entry_row["grammatical_label"] if "grammatical_label" in keys and entry_row["grammatical_label"] else ""
+        ).encode("utf-8")
+    )
     h.update(b"\x00")
-    h.update(str(entry_row["sense_gloss"] if "sense_gloss" in keys and entry_row["sense_gloss"] else "").encode("utf-8"))
+    h.update(
+        str(entry_row["sense_gloss"] if "sense_gloss" in keys and entry_row["sense_gloss"] else "").encode("utf-8")
+    )
     h.update(b"\x00")
-    h.update(str(entry_row["homonym_index"] if "homonym_index" in keys and entry_row["homonym_index"] is not None else 1).encode("utf-8"))
+    h.update(
+        str(
+            entry_row["homonym_index"] if "homonym_index" in keys and entry_row["homonym_index"] is not None else 1
+        ).encode("utf-8")
+    )
     h.update(b"\x00")
-    h.update(str(entry_row["homonym_checked"] if "homonym_checked" in keys and entry_row["homonym_checked"] is not None else 0).encode("utf-8"))
+    h.update(
+        str(
+            entry_row["homonym_checked"]
+            if "homonym_checked" in keys and entry_row["homonym_checked"] is not None
+            else 0
+        ).encode("utf-8")
+    )
     h.update(b"\x00")
-    h.update(str(entry_row["raw_response_ref"] if "raw_response_ref" in keys and entry_row["raw_response_ref"] else "").encode("utf-8"))
+    h.update(
+        str(
+            entry_row["raw_response_ref"] if "raw_response_ref" in keys and entry_row["raw_response_ref"] else ""
+        ).encode("utf-8")
+    )
     h.update(b"\x00")
     h.update(str(entry_row["status"] if "status" in keys and entry_row["status"] else "").encode("utf-8"))
     if section_rows:
+
         def _sec_sort_key(s: Any) -> tuple[str, int, int]:
             s_keys = s.keys() if hasattr(s, "keys") else ()
             k = str(s["kind"]) if "kind" in s_keys and s["kind"] else ""
@@ -612,9 +646,13 @@ def compute_ulif_entry_fingerprint(
             h.update(b"\x00")
             h.update(str(s["kind"] if "kind" in s_keys and s["kind"] else "").encode())
             h.update(b"\x00")
-            h.update(str(s["source_order"] if "source_order" in s_keys and s["source_order"] is not None else 0).encode())
+            h.update(
+                str(s["source_order"] if "source_order" in s_keys and s["source_order"] is not None else 0).encode()
+            )
             h.update(b"\x00")
-            h.update(str(s["sense_or_group_id"] if "sense_or_group_id" in s_keys and s["sense_or_group_id"] else "").encode())
+            h.update(
+                str(s["sense_or_group_id"] if "sense_or_group_id" in s_keys and s["sense_or_group_id"] else "").encode()
+            )
             h.update(b"\x00")
             payload = s["payload_json"] if "payload_json" in s_keys and s["payload_json"] else ""
             h.update(payload.encode() if isinstance(payload, str) else str(payload).encode())
@@ -682,11 +720,7 @@ def _derive_identity_from_raw(
     )
 
     path = Path(db_path) if db_path is not None else _read_db_path()
-    cache = (
-        ulif_raw_cache.cache_path()
-        if path == PROJECT_ROOT / "data/sources.db"
-        else ulif_raw_cache.cache_path(path)
-    )
+    cache = ulif_raw_cache.cache_path() if path == PROJECT_ROOT / "data/sources.db" else ulif_raw_cache.cache_path(path)
 
     if not cache.exists():
         lemma_form = next((f for f in entry_forms if f.get("is_lemma")), None)
@@ -905,37 +939,45 @@ def _derive_identity_from_raw(
         if rel_kind in manifest:
             rel_ref = manifest[rel_kind]
             if not isinstance(rel_ref, str) or not rel_ref.startswith("sha256:") or len(rel_ref) != 71:
-                unavailable_relations.append({
-                    "tab": rel_kind,
-                    "ref": str(rel_ref),
-                    "error": "corrupt_blob",
-                    "locator": f"ulif:entry:{entry_id}:{rel_kind}",
-                })
+                unavailable_relations.append(
+                    {
+                        "tab": rel_kind,
+                        "ref": str(rel_ref),
+                        "error": "corrupt_blob",
+                        "locator": f"ulif:entry:{entry_id}:{rel_kind}",
+                    }
+                )
             else:
                 rel_sha = rel_ref.removeprefix("sha256:")
                 try:
                     rel_bytes = ulif_raw_cache.get(rel_sha, path=cache)
                     if rel_bytes is None:
-                        unavailable_relations.append({
+                        unavailable_relations.append(
+                            {
+                                "tab": rel_kind,
+                                "ref": rel_ref,
+                                "error": "missing_blob",
+                                "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                            }
+                        )
+                except ValueError:
+                    unavailable_relations.append(
+                        {
                             "tab": rel_kind,
                             "ref": rel_ref,
-                            "error": "missing_blob",
+                            "error": "corrupt_blob",
                             "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
-                        })
-                except ValueError:
-                    unavailable_relations.append({
-                        "tab": rel_kind,
-                        "ref": rel_ref,
-                        "error": "corrupt_blob",
-                        "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
-                    })
+                        }
+                    )
                 except Exception:
-                    unavailable_relations.append({
-                        "tab": rel_kind,
-                        "ref": rel_ref,
-                        "error": "raw_cache_error",
-                        "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
-                    })
+                    unavailable_relations.append(
+                        {
+                            "tab": rel_kind,
+                            "ref": rel_ref,
+                            "error": "raw_cache_error",
+                            "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                        }
+                    )
 
     mismatches = []
     if stored_headword != parsed_headword:
@@ -1029,26 +1071,30 @@ def get_ulif_word_records(
         for word in word_list:
             normalized = normalize_ulif_dictua_query(word)
             if not normalized:
-                records.append({
-                    "word": word,
-                    "normalized_query": "",
-                    "status": "invalid_input",
-                    "verified": False,
-                    "entry_count": 0,
-                    "entries": [],
-                })
+                records.append(
+                    {
+                        "word": word,
+                        "normalized_query": "",
+                        "status": "invalid_input",
+                        "verified": False,
+                        "entry_count": 0,
+                        "entries": [],
+                    }
+                )
                 continue
 
             rows = _load_ulif_dictua_rows(conn, normalized)
             if not rows:
-                records.append({
-                    "word": word,
-                    "normalized_query": normalized,
-                    "status": "not_found",
-                    "verified": False,
-                    "entry_count": 0,
-                    "entries": [],
-                })
+                records.append(
+                    {
+                        "word": word,
+                        "normalized_query": normalized,
+                        "status": "not_found",
+                        "verified": False,
+                        "entry_count": 0,
+                        "entries": [],
+                    }
+                )
                 continue
 
             entries: list[dict] = []
@@ -1056,54 +1102,58 @@ def get_ulif_word_records(
                 entry_id = int(row["id"])
                 keys = row.keys()
                 homonym_index = (
-                    int(row["homonym_index"])
-                    if "homonym_index" in keys and row["homonym_index"] is not None
-                    else 1
+                    int(row["homonym_index"]) if "homonym_index" in keys and row["homonym_index"] is not None else 1
                 )
                 homonym_checked = (
                     int(row["homonym_checked"])
                     if "homonym_checked" in keys and row["homonym_checked"] is not None
                     else 0
                 )
-                is_verified = (homonym_checked == 1)
+                is_verified = homonym_checked == 1
 
-                stored_headword = str(row["canonical_headword"] if "canonical_headword" in keys and row["canonical_headword"] else "")
-                stored_grammar = str(row["grammatical_label"] if "grammatical_label" in keys and row["grammatical_label"] else "")
+                stored_headword = str(
+                    row["canonical_headword"] if "canonical_headword" in keys and row["canonical_headword"] else ""
+                )
+                stored_grammar = str(
+                    row["grammatical_label"] if "grammatical_label" in keys and row["grammatical_label"] else ""
+                )
                 stored_gloss = str(row["sense_gloss"] if "sense_gloss" in keys and row["sense_gloss"] else "")
-                register_pos = str(row["register_position"] if "register_position" in keys and row["register_position"] else "")
+                register_pos = str(
+                    row["register_position"] if "register_position" in keys and row["register_position"] else ""
+                )
                 raw_ref = str(row["raw_response_ref"] if "raw_response_ref" in keys and row["raw_response_ref"] else "")
                 retrieved_at = str(row["retrieved_at"] if "retrieved_at" in keys and row["retrieved_at"] else "")
                 resp_sha = str(row["response_sha256"] if "response_sha256" in keys and row["response_sha256"] else "")
                 content_sha = str(
-                    row["content_sha256"]
-                    if "content_sha256" in keys and row["content_sha256"]
-                    else resp_sha
+                    row["content_sha256"] if "content_sha256" in keys and row["content_sha256"] else resp_sha
                 )
                 parser_v = str(row["parser_version"] if "parser_version" in keys and row["parser_version"] else "")
                 status = str(row["status"] if "status" in keys and row["status"] else "")
 
                 if not is_verified:
-                    entries.append({
-                        "entry_id": entry_id,
-                        "homonym_index": homonym_index,
-                        "canonical_headword": stored_headword,
-                        "grammatical_label": stored_grammar,
-                        "sense_gloss": stored_gloss,
-                        "register_position": register_pos,
-                        "homonym_checked": homonym_checked,
-                        "verified": False,
-                        "status": status,
-                        "raw_response_ref": raw_ref,
-                        "retrieved_at": retrieved_at,
-                        "response_sha256": resp_sha,
-                        "content_sha256": content_sha,
-                        "parser_version": parser_v,
-                        "identity_from_raw": None,
-                        "sections": {},
-                        "sections_state": "unverified",
-                        "forms": [],
-                        "forms_state": "unverified",
-                    })
+                    entries.append(
+                        {
+                            "entry_id": entry_id,
+                            "homonym_index": homonym_index,
+                            "canonical_headword": stored_headword,
+                            "grammatical_label": stored_grammar,
+                            "sense_gloss": stored_gloss,
+                            "register_position": register_pos,
+                            "homonym_checked": homonym_checked,
+                            "verified": False,
+                            "status": status,
+                            "raw_response_ref": raw_ref,
+                            "retrieved_at": retrieved_at,
+                            "response_sha256": resp_sha,
+                            "content_sha256": content_sha,
+                            "parser_version": parser_v,
+                            "identity_from_raw": None,
+                            "sections": {},
+                            "sections_state": "unverified",
+                            "forms": [],
+                            "forms_state": "unverified",
+                        }
+                    )
                     continue
 
                 # Verified entry: load complete section payloads without collapsing
@@ -1353,9 +1403,7 @@ def store_ulif_dictua_entry(
     conn.row_factory = sqlite3.Row
     try:
         raw_refs: dict[str, str] = {}
-        source_path = Path(db_path) if db_path is not None else Path(
-            conn.execute("PRAGMA database_list").fetchone()[2]
-        )
+        source_path = Path(db_path) if db_path is not None else Path(conn.execute("PRAGMA database_list").fetchone()[2])
         raw_cache_path = (
             ulif_raw_cache.cache_path()
             if source_path == PROJECT_ROOT / "data/sources.db"
@@ -1369,9 +1417,7 @@ def store_ulif_dictua_entry(
 
         manifest = json.dumps(raw_refs, ensure_ascii=False, sort_keys=True).encode("utf-8")
         response_sha256 = hashlib.sha256(manifest).hexdigest()
-        ulif_raw_cache.put(
-            response_sha256, manifest, "application/json", retrieved_at, path=raw_cache_path
-        )
+        ulif_raw_cache.put(response_sha256, manifest, "application/json", retrieved_at, path=raw_cache_path)
         raw_response_ref = f"sha256:{response_sha256}"
         stored_content_sha256 = content_sha256 or response_sha256
 
@@ -1490,13 +1536,15 @@ def extract_ulif_dictua_snapshot(
             ORDER BY id
             """
         entry_rows = list(conn.execute(entry_sql))
-        section_rows = list(conn.execute(
-            """
+        section_rows = list(
+            conn.execute(
+                """
             SELECT id, entry_id, kind, source_order, sense_or_group_id, payload_json
             FROM ulif_dictua_sections
             ORDER BY id
             """
-        ))
+            )
+        )
         return raw_rows, entry_rows, section_rows
     except sqlite3.Error:
         return [], [], []
@@ -1592,11 +1640,7 @@ def search_ulif_dictua_sections(
     matches: list[dict] = []
     for record in get_ulif_dictua_entries(word, db_path=db_path):
         sections = record.get("sections")
-        if (
-            record.get("status") != "ok"
-            or not isinstance(sections, dict)
-            or not sections.get(kind)
-        ):
+        if record.get("status") != "ok" or not isinstance(sections, dict) or not sections.get(kind):
             continue
         record["matched_section"] = kind
         matches.append(record)
@@ -1664,7 +1708,7 @@ def _read_db_path() -> Path:
 
 def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
     if read_only:
-        conn = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)
+        conn = _shared_open_readonly(db_path.resolve(), check_same_thread=False)
     else:
         conn = sqlite3.connect(str(db_path), check_same_thread=False)
     conn.row_factory = sqlite3.Row
@@ -1710,9 +1754,11 @@ def ulif_stress_rows(form: str) -> list[dict[str, Any]]:
     silently become stress evidence. Each returned row retains its source ids.
     """
     build = ulif_stress_build()
-    if (build.get("state") != "complete"
-            or build.get("parser_version") != ULIF_FORMS_PARSER_VERSION
-            or not build.get("source_fingerprint")):
+    if (
+        build.get("state") != "complete"
+        or build.get("parser_version") != ULIF_FORMS_PARSER_VERSION
+        or not build.get("source_fingerprint")
+    ):
         return []
     # Preserve proper-name case; only try spelling variants after an exact miss.
     normalized = form.translate(str.maketrans("’ʼ`", "'''"))
@@ -1755,7 +1801,7 @@ def _build_fts_query(keywords: set[str], min_len: int = 3) -> str | None:
         if len(kw) < min_len:
             continue
         # Strip FTS5 special characters that break MATCH syntax
-        clean = kw.replace('"', '').replace("'", '').replace('/', ' ').strip()
+        clean = kw.replace('"', "").replace("'", "").replace("/", " ").strip()
         if len(clean) >= min_len:
             terms.append(f'"{clean}"')
     return " OR ".join(terms) if terms else None
@@ -1795,10 +1841,7 @@ def _table_columns(table: str, db_path: str | Path | None = None) -> set[str]:
     except FileNotFoundError:
         return set()
     try:
-        return {
-            row["name"]
-            for row in conn.execute(f"PRAGMA table_info({table})").fetchall()
-        }
+        return {row["name"] for row in conn.execute(f"PRAGMA table_info({table})").fetchall()}
     finally:
         _close_if_temporary(conn, db_path)
 
@@ -1821,7 +1864,7 @@ def _bucket_a_plaintext(bucket_a_phrases: list[str]) -> list[str]:
 def _tokenize_normalized_text(text: str) -> set[str]:
     tokens: set[str] = set()
     for token in _normalize_text(text).replace("/", " ").replace("-", " ").split():
-        cleaned = token.strip(".,;:!?\"«»()[]{}")
+        cleaned = token.strip('.,;:!?"«»()[]{}')
         if cleaned:
             tokens.add(cleaned)
     return tokens
@@ -1907,12 +1950,14 @@ def _search_sections_fts5(
     bucket_a_plain = [_normalize_text(phrase) for phrase in _bucket_a_plaintext(bucket_a_phrases)]
     normalized_bucket_b = {_normalize_text(keyword) for keyword in bucket_b_keywords}
 
-    by_section: dict[int, dict] = defaultdict(lambda: {
-        "bucket_a_hits": 0,
-        "bucket_b_hits": 0,
-        "best_rank": float("inf"),
-        "matched_chunk_ids": [],
-    })
+    by_section: dict[int, dict] = defaultdict(
+        lambda: {
+            "bucket_a_hits": 0,
+            "bucket_b_hits": 0,
+            "best_rank": float("inf"),
+            "matched_chunk_ids": [],
+        }
+    )
     by_chunk: dict[str, dict] = {}
     chunk_rows: dict[str, sqlite3.Row] = {}
 
@@ -1929,12 +1974,15 @@ def _search_sections_fts5(
 
         if row["parent_section_id"] is None:
             chunk_id = str(row["chunk_id"])
-            aggregated = by_chunk.setdefault(chunk_id, {
-                "bucket_a_hits": 0,
-                "bucket_b_hits": 0,
-                "best_rank": float("inf"),
-                "matched_chunk_ids": [],
-            })
+            aggregated = by_chunk.setdefault(
+                chunk_id,
+                {
+                    "bucket_a_hits": 0,
+                    "bucket_b_hits": 0,
+                    "best_rank": float("inf"),
+                    "matched_chunk_ids": [],
+                },
+            )
             chunk_rows[chunk_id] = row
         else:
             section_id = int(row["parent_section_id"])
@@ -1975,9 +2023,7 @@ def _search_sections_fts5(
         key=lambda row: (
             -int(row["section_score"]),
             float(row["best_rank"]),
-            (0, int(row["candidate_id"]))
-            if row["kind"] == "section"
-            else (1, str(row["candidate_id"])),
+            (0, int(row["candidate_id"])) if row["kind"] == "section" else (1, str(row["candidate_id"])),
         ),
     )
     selected_candidates = ranked_candidates[:max_sections]
@@ -1987,17 +2033,11 @@ def _search_sections_fts5(
             key=lambda row: (
                 -int(row["section_score"]),
                 float(row["best_rank"]),
-                (0, int(row["candidate_id"]))
-                if row["kind"] == "section"
-                else (1, str(row["candidate_id"])),
+                (0, int(row["candidate_id"])) if row["kind"] == "section" else (1, str(row["candidate_id"])),
             ),
         )
 
-    section_ids = [
-        int(row["candidate_id"])
-        for row in selected_candidates
-        if row["kind"] == "section"
-    ]
+    section_ids = [int(row["candidate_id"]) for row in selected_candidates if row["kind"] == "section"]
     section_meta: dict[int, dict] = {}
     if section_ids:
         placeholders = ",".join("?" * len(section_ids))
@@ -2027,36 +2067,40 @@ def _search_sections_fts5(
             row = chunk_rows[str(ranked["candidate_id"])]
             chunk_id = str(row["chunk_id"])
             text = str(row["text"] or "")
-            results.append({
-                **dict(row),
-                **{key: value for key, value in ranked.items() if key not in {"kind", "candidate_id"}},
-                "full_text": text,
-                "fts_score": float(ranked["best_rank"]),
-                "unit_key": f"textbook_sections:{chunk_id}",
-                "corpus": "textbook_sections",
-                "parent_key": str(row["source_file"] or ""),
-                "source_type": "textbook",
-            })
+            results.append(
+                {
+                    **dict(row),
+                    **{key: value for key, value in ranked.items() if key not in {"kind", "candidate_id"}},
+                    "full_text": text,
+                    "fts_score": float(ranked["best_rank"]),
+                    "unit_key": f"textbook_sections:{chunk_id}",
+                    "corpus": "textbook_sections",
+                    "parent_key": str(row["source_file"] or ""),
+                    "source_type": "textbook",
+                }
+            )
             continue
 
         meta = section_meta.get(int(ranked["candidate_id"]))
         if not meta:
             continue
-        results.append({
-            **meta,
-            **{key: value for key, value in ranked.items() if key not in {"kind", "candidate_id"}},
-            "section_id": int(ranked["candidate_id"]),
-            "text": meta["full_text"],
-            "chunk_id": f"S{ranked['candidate_id']}",
-            "corpus": "textbook_sections",
-            # Do NOT set "unit_key" here — the dispatcher computes it
-            # downstream without the "S" prefix to match the embedding
-            # manifest's seeded keys (`textbook_sections:{id}`). Setting
-            # it here with the S-prefix would shadow the correct value
-            # and break dense rerank lookup. See #1466 regression fix.
-            "title": meta["section_title"],
-            "source_type": "textbook",
-        })
+        results.append(
+            {
+                **meta,
+                **{key: value for key, value in ranked.items() if key not in {"kind", "candidate_id"}},
+                "section_id": int(ranked["candidate_id"]),
+                "text": meta["full_text"],
+                "chunk_id": f"S{ranked['candidate_id']}",
+                "corpus": "textbook_sections",
+                # Do NOT set "unit_key" here — the dispatcher computes it
+                # downstream without the "S" prefix to match the embedding
+                # manifest's seeded keys (`textbook_sections:{id}`). Setting
+                # it here with the S-prefix would shadow the correct value
+                # and break dense rerank lookup. See #1466 regression fix.
+                "title": meta["section_title"],
+                "source_type": "textbook",
+            }
+        )
     return results
 
 
@@ -2077,10 +2121,14 @@ def _prepare_query(query: str | Path, track: str) -> tuple[list[str], set[str], 
             is_path = False
     if is_path:
         bucket_a_phrases, bucket_b_keywords = build_query_buckets(candidate_path, track)
-        return bucket_a_phrases, bucket_b_keywords, _build_dense_query(
+        return (
             bucket_a_phrases,
             bucket_b_keywords,
-            candidate_path.stem.replace("-", " "),
+            _build_dense_query(
+                bucket_a_phrases,
+                bucket_b_keywords,
+                candidate_path.stem.replace("-", " "),
+            ),
         )
 
     raw_query = _normalize_text(str(query))
@@ -2088,10 +2136,14 @@ def _prepare_query(query: str | Path, track: str) -> tuple[list[str], set[str], 
     if _is_bucket_a_query(raw_query):
         bucket_a_phrases.append(f'"{raw_query}"')
     bucket_b_keywords = _tokenize_normalized_text(raw_query)
-    return bucket_a_phrases, bucket_b_keywords, _build_dense_query(
+    return (
         bucket_a_phrases,
         bucket_b_keywords,
-        raw_query,
+        _build_dense_query(
+            bucket_a_phrases,
+            bucket_b_keywords,
+            raw_query,
+        ),
     )
 
 
@@ -2216,27 +2268,27 @@ def _search_external_candidates(
         full_text = str(row["text"] or "")
         for piece in _candidate_pieces(full_text, corpus="external", tokenizer=tokenizer):
             unit_key = (
-                f"external:{parent_id}:chunk_{piece.chunk_index}"
-                if piece.extra_metadata
-                else f"external:{parent_id}"
+                f"external:{parent_id}:chunk_{piece.chunk_index}" if piece.extra_metadata else f"external:{parent_id}"
             )
-            candidates.append({
-                "unit_key": unit_key,
-                "corpus": "external",
-                "source_type": "external",
-                "chunk_id": str(row["chunk_id"] or ""),
-                "title": str(row["title"] or ""),
-                "text": piece.text,
-                "full_text": piece.text,
-                "source_file": str(row["source_file"] or ""),
-                "parent_key": str(row["source_file"] or ""),
-                "url": str(row["url"] or ""),
-                "source_name": str(row["domain"] or row["source_file"] or ""),
-                "speaker": str(row["speaker"] or ""),
-                "chunk_index": piece.chunk_index,
-                "parent_unit_key": f"external:{parent_id}",
-                "fts_score": float(row["rank"] or 0.0),
-            })
+            candidates.append(
+                {
+                    "unit_key": unit_key,
+                    "corpus": "external",
+                    "source_type": "external",
+                    "chunk_id": str(row["chunk_id"] or ""),
+                    "title": str(row["title"] or ""),
+                    "text": piece.text,
+                    "full_text": piece.text,
+                    "source_file": str(row["source_file"] or ""),
+                    "parent_key": str(row["source_file"] or ""),
+                    "url": str(row["url"] or ""),
+                    "source_name": str(row["domain"] or row["source_file"] or ""),
+                    "speaker": str(row["speaker"] or ""),
+                    "chunk_index": piece.chunk_index,
+                    "parent_unit_key": f"external:{parent_id}",
+                    "fts_score": float(row["rank"] or 0.0),
+                }
+            )
     return candidates
 
 
@@ -2278,11 +2330,7 @@ def _search_wikipedia_candidates(
         title = str(row["title"] or "")
         full_text = str(row["text"] or "")
         for piece in _candidate_pieces(full_text, corpus="wikipedia", tokenizer=tokenizer):
-            unit_key = (
-                f"wikipedia:{title}:chunk_{piece.chunk_index}"
-                if piece.extra_metadata
-                else f"wikipedia:{title}"
-            )
+            unit_key = f"wikipedia:{title}:chunk_{piece.chunk_index}" if piece.extra_metadata else f"wikipedia:{title}"
             candidates.append(
                 {
                     "unit_key": unit_key,
@@ -2447,24 +2495,20 @@ def _expand_to_chunk_candidates(
         if not pieces:
             continue
         for piece in pieces:
-            unit_key = (
-                f"{parent_unit_key}:chunk_{piece.chunk_index}"
-                if piece.extra_metadata
-                else parent_unit_key
+            unit_key = f"{parent_unit_key}:chunk_{piece.chunk_index}" if piece.extra_metadata else parent_unit_key
+            expanded.append(
+                {
+                    **parent,
+                    "corpus": corpus,
+                    "unit_key": unit_key,
+                    "parent_unit_key": parent_unit_key,
+                    "parent_key": str(parent.get("source_file") or parent.get("parent_key", "")),
+                    "text": piece.text,
+                    "full_text": piece.text,
+                    "chunk_index": piece.chunk_index,
+                    "fts_score": float(parent.get("fts_score") or parent.get("best_rank", 0.0) or 0.0),
+                }
             )
-            expanded.append({
-                **parent,
-                "corpus": corpus,
-                "unit_key": unit_key,
-                "parent_unit_key": parent_unit_key,
-                "parent_key": str(parent.get("source_file") or parent.get("parent_key", "")),
-                "text": piece.text,
-                "full_text": piece.text,
-                "chunk_index": piece.chunk_index,
-                "fts_score": float(
-                    parent.get("fts_score") or parent.get("best_rank", 0.0) or 0.0
-                ),
-            })
     return expanded
 
 
@@ -2497,9 +2541,7 @@ def _dispatch_corpus_search(
                 _expand_to_chunk_candidates(
                     [candidate],
                     corpus="textbook_sections",
-                    parent_id_field=(
-                        "section_id" if candidate.get("section_id") is not None else "chunk_id"
-                    ),
+                    parent_id_field=("section_id" if candidate.get("section_id") is not None else "chunk_id"),
                 )
             )
         ]
@@ -2584,11 +2626,7 @@ def _expand_literary_neighbors(match: dict) -> dict:
         return match
 
     target_index = next(
-        (
-            index
-            for index, row in enumerate(rows)
-            if str(row["chunk_id"] or "") == chunk_id
-        ),
+        (index for index, row in enumerate(rows) if str(row["chunk_id"] or "") == chunk_id),
         None,
     )
     if target_index is None:
@@ -2621,7 +2659,7 @@ def _expand_wikipedia_neighbors(match: dict) -> dict:
 
     pieces = _candidate_pieces(str(row["text"] or ""), corpus="wikipedia", tokenizer=_candidate_tokenizer("wikipedia"))
     chunk_index = int(match.get("chunk_index", 0))
-    context = pieces[max(0, chunk_index - 1):chunk_index + 2]
+    context = pieces[max(0, chunk_index - 1) : chunk_index + 2]
     if not context:
         return match
 
@@ -2629,9 +2667,7 @@ def _expand_wikipedia_neighbors(match: dict) -> dict:
         **match,
         "full_text": "\n\n".join(piece.text for piece in context),
         "context_unit_keys": [
-            f"wikipedia:{title}:chunk_{piece.chunk_index}"
-            if piece.extra_metadata
-            else f"wikipedia:{title}"
+            f"wikipedia:{title}:chunk_{piece.chunk_index}" if piece.extra_metadata else f"wikipedia:{title}"
             for piece in context
         ],
     }
@@ -2811,28 +2847,18 @@ def search_sources(
                 str(row.get("unit_key", "")),
             )
         )
-    expanded = [_expand_neighbor_context(match) for match in merged[:max(limit * 3, limit)]]
+    expanded = [_expand_neighbor_context(match) for match in merged[: max(limit * 3, limit)]]
     capped = _apply_context_cap(track, expanded)
     # The guarantee applies to what the caller receives, so check the
     # returned slice, not the longer capped list.
-    if require_textbook_section and not any(
-        _is_textbook_section(match) for match in capped[:limit]
-    ):
+    if require_textbook_section and not any(_is_textbook_section(match) for match in capped[:limit]):
         textbook_section = next(
-            (
-                match
-                for match in [*capped, *expanded]
-                if _is_textbook_section(match)
-            ),
+            (match for match in [*capped, *expanded] if _is_textbook_section(match)),
             None,
         )
         if textbook_section is None:
             raw_textbook_section = next(
-                (
-                    match
-                    for match in merged
-                    if _is_textbook_section(match)
-                ),
+                (match for match in merged if _is_textbook_section(match)),
                 None,
             )
             if raw_textbook_section is not None:
@@ -2843,8 +2869,7 @@ def search_sources(
                 *[
                     match
                     for match in capped
-                    if not _is_textbook_section(match)
-                    or match.get("unit_key") != textbook_section.get("unit_key")
+                    if not _is_textbook_section(match) or match.get("unit_key") != textbook_section.get("unit_key")
                 ],
             ]
     return capped[:limit]
@@ -2864,12 +2889,16 @@ def search_sources(
 # updating ADR-007 first. Soft priors at the rerank layer are fine.
 
 
-def _fts_search(fts_table: str, data_table: str,
-                keywords: set[str], max_total: int,
-                extra_cols: str = "",
-                min_text_len: int = 300,
-                extra_where: str = "",
-                extra_params: tuple = ()) -> list[dict]:
+def _fts_search(
+    fts_table: str,
+    data_table: str,
+    keywords: set[str],
+    max_total: int,
+    extra_cols: str = "",
+    min_text_len: int = 300,
+    extra_where: str = "",
+    extra_params: tuple = (),
+) -> list[dict]:
     """Generic FTS5 search across any prose table.
 
     Args:
@@ -2917,9 +2946,9 @@ def _fts_search(fts_table: str, data_table: str,
         if attempt_delay > 0:
             import sys as _sys
             import time as _time
+
             print(
-                f"  ⚠️  FTS5 query on {fts_table} retrying in "
-                f"{attempt_delay}s (DB lock / FTS rebuild race)",
+                f"  ⚠️  FTS5 query on {fts_table} retrying in {attempt_delay}s (DB lock / FTS rebuild race)",
                 file=_sys.stderr,
             )
             _time.sleep(attempt_delay)
@@ -2967,8 +2996,7 @@ def search_textbooks(
             return []
         if "subject" not in _table_columns("textbooks"):
             raise sqlite3.OperationalError(
-                "textbooks.subject column missing; run "
-                "scripts/migrations/2026-07-06-add-subject-to-textbooks.py"
+                "textbooks.subject column missing; run scripts/migrations/2026-07-06-add-subject-to-textbooks.py"
             )
         extra_where = "AND s.subject = ? AND s.source_file = ?"
         extra_params = (normalized_subject, normalized_source_file)
@@ -2978,8 +3006,7 @@ def search_textbooks(
             return []
         if "subject" not in _table_columns("textbooks"):
             raise sqlite3.OperationalError(
-                "textbooks.subject column missing; run "
-                "scripts/migrations/2026-07-06-add-subject-to-textbooks.py"
+                "textbooks.subject column missing; run scripts/migrations/2026-07-06-add-subject-to-textbooks.py"
             )
         extra_where = "AND s.subject = ?"
         extra_params = (normalized_subject,)
@@ -2990,12 +3017,19 @@ def search_textbooks(
         extra_where += " AND COALESCE(s.transcription_status, '') != 'superseded'"
     # Request 2x to compensate for filtered TOC/noise chunks
     rows = _fts_search(
-        "textbooks_fts", "textbooks", ukr_keywords, max_total * 2,
-        extra_where=extra_where, extra_params=extra_params,
+        "textbooks_fts",
+        "textbooks",
+        ukr_keywords,
+        max_total * 2,
+        extra_where=extra_where,
+        extra_params=extra_params,
     )
     results = []
     for r in rows:
-        if source_filter_requested and normalize_source_filename(str(r.get("source_file", ""))) != normalized_source_file:
+        if (
+            source_filter_requested
+            and normalize_source_filename(str(r.get("source_file", ""))) != normalized_source_file
+        ):
             continue
         text = r.get("text", "")
         if _is_noise(text):
@@ -3063,7 +3097,7 @@ def search_external(
         f"""SELECT s.*, bm25(external_fts) AS rank
             FROM external_fts
             JOIN external_articles s ON s.id = external_fts.rowid
-            WHERE {' AND '.join(where)}
+            WHERE {" AND ".join(where)}
             ORDER BY rank, s.id
             LIMIT ?""",
         (*params, max_total * 15),
@@ -3097,9 +3131,7 @@ def search_external(
         quality_tier = int(r.get("quality_tier", channel_meta.get("quality_tier", 2)) or 2)
         speaker = str(r.get("speaker", "") or channel_meta.get("host", "")).strip()
         register_tag = str(r.get("register_tag", "") or channel_meta.get("register_tag", "")).strip()
-        decolonization_tag = str(
-            r.get("decolonization_tag", "") or channel_meta.get("decolonization_tag", "")
-        ).strip()
+        decolonization_tag = str(r.get("decolonization_tag", "") or channel_meta.get("decolonization_tag", "")).strip()
         channel_name = str(channel_meta.get("name", "")).strip()
 
         r["_kw_score"] = _kw_score(r.get("text", ""), r.get("title", ""), ukr_keywords)
@@ -3139,9 +3171,10 @@ def search_wikipedia(ukr_keywords: set[str], max_total: int = 10) -> list[dict]:
     try:
         conn = _get_conn()
         # Check if wikipedia table exists
-        tables = [r[0] for r in conn.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name='wikipedia'"
-        ).fetchall()]
+        tables = [
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='wikipedia'").fetchall()
+        ]
         if "wikipedia" not in tables:
             return []
     except (FileNotFoundError, Exception):
@@ -3255,13 +3288,17 @@ def _dict_lookup(
             return _dict_lookup_contains(conn, table, word, limit)
 
         cleaned_word = _fold_dict_key(word)
-        query_variants = list(dict.fromkeys([
-            word.strip(),
-            cleaned_word,
-            cleaned_word.capitalize(),
-            cleaned_word.upper(),
-            word.replace("\u0301", "").strip(),
-        ]))
+        query_variants = list(
+            dict.fromkeys(
+                [
+                    word.strip(),
+                    cleaned_word,
+                    cleaned_word.capitalize(),
+                    cleaned_word.upper(),
+                    word.replace("\u0301", "").strip(),
+                ]
+            )
+        )
         query_variants = [v for v in query_variants if v]
 
         # Exact match first, then prefix match
@@ -3314,7 +3351,7 @@ def _batch_dict_lookup(
 
     try:
         for start in range(0, len(requested), 400):
-            chunk = requested[start:start + 400]
+            chunk = requested[start : start + 400]
             values = ", ".join("(?)" for _ in chunk)
             rows = conn.execute(
                 f"""
@@ -3449,7 +3486,7 @@ def search_dmklinger_uk_en_batch(
         if not _table_columns("dmklinger_uk_en", db_path):
             return results
         for start in range(0, len(requested), 400):
-            chunk = requested[start:start + 400]
+            chunk = requested[start : start + 400]
             # Query keys are stress-stripped so callers can pass either form.
             plain_keys = [_strip_combining_acute(word) for word in chunk]
             values = ", ".join("(?)" for _ in plain_keys)
@@ -3511,7 +3548,7 @@ def search_esum_batch(
         if not _table_columns("esum_etymology_meta", db_path):
             return results
         for start in range(0, len(requested), 400):
-            chunk = requested[start:start + 400]
+            chunk = requested[start : start + 400]
             values = ", ".join("(?)" for _ in chunk)
             rows = conn.execute(
                 f"""
@@ -3580,14 +3617,11 @@ def search_slovnyk_me_entries_batch(
         block_filter = ""
         block_params: list[object] = []
         if blocked:
-            block_filter = (
-                f" AND dictionary.dictionary_slug NOT IN "
-                f"({','.join('?' for _ in blocked)})"
-            )
+            block_filter = f" AND dictionary.dictionary_slug NOT IN ({','.join('?' for _ in blocked)})"
             block_params = list(blocked)
 
         for start in range(0, len(requested), 400):
-            chunk = requested[start:start + 400]
+            chunk = requested[start : start + 400]
             normalized = [slovnyk_me.normalize_word(word) for word in chunk]
             # Map normalized form back to original request keys (first wins).
             originals_by_norm: dict[str, list[str]] = {}
@@ -3625,9 +3659,7 @@ def search_slovnyk_me_entries_batch(
                 item = dict(row)
                 norm = item.pop("requested_word")
                 item.pop("result_order", None)
-                by_norm.setdefault(norm, []).append(
-                    _normalize_slovnyk_row(item, norm)
-                )
+                by_norm.setdefault(norm, []).append(_normalize_slovnyk_row(item, norm))
             for norm, originals in originals_by_norm.items():
                 hits = by_norm.get(norm, [])
                 for original in originals:
@@ -3702,9 +3734,7 @@ def _outside_loaded_esum_volume(query: str, volume: int | None) -> bool:
 
 
 def _single_loaded_esum_volume(conn: sqlite3.Connection) -> int | None:
-    rows = conn.execute(
-        "SELECT DISTINCT vol FROM esum_etymology_meta ORDER BY vol LIMIT 2"
-    ).fetchall()
+    rows = conn.execute("SELECT DISTINCT vol FROM esum_etymology_meta ORDER BY vol LIMIT 2").fetchall()
     if len(rows) == 1:
         return int(rows[0]["vol"])
     return None
@@ -3790,9 +3820,7 @@ def search_esum(
         return []
 
     try:
-        if not _table_columns("esum_etymology", db_path) or not _table_columns(
-            "esum_etymology_meta", db_path
-        ):
+        if not _table_columns("esum_etymology", db_path) or not _table_columns("esum_etymology_meta", db_path):
             return []
         loaded_volume = volume if volume is not None else _single_loaded_esum_volume(conn)
         if _outside_loaded_esum_volume(query, loaded_volume):
@@ -3803,13 +3831,17 @@ def search_esum(
         if not clean_query:
             return []
 
-        query_variants = list(dict.fromkeys([
-            query.strip(),
-            clean_query,
-            clean_query.capitalize(),
-            clean_query.upper(),
-            query.replace("\u0301", "").strip(),
-        ]))
+        query_variants = list(
+            dict.fromkeys(
+                [
+                    query.strip(),
+                    clean_query,
+                    clean_query.capitalize(),
+                    clean_query.upper(),
+                    query.replace("\u0301", "").strip(),
+                ]
+            )
+        )
         meta_placeholders = ",".join("?" for _ in query_variants)
         fuzzy_query_is_safe = _dictionary_fuzzy_query_is_safe(clean_query)
         meta_where = f"(lemma IN ({meta_placeholders}) OR replace(lemma, char(0x301), '') = ? COLLATE NOCASE"
@@ -4152,9 +4184,7 @@ def search_slovnyk_me(
     sitemaps. Use :func:`search_slovnyk_me_with_status` where an outage must not
     read as "no results" (#9005).
     """
-    rows, _outages = search_slovnyk_me_with_status(
-        query, limit, dictionaries, live=live, db_path=db_path
-    )
+    rows, _outages = search_slovnyk_me_with_status(query, limit, dictionaries, live=live, db_path=db_path)
     return rows
 
 
@@ -4192,10 +4222,7 @@ def search_slovnyk_me_with_status(
             outages=outages,
         )
     ]
-    seen = {
-        (row.get("dictionary_slug", ""), row.get("source_url", ""))
-        for row in rows
-    }
+    seen = {(row.get("dictionary_slug", ""), row.get("source_url", "")) for row in rows}
     for row in live_rows:
         key = (row.get("dictionary_slug", ""), row.get("source_url", ""))
         if key not in seen:
@@ -4305,13 +4332,7 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
 
 
 def _heritage_text(hit: dict) -> str:
-    return str(
-        hit.get("definition")
-        or hit.get("etymology_text")
-        or hit.get("snippet")
-        or hit.get("text")
-        or ""
-    )
+    return str(hit.get("definition") or hit.get("etymology_text") or hit.get("snippet") or hit.get("text") or "")
 
 
 def _heritage_match_tier(query: str, headword: str) -> int:
@@ -4348,21 +4369,23 @@ def search_heritage(
 
     for hit in search_grinchenko_1907(query, limit=5, db_path=db_path):
         text = _heritage_text(hit)
-        rows.append({
-            "query": query,
-            "source_family": "grinchenko",
-            "source": hit.get("source", "Грінченко"),
-            "word": hit.get("word", ""),
-            "text": text,
-            "classification": "pre_soviet_ukrainian_attestation",
-            "is_authentic_ukrainian": True,
-            "is_russianism": False,
-            "is_modern": False,
-            "is_dialect": "діал" in text.lower(),
-            "sovietization_risk": 0,
-            "evidence_tags": ["pre_soviet", "lexicographic"],
-            "score": 96.0,
-        })
+        rows.append(
+            {
+                "query": query,
+                "source_family": "grinchenko",
+                "source": hit.get("source", "Грінченко"),
+                "word": hit.get("word", ""),
+                "text": text,
+                "classification": "pre_soviet_ukrainian_attestation",
+                "is_authentic_ukrainian": True,
+                "is_russianism": False,
+                "is_modern": False,
+                "is_dialect": "діал" in text.lower(),
+                "sovietization_risk": 0,
+                "evidence_tags": ["pre_soviet", "lexicographic"],
+                "score": 96.0,
+            }
+        )
 
     for hit in search_esum(query, limit=5, db_path=db_path):
         text = _heritage_text(hit)
@@ -4372,21 +4395,23 @@ def search_heritage(
         if "псл" in text.lower() or "псл" in cognates.lower():
             tags.append("proto_slavic")
             score += 5.0
-        rows.append({
-            "query": query,
-            "source_family": "esum",
-            "source": hit.get("source", "ЕСУМ"),
-            "word": hit.get("lemma", ""),
-            "text": text,
-            "classification": "etymological_attestation",
-            "is_authentic_ukrainian": True,
-            "is_russianism": False,
-            "is_modern": False,
-            "is_dialect": False,
-            "sovietization_risk": 0,
-            "evidence_tags": tags,
-            "score": score,
-        })
+        rows.append(
+            {
+                "query": query,
+                "source_family": "esum",
+                "source": hit.get("source", "ЕСУМ"),
+                "word": hit.get("lemma", ""),
+                "text": text,
+                "classification": "etymological_attestation",
+                "is_authentic_ukrainian": True,
+                "is_russianism": False,
+                "is_modern": False,
+                "is_dialect": False,
+                "sovietization_risk": 0,
+                "evidence_tags": tags,
+                "score": score,
+            }
+        )
 
     slovnyk_rows, slovnyk_outages = search_slovnyk_me_with_status(
         query,
@@ -4415,45 +4440,53 @@ def search_heritage(
             classification = "dictionary_attestation"
             score = 72.0
         score -= 5.0 * int(hit.get("sovietization_risk") or 0)
-        rows.append({
-            "query": query,
-            "source_family": "slovnyk_me",
-            "source": hit.get("dictionary_label", "slovnyk.me"),
-            "word": hit.get("word", ""),
-            "text": _heritage_text(hit),
-            "url": hit.get("source_url", ""),
-            "classification": classification,
-            "is_authentic_ukrainian": not is_russianism,
-            "is_russianism": is_russianism,
-            "is_modern": is_modern,
-            "is_dialect": is_dialect,
-            "sovietization_risk": int(hit.get("sovietization_risk") or 0),
-            "sovietization_keywords": hit.get("sovietization_keywords", ""),
-            "evidence_tags": [tag for tag, present in {
-                "modern": is_modern,
-                "regional_or_historical": is_dialect,
-                "possible_russianism": is_russianism,
-                "slovnyk_me": True,
-            }.items() if present],
-            "score": score,
-        })
+        rows.append(
+            {
+                "query": query,
+                "source_family": "slovnyk_me",
+                "source": hit.get("dictionary_label", "slovnyk.me"),
+                "word": hit.get("word", ""),
+                "text": _heritage_text(hit),
+                "url": hit.get("source_url", ""),
+                "classification": classification,
+                "is_authentic_ukrainian": not is_russianism,
+                "is_russianism": is_russianism,
+                "is_modern": is_modern,
+                "is_dialect": is_dialect,
+                "sovietization_risk": int(hit.get("sovietization_risk") or 0),
+                "sovietization_keywords": hit.get("sovietization_keywords", ""),
+                "evidence_tags": [
+                    tag
+                    for tag, present in {
+                        "modern": is_modern,
+                        "regional_or_historical": is_dialect,
+                        "possible_russianism": is_russianism,
+                        "slovnyk_me": True,
+                    }.items()
+                    if present
+                ],
+                "score": score,
+            }
+        )
 
     for hit in search_style_guide(query, limit=3, db_path=db_path):
-        rows.append({
-            "query": query,
-            "source_family": "style_guide",
-            "source": hit.get("source", "Антоненко-Давидович"),
-            "word": hit.get("word", ""),
-            "text": _heritage_text(hit),
-            "classification": "potential_russianism_or_calque",
-            "is_authentic_ukrainian": False,
-            "is_russianism": True,
-            "is_modern": False,
-            "is_dialect": False,
-            "sovietization_risk": 0,
-            "evidence_tags": ["style_warning", "possible_russianism"],
-            "score": 20.0,
-        })
+        rows.append(
+            {
+                "query": query,
+                "source_family": "style_guide",
+                "source": hit.get("source", "Антоненко-Давидович"),
+                "word": hit.get("word", ""),
+                "text": _heritage_text(hit),
+                "classification": "potential_russianism_or_calque",
+                "is_authentic_ukrainian": False,
+                "is_russianism": True,
+                "is_modern": False,
+                "is_dialect": False,
+                "sovietization_risk": 0,
+                "evidence_tags": ["style_warning", "possible_russianism"],
+                "score": 20.0,
+            }
+        )
 
     rows.sort(
         key=lambda row: (
@@ -4480,10 +4513,23 @@ def lookup_by_url(url: str) -> dict | None:
 
 
 CONTENT_TABLES = [
-    "textbooks", "external_articles", "literary_texts",
-    "sum11", "grinchenko", "balla_en_uk", "dmklinger_uk_en",
-    "ukrajinet", "wiktionary", "frazeolohichnyi", "puls_cefr", "style_guide",
-    "wikipedia", "esum_etymology", "ua_gec_errors", "sum20_articles", "slovnyk_me_entries",
+    "textbooks",
+    "external_articles",
+    "literary_texts",
+    "sum11",
+    "grinchenko",
+    "balla_en_uk",
+    "dmklinger_uk_en",
+    "ukrajinet",
+    "wiktionary",
+    "frazeolohichnyi",
+    "puls_cefr",
+    "style_guide",
+    "wikipedia",
+    "esum_etymology",
+    "ua_gec_errors",
+    "sum20_articles",
+    "slovnyk_me_entries",
 ]
 
 
@@ -4497,17 +4543,8 @@ def source_count(table: str | None = None) -> int:
     if table:
         return conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
 
-    existing = {
-        r[0]
-        for r in conn.execute(
-            "SELECT name FROM sqlite_master WHERE type in ('table', 'view')"
-        ).fetchall()
-    }
-    return sum(
-        conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
-        for t in CONTENT_TABLES
-        if t in existing
-    )
+    existing = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type in ('table', 'view')").fetchall()}
+    return sum(conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0] for t in CONTENT_TABLES if t in existing)
 
 
 def list_tables() -> dict[str, int]:
@@ -4517,17 +4554,8 @@ def list_tables() -> dict[str, int]:
     except FileNotFoundError:
         return {}
 
-    existing = {
-        r[0]
-        for r in conn.execute(
-            "SELECT name FROM sqlite_master WHERE type in ('table', 'view')"
-        ).fetchall()
-    }
-    return {
-        t: conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
-        for t in CONTENT_TABLES
-        if t in existing
-    }
+    existing = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type in ('table', 'view')").fetchall()}
+    return {t: conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0] for t in CONTENT_TABLES if t in existing}
 
 
 def main(argv: list[str] | None = None) -> int:

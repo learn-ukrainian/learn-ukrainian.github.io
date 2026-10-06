@@ -63,7 +63,6 @@ import argparse
 import hashlib
 import json
 import random
-import sqlite3
 import sys
 from dataclasses import dataclass
 from enum import StrEnum
@@ -73,6 +72,8 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 
 class AdjectiveCategory(StrEnum):
@@ -1907,7 +1908,7 @@ def verify_deck_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Path | Non
             "missing_forms": [],
         }
 
-    conn = sqlite3.connect(f"{Path(resolved_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(resolved_path).resolve())
     cur = conn.cursor()
 
     missing_forms: list[dict[str, str]] = []
@@ -1968,7 +1969,7 @@ def verify_distractors_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Pat
         AdjectiveInterferenceType.FALSE_DERIVATION_MISSING_MUTATION,
     }
 
-    conn = sqlite3.connect(f"{Path(resolved_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(resolved_path).resolve())
     cur = conn.cursor()
 
     invalid_distractors: list[dict[str, Any]] = []

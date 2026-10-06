@@ -33,6 +33,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.lib.readonly_sqlite import is_sqlite_connection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.audit_dataset_acceptance import PROJECT_ROOT, _resolve_db_path
 from scripts.projects.open_model_data.decolonization_cases_data import (
     LEXICAL_CALQUES,
@@ -543,7 +545,7 @@ def query_source_evidence(
             )
     elif "СУМ-20" in auth or "ВТС" in auth:
         conn = getattr(s_cur, "connection", None)
-        if conn is not None and isinstance(conn, sqlite3.Connection):
+        if conn is not None and is_sqlite_connection(conn):
             ensure_reproducible_sum20_table(conn)
 
         art = (ev.get("article") or term).strip()
@@ -1067,8 +1069,8 @@ def build_all_cases() -> list[DecolonizationCase]:
     vesum_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
     sources_path = _resolve_db_path("sources.db", PROJECT_ROOT)
 
-    v_conn = sqlite3.connect(f"file:{vesum_path}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
+    v_conn = _open_readonly(vesum_path)
+    s_conn = _open_readonly(sources_path)
     ensure_reproducible_sum20_table(s_conn)
 
     v_cur = v_conn.cursor()

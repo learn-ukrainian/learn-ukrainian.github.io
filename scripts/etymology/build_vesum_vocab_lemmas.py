@@ -12,9 +12,11 @@ import argparse
 import datetime as dt
 import json
 import re
-import sqlite3
 import unicodedata
 from pathlib import Path
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DEFAULT_CONTENT_ROOT = Path("site/src/content/docs")
 DEFAULT_MANIFEST = Path("site/src/data/etymology-manifest.json")
@@ -184,9 +186,7 @@ def strip_reflexive_suffix(value: str) -> str:
     return normalized
 
 
-def choose_unambiguous_manifest_lemma(
-    conn: sqlite3.Connection, form: str, manifest_lemma_keys: set[str]
-) -> str | None:
+def choose_unambiguous_manifest_lemma(conn: SQLiteConnection, form: str, manifest_lemma_keys: set[str]) -> str | None:
     rows = conn.execute("SELECT DISTINCT lemma FROM forms WHERE word_form = ?", (form,)).fetchall()
     if not rows:
         return None
@@ -215,7 +215,7 @@ def build_vesum_vocab_lemmas(
     direct_manifest_matches = 0
     ambiguous_or_missing = 0
 
-    conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(vesum_db).resolve())
     try:
         for word in sorted(words, key=normalize_lemma):
             normalized_word = normalize_lemma(word)

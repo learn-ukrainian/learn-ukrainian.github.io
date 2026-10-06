@@ -41,12 +41,13 @@ from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 PRAVOPYS_SOURCE_ID = "pravopys_2019_official"
 PARSER_VERSION = "pravopys_2019_pdf_v3"
 PRAVOPYS_TITLE = "Український правопис"
-PRAVOPYS_EDITION = (
-    "Авторизоване видання 2019 р. — Київ: Наукова думка, 2019. 392 с. ISBN 978-966-00-1728-3"
-)
+PRAVOPYS_EDITION = "Авторизоване видання 2019 р. — Київ: Наукова думка, 2019. 392 с. ISBN 978-966-00-1728-3"
 PRAVOPYS_APPROVALS = (
     "Схвалив Кабінет Міністрів України (Постанова № 437 від 22 травня 2019 р.)",
     "Схвалили спільною постановою Президія НАН України (протокол № 22/10 від 24 жовтня 2018 р.) "
@@ -81,9 +82,7 @@ class OfficialFile:
 
 
 ULIF_PDF_URL = "https://www.ulif.org.ua/system/files/pravopus-new.pdf"
-MON_PDF_URL = (
-    "https://mon.gov.ua/static-objects/mon/sites/1/zagalna%20serednya/Pravopys.2019/ukr.pravopys-2019.pdf"
-)
+MON_PDF_URL = "https://mon.gov.ua/static-objects/mon/sites/1/zagalna%20serednya/Pravopys.2019/ukr.pravopys-2019.pdf"
 
 OFFICIAL_FILES: dict[str, OfficialFile] = {
     "0d2fd75a2e9b2a412d4c8e072f6a8cac06d075a297a770fd037312054b0e501a": OfficialFile(
@@ -236,7 +235,7 @@ def restore_scripts(text: str) -> str:
     last = 0
     line_script: str | None = None
     for match in _COMPOUND_RE.finditer(text):
-        gap = text[last:match.start()]
+        gap = text[last : match.start()]
         if "\n" in gap:
             line_script = None
         out.append(gap)
@@ -244,7 +243,7 @@ def restore_scripts(text: str) -> str:
         scripts = [_part_script(part) for part in pieces[::2]]
         decided = {script for script in scripts if script in (CYRILLIC, LATIN)}
         word_script = next(iter(decided)) if len(decided) == 1 else None
-        is_ending = text[match.start() - 1:match.start()] == "-"
+        is_ending = text[match.start() - 1 : match.start()] == "-"
         inherited = word_script or (line_script if is_ending else None)
         for index, script in enumerate(scripts):
             if script in (CYRILLIC, LATIN):
@@ -504,7 +503,7 @@ def parse_toc(rows: Iterable[Row]) -> list[TocEntry]:
         text = re.sub(r"\s+", " ", text).strip()
         head = _TOC_PARAGRAPH_RE.match(text)
         if head:
-            title = text[head.end():].strip()
+            title = text[head.end() :].strip()
             entries.append(TocEntry("paragraph", int(head.group(1)), title, page))
         elif _PART_HEAD_RE.match(text) and page is None:
             entries.append(TocEntry("part", None, text, None))
@@ -601,7 +600,7 @@ def _match_listed_heading(stream: Sequence[Row | MarginLabel], start: int, toc_k
     """
     key = ""
     best = 0
-    for taken, item in enumerate(stream[start:start + _MAX_HEADING_ROWS], start=1):
+    for taken, item in enumerate(stream[start : start + _MAX_HEADING_ROWS], start=1):
         if isinstance(item, MarginLabel) or item.heading_level:
             break
         key += heading_key(item.text)
@@ -637,8 +636,9 @@ def _heading_run(
         taken = _match_listed_heading(stream, index, toc_keys)
         if not taken:
             break
-        groups.append(_HeadingGroup(BODY_SIZE_HEADING_LEVEL, [r for r in stream[index:index + taken]
-                                                               if isinstance(r, Row)]))
+        groups.append(
+            _HeadingGroup(BODY_SIZE_HEADING_LEVEL, [r for r in stream[index : index + taken] if isinstance(r, Row)])
+        )
         index += taken
     return groups, labels, index
 
@@ -841,7 +841,7 @@ def _line_end_hyphen(before: str, left: str, right: str, is_word: LexiconPredica
 
 def vesum_word_predicate(vesum_db: Path) -> LexiconPredicate:
     """Exact word-form membership in VESUM (read-only, cached)."""
-    conn = sqlite3.connect(f"{vesum_db.resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(vesum_db.resolve())
     cache: dict[str, bool] = {}
 
     def is_word(form: str) -> bool:
@@ -879,8 +879,12 @@ class ContextReading:
 
 
 CONTEXT_READINGS: tuple[ContextReading, ...] = (
-    ContextReading(129, "rows", "-іa", "-ia", 1, "p. 159: the rule cites the foreign (Latin) ending -ia, rendered as -ія"),
-    ContextReading(34, "margin_labels", "-IР-", "-ІР-", 1, "pp. 45–46: the label names the Cyrillic suffix -ір- of the body"),
+    ContextReading(
+        129, "rows", "-іa", "-ia", 1, "p. 159: the rule cites the foreign (Latin) ending -ia, rendered as -ія"
+    ),
+    ContextReading(
+        34, "margin_labels", "-IР-", "-ІР-", 1, "pp. 45–46: the label names the Cyrillic suffix -ір- of the body"
+    ),
     # pp. 96–97 number the four declensions I, II, III, IV; III and IV are encoded in Latin.
     ContextReading(66, "rows", "І відміна", "I відміна", 1, "pp. 96–97: Roman numeral of the I declension"),
     ContextReading(66, "rows", "ІІ відміна", "II відміна", 1, "pp. 96–97: Roman numeral of the II declension"),
@@ -903,7 +907,9 @@ def apply_context_readings(
             raise PravopysParseError(
                 f"§ {reading.paragraph}: {reading.printed!r} printed {found} times, expected {reading.count}"
             )
-        updated = [replace(item, text=pattern.sub(lambda _match, new=reading.reading: new, item.text)) for item in items]
+        updated = [
+            replace(item, text=pattern.sub(lambda _match, new=reading.reading: new, item.text)) for item in items
+        ]
         by_number[reading.paragraph] = replace(paragraph, **{reading.where: updated})
     return [by_number[paragraph.number] for paragraph in paragraphs]
 
@@ -1005,7 +1011,7 @@ CREATE TABLE IF NOT EXISTS pravopys_paragraphs (
 """
 
 
-def ensure_pravopys_schema(conn: sqlite3.Connection) -> None:
+def ensure_pravopys_schema(conn: SQLiteConnection) -> None:
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(PRAVOPYS_SCHEMA_SQL)
     columns = {row[1] for row in conn.execute("PRAGMA table_info(pravopys_paragraphs)")}
@@ -1044,7 +1050,7 @@ class IngestCounts:
 
 
 def store_edition(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     parsed: ParsedEdition,
     official: OfficialFile,
     *,
@@ -1161,7 +1167,7 @@ def _dict_rows(cursor: sqlite3.Cursor) -> list[dict[str, Any]]:
     return [dict(zip(columns, row, strict=True)) for row in cursor.fetchall()]
 
 
-def pravopys_store_status(conn: sqlite3.Connection) -> dict[str, Any]:
+def pravopys_store_status(conn: SQLiteConnection) -> dict[str, Any]:
     """``{"state": "complete", **source_row}`` only when the full edition is stored."""
     tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
     if not {"pravopys_sources", "pravopys_paragraphs"} <= tables:
@@ -1198,15 +1204,17 @@ def _paragraph_record(record: dict[str, Any], source: dict[str, Any]) -> dict[st
     }
 
 
-def get_paragraph(conn: sqlite3.Connection, number: int) -> dict[str, Any] | None:
+def get_paragraph(conn: SQLiteConnection, number: int) -> dict[str, Any] | None:
     """The stored § ``number``, or None when the store is incomplete or the § does not exist."""
     status = pravopys_store_status(conn)
     if status["state"] != "complete":
         return None
-    rows = _dict_rows(conn.execute(
-        "SELECT * FROM pravopys_paragraphs WHERE source_id = ? AND number = ?",
-        (PRAVOPYS_SOURCE_ID, int(number)),
-    ))
+    rows = _dict_rows(
+        conn.execute(
+            "SELECT * FROM pravopys_paragraphs WHERE source_id = ? AND number = ?",
+            (PRAVOPYS_SOURCE_ID, int(number)),
+        )
+    )
     return _paragraph_record(rows[0], status) if rows else None
 
 
@@ -1233,7 +1241,7 @@ def _word_hits(words: list[str], stems: list[str]) -> int:
     return sum(any(_matches(word, stem) for word in words) for stem in stems)
 
 
-def search_paragraphs(conn: sqlite3.Connection, topic: str, limit: int = 5) -> list[dict[str, Any]]:
+def search_paragraphs(conn: SQLiteConnection, topic: str, limit: int = 5) -> list[dict[str, Any]]:
     """Rank stored §§ for a topic.
 
     Top tier: every topic word is in the § title or in its heading path (the
@@ -1245,9 +1253,9 @@ def search_paragraphs(conn: sqlite3.Connection, topic: str, limit: int = 5) -> l
     if status["state"] != "complete" or not stems:
         return []
     scored: list[tuple[float, int, dict[str, Any]]] = []
-    for record in _dict_rows(conn.execute(
-        "SELECT * FROM pravopys_paragraphs WHERE source_id = ?", (PRAVOPYS_SOURCE_ID,)
-    )):
+    for record in _dict_rows(
+        conn.execute("SELECT * FROM pravopys_paragraphs WHERE source_id = ?", (PRAVOPYS_SOURCE_ID,))
+    ):
         title_words = _TOKEN_RE.findall(fold_for_lookup(record["title"]))
         path_words = _TOKEN_RE.findall(fold_for_lookup(" ".join(json.loads(record["section_path"]))))
         # Unresolved line-end hyphens are indexed in both readings (``normalized_text``).
@@ -1267,8 +1275,8 @@ def search_paragraphs(conn: sqlite3.Connection, topic: str, limit: int = 5) -> l
     return [_paragraph_record(record, status) for _score, _number, record in scored[:limit]]
 
 
-def open_read_only(db_path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)
+def open_read_only(db_path: Path) -> SQLiteConnection:
+    conn = _open_readonly(Path(db_path).resolve(), check_same_thread=False)
     conn.execute("PRAGMA busy_timeout = 30000")
     return conn
 
@@ -1297,8 +1305,7 @@ def lookup_offline(topic: str, *, db_path: Path) -> dict[str, Any] | None:
             return None
         best = dict(matches[0])
         best["other_matches"] = [
-            {"section": match["section"], "title": match["title"], "locator": match["locator"]}
-            for match in matches[1:]
+            {"section": match["section"], "title": match["title"], "locator": match["locator"]} for match in matches[1:]
         ]
         return best
     finally:

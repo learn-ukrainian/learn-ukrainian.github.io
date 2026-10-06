@@ -27,12 +27,13 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import sqlite3
 import sys
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
+
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -2601,7 +2602,7 @@ def verify_deck_with_vesum(cards: list[AdverbCard], vesum_db_path: Path | str | 
             "message": f"VESUM database not found or incomplete at {resolved_path}",
         }
 
-    conn = sqlite3.connect(f"{Path(resolved_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(resolved_path).resolve())
     cursor = conn.cursor()
     cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='forms_all'")
     if not cursor.fetchone():

@@ -119,6 +119,8 @@ from scripts.lexicon.source_attribution import (
     soviet_citation_learner_violation,
     withhold_legacy_soviet_citations,
 )
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.mphdict import mphdict_etymology, mphdict_synonyms, mphdict_synonyms_available
 from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_lemma, verify_word
@@ -2035,7 +2037,7 @@ def _base_word(term: str) -> str:
     return term.split(" (")[0]
 
 
-def _ulif_has_tables(conn: sqlite3.Connection) -> bool:
+def _ulif_has_tables(conn: SQLiteConnection) -> bool:
     try:
         return bool(
             conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ulif_dictua_entries'").fetchone()
@@ -2044,7 +2046,7 @@ def _ulif_has_tables(conn: sqlite3.Connection) -> bool:
         return False
 
 
-def _synonyms_ulif(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | None:
+def _synonyms_ulif(conn: SQLiteConnection, lemma: str) -> dict[str, Any] | None:
     """Extract sense-split synonym groups directly from authoritative ULIF DictUA in sources.db."""
     if not _ulif_has_tables(conn):
         return None
@@ -2137,7 +2139,7 @@ def _synonyms_ulif(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | Non
     }
 
 
-def _stress_ulif(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
+def _stress_ulif(conn: SQLiteConnection, lemma: str) -> dict[str, str] | None:
     """Authoritative lexicographical stress from ULIF DictUA."""
     if not _ulif_has_tables(conn):
         return None
@@ -2369,7 +2371,7 @@ def _clean_atlas_chip_candidate(candidate: str, lemma: str) -> str | None:
     return term
 
 
-def _wiktionary_has_antonyms_column(conn: sqlite3.Connection) -> bool:
+def _wiktionary_has_antonyms_column(conn: SQLiteConnection) -> bool:
     try:
         return any(row[1] == "antonyms" for row in conn.execute("PRAGMA table_info(wiktionary)"))
     except sqlite3.OperationalError as exc:
@@ -2386,7 +2388,7 @@ def _candidate_matches_entry_pos(candidate: str, entry_pos: str | None) -> bool:
 
 
 def _antonyms_ulif(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     *,
     entry_pos: str | None = None,
@@ -2494,7 +2496,7 @@ def _antonyms_ulif(
 
 
 def _antonyms_wiktionary(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     *,
     entry_pos: str | None = None,
@@ -3043,7 +3045,7 @@ _FRAZEOLOHICHNYI_FTS_AVAILABLE: dict[str, bool] = {}
 _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = False
 
 
-def _db_cache_key(conn: sqlite3.Connection) -> str | None:
+def _db_cache_key(conn: SQLiteConnection) -> str | None:
     """Stable per-database cache key: the main DB file path, or ``None`` for
     in-memory/temporary (pathless) databases — those are never cached.
 
@@ -3071,7 +3073,7 @@ def _cache_verdict(cache: dict[str, bool], key: str | None, verdict: bool) -> bo
     return verdict
 
 
-def _is_connection_readonly(conn: sqlite3.Connection) -> bool:
+def _is_connection_readonly(conn: SQLiteConnection) -> bool:
     try:
         val = conn.execute("PRAGMA user_version;").fetchone()[0]
         conn.execute(f"PRAGMA user_version = {val};")
@@ -3080,7 +3082,7 @@ def _is_connection_readonly(conn: sqlite3.Connection) -> bool:
         return True
 
 
-def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
+def _ensure_frazeolohichnyi_fts(conn: SQLiteConnection) -> bool:
     global _FRAZEOLOHICHNYI_FTS_WARN_LOGGED
     key = _db_cache_key(conn)
     cached = _FRAZEOLOHICHNYI_FTS_AVAILABLE.get(key)
@@ -3161,7 +3163,7 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
         return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, False)
 
 
-def _idioms_frazeolohichnyi(conn: sqlite3.Connection, lemma: str, *, limit: int = 3) -> dict[str, Any] | None:
+def _idioms_frazeolohichnyi(conn: SQLiteConnection, lemma: str, *, limit: int = 3) -> dict[str, Any] | None:
     """Phraseology rows from local DB, matched on the idiom phrase not loose definition mentions."""
     variants = [_lookup_key(variant) for variant in _split_lemma_variants(_base_lemma(lemma))]
     variants = [variant for variant in variants if variant]
@@ -3273,7 +3275,7 @@ def _merge_idiom_sections(*sections: dict[str, Any] | None) -> dict[str, Any] | 
     }
 
 
-def _idioms_ulif(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | None:
+def _idioms_ulif(conn: SQLiteConnection, lemma: str) -> dict[str, Any] | None:
     """Extract authoritative phraseology/idioms with citations from ULIF DictUA."""
     if not _ulif_has_tables(conn):
         return None
@@ -3344,7 +3346,7 @@ def _idioms_ulif(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | None:
 
 
 def _idioms(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     cache: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
@@ -3958,7 +3960,7 @@ def _add_candidate(
         out.append(term)
 
 
-def _synonyms_from_wiktionary(conn: sqlite3.Connection, lemma: str, out: list[str], seen: set[str]) -> None:
+def _synonyms_from_wiktionary(conn: SQLiteConnection, lemma: str, out: list[str], seen: set[str]) -> None:
     for variant in _split_lemma_variants(lemma):
         row = conn.execute(
             "SELECT synonyms FROM wiktionary WHERE word = ? LIMIT 1",
@@ -3974,7 +3976,7 @@ def _synonyms_from_wiktionary(conn: sqlite3.Connection, lemma: str, out: list[st
             _add_candidate(out, seen, lemma, str(candidate))
 
 
-def _synonyms_from_balla(conn: sqlite3.Connection, lemma: str, out: list[str], seen: set[str]) -> None:
+def _synonyms_from_balla(conn: SQLiteConnection, lemma: str, out: list[str], seen: set[str]) -> None:
     allowed = _A1_SENSE_SYNONYMS.get(_lookup_key(lemma), ())
     lookup_words = _BALLA_LOOKUPS.get(_lookup_key(lemma), ())
     if not allowed or not lookup_words:
@@ -3991,7 +3993,7 @@ def _synonyms_from_balla(conn: sqlite3.Connection, lemma: str, out: list[str], s
                     _add_candidate(out, seen, lemma, candidate)
 
 
-def _sense_correct_synonyms(conn: sqlite3.Connection, lemma: str) -> list[str]:
+def _sense_correct_synonyms(conn: SQLiteConnection, lemma: str) -> list[str]:
     """Return source-attested synonyms for the lemma's A1 sense, capped at six."""
     out: list[str] = []
     seen: set[str] = set()
@@ -4000,7 +4002,7 @@ def _sense_correct_synonyms(conn: sqlite3.Connection, lemma: str) -> list[str]:
 
 
 def _meaning(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     *,
     kaikki_lookup: dict[str, dict[str, Any]] | None = None,
@@ -4462,7 +4464,7 @@ def _vts_definition_card(
     return card
 
 
-def _grinchenko_definition_row(conn: sqlite3.Connection, lemma: str) -> str | None:
+def _grinchenko_definition_row(conn: SQLiteConnection, lemma: str) -> str | None:
     """Return the attested headword spelling if ``lemma`` exists in Грінченко, else None."""
     for variant in _split_lemma_variants(lemma):
         row = conn.execute(
@@ -4514,7 +4516,7 @@ def _grinchenko_template_verified() -> bool:
 
 
 def _grinchenko_definition_card(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
 ) -> dict[str, Any] | None:
     """Heritage attestation card for Б. Грінченка «Словарь української мови» (1907).
@@ -4567,7 +4569,7 @@ def _grinchenko_definition_card(
 
 
 def _definition_cards(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     *,
     cache: dict[str, Any] | None = None,
@@ -4620,7 +4622,7 @@ def _read_cached_slovnyk_rows(lemma: str) -> dict[str, Any]:
 
 
 def _dictionary_definition_rows(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     *,
     cache: dict[str, Any] | None = None,
@@ -4691,7 +4693,7 @@ def _vesum_valid_synonym(term: str) -> bool:
 
 
 def _definition_pointer_relations(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     *,
     cache: dict[str, Any] | None = None,
@@ -4768,7 +4770,7 @@ def _manifest_relation_aliases(manifest: dict[str, Any]) -> dict[str, str]:
 
 
 def _definition_pointer_relations_by_headword(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     manifest: dict[str, Any],
 ) -> dict[str, list[dict[str, Any]]]:
     """Precompute pointer relations and safe reciprocal manifest-headword pairs."""
@@ -4797,7 +4799,7 @@ def _definition_pointer_relations_by_headword(
 
 
 def _definition_antonym_relations(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     *,
     cache: dict[str, Any] | None = None,
@@ -4831,7 +4833,7 @@ def _definition_antonym_relations(
 
 
 def _definition_antonym_relations_by_headword(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     manifest: dict[str, Any],
 ) -> dict[str, list[dict[str, Any]]]:
     """Precompute explicit antonym pointers and symmetric manifest-headword pairs."""
@@ -4988,7 +4990,7 @@ def _numbered_homonym_members(text: str, surface: str) -> list[dict[str, Any]]:
 
 
 def _homonym_dictionary_rows(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     *,
     cache: dict[str, Any] | None = None,
@@ -5017,7 +5019,7 @@ def _homonym_dictionary_rows(
 
 
 def _homonym_relations(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     *,
     cache: dict[str, Any] | None = None,
@@ -5066,7 +5068,7 @@ def _homonym_relations(
 
 
 def _homonym_relations_by_headword(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     manifest: dict[str, Any],
 ) -> dict[str, list[dict[str, Any]]]:
     """Precompute each manifest headword's dictionary-numbered homonym set."""
@@ -5107,7 +5109,7 @@ def _paronym_cache_distinction(definition: object, target: str) -> str:
 
 
 def _paronym_relations(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
 ) -> list[dict[str, Any]]:
     """Emit VESUM-gated paronym pairs from ZNO and the existing open cache.
@@ -5191,7 +5193,7 @@ def _paronym_relations(
 
 
 def _paronym_relations_by_headword(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     manifest: dict[str, Any],
 ) -> dict[str, list[dict[str, Any]]]:
     """Precompute VESUM-gated ZNO/cache paronym pairs for manifest headwords."""
@@ -5208,7 +5210,7 @@ def _paronym_relations_by_headword(
 
 
 def _corpus_relation_pairs_by_headword(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     manifest: dict[str, Any],
 ) -> dict[str, dict[str, list[dict[str, Any]]]]:
     """Read VESUM-gated relation-pair corpus facts for Atlas headwords.
@@ -5311,8 +5313,7 @@ def _safe_relation_for_merge(relation: dict[str, Any]) -> dict[str, Any] | None:
     safe = {key: value for key, value in relation.items() if key != "gate"}
     source = str(safe.get("source") or "")
     if source:
-        clauses = [re.sub(r"\s*\[gate: [^\]]*\]", "", part).strip()
-                   for part in source.split(" + ")]
+        clauses = [re.sub(r"\s*\[gate: [^\]]*\]", "", part).strip() for part in source.split(" + ")]
         allowed = [part for part in clauses if part and not cites_soviet_dictionary_outside_context(part)]
         if not allowed:
             return None
@@ -6008,7 +6009,7 @@ def _etymology_text_is_displayable(text: str) -> bool:
 
 
 def _etymology(
-    conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None
+    conn: SQLiteConnection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None
 ) -> dict | None:
     """ЕСУМ etymology from offline mphdict (primary, authoritative); falls back to a decolonized,
     source-marked Kaikki/Wiktionary etymology for lemmas mphdict lacks (Option C, #5263). The Горох
@@ -6030,7 +6031,7 @@ _GRAC_FREQUENCY_CACHE_DIRTY = False
 _CEFR_ESTIMATE_LEVEL_BY_KEY: dict[str, dict[str, Any]] = {}
 
 
-def _puls_cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
+def _puls_cefr(conn: SQLiteConnection, lemma: str) -> dict[str, str] | None:
     for variant in _split_lemma_variants(lemma):
         try:
             row = conn.execute(
@@ -6150,7 +6151,7 @@ def _ensure_grac_frequency_cache(words: list[str]) -> None:
         _write_grac_frequency_cache()
 
 
-def _prepare_cefr_estimates(conn: sqlite3.Connection, manifest: dict[str, Any]) -> None:
+def _prepare_cefr_estimates(conn: SQLiteConnection, manifest: dict[str, Any]) -> None:
     """Prepare labelled CEFR estimates from GRAC frequency for non-PULS lemmas.
 
     Mapping rationale: estimates use GRAC relative-frequency quantiles within the
@@ -6216,7 +6217,7 @@ def _estimated_cefr(lemma: str) -> dict[str, str] | None:
     }
 
 
-def _cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
+def _cefr(conn: SQLiteConnection, lemma: str) -> dict[str, str] | None:
     return _puls_cefr(conn, lemma) or _estimated_cefr(lemma)
 
 
@@ -6299,7 +6300,7 @@ def _balla_reverse_candidate_keys(token: str) -> list[tuple[str, str | None]]:
     return out
 
 
-def _load_balla_reverse_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str, str | None]]]:
+def _load_balla_reverse_index(conn: SQLiteConnection) -> dict[str, list[tuple[str, str | None]]]:
     """Legacy whole-table index. Prefer :func:`_install_balla_side_db` (runner PR1).
 
     When a side DB is installed, this returns an empty dict and callers must use
@@ -6343,7 +6344,7 @@ def _load_balla_reverse_index(conn: sqlite3.Connection) -> dict[str, list[tuple[
     return index
 
 
-def _balla_reverse_lookup(conn: sqlite3.Connection, lemma_key: str) -> list[tuple[str, str | None]]:
+def _balla_reverse_lookup(conn: SQLiteConnection, lemma_key: str) -> list[tuple[str, str | None]]:
     """Look up Balla reverse candidates without requiring a whole-table Python dict."""
     if _BALLA_SIDE_DB is not None:
         return list(_BALLA_SIDE_DB.lookup(lemma_key))
@@ -6384,7 +6385,7 @@ def _surface_gloss_hints(entry: dict[str, Any]) -> set[str]:
 
 
 def _balla_reverse_translation(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     *,
     entry_pos: object = None,
@@ -6438,7 +6439,7 @@ def _dmklinger_key(word: str) -> str:
     return _strip_stress(word).strip().casefold()
 
 
-def _load_dmklinger_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str, str]]]:
+def _load_dmklinger_index(conn: SQLiteConnection) -> dict[str, list[tuple[str, str]]]:
     """Load dmklinger_uk_en once, keyed by stress-stripped/casefolded headword.
 
     Legacy whole-table path. Prefer :func:`_install_dmklinger_side_db` (runner PR1).
@@ -6468,7 +6469,7 @@ def _load_dmklinger_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str,
     return index
 
 
-def _dmklinger_lookup(conn: sqlite3.Connection, lemma_key: str) -> list[tuple[str, str]]:
+def _dmklinger_lookup(conn: SQLiteConnection, lemma_key: str) -> list[tuple[str, str]]:
     """Look up dmklinger rows without requiring a whole-table Python dict."""
     if _DMKLINGER_SIDE_DB is not None:
         return list(_DMKLINGER_SIDE_DB.lookup(lemma_key))
@@ -7425,7 +7426,7 @@ def _wikidata_translation(lemma: str) -> dict[str, object] | None:
 
 
 def _translation(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     lemma: str,
     kaikki_lookup: dict[str, dict[str, Any]] | None = None,
     *,
@@ -7569,7 +7570,7 @@ _CURATED_LITERARY_CHUNKS: dict[str, str] = {
 }
 
 
-def _literary_attestation(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | None:
+def _literary_attestation(conn: SQLiteConnection, lemma: str) -> dict[str, Any] | None:
     if _has_whitespace(lemma):
         return None
     term = _strip_stress(_slovnyk_lookup_word(lemma)).casefold()
@@ -8137,8 +8138,9 @@ def enrich_entry(
             cache=slovnyk_cache,
         )
     )
-    synonym_relations = [safe for relation in synonym_relations
-                         if (safe := _safe_relation_for_merge(relation)) is not None]
+    synonym_relations = [
+        safe for relation in synonym_relations if (safe := _safe_relation_for_merge(relation)) is not None
+    ]
     synonyms = _merge_synonym_relations(synonyms, synonym_relations)
     _apply_section("synonyms", synonyms, gate_ran=synonyms_gate_ran)
     antonyms = _antonyms_ulif(conn, base, entry_pos=entry_pos)
@@ -8161,8 +8163,9 @@ def enrich_entry(
             cache=slovnyk_cache,
         )
     )
-    antonym_relations = [safe for relation in antonym_relations
-                         if (safe := _safe_relation_for_merge(relation)) is not None]
+    antonym_relations = [
+        safe for relation in antonym_relations if (safe := _safe_relation_for_merge(relation)) is not None
+    ]
     antonyms = _merge_antonym_relations(antonyms, antonym_relations)
     # #5121: item membership is Вікісловник + local-db (offline-safe, gate always runs),
     # but the СУМ-20/ВТС pointer ANNOTATIONS ride the per-lemma slovnyk cache. When that
@@ -8189,8 +8192,9 @@ def enrich_entry(
             cache=slovnyk_cache,
         )
     )
-    homonym_relations = [safe for relation in homonym_relations
-                         if (safe := _safe_relation_for_merge(relation)) is not None]
+    homonym_relations = [
+        safe for relation in homonym_relations if (safe := _safe_relation_for_merge(relation)) is not None
+    ]
     homonyms = _merge_homonym_relations(None, homonym_relations)
     # Homonyms come from СУМ numbering + approved corpus relation pairs (local db); the
     # gate always runs, so an offline run updates from local data (finding 2).
@@ -8198,8 +8202,9 @@ def enrich_entry(
     paronym_relations = (
         pointer_paronym_relations if pointer_paronym_relations is not None else _paronym_relations(conn, lemma)
     )
-    paronym_relations = [safe for relation in paronym_relations
-                         if (safe := _safe_relation_for_merge(relation)) is not None]
+    paronym_relations = [
+        safe for relation in paronym_relations if (safe := _safe_relation_for_merge(relation)) is not None
+    ]
     paronyms = _merge_paronym_relations(None, paronym_relations)
     # Paronyms come from local ZNO/cache pairs only (no slovnyk.me), so their gate runs
     # fully offline — retractions here are always authoritative.
@@ -8404,7 +8409,7 @@ def enrich(
     staged = stage_manifest_to_sqlite(target_manifest, work_dir / "staged_manifest.sqlite")
     # Reviewed synonym verdicts are first-class corpus facts for the manifest.
     load_approved_synonym_verdicts(SOURCES_DB)
-    conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
+    conn = _open_readonly(SOURCES_DB)
     enriched = 0
     entries: list[dict[str, Any]] = []
     citation_violations: list[str] = []

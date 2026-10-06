@@ -16,6 +16,9 @@ from urllib.parse import urlsplit, urlunsplit
 
 from jsonschema import Draft202012Validator
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT = ROOT / "registry/projects/open_model_data/contracts/source_work_locator_v1.schema.json"
 IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
@@ -92,10 +95,10 @@ def _identifier(value: str) -> str:
     return f'"{value}"'
 
 
-def _connect(path: Path) -> sqlite3.Connection:
+def _connect(path: Path) -> SQLiteConnection:
     if not path.is_file() or path.stat().st_size == 0:
         raise LocatorError(f"missing SQLite input: {path}")
-    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
+    connection = _open_readonly(path.resolve())
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only=ON")
     return connection
@@ -440,7 +443,7 @@ def _row(
 
 
 def _family_rows(
-    connection: sqlite3.Connection, family: Mapping[str, Any], validator: Draft202012Validator
+    connection: SQLiteConnection, family: Mapping[str, Any], validator: Draft202012Validator
 ) -> list[dict[str, Any]]:
     fields = list(
         dict.fromkeys(

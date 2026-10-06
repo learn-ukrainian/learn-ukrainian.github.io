@@ -59,6 +59,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 from scripts.storage.paths import artifact_set
@@ -494,7 +495,7 @@ def is_held_out_chunk(chunk: MiddleUkrainianChunk) -> bool:
 
 def load_middle_ukrainian_chunks(sources_db: Path) -> list[MiddleUkrainianChunk]:
     """Load, filter, and stratify Middle Ukrainian chunks from sources.db."""
-    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(sources_db).resolve())
     cur = conn.cursor()
     query = """
     SELECT id, chunk_id, work_id, work, author, year, genre, text, char_count
@@ -1183,7 +1184,7 @@ def build_sft_dataset(
     cur_ves = None
     if vesum_db and Path(vesum_db).is_file() and Path(vesum_db).stat().st_size > 1000:
         try:
-            conn_ves = sqlite3.connect(f"file:{Path(vesum_db).resolve()}?mode=ro", uri=True)
+            conn_ves = _open_readonly(Path(vesum_db).resolve())
             cur_ves = conn_ves.cursor()
         except Exception:
             conn_ves = None

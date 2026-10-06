@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import sqlite3
 import sys
 import time
 from pathlib import Path
@@ -31,6 +30,7 @@ for p in (PROJECT_ROOT, SCRIPTS_DIR):
 from scripts.curriculum.evidence.sources import _sources_path
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS
 from scripts.curriculum.resolver.tokenize import tokenize
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.verification.check_ru_morph import is_russian_pattern
 from scripts.verification.check_text import check_text
 from scripts.verification.stress import STRESS_BATCH_CAP, verify_stresses
@@ -87,7 +87,7 @@ def run_benchmark(
             sources_path = _sources_path()
             if not sources_path.is_file():
                 raise FileNotFoundError(f"Sources database not found at {sources_path}")
-            conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
+            conn = _open_readonly(sources_path)
             try:
                 cur = conn.execute(
                     "SELECT text FROM textbooks WHERE chunk_id = ?",

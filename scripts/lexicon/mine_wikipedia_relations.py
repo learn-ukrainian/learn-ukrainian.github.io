@@ -22,13 +22,17 @@ from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT / "data" / "lexicon" / "cache" / "wikipedia_relation_candidates.json"
 WIKIPEDIA_API = "https://uk.wikipedia.org/w/api.php"
 USER_AGENT = "learn-ukrainian-relation-miner/1.0 (https://learn-ukrainian.github.io)"
 ARTICLE_TITLES = ("Пароніми", "Синоніми", "Антоніми", "Омоніми")
 
-_WORD = r"(?<![А-Яа-яЄєІіЇїҐґ\u0300-\u036f])[А-Яа-яЄєІіЇїҐґ]+(?:['’ʼ-][А-Яа-яЄєІіЇїҐґ]+)*(?![А-Яа-яЄєІіЇїҐґ\u0300-\u036f])"
+_WORD = (
+    r"(?<![А-Яа-яЄєІіЇїҐґ\u0300-\u036f])[А-Яа-яЄєІіЇїҐґ]+(?:['’ʼ-][А-Яа-яЄєІіЇїҐґ]+)*(?![А-Яа-яЄєІіЇїҐґ\u0300-\u036f])"
+)
 _WORD_RE = re.compile(rf"(?<![А-Яа-яЄєІіЇїҐґ])({_WORD})(?![А-Яа-яЄєІіЇїҐґ])")
 _PAIR_RE = re.compile(
     rf"(?P<a>(?:'{{2,3}})?{_WORD}(?:'{{2,3}})?(?:\s*\([^()\n]{{1,220}}\))?)"
@@ -153,7 +157,12 @@ def parse_curated_pairs(text: str, *, default_relation: str) -> list[dict[str, s
                 continue
             first, gloss_a = _term(match.group("a"))
             second, gloss_b = _term(match.group("b"))
-            if first and second and second not in _NON_LEXICAL_PAIR_ENDS and (first != second or line_relation == "homonym"):
+            if (
+                first
+                and second
+                and second not in _NON_LEXICAL_PAIR_ENDS
+                and (first != second or line_relation == "homonym")
+            ):
                 matches.append((first, second, gloss_a, gloss_b))
             # Keep the left term of the match as the next search anchor so a
             # chain such as ``земний — земельний — земляний`` yields both
@@ -167,7 +176,12 @@ def parse_curated_pairs(text: str, *, default_relation: str) -> list[dict[str, s
                 continue
             first, gloss_a = _term(left.group(0))
             second, gloss_b = _term(right.group(0))
-            if first and second and second not in _NON_LEXICAL_PAIR_ENDS and (first != second or line_relation == "homonym"):
+            if (
+                first
+                and second
+                and second not in _NON_LEXICAL_PAIR_ENDS
+                and (first != second or line_relation == "homonym")
+            ):
                 matches.append((first, second, gloss_a, gloss_b))
 
         if line_relation == "homonym":
@@ -199,7 +213,7 @@ class VesumExactLemmaIndex:
     """Read-only exact ``lemma``/POS index backed by VESUM."""
 
     def __init__(self, db_path: Path):
-        self.connection = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        self.connection = _open_readonly(db_path)
         self.connection.row_factory = sqlite3.Row
 
     def close(self) -> None:
@@ -267,7 +281,10 @@ def mine(*, vesum_db: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
             try:
                 _requested, canonical, text = fetch_article(requested_title)
             except Exception as error:
-                report["articles"][requested_title] = {"status": "unreachable", "error": f"{type(error).__name__}: {error}"}
+                report["articles"][requested_title] = {
+                    "status": "unreachable",
+                    "error": f"{type(error).__name__}: {error}",
+                }
                 report["unreachable_articles"].append(requested_title)
                 continue
             parsed = parse_curated_pairs(text, default_relation=_default_relation(requested_title))

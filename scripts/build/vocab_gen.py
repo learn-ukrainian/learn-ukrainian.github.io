@@ -12,10 +12,11 @@ Issue: #1025
 from __future__ import annotations
 
 import logging
-import sqlite3
 from pathlib import Path
 
 import yaml
+
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 logger = logging.getLogger(__name__)
 
@@ -53,18 +54,13 @@ _POS_LABELS = {
 _GENDER_MAP = {":m:": "ч.", ":f:": "ж.", ":n:": "с."}
 
 
-def dedupe_vocab(
-    current: list[dict], previous_words: set[str]
-) -> list[dict]:
+def dedupe_vocab(current: list[dict], previous_words: set[str]) -> list[dict]:
     """Remove words already taught in previous modules.
 
     Case-insensitive matching. Returns filtered list.
     """
     previous_lower = {w.lower() for w in previous_words}
-    return [
-        entry for entry in current
-        if entry.get("word", "").lower() not in previous_lower
-    ]
+    return [entry for entry in current if entry.get("word", "").lower() not in previous_lower]
 
 
 def vesum_enrich_entry(entry: dict) -> dict:
@@ -95,7 +91,7 @@ def vesum_enrich_entry(entry: dict) -> dict:
 
     if VESUM_DB.exists():
         try:
-            db = sqlite3.connect(f"{Path(VESUM_DB).resolve().as_uri()}?mode=ro", uri=True)
+            db = _open_readonly(Path(VESUM_DB).resolve())
             try:
                 row = db.execute(
                     "SELECT pos, tags FROM forms WHERE word_form = ? LIMIT 1",
@@ -127,6 +123,7 @@ def vesum_enrich_entry(entry: dict) -> dict:
     # Add stress marks to the word
     try:
         from pipeline.stress_annotator import annotate_stress
+
         stressed_word, count = annotate_stress(word)
         if count > 0:
             result["word"] = stressed_word
@@ -171,6 +168,7 @@ def get_previous_vocab(level: str, current_seq: int) -> set[str]:
 
             # Fall back to plan vocabulary_hints (v3 dict or v4 list)
             from pipeline.vocab_helpers import extract_vocab_words
+
             hints = plan.get("vocabulary_hints", {})
             for word in extract_vocab_words(hints):
                 word_lower = word.lower()
@@ -215,6 +213,7 @@ def _stress_word(word: str) -> str:
     """
     try:
         from pipeline.stress_annotator import annotate_stress
+
         stressed, count = annotate_stress(word)
         if count > 0:
             return stressed
@@ -240,9 +239,12 @@ def build_slovnyk_markdown(
     3. Expressions table
     """
     GENDER_COLORS = {
-        "ч.": "#0057B8", "м.": "#0057B8",
-        "ж.": "#C2185B", "ф.": "#C2185B",
-        "с.": "#E65100", "н.": "#E65100",
+        "ч.": "#0057B8",
+        "м.": "#0057B8",
+        "ж.": "#C2185B",
+        "ф.": "#C2185B",
+        "с.": "#E65100",
+        "н.": "#E65100",
     }
 
     lines = []
@@ -254,13 +256,15 @@ def build_slovnyk_markdown(
 
     # 1. Dictionary tables
     if plan_vocab:
-        lines.extend([
-            "",
-            "### Обов'язкові та рекомендовані слова",
-            "",
-            f"| Слово | {meaning_label} | Частина мови | Рід |",
-            "|-------|----------|-------------|-----|",
-        ])
+        lines.extend(
+            [
+                "",
+                "### Обов'язкові та рекомендовані слова",
+                "",
+                f"| Слово | {meaning_label} | Частина мови | Рід |",
+                "|-------|----------|-------------|-----|",
+            ]
+        )
         for entry in plan_vocab:
             word = _stress_word(entry.get("word", ""))
             trans = _entry_meaning(entry)
@@ -269,13 +273,15 @@ def build_slovnyk_markdown(
             lines.append(f"| **{word}** | {trans} | {pos} | {gender} |")
 
     if additional_vocab:
-        lines.extend([
-            "",
-            "### Додаткові слова з уроку",
-            "",
-            f"| Слово | {meaning_label} | Частина мови | Рід |",
-            "|-------|----------|-------------|-----|",
-        ])
+        lines.extend(
+            [
+                "",
+                "### Додаткові слова з уроку",
+                "",
+                f"| Слово | {meaning_label} | Частина мови | Рід |",
+                "|-------|----------|-------------|-----|",
+            ]
+        )
         for entry in additional_vocab:
             word = _stress_word(entry.get("word", ""))
             trans = _entry_meaning(entry)
@@ -284,13 +290,15 @@ def build_slovnyk_markdown(
             lines.append(f"| **{word}** | {trans} | {pos} | {gender} |")
 
     if expressions:
-        lines.extend([
-            "",
-            "### Вирази",
-            "",
-            f"| Вираз | {meaning_label} |",
-            "|-------|----------|",
-        ])
+        lines.extend(
+            [
+                "",
+                "### Вирази",
+                "",
+                f"| Вираз | {meaning_label} |",
+                "|-------|----------|",
+            ]
+        )
         for entry in expressions:
             word = entry.get("word", "")
             trans = _entry_meaning(entry)
@@ -317,12 +325,14 @@ def build_slovnyk_markdown(
             cards.append("{ " + ", ".join(card_parts) + " }")
 
         cards_js = ", ".join(cards)
-        lines.extend([
-            "",
-            "### Картки — Flashcards",
-            "",
-            f'<FlashcardDeck client:only="react" cards={{[{cards_js}]}} />',
-        ])
+        lines.extend(
+            [
+                "",
+                "### Картки — Flashcards",
+                "",
+                f'<FlashcardDeck client:only="react" cards={{[{cards_js}]}} />',
+            ]
+        )
 
     lines.append("")
     return "\n".join(lines)

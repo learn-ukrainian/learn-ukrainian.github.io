@@ -45,6 +45,7 @@ import time
 from pathlib import Path
 
 from scripts.atlas.atlas_db import SCHEMA
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -57,7 +58,7 @@ SLUG_SUFFIX_TEMPLATE = "--syn{index:07d}"
 
 
 def _open_readonly(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    conn = _shared_open_readonly(path)
     conn.execute("PRAGMA query_only = ON")
     return conn
 
@@ -178,9 +179,7 @@ def build_synthetic_db(
             path.unlink(missing_ok=True)
 
 
-def _build_synthetic_db_unchecked(
-    *, source_db: Path, out: Path, seed: int, target_articles: int
-) -> dict[str, object]:
+def _build_synthetic_db_unchecked(*, source_db: Path, out: Path, seed: int, target_articles: int) -> dict[str, object]:
     started = time.monotonic()
     snapshot = SourceSnapshot(source_db)
     article_slugs = sorted(snapshot.articles)
@@ -370,11 +369,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         ),
     )
     parser.add_argument(
-        "--source-db", type=Path, default=DEFAULT_SOURCE_DB,
+        "--source-db",
+        type=Path,
+        default=DEFAULT_SOURCE_DB,
         help="real Atlas SQLite DB to resample from, read-only (default: data/atlas.db)",
     )
     parser.add_argument(
-        "--out", type=Path, default=DEFAULT_OUT,
+        "--out",
+        type=Path,
+        default=DEFAULT_OUT,
         help="local synthetic DB path; only an existing synthetic DB may be replaced (default: data/atlas-synthetic.db)",
     )
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED, help="integer RNG seed (default: 8307)")
@@ -385,7 +388,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="positive target article count (default: DISTINCT lemma count in --vesum-db)",
     )
     parser.add_argument(
-        "--vesum-db", type=Path, default=DEFAULT_VESUM_DB,
+        "--vesum-db",
+        type=Path,
+        default=DEFAULT_VESUM_DB,
         help="VESUM SQLite DB used for the default target (default: data/vesum.db)",
     )
     return parser.parse_args(argv)

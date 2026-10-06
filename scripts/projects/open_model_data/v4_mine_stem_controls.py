@@ -31,6 +31,8 @@ if str(REPO_ROOT) not in sys.path:
 import jsonschema
 import numpy as np
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     SENTENCE_SPLIT_RE,
@@ -823,7 +825,7 @@ def vesum_attestation_check(text: str, target_term: str, cursor: sqlite3.Cursor)
     return CleanlinessResult(True)
 
 
-def load_style_guide_collisions(conn: sqlite3.Connection | None) -> set[str]:
+def load_style_guide_collisions(conn: SQLiteConnection | None) -> set[str]:
     collisions = {normalize_apostrophes(item).casefold() for item in STATIC_STYLE_COLLISIONS}
     if conn is None:
         return collisions
@@ -1225,8 +1227,8 @@ def mine_controls(
         raise ValueError("DPO quota cannot exceed SFT quota")
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    sources_conn = sqlite3.connect(f"file:{sources_db.resolve()}?mode=ro", uri=True)
-    vesum_conn = sqlite3.connect(f"file:{vesum_db.resolve()}?mode=ro", uri=True)
+    sources_conn = _open_readonly(sources_db.resolve())
+    vesum_conn = _open_readonly(vesum_db.resolve())
     sources_conn.row_factory = sqlite3.Row
     vesum_cursor = vesum_conn.cursor()
     collisions = load_style_guide_collisions(sources_conn)

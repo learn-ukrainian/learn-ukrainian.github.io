@@ -43,6 +43,8 @@ if str(AUDIT_DIR) not in sys.path:
 import qg_schema
 from _judge_eval_lib import CYRILLIC_TOKEN_RE, UA_GEC_ANN_RE
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_UA_GEC_ROOT = PROJECT_ROOT / "data" / "ua-gec"
 DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "registry" / "ua-gec-gold" / "ua-gec-gold.json"
@@ -269,7 +271,7 @@ def parse_annotated_text(text: str) -> ParsedDocument:
     target_pos = 0
 
     for match in UA_GEC_ANN_RE.finditer(text):
-        prefix = text[last:match.start()]
+        prefix = text[last : match.start()]
         source_parts.append(prefix)
         target_parts.append(prefix)
         source_pos += len(prefix)
@@ -364,13 +366,7 @@ def _context_for_annotation(
 
 def annotation_path(root: Path, candidate: UaGecCandidate) -> Path:
     """Return the expected annotated-file path for a DB row."""
-    return (
-        root
-        / "data"
-        / candidate.partition
-        / "annotated"
-        / f"{candidate.doc_id}.a{candidate.annotator_id}.ann"
-    )
+    return root / "data" / candidate.partition / "annotated" / f"{candidate.doc_id}.a{candidate.annotator_id}.ann"
 
 
 def load_annotation_contexts(
@@ -417,7 +413,7 @@ def load_candidates(db_path: Path, *, tags: Sequence[str] = TARGET_TAGS) -> list
         raise FileNotFoundError(f"UA-GEC sources database not found: {db_path}")
 
     placeholders = ",".join("?" for _ in tags)
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(db_path).resolve())
     conn.row_factory = sqlite3.Row
     try:
         rows = conn.execute(

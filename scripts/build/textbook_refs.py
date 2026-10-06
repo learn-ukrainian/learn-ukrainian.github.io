@@ -21,6 +21,7 @@ import re
 import sqlite3
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from wiki.sources_schema import load_sources_registry, registry_path_for
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -119,6 +120,7 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
 
     # Find the wiki article for this module
     from wiki.config import TRACK_WRITE_DOMAIN
+
     domain = TRACK_WRITE_DOMAIN.get(level, "")
     if not domain:
         return []
@@ -159,14 +161,12 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
         return _refs_from_plan(level, slug)
 
     # Resolve chunk_ids to PDF URLs
-    conn = sqlite3.connect(f"{Path(SOURCES_DB).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(SOURCES_DB).resolve())
     conn.row_factory = sqlite3.Row
     seen_books: dict[str, dict] = {}  # source_file → best ref
 
     for cid in chunk_ids:
-        row = conn.execute(
-            "SELECT source_file, title FROM textbooks WHERE chunk_id = ?", (cid,)
-        ).fetchone()
+        row = conn.execute("SELECT source_file, title FROM textbooks WHERE chunk_id = ?", (cid,)).fetchone()
         if not row:
             continue
 
@@ -210,14 +210,16 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
             if info["page"]:
                 url += f"#page={info['page']}"
 
-        results.append({
-            "author": info["author"],
-            "grade": grade,
-            "year": year,
-            "title": f"Українська мова, {grade} клас ({year})",
-            "url": url,
-            "page": info["page"],
-        })
+        results.append(
+            {
+                "author": info["author"],
+                "grade": grade,
+                "year": year,
+                "title": f"Українська мова, {grade} клас ({year})",
+                "url": url,
+                "page": info["page"],
+            }
+        )
 
     return results[:max_refs]
 
@@ -240,15 +242,19 @@ def _refs_from_plan(level: str, slug: str) -> list[dict]:
         # Only textbook refs (not ULP or web)
         if "url" in ref and "ukrainianlessons" in ref.get("url", ""):
             continue
-        if any(author in title for author in ("Заболотний", "Авраменко", "Голуб", "Большакова", "Вашуленко", "Захарійчук")):
-            results.append({
-                "author": title.split(" Grade")[0] if " Grade" in title else title,
-                "grade": "",
-                "year": "",
-                "title": title,
-                "url": "",
-                "page": None,
-            })
+        if any(
+            author in title for author in ("Заболотний", "Авраменко", "Голуб", "Большакова", "Вашуленко", "Захарійчук")
+        ):
+            results.append(
+                {
+                    "author": title.split(" Grade")[0] if " Grade" in title else title,
+                    "grade": "",
+                    "year": "",
+                    "title": title,
+                    "url": "",
+                    "page": None,
+                }
+            )
 
     return results[:5]
 
@@ -262,9 +268,7 @@ def format_textbook_section(links: list[dict]) -> str:
     for link in links:
         if link["url"]:
             page_info = f", стор. {link['page']}" if link.get("page") else ""
-            lines.append(
-                f"- [{link['author']} — {link['title']}]({link['url']}){page_info}"
-            )
+            lines.append(f"- [{link['author']} — {link['title']}]({link['url']}){page_info}")
         else:
             lines.append(f"- {link['author']} — {link['title']}")
     lines.append("")

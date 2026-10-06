@@ -16,7 +16,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import sys
 import unicodedata
 from collections.abc import Mapping
@@ -32,6 +31,8 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.level_config import resolve_module_track
+from scripts.lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_VESUM = PROJECT_ROOT / "data" / "vesum.db"
@@ -89,7 +90,7 @@ class VesumLemmaLookup:
 
     def __init__(self, db_path: Path = DEFAULT_VESUM):
         self.db_path = Path(db_path)
-        self._conn: sqlite3.Connection | None = None
+        self._conn: SQLiteConnection | None = None
         self._cache: dict[str, bool] = {}
 
     def __enter__(self) -> VesumLemmaLookup:
@@ -103,7 +104,7 @@ class VesumLemmaLookup:
         if self._conn is None:
             if not self.db_path.exists():
                 raise FileNotFoundError(f"VESUM database not found: {self.db_path}")
-            self._conn = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
+            self._conn = _open_readonly(self.db_path)
 
     def close(self) -> None:
         if self._conn is not None:
@@ -145,7 +146,7 @@ class HeritageLemmaLookup:
 
     def __init__(self, db_path: Path = DEFAULT_SOURCES_DB):
         self.db_path = Path(db_path)
-        self._conn: sqlite3.Connection | None = None
+        self._conn: SQLiteConnection | None = None
         self._cache: dict[str, bool] = {}
 
     def __enter__(self) -> HeritageLemmaLookup:
@@ -159,7 +160,7 @@ class HeritageLemmaLookup:
         if self._conn is None:
             if not self.db_path.exists():
                 raise FileNotFoundError(f"sources database not found: {self.db_path}")
-            self._conn = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
+            self._conn = _open_readonly(self.db_path)
 
     def close(self) -> None:
         if self._conn is not None:
@@ -289,7 +290,7 @@ def _manifest_entries(manifest: Any) -> list[Any]:
 def _vesum_has_entry(vesum: Any, lemma: str) -> bool:
     if hasattr(vesum, "has_lemma"):
         return bool(vesum.has_lemma(lemma))
-    if isinstance(vesum, sqlite3.Connection):
+    if is_sqlite_connection(vesum):
         return any(
             vesum.execute("SELECT 1 FROM forms WHERE lemma = ? OR word_form = ? LIMIT 1", (variant, variant)).fetchone()
             for variant in _lookup_variants(lemma)
@@ -312,9 +313,7 @@ def _has_vesum_backed_delimited_components(value: str, vesum: Any) -> bool:
     if not DELIMITED_LEMMA_RE.search(value):
         return False
     components = [component.strip() for component in DELIMITED_LEMMA_RE.split(value)]
-    return len(components) >= 2 and all(
-        component and _vesum_has_entry(vesum, component) for component in components
-    )
+    return len(components) >= 2 and all(component and _vesum_has_entry(vesum, component) for component in components)
 
 
 # OFFLINE FALLBACK for the VESUM-gap class (#3211): the primary mechanism is now the
@@ -573,9 +572,7 @@ def _section_has_content(section_name: str, section: object) -> bool:
         if not isinstance(items, list):
             return False
         return any(
-            isinstance(item, Mapping)
-            and _non_empty_str(item.get("phrase"))
-            and _non_empty_str(item.get("definition"))
+            isinstance(item, Mapping) and _non_empty_str(item.get("phrase")) and _non_empty_str(item.get("definition"))
             for item in items
         )
     return True
@@ -589,8 +586,7 @@ def _check_empty_sections(entry: Mapping[str, Any], lemma: str, violations: list
         section = enrichment[section_name]
         if section_name == "definition_cards":
             if not isinstance(section, list) or not any(
-                isinstance(card, Mapping) and _definitions_have_content(card.get("definitions"))
-                for card in section
+                isinstance(card, Mapping) and _definitions_have_content(card.get("definitions")) for card in section
             ):
                 violations.append(
                     Violation(
@@ -838,9 +834,7 @@ def _check_cross_links(
 
     for usage in usages:
         if not isinstance(usage, Mapping):
-            violations.append(
-                Violation("cross_link_integrity", lemma, "course_usage row is not an object")
-            )
+            violations.append(Violation("cross_link_integrity", lemma, "course_usage row is not an object"))
             continue
         track = str(usage.get("track") or "").strip()
         slug = str(usage.get("slug") or "").strip()

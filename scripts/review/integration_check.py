@@ -59,6 +59,7 @@ from scripts.curriculum.learner_state.planned import planned_state
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import Allowlist
 from scripts.curriculum.validate.validate import main as validate_main
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.review import findings_db, fixloop, record, second_seat, settle
 from scripts.review.prompts import check as prompt_check
 from scripts.review.prompts import render as prompt_render
@@ -535,7 +536,7 @@ class ModuleWorld(World):
         return yaml.safe_load((self.state_dir / fixloop.MODULE_VERDICT_NAME).read_bytes())
 
     def dump_db(self) -> dict[str, list]:
-        conn = sqlite3.connect(self.db)
+        conn = _open_readonly(self.db)
         try:
             return {
                 table: [tuple(row) for row in conn.execute(f"SELECT * FROM {table}")]

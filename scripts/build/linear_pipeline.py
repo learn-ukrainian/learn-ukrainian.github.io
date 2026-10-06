@@ -40,6 +40,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 TEXTBOOK_SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 FOLK_HERITAGE_ATTESTATIONS_PATH = PROJECT_ROOT / "registry" / "folk_heritage_attestations.yaml"
 FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH = PROJECT_ROOT / "registry" / "foreign_proper_noun_attestations.yaml"
@@ -432,6 +436,8 @@ def ensure_claude_writer_agent_deployed(
         "path": str(target_path),
         "changed": changed,
     }
+
+
 RESOURCE_ROLES = frozenset(
     {
         "textbook",
@@ -446,9 +452,7 @@ RESOURCE_ROLES = frozenset(
     }
 )
 INTERNAL_RESOURCE_URL_PREFIXES = ("wiki/", "docs/wiki/")
-URL_BEARING_RESOURCE_ROLES = frozenset(
-    {"reading", "article", "blog", "video", "youtube", "podcast", "audio", "wiki"}
-)
+URL_BEARING_RESOURCE_ROLES = frozenset({"reading", "article", "blog", "video", "youtube", "podcast", "audio", "wiki"})
 MULTIMEDIA_SEARCH_TOOLS = frozenset(
     {
         "query_wikipedia",
@@ -1023,9 +1027,7 @@ def curriculum_profile_for_level(
     key = str(level_code).strip().casefold()
     if not key:
         return None
-    manifest_path = curriculum_manifest or (
-        PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
-    )
+    manifest_path = curriculum_manifest or (PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml")
     data = load_yaml(manifest_path)
     if not isinstance(data, Mapping):
         return None
@@ -1191,7 +1193,9 @@ def render_upgrade_prompt(
         "ACTIVITY_CONFIG": yaml.safe_dump(_activity_config(level, sequence, str(plan["slug"])), sort_keys=False),
         "LEARNER_STATE": state,
         "LESSON_MAP": yaml.safe_dump(
-            _lesson_map_for_prompt(plan, lesson_map, source_dir), allow_unicode=True, sort_keys=False,
+            _lesson_map_for_prompt(plan, lesson_map, source_dir),
+            allow_unicode=True,
+            sort_keys=False,
         ),
         "ORIGINAL_PLAN": yaml.safe_dump(line_break_free_titles(plan), allow_unicode=True, sort_keys=False),
         "ORIGINAL_ARTIFACTS": "\n\n".join(
@@ -1209,11 +1213,7 @@ def _legacy_section_points(section: Mapping[str, Any]) -> list[str]:
     raw_subsections = section.get("subsections")
     points: list[str] = []
     if isinstance(raw_subsections, str):
-        points.extend(
-            part.strip()
-            for part in re.split(r"\s+-\s+|\n+", raw_subsections)
-            if part.strip()
-        )
+        points.extend(part.strip() for part in re.split(r"\s+-\s+|\n+", raw_subsections) if part.strip())
     elif isinstance(raw_subsections, list):
         points.extend(str(part).strip() for part in raw_subsections if str(part).strip())
 
@@ -1464,9 +1464,7 @@ def run_wiki_completeness_gate(
     merged_report["diagnostic"] = f"{len(reports)} wiki articles passed completeness gate."
     if wiki_manifest is not None:
         merged_report["wiki_manifest_slug"] = (
-            wiki_manifest.get("slug")
-            if isinstance(wiki_manifest, Mapping)
-            else slug_key
+            wiki_manifest.get("slug") if isinstance(wiki_manifest, Mapping) else slug_key
         )
     return merged_report
 
@@ -1655,7 +1653,9 @@ def _render_wiki_coverage_required_items(
         lines.append(f"- Required contrast: incorrect `{incorrect}` vs correct `{correct}`")
         lines.append(f"- Pedagogical goal: {why}")
         if str(item.get("treatment")) == "contrast_pair":
-             lines.append("- Required location: activities.yaml `error-correction` activity, entry with `sentence`, `error`, `correction` fields")
+            lines.append(
+                "- Required location: activities.yaml `error-correction` activity, entry with `sentence`, `error`, `correction` fields"
+            )
         lines.append("")
 
     return "\n".join(lines).strip()
@@ -1671,11 +1671,7 @@ def _render_structured_wiki_coverage_required_items(
         "**Coverage rule**: every listed item MUST appear at least once in `module.md` PROSE (model sentence, definition, or paragraph). A vocab table entry alone is NOT coverage. Structural elements (tables, dialogue boxes) count for vocabulary but NOT for wiki_coverage obligations.",
         "",
     ]
-    vocab_items = [
-        str(item)
-        for item in obligation_checklist.get("vocabulary_minimum", [])
-        if str(item).strip()
-    ]
+    vocab_items = [str(item) for item in obligation_checklist.get("vocabulary_minimum", []) if str(item).strip()]
     if vocab_items:
         lines.append("### wiki_vocabulary_minimum")
         lines.append("- Lemmas: " + ", ".join(vocab_items))
@@ -1688,16 +1684,8 @@ def _render_structured_wiki_coverage_required_items(
             lines.append(f"### {oid} (sequence step)")
             extracted = item.get("required_items")
             if isinstance(extracted, Mapping):
-                vocabulary = [
-                    str(value)
-                    for value in extracted.get("vocabulary", [])
-                    if str(value).strip()
-                ]
-                examples = [
-                    str(value)
-                    for value in extracted.get("examples", [])
-                    if str(value).strip()
-                ]
+                vocabulary = [str(value) for value in extracted.get("vocabulary", []) if str(value).strip()]
+                examples = [str(value) for value in extracted.get("examples", []) if str(value).strip()]
                 if vocabulary:
                     lines.append(f"- Vocabulary to introduce: {', '.join(vocabulary)}")
                 if examples:
@@ -1716,7 +1704,9 @@ def _render_structured_wiki_coverage_required_items(
             if why:
                 lines.append(f"- Pedagogical goal: {why}")
             if str(item.get("treatment")) == "contrast_pair":
-                lines.append("- Required location: activities.yaml `error-correction` activity, entry with `sentence`, `error`, `correction` fields")
+                lines.append(
+                    "- Required location: activities.yaml `error-correction` activity, entry with `sentence`, `error`, `correction` fields"
+                )
         elif obligation_type == "phonetic_rule":
             written = str(item.get("written") or "")
             spoken = str(item.get("spoken") or "")
@@ -2011,7 +2001,7 @@ def _textbook_source_year(source_file: str) -> int:
 
 
 def _source_files_for_textbook_reference(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     author: str,
     grade: int,
 ) -> list[str] | None:
@@ -2060,7 +2050,7 @@ def _lookup_textbook_reference_chunk(
         return None
 
     try:
-        with sqlite3.connect(f"{TEXTBOOK_SOURCES_DB_PATH.resolve().as_uri()}?mode=ro", uri=True) as conn:
+        with _open_readonly(TEXTBOOK_SOURCES_DB_PATH.resolve()) as conn:
             conn.row_factory = sqlite3.Row
             source_files = _source_files_for_textbook_reference(conn, author, grade)
             if source_files is None:
@@ -2189,16 +2179,10 @@ def _literary_fallback_queries(
 def _is_literary_source_hit(hit: Mapping[str, Any]) -> bool:
     source_type = str(hit.get("source_type") or "").casefold()
     source_marker = " ".join(
-        str(hit.get(key) or "").casefold()
-        for key in ("source_type", "corpus", "source", "unit_key")
+        str(hit.get(key) or "").casefold() for key in ("source_type", "corpus", "source", "unit_key")
     )
-    return (
-        "textbook" not in source_marker
-        and (
-            "literary" in source_marker
-            or "literary_texts" in source_marker
-            or source_type == "primary"
-        )
+    return "textbook" not in source_marker and (
+        "literary" in source_marker or "literary_texts" in source_marker or source_type == "primary"
     )
 
 
@@ -2247,9 +2231,7 @@ def _search_literary_hits(query: str, *, level: str, limit: int = 1) -> list[dic
     except Exception:
         return []
     literary_hits = [
-        _normalize_literary_hit(hit)
-        for hit in hits or []
-        if isinstance(hit, Mapping) and _is_literary_source_hit(hit)
+        _normalize_literary_hit(hit) for hit in hits or [] if isinstance(hit, Mapping) and _is_literary_source_hit(hit)
     ]
     return literary_hits[:limit]
 
@@ -2287,9 +2269,7 @@ def _build_textbook_excerpt_context(
     lines = ["## Textbook Excerpts (verbatim, must be cited)", ""]
     level_key = str(level).lower()
     references_by_title = {
-        str(ref.get("title") or "").strip(): ref
-        for ref in plan.get("references") or []
-        if isinstance(ref, Mapping)
+        str(ref.get("title") or "").strip(): ref for ref in plan.get("references") or [] if isinstance(ref, Mapping)
     }
     found_any = False
     seen_excerpts: dict[tuple[str, ...], str] = {}
@@ -2521,7 +2501,7 @@ def _render_wiki_knowledge_packet(
             "- `mcp__sources__verify_lemma` for VESUM morphology and inflections.",
             "- `mcp__sources__search_style_guide` for russianisms, surzhyk, calques, and paronym-risk phrases.",
             "- `mcp__sources__query_sum20` for official СУМ-20 definitions when an entry is available.",
-            "- `mcp__sources__query_slovnyk_me(dict=\"vts\")` for ВТС modern meanings when СУМ-20 has no entry.",
+            '- `mcp__sources__query_slovnyk_me(dict="vts")` for ВТС modern meanings when СУМ-20 has no entry.',
             "",
             "Verify suspicious forms before using them in prose, vocabulary, "
             "activities, or resources. Do not call legacy `scripts.rag` or "
@@ -3751,9 +3731,7 @@ def _inline_prompt_tokens(text: str, token_map: Mapping[str, Any]) -> str:
     return text
 
 
-SEMINAR_FOLK_WRITER_RULES_PATH = (
-    PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-write-seminar-folk-rules.md"
-)
+SEMINAR_FOLK_WRITER_RULES_PATH = PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-write-seminar-folk-rules.md"
 
 
 def _seminar_folk_writer_rules(level: str, context: Mapping[str, Any]) -> str:
@@ -3800,10 +3778,17 @@ def _render_section_word_budgets(plan: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
-WRITER_PLAN_OMIT_KEYS = frozenset({
-    "plan_fixes", "changelog", "review_notes", "reviewed_by", "reviewed_at",
-    "lifecycle", "version",
-})
+WRITER_PLAN_OMIT_KEYS = frozenset(
+    {
+        "plan_fixes",
+        "changelog",
+        "review_notes",
+        "reviewed_by",
+        "reviewed_at",
+        "lifecycle",
+        "version",
+    }
+)
 
 
 def _omit_writer_plan_blocks(plan_content: str) -> str:
@@ -3847,7 +3832,8 @@ def _omit_writer_plan_blocks(plan_content: str) -> str:
 
 
 def _writer_plan_content_for_prompt(
-    plan: Mapping[str, Any], plan_content: str,
+    plan: Mapping[str, Any],
+    plan_content: str,
 ) -> str:
     """Omit editorial history only from the writer's embedded plan (#9343).
 
@@ -3857,10 +3843,7 @@ def _writer_plan_content_for_prompt(
     """
     if not is_alphabet_slug(plan.get("slug")):
         return _omit_writer_plan_blocks(plan_content)
-    projected = {
-        key: value for key, value in plan.items()
-        if key not in WRITER_PLAN_OMIT_KEYS
-    }
+    projected = {key: value for key, value in plan.items() if key not in WRITER_PLAN_OMIT_KEYS}
     return _plan_content_for_prompt(projected, plan_content)
 
 
@@ -3910,9 +3893,7 @@ def writer_context(
         "TOPIC_TITLE": str(plan["title"]),
         "PHASE": str(plan.get("phase", "")),
         "WORD_TARGET": str(plan["word_target"]),
-        "SIZE_POLICY": render_writer_size_policy(
-            build_size_policy_for_plan(plan, plan_path=plan_path)
-        ),
+        "SIZE_POLICY": render_writer_size_policy(build_size_policy_for_plan(plan, plan_path=plan_path)),
         "SECTION_WORD_BUDGETS": _render_section_word_budgets(plan),
         "WRITER_SPECIFIC_DIRECTIVES": _writer_specific_directives(writer),
         "PLAN_CONTENT": plan_content,
@@ -4295,9 +4276,7 @@ def _runtime_tool_config(
             catalog_result = ensure_agy_mcp_catalog(resolved)
         except AgyMcpCatalogError as exc:
             _emit(event_sink, "agy_mcp_catalog_preflight", writer=agent_label, ok=False, error=str(exc))
-            raise LinearPipelineError(
-                f"Writer {agent_label!r} refused before dispatch: {exc}"
-            ) from exc
+            raise LinearPipelineError(f"Writer {agent_label!r} refused before dispatch: {exc}") from exc
         _emit(event_sink, "agy_mcp_catalog_preflight", writer=agent_label, ok=True, **catalog_result)
     if mcp_dict:
         tool_config.update(mcp_dict)
@@ -4747,18 +4726,14 @@ def write_writer_artifacts(module_dir: Path, artifacts: Mapping[str, str]) -> No
 
     for name in ("activities.yaml", "vocabulary.yaml", "resources.yaml"):
         parsed = yaml.safe_load(str(artifacts[name]))
-        if name == "activities.yaml" and isinstance(parsed, dict) and (
-            "inline" in parsed or "workbook" in parsed
-        ):
+        if name == "activities.yaml" and isinstance(parsed, dict) and ("inline" in parsed or "workbook" in parsed):
             activity_items: list[Any] = []
             for section_name in ("inline", "workbook"):
                 section = parsed.get(section_name, [])
                 if section is None:
                     continue
                 if not isinstance(section, list):
-                    raise LinearPipelineError(
-                        f"{name} {section_name} section must be a YAML list"
-                    )
+                    raise LinearPipelineError(f"{name} {section_name} section must be a YAML list")
                 activity_items.extend(section)
             if not all(isinstance(item, dict) for item in activity_items):
                 raise LinearPipelineError(f"{name} entries must be mappings")
@@ -5217,11 +5192,7 @@ def render_wiki_coverage_narrow_correction_prompt(
 
 def llm_qg_max_rounds_for_level(level: str | None) -> int:
     """Return the LLM-QG review-round budget for a curriculum level."""
-    return (
-        LLM_QG_SEMINAR_MAX_ROUNDS
-        if str(level or "").strip().lower() in SEMINAR_LEVELS
-        else LLM_QG_CORE_MAX_ROUNDS
-    )
+    return LLM_QG_SEMINAR_MAX_ROUNDS if str(level or "").strip().lower() in SEMINAR_LEVELS else LLM_QG_CORE_MAX_ROUNDS
 
 
 def python_qg_max_correction_rounds_for_level(level: str | None) -> int:
@@ -5485,11 +5456,19 @@ def invoke_reviewer_dim(
     agent_name = tools_writer_runtime_agent(reviewer)
     try:
         response, result = invoke_reviewer_with_schema(
-            agent_name, prompt, profile="dimension", invoker=invoker,
-            mode="read-only", cwd=cwd, model=defaults["model"],
-            task_id=f"phase-4-review-{dim}", entrypoint="dispatch", effort=defaults["effort"],
+            agent_name,
+            prompt,
+            profile="dimension",
+            invoker=invoker,
+            mode="read-only",
+            cwd=cwd,
+            model=defaults["model"],
+            task_id=f"phase-4-review-{dim}",
+            entrypoint="dispatch",
+            effort=defaults["effort"],
             tool_config=_runtime_tool_config(reviewer, workspace_dir=cwd, event_sink=event_sink),
-            event_sink=event_sink, stdout_silence_timeout=stdout_silence_timeout,
+            event_sink=event_sink,
+            stdout_silence_timeout=stdout_silence_timeout,
         )
     except ValueError as exc:
         raise LinearPipelineError(f"Reviewer call for {dim}: {exc}") from exc
@@ -5569,7 +5548,9 @@ def _render_engagement_surgical_instruction(gate_report: Mapping[str, Any]) -> s
 
 
 def _render_russianisms_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
-    findings = gate_report.get("critical_findings") or gate_report.get("detections") or gate_report.get("findings") or []
+    findings = (
+        gate_report.get("critical_findings") or gate_report.get("detections") or gate_report.get("findings") or []
+    )
     return (
         "The following spans matched Russianism patterns: "
         f"{_yaml_inline(findings)}. Replace EXACTLY these spans with the suggested Ukrainian "
@@ -5849,9 +5830,7 @@ def llm_qg_median_sample_index(scores: Sequence[float]) -> int:
     """
     if not scores:
         raise LinearPipelineError("LLM QG reviewer ensemble requires at least one score")
-    return sorted(range(len(scores)), key=lambda index: (float(scores[index]), index))[
-        (len(scores) - 1) // 2
-    ]
+    return sorted(range(len(scores)), key=lambda index: (float(scores[index]), index))[(len(scores) - 1) // 2]
 
 
 def select_median_llm_review_sample(
@@ -6284,8 +6263,7 @@ def _apply_llm_qg_grammar_correction(
         invoker=invoker,
     )
     changed = any(
-        isinstance(record, Mapping) and record.get("changed") is True
-        for record in payload.get("artifacts", [])
+        isinstance(record, Mapping) and record.get("changed") is True for record in payload.get("artifacts", [])
     )
     payload["applied"] = bool(payload.get("applied")) and changed
     payload["findings"] = [dict(finding) for finding in findings]
@@ -6354,9 +6332,7 @@ def _llm_qg_round_summary(round_record: Mapping[str, Any]) -> dict[str, Any]:
     llm_qg = round_record.get("llm_qg")
     aggregate = _llm_qg_aggregate(llm_qg) if isinstance(llm_qg, Mapping) else {}
     min_score, min_dim = (
-        review_loop_aggregate_min(_llm_qg_dimensions(llm_qg))
-        if isinstance(llm_qg, Mapping)
-        else (0.0, None)
+        review_loop_aggregate_min(_llm_qg_dimensions(llm_qg)) if isinstance(llm_qg, Mapping) else (0.0, None)
     )
     return {
         "round": round_record.get("round"),
@@ -6404,14 +6380,8 @@ def _apply_pedagogical_insert_fixes(
     plan_path: Path,
 ) -> dict[str, Any]:
     fixes = _parse_reviewer_fixes(response)
-    insert_fixes = [
-        fix for fix in fixes
-        if "insert_after" in fix and "text" in fix
-    ]
-    rejected_shape_fixes = [
-        fix for fix in fixes
-        if not ("insert_after" in fix and "text" in fix)
-    ]
+    insert_fixes = [fix for fix in fixes if "insert_after" in fix and "text" in fix]
+    rejected_shape_fixes = [fix for fix in fixes if not ("insert_after" in fix and "text" in fix)]
     accepted_fixes, rejected_oversize = _validate_reviewer_fix_shapes(
         insert_fixes,
         max_lines=8,
@@ -6469,10 +6439,7 @@ def _python_qg_violation_value_count(value: Any) -> int:
 
 
 def _python_qg_explicit_violation_count(gate_report: Mapping[str, Any]) -> int:
-    return sum(
-        _python_qg_violation_value_count(gate_report.get(key))
-        for key in PYTHON_QG_VIOLATION_COUNT_KEYS
-    )
+    return sum(_python_qg_violation_value_count(gate_report.get(key)) for key in PYTHON_QG_VIOLATION_COUNT_KEYS)
 
 
 def _python_qg_gate_violation_count(gate_report: Mapping[str, Any]) -> int:
@@ -6931,10 +6898,7 @@ def _run_python_qg_with_bounded_corrections(
             stopped_reason = "yaml_invalid"
             break
 
-        if (
-            failed_gate == "vesum_verified"
-            and not _vesum_correction_improved(before, report)
-        ):
+        if failed_gate == "vesum_verified" and not _vesum_correction_improved(before, report):
             _restore_correction_artifacts(module_dir, artifact_snapshot)
             report = _run_qg()
             _annotate_correction_terminal(
@@ -7070,11 +7034,7 @@ def _run_python_qg_with_legacy_single_shot_corrections(
         correction_round += 1
 
         before = report
-        artifact_snapshot = (
-            _snapshot_correction_artifacts(module_dir)
-            if failed_gate in REVIEWER_FIX_GATES
-            else None
-        )
+        artifact_snapshot = _snapshot_correction_artifacts(module_dir) if failed_gate in REVIEWER_FIX_GATES else None
         handled, unmatched_anchors, correction_payload = _apply_python_qg_correction(
             failed_gate,
             report,
@@ -7799,9 +7759,7 @@ def _count_applicable_reviewer_fixes(text: str, fixes: Sequence[Mapping[str, str
             continue
         find = str(fix.get("find") or "")
         replace = fix.get("replace")
-        if find and replace is not None and (
-            span := _find_reviewer_fix_span(updated, find)
-        ):
+        if find and replace is not None and (span := _find_reviewer_fix_span(updated, find)):
             start, end = span
             updated = updated[:start] + str(replace) + updated[end:]
             count += 1
@@ -8013,11 +7971,7 @@ def _normalized_vesum_missing(report: Mapping[str, Any]) -> frozenset[str]:
     missing = gate_report.get("missing")
     if not isinstance(missing, Sequence) or isinstance(missing, (str, bytes)):
         return frozenset()
-    return frozenset(
-        _normalize_for_vesum(str(surface)).lower()
-        for surface in missing
-        if str(surface).strip()
-    )
+    return frozenset(_normalize_for_vesum(str(surface)).lower() for surface in missing if str(surface).strip())
 
 
 def _vesum_correction_improved(
@@ -8185,8 +8139,7 @@ def _correct_vocab_floor(
     }
     if exhausted:
         diagnostic["message"] = (
-            "plan recommends insufficient unused vocabulary to reach floor: "
-            f"count_after={len(updated)} floor={floor}"
+            f"plan recommends insufficient unused vocabulary to reach floor: count_after={len(updated)} floor={floor}"
         )
     return updated, diagnostic
 
@@ -8791,11 +8744,7 @@ def _apply_reviewer_correction(
         artifact_results.append(artifact_record)
     yaml_invalid = any(record.get("yaml_valid") is False for record in artifact_results)
 
-    unmatched_anchors = (
-        frozenset(set.intersection(*unmatched_by_artifact))
-        if unmatched_by_artifact
-        else frozenset()
-    )
+    unmatched_anchors = frozenset(set.intersection(*unmatched_by_artifact)) if unmatched_by_artifact else frozenset()
     _emit_final_reviewer_unmatched_events(
         unmatched_anchors,
         accepted_fixes,
@@ -9155,9 +9104,7 @@ def _find_unique_reviewer_fix_normalized_span(
     ambiguous = False
     seen_normalized_anchors = {normalized_anchor}
     for variant in _reviewer_anchor_normalized_variants(anchor)[1:]:
-        variant_anchor, _variant_spans = _reviewer_fix_whitespace_normalized_view(
-            variant
-        )
+        variant_anchor, _variant_spans = _reviewer_fix_whitespace_normalized_view(variant)
         if not variant_anchor or variant_anchor in seen_normalized_anchors:
             continue
         seen_normalized_anchors.add(variant_anchor)
@@ -9235,14 +9182,10 @@ def _apply_reviewer_fixes(
             continue
         find = fix.get("find")
         replace = fix.get("replace")
-        if find and replace is not None and (
-            span := _find_exact_reviewer_fix_span(updated, find)
-        ):
+        if find and replace is not None and (span := _find_exact_reviewer_fix_span(updated, find)):
             start, end = span
             updated = updated[:start] + replace + updated[end:]
-        elif find and replace is not None and (
-            span := _find_unique_reviewer_fix_normalized_span(updated, find)
-        ):
+        elif find and replace is not None and (span := _find_unique_reviewer_fix_normalized_span(updated, find)):
             start, end = span
             matched = updated[start:end]
             updated = updated[:start] + replace + updated[end:]
@@ -9279,9 +9222,7 @@ def _previously_passing_regressions(
     ordered_gate_set = set(PYTHON_QG_GATE_ORDER)
     all_gate_names = (set(before_gates) | set(after_gates)) - PYTHON_QG_META_GATES
     ordered_gate_names = [gate for gate in PYTHON_QG_GATE_ORDER if gate in all_gate_names]
-    ordered_gate_names.extend(
-        sorted(gate for gate in all_gate_names if gate not in ordered_gate_set)
-    )
+    ordered_gate_names.extend(sorted(gate for gate in all_gate_names if gate not in ordered_gate_set))
     regressions = []
     for gate in ordered_gate_names:
         before_gate = before_gates.get(gate)
@@ -9792,7 +9733,9 @@ def _validate_lesson_writer_artifact(artifact: str, parsed: Any) -> None:
     for item in parsed:
         if artifact == "vocabulary.yaml" and not all(item.get(key) for key in ("lemma", "translation", "pos", "usage")):
             raise LinearPipelineError("Lesson vocabulary requires lemma, translation, pos, usage")
-        if artifact == "resources.yaml" and not (item.get("title") and (item.get("url") or item.get("chunk_id") or item.get("source"))):
+        if artifact == "resources.yaml" and not (
+            item.get("title") and (item.get("url") or item.get("chunk_id") or item.get("source"))
+        ):
             raise LinearPipelineError("Lesson resource requires title and url/chunk_id/source")
 
 
@@ -10188,7 +10131,9 @@ _ACTIVITY_AUTHORING_FIELDS: dict[str, frozenset[str]] = {
     "ritual-sequencing": _activity("steps", "items", "correct_order", "model_answer"),
     "variant-comparison": _activity("variants", "features", "prompt", "model_answer"),
     "motif-formula": _activity("passage", "text", "formulas", "answers", "prompt", "model_answer"),
-    "performance": _activity("prompt", "fragment", "self_check", "self_checklist", "show_record_button", "model_answer"),
+    "performance": _activity(
+        "prompt", "fragment", "self_check", "self_checklist", "show_record_button", "model_answer"
+    ),
     "authorial-intent": _activity("source_reading", "text_excerpt", "prompt", "techniques_to_identify", "model_answer"),
     # ISTORIO / HIST.
     "source-evaluation": _activity(
@@ -10509,9 +10454,7 @@ def _activity_list_from_loaded_data(data: Any) -> list[dict[str, Any]]:
     if isinstance(data, dict) and ("inline" in data or "workbook" in data):
         unexpected_keys = sorted(set(data) - {"version", "module", "level", "inline", "workbook"})
         if unexpected_keys:
-            raise LinearPipelineError(
-                f"activities.yaml inline/workbook object has unexpected keys: {unexpected_keys}"
-            )
+            raise LinearPipelineError(f"activities.yaml inline/workbook object has unexpected keys: {unexpected_keys}")
         activities: list[dict[str, Any]] = []
         for section in ("inline", "workbook"):
             section_data = data.get(section, [])
@@ -10778,9 +10721,7 @@ def _error_correction_options_gate(
         if str(activity.get("type") or "") != "error-correction":
             continue
         checked += 1
-        violations.extend(
-            error_correction_activity_defects(dict(activity), level=level)
-        )
+        violations.extend(error_correction_activity_defects(dict(activity), level=level))
     report: dict[str, Any] = {
         "passed": not violations,
         "checked": checked,
@@ -10789,10 +10730,7 @@ def _error_correction_options_gate(
     if violations:
         preview = "; ".join(violations[:8])
         more = f" (+{len(violations) - 8} more)" if len(violations) > 8 else ""
-        report["message"] = (
-            f"ERROR_CORRECTION_OPTIONS_GATE FAILED: {len(violations)} defects. "
-            f"{preview}{more}"
-        )
+        report["message"] = f"ERROR_CORRECTION_OPTIONS_GATE FAILED: {len(violations)} defects. {preview}{more}"
     return report
 
 
@@ -11174,11 +11112,7 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         if primary_heading_key in seen_keys:
             continue
         seen_keys.add(primary_heading_key)
-        matching_headings = [
-            heading
-            for key in heading_keys
-            for heading in headings_by_key.get(key, [])
-        ]
+        matching_headings = [heading for key in heading_keys for heading in headings_by_key.get(key, [])]
         if not matching_headings:
             missing.append(title)
         elif len(matching_headings) > 1:
@@ -11330,9 +11264,7 @@ def _folk_heritage_attestation_index(
         if accepted_surfaces is None:
             accepted_surfaces = []
         if not isinstance(accepted_surfaces, list):
-            raise ValueError(
-                f"{source_path} lemma {lemma!r} field 'accepted_surfaces' must be a list"
-            )
+            raise ValueError(f"{source_path} lemma {lemma!r} field 'accepted_surfaces' must be a list")
         for surface in accepted_surfaces:
             normalized = _normalize_for_vesum(str(surface or "")).lower()
             if normalized:
@@ -11362,8 +11294,7 @@ def _foreign_proper_noun_attestation_is_valid(row: Mapping[str, Any]) -> bool:
     # plan-declared foreign_cultural_terms exemption cannot be blessed with a
     # placeholder URL that points at no real page.
     return any(
-        url.startswith(_UK_WIKI_ARTICLE_PREFIX)
-        and url[len(_UK_WIKI_ARTICLE_PREFIX) :].strip("/").strip() != ""
+        url.startswith(_UK_WIKI_ARTICLE_PREFIX) and url[len(_UK_WIKI_ARTICLE_PREFIX) :].strip("/").strip() != ""
         for url in _foreign_proper_noun_attestation_urls(row)
     )
 
@@ -11457,9 +11388,7 @@ def _lowercase_keys_with_only_nonstandard_case(
         originals_by_lower.setdefault(lower, []).append(original)
     blocked: set[str] = set()
     for lower, originals in originals_by_lower.items():
-        if originals and not any(
-            _vesum_casefolded_fallback_casing_is_valid(original) for original in originals
-        ):
+        if originals and not any(_vesum_casefolded_fallback_casing_is_valid(original) for original in originals):
             blocked.add(lower)
     return blocked
 
@@ -11577,9 +11506,7 @@ def _backtick_span_texts(module_text: str) -> list[str]:
 
 def _quoted_surface_lc(module_text: str) -> set[str]:
     """Return normalized-lowercase surfaces quoted in guillemets or backticks."""
-    return _span_surface_lc(_guillemet_span_texts(module_text)) | _span_surface_lc(
-        _backtick_span_texts(module_text)
-    )
+    return _span_surface_lc(_guillemet_span_texts(module_text)) | _span_surface_lc(_backtick_span_texts(module_text))
 
 
 def _guillemet_surface_lc(module_text: str) -> set[str]:
@@ -11601,9 +11528,7 @@ def _plan_vesum_exemption_surfaces_lc(
 
     rationale = entry.get("rationale")
     if not isinstance(rationale, str) or not rationale.strip():
-        raise ValueError(
-            f"vesum_exemptions.{category}[{index}] missing non-empty rationale"
-        )
+        raise ValueError(f"vesum_exemptions.{category}[{index}] missing non-empty rationale")
 
     if category == "foreign_cultural_terms":
         wikipedia_url = entry.get("wikipedia_url")
@@ -11612,29 +11537,20 @@ def _plan_vesum_exemption_surfaces_lc(
             or not wikipedia_url.strip()
             or not _foreign_proper_noun_attestation_is_valid(entry)
         ):
-            raise ValueError(
-                f"vesum_exemptions.{category}[{index}] "
-                "missing valid uk.wikipedia.org wikipedia_url"
-            )
+            raise ValueError(f"vesum_exemptions.{category}[{index}] missing valid uk.wikipedia.org wikipedia_url")
 
     if category == "corpus_attested_quotes":
         source_chunk = entry.get("source_chunk")
         if not isinstance(source_chunk, str) or not source_chunk.strip():
-            raise ValueError(
-                f"vesum_exemptions.{category}[{index}] missing non-empty source_chunk"
-            )
+            raise ValueError(f"vesum_exemptions.{category}[{index}] missing non-empty source_chunk")
 
     surfaces = {_normalize_for_vesum(term).lower()}
     for form_index, form in enumerate(forms):
         if not isinstance(form, str):
-            raise ValueError(
-                f"vesum_exemptions.{category}[{index}].forms[{form_index}] must be string"
-            )
+            raise ValueError(f"vesum_exemptions.{category}[{index}].forms[{form_index}] must be string")
         normalized = _normalize_for_vesum(form).lower()
         if not normalized:
-            raise ValueError(
-                f"vesum_exemptions.{category}[{index}].forms[{form_index}] is empty"
-            )
+            raise ValueError(f"vesum_exemptions.{category}[{index}].forms[{form_index}] is empty")
         surfaces.add(normalized)
     if "" in surfaces:
         raise ValueError(f"vesum_exemptions.{category}[{index}] has empty term")
@@ -11652,20 +11568,13 @@ def _resolve_plan_declared_vesum_exemptions(
     if not isinstance(plan_vesum_exemptions, Mapping):
         raise ValueError("vesum_exemptions must be a mapping")
 
-    unknown_categories = sorted(
-        set(plan_vesum_exemptions) - set(_PLAN_VESUM_EXEMPTION_CATEGORIES)
-    )
+    unknown_categories = sorted(set(plan_vesum_exemptions) - set(_PLAN_VESUM_EXEMPTION_CATEGORIES))
     if unknown_categories:
-        raise ValueError(
-            "vesum_exemptions contains unknown categories: "
-            + ", ".join(unknown_categories)
-        )
+        raise ValueError("vesum_exemptions contains unknown categories: " + ", ".join(unknown_categories))
 
     quoted_lc: set[str] | None = None
     guillemet_lc: set[str] | None = None
-    by_category_lc: dict[str, set[str]] = {
-        category: set() for category in _PLAN_VESUM_EXEMPTION_CATEGORIES
-    }
+    by_category_lc: dict[str, set[str]] = {category: set() for category in _PLAN_VESUM_EXEMPTION_CATEGORIES}
 
     for category in _PLAN_VESUM_EXEMPTION_CATEGORIES:
         rows = plan_vesum_exemptions.get(category, [])
@@ -11690,18 +11599,12 @@ def _resolve_plan_declared_vesum_exemptions(
     by_category_words: dict[str, list[str]] = {}
     for category, category_lc in by_category_lc.items():
         by_category_words[category] = sorted(
-            {
-                surface
-                for surface, lower, _original in unchecked_pairs
-                if lower in category_lc
-            }
+            {surface for surface, lower, _original in unchecked_pairs if lower in category_lc}
         )
     return exempted_lc, by_category_words
 
 
-_HERITAGE_AUTHENTIC_CLASSIFICATIONS = frozenset(
-    {"authentic-archaism", "dialect", "historism", "borrowing", "standard"}
-)
+_HERITAGE_AUTHENTIC_CLASSIFICATIONS = frozenset({"authentic-archaism", "dialect", "historism", "borrowing", "standard"})
 
 _HERITAGE_FALLBACK_BLOCKED_SURFACES = frozenset(
     {
@@ -11763,9 +11666,8 @@ def _engine_classifies_authentic(candidate: str) -> bool:
         verdict = classify_surface_form(candidate)
     except Exception:
         return False
-    return (
-        verdict.get("classification") in _HERITAGE_AUTHENTIC_CLASSIFICATIONS
-        and not verdict.get("is_russianism", False)
+    return verdict.get("classification") in _HERITAGE_AUTHENTIC_CLASSIFICATIONS and not verdict.get(
+        "is_russianism", False
     )
 
 
@@ -12005,9 +11907,7 @@ def _vesum_gate(
             except Exception as exc:
                 return {"passed": False, "error": str(exc), "checked": len(unchecked_pairs)}
             missing_lc -= {
-                word
-                for word, collapsed in syllable_lookup_by_missing.items()
-                if syllable_verified.get(collapsed)
+                word for word, collapsed in syllable_lookup_by_missing.items() if syllable_verified.get(collapsed)
             }
     # Hyphenated multi-word constructions fallback (per user direction
     # 2026-05-23). Many legitimate Ukrainian forms appear as hyphenated
@@ -12068,8 +11968,7 @@ def _vesum_gate(
                 verified_compound_base_adjectives = {
                     word
                     for word, matches in compound_base_verified.items()
-                    if any(_vesum_match_is_adjective(match) for match in matches)
-                    and not _engine_flags_russianism(word)
+                    if any(_vesum_match_is_adjective(match) for match in matches) and not _engine_flags_russianism(word)
                 }
             else:
                 verified_compound_base_adjectives = set()
@@ -12083,8 +11982,7 @@ def _vesum_gate(
                 if all(
                     _vesum_part_verifies_as_compound_constituent(
                         constituent_verified.get(part) or [],
-                        require_modifier=index < last_part_index
-                        and bool(compound_base_candidates_by_part.get(part)),
+                        require_modifier=index < last_part_index and bool(compound_base_candidates_by_part.get(part)),
                     )
                     or (
                         index < last_part_index
@@ -12099,14 +11997,10 @@ def _vesum_gate(
             missing_lc -= resolved_compounds
     if missing_lc:
         ist_adjective_candidates_by_missing = {
-            word: candidates
-            for word in missing_lc
-            if (candidates := _productive_ist_adjective_candidates(word))
+            word: candidates for word in missing_lc if (candidates := _productive_ist_adjective_candidates(word))
         }
         ist_adjective_lookups = {
-            candidate
-            for candidates in ist_adjective_candidates_by_missing.values()
-            for candidate in candidates
+            candidate for candidates in ist_adjective_candidates_by_missing.values() for candidate in candidates
         }
         if ist_adjective_lookups:
             try:
@@ -12184,18 +12078,14 @@ def _vesum_gate(
             )
     missing_lc -= heritage_attested_lc
     plan_exempted_lc: set[str] = set()
-    plan_exempted_by_category: dict[str, list[str]] = {
-        category: [] for category in _PLAN_VESUM_EXEMPTION_CATEGORIES
-    }
+    plan_exempted_by_category: dict[str, list[str]] = {category: [] for category in _PLAN_VESUM_EXEMPTION_CATEGORIES}
     if _vesum_heritage_attestation_enabled(level) and plan_vesum_exemptions is not None:
         try:
-            plan_exempted_lc, plan_exempted_by_category = (
-                _resolve_plan_declared_vesum_exemptions(
-                    missing_lc,
-                    unchecked_pairs,
-                    module_text,
-                    plan_vesum_exemptions,
-                )
+            plan_exempted_lc, plan_exempted_by_category = _resolve_plan_declared_vesum_exemptions(
+                missing_lc,
+                unchecked_pairs,
+                module_text,
+                plan_vesum_exemptions,
             )
         except Exception as exc:
             return {
@@ -12235,9 +12125,7 @@ def _vesum_gate(
             and surface not in foreign_proper_attested_surfaces
         }
     )
-    plan_exempted_words = sorted(
-        {surface for words in plan_exempted_by_category.values() for surface in words}
-    )
+    plan_exempted_words = sorted({surface for words in plan_exempted_by_category.values() for surface in words})
     ignored_missing_lc = _vesum_missing_exclusion_keys(
         ignored_missing_surfaces,
         min_word_length=VESUM_MIN_WORD_LENGTH,
@@ -12254,9 +12142,7 @@ def _vesum_gate(
         "foreign_proper_noun_attested_words": foreign_proper_attested_words[:100],
         "plan_exempted": len(plan_exempted_words),
         "plan_exempted_words": plan_exempted_words[:100],
-        "plan_exempted_by_category": {
-            category: words[:100] for category, words in plan_exempted_by_category.items()
-        },
+        "plan_exempted_by_category": {category: words[:100] for category, words in plan_exempted_by_category.items()},
         "missing": missing[:100],
         "missing_count": len(missing),
     }
@@ -12347,16 +12233,8 @@ def _normalize_bad_form_query(raw: str) -> str:
 
 
 def _heritage_hit_blocks_bad_form_marker(hit: Mapping[str, Any]) -> bool:
-    authentic = bool(
-        hit.get("is_authentic_ukrainian")
-        or hit.get("authentic_ukrainian")
-        or hit.get("authentic")
-    )
-    russianism = bool(
-        hit.get("is_russianism")
-        or hit.get("russianism_warning")
-        or hit.get("Russianism warning")
-    )
+    authentic = bool(hit.get("is_authentic_ukrainian") or hit.get("authentic_ukrainian") or hit.get("authentic"))
+    russianism = bool(hit.get("is_russianism") or hit.get("russianism_warning") or hit.get("Russianism warning"))
     return authentic and not russianism
 
 
@@ -13136,9 +13014,7 @@ def _activity_vesum_text(
     ) -> None:
         if isinstance(node, dict):
             intentional_error_option = (
-                in_options_list
-                and isinstance(node.get("text"), str)
-                and node.get("intentional_error") is True
+                in_options_list and isinstance(node.get("text"), str) and node.get("intentional_error") is True
             )
             for key, child in node.items():
                 if key in skip_subtree:
@@ -13256,9 +13132,7 @@ _SCAFFOLDING_STEP_LABEL_RE = re.compile(
     r"(?:Крок|Урок)\s+\d+\s*:",
     re.IGNORECASE,
 )
-_SCAFFOLDING_SOURCE_MARKER_RE = re.compile(
-    r"\[[SС]\d+(?:\s*,\s*[SС]\d+)*\]"
-)
+_SCAFFOLDING_SOURCE_MARKER_RE = re.compile(r"\[[SС]\d+(?:\s*,\s*[SС]\d+)*\]")
 # Internal pipeline artifacts that must NEVER be named in learner-facing prose.
 # These are writer-only build objects (the wiki Knowledge Packet, the
 # implementation map, the wiki manifest); a learner is never told a rule "comes
@@ -13293,9 +13167,7 @@ def _strip_scaffolding_scan_exclusions(text: str) -> str:
         if stripped.startswith("```"):
             lines.append("\n" if line.endswith("\n") else "")
             is_just_backticks = not stripped.rstrip().strip("`")
-            single_line_fence = (
-                not is_just_backticks and stripped.rstrip().endswith("```")
-            )
+            single_line_fence = not is_just_backticks and stripped.rstrip().endswith("```")
             if not single_line_fence:
                 in_fence = not in_fence
             continue
@@ -13360,26 +13232,15 @@ _CITATION_TITLE_OPEN_QUOTES = ("«", "“", "„", '"')
 
 def _citation_ref_specific_enough_for_containment(reference_title: Any) -> bool:
     normalized_ref = _normalize_citation_match_text(reference_title)
-    return (
-        len(normalized_ref) >= _CITATION_CONTAINMENT_MIN_CHARS
-        and len(_citation_match_tokens(reference_title)) >= 2
-    )
+    return len(normalized_ref) >= _CITATION_CONTAINMENT_MIN_CHARS and len(_citation_match_tokens(reference_title)) >= 2
 
 
 def _citation_author_tokens(author: Any) -> list[str]:
-    return [
-        token
-        for token in _citation_match_tokens(author)
-        if not re.fullmatch(r"[a-zа-яіїєґ]", token)
-    ]
+    return [token for token in _citation_match_tokens(author) if not re.fullmatch(r"[a-zа-яіїєґ]", token)]
 
 
 def _citation_folded_author_tokens(author: Any) -> list[str]:
-    return [
-        folded
-        for token in _citation_author_tokens(author)
-        if (folded := fold_citation_author(token))
-    ]
+    return [folded for token in _citation_author_tokens(author) if (folded := fold_citation_author(token))]
 
 
 def _citation_author_anchor_tokens(author: Any, author_tokens: Sequence[str]) -> set[str]:
@@ -13404,11 +13265,7 @@ def _citation_author_appears_in_source_tokens(
     if author_anchors & set(source_author_tokens):
         return True
 
-    folded_source_tokens = [
-        folded
-        for token in source_author_tokens
-        if (folded := fold_citation_author(token))
-    ]
+    folded_source_tokens = [folded for token in source_author_tokens if (folded := fold_citation_author(token))]
     folded_author_tokens = _citation_folded_author_tokens(author)
     if _citation_token_sequence_contains(folded_author_tokens, folded_source_tokens):
         return True
@@ -13417,11 +13274,7 @@ def _citation_author_appears_in_source_tokens(
 
 
 def _citation_first_title_open_quote_index(source_ref: str) -> int | None:
-    quote_indexes = [
-        index
-        for quote in _CITATION_TITLE_OPEN_QUOTES
-        if (index := source_ref.find(quote)) != -1
-    ]
+    quote_indexes = [index for quote in _CITATION_TITLE_OPEN_QUOTES if (index := source_ref.find(quote)) != -1]
     if not quote_indexes:
         return None
     return min(quote_indexes)
@@ -13479,11 +13332,7 @@ def _citation_plan_reference_records(plan: Mapping[str, Any]) -> list[Mapping[st
         references = plan.get("plan_references", [])
     if not isinstance(references, list):
         return []
-    return [
-        ref
-        for ref in references
-        if isinstance(ref, Mapping) and (ref.get("title") or ref.get("work"))
-    ]
+    return [ref for ref in references if isinstance(ref, Mapping) and (ref.get("title") or ref.get("work"))]
 
 
 def _citation_ref_resolves_by_containment(
@@ -13596,8 +13445,7 @@ def _authorship_text_is_only_anonymous_folk(text: str) -> bool:
 
 def _metadata_authorship_is_anonymous_folk(candidate: Mapping[str, Any]) -> bool:
     metadata_text = " ".join(
-        _anonymous_folk_metadata_text(candidate.get(field))
-        for field in _ANONYMOUS_FOLK_METADATA_FIELDS
+        _anonymous_folk_metadata_text(candidate.get(field)) for field in _ANONYMOUS_FOLK_METADATA_FIELDS
     )
     if not _has_anonymous_folk_marker(metadata_text):
         return False
@@ -13620,10 +13468,7 @@ def _anonymous_folk_primary_citation_resolves(
     if level_key not in SEMINAR_LEVELS:
         return False
 
-    marker_text = " ".join(
-        str(resource.get(field) or "")
-        for field in ("source_ref", "title")
-    )
+    marker_text = " ".join(str(resource.get(field) or "") for field in ("source_ref", "title"))
     marker_text = f"{marker_text} {source_ref}".casefold()
     if not any(marker in marker_text for marker in _ANONYMOUS_FOLK_PRIMARY_MARKERS):
         return False
@@ -13636,8 +13481,7 @@ def _anonymous_folk_primary_citation_resolves(
         [
             record
             for record in _extract_blockquote_records(module_text, level=level_key)
-            if _blockquote_record_is_quote_fidelity_verified(record)
-            and _metadata_authorship_is_anonymous_folk(record)
+            if _blockquote_record_is_quote_fidelity_verified(record) and _metadata_authorship_is_anonymous_folk(record)
         ]
         if module_text
         else []
@@ -13682,8 +13526,7 @@ def _citation_gate(
             normalized_ref not in plan_titles
             and (source_key is None or not any(citation_keys_match(source_key, plan_key) for plan_key in plan_keys))
             and not any(
-                _citation_ref_resolves_by_containment(reference, source_ref)
-                for reference in plan_reference_records
+                _citation_ref_resolves_by_containment(reference, source_ref) for reference in plan_reference_records
             )
             and resource.get("packet_chunk_id") is None
             and not _anonymous_folk_primary_citation_resolves(
@@ -13748,11 +13591,7 @@ def _is_internal_wiki_ref(ref: Mapping[str, Any]) -> bool:
     title = str(ref.get("title") or "").strip().casefold()
     url = str(ref.get("url") or "").strip()
     notes = str(ref.get("notes") or "").strip().casefold()
-    return (
-        title.startswith("wiki:")
-        or url.startswith(("wiki/", "docs/wiki/"))
-        or "wiki/" in notes
-    )
+    return title.startswith("wiki:") or url.startswith(("wiki/", "docs/wiki/")) or "wiki/" in notes
 
 
 def _resource_url_set(resources: list[dict[str, Any]]) -> set[str]:
@@ -13776,11 +13615,7 @@ def _resource_chunk_id(resource: Mapping[str, Any]) -> str:
 def _resource_match_tokens(value: Any) -> set[str]:
     text = str(value or "").casefold()
     text = re.sub(r"\b(?:стор(?:інка)?|p|page|pages|с)\.?\b", " ", text)
-    return {
-        token
-        for token in re.findall(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї'-]+", text)
-        if len(token) >= 3 or token.isdigit()
-    }
+    return {token for token in re.findall(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї'-]+", text) if len(token) >= 3 or token.isdigit()}
 
 
 _RESOURCE_MATCH_STOPWORDS = {
@@ -13990,10 +13825,7 @@ def _reading_passage_counts(text: str) -> tuple[int, int]:
 
 def _substantial_reading_passage(text: str) -> bool:
     lines, words = _reading_passage_counts(text)
-    return lines >= 2 and (
-        lines >= _READING_COVERAGE_MIN_PASSAGE_LINES
-        or words >= _READING_COVERAGE_MIN_PASSAGE_WORDS
-    )
+    return lines >= 2 and (lines >= _READING_COVERAGE_MIN_PASSAGE_LINES or words >= _READING_COVERAGE_MIN_PASSAGE_WORDS)
 
 
 def _hosted_reading_text(reading_slug: str, readings_dir: Path) -> str:
@@ -14114,10 +13946,17 @@ def _reading_coverage_gate(
         else:
             missing.append(reading)
 
-    missing_on_site_reading = level_key == "folk" and len(structured_reading_slug_attrs) < _READING_COVERAGE_MIN_STRUCTURED
+    missing_on_site_reading = (
+        level_key == "folk" and len(structured_reading_slug_attrs) < _READING_COVERAGE_MIN_STRUCTURED
+    )
     missing_substantial_reading = level_key == "folk" and len(substantial_readings) < _READING_COVERAGE_MIN_STRUCTURED
     has_unstructured_readings = level_key == "folk" and unstructured_primary_readings > 0
-    passed = not missing and not missing_on_site_reading and not missing_substantial_reading and not has_unstructured_readings
+    passed = (
+        not missing
+        and not missing_on_site_reading
+        and not missing_substantial_reading
+        and not has_unstructured_readings
+    )
     report: dict[str, Any] = {
         "passed": passed,
         "severity": "HARD" if not passed else None,
@@ -14155,7 +13994,7 @@ def _reading_coverage_gate(
         report["unstructured_reading_failure"] = {
             "severity": "HARD",
             "message": (
-                "FOLK primary-reading blocks must include a reading=\"...\" slug "
+                'FOLK primary-reading blocks must include a reading="..." slug '
                 "and dash-led source attribution; orphan snippets are not valid reading content"
             ),
             "count": unstructured_primary_readings,
@@ -14166,8 +14005,7 @@ def _reading_coverage_gate(
         report["warning"] = {
             "severity": "WARNING",
             "message": (
-                "fewer than 4 primary-reading blocks surfaced; floor is advisory "
-                "and does not affect gate pass/fail"
+                "fewer than 4 primary-reading blocks surfaced; floor is advisory and does not affect gate pass/fail"
             ),
             "surfaced": len(blocks),
             "expected_minimum": _READING_COVERAGE_FLOOR,
@@ -14207,9 +14045,7 @@ def _resource_coverage_gate(
 
     resource_urls = _resource_url_set(resources)
     missing_pronunciation_videos = [
-        record
-        for record in _extract_plan_pronunciation_video_urls(plan)
-        if record["url"] not in resource_urls
+        record for record in _extract_plan_pronunciation_video_urls(plan) if record["url"] not in resource_urls
     ]
 
     missing_wiki_external_resources: list[dict[str, Any]] = []
@@ -14229,11 +14065,7 @@ def _resource_coverage_gate(
                         }
                     )
 
-    passed = not (
-        missing_plan_references
-        or missing_pronunciation_videos
-        or missing_wiki_external_resources
-    )
+    passed = not (missing_plan_references or missing_pronunciation_videos or missing_wiki_external_resources)
     return {
         "passed": passed,
         "severity": "HARD" if not passed else None,
@@ -14380,9 +14212,7 @@ def _strip_quote_fidelity_verified_blockquotes(text: str, *, level: str | None) 
     }
     if not quote_line_numbers:
         return text
-    return "\n".join(
-        line for index, line in enumerate(text.splitlines()) if index not in quote_line_numbers
-    )
+    return "\n".join(line for index, line in enumerate(text.splitlines()) if index not in quote_line_numbers)
 
 
 def _extract_textbook_attribution(line: str) -> str:
@@ -14436,9 +14266,7 @@ def _contains_textbook_quote(blockquote: str, result_text: str) -> bool:
     return False
 
 
-_MATCH_TOKEN_WITH_SPAN_RE = re.compile(
-    r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї][0-9A-Za-zА-Яа-яҐґЄєІіЇї'’ʼ-]*"
-)
+_MATCH_TOKEN_WITH_SPAN_RE = re.compile(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї][0-9A-Za-zА-Яа-яҐґЄєІіЇї'’ʼ-]*")
 
 
 @dataclass(frozen=True)
@@ -14468,9 +14296,7 @@ def _textbook_match_token_spans(text: str) -> list[_MatchToken]:
 
 def _verified_primary_token_keys(verified_primary_texts: Sequence[str]) -> frozenset[str]:
     return frozenset(
-        token.text
-        for source_text in verified_primary_texts
-        for token in _textbook_match_token_spans(source_text)
+        token.text for source_text in verified_primary_texts for token in _textbook_match_token_spans(source_text)
     )
 
 
@@ -14485,11 +14311,7 @@ def _strip_verified_primary_bare_citations(
 
     spans: list[tuple[int, int]] = []
     for match in _BARE_PRIMARY_CITATION_RE.finditer(text):
-        group_name = next(
-            name
-            for name in _BARE_PRIMARY_CITATION_GROUPS
-            if match.group(name) is not None
-        )
+        group_name = next(name for name in _BARE_PRIMARY_CITATION_GROUPS if match.group(name) is not None)
         inner_start = match.start(group_name)
         for token in _textbook_match_token_spans(match.group(group_name)):
             if token.text in verified_primary_token_keys:
@@ -14538,8 +14360,7 @@ def _matching_token_spans(
             while (
                 candidate_start + match_len < len(candidate_token_texts)
                 and source_start + match_len < len(source_tokens)
-                and candidate_token_texts[candidate_start + match_len]
-                == source_tokens[source_start + match_len]
+                and candidate_token_texts[candidate_start + match_len] == source_tokens[source_start + match_len]
             ):
                 match_len += 1
             spans.append(
@@ -15059,30 +14880,18 @@ def _resources_search_attempted_gate(
     Build-time runs are unaffected — telemetry is present, the liveness path is
     not taken, and a present trace with no search still fails exactly as before.
     """
-    attempted = [
-        call
-        for call in writer_tool_calls
-        if _tool_name_from_call(call) in MULTIMEDIA_SEARCH_TOOLS
-    ]
+    attempted = [call for call in writer_tool_calls if _tool_name_from_call(call) in MULTIMEDIA_SEARCH_TOOLS]
     search_tools_used = sorted({_tool_name_from_call(call) for call in attempted})
-    manual_coverage_verified = (
-        not attempted
-        and _manual_resource_coverage_can_stand_in_for_search_telemetry(
-            plan,
-            resource_coverage,
-        )
+    manual_coverage_verified = not attempted and _manual_resource_coverage_can_stand_in_for_search_telemetry(
+        plan,
+        resource_coverage,
     )
     liveness_verified = bool(resource_liveness) and resource_liveness.get("passed") is True
     telemetry_absent_resources_verified_live = (
-        not attempted
-        and not manual_coverage_verified
-        and not telemetry_present
-        and liveness_verified
+        not attempted and not manual_coverage_verified and not telemetry_present and liveness_verified
     )
     result: dict[str, Any] = {
-        "passed": bool(attempted)
-        or manual_coverage_verified
-        or telemetry_absent_resources_verified_live,
+        "passed": bool(attempted) or manual_coverage_verified or telemetry_absent_resources_verified_live,
         "severity": "HARD",
         "search_attempt_count": len(attempted),
         "search_tools_used": search_tools_used,
@@ -15182,7 +14991,7 @@ def _lookup_textbook_metadata(source_file: str) -> dict[str, str] | None:
     if not TEXTBOOK_SOURCES_DB_PATH.exists():
         return None
     try:
-        with sqlite3.connect(f"{TEXTBOOK_SOURCES_DB_PATH.resolve().as_uri()}?mode=ro", uri=True) as conn:
+        with _open_readonly(TEXTBOOK_SOURCES_DB_PATH.resolve()) as conn:
             row = conn.execute(
                 "SELECT author_uk, grade FROM textbooks WHERE source_file = ? LIMIT 1",
                 (source_file,),
@@ -15286,7 +15095,7 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
             output_marker = "Output:\n"
             idx = stripped.find(output_marker)
             if idx >= 0:
-                payload_text = stripped[idx + len(output_marker):]
+                payload_text = stripped[idx + len(output_marker) :]
                 try:
                     parsed = json.loads(payload_text)
                 except (json.JSONDecodeError, ValueError):
@@ -15318,11 +15127,7 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
             # ``{"type": "text", "text": "<md>"}`` for get_chunk_context;
             # this branch closes the LIST-shape gap and is symmetric with
             # the search_text branch directly above.
-            if (
-                tool_name == "get_chunk_context"
-                and item.get("type") == "text"
-                and isinstance(item.get("text"), str)
-            ):
+            if tool_name == "get_chunk_context" and item.get("type") == "text" and isinstance(item.get("text"), str):
                 parsed = _parse_mcp_get_chunk_context_markdown(item["text"])
                 if parsed:
                     items.extend(parsed)
@@ -15621,9 +15426,7 @@ def _published_quote_for_publishable_refs_gate(
     refs_to_check = [
         record
         for record in reference_records
-        if record["title"] in publishable_titles
-        and not record["corpus_missing"]
-        and record["verbatim_required"]
+        if record["title"] in publishable_titles and not record["corpus_missing"] and record["verbatim_required"]
     ]
 
     if not refs_to_check:
@@ -15661,9 +15464,7 @@ def _published_quote_for_publishable_refs_gate(
             if not candidate_results and _citation_ref_text_contains(ref, attribution):
                 candidate_results = [result for _call, result in textbook_results]
 
-            if not any(
-                _contains_textbook_quote(quote, _result_text_for_match(result)) for result in candidate_results
-            ):
+            if not any(_contains_textbook_quote(quote, _result_text_for_match(result)) for result in candidate_results):
                 continue
 
             topic_text = f"{b_record['section_title']} {plan_reasoning}".strip()
@@ -15837,8 +15638,7 @@ def _textbook_grounding_gate(
     # subsumes the prior "diagnostic clarity" gate that only set ``reason``
     # without flipping ``passed``.
     has_fetchable_refs = any(
-        not record["corpus_missing"] and record["verbatim_required"]
-        for record in reference_records
+        not record["corpus_missing"] and record["verbatim_required"] for record in reference_records
     )
     if has_fetchable_refs and not chunk_context_calls:
         passed = False
@@ -16593,11 +16393,7 @@ def _register_consistency_gate(text: str, plan: Mapping[str, Any]) -> dict[str, 
     violations: list[dict[str, Any]] = []
     for line_no, masked_line in enumerate(masked_lines, 1):
         for match in _SHO_RE.finditer(masked_line):
-            context_line = (
-                original_lines[line_no - 1].strip()
-                if line_no <= len(original_lines)
-                else ""
-            )
+            context_line = original_lines[line_no - 1].strip() if line_no <= len(original_lines) else ""
             violations.append(
                 {
                     "form": match.group(0),
@@ -16685,6 +16481,8 @@ def _strip_frontmatter(text: str) -> str:
 def _strip_frontmatter_and_headings(text: str) -> str:
     text = _strip_frontmatter(text)
     return "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
+
+
 def _textbook_quote_fidelity_gate(
     module_text: str,
     level: str | None = None,
@@ -16707,7 +16505,7 @@ def _textbook_quote_fidelity_gate(
     quotes = _extract_blockquote_records(module_text, level=level)
 
     def _normalize(s: str) -> str:
-        s = re.sub(r'[^а-яіїєґА-ЯІЇЄҐ0-9]', '', s.lower())
+        s = re.sub(r"[^а-яіїєґА-ЯІЇЄҐ0-9]", "", s.lower())
         return s
 
     def _is_textbook_attribution(attribution: str) -> bool:
@@ -16717,7 +16515,7 @@ def _textbook_quote_fidelity_gate(
         )
 
     def _corpus_fidelity_violation(text: str, attr: str) -> dict[str, Any] | None:
-        ukr_words = re.findall(r'[а-яіїєґА-ЯІЇЄҐ]+', text)
+        ukr_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ]+", text)
         keywords = {w.lower() for w in ukr_words if len(w) >= 3}
         if not keywords:
             return None
@@ -16741,7 +16539,7 @@ def _textbook_quote_fidelity_gate(
             }
 
         norm_quote = _normalize(text)
-        best_diff = float('inf')
+        best_diff = float("inf")
         best_source_text = ""
 
         for hit in hits:
@@ -16758,7 +16556,7 @@ def _textbook_quote_fidelity_gate(
                 break
 
             for k in range(max(1, len(norm_chunk) - l_q + 1)):
-                window = norm_chunk[k:k+l_q]
+                window = norm_chunk[k : k + l_q]
                 d = distance.Levenshtein.distance(norm_quote, window)
                 if d < best_diff:
                     best_diff = d
@@ -16791,11 +16589,7 @@ def _textbook_quote_fidelity_gate(
 
         if not attr:
             if not nv:
-                violations.append({
-                    "quote": text,
-                    "attribution": "",
-                    "reason": "Missing attribution without NO_VERIFY"
-                })
+                violations.append({"quote": text, "attribution": "", "reason": "Missing attribution without NO_VERIFY"})
             continue
 
         if nv and level_key not in SEMINAR_LEVELS:
@@ -16808,21 +16602,22 @@ def _textbook_quote_fidelity_gate(
         if nv and level_key in SEMINAR_LEVELS:
             exemption = lookup_seminar_quote_exemption(slug_key, text)
             if exemption:
-                warnings.append({
+                warnings.append(
+                    {
+                        "quote": text,
+                        "attribution": attr,
+                        "reason": "NO_VERIFY seminar quote exempted from corpus match",
+                        "exemption": exemption,
+                    }
+                )
+                continue
+            violations.append(
+                {
                     "quote": text,
                     "attribution": attr,
-                    "reason": "NO_VERIFY seminar quote exempted from corpus match",
-                    "exemption": exemption,
-                })
-                continue
-            violations.append({
-                "quote": text,
-                "attribution": attr,
-                "reason": (
-                    "NO_VERIFY on seminar level but fragment not corpus-attested "
-                    "and not exempted"
-                ),
-            })
+                    "reason": ("NO_VERIFY on seminar level but fragment not corpus-attested and not exempted"),
+                }
+            )
             continue
 
         violations.append(violation)
@@ -16831,9 +16626,7 @@ def _textbook_quote_fidelity_gate(
     if violations:
         message = f"verify_quote: {checked} checked, {len(violations)} violations"
     elif warnings:
-        message = (
-            f"verify_quote: {checked} verified, {len(warnings)} seminar exemptions"
-        )
+        message = f"verify_quote: {checked} verified, {len(warnings)} seminar exemptions"
     else:
         message = f"verify_quote: {checked} verified"
     return {

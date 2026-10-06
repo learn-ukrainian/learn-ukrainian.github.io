@@ -28,6 +28,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 ULIF_SYNONYMS_SOURCE = "ulif-synonyms"
 ULIF_DICTUA_URL = "https://lcorp.ulif.org.ua/dictua"
 
@@ -266,7 +268,7 @@ class UlifSynonymGroups:
             return None
         keys = {plain(lemma) for lemma in lemmas} - {""}
         payloads: list[dict[str, Any]] = []
-        with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as conn:
+        with _open_readonly(db_path) as conn:
             try:
                 checked = conn.execute(
                     "SELECT s.id, json_extract(s.payload_json, '$.terms') FROM ulif_dictua_sections s "

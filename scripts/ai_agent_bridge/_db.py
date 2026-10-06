@@ -22,6 +22,7 @@ from importlib import util as importlib_util
 from pathlib import Path
 
 from scripts.fleet_comms.migrations import apply_migrations
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 from ._config import DB_PATH
 
@@ -237,18 +238,8 @@ def _kimi_row_sql(agent: object, model: object) -> int:
 
 def _apply_broker_index_migration(conn: sqlite3.Connection) -> None:
     """Apply the standalone broker-index migration from scripts/migrations."""
-    existing_indexes = {
-        row[0]
-        for row in conn.execute(
-            "SELECT name FROM sqlite_master WHERE type='index'"
-        ).fetchall()
-    }
-    existing_tables = {
-        row[0]
-        for row in conn.execute(
-            "SELECT name FROM sqlite_master WHERE type='table'"
-        ).fetchall()
-    }
+    existing_indexes = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='index'").fetchall()}
+    existing_tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()}
     required_by_table = {
         "messages": {
             "idx_messages_to_agent_created",
@@ -262,17 +253,11 @@ def _apply_broker_index_migration(conn: sqlite3.Connection) -> None:
         "deliveries": {"idx_deliveries_to_agent_status"},
     }
     if all(
-        required_by_table[table].issubset(existing_indexes)
-        for table in required_by_table
-        if table in existing_tables
+        required_by_table[table].issubset(existing_indexes) for table in required_by_table if table in existing_tables
     ):
         return
 
-    migration_path = (
-        Path(__file__).resolve().parents[1]
-        / "migrations"
-        / "2026-05-06-broker-indexes.py"
-    )
+    migration_path = Path(__file__).resolve().parents[1] / "migrations" / "2026-05-06-broker-indexes.py"
     if not migration_path.exists():
         return
     spec = importlib_util.spec_from_file_location("broker_indexes_20260506", migration_path)
@@ -407,33 +392,23 @@ def get_db():
         # was Gemini's #1 blocker in the B.1 adversarial review
         # (task bridge-b1-review). Same mitigation pattern as the
         # legacy messages-table migration above.
-        cursor.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name='channels'"
-        )
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='channels'")
         if not cursor.fetchone():
             conn.executescript(_CHANNELS_SCHEMA)
         else:
             cursor.execute("PRAGMA table_info(channels)")
             channel_columns = [row[1] for row in cursor.fetchall()]
             if "max_age_hours" not in channel_columns:
-                _add_column_racesafe(
-                    conn, "ALTER TABLE channels ADD COLUMN max_age_hours INTEGER DEFAULT 24"
-                )
+                _add_column_racesafe(conn, "ALTER TABLE channels ADD COLUMN max_age_hours INTEGER DEFAULT 24")
 
-            cursor.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='channel_messages'"
-            )
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='channel_messages'")
             if cursor.fetchone():
                 cursor.execute("PRAGMA table_info(channel_messages)")
                 channel_message_columns = [row[1] for row in cursor.fetchall()]
                 if "priority" not in channel_message_columns:
-                    _add_column_racesafe(
-                        conn, "ALTER TABLE channel_messages ADD COLUMN priority TEXT DEFAULT 'fyi'"
-                    )
+                    _add_column_racesafe(conn, "ALTER TABLE channel_messages ADD COLUMN priority TEXT DEFAULT 'fyi'")
 
-            cursor.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='deliveries'"
-            )
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='deliveries'")
             if cursor.fetchone():
                 cursor.execute("PRAGMA table_info(deliveries)")
                 delivery_columns = [row[1] for row in cursor.fetchall()]
@@ -447,17 +422,11 @@ def get_db():
                 if "retry_after" not in delivery_columns:
                     _add_column_racesafe(conn, "ALTER TABLE deliveries ADD COLUMN retry_after TEXT")
                 if "last_error_kind" not in delivery_columns:
-                    _add_column_racesafe(
-                        conn, "ALTER TABLE deliveries ADD COLUMN last_error_kind TEXT"
-                    )
+                    _add_column_racesafe(conn, "ALTER TABLE deliveries ADD COLUMN last_error_kind TEXT")
                 if "deadline_seconds" not in delivery_columns:
-                    _add_column_racesafe(
-                        conn, "ALTER TABLE deliveries ADD COLUMN deadline_seconds INTEGER"
-                    )
+                    _add_column_racesafe(conn, "ALTER TABLE deliveries ADD COLUMN deadline_seconds INTEGER")
 
-                cursor.execute(
-                    "SELECT name FROM sqlite_master WHERE type='index' AND name='idx_deliveries_claim'"
-                )
+                cursor.execute("SELECT name FROM sqlite_master WHERE type='index' AND name='idx_deliveries_claim'")
                 if not cursor.fetchone():
                     conn.execute(
                         """
@@ -466,9 +435,7 @@ def get_db():
                         """
                     )
 
-                cursor.execute(
-                    "SELECT name FROM sqlite_master WHERE type='table' AND name='channel_events'"
-                )
+                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='channel_events'")
                 if not cursor.fetchone():
                     conn.execute(
                         """
@@ -496,9 +463,7 @@ def get_db():
 
                 # #5646 alert state is deliberately part of the existing
                 # channel/inbox broker, not a second scheduler or database.
-                cursor.execute(
-                    "SELECT name FROM sqlite_master WHERE type='table' AND name='bottleneck_alert_state'"
-                )
+                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='bottleneck_alert_state'")
                 if not cursor.fetchone():
                     conn.execute(
                         """
@@ -548,7 +513,7 @@ def connect_readonly() -> sqlite3.Connection | None:
     """
     if not DB_PATH.exists():
         return None
-    conn = sqlite3.connect(f"{DB_PATH.resolve().as_uri()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(DB_PATH.resolve())
     conn.execute("PRAGMA query_only=ON")
     conn.execute("PRAGMA busy_timeout=5000")
     conn.row_factory = sqlite3.Row

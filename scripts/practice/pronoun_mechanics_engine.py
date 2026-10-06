@@ -34,7 +34,6 @@ import argparse
 import hashlib
 import json
 import random
-import sqlite3
 import sys
 from dataclasses import dataclass
 from enum import StrEnum
@@ -44,6 +43,8 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 
 class PronounCategory(StrEnum):
@@ -2737,7 +2738,7 @@ def verify_deck_with_vesum(cards: list[PronounCard], db_path: Path | None = None
             "missing_forms": [],
         }
 
-    conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(vesum_db).resolve())
     cursor = conn.cursor()
 
     missing_forms: list[dict[str, Any]] = []
@@ -2794,7 +2795,7 @@ def verify_distractors_with_vesum(cards: list[PronounCard], db_path: Path | None
             "invalid_distractors": [],
         }
 
-    conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(vesum_db).resolve())
     cursor = conn.cursor()
 
     corruption_types = {

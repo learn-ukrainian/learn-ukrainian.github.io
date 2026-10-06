@@ -10,12 +10,13 @@ from __future__ import annotations
 import datetime as dt
 import html
 import re
-import sqlite3
 from html.parser import HTMLParser
 from typing import Any
 from urllib.parse import quote
 
 import requests
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
 
 try:
     from audit.sum11_sovietization_scan import classify_entry
@@ -23,10 +24,7 @@ except ImportError:  # pragma: no cover - direct package import fallback
     from scripts.audit.sum11_sovietization_scan import classify_entry
 
 SLOVNYK_ME_BASE = "https://slovnyk.me"
-DEFAULT_USER_AGENT = (
-    "learn-ukrainian-slovnyk-me/1.0 "
-    "(noncommercial educational verification; issue 1715)"
-)
+DEFAULT_USER_AGENT = "learn-ukrainian-slovnyk-me/1.0 (noncommercial educational verification; issue 1715)"
 
 # Canonical slugs are taken from https://slovnyk.me/ direct dictionary links.
 SLOVNYK_ME_DICTS: dict[str, str] = {
@@ -242,7 +240,7 @@ class _SlovnykHTMLParser(HTMLParser):
             self.h1_parts.append(data)
 
 
-def ensure_slovnyk_me_schema(conn: sqlite3.Connection) -> None:
+def ensure_slovnyk_me_schema(conn: SQLiteConnection) -> None:
     """Create the curated slovnyk.me table and FTS index if missing."""
     conn.executescript(SLOVNYK_ME_SCHEMA_SQL)
 
@@ -322,12 +320,10 @@ def _classify_flags(dict_slug: str, text: str) -> tuple[bool, bool, bool, int, s
     lower = text.lower()
     is_modern = dict_slug in MODERN_DICTS
     is_dialect = dict_slug in DIALECT_OR_HERITAGE_DICTS or any(
-        marker in lower
-        for marker in (" діал.", " зах.", " заст.", " маловжив", "регіон", "говір", "жарґ", "львів")
+        marker in lower for marker in (" діал.", " зах.", " заст.", " маловжив", "регіон", "говір", "жарґ", "львів")
     )
     is_russianism = dict_slug in RUSSIANISM_GUIDE_DICTS and any(
-        marker in lower
-        for marker in ("росіянізм", "російськ", "кальк", "неправильно", "не слід", "краще")
+        marker in lower for marker in ("росіянізм", "російськ", "кальк", "неправильно", "не слід", "краще")
     )
     risk, keywords = classify_entry("", text)
     return is_modern, is_dialect, is_russianism, risk, ",".join(keywords)

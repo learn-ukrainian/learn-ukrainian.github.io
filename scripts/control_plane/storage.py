@@ -191,9 +191,7 @@ def sqlite_path(store: StoreId, *, repo_root: Path | None = None) -> Path:
             return Path(override).expanduser().resolve()
         return root / "batch_state" / "tasks" / "write-ownership.sqlite3"
     if store is StoreId.TASK_INDEX:
-        raise ControlPlaneStoreUnavailableError(
-            "task_index has no sqlite backing in Phase 0; use a later slice"
-        )
+        raise ControlPlaneStoreUnavailableError("task_index has no sqlite backing in Phase 0; use a later slice")
     raise ControlPlaneStoreUnavailableError(f"unknown store: {store}")
 
 
@@ -207,9 +205,7 @@ def _connect_postgres(store: StoreId, *, read_only: bool) -> Any:
 
     dsn = _pg_dsn()
     if not dsn:
-        raise ControlPlanePgDsnMissingError(
-            f"control-plane store {store.value!r} requires {_ENV_PG_DSN}"
-        )
+        raise ControlPlanePgDsnMissingError(f"control-plane store {store.value!r} requires {_ENV_PG_DSN}")
 
     connect_kwargs: dict[str, Any] = {
         "connect_timeout": _PG_CONNECT_TIMEOUT_S,
@@ -222,9 +218,7 @@ def _connect_postgres(store: StoreId, *, read_only: bool) -> Any:
         return psycopg.connect(dsn, **connect_kwargs)
     except Exception as exc:
         # OPSEC: never surface hostnames / userinfo from the DSN or libpq.
-        raise ControlPlanePgConnectError(
-            f"control-plane store {store.value!r} postgres connect failed"
-        ) from exc
+        raise ControlPlanePgConnectError(f"control-plane store {store.value!r} postgres connect failed") from exc
 
 
 def connect(
@@ -256,17 +250,11 @@ def connect(
     if authority not in {Authority.SQLITE, Authority.SHADOW}:
         raise ControlPlaneError(f"unsupported authority for store {store.value!r}")
 
-    db_path = (
-        Path(path).expanduser().resolve()
-        if path is not None
-        else sqlite_path(store, repo_root=repo_root)
-    )
+    db_path = Path(path).expanduser().resolve() if path is not None else sqlite_path(store, repo_root=repo_root)
     if read_only:
         if not db_path.is_file():
-            raise ControlPlaneStoreUnavailableError(
-                f"control-plane store {store.value!r} database does not exist"
-            )
-        uri = f"file:{db_path.resolve().as_posix()}?mode=ro"
+            raise ControlPlaneStoreUnavailableError(f"control-plane store {store.value!r} database does not exist")
+        uri = Path(db_path.resolve()).resolve().as_uri() + "?mode=ro"
         conn = sqlite3.connect(uri, uri=True, **sqlite_kwargs)
     else:
         db_path.parent.mkdir(parents=True, exist_ok=True)

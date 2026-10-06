@@ -40,7 +40,6 @@ import argparse
 import hashlib
 import json
 import random
-import sqlite3
 import sys
 from dataclasses import dataclass
 from enum import StrEnum
@@ -50,6 +49,8 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 
 class VerbCategory(StrEnum):
@@ -244,12 +245,36 @@ def resolve_epenthesis_rule() -> tuple[str, str, str]:
 def resolve_dental_mutation_rule(mutation_key: str) -> tuple[str, str, str]:
     """Resolve dental/alveolar consonant alternation rule for 1sg per Правопис 2019 § 115."""
     mapping = {
-        "d_dzh": ("д -> дж", "д чергується з дж: ходити -> ходжу, садити -> саджу.", "d alternates with dzh: khodyty -> khodzhy."),
-        "t_ch": ("т -> ч", "т чергується з ч: летіти -> лечу, платити -> плачу.", "t alternates with ch: letity -> lechu."),
-        "s_sh": ("с -> ш", "с чергується з ш: просити -> прошу, косити -> кошу.", "s alternates with sh: prosyty -> proshu."),
-        "z_zh": ("з -> ж", "з чергується з ж: возити -> вожу, морозити -> морожу.", "z alternates with zh: vozyty -> vozhu."),
-        "st_shch": ("ст -> щ", "ст чергується зі щ: мостити -> мощу, чистити -> чищу.", "st alternates with shch: mostyty -> moshchu."),
-        "zd_zhdzh": ("зд -> ждж", "зд чергується з ждж: їздити -> їжджу.", "zd alternates with zhdzh: yizdyty -> yizhdzhu."),
+        "d_dzh": (
+            "д -> дж",
+            "д чергується з дж: ходити -> ходжу, садити -> саджу.",
+            "d alternates with dzh: khodyty -> khodzhy.",
+        ),
+        "t_ch": (
+            "т -> ч",
+            "т чергується з ч: летіти -> лечу, платити -> плачу.",
+            "t alternates with ch: letity -> lechu.",
+        ),
+        "s_sh": (
+            "с -> ш",
+            "с чергується з ш: просити -> прошу, косити -> кошу.",
+            "s alternates with sh: prosyty -> proshu.",
+        ),
+        "z_zh": (
+            "з -> ж",
+            "з чергується з ж: возити -> вожу, морозити -> морожу.",
+            "z alternates with zh: vozyty -> vozhu.",
+        ),
+        "st_shch": (
+            "ст -> щ",
+            "ст чергується зі щ: мостити -> мощу, чистити -> чищу.",
+            "st alternates with shch: mostyty -> moshchu.",
+        ),
+        "zd_zhdzh": (
+            "зд -> ждж",
+            "зд чергується з ждж: їздити -> їжджу.",
+            "zd alternates with zhdzh: yizdyty -> yizhdzhu.",
+        ),
     }
     if mutation_key not in mapping:
         raise ValueError(f"Unknown dental mutation key: {mutation_key}")
@@ -469,7 +494,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "The verb 'khotity' belongs to Class I in all forms: khochesh, khoche, khochut (not *khotiat).",
         },
     },
-
     # =========================================================================
     # 2. CONJ_CLASS_II_VOWEL_Y_YI (II дієвідміна: -иш/-їш, -ать/-ять) [§ 115]
     # =========================================================================
@@ -623,7 +647,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "The verb 'spaty' belongs to Class II (spliat), taking -ysh in 2sg: 'spysh' (not *spesh).",
         },
     },
-
     # =========================================================================
     # 3. CONJ_LABIAL_EPENTHESIS_L (Вставний [л'] після б, п, в, м, ф) [§ 115]
     # =========================================================================
@@ -777,7 +800,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "After labial [m] in 'tiamyty', 3pl requires epenthetic [l']: 'tiamliat' (not *tiam'iat).",
         },
     },
-
     # =========================================================================
     # 4. CONJ_DENTAL_MUTATION_1SG (д->дж, т->ч, с->ш, з->ж, ст->щ, зд->ждж) [§ 115]
     # =========================================================================
@@ -931,7 +953,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "Consonant cluster [st] in 1sg of 'chystyty' alternates with [shch]: 'chyshchu' (not *chystiu).",
         },
     },
-
     # =========================================================================
     # 5. CONJ_STEM_MUTATION_CLASS_I (с->ш, к->ч, г->ж, брати->беру) [§ 115]
     # =========================================================================
@@ -1085,7 +1106,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "In 'terty', root vowel drops in present tense: tru, tresh, 'trut' (not *terut).",
         },
     },
-
     # =========================================================================
     # 6. ASPECT_PREFIXATION (Видові пари: префіксація) [§ 115]
     # =========================================================================
@@ -1272,7 +1292,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "The neutral perfective counterpart to 'maliuvaty' is 'namaliuvaty' (Pravopys 2019 § 115).",
         },
     },
-
     # =========================================================================
     # 7. ASPECT_SUFFIXATION_ABLAUT (Імперфективація, о <-> а) [§ 115]
     # =========================================================================
@@ -1456,7 +1475,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "Imperfective formation with -uva- requires root vowel ablaut [o] -> [a]: 'zlamuvaty' / 'zlamuvala' (Pravopys 2019 § 115).",
         },
     },
-
     # =========================================================================
     # 8. ASPECT_SUPPLETIVE (Суплетивні видові пари) [§ 115]
     # =========================================================================
@@ -1622,7 +1640,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "'znaity' (znaishly) is the perfective counterpart to ongoing 'shukaty'.",
         },
     },
-
     # =========================================================================
     # 9. IMPERATIVE_SYNTHETIC_ENDINGS (-и / -іть vs нульове / -те) [§ 116]
     # =========================================================================
@@ -1776,7 +1793,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "Imperative of 'viryty' takes hard [r] + -te: 'virte' (not *virit or indicative 'viryte').",
         },
     },
-
     # =========================================================================
     # 10. IMPERATIVE_INCLUSIVE_1PL (Заклик до спільної дії: -мо / -імо) [§ 116]
     # =========================================================================
@@ -1930,7 +1946,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "Joint encouragement from 'napysaty' takes ending -imo: 'napyshimo!' (not *napyshimte).",
         },
     },
-
     # =========================================================================
     # 11. IMPERATIVE_ANTI_CALQUE_DAVAI (Усунення кальок «давай(те) робити») [§ 116]
     # =========================================================================
@@ -2084,7 +2099,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "Standard synthetic imperative: 'zhyvimo!' (not calqued 'davaite zhyty').",
         },
     },
-
     # =========================================================================
     # 12. PARTICIPLE_PASSIVE_FORMATION (-ний / -тий) [§ 119]
     # =========================================================================
@@ -2238,7 +2252,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "Passive participle of 'zshyty' uses suffix -tyi: 'zshytyi' (Pravopys 2019 § 119).",
         },
     },
-
     # =========================================================================
     # 13. PARTICIPLE_ANTI_CALQUE_ACTIVE (Усунення активних дієприкметників) [§ 119]
     # =========================================================================
@@ -2392,7 +2405,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "Avoid alien *panuiucha; use standard adjective 'panivna' (Pravopys 2019 § 119).",
         },
     },
-
     # =========================================================================
     # 14. PARTICIPLE_IMPERSONAL_NO_TO (Безособові форми на -но / -то) [§ 119]
     # =========================================================================
@@ -2546,7 +2558,6 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             "en": "Impersonal form in -to forms dynamic predicate: 'rozkryto problemu' (Pravopys 2019 § 119).",
         },
     },
-
     # =========================================================================
     # 15. GERUND_FORMATION_ASPECT (Дієприслівник: недок. -учи/-ачи vs док. -вши/-ши) [§ 120]
     # =========================================================================
@@ -2751,27 +2762,17 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
 def validate_verb_card(card: VerbCard) -> None:
     """Validate card integrity: zero collisions, valid distractor count, blank target in prompt."""
     if len(card.distractors) != 3:
-        raise ValueError(
-            f"Card {card.card_id} must have exactly 3 distractors, got {len(card.distractors)}"
-        )
+        raise ValueError(f"Card {card.card_id} must have exactly 3 distractors, got {len(card.distractors)}")
     opt_texts = [card.correct_answer.strip()] + [d.text.strip() for d in card.distractors]
     if len(set(opt_texts)) != 4:
-        raise ValueError(
-            f"Card {card.card_id} has collision or duplicate options: {opt_texts}"
-        )
+        raise ValueError(f"Card {card.card_id} has collision or duplicate options: {opt_texts}")
     if "___" not in card.prompt_sentence:
-        raise ValueError(
-            f"Card {card.card_id} prompt missing blank indicator '___': {card.prompt_sentence}"
-        )
+        raise ValueError(f"Card {card.card_id} prompt missing blank indicator '___': {card.prompt_sentence}")
     for dist in card.distractors:
         if dist.text.strip() == card.correct_answer.strip():
-            raise ValueError(
-                f"Card {card.card_id} distractor matches correct answer: '{dist.text}'"
-            )
+            raise ValueError(f"Card {card.card_id} distractor matches correct answer: '{dist.text}'")
         if not dist.explanation.get("ua") or not dist.explanation.get("en"):
-            raise ValueError(
-                f"Card {card.card_id} distractor '{dist.text}' missing bilingual explanation"
-            )
+            raise ValueError(f"Card {card.card_id} distractor '{dist.text}' missing bilingual explanation")
 
 
 def build_canonical_verb_cards() -> list[VerbCard]:
@@ -2802,9 +2803,7 @@ def build_canonical_verb_cards() -> list[VerbCard]:
     return cards
 
 
-def export_verb_mechanics_deck(
-    cards: list[VerbCard], out_path: Path | None = None
-) -> dict[str, Any]:
+def export_verb_mechanics_deck(cards: list[VerbCard], out_path: Path | None = None) -> dict[str, Any]:
     """Export cards to JSON payload matching the contract."""
     payload = {
         "schema_version": "1.0",
@@ -2834,9 +2833,7 @@ def find_vesum_db(specified: Path | None = None) -> Path:
     return specified or (PROJECT_ROOT / "data" / "vesum.db")
 
 
-def verify_deck_with_vesum(
-    cards: list[VerbCard], db_path: Path | None = None
-) -> dict[str, Any]:
+def verify_deck_with_vesum(cards: list[VerbCard], db_path: Path | None = None) -> dict[str, Any]:
     """Verify target words in cards against VESUM database if available."""
     resolved_path = find_vesum_db(db_path)
     if not resolved_path.exists() or resolved_path.stat().st_size < 1_000_000:
@@ -2847,7 +2844,7 @@ def verify_deck_with_vesum(
             "checked_word_count": 0,
         }
 
-    conn = sqlite3.connect(f"{Path(resolved_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(resolved_path).resolve())
     cursor = conn.cursor()
     missing: list[dict[str, str]] = []
     checked = 0
@@ -2875,9 +2872,7 @@ def verify_deck_with_vesum(
     }
 
 
-def verify_distractors_with_vesum(
-    cards: list[VerbCard], db_path: Path | None = None
-) -> dict[str, Any]:
+def verify_distractors_with_vesum(cards: list[VerbCard], db_path: Path | None = None) -> dict[str, Any]:
     """Ensure morphological/phonological corruption distractors are NOT valid standard forms in VESUM."""
     resolved_path = find_vesum_db(db_path)
     if not resolved_path.exists() or resolved_path.stat().st_size < 1_000_000:
@@ -2901,7 +2896,7 @@ def verify_distractors_with_vesum(
         VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
     }
 
-    conn = sqlite3.connect(f"{Path(resolved_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(resolved_path).resolve())
     cursor = conn.cursor()
     invalid_distractors: list[dict[str, Any]] = []
     checked = 0
@@ -2927,11 +2922,7 @@ def verify_distractors_with_vesum(
                 standard_verb_rows = [
                     r
                     for r in rows
-                    if (
-                        r[1].startswith("verb")
-                        or r[1] == "advp"
-                        or (r[1] == "adj" and "adjp" in r[2])
-                    )
+                    if (r[1].startswith("verb") or r[1] == "advp" or (r[1] == "adj" and "adjp" in r[2]))
                     and ":bad" not in r[2]
                     and ":alt" not in r[2]
                     and ":subst" not in r[2]

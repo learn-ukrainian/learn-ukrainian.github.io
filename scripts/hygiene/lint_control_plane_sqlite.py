@@ -28,54 +28,12 @@ _CONTROL_PLANE_PACKAGE = "scripts/control_plane"
 _SKIP_PATH_PREFIXES: tuple[str, ...] = ("tests/",)
 
 # Exact ``(path, stripped snippet, max_occurrences)`` for remaining direct opens.
-_ALLOWLIST: tuple[tuple[str, str, int], ...] = (
-    (
-        "scripts/agent_runtime/acpx_discuss.py",
-        'connection = sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True)',
-        1,
-    ),
-    (
-        "scripts/api/fleet_router.py",
-        "connection = sqlite3.connect(",
-        1,
-    ),
-    (
-        "scripts/api/fleet_workers_collect.py",
-        "conn = sqlite3.connect(str(path))",
-        1,
-    ),
-    (
-        "scripts/api/runtime_router.py",
-        'connection = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True)',
-        1,
-    ),
-    (
-        "scripts/entire_context/reconcile.py",
-        'with sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True) as connection:',
-        1,
-    ),
-    (
-        "scripts/entire_context/resolvers.py",
-        'with sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True) as connection:',
-        1,
-    ),
-    (
-        "scripts/orchestration/slot_routing.py",
-        'conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)',
-        1,
-    ),
-)
+_ALLOWLIST: tuple[tuple[str, str, int], ...] = ()
 
 _WRITE_OWNERSHIP = re.compile(r"write[-_]ownership")
-_SESSION_STREAMS = re.compile(
-    r"session[-_]streams|SessionStreamDatabase|session_streams_db_path|stream_leases"
-)
-_FLEET_COMMS = re.compile(
-    r"comms\.sqlite3|default_plane_root|_plane_db_path|comms_plane_store|plane_db"
-)
-_LEGACY = re.compile(
-    r"legacy_broker|legacy_db|MESSAGE_DB|import_legacy|_probe_inbox_legacy|source_path"
-)
+_SESSION_STREAMS = re.compile(r"session[-_]streams|SessionStreamDatabase|session_streams_db_path|stream_leases")
+_FLEET_COMMS = re.compile(r"comms\.sqlite3|default_plane_root|_plane_db_path|comms_plane_store|plane_db")
+_LEGACY = re.compile(r"legacy_broker|legacy_db|MESSAGE_DB|import_legacy|_probe_inbox_legacy|source_path")
 
 
 @dataclass(frozen=True)
@@ -122,10 +80,7 @@ def _stores_for_context(context: str) -> set[str]:
     if (
         fleet_hit
         and not (legacy_hit and "comms_plane" not in context and "plane_db" not in context)
-        and (
-            not legacy_hit
-            or re.search(r"comms_plane|plane_db|default_plane_root|_plane_db", context)
-        )
+        and (not legacy_hit or re.search(r"comms_plane|plane_db|default_plane_root|_plane_db", context))
     ):
         stores.add("fleet_comms")
     if re.search(r"task_index|task-index", context):
@@ -184,8 +139,7 @@ def find_control_plane_connects(repo_root: Path | None = None) -> list[Finding]:
             for candidate in ast.walk(tree):
                 if isinstance(candidate, (ast.FunctionDef, ast.AsyncFunctionDef)) and (
                     candidate.lineno <= node.lineno
-                    and (getattr(candidate, "end_lineno", candidate.lineno) or candidate.lineno)
-                    >= node.lineno
+                    and (getattr(candidate, "end_lineno", candidate.lineno) or candidate.lineno) >= node.lineno
                 ):
                     enclosing = _function_context(candidate, lines)
             context = f"{enclosing}\n{snippet}"

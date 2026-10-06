@@ -17,12 +17,12 @@ Issue: #1009, #1012
 from __future__ import annotations
 
 import re
-import sqlite3
 from pathlib import Path
 
 import yaml
 
 from build.text_utils import parse_vocab_hint
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _CURRICULUM_ROOT = _PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -56,7 +56,7 @@ def _vesum_lookup(word: str) -> tuple[str, str]:
     if not _VESUM_DB.exists():
         return "", ""
     try:
-        db = sqlite3.connect(f"{Path(_VESUM_DB).resolve().as_uri()}?mode=ro", uri=True)
+        db = _open_readonly(Path(_VESUM_DB).resolve())
         row = db.execute(
             "SELECT pos, tags FROM forms WHERE lemma = ? LIMIT 1",
             (word.lower(),),
@@ -80,6 +80,7 @@ def _vesum_lookup(word: str) -> tuple[str, str]:
         return pos, gender
     except Exception:
         return "", ""
+
 
 # Tab markers — PUBLISH step converts these to <Tabs>/<TabItem>
 TAB_MARKER = "<!-- TAB:{name} -->"
@@ -107,6 +108,7 @@ def _translation_fallback(ukrainian_word: str) -> str:
     function. Keeping the entry point here so callers don't need to change.
     """
     import os
+
     if not ukrainian_word:
         return ""
     if not os.environ.get("LEARN_UK_TRANSLATION_FALLBACK"):
@@ -117,6 +119,7 @@ def _translation_fallback(ukrainian_word: str) -> str:
     gloss = ""
     try:
         from rag.source_query import e2u_reverse
+
         gloss = e2u_reverse(ukrainian_word) or ""
     except Exception:
         gloss = ""
@@ -155,6 +158,7 @@ def _build_slovnyk(plan: dict, content: str = "", slug: str = "") -> str:
                 vocab_data = yaml.safe_load(vocab_path.read_text("utf-8"))
                 if isinstance(vocab_data, dict) and vocab_data.get("vocabulary"):
                     from build.vocab_gen import build_slovnyk_markdown
+
                     entries = vocab_data["vocabulary"]
                     # Split into plan vocab, additional, and expressions
                     expressions = [e for e in entries if e.get("expression")]
@@ -178,33 +182,40 @@ def _build_slovnyk(plan: dict, content: str = "", slug: str = "") -> str:
         return ""
 
     GENDER_COLORS = {
-        "ч.": "#0057B8", "м.": "#0057B8",
-        "ж.": "#C2185B", "ф.": "#C2185B",
-        "с.": "#E65100", "н.": "#E65100",
+        "ч.": "#0057B8",
+        "м.": "#0057B8",
+        "ж.": "#C2185B",
+        "ф.": "#C2185B",
+        "с.": "#E65100",
+        "н.": "#E65100",
     }
 
     lines = []
 
     # Dictionary tables
     if required:
-        lines.extend([
-            "",
-            "### Обов'язкові слова — Required words",
-            "",
-            "| Слово | Переклад | Частина мови | Рід |",
-            "|-------|----------|-------------|-----|",
-            *_vocab_table_rows(required),
-        ])
+        lines.extend(
+            [
+                "",
+                "### Обов'язкові слова — Required words",
+                "",
+                "| Слово | Переклад | Частина мови | Рід |",
+                "|-------|----------|-------------|-----|",
+                *_vocab_table_rows(required),
+            ]
+        )
 
     if recommended:
-        lines.extend([
-            "",
-            "### Рекомендовані слова — Recommended words",
-            "",
-            "| Слово | Переклад | Частина мови | Рід |",
-            "|-------|----------|-------------|-----|",
-            *_vocab_table_rows(recommended),
-        ])
+        lines.extend(
+            [
+                "",
+                "### Рекомендовані слова — Recommended words",
+                "",
+                "| Слово | Переклад | Частина мови | Рід |",
+                "|-------|----------|-------------|-----|",
+                *_vocab_table_rows(recommended),
+            ]
+        )
 
     # Flashcards below
     all_items = required + recommended
@@ -227,13 +238,15 @@ def _build_slovnyk(plan: dict, content: str = "", slug: str = "") -> str:
         cards.append("{ " + ", ".join(parts) + " }")
 
     cards_js = ", ".join(cards)
-    lines.extend([
-        "",
-        "### Картки — Flashcards",
-        "",
-        f'<FlashcardDeck client:only="react" cards={{[{cards_js}]}} />',
-        "",
-    ])
+    lines.extend(
+        [
+            "",
+            "### Картки — Flashcards",
+            "",
+            f'<FlashcardDeck client:only="react" cards={{[{cards_js}]}} />',
+            "",
+        ]
+    )
 
     return "\n".join(lines)
 
@@ -275,12 +288,14 @@ def _flatten_resources(resource_data: dict) -> list[dict]:
     items = []
     for category in ("articles", "youtube", "podcasts"):
         for item in resource_data.get(category, []):
-            items.append({
-                "title": item.get("title", ""),
-                "url": item.get("url", ""),
-                "source": item.get("source", item.get("channel", "")),
-                "type": category,
-            })
+            items.append(
+                {
+                    "title": item.get("title", ""),
+                    "url": item.get("url", ""),
+                    "source": item.get("source", item.get("channel", "")),
+                    "type": category,
+                }
+            )
     return items
 
 
@@ -333,10 +348,7 @@ def _build_video_embeds(plan: dict) -> str:
         lines.append(f"#### {group_label}")
         lines.append("")
         for letter, url in valid_letters.items():
-            lines.append(
-                f'<YouTubeVideo client:only="react" url="{url}" '
-                f'label="Літера {letter} — {credit}" />'
-            )
+            lines.append(f'<YouTubeVideo client:only="react" url="{url}" label="Літера {letter} — {credit}" />')
             lines.append("")
 
     return "\n".join(lines)
@@ -364,18 +376,31 @@ def _resolve_textbook_url(title: str) -> str:
 
     # Parse author (first word, case-insensitive match)
     author_map = {
-        "большакова": "bolshakova", "bolshakova": "bolshakova",
-        "захарійчук": "zaharijchuk", "zaharijchuk": "zaharijchuk",
-        "заболотний": "zabolotnyi", "zabolotnyi": "zabolotnyi", "zabolotnij": "zabolotnij",
-        "авраменко": "avramenko", "avramenko": "avramenko",
-        "голуб": "golub", "golub": "golub",
-        "літвінова": "litvinova", "litvinova": "litvinova",
-        "глазова": "glazova", "glazova": "glazova",
-        "ворон": "voron", "voron": "voron",
-        "караман": "karaman", "karaman": "karaman",
-        "вашуленко": "vashulenko", "vashulenko": "vashulenko",
-        "кравцова": "kravcova", "kravcova": "kravcova",
-        "онатій": "onatiy", "onatiy": "onatiy",
+        "большакова": "bolshakova",
+        "bolshakova": "bolshakova",
+        "захарійчук": "zaharijchuk",
+        "zaharijchuk": "zaharijchuk",
+        "заболотний": "zabolotnyi",
+        "zabolotnyi": "zabolotnyi",
+        "zabolotnij": "zabolotnij",
+        "авраменко": "avramenko",
+        "avramenko": "avramenko",
+        "голуб": "golub",
+        "golub": "golub",
+        "літвінова": "litvinova",
+        "litvinova": "litvinova",
+        "глазова": "glazova",
+        "glazova": "glazova",
+        "ворон": "voron",
+        "voron": "voron",
+        "караман": "karaman",
+        "karaman": "karaman",
+        "вашуленко": "vashulenko",
+        "vashulenko": "vashulenko",
+        "кравцова": "kravcova",
+        "kravcova": "kravcova",
+        "онатій": "onatiy",
+        "onatiy": "onatiy",
     }
 
     first_word = title.split()[0].lower().rstrip(",")
@@ -385,15 +410,15 @@ def _resolve_textbook_url(title: str) -> str:
 
     # Try to find matching source_file in our textbook_refs module
     try:
-        import sqlite3
         from pathlib import Path
 
         from build.textbook_refs import _PDF_BASE, _PDF_OVERRIDES, _SHKOLA_OVERRIDES
+
         db_path = Path(__file__).resolve().parents[2] / "data" / "sources.db"
         if not db_path.exists():
             return ""
 
-        conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+        conn = _open_readonly(Path(db_path).resolve())
         # Find source_file matching author + grade, prefer ukrmova over ukrlit
         rows = conn.execute(
             "SELECT DISTINCT source_file FROM textbooks "
@@ -430,6 +455,7 @@ def _build_resources(plan: dict, slug: str = "") -> str:
     miyklas_entries: list[dict] = []
     try:
         from build.miyklas import build_miyklas_resource_entries
+
         miyklas_entries = build_miyklas_resource_entries(plan)
     except Exception as e:
         print(f"  ⚠️  МійКлас resource entries skipped: {e}")
@@ -610,12 +636,14 @@ def _match_resource_index(filename: str, plan: dict, max_results: int = 3) -> li
                 break
         if hit:
             url = base_url + lesson["path"] if not lesson["path"].startswith("http") else lesson["path"]
-            matched.append({
-                "title": lesson.get("title", ""),
-                "url": url,
-                "type": "article",
-                "topic": ", ".join(tags[:3]),
-            })
+            matched.append(
+                {
+                    "title": lesson.get("title", ""),
+                    "url": url,
+                    "type": "article",
+                    "topic": ", ".join(tags[:3]),
+                }
+            )
             if len(matched) >= max_results:
                 break
 
@@ -662,9 +690,7 @@ def _format_dialogues(content: str) -> str:
     def _convert_blockquote(match: re.Match) -> str:
         block = match.group(1)
         lines = block.strip().split("\n")
-        has_dialogue = any(
-            re.match(r"^>\s*(?:—\s|\*\*[^*]+:\*\*)", line) for line in lines
-        )
+        has_dialogue = any(re.match(r"^>\s*(?:—\s|\*\*[^*]+:\*\*)", line) for line in lines)
         if not has_dialogue:
             return match.group(0)
 
@@ -768,6 +794,7 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
     _after = len(content.split())
     if _after < _before * 0.5:
         import logging
+
         logging.error(f"enrich: V5 heading strip ate {_before - _after} words ({_before}→{_after})")
 
     # Remove inline video sections from previous enrichment
@@ -782,6 +809,7 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
     _after = len(content.split())
     if _after < _before * 0.5:
         import logging
+
         logging.error(f"enrich: video strip ate {_before - _after} words ({_before}→{_after})")
 
     # Remove any writer-generated vocabulary tables (the ENRICH step generates proper ones)
@@ -795,11 +823,13 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
     _after = len(content.split())
     if _after < _before * 0.5:
         import logging
+
         logging.error(f"enrich: vocab strip ate {_before - _after} words ({_before}→{_after})")
 
     _post_strip_words = len(content.split())
     if _post_strip_words < _pre_strip_words * 0.3:
         import logging
+
         logging.error(
             f"enrich: stripping removed {_pre_strip_words - _post_strip_words} of "
             f"{_pre_strip_words} words! Restoring original content."
@@ -807,7 +837,7 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
         content = original_content
         # Re-strip only tab markers (safe)
         if "<!-- TAB:Словник -->" in content:
-            content = content[:content.index("<!-- TAB:Словник -->")].strip()
+            content = content[: content.index("<!-- TAB:Словник -->")].strip()
         content = content.replace("<!-- TAB:Урок -->", "").strip()
 
     # 3. Build tab content
@@ -825,6 +855,7 @@ def enrich(content: str, plan: dict, slug: str = "") -> tuple[str, list[str]]:
     # means the regex ate the prose — refuse to enrich to prevent data loss.
     if not content.strip():
         import logging
+
         logging.error(
             f"enrich: body content is only {len(content.strip().split())} words "
             f"after stripping — refusing to enrich (would lose prose). "
@@ -880,6 +911,7 @@ def enrich_file(content_path: Path, plan_path: Path) -> list[str]:
         enriched, actions = enrich(content, plan, slug=slug)
     except Exception as e:
         import logging
+
         logging.warning(f"Enrichment failed for {slug}: {e}")
         return []
 
@@ -888,8 +920,11 @@ def enrich_file(content_path: Path, plan_path: Path) -> list[str]:
         content_path.write_text(enriched, "utf-8")
     elif actions:
         import logging
-        logging.warning(f"Enrichment for {slug} produced suspiciously short output "
-                       f"({len(enriched)} vs {len(content)}). Skipping write.")
+
+        logging.warning(
+            f"Enrichment for {slug} produced suspiciously short output "
+            f"({len(enriched)} vs {len(content)}). Skipping write."
+        )
         return []
 
     return actions

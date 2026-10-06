@@ -28,6 +28,9 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
+
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
 
 # Combining acute accent
@@ -61,47 +64,227 @@ _DIALOGUE_SECTION_RE = re.compile(
 )
 _DIALOGUE_TOKEN_RE = re.compile(r"[a-zа-яґєії'-]+", re.IGNORECASE)
 _DIALOGUE_STOPWORDS = {
-    "a", "an", "and", "at", "for", "from", "in", "of", "on", "the", "to", "with",
-    "а", "але", "бо", "в", "ви", "вона", "вони", "воно", "все", "до", "є", "за",
-    "з", "і", "й", "на", "не", "по", "про", "та", "ти", "у", "це", "цей", "ця",
-    "ці", "що", "як",
+    "a",
+    "an",
+    "and",
+    "at",
+    "for",
+    "from",
+    "in",
+    "of",
+    "on",
+    "the",
+    "to",
+    "with",
+    "а",
+    "але",
+    "бо",
+    "в",
+    "ви",
+    "вона",
+    "вони",
+    "воно",
+    "все",
+    "до",
+    "є",
+    "за",
+    "з",
+    "і",
+    "й",
+    "на",
+    "не",
+    "по",
+    "про",
+    "та",
+    "ти",
+    "у",
+    "це",
+    "цей",
+    "ця",
+    "ці",
+    "що",
+    "як",
 }
 _DIALOGUE_DOMAIN_KEYWORDS = {
     "pet_shop": {
-        "акваріум", "animal", "animals", "cat", "dog", "fish", "hamster", "kitten",
-        "parrot", "pet", "pets", "petshop", "pet-shop", "shop", "turtle",
-        "кіт", "кішка", "кошеня", "кошка", "папуга", "пес", "пташка", "рибка",
-        "собака", "тварина", "тварини", "хом'як", "хомяк", "черепаха",
+        "акваріум",
+        "animal",
+        "animals",
+        "cat",
+        "dog",
+        "fish",
+        "hamster",
+        "kitten",
+        "parrot",
+        "pet",
+        "pets",
+        "petshop",
+        "pet-shop",
+        "shop",
+        "turtle",
+        "кіт",
+        "кішка",
+        "кошеня",
+        "кошка",
+        "папуга",
+        "пес",
+        "пташка",
+        "рибка",
+        "собака",
+        "тварина",
+        "тварини",
+        "хом'як",
+        "хомяк",
+        "черепаха",
     },
     "room_furniture": {
-        "armchair", "bag", "bed", "chair", "desk", "furniture", "lamp", "mirror",
-        "photo", "room", "table", "wall", "window", "зошит", "кімната", "книга",
-        "крісло", "лампа", "ліжко", "ручка", "стілець", "стіна", "стіл", "сумка",
-        "телефон", "фото", "шафа", "дзеркало", "вікно",
+        "armchair",
+        "bag",
+        "bed",
+        "chair",
+        "desk",
+        "furniture",
+        "lamp",
+        "mirror",
+        "photo",
+        "room",
+        "table",
+        "wall",
+        "window",
+        "зошит",
+        "кімната",
+        "книга",
+        "крісло",
+        "лампа",
+        "ліжко",
+        "ручка",
+        "стілець",
+        "стіна",
+        "стіл",
+        "сумка",
+        "телефон",
+        "фото",
+        "шафа",
+        "дзеркало",
+        "вікно",
     },
     "school_classroom": {
-        "backpack", "book", "classroom", "notebook", "pen", "pencil", "school",
-        "student", "teacher", "вчитель", "дошка", "зошит", "карта", "клас",
-        "класна", "олівець", "парта", "підручник", "ручка", "учень", "школа",
+        "backpack",
+        "book",
+        "classroom",
+        "notebook",
+        "pen",
+        "pencil",
+        "school",
+        "student",
+        "teacher",
+        "вчитель",
+        "дошка",
+        "зошит",
+        "карта",
+        "клас",
+        "класна",
+        "олівець",
+        "парта",
+        "підручник",
+        "ручка",
+        "учень",
+        "школа",
     },
     "market_shopping": {
-        "bakery", "bread", "buy", "market", "money", "price", "prices", "shopper",
-        "store", "булочка", "гривня", "гроші", "квиток", "купити", "магазин",
-        "пекар", "покупець", "ринок", "скільки", "супермаркет", "торт", "ціна",
+        "bakery",
+        "bread",
+        "buy",
+        "market",
+        "money",
+        "price",
+        "prices",
+        "shopper",
+        "store",
+        "булочка",
+        "гривня",
+        "гроші",
+        "квиток",
+        "купити",
+        "магазин",
+        "пекар",
+        "покупець",
+        "ринок",
+        "скільки",
+        "супермаркет",
+        "торт",
+        "ціна",
         "ярмарок",
     },
     "cafe_food": {
-        "borshch", "cafe", "coffee", "cook", "croissant", "drink", "eat", "juice",
-        "menu", "pastry", "recipe", "tea", "борщ", "вода", "готувати", "їжа",
-        "кава", "кафе", "круасан", "кухня", "меню", "обід", "рецепт", "сік",
-        "сметана", "тістечко", "чай",
+        "borshch",
+        "cafe",
+        "coffee",
+        "cook",
+        "croissant",
+        "drink",
+        "eat",
+        "juice",
+        "menu",
+        "pastry",
+        "recipe",
+        "tea",
+        "борщ",
+        "вода",
+        "готувати",
+        "їжа",
+        "кава",
+        "кафе",
+        "круасан",
+        "кухня",
+        "меню",
+        "обід",
+        "рецепт",
+        "сік",
+        "сметана",
+        "тістечко",
+        "чай",
     },
     "city_travel": {
-        "airport", "bank", "bus", "city", "guide", "hotel", "map", "metro", "museum",
-        "park", "pharmacy", "square", "station", "street", "taxi", "theatre", "tour",
-        "tourist", "train", "travel", "автобус", "аптека", "банк", "вулиця", "готель",
-        "замок", "карта", "кафе", "метро", "місто", "музей", "парк", "площа",
-        "пошта", "таксі", "театр", "турист", "потяг", "зупинка",
+        "airport",
+        "bank",
+        "bus",
+        "city",
+        "guide",
+        "hotel",
+        "map",
+        "metro",
+        "museum",
+        "park",
+        "pharmacy",
+        "square",
+        "station",
+        "street",
+        "taxi",
+        "theatre",
+        "tour",
+        "tourist",
+        "train",
+        "travel",
+        "автобус",
+        "аптека",
+        "банк",
+        "вулиця",
+        "готель",
+        "замок",
+        "карта",
+        "кафе",
+        "метро",
+        "місто",
+        "музей",
+        "парк",
+        "площа",
+        "пошта",
+        "таксі",
+        "театр",
+        "турист",
+        "потяг",
+        "зупинка",
     },
 }
 _TEXTBOOK_HINT_RE = re.compile(r"\b(?:grade|клас|klas)\b", re.IGNORECASE)
@@ -296,8 +479,18 @@ def check_plan_internal_consistency(plan: dict) -> list[PlanIssue]:
 def check_required_fields(plan: dict) -> list[PlanIssue]:
     """Check that all required fields are present."""
     issues = []
-    required = ["module", "slug", "version", "level", "sequence", "title",
-                "word_target", "content_outline", "vocabulary_hints", "phase"]
+    required = [
+        "module",
+        "slug",
+        "version",
+        "level",
+        "sequence",
+        "title",
+        "word_target",
+        "content_outline",
+        "vocabulary_hints",
+        "phase",
+    ]
     if str(plan.get("level", "")).upper() == "B2":
         # B2 rebuild readiness treats these as legacy source-plan metadata.
         required = [field for field in required if field not in {"vocabulary_hints", "phase"}]
@@ -318,8 +511,11 @@ def check_word_budgets(plan: dict) -> list[PlanIssue]:
 
     total = sum(s.get("words", 0) for s in sections if isinstance(s, dict))
     if total < target:
-        issues.append(PlanIssue("BUDGET", "ERROR",
-                                f"Section budgets sum to {total}w, target is {target}w (short by {target - total}w)"))
+        issues.append(
+            PlanIssue(
+                "BUDGET", "ERROR", f"Section budgets sum to {total}w, target is {target}w (short by {target - total}w)"
+            )
+        )
     return issues
 
 
@@ -335,9 +531,14 @@ def check_no_stress_marks(plan: dict) -> list[PlanIssue]:
             val = str(plan.get(key, ""))
             if STRESS_MARK in val:
                 locations.append(key)
-        issues.append(PlanIssue("STRESS", "ERROR",
-                                f"{count} stress mark(s) found in: {', '.join(locations)}",
-                                "Remove all combining acute (U+0301). Pipeline adds stress marks."))
+        issues.append(
+            PlanIssue(
+                "STRESS",
+                "ERROR",
+                f"{count} stress mark(s) found in: {', '.join(locations)}",
+                "Remove all combining acute (U+0301). Pipeline adds stress marks.",
+            )
+        )
     return issues
 
 
@@ -350,18 +551,21 @@ def check_russicisms(plan: dict) -> list[PlanIssue]:
         # Word boundary check — look for the word surrounded by non-Cyrillic
         pattern = rf"(?<![а-яґєіїА-ЯҐЄІЇ]){re.escape(russian)}(?![а-яґєіїА-ЯҐЄІЇ])"
         if re.search(pattern, text):
-            issues.append(PlanIssue("RUSSICISM", "ERROR",
-                                    f"Possible Russicism: '{russian}'",
-                                    fix))
+            issues.append(PlanIssue("RUSSICISM", "ERROR", f"Possible Russicism: '{russian}'", fix))
 
     # Phrase-level Russicism: "самий + adjective" for superlative
     # Standalone "самий" is valid Ukrainian (той самий = the same one).
     # Only "самий кращий/великий/etc." is a Russicism (→ найкращий/найбільший).
     # Skip negative examples: *самий, 'самий, "самий (quoted citations of errors)
     if re.search(r"(?<![*'\"])(?<!той\s)\bсамий\s+[а-яґєіїА-ЯҐЄІЇ]+(?:ий|ій|а|е)\b", text):
-        issues.append(PlanIssue("RUSSICISM", "ERROR",
-                                "Possible Russicism: 'самий + adjective' for superlative",
-                                "Use най- prefix: найкращий, найбільший"))
+        issues.append(
+            PlanIssue(
+                "RUSSICISM",
+                "ERROR",
+                "Possible Russicism: 'самий + adjective' for superlative",
+                "Use най- prefix: найкращий, найбільший",
+            )
+        )
 
     return issues
 
@@ -382,26 +586,24 @@ def check_phase_alignment(plan: dict) -> list[PlanIssue]:
         # For non-A1 levels, just check that the phase starts with the level prefix
         level_prefix = level.split("-")[0]  # B1, B2, C1, etc.
         if not phase_key.startswith(level_prefix) and level_prefix not in phase_key:
-            issues.append(PlanIssue("PHASE", "WARNING",
-                                    f"Phase '{phase_key}' doesn't match level {level}"))
+            issues.append(PlanIssue("PHASE", "WARNING", f"Phase '{phase_key}' doesn't match level {level}"))
         return issues
 
     # V3 phase ranges for A1 (updated to match curriculum.yaml V3)
     expected_phases = {
-        range(1, 8): "A1.1",      # M01-M07: Sounds, Letters, First Contact
-        range(8, 15): "A1.2",     # M08-M14: My World
-        range(15, 22): "A1.3",    # M15-M21: Actions
-        range(22, 28): "A1.4",    # M22-M27: Time and Nature
-        range(28, 36): "A1.5",    # M28-M35: Places
-        range(36, 42): "A1.6",    # M36-M41: Food and Shopping
-        range(42, 48): "A1.7",    # M42-M47: Communication
-        range(48, 56): "A1.8",    # M48-M55: Past, Future, Graduation
+        range(1, 8): "A1.1",  # M01-M07: Sounds, Letters, First Contact
+        range(8, 15): "A1.2",  # M08-M14: My World
+        range(15, 22): "A1.3",  # M15-M21: Actions
+        range(22, 28): "A1.4",  # M22-M27: Time and Nature
+        range(28, 36): "A1.5",  # M28-M35: Places
+        range(36, 42): "A1.6",  # M36-M41: Food and Shopping
+        range(42, 48): "A1.7",  # M42-M47: Communication
+        range(48, 56): "A1.8",  # M48-M55: Past, Future, Graduation
     }
 
     for seq_range, expected in expected_phases.items():
         if seq in seq_range and phase_key != expected:
-            issues.append(PlanIssue("PHASE", "ERROR",
-                                    f"Module M{seq:02d} should be phase {expected}, got {phase_key}"))
+            issues.append(PlanIssue("PHASE", "ERROR", f"Module M{seq:02d} should be phase {expected}, got {phase_key}"))
     return issues
 
 
@@ -420,20 +622,33 @@ def check_grammar_scope(plan: dict) -> list[PlanIssue]:
     if phase_key == "A1.1":
         seq = plan.get("sequence", 0)
         if seq <= 3:
-            for banned in ("conjugation", "present tense", "past tense", "future tense",
-                           "imperative", "reflexive", "modal"):
+            for banned in (
+                "conjugation",
+                "present tense",
+                "past tense",
+                "future tense",
+                "imperative",
+                "reflexive",
+                "modal",
+            ):
                 if banned in grammar_text:
-                    issues.append(PlanIssue("SCOPE", "ERROR",
-                                            f"M{seq:02d} is phonetics — grammar lists '{banned}'",
-                                            "Phonetics modules (M01-M03) should not teach verb grammar"))
+                    issues.append(
+                        PlanIssue(
+                            "SCOPE",
+                            "ERROR",
+                            f"M{seq:02d} is phonetics — grammar lists '{banned}'",
+                            "Phonetics modules (M01-M03) should not teach verb grammar",
+                        )
+                    )
 
     # No past/future before A1.8
     if phase_key in ("A1.1", "A1.2", "A1.3", "A1.4", "A1.5", "A1.6", "A1.7"):
         for banned in ("past tense", "future tense"):
             if banned in grammar_text and phase_key != "A1.7":
                 # A1.7 might preview these
-                issues.append(PlanIssue("SCOPE", "WARNING",
-                                        f"Grammar lists '{banned}' but phase is {phase_key} (taught in A1.8)"))
+                issues.append(
+                    PlanIssue("SCOPE", "WARNING", f"Grammar lists '{banned}' but phase is {phase_key} (taught in A1.8)")
+                )
     return issues
 
 
@@ -454,8 +669,7 @@ def check_prerequisites(plan: dict, all_slugs: list[str]) -> list[PlanIssue]:
                 if ref.startswith("a1-"):
                     continue  # Old format, skip
                 if ref not in all_slugs and ref not in [f"a1-{s}" for s in all_slugs]:
-                    issues.append(PlanIssue("PREREQ", "WARNING",
-                                            f"Prerequisite references unknown slug: '{ref}'"))
+                    issues.append(PlanIssue("PREREQ", "WARNING", f"Prerequisite references unknown slug: '{ref}'"))
     return issues
 
 
@@ -518,14 +732,11 @@ def _coerce_textbook_grade(grade: object, source_file: str) -> int | None:
 def _known_textbooks(sources_db: Path) -> list[dict[str, object]]:
     if not sources_db.exists():
         raise FileNotFoundError(
-            f"sources_db not found at {sources_db}. "
-            "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
+            f"sources_db not found at {sources_db}. Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(sources_db).resolve())
     try:
-        rows = conn.execute(
-            "SELECT DISTINCT source_file, grade, author FROM textbooks ORDER BY source_file"
-        ).fetchall()
+        rows = conn.execute("SELECT DISTINCT source_file, grade, author FROM textbooks ORDER BY source_file").fetchall()
     finally:
         conn.close()
     return [
@@ -551,9 +762,7 @@ def _reference_matches_textbook(source_name: str, textbook: dict[str, object]) -
     if not author or grade is None:
         return False
     textbook_author = str(textbook["author"])
-    author_matches = author == textbook_author or (
-        {author, textbook_author} == {"zabolotnyi", "zabolotnij"}
-    )
+    author_matches = author == textbook_author or ({author, textbook_author} == {"zabolotnyi", "zabolotnij"})
     if not author_matches or grade != textbook["grade"]:
         return False
     return year is None or year in source_file
@@ -571,8 +780,7 @@ def check_textbook_references_in_corpus(
     textbook_refs = [
         source_name
         for ref in references
-        if (source_name := _reference_source_name(ref))
-        and _looks_like_textbook_reference(source_name)
+        if (source_name := _reference_source_name(ref)) and _looks_like_textbook_reference(source_name)
     ]
     if not textbook_refs:
         return []
@@ -678,8 +886,7 @@ def check_apostrophes(plan: dict) -> list[PlanIssue]:
             line = text[line_start:line_end]
             if _TEACHING_MARKERS.search(line):
                 continue
-            issues.append(PlanIssue("APOSTROPHE", "ERROR",
-                                    f"Missing apostrophe: '{wrong}' should be '{correct}'"))
+            issues.append(PlanIssue("APOSTROPHE", "ERROR", f"Missing apostrophe: '{wrong}' should be '{correct}'"))
             break  # one issue per word is enough
     return issues
 
@@ -693,12 +900,13 @@ def check_vesum_vocabulary(plan: dict) -> list[PlanIssue]:
 
     # Handle both v3 dict {required: [...]} and v4 flat list [{word, pos, definition}]
     from pipeline.vocab_helpers import extract_vocab_words
+
     raw_words = extract_vocab_words(hints)
     words_to_check = []
     for word in raw_words:
         word = word.split("(")[0].strip().split("—")[0].strip().split(" ")[0].strip()
         word = word.replace(STRESS_MARK, "").strip(",").strip()
-        if word and re.search(r'[\u0400-\u04ff]', word) and len(word) > 1:
+        if word and re.search(r"[\u0400-\u04ff]", word) and len(word) > 1:
             words_to_check.append(word)
 
     if not words_to_check:
@@ -707,15 +915,21 @@ def check_vesum_vocabulary(plan: dict) -> list[PlanIssue]:
     # Try VESUM verification
     try:
         from rag.vesum_lookup import vesum_lookup
+
         for word in words_to_check:
             result = vesum_lookup(word)
             if not result:
                 # Skip proper nouns (capitalized)
                 if word[0].isupper():
                     continue
-                issues.append(PlanIssue("VESUM", "WARNING",
-                                        f"Vocabulary word '{word}' not found in VESUM",
-                                        "Check spelling or verify it's a valid Ukrainian word"))
+                issues.append(
+                    PlanIssue(
+                        "VESUM",
+                        "WARNING",
+                        f"Vocabulary word '{word}' not found in VESUM",
+                        "Check spelling or verify it's a valid Ukrainian word",
+                    )
+                )
     except ImportError:
         # VESUM not available — skip this check
         pass
@@ -835,7 +1049,7 @@ def main(argv: list[str] | None = None) -> int:
         start_num = args.module
     else:
         if args.first > 0:
-            slugs = slugs[:args.first]
+            slugs = slugs[: args.first]
         start_num = 1
 
     plans_dir = CURRICULUM_ROOT / "plans" / args.level
@@ -876,7 +1090,9 @@ def main(argv: list[str] | None = None) -> int:
                 print(str(issue))
 
     print(f"\n{'=' * 70}")
-    print(f"  Summary: {plans_passed}/{plans_checked} passed, {total_errors} error(s), {total_issues - total_errors} warning(s)")
+    print(
+        f"  Summary: {plans_passed}/{plans_checked} passed, {total_errors} error(s), {total_issues - total_errors} warning(s)"
+    )
     print(f"{'=' * 70}\n")
 
     return 1 if total_errors > 0 else 0

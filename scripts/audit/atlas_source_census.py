@@ -45,6 +45,7 @@ from scripts.lexicon.content_lexicon_reconciler import (
     strip_mdx_to_prose,
 )
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.storage.paths import REGISTRY_ROOT
 from scripts.wiki.config import TEXTBOOK_PDFS_DIR
 
@@ -381,7 +382,7 @@ def scan_sources_db_textbooks(root: Path, census: AtlasSourceCensus, db_path: Pa
     source_files: set[str] = set()
     char_count = 0
     try:
-        with sqlite3.connect(f"file:{source_db}?mode=ro", uri=True) as conn:
+        with _open_readonly(source_db) as conn:
             cursor = conn.execute(
                 "select coalesce(nullif(grade, ''), 'unknown'), text, source_file, char_count from textbooks"
             )

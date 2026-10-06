@@ -49,7 +49,11 @@ from pathlib import Path
 import numpy as np
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parents[1]
@@ -70,8 +74,7 @@ GEMMA_LICENSE_URL = "https://huggingface.co/google/embeddinggemma-300m"
 _DRY_RUN_HOLD_ENV = "BENCHMARK_DRY_RUN_HOLD_SECS"
 _HF_TOKEN_WARNED = False
 E5_QUERY_INSTRUCTION = (
-    "Instruct: Given a search query about Ukrainian language/literature, "
-    "retrieve relevant passages.\nQuery: "
+    "Instruct: Given a search query about Ukrainian language/literature, retrieve relevant passages.\nQuery: "
 )
 
 # Evaluation constants
@@ -185,6 +188,7 @@ LITERARY_SOURCE_FILES = {
 
 # ── Metrics ───────────────────────────────────────────────────────
 
+
 def recall_at_k(retrieved_ids: list[str], relevant_ids: list[str], k: int) -> float:
     """Fraction of relevant docs found in top-K retrieved."""
     if not relevant_ids:
@@ -214,6 +218,7 @@ def ndcg_at_k(retrieved_ids: list[str], relevant_ids: list[str], k: int) -> floa
 
 
 # ── Data loading ──────────────────────────────────────────────────
+
 
 def load_queries() -> list[dict]:
     """Load benchmark queries from YAML."""
@@ -251,10 +256,7 @@ def get_hf_token() -> str | None:
     global _HF_TOKEN_WARNED
     token = os.environ.get("HF_TOKEN")
     if not token and not _HF_TOKEN_WARNED:
-        print(
-            "WARN: HF_TOKEN not set. Gated models "
-            "(e.g. google/embeddinggemma-300m) will 401."
-        )
+        print("WARN: HF_TOKEN not set. Gated models (e.g. google/embeddinggemma-300m) will 401.")
         _HF_TOKEN_WARNED = True
     return token
 
@@ -276,9 +278,15 @@ def maybe_hold_dry_run_lock_for_tests():
     time.sleep(float(hold_seconds))
 
 
-def build_result_row(metrics: dict, sample_size: int, peak_rss_mb: float,
-                     encode_time_s: float, *, status: str = "complete",
-                     extra: dict | None = None) -> dict:
+def build_result_row(
+    metrics: dict,
+    sample_size: int,
+    peak_rss_mb: float,
+    encode_time_s: float,
+    *,
+    status: str = "complete",
+    extra: dict | None = None,
+) -> dict:
     """Normalize benchmark result rows across harnesses."""
     row = {
         "status": status,
@@ -311,23 +319,20 @@ def count_overlong_texts(tokenizer, texts: list[str], max_length: int) -> tuple[
     over_limit = 0
     max_tokens = 0
     for text in texts:
-        token_count = len(
-            tokenizer.encode(text, add_special_tokens=True, truncation=False)
-        )
+        token_count = len(tokenizer.encode(text, add_special_tokens=True, truncation=False))
         max_tokens = max(max_tokens, token_count)
         if token_count > max_length:
             over_limit += 1
     return over_limit, max_tokens
 
 
-def get_db_connection() -> sqlite3.Connection:
+def get_db_connection() -> SQLiteConnection:
     """Open the benchmark source DB."""
     if not SOURCES_DB_PATH.exists():
         raise FileNotFoundError(
-            f"Sources database not found at {SOURCES_DB_PATH}. "
-            "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
+            f"Sources database not found at {SOURCES_DB_PATH}. Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    conn = sqlite3.connect(f"{Path(SOURCES_DB_PATH).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(SOURCES_DB_PATH).resolve())
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -389,6 +394,7 @@ def sample_chunks_from_sqlite(period: str, sample_size: int) -> list[dict]:
 
 # ── Encoders ──────────────────────────────────────────────────────
 
+
 class BGEEncoder:
     """Wraps BGE-M3 for benchmark: returns dense vectors and optionally sparse."""
 
@@ -399,6 +405,7 @@ class BGEEncoder:
         if self._model is not None:
             return
         from FlagEmbedding import BGEM3FlagModel
+
         print("[bench] Loading BGE-M3...")
         self._model = BGEM3FlagModel(
             "BAAI/bge-m3",
@@ -413,8 +420,12 @@ class BGEEncoder:
         """Returns {dense: np.ndarray, sparse_weights: list[dict]}."""
         self.load()
         result = self._model.encode(
-            texts, batch_size=batch_size, max_length=512,
-            return_dense=True, return_sparse=True, return_colbert_vecs=False,
+            texts,
+            batch_size=batch_size,
+            max_length=512,
+            return_dense=True,
+            return_sparse=True,
+            return_colbert_vecs=False,
         )
         return {
             "dense": result["dense_vecs"],
@@ -427,6 +438,7 @@ class BGEEncoder:
         gc.collect()
         try:
             import torch
+
             if torch.backends.mps.is_available():
                 torch.mps.empty_cache()
         except Exception:
@@ -470,9 +482,7 @@ class GemmaEncoder:
             ).to(self._device)
         except Exception as exc:
             if is_hf_unauthorized(exc):
-                raise SystemExit(
-                    f"ERROR: {GEMMA_MODEL_NAME} needs license acceptance at {GEMMA_LICENSE_URL}"
-                ) from exc
+                raise SystemExit(f"ERROR: {GEMMA_MODEL_NAME} needs license acceptance at {GEMMA_LICENSE_URL}") from exc
             raise
         self._model.eval()
         print("[bench] EmbeddingGemma-300M loaded.")
@@ -485,10 +495,13 @@ class GemmaEncoder:
         all_vecs = []
 
         for i in range(0, len(texts), batch_size):
-            batch = texts[i:i + batch_size]
+            batch = texts[i : i + batch_size]
             inputs = self._tokenizer(
-                batch, padding=True, truncation=True,
-                max_length=512, return_tensors="pt",  # Match BGE-M3's max_length for fair comparison
+                batch,
+                padding=True,
+                truncation=True,
+                max_length=512,
+                return_tensors="pt",  # Match BGE-M3's max_length for fair comparison
             )
             inputs = {k: v.to(self._device) for k, v in inputs.items()}
 
@@ -516,6 +529,7 @@ class GemmaEncoder:
         gc.collect()
         try:
             import torch
+
             if torch.backends.mps.is_available():
                 torch.mps.empty_cache()
         except Exception:
@@ -543,8 +557,7 @@ class Qwen3Encoder:
         dim = self._model.get_sentence_embedding_dimension()
         print(f"[bench] Qwen3-Embedding-0.6B loaded (dim={dim}).")
 
-    def encode(self, texts: list[str], batch_size: int = 2, *,
-               prompt_name: str | None = None) -> dict:
+    def encode(self, texts: list[str], batch_size: int = 2, *, prompt_name: str | None = None) -> dict:
         """Returns {dense: np.ndarray}. Qwen3 is dense-only (no sparse).
 
         Qwen3-Embedding-0.6B is a decoder model (not BERT-like), so it uses
@@ -570,6 +583,7 @@ class Qwen3Encoder:
         gc.collect()
         try:
             import torch
+
             if torch.backends.mps.is_available():
                 torch.mps.empty_cache()
         except Exception:
@@ -597,8 +611,7 @@ class JinaV3Encoder:
         dim = self._model.get_sentence_embedding_dimension()
         print(f"[bench] jina-embeddings-v3 loaded (dim={dim}).")
 
-    def encode(self, texts: list[str], batch_size: int = 8, *,
-               task: str = "retrieval.passage") -> dict:
+    def encode(self, texts: list[str], batch_size: int = 8, *, task: str = "retrieval.passage") -> dict:
         """Returns {dense: np.ndarray} using jina-v3 task adapters."""
         self.load()
         vecs = self._model.encode(
@@ -616,6 +629,7 @@ class JinaV3Encoder:
         gc.collect()
         try:
             import torch
+
             if torch.backends.mps.is_available():
                 torch.mps.empty_cache()
         except Exception:
@@ -644,10 +658,7 @@ class GTEMultilingualBaseEncoder:
         # default long-context allocations that exceed local MPS memory.
         self._model.max_seq_length = 512
         dim = self._model.get_sentence_embedding_dimension()
-        print(
-            "[bench] gte-multilingual-base loaded "
-            f"(dim={dim}, max_seq_length={self._model.max_seq_length})."
-        )
+        print(f"[bench] gte-multilingual-base loaded (dim={dim}, max_seq_length={self._model.max_seq_length}).")
 
     def encode(self, texts: list[str], batch_size: int = 8) -> dict:
         """Returns {dense: np.ndarray}. No task adapter or prompt required."""
@@ -666,6 +677,7 @@ class GTEMultilingualBaseEncoder:
         gc.collect()
         try:
             import torch
+
             if torch.backends.mps.is_available():
                 torch.mps.empty_cache()
         except Exception:
@@ -691,8 +703,7 @@ class E5InstructEncoder:
         )
         dim = self._model.get_sentence_embedding_dimension()
         print(
-            "[bench] multilingual-e5-large-instruct loaded "
-            f"(dim={dim}, max_seq_length={self._model.max_seq_length})."
+            f"[bench] multilingual-e5-large-instruct loaded (dim={dim}, max_seq_length={self._model.max_seq_length})."
         )
 
     def encode(self, texts: list[str], batch_size: int = 8) -> dict:
@@ -712,6 +723,7 @@ class E5InstructEncoder:
         gc.collect()
         try:
             import torch
+
             if torch.backends.mps.is_available():
                 torch.mps.empty_cache()
         except Exception:
@@ -720,6 +732,7 @@ class E5InstructEncoder:
 
 
 # ── Sparse scoring ────────────────────────────────────────────────
+
 
 def sparse_score(query_weights: dict, doc_weights: dict) -> float:
     """Compute sparse dot product between query and document lexical weights."""
@@ -742,17 +755,22 @@ def rrf_combine(dense_ranks: list[str], sparse_ranks: list[str], k: int = 60) ->
 
 # ── Retrieval ─────────────────────────────────────────────────────
 
-def retrieve_dense(query_vec: np.ndarray, chunk_vecs: np.ndarray,
-                   chunk_ids: list[str], top_k: int) -> list[str]:
+
+def retrieve_dense(query_vec: np.ndarray, chunk_vecs: np.ndarray, chunk_ids: list[str], top_k: int) -> list[str]:
     """Retrieve top-K by cosine similarity (vectors assumed normalized)."""
     scores = chunk_vecs @ query_vec
     top_indices = np.argsort(scores)[::-1][:top_k]
     return [chunk_ids[i] for i in top_indices]
 
 
-def retrieve_hybrid(query_vec: np.ndarray, query_sparse: dict,
-                    chunk_vecs: np.ndarray, chunk_sparse_list: list[dict],
-                    chunk_ids: list[str], top_k: int) -> list[str]:
+def retrieve_hybrid(
+    query_vec: np.ndarray,
+    query_sparse: dict,
+    chunk_vecs: np.ndarray,
+    chunk_sparse_list: list[dict],
+    chunk_ids: list[str],
+    top_k: int,
+) -> list[str]:
     """Hybrid retrieval: dense + sparse via RRF.
 
     Uses full corpus ranking for both dense and sparse to avoid
@@ -777,6 +795,7 @@ def retrieve_hybrid(query_vec: np.ndarray, query_sparse: dict,
 
 # ── Memory profiling ──────────────────────────────────────────────
 
+
 def get_peak_memory_mb() -> float:
     """Get peak RSS in MB (macOS/Linux)."""
     usage = resource.getrusage(resource.RUSAGE_SELF)
@@ -790,6 +809,7 @@ def get_mps_memory_mb() -> float:
     """Get current MPS (Apple Silicon GPU) memory allocation in MB. Returns 0 if unavailable."""
     try:
         import torch
+
         if torch.backends.mps.is_available():
             return torch.mps.current_allocated_memory() / (1024 * 1024)
     except Exception:
@@ -798,6 +818,7 @@ def get_mps_memory_mb() -> float:
 
 
 # ── Ground truth population ───────────────────────────────────────
+
 
 def populate_ground_truth():
     """Use existing BGE-M3 against SQLite tier pools to find candidate chunks for empty queries.
@@ -867,6 +888,7 @@ def populate_ground_truth():
 
 
 # ── Main benchmark ────────────────────────────────────────────────
+
 
 def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
     """Run the full benchmark."""
@@ -955,16 +977,12 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
 
         # Evaluate: dense-only
         print("\n  Evaluating BGE-M3 dense-only...")
-        bge_dense_metrics = evaluate_model(
-            queries_with_gt, q_dense, None,
-            collection_ids, c_dense, None, mode="dense"
-        )
+        bge_dense_metrics = evaluate_model(queries_with_gt, q_dense, None, collection_ids, c_dense, None, mode="dense")
 
         # Evaluate: hybrid (dense + sparse)
         print("  Evaluating BGE-M3 hybrid (dense + sparse)...")
         bge_hybrid_metrics = evaluate_model(
-            queries_with_gt, q_dense, q_sparse,
-            collection_ids, c_dense, c_sparse, mode="hybrid"
+            queries_with_gt, q_dense, q_sparse, collection_ids, c_dense, c_sparse, mode="hybrid"
         )
 
         mps_mem = get_mps_memory_mb()
@@ -1012,10 +1030,7 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
 
         # Evaluate
         print("\n  Evaluating EmbeddingGemma-300M...")
-        gemma_metrics = evaluate_model(
-            queries_with_gt, q_dense, None,
-            collection_ids, c_dense, None, mode="dense"
-        )
+        gemma_metrics = evaluate_model(queries_with_gt, q_dense, None, collection_ids, c_dense, None, mode="dense")
 
         mps_mem = get_mps_memory_mb()
         results["gemma-300m"] = build_result_row(
@@ -1056,10 +1071,7 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
 
         # Evaluate
         print("\n  Evaluating Qwen3-Embedding-0.6B...")
-        qwen3_metrics = evaluate_model(
-            queries_with_gt, q_dense, None,
-            collection_ids, c_dense, None, mode="dense"
-        )
+        qwen3_metrics = evaluate_model(queries_with_gt, q_dense, None, collection_ids, c_dense, None, mode="dense")
 
         mps_mem = get_mps_memory_mb()
         results["qwen3-0.6b"] = build_result_row(
@@ -1099,10 +1111,7 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
         peak_rss = get_peak_memory_mb()
 
         print("\n  Evaluating jina-embeddings-v3...")
-        jina_metrics = evaluate_model(
-            queries_with_gt, q_dense, None,
-            collection_ids, c_dense, None, mode="dense"
-        )
+        jina_metrics = evaluate_model(queries_with_gt, q_dense, None, collection_ids, c_dense, None, mode="dense")
 
         mps_mem = get_mps_memory_mb()
         results["jina-v3"] = build_result_row(
@@ -1140,10 +1149,7 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
         peak_rss = get_peak_memory_mb()
 
         print("\n  Evaluating gte-multilingual-base...")
-        gte_metrics = evaluate_model(
-            queries_with_gt, q_dense, None,
-            collection_ids, c_dense, None, mode="dense"
-        )
+        gte_metrics = evaluate_model(queries_with_gt, q_dense, None, collection_ids, c_dense, None, mode="dense")
 
         mps_mem = get_mps_memory_mb()
         results["gte-multilingual-base"] = build_result_row(
@@ -1169,15 +1175,10 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
 
         # Encode queries with the model-card asymmetric instruction prompt.
         print("  Encoding queries...")
-        formatted_queries = [
-            f"{E5_QUERY_INSTRUCTION}{query_text}"
-            for query_text in query_texts
-        ]
+        formatted_queries = [f"{E5_QUERY_INSTRUCTION}{query_text}" for query_text in query_texts]
         max_seq_length = encoder._model.max_seq_length
         tokenizer = encoder._model.tokenizer
-        query_over_limit, _ = count_overlong_texts(
-            tokenizer, formatted_queries, max_seq_length
-        )
+        query_over_limit, _ = count_overlong_texts(tokenizer, formatted_queries, max_seq_length)
         q_result = encoder.encode(formatted_queries, batch_size=8)
         q_dense = q_result["dense"]
 
@@ -1187,9 +1188,7 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
         passages_over_limit = 0
         for coll, texts in collection_texts.items():
             print(f"  Encoding {len(texts)} chunks from {coll}...")
-            over_limit, _ = count_overlong_texts(
-                tokenizer, texts, max_seq_length
-            )
+            over_limit, _ = count_overlong_texts(tokenizer, texts, max_seq_length)
             total_passages += len(texts)
             passages_over_limit += over_limit
             c_result = encoder.encode(texts, batch_size=8)
@@ -1199,10 +1198,7 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
         peak_rss = get_peak_memory_mb()
 
         print("\n  Evaluating multilingual-e5-large-instruct...")
-        e5_metrics = evaluate_model(
-            queries_with_gt, q_dense, None,
-            collection_ids, c_dense, None, mode="dense"
-        )
+        e5_metrics = evaluate_model(queries_with_gt, q_dense, None, collection_ids, c_dense, None, mode="dense")
 
         mps_mem = get_mps_memory_mb()
         results["e5-large-instruct"] = build_result_row(
@@ -1228,10 +1224,7 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
                 + (
                     " Query texts stayed within the limit."
                     if query_over_limit == 0
-                    else (
-                        f" {query_over_limit}/{len(formatted_queries)} query "
-                        "texts also exceeded the limit."
-                    )
+                    else (f" {query_over_limit}/{len(formatted_queries)} query texts also exceeded the limit.")
                 ),
             },
         )
@@ -1251,17 +1244,21 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
     save_benchmark_results(existing_results)
 
 
-def evaluate_model(queries: list[dict], q_dense: np.ndarray,
-                   q_sparse: list[dict] | None,
-                   collection_ids: dict[str, list[str]],
-                   c_dense: dict[str, np.ndarray],
-                   c_sparse: dict[str, list[dict]] | None,
-                   mode: str = "dense") -> dict:
+def evaluate_model(
+    queries: list[dict],
+    q_dense: np.ndarray,
+    q_sparse: list[dict] | None,
+    collection_ids: dict[str, list[str]],
+    c_dense: dict[str, np.ndarray],
+    c_sparse: dict[str, list[dict]] | None,
+    mode: str = "dense",
+) -> dict:
     """Evaluate retrieval quality for a model configuration.
 
     Separates results from human-curated vs auto-populated ground truth
     to avoid circular evaluation bias.
     """
+
     def empty_metrics():
         return {m: [] for m in METRICS}
 
@@ -1285,9 +1282,12 @@ def evaluate_model(queries: list[dict], q_dense: np.ndarray,
 
         if mode == "hybrid" and q_sparse and c_sparse and coll in c_sparse:
             retrieved = retrieve_hybrid(
-                q_dense[i], q_sparse[i],
-                chunk_dense, c_sparse[coll],
-                chunk_ids, top_k=10,
+                q_dense[i],
+                q_sparse[i],
+                chunk_dense,
+                c_sparse[coll],
+                chunk_ids,
+                top_k=10,
             )
         else:
             retrieved = retrieve_dense(q_dense[i], chunk_dense, chunk_ids, top_k=10)
@@ -1476,10 +1476,7 @@ def print_dry_run_plan(args: argparse.Namespace):
         f"{len(queries_with_gt)} queries with ground truth across models: "
         f"{', '.join(selected_models)}."
     )
-    print(
-        "DRY RUN: would sample "
-        f"{args.sample_size} chunks per period from {SOURCES_DB_PATH}."
-    )
+    print(f"DRY RUN: would sample {args.sample_size} chunks per period from {SOURCES_DB_PATH}.")
     maybe_hold_dry_run_lock_for_tests()
 
 

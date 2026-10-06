@@ -20,6 +20,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 THREADS_TABLE = "threads"
 THREADS_REQUIRED_COLUMNS = frozenset({"id", "title", "cwd", "archived", "archived_at"})
 # Codex uses versioned filenames such as ``state_5.sqlite`` and longer opaque
@@ -153,12 +156,12 @@ def _row_to_cleanup_record(row: sqlite3.Row) -> CleanupThreadRecord:
     )
 
 
-def _thread_columns(connection: sqlite3.Connection) -> frozenset[str]:
+def _thread_columns(connection: SQLiteConnection) -> frozenset[str]:
     rows = connection.execute(f"PRAGMA table_info({THREADS_TABLE})").fetchall()
     return frozenset(str(row[1]) for row in rows)
 
 
-def _sqlite_tables(connection: sqlite3.Connection) -> frozenset[str]:
+def _sqlite_tables(connection: SQLiteConnection) -> frozenset[str]:
     rows = connection.execute(
         "SELECT name FROM sqlite_master WHERE type='table'",
     ).fetchall()
@@ -169,12 +172,6 @@ def _require_threads_schema(columns: frozenset[str]) -> None:
     if not THREADS_REQUIRED_COLUMNS.issubset(columns):
         missing = sorted(THREADS_REQUIRED_COLUMNS - columns)
         raise CodexStateSchemaError(f"missing threads columns: {', '.join(missing)}")
-
-
-def _make_uri(path: Path, mode: str) -> str:
-    if mode != "ro":
-        raise ValueError("mode must be 'ro'")
-    return f"file:{path.resolve().as_posix()}?mode=ro"
 
 
 def _raise_db_failure(exc: Exception, *, context: str) -> None:
@@ -195,10 +192,8 @@ def open_state_db(
     if mode != "ro":
         raise ValueError("mode must be 'ro'")
 
-    uri = _make_uri(path, mode)
-    connection = sqlite3.connect(
-        uri,
-        uri=True,
+    connection = _open_readonly(
+        path,
         timeout=timeout_seconds,
         check_same_thread=False,
     )
@@ -272,7 +267,7 @@ def discover_state_database(
     return candidates[0][0]
 
 
-def _select_sql(connection: sqlite3.Connection) -> str:
+def _select_sql(connection: SQLiteConnection) -> str:
     columns = ["id", "title", "cwd", "archived", "archived_at"]
     if "host" in _thread_columns(connection):
         columns.append("host")
@@ -341,9 +336,7 @@ def read_thread_record(
             stable_sample = current
             stable_count = 1
         if time.monotonic() >= deadline:
-            raise CodexStateConflictError(
-                f"thread {task} state raced during bounded read window: {db_path}"
-            )
+            raise CodexStateConflictError(f"thread {task} state raced during bounded read window: {db_path}")
         time.sleep(0.05)
 
 
@@ -416,9 +409,7 @@ def _stable_cleanup_records(
             stable_count = 1
         if time.monotonic() >= deadline:
             target = thread_id or "cleanup inventory"
-            raise CodexStateConflictError(
-                f"{target} state raced during bounded read window: {db_path}"
-            )
+            raise CodexStateConflictError(f"{target} state raced during bounded read window: {db_path}")
         time.sleep(0.05)
 
 

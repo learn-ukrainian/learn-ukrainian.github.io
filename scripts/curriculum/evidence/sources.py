@@ -30,6 +30,8 @@ from pathlib import Path
 from typing import Any
 
 from scripts.lexicon.runner.ulif_dictua_parse import lookup_ulif_label
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
@@ -739,20 +741,20 @@ def aggregate_digest(cited: Iterable[tuple[str, str]]) -> str:
     return hashlib.sha256(_canonical([list(pair) for pair in pairs])).hexdigest()
 
 
-def open_readonly(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True)
+def open_readonly(path: Path) -> SQLiteConnection:
+    conn = _open_readonly(Path(path).resolve())
     conn.row_factory = sqlite3.Row
     return conn
 
 
-def open_snapshot(path: Path) -> sqlite3.Connection:
+def open_snapshot(path: Path) -> SQLiteConnection:
     """Read-only connection pinned to one snapshot for its lifetime.
 
     isolation_level=None keeps Python's sqlite3 module from issuing its own
     BEGIN/COMMIT; the explicit deferred BEGIN plus the probe read is what fixes
     the read mark (a bare BEGIN pins nothing until the first read).
     """
-    conn = sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True, isolation_level=None)
+    conn = _open_readonly(Path(path).resolve(), isolation_level=None)
     try:
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA busy_timeout=30000")
@@ -780,7 +782,7 @@ class Sources:
     ):
         self.sources_db = Path(sources_db) if sources_db is not None else _sources_path()
         self.kaikki_db = Path(kaikki_db) if kaikki_db is not None else _kaikki_path()
-        self._kaikki_conn: sqlite3.Connection | None = None
+        self._kaikki_conn: SQLiteConnection | None = None
         self._kaikki_content_sha256: str | None = None
         self.vesum_db = Path(vesum_db) if vesum_db is not None else VESUM_DB_PATH
         self.standard_path = (
@@ -794,7 +796,7 @@ class Sources:
         self.free_disk_floor_bytes = (
             int(free_disk_floor_bytes) if free_disk_floor_bytes is not None else config.free_disk_floor_bytes()
         )
-        self._conn: sqlite3.Connection | None = None
+        self._conn: SQLiteConnection | None = None
         self._fingerprints: dict[Path, tuple[tuple, str, dict]] = {}
         self._vesum_snapshot: tuple[tuple, str, dict] | None = None
         self.journal_mode: str | None = None
@@ -916,7 +918,7 @@ class Sources:
         except OSError as exc:
             raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: {str(self.sources_db)!r}") from exc
 
-    def _db(self) -> sqlite3.Connection:
+    def _db(self) -> SQLiteConnection:
         if self._conn is None:
             if not self.sources_db.is_file():
                 raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: {str(self.sources_db)!r}")

@@ -10,6 +10,7 @@ from pathlib import Path
 import yaml
 
 from scripts.curriculum.validate.a1_reference import CLOSED_CLASS_PATH, _closed_class_from_bytes, normalize
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 CLASSES = {"займенник": "pron", "сполучник": "conj", "прийменник": "prep", "частка": "part"}
 # PULS comma-separated rows attest each spelling with the row's class and level.
@@ -18,7 +19,7 @@ CLASSES = {"займенник": "pron", "сполучник": "conj", "прий
 def build_inventory(db_path: Path) -> dict:
     """Expand every A1 closed-class PULS row; retain no glosses or unit text."""
     words = {}
-    with sqlite3.connect(db_path.resolve().as_uri() + "?mode=ro", uri=True) as connection:
+    with _open_readonly(db_path.resolve()) as connection:
         rows = connection.execute("SELECT word, level, pos FROM puls_cefr WHERE level = 'A1'").fetchall()
     for word, level, pos in rows:
         if pos not in CLASSES:
@@ -29,11 +30,20 @@ def build_inventory(db_path: Path) -> dict:
                 raise ValueError("PULS A1 closed-class row is not words-only")
             cls = CLASSES[pos]
             words[lemma, cls] = {"lemma": lemma, "kind": "word", "class": cls, "level": level, "source": "PULS"}
-    payload = {"version": 1, "kind": "atlas_source_inventory", "sources": [
-        {"id": "puls-a1-closed-class", "source_family": "puls", "extraction_mode": "curated_key_word",
-         "title": "PULS A1 closed-class words", "path": "puls_cefr",
-         "headwords": [words[key] for key in sorted(words)]},
-    ]}
+    payload = {
+        "version": 1,
+        "kind": "atlas_source_inventory",
+        "sources": [
+            {
+                "id": "puls-a1-closed-class",
+                "source_family": "puls",
+                "extraction_mode": "curated_key_word",
+                "title": "PULS A1 closed-class words",
+                "path": "puls_cefr",
+                "headwords": [words[key] for key in sorted(words)],
+            },
+        ],
+    }
     _closed_class_from_bytes(yaml.safe_dump(payload, allow_unicode=True).encode())
     return payload
 
@@ -41,18 +51,24 @@ def build_inventory(db_path: Path) -> dict:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Build words-only, class-specific A1 attestations from PULS.\n"
-                    "Use for C29 inventory regeneration; this does not assign levels to other classes.",
+        "Use for C29 inventory regeneration; this does not assign levels to other classes.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-               "  .venv/bin/python -m scripts.ingest.build_a1_closed_class --db data/sources.db\n"
-               "  .venv/bin/python -m scripts.ingest.build_a1_closed_class --db /path/sources.db --output /tmp/a1.yaml\n"
-               "Outputs: YAML inventory only; database opened read-only.\n"
-               "Exit codes: 0 generated and validated; 1 source or output failure.\n"
-               "Related: #9582; scripts/curriculum/validate/a1_reference.py",
+        "  .venv/bin/python -m scripts.ingest.build_a1_closed_class --db data/sources.db\n"
+        "  .venv/bin/python -m scripts.ingest.build_a1_closed_class --db /path/sources.db --output /tmp/a1.yaml\n"
+        "Outputs: YAML inventory only; database opened read-only.\n"
+        "Exit codes: 0 generated and validated; 1 source or output failure.\n"
+        "Related: #9582; scripts/curriculum/validate/a1_reference.py",
     )
-    parser.add_argument("--db", type=Path, required=True, help="Existing sources SQLite database (read-only), e.g. data/sources.db")
-    parser.add_argument("--output", type=Path, default=CLOSED_CLASS_PATH,
-                        help="Output YAML path (default: scripts/curriculum/validate/data/a1-closed-class.yaml)")
+    parser.add_argument(
+        "--db", type=Path, required=True, help="Existing sources SQLite database (read-only), e.g. data/sources.db"
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=CLOSED_CLASS_PATH,
+        help="Output YAML path (default: scripts/curriculum/validate/data/a1-closed-class.yaml)",
+    )
     args = parser.parse_args(argv)
     try:
         payload = build_inventory(args.db)

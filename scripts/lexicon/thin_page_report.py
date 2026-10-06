@@ -62,6 +62,8 @@ from scripts.lexicon.enrich_manifest import (
     _load_current_slovnyk_cache_file,
     _phrase_contains_lemma,
 )
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.wiki.sum20_official import live_article_predicate_for
 
 DEFAULT_ATLAS_DB = PROJECT_ROOT / "data" / "atlas.db"
@@ -169,12 +171,12 @@ def normalize_key(text: str) -> str:
     return cleaned.translate(_APOSTROPHES).casefold().strip()
 
 
-def _connect_ro(path: Path) -> sqlite3.Connection:
+def _connect_ro(path: Path) -> SQLiteConnection:
     """Open a SQLite database strictly read-only (safe next to live writers)."""
-    return sqlite3.connect(f"{Path(path).resolve().as_uri()}?mode=ro", uri=True, timeout=30.0)
+    return _open_readonly(Path(path).resolve(), timeout=30.0)
 
 
-def _filled_sections_by_slug(conn: sqlite3.Connection) -> dict[str, set[str]]:
+def _filled_sections_by_slug(conn: SQLiteConnection) -> dict[str, set[str]]:
     placeholders = ", ".join("?" for _ in EMPTY_PAYLOADS)
     filled: dict[str, set[str]] = {}
     for slug, section in conn.execute(

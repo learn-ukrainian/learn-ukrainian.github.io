@@ -26,7 +26,6 @@ import argparse
 import hashlib
 import json
 import re
-import sqlite3
 import sys
 from collections.abc import Iterable
 from dataclasses import dataclass, field
@@ -34,6 +33,9 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_OUTPUT = REPO_ROOT / "registry" / "projects" / "open_model_data" / "sources" / "holdings_manifest.yaml"
@@ -405,7 +407,7 @@ def _row_digest(rows: Iterable[tuple[Any, ...]]) -> tuple[int, str]:
     return count, digest.hexdigest()
 
 
-def measure_rows(conn: sqlite3.Connection, selection: str) -> dict[str, Any]:
+def measure_rows(conn: SQLiteConnection, selection: str) -> dict[str, Any]:
     cursor = conn.execute(selection)
     columns = [description[0] for description in cursor.description]
     count, digest = _row_digest(iter(cursor.fetchone, None))
@@ -433,8 +435,8 @@ def measure_files(root: Path, pattern: str) -> dict[str, Any]:
     }
 
 
-def _open_read_only(path: Path) -> sqlite3.Connection:
-    return sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)
+def _open_read_only(path: Path) -> SQLiteConnection:
+    return _open_readonly(path.resolve())
 
 
 def build_manifest(sources_db: Path, vesum_db: Path, ua_gec: Path, *, measured_at: str) -> dict[str, Any]:

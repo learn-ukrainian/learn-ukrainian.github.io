@@ -42,12 +42,12 @@ For one-shot interactive testing:
         --judge-family claude --judge-model claude-opus-4-7 \\
         --text "Доброго дня! Чекаю на ваші коментарі у вкладенні."
 """
+
 from __future__ import annotations
 
 import argparse
 import json
 import re
-import sqlite3
 import subprocess
 import sys
 import time
@@ -59,6 +59,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DB = PROJECT_ROOT / "data" / "sources.db"
 BRIDGE = PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"
@@ -84,7 +85,7 @@ def retrieve_antonenko(text: str, k: int = 8) -> list[dict]:
     words = set(re.findall(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+", text.lower()))
     if not words:
         return []
-    conn = sqlite3.connect(f"{Path(DB).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(DB).resolve())
     try:
         placeholders = ",".join("?" * len(words))
         rows = conn.execute(
@@ -103,20 +104,14 @@ def retrieve_antonenko(text: str, k: int = 8) -> list[dict]:
         ).fetchall()
     finally:
         conn.close()
-    return [
-        {"headword": r[0], "section": r[1], "page": r[2], "text": (r[3] or "")[:600]}
-        for r in rows
-    ]
+    return [{"headword": r[0], "section": r[1], "page": r[2], "text": (r[3] or "")[:600]} for r in rows]
 
 
 def build_judge_prompt(target_text: str, antonenko_entries: list[dict]) -> str:
     """Construct the judge prompt. Identical across families = fair test."""
     rules_section = ""
     if antonenko_entries:
-        rules_section = (
-            "## Relevant Antonenko-Davydovych entries "
-            "(potentially applicable rules):\n\n"
-        )
+        rules_section = "## Relevant Antonenko-Davydovych entries (potentially applicable rules):\n\n"
         for i, e in enumerate(antonenko_entries[:8], 1):
             rules_section += f"### Rule {i}: {e['headword']}\n{e['text']}\n\n"
     else:
@@ -211,44 +206,70 @@ def call_judge(prompt: str, task_id: str, family: str, model: str, from_agent: s
     raw: str | None
     if family == "gemini":
         argv = [
-            *base, "ask-gemini", "-",
-            "--task-id", task_id,
-            "--from", from_agent,
-            "--model", model,
+            *base,
+            "ask-gemini",
+            "-",
+            "--task-id",
+            task_id,
+            "--from",
+            from_agent,
+            "--model",
+            model,
             "--stdout-only",
             "--skip-model-check",
             "--no-github",
         ]
         proc = subprocess.run(
-            argv, cwd=str(PROJECT_ROOT), input=prompt,
-            capture_output=True, text=True, timeout=JUDGE_TIMEOUT_S,
+            argv,
+            cwd=str(PROJECT_ROOT),
+            input=prompt,
+            capture_output=True,
+            text=True,
+            timeout=JUDGE_TIMEOUT_S,
         )
         raw = proc.stdout.strip() if proc.stdout.strip() else _latest_bridge_response(task_id, "gemini", from_agent)
     elif family == "codex":
         argv = [
-            *base, "ask-codex", "-",
-            "--task-id", task_id,
-            "--from", from_agent,
-            "--to-model", model,
+            *base,
+            "ask-codex",
+            "-",
+            "--task-id",
+            task_id,
+            "--from",
+            from_agent,
+            "--to-model",
+            model,
             "--new-session",
         ]
         proc = subprocess.run(
-            argv, cwd=str(PROJECT_ROOT), input=prompt,
-            capture_output=True, text=True, timeout=JUDGE_TIMEOUT_S,
+            argv,
+            cwd=str(PROJECT_ROOT),
+            input=prompt,
+            capture_output=True,
+            text=True,
+            timeout=JUDGE_TIMEOUT_S,
         )
         raw = _latest_bridge_response(task_id, "codex", from_agent)
     elif family == "claude":
         # ask-claude takes content as positional, not stdin.
         argv = [
-            *base, "ask-claude", prompt,
-            "--task-id", task_id,
-            "--from", from_agent,
-            "--to-model", model,
+            *base,
+            "ask-claude",
+            prompt,
+            "--task-id",
+            task_id,
+            "--from",
+            from_agent,
+            "--to-model",
+            model,
             "--new-session",
         ]
         proc = subprocess.run(
-            argv, cwd=str(PROJECT_ROOT),
-            capture_output=True, text=True, timeout=JUDGE_TIMEOUT_S,
+            argv,
+            cwd=str(PROJECT_ROOT),
+            capture_output=True,
+            text=True,
+            timeout=JUDGE_TIMEOUT_S,
         )
         raw = _latest_bridge_response(task_id, "claude", from_agent)
     else:
@@ -304,12 +325,18 @@ def judge_one(text: str, label: str, family: str, model: str, from_agent: str) -
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--judge-family", required=True, choices=["gemini", "codex", "claude"],
-                    help="Bridge family for the judge model.")
-    ap.add_argument("--judge-model", required=True,
-                    help="Exact model ID (e.g. claude-opus-4-7, gpt-5.5, gemini-3.1-pro-preview).")
-    ap.add_argument("--from-agent", default=None,
-                    help="Sender label for bridge accounting (default: derived from judge-model).")
+    ap.add_argument(
+        "--judge-family",
+        required=True,
+        choices=["gemini", "codex", "claude"],
+        help="Bridge family for the judge model.",
+    )
+    ap.add_argument(
+        "--judge-model", required=True, help="Exact model ID (e.g. claude-opus-4-7, gpt-5.5, gemini-3.1-pro-preview)."
+    )
+    ap.add_argument(
+        "--from-agent", default=None, help="Sender label for bridge accounting (default: derived from judge-model)."
+    )
     ap.add_argument("--inputs", help="Path to outputs.jsonl (eval harness format).")
     ap.add_argument("--text", help="One-shot text mode (interactive testing).")
     ap.add_argument("--label", default="oneshot", help="Label for one-shot mode.")

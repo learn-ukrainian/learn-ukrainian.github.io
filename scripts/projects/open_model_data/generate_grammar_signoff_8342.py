@@ -23,6 +23,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.build_grammar_component_8342 import (
     DEFAULT_FIREWALL_MANIFEST,
     DEFAULT_UA_GEC_TEST_M2,
@@ -183,14 +184,10 @@ def generate_signoff_and_receipt(
                 )
             for k, v in raw_findings.items():
                 if not isinstance(k, str) or not k.isdigit() or str(int(k)) != k:
-                    raise ValueError(
-                        f"Provenance violation: non-canonical sample index key {k!r} in findings file"
-                    )
+                    raise ValueError(f"Provenance violation: non-canonical sample index key {k!r} in findings file")
                 int_k = int(k)
                 if int_k in findings:
-                    raise ValueError(
-                        f"Provenance violation: duplicate sample index key {k!r} in findings file"
-                    )
+                    raise ValueError(f"Provenance violation: duplicate sample index key {k!r} in findings file")
                 findings[int_k] = v
 
     if write_signoff:
@@ -221,13 +218,9 @@ def generate_signoff_and_receipt(
             extra_keys = raw_keys - expected_str_keys
             err_parts = []
             if missing_keys:
-                err_parts.append(
-                    f"missing {len(missing_keys)} sample keys: {sorted(missing_keys)[:10]}"
-                )
+                err_parts.append(f"missing {len(missing_keys)} sample keys: {sorted(missing_keys)[:10]}")
             if extra_keys:
-                err_parts.append(
-                    f"unexpected extra {len(extra_keys)} sample keys: {sorted(extra_keys)[:10]}"
-                )
+                err_parts.append(f"unexpected extra {len(extra_keys)} sample keys: {sorted(extra_keys)[:10]}")
             raise ValueError(
                 f"Provenance violation: findings raw keys do not match expected sample keys ({'; '.join(err_parts)})"
             )
@@ -237,13 +230,9 @@ def generate_signoff_and_receipt(
             extra_indices = finding_indices - expected_indices
             err_parts = []
             if missing_indices:
-                err_parts.append(
-                    f"missing {len(missing_indices)} sample indices: {sorted(missing_indices)[:10]}"
-                )
+                err_parts.append(f"missing {len(missing_indices)} sample indices: {sorted(missing_indices)[:10]}")
             if extra_indices:
-                err_parts.append(
-                    f"unexpected extra {len(extra_indices)} sample indices: {sorted(extra_indices)[:10]}"
-                )
+                err_parts.append(f"unexpected extra {len(extra_indices)} sample indices: {sorted(extra_indices)[:10]}")
             raise ValueError(
                 f"Provenance violation: findings indices do not match expected sample indices ({'; '.join(err_parts)})"
             )
@@ -335,10 +324,7 @@ def generate_signoff_and_receipt(
                     )
                 # Enforce that correction assessment explicitly names its edit spans
                 if err_span and repl_span:
-                    if (
-                        err_span.lower() not in lowered_assessment
-                        or repl_span.lower() not in lowered_assessment
-                    ):
+                    if err_span.lower() not in lowered_assessment or repl_span.lower() not in lowered_assessment:
                         raise ValueError(
                             f"Provenance violation: correction item {s_idx} assessment does not name edit pair "
                             f"«{err_span}» → «{repl_span}»: {assessment!r}"
@@ -376,9 +362,7 @@ def generate_signoff_and_receipt(
 
         # Ensure all control assessments provide distinct sentence-specific evidence
         control_assessments = [
-            findings[s["sample_index"]].get("reviewer_assessment", "")
-            for s in samples
-            if not s["is_erroneous"]
+            findings[s["sample_index"]].get("reviewer_assessment", "") for s in samples if not s["is_erroneous"]
         ]
         if len(set(control_assessments)) != len(control_assessments):
             raise ValueError(
@@ -394,7 +378,7 @@ def generate_signoff_and_receipt(
     all_test = test_sources | test_targets
     is_near_dup = build_jaccard_firewall_matcher(all_test, threshold=0.80)
 
-    conn = sqlite3.connect(f"file:{VESUM_DB}?mode=ro", uri=True)
+    conn = _open_readonly(VESUM_DB)
     cur = conn.cursor()
 
     reviewed_items: list[dict[str, Any]] = []
@@ -590,11 +574,7 @@ def generate_signoff_and_receipt(
                 raise ValueError(
                     f"Provenance violation: item {sample_idx} missing or invalid status {r_status!r} (allowed: {sorted(ALLOWED_REVIEWER_STATUSES)})"
                 )
-            has_defect = (
-                r_verdict != "APPROVED"
-                or r_status != "PASS"
-                or bool(f_entry.get("defect"))
-            )
+            has_defect = r_verdict != "APPROVED" or r_status != "PASS" or bool(f_entry.get("defect"))
             if has_defect:
                 defect_desc = (
                     f_entry.get("defect")
@@ -603,10 +583,7 @@ def generate_signoff_and_receipt(
                 )
                 item_defects.append(defect_desc)
             reviewer_assessment = (
-                f_entry.get("reviewer_assessment")
-                or f_entry.get("evaluation")
-                or f_entry.get("comment")
-                or ""
+                f_entry.get("reviewer_assessment") or f_entry.get("evaluation") or f_entry.get("comment") or ""
             )
             item_criteria = f_entry.get("criteria", {})
             if isinstance(item_criteria, dict):
@@ -701,7 +678,12 @@ def generate_signoff_and_receipt(
         "sample_size_reviewed": sample_size,
         "reviewer_id": reviewer_id or "",
         "reviewer_family": reviewer_family or "",
-        "reviewer_name": reviewer_name or ("Claude Sonnet (Blue Team Independent Language Reviewer)" if reviewer_family == "claude" else reviewer_id or ""),
+        "reviewer_name": reviewer_name
+        or (
+            "Claude Sonnet (Blue Team Independent Language Reviewer)"
+            if reviewer_family == "claude"
+            else reviewer_id or ""
+        ),
         "reviewer_credential": "Cross-Family Independent Review Protocol",
         "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
         "review_date": signoff_date or "2026-09-23",
@@ -776,18 +758,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--write-signoff", action="store_true", help="Write actual signoff file (requires --findings and reviewer info)"
     )
-    parser.add_argument(
-        "--reviewer-id", type=str, default=None, help="Reviewer ID (e.g. claude_blue_team_ling_review)"
-    )
-    parser.add_argument(
-        "--reviewer-family", type=str, default=None, help="Reviewer family (e.g. claude)"
-    )
-    parser.add_argument(
-        "--reviewer-name", type=str, default=None, help="Reviewer display name"
-    )
-    parser.add_argument(
-        "--signoff-date", type=str, default=None, help="Signoff date (YYYY-MM-DD)"
-    )
+    parser.add_argument("--reviewer-id", type=str, default=None, help="Reviewer ID (e.g. claude_blue_team_ling_review)")
+    parser.add_argument("--reviewer-family", type=str, default=None, help="Reviewer family (e.g. claude)")
+    parser.add_argument("--reviewer-name", type=str, default=None, help="Reviewer display name")
+    parser.add_argument("--signoff-date", type=str, default=None, help="Signoff date (YYYY-MM-DD)")
     args = parser.parse_args()
     generate_signoff_and_receipt(
         findings_file=args.findings,

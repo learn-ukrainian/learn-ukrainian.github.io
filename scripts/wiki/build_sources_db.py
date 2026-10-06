@@ -112,6 +112,8 @@ else:
     from .textbook_subjects import AUTHOR_UK_BY_TRANSLIT, subject_for_source_file
     from .ukrainian_wiki_corpus import ensure_ukrainian_wiki_manifest, ensure_ukrainian_wiki_schema
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+
 SCHEMA = """
 -- === FTS5 tables (prose — full-text search) ===
 
@@ -357,6 +359,7 @@ def _enrich_author_uk(entry: dict, *, slug: str) -> dict:
         uk = AUTHOR_UK_BY_TRANSLIT.get(author.lower())
         if uk is None:
             from ingest.incremental_textbook_ingest import IngestError
+
             raise IngestError(
                 f"{slug}: author {author!r} has no canonical Cyrillic form in "
                 "AUTHOR_UK — add it (title-probed, never guessed) before ingest."
@@ -397,11 +400,7 @@ def _build_textbook_row(
             "docs/decisions/2026-05-15-cyrillic-native-matcher.md."
         )
     text = str(entry.get("text") or "")
-    stored_grade = (
-        "university"
-        if source_file.startswith("uni-")
-        else entry.get("grade", grade)
-    )
+    stored_grade = "university" if source_file.startswith("uni-") else entry.get("grade", grade)
     return (
         entry.get("chunk_id", f"tb-{source_file}-{chunk_index}"),
         entry.get("section_title", ""),
@@ -439,9 +438,7 @@ def _extract_sections_with_university_grade_adapter(db_path: Path):
         university_rows = connection.execute(
             "SELECT COUNT(*) FROM textbooks WHERE source_file GLOB 'uni-*'"
         ).fetchone()[0]
-        connection.execute(
-            "UPDATE textbooks SET grade = 'grade-00' WHERE source_file GLOB 'uni-*'"
-        )
+        connection.execute("UPDATE textbooks SET grade = 'grade-00' WHERE source_file GLOB 'uni-*'")
         connection.commit()
     finally:
         connection.close()
@@ -451,29 +448,21 @@ def _extract_sections_with_university_grade_adapter(db_path: Path):
     finally:
         connection = sqlite3.connect(str(db_path))
         try:
-            connection.execute(
-                "UPDATE textbooks SET grade = 'university' WHERE source_file GLOB 'uni-*'"
-            )
+            connection.execute("UPDATE textbooks SET grade = 'university' WHERE source_file GLOB 'uni-*'")
             restored_rows = connection.execute(
-                "SELECT COUNT(*) FROM textbooks "
-                "WHERE source_file GLOB 'uni-*' AND grade = 'university'"
+                "SELECT COUNT(*) FROM textbooks WHERE source_file GLOB 'uni-*' AND grade = 'university'"
             ).fetchone()[0]
             if restored_rows != university_rows:
-                raise ValueError(
-                    "university grade-label restoration changed the full-rebuild row count"
-                )
+                raise ValueError("university grade-label restoration changed the full-rebuild row count")
             integrity = connection.execute("PRAGMA integrity_check").fetchone()[0]
             if integrity != "ok":
-                raise ValueError(
-                    f"database integrity failed after university grade restoration: {integrity}"
-                )
+                raise ValueError(f"database integrity failed after university grade restoration: {integrity}")
             connection.commit()
         finally:
             connection.close()
 
 
-def _ingest_jsonl(conn: sqlite3.Connection, table: str, jsonl_path: Path,
-                  columns: list[str], label: str) -> int:
+def _ingest_jsonl(conn: sqlite3.Connection, table: str, jsonl_path: Path, columns: list[str], label: str) -> int:
     """Ingest a JSONL file into a table. Returns row count."""
     if not jsonl_path.exists():
         print(f"  ⚠️  Missing: {jsonl_path}")
@@ -550,25 +539,28 @@ def _ingest_external_articles(conn: sqlite3.Connection, ext_dir: Path) -> int:
                 if not url or url in seen_urls:
                     continue
                 seen_urls.add(url)
-                batch.append((
-                    f"ext-{source_file}-{len(batch)}",
-                    url, _normalize_url(url),
-                    entry.get("title", ""), entry.get("text", ""),
-                    source_file, entry.get("domain", ""),
-                    entry.get("char_count", len(entry.get("text", ""))),
-                    channel_id,
-                    entry.get("speaker", "") or "",
-                    entry.get("video_id", "") or "",
-                    entry.get("publish_date", "") or "",
-                    entry.get("duration_s", 0) or 0,
-                ))
+                batch.append(
+                    (
+                        f"ext-{source_file}-{len(batch)}",
+                        url,
+                        _normalize_url(url),
+                        entry.get("title", ""),
+                        entry.get("text", ""),
+                        source_file,
+                        entry.get("domain", ""),
+                        entry.get("char_count", len(entry.get("text", ""))),
+                        channel_id,
+                        entry.get("speaker", "") or "",
+                        entry.get("video_id", "") or "",
+                        entry.get("publish_date", "") or "",
+                        entry.get("duration_s", 0) or 0,
+                    )
+                )
         if batch:
             conn.executemany(ext_sql, batch)
         total += len(batch)
-        print(f"  📥 {source_file}: {len(batch)} entries "
-              f"(channel_id={channel_id!r})")
+        print(f"  📥 {source_file}: {len(batch)} entries (channel_id={channel_id!r})")
     return total
-
 
 
 def _db_is_populated(db: Path) -> tuple[bool, int]:
@@ -599,7 +591,7 @@ def _db_is_populated(db: Path) -> tuple[bool, int]:
         # display, but do NOT let a sqlite error flip the verdict.
         total = 0
         try:
-            conn = sqlite3.connect(f"{Path(db).resolve().as_uri()}?mode=ro", uri=True)
+            conn = _shared_open_readonly(Path(db).resolve())
             for tbl in ("textbooks", "literary_texts", "external_articles"):
                 with contextlib.suppress(sqlite3.OperationalError):
                     total += conn.execute(f"SELECT COUNT(*) FROM {tbl}").fetchone()[0]
@@ -613,7 +605,7 @@ def _db_is_populated(db: Path) -> tuple[bool, int]:
     # File too small to plausibly hold real corpora. Trust the count and
     # treat any sqlite error as "not populated" (legacy behavior).
     try:
-        conn = sqlite3.connect(f"{Path(db).resolve().as_uri()}?mode=ro", uri=True)
+        conn = _shared_open_readonly(Path(db).resolve())
         total = 0
         for tbl in ("textbooks", "literary_texts", "external_articles"):
             with contextlib.suppress(sqlite3.OperationalError):
@@ -632,26 +624,20 @@ def _extract_wikipedia_snapshot(db: Path) -> tuple[list[tuple], list[tuple]]:
     if not db.exists():
         return [], []
     try:
-        conn = sqlite3.connect(f"{Path(db).resolve().as_uri()}?mode=ro", uri=True)
+        conn = _shared_open_readonly(Path(db).resolve())
         wiki_rows: list[tuple] = []
         neg_rows: list[tuple] = []
         with contextlib.suppress(sqlite3.OperationalError):
-            wiki_rows = list(conn.execute(
-                "SELECT title, url, text, char_count, fetched_at FROM wikipedia"
-            ))
+            wiki_rows = list(conn.execute("SELECT title, url, text, char_count, fetched_at FROM wikipedia"))
         with contextlib.suppress(sqlite3.OperationalError):
-            neg_rows = list(conn.execute(
-                "SELECT topic, tried_at FROM wikipedia_negative_cache"
-            ))
+            neg_rows = list(conn.execute("SELECT topic, tried_at FROM wikipedia_negative_cache"))
         conn.close()
         return wiki_rows, neg_rows
     except sqlite3.Error:
         return [], []
 
 
-def _restore_wikipedia_snapshot(conn: sqlite3.Connection,
-                                 wiki_rows: list[tuple],
-                                 neg_rows: list[tuple]) -> None:
+def _restore_wikipedia_snapshot(conn: sqlite3.Connection, wiki_rows: list[tuple], neg_rows: list[tuple]) -> None:
     """Re-insert wikipedia + negative cache rows into a freshly-built DB."""
     if wiki_rows:
         conn.executemany(
@@ -688,9 +674,7 @@ def _validate_build(conn: sqlite3.Connection, expected_counts: dict[str, int]) -
     for table, expected in expected_counts.items():
         actual = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
         if actual != expected:
-            raise BuildValidationError(
-                f"{table} has {actual} rows, expected {expected} from ingestion"
-            )
+            raise BuildValidationError(f"{table} has {actual} rows, expected {expected} from ingestion")
 
     integrity = conn.execute("PRAGMA integrity_check").fetchone()[0]
     if integrity != "ok":
@@ -724,9 +708,7 @@ def format_literary_validation_report(conn: sqlite3.Connection) -> str:
             """
         ).fetchall()
     )
-    work_id_count = conn.execute(
-        "SELECT COUNT(DISTINCT work_id) FROM literary_texts"
-    ).fetchone()[0]
+    work_id_count = conn.execute("SELECT COUNT(DISTINCT work_id) FROM literary_texts").fetchone()[0]
 
     lines = ["Literary metadata validation report"]
     for period, count in period_counts.items():
@@ -767,14 +749,16 @@ def declare_wal(db: Path) -> str:
     return mode
 
 
-def build(db_path: Path | None = None,
-          external_dir: Path | None = None,
-          textbook_dir: Path | None = None,
-          gdrive_dir: Path | None = None,
-          *,
-          force: bool = False,
-          dry_run: bool = False,
-          preserve_wiki: bool = True) -> Path:
+def build(
+    db_path: Path | None = None,
+    external_dir: Path | None = None,
+    textbook_dir: Path | None = None,
+    gdrive_dir: Path | None = None,
+    *,
+    force: bool = False,
+    dry_run: bool = False,
+    preserve_wiki: bool = True,
+) -> Path:
     """Build the unified sources database.
 
     Safety:
@@ -808,10 +792,7 @@ def build(db_path: Path | None = None,
         # the file is large but the main-table COUNT query errored
         # transiently (the #1563 failure mode). File size doesn't lie.
         size_mb = db.stat().st_size / (1024 * 1024) if db.exists() else 0.0
-        print(
-            f"  ⚠️  {db.name} already populated "
-            f"({size_mb:,.1f} MB on disk, {total:,} rows across main tables)."
-        )
+        print(f"  ⚠️  {db.name} already populated ({size_mb:,.1f} MB on disk, {total:,} rows across main tables).")
         print("     Refusing to destroy it without --force. Use:")
         print("       .venv/bin/python scripts/wiki/build_sources_db.py --force")
         print("     or add --dry-run to preview what would happen.")
@@ -835,14 +816,12 @@ def build(db_path: Path | None = None,
     if preserve_wiki:
         wiki_rows, neg_rows = _extract_wikipedia_snapshot(db)
         if wiki_rows or neg_rows:
-            print(f"  💾 Preserving wikipedia snapshot: "
-                  f"{len(wiki_rows)} articles, {len(neg_rows)} negative-cache entries")
+            print(
+                f"  💾 Preserving wikipedia snapshot: {len(wiki_rows)} articles, {len(neg_rows)} negative-cache entries"
+            )
     ulif_raw_rows, ulif_entry_rows, ulif_section_rows = extract_ulif_dictua_snapshot(db)
     if ulif_entry_rows:
-        print(
-            "  💾 Preserving DictUA snapshot: "
-            f"{len(ulif_entry_rows)} entries, {len(ulif_section_rows)} sections"
-        )
+        print(f"  💾 Preserving DictUA snapshot: {len(ulif_entry_rows)} entries, {len(ulif_section_rows)} sections")
 
     db.parent.mkdir(parents=True, exist_ok=True)
 
@@ -880,17 +859,11 @@ def build(db_path: Path | None = None,
         if preserve_wiki and (wiki_rows or neg_rows):
             _restore_wikipedia_snapshot(conn, wiki_rows, neg_rows)
             conn.commit()
-            print(f"  ✅ Restored {len(wiki_rows)} wikipedia articles + "
-                  f"{len(neg_rows)} negative-cache entries")
+            print(f"  ✅ Restored {len(wiki_rows)} wikipedia articles + {len(neg_rows)} negative-cache entries")
         if ulif_raw_rows or ulif_entry_rows or ulif_section_rows:
-            restore_ulif_dictua_snapshot(
-                conn, ulif_raw_rows, ulif_entry_rows, ulif_section_rows
-            )
+            restore_ulif_dictua_snapshot(conn, ulif_raw_rows, ulif_entry_rows, ulif_section_rows)
             conn.commit()
-            print(
-                "  ✅ Restored DictUA snapshot: "
-                f"{len(ulif_entry_rows)} entries, {len(ulif_section_rows)} sections"
-            )
+            print(f"  ✅ Restored DictUA snapshot: {len(ulif_entry_rows)} entries, {len(ulif_section_rows)} sections")
 
         total = 0
 
@@ -920,12 +893,14 @@ def build(db_path: Path | None = None,
                             entry = json.loads(line)
                             _require_production_textbook_entry(entry, source_file=source_file)
                             entry = _enrich_author_uk(entry, slug=source_file)
-                            batch.append(_build_textbook_row(
-                                entry,
-                                source_file=source_file,
-                                grade=grade,
-                                chunk_index=len(batch),
-                            ))
+                            batch.append(
+                                _build_textbook_row(
+                                    entry,
+                                    source_file=source_file,
+                                    grade=grade,
+                                    chunk_index=len(batch),
+                                )
+                            )
                     if batch:
                         conn.executemany(tb_sql, batch)
                     tb_total += len(batch)
@@ -972,15 +947,12 @@ def build(db_path: Path | None = None,
         historical_total = 0
         seen_collections: set[str] = set()
         if historical_root.exists():
-            for jsonl_path in sorted(
-                historical_root.glob("*/historical_source_records.jsonl")
-            ):
+            for jsonl_path in sorted(historical_root.glob("*/historical_source_records.jsonl")):
                 rows = load_historical_source_rows(jsonl_path)
                 collection_id = str(rows[0][0])
                 if collection_id in seen_collections:
                     raise BuildValidationError(
-                        f"duplicate historical collection {collection_id!r} under "
-                        f"{historical_root}"
+                        f"duplicate historical collection {collection_id!r} under {historical_root}"
                     )
                 seen_collections.add(collection_id)
                 historical_total += insert_historical_source_rows(conn, rows)
@@ -991,40 +963,74 @@ def build(db_path: Path | None = None,
         # --- Dictionaries ---
         print("\n📕 Dictionaries")
         expected_counts["sum11"] = _ingest_jsonl(
-            conn, "sum11", gd / "sum11" / "chunks.jsonl",
-            ["word", "definition", "text", "source"], "СУМ-11")
+            conn, "sum11", gd / "sum11" / "chunks.jsonl", ["word", "definition", "text", "source"], "СУМ-11"
+        )
         expected_counts["grinchenko"] = _ingest_jsonl(
-            conn, "grinchenko", gd / "grinchenko" / "chunks.jsonl",
-            ["word", "definition", "source"], "Грінченко")
+            conn, "grinchenko", gd / "grinchenko" / "chunks.jsonl", ["word", "definition", "source"], "Грінченко"
+        )
         expected_counts["balla_en_uk"] = _ingest_jsonl(
-            conn, "balla_en_uk", gd / "balla-en-uk" / "chunks.jsonl",
-            ["word", "definition", "text", "source"], "Балла EN→UK")
+            conn,
+            "balla_en_uk",
+            gd / "balla-en-uk" / "chunks.jsonl",
+            ["word", "definition", "text", "source"],
+            "Балла EN→UK",
+        )
         expected_counts["dmklinger_uk_en"] = _ingest_jsonl(
-            conn, "dmklinger_uk_en", gd / "dmklinger-uk-en" / "chunks.jsonl",
-            ["word", "pos", "translations", "text", "source"], "DMKlinger UK→EN")
+            conn,
+            "dmklinger_uk_en",
+            gd / "dmklinger-uk-en" / "chunks.jsonl",
+            ["word", "pos", "translations", "text", "source"],
+            "DMKlinger UK→EN",
+        )
         expected_counts["ukrajinet"] = _ingest_jsonl(
-            conn, "ukrajinet", gd / "ukrajinet" / "chunks.jsonl",
-            ["synset_id", "words", "text", "source"], "Ukrajinet WordNet")
+            conn,
+            "ukrajinet",
+            gd / "ukrajinet" / "chunks.jsonl",
+            ["synset_id", "words", "text", "source"],
+            "Ukrajinet WordNet",
+        )
         expected_counts["wiktionary"] = _ingest_jsonl(
-            conn, "wiktionary", gd / "wiktionary" / "chunks.jsonl",
+            conn,
+            "wiktionary",
+            gd / "wiktionary" / "chunks.jsonl",
             ["word", "definitions", "synonyms", "antonyms", "text", "source"],
-            "Wiktionary UK")
+            "Wiktionary UK",
+        )
         expected_counts["frazeolohichnyi"] = _ingest_jsonl(
-            conn, "frazeolohichnyi", gd / "frazeolohichnyi" / "chunks.jsonl",
-            ["word", "definition", "text", "source"], "Фразеологічний")
+            conn,
+            "frazeolohichnyi",
+            gd / "frazeolohichnyi" / "chunks.jsonl",
+            ["word", "definition", "text", "source"],
+            "Фразеологічний",
+        )
         expected_counts["style_guide"] = _ingest_jsonl(
-            conn, "style_guide", gd / "antonenko-davydovych" / "chunks.jsonl",
-            ["word", "section", "text", "source"], "Антоненко-Давидович")
+            conn,
+            "style_guide",
+            gd / "antonenko-davydovych" / "chunks.jsonl",
+            ["word", "section", "text", "source"],
+            "Антоненко-Давидович",
+        )
 
         # --- CEFR vocabulary (local) ---
         expected_counts["puls_cefr"] = _ingest_jsonl(
-            conn, "puls_cefr", PROJECT_ROOT / "data" / "puls" / "entries.jsonl",
+            conn,
+            "puls_cefr",
+            PROJECT_ROOT / "data" / "puls" / "entries.jsonl",
             ["word", "guideword", "level", "pos", "type", "text", "source"],
-            "PULS CEFR")
+            "PULS CEFR",
+        )
 
-        for key in ("sum11", "grinchenko", "balla_en_uk", "dmklinger_uk_en",
-                    "ukrajinet", "wiktionary", "frazeolohichnyi", "style_guide",
-                    "puls_cefr"):
+        for key in (
+            "sum11",
+            "grinchenko",
+            "balla_en_uk",
+            "dmklinger_uk_en",
+            "ukrajinet",
+            "wiktionary",
+            "frazeolohichnyi",
+            "style_guide",
+            "puls_cefr",
+        ):
             total += expected_counts[key]
 
         conn.commit()
@@ -1091,8 +1097,7 @@ def build(db_path: Path | None = None,
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build the unified sources.db (textbooks + literary + "
-                    "dictionaries + wikipedia passthrough).",
+        description="Build the unified sources.db (textbooks + literary + dictionaries + wikipedia passthrough).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "By default, refuses to destroy an existing populated DB. "
@@ -1102,22 +1107,27 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         ),
     )
     parser.add_argument(
-        "--force", action="store_true",
+        "--force",
+        action="store_true",
         help="Destroy and rebuild an existing populated DB. Required when "
-             "sources.db already has rows in textbooks/literary_texts/"
-             "external_articles.",
+        "sources.db already has rows in textbooks/literary_texts/"
+        "external_articles.",
     )
     parser.add_argument(
-        "--dry-run", action="store_true",
+        "--dry-run",
+        action="store_true",
         help="Print the plan without touching the filesystem or the DB.",
     )
     parser.add_argument(
-        "--no-preserve-wiki", action="store_true",
+        "--no-preserve-wiki",
+        action="store_true",
         help="Also wipe the wikipedia and wikipedia_negative_cache tables. "
-             "Default is to snapshot and restore them across the rebuild.",
+        "Default is to snapshot and restore them across the rebuild.",
     )
     parser.add_argument(
-        "--db-path", type=Path, default=None,
+        "--db-path",
+        type=Path,
+        default=None,
         help="Override the default data/sources.db path (testing only).",
     )
     return parser.parse_args(argv)

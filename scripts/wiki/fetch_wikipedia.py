@@ -27,6 +27,8 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -62,9 +64,22 @@ CREATE TABLE IF NOT EXISTS wikipedia_negative_cache (
 # Source of truth: curriculum/l2-uk-en/curriculum.yaml. Keep aligned with
 # scripts/wiki/config.py:ALL_TRACKS. lit-doc and lit-crimea were merged into
 # other lit-* tracks and are no longer separate tracks.
-SEMINAR_TRACKS = ["folk", "hist", "bio", "istorio", "lit", "oes", "ruth",
-                  "lit-essay", "lit-war", "lit-hist-fic", "lit-youth",
-                  "lit-fantastika", "lit-humor", "lit-drama"]
+SEMINAR_TRACKS = [
+    "folk",
+    "hist",
+    "bio",
+    "istorio",
+    "lit",
+    "oes",
+    "ruth",
+    "lit-essay",
+    "lit-war",
+    "lit-hist-fic",
+    "lit-youth",
+    "lit-fantastika",
+    "lit-humor",
+    "lit-drama",
+]
 
 # Section-header prefixes that indicate a pedagogical heading, not a real
 # Wikipedia topic. Content_outline sections with these prefixes get filtered
@@ -74,15 +89,45 @@ SEMINAR_TRACKS = ["folk", "hist", "bio", "istorio", "lit", "oes", "ruth",
 # Pattern: word-colon-phrase, where word is a Ukrainian academic/essay
 # structural marker. Matched case-insensitively at the START of the section.
 _PEDAGOGICAL_HEADER_PREFIXES = (
-    "вступ", "вступний", "основ", "висновк", "висновок",
-    "джерел", "контекст", "аналіз", "аналітик", "методологія",
-    "огляд", "підсумк", "рефлексі", "дискусі", "розгляд",
-    "тема", "тези", "фокус", "мета", "завдання", "план",
-    "розділ", "частина", "глава", "секція", "підрозділ",
-    "додаток", "бібліографія", "примітк",
+    "вступ",
+    "вступний",
+    "основ",
+    "висновк",
+    "висновок",
+    "джерел",
+    "контекст",
+    "аналіз",
+    "аналітик",
+    "методологія",
+    "огляд",
+    "підсумк",
+    "рефлексі",
+    "дискусі",
+    "розгляд",
+    "тема",
+    "тези",
+    "фокус",
+    "мета",
+    "завдання",
+    "план",
+    "розділ",
+    "частина",
+    "глава",
+    "секція",
+    "підрозділ",
+    "додаток",
+    "бібліографія",
+    "примітк",
     # English equivalents that sometimes sneak into Ukrainian plan YAMLs
-    "introduction", "conclusion", "sources", "analysis", "context",
-    "overview", "summary", "methodology", "discussion",
+    "introduction",
+    "conclusion",
+    "sources",
+    "analysis",
+    "context",
+    "overview",
+    "summary",
+    "methodology",
+    "discussion",
 )
 
 
@@ -121,10 +166,10 @@ def _ensure_table(conn: sqlite3.Connection) -> None:
 # Wikipedia's API asks clients to stay under ~10 req/sec. We stay well
 # below that (1 req/sec minimum) and back off exponentially on 429.
 
-_MIN_INTERVAL_S = 1.0            # minimum gap between consecutive API calls
-_BACKOFF_BASE_S = 30.0           # first backoff after 429
-_BACKOFF_MAX_S = 600.0           # cap at 10 minutes
-_MAX_429_RETRIES = 4             # total attempts per URL before giving up
+_MIN_INTERVAL_S = 1.0  # minimum gap between consecutive API calls
+_BACKOFF_BASE_S = 30.0  # first backoff after 429
+_BACKOFF_MAX_S = 600.0  # cap at 10 minutes
+_MAX_429_RETRIES = 4  # total attempts per URL before giving up
 
 # Module-level tracker of when we last hit the API (any endpoint)
 _last_call_ts: float = 0.0
@@ -151,7 +196,8 @@ def _api_get(url: str) -> dict | None:
     only if every 429 retry is exhausted — callers catch and skip.
     """
     req = urllib.request.Request(
-        url, headers={"User-Agent": "learn-ukrainian-bot/1.0 (https://learn-ukrainian.github.io)"},
+        url,
+        headers={"User-Agent": "learn-ukrainian-bot/1.0 (https://learn-ukrainian.github.io)"},
     )
     for attempt in range(_MAX_429_RETRIES):
         _pace_api_call()
@@ -160,9 +206,8 @@ def _api_get(url: str) -> dict | None:
                 return json.loads(resp.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             if e.code == 429:
-                wait = min(_BACKOFF_BASE_S * (2 ** attempt), _BACKOFF_MAX_S)
-                print(f"    ⏳ rate-limited (429), sleeping {wait:.0f}s "
-                      f"(attempt {attempt + 1}/{_MAX_429_RETRIES})")
+                wait = min(_BACKOFF_BASE_S * (2**attempt), _BACKOFF_MAX_S)
+                print(f"    ⏳ rate-limited (429), sleeping {wait:.0f}s (attempt {attempt + 1}/{_MAX_429_RETRIES})")
                 time.sleep(wait)
                 continue
             # Other HTTP errors: don't retry
@@ -279,15 +324,9 @@ def fetch_for_track(track: str) -> int:
     _ensure_table(conn)
 
     # Positive cache: titles we already have
-    existing = {
-        row[0].lower()
-        for row in conn.execute("SELECT title FROM wikipedia").fetchall()
-    }
+    existing = {row[0].lower() for row in conn.execute("SELECT title FROM wikipedia").fetchall()}
     # Negative cache: topics that previously returned nothing — skip them
-    negative = {
-        row[0].lower()
-        for row in conn.execute("SELECT topic FROM wikipedia_negative_cache").fetchall()
-    }
+    negative = {row[0].lower() for row in conn.execute("SELECT topic FROM wikipedia_negative_cache").fetchall()}
 
     topics = _extract_topics_from_plans(track)
     if not topics:
@@ -299,8 +338,10 @@ def fetch_for_track(track: str) -> int:
     topics = [t for t in topics if t.lower() not in negative]
     skipped_neg = pre_neg - len(topics)
 
-    print(f"  📋 {len(topics)} topics from {track} plans"
-          + (f" ({skipped_neg} skipped via negative cache)" if skipped_neg else ""))
+    print(
+        f"  📋 {len(topics)} topics from {track} plans"
+        + (f" ({skipped_neg} skipped via negative cache)" if skipped_neg else "")
+    )
 
     new_count = 0
     seen_titles: set[str] = set()
@@ -329,8 +370,7 @@ def fetch_for_track(track: str) -> int:
             conn.execute(
                 """INSERT OR IGNORE INTO wikipedia (title, url, text, char_count, fetched_at)
                    VALUES (?, ?, ?, ?, ?)""",
-                (article["title"], article["url"], article["text"],
-                 article["char_count"], now_iso),
+                (article["title"], article["url"], article["text"], article["char_count"], now_iso),
             )
             existing.add(article["title"].lower())
             new_count += 1
@@ -358,7 +398,7 @@ def show_status() -> None:
         print("Database not found. Run build_sources_db.py first.")
         return
 
-    conn = sqlite3.connect(f"{Path(DB_PATH).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(Path(DB_PATH).resolve())
     try:
         count = conn.execute("SELECT COUNT(*) FROM wikipedia").fetchone()[0]
         total_chars = conn.execute("SELECT SUM(char_count) FROM wikipedia").fetchone()[0] or 0

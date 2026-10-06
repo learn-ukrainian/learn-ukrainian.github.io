@@ -20,6 +20,9 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from .chunking import chunk_text, policy_for
 from .config import PROJECT_ROOT
 from .embedding_manifest import (
@@ -707,7 +710,7 @@ def rerank_sections(
     )
 
 
-def _literary_query(conn: sqlite3.Connection, where_sql: str, params: tuple[Any, ...]) -> list[sqlite3.Row]:
+def _literary_query(conn: SQLiteConnection, where_sql: str, params: tuple[Any, ...]) -> list[sqlite3.Row]:
     conn.row_factory = sqlite3.Row
     return conn.execute(
         f"""
@@ -725,7 +728,7 @@ def _literary_query(conn: sqlite3.Connection, where_sql: str, params: tuple[Any,
     ).fetchall()
 
 
-def _iter_textbook_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
+def _iter_textbook_units(conn: SQLiteConnection) -> Iterator[CorpusUnit]:
     conn.row_factory = sqlite3.Row
     rows = conn.execute(
         """
@@ -775,7 +778,7 @@ def _iter_textbook_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
         )
 
 
-def _iter_modern_literary_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
+def _iter_modern_literary_units(conn: SQLiteConnection) -> Iterator[CorpusUnit]:
     for row in _literary_query(conn, "language_period = ?", ("modern",)):
         text = str(row["text"] or "")
         yield CorpusUnit(
@@ -792,7 +795,7 @@ def _iter_modern_literary_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit
         )
 
 
-def _iter_archaic_literary_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
+def _iter_archaic_literary_units(conn: SQLiteConnection) -> Iterator[CorpusUnit]:
     for row in _literary_query(
         conn,
         "language_period IN (?, ?)",
@@ -813,7 +816,7 @@ def _iter_archaic_literary_units(conn: sqlite3.Connection) -> Iterator[CorpusUni
         )
 
 
-def _iter_external_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
+def _iter_external_units(conn: SQLiteConnection) -> Iterator[CorpusUnit]:
     conn.row_factory = sqlite3.Row
     rows = conn.execute(
         """
@@ -840,7 +843,7 @@ def _iter_external_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
         )
 
 
-def _iter_wikipedia_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
+def _iter_wikipedia_units(conn: SQLiteConnection) -> Iterator[CorpusUnit]:
     """Yield one ``CorpusUnit`` per Wikipedia article.
 
     Pre-#1553 this iterator inlined a token-window chunker
@@ -874,7 +877,7 @@ def _iter_wikipedia_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
         )
 
 
-def _iter_ukrainian_wiki_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
+def _iter_ukrainian_wiki_units(conn: SQLiteConnection) -> Iterator[CorpusUnit]:
     conn.row_factory = sqlite3.Row
     try:
         rows = conn.execute(
@@ -915,7 +918,7 @@ def _iter_ukrainian_wiki_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]
         )
 
 
-CORPUS_UNIT_LOADERS: dict[str, Callable[[sqlite3.Connection], Iterator[CorpusUnit]]] = {
+CORPUS_UNIT_LOADERS: dict[str, Callable[[SQLiteConnection], Iterator[CorpusUnit]]] = {
     "textbook_sections": _iter_textbook_units,
     "modern_literary": _iter_modern_literary_units,
     "archaic_literary": _iter_archaic_literary_units,
@@ -946,7 +949,7 @@ def load_corpus_units(corpus: str, *, db_path: Path = DEFAULT_DB_PATH) -> list[C
     policy = policy_for(corpus)
     tokenizer = _get_tokenizer()
 
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(db_path).resolve())
     try:
         units: list[CorpusUnit] = []
         for raw_unit in loader(conn):

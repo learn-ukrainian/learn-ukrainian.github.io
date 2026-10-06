@@ -12,7 +12,6 @@ import argparse
 import hashlib
 import json
 import re
-import sqlite3
 import subprocess
 from collections import Counter
 from collections.abc import Iterable, Sequence
@@ -21,6 +20,8 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -269,15 +270,15 @@ def validate_records(records: Sequence[dict[str, Any]], schema: dict[str, Any]) 
         raise ValueError("inventory validation failed:\n" + "\n".join(sorted(errors)))
 
 
-def connect_read_only(path: Path) -> sqlite3.Connection:
+def connect_read_only(path: Path) -> SQLiteConnection:
     if not path.is_file():
         raise FileNotFoundError(path)
-    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
+    connection = _open_readonly(path.resolve())
     connection.execute("PRAGMA query_only=ON")
     return connection
 
 
-def table_exists(connection: sqlite3.Connection, table: str) -> bool:
+def table_exists(connection: SQLiteConnection, table: str) -> bool:
     row = connection.execute(
         "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",
         (table,),
@@ -286,7 +287,7 @@ def table_exists(connection: sqlite3.Connection, table: str) -> bool:
 
 
 def count_map(
-    connection: sqlite3.Connection,
+    connection: SQLiteConnection,
     sql: str,
     parameters: Sequence[Any] = (),
 ) -> dict[str, int]:
@@ -297,7 +298,7 @@ def count_map(
 
 
 def text_metrics(
-    connection: sqlite3.Connection,
+    connection: SQLiteConnection,
     sql: str,
     parameters: Sequence[Any] = (),
 ) -> dict[str, int | str]:
@@ -348,13 +349,13 @@ def files_text_metrics(paths: Iterable[Path], unit_label: str) -> dict[str, int 
     }
 
 
-def row_count(connection: sqlite3.Connection, table: str) -> int:
+def row_count(connection: SQLiteConnection, table: str) -> int:
     return int(connection.execute(f'SELECT COUNT(*) FROM "{table}"').fetchone()[0])
 
 
 def _db_record(
     *,
-    connection: sqlite3.Connection,
+    connection: SQLiteConnection,
     asset_id: str,
     label: str,
     table: str,
@@ -1100,7 +1101,7 @@ def collect_git_records(repo_root: Path) -> list[dict[str, Any]]:
 
 def collect_drive_records(
     drive_root: Path,
-    connection: sqlite3.Connection,
+    connection: SQLiteConnection,
 ) -> list[dict[str, Any]]:
     literary_raw = _source_stems(drive_root / "literary_texts", "*.jsonl")
     literary_db = {

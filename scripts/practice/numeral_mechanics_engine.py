@@ -45,7 +45,6 @@ import argparse
 import hashlib
 import json
 import random
-import sqlite3
 import sys
 from dataclasses import dataclass
 from enum import StrEnum
@@ -55,6 +54,8 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 
 class NumeralCategory(StrEnum):
@@ -2701,7 +2702,7 @@ def verify_deck_with_vesum(cards: list[NumeralCard], vesum_db_path: Path | str |
             "message": f"VESUM database not found or incomplete at {resolved_path}",
         }
 
-    conn = sqlite3.connect(f"{Path(resolved_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(resolved_path).resolve())
     cursor = conn.cursor()
     cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='forms_all'")
     if not cursor.fetchone():

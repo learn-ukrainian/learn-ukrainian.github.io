@@ -36,6 +36,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.guardrails.worktree_containment import resolve_main_root
 from scripts.lexicon.manifest_fingerprint import build_fingerprint, write_fingerprint
 from scripts.lexicon.manifest_io import _write_atomic
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 from scripts.storage.artifacts import write_artifact
 from scripts.verification.vesum import get_vesum_conn, verify_lemma
 
@@ -169,7 +170,7 @@ class CalqueReconciliationEngine:
     @property
     def sources_conn(self) -> sqlite3.Connection:
         if self._sources_conn is None:
-            self._sources_conn = sqlite3.connect(f"{Path(self.sources_db_path).resolve().as_uri()}?mode=ro", uri=True)
+            self._sources_conn = _shared_open_readonly(Path(self.sources_db_path).resolve())
             self._sources_conn.row_factory = sqlite3.Row
         return self._sources_conn
 

@@ -13,7 +13,6 @@ import collections
 import hashlib
 import json
 import re
-import sqlite3
 import sys
 import unicodedata
 from pathlib import Path
@@ -23,6 +22,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATASET = REPO_ROOT / "data/datasets/hramatka_literary_poltava_v1/hramatka_literary_poltava_v1.jsonl"
@@ -163,10 +163,7 @@ def load_records(path: Path) -> list[dict[str, Any]]:
 
 
 def validate_records(records: list[dict[str, Any]]) -> tuple[list[int], dict[str, int]]:
-    required_missing = {
-        field: sum(not record.get(field) for record in records)
-        for field in REQUIRED_FIELDS
-    }
+    required_missing = {field: sum(not record.get(field) for record in records) for field in REQUIRED_FIELDS}
     missing = {field: count for field, count in required_missing.items() if count}
     if missing:
         raise ValueError(f"candidate required fields missing: {canonical_json(missing)}")
@@ -175,9 +172,7 @@ def validate_records(records: list[dict[str, Any]]) -> tuple[list[int], dict[str
         raw_id = str(record["id"])
         match = re.fullmatch(r"lit-([0-9]+)", raw_id)
         if not match:
-            raise ValueError(
-                f"record line {record['_line']} id must match lit-<integer>: {raw_id!r}"
-            )
+            raise ValueError(f"record line {record['_line']} id must match lit-<integer>: {raw_id!r}")
         ids.append(int(match.group(1)))
     if len(set(ids)) != len(ids):
         raise ValueError("candidate source IDs must be unique")
@@ -185,8 +180,7 @@ def validate_records(records: list[dict[str, Any]]) -> tuple[list[int], dict[str
 
 
 def database_rows(path: Path, ids: list[int]) -> dict[int, dict[str, Any]]:
-    uri = f"file:{path.resolve().as_posix()}?mode=ro"
-    connection = sqlite3.connect(uri, uri=True)
+    connection = _open_readonly(path.resolve())
     try:
         columns = [row[1] for row in connection.execute("PRAGMA table_info(literary_texts)")]
         required = {"id", "chunk_id", "source_file", "work_id", "genre", "source_url"}
@@ -383,10 +377,7 @@ def audit(
         "exact_clusters": connected_clusters(exact_edges),
         "near_clusters": connected_clusters(near_edges),
     }
-    lineage_projection = [
-        {"source_db_id": item_id, "lineage": rows.get(item_id)}
-        for item_id in sorted(ids)
-    ]
+    lineage_projection = [{"source_db_id": item_id, "lineage": rows.get(item_id)} for item_id in sorted(ids)]
     source_db_contract = {
         "path_contract": "data/sources.db (operator-supplied, gitignored local runtime input)",
         "committed_with_repository": False,
@@ -508,18 +499,11 @@ def render_report(summary: dict[str, Any]) -> str:
         )
         for inventory in summary["evaluation_inventories"]
     ]
-    concentration_rows = [
-        f"| Author | {name} | {count} |"
-        for name, count in concentrations["author_top_20"][:10]
-    ]
+    concentration_rows = [f"| Author | {name} | {count} |" for name, count in concentrations["author_top_20"][:10]]
     concentration_rows.extend(
-        f"| Language period | `{name}` | {count} |"
-        for name, count in concentrations["language_period"]
+        f"| Language period | `{name}` | {count} |" for name, count in concentrations["language_period"]
     )
-    concentration_rows.extend(
-        f"| Genre | `{name}` | {count} |"
-        for name, count in concentrations["genre"][:10]
-    )
+    concentration_rows.extend(f"| Genre | `{name}` | {count} |" for name, count in concentrations["genre"][:10])
     concentration_rows.extend(
         f"| Source-file proxy | `{name}` | {count} |"
         for name, count in concentrations["acquisition_channel_proxy_source_file_top_20"][:10]

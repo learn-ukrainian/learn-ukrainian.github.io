@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.lexicon.runner.contracts import RELATION_CLOSURE_VERSION, PhaseSeal, canonical_json
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 RelationKind = str  # synonym | antonym | homonym | paronym | corpus_synonym | …
 
@@ -118,9 +119,7 @@ def extract_and_close_relations(
             raw_batch.clear()
 
         # Phase 2b — run-level reciprocal closure over durable rows (legacy order).
-        closed_by_kind: dict[str, dict[str, list[dict[str, Any]]]] = {
-            kind: {} for kind in extractors
-        }
+        closed_by_kind: dict[str, dict[str, list[dict[str, Any]]]] = {kind: {} for kind in extractors}
         kind_order = list(extractors.keys())
         cursor = conn.execute(
             """
@@ -152,11 +151,7 @@ def extract_and_close_relations(
                     target_key = str(relation.get("item") or "")
                     if target_key not in headwords:
                         continue
-                    if (
-                        kind == "synonym"
-                        and vesum_valid_fn is not None
-                        and not vesum_valid_fn(source_key)
-                    ):
+                    if kind == "synonym" and vesum_valid_fn is not None and not vesum_valid_fn(source_key):
                         continue
                     reciprocal = dict(relation)
                     reciprocal["item"] = headwords[source_key]
@@ -200,11 +195,7 @@ def extract_and_close_relations(
         seal_payload = {
             "algorithm_version": RELATION_CLOSURE_VERSION,
             "closed": {
-                kind: {
-                    source: by_hw[source]
-                    for source in sorted(by_hw)
-                }
-                for kind, by_hw in closed_by_kind.items()
+                kind: {source: by_hw[source] for source in sorted(by_hw)} for kind, by_hw in closed_by_kind.items()
             },
         }
         seal_sha = hashlib.sha256(canonical_json(seal_payload).encode("utf-8")).hexdigest()
@@ -240,7 +231,7 @@ def load_closed_relations_by_headword(
 
     Preserves insertion order within each source (legacy by_headword order).
     """
-    conn = sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(path.resolve())
     try:
         out: dict[str, list[dict[str, Any]]] = {}
         for source_key, payload in conn.execute(
@@ -260,7 +251,7 @@ def load_closed_relations_by_headword(
 
 
 def seal_hash(path: Path) -> str:
-    conn = sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(path.resolve())
     try:
         row = conn.execute("SELECT value FROM meta WHERE key = 'seal_sha256'").fetchone()
         if not row:

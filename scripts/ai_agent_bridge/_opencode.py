@@ -46,6 +46,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 from ._ask_contract import (
     requested_effort,
@@ -352,9 +353,7 @@ def read_opencode_turn_status(
             db_path = Path(raw_db_env)
         else:
             data_home = Path(
-                os.environ.get("OPENCODE_HOME")
-                or os.environ.get("XDG_DATA_HOME")
-                or (Path.home() / ".local" / "share")
+                os.environ.get("OPENCODE_HOME") or os.environ.get("XDG_DATA_HOME") or (Path.home() / ".local" / "share")
             )
             db_path = data_home / "opencode" / "opencode.db"
 
@@ -365,9 +364,7 @@ def read_opencode_turn_status(
 
     if db_path and db_path.exists():
         try:
-            import sqlite3
-
-            conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+            conn = _open_readonly(db_path)
             try:
                 cur = conn.cursor()
                 target_sid = session_id
@@ -653,7 +650,9 @@ def ask_opencode(
         msg_type="response",
         from_llm="opencode",
         to_llm=from_llm,
-        data=provenance_data, from_model=actual_model, to_model=from_model,
+        data=provenance_data,
+        from_model=actual_model,
+        to_model=from_model,
     )
     acknowledge(msg_id)
     record_ask_reply(msg_id, reply_id)
@@ -694,13 +693,9 @@ def ask_pool(
     "examples not constants" note in model-assignment.md).
     """
     require_core_or_exit("ask-pool")
-    effective_variant, effort_reason = _resolve_opencode_effort(
-        lane="ask-pool", effort=effort, variant=variant
-    )
+    effective_variant, effort_reason = _resolve_opencode_effort(lane="ask-pool", effort=effort, variant=variant)
     effective_variant = effective_variant or POOL_DEFAULT_VARIANT
-    effective_model = resolve_model_selection(
-        lane="ask-pool", to_model=to_model, model=model, default=POOL_MODEL
-    )
+    effective_model = resolve_model_selection(lane="ask-pool", to_model=to_model, model=model, default=POOL_MODEL)
     msg_id = send_message(
         content,
         task_id,
@@ -748,7 +743,9 @@ def ask_pool(
         raise SystemExit(f"[Bridge Error] opencode turn aborted ({exc.status.reason})") from exc
     provenance_data, actual_model = response_provenance(
         {"data": json.dumps({"to_model": effective_model, "effort": effort})},
-        actual_model=effective_model, harness="opencode", effort_applied=effective_variant,
+        actual_model=effective_model,
+        harness="opencode",
+        effort_applied=effective_variant,
         effort_reason=effort_reason,
     )
     reply_id = send_message(
@@ -757,7 +754,9 @@ def ask_pool(
         msg_type="response",
         from_llm="pool",
         to_llm=from_llm,
-        data=provenance_data, from_model=actual_model, to_model=from_model,
+        data=provenance_data,
+        from_model=actual_model,
+        to_model=from_model,
     )
     acknowledge(msg_id)
     record_ask_reply(msg_id, reply_id)
@@ -827,9 +826,7 @@ def ask_glm(
         raise SystemExit(f"ask-glm: {exc}") from exc
     warn_missing_review_target(formal_review=formal_review, has_target=False)
     _assert_glm_egress_allowed()
-    effective_model = resolve_model_selection(
-        lane="ask-glm", to_model=to_model, model=model, default=GLM_MODEL
-    )
+    effective_model = resolve_model_selection(lane="ask-glm", to_model=to_model, model=model, default=GLM_MODEL)
     # Advisory consultations default to max; everyday/query defaults to high.
     # Explicit --effort always wins (operator 2026-08-14 / GLM-5.3).
     if effort is None and str(msg_type or "").strip().lower() == "advisory":
@@ -884,7 +881,9 @@ def ask_glm(
         raise SystemExit(f"[Bridge Error] opencode turn aborted ({exc.status.reason})") from exc
     provenance_data, actual_model = response_provenance(
         {"data": json.dumps({"to_model": effective_model, "effort": effort})},
-        actual_model=effective_model, harness="opencode", effort_applied=effective_variant,
+        actual_model=effective_model,
+        harness="opencode",
+        effort_applied=effective_variant,
         effort_reason=effort_reason,
     )
     reply_id = send_message(
@@ -893,7 +892,9 @@ def ask_glm(
         msg_type="response",
         from_llm="glm",
         to_llm=from_llm,
-        data=provenance_data, from_model=actual_model, to_model=from_model,
+        data=provenance_data,
+        from_model=actual_model,
+        to_model=from_model,
     )
     acknowledge(msg_id)
     record_ask_reply(msg_id, reply_id)
@@ -947,9 +948,7 @@ def ask_gemma(
     "examples not constants" note in model-assignment.md).
     """
     require_core_or_exit("ask-gemma")
-    effective_model = resolve_model_selection(
-        lane="ask-gemma", to_model=to_model, model=model, default=GEMMA_MODEL
-    )
+    effective_model = resolve_model_selection(lane="ask-gemma", to_model=to_model, model=model, default=GEMMA_MODEL)
     effective_variant, effort_reason = _resolve_opencode_effort(lane="ask-gemma", effort=effort)
     msg_id = send_message(
         content,
@@ -991,7 +990,9 @@ def ask_gemma(
         raise SystemExit(f"[Bridge Error] opencode turn aborted ({exc.status.reason})") from exc
     provenance_data, actual_model = response_provenance(
         {"data": json.dumps({"to_model": effective_model, "effort": effort})},
-        actual_model=effective_model, harness="opencode", effort_applied=effective_variant,
+        actual_model=effective_model,
+        harness="opencode",
+        effort_applied=effective_variant,
         effort_reason=effort_reason,
     )
     reply_id = send_message(
@@ -1000,7 +1001,9 @@ def ask_gemma(
         msg_type="response",
         from_llm="gemma",
         to_llm=from_llm,
-        data=provenance_data, from_model=actual_model, to_model=from_model,
+        data=provenance_data,
+        from_model=actual_model,
+        to_model=from_model,
     )
     acknowledge(msg_id)
     record_ask_reply(msg_id, reply_id)
@@ -1026,9 +1029,7 @@ def process_for_opencode(
     if not model:
         raise ValueError(f"ask #{message_id} has no target model")
     effort = requested_effort(msg)
-    effective_variant, effort_reason = _resolve_opencode_effort(
-        lane=f"ask-{target}", effort=effort, variant=variant
-    )
+    effective_variant, effort_reason = _resolve_opencode_effort(lane=f"ask-{target}", effort=effort, variant=variant)
 
     kwargs: dict[str, object] = {"data": ask_attachment(msg), "no_timeout": no_timeout}
     try:
@@ -1086,7 +1087,9 @@ def process_for_opencode(
         msg_type="response",
         from_llm=target,
         to_llm=msg["from"],
-        data=provenance_data, from_model=actual_model, to_model=ask_sender_model(msg),
+        data=provenance_data,
+        from_model=actual_model,
+        to_model=ask_sender_model(msg),
     )
     acknowledge(message_id)
     record_ask_reply(message_id, reply_id)

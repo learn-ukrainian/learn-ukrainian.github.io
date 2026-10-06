@@ -22,6 +22,7 @@ from scripts.ai_agent_bridge import _channels
 from scripts.ai_agent_bridge._db import get_db
 from scripts.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
 from scripts.fleet_comms.message_plane import default_plane_root
+from scripts.lib.readonly_sqlite import SQLiteConnection
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +87,7 @@ def _active_lease_holder(stream_epic: str, *, session_db: Path, now: datetime) -
     return holder
 
 
-def _reserve_scan(conn: sqlite3.Connection, *, now: datetime, rate_limit_seconds: int) -> bool:
+def _reserve_scan(conn: SQLiteConnection, *, now: datetime, rate_limit_seconds: int) -> bool:
     """Persistently rate-limit the scanner across independent inbox workers."""
     conn.execute("BEGIN IMMEDIATE")
     try:
@@ -117,14 +118,14 @@ def _reserve_scan(conn: sqlite3.Connection, *, now: datetime, rate_limit_seconds
         raise
 
 
-def _state_row(conn: sqlite3.Connection, stream_epic: str, span: str) -> sqlite3.Row | None:
+def _state_row(conn: SQLiteConnection, stream_epic: str, span: str) -> sqlite3.Row | None:
     return conn.execute(
         "SELECT * FROM bottleneck_alert_state WHERE stream_epic = ? AND span = ?",
         (stream_epic, span),
     ).fetchone()
 
 
-def _record_clear(conn: sqlite3.Connection, stream_epic: str, span: str) -> bool:
+def _record_clear(conn: SQLiteConnection, stream_epic: str, span: str) -> bool:
     row = _state_row(conn, stream_epic, span)
     if row is None or not bool(row["active"]):
         return False
@@ -154,7 +155,7 @@ def _requires_alert(row: sqlite3.Row | None, *, age_s: float, threshold_s: int) 
     return False, level
 
 
-def _record_delivery_failures(conn: sqlite3.Connection) -> int:
+def _record_delivery_failures(conn: SQLiteConnection) -> int:
     """Make failed alert deliveries loud once; the channel remains the record."""
     rows = conn.execute(
         """
@@ -260,13 +261,9 @@ def scan_bottlenecks_at_inbox_checkpoint(
     alerts_posted = 0
     cleared = 0
     try:
-        prior_active = conn.execute(
-            "SELECT stream_epic, span FROM bottleneck_alert_state WHERE active = 1"
-        ).fetchall()
+        prior_active = conn.execute("SELECT stream_epic, span FROM bottleneck_alert_state WHERE active = 1").fetchall()
         error_sources = {
-            str(error.get("source"))
-            for error in metrics.get("source_errors", [])
-            if isinstance(error, dict)
+            str(error.get("source")) for error in metrics.get("source_errors", []) if isinstance(error, dict)
         }
         span_sources = {
             "dispatch": {"dispatch"},
@@ -286,7 +283,7 @@ def scan_bottlenecks_at_inbox_checkpoint(
             if not should_alert:
                 continue
             holder = _active_lease_holder(stream_epic, session_db=lease_path, now=clock)
-            recipients = list(dict.fromkeys([*( [holder] if holder else []), ESCALATION_RECIPIENT]))
+            recipients = list(dict.fromkeys([*([holder] if holder else []), ESCALATION_RECIPIENT]))
             try:
                 _channels.create_channel(ALERT_CHANNEL, description="Fleet lifecycle alerts")
                 post = _channels.post(

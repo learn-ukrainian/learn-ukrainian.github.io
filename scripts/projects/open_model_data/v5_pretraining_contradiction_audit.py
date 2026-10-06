@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -35,6 +34,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.wiki.sum20_official import live_article_predicate_for
 
 
@@ -61,7 +62,9 @@ def resolve_data_path(rel_path: str | Path) -> Path:
 
 
 # Default paths relative to project root
-DEFAULT_PROTECTION_SUITE = Path("data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl")
+DEFAULT_PROTECTION_SUITE = Path(
+    "data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl"
+)
 DEFAULT_SFT_DIR = Path("data/projects/open_model_data/archive/uldr_v1_production/sft")
 DEFAULT_DPO_DIR = Path("data/projects/open_model_data/archive/uldr_v1_production/dpo")
 DEFAULT_SOURCES_DB = Path("data/sources.db")
@@ -96,8 +99,8 @@ def normalize_token(token: str) -> str:
 
 def verify_replacement_attestation(
     replacement: str,
-    vesum_conn: sqlite3.Connection,
-    sources_conn: sqlite3.Connection,
+    vesum_conn: SQLiteConnection,
+    sources_conn: SQLiteConnection,
 ) -> bool:
     """Check if all tokens of the replacement word/phrase are attested in approved Ukrainian authorities."""
     clean = replacement.strip().strip("–—\"'«» .,")
@@ -126,36 +129,139 @@ def verify_replacement_attestation(
     return True
 
 
-ANAPHORIC_WORDS = frozenset({
-    # Personal pronouns
-    "він", "вона", "воно", "вони",
-    "його", "йому", "ним", "ньому", "нього",
-    "її", "їй", "нею", "ній", "неї",
-    "їх", "їм", "ними", "них",
-    # Demonstrative pronouns
-    "це", "цей", "ця", "ці",
-    "цього", "цієї", "цьому", "цій", "цим", "цими", "цих", "цю",
-    "то", "той", "та", "ті", "того", "тієї", "тому", "тій", "тим", "тими", "тих", "ту",
-    # Relative pronouns
-    "який", "яка", "яке", "які",
-    "якого", "якої", "якому", "якій", "яким", "якою", "яких", "якими", "яку",
-    "котрий", "котра", "котре", "котрі",
-    "котрого", "котрої", "котрому", "котрій", "котрим", "котрою", "котрих", "котрими", "котру",
-    "що",
-    # Metalinguistic nouns and usage nouns
-    "слово", "слова", "словом", "слові", "слів", "словах",
-    "термін", "терміна", "терміну", "терміном", "терміні", "терміни", "термінів",
-    "вираз", "виразу", "виразом", "виразі", "вирази", "виразів",
-    "зворот", "звороту", "зворотом", "звороті", "звороти", "зворотів",
-    "форма", "форми", "формою", "формі", "форм", "формах",
-    "лексема", "лексеми", "лексемою", "лексемі", "лексем",
-    "вживання", "вживанням", "вживанні", "вжитку", "вжиток",
-    "використання", "використанням", "використанні",
-    "застосування", "застосуванням", "застосуванні",
-    "написання", "написанням", "написанні",
-    "вимова", "вимовою", "вимові",
-    "значення", "значенням", "значенні",
-})
+ANAPHORIC_WORDS = frozenset(
+    {
+        # Personal pronouns
+        "він",
+        "вона",
+        "воно",
+        "вони",
+        "його",
+        "йому",
+        "ним",
+        "ньому",
+        "нього",
+        "її",
+        "їй",
+        "нею",
+        "ній",
+        "неї",
+        "їх",
+        "їм",
+        "ними",
+        "них",
+        # Demonstrative pronouns
+        "це",
+        "цей",
+        "ця",
+        "ці",
+        "цього",
+        "цієї",
+        "цьому",
+        "цій",
+        "цим",
+        "цими",
+        "цих",
+        "цю",
+        "то",
+        "той",
+        "та",
+        "ті",
+        "того",
+        "тієї",
+        "тому",
+        "тій",
+        "тим",
+        "тими",
+        "тих",
+        "ту",
+        # Relative pronouns
+        "який",
+        "яка",
+        "яке",
+        "які",
+        "якого",
+        "якої",
+        "якому",
+        "якій",
+        "яким",
+        "якою",
+        "яких",
+        "якими",
+        "яку",
+        "котрий",
+        "котра",
+        "котре",
+        "котрі",
+        "котрого",
+        "котрої",
+        "котрому",
+        "котрій",
+        "котрим",
+        "котрою",
+        "котрих",
+        "котрими",
+        "котру",
+        "що",
+        # Metalinguistic nouns and usage nouns
+        "слово",
+        "слова",
+        "словом",
+        "слові",
+        "слів",
+        "словах",
+        "термін",
+        "терміна",
+        "терміну",
+        "терміном",
+        "терміні",
+        "терміни",
+        "термінів",
+        "вираз",
+        "виразу",
+        "виразом",
+        "виразі",
+        "вирази",
+        "виразів",
+        "зворот",
+        "звороту",
+        "зворотом",
+        "звороті",
+        "звороти",
+        "зворотів",
+        "форма",
+        "форми",
+        "формою",
+        "формі",
+        "форм",
+        "формах",
+        "лексема",
+        "лексеми",
+        "лексемою",
+        "лексемі",
+        "лексем",
+        "вживання",
+        "вживанням",
+        "вживанні",
+        "вжитку",
+        "вжиток",
+        "використання",
+        "використанням",
+        "використанні",
+        "застосування",
+        "застосуванням",
+        "застосуванні",
+        "написання",
+        "написанням",
+        "написанні",
+        "вимова",
+        "вимовою",
+        "вимові",
+        "значення",
+        "значенням",
+        "значенні",
+    }
+)
 
 PRONOMINAL_ANAPHORA = re.compile(
     r"\b(?:"
@@ -311,9 +417,8 @@ def find_clause_start_in_prefix(prefix: str, dir_match: re.Match) -> int:
         is_finite_or_modal = bool(
             re.search(rf"^(?:не\b|ні\b|ані\b|{DIRECTIVE_FINITES}\b|{DIRECTIVE_MODALS}\b)", after_conj, re.IGNORECASE)
         )
-        is_unbound_infinitive = (
-            search_prefix_end == dir_start
-            and bool(re.search(rf"^{DIRECTIVE_INFINITIVES}\b", after_conj, re.IGNORECASE))
+        is_unbound_infinitive = search_prefix_end == dir_start and bool(
+            re.search(rf"^{DIRECTIVE_INFINITIVES}\b", after_conj, re.IGNORECASE)
         )
         if is_finite_or_modal or is_unbound_infinitive:
             boundaries.append(m.end())
@@ -322,7 +427,9 @@ def find_clause_start_in_prefix(prefix: str, dir_match: re.Match) -> int:
     for m in re.finditer(r",\s*", search_prefix):
         if ANY_DIRECTIVE_RE.search(search_prefix[: m.start()]):
             after_comma = prefix[m.end() :].lstrip()
-            if re.search(rf"^(?:не\b|ні\b|ані\b|{DIRECTIVE_FINITES}\b|{DIRECTIVE_MODALS}\b)", after_comma, re.IGNORECASE):
+            if re.search(
+                rf"^(?:не\b|ні\b|ані\b|{DIRECTIVE_FINITES}\b|{DIRECTIVE_MODALS}\b)", after_comma, re.IGNORECASE
+            ):
                 boundaries.append(m.end())
 
     return max(boundaries)
@@ -556,13 +663,18 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
             # If target is present ONLY as a replacement destination (e.g. "замінити на «файний»", "замінити словом «файний»"),
             # it is being recommended, not condemned or replaced.
             is_destination = bool(
-                re.search(rf"\b(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower)
+                re.search(
+                    rf"\b(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']?{t_bare}[»\"”’\']?",
+                    cl_lower,
+                )
             )
-            is_subject = bool(re.search(
-                rf"(?:^|\b{ITEM_CLASSIFIER})[«\"“‘\']?{t_bare}[»\"”’\']?\s+"
-                rf"(?:(?:теж|також|ще|вже|цілком|абсолютно|справді|дійсно)\s+)?(?:\b(?:{PREDICATE_WORDS})\b|—|--|–|-)",
-                cl_lower,
-            ))
+            is_subject = bool(
+                re.search(
+                    rf"(?:^|\b{ITEM_CLASSIFIER})[«\"“‘\']?{t_bare}[»\"”’\']?\s+"
+                    rf"(?:(?:теж|також|ще|вже|цілком|абсолютно|справді|дійсно)\s+)?(?:\b(?:{PREDICATE_WORDS})\b|—|--|–|-)",
+                    cl_lower,
+                )
+            )
             current_referent = "OTHER" if is_destination and not is_subject else "TARGET"
         elif quoted:
             first_q = normalize_token(quoted[0])
@@ -571,7 +683,10 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                     rf"(?:^|\b{ITEM_CLASSIFIER})[«\"“‘\']{re.escape(first_q)}[»\"”’\']",
                     cl_lower,
                 )
-                if subj_m and not re.search(rf"\b(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']{re.escape(first_q)}[»\"”’\']", cl_lower):
+                if subj_m and not re.search(
+                    rf"\b(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']{re.escape(first_q)}[»\"”’\']",
+                    cl_lower,
+                ):
                     current_referent = "OTHER"
         else:
             # Check for unquoted subject before directives/predicates (e.g. "общий слід замінити", "общий — помилка", or implicit copula "общий помилка")
@@ -582,12 +697,15 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
             )
             if unquoted_subj_m:
                 uq_word = normalize_token(unquoted_subj_m.group(1))
-                prefix_to_subj = cl_lower[:unquoted_subj_m.start(1)]
+                prefix_to_subj = cl_lower[: unquoted_subj_m.start(1)]
                 has_anaphoric_det = bool(anaphoric_re.search(prefix_to_subj))
                 if uq_word in ANAPHORIC_WORDS or anaphoric_re.fullmatch(uq_word) or has_anaphoric_det:
                     # Anaphoric reference (його, її, це, яку, його вживання, etc.): preserve active referent
                     pass
-                elif uq_word != t_norm and not re.search(rf"\b(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+{re.escape(uq_word)}", cl_lower):
+                elif uq_word != t_norm and not re.search(
+                    rf"\b(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+{re.escape(uq_word)}",
+                    cl_lower,
+                ):
                     current_referent = "OTHER"
             elif anaphoric_re.search(clause) and current_referent is not None:
                 # Anaphoric reference (його, її, це, etc.): preserve active referent from preceding clause
@@ -638,16 +756,20 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 # If introduced by optional focusing particle + на/до or instrumental classifier, it specifies the replacement destination,
                 # NOT the object being replaced (R25-F1, R26-F3). Avoidance directives (уникати) never have replacement destinations.
                 is_avoidance = bool(re.search(r"\bуника\w*", match.group(0), re.IGNORECASE))
-                is_replacement_dest = False if is_avoidance else bool(
-                    re.match(
-                        rf"^\s*(?:(?:{FOCUSING_PARTICLES})\s+)?(?:на(?!\s+(?:письм\w*|практи\w*)\b)|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']?[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+",
-                        suffix_after_dir,
-                        re.IGNORECASE,
+                is_replacement_dest = (
+                    False
+                    if is_avoidance
+                    else bool(
+                        re.match(
+                            rf"^\s*(?:(?:{FOCUSING_PARTICLES})\s+)?(?:на(?!\s+(?:письм\w*|практи\w*)\b)|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']?[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+",
+                            suffix_after_dir,
+                            re.IGNORECASE,
+                        )
                     )
                 )
 
                 adjunct_m = adjunct_re.match(suffix_after_dir)
-                suffix_core = suffix_after_dir[adjunct_m.end():] if adjunct_m else suffix_after_dir
+                suffix_core = suffix_after_dir[adjunct_m.end() :] if adjunct_m else suffix_after_dir
 
                 if not is_avoidance and not is_replacement_dest and adjunct_m:
                     is_replacement_dest = bool(
@@ -679,7 +801,12 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 )
                 gov_tokens = [normalize_token(t) for t in re.findall(r"[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+", gov_span)]
                 has_lexical_obj = any(t and t not in ANAPHORIC_WORDS and t != t_norm for t in gov_tokens)
-                is_anaphoric_obj = has_pronominal_anaphora and not has_quoted_term and not has_post_nominal_mention and not has_lexical_obj
+                is_anaphoric_obj = (
+                    has_pronominal_anaphora
+                    and not has_quoted_term
+                    and not has_post_nominal_mention
+                    and not has_lexical_obj
+                )
 
                 if not is_replacement_dest and not is_anaphoric_obj:
                     # Check if this directive governs an explicit non-target object:
@@ -764,7 +891,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                     continue
 
                 adjunct_m = adjunct_re.match(suffix_after_dir)
-                suffix_core = suffix_after_dir[adjunct_m.end():] if adjunct_m else suffix_after_dir
+                suffix_core = suffix_after_dir[adjunct_m.end() :] if adjunct_m else suffix_after_dir
 
                 # Check anaphoric direct object: e.g. "не вживайте його"
                 gov_span = re.split(
@@ -784,7 +911,12 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 )
                 gov_tokens = [normalize_token(t) for t in re.findall(r"[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+", gov_span)]
                 has_lexical_obj = any(t and t not in ANAPHORIC_WORDS and t != t_norm for t in gov_tokens)
-                is_anaphoric_obj = has_pronominal_anaphora and not has_quoted_term and not has_post_nominal_mention and not has_lexical_obj
+                is_anaphoric_obj = (
+                    has_pronominal_anaphora
+                    and not has_quoted_term
+                    and not has_post_nominal_mention
+                    and not has_lexical_obj
+                )
 
                 if is_anaphoric_obj:
                     if current_referent == "TARGET":
@@ -799,7 +931,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 target_in_objs = False
 
                 for obj_m in re.finditer(lexical_obj_item, suffix_after_dir, re.IGNORECASE):
-                    before_obj = suffix_after_dir[:obj_m.start()]
+                    before_obj = suffix_after_dir[: obj_m.start()]
                     # Check if governed by a preposition (prepositional adjunct, not direct object)
                     if prep_prefix_re.search(before_obj):
                         continue
@@ -861,20 +993,25 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 prefix = cl_lower[:start]
                 is_negated = False
                 # 1. Correlative / coordinated negation: "ні калькою", "ані калькою", "ні є помилкою"
-                if (
-                    re.search(r"\b(?:ні|ані)\s+(?:є\s+|це\s+|вважається\s+)?(?:жодн\w*\s+|ніяк\w*\s+)?$", prefix)
-                    or re.search(r"\b(?:ні|ані)\s*$", prefix)
-                ):
+                if re.search(
+                    r"\b(?:ні|ані)\s+(?:є\s+|це\s+|вважається\s+)?(?:жодн\w*\s+|ніяк\w*\s+)?$", prefix
+                ) or re.search(r"\b(?:ні|ані)\s*$", prefix):
                     is_negated = True
                 else:
                     last_ne = prefix.rfind("не ")
                     if last_ne != -1:
-                        after_ne = prefix[last_ne + 3:]
+                        after_ne = prefix[last_ne + 3 :]
                         if not re.search(r"\b(?:але|проте|однак)\b", after_ne):
                             is_negated = bool(
-                                re.search(r"\bне\s+(?:є|це|було|буде|був|була|становить|вважається|визнається|(?:слід|варто|можна|треба|потрібно|необхідно)\s+(?:вважати|називати|визнавати))(?:\s+(?:ні|ані|жодн\w*|ніяк\w*|зовсім|анітрохи))*\s*$", prefix)
+                                re.search(
+                                    r"\bне\s+(?:є|це|було|буде|був|була|становить|вважається|визнається|(?:слід|варто|можна|треба|потрібно|необхідно)\s+(?:вважати|називати|визнавати))(?:\s+(?:ні|ані|жодн\w*|ніяк\w*|зовсім|анітрохи))*\s*$",
+                                    prefix,
+                                )
                                 or re.search(r"\bне\s*$", prefix)
-                                or re.search(r"\bне\s+(?:є\s+|це\s+|вважається\s+|було\s+)?[а-яА-ЯёЁіІїЇєЄґҐ’'\-]+(?:\s*,\s*|\s+(?:та|і|й|чи|або|ні|ані)\s+)(?:не\s+|ні\s+|ані\s+)?$", prefix)
+                                or re.search(
+                                    r"\bне\s+(?:є\s+|це\s+|вважається\s+|було\s+)?[а-яА-ЯёЁіІїЇєЄґҐ’'\-]+(?:\s*,\s*|\s+(?:та|і|й|чи|або|ні|ані)\s+)(?:не\s+|ні\s+|ані\s+)?$",
+                                    prefix,
+                                )
                             )
                 if not is_negated:
                     return True
@@ -930,14 +1067,10 @@ def run_pretraining_audit(
 
     # 3. Collect protected terms (must be PRESERVE)
     invalid_preservations = [
-        c.get("eval_id")
-        for c in dialect_cases + historical_cases
-        if c.get("expected_action") != "PRESERVE"
+        c.get("eval_id") for c in dialect_cases + historical_cases if c.get("expected_action") != "PRESERVE"
     ]
     if invalid_preservations:
-        raise ValueError(
-            f"Protection suite has non-PRESERVE dialect/historical cases: {invalid_preservations}"
-        )
+        raise ValueError(f"Protection suite has non-PRESERVE dialect/historical cases: {invalid_preservations}")
 
     protected_cases = [c for c in cases if c.get("expected_action") == "PRESERVE"]
     expected_min_preservations = 500 if min_cases >= 600 else 1
@@ -946,9 +1079,7 @@ def run_pretraining_audit(
             f"Insufficient protected preservation cases: expected >= {expected_min_preservations}, got {len(protected_cases)}"
         )
 
-    protected_terms: set[str] = {
-        normalize_token(c["target_term"]) for c in protected_cases if c.get("target_term")
-    }
+    protected_terms: set[str] = {normalize_token(c["target_term"]) for c in protected_cases if c.get("target_term")}
     expected_min_terms = 250 if min_cases >= 600 else 1
     if len(protected_terms) < expected_min_terms:
         raise ValueError(
@@ -968,14 +1099,12 @@ def run_pretraining_audit(
             raw_target = item.get("target_term") or ""
             target = normalize_token(raw_target)
             if not target:
-                raise ValueError(
-                    f"SFT record at line {line_idx+1} in {sft_file.name} lacks required 'target_term'"
-                )
+                raise ValueError(f"SFT record at line {line_idx + 1} in {sft_file.name} lacks required 'target_term'")
 
             is_calque = item.get("is_calque_or_russianism")
             if is_calque is not None and not isinstance(is_calque, bool):
                 raise ValueError(
-                    f"SFT record at line {line_idx+1} in {sft_file.name} has invalid 'is_calque_or_russianism': "
+                    f"SFT record at line {line_idx + 1} in {sft_file.name} has invalid 'is_calque_or_russianism': "
                     f"expected boolean True/False, got {type(is_calque).__name__} ({is_calque!r})"
                 )
 
@@ -983,12 +1112,12 @@ def run_pretraining_audit(
             if raw_action is not None:
                 if not isinstance(raw_action, str):
                     raise ValueError(
-                        f"SFT record at line {line_idx+1} in {sft_file.name} has non-string action label: {raw_action!r}"
+                        f"SFT record at line {line_idx + 1} in {sft_file.name} has non-string action label: {raw_action!r}"
                     )
                 action = raw_action.strip().upper()
                 if action not in ("PRESERVE", "CORRECT", "REPLACE"):
                     raise ValueError(
-                        f"SFT record at line {line_idx+1} in {sft_file.name} has unrecognized action: {raw_action!r}. "
+                        f"SFT record at line {line_idx + 1} in {sft_file.name} has unrecognized action: {raw_action!r}. "
                         f"Recognized actions are: ('PRESERVE', 'CORRECT', 'REPLACE')"
                     )
             else:
@@ -996,21 +1125,23 @@ def run_pretraining_audit(
 
             if is_calque is None and not action:
                 raise ValueError(
-                    f"SFT record at line {line_idx+1} in {sft_file.name} lacks required label field "
+                    f"SFT record at line {line_idx + 1} in {sft_file.name} lacks required label field "
                     f"('is_calque_or_russianism' or 'action')"
                 )
 
             # In production SFT, is_calque_or_russianism is True when the target term is flagged as an error/calque
             is_condemned = (is_calque is True) or (action in ("CORRECT", "REPLACE"))
             if target in protected_terms and is_condemned:
-                sft_contradictions.append({
-                    "shard": sft_file.name,
-                    "line": line_idx + 1,
-                    "target_term": target,
-                    "is_calque_or_russianism": is_calque,
-                    "action": action,
-                    "prompt": item.get("query") or item.get("input_text") or item.get("prompt"),
-                })
+                sft_contradictions.append(
+                    {
+                        "shard": sft_file.name,
+                        "line": line_idx + 1,
+                        "target_term": target,
+                        "is_calque_or_russianism": is_calque,
+                        "action": action,
+                        "prompt": item.get("query") or item.get("input_text") or item.get("prompt"),
+                    }
+                )
 
     # 5. Cross-audit DPO shards (Validating production schema and preference direction)
     dpo_contradictions: list[dict[str, Any]] = []
@@ -1027,65 +1158,64 @@ def run_pretraining_audit(
             rejected = item.get("rejected")
             if not prompt or not chosen or not rejected:
                 raise ValueError(
-                    f"DPO record at line {line_idx+1} in {dpo_file.name} lacks required prompt/chosen/rejected"
+                    f"DPO record at line {line_idx + 1} in {dpo_file.name} lacks required prompt/chosen/rejected"
                 )
 
             metadata = item.get("metadata")
             if not isinstance(metadata, dict):
-                raise ValueError(
-                    f"DPO record at line {line_idx+1} in {dpo_file.name} lacks valid 'metadata' dict"
-                )
+                raise ValueError(f"DPO record at line {line_idx + 1} in {dpo_file.name} lacks valid 'metadata' dict")
 
             raw_target = metadata.get("target_term") or ""
             target = normalize_token(raw_target)
             if not target:
-                raise ValueError(
-                    f"DPO record at line {line_idx+1} in {dpo_file.name} lacks 'metadata.target_term'"
-                )
+                raise ValueError(f"DPO record at line {line_idx + 1} in {dpo_file.name} lacks 'metadata.target_term'")
 
             pair_type = metadata.get("pair_type", "")
             # If target in protected terms and pair penalizes it as an error or directs replacement
             if target in protected_terms and (
-                pair_type != "anti_hyper_purist_preservation_pairs"
-                or is_target_condemned_in_text(target, chosen)
+                pair_type != "anti_hyper_purist_preservation_pairs" or is_target_condemned_in_text(target, chosen)
             ):
-                dpo_contradictions.append({
-                    "shard": dpo_file.name,
-                    "line": line_idx + 1,
-                    "target_term": target,
-                    "pair_type": pair_type,
-                    "prompt": prompt,
-                    "chosen": chosen,
-                })
+                dpo_contradictions.append(
+                    {
+                        "shard": dpo_file.name,
+                        "line": line_idx + 1,
+                        "target_term": target,
+                        "pair_type": pair_type,
+                        "prompt": prompt,
+                        "chosen": chosen,
+                    }
+                )
 
     # 6. Surzhyk control validation against positive authorities (Finding 2)
     surzhyk_valid = True
     surzhyk_anomalies: list[dict[str, Any]] = []
 
-    sources_uri = f"file:{resolved_sources.resolve()}?mode=ro"
-    vesum_uri = f"file:{resolved_vesum.resolve()}?mode=ro"
     with (
-        sqlite3.connect(sources_uri, uri=True) as sources_conn,
-        sqlite3.connect(vesum_uri, uri=True) as vesum_conn,
+        _open_readonly(resolved_sources.resolve()) as sources_conn,
+        _open_readonly(resolved_vesum.resolve()) as vesum_conn,
     ):
         for sc in surzhyk_cases:
             action = sc.get("expected_action")
             repl = sc.get("expected_replacement")
             if action != "CORRECT" or not repl:
                 surzhyk_valid = False
-                surzhyk_anomalies.append({
-                    "eval_id": sc.get("eval_id"),
-                    "reason": "Missing CORRECT action or empty replacement",
-                })
+                surzhyk_anomalies.append(
+                    {
+                        "eval_id": sc.get("eval_id"),
+                        "reason": "Missing CORRECT action or empty replacement",
+                    }
+                )
                 continue
 
             if not verify_replacement_attestation(repl, vesum_conn, sources_conn):
                 surzhyk_valid = False
-                surzhyk_anomalies.append({
-                    "eval_id": sc.get("eval_id"),
-                    "replacement": repl,
-                    "reason": f"Replacement '{repl}' not attested in positive authorities (СУМ-20, VESUM, Grinchenko 1907)",
-                })
+                surzhyk_anomalies.append(
+                    {
+                        "eval_id": sc.get("eval_id"),
+                        "replacement": repl,
+                        "reason": f"Replacement '{repl}' not attested in positive authorities (СУМ-20, VESUM, Grinchenko 1907)",
+                    }
+                )
 
     # 7. Overall audit determination (Hard Non-Vacuous Gates)
     passed = (
@@ -1149,21 +1279,29 @@ def run_pretraining_audit(
         f"   - **{len(protected_terms)}** unique protected regional and historical terms were checked across {sft_total_count:,} SFT records and {dpo_total_count:,} DPO pairs.",
     ]
     if len(sft_contradictions) == 0 and len(dpo_contradictions) == 0:
-        details_lines.append("   - **Result:** Zero training examples penalize protected forms as errors or attempt to normalize them into contemporary standard Ukrainian.")
+        details_lines.append(
+            "   - **Result:** Zero training examples penalize protected forms as errors or attempt to normalize them into contemporary standard Ukrainian."
+        )
     else:
-        details_lines.append(f"   - **Result:** Contradictions detected: {len(sft_contradictions)} in SFT, {len(dpo_contradictions)} in DPO.")
+        details_lines.append(
+            f"   - **Result:** Contradictions detected: {len(sft_contradictions)} in SFT, {len(dpo_contradictions)} in DPO."
+        )
         for sc in sft_contradictions[:10]:
             details_lines.append(f"     - [SFT] {sc['shard']}:{sc['line']} target '{sc['target_term']}' condemned")
         for dc in dpo_contradictions[:10]:
-            details_lines.append(f"     - [DPO] {dc['shard']}:{dc['line']} target '{dc['target_term']}' pair '{dc['pair_type']}'")
+            details_lines.append(
+                f"     - [DPO] {dc['shard']}:{dc['line']} target '{dc['target_term']}' pair '{dc['pair_type']}'"
+            )
 
     verified_controls = len(surzhyk_cases) - len(surzhyk_anomalies)
-    details_lines.extend([
-        "",
-        "2. **Anti-Surzhyk Control Verification against Positive Authorities:**",
-        f"   - Observed anti-surzhyk control cases: {len(surzhyk_cases)} cases targeting Russianisms and Russian-Soviet occupation calques.",
-        f"   - Attestation verification against positive Ukrainian authorities (СУМ-20, VESUM, Grinchenko 1907): {verified_controls} / {len(surzhyk_cases)} verified.",
-    ])
+    details_lines.extend(
+        [
+            "",
+            "2. **Anti-Surzhyk Control Verification against Positive Authorities:**",
+            f"   - Observed anti-surzhyk control cases: {len(surzhyk_cases)} cases targeting Russianisms and Russian-Soviet occupation calques.",
+            f"   - Attestation verification against positive Ukrainian authorities (СУМ-20, VESUM, Grinchenko 1907): {verified_controls} / {len(surzhyk_cases)} verified.",
+        ]
+    )
     if surzhyk_anomalies:
         for sa in surzhyk_anomalies[:10]:
             details_lines.append(f"     - [Anomaly] {sa.get('eval_id')}: {sa.get('reason')}")

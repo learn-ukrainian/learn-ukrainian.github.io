@@ -52,6 +52,7 @@ from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.message_plane import default_plane_root
 from scripts.guardrails.worktree_containment import classify_repo_path
 from scripts.lib import rules_core
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 logger = logging.getLogger(__name__)
 
@@ -192,12 +193,8 @@ def _discussion_admission(root: Path) -> Iterator[None]:
             locked = True
         except OSError as exc:
             if exc.errno in {errno.EACCES, errno.EAGAIN}:
-                raise AcpxDiscussionBusyError(
-                    "another ACP discussion is already running"
-                ) from None
-            raise AcpxDiscussionError(
-                f"unable to acquire the ACP admission lock: {exc}"
-            ) from exc
+                raise AcpxDiscussionBusyError("another ACP discussion is already running") from None
+            raise AcpxDiscussionError(f"unable to acquire the ACP admission lock: {exc}") from exc
         yield
     finally:
         if descriptor is not None:
@@ -263,12 +260,7 @@ class AcpxDiscussionController:
                 and current is not None
                 and current not in _TERMINAL
             )
-            if (
-                transition
-                and current is not None
-                and state not in _NEXT.get(current, set())
-                and not orphan_recovery
-            ):
+            if transition and current is not None and state not in _NEXT.get(current, set()) and not orphan_recovery:
                 raise AcpxDiscussionError(f"invalid ACPX transition {current} -> {state}")
             sequence = int(
                 self.conn.execute(
@@ -283,9 +275,21 @@ class AcpxDiscussionController:
                     metadata_json, created_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
-                    new_id("acp-event"), conversation_id, sequence, event_type, state, sender,
-                    recipient, round_no, outcome, duration_ms, token_count, leg_key_digest,
-                    message_id, json.dumps(metadata or {}, sort_keys=True), _now(),
+                    new_id("acp-event"),
+                    conversation_id,
+                    sequence,
+                    event_type,
+                    state,
+                    sender,
+                    recipient,
+                    round_no,
+                    outcome,
+                    duration_ms,
+                    token_count,
+                    leg_key_digest,
+                    message_id,
+                    json.dumps(metadata or {}, sort_keys=True),
+                    _now(),
                 ),
             )
             self.conn.commit()
@@ -332,8 +336,17 @@ class AcpxDiscussionController:
                     body_artifact_id, content_sha256, metadata_json, created_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
-                    message_id, conversation_id, reply_to, kind, sender, recipient, body,
-                    artifact.artifact_id, artifact.sha256, json.dumps({"acpx_discussion": True}), _now(),
+                    message_id,
+                    conversation_id,
+                    reply_to,
+                    kind,
+                    sender,
+                    recipient,
+                    body,
+                    artifact.artifact_id,
+                    artifact.sha256,
+                    json.dumps({"acpx_discussion": True}),
+                    _now(),
                 ),
             )
             self.store.reference(
@@ -405,11 +418,7 @@ class AcpxDiscussionController:
             "conversation_id": conversation_id,
             "state": state,
             "classification": (
-                "complete"
-                if state == "COMPLETE"
-                else "cancelled"
-                if state == "CANCELLED"
-                else "partial"
+                "complete" if state == "COMPLETE" else "cancelled" if state == "CANCELLED" else "partial"
             ),
             "participant_outcomes": participant_outcomes,
             "rounds_completed": saved_count("rounds_completed", derived_rounds),
@@ -488,8 +497,18 @@ class AcpxDiscussionController:
                     rounds_requested, participants_json, created_at, deadline_at, token_budget,
                     content_budget_bytes
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (conversation_id, task_digest, correlation_digest, idempotency_digest, rounds,
-                 json.dumps(participants), _now(), deadline_at, TOKEN_BUDGET, CONTENT_BUDGET_BYTES),
+                (
+                    conversation_id,
+                    task_digest,
+                    correlation_digest,
+                    idempotency_digest,
+                    rounds,
+                    json.dumps(participants),
+                    _now(),
+                    deadline_at,
+                    TOKEN_BUDGET,
+                    CONTENT_BUDGET_BYTES,
+                ),
             )
             self.conn.execute(
                 """INSERT INTO acp_conversation_events(
@@ -518,9 +537,7 @@ class AcpxDiscussionController:
                 )
                 return existing, self._replay(existing)
             if not _expired_deadline(row[1]):
-                raise AcpxDiscussionError(
-                    "a reservation for this idempotency key is still in progress"
-                ) from None
+                raise AcpxDiscussionError("a reservation for this idempotency key is still in progress") from None
             # An expired prior reservation did not finish. No retry is legal.
             try:
                 self._append(
@@ -633,11 +650,7 @@ class AcpxDiscussionController:
         is never re-executed.
         """
         observed_at = now or datetime.now(UTC)
-        observed_at = (
-            observed_at.replace(tzinfo=UTC)
-            if observed_at.tzinfo is None
-            else observed_at.astimezone(UTC)
-        )
+        observed_at = observed_at.replace(tzinfo=UTC) if observed_at.tzinfo is None else observed_at.astimezone(UTC)
         rows = self.conn.execute(
             """SELECT acp.conversation_id, acp.deadline_at
                FROM acp_conversations AS acp
@@ -689,13 +702,9 @@ class AcpxDiscussionController:
         for raw_participant, raw_value in overrides.items():
             participant = str(raw_participant).strip().lower()
             if participant not in participants or participant in normalized:
-                raise AcpxDiscussionError(
-                    f"{label} contains an unknown or duplicate participant {raw_participant!r}"
-                )
+                raise AcpxDiscussionError(f"{label} contains an unknown or duplicate participant {raw_participant!r}")
             if not isinstance(raw_value, str) or not raw_value.strip():
-                raise AcpxDiscussionError(
-                    f"{label}[{participant!r}] must be a non-empty catalog identifier"
-                )
+                raise AcpxDiscussionError(f"{label}[{participant!r}] must be a non-empty catalog identifier")
             normalized[participant] = raw_value.strip()
         return normalized
 
@@ -725,11 +734,7 @@ class AcpxDiscussionController:
             leg = _leg_digest(conversation_id, str(round_no), participant, _digest(prompts[participant]))
             reservations[participant] = leg
             raw_deliveries = deliveries[participant]
-            if (
-                len(raw_deliveries) == 3
-                and isinstance(raw_deliveries[0], str)
-                and isinstance(raw_deliveries[1], str)
-            ):
+            if len(raw_deliveries) == 3 and isinstance(raw_deliveries[0], str) and isinstance(raw_deliveries[1], str):
                 delivery_items = (raw_deliveries,)
             else:
                 delivery_items = tuple(raw_deliveries)
@@ -902,8 +907,7 @@ class AcpxDiscussionController:
         ):
             raise AcpxDiscussionError(
                 f"participants must name {MIN_PARTICIPANTS} to {MAX_PARTICIPANTS} distinct "
-                "enabled ACP seats: "
-                + ", ".join(sorted(SUPPORTED_PARTICIPANTS))
+                "enabled ACP seats: " + ", ".join(sorted(SUPPORTED_PARTICIPANTS))
             )
         if len(prompt.encode("utf-8")) * len(normalized_participants) > CONTENT_BUDGET_BYTES:
             raise AcpxDiscussionError("prompt exceeds the deterministic ACPX content budget")
@@ -936,9 +940,7 @@ class AcpxDiscussionController:
                     effort=effort_overrides.get(participant),
                 )
             except Exception as exc:
-                raise AcpxDiscussionError(
-                    f"invalid ACP participant selection for {participant!r}: {exc}"
-                ) from exc
+                raise AcpxDiscussionError(f"invalid ACP participant selection for {participant!r}: {exc}") from exc
         # Every discussion leg starts with the rules core: refuse before a
         # reservation is admitted, not one failed leg at a time.
         try:
@@ -1024,12 +1026,17 @@ class AcpxDiscussionController:
         self._append(conversation_id, event_type="STATE", state="INITIAL_FANOUT", transition=True)
         content_used = sum(len(prompt.encode("utf-8")) for _participant in participants)
         outcomes = self._call_wave(
-            conversation_id=conversation_id, task_id=task_id, correlation_id=correlation_id,
-            idempotency_key=idempotency_key, cwd=cwd, round_no=1,
+            conversation_id=conversation_id,
+            task_id=task_id,
+            correlation_id=correlation_id,
+            idempotency_key=idempotency_key,
+            cwd=cwd,
+            round_no=1,
             participants=participants,
             prompts={p: prompt for p in participants},
             deliveries={p: (("root", prompt, None),) for p in participants},
-            state="INITIAL_FANOUT", deadline=deadline,
+            state="INITIAL_FANOUT",
+            deadline=deadline,
             source=source,
             models=models,
             efforts=efforts,
@@ -1069,12 +1076,10 @@ class AcpxDiscussionController:
             for participant in participants:
                 peers = tuple(peer for peer in participants if peer != participant)
                 peer_evidence = "\n\n".join(
-                    f"{peer}'s prior response:\n{prior.get(peer) or '[unavailable]'}"
-                    for peer in peers
+                    f"{peer}'s prior response:\n{prior.get(peer) or '[unavailable]'}" for peer in peers
                 )
                 prompts[participant] = (
-                    f"Original task:\n{prompt}\n\n{peer_evidence}\n\n"
-                    "Respond with your critique or refinement."
+                    f"Original task:\n{prompt}\n\n{peer_evidence}\n\nRespond with your critique or refinement."
                 )
                 deliveries[participant] = tuple(
                     (
@@ -1085,12 +1090,17 @@ class AcpxDiscussionController:
                     for peer in peers
                 )
             outcomes = self._call_wave(
-                conversation_id=conversation_id, task_id=task_id, correlation_id=correlation_id,
-                idempotency_key=idempotency_key, cwd=cwd, round_no=round_no,
+                conversation_id=conversation_id,
+                task_id=task_id,
+                correlation_id=correlation_id,
+                idempotency_key=idempotency_key,
+                cwd=cwd,
+                round_no=round_no,
                 participants=participants,
                 prompts=prompts,
                 deliveries=deliveries,
-                state="CROSS_EXCHANGE", deadline=deadline,
+                state="CROSS_EXCHANGE",
+                deadline=deadline,
                 source=source,
                 models=models,
                 efforts=efforts,
@@ -1122,7 +1132,9 @@ class AcpxDiscussionController:
                 )
 
         self._append(conversation_id, event_type="STATE", state="SYNTHESIS", transition=True)
-        evidence = "\n\n".join(f"{item.participant} round response:\n{item.response}" for item in all_outcomes if item.response)
+        evidence = "\n\n".join(
+            f"{item.participant} round response:\n{item.response}" for item in all_outcomes if item.response
+        )
         synthesis: str | None = None
         synthesis_error: BaseException | None = None
         synthesis_result: Result | None = None
@@ -1304,9 +1316,7 @@ def run_discussion(**kwargs: Any) -> dict[str, Any]:
                     projection.get("reason") or projection.get("outcome") or "unknown",
                 )
         except Exception as exc:
-            logger.warning(
-                "optional ACP context projection failed: %s", type(exc).__name__
-            )
+            logger.warning("optional ACP context projection failed: %s", type(exc).__name__)
     return result
 
 
@@ -1333,7 +1343,7 @@ def verify_discussion_receipt(
     if not db_path.is_file():
         raise AcpxDiscussionNotFoundError("ACP conversation storage was not found")
     try:
-        connection = sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True)
+        connection = _open_readonly(db_path)
         connection.row_factory = sqlite3.Row
         row = connection.execute(
             """SELECT conversation_id, rounds_requested, participants_json, created_at
@@ -1341,9 +1351,7 @@ def verify_discussion_receipt(
             (conversation_id,),
         ).fetchone()
         if row is None:
-            raise AcpxDiscussionNotFoundError(
-                f"ACP conversation {conversation_id} was not found"
-            )
+            raise AcpxDiscussionNotFoundError(f"ACP conversation {conversation_id} was not found")
         events = connection.execute(
             """SELECT sequence, event_type, state, sender, round, outcome,
                       duration_ms, token_count, created_at
@@ -1375,16 +1383,12 @@ def verify_discussion_receipt(
     rounds_value = row["rounds_requested"]
     rounds_requested = (
         rounds_value
-        if isinstance(rounds_value, int)
-        and not isinstance(rounds_value, bool)
-        and 1 <= rounds_value <= MAX_ROUNDS
+        if isinstance(rounds_value, int) and not isinstance(rounds_value, bool) and 1 <= rounds_value <= MAX_ROUNDS
         else 0
     )
     created_at = _safe_receipt_timestamp(row["created_at"])
     terminal_calls = [event for event in events if event["event_type"] == "CALL_TERMINAL"]
-    outcome_counts: dict[str, dict[str, int]] = {
-        participant: {} for participant in participant_names
-    }
+    outcome_counts: dict[str, dict[str, int]] = {participant: {} for participant in participant_names}
     successful_legs: set[tuple[int, str]] = set()
     rounds_observed = 0
     for event in terminal_calls:
@@ -1393,9 +1397,7 @@ def verify_discussion_receipt(
         outcome = _safe_receipt_outcome(event["outcome"])
         if participant not in outcome_counts:
             continue
-        outcome_counts[participant][outcome] = (
-            outcome_counts[participant].get(outcome, 0) + 1
-        )
+        outcome_counts[participant][outcome] = outcome_counts[participant].get(outcome, 0) + 1
         if isinstance(round_no, int) and not isinstance(round_no, bool) and round_no > 0:
             rounds_observed = max(rounds_observed, round_no)
             if outcome == "ok":
@@ -1405,37 +1407,18 @@ def verify_discussion_receipt(
         if not all((round_no, participant) in successful_legs for participant in participant_names):
             break
         successful_rounds = round_no
-    synthesis_events = [
-        event for event in events if event["event_type"] == "SYNTHESIS_TERMINAL"
-    ]
-    synthesis_outcome = (
-        _safe_receipt_outcome(synthesis_events[-1]["outcome"])
-        if synthesis_events
-        else "missing"
-    )
-    replay_count = sum(
-        event["event_type"] == "DUPLICATE_SUPPRESSED" for event in events
-    )
+    synthesis_events = [event for event in events if event["event_type"] == "SYNTHESIS_TERMINAL"]
+    synthesis_outcome = _safe_receipt_outcome(synthesis_events[-1]["outcome"]) if synthesis_events else "missing"
+    replay_count = sum(event["event_type"] == "DUPLICATE_SUPPRESSED" for event in events)
     final_event = events[-1]
-    final_state = (
-        str(final_event["state"])
-        if final_event["state"] in _TERMINAL
-        else "UNKNOWN"
-    )
+    final_state = str(final_event["state"]) if final_event["state"] in _TERMINAL else "UNKNOWN"
     updated_at = _safe_receipt_timestamp(final_event["created_at"])
     terminal_state_event = next(
-        (
-            event
-            for event in reversed(events)
-            if event["event_type"] == "STATE" and event["state"] in _TERMINAL
-        ),
+        (event for event in reversed(events) if event["event_type"] == "STATE" and event["state"] in _TERMINAL),
         None,
     )
     storage_metadata_valid = (
-        rounds_requested > 0
-        and created_at is not None
-        and updated_at is not None
-        and terminal_state_event is not None
+        rounds_requested > 0 and created_at is not None and updated_at is not None and terminal_state_event is not None
     )
     terminal_complete = final_state == "COMPLETE"
     rounds_complete = successful_rounds == rounds_requested

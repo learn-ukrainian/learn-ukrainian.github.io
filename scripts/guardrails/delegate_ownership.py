@@ -24,6 +24,8 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+
 # Anchor ledger + task-state to the PRIMARY checkout (not a worktree copy),
 # matching scripts/delegate.py (Claude CF #5649 r12 F001).
 try:
@@ -586,7 +588,7 @@ class OwnershipLedger:
         self.process_matches_task = process_matches_task
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
-    def _connect(self, *, read_only: bool = False) -> sqlite3.Connection:
+    def _connect(self, *, read_only: bool = False) -> SQLiteConnection:
         conn = cp_connect(
             StoreId.WRITE_OWNERSHIP,
             path=self.path,
@@ -622,7 +624,7 @@ class OwnershipLedger:
             )
         return conn
 
-    def _reconcile_stale(self, conn: sqlite3.Connection) -> list[str]:
+    def _reconcile_stale(self, conn: SQLiteConnection) -> list[str]:
         released: list[str] = []
         rows = conn.execute(
             "SELECT task_id, pid, MIN(created_at) AS created_at FROM write_claims GROUP BY task_id, pid"

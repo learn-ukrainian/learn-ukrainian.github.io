@@ -36,6 +36,8 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 # Prefer sibling imports when AUDIT_DIR is on sys.path (CLI harness mode).
 try:
     from checks.russicism_detection import check_russicisms, check_ua_gec_calques
@@ -788,7 +790,7 @@ def _sources_conn():
     db = _SOURCES_DB_OVERRIDE or (PROJECT_ROOT / "data" / "sources.db")
     if not db.exists():
         return None
-    conn = sqlite3.connect(f"{Path(db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(db).resolve())
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -887,9 +889,7 @@ def _antonenko_title_hit(text: str) -> list[str]:
     hits: list[str] = []
     folded = text.casefold()
     try:
-        rows = conn.execute(
-            "SELECT word FROM style_guide WHERE word LIKE '%–%' OR word LIKE '%—%'"
-        ).fetchall()
+        rows = conn.execute("SELECT word FROM style_guide WHERE word LIKE '%–%' OR word LIKE '%—%'").fetchall()
         for row in rows:
             title = str(row["word"] or "").strip()
             if not title:
@@ -1096,9 +1096,7 @@ def check_invented_forms(ctx: _ScanContext) -> list[dict[str, Any]]:
     return findings
 
 
-def _iter_mc_items(
-    activity: Mapping[str, Any], answer_key: Any = _UNSET
-) -> Iterable[tuple[str, list[str], Any]]:
+def _iter_mc_items(activity: Mapping[str, Any], answer_key: Any = _UNSET) -> Iterable[tuple[str, list[str], Any]]:
     """Yield (prompt, options, correct_answer) for multiple-choice style items.
 
     ``answer_key`` should be the caller's already-resolved key (prefer
@@ -1190,9 +1188,7 @@ def check_invalid_distractors(ctx: _ScanContext) -> list[dict[str, Any]]:
     for act_idx, entry in enumerate(ctx.activities):
         activity = _activity_body(entry)
         resolved_answer_key = _answer_key_for(entry, activity)
-        for item_idx, (_prompt, options, correct) in enumerate(
-            _iter_mc_items(activity, resolved_answer_key)
-        ):
+        for item_idx, (_prompt, options, correct) in enumerate(_iter_mc_items(activity, resolved_answer_key)):
             if len(options) < 2:
                 continue
             correct_opt = _resolve_correct_option(options, correct)
@@ -1289,10 +1285,10 @@ def check_invalid_distractors(ctx: _ScanContext) -> list[dict[str, Any]]:
                     # Optional morphological collision — only when activity type looks grammatical
                     act_type = str(activity.get("type") or "").casefold()
                     if (
-                        "grammar" in act_type
-                        or "morph" in act_type
-                        or "case" in act_type
-                    ) and correct_tokens and len(correct_tokens) == 1:
+                        ("grammar" in act_type or "morph" in act_type or "case" in act_type)
+                        and correct_tokens
+                        and len(correct_tokens) == 1
+                    ):
                         ans_forms = _vesum_hits(correct_tokens[0])
                         dis_forms = _vesum_hits(form)
                         if ans_forms and dis_forms:
@@ -1419,9 +1415,7 @@ def check_answer_key_placeholders(ctx: _ScanContext) -> list[dict[str, Any]]:
                             file="activities.yaml",
                             line=1,
                             excerpt=f"answer_key.{nested_key}=[]",
-                            message=(
-                                f"Activity[{act_idx}] ({act_type}): answer_key.{nested_key} is empty."
-                            ),
+                            message=(f"Activity[{act_idx}] ({act_type}): answer_key.{nested_key} is empty."),
                             text=file_text,
                         )
                     )
@@ -1475,9 +1469,7 @@ def check_structural_integrity(ctx: _ScanContext) -> list[dict[str, Any]]:
                             file="activities.yaml",
                             line=1,
                             excerpt=str(item.get("prompt") or item)[:80],
-                            message=(
-                                f"Activity[{act_idx}] item[{item_idx}]: multiple-choice needs ≥2 options."
-                            ),
+                            message=(f"Activity[{act_idx}] item[{item_idx}]: multiple-choice needs ≥2 options."),
                             text=file_text,
                         )
                     )
@@ -1520,9 +1512,7 @@ def check_structural_integrity(ctx: _ScanContext) -> list[dict[str, Any]]:
                                 file="activities.yaml",
                                 line=1,
                                 excerpt=f"pairs={len(pairs)} key_pairs={len(key_pairs)}",
-                                message=(
-                                    f"Activity[{act_idx}]: answer_key.pairs length does not match payload pairs."
-                                ),
+                                message=(f"Activity[{act_idx}]: answer_key.pairs length does not match payload pairs."),
                                 text=file_text,
                             )
                         )
@@ -1573,8 +1563,7 @@ def check_structural_integrity(ctx: _ScanContext) -> list[dict[str, Any]]:
                         line=1,
                         excerpt=f"blanks={blank_count} answers={answer_count}",
                         message=(
-                            f"Activity[{act_idx}]: cloze blank count ({blank_count}) "
-                            f"≠ answer count ({answer_count})."
+                            f"Activity[{act_idx}]: cloze blank count ({blank_count}) ≠ answer count ({answer_count})."
                         ),
                         text=file_text,
                     )
@@ -1692,9 +1681,7 @@ def check_task_language_cefr(ctx: _ScanContext) -> list[dict[str, Any]]:
                     for field_name in ("prompt", "question", "stem", "statement", "text"):
                         val = item.get(field_name)
                         if isinstance(val, str) and val.strip():
-                            task_strings.append(
-                                (f"activity[{act_idx}].items[{item_idx}].{field_name}", val)
-                            )
+                            task_strings.append((f"activity[{act_idx}].items[{item_idx}].{field_name}", val))
 
     seen: set[str] = set()
     for path, text in task_strings:
@@ -1850,8 +1837,7 @@ def scan_hramatka_module(
     aggregate = _aggregate(dimensions)
     config_hash = checker_config_hash()
     detector_status = {
-        name: {"status": "detector_unavailable", "reason": reason}
-        for name, reason in sorted(unavailable.items())
+        name: {"status": "detector_unavailable", "reason": reason} for name, reason in sorted(unavailable.items())
     }
 
     return {
@@ -2055,9 +2041,7 @@ def run_fixtures(path: Path) -> dict[str, Any]:
     with tempfile.TemporaryDirectory(prefix="hramatka-qg-fixtures-") as raw_tmp:
         tmp_root = Path(raw_tmp)
         results = [
-            evaluate_fixture(fixture, temp_root=tmp_root)
-            for fixture in fixtures
-            if isinstance(fixture, Mapping)
+            evaluate_fixture(fixture, temp_root=tmp_root) for fixture in fixtures if isinstance(fixture, Mapping)
         ]
     passed = sum(1 for result in results if result["passed"])
     return {

@@ -36,6 +36,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.practice_deck.markup_integrity import (
     DEFAULT_OVERLAY,
     load_markup_overlay,
@@ -214,7 +215,7 @@ def fetch_test_html(catalogue: str, test_id: int, *, timeout: float = 30.0) -> s
 
 def load_markup_tasks(db_path: Path) -> list[dict[str, Any]]:
     """Load single-choice tasks that still need visual marks."""
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = _open_readonly(db_path)
     conn.row_factory = sqlite3.Row
     try:
         rows = conn.execute(
@@ -432,9 +433,7 @@ def main(argv: list[str] | None = None) -> int:
         recovered: list[RecoveredTask] = []
         for path in args.html_file:
             html = path.read_text(encoding="utf-8")
-            recovered.extend(
-                parse_tasks_with_option_marks(html, catalogue=args.catalogue, test_id=args.test_id)
-            )
+            recovered.extend(parse_tasks_with_option_marks(html, catalogue=args.catalogue, test_id=args.test_id))
         scanned = {
             "mode": "html-file",
             "files": [str(path) for path in args.html_file],

@@ -10,9 +10,10 @@ from __future__ import annotations
 
 import argparse
 import json
-import sqlite3
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.verification.antonenko_citations import EVIDENCE_FORMS
 from scripts.verification.antonenko_patterns import PATTERNS, SOURCE_FILE, PhrasePattern
 from scripts.verification.check_text import _sources_path_resolved
@@ -23,7 +24,7 @@ def normalize(text: str) -> str:
     return " ".join(text.casefold().translate(str.maketrans("’ʼ`‘–‑‐", "''''---")).split())
 
 
-def audit_citations(conn: sqlite3.Connection, patterns: tuple[PhrasePattern, ...] = PATTERNS) -> dict:
+def audit_citations(conn: SQLiteConnection, patterns: tuple[PhrasePattern, ...] = PATTERNS) -> dict:
     """Fail on absent/wrong-source chunks, absent anchors, or inventory drift."""
     failures = []
     expected = {p.id for p in patterns}
@@ -58,7 +59,7 @@ def main() -> int:
     parser.add_argument("--database", type=Path, default=None, help="Sources SQLite database (read-only).")
     args = parser.parse_args()
     path = args.database or _sources_path_resolved()
-    with sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True) as conn:
+    with _open_readonly(path.resolve()) as conn:
         result = audit_citations(conn)
     print(json.dumps(result, ensure_ascii=False))
     return int(bool(result["failures"]))

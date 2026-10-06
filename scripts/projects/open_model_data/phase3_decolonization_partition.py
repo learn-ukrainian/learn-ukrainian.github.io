@@ -38,6 +38,7 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.storage.paths import artifact_set
 
@@ -312,9 +313,9 @@ class DecolonizationPartitionFirewall:
         if not self.vesum_db.is_file():
             raise FileNotFoundError(f"Missing VESUM database at {self.vesum_db}")
 
-        s_conn = sqlite3.connect(f"{Path(self.sources_db).resolve().as_uri()}?mode=ro", uri=True)
+        s_conn = _open_readonly(Path(self.sources_db).resolve())
         sc = s_conn.cursor()
-        v_conn = sqlite3.connect(f"{Path(self.vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+        v_conn = _open_readonly(Path(self.vesum_db).resolve())
         vc = v_conn.cursor()
 
         # 1. Source Custody: UA-GEC

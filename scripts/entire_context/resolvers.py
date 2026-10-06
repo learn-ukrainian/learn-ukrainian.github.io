@@ -77,6 +77,8 @@ from scripts.control_plane.storage import ControlPlaneError
 from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
 from scripts.fleet_comms.pg_schema import PgSchemaError
 from scripts.fleet_comms.review_publication import parse_sealed_verdict_payload
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.orchestration.task_family.rollover_registry import (
     load_record as load_rollover_record,
 )
@@ -139,9 +141,7 @@ MAX_ISSUE_CACHE_AGE_SECONDS = 3600
 MAX_CACHE_SKEW_SECONDS = 300
 
 #: Terminal request states in the Fleet Comms ``requests`` table.
-_TERMINAL_REQUEST_STATES = frozenset(
-    {"complete", "incomplete", "failed", "expired", "dead_lettered"}
-)
+_TERMINAL_REQUEST_STATES = frozenset({"complete", "incomplete", "failed", "expired", "dead_lettered"})
 _REQUEST_STATES = frozenset({"queued", "running", *_TERMINAL_REQUEST_STATES})
 
 #: Terminal lease statuses in the Agent Process Monitor ``agent_leases`` table.
@@ -397,7 +397,7 @@ def _verify_acp_git_correlation(acp_root: Path, conversation_id: str, git_sha: s
     if not db_path.is_file():
         raise ResolutionError(REASON_SOURCE_MISSING)
     try:
-        with sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True) as connection:
+        with _open_readonly(db_path) as connection:
             row = connection.execute(
                 "SELECT correlation_digest FROM acp_conversations WHERE conversation_id = ?",
                 (conversation_id,),
@@ -591,13 +591,13 @@ def resolve_rollover(
 # ── typed dispatch and re-verification gate ──────────────────────────────────
 
 
-def _open_readonly_sqlite(db_path: Path) -> sqlite3.Connection:
+def _open_readonly_sqlite(db_path: Path) -> SQLiteConnection:
     """Open one SQLite database read-only via URI ``mode=ro``; fail closed."""
     path = Path(db_path).expanduser().resolve()
     if not path.is_file():
         raise ResolutionError(REASON_SOURCE_MISSING)
     try:
-        connection = sqlite3.connect(f"{path.as_uri()}?mode=ro", uri=True)
+        connection = _open_readonly(path)
     except sqlite3.Error as exc:
         raise ResolutionError(REASON_RESOLUTION_ERROR, "sqlite unreadable") from exc
     connection.row_factory = sqlite3.Row
@@ -730,7 +730,7 @@ def _parse_issue_number(identifier: str) -> int:
     """Parse ``issue/<number>`` or a bare positive integer into an issue number."""
     text = identifier.strip()
     if text.startswith("issue/"):
-        text = text[len("issue/"):]
+        text = text[len("issue/") :]
     if not text.isdigit():
         raise ResolutionError(REASON_RESOLUTION_ERROR, "issue canonical_id must be issue/<number>")
     number = int(text)
@@ -796,11 +796,7 @@ def resolve_github_issue(
         raise ResolutionError(REASON_RESOLUTION_ERROR, "issue cache malformed")
 
     generated_at = report.get("generated_at")
-    if (
-        isinstance(generated_at, bool)
-        or not isinstance(generated_at, int | float)
-        or not math.isfinite(generated_at)
-    ):
+    if isinstance(generated_at, bool) or not isinstance(generated_at, int | float) or not math.isfinite(generated_at):
         raise ResolutionError(REASON_RESOLUTION_ERROR, "issue cache missing generated_at")
     moment = now or utc_now()
     now_epoch = moment.timestamp()
@@ -819,8 +815,7 @@ def resolve_github_issue(
 
     open_numbers = report.get("open_issue_numbers")
     if not isinstance(open_numbers, list) or not all(
-        isinstance(number, int) and not isinstance(number, bool) and number > 0
-        for number in open_numbers
+        isinstance(number, int) and not isinstance(number, bool) and number > 0 for number in open_numbers
     ):
         raise ResolutionError(REASON_RESOLUTION_ERROR, "issue cache missing open_issue_numbers")
     open_set = set(open_numbers)
@@ -1215,7 +1210,9 @@ def resolve_formal_review(
 
     published = pub_row is not None
     publication_context = (
-        _require_state(pub_row["status_context"], field="publication_context", allowed=frozenset({DEFAULT_STATUS_CONTEXT}))
+        _require_state(
+            pub_row["status_context"], field="publication_context", allowed=frozenset({DEFAULT_STATUS_CONTEXT})
+        )
         if pub_row is not None
         else None
     )
@@ -1361,9 +1358,8 @@ def resolve_fleet_receipt(
     expires_at = _require_timestamp(row["expires_at"], field="expires_at")
     created_at = _require_timestamp(row["created_at"], field="created_at")
     updated_at = _require_timestamp(row["updated_at"], field="updated_at")
-    if (
-        parse_timestamp(updated_at) < parse_timestamp(created_at)
-        or parse_timestamp(expires_at) < parse_timestamp(created_at)
+    if parse_timestamp(updated_at) < parse_timestamp(created_at) or parse_timestamp(expires_at) < parse_timestamp(
+        created_at
     ):
         raise ResolutionError(REASON_RESOLUTION_ERROR, "request timestamps are inconsistent")
 
@@ -1631,8 +1627,7 @@ def reverify_link(
     # rollover, formal-review, fleet-receipt, and monitor namespaces are
     # canonical resolver output and are compared.
     namespace_mismatch = (
-        kind not in (LinkKind.GIT_COMMIT, LinkKind.GITHUB_ISSUE)
-        and fresh.canonical_namespace != stored_namespace
+        kind not in (LinkKind.GIT_COMMIT, LinkKind.GITHUB_ISSUE) and fresh.canonical_namespace != stored_namespace
     )
     if fresh.canonical_digest != link["canonical_digest"] or namespace_mismatch:
         raise ResolutionError(REASON_DIGEST_MISMATCH)

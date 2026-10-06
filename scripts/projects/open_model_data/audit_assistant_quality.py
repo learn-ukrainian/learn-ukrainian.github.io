@@ -30,6 +30,7 @@ from pathlib import Path
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -127,7 +128,7 @@ def get_textbook_lemma_freq(db_path: Path | None = None) -> dict[str, int]:
     db_p = db_path or DEFAULT_SOURCES_DB
     counts: dict[str, int] = {}
     try:
-        conn = sqlite3.connect(f"file:{db_p}?mode=ro", uri=True)
+        conn = _open_readonly(db_p)
         cur = conn.cursor()
         cur.execute("SELECT text FROM textbooks")
         for row in cur:
@@ -1857,7 +1858,7 @@ def audit_records_for_seed(
 
 
 def main() -> None:
-    conn = sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True)
+    conn = _open_readonly(DEFAULT_VESUM_DB)
     cur = conn.cursor()
 
     sft_files = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))

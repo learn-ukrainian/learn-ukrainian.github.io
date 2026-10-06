@@ -23,6 +23,8 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+
 try:
     import requests
     from bs4 import BeautifulSoup
@@ -410,7 +412,7 @@ def load_atlas_manifest_lemmas(manifest_path: Path) -> list[str]:
 
 
 def load_vesum_lemmas(vesum_db_path: Path) -> list[str]:
-    conn = sqlite3.connect(f"{Path(vesum_db_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(Path(vesum_db_path).resolve())
     cursor = conn.execute("SELECT DISTINCT lemma FROM forms_all WHERE lemma != '' ORDER BY lemma;")
     lemmas = [row[0] for row in cursor.fetchall()]
     conn.close()

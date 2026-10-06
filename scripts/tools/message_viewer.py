@@ -15,6 +15,8 @@ from pathlib import Path
 
 from flask import Flask, jsonify, render_template_string
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 app = Flask(__name__)
 
 # Database path
@@ -320,13 +322,15 @@ HTML_TEMPLATE = """
 </html>
 """
 
+
 def get_db():
     """Get database connection."""
     if not DB_PATH.exists():
         return None
-    conn = sqlite3.connect(DB_PATH)
+    conn = _open_readonly(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
+
 
 def get_messages():
     """Fetch all messages from database."""
@@ -345,6 +349,7 @@ def get_messages():
     conn.close()
     return messages
 
+
 def get_outbox_messages():
     """Fetch messages from .gemini/outbox/"""
     import yaml
@@ -357,22 +362,24 @@ def get_outbox_messages():
         try:
             with open(filepath) as f:
                 data = yaml.safe_load(f)
-                data['filename'] = filepath.name
+                data["filename"] = filepath.name
                 messages.append(data)
         except Exception:
             pass
 
     return messages
 
+
 def get_stats(messages):
     """Calculate statistics."""
     return {
-        'total_messages': len(messages),
-        'claude_messages': sum(1 for m in messages if m['from_llm'] == 'claude'),
-        'gemini_messages': sum(1 for m in messages if m['from_llm'] == 'gemini'),
-        'task_count': len(set(m['task_id'] for m in messages if m['task_id'])),
-        'tasks': sorted(set(m['task_id'] for m in messages if m['task_id']))
+        "total_messages": len(messages),
+        "claude_messages": sum(1 for m in messages if m["from_llm"] == "claude"),
+        "gemini_messages": sum(1 for m in messages if m["from_llm"] == "gemini"),
+        "task_count": len(set(m["task_id"] for m in messages if m["task_id"])),
+        "tasks": sorted(set(m["task_id"] for m in messages if m["task_id"])),
     }
+
 
 def group_by_task(messages):
     """Group messages by task_id."""
@@ -380,15 +387,16 @@ def group_by_task(messages):
 
     groups = defaultdict(list)
     for msg in messages:
-        groups[msg['task_id'] or 'no-task'].append(msg)
+        groups[msg["task_id"] or "no-task"].append(msg)
 
     # Sort each group by id ascending (chronological)
     for task_id in groups:
-        groups[task_id] = sorted(groups[task_id], key=lambda m: m['id'])
+        groups[task_id] = sorted(groups[task_id], key=lambda m: m["id"])
 
     return dict(groups)
 
-@app.route('/')
+
+@app.route("/")
 def index():
     messages = get_messages()
     outbox = get_outbox_messages()
@@ -400,24 +408,27 @@ def index():
         outbox_messages=outbox,
         conversations=group_by_task(messages),
         group_by_task=True,
-        **stats
+        **stats,
     )
 
-@app.route('/api/messages')
+
+@app.route("/api/messages")
 def api_messages():
     """JSON API for messages."""
     messages = get_messages()
     return jsonify(messages)
 
-@app.route('/api/stats')
+
+@app.route("/api/stats")
 def api_stats():
     """JSON API for statistics."""
     messages = get_messages()
     return jsonify(get_stats(messages))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     print("📬 Message Viewer starting...")
     print(f"   Database: {DB_PATH}")
     print(f"   Outbox: {OUTBOX_PATH}")
     print("\n   Open: http://localhost:5055\n")
-    app.run(host='127.0.0.1', port=5055, debug=False)
+    app.run(host="127.0.0.1", port=5055, debug=False)

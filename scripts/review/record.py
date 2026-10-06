@@ -84,6 +84,7 @@ import yaml
 
 from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
+from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.review import findings_db, fixloop, second_seat
 from scripts.review.seeds import manifest as seed_manifest
 from scripts.review.validate.validate import ReviewReturnError, extract_review_yaml, validate_review
@@ -407,7 +408,7 @@ def _writer_family(directory: Path, lesson_n: int) -> str:
 
 
 def _check_seed_identity(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     root: Path,
     seed_id: str,
     target: tuple[str, str, int],
@@ -487,7 +488,7 @@ def _require_saved(target: Path, digest: str, name: str) -> None:
 
 
 def _publish(
-    outcome: Outcome, conn: sqlite3.Connection, root: Path, level: str, slug: str, kind: str, lesson_n: int | None
+    outcome: Outcome, conn: SQLiteConnection, root: Path, level: str, slug: str, kind: str, lesson_n: int | None
 ) -> None:
     """Project the database's latest accepted attempt of the target into its verdict file (after the commit)."""
     try:
@@ -784,7 +785,7 @@ def record_return(
 
 
 def _terminal_budget(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     root: Path,
     level: str,
     slug: str,
@@ -932,7 +933,7 @@ def _persist_accepted(
 
 
 def _close_moot(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     root: Path,
     directory: Path,
     level: str,
@@ -983,7 +984,7 @@ def _terminal_now(
 
 
 def _replay(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     root: Path,
     directory: Path,
     existing: Any,

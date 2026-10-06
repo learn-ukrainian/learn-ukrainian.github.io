@@ -53,8 +53,9 @@ The helper does NOT commit; the caller controls transactions.
 
 from __future__ import annotations
 
-import sqlite3
 from dataclasses import dataclass
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
 
 # Sentinel grade for non-school reference material (Anna Ohoiko books,
 # Ukrainian Lessons Podcast lesson notes, etc.). School-textbook
@@ -74,7 +75,7 @@ class LessonSection:
 
 
 def link_lesson_sections(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     source_file: str,
     sections: list[LessonSection],
@@ -135,7 +136,7 @@ def link_lesson_sections(
     return inserted_count, linked_count
 
 
-def ensure_section_schema(conn: sqlite3.Connection) -> None:
+def ensure_section_schema(conn: SQLiteConnection) -> None:
     """Create textbook_sections + parent_section_id column if missing.
 
     Defensive — the schema is normally provisioned by

@@ -14,6 +14,9 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import TypedDict
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_VESUM_DB = ROOT / "data" / "vesum.db"
 _APOSTROPHE_FOLD = str.maketrans({"’": "'", "ʼ": "'", "ʻ": "'", "＇": "'"})
@@ -40,16 +43,16 @@ def content_tokens(value: str) -> list[str]:
     return [normalize_lemma(token) for token in _WORD_RE.findall(normalize_lemma(value))]
 
 
-def _open_read_only(path: Path) -> sqlite3.Connection:
+def _open_read_only(path: Path) -> SQLiteConnection:
     resolved = path.expanduser().resolve()
     if not resolved.is_file():
         raise FileNotFoundError(f"VESUM database not found: {resolved}")
-    connection = sqlite3.connect(f"file:{resolved.as_posix()}?mode=ro", uri=True)
+    connection = _open_readonly(resolved)
     connection.row_factory = sqlite3.Row
     return connection
 
 
-def _lookup(connection: sqlite3.Connection, term: str) -> tuple[list[str], list[str]]:
+def _lookup(connection: SQLiteConnection, term: str) -> tuple[list[str], list[str]]:
     """Look up a normalized term as either an attested form or a lemma.
 
     VESUM's stored lexical values are normalized lowercase. Normalizing the
@@ -71,7 +74,7 @@ def _lookup(connection: sqlite3.Connection, term: str) -> tuple[list[str], list[
     )
 
 
-def _attest_with_connection(lemma: str, connection: sqlite3.Connection) -> VesumAttestation:
+def _attest_with_connection(lemma: str, connection: SQLiteConnection) -> VesumAttestation:
     """Attest one lemma using an already-open read-only VESUM connection."""
     normalized = normalize_lemma(lemma)
     if not normalized:

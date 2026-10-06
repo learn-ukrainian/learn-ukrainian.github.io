@@ -37,6 +37,7 @@ if str(ROOT) not in sys.path:
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 from scripts.verification.vesum import get_vesum_connection
 from scripts.wiki import sources_db
 from scripts.wiki.diagnostics import retrieval_probe_9233 as phase1
@@ -53,8 +54,17 @@ THREADS = 6
 THREAD_ENV = ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMEXPR_NUM_THREADS", "ORT_NUM_THREADS")
 MEMORY_BYTES = 10 * 1024**3
 E5 = "intfloat/multilingual-e5-small"
-GUARDRAILS = {"threads": THREADS, "memory_bytes": MEMORY_BYTES, "memory_enforcement": "systemd_scope_or_rss_watchdog", "cpu_nice": 19, "io_priority": "idle"}
-PASSAGE_POLICIES = {"embedder": "model maximum; head only", "reranker": {"tokens": 512, "head": 128, "tail": 384, "overhead_excluded": True}}
+GUARDRAILS = {
+    "threads": THREADS,
+    "memory_bytes": MEMORY_BYTES,
+    "memory_enforcement": "systemd_scope_or_rss_watchdog",
+    "cpu_nice": 19,
+    "io_priority": "idle",
+}
+PASSAGE_POLICIES = {
+    "embedder": "model maximum; head only",
+    "reranker": {"tokens": 512, "head": 128, "tail": 384, "overhead_excluded": True},
+}
 TOKEN_RE = phase1.TOKEN_RE
 
 # Repository IDs and retrieval prefixes are frozen from design v5 item 8 and
@@ -63,13 +73,21 @@ TOKEN_RE = phase1.TOKEN_RE
 EMBEDDERS: dict[str, dict[str, str]] = {
     "BAAI/bge-m3": {"kind": "flag", "query_prefix": "", "passage_prefix": ""},
     "Snowflake/snowflake-arctic-embed-l-v2.0": {
-        "kind": "sentence", "query_prefix": "query: ", "passage_prefix": "",
+        "kind": "sentence",
+        "query_prefix": "query: ",
+        "passage_prefix": "",
     },
-    "jinaai/jina-embeddings-v5-text-nano": {"kind": "jina", "query_prefix": "task=retrieval; prompt_name=query", "passage_prefix": "task=retrieval; prompt_name=document"},
+    "jinaai/jina-embeddings-v5-text-nano": {
+        "kind": "jina",
+        "query_prefix": "task=retrieval; prompt_name=query",
+        "passage_prefix": "task=retrieval; prompt_name=document",
+    },
     "intfloat/multilingual-e5-small": {"kind": "sentence", "query_prefix": "query: ", "passage_prefix": "passage: "},
     "hotchpotch/bekko-embedding-v1-a25m": {"kind": "sentence", "query_prefix": "", "passage_prefix": ""},
     "Qwen/Qwen3-Embedding-0.6B": {
-        "kind": "sentence", "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:", "passage_prefix": "",
+        "kind": "sentence",
+        "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+        "passage_prefix": "",
     },
 }
 RERANKERS = {
@@ -83,15 +101,56 @@ EXTRA_SOURCES = (
     "anna-ohoiko-1000-words-2nd-ed",
     "pohribnyi-ukrainska-literaturna-vymova-1992",
 )
-EXPLICIT_FUNCTION_WORDS = frozenset([
-    "а", "або", "але", "в", "від", "до", "з", "за", "і", "й", "на", "не", "у", "та", "що", "це", "як", "про", "для", "коли", "де", "чим", "хто", "чого", "я", "ми", "ти", "ви", "він", "вона", "воно", "вони", "мій", "моя", "моє", "мого", "цим", "цього",
-])
+EXPLICIT_FUNCTION_WORDS = frozenset(
+    [
+        "а",
+        "або",
+        "але",
+        "в",
+        "від",
+        "до",
+        "з",
+        "за",
+        "і",
+        "й",
+        "на",
+        "не",
+        "у",
+        "та",
+        "що",
+        "це",
+        "як",
+        "про",
+        "для",
+        "коли",
+        "де",
+        "чим",
+        "хто",
+        "чого",
+        "я",
+        "ми",
+        "ти",
+        "ви",
+        "він",
+        "вона",
+        "воно",
+        "вони",
+        "мій",
+        "моя",
+        "моє",
+        "мого",
+        "цим",
+        "цього",
+    ]
+)
 TOPIC_FUNCTION_WORDS = frozenset({"з", "із", "зі", "і", "й", "у", "в"})
 FUNCTION_POS = frozenset({"conj", "prep", "part"})
 
 
 def _hash(value: Any) -> str:
-    return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()).hexdigest()
+    return hashlib.sha256(
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    ).hexdigest()
 
 
 def _write_json(path: Path, value: Any) -> None:
@@ -133,14 +192,23 @@ def _stratified_sample(rows: list[Any], size: int = 500) -> list[dict[str, Any]]
     # Proportional allocation with one chunk in every nonempty cell, bounded by
     # cell capacity; stable largest deficit apportionment fills all 500 slots.
     for _ in range(size - len(keys)):
-        key = max((k for k in keys if allocations[k] < len(cells[k])),
-                  key=lambda k: (size * len(cells[k]) / len(rows) - allocations[k], k))
+        key = max(
+            (k for k in keys if allocations[k] < len(cells[k])),
+            key=lambda k: (size * len(cells[k]) / len(rows) - allocations[k], k),
+        )
         allocations[key] += 1
     rng = random.Random(SEED)
     sample_rows = []
     for key in keys:
         for row in rng.sample(cells[key], allocations[key]):
-            sample_rows.append({"chunk_id": str(row["chunk_id"]), "source_identity": key[0], "length_tercile": key[1], "text_sha256": hashlib.sha256(str(row["text"]).encode()).hexdigest()})
+            sample_rows.append(
+                {
+                    "chunk_id": str(row["chunk_id"]),
+                    "source_identity": key[0],
+                    "length_tercile": key[1],
+                    "text_sha256": hashlib.sha256(str(row["text"]).encode()).hexdigest(),
+                }
+            )
     return sorted(sample_rows, key=lambda r: r["chunk_id"])
 
 
@@ -154,14 +222,30 @@ def sample(db_path: Path, work: Path) -> dict[str, Any]:
     rng = random.Random(SEED)
     cost_ids = rng.sample([q["id"] for q in chosen], 50)
     timing_ids = rng.sample([q["id"] for q in chosen if q["family"] == "G3"], 25)
-    return _freeze(work / "evaluation-manifest.json", {
-        "schema": "retrieval-bakeoff-9233-evaluation.v6.1", "seed": SEED,
-        "corpus_rows": len(rows), "corpus_row_digest": _digest_rows(rows),
-        "g3_sha256": G3_SHA256, "query_file_sha256": hashlib.sha256(QUERY_PATH.read_bytes()).hexdigest(),
-        "queries": chosen, "cost_query_ids": cost_ids, "encode_sample": chunks,
-        "encode_sample_sha256": _hash(chunks), "timing_query_ids": timing_ids,
-        "timing_recipe": {"hybrid": f"H:{E5}", "top": TOP_RERANK, "rrf_k": RRF_K, "first_stage_depth": TOP_FIRST_STAGE, "tie_break": "chunk_id ascending", "seed": SEED},
-    })
+    return _freeze(
+        work / "evaluation-manifest.json",
+        {
+            "schema": "retrieval-bakeoff-9233-evaluation.v6.1",
+            "seed": SEED,
+            "corpus_rows": len(rows),
+            "corpus_row_digest": _digest_rows(rows),
+            "g3_sha256": G3_SHA256,
+            "query_file_sha256": hashlib.sha256(QUERY_PATH.read_bytes()).hexdigest(),
+            "queries": chosen,
+            "cost_query_ids": cost_ids,
+            "encode_sample": chunks,
+            "encode_sample_sha256": _hash(chunks),
+            "timing_query_ids": timing_ids,
+            "timing_recipe": {
+                "hybrid": f"H:{E5}",
+                "top": TOP_RERANK,
+                "rrf_k": RRF_K,
+                "first_stage_depth": TOP_FIRST_STAGE,
+                "tie_break": "chunk_id ascending",
+                "seed": SEED,
+            },
+        },
+    )
 
 
 def _evaluation(work: Path) -> dict[str, Any]:
@@ -169,15 +253,35 @@ def _evaluation(work: Path) -> dict[str, Any]:
     if result["encode_sample_sha256"] != _hash(result["encode_sample"]):
         raise ValueError("Encode sample hash mismatch")
     queries, _ = _load_queries()
-    if result["queries"] != _pool_queries(queries) or result["g3_sha256"] != G3_SHA256 or result["query_file_sha256"] != hashlib.sha256(QUERY_PATH.read_bytes()).hexdigest():
+    if (
+        result["queries"] != _pool_queries(queries)
+        or result["g3_sha256"] != G3_SHA256
+        or result["query_file_sha256"] != hashlib.sha256(QUERY_PATH.read_bytes()).hexdigest()
+    ):
         raise ValueError("Evaluation query configuration mismatch")
-    if len(result["cost_query_ids"]) != 50 or len(set(result["cost_query_ids"])) != 50 or not set(result["cost_query_ids"]) <= {q["id"] for q in result["queries"]}:
+    if (
+        len(result["cost_query_ids"]) != 50
+        or len(set(result["cost_query_ids"])) != 50
+        or not set(result["cost_query_ids"]) <= {q["id"] for q in result["queries"]}
+    ):
         raise ValueError("Invalid frozen cost batch")
     rng = random.Random(SEED)
     expected_cost = rng.sample([q["id"] for q in result["queries"]], 50)
     expected_timing = rng.sample([q["id"] for q in result["queries"] if q["family"] == "G3"], 25)
-    recipe = {"hybrid": f"H:{E5}", "top": TOP_RERANK, "rrf_k": RRF_K, "first_stage_depth": TOP_FIRST_STAGE, "tie_break": "chunk_id ascending", "seed": SEED}
-    if result["cost_query_ids"] != expected_cost or result["timing_query_ids"] != expected_timing or result["timing_recipe"] != recipe or len(result["encode_sample"]) != 500:
+    recipe = {
+        "hybrid": f"H:{E5}",
+        "top": TOP_RERANK,
+        "rrf_k": RRF_K,
+        "first_stage_depth": TOP_FIRST_STAGE,
+        "tie_break": "chunk_id ascending",
+        "seed": SEED,
+    }
+    if (
+        result["cost_query_ids"] != expected_cost
+        or result["timing_query_ids"] != expected_timing
+        or result["timing_recipe"] != recipe
+        or len(result["encode_sample"]) != 500
+    ):
         raise ValueError("Frozen sample/timing recipe mismatch")
     return result
 
@@ -188,25 +292,47 @@ def run_manifest(db_path: Path, work: Path, configurations: dict[str, Any]) -> d
         raise ValueError("Run manifest requires configurations for all six embedders and three rerankers")
     for repo, config in configurations.items():
         for revision in (config.get("revision"), config.get("tokenizer", {}).get("revision")):
-            if not isinstance(revision, str) or len(revision) != 40 or any(c not in "0123456789abcdef" for c in revision):
+            if (
+                not isinstance(revision, str)
+                or len(revision) != 40
+                or any(c not in "0123456789abcdef" for c in revision)
+            ):
                 raise ValueError(f"Resolved 40-hex repository/tokenizer revision required for {repo}")
-        if config.get("tokenizer", {}).get("revision") != config["revision"] or config.get("tokenizer", {}).get("repository") != repo or not isinstance(config.get("max_tokens"), int) or config["max_tokens"] < 1:
+        if (
+            config.get("tokenizer", {}).get("revision") != config["revision"]
+            or config.get("tokenizer", {}).get("repository") != repo
+            or not isinstance(config.get("max_tokens"), int)
+            or config["max_tokens"] < 1
+        ):
             raise ValueError(f"Tokenizer repository and finite max_tokens required for {repo}")
-        if repo in EMBEDDERS and config.get("prefixes") != {"query": EMBEDDERS[repo]["query_prefix"], "passage": EMBEDDERS[repo]["passage_prefix"]}:
+        if repo in EMBEDDERS and config.get("prefixes") != {
+            "query": EMBEDDERS[repo]["query_prefix"],
+            "passage": EMBEDDERS[repo]["passage_prefix"],
+        }:
             raise ValueError(f"Prefix configuration mismatch for {repo}")
         if repo in RERANKERS and config.get("scoring_template") != RERANKERS[repo]:
             raise ValueError(f"Scoring template configuration mismatch for {repo}")
     rows = _subset_rows(db_path)
     if _digest_rows(rows) != evaluation["corpus_row_digest"]:
         raise ValueError("Evaluation corpus digest mismatch")
-    return _freeze(work / "run-manifest.json", {
-        "schema": "retrieval-bakeoff-9233-run.v6.1", "corpus_row_digest": _digest_rows(rows),
-        "evaluation_manifest_sha256": evaluation["sha256"], "models": configurations,
-        "passage_policies": PASSAGE_POLICIES, "guardrails": GUARDRAILS,
-        "memory_enforcement_receipt": "memory-enforcement.json (actual enforcement per step)",
-        "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        "retrieval_configuration": {"rrf_k": RRF_K, "first_stage_depth": TOP_FIRST_STAGE, "rerank_depth": TOP_RERANK},
-    })
+    return _freeze(
+        work / "run-manifest.json",
+        {
+            "schema": "retrieval-bakeoff-9233-run.v6.1",
+            "corpus_row_digest": _digest_rows(rows),
+            "evaluation_manifest_sha256": evaluation["sha256"],
+            "models": configurations,
+            "passage_policies": PASSAGE_POLICIES,
+            "guardrails": GUARDRAILS,
+            "memory_enforcement_receipt": "memory-enforcement.json (actual enforcement per step)",
+            "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "retrieval_configuration": {
+                "rrf_k": RRF_K,
+                "first_stage_depth": TOP_FIRST_STAGE,
+                "rerank_depth": TOP_RERANK,
+            },
+        },
+    )
 
 
 def _validate_run(db_path: Path, work: Path) -> dict[str, Any]:
@@ -231,7 +357,12 @@ def _check_runtime(repo: str, meta: dict[str, Any], work: Path) -> None:
 def _measurement_binding(work: Path) -> dict[str, Any]:
     run = _read_frozen(work / "run-manifest.json")
     evaluation = _evaluation(work)
-    return {"run_manifest_sha256": run["sha256"], "evaluation_manifest_sha256": evaluation["sha256"], "encode_sample_sha256": evaluation["encode_sample_sha256"], "guardrails": GUARDRAILS}
+    return {
+        "run_manifest_sha256": run["sha256"],
+        "evaluation_manifest_sha256": evaluation["sha256"],
+        "encode_sample_sha256": evaluation["encode_sample_sha256"],
+        "guardrails": GUARDRAILS,
+    }
 
 
 def _positive(value: Any, name: str) -> float:
@@ -255,15 +386,21 @@ def _measurement_preflight(work: Path, repo: str, variant: str, repeat: bool) ->
     admitted = _admission(work)
     hybrid_count = len(admitted["admitted_embedders"])
     binding = _measurement_binding(work)
+
     def read(precision: str, second: bool) -> dict[str, Any]:
         path = work / "measurements" / (repo.replace("/", "--") + f"-{precision}-{int(second)}.json")
         result = json.loads(path.read_text())
         if any(result.get(key) != value for key, value in binding.items()):
             raise ValueError("Measurement configuration mismatch")
         return result
+
     if variant == "int8":
         first_fp32 = read("fp32", False)
-        fp32 = read("fp32", True) if _borderline(first_fp32["p50_seconds"], first_fp32["mean_seconds"], hybrid_count) else first_fp32
+        fp32 = (
+            read("fp32", True)
+            if _borderline(first_fp32["p50_seconds"], first_fp32["mean_seconds"], hybrid_count)
+            else first_fp32
+        )
         if fp32["p50_seconds"] <= 10 and fp32["mean_seconds"] * hybrid_count * 120 <= 8 * 3600:
             raise ValueError("INT8 fallback requires a failing FP32 measurement")
     if repeat:
@@ -282,7 +419,10 @@ def admit(work: Path, measurements: dict[str, Any], *, persist: bool = True) -> 
     lexical = _read_frozen(work / "lexical-measurement.json")
     if any(lexical.get(key) != value for key, value in binding.items()):
         raise ValueError("Lexical measurement configuration mismatch")
-    measurements = {**measurements, "lexical_query_seconds": _positive(lexical["lexical_query_seconds"], "Lexical query seconds")}
+    measurements = {
+        **measurements,
+        "lexical_query_seconds": _positive(lexical["lexical_query_seconds"], "Lexical query seconds"),
+    }
     for value in encoded.values():
         _positive(value.get("query_seconds"), "Dense query seconds")
         if not isinstance(value.get("batch_size"), int) or value["batch_size"] < 1:
@@ -321,16 +461,24 @@ def admit(work: Path, measurements: dict[str, Any], *, persist: bool = True) -> 
                 raise ValueError("Invalid latency distribution or realised timing-pair hash")
             projected = _positive(chosen["mean_seconds"], "mean query latency") * len(admitted) * 120
             passes = projected <= 8 * 3600 and p50 <= 10
-            evaluations.append({"variant": variant, "attempts": attempts, "projected_seconds": projected, "admitted": passes})
+            evaluations.append(
+                {"variant": variant, "attempts": attempts, "projected_seconds": projected, "admitted": passes}
+            )
             if passes:
                 accepted = variant
                 break
         rerank_decisions[repo] = {"variant": accepted, "measurements": evaluations}
-    result = {"schema": "retrieval-bakeoff-9233-admission.v6.1", **binding,
-              "admitted_embedders": admitted, "excluded_embedders": excluded,
-              "encode_total_projected_seconds": total, "encode_budget_seconds": 20 * 3600,
-              "rerankers": rerank_decisions, "measurements": measurements,
-              "comparison_scope": "best among evaluated configurations"}
+    result = {
+        "schema": "retrieval-bakeoff-9233-admission.v6.1",
+        **binding,
+        "admitted_embedders": admitted,
+        "excluded_embedders": excluded,
+        "encode_total_projected_seconds": total,
+        "encode_budget_seconds": 20 * 3600,
+        "rerankers": rerank_decisions,
+        "measurements": measurements,
+        "comparison_scope": "best among evaluated configurations",
+    }
     if persist:
         _write_json(work / "admission.json", result)
     return result
@@ -352,7 +500,11 @@ def freeze_timing_pairs(work: Path, search_result: dict[str, Any]) -> dict[str, 
     evaluation = _evaluation(work)
     hybrid = evaluation["timing_recipe"]["hybrid"]
     run_sha = _read_frozen(work / "run-manifest.json")["sha256"]
-    if search_result.get("run_manifest_sha256") != run_sha or search_result.get("evaluation_manifest_sha256") != evaluation["sha256"] or hybrid not in search_result["arms"]:
+    if (
+        search_result.get("run_manifest_sha256") != run_sha
+        or search_result.get("evaluation_manifest_sha256") != evaluation["sha256"]
+        or hybrid not in search_result["arms"]
+    ):
         raise ValueError("Timing candidates require frozen E5 hybrid retrieval")
     pairs = []
     for qid in evaluation["timing_query_ids"]:
@@ -360,7 +512,15 @@ def freeze_timing_pairs(work: Path, search_result: dict[str, Any]) -> dict[str, 
         if len(ids) != TOP_RERANK or len(set(ids)) != TOP_RERANK:
             raise ValueError("Each timing query requires 20 unique E5 hybrid candidates")
         pairs.append({"query_id": qid, "candidate_ids": ids})
-    return _freeze(work / "timing-pairs.json", {"run_manifest_sha256": run_sha, "evaluation_manifest_sha256": evaluation["sha256"], "recipe": evaluation["timing_recipe"], "pairs": pairs})
+    return _freeze(
+        work / "timing-pairs.json",
+        {
+            "run_manifest_sha256": run_sha,
+            "evaluation_manifest_sha256": evaluation["sha256"],
+            "recipe": evaluation["timing_recipe"],
+            "pairs": pairs,
+        },
+    )
 
 
 def _passage(text: str, tokenizer: Any, *, budget: int, tail: bool) -> tuple[str, bool, int]:
@@ -390,12 +550,14 @@ def _passage(text: str, tokenizer: Any, *, budget: int, tail: bool) -> tuple[str
         cut = int(encoded_preview["offset_mapping"][budget - 1][1])
         if cut >= len(preview):
             cut = len(preview) - 1
-        preview = preview[:max(0, cut)]
+        preview = preview[: max(0, cut)]
         retained = min(len(preview), head_end) + max(0, len(preview) - head_end - 3) if tail else len(preview)
     return preview, True, retained
 
 
-def _passage_stats(rows: list[dict[str, Any]], tokenizer: Any, budget: int, *, tail: bool) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+def _passage_stats(
+    rows: list[dict[str, Any]], tokenizer: Any, budget: int, *, tail: bool
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     totals: dict[str, list[int]] = defaultdict(lambda: [0, 0, 0, 0])
     previews = []
     for row in rows:
@@ -407,7 +569,14 @@ def _passage_stats(rows: list[dict[str, Any]], tokenizer: Any, budget: int, *, t
         counts[1] += truncated
         counts[2] += len(text)
         counts[3] += retained
-    return previews, {source: {"passages": c[0], "truncation_rate": c[1] / c[0], "retained_character_share": c[3] / c[2] if c[2] else 1.0} for source, c in sorted(totals.items())}
+    return previews, {
+        source: {
+            "passages": c[0],
+            "truncation_rate": c[1] / c[0],
+            "retained_character_share": c[3] / c[2] if c[2] else 1.0,
+        }
+        for source, c in sorted(totals.items())
+    }
 
 
 def _embedder_passage_stats(rows: list[dict[str, Any]], model: Any, meta: dict[str, Any], repo: str) -> dict[str, Any]:
@@ -435,6 +604,7 @@ def _quantize_reranker(model: Any, meta: dict[str, Any]) -> Any:
 
     def quantize(module: Any) -> Any:
         return torch.ao.quantization.quantize_dynamic(module, {torch.nn.Linear}, dtype=torch.qint8, inplace=False)
+
     if meta["kind"] == "qwen":
         return quantize(model[0]), model[1]
     if meta["kind"] == "cross_encoder":
@@ -443,7 +613,9 @@ def _quantize_reranker(model: Any, meta: dict[str, Any]) -> Any:
     return quantize(model)
 
 
-def measure(db_path: Path, work: Path, repo: str, *, batch_size: int = 16, variant: str = "fp32", repeat: bool = False) -> dict[str, Any]:
+def measure(
+    db_path: Path, work: Path, repo: str, *, batch_size: int = 16, variant: str = "fp32", repeat: bool = False
+) -> dict[str, Any]:
     _validate_run(db_path, work)
     evaluation = _evaluation(work)
     _measurement_preflight(work, repo, variant, repeat)
@@ -452,7 +624,9 @@ def measure(db_path: Path, work: Path, repo: str, *, batch_size: int = 16, varia
     binding = _measurement_binding(work)
     lexical = _measure_lexical(db_path, work)
     checkpoint_path = work / "measurements" / (repo.replace("/", "--") + f"-{variant}-{int(repeat)}-progress.json")
-    progress = json.loads(checkpoint_path.read_text()) if checkpoint_path.exists() else {"binding": binding, "units": []}
+    progress = (
+        json.loads(checkpoint_path.read_text()) if checkpoint_path.exists() else {"binding": binding, "units": []}
+    )
     if progress["binding"] != binding or progress.get("batch_size", batch_size) != batch_size:
         raise ValueError("Measurement checkpoint mismatch")
     progress["batch_size"] = batch_size
@@ -467,7 +641,7 @@ def measure(db_path: Path, work: Path, repo: str, *, batch_size: int = 16, varia
         _encode_batch(model, meta, [str(r["text"]) for r in chosen[:batch_size]], repo, batch_size)
         for offset in range(len(progress["units"]) * batch_size, len(chosen), batch_size):
             started = time.perf_counter()
-            _encode_batch(model, meta, [str(r["text"]) for r in chosen[offset:offset + batch_size]], repo, batch_size)
+            _encode_batch(model, meta, [str(r["text"]) for r in chosen[offset : offset + batch_size]], repo, batch_size)
             progress["units"].append(time.perf_counter() - started)
             _write_json(checkpoint_path, progress)
         seconds = sum(progress["units"])
@@ -477,14 +651,35 @@ def measure(db_path: Path, work: Path, repo: str, *, batch_size: int = 16, varia
             before = time.perf_counter()
             _query_vector(model, meta, query_by_id[qid]["query"], repo)
             query_times.append(time.perf_counter() - before)
-        result = {"model": repo, **binding, "sample_rows": len(chosen), "sample_seconds": seconds, "model_load_seconds": model_load_seconds, "batch_size": batch_size, "chunks_per_second": len(chosen) / seconds, "projected_seconds": seconds * len(rows) / len(chosen), "query_seconds": statistics.mean(query_times), "passage_stats": stats}
+        result = {
+            "model": repo,
+            **binding,
+            "sample_rows": len(chosen),
+            "sample_seconds": seconds,
+            "model_load_seconds": model_load_seconds,
+            "batch_size": batch_size,
+            "chunks_per_second": len(chosen) / seconds,
+            "projected_seconds": seconds * len(rows) / len(chosen),
+            "query_seconds": statistics.mean(query_times),
+            "passage_stats": stats,
+        }
     else:
         if repo not in RERANKERS or variant not in {"fp32", "int8"}:
             raise ValueError("Unknown reranker or precision")
         frozen = _read_frozen(work / "timing-pairs.json")
-        if frozen["run_manifest_sha256"] != binding["run_manifest_sha256"] or frozen["evaluation_manifest_sha256"] != evaluation["sha256"] or frozen["recipe"] != evaluation["timing_recipe"] or [p["query_id"] for p in frozen["pairs"]] != evaluation["timing_query_ids"]:
+        if (
+            frozen["run_manifest_sha256"] != binding["run_manifest_sha256"]
+            or frozen["evaluation_manifest_sha256"] != evaluation["sha256"]
+            or frozen["recipe"] != evaluation["timing_recipe"]
+            or [p["query_id"] for p in frozen["pairs"]] != evaluation["timing_query_ids"]
+        ):
             raise ValueError("Timing manifest mismatch")
-        if any(len(pair["candidate_ids"]) != 20 or len(set(pair["candidate_ids"])) != 20 or not set(pair["candidate_ids"]) <= set(by_id) for pair in frozen["pairs"]):
+        if any(
+            len(pair["candidate_ids"]) != 20
+            or len(set(pair["candidate_ids"])) != 20
+            or not set(pair["candidate_ids"]) <= set(by_id)
+            for pair in frozen["pairs"]
+        ):
             raise ValueError("Timing manifest mismatch")
         load_started = time.perf_counter()
         model, meta = _new_reranker(repo, work)
@@ -505,7 +700,18 @@ def measure(db_path: Path, work: Path, repo: str, *, batch_size: int = 16, varia
             _assert_permutation(pair["candidate_ids"], ranked)
             times.append(time.perf_counter() - started)
             _write_json(checkpoint_path, progress)
-        result = {"model": repo, "variant": variant, **binding, "timing_pairs_sha256": frozen["sha256"], "query_seconds": times, "model_load_seconds": model_load_seconds, "p50_seconds": statistics.median(times), "p95_seconds": _percentile(times, .95), "mean_seconds": statistics.mean(times), "passage_stats": stats}
+        result = {
+            "model": repo,
+            "variant": variant,
+            **binding,
+            "timing_pairs_sha256": frozen["sha256"],
+            "query_seconds": times,
+            "model_load_seconds": model_load_seconds,
+            "p50_seconds": statistics.median(times),
+            "p95_seconds": _percentile(times, 0.95),
+            "mean_seconds": statistics.mean(times),
+            "passage_stats": stats,
+        }
     result["lexical_query_seconds"] = lexical["lexical_query_seconds"]
     _write_json(work / "measurements" / (repo.replace("/", "--") + f"-{variant}-{int(repeat)}.json"), result)
     return result
@@ -522,7 +728,13 @@ def _admission_probe() -> bool:
 
     decision = evaluate("danger", tasks_dir())
     probe = decision.probe
-    return bool(decision.admitted and probe and probe.proc_available and probe.mem_available_bytes is not None and probe.load_per_cpu is not None)
+    return bool(
+        decision.admitted
+        and probe
+        and probe.proc_available
+        and probe.mem_available_bytes is not None
+        and probe.load_per_cpu is not None
+    )
 
 
 def _enforce_host_limits() -> dict[str, Any]:
@@ -610,7 +822,12 @@ def _file_worker(payload_path: Path, result_path: Path) -> None:
 def _launch_heavy(function: Any, args: tuple, kwargs: dict, work: Path) -> tuple[Any, Any, str]:
     environment = _scope_environment()
     try:
-        scoped = subprocess.run([*_scope_command(), "true"], env=environment, capture_output=True, timeout=10, check=False).returncode == 0
+        scoped = (
+            subprocess.run(
+                [*_scope_command(), "true"], env=environment, capture_output=True, timeout=10, check=False
+            ).returncode
+            == 0
+        )
     except (OSError, subprocess.TimeoutExpired):
         scoped = False
     enforcement = "systemd_scope" if scoped else "rss_watchdog"
@@ -619,8 +836,21 @@ def _launch_heavy(function: Any, args: tuple, kwargs: dict, work: Path) -> tuple
     result_path = work / "steps" / "worker-result.json"
     # Unique output avoids consuming a prior result after an interrupted step.
     result_path = result_path.with_name(f"worker-result-{os.getpid()}-{time.time_ns()}.json")
-    _write_json(payload_path, {"function": function.__name__, "args": [{"path": str(a)} if isinstance(a, Path) else a for a in args], "kwargs": kwargs})
-    command = [str(project_interpreter(ROOT)), "-c", "from pathlib import Path; import sys; from scripts.wiki.diagnostics.retrieval_bakeoff_9233 import _file_worker; _file_worker(Path(sys.argv[1]), Path(sys.argv[2]))", str(payload_path), str(result_path)]
+    _write_json(
+        payload_path,
+        {
+            "function": function.__name__,
+            "args": [{"path": str(a)} if isinstance(a, Path) else a for a in args],
+            "kwargs": kwargs,
+        },
+    )
+    command = [
+        str(project_interpreter(ROOT)),
+        "-c",
+        "from pathlib import Path; import sys; from scripts.wiki.diagnostics.retrieval_bakeoff_9233 import _file_worker; _file_worker(Path(sys.argv[1]), Path(sys.argv[2]))",
+        str(payload_path),
+        str(result_path),
+    ]
     if scoped:
         command = _scope_command() + command
     process = subprocess.Popen(command, env=environment, cwd=ROOT, start_new_session=True)
@@ -629,12 +859,16 @@ def _launch_heavy(function: Any, args: tuple, kwargs: dict, work: Path) -> tuple
         # Retry only a launcher failure before the worker's start receipt; an
         # OOM kill or any failure after entry must never restart compute.
         expires = time.monotonic() + 10
-        while process.poll() is None and not result_path.with_suffix(".started").exists() and time.monotonic() < expires:
-            time.sleep(.05)
+        while (
+            process.poll() is None and not result_path.with_suffix(".started").exists() and time.monotonic() < expires
+        ):
+            time.sleep(0.05)
         if process.poll() == 1 and not result_path.with_suffix(".started").exists():
             enforcement = "rss_watchdog"
             environment["LU_BAKEOFF_MEMORY_ENFORCEMENT"] = enforcement
-            process = subprocess.Popen(command[len(_scope_command()):], env=environment, cwd=ROOT, start_new_session=True)
+            process = subprocess.Popen(
+                command[len(_scope_command()) :], env=environment, cwd=ROOT, start_new_session=True
+            )
     return _HeavyProcess(process), _ResultFile(result_path), enforcement
 
 
@@ -688,7 +922,18 @@ def _heavy_worker(connection: Any, function: Any, args: tuple, kwargs: dict) -> 
         connection.close()
 
 
-def _supervise(process: Any, pipe: Any, state: dict[str, Any], projection: float, *, clock: Any = time.monotonic, probe: Any = None, window_end: float | None = None, wall_clock: Any = time.time, rss: Any = None) -> dict[str, Any]:
+def _supervise(
+    process: Any,
+    pipe: Any,
+    state: dict[str, Any],
+    projection: float,
+    *,
+    clock: Any = time.monotonic,
+    probe: Any = None,
+    window_end: float | None = None,
+    wall_clock: Any = time.time,
+    rss: Any = None,
+) -> dict[str, Any]:
     probe = probe or _admission_probe
     started = clock()
     previous_running = float(state.get("running_seconds", 0))
@@ -734,7 +979,16 @@ def _supervise(process: Any, pipe: Any, state: dict[str, Any], projection: float
         state["running_seconds"] = previous_running + clock() - started
 
 
-def _guarded_step(function: Any, args: tuple, kwargs: dict, work: Path, step: str, projection: float, *, window_end: float | None = None) -> dict[str, Any]:
+def _guarded_step(
+    function: Any,
+    args: tuple,
+    kwargs: dict,
+    work: Path,
+    step: str,
+    projection: float,
+    *,
+    window_end: float | None = None,
+) -> dict[str, Any]:
     _positive(projection, "Measured step projection")
     path = work / "steps" / (hashlib.sha256(step.encode()).hexdigest() + ".json")
     binding = _measurement_binding(work)
@@ -747,7 +1001,12 @@ def _guarded_step(function: Any, args: tuple, kwargs: dict, work: Path, step: st
         raise RuntimeError("Heavy step stopped: DEADLINE; cumulative running-time budget exhausted")
     # Calendar duration persists across quiet windows; running duration does not
     # accrue while stopped. Deadline is never reset by a resume.
-    state = {**old, "binding": binding, "projection_seconds": projection, "calendar_started": old.get("calendar_started", time.time())}
+    state = {
+        **old,
+        "binding": binding,
+        "projection_seconds": projection,
+        "calendar_started": old.get("calendar_started", time.time()),
+    }
     with _heavy_lock():
         if window_end is not None and time.time() >= window_end:
             raise ValueError("Quiet window has ended; resume in the next quiet window")
@@ -781,7 +1040,7 @@ def _guarded_step(function: Any, args: tuple, kwargs: dict, work: Path, step: st
 
 
 def _ro_connect(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(path.resolve())
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA query_only=ON")
     return conn
@@ -831,20 +1090,40 @@ def _copy_subset(db_path: Path, work: Path, *, vesum_path: Path | None = None) -
     if target.exists():
         with _ro_connect(target) as cached:
             metadata = dict(cached.execute("SELECT key,value FROM metadata"))
-            cached_rows = cached.execute("SELECT id,chunk_id,title,text,source_file,subject,parent_section_id FROM chunks ORDER BY id").fetchall()
+            cached_rows = cached.execute(
+                "SELECT id,chunk_id,title,text,source_file,subject,parent_section_id FROM chunks ORDER BY id"
+            ).fetchall()
             indexed = cached.execute("SELECT rowid,chunk_id,title,text FROM chunks_fts ORDER BY rowid").fetchall()
-        if metadata.get("index_contract") != "A1-lemma-shared-v1" or metadata.get("row_digest") != digest or _digest_rows(cached_rows) != digest or _digest_rows(indexed) != metadata.get("index_digest"):
+        if (
+            metadata.get("index_contract") != "A1-lemma-shared-v1"
+            or metadata.get("row_digest") != digest
+            or _digest_rows(cached_rows) != digest
+            or _digest_rows(indexed) != metadata.get("index_digest")
+        ):
             raise ValueError("Cached corpus digest/lemma contract mismatch; use a fresh --work-dir")
         return target
     with get_vesum_connection(vesum_path or _default_vesum_db()) as vesum:
         expanded, _ = phase1.lemma_expanded_rows(rows, vesum)
     with sqlite3.connect(target) as conn:
-        conn.execute("CREATE TABLE chunks (id INTEGER PRIMARY KEY, chunk_id TEXT UNIQUE, title TEXT, text TEXT, source_file TEXT, subject TEXT, parent_section_id INTEGER)")
+        conn.execute(
+            "CREATE TABLE chunks (id INTEGER PRIMARY KEY, chunk_id TEXT UNIQUE, title TEXT, text TEXT, source_file TEXT, subject TEXT, parent_section_id INTEGER)"
+        )
         conn.executemany("INSERT INTO chunks VALUES (?,?,?,?,?,?,?)", [tuple(row) for row in rows])
-        conn.execute("CREATE VIRTUAL TABLE chunks_fts USING fts5(chunk_id UNINDEXED, title, text, tokenize='unicode61')")
-        conn.executemany("INSERT INTO chunks_fts(rowid,chunk_id,title,text) VALUES (?,?,?,?)", [row[:4] for row in expanded])
+        conn.execute(
+            "CREATE VIRTUAL TABLE chunks_fts USING fts5(chunk_id UNINDEXED, title, text, tokenize='unicode61')"
+        )
+        conn.executemany(
+            "INSERT INTO chunks_fts(rowid,chunk_id,title,text) VALUES (?,?,?,?)", [row[:4] for row in expanded]
+        )
         conn.execute("CREATE TABLE metadata (key TEXT PRIMARY KEY, value TEXT)")
-        conn.executemany("INSERT INTO metadata VALUES (?,?)", [("index_contract", "A1-lemma-shared-v1"), ("row_digest", digest), ("index_digest", _digest_rows([row[:4] for row in expanded]))])
+        conn.executemany(
+            "INSERT INTO metadata VALUES (?,?)",
+            [
+                ("index_contract", "A1-lemma-shared-v1"),
+                ("row_digest", digest),
+                ("index_digest", _digest_rows([row[:4] for row in expanded])),
+            ],
+        )
     return target
 
 
@@ -865,7 +1144,12 @@ def corpus(db_path: Path, work: Path) -> dict[str, Any]:
         if identity not in {"ukrmova", "bukvar"}:
             identity = str(row["source_file"] or "")
         counts[identity] += 1
-    result = {"rows": len(rows), "row_digest_sha256": _digest_rows(rows), "identity_counts": dict(sorted(counts.items())), "subset": "ukrmova, bukvar, ULP source files, and v5 item 7 source identities"}
+    result = {
+        "rows": len(rows),
+        "row_digest_sha256": _digest_rows(rows),
+        "identity_counts": dict(sorted(counts.items())),
+        "subset": "ukrmova, bukvar, ULP source files, and v5 item 7 source identities",
+    }
     _copy_subset(db_path, work)
     if (work / "run-manifest.json").exists():
         result["lexical_measurement"] = _measure_lexical(db_path, work)
@@ -888,16 +1172,28 @@ def _measure_lexical(db_path: Path, work: Path) -> dict[str, Any]:
             started = time.perf_counter()
             _fts_search(index, queries[qid], vesum, lemma=True, limit=TOP_FIRST_STAGE)
             times.append(time.perf_counter() - started)
-    return _freeze(path, {**binding, "cost_query_ids": evaluation["cost_query_ids"], "query_seconds": times, "lexical_query_seconds": _positive(statistics.mean(times), "Lexical query seconds")})
+    return _freeze(
+        path,
+        {
+            **binding,
+            "cost_query_ids": evaluation["cost_query_ids"],
+            "query_seconds": times,
+            "lexical_query_seconds": _positive(statistics.mean(times), "Lexical query seconds"),
+        },
+    )
 
 
 def _vesum_analyses(conn: sqlite3.Connection, token: str) -> list[tuple[str, str]]:
-    return [(str(row[0]), str(row[1])) for row in conn.execute(
-        "SELECT DISTINCT pos,tags FROM forms_all WHERE word_form=?", (token,))]
+    return [
+        (str(row[0]), str(row[1]))
+        for row in conn.execute("SELECT DISTINCT pos,tags FROM forms_all WHERE word_form=?", (token,))
+    ]
 
 
 def _is_function_analysis(pos: str, tags: str) -> bool:
-    return pos in FUNCTION_POS or (pos in {"adv", "noun", "adj"} and "pron" in tags.split(":") and "int" in tags.split(":"))
+    return pos in FUNCTION_POS or (
+        pos in {"adv", "noun", "adj"} and "pron" in tags.split(":") and "int" in tags.split(":")
+    )
 
 
 def _topic_tokens(tokens: list[str], vesum: sqlite3.Connection) -> set[str]:
@@ -907,10 +1203,12 @@ def _topic_tokens(tokens: list[str], vesum: sqlite3.Connection) -> set[str]:
     for index, token in enumerate(tokens):
         if token not in markers:
             continue
-        tail = tokens[index + 1:]
+        tail = tokens[index + 1 :]
         # A list contains two or more lexical function terms. The connector
         # itself is not enough to make an ordinary sentence metalinguistic.
-        listed = {t for t in tail if t in TOPIC_FUNCTION_WORDS or any(pos == "prep" for pos, _ in _vesum_analyses(vesum, t))}
+        listed = {
+            t for t in tail if t in TOPIC_FUNCTION_WORDS or any(pos == "prep" for pos, _ in _vesum_analyses(vesum, t))
+        }
         if len(listed) >= 2:
             topics.update(listed)
     return topics
@@ -923,7 +1221,9 @@ def filter_lemma_query(query: str, vesum: sqlite3.Connection) -> list[str]:
     content = []
     for token in tokens:
         analyses = _vesum_analyses(vesum, token)
-        is_function = token in EXPLICIT_FUNCTION_WORDS or (bool(analyses) and all(_is_function_analysis(pos, tags) for pos, tags in analyses))
+        is_function = token in EXPLICIT_FUNCTION_WORDS or (
+            bool(analyses) and all(_is_function_analysis(pos, tags) for pos, tags in analyses)
+        )
         if not is_function:
             content.append(token)
     if len(content) < 2:
@@ -944,15 +1244,20 @@ def _lemma_terms(query: str, vesum: sqlite3.Connection) -> list[str]:
     return list(dict.fromkeys(terms))
 
 
-def _fts_search(conn: sqlite3.Connection, query: str, vesum: sqlite3.Connection, *, lemma: bool, limit: int) -> list[str]:
+def _fts_search(
+    conn: sqlite3.Connection, query: str, vesum: sqlite3.Connection, *, lemma: bool, limit: int
+) -> list[str]:
     terms = _lemma_terms(query, vesum) if lemma else list(dict.fromkeys(phase1.tokenize(query)))
     expression = sources_db._build_preserving_fts_query(terms)
     if not expression:
         return []
-    return [str(row[0]) for row in conn.execute(
-        "SELECT c.chunk_id FROM chunks_fts JOIN chunks c ON c.id=chunks_fts.rowid WHERE chunks_fts MATCH ? ORDER BY bm25(chunks_fts,0,5.0,1.0),c.id LIMIT ?",
-        (expression, limit),
-    )]
+    return [
+        str(row[0])
+        for row in conn.execute(
+            "SELECT c.chunk_id FROM chunks_fts JOIN chunks c ON c.id=chunks_fts.rowid WHERE chunks_fts MATCH ? ORDER BY bm25(chunks_fts,0,5.0,1.0),c.id LIMIT ?",
+            (expression, limit),
+        )
+    ]
 
 
 def reciprocal_rank_fusion(rankings: list[list[str]], k: int = RRF_K, limit: int = TOP_FIRST_STAGE) -> list[str]:
@@ -965,7 +1270,12 @@ def reciprocal_rank_fusion(rankings: list[list[str]], k: int = RRF_K, limit: int
 
 def _load_rows(corpus_path: Path) -> list[dict[str, Any]]:
     with _ro_connect(corpus_path) as conn:
-        return [dict(row) for row in conn.execute("SELECT id,chunk_id,title,text,source_file,subject,parent_section_id FROM chunks ORDER BY id")]
+        return [
+            dict(row)
+            for row in conn.execute(
+                "SELECT id,chunk_id,title,text,source_file,subject,parent_section_id FROM chunks ORDER BY id"
+            )
+        ]
 
 
 def _model_cache(work: Path) -> None:
@@ -987,12 +1297,17 @@ def _new_encoder(repo: str, work: Path) -> tuple[Any, dict[str, Any]]:
         model = BGEM3FlagModel(snapshot, use_fp16=False, devices="cpu", cache_dir=str(work / "model-cache"))
         max_tokens = 8192
         model.tokenizer.truncation_side = "right"
-        return model, {"kind": "flag", "max_tokens": max_tokens,
-                       "prefixes": {"query": spec["query_prefix"], "passage": spec["passage_prefix"]},
-                       "prompt_names": {"query": None, "passage": None}}
+        return model, {
+            "kind": "flag",
+            "max_tokens": max_tokens,
+            "prefixes": {"query": spec["query_prefix"], "passage": spec["passage_prefix"]},
+            "prompt_names": {"query": None, "passage": None},
+        }
     from sentence_transformers import SentenceTransformer
 
-    model = SentenceTransformer(repo, device="cpu", cache_folder=str(work / "model-cache"), trust_remote_code=spec["kind"] == "jina", **options)
+    model = SentenceTransformer(
+        repo, device="cpu", cache_folder=str(work / "model-cache"), trust_remote_code=spec["kind"] == "jina", **options
+    )
     max_tokens = int(model.max_seq_length)
     model.tokenizer.truncation_side = "right"
     prompts = model.prompts
@@ -1006,8 +1321,7 @@ def _new_encoder(repo: str, work: Path) -> tuple[Any, dict[str, Any]]:
         if spec["kind"] == "sentence" and usable and prompt != prefixes[side]:
             raise ValueError(f"Loaded tokenizer/prefix configuration mismatch for {repo}: {name} prompt")
         prompt_names[side] = name if usable else None
-    return model, {"kind": spec["kind"], "max_tokens": max_tokens, "prefixes": prefixes,
-                   "prompt_names": prompt_names}
+    return model, {"kind": spec["kind"], "max_tokens": max_tokens, "prefixes": prefixes, "prompt_names": prompt_names}
 
 
 def _encode_batch(model: Any, meta: dict[str, Any], texts: list[str], repo: str, batch_size: int) -> Any:
@@ -1016,10 +1330,30 @@ def _encode_batch(model: Any, meta: dict[str, Any], texts: list[str], repo: str,
     prompt_name = meta.get("prompt_names", {}).get("passage")
     passages = texts if prompt_name or spec["kind"] == "jina" else [prefixes["passage"] + text for text in texts]
     if meta["kind"] == "flag":
-        result = model.encode(passages, batch_size=batch_size, max_length=meta["max_tokens"], return_dense=True, return_sparse=False, return_colbert_vecs=False)
+        result = model.encode(
+            passages,
+            batch_size=batch_size,
+            max_length=meta["max_tokens"],
+            return_dense=True,
+            return_sparse=False,
+            return_colbert_vecs=False,
+        )
         return result["dense_vecs"]
-    options = {"task": "retrieval", "prompt_name": "document"} if spec["kind"] == "jina" else {"prompt_name": prompt_name} if prompt_name else {"prompt": ""}
-    return model.encode(passages, batch_size=batch_size, normalize_embeddings=True, convert_to_numpy=True, show_progress_bar=False, **options)
+    options = (
+        {"task": "retrieval", "prompt_name": "document"}
+        if spec["kind"] == "jina"
+        else {"prompt_name": prompt_name}
+        if prompt_name
+        else {"prompt": ""}
+    )
+    return model.encode(
+        passages,
+        batch_size=batch_size,
+        normalize_embeddings=True,
+        convert_to_numpy=True,
+        show_progress_bar=False,
+        **options,
+    )
 
 
 def encode(db_path: Path, work: Path, repo: str, *, limit: int | None, batch_size: int) -> dict[str, Any]:
@@ -1049,12 +1383,18 @@ def encode(db_path: Path, work: Path, repo: str, *, limit: int | None, batch_siz
         db.close()
         raise ValueError("Vector index run manifest mismatch")
     db.execute("INSERT OR IGNORE INTO index_metadata VALUES ('run_manifest_sha256',?)", (run_sha,))
-    db.execute("CREATE TABLE IF NOT EXISTS vectors (chunk_id TEXT PRIMARY KEY, text_sha256 TEXT NOT NULL, vector BLOB NOT NULL, dimensions INTEGER NOT NULL)")
+    db.execute(
+        "CREATE TABLE IF NOT EXISTS vectors (chunk_id TEXT PRIMARY KEY, text_sha256 TEXT NOT NULL, vector BLOB NOT NULL, dimensions INTEGER NOT NULL)"
+    )
     completed = {str(row[0]): str(row[1]) for row in db.execute("SELECT chunk_id,text_sha256 FROM vectors")}
     model, meta = _new_encoder(repo, work)
     _check_runtime(repo, meta, work)
     passage_stats = _embedder_passage_stats(rows, model, meta, repo)
-    pending = [row for row in rows if completed.get(str(row["chunk_id"])) != hashlib.sha256(str(row["text"]).encode()).hexdigest()]
+    pending = [
+        row
+        for row in rows
+        if completed.get(str(row["chunk_id"])) != hashlib.sha256(str(row["text"]).encode()).hexdigest()
+    ]
     previous_path = work / (repo.replace("/", "--") + "-encode.json")
     previous = json.loads(previous_path.read_text()) if previous_path.exists() else {}
     if previous and previous.get("run_manifest_sha256") != _measurement_binding(work)["run_manifest_sha256"]:
@@ -1077,12 +1417,23 @@ def encode(db_path: Path, work: Path, repo: str, *, limit: int | None, batch_siz
             import numpy as np
 
             array = np.asarray(vector, dtype="float32")
-            db.execute("INSERT OR REPLACE INTO vectors VALUES (?,?,?,?)", (row["chunk_id"], hashlib.sha256(str(row["text"]).encode()).hexdigest(), array.tobytes(), int(array.size)))
+            db.execute(
+                "INSERT OR REPLACE INTO vectors VALUES (?,?,?,?)",
+                (
+                    row["chunk_id"],
+                    hashlib.sha256(str(row["text"]).encode()).hexdigest(),
+                    array.tobytes(),
+                    int(array.size),
+                ),
+            )
         db.commit()
-        progress_cost = {**_measurement_binding(work), "wall_seconds": previous.get("wall_seconds", 0) + time.perf_counter() - started,
-                         "steady_state_chunks": previous.get("steady_state_chunks", 0) + steady_chunks,
-                         "steady_state_seconds": previous.get("steady_state_seconds", 0) + steady_seconds,
-                         "peak_rss_bytes": max(_peak_rss_bytes(), previous.get("peak_rss_bytes", 0))}
+        progress_cost = {
+            **_measurement_binding(work),
+            "wall_seconds": previous.get("wall_seconds", 0) + time.perf_counter() - started,
+            "steady_state_chunks": previous.get("steady_state_chunks", 0) + steady_chunks,
+            "steady_state_seconds": previous.get("steady_state_seconds", 0) + steady_seconds,
+            "peak_rss_bytes": max(_peak_rss_bytes(), previous.get("peak_rss_bytes", 0)),
+        }
         _write_json(previous_path, progress_cost)
     wall_seconds = previous.get("wall_seconds", 0) + time.perf_counter() - started
     steady_chunks += previous.get("steady_state_chunks", 0)
@@ -1092,19 +1443,30 @@ def encode(db_path: Path, work: Path, repo: str, *, limit: int | None, batch_siz
         peak_rss *= 1024
     index_size = sum(p.stat().st_size for p in destination.parent.glob(destination.name + "*"))
     report = {
-        "model": repo, "rows_requested": len(rows), "rows_encoded_this_run": len(pending),
-        "rows_resumed": len(rows) - len(pending), "batch_size": batch_size,
+        "model": repo,
+        "rows_requested": len(rows),
+        "rows_encoded_this_run": len(pending),
+        "rows_resumed": len(rows) - len(pending),
+        "batch_size": batch_size,
         "warmup_batch_seconds": warmup_seconds,
         "steady_state_chunks_per_second": steady_chunks / steady_seconds if steady_seconds else None,
-        "steady_state_chunks": steady_chunks, "steady_state_seconds": steady_seconds,
-        "wall_seconds": wall_seconds, "peak_rss_bytes": max(peak_rss, previous.get("peak_rss_bytes", 0)), "index_size_bytes": index_size,
-        "prefixes": meta.get("prefixes", {"query": EMBEDDERS[repo]["query_prefix"], "passage": EMBEDDERS[repo]["passage_prefix"]}),
+        "steady_state_chunks": steady_chunks,
+        "steady_state_seconds": steady_seconds,
+        "wall_seconds": wall_seconds,
+        "peak_rss_bytes": max(peak_rss, previous.get("peak_rss_bytes", 0)),
+        "index_size_bytes": index_size,
+        "prefixes": meta.get(
+            "prefixes", {"query": EMBEDDERS[repo]["query_prefix"], "passage": EMBEDDERS[repo]["passage_prefix"]}
+        ),
         "truncation": f"head-only at model max sequence length ({meta['max_tokens']} tokens)",
-        "index": str(destination), "passage_stats": passage_stats,
+        "index": str(destination),
+        "passage_stats": passage_stats,
         **_measurement_binding(work),
     }
     db.close()
-    (work / (repo.replace("/", "--") + "-encode.json")).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    (work / (repo.replace("/", "--") + "-encode.json")).write_text(
+        json.dumps(report, indent=2) + "\n", encoding="utf-8"
+    )
     return report
 
 
@@ -1114,9 +1476,24 @@ def _query_vector(model: Any, meta: dict[str, Any], query: str, repo: str) -> An
     prompt_name = meta.get("prompt_names", {}).get("query")
     text = query if prompt_name or spec["kind"] == "jina" else prefix + query
     if meta["kind"] == "flag":
-        return model.encode([text], batch_size=1, max_length=meta["max_tokens"], return_dense=True, return_sparse=False, return_colbert_vecs=False)["dense_vecs"][0]
-    options = {"task": "retrieval", "prompt_name": "query"} if spec["kind"] == "jina" else {"prompt_name": prompt_name} if prompt_name else {"prompt": ""}
-    return model.encode([text], batch_size=1, normalize_embeddings=True, convert_to_numpy=True, show_progress_bar=False, **options)[0]
+        return model.encode(
+            [text],
+            batch_size=1,
+            max_length=meta["max_tokens"],
+            return_dense=True,
+            return_sparse=False,
+            return_colbert_vecs=False,
+        )["dense_vecs"][0]
+    options = (
+        {"task": "retrieval", "prompt_name": "query"}
+        if spec["kind"] == "jina"
+        else {"prompt_name": prompt_name}
+        if prompt_name
+        else {"prompt": ""}
+    )
+    return model.encode(
+        [text], batch_size=1, normalize_embeddings=True, convert_to_numpy=True, show_progress_bar=False, **options
+    )[0]
 
 
 def _load_vectors(vectors_path: Path) -> tuple[Any, Any]:
@@ -1145,7 +1522,11 @@ def _dense_rank(query_vector: Any, vectors: Any, limit: int = TOP_FIRST_STAGE) -
 
 
 def _model_token_limit(tokenizer: Any, config: Any) -> int:
-    limits = [int(value) for value in (tokenizer.model_max_length, getattr(config, "max_position_embeddings", None)) if value is not None and 0 < int(value) < 10**9]
+    limits = [
+        int(value)
+        for value in (tokenizer.model_max_length, getattr(config, "max_position_embeddings", None))
+        if value is not None and 0 < int(value) < 10**9
+    ]
     if not limits:
         raise ValueError("Model has no finite token limit")
     return min(limits)
@@ -1157,7 +1538,11 @@ def _native_jina_limits(model: Any) -> dict[str, int]:
     import textwrap
 
     names = {"max_query_length", "max_doc_length"}
-    limits = {name: getattr(model, name) for name in names if type(getattr(model, name, None)) is int and getattr(model, name) > 0}
+    limits = {
+        name: getattr(model, name)
+        for name in names
+        if type(getattr(model, name, None)) is int and getattr(model, name) > 0
+    }
     for name, parameter in inspect.signature(model.rerank).parameters.items():
         if name in names and type(parameter.default) is int and parameter.default > 0:
             limits[name] = parameter.default
@@ -1165,7 +1550,9 @@ def _native_jina_limits(model: Any) -> dict[str, int]:
         tree = ast.parse(textwrap.dedent(inspect.getsource(model.rerank)))
     except (OSError, TypeError, SyntaxError) as exc:
         if set(limits) != names:
-            raise ValueError("Jina native truncation limits unavailable; verify the pinned repository source locally (no download)") from exc
+            raise ValueError(
+                "Jina native truncation limits unavailable; verify the pinned repository source locally (no download)"
+            ) from exc
         return limits
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign):
@@ -1185,7 +1572,9 @@ def _native_jina_limits(model: Any) -> dict[str, int]:
                 if isinstance(target, ast.Name) and target.id in names and type(value) is int and value > 0:
                     limits[target.id] = value
     if set(limits) != names:
-        raise ValueError("Jina native truncation limits unavailable; verify the pinned repository source locally (no download)")
+        raise ValueError(
+            "Jina native truncation limits unavailable; verify the pinned repository source locally (no download)"
+        )
     return limits
 
 
@@ -1195,17 +1584,37 @@ def _new_reranker(repo: str, work: Path) -> tuple[Any, dict[str, Any]]:
     if RERANKERS[repo] == "jina":
         from transformers import AutoModel
 
-        model = AutoModel.from_pretrained(repo, cache_dir=str(work / "model-cache"), trust_remote_code=True, **options).to("cpu").float().eval()
+        model = (
+            AutoModel.from_pretrained(repo, cache_dir=str(work / "model-cache"), trust_remote_code=True, **options)
+            .to("cpu")
+            .float()
+            .eval()
+        )
         model._ensure_tokenizer()
         model._tokenizer.truncation_side = "right"
-        return model, {"kind": "jina", "max_tokens": _model_token_limit(model._tokenizer, model.config),
-                       "truncation": "passage-only 512 tokens: first 128 + last 384; native query limits", **_native_jina_limits(model)}
+        return model, {
+            "kind": "jina",
+            "max_tokens": _model_token_limit(model._tokenizer, model.config),
+            "truncation": "passage-only 512 tokens: first 128 + last 384; native query limits",
+            **_native_jina_limits(model),
+        }
     if RERANKERS[repo] == "qwen":
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
-        tokenizer = AutoTokenizer.from_pretrained(repo, cache_dir=str(work / "model-cache"), padding_side="left", truncation_side="right", **options)
-        model = AutoModelForCausalLM.from_pretrained(repo, cache_dir=str(work / "model-cache"), **options).to("cpu").float().eval()
-        return (model, tokenizer), {"kind": "qwen", "max_tokens": _model_token_limit(tokenizer, model.config), "truncation": "passage-only 512 tokens: first 128 + last 384; preserve scoring template"}
+        tokenizer = AutoTokenizer.from_pretrained(
+            repo, cache_dir=str(work / "model-cache"), padding_side="left", truncation_side="right", **options
+        )
+        model = (
+            AutoModelForCausalLM.from_pretrained(repo, cache_dir=str(work / "model-cache"), **options)
+            .to("cpu")
+            .float()
+            .eval()
+        )
+        return (model, tokenizer), {
+            "kind": "qwen",
+            "max_tokens": _model_token_limit(tokenizer, model.config),
+            "truncation": "passage-only 512 tokens: first 128 + last 384; preserve scoring template",
+        }
     from sentence_transformers import CrossEncoder
 
     model = CrossEncoder(repo, device="cpu", cache_folder=str(work / "model-cache"), **options)
@@ -1213,14 +1622,18 @@ def _new_reranker(repo: str, work: Path) -> tuple[Any, dict[str, Any]]:
     limit = _model_token_limit(model.tokenizer, model.model.config)
     model.max_seq_length = limit
     model.tokenizer.truncation_side = "right"
-    return model, {"kind": "cross_encoder", "max_tokens": limit, "truncation": "passage-only 512 tokens: first 128 + last 384"}
+    return model, {
+        "kind": "cross_encoder",
+        "max_tokens": limit,
+        "truncation": "passage-only 512 tokens: first 128 + last 384",
+    }
 
 
 def _qwen_scores(adapter: tuple[Any, Any], meta: dict[str, Any], query: str, documents: list[str]) -> list[float]:
     import torch
 
     model, tokenizer = adapter
-    prefix = "<|im_start|>system\nJudge whether the Document meets the requirements based on the Query and the Instruct provided. Note that the answer can only be \"yes\" or \"no\".<|im_end|>\n<|im_start|>user\n"
+    prefix = '<|im_start|>system\nJudge whether the Document meets the requirements based on the Query and the Instruct provided. Note that the answer can only be "yes" or "no".<|im_end|>\n<|im_start|>user\n'
     suffix = "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
     prefix_ids = tokenizer.encode(prefix, add_special_tokens=False)
     suffix_ids = tokenizer.encode(suffix, add_special_tokens=False)
@@ -1248,8 +1661,16 @@ def _rerank(model: Any, meta: dict[str, Any], query: str, candidates: list[dict[
     previews, _ = _passage_stats(candidates, tokenizer, 512, tail=True)
     pairs = [[query, str(item["text"])] for item in previews]
     if meta["kind"] != "qwen":
-        overhead = tokenizer.num_special_tokens_to_add(pair=True) if hasattr(tokenizer, "num_special_tokens_to_add") else 4
-        if any(len(tokenizer.encode(query, add_special_tokens=False)) + len(tokenizer.encode(pair[1], add_special_tokens=False)) + overhead > meta["max_tokens"] for pair in pairs):
+        overhead = (
+            tokenizer.num_special_tokens_to_add(pair=True) if hasattr(tokenizer, "num_special_tokens_to_add") else 4
+        )
+        if any(
+            len(tokenizer.encode(query, add_special_tokens=False))
+            + len(tokenizer.encode(pair[1], add_special_tokens=False))
+            + overhead
+            > meta["max_tokens"]
+            for pair in pairs
+        ):
             raise ValueError("Query/template leave insufficient context for the frozen passage preview")
     if meta["kind"] == "jina":
         result = model.rerank(query, [pair[1] for pair in pairs])
@@ -1260,7 +1681,10 @@ def _rerank(model: Any, meta: dict[str, Any], query: str, candidates: list[dict[
         import numpy as np
 
         scores = np.asarray(model.predict(pairs, batch_size=16, show_progress_bar=False)).reshape(-1).tolist()
-    return [str(candidates[i]["chunk_id"]) for i in sorted(range(len(candidates)), key=lambda i: (-float(scores[i]), str(candidates[i]["chunk_id"]))) ]
+    return [
+        str(candidates[i]["chunk_id"])
+        for i in sorted(range(len(candidates)), key=lambda i: (-float(scores[i]), str(candidates[i]["chunk_id"])))
+    ]
 
 
 def _load_queries() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -1273,16 +1697,45 @@ def _load_queries() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     queries: list[dict[str, Any]] = []
     for row in g1_g2.get("g1", []):
         if row.get("stratum") != "english":
-            queries.append({**row, "family": "G1", "stratum": str(row.get("stratum", "G1")), "cluster": "G1:" + str(row["query"])})
+            queries.append(
+                {**row, "family": "G1", "stratum": str(row.get("stratum", "G1")), "cluster": "G1:" + str(row["query"])}
+            )
     for row in g1_g2.get("g2", []):
         for form_index, form in enumerate(row.get("forms", [])):
-            queries.append({"id": f"{row['id']}:{form}", "query": form, "family": "G2", "stratum": "G2-inflected" if form_index else "G2-base", "cluster": "G2:" + json.dumps(row["forms"], ensure_ascii=False, separators=(",", ":")), "pair_index": form_index, "area": row.get("category", "")})
+            queries.append(
+                {
+                    "id": f"{row['id']}:{form}",
+                    "query": form,
+                    "family": "G2",
+                    "stratum": "G2-inflected" if form_index else "G2-base",
+                    "cluster": "G2:" + json.dumps(row["forms"], ensure_ascii=False, separators=(",", ":")),
+                    "pair_index": form_index,
+                    "area": row.get("category", ""),
+                }
+            )
     for row in g3:
-        queries.append({**row, "family": "G3", "stratum": f"G3-{row.get('area','unknown')}-{row.get('kind','unknown')}", "cluster": row["id"]})
+        queries.append(
+            {
+                **row,
+                "family": "G3",
+                "stratum": f"G3-{row.get('area', 'unknown')}-{row.get('kind', 'unknown')}",
+                "cluster": row["id"],
+            }
+        )
     return queries, g3
 
 
-def _run_arm(corpus_path: Path, work: Path, queries: list[dict[str, Any]], arm: str, embedder: str | None, reranker: str | None, vesum_path: Path | None = None, *, timing_only: bool = False) -> dict[str, Any]:
+def _run_arm(
+    corpus_path: Path,
+    work: Path,
+    queries: list[dict[str, Any]],
+    arm: str,
+    embedder: str | None,
+    reranker: str | None,
+    vesum_path: Path | None = None,
+    *,
+    timing_only: bool = False,
+) -> dict[str, Any]:
     """One fresh process owns one complete pipeline, including its RSS peak."""
     pipeline_started = time.perf_counter()
     chunks = _load_rows(corpus_path)
@@ -1299,9 +1752,17 @@ def _run_arm(corpus_path: Path, work: Path, queries: list[dict[str, Any]], arm: 
             ranker = _quantize_reranker(ranker, ranker_meta)
     vector_path = work / "embeddings" / (embedder.replace("/", "--") + ".sqlite3") if embedder else None
     vectors = _load_vectors(vector_path) if vector_path else None
-    checkpoint_path = work / "search-progress" / (hashlib.sha256(arm.encode()).hexdigest() + ("-timing" if timing_only else "") + ".json")
+    checkpoint_path = (
+        work
+        / "search-progress"
+        / (hashlib.sha256(arm.encode()).hexdigest() + ("-timing" if timing_only else "") + ".json")
+    )
     binding = _measurement_binding(work)
-    progress = json.loads(checkpoint_path.read_text()) if checkpoint_path.exists() else {"binding": binding, "rankings": {}, "query_seconds": {}}
+    progress = (
+        json.loads(checkpoint_path.read_text())
+        if checkpoint_path.exists()
+        else {"binding": binding, "rankings": {}, "query_seconds": {}}
+    )
     if progress["binding"] != binding:
         raise ValueError("Search checkpoint mismatch")
     previous_pipeline_seconds = progress.get("pipeline_running_seconds", 0)
@@ -1316,6 +1777,7 @@ def _run_arm(corpus_path: Path, work: Path, queries: list[dict[str, Any]], arm: 
     times = []
     passage_stats = {}
     with _ro_connect(corpus_path) as lexical, get_vesum_connection(vesum_path or _default_vesum_db()) as vesum:
+
         def retrieve(query: str, qid: str) -> list[str]:
             hits = []
             if not arm.startswith("D:"):
@@ -1344,24 +1806,40 @@ def _run_arm(corpus_path: Path, work: Path, queries: list[dict[str, Any]], arm: 
                 started = time.perf_counter()
                 rankings[query["id"]] = retrieve(str(query["query"]), query["id"])
                 progress["query_seconds"][query["id"]] = time.perf_counter() - started
-                progress["pipeline_running_seconds"] = previous_pipeline_seconds + time.perf_counter() - pipeline_started
+                progress["pipeline_running_seconds"] = (
+                    previous_pipeline_seconds + time.perf_counter() - pipeline_started
+                )
                 _write_json(checkpoint_path, progress)
             if query["id"] in measured:
                 times.append(progress["query_seconds"][query["id"]])
     encode_path = work / (embedder.replace("/", "--") + "-encode.json") if embedder else None
     encode_cost = json.loads(encode_path.read_text()) if encode_path and encode_path.exists() else {}
-    cost = {key: encode_cost[key] for key in ("wall_seconds", "steady_state_chunks_per_second", "peak_rss_bytes") if key in encode_cost}
+    cost = {
+        key: encode_cost[key]
+        for key in ("wall_seconds", "steady_state_chunks_per_second", "peak_rss_bytes")
+        if key in encode_cost
+    }
     if encoder:
         passage_stats[embedder] = encode_cost.get("passage_stats", {})
     if ranker:
         rerank_rows = {cid: by_id[cid] for ranking in rankings.values() for cid in ranking[:TOP_RERANK]}
-        _, passage_stats[reranker] = _passage_stats(list(rerank_rows.values()), _reranker_tokenizer(ranker, ranker_meta), 512, tail=True)
-    cost.update({"passage_stats": passage_stats, "query_p50_seconds": statistics.median(times) if times else None,
-                 "query_p95_seconds": _percentile(times, .95) if times else None,
-                 "query_n": len(times), "query_peak_rss_bytes": _peak_rss_bytes(),
-                 "index_size_bytes": (corpus_path.stat().st_size if not arm.startswith("D:") else 0) + (vector_path.stat().st_size if vector_path else 0),
-                 "measurement": "fresh spawned process per arm; one full-pipeline warmup, then frozen 50-query cost batch; end-to-end lexical/dense/fusion/rerank as applicable; process-lifetime RSS including model setup",
-                 "encoder": encoder_meta, "reranker": ranker_meta})
+        _, passage_stats[reranker] = _passage_stats(
+            list(rerank_rows.values()), _reranker_tokenizer(ranker, ranker_meta), 512, tail=True
+        )
+    cost.update(
+        {
+            "passage_stats": passage_stats,
+            "query_p50_seconds": statistics.median(times) if times else None,
+            "query_p95_seconds": _percentile(times, 0.95) if times else None,
+            "query_n": len(times),
+            "query_peak_rss_bytes": _peak_rss_bytes(),
+            "index_size_bytes": (corpus_path.stat().st_size if not arm.startswith("D:") else 0)
+            + (vector_path.stat().st_size if vector_path else 0),
+            "measurement": "fresh spawned process per arm; one full-pipeline warmup, then frozen 50-query cost batch; end-to-end lexical/dense/fusion/rerank as applicable; process-lifetime RSS including model setup",
+            "encoder": encoder_meta,
+            "reranker": ranker_meta,
+        }
+    )
     cost["pipeline_seconds"] = previous_pipeline_seconds + time.perf_counter() - pipeline_started
     cost["pipeline_queries"] = len(rankings) + bool(measured)
     return {"rankings": rankings, "cost": cost}
@@ -1376,11 +1854,17 @@ def _isolated_arm(*args: Any) -> dict[str, Any]:
     cost = timing["cost"]
     # Scale the complete elapsed measurement conservatively: this also scales
     # setup rather than omitting any fixed costs from the real search step.
-    projection = _positive(timing.get("host_running_seconds", cost["pipeline_seconds"]), "Full-pipeline timing") * (len(queries) + 1) / cost["pipeline_queries"]
+    projection = (
+        _positive(timing.get("host_running_seconds", cost["pipeline_seconds"]), "Full-pipeline timing")
+        * (len(queries) + 1)
+        / cost["pipeline_queries"]
+    )
     return _guarded_step(_run_arm, args, {}, work, f"search:{arm}", projection)
 
 
-def search(db_path: Path, work: Path, *, models: list[str], rerankers: list[str], query_limit: int, families: list[str]) -> dict[str, Any]:
+def search(
+    db_path: Path, work: Path, *, models: list[str], rerankers: list[str], query_limit: int, families: list[str]
+) -> dict[str, Any]:
     run = _validate_run(db_path, work)
     evaluation = _evaluation(work)
     admission = _admission(work)
@@ -1426,7 +1910,20 @@ def search(db_path: Path, work: Path, *, models: list[str], rerankers: list[str]
             hybrid = "H:" + arm.split("|", 1)[1]
             for qid, ranking in rankings.items():
                 _assert_permutation(arms[hybrid][qid][:TOP_RERANK], ranking[:TOP_RERANK])
-    result = {"schema": "retrieval-bakeoff-9233-search.v6.1", "evaluation_manifest_sha256": evaluation["sha256"], "run_manifest_sha256": run["sha256"], "g3_query_sha256": G3_SHA256, "queries": queries, "arms": arms, "costs": costs, "vector_coverage": coverage, "seed": SEED, "rrf_k": RRF_K, "top_first_stage": TOP_FIRST_STAGE, "top_rerank": TOP_RERANK}
+    result = {
+        "schema": "retrieval-bakeoff-9233-search.v6.1",
+        "evaluation_manifest_sha256": evaluation["sha256"],
+        "run_manifest_sha256": run["sha256"],
+        "g3_query_sha256": G3_SHA256,
+        "queries": queries,
+        "arms": arms,
+        "costs": costs,
+        "vector_coverage": coverage,
+        "seed": SEED,
+        "rrf_k": RRF_K,
+        "top_first_stage": TOP_FIRST_STAGE,
+        "top_rerank": TOP_RERANK,
+    }
     (work / "search-results.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return result
 
@@ -1473,12 +1970,19 @@ def _pool_queries(queries: list[dict[str, Any]], query_limit: int | None = None)
 
 def pool(work: Path, *, query_limit: int | None = None, overwrite: bool = False) -> dict[str, Any]:
     judge_dir = work / "judging"
-    if not overwrite and (any((judge_dir / name).exists() for name in ("pool.json", "judge-a.jsonl", "judge-b.jsonl")) or (work / "sealed/pool-key.json").exists()):
+    if not overwrite and (
+        any((judge_dir / name).exists() for name in ("pool.json", "judge-a.jsonl", "judge-b.jsonl"))
+        or (work / "sealed/pool-key.json").exists()
+    ):
         raise ValueError("Refusing to overwrite existing judging pool; pass --overwrite-pool explicitly")
     result = json.loads((work / "search-results.json").read_text(encoding="utf-8"))
     if "evaluation_manifest_sha256" in result:
         evaluation = _evaluation(work)
-        if result["evaluation_manifest_sha256"] != evaluation["sha256"] or result["queries"] != evaluation["queries"] or query_limit not in (None, 120):
+        if (
+            result["evaluation_manifest_sha256"] != evaluation["sha256"]
+            or result["queries"] != evaluation["queries"]
+            or query_limit not in (None, 120)
+        ):
             raise ValueError("Pool must match the frozen evaluation manifest")
         admission = _admission(work)
         if set(admission["rerankers"]) != set(RERANKERS):
@@ -1526,7 +2030,15 @@ def pool(work: Path, *, query_limit: int | None = None, overwrite: bool = False)
             if row is None:
                 raise ValueError(f"Pool candidate missing from the frozen corpus: {chunk_id}")
             records.append({"item_id": item_id, "text": str(row["text"])})
-            key.append({"item_id": item_id, "query_id": qid, "arm": "", "chunk_id": chunk_id, "source_identity": str(row["source_file"])})
+            key.append(
+                {
+                    "item_id": item_id,
+                    "query_id": qid,
+                    "arm": "",
+                    "chunk_id": chunk_id,
+                    "source_identity": str(row["source_file"]),
+                }
+            )
             for arm, rankings in result["arms"].items():
                 if chunk_id in rankings.get(qid, [])[:POOL_DEPTH]:
                     key.append({"item_id": item_id, "query_id": qid, "arm": arm, "chunk_id": chunk_id})
@@ -1538,7 +2050,14 @@ def pool(work: Path, *, query_limit: int | None = None, overwrite: bool = False)
     key_path = work / "sealed" / "pool-key.json"
     key_path.parent.mkdir(parents=True, exist_ok=True)
     key_path.write_text(json.dumps(key, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return {"family_counts": dict(Counter(q["family"] for q in queries)), "queries": len(judging), "items": sum(len(q["items"]) for q in judging), "pool": str(judge_dir / "pool.json"), "key": str(key_path), "seed": SEED}
+    return {
+        "family_counts": dict(Counter(q["family"] for q in queries)),
+        "queries": len(judging),
+        "items": sum(len(q["items"]) for q in judging),
+        "pool": str(judge_dir / "pool.json"),
+        "key": str(key_path),
+        "seed": SEED,
+    }
 
 
 def stricter_label(first: bool, second: bool) -> bool:
@@ -1559,7 +2078,9 @@ def cohen_kappa(pairs: list[tuple[bool, bool]]) -> float:
     return 1.0 if expected == 1 and observed == 1 else (observed - expected) / (1 - expected) if expected < 1 else 0.0
 
 
-def paired_cluster_bootstrap(query_values: dict[str, tuple[float, float]], clusters: dict[str, str], *, iterations: int = 10000, seed: int = SEED) -> dict[str, float]:
+def paired_cluster_bootstrap(
+    query_values: dict[str, tuple[float, float]], clusters: dict[str, str], *, iterations: int = 10000, seed: int = SEED
+) -> dict[str, float]:
     if iterations < 1:
         raise ValueError("Bootstrap iterations must be positive")
     grouped: dict[str, list[tuple[float, float]]] = defaultdict(list)
@@ -1575,7 +2096,7 @@ def paired_cluster_bootstrap(query_values: dict[str, tuple[float, float]], clust
     for _ in range(iterations):
         chosen = [keys[rng.randrange(len(keys))] for _ in keys]
         samples.append(statistics.mean(differences[cluster] for cluster in chosen))
-    return {"estimate": estimate, "lower_95": _percentile(samples, .025), "upper_95": _percentile(samples, .975)}
+    return {"estimate": estimate, "lower_95": _percentile(samples, 0.025), "upper_95": _percentile(samples, 0.975)}
 
 
 def _read_labels(path: Path) -> dict[tuple[str, str], dict[str, Any]]:
@@ -1588,7 +2109,9 @@ def _read_labels(path: Path) -> dict[tuple[str, str], dict[str, Any]]:
         required = {"usable_quotation", "usable_exercise", "usable_example", "reason"}
         if not required.issubset(row):
             raise ValueError(f"Missing required labels in {path}: {row.get('item_id')}")
-        if any(type(row[label]) is not bool for label in ("usable_quotation", "usable_exercise", "usable_example")) or "\n" in str(row["reason"]):
+        if any(
+            type(row[label]) is not bool for label in ("usable_quotation", "usable_exercise", "usable_example")
+        ) or "\n" in str(row["reason"]):
             raise ValueError(f"Invalid label types or multiline reason in {path}: {row.get('item_id')}")
         identity = (str(row["query_id"]), str(row["item_id"]))
         if identity in labels:
@@ -1613,7 +2136,15 @@ def _ranking_metrics(ranking: list[str], relevant: set[str]) -> tuple[float, flo
     return dcg / ideal if ideal else 0.0, reciprocal
 
 
-def decide(metrics: dict[str, dict[str, dict[str, float]]], queries: list[dict[str, Any]], costs: dict[str, Any], *, usable_queries: int, kappa_gate: bool, iterations: int) -> dict[str, Any]:
+def decide(
+    metrics: dict[str, dict[str, dict[str, float]]],
+    queries: list[dict[str, Any]],
+    costs: dict[str, Any],
+    *,
+    usable_queries: int,
+    kappa_gate: bool,
+    iterations: int,
+) -> dict[str, Any]:
     clusters = {q["id"]: q["cluster"] for q in queries}
     coverage_arms = sorted(a for a in metrics if a == "L" or a.startswith(("D:", "H:")))
     ranking_arms = []
@@ -1646,24 +2177,54 @@ def decide(metrics: dict[str, dict[str, dict[str, float]]], queries: list[dict[s
                     hybrid = "H:" + arm.split("|", 1)[1]
                     if hybrid not in hybrids:
                         continue
-                    values = {q["id"]: (metrics[hybrid][q["id"]]["ndcg_at_10_strict"], metrics[arm][q["id"]]["ndcg_at_10_strict"]) for q in queries}
+                    values = {
+                        q["id"]: (
+                            metrics[hybrid][q["id"]]["ndcg_at_10_strict"],
+                            metrics[arm][q["id"]]["ndcg_at_10_strict"],
+                        )
+                        for q in queries
+                    }
                     bound = paired_cluster_bootstrap(values, clusters, iterations=iterations)
-                    reranker_vs_hybrid[arm] = {**bound, "reference_arm": hybrid, "eligible_noninferior": bound["upper_95"] <= 0.05}
+                    reranker_vs_hybrid[arm] = {
+                        **bound,
+                        "reference_arm": hybrid,
+                        "eligible_noninferior": bound["upper_95"] <= 0.05,
+                    }
                     if bound["upper_95"] <= 0.05:
                         ranking_arms.append(arm)
                 ranking_comparisons = compare(ranking_arms, "ndcg_at_10_strict")
                 eligible = [a for a in ranking_arms if ranking_comparisons[a]["eligible_noninferior"]]
+
                 def cost_order(arm: str) -> tuple[float, float, float, str]:
                     entry = costs.get(arm, {})
                     values = [entry.get(k) for k in ("query_p95_seconds", "index_size_bytes", "wall_seconds")]
-                    return (*(float(v) if isinstance(v, (int, float)) and math.isfinite(v) and v >= 0 else float("inf") for v in values), arm)
+                    return (
+                        *(
+                            float(v) if isinstance(v, (int, float)) and math.isfinite(v) and v >= 0 else float("inf")
+                            for v in values
+                        ),
+                        arm,
+                    )
+
                 if eligible and all(all(math.isfinite(v) for v in cost_order(a)[:3]) for a in eligible):
                     recommendation = min(eligible, key=cost_order)
                     outcome = "RECOMMENDED" if recommendation.startswith("R:") else "NO_RERANKER"
                 else:
                     outcome = "INCONCLUSIVE"
-                return {"outcome": outcome, "recommended_configuration": recommendation, "coverage_comparisons": comparisons, "ranking_comparisons": ranking_comparisons, "reranker_vs_hybrid": reranker_vs_hybrid}
-    return {"outcome": outcome, "recommended_configuration": recommendation, "coverage_comparisons": comparisons, "ranking_comparisons": ranking_comparisons, "reranker_vs_hybrid": {}}
+                return {
+                    "outcome": outcome,
+                    "recommended_configuration": recommendation,
+                    "coverage_comparisons": comparisons,
+                    "ranking_comparisons": ranking_comparisons,
+                    "reranker_vs_hybrid": reranker_vs_hybrid,
+                }
+    return {
+        "outcome": outcome,
+        "recommended_configuration": recommendation,
+        "coverage_comparisons": comparisons,
+        "ranking_comparisons": ranking_comparisons,
+        "reranker_vs_hybrid": {},
+    }
 
 
 def score(work: Path, labels_a: Path, labels_b: Path, *, iterations: int = 10000) -> dict[str, Any]:
@@ -1673,11 +2234,17 @@ def score(work: Path, labels_a: Path, labels_b: Path, *, iterations: int = 10000
         run = _read_frozen(work / "run-manifest.json")
         if set(_admission(work)["rerankers"]) != set(RERANKERS):
             raise ValueError("Final scoring requires timing/admission decisions for all three rerankers")
-        if search_result["evaluation_manifest_sha256"] != evaluation["sha256"] or search_result["run_manifest_sha256"] != run["sha256"] or search_result["queries"] != evaluation["queries"]:
+        if (
+            search_result["evaluation_manifest_sha256"] != evaluation["sha256"]
+            or search_result["run_manifest_sha256"] != run["sha256"]
+            or search_result["queries"] != evaluation["queries"]
+        ):
             raise ValueError("Score manifest mismatch")
     key = json.loads((work / "sealed/pool-key.json").read_text(encoding="utf-8"))
     pool_rows = json.loads((work / "judging/pool.json").read_text(encoding="utf-8"))
-    if "evaluation_manifest_sha256" in search_result and [q["query_id"] for q in pool_rows] != [q["id"] for q in search_result["queries"]]:
+    if "evaluation_manifest_sha256" in search_result and [q["query_id"] for q in pool_rows] != [
+        q["id"] for q in search_result["queries"]
+    ]:
         raise ValueError("Score pool denominator mismatch")
     a, b = _read_labels(labels_a), _read_labels(labels_b)
     merged: dict[tuple[str, str], dict[str, bool]] = {}
@@ -1726,42 +2293,73 @@ def score(work: Path, labels_a: Path, labels_b: Path, *, iterations: int = 10000
             metrics[arm][qid] = {
                 "recall_at_20_strict": len(set(ranking[:20]) & strict) / len(strict) if strict else 0.0,
                 "recall_at_20_lenient": len(set(ranking[:20]) & lenient) / len(lenient) if lenient else 0.0,
-                "ndcg_at_10_strict": ndcg, "ndcg_at_10_lenient": lndcg,
-                "mrr_at_10_strict": mrr, "mrr_at_10_lenient": lmrr,
+                "ndcg_at_10_strict": ndcg,
+                "ndcg_at_10_lenient": lndcg,
+                "mrr_at_10_strict": mrr,
+                "mrr_at_10_lenient": lmrr,
             }
         by_stratum: dict[str, list[str]] = defaultdict(list)
         for query in selected_queries:
             names = {str(query["stratum"]), str(query["family"]), "pooled"}
             if query["family"] == "G3":
-                names.update({"G3-area:" + str(query.get("area", "unknown")), "G3-kind:" + str(query.get("kind", "unknown"))})
+                names.update(
+                    {"G3-area:" + str(query.get("area", "unknown")), "G3-kind:" + str(query.get("kind", "unknown"))}
+                )
             for name in names:
                 by_stratum[name].append(query["id"])
         summaries[arm] = {}
         for stratum, ids in sorted(by_stratum.items()):
             summaries[arm][stratum] = {
-                "n": len(ids), "usable_n": sum(bool(relevant[qid][0]) for qid in ids),
+                "n": len(ids),
+                "usable_n": sum(bool(relevant[qid][0]) for qid in ids),
                 "lenient_n": sum(bool(relevant[qid][1]) for qid in ids),
                 "queries_without_relevant_pool_item": sum(not relevant[qid][0] for qid in ids),
-                **{metric: _cluster_mean({qid: metrics[arm][qid][metric] for qid in ids}, clusters) for metric in next(iter(metrics[arm].values()), {})},
+                **{
+                    metric: _cluster_mean({qid: metrics[arm][qid][metric] for qid in ids}, clusters)
+                    for metric in next(iter(metrics[arm].values()), {})
+                },
             }
     kappas = {label: cohen_kappa(pairs) for label, pairs in kappa_pairs.items()}
-    kappa_gate = bool(kappas) and all(kappas.get(label, 0.0) >= 0.6 for label in ("usable_quotation", "usable_exercise"))
+    kappa_gate = bool(kappas) and all(
+        kappas.get(label, 0.0) >= 0.6 for label in ("usable_quotation", "usable_exercise")
+    )
     usable_queries = sum(bool(relevant[qid][0]) for qid in query_ids)
-    decision = decide(metrics, selected_queries, search_result["costs"], usable_queries=usable_queries, kappa_gate=kappa_gate, iterations=iterations)
+    decision = decide(
+        metrics,
+        selected_queries,
+        search_result["costs"],
+        usable_queries=usable_queries,
+        kappa_gate=kappa_gate,
+        iterations=iterations,
+    )
     # A partial or altered evaluation denominator never produces a winner.
     if len(query_ids) != 120:
         decision["outcome"] = "INCONCLUSIVE"
         decision["recommended_configuration"] = None
-    report = {"schema": "retrieval-bakeoff-9233-score.v6.1", "g3_query_sha256": G3_SHA256,
-              "query_count": len(query_ids), "usable_queries": usable_queries, "judged_items": len(merged),
-              "judge_disagreements": dict(disagreements), "cohen_kappa": kappas, "kappa_gate": kappa_gate,
-              "strata": summaries, "per_query_metrics": metrics,
-              "per_query_usable_counts": {qid: {"strict": len(relevant[qid][0]), "lenient": len(relevant[qid][1])} for qid in query_ids},
-              "topic_coverage": {name: entry["usable_n"] for name, entry in next(iter(summaries.values()), {}).items()},
-              **decision, "paired_bootstrap_best_minus_arm": decision["coverage_comparisons"],
-              "recommended_by_v5_cost_order": decision["recommended_configuration"], "costs": search_result["costs"],
-              "comparison_scope": "best among evaluated configurations", "passage_policies": PASSAGE_POLICIES,
-              "eligibility_rule": "Recall@20 coverage, then nDCG@10 ranking: upper 95% paired equal-cluster bootstrap(best - arm) <= 0.05; kappa >= 0.6; >=60/120 usable queries", "seed": SEED}
+    report = {
+        "schema": "retrieval-bakeoff-9233-score.v6.1",
+        "g3_query_sha256": G3_SHA256,
+        "query_count": len(query_ids),
+        "usable_queries": usable_queries,
+        "judged_items": len(merged),
+        "judge_disagreements": dict(disagreements),
+        "cohen_kappa": kappas,
+        "kappa_gate": kappa_gate,
+        "strata": summaries,
+        "per_query_metrics": metrics,
+        "per_query_usable_counts": {
+            qid: {"strict": len(relevant[qid][0]), "lenient": len(relevant[qid][1])} for qid in query_ids
+        },
+        "topic_coverage": {name: entry["usable_n"] for name, entry in next(iter(summaries.values()), {}).items()},
+        **decision,
+        "paired_bootstrap_best_minus_arm": decision["coverage_comparisons"],
+        "recommended_by_v5_cost_order": decision["recommended_configuration"],
+        "costs": search_result["costs"],
+        "comparison_scope": "best among evaluated configurations",
+        "passage_policies": PASSAGE_POLICIES,
+        "eligibility_rule": "Recall@20 coverage, then nDCG@10 ranking: upper 95% paired equal-cluster bootstrap(best - arm) <= 0.05; kappa >= 0.6; >=60/120 usable queries",
+        "seed": SEED,
+    }
     (work / "score-results.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     report_path = work / "phase2-results.md"
     report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1770,21 +2368,75 @@ def score(work: Path, labels_a: Path, labels_b: Path, *, iterations: int = 10000
 
 
 def _render_report(report: dict[str, Any]) -> str:
-    lines = ["# #9233 Phase 2 retrieval bake-off results", "", f"Outcome: **{report['outcome']}**; {report['usable_queries']}/120 queries have a strictly usable pool item. Best among evaluated configurations.", "", f"G3 query SHA-256: `{G3_SHA256}`; judged query denominator: {report['query_count']}; pooled items: {report['judged_items']}.", "", "Recall@20 uses the stricter label rule (both judges mark quotation or exercise usable); lenient sensitivity uses either judge. All 120 queries enter the primary contrast with equal weight per bootstrap cluster; G1/G2/G3 and G3 area/kind are diagnostics. English-derived queries are excluded.", "", "## Per arm and stratum", "", "| Arm | Stratum | n | Strict Recall@20 | Lenient Recall@20 |", "|---|---|---:|---:|---:|"]
+    lines = [
+        "# #9233 Phase 2 retrieval bake-off results",
+        "",
+        f"Outcome: **{report['outcome']}**; {report['usable_queries']}/120 queries have a strictly usable pool item. Best among evaluated configurations.",
+        "",
+        f"G3 query SHA-256: `{G3_SHA256}`; judged query denominator: {report['query_count']}; pooled items: {report['judged_items']}.",
+        "",
+        "Recall@20 uses the stricter label rule (both judges mark quotation or exercise usable); lenient sensitivity uses either judge. All 120 queries enter the primary contrast with equal weight per bootstrap cluster; G1/G2/G3 and G3 area/kind are diagnostics. English-derived queries are excluded.",
+        "",
+        "## Per arm and stratum",
+        "",
+        "| Arm | Stratum | n | Strict Recall@20 | Lenient Recall@20 |",
+        "|---|---|---:|---:|---:|",
+    ]
     for arm, strata in sorted(report["strata"].items()):
         for stratum, metrics in sorted(strata.items()):
-            lines.append(f"| {arm} | {stratum} | {metrics['n']} | {metrics['recall_at_20_strict']:.3f} | {metrics['recall_at_20_lenient']:.3f} |")
-    lines.extend(["", "## Paired cluster bootstrap and eligibility", "", "Eligibility requires the upper 95% bound of Recall@20(best) − Recall@20(arm) to be at most 0.05. G2 variants resample as a base-query cluster.", "", "| Arm | Reference | Gain estimate | 95% lower | 95% upper | Eligible |", "|---|---|---:|---:|---:|---|"])
+            lines.append(
+                f"| {arm} | {stratum} | {metrics['n']} | {metrics['recall_at_20_strict']:.3f} | {metrics['recall_at_20_lenient']:.3f} |"
+            )
+    lines.extend(
+        [
+            "",
+            "## Paired cluster bootstrap and eligibility",
+            "",
+            "Eligibility requires the upper 95% bound of Recall@20(best) − Recall@20(arm) to be at most 0.05. G2 variants resample as a base-query cluster.",
+            "",
+            "| Arm | Reference | Gain estimate | 95% lower | 95% upper | Eligible |",
+            "|---|---|---:|---:|---:|---|",
+        ]
+    )
     for arm, metric in sorted(report["paired_bootstrap_best_minus_arm"].items()):
-        lines.append(f"| {arm} | {metric['reference_arm']} | {metric['estimate']:.3f} | {metric['lower_95']:.3f} | {metric['upper_95']:.3f} | {metric['eligible_noninferior']} |")
-    lines.extend(["", f"Recommended by v6.1 cost ordering: **{report['recommended_by_v5_cost_order'] or 'none eligible'}** (p95 latency, then index size, then subset encode wall time).", "", "## Measured costs", "", "| Arm/model | p50 s | p95 s | query RSS bytes | index bytes | encode s | chunks/s | peak encode RSS bytes |", "|---|---:|---:|---:|---:|---:|---:|---:|"])
+        lines.append(
+            f"| {arm} | {metric['reference_arm']} | {metric['estimate']:.3f} | {metric['lower_95']:.3f} | {metric['upper_95']:.3f} | {metric['eligible_noninferior']} |"
+        )
+    lines.extend(
+        [
+            "",
+            f"Recommended by v6.1 cost ordering: **{report['recommended_by_v5_cost_order'] or 'none eligible'}** (p95 latency, then index size, then subset encode wall time).",
+            "",
+            "## Measured costs",
+            "",
+            "| Arm/model | p50 s | p95 s | query RSS bytes | index bytes | encode s | chunks/s | peak encode RSS bytes |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
     for name, cost in sorted(report["costs"].items()):
-        lines.append(f"| {name} | {cost.get('query_p50_seconds','')} | {cost.get('query_p95_seconds','')} | {cost.get('query_peak_rss_bytes','')} | {cost.get('index_size_bytes','')} | {cost.get('wall_seconds','')} | {cost.get('steady_state_chunks_per_second','')} | {cost.get('peak_rss_bytes','')} |")
+        lines.append(
+            f"| {name} | {cost.get('query_p50_seconds', '')} | {cost.get('query_p95_seconds', '')} | {cost.get('query_peak_rss_bytes', '')} | {cost.get('index_size_bytes', '')} | {cost.get('wall_seconds', '')} | {cost.get('steady_state_chunks_per_second', '')} | {cost.get('peak_rss_bytes', '')} |"
+        )
     lines.extend(["", "## nDCG@10 ranking eligibility (MRR@10 and lenient sensitivity in JSON)", ""])
     for arm, metric in sorted(report["ranking_comparisons"].items()):
-        lines.append(f"{arm}: upper 95% best minus arm = {metric['upper_95']:.3f}; eligible = {metric['eligible_noninferior']}")
-    lines.extend(["", f"Passage previews: `{json.dumps(PASSAGE_POLICIES, sort_keys=True)}`. Conclusions are conditional on these preview policies; per-model/source truncation and retained-character shares are in the measured costs."])
-    lines.extend(["", f"Cohen's kappa by label: `{json.dumps(report['cohen_kappa'], sort_keys=True)}`; gate pass: {report['kappa_gate']}. Judge disagreements: `{json.dumps(report['judge_disagreements'], sort_keys=True)}`.", "", "Residual: no independent held-out set beyond the frozen G1/G2/G3 queries; owner: #9233 accountable driver.", ""])
+        lines.append(
+            f"{arm}: upper 95% best minus arm = {metric['upper_95']:.3f}; eligible = {metric['eligible_noninferior']}"
+        )
+    lines.extend(
+        [
+            "",
+            f"Passage previews: `{json.dumps(PASSAGE_POLICIES, sort_keys=True)}`. Conclusions are conditional on these preview policies; per-model/source truncation and retained-character shares are in the measured costs.",
+        ]
+    )
+    lines.extend(
+        [
+            "",
+            f"Cohen's kappa by label: `{json.dumps(report['cohen_kappa'], sort_keys=True)}`; gate pass: {report['kappa_gate']}. Judge disagreements: `{json.dumps(report['judge_disagreements'], sort_keys=True)}`.",
+            "",
+            "Residual: no independent held-out set beyond the frozen G1/G2/G3 queries; owner: #9233 accountable driver.",
+            "",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -1802,39 +2454,147 @@ Related: docs/research/retrieval-bakeoff-9233/g3-queries.yaml; design #9233 v6.1
 """,
     )
     common = argparse.ArgumentParser(add_help=False)
-    common.add_argument("--work-dir", type=Path, required=True, help="External directory for all generated indexes, caches and outputs; example /tmp/bakeoff-9233.")
-    common.add_argument("--sources-db", type=Path, help="Read-only textbook SQLite database; defaults to the active project sources.db.")
+    common.add_argument(
+        "--work-dir",
+        type=Path,
+        required=True,
+        help="External directory for all generated indexes, caches and outputs; example /tmp/bakeoff-9233.",
+    )
+    common.add_argument(
+        "--sources-db", type=Path, help="Read-only textbook SQLite database; defaults to the active project sources.db."
+    )
     commands = parser.add_subparsers(dest="command", required=True)
     p = commands.add_parser("corpus", parents=[common], help="Materialize and digest the frozen Ukrainian subset.")
-    commands.add_parser("sample", parents=[common], help="Freeze the 500 source/length-stratified chunks, 120 queries, cost batch and timing recipe; no models.")
-    p = commands.add_parser("manifest", parents=[common], help="Freeze corpus, resolved model/tokenizer revisions and policies before compute; no models.")
-    p.add_argument("--model-config", type=Path, required=True, help="JSON map of all nine repositories to revision (40-hex), tokenizer {repository, revision}, max_tokens, prefixes (embedders) or scoring_template (rerankers).")
-    p = commands.add_parser("measure", parents=[common], help="Time the frozen encode sample or realised reranker pairs in a guarded CPU child.")
-    p.add_argument("--model", choices=sorted(set(EMBEDDERS) | set(RERANKERS)), required=True, help="Exact repository to measure; example intfloat/multilingual-e5-small.")
-    p.add_argument("--variant", choices=("fp32", "int8"), default="fp32", help="Reranker precision variant; default fp32; int8 is the one dynamic fallback.")
+    commands.add_parser(
+        "sample",
+        parents=[common],
+        help="Freeze the 500 source/length-stratified chunks, 120 queries, cost batch and timing recipe; no models.",
+    )
+    p = commands.add_parser(
+        "manifest",
+        parents=[common],
+        help="Freeze corpus, resolved model/tokenizer revisions and policies before compute; no models.",
+    )
+    p.add_argument(
+        "--model-config",
+        type=Path,
+        required=True,
+        help="JSON map of all nine repositories to revision (40-hex), tokenizer {repository, revision}, max_tokens, prefixes (embedders) or scoring_template (rerankers).",
+    )
+    p = commands.add_parser(
+        "measure",
+        parents=[common],
+        help="Time the frozen encode sample or realised reranker pairs in a guarded CPU child.",
+    )
+    p.add_argument(
+        "--model",
+        choices=sorted(set(EMBEDDERS) | set(RERANKERS)),
+        required=True,
+        help="Exact repository to measure; example intfloat/multilingual-e5-small.",
+    )
+    p.add_argument(
+        "--variant",
+        choices=("fp32", "int8"),
+        default="fp32",
+        help="Reranker precision variant; default fp32; int8 is the one dynamic fallback.",
+    )
     p.add_argument("--batch-size", type=int, default=16, help="Frozen steady-state encode batch size; default 16.")
-    p.add_argument("--projection-seconds", type=float, required=True, help="Measured step projection in running seconds, used for the 1.5x deadline; example 1200. Initial probe requires an explicit bounded estimate.")
-    p.add_argument("--repeat", action="store_true", help="Perform the one required borderline remeasurement; default reuse a completed measurement.")
-    p = commands.add_parser("admit", parents=[common], help="Apply ascending-cost 20h encode and 8h/10s reranker admission; no model compute.")
-    p.add_argument("--measurements", type=Path, required=True, help="JSON with frozen binding, all six embedder projected_seconds/query_seconds, and optional reranker fp32/int8 attempt lists (p50_seconds, p95_seconds, mean_seconds, timing_pairs_sha256). Lexical timing is read from lexical-measurement.json, written by measure or corpus after manifest.")
-    commands.add_parser("timing-pairs", parents=[common], help="Freeze E5 hybrid top-20 realised query/candidate pairs from search-results.json before reranker timing.")
-    p = commands.add_parser("encode", parents=[common], help="CPU encode the subset resumably with the selected embedding model.")
-    p.add_argument("--model", choices=sorted(EMBEDDERS), required=True, help="Exact embedding model repository; example intfloat/multilingual-e5-small.")
-    p.add_argument("--quiet-window-end", type=float, help="Unix UTC end timestamp of the authorized quiet window; required for encodes projected above 2 hours. Interrupted steps resume in a later window.")
+    p.add_argument(
+        "--projection-seconds",
+        type=float,
+        required=True,
+        help="Measured step projection in running seconds, used for the 1.5x deadline; example 1200. Initial probe requires an explicit bounded estimate.",
+    )
+    p.add_argument(
+        "--repeat",
+        action="store_true",
+        help="Perform the one required borderline remeasurement; default reuse a completed measurement.",
+    )
+    p = commands.add_parser(
+        "admit",
+        parents=[common],
+        help="Apply ascending-cost 20h encode and 8h/10s reranker admission; no model compute.",
+    )
+    p.add_argument(
+        "--measurements",
+        type=Path,
+        required=True,
+        help="JSON with frozen binding, all six embedder projected_seconds/query_seconds, and optional reranker fp32/int8 attempt lists (p50_seconds, p95_seconds, mean_seconds, timing_pairs_sha256). Lexical timing is read from lexical-measurement.json, written by measure or corpus after manifest.",
+    )
+    commands.add_parser(
+        "timing-pairs",
+        parents=[common],
+        help="Freeze E5 hybrid top-20 realised query/candidate pairs from search-results.json before reranker timing.",
+    )
+    p = commands.add_parser(
+        "encode", parents=[common], help="CPU encode the subset resumably with the selected embedding model."
+    )
+    p.add_argument(
+        "--model",
+        choices=sorted(EMBEDDERS),
+        required=True,
+        help="Exact embedding model repository; example intfloat/multilingual-e5-small.",
+    )
+    p.add_argument(
+        "--quiet-window-end",
+        type=float,
+        help="Unix UTC end timestamp of the authorized quiet window; required for encodes projected above 2 hours. Interrupted steps resume in a later window.",
+    )
     p.add_argument("--limit", type=int, help="Encode the first N source-ordered chunks only; omit for full subset.")
     p.add_argument("--batch-size", type=int, default=16, help="CPU inference batch size (default 16); example 16.")
-    p = commands.add_parser("search", parents=[common], help="Run L, dense D_i, RRF H_i, and every configured reranker over H_i.")
-    p.add_argument("--models", nargs="+", choices=sorted(EMBEDDERS), default=None, help="Indexed embedder repositories to compare; default all admitted models.")
-    p.add_argument("--rerankers", nargs="*", choices=sorted(RERANKERS), default=None, help="Reranker repositories; default all admitted rerankers; pass --rerankers with no values for the first E5 timing retrieval.")
-    p.add_argument("--query-limit", type=int, default=10000, help="Must include the complete frozen 120-query manifest; default 10000 (does not add queries).")
-    p.add_argument("--families", nargs="+", choices=("G1", "G2", "G3"), default=["G1", "G2", "G3"], help="Query families to execute; default all Ukrainian G1, G2 and G3.")
-    p = commands.add_parser("pool", parents=[common], help="Create arm-blind judging files and a separately sealed arm key.")
-    p.add_argument("--query-limit", type=int, help="Cap unique pooled query strings at N; default 120: all unique G1/G2 pairs, then seeded G3 sample.")
-    p.add_argument("--overwrite-pool", action="store_true", help="Explicitly replace the pool and reset judge files; default refuse any existing pool or labels.")
-    p = commands.add_parser("score", parents=[common], help="Score two judge JSONL files with strict/lenient labels and paired cluster bootstrap.")
+    p = commands.add_parser(
+        "search", parents=[common], help="Run L, dense D_i, RRF H_i, and every configured reranker over H_i."
+    )
+    p.add_argument(
+        "--models",
+        nargs="+",
+        choices=sorted(EMBEDDERS),
+        default=None,
+        help="Indexed embedder repositories to compare; default all admitted models.",
+    )
+    p.add_argument(
+        "--rerankers",
+        nargs="*",
+        choices=sorted(RERANKERS),
+        default=None,
+        help="Reranker repositories; default all admitted rerankers; pass --rerankers with no values for the first E5 timing retrieval.",
+    )
+    p.add_argument(
+        "--query-limit",
+        type=int,
+        default=10000,
+        help="Must include the complete frozen 120-query manifest; default 10000 (does not add queries).",
+    )
+    p.add_argument(
+        "--families",
+        nargs="+",
+        choices=("G1", "G2", "G3"),
+        default=["G1", "G2", "G3"],
+        help="Query families to execute; default all Ukrainian G1, G2 and G3.",
+    )
+    p = commands.add_parser(
+        "pool", parents=[common], help="Create arm-blind judging files and a separately sealed arm key."
+    )
+    p.add_argument(
+        "--query-limit",
+        type=int,
+        help="Cap unique pooled query strings at N; default 120: all unique G1/G2 pairs, then seeded G3 sample.",
+    )
+    p.add_argument(
+        "--overwrite-pool",
+        action="store_true",
+        help="Explicitly replace the pool and reset judge files; default refuse any existing pool or labels.",
+    )
+    p = commands.add_parser(
+        "score",
+        parents=[common],
+        help="Score two judge JSONL files with strict/lenient labels and paired cluster bootstrap.",
+    )
     p.add_argument("--judge-a", type=Path, required=True, help="First judge JSONL with one item label per pooled item.")
     p.add_argument("--judge-b", type=Path, required=True, help="Second judge JSONL with the same item labels.")
-    p.add_argument("--bootstrap-iterations", type=int, default=10000, help="Paired cluster bootstrap replicates (default 10000).")
+    p.add_argument(
+        "--bootstrap-iterations", type=int, default=10000, help="Paired cluster bootstrap replicates (default 10000)."
+    )
     return parser
 
 
@@ -1860,25 +2620,49 @@ def main(argv: list[str] | None = None) -> int:
             if args.batch_size < 1 or (args.model in EMBEDDERS and args.variant != "fp32"):
                 raise ValueError("Positive batch size and fp32 embedder measurement required")
             _measurement_preflight(work, args.model, args.variant, args.repeat)
-            result = _guarded_step(measure, (db_path, work, args.model), {"batch_size": args.batch_size, "variant": args.variant, "repeat": args.repeat}, work, f"measure:{args.model}:{args.variant}:{args.batch_size}:{int(args.repeat)}", args.projection_seconds)
+            result = _guarded_step(
+                measure,
+                (db_path, work, args.model),
+                {"batch_size": args.batch_size, "variant": args.variant, "repeat": args.repeat},
+                work,
+                f"measure:{args.model}:{args.variant}:{args.batch_size}:{int(args.repeat)}",
+                args.projection_seconds,
+            )
         elif args.command == "encode":
             if args.limit is not None and args.limit < 1:
                 raise ValueError("--limit must be positive")
             _validate_run(db_path, work)
             admission = _admission(work)
-            if args.model not in admission["admitted_embedders"] or args.batch_size != admission["measurements"]["embedders"][args.model]["batch_size"]:
+            if (
+                args.model not in admission["admitted_embedders"]
+                or args.batch_size != admission["measurements"]["embedders"][args.model]["batch_size"]
+            ):
                 raise ValueError("Encode requires admission and the measured batch size")
             if args.batch_size < 1:
                 raise ValueError("--batch-size must be positive")
             projection = admission["measurements"]["embedders"][args.model]["projected_seconds"]
             if projection > 2 * 3600 and args.quiet_window_end is None:
                 raise ValueError("Large encode requires --quiet-window-end")
-            result = _guarded_step(encode, (db_path, work, args.model), {"limit": args.limit, "batch_size": args.batch_size}, work, f"encode:{args.model}:{args.limit}:{args.batch_size}", projection, window_end=args.quiet_window_end)
+            result = _guarded_step(
+                encode,
+                (db_path, work, args.model),
+                {"limit": args.limit, "batch_size": args.batch_size},
+                work,
+                f"encode:{args.model}:{args.limit}:{args.batch_size}",
+                projection,
+                window_end=args.quiet_window_end,
+            )
         elif args.command == "search":
             admission = _admission(work)
             models = args.models if args.models is not None else admission["admitted_embedders"]
-            rankers = args.rerankers if args.rerankers is not None else [r for r, d in admission["rerankers"].items() if d["variant"]]
-            result = search(db_path, work, models=models, rerankers=rankers, query_limit=args.query_limit, families=args.families)
+            rankers = (
+                args.rerankers
+                if args.rerankers is not None
+                else [r for r, d in admission["rerankers"].items() if d["variant"]]
+            )
+            result = search(
+                db_path, work, models=models, rerankers=rankers, query_limit=args.query_limit, families=args.families
+            )
         elif args.command == "pool":
             _validate_run(db_path, work)
             result = pool(work, query_limit=args.query_limit, overwrite=args.overwrite_pool)

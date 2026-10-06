@@ -21,6 +21,8 @@ from pathlib import Path
 from typing import Any
 from uuid import UUID
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+
 logger = logging.getLogger(__name__)
 
 from fastapi import APIRouter, Header, HTTPException
@@ -36,18 +38,10 @@ from .resilience import connect_sqlite
 
 router = APIRouter(prefix="/api/hramatka", tags=["hramatka"])
 
-HRAMATKA_STATE_DIR = Path(
-    os.environ.get("HRAMATKA_STATE_DIR", str(BATCH_STATE_DIR / "hramatka"))
-)
-HRAMATKA_DB_PATH = Path(
-    os.environ.get("HRAMATKA_DB_PATH", str(HRAMATKA_STATE_DIR / "lessons.sqlite3"))
-)
-SUPPORT_DIR = Path(
-    os.environ.get("HRAMATKA_SUPPORT_DIR", str(HRAMATKA_STATE_DIR / "support"))
-)
-BAKER_STATE_PATH = Path(
-    os.environ.get("HRAMATKA_BAKER_STATE_PATH", str(HRAMATKA_STATE_DIR / "baker-state.json"))
-)
+HRAMATKA_STATE_DIR = Path(os.environ.get("HRAMATKA_STATE_DIR", str(BATCH_STATE_DIR / "hramatka")))
+HRAMATKA_DB_PATH = Path(os.environ.get("HRAMATKA_DB_PATH", str(HRAMATKA_STATE_DIR / "lessons.sqlite3")))
+SUPPORT_DIR = Path(os.environ.get("HRAMATKA_SUPPORT_DIR", str(HRAMATKA_STATE_DIR / "support")))
+BAKER_STATE_PATH = Path(os.environ.get("HRAMATKA_BAKER_STATE_PATH", str(HRAMATKA_STATE_DIR / "baker-state.json")))
 VESUM_DB_PATH = Path(os.environ.get("HRAMATKA_VESUM_DB_PATH", str(DEFAULT_VESUM_DB_PATH)))
 SCHEMA_PATHS = (
     PROJECT_ROOT / "packages" / "activity-kit" / "src" / "lu.activity.v1.schema.json",
@@ -123,7 +117,7 @@ class VerifyFormsRequest(BaseModel):
         return normalized
 
 
-def _connect(db_path: Path | None = None) -> sqlite3.Connection:
+def _connect(db_path: Path | None = None) -> SQLiteConnection:
     path = db_path or HRAMATKA_DB_PATH
     return connect_sqlite(str(path), timeout=5.0, isolation_level=None)
 
@@ -283,8 +277,7 @@ def verify_linguistics(payload: VerifyFormsRequest) -> dict[str, Any]:
     except (FileNotFoundError, OSError, sqlite3.Error) as exc:
         raise HTTPException(status_code=503, detail="VESUM dictionary unavailable") from exc
     results = [
-        {"form": form, "attested": bool(attestations[form]), "matches": attestations[form]}
-        for form in payload.forms
+        {"form": form, "attested": bool(attestations[form]), "matches": attestations[form]} for form in payload.forms
     ]
     return {
         "results": results,
@@ -378,9 +371,7 @@ def readiness() -> JSONResponse:
         "schemas": _check_schemas(),
         "vesum": _check_vesum(),
     }
-    serialized_checks = {
-        name: {"ok": ok, "detail": detail} for name, (ok, detail) in checks.items()
-    }
+    serialized_checks = {name: {"ok": ok, "detail": detail} for name, (ok, detail) in checks.items()}
     is_ready = all(check["ok"] for check in serialized_checks.values())
     return JSONResponse(
         status_code=200 if is_ready else 503,

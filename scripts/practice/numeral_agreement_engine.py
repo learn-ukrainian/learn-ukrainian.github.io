@@ -29,6 +29,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.verification.vesum import get_vesum_connection
 
 
@@ -289,7 +290,7 @@ def load_noun_paradigms_from_db(
     lemmas_info: dict[str, dict[str, Any]] = {}
 
     if vocab_db_path.is_file():
-        conn_vocab = sqlite3.connect(str(vocab_db_path))
+        conn_vocab = _open_readonly(str(vocab_db_path))
         conn_vocab.row_factory = sqlite3.Row
         cur = conn_vocab.cursor()
         rows = cur.execute(
@@ -441,7 +442,9 @@ def generate_card_for_tier(
             "з іменником у роді, числі й відмінку: вимагає називного відмінка однини."
         )
         pravopys_rule_en = "Numerals ending in 'one' (1, 21, 31...) agree in gender and govern Nominative singular."
-        pravopys_citation = "Академічна граматика: узгодження числівника «один» з іменником (Волкова, Масло 2012, с. 90)"
+        pravopys_citation = (
+            "Академічна граматика: узгодження числівника «один» з іменником (Волкова, Масло 2012, с. 90)"
+        )
 
     elif tier == NumeralTier.TIER_2_PAUCAL:
         numeral_val = rng.choice([2, 3, 4, 22, 23, 24, 32, 34])
@@ -469,7 +472,9 @@ def generate_card_for_tier(
                 "іменником у називному відмінку множини: «два столи», «три сестри», «чотири вікна»."
             )
             pravopys_rule_en = "Numerals 2, 3, 4 (except 12–14) govern Nominative plural: 'два столи', 'три сестри'."
-            pravopys_citation = "Академічна граматика: сполучення числівників 2, 3, 4 з іменником (Волкова, Масло 2012, с. 91)"
+            pravopys_citation = (
+                "Академічна граматика: сполучення числівників 2, 3, 4 з іменником (Волкова, Масло 2012, с. 91)"
+            )
 
     elif tier == NumeralTier.TIER_3_PLURAL:
         # Include teens to test teen-tier violation specifically
@@ -483,7 +488,9 @@ def generate_card_for_tier(
             "іменником у родовому відмінку множини: «п'ять столів», «дванадцять сестер»."
         )
         pravopys_rule_en = "Numerals 5–20, 30, and teens 11–14 govern Genitive plural: 'п'ять столів'."
-        pravopys_citation = "Академічна граматика: сполучення числівників від 5 і більше з іменником (Волкова, Масло 2012, с. 91)"
+        pravopys_citation = (
+            "Академічна граматика: сполучення числівників від 5 і більше з іменником (Волкова, Масло 2012, с. 91)"
+        )
 
     elif tier == NumeralTier.TIER_4_FRACTIONAL:
         use_decimal = rng.choice([False, True])
@@ -498,7 +505,9 @@ def generate_card_for_tier(
         pravopys_rule_en = (
             "'Півтора' (m/n), 'півтори' (f), and decimals govern Genitive singular: 'півтора року', '2.5 літра'."
         )
-        pravopys_citation = "Академічна граматика: сполучення дробових числівників з іменником (Волкова, Масло 2012, с. 92)"
+        pravopys_citation = (
+            "Академічна граматика: сполучення дробових числівників з іменником (Волкова, Масло 2012, с. 92)"
+        )
 
     elif tier == NumeralTier.TIER_5_COLLECTIVE:
         # Collective numerals apply strictly to masculine animates and neuters

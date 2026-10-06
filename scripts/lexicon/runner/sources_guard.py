@@ -20,6 +20,8 @@ from collections.abc import Iterator
 from pathlib import Path
 from urllib.parse import unquote
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+
 _ENV_FLAG = "LEXICON_RUNNER_NETWORK_WORKER"
 _SOURCES_DB_ENV = "LEXICON_SOURCES_DB"
 _SOURCES_DB_NAME = "sources.db"
@@ -151,13 +153,11 @@ def assert_not_sources_db(path: Path | str) -> None:
     if not _flag_active():
         return
     if _looks_like_sources_db(path) or _inode_matches_configured_sources(path):
-        raise SourcesDbForbiddenError(
-            f"network workers cannot open sources.db (refused path={path})"
-        )
+        raise SourcesDbForbiddenError(f"network workers cannot open sources.db (refused path={path})")
 
 
 def install_network_authorizer(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     force: bool = False,
 ) -> None:
@@ -188,11 +188,11 @@ def install_network_authorizer(
 
 
 def apply_network_connection_guards(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     path: Path | str | None = None,
     *,
     force_authorizer: bool = False,
-) -> sqlite3.Connection:
+) -> SQLiteConnection:
     """Path assert (optional) + ATTACH authorizer for a network-side connection."""
     if path is not None:
         assert_not_sources_db(path)
@@ -225,9 +225,7 @@ def open_sources_db_refused(path: Path | str) -> None:
     corpus sources.
     """
     if _looks_like_sources_db(path) or _inode_matches_configured_sources(path):
-        raise SourcesDbForbiddenError(
-            f"network workers cannot open sources.db (refused path={path})"
-        )
+        raise SourcesDbForbiddenError(f"network workers cannot open sources.db (refused path={path})")
     # Non-sources paths are still blocked when the ambient network role is set
     # and something tries the open_sources_ro helper — that helper consults the flag.
     if _flag_active():

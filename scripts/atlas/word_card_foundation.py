@@ -23,6 +23,7 @@ from scripts.common.repo_root import main_checkout_root
 from scripts.curriculum.evidence.lock import atomic_write
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.promote_teacher_lesson_intake import _POS_MAP
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 ROOT = Path(__file__).resolve().parents[2]
 REGISTER = ROOT / "docs/sources/permissions-register.yaml"
@@ -32,21 +33,54 @@ HEX = r"[0-9a-f]{64}"
 PROSE = ("note", "matched_by", "hold", "match_note")  # Provenance prose; attributes and scope labels never link.
 # Input role: (native paths whose whole field set a validator fixes, None meaning every object; excluded inventory
 # arrays). List items are None in paths. Role-less inputs read no native key and exclude nothing.
-ROLES = {None: (None, set()), "register": (None, set()), "receipt": ({("denominator",)}, set()),
-         "registry": (None, {("entries",), ("source_records",), ("events",)}),
-         "manifest": ({(), ("admission",), ("admission", "denominator"), ("counts",), ("database_file_sha256",),
-                       ("database_wal_sha256",), ("selection", "denominator"), ("selection", "source_records", None,
-                       "row_key"), ("legacy_articles", None), ("legacy_articles", None, "metadata")},
-                      {("selection", "units"), ("selection", "source_records"), ("legacy_articles",)})}
+ROLES = {
+    None: (None, set()),
+    "register": (None, set()),
+    "receipt": ({("denominator",)}, set()),
+    "registry": (None, {("entries",), ("source_records",), ("events",)}),
+    "manifest": (
+        {
+            (),
+            ("admission",),
+            ("admission", "denominator"),
+            ("counts",),
+            ("database_file_sha256",),
+            ("database_wal_sha256",),
+            ("selection", "denominator"),
+            ("selection", "source_records", None, "row_key"),
+            ("legacy_articles", None),
+            ("legacy_articles", None, "metadata"),
+        },
+        {("selection", "units"), ("selection", "source_records"), ("legacy_articles",)},
+    ),
+}
 ADMISSION_FIELDS = {
-    "admission", "candidate_sha256", "review_report_sha256", "review_family",
-    "author_seat_distinct", "denominator", "checked_at", "review_task_id",
-    "review_run_nonce", "review_model", "review_harness", "author_task_id",
+    "admission",
+    "candidate_sha256",
+    "review_report_sha256",
+    "review_family",
+    "author_seat_distinct",
+    "denominator",
+    "checked_at",
+    "review_task_id",
+    "review_run_nonce",
+    "review_model",
+    "review_harness",
+    "author_task_id",
 }
 MANIFEST_FIELDS = {
-    "schema_version", "selection", "selection_file_sha256", "selection_content_sha256",
-    "admission", "database_file_sha256", "database_wal_sha256", "rules_version",
-    "normaliser_version", "counts", "legacy_articles", "manifest_sha256",
+    "schema_version",
+    "selection",
+    "selection_file_sha256",
+    "selection_content_sha256",
+    "admission",
+    "database_file_sha256",
+    "database_wal_sha256",
+    "rules_version",
+    "normaliser_version",
+    "counts",
+    "legacy_articles",
+    "manifest_sha256",
 }
 # Reviewed matching metadata, not a spelling-only correspondence rule.
 POS_BINDINGS = {259013: 421145, 263932: 426804, 267658: 436957}
@@ -64,8 +98,9 @@ def require(condition, message):
 
 
 def canonical(value, sort_keys=True):
-    return json.dumps(value, ensure_ascii=False, sort_keys=sort_keys,
-                      separators=(",", ":"), allow_nan=False).encode("utf-8")
+    return json.dumps(value, ensure_ascii=False, sort_keys=sort_keys, separators=(",", ":"), allow_nan=False).encode(
+        "utf-8"
+    )
 
 
 def digest(value):
@@ -84,6 +119,7 @@ def parse(value):
             require(key not in result, "Duplicate JSON key")
             result[key] = item
         return result
+
     parsed = json.loads(value, object_pairs_hook=pairs)
     canonical(parsed)  # Reject nonfinite numbers and invalid Unicode, even in unused fields.
     return parsed
@@ -98,12 +134,14 @@ def write(path, value):
     def render(item, depth=0):
         indent = "  " * depth
         if isinstance(item, dict) and any(isinstance(v, list | dict) for v in item.values()):
-            fields = [indent + "  " + json.dumps(k) + ": " + render(v, depth + 1)
-                      for k, v in item.items()]
+            fields = [indent + "  " + json.dumps(k) + ": " + render(v, depth + 1) for k, v in item.items()]
             return "{\n" + ",\n".join(fields) + "\n" + indent + "}"
         if isinstance(item, list) and item:
-            return "[\n" + ",\n".join(indent + "  " + canonical(row, False).decode() for row in item) + "\n" + indent + "]"
+            return (
+                "[\n" + ",\n".join(indent + "  " + canonical(row, False).decode() for row in item) + "\n" + indent + "]"
+            )
         return canonical(item, False).decode()
+
     atomic_write(path, (render(value) + "\n").encode())
 
 
@@ -113,8 +151,10 @@ def schema(value, name):
 
 
 def fields(value, required, optional=()):
-    require(isinstance(value, dict) and set(required) <= set(value) <= set(required) | set(optional),
-            "Invalid object fields")
+    require(
+        isinstance(value, dict) and set(required) <= set(value) <= set(required) | set(optional),
+        "Invalid object fields",
+    )
 
 
 def nonempty(value):
@@ -127,7 +167,7 @@ def hex_digest(value):
 
 def readonly(stack, path):
     require(path.is_absolute() and path.is_file(), "Source DB must be an existing absolute file")
-    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
+    connection = _open_readonly(path.resolve())
     stack.callback(connection.close)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only = ON")
@@ -145,9 +185,10 @@ def fingerprints(databases):
 
 
 def rows(connection, table, key):
-    require(isinstance(key, dict) and key and
-            all(re.fullmatch(r"[A-Za-z_][A-Za-z_0-9]*", n) for n in [table, *key]),
-            "Invalid row selector")
+    require(
+        isinstance(key, dict) and key and all(re.fullmatch(r"[A-Za-z_][A-Za-z_0-9]*", n) for n in [table, *key]),
+        "Invalid row selector",
+    )
     where = " AND ".join(f'"{column}" = ?' for column in key)
     return [dict(row) for row in connection.execute(f'SELECT * FROM "{table}" WHERE {where}', tuple(key.values()))]
 
@@ -178,27 +219,40 @@ def source_keys(entry):
 
 def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the first, which has the manifest role.
     first = inputs[0]  # A first input without a selection object is itself read as the selection.
-    places = [("manifest", () if isinstance(first, dict) and isinstance(first.get("selection"), dict) else
-               ("selection",)), *((role, ()) for role in roles)] + [(None, ())] * len(inputs)
+    places = [
+        ("manifest", () if isinstance(first, dict) and isinstance(first.get("selection"), dict) else ("selection",)),
+        *((role, ()) for role in roles),
+    ] + [(None, ())] * len(inputs)
     objects = [node for item, at in zip(inputs, places, strict=False) for node in walk(item, at=at)]
     for value, *_ in objects:
         if isinstance(value, dict):
-            require(not any(k.startswith(("expected", "adjudicated")) for k in value),
-                    "Held-out expected answers are forbidden in admitted inputs")
+            require(
+                not any(k.startswith(("expected", "adjudicated")) for k in value),
+                "Held-out expected answers are forbidden in admitted inputs",
+            )
     if heldout is None:
         return "unverified"
     membership = load(heldout)
     fields(membership, {"heldout", "replay"})
-    require(all(isinstance(v, list) and all(nonempty(k) for k in v) and len(set(v)) == len(v)
-                for v in membership.values()), "Membership keys must be unique nonempty strings")
+    require(
+        all(isinstance(v, list) and all(nonempty(k) for k in v) and len(set(v)) == len(v) for v in membership.values()),
+        "Membership keys must be unique nonempty strings",
+    )
     boundary, replay = set(membership["heldout"]), set(membership["replay"])
     require(boundary and not boundary & replay, "Heldout and replay must be disjoint")
     groups, owners = [], {}
-    records = [r for v, *_ in objects if isinstance(v, dict) and isinstance(v.get("source_records"), list)
-               for r in v["source_records"] if "raw_row" in r]
+    records = [
+        r
+        for v, *_ in objects
+        if isinstance(v, dict) and isinstance(v.get("source_records"), list)
+        for r in v["source_records"]
+        if "raw_row" in r
+    ]
+
     def cited(value, keys, decoded=False, at=(None, ()), scan=False):  # Shared recogniser: every known key, nested too.
         texts = [t for t, *_ in walk(value, decoded, (), at, scan) if isinstance(t, str)]
         return {k for t in texts for k in keys if k in t and re.search(rf"(?<![\w:/#-]){re.escape(k)}(?![\w:/#-])", t)}
+
     # Closure inventory: identities (card/sense/source-record ids, mint cards/to) and structured keys (aliases, locators,
     # candidates, creation/unit keys, legacy slugs/aliases, mint endpoints, POS-review anchors, a paradigm's admitted
     # parent) link; PROSE and mint evidence only via cited known keys. Every object that forms a group is an owner.
@@ -210,10 +264,17 @@ def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the fir
             group |= {value["source_record_id"]} | {a["key"] for a in value.get("aliases", [])}
             group |= {k for c in value.get("correspondence", []) for k in [c.get("locator"), *c.get("candidates", [])]}
             notes += [[d.get(f) for f in PROSE] for d in value.get("aliases", []) + value.get("correspondence", [])]
-        if "card_id" in value:  # Owned senses and every creation source key; mwe_key is <source_locator>|<normalised form>.
+        if (
+            "card_id" in value
+        ):  # Owned senses and every creation source key; mwe_key is <source_locator>|<normalised form>.
             creation = value.get("key_at_creation", {})
-            group |= {value["card_id"], *source_keys(value), *(s["sense_id"] for s in value.get("senses", [])),
-                     creation.get("paradigm_key"), creation.get("mwe_key", "").rpartition("|")[0]}
+            group |= {
+                value["card_id"],
+                *source_keys(value),
+                *(s["sense_id"] for s in value.get("senses", [])),
+                creation.get("paradigm_key"),
+                creation.get("mwe_key", "").rpartition("|")[0],
+            }
             notes += [[d.get(f) for f in PROSE] for d in creation.get("source_keys", [])]
         if value.get("kind") in {"mint", "sense_mint", "source_record_mint"}:  # Evidence is provenance, never a key.
             group |= {*value.get("cards", []), *value.get("from", []), *value.get("to", [])}
@@ -240,22 +301,33 @@ def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the fir
             break
         boundary = expanded
     require(not boundary & replay, "Heldout/replay overlap after conservative alias closure")
-    for value, decoded, trail, at in objects:  # Adjudication markers are scanned with the same recogniser, never linked.
+    for (
+        value,
+        decoded,
+        trail,
+        at,
+    ) in objects:  # Adjudication markers are scanned with the same recogniser, never linked.
         if not isinstance(value, dict):
             continue
         adjudication = value.get("kind") in {"identity", "split", "merge", "resolve", "variant", "sense_map"}
         adjudication |= any(k in value for k in ("overlay_id", "settled_by", "mapping", "merged_into", "split_into"))
         adjudication |= "event_id" in value and value.get("kind") not in {"mint", "sense_mint", "source_record_mint"}
         if adjudication:
-            require(not cited(value, boundary, decoded),
-                    "Held-out adjudicated mapping touches a membership key or indirect alias")
+            require(
+                not cited(value, boundary, decoded),
+                "Held-out adjudicated mapping touches a membership key or indirect alias",
+            )
             # A marker also marks every enclosing owner (itself included): refuse a closure-held or citing owner.
             for index, owner, owned in [owners[id(o)] for o, *_ in (*trail, (value,)) if id(o) in owners]:
-                require(not groups[index] & boundary and not cited(owner, boundary, owned),
-                        "Held-out adjudicated mapping touches a marked owner's closure or text")
+                require(
+                    not groups[index] & boundary and not cited(owner, boundary, owned),
+                    "Held-out adjudicated mapping touches a marked owner's closure or text",
+                )
             # Then its context: every enclosing object to the input root, its own included, minus inventory arrays.
-            require(not any(cited(o, boundary, d, place, True) for o, d, place in (*trail, (value, decoded, at))),
-                    "Held-out adjudicated mapping touches its enclosing context")
+            require(
+                not any(cited(o, boundary, d, place, True) for o, d, place in (*trail, (value, decoded, at))),
+                "Held-out adjudicated mapping touches its enclosing context",
+            )
     return "checked"
 
 
@@ -263,8 +335,13 @@ def paradigm_parent(record, records):  # The one cross-record relation: a ULIF p
     if (record["source_id"], record["table"]) != ("ulif", "ulif_dictua_sections"):
         return {}
     require(type(record["raw_row"]["entry_id"]) is int, "Invalid paradigm parent locator")
-    parents = [r for r in records if r["source_id"] == "ulif" and
-               r["table"] == "ulif_dictua_entries" and r["raw_row"]["id"] == record["raw_row"]["entry_id"]]
+    parents = [
+        r
+        for r in records
+        if r["source_id"] == "ulif"
+        and r["table"] == "ulif_dictua_entries"
+        and r["raw_row"]["id"] == record["raw_row"]["entry_id"]
+    ]
     require(len(parents) == 1, "Paradigm requires exactly one admitted parent")
     return parents[0]
 
@@ -273,7 +350,8 @@ def intrinsic(record, records):
     raw, source, table = record["raw_row"], record["source_id"], record["table"]
     if (source, table) == ("ulif", "ulif_dictua_entries"):
         return "query_headword_label", "ulif:record:" + "#".join(
-            raw[k] for k in ("normalized_query", "canonical_headword", "grammatical_label"))
+            raw[k] for k in ("normalized_query", "canonical_headword", "grammatical_label")
+        )
     if (source, table) == ("puls", "puls_cefr"):
         return "table_row", "puls:record:" + "/".join(raw[k] for k in ("word", "pos", "level"))
     if (source, table) == ("frazeolohichnyi", "frazeolohichnyi"):
@@ -282,32 +360,54 @@ def intrinsic(record, records):
     if (source, table) == ("ukrainian_word_stress", "enrichment"):
         payload = parse(raw["payload_json"])
         fields(payload, {"form", "source"})
-        require(all(nonempty(v) for v in payload.values()) and
-                payload["source"] == raw["source"] == "ukrainian-word-stress" and raw["section"] == "stress",
-                "Invalid stress tuple")
+        require(
+            all(nonempty(v) for v in payload.values())
+            and payload["source"] == raw["source"] == "ukrainian-word-stress"
+            and raw["section"] == "stress",
+            "Invalid stress tuple",
+        )
         return "table_row", "ukrainian_word_stress:record:stress:v1:sha256:" + digest(payload)
     require((source, table) == ("ulif", "ulif_dictua_sections"), "Missing approved source-key contract")
     payload = parse(raw["payload_json"])
     fields(payload, {"rows", "raw_html", "raw_response_ref", "sense_or_group_id", "source_order"})
     matrix = payload["rows"]
-    require(isinstance(matrix, list) and matrix and all(isinstance(r, list) and r for r in matrix) and
-            all(len(r) == len(matrix[0]) and all(isinstance(c, str) for c in r) for r in matrix),
-            "Invalid paradigm matrix")
-    require(raw["kind"] == "paradigm" and nonempty(payload["raw_html"]) and
-            nonempty(payload["raw_response_ref"]) and re.fullmatch("sha256:" + HEX, payload["raw_response_ref"]) and
-            nonempty(payload["sense_or_group_id"]) and
-            re.fullmatch(r"paradigm:[1-9][0-9]*", payload["sense_or_group_id"]) and
-            type(payload["source_order"]) is int and payload["source_order"] >= 0 and
-            type(raw["source_order"]) is int and raw["source_order"] == payload["source_order"] and
-            raw["sense_or_group_id"] == payload["sense_or_group_id"], "Invalid paradigm discriminator")
+    require(
+        isinstance(matrix, list)
+        and matrix
+        and all(isinstance(r, list) and r for r in matrix)
+        and all(len(r) == len(matrix[0]) and all(isinstance(c, str) for c in r) for r in matrix),
+        "Invalid paradigm matrix",
+    )
+    require(
+        raw["kind"] == "paradigm"
+        and nonempty(payload["raw_html"])
+        and nonempty(payload["raw_response_ref"])
+        and re.fullmatch("sha256:" + HEX, payload["raw_response_ref"])
+        and nonempty(payload["sense_or_group_id"])
+        and re.fullmatch(r"paradigm:[1-9][0-9]*", payload["sense_or_group_id"])
+        and type(payload["source_order"]) is int
+        and payload["source_order"] >= 0
+        and type(raw["source_order"]) is int
+        and raw["source_order"] == payload["source_order"]
+        and raw["sense_or_group_id"] == payload["sense_or_group_id"],
+        "Invalid paradigm discriminator",
+    )
     parent_row = paradigm_parent(record, records)["raw_row"]
-    parent = {k: parent_row[k] for k in ("content_sha256", "normalized_query", "canonical_headword",
-                                      "grammatical_label", "homonym_index")}
-    require(hex_digest(parent["content_sha256"]) and nonempty(parent["normalized_query"]) and
-            all(isinstance(parent[k], str) for k in ("canonical_headword", "grammatical_label")) and
-            type(parent["homonym_index"]) is int and parent["homonym_index"] > 0, "Invalid paradigm parent")
+    parent = {
+        k: parent_row[k]
+        for k in ("content_sha256", "normalized_query", "canonical_headword", "grammatical_label", "homonym_index")
+    }
+    require(
+        hex_digest(parent["content_sha256"])
+        and nonempty(parent["normalized_query"])
+        and all(isinstance(parent[k], str) for k in ("canonical_headword", "grammatical_label"))
+        and type(parent["homonym_index"]) is int
+        and parent["homonym_index"] > 0,
+        "Invalid paradigm parent",
+    )
     return "table_row", "ulif:record:paradigm:v1:sha256:" + digest(
-        {"parent": parent, "kind": "paradigm", "payload": payload})
+        {"parent": parent, "kind": "paradigm", "payload": payload}
+    )
 
 
 def aliases(record, records):
@@ -334,15 +434,17 @@ def selection_check(selection, registered):
         require(record["source_id"] in registered, "Unregistered source; update approved register first")
         raw, key = record["raw_row"], record["row_key"]
         require(isinstance(raw, dict) and isinstance(key, dict) and key, "Invalid row selector")
-        require(all(raw.get(k) == v and type(raw.get(k)) is type(v) for k, v in key.items()),
-                "Row selector disagrees with literal capture")
+        require(
+            all(raw.get(k) == v and type(raw.get(k)) is type(v) for k, v in key.items()),
+            "Row selector disagrees with literal capture",
+        )
         if record["table"] == "enrichment":
             fields(key, {"slug", "section"})
             locator = "atlas0:enrichment:" + key["slug"] + "/" + key["section"]
         else:
             fields(key, {"id"})
             require(type(key["id"]) is int, "Invalid integer row locator")
-            locator = f'{record["source_id"]}:{record["table"]}:id:{key["id"]}'
+            locator = f"{record['source_id']}:{record['table']}:id:{key['id']}"
         require(record["locator"] == locator, "Literal locator disagrees with source row selector")
         require(record["content_fingerprint_basis"] == ROW_BASIS, "Label digest as literal-row, not full DB")
         require(digest(raw) == record["content_sha256"], "Changed selected bytes; re-admit the input")
@@ -350,52 +452,101 @@ def selection_check(selection, registered):
         require(record["source_content_sha256"] == raw.get("content_sha256"), "Source content hash mismatch")
         require(record.get("database", "sources") in {"sources", "atlas", "vesum"}, "Unknown source database")
         if record["table"] == "ulif_dictua_entries":
-            require(type(raw["homonym_checked"]) is int and raw["homonym_checked"] == 1 and
-                    raw["status"] == "ok" and nonempty(raw["parser_version"]), "ULIF lacks checked provenance")
-            require(nonempty(raw["retrieved_at"]) and hex_digest(raw["content_sha256"]) and
-                    nonempty(raw["raw_response_ref"]), "Missing ULIF provenance")
+            require(
+                type(raw["homonym_checked"]) is int
+                and raw["homonym_checked"] == 1
+                and raw["status"] == "ok"
+                and nonempty(raw["parser_version"]),
+                "ULIF lacks checked provenance",
+            )
+            require(
+                nonempty(raw["retrieved_at"])
+                and hex_digest(raw["content_sha256"])
+                and nonempty(raw["raw_response_ref"]),
+                "Missing ULIF provenance",
+            )
         if record["source_id"] == "ukrainian_word_stress":
-            require(record["lineage_status"] == "unknown" and nonempty(record["lineage_basis"]),
-                    "Preserve unknown lineage explicitly")
+            require(
+                record["lineage_status"] == "unknown" and nonempty(record["lineage_basis"]),
+                "Preserve unknown lineage explicitly",
+            )
         evidence = aliases(record, records)
         if record["table"] in {"enrichment", "ulif_dictua_sections"}:
             tuple_keys.append(evidence[0]["key"])
-    require(len(set(tuple_keys)) == len(tuple_keys), "Duplicate intrinsic tuple or digest collision; allocation ambiguous")
+    require(
+        len(set(tuple_keys)) == len(tuple_keys), "Duplicate intrinsic tuple or digest collision; allocation ambiguous"
+    )
     for unit in units:
-        require(nonempty(unit["unit_key"]) and unit["entry_type"] in {"lexeme_candidate", "mwe_candidate"},
-                "Unknown candidate kind")
-        require(all(nonempty(unit[k]) for k in ("counting_basis", "cefr_basis", "atlas_mapping_basis")),
-                "Missing partition or mapping basis")
+        require(
+            nonempty(unit["unit_key"]) and unit["entry_type"] in {"lexeme_candidate", "mwe_candidate"},
+            "Unknown candidate kind",
+        )
+        require(
+            all(nonempty(unit[k]) for k in ("counting_basis", "cefr_basis", "atlas_mapping_basis")),
+            "Missing partition or mapping basis",
+        )
         require(unit["supplementary_correspondence"] == "unresolved", "No cross-source matching in foundation")
-        require(isinstance(unit["source_record_keys"], list) and
-                unit["anchor_locator"] in unit["source_record_keys"]
-                and set(unit["source_record_keys"]) <= set(locators), "Missing source reference")
+        require(
+            isinstance(unit["source_record_keys"], list)
+            and unit["anchor_locator"] in unit["source_record_keys"]
+            and set(unit["source_record_keys"]) <= set(locators),
+            "Missing source reference",
+        )
         require(unit["atlas_slug"] is None or nonempty(unit["atlas_slug"]), "Invalid legacy mapping")
     require(set(locators) == set().union(*(set(u["source_record_keys"]) for u in units)), "Unreferenced source record")
-    counts = {"units": len(units), "source_records": len(records),
-              "atlas_articles": len({u["atlas_slug"] for u in units if u["atlas_slug"]})}
-    require(counts == selection["denominator"] and all(type(v) is int for v in selection["denominator"].values())
-            and counts["units"] == 150, "Pilot denominator drift; require exactly 150 admitted units")
+    counts = {
+        "units": len(units),
+        "source_records": len(records),
+        "atlas_articles": len({u["atlas_slug"] for u in units if u["atlas_slug"]}),
+    }
+    require(
+        counts == selection["denominator"]
+        and all(type(v) is int for v in selection["denominator"].values())
+        and counts["units"] == 150,
+        "Pilot denominator drift; require exactly 150 admitted units",
+    )
     return counts
 
 
 def admission_check(receipt, counts, selection_hash):
-    fields(receipt, {"admission", "candidate_sha256", "review_report_sha256", "review_family",
-                     "author_seat_distinct", "denominator"}, ADMISSION_FIELDS)
-    require(receipt["admission"] == "APPROVE" and receipt["candidate_sha256"] == selection_hash and
-            hex_digest(receipt["review_report_sha256"]), "Missing source admission")
-    require(receipt["author_seat_distinct"] is True and receipt["review_family"] == "google" and
-            receipt["denominator"] == counts and all(type(v) is int for v in receipt["denominator"].values()),
-            "Require independent source admission with exact denominators")
-    require(all(isinstance(v, str) for k, v in receipt.items() if k not in {"author_seat_distinct", "denominator"}),
-            "Invalid admission provenance types")
+    fields(
+        receipt,
+        {
+            "admission",
+            "candidate_sha256",
+            "review_report_sha256",
+            "review_family",
+            "author_seat_distinct",
+            "denominator",
+        },
+        ADMISSION_FIELDS,
+    )
+    require(
+        receipt["admission"] == "APPROVE"
+        and receipt["candidate_sha256"] == selection_hash
+        and hex_digest(receipt["review_report_sha256"]),
+        "Missing source admission",
+    )
+    require(
+        receipt["author_seat_distinct"] is True
+        and receipt["review_family"] == "google"
+        and receipt["denominator"] == counts
+        and all(type(v) is int for v in receipt["denominator"].values()),
+        "Require independent source admission with exact denominators",
+    )
+    require(
+        all(isinstance(v, str) for k, v in receipt.items() if k not in {"author_seat_distinct", "denominator"}),
+        "Invalid admission provenance types",
+    )
 
 
 def creation_key(article):
     metadata = article["metadata"]
-    return {"spelling": unicodedata.normalize("NFC", strip_acute_stress(metadata["lemma"])),
-            "pos": article["coarse_pos"], "source_keys": [{"source_id": "atlas0",
-                             "key": "atlas0:slug:" + metadata["slug"]}]}
+    return {
+        "spelling": unicodedata.normalize("NFC", strip_acute_stress(metadata["lemma"])),
+        "pos": article["coarse_pos"],
+        "source_keys": [{"source_id": "atlas0", "key": "atlas0:slug:" + metadata["slug"]}],
+    }
 
 
 def legacy_capture(raw, legacy_aliases, selection, vesum):
@@ -409,12 +560,17 @@ def legacy_capture(raw, legacy_aliases, selection, vesum):
     expected = {"infinitive": "verb"}.get(expected, expected)
     proof = []
     if raw["entry_type"] == "lemma":
-        anchors = [r for r in selection["source_records"] if r["table"] == "ulif_dictua_entries" and
-                   r["locator"] in {u["anchor_locator"] for u in selection["units"] if u["atlas_slug"] == raw["slug"]}]
+        anchors = [
+            r
+            for r in selection["source_records"]
+            if r["table"] == "ulif_dictua_entries"
+            and r["locator"] in {u["anchor_locator"] for u in selection["units"] if u["atlas_slug"] == raw["slug"]}
+        ]
         binding = next((r for r in anchors if r["raw_row"]["id"] in POS_BINDINGS), None)
         if binding:
-            proof = rows(vesum, "forms_all",
-                         {"entry_id": POS_BINDINGS[binding["raw_row"]["id"]], "lemma": raw["lemma"]})
+            proof = rows(
+                vesum, "forms_all", {"entry_id": POS_BINDINGS[binding["raw_row"]["id"]], "lemma": raw["lemma"]}
+            )
         else:
             proof = rows(vesum, "forms_all", {"lemma": raw["lemma"]})
             proof = [r for r in proof if (":pron:" in r["tags"] if label == "pronoun" else r["pos"] == expected)]
@@ -422,60 +578,109 @@ def legacy_capture(raw, legacy_aliases, selection, vesum):
         expected = proof[0]["pos"]
         proof = sorted({canonical({k: r[k] for k in ("entry_id", "lemma", "pos", "tags")}) for r in proof})
         proof = [parse(r) for r in proof]
-    require(expected in set(_POS_MAP) - {"adjective", "adverb", "preposition", "numeral", "pronoun"},
-            "Unresolved source-backed coarse POS; no guessing")
-    return {"metadata": metadata, "coarse_pos": expected, "pos_evidence": proof,
-            "pos_review": {"anchor_locator": binding["locator"], "report_sha256": POS_REVIEW,
-                           "tools_sha256": POS_TOOLS} if raw["entry_type"] == "lemma" and binding else None,
-            "literal_row_sha256": digest(raw), "literal_row_fingerprint_basis": ROW_BASIS,
-            "metadata_sha256": digest(metadata), "aliases": sorted(legacy_aliases, key=canonical)}
+    require(
+        expected in set(_POS_MAP) - {"adjective", "adverb", "preposition", "numeral", "pronoun"},
+        "Unresolved source-backed coarse POS; no guessing",
+    )
+    return {
+        "metadata": metadata,
+        "coarse_pos": expected,
+        "pos_evidence": proof,
+        "pos_review": {"anchor_locator": binding["locator"], "report_sha256": POS_REVIEW, "tools_sha256": POS_TOOLS}
+        if raw["entry_type"] == "lemma" and binding
+        else None,
+        "literal_row_sha256": digest(raw),
+        "literal_row_fingerprint_basis": ROW_BASIS,
+        "metadata_sha256": digest(metadata),
+        "aliases": sorted(legacy_aliases, key=canonical),
+    }
 
 
 def manifest_check(manifest):
     fields(manifest, MANIFEST_FIELDS)
     require(manifest["schema_version"] == "atlas-word-card-foundation.v1", "Unsupported frozen manifest")
-    require(manifest["manifest_sha256"] == digest({k: v for k, v in manifest.items() if k != "manifest_sha256"}),
-            "Changed manifest bytes/content; restore admitted freeze")
-    require(manifest["rules_version"] == "rules-v1-draft" and manifest["normaliser_version"] == "norm-v1",
-            "Unapproved rules or normaliser version")
+    require(
+        manifest["manifest_sha256"] == digest({k: v for k, v in manifest.items() if k != "manifest_sha256"}),
+        "Changed manifest bytes/content; restore admitted freeze",
+    )
+    require(
+        manifest["rules_version"] == "rules-v1-draft" and manifest["normaliser_version"] == "norm-v1",
+        "Unapproved rules or normaliser version",
+    )
     register = yaml.safe_load(REGISTER.read_bytes())
     schema(register, "permissions-register.schema.json")
-    require(file_digest(REGISTER) == manifest["selection"]["source_register_sha256"],
-            "Register fingerprint mismatch; re-admit and re-freeze before reuse")
-    require(digest(manifest["selection"]) == manifest["selection_content_sha256"], "Selection content fingerprint mismatch")
+    require(
+        file_digest(REGISTER) == manifest["selection"]["source_register_sha256"],
+        "Register fingerprint mismatch; re-admit and re-freeze before reuse",
+    )
+    require(
+        digest(manifest["selection"]) == manifest["selection_content_sha256"], "Selection content fingerprint mismatch"
+    )
     original = (json.dumps(manifest["selection"], ensure_ascii=False, indent=2) + "\n").encode()
-    require(hashlib.sha256(original).hexdigest() == manifest["selection_file_sha256"], "Admitted selection bytes changed")
+    require(
+        hashlib.sha256(original).hexdigest() == manifest["selection_file_sha256"], "Admitted selection bytes changed"
+    )
     counts = selection_check(manifest["selection"], {s["id"] for s in register["sources"]})
     admission_check(manifest["admission"], counts, manifest["selection_file_sha256"])
     inventory = manifest["legacy_articles"]
-    require({a["metadata"]["slug"] for a in inventory} ==
-            {u["atlas_slug"] for u in manifest["selection"]["units"] if u["atlas_slug"]}, "Legacy inventory mismatch")
+    require(
+        {a["metadata"]["slug"] for a in inventory}
+        == {u["atlas_slug"] for u in manifest["selection"]["units"] if u["atlas_slug"]},
+        "Legacy inventory mismatch",
+    )
     require(len(inventory) == counts["atlas_articles"], "Duplicate legacy inventory")
     for article in inventory:
-        fields(article, {"metadata", "metadata_sha256", "coarse_pos", "pos_evidence", "pos_review",
-                         "literal_row_sha256", "literal_row_fingerprint_basis", "aliases"})
+        fields(
+            article,
+            {
+                "metadata",
+                "metadata_sha256",
+                "coarse_pos",
+                "pos_evidence",
+                "pos_review",
+                "literal_row_sha256",
+                "literal_row_fingerprint_basis",
+                "aliases",
+            },
+        )
         fields(article["metadata"], {"slug", "lemma", "entry_type", "pos"})
-        require(article["literal_row_fingerprint_basis"] == ROW_BASIS and hex_digest(article["literal_row_sha256"]),
-                "Invalid full literal legacy fingerprint")
+        require(
+            article["literal_row_fingerprint_basis"] == ROW_BASIS and hex_digest(article["literal_row_sha256"]),
+            "Invalid full literal legacy fingerprint",
+        )
         require(article["metadata_sha256"] == digest(article["metadata"]), "Changed legacy metadata projection")
-        require(nonempty(article["coarse_pos"]) and
-                all(p["pos"] == article["coarse_pos"] and p["lemma"] == article["metadata"]["lemma"]
-                    for p in article["pos_evidence"]), "Inconsistent POS evidence")
-        require(all(a["target_slug"] == article["metadata"]["slug"] for a in article["aliases"]),
-                "Alias target outside inventory")
+        require(
+            nonempty(article["coarse_pos"])
+            and all(
+                p["pos"] == article["coarse_pos"] and p["lemma"] == article["metadata"]["lemma"]
+                for p in article["pos_evidence"]
+            ),
+            "Inconsistent POS evidence",
+        )
+        require(
+            all(a["target_slug"] == article["metadata"]["slug"] for a in article["aliases"]),
+            "Alias target outside inventory",
+        )
         require(len({canonical(a) for a in article["aliases"]}) == len(article["aliases"]), "Duplicate legacy aliases")
-    require(manifest["counts"] == counts | {"legacy_alias_rows": sum(len(a["aliases"]) for a in inventory)} and
-            all(type(v) is int for v in manifest["counts"].values()), "Incorrect separate denominators")
+    require(
+        manifest["counts"] == counts | {"legacy_alias_rows": sum(len(a["aliases"]) for a in inventory)}
+        and all(type(v) is int for v in manifest["counts"].values()),
+        "Incorrect separate denominators",
+    )
     for key in ("database_file_sha256", "database_wal_sha256"):
         fields(manifest[key], {"sources", "atlas", "vesum"})
-        require(all(hex_digest(h) or (key == "database_wal_sha256" and h is None) for h in manifest[key].values()),
-                "Missing frozen DB/WAL file fingerprints")
+        require(
+            all(hex_digest(h) or (key == "database_wal_sha256" and h is None) for h in manifest[key].values()),
+            "Missing frozen DB/WAL file fingerprints",
+        )
     return counts
 
 
 def output_check(output, inputs):
-    require(output.resolve() not in {p.resolve() for p in inputs if p is not None},
-            "Output must be separate from every input/source/heldout file")
+    require(
+        output.resolve() not in {p.resolve() for p in inputs if p is not None},
+        "Output must be separate from every input/source/heldout file",
+    )
 
 
 def freeze(args):
@@ -483,39 +688,68 @@ def freeze(args):
     receipts = list(args.selection.parent.glob("*source-admission-receipt.json"))
     require(len(receipts) == 1, "Place one driver source-admission-receipt.json beside selection")
     receipt = load(receipts[0])
-    require(file_digest(Path(receipt["review_report_path"])) == receipt["review_report_sha256"],
-            "Admission report fingerprint mismatch")
+    require(
+        file_digest(Path(receipt["review_report_path"])) == receipt["review_report_sha256"],
+        "Admission report fingerprint mismatch",
+    )
     register = yaml.safe_load(args.source_register.read_bytes())
     schema(register, "permissions-register.schema.json")
-    require(file_digest(args.source_register) == selection["source_register_sha256"], "Source register fingerprint mismatch")
+    require(
+        file_digest(args.source_register) == selection["source_register_sha256"], "Source register fingerprint mismatch"
+    )
     counts = selection_check(selection, {s["id"] for s in register["sources"]})
     admission = {k: receipt[k] for k in sorted(ADMISSION_FIELDS) if k in receipt}
     admission_check(admission, counts, file_digest(args.selection))
     isolation([selection, receipt, register], None, ("receipt", "register"))
     databases = {n: getattr(args, n + "_db") for n in ("sources", "atlas", "vesum")}
     sidecars = [Path(str(p) + suffix) for p in databases.values() for suffix in ("-wal", "-shm")]
-    output_check(args.output, [*databases.values(), *sidecars, args.selection, args.source_register, receipts[0],
-                              Path(receipt["review_report_path"]), args.heldout_manifest])
+    output_check(
+        args.output,
+        [
+            *databases.values(),
+            *sidecars,
+            args.selection,
+            args.source_register,
+            receipts[0],
+            Path(receipt["review_report_path"]),
+            args.heldout_manifest,
+        ],
+    )
     before = fingerprints(databases)
     inventory = []
     with ExitStack() as stack:
         connections = {n: readonly(stack, p) for n, p in databases.items()}
         for record in selection["source_records"]:
             actual = rows(connections[record.get("database", "sources")], record["table"], record["row_key"])
-            require(actual == [record["raw_row"]] and [digest(row) for row in actual] == [record["content_sha256"]],
-                    "Selected literal row mismatch; stop and re-admit source version")
+            require(
+                actual == [record["raw_row"]] and [digest(row) for row in actual] == [record["content_sha256"]],
+                "Selected literal row mismatch; stop and re-admit source version",
+            )
         for slug in sorted({u["atlas_slug"] for u in selection["units"] if u["atlas_slug"]}):
             articles = rows(connections["atlas"], "articles", {"slug": slug})
             require(len(articles) == 1, "Missing or duplicate legacy article; no invented mappings")
-            inventory.append(legacy_capture(articles[0], rows(connections["atlas"], "aliases", {"target_slug": slug}),
-                                            selection, connections["vesum"]))
+            inventory.append(
+                legacy_capture(
+                    articles[0],
+                    rows(connections["atlas"], "aliases", {"target_slug": slug}),
+                    selection,
+                    connections["vesum"],
+                )
+            )
     require(before == fingerprints(databases), "Source file/WAL mutation detected; no freeze written")
-    manifest = {"schema_version": "atlas-word-card-foundation.v1", "selection": selection,
-                "selection_file_sha256": file_digest(args.selection), "selection_content_sha256": digest(selection),
-                "admission": admission, "database_file_sha256": before[0], "database_wal_sha256": before[1],
-                "rules_version": args.rules_version, "normaliser_version": args.normaliser_version,
-                "counts": counts | {"legacy_alias_rows": sum(len(a["aliases"]) for a in inventory)},
-                "legacy_articles": inventory}
+    manifest = {
+        "schema_version": "atlas-word-card-foundation.v1",
+        "selection": selection,
+        "selection_file_sha256": file_digest(args.selection),
+        "selection_content_sha256": digest(selection),
+        "admission": admission,
+        "database_file_sha256": before[0],
+        "database_wal_sha256": before[1],
+        "rules_version": args.rules_version,
+        "normaliser_version": args.normaliser_version,
+        "counts": counts | {"legacy_alias_rows": sum(len(a["aliases"]) for a in inventory)},
+        "legacy_articles": inventory,
+    }
     manifest["manifest_sha256"] = digest(manifest)
     manifest_check(manifest)
     isolation([manifest, receipt, register], args.heldout_manifest, ("receipt", "register"))
@@ -534,41 +768,57 @@ def registry_check(registry):
     for entry in registry["entries"]:
         errors = validator.descend(entry["key_at_creation"], card_schema["properties"]["key_at_creation"])
         require(not next(errors, None), "Invalid card key_at_creation")
-    identities = [e["card_id"] for e in registry["entries"]] + [r["source_record_id"] for r in registry["source_records"]]
+    identities = [e["card_id"] for e in registry["entries"]] + [
+        r["source_record_id"] for r in registry["source_records"]
+    ]
     identities += [s["sense_id"] for e in registry["entries"] for s in e["senses"]]
     require(len(identities) == len(set(identities)), "Reused identity; restore prior registry")
     ids = set(identities)
     require(len({e["event_id"] for e in registry["events"]}) == len(registry["events"]), "Duplicate history event")
     minted = []
     for event in registry["events"]:
-        require(set(event.get("cards", []) + event.get("from", []) + event.get("to", [])) <= ids,
-                "History references missing identity")
+        require(
+            set(event.get("cards", []) + event.get("from", []) + event.get("to", [])) <= ids,
+            "History references missing identity",
+        )
         if event["kind"] in {"mint", "sense_mint", "source_record_mint"}:
             targets = event.get("cards", []) if event["kind"] == "mint" else event.get("to", [])
-            require(len(targets) == 1 and nonempty(event["evidence"]) and nonempty(event["build_id"]),
-                    "Inconsistent mint history")
+            require(
+                len(targets) == 1 and nonempty(event["evidence"]) and nonempty(event["build_id"]),
+                "Inconsistent mint history",
+            )
             prefix = {"mint": "wc_", "sense_mint": "ws_", "source_record_mint": "sr_"}[event["kind"]]
             require(targets[0].startswith(prefix), "Wrong mint identity type")
             minted.extend(targets)
     require(len(minted) == len(ids) and set(minted) == ids, "Missing or duplicate mint history")
-    graph = {e["card_id"]: e.get("split_into", []) + ([e["merged_into"]] if "merged_into" in e else [])
-             for e in registry["entries"]}
+    graph = {
+        e["card_id"]: e.get("split_into", []) + ([e["merged_into"]] if "merged_into" in e else [])
+        for e in registry["entries"]
+    }
+
     def acyclic(node, trail):
         require(node in ids and node not in trail, "Missing or cyclic identity reference")
         for target in graph.get(node, []):
             acyclic(target, trail | {node})
+
     for node in graph:
         acyclic(node, set())
-    require(len({canonical(e["key_at_creation"]) for e in registry["entries"]}) == len(registry["entries"]),
-            "Duplicate creation key allocated twice")
+    require(
+        len({canonical(e["key_at_creation"]) for e in registry["entries"]}) == len(registry["entries"]),
+        "Duplicate creation key allocated twice",
+    )
     observations = []
     for record in registry["source_records"]:
         require(len({canonical(a) for a in record["aliases"]}) == len(record["aliases"]), "Duplicate alias history")
-        require(len({c["snapshot_id"] for c in record["correspondence"]}) == len(record["correspondence"]),
-                "Duplicate correspondence history")
+        require(
+            len({c["snapshot_id"] for c in record["correspondence"]}) == len(record["correspondence"]),
+            "Duplicate correspondence history",
+        )
         for c in record["correspondence"]:
-            require(any(a["snapshot_id"] == c["snapshot_id"] for a in record["aliases"]),
-                    "Correspondence has no observed aliases")
+            require(
+                any(a["snapshot_id"] == c["snapshot_id"] for a in record["aliases"]),
+                "Correspondence has no observed aliases",
+            )
             if c["status"] == "unique":
                 observations.append((record["source_id"], c["snapshot_id"], c["locator"]))
     require(len(set(observations)) == len(observations), "Source row allocated twice")
@@ -577,14 +827,21 @@ def registry_check(registry):
 def allocation_check(manifest, registry, complete=True):
     registry_check(registry)
     build = "pilot@sha256:" + manifest["manifest_sha256"]
-    require(not registry["events"] or any(e["build_id"] == build for e in registry["events"]),
-            "New or changed snapshot requires correspondence; no allocation")
+    require(
+        not registry["events"] or any(e["build_id"] == build for e in registry["events"]),
+        "New or changed snapshot requires correspondence; no allocation",
+    )
     cards, sources = [], []
+
     def bound(identity, kind, evidence):
-        events = [e for e in registry["events"] if e["kind"] == kind and
-                  identity in e.get("cards", []) + e.get("to", [])]
-        require(len(events) == 1 and events[0]["evidence"] == evidence and events[0]["build_id"] == build,
-                "Identity differs from original mint evidence/build/type")
+        events = [
+            e for e in registry["events"] if e["kind"] == kind and identity in e.get("cards", []) + e.get("to", [])
+        ]
+        require(
+            len(events) == 1 and events[0]["evidence"] == evidence and events[0]["build_id"] == build,
+            "Identity differs from original mint evidence/build/type",
+        )
+
     for article in manifest["legacy_articles"]:
         key = "atlas0:slug:" + article["metadata"]["slug"]
         matches = [e for e in registry["entries"] if key in source_keys(e)]
@@ -599,25 +856,48 @@ def allocation_check(manifest, registry, complete=True):
     records = manifest["selection"]["source_records"]
     snapshots, expected = {r["snapshot_id"] for r in records}, {}
     for record in records:
-        matches = [r for r in registry["source_records"] if r["source_id"] == record["source_id"] and
-                   any(c.get("locator") == record["locator"] and c["snapshot_id"] == record["snapshot_id"] and
-                       c["status"] == "unique" for c in r["correspondence"])]
+        matches = [
+            r
+            for r in registry["source_records"]
+            if r["source_id"] == record["source_id"]
+            and any(
+                c.get("locator") == record["locator"]
+                and c["snapshot_id"] == record["snapshot_id"]
+                and c["status"] == "unique"
+                for c in r["correspondence"]
+            )
+        ]
         require(len(matches) <= 1, "Source row has multiple allocations")
         if matches:
             expected[matches[0]["source_record_id"]] = aliases(record, records)
-            require(all(a in matches[0]["aliases"] for a in expected[matches[0]["source_record_id"]]),
-                    "Inconsistent source alias history")
+            require(
+                all(a in matches[0]["aliases"] for a in expected[matches[0]["source_record_id"]]),
+                "Inconsistent source alias history",
+            )
             bound(matches[0]["source_record_id"], "source_record_mint", record["locator"])
             sources.append(matches[0]["source_record_id"])
     # Aliases under this freeze's snapshots must be exactly the bound row's; other snapshots are retained history.
-    require(all(a in expected.get(r["source_record_id"], []) for r in registry["source_records"]
-                for a in r["aliases"] if a["snapshot_id"] in snapshots), "Frozen-snapshot alias differs from its bound row")
-    minted = {i for e in registry["events"] if e["build_id"] == build and e["kind"] in {"mint", "sense_mint", "source_record_mint"}
-              for i in e.get("cards", []) + e.get("to", [])}
+    require(
+        all(
+            a in expected.get(r["source_record_id"], [])
+            for r in registry["source_records"]
+            for a in r["aliases"]
+            if a["snapshot_id"] in snapshots
+        ),
+        "Frozen-snapshot alias differs from its bound row",
+    )
+    minted = {
+        i
+        for e in registry["events"]
+        if e["build_id"] == build and e["kind"] in {"mint", "sense_mint", "source_record_mint"}
+        for i in e.get("cards", []) + e.get("to", [])
+    }
     require(minted <= set(cards + sources), "Allocation history exceeds frozen pilot inventory")
-    require((len(cards) == manifest["counts"]["atlas_articles"] and
-             len(sources) == manifest["counts"]["source_records"]) or not (complete or registry["events"]),
-            "Partial allocation; restore atomic prior registry")
+    require(
+        (len(cards) == manifest["counts"]["atlas_articles"] and len(sources) == manifest["counts"]["source_records"])
+        or not (complete or registry["events"]),
+        "Partial allocation; restore atomic prior registry",
+    )
     return cards, sources
 
 
@@ -635,34 +915,68 @@ def locked(output):
 def allocate(args, manifest):
     output_check(args.registry, [args.manifest, args.heldout_manifest])
     with locked(args.registry):
-        registry = load(args.registry) if args.registry.exists() else {
-            "schema_version": "1", "registry_version": 1, "entries": [], "source_records": [], "events": []}
+        registry = (
+            load(args.registry)
+            if args.registry.exists()
+            else {"schema_version": "1", "registry_version": 1, "entries": [], "source_records": [], "events": []}
+        )
         isolation([manifest, registry], args.heldout_manifest, ("registry",))
         cards, sources = allocation_check(manifest, registry, False)
         build = "pilot@sha256:" + manifest["manifest_sha256"]
-        occupied = {e["card_id"] for e in registry["entries"]} | {r["source_record_id"] for r in registry["source_records"]}
+        occupied = {e["card_id"] for e in registry["entries"]} | {
+            r["source_record_id"] for r in registry["source_records"]
+        }
+
         def mint(prefix):
             identity = prefix + "".join(secrets.choice(ALPHABET) for _ in range(12))
             require(identity not in occupied, "Random identifier reuse; allocation refused without write")
             occupied.add(identity)
             return identity
+
         def event(kind, identity, evidence):
             number = max([int(e["event_id"][3:]) for e in registry["events"]], default=0) + 1
-            registry["events"].append({"event_id": f"ie_{number:04d}", "kind": kind, "build_id": build,
-                                       "cards" if kind == "mint" else "to": [identity], "evidence": evidence})
+            registry["events"].append(
+                {
+                    "event_id": f"ie_{number:04d}",
+                    "kind": kind,
+                    "build_id": build,
+                    "cards" if kind == "mint" else "to": [identity],
+                    "evidence": evidence,
+                }
+            )
+
         if not cards and not sources:
             for article in manifest["legacy_articles"]:
                 identity = mint("wc_")
-                registry["entries"].append({"card_id": identity,
-                    "card_kind": "mwe" if article["metadata"]["entry_type"] != "lemma" else "lexeme",
-                    "state": "active", "key_at_creation": creation_key(article), "created_in_build": build, "senses": []})
+                registry["entries"].append(
+                    {
+                        "card_id": identity,
+                        "card_kind": "mwe" if article["metadata"]["entry_type"] != "lemma" else "lexeme",
+                        "state": "active",
+                        "key_at_creation": creation_key(article),
+                        "created_in_build": build,
+                        "senses": [],
+                    }
+                )
                 event("mint", identity, "atlas0:slug:" + article["metadata"]["slug"])
             records = manifest["selection"]["source_records"]
             for record in records:
                 identity = mint("sr_")
-                registry["source_records"].append({"source_record_id": identity, "source_id": record["source_id"],
-                    "aliases": aliases(record, records), "correspondence": [{"snapshot_id": record["snapshot_id"],
-                        "status": "unique", "locator": record["locator"], "matched_by": "direct observation in initial snapshot"}]})
+                registry["source_records"].append(
+                    {
+                        "source_record_id": identity,
+                        "source_id": record["source_id"],
+                        "aliases": aliases(record, records),
+                        "correspondence": [
+                            {
+                                "snapshot_id": record["snapshot_id"],
+                                "status": "unique",
+                                "locator": record["locator"],
+                                "matched_by": "direct observation in initial snapshot",
+                            }
+                        ],
+                    }
+                )
                 event("source_record_mint", identity, record["locator"])
             registry["registry_version"] += int(args.registry.exists())
             allocation_check(manifest, registry)
@@ -682,45 +996,110 @@ def main(argv=None):
     )
     parser = argparse.ArgumentParser(
         description="Freeze admitted pilot inputs and allocate persistent identities; preparation only.",
-        epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
+        epilog=epilog,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     commands = parser.add_subparsers(dest="operation", required=True)
     for operation in ("freeze", "allocate", "verify"):
-        command = commands.add_parser(operation,
+        command = commands.add_parser(
+            operation,
             description=f"{operation.title()} pilot foundation inputs; normal data/source refusals exit 1.",
-            epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
-        names = ("selection", "sources-db", "atlas-db", "vesum-db", "source-register", "rules-version",
-                 "normaliser-version", "output") if operation == "freeze" else ("manifest", "registry")
+            epilog=epilog,
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+        )
+        names = (
+            (
+                "selection",
+                "sources-db",
+                "atlas-db",
+                "vesum-db",
+                "source-register",
+                "rules-version",
+                "normaliser-version",
+                "output",
+            )
+            if operation == "freeze"
+            else ("manifest", "registry")
+        )
         for name in names:
-            detail = "VERSION (rules-v1-draft or norm-v1)" if name.endswith("version") else "FILE (explicit path, no default)"
-            command.add_argument("--" + name, required=True, type=str if name.endswith("version") else Path,
-                help=f"{name}: {detail}; selection needs a sibling *source-admission-receipt.json with report hash/path")
-        command.add_argument("--heldout-manifest", type=Path,
-            help='Optional membership JSON {"heldout":["source:key"],"replay":[]}; default absent means isolation unverified')
+            detail = (
+                "VERSION (rules-v1-draft or norm-v1)"
+                if name.endswith("version")
+                else "FILE (explicit path, no default)"
+            )
+            command.add_argument(
+                "--" + name,
+                required=True,
+                type=str if name.endswith("version") else Path,
+                help=f"{name}: {detail}; selection needs a sibling *source-admission-receipt.json with report hash/path",
+            )
+        command.add_argument(
+            "--heldout-manifest",
+            type=Path,
+            help='Optional membership JSON {"heldout":["source:key"],"replay":[]}; default absent means isolation unverified',
+        )
         if operation == "verify":
-            command.add_argument("--for-evaluation", action="store_true",
-                help="Request evaluation admission (default false); refused pending authenticated operator authority and thresholds")
+            command.add_argument(
+                "--for-evaluation",
+                action="store_true",
+                help="Request evaluation admission (default false); refused pending authenticated operator authority and thresholds",
+            )
     args = parser.parse_args(argv)
     try:
         manifest = freeze(args) if args.operation == "freeze" else load(args.manifest)
         manifest_check(manifest)
-        registry = allocate(args, manifest) if args.operation == "allocate" else (
-            load(args.registry) if args.operation == "verify" else None)
+        registry = (
+            allocate(args, manifest)
+            if args.operation == "allocate"
+            else (load(args.registry) if args.operation == "verify" else None)
+        )
         if args.operation == "verify":
             allocation_check(manifest, registry)
-            require(not args.for_evaluation, "Evaluation refused: authenticated operator authority/signature and "
-                    "acceptance thresholds are not established; Gate 2 remains open")
+            require(
+                not args.for_evaluation,
+                "Evaluation refused: authenticated operator authority/signature and "
+                "acceptance thresholds are not established; Gate 2 remains open",
+            )
         checked = isolation([manifest, registry], args.heldout_manifest, ("registry",))
         unresolved = [u["unit_key"] for u in manifest["selection"]["units"] if not u["atlas_slug"]]
         # Only this build's identities are verified; other builds' events are retained, unverified history.
-        foreign = None if registry is None else sum(
-            e["build_id"] != "pilot@sha256:" + manifest["manifest_sha256"] for e in registry["events"])
-        print(json.dumps({"operation": args.operation, "counts": manifest["counts"], "foreign_build_events": foreign,
-                          "unresolved_card_mappings": unresolved, "supplementary_correspondence": "unresolved",
-                          "heldout_isolation": checked, "evaluation_readiness": "unknown"}, ensure_ascii=False, sort_keys=True))
+        foreign = (
+            None
+            if registry is None
+            else sum(e["build_id"] != "pilot@sha256:" + manifest["manifest_sha256"] for e in registry["events"])
+        )
+        print(
+            json.dumps(
+                {
+                    "operation": args.operation,
+                    "counts": manifest["counts"],
+                    "foreign_build_events": foreign,
+                    "unresolved_card_mappings": unresolved,
+                    "supplementary_correspondence": "unresolved",
+                    "heldout_isolation": checked,
+                    "evaluation_readiness": "unknown",
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+        )
         return 0
-    except (ValueError, KeyError, TypeError, OSError, sqlite3.Error, AttributeError, IndexError,
-            RecursionError, yaml.YAMLError) as error:
-        message = str(error) if isinstance(error, Refusal) else "Invalid or inaccessible input; check schema and readable sources"
+    except (
+        ValueError,
+        KeyError,
+        TypeError,
+        OSError,
+        sqlite3.Error,
+        AttributeError,
+        IndexError,
+        RecursionError,
+        yaml.YAMLError,
+    ) as error:
+        message = (
+            str(error)
+            if isinstance(error, Refusal)
+            else "Invalid or inaccessible input; check schema and readable sources"
+        )
         print("REFUSED: " + message, file=sys.stderr)
         return 1
 

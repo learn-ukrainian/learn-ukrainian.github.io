@@ -19,6 +19,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.generate_mdx.reading_links import normalize_work_title
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.readings.primary_text_demand import DEFAULT_PLANS_DIR, build_manifest
 from scripts.readings.rights_classifier import normalize_author, normalize_token
 
@@ -96,9 +97,8 @@ class _PreparedSection:
 def load_sections(db_path: Path) -> list[Section]:
     """Load textbook_sections rows from a read-only SQLite connection."""
 
-    uri = f"{db_path.resolve().as_uri()}?mode=ro"
     try:
-        with sqlite3.connect(uri, uri=True) as conn:
+        with _open_readonly(db_path.resolve()) as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute(
                 """
@@ -173,9 +173,7 @@ def _lookup_prepared(
         if work_match is None:
             continue
 
-        author_match = bool(
-            normalized_author and normalized_author in prepared.normalized_title
-        )
+        author_match = bool(normalized_author and normalized_author in prepared.normalized_title)
         confidence = _hit_confidence(work_match, author_match)
         hit: CurationHit = {
             "source_file": section.source_file,
@@ -203,13 +201,7 @@ def _lookup_prepared(
     return {
         "in_school_canon": bool(canon_hits),
         "confidence": ranked_hits[0][0] if ranked_hits else 0.0,
-        "grades": sorted(
-            {
-                hit["grade"]
-                for _, hit in canon_hits
-                if hit["grade"] is not None
-            }
-        ),
+        "grades": sorted({hit["grade"] for _, hit in canon_hits if hit["grade"] is not None}),
         "hit_count": len(hits),
         "best_hit": best_hit,
         "excerpt_boundary": _excerpt_boundary(best_hit),
@@ -238,20 +230,15 @@ def build_curation_manifest(
             {
                 "work": work,
                 "author": author,
-                "normalized_key": entry.get("normalized_key")
-                or _normalized_key(work, author),
+                "normalized_key": entry.get("normalized_key") or _normalized_key(work, author),
                 "curation": curation,
             }
         )
 
     summary = {
         "total_works": len(entries),
-        "in_canon_count": sum(
-            1 for entry in entries if entry["curation"]["in_school_canon"]
-        ),
-        "high_confidence_count": sum(
-            1 for entry in entries if entry["curation"]["confidence"] >= 1.0
-        ),
+        "in_canon_count": sum(1 for entry in entries if entry["curation"]["in_school_canon"]),
+        "high_confidence_count": sum(1 for entry in entries if entry["curation"]["confidence"] >= 1.0),
         "no_hit_count": sum(1 for entry in entries if entry["curation"]["hit_count"] == 0),
     }
     return {"summary": summary, "entries": entries}
@@ -353,11 +340,7 @@ def _hit_confidence(work_match: WorkMatch, author_match: bool) -> float:
 def _excerpt_boundary(hit: CurationHit | None) -> ExcerptBoundary | None:
     if hit is None:
         return None
-    if (
-        hit["page_start"] is None
-        and hit["page_end"] is None
-        and hit["full_text_chars"] <= 0
-    ):
+    if hit["page_start"] is None and hit["page_end"] is None and hit["full_text_chars"] <= 0:
         return None
     return {
         "page_start": hit["page_start"],
@@ -388,8 +371,7 @@ def _prepare_section(section: Section) -> _PreparedSection:
         section=section,
         normalized_title=normalize_token(clean_title),
         guillemet_tokens=frozenset(
-            normalize_work_title(match.group("title"))
-            for match in GUILLEMET_RE.finditer(clean_title)
+            normalize_work_title(match.group("title")) for match in GUILLEMET_RE.finditer(clean_title)
         ),
     )
 

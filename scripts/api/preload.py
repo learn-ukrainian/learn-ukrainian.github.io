@@ -34,7 +34,6 @@ PRELOAD_MODULES = [
     "scripts.api.fleet_workers_sanitize",
     "scripts.api.fleet_workers_collect",
     "scripts.api.fleet_workers_router",
-    "sqlite3",
     "scripts.api.review_parsing",
     "scripts.orchestration",
     "audit.config",

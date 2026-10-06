@@ -34,6 +34,7 @@ from scripts.audit.llm_qg_store import db_path as configured_qg_db_path
 from scripts.audit.module_quality_audit import PlannedModule, audit_one_module
 from scripts.audit.wiki_completeness_gate import check_wiki_completeness
 from scripts.build import linear_pipeline
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.orchestration.preparation_evidence import RegistryValidationError, load_manual_evidence
 from scripts.validate import check_discovery_integrity, check_wiki_subject, lint_seminar_quality
 from scripts.wiki.domains import resolve_write_domain
@@ -116,7 +117,7 @@ def _read_current_qg(db_path: Path, track: str, slug: str, module_dir: Path) -> 
             "detail": "QG store is unavailable",
         }
     try:
-        connection = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        connection = _open_readonly(db_path)
         try:
             row = connection.execute(
                 """

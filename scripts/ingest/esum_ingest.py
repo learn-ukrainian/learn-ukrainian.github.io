@@ -33,10 +33,13 @@ from collections.abc import Iterable
 from functools import lru_cache
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_INPUT = REPO / "data" / "raw" / "esum" / "vol1.txt"
 DEFAULT_OUTPUT = REPO / "data" / "processed" / "esum_vol1.jsonl"
-_VESUM_CONN: sqlite3.Connection | None = None
+_VESUM_CONN: SQLiteConnection | None = None
 _VESUM_CONN_UNAVAILABLE = False
 _VESUM_LEMMAS: frozenset[str] | None = None
 CYRILLIC_WORD = r"[а-яґіїєА-ЯҐІЇЄ'’]"
@@ -229,7 +232,7 @@ def _vesum_db_path() -> Path:
     return REPO / "data" / "vesum.db"
 
 
-def _vesum_conn() -> sqlite3.Connection | None:
+def _vesum_conn() -> SQLiteConnection | None:
     global _VESUM_CONN, _VESUM_CONN_UNAVAILABLE
     if _VESUM_CONN_UNAVAILABLE:
         return None
@@ -240,7 +243,7 @@ def _vesum_conn() -> sqlite3.Connection | None:
         _VESUM_CONN_UNAVAILABLE = True
         return None
     try:
-        _VESUM_CONN = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True)
+        _VESUM_CONN = _open_readonly(db_path.resolve())
     except sqlite3.Error:
         _VESUM_CONN_UNAVAILABLE = True
         return None
@@ -257,9 +260,7 @@ def _vesum_lemmas() -> frozenset[str]:
         return _VESUM_LEMMAS
     try:
         _VESUM_LEMMAS = frozenset(
-            _lemma_lookup_key(row[0])
-            for row in conn.execute("SELECT DISTINCT lemma FROM forms")
-            if row[0]
+            _lemma_lookup_key(row[0]) for row in conn.execute("SELECT DISTINCT lemma FROM forms") if row[0]
         )
     except sqlite3.Error:
         _VESUM_LEMMAS = frozenset()
@@ -394,9 +395,7 @@ def _clean_lines(lines: Iterable[str], source_format: str = "djvutxt") -> list[t
             # In text-pdf, if a line starts with [ (pipe), it's likely a new entry.
             # Don't merge it into the previous carry, unless it's a hyphenated fragment.
             starts_bracket_entry = (
-                source_format == "text-pdf"
-                and line.startswith("[")
-                and not line.split()[0].rstrip("[").endswith("-")
+                source_format == "text-pdf" and line.startswith("[") and not line.split()[0].rstrip("[").endswith("-")
             )
             starts_plain_entry = (
                 source_format == "text-pdf"

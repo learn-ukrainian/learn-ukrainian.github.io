@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import hashlib
 import json
-import sqlite3
 from pathlib import Path
 from typing import Any
 
 from scripts.lexicon.runner.contracts import canonical_json
 from scripts.lexicon.runner.side_db import KaikkiSideDb
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 
 def enrich_chunk_payload(payload: dict[str, Any]) -> dict[str, str]:
@@ -31,7 +31,7 @@ def enrich_chunk_payload(payload: dict[str, Any]) -> dict[str, str]:
         raise ValueError("entries_path must contain a JSON list")
 
     sources_path = Path(str(payload["sources_db"]))
-    conn = sqlite3.connect(f"file:{sources_path.resolve().as_posix()}?mode=ro", uri=True)
+    conn = _open_readonly(sources_path.resolve())
     try:
         sealed_cefr = load_sealed_cefr_map(Path(str(payload["cefr_seal_db"])))
         apply_sealed_cefr_to_engine_cache(sealed_cefr, em._CEFR_ESTIMATE_LEVEL_BY_KEY)
@@ -52,11 +52,7 @@ def enrich_chunk_payload(payload: dict[str, Any]) -> dict[str, str]:
         if dmk_path:
             dmk = DmklingerSideDb(Path(str(dmk_path)))
             em._install_dmklinger_side_db(dmk)
-        kaikki = (
-            KaikkiSideDb(Path(str(kaikki_path))).as_mapping_proxy()
-            if kaikki_path
-            else em._load_kaikki_lookup()
-        )
+        kaikki = KaikkiSideDb(Path(str(kaikki_path))).as_mapping_proxy() if kaikki_path else em._load_kaikki_lookup()
 
         out_dir = Path(str(payload["artifact_dir"]))
         out_dir.mkdir(parents=True, exist_ok=True)

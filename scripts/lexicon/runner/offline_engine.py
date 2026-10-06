@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import sqlite3
 from pathlib import Path
 from typing import Any
 
@@ -43,6 +42,7 @@ from scripts.lexicon.runner.stream_manifest import (
     stream_manifest_entries_sqlite,
 )
 from scripts.lexicon.runner.worker import run_capped_worker
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 
 def enrich_offline_slice(
@@ -80,7 +80,7 @@ def enrich_offline_slice(
     staged = stage_manifest_to_sqlite(manifest_path, work_dir / "staged_manifest.sqlite")
     entries = list(stream_manifest_entries_sqlite(Path(staged["path"])))
 
-    sources = sqlite3.connect(f"file:{sources_db.resolve().as_posix()}?mode=ro", uri=True)
+    sources = _open_readonly(sources_db.resolve())
     try:
         balla_art = build_balla_reverse_side_db(
             sources,
@@ -262,9 +262,7 @@ def enrich_offline_slice(
                 for lemma_id in chunk.lemma_ids:
                     artifact_file = artifacts_root / chunk.chunk_id / f"{lemma_id}.json"
                     if artifact_file.is_file():
-                        completed[lemma_id] = json.loads(
-                            artifact_file.read_text(encoding="utf-8")
-                        )
+                        completed[lemma_id] = json.loads(artifact_file.read_text(encoding="utf-8"))
 
         pending = list(chunks)
         processed_this_invocation = 0
@@ -328,9 +326,7 @@ def enrich_offline_slice(
 
                 arts = enrich_chunk_payload(payload)
                 for lemma_id, _digest in arts.items():
-                    completed[lemma_id] = json.loads(
-                        (artifact_dir / f"{lemma_id}.json").read_text(encoding="utf-8")
-                    )
+                    completed[lemma_id] = json.loads((artifact_dir / f"{lemma_id}.json").read_text(encoding="utf-8"))
                 result_hash = hashlib.sha256(
                     json.dumps(sorted(arts.items()), sort_keys=True).encode("utf-8")
                 ).hexdigest()

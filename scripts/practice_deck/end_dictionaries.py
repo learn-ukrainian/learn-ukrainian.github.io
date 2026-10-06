@@ -25,7 +25,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import sys
 import unicodedata
 from collections import Counter
@@ -37,6 +36,9 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.storage.artifacts import write_artifact
 
 DEFAULT_OUT_DIR = PROJECT_ROOT / "data" / "lexicon" / "textbook-end-dictionaries"
@@ -302,7 +304,7 @@ def classify_section_row(row: Mapping[str, Any]) -> EndDictionarySection | None:
 
 
 def enumerate_end_dictionary_sections(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
 ) -> list[EndDictionarySection]:
     """Deterministic SQL + title classifier over textbook_sections."""
     rows = conn.execute(
@@ -737,7 +739,7 @@ def parse_section_entries(
 
 
 def extract_all(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
 ) -> tuple[list[EndDictionarySection], list[EndDictionaryEntry]]:
     """Enumerate sections and parse every classified end-dictionary."""
     sections = enumerate_end_dictionary_sections(conn)
@@ -974,7 +976,7 @@ def main(argv: list[str] | None = None) -> int:
     sources_db = resolve_sources_db(args.sources_db)
     if not sources_db.is_file():
         raise SystemExit(f"sources.db not found: {sources_db}")
-    conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    conn = _open_readonly(sources_db)
     try:
         sections, entries = extract_all(conn)
     finally:

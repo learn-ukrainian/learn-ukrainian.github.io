@@ -15,6 +15,9 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 DEFAULT_DAILY_POOL = Path("site/src/data/lexicon-daily-pool.json")
 DEFAULT_PRACTICE_LEXEMES_DIR = Path("site/public/lexicon")
 DEFAULT_SOURCES_DB = Path("data/sources.db")
@@ -44,23 +47,17 @@ LATIN_CHAR_RE = re.compile(r"[A-Za-z]")
 NON_UKRAINIAN_ALPHA_RE = re.compile(r"[^\W\d_А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]")
 COMBINING_MARK_RE = re.compile(r"[\u0300-\u036f]")
 MIDWORD_JOIN_RE = re.compile(r"[а-щьюяєіїґ][А-ЩЬЮЯЄІЇҐ]")
-ENUMERATION_RE = re.compile(
-    r"(?<!\w)[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:,\s*[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+){2,}[.!?]$"
-)
+ENUMERATION_RE = re.compile(r"(?<!\w)[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:,\s*[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+){2,}[.!?]$")
 TITLE_CASE_RUN_RE = re.compile(
     r"^\s*(?:[А-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ]+\s+){3,}"
     r"[А-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ]+\s*[.!?]$"
 )
-ACRONYM_JOIN_RE = re.compile(
-    r"\b[А-ЩЬЮЯЄІЇҐ]{3,}\s+[А-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ]+\b"
-)
+ACRONYM_JOIN_RE = re.compile(r"\b[А-ЩЬЮЯЄІЇҐ]{3,}\s+[А-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ]+\b")
 FORMULA_MARKER_RE = re.compile(
     r"(?:[=<>≤≥→←↔⇒⇔∑√±×÷§]|(?:^|\s)\d+\s*[.)](?:\s|$)|"
     r"(?<!\w)[A-Za-z]\s*[=<>]|(?:—|–|-)\s*[»>])"
 )
-OPTION_LABEL_RE = re.compile(
-    r"(?<![А-ЩЬЮЯЄІЇҐа-щьюяєіїґ])[А-ЩЬЮЯЄІЇҐ]\s+(?=[А-ЩЬЮЯЄІЇҐ])"
-)
+OPTION_LABEL_RE = re.compile(r"(?<![А-ЩЬЮЯЄІЇҐа-щьюяєіїґ])[А-ЩЬЮЯЄІЇҐ]\s+(?=[А-ЩЬЮЯЄІЇҐ])")
 WORKSHEET_RE = re.compile(
     r"\b(?:виконай|виконайте|запиши|запишіть|вибери|виберіть|обери|оберіть|"
     r"познач|позначте|підкресли|підкресліть|випиши|випишіть|спиши|спишіть|"
@@ -76,9 +73,7 @@ WORKSHEET_RE = re.compile(
     re.IGNORECASE,
 )
 BRACKET_RE = re.compile(r"[\[\]()]")
-LEADING_NUMBER_RE = re.compile(
-    r"^\s*\d+(?:\.\d+)*\s+(?P<word>[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)"
-)
+LEADING_NUMBER_RE = re.compile(r"^\s*\d+(?:\.\d+)*\s+(?P<word>[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)")
 MONTH_WORDS = frozenset(
     {
         "січня",
@@ -100,17 +95,13 @@ BULLET_RE = re.compile(r"[•·▪◦]")
 LEADING_FRAGMENT_RE = re.compile(r"^\s*[,;:…]")
 LEADING_LOWERCASE_RE = re.compile(r"^\s*[а-щьюяєіїґ]")
 QUESTION_PROMPT_RE = re.compile(r"\bу яких\b", re.IGNORECASE)
-SINGLE_LETTER_PAIR_RE = re.compile(
-    r"(?<!\w)[А-ЩЬЮЯЄІЇҐ]\s+[А-ЩЬЮЯЄІЇҐ](?!\w)"
-)
+SINGLE_LETTER_PAIR_RE = re.compile(r"(?<!\w)[А-ЩЬЮЯЄІЇҐ]\s+[А-ЩЬЮЯЄІЇҐ](?!\w)")
 FORMULA_TERM_RE = re.compile(
     r"\b(?:ОДЗ|параметр\w*|площин\w*)\b|(?<!\w)[Ьь](?!\w)",
     re.IGNORECASE,
 )
 DECORATIVE_SYMBOL_RE = re.compile(r"[★☆◆◇◊▪▫●○]")
-MIXED_ALNUM_RE = re.compile(
-    r"(?:[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]\d+|\d+[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ])"
-)
+MIXED_ALNUM_RE = re.compile(r"(?:[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]\d+|\d+[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ])")
 FILL_BLANK_RE = re.compile(r"_{2,}")
 LEADING_HEADING_RE = re.compile(
     r"^\s*(?:правило|вправа|завдання|розділ|тема|назва|підсумок)\b",
@@ -145,14 +136,10 @@ SHORT_TOKEN_RUN_RE = re.compile(
 )
 TRAILING_SINGLE_TOKEN_RE = re.compile(r"(?:^|\s)[А-ЩЬЮЯЄІЇҐ]\s*[.!?]$")
 UPPERCASE_HEADING_RE = re.compile(r"\b[А-ЩЬЮЯЄІЇҐ]{4,}\b")
-DOTTED_OCR_RE = re.compile(
-    r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]\.{2,}[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]"
-)
+DOTTED_OCR_RE = re.compile(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]\.{2,}[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]")
 DIGIT_RE = re.compile(r"\d")
 SEMICOLON_RE = re.compile(r";")
-BROKEN_APOSTROPHE_RE = re.compile(
-    r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ][’'][–-]|[–-][’'][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]"
-)
+BROKEN_APOSTROPHE_RE = re.compile(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ][’'][–-]|[–-][’'][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]")
 # A standalone ``Г`` followed by a lowercase word is an answer-choice marker
 # in the textbook corpus; ordinary one-letter sentence starters such as ``Я``
 # and ``В`` must remain valid.
@@ -395,7 +382,7 @@ class VesumSentenceVerifier:
     """Small cached VESUM lookup used only for sentence-shape screening."""
 
     def __init__(self, path: Path) -> None:
-        self.conn = sqlite3.connect(f"{Path(path).resolve().as_uri()}?mode=ro", uri=True)
+        self.conn = _open_readonly(Path(path).resolve())
         self.cache: dict[str, bool] = {}
         self.imperative_cache: dict[str, bool] = {}
 
@@ -436,9 +423,7 @@ class VesumSentenceVerifier:
                 variants,
             )
             known = any(
-                "impr" in (tags := row[0]).split(":")
-                and bool({"1", "2"}.intersection(tags.split(":")))
-                for row in rows
+                "impr" in (tags := row[0]).split(":") and bool({"1", "2"}.intersection(tags.split(":"))) for row in rows
             )
             self.imperative_cache[key] = known
         return known
@@ -458,7 +443,7 @@ def _candidate_sentences(text: str, lemma: str, *, vesum: VesumSentenceVerifier 
         sentence = raw_sentence.strip(" \t\n—–")
         quiz_marker = LEADING_QUIZ_MARKER_RE.match(sentence)
         if quiz_marker:
-            sentence = sentence[quiz_marker.end():].lstrip(" \t\n—–")
+            sentence = sentence[quiz_marker.end() :].lstrip(" \t\n—–")
         tokens = _tokens(sentence)
         if not (3 <= len(tokens) <= 18 and 15 <= len(sentence) <= 180):
             continue
@@ -480,7 +465,7 @@ def _candidate_sentences(text: str, lemma: str, *, vesum: VesumSentenceVerifier 
 
 
 def _fts_rows(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     fts_table: str,
     content_table: str,
@@ -507,10 +492,7 @@ def _fts_rows(
     # the hydrated corpus exposes that metadata.
     if preferred_subjects and "subject" in columns:
         placeholders = ", ".join("?" for _ in preferred_subjects)
-        order_prefix = (
-            "CASE WHEN lower(coalesce(source.subject, '')) "
-            f"IN ({placeholders}) THEN 0 ELSE 1 END, "
-        )
+        order_prefix = f"CASE WHEN lower(coalesce(source.subject, '')) IN ({placeholders}) THEN 0 ELSE 1 END, "
         parameters.extend(subject.casefold() for subject in preferred_subjects)
     sql = f"""
         SELECT source.text, source.title, source.chunk_id
@@ -525,7 +507,7 @@ def _fts_rows(
 
 
 def _source_sentences(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     target: dict[str, str],
     source_kind: str,
@@ -758,7 +740,7 @@ def build_inventory(
         raise ValueError("max_per_lemma must be positive")
     if textbook_search_limit < 1:
         raise ValueError("textbook search limit must be positive")
-    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(sources_db).resolve())
     conn.row_factory = sqlite3.Row
     vesum = VesumSentenceVerifier(vesum_db) if vesum_db is not None and vesum_db.exists() else None
     try:

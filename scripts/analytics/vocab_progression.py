@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import os
 import re
-import sqlite3
 import statistics
 import sys
 import unicodedata
@@ -22,11 +21,15 @@ import yaml
 SCRIPT_ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = Path(os.environ.get("VOCAB_PROGRESSION_PROJECT_ROOT", str(SCRIPT_ROOT))).resolve()
 
+if str(SCRIPT_ROOT) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_ROOT))
+
 SCRIPTS_DIR = SCRIPT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from audit.config import get_word_target
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 CORE_LEVELS = ("a1", "a2", "b1", "b2", "c1", "c2")
 CEFR_ORDER = {"A1": 1, "A2": 2, "B1": 3, "B2": 4, "C1": 5, "C2": 6}
@@ -93,7 +96,7 @@ def _load_vocab_entries(path: Path) -> list[dict[str, Any]]:
 
 def _chunked(items: list[str], size: int = 500) -> Iterable[list[str]]:
     for index in range(0, len(items), size):
-        yield items[index:index + size]
+        yield items[index : index + size]
 
 
 @dataclass(frozen=True)
@@ -182,7 +185,7 @@ class VesumLookup:
     def __init__(self, db_path: Path):
         if not db_path.exists():
             raise FileNotFoundError(f"VESUM database not found at {db_path}")
-        self._conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+        self._conn = _open_readonly(Path(db_path).resolve())
         self._cache: dict[str, str | None] = {}
 
     def close(self) -> None:
@@ -205,10 +208,7 @@ class VesumLookup:
                 f"SELECT word_form, lemma FROM forms WHERE word_form IN ({placeholders})",
                 chunk,
             ).fetchall()
-            found = {
-                normalize_surface(word_form): normalize_surface(lemma)
-                for word_form, lemma in rows
-            }
+            found = {normalize_surface(word_form): normalize_surface(lemma) for word_form, lemma in rows}
             for surface in chunk:
                 self._cache[surface] = found.get(surface)
 
@@ -237,7 +237,7 @@ class PulsLookup:
     def __init__(self, db_path: Path):
         if not db_path.exists():
             raise FileNotFoundError(f"Sources database not found at {db_path}")
-        self._conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+        self._conn = _open_readonly(Path(db_path).resolve())
         self._cache: dict[str, str | None] = {}
 
     def close(self) -> None:
@@ -278,11 +278,7 @@ class PulsLookup:
             (normalized,),
         ).fetchall()
         levels = sorted(
-            {
-                str(row[0]).upper()
-                for row in rows
-                if str(row[0]).upper() in CEFR_ORDER
-            },
+            {str(row[0]).upper() for row in rows if str(row[0]).upper() in CEFR_ORDER},
             key=CEFR_ORDER.get,
         )
         result = levels[0] if levels else None
@@ -609,7 +605,9 @@ def render_level_report(analysis: LevelAnalysis, gaps_only: bool = False) -> str
             f"modules {', '.join(analysis.worst_paced_word.modules)})"
         )
 
-    lines.extend(["", "## First Introductions", "", "| Lemma | First Intro | Repeats | Later Modules |", "|---|---|---:|---|"])
+    lines.extend(
+        ["", "## First Introductions", "", "| Lemma | First Intro | Repeats | Later Modules |", "|---|---|---:|---|"]
+    )
     for row in analysis.word_progressions:
         later_modules = ", ".join(row.modules[1:]) if row.rep_count else "-"
         lines.append(f"| {row.lemma} | {row.first_intro} | {row.rep_count} | {later_modules} |")
@@ -627,9 +625,7 @@ def render_level_report(analysis: LevelAnalysis, gaps_only: bool = False) -> str
     if analysis.premature:
         lines.extend(["", "| Lemma | CEFR | Module | Surface Forms |", "|---|---|---|---|"])
         for item in analysis.premature:
-            lines.append(
-                f"| {item.lemma} | {item.level} | {item.module} | {', '.join(item.surface_forms)} |"
-            )
+            lines.append(f"| {item.lemma} | {item.level} | {item.module} | {', '.join(item.surface_forms)} |")
     else:
         lines.extend(["", "_No premature vocabulary found._"])
 
@@ -637,9 +633,7 @@ def render_level_report(analysis: LevelAnalysis, gaps_only: bool = False) -> str
     if analysis.non_vesum:
         lines.extend(["", "| Surface | Modules | Raw Forms |", "|---|---|---|"])
         for item in analysis.non_vesum[:50]:
-            lines.append(
-                f"| {item.surface} | {', '.join(item.modules)} | {', '.join(item.raw_forms)} |"
-            )
+            lines.append(f"| {item.surface} | {', '.join(item.modules)} | {', '.join(item.raw_forms)} |")
         if len(analysis.non_vesum) > 50:
             lines.extend(["", f"_Truncated to 50 of {len(analysis.non_vesum)} non-VESUM surfaces._"])
     else:
@@ -654,7 +648,9 @@ def render_level_report(analysis: LevelAnalysis, gaps_only: bool = False) -> str
 
 def render_report(levels: Iterable[str], gaps_only: bool = False, paths: ProjectPaths | None = None) -> str:
     analyses = analyze_levels(levels, paths)
-    return "\n\n---\n\n".join(render_level_report(analysis, gaps_only=gaps_only).strip() for analysis in analyses) + "\n"
+    return (
+        "\n\n---\n\n".join(render_level_report(analysis, gaps_only=gaps_only).strip() for analysis in analyses) + "\n"
+    )
 
 
 def available_levels(paths: ProjectPaths | None = None) -> list[str]:

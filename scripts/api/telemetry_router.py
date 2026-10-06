@@ -19,6 +19,7 @@ from uuid import uuid4
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.telemetry.legacy_bridge import bridge_usage_summary
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
@@ -80,8 +81,6 @@ class ModuleBuildTelemetryIngest(BaseModel):
     participants: list[ModuleBuildParticipantIngest] = Field(default_factory=list)
 
 
-
-
 def _tool_timings_path(ctx: MonitorContext | None = None) -> Path:
     return resolve_context(ctx).roots.project_root / "data" / "telemetry" / "tool_timings.db"
 
@@ -94,7 +93,7 @@ def _legacy_comms_db_path(ctx: MonitorContext | None = None) -> Path:
     return legacy_comms_db_path_for_root(resolve_context(ctx).roots.project_root)
 
 
-def _open_telemetry_db(ctx: MonitorContext, path: Path) -> sqlite3.Connection:
+def _open_telemetry_db(ctx: MonitorContext, path: Path) -> SQLiteConnection:
     path.parent.mkdir(parents=True, exist_ok=True)
     return ctx._open_db(path)
 
@@ -285,7 +284,7 @@ def _run_row_to_dict(row: sqlite3.Row, participants: list[dict[str, Any]]) -> di
     }
 
 
-def _load_participants(conn: sqlite3.Connection, run_ids: list[str]) -> dict[str, list[dict[str, Any]]]:
+def _load_participants(conn: SQLiteConnection, run_ids: list[str]) -> dict[str, list[dict[str, Any]]]:
     if not run_ids:
         return {}
     placeholders = ",".join("?" for _ in run_ids)
@@ -385,15 +384,17 @@ def read_tool_timings(
     results = []
     for tool_name, values in durations.items():
         count = len(values)
-        results.append({
-            "tool_name": tool_name,
-            "count": count,
-            "p50_ms": _percentile_ms(values, 0.50),
-            "p95_ms": _percentile_ms(values, 0.95),
-            "p99_ms": _percentile_ms(values, 0.99),
-            "mean_ms": round(sum(values) / count),
-            "failure_count": failures[tool_name],
-        })
+        results.append(
+            {
+                "tool_name": tool_name,
+                "count": count,
+                "p50_ms": _percentile_ms(values, 0.50),
+                "p95_ms": _percentile_ms(values, 0.95),
+                "p99_ms": _percentile_ms(values, 0.99),
+                "mean_ms": round(sum(values) / count),
+                "failure_count": failures[tool_name],
+            }
+        )
 
     return sorted(results, key=lambda item: (-item["count"], item["tool_name"]))
 
@@ -568,9 +569,7 @@ def read_module_build_telemetry_for_module(
     limit: int = Query(20, ge=1, le=200),
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
-    payload = read_module_build_telemetry(
-        level=level, slug=slug, swarm_used=None, limit=limit, ctx=ctx
-    )
+    payload = read_module_build_telemetry(level=level, slug=slug, swarm_used=None, limit=limit, ctx=ctx)
     return {
         "generated_at": payload["generated_at"],
         "level": level.strip().lower(),

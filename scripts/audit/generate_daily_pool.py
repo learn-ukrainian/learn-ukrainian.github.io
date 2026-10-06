@@ -21,7 +21,6 @@ import argparse
 import hashlib
 import json
 import re
-import sqlite3
 from pathlib import Path
 from typing import Any
 
@@ -34,6 +33,7 @@ from scripts.audit.lexeme_filter import (
     is_lexeme_entry,
     is_surface_admitted,
 )
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_OUT = Path("site/src/data/lexicon-daily-pool.json")
@@ -502,7 +502,7 @@ def load_db_entries(db_path: Path) -> list[dict[str, Any]]:
     resolvers, never Word-of-the-Day candidates). Each ``article_payloads`` row
     stores the manifest-shaped public payload, so ``build_pool`` runs unchanged.
     """
-    conn = sqlite3.connect(db_path)
+    conn = _open_readonly(db_path)
     try:
         # Fail loudly on a stale/hand-edited DB before selecting candidates —
         # the same count/target gates the search-artifact builder runs (#4385 §CI).

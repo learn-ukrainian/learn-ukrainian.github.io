@@ -40,6 +40,7 @@ from typing import Any
 from scripts.atlas import atlas_db
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.source_attribution import cites_soviet_dictionary_outside_context
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 DEFAULT_DB = atlas_db.DEFAULT_DB
 DEFAULT_SOURCES_DB = enrich_manifest.SOURCES_DB
@@ -399,7 +400,7 @@ def _fill_local(
 ) -> FillResult:
     with (
         _connect(db_path) as atlas_conn,
-        sqlite3.connect(f"{Path(sources_db_path).resolve().as_uri()}?mode=ro", uri=True) as sources_conn,
+        _shared_open_readonly(Path(sources_db_path).resolve()) as sources_conn,
     ):
         articles = _article_rows(atlas_conn, slug)
         if slug and not articles:
@@ -427,7 +428,9 @@ def _fill_local(
             # Rows citing Soviet-era evidence are never kept as "existing" (#8990, rule #M-6):
             # they are recomputed from allowed sources, or deleted when nothing replaces them.
             soviet_withheld = {
-                section for section, payload in stored_payloads.items() if cites_soviet_dictionary_outside_context(payload)
+                section
+                for section, payload in stored_payloads.items()
+                if cites_soviet_dictionary_outside_context(payload)
             }
             existing_payloads = (
                 {}

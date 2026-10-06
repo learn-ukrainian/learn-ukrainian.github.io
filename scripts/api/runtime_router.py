@@ -48,11 +48,11 @@ from agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
 from agent_runtime.usage import has_headroom
 from scripts.fleet_comms import message_plane
 from scripts.fleet_comms.message_plane import read_plane_status
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.orchestration import codex_transport_health
 
 router = APIRouter(tags=["runtime"])
-
-
 
 
 _KNOWN_OUTCOMES = ("ok", "error", "timeout", "rate_limited")
@@ -61,60 +61,68 @@ _RUNTIME_ATTRIBUTION_SOURCES = frozenset({"explicit", "session_env", "unknown"})
 _RUNTIME_FAILURE_CODES = RUNTIME_FAILURE_CODES
 _ACP_LEGACY_PARTICIPANTS = ("codex", "grok")
 _ACP_ENABLED_PARTICIPANTS = frozenset(ACPX_SUPPORTED_PARTICIPANTS)
-_ACP_STATES = frozenset({
-    "CREATED",
-    "INITIAL_FANOUT",
-    "INITIAL_COMPLETE",
-    "PARTIAL",
-    "CROSS_EXCHANGE",
-    "CROSS_EXCHANGE_COMPLETE",
-    "SYNTHESIS",
-    "COMPLETE",
-    "PARTIAL_COMPLETE",
-    "FAILED",
-    "CANCELLED",
-})
-_ACP_EVENT_TYPES = frozenset({
-    "CONVERSATION_CREATED",
-    "CREATED",
-    "STATE",
-    "CALL_RESERVED",
-    "CALL_TERMINAL",
-    "SYNTHESIS_TERMINAL",
-    "ORPHAN_RESERVATION",
-    "INITIAL_FANOUT",
-    "PARTICIPANT_MESSAGE",
-    "PARTICIPANT_COMPLETE",
-    "CROSS_EXCHANGE",
-    "CROSS_EXCHANGE_MESSAGE",
-    "CROSS_EXCHANGE_COMPLETE",
-    "SYNTHESIS",
-    "SYNTHESIS_COMPLETE",
-    "DUPLICATE_SUPPRESSED",
-    "BUDGET_EXHAUSTED",
-    "DEADLINE_EXCEEDED",
-    "FAILED",
-    "CANCELLED",
-})
-_ACP_OUTCOMES = frozenset({
-    "queued",
-    "running",
-    "succeeded",
-    "partial",
-    "failed",
-    "cancelled",
-    "duplicate_suppressed",
-    "budget_exhausted",
-    "deadline_exceeded",
-})
-_ACP_MESSAGE_EVENTS = frozenset({
-    "PARTICIPANT_MESSAGE",
-    "PARTICIPANT_COMPLETE",
-    "CROSS_EXCHANGE_MESSAGE",
-    "CROSS_EXCHANGE_COMPLETE",
-    "CALL_TERMINAL",
-    "SYNTHESIS_TERMINAL",
-})
+_ACP_STATES = frozenset(
+    {
+        "CREATED",
+        "INITIAL_FANOUT",
+        "INITIAL_COMPLETE",
+        "PARTIAL",
+        "CROSS_EXCHANGE",
+        "CROSS_EXCHANGE_COMPLETE",
+        "SYNTHESIS",
+        "COMPLETE",
+        "PARTIAL_COMPLETE",
+        "FAILED",
+        "CANCELLED",
+    }
+)
+_ACP_EVENT_TYPES = frozenset(
+    {
+        "CONVERSATION_CREATED",
+        "CREATED",
+        "STATE",
+        "CALL_RESERVED",
+        "CALL_TERMINAL",
+        "SYNTHESIS_TERMINAL",
+        "ORPHAN_RESERVATION",
+        "INITIAL_FANOUT",
+        "PARTICIPANT_MESSAGE",
+        "PARTICIPANT_COMPLETE",
+        "CROSS_EXCHANGE",
+        "CROSS_EXCHANGE_MESSAGE",
+        "CROSS_EXCHANGE_COMPLETE",
+        "SYNTHESIS",
+        "SYNTHESIS_COMPLETE",
+        "DUPLICATE_SUPPRESSED",
+        "BUDGET_EXHAUSTED",
+        "DEADLINE_EXCEEDED",
+        "FAILED",
+        "CANCELLED",
+    }
+)
+_ACP_OUTCOMES = frozenset(
+    {
+        "queued",
+        "running",
+        "succeeded",
+        "partial",
+        "failed",
+        "cancelled",
+        "duplicate_suppressed",
+        "budget_exhausted",
+        "deadline_exceeded",
+    }
+)
+_ACP_MESSAGE_EVENTS = frozenset(
+    {
+        "PARTICIPANT_MESSAGE",
+        "PARTICIPANT_COMPLETE",
+        "CROSS_EXCHANGE_MESSAGE",
+        "CROSS_EXCHANGE_COMPLETE",
+        "CALL_TERMINAL",
+        "SYNTHESIS_TERMINAL",
+    }
+)
 _ACP_TRANSCRIPT_KINDS = frozenset({"request", "reply", "synthesis"})
 _ACP_TRANSCRIPT_MAX_MESSAGES = 32
 _ACP_TRANSCRIPT_MAX_BODY_BYTES = 256 * 1024
@@ -264,9 +272,7 @@ def _usage_dir(ctx: MonitorContext | None = None) -> Path:
     return resolve_context(ctx).roots.batch_state_dir / "api_usage"
 
 
-def _usage_files(
-    *, days: int, usage_dir: Path | None = None, ctx: MonitorContext | None = None
-) -> list[Path]:
+def _usage_files(*, days: int, usage_dir: Path | None = None, ctx: MonitorContext | None = None) -> list[Path]:
     root = usage_dir if usage_dir is not None else _usage_dir(ctx)
     if not root.exists():
         return []
@@ -389,7 +395,14 @@ def list_runtime_agents(ctx: MonitorContext) -> list[dict[str, Any]]:
         # Skip non-agent helper modules and alternate-harness adapters that
         # alias an existing fleet agent name (hermes_* wrap the same grok /
         # qwen / deepseek identities for ask-hermes only).
-        if path.stem in {"__init__", "acpx", "base", "hermes_deepseek", "hermes_grok", "hermes_qwen"} or path.stem.startswith("_"):
+        if path.stem in {
+            "__init__",
+            "acpx",
+            "base",
+            "hermes_deepseek",
+            "hermes_grok",
+            "hermes_qwen",
+        } or path.stem.startswith("_"):
             continue
         try:
             module = importlib.import_module(f"agent_runtime.adapters.{path.stem}")
@@ -428,14 +441,16 @@ def list_runtime_agents(ctx: MonitorContext) -> list[dict[str, Any]]:
             registry_default = _registry_models.get(agent_name, getattr(obj, "default_model", None))
             last_model = last_used.get(agent_name)
             headroom_model = last_model or registry_default
-            agents.append({
-                "name": agent_name,
-                "binary": binary,
-                "default_model": registry_default,
-                "last_used_model": last_model,
-                "headroom_model": headroom_model,
-                "supported_modes": sorted(str(mode) for mode in getattr(obj, "supported_modes", [])),
-            })
+            agents.append(
+                {
+                    "name": agent_name,
+                    "binary": binary,
+                    "default_model": registry_default,
+                    "last_used_model": last_model,
+                    "headroom_model": headroom_model,
+                    "supported_modes": sorted(str(mode) for mode in getattr(obj, "supported_modes", [])),
+                }
+            )
             break
     return agents
 
@@ -499,10 +514,7 @@ def acpx_shadow_overview(*, days: int = 7, ctx: MonitorContext | None = None) ->
             "effort": GROK_SHADOW_EFFORT,
         },
     )
-    evidence_by_seat = {
-        str(seat["name"]): _new_outcome_bucket()
-        for seat in seat_specs
-    }
+    evidence_by_seat = {str(seat["name"]): _new_outcome_bucket() for seat in seat_specs}
     comparison = {
         "attempts": 0,
         "comparisons": 0,
@@ -518,10 +530,7 @@ def acpx_shadow_overview(*, days: int = 7, ctx: MonitorContext | None = None) ->
         record_agent = str(record.get("agent") or "")
         if record_agent in evidence_by_seat:
             _update_outcome_bucket(evidence_by_seat[record_agent], record)
-        if (
-            record_agent == "acpx-shadow-pilot"
-            and record.get("event") == "acpx_shadow_comparison"
-        ):
+        if record_agent == "acpx-shadow-pilot" and record.get("event") == "acpx_shadow_comparison":
             comparison["attempts"] += 1
             if record.get("duplicate") is True:
                 comparison["duplicates_suppressed"] += 1
@@ -539,16 +548,18 @@ def acpx_shadow_overview(*, days: int = 7, ctx: MonitorContext | None = None) ->
     seats: list[dict[str, Any]] = []
     for seat in seat_specs:
         evidence = evidence_by_seat[str(seat["name"])]
-        seats.append({
-            **seat,
-            "read_only": True,
-            "stateless": True,
-            "evidence_state": "observed" if evidence["total"] else "no_evidence",
-            "evidence": {
-                "window_days": window_days,
-                **evidence,
-            },
-        })
+        seats.append(
+            {
+                **seat,
+                "read_only": True,
+                "stateless": True,
+                "evidence_state": "observed" if evidence["total"] else "no_evidence",
+                "evidence": {
+                    "window_days": window_days,
+                    **evidence,
+                },
+            }
+        )
 
     return {
         "generated_at": _isoformat_z(datetime.now(UTC)),
@@ -632,20 +643,24 @@ def recent_runtime_records(*, limit: int = 50, ctx: MonitorContext | None = None
                 failure_code = "rate_limited"
             else:
                 failure_code = "unknown" if outcome not in {"ok", None} else None
-        summaries.append({
-            "ts": _isoformat_z(ts) if ts else record.get("ts"),
-            "agent": record.get("agent"),
-            "entrypoint": record.get("entrypoint"),
-            "via": record.get("entrypoint"),
-            "source": initiator,
-            "source_provenance": source_provenance,
-            "source_task_id": source_task_id,
-            "model": record.get("model"),
-            "outcome": record.get("outcome"),
-            "failure_code": failure_code,
-            "duration_s": record.get("duration_s"),
-        })
-    summaries.sort(key=lambda item: _parse_iso_datetime(item.get("ts")) or datetime.min.replace(tzinfo=UTC), reverse=True)
+        summaries.append(
+            {
+                "ts": _isoformat_z(ts) if ts else record.get("ts"),
+                "agent": record.get("agent"),
+                "entrypoint": record.get("entrypoint"),
+                "via": record.get("entrypoint"),
+                "source": initiator,
+                "source_provenance": source_provenance,
+                "source_task_id": source_task_id,
+                "model": record.get("model"),
+                "outcome": record.get("outcome"),
+                "failure_code": failure_code,
+                "duration_s": record.get("duration_s"),
+            }
+        )
+    summaries.sort(
+        key=lambda item: _parse_iso_datetime(item.get("ts")) or datetime.min.replace(tzinfo=UTC), reverse=True
+    )
     return {"records": summaries[:record_limit]}
 
 
@@ -807,10 +822,15 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
     requested = record.get("requested") if isinstance(record.get("requested"), dict) else {}
     resolved = record.get("resolved") if isinstance(record.get("resolved"), dict) else {}
     quota_detail = record.get("quota") if isinstance(record.get("quota"), dict) else {}
-    quota_snapshot = _routing_first(
-        quota_detail.get("snapshot") if isinstance(quota_detail.get("snapshot"), dict) else None,
-        _routing_value(record, "quota_snapshot") if isinstance(_routing_value(record, "quota_snapshot"), dict) else None,
-    ) or {}
+    quota_snapshot = (
+        _routing_first(
+            quota_detail.get("snapshot") if isinstance(quota_detail.get("snapshot"), dict) else None,
+            _routing_value(record, "quota_snapshot")
+            if isinstance(_routing_value(record, "quota_snapshot"), dict)
+            else None,
+        )
+        or {}
+    )
     lifecycle = record.get("lifecycle") if isinstance(record.get("lifecycle"), dict) else {}
     replay = record.get("replay") if isinstance(record.get("replay"), dict) else {}
     retry = record.get("retry") if isinstance(record.get("retry"), dict) else {}
@@ -848,7 +868,9 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
             _routing_value(record, "requested_reviewer", "requested_route"), requested.get("requested_reviewer")
         ),
         "automatic": automatic,
-        "resolved_candidate": _routing_first(_routing_value(record, "resolved_candidate", "candidate"), resolved.get("candidate")),
+        "resolved_candidate": _routing_first(
+            _routing_value(record, "resolved_candidate", "candidate"), resolved.get("candidate")
+        ),
         "resolved_route": _routing_first(_routing_value(record, "resolved_route", "route"), resolved.get("route")),
         "resolved_model": _routing_first(_routing_value(record, "resolved_model", "model"), resolved.get("model")),
         "resolved_family": _routing_first(_routing_value(record, "resolved_family", "family"), resolved.get("family")),
@@ -862,19 +884,32 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
             # failure posture can distinguish otherwise suitable routes.
             "hard_eligibility": _routing_trace_value(
                 trace,
-                "hard_eligibility", "eligibility", "capability_gates", "gates",
+                "hard_eligibility",
+                "eligibility",
+                "capability_gates",
+                "gates",
             ),
             "task_fit_quality": _routing_trace_value(
                 trace,
-                "task_fit", "capability_fit", "strength", "quality_rank", "suitability",
+                "task_fit",
+                "capability_fit",
+                "strength",
+                "quality_rank",
+                "suitability",
             ),
             "tie_breakers": _routing_trace_value(
                 trace,
-                "tie_breakers", "quota_cost_capacity", "quota", "opportunity_cost", "failure_posture",
+                "tie_breakers",
+                "quota_cost_capacity",
+                "quota",
+                "opportunity_cost",
+                "failure_posture",
             ),
             "cheaper_or_idle_not_selected": _routing_trace_value(
                 trace,
-                "cheaper_or_idle_not_selected", "rejected_alternatives", "not_selected",
+                "cheaper_or_idle_not_selected",
+                "rejected_alternatives",
+                "not_selected",
             ),
         },
         "quota_source": _routing_first(
@@ -883,29 +918,42 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
         "quota_freshness": quota_freshness,
         "quota_freshness_state": _routing_quota_freshness_state(quota_freshness),
         "quota_fresh_at": _routing_first(
-            _routing_value(record, "quota_fresh_at"), quota_detail.get("fresh_at"),
-            quota_snapshot.get("fresh_at"), quota_snapshot.get("fetched_at"), snapshot_codexbar.get("fetched_at"),
+            _routing_value(record, "quota_fresh_at"),
+            quota_detail.get("fresh_at"),
+            quota_snapshot.get("fresh_at"),
+            quota_snapshot.get("fetched_at"),
+            snapshot_codexbar.get("fetched_at"),
         ),
         "quota_headroom": _routing_first(_routing_value(record, "quota_headroom"), quota_snapshot.get("headroom")),
         "quota_headroom_band": _routing_first(
             _routing_value(record, "quota_headroom_band"), quota_detail.get("headroom_band")
         ),
-        "credential_bucket": _routing_first(_routing_value(record, "credential_bucket"), quota_detail.get("credential_bucket")),
-        "estimated_input_bytes": _routing_first(_routing_value(record, "estimated_input_bytes"), requested.get("estimated_input_bytes")),
+        "credential_bucket": _routing_first(
+            _routing_value(record, "credential_bucket"), quota_detail.get("credential_bucket")
+        ),
+        "estimated_input_bytes": _routing_first(
+            _routing_value(record, "estimated_input_bytes"), requested.get("estimated_input_bytes")
+        ),
         "actual_input_bytes": _routing_value(record, "actual_input_bytes"),
         "actual_output_bytes": _routing_value(record, "actual_output_bytes"),
         "actual_work_bytes": _routing_first(_routing_value(record, "actual_work_bytes"), lifecycle.get("actual_bytes")),
         "actual_tokens": _routing_first(_routing_value(record, "actual_tokens"), lifecycle.get("actual_tokens")),
-        "reservation_state": _routing_first(_routing_value(record, "reservation_state", "status"), lifecycle.get("status")),
+        "reservation_state": _routing_first(
+            _routing_value(record, "reservation_state", "status"), lifecycle.get("status")
+        ),
         "terminal_status": _routing_first(_routing_value(record, "terminal_status", "status"), lifecycle.get("status")),
         "created_at": _routing_first(_routing_value(record, "created_at"), lifecycle.get("created_at")),
         "expires_at": _routing_first(_routing_value(record, "expires_at"), lifecycle.get("expires_at")),
         "started_at": _routing_first(_routing_value(record, "started_at"), lifecycle.get("started_at")),
         "settled_at": _routing_first(_routing_value(record, "settled_at", "terminal_at"), lifecycle.get("settled_at")),
         "duration_s": _routing_duration_s(record),
-        "failure_classification": _routing_first(_routing_value(record, "failure_classification"), lifecycle.get("failure_classification")),
+        "failure_classification": _routing_first(
+            _routing_value(record, "failure_classification"), lifecycle.get("failure_classification")
+        ),
         "retry_chain": _routing_first(_routing_value(record, "retry_chain", "retry"), retry),
-        "failover_chain": _routing_first(_routing_value(record, "failover_chain", "failover"), retry.get("fallback_from")),
+        "failover_chain": _routing_first(
+            _routing_value(record, "failover_chain", "failover"), retry.get("fallback_from")
+        ),
         "replay_status": _routing_first(_routing_value(record, "replay_status", "replay"), replay),
         "cache_status": _routing_value(record, "cache_status", "cache"),
     }
@@ -950,9 +998,7 @@ def _routing_apply_observer_expiry(item: dict[str, Any], now: datetime) -> None:
 
 def _routing_assignment_window(assignments: list[dict[str, Any]], now: datetime) -> dict[str, Any] | None:
     timestamps = [
-        parsed
-        for parsed in (_parse_iso_datetime(item.get("timestamp")) for item in assignments)
-        if parsed is not None
+        parsed for parsed in (_parse_iso_datetime(item.get("timestamp")) for item in assignments) if parsed is not None
     ]
     if not timestamps:
         return None
@@ -980,7 +1026,9 @@ def _routing_assignment_aggregate(records: list[dict[str, Any]]) -> dict[str, An
     if not isinstance(quota_snapshot, dict):
         quota_snapshot = {}
     item["capacity_evidence"] = _routing_capacity_evidence(ordered, quota_snapshot)
-    item["current_state"] = _routing_first(item.get("reservation_state"), item.get("terminal_status"), item.get("decision_state"))
+    item["current_state"] = _routing_first(
+        item.get("reservation_state"), item.get("terminal_status"), item.get("decision_state")
+    )
     return item
 
 
@@ -1090,23 +1138,21 @@ def _acp_db_path(ctx: MonitorContext) -> Path:
     return message_plane.default_plane_root(repo_root=ctx.roots.project_root) / "comms.sqlite3"
 
 
-def _open_acp_db_readonly(ctx: MonitorContext) -> sqlite3.Connection | None:
+def _open_acp_db_readonly(ctx: MonitorContext) -> SQLiteConnection | None:
     """Open fleet-comms storage read-only, returning ``None`` when unavailable."""
     db_path = _acp_db_path(ctx)
     if not db_path.is_file():
         return None
     try:
-        connection = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True)
+        connection = _open_readonly(db_path.resolve())
     except (OSError, sqlite3.Error, ValueError):
         return None
     connection.row_factory = sqlite3.Row
     return connection
 
 
-def _acp_table_exists(connection: sqlite3.Connection, table: str) -> bool:
-    row = connection.execute(
-        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", (table,)
-    ).fetchone()
+def _acp_table_exists(connection: SQLiteConnection, table: str) -> bool:
+    row = connection.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", (table,)).fetchone()
     return row is not None
 
 
@@ -1202,9 +1248,7 @@ def _acp_synthesis_state(events: list[dict[str, Any]], current_state: str | None
     if current_state in {"PARTIAL", "PARTIAL_COMPLETE", "CANCELLED"}:
         return "partial"
     if current_state == "COMPLETE" and (
-        "SYNTHESIS" in states
-        or "SYNTHESIS_COMPLETE" in event_types
-        or "SYNTHESIS_TERMINAL" in event_types
+        "SYNTHESIS" in states or "SYNTHESIS_COMPLETE" in event_types or "SYNTHESIS_TERMINAL" in event_types
     ):
         return "complete"
     if current_state == "SYNTHESIS" or "SYNTHESIS" in states:
@@ -1229,9 +1273,7 @@ def _acp_termination(events: list[dict[str, Any]], current_state: str | None) ->
     return None
 
 
-def _sanitize_acp_event(
-    row: sqlite3.Row, *, allowed_lanes: frozenset[str]
-) -> dict[str, Any] | None:
+def _sanitize_acp_event(row: sqlite3.Row, *, allowed_lanes: frozenset[str]) -> dict[str, Any] | None:
     sequence = _acp_int(row["sequence"])
     state = _acp_text(row["state"], allowed=_ACP_STATES)
     event_type = _acp_event_type(row["event_type"])
@@ -1266,7 +1308,7 @@ def _sanitize_acp_event(
 
 
 def _acp_events(
-    connection: sqlite3.Connection,
+    connection: SQLiteConnection,
     conversation_id: str,
     participants: tuple[str, str],
 ) -> list[dict[str, Any]]:
@@ -1285,23 +1327,14 @@ def _acp_events(
     except sqlite3.Error:
         return []
     allowed_lanes = frozenset({"root", "codex", *participants})
-    events = [
-        event
-        for row in rows
-        if (event := _sanitize_acp_event(row, allowed_lanes=allowed_lanes)) is not None
-    ]
+    events = [event for row in rows if (event := _sanitize_acp_event(row, allowed_lanes=allowed_lanes)) is not None]
     return events
 
 
-def _acp_rounds_completed(
-    events: list[dict[str, Any]], participants: tuple[str, str]
-) -> int:
+def _acp_rounds_completed(events: list[dict[str, Any]], participants: tuple[str, str]) -> int:
     lanes_by_round: dict[int, set[str]] = defaultdict(set)
     for event in events:
-        if (
-            event.get("event_type") not in _ACP_MESSAGE_EVENTS
-            or event.get("outcome") != "succeeded"
-        ):
+        if event.get("event_type") not in _ACP_MESSAGE_EVENTS or event.get("outcome") != "succeeded":
             continue
         round_number = event.get("round")
         if not isinstance(round_number, int):
@@ -1333,7 +1366,10 @@ def _acp_summary(
     deadline = _parse_iso_datetime(deadline_at)
     expired = not terminal and (deadline is None or datetime.now(UTC) > deadline)
     stale_or_unhealthy = expired or current_state in {
-        "PARTIAL", "PARTIAL_COMPLETE", "FAILED", "CANCELLED",
+        "PARTIAL",
+        "PARTIAL_COMPLETE",
+        "FAILED",
+        "CANCELLED",
     }
     updated_at = events[-1]["created_at"] if events else created_at
     terminal_event = next(
@@ -1356,9 +1392,7 @@ def _acp_summary(
         duration_ms = sum(event.get("duration_ms", 0) for event in events)
     terminal_tokens = terminal_event.get("token_count") if terminal_event else None
     total_tokens = (
-        terminal_tokens
-        if isinstance(terminal_tokens, int)
-        else sum(event.get("token_count", 0) for event in events)
+        terminal_tokens if isinstance(terminal_tokens, int) else sum(event.get("token_count", 0) for event in events)
     )
     termination = _acp_termination(events, current_state)
     return {
@@ -1381,12 +1415,15 @@ def _acp_summary(
     }
 
 
-def _acp_available_connection(ctx: MonitorContext) -> sqlite3.Connection | None:
+def _acp_available_connection(ctx: MonitorContext) -> SQLiteConnection | None:
     connection = _open_acp_db_readonly(ctx)
     if connection is None:
         return None
     try:
-        if not (_acp_table_exists(connection, "acp_conversations") and _acp_table_exists(connection, "acp_conversation_events")):
+        if not (
+            _acp_table_exists(connection, "acp_conversations")
+            and _acp_table_exists(connection, "acp_conversation_events")
+        ):
             connection.close()
             return None
     except sqlite3.Error:
@@ -1496,7 +1533,7 @@ def _acp_transcript_body(value: Any, *, remaining_bytes: int) -> str | None:
 
 
 def _acp_transcript_entries(
-    connection: sqlite3.Connection,
+    connection: SQLiteConnection,
     conversation_id: str,
     participants: tuple[str, str],
 ) -> list[dict[str, Any]] | None:
@@ -1551,9 +1588,7 @@ def _acp_transcript_entries(
         if round_number is not None:
             entry["round"] = round_number
         entries.append(entry)
-        remaining_bytes -= len(
-            json.dumps(body, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-        )
+        remaining_bytes -= len(json.dumps(body, ensure_ascii=False, separators=(",", ":")).encode("utf-8"))
     return entries
 
 
@@ -1598,9 +1633,7 @@ async def runtime_usage(
     days: int = Query(7, ge=1, le=30),
     ctx: MonitorContext = Depends(get_ctx),
 ):
-    return await asyncio.to_thread(
-        summarize_runtime_usage, days=days, agent=agent, entrypoint=entrypoint, ctx=ctx
-    )
+    return await asyncio.to_thread(summarize_runtime_usage, days=days, agent=agent, entrypoint=entrypoint, ctx=ctx)
 
 
 @router.get("/acpx")
@@ -1667,9 +1700,7 @@ async def runtime_recent(limit: int = Query(50, ge=1, le=500), ctx: MonitorConte
 
 
 @router.get("/routing-assignments")
-async def runtime_routing_assignments(
-    limit: int = Query(100, ge=1, le=100), ctx: MonitorContext = Depends(get_ctx)
-):
+async def runtime_routing_assignments(limit: int = Query(100, ge=1, le=100), ctx: MonitorContext = Depends(get_ctx)):
     """Read-only routing authority decisions and their actual plane posture."""
     return await asyncio.to_thread(list_routing_assignments, limit=limit, ctx=ctx)
 
@@ -1753,18 +1784,14 @@ async def runtime_auth():
     # key happens to be present in case someone's running the SDK too.
     claude = {
         "api_key_present": bool(env.get("ANTHROPIC_API_KEY")),
-        "source": (
-            "ANTHROPIC_API_KEY" if env.get("ANTHROPIC_API_KEY") else None
-        ),
+        "source": ("ANTHROPIC_API_KEY" if env.get("ANTHROPIC_API_KEY") else None),
     }
 
     # Codex uses its own key env var. Same logic.
     codex = {
         "api_key_present": bool(env.get("OPENAI_API_KEY") or env.get("CODEX_API_KEY")),
         "source": (
-            "OPENAI_API_KEY" if env.get("OPENAI_API_KEY")
-            else "CODEX_API_KEY" if env.get("CODEX_API_KEY")
-            else None
+            "OPENAI_API_KEY" if env.get("OPENAI_API_KEY") else "CODEX_API_KEY" if env.get("CODEX_API_KEY") else None
         ),
     }
 

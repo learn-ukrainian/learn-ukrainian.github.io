@@ -411,7 +411,7 @@ def _existing_corpus_fingerprint(connection: sqlite3.Connection) -> str:
 
 def _database_evidence(path: Path) -> dict[str, Any]:
     _regular_file(path, "database")
-    uri = f"file:{Path(path).resolve()}?mode=ro"
+    uri = Path(Path(path).resolve()).resolve().as_uri() + "?mode=ro"
     try:
         with sqlite3.connect(uri, uri=True, timeout=30.0) as connection:
             counts = _database_counts(connection)
@@ -522,7 +522,7 @@ def _cleanup_sidecars(path: Path) -> None:
 
 
 def _sqlite_backup(source: Path, target: Path) -> None:
-    source_uri = f"file:{Path(source).resolve()}?mode=ro"
+    source_uri = Path(Path(source).resolve()).resolve().as_uri() + "?mode=ro"
     try:
         with sqlite3.connect(source_uri, uri=True) as source_connection, sqlite3.connect(target) as target_connection:
             source_connection.backup(target_connection)

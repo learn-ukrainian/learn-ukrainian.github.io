@@ -56,6 +56,7 @@ from scripts.lexicon.curated_membership import (
     apply_membership,
     read_membership,
 )
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 from scripts.practice.creation_review import CreationReview, heritage_source
 from scripts.practice.ulif_synonym_groups import (
     ULIF_SYNONYMS_SOURCE,
@@ -558,9 +559,7 @@ class SqliteSourcePassages:
 
     def chunk_text(self, chunk_id: str) -> str | None:
         if chunk_id not in self._cache:
-            import sqlite3
-
-            with sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True) as connection:
+            with _shared_open_readonly(self.db_path) as connection:
                 row = connection.execute("SELECT text FROM textbooks WHERE chunk_id = ?", (chunk_id,)).fetchone()
             self._cache[chunk_id] = row[0] if row else None
         return self._cache[chunk_id]
@@ -3322,7 +3321,7 @@ def _imperative_connection(verifier: VesumVerifier) -> sqlite3.Connection:
         from scripts.rag.config import VESUM_DB_PATH
 
         path = verifier.db_path or VESUM_DB_PATH
-        return sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)
+        return _shared_open_readonly(path.resolve())
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, tags TEXT, pos TEXT)")
     if isinstance(verifier, JsonVesumVerifier):

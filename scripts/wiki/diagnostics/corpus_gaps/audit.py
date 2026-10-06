@@ -20,6 +20,8 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.storage.artifacts import write_artifact
 from scripts.storage.paths import artifact_path
 from wiki.config import TRACK_WRITE_DOMAIN
@@ -571,7 +573,9 @@ def looks_like_objective(text: str) -> bool:
         return False
     if isinstance(yaml.safe_load(stripped), dict):
         return True
-    return stripped.startswith(OBJECTIVE_PREFIXES) or (len(stripped.split()) >= 8 and any(ch in stripped for ch in ".:"))
+    return stripped.startswith(OBJECTIVE_PREFIXES) or (
+        len(stripped.split()) >= 8 and any(ch in stripped for ch in ".:")
+    )
 
 
 def normalize_slug_key(track: str, slug: str) -> str:
@@ -711,13 +715,10 @@ def run_codex_concept_extraction(prompt: str, model: str = DEFAULT_MODEL) -> dic
                 timeout=CODEX_TIMEOUT_S,
             )
         except subprocess.TimeoutExpired as exc:
-            raise RuntimeError(
-                f"Codex concept extraction failed: timed out after {CODEX_TIMEOUT_S}s"
-            ) from exc
+            raise RuntimeError(f"Codex concept extraction failed: timed out after {CODEX_TIMEOUT_S}s") from exc
         if completed.returncode != 0:
             raise RuntimeError(
-                "Codex concept extraction failed: "
-                f"returncode={completed.returncode}, stderr={completed.stderr.strip()}"
+                f"Codex concept extraction failed: returncode={completed.returncode}, stderr={completed.stderr.strip()}"
             )
         if not output_path.exists():
             raise RuntimeError("Codex concept extraction did not write the expected output file.")
@@ -822,7 +823,7 @@ def build_candidate_forms(variants: list[str]) -> list[str]:
 
 
 def query_table_for_concept(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     table: str,
     variants: list[str],
@@ -856,7 +857,7 @@ def query_table_for_concept(
     }
 
 
-def check_concept_coverage(conn: sqlite3.Connection, concept_entry: dict[str, Any]) -> dict[str, Any]:
+def check_concept_coverage(conn: SQLiteConnection, concept_entry: dict[str, Any]) -> dict[str, Any]:
     variants = [str(item) for item in concept_entry.get("variants", []) if str(item).strip()]
     textbooks = query_table_for_concept(conn, table="textbooks", variants=variants)
     external = query_table_for_concept(conn, table="external_articles", variants=variants)
@@ -883,7 +884,7 @@ def tokenize_ukrainian(text: str) -> list[str]:
         token = raw.strip(".,;:!?\"'()[]{}")
         if len(token) < 3 or token in STOPWORDS:
             continue
-        if not any("\u0400" <= ch <= "\u04FF" or ch == "ґ" for ch in token):
+        if not any("\u0400" <= ch <= "\u04ff" or ch == "ґ" for ch in token):
             continue
         tokens.append(token)
     return tokens
@@ -1012,9 +1013,7 @@ def render_gap_categories_markdown(coverage_map: dict[str, Any], categories: lis
 
 def select_sources_for_category(category: dict[str, Any]) -> list[SourceProposal]:
     selected = [
-        proposal
-        for proposal in SOURCE_CATALOG
-        if any(tag in proposal.tags for tag in category.get("source_tags", []))
+        proposal for proposal in SOURCE_CATALOG if any(tag in proposal.tags for tag in category.get("source_tags", []))
     ]
     if selected:
         return selected[:2]
@@ -1178,10 +1177,7 @@ def write_draft_tickets(categories: list[dict[str, Any]], rows: list[dict[str, A
 
 
 def summarize_gap_categories(categories: list[dict[str, Any]], limit: int = 5) -> list[str]:
-    return [
-        f"{category['label']} ({category['affected_article_count']} article(s))"
-        for category in categories[:limit]
-    ]
+    return [f"{category['label']} ({category['affected_article_count']} article(s))" for category in categories[:limit]]
 
 
 def render_ratio_bar(numerator: int, denominator: int, width: int = 20) -> str:
@@ -1200,9 +1196,7 @@ def build_article_coverage_rows(coverage_map: dict[str, Any]) -> list[dict[str, 
         covered_count = max(0, concept_count - absent_count)
         coverage_pct = round((covered_count / concept_count) * 100, 1) if concept_count else 0.0
         missing_concepts = [
-            concept["concept"]
-            for concept in article.get("concepts", [])
-            if concept.get("absent_from_corpus")
+            concept["concept"] for concept in article.get("concepts", []) if concept.get("absent_from_corpus")
         ]
         rows.append(
             {
@@ -1288,9 +1282,7 @@ def render_a1_report_markdown(
     absent_concepts = int(metadata.get("absent_concept_count", 0))
     covered_concepts = max(0, total_concepts - absent_concepts)
     coverage_pct = round((covered_concepts / total_concepts) * 100, 1) if total_concepts else 0.0
-    cached_a1_concepts = sum(
-        1 for key in article_concepts.get("articles", {}) if key.startswith("a1/")
-    )
+    cached_a1_concepts = sum(1 for key in article_concepts.get("articles", {}) if key.startswith("a1/"))
     source_rows = build_report_source_rows(categories)
 
     lines = [
@@ -1352,9 +1344,7 @@ def render_a1_report_markdown(
     )
 
     for category in categories[:5]:
-        examples = ", ".join(
-            concept["concept"] for concept in category["affected_concepts"][:3]
-        )
+        examples = ", ".join(concept["concept"] for concept in category["affected_concepts"][:3])
         lines.append(
             f"| {category['severity_tier']} | {category['label']} | "
             f"{category['affected_article_count']} | "
@@ -1413,7 +1403,7 @@ def build_coverage_map(
     total_concepts = 0
     absent_concepts = 0
 
-    with sqlite3.connect(f"{Path(SOURCES_DB_PATH).resolve().as_uri()}?mode=ro", uri=True) as conn:
+    with _open_readonly(Path(SOURCES_DB_PATH).resolve()) as conn:
         for key in sorted(article_concepts.get("articles", {})):
             if allowed_keys is not None and key not in allowed_keys:
                 continue

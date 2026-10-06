@@ -71,6 +71,9 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 try:
     from lexicon.manifest_io import load_manifest
 except ModuleNotFoundError:  # pragma: no cover - package import path in tests
@@ -121,13 +124,36 @@ _EN_STOPWORDS = frozenset({"a", "an", "the", "to", "of", "and", "or"})
 # lesson form ("кого" 'whom', "мусить" 'has to') links to its lemma's article
 # ("хто" 'who', "мусити" 'to have to').
 _EN_IRREGULAR = {
-    "me": "i", "him": "he", "his": "he", "her": "she", "hers": "she",
-    "us": "we", "them": "they", "their": "they", "theirs": "they",
-    "whom": "who", "whose": "who", "these": "this", "those": "that",
-    "am": "be", "is": "be", "are": "be", "was": "be", "were": "be", "been": "be", "being": "be",
-    "has": "have", "had": "have", "having": "have",
-    "does": "do", "did": "do", "done": "do",
-    "people": "person", "men": "man", "women": "woman", "children": "child",
+    "me": "i",
+    "him": "he",
+    "his": "he",
+    "her": "she",
+    "hers": "she",
+    "us": "we",
+    "them": "they",
+    "their": "they",
+    "theirs": "they",
+    "whom": "who",
+    "whose": "who",
+    "these": "this",
+    "those": "that",
+    "am": "be",
+    "is": "be",
+    "are": "be",
+    "was": "be",
+    "were": "be",
+    "been": "be",
+    "being": "be",
+    "has": "have",
+    "had": "have",
+    "having": "have",
+    "does": "do",
+    "did": "do",
+    "done": "do",
+    "people": "person",
+    "men": "man",
+    "women": "woman",
+    "children": "child",
     "grey": "gray",
 }
 _EN_VOWELS = frozenset("aeiouy")
@@ -296,7 +322,10 @@ def _load_manifest_tables(manifest_path: str) -> tuple[dict[str, str], dict[str,
     except (FileNotFoundError, OSError, ValueError) as exc:
         if not _warned_manifest_unavailable:
             import sys
-            print(f"WARNING: atlas manifest unavailable ({exc!r}) — generating MDX without atlas links", file=sys.stderr)
+
+            print(
+                f"WARNING: atlas manifest unavailable ({exc!r}) — generating MDX without atlas links", file=sys.stderr
+            )
             _warned_manifest_unavailable = True
         return {}, {}
 
@@ -336,7 +365,7 @@ def _load_index(manifest_path: str) -> dict[str, str]:
 
 
 @lru_cache(maxsize=1)
-def _vesum_connection() -> sqlite3.Connection | None:
+def _vesum_connection() -> SQLiteConnection | None:
     """Open VESUM read-only, or return None where it is not installed (CI)."""
     try:
         from rag.config import VESUM_DB_PATH
@@ -345,7 +374,7 @@ def _vesum_connection() -> sqlite3.Connection | None:
     if not Path(VESUM_DB_PATH).is_file():
         return None
     try:
-        return sqlite3.connect(f"file:{VESUM_DB_PATH}?mode=ro", uri=True, check_same_thread=False)
+        return _open_readonly(VESUM_DB_PATH, check_same_thread=False)
     except sqlite3.Error:
         return None
 

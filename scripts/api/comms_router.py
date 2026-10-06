@@ -33,6 +33,8 @@ from importlib import util as importlib_util
 
 import yaml
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+
 logger = logging.getLogger(__name__)
 
 from fastapi import APIRouter, Depends, Query, Request, Response
@@ -98,7 +100,7 @@ def _read_tail_text(path, max_bytes: int = BATCH_LOG_TAIL_BYTES) -> tuple[str, b
         return handle.read().decode("utf-8", errors="replace"), True
 
 
-def _tune_db_connection(conn: sqlite3.Connection, *, writable: bool) -> None:
+def _tune_db_connection(conn: SQLiteConnection, *, writable: bool) -> None:
     """Apply broker read/write PRAGMAs for API connections."""
     conn.execute("PRAGMA busy_timeout=5000")
     conn.execute("PRAGMA cache_size=-20000")
@@ -134,7 +136,7 @@ def ensure_broker_db_ready(ctx: MonitorContext | None = None) -> None:
         conn.close()
 
 
-def _get_db(ctx: MonitorContext) -> sqlite3.Connection | None:
+def _get_db(ctx: MonitorContext) -> SQLiteConnection | None:
     """Get read-only broker DB connection. Returns None if DB missing."""
     handle = ctx.stores.message_db
     if handle is None or not handle.path.exists():
@@ -144,7 +146,7 @@ def _get_db(ctx: MonitorContext) -> sqlite3.Connection | None:
     return conn
 
 
-def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
+def _table_exists(conn: SQLiteConnection, table: str) -> bool:
     row = conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
         (table,),
@@ -152,7 +154,7 @@ def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
     return row is not None
 
 
-def _column_exists(conn: sqlite3.Connection, table: str, column: str) -> bool:
+def _column_exists(conn: SQLiteConnection, table: str, column: str) -> bool:
     return any(row["name"] == column for row in conn.execute(f"PRAGMA table_info({table})"))
 
 
@@ -213,9 +215,7 @@ def _maybe_run_delivery_expiry_sweep(ctx: MonitorContext) -> None:
             return
         # Snapshot the message DB path from the request's context (respects
         # the app's MonitorContext) and hand it to the sweep explicitly.
-        _expire_sweep_thread = threading.Thread(
-            target=_run_delivery_expiry_sweep, args=(message_db,), daemon=True
-        )
+        _expire_sweep_thread = threading.Thread(target=_run_delivery_expiry_sweep, args=(message_db,), daemon=True)
         _expire_sweep_thread.start()
 
 
@@ -798,9 +798,9 @@ async def broker_health(ctx: MonitorContext = Depends(get_ctx)):
             if conn is not None:
                 conn.execute("SELECT 1")
                 health["db_writable"] = True
-                health["queue_depth"] = conn.execute(
-                    "SELECT COUNT(*) FROM messages WHERE acknowledged = 0"
-                ).fetchone()[0]
+                health["queue_depth"] = conn.execute("SELECT COUNT(*) FROM messages WHERE acknowledged = 0").fetchone()[
+                    0
+                ]
                 conn.close()
         except Exception as exc:
             logger.warning("comms health: broker DB probe failed: %s", exc)
@@ -1491,9 +1491,7 @@ async def get_channel_endpoint(name: str, ctx: MonitorContext = Depends(get_ctx)
         if not row:
             return JSONResponse(status_code=404, content={"error": f"channel '{safe_name}' not found"})
 
-        msg_count = conn.execute(
-            "SELECT COUNT(*) FROM channel_messages WHERE channel = ?", (safe_name,)
-        ).fetchone()[0]
+        msg_count = conn.execute("SELECT COUNT(*) FROM channel_messages WHERE channel = ?", (safe_name,)).fetchone()[0]
         pending = conn.execute(
             "SELECT COUNT(*) FROM deliveries d "
             "JOIN channel_messages cm ON cm.message_id = d.message_id "
@@ -1715,6 +1713,7 @@ async def post_to_channel(name: str, req: ChannelPostRequest, request: Request):
         status_code=410,
         content={"error": "browser channel writes retired; /fleet.html is read-only"},
     )
+
 
 @router.get("/by-module/{track}/{slug}")
 async def messages_by_module(
@@ -1982,17 +1981,13 @@ def comms_inbox(
     }
 
 
-
-
 def _authority_plane_db(ctx: MonitorContext) -> Path:
     # EXACT mirror of fleet_router._plane_db_path (#7505 CF r1: the two
     # surfaces must never resolve the plane differently).
     return default_plane_root(repo_root=ctx.roots.project_root) / "comms.sqlite3"
 
 
-def _authority_metrics_payload(
-    collector, ctx: MonitorContext, empty_fields: dict | None = None, **kwargs
-) -> dict:
+def _authority_metrics_payload(collector, ctx: MonitorContext, empty_fields: dict | None = None, **kwargs) -> dict:
     """#7486 (plan v3.1 item 5): metric routes follow the storage/plane switch.
 
     Fail-open like the fleet facade: absent plane db → db_missing; collector
@@ -2059,9 +2054,7 @@ async def comms_v1_backlog(
             "db_missing": True,
             "store": store,
         }
-    payload = collect_delivery_backlog(
-        message_db, limit=limit, exclude_retired=exclude_retired
-    )
+    payload = collect_delivery_backlog(message_db, limit=limit, exclude_retired=exclude_retired)
     payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
     payload["store"] = store
     payload["content_included"] = False

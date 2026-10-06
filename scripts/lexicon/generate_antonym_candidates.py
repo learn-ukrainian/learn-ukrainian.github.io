@@ -9,10 +9,11 @@ from __future__ import annotations
 
 import argparse
 import json
-import sqlite3
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
+
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT / "data" / "lexicon" / "cache" / "morphological_antonym_candidates.json"
@@ -27,11 +28,10 @@ def _norm(value: str) -> str:
 
 def load_exact_lemmas(db_path: Path) -> tuple[dict[str, set[str]], dict[tuple[str, str], set[str]]]:
     """Return direct lemma/POS membership and its VESUM tags."""
-    connection = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    connection = _open_readonly(db_path)
     try:
         rows = connection.execute(
-            "SELECT lemma, pos, tags FROM forms "
-            "WHERE word_form = lemma AND pos IN ('adj', 'adv', 'noun')"
+            "SELECT lemma, pos, tags FROM forms WHERE word_form = lemma AND pos IN ('adj', 'adv', 'noun')"
         ).fetchall()
     finally:
         connection.close()

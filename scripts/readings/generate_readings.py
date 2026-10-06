@@ -27,6 +27,8 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.etymology.transliterate import transliterate
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.readings.clean_text_resolver import load_work_index, resolve_clean_text
 from scripts.readings.primary_text_demand import DEFAULT_PLANS_DIR, build_manifest
 from scripts.readings.rights_classifier import classify_rights
@@ -135,7 +137,7 @@ QuoteVerifier = Callable[[PrimaryReadingCandidate, CorpusText], VerificationResu
 CURATED_METADATA: dict[str, dict[str, Any]] = {
     "koliadka-yak-shche-ne-bulo": {
         "title": "«Як ще не було початку світа» (космогонічна колядка)",
-        "title_en": "\"When the world had no beginning\" (cosmogonic carol)",
+        "title_en": '"When the world had no beginning" (cosmogonic carol)',
         "genre": "Колядка",
         "order": 20,
     },
@@ -147,7 +149,7 @@ CURATED_METADATA: dict[str, dict[str, Any]] = {
     },
     "shchedrivka-oi-syvaia-ta-i-zozulechka": {
         "title": "«Ой сивая та і зозулечка» (щедрівка з тріадою світил)",
-        "title_en": "\"Oh, the grey cuckoo\" (shchedrivka with a triad of lights)",
+        "title_en": '"Oh, the grey cuckoo" (shchedrivka with a triad of lights)',
         "genre": "Щедрівка",
         "collector": "корпус ukrlib-narod-dumy; збирач не зазначений",
         "year": "традиційний текст; корпусна дата 1600",
@@ -361,11 +363,7 @@ def generate_from_demand(
             )
             continue
 
-        tracks = {
-            str(item.get("track") or "").strip()
-            for item in taught_by
-            if str(item.get("track") or "").strip()
-        }
+        tracks = {str(item.get("track") or "").strip() for item in taught_by if str(item.get("track") or "").strip()}
         resolved_by_slug[slug] = ResolvedReading(
             candidate=candidate,
             corpus=corpus,
@@ -373,9 +371,7 @@ def generate_from_demand(
             tracks=tracks,
             study_links=_study_links_from_taught_by(taught_by, plans_dir),
             taught_in=tuple(
-                str(item.get("slug") or "").strip()
-                for item in taught_by
-                if str(item.get("slug") or "").strip()
+                str(item.get("slug") or "").strip() for item in taught_by if str(item.get("slug") or "").strip()
             ),
             source_chunk_ids=tuple(str(chunk_id) for chunk_id in clean_source["chunk_ids"]),
         )
@@ -431,7 +427,7 @@ class CorpusLookup:
     ) -> CorpusText | None:
         if not self.db_path.exists():
             return None
-        with sqlite3.connect(f"{Path(self.db_path).resolve().as_uri()}?mode=ro", uri=True) as conn:
+        with _open_readonly(Path(self.db_path).resolve()) as conn:
             conn.row_factory = sqlite3.Row
             for hint in _matching_hints(candidate, hints):
                 if hint.packet_chunk_id:
@@ -449,10 +445,7 @@ class CorpusLookup:
                         return corpus
 
             rows = self._candidate_rows(conn, candidate)
-            scored = [
-                (self._score(candidate, row), _row_to_corpus(row))
-                for row in rows
-            ]
+            scored = [(self._score(candidate, row), _row_to_corpus(row)) for row in rows]
             for _score, corpus in sorted(scored, key=lambda pair: pair[0], reverse=True):
                 if corpus and verify_candidate_against_corpus(candidate, corpus).matched:
                     return corpus
@@ -460,7 +453,7 @@ class CorpusLookup:
 
     def _candidate_rows(
         self,
-        conn: sqlite3.Connection,
+        conn: SQLiteConnection,
         candidate: PrimaryReadingCandidate,
     ) -> list[sqlite3.Row]:
         rows: list[sqlite3.Row] = []
@@ -511,10 +504,7 @@ def verify_candidate_against_corpus(
 ) -> VerificationResult:
     """Verify that every embedded quote line is attested in the corpus text."""
     text_key = _block_key(corpus.text)
-    missing = [
-        line for line in candidate.quote_lines
-        if _line_key(line) and _line_key(line) not in text_key
-    ]
+    missing = [line for line in candidate.quote_lines if _line_key(line) and _line_key(line) not in text_key]
     if missing:
         return VerificationResult(
             matched=False,
@@ -618,15 +608,9 @@ def format_summary(summary: GenerationSummary, *, project_root: Path = PROJECT_R
         f"Skipped: {len(summary.skipped)}",
     ]
     for item in summary.written:
-        lines.append(
-            f"- {item.action}: {_display_path(item.path, project_root)} "
-            f"(chunk {item.source_chunk_id})"
-        )
+        lines.append(f"- {item.action}: {_display_path(item.path, project_root)} (chunk {item.source_chunk_id})")
     for item in summary.existing:
-        lines.append(
-            f"- {item.action}: {_display_path(item.path, project_root)} "
-            f"(chunk {item.source_chunk_id})"
-        )
+        lines.append(f"- {item.action}: {_display_path(item.path, project_root)} (chunk {item.source_chunk_id})")
     for item in summary.skipped:
         suffix = f" [{item.slug}]" if item.slug else ""
         lines.append(f"- skipped{suffix}: {item.title} — {item.reason}")
@@ -802,7 +786,7 @@ def _ordered_unique(values: Iterable[str]) -> list[str]:
 
 def _load_corpus_chunk_rows(db_path: Path) -> dict[str, sqlite3.Row]:
     rows_by_chunk_id: dict[str, sqlite3.Row] = {}
-    with sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True) as conn:
+    with _open_readonly(Path(db_path).resolve()) as conn:
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             """
@@ -914,7 +898,8 @@ def _metadata_for(resolved: ResolvedReading) -> dict[str, Any]:
         "period": curated.get("period") or _period_label(corpus),
         "tracks": [],
         "excerpt": curated.get("excerpt") or _fallback_excerpt(candidate, corpus),
-        "source": curated.get("source") or (
+        "source": curated.get("source")
+        or (
             f"{candidate.author}; корпус {source_file}. Текст у суспільному надбанні; "
             "подано дослівно за корпусним записом."
         ),

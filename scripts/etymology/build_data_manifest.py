@@ -47,6 +47,8 @@ import sqlite3
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 try:
     from scripts.etymology.transliterate import transliterate
 except ModuleNotFoundError:  # pragma: no cover - direct-script support
@@ -59,7 +61,7 @@ MANIFEST_VERSION = "2026-05-15-v1"
 
 def load_manifest(db_path: Path) -> dict:
     """Load all ESUM entries from sources.db and shape into the build manifest."""
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(db_path).resolve())
     conn.row_factory = sqlite3.Row
     try:
         cognate_columns = {row["name"] for row in conn.execute("PRAGMA table_info(esum_cognate_forms)")}
@@ -89,8 +91,7 @@ def load_manifest(db_path: Path) -> dict:
 
     # First pass: compute slug counts to detect collisions for polysemy ordinal.
     slug_counts: Counter[tuple[str, int, int]] = Counter(
-        (transliterate(row["lemma"]) or f"entry-{row['id']}", row["vol"], row["page"])
-        for row in rows
+        (transliterate(row["lemma"]) or f"entry-{row['id']}", row["vol"], row["page"]) for row in rows
     )
 
     # Second pass: assign canonical slug + page_slug per entry.

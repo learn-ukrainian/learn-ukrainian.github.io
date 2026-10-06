@@ -233,7 +233,7 @@ class MonitorContext:
         if session_streams:
             return SessionStreamDatabase(path)
         if read_only:
-            return connect_sqlite(f"file:{path}?mode=ro", uri=True)
+            return connect_sqlite(path.resolve().as_uri() + "?mode=ro", uri=True)
         return connect_sqlite(str(path))
 
 

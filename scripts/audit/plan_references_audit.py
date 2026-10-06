@@ -42,6 +42,9 @@ from pathlib import Path
 
 import yaml
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 PLANS_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans"
 SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
@@ -77,6 +80,7 @@ def _canonicalize_author_uk(author: str) -> str:
     """Canonical-form lookup; pass-through on miss."""
     return _CYRILLIC_AUTHOR_CANONICAL.get(author, author)
 
+
 # "Author Grade N, p.M" / "с. M" / "стор. M". Cyrillic author block,
 # Grade integer, then a page-style marker followed by digits.
 PAGED_CITATION_RE = re.compile(
@@ -88,19 +92,101 @@ PAGED_CITATION_RE = re.compile(
 # overlap doesn't get inflated by particles/auxiliaries.
 UK_STOPWORDS = frozenset(
     [
-        "що", "як", "це", "цей", "ця", "ці", "той", "та", "те", "ті",
-        "або", "але", "тому", "тому що", "ще", "вже", "коли", "де",
-        "куди", "звідки", "чому", "хто", "який", "яка", "яке", "які",
-        "для", "про", "над", "під", "при", "без", "після", "перед",
-        "між", "через", "проти", "крім", "окрім", "разом", "поряд",
-        "сам", "сама", "сами", "інший", "інша", "інше", "інші",
-        "може", "можна", "треба", "потрібно", "потрібен", "є", "був",
-        "була", "було", "були", "буде", "буду", "будемо", "будуть",
-        "так", "ні", "не", "ані", "лише", "тільки", "навіть", "хоча",
-        "якщо", "коли", "поки", "доки", "поки що", "досі", "вже",
-        "теж", "також", "багато", "мало", "трохи", "дуже", "зовсім",
-        "грамат", "урок", "розділ", "тема", "підручник", "клас",
-        "вправ", "завдан", "ілюстр", "приклад", "сторінк",
+        "що",
+        "як",
+        "це",
+        "цей",
+        "ця",
+        "ці",
+        "той",
+        "та",
+        "те",
+        "ті",
+        "або",
+        "але",
+        "тому",
+        "тому що",
+        "ще",
+        "вже",
+        "коли",
+        "де",
+        "куди",
+        "звідки",
+        "чому",
+        "хто",
+        "який",
+        "яка",
+        "яке",
+        "які",
+        "для",
+        "про",
+        "над",
+        "під",
+        "при",
+        "без",
+        "після",
+        "перед",
+        "між",
+        "через",
+        "проти",
+        "крім",
+        "окрім",
+        "разом",
+        "поряд",
+        "сам",
+        "сама",
+        "сами",
+        "інший",
+        "інша",
+        "інше",
+        "інші",
+        "може",
+        "можна",
+        "треба",
+        "потрібно",
+        "потрібен",
+        "є",
+        "був",
+        "була",
+        "було",
+        "були",
+        "буде",
+        "буду",
+        "будемо",
+        "будуть",
+        "так",
+        "ні",
+        "не",
+        "ані",
+        "лише",
+        "тільки",
+        "навіть",
+        "хоча",
+        "якщо",
+        "коли",
+        "поки",
+        "доки",
+        "поки що",
+        "досі",
+        "вже",
+        "теж",
+        "також",
+        "багато",
+        "мало",
+        "трохи",
+        "дуже",
+        "зовсім",
+        "грамат",
+        "урок",
+        "розділ",
+        "тема",
+        "підручник",
+        "клас",
+        "вправ",
+        "завдан",
+        "ілюстр",
+        "приклад",
+        "сторінк",
     ]
 )
 
@@ -165,9 +251,7 @@ def _topic_keywords(plan: dict) -> list[str]:
     return parts
 
 
-def _extract_citations(
-    plan_path: Path, level: str
-) -> list[Citation]:
+def _extract_citations(plan_path: Path, level: str) -> list[Citation]:
     with plan_path.open(encoding="utf-8") as f:
         plan = yaml.safe_load(f) or {}
     slug = plan_path.stem
@@ -175,11 +259,7 @@ def _extract_citations(
 
     refs = plan.get("references") or []
     for idx, ref in enumerate(refs):
-        text = (
-            " || ".join(str(ref.get(k) or "") for k in ("title", "notes"))
-            if isinstance(ref, dict)
-            else str(ref)
-        )
+        text = " || ".join(str(ref.get(k) or "") for k in ("title", "notes")) if isinstance(ref, dict) else str(ref)
         for m in PAGED_CITATION_RE.finditer(text):
             cites.append(
                 Citation(
@@ -213,9 +293,7 @@ def _extract_citations(
     return cites
 
 
-def _source_files_for(
-    conn: sqlite3.Connection, author_uk: str, grade: int
-) -> list[str]:
+def _source_files_for(conn: SQLiteConnection, author_uk: str, grade: int) -> list[str]:
     """Cyrillic-native matcher: queries textbooks.author_uk + grade directly.
 
     Applies _canonicalize_author_uk to handle spelling variants
@@ -225,16 +303,13 @@ def _source_files_for(
         return []
     canonical = _canonicalize_author_uk(author_uk)
     rows = conn.execute(
-        (
-            "SELECT DISTINCT source_file FROM textbooks "
-            "WHERE author_uk = ? AND grade = ?"
-        ),
+        ("SELECT DISTINCT source_file FROM textbooks WHERE author_uk = ? AND grade = ?"),
         (canonical, str(grade)),
     ).fetchall()
     return sorted(str(r[0]) for r in rows)
 
 
-def _author_uk_exists(conn: sqlite3.Connection, author_uk: str) -> bool:
+def _author_uk_exists(conn: SQLiteConnection, author_uk: str) -> bool:
     """True iff at least one row exists with this Cyrillic author at any grade."""
     canonical = _canonicalize_author_uk(author_uk)
     row = conn.execute(
@@ -244,9 +319,7 @@ def _author_uk_exists(conn: sqlite3.Connection, author_uk: str) -> bool:
     return row is not None
 
 
-def _fetch_chunk(
-    conn: sqlite3.Connection, source_files: list[str], page: int
-) -> dict | None:
+def _fetch_chunk(conn: SQLiteConnection, source_files: list[str], page: int) -> dict | None:
     if not source_files:
         return None
     quoted = ",".join("?" for _ in source_files)
@@ -271,9 +344,7 @@ def _fetch_chunk(
     return None
 
 
-def _nearby_pages(
-    conn: sqlite3.Connection, source_files: list[str], page: int, radius: int = 3
-) -> list[tuple[int, str]]:
+def _nearby_pages(conn: SQLiteConnection, source_files: list[str], page: int, radius: int = 3) -> list[tuple[int, str]]:
     """Return up to `radius`-distance pages that DO exist, with chunk
     titles, for the GHOST_PAGE 'suggested fix' column."""
     if not source_files:
@@ -312,14 +383,9 @@ def _classify_level_mismatch(level: str, grade: int) -> bool:
     return grade >= threshold
 
 
-def _audit_citation(
-    cite: Citation, plan_text: str, conn: sqlite3.Connection
-) -> Finding:
+def _audit_citation(cite: Citation, plan_text: str, conn: SQLiteConnection) -> Finding:
     if not _author_uk_exists(conn, cite.author):
-        fix = (
-            f"unknown author {cite.author!r}; not present in "
-            "textbooks.author_uk (verify spelling or add to corpus)"
-        )
+        fix = f"unknown author {cite.author!r}; not present in textbooks.author_uk (verify spelling or add to corpus)"
         return Finding(citation=cite, mode="UNKNOWN_AUTHOR", detail=fix)
 
     files = _source_files_for(conn, cite.author, cite.grade)
@@ -328,8 +394,7 @@ def _audit_citation(
             citation=cite,
             mode="GHOST_SOURCE",
             detail=(
-                f"{cite.author} Grade {cite.grade} not in corpus "
-                f"(canonical: {_canonicalize_author_uk(cite.author)!r})"
+                f"{cite.author} Grade {cite.grade} not in corpus (canonical: {_canonicalize_author_uk(cite.author)!r})"
             ),
             suggested_fix="drop citation or replace with a grade in corpus",
         )
@@ -345,10 +410,7 @@ def _audit_citation(
         return Finding(
             citation=cite,
             mode="GHOST_PAGE",
-            detail=(
-                f"page {cite.page} not in corpus for "
-                f"{', '.join(files)}"
-            ),
+            detail=(f"page {cite.page} not in corpus for {', '.join(files)}"),
             resolved_source_file=files[0],
             suggested_fix=fix,
         )
@@ -366,18 +428,13 @@ def _audit_citation(
         return Finding(
             citation=cite,
             mode="TOPIC_MISMATCH",
-            detail=(
-                f"chunk title {chunk['title']!r}; only {overlap_count} "
-                "shared content stems with plan topic"
-            ),
+            detail=(f"chunk title {chunk['title']!r}; only {overlap_count} shared content stems with plan topic"),
             chunk_preview=(chunk.get("text") or "")[:300].replace("\n", " "),
             resolved_source_file=chunk["source_file"],
             chunk_title=str(chunk.get("title") or ""),
             overlap=overlap_count,
             topic_keywords=sorted(overlap),
-            suggested_fix=(
-                "verify topic relevance; drop or replace with on-topic page"
-            ),
+            suggested_fix=("verify topic relevance; drop or replace with on-topic page"),
         )
 
     if level_warn:
@@ -385,17 +442,11 @@ def _audit_citation(
         if cite.level in ("a1", "a2"):
             fix_hint = "prefer Grade <=6 source if available"
         else:
-            fix_hint = (
-                f"verify Grade {cite.grade} content is genuinely "
-                f"{cite.level.upper()}-appropriate"
-            )
+            fix_hint = f"verify Grade {cite.grade} content is genuinely {cite.level.upper()}-appropriate"
         return Finding(
             citation=cite,
             mode="LEVEL_MISMATCH",
-            detail=(
-                f"{cite.level.upper()} plan cites Grade {cite.grade} "
-                f"textbook (threshold: Grade >= {threshold})"
-            ),
+            detail=(f"{cite.level.upper()} plan cites Grade {cite.grade} textbook (threshold: Grade >= {threshold})"),
             chunk_preview=(chunk.get("text") or "")[:300].replace("\n", " "),
             resolved_source_file=chunk["source_file"],
             chunk_title=str(chunk.get("title") or ""),
@@ -427,25 +478,19 @@ def _collect(level: str) -> tuple[list[Citation], dict[str, str]]:
     return cites, plan_text_by_slug
 
 
-def _render_markdown(
-    findings: list[Finding], totals: dict, tracks: list[str]
-) -> str:
+def _render_markdown(findings: list[Finding], totals: dict, tracks: list[str]) -> str:
     lines: list[str] = []
     track_label = " + ".join(t.upper() for t in tracks)
     lines.append(f"# {track_label} plan_references audit")
     lines.append("")
-    lines.append(
-        f"Generated: {dt.datetime.now(dt.UTC).strftime('%Y-%m-%d')}"
-    )
+    lines.append(f"Generated: {dt.datetime.now(dt.UTC).strftime('%Y-%m-%d')}")
     lines.append("")
     lines.append("## Summary")
     lines.append("")
     lines.append(f"- Plans audited: **{totals['plans']}**")
     for t in tracks:
         lines.append(f"  - {t.upper()}: {totals['plans_by_track'].get(t, 0)}")
-    lines.append(
-        f"- Paged citations extracted: **{totals['citations']}**"
-    )
+    lines.append(f"- Paged citations extracted: **{totals['citations']}**")
     lines.append("- By failure mode:")
     for mode in (
         "OK",
@@ -458,9 +503,7 @@ def _render_markdown(
         lines.append(f"  - {mode}: {totals['by_mode'].get(mode, 0)}")
     lines.append("- LEVEL_MISMATCH thresholds (grade >= threshold flags):")
     for t in tracks:
-        lines.append(
-            f"  - {t.upper()}: Grade >= {PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(t, '—')}"
-        )
+        lines.append(f"  - {t.upper()}: Grade >= {PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(t, '—')}")
     lines.append("")
     lines.append(
         "Failure modes are reported separately: a single citation may be both "
@@ -471,11 +514,7 @@ def _render_markdown(
     lines.append("")
 
     for level in tracks:
-        level_findings = [
-            f
-            for f in findings
-            if f.citation.level == level and f.mode != "OK"
-        ]
+        level_findings = [f for f in findings if f.citation.level == level and f.mode != "OK"]
         lines.append(f"## {level.upper()} — broken citations")
         lines.append("")
         if not level_findings:
@@ -489,9 +528,7 @@ def _render_markdown(
         for slug in sorted(by_plan):
             lines.append(f"### {slug}")
             lines.append("")
-            lines.append(
-                "| citation | mode | corpus reality | suggested fix |"
-            )
+            lines.append("| citation | mode | corpus reality | suggested fix |")
             lines.append("| --- | --- | --- | --- |")
             for f in sorted(
                 by_plan[slug],
@@ -500,15 +537,10 @@ def _render_markdown(
                 detail = f.detail.replace("|", "\\|")
                 fix = (f.suggested_fix or "").replace("|", "\\|")
                 if f.mode == "TOPIC_MISMATCH" and f.chunk_preview:
-                    detail += (
-                        f"<br>chunk text (first 300 chars): "
-                        f'_"{f.chunk_preview.replace("|", "\\|")[:300]}"_'
-                    )
+                    detail += f'<br>chunk text (first 300 chars): _"{f.chunk_preview.replace("|", "\\|")[:300]}"_'
                 if f.mode == "LEVEL_MISMATCH" and f.chunk_title:
                     detail += f"<br>chunk title: _{f.chunk_title}_"
-                lines.append(
-                    f"| `{f.citation.raw}` | {f.mode} | {detail} | {fix} |"
-                )
+                lines.append(f"| `{f.citation.raw}` | {f.mode} | {detail} | {fix} |")
             lines.append("")
 
     lines.append("## Aggregate findings")
@@ -518,18 +550,14 @@ def _render_markdown(
     unknown_by_author: dict[str, int] = {}
     for f in findings:
         if f.mode == "UNKNOWN_AUTHOR":
-            unknown_by_author[f.citation.author] = (
-                unknown_by_author.get(f.citation.author, 0) + 1
-            )
+            unknown_by_author[f.citation.author] = unknown_by_author.get(f.citation.author, 0) + 1
     if unknown_by_author:
         lines.append("| author | citations affected |")
         lines.append("| --- | --- |")
         for author in sorted(unknown_by_author):
             lines.append(f"| {author} | {unknown_by_author[author]} |")
     else:
-        lines.append(
-            "_All cited authors resolve against `textbooks.author_uk`._"
-        )
+        lines.append("_All cited authors resolve against `textbooks.author_uk`._")
     lines.append("")
 
     lines.append("### Level-mismatch summary")
@@ -543,13 +571,10 @@ def _render_markdown(
         lines.append("| level | author | grade | citations |")
         lines.append("| --- | --- | --- | --- |")
         for (lvl, author, grade), cnt in sorted(lvl_rows.items()):
-            lines.append(
-                f"| {lvl.upper()} | {author} | Grade {grade} | {cnt} |"
-            )
+            lines.append(f"| {lvl.upper()} | {author} | Grade {grade} | {cnt} |")
     else:
         threshold_phrase = "; ".join(
-            f"{t.upper()} Grade >= {PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(t, '—')}"
-            for t in tracks
+            f"{t.upper()} Grade >= {PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(t, '—')}" for t in tracks
         )
         lines.append(f"_No citations crossed thresholds: {threshold_phrase}._")
     lines.append("")
@@ -628,10 +653,7 @@ def main(argv: list[str] | None = None) -> int:
         "--tracks",
         type=_parse_tracks,
         default=list(DEFAULT_TRACKS),
-        help=(
-            "Comma-separated track list (default: a1,a2). Valid: "
-            f"{sorted(PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS)}."
-        ),
+        help=(f"Comma-separated track list (default: a1,a2). Valid: {sorted(PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS)}."),
     )
     args = parser.parse_args(argv)
 
@@ -647,17 +669,13 @@ def main(argv: list[str] | None = None) -> int:
         cites, text_map = _collect(track)
         all_cites.extend(cites)
         plan_text_by_slug.update(text_map)
-        plans_by_track[track] = len(
-            list((PLANS_ROOT / track).glob("*.yaml"))
-        )
+        plans_by_track[track] = len(list((PLANS_ROOT / track).glob("*.yaml")))
 
     findings: list[Finding] = []
-    with sqlite3.connect(f"{Path(args.db).resolve().as_uri()}?mode=ro", uri=True) as conn:
+    with _open_readonly(Path(args.db).resolve()) as conn:
         conn.row_factory = sqlite3.Row
         for cite in all_cites:
-            f = _audit_citation(
-                cite, plan_text_by_slug.get(cite.plan_slug, ""), conn
-            )
+            f = _audit_citation(cite, plan_text_by_slug.get(cite.plan_slug, ""), conn)
             findings.append(f)
 
     by_mode: dict[str, int] = {}
@@ -710,9 +728,7 @@ def main(argv: list[str] | None = None) -> int:
         encoding="utf-8",
     )
 
-    (args.out_dir / "REPORT.md").write_text(
-        _render_markdown(findings_sorted, totals, tracks), encoding="utf-8"
-    )
+    (args.out_dir / "REPORT.md").write_text(_render_markdown(findings_sorted, totals, tracks), encoding="utf-8")
 
     summary = (
         f"plans={totals['plans']} citations={totals['citations']} "

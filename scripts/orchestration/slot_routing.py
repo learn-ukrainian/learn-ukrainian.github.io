@@ -38,15 +38,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.orchestration.fleet_taxonomy import (
     UnknownAreaError,
     resolve_area,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_SESSION_DB_PATH = (
-    PROJECT_ROOT / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
-)
+DEFAULT_SESSION_DB_PATH = PROJECT_ROOT / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
 DEFAULT_ASSIGNMENTS_PATH = PROJECT_ROOT / "scripts" / "config" / "area_assignments.yaml"
 
 
@@ -97,6 +96,7 @@ def _find_area_for_slot(slot: str, assignments_path: Path) -> str | None:
             return None
         text = assignments_path.read_text(encoding="utf-8")
         import yaml
+
         raw_data = yaml.safe_load(text)
         if not isinstance(raw_data, dict):
             return None
@@ -212,7 +212,7 @@ def resolve_slot_holder(
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
 
     try:
-        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        conn = _open_readonly(db_path)
         conn.row_factory = sqlite3.Row
         try:
             rows = conn.execute(query, epic_stream_ids).fetchall()

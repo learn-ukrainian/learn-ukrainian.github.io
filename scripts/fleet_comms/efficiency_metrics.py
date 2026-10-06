@@ -28,6 +28,8 @@ from scripts.control_plane.storage import (
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.message_plane import resolve_plane_mode
 from scripts.fleet_comms.opsec_store import batch_tasks_store, comms_plane_store
+from scripts.lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.orchestration.task_record_store import iter_task_records
 
 # Alert thresholds are intentionally reported, not enforced here. #5646 owns
@@ -53,9 +55,9 @@ _RETIRED_AGENTS = frozenset({"gemini"})
 
 
 @contextmanager
-def _connect_legacy(db_path: Path) -> Iterator[sqlite3.Connection]:
+def _connect_legacy(db_path: Path) -> Iterator[SQLiteConnection]:
     """Open a read path connection and always close it (sqlite3 `with` only commits)."""
-    conn = sqlite3.connect(str(db_path))
+    conn = _open_readonly(str(db_path))
     conn.row_factory = sqlite3.Row
     try:
         yield conn
@@ -97,38 +99,42 @@ def _connect_ro(db_path: Path) -> Iterator[Any]:
 
 
 def _placeholder(conn: Any) -> str:
-    return "?" if isinstance(conn, sqlite3.Connection) else "%s"
+    return "?" if is_sqlite_connection(conn) else "%s"
 
 
 def _table_exists(conn: Any, name: str) -> bool:
-    if isinstance(conn, sqlite3.Connection):
+    if is_sqlite_connection(conn):
         query = "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?"
     else:
         query = "SELECT 1 FROM pg_class WHERE oid = to_regclass(%s) AND relkind IN ('r', 'p')"
     exists = conn.execute(query, (name,)).fetchone() is not None
-    if not exists and not isinstance(conn, sqlite3.Connection):
+    if not exists and not is_sqlite_connection(conn):
         raise EfficiencyMetricsReadError("control-plane store 'fleet_comms' metrics table unavailable")
     return exists
 
 
 def _column_names(conn: Any, table: str) -> set[str]:
-    if isinstance(conn, sqlite3.Connection):
+    if is_sqlite_connection(conn):
         return {str(r[1]) for r in conn.execute(f"PRAGMA table_info({table})").fetchall()}
     return {
         str(r["attname"])
         for r in conn.execute(
-            "SELECT attname FROM pg_attribute WHERE attrelid = to_regclass(%s) "
-            "AND attnum > 0 AND NOT attisdropped",
+            "SELECT attname FROM pg_attribute WHERE attrelid = to_regclass(%s) AND attnum > 0 AND NOT attisdropped",
             (table,),
         ).fetchall()
     }
 
 
 def _delivery_latency(
-    conn: Any, *, table: str, start: str, end: str, delivered_only: bool = False,
+    conn: Any,
+    *,
+    table: str,
+    start: str,
+    end: str,
+    delivered_only: bool = False,
 ) -> dict[str, Any] | None:
     """Aggregate durable timestamps; identifiers are collector-owned constants."""
-    if isinstance(conn, sqlite3.Connection):
+    if is_sqlite_connection(conn):
         duration = f"(julianday({end}) - julianday({start})) * 86400.0"
     else:
         duration = f"EXTRACT(EPOCH FROM ({end}::timestamptz - {start}::timestamptz))"
@@ -191,9 +197,7 @@ def collect_delivery_backlog(
         if not select_cols:
             return {"total": 0, "by_agent": {}, "by_status": {}, "rows": []}
         order_col = (
-            "dispatched_at"
-            if "dispatched_at" in cols
-            else ("created_at" if "created_at" in cols else select_cols[0])
+            "dispatched_at" if "dispatched_at" in cols else ("created_at" if "created_at" in cols else select_cols[0])
         )
         status_filter = "('pending', 'dispatched')"
         rows = conn.execute(
@@ -275,21 +279,20 @@ def collect_efficiency_metrics(db_path: Path) -> dict[str, Any]:
         }
 
         if _table_exists(conn, "deliveries"):
-            for r in conn.execute(
-                "SELECT status, COUNT(*) AS c FROM deliveries GROUP BY status"
-            ):
+            for r in conn.execute("SELECT status, COUNT(*) AS c FROM deliveries GROUP BY status"):
                 metrics["deliveries"][str(r["status"])] = int(r["c"])
             latency = _delivery_latency(
-                conn, table="deliveries", start="dispatched_at", end="delivered_at",
+                conn,
+                table="deliveries",
+                start="dispatched_at",
+                end="delivered_at",
                 delivered_only=True,
             )
             if latency:
                 metrics["latency_seconds"]["delivery_dispatch_to_done"] = latency
 
         if _table_exists(conn, "requests"):
-            for r in conn.execute(
-                "SELECT state, COUNT(*) AS c FROM requests GROUP BY state"
-            ):
+            for r in conn.execute("SELECT state, COUNT(*) AS c FROM requests GROUP BY state"):
                 metrics["requests"][str(r["state"])] = int(r["c"])
 
         if _table_exists(conn, "messages"):
@@ -298,16 +301,12 @@ def collect_efficiency_metrics(db_path: Path) -> dict[str, Any]:
             # Never assume status alone — schemas without it must still return metrics.
             if "message_type" in msg_cols:
                 by_type: dict[str, int] = {}
-                for r in conn.execute(
-                    "SELECT message_type, COUNT(*) AS c FROM messages GROUP BY message_type"
-                ):
+                for r in conn.execute("SELECT message_type, COUNT(*) AS c FROM messages GROUP BY message_type"):
                     by_type[str(r["message_type"] or "")] = int(r["c"])
                 metrics["messages_legacy"]["by_message_type"] = by_type
             if "status" in msg_cols:
                 by_status: dict[str, int] = {}
-                for r in conn.execute(
-                    "SELECT status, COUNT(*) AS c FROM messages GROUP BY status"
-                ):
+                for r in conn.execute("SELECT status, COUNT(*) AS c FROM messages GROUP BY status"):
                     # Truncate long free-form failure strings (not content, but keep compact).
                     key = str(r["status"] or "")
                     if len(key) > 80:
@@ -325,9 +324,7 @@ def collect_efficiency_metrics(db_path: Path) -> dict[str, Any]:
                 metrics["messages_legacy"]["distinct_task_ids"] = int(pair["tasks"] or 0)
 
         if _table_exists(conn, "dead_letters"):
-            metrics["dead_letters"] = int(
-                conn.execute("SELECT COUNT(*) AS c FROM dead_letters").fetchone()["c"]
-            )
+            metrics["dead_letters"] = int(conn.execute("SELECT COUNT(*) AS c FROM dead_letters").fetchone()["c"])
 
         # retired endpoint backlog should be zero for gemini inserts going forward
         if _table_exists(conn, "deliveries"):
@@ -463,12 +460,13 @@ def collect_efficiency_metrics_authority(plane_db: Path) -> dict[str, Any]:
         return metrics
     with _connect_ro(plane_db) as conn:
         if _table_exists(conn, "authority_deliveries"):
-            for r in conn.execute(
-                "SELECT state, COUNT(*) AS c FROM authority_deliveries GROUP BY state"
-            ):
+            for r in conn.execute("SELECT state, COUNT(*) AS c FROM authority_deliveries GROUP BY state"):
                 metrics["deliveries"][str(r["state"])] = int(r["c"])
             latency = _delivery_latency(
-                conn, table="authority_deliveries", start="created_at", end="completed_at",
+                conn,
+                table="authority_deliveries",
+                start="created_at",
+                end="completed_at",
             )
             if latency:
                 metrics["latency_seconds"]["delivery_created_to_done"] = latency
@@ -483,9 +481,7 @@ def collect_efficiency_metrics_authority(plane_db: Path) -> dict[str, Any]:
             metrics["retired_endpoint_pending"] = {"gemini": int(gemini_pending)}
 
         if _table_exists(conn, "authority_jobs"):
-            for r in conn.execute(
-                "SELECT state, COUNT(*) AS c FROM authority_jobs GROUP BY state"
-            ):
+            for r in conn.execute("SELECT state, COUNT(*) AS c FROM authority_jobs GROUP BY state"):
                 metrics["jobs"][str(r["state"])] = int(r["c"])
 
         if _table_exists(conn, "authority_dead_letters"):
@@ -636,7 +632,9 @@ def _store_merge_facts(path: Path, facts: dict[str, str]) -> None:
 
 
 def _run_gh(
-    args: list[str], *, timeout: float = _GH_TIMEOUT_S,
+    args: list[str],
+    *,
+    timeout: float = _GH_TIMEOUT_S,
 ) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         args,
@@ -747,10 +745,18 @@ def _fetch_merge_facts(
         batch = valid[start : start + _GRAPHQL_BATCH_SIZE]
         try:
             from scripts.publish.github import read
+
             def transport(args, **kwargs):
                 return gh_runner([gh_bin, *args[1:]], timeout=kwargs["timeout"])
-            proc = read("merge-facts", batch=batch, runner=transport if gh_runner is not _run_gh else None,
-                        timeout=_GH_TIMEOUT_S, capture_output=True, text=True)
+
+            proc = read(
+                "merge-facts",
+                batch=batch,
+                runner=transport if gh_runner is not _run_gh else None,
+                timeout=_GH_TIMEOUT_S,
+                capture_output=True,
+                text=True,
+            )
             stdout = proc.stdout or ""
             if isinstance(stdout, bytes):
                 stdout = stdout.decode("utf-8", errors="replace")

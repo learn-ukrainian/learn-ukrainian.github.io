@@ -20,6 +20,9 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FIXTURE_DIR = REPO_ROOT / "tests/fixtures/qg_bakeoff"
 DEFAULT_RIGHTS_JSON = REPO_ROOT / "tests/fixtures/qg_bakeoff_rights/rights.json"
@@ -281,14 +284,14 @@ def classify_row(claim_id: str, row_kind: str, text: str) -> str:
     return "POINTER"
 
 
-def table_columns(conn: sqlite3.Connection, table: str) -> set[str]:
+def table_columns(conn: SQLiteConnection, table: str) -> set[str]:
     try:
         return {row["name"] for row in conn.execute(f"PRAGMA table_info({table})")}
     except sqlite3.Error:
         return set()
 
 
-def table_exists(conn: sqlite3.Connection, table: str) -> bool:
+def table_exists(conn: SQLiteConnection, table: str) -> bool:
     row = conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name = ?",
         (table,),
@@ -353,7 +356,7 @@ def candidate_hit(spec: TableSpec, row: sqlite3.Row, quotes: list[str], method_p
     return best
 
 
-def select_columns(spec: TableSpec, conn: sqlite3.Connection) -> str:
+def select_columns(spec: TableSpec, conn: SQLiteConnection) -> str:
     columns = table_columns(conn, spec.table)
     requested = [spec.id_col]
     requested.extend(spec.text_cols)
@@ -370,7 +373,7 @@ def select_columns(spec: TableSpec, conn: sqlite3.Connection) -> str:
 
 
 def lookup_chunk_ids(
-    connections: dict[str, sqlite3.Connection],
+    connections: dict[str, SQLiteConnection],
     chunk_ids: list[str],
     quotes: list[str],
 ) -> SourceHit | None:
@@ -403,7 +406,7 @@ def lookup_chunk_ids(
 
 
 def lookup_wikipedia_titles(
-    connections: dict[str, sqlite3.Connection],
+    connections: dict[str, SQLiteConnection],
     titles: list[str],
     quotes: list[str],
 ) -> SourceHit | None:
@@ -442,7 +445,7 @@ def fts_query_for_quote(quote: str, max_tokens: int) -> str:
 
 
 def lookup_fts(
-    connections: dict[str, sqlite3.Connection],
+    connections: dict[str, SQLiteConnection],
     quotes: list[str],
 ) -> SourceHit | None:
     best: SourceHit | None = None
@@ -482,7 +485,7 @@ def lookup_fts(
 
 
 def lookup_substring(
-    connections: dict[str, sqlite3.Connection],
+    connections: dict[str, SQLiteConnection],
     quotes: list[str],
 ) -> SourceHit | None:
     best: SourceHit | None = None
@@ -528,7 +531,7 @@ def lookup_substring(
 
 
 def resolve_hit(
-    connections: dict[str, sqlite3.Connection],
+    connections: dict[str, SQLiteConnection],
     evidence_text: str,
     row_kind: str,
 ) -> SourceHit | None:
@@ -745,9 +748,9 @@ def resolve_rows(
 ) -> list[dict[str, Any]]:
     license_entries = load_license_map(license_map)
     replace_entries = load_replace_list(replace_list)
-    connections: dict[str, sqlite3.Connection] = {
-        "sources": sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True),
-        "vesum": sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True),
+    connections: dict[str, SQLiteConnection] = {
+        "sources": _open_readonly(Path(sources_db).resolve()),
+        "vesum": _open_readonly(Path(vesum_db).resolve()),
     }
     for conn in connections.values():
         conn.row_factory = sqlite3.Row
@@ -900,11 +903,7 @@ def print_summary(rows: list[dict[str, Any]], rights_json: Path, matrix_doc: Pat
     print(f"license_counts={dict(sorted(Counter(row['license'] for row in rows).items()))}")
     for verdict in sorted({row["verdict"] for row in rows}):
         example = next(
-            (
-                row
-                for row in rows
-                if row["verdict"] == verdict and row["classification"] == "QUOTED_TEXT"
-            ),
+            (row for row in rows if row["verdict"] == verdict and row["classification"] == "QUOTED_TEXT"),
             next(row for row in rows if row["verdict"] == verdict),
         )
         print(f"example[{verdict}]=" + json.dumps(example, ensure_ascii=False, sort_keys=True))

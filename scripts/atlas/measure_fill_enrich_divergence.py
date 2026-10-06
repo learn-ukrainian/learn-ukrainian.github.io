@@ -44,6 +44,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.lexicon import enrich_manifest as em
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 DEFAULT_COHORT_SIZE = 50
 RELATION_KINDS = ("synonym", "antonym", "homonym", "paronym")
@@ -222,14 +223,10 @@ def fill_local_style_relations(
         key = _entry_key(lemma)
         if not key:
             continue
-        synonym = em._definition_pointer_relations(
-            conn, lemma
-        )
+        synonym = em._definition_pointer_relations(conn, lemma)
         if synonym:
             out["synonym"][key] = synonym
-        antonym = em._definition_antonym_relations(
-            conn, lemma
-        )
+        antonym = em._definition_antonym_relations(conn, lemma)
         if antonym:
             out["antonym"][key] = antonym
         homonym = em._homonym_relations(conn, lemma)
@@ -247,12 +244,8 @@ def enrich_style_relations(
 ) -> dict[str, dict[str, list[dict[str, Any]]]]:
     """Run-level by_headword maps with reciprocal closure (full enrich / fixed fill_local)."""
     return {
-        "synonym": em._definition_pointer_relations_by_headword(
-            conn, manifest
-        ),
-        "antonym": em._definition_antonym_relations_by_headword(
-            conn, manifest
-        ),
+        "synonym": em._definition_pointer_relations_by_headword(conn, manifest),
+        "antonym": em._definition_antonym_relations_by_headword(conn, manifest),
         "homonym": em._homonym_relations_by_headword(conn, manifest),
         "paronym": em._paronym_relations_by_headword(conn, manifest),
     }
@@ -281,11 +274,7 @@ def _cefr_delta(
                 enrich_estimated += 1
         if enrich_block and not fill_block:
             missing_on_fill.append(lemma)
-        elif (
-            fill_block
-            and enrich_block
-            and str(fill_block.get("level") or "") != str(enrich_block.get("level") or "")
-        ):
+        elif fill_block and enrich_block and str(fill_block.get("level") or "") != str(enrich_block.get("level") or ""):
             level_divergent.append(
                 {
                     "lemma": lemma,
@@ -324,12 +313,8 @@ def _relation_delta(
             "enrich": enrich_stats,
             "edges_only_on_enrich": len(only_enrich),
             "edges_only_on_fill": len(only_fill),
-            "reciprocal_only_on_enrich": sum(
-                1 for _s, _t, direction in only_enrich if direction == "reciprocal"
-            ),
-            "sample_only_on_enrich": [
-                {"source": s, "target": t, "direction": d} for s, t, d in only_enrich[:8]
-            ],
+            "reciprocal_only_on_enrich": sum(1 for _s, _t, direction in only_enrich if direction == "reciprocal"),
+            "sample_only_on_enrich": [{"source": s, "target": t, "direction": d} for s, t, d in only_enrich[:8]],
         }
     return relation_delta
 
@@ -356,12 +341,11 @@ def measure_divergence(
 
     manifest = {"entries": [dict(entry) for entry in entries]}
     lemmas = [str(entry.get("lemma") or "") for entry in entries]
-    connect = open_conn or (lambda path: sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True))
+    connect = open_conn or (lambda path: _shared_open_readonly(path.resolve()))
 
     with _engine_state(grac_cache, dictionary_rows):
         conn = connect(sources_db)
         try:
-
             # --- legacy fill_local CEFR path: clear estimates, do not rebuild ---
             em._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
             legacy_fill_cefr: dict[str, dict[str, str] | None] = {}
@@ -377,12 +361,8 @@ def measure_divergence(
                 fixed_fill_cefr[lemma] = block
                 enrich_cefr[lemma] = block
 
-            legacy_fill_relations = fill_local_style_relations(
-                conn, entries
-            )
-            fixed_fill_relations = enrich_style_relations(
-                conn, manifest
-            )
+            legacy_fill_relations = fill_local_style_relations(conn, entries)
+            fixed_fill_relations = enrich_style_relations(conn, manifest)
             enrich_relations = fixed_fill_relations
             prepared_estimate_keys = len(em._CEFR_ESTIMATE_LEVEL_BY_KEY)
         finally:
@@ -445,9 +425,7 @@ def run_default_measurement(cohort_size: int = DEFAULT_COHORT_SIZE) -> dict[str,
         sources = tmp_path / "sources.sqlite"
         build_synthetic_sources(sources, entries)
         grac = build_synthetic_grac(entries, puls_count=min(10, len(entries)))
-        return measure_divergence(
-            entries, sources, grac, dictionary_rows=build_synthetic_dictionary_rows(entries)
-        )
+        return measure_divergence(entries, sources, grac, dictionary_rows=build_synthetic_dictionary_rows(entries))
 
 
 def format_summary(result: dict[str, Any]) -> str:
@@ -490,9 +468,7 @@ def format_summary(result: dict[str, Any]) -> str:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Measure fill_local vs enrich CEFR/relation divergence (#5331)."
-    )
+    parser = argparse.ArgumentParser(description="Measure fill_local vs enrich CEFR/relation divergence (#5331).")
     parser.add_argument(
         "--cohort-size",
         type=int,

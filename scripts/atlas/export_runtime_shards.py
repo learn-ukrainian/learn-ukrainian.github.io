@@ -54,6 +54,8 @@ if __package__ is None or __package__ == "":
 from scripts.atlas.normalization import normalize_atlas_text, normalize_slug_for_hash
 from scripts.etymology.transliterate import transliterate
 from scripts.lexicon.source_attribution import withhold_legacy_soviet_citations
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 SCHEMA_VERSION = 1
 ENTRY_SHARD_SCHEMA = "atlas-entry-shard"
@@ -137,9 +139,7 @@ def load_component_tokenization_vectors() -> list[dict[str, object]]:
 
 
 def canonical_json_bytes(payload: Any) -> bytes:
-    return (json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=False) + "\n").encode(
-        "utf-8"
-    )
+    return (json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=False) + "\n").encode("utf-8")
 
 
 def sha256_hex(data: bytes) -> str:
@@ -155,9 +155,8 @@ def write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def open_readonly_db(db_path: Path) -> sqlite3.Connection:
-    uri = f"file:{db_path.resolve().as_posix()}?mode=ro"
-    conn = sqlite3.connect(uri, uri=True)
+def open_readonly_db(db_path: Path) -> SQLiteConnection:
+    conn = _open_readonly(db_path.resolve())
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA query_only = ON")
     return conn
@@ -205,18 +204,14 @@ def _assert_cefr_consistent(slug: str, article_cefr: str | None, entry: Mapping[
     left = _clean_text(article_cefr)
     right = _clean_text(payload_cefr)
     if left and right and left.upper() != right.upper():
-        raise ExportError(
-            f"CEFR conflict for slug={slug!r}: articles.cefr={left!r} enrichment.cefr={right!r}"
-        )
+        raise ExportError(f"CEFR conflict for slug={slug!r}: articles.cefr={left!r} enrichment.cefr={right!r}")
 
 
-def _site_build_entry_model_gates(conn: sqlite3.Connection) -> dict[str, int]:
+def _site_build_entry_model_gates(conn: SQLiteConnection) -> dict[str, int]:
     reviewed_entries = conn.execute(
         "SELECT COUNT(*) FROM articles WHERE review_state = 'approved' AND visibility = 'public'"
     ).fetchone()[0]
-    public_routes = conn.execute(
-        "SELECT COUNT(*) FROM article_payloads WHERE is_public_route = 1"
-    ).fetchone()[0]
+    public_routes = conn.execute("SELECT COUNT(*) FROM article_payloads WHERE is_public_route = 1").fetchone()[0]
     form_of_routes = conn.execute(
         """SELECT COUNT(*)
            FROM article_payloads AS payload
@@ -250,9 +245,7 @@ def _site_build_entry_model_gates(conn: sqlite3.Connection) -> dict[str, int]:
     ).fetchone()[0]
     if invalid_aliases:
         raise ExportError(f"alias_target_integrity failure: {invalid_aliases} invalid public aliases")
-    public_aliases = conn.execute(
-        "SELECT COUNT(*) FROM aliases WHERE visibility = 'public'"
-    ).fetchone()[0]
+    public_aliases = conn.execute("SELECT COUNT(*) FROM aliases WHERE visibility = 'public'").fetchone()[0]
     return {
         "articles": int(reviewed_entries),
         "formRoutes": int(form_of_routes),
@@ -310,11 +303,7 @@ def component_links_for_entry(
     links: list[dict[str, str | None]] = []
     for text in find_component_tokens(lemma):
         target_slug = component_targets.get(normalize_atlas_text(text))
-        if (
-            target_slug
-            and target_slug in lemma_slugs
-            and target_slug != current_slug
-        ):
+        if target_slug and target_slug in lemma_slugs and target_slug != current_slug:
             links.append({"text": text, "targetSlug": target_slug})
         else:
             links.append({"text": text, "targetSlug": None})
@@ -453,15 +442,21 @@ class EntryReplay:
 
     def __init__(
         self,
-        conn: sqlite3.Connection,
+        conn: SQLiteConnection,
         *,
         practice_levels_by_slug: Mapping[str, Sequence[str]],
     ) -> None:
         self._conn = conn
         self._practice_levels_by_slug = practice_levels_by_slug
         self.withholding: dict[str, Any] = {
-            "stage": "export", "entries_touched": 0, "citations_withheld": 0, "by_section": {},
-            "clauses_withheld": 0, "items_withheld": 0, "items_kept": 0, "gate_notes_removed": 0,
+            "stage": "export",
+            "entries_touched": 0,
+            "citations_withheld": 0,
+            "by_section": {},
+            "clauses_withheld": 0,
+            "items_withheld": 0,
+            "items_kept": 0,
+            "gate_notes_removed": 0,
             "relation_sections_touched": 0,
         }
         self._component_targets = build_component_link_targets(
@@ -510,8 +505,13 @@ class EntryReplay:
             raise ExportError(f"СУМ-11 citation withholding failed for {row['slug']!r}: {exc}") from exc
         self.withholding["entries_touched"] += withdrawn["entries_touched"]
         self.withholding["citations_withheld"] += withdrawn["citations_withheld"]
-        for metric in ("clauses_withheld", "items_withheld", "items_kept", "gate_notes_removed",
-                       "relation_sections_touched"):
+        for metric in (
+            "clauses_withheld",
+            "items_withheld",
+            "items_kept",
+            "gate_notes_removed",
+            "relation_sections_touched",
+        ):
             self.withholding[metric] += withdrawn[metric]
         for section, count in withdrawn["by_section"].items():
             by_section = self.withholding["by_section"]
@@ -568,7 +568,7 @@ class EntryReplay:
 
 
 def load_entry_records(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     practice_levels_by_slug: Mapping[str, Sequence[str]],
 ) -> list[dict[str, Any]]:
@@ -577,9 +577,7 @@ def load_entry_records(
     return list(replay.iter_records())
 
 
-def _article_search_row(
-    slug: str, display_head: str, gloss: object, entry_type: str, cefr: object
-) -> dict[str, Any]:
+def _article_search_row(slug: str, display_head: str, gloss: object, entry_type: str, cefr: object) -> dict[str, Any]:
     row: dict[str, Any] = {
         "l": display_head,
         "s": slug,
@@ -593,7 +591,7 @@ def _article_search_row(
     return row
 
 
-def _iter_article_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, Any]]:
+def _iter_article_search_rows(conn: SQLiteConnection) -> Iterator[dict[str, Any]]:
     # Row order is irrelevant: slug is the primary key, so the (normalized head,
     # slug) sort applied afterwards is total.
     for slug, display_head, gloss, entry_type, cefr in conn.execute(
@@ -604,7 +602,7 @@ def _iter_article_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, An
         yield _article_search_row(slug, display_head, gloss, entry_type, cefr)
 
 
-def _replay_article_search_row(conn: sqlite3.Connection, slug: str) -> dict[str, Any]:
+def _replay_article_search_row(conn: SQLiteConnection, slug: str) -> dict[str, Any]:
     """Re-read one article search row by primary key (same snapshot as the scan)."""
     found = conn.execute(
         "SELECT slug, display_head, gloss, entry_type, cefr FROM articles WHERE slug = ?", (slug,)
@@ -614,7 +612,7 @@ def _replay_article_search_row(conn: sqlite3.Connection, slug: str) -> dict[str,
     return _article_search_row(*found)
 
 
-def _iter_located_alias_search_rows(conn: sqlite3.Connection) -> Iterator[tuple[int, dict[str, Any]]]:
+def _iter_located_alias_search_rows(conn: SQLiteConnection) -> Iterator[tuple[int, dict[str, Any]]]:
     """Public aliases as ``(rowid, row)``; first row per ``(normalized alias, target)`` wins.
 
     The ORDER BY is load-bearing: which raw alias/kind survives the dedup depends
@@ -637,12 +635,12 @@ def _iter_located_alias_search_rows(conn: sqlite3.Connection) -> Iterator[tuple[
         yield rowid, {"a": alias, "k": kind, "s": target_slug, "h": target_head}
 
 
-def _iter_alias_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, Any]]:
+def _iter_alias_search_rows(conn: SQLiteConnection) -> Iterator[dict[str, Any]]:
     for _rowid, row in _iter_located_alias_search_rows(conn):
         yield row
 
 
-def _replay_alias_search_row(conn: sqlite3.Connection, rowid: int) -> dict[str, Any]:
+def _replay_alias_search_row(conn: SQLiteConnection, rowid: int) -> dict[str, Any]:
     """Re-read the winning alias row by rowid (same snapshot as the dedup scan)."""
     found = conn.execute(
         """SELECT alias.alias, alias.kind, alias.target_slug, article.display_head
@@ -665,7 +663,7 @@ def _alias_sort_key(row: Mapping[str, Any]) -> tuple[str, str, str]:
     return (normalize_atlas_text(row["a"]), row["s"], row["k"])
 
 
-def load_search_rows(conn: sqlite3.Connection) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def load_search_rows(conn: SQLiteConnection) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Whole-corpus search rows in canonical order (compatibility / test oracle)."""
     articles = sorted(_iter_article_search_rows(conn), key=_article_sort_key)
     aliases = sorted(_iter_alias_search_rows(conn), key=_alias_sort_key)
@@ -818,8 +816,22 @@ _GZIP_TRAILER_BYTES = 8
 # CPython 3.12 Include/internal/pycore_blocks_output_buffer.h BUFFER_BLOCK_SIZE.
 _KIB, _MIB = 1024, 1024 * 1024
 _OUTPUT_BLOCK_SIZES = (
-    32 * _KIB, 64 * _KIB, 256 * _KIB, 1 * _MIB, 4 * _MIB, 8 * _MIB, 16 * _MIB, 16 * _MIB,
-    32 * _MIB, 32 * _MIB, 32 * _MIB, 32 * _MIB, 64 * _MIB, 64 * _MIB, 128 * _MIB, 128 * _MIB,
+    32 * _KIB,
+    64 * _KIB,
+    256 * _KIB,
+    1 * _MIB,
+    4 * _MIB,
+    8 * _MIB,
+    16 * _MIB,
+    16 * _MIB,
+    32 * _MIB,
+    32 * _MIB,
+    32 * _MIB,
+    32 * _MIB,
+    64 * _MIB,
+    64 * _MIB,
+    128 * _MIB,
+    128 * _MIB,
     256 * _MIB,
 )
 
@@ -918,9 +930,7 @@ class StoredDeflateModel:
             if length > have:
                 length = have
             whole = (left + self.avail_in) & _UINT_MAX  # unsigned sum: wraps like the C
-            if length < min_block and (
-                (length == 0 and flush != _Z_FINISH) or flush == _Z_NO_FLUSH or length != whole
-            ):
+            if length < min_block and ((length == 0 and flush != _Z_FINISH) or flush == _Z_NO_FLUSH or length != whole):
                 break
             last = 1 if flush == _Z_FINISH and length == whole else 0
             self._stored_block(length, last)
@@ -1083,8 +1093,25 @@ def _frame_stored_gzip(
 # slide, pending block, empty final block) and the first four output-buffer
 # growths (32 KiB -> 64 KiB -> 256 KiB -> 1 MiB -> 4 MiB).
 _STORED_CANARY_LENGTHS = (
-    0, 1, 5, 32_752, 32_753, 32_754, 32_768, 65_530, 65_531, 65_532, 65_536, 98_304, 98_309,
-    100_000, 131_072, 262_144, 400_000, 1_048_576, 1_500_000,
+    0,
+    1,
+    5,
+    32_752,
+    32_753,
+    32_754,
+    32_768,
+    65_530,
+    65_531,
+    65_532,
+    65_536,
+    98_304,
+    98_309,
+    100_000,
+    131_072,
+    262_144,
+    400_000,
+    1_048_576,
+    1_500_000,
 )
 _stored_canary_passed = False
 
@@ -1108,7 +1135,9 @@ def check_stored_gzip_runtime() -> None:
     _stored_canary_passed = True
 
 
-def _plan_stored_gzip(source: ChunkSource, *, max_bytes: int | None) -> tuple[list[tuple[int, int]], tuple[int, str, int]] | None:
+def _plan_stored_gzip(
+    source: ChunkSource, *, max_bytes: int | None
+) -> tuple[list[tuple[int, int]], tuple[int, str, int]] | None:
     """Level-0 pass 1: the block plan and ``(raw bytes, sha256, crc32)``; ``None`` past ``max_bytes``."""
     check_stored_gzip_runtime()
     raw_sha = hashlib.sha256()
@@ -1247,9 +1276,7 @@ def slug_digest(slug: str) -> bytes:
     return hashlib.sha256(normalize_slug_for_hash(slug).encode("utf-8")).digest()
 
 
-def _first_one_bit(
-    ordered: Sequence[tuple[bytes, str]], lo: int, hi: int, bit_index: int
-) -> int:
+def _first_one_bit(ordered: Sequence[tuple[bytes, str]], lo: int, hi: int, bit_index: int) -> int:
     """First index in ``[lo, hi)`` whose digest has a 1 at ``bit_index`` (MSB first)."""
     byte, shift = bit_index >> 3, 7 - (bit_index & 7)
     while lo < hi:
@@ -1291,9 +1318,7 @@ def build_entry_shards(
         result = (
             None
             if known_oversize
-            else compress_stream_bounded(
-                source(slugs), compression_level=compression_level, max_bytes=max_gzip_bytes
-            )
+            else compress_stream_bounded(source(slugs), compression_level=compression_level, max_bytes=max_gzip_bytes)
         )
         if result is not None:
             shard_id = entry_shard_id(bit_length, prefix_value)
@@ -1309,13 +1334,10 @@ def build_entry_shards(
             size = gzip_size(source(slugs), compression_level=compression_level)
             slug = slugs[0] if slugs else "?"
             raise ExportError(
-                f"single entry record exceeds entry-max-gzip-bytes "
-                f"({size} > {max_gzip_bytes}) slug={slug!r}"
+                f"single entry record exceeds entry-max-gzip-bytes ({size} > {max_gzip_bytes}) slug={slug!r}"
             )
         if bit_length >= 256:
-            raise ExportError(
-                f"entry shard of {len(slugs)} records cannot split: slug hashes are identical"
-            )
+            raise ExportError(f"entry shard of {len(slugs)} records cannot split: slug hashes are identical")
         del slugs
         mid = _first_one_bit(ordered, lo, hi, bit_length)
         child_bits = bit_length + 1
@@ -1482,8 +1504,7 @@ def build_search_family_shards(
             # Cannot split further — hard fail (still oversized).
             size = gzip_size(source(prefix, ranks, terminal=False), compression_level=compression_level)
             raise ExportError(
-                f"search {family} shard for prefix={prefix!r} exceeds max "
-                f"({size} > {max_gzip_bytes}) and cannot split"
+                f"search {family} shard for prefix={prefix!r} exceeds max ({size} > {max_gzip_bytes}) and cannot split"
             )
         del ranks
 
@@ -1497,8 +1518,7 @@ def build_search_family_shards(
             )
 
         node["children"] = {
-            char: split_or_write(prefix + char, child_lo, child_hi)
-            for char, child_lo, child_hi in children
+            char: split_or_write(prefix + char, child_lo, child_hi) for char, child_lo, child_hi in children
         }
         return node
 
@@ -1562,9 +1582,7 @@ def register_decks(
             )
             compressed_files[f"{level}/{part}"] = compressed
         if len(deck_versions) != 1:
-            raise ExportError(
-                f"deck parts for {level} must share one deckVersion, got {sorted(deck_versions)}"
-            )
+            raise ExportError(f"deck parts for {level} must share one deckVersion, got {sorted(deck_versions)}")
         levels[level] = {
             "deckVersion": next(iter(deck_versions)),
             "parts": parts,
@@ -1613,10 +1631,7 @@ class DataVersionHasher:
     ) -> str:
         self._add_rows(b"searchArticles", article_fragments)
         self._add_rows(b"searchAliases", alias_fragments)
-        decks = {
-            level: info.get("deckVersion")
-            for level, info in sorted((deck_index.get("levels") or {}).items())
-        }
+        decks = {level: info.get("deckVersion") for level, info in sorted((deck_index.get("levels") or {}).items())}
         self._sha.update(f'],"decks":{_dumps(decks)}}}\n'.encode())
         return f"atlas-v1-{self._sha.hexdigest()[:16]}"
 
@@ -2113,8 +2128,7 @@ def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = N
         compressed_bytes, compressed_sha = _file_digest(path)
         if compressed_bytes != descriptor["bytes"]:
             errors.append(
-                f"{family} {descriptor['id']}: bytes mismatch "
-                f"file={compressed_bytes} desc={descriptor['bytes']}"
+                f"{family} {descriptor['id']}: bytes mismatch file={compressed_bytes} desc={descriptor['bytes']}"
             )
         if compressed_sha != descriptor["sha256"]:
             errors.append(f"{family} {descriptor['id']}: sha256 mismatch")
@@ -2159,8 +2173,7 @@ def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = N
             errors.append(f"{family} {descriptor['id']}: dataVersion mismatch vs manifest")
         if payload.records_is_list and payload.record_count != descriptor["count"]:
             errors.append(
-                f"{family} {descriptor['id']}: count mismatch "
-                f"records={payload.record_count} desc={descriptor['count']}"
+                f"{family} {descriptor['id']}: count mismatch records={payload.record_count} desc={descriptor['count']}"
             )
         return payload
 
@@ -2250,9 +2263,7 @@ def _tree_digest(root: Path) -> str:
     buffer = memoryview(bytearray(1 << 16))
     entries: list[tuple[str, Path]] = []
     for directory, _dirs, files in os.walk(root):
-        entries.extend(
-            (Path(directory, name).relative_to(root).as_posix(), Path(directory, name)) for name in files
-        )
+        entries.extend((Path(directory, name).relative_to(root).as_posix(), Path(directory, name)) for name in files)
     for relative, path in sorted(entries):
         encoded = relative.encode("utf-8")
         digest.update(struct.pack(">Q", len(encoded)) + encoded)
@@ -2587,9 +2598,7 @@ def export_runtime_shards(
             }
             if verify:
                 # Verified before publishing: a bad tree never becomes current.
-                report["verify"] = verify_tree(
-                    out_dir, base_path, manifest_path=stage.root / "manifest.json"
-                )
+                report["verify"] = verify_tree(out_dir, base_path, manifest_path=stage.root / "manifest.json")
 
             def build_current(manifest_url: str) -> bytes:
                 return canonical_json_bytes(
@@ -2627,9 +2636,7 @@ def _strip_transport_fields(value: Any) -> Any:
     """Drop per-object zlib transport fields from manifest/current JSON."""
     if isinstance(value, Mapping):
         return {
-            key: _strip_transport_fields(item)
-            for key, item in value.items()
-            if key not in _TRANSPORT_FINGERPRINT_KEYS
+            key: _strip_transport_fields(item) for key, item in value.items() if key not in _TRANSPORT_FINGERPRINT_KEYS
         }
     if isinstance(value, list):
         return [_strip_transport_fields(item) for item in value]
@@ -2642,9 +2649,7 @@ def _logical_file_payload(path: Path) -> bytes:
         try:
             return gzip.decompress(path.read_bytes())
         except (OSError, EOFError, gzip.BadGzipFile) as exc:
-            raise ExportError(
-                f"undecompressable runtime object (logical fingerprint): {path}"
-            ) from exc
+            raise ExportError(f"undecompressable runtime object (logical fingerprint): {path}") from exc
     if path.suffix == ".json" or path.name in {"current.json", "manifest.json"}:
         payload = json.loads(path.read_bytes().decode("utf-8"))
         return canonical_json_bytes(_strip_transport_fields(payload))

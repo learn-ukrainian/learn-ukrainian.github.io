@@ -24,6 +24,8 @@ from typing import Any
 
 import jsonschema
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -299,7 +301,7 @@ def load_calque_candidates(
 
     # 2. UA-GEC F/Calque human-annotated errors
     if sources_db_path.is_file():
-        conn = sqlite3.connect(f"{Path(sources_db_path).resolve().as_uri()}?mode=ro", uri=True)
+        conn = _open_readonly(Path(sources_db_path).resolve())
         try:
             cur = conn.cursor()
             rows = cur.execute(
@@ -360,7 +362,7 @@ def load_calque_candidates(
 def get_vesum_counts(
     lemmas: list[str],
     vesum_db_path: Path,
-    conn: sqlite3.Connection | None = None,
+    conn: SQLiteConnection | None = None,
 ) -> dict[str, int]:
     """Query local VESUM database for paradigm form counts across all constituent words."""
     counts: dict[str, int] = {}
@@ -368,7 +370,7 @@ def get_vesum_counts(
         return {lemma: 0 for lemma in lemmas}
     close_conn = False
     if conn is None:
-        conn = sqlite3.connect(f"file:{vesum_db_path.resolve()}?mode=ro", uri=True)
+        conn = _open_readonly(vesum_db_path.resolve())
         close_conn = True
     try:
         cur = conn.cursor()
@@ -396,7 +398,7 @@ def get_vesum_counts(
     return counts
 
 
-def _has_textbooks_fts(conn: sqlite3.Connection) -> bool:
+def _has_textbooks_fts(conn: SQLiteConnection) -> bool:
     """Check whether textbooks_fts virtual table exists in the connected database."""
     try:
         cur = conn.cursor()
@@ -584,14 +586,14 @@ def extract_clean_sentence_candidates(text: str, phrase: str) -> list[str]:
 def find_textbook_attestation(
     lemma: str,
     sources_db_path: Path,
-    conn: sqlite3.Connection | None = None,
+    conn: SQLiteConnection | None = None,
 ) -> dict[str, Any] | None:
     """Find a verified, clean living-standard sentence from MESU-approved Grade 1-11 textbooks."""
     if not sources_db_path.is_file():
         return None
     close_conn = False
     if conn is None:
-        conn = sqlite3.connect(f"file:{sources_db_path.resolve()}?mode=ro", uri=True)
+        conn = _open_readonly(sources_db_path.resolve())
         close_conn = True
     try:
         cur = conn.cursor()
@@ -704,14 +706,14 @@ def find_textbook_attestation(
 def find_dictionary_attestation(
     lemma: str,
     sources_db_path: Path,
-    conn: sqlite3.Connection | None = None,
+    conn: SQLiteConnection | None = None,
 ) -> str | None:
     """Check historical (Grinchenko) and academic (SUM-11) dictionary presence in sources.db."""
     if not sources_db_path.is_file():
         return None
     close_conn = False
     if conn is None:
-        conn = sqlite3.connect(f"file:{sources_db_path.resolve()}?mode=ro", uri=True)
+        conn = _open_readonly(sources_db_path.resolve())
         close_conn = True
     try:
         cur = conn.cursor()
@@ -1317,12 +1319,12 @@ def generate_pipeline(
         return t_path.open("w", encoding="utf-8"), d_path.open("w", encoding="utf-8"), t_path, d_path
 
     # Reuse persistent read-only SQLite connections across candidate iterations
-    conn_sources: sqlite3.Connection | None = None
-    conn_vesum: sqlite3.Connection | None = None
+    conn_sources: SQLiteConnection | None = None
+    conn_vesum: SQLiteConnection | None = None
     if sources_db_path.is_file():
-        conn_sources = sqlite3.connect(f"file:{sources_db_path.resolve()}?mode=ro", uri=True)
+        conn_sources = _open_readonly(sources_db_path.resolve())
     if vesum_db_path.is_file():
-        conn_vesum = sqlite3.connect(f"file:{vesum_db_path.resolve()}?mode=ro", uri=True)
+        conn_vesum = _open_readonly(vesum_db_path.resolve())
 
     try:
         for candidate in candidates:

@@ -13,7 +13,6 @@ import argparse
 import hashlib
 import json
 import os
-import sqlite3
 import sys
 import tempfile
 from collections.abc import Mapping, Sequence
@@ -25,6 +24,8 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data import phase3_source_policy_v4 as policy_v4
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
@@ -367,13 +368,13 @@ def load_gate(path: Path = DEFAULT_GATE_PATH) -> tuple[dict[str, Any], str]:
     return validate_gate_document(read_json(path)), gate_sha256
 
 
-def _foreign_key_evidence(conn: sqlite3.Connection) -> tuple[int, str]:
+def _foreign_key_evidence(conn: SQLiteConnection) -> tuple[int, str]:
     failures = sorted(tuple(row) for row in conn.execute("PRAGMA foreign_key_check").fetchall())
     digest = hashlib.sha256(json.dumps(failures, separators=(",", ":"), ensure_ascii=False).encode("utf-8")).hexdigest()
     return len(failures), digest
 
 
-def _database_counts(conn: sqlite3.Connection) -> dict[str, int]:
+def _database_counts(conn: SQLiteConnection) -> dict[str, int]:
     return {
         "textbook_rows": conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0],
         "fts_rows": conn.execute("SELECT COUNT(*) FROM textbooks_fts").fetchone()[0],
@@ -408,8 +409,7 @@ def validate_database_preimage(
     database_gate = gate["database"]
     require(sha256_file(db_path) == database_gate["sha256_before"], "live database preimage SHA-256 drift")
 
-    uri = f"file:{db_path.resolve()}?mode=ro"
-    conn = sqlite3.connect(uri, uri=True, timeout=30.0)
+    conn = _open_readonly(db_path.resolve(), timeout=30.0)
     try:
         journal_mode = str(conn.execute("PRAGMA journal_mode").fetchone()[0]).lower()
         require(journal_mode == database_gate["journal_mode"], "live database journal-mode drift")

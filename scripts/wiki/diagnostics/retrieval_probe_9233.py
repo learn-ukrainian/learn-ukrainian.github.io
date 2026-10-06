@@ -35,14 +35,12 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 from scripts.verification.vesum import get_vesum_connection
 from scripts.wiki import sources_db
 
 PACK_PATH = ROOT / "curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml"
-ARC_PATHS = {
-    level: ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}/_arc.yaml"
-    for level in ("a1", "a2")
-}
+ARC_PATHS = {level: ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}/_arc.yaml" for level in ("a1", "a2")}
 GRAMMAR_SOURCE = ROOT / "docs/epics/fresh-build-a2-arc.md"
 GRAMMAR_TEXTBOOK_CHUNK = "11-klas-ukrajinska-mova-avramenko-2019_s0059"
 EXPECTED_DESIGN_SHA256 = "6f59c17dd04c3e9e189b521c73a28b392f9aa1fc102f2370a4f48fdd60704e7e"
@@ -51,8 +49,32 @@ STRESS_MARKS = str.maketrans({"\u0301": None, "\u0300": None})
 APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "ʻ": "'", "՚": "'", "＇": "'"})
 TOKEN_RE = re.compile(r"[\w\u0300\u0301]+(?:['’ʼʻ՚＇][\w\u0300\u0301]+)*", re.UNICODE)
 CYRILLIC_RE = re.compile(r"[а-яґєії]", re.IGNORECASE)
-ENGLISH_STOP = frozenset(["a", "an", "and", "are", "as", "at", "be", "between", "by", "for", "from", "in", "is", "of", "on", "or", "the", "to", "with"])
-UKRAINIAN_STOP = frozenset(["а", "або", "але", "в", "від", "до", "з", "за", "і", "й", "на", "не", "у", "та", "що", "це", "як", "про", "для"])
+ENGLISH_STOP = frozenset(
+    [
+        "a",
+        "an",
+        "and",
+        "are",
+        "as",
+        "at",
+        "be",
+        "between",
+        "by",
+        "for",
+        "from",
+        "in",
+        "is",
+        "of",
+        "on",
+        "or",
+        "the",
+        "to",
+        "with",
+    ]
+)
+UKRAINIAN_STOP = frozenset(
+    ["а", "або", "але", "в", "від", "до", "з", "за", "і", "й", "на", "не", "у", "та", "що", "це", "як", "про", "для"]
+)
 
 # This source-owned category inventory is taken from the A2 arc rationale;
 # VESUM supplies every generated inflected form.
@@ -90,7 +112,7 @@ def tokenize(text: str) -> list[str]:
 
 
 def _ro_connect(path: Path) -> sqlite3.Connection:
-    connection = sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)
+    connection = _shared_open_readonly(path.resolve())
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only = ON")
     return connection
@@ -112,12 +134,15 @@ def _get_pack_citations(pack_path: Path) -> list[dict[str, Any]]:
             chunk_id = str(source.get("chunk_id") or "").strip()
             if source.get("table") != "textbooks" or not chunk_id:
                 continue
-            citations.setdefault(chunk_id, {
-                "chunk_id": chunk_id,
-                "citation_ids": [],
-                "span": item.get("span") or {},
-                "supports": str(item.get("supports") or item.get("pattern") or ""),
-            })
+            citations.setdefault(
+                chunk_id,
+                {
+                    "chunk_id": chunk_id,
+                    "citation_ids": [],
+                    "span": item.get("span") or {},
+                    "supports": str(item.get("supports") or item.get("pattern") or ""),
+                },
+            )
             citations[chunk_id]["citation_ids"].append(str(item.get("id", "")))
     return [citations[key] for key in sorted(citations)]
 
@@ -126,7 +151,9 @@ def _get_cited_span(full_text: str, span: dict[str, Any]) -> str:
     """Select the exact first-to-last cited fragment from source text."""
     first_tokens = tokenize(str(span.get("first_words") or ""))
     last_tokens = tokenize(str(span.get("last_words") or ""))
-    source_tokens = [(normalize_token(match.group(0)), match.start(), match.end()) for match in TOKEN_RE.finditer(full_text)]
+    source_tokens = [
+        (normalize_token(match.group(0)), match.start(), match.end()) for match in TOKEN_RE.finditer(full_text)
+    ]
 
     def find_sequence(needle: list[str], after: int = 0) -> tuple[int, int] | None:
         for start in range(after, len(source_tokens) - len(needle) + 1):
@@ -156,9 +183,13 @@ def _is_content_word(token: str, connection: sqlite3.Connection, *, english: boo
     ).fetchall()
     content_pos = {"noun", "verb", "adj", "adv", "adjective", "participle", "numr"}
     excluded_tags = {"prop", "pron", "arch", "rare", "short"}
-    return bool(rows) and len({normalize_token(str(row[0])) for row in rows}) == 1 and all(
-        str(row[1]).casefold() in content_pos and not excluded_tags.intersection(str(row[2]).split(":"))
-        for row in rows
+    return (
+        bool(rows)
+        and len({normalize_token(str(row[0])) for row in rows}) == 1
+        and all(
+            str(row[1]).casefold() in content_pos and not excluded_tags.intersection(str(row[2]).split(":"))
+            for row in rows
+        )
     )
 
 
@@ -184,18 +215,22 @@ def _first_paradigm_alternative(token: str, connection: sqlite3.Connection) -> t
     return None
 
 
-def _make_form_mismatch_query(span: str, connection: sqlite3.Connection, *, used_queries: set[str] | None = None) -> dict[str, Any] | None:
+def _make_form_mismatch_query(
+    span: str, connection: sqlite3.Connection, *, used_queries: set[str] | None = None
+) -> dict[str, Any] | None:
     folded = unicodedata.normalize("NFC", span.translate(STRESS_MARKS).translate(APOSTROPHES))
     # Minimal-pair pronunciation drills are marked in the source by dash-
     # separated forms. Their apparent words must not seed a content query.
-    drill_ranges = [(m.start(), m.end()) for m in re.finditer(r"[а-яґєіїА-ЯҐЄІЇ']+\s*–\s*[а-яґєіїА-ЯҐЄІЇ']+\s*[+–]", folded)]
+    drill_ranges = [
+        (m.start(), m.end()) for m in re.finditer(r"[а-яґєіїА-ЯҐЄІЇ']+\s*–\s*[а-яґєіїА-ЯҐЄІЇ']+\s*[+–]", folded)
+    ]
     selected: list[tuple[str, str, str]] = []
     for match in TOKEN_RE.finditer(folded):
         original = match.group(0)
         if any(start <= match.start() < end for start, end in drill_ranges):
             continue
         # A hyphen-attached syllable is drill/OCR material, not a word.
-        if folded[max(0, match.start()-1):match.start()] == "-" or folded[match.end():match.end()+1] == "-":
+        if folded[max(0, match.start() - 1) : match.start()] == "-" or folded[match.end() : match.end() + 1] == "-":
             continue
         if not _is_content_word(original, connection):
             continue
@@ -343,7 +378,9 @@ def build_query_set(
         for category, term in GRAMMAR_TERM_SOURCES.items():
             term_source = _display_path(grammar_source)
             if category in {"number", "verb"}:
-                row = source_conn.execute("SELECT text FROM textbooks WHERE chunk_id = ?", (GRAMMAR_TEXTBOOK_CHUNK,)).fetchone()
+                row = source_conn.execute(
+                    "SELECT text FROM textbooks WHERE chunk_id = ?", (GRAMMAR_TEXTBOOK_CHUNK,)
+                ).fetchone()
                 term_text = str(row[0]) if row else ""
                 term_source = f"textbooks:{GRAMMAR_TEXTBOOK_CHUNK}"
             else:
@@ -370,28 +407,32 @@ def build_query_set(
             ua = _make_form_mismatch_query(span, vesum_conn, used_queries=used_queries)
             if ua:
                 used_queries.add(ua["query"])
-                g1.append({
-                    "id": f"G1-UA-{len(g1)+1:03d}",
-                    "gold_chunk_id": citation["chunk_id"],
-                    "citation_ids": citation["citation_ids"],
-                    "stratum": "ukrainian_form_mismatch",
-                    "query": ua["query"],
-                    "forms": ua["forms"],
-                    "source_file": str(row["source_file"] or ""),
-                    "subject": str(row["subject"] or ""),
-                })
+                g1.append(
+                    {
+                        "id": f"G1-UA-{len(g1) + 1:03d}",
+                        "gold_chunk_id": citation["chunk_id"],
+                        "citation_ids": citation["citation_ids"],
+                        "stratum": "ukrainian_form_mismatch",
+                        "query": ua["query"],
+                        "forms": ua["forms"],
+                        "source_file": str(row["source_file"] or ""),
+                        "subject": str(row["subject"] or ""),
+                    }
+                )
             english = _make_english_query(citation["supports"])
             if english:
-                g1.append({
-                    "id": f"G1-EN-{len(g1)+1:03d}",
-                    "gold_chunk_id": citation["chunk_id"],
-                    "citation_ids": citation["citation_ids"],
-                    "stratum": "english",
-                    "query": english,
-                    "forms": [],
-                    "source_file": str(row["source_file"] or ""),
-                    "subject": str(row["subject"] or ""),
-                })
+                g1.append(
+                    {
+                        "id": f"G1-EN-{len(g1) + 1:03d}",
+                        "gold_chunk_id": citation["chunk_id"],
+                        "citation_ids": citation["citation_ids"],
+                        "stratum": "english",
+                        "query": english,
+                        "forms": [],
+                        "source_file": str(row["source_file"] or ""),
+                        "subject": str(row["subject"] or ""),
+                    }
+                )
         g2: list[dict[str, Any]] = []
         total_positions = 0
         for level, path in arc_paths.items():
@@ -417,19 +458,21 @@ def build_query_set(
                         forms = _phrase_paradigm_forms(case_lemmas, vesum_conn)
                         if len(forms) < 3:
                             continue
-                g2.append({
-                    "id": f"G2-{level.upper()}-{int(position['position']):03d}",
-                    "level": level,
-                    "position": int(position["position"]),
-                    "slug": slug,
-                    "job": job,
-                    "category": category,
-                    "source_text": source_text,
-                    "source_path": source_path,
-                    "base_query": forms[0],
-                    "inflected_queries": forms[1:3],
-                    "forms": forms[:3],
-                })
+                g2.append(
+                    {
+                        "id": f"G2-{level.upper()}-{int(position['position']):03d}",
+                        "level": level,
+                        "position": int(position["position"]),
+                        "slug": slug,
+                        "job": job,
+                        "category": category,
+                        "source_text": source_text,
+                        "source_path": source_path,
+                        "base_query": forms[0],
+                        "inflected_queries": forms[1:3],
+                        "forms": forms[:3],
+                    }
+                )
         result = {
             "schema": "retrieval-probe-9233-queries.v1",
             "design_sha256": EXPECTED_DESIGN_SHA256,
@@ -440,7 +483,14 @@ def build_query_set(
             "g2": g2,
             "g2_term_inventory": grammar_terms,
             "g2_category_exclusions": grammar_exclusions,
-            "counts": {"g1": len(g1), "g1_cited_chunks": len({q["gold_chunk_id"] for q in g1}), "g1_ukrainian_form_mismatch": sum(q["stratum"] == "ukrainian_form_mismatch" for q in g1), "g1_english": sum(q["stratum"] == "english" for q in g1), "g2": len(g2), "arc_non_self_check_positions": total_positions},
+            "counts": {
+                "g1": len(g1),
+                "g1_cited_chunks": len({q["gold_chunk_id"] for q in g1}),
+                "g1_ukrainian_form_mismatch": sum(q["stratum"] == "ukrainian_form_mismatch" for q in g1),
+                "g1_english": sum(q["stratum"] == "english" for q in g1),
+                "g2": len(g2),
+                "arc_non_self_check_positions": total_positions,
+            },
         }
         source_conn.close()
         return result
@@ -450,9 +500,18 @@ def _digest_textbooks(connection: sqlite3.Connection) -> tuple[str, int, int]:
     digest = hashlib.sha256()
     count = 0
     unsectioned = 0
-    cursor = connection.execute("SELECT id, chunk_id, title, text, source_file, subject, parent_section_id FROM textbooks ORDER BY id")
+    cursor = connection.execute(
+        "SELECT id, chunk_id, title, text, source_file, subject, parent_section_id FROM textbooks ORDER BY id"
+    )
     for row in cursor:
-        payload = json.dumps([row[0], *[str(value or "") if index not in (6,) else value for index, value in enumerate(row[1:], start=1)]], ensure_ascii=False, separators=(",", ":"))
+        payload = json.dumps(
+            [
+                row[0],
+                *[str(value or "") if index not in (6,) else value for index, value in enumerate(row[1:], start=1)],
+            ],
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
         digest.update(payload.encode("utf-8"))
         digest.update(b"\n")
         count += 1
@@ -477,7 +536,9 @@ def _exact_chunk_search(connection: sqlite3.Connection, query: str, limit: int) 
     return [str(row[0]) for row in rows]
 
 
-def lemma_expanded_rows(rows: list[sqlite3.Row] | list[tuple[Any, ...]], vesum: sqlite3.Connection) -> tuple[list[tuple[Any, ...]], int]:
+def lemma_expanded_rows(
+    rows: list[sqlite3.Row] | list[tuple[Any, ...]], vesum: sqlite3.Connection
+) -> tuple[list[tuple[Any, ...]], int]:
     """Shared A1 index contract: id, chunk, title, text, source, subject rows."""
     unique_tokens = {token for row in rows for value in row[2:4] for token in tokenize(str(value or ""))}
     token_lemmas: dict[str, list[str]] = {}
@@ -493,8 +554,9 @@ def lemma_expanded_rows(rows: list[sqlite3.Row] | list[tuple[Any, ...]], vesum: 
             token_lemmas.setdefault(normalize_token(str(form)), []).append(normalize_token(str(lemma)))
 
     def expand(value: Any) -> str:
-        return " ".join(lemma for token in tokenize(str(value or ""))
-                        for lemma in dict.fromkeys(token_lemmas.get(token, [token])))
+        return " ".join(
+            lemma for token in tokenize(str(value or "")) for lemma in dict.fromkeys(token_lemmas.get(token, [token]))
+        )
 
     expanded = [(row[0], row[1], expand(row[2]), expand(row[3]), row[4], row[5]) for row in rows]
     return expanded, len(unique_tokens)
@@ -517,8 +579,12 @@ def _create_lemma_index(sources_path: Path, vesum_path: Path, temp_dir: Path) ->
             index = sqlite3.connect(index_path)
             index.execute("PRAGMA journal_mode = OFF")
             index.execute("PRAGMA synchronous = OFF")
-            index.execute("CREATE VIRTUAL TABLE lemma_fts USING fts5(chunk_id UNINDEXED, source_file UNINDEXED, subject UNINDEXED, title_terms, text_terms, tokenize='unicode61')")
-            rows = source.execute("SELECT id, chunk_id, title, text, source_file, subject FROM textbooks ORDER BY id").fetchall()
+            index.execute(
+                "CREATE VIRTUAL TABLE lemma_fts USING fts5(chunk_id UNINDEXED, source_file UNINDEXED, subject UNINDEXED, title_terms, text_terms, tokenize='unicode61')"
+            )
+            rows = source.execute(
+                "SELECT id, chunk_id, title, text, source_file, subject FROM textbooks ORDER BY id"
+            ).fetchall()
             expanded, unique_token_count = lemma_expanded_rows(rows, vesum)
             corpus_count = len(expanded)
             for row in expanded:
@@ -535,7 +601,12 @@ def _create_lemma_index(sources_path: Path, vesum_path: Path, temp_dir: Path) ->
         if index is not None:
             index.close()
         source.close()
-    return index_path, {"build_seconds": time.perf_counter() - started, "size_bytes": index_path.stat().st_size, "unique_surface_tokens": unique_token_count, "indexed_rows": corpus_count}
+    return index_path, {
+        "build_seconds": time.perf_counter() - started,
+        "size_bytes": index_path.stat().st_size,
+        "unique_surface_tokens": unique_token_count,
+        "indexed_rows": corpus_count,
+    }
 
 
 def _lemma_query(query: str, vesum: sqlite3.Connection, *, include_short: bool = True) -> list[str]:
@@ -556,7 +627,7 @@ def _lemma_search(index_path: Path, query: str, vesum: sqlite3.Connection, limit
     fts_query = sources_db._build_preserving_fts_query(terms)
     if not fts_query:
         return []
-    connection = sqlite3.connect(f"file:{index_path.resolve().as_posix()}?mode=ro", uri=True)
+    connection = _shared_open_readonly(index_path.resolve())
     try:
         rows = connection.execute(
             "SELECT chunk_id FROM lemma_fts WHERE lemma_fts MATCH ? ORDER BY bm25(lemma_fts, 0, 0, 0, 5.0, 1.0), rowid LIMIT ?",
@@ -567,20 +638,32 @@ def _lemma_search(index_path: Path, query: str, vesum: sqlite3.Connection, limit
         connection.close()
 
 
-def _production_search(query: str, track: str, source_conn: sqlite3.Connection, limit: int = 10, *, production: types.ModuleType | None = None) -> dict[str, int]:
+def _production_search(
+    query: str,
+    track: str,
+    source_conn: sqlite3.Connection,
+    limit: int = 10,
+    *,
+    production: types.ModuleType | None = None,
+) -> dict[str, int]:
     runtime = production or sources_db
     with runtime.using_connection(source_conn):
         results = runtime.search_sources(query, track=track, limit=limit)
     textbook_results = [row for row in results if row.get("corpus") == "textbook_sections"]
-    section_ids = list(dict.fromkeys(
-        int(str(row.get("chunk_id", ""))[1:])
-        for row in textbook_results
-        if re.fullmatch(r"S\d+", str(row.get("chunk_id", "")))
-    ))
+    section_ids = list(
+        dict.fromkeys(
+            int(str(row.get("chunk_id", ""))[1:])
+            for row in textbook_results
+            if re.fullmatch(r"S\d+", str(row.get("chunk_id", "")))
+        )
+    )
     # #9303 adds direct unsectioned chunks in the same corpus. Preserve their
     # actual result rank, including gaps occupied by other corpora.
-    member_ranks = {str(row["chunk_id"]): rank for rank, row in enumerate(results, 1)
-                    if row.get("corpus") == "textbook_sections" and not re.fullmatch(r"S\d+", str(row.get("chunk_id", "")))}
+    member_ranks = {
+        str(row["chunk_id"]): rank
+        for rank, row in enumerate(results, 1)
+        if row.get("corpus") == "textbook_sections" and not re.fullmatch(r"S\d+", str(row.get("chunk_id", "")))
+    }
     if not section_ids:
         return member_ranks
     placeholders = ",".join("?" for _ in section_ids)
@@ -600,7 +683,9 @@ def _production_search(query: str, track: str, source_conn: sqlite3.Connection, 
     return member_ranks
 
 
-def _rank_metrics(queries: list[dict[str, Any]], rankings: dict[str, list[str] | dict[str, int]], arm: str) -> dict[str, dict[str, float | int]]:
+def _rank_metrics(
+    queries: list[dict[str, Any]], rankings: dict[str, list[str] | dict[str, int]], arm: str
+) -> dict[str, dict[str, float | int]]:
     result: dict[str, dict[str, float | int]] = {}
     for stratum in ("all", "ukrainian_form_mismatch", "english"):
         selected = [q for q in queries if stratum == "all" or q["stratum"] == stratum]
@@ -635,7 +720,9 @@ def _percentile(values: list[float], percentile: float) -> float:
 
 def _production_snapshot(ref: str | None) -> tuple[types.ModuleType, dict[str, str]]:
     """Load an explicitly selected repository search implementation, read-only."""
-    revision = subprocess.check_output(["git", "rev-parse", "--verify", f"{ref or 'HEAD'}^{{commit}}"], cwd=ROOT, text=True, timeout=30).strip()
+    revision = subprocess.check_output(
+        ["git", "rev-parse", "--verify", f"{ref or 'HEAD'}^{{commit}}"], cwd=ROOT, text=True, timeout=30
+    ).strip()
     code = subprocess.check_output(["git", "show", f"{revision}:scripts/wiki/sources_db.py"], cwd=ROOT, timeout=30)
     provenance = {"revision": revision, "source_sha256": hashlib.sha256(code).hexdigest()}
     if ref is None:
@@ -647,17 +734,38 @@ def _production_snapshot(ref: str | None) -> tuple[types.ModuleType, dict[str, s
     return module, provenance
 
 
-def _descriptive_gate(queries: list[dict[str, Any]], metrics: dict[str, Any], rankings: dict[str, Any], g2: list[dict[str, Any]]) -> dict[str, Any]:
+def _descriptive_gate(
+    queries: list[dict[str, Any]], metrics: dict[str, Any], rankings: dict[str, Any], g2: list[dict[str, Any]]
+) -> dict[str, Any]:
     better = max(("A0-chunk", "A1-lemma"), key=lambda arm: metrics[arm]["ukrainian_form_mismatch"]["hit_at_20"])
     readings = []
     for stratum in ("ukrainian_form_mismatch", "all"):
         selected = [q for q in queries if stratum == "all" or q["stratum"] == stratum]
-        misses = {depth: sum(q["gold_chunk_id"] not in rankings[better][q["id"]][:depth] for q in selected) for depth in (20, 100)}
-        readings.append({"stratum": stratum, "n": len(selected), "misses_at_20": misses[20], "misses_at_100": misses[100],
-                         "v2_threshold_met": bool(selected) and misses[100] / len(selected) >= .2, "any_miss_at_20": bool(misses[20])})
-    return {"status": "descriptive_only", "better_lexical_arm": better, "readings": readings,
-            "g2_overlap_recoveries": sum(pair["arms"]["A1-lemma"]["any_shared_chunk"] and not pair["arms"]["A0-chunk"]["any_shared_chunk"] for row in g2 for pair in row["pairs"]),
-            "criterion": "v3 dropped the numeric threshold without specifying a replacement. v5 superseded the Phase 1→2 gate with the hybrid-search goal; neither historical reading authorizes compute. The former G2 OR-clause is descriptive only: identical lemma sets necessarily produce identical queries and overlap; it is never a gate input. G2 judged recall is unmeasured."}
+        misses = {
+            depth: sum(q["gold_chunk_id"] not in rankings[better][q["id"]][:depth] for q in selected)
+            for depth in (20, 100)
+        }
+        readings.append(
+            {
+                "stratum": stratum,
+                "n": len(selected),
+                "misses_at_20": misses[20],
+                "misses_at_100": misses[100],
+                "v2_threshold_met": bool(selected) and misses[100] / len(selected) >= 0.2,
+                "any_miss_at_20": bool(misses[20]),
+            }
+        )
+    return {
+        "status": "descriptive_only",
+        "better_lexical_arm": better,
+        "readings": readings,
+        "g2_overlap_recoveries": sum(
+            pair["arms"]["A1-lemma"]["any_shared_chunk"] and not pair["arms"]["A0-chunk"]["any_shared_chunk"]
+            for row in g2
+            for pair in row["pairs"]
+        ),
+        "criterion": "v3 dropped the numeric threshold without specifying a replacement. v5 superseded the Phase 1→2 gate with the hybrid-search goal; neither historical reading authorizes compute. The former G2 OR-clause is descriptive only: identical lemma sets necessarily produce identical queries and overlap; it is never a gate input. G2 judged recall is unmeasured.",
+    }
 
 
 def _g1_bootstrap(queries: list[dict[str, Any]], rankings: dict[str, Any], *, iterations: int = 2000) -> dict[str, Any]:
@@ -665,7 +773,10 @@ def _g1_bootstrap(queries: list[dict[str, Any]], rankings: dict[str, Any], *, it
     clusters: dict[str, list[int]] = defaultdict(list)
     for query in queries:
         if query["stratum"] == "ukrainian_form_mismatch":
-            clusters[query["query"]].append(int(query["gold_chunk_id"] in rankings["A1-lemma"][query["id"]][:20]) - int(query["gold_chunk_id"] in rankings["A0-chunk"][query["id"]][:20]))
+            clusters[query["query"]].append(
+                int(query["gold_chunk_id"] in rankings["A1-lemma"][query["id"]][:20])
+                - int(query["gold_chunk_id"] in rankings["A0-chunk"][query["id"]][:20])
+            )
     if not clusters:
         return {"clusters": 0, "iterations": 0, "gain": None, "ci95": None}
     groups = list(clusters.values())
@@ -674,12 +785,22 @@ def _g1_bootstrap(queries: list[dict[str, Any]], rankings: dict[str, Any], *, it
     for _ in range(iterations):
         values = [value for group in rng.choices(groups, k=len(groups)) for value in group]
         samples.append(statistics.mean(values))
-    return {"clusters": len(groups), "iterations": iterations, "seed": 9233, "gain": statistics.mean(value for group in groups for value in group), "ci95": [_percentile(samples, .025), _percentile(samples, .975)]}
+    return {
+        "clusters": len(groups),
+        "iterations": iterations,
+        "seed": 9233,
+        "gain": statistics.mean(value for group in groups for value in group),
+        "ci95": [_percentile(samples, 0.025), _percentile(samples, 0.975)],
+    }
 
 
 def run_probe(args: argparse.Namespace) -> dict[str, Any]:
     sources_path = args.sources_db.resolve() if args.sources_db else sources_db._read_db_path()
-    vesum_path = args.vesum_db.resolve() if args.vesum_db else Path(__import__("scripts.rag.config", fromlist=["VESUM_DB_PATH"]).VESUM_DB_PATH)
+    vesum_path = (
+        args.vesum_db.resolve()
+        if args.vesum_db
+        else Path(__import__("scripts.rag.config", fromlist=["VESUM_DB_PATH"]).VESUM_DB_PATH)
+    )
     query_set_path = args.output_dir / "queries.yaml"
     args.output_dir.mkdir(parents=True, exist_ok=True)
     if query_set_path.exists() and args.regenerate_queries and not args.overwrite_frozen_queries:
@@ -701,13 +822,29 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
                 new = current.get(old["gold_chunk_id"])
                 if new and new["query"] == old["query"]:
                     continue
-                changes.append({"previous_id": old["id"], "gold_chunk_id": old["gold_chunk_id"], "old_query": old["query"], "new_query": new["query"] if new else None,
-                                "reason": "strict single-lemma/content-POS, non-proper-noun admission; first eligible alternatives and unused combinations" if new else "fewer than two eligible Ukrainian words after rejecting ambiguous/function/proper/archaic analyses and drill fragments; English-only"})
+                changes.append(
+                    {
+                        "previous_id": old["id"],
+                        "gold_chunk_id": old["gold_chunk_id"],
+                        "old_query": old["query"],
+                        "new_query": new["query"] if new else None,
+                        "reason": "strict single-lemma/content-POS, non-proper-noun admission; first eligible alternatives and unused combinations"
+                        if new
+                        else "fewer than two eligible Ukrainian words after rejecting ambiguous/function/proper/archaic analyses and drill fragments; English-only",
+                    }
+                )
             query_set["g1_changes"] = changes
         query_set_path.write_text(yaml.safe_dump(query_set, allow_unicode=True, sort_keys=False), encoding="utf-8")
     query_sha = hashlib.sha256(query_set_path.read_bytes()).hexdigest()
     if args.queries_only:
-        return {"query_set_sha256": query_sha, "query_count": len(query_set["g1"]), "g1_ukrainian": query_set["counts"]["g1_ukrainian_form_mismatch"], "g1_english": query_set["counts"]["g1_english"], "g2_positions": len(query_set["g2"]), "frozen_only": True}
+        return {
+            "query_set_sha256": query_sha,
+            "query_count": len(query_set["g1"]),
+            "g1_ukrainian": query_set["counts"]["g1_ukrainian_form_mismatch"],
+            "g1_english": query_set["counts"]["g1_english"],
+            "g2_positions": len(query_set["g2"]),
+            "frozen_only": True,
+        }
     source_conn = _ro_connect(sources_path)
     index_path = None
     vesum_conn = None
@@ -719,13 +856,17 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
         rankings: dict[str, dict[str, list[str] | dict[str, int]]] = {"A0-prod": {}, "A0-chunk": {}, "A1-lemma": {}}
         before_rankings = {}
         for query in query_set["g1"]:
-            rankings["A0-prod"][query["id"]] = _production_search(query["query"], "a1", source_conn, limit=10, production=production)
+            rankings["A0-prod"][query["id"]] = _production_search(
+                query["query"], "a1", source_conn, limit=10, production=production
+            )
             before_rankings[query["id"]] = _production_search(query["query"], "a1", source_conn, limit=10)
             rankings["A0-chunk"][query["id"]] = _exact_chunk_search(source_conn, query["query"], 100)
             rankings["A1-lemma"][query["id"]] = _lemma_search(index_path, query["query"], vesum_conn, 100)
         metrics = {arm: _rank_metrics(query_set["g1"], rankings[arm], arm) for arm in rankings}
         citation_rows = source_conn.execute(
-            "SELECT chunk_id, parent_section_id FROM textbooks WHERE chunk_id IN (" + ",".join("?" for _ in {q['gold_chunk_id'] for q in query_set['g1']}) + ")",
+            "SELECT chunk_id, parent_section_id FROM textbooks WHERE chunk_id IN ("
+            + ",".join("?" for _ in {q["gold_chunk_id"] for q in query_set["g1"]})
+            + ")",
             list(dict.fromkeys(q["gold_chunk_id"] for q in query_set["g1"])),
         ).fetchall()
         unreachable = sum(row[1] is None for row in citation_rows)
@@ -738,7 +879,11 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
                 hits: list[list[str]] = []
                 for text in qset:
                     start = time.perf_counter()
-                    result = _exact_chunk_search(source_conn, text, 20) if arm == "A0-chunk" else _lemma_search(index_path, text, vesum_conn, 20)
+                    result = (
+                        _exact_chunk_search(source_conn, text, 20)
+                        if arm == "A0-chunk"
+                        else _lemma_search(index_path, text, vesum_conn, 20)
+                    )
                     elapsed = time.perf_counter() - start
                     if arm == "A1-lemma":
                         query_times.append(elapsed)
@@ -751,26 +896,70 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
                     overlap = sorted(set(arm_hits[arm][0]) & set(arm_hits[arm][inflected_index]))
                     pair[arm] = {"top20_overlap": len(overlap), "any_shared_chunk": bool(overlap)}
                 pairs.append({"inflected_query": qset[inflected_index], "arms": pair})
-            g2_results.append({"id": probe["id"], "level": probe["level"], "position": probe["position"], "category": probe["category"], "base_query": qset[0], "pairs": pairs})
-        language_ids = {str(row[0]) for row in source_conn.execute("SELECT DISTINCT source_file FROM textbooks WHERE subject IN ('ukrmova','bukvar') OR source_file LIKE 'ulp-%'")}
-        language_queries = [q for q in query_set["g1"] if q["source_file"] in language_ids or q["subject"] in {"ukrmova", "bukvar"} or q["source_file"].startswith("ulp-")]
+            g2_results.append(
+                {
+                    "id": probe["id"],
+                    "level": probe["level"],
+                    "position": probe["position"],
+                    "category": probe["category"],
+                    "base_query": qset[0],
+                    "pairs": pairs,
+                }
+            )
+        language_ids = {
+            str(row[0])
+            for row in source_conn.execute(
+                "SELECT DISTINCT source_file FROM textbooks WHERE subject IN ('ukrmova','bukvar') OR source_file LIKE 'ulp-%'"
+            )
+        }
+        language_queries = [
+            q
+            for q in query_set["g1"]
+            if q["source_file"] in language_ids
+            or q["subject"] in {"ukrmova", "bukvar"}
+            or q["source_file"].startswith("ulp-")
+        ]
         language_metrics = {arm: _rank_metrics(language_queries, rankings[arm], arm) for arm in rankings}
         gate = _descriptive_gate(query_set["g1"], metrics, rankings, g2_results)
         before_metrics = _rank_metrics(query_set["g1"], before_rankings, "A0-prod")
-        direct_ids = {str(row[0]) for row in source_conn.execute("SELECT chunk_id FROM textbooks WHERE parent_section_id IS NULL")}
+        direct_ids = {
+            str(row[0]) for row in source_conn.execute("SELECT chunk_id FROM textbooks WHERE parent_section_id IS NULL")
+        }
         before_direct = set().union(*(set(r) for r in before_rankings.values())) & direct_ids
         after_direct = set().union(*(set(r) for r in rankings["A0-prod"].values())) & direct_ids
         peak_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         result = {
             "design_sha256": EXPECTED_DESIGN_SHA256,
             "query_set_sha256": query_sha,
-            "textbooks": {"rows": textbook_count, "row_digest_sha256": textbooks_digest, "row_digest_order": "id ASC; compact UTF-8 JSON array of id, chunk_id, title, text, source_file, subject, parent_section_id per row, newline-delimited", "unsectioned_rows": unsectioned_count, "g1_structurally_unreachable": unreachable},
-            "a0_prod": {"default_limit": 10, "before_revision": _production_snapshot(None)[1]["revision"], "after": production_provenance, "before_metrics": before_metrics, "before_direct_chunks": len(before_direct), "after_direct_chunks": len(after_direct), "ulp_rows": source_conn.execute("SELECT count(*) FROM textbooks WHERE source_file LIKE 'ulp-%'").fetchone()[0]},
+            "textbooks": {
+                "rows": textbook_count,
+                "row_digest_sha256": textbooks_digest,
+                "row_digest_order": "id ASC; compact UTF-8 JSON array of id, chunk_id, title, text, source_file, subject, parent_section_id per row, newline-delimited",
+                "unsectioned_rows": unsectioned_count,
+                "g1_structurally_unreachable": unreachable,
+            },
+            "a0_prod": {
+                "default_limit": 10,
+                "before_revision": _production_snapshot(None)[1]["revision"],
+                "after": production_provenance,
+                "before_metrics": before_metrics,
+                "before_direct_chunks": len(before_direct),
+                "after_direct_chunks": len(after_direct),
+                "ulp_rows": source_conn.execute(
+                    "SELECT count(*) FROM textbooks WHERE source_file LIKE 'ulp-%'"
+                ).fetchone()[0],
+            },
             "g1_bootstrap": _g1_bootstrap(query_set["g1"], rankings),
             "g1_metrics": metrics,
             "language_subset_metrics": {"denominator": len(language_queries), "arms": language_metrics},
             "g2_inflection_probe": {"positions": len(g2_results), "pairs": g2_results},
-            "a1_lemma_cost": {**index_cost, "query_batch_n": min(50, len(query_times)), "query_p50_seconds": statistics.median(query_times[:50]) if query_times else 0.0, "query_p95_seconds": _percentile(query_times[:50], .95), "peak_rss_bytes": peak_rss * 1024 if sys.platform != "darwin" else peak_rss},
+            "a1_lemma_cost": {
+                **index_cost,
+                "query_batch_n": min(50, len(query_times)),
+                "query_p50_seconds": statistics.median(query_times[:50]) if query_times else 0.0,
+                "query_p95_seconds": _percentile(query_times[:50], 0.95),
+                "peak_rss_bytes": peak_rss * 1024 if sys.platform != "darwin" else peak_rss,
+            },
             "phase2_gate": gate,
         }
         _write_results(args.output_dir / "phase1-results.md", query_set, result)
@@ -787,11 +976,15 @@ def _write_results(path: Path, query_set: dict[str, Any], result: dict[str, Any]
     rows = []
     for arm, strata in result["g1_metrics"].items():
         for stratum, metric in strata.items():
-            rows.append(f"| {arm} | {stratum} | {metric['n']} | {metric['hit_at_20']:.3f} | {metric['hit_at_100']:.3f} | {metric['mrr']:.3f} |")
+            rows.append(
+                f"| {arm} | {stratum} | {metric['n']} | {metric['hit_at_20']:.3f} | {metric['hit_at_100']:.3f} | {metric['mrr']:.3f} |"
+            )
     language_rows = []
     for arm, strata in result["language_subset_metrics"]["arms"].items():
         metric = strata["all"]
-        language_rows.append(f"| {arm} | {metric['n']} | {metric['hit_at_20']:.3f} | {metric['hit_at_100']:.3f} | {metric['mrr']:.3f} |")
+        language_rows.append(
+            f"| {arm} | {metric['n']} | {metric['hit_at_20']:.3f} | {metric['hit_at_100']:.3f} | {metric['mrr']:.3f} |"
+        )
     inflection_rows = []
     seen_triples = set()
     for probe in result["g2_inflection_probe"]["pairs"]:
@@ -801,38 +994,103 @@ def _write_results(path: Path, query_set: dict[str, Any], result: dict[str, Any]
         seen_triples.add(triple)
         for pair in probe["pairs"]:
             for arm, metric in pair["arms"].items():
-                inflection_rows.append(f"| {probe['id']} | {probe['base_query']} → {pair['inflected_query']} | {arm} | {metric['top20_overlap']} | {str(metric['any_shared_chunk']).lower()} |")
+                inflection_rows.append(
+                    f"| {probe['id']} | {probe['base_query']} → {pair['inflected_query']} | {arm} | {metric['top20_overlap']} | {str(metric['any_shared_chunk']).lower()} |"
+                )
     cost = result["a1_lemma_cost"]
     gate = result["phase2_gate"]
-    gate_rows = [f"| {row['stratum']} | {row['n']} | {row['misses_at_100']} | {str(row['v2_threshold_met']).lower()} | {row['misses_at_20']} | {str(row['any_miss_at_20']).lower()} |" for row in gate["readings"]]
-    changes = [f"| {row['previous_id']} | {row['old_query']} | {row['new_query'] or 'English-only'} | {row['reason']} |" for row in query_set.get("g1_changes", [])]
-    unique_counts = {stratum: len({q["query"] for q in query_set["g1"] if stratum == "all" or q["stratum"] == stratum}) for stratum in ("all", "ukrainian_form_mismatch", "english")}
+    gate_rows = [
+        f"| {row['stratum']} | {row['n']} | {row['misses_at_100']} | {str(row['v2_threshold_met']).lower()} | {row['misses_at_20']} | {str(row['any_miss_at_20']).lower()} |"
+        for row in gate["readings"]
+    ]
+    changes = [
+        f"| {row['previous_id']} | {row['old_query']} | {row['new_query'] or 'English-only'} | {row['reason']} |"
+        for row in query_set.get("g1_changes", [])
+    ]
+    unique_counts = {
+        stratum: len({q["query"] for q in query_set["g1"] if stratum == "all" or q["stratum"] == stratum})
+        for stratum in ("all", "ukrainian_form_mismatch", "english")
+    }
     prod = result["a0_prod"]
     bootstrap = result["g1_bootstrap"]
-    text = "\n".join([
-        "# #9233 Phase 1 retrieval probe results", "",
-        "Generated by `scripts/wiki/diagnostics/retrieval_probe_9233.py`; no semantic judging was run.", "",
-        "Hashes:", "", f"- Frozen design SHA-256: `{result['design_sha256']}`", f"- Query-set SHA-256: `{result['query_set_sha256']}`",
-        *[f"- {group.upper()} SHA-256 (compact sorted-key UTF-8 JSON): `{hashlib.sha256(json.dumps(query_set[group], ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode()).hexdigest()}`" for group in ("g1", "g2")],
-        f"- Superseding v5 design SHA-256: `{V5_DESIGN_SHA256}`", "",
-        f"G1 denominator: {query_set['counts']['g1_cited_chunks']} unique cited chunk IDs and {len(query_set['g1'])} query records ({query_set['counts']['g1_ukrainian_form_mismatch']} Ukrainian form-mismatch; {query_set['counts']['g1_english']} English). G2 denominator: {len(query_set['g2'])} grammar positions.", "",
-        f"Textbooks table: {result['textbooks']['rows']} rows; row digest SHA-256 `{result['textbooks']['row_digest_sha256']}` (`{result['textbooks']['row_digest_order']}`); {result['textbooks']['unsectioned_rows']} unsectioned rows (including {prod['ulp_rows']} ULP rows); {result['textbooks']['g1_structurally_unreachable']} cited G1 rows lacked sections before #9303. The database and row digest do not change for this code fix.", "",
-        "A0-prod uses production `search_sources` at limit 10, maps S{section_id} to member chunk IDs and keeps direct unsectioned chunk IDs from #9303, preserving actual returned result ranks. Its hit@20 and hit@100 are capped by tool depth. Both lexical chunk arms use the whole table without a subject predicate. Dense retrieval is disabled for this judge-free run (SOURCES_MCP_NO_DENSE=1).", "",
-        f"Before #9303 runtime: `{prod['before_revision']}`. After runtime: `{prod['after']['revision']}`; sources_db.py SHA-256 `{prod['after']['source_sha256']}`. Only that module is loaded from the selected Git snapshot; dependencies remain from the working tree. Before/after A0-prod G1 hit counts: {round(prod['before_metrics']['all']['hit_at_20'] * len(query_set['g1']))}/{len(query_set['g1'])} → {round(result['g1_metrics']['A0-prod']['all']['hit_at_20'] * len(query_set['g1']))}/{len(query_set['g1'])}. Unique unsectioned chunks actually returned across these G1 queries: {prod['before_direct_chunks']} → {prod['after_direct_chunks']} (not a claim that every unsectioned row was retrieved).", "",
-        f"Unique G1 query strings: {unique_counts['all']} all; {unique_counts['ukrainian_form_mismatch']} Ukrainian; {unique_counts['english']} English. Paired bootstrap for A1-lemma − A0-chunk hit@20: cluster = exact Ukrainian query string, keeping all repeated gold-chunk records together; {bootstrap['clusters']} clusters, {bootstrap['iterations']} resamples, seed 9233, gain {bootstrap['gain']}, 95% interval {bootstrap['ci95']}. Repeated primer spans containing only бачити/чути cannot supply distinct strings under the frozen cited-span rule. This narrow, source-derived sample is not independent held-out semantic proof.", "",
-        "## G1 query regeneration", "", query_set["g1_rule"], "",
-        "Local selection uses read-only VESUM forms_all/POS/tags and form_markers. All selected source and query forms are attested there. Sources MCP attestation is recorded separately for this run; it uses VESUM too and supplies no independent semantic proof. No Ukrainian forms are generated by a language model.", "",
-        f"Previous query SHA-256: `{query_set.get('previous_query_sha256', 'none')}`. All dropped/replaced Ukrainian queries follow; unchanged records are retained.", "",
-        "| Previous ID | Previous query | Replacement | Reason |", "|---|---|---|---|", *changes, "",
-        "## G1 retrieval metrics", "", "| Arm | Stratum | n | hit@20 | hit@100 | MRR |", "|---|---|---:|---:|---:|---:|", *rows, "",
-        f"Language subset denominator: {result['language_subset_metrics']['denominator']} queries, selected by source identity (`ukrmova`, `bukvar`, ULP source files).", "", "| Arm | n | hit@20 | hit@100 | MRR |", "|---|---:|---:|---:|---:|", *language_rows, "",
-        "## Mechanical G2 inflection probe", "", f"Each unique term triple is reported once ({len(seen_triples)} triples; first position shown); the complete position inventory remains in queries.yaml. Category counts: {dict(Counter(q['category'] for q in query_set['g2']))}. Excluded categories: {query_set.get('g2_category_exclusions', {})}. Number (число) and verb (дієслово) are grounded in textbooks:{GRAMMAR_TEXTBOOK_CHUNK}; other terms retain their arc-source provenance. The existing first-match category priority is retained: all number/plural/singular jobs also match case first, so number has zero dedicated positions in this arc snapshot. Sentence (речення) also has zero dedicated positions: its jobs match earlier categories first. Both source terms and paradigms remain available. Overlap counts shared chunk IDs, never judged relevance.", "", "| First position | Pair | Arm | top-20 overlap | any shared chunk |", "|---|---|---|---:|---|", *inflection_rows, "",
-        "## A1-lemma cost", "", f"Index build: {cost['build_seconds']:.3f} s; SQLite index size: {cost['size_bytes']} bytes; unique corpus surface tokens: {cost['unique_surface_tokens']}; indexed rows: {cost['indexed_rows']}; first 50 ordered G2 queries p50/p95: {cost['query_p50_seconds']:.6f}/{cost['query_p95_seconds']:.6f} s (n={cost['query_batch_n']}); peak process RSS: {cost['peak_rss_bytes']} bytes.", "",
-        "## Phase 2 gate — descriptive only", "", f"Better lexical arm by Ukrainian G1 hit@20: {gate['better_lexical_arm']}. English is outside the primary contrast; the pooled row is a historical sensitivity reading only.", "",
-        "| Stratum | n | Outside top 100 | v2 ≥20% met | Misses at 20 | Any-miss reading |", "|---|---:|---:|---|---:|---|", *gate_rows, "",
-        gate["criterion"], "", f"Former G2 overlap OR-clause occurrences: {gate['g2_overlap_recoveries']} position-pairs; descriptive, excluded from both readings.", "",
-        "Residual: no embedder, reranker, Phase 2 or semantic relevance judging was run. Compute awaits the operator; the accountable driver owns that follow-on decision and independent exact-head code/Ukrainian review. No search recommendation follows from this Phase 1 report.", "",
-    ])
+    text = "\n".join(
+        [
+            "# #9233 Phase 1 retrieval probe results",
+            "",
+            "Generated by `scripts/wiki/diagnostics/retrieval_probe_9233.py`; no semantic judging was run.",
+            "",
+            "Hashes:",
+            "",
+            f"- Frozen design SHA-256: `{result['design_sha256']}`",
+            f"- Query-set SHA-256: `{result['query_set_sha256']}`",
+            *[
+                f"- {group.upper()} SHA-256 (compact sorted-key UTF-8 JSON): `{hashlib.sha256(json.dumps(query_set[group], ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode()).hexdigest()}`"
+                for group in ("g1", "g2")
+            ],
+            f"- Superseding v5 design SHA-256: `{V5_DESIGN_SHA256}`",
+            "",
+            f"G1 denominator: {query_set['counts']['g1_cited_chunks']} unique cited chunk IDs and {len(query_set['g1'])} query records ({query_set['counts']['g1_ukrainian_form_mismatch']} Ukrainian form-mismatch; {query_set['counts']['g1_english']} English). G2 denominator: {len(query_set['g2'])} grammar positions.",
+            "",
+            f"Textbooks table: {result['textbooks']['rows']} rows; row digest SHA-256 `{result['textbooks']['row_digest_sha256']}` (`{result['textbooks']['row_digest_order']}`); {result['textbooks']['unsectioned_rows']} unsectioned rows (including {prod['ulp_rows']} ULP rows); {result['textbooks']['g1_structurally_unreachable']} cited G1 rows lacked sections before #9303. The database and row digest do not change for this code fix.",
+            "",
+            "A0-prod uses production `search_sources` at limit 10, maps S{section_id} to member chunk IDs and keeps direct unsectioned chunk IDs from #9303, preserving actual returned result ranks. Its hit@20 and hit@100 are capped by tool depth. Both lexical chunk arms use the whole table without a subject predicate. Dense retrieval is disabled for this judge-free run (SOURCES_MCP_NO_DENSE=1).",
+            "",
+            f"Before #9303 runtime: `{prod['before_revision']}`. After runtime: `{prod['after']['revision']}`; sources_db.py SHA-256 `{prod['after']['source_sha256']}`. Only that module is loaded from the selected Git snapshot; dependencies remain from the working tree. Before/after A0-prod G1 hit counts: {round(prod['before_metrics']['all']['hit_at_20'] * len(query_set['g1']))}/{len(query_set['g1'])} → {round(result['g1_metrics']['A0-prod']['all']['hit_at_20'] * len(query_set['g1']))}/{len(query_set['g1'])}. Unique unsectioned chunks actually returned across these G1 queries: {prod['before_direct_chunks']} → {prod['after_direct_chunks']} (not a claim that every unsectioned row was retrieved).",
+            "",
+            f"Unique G1 query strings: {unique_counts['all']} all; {unique_counts['ukrainian_form_mismatch']} Ukrainian; {unique_counts['english']} English. Paired bootstrap for A1-lemma − A0-chunk hit@20: cluster = exact Ukrainian query string, keeping all repeated gold-chunk records together; {bootstrap['clusters']} clusters, {bootstrap['iterations']} resamples, seed 9233, gain {bootstrap['gain']}, 95% interval {bootstrap['ci95']}. Repeated primer spans containing only бачити/чути cannot supply distinct strings under the frozen cited-span rule. This narrow, source-derived sample is not independent held-out semantic proof.",
+            "",
+            "## G1 query regeneration",
+            "",
+            query_set["g1_rule"],
+            "",
+            "Local selection uses read-only VESUM forms_all/POS/tags and form_markers. All selected source and query forms are attested there. Sources MCP attestation is recorded separately for this run; it uses VESUM too and supplies no independent semantic proof. No Ukrainian forms are generated by a language model.",
+            "",
+            f"Previous query SHA-256: `{query_set.get('previous_query_sha256', 'none')}`. All dropped/replaced Ukrainian queries follow; unchanged records are retained.",
+            "",
+            "| Previous ID | Previous query | Replacement | Reason |",
+            "|---|---|---|---|",
+            *changes,
+            "",
+            "## G1 retrieval metrics",
+            "",
+            "| Arm | Stratum | n | hit@20 | hit@100 | MRR |",
+            "|---|---|---:|---:|---:|---:|",
+            *rows,
+            "",
+            f"Language subset denominator: {result['language_subset_metrics']['denominator']} queries, selected by source identity (`ukrmova`, `bukvar`, ULP source files).",
+            "",
+            "| Arm | n | hit@20 | hit@100 | MRR |",
+            "|---|---:|---:|---:|---:|",
+            *language_rows,
+            "",
+            "## Mechanical G2 inflection probe",
+            "",
+            f"Each unique term triple is reported once ({len(seen_triples)} triples; first position shown); the complete position inventory remains in queries.yaml. Category counts: {dict(Counter(q['category'] for q in query_set['g2']))}. Excluded categories: {query_set.get('g2_category_exclusions', {})}. Number (число) and verb (дієслово) are grounded in textbooks:{GRAMMAR_TEXTBOOK_CHUNK}; other terms retain their arc-source provenance. The existing first-match category priority is retained: all number/plural/singular jobs also match case first, so number has zero dedicated positions in this arc snapshot. Sentence (речення) also has zero dedicated positions: its jobs match earlier categories first. Both source terms and paradigms remain available. Overlap counts shared chunk IDs, never judged relevance.",
+            "",
+            "| First position | Pair | Arm | top-20 overlap | any shared chunk |",
+            "|---|---|---|---:|---|",
+            *inflection_rows,
+            "",
+            "## A1-lemma cost",
+            "",
+            f"Index build: {cost['build_seconds']:.3f} s; SQLite index size: {cost['size_bytes']} bytes; unique corpus surface tokens: {cost['unique_surface_tokens']}; indexed rows: {cost['indexed_rows']}; first 50 ordered G2 queries p50/p95: {cost['query_p50_seconds']:.6f}/{cost['query_p95_seconds']:.6f} s (n={cost['query_batch_n']}); peak process RSS: {cost['peak_rss_bytes']} bytes.",
+            "",
+            "## Phase 2 gate — descriptive only",
+            "",
+            f"Better lexical arm by Ukrainian G1 hit@20: {gate['better_lexical_arm']}. English is outside the primary contrast; the pooled row is a historical sensitivity reading only.",
+            "",
+            "| Stratum | n | Outside top 100 | v2 ≥20% met | Misses at 20 | Any-miss reading |",
+            "|---|---:|---:|---|---:|---|",
+            *gate_rows,
+            "",
+            gate["criterion"],
+            "",
+            f"Former G2 overlap OR-clause occurrences: {gate['g2_overlap_recoveries']} position-pairs; descriptive, excluded from both readings.",
+            "",
+            "Residual: no embedder, reranker, Phase 2 or semantic relevance judging was run. Compute awaits the operator; the accountable driver owns that follow-on decision and independent exact-head code/Ukrainian review. No search recommendation follows from this Phase 1 report.",
+            "",
+        ]
+    )
     path.write_text(text, encoding="utf-8")
 
 
@@ -852,19 +1110,45 @@ def build_parser() -> argparse.ArgumentParser:
             "Related: frozen #9233 bake-off design v3; scripts/wiki/sources_db.py; issue #9233."
         ),
     )
-    parser.add_argument("--sources-db", type=Path, help="Read-only sources.db path; default is the project active database resolved by sources_db.")
-    parser.add_argument("--vesum-db", type=Path, help="Read-only VESUM path; default is the project VESUM database resolver.")
+    parser.add_argument(
+        "--sources-db",
+        type=Path,
+        help="Read-only sources.db path; default is the project active database resolved by sources_db.",
+    )
+    parser.add_argument(
+        "--vesum-db", type=Path, help="Read-only VESUM path; default is the project VESUM database resolver."
+    )
     parser.add_argument(
         "--temp-dir",
         type=Path,
         required=True,
         help='Existing or creatable temporary directory outside this repository for the lemma SQLite index; example: "$TMPDIR/probe-9233".',
     )
-    parser.add_argument("--output-dir", type=Path, default=ROOT / "docs/research/retrieval-bakeoff-9233", help="Directory for frozen queries and generated results; default: docs/research/retrieval-bakeoff-9233.")
-    parser.add_argument("--queries-only", action="store_true", help="Write/freeze queries.yaml and report its SHA-256 without running any retrieval arm; default: run the full probe.")
-    parser.add_argument("--regenerate-queries", action="store_true", help="Rebuild queries.yaml from the cited pack, arcs, source text, and VESUM before any arm runs; default: reuse the frozen file.")
-    parser.add_argument("--overwrite-frozen-queries", action="store_true", help="Explicitly permit --regenerate-queries to replace an existing frozen queries.yaml; default: refuse.")
-    parser.add_argument("--production-ref", help="Load scripts/wiki/sources_db.py from this local Git revision for A0-prod, retaining the working-tree runtime as the before baseline; default: current runtime. Other modules stay at the working-tree versions.")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=ROOT / "docs/research/retrieval-bakeoff-9233",
+        help="Directory for frozen queries and generated results; default: docs/research/retrieval-bakeoff-9233.",
+    )
+    parser.add_argument(
+        "--queries-only",
+        action="store_true",
+        help="Write/freeze queries.yaml and report its SHA-256 without running any retrieval arm; default: run the full probe.",
+    )
+    parser.add_argument(
+        "--regenerate-queries",
+        action="store_true",
+        help="Rebuild queries.yaml from the cited pack, arcs, source text, and VESUM before any arm runs; default: reuse the frozen file.",
+    )
+    parser.add_argument(
+        "--overwrite-frozen-queries",
+        action="store_true",
+        help="Explicitly permit --regenerate-queries to replace an existing frozen queries.yaml; default: refuse.",
+    )
+    parser.add_argument(
+        "--production-ref",
+        help="Load scripts/wiki/sources_db.py from this local Git revision for A0-prod, retaining the working-tree runtime as the before baseline; default: current runtime. Other modules stay at the working-tree versions.",
+    )
     return parser
 
 
@@ -874,7 +1158,19 @@ def main(argv: list[str] | None = None) -> int:
     if result.get("frozen_only"):
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
     else:
-        print(json.dumps({"query_set_sha256": result["query_set_sha256"], "textbooks_rows": result["textbooks"]["rows"], "g1": result["g1_metrics"], "phase2_gate": result["phase2_gate"], "a1_lemma_cost": result["a1_lemma_cost"]}, ensure_ascii=False, sort_keys=True))
+        print(
+            json.dumps(
+                {
+                    "query_set_sha256": result["query_set_sha256"],
+                    "textbooks_rows": result["textbooks"]["rows"],
+                    "g1": result["g1_metrics"],
+                    "phase2_gate": result["phase2_gate"],
+                    "a1_lemma_cost": result["a1_lemma_cost"],
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+        )
     return 0
 
 

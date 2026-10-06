@@ -23,6 +23,7 @@ from ai_llm.fallback import (
     call_gemini_with_fallback,
     visible_sleep,
 )
+from scripts.lib.readonly_sqlite import SQLiteConnection
 from validate.check_wiki_verify_markers import (
     assert_no_verify_markers,
     find_verify_markers_text,
@@ -363,7 +364,7 @@ def _fetch_chunks_by_chunk_id(chunk_ids: list[str]) -> list[dict]:
 
 
 def _fetch_chunks_by_chunk_id_with_conn(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     chunk_ids: list[str],
 ) -> list[dict]:
     """Fetch exact chunks on an existing DB connection, preserving request order."""
@@ -381,7 +382,7 @@ def _fetch_chunks_by_chunk_id_with_conn(
 
 
 def _fetch_chunk_by_chunk_id_with_conn(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     chunk_id: str,
 ) -> dict | None:
     for fetcher in (
@@ -397,7 +398,7 @@ def _fetch_chunk_by_chunk_id_with_conn(
     return None
 
 
-def _fetch_textbook_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _fetch_textbook_chunk_with_conn(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = _fetchone_dict(
         conn,
         """
@@ -426,7 +427,7 @@ def _fetch_textbook_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> 
     }
 
 
-def _fetch_literary_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _fetch_literary_chunk_with_conn(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = _fetchone_dict(
         conn,
         """
@@ -458,7 +459,7 @@ def _fetch_literary_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> 
     }
 
 
-def _fetch_external_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _fetch_external_chunk_with_conn(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = _fetchone_dict(
         conn,
         """
@@ -490,7 +491,7 @@ def _fetch_external_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> 
     }
 
 
-def _fetch_wikipedia_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _fetch_wikipedia_chunk_with_conn(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = _fetchone_dict(
         conn,
         """
@@ -516,7 +517,7 @@ def _fetch_wikipedia_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) ->
     }
 
 
-def _fetch_ukrainian_wiki_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _fetch_ukrainian_wiki_chunk_with_conn(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = _fetchone_dict(
         conn,
         """
@@ -543,7 +544,7 @@ def _fetch_ukrainian_wiki_chunk_with_conn(conn: sqlite3.Connection, chunk_id: st
 
 
 def _fetchone_dict(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     sql: str,
     params: tuple[object, ...],
 ) -> dict[str, object] | None:

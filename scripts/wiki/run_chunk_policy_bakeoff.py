@@ -83,6 +83,8 @@ from rag.benchmark_embeddings import (
     ndcg_at_k,
     recall_at_k,
 )
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from wiki import chunking as chunking_module
 from wiki import dense_rerank as dense_rerank_module
 from wiki.chunking import (
@@ -92,13 +94,7 @@ from wiki.chunking import (
 )
 
 SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
-DEFAULT_OUTPUT = (
-    PROJECT_ROOT
-    / "docs"
-    / "architecture"
-    / "research"
-    / "2026-04-25-chunk-policy-bakeoff-results.md"
-)
+DEFAULT_OUTPUT = PROJECT_ROOT / "docs" / "architecture" / "research" / "2026-04-25-chunk-policy-bakeoff-results.md"
 BAKEOFF_LOCK_FILE = "/tmp/chunk-policy-bakeoff.lock"
 
 # Periods covered by the gold set (mirrors benchmark_embeddings.PERIODS).
@@ -134,9 +130,9 @@ DEFAULT_BATCH_SIZES = {
 # #1345 dense baselines — used by Cell A reproduction sanity check.
 # Source: docs/architecture/research/2026-04-embedder-survey.md.
 BASELINE_1345 = {
-    "modern":           {"recall@10": 1.000, "ndcg@10": 0.997},
+    "modern": {"recall@10": 1.000, "ndcg@10": 0.997},
     "middle_ukrainian": {"recall@10": 0.500, "ndcg@10": 0.380},
-    "old_east_slavic":  {"recall@10": 0.300, "ndcg@10": 0.220},
+    "old_east_slavic": {"recall@10": 0.300, "ndcg@10": 0.220},
 }
 
 
@@ -198,9 +194,7 @@ CELLS: dict[str, CellConfig] = {
         policy_overrides={
             "wikipedia": _paragraph_policy("wikipedia", target=1500, overlap=150),
             "external": _paragraph_policy("external", target=1500, overlap=150),
-            "textbook_sections": _paragraph_policy(
-                "textbook_sections", target=1500, overlap=150
-            ),
+            "textbook_sections": _paragraph_policy("textbook_sections", target=1500, overlap=150),
         },
         batch_size=DEFAULT_BATCH_SIZES["B"],
     ),
@@ -211,9 +205,7 @@ CELLS: dict[str, CellConfig] = {
         policy_overrides={
             "wikipedia": _paragraph_policy("wikipedia", target=4000, overlap=400),
             "external": _paragraph_policy("external", target=4000, overlap=400),
-            "textbook_sections": _paragraph_policy(
-                "textbook_sections", target=4000, overlap=400
-            ),
+            "textbook_sections": _paragraph_policy("textbook_sections", target=4000, overlap=400),
         },
         batch_size=DEFAULT_BATCH_SIZES["C"],
     ),
@@ -246,13 +238,12 @@ def policy_for_period(period: str, cell: CellConfig) -> ChunkingPolicy:
 # --- DB sampling (mirrors benchmark_embeddings) --------------------------
 
 
-def get_db_connection() -> sqlite3.Connection:
+def get_db_connection() -> SQLiteConnection:
     if not SOURCES_DB_PATH.exists():
         raise FileNotFoundError(
-            f"Sources database not found at {SOURCES_DB_PATH}. "
-            "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
+            f"Sources database not found at {SOURCES_DB_PATH}. Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    conn = sqlite3.connect(f"{Path(SOURCES_DB_PATH).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(SOURCES_DB_PATH).resolve())
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -367,9 +358,7 @@ def rechunk_period(
             continue
         sub_count_per_parent[parent_id] = len(pieces)
         for piece in pieces:
-            sub_chunks.append(
-                SubChunk(parent_chunk_id=parent_id, sub_index=piece.chunk_index, text=piece.text)
-            )
+            sub_chunks.append(SubChunk(parent_chunk_id=parent_id, sub_index=piece.chunk_index, text=piece.text))
 
     counts = list(sub_count_per_parent.values()) or [0]
     stats = {
@@ -554,10 +543,7 @@ def evaluate_period(
         period_metrics["recall@10"].append(recall_at_k(retrieved_parents, relevant, 10))
         period_metrics["ndcg@10"].append(ndcg_at_k(retrieved_parents, relevant, 10))
 
-    aggregated = {
-        m: float(np.mean(period_metrics[m])) if period_metrics[m] else 0.0
-        for m in METRICS
-    }
+    aggregated = {m: float(np.mean(period_metrics[m])) if period_metrics[m] else 0.0 for m in METRICS}
     diag = {
         "queries_evaluated": len(queries),
         "queries_with_<10_unique_parents": queries_with_low_unique,
@@ -582,10 +568,7 @@ def run_cell(
         "cell_id": cell.cell_id,
         "description": cell.description,
         "index_max_length": cell.index_max_length,
-        "policy_overrides": {
-            corpus: dataclasses.asdict(policy)
-            for corpus, policy in cell.policy_overrides.items()
-        },
+        "policy_overrides": {corpus: dataclasses.asdict(policy) for corpus, policy in cell.policy_overrides.items()},
         "by_period": {},
         "stats": {},
     }
@@ -599,9 +582,7 @@ def run_cell(
         period_query_indices: dict[str, list[int]] = {}
         for period in PERIODS:
             qs = queries_by_period.get(period, [])
-            period_query_indices[period] = list(
-                range(len(all_queries), len(all_queries) + len(qs))
-            )
+            period_query_indices[period] = list(range(len(all_queries), len(all_queries) + len(qs)))
             all_queries.extend(qs)
         if not all_queries:
             raise RuntimeError("no queries with ground truth")
@@ -610,9 +591,7 @@ def run_cell(
         # them; use a slightly larger query batch to keep encode latency
         # snappy without breaking the long-context memory budget.
         query_batch = max(cell.batch_size, 8)
-        q_result = encoder.encode(
-            q_texts, max_length=cell.index_max_length, batch_size=query_batch
-        )
+        q_result = encoder.encode(q_texts, max_length=cell.index_max_length, batch_size=query_batch)
         q_dense = q_result["dense"]
 
         for period in PERIODS:
@@ -636,12 +615,9 @@ def run_cell(
 
             sub_texts = [s.text for s in sub_chunks]
             print(
-                f"    encoding {len(sub_texts)} sub-chunks "
-                f"@ max_length={cell.index_max_length} batch={cell.batch_size}"
+                f"    encoding {len(sub_texts)} sub-chunks @ max_length={cell.index_max_length} batch={cell.batch_size}"
             )
-            sub_result = encoder.encode(
-                sub_texts, max_length=cell.index_max_length, batch_size=cell.batch_size
-            )
+            sub_result = encoder.encode(sub_texts, max_length=cell.index_max_length, batch_size=cell.batch_size)
             sub_dense = sub_result["dense"]
 
             metrics, diag = evaluate_period(
@@ -692,9 +668,7 @@ def run_cell(
 # --- Sanity gate (Cell A vs #1345 baseline) ------------------------------
 
 
-def cell_a_baseline_drift(
-    cell_a_results: dict[str, Any], tolerance: float
-) -> tuple[bool, list[str]]:
+def cell_a_baseline_drift(cell_a_results: dict[str, Any], tolerance: float) -> tuple[bool, list[str]]:
     """Compare Cell A's R@10 against the #1345 baseline. Returns
     ``(passes, [drift_lines])``."""
 
@@ -737,9 +711,7 @@ def render_results_markdown(
     out.append("Date: 2026-04-25\n")
     out.append(f"Sample size per period: {sample_size}\n")
     out.append(f"Sub-chunk retrieval depth: {SUBCHUNK_RETRIEVAL_DEPTH}\n")
-    out.append(
-        f"Cell A baseline tolerance (vs #1345): ±{tolerance:.2f} R@10\n\n"
-    )
+    out.append(f"Cell A baseline tolerance (vs #1345): ±{tolerance:.2f} R@10\n\n")
 
     out.append("## Cell A reproduction sanity check\n\n")
     out.append(
@@ -758,7 +730,9 @@ def render_results_markdown(
         out.append("\n**✅ Sanity check passed.**\n")
 
     out.append("\n## Per-cell metrics\n\n")
-    out.append("| Period | Cell A R@10 | Cell B R@10 | Cell C R@10 | Cell A nDCG@10 | Cell B nDCG@10 | Cell C nDCG@10 |\n")
+    out.append(
+        "| Period | Cell A R@10 | Cell B R@10 | Cell C R@10 | Cell A nDCG@10 | Cell B nDCG@10 | Cell C nDCG@10 |\n"
+    )
     out.append("|---|---:|---:|---:|---:|---:|---:|\n")
     by_cell = {c["cell_id"]: c for c in cells}
     for period in PERIODS:
@@ -771,10 +745,7 @@ def render_results_markdown(
         out.append("| " + " | ".join(row) + " |\n")
 
     out.append("\n## Per-cell chunking stats\n\n")
-    out.append(
-        "Sub-chunks per parent measures chunker fragmentation. Higher = more "
-        "fragmentation per source row.\n\n"
-    )
+    out.append("Sub-chunks per parent measures chunker fragmentation. Higher = more fragmentation per source row.\n\n")
     out.append("| Period | Cell | sub-chunks | mean/parent | p90/parent | max/parent |\n")
     out.append("|---|---|---:|---:|---:|---:|\n")
     for period in PERIODS:
@@ -907,9 +878,7 @@ def parse_cells(arg: str) -> list[str]:
     cells = [c.strip().upper() for c in arg.split(",") if c.strip()]
     for cid in cells:
         if cid not in CELLS:
-            raise argparse.ArgumentTypeError(
-                f"unknown cell {cid!r}; valid: {sorted(CELLS)}"
-            )
+            raise argparse.ArgumentTypeError(f"unknown cell {cid!r}; valid: {sorted(CELLS)}")
     return cells
 
 
@@ -962,8 +931,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--baseline-tolerance",
         type=float,
         default=0.02,
-        help="Max R@10 drift between Cell A and #1345 baseline before sanity "
-             "check fails. Default: 0.02.",
+        help="Max R@10 drift between Cell A and #1345 baseline before sanity check fails. Default: 0.02.",
     )
     parser.add_argument(
         "--batch-A",
@@ -1073,9 +1041,7 @@ def _write_outputs(
     if drift_lines is None:
         cell_a = next((c for c in cells_results if c["cell_id"] == "A"), None)
         if cell_a is not None:
-            drift_passes, drift_lines = cell_a_baseline_drift(
-                cell_a, args.baseline_tolerance
-            )
+            drift_passes, drift_lines = cell_a_baseline_drift(cell_a, args.baseline_tolerance)
         else:
             drift_lines = ["  Cell A not yet completed — sanity check pending."]
             drift_passes = True
@@ -1088,10 +1054,7 @@ def _write_outputs(
         drift_passes=drift_passes,
     )
     if partial:
-        md = (
-            f"<!-- PARTIAL: {len(cells_results)} cell(s) of "
-            f"{len(args.cells)} complete -->\n\n" + md
-        )
+        md = f"<!-- PARTIAL: {len(cells_results)} cell(s) of {len(args.cells)} complete -->\n\n" + md
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(md, encoding="utf-8")
@@ -1100,9 +1063,7 @@ def _write_outputs(
 
     if args.json_output:
         args.json_output.parent.mkdir(parents=True, exist_ok=True)
-        args.json_output.write_text(
-            json.dumps(cells_results, indent=2, default=str), encoding="utf-8"
-        )
+        args.json_output.write_text(json.dumps(cells_results, indent=2, default=str), encoding="utf-8")
         print(f"  ↳ JSON: {args.json_output}")
 
 

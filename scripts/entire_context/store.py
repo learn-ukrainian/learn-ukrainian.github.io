@@ -22,6 +22,8 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+
 from .model import (
     LOCATOR_ID_RE,
     SCHEMA_VERSION,
@@ -150,7 +152,7 @@ class ContextLinkStore:
             self.db_path.parent.mkdir(parents=True, exist_ok=True)
             connection = sqlite3.connect(self.db_path)
         else:
-            connection = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
+            connection = _shared_open_readonly(self.db_path)
         connection.row_factory = sqlite3.Row
         try:
             if write:
@@ -378,8 +380,7 @@ class ContextLinkStore:
                 (locator_id, reason, actor, timestamp),
             )
             connection.execute(
-                "UPDATE context_links SET state = 'tombstoned', tombstone_reason = ?"
-                " WHERE locator_id = ?",
+                "UPDATE context_links SET state = 'tombstoned', tombstone_reason = ? WHERE locator_id = ?",
                 (reason, locator_id),
             )
         return True
@@ -455,12 +456,9 @@ class ContextLinkStore:
                 "SELECT state, COUNT(*) AS n FROM context_links GROUP BY state ORDER BY state"
             ).fetchall()
             events = connection.execute("SELECT COUNT(*) AS n, MAX(recorded_at) AS last_at FROM link_events").fetchone()
-            uses = connection.execute(
-                "SELECT COUNT(*) AS n, MAX(recorded_at) AS last_at FROM use_receipts"
-            ).fetchone()
+            uses = connection.execute("SELECT COUNT(*) AS n, MAX(recorded_at) AS last_at FROM use_receipts").fetchone()
             use_consumers = connection.execute(
-                "SELECT consumer, COUNT(*) AS n FROM use_receipts"
-                " GROUP BY consumer ORDER BY consumer"
+                "SELECT consumer, COUNT(*) AS n FROM use_receipts GROUP BY consumer ORDER BY consumer"
             ).fetchall()
             tombstone_reasons = connection.execute(
                 "SELECT tombstone_reason, COUNT(*) AS n FROM context_links"
@@ -468,8 +466,7 @@ class ContextLinkStore:
                 " ORDER BY tombstone_reason"
             ).fetchall()
             sync_table = connection.execute(
-                "SELECT 1 FROM sqlite_master WHERE type = 'table'"
-                " AND name = 'projection_sync_state'"
+                "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'projection_sync_state'"
             ).fetchone()
             acp_sync = None
             if sync_table is not None:
@@ -526,17 +523,13 @@ class ContextLinkStore:
             "last_event_at": events["last_at"] if events else None,
             "use_receipts": int(uses["n"]) if uses else 0,
             "last_use_at": uses["last_at"] if uses else None,
-            "uses_by_consumer": {
-                str(row["consumer"]): int(row["n"]) for row in use_consumers
-            },
+            "uses_by_consumer": {str(row["consumer"]): int(row["n"]) for row in use_consumers},
             "projection_health": {
                 "pending": count_map.get("pending", 0),
                 "tombstoned": count_map.get("tombstoned", 0),
                 "dangling": dangling,
                 "tombstones_by_reason": {
-                    str(row["tombstone_reason"]): int(row["n"])
-                    for row in tombstone_reasons
-                    if row["tombstone_reason"]
+                    str(row["tombstone_reason"]): int(row["n"]) for row in tombstone_reasons if row["tombstone_reason"]
                 },
                 "acp": acp_health,
             },
@@ -642,9 +635,7 @@ class ContextLinkStore:
                 (source_kind.value,),
             ).fetchone()
             attempts = (int(prior["attempts"]) if prior is not None else 0) + 1
-            failures = (int(prior["failures"]) if prior is not None else 0) + (
-                1 if outcome == "failed" else 0
-            )
+            failures = (int(prior["failures"]) if prior is not None else 0) + (1 if outcome == "failed" else 0)
             retries = (int(prior["retries"]) if prior is not None else 0) + (
                 1 if prior is not None and prior["last_outcome"] == "failed" else 0
             )
@@ -742,9 +733,7 @@ class ContextLinkStore:
             "purpose": purpose,
             "locator_ids": list(normalized),
         }
-        receipt_id = "ecuse_" + hashlib.sha256(
-            canonical_json(material).encode("utf-8")
-        ).hexdigest()
+        receipt_id = "ecuse_" + hashlib.sha256(canonical_json(material).encode("utf-8")).hexdigest()
         timestamp = isoformat_z(now or utc_now())
         with self._transaction() as connection:
             rows = connection.execute(

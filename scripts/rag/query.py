@@ -19,6 +19,8 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 try:
     from wiki import sources_db
 except ImportError:  # pragma: no cover - package import fallback
@@ -141,11 +143,7 @@ def search_literary(
         hits = [hit for hit in hits if genre_l in str(hit.get("genre", "")).lower()]
     if period:
         period_l = period.lower()
-        hits = [
-            hit
-            for hit in hits
-            if period_l in str(hit.get("language_period", "")).lower()
-        ]
+        hits = [hit for hit in hits if period_l in str(hit.get("language_period", "")).lower()]
     return hits[:limit]
 
 
@@ -188,7 +186,7 @@ def get_chunk_context(chunk_id: str, window: int = 2) -> list[dict[str, Any]]:
     db_path = sources_db.SOURCES_DB_PATH
     if not db_path.exists():
         return []
-    with sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True) as conn:
+    with _open_readonly(Path(db_path).resolve()) as conn:
         conn.row_factory = sqlite3.Row
         row = conn.execute(
             "SELECT source_file, chunk_id FROM textbooks WHERE chunk_id = ?",

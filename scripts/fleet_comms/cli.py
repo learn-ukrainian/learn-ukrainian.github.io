@@ -59,6 +59,7 @@ from scripts.fleet_comms.opsec_store import (
 )
 from scripts.fleet_comms.paths import PlaneRootAnchorError
 from scripts.fleet_comms.review_publication import DEFAULT_GATE_KIND
+from scripts.lib.readonly_sqlite import SQLiteConnection
 
 EXIT_OK = 0
 EXIT_USAGE = 2
@@ -140,7 +141,9 @@ def _short_plane_health(status: dict[str, Any]) -> dict[str, Any]:
     db_exists = schema.get("db_exists")
     return {
         "healthy": (
-            enabled and read_only and db_exists is True
+            enabled
+            and read_only
+            and db_exists is True
             and (status.get("store") or {}).get("reachable") is True
             and not schema.get("db_error")
             and schema.get("applied_version") is not None
@@ -342,9 +345,7 @@ def fleet_progress_payload(
             "missing_action": missing,
             "invalid_disposition": invalid,
             "dishonest": dishonest,
-            "eligible_idle_opportunity_seconds": idle_report.get(
-                "eligible_idle_opportunity_seconds"
-            ),
+            "eligible_idle_opportunity_seconds": idle_report.get("eligible_idle_opportunity_seconds"),
         },
         "work_next": {
             "available": bool(work_next.get("available")),
@@ -446,9 +447,7 @@ def fleet_help_payload() -> dict[str, Any]:
 
 def cmd_fleet_help(_args: argparse.Namespace) -> int:
     """Map the facade to existing Truth, Hand, and Eyes surfaces."""
-    sys.stdout.write(
-        _json_dump(fleet_help_payload())
-    )
+    sys.stdout.write(_json_dump(fleet_help_payload()))
     return EXIT_OK
 
 
@@ -480,7 +479,8 @@ def cmd_metrics(args: argparse.Namespace) -> int:
     source = resolve_metrics_source(force_legacy=_force_legacy(args))
     if source == "authority":
         payload = authority_collector_payload(
-            collect_efficiency_metrics_authority, _resolve_plane_db(args),
+            collect_efficiency_metrics_authority,
+            _resolve_plane_db(args),
         )
         sys.stdout.write(_json_dump(payload))
         return EXIT_OK
@@ -535,9 +535,11 @@ def cmd_backlog(args: argparse.Namespace) -> int:
     exclude_retired = not args.include_retired
     if source == "authority":
         payload = authority_collector_payload(
-            collect_delivery_backlog_authority, _resolve_plane_db(args),
+            collect_delivery_backlog_authority,
+            _resolve_plane_db(args),
             empty_fields={"total": 0, "by_agent": {}, "by_status": {}, "rows": []},
-            limit=args.limit, exclude_retired=exclude_retired,
+            limit=args.limit,
+            exclude_retired=exclude_retired,
         )
         sys.stdout.write(_json_dump(payload))
         return EXIT_OK
@@ -578,7 +580,8 @@ def cmd_dead_letters(args: argparse.Namespace) -> int:
     source = resolve_metrics_source(force_legacy=_force_legacy(args))
     if source == "authority":
         payload = authority_collector_payload(
-            collect_dead_letters_authority, _resolve_plane_db(args),
+            collect_dead_letters_authority,
+            _resolve_plane_db(args),
             empty_fields={"total": 0, "by_reason": {}, "rows": []},
             limit=args.limit,
         )
@@ -611,7 +614,7 @@ def cmd_dead_letters(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
-def _open_plane_db_ro(root: Path) -> sqlite3.Connection:
+def _open_plane_db_ro(root: Path) -> SQLiteConnection:
     db_path = root / "comms.sqlite3"
     if not db_path.is_file():
         raise FleetCommsCliError(f"plane DB not found: {db_path}")
@@ -621,7 +624,7 @@ def _open_plane_db_ro(root: Path) -> sqlite3.Connection:
     return conn
 
 
-def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
+def _table_exists(conn: SQLiteConnection, table: str) -> bool:
     row = conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
         (table,),
@@ -654,8 +657,7 @@ def get_formal_review_job(
     try:
         if not _table_exists(conn, "formal_review_jobs"):
             raise FleetCommsCliError(
-                f"formal_review_jobs table missing under {plane_root} "
-                "(run fleet-comms migrations first)"
+                f"formal_review_jobs table missing under {plane_root} (run fleet-comms migrations first)"
             )
         row = conn.execute(
             "SELECT * FROM formal_review_jobs WHERE review_id = ?",
@@ -808,8 +810,10 @@ def cmd_deliveries(args: argparse.Namespace) -> int:
         with AuthorityService(root=_authority_root(args)) as service:
             if args.deliveries_command == "claim":
                 lease = service.claim_next_delivery(
-                    args.recipient, args.worker_id,
-                    lease_seconds=args.lease_seconds, max_attempts=args.max_attempts,
+                    args.recipient,
+                    args.worker_id,
+                    lease_seconds=args.lease_seconds,
+                    max_attempts=args.max_attempts,
                 )
                 if lease is None:
                     sys.stdout.write(_json_dump({"delivery": None, "content_included": False}))
@@ -821,15 +825,20 @@ def cmd_deliveries(args: argparse.Namespace) -> int:
                 )
             elif args.deliveries_command == "consume":
                 payload = service.record_supervisory_consumption(
-                    args.delivery_id, worker_id=args.worker_id,
-                    fence_token=args.fence_token, driver_generation=args.driver_generation,
+                    args.delivery_id,
+                    worker_id=args.worker_id,
+                    fence_token=args.fence_token,
+                    driver_generation=args.driver_generation,
                 )
             elif args.deliveries_command == "ack":
-                payload = asdict(service.acknowledge_delivery(
-                    args.delivery_id, worker_id=args.worker_id,
-                    fence_token=args.fence_token,
-                    acknowledgment_artifact_id=args.acknowledgment_artifact_id,
-                ))
+                payload = asdict(
+                    service.acknowledge_delivery(
+                        args.delivery_id,
+                        worker_id=args.worker_id,
+                        fence_token=args.fence_token,
+                        acknowledgment_artifact_id=args.acknowledgment_artifact_id,
+                    )
+                )
             else:
                 payload = asdict(service.get_delivery(args.delivery_id))
     except AuthorityServiceError as exc:
@@ -865,8 +874,10 @@ def _add_deliveries_parser(sub: Any) -> None:
         "Related: scripts.fleet_comms.authority.AuthorityService; channels publish; plane-status."
     )
     deliveries = sub.add_parser(
-        "deliveries", help="Process fenced authority deliveries without message bodies",
-        description=description, epilog=epilog,
+        "deliveries",
+        help="Process fenced authority deliveries without message bodies",
+        description=description,
+        epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     operations = deliveries.add_subparsers(dest="deliveries_command", required=True)
@@ -877,28 +888,46 @@ def _add_deliveries_parser(sub: Any) -> None:
         ("ack", "Acknowledge a delivery after verifying its outcome"),
     ):
         operation = operations.add_parser(
-            name, help=summary, description=f"{summary}.\n{description}", epilog=epilog,
+            name,
+            help=summary,
+            description=f"{summary}.\n{description}",
+            epilog=epilog,
             formatter_class=argparse.RawDescriptionHelpFormatter,
         )
         operation.add_argument(
-            "--root", default=None,
+            "--root",
+            default=None,
             help="Authority storage directory (default: FLEET_COMMS_ROOT or shared plane root; e.g. /tmp/test-plane)",
         )
         if name == "claim":
             operation.add_argument("--recipient", required=True, help="Exact recipient seat, e.g. codex")
-            operation.add_argument("--lease-seconds", type=int, default=300, help="Positive lease duration in seconds (default: 300)")
-            operation.add_argument("--max-attempts", type=int, default=3, help="Positive delivery attempt limit (default: 3)")
+            operation.add_argument(
+                "--lease-seconds", type=int, default=300, help="Positive lease duration in seconds (default: 300)"
+            )
+            operation.add_argument(
+                "--max-attempts", type=int, default=3, help="Positive delivery attempt limit (default: 3)"
+            )
         else:
             operation.add_argument("delivery_id", help="Exact delivery_id returned by claim")
         if name != "status":
-            operation.add_argument("--worker-id", required=True, help="Lease owner identity; reuse the claim value, e.g. seat-1")
+            operation.add_argument(
+                "--worker-id", required=True, help="Lease owner identity; reuse the claim value, e.g. seat-1"
+            )
         if name in {"consume", "ack"}:
-            operation.add_argument("--fence-token", type=int, required=True, help="Positive fence_token returned by the current claim, e.g. 1")
+            operation.add_argument(
+                "--fence-token",
+                type=int,
+                required=True,
+                help="Positive fence_token returned by the current claim, e.g. 1",
+            )
         if name == "consume":
-            operation.add_argument("--driver-generation", required=True, help="Driver generation consuming the request, e.g. gen-1")
+            operation.add_argument(
+                "--driver-generation", required=True, help="Driver generation consuming the request, e.g. gen-1"
+            )
         if name == "ack":
             operation.add_argument(
-                "--acknowledgment-artifact-id", default=None,
+                "--acknowledgment-artifact-id",
+                default=None,
                 help="Existing sealed outcome artifact ID (default: no artifact); reuse on idempotent ack",
             )
         operation.set_defaults(func=cmd_deliveries)
@@ -1001,7 +1030,6 @@ def cmd_channel_publish(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
-
 def cmd_github_metrics(args: argparse.Namespace) -> int:
     """PR open→merge latency from GitHub (metadata only; Sol PR-M residual)."""
     payload = collect_github_pr_metrics(
@@ -1061,11 +1089,7 @@ def cmd_acp_verify(args: argparse.Namespace) -> int:
         verify_discussion_receipt,
     )
 
-    root = (
-        Path(args.root).expanduser()
-        if args.root
-        else default_plane_root(repo_root=Path.cwd())
-    )
+    root = Path(args.root).expanduser() if args.root else default_plane_root(repo_root=Path.cwd())
     try:
         payload = verify_discussion_receipt(
             root=root,
@@ -1088,9 +1112,7 @@ def cmd_requests_requeue_stale(args: argparse.Namespace) -> int:
 
     root = Path(args.root).expanduser() if args.root else None
     with RequestExecutor(root=root) as executor:
-        requeued = executor.requeue_stale_running(
-            stale_after_seconds=args.stale_after_seconds
-        )
+        requeued = executor.requeue_stale_running(stale_after_seconds=args.stale_after_seconds)
     sys.stdout.write(
         _json_dump(
             {
@@ -1379,18 +1401,14 @@ def build_parser() -> argparse.ArgumentParser:
     channel_create.add_argument("--root")
     channel_create.set_defaults(func=cmd_channel_create)
 
-    channel_subscribe = channel_sub.add_parser(
-        "subscribe", help="Add durable future fan-out recipients"
-    )
+    channel_subscribe = channel_sub.add_parser("subscribe", help="Add durable future fan-out recipients")
     channel_subscribe.add_argument("name")
     channel_subscribe.add_argument("recipient", nargs="+")
     channel_subscribe.add_argument("--metadata-json")
     channel_subscribe.add_argument("--root")
     channel_subscribe.set_defaults(func=cmd_channel_subscribe)
 
-    channel_context = channel_sub.add_parser(
-        "context", help="Seal and select the current channel context revision"
-    )
+    channel_context = channel_sub.add_parser("context", help="Seal and select the current channel context revision")
     channel_context.add_argument("name")
     channel_context.add_argument("body", help="Context text or '-' for stdin")
     channel_context.add_argument("--producer", default="fleet-comms-cli")
@@ -1510,7 +1528,6 @@ def build_parser() -> argparse.ArgumentParser:
     )
     dead.set_defaults(func=cmd_dead_letters)
 
-
     gh_metrics = sub.add_parser(
         "github-metrics",
         help="PR open→merge latency from GitHub (metadata only; Sol PR-M residual)",
@@ -1613,15 +1630,10 @@ def cmd_cold_start_board(args: argparse.Namespace) -> int:
         repo_root=repo_root,
     )
 
-    output = (
-        render_markdown_board(board_data)
-        if args.format == "markdown"
-        else _json_dump(board_data)
-    )
+    output = render_markdown_board(board_data) if args.format == "markdown" else _json_dump(board_data)
 
     sys.stdout.write(output)
     return EXIT_OK
-
 
 
 def main(argv: list[str] | None = None) -> int:

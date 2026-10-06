@@ -14,6 +14,9 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any, TypedDict
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 
 class AllOfVariant(TypedDict):
     """Multi-token variant: ALL listed substrings must appear in the same chunk.
@@ -22,6 +25,7 @@ class AllOfVariant(TypedDict):
     order (e.g. "ґ ... 1933 ... 1990" in any order satisfies the
     "Ґ-letter abolition + reinstatement" concept).
     """
+
     all_of: list[str]
 
 
@@ -48,14 +52,16 @@ MAX_EVIDENCE_CHARS = 200
 STRATEGY_LEGACY = "legacy_chunk"
 STRATEGY_MODERN = "modern_dense"
 
-APOSTROPHE_MAP = str.maketrans({
-    "’": "'",
-    "ʼ": "'",
-    "ʹ": "'",
-    "`": "'",
-    "´": "'",
-    "՚": "'",
-})
+APOSTROPHE_MAP = str.maketrans(
+    {
+        "’": "'",
+        "ʼ": "'",
+        "ʹ": "'",
+        "`": "'",
+        "´": "'",
+        "՚": "'",
+    }
+)
 
 # OCR'd PDF textbooks routinely break Ukrainian words across lines using
 # soft hyphens (U+00AD) or hyphen-minus + line break ("зву-\nків"). Both
@@ -65,7 +71,7 @@ APOSTROPHE_MAP = str.maketrans({
 # variants before substring matching. We do NOT strip hyphen-minus when
 # it sits between two letters with no whitespace ("по-перше"), only when
 # whitespace separates the two halves (line-break hyphenation only).
-_SOFT_HYPHEN = "\u00AD"
+_SOFT_HYPHEN = "\u00ad"
 _LINE_BREAK_HYPHENATION = re.compile(r"([\u0400-\u04FFa-zа-яіїєґ])-\s+([\u0400-\u04FFa-zа-яіїєґ])", re.IGNORECASE)
 _WHITESPACE = re.compile(r"\s+")
 
@@ -134,8 +140,8 @@ BASE_TARGET_CONCEPTS: dict[str, list[ConceptVariant]] = {
         # (в→[ў]) so a Grade 10 generic milozvuchnist chapter no
         # longer counts.
         {"all_of": ["милозвучн", "[ў]"]},
-        {"all_of": ["милозвучн", "лев"]},      # primer example: лев → [леў]
-        {"all_of": ["милозвучн", "був"]},      # primer example: був → [буў]
+        {"all_of": ["милозвучн", "лев"]},  # primer example: лев → [леў]
+        {"all_of": ["милозвучн", "був"]},  # primer example: був → [буў]
         "уникаємо збігу голосних або приголосних",
     ],
     # REMOVED 2026-04-20 (#1340): "g_ge_history" — the 1933 abolition /
@@ -219,8 +225,7 @@ ADDED_VARIANTS: dict[str, list[ConceptVariant]] = {
 }
 
 TARGET_CONCEPTS: dict[str, list[ConceptVariant]] = {
-    key: BASE_TARGET_CONCEPTS[key] + ADDED_VARIANTS.get(key, [])
-    for key in BASE_TARGET_CONCEPTS
+    key: BASE_TARGET_CONCEPTS[key] + ADDED_VARIANTS.get(key, []) for key in BASE_TARGET_CONCEPTS
 }
 
 #: Total concepts under test, used to scale reporting and PASS threshold.
@@ -270,7 +275,7 @@ def extract_ukrainian_keywords(discovery: dict[str, Any]) -> list[str]:
         if all(ord(ch) < 256 for ch in keyword.replace(" ", "")):
             continue
         for word in keyword.split():
-            if any("\u0400" <= ch <= "\u04FF" for ch in word) and len(word) >= 4:
+            if any("\u0400" <= ch <= "\u04ff" for ch in word) and len(word) >= 4:
                 cleaned = word.strip(".,;:!?\"'«»()—–-`*_")
                 if len(cleaned) >= 4:
                     keywords.add(cleaned.lower())
@@ -327,8 +332,7 @@ def variant_matches(normalized_text: str, normalized_variant: list[str]) -> bool
 #: variant string for every chunk (was O(chunks × variants) normalize_text
 #: calls per concept; now O(variants) at startup, then O(1) lookups).
 NORMALIZED_TARGET_CONCEPTS: dict[str, list[list[str]]] = {
-    concept: [_normalize_variant(variant) for variant in variants]
-    for concept, variants in TARGET_CONCEPTS.items()
+    concept: [_normalize_variant(variant) for variant in variants] for concept, variants in TARGET_CONCEPTS.items()
 }
 
 
@@ -370,7 +374,7 @@ def match_returned_concepts(chunks: list[dict[str, Any]]) -> dict[str, dict[str,
 
 
 def query_full_corpus_for_concept(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     variants: Iterable[Any],
 ) -> dict[str, Any]:
     """Look up every textbook chunk that satisfies any variant.
@@ -444,12 +448,8 @@ def query_full_corpus_for_concept(
 
 
 def diagnose_verdict(concepts: dict[str, dict[str, Any]]) -> str:
-    returned_present = sum(
-        1 for result in concepts.values() if result["present_in_returned_41"]
-    )
-    full_present = sum(
-        1 for result in concepts.values() if result["present_in_full_corpus"]
-    )
+    returned_present = sum(1 for result in concepts.values() if result["present_in_returned_41"])
+    full_present = sum(1 for result in concepts.values() if result["present_in_full_corpus"])
     if returned_present >= VERDICT_BOTTLENECK_THRESHOLD:
         return "writer_bottleneck"
     if returned_present < VERDICT_BOTTLENECK_THRESHOLD and full_present >= VERDICT_BOTTLENECK_THRESHOLD:
@@ -460,17 +460,11 @@ def diagnose_verdict(concepts: dict[str, dict[str, Any]]) -> str:
 
 
 def summarize_counts(concepts: dict[str, dict[str, Any]]) -> tuple[int, int, int]:
-    returned_present = sum(
-        1 for result in concepts.values() if result["present_in_returned_41"]
-    )
+    returned_present = sum(1 for result in concepts.values() if result["present_in_returned_41"])
     absent_returned_but_present_corpus = sum(
-        1
-        for result in concepts.values()
-        if not result["present_in_returned_41"] and result["present_in_full_corpus"]
+        1 for result in concepts.values() if not result["present_in_returned_41"] and result["present_in_full_corpus"]
     )
-    absent_corpus = sum(
-        1 for result in concepts.values() if not result["present_in_full_corpus"]
-    )
+    absent_corpus = sum(1 for result in concepts.values() if not result["present_in_full_corpus"])
     return returned_present, absent_returned_but_present_corpus, absent_corpus
 
 
@@ -485,9 +479,7 @@ def format_grades(result: dict[str, Any]) -> str:
 
 
 def build_recommendation(verdict: str, concepts: dict[str, dict[str, Any]]) -> list[str]:
-    missing_concepts = [
-        name for name, result in concepts.items() if not result["present_in_full_corpus"]
-    ]
+    missing_concepts = [name for name, result in concepts.items() if not result["present_in_full_corpus"]]
     retrieval_only_concepts = [
         name
         for name, result in concepts.items()
@@ -585,19 +577,14 @@ def collect_returned_grade_samples(
 
 def ensure_supported_target(track: str, slug: str) -> None:
     if track != SUPPORTED_TRACK or slug != SUPPORTED_SLUG:
-        raise SystemExit(
-            f"This diagnostic only supports {SUPPORTED_TRACK}/{SUPPORTED_SLUG}; "
-            f"received {track}/{slug}."
-        )
+        raise SystemExit(f"This diagnostic only supports {SUPPORTED_TRACK}/{SUPPORTED_SLUG}; received {track}/{slug}.")
 
 
 def output_paths_for_strategy(strategy: str) -> tuple[Path, Path]:
     if strategy == STRATEGY_MODERN:
         return (
             PLAYBACK_OUTPUT_PATH.with_name(f"{PLAYBACK_OUTPUT_PATH.stem}.modern.json"),
-            PLAYBACK_MARKDOWN_OUTPUT_PATH.with_name(
-                f"{PLAYBACK_MARKDOWN_OUTPUT_PATH.stem}.modern.md"
-            ),
+            PLAYBACK_MARKDOWN_OUTPUT_PATH.with_name(f"{PLAYBACK_MARKDOWN_OUTPUT_PATH.stem}.modern.md"),
         )
     return PLAYBACK_OUTPUT_PATH, PLAYBACK_MARKDOWN_OUTPUT_PATH
 
@@ -623,7 +610,9 @@ def adapt_modern_dense_match(match: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def search_returned_chunks(track: str, discovery_path: Path, keywords: list[str], strategy: str) -> list[dict[str, Any]]:
+def search_returned_chunks(
+    track: str, discovery_path: Path, keywords: list[str], strategy: str
+) -> list[dict[str, Any]]:
     if strategy == STRATEGY_LEGACY:
         return search_textbooks(set(keywords), max_total=40, track=track)
     if strategy == STRATEGY_MODERN:
@@ -679,15 +668,11 @@ def render_comparison_markdown(
     for concept in TARGET_CONCEPTS:
         legacy_hit = legacy_result["concepts"][concept]["present_in_returned_41"]
         modern_hit = modern_result["concepts"][concept]["present_in_returned_41"]
-        lines.append(
-            f"| {concept} | {'yes' if legacy_hit else 'no'} | {'yes' if modern_hit else 'no'} |"
-        )
+        lines.append(f"| {concept} | {'yes' if legacy_hit else 'no'} | {'yes' if modern_hit else 'no'} |")
 
     if verdict == "FAIL":
         failing_concepts = [
-            concept
-            for concept in TARGET_CONCEPTS
-            if not modern_result["concepts"][concept]["present_in_returned_41"]
+            concept for concept in TARGET_CONCEPTS if not modern_result["concepts"][concept]["present_in_returned_41"]
         ]
         lines.extend(
             [
@@ -731,7 +716,7 @@ def run_diagnostic(track: str, slug: str, strategy: str = STRATEGY_LEGACY) -> di
     concept_results = match_returned_concepts(returned_chunks)
     collect_returned_grade_samples(returned_chunks, concept_results)
 
-    with sqlite3.connect(f"{Path(SOURCES_DB_PATH).resolve().as_uri()}?mode=ro", uri=True) as conn:
+    with _open_readonly(Path(SOURCES_DB_PATH).resolve()) as conn:
         for concept, result in concept_results.items():
             if result["present_in_returned_41"]:
                 result["present_in_full_corpus"] = True
@@ -760,9 +745,7 @@ def run_diagnostic(track: str, slug: str, strategy: str = STRATEGY_LEGACY) -> di
 
 
 def write_outputs(result: dict[str, Any]) -> tuple[Path, Path]:
-    playback_path, markdown_path = output_paths_for_strategy(
-        str(result.get("strategy", STRATEGY_LEGACY))
-    )
+    playback_path, markdown_path = output_paths_for_strategy(str(result.get("strategy", STRATEGY_LEGACY)))
     playback_path.parent.mkdir(parents=True, exist_ok=True)
     playback_path.write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + "\n",

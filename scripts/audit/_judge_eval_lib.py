@@ -4,6 +4,7 @@ The Grok single-model harness and the multi-model matrix use the same
 Antonenko-grounded prompt, PR #2006 gold loader, and sev2-tolerant scoring.
 Keep this module free of provider-specific subprocess logic.
 """
+
 from __future__ import annotations
 
 import json
@@ -28,6 +29,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DB = PROJECT_ROOT / "data" / "sources.db"
 VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
@@ -141,7 +143,7 @@ def retrieve_antonenko(text: str, k: int = 8, *, db_path: Path = DB) -> list[dic
     words = set(re.findall(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+", text.lower()))
     if not words:
         return []
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(db_path).resolve())
     try:
         placeholders = ",".join("?" * len(words))
         rows = conn.execute(
@@ -161,10 +163,7 @@ def retrieve_antonenko(text: str, k: int = 8, *, db_path: Path = DB) -> list[dic
     finally:
         conn.close()
 
-    return [
-        {"headword": r[0], "section": r[1], "page": r[2], "text": (r[3] or "")[:600]}
-        for r in rows
-    ]
+    return [{"headword": r[0], "section": r[1], "page": r[2], "text": (r[3] or "")[:600]} for r in rows]
 
 
 def _text_tokens(text: str, *, min_len: int = 3) -> list[str]:
@@ -200,7 +199,7 @@ def _heritage_check(text: str, *, db_path: Path = DB) -> list[dict[str, Any]]:
     tokens = _text_tokens(text)
     if not tokens:
         return []
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(db_path).resolve())
     try:
         placeholders = ",".join("?" * len(tokens))
         grinchenko = {
@@ -288,7 +287,7 @@ def _vesum_unknown(text: str, *, db_path: Path = VESUM_DB) -> list[str]:
     candidate_tokens = [t for t in tokens if t not in proper_nouns]
     if not candidate_tokens:
         return []
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(db_path).resolve())
     try:
         placeholders = ",".join("?" * len(candidate_tokens))
         known = {
@@ -356,7 +355,7 @@ def _antonenko_fulltext_search(
     narrowed_query = f"({prefix_or}) AND ({marker_or})"
 
     def _run_query(fts_query: str) -> list[tuple[str, str]]:
-        conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+        conn = _open_readonly(Path(db_path).resolve())
         try:
             return conn.execute(
                 """
@@ -401,15 +400,17 @@ def _antonenko_fulltext_search(
         if best_pos is None:
             continue
         start = max(0, best_pos - snippet_chars // 4)
-        snippet = chunk_text[start:start + snippet_chars].strip().replace("\n", " ")
+        snippet = chunk_text[start : start + snippet_chars].strip().replace("\n", " ")
         # extract page number from title like "Antonenko-Davydovych «Як ми говоримо», p. 142"
         page_match = re.search(r"p\.\s*(\d+)", title or "")
-        hits.append({
-            "page": int(page_match.group(1)) if page_match else None,
-            "matched_token": best_token,
-            "snippet": snippet,
-            "marker_narrowed": marker_narrowed,
-        })
+        hits.append(
+            {
+                "page": int(page_match.group(1)) if page_match else None,
+                "matched_token": best_token,
+                "snippet": snippet,
+                "marker_narrowed": marker_narrowed,
+            }
+        )
         if len(hits) >= k:
             break
     return hits
@@ -454,9 +455,7 @@ def _ua_gec_load_index(*, root: Path = UA_GEC_ROOT) -> list[tuple[frozenset[str]
             if key in seen:
                 continue
             seen.add(key)
-            error_tokens = frozenset(
-                t.lower() for t in CYRILLIC_TOKEN_RE.findall(error_str) if len(t) >= 3
-            )
+            error_tokens = frozenset(t.lower() for t in CYRILLIC_TOKEN_RE.findall(error_str) if len(t) >= 3)
             if not error_tokens:
                 continue
             index.append((error_tokens, error_str, correct_str, tag))
@@ -537,7 +536,7 @@ def retrieve_ua_gec(text: str, k: int = 8, *, db_path: Path = DB) -> list[dict[s
     register calques that don't have Antonenko-Davydovych headword entries.
     """
     try:
-        conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+        conn = _open_readonly(Path(db_path).resolve())
     except sqlite3.OperationalError:
         # A checkout without the sources DB fails soft, like a missing table.
         return []
@@ -577,8 +576,7 @@ def retrieve_ua_gec(text: str, k: int = 8, *, db_path: Path = DB) -> list[dict[s
         conn.close()
 
     return [
-        {"error": r["error"], "correct": r["correct"], "type": r["error_type"], "doc_id": r["doc_id"]}
-        for r in rows
+        {"error": r["error"], "correct": r["correct"], "type": r["error_type"], "doc_id": r["doc_id"]} for r in rows
     ]
 
 
@@ -602,20 +600,14 @@ def build_judge_prompt(
     """
     evidence = ""
     if antonenko_entries:
-        evidence += (
-            "## Relevant Antonenko-Davydovych entries "
-            "(potentially applicable rules):\n\n"
-        )
+        evidence += "## Relevant Antonenko-Davydovych entries (potentially applicable rules):\n\n"
         for i, entry in enumerate(antonenko_entries[:8], 1):
             evidence += f"### Antonenko Rule {i}: {entry['headword']}\n{entry['text']}\n\n"
 
     if ua_gec_entries:
         evidence += "## UA-GEC human-annotated error pairs matching text:\n\n"
         for entry in ua_gec_entries[:8]:
-            evidence += (
-                f"- Error: \"{entry['error']}\" → Correction: "
-                f"\"{entry['correct']}\" (Type: {entry['type']})\n"
-            )
+            evidence += f'- Error: "{entry["error"]}" → Correction: "{entry["correct"]}" (Type: {entry["type"]})\n'
         evidence += "\n"
 
     if not evidence:
@@ -669,10 +661,7 @@ def _render_evidence_section(evidence: dict[str, Any]) -> str:
         sections.append(
             "### Antonenko-Davydovych — keyed headword entries (style_guide table)\n"
             "These are the 342 structured entries. Each is a canonical rule.\n\n"
-            + "\n".join(
-                f"- **{e['headword']}** (p.{e['page']}): {e['text'][:400]}"
-                for e in ant_kw[:6]
-            )
+            + "\n".join(f"- **{e['headword']}** (p.{e['page']}): {e['text'][:400]}" for e in ant_kw[:6])
         )
     else:
         sections.append("### Antonenko-Davydovych — keyed headword entries\n(no headword hits)")
@@ -704,10 +693,7 @@ def _render_evidence_section(evidence: dict[str, Any]) -> str:
             "### Antonenko-Davydovych — full-book prose hits (textbooks table, 169 page chunks)\n"
             "Complements the 342 headwords above. May surface register rules and discussion absent from the keyed index.\n\n"
             f"{preamble}\n\n"
-            + "\n".join(
-                f"- p.{h['page']} (matched on `{h['matched_token']}`): {h['snippet']}"
-                for h in ant_ft[:4]
-            )
+            + "\n".join(f"- p.{h['page']} (matched on `{h['matched_token']}`): {h['snippet']}" for h in ant_ft[:4])
         )
     else:
         sections.append("### Antonenko-Davydovych — full-book prose hits\n(no prose hits)")
@@ -719,10 +705,7 @@ def _render_evidence_section(evidence: dict[str, Any]) -> str:
             "Single-word attestation in pre-Soviet / etymological dictionaries is strong "
             "evidence that the form is canonical Ukrainian, **not** a Russianism. Do not "
             "flag attested forms below as Russianisms without overriding evidence.\n\n"
-            + "\n".join(
-                f"- `{e['token']}` — attested in: {', '.join(e['sources'])}"
-                for e in heritage[:12]
-            )
+            + "\n".join(f"- `{e['token']}` — attested in: {', '.join(e['sources'])}" for e in heritage[:12])
         )
     else:
         sections.append("### Heritage attestation\n(no Grinchenko/ESUM attestations)")
@@ -733,8 +716,7 @@ def _render_evidence_section(evidence: dict[str, Any]) -> str:
         sections.append(
             "### Russian-shadow morphology hits (pymorphy3, fires only on non-VESUM tokens)\n"
             + "\n".join(
-                f"- `{t['token']}` → ru lemma `{t['ru_lemma']}` (confidence {t['confidence']})"
-                for t in rs_tokens[:8]
+                f"- `{t['token']}` → ru lemma `{t['ru_lemma']}` (confidence {t['confidence']})" for t in rs_tokens[:8]
             )
         )
     elif rs.get("available"):
@@ -761,8 +743,7 @@ def _render_evidence_section(evidence: dict[str, Any]) -> str:
             "- `F/Style` hits are **weaker** — they often record stylistic preferences (e.g. an annotator may prefer `Добрий день` over the equally-correct canonical greeting `Доброго дня!`). Do **not** flag a phrase as a Russianism on F/Style evidence alone unless the substitution is also supported by Antonenko or your independent knowledge.\n"
             "- `G/Case` and `G/Gender` hits indicate Russian-pattern grammar, but require that the target text actually contains the exact `error` form (or a close inflection) — verify before citing.\n\n"
             + "\n".join(
-                f"- [{h['tag']}] `{h['error']}` → `{h['correct']}` (overlap={h['overlap']})"
-                for h in ua_gec[:6]
+                f"- [{h['tag']}] `{h['error']}` → `{h['correct']}` (overlap={h['overlap']})" for h in ua_gec[:6]
             )
         )
     else:
@@ -890,9 +871,7 @@ def score_case(verdict: dict[str, Any], gold: dict[str, Any]) -> dict[str, Any]:
     sev2_plus_judge = sum(
         1
         for item in issues
-        if isinstance(item, dict)
-        and isinstance(item.get("severity"), int)
-        and item["severity"] >= 2
+        if isinstance(item, dict) and isinstance(item.get("severity"), int) and item["severity"] >= 2
     )
     expected_flags_n = len(gold.get("expected_flags") or [])
 
@@ -980,10 +959,10 @@ def render_grok_report(
         "",
         "| Metric | Value |",
         "|---|---:|",
-        f"| Case accuracy | **{agg['case_accuracy']*100:.1f}%** |",
-        f"| Precision (sev≥2) | {agg['precision']*100:.1f}% |",
-        f"| Recall (sev≥2) | {agg['recall']*100:.1f}% |",
-        f"| **F1 (sev≥2)** | **{agg['f1']*100:.1f}%** |",
+        f"| Case accuracy | **{agg['case_accuracy'] * 100:.1f}%** |",
+        f"| Precision (sev≥2) | {agg['precision'] * 100:.1f}% |",
+        f"| Recall (sev≥2) | {agg['recall'] * 100:.1f}% |",
+        f"| **F1 (sev≥2)** | **{agg['f1'] * 100:.1f}%** |",
         f"| tp / fp / fn | {agg['tp']} / {agg['fp']} / {agg['fn']} |",
         "",
         "## Reference leaderboard (2026-05-15, n=12)",
@@ -993,7 +972,7 @@ def render_grok_report(
         "| claude-opus-4-7 | 86% | 79% | 94% | 100% |",
         "| gemini-3.1-pro-preview | 84% | 81% | 87% | 92% |",
         "| gpt-5.5 | 78% | 90% | 69% | 83% |",
-        f"| **{model}** | **{agg['f1']*100:.0f}%** | **{agg['precision']*100:.0f}%** | **{agg['recall']*100:.0f}%** | **{agg['case_accuracy']*100:.0f}%** |",
+        f"| **{model}** | **{agg['f1'] * 100:.0f}%** | **{agg['precision'] * 100:.0f}%** | **{agg['recall'] * 100:.0f}%** | **{agg['case_accuracy'] * 100:.0f}%** |",
         "",
         f"Source: `audit/2026-05-15-russianism-judge-calibration/REPORT.md` on `{ref}` for the prior 3 judges.",
         "",

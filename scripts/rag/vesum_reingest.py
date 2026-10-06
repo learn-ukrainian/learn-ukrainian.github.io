@@ -22,6 +22,7 @@ from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 from scripts.rag.word_identity import normalize_evidence_form
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -33,9 +34,7 @@ SCHEMA_VERSION = "vesum-reingest-v2"
 MARKER_POLICY_VERSION = "v1"
 IMPORTER_VERSION = "v2"
 COMPATIBILITY_HIDDEN_MARKERS = frozenset({"bad", "subst", "obsc"})
-COMPATIBILITY_HIDDEN_MARKERS_SQL = ", ".join(
-    f"'{marker}'" for marker in sorted(COMPATIBILITY_HIDDEN_MARKERS)
-)
+COMPATIBILITY_HIDDEN_MARKERS_SQL = ", ".join(f"'{marker}'" for marker in sorted(COMPATIBILITY_HIDDEN_MARKERS))
 TAG_MARKERS: dict[str, tuple[str, str]] = {
     "alt": ("orthographic_variant", "tag"),
     "arch": ("archaic", "tag"),
@@ -145,14 +144,10 @@ def verify_release_asset(asset_path: Path, lock: dict[str, object]) -> None:
         raise VesumReingestError("VESUM source lock has an invalid asset size or SHA-256")
     actual_size = asset_path.stat().st_size
     if actual_size != expected_size:
-        raise VesumReingestError(
-            f"VESUM release size mismatch: expected {expected_size}, got {actual_size}"
-        )
+        raise VesumReingestError(f"VESUM release size mismatch: expected {expected_size}, got {actual_size}")
     actual_sha256 = sha256_file(asset_path)
     if actual_sha256 != expected_sha256:
-        raise VesumReingestError(
-            f"VESUM release SHA-256 mismatch: expected {expected_sha256}, got {actual_sha256}"
-        )
+        raise VesumReingestError(f"VESUM release SHA-256 mismatch: expected {expected_sha256}, got {actual_sha256}")
 
 
 def verify_pipeline_identity(lock: dict[str, object]) -> None:
@@ -307,9 +302,7 @@ def marker_rows(tags: str, source_comment: str | None) -> tuple[tuple[str, str, 
         if marker is not None:
             marker_class, origin = marker
             rows.add((token, origin, marker_class))
-    if source_comment is not None and any(
-        line.strip().casefold() == "діалект" for line in source_comment.splitlines()
-    ):
+    if source_comment is not None and any(line.strip().casefold() == "діалект" for line in source_comment.splitlines()):
         rows.add(DIALECT_MARKER)
     return tuple(sorted(rows))
 
@@ -397,9 +390,7 @@ def _canonical_jsonl_line(
             for marker, origin, marker_class in markers
         ],
     }
-    return (
-        json.dumps(record, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(record, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
 
 
 def _canonical_jsonl_sha256(connection: sqlite3.Connection) -> str:
@@ -480,9 +471,7 @@ def build_shadow_database(asset_path: Path, output_path: Path) -> BuildSummary:
     :func:`build_from_lock`.
     """
     if output_path.resolve() == PRODUCTION_DB_PATH.resolve():
-        raise VesumReingestError(
-            "Refusing to replace data/vesum.db: step 1 only builds an explicit shadow database"
-        )
+        raise VesumReingestError("Refusing to replace data/vesum.db: step 1 only builds an explicit shadow database")
     output_path.parent.mkdir(parents=True, exist_ok=True)
     temporary_path = output_path.with_name(f".{output_path.name}.tmp")
     temporary_path.unlink(missing_ok=True)
@@ -616,7 +605,7 @@ def generate_fixture_manifest(
         ("vulg", "vulg"),
         ("dialect", "dialect"),
     )
-    connection = sqlite3.connect(f"file:{database_path}?mode=ro", uri=True)
+    connection = _shared_open_readonly(database_path)
     connection.row_factory = sqlite3.Row
     try:
         fixtures = []
@@ -646,8 +635,7 @@ def generate_fixture_manifest(
                     "source_location": row["source_location"],
                     "markers": markers,
                     "compatibility_visible": not any(
-                        marker_row["marker"] in COMPATIBILITY_HIDDEN_MARKERS
-                        for marker_row in markers
+                        marker_row["marker"] in COMPATIBILITY_HIDDEN_MARKERS for marker_row in markers
                     ),
                 }
             )

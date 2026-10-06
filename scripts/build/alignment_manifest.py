@@ -9,7 +9,6 @@ import inspect
 import json
 import logging
 import re
-import sqlite3
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -20,13 +19,13 @@ import yaml
 from audit import config as audit_config
 from build.phases import wiki_compressor
 from common import thresholds
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 logger = logging.getLogger(__name__)
 
 _ACTIVE_DECISION_SCOPES = {"pipeline", "architecture"}
-_EMPTY_PLAN_SENTINEL = (
-    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-)
+_EMPTY_PLAN_SENTINEL = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 _TEMPLATE_KEY_RE = re.compile(r"[^A-Za-z0-9]+")
 _PATH_ATTRS = {
     "PROJECT_ROOT",
@@ -111,11 +110,7 @@ def _resolve_attr(name: str) -> Any:
         return _resolve_attr("PROJECT_ROOT") / "docs" / "decisions" / "decisions.yaml"
     if name == "PHASE_TEMPLATES_ROOT":
         root = getattr(v6_build, "PHASES_DIR", None) if v6_build is not None else None
-        return (
-            Path(root)
-            if root is not None
-            else _resolve_attr("PROJECT_ROOT") / "scripts" / "build" / "phases"
-        )
+        return Path(root) if root is not None else _resolve_attr("PROJECT_ROOT") / "scripts" / "build" / "phases"
     if name == "CLAUDE_PHASES_ROOT":
         return _resolve_attr("PROJECT_ROOT") / ".claude" / "phases" / "claude"
     if name == "GEMINI_PHASES_ROOT":
@@ -227,7 +222,7 @@ _FTS5_SHADOW_SUFFIXES: tuple[str, ...] = (
 )
 
 
-def _sqlite_indexed_table_names(connection: sqlite3.Connection) -> tuple[str, ...]:
+def _sqlite_indexed_table_names(connection: SQLiteConnection) -> tuple[str, ...]:
     rows = connection.execute(
         """
         SELECT name, COALESCE(sql, '')
@@ -247,11 +242,7 @@ def _sqlite_indexed_table_names(connection: sqlite3.Connection) -> tuple[str, ..
         if table_sql.upper().lstrip().startswith("CREATE VIRTUAL TABLE"):
             virtual_table_names.add(str(name))
 
-    shadow_names: set[str] = {
-        f"{vt}{suffix}"
-        for vt in virtual_table_names
-        for suffix in _FTS5_SHADOW_SUFFIXES
-    }
+    shadow_names: set[str] = {f"{vt}{suffix}" for vt in virtual_table_names for suffix in _FTS5_SHADOW_SUFFIXES}
 
     # Pass 2: keep virtual tables and any regular table with an explicit
     # index, BUT subtract FTS5 shadows — see the block comment above for
@@ -263,18 +254,14 @@ def _sqlite_indexed_table_names(connection: sqlite3.Connection) -> tuple[str, ..
             continue
         table_sql = str(sql or "")
         is_virtual_table = table_sql.upper().lstrip().startswith("CREATE VIRTUAL TABLE")
-        has_explicit_index = bool(
-            connection.execute(f'PRAGMA index_list("{table_name}")').fetchall()
-        )
+        has_explicit_index = bool(connection.execute(f'PRAGMA index_list("{table_name}")').fetchall())
         if is_virtual_table or has_explicit_index:
             names.append(table_name)
     return tuple(sorted(names))
 
 
-def _sqlite_table_snapshot(connection: sqlite3.Connection, table_name: str) -> dict[str, Any]:
-    row_count, max_rowid = connection.execute(
-        f'SELECT COUNT(*), MAX(rowid) FROM "{table_name}"'
-    ).fetchone()
+def _sqlite_table_snapshot(connection: SQLiteConnection, table_name: str) -> dict[str, Any]:
+    row_count, max_rowid = connection.execute(f'SELECT COUNT(*), MAX(rowid) FROM "{table_name}"').fetchone()
     return {
         "table_name": table_name,
         "row_count": int(row_count or 0),
@@ -290,11 +277,9 @@ def _sources_hash() -> str:
     # `Path.as_uri()` produces a cross-platform-safe `file://…` URI;
     # raw f-string interpolation leaks backslashes on Windows. Flagged
     # by gemini-review on PR #1468.
-    db_uri = f"{sources_db_path.as_uri()}?mode=ro"
-    with sqlite3.connect(db_uri, uri=True) as connection:
+    with _open_readonly(sources_db_path) as connection:
         manifest_rows = tuple(
-            _sqlite_table_snapshot(connection, table_name)
-            for table_name in _sqlite_indexed_table_names(connection)
+            _sqlite_table_snapshot(connection, table_name) for table_name in _sqlite_indexed_table_names(connection)
         )
     return _sha256_bytes(_stable_json_bytes(manifest_rows))
 
@@ -385,8 +370,7 @@ def _decisions_subset() -> list[tuple[str, str]]:
     subset = [
         (str(decision["id"]), str(decision["status"]))
         for decision in decisions
-        if decision.get("status") == "active"
-        and decision.get("scope") in _ACTIVE_DECISION_SCOPES
+        if decision.get("status") == "active" and decision.get("scope") in _ACTIVE_DECISION_SCOPES
     ]
     return sorted(subset)
 

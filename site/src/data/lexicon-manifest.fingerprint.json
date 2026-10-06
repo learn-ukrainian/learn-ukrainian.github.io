@@ -7,19 +7,19 @@
       },
       {
         "path": "scripts/lexicon/admit_fmu_boosters.py",
-        "sha256": "0d4cda12165b99f93554c958cbff9912e7d12692050c2ac7a2ad25e60cf28b20"
+        "sha256": "107e14c1f285a7dc6cc432cd0d00c6c21e6305f472be867dd4a2c08e63b03c52"
       },
       {
         "path": "scripts/lexicon/admit_stem_slice_2a.py",
-        "sha256": "01b25073d7f1b87d4499dc3c7eed71b86bf8b3c6d875e58f8bd8a39e7eba12f8"
+        "sha256": "ba0a5f4a9bdbf28d7d64af5c241e4b9153e031b1d4dee3380b2b5274090a5b59"
       },
       {
         "path": "scripts/lexicon/admit_teacher_table.py",
-        "sha256": "aeccab10b1b77c62169b8b572ac84b81c8cb1df2216f64cee0be93476f1b1cd5"
+        "sha256": "8661b12249b8e9fb6132bcea7afbd0acc99a080c5e1ec62e9059c103640cbc6a"
       },
       {
         "path": "scripts/lexicon/admit_textbook_book_glossary.py",
-        "sha256": "c75f11f8a3ead9ca3bd2e42f5f1096700872376a9b2a97f60399bda7fe08f175"
+        "sha256": "2593f3b93af5932239012ae3891ce9739cb70dd797d7017960a1b85a0512bcad"
       },
       {
         "path": "scripts/lexicon/apply_anchor_worksheet.py",
@@ -39,7 +39,7 @@
       },
       {
         "path": "scripts/lexicon/audit_sum11_relations.py",
-        "sha256": "084b7048f03902420df123729a159fb7724184103b575a17fde9469ccb8316c4"
+        "sha256": "adb3604074f7d85764bd9d9ad97a94d7b5fa8af97ab84e9bd2b8c98e7751f895"
       },
       {
         "path": "scripts/lexicon/backfill_course_usage.py",
@@ -67,7 +67,7 @@
       },
       {
         "path": "scripts/lexicon/build_teacher_deck_cloze.py",
-        "sha256": "f2ffd92259b09ef692a2518153bdb5b1e7aba3b689485c7df1dfc8bff4d4ec71"
+        "sha256": "75068e7321f0f5a3badb8eed66a96f74a8e3d20a2beaa2d7b25be626a2239d98"
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
@@ -147,7 +147,7 @@
       },
       {
         "path": "scripts/lexicon/curated_membership_evidence.py",
-        "sha256": "704d44d0a94dbe74c24de6413967b7267934b97e745ed68681323b39e1bb7f1d"
+        "sha256": "81f0c5fdc19f37f7ec1078c096829d49455327d048ba16234969df060a47a5c6"
       },
       {
         "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
@@ -155,15 +155,15 @@
       },
       {
         "path": "scripts/lexicon/curated_seed_atlas_admission.py",
-        "sha256": "3160fc4c5b574ae4edb296462b025baae021f3844fae68049dfd9814a9b82b73"
+        "sha256": "4e32b5f33f214647e5149f392358b6331ad30339c77ff55cb94d09221d8de781"
       },
       {
         "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
-        "sha256": "f2b2c6dffb41c5b51f7fa1a6139fbff2020fdd3edd8d28591de25669a153abf4"
+        "sha256": "5f22cd2ef29be514ec293bd1f6d6d46f48e0255f4d84567389234375fac8e566"
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
-        "sha256": "7ec47da44976bfe64255f1acdb1e3d02e4eaf570a612f650f36f30fb2b1a2d39"
+        "sha256": "e1a118493dbf88d65a8e2eb28a3ea525eca49e0dde64cb46a9f6676cd5f0b7f0"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
@@ -175,11 +175,11 @@
       },
       {
         "path": "scripts/lexicon/enrich_heteronyms.py",
-        "sha256": "65024861456bce720530d86e978835f5899d61db4b4040cf10e35ec42d91f1ef"
+        "sha256": "7b2f924cb7aa198ec17aaf138acab92f81e97ac250e137e83a86ae5cd40dc655"
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "3e29193064f5aab0d61f1587da0753da373bfb270b9e957da739d0cf97ce27dd"
+        "sha256": "c8b5ac7bfeed01963ea0a3e1d861d4153724bcb38ef8f40c9eb78caf1fb8e861"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -215,7 +215,7 @@
       },
       {
         "path": "scripts/lexicon/generate_antonym_candidates.py",
-        "sha256": "4d424621a014a85ea67b8f123e6e0d1fed5726eeea76c0afe0d3d5cd359bebef"
+        "sha256": "541f0eddf8248ff804adea597a9ad8e7598e70832c0d2181c4b4c6255c44b088"
       },
       {
         "path": "scripts/lexicon/generate_needs_review_ledger.py",
@@ -227,19 +227,19 @@
       },
       {
         "path": "scripts/lexicon/generate_vesum_form_shards.py",
-        "sha256": "7f2371bcebd12000af980098c0d46ffc4befe67d31813fb3000c6561a33fd087"
+        "sha256": "a93a60869827662ae060e85225cc86b5f18ab872c67e67ab7539ab5ce1a9859a"
       },
       {
         "path": "scripts/lexicon/grow_lexicon_from_content.py",
-        "sha256": "82bac344a81ca5e98fceb1c5666ffecd958260437a38881a509f2669645fac3c"
+        "sha256": "d3190e6d47c4ce18ea01d1e96cc45c803ec562be1e381a70af53f77cde96b874"
       },
       {
         "path": "scripts/lexicon/heritage_calque_wave.py",
-        "sha256": "c4965880329bddbc2b1b4d25aa3b8dcc31c559406c85aa0785952286aaf16d29"
+        "sha256": "2fa0ea2b9411f7102a81af0b67822478db592736a59e623299960ce5eb6793e6"
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "7c5d5ebdba29102287fcfaa705590957606b0869673c9b508cbd2a90c4c7fd05"
+        "sha256": "8b0a87375f734fe349586acf8d65f4676ed9fc9497f43d17ed1439b425783f37"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",
@@ -283,7 +283,7 @@
       },
       {
         "path": "scripts/lexicon/mine_wikipedia_relations.py",
-        "sha256": "637382e13911a75e82b1c737ae734234838dc157f4416dabc6663a7bd90c859a"
+        "sha256": "4c47f34db2e650f5e98e1403f48d9ead4f528b685b27a71edf7a7c28a9be8ad4"
       },
       {
         "path": "scripts/lexicon/miyklas_relation_miner.py",
@@ -299,11 +299,11 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_paired_headword_split.py",
-        "sha256": "1385357771b52c3819c7ee4de336e5209ba8055c1f598cbf7ea74b7953c7aed4"
+        "sha256": "5aece3b3458f76a57ac442566276d41dcd64f5629e7234df8f33c44873a837ff"
       },
       {
         "path": "scripts/lexicon/ohoiko_quality_enrichment.py",
-        "sha256": "fe75f2d14be0ae8e7368295547fe082e041bcbc04b7b31aa5655479fb7d41ed4"
+        "sha256": "01c479a7a7ed929366dcc2c0953990c9804bcbd42b67ce88ee27bb81b3398118"
       },
       {
         "path": "scripts/lexicon/park_thin_entries.py",
@@ -319,7 +319,7 @@
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
-        "sha256": "8d3ef09730874d293c45cd934d1fddd68b05a12948d2b8479863b12e26f4c037"
+        "sha256": "0820df2b0cb0534d2dc1444453067cf308b2db12c6700c54607e2bf3aba7c6da"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
@@ -327,15 +327,15 @@
       },
       {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",
-        "sha256": "feb917d18620be3e986d5bc84f6a59c5e931cc0eb1e395b1a5de368c8552402b"
+        "sha256": "b198057deb985cbca702e4bdb24a999946a80d484366b29ee842d01b64e6588d"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-        "sha256": "c49d35371c07b829c0f43bfb136586a6de5c0b997d85bbcb822e5ee90d95a93b"
+        "sha256": "ef9560322662e0a5cc280feb1f0ddc3b14aa7a56b045d583a4cd4d78877b2bb3"
       },
       {
         "path": "scripts/lexicon/relation_pairs.py",
-        "sha256": "24781db1d0078fd7e83c349477ff764cd409c11b202949a3c615dcf9654d2fa1"
+        "sha256": "7ddf9530fc380a2ed5dfc68ba12989a02b2a1b9e3c784e25a324289fed28eb92"
       },
       {
         "path": "scripts/lexicon/relation_render_diff.py",
@@ -343,7 +343,7 @@
       },
       {
         "path": "scripts/lexicon/repair_plural_noun_aliases.py",
-        "sha256": "b0c78bc6ceed173ef616af7b61df71f9ddd02fa13772e062a25cebd80e8339e1"
+        "sha256": "9242789d49580c5ad20eb13526b5d2b0f4af161483bd282179b2e2b2eed00136"
       },
       {
         "path": "scripts/lexicon/repair_truncated_definition_cards.py",
@@ -371,11 +371,11 @@
       },
       {
         "path": "scripts/lexicon/teacher_deck_shard.py",
-        "sha256": "7aa1c25c60ebc9b72addb0acc86a22a18ba9d89240d7b2c93933bc4c61879f33"
+        "sha256": "6e558f38dff032c550efc3491b783e6fb05c703a0e51203d6bbfb2ced3704511"
       },
       {
         "path": "scripts/lexicon/thin_page_report.py",
-        "sha256": "0a9bcd858cb09e6bed6e0200d01597bc5673c7f7771e0ca389c386b13f731124"
+        "sha256": "ef1e839a17e5483c3fc84a42457fd2fa76a40d95216898794732cca3fae70261"
       },
       {
         "path": "scripts/lexicon/triage_needs_review.py",
@@ -383,11 +383,11 @@
       },
       {
         "path": "scripts/lexicon/ulif_raw_cache.py",
-        "sha256": "acfd8d7bc8def31e9dab2a4dec86d34199055a2e4f5f191e7ca56afdfd71eda4"
+        "sha256": "7f29130cc7c5223e5c8e79d3dfc70c1ac79553a796bd29a68cf695295c75faef"
       },
       {
         "path": "scripts/lexicon/ulp_taught_pair_extractor.py",
-        "sha256": "53df3a3022ad0bb6ca683e87ee2f88790446d08dde1821555de90cc5e6d16319"
+        "sha256": "8a1139cebf07450ff880540840cd77d00fba6c017fe1e3781952580767d137dc"
       },
       {
         "path": "scripts/lexicon/verb_pedagogy_vesum_aspect.py",
@@ -399,7 +399,7 @@
       },
       {
         "path": "scripts/lexicon/verify_synonym_pairs.py",
-        "sha256": "8f31c0fd39897375038e79484ff8aca43ff6878ab03cc49d7967d559b762f43b"
+        "sha256": "0c2b9282a4dcf7d9e26d4597dc25316833f373ba603fce1de26673b849af58a3"
       },
       {
         "path": "scripts/lexicon/vesum_form_key.py",

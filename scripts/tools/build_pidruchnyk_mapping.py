@@ -7,7 +7,6 @@ Contact: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
 from __future__ import annotations
 
 import argparse
-import sqlite3
 import sys
 import time
 from pathlib import Path
@@ -17,15 +16,14 @@ import requests
 import yaml
 from bs4 import BeautifulSoup
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "registry" / "pidruchnyk_urls.yaml"
 BASE_URL = "https://pidruchnyk.com.ua"
 REQUEST_DELAY_S = 0.5
-USER_AGENT = (
-    "learn-ukrainian textbook mapper/1.0 "
-    "(https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
-)
+USER_AGENT = "learn-ukrainian textbook mapper/1.0 (https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
 
 AUTHOR_NAMES = {
     "avramenko": "Авраменко",
@@ -105,11 +103,9 @@ def source_file_category(source_file: str) -> str | None:
 
 def load_source_files(db_path: Path) -> list[str]:
     """Load the distinct textbook source_file IDs from SQLite."""
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(Path(db_path).resolve())
     try:
-        rows = conn.execute(
-            "SELECT DISTINCT source_file FROM textbooks ORDER BY source_file"
-        ).fetchall()
+        rows = conn.execute("SELECT DISTINCT source_file FROM textbooks ORDER BY source_file").fetchall()
     finally:
         conn.close()
     return [row[0] for row in rows]
@@ -151,18 +147,12 @@ def match_book(source_file: str, books: list[dict[str, str]]) -> dict[str, str] 
     """Find a confident pidruchnyk page match for one source_file."""
     author = source_file_author(source_file)
     year = source_file_year(source_file)
-    author_matches = [
-        book
-        for book in books
-        if author.lower() in book["title"].lower()
-    ]
+    author_matches = [book for book in books if author.lower() in book["title"].lower()]
     if not author_matches:
         return None
 
     if year is not None:
-        author_matches = [
-            book for book in author_matches if year in book["title"]
-        ]
+        author_matches = [book for book in author_matches if year in book["title"]]
         if not author_matches:
             return None
 
@@ -204,10 +194,7 @@ def build_mapping(db_path: Path, output_path: Path, force: bool) -> int:
             if category is not None
         }
     )
-    books_by_category = {
-        category: fetch_category_books(session, category)
-        for category in categories
-    }
+    books_by_category = {category: fetch_category_books(session, category) for category in categories}
 
     mapping = dict(existing)
     skipped: list[str] = []

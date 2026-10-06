@@ -40,6 +40,8 @@ from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.fleet_comms.migrations import MIGRATIONS
 from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION
+from scripts.lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.orchestration import reap_worktrees
 
 from . import comms_router as legacy_comms
@@ -59,16 +61,12 @@ MAX_ACTIVITY_SCAN = 500
 MAX_OPERATIONS_ITEMS = 50
 AUTHORITY_HEALTH_WINDOW_HOURS = 24
 
-_ZOMBIE_TYPES = frozenset(
-    {"stale_message", "pingpong", "error_loop", "orphan_pid", "corrupt_pid"}
-)
+_ZOMBIE_TYPES = frozenset({"stale_message", "pingpong", "error_loop", "orphan_pid", "corrupt_pid"})
 _ZOMBIE_SEVERITIES = frozenset({"warning", "critical"})
 _BATCH_HEALTH = frozenset({"complete", "healthy", "stalled", "dead", "unknown"})
 _TRACK_LABEL = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,39}$")
 _PROBE_ERROR = re.compile(r"^ps: [A-Za-z][A-Za-z0-9_]{0,63}(?: \d{1,6})?$")
-_SAFE_FAILURE_PHASES = frozenset(
-    {"admission", "transport", "provider", "result_parse", "postprocess"}
-)
+_SAFE_FAILURE_PHASES = frozenset({"admission", "transport", "provider", "result_parse", "postprocess"})
 _SAFE_FAILURE_CODES = frozenset(
     {
         "adapter_refused",
@@ -106,13 +104,9 @@ _SAFE_METADATA_KEYS = frozenset(
     }
 )
 _PROVENANCE_KEY_ALIASES = {"source": "Source", "agent": "Agent", "via": "Via"}
-_SECRET_ASSIGNMENT = re.compile(
-    r"(?i)\b(api[_-]?key|authorization|password|secret|token)\b(\s*[:=]\s*)([^,;\s]+)"
-)
+_SECRET_ASSIGNMENT = re.compile(r"(?i)\b(api[_-]?key|authorization|password|secret|token)\b(\s*[:=]\s*)([^,;\s]+)")
 _BEARER_TOKEN = re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/=-]{8,}")
 _TOKEN_LITERAL = re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9_]{16,}|sk-[A-Za-z0-9_-]{16,})\b")
-
-
 
 
 def _plane_root(ctx: MonitorContext | None = None) -> Path:
@@ -174,7 +168,7 @@ def _read_connection(
 def _table_exists(connection: Any, table: str) -> bool:
     query = (
         "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?"
-        if isinstance(connection, sqlite3.Connection)
+        if is_sqlite_connection(connection)
         else "SELECT 1 FROM pg_class WHERE oid = to_regclass(%s) AND relkind IN ('r', 'p')"
     )
     row = connection.execute(query, (table,)).fetchone()
@@ -221,9 +215,7 @@ def _safe_text(value: Any, *, limit: int = 160, fallback: str = "unknown") -> st
 
 
 def _redact_preview(value: str) -> str:
-    value = _SECRET_ASSIGNMENT.sub(
-        lambda match: f"{match.group(1)}{match.group(2)}[REDACTED]", value
-    )
+    value = _SECRET_ASSIGNMENT.sub(lambda match: f"{match.group(1)}{match.group(2)}[REDACTED]", value)
     value = _BEARER_TOKEN.sub("Bearer [REDACTED]", value)
     return _TOKEN_LITERAL.sub("[REDACTED]", value)
 
@@ -337,7 +329,7 @@ def _empty_collection(
 
 
 def _paged_query(
-    connection: sqlite3.Connection,
+    connection: SQLiteConnection,
     *,
     key: str,
     select_sql: str,
@@ -383,20 +375,14 @@ def _safe_plane_status(ctx: MonitorContext | None = None) -> dict[str, Any]:
     mode = _safe_text(status.get("mode"), fallback="invalid")
     authority_active = mode == "authority"
     schema = status.get("schema") if isinstance(status.get("schema"), dict) else {}
-    telemetry = (
-        status.get("parity_telemetry")
-        if isinstance(status.get("parity_telemetry"), dict)
-        else {}
-    )
+    telemetry = status.get("parity_telemetry") if isinstance(status.get("parity_telemetry"), dict) else {}
     return {
         "mode": mode,
         "enabled": bool(status.get("enabled")),
         "read_only": True,
         "response_schema_version": status.get("response_schema_version"),
         "store": status.get("store"),
-        "authority": (
-            "fleet_comms_authoritative" if authority_active else "file_handoffs_authoritative"
-        ),
+        "authority": ("fleet_comms_authoritative" if authority_active else "file_handoffs_authoritative"),
         "cutover": "authority_active" if authority_active else "pre_flip_operator_gated",
         "schema": {
             "known_version": schema.get("known_version"),
@@ -598,8 +584,7 @@ def _count_by_state_where(
     if not _table_exists(connection, table):
         return {}
     rows = connection.execute(
-        f"SELECT {column}, COUNT(*) FROM {table} WHERE {where} "
-        f"GROUP BY {column} ORDER BY {column}",
+        f"SELECT {column}, COUNT(*) FROM {table} WHERE {where} GROUP BY {column} ORDER BY {column}",
         params,
     ).fetchall()
     return {_safe_text(row[0], fallback="unknown"): int(row[1]) for row in rows}
@@ -630,7 +615,7 @@ def _authority_health_snapshot(
     }
     if connection is None:
         return unavailable
-    placeholder = "?" if isinstance(connection, sqlite3.Connection) else "%s"
+    placeholder = "?" if is_sqlite_connection(connection) else "%s"
     try:
         if not _table_exists(connection, "authority_jobs"):
             return {**unavailable, "availability": "schema_read_failed"}
@@ -661,9 +646,7 @@ def _authority_health_snapshot(
         logger.warning("Fleet observer could not derive authority health")
         return {**unavailable, "availability": "schema_read_failed"}
     total = sum(states.values())
-    failures = sum(
-        states.get(name, 0) for name in ("failed", "expired", "dead_lettered")
-    )
+    failures = sum(states.get(name, 0) for name in ("failed", "expired", "dead_lettered"))
     if failures or overdue or dead_letters:
         state = "degraded"
     elif total:
@@ -700,9 +683,7 @@ def _runtime_activity_snapshot(since: str, ctx: MonitorContext | None = None) ->
     total = sum(
         1
         for record in records
-        if isinstance(record, dict)
-        and isinstance(record.get("ts"), str)
-        and record["ts"] >= since
+        if isinstance(record, dict) and isinstance(record.get("ts"), str) and record["ts"] >= since
     )
     return {
         "ledger": "runtime_delegate_usage",
@@ -753,20 +734,14 @@ def _legacy_broker_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]
     result["db_exists"] = True
     try:
         result["size_kb"] = round(db_path.stat().st_size / 1024, 1)
-        connection = sqlite3.connect(
-            f"{db_path.resolve().as_uri()}?mode=ro",
-            uri=True,
-            timeout=0.25,
-        )
+        connection = _open_readonly(db_path.resolve(), timeout=0.25)
         try:
             connection.execute("PRAGMA query_only = ON")
             result["readable"] = True
             if not _table_exists(connection, "messages"):
                 result["availability"] = "table_missing"
                 return result
-            row = connection.execute(
-                "SELECT COUNT(*) FROM messages WHERE acknowledged = 0"
-            ).fetchone()
+            row = connection.execute("SELECT COUNT(*) FROM messages WHERE acknowledged = 0").fetchone()
             result["unacknowledged_depth"] = _non_negative_int(row[0] if row else 0)
             result["availability"] = "available"
         finally:
@@ -880,9 +855,7 @@ def _safe_batch_projection(raw: Any) -> dict[str, Any]:
                 "research_done": _non_negative_int(entry.get("research_done")),
                 "remaining": _non_negative_int(entry.get("remaining")),
                 "recent_30min": _non_negative_int(entry.get("recent_30min")),
-                "throughput_per_hour": _non_negative_float(
-                    entry.get("throughput_per_hour")
-                ),
+                "throughput_per_hour": _non_negative_float(entry.get("throughput_per_hour")),
             }
         )
 
@@ -895,9 +868,7 @@ def _safe_batch_projection(raw: Any) -> dict[str, Any]:
         "limit": MAX_OPERATIONS_ITEMS,
         "truncated": sum(by_health.values()) > len(tracks),
         "running_processes": (
-            None
-            if raw.get("running_processes", 0) is None
-            else _non_negative_int(raw.get("running_processes"))
+            None if raw.get("running_processes", 0) is None else _non_negative_int(raw.get("running_processes"))
         ),
         "by_health": dict(sorted(by_health.items())),
         "tracks": tracks,
@@ -913,9 +884,7 @@ def _legacy_batch_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
     logs = legacy_comms._scan_preseed_logs(resolved_ctx)
     processes, process_error = legacy_comms._check_build_processes()
     all_tracks = {
-        str(item.get("track"))
-        for item in [*logs, *processes]
-        if isinstance(item, dict) and item.get("track")
+        str(item.get("track")) for item in [*logs, *processes] if isinstance(item, dict) and item.get("track")
     }
     tracks: dict[str, dict[str, Any]] = {}
     for track in sorted(all_tracks):
@@ -925,31 +894,19 @@ def _legacy_batch_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
             None,
         )
         process = next(
-            (
-                item
-                for item in processes
-                if isinstance(item, dict) and item.get("track") == track
-            ),
+            (item for item in processes if isinstance(item, dict) and item.get("track") == track),
             None,
         )
         if log and log.get("complete"):
             health = "complete"
         elif process:
             recent = _non_negative_int(progress.get("recent_30min"))
-            log_is_recent = bool(
-                log
-                and "age_seconds" in log
-                and _non_negative_int(log.get("age_seconds")) < 900
-            )
+            log_is_recent = bool(log and "age_seconds" in log and _non_negative_int(log.get("age_seconds")) < 900)
             health = "healthy" if recent > 0 or log_is_recent else "stalled"
         elif process_error:
             # A failed ps probe is not evidence the build exited.
             health = "unknown"
-        elif (
-            log
-            and not log.get("complete")
-            and _non_negative_int(log.get("age_seconds")) > 600
-        ):
+        elif log and not log.get("complete") and _non_negative_int(log.get("age_seconds")) > 600:
             health = "dead"
         else:
             health = "unknown"
@@ -997,12 +954,8 @@ async def fleet_operations(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, 
         if broker["availability"] == "available":
             broker["availability"] = "partial"
 
-    zombies = _safe_zombie_projection(
-        zombie_result if not isinstance(zombie_result, BaseException) else None
-    )
-    batches = _safe_batch_projection(
-        batch_result if not isinstance(batch_result, BaseException) else None
-    )
+    zombies = _safe_zombie_projection(zombie_result if not isinstance(zombie_result, BaseException) else None)
+    batches = _safe_batch_projection(batch_result if not isinstance(batch_result, BaseException) else None)
     sections = (broker["availability"], zombies["availability"], batches["availability"])
     if all(section == "available" for section in sections):
         availability = "available"
@@ -1043,13 +996,12 @@ def fleet_health(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     window = authority_health.get("window") or {}
     since = window.get("since")
     if not isinstance(since, str):
-        since = (datetime.now(UTC) - timedelta(hours=AUTHORITY_HEALTH_WINDOW_HOURS)).strftime(
-            "%Y-%m-%dT%H:%M:%SZ"
-        )
+        since = (datetime.now(UTC) - timedelta(hours=AUTHORITY_HEALTH_WINDOW_HOURS)).strftime("%Y-%m-%dT%H:%M:%SZ")
     runtime_activity = _runtime_activity_snapshot(since, ctx)
     return {
         "ok": (
-            bool(status["enabled"]) and bool(authority_health["ok"])
+            bool(status["enabled"])
+            and bool(authority_health["ok"])
             and status["store"]["reachable"] is True
             and not status["schema"].get("db_error")
         ),
@@ -1091,7 +1043,9 @@ def fleet_overview(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
 
 
 def _populate_fleet_overview(
-    result: dict[str, Any], status: dict[str, Any], ctx: MonitorContext,
+    result: dict[str, Any],
+    status: dict[str, Any],
+    ctx: MonitorContext,
 ) -> dict[str, Any]:
     with _read_connection(ctx, pg_supported=True) as (connection, availability):
         if connection is None:
@@ -1129,9 +1083,7 @@ def _populate_fleet_overview(
             "total": sum(authority_job_states.values()),
             "by_state": authority_job_states,
         }
-        dead_letter_table = (
-            "authority_dead_letters" if status["mode"] == "authority" else "dead_letters"
-        )
+        dead_letter_table = "authority_dead_letters" if status["mode"] == "authority" else "dead_letters"
         if _table_exists(connection, dead_letter_table):
             counts["dead_letters"]["total"] = int(
                 connection.execute(f"SELECT COUNT(*) FROM {dead_letter_table}").fetchone()[0]
@@ -1141,18 +1093,12 @@ def _populate_fleet_overview(
                 connection.execute("SELECT COUNT(*) FROM acp_conversations").fetchone()[0]
             )
         result["counts"] = counts
-        result["availability"] = "available" if any(
-            section["total"] for section in counts.values()
-        ) else "empty"
-        result["authority_health"] = (
-            _authority_health_snapshot(connection)
-            if status["mode"] == "authority"
-            else None
-        )
+        result["availability"] = "available" if any(section["total"] for section in counts.values()) else "empty"
+        result["authority_health"] = _authority_health_snapshot(connection) if status["mode"] == "authority" else None
     return result
 
 
-def _registered_endpoints(connection: sqlite3.Connection | None) -> dict[str, dict[str, Any]]:
+def _registered_endpoints(connection: SQLiteConnection | None) -> dict[str, dict[str, Any]]:
     if connection is None or not _table_exists(connection, "agent_endpoints"):
         return {}
     try:
@@ -1231,9 +1177,7 @@ def fleet_agents(
             }
         )
     if agent is not None:
-        endpoints = [
-            item for item in endpoints if agent == item["agent"] or agent in item["aliases"]
-        ]
+        endpoints = [item for item in endpoints if agent == item["agent"] or agent in item["aliases"]]
     if state is not None:
         endpoints = [item for item in endpoints if state == item["state"]]
     endpoints.sort(key=lambda item: str(item["agent"]))
@@ -1302,9 +1246,7 @@ def fleet_requests(
     }
     with _read_connection(ctx) as (connection, availability):
         if connection is None:
-            return _empty_collection(
-                "requests", limit=limit, offset=offset, availability=availability, filters=filters
-            )
+            return _empty_collection("requests", limit=limit, offset=offset, availability=availability, filters=filters)
         if not _table_exists(connection, "requests"):
             return _empty_collection(
                 "requests", limit=limit, offset=offset, availability="table_missing", filters=filters
@@ -1327,7 +1269,9 @@ def fleet_requests(
             from_sql += " LEFT JOIN comms_messages AS message ON message.message_id = request.request_message_id"
         if has_messages and has_conversations:
             select_extras[2] = "conversation.source AS conversation_source"
-            from_sql += " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            from_sql += (
+                " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            )
         if has_messages and has_authority_metadata:
             select_extras[3] = "authority_meta.provenance_json AS authority_provenance_json"
             from_sql += (
@@ -1360,8 +1304,7 @@ def fleet_requests(
                 source_expression = "conversation.source"
                 if has_authority_metadata:
                     source_expression = (
-                        "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
-                        f"{source_expression})"
+                        f"COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), {source_expression})"
                     )
                 clauses.append(f"{source_expression} = ?")
                 params.append(source)
@@ -1386,8 +1329,7 @@ def fleet_requests(
             select_sql=(
                 "SELECT request.request_id, request.request_message_id, request.requested_recipient, "
                 "request.resolved_recipient, request.state, request.expires_at, request.completion_state, "
-                "request.invocation_spec_json, request.created_at, request.updated_at, "
-                + ", ".join(select_extras)
+                "request.invocation_spec_json, request.created_at, request.updated_at, " + ", ".join(select_extras)
             ),
             from_sql=from_sql,
             clauses=clauses,
@@ -1459,11 +1401,7 @@ def _safe_authority_failure(value: Any) -> dict[str, Any] | None:
     phase = failure.get("phase")
     code = failure.get("code")
     retryable = failure.get("retryable")
-    if (
-        phase not in _SAFE_FAILURE_PHASES
-        or code not in _SAFE_FAILURE_CODES
-        or not isinstance(retryable, bool)
-    ):
+    if phase not in _SAFE_FAILURE_PHASES or code not in _SAFE_FAILURE_CODES or not isinstance(retryable, bool):
         return None
     return {"phase": phase, "code": code, "retryable": retryable}
 
@@ -1497,13 +1435,9 @@ def fleet_authority_jobs(
     }
     with _read_connection(ctx) as (connection, availability):
         if connection is None:
-            return _empty_collection(
-                "jobs", limit=limit, offset=offset, availability=availability, filters=filters
-            )
+            return _empty_collection("jobs", limit=limit, offset=offset, availability=availability, filters=filters)
         if not _table_exists(connection, "authority_jobs"):
-            return _empty_collection(
-                "jobs", limit=limit, offset=offset, availability="table_missing", filters=filters
-            )
+            return _empty_collection("jobs", limit=limit, offset=offset, availability="table_missing", filters=filters)
         has_messages = _table_exists(connection, "comms_messages")
         has_metadata = _table_exists(connection, "authority_message_metadata")
         has_conversations = _table_exists(connection, "conversations")
@@ -1539,9 +1473,7 @@ def fleet_authority_jobs(
                     "conversation.conversation_id = message.conversation_id OR "
                     "(job.job_kind = 'discussion' AND conversation.conversation_id = job.subject_id)"
                 )
-            from_sql += (
-                " LEFT JOIN conversations AS conversation ON " + conversation_join
-            )
+            from_sql += " LEFT JOIN conversations AS conversation ON " + conversation_join
             conversation_select = "conversation.conversation_id AS conversation_id"
             if has_messages:
                 conversation_select = (
@@ -1570,17 +1502,13 @@ def fleet_authority_jobs(
             clauses.append("job.state = ?")
             params.append(state)
         if agent is not None:
-            default_agent = (
-                "CASE WHEN job.job_kind = 'formal_review' THEN 'review-gate' "
-                "ELSE 'authority-service' END"
-            )
+            default_agent = "CASE WHEN job.job_kind = 'formal_review' THEN 'review-gate' ELSE 'authority-service' END"
             agent_expression = default_agent
             if has_messages:
                 agent_expression = f"COALESCE(message.sender, {default_agent})"
             if has_metadata and has_messages:
                 agent_expression = (
-                    "COALESCE(json_extract(authority_meta.provenance_json, '$.Agent'), "
-                    f"{agent_expression})"
+                    f"COALESCE(json_extract(authority_meta.provenance_json, '$.Agent'), {agent_expression})"
                 )
             agent_clause = f"{agent_expression} = ?"
             params.append(agent)
@@ -1598,8 +1526,7 @@ def fleet_authority_jobs(
                 source_expression = f"COALESCE(conversation.source, {default_source})"
             if has_metadata and has_messages:
                 source_expression = (
-                    "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
-                    f"{source_expression})"
+                    f"COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), {source_expression})"
                 )
             clauses.append(f"{source_expression} = ?")
             params.append(source)
@@ -1705,9 +1632,7 @@ def fleet_messages(
     }
     with _read_connection(ctx) as (connection, availability):
         if connection is None:
-            return _empty_collection(
-                "messages", limit=limit, offset=offset, availability=availability, filters=filters
-            )
+            return _empty_collection("messages", limit=limit, offset=offset, availability=availability, filters=filters)
         if not _table_exists(connection, "comms_messages"):
             return _empty_collection(
                 "messages", limit=limit, offset=offset, availability="table_missing", filters=filters
@@ -1721,7 +1646,9 @@ def fleet_messages(
         authority_provenance_select = "NULL AS authority_provenance_json"
         if has_conversations:
             source_select = "conversation.source AS conversation_source"
-            from_sql += " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            from_sql += (
+                " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            )
         if has_requests:
             request_state_select = "request.state AS request_state"
             from_sql += " LEFT JOIN requests AS request ON request.request_message_id = message.message_id"
@@ -1755,8 +1682,7 @@ def fleet_messages(
                 source_expression = "COALESCE(conversation.source, message.sender)"
             if has_authority_metadata:
                 source_expression = (
-                    "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
-                    f"{source_expression})"
+                    f"COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), {source_expression})"
                 )
             clauses.append(f"{source_expression} = ?")
             params.append(source)
@@ -1790,7 +1716,7 @@ def fleet_messages(
         )
 
 
-def _message_detail(connection: sqlite3.Connection, message_id: str) -> dict[str, Any] | None:
+def _message_detail(connection: SQLiteConnection, message_id: str) -> dict[str, Any] | None:
     if not _table_exists(connection, "comms_messages"):
         return None
     has_conversations = _table_exists(connection, "conversations")
@@ -1809,8 +1735,7 @@ def _message_detail(connection: sqlite3.Connection, message_id: str) -> dict[str
     if has_authority_metadata:
         authority_provenance_select = "authority_meta.provenance_json AS authority_provenance_json"
         from_sql += (
-            " LEFT JOIN authority_message_metadata AS authority_meta"
-            " ON authority_meta.message_id = message.message_id"
+            " LEFT JOIN authority_message_metadata AS authority_meta ON authority_meta.message_id = message.message_id"
         )
     try:
         row = connection.execute(
@@ -1965,12 +1890,14 @@ def fleet_discussions(
             params=params,
         )
         where_sql = f" WHERE {' AND '.join(clauses)}" if clauses else ""
-        group_sql = " GROUP BY conversation.conversation_id, conversation.source, conversation.title, conversation.created_at"
+        group_sql = (
+            " GROUP BY conversation.conversation_id, conversation.source, conversation.title, conversation.created_at"
+        )
         try:
             total = int(
-                connection.execute(
-                    f"SELECT COUNT(*) FROM conversations AS conversation{where_sql}", params
-                ).fetchone()[0]
+                connection.execute(f"SELECT COUNT(*) FROM conversations AS conversation{where_sql}", params).fetchone()[
+                    0
+                ]
             )
             latest_order = (
                 "COALESCE(MAX(message.created_at), conversation.created_at)"
@@ -2150,9 +2077,7 @@ def fleet_reviews(
     }
     with _read_connection(ctx) as (connection, availability):
         if connection is None:
-            return _empty_collection(
-                "reviews", limit=limit, offset=offset, availability=availability, filters=filters
-            )
+            return _empty_collection("reviews", limit=limit, offset=offset, availability=availability, filters=filters)
         if not _table_exists(connection, "formal_review_jobs"):
             return _empty_collection(
                 "reviews", limit=limit, offset=offset, availability="table_missing", filters=filters
@@ -2359,10 +2284,7 @@ def fleet_dead_letters(
                 clauses.append("COALESCE(delivery.recipient, 'authority-job') = ?")
                 params.append(agent)
             if source is not None:
-                clauses.append(
-                    "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
-                    "'authority') = ?"
-                )
+                clauses.append("COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), 'authority') = ?")
                 params.append(source)
             _time_clauses(
                 "letter.created_at",
@@ -2421,7 +2343,9 @@ def fleet_dead_letters(
             from_sql += " LEFT JOIN comms_messages AS message ON message.message_id = request.request_message_id"
         if has_requests and has_messages and has_conversations:
             source_select = "conversation.source AS conversation_source"
-            from_sql += " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            from_sql += (
+                " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            )
         if has_requests and has_messages and has_authority_metadata:
             authority_provenance_select = "authority_meta.provenance_json AS authority_provenance_json"
             from_sql += (
@@ -2451,8 +2375,7 @@ def fleet_dead_letters(
                 source_expression = "conversation.source"
                 if has_authority_metadata:
                     source_expression = (
-                        "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
-                        f"{source_expression})"
+                        f"COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), {source_expression})"
                     )
                 clauses.append(f"{source_expression} = ?")
                 params.append(source)
@@ -2513,8 +2436,7 @@ def fleet_migrations(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
             rows = []
             availability = "db_unavailable"
     migrations = [
-        {"version": int(row["version"]), "name": row["name"], "applied_at": row["applied_at"]}
-        for row in rows
+        {"version": int(row["version"]), "name": row["name"], "applied_at": row["applied_at"]} for row in rows
     ]
     return {
         "read_only": True,

@@ -19,6 +19,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+
 ROOT = Path(__file__).resolve().parents[2]
 SYNSETS_DB_NAME = "synsets_ua.db"
 ETYM_DB_NAME = "etym.db"
@@ -96,9 +98,7 @@ def normalize_lookup(value: object) -> str:
     """
     decomposed = unicodedata.normalize("NFD", str(value or ""))
     without_stress = "".join(
-        character
-        for character in decomposed
-        if character != '"' and character not in _COMBINING_STRESS
+        character for character in decomposed if character != '"' and character not in _COMBINING_STRESS
     )
     normalized = unicodedata.normalize("NFC", without_stress)
     normalized = normalized.replace("`", "'").replace("’", "'").replace("ʼ", "'")
@@ -146,7 +146,7 @@ def normalize_gloss(value: object) -> dict[str, Any]:
 def _connect_read_only(path: Path) -> sqlite3.Connection:
     if not path.is_file():
         raise FileNotFoundError(path)
-    connection = sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)
+    connection = _shared_open_readonly(path.resolve())
     connection.row_factory = sqlite3.Row
     return connection
 
@@ -205,9 +205,7 @@ def _ensure_index(path: Path, spec: _IndexSpec, sidecar: Path) -> str:
 
         index_connection.execute("DELETE FROM normalized_words WHERE source_key = ?", (source_key,))
         with _connect_read_only(path) as source_connection:
-            source_rows = source_connection.execute(
-                f"SELECT {spec.id_column}, {spec.word_column} FROM {spec.table}"
-            )
+            source_rows = source_connection.execute(f"SELECT {spec.id_column}, {spec.word_column} FROM {spec.table}")
             for batch in _batched(source_rows):
                 index_connection.executemany(
                     "INSERT INTO normalized_words (source_key, lookup_key, row_id) VALUES (?, ?, ?)",
@@ -307,9 +305,7 @@ def mphdict_synonyms(
             placeholders = ", ".join("?" for _ in chunk)
             set_ids.update(
                 int(row[0])
-                for row in connection.execute(
-                    f"SELECT DISTINCT id_set FROM wlist WHERE id IN ({placeholders})", chunk
-                )
+                for row in connection.execute(f"SELECT DISTINCT id_set FROM wlist WHERE id IN ({placeholders})", chunk)
             )
 
         groups: list[dict[str, Any]] = []
@@ -450,9 +446,7 @@ def mphdict_etymology(
         # occur as an embedded comparison under unrelated derived-word roots;
         # use those only when ЕСУМ has no matching article headword at all.
         has_direct_headword = any(root_ranks.values())
-        candidate_root_ids = [
-            root_id for root_id, rank in root_ranks.items() if rank or not has_direct_headword
-        ]
+        candidate_root_ids = [root_id for root_id, rank in root_ranks.items() if rank or not has_direct_headword]
         roots: list[dict[str, Any]] = []
         ordered_root_ids = sorted(candidate_root_ids, key=lambda root_id: (-root_ranks[root_id], root_id))
         for chunk in _chunks(ordered_root_ids):

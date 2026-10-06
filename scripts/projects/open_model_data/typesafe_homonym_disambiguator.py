@@ -28,6 +28,9 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any, ClassVar
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 
@@ -160,12 +163,12 @@ class TypeSafeHomonymDisambiguator:
         self.base_url = base_url.rstrip("/")
         self.batch_size = max(1, batch_size)
         self.vesum_path = _resolve_vesum_path(vesum_path)
-        self._vesum_conn: sqlite3.Connection | None = None
+        self._vesum_conn: SQLiteConnection | None = None
 
-    def _get_vesum_conn(self) -> sqlite3.Connection | None:
+    def _get_vesum_conn(self) -> SQLiteConnection | None:
         if self._vesum_conn is None and self.vesum_path.is_file():
             try:
-                self._vesum_conn = sqlite3.connect(f"{self.vesum_path.resolve().as_uri()}?mode=ro", uri=True)
+                self._vesum_conn = _open_readonly(self.vesum_path.resolve())
             except sqlite3.Error:
                 self._vesum_conn = None
         return self._vesum_conn

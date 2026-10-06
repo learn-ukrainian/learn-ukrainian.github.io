@@ -44,6 +44,7 @@ from scripts.fleet_comms.opsec_store import (
     legacy_broker_store,
     session_streams_store,
 )
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 try:
     from agents_extensions.shared.session_streams.db import (
@@ -580,7 +581,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
     deliveries: list[dict[str, Any]] = []
     total = 0
 
-    conn = sqlite3.connect(f"file:{db_path.resolve().as_posix()}?mode=ro", uri=True)
+    conn = _open_readonly(db_path.resolve())
     conn.row_factory = sqlite3.Row
     try:
         if not _table_exists(conn, "deliveries"):

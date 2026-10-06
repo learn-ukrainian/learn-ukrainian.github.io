@@ -11,12 +11,14 @@ import hashlib
 import importlib.util
 import json
 import re
-import sqlite3
 import unicodedata
 from collections import defaultdict
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -251,11 +253,7 @@ def _gerund_parent(entry: Mapping[str, Any]) -> str | None:
     morphology = enrichment.get("morphology") if isinstance(enrichment, Mapping) else None
     if isinstance(morphology, Mapping):
         paradigm = morphology.get("paradigm")
-        if (
-            morphology.get("source") == "VESUM"
-            and morphology.get("pos") == "advp"
-            and isinstance(paradigm, Mapping)
-        ):
+        if morphology.get("source") == "VESUM" and morphology.get("pos") == "advp" and isinstance(paradigm, Mapping):
             parent = _clean_gerund_parent(paradigm.get("verb"))
             if parent:
                 candidates.setdefault(_normalized_parent_hint(parent), parent)
@@ -448,11 +446,7 @@ def _restore_typeahead_abbreviations(text: str, placeholders: Mapping[str, str])
 def _typeahead_sentences(text: str) -> list[str]:
     protected, placeholders = _protect_typeahead_abbreviations(text)
     parts = re.split(r"(?<=[.!?])\s+(?=[«\"„“А-ЯA-ZҐІЇЄ])", protected)
-    return [
-        _restore_typeahead_abbreviations(part.strip(), placeholders)
-        for part in parts
-        if part.strip()
-    ]
+    return [_restore_typeahead_abbreviations(part.strip(), placeholders) for part in parts if part.strip()]
 
 
 def _cap_typeahead_gloss(text: str, limit: int) -> str:
@@ -565,9 +559,7 @@ def _browse_row(row: Mapping[str, Any]) -> dict[str, Any]:
         "g": row.get("g"),
         "c": row.get("c"),
         "hay": " ".join(
-            str(value)
-            for value in (row.get("l"), row.get("g"), row.get("r"))
-            if isinstance(value, str) and value
+            str(value) for value in (row.get("l"), row.get("g"), row.get("r")) if isinstance(value, str) and value
         ).lower(),
     }
     cls = row.get("cls")
@@ -593,7 +585,7 @@ def build_index(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return sorted(visible, key=lambda row: _uk_sort_key(row["l"]))
 
 
-def _site_build_entry_model_gates(conn: sqlite3.Connection) -> None:
+def _site_build_entry_model_gates(conn: SQLiteConnection) -> None:
     """Fail the site artifact build on the entry-model's count/target gates.
 
     ``atlas_db`` runs the same checks while materializing the database. Repeating
@@ -604,9 +596,7 @@ def _site_build_entry_model_gates(conn: sqlite3.Connection) -> None:
     reviewed_entries = conn.execute(
         "SELECT COUNT(*) FROM articles WHERE review_state = 'approved' AND visibility = 'public'"
     ).fetchone()[0]
-    public_routes = conn.execute(
-        "SELECT COUNT(*) FROM article_payloads WHERE is_public_route = 1"
-    ).fetchone()[0]
+    public_routes = conn.execute("SELECT COUNT(*) FROM article_payloads WHERE is_public_route = 1").fetchone()[0]
     form_alias_routes = conn.execute(
         """SELECT COUNT(*)
            FROM article_payloads AS payload
@@ -643,8 +633,7 @@ def _site_build_entry_model_gates(conn: sqlite3.Connection) -> None:
     ).fetchall()
     if invalid_aliases:
         details = "; ".join(
-            f"alias={alias!r} kind={kind!r} target_slug={target!r}"
-            for alias, kind, target in invalid_aliases[:5]
+            f"alias={alias!r} kind={kind!r} target_slug={target!r}" for alias, kind, target in invalid_aliases[:5]
         )
         raise ValueError(
             "alias_target_integrity failure: public aliases must resolve to approved public "
@@ -652,7 +641,7 @@ def _site_build_entry_model_gates(conn: sqlite3.Connection) -> None:
         )
 
 
-def _primary_source_for_slug(conn: sqlite3.Connection, slug: str) -> str | None:
+def _primary_source_for_slug(conn: SQLiteConnection, slug: str) -> str | None:
     families = [
         row[0]
         for row in conn.execute(
@@ -667,7 +656,7 @@ def _primary_source_for_slug(conn: sqlite3.Connection, slug: str) -> str | None:
 
 
 def _heritage_status_for_slug(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     slug: str,
     *,
     heritage_classification: str | None,
@@ -687,7 +676,7 @@ def _heritage_status_for_slug(
     return {}
 
 
-def _definition_cards_for_slug(conn: sqlite3.Connection, slug: str) -> object:
+def _definition_cards_for_slug(conn: SQLiteConnection, slug: str) -> object:
     row = conn.execute(
         "SELECT payload_json FROM enrichment WHERE slug = ? AND section = 'definition_cards'",
         (slug,),
@@ -706,7 +695,7 @@ def browse_rows_from_db_articles(
 ) -> list[dict[str, Any]]:
     """Attach browse ``cls`` codes to DB article rows using stored heritage/provenance."""
 
-    conn = sqlite3.connect(db_path)
+    conn = _open_readonly(db_path)
     try:
         article_meta = {
             slug: (heritage_classification, lemma, gloss)
@@ -775,35 +764,27 @@ def verify_browse_artifacts_written(
     meta = json.loads(meta_out.read_text(encoding="utf-8"))
     actual_total = meta.get("total")
     if actual_total != expected_total:
-        raise SystemExit(
-            "browse-meta total mismatch after write: "
-            f"expected {expected_total}, got {actual_total!r}"
-        )
+        raise SystemExit(f"browse-meta total mismatch after write: expected {expected_total}, got {actual_total!r}")
     letter_counts = meta.get("letterCounts")
     if not isinstance(letter_counts, dict):
         raise SystemExit("browse-meta missing letterCounts after write")
     shard_total = sum(int(letter_counts.get(letter, 0)) for letter in UKRAINIAN_ALPHABET)
     if shard_total != expected_total:
         raise SystemExit(
-            "browse-meta letterCounts sum mismatch after write: "
-            f"expected {expected_total}, got {shard_total}"
+            f"browse-meta letterCounts sum mismatch after write: expected {expected_total}, got {shard_total}"
         )
     for letter in UKRAINIAN_ALPHABET:
         count = int(letter_counts.get(letter, 0))
         shard_path = browse_dir / f"{letter}.json"
         if count == 0:
             if shard_path.exists():
-                raise SystemExit(
-                    f"browse shard {shard_path} must not exist when letterCounts[{letter!r}] is 0"
-                )
+                raise SystemExit(f"browse shard {shard_path} must not exist when letterCounts[{letter!r}] is 0")
             continue
         if not shard_path.is_file():
             raise SystemExit(f"browse shard missing for letter {letter!r}: {shard_path}")
         shard_rows = json.loads(shard_path.read_text(encoding="utf-8"))
         if len(shard_rows) != count:
-            raise SystemExit(
-                f"browse shard {letter!r} count mismatch: meta={count}, file={len(shard_rows)}"
-            )
+            raise SystemExit(f"browse shard {letter!r} count mismatch: meta={count}, file={len(shard_rows)}")
 
 
 def build_atlas_db_search_artifacts(
@@ -816,7 +797,7 @@ def build_atlas_db_search_artifacts(
     are deliberately never copied into the article index.
     """
 
-    conn = sqlite3.connect(db_path)
+    conn = _open_readonly(db_path)
     try:
         _site_build_entry_model_gates(conn)
         article_rows = conn.execute(
@@ -903,16 +884,18 @@ def build_atlas_db_search_artifacts(
                 )
             }
         )
-        public_alias_records = conn.execute(
-            "SELECT COUNT(*) FROM aliases WHERE visibility = 'public'"
-        ).fetchone()[0]
-        return articles, aliases, {
-            "reviewed_entries": len(articles),
-            "public_alias_records": public_alias_records,
-            "emitted_aliases": len(aliases),
-            "deduplicated_aliases": public_alias_records - len(aliases),
-            **{f"entry_type_{entry_type}": count for entry_type, count in by_type.items()},
-        }
+        public_alias_records = conn.execute("SELECT COUNT(*) FROM aliases WHERE visibility = 'public'").fetchone()[0]
+        return (
+            articles,
+            aliases,
+            {
+                "reviewed_entries": len(articles),
+                "public_alias_records": public_alias_records,
+                "emitted_aliases": len(aliases),
+                "deduplicated_aliases": public_alias_records - len(aliases),
+                **{f"entry_type_{entry_type}": count for entry_type, count in by_type.items()},
+            },
+        )
     finally:
         conn.close()
 
@@ -996,19 +979,10 @@ def build_browse_outputs(
         "schema": "atlas-browse-meta",
         "schemaVersion": 1,
         "total": sum(len(items) for items in shards.values()),
-        "letterCounts": {
-            letter: len(shards.get(letter, [])) for letter in UKRAINIAN_ALPHABET
-        },
-        "chipCounts": {
-            code: chip_counts[code]
-            for code in CLASSIFICATION_CODES
-            if chip_counts.get(code, 0) > 0
-        },
+        "letterCounts": {letter: len(shards.get(letter, [])) for letter in UKRAINIAN_ALPHABET},
+        "chipCounts": {code: chip_counts[code] for code in CLASSIFICATION_CODES if chip_counts.get(code, 0) > 0},
         "letterChip": {
-            letter: {
-                code: letter_chip[letter].get(code, 0)
-                for code in CLASSIFICATION_CODES
-            }
+            letter: {code: letter_chip[letter].get(code, 0) for code in CLASSIFICATION_CODES}
             for letter in UKRAINIAN_ALPHABET
         },
         "browseShardCount": len(browse_shards),

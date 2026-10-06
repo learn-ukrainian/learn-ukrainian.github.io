@@ -44,23 +44,19 @@ from scripts.fleet_comms.formal_review_jobs import (
 )
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 from scripts.fleet_comms.review_publication import SealedVerdict, parse_sealed_verdict_payload
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 AuthorityJobKind = Literal["request", "discussion", "formal_review"]
-AuthorityJobState = Literal[
-    "queued", "running", "complete", "failed", "expired", "dead_lettered"
-]
-AuthorityDeliveryState = Literal[
-    "queued", "running", "acknowledged", "failed", "expired", "dead_lettered"
-]
+AuthorityJobState = Literal["queued", "running", "complete", "failed", "expired", "dead_lettered"]
+AuthorityDeliveryState = Literal["queued", "running", "acknowledged", "failed", "expired", "dead_lettered"]
 
 _JOB_KINDS = frozenset({"request", "discussion", "formal_review"})
 _JOB_TERMINAL = frozenset({"complete", "failed", "expired", "dead_lettered"})
 _DELIVERY_TERMINAL = frozenset({"acknowledged", "failed", "expired", "dead_lettered"})
 _WAKE_STATES = {"emitted": 0, "received": 1, "consumed": 2}
 _AUTHORITY_SCHEMA_VERSION = 5
-_FAILURE_PHASES = frozenset(
-    {"admission", "transport", "provider", "result_parse", "postprocess"}
-)
+_FAILURE_PHASES = frozenset({"admission", "transport", "provider", "result_parse", "postprocess"})
 _FAILURE_CODES = frozenset(
     {
         "adapter_refused",
@@ -148,7 +144,6 @@ def _admitted_subscribers(names: Iterable[str]) -> list[AdmittedTarget]:
         except KimiAdmissionRefused:
             continue
     return admitted
-
 
 
 def _safe_json_mapping(value: Mapping[str, Any] | None) -> dict[str, Any]:
@@ -361,9 +356,7 @@ class AuthorityService:
         normalized_subscribers = _normalize_recipients(subscribers)
         meta = _safe_json_mapping(metadata)
         with self._write_transaction():
-            row = self._conn.execute(
-                "SELECT * FROM authority_channels WHERE name = ?", (channel_name,)
-            ).fetchone()
+            row = self._conn.execute("SELECT * FROM authority_channels WHERE name = ?", (channel_name,)).fetchone()
             if row is None:
                 channel_id = new_id("authority-channel")
                 created_at = _iso()
@@ -444,9 +437,7 @@ class AuthorityService:
 
     def get_channel(self, name: str) -> AuthorityChannel:
         channel_name = _nonempty(name, field="channel")
-        row = self._conn.execute(
-            "SELECT * FROM authority_channels WHERE name = ?", (channel_name,)
-        ).fetchone()
+        row = self._conn.execute("SELECT * FROM authority_channels WHERE name = ?", (channel_name,)).fetchone()
         if row is None:
             raise AuthorityServiceError("channel_not_found")
         subscriber_rows = self._conn.execute(
@@ -459,9 +450,7 @@ class AuthorityService:
             name=str(row["name"]),
             metadata=self._decode_mapping(row["metadata_json"], field="channel_metadata"),
             current_context_revision_id=(
-                str(row["current_context_revision_id"])
-                if row["current_context_revision_id"] is not None
-                else None
+                str(row["current_context_revision_id"]) if row["current_context_revision_id"] is not None else None
             ),
             created_at=str(row["created_at"]),
             subscribers=tuple(str(item["recipient"]) for item in subscriber_rows),
@@ -864,9 +853,7 @@ class AuthorityService:
                     commit=False,
                 )
             else:
-                artifact = self._require_artifact_tx(
-                    _nonempty(snapshot_artifact_id, field="snapshot_artifact_id")
-                )
+                artifact = self._require_artifact_tx(_nonempty(snapshot_artifact_id, field="snapshot_artifact_id"))
             payload = {**payload_base, "snapshot_sha256": artifact.sha256}
             review = self._find_formal_review_tx(repo, pr_number, sha, gate)
             if review is None:
@@ -910,9 +897,7 @@ class AuthorityService:
 
     def get_job(self, job_id: str) -> AuthorityJob:
         jid = _nonempty(job_id, field="job_id")
-        row = self._conn.execute(
-            "SELECT * FROM authority_jobs WHERE job_id = ?", (jid,)
-        ).fetchone()
+        row = self._conn.execute("SELECT * FROM authority_jobs WHERE job_id = ?", (jid,)).fetchone()
         if row is None:
             raise AuthorityServiceError("job_not_found")
         return self._job_from_row(row)
@@ -961,9 +946,7 @@ class AuthorityService:
             )
             if cursor.rowcount != 1:  # BEGIN IMMEDIATE makes this defensive only.
                 raise AuthorityStaleLeaseError("job_claim_raced")
-            self._append_job_event_tx(
-                str(row["job_id"]), token, "claimed", "running", {"worker_id": worker}
-            )
+            self._append_job_event_tx(str(row["job_id"]), token, "claimed", "running", {"worker_id": worker})
             claimed = self._conn.execute(
                 "SELECT * FROM authority_jobs WHERE job_id = ?", (str(row["job_id"]),)
             ).fetchone()
@@ -1124,9 +1107,7 @@ class AuthorityService:
             event_metadata: dict[str, Any] = {"worker_id": worker}
             if failure_metadata is not None:
                 event_metadata["failure"] = failure_metadata
-            self._append_job_event_tx(
-                jid, fence_token, "finished", state, event_metadata
-            )
+            self._append_job_event_tx(jid, fence_token, "finished", state, event_metadata)
             return self.get_job(jid)
 
     def reclaim_expired_jobs(self, *, now: str | None = None) -> int:
@@ -1154,11 +1135,7 @@ class AuthorityService:
             previous_state = str(row["state"])
             if previous_state not in allowed_states:
                 raise AuthorityServiceError("job_not_retryable")
-            deadline = (
-                self._normalize_deadline(deadline_at)
-                if deadline_at is not None
-                else row["deadline_at"]
-            )
+            deadline = self._normalize_deadline(deadline_at) if deadline_at is not None else row["deadline_at"]
             if deadline is not None and str(deadline) <= now_value:
                 raise AuthorityServiceError("job_retry_deadline_expired")
             self._conn.execute(
@@ -1187,9 +1164,7 @@ class AuthorityService:
 
     def get_delivery(self, delivery_id: str) -> AuthorityDelivery:
         did = _nonempty(delivery_id, field="delivery_id")
-        row = self._conn.execute(
-            "SELECT * FROM authority_deliveries WHERE delivery_id = ?", (did,)
-        ).fetchone()
+        row = self._conn.execute("SELECT * FROM authority_deliveries WHERE delivery_id = ?", (did,)).fetchone()
         if row is None:
             raise AuthorityServiceError("delivery_not_found")
         return self._delivery_from_row(row)
@@ -1296,9 +1271,7 @@ class AuthorityService:
             ).fetchone()
             if existing is None:
                 self._insert_idempotency_tx(namespace, str(fence_token), digest, generation)
-            self._record_wake_receipt_tx(
-                did, str(row["recipient"]), fence_token, state="consumed", now=now_value
-            )
+            self._record_wake_receipt_tx(did, str(row["recipient"]), fence_token, state="consumed", now=now_value)
             return {
                 "delivery_id": did,
                 "fence_token": fence_token,
@@ -1320,8 +1293,11 @@ class AuthorityService:
         """Record the verified action outcome after durable consumption."""
         self._require_supervisory_delivery_tx(delivery_id)
         return self.acknowledge_delivery(
-            delivery_id, worker_id=worker_id, fence_token=fence_token,
-            acknowledgment=acknowledgment, now=now,
+            delivery_id,
+            worker_id=worker_id,
+            fence_token=fence_token,
+            acknowledgment=acknowledgment,
+            now=now,
         )
 
     def refuse_supervisory_delivery(
@@ -1336,8 +1312,12 @@ class AuthorityService:
         """Record a driver's refusal after durable consumption."""
         self._require_supervisory_delivery_tx(delivery_id)
         return self.finish_delivery(
-            delivery_id, worker_id=worker_id, fence_token=fence_token,
-            state="failed", result=result, now=now,
+            delivery_id,
+            worker_id=worker_id,
+            fence_token=fence_token,
+            state="failed",
+            result=result,
+            now=now,
         )
 
     def supervisory_delivery_status(self, delivery_id: str) -> str:
@@ -1455,9 +1435,7 @@ class AuthorityService:
                     fence_token,
                 ),
             )
-            self._record_wake_receipt_tx(
-                did, str(row["recipient"]), fence_token, state="consumed", now=now_value
-            )
+            self._record_wake_receipt_tx(did, str(row["recipient"]), fence_token, state="consumed", now=now_value)
             if state == "failed":
                 self._dead_letter_delivery_tx(did, reason_code="worker_failed")
             return self.get_delivery(did)
@@ -1512,9 +1490,7 @@ class AuthorityService:
         """Fail closed unless the sealed immutable snapshot matches the exact PR head."""
         rid = _nonempty(review_id, field="review_id")
         head = _nonempty(current_head_sha, field="current_head_sha").lower()
-        row = self._conn.execute(
-            "SELECT * FROM formal_review_jobs WHERE review_id = ?", (rid,)
-        ).fetchone()
+        row = self._conn.execute("SELECT * FROM formal_review_jobs WHERE review_id = ?", (rid,)).fetchone()
         if row is None:
             raise AuthorityServiceError("formal_review_not_found")
         self._require_formal_snapshot_seal_tx(rid, current_head_sha=head)
@@ -1531,15 +1507,11 @@ class AuthorityService:
             parsed = sealed if isinstance(sealed, SealedVerdict) else parse_sealed_verdict_payload(sealed)
         except Exception as exc:
             raise AuthorityServiceError("sealed_verdict_invalid") from exc
-        job = self.require_publishable_formal_review(
-            review_id, current_head_sha=parsed.head_sha
-        )
+        job = self.require_publishable_formal_review(review_id, current_head_sha=parsed.head_sha)
         if parsed.review_id != job.review_id:
             raise AuthorityServiceError("sealed_review_id_mismatch")
         try:
-            return FormalReviewJobService(store=self.store).accept_sealed_verdict(
-                job.review_id, parsed
-            )
+            return FormalReviewJobService(store=self.store).accept_sealed_verdict(job.review_id, parsed)
         except FormalReviewJobsError as exc:
             raise AuthorityServiceError("sealed_verdict_rejected") from exc
 
@@ -1618,8 +1590,7 @@ class AuthorityService:
                     or decision.evidence.get("authority_key") != routing_request.authority_key
                     or decision.evidence.get("reason") != reason
                     or decision.evidence.get("requested_data_egress_policy") != egress
-                    or decision.evidence.get("new_requested_reviewer")
-                    != routing_request.requested_reviewer
+                    or decision.evidence.get("new_requested_reviewer") != routing_request.requested_reviewer
                 ):
                     raise AuthorityServiceError("substitution_authority_job_not_failed")
                 return ledger.reserve_selection(
@@ -1635,17 +1606,11 @@ class AuthorityService:
             if prior is None:
                 raise AuthorityServiceError("substitution_prior_reservation_missing")
             prior_reserved = next(
-                (
-                    decision
-                    for decision in ledger.decisions(prior.reservation_id)
-                    if decision.event_type == "reserved"
-                ),
+                (decision for decision in ledger.decisions(prior.reservation_id) if decision.event_type == "reserved"),
                 None,
             )
             prior_envelope = (
-                prior_reserved.evidence.get("authorization_envelope")
-                if prior_reserved is not None
-                else None
+                prior_reserved.evidence.get("authorization_envelope") if prior_reserved is not None else None
             )
             prior_envelope_source = "persisted"
             if not isinstance(prior_envelope, Mapping):
@@ -1682,7 +1647,10 @@ class AuthorityService:
                 (now_value, jid),
             )
             self._append_job_event_tx(
-                jid, int(job["fence_token"]), "substitution_authorized", "queued",
+                jid,
+                int(job["fence_token"]),
+                "substitution_authorized",
+                "queued",
                 {"reservation_id": reservation.reservation_id, "review_id": rid},
             )
             return reservation
@@ -1772,7 +1740,7 @@ class AuthorityService:
         if not path.is_file():
             raise AuthorityServiceError("legacy_source_db_not_found")
         source_name = _nonempty(source, field="source")
-        conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        conn = _open_readonly(path)
         conn.row_factory = sqlite3.Row
         try:
             records: list[dict[str, Any]] = []
@@ -1975,9 +1943,7 @@ class AuthorityService:
             )
             delivery_ids.append(delivery_id)
             if emit_wakes and delivery_state == "queued":
-                self._record_wake_receipt_tx(
-                    delivery_id, recipient, 0, state="emitted", now=creation
-                )
+                self._record_wake_receipt_tx(delivery_id, recipient, 0, state="emitted", now=creation)
         self._insert_idempotency_tx("message", key, _sha256_json(payload), mid)
         return AuthorityMessage(
             message_id=mid,
@@ -2067,11 +2033,7 @@ class AuthorityService:
         if not isinstance(actual, dict):
             raise AuthorityServiceError("job_payload_corrupt")
         expected = _safe_json_mapping(expected_payload)
-        matches = (
-            all(actual.get(key) == value for key, value in expected.items())
-            if subset
-            else actual == expected
-        )
+        matches = all(actual.get(key) == value for key, value in expected.items()) if subset else actual == expected
         if not matches:
             raise AuthorityServiceError("idempotency_key_reused_with_different_payload")
 
@@ -2093,9 +2055,7 @@ class AuthorityService:
                        updated_at = ?, completed_at = ? WHERE job_id = ?""",
                 (now, now, str(row["job_id"])),
             )
-            self._append_job_event_tx(
-                str(row["job_id"]), int(row["fence_token"]), "expired", "expired", {}
-            )
+            self._append_job_event_tx(str(row["job_id"]), int(row["fence_token"]), "expired", "expired", {})
             self._dead_letter_job_tx(str(row["job_id"]), reason_code="deadline_expired")
             reclaimed += 1
         stale_rows = self._conn.execute(
@@ -2114,9 +2074,7 @@ class AuthorityService:
                        updated_at = ? WHERE job_id = ?""",
                 (now, str(row["job_id"])),
             )
-            self._append_job_event_tx(
-                str(row["job_id"]), int(row["fence_token"]), "reclaimed", "queued", {}
-            )
+            self._append_job_event_tx(str(row["job_id"]), int(row["fence_token"]), "reclaimed", "queued", {})
             reclaimed += 1
         return reclaimed
 
@@ -2366,15 +2324,9 @@ class AuthorityService:
         conversation_external = str(
             data.get("conversation_id") or data.get("thread_id") or data.get("task_id") or external_id
         )
-        conversation_id = "legacy-conversation-" + _sha256_bytes(
-            f"{source}:{conversation_external}".encode()
-        )[:32]
+        conversation_id = "legacy-conversation-" + _sha256_bytes(f"{source}:{conversation_external}".encode())[:32]
         reply_raw = data.get("in_reply_to") or data.get("parent_id")
-        in_reply_to = (
-            "legacy-message-" + _sha256_bytes(f"{source}:{reply_raw}".encode())[:32]
-            if reply_raw
-            else None
-        )
+        in_reply_to = "legacy-message-" + _sha256_bytes(f"{source}:{reply_raw}".encode())[:32] if reply_raw else None
         message_id = "legacy-message-" + _sha256_bytes(f"{source}:{external_id}".encode())[:32]
         provenance = _safe_json_mapping(data.get("provenance") if isinstance(data.get("provenance"), Mapping) else None)
         provenance.setdefault("Source", str(data.get("Source") or source))
@@ -2420,16 +2372,17 @@ class AuthorityService:
         }
 
     @staticmethod
-    def _sqlite_table_exists(conn: sqlite3.Connection, name: str) -> bool:
-        return conn.execute(
-            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", (name,)
-        ).fetchone() is not None
+    def _sqlite_table_exists(conn: SQLiteConnection, name: str) -> bool:
+        return (
+            conn.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", (name,)).fetchone()
+            is not None
+        )
 
     @staticmethod
     def _split_legacy_csv(value: Any) -> tuple[str, ...]:
         return tuple(item.strip() for item in str(value or "").split(",") if item.strip())
 
-    def _legacy_delivery_map(self, conn: sqlite3.Connection) -> dict[str, tuple[str, ...]]:
+    def _legacy_delivery_map(self, conn: SQLiteConnection) -> dict[str, tuple[str, ...]]:
         if not self._sqlite_table_exists(conn, "deliveries"):
             return {}
         columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(deliveries)")}
@@ -2508,9 +2461,7 @@ class AuthorityService:
     # Small validation / row conversion helpers
 
     def _require_authority_schema(self) -> None:
-        row = self._conn.execute(
-            "SELECT MAX(version) AS version FROM comms_schema_migrations"
-        ).fetchone()
+        row = self._conn.execute("SELECT MAX(version) AS version FROM comms_schema_migrations").fetchone()
         applied = int(row["version"] or 0) if row is not None else 0
         known = MIGRATIONS[-1].version if MIGRATIONS else 0
         if known < _AUTHORITY_SCHEMA_VERSION or applied < _AUTHORITY_SCHEMA_VERSION:
@@ -2526,9 +2477,7 @@ class AuthorityService:
 
     def _ensure_channel_tx(self, channel: str) -> sqlite3.Row:
         channel_name = _nonempty(channel, field="channel")
-        row = self._conn.execute(
-            "SELECT * FROM authority_channels WHERE name = ?", (channel_name,)
-        ).fetchone()
+        row = self._conn.execute("SELECT * FROM authority_channels WHERE name = ?", (channel_name,)).fetchone()
         if row is not None:
             return row
         channel_id = new_id("authority-channel")
@@ -2538,18 +2487,14 @@ class AuthorityService:
                VALUES (?, ?, '{}', ?)""",
             (channel_id, channel_name, now),
         )
-        created = self._conn.execute(
-            "SELECT * FROM authority_channels WHERE channel_id = ?", (channel_id,)
-        ).fetchone()
+        created = self._conn.execute("SELECT * FROM authority_channels WHERE channel_id = ?", (channel_id,)).fetchone()
         if created is None:  # pragma: no cover - same transaction
             raise AuthorityServiceError("channel_create_lost")
         return created
 
     def _require_channel_tx(self, channel: str | None) -> sqlite3.Row:
         channel_name = _nonempty(channel, field="channel")
-        row = self._conn.execute(
-            "SELECT * FROM authority_channels WHERE name = ?", (channel_name,)
-        ).fetchone()
+        row = self._conn.execute("SELECT * FROM authority_channels WHERE name = ?", (channel_name,)).fetchone()
         if row is None:
             raise AuthorityServiceError("channel_not_found")
         return row
@@ -2604,9 +2549,7 @@ class AuthorityService:
             raise AuthorityServiceError("idempotency_key_reused_with_different_payload")
         return str(row["subject_id"])
 
-    def _insert_idempotency_tx(
-        self, namespace: str, key: str, payload_sha256: str, subject_id: str
-    ) -> None:
+    def _insert_idempotency_tx(self, namespace: str, key: str, payload_sha256: str, subject_id: str) -> None:
         self._conn.execute(
             """INSERT INTO authority_idempotency(
                 namespace, idempotency_key, payload_sha256, subject_id, created_at
@@ -2643,17 +2586,13 @@ class AuthorityService:
             raise AuthorityServiceError("artifact_not_found") from exc
 
     def _require_job_tx(self, job_id: str) -> sqlite3.Row:
-        row = self._conn.execute(
-            "SELECT * FROM authority_jobs WHERE job_id = ?", (job_id,)
-        ).fetchone()
+        row = self._conn.execute("SELECT * FROM authority_jobs WHERE job_id = ?", (job_id,)).fetchone()
         if row is None:
             raise AuthorityServiceError("job_not_found")
         return row
 
     def _require_delivery_tx(self, delivery_id: str) -> sqlite3.Row:
-        row = self._conn.execute(
-            "SELECT * FROM authority_deliveries WHERE delivery_id = ?", (delivery_id,)
-        ).fetchone()
+        row = self._conn.execute("SELECT * FROM authority_deliveries WHERE delivery_id = ?", (delivery_id,)).fetchone()
         if row is None:
             raise AuthorityServiceError("delivery_not_found")
         return row
@@ -2670,9 +2609,7 @@ class AuthorityService:
             raise AuthorityStaleLeaseError("terminalization_conflict")
 
     @staticmethod
-    def _assert_current_job_lease(
-        row: sqlite3.Row, worker: str, token: int, now: str
-    ) -> None:
+    def _assert_current_job_lease(row: sqlite3.Row, worker: str, token: int, now: str) -> None:
         if (
             str(row["state"]) != "running"
             or str(row["lease_owner"] or "") != worker
@@ -2683,9 +2620,7 @@ class AuthorityService:
             raise AuthorityStaleLeaseError("stale_job_lease")
 
     @staticmethod
-    def _assert_current_delivery_lease(
-        row: sqlite3.Row, worker: str, token: int, now: str
-    ) -> None:
+    def _assert_current_delivery_lease(row: sqlite3.Row, worker: str, token: int, now: str) -> None:
         if (
             str(row["state"]) != "running"
             or str(row["lease_owner"] or "") != worker
@@ -2728,19 +2663,13 @@ class AuthorityService:
             state=str(row["state"]),
             deadline_at=str(row["deadline_at"]) if row["deadline_at"] is not None else None,
             lease_owner=str(row["lease_owner"]) if row["lease_owner"] is not None else None,
-            lease_expires_at=(
-                str(row["lease_expires_at"]) if row["lease_expires_at"] is not None else None
-            ),
+            lease_expires_at=(str(row["lease_expires_at"]) if row["lease_expires_at"] is not None else None),
             fence_token=int(row["fence_token"]),
             attempt_count=int(row["attempt_count"]),
             acknowledgment_artifact_id=(
-                str(row["acknowledgment_artifact_id"])
-                if row["acknowledgment_artifact_id"] is not None
-                else None
+                str(row["acknowledgment_artifact_id"]) if row["acknowledgment_artifact_id"] is not None else None
             ),
-            terminal_sha256=(
-                str(row["terminal_sha256"]) if row["terminal_sha256"] is not None else None
-            ),
+            terminal_sha256=(str(row["terminal_sha256"]) if row["terminal_sha256"] is not None else None),
             created_at=str(row["created_at"]),
             updated_at=str(row["updated_at"]),
             completed_at=str(row["completed_at"]) if row["completed_at"] is not None else None,
@@ -2756,17 +2685,11 @@ class AuthorityService:
             state=str(row["state"]),
             deadline_at=str(row["deadline_at"]) if row["deadline_at"] is not None else None,
             lease_owner=str(row["lease_owner"]) if row["lease_owner"] is not None else None,
-            lease_expires_at=(
-                str(row["lease_expires_at"]) if row["lease_expires_at"] is not None else None
-            ),
+            lease_expires_at=(str(row["lease_expires_at"]) if row["lease_expires_at"] is not None else None),
             fence_token=int(row["fence_token"]),
             attempt_count=int(row["attempt_count"]),
-            result_artifact_id=(
-                str(row["result_artifact_id"]) if row["result_artifact_id"] is not None else None
-            ),
-            terminal_sha256=(
-                str(row["terminal_sha256"]) if row["terminal_sha256"] is not None else None
-            ),
+            result_artifact_id=(str(row["result_artifact_id"]) if row["result_artifact_id"] is not None else None),
+            terminal_sha256=(str(row["terminal_sha256"]) if row["terminal_sha256"] is not None else None),
             idempotency_key=str(row["idempotency_key"]),
             created_at=str(row["created_at"]),
             updated_at=str(row["updated_at"]),

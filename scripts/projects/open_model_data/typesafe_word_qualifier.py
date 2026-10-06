@@ -33,6 +33,9 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any, ClassVar
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 
@@ -117,100 +120,110 @@ RUSSIAN_ONLY_CHARS_RE = re.compile(r"[ыэъёЫЭЪЁ]")
 MIXED_HOMOGLYPH_RE = re.compile(
     r"\b(?=[a-zA-Zа-яА-ЯіїєґІЇЄҐ]*[a-zA-Z])(?=[a-zA-Zа-яА-ЯіїєґІЇЄҐ]*[а-яА-ЯіїєґІЇЄҐ])[a-zA-Zа-яА-ЯіїєґІЇЄҐ]+\b"
 )
-KNOWN_CALQUES = frozenset({
-    "мероприємство",
-    "празнувати",
-    "слідуючий",
-    "приймати участь",
-    "влучний випадок",
-    "бувший",
-    "давнішній",
-    "взнос",
-    "заказ",
-    "наложка",
-    "підписка",
-    "по крайній мірі",
-    "палата представників",
-})
-KNOWN_DIALECTAL = frozenset({
-    "файний",
-    "файно",
-    "ґазда",
-    "ґаздиня",
-    "ватра",
-    "плай",
-    "полонина",
-    "батяр",
-    "кобіта",
-    "легінь",
-    "крисаня",
-    "бусько",
-    "посіпака",
-    "вуйко",
-    "стрий",
-})
-KNOWN_ARCHAISMS = frozenset({
-    "бяше",
-    "рече",
-    "яко",
-    "се",
-    "вои",
-    "иже",
-    "кнѧз",
-    "віче",
-    "ратник",
-    "острог",
-    "гридень",
-    "дідич",
-})
-KNOWN_STOPWORDS = frozenset({
-    "і",
-    "й",
-    "та",
-    "але",
-    "що",
-    "як",
-    "це",
-    "в",
-    "у",
-    "на",
-    "з",
-    "із",
-    "зі",
-    "до",
-    "по",
-    "за",
-    "про",
-    "від",
-    "для",
-    "не",
-    "чи",
-    "бо",
-    "так",
-    "ми",
-    "ви",
-    "він",
-    "вона",
-    "вони",
-    "я",
-    "ти",
-})
-KNOWN_CULTURAL_GEMS = frozenset({
-    "воля",
-    "незалежність",
-    "соборність",
-    "гідність",
-    "кобзар",
-    "вишиванка",
-    "писанка",
-    "рушник",
-    "калина",
-    "козак",
-    "січ",
-    "майдан",
-    "тризуб",
-    "державність",
-})
+KNOWN_CALQUES = frozenset(
+    {
+        "мероприємство",
+        "празнувати",
+        "слідуючий",
+        "приймати участь",
+        "влучний випадок",
+        "бувший",
+        "давнішній",
+        "взнос",
+        "заказ",
+        "наложка",
+        "підписка",
+        "по крайній мірі",
+        "палата представників",
+    }
+)
+KNOWN_DIALECTAL = frozenset(
+    {
+        "файний",
+        "файно",
+        "ґазда",
+        "ґаздиня",
+        "ватра",
+        "плай",
+        "полонина",
+        "батяр",
+        "кобіта",
+        "легінь",
+        "крисаня",
+        "бусько",
+        "посіпака",
+        "вуйко",
+        "стрий",
+    }
+)
+KNOWN_ARCHAISMS = frozenset(
+    {
+        "бяше",
+        "рече",
+        "яко",
+        "се",
+        "вои",
+        "иже",
+        "кнѧз",
+        "віче",
+        "ратник",
+        "острог",
+        "гридень",
+        "дідич",
+    }
+)
+KNOWN_STOPWORDS = frozenset(
+    {
+        "і",
+        "й",
+        "та",
+        "але",
+        "що",
+        "як",
+        "це",
+        "в",
+        "у",
+        "на",
+        "з",
+        "із",
+        "зі",
+        "до",
+        "по",
+        "за",
+        "про",
+        "від",
+        "для",
+        "не",
+        "чи",
+        "бо",
+        "так",
+        "ми",
+        "ви",
+        "він",
+        "вона",
+        "вони",
+        "я",
+        "ти",
+    }
+)
+KNOWN_CULTURAL_GEMS = frozenset(
+    {
+        "воля",
+        "незалежність",
+        "соборність",
+        "гідність",
+        "кобзар",
+        "вишиванка",
+        "писанка",
+        "рушник",
+        "калина",
+        "козак",
+        "січ",
+        "майдан",
+        "тризуб",
+        "державність",
+    }
+)
 
 
 class TypeSafeWordQualifier:
@@ -258,12 +271,12 @@ class TypeSafeWordQualifier:
         if vesum_path is None:
             vesum_path = PROJECT_ROOT / "data" / "vesum.db"
         self.vesum_path = Path(vesum_path)
-        self._vesum_conn: sqlite3.Connection | None = None
+        self._vesum_conn: SQLiteConnection | None = None
 
-    def _get_vesum_conn(self) -> sqlite3.Connection | None:
+    def _get_vesum_conn(self) -> SQLiteConnection | None:
         if self._vesum_conn is None and self.vesum_path.is_file():
             try:
-                self._vesum_conn = sqlite3.connect(f"{self.vesum_path.resolve().as_uri()}?mode=ro", uri=True)
+                self._vesum_conn = _open_readonly(self.vesum_path.resolve())
             except sqlite3.Error:
                 self._vesum_conn = None
         return self._vesum_conn
@@ -410,10 +423,14 @@ class TypeSafeWordQualifier:
                 ocr_val = float(ocr_ans.get("noul", -1))
 
                 if not (
-                    math.isfinite(conf_val) and 0.0 <= conf_val <= 1.0
-                    and math.isfinite(shadow_val) and 0.0 <= shadow_val <= 1.0
-                    and math.isfinite(prio_val) and 0.0 <= prio_val <= 4.0
-                    and math.isfinite(ocr_val) and 0.0 <= ocr_val <= 1.0
+                    math.isfinite(conf_val)
+                    and 0.0 <= conf_val <= 1.0
+                    and math.isfinite(shadow_val)
+                    and 0.0 <= shadow_val <= 1.0
+                    and math.isfinite(prio_val)
+                    and 0.0 <= prio_val <= 4.0
+                    and math.isfinite(ocr_val)
+                    and 0.0 <= ocr_val <= 1.0
                 ):
                     raise ValueError("Metric out of bounds")
             except (TypeError, ValueError):
@@ -697,7 +714,9 @@ def main() -> None:
         }
         print(json.dumps(out, ensure_ascii=False, indent=2))
     else:
-        print(f"Processed: {report.total_processed} words in {report.elapsed_seconds:.2f}s ({report.words_per_second:.1f} w/s)")
+        print(
+            f"Processed: {report.total_processed} words in {report.elapsed_seconds:.2f}s ({report.words_per_second:.1f} w/s)"
+        )
         print(f"  Standard Literary: {report.standard_literary}")
         print(f"  Dialectal:         {report.dialectal}")
         print(f"  Archaism:          {report.archaism}")

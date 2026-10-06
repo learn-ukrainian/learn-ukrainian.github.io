@@ -13,14 +13,16 @@ from __future__ import annotations
 
 import functools
 import re
-import sqlite3
 from pathlib import Path
 from typing import Any
 
-_VESUM_CONN: sqlite3.Connection | None = None
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
+_VESUM_CONN: SQLiteConnection | None = None
 
 
-def _get_vesum_connection() -> sqlite3.Connection | None:
+def _get_vesum_connection() -> SQLiteConnection | None:
     global _VESUM_CONN
     if _VESUM_CONN is None:
         try:
@@ -31,7 +33,7 @@ def _get_vesum_connection() -> sqlite3.Connection | None:
             db_path = Path(__file__).resolve().parents[3] / "data" / "vesum.db"
         if db_path.is_file():
             try:
-                _VESUM_CONN = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+                _VESUM_CONN = _open_readonly(db_path)
             except Exception:
                 _VESUM_CONN = None
     return _VESUM_CONN
@@ -676,13 +678,11 @@ def clean_sentence_for_query(sentence: str) -> str:
     """
     s = sentence.strip()
 
-    guillemet_wrapped = (
-        (s.startswith("«") and s.endswith("»") and s.count("«") == 1 and s.count("»") == 1)
-        or (s.startswith("«") and bool(re.search(r"[.?!…]+»$", s)) and s.count("«") == 1 and s.count("»") == 1)
+    guillemet_wrapped = (s.startswith("«") and s.endswith("»") and s.count("«") == 1 and s.count("»") == 1) or (
+        s.startswith("«") and bool(re.search(r"[.?!…]+»$", s)) and s.count("«") == 1 and s.count("»") == 1
     )
-    ascii_wrapped = (
-        (s.startswith('"') and s.endswith('"') and s.count('"') == 2)
-        or (s.startswith('"') and bool(re.search(r'[.?!…]+"$', s)) and s.count('"') == 2)
+    ascii_wrapped = (s.startswith('"') and s.endswith('"') and s.count('"') == 2) or (
+        s.startswith('"') and bool(re.search(r'[.?!…]+"$', s)) and s.count('"') == 2
     )
 
     if guillemet_wrapped:
@@ -796,7 +796,6 @@ def resolve_specific_linguistic_citation(
     # citations fail closed to silent_rewrite.
     if primary_tag == "F/Calque":
         return None
-
 
     # 3. Case government and inflection (G/Case)
     if primary_tag == "G/Case":

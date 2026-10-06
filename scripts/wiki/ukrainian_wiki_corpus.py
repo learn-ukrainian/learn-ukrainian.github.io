@@ -27,6 +27,7 @@ from .sources_db import search_style_guide
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 from scripts.storage.artifacts import write_artifact
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
@@ -194,10 +195,7 @@ class SmokeQueryResult:
 
 def ensure_ukrainian_wiki_schema(conn: sqlite3.Connection) -> None:
     conn.executescript(UKRAINIAN_WIKI_SCHEMA)
-    existing = {
-        row[1]
-        for row in conn.execute("PRAGMA table_info(ukrainian_wiki)").fetchall()
-    }
+    existing = {row[1] for row in conn.execute("PRAGMA table_info(ukrainian_wiki)").fetchall()}
     for column, ddl in UKRAINIAN_WIKI_COLUMN_SPECS:
         if column in existing:
             continue
@@ -300,7 +298,7 @@ def _split_overlong_passage(text: str, *, max_chars: int) -> list[str]:
 
     sentences = [sentence.strip() for sentence in _SENTENCE_SPLIT_RE.split(text) if sentence.strip()]
     if len(sentences) <= 1:
-        return [text[index:index + max_chars].strip() for index in range(0, len(text), max_chars)]
+        return [text[index : index + max_chars].strip() for index in range(0, len(text), max_chars)]
 
     chunks: list[str] = []
     current: list[str] = []
@@ -364,7 +362,7 @@ def segment_article_passages(
             level = len(heading_match.group(1))
             title = heading_match.group(2).strip()
             if len(headings) >= level:
-                headings[:] = headings[:level - 1]
+                headings[:] = headings[: level - 1]
             headings.append(title)
             continue
         if not stripped:
@@ -387,9 +385,7 @@ def segment_article_passages(
         current_words = len(current_text.split())
 
         while (
-            current_words < min_words
-            and pointer + 1 < len(paragraphs)
-            and paragraphs[pointer + 1][1] == section_path
+            current_words < min_words and pointer + 1 < len(paragraphs) and paragraphs[pointer + 1][1] == section_path
         ):
             next_idx, _, next_text = paragraphs[pointer + 1]
             merged = f"{current_text}\n\n{next_text}"
@@ -610,10 +606,7 @@ def run_admission_gates(
 ) -> AdmissionReport:
     article_text = article_path.read_text(encoding="utf-8")
     stripped_text = _strip_non_prose(article_text)
-    headings = [
-        match.group(2).strip()
-        for match in _HEADING_RE.finditer(stripped_text)
-    ]
+    headings = [match.group(2).strip() for match in _HEADING_RE.finditer(stripped_text)]
     article_title = headings[0] if headings else article_path.stem.replace("-", " ").title()
 
     citation = _citation_gate(article_path, article_text)
@@ -753,12 +746,12 @@ def _collect_article_paths(path: Path, *, recursive: bool = False) -> list[Path]
         return sorted(candidate for candidate in path.rglob("*.md") if candidate.is_file())
 
     nested_paths = sorted(
-        candidate
-        for candidate in path.rglob("*.md")
-        if candidate.is_file() and candidate.parent != path
+        candidate for candidate in path.rglob("*.md") if candidate.is_file() and candidate.parent != path
     )
     index_like_names = {"index.md", "readme.md"}
-    direct_paths_are_indexes = direct_paths and all(candidate.name.lower() in index_like_names for candidate in direct_paths)
+    direct_paths_are_indexes = direct_paths and all(
+        candidate.name.lower() in index_like_names for candidate in direct_paths
+    )
     if nested_paths and (not direct_paths or direct_paths_are_indexes):
         raise ValueError(
             f"{_relative_or_absolute(path)} contains markdown articles in subdirectories, "
@@ -772,11 +765,7 @@ def _warn_cross_track_slug_collisions(article_paths: list[Path]) -> None:
     for article_path in article_paths:
         tracks_by_slug.setdefault(article_path.stem, set()).add(_infer_track(article_path))
 
-    collisions = {
-        slug: sorted(tracks)
-        for slug, tracks in tracks_by_slug.items()
-        if len(tracks) > 1
-    }
+    collisions = {slug: sorted(tracks) for slug, tracks in tracks_by_slug.items() if len(tracks) > 1}
     if not collisions:
         return
 
@@ -789,11 +778,7 @@ def _warn_cross_track_slug_collisions(article_paths: list[Path]) -> None:
 
 
 def _admission_failure_detail(report: AdmissionReport) -> str:
-    failed = [
-        f"{result.name}: {result.detail}"
-        for result in report.results
-        if not result.passed
-    ]
+    failed = [f"{result.name}: {result.detail}" for result in report.results if not result.passed]
     return "admission gate failed: " + "; ".join(failed)
 
 
@@ -816,7 +801,7 @@ def run_smoke_queries(
     limit: int = 5,
     db_path: Path = DEFAULT_DB_PATH,
 ) -> list[SmokeQueryResult]:
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(Path(db_path).resolve())
     conn.row_factory = sqlite3.Row
     smoke_results: list[SmokeQueryResult] = []
     try:
@@ -875,16 +860,8 @@ def write_ingest_report(
     completed = [result for result in results if result.failure is None]
     inserted_counts = [result.inserted_chunks for result in completed]
     low_threshold, high_threshold = _suspicious_thresholds(inserted_counts)
-    suspicious_low = {
-        result.article_slug
-        for result in completed
-        if result.inserted_chunks < low_threshold
-    }
-    suspicious_high = {
-        result.article_slug
-        for result in completed
-        if result.inserted_chunks > high_threshold
-    }
+    suspicious_low = {result.article_slug for result in completed if result.inserted_chunks < low_threshold}
+    suspicious_high = {result.article_slug for result in completed if result.inserted_chunks > high_threshold}
 
     total_segmented = sum(result.segmented_chunks for result in results)
     total_inserted = sum(result.inserted_chunks for result in results)
@@ -949,9 +926,7 @@ def write_ingest_report(
             ]
         )
         for article_slug, skipped in skipped_rows:
-            lines.append(
-                f"| `{article_slug}` | `{skipped.passage_id}` | {skipped.chunk_index} | {skipped.detail} |"
-            )
+            lines.append(f"| `{article_slug}` | `{skipped.passage_id}` | {skipped.chunk_index} | {skipped.detail} |")
 
     if failures:
         lines.extend(["", "## Failures", ""])
@@ -1120,23 +1095,45 @@ def _build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("article", type=Path, help="Compiled wiki markdown path or a directory of compiled articles.")
-    parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH, help=f"Override sources DB path (default: {DEFAULT_DB_PATH}).")
+    parser.add_argument(
+        "--db-path", type=Path, default=DEFAULT_DB_PATH, help=f"Override sources DB path (default: {DEFAULT_DB_PATH})."
+    )
     parser.add_argument(
         "--manifest-db",
         type=Path,
         default=DEFAULT_MANIFEST_DB,
         help=f"Override embedding manifest DB path (default: {DEFAULT_MANIFEST_DB}).",
     )
-    parser.add_argument("--report-path", type=Path, default=DEFAULT_REPORT_PATH,
-                        help=f"Markdown report output path (default: {DEFAULT_REPORT_PATH}).")
-    parser.add_argument("--min-words", type=int, default=DEFAULT_MIN_WORDS,
-                        help=f"Reject passages below this word count (default: {DEFAULT_MIN_WORDS}).")
-    parser.add_argument("--max-chars", type=int, default=DEFAULT_MAX_CHARS,
-                        help=f"Maximum characters per passage chunk before splitting (default: {DEFAULT_MAX_CHARS}).")
-    parser.add_argument("--min-chunk-chars", type=int, default=DEFAULT_CHUNK_MIN_CHARS,
-                        help=f"Minimum characters for a kept chunk after splitting (default: {DEFAULT_CHUNK_MIN_CHARS}).")
-    parser.add_argument("--min-vesum-coverage", type=float, default=DEFAULT_VESUM_MIN_COVERAGE,
-                        help=f"Minimum Vesum/Pravopys coverage ratio for article admission gates (default: {DEFAULT_VESUM_MIN_COVERAGE}).")
+    parser.add_argument(
+        "--report-path",
+        type=Path,
+        default=DEFAULT_REPORT_PATH,
+        help=f"Markdown report output path (default: {DEFAULT_REPORT_PATH}).",
+    )
+    parser.add_argument(
+        "--min-words",
+        type=int,
+        default=DEFAULT_MIN_WORDS,
+        help=f"Reject passages below this word count (default: {DEFAULT_MIN_WORDS}).",
+    )
+    parser.add_argument(
+        "--max-chars",
+        type=int,
+        default=DEFAULT_MAX_CHARS,
+        help=f"Maximum characters per passage chunk before splitting (default: {DEFAULT_MAX_CHARS}).",
+    )
+    parser.add_argument(
+        "--min-chunk-chars",
+        type=int,
+        default=DEFAULT_CHUNK_MIN_CHARS,
+        help=f"Minimum characters for a kept chunk after splitting (default: {DEFAULT_CHUNK_MIN_CHARS}).",
+    )
+    parser.add_argument(
+        "--min-vesum-coverage",
+        type=float,
+        default=DEFAULT_VESUM_MIN_COVERAGE,
+        help=f"Minimum Vesum/Pravopys coverage ratio for article admission gates (default: {DEFAULT_VESUM_MIN_COVERAGE}).",
+    )
     parser.add_argument(
         "--recursive",
         action="store_true",

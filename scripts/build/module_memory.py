@@ -13,6 +13,8 @@ from typing import Any
 import yaml
 
 from build.alignment_manifest import manifest_hash, stamp_artifact
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.storage.paths import artifact_path
 
 PLAN_LEVEL_ERROR_CLASSES = {
@@ -62,9 +64,7 @@ def _sha256_file(path: Path) -> str:
 
 
 def _stable_json(value: Any) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
-        "utf-8"
-    )
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
 def _read_yaml(path: Path) -> Any:
@@ -127,7 +127,7 @@ def _manifest_path_key(path: Path, root: Path) -> str:
         return str(path.resolve())
 
 
-def _sqlite_table_names(connection: sqlite3.Connection) -> set[str]:
+def _sqlite_table_names(connection: SQLiteConnection) -> set[str]:
     rows = connection.execute(
         """
         SELECT name
@@ -139,7 +139,7 @@ def _sqlite_table_names(connection: sqlite3.Connection) -> set[str]:
     return {str(row[0]) for row in rows}
 
 
-def _sqlite_table_digest(connection: sqlite3.Connection, table_name: str) -> str:
+def _sqlite_table_digest(connection: SQLiteConnection, table_name: str) -> str:
     columns = [str(row[1]) for row in connection.execute(f'PRAGMA table_info("{table_name}")')]
     digest = hashlib.sha256()
     digest.update(table_name.encode("utf-8"))
@@ -166,7 +166,7 @@ def _sqlite_group_digest(db_path: Path, tables: tuple[str, ...]) -> str | None:
     if not db_path.exists():
         return None
 
-    with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as connection:
+    with _open_readonly(db_path) as connection:
         existing_tables = _sqlite_table_names(connection)
         digest = hashlib.sha256()
         used = False
@@ -185,7 +185,7 @@ def _sqlite_table_hashes(db_path: Path, tables: tuple[str, ...]) -> dict[str, st
     if not db_path.exists():
         return {}
 
-    with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as connection:
+    with _open_readonly(db_path) as connection:
         existing_tables = _sqlite_table_names(connection)
         return {
             table_name: _sqlite_table_digest(connection, table_name)
@@ -238,9 +238,7 @@ def compute_sources_manifest(
         manifest[f"wiki://{level}/{slug}/{rel_path}"] = digest
 
     if writer_template_path.exists():
-        manifest[_manifest_path_key(writer_template_path, project_root)] = _sha256_file(
-            writer_template_path
-        )
+        manifest[_manifest_path_key(writer_template_path, project_root)] = _sha256_file(writer_template_path)
 
     return manifest
 
@@ -299,8 +297,8 @@ def load_module_memory(
     merged["events"] = list(memory.get("events") or [])
 
     invalidated = False
-    legacy_payload = bool(current_hash) and not stored_hash and bool(
-        memory.get("plan_hash") or memory.get("sources_hash")
+    legacy_payload = (
+        bool(current_hash) and not stored_hash and bool(memory.get("plan_hash") or memory.get("sources_hash"))
     )
     if legacy_payload:
         invalidated = True
@@ -335,11 +333,7 @@ def load_module_memory(
     if expected_plan_version is not None:
         merged["plan_version"] = int(expected_plan_version)
 
-    if (
-        not path.exists()
-        or invalidated
-        or (current_hash and stored_hash != current_hash)
-    ):
+    if not path.exists() or invalidated or (current_hash and stored_hash != current_hash):
         save_module_memory(path, merged, current_manifest=current_manifest)
 
     return merged, invalidated
@@ -421,10 +415,7 @@ def directives_conflict(left: str, right: str) -> bool:
     )
     for first, second in antonym_pairs:
         if ({first, second} <= {left_norm, right_norm}) or (
-            (first in left_norm
-            and second in right_norm)
-            or (second in left_norm
-            and first in right_norm)
+            (first in left_norm and second in right_norm) or (second in left_norm and first in right_norm)
         ):
             return True
 

@@ -12,7 +12,6 @@ import argparse
 import json
 import os
 import shutil
-import sqlite3
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -25,6 +24,7 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.rag.vesum_reingest import (
     DEFAULT_LOCK_PATH,
     PRODUCTION_DB_PATH,
@@ -63,15 +63,10 @@ def verify_shadow_database(
     if not isinstance(expected, dict):
         raise ActivationError("Source lock has no expected semantic summary")
 
-    conn = sqlite3.connect(f"file:{shadow_path}?mode=ro", uri=True)
+    conn = _open_readonly(shadow_path)
     try:
         # 1. Schema check
-        tables = {
-            row[0]
-            for row in conn.execute(
-                "SELECT name FROM sqlite_master WHERE type IN ('table', 'view')"
-            )
-        }
+        tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")}
         required_elements = {"forms_all", "form_markers", "forms", "vesum_build_metadata"}
         missing = required_elements - tables
         if missing:
@@ -119,9 +114,7 @@ def verify_shadow_database(
         }
         expected_markers = expected.get("marker_counts", {})
         if marker_counts != expected_markers:
-            raise ActivationError(
-                f"Marker counts mismatch: expected {expected_markers}, got {marker_counts}"
-            )
+            raise ActivationError(f"Marker counts mismatch: expected {expected_markers}, got {marker_counts}")
 
     finally:
         conn.close()
@@ -223,7 +216,7 @@ def rollback_database(
         raise ActivationError(f"Backup file not found or empty: {backup_path}")
 
     # Validate backup can be read
-    conn = sqlite3.connect(f"file:{backup_path}?mode=ro", uri=True)
+    conn = _open_readonly(backup_path)
     try:
         conn.execute("SELECT 1 FROM forms LIMIT 1").fetchall()
     except Exception as exc:

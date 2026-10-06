@@ -24,6 +24,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.generate_mdx.reading_links import normalize_work_title
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.readings.primary_text_demand import DEFAULT_PLANS_DIR, build_manifest
 from scripts.readings.rights_classifier import (
     classify_rights,
@@ -135,9 +136,8 @@ class WorkIndex:
 def load_work_index(db_path: Path = DEFAULT_DB) -> WorkIndex:
     """Load literary_texts into a deterministic in-memory work index."""
 
-    uri = f"{db_path.resolve().as_uri()}?mode=ro"
     try:
-        with sqlite3.connect(uri, uri=True) as conn:
+        with _open_readonly(db_path.resolve()) as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute(
                 """
@@ -180,9 +180,7 @@ def load_work_index(db_path: Path = DEFAULT_DB) -> WorkIndex:
         buckets.setdefault(bucket_key, []).append(row)
 
     groups = tuple(sorted((_build_group(bucket) for bucket in buckets.values()), key=_group_key))
-    by_work_id = {
-        group.work_id: group for group in groups if group.work_id is not None
-    }
+    by_work_id = {group.work_id: group for group in groups if group.work_id is not None}
     by_key_lists: dict[WorkKey, list[WorkGroup]] = {}
     for group in groups:
         _append_keyed_group(by_key_lists, (group.normalized_work, group.normalized_author), group)
@@ -193,10 +191,7 @@ def load_work_index(db_path: Path = DEFAULT_DB) -> WorkIndex:
                 group,
             )
 
-    by_key = {
-        key: tuple(sorted(value, key=_group_rank_key))
-        for key, value in by_key_lists.items()
-    }
+    by_key = {key: tuple(sorted(value, key=_group_rank_key)) for key, value in by_key_lists.items()}
     return WorkIndex(by_key=by_key, by_work_id=by_work_id, groups=groups)
 
 
@@ -270,25 +265,16 @@ def build_clean_text_manifest(
             {
                 "work": work,
                 "author": author,
-                "normalized_key": entry.get("normalized_key")
-                or _normalized_key(work, author),
+                "normalized_key": entry.get("normalized_key") or _normalized_key(work, author),
                 "resolution": resolution,
             }
         )
 
     summary = {
         "total_works": len(entries),
-        "in_corpus_count": sum(
-            1 for entry in entries if entry["resolution"]["in_corpus"]
-        ),
-        "hostable_full_count": sum(
-            1 for entry in entries if entry["resolution"]["hostable_full"]
-        ),
-        "needs_link_count": sum(
-            1
-            for entry in entries
-            if entry["resolution"]["free_full_text_link"] is not None
-        ),
+        "in_corpus_count": sum(1 for entry in entries if entry["resolution"]["in_corpus"]),
+        "hostable_full_count": sum(1 for entry in entries if entry["resolution"]["hostable_full"]),
+        "needs_link_count": sum(1 for entry in entries if entry["resolution"]["free_full_text_link"] is not None),
     }
     return {"summary": summary, "entries": entries}
 

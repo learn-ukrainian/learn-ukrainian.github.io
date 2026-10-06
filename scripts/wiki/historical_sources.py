@@ -5,10 +5,11 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-import sqlite3
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
 
 SCHEMA_VERSION = "historical-source-record.v1"
 ALLOWED_DISPOSITIONS = {
@@ -122,7 +123,7 @@ def canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
-def ensure_historical_source_schema(conn: sqlite3.Connection) -> None:
+def ensure_historical_source_schema(conn: SQLiteConnection) -> None:
     conn.executescript(HISTORICAL_SOURCE_SCHEMA)
 
 
@@ -137,9 +138,7 @@ def _require_optional_year(row: dict[str, Any], field: str, *, source: str) -> i
 
 def build_row(row: dict[str, Any], *, source: str) -> tuple[Any, ...]:
     if row.get("schema_version") != SCHEMA_VERSION:
-        raise HistoricalSourceError(
-            f"{source}: schema_version must be {SCHEMA_VERSION!r}"
-        )
+        raise HistoricalSourceError(f"{source}: schema_version must be {SCHEMA_VERSION!r}")
     collection_id = row.get("collection_id")
     source_record_id = row.get("source_record_id")
     if not isinstance(collection_id, str) or not collection_id:
@@ -216,21 +215,17 @@ def load_rows(path: Path) -> list[tuple[Any, ...]]:
     return rows
 
 
-def insert_rows(conn: sqlite3.Connection, rows: Iterable[tuple[Any, ...]]) -> int:
+def insert_rows(conn: SQLiteConnection, rows: Iterable[tuple[Any, ...]]) -> int:
     materialized = list(rows)
     conn.executemany(INSERT_SQL, materialized)
     return len(materialized)
 
 
-def validate_historical_fts(conn: sqlite3.Connection) -> None:
+def validate_historical_fts(conn: SQLiteConnection) -> None:
     source_count = conn.execute("SELECT COUNT(*) FROM historical_source_records").fetchone()[0]
     fts_count = conn.execute("SELECT COUNT(*) FROM historical_source_records_fts").fetchone()[0]
     if source_count != fts_count:
         raise HistoricalSourceError(
-            "historical_source_records/FTS row parity failed "
-            f"({source_count} source, {fts_count} indexed)"
+            f"historical_source_records/FTS row parity failed ({source_count} source, {fts_count} indexed)"
         )
-    conn.execute(
-        "INSERT INTO historical_source_records_fts(historical_source_records_fts) "
-        "VALUES ('integrity-check')"
-    )
+    conn.execute("INSERT INTO historical_source_records_fts(historical_source_records_fts) VALUES ('integrity-check')")
