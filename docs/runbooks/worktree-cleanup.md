@@ -180,6 +180,25 @@ preserved or discarded by the responsible driver. Scheduled branch cleanup
 retains a rescue ref with unique commits; a ref whose tip is proven contained
 in another origin ref may be removed under the existing containment rules.
 
+## Branch sweep evidence (#9909)
+
+`scripts.hygiene.branch_sweep` stays a dry run unless `--apply` is passed. A
+merged pull-request head that matches the branch tip, and a tip that is already
+an ancestor of `origin/main`, are still the only ancestry proofs. Any other
+agent or scratch branch is deleted only when one more proof holds: every commit
+that is not on `origin/main` has the same `git patch-id --stable` as a commit
+on `origin/main` since the merge base, or the issue named by the branch (or, when
+the name does not name one, by its commit messages) is closed and the merged
+pull request that closed it changed every file the branch changes. That merge
+commit has to be on `origin/main`. `rescue/` branches can use only the patch-id
+proof. An open pull request, a registered worktree, or a task record that has
+not finished (including `spawning` and `running`) keeps the branch. The issue
+timeline is one REST read; an unreadable read keeps the branch. `--apply`
+appends `batch_state/branch-archive/evidence.jsonl` on the control-plane
+checkout before it deletes either ref. Each line records the branch, tip SHA,
+evidence kind, evidence detail, and UTC time. While GitHub still has the
+object, `git fetch origin <tip-sha>` recovers it.
+
 The scheduled job uses
 `git worktree remove --force` only as the final deletion step after all P0
 guards and their final TOCTOU checks have passed; this removes disposable
