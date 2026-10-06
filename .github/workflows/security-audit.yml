@@ -18,6 +18,8 @@ on:
   schedule:
     # Weekly Monday 09:00 UTC — surfaces newly-disclosed advisories between landings.
     - cron: '0 9 * * 1'
+    # Daily 04:23 UTC — keeps the dependency-advisory tracking issue current (#9871).
+    - cron: '23 4 * * *'
   workflow_dispatch: {}
   pull_request:
     paths:
@@ -77,3 +79,75 @@ jobs:
           echo "::group::npm audit (all, advisory summary)"
           npm audit --prefix site || true
           echo "::endgroup::"
+
+  advisory-issue:
+    name: Dependency advisory tracking issue
+    # Scheduled/dispatch runs on the default branch maintain a single issue
+    # labelled dependency-advisory with unsuppressed findings, closing it when
+    # the audit comes back clean (#9871). PR runs never touch issues.
+    if: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Collect unsuppressed findings
+        run: |
+          python -m pip install --upgrade pip pip-audit pyyaml
+          python -m scripts.ci.dependency_advisory_issue collect --out ci-artifacts/dependency-findings.json
+
+      - name: Plan tracking-issue action
+        id: plan
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE_NUMBER="$(gh issue list --label dependency-advisory --state open --json number --limit 1 --jq '.[0].number // ""')"
+          python -m scripts.ci.dependency_advisory_issue plan \
+            --findings ci-artifacts/dependency-findings.json \
+            --issue-number "$ISSUE_NUMBER" \
+            --body-out ci-artifacts/advisory-issue-body.md
+
+      - name: Apply tracking-issue action
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTION: ${{ steps.plan.outputs.action }}
+          ISSUE_NUMBER: ${{ steps.plan.outputs.issue_number }}
+        run: |
+          set -euo pipefail
+          echo "advisory-issue action: $ACTION (issue: ${ISSUE_NUMBER:-none})"
+          case "$ACTION" in
+            create)
+              gh label create dependency-advisory --force \
+                --description "Unsuppressed dependency advisories from the scheduled audit" --color BFD4F2
+              gh issue create --label dependency-advisory \
+                --title "Dependency advisories: unsuppressed findings (scheduled audit)" \
+                --body-file ci-artifacts/advisory-issue-body.md
+              ;;
+            update)
+              gh issue edit "$ISSUE_NUMBER" --body-file ci-artifacts/advisory-issue-body.md
+              ;;
+            close)
+              gh issue close "$ISSUE_NUMBER" \
+                --comment "Scheduled dependency audit is clean: no unsuppressed findings. Closing."
+              ;;
+            none)
+              echo "Audit clean and no open tracking issue; nothing to do."
+              ;;
+            *)
+              echo "::error::Unknown advisory-issue action: $ACTION"
+              exit 1
+              ;;
+          esac
