@@ -12,6 +12,79 @@ from scripts.projects.open_model_data.review_build.transforms import transform
 from tests.projects.open_model_data.review_build.conftest import selector
 
 
+@pytest.mark.parametrize(
+    "body,expected,reasons",
+    [
+        ("FIRST, SECOND", ["FIRST", "SECOND"], ["ok", "ok"]),
+        ("FIRST-\nPART, SECOND", ["FIRST-\nPART", "SECOND"], ["ok", "ok"]),
+        ("FIRST (inner, comma), SECOND", ["FIRST (inner, comma)", "SECOND"], ["ok", "ok"]),
+        ('"a phrase, with comma"', ['"a phrase, with comma"'], ["ok"]),
+        ("«a phrase: with, comma»", ["«a phrase: with, comma»"], ["ok"]),
+        (
+            "1) a clause, which continues; 2) another clause",
+            ["a clause, which continues", "another clause"],
+            ["ok", "ok"],
+        ),
+        ("1. first, with comma\n2. second, with comma", ["first, with comma", "second, with comma"], ["ok", "ok"]),
+        ("a) first, with comma\nb) second, with comma", ["first, with comma", "second, with comma"], ["ok", "ok"]),
+        (
+            "1) First sentence. Another sentence, still the example; 2) SECOND",
+            ["First sentence. Another sentence, still the example", "SECOND"],
+            ["ok", "ok"],
+        ),
+        ("a clause, which continues", ["a clause, which continues"], ["example_boundary_ambiguous"]),
+        ("FIRST PHRASE, SECOND PHRASE", ["FIRST PHRASE, SECOND PHRASE"], ["example_boundary_ambiguous"]),
+        ("FIRST, e.g. SECOND", ["FIRST, e.g. SECOND"], ["example_boundary_ambiguous"]),
+        ("J. ALPHA, BETA", ["J. ALPHA, BETA"], ["example_boundary_ambiguous"]),
+        ('"first, second", "third, fourth"', ['"first, second", "third, fourth"'], ["example_boundary_ambiguous"]),
+        ("FIRST (unclosed, SECOND", ["FIRST (unclosed, SECOND"], ["example_boundary_ambiguous"]),
+        ("FIRST), SECOND", ["FIRST), SECOND"], ["example_boundary_ambiguous"]),
+        ("FIRST, SECOND with prose tail", ["FIRST, SECOND with prose tail"], ["example_boundary_ambiguous"]),
+        ("FIRST,, SECOND", ["FIRST,, SECOND"], ["example_boundary_ambiguous"]),
+        (
+            "FIRST, SECOND; THIRD PHRASE, FOURTH",
+            ["FIRST", "SECOND", "THIRD PHRASE, FOURTH"],
+            ["ok", "ok", "example_boundary_ambiguous"],
+        ),
+        ("FIRST'PART, SECOND", ["FIRST'PART", "SECOND"], ["ok", "ok"]),
+        ("FIRST’PART, SECOND", ["FIRST’PART", "SECOND"], ["ok", "ok"]),
+    ],
+)
+def test_printed_example_boundaries_are_verbatim(body, expected, reasons):
+    text = "SYNTHETIC examples: " + body + "."
+    decisions = bindings.example_boundaries(text)
+    assert [text[slice(*span)] for span, _ in decisions] == expected
+    assert [reason for _, reason in decisions] == reasons
+    assert bindings.example_items(text) == [span for span, _ in decisions]
+
+
+def test_nested_colon_cannot_introduce_a_second_list():
+    text = 'SYNTHETIC examples: "first: alpha, beta"; SECOND.'
+    assert len(bindings.example_regions(text)) == 1
+    assert [text[slice(*span)] for span, _ in bindings.example_boundaries(text)] == ['"first: alpha, beta"', "SECOND"]
+
+
+def test_empty_groups_and_rule_boundaries():
+    text = "SYNTHETIC examples: FIRST, SECOND; ; THIRD. Rule continues: FOURTH, FIFTH."
+    assert [text[slice(*span)] for span, _ in bindings.example_boundaries(text)] == [
+        "FIRST",
+        "SECOND",
+        "THIRD",
+        "FOURTH",
+        "FIFTH",
+    ]
+
+
+@pytest.mark.parametrize("body", ["FIRST, Prof. SECOND, THIRD", "FIRST, abbreviation. SECOND", "FIRST: SECOND, THIRD"])
+def test_dotted_or_colon_continuation_cannot_license_a_truncated_example(body):
+    text = "SYNTHETIC examples: " + body + "."
+    decisions = bindings.example_boundaries(text)
+    assert decisions[0][1] == "example_boundary_ambiguous"
+    assert not any(
+        reason == "ok" and text[slice(*span)] in {"Prof", "abbreviation", "FIRST"} for span, reason in decisions
+    )
+
+
 def test_sql_span_query_is_independent_of_candidate_stream(bundle):
     text = "SYNTHETIC examples: FIRST, SECOND. Rule ends here."
     with sqlite3.connect(bundle["db"]) as writer:

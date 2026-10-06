@@ -106,7 +106,7 @@ def update(source, **fields):
 
 def test_registry_and_independent_span_accounting(source):
     assert load_components(["C5"])["C5"] is COMPONENT
-    assert COMPONENT.spec["operation_specs"][OPERATION]["frozen_count"] == FROZEN_COUNT == 11926
+    assert COMPONENT.spec["operation_specs"][OPERATION]["frozen_count"] == FROZEN_COUNT == 6711
     with reader_for(source) as reader:
         gate, candidates, _ = gate_and_candidates(source, reader)
         assert sorted(c.unit_id for c in candidates) == reader.units(UNIT_QUERY)
@@ -127,6 +127,39 @@ def test_registry_and_independent_span_accounting(source):
             assert candidate.response[0].text == row["text"]
             assert candidate.response[1].text == row["locator"]
             assert gate.unit_id(candidate) == example_unit(primary_citation(row), candidate.slots[0].span)
+
+
+def test_ambiguous_list_is_counted_and_withheld_and_cannot_be_promoted(source):
+    update(source, text="SYNTHETIC examples: first clause, which continues; THIRD, FOURTH.")
+    with reader_for(source) as reader:
+        gate, candidates, _ = gate_and_candidates(source, reader)
+        first = candidates[0]
+        assert first.reason == "example_boundary_ambiguous" and first.outcome == "withheld"
+        assert first.slots[0].text == "first clause, which continues"
+        records, report = gate.run(candidates)
+        assert len(records) == 24
+        assert report["accounting"]["C5"]["counted"] == 25
+        assert report["accounting"]["C5"]["reasons"]["example_boundary_ambiguous"] == 1
+        promoted = replace(first, outcome="accepted", reason="ok", evidence=())
+        with pytest.raises(BuildError, match="binding_example"):
+            gate.run([promoted, *candidates[1:]])
+
+
+def test_numbered_example_internal_comma_is_bound_as_one_verbatim_item(source):
+    update(source, text="SYNTHETIC examples: 1) first clause, which continues; 2) SECOND.")
+    with reader_for(source) as reader:
+        gate, candidates, _ = gate_and_candidates(source, reader)
+        assert candidates[0].slots[0].text == "first clause, which continues"
+        assert candidates[1].slots[0].text == "SECOND"
+        assert gate.run(candidates)[1]["accounting"]["C5"]["accepted"] == 24
+
+
+def test_hyphenation_reason_precedes_boundary_ambiguity(source):
+    update(source, text="SYNTHETIC examples: first clause, which continues. UNKNOWN-\nmore")
+    with reader_for(source) as reader:
+        gate, candidates, _ = gate_and_candidates(source, reader)
+        assert candidates[0].reason == "paragraph_hyphenation_unresolved"
+        assert gate.run(candidates)[1]["accounting"]["C5"]["withheld"] == 1
 
 
 @pytest.mark.parametrize(

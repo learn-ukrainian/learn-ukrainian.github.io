@@ -9,7 +9,7 @@ from collections.abc import Mapping
 from typing import ClassVar
 
 from ..attribution import Attribution
-from ..bindings import example_items
+from ..bindings import example_boundaries
 from ..contract import Candidate, Citation, Value, canonical, digest
 from ..errors import BuildError, require
 from ..gate import evidence_id
@@ -21,7 +21,7 @@ REGISTER_ID = "pravopys_2019"
 STORE = "sources.db"
 TABLE = "pravopys_paragraphs"
 OPERATION = "printed_spelling_rule"
-FROZEN_COUNT = 11926
+FROZEN_COUNT = 6711
 UNIT_QUERY = {
     "kind": "sql",
     "store": STORE,
@@ -182,11 +182,15 @@ class PravopysComponent:
                 "attribution_unresolved",
                 "locator_unavailable",
                 "catalog_inapplicable",
+                "example_boundary_ambiguous",
             ],
             "excluded": [],
         },
         "transforms": {"dehyphenate@2": DEHYPHENATION},
-        "unit_grain": "Printed colon-list example span in its own paragraph; measured 11926 in 168 paragraphs.",
+        "unit_grain": (
+            "Printed colon-list example span, or one unresolved list group withheld for boundary ambiguity; "
+            "measured 6711 in 168 paragraphs."
+        ),
         "reference_multiplicity": "One complete source paragraph and its held locator per printed example span.",
     }
     adapters: ClassVar[dict] = {REGISTER_ID: PravopysAttribution()}
@@ -210,7 +214,7 @@ class PravopysComponent:
                 if exc.code != "hyphen_metadata_unavailable":
                     raise
                 reason = exc.code
-            for span in example_items(raw):
+            for span, boundary_reason in example_boundaries(raw):
                 example = raw[span[0] : span[1]]
                 unit_reason = reason
                 # Inspect what this unit actually carries. The catalog currently
@@ -221,6 +225,8 @@ class PravopysComponent:
                     or unresolved_overlaps(Result(raw, unresolved=resolved.unresolved), span)
                 ):
                     unit_reason = "paragraph_hyphenation_unresolved"
+                if unit_reason == "ok" and boundary_reason != "ok":
+                    unit_reason = boundary_reason
                 response_transform = "dehyphenate@2"
                 yield Candidate(
                     "C5",
