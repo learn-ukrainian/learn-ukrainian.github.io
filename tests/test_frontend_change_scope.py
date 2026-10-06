@@ -463,12 +463,13 @@ def test_component_map_covers_full_index_frontend_denominator() -> None:
     from scripts.ci import components
 
     manifest = components.load_manifest()
+    graph = components.import_graph(manifest)
     patterns = scope.load_denominator()["paths"]
     paths = components.tracked_paths()
     included = [path for path in paths if scope.path_in_denominator(path, patterns)]
     assert included
     fronts = set(manifest["selector_contracts"]["frontend_components"])
-    assert all(fronts <= set(components.affected([path], manifest)["components"]) for path in included)
+    assert all(fronts <= set(components.affected([path], manifest, graph)["components"]) for path in included)
 
 
 def test_component_ownership_does_not_expand_frontend_cheap_exit() -> None:

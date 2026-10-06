@@ -3,7 +3,7 @@
   "plan": "plans/component-separation-9721.md",
   "plan_version": 2,
   "baseline": "dff595c12a714713f7fb8f9f18ff5245283adf7e",
-  "description": "Conservative path ownership plus runnable contract suites. These interfaces do not change CI selection or certify component independence. Unclassified tests remain shared-core. Test IDs are collected at execution time; artifact-dependent tests retain the existing data tier.",
+  "description": "Index-backed path ownership and complete node test sets, including computed Python importers and shared integration tests. Computed unresolved edges force all-node selection; no CI selection or independence certification.",
   "components": {
     "open-model-data": {
       "lane": "open-model-data",
@@ -1297,7 +1297,7 @@
       "id": "shared-storage-open-model-data",
       "producer": "shared-core",
       "consumer": "open-model-data",
-      "kind": "import",
+      "kind": "artifact",
       "anchors": [
         "scripts/storage/artifacts.py:251",
         "scripts/storage/paths.py:105"
@@ -1308,7 +1308,7 @@
       "id": "shared-storage-atlas-data",
       "producer": "shared-core",
       "consumer": "atlas-data",
-      "kind": "import",
+      "kind": "artifact",
       "anchors": [
         "scripts/storage/artifacts.py:251",
         "scripts/storage/paths.py:105"
@@ -1319,7 +1319,7 @@
       "id": "shared-storage-atlas-frontend",
       "producer": "shared-core",
       "consumer": "atlas-frontend",
-      "kind": "import",
+      "kind": "artifact",
       "anchors": [
         "scripts/storage/artifacts.py:251",
         "scripts/storage/paths.py:105"
@@ -1330,7 +1330,7 @@
       "id": "shared-storage-practice-frontend",
       "producer": "shared-core",
       "consumer": "practice-frontend",
-      "kind": "import",
+      "kind": "artifact",
       "anchors": [
         "scripts/storage/artifacts.py:251",
         "scripts/storage/paths.py:105"
@@ -1341,7 +1341,7 @@
       "id": "shared-storage-curriculum-generation",
       "producer": "shared-core",
       "consumer": "curriculum-generation",
-      "kind": "import",
+      "kind": "artifact",
       "anchors": [
         "scripts/storage/artifacts.py:251",
         "scripts/storage/paths.py:105"
@@ -1352,7 +1352,7 @@
       "id": "shared-storage-curriculum-display",
       "producer": "shared-core",
       "consumer": "curriculum-display",
-      "kind": "import",
+      "kind": "artifact",
       "anchors": [
         "scripts/storage/artifacts.py:251",
         "scripts/storage/paths.py:105"
@@ -1363,7 +1363,7 @@
       "id": "shared-storage-harness",
       "producer": "shared-core",
       "consumer": "harness",
-      "kind": "import",
+      "kind": "artifact",
       "anchors": [
         "scripts/storage/artifacts.py:251",
         "scripts/storage/paths.py:105"
@@ -1498,7 +1498,6 @@
       "resolved": true
     }
   ],
-  "unresolved_edges": [],
   "residual_commands": [
     {
       "id": "legacy-atlas-make",
@@ -1589,5 +1588,17 @@
     "families": "Every required input family, with name, existing schema identifier, version and members",
     "member": "Each member has unique logical name, repository-relative path and sha256; existing schemas are not replaced",
     "verification_scope": "Digest and freshness wrapper. Product semantic readiness remains owned by slices 3-5 and held-out certification by slice 8."
+  },
+  "shared_integration_tests": [
+    "tests/ci/test_components.py",
+    "tests/test_frontend_change_scope.py",
+    "tests/test_auto_deploy_component_parity.py"
+  ],
+  "vitest": {
+    "assignment": "Configured Vitest file directories intersected with exact/longest-prefix ownership; broad site/ ownership assigns shared files to all three frontend nodes.",
+    "built_output_files": [
+      "site/tests/unit/build-renders.test.ts",
+      "site/tests/unit/etymology-handler-built-output.test.ts"
+    ]
   }
 }

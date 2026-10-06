@@ -7,6 +7,7 @@ Contract checks and prepared-artifact certification are reported separately.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import os
@@ -16,6 +17,7 @@ import sys
 import tempfile
 import xml.etree.ElementTree as ET
 from collections.abc import Sequence
+from functools import lru_cache
 from pathlib import Path, PurePosixPath
 
 from scripts.ci import frontend_change_scope
@@ -84,7 +86,7 @@ def assign_path(path: str, manifest: dict) -> tuple[list[str], str]:
         repo_path(path)
     except ValueError:
         return list(NODE_IDS), "unmapped"
-    unresolved = manifest["unresolved_edges"]
+    unresolved = manifest.get("unresolved_edges", [])
     if any(path == edge["path"] or path.startswith(edge["path"].rstrip("/") + "/") for edge in unresolved):
         return list(NODE_IDS), "dynamic-unresolved"
     if path in manifest["exact_paths"]:
@@ -99,37 +101,233 @@ def assign_path(path: str, manifest: dict) -> tuple[list[str], str]:
     return list(candidates.pop()), "prefix"
 
 
-def affected(paths: Sequence[str], manifest: dict) -> dict:
+def python_sources(root: Path = ROOT) -> dict[str, bytes]:
+    """Read indexed blobs in one batch, overlaying only tracked worktree edits."""
+    index = subprocess.run(["git", "ls-files", "-s", "-z"], cwd=root, check=True,
+                           capture_output=True, timeout=30).stdout
+    entries = {}
+    for entry in index.decode("utf-8", errors="surrogateescape").split("\0"):
+        if entry:
+            meta, path = entry.split("\t", 1)
+            _, sha, stage = meta.split()
+            if stage != "0":
+                raise ValueError("unmerged index cannot establish import closure")
+            if path.endswith(".py"):
+                entries[path] = sha
+    changes = subprocess.run(["git", "diff", "--name-only", "-z"], cwd=root, check=True,
+                             capture_output=True, timeout=30).stdout.decode().split("\0")
+    overlays = tuple((path, (root / path).read_bytes() if (root / path).is_file() else b"")
+                     for path in changes if path in entries)
+    return indexed_python_sources(str(root), tuple(entries.items()), overlays)
+
+
+@lru_cache(maxsize=2)
+def indexed_python_sources(root: str, entries: tuple, overlays: tuple) -> dict[str, bytes]:
+    """Cache by indexed blob identities and actual edited bytes, never by time."""
+    result = subprocess.run(["git", "cat-file", "--batch"], cwd=root, check=True,
+                            input="".join(sha + "\n" for _, sha in entries).encode(),
+                            capture_output=True, timeout=60)
+    sources = {}
+    offset = 0
+    for path, _ in entries:
+        end = result.stdout.index(b"\n", offset)
+        _, kind, size = result.stdout[offset:end].split()
+        if kind != b"blob":
+            raise ValueError("expected indexed source blob")
+        offset = end + 1
+        sources[path] = result.stdout[offset:offset + int(size)]
+        offset += int(size) + 1
+    sources.update(overlays)
+    return sources
+
+
+def literal_target(node: ast.AST, bindings: dict, file: str, seen: frozenset = frozenset()):
+    """Evaluate only literal strings and pathlib composition; never execute code."""
+    if isinstance(node, ast.Constant) and isinstance(node.value, (str, int)):
+        return node.value
+    if isinstance(node, ast.Name):
+        if node.id == "__file__":
+            return PurePosixPath(file)
+        if node.id not in seen and len(bindings.get(node.id, [])) == 1:
+            return literal_target(bindings[node.id][0], bindings, file, seen | {node.id})
+    if isinstance(node, ast.BinOp):
+        left = literal_target(node.left, bindings, file, seen)
+        right = literal_target(node.right, bindings, file, seen)
+        if isinstance(node.op, ast.Div) and isinstance(left, PurePosixPath) and isinstance(right, str):
+            return left / right
+        if isinstance(node.op, ast.Add) and isinstance(left, str) and isinstance(right, str):
+            return left + right
+    if isinstance(node, ast.Attribute) and node.attr == "parent":
+        base = literal_target(node.value, bindings, file, seen)
+        if isinstance(base, PurePosixPath):
+            return base.parent
+    if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Attribute) and node.value.attr == "parents":
+        base = literal_target(node.value.value, bindings, file, seen)
+        index = literal_target(node.slice, bindings, file, seen)
+        if isinstance(base, PurePosixPath) and isinstance(index, int) and 0 <= index < len(base.parents):
+            return base.parents[index]
+    if isinstance(node, ast.Call):
+        name = ast.unparse(node.func).split(".")[-1]
+        if name in {"Path", "PurePosixPath", "_P", "str"} and len(node.args) == 1:
+            value = literal_target(node.args[0], bindings, file, seen)
+            if isinstance(value, (str, PurePosixPath)):
+                return str(value) if name == "str" else PurePosixPath(value)
+        if name in {"resolve", "absolute"} and isinstance(node.func, ast.Attribute) and not node.args:
+            return literal_target(node.func.value, bindings, file, seen)
+    return None
+
+
+def scan_imports(sources: dict[str, bytes]) -> dict:
+    """Compute local import/load edges, retaining each unprovable target."""
+    modules = {path[:-3].replace("/", ".").removesuffix(".__init__"): path for path in sources}
+    packages = {".".join(name.split(".")[:index]) for name in modules
+                for index in range(1, len(name.split(".")))}
+    edges = set()
+    unresolved = set()
+
+    def resolve(module):
+        # Legacy sys.path entries expose scripts packages without scripts.*.
+        return modules.get(module) or modules.get("scripts." + module)
+
+    for path, source in sources.items():
+        try:
+            tree = ast.parse(source, filename=path)
+        except (SyntaxError, ValueError):
+            unresolved.add((path, 0, "parse-error"))
+            continue
+        bindings = {}
+        has_specs = b"spec_from_file_location" in source
+        loaders = {"__import__": ("module", 0)}
+        wrappers = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name):
+                        bindings.setdefault(target.id, []).append(node.value)
+            if isinstance(node, ast.ImportFrom) and node.module in {"importlib", "importlib.util", "runpy"}:
+                for alias in node.names:
+                    if alias.name in {"import_module", "spec_from_file_location", "run_path", "run_module"}:
+                        loaders[alias.asname or alias.name] = (
+                            "file" if alias.name in {"spec_from_file_location", "run_path"} else "module",
+                            1 if alias.name == "spec_from_file_location" else 0,
+                        )
+            if (has_specs
+                and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and any(
+                isinstance(child, ast.Call) and isinstance(child.func, ast.Attribute)
+                and child.func.attr == "spec_from_file_location"
+                for child in ast.walk(node)
+            )):
+                wrappers.add(node.name)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                names = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom):
+                package = path[:-3].replace("/", ".").split(".")
+                package.pop()
+                base = ".".join(package[:len(package) - node.level + 1]) if node.level else ""
+                base = ".".join(filter(None, (base, node.module)))
+                names = [base, *(base + "." + alias.name for alias in node.names)]
+            else:
+                names = []
+            for name in names:
+                target = resolve(name)
+                if target:
+                    edges.add((path, target))
+                elif (name.startswith("scripts.") and name not in packages
+                      and (isinstance(node, ast.Import) or name == getattr(node, "module", None))):
+                    # Imported attributes are not modules; only fail missing base modules.
+                    unresolved.add((path, node.lineno, "missing-local-import"))
+            if not isinstance(node, ast.Call):
+                continue
+            name = ast.unparse(node.func)
+            leaf = name.split(".")[-1]
+            kind, index = loaders.get(name, (None, 0))
+            if leaf in {"import_module", "spec_from_file_location", "run_path", "run_module"}:
+                kind = "file" if leaf in {"spec_from_file_location", "run_path"} else "module"
+                index = 1 if leaf == "spec_from_file_location" else 0
+            if name in wrappers:
+                kind = "file"
+                index = 1
+            if not kind:
+                continue
+            expression = node.args[index] if len(node.args) > index else next(
+                (kw.value for kw in node.keywords if kw.arg in {"name", "location"}), None)
+            value = literal_target(expression, bindings, path) if expression is not None else None
+            target = resolve(str(value)) if kind == "module" and value is not None else str(value)
+            if target in sources:
+                edges.add((path, target))
+            elif value is None or kind == "file" or str(value).startswith("scripts."):
+                unresolved.add((path, node.lineno, "nonliteral-or-missing-load"))
+    return {"file_edges": sorted(edges), "unresolved_edges": [
+        {"path": path, "line": line, "reason": reason} for path, line, reason in sorted(unresolved)
+    ], "python_files": len(sources)}
+
+
+def import_graph(manifest: dict, root: Path = ROOT) -> dict:
+    """Lift discovered file dependencies to node edges; assert mandatory imports."""
+    sources = python_sources(root)
+    graph = cached_import_scan(tuple(sources.items()))
+    pairs = {(producer, consumer) for importer, target in graph["file_edges"]
+             for producer in assign_path(target, manifest)[0]
+             for consumer in assign_path(importer, manifest)[0]}
+    missing = [edge["id"] for edge in manifest["edges"]
+               if edge["kind"] in {"import", "dynamic"}
+               and (edge["producer"], edge["consumer"]) not in pairs]
+    # Artifact/schema boundaries are explicit contracts, not Python imports.
+    pairs.update((e["producer"], e["consumer"]) for e in manifest["edges"]
+                 if e["kind"] not in {"import", "dynamic"})
+    return graph | {"node_edges": sorted(pairs), "missing_mandatory_edges": missing}
+
+
+@lru_cache(maxsize=32)
+def cached_import_scan(sources: tuple) -> dict:
+    """Reuse an AST scan only when every indexed/current source byte is identical."""
+    return scan_imports(dict(sources))
+
+
+def affected(paths: Sequence[str], manifest: dict, graph: dict | None = None) -> dict:
     """Select consumers transitively; shared or incomplete evidence selects all."""
     selected: set[str] = set()
     reasons = set()
+    graph = graph if graph is not None else import_graph(manifest)
     for path in paths:
         owners, reason = assign_path(path, manifest)
         selected.update(owners)
         if reason not in {"exact", "prefix"}:
             reasons.add(reason)
-    if any(not edge.get("resolved", False) for edge in manifest["edges"]):
+    if paths and (graph["unresolved_edges"] or graph["missing_mandatory_edges"]
+                  or any(not edge.get("resolved", False) for edge in manifest["edges"])):
         reasons.add("dynamic-unresolved")
         selected.update(NODE_IDS)
     while True:
         before = selected.copy()
         if "shared-core" in selected:
             selected.update(NODE_IDS)
-        selected.update(edge["consumer"] for edge in manifest["edges"] if edge["producer"] in selected)
+        selected.update(consumer for producer, consumer in graph["node_edges"] if producer in selected)
         if before == selected:
             break
-    return {"components": sorted(selected), "fallback_reasons": sorted(reasons), "changed_paths": len(paths)}
+    return {"components": sorted(selected), "fallback_reasons": sorted(reasons), "changed_paths": len(paths),
+            "import_edges": len(graph["file_edges"]), "unresolved_edges": len(graph["unresolved_edges"])}
 
 
-def parity_gaps(paths: Sequence[str], manifest: dict, root: Path = ROOT) -> list[str]:
+def parity_gaps(paths: Sequence[str], manifest: dict, root: Path = ROOT, graph: dict | None = None) -> list[str]:
     """Cross-check existing selector semantics without deriving them from the map."""
     patterns = frontend_change_scope.load_denominator(root / manifest["selector_contracts"]["frontend_denominator"])["paths"]
     fronts = set(manifest["selector_contracts"]["frontend_components"])
     gaps = []
+    graph = graph if graph is not None else import_graph(manifest, root)
     for path in paths:
         requires_front = frontend_change_scope.path_in_denominator(path, patterns)
         deploy = auto_deploy_eligibility.decide_auto_deploy([path]).deploy
-        if (requires_front or deploy) and not fronts.issubset(affected([path], manifest)["components"]):
+        owners, _ = assign_path(path, manifest)
+        # Check the declared boundary independently of all-node fallback.
+        selected = set(owners)
+        while True:
+            before = selected.copy()
+            selected.update(e["consumer"] for e in manifest["edges"] if e["producer"] in selected)
+            if before == selected:
+                break
+        if (requires_front or deploy) and not fronts.issubset(selected):
             gaps.append(path)
     return gaps
 
@@ -137,6 +335,7 @@ def parity_gaps(paths: Sequence[str], manifest: dict, root: Path = ROOT) -> list
 def inventory(manifest: dict, root: Path = ROOT) -> dict:
     """Count explicit coverage, separately from conservative fallback selection."""
     paths = tracked_paths(root)
+    graph = import_graph(manifest, root)
     missing = {kind: [] for kind in ("unmapped", "ambiguous", "dynamic-unresolved")}
     counts = dict.fromkeys(NODE_IDS, 0)
     unmapped_tests = []
@@ -148,30 +347,75 @@ def inventory(manifest: dict, root: Path = ROOT) -> dict:
                 unmapped_tests.append(path)
         for owner in owners:
             counts[owner] += 1
-    gaps = parity_gaps(paths, manifest, root)
+    gaps = parity_gaps(paths, manifest, root, graph)
     return {
         "inventory_source": "git ls-files -z (index; includes sparse paths)",
         "tracked_paths": len(paths), "node_path_counts": counts,
         "unassigned": len(missing["unmapped"]), "ambiguous": len(missing["ambiguous"]),
         "dynamic_unresolved": len(missing["dynamic-unresolved"]) + sum(not e.get("resolved", False) for e in manifest["edges"]),
+        "unresolved_import_edges": len(graph["unresolved_edges"]),
+        "import_graph": {key: value for key, value in graph.items() if key != "file_edges"},
+        "import_edges": len(graph["file_edges"]),
         "unmapped_test_files": len(unmapped_tests), "selector_parity_gaps": len(gaps),
         "problems": missing, "parity_gaps": gaps,
     }
 
 
 def test_files(component: str, manifest: dict, root: Path = ROOT) -> list[str]:
-    """Expand declared file/prefix contract suites from the index, never glob cwd."""
+    """Resolve all mapped pytest files plus transitive source importers."""
     node = manifest["components"][component]
     files = set(node["test_files"])
     prefixes = tuple(node["test_prefixes"])
-    if prefixes:
-        files.update(path for path in tracked_paths(root) if path.startswith(prefixes)
-                     and PurePosixPath(path).name.startswith("test_") and path.endswith(".py"))
+    paths = tracked_paths(root)
+    tests = {path for path in paths if path.startswith("tests/")
+             and PurePosixPath(path).name.startswith("test_") and path.endswith(".py")}
+    files.update(path for path in tests if component in assign_path(path, manifest)[0]
+                 or (prefixes and path.startswith(prefixes)))
+    sources = {path for path in paths if not path.startswith("tests/")
+               and component in assign_path(path, manifest)[0]}
+    graph = import_graph(manifest, root)
+    # Reverse traversal from *files*, rather than node SCCs, avoids treating
+    # every test in a cyclic product pair as an importer of every source file.
+    reverse = {}
+    for importer, target in graph["file_edges"]:
+        reverse.setdefault(target, set()).add(importer)
+    pending = list(sources)
+    visited = set(sources)
+    while pending:
+        for importer in reverse.get(pending.pop(), ()):
+            if importer not in visited:
+                visited.add(importer)
+                pending.append(importer)
+    files.update(tests & visited)
+    files.update(manifest.get("shared_integration_tests", []))
     if not files:
         raise ValueError("node has no declared contract tests")
     if any(not (root / path).is_file() for path in files):
         raise ValueError("declared test file is absent; materialize its sparse tree")
     return sorted(files)
+
+
+def vitest_files(component: str, manifest: dict, root: Path = ROOT) -> list[str]:
+    """Assign Vitest's configured test directories by the same path ownership."""
+    return [path for path in tracked_paths(root)
+            if path.startswith(("site/tests/unit/", "site/src/pages/__tests__/"))
+            and re.search(r"\.(test|spec)\.tsx?$", path)
+            and component in assign_path(path, manifest)[0]]
+
+
+def node_test_commands(component: str, manifest: dict, files: list[str], front_files: list[str]) -> list[dict]:
+    """Use pytest and existing site scripts; retain the built-output test tier."""
+    commands = [{"argv": ["{python}", "-m", "pytest", "-q", *files,
+                           *manifest["components"][component]["test_args"]],
+                 "cwd": ".", "scope": "complete-node-pytest"}]
+    if front_files:
+        built = set(manifest["vitest"]["built_output_files"])
+        for script, subset in (("test:unit", sorted(set(front_files) - built)),
+                               ("test:built-output", sorted(set(front_files) & built))):
+            if subset:
+                commands.append({"argv": ["npm", "run", script, "--", *(p.removeprefix("site/") for p in subset)],
+                                 "cwd": "site", "scope": "complete-node-vitest"})
+    return commands
 
 
 def collect_tests(files: Sequence[str], args: Sequence[str], root: Path = ROOT) -> tuple[list[str], int]:
@@ -182,6 +426,22 @@ def collect_tests(files: Sequence[str], args: Sequence[str], root: Path = ROOT) 
     )
     ids = sorted(line.strip() for line in result.stdout.splitlines() if line.startswith("tests/") and "::" in line)
     return ids, result.returncode if result.returncode else (0 if ids else 5)
+
+
+def collect_vitest(files: Sequence[str], root: Path = ROOT) -> tuple[list[dict], int]:
+    """Collect Vitest IDs with its installed CLI, independently of pytest IDs."""
+    if not files:
+        return [], 0
+    result = subprocess.run(["npm", "exec", "--", "vitest", "list", "--json",
+                             *(path.removeprefix("site/") for path in files)],
+                            cwd=root / "site", capture_output=True, text=True, timeout=180,
+                            env=os.environ | {"npm_config_offline": "true"})
+    if result.returncode:
+        return [], result.returncode
+    rows = json.loads(result.stdout)
+    if not isinstance(rows, list) or not rows:
+        return [], 5
+    return rows, 0
 
 
 def digest(value: object) -> str:
@@ -275,9 +535,10 @@ def expand_command(command: dict, root: Path, output_dir: Path | None, members: 
 
 
 def run_commands(commands: list[dict], root: Path, output_dir: Path | None,
-                 members: dict[str, Path]) -> tuple[list[dict], int]:
+                 members: dict[str, Path], *, keep_going: bool = False) -> tuple[list[dict], int]:
     """Wait for every command in the foreground; skipped checks are not passes."""
     reports = []
+    overall_code = 0
     expanded = [(command, expand_command(command, root, output_dir, members)) for command in commands]
     for command, argv in expanded:
         with tempfile.TemporaryDirectory(prefix="component-check-") as scratch:
@@ -296,8 +557,10 @@ def run_commands(commands: list[dict], root: Path, output_dir: Path | None,
                             "exit_code": result.returncode, "skipped": skipped,
                             "result": "pass" if code == 0 else "artifact-dependent" if skipped else "fail"})
             if code:
-                return reports, code
-    return reports, 0
+                overall_code = overall_code or code
+                if not keep_going:
+                    return reports, code
+    return reports, overall_code
 
 
 def parser() -> argparse.ArgumentParser:
@@ -305,6 +568,7 @@ def parser() -> argparse.ArgumentParser:
     examples = (
         "Examples:\n  .venv/bin/python -m scripts.ci.components inventory --check\n"
         "  .venv/bin/python -m scripts.ci.components test --component atlas-data\n"
+        "  .venv/bin/python -m scripts.ci.components test --component atlas-frontend --list\n"
         "  .venv/bin/python -m scripts.ci.components build --component atlas-frontend "
         "--inputs inputs.json --output-dir site/dist\n"
         "Outputs: JSON on stdout; test processes; builds write declared outputs, curriculum producers "
@@ -340,6 +604,8 @@ def parser() -> argparse.ArgumentParser:
             sub.add_argument("--check", action="store_true", help="Fail on unassigned, ambiguous, unresolved or parity gaps; default: report only")
             sub.add_argument("--collect", action="store_true", help="Collect fresh contract-suite test IDs for --component (required); default: file census only")
             sub.add_argument("--identities", action="store_true", help="Include current input-binding identities for --component (required); default: omitted")
+        if operation == "test":
+            sub.add_argument("--list", action="store_true", help="List complete resolved pytest/Vitest file sets and counts without execution; default: run all")
         if operation == "affected":
             sub.add_argument("paths", nargs="*", help="Changed repository-relative paths, e.g. scripts/config.py; default: empty set")
             sub.add_argument("--paths-file", type=Path, help="NUL-delimited git diff path list, e.g. changed.z; default: positional paths only")
@@ -363,6 +629,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             report = inventory(manifest)
             if args.check and any(report[key] for key in ("unassigned", "ambiguous", "dynamic_unresolved", "unmapped_test_files", "selector_parity_gaps")):
                 code = 1
+            if args.check and report.get("import_graph", {}).get("missing_mandatory_edges"):
+                code = 1
             if args.collect or args.identities:
                 if not args.component:
                     raise ValueError("--collect/--identities requires --component")
@@ -370,6 +638,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     report["identities"] = current_identities(args.component, manifest)
                 if args.collect:
                     report["test_ids"], collect_code = collect_tests(test_files(args.component, manifest), [])
+                    report["vitest_ids"], vitest_code = collect_vitest(vitest_files(args.component, manifest))
+                    collect_code = collect_code or vitest_code
                     if collect_code:
                         report["selection"] = list(NODE_IDS)
                         report["fallback_reason"] = "collection-error"
@@ -379,18 +649,27 @@ def main(argv: Sequence[str] | None = None) -> int:
             members = verify_inputs(args.inputs, args.component, manifest) if getattr(args, "inputs", None) else {}
             if args.operation == "test":
                 files = test_files(args.component, manifest)
+                front_files = vitest_files(args.component, manifest)
+                census = {"test_files": files + front_files, "test_file_count": len(files) + len(front_files),
+                          "pytest_file_count": len(files), "vitest_file_count": len(front_files)}
+                if args.list:
+                    print(json.dumps({"component": args.component, **census}, indent=2))
+                    return 0
                 ids, code = collect_tests(files, node["test_args"])
+                front_ids, front_code = collect_vitest(front_files)
+                code = code or front_code
                 artifact_ids = []
                 if not code and node["test_args"]:
                     all_ids, code = collect_tests(files, [])
                     artifact_ids = sorted(set(all_ids) - set(ids))
                 if code:
-                    report = {"component": args.component, "selection": list(NODE_IDS), "fallback_reason": "collection-error"}
+                    report = {"component": args.component, **census, "selection": list(NODE_IDS),
+                              "fallback_reason": "collection-error", "pytest_collection_exit": code,
+                              "vitest_collection_exit": front_code}
                 else:
-                    commands = [{"argv": ["{python}", "-m", "pytest", "-q", *files, *node["test_args"]],
-                                 "cwd": ".", "scope": "code-contract"}]
-                    results, code = run_commands(commands, ROOT, None, {})
-                    report = {"component": args.component, "test_ids": ids, "commands": results,
+                    commands = node_test_commands(args.component, manifest, files, front_files)
+                    results, code = run_commands(commands, ROOT, None, {}, keep_going=True)
+                    report = {"component": args.component, **census, "test_ids": ids, "vitest_ids": front_ids, "commands": results,
                               "artifact_dependent_test_ids": artifact_ids,
                               "artifact_owner_slice": 5 if artifact_ids else None,
                               "data_tier": "needs_artifact cases remain artifact-dependent; see residual_commands"}

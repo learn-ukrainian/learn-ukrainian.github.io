@@ -88,7 +88,9 @@ def test_affected_reaches_cycle_consumers_shared_and_empty(manifest):
     assert {"curriculum-generation", "curriculum-display", "atlas-data", "atlas-frontend", "practice-frontend", "open-model-data"} <= set(selected)
     assert set(c.affected(["scripts/config.py"], manifest)["components"]) == set(c.NODE_IDS)
     assert c.affected([], manifest)["components"] == []
-    assert c.affected(["scripts/projects/open_model_data/view.py"], manifest)["components"] == ["open-model-data"]
+    result = c.affected(["scripts/projects/open_model_data/view.py"], manifest)
+    assert set(result["components"]) == set(c.NODE_IDS)
+    assert result["unresolved_edges"] > 0
 
 
 def test_inventory_includes_index_only_sparse_and_odd_paths(repo, manifest):
@@ -138,12 +140,129 @@ def test_manifest_validation_rejects_bad_contract(tmp_path, manifest, mutation):
 
 
 def test_test_prefixes_expand_index_and_absence_refuses(repo, manifest):
+    manifest["shared_integration_tests"] = []
     manifest["components"]["harness"]["test_files"] = []
     manifest["components"]["harness"]["test_prefixes"] = ["tests/"]
     assert c.test_files("harness", manifest, repo) == ["tests/test_fixture.py"]
     (repo / "tests/test_fixture.py").unlink()
     with pytest.raises(ValueError, match="absent"):
         c.test_files("harness", manifest, repo)
+
+
+def test_ast_closure_relative_bare_literal_loads_and_nonliteral():
+    sources = {
+        "scripts/lexicon/source.py": b"X = 1\n",
+        "scripts/lexicon/relative.py": b"from . import source\n",
+        "scripts/build/consumer.py": b"from lexicon import relative\n",
+        "scripts/audit/loader.py": b'''from pathlib import Path
+import importlib.util as util
+ROOT = Path(__file__).resolve().parents[2]
+def load(name, path):
+    return util.spec_from_file_location(name, path)
+load('source', ROOT / 'scripts' / 'lexicon' / 'source.py')
+''',
+        "tests/test_use.py": b"import scripts.build.consumer\n",
+        "tests/test_dynamic.py": b"from importlib import import_module as load\nload(target)\n",
+    }
+    graph = c.scan_imports(sources)
+    assert ("scripts/lexicon/relative.py", "scripts/lexicon/source.py") in graph["file_edges"]
+    assert ("scripts/build/consumer.py", "scripts/lexicon/relative.py") in graph["file_edges"]
+    assert ("scripts/audit/loader.py", "scripts/lexicon/source.py") in graph["file_edges"]
+    assert any(e["path"] == "tests/test_dynamic.py" for e in graph["unresolved_edges"])
+
+
+def test_indexed_imports_survive_sparse_checkout_and_invalidate_on_edits(repo, manifest):
+    path = repo / "scripts/config.py"
+    path.write_text("from scripts.ci import components\n")
+    git(repo, "add", "scripts/config.py")
+    git(repo, "update-index", "--skip-worktree", "scripts/config.py")
+    path.unlink()
+    assert ("scripts/config.py", "scripts/ci/components.py") in c.import_graph(manifest, repo)["file_edges"]
+    path.write_text("import importlib\nimportlib.import_module(target)\n")
+    git(repo, "update-index", "--no-skip-worktree", "scripts/config.py")
+    assert any(e["path"] == "scripts/config.py" for e in c.import_graph(manifest, repo)["unresolved_edges"])
+
+
+def test_complete_node_test_set_ownership_importers_and_integration(repo, manifest):
+    manifest["shared_integration_tests"] = ["tests/test_fixture.py"]
+    manifest["components"]["atlas-data"]["test_files"] = []
+    for path, source in {
+        "scripts/lexicon/source.py": "VALUE = 1\n",
+        "scripts/build/consumer.py": "from scripts.lexicon.source import VALUE\n",
+        "tests/test_source.py": "from scripts.build.consumer import VALUE\n",
+        "tests/test_other.py": "VALUE = 2\n",
+        "tests/test_mapped.py": "VALUE = 3\n",
+    }.items():
+        target = repo / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(source)
+    manifest["exact_paths"]["tests/test_mapped.py"] = ["atlas-data"]
+    git(repo, "add", ".")
+    assert c.test_files("atlas-data", manifest, repo) == [
+        "tests/test_fixture.py", "tests/test_mapped.py", "tests/test_source.py"]
+
+
+def test_unresolved_and_missing_mandatory_edges_force_all(manifest):
+    graph = {"node_edges": [], "file_edges": [], "unresolved_edges": [], "missing_mandatory_edges": ["lost"]}
+    assert set(c.affected(["scripts/lexicon/source.py"], manifest, graph)["components"]) == set(c.NODE_IDS)
+    graph["missing_mandatory_edges"] = []
+    graph["unresolved_edges"] = [{"path": "scripts/loader.py"}]
+    assert c.affected(["site/new.ts"], manifest, graph)["fallback_reasons"] == ["dynamic-unresolved"]
+
+
+@pytest.mark.parametrize(("producer", "consumer"), [
+    ("harness", "curriculum-generation"), ("curriculum-generation", "harness"), ("harness", "atlas-data"),
+])
+def test_review_probes_computed_even_without_unresolved_fallback(manifest, producer, consumer):
+    graph = c.import_graph(manifest)
+    assert (producer, consumer) in graph["node_edges"]
+    graph = graph | {"unresolved_edges": [], "missing_mandatory_edges": []}
+    probes = {"harness": "scripts/agent_runtime/runner.py", "curriculum-generation": "scripts/build/fresh/assemble.py"}
+    assert consumer in c.affected([probes[producer]], manifest, graph)["components"]
+
+
+def test_vitest_files_follow_ownership_and_existing_scripts(repo, manifest):
+    path = repo / "site/tests/unit/shared.test.ts"
+    path.parent.mkdir(parents=True)
+    path.write_text("// test\n")
+    git(repo, "add", ".")
+    for node in manifest["selector_contracts"]["frontend_components"]:
+        files = c.vitest_files(node, manifest, repo)
+        assert files == ["site/tests/unit/shared.test.ts"]
+        commands = c.node_test_commands(node, manifest, ["tests/test_fixture.py"], files)
+        assert commands[1]["argv"] == ["npm", "run", "test:unit", "--", "tests/unit/shared.test.ts"]
+    built = manifest["vitest"]["built_output_files"]
+    assert c.node_test_commands("atlas-frontend", manifest, [], built)[1]["argv"][:3] == ["npm", "run", "test:built-output"]
+
+
+def test_list_reports_resolved_sets_without_running(monkeypatch, capsys):
+    monkeypatch.setattr(c, "test_files", lambda *a: ["tests/test_one.py", "tests/test_two.py"])
+    monkeypatch.setattr(c, "vitest_files", lambda *a: ["site/tests/unit/shared.test.ts"])
+    monkeypatch.setattr(c, "collect_tests", lambda *a: pytest.fail("list must not collect"))
+    assert c.main(["test", "--component", "atlas-frontend", "--list"]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["test_file_count"] == 3 and result["pytest_file_count"] == 2 and result["vitest_file_count"] == 1
+
+
+def test_literal_targets_and_parse_errors_are_conservative():
+    assert c.literal_target(c.ast.parse("Path(__file__).parent / 'x.py'", mode="eval").body, {}, "scripts/load.py") == c.PurePosixPath("scripts/x.py")
+    graph = c.scan_imports({"scripts/broken.py": b"def invalid(\n"})
+    assert graph["unresolved_edges"][0]["reason"] == "parse-error"
+
+
+def test_vitest_collection_uses_installed_cli_and_keeps_failures(monkeypatch):
+    calls = []
+    def run(argv, **kwargs):
+        calls.append((argv, kwargs))
+        return subprocess.CompletedProcess(argv, 0, '[{"file":"shared.test.ts","name":"renders"}]')
+    monkeypatch.setattr(c.subprocess, "run", run)
+    rows, code = c.collect_vitest(["site/tests/unit/shared.test.ts"])
+    assert code == 0 and rows[0]["name"] == "renders"
+    assert calls[0][0][-1] == "tests/unit/shared.test.ts"
+    assert calls[0][1]["env"]["npm_config_offline"] == "true"
+    assert c.collect_vitest([]) == ([], 0)
+    monkeypatch.setattr(c.subprocess, "run", lambda argv, **kw: subprocess.CompletedProcess(argv, 2, ""))
+    assert c.collect_vitest(["site/tests/unit/shared.test.ts"])[1] == 2
 
 
 def test_collect_ids_at_check_time_and_collection_failure(repo, monkeypatch):
@@ -232,6 +351,8 @@ def test_run_commands_real_pass_failure_and_skips(repo, monkeypatch):
     (repo / "tests/test_fixture.py").write_text("def test_fixture():\n    assert False\n")
     reports, code = c.run_commands([command], repo, None, {})
     assert code == 1 and reports[0]["result"] == "fail"
+    reports, code = c.run_commands([command, command], repo, None, {}, keep_going=True)
+    assert code == 1 and len(reports) == 2
 
 
 def test_atlas_build_argv_runs_real_db_search_and_daily_producers(tmp_path, manifest):
@@ -297,7 +418,7 @@ def test_cli_inventory_affected_and_error_are_structural(monkeypatch, capsys, ma
 
 def test_cli_command_dispatch_and_no_artifact_certification(monkeypatch, capsys):
     monkeypatch.setattr(c, "collect_tests", lambda *a: (["tests/test_fixture.py::test_fixture"], 0))
-    monkeypatch.setattr(c, "run_commands", lambda *a: ([{"result": "pass"}], 0))
+    monkeypatch.setattr(c, "run_commands", lambda *a, **kw: ([{"result": "pass"}], 0))
     assert c.main(["test", "--component", "atlas-data"]) == 0
     assert json.loads(capsys.readouterr().out)["commands"][0]["result"] == "pass"
     assert c.main(["verify", "--component", "atlas-data"]) == 0

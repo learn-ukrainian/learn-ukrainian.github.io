@@ -32,11 +32,12 @@ def test_pages_decision_and_frontend_closure(path, deploy, reason):
 
 def test_every_tracked_pages_eligible_path_covers_all_frontend_consumers():
     manifest = components.load_manifest()
+    graph = components.import_graph(manifest)
     paths = components.tracked_paths()
     eligible = [path for path in paths if pages.decide_auto_deploy([path]).deploy]
     assert eligible
     fronts = set(manifest["selector_contracts"]["frontend_components"])
-    assert all(fronts <= set(components.affected([path], manifest)["components"]) for path in eligible)
+    assert all(fronts <= set(components.affected([path], manifest, graph)["components"]) for path in eligible)
 
 
 def test_empty_and_mixed_pages_changes_keep_fail_closed_semantics():
