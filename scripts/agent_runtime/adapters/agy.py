@@ -92,6 +92,7 @@ import shlex
 import shutil
 import subprocess
 import tempfile
+import unicodedata
 import urllib.parse
 import uuid
 from collections.abc import Mapping
@@ -1034,7 +1035,15 @@ class AgyAdapter:
         call_start_time: float | None = None,
     ) -> ParseResult:
         """Keep killed-command evidence on every outcome, including early refusals."""
-        bound = _invocation_transcript(plan)
+        denial = _headless_permission_denial((stderr or "").strip())
+        read_reason = None
+        try:
+            bound = _invocation_transcript(plan)
+        except (AttemptReadError, OSError):
+            if denial is None:
+                raise
+            bound = None
+            read_reason = "transcript_read_refused"
         killed, _excused = _model_killed_tasks(bound.events) if bound is not None else ([], set())
         result = self._parse_response(
             stdout=stdout,
@@ -1044,6 +1053,17 @@ class AgyAdapter:
             plan=plan,
             call_start_time=call_start_time,
         )
+        if denial is not None:
+            attempt = _headless_denial_evidence(bound, plan, denial.permission_kind, read_reason=read_reason)
+            result = dataclasses.replace(
+                result,
+                agy_attempt=attempt,
+                stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED
+                + "\n"
+                + json.dumps(
+                    {"permission_kind": attempt.permission_kind, "permission_target": attempt.permission_target}
+                ),
+            )
         if killed and not result.ok:
             reason, _, detail = (result.stderr_excerpt or "").partition("\n")
             blocked = [command for command in killed if not _read_only_killed_command(command)]
@@ -1053,7 +1073,7 @@ class AgyAdapter:
         return dataclasses.replace(
             result,
             agy_killed_commands=killed,
-            agy_pre_model_failure=_pre_model_failure(plan, stdout, bound),
+            agy_pre_model_failure=False if denial else _pre_model_failure(plan, stdout, bound),
             agy_attempt=_attempt_evidence(bound, result, plan),
         )
 
@@ -1092,10 +1112,11 @@ class AgyAdapter:
                 response="",
                 failure_code="provider_policy_refusal",
                 provider_error_text="",
-                stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED + "\n" + json.dumps(denial._asdict()),
+                stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED,
                 agy_attempt=AgyAttempt(
                     completion_reason=AGY_HEADLESS_PERMISSION_DENIED,
-                    permission_target=denial.permission_target,
+                    permission_kind=denial.permission_kind,
+                    permission_target="unknown",
                 ),
             )
         stream_error = str(stream_result.get("error") or "") if stream_result else ""
@@ -1248,6 +1269,11 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         failure_code=result.failure_code,
         permission_profile_id=plan.metadata.get("agy_permission_profile_id") if plan else None,
         permission_target=result.agy_attempt.permission_target if result.agy_attempt else None,
+        permission_kind=result.agy_attempt.permission_kind if result.agy_attempt else None,
+        denied_tool_name=result.agy_attempt.denied_tool_name if result.agy_attempt else None,
+        permission_target_unknown_reason=result.agy_attempt.permission_target_unknown_reason
+        if result.agy_attempt
+        else None,
     )
     if bound is None or bound.unreadable_lines:
         return base
@@ -1352,6 +1378,151 @@ class AgyHeadlessPermissionDenial(NamedTuple):
 
     permission_kind: str
     permission_target: str | None
+
+
+_DENIAL_TARGET_ARGS = {
+    "read_file": {
+        "view_file": "AbsolutePath",
+        "view_file_outline": "AbsolutePath",
+        "view_code_item": "File",
+        "list_dir": "DirectoryPath",
+        "grep_search": "SearchPath",
+        "find_by_name": "SearchDirectory",
+    },
+    "read_url": {"read_url_content": "Url"},
+}
+
+
+def _sanitized_denial_target(target: Any, kind: str, plan: InvocationPlan | None) -> tuple[str, str | None]:
+    """Keep only workspace-relative paths, fixed outside classes or URL hosts."""
+    target = _decode_jsonish(target)
+    if not isinstance(target, str) or not target or len(target) > 4096:
+        return "unknown", "target_missing"
+    if any(unicodedata.category(char) in {"Cc", "Cf", "Zl", "Zp"} for char in target):
+        return "unknown", "target_unsafe"
+    if kind == "read_url":
+        try:
+            url = urllib.parse.urlsplit(target)
+            host = url.hostname
+            if url.scheme not in {"http", "https"} or not host or not re.fullmatch(r"[a-zA-Z0-9.-]+", host):
+                return "unknown", "url_invalid"
+            # Numeric hosts are infrastructure details, not publishable domains.
+            if re.fullmatch(r"[0-9.]+", host):
+                return "unknown", "url_host_private"
+            return "url:" + host.lower(), None
+        except ValueError:
+            return "unknown", "url_invalid"
+    if kind != "read_file" or plan is None:
+        return "unknown", "target_kind_unsupported"
+    if "?" in target or "#" in target or "://" in target or target.startswith("~"):
+        return "unknown", "file_target_invalid"
+    try:
+        workspace = plan.cwd.resolve()
+        path = Path(target)
+        path = (path if path.is_absolute() else workspace / path).resolve()
+        if path.is_relative_to(workspace):
+            relative = path.relative_to(workspace).as_posix()
+            if redact_text(relative) != relative:
+                return "unknown", "target_unsafe"
+            return "workspace:" + relative, None
+        # Dispatch worktrees identify the enclosing repository without a Git call.
+        repo_root = next((parent.parent for parent in workspace.parents if parent.name == ".worktrees"), None)
+        roots = [
+            ("repo-root", repo_root),
+            ("home", Path.home()),
+            ("home", Path(plan.env_overrides["HOME"]) if plan.env_overrides.get("HOME") else None),
+            ("tmp", Path(plan.env_overrides.get("TMPDIR") or tempfile.gettempdir())),
+            ("tmp", Path("/tmp")),
+            ("tmp", Path("/var/tmp")),
+        ]
+        roots.extend(
+            ("system", Path(root))
+            for root in ("/etc", "/usr", "/bin", "/sbin", "/lib", "/lib64", "/proc", "/sys", "/dev", "/run", "/var")
+        )
+        for label, root in roots:
+            if root is not None and path.is_relative_to(root.resolve()):
+                return "outside:" + label, None
+        return "outside:other", None
+    except (OSError, RuntimeError, ValueError):
+        return "unknown", "file_target_invalid"
+
+
+def _headless_denial_evidence(
+    bound: _TranscriptSlice | None,
+    plan: InvocationPlan | None,
+    kind: str,
+    *,
+    read_reason: str | None = None,
+) -> AgyAttempt:
+    """Pair native result slots or a unique unresolved intent; never use prose.
+
+    Read only the already-bound invocation slice, before runtime lease reaping.
+    Multiple unresolved calls do not establish which permission request fired.
+    """
+    base = AgyAttempt(
+        completion_reason=AGY_HEADLESS_PERMISSION_DENIED,
+        permission_kind=kind,
+        permission_target="unknown",
+    )
+    if bound is None or bound.unreadable_lines:
+        return dataclasses.replace(
+            base,
+            permission_target_unknown_reason=read_reason
+            or ("transcript_corrupt" if bound else "transcript_unbound_or_unreadable"),
+        )
+    pending: list[Mapping[str, Any]] = []
+    denied: list[tuple[Mapping[str, Any], str]] = []
+    for event in bound.events:
+        if event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL":
+            denied.clear()  # A later model turn supersedes an earlier refusal.
+            calls = event.get("tool_calls")
+            for call in calls if isinstance(calls, list) else []:
+                if isinstance(call, Mapping) and call not in pending:
+                    pending.append(call)
+        elif event.get("type") in {"GENERIC", "TOOL_RESPONSE"} and pending:
+            call = pending.pop(0)
+            content = str(event.get("content") or "")
+            if (
+                event.get("status") in {"ERROR", "INVALID"}
+                and "Matches user-configured deny rule." not in content
+                and (
+                    native := re.match(
+                        r"^Encountered error in step execution: permission check failed for "
+                        + re.escape(kind)
+                        + r' "(?P<target>[^"\r\n]*)": Permission denied for '
+                        + re.escape(kind)
+                        + r"\((?P=target)\)\.",
+                        content,
+                    )
+                )
+            ):
+                denied.append((call, native.group("target")))
+    candidates = [(call, None) for call in pending] if pending else denied
+    if len(candidates) != 1:
+        return dataclasses.replace(
+            base, permission_target_unknown_reason="trigger_ambiguous" if candidates else "trigger_missing"
+        )
+    call, native_target = candidates[0]
+    name = call.get("name")
+    arg_key = _DENIAL_TARGET_ARGS.get(kind, {}).get(name) if isinstance(name, str) else None
+    if not isinstance(name, str) or not re.fullmatch(r"[a-z][a-z0-9_]{0,79}", name):
+        return dataclasses.replace(base, permission_target_unknown_reason="tool_unknown")
+    # MCP/command output cannot supply file or URL permission evidence.
+    if not arg_key and (kind, name) not in {("command", "run_command"), ("mcp", "call_mcp_tool")}:
+        return dataclasses.replace(base, permission_target_unknown_reason="tool_kind_unverified")
+    args = call.get("args")
+    target, reason = _sanitized_denial_target(
+        native_target
+        if native_target is not None
+        else args.get(arg_key)
+        if isinstance(args, Mapping) and arg_key
+        else None,
+        kind,
+        plan,
+    )
+    return dataclasses.replace(
+        base, denied_tool_name=name, permission_target=target, permission_target_unknown_reason=reason
+    )
 
 
 def _headless_permission_denial(stderr_text: str) -> AgyHeadlessPermissionDenial | None:

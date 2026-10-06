@@ -22,7 +22,9 @@ from agent_runtime.telemetry import (
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
 
 
-@pytest.mark.parametrize("outcome", ["success", "failure", "timeout", "profiled", "profile-refused", "recon-profiled"])
+@pytest.mark.parametrize(
+    "outcome", ["success", "failure", "timeout", "profiled", "profile-refused", "recon-profiled", "headless-denial"]
+)
 def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypatch, outcome):
     import delegate
     from agent_runtime.errors import AgentTimeoutError
@@ -89,11 +91,63 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
     monkeypatch.setattr("scripts.agent_runtime.review_mcp.prepare_agy_permission_home", provision)
     lease = tmp_path / "lease"
     lease.mkdir()
-    monkeypatch.setattr(delegate, "_reap_runtime_tmp_lease", lambda *_: {"tmp_bytes_freed": 0, "tmp_reap_error": None})
+    ordering = []
+    transcript = None
+
+    def invoke_denial(*args, **kwargs):
+        nonlocal transcript
+        from dataclasses import replace
+
+        from scripts.agent_runtime.adapters import agy
+        from tests.agent_runtime.adapters.test_agy_adapter import _FINISHED_CONVERSATION_ID, _background_plan, _event
+        from tests.agent_runtime.adapters.test_agy_review_permissions import auto_denial
+
+        plan = _background_plan(
+            lease,
+            _FINISHED_CONVERSATION_ID,
+            [
+                _event(
+                    "PLANNER_RESPONSE",
+                    "",
+                    source="MODEL",
+                    tool_calls=[
+                        {"name": "view_file", "args": {"AbsolutePath": '"evidence.txt"'}},
+                    ],
+                ),
+            ],
+        )
+        plan = replace(plan, cwd=repo)
+        transcript = agy._transcript_path_from_plan(plan)
+        assert transcript.is_file()
+        parsed = agy.AgyAdapter().parse_response(
+            stdout="", stderr=auto_denial("read_file"), returncode=1, output_file=None, plan=plan
+        )
+        assert parsed.agy_attempt.permission_target == "workspace:evidence.txt"
+        result.agy_telemetry = AgyTelemetry(attempts=(parsed.agy_attempt,), parent_task_id=task_id)
+        result.failure_code = parsed.failure_code
+        result.stderr_excerpt = parsed.stderr_excerpt
+        result.returncode = 1
+        ordering.append("extracted")
+        return result
+
+    def reap(*args):
+        if outcome == "headless-denial":
+            # Simulate the common reaper removing the invocation store. The
+            # real adapter must have extracted evidence before this callback.
+            assert ordering == ["extracted"]
+            assert transcript.is_file()
+            transcript.unlink()
+            ordering.append("reaped")
+        return {"tmp_bytes_freed": 0, "tmp_reap_error": None}
+
+    monkeypatch.setattr(delegate, "_reap_runtime_tmp_lease", reap)
     writes = []
     original_write = delegate._write_state_atomic
 
     def capture(path, state):
+        if outcome == "headless-denial" and state.get("status") == "failed":
+            assert ordering == ["extracted", "reaped"]
+            assert not transcript.exists()
         writes.append(dict(state))
         original_write(path, state)
 
@@ -101,7 +155,9 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
     with patch(
         "agent_runtime.runner.invoke",
         return_value=result,
-        side_effect=AgentTimeoutError("agy", 30, agy_telemetry=telemetry) if outcome == "timeout" else None,
+        side_effect=invoke_denial
+        if outcome == "headless-denial"
+        else (AgentTimeoutError("agy", 30, agy_telemetry=telemetry) if outcome == "timeout" else None),
     ) as runtime:
         delegate._run_worker(
             task_id=task_id,
@@ -114,6 +170,16 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
             runtime_tmp_root=str(lease),
         )
     terminal = next(state for state in writes if state.get("status") in {"done", "failed", "timeout"})
+    if outcome == "headless-denial":
+        assert terminal["status"] == "failed"
+        assert terminal["agy_attempt_count"] == 1
+        assert terminal["agy_attempts"][0]["permission_kind"] == "read_file"
+        assert terminal["agy_attempts"][0]["denied_tool_name"] == "view_file"
+        assert terminal["agy_attempts"][0]["permission_target"] == "workspace:evidence.txt"
+        assert terminal["agy_attempts"][0]["failure_code"] == "provider_policy_refusal"
+        assert terminal["agy_attempts"][0]["permission_target_unknown_reason"] is None
+        assert terminal["agy_retry_disposition"] == "no_retry"
+        return
     if outcome == "profile-refused":
         assert terminal["agy_attempt_count"] == 0
         runtime.assert_not_called()
