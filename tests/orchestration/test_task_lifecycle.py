@@ -1354,6 +1354,7 @@ def test_every_lifecycle_boundary_survives_durable_resume(tmp_path: Path, state:
 # --------------------------------------------------------------------------- #
 def _fresh_report(now: float, index: dict) -> dict:
     return {
+        "repository": "org/repo",
         "generated_at": now,
         "membership_complete": True,
         "incomplete_nodes": [],
@@ -1617,6 +1618,7 @@ def test_resolve_membership_accepts_complete_traversal_report() -> None:
     import time
 
     complete_report = {
+        "repository": "org/repo",
         "generated_at": time.time(),
         "membership_complete": True,
         "incomplete_nodes": [],
@@ -2214,6 +2216,58 @@ def test_9852_repository_evidence_refuses_malformed_task_identity():
     assert task_lifecycle.repository_evidence_refusal(
         "repo", "org/repo", source="audit"
     ) == "task repository identity is malformed"
+
+
+@pytest.mark.parametrize("native_parent_epic", [None, 30], ids=["body", "native-chain"])
+@pytest.mark.parametrize(
+    "evidence_repository,valid,reason",
+    [
+        ("other/repo", False, "does not match"),
+        (None, False, "missing or malformed"),
+        ("", False, "missing or malformed"),
+        ("repo", False, "missing or malformed"),
+        (42, False, "missing or malformed"),
+        ([], False, "missing or malformed"),
+        (" org/repo", False, "missing or malformed"),
+        ("ORG/Repo", True, None),
+        ("org/repo", True, None),
+    ],
+)
+def test_9866_read_only_audit_requires_identity_repository(native_parent_epic, evidence_repository, valid, reason):
+    report = _9794_body_report()
+    if native_parent_epic is not None:
+        report["effective_membership"]["42"]["via"] = "native"
+        report["effective_membership"]["30"] = {
+            "epics": [10], "streams": ["infra"], "via": "native", "unique_stream": True,
+        }
+    if evidence_repository is None:
+        report.pop("repository")
+    else:
+        report["repository"] = evidence_repository
+    result = task_lifecycle.resolve_membership(
+        repository="org/repo", issue_number=42, stream_epic=10,
+        native_parent_epic=native_parent_epic, native_parent_repository="org/repo",
+        registered_epics=[10], membership_report=report,
+    )
+    assert result["valid"] is valid
+    if valid:
+        assert result["method"] == ("body" if native_parent_epic is None else "native_chain")
+        assert result["generated_at"] == report["generated_at"]
+        assert result["digest"] == task_lifecycle.digest(report["effective_membership"])
+    else:
+        assert reason in result["reason"]
+        assert result["method"] is None
+        assert result["epic"] is None
+
+
+def test_9866_evaluate_refuses_foreign_audit():
+    observation = _observation(_body())
+    observation["github"]["issue"]["parent_epic"] = None
+    observation["github"]["membership_audit"] = {**_9794_body_report(), "repository": "other/repo"}
+    result = task_lifecycle.evaluate(_ready_evidence(_ledger()), observation)
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert result["membership"]["valid"] is False
+    assert "membership audit repository does not match the task identity" in " ".join(result["hard_blockers"])
 
 
 def test_9794_live_null_target_accepts_exact_body_evidence():

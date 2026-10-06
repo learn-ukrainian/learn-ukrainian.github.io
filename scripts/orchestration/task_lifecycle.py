@@ -176,6 +176,7 @@ def _fresh_membership_audit(
 
 def _resolve_native_chain(
     *,
+    repository: str,
     issue_number: int,
     stream_epic: int,
     native_parent_epic: int,
@@ -202,6 +203,11 @@ def _resolve_native_chain(
             "digest": None,
             "reason": prefix + str(failure),
         }
+    failure = repository_evidence_refusal(
+        repository, validated_report.get("repository"), source="membership audit"
+    )
+    if failure is not None:
+        return _membership_refusal(prefix + failure)
     generated_at = validated_report.get("generated_at")
     index = validated_report.get("effective_membership") or {}
     evidence_digest = digest(index)
@@ -369,6 +375,7 @@ def resolve_membership(
     case-insensitively, before any number-based branch. Snapshot agreement is
     read-only evidence; membership-reliant writes additionally require
     :func:`resolve_live_ancestry`, including transferred-scope follow-ups.
+    Audit evidence on either snapshot path must name the same repository.
 
     Native GitHub sub-issue parentage is authoritative and takes precedence
     over any body-derived evidence: if ``native_parent_epic`` is set at all,
@@ -434,6 +441,7 @@ def resolve_membership(
                 ),
             }
         return _resolve_native_chain(
+            repository=repository,
             issue_number=issue_number,
             stream_epic=stream_epic,
             native_parent_epic=native_parent_epic,
@@ -450,6 +458,11 @@ def resolve_membership(
             "digest": None,
             "reason": failure,
         }
+    failure = repository_evidence_refusal(
+        repository, validated_report.get("repository"), source="membership audit"
+    )
+    if failure is not None:
+        return _membership_refusal(failure)
     generated_at = validated_report.get("generated_at")
     index = validated_report.get("effective_membership") or {}
     evidence_digest = digest(index)
