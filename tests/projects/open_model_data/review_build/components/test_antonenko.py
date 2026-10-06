@@ -23,6 +23,9 @@ from scripts.projects.open_model_data.review_build.components.antonenko import (
     book_locator,
     citation,
     filtered_pairs,
+    identity_relation,
+    inverse_identities,
+    pair_identity,
     pin_dispatch_files,
     recommended_lookup,
     validate_receipts,
@@ -67,12 +70,12 @@ def source(tmp_path, monkeypatch):
     vesum = tmp_path / "SYNTHETIC-vesum.db"
     with sqlite3.connect(vesum) as vesum_connection:
         vesum_connection.execute(
-            "CREATE TABLE forms_all(id INTEGER PRIMARY KEY, word_form TEXT, word_form_folded TEXT)"
+            "CREATE TABLE forms_all(id INTEGER PRIMARY KEY, word_form TEXT, word_form_folded TEXT, lemma TEXT)"
         )
         vesum_connection.executemany(
-            "INSERT INTO forms_all VALUES (?, ?, ?)",
+            "INSERT INTO forms_all VALUES (?, ?, ?, ?)",
             [
-                (i, word, word.casefold())
+                (i, word, word.casefold(), word.casefold())
                 for i, word in enumerate(("SYNTHETIC", "wrong", "right", "other", "better", "long", "target"), 1)
             ],
         )
@@ -454,7 +457,8 @@ def test_no_receipt_root_never_approves_and_shared_store_does_not_leak_sessions(
 
 
 @pytest.mark.parametrize("component", ["C6b"])
-def test_source_bound_packet_build_verify_and_tamper_refusal(source, component, tmp_path):
+@pytest.mark.parametrize("tamper", ["packet", "lemma", "new_analysis", "remove_analysis"])
+def test_source_bound_packet_build_verify_and_tamper_refusal(source, component, tmp_path, tamper):
     import yaml
 
     from scripts.projects.open_model_data.review_build.build import execute
@@ -484,7 +488,16 @@ def test_source_bound_packet_build_verify_and_tamper_refusal(source, component, 
         assert execute(config, guard, verify=True, component_objects={component: obj})["status"] == "verified"
         manifest = json.loads(guard.read("manifest.json"))
         packet_name = next(n for n in manifest["files"] if "adjudication-packets" in n)
-        guard.write(packet_name, b"SYNTHETIC changed packet")
+        if tamper == "packet":
+            guard.write(packet_name, b"SYNTHETIC changed packet")
+        else:
+            with sqlite3.connect(source["vesum"]) as db:
+                if tamper == "lemma":
+                    db.execute("UPDATE forms_all SET lemma='SYNTHETIC changed lemma' WHERE word_form='wrong'")
+                elif tamper == "new_analysis":
+                    db.execute("INSERT INTO forms_all VALUES (99, 'wrong', 'wrong', 'SYNTHETIC alternative')")
+                else:
+                    db.execute("DELETE FROM forms_all WHERE word_form='wrong'")
         with pytest.raises(BuildError, match="artifact_mismatch"):
             execute(config, guard, verify=True, component_objects={component: obj})
 
@@ -929,7 +942,155 @@ def test_recommended_lookup_cites_each_token_and_preserves_missing_evidence(sour
         lookups = recommended_lookup("RIGHT, better; unknown.", ctx.reader)
         assert [x["token"] for x in lookups] == ["RIGHT", "better", "unknown"]
         assert [bool(x["citations"]) for x in lookups] == [True, True, False]
+        assert [x["lemmas"] for x in lookups] == [["right"], ["better"], []]
         assert ctx.reader.snapshots()["vesum.db:forms_all"]
+
+
+@pytest.fixture
+def lexeme_source(source):
+    # Synthetic morphology, with expectations separately asserted below. The
+    # ambiguous analysis deliberately follows the first analysis in id order.
+    forms = [
+        ("alphas", "alpha"),
+        ("alphal", "alpha"),
+        ("betas", "beta"),
+        ("betal", "beta"),
+        ("ambiguous", "alpha"),
+        ("ambiguous", "beta"),
+        ("gammas", "gamma"),
+        ("shared", "common"),
+        ("shareds", "common"),
+    ]
+    with sqlite3.connect(source["vesum"]) as db:
+        db.executemany(
+            "INSERT INTO forms_all VALUES (?, ?, ?, ?)",
+            [(i, form, form.casefold(), lemma) for i, (form, lemma) in enumerate(forms, 100)],
+        )
+    return source
+
+
+def test_lookup_uses_all_analyses_with_independent_expected_citations(lexeme_source):
+    ctx = context(lexeme_source)
+    with ctx.reader:
+        lookup = recommended_lookup("AMBIGUOUS alphas missing", ctx.reader)
+        assert [item["lemmas"] for item in lookup] == [["alpha", "beta"], ["alpha"], []]
+        assert [[c["row_key"] for c in item["citations"]] for item in lookup] == [
+            ["id=104", "id=105"],
+            ["id=100"],
+            [],
+        ]
+        assert [[c["field_sha256"] for c in item["lemma_citations"]] for item in lookup] == [
+            [digest(b"alpha"), digest(b"beta")],
+            [digest(b"alpha")],
+            [],
+        ]
+        for item in lookup:
+            for cited in item["citations"] + item["lemma_citations"]:
+                assert ctx.reader.field(antonenko.Citation(**cited))[1] in {"ambiguous", "alphas", "alpha", "beta"}
+        assert ctx.reader.reads[("vesum.db", "forms_all")] == {
+            ("id=104", digest(b"ambiguous")),
+            ("id=104", digest(b"alpha")),
+            ("id=105", digest(b"ambiguous")),
+            ("id=105", digest(b"beta")),
+            ("id=100", digest(b"alphas")),
+            ("id=100", digest(b"alpha")),
+        }
+
+
+@pytest.mark.parametrize(
+    "forms,expected",
+    [
+        # Inflected inverse; ambiguous overlap must retain the second lemma.
+        ([("alphas", "betas"), ("betal", "alphal")], ["inverse_pair_in_row"] * 2),
+        ([("alphas", "ambiguous"), ("betal", "alphal")], ["inverse_pair_in_row"] * 2),
+        ([("ALPHAS", "betas"), ("BETAL", "ALPHAL")], ["inverse_pair_in_row"] * 2),
+        # Shared phrase lemmas cancel on both sides, regardless of inflection.
+        ([("shared alphas", "shared betas"), ("shareds betal", "shareds alphal")], ["inverse_pair_in_row"] * 2),
+        # A shared carrier alone cannot turn unrelated corrections into inverses.
+        ([("shared alphas", "shared betas"), ("shareds gammas", "shareds alphal")], ["agreed"] * 2),
+        ([("alphas", "betas"), ("gammas", "alphal")], ["agreed"] * 2),
+        ([("alphas", "betas")], ["agreed"]),
+        # Unknown rejected identity is ordinary for one-direction corrections.
+        ([("missing", "betas")], ["agreed"]),
+        ([("missing", "betas"), ("absent", "betal")], ["agreed"] * 2),
+        # Half-proven inverse is unsafe; two unknown directions prove nothing.
+        ([("alphas", "betas"), ("missing", "alphal")], ["inverse_pair_in_row"] * 2),
+        ([("missing", "betas"), ("absent", "gammas")], ["agreed"] * 2),
+        # Incomplete phrase identity is unknown rather than proven-different.
+        ([("alphas", "betas"), ("missing gammas", "alphal")], ["inverse_pair_in_row"] * 2),
+        # Empty phrase remainders cannot establish equality.
+        ([("shared", "shareds"), ("shareds", "shared shareds")], ["agreed"] * 2),
+        # Equal known single-word lemma sets do not establish two lexemes.
+        ([("alphas", "alphal"), ("ALPHAL", "ALPHAS")], ["agreed"] * 2),
+    ],
+)
+def test_lexeme_inverse_dispositions_and_gate(lexeme_source, forms, expected):
+    row = lexeme_source["rows"][0]
+    row["text"] = "SYNTHETIC " + "; ".join(f"{left} / {right}" for left, right in forms)
+    spans = []
+    cursor = len("SYNTHETIC ")
+    for left, right in forms:
+        spans.append(
+            {
+                "rejected": {"start": cursor, "end": cursor + len(left)},
+                "recommended": {"start": cursor + len(left) + 3, "end": cursor + len(left) + 3 + len(right)},
+            }
+        )
+        cursor += len(left) + len(right) + 5
+    with sqlite3.connect(lexeme_source["db"]) as db:
+        db.execute("UPDATE style_guide SET text=? WHERE id=1", (row["text"],))
+
+    def select(receipts):
+        for receipt in receipts.values():
+            receipt["rows"][0]["pairs"] = spans
+
+    write_receipt(lexeme_source, select)
+    ctx, obj = context(lexeme_source), component_for("C6b")
+    with ctx.reader:
+        candidates = list(obj.iter_candidates(ctx))
+        units = RECEIPTS.row_units(row)
+        assert [unit["reason"] for unit in units] == expected
+        assert all(
+            unit["rejected_form"] == left and unit["recommended_form"] == right
+            for unit, (left, right) in zip(units, forms, strict=True)
+        )
+        records, report = gate(ctx, obj, "C6b").run(candidates)
+        assert report["accounting"]["C6b"]["counted"] == len(forms) + 1
+        assert len(records) == 1 + expected.count("agreed")
+        for unit in units:
+            assert RECEIPTS.row("C6b", "id=" + unit["id"]) == unit
+        if "inverse_pair_in_row" in expected:
+            unit = units[0]
+            unit.update(reason="agreed", eligible=True)
+            with pytest.raises(BuildError, match="adjudication_direction"):
+                RECEIPTS.row("C6b", "id=" + unit["id"])
+
+
+@pytest.mark.parametrize("changed_token", ["wrong", "other"])
+def test_lookup_changes_cannot_change_receipt_admission(lexeme_source, monkeypatch, changed_token):
+    expand_row(lexeme_source)
+    write_receipt(lexeme_source, lambda receipts: add_second_pair(lexeme_source, receipts))
+    ctx, obj = context(lexeme_source), component_for("C6b")
+    with ctx.reader:
+        list(obj.iter_candidates(ctx))
+        unit = RECEIPTS.row_units(lexeme_source["rows"][0])[0]
+        original = ctx.reader.query_values
+
+        def changed_lookup(query):
+            return [] if query.get("parameters") == [changed_token] else original(query)
+
+        monkeypatch.setattr(ctx.reader, "query_values", changed_lookup)
+        with pytest.raises(BuildError, match="adjudication_stale"):
+            RECEIPTS.row("C6b", "id=" + unit["id"])
+
+
+def test_identity_unknown_and_distinctness_controls():
+    assert identity_relation((set(), True), (set(), True)) == "unknown"
+    assert identity_relation(({"alpha"}, True), ({"beta"}, False)) == "unknown"
+    assert identity_relation(({"alpha"}, True), ({"beta"}, True)) == "different"
+    assert identity_relation(({"alpha"}, False), ({"alpha", "beta"}, True)) == "shared"
+    assert pair_identity({"rejected": [], "recommended": []}) == ((set(), False), (set(), False))
+    assert not inverse_identities(None, (({"alpha"}, True), ({"beta"}, True)))
 
 
 @pytest.mark.parametrize(
@@ -939,14 +1100,20 @@ def test_nested_pair_is_subsumed_regardless_of_reconciliation(decision):
     text = "long wrong long right"
     big, small = ((0, 10), (11, 21)), ((5, 10), (16, 21))
     pairs = [(*big, "agreed"), (*small, decision)]
-    lookups = {pair: [{"citations": ["SYNTHETIC witness"]}] for pair in (big, small)}
+    lookups = {
+        pair: {side: [{"citations": ["SYNTHETIC witness"], "lemmas": []}] for side in ("rejected", "recommended")}
+        for pair in (big, small)
+    }
     assert filtered_pairs(pairs, text, lookups) == {big: "agreed", small: "subsumed_span"}
 
 
 def test_inverse_union_includes_nonadmitted_inverse_and_duplicates_keep_first():
     text = "wrong right wrong right"
     first, repeated, inverse = ((0, 5), (6, 11)), ((12, 17), (18, 23)), ((6, 11), (0, 5))
-    lookups = {pair: [{"citations": ["SYNTHETIC witness"]}] for pair in (first, repeated, inverse)}
+    lookups = {
+        pair: {side: [{"citations": ["SYNTHETIC witness"], "lemmas": []}] for side in ("rejected", "recommended")}
+        for pair in (first, repeated, inverse)
+    }
     pairs = [(*repeated, "agreed"), (*first, "agreed")]
     assert filtered_pairs(pairs, text, lookups) == {first: "agreed", repeated: "duplicate_in_row"}
     pairs.append((*inverse, "reconciled_rejected"))
@@ -965,7 +1132,7 @@ def test_unattested_recommended_pair_withholds_and_cannot_bypass_receipt_gate(so
         assert len(records) == 1
         assert report["accounting"]["C6b"]["reasons"] == {"agreed": 1, "recommended_unattested": 1}
         unit = next(u for u in RECEIPTS.records.values() if u["reason"] == "recommended_unattested")
-        assert RECEIPTS.lookups[unit["id"]][0]["citations"] == []
+        assert RECEIPTS.lookups[unit["id"]]["recommended"][0]["citations"] == []
         unit["reason"] = "agreed"
         with pytest.raises(BuildError, match="adjudication_direction"):
             RECEIPTS.row("C6b", "id=" + unit["id"])

@@ -1,4 +1,4 @@
-"""Host-only row batches and dual offset selections; no semantic parser or census."""
+"""Host-only dual offset selections and cited, context-free lexeme safety rules."""
 
 import json
 import re
@@ -336,7 +336,11 @@ WORD_TOKEN = re.compile(r"[^\W\d_](?:[^\W\d_]|[\u0300\u0301])*(?:['’ʼ‘`-][^
 
 
 def recommended_lookup(text, reader):
-    """Cite a real VESUM form for every token, without changing exported bytes."""
+    """Cite every VESUM form/lemma witness for either side; retain missing tokens.
+
+    The historical name also serves rejected-side identity lookup. No spelling
+    guess or preferred analysis replaces the complete forms_all lemma set.
+    """
     lookups = []
     for match in WORD_TOKEN.finditer(text):
         token = match.group()
@@ -345,42 +349,102 @@ def recommended_lookup(text, reader):
             {
                 "kind": "sql",
                 "store": "vesum.db",
-                "sql": "SELECT json_array(id, word_form) FROM forms_all WHERE word_form_folded=? ORDER BY id LIMIT 1",
+                "sql": "SELECT json_array(id, word_form, lemma) FROM forms_all WHERE word_form_folded=? ORDER BY id",
                 "parameters": [key],
             }
         )
-        witnesses = []
+        witnesses, lemma_witnesses, lemmas = [], [], set()
         for raw in found:
-            row_id, form = json.loads(raw)
-            cited = Citation(
-                "vesum",
-                "vesum.db",
-                "forms_all",
-                f"id={row_id}",
-                "word_form",
-                f"VESUM form {row_id}",
-                digest(form.encode()),
-            )
-            reader.field(cited)
-            witnesses.append(asdict(cited))
-        lookups.append({"token": token, "key": key, "citations": witnesses})
+            row_id, form, lemma = json.loads(raw)
+            for field, value, citations in (("word_form", form, witnesses), ("lemma", lemma, lemma_witnesses)):
+                cited = Citation(
+                    "vesum",
+                    "vesum.db",
+                    "forms_all",
+                    f"id={row_id}",
+                    field,
+                    f"VESUM form {row_id}",
+                    digest(value.encode()),
+                )
+                reader.field(cited)
+                citations.append(asdict(cited))
+            if lemma:
+                lemmas.add(normalize_evidence_form(normalize(lemma, "unstress_nfc")))
+        lookups.append(
+            {
+                "token": token,
+                "key": key,
+                "citations": witnesses,
+                "lemma_citations": lemma_witnesses,
+                "lemmas": sorted(lemmas),
+            }
+        )
     return lookups
 
 
+def pair_lookup(left, right, text, reader):
+    """Pin both verbatim sides, including unattested rejected tokens."""
+    return {
+        "rejected": recommended_lookup(text[slice(*left)], reader),
+        "recommended": recommended_lookup(text[slice(*right)], reader),
+    }
+
+
+def pair_identity(lookup):
+    """Return distinct side lemma sets and completeness, or no distinct lexemes.
+
+    Equal known single-token sets cannot establish two lexemes. Overlapping but
+    unequal sets stay intact, preserving ambiguous cross-direction witnesses.
+    For phrases remove shared lemmas on both sides; empty remainders are unknown.
+    """
+    sides = [lookup[side] for side in ("rejected", "recommended")]
+    lemmas = [set().union(*(item["lemmas"] for item in side)) for side in sides]
+    complete = [bool(side) and all(item["lemmas"] for item in side) for side in sides]
+    if all(len(side) == 1 for side in sides):
+        if all(complete) and lemmas[0] == lemmas[1]:
+            return None
+    else:
+        shared = lemmas[0] & lemmas[1]
+        lemmas = [side - shared for side in lemmas]
+    return tuple(zip(lemmas, complete, strict=True))
+
+
+def identity_relation(left, right):
+    """Classify cited identity as shared, different, or unknown; never guess."""
+    left_lemmas, left_complete = left
+    right_lemmas, right_complete = right
+    if left_lemmas & right_lemmas:
+        return "shared"
+    if left_lemmas and right_lemmas and left_complete and right_complete:
+        return "different"
+    return "unknown"
+
+
+def inverse_identities(first, second):
+    """Require a reverse witness; refuse shared/shared and shared/unknown."""
+    if first is None or second is None:
+        return False
+    directions = (identity_relation(first[0], second[1]), identity_relation(first[1], second[0]))
+    return "shared" in directions and "different" not in directions
+
+
 def filtered_pairs(pairs, text, lookups):
-    """Apply row-local safety rules to the complete union, preserving every unit."""
+    """Refuse exact or cited lexeme inverses across the complete row union."""
     ordered = sorted(pairs)
     forms = {(left, right): (text[slice(*left)], text[slice(*right)]) for left, right, _ in ordered}
     all_forms = set(forms.values())
+    identities = {pair: pair_identity(lookup) for pair, lookup in lookups.items()}
     seen, result = set(), {}
     for left, right, reason in ordered:
         pair = (left, right)
         rejected, recommended = forms[pair]
-        if (recommended, rejected) in all_forms:
+        if (recommended, rejected) in all_forms or any(
+            pair != other and inverse_identities(identities[pair], identities[other]) for other in identities
+        ):
             reason = "inverse_pair_in_row"
         elif (rejected, recommended) in seen:
             reason = "duplicate_in_row"
-        elif not lookups[pair] or any(not item["citations"] for item in lookups[pair]):
+        elif not lookups[pair]["recommended"] or any(not item["citations"] for item in lookups[pair]["recommended"]):
             reason = "recommended_unattested"
         seen.add((rejected, recommended))
         result[pair] = reason
@@ -501,7 +565,7 @@ class ReceiptStore:
             if not pairs:
                 pairs = [(None, None, decision["reason"])]
             lookups = {
-                (left, right): recommended_lookup(row["text"][slice(*right)], ctx.reader)
+                (left, right): pair_lookup(left, right, row["text"], ctx.reader)
                 for left, right, _ in pairs
                 if left is not None and apply_filters
             }
@@ -599,9 +663,16 @@ class ReceiptStore:
             for kind in ("agreed", "reconciled_accepted", "reconciled_rejected", "disputed")
             for left, right in selected[kind]
         ]
-        lookups = {
-            (left, right): recommended_lookup(row["text"][slice(*right)], self.reader) for left, right, _ in all_pairs
-        }
+        lookups = {(left, right): pair_lookup(left, right, row["text"], self.reader) for left, right, _ in all_pairs}
+        # Every sibling can affect inverse admission. Revalidate the whole row's
+        # pinned lookup evidence before recomputing any one unit's disposition.
+        require(
+            all(
+                canonical(lookup) == canonical(self.lookups[pair_id(row["id"], *pair)])
+                for pair, lookup in lookups.items()
+            ),
+            "adjudication_stale",
+        )
         # Unreconciled pairs retain their public accounting reason.
         all_pairs = [
             (left, right, "adjudication_disagreement" if kind == "disputed" else kind)

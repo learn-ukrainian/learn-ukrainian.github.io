@@ -142,18 +142,34 @@ Before emission, row-local filters cover the complete candidate union, including
 reconciliation-rejected pairs. Precedence is `inverse_pair_in_row`, then
 `duplicate_in_row`, then `recommended_unattested`, then `subsumed_span`:
 
-- Withhold both directions whenever the inverse text pair exists in the row's
-  union. No sense context is added.
+- Withhold both directions whenever the exact inverse text pair exists in the
+  row's union, or source-backed lexeme identity establishes a reverse pair
+  across inflection or case. Compare all VESUM lemma witnesses for both sides,
+  including reconciliation-rejected candidates. For one-word sides the two
+  sides' known lemma sets must differ; overlapping but unequal sets remain
+  eligible for inverse comparison. For multi-word sides remove lemmas shared
+  by both sides before comparing. Each cross-direction comparison is shared
+  (nonempty intersection), different (disjoint nonempty complete identities),
+  or unknown (missing witnesses or empty distinctive identity). A shared/shared
+  or shared/unknown inverse withholds both units; unknown/unknown does not.
+  Missing rejected witnesses alone never withhold an ordinary correction.
+  No sense context is added and no intended meaning is inferred.
 - Identical ordered text pairs keep only the first offset occurrence; later
   occurrences remain counted as `duplicate_in_row`. Selection authority is
   never transferred to an earlier rejected occurrence.
 - Every recommended word token requires a cited VESUM `forms_all` lookup.
   Case, stress and apostrophe folding affect lookup identity only; source and
   output text stay verbatim. Internal hyphens remain part of the token.
-  Missing tokens withhold the unit as `recommended_unattested`; absence is not
-  a linguistic verdict. `C6b/recommended-lookups.json` retains each token and
-  its actual VESUM form citation or an empty witness list. Cited field bytes
-  are pinned by the shared snapshot reader. The request must locate `vesum.db`.
+  Missing recommended tokens withhold the unit as `recommended_unattested`;
+  absence is not a linguistic verdict. `C6b/recommended-lookups.json` retains
+  both rejected and recommended tokens, all `forms_all` form and lemma
+  citations, sorted lemma sets, and empty witness lists for missing tokens.
+  Lookup queries never select an arbitrary first analysis. Both cited fields
+  are fingerprinted in the read-only snapshot; the artifact pins the complete
+  lookup results, including absence. Receipt reads revalidate every sibling's
+  pinned lookup before recomputing admission, and offline verification refuses
+  changed, added or removed lookup evidence. Source/export forms and offsets
+  remain verbatim. The request must locate `vesum.db`.
 - If both spans of a shorter pair are contained in a longer eligible pair,
   withhold the shorter as `subsumed_span`, regardless of its reconciliation
   disposition. All original units remain in accounting.
