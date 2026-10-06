@@ -13,14 +13,19 @@ and subprocess calls are not parsers.
 
 Name use is not a list of statement kinds. A parent map over ``ast.walk``
 inspects every name, and every attribute whose value is a bound module name,
-wherever that name sits.
+wherever that name sits. External syntax-check calls use that same walk:
+every ``ast.Call`` is inspected, so the position of the call cannot hide it.
+A match class pattern is the grammar's form of a call written in a pattern,
+and it is judged with the same argv rules.
 
 Handwritten scanners are not detected. The quote tracker in
 ``agents_extensions/shared/hooks/guard-secret-print.py`` (``_strip_shell_comments``
 and the sibling scanners listed in the slice-2b residual) is outside this
-guarantee. Slice 2b migrates those scanners; this module does not. ``exec``,
-``eval``, ``compile``, and ``importlib`` / ``__import__`` with a computed
-string are outside this guarantee.
+guarantee. Slice 2b migrates those scanners; this module does not. Quoted
+(string) annotations stay source text. Reading them belongs to the evaluation
+machinery ``exec``, ``eval``, and ``typing.get_type_hints``, which this checker
+does not run. ``compile`` and ``importlib`` / ``__import__`` with a computed
+string are outside this guarantee as well.
 
 ``shell_shlex.py`` and ``shell_redirects.py`` are the shared parser boundary.
 Outside those modules a name bound to either may appear only as a public
@@ -452,6 +457,8 @@ class _Analyzer:
         self._shlex_module_names: set[str] = set()
         self._boundary_names: dict[str, str] = {}
         self._dynamic_aliases: dict[str, str] = {}
+        self._node_scopes: dict[int, _Scope] = {}
+        self._module_scope: _Scope | None = None
 
     def symbol(self) -> str:
         return ".".join(self._symbols) if self._symbols else "<module>"
@@ -465,15 +472,57 @@ class _Analyzer:
 
     def analyze(self, tree: ast.Module) -> None:
         self._prepare_closed_names(tree)
-        # Name-use is a total walk. The statement visitor below only binds
-        # imports, follows values for syntax-check calls, and records imported
-        # callables. It does not decide which nodes can hold a module name.
+        # Name use and syntax-check calls are total walks. The statement
+        # visitor binds imports, records literal values those calls read, and
+        # records imported callables. It does not decide which nodes can hold
+        # a module name or a call.
         self._inspect_bound_module_uses(tree)
         module = _Scope(kind="module", parent=None, module=None)  # type: ignore[arg-type]
         module.module = module
+        self._module_scope = module
+        self._node_scopes = {id(tree): module}
         self._hoist(tree.body, module)
         for stmt in tree.body:
             self._visit_stmt(stmt, module)
+        self._inspect_syntax_check_calls(tree)
+
+    def _scope_for(self, node: ast.AST, parents: dict[ast.AST, ast.AST]) -> _Scope:
+        """Lexical scope of ``node``.
+
+        The statement visitor stamps every statement and expression it walks.
+        A call it does not walk takes the nearest stamped ancestor: the
+        assignment or match statement for a target or pattern, and the
+        function definition for an annotation or a default.
+        """
+        current: ast.AST | None = node
+        while current is not None:
+            found = self._node_scopes.get(id(current))
+            if found is not None:
+                return found
+            current = parents.get(current)
+        if self._module_scope is None:
+            raise RuntimeError("syntax-check walk ran before the module scope existed")
+        return self._module_scope
+
+    def _inspect_syntax_check_calls(self, tree: ast.AST) -> None:
+        """Judge every call for an external syntax check, not a statement list."""
+        if not self.record_sites:
+            return
+        parents: dict[ast.AST, ast.AST] = {}
+        for node in ast.walk(tree):
+            for child in ast.iter_child_nodes(node):
+                parents[child] = node
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call):
+                identity = self._call_syntax_identity(node, self._scope_for(node, parents))
+            elif isinstance(node, ast.MatchClass):
+                # ``case subprocess.run([...])`` is a class pattern, not an
+                # ``ast.Call``. The call is still written in that position.
+                identity = self._match_syntax_identity(node, self._scope_for(node, parents))
+            else:
+                continue
+            if identity:
+                self._record_site(node, identity, parents)
 
     def _bound_module(self, name: str) -> tuple[str, str] | None:
         if name in self._shlex_module_names:
@@ -782,6 +831,7 @@ class _Analyzer:
         self._bind_at(scope, getattr(node, "lineno", 0), getattr(node, "col_offset", 0), name, binding)
 
     def _visit_stmt(self, node: ast.stmt, scope: _Scope) -> None:
+        self._node_scopes[id(node)] = scope
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             self._visit_function(node, scope)
         elif isinstance(node, ast.ClassDef):
@@ -904,6 +954,7 @@ class _Analyzer:
         as_call_func: bool = False,
         as_attribute_base: bool = False,
     ) -> None:
+        self._node_scopes[id(node)] = scope
         if isinstance(node, ast.Call):
             self._visit_call(node, scope)
         elif isinstance(node, ast.Attribute):
@@ -1070,12 +1121,90 @@ class _Analyzer:
             return f"{binding.detail[0]}.{binding.detail[1]}"
         if binding.kind == "parser_lib":
             return f"call:{binding.detail[0]}"
-        if binding.kind == "runner":
-            argv = self._runner_argv(node, scope, binding)
-            if argv is None:
-                return None
-            return _syntax_identity(argv)
+        # Runner calls are judged by the total walk, not here.
         return None
+
+    def _call_syntax_identity(self, node: ast.Call, scope: _Scope) -> str | None:
+        binding = self._resolve(node.func, scope)
+        if binding.kind != "runner":
+            return None
+        argv = self._runner_argv(node, scope, binding)
+        if argv is None:
+            return None
+        return _syntax_identity(argv)
+
+    def _match_syntax_identity(self, node: ast.MatchClass, scope: _Scope) -> str | None:
+        binding = self._resolve(node.cls, scope)
+        if binding.kind != "runner":
+            return None
+        argv = self._match_runner_argv(node, scope, binding)
+        if argv is None:
+            return None
+        return _syntax_identity(argv)
+
+    def _match_command_pattern(self, node: ast.MatchClass) -> ast.pattern | None:
+        for attr, pattern in zip(node.kwd_attrs, node.kwd_patterns, strict=True):
+            if attr == "args":
+                return pattern
+        if node.patterns:
+            return node.patterns[0]
+        return None
+
+    def _match_runner_argv(
+        self, node: ast.MatchClass, scope: _Scope, binding: _Binding
+    ) -> tuple[str | None, ...] | None:
+        """Argv of a class pattern, using the same shapes as ``_runner_argv``."""
+        family, func = binding.detail
+        if family == "subprocess" or func in OS_STRING_FUNCS:
+            pattern = self._match_command_pattern(node)
+            if pattern is None:
+                return None
+            return self._static_pattern(pattern, scope)
+        if func in OS_EXEC_ARGV_FUNCS and len(node.patterns) >= 2:
+            argv = self._static_pattern(node.patterns[1], scope)
+            if argv is not None:
+                return argv
+            exe = self._pattern_element(node.patterns[0], scope)
+            return (exe,) if exe is not None else None
+        if func in OS_EXEC_LIST_FUNCS and node.patterns:
+            values = tuple(self._pattern_element(pattern, scope) for pattern in node.patterns)
+            if values[0] is None and all(item is None for item in values):
+                return None
+            return values
+        return None
+
+    def _static_pattern(self, pattern: ast.pattern, scope: _Scope) -> tuple[str | None, ...] | None:
+        if isinstance(pattern, ast.MatchAs):
+            if pattern.pattern is None:
+                return None
+            return self._static_pattern(pattern.pattern, scope)
+        if isinstance(pattern, ast.MatchOr):
+            fallback: tuple[str | None, ...] | None = None
+            for alternative in pattern.patterns:
+                found = self._static_pattern(alternative, scope)
+                if found is None:
+                    continue
+                if _syntax_identity(found) is not None:
+                    return found
+                if fallback is None:
+                    fallback = found
+            return fallback
+        if isinstance(pattern, ast.MatchSequence):
+            if any(isinstance(part, ast.MatchStar) for part in pattern.patterns):
+                return None
+            return tuple(self._pattern_element(part, scope) for part in pattern.patterns)
+        if isinstance(pattern, ast.MatchValue):
+            return self._static_command(pattern.value, scope)
+        return None
+
+    def _pattern_element(self, pattern: ast.pattern, scope: _Scope) -> str | None:
+        if isinstance(pattern, ast.MatchAs):
+            if pattern.pattern is None:
+                return None
+            return self._pattern_element(pattern.pattern, scope)
+        if not isinstance(pattern, ast.MatchValue):
+            return None
+        return self._const_str(pattern.value, scope)
 
     def _runner_argv(self, node: ast.Call, scope: _Scope, binding: _Binding) -> tuple[str | None, ...] | None:
         family, func = binding.detail
@@ -1974,6 +2103,56 @@ def test_function_local_same_package_helper_parser_site_fails() -> None:
 def test_bash_command_string_is_not_a_syntax_check() -> None:
     source = "import subprocess\n\ndef run(command):\n    subprocess.run(['bash', '-c', command])\n"
     assert _single(source) == []
+
+
+def test_syntax_check_hidden_positions_fail() -> None:
+    source = (
+        "import subprocess\n"
+        "\n"
+        "def annotated(path: subprocess.run(['bash', '-n', path])):\n"
+        "    pass\n"
+        "\n"
+        "def returned() -> subprocess.run(['sh', '-n', 'hook.sh']):\n"
+        "    pass\n"
+        "\n"
+        "def defaulted(path=subprocess.run(['dash', '--noexec', path])):\n"
+        "    pass\n"
+        "\n"
+        "holder = {}\n"
+        "holder[subprocess.run(['zsh', '-o', 'noexec', 'hook.sh'])] = None\n"
+        "\n"
+        "def matched(command):\n"
+        "    match command:\n"
+        "        case subprocess.run(['bash', '-nc', command]):\n"
+        "            return command\n"
+    )
+    reasons = _single(source)
+    assert any(reason.endswith("::<module>::syntax:bash -n") for reason in reasons)
+    assert any(reason.endswith("::<module>::syntax:sh -n") for reason in reasons)
+    assert any(reason.endswith("::<module>::syntax:dash -n") for reason in reasons)
+    assert any(reason.endswith("::<module>::syntax:zsh -n") for reason in reasons)
+    assert any(reason.endswith("::matched::syntax:bash -n") for reason in reasons)
+    assert sum(reason.endswith("::syntax:bash -n") for reason in reasons) == 2
+
+
+def test_match_or_syntax_check_fails() -> None:
+    source = (
+        "import subprocess\n"
+        "\n"
+        "def matched(command):\n"
+        "    match command:\n"
+        "        case subprocess.run(['true'] | ['bash', '-n', 'hook.sh']):\n"
+        "            return command\n"
+    )
+    reasons = _single(source)
+    assert any(reason.endswith("::matched::syntax:bash -n") for reason in reasons)
+
+
+def test_quoted_annotation_stays_unevaluated() -> None:
+    shlex_annotation = "import shlex\n\ndef f(v: 'shlex.split'):\n    pass\n"
+    syntax_annotation = "import subprocess\n\ndef f(v: \"subprocess.run(['bash', '-n', 'a'])\"):\n    pass\n"
+    assert _single(shlex_annotation) == []
+    assert _single(syntax_annotation) == []
 
 
 def test_fixture_replacement_outside_creation_set_fails() -> None:
