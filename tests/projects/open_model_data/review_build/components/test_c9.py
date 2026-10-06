@@ -1193,3 +1193,22 @@ def test_numbered_verified_imperatives_require_their_own_printed_answer(tmp_path
     write_pages(path, pages)
     with SnapshotReader({"sources.db": path}) as reader:
         assert extract(reader, pages)[0].reason == "exercise_without_answer"
+
+
+
+def test_long_recurring_page_edge_survivor_requires_withholding(tmp_path):
+    edge = "SYNTHETIC long running head " + "SYNTHETIC prose " * 15
+    assert len(edge) > 180
+    pages = [
+        page(1, imprint()),
+        page(2, edge + "\n§ 1. SYNTHETIC Heading\nSYNTHETIC body"),
+        page(3, edge + "\nSYNTHETIC continued body"),
+        page(4, "§ 2. SYNTHETIC Next\nSYNTHETIC final prose"),
+    ]
+    path = tmp_path / "SYNTHETIC.db"
+    write_pages(path, pages)
+    with SnapshotReader({"sources.db": path}) as reader:
+        candidate = extract(reader, pages)[0]
+        assert candidate.outcome == "withheld"
+        assert candidate.reason == "running_head_unresolved"
+        assert edge in candidate.response[1].text

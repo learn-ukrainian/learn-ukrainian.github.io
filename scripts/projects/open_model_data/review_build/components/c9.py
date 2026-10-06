@@ -188,7 +188,7 @@ def recurring_edges(pages):
             if line.strip() and not re.fullmatch(PAGE_PATTERN, line.strip())
         ]
         if lines:
-            edges.update({edge_key(line) for line in (lines[0], lines[-1]) if 0 < len(edge_key(line)) <= 180})
+            edges.update({edge_key(line) for line in (lines[0], lines[-1]) if edge_key(line)})
     return {line for line, count in edges.items() if count >= 2}
 
 
