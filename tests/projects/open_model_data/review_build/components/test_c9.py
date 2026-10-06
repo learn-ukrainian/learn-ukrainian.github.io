@@ -113,8 +113,10 @@ def source(tmp_path):
     return path, pages
 
 
-def gate_for(reader, pages, count):
-    component = component_for(pages)
+def gate_for(reader, pages, count, profiles=None):
+    component = component_for(pages) if profiles is None else Textbooks(profiles)
+    if profiles is not None:
+        component.spec["compatibility"] = compatibility({p["source_file"] for p in pages})
     spec = copy.deepcopy(component.spec)
     spec["operation_specs"]["verbatim_section"]["frozen_count"] = count
     root = Path(__file__).resolve().parents[5]
@@ -1173,11 +1175,33 @@ def test_bare_marker_does_not_join_heading_like_uppercase_line(tmp_path, label):
 
 @pytest.mark.parametrize(
     "verb",
-    ["Поцікавтеся", "Поділіться", "Ознайомтеся", "Зверніться", "Переконайтеся",
-     "Проаналізуйте", "Відредагуйте", "Презентуйте", "Перекажіть", "Опишіть",
-     "Розкажіть", "Сформулюйте", "Поставте", "Продовжте", "Виберіть", "Уявіть",
-     "Одягніть", "Зафіксуйте", "Закручуйте", "Обгорніть", "Протягніть",
-     "Напишіть", "Обґрунтуйте", "Наведіть", "Схарактеризуйте"],
+    [
+        "Поцікавтеся",
+        "Поділіться",
+        "Ознайомтеся",
+        "Зверніться",
+        "Переконайтеся",
+        "Проаналізуйте",
+        "Відредагуйте",
+        "Презентуйте",
+        "Перекажіть",
+        "Опишіть",
+        "Розкажіть",
+        "Сформулюйте",
+        "Поставте",
+        "Продовжте",
+        "Виберіть",
+        "Уявіть",
+        "Одягніть",
+        "Зафіксуйте",
+        "Закручуйте",
+        "Обгорніть",
+        "Протягніть",
+        "Напишіть",
+        "Обґрунтуйте",
+        "Наведіть",
+        "Схарактеризуйте",
+    ],
 )
 def test_numbered_verified_imperatives_require_their_own_printed_answer(tmp_path, verb):
     from scripts.projects.open_model_data.review_build.components.c9 import exercise_without_answer
@@ -1193,7 +1217,6 @@ def test_numbered_verified_imperatives_require_their_own_printed_answer(tmp_path
     write_pages(path, pages)
     with SnapshotReader({"sources.db": path}) as reader:
         assert extract(reader, pages)[0].reason == "exercise_without_answer"
-
 
 
 def test_long_recurring_page_edge_survivor_requires_withholding(tmp_path):
@@ -1212,3 +1235,132 @@ def test_long_recurring_page_edge_survivor_requires_withholding(tmp_path):
         assert candidate.outcome == "withheld"
         assert candidate.reason == "running_head_unresolved"
         assert edge in candidate.response[1].text
+
+
+@pytest.fixture
+def split_identity_source(tmp_path):
+    from scripts.projects.open_model_data.review_build.components.c9_identity import FIELDS
+    from scripts.projects.open_model_data.review_build.components.c9_profile_candidates import locator
+
+    pages = [page(1, imprint())]
+    profiles = synthetic_profiles(pages)
+    profile = profiles[pages[0]["source_file"]]
+    # All five designated fields use their own title/imprint page, in one book.
+    for index, field in enumerate(FIELDS, 1):
+        text = profile["fields"][field]["text"]
+        if index > 1:
+            pages.append(page(index, f"SYNTHETIC imprint\n{text}"))
+        row = pages[index - 1]
+        start = row["full_text"].index(text)
+        field_locator, offsets = locator(row["full_text"], start, start + len(text))
+        field_locator.update(page_index=index, identity_source="imprint")
+        profile["fields"][field] = field_locator
+        profile["field_offsets"][field] = offsets
+    pages += [
+        page(6, "§ 1. SYNTHETIC First\nSYNTHETIC body"),
+        page(7, "§ 2. SYNTHETIC Next\nSYNTHETIC next body"),
+    ]
+    path = tmp_path / "SYNTHETIC-split.db"
+    write_pages(path, pages)
+    return path, pages, profiles
+
+
+def test_per_field_designated_pages_build_gate_and_attribution(split_identity_source):
+    path, pages, profiles = split_identity_source
+    item = identity(pages, profiles)
+    assert item is not None
+    assert {p["page_start"] for p in item.field_rows.values()} == set(range(1, 6))
+    with SnapshotReader({"sources.db": path}) as reader:
+        component = Textbooks(profiles)
+        candidate = next(component._book(pages, reader))
+        assert candidate.outcome == "accepted"
+        assert [v.citations[0].row_key for v in candidate.context] == [f"section_id={i}" for i in range(1, 6)]
+        assert candidate.slots[1].citations[0].row_key == "section_id=3"
+        records, report = gate_for(reader, pages, 2, profiles).run(list(component._book(pages, reader)))
+        assert len(records) == 1
+        assert report["accounting"]["C9"]["reasons"]["printed_heading"] == 1
+        result = TextbookAttribution(profiles).resolve(
+            TextbookAttribution.FORMS[SOURCE_SCHOOL], citation(pages[5]), pages[5], reader
+        )
+        assert "SYNTHETIC Publisher, 2025." in result.bibliography
+        assert {key for key, _ in reader.reads[("sources.db", "textbook_sections")]} >= {
+            f"section_id={i}" for i in range(1, 6)
+        }
+
+
+@pytest.mark.parametrize("field", ["title", "authors", "grade", "publisher", "year"])
+@pytest.mark.parametrize("mutation", ["missing_page", "foreign_book", "text", "lines", "offset", "bibliography"])
+def test_per_field_identity_refuses_drift_and_foreign_sources(split_identity_source, field, mutation):
+    _, pages, profiles = split_identity_source
+    profiles = copy.deepcopy(profiles)
+    profile = profiles[pages[0]["source_file"]]
+    designated = profile["fields"][field]
+    index = designated["page_index"]
+    if mutation == "missing_page":
+        pages = [p for p in pages if p["page_start"] != index]
+    elif mutation == "foreign_book":
+        pages = [dict(p, source_file="5-klas-SYNTHETIC-other") if p["page_start"] == index else p for p in pages]
+        # Keep the book anchor first even when the title page is substituted.
+        pages = sorted(pages, key=lambda p: p["source_file"] != "5-klas-SYNTHETIC-book")
+    elif mutation == "text":
+        designated["text"] += "SYNTHETIC drift"
+    elif mutation == "lines":
+        designated["lines"][0] += 1
+    elif mutation == "offset":
+        profile["field_offsets"][field][0] += 1
+    else:
+        designated["identity_source"] = "bibliography"
+    assert identity(pages, profiles) is None
+
+
+@pytest.mark.parametrize("field_index", range(5))
+def test_per_field_gate_refuses_authentic_quote_on_undesignated_page(split_identity_source, field_index):
+    path, pages, profiles = split_identity_source
+    # A duplicate authentic field on another page must not authenticate identity.
+    duplicate = page(8, pages[field_index]["full_text"])
+    with sqlite3.connect(path) as connection:
+        connection.execute("INSERT INTO textbook_sections VALUES (?,?,?,?,?,?,?,?,?)", list(duplicate.values()))
+    with SnapshotReader({"sources.db": path}) as reader:
+        candidate = next(Textbooks(profiles)._book(pages, reader))
+        attestation = candidate.context[field_index]
+        context = list(candidate.context)
+        context[field_index] = replace(attestation, citations=(citation(duplicate),))
+        slots = list(candidate.slots)
+        if field_index in (0, 2):
+            slot_index = 0 if field_index == 0 else 1
+            slots[slot_index] = replace(slots[slot_index], citations=(citation(duplicate),))
+        forged = replace(candidate, context=tuple(context), slots=tuple(slots))
+        gate_for(reader, pages, 2, profiles).quote(forged)
+        with pytest.raises(BuildError, match="binding_set"):
+            bindings.check(
+                forged,
+                Textbooks(profiles).spec["operation_specs"]["verbatim_section"]["binding"],
+                reader,
+                {"line_excision@1": LINE_POLICY},
+            )
+
+
+def test_per_field_gate_refuses_other_book_and_missing_attestation(split_identity_source):
+    path, pages, profiles = split_identity_source
+    foreign = page(8, pages[3]["full_text"], book="5-klas-SYNTHETIC-other")
+    with sqlite3.connect(path) as connection:
+        connection.execute("INSERT INTO textbook_sections VALUES (?,?,?,?,?,?,?,?,?)", list(foreign.values()))
+    with SnapshotReader({"sources.db": path}) as reader:
+        component = Textbooks(profiles)
+        candidate = next(component._book(pages, reader))
+        context = list(candidate.context)
+        context[3] = replace(context[3], citations=(citation(foreign),))
+        with pytest.raises(BuildError, match="binding_group"):
+            bindings.check(
+                replace(candidate, context=tuple(context)),
+                component.spec["operation_specs"]["verbatim_section"]["binding"],
+                reader,
+                {"line_excision@1": LINE_POLICY},
+            )
+        with pytest.raises(BuildError, match="binding_selector"):
+            bindings.check(
+                replace(candidate, context=candidate.context[:-1]),
+                component.spec["operation_specs"]["verbatim_section"]["binding"],
+                reader,
+                {"line_excision@1": LINE_POLICY},
+            )

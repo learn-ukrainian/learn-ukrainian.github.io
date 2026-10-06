@@ -6806,6 +6806,192 @@
           377
         ]
       }
+    },
+    "7-klas-istoriya-shchupak-2024-full": {
+      "page_index": 4,
+      "identity_source": "imprint",
+      "fields": {
+        "title": {
+          "lines": [
+            30,
+            30
+          ],
+          "columns": [
+            0,
+            23
+          ],
+          "text": "Історія: Україна і світ",
+          "page_index": 4,
+          "identity_source": "imprint"
+        },
+        "authors": {
+          "lines": [
+            29,
+            29
+          ],
+          "columns": [
+            4,
+            66
+          ],
+          "text": "Щупак І. Я., Секиринський Д. О., Власова Н. С., Кронгауз В. О.",
+          "page_index": 4,
+          "identity_source": "imprint"
+        },
+        "grade": {
+          "lines": [
+            30,
+            30
+          ],
+          "columns": [
+            60,
+            67
+          ],
+          "text": "7 класу",
+          "page_index": 4,
+          "identity_source": "imprint"
+        },
+        "publisher": {
+          "lines": [
+            31,
+            31
+          ],
+          "columns": [
+            44,
+            56
+          ],
+          "text": "УОВЦ «Оріон»",
+          "page_index": 4,
+          "identity_source": "imprint"
+        },
+        "year": {
+          "lines": [
+            31,
+            31
+          ],
+          "columns": [
+            58,
+            62
+          ],
+          "text": "2024",
+          "page_index": 4,
+          "identity_source": "imprint"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          1734,
+          1757
+        ],
+        "authors": [
+          1671,
+          1733
+        ],
+        "grade": [
+          1794,
+          1801
+        ],
+        "publisher": [
+          1846,
+          1858
+        ],
+        "year": [
+          1860,
+          1864
+        ]
+      }
+    },
+    "9-klas-mystetstvo-kondratova-2025": {
+      "page_index": 1,
+      "identity_source": "title_page",
+      "fields": {
+        "title": {
+          "lines": [
+            2,
+            2
+          ],
+          "columns": [
+            0,
+            9
+          ],
+          "text": "МИСТЕЦТВО",
+          "page_index": 1,
+          "identity_source": "title_page"
+        },
+        "authors": {
+          "lines": [
+            10,
+            10
+          ],
+          "columns": [
+            25,
+            42
+          ],
+          "text": "Л. Г. Кондратова.",
+          "page_index": 2,
+          "identity_source": "imprint"
+        },
+        "grade": {
+          "lines": [
+            4,
+            4
+          ],
+          "columns": [
+            4,
+            11
+          ],
+          "text": "9 класу",
+          "page_index": 1,
+          "identity_source": "title_page"
+        },
+        "publisher": {
+          "lines": [
+            8,
+            8
+          ],
+          "columns": [
+            0,
+            24
+          ],
+          "text": "НАВЧАЛЬНА КНИГА – БОГДАН",
+          "page_index": 1,
+          "identity_source": "title_page"
+        },
+        "year": {
+          "lines": [
+            9,
+            9
+          ],
+          "columns": [
+            0,
+            4
+          ],
+          "text": "2025",
+          "page_index": 1,
+          "identity_source": "title_page"
+        }
+      },
+      "field_offsets": {
+        "title": [
+          19,
+          28
+        ],
+        "authors": [
+          399,
+          416
+        ],
+        "grade": [
+          63,
+          70
+        ],
+        "publisher": [
+          168,
+          192
+        ],
+        "year": [
+          193,
+          197
+        ]
+      }
     }
   }
 }

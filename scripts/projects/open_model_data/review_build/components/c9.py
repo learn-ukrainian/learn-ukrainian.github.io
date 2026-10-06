@@ -26,7 +26,7 @@ from ..errors import require
 from ..gate import REASONING, evidence_id
 from ..transforms import transform
 from . import ComponentContext
-from .c9_identity import identity, load_profiles, profile_binding
+from .c9_identity import FIELDS, identity, load_profiles, profile_binding
 from .c9_queries import BODY_QUERY, ELIGIBLE_SQL, END_QUERY, EXCISION_QUERY, HEADING_QUERY, UNIT_QUERY
 
 SOURCE_SCHOOL = "textbooks"
@@ -256,10 +256,11 @@ class TextbookAttribution:
         item = cache[book]
         require(item is not None, "attribution_unresolved")
         page_number = printed_page(row)
-        identity_page = row["section_id"] == item.row["section_id"]
+        identity_page = any(row["section_id"] == p["section_id"] for p in item.field_rows.values())
         require(page_number is not None or identity_page, "attribution_unresolved")
         # Pin the actual imprint column, including on response-page citations.
-        reader.field(citation(item.row))
+        for field_row in item.field_rows.values():
+            reader.field(citation(field_row))
         replacements = {
             "author(s)": item.text("authors"),
             "title": item.text("title"),
@@ -293,7 +294,7 @@ BINDING = {
                 {**ANCHOR, "field": "source_file"},
                 selector("slots", "book_title", field="source_file"),
                 selector("slots", "grade", field="source_file"),
-                selector("context", "textbook_identity_attestation", field="source_file"),
+                selector("context", "textbook_identity_attestation", match="all", min=5, field="source_file"),
                 selector("response", "body", match="all", field="source_file"),
             ],
         },
@@ -301,8 +302,14 @@ BINDING = {
             "op": "same_row",
             "values": [
                 selector("slots", "book_title"),
+                selector("context", "textbook_identity_attestation", index=0),
+            ],
+        },
+        {
+            "op": "same_row",
+            "values": [
                 selector("slots", "grade"),
-                selector("context", "textbook_identity_attestation"),
+                selector("context", "textbook_identity_attestation", index=2),
             ],
         },
         {
@@ -696,11 +703,14 @@ class Textbooks:
                 reason = "book_identity_unresolved"
             else:
                 slots = [
-                    value(imprint.row, "book_title", imprint.fields["title"]),
-                    value(imprint.row, "grade", imprint.fields["grade"]),
+                    value(imprint.field_rows["title"], "book_title", imprint.fields["title"]),
+                    value(imprint.field_rows["grade"], "grade", imprint.fields["grade"]),
                     slot_heading,
                 ]
-                context = [value(imprint.row, "textbook_identity_attestation", imprint.span)]
+                context = [
+                    value(imprint.field_rows[key], "textbook_identity_attestation", imprint.fields[key])
+                    for key in FIELDS
+                ]
             if imprint is None:
                 reason = "book_identity_unresolved"
             elif damaged_book:

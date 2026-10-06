@@ -18,12 +18,11 @@ LEVEL = re.compile(r"\b(?:студентів|вищих навчальних з�
 
 @dataclass(frozen=True)
 class Identity:
-    row: dict
     fields: dict
-    span: tuple[int, int]
+    field_rows: dict
 
     def text(self, key):
-        return self.row["full_text"][slice(*self.fields[key])]
+        return self.field_rows[key]["full_text"][slice(*self.fields[key])]
 
 
 def load_profiles(reader):
@@ -49,40 +48,57 @@ def field_span(text, field):
 
 
 def identity(pages, profiles):
-    """Profiles designate an inspected title/imprint page, never search citations."""
+    """Authenticate each designated title/imprint field within the same book."""
     if not pages:
         return None
     profile = profiles.get(pages[0]["source_file"])
     if profile is None or profile.get("identity_source") not in {"title_page", "imprint"}:
         return None
-    rows = [p for p in pages if p["page_start"] == profile["page_index"]]
-    if len(rows) != 1 or set(profile.get("fields", {})) != set(FIELDS):
+    if set(profile.get("fields", {})) != set(FIELDS):
         return None
-    row = rows[0]
-    fields = {}
+    fields, field_rows = {}, {}
     for key in FIELDS:
-        span = field_span(row["full_text"], profile["fields"][key])
+        field = profile["fields"][key]
+        if field.get("identity_source", profile["identity_source"]) not in {"title_page", "imprint"}:
+            return None
+        rows = [
+            p
+            for p in pages
+            if p["source_file"] == pages[0]["source_file"]
+            and p["page_start"] == field.get("page_index", profile["page_index"])
+        ]
+        if len(rows) != 1:
+            return None
+        row = rows[0]
+        span = field_span(row["full_text"], field)
         if span is None or list(span) != profile.get("field_offsets", {}).get(key):
             return None
         fields[key] = span
+        field_rows[key] = row
     # Strip a printed library code by the same rule for every book; no rewritten bytes.
-    title = row["full_text"][slice(*fields["title"])]
+    title = field_rows["title"]["full_text"][slice(*fields["title"])]
     match = CATALOGUE.match(title)
     if match:
         fields["title"] = (fields["title"][0] + match.end(), fields["title"][1])
-    if not all(row["full_text"][slice(*span)].strip() for span in fields.values()):
+    if not all(field_rows[key]["full_text"][slice(*span)].strip() for key, span in fields.items()):
         return None
-    level = row["full_text"][slice(*fields["grade"])]
-    grammar = LEVEL if row["source_file"].startswith("uni-") else GRADE
+    level = field_rows["grade"]["full_text"][slice(*fields["grade"])]
+    grammar = LEVEL if pages[0]["source_file"].startswith("uni-") else GRADE
     if not grammar.fullmatch(level) or not re.fullmatch(r"(?:19|20)[0-9]{2}", profile["fields"]["year"]["text"]):
         return None
-    return Identity(row, fields, (min(s for s, e in fields.values()), max(e for s, e in fields.values())))
+    return Identity(fields, field_rows)
 
 
 def profile_binding(profiles):
     """Gate re-reads designated page and spans, independently of candidate citations."""
     rules = []
-    for slot, field in (("book_title", "title"), ("grade", "grade")):
+    selectors = [
+        ({"area": "slots", "slot": slot}, field) for slot, field in (("book_title", "title"), ("grade", "grade"))
+    ] + [
+        ({"area": "context", "slot": "textbook_identity_attestation", "index": index}, field)
+        for index, field in enumerate(FIELDS)
+    ]
+    for selector, field in selectors:
         cases = []
         for book, profile in sorted(profiles.items()):
             f = profile["fields"][field]
@@ -93,12 +109,12 @@ def profile_binding(profiles):
                 start += match.end()
             quote = lambda s: "'" + s.replace("'", "''") + "'"  # noqa: E731
             cases.append(
-                f"WHEN source_file={quote(book)} AND page_start={profile['page_index']} "
+                f"WHEN source_file={quote(book)} AND page_start={f.get('page_index', profile['page_index'])} "
                 f"THEN substr(full_text,{start + 1},{end - start})"
             )
-        sql = "SELECT CASE " + " ".join(cases) + " END FROM textbook_sections WHERE source_file=?"
+        sql = "SELECT CASE " + " ".join(cases) + " END FROM textbook_sections WHERE source_file=? AND section_id=?"
         if not cases:
-            sql = "SELECT NULL FROM textbook_sections WHERE source_file=?"
+            sql = "SELECT NULL FROM textbook_sections WHERE source_file=? AND section_id=?"
         sql = (
             "SELECT expected FROM ("
             + sql.replace(" END FROM", " END AS expected FROM")
@@ -107,12 +123,15 @@ def profile_binding(profiles):
         rules.append(
             {
                 "op": "set_query_equal",
-                "values": [{"area": "slots", "slot": slot}],
+                "values": [selector],
                 "normalizer": "identity",
                 "queries": [
                     {
                         "query": {"kind": "sql", "store": "sources.db", "sql": sql, "parameters": []},
-                        "parameters": [{"area": "slots", "slot": "section_title", "field": "source_file"}],
+                        "parameters": [
+                            {"area": "slots", "slot": "section_title", "field": "source_file"},
+                            {**selector, "field": "section_id"},
+                        ],
                     }
                 ],
             }
