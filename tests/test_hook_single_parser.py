@@ -16,8 +16,7 @@ access to these modules fail. The observed parser sites must equal the frozen
 creation set exactly. This module is a test: production hooks must not import
 it, and it is not a bash oracle deployed with them.
 
-Process starts. This check does not track commands through assignments, aliases,
-or event-loop objects. A process start is allowed only when both of these hold:
+Process starts. A process start is allowed only when both of these hold:
 
 1. It is a direct call ``subprocess.run``, ``subprocess.call``,
    ``subprocess.check_call``, or ``subprocess.check_output``. ``Popen`` is not
@@ -44,15 +43,33 @@ module escapes; ``asyncio`` subprocess APIs and any ``subprocess_exec`` or
 ``psutil.Popen``, ``pexpect``, ``sh``, and ``plumbum``. A new external
 capability has to be classified in this set before it is silent.
 
-Rule 4 exceptions. An existing call whose argv is not a reviewed template, and
-an existing helper default or alias that stores ``subprocess.run``, is listed
-in ``tests/fixtures/hook_process_start_baseline.json``. Each entry pins
-multiplicity, the normalized call AST, and a one-line explanation of where the
-command comes from. The fixture must equal the creation set in this module.
-Replacing, duplicating, or adding an entry fails unless both change together.
-An entry waives nothing in rule 1 or 3: ``shell=``, ``executable=``, a rebound
-or aliased ``subprocess``, and any other process API still fail when the same
-AST is written into the baseline.
+A name bound to a process-capable module (``os``, ``asyncio``,
+``asyncio.subprocess``, ``psutil``, ``pty``, ``multiprocessing``,
+``concurrent.futures``, ``subprocess`` other than the one plain import, and the
+other modules in rule 3) is a violation when that name is used as a value:
+assignment, argument, return, container, or the host of an attribute after a
+rebinding. Every ``ast.Name`` and ``ast.Attribute`` is judged through the
+parent map. Wildcard imports from any of those modules are violations and are
+not expanded.
+
+``subprocess`` is rebound by every binding of that name other than the one
+plain import. That includes Store and Del names (assignment, walrus, ``for``,
+``with``, comprehension targets), match captures, ``except`` names, parameters,
+function and class names, ``global`` / ``nonlocal``, and ``import X as
+subprocess`` / ``from X import Y as subprocess``.
+
+Rule 4 exceptions. Only a call AST may be baselined. An existing call whose
+argv is not a reviewed template is listed in
+``tests/fixtures/hook_process_start_baseline.json``. A function that launches a
+process from a computed argv is a runner helper: its own launch call is pinned,
+and every call to that helper from the scanned set is pinned too (normalized
+call AST, literal argv where present, multiplicity). A runner default or alias
+is not baseline-eligible; the baseline pins the launch call instead. The
+fixture must equal the creation set in this module. Replacing, duplicating, or
+adding an entry fails unless both change together. An entry waives nothing in
+rule 1 or 3: ``shell=``, ``executable=``, a rebound or aliased ``subprocess``,
+and any other process API still fail when the same AST is written into the
+baseline.
 
 Trust assumptions. The check trusts that the literal names ``git`` and ``gh``
 resolve to those executables, and that user or system git/gh configuration does
@@ -188,10 +205,25 @@ WHITE_BOX_TESTS = frozenset(
 SHELL_PARSER_LIBRARIES = frozenset({"bashlex", "tree_sitter_bash"})
 SHLEX_MODULE_ALLOWED_ATTRS = frozenset({"quote", "join"})
 DYNAMIC_MODULE_FUNCS = frozenset({"getattr", "vars", "globals", "__import__"})
-# Star-imports of these modules are refused outside the boundary and are not
-# expanded. ``asyncio.subprocess`` is named here because its final segment is
-# not the stdlib ``subprocess`` module.
-WILDCARD_IMPORT_MODULES = frozenset({"asyncio", "os", "shlex", "subprocess"})
+# Process-capable modules. A name bound to one of these, used as a value, is a
+# violation. Star-imports of these modules, and of shlex, are refused outside
+# the boundary and are not expanded.
+PROCESS_CAPABLE_MODULES = frozenset(
+    {
+        "asyncio",
+        "asyncio.subprocess",
+        "concurrent.futures",
+        "multiprocessing",
+        "os",
+        "pexpect",
+        "plumbum",
+        "psutil",
+        "pty",
+        "sh",
+        "subprocess",
+    }
+)
+WILDCARD_IMPORT_MODULES = PROCESS_CAPABLE_MODULES | frozenset({"shlex"})
 # May-bind is only the shlex module and the boundary modules.
 _MAY_BIND_KINDS = frozenset({"shlex_module", "boundary_module"})
 SHLEX_EXPORTS = frozenset({"split", "shlex", "quote", "join"})
@@ -246,7 +278,8 @@ ASYNCIO_SUBPROCESS_ATTRS = frozenset({"create_subprocess_exec", "create_subproce
 EVENT_LOOP_SUBPROCESS_ATTRS = frozenset({"subprocess_exec", "subprocess_shell"})
 EXTERNAL_PROCESS_MODULES = frozenset({"pty", "multiprocessing", "pexpect", "plumbum", "sh"})
 _OS_GETATTR_FUNCS = frozenset({"getattr", "hasattr", "setattr", "delattr"})
-_ELIGIBLE_PROCESS_REASONS = frozenset({"argv-template", "runner-reference"})
+# Only call ASTs. A runner default or alias (``runner-reference``) cannot be pinned.
+_ELIGIBLE_PROCESS_REASONS = frozenset({"argv-template", "runner-call"})
 
 
 @dataclass(frozen=True)
@@ -412,32 +445,59 @@ def _is_stdlib_subprocess_module(module: str | None) -> bool:
     return module == "subprocess" or module.endswith(".subprocess")
 
 
-def _binding_targets(node: ast.AST) -> list[ast.AST]:
-    """Assignment, loop, with, and walrus targets. Imports and parameters are separate."""
-    if isinstance(node, (ast.For, ast.AsyncFor)):
-        return [node.target]
-    if isinstance(node, ast.Assign):
-        return list(node.targets)
-    if isinstance(node, (ast.AnnAssign, ast.AugAssign)):
-        return [node.target]
-    if isinstance(node, ast.NamedExpr):
-        return [node.target]
-    if isinstance(node, (ast.With, ast.AsyncWith)):
-        return [item.optional_vars for item in node.items if item.optional_vars is not None]
+def _string_binding_sites(node: ast.AST) -> list[tuple[str, ast.AST]]:
+    """Names bound without a Store ``ast.Name``. Import aliases are separate.
+
+    Store and Del names (assignment, walrus, ``for``, ``with``, comprehension
+    targets) are visited directly. These forms bind through a string field.
+    """
+    if isinstance(node, (ast.Global, ast.Nonlocal)):
+        return [(name, node) for name in node.names]
+    if isinstance(node, ast.ExceptHandler) and node.name:
+        return [(node.name, node)]
+    if isinstance(node, ast.MatchAs) and node.name:
+        return [(node.name, node)]
+    if isinstance(node, ast.MatchStar) and node.name:
+        return [(node.name, node)]
+    if isinstance(node, ast.MatchMapping) and node.rest:
+        return [(node.rest, node)]
+    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+        return [(node.name, node)]
+    if isinstance(node, ast.arg):
+        return [(node.arg, node)]
     return []
 
 
-def _store_names(target: ast.AST) -> list[ast.Name]:
-    if isinstance(target, ast.Name) and isinstance(target.ctx, (ast.Store, ast.Del)):
-        return [target]
-    if isinstance(target, (ast.Tuple, ast.List)):
-        found: list[ast.Name] = []
-        for elt in target.elts:
-            found.extend(_store_names(elt))
-        return found
-    if isinstance(target, ast.Starred):
-        return _store_names(target.value)
-    return []
+def _subprocess_runner_attributes(expr: ast.AST) -> list[ast.Attribute]:
+    """Permitted ``subprocess`` runners used as values inside ``expr``."""
+    found: list[ast.Attribute] = []
+    for node in ast.walk(expr):
+        if (
+            isinstance(node, ast.Attribute)
+            and isinstance(node.value, ast.Name)
+            and node.value.id == "subprocess"
+            and node.attr in PERMITTED_SUBPROCESS_RUNNERS
+        ):
+            found.append(node)
+    return found
+
+
+def _iter_scope_nodes(body: list[ast.stmt]) -> Iterable[ast.AST]:
+    """Nodes in ``body`` except nested function and lambda bodies.
+
+    Class bodies are entered so a class-level alias is visible. Methods are
+    skipped here and scanned as their own functions.
+    """
+    stack: list[ast.AST] = list(reversed(body))
+    while stack:
+        node = stack.pop()
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+            continue
+        if isinstance(node, ast.ClassDef):
+            stack.extend(reversed(node.body))
+            continue
+        yield node
+        stack.extend(reversed(list(ast.iter_child_nodes(node))))
 
 
 def _is_module_level(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> bool:
@@ -575,7 +635,7 @@ class ProcessFinding:
 
 @dataclass(frozen=True)
 class ProcessException:
-    """One pinned non-template call or stored ``subprocess.run``."""
+    """One pinned call. A runner default or alias is not a baseline row."""
 
     path: str
     enclosing_symbol: str
@@ -587,7 +647,7 @@ class ProcessException:
         return (self.path, self.enclosing_symbol, self.normalized_ast)
 
 
-PROCESS_EXCEPTION_COUNT = 13
+PROCESS_EXCEPTION_COUNT = 50
 
 PROCESS_CREATION_EXCEPTIONS: tuple[ProcessException, ...] = (
     ProcessException(
@@ -595,15 +655,14 @@ PROCESS_CREATION_EXCEPTIONS: tuple[ProcessException, ...] = (
         '_check_states',
         1,
         (
-            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
-            "gs=[List(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='checks'), Nam"
-            "e(id='pr', ctx=Load()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args="
-            "[Name(id='repo', ctx=Load())], keywords=[]), ctx=Load()), Constant(value='--json'), Cons"
-            "tant(value='name,bucket,state')], ctx=Load())], keywords=[keyword(arg='capture_output', "
-            "value=Constant(value=True)), keyword(arg='env', value=Call(func=Name(id='_gh_env', ctx=L"
-            "oad()), args=[], keywords=[])), keyword(arg='cwd', value=Name(id='cwd', ctx=Load())), ke"
-            "yword(arg='text', value=Constant(value=True)), keyword(arg='timeout', value=Constant(val"
-            'ue=8))])'
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[List"
+            "(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='checks'), Name(id='pr', ctx=L"
+            "oad()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args=[Name(id='repo', ctx=Loa"
+            "d())], keywords=[]), ctx=Load()), Constant(value='--json'), Constant(value='name,bucket,state')]"
+            ", ctx=Load())], keywords=[keyword(arg='capture_output', value=Constant(value=True)), keyword(arg"
+            "='env', value=Call(func=Name(id='_gh_env', ctx=Load()), args=[], keywords=[])), keyword(arg='cwd"
+            "', value=Name(id='cwd', ctx=Load())), keyword(arg='text', value=Constant(value=True)), keyword(a"
+            "rg='timeout', value=Constant(value=8))])"
         ),
         'Spreads _repo_args(repo) before --json name,bucket,state.',
     ),
@@ -612,15 +671,14 @@ PROCESS_CREATION_EXCEPTIONS: tuple[ProcessException, ...] = (
         '_check_states_from_status_rollup',
         1,
         (
-            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
-            "gs=[List(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='view'), Name("
-            "id='pr', ctx=Load()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args=[N"
-            "ame(id='repo', ctx=Load())], keywords=[]), ctx=Load()), Constant(value='--json'), Consta"
-            "nt(value='statusCheckRollup')], ctx=Load())], keywords=[keyword(arg='capture_output', va"
-            "lue=Constant(value=True)), keyword(arg='env', value=Call(func=Name(id='_gh_env', ctx=Loa"
-            "d()), args=[], keywords=[])), keyword(arg='cwd', value=Name(id='cwd', ctx=Load())), keyw"
-            "ord(arg='text', value=Constant(value=True)), keyword(arg='timeout', value=Constant(value"
-            '=8))])'
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[List"
+            "(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='view'), Name(id='pr', ctx=Loa"
+            "d()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args=[Name(id='repo', ctx=Load("
+            "))], keywords=[]), ctx=Load()), Constant(value='--json'), Constant(value='statusCheckRollup')], "
+            "ctx=Load())], keywords=[keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='"
+            "env', value=Call(func=Name(id='_gh_env', ctx=Load()), args=[], keywords=[])), keyword(arg='cwd',"
+            " value=Name(id='cwd', ctx=Load())), keyword(arg='text', value=Constant(value=True)), keyword(arg"
+            "='timeout', value=Constant(value=8))])"
         ),
         'Spreads _repo_args(repo) before --json statusCheckRollup.',
     ),
@@ -629,15 +687,14 @@ PROCESS_CREATION_EXCEPTIONS: tuple[ProcessException, ...] = (
         '_pr_meta',
         1,
         (
-            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
-            "gs=[List(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='view'), Name("
-            "id='pr', ctx=Load()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args=[N"
-            "ame(id='repo', ctx=Load())], keywords=[]), ctx=Load()), Constant(value='--json'), Consta"
-            "nt(value='isDraft,baseRefName,body,headRefOid,number,url')], ctx=Load())], keywords=[key"
-            "word(arg='capture_output', value=Constant(value=True)), keyword(arg='env', value=Call(fu"
-            "nc=Name(id='_gh_env', ctx=Load()), args=[], keywords=[])), keyword(arg='cwd', value=Name"
-            "(id='cwd', ctx=Load())), keyword(arg='text', value=Constant(value=True)), keyword(arg='t"
-            "imeout', value=Constant(value=8))])"
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[List"
+            "(elts=[Constant(value='gh'), Constant(value='pr'), Constant(value='view'), Name(id='pr', ctx=Loa"
+            "d()), Starred(value=Call(func=Name(id='_repo_args', ctx=Load()), args=[Name(id='repo', ctx=Load("
+            "))], keywords=[]), ctx=Load()), Constant(value='--json'), Constant(value='isDraft,baseRefName,bo"
+            "dy,headRefOid,number,url')], ctx=Load())], keywords=[keyword(arg='capture_output', value=Constan"
+            "t(value=True)), keyword(arg='env', value=Call(func=Name(id='_gh_env', ctx=Load()), args=[], keyw"
+            "ords=[])), keyword(arg='cwd', value=Name(id='cwd', ctx=Load())), keyword(arg='text', value=Const"
+            "ant(value=True)), keyword(arg='timeout', value=Constant(value=8))])"
         ),
         'Spreads _repo_args(repo) between the PR selector and --json.',
     ),
@@ -646,15 +703,14 @@ PROCESS_CREATION_EXCEPTIONS: tuple[ProcessException, ...] = (
         'main',
         1,
         (
-            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
-            "gs=[List(elts=[Call(func=Name(id='str', ctx=Load()), args=[Name(id='python_bin', ctx=Loa"
-            "d())], keywords=[]), Call(func=Name(id='str', ctx=Load()), args=[Name(id='script', ctx=L"
-            "oad())], keywords=[]), Constant(value='--repo'), Call(func=Name(id='str', ctx=Load()), a"
-            "rgs=[Name(id='project_dir', ctx=Load())], keywords=[]), Constant(value='--fix'), Constan"
-            "t(value='-q')], ctx=Load())], keywords=[keyword(arg='check', value=Constant(value=False)"
-            "), keyword(arg='stdout', value=Attribute(value=Name(id='subprocess', ctx=Load()), attr='"
-            "DEVNULL', ctx=Load())), keyword(arg='stderr', value=Attribute(value=Name(id='subprocess'"
-            ", ctx=Load()), attr='DEVNULL', ctx=Load()))])"
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[List"
+            "(elts=[Call(func=Name(id='str', ctx=Load()), args=[Name(id='python_bin', ctx=Load())], keywords="
+            "[]), Call(func=Name(id='str', ctx=Load()), args=[Name(id='script', ctx=Load())], keywords=[]), C"
+            "onstant(value='--repo'), Call(func=Name(id='str', ctx=Load()), args=[Name(id='project_dir', ctx="
+            "Load())], keywords=[]), Constant(value='--fix'), Constant(value='-q')], ctx=Load())], keywords=["
+            "keyword(arg='check', value=Constant(value=False)), keyword(arg='stdout', value=Attribute(value=N"
+            "ame(id='subprocess', ctx=Load()), attr='DEVNULL', ctx=Load())), keyword(arg='stderr', value=Attr"
+            "ibute(value=Name(id='subprocess', ctx=Load()), attr='DEVNULL', ctx=Load()))])"
         ),
         'Executable is project_interpreter(); script is scripts/audit/check_core_bare.py.',
     ),
@@ -663,12 +719,12 @@ PROCESS_CREATION_EXCEPTIONS: tuple[ProcessException, ...] = (
         '_git',
         1,
         (
-            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
-            "gs=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='cwd', value=Call(func=Name(id='"
-            "str', ctx=Load()), args=[Name(id='cwd', ctx=Load())], keywords=[])), keyword(arg='captur"
-            "e_output', value=Constant(value=True)), keyword(arg='text', value=Constant(value=True)),"
-            " keyword(arg='env', value=Name(id='env', ctx=Load())), keyword(arg='check', value=Consta"
-            "nt(value=False)), keyword(arg='timeout', value=Name(id='_GIT_TIMEOUT_S', ctx=Load()))])"
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name"
+            "(id='argv', ctx=Load())], keywords=[keyword(arg='cwd', value=Call(func=Name(id='str', ctx=Load()"
+            "), args=[Name(id='cwd', ctx=Load())], keywords=[])), keyword(arg='capture_output', value=Constan"
+            "t(value=True)), keyword(arg='text', value=Constant(value=True)), keyword(arg='env', value=Name(i"
+            "d='env', ctx=Load())), keyword(arg='check', value=Constant(value=False)), keyword(arg='timeout',"
+            " value=Name(id='_GIT_TIMEOUT_S', ctx=Load()))])"
         ),
         "argv is ['git', *args] from the caller's git arguments, not a fixed template.",
     ),
@@ -677,12 +733,11 @@ PROCESS_CREATION_EXCEPTIONS: tuple[ProcessException, ...] = (
         '_run_git',
         1,
         (
-            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
-            "gs=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='capture_output', value=Constant"
-            "(value=True)), keyword(arg='text', value=Constant(value=True)), keyword(arg='check', val"
-            "ue=Constant(value=False)), keyword(arg='env', value=Call(func=Name(id='sanitized_git_env"
-            "', ctx=Load()), args=[], keywords=[])), keyword(arg='timeout', value=Name(id='_GIT_TIMEO"
-            "UT_S', ctx=Load()))])"
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name"
+            "(id='argv', ctx=Load())], keywords=[keyword(arg='capture_output', value=Constant(value=True)), k"
+            "eyword(arg='text', value=Constant(value=True)), keyword(arg='check', value=Constant(value=False)"
+            "), keyword(arg='env', value=Call(func=Name(id='sanitized_git_env', ctx=Load()), args=[], keyword"
+            "s=[])), keyword(arg='timeout', value=Name(id='_GIT_TIMEOUT_S', ctx=Load()))])"
         ),
         "argv is ['git', '-C', cwd, *args] from the caller's git arguments.",
     ),
@@ -691,10 +746,10 @@ PROCESS_CREATION_EXCEPTIONS: tuple[ProcessException, ...] = (
         'run_wrapped',
         1,
         (
-            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
-            "gs=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='input', value=Name(id='stdin', "
-            "ctx=Load())), keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='ti"
-            "meout', value=Name(id='_HOOK_TIMEOUT_SECONDS', ctx=Load()))])"
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name"
+            "(id='argv', ctx=Load())], keywords=[keyword(arg='input', value=Name(id='stdin', ctx=Load())), ke"
+            "yword(arg='capture_output', value=Constant(value=True)), keyword(arg='timeout', value=Name(id='_"
+            "HOOK_TIMEOUT_SECONDS', ctx=Load()))])"
         ),
         'argv is the hook command passed into run_wrapped, not a displayed list.',
     ),
@@ -703,11 +758,11 @@ PROCESS_CREATION_EXCEPTIONS: tuple[ProcessException, ...] = (
         '_time_one',
         1,
         (
-            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
-            "gs=[Name(id='argv', ctx=Load())], keywords=[keyword(arg='input', value=Name(id='stdin', "
-            "ctx=Load())), keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='en"
-            "v', value=Name(id='env', ctx=Load())), keyword(arg='cwd', value=Name(id='ROOT', ctx=Load"
-            "())), keyword(arg='timeout', value=Name(id='_HOOK_TIMEOUT_SECONDS', ctx=Load()))])"
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name"
+            "(id='argv', ctx=Load())], keywords=[keyword(arg='input', value=Name(id='stdin', ctx=Load())), ke"
+            "yword(arg='capture_output', value=Constant(value=True)), keyword(arg='env', value=Name(id='env',"
+            " ctx=Load())), keyword(arg='cwd', value=Name(id='ROOT', ctx=Load())), keyword(arg='timeout', val"
+            "ue=Name(id='_HOOK_TIMEOUT_SECONDS', ctx=Load()))])"
         ),
         'argv is the hook command passed into _time_one, not a displayed list.',
     ),
@@ -716,55 +771,483 @@ PROCESS_CREATION_EXCEPTIONS: tuple[ProcessException, ...] = (
         'canonical_state_root',
         1,
         (
-            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
-            "gs=[Name(id='command', ctx=Load())], keywords=[keyword(arg='check', value=Constant(value"
-            "=False)), keyword(arg='capture_output', value=Constant(value=True)), keyword(arg='text',"
-            " value=Constant(value=True)), keyword(arg='env', value=Name(id='env', ctx=Load())), keyw"
-            "ord(arg='timeout', value=Name(id='_GIT_TIMEOUT_SECONDS', ctx=Load()))])"
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name"
+            "(id='command', ctx=Load())], keywords=[keyword(arg='check', value=Constant(value=False)), keywor"
+            "d(arg='capture_output', value=Constant(value=True)), keyword(arg='text', value=Constant(value=Tr"
+            "ue)), keyword(arg='env', value=Name(id='env', ctx=Load())), keyword(arg='timeout', value=Name(id"
+            "='_GIT_TIMEOUT_SECONDS', ctx=Load()))])"
         ),
         'command is the git -C rev-parse list built above and passed by name.',
-    ),
-    ProcessException(
-        'scripts/opsec/gh_snapshot.py',
-        'admit',
-        1,
-        (
-            "Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load())"
-        ),
-        'reader defaults to subprocess.run and is forwarded to repository.',
-    ),
-    ProcessException(
-        'scripts/opsec/gh_snapshot.py',
-        'repository',
-        1,
-        (
-            "Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load())"
-        ),
-        'reader defaults to subprocess.run and launches git remote get-url origin.',
-    ),
-    ProcessException(
-        'scripts/opsec/prepublish.py',
-        'checked_run',
-        1,
-        (
-            "BoolOp(op=Or(), values=[Name(id='runner', ctx=Load()), Attribute(value=Name(id='subproce"
-            "ss', ctx=Load()), attr='run', ctx=Load())])"
-        ),
-        "runner falls back to subprocess.run; args are the caller's, gh goes through admit.",
     ),
     ProcessException(
         'scripts/orchestration/thread_handoff.py',
         'run_command',
         1,
         (
-            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), ar"
-            "gs=[Name(id='args', ctx=Load())], keywords=[keyword(arg='cwd', value=Call(func=Name(id='"
-            "str', ctx=Load()), args=[Name(id='cwd', ctx=Load())], keywords=[])), keyword(arg='captur"
-            "e_output', value=Constant(value=True)), keyword(arg='text', value=Constant(value=True)),"
-            " keyword(arg='timeout', value=Name(id='timeout_s', ctx=Load())), keyword(arg='check', va"
-            "lue=Constant(value=False)), keyword(arg='env', value=Name(id='env', ctx=Load()))])"
+            "Call(func=Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load()), args=[Name"
+            "(id='args', ctx=Load())], keywords=[keyword(arg='cwd', value=Call(func=Name(id='str', ctx=Load()"
+            "), args=[Name(id='cwd', ctx=Load())], keywords=[])), keyword(arg='capture_output', value=Constan"
+            "t(value=True)), keyword(arg='text', value=Constant(value=True)), keyword(arg='timeout', value=Na"
+            "me(id='timeout_s', ctx=Load())), keyword(arg='check', value=Constant(value=False)), keyword(arg="
+            "'env', value=Name(id='env', ctx=Load()))])"
         ),
         'args is caller-supplied; callers pass git, gh, ps, and the project interpreter.',
+    ),
+    ProcessException(
+        'agents_extensions/shared/hooks/guard-pr-merge.py',
+        '_check_states',
+        1,
+        (
+            "Call(func=Name(id='_check_states_from_status_rollup', ctx=Load()), args=[Name(id='pr', ctx=Load("
+            ")), Name(id='repo', ctx=Load()), Name(id='cwd', ctx=Load())], keywords=[])"
+        ),
+        'Calls _check_states_from_status_rollup, whose gh pr view argv is pinned separately.',
+    ),
+    ProcessException(
+        'agents_extensions/shared/hooks/heal-core-bare.py',
+        '<module>',
+        1,
+        (
+            "Call(func=Name(id='main', ctx=Load()), args=[], keywords=[])"
+        ),
+        'Module-level main() launches the pinned project-interpreter call.',
+    ),
+    ProcessException(
+        'scripts/guardrails/assert_primary_on_main.py',
+        'primary_head_state',
+        1,
+        (
+            "Call(func=Name(id='_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(value='s"
+            "ymbolic-ref'), Constant(value='--quiet'), Constant(value='--short'), Constant(value='HEAD')], ke"
+            'ywords=[])'
+        ),
+        'Passes git symbolic-ref --quiet --short HEAD through the pinned _git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/assert_primary_on_main.py',
+        'primary_head_state',
+        1,
+        (
+            "Call(func=Name(id='_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(value='r"
+            "ev-parse'), Constant(value='--short'), Constant(value='HEAD')], keywords=[])"
+        ),
+        'Passes git rev-parse --short HEAD through the pinned _git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/assert_primary_on_main.py',
+        'heal_primary_to_main',
+        1,
+        (
+            "Call(func=Name(id='_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(value='s"
+            "how-ref'), Constant(value='--verify'), Constant(value='--quiet'), Constant(value='refs/heads/mai"
+            "n')], keywords=[])"
+        ),
+        'Passes git show-ref --verify --quiet refs/heads/main through the pinned _git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/assert_primary_on_main.py',
+        'heal_primary_to_main',
+        1,
+        (
+            "Call(func=Name(id='_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(value='f"
+            "etch'), Constant(value='origin'), Constant(value='main')], keywords=[])"
+        ),
+        'Passes git fetch origin main through the pinned _git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/assert_primary_on_main.py',
+        'heal_primary_to_main',
+        1,
+        (
+            "Call(func=Name(id='_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(value='c"
+            "heckout'), Constant(value='-B'), Constant(value='main'), Constant(value='origin/main')], keyword"
+            's=[])'
+        ),
+        'Passes git checkout -B main origin/main through the pinned _git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/assert_primary_on_main.py',
+        'heal_primary_to_main',
+        1,
+        (
+            "Call(func=Name(id='_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(value='c"
+            "heckout'), Constant(value='main')], keywords=[])"
+        ),
+        'Passes git checkout main through the pinned _git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/assert_primary_on_main.py',
+        'heal_primary_to_main',
+        1,
+        (
+            "Call(func=Name(id='_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(value='p"
+            "ull'), Constant(value='--ff-only'), Constant(value='origin'), Constant(value='main')], keywords="
+            '[])'
+        ),
+        'Passes git pull --ff-only origin main through the pinned _git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        '_resolve_main_root_or_none',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='start_dir', ctx=Load()), Constant(valu"
+            "e='rev-parse'), Constant(value='--path-format=absolute'), Constant(value='--git-common-dir')], k"
+            'eywords=[])'
+        ),
+        'Passes git rev-parse --path-format=absolute --git-common-dir through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        '_resolve_main_root_or_none',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='start_dir', ctx=Load()), Constant(valu"
+            "e='rev-parse'), Constant(value='--show-toplevel')], keywords=[])"
+        ),
+        'Passes git rev-parse --show-toplevel through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        'registered_worktrees',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(valu"
+            "e='worktree'), Constant(value='list'), Constant(value='--porcelain')], keywords=[])"
+        ),
+        'Passes git worktree list --porcelain through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        'is_tracked',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='root', ctx=Load()), Constant(value='ls"
+            "-files'), Constant(value='--error-unmatch'), Constant(value='--'), Name(id='rel', ctx=Load())], "
+            'keywords=[])'
+        ),
+        'Passes git ls-files --error-unmatch and a relative path through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        'is_ignored',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='root', ctx=Load()), Constant(value='ch"
+            "eck-ignore'), Constant(value='-q'), Constant(value='--'), Name(id='rel', ctx=Load())], keywords="
+            '[])'
+        ),
+        'Passes git check-ignore -q and a relative path through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        'current_branch',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='start', ctx=Load()), Constant(value='s"
+            "ymbolic-ref'), Constant(value='--quiet'), Constant(value='--short'), Constant(value='HEAD')], ke"
+            'ywords=[])'
+        ),
+        'Passes git symbolic-ref --quiet --short HEAD through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        'heal_primary_bare_if_needed',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(valu"
+            "e='rev-parse'), Constant(value='--is-bare-repository')], keywords=[])"
+        ),
+        'Passes git rev-parse --is-bare-repository through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        'heal_primary_bare_if_needed',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(valu"
+            "e='config'), Constant(value='--get'), Constant(value='core.bare')], keywords=[])"
+        ),
+        'Passes git config --get core.bare through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        'heal_primary_bare_if_needed',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(valu"
+            "e='config'), Constant(value='core.bare'), Constant(value='false')], keywords=[])"
+        ),
+        'Passes git config core.bare false through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        'heal_primary_bare_if_needed',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(valu"
+            "e='config'), Constant(value='extensions.worktreeConfig'), Constant(value='true')], keywords=[])"
+        ),
+        'Passes git config extensions.worktreeConfig true through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        'primary_checkout_dirty_status',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Constant(valu"
+            "e='rev-parse'), Constant(value='HEAD')], keywords=[])"
+        ),
+        'Passes git rev-parse HEAD through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/guardrails/worktree_containment.py',
+        'primary_checkout_dirty_status',
+        1,
+        (
+            "Call(func=Name(id='_run_git', ctx=Load()), args=[Name(id='main_root', ctx=Load()), Starred(value"
+            "=Subscript(value=Name(id='command', ctx=Load()), slice=Slice(lower=Constant(value=1)), ctx=Load("
+            ')), ctx=Load())], keywords=[])'
+        ),
+        'Spreads command[1:] through the pinned _run_git runner.',
+    ),
+    ProcessException(
+        'scripts/hooks/hook_timing.py',
+        'main',
+        1,
+        (
+            "Call(func=Name(id='run_wrapped', ctx=Load()), args=[Name(id='cmd', ctx=Load())], keywords=[])"
+        ),
+        'Passes the hook command in cmd through the pinned run_wrapped runner.',
+    ),
+    ProcessException(
+        'scripts/hooks/measure_hook_stack.py',
+        'main',
+        1,
+        (
+            "Call(func=Name(id='_time_one', ctx=Load()), args=[Name(id='name', ctx=Load()), Name(id='argv', c"
+            "tx=Load()), Name(id='stdin', ctx=Load()), Name(id='env_extra', ctx=Load())], keywords=[keyword(a"
+            "rg='repeats', value=Attribute(value=Name(id='args', ctx=Load()), attr='repeats', ctx=Load()))])"
+        ),
+        'Passes the hook argv into the pinned _time_one runner.',
+    ),
+    ProcessException(
+        'scripts/lib/session_record.py',
+        'sessions_dir',
+        1,
+        (
+            "Call(func=Name(id='canonical_state_root', ctx=Load()), args=[], keywords=[])"
+        ),
+        'sessions_dir calls canonical_state_root, whose git rev-parse command is pinned separately.',
+    ),
+    ProcessException(
+        'scripts/lib/session_record.py',
+        '_resolved_state_root',
+        1,
+        (
+            "Call(func=Name(id='canonical_state_root', ctx=Load()), args=[], keywords=[])"
+        ),
+        '_resolved_state_root calls canonical_state_root, whose git rev-parse command is pinned separately.',
+    ),
+    ProcessException(
+        'scripts/opsec/gh_snapshot.py',
+        'repository',
+        1,
+        (
+            "Call(func=Name(id='reader', ctx=Load()), args=[List(elts=[Constant(value='git'), Constant(value="
+            "'remote'), Constant(value='get-url'), Constant(value='origin')], ctx=Load())], keywords=[keyword"
+            "(arg='cwd', value=Name(id='cwd', ctx=Load())), keyword(arg='env', value=Call(func=Name(id='inter"
+            "nal_environment', ctx=Load()), args=[Name(id='environment', ctx=Load())], keywords=[])), keyword"
+            "(arg='capture_output', value=Constant(value=True)), keyword(arg='text', value=Constant(value=Tru"
+            "e)), keyword(arg='check', value=Constant(value=False)), keyword(arg='timeout', value=Constant(va"
+            'lue=5))])'
+        ),
+        'reader launches git remote get-url origin; the default reader is subprocess.run.',
+    ),
+    ProcessException(
+        'scripts/opsec/gh_snapshot.py',
+        'admit',
+        1,
+        (
+            "Call(func=Name(id='repository', ctx=Load()), args=[Name(id='cwd', ctx=Load()), Name(id='origin_e"
+            "nv', ctx=Load())], keywords=[keyword(arg='reader', value=Name(id='reader', ctx=Load()))])"
+        ),
+        'Forwards reader into repository, whose git remote get-url call is pinned separately.',
+    ),
+    ProcessException(
+        'scripts/opsec/gh_snapshot.py',
+        'admit',
+        1,
+        (
+            "Call(func=Name(id='reader', ctx=Load()), args=[List(elts=[Constant(value='git'), Constant(value="
+            "'rev-parse'), Constant(value='--show-toplevel')], ctx=Load())], keywords=[keyword(arg='cwd', val"
+            "ue=Name(id='cwd', ctx=Load())), keyword(arg='env', value=Call(func=Name(id='internal_environment"
+            "', ctx=Load()), args=[Name(id='environment', ctx=Load())], keywords=[])), keyword(arg='text', va"
+            "lue=Constant(value=True)), keyword(arg='capture_output', value=Constant(value=True)), keyword(ar"
+            "g='check', value=Constant(value=False)), keyword(arg='timeout', value=Constant(value=5))])"
+        ),
+        'reader launches git rev-parse --show-toplevel; the default reader is subprocess.run.',
+    ),
+    ProcessException(
+        'scripts/opsec/gh_snapshot.py',
+        'admit',
+        1,
+        (
+            "Call(func=Name(id='repository', ctx=Load()), args=[Name(id='cwd', ctx=Load()), Name(id='environm"
+            "ent', ctx=Load()), IfExp(test=Name(id='selectors', ctx=Load()), body=Subscript(value=Name(id='se"
+            "lectors', ctx=Load()), slice=UnaryOp(op=USub(), operand=Constant(value=1)), ctx=Load()), orelse="
+            "Constant(value=None)), Name(id='reader', ctx=Load())], keywords=[])"
+        ),
+        'Forwards reader into repository with the last selector; the git remote call is pinned separately.',
+    ),
+    ProcessException(
+        'scripts/opsec/prepublish.py',
+        'checked_run',
+        1,
+        (
+            "Call(func=Name(id='runner', ctx=Load()), args=[Name(id='args', ctx=Load())], keywords=[keyword(v"
+            "alue=Name(id='kwargs', ctx=Load()))])"
+        ),
+        "Fallback runner(args) launches the caller's argv; the default runner is subprocess.run.",
+    ),
+    ProcessException(
+        'scripts/opsec/prepublish.py',
+        'checked_run',
+        1,
+        (
+            "Call(func=Name(id='admit', ctx=Load()), args=[Call(func=Name(id='list', ctx=Load()), args=[Subsc"
+            "ript(value=Name(id='args', ctx=Load()), slice=Slice(lower=Constant(value=1)), ctx=Load())], keyw"
+            "ords=[])], keywords=[keyword(arg='cwd', value=Call(func=Name(id='Path', ctx=Load()), args=[BoolO"
+            "p(op=Or(), values=[Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='get', ctx=Load"
+            "()), args=[Constant(value='cwd')], keywords=[]), Call(func=Attribute(value=Name(id='Path', ctx=L"
+            "oad()), attr='cwd', ctx=Load()), args=[], keywords=[])])], keywords=[])), keyword(arg='environme"
+            "nt', value=Name(id='environment', ctx=Load())), keyword(arg='reader', value=Name(id='runner', ct"
+            'x=Load()))])'
+        ),
+        'Forwards runner into admit, whose git calls are pinned in gh_snapshot.',
+    ),
+    ProcessException(
+        'scripts/opsec/prepublish.py',
+        'checked_run',
+        1,
+        (
+            "Call(func=Name(id='runner', ctx=Load()), args=[List(elts=[Subscript(value=Name(id='args', ctx=Lo"
+            "ad()), slice=Constant(value=0), ctx=Load()), Starred(value=Attribute(value=Name(id='frozen', ctx"
+            "=Load()), attr='argv', ctx=Load()), ctx=Load())], ctx=Load())], keywords=[keyword(value=Name(id="
+            "'kwargs', ctx=Load()))])"
+        ),
+        'runner launches gh plus the frozen argv from admit; the default runner is subprocess.run.',
+    ),
+    ProcessException(
+        'scripts/orchestration/thread_handoff.py',
+        'canonical_state_root',
+        1,
+        (
+            "Call(func=Name(id='run_command', ctx=Load()), args=[List(elts=[Constant(value='git'), Constant(v"
+            "alue='rev-parse'), Constant(value='--path-format=absolute'), Constant(value='--git-common-dir')]"
+            ", ctx=Load())], keywords=[keyword(arg='cwd', value=Name(id='repo_root', ctx=Load())), keyword(ar"
+            "g='env', value=Call(func=Name(id='git_environment', ctx=Load()), args=[], keywords=[]))])"
+        ),
+        'run_command launches git rev-parse --path-format=absolute --git-common-dir.',
+    ),
+    ProcessException(
+        'scripts/orchestration/thread_handoff.py',
+        'git_output',
+        1,
+        (
+            "Call(func=Name(id='run_command', ctx=Load()), args=[List(elts=[Constant(value='git'), Starred(va"
+            "lue=Name(id='args', ctx=Load()), ctx=Load())], ctx=Load())], keywords=[keyword(arg='cwd', value="
+            "Name(id='repo_root', ctx=Load())), keyword(arg='timeout_s', value=Name(id='timeout_s', ctx=Load("
+            "))), keyword(arg='env', value=Call(func=Name(id='git_environment', ctx=Load()), args=[], keyword"
+            's=[]))])'
+        ),
+        "run_command launches git plus the caller's args.",
+    ),
+    ProcessException(
+        'scripts/orchestration/thread_handoff.py',
+        'gh_json',
+        1,
+        (
+            "Call(func=Name(id='run_command', ctx=Load()), args=[List(elts=[Constant(value='gh'), Starred(val"
+            "ue=Name(id='args', ctx=Load()), ctx=Load())], ctx=Load())], keywords=[keyword(arg='cwd', value=N"
+            "ame(id='repo_root', ctx=Load())), keyword(arg='timeout_s', value=Name(id='timeout_s', ctx=Load()"
+            '))])'
+        ),
+        "run_command launches gh plus the caller's args.",
+    ),
+    ProcessException(
+        'scripts/orchestration/thread_handoff.py',
+        'require_checkout_continuity.is_ancestor',
+        1,
+        (
+            "Call(func=Name(id='run_command', ctx=Load()), args=[List(elts=[Constant(value='git'), Constant(v"
+            "alue='merge-base'), Constant(value='--is-ancestor'), Name(id='expected_head', ctx=Load()), Name("
+            "id='current_head', ctx=Load())], ctx=Load())], keywords=[keyword(arg='cwd', value=Name(id='repo_"
+            "root', ctx=Load())), keyword(arg='env', value=Call(func=Name(id='git_environment', ctx=Load()), "
+            'args=[], keywords=[]))])'
+        ),
+        'run_command launches git merge-base --is-ancestor with the two heads.',
+    ),
+    ProcessException(
+        'scripts/orchestration/thread_handoff.py',
+        '_default_process_snapshot',
+        1,
+        (
+            "Call(func=Name(id='run_command', ctx=Load()), args=[List(elts=[Constant(value='ps'), Constant(va"
+            "lue='-o'), Constant(value='ppid=,comm=,lstart='), Constant(value='-p'), Call(func=Name(id='str',"
+            " ctx=Load()), args=[Name(id='pid', ctx=Load())], keywords=[])], ctx=Load())], keywords=[keyword("
+            "arg='cwd', value=Call(func=Attribute(value=Name(id='Path', ctx=Load()), attr='cwd', ctx=Load()),"
+            " args=[], keywords=[])), keyword(arg='env', value=Name(id='env', ctx=Load()))])"
+        ),
+        'run_command launches ps -o ppid=,comm=,lstart= for one pid.',
+    ),
+    ProcessException(
+        'scripts/orchestration/thread_handoff.py',
+        '_default_machine_id',
+        1,
+        (
+            "Call(func=Name(id='run_command', ctx=Load()), args=[List(elts=[Constant(value='ioreg'), Constant"
+            "(value='-rd1'), Constant(value='-c'), Constant(value='IOPlatformExpertDevice')], ctx=Load())], k"
+            "eywords=[keyword(arg='cwd', value=Call(func=Attribute(value=Name(id='Path', ctx=Load()), attr='c"
+            "wd', ctx=Load()), args=[], keywords=[])), keyword(arg='env', value=Call(func=Name(id='git_enviro"
+            "nment', ctx=Load()), args=[], keywords=[]))])"
+        ),
+        'run_command launches ioreg -rd1 -c IOPlatformExpertDevice.',
+    ),
+    ProcessException(
+        'scripts/orchestration/thread_handoff.py',
+        '_process_is_zombie',
+        1,
+        (
+            "Call(func=Name(id='run_command', ctx=Load()), args=[List(elts=[Constant(value='ps'), Constant(va"
+            "lue='-o'), Constant(value='stat='), Constant(value='-p'), Call(func=Name(id='str', ctx=Load()), "
+            "args=[Name(id='pid', ctx=Load())], keywords=[])], ctx=Load())], keywords=[keyword(arg='cwd', val"
+            "ue=Call(func=Attribute(value=Name(id='Path', ctx=Load()), attr='cwd', ctx=Load()), args=[], keyw"
+            "ords=[])), keyword(arg='env', value=Name(id='env', ctx=Load()))])"
+        ),
+        'run_command launches ps -o stat= for one pid.',
+    ),
+    ProcessException(
+        'scripts/orchestration/thread_handoff.py',
+        'request_claudex_rollover',
+        1,
+        (
+            "Call(func=Name(id='run_command', ctx=Load()), args=[List(elts=[Call(func=Attribute(value=Name(id"
+            "='os', ctx=Load()), attr='fspath', ctx=Load()), args=[Call(func=Name(id='project_interpreter', c"
+            "tx=Load()), args=[Name(id='repo_root', ctx=Load())], keywords=[])], keywords=[]), Call(func=Attr"
+            "ibute(value=Name(id='os', ctx=Load()), attr='fspath', ctx=Load()), args=[Name(id='supervisor_scr"
+            "ipt', ctx=Load())], keywords=[]), Constant(value='request-rollover'), Constant(value='--state-ro"
+            "ot'), Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='fspath', ctx=Load()), args=[Nam"
+            "e(id='state_root', ctx=Load())], keywords=[]), Constant(value='--run-id'), Name(id='run_id', ctx"
+            "=Load()), Constant(value='--launch-generation'), Call(func=Name(id='str', ctx=Load()), args=[Nam"
+            "e(id='launch_generation', ctx=Load())], keywords=[]), Constant(value='--session-id'), Name(id='s"
+            "ession_id', ctx=Load()), Constant(value='--lineage-id'), Name(id='lineage_id', ctx=Load()), Cons"
+            "tant(value='--rollover-generation'), Call(func=Name(id='str', ctx=Load()), args=[Name(id='rollov"
+            "er_generation', ctx=Load())], keywords=[]), Constant(value='--rollover-id'), Name(id='rollover_i"
+            "d', ctx=Load())], ctx=Load())], keywords=[keyword(arg='cwd', value=Name(id='repo_root', ctx=Load"
+            '()))])'
+        ),
+        'run_command launches the project interpreter on claudex_supervisor.py request-rollover.',
     ),
 )
 
@@ -812,11 +1295,17 @@ class _ProcessAllowlist:
         self._asyncio_names: set[str] = set()
         self._asyncio_subprocess_names: set[str] = set()
         self._psutil_names: set[str] = set()
+        self._module_names: dict[str, set[str]] = {}
+        self._rebound_modules: set[str] = set()
+        self._suppressed_runner_ids: set[int] = set()
 
     def collect(self) -> list[ProcessFinding]:
         self._collect_imports()
+        self._propagate_process_modules()
+        self._sync_process_name_sets()
         self._collect_binding_escapes()
-        self._collect_module_values()
+        self._taint_subprocess_values()
+        self._collect_alias_launches()
         self._collect_references()
         self.findings.sort(key=lambda item: (item.line, item.column, item.reason, item.normalized_ast))
         return self.findings
@@ -849,6 +1338,11 @@ class _ProcessAllowlist:
                 else:
                     plain_subprocess = True
                     self._subprocess_names.add("subprocess")
+            elif local == "subprocess":
+                # ``import os as subprocess`` binds the subprocess name to another module.
+                self._add(alias, "binding:rebound")
+                tainted_subprocess = True
+                self._subprocess_names.add("subprocess")
             if root == "os" and alias.asname is None:
                 self._os_names.add("os")
             elif alias.name == "os" and alias.asname:
@@ -859,7 +1353,38 @@ class _ProcessAllowlist:
                 self._psutil_names.add(alias.asname or "psutil")
             if root in EXTERNAL_PROCESS_MODULES and alias.name.split(".", 1)[0] == root:
                 self._add(node, f"external-capability:{root}")
+            self._note_process_import(alias)
         return plain_subprocess, tainted_subprocess
+
+    def _note_process_import(self, alias: ast.alias) -> None:
+        """Record the module object an ``import`` actually binds."""
+        full = alias.name
+        if alias.asname:
+            if full in PROCESS_CAPABLE_MODULES:
+                self._bind_process_module(alias.asname, full, imported=True)
+            return
+        root = full.split(".", 1)[0]
+        if root in PROCESS_CAPABLE_MODULES:
+            self._bind_process_module(root, root, imported=True)
+
+    def _bind_process_module(self, local: str, module: str, *, imported: bool) -> None:
+        if module not in PROCESS_CAPABLE_MODULES:
+            return
+        self._module_names.setdefault(local, set()).add(module)
+        if not imported:
+            self._rebound_modules.add(local)
+
+    def _add_rebound_modules(self, name: str, modules: set[str]) -> bool:
+        changed = False
+        bucket = self._module_names.setdefault(name, set())
+        for module in modules:
+            if module not in bucket:
+                bucket.add(module)
+                changed = True
+        if name not in self._rebound_modules:
+            self._rebound_modules.add(name)
+            changed = True
+        return changed
 
     def _remember_asyncio_import(self, node: ast.Import, alias: ast.alias) -> None:
         if alias.name == "asyncio.subprocess" or alias.name.startswith("asyncio.subprocess."):
@@ -882,6 +1407,17 @@ class _ProcessAllowlist:
         if _is_stdlib_subprocess_module(module):
             self._add(node, "binding:from-import")
             tainted = True
+        else:
+            for alias in node.names:
+                local = alias.asname or alias.name
+                if local == "subprocess":
+                    self._add(alias, "binding:rebound")
+                    tainted = True
+                    self._subprocess_names.add("subprocess")
+        if module == "asyncio":
+            for alias in node.names:
+                if alias.name == "subprocess":
+                    self._bind_process_module(alias.asname or alias.name, "asyncio.subprocess", imported=True)
         if _module_is(module, "os"):
             for alias in node.names:
                 if _is_os_process_attr(alias.name):
@@ -914,36 +1450,209 @@ class _ProcessAllowlist:
                 self._add(alias, "event-loop-subprocess")
 
     def _collect_binding_escapes(self) -> None:
-        for node in ast.walk(self.tree):
-            if isinstance(node, ast.arg) and node.arg == "subprocess":
-                self._add(node, "binding:rebound")
-                self._subprocess_clean = False
-                continue
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and node.name == "subprocess":
-                self._add(node, "binding:rebound")
-                self._subprocess_clean = False
-                continue
-            if isinstance(node, ast.ExceptHandler) and node.name == "subprocess":
-                self._add(node, "binding:rebound")
-                self._subprocess_clean = False
-                continue
-            for target in _binding_targets(node):
-                for name in _store_names(target):
-                    if name.id == "subprocess":
-                        self._add(name, "binding:rebound")
-                        self._subprocess_clean = False
+        """Every binding of the name ``subprocess`` except the plain import.
 
-    def _collect_module_values(self) -> None:
+        Store and Del names cover assignment, walrus, loops, ``with``, and
+        comprehensions. String fields cover match, ``except``, parameters,
+        definitions, and ``global`` / ``nonlocal``. Nothing is skipped because
+        of the statement it sits in.
+        """
+        seen: set[int] = set()
+        for node in ast.walk(self.tree):
+            sites: list[ast.AST] = []
+            if isinstance(node, ast.Name) and isinstance(node.ctx, (ast.Store, ast.Del)) and node.id == "subprocess":
+                sites.append(node)
+            sites.extend(site for name, site in _string_binding_sites(node) if name == "subprocess")
+            for site in sites:
+                if id(site) in seen:
+                    continue
+                seen.add(id(site))
+                self._add(site, "binding:rebound")
+                self._subprocess_clean = False
+
+    def _expr_process_modules(self, expr: ast.AST) -> set[str]:
+        if isinstance(expr, ast.Name):
+            return set(self._module_names.get(expr.id, ()))
+        if isinstance(expr, ast.Attribute):
+            base = self._expr_process_modules(expr.value)
+            found: set[str] = set()
+            if expr.attr == "subprocess" and "asyncio" in base:
+                found.add("asyncio.subprocess")
+            if expr.attr == "futures" and "concurrent" in base:
+                found.add("concurrent.futures")
+            return found
+        if isinstance(expr, ast.BoolOp):
+            found = set()
+            for value in expr.values:
+                found |= self._expr_process_modules(value)
+            return found
+        if isinstance(expr, ast.IfExp):
+            return self._expr_process_modules(expr.body) | self._expr_process_modules(expr.orelse)
+        if isinstance(expr, ast.NamedExpr):
+            return self._expr_process_modules(expr.value)
+        return set()
+
+    def _propagate_process_modules(self) -> None:
+        """Copy a process-module binding through assignments. Flow-insensitive."""
+        changed = True
+        while changed:
+            changed = False
+            for node in ast.walk(self.tree):
+                changed |= self._propagate_process_node(node)
+
+    def _propagate_process_node(self, node: ast.AST) -> bool:
+        if isinstance(node, ast.Assign) and len(node.targets) == 1:
+            target = node.targets[0]
+            if (
+                isinstance(target, (ast.Tuple, ast.List))
+                and isinstance(node.value, (ast.Tuple, ast.List))
+                and len(target.elts) == len(node.value.elts)
+                and not any(isinstance(elt, ast.Starred) for elt in (*target.elts, *node.value.elts))
+            ):
+                changed = False
+                for left, right in zip(target.elts, node.value.elts, strict=True):
+                    modules = self._expr_process_modules(right)
+                    if modules and isinstance(left, ast.Name):
+                        changed |= self._add_rebound_modules(left.id, modules)
+                return changed
+        value: ast.expr | None = None
+        targets: list[ast.AST] = []
+        if isinstance(node, ast.Assign):
+            value = node.value
+            targets = list(node.targets)
+        elif isinstance(node, (ast.AnnAssign, ast.NamedExpr)) and node.value is not None:
+            value = node.value
+            targets = [node.target]
+        if value is None:
+            return False
+        modules = self._expr_process_modules(value)
+        if not modules:
+            return False
+        changed = False
+        for target in targets:
+            if isinstance(target, ast.Name):
+                changed |= self._add_rebound_modules(target.id, modules)
+        return changed
+
+    def _sync_process_name_sets(self) -> None:
+        for name in sorted(self._module_names):
+            modules = self._module_names[name]
+            if "os" in modules:
+                self._os_names.add(name)
+            if "asyncio" in modules:
+                self._asyncio_names.add(name)
+            if "asyncio.subprocess" in modules:
+                self._asyncio_subprocess_names.add(name)
+            if "psutil" in modules:
+                self._psutil_names.add(name)
+            if "subprocess" in modules:
+                self._subprocess_names.add(name)
+
+    def _name_is_attribute_host(self, node: ast.Name) -> bool:
+        parent = self.parents.get(node)
+        return isinstance(parent, ast.Attribute) and parent.value is node
+
+    def _process_name_is_value_use(self, node: ast.Name) -> bool:
+        """True when ``node`` uses a process-capable module as a value.
+
+        The original import name hosting an attribute (``os.path``, ``asyncio.sleep``)
+        is not a value use. A name that was assigned the module, then used as
+        the host of an attribute, is.
+        """
+        if node.id not in self._module_names:
+            return False
+        if self._name_is_attribute_host(node) and node.id not in self._rebound_modules:
+            return False
+        modules = self._module_names[node.id]
+        return not ("os" in modules and _benign_os_getattr(node, self.parents))
+
+    def _taint_subprocess_values(self) -> None:
+        """A subprocess module used as a value makes every later runner untrusted.
+
+        This runs before call judgment so breadth-first walk order cannot see
+        the call first.
+        """
         for node in ast.walk(self.tree):
             if not isinstance(node, ast.Name) or not isinstance(node.ctx, ast.Load):
                 continue
-            if node.id != "subprocess" or node.id not in self._subprocess_names:
+            if "subprocess" not in self._module_names.get(node.id, ()):
                 continue
-            parent = self.parents.get(node)
-            if isinstance(parent, ast.Attribute) and parent.value is node:
+            if self._process_name_is_value_use(node):
+                self._subprocess_clean = False
+                return
+
+    def _module_value_reason(self, name: str) -> str:
+        if self._module_names.get(name) == {"os"}:
+            return "os-escape"
+        return "binding:module-value"
+
+    def _note_runner_assignment(self, node: ast.AST, established: dict[str, list[ast.Attribute]]) -> None:
+        value: ast.expr | None = None
+        targets: list[ast.AST] = []
+        if isinstance(node, ast.Assign):
+            value = node.value
+            targets = list(node.targets)
+        elif isinstance(node, (ast.AnnAssign, ast.NamedExpr)) and node.value is not None:
+            value = node.value
+            targets = [node.target]
+        if value is None:
+            return
+        attributes = _subprocess_runner_attributes(value)
+        if not attributes:
+            return
+        for target in targets:
+            if isinstance(target, ast.Name):
+                established.setdefault(target.id, []).extend(attributes)
+
+    def _scan_runner_scope(self, body: list[ast.stmt], established: dict[str, list[ast.Attribute]]) -> None:
+        for node in _iter_scope_nodes(body):
+            self._note_runner_assignment(node, established)
+        called: set[str] = set()
+        calls: list[ast.Call] = []
+        for node in _iter_scope_nodes(body):
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in established:
+                called.add(node.func.id)
+                calls.append(node)
+        for name in sorted(called):
+            for attribute in established[name]:
+                self._suppressed_runner_ids.add(id(attribute))
+        for call in calls:
+            self._add(call, "runner-call", call)
+
+    def _collect_alias_launches(self) -> None:
+        """A call through a name bound to ``subprocess.run`` is the launch.
+
+        The default or alias that established the name is not a separate
+        baseline row. ``subprocess.run`` stored and not called stays a
+        ``runner-reference``.
+        """
+        module_established: dict[str, list[ast.Attribute]] = {}
+        self._scan_runner_scope(self.tree.body, module_established)
+        for node in ast.walk(self.tree):
+            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 continue
-            self._add(node, "binding:module-value")
-            self._subprocess_clean = False
+            established: dict[str, list[ast.Attribute]] = {
+                name: list(attributes) for name, attributes in module_established.items()
+            }
+            positional = node.args.posonlyargs + node.args.args
+            pad = len(positional) - len(node.args.defaults)
+            for arg, default in zip(positional, [None] * pad + list(node.args.defaults), strict=True):
+                if default is None:
+                    continue
+                attributes = _subprocess_runner_attributes(default)
+                if attributes:
+                    established.setdefault(arg.arg, []).extend(attributes)
+            for arg, default in zip(node.args.kwonlyargs, node.args.kw_defaults, strict=True):
+                if default is None:
+                    continue
+                attributes = _subprocess_runner_attributes(default)
+                if attributes:
+                    established.setdefault(arg.arg, []).extend(attributes)
+            self._scan_runner_scope(node.body, established)
+
+    def _attribute_process_modules(self, node: ast.Attribute) -> set[str]:
+        """Modules this attribute expression denotes, when it is the module object."""
+        return self._expr_process_modules(node)
 
     def _collect_references(self) -> None:
         for node in ast.walk(self.tree):
@@ -953,15 +1662,19 @@ class _ProcessAllowlist:
                 self._on_attribute(node)
 
     def _on_name(self, node: ast.Name) -> None:
-        parent = self.parents.get(node)
-        if isinstance(parent, ast.Attribute) and parent.value is node:
-            return
-        if node.id == "ProcessPoolExecutor":
+        if node.id == "ProcessPoolExecutor" and not self._name_is_attribute_host(node):
             self._add(node, "external-capability:ProcessPoolExecutor")
-        if node.id in self._os_names and not _benign_os_getattr(node, self.parents):
-            self._add(node, "os-escape")
+        if not self._process_name_is_value_use(node):
+            return
+        self._add(node, self._module_value_reason(node.id))
+        if "subprocess" in self._module_names.get(node.id, ()):
+            self._subprocess_clean = False
 
     def _on_attribute(self, node: ast.Attribute) -> None:
+        modules = self._attribute_process_modules(node)
+        parent = self.parents.get(node)
+        if modules and not (isinstance(parent, ast.Attribute) and parent.value is node):
+            self._add(node, "binding:module-value")
         if node.attr == "ProcessPoolExecutor":
             self._add(node, "external-capability:ProcessPoolExecutor")
         if node.attr in EVENT_LOOP_SUBPROCESS_ATTRS:
@@ -1043,6 +1756,8 @@ class _ProcessAllowlist:
                 self._add(node, "binding:untrusted", parent)
                 return
             reason = "runner-reference" if self._subprocess_clean and base_is_plain else "binding:untrusted"
+            if reason == "runner-reference" and id(node) in self._suppressed_runner_ids:
+                return
             root = _exception_root(node, self.parents) if reason == "runner-reference" else node
             self._add(node, reason, root)
             return
@@ -2368,6 +3083,195 @@ def _dotted_module_name(path: str) -> str:
     return stem.replace("/", ".")
 
 
+def _remember_helper_module(
+    module_names: dict[str, set[tuple[str, tuple[str, ...]]]],
+    local: str,
+    dotted: str,
+    prefix: tuple[str, ...],
+) -> None:
+    module_names.setdefault(local, set()).add((dotted, prefix))
+
+
+def _helper_bindings(
+    path: str,
+    tree: ast.AST,
+    helpers: set[tuple[str, str]],
+    by_module: dict[str, dict[str, str]],
+) -> tuple[dict[str, set[tuple[str, str]]], dict[str, set[tuple[str, tuple[str, ...]]]]]:
+    """Local names that may call a runner helper, and names that may be its module.
+
+    A module binding is ``(dotted module, attribute prefix)``. The prefix is
+    empty when the local name is the module, and the remaining dotted segments
+    when the import bound only the root package.
+    """
+    func_names: dict[str, set[tuple[str, str]]] = {}
+    module_names: dict[str, set[tuple[str, tuple[str, ...]]]] = {}
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and (path, node.name) in helpers:
+            func_names.setdefault(node.name, set()).add((path, node.name))
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom):
+            resolved = _resolve_imported_module(path, node.module, node.level)
+            if not resolved:
+                continue
+            funcs = by_module.get(resolved, {})
+            for alias in node.names:
+                if alias.name == "*":
+                    continue
+                local = alias.asname or alias.name
+                if alias.name in funcs:
+                    func_names.setdefault(local, set()).add((funcs[alias.name], alias.name))
+                submodule = f"{resolved}.{alias.name}"
+                if submodule in by_module:
+                    _remember_helper_module(module_names, local, submodule, ())
+            continue
+        if not isinstance(node, ast.Import):
+            continue
+        for alias in node.names:
+            parts = tuple(alias.name.split("."))
+            local = alias.asname or parts[0]
+            modules = [alias.name] if alias.name in by_module else []
+            if not modules:
+                modules = [module for module in by_module if module.startswith(alias.name + ".")]
+            for module in modules:
+                module_parts = tuple(module.split("."))
+                if alias.asname:
+                    prefix: tuple[str, ...] = ()
+                else:
+                    prefix = module_parts[len(parts) :] if module != alias.name else parts[1:]
+                _remember_helper_module(module_names, local, module, prefix)
+    return func_names, module_names
+
+
+def _matching_helpers(
+    root: str,
+    attrs: tuple[str, ...],
+    func_names: dict[str, set[tuple[str, str]]],
+    module_names: dict[str, set[tuple[str, tuple[str, ...]]]],
+    by_module: dict[str, dict[str, str]],
+) -> set[tuple[str, str]]:
+    if not attrs:
+        return set(func_names.get(root, ()))
+    func_name = attrs[-1]
+    prefix = attrs[:-1]
+    found: set[tuple[str, str]] = set()
+    for dotted, stored_prefix in module_names.get(root, ()):
+        helper_path = by_module.get(dotted, {}).get(func_name)
+        if stored_prefix == prefix and helper_path is not None:
+            found.add((helper_path, func_name))
+    return found
+
+
+def _expr_helper_bindings(
+    expr: ast.expr,
+    func_names: dict[str, set[tuple[str, str]]],
+    module_names: dict[str, set[tuple[str, tuple[str, ...]]]],
+    by_module: dict[str, dict[str, str]],
+) -> tuple[set[tuple[str, str]], set[tuple[str, tuple[str, ...]]]]:
+    if isinstance(expr, ast.Name):
+        return set(func_names.get(expr.id, ())), set(module_names.get(expr.id, ()))
+    chain = _attribute_chain(expr)
+    if chain is None:
+        return set(), set()
+    root, attrs = chain
+    return _matching_helpers(root.id, attrs, func_names, module_names, by_module), set()
+
+
+def _propagate_helper_aliases(
+    tree: ast.AST,
+    func_names: dict[str, set[tuple[str, str]]],
+    module_names: dict[str, set[tuple[str, tuple[str, ...]]]],
+    by_module: dict[str, dict[str, str]],
+) -> None:
+    """``cmd = run_command`` and ``alias = module`` keep the helper binding."""
+    changed = True
+    while changed:
+        changed = False
+        for node in ast.walk(tree):
+            value: ast.expr | None = None
+            targets: list[ast.AST] = []
+            if isinstance(node, ast.Assign):
+                value = node.value
+                targets = list(node.targets)
+            elif isinstance(node, (ast.AnnAssign, ast.NamedExpr)) and node.value is not None:
+                value = node.value
+                targets = [node.target]
+            if value is None:
+                continue
+            funcs, modules = _expr_helper_bindings(value, func_names, module_names, by_module)
+            for target in targets:
+                if not isinstance(target, ast.Name):
+                    continue
+                if funcs:
+                    bucket = func_names.setdefault(target.id, set())
+                    before = len(bucket)
+                    bucket.update(funcs)
+                    changed = changed or len(bucket) != before
+                if modules:
+                    bucket = module_names.setdefault(target.id, set())
+                    before = len(bucket)
+                    bucket.update(modules)
+                    changed = changed or len(bucket) != before
+
+
+def _call_targets_helper(
+    node: ast.Call,
+    func_names: dict[str, set[tuple[str, str]]],
+    module_names: dict[str, set[tuple[str, tuple[str, ...]]]],
+    by_module: dict[str, dict[str, str]],
+) -> bool:
+    func = node.func
+    if isinstance(func, ast.Name):
+        return bool(func_names.get(func.id))
+    chain = _attribute_chain(func)
+    if chain is None:
+        return False
+    root, attrs = chain
+    if not attrs:
+        return False
+    return bool(_matching_helpers(root.id, attrs, func_names, module_names, by_module))
+
+
+def _append_runner_helper_calls(sources: dict[str, str], findings: list[ProcessFinding]) -> None:
+    """Pin every scanned call to a function that launches a computed argv.
+
+    The helper's own launch is already a finding. Calls are pinned too, so a
+    new argv or an extra call does not hide behind the launch.
+    """
+    trees: dict[str, ast.Module] = {}
+    for path in sorted(sources):
+        try:
+            trees[path] = ast.parse(sources[path])
+        except SyntaxError:
+            continue
+    launched: dict[str, set[str]] = defaultdict(set)
+    for finding in findings:
+        if finding.reason in {"argv-template", "runner-call"} and "." not in finding.enclosing_symbol:
+            launched[finding.path].add(finding.enclosing_symbol)
+    helpers: set[tuple[str, str]] = set()
+    for path, tree in trees.items():
+        names = launched.get(path, ())
+        for node in tree.body:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name in names:
+                helpers.add((path, node.name))
+    if not helpers:
+        return
+    by_module: dict[str, dict[str, str]] = defaultdict(dict)
+    for path, name in sorted(helpers):
+        by_module[_dotted_module_name(path)][name] = path
+    for path in sorted(trees):
+        tree = trees[path]
+        parents = _parent_map(tree)
+        func_names, module_names = _helper_bindings(path, tree, helpers, by_module)
+        _propagate_helper_aliases(tree, func_names, module_names, by_module)
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            if not _call_targets_helper(node, func_names, module_names, by_module):
+                continue
+            findings.append(_finding(path, node, parents, "runner-call", node))
+
+
 def analyze_files(sources: dict[str, str], *, root: Path | None = None) -> Check:
     """Analyze an overlay of repo-relative sources. ``root`` fills helpers that are not overlaid."""
 
@@ -2432,6 +3336,11 @@ def analyze_files(sources: dict[str, str], *, root: Path | None = None) -> Check
         sites.extend(file_sites)
         violations.extend(file_violations)
         findings.extend(file_findings)
+    _append_runner_helper_calls(
+        {path: sources[path] for path in (*hook_files, *ordered_helpers) if path in sources},
+        findings,
+    )
+    findings.sort(key=lambda item: (item.path, item.line, item.column, item.reason, item.normalized_ast))
     process_violations, stale = reconcile_process_findings(findings, ())
     violations.extend(process_violations)
     violations.extend(_stale_process_violation(item) for item in stale)
@@ -2511,12 +3420,15 @@ def load_process_baseline(path: Path = PROCESS_FIXTURE_PATH) -> tuple[ProcessExc
         )
     entries = []
     for item in payload["exceptions"]:
+        normalized = item["normalized_ast"]
+        if not str(normalized).startswith("Call("):
+            raise AssertionError(f"process baseline entry is not a call: {item['path']}::{item['enclosing_symbol']}")
         entries.append(
             ProcessException(
                 item["path"],
                 item["enclosing_symbol"],
                 item["multiplicity"],
-                item["normalized_ast"],
+                normalized,
                 item["explanation"],
             )
         )
@@ -3144,7 +4056,25 @@ def _mutant_violation(kind: str, detail: str, symbol: str = "<module>") -> str:
     return f"{kind}: {_MUTANT}::{symbol}::{detail}"
 
 
-@pytest.mark.parametrize("module", ["shlex", "subprocess", "os", "asyncio", "shell_shlex", "shell_redirects"])
+@pytest.mark.parametrize(
+    "module",
+    [
+        "shlex",
+        "subprocess",
+        "os",
+        "asyncio",
+        "asyncio.subprocess",
+        "concurrent.futures",
+        "multiprocessing",
+        "psutil",
+        "pty",
+        "pexpect",
+        "sh",
+        "plumbum",
+        "shell_shlex",
+        "shell_redirects",
+    ],
+)
 def test_wildcard_runner_and_boundary_imports_fail(module: str) -> None:
     reasons = _single(f"from {module} import *\n")
     assert _mutant_violation("wildcard import", module) in reasons
@@ -3359,7 +4289,7 @@ def test_reviewed_command_template_passes(argv: str) -> None:
 def test_process_exceptions_match_fixture() -> None:
     loaded = load_process_baseline()
     assert loaded == PROCESS_CREATION_EXCEPTIONS
-    assert sum(item.multiplicity for item in loaded) == PROCESS_EXCEPTION_COUNT == 13
+    assert sum(item.multiplicity for item in loaded) == PROCESS_EXCEPTION_COUNT == 50
     assert len({item.path for item in loaded}) == 10
     hooks = {path: _read(REPO_ROOT / path) for path in discover_hook_files(REPO_ROOT)}
     bare = analyze_files(hooks, root=REPO_ROOT)
@@ -3428,6 +4358,7 @@ def test_process_exception_does_not_waive_rule_one_or_three() -> None:
         "import os\nos.system('true')\n",
         "import subprocess\nsubprocess.run(['git', '-c', 'alias.x=!bash', 'status'])\n",
         "import subprocess as sp\nsp.run(['git', 'rev-parse', '--git-dir'])\n",
+        "import subprocess\nrunners = {'run': subprocess.run}\n",
     ]
     for source in samples:
         check = analyze_files({_MUTANT_PROCESS: source})
@@ -3566,7 +4497,7 @@ def test_held_out_process_start_probes_fail(source: str, reasons: list[str]) -> 
 
 
 def test_helper_aliases_and_reexports_fail_at_the_definition() -> None:
-    """A helper binding is the violation. The checker does not follow the alias into a call."""
+    """A called runner alias is pinned at the call. An import re-export fails at the binding."""
     helper = "scripts/parsing/review_helper.py"
     cases = [
         (
@@ -3580,7 +4511,7 @@ def test_helper_aliases_and_reexports_fail_at_the_definition() -> None:
                     "    return runner(['bash', '-n', '-c', 'true'])\n"
                 ),
             },
-            [_process(4, "parse", "runner-reference", helper)],
+            [_process(5, "parse", "runner-call", helper)],
         ),
         (
             {
@@ -3649,12 +4580,13 @@ def test_false_branch_subprocess_rebind_fails() -> None:
 
 
 def test_runner_stored_or_passed_fails_without_following_the_name() -> None:
+    """A stored or passed runner stays a reference. A default that is called is the launch."""
     stored = "import subprocess\nrunners = {'run': subprocess.run}\n"
     passed = "import subprocess\ncall(subprocess.run)\n"
     defaulted = "import subprocess\n\ndef check(runner=subprocess.run):\n    return runner(['bash', '-n', 'hook.sh'])\n"
     assert _single(stored) == [_process(2, "<module>", "runner-reference")]
     assert _single(passed) == [_process(2, "<module>", "runner-reference")]
-    assert _single(defaulted) == [_process(3, "check", "runner-reference")]
+    assert _single(defaulted) == [_process(4, "check", "runner-call")]
 
 
 def test_process_apis_fail_without_a_syntax_flag() -> None:
@@ -3748,6 +4680,226 @@ def test_module_object_and_os_escape_fail() -> None:
         _process(2, "<module>", "os-escape")
     ]
     assert _single("import os\ngetattr(os, 'system')\n") == [_process(2, "<module>", "os-escape")]
+
+
+def test_reviewer_module_value_probes_fail() -> None:
+    """A process-capable module used as a value is a violation, including after rebinding."""
+    cases = [
+        (
+            "import asyncio\n"
+            "api = asyncio\n"
+            "\n"
+            "async def check():\n"
+            "    await api.create_subprocess_exec('bash', '-n', stdin=-1)\n",
+            [
+                _process(2, "<module>", "binding:module-value"),
+                _process(5, "check", "asyncio-subprocess"),
+                _process(5, "check", "binding:module-value"),
+            ],
+        ),
+        (
+            "import psutil\n"
+            "api = psutil\n"
+            "api.Popen(['bash', '-n'], stdin=-1)\n",
+            [
+                _process(2, "<module>", "binding:module-value"),
+                _process(3, "<module>", "binding:module-value"),
+                _process(3, "<module>", "external-capability:psutil.Popen"),
+            ],
+        ),
+        (
+            "from psutil import *\nPopen(['bash', '-n'], stdin=-1)\n",
+            [_mutant_violation("wildcard import", "psutil")],
+        ),
+        (
+            "import asyncio\ndef check():\n    return asyncio\n",
+            [_process(3, "check", "binding:module-value")],
+        ),
+        (
+            "import asyncio\nstored = [asyncio]\n",
+            [_process(2, "<module>", "binding:module-value")],
+        ),
+        (
+            "import psutil\ncall(psutil)\n",
+            [_process(2, "<module>", "binding:module-value")],
+        ),
+        (
+            "import os\napi = os\napi.system('true')\n",
+            [
+                _process(2, "<module>", "os-escape"),
+                _process(3, "<module>", "os-escape"),
+                _process(3, "<module>", "os-process:system"),
+            ],
+        ),
+        (
+            "import asyncio\nsub = asyncio.subprocess\n",
+            [
+                _process(2, "<module>", "asyncio-subprocess"),
+                _process(2, "<module>", "binding:module-value"),
+            ],
+        ),
+    ]
+    for source, expected in cases:
+        assert _single(source) == expected
+
+
+def test_reviewer_subprocess_rebinding_probes_fail() -> None:
+    """Every binding of the name subprocess, then a permitted template, is untrusted."""
+    template = "subprocess.run(['git', 'rev-parse', '--git-dir'])\n"
+    cases = [
+        (
+            "import subprocess\nitems = [None]\nvalues = [None for subprocess in items]\n" + template,
+            [
+                _process(3, "<module>", "binding:rebound"),
+                _process(4, "<module>", "binding:untrusted"),
+            ],
+        ),
+        (
+            "import subprocess\nvalue = None\nmatch value:\n    case subprocess:\n        pass\n" + template,
+            [
+                _process(4, "<module>", "binding:rebound"),
+                _process(6, "<module>", "binding:untrusted"),
+            ],
+        ),
+        (
+            "import os as subprocess\n" + template,
+            [
+                _process(1, "<module>", "binding:rebound"),
+                _process(2, "<module>", "binding:untrusted"),
+            ],
+        ),
+        (
+            "from os import path as subprocess\n" + template,
+            [
+                _process(1, "<module>", "binding:rebound"),
+                _process(2, "<module>", "binding:untrusted"),
+            ],
+        ),
+        (
+            "import subprocess\nif (subprocess := None):\n    pass\n" + template,
+            [
+                _process(2, "<module>", "binding:rebound"),
+                _process(4, "<module>", "binding:untrusted"),
+            ],
+        ),
+        (
+            "import subprocess\nfor subprocess in (None,):\n    pass\n" + template,
+            [
+                _process(2, "<module>", "binding:rebound"),
+                _process(4, "<module>", "binding:untrusted"),
+            ],
+        ),
+        (
+            "import subprocess\n"
+            "class CM:\n"
+            "    def __enter__(self):\n"
+            "        return None\n"
+            "    def __exit__(self, *args):\n"
+            "        return False\n"
+            "with CM() as subprocess:\n"
+            "    pass\n"
+            + template,
+            [
+                _process(7, "<module>", "binding:rebound"),
+                _process(9, "<module>", "binding:untrusted"),
+            ],
+        ),
+        (
+            "import subprocess\ntry:\n    pass\nexcept Exception as subprocess:\n    pass\n" + template,
+            [
+                _process(4, "<module>", "binding:rebound"),
+                _process(6, "<module>", "binding:untrusted"),
+            ],
+        ),
+        (
+            "import subprocess\ndef check():\n    global subprocess\n    " + template,
+            [
+                _process(3, "check", "binding:rebound"),
+                _process(4, "check", "binding:untrusted"),
+            ],
+        ),
+        (
+            "import subprocess\n"
+            "def outer():\n"
+            "    subprocess = None\n"
+            "    def inner():\n"
+            "        nonlocal subprocess\n"
+            "        " + template +
+            "    return inner\n",
+            [
+                _process(3, "outer", "binding:rebound"),
+                _process(5, "outer.inner", "binding:rebound"),
+                _process(6, "outer.inner", "binding:untrusted"),
+            ],
+        ),
+    ]
+    for source, expected in cases:
+        assert _single(source) == expected
+
+
+def _overlaid_violation_text(path: str, source: str) -> list[str]:
+    sources = {item: _read(REPO_ROOT / item) for item in discover_hook_files(REPO_ROOT)}
+    sources[path] = source
+    check = analyze_files(sources, root=REPO_ROOT)
+    applied = apply_process_baseline(check, load_process_baseline())
+    return [item.format() for item in applied.violations]
+
+
+def test_reviewer_runner_overlays_are_not_covered_by_the_baseline() -> None:
+    """Replacing or adding a runner call fails without editing the pinned calls."""
+    snapshot = "scripts/opsec/gh_snapshot.py"
+    snapshot_text = _read(REPO_ROOT / snapshot)
+    origin = '["git", "remote", "get-url", "origin"]'
+    assert snapshot_text.count(origin) == 1
+    snapshot_reasons = _overlaid_violation_text(snapshot, snapshot_text.replace(origin, '["bash", "-n", "probe"]', 1))
+    process = [item for item in snapshot_reasons if item.startswith("process-start:")]
+    stale = [item for item in snapshot_reasons if item.startswith("stale process exception:")]
+    assert process == [f"process-start: {snapshot}:471::repository::runner-call"]
+    assert len(stale) == 1
+    assert stale[0].startswith(f"stale process exception: {snapshot}::repository::Call(")
+    assert "Constant(value='get-url')" in stale[0]
+    assert "probe" not in stale[0]
+    assert len(snapshot_reasons) == 2
+
+    prepublish = "scripts/opsec/prepublish.py"
+    prepublish_text = _read(REPO_ROOT / prepublish)
+    fallback = "        return runner(args, **kwargs)\n"
+    assert prepublish_text.count(fallback) == 1
+    inserted = fallback + '    runner(["bash", "-n", "probe"])\n'
+    prepublish_reasons = _overlaid_violation_text(prepublish, prepublish_text.replace(fallback, inserted, 1))
+    assert prepublish_reasons == [f"process-start: {prepublish}:503::checked_run::runner-call"]
+
+    hook = "agents_extensions/shared/hooks/probe_runner.py"
+    hook_reasons = _overlaid_violation_text(
+        hook,
+        "from scripts.orchestration.thread_handoff import run_command\n" 'run_command(["bash", "-nc", "if"])\n',
+    )
+    assert hook_reasons == [f"process-start: {hook}:2::<module>::runner-call"]
+
+
+def test_process_baseline_rejects_a_non_call(tmp_path: Path) -> None:
+    fixture = tmp_path / "baseline.json"
+    fixture.write_text(
+        json.dumps(
+            {
+                "pinned_count_at_creation": PROCESS_EXCEPTION_COUNT,
+                "exceptions": [
+                    {
+                        "path": "scripts/opsec/gh_snapshot.py",
+                        "enclosing_symbol": "repository",
+                        "multiplicity": 1,
+                        "normalized_ast": (
+                            "Attribute(value=Name(id='subprocess', ctx=Load()), attr='run', ctx=Load())"
+                        ),
+                        "explanation": "reader default",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(AssertionError, match="process baseline entry is not a call"):
+        load_process_baseline(fixture)
 
 
 def test_syntax_check_tracker_is_gone() -> None:
