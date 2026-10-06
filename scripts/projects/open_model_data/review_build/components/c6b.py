@@ -1,13 +1,11 @@
-"""C6b: one accounting row, one record per dual-selected replacement pair."""
+"""C6b: one accounting unit per selected pair, with no answer-bearing context."""
 
-from ..contract import Value
 from .antonenko import (
     BOOK_ADAPTER,
     RECEIPTS,
     SOURCE,
     STORE,
     candidate,
-    citation,
     common_spec,
     packet_files,
     quoted,
@@ -18,16 +16,18 @@ from .antonenko import (
 OPERATION = "book_calque_replacement"
 EXPRESSION = selector("slots", "expression")
 TARGET = selector("response", "replacement")
-PASSAGE = selector("context", "passage")
-AUTHOR = selector("context", "author")
 RECEIPT = selector("slots", "expression", citation=1)
 BINDING = {
     "schema": "binding-spec.v1",
     "rules": [
-        {"op": "same_row", "values": [EXPRESSION, TARGET, PASSAGE, AUTHOR]},
+        {"op": "same_row", "values": [EXPRESSION, TARGET]},
         {"op": "equal", "values": [EXPRESSION, {**RECEIPT, "field": "rejected_form"}]},
         {"op": "equal", "values": [TARGET, {**TARGET, "citation": 1, "field": "recommended_form"}]},
         {"op": "equal", "values": [{**EXPRESSION, "field": "id"}, {**RECEIPT, "field": "book_id"}]},
+        {
+            "op": "equal",
+            "values": [{**selector("slots", "accounting_unit"), "field": "id"}, {**RECEIPT, "field": "id"}],
+        },
         {"op": "span_equal", "value": EXPRESSION, "receipt": {**RECEIPT, "field": "rejected_span"}},
         {"op": "span_equal", "value": TARGET, "receipt": {**RECEIPT, "field": "recommended_span"}},
         {"op": "literal", "values": [{**RECEIPT, "field": "sol"}], "expected": "APPROVE"},
@@ -41,7 +41,9 @@ class BookCalqueComponent:
         self.spec = common_spec(
             OPERATION,
             {
-                "primary": [{"selector": EXPRESSION, "store": "sources.db", "table": "style_guide", "key": "id"}],
+                "primary": [
+                    {"selector": selector("slots", "accounting_unit"), "store": STORE, "table": "C6b", "key": "id"}
+                ],
                 "separator": ";",
             },
         )
@@ -52,19 +54,15 @@ class BookCalqueComponent:
     def iter_candidates(self, ctx):
         RECEIPTS.configure(ctx)
         for row in ctx.reader.iter_rows("sources.db", "style_guide"):
-            decision = RECEIPTS.get(row)
-            context = (
-                quoted(row, "passage"),
-                Value("author", row["source"], (citation(row, "source"),), None, "verbatim"),
-            )
-            if decision["reason"] != "ok":
-                yield candidate("C6b", OPERATION, row, (quoted(row, "expression"),), context, (), decision["reason"])
-                continue
-            for left, right in decision["pairs"]:
+            for unit in RECEIPTS.row_units(row):
+                if unit["reason"] != "ok":
+                    yield candidate("C6b", OPERATION, row, (), (), (), unit["reason"], unit)
+                    continue
+                left, right = unit["rejected_span"], unit["recommended_span"]
                 receipt = RECEIPTS.admit(row, left, right)
                 expression = quoted(row, "expression", left, (receipt_citation(receipt, "C6b", "rejected_form"),))
                 target = quoted(row, "replacement", right, (receipt_citation(receipt, "C6b", "recommended_form"),))
-                yield candidate("C6b", OPERATION, row, (expression,), context, (target,))
+                yield candidate("C6b", OPERATION, row, (expression,), (), (target,), unit=unit)
 
     def artifact_files(self, ctx):
         return packet_files(ctx, "C6b")
