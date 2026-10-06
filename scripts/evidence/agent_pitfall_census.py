@@ -113,6 +113,36 @@ def _commits(since: str, until: str) -> list[tuple[str, str, str, str]]:
     return rows
 
 
+def _path_bucket(path: str) -> str | None:
+    if path.startswith("tests/") or path.startswith("site/tests/"):
+        return "tests"
+    if path.startswith("scripts/lexicon/") or path.startswith("data/lexicon/"):
+        return "lexicon"
+    if path.startswith("site/") and re.search(r"atlas|word-card|wordcard", path, re.I):
+        return "site_atlas"
+    if path.startswith("site/") and re.search(r"practice", path, re.I):
+        return "site_practice"
+    if path.startswith("site/"):
+        return "site_other"
+    if path == ".github/workflows/ci.yml":
+        return "ci_yml"
+    if path.startswith(".github/workflows/"):
+        return "workflows_other"
+    if (
+        path.startswith("scripts/delegate.py")
+        or path.startswith("scripts/review/")
+        or path.startswith("scripts/orchestration/")
+        or path.startswith("scripts/fleet/")
+        or path.startswith("scripts/agent_runtime/")
+        or path.startswith("scripts/runtime/")
+        or "/hooks/" in path
+    ):
+        return "delivery"
+    if path.startswith("curriculum/"):
+        return "curriculum"
+    return None
+
+
 def _path_buckets(since: str, until: str) -> dict[str, int]:
     raw = _git(
         "log",
@@ -123,35 +153,6 @@ def _path_buckets(since: str, until: str) -> dict[str, int]:
         "--name-only",
     )
     counts: Counter[str] = Counter()
-
-    def bucket(path: str) -> str | None:
-        if path.startswith("scripts/lexicon/") or path.startswith("data/lexicon/"):
-            return "lexicon"
-        if path.startswith("site/") and re.search(r"atlas|word-card|wordcard", path, re.I):
-            return "site_atlas"
-        if path.startswith("site/") and re.search(r"practice", path, re.I):
-            return "site_practice"
-        if path.startswith("site/"):
-            return "site_other"
-        if path == ".github/workflows/ci.yml":
-            return "ci_yml"
-        if path.startswith(".github/workflows/"):
-            return "workflows_other"
-        if (
-            path.startswith("scripts/delegate.py")
-            or path.startswith("scripts/review/")
-            or path.startswith("scripts/orchestration/")
-            or path.startswith("scripts/fleet/")
-            or path.startswith("scripts/agent_runtime/")
-            or path.startswith("scripts/runtime/")
-            or "/hooks/" in path
-        ):
-            return "delivery"
-        if path.startswith("curriculum/"):
-            return "curriculum"
-        if path.startswith("tests/") or path.startswith("site/tests/"):
-            return "tests"
-        return None
 
     for chunk in raw.split("\x1e"):
         chunk = chunk.strip("\n")
@@ -169,7 +170,7 @@ def _path_buckets(since: str, until: str) -> dict[str, int]:
             path = line.strip()
             if not path:
                 continue
-            name = bucket(path)
+            name = _path_bucket(path)
             if name:
                 hit.add(name)
         if not hit:
