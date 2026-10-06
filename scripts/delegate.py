@@ -4595,9 +4595,10 @@ def _mark_crashed_task(state_path: Path, state: dict[str, Any], *, source: str) 
         allowed_statuses=("running", "spawning"),
         pid_alive=_pid_alive,
         resolve_head=_resolve_sha,
+        write=_write_record_unlocked,
     )
     state.clear()
-    state.update(_hydrate_read_only_checkout_snapshots(current))
+    state.update(_hydrate_read_only_checkout_snapshots(_public_record(current)[0]))
 
 
 def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> None:
@@ -4622,9 +4623,10 @@ def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> 
             state,
             source=source,
             is_orphaned=worktree_prep.is_orphaned_prep_record,
+            write=_write_record_unlocked,
         )
         state.clear()
-        state.update(current)
+        state.update(_public_record(current)[0])
     elif dispatch_admission.is_orphaned_admission_hold(state):
         current, _changed = mark_orphaned_admission_hold_crashed(
             state_path,
@@ -4632,9 +4634,10 @@ def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> 
             source=source,
             is_orphaned=dispatch_admission.is_orphaned_admission_hold,
             reason=dispatch_admission.ORPHANED_HOLD_REASON,
+            write=_write_record_unlocked,
         )
         state.clear()
-        state.update(current)
+        state.update(_public_record(current)[0])
 
 
 # Exit code for a dispatch refused by host admission: retryable once a worker
@@ -6027,9 +6030,11 @@ def _public_row(row: Mapping[str, Any], record_path: Path | None, *, source: str
 def _write_record_unlocked(path: Path, state: dict[str, Any]) -> None:
     """Write a task record through the public-reason sink; the caller holds its lock (#9878).
 
-    The only writer of a task record in this module: every reason field is
-    replaced by its public form before the write, and the raw text it replaced
-    is recorded in the task's local diagnostic file after it.
+    The only writer of a task record in this module, and the one it hands the
+    dead-worker markers (``write=``): at this persistence point every reason
+    field is checked against the cause registry and replaced by its public
+    form, whoever assigned it, and the raw text it replaced is recorded in the
+    task's local diagnostic file after the write.
     """
     public, recorded = _public_record(state)
     write_state_unlocked(path, public)
@@ -6122,8 +6127,8 @@ class _TypedFailure(RuntimeError):
 
 # The task's local diagnostic file: ``<id>.diag`` beside the record, rotated once
 # to ``<id>.diag.prev``. Never served or published. Each entry is one JSON line
-# of at most _DIAG_MAX_ENTRY_BYTES; the file rotates before it would pass
-# _DIAG_MAX_FILE_BYTES, so the two together stay under twice that.
+# of at most _DIAG_MAX_ENTRY_BYTES; each of the two files stays within
+# _DIAG_MAX_FILE_BYTES and mode 0600, whatever was on disk before the append.
 _DIAG_MAX_ENTRY_BYTES = 4096
 _DIAG_MAX_FILE_BYTES = 256 * 1024
 _DIAG_ROTATED_SUFFIX = ".prev"
@@ -6166,14 +6171,9 @@ def _diagnostic_line(source: str, field: str, cause: _TypedCause) -> bytes:
     return encode(diagnostic[:low] + _DIAG_TRUNCATED)
 
 
-def _open_diagnostic(directory_fd: int, name: str) -> int:
-    """Open ``name`` for append in the trusted task directory: no symlink, a private regular file of ours."""
-    fd = os.open(
-        name,
-        os.O_WRONLY | os.O_APPEND | os.O_CREAT | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK,
-        0o600,
-        dir_fd=directory_fd,
-    )
+def _open_diagnostic(directory_fd: int, name: str, flags: int = os.O_RDWR | os.O_APPEND | os.O_CREAT) -> int:
+    """Open ``name`` in the trusted task directory: no symlink, a private regular file of ours, made 0600."""
+    fd = os.open(name, flags | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK, 0o600, dir_fd=directory_fd)
     try:
         info = os.fstat(fd)
         if not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid() or info.st_nlink != 1:
@@ -6186,21 +6186,71 @@ def _open_diagnostic(directory_fd: int, name: str) -> int:
         raise
 
 
+def _newest_lines(data: bytes, limit: int) -> bytes:
+    """The newest whole lines of ``data`` that fit in ``limit`` bytes."""
+    if len(data) <= limit:
+        return data
+    tail = data[len(data) - limit :]
+    return tail if data[len(data) - limit - 1 : len(data) - limit] == b"\n" else tail.partition(b"\n")[2]
+
+
+def _bound_diagnostic_fd(fd: int) -> None:
+    """Cut the locked diagnostic file ``fd`` to its newest lines within :data:`_DIAG_MAX_FILE_BYTES`."""
+    size = os.fstat(fd).st_size
+    if size <= _DIAG_MAX_FILE_BYTES:
+        return
+    kept = _newest_lines(os.pread(fd, _DIAG_MAX_FILE_BYTES + 1, size - _DIAG_MAX_FILE_BYTES - 1), _DIAG_MAX_FILE_BYTES)
+    os.ftruncate(fd, 0)
+    os.lseek(fd, 0, os.SEEK_SET)
+    view = memoryview(kept)
+    while view:
+        view = view[os.write(fd, view) :]
+
+
+def _bound_rotated_diagnostic(directory_fd: int, name: str) -> None:
+    """Bring the rotated generation ``name`` within :data:`_DIAG_MAX_FILE_BYTES` and 0600, keeping its newest lines.
+
+    A name that is not a private regular file of ours (a symlink, a hard
+    link, another owner's file) is unlinked: the name alone goes, never what
+    it points at. The caller holds the lock on the current diagnostic file;
+    this one is locked too, against the writer that rotated it.
+    """
+    try:
+        fd = _open_diagnostic(directory_fd, name, os.O_RDWR)
+    except FileNotFoundError:
+        return
+    except OSError:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(name, dir_fd=directory_fd)
+        return
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        _bound_diagnostic_fd(fd)
+    finally:
+        os.close(fd)
+
+
 def _append_diagnostics(record_path: Path, causes: Sequence[tuple[str, _TypedCause]], *, source: str) -> str | None:
     """Append each ``(field, cause)`` with its raw text to the record's local ``.diag`` file (#9878).
 
     Writes only beside an existing task record, so a refused worker still
     leaves no task file behind. The task directory is opened without following
-    a symlink and the file through it, never following one either, created
-    0600 and refused unless it is a private regular file with one link. Entries
-    and the file are bounded (:data:`_DIAG_MAX_ENTRY_BYTES`,
-    :data:`_DIAG_MAX_FILE_BYTES`, one rotated generation). Returns the file's
-    repository-relative path for a row to point at, or None when nothing was
-    written; a write error never hides the failure being recorded.
+    a symlink and each file through it, never following one either, created
+    0600 and refused unless it is a private regular file with one link.
+    Entries are bounded (:data:`_DIAG_MAX_ENTRY_BYTES`). Each file is
+    unconditionally bounded (:data:`_DIAG_MAX_FILE_BYTES`) and 0600: an
+    oversized ``.diag`` rotates, and before every append the rotated
+    ``.diag.prev`` is cut to its newest lines and made private, so neither a
+    pre-existing oversized file nor a rotation leaves one over the limit.
+    Returns the file's repository-relative path for a row to point at, or
+    None when nothing was written; a write error never hides the failure
+    being recorded.
     """
     if not causes:
         return None
-    data = b"".join(_diagnostic_line(source, field, cause) for field, cause in causes)
+    data = _newest_lines(
+        b"".join(_diagnostic_line(source, field, cause) for field, cause in causes), _DIAG_MAX_FILE_BYTES
+    )
     name = record_path.with_suffix(".diag").name
     try:
         directory_fd = os.open(record_path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
@@ -6220,9 +6270,11 @@ def _append_diagnostics(record_path: Path, causes: Sequence[tuple[str, _TypedCau
                 continue
             if os.fstat(fd).st_size + len(data) > _DIAG_MAX_FILE_BYTES:
                 os.replace(name, name + _DIAG_ROTATED_SUFFIX, src_dir_fd=directory_fd, dst_dir_fd=directory_fd)
+                _bound_diagnostic_fd(fd)  # the rotated copy, still locked: never left over the limit
                 os.close(fd)
                 fd = None
                 continue
+            _bound_rotated_diagnostic(directory_fd, name + _DIAG_ROTATED_SUFFIX)
             view = memoryview(data)
             while view:
                 view = view[os.write(fd, view) :]

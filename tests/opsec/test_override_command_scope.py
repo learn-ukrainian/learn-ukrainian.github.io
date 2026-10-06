@@ -116,9 +116,14 @@ for name in config["steps"]:
         gate()
         real = delegate.request_run
         delegate.request_run = lambda request, **kwargs: real(request, runner=fake, **kwargs)
+        # A task record in the sandbox, so the gate's reason lands in its local diagnostic file (#9878).
+        delegate.tasks_dir = lambda: Path(config["sandbox_root"]) / "batch_state" / "tasks"
+        delegate._write_state_atomic(delegate._state_path("impl-unit"), {"task_id": "impl-unit"})
         step("finalize", lambda: repr(delegate._auto_finalize_dirty_worktree(
             worktree=work, task_id="impl-unit", agent=token, branch="feature", base_branch="trunk",
             open_pr=True, owned_paths=["file.txt"])))
+        diag = delegate._diagnostic_path("impl-unit")
+        outcome["finalize_diag"] = diag.read_text(encoding="utf-8") if diag.exists() else ""
     else:
         step(name, {"push": push, "comment": comment, "child_comment": child_comment,
                     "set_override": set_override, "imported": imported}[name])
@@ -221,8 +226,10 @@ def test_delegate_auto_finalize_admits_one_flagged_publication(sandbox):
     assert TOKEN in _git(sandbox.work, "log", "-1", "--format=%B")
     assert _remote_has(sandbox, sent_commit), outcome
     assert flagged_sends(sandbox) == [], outcome
-    # #9878: the result names the typed cause; the gate's own reason is for the local diagnostic.
+    # #9878: the result names the typed cause; the gate's own reason is kept in the local diagnostic.
     assert "auto_finalize_publish_blocked" in outcome["finalize"], outcome
+    assert "override already consumed" not in outcome["finalize"], outcome
+    assert "override already consumed" in outcome["finalize_diag"], outcome
     assert len(log_rows(sandbox)) == 1
 
 

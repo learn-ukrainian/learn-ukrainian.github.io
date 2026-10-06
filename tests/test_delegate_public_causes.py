@@ -9,6 +9,7 @@ opened without following symlinks, created 0600 and bounded.
 
 from __future__ import annotations
 
+import argparse
 import ast
 import json
 import os
@@ -185,8 +186,21 @@ def _functions_referencing(tree: ast.Module, name: str) -> set[str]:
     return found
 
 
+# The dead-worker markers persist the record themselves unless handed a writer.
+_RECORD_MARKERS = (
+    "mark_dead_worker_terminal",
+    "mark_orphaned_worktree_prep_crashed",
+    "mark_orphaned_admission_hold_crashed",
+)
+
+
 def test_only_the_sink_writes_a_task_record():
-    """AST: the raw writer is called from the sink alone, and every record writer goes through the sink."""
+    """AST regression guard: the raw writer is called from the sink alone, and every record writer goes through it.
+
+    A guard only, not the proof: it sees the writers it names, not a direct
+    file write. The runtime tests below write through the persistence point
+    and read the record back from disk.
+    """
     tree = _delegate_tree()
     assert _functions_referencing(tree, "write_state_unlocked") == {"_write_record_unlocked"}
     assert "_write_state_atomic" in _functions_referencing(tree, "_write_record_unlocked")
@@ -197,6 +211,15 @@ def test_only_the_sink_writes_a_task_record():
         and any(isinstance(sub, ast.Name) and sub.id == "write_state_unlocked" for sub in ast.walk(node))
     ]
     assert module_level == []  # no alias of the raw writer escapes the sink
+    marker_calls = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in _RECORD_MARKERS
+    ]
+    assert {call.func.id for call in marker_calls} == set(_RECORD_MARKERS)
+    for call in marker_calls:  # each marker is handed the sink as its writer
+        writers = [keyword.value for keyword in call.keywords if keyword.arg == "write"]
+        assert [getattr(writer, "id", None) for writer in writers] == ["_write_record_unlocked"], call.func.id
 
 
 def test_every_rescue_row_leaves_through_the_sink():
@@ -249,6 +272,59 @@ def test_a_rescue_row_with_free_text_is_replaced_at_the_sink(monkeypatch):
     assert row["diagnostic"].endswith("sink-row.diag")
     _assert_public(row)
     _assert_kept_locally("sink-row", field="reason")
+
+
+def _status(task_id: str, capsys) -> dict:
+    assert delegate.cmd_status(argparse.Namespace(task_id=task_id, run_nonce=None)) == 0
+    return json.loads(capsys.readouterr().out)
+
+
+def test_a_raw_reason_assigned_in_memory_during_status_is_persisted_as_a_typed_cause(monkeypatch, capsys):
+    """``cmd_status`` heals an orphaned record; a raw ``last_error`` assigned to it in memory is caught at the write."""
+    task_id = "sink-status-memory"
+    path = delegate._state_path(task_id)
+    record = {
+        "task_id": task_id,
+        "status": "spawning",
+        "pid": None,
+        "run_nonce": "nonce-1",
+        "started_at": "2026-10-06T00:00:00+00:00",
+        "worktree_prep": {"run_nonce": "nonce-1", "owner_pid": 999_999},
+    }
+    path.write_text(json.dumps(record), encoding="utf-8")
+
+    def orphaned_with_raw_reason(current):
+        current["last_error"] = HOSTILE  # any producer, in memory, before the record is persisted
+        return True
+
+    monkeypatch.setattr(delegate.worktree_prep, "is_orphaned_prep_record", orphaned_with_raw_reason)
+
+    shown = _status(task_id, capsys)
+
+    on_disk = json.loads(path.read_text(encoding="utf-8"))
+    assert (on_disk["status"], on_disk["last_error"]) == ("crashed", "unclassified_error")
+    _assert_public(on_disk)
+    assert shown["last_error"] == "unclassified_error"
+    _assert_public(shown)
+    assert _assert_kept_locally(task_id, field="last_error")["source"] == "record"
+
+
+def test_a_raw_reason_already_on_disk_is_replaced_when_status_persists_the_record(monkeypatch, capsys):
+    """A dead worker's record, raw ``last_error`` from an earlier writer: the heal write holds a typed cause."""
+    task_id = "sink-status-disk"
+    path = delegate._state_path(task_id)
+    path.write_text(
+        json.dumps({"task_id": task_id, "status": "running", "pid": 999_999, "last_error": HOSTILE}), encoding="utf-8"
+    )
+    monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: False)
+
+    shown = _status(task_id, capsys)
+
+    on_disk = json.loads(path.read_text(encoding="utf-8"))
+    assert (on_disk["status"], on_disk["last_error"]) == ("crashed", "unclassified_error")
+    _assert_public(on_disk)
+    _assert_public(shown)
+    _assert_kept_locally(task_id, field="last_error")
 
 
 # --- the producers the review named: injected host details never reach a public field ------------
@@ -584,6 +660,75 @@ def test_the_diagnostic_file_rotates_once_and_stays_bounded():
     for path in (diag, rotated):
         for line in path.read_text(encoding="utf-8").splitlines():
             assert json.loads(line)["public"] == "rescue_push_failed, git push, exit 128"
+
+
+def _oversized_diagnostic(path: Path, *, mode: int = 0o644) -> list[str]:
+    """Fill ``path`` with about 2 MiB of numbered entries, left ``mode``; returns the lines written."""
+    lines = [
+        json.dumps(
+            {"code": "rescue_push_failed", "public": "rescue_push_failed", "diagnostic": f"{n:06d} " + "y" * 1000}
+        )
+        for n in range(2 * 1024 * 1024 // 1050)
+    ]
+    path.write_text("".join(line + "\n" for line in lines), encoding="utf-8")
+    path.chmod(mode)
+    assert path.stat().st_size > 2 * 1024 * 1024 - 4096
+    return lines
+
+
+def _assert_bounded_and_private(*paths: Path) -> None:
+    for path in paths:
+        assert path.stat().st_size <= delegate._DIAG_MAX_FILE_BYTES, path
+        assert stat.S_IMODE(path.stat().st_mode) == 0o600, path
+        for line in path.read_text(encoding="utf-8").splitlines():
+            json.loads(line)  # only whole entries are kept
+
+
+def test_an_append_beside_an_oversized_diagnostic_leaves_every_file_bounded_and_private():
+    """An existing 2 MiB, 0644 ``.diag`` rotates, and the rotated copy keeps only its newest entries."""
+    record = delegate._state_path("diag-oversized")
+    delegate._write_state_atomic(record, {"task_id": "diag-oversized"})
+    diag = record.with_suffix(".diag")
+    rotated = diag.with_name(diag.name + delegate._DIAG_ROTATED_SUFFIX)
+    lines = _oversized_diagnostic(diag)
+
+    assert delegate._append_diagnostics(record, [("reason", _cause())], source="test")
+
+    _assert_bounded_and_private(diag, rotated)
+    kept = rotated.read_text(encoding="utf-8").splitlines()
+    assert kept and kept == lines[-len(kept) :]
+    assert [json.loads(line)["source"] for line in diag.read_text(encoding="utf-8").splitlines()] == ["test"]
+
+
+def test_an_existing_oversized_readable_rotated_diagnostic_is_bounded_and_made_private():
+    """An existing 2 MiB, 0644 ``.diag.prev`` is cut to its newest entries and made 0600 before the append."""
+    record = delegate._state_path("diag-prev")
+    delegate._write_state_atomic(record, {"task_id": "diag-prev"})
+    diag = record.with_suffix(".diag")
+    rotated = diag.with_name(diag.name + delegate._DIAG_ROTATED_SUFFIX)
+    lines = _oversized_diagnostic(rotated)
+
+    assert delegate._append_diagnostics(record, [("reason", _cause())], source="test")
+
+    _assert_bounded_and_private(diag, rotated)
+    kept = rotated.read_text(encoding="utf-8").splitlines()
+    assert kept and kept == lines[-len(kept) :]
+
+
+def test_a_symlinked_rotated_diagnostic_is_dropped_and_its_target_untouched(tmp_path):
+    record = delegate._state_path("diag-prev-link")
+    delegate._write_state_atomic(record, {"task_id": "diag-prev-link"})
+    diag = record.with_suffix(".diag")
+    rotated = diag.with_name(diag.name + delegate._DIAG_ROTATED_SUFFIX)
+    target = tmp_path / "other-artifact.txt"
+    target.write_text("keep\n" * 100_000, encoding="utf-8")
+    rotated.symlink_to(target)
+
+    assert delegate._append_diagnostics(record, [("reason", _cause())], source="test")
+
+    assert not rotated.is_symlink() and not rotated.exists()
+    assert target.read_text(encoding="utf-8") == "keep\n" * 100_000
+    _assert_bounded_and_private(diag)
 
 
 def test_the_advisory_committed_diff_error_names_the_exception_class_only(tmp_path, monkeypatch):
