@@ -1,0 +1,1923 @@
+{
+  "schema_version": "atlas-golden-selection-keys.v1",
+  "kind": "golden",
+  "disposition": "partial_selection_total_unexpressible",
+  "case_target": 220,
+  "selected_case_count": 175,
+  "source_record_count": 626,
+  "split": {
+    "seed": "9862-w0-r2-20261006",
+    "algorithm": "ascending SHA-256 of UTF-8 seed + NUL + case key within each category; pilot closure forced to replay",
+    "heldout": 70,
+    "replay": 105
+  },
+  "categories": {
+    "homographs": {
+      "selected": 40,
+      "heldout": 16,
+      "replay": 24,
+      "pilot_closure_forced_replay": 9
+    },
+    "stress_doublets": {
+      "selected": 20,
+      "heldout": 8,
+      "replay": 12,
+      "pilot_closure_forced_replay": 1
+    },
+    "aspect_homographs": {
+      "selected": 5,
+      "heldout": 2,
+      "replay": 3,
+      "pilot_closure_forced_replay": 0
+    },
+    "multi_sense": {
+      "selected": 20,
+      "heldout": 8,
+      "replay": 12,
+      "pilot_closure_forced_replay": 1
+    },
+    "stress_disagreements": {
+      "selected": 20,
+      "heldout": 8,
+      "replay": 12,
+      "pilot_closure_forced_replay": 1
+    },
+    "proper_common_pairs": {
+      "selected": 20,
+      "heldout": 8,
+      "replay": 12,
+      "pilot_closure_forced_replay": 0
+    },
+    "multi_headword_mwes": {
+      "selected": 20,
+      "heldout": 8,
+      "replay": 12,
+      "pilot_closure_forced_replay": 0
+    },
+    "ulif_header_damage": {
+      "selected": 10,
+      "heldout": 4,
+      "replay": 6,
+      "pilot_closure_forced_replay": 0
+    },
+    "ordinary_controls": {
+      "selected": 20,
+      "heldout": 8,
+      "replay": 12,
+      "pilot_closure_forced_replay": 0
+    }
+  },
+  "cases": [
+    {
+      "case_key": "golden:case:c3570a99d540e8edd01dd20e",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:76791",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:76791",
+        "ulif:ulif_dictua_entries:id:76792",
+        "ulif:ulif_dictua_entries:id:76793",
+        "ulif:ulif_dictua_sections:id:96928",
+        "ulif:ulif_dictua_sections:id:96929",
+        "ulif:ulif_dictua_sections:id:96933"
+      ]
+    },
+    {
+      "case_key": "golden:case:7e71b11d8c88dfaf3f251b24",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:102612",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:102612",
+        "ulif:ulif_dictua_entries:id:102613",
+        "ulif:ulif_dictua_entries:id:102614",
+        "ulif:ulif_dictua_entries:id:102615",
+        "ulif:ulif_dictua_entries:id:102616",
+        "ulif:ulif_dictua_entries:id:102617",
+        "ulif:ulif_dictua_entries:id:102618",
+        "ulif:ulif_dictua_sections:id:130137",
+        "ulif:ulif_dictua_sections:id:130138",
+        "ulif:ulif_dictua_sections:id:130139",
+        "ulif:ulif_dictua_sections:id:130140",
+        "ulif:ulif_dictua_sections:id:130142",
+        "ulif:ulif_dictua_sections:id:130143",
+        "ulif:ulif_dictua_sections:id:130145"
+      ]
+    },
+    {
+      "case_key": "golden:case:8f799b8707cbc6174a24690b",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:31375",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:31375",
+        "ulif:ulif_dictua_entries:id:31376",
+        "ulif:ulif_dictua_sections:id:32040",
+        "ulif:ulif_dictua_sections:id:32042"
+      ]
+    },
+    {
+      "case_key": "golden:case:4059ea2a21da9774f54a4a8d",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:29074",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:29074",
+        "ulif:ulif_dictua_entries:id:29075",
+        "ulif:ulif_dictua_sections:id:28468",
+        "ulif:ulif_dictua_sections:id:28470"
+      ]
+    },
+    {
+      "case_key": "golden:case:53f74a8c3e7a9aca9347a643",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:176192",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:176192",
+        "ulif:ulif_dictua_sections:id:225965"
+      ]
+    },
+    {
+      "case_key": "golden:case:4226d6bc48ec1760449fb3d8",
+      "category": "aspect_homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:34096",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:34096",
+        "ulif:ulif_dictua_entries:id:34097"
+      ]
+    },
+    {
+      "case_key": "golden:case:cbd66456dc28ecb18e89ec26",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3",
+        "ulif:ulif_dictua_sections:id:124669"
+      ]
+    },
+    {
+      "case_key": "golden:case:12e04708a20cd57384e394cd",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:47595",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:47595",
+        "atlas0:enrichment:\u0432\u0440\u044f\u0434\u0438-\u0433\u043e\u0434\u0438/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:2dce4cd0b1c5f21a8e675c69",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:6",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:6",
+        "ulif:ulif_dictua_entries:id:57693",
+        "ulif:ulif_dictua_sections:id:72659",
+        "ulif:ulif_dictua_sections:id:72664"
+      ]
+    },
+    {
+      "case_key": "golden:case:52c2c017702580eaa30d3cdf",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:11",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:11",
+        "ulif:ulif_dictua_entries:id:112941",
+        "ulif:ulif_dictua_sections:id:143102",
+        "ulif:ulif_dictua_sections:id:143103"
+      ]
+    },
+    {
+      "case_key": "golden:case:0a48f3e3150bf46fa40b0d02",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:17",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:17",
+        "ulif:ulif_dictua_entries:id:114963",
+        "ulif:ulif_dictua_sections:id:145609",
+        "ulif:ulif_dictua_sections:id:145610"
+      ]
+    },
+    {
+      "case_key": "golden:case:5e9bf5b125ec6d3d274bef29",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:146",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:146",
+        "ulif:ulif_dictua_entries:id:69557",
+        "ulif:ulif_dictua_sections:id:87127",
+        "ulif:ulif_dictua_sections:id:87128"
+      ]
+    },
+    {
+      "case_key": "golden:case:5bbe9ffc03b4a36568df4137",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:372",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:372",
+        "ulif:ulif_dictua_entries:id:69792",
+        "ulif:ulif_dictua_sections:id:87509",
+        "ulif:ulif_dictua_sections:id:87510"
+      ]
+    },
+    {
+      "case_key": "golden:case:c0c61568c59467c624b0be8e",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:421",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:421",
+        "ulif:ulif_dictua_entries:id:69842",
+        "ulif:ulif_dictua_sections:id:87589",
+        "ulif:ulif_dictua_sections:id:87590"
+      ]
+    },
+    {
+      "case_key": "golden:case:b8901fbd2d79824fd201d91e",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1209",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1209",
+        "ulif:ulif_dictua_entries:id:90603",
+        "ulif:ulif_dictua_sections:id:115807",
+        "ulif:ulif_dictua_sections:id:115808"
+      ]
+    },
+    {
+      "case_key": "golden:case:63ba40497de183ccca2751dc",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1340",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1340",
+        "ulif:ulif_dictua_entries:id:91058",
+        "ulif:ulif_dictua_sections:id:116354",
+        "ulif:ulif_dictua_sections:id:116355"
+      ]
+    },
+    {
+      "case_key": "golden:case:6ea3f85c710cfb99cc1f998e",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1599",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1599",
+        "ulif:ulif_dictua_entries:id:19736",
+        "ulif:ulif_dictua_sections:id:15207"
+      ]
+    },
+    {
+      "case_key": "golden:case:efd32318ffd32fe3b4663c12",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1745",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1745",
+        "ulif:ulif_dictua_entries:id:13981",
+        "ulif:ulif_dictua_sections:id:8321",
+        "ulif:ulif_dictua_sections:id:8322"
+      ]
+    },
+    {
+      "case_key": "golden:case:9290386fb28f8464288f0190",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1871",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1871",
+        "ulif:ulif_dictua_entries:id:14757",
+        "ulif:ulif_dictua_entries:id:14758",
+        "ulif:ulif_dictua_entries:id:14759",
+        "ulif:ulif_dictua_entries:id:14760",
+        "ulif:ulif_dictua_sections:id:9183",
+        "ulif:ulif_dictua_sections:id:9184",
+        "ulif:ulif_dictua_sections:id:9186"
+      ]
+    },
+    {
+      "case_key": "golden:case:cb3eb1202c117a19b4d4ce40",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1946",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1946",
+        "ulif:ulif_dictua_entries:id:15021",
+        "ulif:ulif_dictua_sections:id:9518",
+        "ulif:ulif_dictua_sections:id:9519"
+      ]
+    },
+    {
+      "case_key": "golden:case:5baffc4d3b7f4d3101820492",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2088",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2088",
+        "ulif:ulif_dictua_entries:id:15648",
+        "ulif:ulif_dictua_sections:id:10242",
+        "ulif:ulif_dictua_sections:id:10243"
+      ]
+    },
+    {
+      "case_key": "golden:case:b4bdae4ce807b046f1ed8594",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2160",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2160",
+        "ulif:ulif_dictua_entries:id:15911",
+        "ulif:ulif_dictua_sections:id:10539",
+        "ulif:ulif_dictua_sections:id:10540"
+      ]
+    },
+    {
+      "case_key": "golden:case:48b7a1e267abfd409d19aea5",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2405",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2405",
+        "ulif:ulif_dictua_entries:id:16707",
+        "ulif:ulif_dictua_sections:id:11501",
+        "ulif:ulif_dictua_sections:id:11502"
+      ]
+    },
+    {
+      "case_key": "golden:case:55b9d23bc96e453bde664380",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2478",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2478",
+        "ulif:ulif_dictua_entries:id:16762",
+        "ulif:ulif_dictua_sections:id:11572",
+        "ulif:ulif_dictua_sections:id:11573"
+      ]
+    },
+    {
+      "case_key": "golden:case:a362487f156660c1fa2a50d9",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2543",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2543",
+        "ulif:ulif_dictua_entries:id:17057",
+        "ulif:ulif_dictua_entries:id:17058",
+        "ulif:ulif_dictua_sections:id:11920",
+        "ulif:ulif_dictua_sections:id:11921",
+        "ulif:ulif_dictua_sections:id:11923"
+      ]
+    },
+    {
+      "case_key": "golden:case:76cecfe4f3b18248c8e6c7fb",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2944",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2944",
+        "ulif:ulif_dictua_entries:id:18282",
+        "ulif:ulif_dictua_sections:id:13429",
+        "ulif:ulif_dictua_sections:id:13430"
+      ]
+    },
+    {
+      "case_key": "golden:case:b5cbe63c92f8ec06202e62c4",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3637",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3637",
+        "ulif:ulif_dictua_entries:id:20322",
+        "ulif:ulif_dictua_sections:id:15916",
+        "ulif:ulif_dictua_sections:id:15917"
+      ]
+    },
+    {
+      "case_key": "golden:case:544d18f19379d29ce6d703ee",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3692",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3692",
+        "ulif:ulif_dictua_entries:id:20394",
+        "ulif:ulif_dictua_entries:id:20395",
+        "ulif:ulif_dictua_entries:id:20396",
+        "ulif:ulif_dictua_entries:id:20397",
+        "ulif:ulif_dictua_entries:id:20398",
+        "ulif:ulif_dictua_entries:id:20399",
+        "ulif:ulif_dictua_entries:id:20400",
+        "ulif:ulif_dictua_entries:id:20401",
+        "ulif:ulif_dictua_entries:id:20402",
+        "ulif:ulif_dictua_entries:id:20403",
+        "ulif:ulif_dictua_sections:id:16050",
+        "ulif:ulif_dictua_sections:id:16051",
+        "ulif:ulif_dictua_sections:id:16055",
+        "ulif:ulif_dictua_sections:id:16056",
+        "ulif:ulif_dictua_sections:id:16057",
+        "ulif:ulif_dictua_sections:id:16058",
+        "ulif:ulif_dictua_sections:id:16059",
+        "ulif:ulif_dictua_sections:id:16060",
+        "ulif:ulif_dictua_sections:id:16061",
+        "ulif:ulif_dictua_sections:id:16063",
+        "ulif:ulif_dictua_sections:id:16065"
+      ]
+    },
+    {
+      "case_key": "golden:case:42115639fc0060bed2555ea0",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3705",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3705",
+        "ulif:ulif_dictua_entries:id:20444",
+        "ulif:ulif_dictua_sections:id:16116",
+        "ulif:ulif_dictua_sections:id:16117"
+      ]
+    },
+    {
+      "case_key": "golden:case:f73de072e36bbd58d62c2b11",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3747",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3747",
+        "ulif:ulif_dictua_entries:id:20525",
+        "ulif:ulif_dictua_sections:id:16232",
+        "ulif:ulif_dictua_sections:id:16233"
+      ]
+    },
+    {
+      "case_key": "golden:case:3ca585f3f2225c16c30cde65",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3762",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3762",
+        "ulif:ulif_dictua_entries:id:20988",
+        "ulif:ulif_dictua_sections:id:16762",
+        "ulif:ulif_dictua_sections:id:16763"
+      ]
+    },
+    {
+      "case_key": "golden:case:c3b86770678c6b1476e6f4c7",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3828",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3828",
+        "ulif:ulif_dictua_entries:id:21151",
+        "ulif:ulif_dictua_sections:id:17041",
+        "ulif:ulif_dictua_sections:id:17042"
+      ]
+    },
+    {
+      "case_key": "golden:case:32a5b9fb3ede62752c52534f",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3853",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3853",
+        "ulif:ulif_dictua_entries:id:21231",
+        "ulif:ulif_dictua_sections:id:17163"
+      ]
+    },
+    {
+      "case_key": "golden:case:d67a37b19a12001f4c0d4938",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3878",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3878",
+        "ulif:ulif_dictua_entries:id:21327",
+        "ulif:ulif_dictua_sections:id:17308",
+        "ulif:ulif_dictua_sections:id:17309"
+      ]
+    },
+    {
+      "case_key": "golden:case:89c75d93ff7c9acc1c1b99f9",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3892",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3892",
+        "ulif:ulif_dictua_entries:id:21375",
+        "ulif:ulif_dictua_sections:id:17370",
+        "ulif:ulif_dictua_sections:id:17371"
+      ]
+    },
+    {
+      "case_key": "golden:case:424ea1856a6753d8ea271989",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3956",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3956",
+        "ulif:ulif_dictua_entries:id:21525",
+        "ulif:ulif_dictua_entries:id:21526",
+        "ulif:ulif_dictua_sections:id:17565",
+        "ulif:ulif_dictua_sections:id:17566",
+        "ulif:ulif_dictua_sections:id:17567"
+      ]
+    },
+    {
+      "case_key": "golden:case:01de4074a0b01a9b61e4c446",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3967",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3967",
+        "ulif:ulif_dictua_entries:id:21539",
+        "ulif:ulif_dictua_sections:id:17587",
+        "ulif:ulif_dictua_sections:id:17588"
+      ]
+    },
+    {
+      "case_key": "golden:case:7d770ab26933d432e923327f",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4023",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4023",
+        "ulif:ulif_dictua_entries:id:21692",
+        "ulif:ulif_dictua_sections:id:17825",
+        "ulif:ulif_dictua_sections:id:17826"
+      ]
+    },
+    {
+      "case_key": "golden:case:f95a98a78ba814ad2a2dbe4e",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4034",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4034",
+        "ulif:ulif_dictua_entries:id:21713",
+        "ulif:ulif_dictua_entries:id:21714",
+        "ulif:ulif_dictua_entries:id:21715",
+        "ulif:ulif_dictua_sections:id:17858",
+        "ulif:ulif_dictua_sections:id:17859",
+        "ulif:ulif_dictua_sections:id:17863",
+        "ulif:ulif_dictua_sections:id:17864"
+      ]
+    },
+    {
+      "case_key": "golden:case:cd726aae7ba2e2a11776ec4b",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4111",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4111",
+        "ulif:ulif_dictua_entries:id:21944",
+        "ulif:ulif_dictua_sections:id:18174",
+        "ulif:ulif_dictua_sections:id:18175"
+      ]
+    },
+    {
+      "case_key": "golden:case:ce1c4a4564aa13a240e261df",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4121",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4121",
+        "ulif:ulif_dictua_entries:id:21977",
+        "ulif:ulif_dictua_sections:id:18227",
+        "ulif:ulif_dictua_sections:id:18228"
+      ]
+    },
+    {
+      "case_key": "golden:case:cf39820f093f45012cb2490b",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4148",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4148",
+        "ulif:ulif_dictua_entries:id:22086",
+        "ulif:ulif_dictua_entries:id:22087",
+        "ulif:ulif_dictua_entries:id:22088",
+        "ulif:ulif_dictua_entries:id:22089",
+        "ulif:ulif_dictua_entries:id:22090",
+        "ulif:ulif_dictua_sections:id:18360",
+        "ulif:ulif_dictua_sections:id:18361",
+        "ulif:ulif_dictua_sections:id:18362",
+        "ulif:ulif_dictua_sections:id:18363",
+        "ulif:ulif_dictua_sections:id:18364",
+        "ulif:ulif_dictua_sections:id:18366"
+      ]
+    },
+    {
+      "case_key": "golden:case:57884a26682603ec42a78914",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4161",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4161",
+        "ulif:ulif_dictua_entries:id:22110",
+        "ulif:ulif_dictua_sections:id:18396",
+        "ulif:ulif_dictua_sections:id:18398"
+      ]
+    },
+    {
+      "case_key": "golden:case:241f552be911cb7b77c081f0",
+      "category": "homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4165",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4165",
+        "ulif:ulif_dictua_entries:id:22123",
+        "ulif:ulif_dictua_entries:id:22124",
+        "ulif:ulif_dictua_entries:id:22125",
+        "ulif:ulif_dictua_sections:id:18414",
+        "ulif:ulif_dictua_sections:id:18415",
+        "ulif:ulif_dictua_sections:id:18419",
+        "ulif:ulif_dictua_sections:id:18420"
+      ]
+    },
+    {
+      "case_key": "golden:case:3414f2902c27062ac4ea437b",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:73480",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:73480",
+        "ulif:ulif_dictua_sections:id:92537"
+      ]
+    },
+    {
+      "case_key": "golden:case:5c4d82da547aff181acae9ac",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:75046",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:75046",
+        "ulif:ulif_dictua_sections:id:94591"
+      ]
+    },
+    {
+      "case_key": "golden:case:e9b66bd8e9c4c0d162b37ff8",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:80945",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:80945",
+        "ulif:ulif_dictua_sections:id:102440"
+      ]
+    },
+    {
+      "case_key": "golden:case:ef215ab7a369d9582a081429",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:81435",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:81435",
+        "ulif:ulif_dictua_sections:id:103093"
+      ]
+    },
+    {
+      "case_key": "golden:case:adfc3b4bc534048c024580e8",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:95884",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:95884",
+        "ulif:ulif_dictua_sections:id:122129"
+      ]
+    },
+    {
+      "case_key": "golden:case:77c7974488478419d93083e5",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:99472",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:99472",
+        "ulif:ulif_dictua_entries:id:99473",
+        "ulif:ulif_dictua_entries:id:99474",
+        "ulif:ulif_dictua_sections:id:126444",
+        "ulif:ulif_dictua_sections:id:126445",
+        "ulif:ulif_dictua_sections:id:126447"
+      ]
+    },
+    {
+      "case_key": "golden:case:abe7903fc74e167c3ec7921c",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:178047",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:178047",
+        "ulif:ulif_dictua_entries:id:178048",
+        "ulif:ulif_dictua_sections:id:228024",
+        "ulif:ulif_dictua_sections:id:228026"
+      ]
+    },
+    {
+      "case_key": "golden:case:72d2fb34c0631e5a1a622775",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:13696",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:13696"
+      ]
+    },
+    {
+      "case_key": "golden:case:8ad2f8eb5e83410694f358c7",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:14225",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:14225",
+        "ulif:ulif_dictua_sections:id:8622"
+      ]
+    },
+    {
+      "case_key": "golden:case:112d9cb86b25678915bc1027",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:14441",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:14441",
+        "ulif:ulif_dictua_sections:id:8852"
+      ]
+    },
+    {
+      "case_key": "golden:case:680681e101d7e8e48d7d94bc",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:14444",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:14444",
+        "ulif:ulif_dictua_sections:id:8855"
+      ]
+    },
+    {
+      "case_key": "golden:case:76641d2f74ce8bcdde0b6b8b",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:14470",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:14470",
+        "ulif:ulif_dictua_sections:id:8883"
+      ]
+    },
+    {
+      "case_key": "golden:case:d3e0f35bfa991831c92d6cdb",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:14783",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:14783",
+        "ulif:ulif_dictua_sections:id:9224"
+      ]
+    },
+    {
+      "case_key": "golden:case:f0fce93ec3b59cb65bf012cf",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:14893",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:14893",
+        "ulif:ulif_dictua_sections:id:9374"
+      ]
+    },
+    {
+      "case_key": "golden:case:471b62da14cd254c1903ba39",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:15360",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:15360",
+        "ulif:ulif_dictua_sections:id:9917"
+      ]
+    },
+    {
+      "case_key": "golden:case:fa2e2d22e143f10da1ae7746",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:15660",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:15660"
+      ]
+    },
+    {
+      "case_key": "golden:case:2e48414f11a3af9c387f570d",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:15956",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:15956",
+        "ulif:ulif_dictua_sections:id:10594"
+      ]
+    },
+    {
+      "case_key": "golden:case:389b32561c37ef306c4220c2",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:16006",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:16006",
+        "ulif:ulif_dictua_sections:id:10662"
+      ]
+    },
+    {
+      "case_key": "golden:case:f0eaf02015e2fc8c523169b6",
+      "category": "stress_doublets",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:16265",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:16265",
+        "ulif:ulif_dictua_sections:id:10960"
+      ]
+    },
+    {
+      "case_key": "golden:case:7b1b2f15a7b557f73319d16e",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:120",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:120",
+        "ulif:ulif_dictua_entries:id:69533",
+        "ulif:ulif_dictua_sections:id:87090",
+        "ulif:ulif_dictua_sections:id:87091"
+      ]
+    },
+    {
+      "case_key": "golden:case:86663fd06195b6af1340ee3e",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:428",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:428",
+        "ulif:ulif_dictua_entries:id:69847",
+        "ulif:ulif_dictua_sections:id:87601",
+        "ulif:ulif_dictua_sections:id:87602"
+      ]
+    },
+    {
+      "case_key": "golden:case:3bc24b89bfadd7b70746b12b",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:510",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:510",
+        "ulif:ulif_dictua_entries:id:69887",
+        "ulif:ulif_dictua_sections:id:87678",
+        "ulif:ulif_dictua_sections:id:87679"
+      ]
+    },
+    {
+      "case_key": "golden:case:0b2f866dd93945ad234fa406",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:518",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:518",
+        "ulif:ulif_dictua_entries:id:69893",
+        "ulif:ulif_dictua_sections:id:87692",
+        "ulif:ulif_dictua_sections:id:87693"
+      ]
+    },
+    {
+      "case_key": "golden:case:0e838245a5313f325c1fb8b0",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:640",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:640",
+        "ulif:ulif_dictua_entries:id:88959",
+        "ulif:ulif_dictua_sections:id:113683",
+        "ulif:ulif_dictua_sections:id:113684"
+      ]
+    },
+    {
+      "case_key": "golden:case:6a190cb9714da19574a95af3",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:883",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:883",
+        "ulif:ulif_dictua_entries:id:89128",
+        "ulif:ulif_dictua_sections:id:113996",
+        "ulif:ulif_dictua_sections:id:113997"
+      ]
+    },
+    {
+      "case_key": "golden:case:9190249e5ccddd03741ab7ce",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1405",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1405",
+        "ulif:ulif_dictua_entries:id:91121",
+        "ulif:ulif_dictua_sections:id:116456",
+        "ulif:ulif_dictua_sections:id:116457"
+      ]
+    },
+    {
+      "case_key": "golden:case:27e2cda7469d39a1a7e23516",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1685",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1685",
+        "ulif:ulif_dictua_entries:id:13743",
+        "ulif:ulif_dictua_sections:id:8020",
+        "ulif:ulif_dictua_sections:id:8021"
+      ]
+    },
+    {
+      "case_key": "golden:case:daee5b3adc1106673aedaa15",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1692",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1692",
+        "ulif:ulif_dictua_entries:id:13787",
+        "ulif:ulif_dictua_sections:id:8071",
+        "ulif:ulif_dictua_sections:id:8072"
+      ]
+    },
+    {
+      "case_key": "golden:case:8f776385e597430d67ad7216",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1750",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1750",
+        "ulif:ulif_dictua_entries:id:13984",
+        "ulif:ulif_dictua_sections:id:8331",
+        "ulif:ulif_dictua_sections:id:8332"
+      ]
+    },
+    {
+      "case_key": "golden:case:27b6246ec12c017a426f092f",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1978",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1978",
+        "ulif:ulif_dictua_entries:id:15098",
+        "ulif:ulif_dictua_sections:id:9610",
+        "ulif:ulif_dictua_sections:id:9611"
+      ]
+    },
+    {
+      "case_key": "golden:case:6a91b8b6bd55f296cd532474",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2010",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2010",
+        "ulif:ulif_dictua_entries:id:15227",
+        "ulif:ulif_dictua_sections:id:9757",
+        "ulif:ulif_dictua_sections:id:9758"
+      ]
+    },
+    {
+      "case_key": "golden:case:863e6689147d33f44a3caf5f",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2230",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2230",
+        "ulif:ulif_dictua_entries:id:16256",
+        "ulif:ulif_dictua_sections:id:10947",
+        "ulif:ulif_dictua_sections:id:10948"
+      ]
+    },
+    {
+      "case_key": "golden:case:075305e6c8afbbc9cb535fc2",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2536",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2536",
+        "ulif:ulif_dictua_entries:id:17007",
+        "ulif:ulif_dictua_sections:id:11863",
+        "ulif:ulif_dictua_sections:id:11864"
+      ]
+    },
+    {
+      "case_key": "golden:case:bcfa02070f86b6e9c42ad8e8",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2628",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2628",
+        "ulif:ulif_dictua_entries:id:17387",
+        "ulif:ulif_dictua_sections:id:12332",
+        "ulif:ulif_dictua_sections:id:12333"
+      ]
+    },
+    {
+      "case_key": "golden:case:33f9782d239e7542887e10f5",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2639",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2639",
+        "ulif:ulif_dictua_entries:id:17413",
+        "ulif:ulif_dictua_sections:id:12364",
+        "ulif:ulif_dictua_sections:id:12365"
+      ]
+    },
+    {
+      "case_key": "golden:case:21f4a1a16e1af58eba6d8d21",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2910",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2910",
+        "ulif:ulif_dictua_entries:id:18267",
+        "ulif:ulif_dictua_sections:id:13401",
+        "ulif:ulif_dictua_sections:id:13402"
+      ]
+    },
+    {
+      "case_key": "golden:case:76220948b99ba51c1fe11f23",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3015",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3015",
+        "ulif:ulif_dictua_entries:id:18594",
+        "ulif:ulif_dictua_sections:id:13788",
+        "ulif:ulif_dictua_sections:id:13789"
+      ]
+    },
+    {
+      "case_key": "golden:case:1495d9ed370e1d08b540d869",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3042",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3042",
+        "ulif:ulif_dictua_entries:id:18722",
+        "ulif:ulif_dictua_sections:id:13929",
+        "ulif:ulif_dictua_sections:id:13930"
+      ]
+    },
+    {
+      "case_key": "golden:case:38e4125ca0ca1b374af2ef6b",
+      "category": "proper_common_pairs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3685",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3685",
+        "ulif:ulif_dictua_entries:id:20381",
+        "ulif:ulif_dictua_sections:id:16027",
+        "ulif:ulif_dictua_sections:id:16028"
+      ]
+    },
+    {
+      "case_key": "golden:case:09aaa0ded6189c7cc98b629a",
+      "category": "aspect_homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:26655",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:26655",
+        "ulif:ulif_dictua_entries:id:26656"
+      ]
+    },
+    {
+      "case_key": "golden:case:b42de94c6a7b4994aae12ada",
+      "category": "aspect_homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:32046",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:32046",
+        "ulif:ulif_dictua_entries:id:32047",
+        "ulif:ulif_dictua_entries:id:32048"
+      ]
+    },
+    {
+      "case_key": "golden:case:6ff478700ac78fbbe2fe01e2",
+      "category": "aspect_homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:33252",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:33252",
+        "ulif:ulif_dictua_entries:id:33253",
+        "ulif:ulif_dictua_entries:id:33254"
+      ]
+    },
+    {
+      "case_key": "golden:case:0d0cefbdb8c663cd8b40ec0f",
+      "category": "aspect_homographs",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:33256",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:33256",
+        "ulif:ulif_dictua_entries:id:33257"
+      ]
+    },
+    {
+      "case_key": "golden:case:1264f180f44644385e2b1469",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:7963",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:13695",
+        "ulif:ulif_dictua_entries:id:131284",
+        "ulif:ulif_dictua_entries:id:146673",
+        "ulif:ulif_dictua_sections:id:7963",
+        "ulif:ulif_dictua_sections:id:166766",
+        "ulif:ulif_dictua_sections:id:186735",
+        "ulif:ulif_dictua_sections:id:186740"
+      ]
+    },
+    {
+      "case_key": "golden:case:74f9bab3f19d4e24dd0038db",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:10074",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:15508",
+        "ulif:ulif_dictua_entries:id:89266",
+        "ulif:ulif_dictua_sections:id:10074",
+        "ulif:ulif_dictua_sections:id:10077",
+        "ulif:ulif_dictua_sections:id:114163",
+        "ulif:ulif_dictua_sections:id:114164"
+      ]
+    },
+    {
+      "case_key": "golden:case:eaf39f29478313a347b7f789",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:11122",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:16403",
+        "ulif:ulif_dictua_entries:id:41496",
+        "ulif:ulif_dictua_sections:id:11122",
+        "ulif:ulif_dictua_sections:id:11123",
+        "ulif:ulif_dictua_sections:id:48597"
+      ]
+    },
+    {
+      "case_key": "golden:case:2c5fb77c4aa5fc08db42b79d",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:11469",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:16679",
+        "ulif:ulif_dictua_entries:id:147549",
+        "ulif:ulif_dictua_sections:id:11469",
+        "ulif:ulif_dictua_sections:id:11470",
+        "ulif:ulif_dictua_sections:id:187836",
+        "ulif:ulif_dictua_sections:id:187837"
+      ]
+    },
+    {
+      "case_key": "golden:case:420695b70c75dccc8be88335",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:11547",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:16743",
+        "ulif:ulif_dictua_entries:id:237536",
+        "ulif:ulif_dictua_entries:id:253372",
+        "ulif:ulif_dictua_sections:id:11547",
+        "ulif:ulif_dictua_sections:id:11548",
+        "ulif:ulif_dictua_sections:id:305669",
+        "ulif:ulif_dictua_sections:id:305672",
+        "ulif:ulif_dictua_sections:id:325565",
+        "ulif:ulif_dictua_sections:id:325568"
+      ]
+    },
+    {
+      "case_key": "golden:case:304a1dc2f71de4ebcb1042a1",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:12434",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2749",
+        "ulif:ulif_dictua_entries:id:231553",
+        "ulif:ulif_dictua_sections:id:12434",
+        "ulif:ulif_dictua_sections:id:12435",
+        "ulif:ulif_dictua_sections:id:298560",
+        "ulif:ulif_dictua_sections:id:298561"
+      ]
+    },
+    {
+      "case_key": "golden:case:095707fdc11f5375351a0f5b",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:14122",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:18881",
+        "ulif:ulif_dictua_entries:id:230410",
+        "ulif:ulif_dictua_sections:id:14122",
+        "ulif:ulif_dictua_sections:id:14126",
+        "ulif:ulif_dictua_sections:id:297209",
+        "ulif:ulif_dictua_sections:id:297214"
+      ]
+    },
+    {
+      "case_key": "golden:case:2c84d6cd23656b4ab8af25cf",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:15886",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:20304",
+        "ulif:ulif_dictua_entries:id:58096",
+        "ulif:ulif_dictua_sections:id:15886",
+        "ulif:ulif_dictua_sections:id:73107"
+      ]
+    },
+    {
+      "case_key": "golden:case:ed5d5a238e8e8e97f2bebd64",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:16795",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:21007",
+        "ulif:ulif_dictua_entries:id:27694",
+        "ulif:ulif_dictua_entries:id:56070",
+        "ulif:ulif_dictua_entries:id:92600",
+        "ulif:ulif_dictua_sections:id:16795",
+        "ulif:ulif_dictua_sections:id:16799",
+        "ulif:ulif_dictua_sections:id:26372",
+        "ulif:ulif_dictua_sections:id:26378",
+        "ulif:ulif_dictua_sections:id:70290",
+        "ulif:ulif_dictua_sections:id:70292",
+        "ulif:ulif_dictua_sections:id:118329",
+        "ulif:ulif_dictua_sections:id:118331"
+      ]
+    },
+    {
+      "case_key": "golden:case:fe0e178dcd0c6b641a197f20",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:17187",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3858",
+        "ulif:ulif_dictua_entries:id:21264",
+        "ulif:ulif_dictua_sections:id:17187",
+        "ulif:ulif_dictua_sections:id:17190",
+        "ulif:ulif_dictua_sections:id:17216",
+        "ulif:ulif_dictua_sections:id:17217"
+      ]
+    },
+    {
+      "case_key": "golden:case:40f3fbf350d8c27e83018cbd",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:17559",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:21521",
+        "ulif:ulif_dictua_entries:id:101703",
+        "ulif:ulif_dictua_sections:id:17559",
+        "ulif:ulif_dictua_sections:id:17560",
+        "ulif:ulif_dictua_sections:id:129047",
+        "ulif:ulif_dictua_sections:id:129049"
+      ]
+    },
+    {
+      "case_key": "golden:case:1e704bb49383264311af8337",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:19093",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:22635",
+        "ulif:ulif_dictua_entries:id:97913",
+        "ulif:ulif_dictua_sections:id:19093",
+        "ulif:ulif_dictua_sections:id:19097",
+        "ulif:ulif_dictua_sections:id:124536",
+        "ulif:ulif_dictua_sections:id:124537"
+      ]
+    },
+    {
+      "case_key": "golden:case:87dec273b17ba0027544dc7b",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:19192",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:22698",
+        "ulif:ulif_dictua_entries:id:235190",
+        "ulif:ulif_dictua_entries:id:238998",
+        "ulif:ulif_dictua_sections:id:19192",
+        "ulif:ulif_dictua_sections:id:19197",
+        "ulif:ulif_dictua_sections:id:302792",
+        "ulif:ulif_dictua_sections:id:302795",
+        "ulif:ulif_dictua_sections:id:307463",
+        "ulif:ulif_dictua_sections:id:307465"
+      ]
+    },
+    {
+      "case_key": "golden:case:32c512e70e792fb386e55d60",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:19390",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:22806",
+        "ulif:ulif_dictua_entries:id:139785",
+        "ulif:ulif_dictua_entries:id:140469",
+        "ulif:ulif_dictua_sections:id:19390",
+        "ulif:ulif_dictua_sections:id:19391",
+        "ulif:ulif_dictua_sections:id:177047",
+        "ulif:ulif_dictua_sections:id:177049",
+        "ulif:ulif_dictua_sections:id:178129",
+        "ulif:ulif_dictua_sections:id:178131"
+      ]
+    },
+    {
+      "case_key": "golden:case:33ac1f510dd089e9bc2a3dce",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:19545",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:22912",
+        "ulif:ulif_dictua_entries:id:116774",
+        "ulif:ulif_dictua_entries:id:269240",
+        "ulif:ulif_dictua_sections:id:19545",
+        "ulif:ulif_dictua_sections:id:147786",
+        "ulif:ulif_dictua_sections:id:344308"
+      ]
+    },
+    {
+      "case_key": "golden:case:7ce0abafb390466ba8b67b29",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:22734",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:25243",
+        "ulif:ulif_dictua_entries:id:25247",
+        "ulif:ulif_dictua_sections:id:22734",
+        "ulif:ulif_dictua_sections:id:22736",
+        "ulif:ulif_dictua_sections:id:22740",
+        "ulif:ulif_dictua_sections:id:22741"
+      ]
+    },
+    {
+      "case_key": "golden:case:596b229bd07b54f0ca08d71b",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:23979",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:26008",
+        "ulif:ulif_dictua_entries:id:33767",
+        "ulif:ulif_dictua_entries:id:137919",
+        "ulif:ulif_dictua_sections:id:23979",
+        "ulif:ulif_dictua_sections:id:35847",
+        "ulif:ulif_dictua_sections:id:174943"
+      ]
+    },
+    {
+      "case_key": "golden:case:feb2bf65b2e5c07627dfa50d",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:25345",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:27038",
+        "ulif:ulif_dictua_entries:id:46862",
+        "ulif:ulif_dictua_entries:id:139451",
+        "ulif:ulif_dictua_sections:id:25345",
+        "ulif:ulif_dictua_sections:id:25346",
+        "ulif:ulif_dictua_sections:id:56429",
+        "ulif:ulif_dictua_sections:id:56431",
+        "ulif:ulif_dictua_sections:id:176635",
+        "ulif:ulif_dictua_sections:id:176638"
+      ]
+    },
+    {
+      "case_key": "golden:case:8bed8fcd34f2c02b28a2a658",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:25421",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:27088",
+        "ulif:ulif_dictua_entries:id:27090",
+        "ulif:ulif_dictua_entries:id:231665",
+        "ulif:ulif_dictua_sections:id:25421",
+        "ulif:ulif_dictua_sections:id:25422",
+        "ulif:ulif_dictua_sections:id:25425",
+        "ulif:ulif_dictua_sections:id:25426",
+        "ulif:ulif_dictua_sections:id:298706",
+        "ulif:ulif_dictua_sections:id:298707"
+      ]
+    },
+    {
+      "case_key": "golden:case:1768e410b4c92b0388a03a86",
+      "category": "multi_headword_mwes",
+      "anchor_locator": "ulif:ulif_dictua_sections:id:25631",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5426",
+        "ulif:ulif_dictua_entries:id:209876",
+        "ulif:ulif_dictua_sections:id:25631",
+        "ulif:ulif_dictua_sections:id:25632",
+        "ulif:ulif_dictua_sections:id:271820",
+        "ulif:ulif_dictua_sections:id:271823"
+      ]
+    },
+    {
+      "case_key": "golden:case:58c1592d61b3bcb148a3402d",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:610",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:610",
+        "ulif:ulif_dictua_sections:id:113664"
+      ]
+    },
+    {
+      "case_key": "golden:case:aed6437b8d824bcb602ac8cc",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1165",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1165",
+        "ulif:ulif_dictua_sections:id:115222"
+      ]
+    },
+    {
+      "case_key": "golden:case:4e5ef73467a129254e994de8",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1343",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1343",
+        "ulif:ulif_dictua_sections:id:116378"
+      ]
+    },
+    {
+      "case_key": "golden:case:47ab055a3936aa68ec785933",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1451",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1451",
+        "ulif:ulif_dictua_sections:id:116660"
+      ]
+    },
+    {
+      "case_key": "golden:case:4eb79ecb2f243b0671f4fc43",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2301",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2301",
+        "ulif:ulif_dictua_sections:id:11216"
+      ]
+    },
+    {
+      "case_key": "golden:case:d1693b9a82452c84c11698e4",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2479",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2479",
+        "ulif:ulif_dictua_sections:id:11571"
+      ]
+    },
+    {
+      "case_key": "golden:case:e9d6357db01e186ea231f4f0",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3083",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3083",
+        "ulif:ulif_dictua_sections:id:14105"
+      ]
+    },
+    {
+      "case_key": "golden:case:f7f5f2e4394b6781958c646b",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:3269",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:3269",
+        "ulif:ulif_dictua_sections:id:14633"
+      ]
+    },
+    {
+      "case_key": "golden:case:2f5d2095a78510c609a0a4fa",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4035",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4035",
+        "ulif:ulif_dictua_sections:id:17866"
+      ]
+    },
+    {
+      "case_key": "golden:case:fa3f47e0e6754fc6863df266",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4201",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4201",
+        "ulif:ulif_dictua_sections:id:18496"
+      ]
+    },
+    {
+      "case_key": "golden:case:a5245b9e993ab2f1c184558f",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4700",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4700",
+        "ulif:ulif_dictua_sections:id:21712"
+      ]
+    },
+    {
+      "case_key": "golden:case:6fb6eb9b2bdc7c95a140b209",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5098",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5098",
+        "ulif:ulif_dictua_sections:id:22517"
+      ]
+    },
+    {
+      "case_key": "golden:case:9c128389789a7d26d05e26cb",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5367",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5367",
+        "ulif:ulif_dictua_sections:id:25498"
+      ]
+    },
+    {
+      "case_key": "golden:case:909324370ec886dbcc4c6cac",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5492",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5492",
+        "ulif:ulif_dictua_sections:id:25734"
+      ]
+    },
+    {
+      "case_key": "golden:case:c7180502fd58c668249b08ff",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5874",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5874",
+        "ulif:ulif_dictua_sections:id:26806"
+      ]
+    },
+    {
+      "case_key": "golden:case:5032819e5fac3080e1057641",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5907",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5907",
+        "ulif:ulif_dictua_sections:id:26885"
+      ]
+    },
+    {
+      "case_key": "golden:case:2ebf0ab9c9d1adf8f5b066f8",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:6114",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:6114",
+        "ulif:ulif_dictua_sections:id:27467"
+      ]
+    },
+    {
+      "case_key": "golden:case:c8e2464411edc41fc3c44a80",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:7784",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:7784",
+        "ulif:ulif_dictua_sections:id:31485"
+      ]
+    },
+    {
+      "case_key": "golden:case:3bd9932dcbe397758dac649e",
+      "category": "multi_sense",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:9040",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:9040",
+        "ulif:ulif_dictua_sections:id:54253"
+      ]
+    },
+    {
+      "case_key": "golden:case:055952a98c5db1fcd6670405",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:29495",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:29495",
+        "atlas0:enrichment:\u0431\u0443\u0434\u044c-\u0449\u043e/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:e0293f7cde40314d746dfe93",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:35038",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:35038",
+        "atlas0:enrichment:\u0432\u0438\u0434\u0438\u043c\u043e-\u043d\u0435\u0432\u0438\u0434\u0438\u043c\u043e/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:9f8b4945ef451f66d1a60c59",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:48059",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:48059",
+        "atlas0:enrichment:\u0432\u0441\u044c\u043e\u0433\u043e/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:ca2555d2aee8a6760d16fda8",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:50502",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:50502",
+        "atlas0:enrichment:\u0433\u0430\u0440\u044f\u0447\u0435/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:a2468ad76656f5aade821e4a",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:53708",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:53708",
+        "ulif:ulif_dictua_sections:id:66388",
+        "atlas0:enrichment:\u0433\u043e\u043b\u043e\u0432\u043d\u0435/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:bc18126dda63256210d54ff2",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:57027",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:57027",
+        "atlas0:enrichment:\u0434\u0430\u0432\u043d\u0438\u043c-\u0434\u0430\u0432\u043d\u043e/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:31e64cab97f878bc739a29d1",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:60329",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:60329",
+        "ulif:ulif_dictua_sections:id:75620",
+        "atlas0:enrichment:\u0434\u0437\u0432\u0456\u043d\u043a\u0430/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:1f2fda11c24fe23820016e4f",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:84422",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:84422",
+        "ulif:ulif_dictua_sections:id:107342",
+        "atlas0:enrichment:\u0437\u0434\u043e\u0440\u043e\u0432\u0438\u043b\u043e/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:f23422aecb2db9b92610b793",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:92038",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:92038",
+        "atlas0:enrichment:\u043a\u0430\u0437\u043d\u0430-\u043a\u043e\u043b\u0438/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:eda39cfe20f082c219dfa9e8",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:109974",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:109974",
+        "ulif:ulif_dictua_sections:id:139380",
+        "atlas0:enrichment:\u043b\u0438\u0442\u0432\u0438\u043d\u0438/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:787b4938cbcc9346e656d076",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:115171",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:115171",
+        "ulif:ulif_dictua_sections:id:145882",
+        "atlas0:enrichment:\u043c\u0430\u043d\u0456\u0432\u0446\u0456/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:d78a8e2fcf02a0398cf07bd1",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:122127",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:122127",
+        "ulif:ulif_dictua_sections:id:154278",
+        "atlas0:enrichment:\u043c\u043e\u0442\u0443\u0437\u043e\u0447\u043e\u043a/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:1431a57ee0fd4d38325b8cb8",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:147232",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:147232",
+        "ulif:ulif_dictua_sections:id:187486",
+        "atlas0:enrichment:\u043e\u043b\u0435\u043d\u044f/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:fcc5ff19ab98b7bd9f744a7c",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:159853",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:159853",
+        "ulif:ulif_dictua_sections:id:204338",
+        "atlas0:enrichment:\u043f\u0435\u0440\u0435\u0441\u0456\u0432/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:7a7f77db6b2dde802dfcb165",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:169829",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:169829",
+        "ulif:ulif_dictua_sections:id:218125",
+        "atlas0:enrichment:\u043f\u043e\u0432\u0456\u0432/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:8fcaba18cee849893b9dbc16",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:175678",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:175678",
+        "ulif:ulif_dictua_sections:id:225323",
+        "atlas0:enrichment:\u043f\u043e\u043b\u0442\u0430\u0432\u0446\u0456/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:b55323ad4db8348fa51a3def",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:175692",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:175692",
+        "ulif:ulif_dictua_sections:id:225337",
+        "atlas0:enrichment:\u043f\u043e\u043b\u0443\u0431\u043e\u0442\u043a\u0438/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:b8abef5ab44039f074361b0d",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:212725",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:212725",
+        "ulif:ulif_dictua_sections:id:275068",
+        "atlas0:enrichment:\u0441\u0432\u044f\u0442\u0430/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:8555171878baf3622f1d2c12",
+      "category": "stress_disagreements",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:213909",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:213909",
+        "ulif:ulif_dictua_sections:id:276339",
+        "atlas0:enrichment:\u0441\u0435\u0440\u0431\u0438/stress"
+      ]
+    },
+    {
+      "case_key": "golden:case:e13f0eeca224538ec16a3fb3",
+      "category": "ulif_header_damage",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:26693",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:26693"
+      ]
+    },
+    {
+      "case_key": "golden:case:0be2d6f6595c4d61b0bb82e6",
+      "category": "ulif_header_damage",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:27901",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:27901"
+      ]
+    },
+    {
+      "case_key": "golden:case:8d5825ec3d3abb3ea316d0a2",
+      "category": "ulif_header_damage",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:29209",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:29209"
+      ]
+    },
+    {
+      "case_key": "golden:case:979dfa9bdb29aa26d6a8a452",
+      "category": "ulif_header_damage",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:31463",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:31463"
+      ]
+    },
+    {
+      "case_key": "golden:case:3c04a38fd2a4feb0b7bb918b",
+      "category": "ulif_header_damage",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:36547",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:36547"
+      ]
+    },
+    {
+      "case_key": "golden:case:e529f2627e909dc9ceb82107",
+      "category": "ulif_header_damage",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:53479",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:53479"
+      ]
+    },
+    {
+      "case_key": "golden:case:0936d0f6dd6a711427809bd4",
+      "category": "ulif_header_damage",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:54849",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:54849"
+      ]
+    },
+    {
+      "case_key": "golden:case:e56b391e67d091a7edf2c616",
+      "category": "ulif_header_damage",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:65555",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:65555"
+      ]
+    },
+    {
+      "case_key": "golden:case:b7bb1d7face27bee1c1a7df6",
+      "category": "ulif_header_damage",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:67491",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:67491"
+      ]
+    },
+    {
+      "case_key": "golden:case:4996b90639061f34319dc4af",
+      "category": "ulif_header_damage",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:67662",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:67662"
+      ]
+    },
+    {
+      "case_key": "golden:case:b916ad0467f4a458eb51fda5",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2",
+        "ulif:ulif_dictua_sections:id:259617"
+      ]
+    },
+    {
+      "case_key": "golden:case:603cc7042c72f4efe49e808f",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:7",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:7"
+      ]
+    },
+    {
+      "case_key": "golden:case:b19475811d89e1f7e33a1a48",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:9",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:9",
+        "ulif:ulif_dictua_sections:id:77440"
+      ]
+    },
+    {
+      "case_key": "golden:case:4915b0024b093d0adf0a21aa",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:12",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:12"
+      ]
+    },
+    {
+      "case_key": "golden:case:8de673e3272b5462b0845f9b",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:13",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:13"
+      ]
+    },
+    {
+      "case_key": "golden:case:6d6e6a644ac0c2c7afb94569",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:16",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:16"
+      ]
+    },
+    {
+      "case_key": "golden:case:5c6f80f78287dcffb37b209a",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:1163",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:1163",
+        "ulif:ulif_dictua_sections:id:115161"
+      ]
+    },
+    {
+      "case_key": "golden:case:5b146695a2399eba1e03b3c5",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:2553",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:2553",
+        "ulif:ulif_dictua_sections:id:11777"
+      ]
+    },
+    {
+      "case_key": "golden:case:3cde87c2d2cd286988284636",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4150",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4150",
+        "ulif:ulif_dictua_sections:id:18367"
+      ]
+    },
+    {
+      "case_key": "golden:case:08c4a8889ac08fd289e458fb",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4167",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4167",
+        "ulif:ulif_dictua_sections:id:18422"
+      ]
+    },
+    {
+      "case_key": "golden:case:6e225e795a705ead93ef9d74",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4276",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4276",
+        "ulif:ulif_dictua_sections:id:18789"
+      ]
+    },
+    {
+      "case_key": "golden:case:a3ad3091bbac9f591a5fdb5a",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4368",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4368",
+        "ulif:ulif_dictua_sections:id:19082"
+      ]
+    },
+    {
+      "case_key": "golden:case:f3596d78c9523352fbc8f36e",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:4988",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:4988",
+        "ulif:ulif_dictua_sections:id:22355"
+      ]
+    },
+    {
+      "case_key": "golden:case:0ab0494b5d89e0f47dd2dbee",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5489",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5489",
+        "ulif:ulif_dictua_sections:id:314361"
+      ]
+    },
+    {
+      "case_key": "golden:case:be8edb6e4040574199a9a36a",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5516",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5516",
+        "ulif:ulif_dictua_sections:id:25819"
+      ]
+    },
+    {
+      "case_key": "golden:case:8de1c70547aaa8715dfa9d87",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5578",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5578",
+        "ulif:ulif_dictua_sections:id:25951"
+      ]
+    },
+    {
+      "case_key": "golden:case:77f1ef9300b3cd564000d7fa",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5897",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5897",
+        "ulif:ulif_dictua_sections:id:26855"
+      ]
+    },
+    {
+      "case_key": "golden:case:8a3d1b49ce862f6f6245c2f7",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5935",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5935",
+        "ulif:ulif_dictua_sections:id:27012"
+      ]
+    },
+    {
+      "case_key": "golden:case:2c5069084db46816ea66a8f8",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5946",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5946",
+        "ulif:ulif_dictua_sections:id:27051"
+      ]
+    },
+    {
+      "case_key": "golden:case:6d7b2211ee91446eb189268e",
+      "category": "ordinary_controls",
+      "anchor_locator": "ulif:ulif_dictua_entries:id:5973",
+      "source_keys": [
+        "ulif:ulif_dictua_entries:id:5973",
+        "ulif:ulif_dictua_sections:id:27107"
+      ]
+    }
+  ]
+}

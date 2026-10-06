@@ -1503,3 +1503,26 @@ def test_joint_verify_replay_may_share_literal_pilot_parent(pilot, capsys):
     save(member, dict(heldout=["golden:case:0"], replay=["golden:case:1"]))
     assert pilot["operation"]("verify", "--manifest", str(path), "--heldout-manifest", str(member)) == 1
     assert "Heldout/pilot overlap" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("fault,reason", [
+    ("duplicate_pilot", "Joint verify requires exactly one pilot and one golden"),
+    ("third_manifest", "Verify requires one manifest or a pilot/golden pair"),
+    ("allocate_golden", "Golden cases are not pilot identity allocations"),
+])
+def test_joint_cli_input_refusals(pilot, fault, reason, capsys):
+    prepared(pilot)
+    golden = pilot["root"] / "golden.json"
+    golden.write_text(json.dumps(golden_manifest(pilot), ensure_ascii=False, indent=2) + "\n")
+    before = pilot["registry"].read_bytes()
+    if fault == "allocate_golden":
+        argv = ["allocate", "--manifest", str(golden), "--registry", str(pilot["registry"])]
+    else:
+        paths = [pilot["manifest"], pilot["manifest"]] if fault == "duplicate_pilot" else [
+            pilot["manifest"], golden, pilot["manifest"]]
+        argv = ["verify", "--registry", str(pilot["registry"])]
+        for path in paths:
+            argv += ["--manifest", str(path)]
+    assert foundation.main(argv) == 1
+    assert reason in capsys.readouterr().err
+    assert before == pilot["registry"].read_bytes()

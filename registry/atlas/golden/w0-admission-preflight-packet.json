@@ -1,28 +1,22 @@
 {
-  "packet_kind": "w0-source-admission-preflight",
+  "packet_kind": "w0-source-admission-packet",
   "issue": 9862,
   "parent_issue": 6321,
-  "disposition": "blocked_before_selection",
-  "author_task": "codex/impl-9862",
-  "accountable_driver": "claude-open-model-data",
-  "selection_report": "registry/atlas/golden/w0-selection-report.md",
-  "selection_report_sha256": "230a5a6de31b60196bbdf99a867c8b839f790c6df690e46ae7ae94c169c35690",
-  "base_sha": "141f3f269ed6e4b18a1deb2f50d3b292aaea25e8",
-  "selection_file": null,
-  "frozen_manifest_file": null,
-  "heldout_membership_file": null,
-  "source_admission_receipt_file": null,
+  "disposition": "partial_selection_total_unexpressible",
+  "author_task": "codex/impl-9862-r2",
+  "accountable_driver": "codex",
+  "admission_ready": false,
   "selection_counts": {
     "homographs": {
-      "selected": 0,
+      "selected": 40,
       "target": 40
     },
     "stress_doublets": {
-      "selected": 0,
+      "selected": 20,
       "target": 20
     },
     "proper_common_pairs": {
-      "selected": 0,
+      "selected": 20,
       "target": 20
     },
     "aspect_pairs": {
@@ -30,19 +24,19 @@
       "target": 20
     },
     "aspect_homographs": {
-      "selected": 0,
+      "selected": 5,
       "target": 5
     },
     "multi_headword_mwes": {
-      "selected": 0,
+      "selected": 20,
       "target": 20
     },
     "multi_sense": {
-      "selected": 0,
+      "selected": 20,
       "target": 20
     },
     "stress_disagreements": {
-      "selected": 0,
+      "selected": 20,
       "target": 20
     },
     "tier_3_only": {
@@ -50,7 +44,7 @@
       "target": 10
     },
     "ulif_header_damage": {
-      "selected": 0,
+      "selected": 10,
       "target": 10
     },
     "russification_pairs": {
@@ -58,38 +52,139 @@
       "target": 15
     },
     "ordinary_controls": {
-      "selected": 0,
+      "selected": 20,
       "target": 20
     }
   },
-  "total_selected": 0,
+  "total_selected": 175,
   "total_target": 220,
+  "source_records": 626,
+  "missing_cases": 45,
   "pilot_units": 150,
-  "admission_ready": false,
-  "stop_basis": "Required multi-headword phraseology source key lacks an approved foundation contract. Issue stop policy applies.",
-  "prerequisites": [
+  "selection_file": "registry/atlas/golden/w0-selection-keys.json",
+  "selection_file_sha256": "f9fb1306be48eea9461b1d90c1e023cda93e3b559106b08a40794bcfb933c575",
+  "heldout_membership_file": "registry/atlas/golden/w0-heldout-membership.json",
+  "heldout_membership_sha256": "1ea23d1ea0994299df04864c5e13f69fafc8423deb6fccfd9a7b9677fa695638",
+  "selection_report": "registry/atlas/golden/w0-selection-report.md",
+  "selection_report_sha256": "9d087091ea3ad04a21e4eff27ead355edc28bb1cc87d003e3f14fa8e1a4b70ee",
+  "host_only_artifacts": [
     {
-      "id": "mwe_source_key",
-      "error": "Invalid object fields",
-      "locator": "ulif:ulif_dictua_sections:id:7963",
-      "owner": "claude-open-model-data"
+      "name": "recovery-staged-selection-candidate.json",
+      "storage": "host-only",
+      "sha256": "5537167bf51e56e095db7b96570663aa59786f1e5fd7778feb2d178ca4158ade"
     },
     {
-      "id": "golden_case_denominator",
-      "error": "Pilot denominator drift; require exactly 150 admitted units",
-      "owner": "claude-open-model-data"
+      "name": "recovery-validation-summary.json",
+      "storage": "host-only",
+      "sha256": "7f9deeb43d6a33b6f59595bd076842f9d209f6c526ed08493c339140c35fa0ed"
     },
     {
-      "id": "joint_golden_pilot_isolation_inputs",
-      "error": "Unresolved membership keys; isolation cannot be checked",
-      "owner": "claude-open-model-data"
+      "name": "recovery-validation.py",
+      "storage": "host-only",
+      "sha256": "edce98bfead0658eaac3ee925de64c2aeacd6cdad49949a99b505cc70a605234"
+    },
+    {
+      "name": "recovery-live-mcp-proof.json",
+      "storage": "host-only",
+      "sha256": "497f850175f777ebd1902c0c8c69cd5ab926e65881c6ff43bfec1049d06d5617"
+    },
+    {
+      "name": "recovery-doublet-inspection.txt",
+      "storage": "host-only",
+      "sha256": "212f62cd8885779cad9e2733721ac54f24de1b2acdd7403c970431dc324f55d8"
+    },
+    {
+      "name": "recovery-mcp-diagnostics-summary.json",
+      "storage": "host-only",
+      "sha256": "2063b9e85f6c4fe4defc471f1e59d92993dd9f3de098f7dbe2e3a672c5b221cc"
+    },
+    {
+      "name": "recovery-split-proof.json",
+      "storage": "host-only",
+      "sha256": "90fa0261f3161e336231f2f4a29b700a49568abd7e75526c455ba0bf172e1ba9"
+    },
+    {
+      "name": "recovery-first-test-result.txt",
+      "storage": "host-only",
+      "sha256": "b1990440e1c1f6eef33a91fbe693e1242a29dd0b91a4b4c67d564ab9536e7141"
+    },
+    {
+      "name": "recovery-clean-test-result.txt",
+      "storage": "host-only",
+      "sha256": "9b8ca6328e27af5be5289bc6609bcebb37f64b98ae1b753ab1e6bda665b93dda"
+    },
+    {
+      "name": "recovery-foundation.coverage",
+      "storage": "host-only",
+      "sha256": "c6a7a5e7a36d907f7e37beafd4d45dd93b13bf82f4c0c10193e2be06dbec044b"
+    },
+    {
+      "name": "recovery-verification.json",
+      "storage": "host-only",
+      "sha256": "3b1583493f1b810f4836e5e86aeeec09a579a02b357f065409d264e3b1a7dcac"
     }
   ],
+  "frozen_manifest_file": null,
+  "source_admission_receipt_file": null,
+  "split": {
+    "seed": "9862-w0-r2-20261006",
+    "replay": 105,
+    "heldout": 70,
+    "pilot_closure_forced_replay": 12
+  },
+  "partial_candidate_isolation": "checked",
+  "frozen_manifest_cli_isolation": "unverified",
+  "independent_heldout_evaluation": "not_performed",
   "open_acceptance_criteria": [
     "AC1",
     "AC2",
     "AC3",
     "AC4"
   ],
-  "next_action": "Driver dispositions foundation prerequisites, then resumes measured selection and routes non-author source admission. No receipt may be authored by this author."
+  "stop_basis": "Total 220 cannot be expressed: missing aspect-pair, project/teacher and Antonenko evidence contracts; bounded tier-3-only census returned zero.",
+  "next_action": "Driver resolves evidence-family contracts and tier-3-only source scope, completes 220 cases, then routes non-author source admission. This partial packet is not admissible.",
+  "recovery_task": "codex/codex-recover-w0",
+  "required_examples": {
+    "homographs": {
+      "selected": 4,
+      "target": 5,
+      "missing_reason": "Invalid paradigm matrix",
+      "withheld_source_keys": [
+        "ulif:ulif_dictua_entries:id:36642",
+        "ulif:ulif_dictua_entries:id:36643",
+        "ulif:ulif_dictua_sections:id:40486",
+        "ulif:ulif_dictua_sections:id:40488"
+      ]
+    }
+  },
+  "source_admission_accounting": {
+    "candidate_cases": 175,
+    "accepted": 0,
+    "withheld_pending_non_author": 175,
+    "candidate_source_records": 626,
+    "accepted_source_records": 0,
+    "withheld_source_records": 626,
+    "unfilled_target_positions": 45
+  },
+  "verification": {
+    "tests": {
+      "command": "PROJECT_PYTHON -m pytest -q -n 2 tests/test_word_card_foundation.py",
+      "exit": 0,
+      "passed": 471,
+      "seconds": 309.84
+    },
+    "ruff": {
+      "command": "PROJECT_PYTHON -m ruff check scripts/atlas/word_card_foundation.py tests/test_word_card_foundation.py",
+      "exit": 0,
+      "output": "All checks passed!"
+    },
+    "coverage": {
+      "statement_percent": 99,
+      "statements": 564,
+      "missed": 3,
+      "assertions_passed": 471,
+      "initial_exit": 1,
+      "guard_error": "Recovery changed reports during test and created coverage scratch; corrected by clean static-checkout rerun"
+    }
+  }
 }

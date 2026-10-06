@@ -75,6 +75,11 @@ The approved bounded tuple clarification adds `table_row` evidence keys:
 contains its literal content digest, query, headword, grammatical label and
 homonym index, joined through an admitted parent locator. Paradigm payload keeps
 exactly rows, raw HTML, response reference, group discriminator and source order.
+ULIF `phraseology` sections use `ulif:record:phraseology:v1:sha256:<digest>`
+with the same `{parent,kind,payload}` fingerprint and admitted-parent dependency.
+Their literal payload fields are `citations`, `raw_html`, `raw_response_ref`,
+`register_labels`, `sense_or_group_id`, `source_order`, `terms`, and `text`;
+terms retain their stored `raw_html` and `text`. Other section kinds still refuse.
 Tuple JSON is UTF-8, sorted, compact, without newline or string normalization.
 Local IDs/timestamps are excluded; accents, case, spaces and raw HTML remain.
 Duplicate tuples/digest collisions refuse; null source content stays null.
@@ -86,6 +91,20 @@ counted in `foreign_build_events`. Admission pins the reviewing family used for 
 (`google`) and fails closed; another family needs an author-family field and a re-freeze.
 Per-output lock files stay in the ignored lock directory and are never unlinked.
 Immutable output conflicts and source/WAL mutation refuse before writing.
+The legacy pilot keeps its exact 150-unit denominator. A golden selection and
+its frozen manifest declare `kind: golden`; the selection also declares integer
+`case_count: 220`. Its 220 cases each expand to one or more literal source rows;
+case and source-row counts remain separate. Other kinds and counts refuse.
+Golden cases are source inventories, not pilot identity allocations. Source
+admission remains a distinct non-author gate before a golden manifest can freeze.
+For joint isolation, repeat `--manifest` on `verify`, in either order:
+`verify --manifest <pilot> --manifest <golden> --registry <registry>
+--heldout-manifest <membership>`. Both frozen manifests are validated; the
+registry's pilot allocations retain their existing checks. Golden membership
+verification requires the pilot manifest. Every membership key must be known in
+the union, and held-out closure must be disjoint from replay and the entire
+pilot closure. A repeated identical literal row counts once for parent lookup;
+every input owner still contributes its aliases and adjudication context.
 Optional membership is `{"heldout":["source:key"],"replay":[]}`. Keys must resolve;
 conservative unit/locator/card/alias/paradigm-parent closure must remain disjoint from replay.
 Provenance prose (mint evidence, alias/source-key notes, `matched_by`, `hold`) links only through known
