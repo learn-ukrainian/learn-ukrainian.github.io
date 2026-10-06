@@ -204,6 +204,43 @@ def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool
     return detector
 
 
+_CLAUDE_ADAPTER_ALIASES = ("scripts.agent_runtime.adapters.claude", "agent_runtime.adapters.claude")
+_KIMICC_ADAPTER_ALIASES = ("scripts.agent_runtime.adapters.kimicc", "agent_runtime.adapters.kimicc")
+_STUBBED_CLAUDE_CLI_VERSION = (2, 1, 200)
+
+
+@pytest.fixture(autouse=True)
+def _stub_claude_cli_version_gate(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep tests independent of the installed Claude CLI version (#9903).
+
+    ``scripts.agent_runtime.adapters.claude`` and ``agent_runtime.adapters.claude``
+    are two module objects, each with its own process-cached
+    ``_probe_claude_cli_version``; ``kimicc`` binds the gate by name too. Clear
+    every probe cache and stub the gate on every alias that is importable here.
+    Tests marked ``real_claude_cli_gate`` keep the real gate (with their own
+    fakes) and only get fresh caches. A test that patches the gate itself runs
+    after this fixture, so its patch wins.
+    """
+    import importlib
+    import importlib.util
+
+    keep_real_gate = request.node.get_closest_marker("real_claude_cli_gate") is not None
+
+    def _stub(_cmd_prefix: tuple[str, ...]) -> tuple[int, int, int]:
+        return _STUBBED_CLAUDE_CLI_VERSION
+
+    for alias in _CLAUDE_ADAPTER_ALIASES + _KIMICC_ADAPTER_ALIASES:
+        if alias not in sys.modules and importlib.util.find_spec(alias.split(".")[0]) is None:
+            continue
+        module = importlib.import_module(alias)
+        probe = getattr(module, "_probe_claude_cli_version", None)
+        if probe is not None:
+            probe.cache_clear()
+            request.addfinalizer(probe.cache_clear)
+        if not keep_real_gate:
+            monkeypatch.setattr(module, "_ensure_supported_claude_cli_version", _stub)
+
+
 @pytest.fixture(autouse=True)
 def dispatch_slice_probe(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
     """Decouple tests from the host's ``lu-dispatch.slice`` (#8891, #9514).
