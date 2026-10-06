@@ -26,15 +26,29 @@ FILESYSTEMS = frozenset({"ext4", "xfs", "btrfs"})
 
 
 def filesystem(path: Path) -> str:
+    path = path.resolve()
+    ancestor = path
+    while not ancestor.exists():
+        require(ancestor != ancestor.parent, "filesystem_unknown")
+        ancestor = ancestor.parent
+    device = ancestor.stat().st_dev
+    major_minor = f"{os.major(device)}:{os.minor(device)}"
     mounts = []
     for line in Path("/proc/self/mountinfo").read_text().splitlines():
         head, tail = line.split(" - ", 1)
-        mount = re.sub(r"\\([0-7]{3})", lambda m: chr(int(m[1], 8)), head.split()[4])
+        fields = head.split()
+        mount = re.sub(r"\\([0-7]{3})", lambda m: chr(int(m[1], 8)), fields[4])
         root = Path(mount)
-        if path == root or root in path.parents:
-            mounts.append((len(root.parts), tail.split()[0]))
+        if fields[2] == major_minor and (path == root or root in path.parents):
+            mounts.append((len(root.parts), root, fields[0], tail.split()[0]))
     require(bool(mounts), "filesystem_unknown")
-    return max(mounts)[1]
+    longest = max(entry[0] for entry in mounts)
+    visible = [entry for entry in mounts if entry[0] == longest]
+    require(
+        len({entry[1] for entry in visible}) == 1 and len({entry[2] for entry in visible}) == len(visible),
+        "filesystem_ambiguous",
+    )
+    return visible[-1][-1]
 
 
 def _private(fd: int) -> None:
@@ -157,7 +171,7 @@ class OutputGuard:
         require(all(p not in {"", ".", ".."} for p in parts), "output_name")
         return parts
 
-    def write(self, name: str, content: bytes) -> None:
+    def _write(self, name: str, content: bytes) -> None:
         parts = self._parts(name)
         fd = self._directory(parts[:-1])
         try:
@@ -177,7 +191,7 @@ class OutputGuard:
         finally:
             os.close(fd)
 
-    def read(self, name: str) -> bytes:
+    def _read(self, name: str) -> bytes:
         parts = self._parts(name)
         fd = self._directory(parts[:-1])
         try:
@@ -193,3 +207,15 @@ class OutputGuard:
                 os.close(file_fd)
         finally:
             os.close(fd)
+
+    def write(self, name: str, content: bytes) -> None:
+        try:
+            self._write(name, content)
+        except OSError:
+            raise BuildError("output_io") from None
+
+    def read(self, name: str) -> bytes:
+        try:
+            return self._read(name)
+        except OSError:
+            raise BuildError("output_io") from None

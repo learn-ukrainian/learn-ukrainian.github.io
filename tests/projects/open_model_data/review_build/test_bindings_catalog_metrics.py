@@ -16,11 +16,11 @@ from tests.projects.open_model_data.review_build.conftest import citation, regis
 
 def test_round_robin_is_exactly_balanced_and_input_order_independent(bundle):
     catalog = Catalog(bundle["catalog"])
-    candidates = bundle["candidates"] * 0 + bundle["candidates"]
+    candidates = [*bundle["candidates"], replace(bundle["candidates"][0], unit_id="SYNTHETIC remainder")]
     applicability = {record_id(c): catalog.applicable(c) for c in candidates}
     forward = catalog.assign(candidates, applicability)
     assert forward == catalog.assign(list(reversed(candidates)), applicability)
-    assert set(Counter(forward.values()).values()) == {1}
+    assert sorted(Counter(forward.values()).values()) == [1] * 11 + [2]
     assert list(forward) == sorted(forward)
     # Applicability sets have their own independent rotation.
     ids = list(applicability)
@@ -117,16 +117,20 @@ def test_concentration_failures_cannot_be_hidden_by_ids_or_source_text(bundle, k
 
 
 def test_binding_engine_region_group_contiguity_and_unknown_rule(bundle):
-    text = "SYNTHETIC rule: SYNTHETIC example\nSYNTHETIC outside"
+    text = "SYNTHETIC examples: SYNTHETIC example\n1. SYNTHETIC outside"
     with sqlite3.connect(bundle["db"]) as writer:
         writer.execute("UPDATE units SET source_field=? WHERE id=1", (text,))
     row = {**bundle["rows"][0], "source_field": text}
+    original = bundle["candidates"][0]
+    bundle["candidates"][0] = replace(
+        original, slots=(replace(original.slots[0], text=text, citations=(citation(row),)),)
+    )
     example = Value("example", "SYNTHETIC example", (citation(row),), (16, 33), "verbatim")
     candidate = replace(bundle["candidates"][0], slots=(example,))
     with SnapshotReader({"sources.db": bundle["db"]}) as reader:
         spec = {"schema": "binding-spec.v1", "rules": [{"op": "example_list", "values": [selector(slot="example")]}]}
         # Locate the actual source span rather than relying on the example fixture offsets.
-        start = text.index("SYNTHETIC example")
+        start = text.index("SYNTHETIC example", text.index(":"))
         candidate = replace(candidate, slots=(replace(example, span=(start, start + len(example.text))),))
         assert "example_list" in bindings.check(candidate, spec, reader, {})
         bad = replace(candidate, slots=(replace(candidate.slots[0], span=(34, len(text))),))
@@ -196,13 +200,20 @@ def test_supporting_citation_needs_independent_agreement(bundle):
     assert len(run_gate(bundle)[0]) == 12
 
 
-@pytest.mark.parametrize("mismatch", [False, True, "swapped", "adjudication"])
+@pytest.mark.parametrize("mismatch", [False, True, "swapped", "adjudication", "unrelated_sum11", "extra", "substring"])
 def test_c7_shared_pair_form_keys_and_adjudication(bundle, mismatch):
     # All strings are synthetic; this tests structural admission, not linguistic truth.
     sources = ("synthetic", "synthetic_book", "sum11", "synthetic_ulif", "synthetic_vesum", "synthetic_receipt")
     bundle["register"] = register_data(sources=sources)
     bundle["config"]["compatibility"] = [
-        {"store": "sources.db", "table": "units", "source_id": s, "role": "sum11" if s == "sum11" else "modern"}
+        {
+            "store": "sources.db",
+            "table": "units",
+            "source_id": s,
+            "role": "sum11" if s == "sum11" else "modern",
+            "source_column": "source_file",
+            "source_values": ["SYNTHETIC book"],
+        }
         for s in sources
     ]
     c = bundle["candidates"][0]
@@ -265,13 +276,42 @@ def test_c7_shared_pair_form_keys_and_adjudication(bundle, mismatch):
             ],
         },
     ]
+    if mismatch == "unrelated_sum11":
+        left = replace(left, citations=(citation(bundle["rows"][1], source="sum11"), left.citations[1]))
+        # Book is primary so quotation passes and the unrelated supporting row
+        # must fail the content check rather than primary quotation.
+        left = replace(left, citations=tuple(reversed(left.citations)))
+        pair["book_rejected"]["citation"] = 0
+        pair["rejected_key"].update(citation=0)
+        bundle["candidates"][0] = replace(c, context=(left, right, receipt))
+    elif mismatch == "extra":
+        right = replace(right, citations=(*right.citations, citation(bundle["rows"][1], source="synthetic")))
+        bundle["candidates"][0] = replace(c, context=(left, right, receipt))
+    elif mismatch == "substring":
+        longer = row["source_field"] + "longer"
+        with sqlite3.connect(bundle["db"]) as writer:
+            writer.execute("UPDATE units SET target_field=? WHERE id=2", (longer,))
+        book = citation({**bundle["rows"][1], "target_field": longer}, "target_field", "synthetic_book")
+        left = replace(left, citations=(left.citations[0], book))
+        right = replace(right, citations=(book, *right.citations[1:]), span=(0, len(right.text)))
+        # Exercise the witness check directly: quotation of the recommended
+        # primary is a separate gate, and this book has only a substring.
+        with SnapshotReader({"sources.db": bundle["db"]}) as reader:
+            with pytest.raises(BuildError, match="binding_contrast"):
+                bindings.check(replace(c, context=(left, right, receipt)), bundle["spec"]["binding"], reader, {})
+        return
     if mismatch == "swapped":
         bundle["candidates"][0] = replace(
             c, response=(replace(c.response[0], text=row["source_field"], citations=(citation(row),)),)
         )
     if mismatch:
         with pytest.raises(
-            BuildError, match="binding_adjudication" if mismatch == "adjudication" else "binding_contrast"
+            BuildError,
+            match="supporting_unbound"
+            if mismatch == "extra"
+            else "binding_adjudication"
+            if mismatch == "adjudication"
+            else "binding_contrast",
         ):
             run_gate(bundle)
     else:
@@ -409,3 +449,77 @@ def test_gate_c2_applicability_reads_source_assertions(bundle):
         spec["applicability"]["without_sense"][0][1] = 0
         with pytest.raises(BuildError, match="catalog_inapplicable"):
             gate.applicable(replace(c, slots=(c.slots[0], replace(sense, text=""))))
+
+
+@pytest.mark.parametrize(
+    "text,item,allowed",
+    [
+        (
+            "SYNTHETIC examples: SYNTHETIC alpha, SYNTHETIC beta. SYNTHETIC rule prose: SYNTHETIC outside",
+            "SYNTHETIC beta",
+            True,
+        ),
+        (
+            "SYNTHETIC examples: SYNTHETIC alpha, SYNTHETIC beta. SYNTHETIC rule prose: SYNTHETIC outside",
+            "SYNTHETIC outside",
+            False,
+        ),
+        ("SYNTHETIC examples: SYNTHETIC alpha, SYNTHETIC beta. SYNTHETIC rule prose", "alpha", False),
+        (
+            "SYNTHETIC examples: SYNTHETIC alpha; SYNTHETIC beta\n2. SYNTHETIC rule: SYNTHETIC outside",
+            "SYNTHETIC outside",
+            False,
+        ),
+        (
+            "SYNTHETIC examples: SYNTHETIC alpha; SYNTHETIC beta. SYNTHETIC examples: SYNTHETIC gamma, SYNTHETIC delta.",
+            "SYNTHETIC delta",
+            True,
+        ),
+        ("SYNTHETIC examples:\n SYNTHETIC alpha, SYNTHETIC beta\n3. SYNTHETIC rule", "SYNTHETIC alpha", True),
+    ],
+)
+def test_colon_regions_require_whole_items_and_exclude_later_rule_prose(bundle, text, item, allowed):
+    with sqlite3.connect(bundle["db"]) as writer:
+        writer.execute("UPDATE units SET source_field=? WHERE id=1", (text,))
+    start = text.index(item)
+    value = Value(
+        "example",
+        item,
+        (citation({**bundle["rows"][0], "source_field": text}),),
+        (start, start + len(item)),
+        "verbatim",
+    )
+    candidate = replace(bundle["candidates"][0], slots=(value,))
+    spec = {"schema": "binding-spec.v1", "rules": [{"op": "example_list", "values": [selector(slot="example")]}]}
+    with SnapshotReader({"sources.db": bundle["db"]}) as reader:
+        if allowed:
+            assert bindings.check(candidate, spec, reader, {}) == {"example_list"}
+        else:
+            with pytest.raises(BuildError, match="binding_example"):
+                bindings.check(candidate, spec, reader, {})
+
+
+@pytest.mark.parametrize("neighbor", ["x", "9", "_", "'", "’", "ʼ", "\u0301"])
+def test_book_tokens_do_not_match_inside_unicode_or_apostrophe_tokens(neighbor):
+    assert not bindings.whole_token("SYNTHETIC", neighbor + "SYNTHETIC")
+    assert not bindings.whole_token("SYNTHETIC", "SYNTHETIC" + neighbor)
+    assert bindings.whole_token("SYNTHETIC", "(SYNTHETIC); SYNTHETIC!")
+
+
+def test_c2_missing_applicability_spec_is_not_withheld(bundle):
+    from scripts.projects.open_model_data.review_build.attribution import Resolver, SyntheticAdapter
+    from scripts.projects.open_model_data.review_build.build import prepare
+    from scripts.projects.open_model_data.review_build.gate import Gate
+
+    candidate = replace(bundle["candidates"][0], component="C2")
+    with SnapshotReader({"sources.db": bundle["db"]}) as reader:
+        gate = Gate(
+            reader,
+            Catalog(bundle["catalog"]),
+            Resolver(bundle["register"], {"synthetic": SyntheticAdapter()}),
+            {"C2": bundle["spec"]},
+            bundle["config"]["compatibility"],
+        )
+        for slots in (candidate.slots, (*candidate.slots, replace(candidate.response[0], slot="sense"))):
+            with pytest.raises(BuildError, match="applicability_spec"):
+                prepare([replace(candidate, slots=slots)], gate)

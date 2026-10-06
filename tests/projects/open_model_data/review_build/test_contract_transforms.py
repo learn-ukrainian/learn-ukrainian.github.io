@@ -74,8 +74,12 @@ def test_verbatim_property(seed):
 def test_html_text_node_order_property(seed):
     generator = random.Random(seed)
     nodes = ["SYNTHETIC " + "".join(generator.choices(string.ascii_letters, k=20)) for _ in range(8)]
-    html = "<div>" + "".join(f"<b>{node}</b> " for node in nodes) + "</div>"
-    assert transform("ulif_html_text@1", html).text == " ".join(nodes)
+    html = (
+        '<div title="SYNTHETIC attribute">'
+        + "".join(f'<b data-note="SYNTHETIC attribute">{node}</b> ' for node in nodes)
+        + "<script>SYNTHETIC script text</script></div>"
+    )
+    assert transform("ulif_html_text@1", html).text == " ".join([*nodes, "SYNTHETIC script text"])
     assert transform("ulif_html_text@1", "<i>SYNTHETIC &amp; text</i>").text == "SYNTHETIC & text"
 
 

@@ -59,7 +59,6 @@ class SnapshotReader:
         self.connections: dict[str, sqlite3.Connection] = {}
         self.files = dict(files or {})
         self.reads: dict[tuple[str, str], set[tuple[str, str]]] = {}
-        self._censused: set[tuple[str, str]] = set()
         try:
             require(len({p.resolve() for p in databases.values()}) == len(databases), "duplicate_database")
             for store, path in sorted(databases.items()):
@@ -82,7 +81,7 @@ class SnapshotReader:
     def row(self, citation: Citation) -> dict:
         if citation.store in self.files:
             row = dict(self.files[citation.store].row(citation.table, citation.row_key))
-            self._remember(citation.store, citation.table, citation.row_key, row)
+            self._remember_citation(citation, row)
             return row
         require(citation.store in self.connections, "unknown_store")
         conn = self.connections[citation.store]
@@ -99,27 +98,21 @@ class SnapshotReader:
         ).fetchall()
         require(len(rows) == 1, "row_unavailable")
         row = dict(rows[0])
-        self._remember(citation.store, citation.table, citation.row_key, row)
+        self._remember_citation(citation, row)
         return row
 
-    def _remember(self, store: str, table: str, row_key: str, row: dict) -> None:
-        for value in row.values():
-            if isinstance(value, str):
-                raw = value.encode("utf-8")
-            elif isinstance(value, bytes | bytearray | memoryview):
-                raw = bytes(value)
-            else:
-                raw = canonical(value)
-            self.reads.setdefault((store, table), set()).add((row_key, digest(raw)))
+    def _remember_citation(self, citation: Citation, row: dict) -> None:
+        column = citation.field.partition("#")[0]
+        require(column in row and isinstance(row[column], str), "field_unavailable")
+        actual = digest(row[column].encode("utf-8"))
+        require(actual == citation.field_sha256, "field_digest")
+        self.reads.setdefault((citation.store, citation.table), set()).add((citation.row_key, actual))
 
     def field(self, citation: Citation) -> tuple[str, object]:
         column, separator, pointer = citation.field.partition("#")
         row = self.row(citation)
-        require(column in row and isinstance(row[column], str), "field_unavailable")
+        # row() authenticated and pinned these column bytes already.
         raw = row[column]
-        actual = digest(raw.encode("utf-8"))
-        require(actual == citation.field_sha256, "field_digest")
-        self.reads.setdefault((citation.store, citation.table), set()).add((citation.row_key, actual))
         selected = raw
         if separator:
             require(pointer == "" or pointer.startswith("/"), "json_pointer")
@@ -137,33 +130,10 @@ class SnapshotReader:
             require(store in self.connections and query.get("kind") == "sql", "unit_query")
             require(query["sql"].lstrip().upper().startswith(("SELECT ", "WITH ")), "unit_query")
             connection = self.connections[store]
-            tables = set()
-
-            def authorize(action, table, column, database, trigger):
-                if action == sqlite3.SQLITE_READ and table != "sqlite_master":
-                    tables.add(table)
-                return (
-                    sqlite3.SQLITE_DENY
-                    if action in {sqlite3.SQLITE_ATTACH, sqlite3.SQLITE_DETACH}
-                    else sqlite3.SQLITE_OK
-                )
-
-            connection.set_authorizer(authorize)
-            try:
-                rows = connection.execute(query["sql"], query.get("parameters", [])).fetchall()
-            finally:
-                connection.set_authorizer(
-                    lambda action, *_: (
-                        sqlite3.SQLITE_DENY
-                        if action in {sqlite3.SQLITE_ATTACH, sqlite3.SQLITE_DETACH}
-                        else sqlite3.SQLITE_OK
-                    )
-                )
-            for table in sorted(tables):
-                if (store, table) not in self._censused:
-                    for _ in self.iter_rows(store, table):
-                        pass
-                    self._censused.add((store, table))
+            # The connection's read-only authorizer already denies ATTACH and
+            # DETACH. Unit queries count keys; they do not invent field hashes
+            # by scanning unrelated columns/rows after the query.
+            rows = connection.execute(query["sql"], query.get("parameters", [])).fetchall()
             require(all(len(r) == 1 for r in rows), "unit_query")
             units = [str(r[0]) for r in rows]
         require(len(units) == len(set(units)), "duplicate_unit_query")
@@ -177,7 +147,6 @@ class SnapshotReader:
             for item in self.files[store].all_rows(table):
                 row = dict(item)
                 require("row_key" in row, "invalid_row_key")
-                self._remember(store, table, str(row["row_key"]), row)
                 yield row
             return
         require(store in self.connections, "unknown_store")
@@ -187,8 +156,6 @@ class SnapshotReader:
         require(bool(keys), "invalid_row_key")
         for item in conn.execute(f"SELECT * FROM {identifier(table)}"):
             row = dict(item)
-            row_key = ";".join(f"{key}={row[key]}" for key in keys)
-            self._remember(store, table, row_key, row)
             yield row
 
     def is_word(self, word: str, policy: dict) -> bool:
@@ -202,7 +169,10 @@ class SnapshotReader:
         require(bool(keys), "invalid_row_key")
         for item in conn.execute(query, (word,)):
             row = dict(item)
-            self._remember(policy["store"], policy["table"], ";".join(f"{key}={row[key]}" for key in keys), row)
+            row_key = ";".join(f"{key}={row[key]}" for key in keys)
+            self.reads.setdefault((policy["store"], policy["table"]), set()).add(
+                (row_key, digest(row[policy["field"]].encode("utf-8")))
+            )
             found = True
         return found
 

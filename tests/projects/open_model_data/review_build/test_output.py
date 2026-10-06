@@ -25,7 +25,7 @@ def test_private_directories_files_and_read(tmp_path):
             assert path.stat().st_mode & 0o777 == 0o700
         assert (target / "C1/records.jsonl").stat().st_mode & 0o777 == 0o600
         for name in ("../escape", "/absolute", "a//b", "a/./b", "SYNTHETIC\ntext"):
-            with pytest.raises(BuildError):
+            with pytest.raises(BuildError, match="output_name"):
                 guard.write(name, b"SYNTHETIC")
 
 
@@ -85,7 +85,13 @@ def test_each_guard_refusal(tmp_path, monkeypatch, kind):
         monkeypatch.setattr(os, "listxattr", lambda fd: ["system.posix_acl_access"])
     elif kind == "access":
         monkeypatch.setattr(os, "open", lambda *args, **kwargs: (_ for _ in ()).throw(PermissionError("SYNTHETIC")))
-    with pytest.raises(BuildError):
+    code = {
+        "filesystem": "filesystem_refused",
+        "mode": "output_mode",
+        "owner": "output_owner",
+        "acl": "output_acl",
+    }.get(kind, "output_check_unavailable")
+    with pytest.raises(BuildError, match=code):
         output.OutputGuard(target)
 
 
@@ -112,7 +118,17 @@ def test_descriptor_relative_writes_refuse_unsafe_existing_entries(tmp_path, kin
         else:
             (child / ".git").write_text("SYNTHETIC gitdir")
         name = "alias/records.jsonl" if kind == "symlink-dir" else "C1/records.jsonl"
-        with pytest.raises((BuildError, OSError)):
+        with pytest.raises(
+            BuildError,
+            match={
+                "symlink-file": "output_io",
+                "hardlink": "output_file_type",
+                "file-mode": "output_file_mode",
+                "symlink-dir": "output_io",
+                "dir-mode": "output_mode",
+                "git-in-child": "repository_output",
+            }[kind],
+        ):
             guard.write(name, b"SYNTHETIC replacement")
         if kind in {"hardlink", "file-mode"}:
             assert file.read_bytes() == b"SYNTHETIC untouched"
@@ -127,6 +143,20 @@ def test_filesystem_parser_longest_mount_and_escaped_path(tmp_path, monkeypatch)
         Path,
         "read_text",
         lambda path, *a, **kw: info if str(path) == "/proc/self/mountinfo" else real_method(path, *a, **kw),
+    )
+    real_stat = Path.stat
+    from types import SimpleNamespace
+
+    monkeypatch.setattr(
+        Path,
+        "stat",
+        lambda path, *a, **kw: (
+            SimpleNamespace(st_dev=os.makedev(0, 2), st_mode=0o40700)
+            if path == tmp_path
+            else SimpleNamespace(st_dev=os.makedev(0, 1), st_mode=0o40755)
+            if path == Path("/")
+            else real_stat(path, *a, **kw)
+        ),
     )
     assert output.filesystem(tmp_path / "output") == "nfs"
     assert output.filesystem(Path("/SYNTHETIC")) == "ext4"
@@ -181,3 +211,61 @@ def test_relative_symlink_path_before_dotdot_is_refused(tmp_path, monkeypatch):
     with output.OutputGuard(Path("SYNTHETIC-relative-out")) as guard:
         guard.write("records.jsonl", b"SYNTHETIC private text")
         assert guard.read("records.jsonl") == b"SYNTHETIC private text"
+
+
+@pytest.mark.parametrize("scenario", ["stacked", "shadowed", "same-device-stacked", "ambiguous", "no-match"])
+def test_mount_resolution_uses_visible_device_and_last_longest_entry(tmp_path, monkeypatch, scenario):
+    monkeypatch.undo()
+    real_stat = Path.stat
+    real_read = Path.read_text
+    visible_device = os.makedev(0, 2)
+    prefix = str(tmp_path)
+    if scenario in {"stacked", "same-device-stacked"}:
+        lower = "0:2" if scenario == "same-device-stacked" else "0:1"
+        info = f"1 0 {lower} / {prefix} rw - xfs SYNTHETIC rw\n2 0 0:2 / {prefix} rw - cifs SYNTHETIC rw\n"
+        path = tmp_path / "out"
+    elif scenario == "shadowed":
+        (tmp_path / "b").mkdir()
+        info = f"1 0 0:1 / {prefix}/b rw - ext4 SYNTHETIC rw\n2 0 0:2 / {prefix} rw - nfs4 SYNTHETIC rw\n"
+        path = tmp_path / "b/out"
+    elif scenario == "ambiguous":
+        info = f"1 0 0:2 / {prefix} rw - ext4 SYNTHETIC rw\n1 0 0:2 / {prefix} rw - xfs SYNTHETIC rw\n"
+        path = tmp_path / "out"
+    else:
+        info = f"1 0 0:1 / {prefix} rw - ext4 SYNTHETIC rw\n"
+        path = tmp_path / "out"
+
+    def stat_visible(path, *args, **kwargs):
+        info = real_stat(path, *args, **kwargs)
+        fields = list(info)
+        fields[2] = visible_device
+        return os.stat_result(fields)
+
+    monkeypatch.setattr(Path, "stat", stat_visible)
+    monkeypatch.setattr(
+        Path,
+        "read_text",
+        lambda path, *a, **kw: info if str(path) == "/proc/self/mountinfo" else real_read(path, *a, **kw),
+    )
+    code = (
+        "filesystem_ambiguous"
+        if scenario == "ambiguous"
+        else "filesystem_unknown"
+        if scenario == "no-match"
+        else "filesystem_refused"
+    )
+    with pytest.raises(BuildError, match=code):
+        output.OutputGuard(path)
+    assert not path.exists()
+
+
+@pytest.mark.parametrize("operation", ["write", "read"])
+def test_output_io_errors_are_closed_codes(tmp_path, monkeypatch, operation):
+    with output.OutputGuard(tmp_path / "SYNTHETIC-out") as guard:
+        guard.write("records.jsonl", b"SYNTHETIC")
+        monkeypatch.setattr(os, "open", lambda *a, **kw: (_ for _ in ()).throw(PermissionError("SYNTHETIC private")))
+        with pytest.raises(BuildError, match="output_io"):
+            if operation == "write":
+                guard.write("records.jsonl", b"SYNTHETIC new")
+            else:
+                guard.read("records.jsonl")

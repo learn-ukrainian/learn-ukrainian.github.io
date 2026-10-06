@@ -8,8 +8,8 @@ class BuildError(Exception):
         self.code = code
         self.record_id = record_id
         self.component = component
+        # Hash arbitrary row keys in diagnostics: a primary key can contain a headword.
         self.row_key = row_key
-        # Hash arbitrary row keys: even a database primary key can contain a headword.
         super().__init__(code)
 
     def diagnostic(self) -> dict[str, str]:

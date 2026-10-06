@@ -22,7 +22,15 @@ class SourceRoles:
             key = (entry["store"], entry["table"], entry["source_id"])
             require(key not in self.compatibility, "role_duplicate")
             require(entry["role"] in {"modern", "sum11", "ua_gec", "textbook", "forbidden"}, "role_spec")
+            require(
+                isinstance(entry.get("source_column"), str)
+                and bool(entry["source_column"])
+                and isinstance(entry.get("source_values"), list)
+                and bool(entry["source_values"]),
+                "role_spec",
+            )
             self.compatibility[key] = entry
+        self.dev_authors: set[str] = set()
         self.dev_documents: set[str] = set()
         self.test_hashes: set[str] = set()
         self.corpus = corpus
@@ -44,25 +52,30 @@ class SourceRoles:
         for author in sorted(documents, key=lambda a: digest(("omd-rb1-dev" + a).encode())):
             if len(self.dev_documents) >= target:
                 break
+            self.dev_authors.add(author)
             self.dev_documents.update(documents[author])
+        for row in rows:
+            if str(row[spec["author"]]) in self.dev_authors:
+                self.dev_documents.add(str(row[spec["document"]]))
 
     def check(self, citation: Citation, candidate: Candidate, bindings: set[str], rejected_slot: str = "") -> None:
         key = (citation.store, citation.table, citation.source_id)
         require(key in self.compatibility, "source_compatibility")
         spec = self.compatibility[key]
         row = self.reader.row(citation)
-        if "source_id" in row:
-            require(row["source_id"] == citation.source_id, "source_compatibility")
+        require(
+            spec["source_column"] in row and row[spec["source_column"]] in spec["source_values"], "source_compatibility"
+        )
         source_file = str(row.get(spec.get("source_file", "source_file"), ""))
         require(
             not any(name.startswith("zno_") for name in (citation.source_id, source_file, citation.table)),
             "forbidden_source",
         )
-        require(
-            "pogrib" not in citation.source_id.casefold() and "pogrib" not in source_file.casefold(), "forbidden_source"
-        )
         require(spec["role"] != "forbidden", "forbidden_source")
-        require(row.get(spec.get("sensitive", "is_sensitive"), 0) not in {1, "1"}, "sensitive_source")
+        sensitive = spec.get("sensitive", "is_sensitive")
+        if spec["role"] in {"ua_gec", "textbook"}:
+            require(sensitive in row and row[sensitive] in {0, "0", 1, "1"}, "sensitivity_unavailable")
+        require(row.get(sensitive, 0) not in {1, "1"}, "sensitive_source")
         if spec["role"] == "sum11" or citation.source_id == "sum11":
             require(
                 spec["role"] == "sum11"

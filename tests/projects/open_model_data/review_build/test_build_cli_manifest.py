@@ -169,46 +169,133 @@ def test_private_manifest_allowlist_and_string_refusals(bundle):
             private_manifest(bad)
 
 
+BANNED_MODULES = {"requests", "httpx", "urllib.request", "http.client", "socket", "huggingface_hub", "subprocess"}
+BANNED_CALLS = {"os.system", "builtins.__import__", "builtins.eval", "builtins.exec"}
+
+
+def assert_no_execution(source):
+    tree = ast.parse(source)
+    aliases = {"__import__": "builtins.__import__", "eval": "builtins.eval", "exec": "builtins.exec"}
+
+    def banned(name):
+        return name in BANNED_CALLS or any(name == mod or name.startswith(mod + ".") for mod in BANNED_MODULES)
+
+    def dotted(node):
+        if isinstance(node, ast.Name):
+            return aliases.get(node.id, node.id)
+        if isinstance(node, ast.Attribute):
+            return dotted(node.value) + "." + node.attr
+        return ""
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                assert not banned(alias.name), alias.name
+                aliases[alias.asname or alias.name.split(".")[0]] = (
+                    alias.name if alias.asname else alias.name.split(".")[0]
+                )
+        elif isinstance(node, ast.ImportFrom):
+            module = node.module or ""
+            assert not banned(module), module
+            for alias in node.names:
+                assert not (
+                    alias.name == "*" and (module == "os" or any(m.startswith(module + ".") for m in BANNED_MODULES))
+                ), module
+                name = module + "." + alias.name
+                assert not banned(name), name
+                aliases[alias.asname or alias.name] = name
+    # Propagate straightforward local aliases, so an alias cannot erase the
+    # imported module/function identity before a banned attribute is used.
+    for _ in range(len(list(ast.walk(tree)))):
+        changed = False
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Assign):
+                name = dotted(node.value)
+                for target in node.targets:
+                    if name and isinstance(target, ast.Name) and aliases.get(target.id) != name:
+                        aliases[target.id] = name
+                        changed = True
+        if not changed:
+            break
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Attribute):
+            assert not banned(dotted(node)), dotted(node)
+        if isinstance(node, ast.Call):
+            name = dotted(node.func)
+            assert not banned(name), name
+            if name in {"importlib.import_module", "builtins.__import__"} and node.args:
+                module = node.args[0]
+                assert not (isinstance(module, ast.Constant) and isinstance(module.value, str) and banned(module.value))
+            if name in {"getattr", "builtins.getattr"} and len(node.args) >= 2:
+                attribute = node.args[1]
+                if isinstance(attribute, ast.Constant) and isinstance(attribute.value, str):
+                    assert not banned(dotted(node.args[0]) + "." + attribute.value)
+
+
 def test_package_has_no_network_or_process_execution_imports():
-    # Inspect this importable package via its loader, without a repository-tree
-    # walk or execution of discovered modules. Unknown subpackages fail closed.
     modules = [(framework.__name__, framework.__spec__)]
     for info in pkgutil.iter_modules(framework.__path__, framework.__name__ + "."):
         assert not info.ispkg, "Framework subpackages need recursive import-ban coverage"
         modules.append((info.name, info.module_finder.find_spec(info.name)))
-    banned = {"requests", "httpx", "urllib.request", "http.client", "socket", "huggingface_hub", "subprocess"}
     for name, spec in modules:
         assert spec is not None and hasattr(spec.loader, "get_source"), name
         source = spec.loader.get_source(name)
         assert source is not None, name
-        for node in ast.walk(ast.parse(source)):
-            if isinstance(node, ast.Import):
-                assert not any(
-                    alias.name == name or alias.name.startswith(name + ".") for alias in node.names for name in banned
-                ), name
-            if isinstance(node, ast.ImportFrom):
-                module = node.module or ""
-                names = {module} | {module + "." + alias.name for alias in node.names}
-                assert not any(item == name or item.startswith(name + ".") for item in names for name in banned), name
-                assert not (module == "os" and any(alias.name == "system" for alias in node.names)), name
-            if isinstance(node, ast.Attribute):
-                assert not (isinstance(node.value, ast.Name) and node.value.id == "os" and node.attr == "system"), name
-            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
-                assert node.func.id not in {"__import__", "eval", "exec"}, name
+        assert_no_execution(source)
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        'import importlib; importlib.import_module("socket")',
+        'import importlib as i; i.import_module("subprocess")',
+        'from importlib import import_module as load; load("urllib.request")',
+        '__import__("socket")',
+        'import os; getattr(os, "system")("SYNTHETIC")',
+        'import os as o; o.system("SYNTHETIC")',
+        'import os as o; p = o; p.system("SYNTHETIC")',
+        'from os import system as run; run("SYNTHETIC")',
+        "from socket import *",
+        "from os import *",
+        "from urllib import request as r",
+        'import urllib as u; u.request.urlopen("SYNTHETIC")',
+    ],
+)
+def test_semantic_import_guard_refuses_dynamic_and_alias_bypasses(source):
+    with pytest.raises(AssertionError):
+        assert_no_execution(source)
+
+
+def test_synthetic_build_never_calls_network_or_process_execution(bundle, monkeypatch):
+    import os
+    import socket
+    import subprocess
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("SYNTHETIC forbidden runtime execution")
+
+    monkeypatch.setattr(socket, "socket", forbidden)
+    monkeypatch.setattr(subprocess, "Popen", forbidden)
+    monkeypatch.setattr(os, "system", forbidden)
+    with OutputGuard(bundle["root"] / "SYNTHETIC-runtime-out") as guard:
+        assert execute(bundle["root"] / "request.json", guard)["status"] == "built"
+        assert execute(bundle["root"] / "request.json", guard, verify=True)["status"] == "verified"
 
 
 def test_missing_catalog_slot_withholds_and_preserves_unit_accounting(bundle):
-    candidate = bundle["candidates"][0]
-    bundle["candidates"][0] = replace(candidate, slots=(replace(candidate.slots[0], slot="SYNTHETIC_missing_slot"),))
+    for line in bundle["catalog"]["components"]["C1"]["instructions"]:
+        line["slots"] = ["sentence", "SYNTHETIC_missing_slot"]
+        line["template"] += " {SYNTHETIC_missing_slot}"
     save_bundle(bundle)
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
         execute(bundle["root"] / "request.json", guard)
         accounting = json.loads(guard.read("accounting.json"))["C1"]
-        assert accounting["withheld"] == 1
-        assert accounting["accepted"] == 11
+        assert accounting["withheld"] == 12
+        assert accounting["accepted"] == 0
         assert accounting["counted"] == 12
-        assert accounting["reasons"]["catalog_inapplicable"] == 1
-        assert execute(bundle["root"] / "request.json", guard, verify=True)["status"] == "verified"
+        assert accounting["reasons"]["catalog_inapplicable"] == 12
+        with pytest.raises(BuildError, match="mutation_unavailable"):
+            execute(bundle["root"] / "request.json", guard, verify=True)
 
 
 def test_input_pin_drift_fails_verify_even_if_unused_metadata_changed(bundle):
@@ -228,3 +315,96 @@ def test_cli_logging_failure_and_malformed_request_fail_safely(bundle, monkeypat
     monkeypatch.setattr(OutputGuard, "write", lambda *a, **kw: (_ for _ in ()).throw(ValueError("SYNTHETIC secret")))
     assert cli.main(args) == 1
     assert json.loads(capsys.readouterr().err)["error"] == "error_log_unavailable"
+
+
+@pytest.mark.parametrize("error", [KeyError, TypeError])
+def test_adapter_programming_errors_fail_build_without_withholding(bundle, error):
+    class BrokenAdapter:
+        def resolve(self, *args):
+            raise error("SYNTHETIC bug")
+
+    bundle["config"]["synthetic_sources"] = []
+    save_bundle(bundle)
+    with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
+        with pytest.raises(BuildError, match="attribution_adapter"):
+            execute(bundle["root"] / "request.json", guard, adapters={"synthetic": BrokenAdapter()})
+
+
+def test_verify_generates_five_private_generic_mutation_fixtures(bundle):
+    from scripts.projects.open_model_data.review_build.contract import candidate_from_dict
+
+    with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
+        execute(bundle["root"] / "request.json", guard)
+        execute(bundle["root"] / "request.json", guard, verify=True)
+        results = json.loads(guard.read("mutation-fixtures/results.json"))
+        assert results == {
+            "absent_quote": "quote_mismatch",
+            "wrong_span": "quote_span",
+            "empty_locator": "empty_locator",
+            "missing_unit": "missing_unit",
+            "swapped_citation": "unit_id_mismatch",
+        }
+        for name, code in results.items():
+            stream = [
+                candidate_from_dict(json.loads(line))
+                for line in guard.read(f"mutation-fixtures/{name}.jsonl").splitlines()
+            ]
+            with pytest.raises(BuildError, match=code):
+                run_gate(bundle, stream)
+
+
+def test_verify_refuses_a_mutation_that_the_gate_admits(bundle, monkeypatch):
+    from scripts.projects.open_model_data.review_build.build import verify_mutations
+    from scripts.projects.open_model_data.review_build.catalog import Catalog
+    from scripts.projects.open_model_data.review_build.gate import Gate
+
+    with SnapshotReader({"sources.db": bundle["db"]}) as reader, OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
+        resolver = Resolver(bundle["register"], {"synthetic": SyntheticAdapter()})
+        monkeypatch.setattr(Gate, "run", lambda self, candidates: ([], {}))
+        with pytest.raises(BuildError, match="mutation_admitted"):
+            verify_mutations(
+                bundle["config"], bundle["candidates"], reader, Catalog(bundle["catalog"]), resolver, guard
+            )
+
+        def wrong_failure(self, candidates):
+            raise BuildError("SYNTHETIC unrelated")
+
+        monkeypatch.setattr(Gate, "run", wrong_failure)
+        with pytest.raises(BuildError, match="mutation_wrong_failure"):
+            verify_mutations(
+                bundle["config"], bundle["candidates"], reader, Catalog(bundle["catalog"]), resolver, guard
+            )
+
+
+def test_cli_passes_derived_repository_root_to_output_guard(bundle, monkeypatch, capsys):
+    supplied = []
+    real_guard = cli.OutputGuard
+
+    def capture(path, protected_roots):
+        supplied.extend(protected_roots)
+        return real_guard(path, protected_roots)
+
+    monkeypatch.setattr(cli, "OutputGuard", capture)
+    assert (
+        cli.main(
+            ["build", "--config", str(bundle["root"] / "request.json"), "--out", str(bundle["root"] / "SYNTHETIC-out")]
+        )
+        == 0
+    )
+    assert supplied == [Path(cli.__file__).resolve().parents[4]]
+    assert (supplied[0] / ".git").exists()
+    capsys.readouterr()
+
+
+@pytest.mark.parametrize("component", ["C1", "C9"])
+def test_verify_mutations_work_on_a_single_unit_from_any_component(bundle, component):
+    bundle["candidates"] = [replace(bundle["candidates"][0], component=component)]
+    bundle["spec"]["unit_query"]["sql"] += " WHERE id=1"
+    bundle["spec"]["frozen_count"] = 1
+    bundle["config"]["components"] = {component: bundle["spec"]}
+    bundle["catalog"]["components"] = {component: bundle["catalog"]["components"]["C1"]}
+    save_bundle(bundle)
+    with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
+        execute(bundle["root"] / "request.json", guard)
+        assert execute(bundle["root"] / "request.json", guard, verify=True)["status"] == "verified"
+        assert json.loads(guard.read("mutation-fixtures/results.json"))["swapped_citation"] == "quote_mismatch"

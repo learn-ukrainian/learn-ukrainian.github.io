@@ -48,8 +48,8 @@ def test_clean_build_and_authentic_duplicate_reporting(bundle):
         )
         for row in repeated_rows[12:]:
             writer.execute(
-                "INSERT INTO units(id,source_field,target_field) VALUES(?,?,?)",
-                (row["id"], row["source_field"], row["target_field"]),
+                "INSERT INTO units(id,source_field,target_field,source_file) VALUES(?,?,?,?)",
+                (row["id"], row["source_field"], row["target_field"], row["source_file"]),
             )
     original = bundle["candidates"][0]
     bundle["candidates"] = [
@@ -182,6 +182,8 @@ def test_must_fail_source_roles(bundle, fixture, code):
     elif fixture in {"zno", "pogribny"}:
         source = "zno_SYNTHETIC" if fixture == "zno" else "pogribny_SYNTHETIC"
         role["source_id"] = source
+        if fixture == "pogribny":
+            role["role"] = "forbidden"
         bundle["register"]["sources"][0]["id"] = source
         bundle["candidates"] = [
             replace(
@@ -246,6 +248,19 @@ def test_must_fail_source_roles(bundle, fixture, code):
                     "UPDATE units SET split='test',source_field=? WHERE id=?",
                     (selected.slots[0].text, int(other.unit_id)),
                 )
+                index = bundle["candidates"].index(other)
+                v = other.slots[0]
+                bundle["candidates"][index] = replace(
+                    other,
+                    slots=(
+                        replace(
+                            v,
+                            citations=(
+                                replace(v.citations[0], field_sha256=selected.slots[0].citations[0].field_sha256),
+                            ),
+                        ),
+                    ),
+                )
             elif fixture == "mixed_c6":
                 writer.execute("UPDATE units SET layer='gec-fluency',edits='[\"F/Calque\",\"SYNTHETIC other edit\"]'")
         if fixture == "mixed_c6":
@@ -275,3 +290,86 @@ def test_nonaccepted_candidates_still_require_citation_compatibility(bundle):
         )
         with pytest.raises(BuildError, match="source_compatibility"):
             run_gate(bundle)
+
+
+def test_unit_ids_recomputed_from_primary_cited_rows(bundle):
+    first, second = bundle["candidates"][:2]
+    bundle["candidates"][0] = replace(first, slots=second.slots)
+    with pytest.raises(BuildError, match="unit_id_mismatch"):
+        run_gate(bundle)
+
+
+def test_unit_identity_can_bind_multiple_primary_keys_and_store_table(bundle):
+    part = bundle["spec"]["unit_id"]["primary"][0]
+    bundle["spec"]["unit_id"]["primary"] = [part, {**part, "selector": selector("response", "target")}]
+    bundle["candidates"] = [replace(c, unit_id=f"{c.unit_id};{c.unit_id}") for c in bundle["candidates"]]
+    bundle["spec"]["unit_query"]["sql"] = "SELECT id || ';' || id FROM units"
+    assert len(run_gate(bundle)[0]) == 12
+    part["table"] = "SYNTHETIC wrong table"
+    with pytest.raises(BuildError, match="unit_id_mismatch"):
+        run_gate(bundle)
+
+
+@pytest.mark.parametrize("kind", ["missing_spec", "supporting", "missing_key"])
+def test_unit_identity_spec_fails_closed(bundle, kind):
+    if kind == "missing_spec":
+        del bundle["spec"]["unit_id"]
+    elif kind == "supporting":
+        bundle["spec"]["unit_id"]["primary"][0]["selector"]["citation"] = 1
+    else:
+        bundle["spec"]["unit_id"]["primary"][0]["key"] = "SYNTHETIC absent"
+    with pytest.raises(BuildError, match="unit_id_spec"):
+        run_gate(bundle)
+
+
+@pytest.mark.parametrize("role_name", ["ua_gec", "textbook"])
+@pytest.mark.parametrize("kind", ["missing", "null"])
+def test_sensitive_roles_require_a_present_known_sensitivity(bundle, role_name, kind):
+    role = bundle["config"]["compatibility"][0]
+    role["role"] = role_name
+    if kind == "missing":
+        role["sensitive"] = "SYNTHETIC missing"
+    else:
+        with sqlite3.connect(bundle["db"]) as writer:
+            writer.execute("UPDATE units SET is_sensitive=NULL")
+    with pytest.raises(BuildError, match="sensitivity_unavailable"):
+        run_gate(bundle)
+
+
+@pytest.mark.parametrize("kind", ["missing_column", "unexpected_value", "missing_mapping"])
+def test_compatibility_requires_source_identity_from_the_row(bundle, kind):
+    role = bundle["config"]["compatibility"][0]
+    if kind == "missing_column":
+        role["source_column"] = "SYNTHETIC missing"
+    elif kind == "unexpected_value":
+        role["source_values"] = ["SYNTHETIC unrelated source"]
+    else:
+        del role["source_column"]
+    with pytest.raises(BuildError, match="role_spec" if kind == "missing_mapping" else "source_compatibility"):
+        run_gate(bundle)
+
+
+def test_dev_carveout_excludes_fluency_only_documents_of_the_same_author(bundle):
+    corpus = {
+        "store": "sources.db",
+        "table": "units",
+        "split": "split",
+        "document": "document",
+        "author": "author",
+        "layer": "layer",
+        "text": "source_field",
+    }
+    role = bundle["config"]["compatibility"][0]
+    role.update(role="ua_gec", split="split", document="document", text="source_field", layer="layer", edits="edits")
+    with SnapshotReader({"sources.db": bundle["db"]}) as reader:
+        carved = SourceRoles(reader, [role], corpus).dev_authors
+    author = sorted(carved)[0]
+    other = next(row for row in bundle["rows"] if row["author"] not in carved)
+    with sqlite3.connect(bundle["db"]) as writer:
+        writer.execute("UPDATE units SET author=?, layer='gec-fluency' WHERE id=?", (author, other["id"]))
+    with SnapshotReader({"sources.db": bundle["db"]}) as reader:
+        roles = SourceRoles(reader, [role], corpus)
+        assert other["document"] in roles.dev_documents
+        c = bundle["candidates"][other["id"] - 1]
+        with pytest.raises(BuildError, match="dev_source"):
+            roles.check(c.slots[0].citations[0], c, set())

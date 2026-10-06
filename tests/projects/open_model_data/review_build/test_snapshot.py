@@ -54,12 +54,7 @@ def test_snapshot_digest_is_order_independent_and_includes_role_reads(bundle):
         for citation in reversed(citations):
             reader.row(citation)
         assert reader.snapshots() == forward
-        expected = set(
-            (f"id={r['id']}", digest(v.encode() if isinstance(v, str) else canonical(v)))
-            for r in bundle["rows"]
-            for v in r.values()
-        )
-        expected.update((f"id={r['id']}", digest(b"null")) for r in bundle["rows"])
+        expected = {(c.row_key, c.field_sha256) for c in citations}
         expected = sorted(expected, key=lambda p: (p[0].encode(), p[1]))
         assert forward["sources.db:units"] == "sources.db:units@" + digest(canonical(expected))
 
@@ -150,4 +145,29 @@ def test_snapshot_can_pin_binary_metadata_without_treating_it_as_text(bundle):
         writer.execute("UPDATE units SET synthetic_blob=? WHERE id=1", (b"SYNTHETIC binary metadata",))
     with SnapshotReader({"sources.db": bundle["db"]}) as reader:
         reader.units(bundle["spec"]["unit_query"])
-        assert ("id=1", digest(b"SYNTHETIC binary metadata")) in reader.reads["sources.db", "units"]
+        reader.row(bundle["candidates"][0].slots[0].citations[0])
+        assert reader.reads["sources.db", "units"] == {("id=1", digest(bundle["rows"][0]["source_field"].encode()))}
+
+
+def test_snapshot_pins_only_cited_column_bytes_sorted_by_utf8_row_key(bundle):
+    rows = bundle["rows"]
+    with SnapshotReader({"sources.db": bundle["db"]}) as reader:
+        reader.units(bundle["spec"]["unit_query"])
+        for index in (9, 1, 0):
+            for area in ("slots", "response"):
+                reader.row(getattr(bundle["candidates"][index], area)[0].citations[0])
+        pairs = [
+            (f"id={rows[i]['id']}", digest(rows[i][field].encode()))
+            for i in (9, 1, 0)
+            for field in ("source_field", "target_field")
+        ]
+        pairs.sort(key=lambda p: (p[0].encode("utf-8"), p[1]))
+        assert reader.snapshots() == {"sources.db:units": "sources.db:units@" + digest(canonical(pairs))}
+        before = reader.snapshots()
+    with sqlite3.connect(bundle["db"]) as writer:
+        writer.execute("UPDATE units SET tags='SYNTHETIC irrelevant metadata'")
+    with SnapshotReader({"sources.db": bundle["db"]}) as reader:
+        for index in (0, 1, 9):
+            for area in ("slots", "response"):
+                reader.field(getattr(bundle["candidates"][index], area)[0].citations[0])
+        assert reader.snapshots() == before

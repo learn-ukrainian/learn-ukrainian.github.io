@@ -1,8 +1,6 @@
 # Epic #6321 — private review build RB-1 (design v1.3.1)
 
-Status: PROPOSED by the driver (Claude Opus 5.5); v1.0 (sha256 3c2f9efa…) got CHANGES_REQUESTED from GPT-6.1 Sol
-(designated approver, `design-rb1-sol`, 8 blockers) and Grok 4.7 (adversarial critic, `design-rb1-grok`, 9 blockers);
-every finding is adopted below (map in §12). Needs Sol's designated approval before any dispatch.
+Status: APPROVED — v1.3 Sol APPROVE (`design-rb1-sol-r3`); v1.3.1 editorial tightenings.
 Authority: operator decision 2026-10-06 on #6321 and its addendum (00:25Z): build the complete dataset (plan v3.5.0,
 C1–C7 + C9) as a **private review build** for Ukrainian researchers, on the project's own build host, against the local
 Sources MCP and `sources.db`; every value carries `source_id`, snapshot, locator, `licence_ref` and attribution; no

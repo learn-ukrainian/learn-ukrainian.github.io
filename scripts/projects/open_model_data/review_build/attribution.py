@@ -49,6 +49,9 @@ class Resolver:
                 isinstance(form, str) and bool(form.strip()) and isinstance(licence, str) and bool(licence.strip()),
                 "attribution_unresolved",
             )
+        except (KeyError, TypeError):
+            raise BuildError("attribution_unresolved") from None
+        try:
             require(citation.source_id in self.adapters, "attribution_unresolved")
             result = self.adapters[citation.source_id].resolve(form, citation, reader.row(citation), reader)
             require(result.mapped_form == form and not result.instruction_form, "attribution_unresolved")
@@ -63,4 +66,4 @@ class Resolver:
                 result.bibliography + "; " + citation.locator,
             )
         except (KeyError, TypeError):
-            raise BuildError("attribution_unresolved") from None
+            raise BuildError("attribution_adapter") from None

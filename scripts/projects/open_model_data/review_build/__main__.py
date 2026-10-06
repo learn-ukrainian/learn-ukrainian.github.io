@@ -20,7 +20,8 @@ EPILOG = """Examples:
   .venv/bin/python -m scripts.projects.open_model_data.review_build build --config "$TMPDIR/request.json" --out "$TMPDIR/rb1"
   .venv/bin/python -m scripts.projects.open_model_data.review_build verify --config "$TMPDIR/request.json" --out "$TMPDIR/rb1"
 Outputs: build writes private JSONL records, candidates, attribution notices, accounting,
-  metrics, manifest and README under --out only; verify compares all pinned artifacts.
+  metrics, manifest and README under --out only; verify compares all pinned artifacts
+  and generates private generic must-fail inputs under --out/mutation-fixtures.
   Errors write tracebacks only to --out/logs after the output guard succeeds. No DB updates.
 Exit codes: 0 = build/verification succeeded; 1 = a gate or input failed; 2 = CLI usage refused.
 Related: docs/projects/open-model-data/REVIEW_BUILD.md; issue #9817, epic #6321.
@@ -65,7 +66,7 @@ def main(argv: list[str] | None = None) -> int:
     output = None
     try:
         args = parser().parse_args(argv)
-        output = OutputGuard(args.out)
+        output = OutputGuard(args.out, (Path(__file__).resolve().parents[4],))
         result = execute(args.config, output, verify=args.command == "verify")
         print(json.dumps(result, sort_keys=True))
         return 0

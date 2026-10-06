@@ -144,6 +144,10 @@ def bundle(tmp_path):
         for row in rows
     ]
     spec = {
+        "unit_id": {
+            "primary": [{"selector": selector(), "store": "sources.db", "table": "units", "key": "id"}],
+            "separator": ";",
+        },
         "unit_query": {"kind": "sql", "store": "sources.db", "sql": "SELECT id FROM units"},
         "frozen_count": 12,
         "unit_grain": "SYNTHETIC unit",
@@ -169,7 +173,16 @@ def bundle(tmp_path):
         "register": "register.yaml",
         "synthetic_sources": ["synthetic"],
         "components": {"C1": spec},
-        "compatibility": [{"store": "sources.db", "table": "units", "source_id": "synthetic", "role": "modern"}],
+        "compatibility": [
+            {
+                "store": "sources.db",
+                "table": "units",
+                "source_id": "synthetic",
+                "role": "modern",
+                "source_column": "source_file",
+                "source_values": ["SYNTHETIC book"],
+            }
+        ],
     }
     result = {
         "rows": rows,

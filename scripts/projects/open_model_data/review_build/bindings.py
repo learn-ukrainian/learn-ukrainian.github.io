@@ -55,12 +55,54 @@ def boundary(candidate: Candidate, definition: int | dict, reader: SnapshotReade
 
 
 def example_regions(text: str) -> list[tuple[int, int]]:
-    """Colon-introduced list through its line/paragraph terminator (not next paragraph)."""
+    """Find colon lists, stopping at sentence/rule boundaries and later colons.
+
+    Explicit example introductions can have one item. Other introductions need
+    a comma/semicolon list; ambiguous single prose clauses fail closed.
+    """
     regions = []
-    for match in re.finditer(r":(?:[ \t]*\n[ \t]*)?", text):
-        end = text.find("\n", match.end())
-        regions.append((match.end(), len(text) if end < 0 else end))
+    for match in re.finditer(r":", text):
+        start = match.end()
+        if re.match(r"[ \t]*\n", text[start:]):
+            start += re.match(r"[ \t]*\n[ \t]*", text[start:]).end()
+        end = len(text)
+        for stop in re.finditer(r":|\.(?=\s+[^\W\d_])|\n(?=[ \t]*(?:\n|\d+[.)]|§|Rule\b|Правило\b))", text[start:]):
+            pos = start + stop.start()
+            if stop.group() == ".":
+                following = text[pos + 1 :].lstrip()
+                if not following or not following[0].isupper():
+                    continue
+            end = pos
+            break
+        intro_start = max(text.rfind(":", 0, match.start()), text.rfind("\n", 0, match.start())) + 1
+        intro = text[intro_start : match.start()]
+        body = text[start:end].rstrip().rstrip(".")
+        explicit = re.search(r"\b(?:examples?|e\.g|наприклад|як-от)\b", intro, re.I)
+        if explicit or re.search(r"[,;]", body):
+            regions.append((start, start + len(body)))
     return regions
+
+
+def example_items(text: str) -> list[tuple[int, int]]:
+    items = []
+    for start, end in example_regions(text):
+        for match in re.finditer(r"[^,;]+", text[start:end]):
+            raw = match.group()
+            left = start + match.start() + len(raw) - len(raw.lstrip())
+            right = start + match.end() - len(raw) + len(raw.rstrip())
+            if left < right:
+                items.append((left, right))
+    return items
+
+
+def whole_token(form: str, witness: str) -> bool:
+    # Apostrophes and combining marks belong to the token, even where Python's
+    # Unicode \w alone would split them. No stored/source bytes are changed.
+    for match in re.finditer(re.escape(form), witness):
+        neighbors = witness[max(0, match.start() - 1) : match.start()] + witness[match.end() : match.end() + 1]
+        if not any(c.isalnum() or c == "_" or c in "'’ʼ" or unicodedata.category(c).startswith("M") for c in neighbors):
+            return True
+    return False
 
 
 def _unstress(text: str) -> str:
@@ -95,7 +137,7 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
             require(isinstance(field, str) and value.span is not None, "binding_example")
             source = transform(value.transform, field, policies.get(value.transform), reader).text
             require(
-                any(start <= value.span[0] < value.span[1] <= end for start, end in example_regions(source)),
+                value.span in example_items(source),
                 "binding_example",
             )
         elif op == "contiguous_pages":
@@ -150,20 +192,26 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
             require(book_left.source_id == rule["book_source"], "binding_contrast")
             # Both model-visible members must quote the shared book row as one of their citations.
             require(book_left in rejected.citations and book_right in recommended.citations, "binding_contrast")
-            for book, member in ((book_left, rejected), (book_right, recommended)):
-                _, witness = reader.field(book)
-                require(isinstance(witness, str) and member.text in witness, "binding_contrast")
-            for citation in recommended.citations:
-                if citation.source_id in {rule["ulif_source"], rule["vesum_source"]}:
-                    _, witness = reader.field(citation)
-                    require(
-                        isinstance(witness, str) and _unstress(witness) == _unstress(recommended.text),
-                        "binding_contrast",
-                    )
-            for selector_name in ("rejected", "recommended"):
+            for selector_name, book in (("rejected", book_left), ("recommended", book_right)):
                 ref = rule[selector_name]
                 member = select(candidate, ref)
-                agreements.append([{**ref, "citation": i} for i in range(len(member.citations))])
+                confirmed = []
+                for index, citation in enumerate(member.citations):
+                    _, witness = reader.field(citation)
+                    if citation == book:
+                        require(isinstance(witness, str) and whole_token(member.text, witness), "binding_contrast")
+                    elif (selector_name == "rejected" and citation.source_id == rule["sum11_source"]) or (
+                        selector_name == "recommended"
+                        and citation.source_id in {rule["ulif_source"], rule["vesum_source"]}
+                    ):
+                        require(
+                            isinstance(witness, str) and _unstress(witness) == _unstress(member.text),
+                            "binding_contrast",
+                        )
+                    else:
+                        continue
+                    confirmed.append({**ref, "citation": index})
+                agreements.append(confirmed)
             for key, value in (("rejected_key", rejected), ("recommended_key", recommended)):
                 require(operand(candidate, rule[key], reader) == _unstress(value.text), "binding_contrast")
             require(

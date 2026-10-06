@@ -83,14 +83,33 @@ class Gate:
                     bindings.operand(candidate, s, self.reader) == expected
                     for s, expected in applicability_spec.get("with_sense", [])
                 )
-                require(bool(applicability_spec.get("with_sense")), "catalog_inapplicable")
+                require(bool(applicability_spec.get("with_sense")), "applicability_spec")
             else:
                 empty_safe = all(
                     bindings.operand(candidate, s, self.reader) == expected
                     for s, expected in applicability_spec.get("without_sense", [])
                 )
-                require(bool(applicability_spec.get("without_sense")), "catalog_inapplicable")
+                require(bool(applicability_spec.get("without_sense")), "applicability_spec")
         return self.catalog.applicable(candidate, discriminating, empty_safe, spec.get("slot_serializers"))
+
+    def unit_id(self, candidate: Candidate) -> str:
+        spec = self.components[candidate.component].get("unit_id", {})
+        require(bool(spec.get("primary")) and isinstance(spec.get("separator"), str), "unit_id_spec")
+        parts = []
+        for part in spec["primary"]:
+            ref = part["selector"]
+            require(ref.get("citation", 0) == 0 and "field" not in ref, "unit_id_spec")
+            require(bool(bindings.select(candidate, ref).citations), "uncited_value")
+            citation = bindings.citation_for(candidate, ref)
+            require((citation.store, citation.table) == (part["store"], part["table"]), "unit_id_mismatch")
+            self.reader.row(citation)  # Validate the actual primary key and pin its cited column.
+            if "key" in part:
+                keys = dict(pair.split("=", 1) for pair in citation.row_key.split(";"))
+                require(part["key"] in keys, "unit_id_spec")
+                parts.append(keys[part["key"]])
+            else:
+                parts.append(citation.row_key)
+        return spec["separator"].join(parts)
 
     def run(self, candidates: list[Candidate]) -> tuple[list[dict], dict]:
         try:
@@ -133,6 +152,7 @@ class Gate:
                             (citation.store, citation.table, citation.source_id) in self.roles.compatibility,
                             "source_compatibility",
                         )
+                require(candidate.unit_id == self.unit_id(candidate), "unit_id_mismatch")
                 if candidate.outcome not in {"accepted", "rejected"}:
                     require(bool(candidate.evidence), "outcome_evidence")
                     continue
