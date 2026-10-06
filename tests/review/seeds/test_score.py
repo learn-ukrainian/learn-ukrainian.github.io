@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import json
 import math
+import sqlite3
 from datetime import date
 from pathlib import Path
 
@@ -864,3 +865,47 @@ def test_the_report_directory_is_dated_and_named_for_the_seat() -> None:
 def test_agreement_with_missing_database_does_not_create_it(env: Env) -> None:
     assert score.agreement_by_seat_pair(["a1"], db_path_for=env.path_for, confidence=0.95) == []
     assert not env.path_for("a1").exists()
+
+
+@pytest.mark.parametrize("reader", ["collect", "agreement"])
+@pytest.mark.parametrize("versions", [None, [], [-1], [findings_db.SCHEMA_VERSION + 1], [5, 5]])
+def test_readers_refuse_unrecognized_schema_without_mutation(env: Env, reader: str, versions) -> None:
+    env.add(mechanical_seed("seed-schema"), "rolling")
+    conn = env.connect()
+    try:
+        with conn:
+            if versions is None:
+                conn.execute("DROP TABLE schema_version")
+            else:
+                conn.execute("DELETE FROM schema_version")
+                conn.executemany("INSERT INTO schema_version VALUES (?)", [(version,) for version in versions])
+    finally:
+        conn.close()
+    before = env.db.read_bytes()
+    with pytest.raises(findings_db.VersionMismatch, match="refusing to open"):
+        if reader == "collect":
+            score.collect("codex", "rolling", repo_root=env.root, db_path_for=env.path_for)
+        else:
+            score.agreement_by_seat_pair(["a1"], db_path_for=env.path_for, confidence=0.95)
+    assert env.db.read_bytes() == before
+
+
+@pytest.mark.parametrize("version", [*findings_db.MIGRATIONS, findings_db.SCHEMA_VERSION])
+def test_readonly_findings_open_preserves_timeout_and_does_not_migrate(env: Env, version: int) -> None:
+    conn = env.connect()
+    try:
+        with conn:
+            conn.execute("UPDATE schema_version SET version = ?", (version,))
+    finally:
+        conn.close()
+    before = env.db.read_bytes()
+    conn = score._open_findings_readonly(env.db)
+    try:
+        assert conn.execute("SELECT version FROM schema_version").fetchone()[0] == version
+        assert conn.execute("PRAGMA busy_timeout").fetchone()[0] == 30000
+        assert conn.execute("PRAGMA query_only").fetchone()[0] == 1
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("UPDATE schema_version SET version = 99")
+    finally:
+        conn.close()
+    assert env.db.read_bytes() == before

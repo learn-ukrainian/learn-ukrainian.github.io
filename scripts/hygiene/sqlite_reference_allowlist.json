@@ -86,6 +86,14 @@
     "calls": []
   },
   {
+    "path": "scripts/api/dashboard_comms.py",
+    "reference_count": 1,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "Broker reads remain routed through MonitorContext for fixture-root enforcement and slow-query logging; migrate the context's file:{path}?mode=ro construction in the Monitor context slice of #9662.",
+    "calls": []
+  },
+  {
     "path": "scripts/api/delegate_router.py",
     "reference_count": 1,
     "kind": "reader_pending_migration_9662",

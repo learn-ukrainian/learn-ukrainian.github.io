@@ -7,6 +7,7 @@ import re
 import sqlite3
 import subprocess
 from contextlib import asynccontextmanager
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock
@@ -18,10 +19,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.testclient import TestClient
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from scripts.api import dashboard_comms
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context, production_context
 from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
-from scripts.api.resilience import resilience_middleware
+from scripts.api.resilience import TimedSQLiteConnection, resilience_middleware
 from tests.api.opsec_sweep import registry
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
@@ -31,6 +33,7 @@ DB_ACCESS_PATTERNS = (
     re.compile(r"\bsqlite3\.connect\("),
     re.compile(r"\bconnect_sqlite\("),
     re.compile(r"\bSessionStreamDatabase\("),
+    re.compile(r"\bopen_readonly\("),
 )
 
 # The exact pre-migration inventory from design §4.1: 22 access sites in 21
@@ -45,15 +48,16 @@ DB_ACCESS_PATTERNS = (
 # step 12d removed telemetry_router.py and wiki_router.py (13 -> 11) after
 # both opened stores through MonitorContext;
 # step 12e removed scripts/api/epics_router.py (11 -> 10).
-# #9662 moved fleet_router, fleet_workers_collect and runtime_router readers
-# to the shared read-only helper (10 -> 7); the SQLite boundary guard covers them.
 DB_ACCESS_ALLOWLIST = frozenset(
     {
         "scripts/api/agent_monitor_router.py",
+        "scripts/api/fleet_router.py",
+        "scripts/api/fleet_workers_collect.py",
         "scripts/api/hramatka_cache.py",
         "scripts/api/hramatka_router.py",
         "scripts/api/occupancy_local.py",
         "scripts/api/resilience.py",
+        "scripts/api/runtime_router.py",
         "scripts/api/telemetry/legacy_comms.py",
         "agents_extensions/shared/session_streams/db.py",
     }
@@ -691,9 +695,35 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
         assert "First dispatcher log line" not in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
 
 
+def test_broker_reads_use_guarded_timed_readonly_context(tmp_path: Path) -> None:
+    context = fixture_context(tmp_path / "fixture")
+    handle = context.stores.message_db
+    assert handle is not None
+    handle.path.parent.mkdir(parents=True, exist_ok=True)
+    with sqlite3.connect(handle.path) as conn:
+        conn.execute("CREATE TABLE messages (body TEXT)")
+        conn.execute("INSERT INTO messages VALUES ('fixture message')")
+    conn = dashboard_comms.get_broker_db(context)
+    try:
+        assert isinstance(conn, TimedSQLiteConnection)
+        assert conn.row_factory is sqlite3.Row
+        assert conn.execute("SELECT body FROM messages").fetchone()["body"] == "fixture message"
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("INSERT INTO messages VALUES ('forbidden')")
+    finally:
+        conn.close()
+
+    outside = tmp_path / "outside.sqlite"
+    with sqlite3.connect(outside) as conn:
+        conn.execute("CREATE TABLE messages (body TEXT)")
+    context = replace(context, stores=replace(context.stores, message_db=replace(handle, path=outside)))
+    with pytest.raises(ValueError, match="escapes"):
+        dashboard_comms.get_broker_db(context)
+
+
 @pytest.mark.repo_wide
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 7
+    assert len(DB_ACCESS_ALLOWLIST) == 10
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
     files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
     findings: list[str] = []

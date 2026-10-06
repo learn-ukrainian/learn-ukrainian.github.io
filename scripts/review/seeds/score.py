@@ -258,6 +258,28 @@ def _units_of(set_name: str, repo_root: Path | None) -> tuple[list[str], seed_ma
     return units, lock
 
 
+def _open_findings_readonly(path: Path) -> SQLiteConnection:
+    """Refuse unrecognized findings schemas without taking a write lock or migrating."""
+    conn = open_readonly(path, timeout=30)
+    try:
+        tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+        if "schema_version" not in tables:
+            raise findings_db.VersionMismatch(f"{path}: no schema_version; refusing to open it")
+        versions = [row[0] for row in conn.execute("SELECT version FROM schema_version")]
+        if len(versions) != 1 or (
+            versions[0] != findings_db.SCHEMA_VERSION and versions[0] not in findings_db.MIGRATIONS
+        ):
+            raise findings_db.VersionMismatch(
+                f"{path}: schema_version {versions} is not {findings_db.SCHEMA_VERSION} "
+                f"(or a version that migrates to it: {sorted(findings_db.MIGRATIONS)}); refusing to open it"
+            )
+        conn.row_factory = sqlite3.Row
+        return conn
+    except BaseException:
+        conn.close()
+        raise
+
+
 def collect(
     seat: str,
     set_name: str,
@@ -287,8 +309,7 @@ def collect(
 
         def conn_for(level: str) -> SQLiteConnection:
             if level not in connections:
-                connections[level] = open_readonly(path_for(level))
-                connections[level].row_factory = sqlite3.Row
+                connections[level] = _open_findings_readonly(path_for(level))
             return connections[level]
 
         by_unit = {
@@ -540,8 +561,7 @@ def agreement_by_seat_pair(
         path = db_path_for(level)
         if not Path(path).is_file():
             continue
-        conn = open_readonly(path)
-        conn.row_factory = sqlite3.Row
+        conn = _open_findings_readonly(path)
         try:
             for row in conn.execute("SELECT rowid, * FROM agreement ORDER BY rowid").fetchall():
                 sides = []
