@@ -412,12 +412,118 @@ def test_missing_grok_binary_raises(tmp_path):
 
 
 def test_parse_success_json():
-    out = json.dumps({"text": "done\n", "stopReason": "EndTurn", "sessionId": "abc-123"})
+    out = json.dumps({"text": "done\n", "stopReason": "end_turn", "sessionId": "abc-123"})
     r = GrokBuildAdapter().parse_response(stdout=out, stderr="", returncode=0, output_file=None)
     assert r.ok
     assert r.response == "done"
     assert r.session_id == "abc-123"
     assert r.rate_limited is False
+
+
+@pytest.fixture
+def recorded_cancelled_turn():
+    """Sanitized 2026-10-05 critic-impl-9742-b capture, native CLI 1.0.46.
+
+    batch_state/tasks/critic-impl-9742-b.json recorded rc=0/status=done;
+    the native session's updates.jsonl ended with stop_reason=cancelled and
+    events.jsonl with turn_ended/outcome=cancelled/permission_cancelled.
+    The task's result was 237 UTF-8 bytes of opening narration, with no
+    verdict. Keep terminal metadata; replace the private reply and session ID.
+    Reconstruct the headless JSON envelope from that recorded terminal update.
+    """
+    return {
+        "text": "[partial opening narration redacted]",
+        "stopReason": "cancelled",
+        "sessionId": "recorded-session-redacted",
+        "modelUsage": {"grok-4.7-build": {"modelCalls": 14}},
+    }
+
+
+@pytest.mark.parametrize("returncode", [0, 1])
+def test_recorded_cancelled_turn_is_not_a_done_task(recorded_cancelled_turn, returncode):
+    from scripts import delegate
+
+    result = GrokBuildAdapter().parse_response(
+        stdout=json.dumps(recorded_cancelled_turn), stderr="", returncode=returncode, output_file=None,
+    )
+    assert not result.ok
+    assert result.response == ""
+    assert result.failure_code == "provider_stream_incomplete"
+    assert recorded_cancelled_turn["text"] in result.stderr_excerpt
+    assert result.session_id == recorded_cancelled_turn["sessionId"]
+    assert result.substitution["actual_model"] == "grok-4.7-build"
+    assert delegate._classify_final_status(
+        cancelled=False, rate_limited=result.rate_limited, ok_outcome=result.ok,
+    ) == "failed"
+
+
+@pytest.mark.parametrize("stop_reason", [
+    "cancelled", "max_tokens", "tool_use", "error", "EndTurn", "", None, 0, [], {},
+])
+def test_plain_reply_requires_exact_end_turn(stop_reason):
+    from agent_runtime.failover import classify_failover_trigger
+
+    partial = "Opening narration mentions HTTP 429: too many requests."
+    stdout = json.dumps({"text": partial, "stopReason": stop_reason})
+    result = GrokBuildAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
+    assert not result.ok
+    assert result.response == ""
+    assert result.failure_code == "provider_stream_incomplete"
+    assert partial in result.stderr_excerpt
+    assert result.rate_limited is False
+    assert classify_failover_trigger(
+        parse=result, returncode=0, kill_reason=None, stdout_text=stdout, stderr_text="",
+    ) is None
+
+
+def test_plain_reply_without_stop_reason_is_incomplete():
+    result = GrokBuildAdapter().parse_response(
+        stdout=json.dumps({"text": "partial narration"}), stderr="", returncode=0, output_file=None,
+    )
+    assert not result.ok
+    assert result.response == ""
+    assert result.failure_code == "provider_stream_incomplete"
+    assert "partial narration" in result.stderr_excerpt
+
+
+def test_incomplete_reply_preserves_text_alongside_stderr(recorded_cancelled_turn):
+    result = GrokBuildAdapter().parse_response(
+        stdout=json.dumps(recorded_cancelled_turn), stderr="permission cancelled", returncode=0, output_file=None,
+    )
+    assert not result.ok
+    assert result.response == ""
+    assert result.failure_code == "provider_stream_incomplete"
+    assert recorded_cancelled_turn["text"] in result.stderr_excerpt
+    assert "permission cancelled" in result.stderr_excerpt
+
+
+def test_complete_reply_with_log_noise():
+    stdout = "startup log\n" + json.dumps({"text": "final report", "stopReason": "end_turn"}) + "\ntrailing log"
+    result = GrokBuildAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
+    assert result.ok
+    assert result.response == "final report"
+    assert result.failure_code is None
+
+
+def test_empty_stdout_with_streamed_text_is_incomplete(recorded_cancelled_turn):
+    # Streamed narration in diagnostics cannot substitute for a final envelope.
+    result = GrokBuildAdapter().parse_response(
+        stdout="", stderr=recorded_cancelled_turn["text"], returncode=0, output_file=None,
+    )
+    assert not result.ok
+    assert result.response == ""
+    assert result.failure_code == "provider_stream_incomplete"
+    assert recorded_cancelled_turn["text"] in result.stderr_excerpt
+
+
+@pytest.mark.parametrize("text", ["", " \n"])
+def test_end_turn_without_answer_is_not_success(text):
+    result = GrokBuildAdapter().parse_response(
+        stdout=json.dumps({"text": text, "stopReason": "end_turn"}),
+        stderr="", returncode=0, output_file=None,
+    )
+    assert not result.ok
+    assert result.response == ""
 
 
 @pytest.mark.parametrize("usage,expected", [
@@ -430,7 +536,7 @@ def test_parse_success_json():
 def test_native_runtime_identity_comes_only_from_single_model_usage_key(usage, expected):
     from scripts import delegate
 
-    stdout = json.dumps({"text": "VERDICT: APPROVE grok-4.7-build", "model": "grok-4.7-build", "modelUsage": usage})
+    stdout = json.dumps({"text": "VERDICT: APPROVE grok-4.7-build", "stopReason": "end_turn", "model": "grok-4.7-build", "modelUsage": usage})
     result = GrokBuildAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
     assert result.ok
     assert result.substitution["actual_model"] == expected
@@ -443,7 +549,8 @@ def test_native_runtime_identity_comes_only_from_single_model_usage_key(usage, e
 
 def test_native_plain_reply_does_not_attest_model():
     result = GrokBuildAdapter().parse_response(stdout="VERDICT: APPROVE grok-4.7-build", stderr="", returncode=0, output_file=None)
-    assert result.ok
+    assert not result.ok
+    assert result.failure_code == "provider_stream_incomplete"
     assert result.substitution["actual_model_known"] is False
 
 
@@ -459,7 +566,7 @@ def test_native_runtime_alias_keeps_requested_pin_and_real_substitution(agent, r
     from scripts import delegate
 
     result = GrokBuildAdapter().parse_response(
-        stdout=json.dumps({"text": "VERDICT: APPROVE", "modelUsage": {runtime: {"modelCalls": 1}}}),
+        stdout=json.dumps({"text": "VERDICT: APPROVE", "stopReason": "end_turn", "modelUsage": {runtime: {"modelCalls": 1}}}),
         stderr="", returncode=0, output_file=None,
     )
     assert result.substitution["substituted"] is substituted
@@ -491,8 +598,10 @@ def test_parse_json_with_log_noise():
 
 def test_parse_plain_fallback():
     r = GrokBuildAdapter().parse_response(stdout="just plain text", stderr="", returncode=0, output_file=None)
-    assert r.ok
-    assert r.response == "just plain text"
+    assert not r.ok
+    assert r.response == ""
+    assert r.failure_code == "provider_stream_incomplete"
+    assert "just plain text" in r.stderr_excerpt
 
 
 def test_registry_native_grok_distinct_from_hermes_grok():
