@@ -245,3 +245,96 @@ GitHub Actions no longer uses. **When the CI dependency install changes,
 update the runner script to match** — a drifted runner is a false-green risk.
 Runner ↔ CI parity is covered offline by
 `tests/ci/test_cursor_cloud_pytest_verify.py`.
+
+## Advisory component shadow (#9721 slice 6)
+
+`Component shadow` is a separate report-only job after pytest, including red
+runs. It checks out the event head with full history, reads the full-run shard
+artifacts, and uploads an ignored `component-shadow` JSON receipt. Its failures
+are advisory and absent from CI Gate's result checks. The full pytest command,
+static shards, full tested-tree record, partition checks and needs_artifact
+reconciliation remain unchanged. This does not authorize PR narrowing; decision
+A in `plans/component-separation-9721.md` and slice 7 remain separate.
+
+The shadow uses the event base/head merge-base diff, including stacked parent
+commits and both rename sides. Empty/missing/unresolvable diffs, non-PR events,
+workflow/tool/dependency/shared changes and unresolved runtime edges select all.
+Resolved would-run files come from `components.test_files`, including importers
+and shared integration obligations. Literal file reads and Python subprocess
+targets contribute reverse edges; unknown reads/argv and sys.path changes select
+all. The receipt records changed paths, selected nodes/files, would-skip files,
+full JUnit failures, collection errors, tool/source/graph identities and artifact
+coverage problems. Collected IDs are those attested by full-run JUnit plus the
+existing pre-deselection needs_artifact lists; JUnit cannot attest other IDs
+removed by the existing marker filter. Executed IDs exclude skips and collection
+errors. No separate collection or candidate test execution is introduced.
+
+Use the task-prescribed interpreter as `$P` and ignored, managed scratch as `$R`:
+
+```bash
+# Run/job metadata census only, before observing candidate selection/results.
+"$P" -m scripts.ci.component_shadow inventory --output "$R/baseline.json"
+"$P" -m scripts.ci.component_shadow register --baseline "$R/baseline.json" \
+  --output "$R/registration.json"
+# After registration, acquire the complete live census through the stop date.
+"$P" -m scripts.ci.component_shadow inventory --first-attempts --created "$START..$STOP" \
+  --output "$R/receipts/runs.json"
+"$P" -m scripts.ci.component_shadow check --registration "$R/registration.json" \
+  --receipts "$R/receipts"
+```
+
+Registration refuses overwriting an existing file. It freezes the graph, source
+and tool hashes; all pytest-red PR/merge-group run IDs in the plan's baseline
+window (2026-10-03 through 2026-10-06 11:14:28 UTC); and the next 150 completed
+PR runs whose first attempt completes after registration, with at least
+30 pytest-red runs. Order is completion time then numeric run ID. Cancelled or artifact-less
+completed cases are included and remain unresolved. A paginated live run/job
+census is required: missing receipts cannot shrink the denominator. Run attempts
+beyond the first do not enter the live window. The live census uses attempt-1
+run and job metadata, so later reruns cannot erase first-attempt red cases.
+Choose `$START` early enough to include PR runs already in flight at
+registration; they count when their first attempt completes afterward. Metadata
+acquisition reads job conclusions, never candidate test IDs or artifacts.
+
+Every skipped full-JUnit failing ID is a miss, including flaky tests. The sole
+test-failure exemption is the same ID failing in an artifact-complete, first
+attempt rerun of the event base commit under the registered tools. Produce that
+receipt using `report --kind base --candidate-run-id ID --head BASE_SHA` against
+its full-run artifacts. The base rule is frozen before candidates; no post-hoc
+flaky reclassification is accepted. A collection error outside selection always
+counts. Historical replay uses `report --kind historical --run-id ID` after
+registration; historical observation timestamps need not follow registration.
+Run the registered observer with `--root` pointing at the historical source
+checkout: its map/tool identities come from the observer, and its source census
+comes from that checkout, which may predate the tools.
+Live receipts observed before registration are refused. Keep each receipt at
+`receipts/ID.json` and its original XML files under `receipts/ID/junit/`
+(subdirectories are allowed); base reruns use their own run ID. The checker
+re-reads and hashes those files independently and refuses a disagreement with
+the receipt. The shadow artifact retains the receipt and original shard
+artifacts for 45 days, covering the 30-day live window.
+
+The driver supplies and freezes `injected_cases` separately, recording an ID,
+`coverage` labels, `expected_failure_ids` and a `registered_at` timestamp for
+each before observing its results. At least twelve distinct controls cover all eight nodes and the
+shared-fixture, dynamic-load, subprocess and stale-artifact classes. The author
+must not supply those held-out faults. The checker cannot pass until these
+controls, every historical replay and the live denominators are complete with
+zero misses. Every injected control must demonstrate its pre-registered failing
+IDs in the full JUnit. Missing, unreproducible, malformed, mismatched-tool or
+artifact-less cases remain unresolved. Receipts observed after day 30 cannot
+complete the window. After day 30 an incomplete window is inconclusive,
+with the missing-evidence residual owned by the driver; it never authorizes
+narrowing.
+
+Cost is unknown until matched measurements are supplied via `report --cost`.
+Inputs are `full_pr_runner_minutes`, `full_queue_runner_minutes`,
+`reuse_probability`, `reporter_runner_minutes`, `rerun_runner_minutes`,
+`ejection_runner_minutes`, `duplicated_preparation_runner_minutes` and
+`elapsed_wait_minutes`. The projection scales PR cost by selected JUnit test
+time and adds full queue execution, lost reuse and every supplied overhead.
+Runner-minutes and elapsed waits are separate, and projection is not a measured
+saving. The unchanged exact-job-inventory reuse helper refuses the additional
+shadow job, so lost full-run reuse must be included even for full selection.
+The driver must measure combined PR/queue cost and reconcile this residual before
+decision A; the shadow does not amend reuse eligibility.

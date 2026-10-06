@@ -677,3 +677,47 @@ def test_junit_cli_dispatch(monkeypatch, tmp_path, capsys):
     assert calls[-1][1] == c.NODE_IDS
     assert c.main(['junit', '--component', 'harness', '--junit', str(tmp_path / 'full.xml')]) == 0
     assert calls[-1][1] == ['harness']
+
+
+@pytest.mark.parametrize("source,target", [
+    ('from pathlib import Path\nPath("schemas/input.json").read_text()', "schemas/input.json"),
+    ('open("schemas/input.json")', "schemas/input.json"),
+    ('import io\nio.open("schemas/input.json")', "schemas/input.json"),
+    ('import builtins\nbuiltins.open(file="schemas/input.json")', "schemas/input.json"),
+    ('import subprocess, sys\nsubprocess.run([sys.executable, "scripts/config.py"])', "scripts/config.py"),
+    ('from subprocess import run as go\ngo(["python3", "-m", "scripts.config"])', "scripts/config.py"),
+])
+def test_runtime_literal_file_and_subprocess_edges(source, target):
+    graph = c.scan_imports({"tests/test_reader.py": source.encode(), "scripts/config.py": b"VALUE = 1"},
+                           {"tests/test_reader.py", "scripts/config.py", "schemas/input.json"})
+    assert ("tests/test_reader.py", target) in graph["file_edges"]
+    assert not graph["unresolved_edges"]
+
+
+@pytest.mark.parametrize("source,reason", [
+    ('open(variable)', "unresolved-file-read"),
+    ('Path(variable).read_bytes()', "unresolved-file-read"),
+    ('from pathlib import Path\nPath("missing.json").open()', "unresolved-file-read"),
+    ('import sys as system\nsystem.path.insert(0, "scripts")', "sys-path"),
+    ('import sys\nsys.path = ["scripts"]', "sys-path"),
+    ('from sys import path as paths\npaths[:] = ["scripts"]', "sys-path"),
+    ('import subprocess\nsubprocess.run(command)', "unresolved-subprocess"),
+    ('import subprocess\nsubprocess.run(["python3", "scripts/config.py", argument])', "unresolved-subprocess"),
+    ('import subprocess\nsubprocess.run(["python3", "scripts/config.py"], shell=True)', "unresolved-subprocess"),
+    ('import os\nos.system("echo hello")', "unresolved-subprocess"),
+])
+def test_unresolved_runtime_edges_force_full_selection(manifest, source, reason):
+    graph = c.scan_imports({"scripts/projects/open_model_data/reader.py": source.encode()})
+    assert any(edge["reason"] == reason for edge in graph["unresolved_edges"])
+    graph |= {"node_edges": [], "missing_mandatory_edges": []}
+    assert set(c.affected(["scripts/projects/open_model_data/reader.py"], manifest, graph)["components"]) == set(c.NODE_IDS)
+
+
+def test_literal_file_read_importer_in_resolved_test_set(repo, manifest):
+    schema = repo / "site/schemas/input.json"
+    schema.parent.mkdir(parents=True)
+    schema.write_text("{}")
+    reader = repo / "tests/test_schema_reader.py"
+    reader.write_text('from pathlib import Path\nPath("site/schemas/input.json").read_text()\n')
+    git(repo, "add", ".")
+    assert "tests/test_schema_reader.py" in c.test_files("atlas-frontend", manifest, repo)
