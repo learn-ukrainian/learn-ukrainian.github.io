@@ -709,7 +709,7 @@ GQL_READS = {
     "pr-bases": "\nquery($owner: String!, $name: String!, $cursor: String) {\n  repository(owner: $owner, name: $name) {\n    pullRequests(states: OPEN, first: 100, after: $cursor) {\n      totalCount\n      pageInfo { hasNextPage endCursor }\n      nodes { number baseRefOid }\n    }\n  }\n}\n",
     "issue-scope": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){issue(number:$number){number body labels(first:100){nodes{name}} parent{number}}}}",
     "membership-head": "query($owner:String!,$name:String!,$number:Int!,$branch:String!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid isInMergeQueue} mergeQueue(branch:$branch){url}}}",
-    "issue-parent": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){nameWithOwner issue(number:$number){number state url parent{number url}}}}",
+    "issue-parent": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){nameWithOwner issue(number:$number){number state url parent{number url repository{nameWithOwner}}}}}",
     "membership": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){isInMergeQueue}}}",
     "squash-text": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid viewerMergeHeadlineText(mergeType:SQUASH) viewerMergeBodyText(mergeType:SQUASH) mergeQueueEntry{headCommit{oid message}}}}}",
     "subissues": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){issue(number:$number){body subIssues(first:100){nodes{number} pageInfo{hasNextPage endCursor}}}}}",

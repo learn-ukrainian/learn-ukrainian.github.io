@@ -1788,12 +1788,33 @@ def test_ordinary_paths_preserve_resolution(risk):
 _REAL_RATE_LIMIT_READER = credit_lane.read_recent_rate_limits
 
 
-def _credit_codex(credit: dict | None, **overrides) -> dict:
-    """A near-cap, healthy Codex routing-budget record publishing ``credit``."""
-    record = {"status": "near_cap", "health": {"healthy": True}, **overrides}
+# The probe reading a published credit leaf rests on; relief is re-checked against it (#9740 F6).
+_FRESH_PROBE = {"freshness": "fresh", "age_s": 60.0}
+
+
+def _credit_codex(credit: dict | None, *, diagnostics: dict | None = None, **overrides) -> dict:
+    """A near-cap, healthy Codex routing-budget record with a fresh probe, publishing ``credit``.
+
+    The record carries the inputs the producer computed ``credit`` from (remaining
+    allowance, raw balance and its fetch time): relief is re-decided from them (#9740).
+    """
+    evidence = credit.get("evidence") if isinstance(credit, dict) else None
+    fetched = (evidence or {}).get("credit_fetched_at") or (datetime.now(UTC) - timedelta(minutes=1)).isoformat()
+    record = {
+        "status": "near_cap",
+        "health": {"healthy": True},
+        "remaining_pct": 1.0,
+        "credit_balance": 62500.0,
+        "fetched_at": fetched,
+        **_FRESH_PROBE,
+        **overrides,
+    }
     if credit is not None:
         record["credit"] = credit
-    return {"agents": {"codex": record}}
+    snapshot: dict = {"agents": {"codex": record}}
+    if diagnostics is not None:
+        snapshot["diagnostics"] = diagnostics
+    return snapshot
 
 
 def _published_credit(*, fetched_at: datetime | None = None) -> dict:
@@ -1873,6 +1894,27 @@ def test_stale_published_credit_balance_stays_excluded():
     assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
 
 
+@pytest.mark.parametrize(
+    ("record", "diagnostics", "why"),
+    [
+        ({"freshness": "stale_last_good"}, None, "credit probe freshness=stale_last_good"),
+        ({"stale": True}, None, "credit probe freshness=fresh"),
+        ({"freshness": None, "age_s": None}, None, "credit probe freshness=missing"),
+        ({}, {"stale": True}, "routing-budget snapshot is stale"),
+    ],
+    ids=["stale-probe", "stale-flag", "missing-freshness", "stale-snapshot"],
+)
+def test_published_credit_relief_is_rechecked_against_the_full_record(record, diagnostics, why):
+    """#9740 F6: a published ``credit_balance_present`` leaf never outlives contradictory probe evidence."""
+    snapshot = _credit_codex(_published_credit(), diagnostics=diagnostics, **record)
+    result = evaluate_candidate(
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=snapshot)
+    )
+    assert result.status == "excluded"
+    assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
+    assert result.credit["reason"] == f"published credit relief not re-verified: {why}"
+
+
 def test_credit_balance_never_relaxes_hard_health_exclusion():
     snapshot = _credit_codex(_published_credit(), health={"healthy": False})
     result = evaluate_candidate(
@@ -1908,7 +1950,7 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
 
     credit_backed = {
         "agents": {
-            "codex": {"status": "near_cap", "credit": _published_credit(), "scheduler": light_codex},
+            "codex": {**_credit_codex(_published_credit())["agents"]["codex"], "scheduler": light_codex},
             "claude": {"status": "healthy", "scheduler": busy_claude},
         }
     }
@@ -1919,7 +1961,7 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
     # With the plan-backed seat near cap too, the credit-backed seat is selected and the receipt says so.
     only_credit = {
         "agents": {
-            "codex": {"status": "near_cap", "credit": _published_credit()},
+            "codex": _credit_codex(_published_credit())["agents"]["codex"],
             "claude": {"status": "near_cap"},
         }
     }

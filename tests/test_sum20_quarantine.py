@@ -365,3 +365,35 @@ def test_legacy_parser_rows_are_excluded_without_quarantine_column(legacy_db):
             10,
             11,
         ]
+
+
+@pytest.mark.parametrize("database_fixture", ["legacy_db", "quarantined_db"])
+def test_committed_record_cannot_attest_a_quarantined_headword(request, database_fixture, monkeypatch):
+    from scripts.projects.open_model_data import build_decolonization_cases as cases
+
+    database = request.getfixturevalue(database_fixture)
+    db = database[0] if isinstance(database, tuple) else database
+    monkeypatch.setattr(
+        cases,
+        "EXPLICIT_SOURCE_EVIDENCE",
+        {
+            "synthetic": {
+                "authority": "СУМ-20",
+                "source": "СУМ-20",
+                "target_term": "дух",
+                "article": "ДУХ",
+                "supporting_passage": "synthetic evidence",
+                "locus": "synthetic locus",
+            }
+        },
+    )
+    with sqlite3.connect(db) as sources, sqlite3.connect(":memory:") as vesum:
+        # Only the committed path could attest this headword; keep the marked row
+        # and remove the synthetic official homonym from this isolated fixture.
+        sources.execute("DELETE FROM sum20_articles WHERE wordid = 10")
+        vesum.execute("CREATE TABLE forms_all (lemma TEXT, word_form TEXT, pos TEXT, tags TEXT, source_location TEXT)")
+        vesum.execute("INSERT INTO forms_all VALUES ('дух', 'дух', 'noun', '', 'synthetic')")
+        with pytest.raises(ValueError, match="Lexical evidence missing"):
+            cases.query_source_evidence(
+                "synthetic", "дух", "", "СУМ-20", "synthetic", sources.cursor(), vesum.cursor(), []
+            )

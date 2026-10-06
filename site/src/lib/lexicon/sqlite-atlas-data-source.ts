@@ -132,7 +132,12 @@ export class SqliteAtlasDataSource implements AtlasDataSource {
   private readonly aliasRows: SearchAlias[];
   private readonly deckDir: string;
 
-  constructor(options?: { version?: string; deckDir?: string }) {
+  constructor(options?: {
+    version?: string;
+    deckDir?: string;
+    /** Instance-owned search inputs; defaults to the canonical SSG artifacts. */
+    searchArtifactsDir?: string;
+  }) {
     const cache = getAtlasPayloadCache();
     this.version = options?.version ?? `sqlite-${cache.manifestVersion}`;
     this.generatedAt = cache.generatedAt;
@@ -259,8 +264,9 @@ export class SqliteAtlasDataSource implements AtlasDataSource {
 
       // Prefer the dual-publication search artifacts so ranking matches the
       // legacy generate_search_index / exporter transliteration surface.
-      const searchIndexPath = resolve(process.cwd(), "src/data/lexicon-search-index.json");
-      const searchAliasesPath = resolve(process.cwd(), "src/data/lexicon-search-aliases.json");
+      const searchArtifactsDir = options?.searchArtifactsDir ?? resolve(process.cwd(), "src/data");
+      const searchIndexPath = resolve(searchArtifactsDir, "lexicon-search-index.json");
+      const searchAliasesPath = resolve(searchArtifactsDir, "lexicon-search-aliases.json");
       if (existsSync(searchIndexPath) && existsSync(searchAliasesPath)) {
         this.articleRows = JSON.parse(readFileSync(searchIndexPath, "utf-8")) as SearchRow[];
         this.aliasRows = JSON.parse(readFileSync(searchAliasesPath, "utf-8")) as SearchAlias[];

@@ -1104,3 +1104,10 @@ def test_pr_creation_cannot_publish_implicit_branch_names(fields):
     with pytest.raises(gate.PublishBlocked):
         pub.publish("pr-create", repo="unit/public", title="clean", body="clean", runner=spy(calls), **fields)
     assert not calls
+
+
+def test_9794_issue_parent_read_selects_typed_parent_repository():
+    calls = []
+    pub.read("issue-parent", repo="unit/public", number=1, runner=spy(calls))
+    query = json.loads(calls[0]["--input"])["query"]
+    assert "parent{number url repository{nameWithOwner}}" in query

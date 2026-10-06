@@ -964,13 +964,21 @@ def test_lanes_without_credit_policy_keep_origin_main_rows(scenario):
         },
         "diagnostics": {"stale": False},
     }
-    rows = {row["lane"]: row for row in capacity_pick.build_lane_rows(budget, reset_reserve=unavailable_reserve())}
+    rows = {
+        row["lane"]: row
+        for row in capacity_pick.build_lane_rows(budget, active_in_flight={}, reset_reserve=unavailable_reserve())
+    }
     assert set(rows) == set(capacity_pick.CODE_LANES)
     for lane in capacity_pick.CODE_LANES:
         if lane == "codex":
             continue
         row = dict(rows[lane])
         assert row.pop("credit") == {"state": "not_configured"}
+        # #9740 additive row facts; the origin/main fields stay byte-identical.
+        facts = row.pop("routing_facts")
+        assert row.pop("capacity")["state"] == ("avoid" if row["avoid"] else "verified")
+        assert row.pop("health") == facts["health"] == "healthy"
+        assert row.pop("remaining_source") == facts["remaining_source"] == "remaining_pct"
         assert row == _origin_main_row(lane, scenario), lane
     codex = rows["codex"]
     expected = {
@@ -1440,3 +1448,385 @@ def test_published_credit_relief_denies_relief_for_unreadable_records(monkeypatc
     receipt = credit_lane.published_credit_relief("codex", published, "gpt-6.1-sol", policy=POLICY, now=NOW)
     assert receipt["state"] == credit_lane.CREDITS_UNVERIFIED
     assert receipt["evidence"]["unreadable_records"] == {"files": 1}
+
+
+# --- #9740: one interpretation of routing facts --------------------------------
+
+
+def _pace_hot(**pace) -> dict:
+    """A fresh weekly-pace hot Codex record with a visible deficit above the cap and no reserves."""
+    return _codex(
+        status="hot",
+        status_source="weekly_pace",
+        remaining_pct=60.0,
+        credit_balance=0.0,
+        reset_credits=None,
+        codexbar={
+            **_codex()["codexbar"],
+            "weekly_used_pct": 40.0,
+            "weekly_remaining_pct": 60.0,
+            "weekly_expected_pct": 25.0,
+            "weekly_pace_delta_pct": 15.0,
+            "will_last_to_reset": False,
+            **pace,
+        },
+    )
+
+
+def _pace_hot_with_credits() -> dict:
+    return {**_pace_hot(), "credit_balance": 62500.0}
+
+
+def _facts(info: dict, *, model: str | None = None, stale: bool | None = False) -> credit_lane.RoutingFacts:
+    metadata = None if stale is None else {"stale": stale}
+    return credit_lane.routing_facts("codex", info, model=model, snapshot_metadata=metadata, policy=POLICY, now=NOW)
+
+
+@pytest.mark.parametrize(
+    ("record", "expected"),
+    [
+        (
+            {
+                "remaining_pct": 40,
+                "codexbar": {"weekly_remaining_pct": 40, "primary_remaining_pct": 3, "secondary_remaining_pct": 80},
+            },
+            (3.0, "codexbar.primary_remaining_pct"),
+        ),
+        ({"remaining_pct": True, "codexbar": {"weekly_remaining_pct": 50}}, (50.0, "codexbar.weekly_remaining_pct")),
+        ({"burn_pct_7d": 95.0, "headroom_pct": 5.0}, (None, None)),
+        ({"remaining_pct": float("nan")}, (None, None)),
+        ({"provider_windows": {"auto": {"remaining_pct": 61.0}}}, (61.0, "provider_windows.auto.remaining_pct")),
+        (
+            {"codexbar": {"provider_windows": {"auto": {"remaining_pct": 7.0}, "api": {"remaining_pct": 1.0}}}},
+            (7.0, "provider_windows.auto.remaining_pct"),
+        ),
+    ],
+    ids=["tightest-window", "boolean-rejected", "burn-only-unknown", "non-finite", "cursor-auto", "api-pool-separate"],
+)
+def test_plan_remaining_reading_is_the_one_remaining_interpretation(record, expected):
+    """F1: the owner's tightest window, the Cursor Auto allowance, and nothing from booleans or burn."""
+    assert credit_lane.plan_remaining_reading(record) == expected
+    assert capacity_pick.remaining_pct(record) == expected[0]
+
+
+@pytest.mark.parametrize(
+    ("record", "expected"),
+    [
+        ({"freshness": "fresh", "age_s": 10.0}, credit_lane.FRESH),
+        ({"freshness": "fresh", "age_s": 900.0}, credit_lane.STALE),
+        ({"freshness": "stale_last_good", "age_s": 10.0}, credit_lane.STALE),
+        ({"freshness": "fresh", "age_s": 10.0, "codexbar": {"stale": True}}, credit_lane.STALE),
+        ({"freshness": "fresh"}, credit_lane.UNKNOWN),
+        ({"freshness": "unavailable", "age_s": 1.0}, credit_lane.UNKNOWN),
+        ({}, credit_lane.UNKNOWN),
+    ],
+)
+def test_probe_freshness_never_reads_missing_as_fresh(record, expected):
+    """F5/A6: only an explicit fresh label with an in-window age is fresh."""
+    assert credit_lane.probe_freshness(record, POLICY.credit_max_age_s)[0] == expected
+
+
+@pytest.mark.parametrize(
+    ("metadata", "expected"),
+    [
+        ({"stale": True}, credit_lane.STALE),
+        ({"stale": False}, credit_lane.FRESH),
+        ({}, credit_lane.UNKNOWN),
+        (None, credit_lane.UNKNOWN),
+    ],
+)
+def test_snapshot_freshness_missing_is_unknown(metadata, expected):
+    assert credit_lane.snapshot_freshness(metadata)[0] == expected
+
+
+@pytest.mark.parametrize(
+    ("health", "expected"),
+    [
+        ({"healthy": True, "basis": "scan_observed_idle"}, credit_lane.HEALTHY),
+        ({"healthy": False, "last_error": "boom"}, credit_lane.UNHEALTHY),
+        ({"healthy": None, "basis": "scan_unavailable"}, credit_lane.UNKNOWN),
+        (None, credit_lane.UNKNOWN),
+    ],
+)
+def test_health_fact_missing_is_unknown(health, expected):
+    """F4: health is established only by an explicit boolean."""
+    assert credit_lane.health_fact({"health": health} if health is not None else {})[0] == expected
+
+
+def test_stale_pace_deficit_is_unknown_stale_but_owner_pace_decision_is_unchanged():
+    """F2/A2: the qualifier is typed; raw_deficit and uncovered stay the owner's values."""
+    fresh = _facts(_pace_hot())
+    stale = _facts(_pace_hot(), stale=True)
+    assert (fresh.raw_deficit, fresh.uncovered, fresh.capacity) == (True, True, credit_lane.CAPACITY_AVOID)
+    assert (stale.raw_deficit, stale.uncovered) == (True, True)
+    assert stale.capacity == credit_lane.CAPACITY_UNKNOWN_STALE
+    assert stale.capacity_reason.startswith(credit_lane.STALE_ADVISORY_LABEL)
+    assert (
+        credit_lane.pace_deficit_state("codex", _pace_hot(), policy=POLICY, now=NOW, snapshot_stale=True)["uncovered"]
+        is True
+    )
+
+
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"status": "near_cap", "remaining_pct": 5.0},
+        {"remaining_pct": 5.0},
+        {"runtime": {"headroom_blocked": True, "rate_limited": 3}},
+        {"health": {"healthy": False}},
+        {"login_state": "NEED_LOGIN"},
+        {"eligible": False},
+        {"status_source": "ledger_burn"},
+        {"status_source": None},
+    ],
+    ids=[
+        "near-cap-status",
+        "near-cap-window",
+        "runtime-blocked-hot",
+        "unhealthy",
+        "need-login",
+        "ineligible",
+        "ledger-hot",
+        "sourceless-hot",
+    ],
+)
+def test_stale_snapshot_never_relaxes_current_avoid_reasons(overrides):
+    """A2: near cap (also with stale credit evidence), runtime-blocked hot, unhealthy, NEED_LOGIN,
+    ineligible and a hot label that is not weekly pace stay AVOID on a stale snapshot."""
+    info = _pace_hot(**{})
+    info.update(overrides)
+    if "remaining_pct" in overrides:
+        info["codexbar"] = {**info["codexbar"], "weekly_remaining_pct": overrides["remaining_pct"]}
+        info["credit_balance"] = 62500.0
+    assert _facts(info, stale=True).capacity == credit_lane.CAPACITY_AVOID
+
+
+@pytest.mark.parametrize(("blocked", "status"), [(False, "warm"), (True, "hot")])
+def test_hidden_pace_hot_takes_the_allowance_status_never_a_default_cool(blocked, status):
+    """F3/A3: below the visibility floor a weekly-pace hot label takes the remaining-allowance
+    status (45% remaining is warm), unless runtime blockage set the hot label."""
+    info = _pace_hot(weekly_expected_pct=0.1)
+    info.update(remaining_pct=45.0)
+    info["codexbar"]["weekly_remaining_pct"] = 45.0
+    if blocked:
+        info["runtime"] = {"headroom_blocked": True, "rate_limited": 2}
+    facts = _facts(info)
+    assert facts.pace_visible is False and facts.raw_deficit is None
+    assert facts.status == status
+    assert facts.capacity == (credit_lane.CAPACITY_AVOID if blocked else credit_lane.CAPACITY_VERIFIED)
+
+
+@pytest.mark.parametrize(
+    ("overrides", "stale", "status", "capacity"),
+    [
+        ({}, False, "warm", credit_lane.CAPACITY_VERIFIED),
+        ({"runtime": {"headroom_blocked": True, "rate_limited": 2}}, False, "hot", credit_lane.CAPACITY_AVOID),
+        ({"status_source": "cursor_auto"}, False, "hot", credit_lane.CAPACITY_AVOID),
+        ({"status_source": None}, False, "hot", credit_lane.CAPACITY_AVOID),
+        ({}, True, "hot", credit_lane.CAPACITY_UNKNOWN_STALE),
+        ({}, None, "hot", credit_lane.CAPACITY_AVOID),
+    ],
+    ids=["fresh-cleared", "runtime-blocked", "cursor-auto", "sourceless", "stale-snapshot", "staleness-unknown"],
+)
+def test_weekly_pace_hot_without_a_deficit_is_cleared_by_the_owner_only_when_fresh(overrides, stale, status, capacity):
+    """#9040 (A8) in the owner: a visible on-pace reading clears a weekly-pace hot label on a fresh
+    observation and takes the remaining-allowance status (45% remaining is warm). A runtime block,
+    another source, or a stale or unknown observation keeps the label."""
+    info = _pace_hot(weekly_pace_delta_pct=0.49)
+    info.update(remaining_pct=45.0, **overrides)
+    info["codexbar"]["weekly_remaining_pct"] = 45.0
+    facts = _facts(info, stale=stale)
+    assert facts.pace_visible is True and facts.raw_deficit is False
+    assert facts.status == status
+    assert facts.capacity == capacity, facts.capacity_reason
+    if status != "hot":
+        assert facts.pace_reason.startswith("no pace deficit on a fresh observation")
+
+
+@pytest.mark.parametrize("missing", ["age_s", "freshness"], ids=["probe-age-missing", "probe-freshness-unknown"])
+def test_weekly_pace_hot_label_needs_a_positively_fresh_probe(missing):
+    """#9040 (A8): a fresh snapshot alone never clears the label; an incomplete probe keeps it hot."""
+    info = _pace_hot(weekly_pace_delta_pct=0.49)
+    info.update(remaining_pct=45.0)
+    info["codexbar"]["weekly_remaining_pct"] = 45.0
+    info.pop(missing)
+    info["codexbar"].pop(missing)
+    facts = _facts(info)
+    assert (facts.snapshot_freshness, facts.probe_freshness) == (credit_lane.FRESH, credit_lane.UNKNOWN)
+    # The observation helper still reads fresh (a probe-less lane's snapshot covers it); the clearance does not.
+    assert facts.observation_freshness == credit_lane.FRESH
+    assert facts.pace_visible is True and facts.raw_deficit is False
+    assert facts.status == "hot"
+    assert facts.capacity == credit_lane.CAPACITY_AVOID, facts.capacity_reason
+
+
+def test_hidden_pace_with_unknown_allowance_is_unknown_not_cool():
+    info = _pace_hot(weekly_expected_pct=0.1)
+    for key in ("remaining_pct",):
+        info.pop(key)
+    info["codexbar"] = {k: v for k, v in info["codexbar"].items() if not k.endswith("remaining_pct")}
+    facts = _facts(info)
+    assert facts.status == credit_lane.UNKNOWN
+    assert facts.capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+def test_conflicting_pace_aliases_have_one_meaning():
+    """F3 key order: expected_pct, expectedUsedPercent, weekly_expected_pct, then the reset fallback."""
+    from scripts.api.subscription_usage import PACE_EXPECTED_PCT_ALIASES, pace_expected_pct, pace_is_deficit
+
+    pace = {
+        "expectedUsedPercent": 0.1,
+        "weekly_expected_pct": 40.0,
+        "weekly_pace_delta_pct": 20.0,
+        "will_last_to_reset": False,
+    }
+    assert PACE_EXPECTED_PCT_ALIASES == ("expected_pct", "expectedUsedPercent", "weekly_expected_pct")
+    assert pace_expected_pct(pace) == 0.1
+    assert pace_is_deficit(pace) is None
+    facts = _facts(
+        _codex(
+            status="cool", remaining_pct=60.0, codexbar={**_codex()["codexbar"], **pace, "weekly_remaining_pct": 60.0}
+        )
+    )
+    assert (facts.pace_visible, facts.raw_deficit) == (False, None)
+
+
+def test_model_change_against_identical_credit_evidence():
+    """F7: None is lane inventory (coverage for the listed models); a concrete route is model-specific."""
+    info = _pace_hot_with_credits()
+    inventory = _facts(info)
+    allowed = _facts(info, model="gpt-6.1-sol")
+    forbidden = _facts(info, model="gpt-5-codex")
+    assert inventory.covered_by == allowed.covered_by == ("credits",)
+    assert inventory.credit_models == ("gpt-6.1-sol", "gpt-6-luna")
+    assert inventory.model_permission is None
+    assert forbidden.covered_by == () and forbidden.uncovered is True
+    assert forbidden.capacity == credit_lane.CAPACITY_AVOID
+    # Above the cap the credit-period allowlist does not gate admission: permission is not refused.
+    assert forbidden.model_permission is True and forbidden.refusal_reason is None
+
+
+def test_off_allowlist_model_near_cap_with_credit_is_refused_not_relieved():
+    """A4/F7: lane-level relief is not model permission; the refusal carries CREDIT_PERIOD_MODEL_REFUSED."""
+    lane = _facts(_codex())
+    off = _facts(_codex(), model="gpt-5-codex")
+    assert lane.capacity == credit_lane.CAPACITY_VERIFIED and lane.credit_relief
+    assert off.model_permission is False and not off.credit_relief
+    assert off.capacity == credit_lane.CAPACITY_AVOID
+    assert off.refusal_reason.startswith(credit_lane.REFUSAL_CODE)
+
+
+def test_routing_facts_share_one_rate_limit_observation(monkeypatch):
+    """Credit state and pace coverage read the runtime records once per call."""
+    calls: list[str] = []
+
+    def reader(lane, *_a, **_k):
+        calls.append(lane)
+        return {"count": 0, "last_rate_limited_at": None}
+
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", reader)
+    facts = _facts(_pace_hot_with_credits())
+    assert facts.covered_by == ("credits",)
+    assert calls == ["codex"]
+
+
+def test_routing_facts_ignore_published_conclusions():
+    """Published ``credit``/``pace_deficit`` leaves never substitute for their inputs."""
+    info = _pace_hot()
+    info["credit"] = {"state": credit_lane.CREDIT_BALANCE_PRESENT}
+    info["pace_deficit"] = {"uncovered": False, "covered_by": ["credits"]}
+    facts = _facts(info)
+    assert facts.uncovered is True and facts.capacity == credit_lane.CAPACITY_AVOID
+
+
+def test_routing_facts_unreadable_policy_is_policy_error(monkeypatch):
+    def broken(*_a, **_k):
+        raise ValueError("bad policy")
+
+    monkeypatch.setattr(credit_lane, "load_policy", broken)
+    facts = credit_lane.routing_facts(
+        "codex", _codex(), model="gpt-5-codex", snapshot_metadata={"stale": False}, now=NOW
+    )
+    assert facts.credit["state"] == credit_lane.POLICY_ERROR
+    assert facts.capacity == credit_lane.CAPACITY_AVOID
+    assert facts.model_permission is False and facts.refusal_reason.startswith(credit_lane.REFUSAL_CODE)
+
+
+@pytest.mark.parametrize(
+    ("overrides", "stale"),
+    [
+        ({"freshness": "stale_last_good"}, False),
+        ({"age_s": 5000.0}, False),
+        ({"stale": True}, False),
+        ({"freshness": None, "codexbar": {**_codex()["codexbar"], "freshness": None}}, False),
+        ({}, True),
+    ],
+    ids=["probe-stale-label", "probe-over-age", "stale-flag", "freshness-missing", "snapshot-stale"],
+)
+def test_published_relief_rechecks_the_complete_record(overrides, stale):
+    """F6: a published credit_balance_present leaf cannot override contradictory probe evidence."""
+    record = _codex(**overrides)
+    receipt = credit_lane.published_credit_relief(
+        "codex", _published(), "gpt-6.1-sol", policy=POLICY, now=NOW, record=record, snapshot_stale=stale
+    )
+    assert receipt["state"] == credit_lane.CREDITS_UNVERIFIED
+    assert receipt["reason"].startswith("published credit relief not re-verified")
+    fresh = credit_lane.published_credit_relief(
+        "codex", _published(), "gpt-6.1-sol", policy=POLICY, now=NOW, record=_codex()
+    )
+    assert fresh["state"] == _PRESENT
+
+
+# Consumers whose decisions the owner makes. Each may call the owner, but must
+# not hold its own reader of the raw fields the owner interprets (#9740).
+_CONSUMER_MODULES = (
+    "scripts/fleet/capacity_pick.py",
+    "scripts/fleet/idle_settle.py",
+    "scripts/review/reviewer_scheduler.py",
+    "scripts/orchestration/curriculum_coordinator.py",
+)
+_OWNER_ONLY_FIELDS = frozenset(
+    {
+        "remaining_pct",
+        "weekly_remaining_pct",
+        "primary_remaining_pct",
+        "secondary_remaining_pct",
+        "headroom_pct",
+        "expected_pct",
+        "expectedUsedPercent",
+        "weekly_expected_pct",
+        "credit_fetched_at",
+        "age_s",
+        "quota_ok",
+    }
+)
+
+
+_OWNER_OUTPUTS = frozenset({"row", "entry", "evidence", "credit", "advice", "published", "facts_row"})
+
+
+@pytest.mark.parametrize("path", _CONSUMER_MODULES)
+def test_consumers_do_not_rederive_owner_decisions(path):
+    """Structural guard: no consumer reads the raw window, pace-alias, freshness-age or remaining
+    fields that ``credit_lane`` interprets, and none parses ``healthy`` or ``stale`` with a default."""
+    import ast
+
+    source = (Path(__file__).resolve().parents[1] / path).read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    reads: list[str] = []
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr == "get"
+            # Rows, receipts and evidence are the owner's own output, not raw lane records.
+            and not (isinstance(node.func.value, ast.Name) and node.func.value.id in _OWNER_OUTPUTS)
+            and node.args
+            and isinstance(node.args[0], ast.Constant)
+        ):
+            key = node.args[0].value
+            if key in _OWNER_ONLY_FIELDS and not (path.endswith("idle_settle.py") and key == "quota_ok"):
+                reads.append(f"{path}:{node.lineno}: .get({key!r})")
+            if key == "healthy" and len(node.args) > 1:
+                reads.append(f"{path}:{node.lineno}: .get('healthy', default)")
+    assert reads == [], "consumer re-derives an owner decision:\n" + "\n".join(reads)

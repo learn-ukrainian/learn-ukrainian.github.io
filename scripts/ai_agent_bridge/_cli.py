@@ -83,7 +83,7 @@ def _detect_caller_identity_from_env() -> str | None:
     handoff_agent = os.environ.get("SESSION_HANDOFF_AGENT")
     if handoff_agent:
         # Phantom `{provider}-{empty-slots-area}` handoff identities (minted by
-        # pre-#7597 launchers, e.g. grok-open-model-data) resolve to the
+        # pre-#7597 launchers, e.g. grok-monitor) resolve to the
         # provider so the explicit handoff marker still beats the GROK_AGENT /
         # CLAUDE_PROJECT_DIR heuristics below.
         resolved = resolve_invocation_attribution(env={"SESSION_HANDOFF_AGENT": handoff_agent})
@@ -518,7 +518,7 @@ def _build_parser() -> argparse.ArgumentParser:
         dest="for_llm",
         default=None,
         # type= runs before choices: an already-minted phantom
-        # `{provider}-{empty-slots-area}` (e.g. grok-open-model-data, #7597)
+        # `{provider}-{empty-slots-area}` (e.g. grok-monitor, #7597)
         # normalizes to its provider so live sessions can drain.
         type=_channels.resolve_recipient_alias,
         choices=recipient_choices,

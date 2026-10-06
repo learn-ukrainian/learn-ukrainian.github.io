@@ -1787,6 +1787,24 @@ def _expected_pct_from_reset(pace: dict[str, Any], *, now: datetime | None = Non
     return float(expected)
 
 
+PACE_EXPECTED_PCT_ALIASES: tuple[str, ...] = ("expected_pct", "expectedUsedPercent", "weekly_expected_pct")
+
+
+def pace_expected_pct(pace: dict[str, Any] | None, *, now: datetime | None = None) -> float | None:
+    """The one expected-percent reading of a pace record (#9740).
+
+    Aliases in :data:`PACE_EXPECTED_PCT_ALIASES` order, then the reset-derived
+    fallback of :func:`_expected_pct_from_reset`. Every pace consumer reads the
+    expected percent here so a record carrying conflicting aliases has one meaning.
+    """
+    if not isinstance(pace, dict):
+        return None
+    expected = _pace_number(pace, *PACE_EXPECTED_PCT_ALIASES)
+    if expected is None:
+        expected = _expected_pct_from_reset(pace, now=now)
+    return expected
+
+
 def pace_is_deficit(
     pace: dict[str, Any] | None,
     *,
@@ -1811,9 +1829,7 @@ def pace_is_deficit(
     """
     if not isinstance(pace, dict):
         return None
-    expected = _pace_number(pace, "expected_pct", "expectedUsedPercent", "weekly_expected_pct")
-    if expected is None:
-        expected = _expected_pct_from_reset(pace, now=now)
+    expected = pace_expected_pct(pace, now=now)
     delta = _pace_number(pace, "delta_pct", "weekly_pace_delta_pct", "deltaPercent")
     if "will_last_to_reset" in pace:
         will_last = pace.get("will_last_to_reset")
