@@ -198,7 +198,10 @@ def test_must_fail_source_roles(bundle, fixture, code):
             for c in bundle["candidates"]
         ]
     elif fixture in {"grade_zero", "private_textbook", "nonallowlisted_book"}:
-        role.update(role="textbook", grade="grade", allowlisted_files=["SYNTHETIC book"])
+        filename = "0-klas-SYNTHETIC" if fixture == "grade_zero" else "1-klas-SYNTHETIC"
+        role.update(role="textbook", sensitive="is_sensitive", source_values=[filename], allowlisted_files=[filename])
+        with sqlite3.connect(bundle["db"]) as writer:
+            writer.execute("UPDATE units SET source_file=?", (filename,))
         if fixture != "nonallowlisted_book":
             with sqlite3.connect(bundle["db"]) as writer:
                 writer.execute(
@@ -327,6 +330,7 @@ def test_unit_identity_spec_fails_closed(bundle, kind):
 def test_sensitive_roles_require_a_present_known_sensitivity(bundle, role_name, kind):
     role = bundle["config"]["compatibility"][0]
     role["role"] = role_name
+    role["sensitive"] = "is_sensitive"
     if kind == "missing":
         role["sensitive"] = "SYNTHETIC missing"
     else:

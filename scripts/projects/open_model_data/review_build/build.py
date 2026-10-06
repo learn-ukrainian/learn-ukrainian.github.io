@@ -10,7 +10,7 @@ import yaml
 from scripts.common.jsonl import jsonl_lines
 
 from .attribution import AttributionAdapter, Resolver, SyntheticAdapter
-from .bindings import select
+from .bindings import expand, select
 from .catalog import Catalog
 from .contract import Candidate, candidate_from_dict, canonical, digest, record_id, values
 from .errors import BuildError, require
@@ -173,26 +173,51 @@ def verify_mutations(
         ),
         "missing_unit": candidates[:i] + candidates[i + 1 :],
     }
-    # Swap the primary citation used for accounting with a distinct cited row.
-    ref = config["components"][candidate.component]["unit_id"]["primary"][0]["selector"]
-    primary_value = select(candidate, ref)
-    primary = primary_value.citations[0]
-    donors = [
-        c
-        for unit in candidates
-        for v in values(unit)
-        for c in v.citations
-        if (c.store, c.table, c.row_key) != (primary.store, primary.table, primary.row_key)
-    ]
-    # A singleton can still swap two distinct cited columns of its row.
-    if not donors:
-        donors = [c for v in values(candidate) for c in v.citations if c != primary]
-    require(bool(donors), "mutation_unavailable")
-    donor = sorted(donors, key=lambda c: canonical(asdict(c)))[0]
-    swapped = replace(primary_value, citations=(donor, *primary_value.citations[1:]))
-    parts = tuple(swapped if v == primary_value else v for v in getattr(candidate, ref["area"]))
-    fixtures["swapped_citation"] = list(candidates)
-    fixtures["swapped_citation"][i] = replace(candidate, **{ref["area"]: parts})
+    # Find an observable swap: a heading's span can quote the same prefix from
+    # two different fields, in which case that particular swap is no mutation.
+    gate = Gate(reader, catalog, resolver, config["components"], config["compatibility"], config.get("corpus"))
+    donors = sorted(
+        {c for unit in candidates for v in values(unit) for c in v.citations}, key=lambda c: canonical(asdict(c))
+    )
+    for index, unit in enumerate(candidates):
+        if unit.outcome != "accepted":
+            continue
+        ref = expand(unit, gate.spec(unit)["unit_id"]["primary"][0]["selector"])[0]
+        primary_value = select(unit, ref)
+        primary = primary_value.citations[0]
+        ordered = sorted(
+            donors,
+            key=lambda c: (
+                (c.store, c.table, c.row_key) == (primary.store, primary.table, primary.row_key),
+                canonical(asdict(c)),
+            ),
+        )
+        for donor in ordered:
+            if donor == primary:
+                continue
+            swapped = replace(primary_value, citations=(donor, *primary_value.citations[1:]))
+            parts = list(getattr(unit, ref["area"]))
+            positions = [j for j, value in enumerate(parts) if value.slot == ref["slot"]]
+            parts[positions[ref.get("index", 0)]] = swapped
+            mutated = replace(unit, **{ref["area"]: tuple(parts)})
+            try:
+                require(gate.unit_id(mutated) == unit.unit_id, "unit_id_mismatch")
+                gate.quote(mutated)
+            except BuildError as exc:
+                if exc.code not in {
+                    "unit_id_mismatch",
+                    "quote_mismatch",
+                    "quote_span",
+                    "field_digest",
+                    "source_compatibility",
+                }:
+                    continue
+                fixtures["swapped_citation"] = list(candidates)
+                fixtures["swapped_citation"][index] = mutated
+                break
+        if "swapped_citation" in fixtures:
+            break
+    require("swapped_citation" in fixtures, "mutation_unavailable")
     failures = {}
     for name, stream in sorted(fixtures.items()):
         gate = Gate(reader, catalog, resolver, config["components"], config["compatibility"], config.get("corpus"))
@@ -204,7 +229,13 @@ def verify_mutations(
                 "wrong_span": {"quote_span"},
                 "empty_locator": {"empty_locator"},
                 "missing_unit": {"missing_unit"},
-                "swapped_citation": {"unit_id_mismatch", "quote_mismatch", "field_digest", "source_compatibility"},
+                "swapped_citation": {
+                    "unit_id_mismatch",
+                    "quote_mismatch",
+                    "quote_span",
+                    "field_digest",
+                    "source_compatibility",
+                },
             }
             require(exc.code in expected[name], "mutation_wrong_failure")
             failures[name] = exc.code
@@ -222,6 +253,7 @@ def execute(
     verify: bool = False,
     adapters: dict[str, AttributionAdapter] | None = None,
     files: dict[str, FileStore] | None = None,
+    components: list[str] | None = None,
 ) -> dict:
     """Config is a host-local JSON descriptor, not executable component code.
 
@@ -247,6 +279,11 @@ def execute(
     candidates = [
         candidate_from_dict(json.loads(line)) for line in jsonl_lines(candidates_bytes.decode("utf-8")) if line.strip()
     ]
+    if components is not None:
+        selected = set(components)
+        require(bool(selected) and selected <= set(config["components"]), "component_selection")
+        config["components"] = {c: spec for c, spec in config["components"].items() if c in selected}
+        candidates = [candidate for candidate in candidates if candidate.component in selected]
     source_adapters = dict(adapters or {})
     for source in config.get("synthetic_sources", []):
         require(source.startswith("synthetic"), "synthetic_adapter_source")
@@ -257,11 +294,13 @@ def execute(
         "catalog": digest(catalog_bytes),
         "candidates": digest(candidates_bytes),
         "spec": digest(config_bytes),
+        "components": sorted(config["components"]),
         "code": code_pins(),
     }
     with SnapshotReader({store: input_path(path) for store, path in config["databases"].items()}, files) as reader:
         result = artifacts(config, candidates, reader, catalog, resolver, pins)
         if verify:
+            require(out.read("manifest.json") == result["manifest.json"], "artifact_mismatch")
             for name, content in sorted(result.items()):
                 require(out.read(name) == content, "artifact_mismatch")
             verify_mutations(

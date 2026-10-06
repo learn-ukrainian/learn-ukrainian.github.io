@@ -59,7 +59,6 @@ class Resolver:
                 bool(result.bibliography.strip()) and not re.search(r"<[^>]*>", result.bibliography),
                 "attribution_unresolved",
             )
-            require(not re.search(r"<[^>]*>", form), "attribution_unresolved")
             require(bool(citation.locator.strip()), "locator_unavailable")
             return (
                 f"permissions-register.yaml#{citation.source_id}; {licence}",

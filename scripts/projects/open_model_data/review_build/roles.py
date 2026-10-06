@@ -2,6 +2,7 @@
 
 import json
 import math
+import re
 import unicodedata
 from collections import defaultdict
 
@@ -30,6 +31,9 @@ class SourceRoles:
                 "role_spec",
             )
             self.compatibility[key] = entry
+            sensitive = entry.get("sensitive", "is_sensitive" if entry["role"] == "ua_gec" else None)
+            require(sensitive is None or (isinstance(sensitive, str) and bool(sensitive)), "role_spec")
+            require(entry["role"] != "ua_gec" or sensitive is not None, "role_spec")
         self.dev_authors: set[str] = set()
         self.dev_documents: set[str] = set()
         self.test_hashes: set[str] = set()
@@ -72,10 +76,10 @@ class SourceRoles:
             "forbidden_source",
         )
         require(spec["role"] != "forbidden", "forbidden_source")
-        sensitive = spec.get("sensitive", "is_sensitive")
-        if spec["role"] in {"ua_gec", "textbook"}:
+        sensitive = spec.get("sensitive", "is_sensitive" if spec["role"] == "ua_gec" else None)
+        if sensitive is not None:
             require(sensitive in row and row[sensitive] in {0, "0", 1, "1"}, "sensitivity_unavailable")
-        require(row.get(sensitive, 0) not in {1, "1"}, "sensitive_source")
+            require(row[sensitive] not in {1, "1"}, "sensitive_source")
         if spec["role"] == "sum11" or citation.source_id == "sum11":
             require(
                 spec["role"] == "sum11"
@@ -111,9 +115,8 @@ class SourceRoles:
                 )
         if spec["role"] == "textbook":
             require(source_file in spec["allowlisted_files"], "textbook_allowlist")
-            grade = row[spec["grade"]]
             require(
-                (type(grade) is int and 1 <= grade <= 11) or (grade == "university" and source_file.startswith("uni-")),
+                bool(re.fullmatch(r"(?:[1-9]|1[01])-klas-.+|uni-.+", source_file)),
                 "textbook_grade",
             )
         if "quarantine" in spec:

@@ -6,6 +6,23 @@ Call `execute(config_path, guarded_output, adapters=..., files=...)` from compon
 integration code, or use the module CLI for a JSON request. Adapters are passed as
 objects implementing the published protocols; request files cannot import code.
 
+The CLI defaults to the host-local `batch_state/review_build/request.json` in the
+shared repository, resolved through Git's common directory in a worktree.
+Component integration stages the reviewed request and candidates there. A
+component developer then uses that default without writing another config:
+
+```bash
+.venv/bin/python -m scripts.projects.open_model_data.review_build build --out "$TMPDIR/rb1-c9" --components C9
+.venv/bin/python -m scripts.projects.open_model_data.review_build verify --out "$TMPDIR/rb1-c9" --components C9
+```
+
+`--components C3 C4 --components C9` is repeatable; omission selects all components
+in the request. Unknown or unstaged components fail closed. `--config` overrides
+the default. Build and verify must use the same selection, pinned in the manifest.
+The default does not invent extractors or reviewed specs for unfinished packets.
+Real component callers pass their adapter objects to
+`execute(..., components=["C9"])`.
+
 ## Request and component specs
 
 `omd-review-request.v1` requires `candidates` (JSONL of the frozen `Candidate`
@@ -42,6 +59,30 @@ Every component spec requires:
   as missing coverage, never PASS.
 - `binding`: `binding-spec.v1` with a nonempty `rules` array (below).
 
+For operations with different unit domains, keep `operations` as the closed list
+and declare `operation_specs: {operation: {unit_query, frozen_count, unit_id,
+binding, ...}}`. Every listed operation requires all four declarations. Common
+reasons, transforms and serializers may stay on the component; operation keys
+override them. C3's ULIF sections and sense definitions can use different primary
+tables, counts, identity and binding rules. Accounting enforces each operation
+separately, then aggregates component totals. Reused ids across operations are
+allowed; duplicates within an operation fail. The manifest's
+`operation_accounting` records separate denominators. Flat specs retain their
+existing shared unit domain.
+
+Span/composite identity uses `unit_id: {format: citation.v1, primary:
+[{selector: ..., store: ..., table: ..., span: true}, ...]}`. The gate emits
+canonical compact JSON of ordered identities `[[store, table, row_key,
+[start,end]], ...]`; omit `span` for a row-only part. Every part selects a primary
+citation, with its actual store/table/key revalidated. A multi-selector can
+select an ordered composite of primary citations from several values/pages.
+The independent unit query must emit the same JSON (SQL `json_array` can produce
+it). Query ids must equal candidate ids, recomputed by the gate for all outcomes.
+Two headings on a page differ by span; multipage bodies can bind every page.
+`key` is disallowed for `citation.v1`, preserving the complete primary key.
+Legacy joined identity also supports `span: true`, appending canonical
+`[start,end]` with its declared separator.
+
 Optional keys: `slot_serializers` maps C2's `slot` to `{id:
 c2-header-cells.v2, section: [source slot names], row: source slot name or null,
 column: [source slot names]}`. It emits the catalog's positional three-element
@@ -73,6 +114,16 @@ field: optional_column}`. Index defaults to zero; `field` selects a source row
 column. Without `field`, index zero selects quoted value text; a supporting index
 selects that citation's independent source field. Unknown rules fail closed.
 
+Add `match: all, min: N` to select every value with that slot in contract order
+(N defaults to 1 and must be at least 1). `index: I` selects one occurrence of a
+repeated slot; scalar selectors still require exactly one value. Add
+`citation: all, citation_min: N` to quantify over every citation of each selected
+value. Expanded refs keep both indices: evidence for one repeated slot cannot
+authenticate another. `equal`, `literal`, `same_row`, `one_group` and
+`contiguous_pages` quantify over expanded selectors. Scalar-only operations
+refuse inappropriate cardinality. Sense/article `one_group` rules with
+`citation: all` check every witness; quotation agreement is still required.
+
 - `equal`: `values` selectors must have equal source operands.
 - `literal`: one `values` selector must equal `expected` control metadata.
 - `same_row`: `values` citations share store, table and the real primary key.
@@ -91,6 +142,15 @@ selects that citation's independent source field. Unknown rules fail closed.
 - `form_agreement`: two `values` selectors match after NFC and removal of the
   combining acute accent; `left_tags` and `right_tags` from the respective cited
   rows agree. Stored/model-visible bytes remain unchanged.
+- `set_query_equal`: `values` selects the record's variants (use `match: all`);
+  `normalizer` is `identity` or `unstress_nfc`. `queries` is a nonempty list of
+  `{query: {kind: sql, store: ..., sql: SELECT ...}, parameters: [selectors...]}`.
+  The gate derives scalar parameters from cited operands, runs each one-column
+  query in the pinned read transaction, normalizes for comparison only, and
+  requires **each** result set to equal the record value set. Repeated source
+  rows collapse as sets; missing, extra or divergent variants fail. This checks
+  complete variant agreement independently of extraction, without replacing
+  quotation or supporting-citation authentication.
 - `contrast_pair`: selectors `rejected`, `recommended`, `response` establish the
   visible direction. `book_rejected`/`book_recommended` cite one `book_source`
   row that contains both members as whole Unicode tokens (including apostrophes
@@ -113,14 +173,18 @@ Each compatibility row requires `store`, `table`, `source_id`, `role` (one of
 match this reviewed table. Each entry also requires `source_column` and nonempty
 `source_values`: the cited row must have that column and one of its expected
 values. Missing columns and unexpected values fail `source_compatibility`.
-Source roles, sensitivity, split and grade are read from the cited row, never
+Source roles, sensitivity, split and file names are read from the cited row, never
 candidate metadata. Optional field mappings:
-`source_file` (default `source_file`), `sensitive` (default `is_sensitive`),
+`source_file` (default `source_file`), `sensitive` (required column name or null
+for sources with no sensitivity concept),
 `quarantine`. UA-GEC mappings require `split`, `document`, `text`, `layer`, `edits`.
-UA-GEC and textbook roles require a present, non-null sensitivity column with a
-known 0/1 value; a missing/unknown value fails `sensitivity_unavailable`.
-Textbooks require `grade` and exact `allowlisted_files`; school grades are 1–11,
-university rows use `university` and an allowlisted `uni-*` file. СУМ-11 requires
+UA-GEC always requires sensitivity (default column `is_sensitive`); null cannot
+disable it. Other sources default to none. Any declared sensitivity column must
+be present with a known 0/1 value: unknown fails `sensitivity_unavailable`, and
+1 fails `sensitive_source`. Textbooks require exact `allowlisted_files`, and the
+cited `source_file` must match `N-klas-*` for N=1–11 or `uni-*`. Grade metadata
+does not control admission; university grade-0 rows are admitted by allowlisted
+filenames. СУМ-11 requires
 `risk` and `keywords` (defaults `sovietization_risk`, `sovietization_keywords`),
 an admitted C7 contrast, opt-in/context flags, and use only in the rejected
 model-visible member. Risk and keywords are copied from the source to provenance.
@@ -139,6 +203,17 @@ and its metadata/annotation-unit bindings; no DB or corpus text is embedded here
 ..., field: ...}` and joins only a positively attested combined form whose
 hyphenated form is unattested, recording original offsets and each join. HTML
 text nodes retain document order; whitespace collapses without added words.
+
+## Attribution and repository configuration
+
+An adapter must keep `mapped_form == form`; the register form may contain
+placeholders once the adapter resolves them. The resulting bibliography must
+have no placeholders or instruction text (`instruction_form` must be false).
+Adapters can call `reader.read_repository_config("scripts/config/vesum_source.lock.json")`
+for raw pinned bytes. Names must be repository-relative and cannot escape through
+traversal or symlinks. Each file is read once per reader; the manifest's
+`repository_configs` records its SHA-256. A new verify run re-reads it and refuses
+drift, including changes to configuration bytes that leave rendering unchanged.
 
 ## Output and proof boundary
 

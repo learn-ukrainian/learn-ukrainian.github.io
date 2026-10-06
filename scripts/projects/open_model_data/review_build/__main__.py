@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .build import execute
 from .errors import BuildError
+from .gate import COMPONENTS
 from .output import OutputGuard
 
 
@@ -17,6 +18,7 @@ class Parser(argparse.ArgumentParser):
 
 
 EPILOG = """Examples:
+  .venv/bin/python -m scripts.projects.open_model_data.review_build build --out "$TMPDIR/rb1" --components C9
   .venv/bin/python -m scripts.projects.open_model_data.review_build build --config "$TMPDIR/request.json" --out "$TMPDIR/rb1"
   .venv/bin/python -m scripts.projects.open_model_data.review_build verify --config "$TMPDIR/request.json" --out "$TMPDIR/rb1"
 Outputs: build writes private JSONL records, candidates, attribution notices, accounting,
@@ -26,6 +28,22 @@ Outputs: build writes private JSONL records, candidates, attribution notices, ac
 Exit codes: 0 = build/verification succeeded; 1 = a gate or input failed; 2 = CLI usage refused.
 Related: docs/projects/open-model-data/REVIEW_BUILD.md; issue #9817, epic #6321.
 """
+
+
+def default_config() -> Path:
+    """The shared staged request is available from every linked worktree."""
+    root = Path(__file__).resolve().parents[4]
+    git = root / ".git"
+    if git.is_file():
+        text = git.read_text().strip()
+        if not text.startswith("gitdir: "):
+            raise BuildError("code_identity")
+        git = (root / text[8:]).resolve()
+        common = git / "commondir"
+        if common.exists():
+            git = (git / common.read_text().strip()).resolve()
+        root = git.parent
+    return root / "batch_state/review_build/request.json"
 
 
 def parser() -> Parser:
@@ -49,9 +67,16 @@ def parser() -> Parser:
         )
         command.add_argument(
             "--config",
-            required=True,
             type=Path,
-            help="Required host-local omd-review-request.v1 JSON descriptor, e.g. $TMPDIR/request.json",
+            default=default_config(),
+            help="Host-local omd-review-request.v1 JSON descriptor (default: shared batch_state/review_build/request.json staged by component integration); e.g. $TMPDIR/request.json",
+        )
+        command.add_argument(
+            "--components",
+            nargs="+",
+            action="extend",
+            choices=sorted(COMPONENTS),
+            help="Component ids to build/verify, e.g. C3 C4; repeatable (default: all in config). Use the same selection for verify.",
         )
         command.add_argument(
             "--out",
@@ -67,7 +92,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         args = parser().parse_args(argv)
         output = OutputGuard(args.out, (Path(__file__).resolve().parents[4],))
-        result = execute(args.config, output, verify=args.command == "verify")
+        result = execute(args.config, output, verify=args.command == "verify", components=args.components)
         print(json.dumps(result, sort_keys=True))
         return 0
     except Exception as exc:

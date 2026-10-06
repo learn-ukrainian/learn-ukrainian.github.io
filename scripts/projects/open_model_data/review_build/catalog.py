@@ -13,7 +13,7 @@ PLACEHOLDER = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*)\}")
 class Catalog:
     def __init__(self, data: dict):
         require(data.get("schema_version") == "instruction-catalog.v1", "catalog_schema")
-        require(data.get("status") in {"reviewed", "reviewed_rb1", "approved"}, "catalog_unreviewed")
+        require(data.get("status") in {"reviewed", "reviewed_rb1", "approved", "rb1_approved"}, "catalog_unreviewed")
         self.data = data
         self.version = data["version"]
         self.lines = {}

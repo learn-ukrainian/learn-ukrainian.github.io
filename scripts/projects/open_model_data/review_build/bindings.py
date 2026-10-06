@@ -3,7 +3,7 @@
 Selectors: {area: slots|context|response, slot: name, citation: 0,
             field: optional DB column}; absent field selects exact value text.
 Rules: equal, same_row, one_group, example_list, contiguous_pages, contrast_pair,
-       form_agreement, literal. Unknown rules fail closed. A component owns the
+       form_agreement, literal, set_query_equal. Unknown rules fail closed. A component owns the
 reviewed spec, not a callable validation hook.
 """
 
@@ -19,14 +19,46 @@ from .transforms import transform
 def select(candidate: Candidate, selector: dict) -> Value:
     require(selector.get("area") in {"slots", "context", "response"}, "binding_selector")
     matches = [v for v in getattr(candidate, selector["area"]) if v.slot == selector["slot"]]
+    if "index" in selector:
+        index = selector["index"]
+        require(type(index) is int and 0 <= index < len(matches), "binding_selector")
+        return matches[index]
     require(len(matches) == 1, "binding_selector")
     return matches[0]
+
+
+def expand(candidate: Candidate, selector: dict) -> list[dict]:
+    """Expand declared multi-values/citations to concrete, identity-bearing refs."""
+    require(selector.get("area") in {"slots", "context", "response"}, "binding_selector")
+    require(selector.get("match", "one") in {"one", "all"}, "binding_selector")
+    if selector.get("match") == "all":
+        require("index" not in selector, "binding_selector")
+        minimum = selector.get("min", 1)
+        require(type(minimum) is int and minimum >= 1, "binding_selector")
+        matches = [v for v in getattr(candidate, selector["area"]) if v.slot == selector["slot"]]
+        require(len(matches) >= minimum, "binding_selector")
+        refs = [{**selector, "index": i} for i in range(len(matches))]
+    else:
+        select(candidate, selector)
+        refs = [dict(selector)]
+    result = []
+    for ref in refs:
+        ref.pop("match", None)
+        ref.pop("min", None)
+        if ref.get("citation") == "all":
+            minimum = ref.pop("citation_min", 1)
+            citations = select(candidate, ref).citations
+            require(type(minimum) is int and minimum >= 1 and len(citations) >= minimum, "binding_selector")
+            result.extend({**ref, "citation": i} for i in range(len(citations)))
+        else:
+            result.append(ref)
+    return result
 
 
 def citation_for(candidate: Candidate, selector: dict):
     value = select(candidate, selector)
     index = selector.get("citation", 0)
-    require(isinstance(index, int) and 0 <= index < len(value.citations), "binding_selector")
+    require(type(index) is int and 0 <= index < len(value.citations), "binding_selector")
     return value.citations[index]
 
 
@@ -106,7 +138,21 @@ def whole_token(form: str, witness: str) -> bool:
 
 
 def _unstress(text: str) -> str:
-    return unicodedata.normalize("NFC", text.replace("\u0301", ""))
+    return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).replace("\u0301", ""))
+
+
+def normalize(text: str, name: str) -> str:
+    require(name in {"identity", "unstress_nfc"}, "binding_normalizer")
+    require(isinstance(text, str), "binding_set")
+    return _unstress(text) if name == "unstress_nfc" else text
+
+
+def node_for(candidate: Candidate, ref: dict) -> tuple:
+    # Repeated slots must not alias each other's supporting-citation evidence.
+    matches = [v for v in getattr(candidate, ref["area"]) if v.slot == ref["slot"]]
+    index = ref.get("index", 0)
+    require(index < len(matches), "binding_selector")
+    return ref["area"], ref["slot"], index, ref.get("citation", 0)
 
 
 def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: dict) -> set[str]:
@@ -115,15 +161,25 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
     agreements: list[list[dict]] = []
     for rule in spec["rules"]:
         op = rule["op"]
-        selectors = rule.get("values", [])
+        selectors = [ref for s in rule.get("values", []) for ref in expand(candidate, s)]
         if op == "equal":
             operands = [operand(candidate, s, reader) for s in selectors]
             require(len(operands) >= 2 and all(o == operands[0] for o in operands), "binding_equal")
             agreements.append(selectors)
         elif op == "literal":
             require(
-                len(selectors) == 1 and operand(candidate, selectors[0], reader) == rule["expected"], "binding_literal"
+                bool(selectors) and all(operand(candidate, ref, reader) == rule["expected"] for ref in selectors),
+                "binding_literal",
             )
+        elif op == "set_query_equal":
+            require(bool(selectors) and bool(rule.get("queries")), "binding_set")
+            normalizer = rule["normalizer"]
+            expected = {normalize(operand(candidate, ref, reader), normalizer) for ref in selectors}
+            for definition in rule["queries"]:
+                query = dict(definition["query"])
+                query["parameters"] = [operand(candidate, ref, reader) for ref in definition.get("parameters", [])]
+                actual = {normalize(value, normalizer) for value in reader.query_values(query)}
+                require(actual == expected, "binding_set")
         elif op == "same_row":
             citations = [citation_for(candidate, s) for s in selectors]
             require(len(citations) >= 2 and len({(c.store, c.table, c.row_key) for c in citations}) == 1, "binding_row")
@@ -131,6 +187,7 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
             operands = [operand(candidate, s, reader) for s in selectors]
             require(bool(operands) and all(o is not None and o == operands[0] for o in operands), "binding_group")
         elif op == "example_list":
+            require(len(selectors) == 1, "binding_example")
             value = select(candidate, selectors[0])
             citation = value.citations[0]
             _, field = reader.field(citation)
@@ -238,18 +295,21 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
         for ref in refs:
             citation = citation_for(candidate, ref)
             if "field" not in ref or ref["field"] == citation.field:
-                nodes.append((ref["area"], ref["slot"], ref.get("citation", 0)))
+                nodes.append(node_for(candidate, ref))
         for node in nodes:
             graph.setdefault(node, set()).update(nodes)
     for area in ("slots", "context", "response"):
+        occurrences = {}
         for value in getattr(candidate, area):
-            reached = {(area, value.slot, 0)}
+            index = occurrences.get(value.slot, 0)
+            occurrences[value.slot] = index + 1
+            reached = {(area, value.slot, index, 0)}
             pending = list(reached)
             while pending:
                 node = pending.pop()
                 for neighbor in graph.get(node, set()) - reached:
                     reached.add(neighbor)
                     pending.append(neighbor)
-            for index in range(1, len(value.citations)):
-                require((area, value.slot, index) in reached, "supporting_unbound")
+            for citation_index in range(1, len(value.citations)):
+                require((area, value.slot, index, citation_index) in reached, "supporting_unbound")
     return passed

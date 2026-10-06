@@ -55,10 +55,18 @@ class FileStore(Protocol):
 
 
 class SnapshotReader:
-    def __init__(self, databases: Mapping[str, Path], files: Mapping[str, FileStore] | None = None):
+    def __init__(
+        self,
+        databases: Mapping[str, Path],
+        files: Mapping[str, FileStore] | None = None,
+        *,
+        repository_root: Path | None = None,
+    ):
         self.connections: dict[str, sqlite3.Connection] = {}
         self.files = dict(files or {})
         self.reads: dict[tuple[str, str], set[tuple[str, str]]] = {}
+        self.repository_root = (repository_root or Path(__file__).resolve().parents[4]).resolve()
+        self.repository_configs: dict[str, bytes] = {}
         try:
             require(len({p.resolve() for p in databases.values()}) == len(databases), "duplicate_database")
             for store, path in sorted(databases.items()):
@@ -77,6 +85,20 @@ class SnapshotReader:
     def close(self) -> None:
         for connection in self.connections.values():
             connection.close()
+
+    def read_repository_config(self, name: str) -> bytes:
+        """Adapters read each repository config once; the manifest pins its bytes."""
+        path = Path(name)
+        require(not path.is_absolute() and bool(path.parts) and ".." not in path.parts, "repository_config")
+        target = (self.repository_root / path).resolve()
+        require(target.is_relative_to(self.repository_root), "repository_config")
+        key = path.as_posix()
+        if key not in self.repository_configs:
+            self.repository_configs[key] = target.read_bytes()
+        return self.repository_configs[key]
+
+    def repository_config_hashes(self) -> dict[str, str]:
+        return {name: digest(content) for name, content in sorted(self.repository_configs.items())}
 
     def row(self, citation: Citation) -> dict:
         if citation.store in self.files:
@@ -123,6 +145,12 @@ class SnapshotReader:
         return raw, selected
 
     def units(self, query: dict) -> list[str]:
+        units = [str(value) for value in self.query_values(query)]
+        require(len(units) == len(set(units)), "duplicate_unit_query")
+        return sorted(units)
+
+    def query_values(self, query: dict) -> list:
+        """One-column read results; set rules permit repeated source variants."""
         store = query["store"]
         if store in self.files:
             units = self.files[store].units(query)
@@ -135,9 +163,8 @@ class SnapshotReader:
             # by scanning unrelated columns/rows after the query.
             rows = connection.execute(query["sql"], query.get("parameters", [])).fetchall()
             require(all(len(r) == 1 for r in rows), "unit_query")
-            units = [str(r[0]) for r in rows]
-        require(len(units) == len(set(units)), "duplicate_unit_query")
-        return sorted(units)
+            units = [r[0] for r in rows]
+        return units
 
     def all_rows(self, store: str, table: str) -> list[dict]:
         return list(self.iter_rows(store, table))

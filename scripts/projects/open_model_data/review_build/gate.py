@@ -44,11 +44,25 @@ class Gate:
         require(bool(components) and set(components) <= COMPONENTS, "component_spec")
         self.reader, self.catalog, self.resolver = reader, catalog, resolver
         self.components = components
+        for spec in components.values():
+            if "operation_specs" in spec:
+                require(set(spec["operation_specs"]) == set(spec["operations"]), "operation_spec")
+                for operation in spec["operation_specs"].values():
+                    require({"binding", "unit_query", "frozen_count", "unit_id"} <= set(operation), "operation_spec")
         self.roles = SourceRoles(reader, compatibility, corpus)
         self.attributions: dict = {}
 
+    def spec(self, candidate: Candidate) -> dict:
+        """Operation declarations override the component's common policies."""
+        require(candidate.component in self.components, "unknown_component")
+        base = self.components[candidate.component]
+        if "operation_specs" in base:
+            require(candidate.operation in base["operation_specs"], "operation")
+            return {**base, **base["operation_specs"][candidate.operation]}
+        return base
+
     def quote(self, candidate: Candidate) -> None:
-        spec = self.components[candidate.component]
+        spec = self.spec(candidate)
         for value in values(candidate):
             require(isinstance(value.text, str) and isinstance(value.slot, str) and bool(value.slot), "invalid_value")
             require(bool(value.citations), "uncited_value")
@@ -73,7 +87,7 @@ class Gate:
                 self.attributions[citation] = self.resolver.resolve(citation, self.reader)
 
     def applicable(self, candidate: Candidate) -> tuple[str, ...]:
-        spec = self.components[candidate.component]
+        spec = self.spec(candidate)
         # Applicability assertions are themselves selectors into source rows.
         applicability_spec = spec.get("applicability", {})
         discriminating = empty_safe = False
@@ -93,23 +107,49 @@ class Gate:
         return self.catalog.applicable(candidate, discriminating, empty_safe, spec.get("slot_serializers"))
 
     def unit_id(self, candidate: Candidate) -> str:
-        spec = self.components[candidate.component].get("unit_id", {})
-        require(bool(spec.get("primary")) and isinstance(spec.get("separator"), str), "unit_id_spec")
+        spec = self.spec(candidate).get("unit_id", {})
+        encoding = spec.get("format", "joined")
+        require(encoding in {"joined", "citation.v1"} and bool(spec.get("primary")), "unit_id_spec")
+        require(encoding != "joined" or isinstance(spec.get("separator"), str), "unit_id_spec")
         parts = []
         for part in spec["primary"]:
-            ref = part["selector"]
-            require(ref.get("citation", 0) == 0 and "field" not in ref, "unit_id_spec")
-            require(bool(bindings.select(candidate, ref).citations), "uncited_value")
-            citation = bindings.citation_for(candidate, ref)
-            require((citation.store, citation.table) == (part["store"], part["table"]), "unit_id_mismatch")
-            self.reader.row(citation)  # Validate the actual primary key and pin its cited column.
-            if "key" in part:
-                keys = dict(pair.split("=", 1) for pair in citation.row_key.split(";"))
-                require(part["key"] in keys, "unit_id_spec")
-                parts.append(keys[part["key"]])
-            else:
-                parts.append(citation.row_key)
-        return spec["separator"].join(parts)
+            for ref in bindings.expand(candidate, part["selector"]):
+                require(ref.get("citation", 0) == 0 and "field" not in ref, "unit_id_spec")
+                value = bindings.select(candidate, ref)
+                require(bool(value.citations), "uncited_value")
+                citation = bindings.citation_for(candidate, ref)
+                require((citation.store, citation.table) == (part["store"], part["table"]), "unit_id_mismatch")
+                self.reader.row(citation)
+                require(type(part.get("span", False)) is bool, "unit_id_spec")
+                if encoding == "citation.v1":
+                    require("key" not in part, "unit_id_spec")
+                    identity = [citation.store, citation.table, citation.row_key]
+                else:
+                    keys = dict(pair.split("=", 1) for pair in citation.row_key.split(";"))
+                    require("key" not in part or part["key"] in keys, "unit_id_spec")
+                    identity = [keys[part["key"]] if "key" in part else citation.row_key]
+                if part.get("span"):
+                    _, field = self.reader.field(citation)
+                    source = transform(
+                        value.transform,
+                        field,
+                        self.spec(candidate).get("transforms", {}).get(value.transform),
+                        self.reader,
+                    ).text
+                    require(
+                        value.span is not None
+                        and len(value.span) == 2
+                        and all(type(n) is int for n in value.span)
+                        and 0 <= value.span[0] < value.span[1] <= len(source),
+                        "quote_span",
+                    )
+                    identity.append(list(value.span))
+                parts.append(
+                    identity
+                    if encoding == "citation.v1"
+                    else spec["separator"].join(canonical(p).decode() if isinstance(p, list) else p for p in identity)
+                )
+        return canonical(parts).decode() if encoding == "citation.v1" else spec["separator"].join(parts)
 
     def run(self, candidates: list[Candidate]) -> tuple[list[dict], dict]:
         try:
@@ -120,23 +160,37 @@ class Gate:
             raise BuildError("gate_input_invalid") from None
 
     def _run(self, candidates: list[Candidate]) -> tuple[list[dict], dict]:
-        accounting, seen = {}, set()
+        accounting, operation_accounting, seen = {}, {}, set()
         for component, spec in sorted(self.components.items()):
-            independent = self.reader.units(spec["unit_query"])
-            require(len(independent) == spec["frozen_count"], "frozen_count")
+            domains = spec.get("operation_specs", {None: spec})
+            total, counts, reasons = 0, Counter(), Counter()
             stream = [c for c in candidates if c.component == component]
-            units = [c.unit_id for c in stream]
-            require(len(units) == len(set(units)), "duplicate_unit")
-            require(set(units) == set(independent), "missing_unit")
-            counts = Counter(c.outcome for c in stream)
-            require(set(counts) <= {"accepted", "rejected", "withheld", "excluded"}, "outcome")
-            require(sum(counts.values()) == len(independent), "accounting")
-            require(all(c.reason in spec["reasons"][c.outcome] for c in stream), "reason_code")
             require(all(c.operation in spec["operations"] for c in stream), "operation")
+            for operation, overrides in domains.items():
+                domain = {**spec, **overrides}
+                independent = self.reader.units(domain["unit_query"])
+                require(len(independent) == domain["frozen_count"], "frozen_count")
+                subset = [c for c in stream if operation is None or c.operation == operation]
+                units = [c.unit_id for c in subset]
+                require(len(units) == len(set(units)), "duplicate_unit")
+                require(set(units) == set(independent), "missing_unit")
+                outcomes = Counter(c.outcome for c in subset)
+                require(set(outcomes) <= {"accepted", "rejected", "withheld", "excluded"}, "outcome")
+                require(sum(outcomes.values()) == len(independent), "accounting")
+                require(all(c.reason in domain["reasons"][c.outcome] for c in subset), "reason_code")
+                total += len(independent)
+                counts.update(outcomes)
+                reasons.update(c.reason for c in subset)
+                if operation is not None:
+                    operation_accounting[f"{component}.{operation}"] = {
+                        "counted": len(independent),
+                        **{o: outcomes[o] for o in ("accepted", "rejected", "withheld", "excluded")},
+                        "reasons": dict(sorted(Counter(c.reason for c in subset).items())),
+                    }
             accounting[component] = {
-                "counted": len(independent),
+                "counted": total,
                 **{o: counts[o] for o in ("accepted", "rejected", "withheld", "excluded")},
-                "reasons": dict(sorted(Counter(c.reason for c in stream).items())),
+                "reasons": dict(sorted(reasons.items())),
             }
         require(all(c.component in self.components for c in candidates), "unknown_component")
         accepted = []
@@ -162,7 +216,7 @@ class Gate:
                     require(bool(candidate.evidence) and set(candidate.evidence) <= cited, "rejection_evidence")
                     continue
                 require(bool(candidate.response) and any(v.text.strip() for v in candidate.response), "empty_response")
-                spec = self.components[candidate.component]
+                spec = self.spec(candidate)
                 passed = bindings.check(candidate, spec["binding"], self.reader, spec.get("transforms", {}))
                 contrast = [rule for rule in spec["binding"]["rules"] if rule["op"] == "contrast_pair"]
                 require(candidate.component != "C7" or len(contrast) == 1, "binding_contrast")
@@ -188,7 +242,7 @@ class Gate:
         for candidate in sorted(accepted, key=record_id):
             rid = record_id(candidate)
             line_id = assigned[rid]
-            spec = self.components[candidate.component]
+            spec = self.spec(candidate)
             instruction = self.catalog.render(candidate, line_id, spec.get("slot_serializers"))
             context = serialize(candidate.context, spec.get("context_serializer", "text"))
             response = serialize(candidate.response, spec.get("response_serializer", "text"))
@@ -249,10 +303,12 @@ class Gate:
         duplicates = [sorted(ids) for ids in duplicate_pairs.values() if len(ids) > 1]
         return records, {
             "accounting": accounting,
+            "operation_accounting": operation_accounting,
             "metrics": metrics,
             "duplicate_groups": sorted(duplicates),
             "snapshots": self.reader.snapshots(),
             "ua_gec_files": self.reader.file_hashes(),
+            "repository_configs": self.reader.repository_config_hashes(),
             "split_counts": {
                 "dev_documents": len(self.roles.dev_documents),
                 "test_hashes": len(self.roles.test_hashes),
