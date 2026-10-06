@@ -164,13 +164,50 @@ def excluded_surfaces() -> tuple[Surface, ...]:
     return tuple(surfaces)
 
 
-def denominator_text(*, rows: list[tuple[str, int, int, int, str]]) -> str:
-    """Human-readable pair counts and excluded surfaces for the test output."""
+@dataclass(frozen=True)
+class CoverageRow:
+    """One entry's honest interception coverage. ``zero-start`` is not a pass."""
+
+    entry: str
+    inputs: int
+    completed: int
+    attempted_starts: int
+    violations: int
+    reached: tuple[str, ...]
+    unreached: tuple[str, ...]
+    status: str
+    note: str = ""
+
+
+# The healer's child is a separate program. Its git reads and config writes are not executed.
+WITHHELD_DESCENDANT = "heal-core-bare.py -> scripts/audit/check_core_bare.py"
+
+
+def denominator_text(*, rows: list[CoverageRow]) -> str:
+    """Human-readable pair counts, template coverage, and excluded surfaces."""
     lines = ["hook runtime denominator"]
-    lines.append(f"{'entry':<64} {'inputs':>7} {'done':>7} {'violations':>11}  status")
-    for entry, inputs, done, violations, status in rows:
-        name = entry.rsplit("/", 1)[-1]
-        lines.append(f"{name:<64} {inputs:7d} {done:7d} {violations:11d}  {status}")
+    header = (
+        f"{'entry':<40} {'inputs':>7} {'done':>7} {'starts':>7} "
+        f"{'violations':>11}  status"
+    )
+    lines.append(header)
+    for row in rows:
+        name = row.entry.rsplit("/", 1)[-1]
+        lines.append(
+            f"{name:<40} {row.inputs:7d} {row.completed:7d} {row.attempted_starts:7d} "
+            f"{row.violations:11d}  {row.status}"
+        )
+        reached = ", ".join(row.reached) if row.reached else "(none)"
+        unreached = ", ".join(row.unreached) if row.unreached else "(none)"
+        lines.append(f"  reached: {reached}")
+        lines.append(f"  unreached: {unreached}")
+        if row.note:
+            lines.append(f"  note: {row.note}")
+    zero = [row.entry.rsplit("/", 1)[-1] for row in rows if row.status == "zero-start"]
+    lines.append(
+        "zero-start entries (not interception coverage): " + (", ".join(zero) if zero else "(none)")
+    )
+    lines.append(f"withheld descendant: {WITHHELD_DESCENDANT}")
     lines.append("excluded surfaces:")
     for surface in excluded_surfaces():
         shown = surface.path if len(surface.path) < 160 else surface.path[:157] + "..."

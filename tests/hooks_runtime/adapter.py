@@ -69,7 +69,9 @@ def _load_events(path: Path) -> tuple[ObservedStart, ...]:
         if not line.strip():
             continue
         item = json.loads(line)
-        explicit = item.get("dangerous") if item.get("explicit") else None
+        if item.get("event") in {"os.putenv", "os.unsetenv"}:
+            continue
+        names = item.get("env_injection")
         events.append(
             ObservedStart(
                 event=item["event"],
@@ -78,8 +80,11 @@ def _load_events(path: Path) -> tuple[ObservedStart, ...]:
                 pair_index=int(item["pair_index"]),
                 executable=str(item.get("executable") or ""),
                 argv=tuple(item.get("argv") or ()),
-                explicit_env=dict(explicit) if explicit is not None else None,
-                inherited_dangerous=dict(item.get("inherited_dangerous") or {}),
+                explicit_env=None,
+                inherited_dangerous={},
+                shell_mediated=str(item.get("shell_mediated") or ""),
+                env_injection=tuple(names) if isinstance(names, list) else None,
+                explicit=bool(item.get("explicit")),
             )
         )
     return tuple(events)

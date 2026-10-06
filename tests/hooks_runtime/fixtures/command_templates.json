@@ -2,6 +2,7 @@
   "role": "runtime argv validators, not exemptions",
   "templates": [
     {
+      "id": "git-rev-parse-git-common-dir",
       "program": "git",
       "argv": ["rev-parse", "--git-common-dir"],
       "serves": [
@@ -13,6 +14,7 @@
       ]
     },
     {
+      "id": "git-rev-parse-git-dir",
       "program": "git",
       "argv": ["rev-parse", "--git-dir"],
       "serves": [
@@ -24,6 +26,7 @@
       ]
     },
     {
+      "id": "git-rev-parse-common-dir-absolute",
       "program": "git",
       "argv": ["rev-parse", "--path-format=absolute", "--git-common-dir"],
       "serves": [
@@ -35,6 +38,7 @@
       ]
     },
     {
+      "id": "git-rev-parse-toplevel-absolute",
       "program": "git",
       "argv": ["rev-parse", "--path-format=absolute", "--show-toplevel"],
       "serves": [
@@ -46,6 +50,7 @@
       ]
     },
     {
+      "id": "git-symbolic-ref-head",
       "program": "git",
       "argv": ["symbolic-ref", "--quiet", "--short", "HEAD"],
       "serves": [
@@ -57,19 +62,28 @@
       ]
     },
     {
+      "id": "gh-api-branch-protection",
       "program": "gh",
-      "argv": ["api", null],
+      "argv": ["api", {"type": "api-endpoint"}],
       "serves": [
         {
           "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
           "line": 858,
           "text": "\"gh\", \"api\""
         }
-      ]
+      ],
+      "note": "The only accepted gh api path is repos/<owner>/<repo>/branches/<branch>/protection. user, --paginate, pull merge, and any other endpoint are rejected."
     },
     {
+      "id": "gh-pr-checks",
       "program": "gh",
-      "argv": ["pr", "checks", null, "--json", "name,bucket,state"],
+      "argv": [
+        "pr",
+        "checks",
+        {"type": "pr-selector"},
+        "--json",
+        {"type": "json-fields", "fields": ["name", "bucket", "state"]}
+      ],
       "serves": [
         {
           "file": "agents_extensions/shared/hooks/guard-admin-merge.py",
@@ -84,6 +98,7 @@
       ]
     },
     {
+      "id": "gh-pr-view",
       "program": "gh",
       "argv": [
         "pr",
@@ -110,6 +125,7 @@
       "note": "gh pr view selector: PR number, git branch name, or https://github.com/<owner>/<repo>/pull/<n>. The parser also forwards the prose ellipsis ... from a backtick example; that one literal is not option-shaped."
     },
     {
+      "id": "gh-pr-view-repo",
       "program": "gh",
       "argv": [
         "pr",
@@ -137,6 +153,7 @@
       ]
     },
     {
+      "id": "gh-pr-checks-repo",
       "program": "gh",
       "argv": [
         "pr",
@@ -161,6 +178,7 @@
       ]
     },
     {
+      "id": "git-c-rev-parse-common-dir",
       "program": "git",
       "argv": [
         "-C",
@@ -187,6 +205,77 @@
         }
       ],
       "note": "The -C operand is an absolute path and never option-shaped. Production also passes not-yet-created absolute paths; an existing non-directory is rejected. Only these rev-parse flags are accepted."
+    },
+    {
+      "id": "gh-pr-view-rollup",
+      "program": "gh",
+      "argv": ["pr", "view", {"type": "pr-selector"}, "--json", "statusCheckRollup"],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
+          "line": 796,
+          "text": "statusCheckRollup"
+        }
+      ],
+      "note": "Fallback after gh pr checks rejects --json. The selector is the same closed pr-selector as gh pr view."
+    },
+    {
+      "id": "gh-pr-view-repo-rollup",
+      "program": "gh",
+      "argv": [
+        "pr",
+        "view",
+        {"type": "pr-selector"},
+        "--repo",
+        {"type": "owner-repo"},
+        "--json",
+        "statusCheckRollup"
+      ],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
+          "line": 796,
+          "text": "statusCheckRollup"
+        },
+        {
+          "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
+          "line": 705,
+          "text": "[\"--repo\", repo]"
+        }
+      ]
+    },
+    {
+      "id": "git-c-rev-parse-toplevel",
+      "program": "git",
+      "argv": ["-C", {"type": "absolute-path"}, "rev-parse", "--show-toplevel"],
+      "serves": [
+        {
+          "file": "scripts/guardrails/worktree_containment.py",
+          "line": 215,
+          "text": "rev-parse\", \"--show-toplevel\""
+        }
+      ],
+      "note": "Reached only when --git-common-dir is not named .git. The -C operand is the same absolute-path slot as the common-dir probe."
+    },
+    {
+      "id": "python-check-core-bare",
+      "program": "python",
+      "argv": [
+        {"type": "project-interpreter"},
+        {"type": "repo-script", "path": "scripts/audit/check_core_bare.py"},
+        "--repo",
+        {"type": "repository-root"},
+        "--fix",
+        "-q"
+      ],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/heal-core-bare.py",
+          "line": 74,
+          "text": "\"--repo\", str(project_dir), \"--fix\", \"-q\""
+        }
+      ],
+      "note": "Bound to the project interpreter, scripts/audit/check_core_bare.py, and the repository the healer discovered. No -c, -m, or extra arguments. The child is not executed; its git reads and config writes stay withheld."
     }
   ]
 }

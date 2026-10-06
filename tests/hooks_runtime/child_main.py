@@ -6,9 +6,11 @@ drop them, and so a forked child can record ``os.exec`` before the new image
 replaces it. Shell and native descendants are not instrumented: only this
 interpreter and Python children that inherit the hook are visible.
 
-Every process start is blocked after it is recorded, except ``os.fork`` /
-``os.forkpty`` (the child must still emit its exec event) and an optional
-exact argv the descendant-boundary probe is allowed to exec.
+A recording stand-in answers a launch only after the same classifier accepts
+it. Every other process start is blocked after it is recorded, except
+``os.fork`` / ``os.forkpty`` (the child must still emit its exec event) and an
+optional exact argv the descendant-boundary probe is allowed to exec.
+``os.putenv`` and ``os.unsetenv`` are recorded as key names only.
 """
 
 from __future__ import annotations
@@ -27,7 +29,14 @@ _REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 if _REPO not in sys.path:
     sys.path.insert(0, _REPO)
 
-from tests.hooks_runtime.policy import dangerous_snapshot, text_argv
+from tests.hooks_runtime.policy import (
+    ObservedStart,
+    allowed_template,
+    injection_names,
+    looks_like_python,
+    text_argv,
+)
+from tests.hooks_runtime.standin import install as install_standin
 
 _PARENT_PID = os.getpid()
 _STATE = {"index": -1}
@@ -36,8 +45,12 @@ _LOG_FD = -1
 _ALLOW_ARGV: tuple[str, ...] | None = None
 _COLLECT_CHILDREN = True
 _WRITE_LOCK = threading.Lock()
+_BASELINE: dict[str, str] = {}
+# putenv/unsetenv do not update os.environ. None means the key was unset.
+_DELTA: dict[str, str | None] = {}
 
 _FORK_EVENTS = frozenset({"os.fork", "os.forkpty"})
+_ENV_EVENTS = frozenset({"os.putenv", "os.unsetenv"})
 _PROCESS_EVENTS = frozenset(
     {
         "subprocess.Popen",
@@ -72,19 +85,84 @@ def _first(value: object) -> str:
     return words[0]
 
 
-def _normalize(event: str, args: tuple[object, ...]) -> dict[str, object] | None:
-    """Return one log record, or None when the event is not a process start."""
+def _merged_inherited() -> dict[str, str]:
+    """Process environment plus decoded putenv/unsetenv that os.environ missed."""
+    merged = dict(os.environ)
+    with _WRITE_LOCK:
+        delta = dict(_DELTA)
+    for key, value in delta.items():
+        if value is None:
+            merged.pop(key, None)
+        else:
+            merged[key] = value
+    return merged
+
+
+def _observe(
+    event: str,
+    *,
+    executable: str,
+    argv: tuple[str, ...],
+    explicit_env: dict[str, str] | None,
+    shell_mediated: str,
+) -> ObservedStart:
+    names = injection_names(
+        explicit=explicit_env,
+        inherited=_merged_inherited() if explicit_env is None else {},
+        baseline=_BASELINE,
+        python_launch=looks_like_python(argv),
+    )
+    return ObservedStart(
+        event=event,
+        pid=os.getpid(),
+        parent_pid=_PARENT_PID,
+        pair_index=int(_STATE["index"]),
+        executable=executable,
+        argv=argv,
+        explicit_env=None,
+        inherited_dangerous={},
+        shell_mediated=shell_mediated,
+        env_injection=names,
+        explicit=explicit_env is not None,
+    )
+
+
+def _public_record(start: ObservedStart) -> dict[str, object]:
+    """Log record. Environment values are not included."""
+    return {
+        "event": start.event,
+        "pid": start.pid,
+        "parent_pid": start.parent_pid,
+        "pair_index": start.pair_index,
+        "executable": start.executable,
+        "argv": list(start.argv),
+        "explicit": start.explicit,
+        "shell_mediated": start.shell_mediated,
+        "env_injection": list(start.env_injection or ()),
+    }
+
+
+def _write_record(record: dict[str, object]) -> None:
+    line = (json.dumps(record, separators=(",", ":")) + "\n").encode("utf-8")
+    with _WRITE_LOCK:
+        os.write(_LOG_FD, line)
+
+
+def _normalize(event: str, args: tuple[object, ...]) -> ObservedStart | None:
+    """Return one observed start, or None when the event is not a process start."""
     executable = ""
     argv: tuple[str, ...] | None = None
     explicit: dict[str, str] | None = None
+    shell_mediated = ""
     if event == "subprocess.Popen" and len(args) >= 4:
         executable = _first(args[0])
         argv = text_argv(args[1]) or ()
         explicit = _mapping(args[3])
     elif event == "os.system" and args:
         argv = text_argv(args[0]) or ()
-        executable = argv[0] if argv else ""
+        executable = ""
         explicit = None
+        shell_mediated = "os.system"
     elif event in {"os.exec", "os.posix_spawn", "os.spawn"} and len(args) >= 2:
         executable = _first(args[0])
         argv = text_argv(args[1]) or ()
@@ -98,42 +176,58 @@ def _normalize(event: str, args: tuple[object, ...]) -> dict[str, object] | None
         explicit = None
     else:
         return None
-    inherited = dangerous_snapshot(os.environ) if explicit is None else {}
-    dangerous = dangerous_snapshot(explicit) if explicit is not None else {}
-    return {
-        "event": event,
-        "pid": os.getpid(),
-        "parent_pid": _PARENT_PID,
-        "pair_index": _STATE["index"],
-        "executable": executable,
-        "argv": list(argv or ()),
-        "explicit": explicit is not None,
-        "dangerous": dangerous,
-        "inherited_dangerous": inherited,
-    }
+    return _observe(
+        event,
+        executable=executable,
+        argv=argv or (),
+        explicit_env=explicit,
+        shell_mediated=shell_mediated,
+    )
+
+
+def _record_env(event: str, args: tuple[object, ...]) -> None:
+    """Track putenv/unsetenv by key name. The value is not written to the log."""
+    if not args:
+        return
+    key = _text(args[0])
+    if event == "os.unsetenv":
+        op = "unset"
+        stored: str | None = None
+    elif len(args) < 2:
+        return
+    else:
+        op = "set"
+        stored = _text(args[1])
+    record = {"event": event, "op": op, "key": key, "pair_index": int(_STATE["index"])}
+    line = (json.dumps(record, separators=(",", ":")) + "\n").encode("utf-8")
+    with _WRITE_LOCK:
+        _DELTA[key] = stored
+        os.write(_LOG_FD, line)
 
 
 def _audit(event: str, args: tuple[object, ...]) -> None:
     # Re-entrancy is per thread. A sibling thread's process start must still be recorded.
-    if event not in _PROCESS_EVENTS or getattr(_LOCAL, "in_hook", False):
+    if event not in _PROCESS_EVENTS and event not in _ENV_EVENTS:
+        return
+    if getattr(_LOCAL, "in_hook", False):
         return
     pid = os.getpid()
     if pid != _PARENT_PID and not _COLLECT_CHILDREN:
         return
     _LOCAL.in_hook = True
     try:
+        if event in _ENV_EVENTS:
+            _record_env(event, args)
+            return
         if os.environ.get("HOOK_RUNTIME_HOLD_HOOK") == "1":
             time.sleep(0.2)
-        record = _normalize(event, args)
-        if record is None:
+        start = _normalize(event, args)
+        if start is None:
             return
-        line = (json.dumps(record, separators=(",", ":")) + "\n").encode("utf-8")
-        with _WRITE_LOCK:
-            os.write(_LOG_FD, line)
+        _write_record(_public_record(start))
         if event in _FORK_EVENTS:
             return
-        argv = tuple(record["argv"])
-        if _ALLOW_ARGV is not None and argv == _ALLOW_ARGV:
+        if _ALLOW_ARGV is not None and start.argv == _ALLOW_ARGV:
             # Parent and the forked child both let this exact image exec.
             return
         if pid != _PARENT_PID:
@@ -142,6 +236,29 @@ def _audit(event: str, args: tuple[object, ...]) -> None:
         raise FileNotFoundError("audit hook blocked process start")
     finally:
         _LOCAL.in_hook = False
+
+
+def _decide(args: object, executable: object, env: object, shell: bool) -> str | None:
+    """Classify before any canned answer. None falls through to the real constructor."""
+    if shell or isinstance(args, (str, bytes)) or not isinstance(args, (list, tuple)):
+        return None
+    argv = text_argv(args)
+    if not argv:
+        return None
+    exe = _text(executable) if executable else argv[0]
+    explicit = _mapping(env) if env is not None else None
+    start = _observe(
+        "subprocess.Popen",
+        executable=exe,
+        argv=argv,
+        explicit_env=explicit,
+        shell_mediated="",
+    )
+    ident = allowed_template(start)
+    if ident is None:
+        return None
+    _write_record(_public_record(start))
+    return ident
 
 
 def _run_canary() -> None:
@@ -192,6 +309,7 @@ def _write_summary(summary_fd: int, entry: str, body: dict[str, object]) -> None
 def main() -> int:
     global _LOG_FD, _ALLOW_ARGV, _COLLECT_CHILDREN
     sys.dont_write_bytecode = True
+    _BASELINE.update(os.environ)
     log_path = os.environ["HOOK_RUNTIME_LOG"]
     _LOG_FD = os.open(log_path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
     _COLLECT_CHILDREN = os.environ.get("HOOK_RUNTIME_COLLECT_FORK_CHILDREN", "1") != "0"
@@ -199,6 +317,7 @@ def main() -> int:
     if allow:
         _ALLOW_ARGV = tuple(json.loads(allow))
     sys.addaudithook(_audit)
+    install_standin(_decide)
     summary_fd = os.dup(1)
     devnull = os.open(os.devnull, os.O_WRONLY)
     os.dup2(devnull, 1)

@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import os
 import subprocess
+import sys
 import threading
 import time
 
@@ -122,6 +123,140 @@ def noop() -> None:
     return
 
 
+def fstring_shell() -> None:
+    script = "x.sh"
+    subprocess.run(f"bash -n {script}", shell=True, check=False, timeout=30)
+
+
+def asyncio_shell() -> None:
+    async def main() -> None:
+        await asyncio.create_subprocess_shell("bash -n x.sh")
+
+    asyncio.run(main())
+
+
+def bash_c() -> None:
+    subprocess.run(["bash", "-c", "bash -n x.sh"], check=False, timeout=30)
+
+
+def shell_git_alias() -> None:
+    subprocess.run(["bash", "-c", "git -c alias.x=!bash -n bad.sh x"], check=False, timeout=30)
+
+
+def timeout_wrap() -> None:
+    subprocess.run(["timeout", "5", "bash", "-n", "x.sh"], check=False, timeout=30)
+
+
+def env_wrap() -> None:
+    subprocess.run(["env", "git", "rev-parse", "--git-dir"], check=False, timeout=30)
+
+
+def nice_wrap() -> None:
+    subprocess.run(["nice", "git", "status"], check=False, timeout=30)
+
+
+def os_system_git() -> None:
+    os.system("git rev-parse --git-dir")
+
+
+def argv0_override() -> None:
+    subprocess.run(["/tmp/evil/git", "rev-parse", "--git-dir"], check=False, timeout=30)
+
+
+def executable_override() -> None:
+    subprocess.run(["git", "rev-parse", "--git-dir"], executable="/tmp/evil/git", check=False, timeout=30)
+
+
+def putenv_pager() -> None:
+    os.putenv("GH_PAGER", "sentinel-value")
+    try:
+        subprocess.run(["git", "rev-parse", "--git-dir"], check=False, timeout=30)
+    except FileNotFoundError:
+        return
+
+
+def redirect_mutation() -> None:
+    """Change harness-controlled keys after the baseline snapshot, then launch git."""
+    from pathlib import Path
+
+    root = Path("redirect-bin")
+    root.mkdir()
+    git = root / "git"
+    git.write_text("#!/bin/sh\ntouch real-git-executed\n", encoding="utf-8")
+    git.chmod(0o755)
+    for key in os.environ.get("HOOK_RUNTIME_REDIRECT_KEYS", "").split(","):
+        if key:
+            os.environ[key] = "redirected"
+    os.environ["PATH"] = str(root.resolve())
+    try:
+        subprocess.run(["git", "rev-parse", "--git-dir"], check=False, timeout=30)
+    except FileNotFoundError:
+        return
+
+
+def path_tripwire() -> None:
+    """Baseline PATH names only a fake git. An allowed template must not exec it."""
+    from pathlib import Path
+
+    result = subprocess.run(
+        ["git", "rev-parse", "--git-dir"],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    Path("shim-result").write_text(f"canned\n{result.returncode}\n{result.stdout}", encoding="utf-8")
+
+
+def shim_then_forbidden() -> None:
+    """A canned success must not authorize a later shell syntax check."""
+    from pathlib import Path
+
+    result = subprocess.run(
+        ["git", "rev-parse", "--git-dir"],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    Path("shim-result").write_text(f"canned\n{result.returncode}\n{result.stdout}", encoding="utf-8")
+    try:
+        subprocess.run(["bash", "-n", "x.sh"], check=False, timeout=30)
+    except FileNotFoundError:
+        return
+
+
+def python_c() -> None:
+    subprocess.run([sys.executable, "-c", "print(1)"], check=False, timeout=30)
+
+
+def python_loader_redirect() -> None:
+    """A healer-shaped argv with PYTHONPATH changed is not the reviewed launch."""
+    from pathlib import Path
+
+    from scripts.common.repo_root import project_interpreter
+
+    root = Path(__file__).resolve().parents[3]
+    os.environ["PYTHONPATH"] = "redirected"
+    try:
+        subprocess.run(
+            [
+                str(project_interpreter(root)),
+                str(root / "scripts" / "audit" / "check_core_bare.py"),
+                "--repo",
+                str(root),
+                "--fix",
+                "-q",
+            ],
+            check=False,
+            timeout=30,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except FileNotFoundError:
+        return
+
+
 def command_env() -> None:
     env = {
         "BROWSER": "echo",
@@ -168,25 +303,41 @@ def config_shapes() -> None:
 
 
 _CASES = {
+    "argv0_override": argv0_override,
     "asyncio_exec": asyncio_exec,
+    "asyncio_shell": asyncio_shell,
+    "bash_c": bash_c,
     "bytes_argv": bytes_argv,
     "command_env": command_env,
     "concurrent_starts": concurrent_starts,
     "config_shapes": config_shapes,
     "crash": crash,
     "descendant": descendant,
+    "env_wrap": env_wrap,
+    "executable_override": executable_override,
     "explicit_pager": explicit_pager,
     "fork_child": fork_child,
+    "fstring_shell": fstring_shell,
     "inherited_pager": inherited_pager,
     "launch_keyword": launch_keyword,
     "launch_positional": launch_positional,
+    "nice_wrap": nice_wrap,
     "noop": noop,
     "os_exec": os_exec,
     "os_system": os_system,
+    "os_system_git": os_system_git,
+    "path_tripwire": path_tripwire,
     "posix_spawn": posix_spawn,
+    "putenv_pager": putenv_pager,
+    "python_c": python_c,
+    "python_loader_redirect": python_loader_redirect,
+    "redirect_mutation": redirect_mutation,
     "second_level": second_level,
+    "shell_git_alias": shell_git_alias,
+    "shim_then_forbidden": shim_then_forbidden,
     "sleeper": sleeper,
     "swallow": swallow,
+    "timeout_wrap": timeout_wrap,
     "value_runner": value_runner,
 }
 
