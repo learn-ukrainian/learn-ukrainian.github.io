@@ -16,13 +16,16 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from dataclasses import asdict
 from pathlib import Path
 
+from scripts.common.git_context import sanitized_git_env
 from scripts.review.evidence import compute_target_input_fingerprint
 from scripts.review.findings import FindingEvent, FindingsLedger, FindingsLedgerError
 from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS
+from scripts.review.record_cf_verdict import BranchFactsError, collect_branch_review_facts
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.scope_baseline import (
     ScopeBaseline,
@@ -346,6 +349,38 @@ def _cmd_record_cycle(args: argparse.Namespace) -> int:
     return 0
 
 
+def _checkout_git(repo_root: Path, *args: str) -> str:
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(repo_root), *args],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+            env=sanitized_git_env(),
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise CloseoutStateError(f"git {args[0]} unavailable") from exc
+    if proc.returncode:
+        raise CloseoutStateError(f"git {args[0]} failed")
+    return proc.stdout.strip()
+
+
+def _checkout_repository(repo_root: Path) -> str:
+    """``owner/name`` of the checkout's GitHub origin, which task records must name."""
+    url = _checkout_git(repo_root, "config", "--get", "remote.origin.url")
+    match = re.search(r"github\.com[:/]([\w.-]+/[\w.-]+?)(?:\.git)?/?$", url)
+    if not match:
+        raise CloseoutStateError("repository unknown: pass --repository owner/name")
+    return match.group(1)
+
+
+def _checkout_task_root(repo_root: Path) -> Path:
+    """The primary checkout's dispatch task records, shared by every linked worktree."""
+    common = Path(_checkout_git(repo_root, "rev-parse", "--path-format=absolute", "--git-common-dir"))
+    return common.parent / "batch_state" / "tasks"
+
+
 def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     if args.domain.strip().casefold() not in VALID_REVIEW_PROFILES:
         print(
@@ -369,6 +404,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     if args.review_profile == "code" and target is None and not args.owned_path:
         raise CloseoutStateError("review_target_required: resolve the target first or supply --owned-path")
     changed_paths = target.changed_paths if target else ()
+    facts = None
     if target:
         # numstat display paths compact renames (a/{old => new}/file). Read
         # literal filenames from the frozen endpoints instead of parsing that
@@ -384,25 +420,53 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         except TargetResolutionError as exc:
             raise CloseoutStateError(str(exc)) from exc
         changed_paths = tuple(dict.fromkeys((*changed_paths, *literal_paths)))
-    inputs = ResolverInputs(
-        author_model=args.author_model,
-        review_profile=args.review_profile,
-        risk=args.risk,
-        domain=args.domain,
-        changed_paths=changed_paths,
-        language_lane=args.language_lane,
-        required_capabilities=frozenset(args.required_capability or []),
-        data_egress_policy=args.data_egress_policy,
-        isolation_required=args.isolation_required,
-        routing_snapshot=routing_snapshot,
-        author_family=args.author_family,
-        subject_seats=frozenset(args.subject_seat or []),
-        subject_families=frozenset(args.subject_family or []),
-        owned_paths=tuple(args.owned_path or []),
-    )
+        if target.mode != "local":
+            # A committed target has complete Git authorship: select from the
+            # same facts the verdict recorder accepts (#9739). --author-model is
+            # added to them, never substituted for them.
+            try:
+                facts = collect_branch_review_facts(
+                    repository=args.repository or _checkout_repository(repo_root),
+                    repo_root=repo_root,
+                    base_tip_sha=target.base_sha,
+                    head_sha=target.head_sha,
+                    task_root=Path(args.task_root) if args.task_root else _checkout_task_root(repo_root),
+                    owned_paths=tuple(args.owned_path or []),
+                    subject_seats=tuple(args.subject_seat or []),
+                    subject_families=tuple(args.subject_family or []),
+                )
+            except (BranchFactsError, CloseoutStateError) as exc:
+                payload = {"selected": None, "fail_closed_reason": f"branch review facts unavailable: {exc}"}
+                state["resolved_reviewer"] = payload
+                _save_state(args.state_file, state)
+                print(json.dumps(payload, indent=2))
+                return 1
+    common = {
+        "author_model": args.author_model,
+        "domain": args.domain,
+        "language_lane": args.language_lane,
+        "required_capabilities": frozenset(args.required_capability or []),
+        "data_egress_policy": args.data_egress_policy,
+        "isolation_required": args.isolation_required,
+        "routing_snapshot": routing_snapshot,
+        "author_family": args.author_family,
+    }
+    if facts is not None:
+        inputs = facts.resolver_inputs(risk=args.risk, review_profile=args.review_profile, **common)
+    else:
+        inputs = ResolverInputs(
+            review_profile=args.review_profile,
+            risk=args.risk,
+            changed_paths=changed_paths,
+            subject_seats=frozenset(args.subject_seat or []),
+            subject_families=frozenset(args.subject_family or []),
+            owned_paths=tuple(args.owned_path or []),
+            **common,
+        )
     resolution = resolve_reviewer(inputs)
     payload = {
         "selected": asdict(resolution.selected) if resolution.selected else None,
+        "branch_facts": facts.receipt() if facts is not None else None,
         "quorum": [asdict(q) for q in resolution.quorum],
         "quorum_rule": resolution.quorum_rule,
         "advisory": [asdict(a) for a in resolution.advisory],
@@ -674,6 +738,9 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "Pick the formal cross-family reviewer for one author.\n"
             "Resolve the target first in the same state file, or supply --owned-path. "
+            "For a committed target (commit, branch, pr), every author named by the "
+            "target's X-Agent trailers and task records is excluded too, as the verdict "
+            "recorder requires (#9739); --author-model adds to them. "
             "Use it after the author model is known. Pass --subject-seat, "
             "--subject-family, or --owned-path when the change governs a seat's "
             "adapter or reviewer hooks. Do not use it to hand-pick a lane, and do "
@@ -802,6 +869,22 @@ def _build_parser() -> argparse.ArgumentParser:
             "An unambiguous per-seat adapter or reviewer hook infers that seat. "
             "An ambiguous path (shared acpx.py, base.py, guard-reviewer-publish.py) "
             "fails closed unless --subject-seat or --subject-family is also set."
+        ),
+    )
+    p_reviewer.add_argument(
+        "--repository",
+        default=None,
+        help=(
+            "GitHub owner/name that author task records must name, for a committed target's "
+            "complete authorship. Default: the target checkout's origin. Example: owner/repo"
+        ),
+    )
+    p_reviewer.add_argument(
+        "--task-root",
+        default=None,
+        help=(
+            "Dispatch task-record directory (hot and archive/) that X-Agent task trailers resolve "
+            "against. Default: batch_state/tasks of the target's primary checkout. Example: batch_state/tasks"
         ),
     )
     p_reviewer.add_argument(

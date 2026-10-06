@@ -109,10 +109,37 @@ def test_slots_resolve_to_the_live_holder_or_keep_the_identity_with_a_warning(mo
         ("claude-folk",), mode=BRIDGE_MODE, slots=_channels.STATIC_VALID_AGENTS, warnings=warnings
     )
     assert (unheld.recipient, unheld.reason) == ("claude-folk", "explicit")
-    assert warnings and "has no live holder" in warnings[0]
+    assert warnings and "recipient claude slot has no live holder (no-live-holder)" in warnings[0]
+    # #9739: the caller's slot string never reaches the log text.
+    assert "claude-folk" not in warnings[0]
 
     (static,) = resolve_and_admit(("claude-infra",), mode=BRIDGE_MODE, slots=_channels.STATIC_VALID_AGENTS)
     assert static.recipient == "claude-infra"
+
+
+def test_slot_log_label_comes_from_the_seat_list_and_taxonomy_area():
+    # #9739: log text names a slot by its static seat prefix and taxonomy area.
+    seats = _channels.STATIC_VALID_AGENTS
+    assert target_admission._slot_label("grok-infra", seats, "infra") == "grok slot in area 'infra'"
+    assert target_admission._slot_label("claude-infra-x", seats) == "claude-infra slot"  # longest prefix
+    assert target_admission._slot_label("nobody-infra", seats) == "slot with an unregistered seat prefix"
+
+
+def test_slot_resolver_failure_warning_omits_the_caller_slot_string(monkeypatch, capsys):
+    def boom(_slot: str, **_kwargs: object) -> None:
+        raise RuntimeError("resolver down")
+
+    monkeypatch.setattr(slot_routing, "resolve_slot_holder", boom)
+    warnings: list[str] = []
+    (target,) = resolve_and_admit(
+        ("claude-folk",), mode=BRIDGE_MODE, slots=_channels.STATIC_VALID_AGENTS, warnings=warnings
+    )
+    assert target.recipient == "claude-folk"
+    expected = "slot resolver failed for the claude slot (RuntimeError: resolver down) — queued at its identity"
+    assert warnings and expected in warnings[0]
+    err = capsys.readouterr().err
+    assert expected in err
+    assert "claude-folk" not in err
 
 
 def test_compat_names_resolve_to_their_participant_and_unknown_names_fail():
@@ -305,3 +332,46 @@ def test_the_fallback_guard_detects_a_kimi_destination():
     assert target_admission.stored_kimi_row("cursor", "kimi-code/k3")
     assert target_admission.stored_kimi_row("cursor", "k3")
     assert not target_admission.stored_kimi_row("cursor", "composer-2.5")
+
+
+# --- #9739: runtime review admission excludes every branch author ---------------------------------
+
+
+def test_review_admission_uses_complete_branch_authorship_like_the_recorder(tmp_path, monkeypatch):
+    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    repo.commit(OPUS, message="first author")
+    repo.commit(SOL, message="latest author")
+    facts = recorder.collect_branch_review_facts(
+        repository=REPOSITORY,
+        repo_root=repo.root,
+        base_tip_sha=repo.sha("origin/main"),
+        head_sha=repo.sha("feature"),
+        task_root=tmp_path / "tasks",
+    )
+    trusted = {
+        "mode": "read-only",
+        "review_dispatch": True,
+        "review_author_model": "gpt-6.1-sol",
+        "review_risk": "medium",
+    }
+
+    # Without the facts, the latest author alone admits an earlier author's family.
+    (legacy,) = resolve_and_admit(("claude",), model="claude-opus-5-5", **trusted)
+    assert legacy.recipient == "claude"
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ROUTE_REFUSED"):
+        resolve_and_admit(("claude",), model="claude-opus-5-5", review_facts=facts, **trusted)
+    (grok,) = resolve_and_admit(("cursor",), model="grok-4.7-high", review_facts=lambda: facts, **trusted)
+    assert (grok.recipient, grok.model) == ("cursor", "grok-4.7-high")
+
+    # The recorder reaches the same verdicts on the same facts.
+    recorder._require_qualified_reviewer(
+        facts, task={"agent": "cursor", "review_risk": "medium"}, model="grok-4.7", family="xai"
+    )
+    with pytest.raises(recorder.RecordError, match="not qualified"):
+        recorder._require_qualified_reviewer(
+            facts, task={"agent": "claude", "review_risk": "medium"}, model="claude-opus-5-5", family="anthropic"
+        )

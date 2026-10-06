@@ -42,12 +42,17 @@ def review_repo(tmp_path, monkeypatch):
     return _init_review_repo(tmp_path, monkeypatch)
 
 
+# The fixture commits' author, matching the tests' --review-author-model: review
+# admission attributes every branch commit by its X-Agent trailer (#9739).
+FIXTURE_AUTHOR_TRAILER = "X-Agent: codex/gpt-6.1-sol"
+
+
 def _change(repo, path):
     file = repo / path
     file.parent.mkdir(parents=True, exist_ok=True)
     file.write_text("value = 2\n")
     _git(repo, "add", ".")
-    _git(repo, "commit", "-qm", "review target")
+    _git(repo, "commit", "-qm", f"review target\n\n{FIXTURE_AUTHOR_TRAILER}")
     head = _git(repo, "rev-parse", "HEAD")
     _git(repo, "update-ref", "refs/remotes/origin/review-target", head)
     return head

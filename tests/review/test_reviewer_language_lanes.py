@@ -187,7 +187,8 @@ def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
     base_sha = git("rev-parse", "HEAD")
     source.write_text("value = 2\n", encoding="utf-8")
     git("add", ".")
-    git("commit", "-qm", "change word store")
+    # A committed target is attributed by its X-Agent trailer (#9739): a Codex author, as --author-model says.
+    git("commit", "-qm", "change word store\n\nX-Agent: codex/gpt-6.1-sol")
     head_sha = git("rev-parse", "HEAD")
     state_file = tmp_path / "review.json"
     assert (
@@ -212,7 +213,9 @@ def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
     assert state["target"]["head_sha"] == head_sha
     assert state["target"]["changed_paths"] == ["scripts/lexicon/word_store.py"]
     assert state["target_args"]["repo_root"] == str(repo.resolve())
-    assert main(["--state-file", str(state_file), "resolve-reviewer", "--author-model", "codex"]) == 0
+    # The fixture repository has no GitHub origin, so name the repository its task records would carry.
+    repository = ["--repository", "learn-ukrainian/learn-ukrainian.github.io"]
+    assert main(["--state-file", str(state_file), "resolve-reviewer", "--author-model", "codex", *repository]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["selected"]["family"] == "anthropic"
     assert any("Ukrainian-content language-lanes exclusion" in (item["reason"] or "") for item in payload["trace"])

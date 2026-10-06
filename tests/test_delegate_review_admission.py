@@ -22,7 +22,7 @@ from scripts.review import reviewer_resolver
 
 @pytest.fixture(scope="module")
 def ordinary_review_repo(tmp_path_factory):
-    from tests.test_ask_review_admission_floor import _change, _git
+    from tests.test_ask_review_admission_floor import _git
 
     repo = tmp_path_factory.mktemp("ordinary-review")
     _git(repo, "init", "-q", "-b", "main")
@@ -33,8 +33,10 @@ def ordinary_review_repo(tmp_path_factory):
     _git(repo, "add", ".")
     _git(repo, "commit", "-qm", "base")
     _git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
-    head = _change(repo, "ordinary.py")
-    _git(repo, "update-ref", "refs/remotes/origin/ordinary-review", head)
+    # No authored commits past the base: a trusted review's complete authorship
+    # (#9739) is then exactly its declared --review-author-model, the identity
+    # these admission tests vary. Branch authorship has its own tests.
+    _git(repo, "update-ref", "refs/remotes/origin/ordinary-review", "HEAD")
     return repo
 
 
@@ -1805,3 +1807,54 @@ def test_native_grok_review_keeps_requested_identity_without_budget_probe(monkey
     assert refusal is None
     assert (target.recipient, target.model) == ("grok", "grok-4.7")
     assert routing.substitution is None
+
+
+# --- #9739: a trusted review reads the target branch's complete authorship ------------------------
+
+
+@pytest.mark.parametrize(
+    "agent,model,admitted",
+    [("claude", "claude-opus-5-5", False), ("codex", "gpt-6.1-sol", False), ("cursor", "grok-4.7-high", True)],
+)
+def test_trusted_review_admission_excludes_every_author_of_the_branch(tmp_path, monkeypatch, agent, model, admitted):
+    from tests.test_authoring_review_feasibility import OPUS, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    repo.commit(OPUS, message="first author")
+    repo.commit(SOL, message="latest author")
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    args = _args(
+        "--agent",
+        agent,
+        "--model",
+        model,
+        "--branch",
+        "feature",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "medium",
+    )
+
+    refusal, target = delegate._admit_dispatch_target(args, agent=agent, trees=None)
+
+    if admitted:
+        assert refusal is None and (target.recipient, target.model) == (agent, model)
+    else:
+        assert target is None and "REVIEW_ROUTE_REFUSED" in refusal
+
+
+def test_trusted_review_of_an_unattributed_branch_refuses(tmp_path, monkeypatch):
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    repo.commit(None, message="no trailer")
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    args = _args("--branch", "feature", "--review-author-model", "claude-opus-5-5", "--review-risk", "medium")
+
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+
+    assert target is None and "REVIEW_TARGET_UNRESOLVED" in refusal and "X-Agent" in refusal
