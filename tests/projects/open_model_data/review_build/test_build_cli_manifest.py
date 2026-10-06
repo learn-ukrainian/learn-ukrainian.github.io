@@ -19,7 +19,7 @@ from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.manifest import private_manifest
 from scripts.projects.open_model_data.review_build.output import OutputGuard
 from scripts.projects.open_model_data.review_build.snapshot import SnapshotReader
-from tests.projects.open_model_data.review_build.conftest import run_gate, save_bundle
+from tests.projects.open_model_data.review_build.conftest import run_gate, save_bundle, synthetic_components
 
 
 @pytest.fixture(autouse=True)
@@ -31,22 +31,11 @@ def synthetic_mount(monkeypatch):
 def cli_test_component(bundle, monkeypatch):
     from scripts.projects.open_model_data.review_build import components
 
-    class SyntheticComponent:
-        def __init__(self):
-            self.files = {}
-            self.adapters = {"synthetic": SyntheticAdapter()}
-
-        @property
-        def spec(self):
-            return bundle["spec"]
-
-        def iter_candidates(self, ctx):
-            return iter(bundle["candidates"])
-
+    monkeypatch.setattr(cli, "REGISTRY", {"C1": "c1"})
     monkeypatch.setattr(
         cli,
         "load_components",
-        lambda ids, **kwargs: components.load_components(ids, _test_overrides={c: SyntheticComponent() for c in ids}),
+        lambda ids, **kwargs: components.load_components(ids, _test_overrides=synthetic_components(bundle)),
     )
 
 
@@ -55,8 +44,13 @@ def test_build_verify_determinism_and_tamper_refusal(bundle):
     dirs = [bundle["root"] / name for name in ("SYNTHETIC-one", "SYNTHETIC-two")]
     for path in dirs:
         with OutputGuard(path) as guard:
-            result = execute(bundle["root"] / "request.json", guard)
-            assert execute(bundle["root"] / "request.json", guard, verify=True)["status"] == "verified"
+            result = execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle))
+            assert (
+                execute(
+                    bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), verify=True
+                )["status"]
+                == "verified"
+            )
             results.append(result)
     assert results[0] == results[1]
     first = {p.relative_to(dirs[0]): p.read_bytes() for p in dirs[0].rglob("*") if p.is_file()}
@@ -70,7 +64,7 @@ def test_build_verify_determinism_and_tamper_refusal(bundle):
     with OutputGuard(dirs[0]) as guard:
         guard.write("C1/records.jsonl", b"SYNTHETIC forged artifact\n")
         with pytest.raises(BuildError, match="artifact_mismatch"):
-            execute(bundle["root"] / "request.json", guard, verify=True)
+            execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), verify=True)
     for path in dirs:
         assert all(p.stat().st_mode & 0o777 == (0o700 if p.is_dir() else 0o600) for p in path.rglob("*"))
 
@@ -86,15 +80,19 @@ def test_unicode_separators_round_trip_write_read_verify(bundle, separator):
         writer.execute("UPDATE units SET source_field=? WHERE id=1", (text,))
     raw = _jsonl([asdict(c) for c in bundle["candidates"]])
     assert separator.encode("utf-8") in raw
-    (bundle["root"] / "input.jsonl").write_bytes(raw)
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        execute(bundle["root"] / "request.json", guard)
+        execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle))
         emitted = guard.read("C1/records.jsonl")
         assert separator.encode("utf-8") in emitted
         records = [json.loads(line) for line in jsonl_lines(emitted.decode("utf-8")) if line.strip()]
         assert len(records) == len(bundle["candidates"])
         assert [v["text"] for r in records for v in r["values"] if v["slot"] == "sentence"].count(text) == 1
-        assert execute(bundle["root"] / "request.json", guard, verify=True)["status"] == "verified"
+        assert (
+            execute(
+                bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), verify=True
+            )["status"]
+            == "verified"
+        )
 
 
 @pytest.mark.parametrize(
@@ -106,7 +104,7 @@ def test_unresolved_attribution_fails_gate_and_withholds_source_records(bundle, 
         run_gate(bundle)
     save_bundle(bundle)
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        execute(bundle["root"] / "request.json", guard)
+        execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle))
         manifest = json.loads(guard.read("manifest.json"))
         assert manifest["accounting"]["C1"]["accepted"] == 0
         assert manifest["accounting"]["C1"]["withheld"] == 12
@@ -354,8 +352,16 @@ def test_synthetic_build_never_calls_network_or_process_execution(bundle, monkey
     monkeypatch.setattr(subprocess, "Popen", forbidden)
     monkeypatch.setattr(os, "system", forbidden)
     with OutputGuard(bundle["root"] / "SYNTHETIC-runtime-out") as guard:
-        assert execute(bundle["root"] / "request.json", guard)["status"] == "built"
-        assert execute(bundle["root"] / "request.json", guard, verify=True)["status"] == "verified"
+        assert (
+            execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle))["status"]
+            == "built"
+        )
+        assert (
+            execute(
+                bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), verify=True
+            )["status"]
+            == "verified"
+        )
 
 
 def test_missing_catalog_slot_withholds_and_preserves_unit_accounting(bundle):
@@ -364,23 +370,23 @@ def test_missing_catalog_slot_withholds_and_preserves_unit_accounting(bundle):
         line["template"] += " {SYNTHETIC_missing_slot}"
     save_bundle(bundle)
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        execute(bundle["root"] / "request.json", guard)
+        execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle))
         accounting = json.loads(guard.read("accounting.json"))["C1"]
         assert accounting["withheld"] == 12
         assert accounting["accepted"] == 0
         assert accounting["counted"] == 12
         assert accounting["reasons"]["catalog_inapplicable"] == 12
         with pytest.raises(BuildError, match="mutation_unavailable"):
-            execute(bundle["root"] / "request.json", guard, verify=True)
+            execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), verify=True)
 
 
 def test_input_pin_drift_fails_verify_even_if_unused_metadata_changed(bundle):
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        execute(bundle["root"] / "request.json", guard)
+        execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle))
         bundle["register"]["sources"][0]["SYNTHETIC_note"] = "SYNTHETIC new metadata"
         save_bundle(bundle)
         with pytest.raises(BuildError, match="artifact_mismatch"):
-            execute(bundle["root"] / "request.json", guard, verify=True)
+            execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), verify=True)
 
 
 def test_cli_logging_failure_and_malformed_request_fail_safely(bundle, monkeypatch, capsys):
@@ -403,15 +409,20 @@ def test_adapter_programming_errors_fail_build_without_withholding(bundle, error
     save_bundle(bundle)
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
         with pytest.raises(BuildError, match="attribution_adapter"):
-            execute(bundle["root"] / "request.json", guard, adapters={"synthetic": BrokenAdapter()})
+            execute(
+                bundle["root"] / "request.json",
+                guard,
+                component_objects=synthetic_components(bundle),
+                adapters={"synthetic": BrokenAdapter()},
+            )
 
 
 def test_verify_generates_five_private_generic_mutation_fixtures(bundle):
     from scripts.projects.open_model_data.review_build.contract import candidate_from_dict
 
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        execute(bundle["root"] / "request.json", guard)
-        execute(bundle["root"] / "request.json", guard, verify=True)
+        execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle))
+        execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), verify=True)
         results = json.loads(guard.read("mutation-fixtures/results.json"))
         assert results == {
             "absent_quote": "quote_mismatch",
@@ -440,7 +451,12 @@ def test_verify_refuses_a_mutation_that_the_gate_admits(bundle, monkeypatch):
         monkeypatch.setattr(Gate, "run", lambda self, candidates: ([], {}))
         with pytest.raises(BuildError, match="mutation_admitted"):
             verify_mutations(
-                bundle["config"], bundle["candidates"], reader, Catalog(bundle["catalog"]), resolver, guard
+                {**bundle["config"], "components": bundle["specs"]},
+                bundle["candidates"],
+                reader,
+                Catalog(bundle["catalog"]),
+                resolver,
+                guard,
             )
 
         def wrong_failure(self, candidates):
@@ -449,7 +465,12 @@ def test_verify_refuses_a_mutation_that_the_gate_admits(bundle, monkeypatch):
         monkeypatch.setattr(Gate, "run", wrong_failure)
         with pytest.raises(BuildError, match="mutation_wrong_failure"):
             verify_mutations(
-                bundle["config"], bundle["candidates"], reader, Catalog(bundle["catalog"]), resolver, guard
+                {**bundle["config"], "components": bundle["specs"]},
+                bundle["candidates"],
+                reader,
+                Catalog(bundle["catalog"]),
+                resolver,
+                guard,
             )
 
 
@@ -478,10 +499,15 @@ def test_verify_mutations_work_on_a_single_unit_from_any_component(bundle, compo
     bundle["candidates"] = [replace(bundle["candidates"][0], component=component)]
     bundle["spec"]["unit_query"]["sql"] += " WHERE id=1"
     bundle["spec"]["frozen_count"] = 1
-    bundle["config"]["components"] = {component: bundle["spec"]}
+    bundle["specs"] = {component: bundle["spec"]}
     bundle["catalog"]["components"] = {component: bundle["catalog"]["components"]["C1"]}
     save_bundle(bundle)
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        execute(bundle["root"] / "request.json", guard)
-        assert execute(bundle["root"] / "request.json", guard, verify=True)["status"] == "verified"
+        execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle))
+        assert (
+            execute(
+                bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), verify=True
+            )["status"]
+            == "verified"
+        )
         assert json.loads(guard.read("mutation-fixtures/results.json"))["swapped_citation"] == "quote_mismatch"

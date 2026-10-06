@@ -4,22 +4,22 @@ This package implements the approved [review-build design](../../../../docs/proj
 The CLI loads extractors and attribution adapters only through the closed, lazy
 registry in `components/__init__.py`. Component modules expose one `COMPONENT`
 object. Request files supply host-local data paths, never executable import names.
-The library also supports staged candidate files through
-`execute(config_path, guarded_output, adapters=..., files=...)`.
+The library uses the same registered components through
+`execute(config_path, guarded_output, components=..., adapters=..., files=...)`.
 
 The CLI defaults to the host-local `batch_state/review_build/request.json` in the
 shared repository, resolved through Git's common directory in a worktree.
-Component integration stages the reviewed request there. A component developer
-then uses that default without writing another config:
+Initialize the location-only request once, then use it for builds:
 
 ```bash
+.venv/bin/python -m scripts.projects.open_model_data.review_build init-request
 .venv/bin/python -m scripts.projects.open_model_data.review_build build --out "$TMPDIR/rb1-c9" --components C9
 .venv/bin/python -m scripts.projects.open_model_data.review_build verify --out "$TMPDIR/rb1-c9" --components C9
 ```
 
 `--components C3 C4 --components C9` is repeatable; omission selects all components
-in the request. Unknown or unstaged components fail closed. `--config` overrides
-the default. Build and verify must use the same selection, pinned in the manifest.
+in the closed registry. Unknown or unavailable components fail closed. `--config`
+overrides the default. Build and verify must use the same selection, pinned in the manifest.
 The default does not invent extractors or reviewed specs for unfinished packets.
 Only selected component modules are imported. Unknown ids refuse; an unfinished
 module returns `component_unavailable` with that id alone. Competing adapters for
@@ -37,7 +37,14 @@ catalog's shared C6 instructions; both retain C6's UA-GEC admission rules.
 2. Put reviewed common policy in `spec` and each operation's binding, independent
    unit query, measured frozen count and primary unit identity in
    `spec["operation_specs"]`. Keep the existing closed `operations` and `reasons`
-   declarations. Attribution adapters are keyed by register `source_id` and
+   declarations. Declare `spec["compatibility"]` as a list of reviewed citation-role
+   entries (source identity, store/table, source column/values, role, sensitivity
+   and quarantine mappings). Declare `spec["corpus"]` when using UA-GEC, with the
+   split/document/author/layer/text column mapping. These declarations are copied
+   and pinned with the spec; the gate unions only selected component policies.
+   Identical table entries are deduplicated; different entries for one
+   `(store, table)` refuse `compatibility_conflict`. Competing corpus mappings
+   refuse `corpus_conflict`. Attribution adapters are keyed by register `source_id` and
    authenticate complete bibliography mapping. Reuse a shared adapter instance
    when several components cite the same source.
 3. Iterate source rows using `ctx.reader` (the same pinned read transaction used
@@ -48,10 +55,11 @@ catalog's shared C6 instructions; both retain C6's UA-GEC admission rules.
    `Candidate` objects for every independently counted unit, including withheld,
    rejected and excluded ones. Never open writable databases or import code from
    request paths. Component file adapters are installed before this reader opens.
-4. Stage a request listing the selected ids, catalog, register, source stores and
-   reviewed citation compatibility. Run CLI build then verify with the same
-   selection. The manifest pins component specs, generated candidates and all
-   package source files, including registry and component code. Generic mutations
+4. Run `init-request` (or use `--path P` and then `--config P`) to locate the
+   catalog, register, source stores and UA-GEC root. Select ids with CLI
+   `--components`, then build and verify with the same selection. The manifest pins
+   component specs, generated candidates and all package source files, including
+   registry and component code. Generic mutations
    must refuse; the component owns additional semantic must-fail cases.
 
 Tests can pass in-process objects through `main(..., _test_components={...})` or
@@ -60,25 +68,37 @@ request-file representation and cannot add ids outside the closed registry.
 `test_components.py` proves extraction, adapter wiring, operation accounting,
 all five verify mutations and tamper refusal using synthetic SQLite rows.
 
-## Request and component specs
+## Request
 
-`omd-review-request.v1` requires `catalog` and `register` (YAML), `databases`
-(`store` to path), `components` (selected ids), and `compatibility` (citation role
-rows). For CLI extraction, `components` values may be empty objects: registered
-modules supply their reviewed specs. `candidates` (JSONL of the frozen `Candidate`
-contract) is required only by the library's staged-candidate path. The CLI always
-extracts through registered modules, ignoring any staged candidate file.
-Relative input paths resolve against the request's directory. `synthetic_sources`
-permits only ids starting with `synthetic` and register forms starting with
-`SYNTHETIC `. Real callers supply `AttributionAdapter` and `FileStore` objects.
-Input file bytes, the effective request with copied component specs, component
-declarations, framework source files, checkout SHA,
-and file-store digests are pinned in the manifest. DB snapshots pin cited columns'
-bytes as `(row_key, field_sha256)` pairs, not entire rows. `verify` re-runs the gate
-against the live DB and compares all expected output bytes, including provenance
-and pins.
-It then generates and checks generic mutation fixtures under `--out/mutation-fixtures/`.
-Those private fixtures are not committed or included in the build manifest.
+`omd-review-request.v2` carries input locations only: required `catalog` and
+`register` (YAML paths), `databases` (`store` → database path), and
+`ua_gec` containing only `root` (the corpus directory path). Tests may also supply
+`synthetic_sources`, restricted to ids starting with `synthetic` and register
+forms starting with `SYNTHETIC `. Every other key, including `compatibility`,
+`corpus`, `components` or `candidates`, refuses `request_policy_key`. v1 refuses
+`request_schema` with a migration hint. Request JSON never selects components or
+provides admission policy.
+
+`init-request [--path P]` creates a 0600 file in a 0700 parent, pointing at the
+shared repository's `data/sources.db`, `data/vesum.db`, `data/ua-gec`,
+`registry/projects/open_model_data/instruction_catalog.yaml` and
+`docs/sources/permissions-register.yaml`. It refuses existing files and symlinks;
+a pre-existing parent must already be private. Without `--path`, it writes
+`batch_state/review_build/request.json`. Build/verify without `--config` read
+that file; absence refuses `request_missing` with an `init-request` hint.
+Relative input paths resolve against the request's directory. Real callers
+supply `AttributionAdapter` and `FileStore` objects through registered code.
+
+Input file bytes, the location-only request, copied component declarations
+(including admission policy), framework source files, checkout SHA and
+file-store digests are pinned in the manifest. DB snapshots pin cited columns'
+bytes as `(row_key, field_sha256)` pairs, not entire rows. `verify` re-runs the
+gate against the live DB and compares all expected output bytes, including
+provenance and pins. It then generates and checks generic mutation fixtures
+under `--out/mutation-fixtures/`. Those private fixtures are not committed or
+included in the build manifest.
+
+## Component specs
 
 Every component spec requires:
 
@@ -250,7 +270,7 @@ filenames. СУМ-11 requires
 an admitted C7 contrast, opt-in/context flags, and use only in the rejected
 model-visible member. Risk and keywords are copied from the source to provenance.
 
-The request's `corpus` mapping supplies `store`, `table`, `split`, `document`,
+The component spec's `corpus` mapping supplies `store`, `table`, `split`, `document`,
 `author`, `layer`, `text`. The gate independently scans that corpus, orders whole
 train authors by SHA-256 of `omd-rb1-dev` + author id, and includes authors until
 at least 10% of gec-only train documents are carved out. Test sentence overlap

@@ -1,6 +1,5 @@
 """Build/verify orchestration. Inputs and all text-bearing outputs stay host local."""
 
-import json
 from collections import Counter, defaultdict
 from copy import deepcopy
 from dataclasses import asdict, replace
@@ -8,17 +7,16 @@ from pathlib import Path
 
 import yaml
 
-from scripts.common.jsonl import jsonl_lines
-
 from .attribution import AttributionAdapter, Resolver, SyntheticAdapter
 from .bindings import expand, select
 from .catalog import Catalog
-from .components import Component, ComponentContext, merge_adapters
-from .contract import Candidate, candidate_from_dict, canonical, digest, record_id, values
+from .components import REGISTRY, Component, ComponentContext, admission_policy, load_components, merge_adapters
+from .contract import Candidate, canonical, digest, record_id, values
 from .errors import BuildError, require
 from .gate import Gate
 from .manifest import code_pins, private_manifest
 from .output import OutputGuard
+from .request import read_request
 from .snapshot import FileStore, SnapshotReader
 
 FRAMEWORK_VERSION = "1.0.0"
@@ -53,7 +51,7 @@ def prepare(candidates: list[Candidate], gate: Gate) -> list[Candidate]:
 def artifacts(
     config: dict, candidates: list[Candidate], reader: SnapshotReader, catalog: Catalog, resolver: Resolver, pins: dict
 ) -> dict[str, bytes]:
-    gate = Gate(reader, catalog, resolver, config["components"], config["compatibility"], config.get("corpus"))
+    gate = Gate(reader, catalog, resolver, config["components"])
     effective = prepare(candidates, gate)
     records, report = gate.run(effective)
     files = {"candidates.jsonl": _jsonl([asdict(c) for c in sorted(effective, key=record_id)])}
@@ -177,7 +175,7 @@ def verify_mutations(
     }
     # Find an observable swap: a heading's span can quote the same prefix from
     # two different fields, in which case that particular swap is no mutation.
-    gate = Gate(reader, catalog, resolver, config["components"], config["compatibility"], config.get("corpus"))
+    gate = Gate(reader, catalog, resolver, config["components"])
     donors = sorted(
         {c for unit in candidates for v in values(unit) for c in v.citations}, key=lambda c: canonical(asdict(c))
     )
@@ -222,7 +220,7 @@ def verify_mutations(
     require("swapped_citation" in fixtures, "mutation_unavailable")
     failures = {}
     for name, stream in sorted(fixtures.items()):
-        gate = Gate(reader, catalog, resolver, config["components"], config["compatibility"], config.get("corpus"))
+        gate = Gate(reader, catalog, resolver, config["components"])
         try:
             gate.run(stream)
         except BuildError as exc:
@@ -258,36 +256,27 @@ def execute(
     components: list[str] | None = None,
     component_objects: dict[str, Component] | None = None,
 ) -> dict:
-    """Config is a host-local JSON descriptor, not executable component code.
-
-    Required keys: schema, catalog (YAML), register (YAML),
-    databases {store:path}, components {C*: reviewed spec}, compatibility (roles).
-    Staged-library mode also requires candidates (JSONL); registered objects extract
-    candidates through the shared reader. Optional corpus (split field mapping)
-    and synthetic_sources (explicit test ids).
-    Component specs require unit_query, unit_id, frozen_count, reasons, operations, binding;
-    optional transforms, applicability, context/response serializers. Bindings and
-    roles schemas are documented in their modules and exercised by synthetic tests.
-    """
-    config_bytes = config_path.read_bytes()
-    config = json.loads(config_bytes)
-    require(config["schema"] == "omd-review-request.v1", "request_schema")
+    """Read location-only v2 input and copy policy exclusively from component objects."""
+    config_bytes, request = read_request(config_path)
     root = config_path.parent
 
     def input_path(value: str) -> Path:
         return (root / value).resolve()
 
+    if component_objects is None:
+        selected = components if components is not None else sorted(REGISTRY)
+        component_objects = load_components(selected)
+    else:
+        selected = components if components is not None else list(component_objects)
+        require(bool(selected) and set(selected) <= set(component_objects), "component_selection")
+        component_objects = {c: component_objects[c] for c in sorted(set(selected))}
+    config = {**request, "components": {c: deepcopy(obj.spec) for c, obj in component_objects.items()}}
+    # Reject competing admission policies before running any extractor.
+    admission_policy(config["components"])
     catalog_bytes = input_path(config["catalog"]).read_bytes()
     register_bytes = input_path(config["register"]).read_bytes()
     catalog = Catalog(yaml.safe_load(catalog_bytes))
-    if components is not None:
-        selected = set(components)
-        require(bool(selected) and selected <= set(config["components"]), "component_selection")
-        config["components"] = {c: spec for c, spec in config["components"].items() if c in selected}
-    if component_objects is not None:
-        require(set(component_objects) == set(config["components"]), "component_selection")
-        config["components"] = {c: deepcopy(obj.spec) for c, obj in component_objects.items()}
-    source_adapters = merge_adapters(adapters or {}, *(obj.adapters for obj in (component_objects or {}).values()))
+    source_adapters = merge_adapters(adapters or {}, *(obj.adapters for obj in component_objects.values()))
     for source in config.get("synthetic_sources", []):
         require(source.startswith("synthetic"), "synthetic_adapter_source")
         # An explicit adapter cannot be silently overwritten by request data.
@@ -295,7 +284,7 @@ def execute(
             source_adapters[source] = SyntheticAdapter()
     resolver = Resolver(yaml.safe_load(register_bytes), source_adapters)
     source_files = dict(files or {})
-    for obj in (component_objects or {}).values():
+    for obj in component_objects.values():
         for store, adapter in getattr(obj, "files", {}).items():
             require(store not in source_files or source_files[store] is adapter, "file_store_conflict")
             source_files[store] = adapter
@@ -303,7 +292,7 @@ def execute(
         "register": digest(register_bytes),
         "catalog": digest(catalog_bytes),
         "spec": digest(config_bytes),
-        "request": digest(canonical(config)),
+        "request": digest(canonical(request)),
         "component_specs": digest(canonical(config["components"])),
         "components": sorted(config["components"]),
         "code": code_pins(),
@@ -311,30 +300,20 @@ def execute(
     with SnapshotReader(
         {store: input_path(path) for store, path in config["databases"].items()}, source_files
     ) as reader:
-        if component_objects is not None:
-            candidates = []
-            ctx = ComponentContext(reader, config)
-            for component, obj in component_objects.items():
-                stream = list(obj.iter_candidates(ctx))
-                require(all(c.component == component for c in stream), "component_candidates")
-                candidates.extend(stream)
-            require(
-                digest(canonical({c: obj.spec for c, obj in component_objects.items()})) == pins["component_specs"],
-                "spec_mutated",
-            )
-            candidates.sort(key=record_id)
-            candidates_bytes = _jsonl([asdict(c) for c in candidates])
-        else:
-            candidates_bytes = input_path(config["candidates"]).read_bytes()
-            candidates = [
-                candidate_from_dict(json.loads(line))
-                for line in jsonl_lines(candidates_bytes.decode("utf-8"))
-                if line.strip()
-            ]
-            if components is not None:
-                candidates = [c for c in candidates if c.component in set(components)]
+        candidates = []
+        ctx = ComponentContext(reader, request)
+        for component, obj in component_objects.items():
+            stream = list(obj.iter_candidates(ctx))
+            require(all(c.component == component for c in stream), "component_candidates")
+            candidates.extend(stream)
+        require(
+            digest(canonical({c: obj.spec for c, obj in component_objects.items()})) == pins["component_specs"],
+            "spec_mutated",
+        )
+        candidates.sort(key=record_id)
+        candidates_bytes = _jsonl([asdict(c) for c in candidates])
         require(digest(canonical(config["components"])) == pins["component_specs"], "spec_mutated")
-        require(digest(canonical(config)) == pins["request"], "spec_mutated")
+        require(digest(canonical(request)) == pins["request"], "spec_mutated")
         pins["candidates"] = digest(candidates_bytes)
         result = artifacts(config, candidates, reader, catalog, resolver, pins)
         if verify:
@@ -345,9 +324,7 @@ def execute(
                 config,
                 prepare(
                     candidates,
-                    Gate(
-                        reader, catalog, resolver, config["components"], config["compatibility"], config.get("corpus")
-                    ),
+                    Gate(reader, catalog, resolver, config["components"]),
                 ),
                 reader,
                 catalog,

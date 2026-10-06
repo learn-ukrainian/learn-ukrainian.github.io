@@ -45,12 +45,32 @@ def _freeze(value):
 
 
 class Component(Protocol):
-    # spec uses the existing component/operation_specs contract, including reasons.
+    # spec includes reviewed compatibility and optional corpus admission policy.
     spec: dict
     adapters: Mapping[str, AttributionAdapter]
     files: Mapping[str, FileStore]
 
     def iter_candidates(self, ctx: ComponentContext) -> Iterable[Candidate]: ...
+
+
+def admission_policy(specs: Mapping[str, dict]) -> tuple[list[dict], dict | None]:
+    """Union copied component policies; competing table or corpus mappings refuse."""
+    entries = {}
+    corpus = None
+    for component in sorted(specs):
+        spec = specs[component]
+        require(isinstance(spec.get("compatibility"), list), "component_policy")
+        for entry in spec["compatibility"]:
+            require(isinstance(entry, dict) and {"store", "table"} <= entry.keys(), "component_policy")
+            key = (entry["store"], entry["table"])
+            require(key not in entries or entries[key] == entry, "compatibility_conflict")
+            entries[key] = entry
+        mapping = spec.get("corpus")
+        if mapping is not None:
+            require(isinstance(mapping, dict) and bool(mapping), "component_policy")
+            require(corpus is None or corpus == mapping, "corpus_conflict")
+            corpus = mapping
+    return [entries[key] for key in sorted(entries)], corpus
 
 
 def load_components(

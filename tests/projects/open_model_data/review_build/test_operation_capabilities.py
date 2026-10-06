@@ -19,7 +19,13 @@ from scripts.projects.open_model_data.review_build.gate import Gate
 from scripts.projects.open_model_data.review_build.output import OutputGuard
 from scripts.projects.open_model_data.review_build.roles import SourceRoles
 from scripts.projects.open_model_data.review_build.snapshot import SnapshotReader
-from tests.projects.open_model_data.review_build.conftest import citation, run_gate, save_bundle, selector
+from tests.projects.open_model_data.review_build.conftest import (
+    citation,
+    run_gate,
+    save_bundle,
+    selector,
+    synthetic_components,
+)
 
 
 def gate_for(bundle, reader):
@@ -27,8 +33,7 @@ def gate_for(bundle, reader):
         reader,
         Catalog(bundle["catalog"]),
         Resolver(bundle["register"], {"synthetic": SyntheticAdapter()}),
-        bundle["config"]["components"],
-        bundle["config"]["compatibility"],
+        bundle["specs"],
     )
 
 
@@ -46,10 +51,11 @@ def heterogeneous(bundle):
     second["binding"]["rules"] = [
         {"op": "equal", "values": [selector(field="entry_id"), selector("response", "target", field="entry_id")]}
     ]
-    bundle["config"]["components"] = {
+    bundle["specs"] = {
         "C3": {
             "operations": ["synonyms", "sense_definition"],
             "reasons": original["reasons"],
+            "compatibility": original["compatibility"],
             "operation_specs": {"synonyms": original, "sense_definition": second},
         }
     }
@@ -78,7 +84,7 @@ def heterogeneous(bundle):
             ]
         }
     }
-    bundle["config"]["compatibility"].append({**bundle["config"]["compatibility"][0], "table": "senses"})
+    bundle["spec"]["compatibility"].append({**bundle["spec"]["compatibility"][0], "table": "senses"})
 
 
 def test_operation_specific_tables_counts_bindings_and_verify(bundle, monkeypatch):
@@ -91,8 +97,13 @@ def test_operation_specific_tables_counts_bindings_and_verify(bundle, monkeypatc
     save_bundle(bundle)
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        execute(bundle["root"] / "request.json", guard)
-        assert execute(bundle["root"] / "request.json", guard, verify=True)["status"] == "verified"
+        execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle))
+        assert (
+            execute(
+                bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), verify=True
+            )["status"]
+            == "verified"
+        )
 
 
 @pytest.mark.parametrize(
@@ -110,7 +121,7 @@ def test_operation_specific_refusals(bundle, mutation, code):
     if mutation == "missing":
         bundle["candidates"].pop()
     elif mutation == "count":
-        bundle["config"]["components"]["C3"]["operation_specs"]["sense_definition"]["frozen_count"] = 13
+        bundle["specs"]["C3"]["operation_specs"]["sense_definition"]["frozen_count"] = 13
     elif mutation == "identity":
         c = bundle["candidates"][-1]
         bundle["candidates"][-1] = replace(c, slots=(replace(c.slots[0], citations=(citation(bundle["rows"][-1]),)),))
@@ -118,7 +129,7 @@ def test_operation_specific_refusals(bundle, mutation, code):
         c = bundle["candidates"][-1]
         bundle["candidates"][-1] = replace(c, response=bundle["candidates"][-2].response)
     else:
-        del bundle["config"]["components"]["C3"]["operation_specs"]["sense_definition"]["binding"]
+        del bundle["specs"]["C3"]["operation_specs"]["sense_definition"]["binding"]
     with pytest.raises(BuildError, match=code):
         run_gate(bundle)
 
@@ -159,8 +170,13 @@ def test_span_identity_distinguishes_two_headings_on_one_page_and_composites(bun
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
     save_bundle(bundle)
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        execute(bundle["root"] / "request.json", guard)
-        assert execute(bundle["root"] / "request.json", guard, verify=True)["status"] == "verified"
+        execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle))
+        assert (
+            execute(
+                bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), verify=True
+            )["status"]
+            == "verified"
+        )
     original = bundle["candidates"][0]
     bundle["candidates"][0] = replace(
         original, slots=(replace(original.slots[0], span=bundle["candidates"][1].slots[0].span),)
@@ -315,18 +331,33 @@ def test_resolved_placeholder_and_repository_config_are_pinned(bundle, monkeypat
             return Attribution(form.replace("<version>", version), form)
 
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        execute(bundle["root"] / "request.json", guard, adapters={"synthetic": PinnedAdapter()})
+        execute(
+            bundle["root"] / "request.json",
+            guard,
+            component_objects=synthetic_components(bundle),
+            adapters={"synthetic": PinnedAdapter()},
+        )
         manifest = json.loads(guard.read("manifest.json"))
         assert manifest["repository_configs"] == {config_name: digest(config_file.read_bytes())}
         assert (
-            execute(bundle["root"] / "request.json", guard, verify=True, adapters={"synthetic": PinnedAdapter()})[
-                "status"
-            ]
+            execute(
+                bundle["root"] / "request.json",
+                guard,
+                component_objects=synthetic_components(bundle),
+                verify=True,
+                adapters={"synthetic": PinnedAdapter()},
+            )["status"]
             == "verified"
         )
         config_file.write_text('{"version":"2"}')
         with pytest.raises(BuildError, match="artifact_mismatch"):
-            execute(bundle["root"] / "request.json", guard, verify=True, adapters={"synthetic": PinnedAdapter()})
+            execute(
+                bundle["root"] / "request.json",
+                guard,
+                component_objects=synthetic_components(bundle),
+                verify=True,
+                adapters={"synthetic": PinnedAdapter()},
+            )
     with real_reader({"sources.db": bundle["db"]}, repository_root=bundle["root"]) as reader:
         first = reader.read_repository_config(config_name)
         config_file.write_text('{"version":"3"}')
@@ -383,7 +414,7 @@ def test_textbook_roles_derive_allowlist_admission_from_file_not_grade(bundle, f
     with sqlite3.connect(bundle["db"]) as writer:
         writer.execute("UPDATE units SET source_file=?,grade=0,is_sensitive=NULL", (filename,))
     role = {
-        **bundle["config"]["compatibility"][0],
+        **bundle["spec"]["compatibility"][0],
         "role": "textbook",
         "sensitive": None,
         "source_values": [filename],
@@ -403,7 +434,7 @@ def test_textbook_roles_derive_allowlist_admission_from_file_not_grade(bundle, f
 
 
 def test_ua_gec_cannot_disable_sensitivity_and_dictionary_declares_none(bundle):
-    role = bundle["config"]["compatibility"][0]
+    role = bundle["spec"]["compatibility"][0]
     role.update(role="ua_gec", sensitive=None)
     with SnapshotReader({"sources.db": bundle["db"]}) as reader:
         with pytest.raises(BuildError, match="role_spec"):
@@ -437,7 +468,7 @@ def test_cli_default_config_repeatable_selection_and_verify(bundle, monkeypatch,
             s in help_text for s in ("--components", "default:", "Examples:", "Outputs:", "Exit codes:", "Related:")
         )
     assert cli.main(["build", "--out", str(bundle["root"] / "SYNTHETIC-other"), "--components", "C9"]) == 1
-    assert json.loads(capsys.readouterr().err)["error"] == "component_selection"
+    assert json.loads(capsys.readouterr().err)["error"] == "component_unavailable"
 
 
 def test_selection_filters_records_accounting_metrics_and_pins(bundle, monkeypatch):
@@ -446,19 +477,36 @@ def test_selection_filters_records_accounting_metrics_and_pins(bundle, monkeypat
     bundle["catalog"]["components"]["C9"] = copy.deepcopy(original)
     for line in bundle["catalog"]["components"]["C9"]["instructions"]:
         line["id"] = line["id"].replace("C1", "C9")
-    bundle["config"]["components"]["C9"] = copy.deepcopy(bundle["spec"])
+    bundle["specs"]["C9"] = copy.deepcopy(bundle["spec"])
     bundle["candidates"] += [replace(c, component="C9") for c in bundle["candidates"]]
     save_bundle(bundle)
     with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        execute(bundle["root"] / "request.json", guard, components=["C9"])
+        execute(
+            bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), components=["C9"]
+        )
         assert not (bundle["root"] / "SYNTHETIC-out/C1").exists()
         manifest = json.loads(guard.read("manifest.json"))
         assert manifest["pins"]["components"] == ["C9"]
         assert set(manifest["accounting"]) == {"C9"}
         assert set(manifest["metrics"]) == {"C9.sentence_correction"}
-        assert execute(bundle["root"] / "request.json", guard, components=["C9"], verify=True)["status"] == "verified"
+        assert (
+            execute(
+                bundle["root"] / "request.json",
+                guard,
+                component_objects=synthetic_components(bundle),
+                components=["C9"],
+                verify=True,
+            )["status"]
+            == "verified"
+        )
         with pytest.raises(BuildError, match="artifact_mismatch"):
-            execute(bundle["root"] / "request.json", guard, components=["C1"], verify=True)
+            execute(
+                bundle["root"] / "request.json",
+                guard,
+                component_objects=synthetic_components(bundle),
+                components=["C1"],
+                verify=True,
+            )
 
 
 def test_default_config_uses_shared_git_directory():

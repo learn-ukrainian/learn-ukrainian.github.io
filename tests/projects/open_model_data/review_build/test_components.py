@@ -69,11 +69,10 @@ def test_adapter_conflicts_are_not_overwritten():
 @pytest.mark.parametrize("component", ["C1", "C6a", "C6b"])
 def test_cli_registered_component_build_verify_and_mutations(bundle, monkeypatch, capsys, component):
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
-    bundle["config"].pop("candidates")
-    bundle["config"]["components"] = {component: {}}
+    bundle["specs"] = {component: {}}
     bundle["config"]["synthetic_sources"] = []
     # A source id without the synthetic prefix proves CLI adapter plumbing.
-    bundle["config"]["compatibility"][0]["source_id"] = "component_source"
+    bundle["spec"]["compatibility"][0]["source_id"] = "component_source"
     bundle["register"]["sources"][0]["id"] = "component_source"
     catalog_component = "C6" if component.startswith("C6") else component
     bundle["catalog"]["components"] = {catalog_component: bundle["catalog"]["components"]["C1"]}
@@ -116,7 +115,7 @@ def test_cli_registered_component_build_verify_and_mutations(bundle, monkeypatch
     assert manifest["accounting"][component]["accepted"] == 12
     assert manifest["operation_accounting"][f"{component}.sentence_correction"]["counted"] == 12
     assert manifest["pins"]["component_specs"] == digest(canonical({component: spec}))
-    expected_request = {**bundle["config"], "components": {component: spec}}
+    expected_request = bundle["config"]
     assert manifest["pins"]["request"] == digest(canonical(expected_request))
     assert "components/__init__.py" in manifest["pins"]["code"]["files"]
     assert len(json.loads((out / "mutation-fixtures/results.json").read_bytes())) == 5
@@ -150,22 +149,22 @@ def test_extraction_cannot_mutate_admission_policy(bundle, monkeypatch, capsys, 
         def iter_candidates(self, ctx):
             if active:
                 if mutation == "request_policy":
-                    ctx.request["compatibility"][0]["source_values"] = ["SYNTHETIC changed"]
+                    ctx.request["databases"]["sources.db"] = "SYNTHETIC changed"
                 elif mutation == "request_list":
-                    ctx.request["compatibility"][0]["source_values"][0] = "SYNTHETIC changed"
+                    ctx.request["synthetic_sources"][0] = "SYNTHETIC changed"
                 elif mutation == "request_spec":
-                    ctx.request["components"]["C1"]["frozen_count"] = 0
+                    ctx.request["catalog"] = "SYNTHETIC changed"
                 elif mutation == "own_spec":
                     self.spec["binding"]["rules"].clear()
-                    assert ctx.request["components"]["C1"]["binding"]["rules"]
+                    assert "components" not in ctx.request
                 else:
                     self.spec = {**self.spec, "frozen_count": 0}
-                    assert ctx.request["components"]["C1"]["frozen_count"] == original_spec["frozen_count"]
+                    assert "compatibility" not in ctx.request
             yield from bundle["candidates"]
 
     obj = MutatingComponent()
     out = bundle["root"] / "SYNTHETIC-mutating-output"
-    args = ["--config", str(bundle["root"] / "request.json"), "--out", str(out)]
+    args = ["--config", str(bundle["root"] / "request.json"), "--out", str(out), "--components", "C1"]
     if verify:
         assert cli.main(["build", *args], _test_components={"C1": obj}) == 0
         capsys.readouterr()
@@ -182,17 +181,26 @@ def test_extraction_cannot_mutate_admission_policy(bundle, monkeypatch, capsys, 
 
 def test_cli_conflicting_components_fail_before_extraction(bundle, monkeypatch, capsys):
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
-    bundle["config"]["components"]["C2"] = {}
+    bundle["specs"]["C2"] = {}
     save_bundle(bundle)
     objects = {c: SimpleNamespace(adapters={"source": SyntheticAdapter()}) for c in ("C1", "C2")}
-    args = ["build", "--config", str(bundle["root"] / "request.json"), "--out", str(bundle["root"] / "SYNTHETIC-out")]
+    args = [
+        "build",
+        "--config",
+        str(bundle["root"] / "request.json"),
+        "--out",
+        str(bundle["root"] / "SYNTHETIC-out"),
+        "--components",
+        "C1",
+        "C2",
+    ]
     assert cli.main(args, _test_components=objects) == 1
     assert json.loads(capsys.readouterr().err)["error"] == "adapter_conflict"
 
 
 def test_cli_unavailable_unselected_component_does_not_poison_selected_build(bundle, monkeypatch, capsys):
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
-    bundle["config"]["components"]["C9"] = {}
+    bundle["specs"]["C9"] = {}
     save_bundle(bundle)
     obj = SimpleNamespace(
         spec=bundle["spec"],
@@ -282,7 +290,6 @@ def test_real_c2_variants_accept_and_must_fail(bundle, real_catalog, variant):
             real_catalog,
             Resolver(bundle["register"], {"synthetic": SyntheticAdapter()}),
             {"C2": spec},
-            bundle["config"]["compatibility"],
         )
         assert gate.applicable(candidate) == ids
         spec["applicability"][variant][0][1] = 0
@@ -356,7 +363,6 @@ def test_real_c3_variants_use_source_queries_accept_and_must_fail(bundle, real_c
                 real_catalog,
                 Resolver(bundle["register"], {"synthetic": SyntheticAdapter()}),
                 {"C3": spec},
-                bundle["config"]["compatibility"],
             )
             if expected_variant is None:
                 with pytest.raises(BuildError, match="catalog_inapplicable"):
@@ -376,7 +382,6 @@ def test_real_c3_variants_use_source_queries_accept_and_must_fail(bundle, real_c
                 real_catalog,
                 Resolver(bundle["register"], {"synthetic": SyntheticAdapter()}),
                 {"C3": spec},
-                bundle["config"]["compatibility"],
             )
             with pytest.raises(BuildError, match="binding_selector"):
                 gate.applicable(candidate)
@@ -404,7 +409,6 @@ def test_real_c3_variants_use_source_queries_accept_and_must_fail(bundle, real_c
             real_catalog,
             Resolver(bundle["register"], {"synthetic": SyntheticAdapter()}),
             {"C3": spec},
-            bundle["config"]["compatibility"],
         )
         with pytest.raises(BuildError, match="applicability_spec"):
             gate.applicable(candidate)
