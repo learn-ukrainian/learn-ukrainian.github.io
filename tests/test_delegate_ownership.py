@@ -963,11 +963,73 @@ def test_reconciliation_distinguishes_verified_replacement_from_recycled_pid(tmp
     assert len(rows2) == 0
 
 
-def test_pid_matches_task_real_process_identity(tmp_path: Path):
-    """#8659 / CF r5 F1: Verify _pid_matches_task using real subprocesses with environ/cmdline."""
-    import sqlite3
+_EXEC_HANDSHAKE_TIMEOUT_S = 10.0
+
+
+def _spawn_execd_sleeper(
+    *,
+    env: dict[str, str],
+    cwd: str | None = None,
+    timeout_s: float = _EXEC_HANDSHAKE_TIMEOUT_S,
+):
+    """Spawn a sleeper and return only after its ``execve`` has completed.
+
+    #9808: ``Popen`` can return while ``/proc/<pid>/cmdline`` and ``environ``
+    still show the forked parent. The child writes one byte only after the
+    new image is running; this blocks on that byte with a bounded ``select``.
+    """
+    import select
     import subprocess
     import sys
+    import time
+
+    read_fd, write_fd = os.pipe()
+    proc = None
+    try:
+        os.set_inheritable(write_fd, True)
+        script = f"import os, time\nos.write({write_fd}, b'1')\nos.close({write_fd})\ntime.sleep(30)\n"
+        proc = subprocess.Popen(
+            [sys.executable, "-c", script],
+            env=env,
+            cwd=cwd,
+            pass_fds=(write_fd,),
+        )
+        os.close(write_fd)
+        write_fd = -1
+        deadline = time.monotonic() + timeout_s
+        got = b""
+        while b"1" not in got:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0 or proc.poll() is not None:
+                raise AssertionError(
+                    f"child pid {proc.pid} did not signal exec within {timeout_s}s (returncode={proc.poll()})"
+                )
+            readable, _, _ = select.select([read_fd], [], [], remaining)
+            if not readable:
+                raise AssertionError(f"child pid {proc.pid} did not signal exec within {timeout_s}s")
+            chunk = os.read(read_fd, 16)
+            if not chunk:
+                raise AssertionError(f"child pid {proc.pid} closed the exec handshake (returncode={proc.poll()})")
+            got += chunk
+        return proc
+    except Exception:
+        if proc is not None and proc.poll() is None:
+            proc.kill()
+            proc.wait(timeout=5)
+        raise
+    finally:
+        if write_fd >= 0:
+            os.close(write_fd)
+        os.close(read_fd)
+
+
+def test_pid_matches_task_real_process_identity(tmp_path: Path):
+    """#8659 / CF r5 F1: Verify _pid_matches_task using real subprocesses with environ/cmdline.
+
+    #9808: both children are sampled only after they signal that exec has
+    finished. The parent image has no task marker, so an early sample is False.
+    """
+    import sqlite3
     import time
 
     from scripts.guardrails.delegate_ownership import _pid_matches_task
@@ -975,13 +1037,11 @@ def test_pid_matches_task_real_process_identity(tmp_path: Path):
     task_id = "real-worker-task"
 
     # Spawn real worker subprocess carrying task identity in environ
-    worker = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
+    worker = _spawn_execd_sleeper(
         env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
     )
     # Spawn dummy subprocess carrying no task identity
-    dummy = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
+    dummy = _spawn_execd_sleeper(
         env={k: v for k, v in os.environ.items() if "TASK_ID" not in k},
     )
 
@@ -1041,11 +1101,161 @@ def test_pid_matches_task_real_process_identity(tmp_path: Path):
         dummy.wait()
 
 
+# Holds a grandchild between fork and execve, then lets it exec on "release".
+# The supervisor image must not carry the task marker; the grandchild adds it
+# only in the execve environment.
+_FORK_BEFORE_EXEC = """
+import os
+import select
+import sys
+import time
+
+task_id = sys.argv[1]
+hold_r, hold_w = os.pipe()
+ready_r, ready_w = os.pipe()
+while ready_w < 3:
+    moved = os.dup(ready_w)
+    os.close(ready_w)
+    ready_w = moved
+os.set_inheritable(ready_w, True)
+pid = os.fork()
+if pid == 0:
+    os.close(hold_w)
+    os.close(ready_r)
+    try:
+        os.read(hold_r, 1)
+        env = os.environ.copy()
+        env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
+        code = "import os, time\\nos.write(%d, b'1')\\nos.close(%d)\\ntime.sleep(60)\\n" % (ready_w, ready_w)
+        os.execve(sys.executable, [sys.executable, "-c", code], env)
+    finally:
+        os._exit(127)
+
+os.close(hold_r)
+os.close(ready_w)
+sys.stdout.buffer.write(b"%d\\n" % pid)
+sys.stdout.buffer.flush()
+try:
+    if sys.stdin.buffer.readline().strip() != b"release":
+        raise SystemExit(2)
+    os.write(hold_w, b"x")
+    os.close(hold_w)
+    hold_w = -1
+    deadline = time.monotonic() + 10
+    got = b""
+    while b"1" not in got:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            sys.stdout.buffer.write(b"timeout\\n")
+            sys.stdout.buffer.flush()
+            raise SystemExit(3)
+        readable, _, _ = select.select([ready_r], [], [], remaining)
+        if not readable:
+            sys.stdout.buffer.write(b"timeout\\n")
+            sys.stdout.buffer.flush()
+            raise SystemExit(3)
+        chunk = os.read(ready_r, 16)
+        if not chunk:
+            sys.stdout.buffer.write(b"closed\\n")
+            sys.stdout.buffer.flush()
+            raise SystemExit(4)
+        got += chunk
+    sys.stdout.buffer.write(b"execed\\n")
+    sys.stdout.buffer.flush()
+    if sys.stdin.buffer.readline().strip() != b"stop":
+        raise SystemExit(5)
+finally:
+    if hold_w >= 0:
+        os.close(hold_w)
+    try:
+        os.kill(pid, 15)
+    except OSError:
+        pass
+    os.waitpid(pid, 0)
+"""
+
+
+def _read_helper_line(stream_fd: int, proc, timeout_s: float) -> bytes:
+    """Read one helper stdout line, bounded, without a bare sleep."""
+    import select
+    import time
+
+    deadline = time.monotonic() + timeout_s
+    buf = bytearray()
+    while b"\n" not in buf:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise AssertionError(f"exec-window helper timed out after {timeout_s}s (returncode={proc.poll()})")
+        readable, _, _ = select.select([stream_fd], [], [], remaining)
+        if not readable:
+            raise AssertionError(f"exec-window helper timed out after {timeout_s}s (returncode={proc.poll()})")
+        chunk = os.read(stream_fd, 256)
+        if not chunk:
+            raise AssertionError(f"exec-window helper exited {proc.poll()} before a full line; got {bytes(buf)!r}")
+        buf.extend(chunk)
+    line, _, _rest = bytes(buf).partition(b"\n")
+    return line
+
+
+def test_pid_matches_task_before_exec_is_parent_image(tmp_path: Path):
+    """#9808: a child held before execve still has the parent image, so the match is False.
+
+    The old real-process assertion (``is True`` immediately after spawn) fails
+    on this image. After the child execs, the same pid matches.
+    """
+    import signal
+    import subprocess
+    import sys
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "before-exec-9808"
+    clean_env = {key: value for key, value in os.environ.items() if "TASK_ID" not in key}
+    proc = subprocess.Popen(
+        [sys.executable, "-c", _FORK_BEFORE_EXEC, task_id],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        cwd=str(tmp_path),
+        env=clean_env,
+        bufsize=0,
+        start_new_session=True,
+    )
+    assert proc.stdin is not None
+    assert proc.stdout is not None
+    try:
+        pid = int(_read_helper_line(proc.stdout.fileno(), proc, _EXEC_HANDSHAKE_TIMEOUT_S))
+        pre_cmd = (Path("/proc") / str(pid) / "cmdline").read_bytes()
+        pre_env = (Path("/proc") / str(pid) / "environ").read_bytes()
+        marker = b"LEARN_UKRAINIAN_DISPATCH_TASK_ID=" + task_id.encode()
+        assert marker not in pre_env.split(b"\0")
+        assert _pid_matches_task(pid, task_id) is False
+
+        proc.stdin.write(b"release\n")
+        proc.stdin.flush()
+        status = _read_helper_line(proc.stdout.fileno(), proc, _EXEC_HANDSHAKE_TIMEOUT_S)
+        assert status == b"execed", status
+        post_cmd = (Path("/proc") / str(pid) / "cmdline").read_bytes()
+        post_env = (Path("/proc") / str(pid) / "environ").read_bytes()
+        assert post_cmd != pre_cmd
+        assert marker in post_env.split(b"\0")
+        assert _pid_matches_task(pid, task_id) is True
+    finally:
+        if proc.poll() is None:
+            try:
+                proc.stdin.write(b"stop\n")
+                proc.stdin.flush()
+            except OSError:
+                pass
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            os.killpg(proc.pid, signal.SIGKILL)
+            proc.wait(timeout=5)
+
+
 def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
     """#8659 / CF r6 F1 & CF r7 F1: Unavailable evidence or denied /proc inspection preserves claims."""
     import sqlite3
-    import subprocess
-    import sys
     import time
     from unittest.mock import patch
 
@@ -1054,8 +1264,7 @@ def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
     task_id = "unknown-proc-task"
 
     # Spawn live worker process carrying task marker
-    worker = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
+    worker = _spawn_execd_sleeper(
         env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
     )
 
@@ -1127,8 +1336,6 @@ def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
 def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: Path):
     """#8659 / CF r6 F2: Working-directory matching rejects prefix/suffix substrings and preserves genuine worktrees."""
     import sqlite3
-    import subprocess
-    import sys
     import time
 
     from scripts.guardrails.delegate_ownership import _pid_matches_task
@@ -1145,22 +1352,11 @@ def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: P
 
     clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
 
-    # Spawn processes in each directory without task marker in env or cmdline
-    p_unrelated = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        cwd=str(unrelated_dir),
-        env=clean_env,
-    )
-    p_prefix = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        cwd=str(prefix_dir),
-        env=clean_env,
-    )
-    p_genuine = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        cwd=str(genuine_dir),
-        env=clean_env,
-    )
+    # Spawn processes in each directory without task marker in env or cmdline.
+    # Wait for exec so cwd is the requested directory, not the parent's.
+    p_unrelated = _spawn_execd_sleeper(env=clean_env, cwd=str(unrelated_dir))
+    p_prefix = _spawn_execd_sleeper(env=clean_env, cwd=str(prefix_dir))
+    p_genuine = _spawn_execd_sleeper(env=clean_env, cwd=str(genuine_dir))
 
     try:
         # Direct _pid_matches_task checks
@@ -1237,8 +1433,6 @@ def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: P
 def test_pid_matches_task_deleted_cwd_preserves_claim(tmp_path: Path):
     """#8659 / CF r8 F1: Removed process cwd evidence is treated as unknown and preserves claims."""
     import sqlite3
-    import subprocess
-    import sys
     import time
 
     from scripts.guardrails.delegate_ownership import _pid_matches_task
@@ -1251,11 +1445,7 @@ def test_pid_matches_task_deleted_cwd_preserves_claim(tmp_path: Path):
 
     # Spawn real process with marker-free environment and command line
     clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
-    p = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        cwd=str(target_dir),
-        env=clean_env,
-    )
+    p = _spawn_execd_sleeper(env=clean_env, cwd=str(target_dir))
 
     try:
         # Before removal: cwd matches task_id exactly
@@ -1310,8 +1500,6 @@ def test_pid_matches_task_deleted_cwd_preserves_claim(tmp_path: Path):
 def test_pid_matches_task_worktree_resolution_error_preserves_claim(tmp_path: Path):
     """#8659 / CF r9 F1: Unavailable worktree_path resolution (FileNotFoundError/PermissionError) preserves claims."""
     import sqlite3
-    import subprocess
-    import sys
     import time
     from unittest.mock import patch
 
@@ -1323,11 +1511,7 @@ def test_pid_matches_task_worktree_resolution_error_preserves_claim(tmp_path: Pa
 
     # Marker-free environment and command line: environ and cmdline read cleanly without matching
     clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
-    p = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        cwd=str(cwd_dir),
-        env=clean_env,
-    )
+    p = _spawn_execd_sleeper(env=clean_env, cwd=str(cwd_dir))
 
     try:
         # 1. worktree_path resolution raises FileNotFoundError
