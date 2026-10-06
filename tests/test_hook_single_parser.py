@@ -20,7 +20,8 @@ one of those) and that requests a syntax check (``-n``, a short-option
 cluster containing ``n``, ``--noexec``, or ``-o noexec``) is a site. A
 literal shell command string beginning with one of those programs plus a
 ``-n``-class flag is the same site on ``os.system``, ``os.popen``,
-``asyncio.create_subprocess_shell``, ``subprocess.getoutput``,
+``asyncio.create_subprocess_shell`` (including ``asyncio.subprocess`` and a
+from-import of it), ``subprocess.getoutput``,
 ``subprocess.getstatusoutput``, and ``subprocess.*`` with ``shell=True``.
 ``shlex.quote`` and ``shlex.join`` are output quoting and are allowed.
 Generic regexes, loops, and subprocess calls are not parsers.
@@ -38,15 +39,22 @@ A process runner is ``subprocess.run``, ``Popen``, ``call``, ``check_call``,
 ``check_output``, ``getoutput``, or ``getstatusoutput``; ``os.system``,
 ``os.popen``, ``os.exec*``, ``os.spawn*``, ``os.posix_spawn``, or
 ``os.posix_spawnp``; or ``asyncio.create_subprocess_exec`` or
-``asyncio.create_subprocess_shell``. The reference may be ``module.attr`` on
-any import of that module, including a dotted import whose final segment is
-the module, or a name brought in by ``from module import attr``.
+``asyncio.create_subprocess_shell``. ``asyncio.subprocess`` is that asyncio
+runner module. The import, an aliased import, and the attribute
+``asyncio.subprocess`` are the module. ``from asyncio.subprocess import``
+of those two callables, with or without an alias, is the runner, and
+``from asyncio import subprocess`` binds the same module. The reference
+may be ``module.attr`` on any import of that module, including a dotted
+import whose final segment is the module, or a name brought in by ``from
+module import attr``. The final segment of ``asyncio.subprocess`` is not
+the ``subprocess`` module.
 
 The module objects ``subprocess``, ``os``, ``asyncio``, and ``shlex`` follow
 the same shape when they are passed, assigned, or stored instead of used as
-the base of an attribute (``module used as a value``). A ``shlex`` module
-used that way is also a parser site. ``getattr(subprocess, 'run')`` passes
-the module and is that violation; it is not a separate hole.
+the base of an attribute (``module used as a value``). ``asyncio.subprocess``
+used that way is the ``asyncio`` module. A ``shlex`` module used that way is
+also a parser site. ``getattr(subprocess, 'run')`` passes the module and is
+that violation; it is not a separate hole.
 
 In a hook module outside the boundary, ``from shlex import *``,
 ``from subprocess import *``, ``from os import *``, ``from asyncio import *``,
@@ -75,8 +83,13 @@ Accepted limitations (owner: claude-infra, slice 2b):
   module does not.
 - Execution and import machinery is not run: ``exec``, ``eval``, ``compile``,
   computed ``importlib`` / ``__import__``, and ``typing.get_type_hints`` on
-  quoted annotations. A runner reached only through that machinery, with no
-  direct reference to the module or the callable, stays unresolved.
+  quoted annotations. Dynamic namespace access is the same class:
+  ``globals()``, ``vars()``, ``__dict__``, and ``sys.modules[...]``. A runner
+  reached only through that machinery, with no direct reference to the module
+  or the callable, stays unresolved.
+- The escape rule applies to hook modules only. Helpers imported by hooks are
+  scanned for parser sites, not for runner escape (slice 2b, owner:
+  claude-infra).
 - Quoted (string) annotations stay source text.
 - A function-local absolute import that leaves a helper's package is not
   followed. The session-start hook reaches application modules that already
@@ -207,6 +220,8 @@ OS_RUNNER_FUNCS = (
 ASYNCIO_EXEC_FUNCS = frozenset({"create_subprocess_exec"})
 ASYNCIO_SHELL_FUNCS = frozenset({"create_subprocess_shell"})
 ASYNCIO_RUNNER_FUNCS = ASYNCIO_EXEC_FUNCS | ASYNCIO_SHELL_FUNCS
+# ``asyncio.subprocess`` carries these runners. Its final segment is
+# ``subprocess``, which is a different family; the parent segment decides.
 # Star-imports of these modules are refused outside the boundary. They are not expanded.
 WILDCARD_IMPORT_MODULES = frozenset({"asyncio", "os", "shlex", "subprocess"})
 # Runner alias tracking is gone. May-bind is only the shlex module and the
@@ -398,6 +413,15 @@ class _Scope:
         if self.parent is not None:
             return self.parent.lookup(name, line, column)
         return None
+
+
+def _is_asyncio_subprocess_module(module: str) -> bool:
+    """True when ``module`` is the ``asyncio.subprocess`` runner module.
+
+    The final segment is ``subprocess``, which names another runner family.
+    The parent segment keeps this path on the asyncio runners.
+    """
+    return module.split(".")[-2:] == ["asyncio", "subprocess"]
 
 
 def _classify_leaf(leaf: str) -> tuple[str, str] | None:
@@ -864,11 +888,15 @@ class _Analyzer:
         package.module`` binds ``package`` to the top package and the attribute
         chain to the module. A runner module is remembered only so a direct
         reference can be recognized; it is not copied through assignment.
+        ``asyncio.subprocess`` is the asyncio runner module, not ``subprocess``.
         """
         parts = tuple(alias.name.split("."))
         leaf = parts[-1]
         root = parts[0]
         if alias.asname:
+            if _is_asyncio_subprocess_module(alias.name):
+                self._bind_direct_module(alias.asname, "asyncio", "asyncio")
+                return
             classified = _classify_leaf(leaf)
             if classified is not None:
                 family, name = classified
@@ -879,6 +907,9 @@ class _Analyzer:
             family, name = root_classified
             self._bind_direct_module(root, family, name)
         if len(parts) > 1:
+            if _is_asyncio_subprocess_module(alias.name):
+                self._dotted_modules.setdefault(root, set()).add((parts[1:], "asyncio", "subprocess"))
+                return
             classified = _classify_leaf(leaf)
             if classified is not None:
                 family, name = classified
@@ -927,7 +958,10 @@ class _Analyzer:
                     continue
                 family, name = classified
                 self._bind_direct_module(alias.asname or alias.name, family, name)
-        if module_leaf == "subprocess":
+        if _is_asyncio_subprocess_module(module):
+            funcs = ASYNCIO_RUNNER_FUNCS
+            family = "asyncio"
+        elif module_leaf == "subprocess":
             funcs = SUBPROCESS_FUNCS
             family = "subprocess"
         elif module_leaf == "os":
@@ -938,6 +972,11 @@ class _Analyzer:
             family = "asyncio"
         else:
             return
+        if module_leaf == "asyncio":
+            for alias in node.names:
+                if alias.name == "subprocess":
+                    # ``from asyncio import subprocess`` is asyncio.subprocess.
+                    self._bind_direct_module(alias.asname or alias.name, "asyncio", "asyncio")
         for alias in node.names:
             if alias.name == "*" or alias.name not in funcs:
                 continue
@@ -1064,26 +1103,33 @@ class _Analyzer:
                     found.add((family, node.attr))
         return sorted(found)
 
-    def _runner_families(self, node: ast.AST) -> list[str]:
-        """Runner-module families ``node`` is, from imports only."""
+    def _module_families(self, node: ast.AST) -> set[str]:
+        """Import families ``node`` names. Assignment does not copy one.
+
+        ``asyncio.subprocess`` is the asyncio family. The attribute is recognized
+        on an asyncio import, and so is a dotted import of that module path.
+        """
         found: set[str] = set()
         if isinstance(node, ast.Name):
             found.update(self._module_aliases.get(node.id, ()))
-        else:
-            for family, _leaf in self._dotted_exact(node):
-                found.add(family)
-        return sorted(family for family in found if family in RUNNER_MODULE_FAMILIES)
+            return found
+        for family, _leaf in self._dotted_exact(node):
+            found.add(family)
+        if (
+            isinstance(node, ast.Attribute)
+            and node.attr == "subprocess"
+            and "asyncio" in self._module_families(node.value)
+        ):
+            found.add("asyncio")
+        return found
+
+    def _runner_families(self, node: ast.AST) -> list[str]:
+        """Runner-module families ``node`` is, from imports only."""
+        return sorted(family for family in self._module_families(node) if family in RUNNER_MODULE_FAMILIES)
 
     def _direct_value_modules(self, node: ast.AST) -> list[str]:
         """``subprocess``, ``os``, ``asyncio``, or ``shlex`` when ``node`` is that module."""
-        found: set[str] = set()
-        if isinstance(node, ast.Name):
-            found.update(self._module_aliases.get(node.id, ()))
-        else:
-            for family, _leaf in self._dotted_exact(node):
-                if family in VALUE_MODULE_FAMILIES:
-                    found.add(family)
-        return sorted(family for family in found if family in VALUE_MODULE_FAMILIES)
+        return sorted(family for family in self._module_families(node) if family in VALUE_MODULE_FAMILIES)
 
     def _inspect_runner_escape(self, tree: ast.AST) -> None:
         """A runner or runner module used as a value is a violation.
@@ -3148,6 +3194,172 @@ def test_runner_module_used_as_a_value_fails() -> None:
     assert _mutant_violation("module used as a value", "shlex") in shlex_module
     assert any(reason.endswith("::<module>::shlex") for reason in shlex_module)
     assert _single("import subprocess\nsubprocess.run(['git', 'status'])\n") == []
+
+
+@pytest.mark.parametrize(
+    ("source", "reason"),
+    [
+        pytest.param(
+            "import asyncio.subprocess\n"
+            "\n"
+            "async def check():\n"
+            "    await asyncio.subprocess.create_subprocess_exec('bash', '-n', 'hook.sh')\n",
+            _mutant_site("check", "syntax:bash -n"),
+            id="import",
+        ),
+        pytest.param(
+            "import asyncio.subprocess as asp\n"
+            "\n"
+            "async def check():\n"
+            "    await asp.create_subprocess_shell('sh -n hook.sh')\n",
+            _mutant_site("check", "syntax:sh -n"),
+            id="aliased-import",
+        ),
+        pytest.param(
+            "import asyncio\n"
+            "\n"
+            "async def check():\n"
+            "    await asyncio.subprocess.create_subprocess_exec('dash', '--noexec', 'hook.sh')\n",
+            _mutant_site("check", "syntax:dash -n"),
+            id="attribute",
+        ),
+        pytest.param(
+            "import asyncio as aio\n"
+            "\n"
+            "async def check():\n"
+            "    await aio.subprocess.create_subprocess_shell('zsh -o noexec hook.sh')\n",
+            _mutant_site("check", "syntax:zsh -n"),
+            id="attribute-alias",
+        ),
+        pytest.param(
+            "from asyncio.subprocess import create_subprocess_exec\n"
+            "\n"
+            "async def check():\n"
+            "    await create_subprocess_exec('bash', '-n', 'hook.sh')\n",
+            _mutant_site("check", "syntax:bash -n"),
+            id="from-import",
+        ),
+        pytest.param(
+            "from asyncio.subprocess import create_subprocess_shell as shell\n"
+            "\n"
+            "async def check():\n"
+            "    await shell(cmd='bash -n hook.sh')\n",
+            _mutant_site("check", "syntax:bash -n"),
+            id="from-import-alias",
+        ),
+        pytest.param(
+            "from asyncio import subprocess as aio_sub\n"
+            "\n"
+            "async def check():\n"
+            "    await aio_sub.create_subprocess_exec('bash', '-xn', 'hook.sh')\n",
+            _mutant_site("check", "syntax:bash -n"),
+            id="from-asyncio-import-subprocess",
+        ),
+    ],
+)
+def test_asyncio_subprocess_literal_argv_fails(source: str, reason: str) -> None:
+    assert _single(source) == [reason]
+
+
+@pytest.mark.parametrize(
+    ("source", "reasons"),
+    [
+        pytest.param(
+            "import asyncio.subprocess\n"
+            "spawn = asyncio.subprocess.create_subprocess_exec\n"
+            "stored = asyncio.subprocess\n",
+            [
+                _mutant_violation("runner used as a value", "asyncio.create_subprocess_exec"),
+                _mutant_violation("module used as a value", "asyncio"),
+            ],
+            id="import",
+        ),
+        pytest.param(
+            "import asyncio.subprocess as asp\nspawn = asp.create_subprocess_shell\nstored = asp\n",
+            [
+                _mutant_violation("runner used as a value", "asyncio.create_subprocess_shell"),
+                _mutant_violation("module used as a value", "asyncio"),
+            ],
+            id="aliased-import",
+        ),
+        pytest.param(
+            "import asyncio\nspawn = asyncio.subprocess.create_subprocess_exec\nstored = asyncio.subprocess\n",
+            [
+                _mutant_violation("runner used as a value", "asyncio.create_subprocess_exec"),
+                _mutant_violation("module used as a value", "asyncio"),
+            ],
+            id="attribute",
+        ),
+        pytest.param(
+            "from asyncio.subprocess import create_subprocess_exec as spawn, create_subprocess_shell\n"
+            "call(spawn)\n"
+            "call(create_subprocess_shell)\n",
+            [
+                _mutant_violation("runner used as a value", "asyncio.create_subprocess_exec"),
+                _mutant_violation("runner used as a value", "asyncio.create_subprocess_shell"),
+            ],
+            id="from-import-alias",
+        ),
+        pytest.param(
+            "from asyncio import subprocess\nspawn = subprocess.create_subprocess_shell\nstored = subprocess\n",
+            [
+                _mutant_violation("runner used as a value", "asyncio.create_subprocess_shell"),
+                _mutant_violation("module used as a value", "asyncio"),
+            ],
+            id="from-asyncio-import-subprocess",
+        ),
+    ],
+)
+def test_asyncio_subprocess_escape_fails(source: str, reasons: list[str]) -> None:
+    assert _single(source) == reasons
+
+
+def test_asyncio_subprocess_without_syntax_flag_passes() -> None:
+    sources = [
+        "import asyncio.subprocess\n"
+        "\n"
+        "async def check():\n"
+        "    await asyncio.subprocess.create_subprocess_exec('git', 'status')\n",
+        "import asyncio.subprocess as asp\n"
+        "\n"
+        "async def check():\n"
+        "    await asp.create_subprocess_shell('bash -c true')\n",
+        "import asyncio\n\nasync def check():\n    return asyncio.subprocess.PIPE\n",
+        "from asyncio.subprocess import create_subprocess_exec as spawn\n"
+        "\n"
+        "async def check():\n"
+        "    await spawn('git', 'status')\n",
+    ]
+    assert all(_single(source) == [] for source in sources)
+
+
+def test_dynamic_namespace_runner_stays_unresolved() -> None:
+    """``globals()``, ``vars()``, ``__dict__``, and ``sys.modules`` do not name a runner."""
+    sources = [
+        "import subprocess\n\ndef check():\n    return globals()['subprocess'].run(['bash', '-n', 'hook.sh'])\n",
+        "import subprocess\n\ndef check():\n    return vars()['subprocess'].run(['bash', '-n', 'hook.sh'])\n",
+        "import subprocess\n\ndef check():\n    return subprocess.__dict__['run'](['bash', '-n', 'hook.sh'])\n",
+        "import sys\n\ndef check():\n    return sys.modules['subprocess'].run(['bash', '-n', 'hook.sh'])\n",
+    ]
+    assert all(_single(source) == [] for source in sources)
+
+
+def test_escape_rule_is_hook_modules_only() -> None:
+    """Helpers are scanned for parser sites. Runner escape is hook modules only."""
+    helper = "scripts/parsing/review_helper.py"
+    body = "import subprocess\nimport shlex\n\ndef parse(command):\n    runner = subprocess.run\n    return shlex.split(command)\n"
+    reasons = _overlay_reasons(
+        {
+            "scripts/hooks/guard.py": "from ..parsing.review_helper import parse\n",
+            helper: body,
+        },
+        [],
+    )
+    assert reasons == [f"new parser site: {helper}::parse::shlex.split"]
+    hook_reasons = _single(body)
+    assert _mutant_violation("runner used as a value", "subprocess.run", "parse") in hook_reasons
+    assert _mutant_site("parse", "shlex.split") in hook_reasons
+    assert len(hook_reasons) == 2
 
 
 def _seeded_scan(script: str, probe: str, seed: str) -> dict[str, object]:
