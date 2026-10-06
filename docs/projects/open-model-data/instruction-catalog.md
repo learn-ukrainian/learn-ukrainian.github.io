@@ -1,9 +1,14 @@
-# E10 instruction catalog — draft 0.4.0
+# E10 instruction catalog — RB-1 amendment 0.5.0
 
 Issue #9611; parent #6321. Author: GPT-6.1 Sol, Codex.
-This is a **draft**, with `training_eligible: false`. Round 4 addresses the
-remaining B1 blocker and three residuals on `4762a7d97bac0372854718477bbf79ebe65ca60b`;
-it does not certify PA6. The driver adopts the stricter numerical bounds
+Amendment #9818 implements the approved RB-1 WP-CAT scope. The PA6 instruction
+reviews by Claude Opus 5.5 and Gemini 3.8 Flash at `17dbf1e7` are recorded on
+#9611 (PR #9679); the E5 checker criterion remains open there. This amendment's
+two Ukrainian reviews and exact-head code review remain **pending**, recorded
+separately in `review_status`; `status: rb1_amendment_pending_reviews` and
+`training_eligible: false` do not certify PA6 or training readiness.
+Historical rounds below retain their original heads and results.
+The driver adopts the stricter numerical bounds
 **top1 ≤ 0.15, top5 ≤ 0.60**; the round-2 brief's 0.65 is superseded.
 
 [Catalog](../../../registry/projects/open_model_data/instruction_catalog.yaml) ·
@@ -22,13 +27,13 @@ No answer text, explanation or worked solution is authored here.
 | --- | ---: | --- |
 | C1 | 12 | Sentence correction including unchanged no-edit pairs. |
 | C2 | 24 | 12 with-sense and 12 sense-less agreed-form lines; fixed source-header serialization. |
-| C3 | 24 | 12 synonym and 12 antonym lines; source-readable sense labels. |
+| C3 | 36 | 12 synonym, 12 antonym and 12 СУМ-20 sense-definition lines. |
 | C4 | 12 | Dictionary definition **and citation from the same entry**. |
 | C5 | 12 | Full Правопис § containing its printed example. |
 | C6 | 24 | 12 calque-only sentence lines and 12 signed book-replacement lines. |
-| C7 | 12 | Modern-attested side of an admitted opt-in contrast pair. |
+| C7 | 12 | Modern-attested side of an admitted opt-in contrast pair; both forms visible in context. |
 | C9 | 12 | Complete text under an authenticated printed textbook heading. |
-| **Total** | **132** | **8 components, 10 operations; C2 has two 12-line applicability variants.** |
+| **Total** | **144** | **8 components, 11 operations; C2 has two 12-line applicability variants.** |
 
 Twelve distinct starts per applicable line set give balanced top1 = 1/12 (8.33%) and
 top5 = 5/12 (41.67%). Dropping two disputed lines leaves ten starts:
@@ -40,8 +45,9 @@ Counts establish scheduling capacity, not semantic variety or model quality.
 Slots are binding roles, never guessed physical database columns. E4 must
 authenticate source adapters and exact row/field/span locators. Interpolation
 is single-pass and verbatim: no inflection, paraphrase, truncation, added stress,
-replacement or recursive expansion. The sole serialization exception is the
-fixed C2 header/target JSON specified below (PLAN P1(c)); no free-form joining.
+replacement or recursive expansion. Fixed lossless serializers are the C2
+header/target JSON (PLAN P1(c)), C3 sense context and C7 contrast pair specified
+below; no free-form joining.
 Braces in source values remain literal.
 Missing, ambiguous or inapplicable fields withhold the record. Empty or
 whitespace-only declared slots also withhold. C2 `sense` must be present as a
@@ -77,9 +83,14 @@ template patterns, with six source-value fixtures and quotation mutations.
   homonym forms differ, withhold missing or non-discriminating source senses.
   One target contains all agreed variants. P3 exclusions and VESUM/ULIF
   tuple agreement still bind; incomplete agreement withholds the whole record.
-- **C3:** the group must belong to the selected headword sense. Withhold if no
+- **C3 synonyms/antonyms:** the group must belong to the selected headword sense. Withhold if no
   source-readable sense label exists; a numeric sense ID cannot become a gloss.
   Both .03 lines use `до слова`, not `для слова`.
+- **C3 sense_definition:** the stressed headword and printed POS label belong
+  to the same unquarantined СУМ-20 article as the selected sense's definition.
+  Its register labels and citations may provide context. Slots never contain
+  the target definition; source identity alone cannot disambiguate a meaning
+  for the model. The applicability and context contract below binds all 12 lines.
 - **C4:** **citation stays in the target**, together with the definition from
   that same dictionary entry. Every instruction requests both explicitly.
   Never invent an example; exclude ruler-overlapping citations.
@@ -95,8 +106,9 @@ template patterns, with six source-value fixtures and quotation mutations.
   using `заміну (заміни)` or neutral `замінити` wording. `автор` refers to
   authenticated author context; no
   dangling book reference or invented sentence bridge remains.
-- **C7:** no interpolation slots. The admitted #8982 pair is mandatory context,
-  with modern-source and Soviet-context roles. SUM-11 never supplies the norm;
+- **C7:** no interpolation slots. Both forms of the admitted #8982 pair are
+  mandatory model-visible context, in hash order without answer labels.
+  Modern-source and Soviet-context roles stay in provenance. SUM-11 never supplies the norm;
   unadjudicated pairs, the default split and pretraining remain excluded.
 - **C9:** `section_title` is a heading **printed in textbook text**, extracted
   verbatim with position by #8341. It is keyed by verbatim book title, grade
@@ -104,17 +116,72 @@ template patterns, with six source-value fixtures and quotation mutations.
   this fits a theme, § or chapter without miscalling every unit `розділ`.
   Refuse ingester labels (`Сторінка N`, `Reference N`, `Entry N`,
   `Private lesson …`) and **all non-textbook files**. Existing section labels
-  alone prove no eligible heading. Until #8341 provides printed-heading
+  alone prove no eligible heading. Until WP5 (#8341) provides printed-heading
   evidence, withhold records. Targets are complete verbatim headed units;
   no summaries, unkeyed exercises, contents pages or OCR-damaged text.
   The printed-question/printed-answer route uses source text directly.
 
 The Draft 2020-12 schema uses typed version/plan/status/metric metadata, rather
 than constants pinning one draft. It can validate an approved version's shape;
-it cannot grant approval or training eligibility. Drafts must remain ineligible.
+it cannot grant approval or training eligibility. Drafts and pending RB-1
+amendments must remain ineligible.
 Component/operation and source-role constraints remain closed. Every declared
 slot must occur in its template (schema lookaheads and committed mutation tests);
 the committed test also requires placeholder order to match `slots` exactly.
+
+## RB-1 C3 meaning and C7 pair serialization
+
+WP-CAT implements the approved RB-1 design with SHA-256
+`a2bd9843d599a2bb7d47d5c83f5dea959cb558b8aa770e65a3dee34f27969c5e`,
+§3 (record context), §5 (C3 meaning, C7 and C9) and §6 (catalog amendment).
+The catalog declares these contracts; WP0 implements rendering and WP3/WP6
+authenticate their source bindings. Author fixtures do not prove those engines
+or replace independent exact-head reviews.
+
+**C3 `sense_definition`.** All 12 lines have exactly `[headword, pos]` slots:
+the article's verbatim stressed headword and its POS label **as printed**.
+These are binding roles, not guessed physical column names; WP3 authenticates
+the article and field locators. No synthesized stress, POS expansion, VESUM
+code or authored sense label is allowed. The headword follows the existing
+guillemet withholding rule; the POS is final after a colon, unquoted and
+without added punctuation. Missing, null, empty or whitespace-only fields
+withhold, including an empty definition. A quarantined article withholds.
+The target is exactly the selected `sum20_senses` row's definition, without
+register labels, examples, explanations or other senses appended.
+
+`c3-sense-context.v1` is the positional JSON array
+`[register-label strings, sense-citation strings]`, serialized with
+`json.dumps(value, ensure_ascii=False, separators=(",", ":"))`.
+Each position is an array of verbatim strings in source order; absent labels
+or citations are empty arrays, so absent context is `[[],[]]`.
+Only that sense's register labels and its own `sum20_citations` may appear,
+bound to the same article and sense. Printed citation author labels stay
+verbatim where present; neither numeric sense IDs nor English role keys are
+model-visible substitutes. Definition text is never an instruction slot or
+context part. Withhold if the same model-visible headword, POS and context
+map to conflicting definitions: provenance alone cannot tell the model which
+meaning to supply. A single unambiguous sense can use empty context.
+This does not change the ULIF synonyms/antonyms applicability or targets.
+
+**C7 `modern_norm_selection`.** The 12 existing instruction strings and
+their empty slot lists remain intact. `c7-contrast-pair.v1` is a two-element
+JSON array of both distinct, nonblank **verbatim** admitted forms, emitted
+with the same JSON settings. For each form compute
+`sha256((record_id + "\0" + form).encode("utf-8")).digest()`, where
+`record_id` is the RB-1 canonical lowercase 64-hex record hash. Sort the two
+forms by these digest bytes ascending. The input order and source role do
+not select a position; repeated rendering of the same record is stable.
+Withhold identical forms, missing members or a digest tie. JSON escaping is
+reversible serialization; no case, stress, punctuation or whitespace in a
+form is rewritten.
+
+Only the unlabelled pair is model-visible context: no recommended/rejected
+keys, per-form dictionary names, adjudication or norm labels, or answer-bearing
+source roles. Those remain in authenticated provenance, excluded from the
+model input. The target is the recommended ULIF/VESUM-attested member
+verbatim, regardless of its position. Both pair members keep their own
+citations and the shared adjudication identity. Opt-in, source-role and
+Soviet-context requirements remain binding.
 
 ## C2 fixed header cells and variant target
 
@@ -922,3 +989,121 @@ These checks establish local catalog contracts and arithmetic, not independent
 held-out proof or PA6 certification. The driver owns fresh exact-head reviews,
 E4/E5 source/export proof and the subsequent landing/closeout gates. This worker
 hands back a pushed clean branch; no PR, merge or enqueue is part of this packet.
+
+## WP-CAT amendment source evidence (2026-10-06)
+
+Author checks below are lexical and orthographic evidence, not non-author
+Ukrainian approval. No dictionary definitions or dataset records were copied
+into the catalog or fixtures. Sources calls were made sequentially; the initial
+concurrent verification batch returned errors and inconsistent analyses and was
+discarded. The successful sequential calls below are the evidence used.
+
+Canary: `mcp__sources__verify_word({"word":"апостроф"})` returned
+**`2 analyses (1 distinct lemma)`**, with
+`noun:inanim:m:v_naz` and `noun:inanim:m:v_zna` for lemma `апостроф`.
+
+For each row, `mcp__sources__verify_words({"words":[…]})` received exactly
+the listed lowercase project-literal words (duplicates removed; slots omitted).
+Every listed word also received its own
+`mcp__sources__check_russian_shadow({"word":word})` call. Its raw result was
+identical for all words:
+
+```json
+{"matches_russian": false, "russian_lemma": null, "ukrainian_alternative": null, "confidence": 0.0}
+```
+
+| Line | Exact verify_words input | Raw verification result | Shadow result for each word |
+| --- | --- | --- | --- |
+| C3.sense_definition.01 | `["подай","дослівне","словникове","тлумачення","слова","частина","мови"]` | `Found: 7/7` | `matches_russian: false; confidence: 0.0` |
+| C3.sense_definition.02 | `["запиши","тлумачення","слова","без","змін","за","словником","позначення","частини","мови"]` | `Found: 10/10` | `matches_russian: false; confidence: 0.0` |
+| C3.sense_definition.03 | `["наведи","тлумачення","слова","дослівно","за","словником","частина","мови"]` | `Found: 8/8` | `matches_russian: false; confidence: 0.0` |
+| C3.sense_definition.04 | `["процитуй","визначення","значення","слова","з","відповідної","словникової","статті","частина","мови"]` | `Found: 10/10` | `matches_russian: false; confidence: 0.0` |
+| C3.sense_definition.05 | `["відтвори","словникове","визначення","для","слова","позначення","частини","мови"]` | `Found: 8/8` | `matches_russian: false; confidence: 0.0` |
+| C3.sense_definition.06 | `["слово","протлумач","дослівно","за","словником","частина","мови"]` | `Found: 7/7` | `matches_russian: false; confidence: 0.0` |
+| C3.sense_definition.07 | `["тлумачення","слова","наведи","без","змін","словникове","позначення","частини","мови"]` | `Found: 9/9` | `matches_russian: false; confidence: 0.0` |
+| C3.sense_definition.08 | `["значення","слова","процитуй","за","словником","позначення","частини","мови"]` | `Found: 8/8` | `matches_russian: false; confidence: 0.0` |
+| C3.sense_definition.09 | `["яке","тлумачення","слова","подає","словник","наведи","його","дослівно","частина","мови"]` | `Found: 10/10` | `matches_russian: false; confidence: 0.0` |
+| C3.sense_definition.10 | `["як","словник","визначає","значення","слова","процитуй","визначення","частина","мови"]` | `Found: 9/9` | `matches_russian: false; confidence: 0.0` |
+| C3.sense_definition.11 | `["дослівно","запиши","визначення","значення","слова","за","словником","позначення","частини","мови"]` | `Found: 10/10` | `matches_russian: false; confidence: 0.0` |
+| C3.sense_definition.12 | `["визначення","слова","відтвори","без","змін","зі","словника","частина","мови"]` | `Found: 9/9` | `matches_russian: false; confidence: 0.0` |
+
+The changed C9 exclusion retains the existing Ukrainian literal `Сторінка`;
+`verify_words({"words":["сторінка"]})` returned **`Found: 1/1`**
+(lemma `сторінка`, `noun:inanim:f:v_naz`); its shadow call returned the
+same false/0.0 JSON above. Only the English supplier wording changed in C9.
+C7 instruction strings were unchanged; its new serialization metadata is English.
+
+Orthographic/punctuation calls (authorities for those facets, not semantic
+sentence approval): `query_pravopys({"topic":"160"})` returned
+**`§ 160. Двокрапка (:)`**, locator §160, pp. 228–230;
+`query_pravopys({"topic":"лапки"})` returned
+**`§ 164. Лапки (« », “ ”, „ “, рідше „ ”)`**, pp. 246–248;
+`query_pravopys({"topic":"156"})` returned
+**`§ 156. Знак питання (?)`**, pp. 199–201;
+`query_pravopys({"topic":"з-із-зі"})` returned
+**`§ 25. Уживання прийменника З і його варіантів ІЗ, ЗІ (ЗО)`**,
+pp. 29–31. Line .12 uses `зі словника`.
+
+For the Russianism check, both Антоненко surfaces were queried for every new
+line after removing slots and punctuation; full-text results were scoped with
+`source_file="antonenko-davydovych-yak-my-hovorymo"`, `limit=1`.
+These are retrieval results, not claims that a whole authored sentence occurs
+in the book or that no Russianism exists. VESUM attests the words; independent
+review must judge sentence meaning and naturalness.
+
+| Line | Raw search_style_guide result | Raw search_text result and locator |
+| --- | --- | --- |
+| C3.sense_definition.01 | `No results in Антоненко-Давидович for: "Подай дослівне словникове тлумачення слова Частина мови"` | `Found 1 results for: "Подай дослівне словникове тлумачення слова Частина мови"`; `antonenko-davydovych-yak-my-hovorymo_p006` |
+| C3.sense_definition.02 | `No results in Антоненко-Давидович for: "Запиши тлумачення слова без змін за словником Позначення частини мови"` | `Found 1 results for: "Запиши тлумачення слова без змін за словником Позначення частини мови"`; `antonenko-davydovych-yak-my-hovorymo_p005` |
+| C3.sense_definition.03 | `No results in Антоненко-Давидович for: "Наведи тлумачення слова дослівно за словником Частина мови слова"` | `Found 1 results for: "Наведи тлумачення слова дослівно за словником Частина мови слова"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
+| C3.sense_definition.04 | `No results in Антоненко-Давидович for: "Процитуй визначення значення слова з відповідної словникової статті Частина мови"` | `Found 1 results for: "Процитуй визначення значення слова з відповідної словникової статті Частина мови"`; `antonenko-davydovych-yak-my-hovorymo_p137` |
+| C3.sense_definition.05 | `No results in Антоненко-Давидович for: "Відтвори словникове визначення для слова Позначення частини мови"` | `Found 1 results for: "Відтвори словникове визначення для слова Позначення частини мови"`; `antonenko-davydovych-yak-my-hovorymo_p168` |
+| C3.sense_definition.06 | `No results in Антоненко-Давидович for: "Слово протлумач дослівно за словником Частина мови"` | `Found 1 results for: "Слово протлумач дослівно за словником Частина мови"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
+| C3.sense_definition.07 | `No results in Антоненко-Давидович for: "Тлумачення слова наведи без змін Словникове позначення частини мови"` | `Found 1 results for: "Тлумачення слова наведи без змін Словникове позначення частини мови"`; `antonenko-davydovych-yak-my-hovorymo_p005` |
+| C3.sense_definition.08 | `No results in Антоненко-Давидович for: "Значення слова процитуй за словником Позначення частини мови"` | `Found 1 results for: "Значення слова процитуй за словником Позначення частини мови"`; `antonenko-davydovych-yak-my-hovorymo_p006` |
+| C3.sense_definition.09 | `No results in Антоненко-Давидович for: "Яке тлумачення слова подає словник Наведи його дослівно Частина мови"` | `Found 1 results for: "Яке тлумачення слова подає словник Наведи його дослівно Частина мови"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
+| C3.sense_definition.10 | `No results in Антоненко-Давидович for: "Як словник визначає значення слова Процитуй визначення Частина мови"` | `Found 1 results for: "Як словник визначає значення слова Процитуй визначення Частина мови"`; `antonenko-davydovych-yak-my-hovorymo_p050` |
+| C3.sense_definition.11 | `No results in Антоненко-Давидович for: "Дослівно запиши визначення значення слова за словником Позначення частини мови"` | `Found 1 results for: "Дослівно запиши визначення значення слова за словником Позначення частини мови"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
+| C3.sense_definition.12 | `No results in Антоненко-Давидович for: "Визначення слова відтвори без змін зі словника Частина мови"` | `Found 1 results for: "Визначення слова відтвори без змін зі словника Частина мови"`; `antonenko-davydovych-yak-my-hovorymo_p133` |
+
+### WP-CAT focused validation and review handback
+
+All commands ran in the assigned dispatch worktree with the shared project
+interpreter. The initial test command collected 453 tests but skipped them
+because the sparse worktree omitted `data/projects`; materializing the tree
+with `git sparse-checkout add data/projects` restored execution. The first
+executed run found the old ULIF .11/.12 assertion also selecting definition
+lines; its operation filter now retains that assertion for synonyms/antonyms.
+
+Final focused run:
+
+```text
+.venv/bin/python -m pytest -q tests/projects/open_model_data/test_instruction_catalog.py
+453 passed in 20.31s
+.venv/bin/ruff check tests/projects/open_model_data/test_instruction_catalog.py
+All checks passed!
+.venv/bin/python -m yamllint registry/projects/open_model_data/instruction_catalog.yaml
+exit 0, no output
+git diff --check
+exit 0, no output
+```
+
+Examples use canonical repository-relative command spelling; this worker
+invoked the task-prescribed shared project executables by absolute path.
+Only this test module consumes the catalog assets.
+The preservation probe reported: **All 132 prior instructions unchanged;
+exactly 12 new C3 lines; C9 changes only its supplier exclusion.**
+For the new operation, the committed arithmetic helpers reported prefix
+lengths 1 and 4: `top1=1/12; top5=5/12`; repetition:
+`suffix_top1=1/12; 8gram_record_share=1/12`. The test also checks ten-line
+drop slack without relaxing the 0.15/0.60 thresholds.
+
+The worker denominator is 12 unchanged C7 instructions plus their new context
+contract, 12 new C3 instructions, one C9 exclusion and review/version metadata.
+Independent held-out proof is pending: Claude Opus 5.5 and Gemini 3.8 Flash
+Ukrainian reviews, plus Opus exact-head code review (three review gates).
+The accountable open-model-data driver owns those reviews and subsequent
+PR/CI/landing, not this author packet; #9818 remains open. WP0/WP3/WP6 own
+production renderer and source-binding proof. Unverified or disputed Ukrainian
+meaning, source binding or answer leakage blocks acceptance; no author fixture
+waives those gates. No PR, merge, enqueue or auto-merge was requested here.

@@ -58,7 +58,7 @@ def test_catalog_schema_counts_ids_and_plan_binding() -> None:
     VALIDATOR.validate(CATALOG)
     assert set(CATALOG["components"]) == {"C1", "C2", "C3", "C4", "C5", "C6", "C7", "C9"}
     assert len(CATALOG["components"]) == 8
-    assert len(LINES) == len({line["id"] for line in LINES}) == 132
+    assert len(LINES) == len({line["id"] for line in LINES}) == 144
     operations = set()
     for component, entry in CATALOG["components"].items():
         assert entry["line_count"] == len(entry["instructions"])
@@ -70,6 +70,7 @@ def test_catalog_schema_counts_ids_and_plan_binding() -> None:
         ("C2", "agreed_form"),
         ("C3", "synonyms"),
         ("C3", "antonyms"),
+        ("C3", "sense_definition"),
         ("C4", "idiom_definition"),
         ("C5", "printed_spelling_rule"),
         ("C6", "calque_correction"),
@@ -77,7 +78,7 @@ def test_catalog_schema_counts_ids_and_plan_binding() -> None:
         ("C7", "modern_norm_selection"),
         ("C9", "verbatim_section"),
     }
-    assert len(operations) == 10
+    assert len(operations) == 11
     assert CATALOG["plan"] == {
         "path": "docs/projects/open-model-data/PLAN.md",
         "version": "3.5.0",
@@ -103,13 +104,14 @@ def test_schema_rejects_a_template_missing_any_declared_slot(line: dict, slot: s
     assert list(VALIDATOR.iter_errors(bad))
 
 
-def test_approved_metadata_is_versionable_but_draft_cannot_be_eligible() -> None:
+@pytest.mark.parametrize("pending_status", ["draft", "rb1_amendment_pending_reviews"])
+def test_approved_metadata_is_versionable_but_pending_cannot_be_eligible(pending_status: str) -> None:
     approved = copy.deepcopy(CATALOG)
     approved.update(version="1.0.0", status="approved", training_eligible=True)
     approved["plan"].update(version="3.5.1", body_sha256="a" * 64)
     approved["prefix_metric"]["status"] = "frozen"
     VALIDATOR.validate(approved)  # Shape only, never approval or an eligibility receipt.
-    approved["status"] = "draft"
+    approved["status"] = pending_status
     assert list(VALIDATOR.iter_errors(approved))
 
 
@@ -236,11 +238,91 @@ def test_tokens_normalize_metric_only_and_mask_all_source_roles() -> None:
     assert tokens("і\u0308") == tokens("ї")
 
 
+def test_rb1_status_records_prior_instruction_reviews_and_pending_amendment() -> None:
+    assert CATALOG["version"] == "0.5.0-rb1"
+    assert CATALOG["status"] == "rb1_amendment_pending_reviews"
+    assert CATALOG["training_eligible"] is False
+    reviews = CATALOG["review_status"]
+    assert reviews["pa6"]["status"] == "instruction_reviews_approved"
+    assert reviews["pa6"]["reviewed_head"] == "17dbf1e7"
+    assert reviews["pa6"]["issue"] == 9611
+    assert "E5" in reviews["pa6"]["remaining_gate"]
+    assert reviews["amendment"]["issue"] == 9818
+    assert reviews["amendment"]["status"] == "pending"
+    assert set(reviews["amendment"]["ukrainian_reviews"].values()) == {"pending"}
+    assert set(reviews["amendment"]["code_review"].values()) == {"pending"}
+    bad = copy.deepcopy(CATALOG)
+    del bad["review_status"]
+    assert list(VALIDATOR.iter_errors(bad))
+
+
+@pytest.mark.parametrize("component,contract", [("C3", "sense_definition_contract"), ("C7", "serialization")])
+def test_rb1_refuses_missing_or_changed_context_target_and_applicability_contracts(
+    component: str, contract: str
+) -> None:
+    bad = copy.deepcopy(CATALOG)
+    del bad["components"][component][contract]
+    assert list(VALIDATOR.iter_errors(bad))
+    for key in CATALOG["components"][component][contract]:
+        bad = copy.deepcopy(CATALOG)
+        bad["components"][component][contract][key] = "UNBOUND_OR_ANSWER_LEAKING"
+        assert list(VALIDATOR.iter_errors(bad)), key
+
+
+@pytest.mark.parametrize("pos", ["SOURCE_POS.", "(SOURCE_POS)", "SOURCE_{headword}:"])
+def test_c3_definition_lines_preserve_stress_printed_pos_and_hide_definition(pos: str) -> None:
+    headword = "SOURCE_HEA\u0301DWORD"
+    definition = "SOURCE_DEFINITION."
+    context = [["SOURCE_REGISTER"], ["SOURCE_CITATION_1.", "SOURCE_CITATION_2."]]
+    serialized = json.dumps(context, ensure_ascii=False, separators=(",", ":"))
+    assert json.loads(serialized) == context
+    lines = [line for line in CATALOG["components"]["C3"]["instructions"] if line["operation"] == "sense_definition"]
+    assert len(lines) == 12
+    for line in lines:
+        assert line["slots"] == ["headword", "pos"]
+        rendered = line["template"].format(headword=headword, pos=pos)
+        assert "«" + headword + "»" in rendered
+        assert rendered.endswith(": " + pos)
+        assert definition not in rendered
+        assert "sense" not in line["slots"]
+    bad = copy.deepcopy(CATALOG)
+    del bad["components"]["C3"]["source_fields"]["pos"]
+    assert list(VALIDATOR.iter_errors(bad))
+
+
+def test_c7_pair_context_is_lossless_hash_ordered_and_has_no_answer_labels() -> None:
+    forms = ["SOURCE_FORM_A", "SOURCE_FORM_B"]
+    positions = set()
+    for index in range(32):
+        record_id = hashlib.sha256(str(index).encode()).hexdigest()
+
+        def order(form: str, record_hash: str = record_id) -> bytes:
+            return hashlib.sha256((record_hash + "\0" + form).encode("utf-8")).digest()
+
+        pair = sorted(forms, key=order)
+        assert sorted(reversed(forms), key=order) == pair
+        context = json.dumps(pair, ensure_ascii=False, separators=(",", ":"))
+        assert json.loads(context) == pair
+        assert set(json.loads(context)) == set(forms)
+        positions.add(pair.index(forms[0]))
+        for line in CATALOG["components"]["C7"]["instructions"]:
+            assert line["slots"] == []
+            assert not re.search(r"\{[a-z_]+\}", line["template"])
+            assert forms[0] in context and forms[1] in context
+            assert not any(label in context for label in ("recommended", "rejected", "normative"))
+    assert positions == {0, 1}
+
+
+def test_c9_exclusion_names_wp5_as_authenticated_heading_supplier() -> None:
+    exclusion = CATALOG["components"]["C9"]["exclusions"][1]
+    assert "Until WP5 (#8341) supplies authenticated printed headings, withhold C9 records." in exclusion
+
+
 def test_balanced_catalog_and_two_line_drop_retain_prefix_slack() -> None:
     groups = defaultdict(list)
     for line in LINES:
         groups[line["id"].split(".")[0], line["operation"], line.get("sense_variant")].append(tokens(line["template"]))
-    assert len(groups) == 11
+    assert len(groups) == 12
     assert CATALOG["prefix_metric"]["prefix_lengths"] == [1, 4]
     assert Fraction(str(CATALOG["prefix_metric"]["top1_max"])) == Fraction("0.15")
     assert Fraction(str(CATALOG["prefix_metric"]["top5_max"])) == Fraction("0.60")
@@ -384,7 +466,7 @@ def test_c2_combined_operation_keeps_prefix_bounds_as_well_as_each_variant() -> 
 
 def test_c3_final_lines_have_one_sense_label_and_no_forward_reference() -> None:
     for line in CATALOG["components"]["C3"]["instructions"]:
-        if line["id"].endswith((".11", ".12")):
+        if line["operation"] in {"synonyms", "antonyms"} and line["id"].endswith((".11", ".12")):
             assert line["template"].count("Значення") == 1
             assert "У цьому значенні" not in line["template"]
             assert line["template"].endswith("Значення: {sense}")

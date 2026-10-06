@@ -1,10 +1,29 @@
 ---
-# Draft only; PA6 still requires non-author reviews and the E5-backed checker.
+# PA6 instruction reviews recorded; RB-1 amendment reviews remain pending.
 schema_version: instruction-catalog.v1
-version: 0.4.0-draft
-status: draft
+version: 0.5.0-rb1
+status: rb1_amendment_pending_reviews
 training_eligible: false
 issue: 9611
+review_status:
+  pa6:
+    status: instruction_reviews_approved
+    issue: 9611
+    pr: 9679
+    reviewed_head: 17dbf1e7
+    reviewers:
+      - claude-opus-5-5
+      - gemini-3.8-flash-high
+    remaining_gate: E5 checker proof; PA6 certification and training eligibility are not claimed.
+  amendment:
+    issue: 9818
+    status: pending
+    author: gpt-6.1-sol
+    ukrainian_reviews:
+      claude-opus-5-5: pending
+      gemini-3.8-flash-high: pending
+    code_review:
+      claude-opus-5-5: pending
 plan:
   path: docs/projects/open-model-data/PLAN.md
   version: 3.5.0
@@ -343,18 +362,34 @@ components:
           - lemma
           - slot
   C3:
-    binding: Headword sense ↔ ULIF synonym/antonym group for that same sense.
+    binding: Headword sense ↔ ULIF synonym/antonym group for that same sense, or stressed СУМ-20 headword
+      and printed POS ↔ the verbatim definition of that same article's selected sense.
     source_fields:
-      headword: ULIF headword of the selected sense
+      headword: ULIF headword of the selected sense for synonyms/antonyms; verbatim СУМ-20 stressed article
+        headword for sense_definition. Never add or remove stress.
       sense: ULIF sense label/text from the selected sense; never an authored gloss
+      pos: Verbatim СУМ-20 article POS label as printed; only for sense_definition, never a VESUM tag or expansion.
+    sense_definition_contract:
+      context: c3-sense-context.v1
+      context_parts:
+        - register_labels
+        - sense_citations
+      context_values: verbatim_same_article_and_sense_source_order
+      target: verbatim_same_sense_definition
+      applicability: withhold_missing_slots_quarantined_articles_or_non_discriminating_context
+      specification: docs/projects/open-model-data/instruction-catalog.md
     required_context:
       - sense_identity
-      - ulif_group_identity
+      - ulif_group_identity_or_sum20_article_and_sense_identity
       - source_locator
-    target_policy: Target is the verbatim ULIF group for the selected headword sense and operation.
+    target_policy: For synonyms/antonyms, target is the verbatim ULIF group for the selected headword sense
+      and operation. For sense_definition, target is only the selected СУМ-20 sense's verbatim definition;
+      register labels and that sense's citations may be context, never another sense or an authored gloss.
     exclusions:
-      - Wrong-sense groups; invented glosses; a sense with no source-readable label is withheld for this draft.
-    line_count: 24
+      - Wrong-sense ULIF groups; invented glosses; synonyms/antonyms without a source-readable sense label.
+      - For sense_definition, quarantined articles, missing stressed headword/POS/definition, or context that
+        does not distinguish conflicting definitions for the same model-visible headword and POS.
+    line_count: 36
     line_count_rationale: Twelve lines per operation give balanced top1=1/12 and top5=5/12. After two disputed
       lines are dropped, ten distinct starts give 0.10/0.50, retaining slack under proposed 0.15/0.60 bounds.
       Repetition is measured separately; counts do not prove semantic diversity.
@@ -503,6 +538,79 @@ components:
         slots:
           - headword
           - sense
+      - id: C3.sense_definition.01
+        operation: sense_definition
+        template: 'Подай дослівне словникове тлумачення слова «{headword}». Частина мови: {pos}'
+        slots:
+          - headword
+          - pos
+      - id: C3.sense_definition.02
+        operation: sense_definition
+        template: 'Запиши тлумачення слова «{headword}» без змін за словником. Позначення частини мови: {pos}'
+        slots:
+          - headword
+          - pos
+      - id: C3.sense_definition.03
+        operation: sense_definition
+        template: 'Наведи тлумачення слова «{headword}» дослівно за словником. Частина мови слова: {pos}'
+        slots:
+          - headword
+          - pos
+      - id: C3.sense_definition.04
+        operation: sense_definition
+        template: 'Процитуй визначення значення слова «{headword}» з відповідної словникової статті.
+          Частина мови: {pos}'
+        slots:
+          - headword
+          - pos
+      - id: C3.sense_definition.05
+        operation: sense_definition
+        template: 'Відтвори словникове визначення для слова «{headword}». Позначення частини мови: {pos}'
+        slots:
+          - headword
+          - pos
+      - id: C3.sense_definition.06
+        operation: sense_definition
+        template: 'Слово «{headword}» протлумач дослівно за словником. Частина мови: {pos}'
+        slots:
+          - headword
+          - pos
+      - id: C3.sense_definition.07
+        operation: sense_definition
+        template: 'Тлумачення слова «{headword}» наведи без змін. Словникове позначення частини мови: {pos}'
+        slots:
+          - headword
+          - pos
+      - id: C3.sense_definition.08
+        operation: sense_definition
+        template: 'Значення слова «{headword}» процитуй за словником. Позначення частини мови: {pos}'
+        slots:
+          - headword
+          - pos
+      - id: C3.sense_definition.09
+        operation: sense_definition
+        template: 'Яке тлумачення слова «{headword}» подає словник? Наведи його дослівно. Частина мови: {pos}'
+        slots:
+          - headword
+          - pos
+      - id: C3.sense_definition.10
+        operation: sense_definition
+        template: 'Як словник визначає значення слова «{headword}»? Процитуй визначення. Частина мови: {pos}'
+        slots:
+          - headword
+          - pos
+      - id: C3.sense_definition.11
+        operation: sense_definition
+        template: 'Дослівно запиши визначення значення слова «{headword}» за словником. Позначення частини мови: {pos}'
+        slots:
+          - headword
+          - pos
+      - id: C3.sense_definition.12
+        operation: sense_definition
+        template: 'Визначення слова «{headword}» відтвори без змін зі словника. Частина мови: {pos}'
+        slots:
+          - headword
+          - pos
   C4:
     binding: Idiom ↔ definition ↔ citation in the same dictionary entry.
     source_fields:
@@ -807,10 +915,18 @@ components:
     binding: 'Opt-in #8982 contrast: source-attested modern ULIF/VESUM form versus SUM-11 Soviet colonization
       context; never SUM-11 as norm.'
     source_fields: {}
+    serialization:
+      context: c7-contrast-pair.v1
+      members: both_verbatim_admitted_forms
+      order: sha256_record_id_nul_form_utf8_ascending
+      visibility: model_visible_unlabelled_pair_only
+      target: verbatim_recommended_member
+      specification: docs/projects/open-model-data/instruction-catalog.md
     required_context:
       - modern_source_attestation
       - soviet_colonization_context
       - admitted_contrast_pair
+      - model_visible_contrast_pair
       - source_locator
     target_policy: 'Target is the modern ULIF/VESUM-attested side of an admitted #8982 pair, verbatim; SUM-11
       is contrastive context only.'
@@ -891,7 +1007,7 @@ components:
       - Exercises without printed answers; tables of contents; OCR-damaged sections. The printed-question/printed-answer
         route uses source text directly, not invented catalog questions.
       - 'Ingester labels: Сторінка N, Reference N, Entry N, Private lesson …; all non-textbook files; missing
-        printed heading/position or book title/grade. Until #8341 supplies authenticated printed headings,
+        printed heading/position or book title/grade. Until WP5 (#8341) supplies authenticated printed headings,
         withhold C9 records.'
     line_count: 12
     line_count_rationale: Twelve lines per operation give balanced top1=1/12 and top5=5/12. After two disputed
