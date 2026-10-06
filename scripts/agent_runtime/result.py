@@ -45,6 +45,7 @@ class AgyAttempt:
     permission_kind: str | None = None
     denied_tool_name: str | None = None
     permission_target_unknown_reason: str | None = None
+    via_symlink: bool = False
 
 
 @dataclass(frozen=True)

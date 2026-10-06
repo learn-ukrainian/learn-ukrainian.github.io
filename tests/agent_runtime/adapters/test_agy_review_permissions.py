@@ -460,7 +460,29 @@ def test_auto_denial_does_not_persist_unbound_concrete_resource(kind, target):
     }
     assert agy._headless_permission_denial(auto_denial(f"{kind}({target})")) == (kind, target)
     assert parsed.agy_attempt.permission_target == "unknown"
-    assert parsed.agy_attempt.permission_target_unknown_reason == "transcript_unbound_or_unreadable"
+    assert parsed.agy_attempt.permission_target_unknown_reason == "target_kind_unsupported"
+
+
+@pytest.mark.parametrize(
+    "target,expected,reason",
+    [
+        ("https://example.org/private?q=x", "url:example.org", None),
+        ("https://fixture.internal/private", "unknown", "url_host_private"),
+    ],
+)
+def test_cli_url_fallback_needs_no_workspace_plan(target, expected, reason):
+    from scripts.agent_runtime.result import AgyTelemetry
+
+    parsed = agy.AgyAdapter().parse_response(
+        stdout="", stderr=auto_denial(f"read_url({target})"), returncode=1, output_file=None
+    )
+    assert parsed.failure_code == "provider_policy_refusal"
+    assert not parsed.ok and not parsed.agy_pre_model_failure
+    attempt = AgyTelemetry(attempts=(parsed.agy_attempt,)).task_fields()["agy_attempts"][0]
+    assert attempt["permission_target"] == expected
+    assert attempt["permission_target_unknown_reason"] == reason
+    assert attempt["denied_tool_name"] is None
+    assert "private" not in parsed.stderr_excerpt
 
 
 def test_permission_help_example_is_not_an_observed_target():
