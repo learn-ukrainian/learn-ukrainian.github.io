@@ -1,6 +1,6 @@
 # Agent-friendly rearchitecture — counted gaps against the approved delivery design
 
-Status: draft for the operator. This document does not implement anything. It extends the approved design in [docs/plans/agent-friendly-delivery.md](agent-friendly-delivery.md) and the baseline in [docs/design/agent-friendly-delivery-baseline.md](../design/agent-friendly-delivery-baseline.md). Cross-family review has not been requested: the operator asked to read the plan first.
+Status: landed on operator direction (2026-10-06, PR #9803 superseded by this PR); review of record recorded on the landing PR; census figures remain frozen at `3e4bdb3dd9`. This document does not implement anything. It extends the approved design in [docs/plans/agent-friendly-delivery.md](agent-friendly-delivery.md) and the baseline in [docs/design/agent-friendly-delivery-baseline.md](../design/agent-friendly-delivery-baseline.md).
 
 Frozen git head for every count below: `3e4bdb3dd9ecc57d1b519050bf64fa7a0ed9b737`. Machine-readable snapshot: [agent-friendly-rearchitecture-evidence.json](agent-friendly-rearchitecture-evidence.json). Refresh the git half with:
 
@@ -207,6 +207,8 @@ Removes repeated absolute-path scrubs. `opsec` is 17 fix commits on the quarter 
 Collision: Atlas data only if a scrub rewrites lexicon or `sources.db` (do not), Atlas frontend no, #9721 boundaries only where open-model-data artifacts are already that component's outputs, #9718 CI path no. Sequence: alongside, and stop if the file is in an Atlas or #9721 branch.
 
 ## 4. Collisions and sequencing
+
+**State at landing (2026-10-06).** #9784 merged (`aed3a320fd`) as the #9721 plan. The #9737 PRs listed under "Branches this work did not touch" (#9781, #9779, #9800, #9798, #9802) have merged. Move 2 is in progress as #9807 slice 2a.
 
 Fixed inputs, not redesigned here:
 
