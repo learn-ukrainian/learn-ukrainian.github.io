@@ -350,3 +350,18 @@ def test_decolonization_lookup_rejects_quarantined_only_match(quarantined_db, mo
             cases.query_source_evidence(
                 "synthetic", "плин", "", "СУМ-20", "synthetic", sources.cursor(), vesum.cursor(), []
             )
+
+
+def test_legacy_parser_rows_are_excluded_without_quarantine_column(legacy_db):
+    db, expected = legacy_db
+    with sqlite3.connect(db) as conn:
+        predicate = live_article_predicate_for(conn)
+        assert "parser_version != 'v1-official-codification'" in predicate
+        assert [row[0] for row in conn.execute(f"SELECT wordid FROM sum20_articles WHERE {predicate}")] == [10, 11]
+        # The records remain present; only retrieval refuses them.
+        assert {row[0] for row in conn.execute("SELECT wordid FROM sum20_articles")} == {10, 11, *expected}
+        alias_predicate = live_article_predicate(_columns(db), "a")
+        assert [row[0] for row in conn.execute(f"SELECT a.wordid FROM sum20_articles a WHERE {alias_predicate}")] == [
+            10,
+            11,
+        ]

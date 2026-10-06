@@ -365,11 +365,17 @@ def live_article_predicate(columns: Iterable[str], alias: str = "") -> str:
     """SQL predicate that keeps only non-quarantined ``sum20_articles`` rows.
 
     Quarantined rows stay in the table (never deleted) but no retrieval path
-    returns them.  A table created before the column existed has no quarantined
-    rows to hide, so the predicate is then always true.
+    returns them.  A restored table may predate the quarantine column while retaining
+    unverified codification rows; their parser version remains excluded.
     """
     prefix = f"{alias}." if alias else ""
-    return f"{prefix}{QUARANTINE_COLUMN} = ''" if QUARANTINE_COLUMN in set(columns) else "1 = 1"
+    columns = set(columns)
+    predicates = []
+    if QUARANTINE_COLUMN in columns:
+        predicates.append(f"{prefix}{QUARANTINE_COLUMN} = ''")
+    if "parser_version" in columns:
+        predicates.append(f"{prefix}parser_version != 'v1-official-codification'")
+    return " AND ".join(predicates) or "1 = 1"
 
 
 def live_article_predicate_for(conn: sqlite3.Connection | sqlite3.Cursor, alias: str = "") -> str:

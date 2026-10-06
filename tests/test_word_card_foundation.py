@@ -761,41 +761,18 @@ def test_committed_migration_pin_digests():
 
 
 def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
-    paths = [
-        ROOT / "registry/atlas/pilot/pilot-v1.json",
-        ROOT / "registry/atlas/identity/registry.json",
-        ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json",
-    ]
+    paths = [ROOT / "registry/atlas/pilot/pilot-v1.json", ROOT / "registry/atlas/identity/registry.json",
+             ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json"]
     before = [p.read_bytes() for p in paths]
     manifest, pin = [json.loads(paths[i].read_bytes()) for i in (0, 2)]
     source_ids = sorted({r["source_id"] for r in manifest["selection"]["source_records"]})
     register = yaml.safe_load(REGISTER.read_bytes())
     assert pin["manifest_sha256"] == manifest["manifest_sha256"]
     assert pin["legacy_source_register_sha256"] == manifest["selection"]["source_register_sha256"]
-    assert pin["source_ids"] == source_ids
-    # A mutable register may amend a referenced source (#9609). Keep the committed
-    # pilot/pin unchanged, and exercise success only on a test-admitted temp copy.
-    copied_manifest = tmp_path / "pilot.json"
-    copied_manifest.write_bytes(before[0])
-    pin["pins"].append(admitted_pin(register, source_ids, manifest["selection"]["denominator"]))
-    save(copied_manifest.with_suffix(".register-pin.json"), pin)
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "scripts.atlas.word_card_foundation",
-            "verify",
-            "--manifest",
-            str(copied_manifest),
-            "--registry",
-            str(paths[1]),
-        ],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=60,
-    )
+    assert pin["source_ids"] == source_ids and pin["pins"][-1]["entries_sha256"] == sha(register_payload(register, source_ids))
+    result = subprocess.run([sys.executable, "-m", "scripts.atlas.word_card_foundation", "verify",
+                             "--manifest", str(paths[0]), "--registry", str(paths[1])],
+                            cwd=ROOT, capture_output=True, text=True, check=False, timeout=60)
     assert result.returncode == 0, result.stderr
     output = json.loads(result.stdout)
     assert output["counts"] == dict(units=150, source_records=272, atlas_articles=114, legacy_alias_rows=140)
@@ -805,21 +782,8 @@ def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
     assert output["foreign_build_events"] == 0
     member, held = tmp_path / "membership.json", json.loads(paths[0].read_bytes())["selection"]["source_records"][0]
     save(member, dict(heldout=[held["locator"]], replay=[]))  # No committed owner carries an adjudication marker.
-    assert (
-        foundation.main(
-            [
-                "verify",
-                "--manifest",
-                str(copied_manifest),
-                "--registry",
-                str(paths[1]),
-                "--heldout-manifest",
-                str(member),
-            ]
-        )
-        == 0
-        and '"heldout_isolation": "checked"' in capsys.readouterr().out
-    )
+    assert foundation.main(["verify", "--manifest", str(paths[0]), "--registry", str(paths[1]),
+                            "--heldout-manifest", str(member)]) == 0 and '"heldout_isolation": "checked"' in capsys.readouterr().out
     assert before == [p.read_bytes() for p in paths]
 
 
@@ -1189,11 +1153,8 @@ B03 = {  # case: (child moved from unit 141 to source-only unit 35, marked row, 
 def test_b03_real_paradigm_parent_is_a_closure_dependency(tmp_path, case, capsys):
     """Regression only: real rows conserved; admission fingerprints and build ids are rebound, never re-admitted."""
     moved, marked, direct, held, replay, reason = B03[case]
-    committed = [
-        ROOT / "registry/atlas/pilot/pilot-v1.json",
-        ROOT / "registry/atlas/identity/registry.json",
-        ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json",
-    ]
+    committed = [ROOT / "registry/atlas/pilot/pilot-v1.json", ROOT / "registry/atlas/identity/registry.json",
+                 ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json"]
     before = [p.read_bytes() for p in committed]
     manifest = json.loads(before[0])
     units = manifest["selection"]["units"]
@@ -1212,15 +1173,10 @@ def test_b03_real_paradigm_parent_is_a_closure_dependency(tmp_path, case, capsys
     paths[1].write_text(before[1].decode().replace(build, "pilot@sha256:" + manifest["manifest_sha256"]))
     pin = json.loads(before[2])
     pin["manifest_sha256"] = manifest["manifest_sha256"]
-    # Closure regression fixtures need their own synthetic admission for the
-    # current register; a committed historical pin must never be silently updated.
-    register = yaml.safe_load(REGISTER.read_bytes())
-    pin["pins"].append(admitted_pin(register, pin["source_ids"], manifest["selection"]["denominator"]))
     save(paths[0].with_suffix(".register-pin.json"), pin)
     save(paths[2], dict(heldout=[held], replay=[replay] if replay else []))
-    assert foundation.main(
-        ["verify", "--manifest", str(paths[0]), "--registry", str(paths[1]), "--heldout-manifest", str(paths[2])]
-    ) == (reason is not None)
+    assert foundation.main(["verify", "--manifest", str(paths[0]), "--registry", str(paths[1]),
+                            "--heldout-manifest", str(paths[2])]) == (reason is not None)
     output = capsys.readouterr()
     assert reason in output.err if reason else '"heldout_isolation": "checked"' in output.out
     assert before == [p.read_bytes() for p in committed]
@@ -1336,38 +1292,3 @@ def test_freeze_replay_compares_type_exact_manifest(pilot, change, capsys):
     assert pilot["manifest"].read_bytes() == before and db_bytes(pilot) == sources
     refusal = "REFUSED: Immutable manifest exists with different content\n"
     assert capsys.readouterr().err == (refusal if change in edits else "")
-
-
-def test_committed_pilot_refuses_9609_referenced_edition_amendment(tmp_path):
-    paths = [
-        ROOT / "registry/atlas/pilot/pilot-v1.json",
-        ROOT / "registry/atlas/identity/registry.json",
-        ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json",
-    ]
-    before = [path.read_bytes() for path in paths]
-    pin = json.loads(before[2])
-    register = yaml.safe_load(REGISTER.read_bytes())
-    assert "frazeolohichnyi" in pin["source_ids"]
-    phraseology = next(row for row in register["sources"] if row["id"] == "frazeolohichnyi")
-    assert "ISBN 966-00-0797-3" in phraseology["citation"]["form"]
-    assert pin["pins"][-1]["entries_sha256"] != sha(register_payload(register, pin["source_ids"]))
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "scripts.atlas.word_card_foundation",
-            "verify",
-            "--manifest",
-            str(paths[0]),
-            "--registry",
-            str(paths[1]),
-        ],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=60,
-    )
-    assert result.returncode == 1
-    assert "Register fingerprint mismatch; re-admit and re-freeze before reuse" in result.stderr
-    assert before == [path.read_bytes() for path in paths]

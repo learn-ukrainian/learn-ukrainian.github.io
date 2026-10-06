@@ -35,6 +35,7 @@ from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
 pytest_plugins = [
+    "tests.helpers.source_db_write_guard",
     "tests.helpers.checkout_write_guard",
     "tests.helpers.checkout_write_defaults",
     "tests.cursor_process_guard",

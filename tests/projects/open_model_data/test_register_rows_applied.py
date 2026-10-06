@@ -56,7 +56,9 @@ def test_phraseology_edition_is_applied_and_twin_is_current():
 def test_antonenko_records_unknown_edition_and_uses_section_locator():
     row = rows()["antonenko_style_guide"]
     assert "<section>" in row["citation"]["form"]
-    assert "<page>" not in row["citation"]["form"]
+    assert "<page>" in row["citation"]["form"]
+    assert "positive held page" in row["citation"]["form"]
+    assert "page null or 0" in row["citation"]["form"]
     assert "unverified" in row["provenance"]["retrieved_evidence"]
     assert any("edition is unverified" in q for q in row["open_questions"])
 

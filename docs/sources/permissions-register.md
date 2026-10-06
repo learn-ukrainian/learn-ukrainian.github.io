@@ -636,7 +636,7 @@ Edition evidence: `registry/projects/open_model_data/sources/frazeolohichnyi_edi
   - «УкрЛіб © 2000 — 2026, Євген Васильєв При використанні матеріалів сайту, посилання на УкрЛіб обов'язкове.» — The ukrlib.com.ua copy asks for a link; it grants nothing for the author's rights (https://www.ukrlib.com.ua/books/printit.php?tid=4002, read 2026-09-27)
 - **Also searched:** https://archive.org/details/hovorymo1970 (1970 edition, user upload, no rights field); https://r2u.org.ua/yak-my-hovorymo/ (404)
 - **Statute referred to:** `law_art31_term`, `law_art22_quotation`
-- **Citation:** Антоненко-Давидович Б. Як ми говоримо. Видання не встановлено. Розділ «<section>». Label shown: «Як ми говоримо» Антоненка-Давидовича — scripts/lexicon/source_attribution.py DAVYDOV_LABEL.
+- **Citation:** Антоненко-Давидович Б. Як ми говоримо. Видання не встановлено. С. <page> (positive held page); otherwise Розділ «<section>» (page null or 0). Label shown: «Як ми говоримо» Антоненка-Давидовича — scripts/lexicon/source_attribution.py DAVYDOV_LABEL.
 - **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the stored copies listed in stored_in (deleted only with the operator's authorisation).
 - **Open questions:** The held edition is unverified (holdings_manifest.yaml); edition-dependent records remain unresolved until authenticated.; Who represents the author’s heirs?.
 
@@ -658,8 +658,9 @@ The held edition remains unverified in the holdings record; a 1991 ingest filena
 - **Citation:** Not shown; cited only in internal notes as Ukrainian Lessons (Anna Ohoiko). Label shown: not named on learner pages.
 - **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the stored copies listed in stored_in (deleted only with the operator's authorisation).
 
-## ЗНО (2010–2021) and НМТ (2022–2025) Ukrainian-language tests with official answer keys (`zno_nmt`)
+### ЗНО (2010–2021) and НМТ (2022–2025) Ukrainian-language tests with official answer keys — `zno_nmt`
 
+- **Permission status:** `none`
 - **Organisation:** Український центр оцінювання якості освіти (test author); copies published by osvita.ua, zno.osvita.ua and lv.testportal.gov.ua
 - **Role:** Exam-task ruler (1,616 keyed tasks; the 30 own-statement essay tasks have no key and are excluded). Never training data (plan PA7).
 - **Fields:** task_stem, task_options, answer_key
@@ -673,8 +674,9 @@ The held edition remains unverified in the holdings record; a 1991 ingest filena
 
 Open questions: Origin fixity: the booklets and online-test pages were not hashed when fetched. Either re-fetch and hash them, or record the row hash as the only fixity.; 61 tasks belong to a booklet marked fetch_status 'dead' and 61 to one marked 'wrong-content'. Their tasks come from the online test pages, so the booklet status does not void them, but the link should be re-checked..
 
-## «Український правопис» (2019), authorised edition, official PDF (`pravopys_2019`)
+### «Український правопис» (2019), authorised edition, official PDF — `pravopys_2019`
 
+- **Permission status:** `none`
 - **Organisation:** Інститут мовознавства ім. О. О. Потебні НАН України, Інститут української мови НАН України and Український мовно-інформаційний фонд НАН України (copyright holders per the imprint page); publisher Наукова думка
 - **Role:** Spelling norm (plan P2). Component C5 uses only the examples printed inside each paragraph, paired with that paragraph (§ locator).
 - **Fields:** paragraph_text, section_path, page_locator
@@ -688,8 +690,9 @@ Open questions: Origin fixity: the booklets and online-test pages were not hashe
 
 Open questions: none recorded.
 
-## Погрібний М. І. «Українська літературна вимова» (1992), booklet (`pohribnyi_1992`)
+### Погрібний М. І. «Українська літературна вимова» (1992), booklet — `pohribnyi_1992`
 
+- **Permission status:** `none`
 - **Organisation:** Author М. І. Погрібний; published by агентство «TRANSFORM», Дніпропетровськ (per the ingest record)
 - **Role:** Provenance record only. Plan O7 removed this booklet as a dataset source; no component or ruler uses it.
 - **Fields:** provenance (record only)
@@ -703,8 +706,9 @@ Open questions: none recorded.
 
 Open questions: The publisher and place come from the ingest record only. Check them against the scan's imprint during E3c..
 
-## Ukrainian university textbooks (21 uni-* sources) in textbook_sections (`textbooks_university`)
+### Ukrainian university textbooks (21 uni-* sources) in textbook_sections — `textbooks_university`
 
+- **Permission status:** `none`
 - **Organisation:** Authors and publishers named on each held university textbook imprint page.
 - **Role:** University textbook sections for C9; cite each book at its own held imprint and page granularity.
 - **Fields:** example_sentence, textbook_chunk

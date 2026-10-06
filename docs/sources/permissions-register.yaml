@@ -1752,7 +1752,7 @@ sources:
     - law_art31_term
     - law_art22_quotation
   citation:
-    form: Антоненко-Давидович Б. Як ми говоримо. Видання не встановлено. Розділ «<section>».
+    form: Антоненко-Давидович Б. Як ми говоримо. Видання не встановлено. С. <page> (positive held page); otherwise Розділ «<section>» (page null or 0).
     shown_label: «Як ми говоримо» Антоненка-Давидовича — scripts/lexicon/source_attribution.py DAVYDOV_LABEL
   removal:
     route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
@@ -1809,6 +1809,7 @@ sources:
     scope: the stored copies listed in stored_in (deleted only with the operator's authorisation).
   open_questions: []
 - id: zno_nmt
+  permission_status: none
   name: ЗНО (2010–2021) and НМТ (2022–2025) Ukrainian-language tests with official answer keys
   organisation: Український центр оцінювання якості освіти (test author); copies published by osvita.ua, zno.osvita.ua
     and lv.testportal.gov.ua
@@ -1863,6 +1864,7 @@ sources:
   - 61 tasks belong to a booklet marked fetch_status 'dead' and 61 to one marked 'wrong-content'. Their tasks come
     from the online test pages, so the booklet status does not void them, but the link should be re-checked.
 - id: pravopys_2019
+  permission_status: none
   name: «Український правопис» (2019), authorised edition, official PDF
   organisation: Інститут мовознавства ім. О. О. Потебні НАН України, Інститут української мови НАН України and Український
     мовно-інформаційний фонд НАН України (copyright holders per the imprint page); publisher Наукова думка
@@ -1914,6 +1916,7 @@ sources:
       only with the operator's authorisation).
   open_questions: []
 - id: pohribnyi_1992
+  permission_status: none
   name: Погрібний М. І. «Українська літературна вимова» (1992), booklet
   organisation: Author М. І. Погрібний; published by агентство «TRANSFORM», Дніпропетровськ (per the ingest record)
   role: Provenance record only. Plan O7 removed this booklet as a dataset source; no component or ruler uses it.
@@ -1954,6 +1957,7 @@ sources:
   open_questions:
   - The publisher and place come from the ingest record only. Check them against the scan's imprint during E3c.
 - id: textbooks_university
+  permission_status: none
   name: Ukrainian university textbooks (21 uni-* sources) in textbook_sections
   organisation: Authors and publishers named on each held university textbook imprint page.
   role: University textbook sections for C9; cite each book at its own held imprint and page granularity.

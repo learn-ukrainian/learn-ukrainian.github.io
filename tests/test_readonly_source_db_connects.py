@@ -44,7 +44,13 @@ def test_allowlisted_references_have_pinned_counts_and_declared_targets(entry):
         assert lint.writer_target_violations(source, entry) == []
     else:
         assert entry.kind == "reader_pending_migration_9662"
-        assert entry.target_db is None and not entry.calls
+        assert entry.target_db is None
+        calls = [
+            ast.unparse(n)
+            for n in ast.walk(ast.parse(source))
+            if isinstance(n, ast.Call) and ast.unparse(n.func) == "sqlite3.connect"
+        ]
+        assert calls == list(entry.calls)
 
 
 FORBIDDEN = (
@@ -76,6 +82,15 @@ FORBIDDEN = (
         'import sqlite3\nmodules = [sqlite3]\nmodules[0].connect("other.db")',
         'import sqlite3\nAlias = sqlite3\nAlias.connect("other.db")',
         "from sqlite3 import *",
+        "from scripts.lib.readonly_sqlite import sqlite3 as db; db.connect(path)",
+        "import anywhere as m; m.sqlite3.connect(path)",
+        "import anywhere as m; db = m.sqlite3; db.connect(path)",
+        'import sys; sys.modules["sqlite3"].connect(path)',
+        'import sys as s; db = s.modules["sqlite3"]; db.connect(path)',
+        'import pkgutil; pkgutil.resolve_name("sqlite3:connect")(path)',
+        'import pkgutil as p; p.resolve_name("sqlite3:Connection")(path)',
+        'from pkgutil import resolve_name as r; r("sqlite3:connect")(path)',
+        'import pkgutil; pkgutil.resolve_name("sqli" + "te3:connect")(path)',
         'import importlib\nimportlib.import_module("sqli" + "te3").connect(path)',
         "import importlib\ndb = importlib.import_module(name)\ndb.connect(path)",
         'import importlib\ndb = importlib.import_module("sqlite3")\ndb.Connection(path)',
@@ -145,7 +160,7 @@ def test_new_connect_in_allowlisted_file_fails_even_on_same_line(tmp_path, kind)
         kind,
         "output.db" if kind == "writer" else None,
         "synthetic fixture",
-        ("sqlite3.connect('output.db')",) if kind == "writer" else (),
+        ("sqlite3.connect('output.db')",),
     )
     assert lint.find_violations(tmp_path, (entry,)) == ([], [])
     path.write_text(source + '; sqlite3.connect("sources.db")')
@@ -291,3 +306,22 @@ def test_only_listed_source_ingest_build_writers_declare_protected_databases():
         if entry.kind == "writer" and any(name in entry.target_db for name in ("sources.db", "vesum.db"))
     }
     assert actual == SOURCE_INGEST_BUILD_WRITERS
+
+
+def test_allowlisted_vesum_reader_cannot_switch_to_writable(tmp_path):
+    entry = next(e for e in lint.load_allowlist() if e.path == "scripts/verification/vesum.py")
+    source = (REPO_ROOT / entry.path).read_text()
+    path = tmp_path / entry.path
+    path.parent.mkdir(parents=True)
+    path.write_text(source)
+    assert lint.find_violations(tmp_path, (entry,)) == ([], [])
+    assert 'sqlite3.connect(f"{resolved_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)' in source
+    path.write_text(
+        source.replace(
+            'sqlite3.connect(f"{resolved_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)',
+            "sqlite3.connect(str(resolved_path))",
+        )
+    )
+    violations, unreadable = lint.find_violations(tmp_path, (entry,))
+    assert not unreadable
+    assert any("reader opens differ" in v for v in violations)

@@ -4,11 +4,13 @@
 Every constructor reference is forbidden outside the pinned reference manifest
 and the one tested reader boundary, independent of target, mode, or call shape.
 Every listed file pins its reference count; readers awaiting #9662 do not gain
-permission to add constructors. Writer call expressions pin their target sites.
+permission to add constructors. Reader and writer call expressions pin their target sites.
 Module objects may not escape into assignments/containers/calls: otherwise an
 alias could hide a constructor. Dynamic imports of SQLite are refused too.
-Code built from strings (exec) is out of scope. Test fixture opens are outside
-this scan; a separate runtime guard must reject writable real data/*.db opens.
+Code built from strings (exec) and constructors recovered through type(conn)(path)
+are stated residuals outside this structural scan. Test fixture opens are outside
+this scan; tests/helpers/source_db_write_guard.py rejects writable real
+repository data/*.db connect calls within the pytest process.
 """
 
 from __future__ import annotations
@@ -24,7 +26,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 READER_BOUNDARY = "scripts/lib/readonly_sqlite.py"
-REFERENCE_MANIFEST = Path(__file__).with_name("sqlite_writer_allowlist.json")
+REFERENCE_MANIFEST = Path(__file__).with_name("sqlite_reference_allowlist.json")
 SQLITE_MODULES = frozenset({"sqlite3", "sqlite3.dbapi2", "_sqlite3"})
 CONSTRUCTORS = frozenset({"connect", "Connection"})
 
@@ -54,7 +56,7 @@ def load_allowlist() -> tuple[AllowedReference, ...]:
             or not entry.path.startswith("scripts/")
             or ".." in Path(entry.path).parts
             or (entry.kind == "writer" and (not entry.target_db or not entry.calls))
-            or (entry.kind != "writer" and (entry.target_db is not None or entry.calls))
+            or (entry.kind != "writer" and entry.target_db is not None)
         ):
             raise ValueError(f"invalid SQLite allowlist entry: {entry.path}")
     return entries
@@ -82,7 +84,7 @@ def classify_source(source: str, rel_path: str) -> list[Finding]:
     nodes = list(ast.walk(tree))
     lines = source.splitlines()
     modules = set(SQLITE_MODULES)
-    loaders = {"__import__", "importlib.import_module"}
+    loaders = {"__import__", "importlib.import_module", "pkgutil.resolve_name"}
     findings: dict[tuple[int, int], Finding] = {}
     constructors = set()
 
@@ -99,6 +101,8 @@ def classify_source(source: str, rel_path: str) -> list[Finding]:
                         modules.add(f"{alias.asname or alias.name}.dbapi2")
                 if alias.name == "importlib":
                     loaders.add(f"{alias.asname or alias.name}.import_module")
+                if alias.name == "pkgutil":
+                    loaders.add(f"{alias.asname or alias.name}.resolve_name")
                 if alias.name == "builtins":
                     loaders.add(f"{alias.asname or alias.name}.__import__")
         elif isinstance(node, ast.ImportFrom):
@@ -110,6 +114,15 @@ def classify_source(source: str, rel_path: str) -> list[Finding]:
                             constructors.add(alias.asname or alias.name)
                     elif node.module == "sqlite3" and alias.name == "dbapi2":
                         modules.add(alias.asname or alias.name)
+            elif any(alias.name in SQLITE_MODULES for alias in node.names):
+                for alias in node.names:
+                    if alias.name in SQLITE_MODULES:
+                        report(alias)
+                        modules.add(alias.asname or alias.name)
+            elif node.module == "pkgutil":
+                for alias in node.names:
+                    if alias.name == "resolve_name":
+                        loaders.add(alias.asname or alias.name)
             elif node.module == "importlib":
                 for alias in node.names:
                     if alias.name == "import_module":
@@ -119,24 +132,6 @@ def classify_source(source: str, rel_path: str) -> list[Finding]:
                     if alias.name == "__import__":
                         loaders.add(alias.asname or alias.name)
 
-    # No relevant AST identifiers/imports/literals means no possible reference.
-    # This shortcut uses the parsed syntax, not substring or caller/path inference.
-    module_roots = {m.split(".")[0] for m in modules}
-    if (
-        not findings
-        and not constructors
-        and not any(
-            (isinstance(node, ast.Name) and node.id in module_roots)
-            or (isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value in SQLITE_MODULES)
-            or (
-                isinstance(node, ast.Call)
-                and _dotted(node.func) in loaders
-                and (not node.args or not isinstance(node.args[0], ast.Constant))
-            )
-            for node in nodes
-        )
-    ):
-        return []
     parents = {child: node for node in nodes for child in ast.iter_child_nodes(node)}
     assignments = [node for node in nodes if isinstance(node, (ast.Assign, ast.AnnAssign))]
 
@@ -154,7 +149,9 @@ def classify_source(source: str, rel_path: str) -> list[Finding]:
                         if node.value.args
                         else next((k.value for k in node.value.keywords if k.arg == "name"), None)
                     )
-                    dynamic_module = not isinstance(target, ast.Constant) or target.value in SQLITE_MODULES
+                    dynamic_module = not isinstance(target, ast.Constant) or (
+                        isinstance(target.value, str) and target.value.split(":", 1)[0] in SQLITE_MODULES
+                    )
                 targets = node.targets if isinstance(node, ast.Assign) else [node.target]
                 for target in targets:
                     if not isinstance(target, ast.Name):
@@ -169,6 +166,19 @@ def classify_source(source: str, rel_path: str) -> list[Finding]:
                     ) and target.id not in constructors:
                         constructors.add(target.id)
                         changed = True
+
+    for node in nodes:
+        # Any module can re-export sqlite3. Pin neither the exporting module's
+        # identity nor an inferred caller path: the SQLite attribute is enough.
+        if isinstance(node, ast.Attribute) and node.attr in SQLITE_MODULES:
+            report(node)
+            modules.add(_dotted(node))
+        if (
+            isinstance(node, ast.Subscript)
+            and isinstance(node.slice, ast.Constant)
+            and node.slice.value in SQLITE_MODULES
+        ):
+            report(node)
 
     for node in nodes:
         if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load) and node.id in constructors:
@@ -195,9 +205,11 @@ def classify_source(source: str, rel_path: str) -> list[Finding]:
             # A nonliteral import target might load SQLite: refuse it without
             # path/name dataflow inference. Known unrelated literal imports pass.
             target = node.args[0] if node.args else next((k.value for k in node.keywords if k.arg == "name"), None)
-            if (isinstance(target, ast.Constant) and target.value in SQLITE_MODULES) or (
-                not isinstance(target, ast.Constant)
-            ):
+            if (
+                isinstance(target, ast.Constant)
+                and isinstance(target.value, str)
+                and target.value.split(":", 1)[0] in SQLITE_MODULES
+            ) or (not isinstance(target, ast.Constant)):
                 report(node)
     return sorted(findings.values(), key=lambda finding: finding.line_no)
 
@@ -283,6 +295,14 @@ def find_violations(
                     violations.append(f"{rel}: pinned {entry.reference_count} references, found {len(references)}")
                 if entry.kind == "writer":
                     violations.extend(writer_target_violations(source, entry, references))
+                else:
+                    calls = [
+                        ast.unparse(n)
+                        for n in ast.walk(ast.parse(source))
+                        if isinstance(n, ast.Call) and _dotted(n.func) == "sqlite3.connect"
+                    ]
+                    if Counter(calls) != Counter(entry.calls):
+                        violations.append(f"{rel}: reader opens differ from pinned call expressions")
             else:
                 violations.extend(f"{f.rel_path}:{f.line_no}: {f.kind}: {f.snippet}" for f in references)
         except (OSError, SyntaxError):
