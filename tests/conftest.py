@@ -206,12 +206,11 @@ def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool
 
 
 _CLAUDE_ADAPTER_ALIASES = ("scripts.agent_runtime.adapters.claude", "agent_runtime.adapters.claude")
-_KIMICC_ADAPTER_ALIASES = ("scripts.agent_runtime.adapters.kimicc", "agent_runtime.adapters.kimicc")
 _STUBBED_CLAUDE_CLI_VERSION = (2, 1, 200)
-# Bridge package the rules-workflow venv does not install. Adapter imports reach
-# it through fleet_comms contracts; its absence is not an alias typo.
+# Bridge package the rules-workflow venv does not install. The Claude adapter
+# reaches it through fleet_comms contracts; its absence is not an alias typo.
 _BRIDGE_RUNTIME = "learn_ukrainian_v4_runtime"
-# alias -> why this process last left that gate unpatched. A later successful
+# alias -> why this process last left that probe unpatched. A later successful
 # import removes the entry. The dict is the record; the warning fires once per
 # distinct reason so a runtime-less session does not warn on every test.
 _CLAUDE_GATE_IMPORT_SKIPS: dict[str, str] = {}
@@ -232,7 +231,7 @@ def _record_claude_gate_skip(alias: str, missing: str) -> None:
         return
     _CLAUDE_GATE_IMPORT_SKIPS[alias] = reason
     warnings.warn(
-        f"Claude CLI version-gate stub skipped {alias}: {reason}",
+        f"Claude CLI version-probe stub skipped {alias}: {reason}",
         RuntimeWarning,
         stacklevel=2,
     )
@@ -244,36 +243,31 @@ def _stub_claude_cli_version_gate(request: pytest.FixtureRequest, monkeypatch: p
 
     ``scripts.agent_runtime.adapters.claude`` and ``agent_runtime.adapters.claude``
     are two module objects, each with its own process-cached
-    ``_probe_claude_cli_version``. Both ``kimicc`` aliases bind
-    ``_ensure_supported_claude_cli_version`` with ``from .claude import`` at
-    first import, which copies the function object currently on the Claude module.
-    Import every alias that binds the gate before patching any of them, then
-    patch the ``kimicc`` bindings explicitly so teardown restores the real
-    gate. Patching Claude first would make that first import capture the stub,
-    and teardown would put the stub back.
+    ``_probe_claude_cli_version``. The gate calls that probe through the Claude
+    module's globals at call time. ``kimicc`` copies the gate by name, so
+    replacing the gate is order-sensitive: a late import keeps the replacement
+    after teardown. Patching the probe covers every copy, including one imported
+    while the stub is active, and teardown restores the real probe for all of
+    them. This fixture does not import ``kimicc`` and does not replace the gate.
 
     An alias whose import fails because ``learn_ukrainian_v4_runtime`` is not
-    installed is skipped and the missing module is recorded. The rules-workflow
-    venv has no bridge runtime and does not build Claude invocations. Any other
-    import error still propagates. When the runtime is present, every alias is
-    still imported before any gate is patched.
+    installed is skipped and the missing module is recorded. The Claude adapter
+    reaches that package through fleet_comms contracts, and the rules-workflow
+    venv does not install it. Any other import error still propagates.
 
-    Tests marked ``real_claude_cli_gate`` keep the real gate (with their own
-    fakes) and only get fresh caches. A test that patches the gate itself runs
-    after this fixture, so its patch wins.
+    Tests marked ``real_claude_cli_gate`` keep the real probe (with their own
+    fakes) and only get fresh caches. A test that patches the gate or the probe
+    itself runs after this fixture, so its patch wins.
     """
     import importlib
     import importlib.util
 
-    keep_real_gate = request.node.get_closest_marker("real_claude_cli_gate") is not None
+    keep_real_probe = request.node.get_closest_marker("real_claude_cli_gate") is not None
 
     def _stub(_cmd_prefix: tuple[str, ...]) -> tuple[int, int, int]:
         return _STUBBED_CLAUDE_CLI_VERSION
 
-    # Import first. A later patch of the Claude module does not update the
-    # object kimicc already copied in with ``from .claude import``.
-    modules: list[Any] = []
-    for alias in _CLAUDE_ADAPTER_ALIASES + _KIMICC_ADAPTER_ALIASES:
+    for alias in _CLAUDE_ADAPTER_ALIASES:
         if alias not in sys.modules and importlib.util.find_spec(alias.split(".")[0]) is None:
             continue
         try:
@@ -285,15 +279,12 @@ def _stub_claude_cli_version_gate(request: pytest.FixtureRequest, monkeypatch: p
             _record_claude_gate_skip(alias, missing)
             continue
         _CLAUDE_GATE_IMPORT_SKIPS.pop(alias, None)
-        modules.append(module)
-
-    for module in modules:
         probe = getattr(module, "_probe_claude_cli_version", None)
-        if probe is not None:
+        if probe is not None and hasattr(probe, "cache_clear"):
             probe.cache_clear()
             request.addfinalizer(probe.cache_clear)
-        if not keep_real_gate:
-            monkeypatch.setattr(module, "_ensure_supported_claude_cli_version", _stub)
+        if probe is not None and not keep_real_probe:
+            monkeypatch.setattr(module, "_probe_claude_cli_version", _stub)
 
 
 @pytest.fixture(autouse=True)

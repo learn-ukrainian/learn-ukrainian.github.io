@@ -1,13 +1,14 @@
 """Claude invocation tests never depend on the installed CLI version (#9903).
 
 A fake ``claude`` that reports an old version sits first on ``PATH``. Tests
-that build an invocation must still pass through the shared gate stub in
-``tests/conftest.py`` on both module aliases; the gate's own tests, marked
-``real_claude_cli_gate``, keep the real gate and still fail closed.
+that build an invocation must still pass through the shared probe stub in
+``tests/conftest.py`` on both Claude module aliases. The gate's own tests,
+marked ``real_claude_cli_gate``, keep the real probe and still fail closed.
 
-``kimicc`` copies the gate at first import. The order test drops both kimicc
-aliases and drives that fixture through an unmarked run followed by a marked
-one, then the reverse, in this process.
+``kimicc`` copies the gate at first import. That copy calls
+``_probe_claude_cli_version`` through the Claude module's globals, so the
+order tests import kimicc while the probe is stubbed and while it is real.
+A late import must not keep the stub after teardown.
 """
 
 import importlib
@@ -61,9 +62,15 @@ def test_invocation_builds_with_old_cli_on_path(tmp_path, old_claude_on_path):
 
 @pytest.mark.parametrize("alias", ALIASES)
 def test_gate_is_stubbed_on_every_alias(alias, old_claude_on_path):
+    from tests.conftest import _STUBBED_CLAUDE_CLI_VERSION
+
     module = importlib.import_module(alias)
-    assert module._ensure_supported_claude_cli_version((str(old_claude_on_path),)) is not None
-    assert module._ensure_supported_claude_cli_version((str(old_claude_on_path),)) >= (2, 1, 116)
+    prefix = (str(old_claude_on_path),)
+    gate = module._ensure_supported_claude_cli_version
+    # The fixture stubs the probe. The gate function itself stays the real one.
+    assert gate.__name__ == "_ensure_supported_claude_cli_version"
+    assert module._probe_claude_cli_version(prefix) == _STUBBED_CLAUDE_CLI_VERSION
+    assert gate(prefix) == _STUBBED_CLAUDE_CLI_VERSION
 
 
 @pytest.mark.real_claude_cli_gate
@@ -131,7 +138,7 @@ def _restore_kimicc(snapshot: list[tuple]) -> None:
 def _kimicc_modules() -> list:
     missing = [alias for alias in KIMICC_ALIASES if alias not in sys.modules]
     if missing:
-        pytest.fail(f"gate fixture did not import {missing}")
+        pytest.fail(f"kimicc was not imported: {missing}")
     return [sys.modules[alias] for alias in KIMICC_ALIASES]
 
 
@@ -139,27 +146,46 @@ def _clear_claude_probe_caches() -> None:
     for alias in ALIASES:
         module = sys.modules.get(alias)
         probe = getattr(module, "_probe_claude_cli_version", None) if module is not None else None
-        if probe is not None:
-            probe.cache_clear()
+        cache_clear = getattr(probe, "cache_clear", None)
+        if cache_clear is not None:
+            cache_clear()
+
+
+def _import_kimicc() -> None:
+    for alias in KIMICC_ALIASES:
+        importlib.import_module(alias)
 
 
 def _assert_kimicc_stubbed(prefix: tuple[str, ...]) -> None:
     from tests.conftest import _STUBBED_CLAUDE_CLI_VERSION
 
     for module in _kimicc_modules():
-        assert module._ensure_supported_claude_cli_version(prefix) == _STUBBED_CLAUDE_CLI_VERSION
+        gate = module._ensure_supported_claude_cli_version
+        assert gate.__name__ == "_ensure_supported_claude_cli_version"
+        assert gate(prefix) == _STUBBED_CLAUDE_CLI_VERSION
 
 
-def _assert_kimicc_rejects_old_cli(prefix: tuple[str, ...]) -> None:
+def _assert_kimicc_shares_claude_gate() -> None:
+    """kimicc holds the Claude function, not a stub captured at import."""
+    for kimicc_alias, claude_alias in zip(KIMICC_ALIASES, ALIASES, strict=True):
+        shared = sys.modules[claude_alias]._ensure_supported_claude_cli_version
+        assert sys.modules[kimicc_alias]._ensure_supported_claude_cli_version is shared
+
+
+def _assert_every_binding_rejects(prefix: tuple[str, ...]) -> None:
     _clear_claude_probe_caches()
-    for module in _kimicc_modules():
+    _assert_kimicc_shares_claude_gate()
+    for alias in (*ALIASES, *KIMICC_ALIASES):
+        module = sys.modules.get(alias)
+        if module is None:
+            pytest.fail(f"expected {alias} to be imported")
         with pytest.raises(RuntimeError, match=r"Claude CLI < 2\.1\.116"):
             module._ensure_supported_claude_cli_version(prefix)
 
 
 def _install_gate(patch: pytest.MonkeyPatch, *, marked: bool) -> None:
     # Pytest refuses a direct fixture call. Drive the same function the autouse
-    # fixture wraps, so this process repeats its import-then-patch order.
+    # fixture wraps, so this process repeats its probe patch.
     import tests.conftest as root_conftest
 
     install = inspect.unwrap(root_conftest._stub_claude_cli_version_gate)
@@ -168,11 +194,11 @@ def _install_gate(patch: pytest.MonkeyPatch, *, marked: bool) -> None:
 
 @pytest.mark.real_claude_cli_gate
 def test_kimicc_bindings_survive_unmarked_then_marked_and_the_reverse(monkeypatch, old_claude_on_path):
-    """Both kimicc aliases follow the shared gate across fixture order (#9903).
+    """Both kimicc aliases follow the shared probe across fixture order (#9903).
 
-    Unmarked then marked is the order that kept the stub: a first import copied
-    the patched Claude gate, and teardown restored that copy. Marked then
-    unmarked imports kimicc while the real gate is still in place.
+    Unmarked then marked imports kimicc while the probe stub is active.
+    Marked then unmarked imports kimicc while the real probe is still in place.
+    After each teardown, every Claude and kimicc binding rejects 2.1.50.
     """
     prefix = (str(old_claude_on_path),)
     for alias in ALIASES:
@@ -180,28 +206,54 @@ def test_kimicc_bindings_survive_unmarked_then_marked_and_the_reverse(monkeypatc
         assert gate.__name__ == "_ensure_supported_claude_cli_version"
 
     snapshot = _snapshot_kimicc()
-    saved_gates = {}
-    for alias in ALIASES:
-        module = importlib.import_module(alias)
-        saved_gates[module] = module._ensure_supported_claude_cli_version
     try:
         _unload_kimicc()
         with monkeypatch.context() as patch:
             _install_gate(patch, marked=False)
+            _import_kimicc()
             _assert_kimicc_stubbed(prefix)
-        _assert_kimicc_rejects_old_cli(prefix)
+        _assert_every_binding_rejects(prefix)
 
         _unload_kimicc()
         with monkeypatch.context() as patch:
             _install_gate(patch, marked=True)
-            _assert_kimicc_rejects_old_cli(prefix)
+            _import_kimicc()
+            _assert_every_binding_rejects(prefix)
         with monkeypatch.context() as patch:
             _install_gate(patch, marked=False)
             _assert_kimicc_stubbed(prefix)
-        _assert_kimicc_rejects_old_cli(prefix)
+        _assert_every_binding_rejects(prefix)
     finally:
-        for module, gate in saved_gates.items():
-            module._ensure_supported_claude_cli_version = gate
+        _restore_kimicc(snapshot)
+        _clear_claude_probe_caches()
+
+
+@pytest.mark.real_claude_cli_gate
+def test_late_kimicc_import_while_stubbed_rejects_after_marked_gate(monkeypatch, old_claude_on_path):
+    """Claude is imported, kimicc is not, then kimicc imports while the probe is stubbed.
+
+    Teardown plus the next marked run must reject 2.1.50 on every Claude and
+    kimicc binding. Replacing the gate left that late copy returning the stub
+    (#9903).
+    """
+    prefix = (str(old_claude_on_path),)
+    for alias in ALIASES:
+        module = importlib.import_module(alias)
+        assert module._ensure_supported_claude_cli_version.__name__ == "_ensure_supported_claude_cli_version"
+
+    snapshot = _snapshot_kimicc()
+    try:
+        _unload_kimicc()
+        with monkeypatch.context() as patch:
+            _install_gate(patch, marked=False)
+            assert all(alias not in sys.modules for alias in KIMICC_ALIASES)
+            _import_kimicc()
+            _assert_kimicc_shares_claude_gate()
+            _assert_kimicc_stubbed(prefix)
+        with monkeypatch.context() as patch:
+            _install_gate(patch, marked=True)
+            _assert_every_binding_rejects(prefix)
+    finally:
         _restore_kimicc(snapshot)
         _clear_claude_probe_caches()
 
@@ -222,10 +274,10 @@ def test_only_the_bridge_runtime_counts_as_an_absent_gate_dependency():
 
 
 def test_fixture_skips_alias_when_bridge_runtime_is_absent(monkeypatch):
-    """Each gate alias is skipped, with the missing runtime recorded, and nothing else is swallowed."""
+    """Each Claude adapter alias is skipped, with the missing runtime recorded, and nothing else is swallowed."""
     import tests.conftest as root_conftest
 
-    aliases = root_conftest._CLAUDE_ADAPTER_ALIASES + root_conftest._KIMICC_ADAPTER_ALIASES
+    aliases = root_conftest._CLAUDE_ADAPTER_ALIASES
     seen: list[str] = []
 
     def fake_import(name, package=None):
