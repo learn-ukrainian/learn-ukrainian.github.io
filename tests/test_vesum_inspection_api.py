@@ -15,6 +15,8 @@ import bz2
 import json
 import os
 import sqlite3
+import subprocess
+import sys
 import threading
 from pathlib import Path
 
@@ -35,6 +37,47 @@ from scripts.verification.vesum import (
     verify_word,
     verify_words,
 )
+
+
+def test_parallel_retained_readers_complete_without_writing_or_attaching(tmp_path):
+    database = tmp_path / "parallel dictionary.db"
+    with sqlite3.connect(database) as conn:
+        conn.execute("CREATE TABLE proof(value INTEGER)")
+        conn.execute("INSERT INTO proof VALUES (7)")
+    code = r"""
+import sqlite3, sys, threading
+from concurrent.futures import ThreadPoolExecutor
+from scripts.verification import vesum
+barrier = threading.Barrier(8)
+def read(worker):
+    barrier.wait()
+    with vesum.get_vesum_connection(sys.argv[1]) as conn:
+        for iteration in range(100):
+            sql = f"SELECT value FROM proof /* worker {worker} iteration {iteration} */"
+            assert conn.execute(sql).fetchone()[0] == 7
+        conn.execute("PRAGMA query_only=OFF")
+        try:
+            conn.execute("INSERT INTO proof VALUES (8)")
+        except sqlite3.OperationalError:
+            pass
+        else:
+            raise AssertionError("retained reader could write")
+        try:
+            conn.execute("ATTACH DATABASE ':memory:' AS forbidden")
+        except sqlite3.DatabaseError:
+            pass
+        else:
+            raise AssertionError("retained reader could attach")
+    return True
+with ThreadPoolExecutor(max_workers=8) as pool:
+    assert all(pool.map(read, range(8)))
+vesum.close_vesum_conn()
+assert not vesum._READER_LOCKS
+"""
+    before = database.read_bytes()
+    subprocess.run([sys.executable, "-c", code, str(database)], check=True, capture_output=True, timeout=10)
+    assert database.read_bytes() == before
+
 
 SYNTHETIC_INSPECTION_BLOCKS = """\
 clean noun:inanim:m:v_naz    # clean header

@@ -3,7 +3,9 @@
 import json
 import os
 import sqlite3
+import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -13,6 +15,52 @@ pytestmark = pytest.mark.reads_content
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 
 from wiki import sources_db
+
+
+def test_parallel_cached_readers_complete_and_keep_the_readonly_boundary(tmp_path):
+    database = tmp_path / "parallel readers.db"
+    with sqlite3.connect(database) as conn:
+        conn.execute("CREATE TABLE proof(value INTEGER)")
+        conn.execute("INSERT INTO proof VALUES (7)")
+    code = r"""
+import sqlite3, sys, threading
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from scripts.wiki import sources_db
+sources_db._read_db_path = lambda: Path(sys.argv[1])
+sources_db._conn = None
+main = sources_db._get_conn()
+barrier = threading.Barrier(8)
+def read(worker):
+    conn = sources_db._get_conn()
+    assert sources_db._get_conn() is conn
+    barrier.wait()
+    for iteration in range(100):
+        sql = f"SELECT value FROM proof /* worker {worker} iteration {iteration} */"
+        assert conn.execute(sql).fetchone()[0] == 7
+    conn.execute("PRAGMA query_only=OFF")
+    try:
+        conn.execute("INSERT INTO proof VALUES (8)")
+    except sqlite3.OperationalError:
+        pass
+    else:
+        raise AssertionError("worker could write")
+    try:
+        conn.execute("ATTACH DATABASE ':memory:' AS forbidden")
+    except sqlite3.DatabaseError:
+        pass
+    else:
+        raise AssertionError("worker could attach")
+    return id(conn)
+with ThreadPoolExecutor(max_workers=8) as pool:
+    connections = list(pool.map(read, range(8)))
+assert len(set(connections)) == 8
+assert id(main) not in connections
+main.close()
+"""
+    before = database.read_bytes()
+    subprocess.run([sys.executable, "-c", code, str(database)], check=True, capture_output=True, timeout=10)
+    assert database.read_bytes() == before
 
 
 @pytest.fixture(autouse=True)
@@ -25,6 +73,24 @@ def sources_report_log_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> P
     for module in (builder, qualified_builder):
         monkeypatch.setattr(module, "LOG_DIR", log_dir)
     return log_dir
+
+
+def test_reused_reader_thread_follows_the_selected_database(tmp_path, monkeypatch):
+    paths = [tmp_path / "first.db", tmp_path / "second.db"]
+    for path, value in zip(paths, [7, 11], strict=True):
+        with sqlite3.connect(path) as conn:
+            conn.execute("CREATE TABLE proof(value INTEGER)")
+            conn.execute("INSERT INTO proof VALUES (?)", (value,))
+    selected = [paths[0]]
+    monkeypatch.setattr(sources_db, "_read_db_path", lambda: selected[0])
+
+    def read():
+        return sources_db._get_conn().execute("SELECT value FROM proof").fetchone()[0]
+
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        assert pool.submit(read).result(timeout=5) == 7
+        selected[0] = paths[1]
+        assert pool.submit(read).result(timeout=5) == 11
 
 
 def test_reader_missing_database_raises_without_creating_file(tmp_path: Path) -> None:
@@ -192,23 +258,31 @@ def sample_data(tmp_path):
     ext_dir = tmp_path / "external"
     ext_dir.mkdir()
     blogs = [
-        {"url": "https://example.com/genitive", "title": "Родовий відмінок",
-         "domain": "example.com", "char_count": 400,
-         "text": (
-             "Родовий відмінок вживається для позначення належності, частини від цілого, "
-             "а також після багатьох прийменників. Він є одним із найчастіше вживаних "
-             "відмінків в українській мові. Іменники першої відміни в родовому відмінку "
-             "мають закінчення -и або -і, а іменники другої відміни — закінчення -а (-я) "
-             "або -у (-ю) залежно від лексичного значення."
-         )},
-        {"url": "https://example.com/dative", "title": "Давальний відмінок",
-         "domain": "example.com", "char_count": 350,
-         "text": (
-             "Давальний відмінок вказує на адресата дії або особу, для якої щось робиться. "
-             "В українській мові давальний відмінок часто вживається з дієсловами, що "
-             "позначають передачу, повідомлення, допомогу. Наприклад: дати книгу другові, "
-             "розповісти матері, допомогти сусідові. Закінчення залежать від відміни іменника."
-         )},
+        {
+            "url": "https://example.com/genitive",
+            "title": "Родовий відмінок",
+            "domain": "example.com",
+            "char_count": 400,
+            "text": (
+                "Родовий відмінок вживається для позначення належності, частини від цілого, "
+                "а також після багатьох прийменників. Він є одним із найчастіше вживаних "
+                "відмінків в українській мові. Іменники першої відміни в родовому відмінку "
+                "мають закінчення -и або -і, а іменники другої відміни — закінчення -а (-я) "
+                "або -у (-ю) залежно від лексичного значення."
+            ),
+        },
+        {
+            "url": "https://example.com/dative",
+            "title": "Давальний відмінок",
+            "domain": "example.com",
+            "char_count": 350,
+            "text": (
+                "Давальний відмінок вказує на адресата дії або особу, для якої щось робиться. "
+                "В українській мові давальний відмінок часто вживається з дієсловами, що "
+                "позначають передачу, повідомлення, допомогу. Наприклад: дати книгу другові, "
+                "розповісти матері, допомогти сусідові. Закінчення залежать від відміни іменника."
+            ),
+        },
     ]
     with open(ext_dir / "test_blogs.jsonl", "w") as f:
         for e in blogs:
@@ -218,18 +292,23 @@ def sample_data(tmp_path):
     tb_dir = tmp_path / "textbooks" / "grade-05"
     tb_dir.mkdir(parents=True)
     chunks = [
-        {"chunk_id": "5-klas-test_s001", "section_title": "Іменник",
-         "text": (
-             "Родовий відмінок іменників вживається для позначення належності, "
-             "частини від цілого, а також після деяких прийменників. "
-             "Наприклад: книга вчителя, склянка води, біля школи. "
-             "У родовому відмінку іменники першої відміни мають закінчення -и, -і, "
-             "а іменники другої відміни — закінчення -а (-я) або -у (-ю) залежно від "
-             "лексичного значення слова. Правильне вживання відмінкових форм є ознакою "
-             "грамотного мовлення."
-         ),
-         "grade": "5", "author": "avramenko", "author_uk": "Авраменко",
-         "token_count": 50},
+        {
+            "chunk_id": "5-klas-test_s001",
+            "section_title": "Іменник",
+            "text": (
+                "Родовий відмінок іменників вживається для позначення належності, "
+                "частини від цілого, а також після деяких прийменників. "
+                "Наприклад: книга вчителя, склянка води, біля школи. "
+                "У родовому відмінку іменники першої відміни мають закінчення -и, -і, "
+                "а іменники другої відміни — закінчення -а (-я) або -у (-ю) залежно від "
+                "лексичного значення слова. Правильне вживання відмінкових форм є ознакою "
+                "грамотного мовлення."
+            ),
+            "grade": "5",
+            "author": "avramenko",
+            "author_uk": "Авраменко",
+            "token_count": 50,
+        },
     ]
     with open(tb_dir / "5-klas-ukrmova-avramenko-2022.jsonl", "w") as f:
         for c in chunks:
@@ -238,12 +317,7 @@ def sample_data(tmp_path):
     # Dictionaries (on fake gdrive)
     gdrive = tmp_path / "gdrive"
 
-    historical_dir = (
-        gdrive
-        / "historical_language_corpus"
-        / "canonical"
-        / "saint-sophia-inscriptions"
-    )
+    historical_dir = gdrive / "historical_language_corpus" / "canonical" / "saint-sophia-inscriptions"
     historical_dir.mkdir(parents=True)
     historical_row = {
         "schema_version": "historical-source-record.v1",
@@ -278,16 +352,20 @@ def sample_data(tmp_path):
     lit_dir = gdrive / "literary_texts"
     lit_dir.mkdir(parents=True)
     lit = [
-        {"chunk_id": "lit-test-0", "title": "Козацькі думи",
-         "author": "Народ", "section_title": "Козацькі думи",
-         "source_url": "https://lit.example/kozak",
-         "text": (
-             "Ой у полі козак лежить, кінь коло нього ходить. Козацькі думи — один із "
-             "найдавніших жанрів українського фольклору. Вони оспівують героїчні подвиги "
-             "козаків, їхню боротьбу за волю та незалежність. Думи виконувалися кобзарями "
-             "та лірниками під акомпанемент бандури або ліри. Цей жанр не має аналогів "
-             "в інших слов'янських літературах і є унікальним надбанням української культури."
-         )},
+        {
+            "chunk_id": "lit-test-0",
+            "title": "Козацькі думи",
+            "author": "Народ",
+            "section_title": "Козацькі думи",
+            "source_url": "https://lit.example/kozak",
+            "text": (
+                "Ой у полі козак лежить, кінь коло нього ходить. Козацькі думи — один із "
+                "найдавніших жанрів українського фольклору. Вони оспівують героїчні подвиги "
+                "козаків, їхню боротьбу за волю та незалежність. Думи виконувалися кобзарями "
+                "та лірниками під акомпанемент бандури або ліри. Цей жанр не має аналогів "
+                "в інших слов'янських літературах і є унікальним надбанням української культури."
+            ),
+        },
     ]
     with open(lit_dir / "test-kozak.jsonl", "w") as f:
         for c in lit:
@@ -295,18 +373,53 @@ def sample_data(tmp_path):
     for name, entries in [
         ("sum11", [{"word": "слово", "definition": "Одиниця мови", "text": "слово — одиниця мови", "source": "СУМ"}]),
         ("grinchenko", [{"word": "хата", "definition": "Будинок", "source": "Грінченко"}]),
-        ("balla-en-uk", [{"word": "house", "definition": "будинок, хата", "text": "house — будинок", "source": "Балла"}]),
-        ("dmklinger-uk-en", [{"word": "дім", "pos": "noun", "translations": ["house", "home"], "text": "дім — house", "source": "DM"}]),
-        ("ukrajinet", [{"synset_id": "s1", "words": "великий, здоровий, чималий", "text": "великий синонім", "source": "UNet"}]),
-        ("wiktionary", [{"word": "кіт", "definitions": "Домашня тварина", "synonyms": "", "antonyms": "", "text": "кіт", "source": "Wikt"}]),
-        ("frazeolohichnyi", [{"word": "вода", "definition": "Не розлий вода", "text": "вода — фразеологізм", "source": "Фраз"}]),
-        ("antonenko-davydovych", [
-            {"word": "процент", "section": "Лексика", "text": "Кажіть відсоток", "source": "АД"},
-            {"word": "Приймати участь", "section": "Лексика",
-             "text": "Приймати участь — калька з рос. Кажіть: брати участь.", "source": "АД"},
-            {"word": "На протязі", "section": "Прийменники",
-             "text": "На протязі — калька з рос. 'в течение'. Кажіть: протягом.", "source": ""},
-        ]),
+        (
+            "balla-en-uk",
+            [{"word": "house", "definition": "будинок, хата", "text": "house — будинок", "source": "Балла"}],
+        ),
+        (
+            "dmklinger-uk-en",
+            [{"word": "дім", "pos": "noun", "translations": ["house", "home"], "text": "дім — house", "source": "DM"}],
+        ),
+        (
+            "ukrajinet",
+            [{"synset_id": "s1", "words": "великий, здоровий, чималий", "text": "великий синонім", "source": "UNet"}],
+        ),
+        (
+            "wiktionary",
+            [
+                {
+                    "word": "кіт",
+                    "definitions": "Домашня тварина",
+                    "synonyms": "",
+                    "antonyms": "",
+                    "text": "кіт",
+                    "source": "Wikt",
+                }
+            ],
+        ),
+        (
+            "frazeolohichnyi",
+            [{"word": "вода", "definition": "Не розлий вода", "text": "вода — фразеологізм", "source": "Фраз"}],
+        ),
+        (
+            "antonenko-davydovych",
+            [
+                {"word": "процент", "section": "Лексика", "text": "Кажіть відсоток", "source": "АД"},
+                {
+                    "word": "Приймати участь",
+                    "section": "Лексика",
+                    "text": "Приймати участь — калька з рос. Кажіть: брати участь.",
+                    "source": "АД",
+                },
+                {
+                    "word": "На протязі",
+                    "section": "Прийменники",
+                    "text": "На протязі — калька з рос. 'в течение'. Кажіть: протягом.",
+                    "source": "",
+                },
+            ],
+        ),
     ]:
         d = gdrive / name
         d.mkdir(parents=True)
@@ -318,9 +431,21 @@ def sample_data(tmp_path):
     puls_dir = tmp_path / "data" / "puls"
     puls_dir.mkdir(parents=True)
     with open(puls_dir / "entries.jsonl", "w") as f:
-        f.write(json.dumps({"word": "добре", "guideword": "", "level": "A1",
-                            "pos": "прислівник", "type": "значення",
-                            "text": "добре (A1)", "source": "PULS"}, ensure_ascii=False) + "\n")
+        f.write(
+            json.dumps(
+                {
+                    "word": "добре",
+                    "guideword": "",
+                    "level": "A1",
+                    "pos": "прислівник",
+                    "type": "значення",
+                    "text": "добре (A1)",
+                    "source": "PULS",
+                },
+                ensure_ascii=False,
+            )
+            + "\n"
+        )
 
     return {
         "ext_dir": ext_dir,
@@ -378,13 +503,10 @@ class TestBuildSourcesDb:
         assert conn.execute("SELECT COUNT(*) FROM style_guide").fetchone()[0] == 3
 
         # FTS works
-        fts = conn.execute(
-            "SELECT COUNT(*) FROM textbooks_fts WHERE textbooks_fts MATCH '\"родовий\"'"
-        ).fetchone()[0]
+        fts = conn.execute("SELECT COUNT(*) FROM textbooks_fts WHERE textbooks_fts MATCH '\"родовий\"'").fetchone()[0]
         assert fts >= 1
         historical_fts = conn.execute(
-            "SELECT COUNT(*) FROM historical_source_records_fts "
-            "WHERE historical_source_records_fts MATCH '\"напис\"'"
+            "SELECT COUNT(*) FROM historical_source_records_fts WHERE historical_source_records_fts MATCH '\"напис\"'"
         ).fetchone()[0]
         assert historical_fts == 1
         conn.close()
@@ -395,18 +517,14 @@ class TestBuildSourcesDb:
 
         monkeypatch.setattr(bdb, "PROJECT_ROOT", sample_data["project_root"])
 
-        build(sample_data["db_path"], sample_data["ext_dir"],
-              sample_data["tb_dir"], sample_data["gdrive"])
-        build(sample_data["db_path"], sample_data["ext_dir"],
-              sample_data["tb_dir"], sample_data["gdrive"])
+        build(sample_data["db_path"], sample_data["ext_dir"], sample_data["tb_dir"], sample_data["gdrive"])
+        build(sample_data["db_path"], sample_data["ext_dir"], sample_data["tb_dir"], sample_data["gdrive"])
 
         conn = sqlite3.connect(str(sample_data["db_path"]))
         assert conn.execute("SELECT COUNT(*) FROM sum11").fetchone()[0] == 1
         conn.close()
 
-    def test_full_rebuild_uses_canonical_university_grade_label(
-        self, sample_data, monkeypatch
-    ):
+    def test_full_rebuild_uses_canonical_university_grade_label(self, sample_data, monkeypatch):
         from scripts.wiki import build_sources_db as bdb
         from scripts.wiki.build_sources_db import build
 
@@ -451,16 +569,17 @@ class TestSourcesDb:
         import wiki.build_sources_db as bdb
         import wiki.sources_db as sdb
         from wiki.build_sources_db import build
+
         monkeypatch.setattr(bdb, "PROJECT_ROOT", sample_data["project_root"])
 
-        build(sample_data["db_path"], sample_data["ext_dir"],
-              sample_data["tb_dir"], sample_data["gdrive"])
+        build(sample_data["db_path"], sample_data["ext_dir"], sample_data["tb_dir"], sample_data["gdrive"])
         monkeypatch.setattr(sdb, "SOURCES_DB_PATH", sample_data["db_path"])
         monkeypatch.setattr(sdb, "_conn", None)
 
     def test_search_textbooks(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_textbooks
+
         results = search_textbooks({"родовий", "відмінок"}, max_total=5)
         assert len(results) >= 1
         assert results[0]["source_type"] == "textbook"
@@ -489,6 +608,7 @@ class TestSourcesDb:
     def test_search_external(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_external
+
         results = search_external({"родовий", "відмінок"}, max_total=5)
         assert len(results) >= 1
         assert results[0]["source_type"] == "external"
@@ -496,12 +616,14 @@ class TestSourcesDb:
     def test_search_literary(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_literary
+
         results = search_literary({"козак"}, max_total=5)
         assert len(results) >= 1
 
     def test_search_definitions(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_definitions
+
         results = search_definitions("слово")
         assert len(results) == 1
         assert "Одиниця мови" in results[0]["definition"]
@@ -509,18 +631,21 @@ class TestSourcesDb:
     def test_search_grinchenko_1907(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_grinchenko_1907
+
         results = search_grinchenko_1907("хата")
         assert len(results) == 1
 
     def test_translate_en_uk(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import translate_en_uk
+
         results = translate_en_uk("house")
         assert len(results) == 1
 
     def test_search_synonyms(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_synonyms
+
         results = search_synonyms("великий")
         assert len(results) >= 1
 
@@ -532,12 +657,14 @@ class TestSourcesDb:
             word="великий",
             canonical_headword="великий",
             sections={
-                "synonyms": [{
-                    "sense_or_group_id": "synonyms:1",
-                    "terms": [{"text": "величезний"}],
-                    "register_labels": ["розм."],
-                    "citations": ["Леся Українка"],
-                }],
+                "synonyms": [
+                    {
+                        "sense_or_group_id": "synonyms:1",
+                        "terms": [{"text": "величезний"}],
+                        "register_labels": ["розм."],
+                        "citations": ["Леся Українка"],
+                    }
+                ],
             },
             raw_responses={"synonyms": "<html>official synonym group</html>"},
             retrieved_at="2026-07-15T00:00:00+00:00",
@@ -557,12 +684,15 @@ class TestSourcesDb:
 
         conn = sqlite3.connect(str(sample_data["db_path"]))
         try:
-            columns = {
-                row[1] for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")
-            }
+            columns = {row[1] for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")}
             assert {
-                "normalized_query", "canonical_headword", "raw_response_ref", "retrieved_at",
-                "response_sha256", "parser_version", "status",
+                "normalized_query",
+                "canonical_headword",
+                "raw_response_ref",
+                "retrieved_at",
+                "response_sha256",
+                "parser_version",
+                "status",
             } <= columns
             assert conn.execute("SELECT COUNT(*) FROM ulif_dictua_sections").fetchone()[0] == 1
         finally:
@@ -572,11 +702,13 @@ class TestSourcesDb:
             word="вода",
             canonical_headword="вода",
             sections={
-                "phraseology": [{
-                    "sense_or_group_id": "phraseology:1",
-                    "terms": [{"text": "води в рот набрати"}],
-                    "text": "води в рот набрати",
-                }],
+                "phraseology": [
+                    {
+                        "sense_or_group_id": "phraseology:1",
+                        "terms": [{"text": "води в рот набрати"}],
+                        "text": "води в рот набрати",
+                    }
+                ],
             },
             raw_responses={"phraseology": "<html>official phraseology group</html>"},
             retrieved_at="2026-07-15T00:00:00+00:00",
@@ -590,6 +722,7 @@ class TestSourcesDb:
     def test_query_cefr_level(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import query_cefr_level
+
         results = query_cefr_level("добре")
         assert len(results) >= 1
         assert results[0]["level"] == "A1"
@@ -610,12 +743,11 @@ class TestSourcesDb:
     def test_search_style_guide(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_style_guide
+
         results = search_style_guide("процент")
         assert len(results) == 1
 
-    def test_search_style_guide_lowercase_phrase_matches_capitalized_headword(
-        self, sample_data, monkeypatch
-    ):
+    def test_search_style_guide_lowercase_phrase_matches_capitalized_headword(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_style_guide
 
@@ -624,9 +756,7 @@ class TestSourcesDb:
         assert results[0]["word"] == "Приймати участь"
         assert results[0]["source"] == "АД"
 
-    def test_search_style_guide_substring_matches_multiword_headword(
-        self, sample_data, monkeypatch
-    ):
+    def test_search_style_guide_substring_matches_multiword_headword(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_style_guide
 
@@ -637,9 +767,7 @@ class TestSourcesDb:
         # in the canonical attribution rather than returning "".
         assert results[0]["source"] == "Антоненко-Давидович"
 
-    def test_search_style_guide_body_fallback_when_not_in_headword(
-        self, sample_data, monkeypatch
-    ):
+    def test_search_style_guide_body_fallback_when_not_in_headword(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_style_guide
 
@@ -649,9 +777,7 @@ class TestSourcesDb:
         assert results[0]["word"] == "На протязі"
         assert "протягом" in results[0]["text"]
 
-    def test_search_style_guide_nonexistent_query_returns_empty(
-        self, sample_data, monkeypatch
-    ):
+    def test_search_style_guide_nonexistent_query_returns_empty(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_style_guide
 
@@ -660,12 +786,14 @@ class TestSourcesDb:
     def test_lookup_by_url(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import lookup_by_url
+
         result = lookup_by_url("https://example.com/genitive")
         assert result is not None
         assert result["title"] == "Родовий відмінок"
 
     def test_missing_db(self, tmp_path, monkeypatch):
         import wiki.sources_db as sdb
+
         monkeypatch.setattr(sdb, "SOURCES_DB_PATH", tmp_path / "nope.db")
         monkeypatch.setattr(sdb, "_conn", None)
         assert sdb.search_textbooks({"test"}) == []
@@ -714,28 +842,84 @@ def external_search_db(tmp_path, monkeypatch):
     )
     rows = [
         (
-            "ext-ulp-000", "https://example.test/ulp", "https://example.test/ulp",
-            "Козаки козаки козаки", "Козаки як навчальна тема для студентів. Козаки у простій мові.",
-            "ulp_youtube", "example.test", 68, "ulp_youtube", "Anna Ohoiko",
-            "scripted", "moderate", 1, "", 0, None, None, "ulp001",
+            "ext-ulp-000",
+            "https://example.test/ulp",
+            "https://example.test/ulp",
+            "Козаки козаки козаки",
+            "Козаки як навчальна тема для студентів. Козаки у простій мові.",
+            "ulp_youtube",
+            "example.test",
+            68,
+            "ulp_youtube",
+            "Anna Ohoiko",
+            "scripted",
+            "moderate",
+            1,
+            "",
+            0,
+            None,
+            None,
+            "ulp001",
         ),
         (
-            "ext-realna-000", "https://example.test/realna", "https://example.test/realna",
-            "Козаки та історія", "Козаки в історії України, деколонізація та пам'ять про козаків.",
-            "realna_istoria", "example.test", 69, "realna_istoria", "Акім Галімов",
-            "interview", "strong", 1, "", 0, None, None, "realna001",
+            "ext-realna-000",
+            "https://example.test/realna",
+            "https://example.test/realna",
+            "Козаки та історія",
+            "Козаки в історії України, деколонізація та пам'ять про козаків.",
+            "realna_istoria",
+            "example.test",
+            69,
+            "realna_istoria",
+            "Акім Галімов",
+            "interview",
+            "strong",
+            1,
+            "",
+            0,
+            None,
+            None,
+            "realna001",
         ),
         (
-            "ext-imtgsh-000", "https://example.test/imtgsh", "https://example.test/imtgsh",
-            "Козаки на пограниччі", "Козаки та історія державності. Шевченко, кордони, козаки.",
-            "imtgsh", "example.test", 63, "imtgsh", "Редакційний голос каналу",
-            "scripted", "strong", 2, "", 0, None, None, "imtgsh001",
+            "ext-imtgsh-000",
+            "https://example.test/imtgsh",
+            "https://example.test/imtgsh",
+            "Козаки на пограниччі",
+            "Козаки та історія державності. Шевченко, кордони, козаки.",
+            "imtgsh",
+            "example.test",
+            63,
+            "imtgsh",
+            "Редакційний голос каналу",
+            "scripted",
+            "strong",
+            2,
+            "",
+            0,
+            None,
+            None,
+            "imtgsh001",
         ),
         (
-            "ext-other-000", "https://example.test/other", "https://example.test/other",
-            "Козаки в блозі", "Козаки як тло для короткої нотатки.",
-            "other_blogs", "example.test", 35, "other_blogs", "Multiple authors",
-            "mixed", "neutral", 3, "", 0, None, None, "other001",
+            "ext-other-000",
+            "https://example.test/other",
+            "https://example.test/other",
+            "Козаки в блозі",
+            "Козаки як тло для короткої нотатки.",
+            "other_blogs",
+            "example.test",
+            35,
+            "other_blogs",
+            "Multiple authors",
+            "mixed",
+            "neutral",
+            3,
+            "",
+            0,
+            None,
+            None,
+            "other001",
         ),
     ]
     conn.executemany(
@@ -819,7 +1003,7 @@ def test_rebuild_author_uk_enrichment_regression(tmp_path, monkeypatch):
         "grade": "5",
         "author": "avramenko",
         "author_uk": None,
-        "token_count": 5
+        "token_count": 5,
     }
 
     jsonl_path = tb_dir / "5-klas-ukrmova-avramenko-2022.jsonl"
@@ -868,7 +1052,7 @@ def test_rebuild_author_absent_edge(tmp_path, monkeypatch):
         "section_title": "Іменник",
         "text": "Приклад тексту.",
         "grade": "5",
-        "token_count": 5
+        "token_count": 5,
     }
 
     jsonl_path = tb_dir / "5-klas-ukrmova-avramenko-2022.jsonl"
@@ -920,7 +1104,7 @@ def test_rebuild_author_unmapped_edge(tmp_path, monkeypatch):
         "grade": "5",
         "author": "unknown_author_name",
         "author_uk": None,
-        "token_count": 5
+        "token_count": 5,
     }
 
     jsonl_path = tb_dir / "5-klas-ukrmova-avramenko-2022.jsonl"
@@ -976,16 +1160,24 @@ class TestForcedRebuildAtomicity:
         # chunk whose author has no canonical Cyrillic form.
         bad_dir = sample_data["tb_dir"] / "grade-05"
         with open(bad_dir / "zzz-unmapped.jsonl", "w", encoding="utf-8") as f:
-            f.write(json.dumps({
-                "chunk_id": "bad-1", "section_title": "Зламаний",
-                "text": "Текст без відповідного автора у мапі.",
-                "grade": "5", "author": "totally_unmapped_author",
-                "author_uk": None, "token_count": 5,
-            }, ensure_ascii=False) + "\n")
+            f.write(
+                json.dumps(
+                    {
+                        "chunk_id": "bad-1",
+                        "section_title": "Зламаний",
+                        "text": "Текст без відповідного автора у мапі.",
+                        "grade": "5",
+                        "author": "totally_unmapped_author",
+                        "author_uk": None,
+                        "token_count": 5,
+                    },
+                    ensure_ascii=False,
+                )
+                + "\n"
+            )
 
         with pytest.raises(IngestError):
-            build(db_path, sample_data["ext_dir"], sample_data["tb_dir"],
-                  sample_data["gdrive"], force=True)
+            build(db_path, sample_data["ext_dir"], sample_data["tb_dir"], sample_data["gdrive"], force=True)
 
         # The pre-existing DB must be untouched — never unlinked, never
         # partially overwritten.
@@ -1012,8 +1204,7 @@ class TestForcedRebuildAtomicity:
         build(db_path, sample_data["ext_dir"], sample_data["tb_dir"], sample_data["gdrive"])
         first_inode = db_path.stat().st_ino
 
-        build(db_path, sample_data["ext_dir"], sample_data["tb_dir"],
-              sample_data["gdrive"], force=True)
+        build(db_path, sample_data["ext_dir"], sample_data["tb_dir"], sample_data["gdrive"], force=True)
 
         out = capsys.readouterr().out
         assert "Atomically replaced" in out
@@ -1238,12 +1429,15 @@ class TestHeadwordFirstRanking:
 
         assert len(oversized_document.encode("utf-8")) > 50_000
         assert search_esum(oversized_document, db_path=esum_heritage_rank_db, limit=5) == []
-        assert search_heritage(
-            oversized_document,
-            db_path=esum_heritage_rank_db,
-            include_live_slovnyk=False,
-            limit=5,
-        ) == []
+        assert (
+            search_heritage(
+                oversized_document,
+                db_path=esum_heritage_rank_db,
+                include_live_slovnyk=False,
+                limit=5,
+            )
+            == []
+        )
 
     def test_search_esum_oversized_exact_lemma_still_resolves(self, esum_heritage_rank_db):
         from wiki.sources_db import search_esum

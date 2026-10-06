@@ -35,6 +35,7 @@ _vesum_conn_path: Path | None = None
 _vesum_conn_stat: tuple[int, int] | None = None
 _CONN_LOCK = threading.Lock()
 _ACTIVE_CONNS: dict[SQLiteConnection, int] = {}
+_READER_LOCKS: dict[SQLiteConnection, Any] = {}
 
 
 class InspectionStatus(StrEnum):
@@ -136,6 +137,7 @@ def _get_or_create_conn_locked(resolved_path: Path, current_stat: tuple[int, int
             _ACTIVE_CONNS.pop(old_conn, None)
             with contextlib.suppress(Exception):
                 old_conn.close()
+            _READER_LOCKS.pop(old_conn, None)
 
     return _vesum_conn
 
@@ -151,11 +153,16 @@ def _release_conn(conn: SQLiteConnection) -> None:
                 if conn is not _vesum_conn:
                     with contextlib.suppress(Exception):
                         conn.close()
+                    _READER_LOCKS.pop(conn, None)
 
 
 @contextlib.contextmanager
 def get_vesum_connection(db_path: str | Path | None = None) -> Iterator[SQLiteConnection]:
-    """Context manager guaranteeing connection retention across the reader's lifetime."""
+    """Retain a reader and serialize use of its SQLite callback connection.
+
+    Each generation has its own lock, so a replacement can still be opened
+    while a retained reader finishes on the preceding database generation.
+    """
     resolved_path = _resolve_vesum_db_path(db_path)
     if not resolved_path.exists():
         raise FileNotFoundError(
@@ -174,9 +181,11 @@ def get_vesum_connection(db_path: str | Path | None = None) -> Iterator[SQLiteCo
     with _CONN_LOCK:
         conn = _get_or_create_conn_locked(resolved_path, current_stat)
         _ACTIVE_CONNS[conn] = _ACTIVE_CONNS.get(conn, 0) + 1
+        reader_lock = _READER_LOCKS.setdefault(conn, threading.RLock())
 
     try:
-        yield conn
+        with reader_lock:
+            yield conn
     finally:
         _release_conn(conn)
 
@@ -217,6 +226,7 @@ def close_vesum_conn(conn: SQLiteConnection | None = None) -> None:
             _ACTIVE_CONNS.pop(target, None)
             with contextlib.suppress(Exception):
                 target.close()
+            _READER_LOCKS.pop(target, None)
 
 
 def _normalize_apostrophes(word: str) -> str:

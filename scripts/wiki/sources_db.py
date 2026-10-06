@@ -28,6 +28,7 @@ import json
 import os
 import sqlite3
 import sys
+import threading
 from collections import defaultdict
 from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
@@ -87,6 +88,7 @@ TRACK_PRIORS_PATH = PROJECT_ROOT / "scripts" / "wiki" / "track_priors.yaml"
 _MAX_PATH_PROBE_BYTES = 255
 
 _conn: sqlite3.Connection | None = None
+_reader_threads = threading.local()
 _active_connection: contextvars.ContextVar[sqlite3.Connection | None] = contextvars.ContextVar(
     "sources_db_active_connection", default=None
 )
@@ -1720,19 +1722,39 @@ def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
 
 
 def _get_conn() -> sqlite3.Connection:
-    """Get or create a cached database connection."""
+    """Get a cached reader owned by this thread or the active request.
+
+    SQLite authorizer callbacks must not share a connection across concurrent
+    searches: the SQLite mutex and Python callback can deadlock. Keep the
+    existing main-thread cache; pool threads own their connections, which
+    are released with their thread-local state when the executor shuts down.
+    """
     override = _active_connection.get()
     if override is not None:
         return override
     global _conn
-    if _conn is None:
-        path = _read_db_path()
+    is_main = threading.current_thread() is threading.main_thread()
+    path = None if is_main else _read_db_path()
+    conn = _conn if is_main else getattr(_reader_threads, "connection", None)
+    if not is_main and getattr(_reader_threads, "path", None) != path:
+        conn = None
+    if conn is None:
+        if path is None:
+            path = _read_db_path()
         if not path.is_file() or not path.stat().st_size:
             raise FileNotFoundError(
                 f"Sources database not found at {path}. Run: .venv/bin/python scripts/wiki/build_sources_db.py"
             )
-        _conn = _open_conn(path, read_only=True)
-    return _conn
+        conn = _open_conn(path, read_only=True)
+        if is_main:
+            _conn = conn
+        else:
+            old_conn = getattr(_reader_threads, "connection", None)
+            _reader_threads.connection = conn
+            _reader_threads.path = path
+            if old_conn is not None:
+                old_conn.close()
+    return conn
 
 
 def ulif_stress_build() -> dict[str, Any]:
