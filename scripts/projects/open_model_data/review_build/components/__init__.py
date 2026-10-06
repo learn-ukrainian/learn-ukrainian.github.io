@@ -1,6 +1,6 @@
 """Closed, lazy component registry. Request data never names executable code."""
 
-from collections.abc import Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
 from importlib import import_module
 from types import MappingProxyType
@@ -71,6 +71,20 @@ def admission_policy(specs: Mapping[str, dict]) -> tuple[list[dict], dict | None
             require(corpus is None or corpus == mapping, "corpus_conflict")
             corpus = mapping
     return [entries[key] for key in sorted(entries)], corpus
+
+
+@dataclass(frozen=True)
+class MutationFixture:
+    """Trusted component code supplies private bytes and an exact gate probe.
+
+    Optional COMPONENT.mutation_fixtures(ctx, candidates, gate) yields these objects.
+    The framework, rather than the generator, enforces the expected refusal.
+    """
+
+    name: str
+    payload: bytes
+    expected_code: str
+    check: Callable[[], None]
 
 
 def load_components(

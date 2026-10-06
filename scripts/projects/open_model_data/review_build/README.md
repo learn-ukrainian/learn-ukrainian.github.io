@@ -100,6 +100,16 @@ included in the build manifest.
 
 ## Component specs
 
+C1 and C6a use the held official UA-GEC reader. Their registered component
+specs own the UA-GEC compatibility, sensitivity and corpus mappings; the request
+supplies only `ua_gec.root`. The root must match the shared repository's
+`data/ua-gec`, so request data cannot select another executable reader package.
+Each build/verify opens a fresh file store. Authentic reasoning-marker sentences
+are withheld as `reasoning_marker_in_source`. Raw markup outside the reader's
+parsed spans, including markers split across newlines and unauthenticated stray
+braces, is withheld as `unparsed_annotation_markup`; parsed delimiters and learner
+braces inside authenticated source spans remain source text.
+
 Every component spec requires:
 
 - `unit_query`: `{kind: sql, store: ..., sql: SELECT ..., parameters: [...]}`;
@@ -318,4 +328,10 @@ absent-quote, wrong-span, empty-locator, missing-unit and swapped-citation
 fixtures, derives them from an admitted component's actual candidate citations,
 and requires their specific gate refusals. A build with no admitted candidate or
 no distinct donor citation fails `mutation_unavailable`; a passing mutation
-fails `mutation_admitted`. Component-specific mutations stay with WP1–WP6.
+fails `mutation_admitted`. Selected registered components may expose optional
+`COMPONENT.mutation_fixtures(ctx, candidates, gate)`, yielding `MutationFixture` objects
+with a private payload, stable name, expected error code and gate probe. CLI
+`verify` runs every yielded probe and requires that exact `BuildError` code;
+success, a different refusal, duplicate names or an empty generator fail verification.
+Payloads and `component-results.json` stay under the guarded host-only output.
+Component-specific fixture definitions stay with WP1–WP6.
