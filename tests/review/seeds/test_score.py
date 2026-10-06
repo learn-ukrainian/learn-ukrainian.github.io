@@ -514,6 +514,7 @@ def test_a_seat_with_no_attempts_has_nothing_to_score(env: Env) -> None:
     with pytest.raises(score.ScoreError) as caught:
         run(env, seat="agy")
     assert caught.value.code == score.NO_ATTEMPTS
+    assert not env.path_for("a1").exists()
 
 
 def test_a_seed_whose_recorded_identity_drifted_from_its_manifest_is_not_scored(env: Env) -> None:
@@ -858,3 +859,8 @@ def test_the_cli_prints_the_report_or_refuses_with_a_code(
 def test_the_report_directory_is_dated_and_named_for_the_seat() -> None:
     path = score.report_path("codex", date(2026, 9, 25), Path("/repo"))
     assert path == Path("/repo/audit/reviewer-measurement/2026-09-25-codex/REPORT.md")
+
+
+def test_agreement_with_missing_database_does_not_create_it(env: Env) -> None:
+    assert score.agreement_by_seat_pair(["a1"], db_path_for=env.path_for, confidence=0.95) == []
+    assert not env.path_for("a1").exists()

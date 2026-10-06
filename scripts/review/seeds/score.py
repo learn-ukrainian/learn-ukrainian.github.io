@@ -52,6 +52,13 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
+
 from scripts.review import findings_db
 from scripts.review.seeds import manifest as seed_manifest
 
@@ -275,12 +282,13 @@ def collect(
         else seed_manifest.load_seed(unit, repo_root)
         for unit in units
     }
-    connections: dict[str, sqlite3.Connection] = {}
+    connections: dict[str, SQLiteConnection] = {}
     try:
 
-        def conn_for(level: str) -> sqlite3.Connection:
+        def conn_for(level: str) -> SQLiteConnection:
             if level not in connections:
-                connections[level] = findings_db.connect(path_for(level))
+                connections[level] = open_readonly(path_for(level))
+                connections[level].row_factory = sqlite3.Row
             return connections[level]
 
         by_unit = {
@@ -288,7 +296,7 @@ def collect(
                 row
                 for row in findings_db.measurement_attempts(conn_for(record.level), unit)
                 if row["harness"] == seat and (model is None or row["reviewer_model"] == model)
-            ]
+            ] if Path(path_for(record.level)).is_file() else []
             for unit, record in records.items()
         }
         families = {row["reviewer_family"] for rows in by_unit.values() for row in rows}
@@ -351,7 +359,7 @@ def _violations(record: seed_manifest.Seed | seed_manifest.Clean, family: str) -
 
 
 def _observe(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     unit: str,
     record: seed_manifest.Seed | seed_manifest.Clean,
     attempts: list[sqlite3.Row],
@@ -388,7 +396,7 @@ def _observe(
     return Observation(**common, **extra, classes=dict(sorted(classes.items())))
 
 
-def _check_identity_row(conn: sqlite3.Connection, seed: seed_manifest.Seed) -> None:
+def _check_identity_row(conn: SQLiteConnection, seed: seed_manifest.Seed) -> None:
     """The identities recorded in the database, when present, are the manifest's: a drifted seed is not scored."""
     row = findings_db.get_seed_identity(conn, seed.seed_id)
     if row is not None and {key: row[key] for key in seed.identity_row()} != seed.identity_row():
@@ -529,7 +537,11 @@ def agreement_by_seat_pair(
     """
     latest: dict[tuple, tuple[bool, int]] = {}
     for level in levels:
-        conn = findings_db.connect(db_path_for(level))
+        path = db_path_for(level)
+        if not Path(path).is_file():
+            continue
+        conn = open_readonly(path)
+        conn.row_factory = sqlite3.Row
         try:
             for row in conn.execute("SELECT rowid, * FROM agreement ORDER BY rowid").fetchall():
                 sides = []

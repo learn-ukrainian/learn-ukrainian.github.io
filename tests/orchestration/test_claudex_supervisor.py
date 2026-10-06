@@ -67,6 +67,7 @@ def venv_less_linked_worktree(tmp_path: Path) -> Iterator[SimpleNamespace]:
         "scripts/context_canary.py",
         "scripts/lib/context_profiles.py",
         "scripts/lib/session_record.py",
+        "scripts/lib/readonly_sqlite.py",
         "scripts/orchestration/claudex_supervisor.py",
         "scripts/orchestration/task_identity.py",
         "scripts/orchestration/thread_handoff.py",

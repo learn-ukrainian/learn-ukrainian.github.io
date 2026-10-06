@@ -68,6 +68,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
+
 from scripts.agent_runtime.acpx_discuss import (
     AcpxDiscussionError,
     AcpxDiscussionNotFoundError,
@@ -397,7 +404,7 @@ def _verify_acp_git_correlation(acp_root: Path, conversation_id: str, git_sha: s
     if not db_path.is_file():
         raise ResolutionError(REASON_SOURCE_MISSING)
     try:
-        with sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True) as connection:
+        with open_readonly(db_path) as connection:
             row = connection.execute(
                 "SELECT correlation_digest FROM acp_conversations WHERE conversation_id = ?",
                 (conversation_id,),
@@ -591,13 +598,13 @@ def resolve_rollover(
 # ── typed dispatch and re-verification gate ──────────────────────────────────
 
 
-def _open_readonly_sqlite(db_path: Path) -> sqlite3.Connection:
+def _open_readonly_sqlite(db_path: Path) -> SQLiteConnection:
     """Open one SQLite database read-only via URI ``mode=ro``; fail closed."""
     path = Path(db_path).expanduser().resolve()
     if not path.is_file():
         raise ResolutionError(REASON_SOURCE_MISSING)
     try:
-        connection = sqlite3.connect(f"{path.as_uri()}?mode=ro", uri=True)
+        connection = open_readonly(path)
     except sqlite3.Error as exc:
         raise ResolutionError(REASON_RESOLUTION_ERROR, "sqlite unreadable") from exc
     connection.row_factory = sqlite3.Row

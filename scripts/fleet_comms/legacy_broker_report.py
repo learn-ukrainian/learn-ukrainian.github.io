@@ -14,6 +14,13 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
+
 from scripts.common.repo_root import main_checkout_root
 from scripts.fleet_comms.opsec_store import store_descriptor
 
@@ -54,18 +61,18 @@ def _iso_z(value: datetime) -> str:
     return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
 
 
-def _open_read_only(path: Path) -> sqlite3.Connection:
-    return sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)
+def _open_read_only(path: Path) -> SQLiteConnection:
+    return open_readonly(path.resolve())
 
 
-def _table_exists(connection: sqlite3.Connection, table: str) -> bool:
+def _table_exists(connection: SQLiteConnection, table: str) -> bool:
     return (
         connection.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", (table,)).fetchone()
         is not None
     )
 
 
-def _meta_value(connection: sqlite3.Connection, key: str) -> str | None:
+def _meta_value(connection: SQLiteConnection, key: str) -> str | None:
     if not _table_exists(connection, "telemetry_meta"):
         return None
     row = connection.execute("SELECT value FROM telemetry_meta WHERE key = ?", (key,)).fetchone()

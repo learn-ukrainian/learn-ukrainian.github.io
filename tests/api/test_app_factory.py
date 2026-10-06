@@ -45,16 +45,15 @@ DB_ACCESS_PATTERNS = (
 # step 12d removed telemetry_router.py and wiki_router.py (13 -> 11) after
 # both opened stores through MonitorContext;
 # step 12e removed scripts/api/epics_router.py (11 -> 10).
+# #9662 moved fleet_router, fleet_workers_collect and runtime_router readers
+# to the shared read-only helper (10 -> 7); the SQLite boundary guard covers them.
 DB_ACCESS_ALLOWLIST = frozenset(
     {
         "scripts/api/agent_monitor_router.py",
-        "scripts/api/fleet_router.py",
-        "scripts/api/fleet_workers_collect.py",
         "scripts/api/hramatka_cache.py",
         "scripts/api/hramatka_router.py",
         "scripts/api/occupancy_local.py",
         "scripts/api/resilience.py",
-        "scripts/api/runtime_router.py",
         "scripts/api/telemetry/legacy_comms.py",
         "agents_extensions/shared/session_streams/db.py",
     }
@@ -694,7 +693,7 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
 
 @pytest.mark.repo_wide
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 10
+    assert len(DB_ACCESS_ALLOWLIST) == 7
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
     files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
     findings: list[str] = []
