@@ -5907,6 +5907,20 @@ class _BundleReconcileTree:
             return False
         return True
 
+    def _error_with_cleanup(self, original: BaseException, cleanup: BaseException, what: str) -> BundleReconcileRefused:
+        """Keep ``original`` and append a cleanup failure.
+
+        Callers keep only ``str()`` of the exception ``write`` raises. Raising
+        the cleanup error instead would discard the earlier diagnostic, and an
+        ``OSError`` that carries errno does not change ``str()`` when its
+        ``args`` change.
+        """
+        try:
+            code = original.code
+        except AttributeError:
+            code = "reconcile_install_failed"
+        return BundleReconcileRefused(code, f"{original}; {what}: {cleanup}")
+
     def write(self, parent: int, name: str, payload: bytes, *, replace: bool = False) -> None:
         previous = self.existing(parent, name)
         if previous is not None:
@@ -5926,14 +5940,27 @@ class _BundleReconcileTree:
         except FileExistsError as exc:
             self.existing(parent, temporary, temporary=True)
             raise BundleReconcileRefused("reconcile_temp_exists") from exc
+        caught: BaseException | None = None
         try:
-            with os.fdopen(fd, "wb") as handle:
-                held = os.fstat(handle.fileno())
-                if not stat.S_ISREG(held.st_mode) or held.st_nlink != 1:
-                    raise BundleReconcileRefused("reconcile_temp_changed")
-                handle.write(payload)
-                handle.flush()
-                os.fsync(handle.fileno())
+            body_error: BaseException | None = None
+            try:
+                with os.fdopen(fd, "wb") as handle:
+                    try:
+                        held = os.fstat(handle.fileno())
+                        if not stat.S_ISREG(held.st_mode) or held.st_nlink != 1:
+                            raise BundleReconcileRefused("reconcile_temp_changed")
+                        handle.write(payload)
+                        handle.flush()
+                        os.fsync(handle.fileno())
+                    except Exception as exc:
+                        body_error = exc
+                        raise
+            except Exception as exc:
+                # Closing the temporary can raise after the body failed. Keep
+                # the body diagnostic; the close error must not replace it.
+                if body_error is not None and exc is not body_error:
+                    raise self._error_with_cleanup(body_error, exc, "temporary close failed") from body_error
+                raise
             if previous is None:
                 self.ledger.intend_new(name_rel)
             else:
@@ -5948,15 +5975,36 @@ class _BundleReconcileTree:
                 self.ledger.mark_published(name_rel)
             except FileExistsError as exc:
                 raise BundleReconcileRefused("reconcile_member_changed") from exc
+        except Exception as exc:
+            caught = exc
+            raise
         finally:
+            # Unlink is cleanup. Add its failure to the pending error. Raising
+            # it alone would replace that error before the caller can see it.
             removed = False
+            unlink_error: BaseException | None = None
             try:
                 os.unlink(temporary, dir_fd=parent)
                 removed = True
             except FileNotFoundError:
                 removed = True
-            if removed and not self._leaf_exists(parent, temporary):
-                self.ledger.drop(temp_rel)
+            except OSError as exc:
+                unlink_error = exc
+            if removed:
+                try:
+                    gone = not self._leaf_exists(parent, temporary)
+                except OSError as exc:
+                    # The post-unlink check sits in this finally too. Its failure
+                    # must not replace a publication error that is already pending.
+                    if caught is not None:
+                        raise self._error_with_cleanup(caught, exc, "temporary stat failed") from caught
+                    raise
+                if gone:
+                    self.ledger.drop(temp_rel)
+            if unlink_error is not None and caught is not None:
+                raise self._error_with_cleanup(caught, unlink_error, "temporary unlink failed") from caught
+            if unlink_error is not None:
+                raise unlink_error
 
     def release(self, count: int) -> None:
         for fd in reversed(self.fds[count:]):
