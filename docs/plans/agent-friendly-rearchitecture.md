@@ -8,6 +8,8 @@ Frozen git head for every count below: `3e4bdb3dd9ecc57d1b519050bf64fa7a0ed9b737
 .venv/bin/python scripts/evidence/agent_pitfall_census.py --pretty
 ```
 
+The census pins full UTC calendar days with explicit UTC-midnight bounds and git running with `TZ=UTC`; monthly trailer figures use each commit's own committer offset, so the counts reproduce on any host and at any time of day. The first snapshot of this plan used date-only bounds, which git resolves with the current time of day in the host timezone, so its figures could not be reproduced; this snapshot replaces them.
+
 ## Relationship
 
 * **Adds.** A full count of fix commits, path buckets, reverts, and X-Agent trailers for 2026-07-01 through 2026-10-05, plus a complete failed-workflow census for that quarter and a complete failed-job census for the CI workflow in the approved plan's own window (2026-09-30 through 2026-10-05). Three gaps the approved plan's 200-commit sample did not rank: review-machinery repairs inside that same window, the quarter-long practice/atlas/lexicon repair mass, and hook-guard repairs that continued after a shared parser landed. A sequencing rule so those gaps do not collide with #9721, #9718, or the Atlas word-card work.
@@ -20,8 +22,8 @@ Frozen git head for every count below: `3e4bdb3dd9ecc57d1b519050bf64fa7a0ed9b737
 
 | Source | What was counted | Range |
 | --- | --- | --- |
-| Non-merge git commits | 3,689 commits, of which 1,485 start with `fix` | 2026-07-01 inclusive through 2026-10-05 (git `--until=2026-10-06`) |
-| Same, approved-plan window | 211 commits, of which 110 start with `fix` | 2026-09-30 through 2026-10-05 |
+| Non-merge git commits | 3,739 commits, of which 1,489 start with `fix` | 2026-07-01 inclusive through 2026-10-05 (git `--until=2026-10-06T00:00:00+00:00`) |
+| Same, approved-plan window | 281 commits, of which 151 start with `fix` | 2026-09-30 through 2026-10-05 |
 | X-Agent trailer by calendar month | All 9,204 non-merge commits on this head | 2025-11 through 2026-10 |
 | GitHub Actions runs with `conclusion=failure` | 4,132 runs, by workflow name and event | 2026-07-01 through 2026-10-05, weekly slices summed |
 | Failed jobs on failed `CI` workflow runs | 147 runs, every failed job | 2026-09-30 through 2026-10-05 |
@@ -29,13 +31,13 @@ Frozen git head for every count below: `3e4bdb3dd9ecc57d1b519050bf64fa7a0ed9b737
 | Issue comments | 13,924 comments scanned for the verdict marker | `since=2026-07-01` |
 | This checkout | Definitions and production calls of the worktree removers | head above |
 
-The July start is measured, not chosen for convenience. Missing `X-Agent` trailers are 725/967 in May, 424/1,445 in June, 138/1,485 in July, 73/978 in August, 54/1,070 in September, and 6/211 in October. July is the first month the trailer is the normal case. Counts before that mix the period before the trailer rule. The primary window still has 271/3,689 commits without the trailer.
+The July start is measured, not chosen for convenience. Missing `X-Agent` trailers are 725/967 in May, 424/1,445 in June, 138/1,485 in July, 73/978 in August, 54/1,070 in September, and 6/211 in October. July is the first month the trailer is the normal case. Counts before that mix the period before the trailer rule. The primary window still has 271/3,739 commits without the trailer.
 
 Method follows pstack `/correct` and `/architect` as a way of reading history: group repeated repairs, prefer a structural owner over a new checklist, and screen a second shape (a central facade) against the design red flags. `/architect`'s multi-model arena was not run. The operator forbade a blank-slate redesign and forbade vendoring an arena, and [model-assignment.md](../../agents_extensions/shared/rules/model-assignment.md) plus [cursor-driver.md](../runbooks/cursor-driver.md) already forbid committing one. The approved design is the candidate. The facade is the alternative already rejected in that design; the counts below support that rejection. `/recall` used the assignment's state capsule (the approved plan, #9737, #9721) as the shared record. Monitor's rules API was unreachable in this session; the rules were read from `agents_extensions/shared/rules/`, including operator item 12 (no new architecture without approval) and the CLI help standard.
 
 **Counted** means a git token, a path prefix, a workflow name, a job name, or a search total. **Inferred** means a cause read off those counts. Inferences are marked.
 
-The approved plan sampled 200 of the 211 non-merge commits in its window and inspected eight diffs. That sample is a mechanism study. It is not a ranking of the 211, and it is not a ranking of the quarter. This document supplies those rankings. It does not replace the eight-diff mechanism study.
+The approved plan sampled 200 of the 211 non-merge commits in its window and inspected eight diffs. This census counts that window as full UTC calendar days and finds 281 commits. That sample is a mechanism study. It is not a ranking of the 211, and it is not a ranking of the quarter. This document supplies those rankings. It does not replace the eight-diff mechanism study.
 
 A failed Actions run is not, by itself, an agent mistake. The CI Gate is supposed to go red when the head is not eligible. Advisory workflows are labeled advisory in their names.
 
@@ -43,7 +45,7 @@ A failed Actions run is not, by itself, an agent mistake. The CI Gate is suppose
 
 ### Ranked by `fix(<scope>)` subject token
 
-These scopes are disjoint: a subject has one scope token. 1,485 fix commits in the primary window.
+These scopes are disjoint: a subject has one scope token. 1,489 fix commits in the primary window.
 
 | Rank | Scope | Count | Bucket |
 | --- | --- | --- | --- |
@@ -53,54 +55,58 @@ These scopes are disjoint: a subject has one scope token. 1,485 fix commits in t
 | 4 | review | 64 | delivery machinery |
 | 5 | delegate | 53 | delivery machinery |
 | 6 | tests | 48 | harness |
-| 7 | lexicon | 48 | learner content |
+| 6 | lexicon | 48 | learner content |
 | 8 | bridge | 44 | delivery machinery |
-| 9 | bio | 43 | learner content |
+| 8 | bio | 44 | learner content |
 | 10 | hooks | 38 | delivery machinery |
 | 11 | runtime | 37 | delivery machinery |
 | 12 | api | 35 | delivery machinery |
 | 13 | build | 33 | harness |
 | 14 | audit | 24 | harness |
 | 15 | site | 23 | learner content |
-| 16 | orchestration | 23 | delivery machinery |
-| 16 | routing | 23 | delivery machinery |
-| 18 | security | 21 | harness |
-| 18 | dispatch | 21 | delivery machinery |
-| 18 | folk | 21 | learner content |
+| 15 | orchestration | 23 | delivery machinery |
+| 15 | routing | 23 | delivery machinery |
+| 15 | folk | 23 | learner content |
+| 19 | security | 21 | harness |
+| 19 | dispatch | 21 | delivery machinery |
 
-The bucket column labels rows in this table. It is not a partition of all 1,485 commits: the census found 178 scopes. Learner-content rows in the table (practice, atlas, lexicon, bio, site, folk) sum to 300. Delivery-machinery rows (review, delegate, bridge, hooks, runtime, api, orchestration, routing, dispatch) sum to 338. Harness rows (ci, tests, build, audit, security) sum to 191. The next scopes, outside the table, include fleet, harness, and monitor at 20 each, and opsec at 17.
+The bucket column labels rows in this table. It is not a partition of all 1,489 commits: the census found 179 scopes. Learner-content rows in the table (practice, atlas, lexicon, bio, site, folk) sum to 303. Delivery-machinery rows (review, delegate, bridge, hooks, runtime, api, orchestration, routing, dispatch) sum to 338. Harness rows (ci, tests, build, audit, security) sum to 191. The next scopes, outside the table, are fleet, harness, and monitor at 20 each, cycle007 at 19, and opsec and acp at 17 each.
 
-Same token, approved-plan window only (110 fix commits inside the 211):
+Same token, approved-plan window only (151 fix commits inside the 281):
 
 | Scope | Count |
 | --- | --- |
-| review | 16 |
-| opsec, runtime, fresh, tests, dispatch | 7 each |
-| build, delegate | 6 each |
-| agent-runtime | 5 |
-| routing | 2 |
-| hooks | 2 |
-| orchestration, reaper | 1 each |
+| review | 18 |
+| dispatch | 10 |
+| fresh | 9 |
+| runtime, tests | 8 each |
+| opsec, build, delegate | 7 each |
+| routing | 6 |
+| agent-runtime, evidence, deps | 5 each |
+| sources | 4 |
+| ulif | 3 |
+| lifecycle, site, launchers, agy, acp, session-streams, reaper, ci, fresh-build, hooks, stress, fleet, agents, standard | 2 each |
+| workflow, path-safety, orchestration, eval, security, atlas, jsonl, rollover, session-start, agent_runtime, docs, hygiene, mcp, infra, rag, wiki, cursor, mdx, pre-commit, backup, fresh-writer | 1 each |
 
-`fix(fresh)` in that window is the curriculum-validator class the approved plan already described (learner-only page text, arc, English channel, activity coverage). Examples: [#9574](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/9574), [#9697](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/9697). `fix(routing)` is 2, matching the two commits that plan cites: [84c9f897da](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/84c9f897da9bc272c6ac9e1a2ab6bc2f553d097b) and [8e4496f135](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/8e4496f135ead2a1d23f608177917dea1e3d6ff2).
+`fix(fresh)` in that window is the curriculum-validator class the approved plan already described (learner-only page text, arc, English channel, activity coverage). Examples: [#9574](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/9574), [#9697](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/9697). `fix(routing)` is 6; the two commits that plan cites, [84c9f897da](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/84c9f897da9bc272c6ac9e1a2ab6bc2f553d097b) and [8e4496f135](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/8e4496f135ead2a1d23f608177917dea1e3d6ff2), both 2026-10-03, are among them.
 
-### Path buckets on the 1,485 fix commits
+### Path buckets on the 1,489 fix commits
 
 A commit is counted once per bucket it touches.
 
 | Bucket | Fix commits |
 | --- | --- |
-| tests or site tests | 1,222 |
+| tests or site tests | 1,223 |
 | delivery trees (`scripts/delegate.py`, `scripts/review/`, `scripts/orchestration/`, `scripts/fleet/`, `scripts/agent_runtime/`, `scripts/runtime/`, hook paths) | 424 |
-| other site paths | 239 |
+| other site paths | 243 |
 | `scripts/lexicon/` or `data/lexicon/` | 120 |
 | site paths whose names mention practice | 109 |
-| `curriculum/` | 85 |
+| `curriculum/` | 88 |
 | site paths whose names mention atlas or word-card | 48 |
 | `.github/workflows/ci.yml` | 46 |
 | other workflow files | 30 |
 
-In the approved-plan window the delivery bucket is 60 of 110 fix commits. Lexicon is 5. Site-atlas is 2. `ci.yml` is 1.
+In the approved-plan window the delivery bucket is 78 of 151 fix commits. Lexicon is 7. Site-atlas is 2. `ci.yml` is 1.
 
 ### Subject-regex hits (not a second ranking)
 
@@ -108,7 +114,7 @@ The census script also counts fix subjects against fixed regexes. A subject can 
 
 ### Reverts
 
-Two commits in the primary window start with `revert`: [#8384](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/96fac6e1c7456f2739f53daa59d0be54a8f6a193) and [#8356](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/f4c979f709edeacac7adf88679f9cdc4ec160f50), both A1 curriculum rollbacks on 2026-09-20 and 2026-09-21. One further subject mentions a revert: the autopsy of a connector commit that silently reverted merged hunks, [#7190](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/0afded20103043ae36bc56b4ccd288da8ec0cfa5). Reverts are rare next to the 1,485 fix commits. **Inferred:** agents repair in place far more often than the project reverts a merge.
+Two commits in the primary window start with `revert`: [#8384](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/96fac6e1c7456f2739f53daa59d0be54a8f6a193) and [#8356](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/f4c979f709edeacac7adf88679f9cdc4ec160f50), both A1 curriculum rollbacks on 2026-09-20 and 2026-09-21. One further subject mentions a revert: the autopsy of a connector commit that silently reverted merged hunks, [#7190](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/0afded20103043ae36bc56b4ccd288da8ec0cfa5). Reverts are rare next to the 1,489 fix commits. **Inferred:** agents repair in place far more often than the project reverts a merge.
 
 ### CI failures, separate from the fix commits
 
@@ -139,8 +145,8 @@ The approved plan says two repeated classes have independent diff evidence (rout
 
 The full count of that same window forces two corrections to that evidence section:
 
-1. The fleet ranking for 2026-09-30..2026-10-05 is not "two classes." Of 110 fix commits, `review` is 16 and `routing` is 2. `fresh` (the curriculum-validator class) is 7, tied with opsec, runtime, tests, and dispatch.
-2. Review-machinery repair is recurrent in that window (16 fix commits), so the "single sampled event" label does not survive a complete subject count. The approved response is already review-feasibility ownership (#9739). The label changes. The response stays.
+1. The fleet ranking for 2026-09-30..2026-10-05 is not "two classes." Of 151 fix commits, `review` leads at 18, followed by `dispatch` at 10 and `fresh` (the curriculum-validator class) at 9; runtime and tests are tied at 8 each, opsec, build, and delegate at 7 each, and routing is at 6.
+2. Review-machinery repair is recurrent in that window (18 fix commits), so the "single sampled event" label does not survive a complete subject count. The approved response is already review-feasibility ownership (#9739). The label changes. The response stays.
 
 Across the quarter, practice (96), atlas (69), and lexicon (48) outrank routing (23). That is a gap the six-day sample could not see. It does not force a different architecture. See move 4.
 
@@ -162,7 +168,7 @@ Each move says what it removes, then the collision line. The collision table in 
 
 ### Move 1 — Finish the approved owner repairs
 
-Removes the repeated reconstruction of routing, review-admission, and removal facts (routing scope 23 on the quarter; review scope 16 in the sample window and 64 on the quarter; the removal scan above).
+Removes the repeated reconstruction of routing, review-admission, and removal facts (routing scope 23 on the quarter; review scope 18 in the sample window and 64 on the quarter; the removal scan above).
 
 The work is the open #9737 packets, on their existing branches. This plan adds the ranking that says review-feasibility is the largest fix scope inside the approved plan's own window, which is why that packet stays first among delivery repairs. It does not add a facade, a new bus, or a second Work API.
 
@@ -182,17 +188,17 @@ Removes the temptation to add another hand-maintained path filter. Evidence: 46 
 
 The structural move, when it happens, is to derive selection from #9721's dependency graph. Until that graph is the source of truth, a new filter list is another hand-synced list. #9718 already owns `.github/workflows/ci.yml` for frontend build reuse, and it has an open test-race (A4) in `atlas-runtime-shards.test.ts` on branch `cursor/ci-frontend-speed-9718` (pushed, no pull request). Editing that file here would collide with both.
 
-Collision: Atlas data no, Atlas frontend only if the Frontend job changes (do not change it), #9721 boundaries yes as a future consumer of their graph, #9718 CI path yes if `ci.yml` changes. Sequence: after #9718 lands and after #9721's map exists. Both of those yield first.
+Collision: Atlas data no, Atlas frontend only if the Frontend job changes (do not change it), #9721 boundaries yes as a future consumer of their graph, #9718 CI path yes if `ci.yml` changes. Sequence: after #9718 lands and after #9721's map exists. Both of those land first.
 
 ### Move 4 — Leave learner-content evidence inside the components that already own it
 
-Removes the quarter's largest content repair mass from the "we need a new platform" reading. Practice 96, atlas 69, lexicon 48, bio 43. Paths: lexicon 120, site practice 109, site atlas 48, curriculum 85. The approved plan's lesson-page validators show up as `fix(fresh)` 7 inside its own window. They do not account for the quarter's practice and atlas scopes. That is the gap.
+Removes the quarter's largest content repair mass from the "we need a new platform" reading. Practice 96, atlas 69, lexicon 48, bio 44. Paths: lexicon 120, site practice 109, site atlas 48, curriculum 88. The approved plan's lesson-page validators show up as `fix(fresh)` 9 inside its own window. They do not account for the quarter's practice and atlas scopes. That is the gap.
 
 #8977 already states the structural fix: one cited card per word, and Atlas, practice, and the open dataset generated from those cards, on the ULIF tables from merged [#9268](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/9268), under #8400's one-crawler one-store rules. A second card schema, a second lexicon store, or a seventh component would recreate the split the 120 lexicon fix commits are already paying for. **Inferred from the issue text plus the path counts:** the repair mass is a consumer-copy problem #8977 names, not a missing delivery facade.
 
 This plan does not design that card, does not retune ULIF, and does not move practice validators into Atlas data. Practice-frontend checks belong on #9721's practice-frontend boundary and read cards when #8977 produces them. Curriculum-generation checks stay on that component. Atlas data stays #8400 and #8977.
 
-Collision: Atlas data yes if anyone edits `sources.db` or ULIF tables (forbidden here), Atlas frontend yes if anyone edits word-card rendering (forbidden here), #9721 boundaries yes only as alignment with the six components, #9718 CI path no. Sequence: after the in-flight word-card and ULIF work for anything that reads cards. Those streams yield first.
+Collision: Atlas data yes if anyone edits `sources.db` or ULIF tables (forbidden here), Atlas frontend yes if anyone edits word-card rendering (forbidden here), #9721 boundaries yes only as alignment with the six components, #9718 CI path no. Sequence: after the in-flight word-card and ULIF work for anything that reads cards. Those streams land first.
 
 ### Move 5 — Keep public-path refusal on the existing publisher
 
@@ -208,13 +214,13 @@ Fixed inputs, not redesigned here:
 * #9718 — frontend build reuse. Owns `.github/workflows/ci.yml`, the site build-artifact tests, `tests/test_frontend_ci_build_reuse.py`, and `docs/runbooks/ci-gate.md`. Branch `cursor/ci-frontend-speed-9718` is pushed and has no pull request. Open A4 race in `atlas-runtime-shards.test.ts`. Packet coordination is codex-atlas; landing stays with the infrastructure owner.
 * #8400 / #8977 — ULIF source rules and one cited word card, on the tables from merged #9268. Owner codex-atlas, stream #4387. #8977's non-goal is re-harvesting ULIF. #8400's rule is one crawler and one store.
 
-| Move | Atlas data | Atlas frontend | #9721 boundaries | #9718 CI path | When | Who yields |
+| Move | Atlas data | Atlas frontend | #9721 boundaries | #9718 CI path | When | Order |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1. Finish approved owner repairs | no | no | no | no | alongside the open #9737 pull requests | this plan yields |
-| 2. One hook parser | no | no | no | no | alongside #9737, after move 1 if hook files overlap | no Atlas or CI yield |
-| 3. Selection from #9721's graph | no | no, leave the Frontend job | yes, as a consumer of their map | yes, so do not edit `ci.yml` now | after #9718 and after the #9721 map | #9718 and #9721 yield first |
-| 4. Content evidence via existing cards | yes if schema or ULIF changes, so do not | yes if card rendering changes, so do not | align with the six; do not add a seventh | no | after #8400 / #8977 for card readers | Atlas word-card work yields first |
-| 5. Public-path refusal on the current publisher | no lexicon or `sources.db` edits | no | open-model-data outputs only, inside that component | no | alongside, stop on an overlapping branch | the branch that already has the file |
+| 1. Finish approved owner repairs | no | no | no | no | alongside the open #9737 pull requests | the open #9737 pull requests land first; this plan waits |
+| 2. One hook parser | no | no | no | no | alongside #9737, after move 1 if hook files overlap | no Atlas or CI ordering |
+| 3. Selection from #9721's graph | no | no, leave the Frontend job | yes, as a consumer of their map | yes, so do not edit `ci.yml` now | after #9718 and after the #9721 map | #9718 and #9721 land first |
+| 4. Content evidence via existing cards | yes if schema or ULIF changes, so do not | yes if card rendering changes, so do not | align with the six; do not add a seventh | no | after #8400 / #8977 for card readers | Atlas word-card work lands first |
+| 5. Public-path refusal on the current publisher | no lexicon or `sources.db` edits | no | open-model-data outputs only, inside that component | no | alongside, stop on an overlapping branch | the branch that already has the file lands first |
 
 Prefer #9721's six names over any new component list. Move 4 would force Atlas rework if it added a card schema or a second lexicon store. The path evidence for refusing that rework is the 120 lexicon fix commits and the 48 site-atlas fix commits already spent on the current store, plus #8977's statement that independent copies are the defect. Move 3 would force #9718 rework if it edited `ci.yml` or `atlas-runtime-shards.test.ts` while A4 is open. The job evidence for refusing a frontend-CI redesign is 3 Frontend failures against 146 CI Gate failures in the approved plan's window.
 
@@ -222,7 +228,7 @@ Prefer #9721's six names over any new component list. Move 4 would force Atlas r
 
 | Probe | Command or read | Result | What it changed |
 | --- | --- | --- | --- |
-| Git census | `.venv/bin/python scripts/evidence/agent_pitfall_census.py` at `3e4bdb3dd9` | 3,689 non-merge / 1,485 fix; scopes and path buckets in section 2 | Replaced the 200-commit ranking with a full count. Forced the two evidence-section corrections. Did not force a new architecture. |
+| Git census | `.venv/bin/python scripts/evidence/agent_pitfall_census.py` at `3e4bdb3dd9` | 3,739 non-merge / 1,489 fix; scopes and path buckets in section 2 | Replaced the 200-commit ranking with a full count. Forced the two evidence-section corrections. Did not force a new architecture. |
 | Removal scan | same script, `structure_on_head` | One raw remover; production callers are the owner and the reaper; `git_safety.remove_unclaimed_worktree` is a second name that delegates | Move 1 does not invent a remover. #9755 already landed the chokepoint the approved plan described. |
 | CI job census | Actions API, every failed job on 147 failed CI runs, 2026-09-30..2026-10-06 | CI Gate 146, pytest shards 290, Frontend 3 | Move 3 does not retune the Frontend job. Duration stays with #9718. |
 | Path buckets | same git census | Lexicon 120, site practice 109, site atlas 48, `ci.yml` 46 | Move 4 yields to #8977 / #8400. Move 3 yields to #9718 and #9721. |

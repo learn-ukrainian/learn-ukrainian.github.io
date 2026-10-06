@@ -9,7 +9,9 @@ mistake: a failed gate is often the gate refusing a bad head.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -22,11 +24,20 @@ PRIMARY_SINCE = "2026-07-01"
 PRIMARY_UNTIL = "2026-10-06"
 SAMPLE_SINCE = "2026-09-30"
 SAMPLE_UNTIL = "2026-10-06"
+# Bounds are explicit UTC-midnight instants: git resolves a date-only bound with
+# the current time of day in the host timezone, making earlier runs irreproducible.
+WINDOW_UTC_OFFSET = "+00:00"
 
 FIX_SCOPE = re.compile(r"^fix\(([^)]+)\)", re.I)
 FIX_PREFIX = re.compile(r"^fix(\(|:)", re.I)
 REVERT_PREFIX = re.compile(r"^revert(\(|:|\s)", re.I)
 REVERT_WORD = re.compile(r"revert", re.I)
+
+# Scope tokens naming an internal machine use a neutral label;
+# digest keys keep the alias out of the repo.
+SCOPE_LABELS = {
+    "1f3114901bde88416893b1537d441fe77bcdb112fc436c9655846dfeab20a3ba": "internal-host",
+}
 
 # Subject regexes. A commit may match more than one. The match count is
 # measured; calling the regex a single root cause is an inference the plan
@@ -72,7 +83,13 @@ SUBJECT_CLASSES: tuple[tuple[str, re.Pattern[str]], ...] = (
 
 
 def _git(*args: str) -> str:
-    return subprocess.check_output(["git", *args], text=True, errors="replace")
+    env = os.environ.copy()
+    env["TZ"] = "UTC"
+    return subprocess.check_output(["git", *args], text=True, errors="replace", timeout=120, env=env)
+
+
+def _window_instant(date: str) -> str:
+    return f"{date}T00:00:00{WINDOW_UTC_OFFSET}"
 
 
 def _commits(since: str, until: str) -> list[tuple[str, str, str, str]]:
@@ -80,8 +97,8 @@ def _commits(since: str, until: str) -> list[tuple[str, str, str, str]]:
     raw = _git(
         "log",
         "--no-merges",
-        f"--since={since}",
-        f"--until={until}",
+        f"--since={_window_instant(since)}",
+        f"--until={_window_instant(until)}",
         "--format=%H%x1f%cI%x1f%s%x1f%b%x1e",
     )
     rows: list[tuple[str, str, str, str]] = []
@@ -100,8 +117,8 @@ def _path_buckets(since: str, until: str) -> dict[str, int]:
     raw = _git(
         "log",
         "--no-merges",
-        f"--since={since}",
-        f"--until={until}",
+        f"--since={_window_instant(since)}",
+        f"--until={_window_instant(until)}",
         "--pretty=format:%x1e%H%x1f%s",
         "--name-only",
     )
@@ -176,7 +193,9 @@ def _window(since: str, until: str) -> dict[str, object]:
         if FIX_PREFIX.match(subject):
             fix_n += 1
             match = FIX_SCOPE.match(subject)
-            scopes[match.group(1).lower() if match else "<no-scope>"] += 1
+            scope = match.group(1).lower() if match else "<no-scope>"
+            scope = SCOPE_LABELS.get(hashlib.sha256(scope.encode()).hexdigest(), scope)
+            scopes[scope] += 1
             for name, pattern in SUBJECT_CLASSES:
                 if pattern.search(subject):
                     classes[name] += 1
@@ -187,6 +206,8 @@ def _window(since: str, until: str) -> dict[str, object]:
     return {
         "since": since,
         "until_exclusive": until,
+        "since_instant": _window_instant(since),
+        "until_exclusive_instant": _window_instant(until),
         "non_merge_commits": len(rows),
         "fix_prefix_commits": fix_n,
         "missing_x_agent_trailer": missing_trailer,
@@ -211,10 +232,7 @@ def _trailer_by_month() -> list[dict[str, int | str]]:
         total[month] += 1
         if "X-Agent:" not in body:
             missing[month] += 1
-    return [
-        {"month": month, "non_merge": total[month], "missing_x_agent": missing[month]}
-        for month in sorted(total)
-    ]
+    return [{"month": month, "non_merge": total[month], "missing_x_agent": missing[month]} for month in sorted(total)]
 
 
 def _structure(root: Path) -> dict[str, object]:
@@ -256,8 +274,11 @@ def build_report(root: Path) -> dict[str, object]:
     head = _git("rev-parse", "HEAD").strip()
     return {
         "head": head,
+        "timezone": "UTC",
         "method": (
-            "Non-merge git history. fix() scope counts are the subject token. "
+            "Non-merge git history with explicit UTC-midnight window bounds and TZ=UTC for git. "
+            "Monthly trailer figures use %cI and each commit's committer offset, independent of the host clock. "
+            "fix() scope counts are the subject token with neutral internal-machine labels. "
             "Subject-class hits are regex matches and are not mutually exclusive. "
             "Path buckets count fix commits that touch at least one matching path. "
             "Structure lines are a source scan of this checkout."
@@ -285,7 +306,7 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python scripts/evidence/agent_pitfall_census.py --pretty\n"
             "\n"
             "Outputs: JSON on stdout. Writes nothing.\n"
-            "Exit codes: 0 on success, 1 if git fails.\n"
+            "Exit codes: 0 on success, 1 if git fails or times out.\n"
             "Related: docs/plans/agent-friendly-rearchitecture.md, "
             "docs/plans/agent-friendly-delivery.md, epic #9737.\n"
         ),
@@ -315,6 +336,6 @@ def main(argv: list[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except subprocess.CalledProcessError as exc:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         print(f"git failed: {exc}", file=sys.stderr)
         raise SystemExit(1) from exc

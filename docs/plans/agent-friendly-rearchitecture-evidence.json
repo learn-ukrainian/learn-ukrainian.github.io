@@ -4,46 +4,50 @@
       "fix_path_buckets": {
         "ci_yml": 1,
         "curriculum": 1,
-        "delivery": 60,
-        "lexicon": 5,
-        "no_listed_bucket": 2,
+        "delivery": 78,
+        "lexicon": 7,
+        "no_listed_bucket": 5,
         "site_atlas": 2,
-        "site_other": 9,
-        "tests": 105,
+        "site_other": 10,
+        "tests": 142,
         "workflows_other": 1
       },
-      "fix_prefix_commits": 110,
+      "fix_prefix_commits": 151,
       "fix_scopes": [
         [
           "review",
-          16
+          18
+        ],
+        [
+          "dispatch",
+          10
+        ],
+        [
+          "fresh",
+          9
+        ],
+        [
+          "runtime",
+          8
+        ],
+        [
+          "tests",
+          8
         ],
         [
           "opsec",
           7
         ],
         [
-          "runtime",
-          7
-        ],
-        [
-          "fresh",
-          7
-        ],
-        [
-          "tests",
-          7
-        ],
-        [
-          "dispatch",
-          7
-        ],
-        [
           "build",
-          6
+          7
         ],
         [
           "delegate",
+          7
+        ],
+        [
+          "routing",
           6
         ],
         [
@@ -51,7 +55,19 @@
           5
         ],
         [
+          "evidence",
+          5
+        ],
+        [
           "deps",
+          5
+        ],
+        [
+          "sources",
+          4
+        ],
+        [
+          "ulif",
           3
         ],
         [
@@ -67,7 +83,11 @@
           2
         ],
         [
-          "routing",
+          "agy",
+          2
+        ],
+        [
+          "acp",
           2
         ],
         [
@@ -75,7 +95,7 @@
           2
         ],
         [
-          "evidence",
+          "reaper",
           2
         ],
         [
@@ -92,6 +112,18 @@
         ],
         [
           "stress",
+          2
+        ],
+        [
+          "fleet",
+          2
+        ],
+        [
+          "agents",
+          2
+        ],
+        [
+          "standard",
           2
         ],
         [
@@ -123,18 +155,6 @@
           1
         ],
         [
-          "agy",
-          1
-        ],
-        [
-          "acp",
-          1
-        ],
-        [
-          "reaper",
-          1
-        ],
-        [
           "rollover",
           1
         ],
@@ -163,34 +183,54 @@
           1
         ],
         [
-          "ulif",
+          "rag",
           1
         ],
         [
-          "rag",
+          "wiki",
+          1
+        ],
+        [
+          "cursor",
+          1
+        ],
+        [
+          "mdx",
+          1
+        ],
+        [
+          "pre-commit",
+          1
+        ],
+        [
+          "backup",
+          1
+        ],
+        [
+          "fresh-writer",
           1
         ]
       ],
       "fix_subject_class_hits": [
         [
+          "source_evidence",
+          14
+        ],
+        [
+          "review_machinery",
+          13
+        ],
+        [
           "opsec_path",
           8
         ],
         [
-          "review_machinery",
-          7
-        ],
-        [
-          "source_evidence",
-          6
-        ],
-        [
           "removal_or_reap",
-          4
+          5
         ],
         [
           "routing_credit",
-          3
+          4
         ],
         [
           "hook_guard",
@@ -202,28 +242,30 @@
         ]
       ],
       "missing_x_agent_trailer": 6,
-      "non_merge_commits": 211,
+      "non_merge_commits": 281,
       "revert_mention_commits": [],
       "revert_prefix_commits": [],
       "since": "2026-09-30",
-      "until_exclusive": "2026-10-06"
+      "since_instant": "2026-09-30T00:00:00+00:00",
+      "until_exclusive": "2026-10-06",
+      "until_exclusive_instant": "2026-10-06T00:00:00+00:00"
     },
     "head": "3e4bdb3dd9ecc57d1b519050bf64fa7a0ed9b737",
-    "method": "Non-merge git history. fix() scope counts are the subject token. Subject-class hits are regex matches and are not mutually exclusive. Path buckets count fix commits that touch at least one matching path. Structure lines are a source scan of this checkout.",
+    "method": "Non-merge git history with explicit UTC-midnight window bounds and TZ=UTC for git. Monthly trailer figures use %cI and each commit's committer offset, independent of the host clock. fix() scope counts are the subject token with neutral internal-machine labels. Subject-class hits are regex matches and are not mutually exclusive. Path buckets count fix commits that touch at least one matching path. Structure lines are a source scan of this checkout.",
     "primary_window": {
       "fix_path_buckets": {
         "ci_yml": 46,
-        "curriculum": 85,
+        "curriculum": 88,
         "delivery": 424,
         "lexicon": 120,
         "no_listed_bucket": 51,
         "site_atlas": 48,
-        "site_other": 239,
+        "site_other": 243,
         "site_practice": 109,
-        "tests": 1222,
+        "tests": 1223,
         "workflows_other": 30
       },
-      "fix_prefix_commits": 1485,
+      "fix_prefix_commits": 1489,
       "fix_scopes": [
         [
           "practice",
@@ -259,7 +301,7 @@
         ],
         [
           "bio",
-          43
+          44
         ],
         [
           "hooks",
@@ -294,15 +336,15 @@
           23
         ],
         [
+          "folk",
+          23
+        ],
+        [
           "security",
           21
         ],
         [
           "dispatch",
-          21
-        ],
-        [
-          "folk",
           21
         ],
         [
@@ -822,7 +864,7 @@
           1
         ],
         [
-          "hramatka",
+          "internal-host",
           1
         ],
         [
@@ -936,6 +978,10 @@
         [
           "validate",
           1
+        ],
+        [
+          "activity",
+          1
         ]
       ],
       "fix_subject_class_hits": [
@@ -977,7 +1023,7 @@
         ]
       ],
       "missing_x_agent_trailer": 271,
-      "non_merge_commits": 3689,
+      "non_merge_commits": 3739,
       "revert_mention_commits": [
         {
           "date": "2026-08-23",
@@ -998,7 +1044,9 @@
         }
       ],
       "since": "2026-07-01",
-      "until_exclusive": "2026-10-06"
+      "since_instant": "2026-07-01T00:00:00+00:00",
+      "until_exclusive": "2026-10-06",
+      "until_exclusive_instant": "2026-10-06T00:00:00+00:00"
     },
     "structure_on_head": {
       "git_worktree_remove_definitions": [
@@ -1014,6 +1062,7 @@
         "scripts/orchestration/task_family/git_safety.py:737"
       ]
     },
+    "timezone": "UTC",
     "x_agent_by_month": [
       {
         "missing_x_agent": 71,
