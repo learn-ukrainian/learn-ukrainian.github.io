@@ -269,6 +269,19 @@ def test_gate_names_the_refused_provider_slot(provider: str) -> None:
 REGISTERED_SELECTORS = ("infra", "devops", "monitor", "open-model-data", "atlas", "folk", "bio", "corpus", "hramatka")
 
 
+@pytest.mark.parametrize("provider", ("claude", "codex"))
+def test_open_model_data_selector_mints_registered_slot(provider: str) -> None:
+    identity_function = "handoff_identity_for_epic" if provider == "claude" else "handoff_identity_for_codex_epic"
+    result = _bash(
+        'source "$1"; launcher_require_registered_slot "$2" open-model-data && "$3" open-model-data',
+        str(HANDOFF_IDENTITY),
+        provider,
+        identity_function,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == f"{provider}-open-model-data"
+
+
 def test_gate_refuses_every_unregistered_selector_and_accepts_every_registered_one() -> None:
     """Every selector under test resolves; the gate refuses (3) exactly the unregistered ones for claude."""
     lanes, gate = _gate_matrix()
