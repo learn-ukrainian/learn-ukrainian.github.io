@@ -217,7 +217,7 @@ def test_no_task_state(hermetic_reap):
     assert "no task state" in report["main_worktree"]["reason"]
 
 
-@pytest.mark.parametrize("contents", ["regenerable_only", "mixed", "oversized_output", "symlink", "unpublished_manifest"])
+@pytest.mark.parametrize("contents", ["regenerable_only", "mixed", "oversized_output", "symlink", "unpublished_manifest", "oversized_manifest"])
 def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, tmp_path, contents):
     repo, tasks = hermetic_reap
     (repo / "site").mkdir()
@@ -246,7 +246,6 @@ def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, t
             "nested/.pytest_cache/cache.bin",
             ".ruff_cache/cache.bin",
             ".mypy_cache/cache.bin",
-            "site/src/data/lexicon-manifest.json",
         ]:
             path = worktree / name
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -258,16 +257,18 @@ def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, t
         (worktree / "ignored").mkdir()
         (worktree / "ignored/answer.txt").write_bytes(b"answer" if contents == "mixed" else b"x" * 32)
     unpublished = b'{"entries": ["promoted"]}'
-    if contents == "unpublished_manifest":
-        (worktree / "site/src/data/lexicon-manifest.json").write_bytes(unpublished)
+    if contents in {"unpublished_manifest", "oversized_manifest"}:
+        (worktree / "site/src/data/lexicon-manifest.json").write_bytes(
+            unpublished if contents == "unpublished_manifest" else b"x" * 64
+        )
     monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", 32 if contents == "unpublished_manifest" else 16)
     _write_task_state(tasks, task_id, "done", worktree, agent="codex")
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     row = report["main_worktree"]
     assert (outside / "unique.txt").read_bytes() == b"unique outside output"
-    if contents in {"oversized_output", "symlink"}:
+    if contents in {"oversized_output", "oversized_manifest", "symlink"}:
         assert row["action"] == "skipped" and worktree.exists(), row
-        assert ("exceeds preservation cap" if contents == "oversized_output" else "links outside") in row["reason"]
+        assert ("exceeds preservation cap" if contents != "symlink" else "links outside") in row["reason"]
         assert not (repo / "batch_state/preserved").exists()
     else:
         assert row["action"] == "removed" and not worktree.exists(), row
