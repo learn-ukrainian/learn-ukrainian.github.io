@@ -518,3 +518,17 @@ def test_resolved_test_sets_do_not_freeze_to_manifest_samples(manifest):
     assert ("atlas-data", "harness") in graph["node_edges"]
     graph = graph | {"unresolved_edges": [], "missing_mandatory_edges": []}
     assert "harness" in c.affected(["scripts/lexicon/runner/atlas_job.py"], manifest, graph)["components"]
+
+
+def test_frontend_build_declares_shared_astro_scope(tmp_path, monkeypatch, capsys, manifest):
+    monkeypatch.setattr(c, "verify_inputs", lambda *args: {})
+    monkeypatch.setattr(c, "run_commands", lambda *args, **kw: ([{"result": "pass"}], 0))
+    for node in manifest["selector_contracts"]["frontend_components"]:
+        assert c.main(["build", "--component", node, "--inputs", str(tmp_path / "inputs.json"),
+                       "--output-dir", str(tmp_path / node)]) == 0
+        report = json.loads(capsys.readouterr().out)
+        assert report["build_scope"] == "shared-astro"
+        assert report["input_bytes_verified"] is True
+        assert report["artifact_certification"].startswith("not_certified")
+    residual = next(r for r in manifest["residual_commands"] if r["id"] == "open-model-prepared-build-inputs")
+    assert residual["status"] == "artifact-dependent" and residual["owner_slice"] == 5

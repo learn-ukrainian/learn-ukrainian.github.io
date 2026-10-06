@@ -716,6 +716,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     args.output_dir.mkdir(parents=True, exist_ok=True)
                 results, code = run_commands(commands, ROOT, args.output_dir, members)
                 report = {"component": args.component, "commands": results,
+                          "build_scope": node.get("build_scope") if args.operation == "build" else None,
                           "input_bytes_verified": bool(getattr(args, "inputs", None)),
                           "artifact_certification": "not_certified (owning slices 3-5 and 8)",
                           "residual_commands": [entry for entry in manifest["residual_commands"] if entry["component"] == args.component]}

@@ -207,7 +207,8 @@
       ],
       "output_families": [
         "shared-astro"
-      ]
+      ],
+      "build_scope": "shared-astro"
     },
     "practice-frontend": {
       "lane": "atlas",
@@ -267,7 +268,8 @@
           "run",
           "hydrate:teacher"
         ]
-      ]
+      ],
+      "build_scope": "shared-astro"
     },
     "curriculum-generation": {
       "lane": "curriculum",
@@ -373,7 +375,8 @@
       ],
       "output_families": [
         "shared-astro"
-      ]
+      ],
+      "build_scope": "shared-astro"
     },
     "harness": {
       "lane": "infra",
@@ -1570,6 +1573,31 @@
         "site/scripts/verify-consumed-artifacts.mjs"
       ],
       "reason": "Prepared runtime members required; complete readiness remains slice 3, then learner certification slice 8."
+    },
+    {
+      "id": "open-model-prepared-build-inputs",
+      "component": "open-model-data",
+      "status": "artifact-dependent",
+      "owner_slice": 5,
+      "argv": [
+        "{python}",
+        "-m",
+        "scripts.projects.open_model_data.model_view_exporter",
+        "continued-pretraining",
+        "--source-records",
+        "{member:source-records}",
+        "--payloads",
+        "{member:payloads}",
+        "--origin",
+        "human_authored",
+        "--representation-view",
+        "faithful_literary",
+        "--output",
+        "{output_dir}/view.jsonl",
+        "--receipt-output",
+        "{output_dir}/view-receipt.json"
+      ],
+      "reason": "The production build requires admitted human-authored source records and payloads. Structural test fixtures are rejected; they do not certify a production view."
     }
   ],
   "selector_contracts": {
