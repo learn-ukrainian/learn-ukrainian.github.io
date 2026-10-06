@@ -38,7 +38,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
 from agent_runtime.adapters.base import InvocationPlan
-from agent_runtime.result import ParseResult
+from agent_runtime.result import ParseResult, Result
 from agent_runtime.telemetry import InvocationTelemetry
 from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
@@ -5407,7 +5407,7 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
     tmp_path,
     monkeypatch,
 ):
-    """Agy dispatches with clean rc=0, dirty worktree, and zero commits finalize."""
+    """Successful Agy dispatches with rc=0, dirty worktree, and zero commits finalize."""
     _sanitize_git_env_for_test(monkeypatch)
     origin = tmp_path / "origin.git"
     worktree = tmp_path / "worktree"
@@ -5507,8 +5507,8 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
         "_Result",
         (),
         {
-            "ok": False,
-            "response": "",
+            "ok": True,
+            "response": "complete",
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
@@ -5588,6 +5588,101 @@ def _agy_dispatch_worktree(tmp_path: Path, branch: str) -> Path:
     git("push", "-u", "origin", "main")
     git("checkout", "-b", branch)
     return worktree
+
+
+@pytest.mark.parametrize(
+    ("agent", "model", "ok", "failure_code", "pushed_commit_first"),
+    [
+        ("grok", "grok-4.7", False, "provider_stream_incomplete", False),
+        ("grok", "grok-4.7", False, "provider_stream_incomplete", True),
+        ("grok", "grok-4.7", True, None, False),
+        ("codex", "gpt-6.1-sol", False, "provider_policy_refusal", False),
+        ("claude", "claude-opus-5-5", False, "future_incomplete_run", True),
+        ("claude", "claude-opus-5-5", False, None, False),
+    ],
+)
+def test_run_worker_auto_finalize_respects_provider_outcome(
+    tmp_tasks_dir, tmp_path, monkeypatch, agent, model, ok, failure_code, pushed_commit_first
+):
+    """#9771: committing a dirty tree cannot turn an adapter rejection into success."""
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = "provider-outcome"
+    branch = f"{agent}/{task_id}"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    if pushed_commit_first:
+        (worktree / "wip.txt").write_text("wip\n", encoding="utf-8")
+        for args in (["add", "wip.txt"], ["commit", "-m", "wip"], ["push", "-u", "origin", branch]):
+            subprocess.run(["git", *args], cwd=worktree, check=True, capture_output=True, timeout=30)
+    original_head = delegate._resolve_sha(worktree)
+    (worktree / "artifact.txt").write_text("worker edits\n", encoding="utf-8")
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "owned_paths": ["artifact.txt"],
+            "keep_worktree": True,
+        },
+    )
+    parsed = ParseResult(ok=ok, response="complete" if ok else "", stderr_excerpt=failure_code)
+    if agent == "grok":
+        from agent_runtime.adapters.grok_build import GrokBuildAdapter
+
+        parsed = GrokBuildAdapter().parse_response(
+            stdout=json.dumps(
+                {"text": "complete" if ok else "partial narration", "stopReason": "end_turn" if ok else "cancelled"}
+            ),
+            stderr="",
+            returncode=0,
+            output_file=None,
+        )
+    result = Result(
+        ok=parsed.ok,
+        agent=agent,
+        model=model,
+        mode="danger",
+        response=parsed.response,
+        stderr_excerpt=parsed.stderr_excerpt,
+        duration_s=0.1,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=0,
+        failure_code=parsed.failure_code or failure_code,
+    )
+    with patch("agent_runtime.runner.invoke", return_value=result):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent=agent,
+            prompt="hi",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=model,
+            hard_timeout=60,
+            effort="high",
+            keep_worktree=True,
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert rc == (0 if ok else 1)
+    assert state["status"] == ("done" if ok else "needs_finalize")
+    assert state["needs_finalize"] is not ok
+    assert state["worktree_dirty_on_exit"] is not ok
+    assert state["last_error"] == (delegate._first_error_line(parsed.stderr_excerpt) if not ok else None)
+    assert state.get("failure_code") == failure_code
+    if ok:
+        assert state["auto_finalize"]["ok"] is True
+        assert state["auto_finalize"]["changed_files"] == ["artifact.txt"]
+        assert delegate._count_unpushed_commits(worktree, branch) == 0
+    else:
+        assert state["auto_finalize"] is None
+        assert delegate._resolve_sha(worktree) == original_head
+        assert (worktree / "artifact.txt").read_text(encoding="utf-8") == "worker edits\n"
+        assert not state["result_file"]
 
 
 @pytest.mark.parametrize(
