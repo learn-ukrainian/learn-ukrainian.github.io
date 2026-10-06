@@ -26,6 +26,7 @@ SUM20_ATTRIBUTION_LABEL = (
     "Словник української мови у 20 томах (УМІФ НАН України; Інститут мовознавства ім. О. О. Потебні НАН України)"
 )
 PARSER_VERSION = "sum20_official_v1"
+QUARANTINE_COLUMN = "quarantine_reason"
 DEFAULT_USER_AGENT = "learn-ukrainian-sum20-ingest/1.0 (noncommercial educational corpus; issue 5228)"
 
 _ARTICLE_RE = re.compile(r"<article\b[^>]*>.*?</article\s*>", re.IGNORECASE | re.DOTALL)
@@ -272,7 +273,8 @@ CREATE TABLE IF NOT EXISTS sum20_articles (
     official_url TEXT NOT NULL,
     fetched_at TEXT NOT NULL,
     content_sha256 TEXT NOT NULL,
-    parser_version TEXT NOT NULL
+    parser_version TEXT NOT NULL,
+    quarantine_reason TEXT NOT NULL DEFAULT ''
 );
 CREATE TABLE IF NOT EXISTS sum20_senses (
     id INTEGER PRIMARY KEY,
@@ -347,6 +349,33 @@ def ensure_sum20_official_schema(conn: sqlite3.Connection) -> None:
     """Create the official СУМ-20 collection and resumable-crawl metadata."""
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(SUM20_SCHEMA_SQL)
+    ensure_sum20_quarantine_column(conn)
+
+
+def ensure_sum20_quarantine_column(conn: sqlite3.Connection) -> bool:
+    """Add ``sum20_articles.quarantine_reason`` to a table created before #9609; return whether it was added."""
+    columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(sum20_articles)")}
+    if not columns or QUARANTINE_COLUMN in columns:
+        return False
+    conn.execute(f"ALTER TABLE sum20_articles ADD COLUMN {QUARANTINE_COLUMN} TEXT NOT NULL DEFAULT ''")
+    return True
+
+
+def live_article_predicate(columns: Iterable[str], alias: str = "") -> str:
+    """SQL predicate that keeps only non-quarantined ``sum20_articles`` rows.
+
+    Quarantined rows stay in the table (never deleted) but no retrieval path
+    returns them.  A table created before the column existed has no quarantined
+    rows to hide, so the predicate is then always true.
+    """
+    prefix = f"{alias}." if alias else ""
+    return f"{prefix}{QUARANTINE_COLUMN} = ''" if QUARANTINE_COLUMN in set(columns) else "1 = 1"
+
+
+def live_article_predicate_for(conn: sqlite3.Connection | sqlite3.Cursor, alias: str = "") -> str:
+    """``live_article_predicate`` for the ``sum20_articles`` table behind a connection or cursor."""
+    rows = conn.execute("PRAGMA table_info(sum20_articles)").fetchall()
+    return live_article_predicate((str(row[1]) for row in rows), alias)
 
 
 def utc_now() -> str:

@@ -33,6 +33,7 @@ import jsonschema
 from jsonschema import Draft202012Validator
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
@@ -1251,7 +1252,7 @@ def assemble_production_shards(
         return receipt
 
     # 3. Assemble SFT PRESERVE controls (1,800 items: 180 polysemy/abstention + 1,620 STEM)
-    conn_vesum = sqlite3.connect(vesum_db_path)
+    conn_vesum = _open_readonly(Path(vesum_db_path).resolve())
     cur_v = conn_vesum.cursor()
 
     abstention_trajectories = generate_abstention_trajectories(cur_v, count=180)
@@ -1300,7 +1301,7 @@ def assemble_production_shards(
         raise RuntimeError(f"Expected {PRESERVE_SFT_QUOTA} PRESERVE trajectories, got {len(preserve_trajectories)}")
 
     # 4. Assemble SFT CORRECT trajectories (4,200 items: 441 gold + 1,050 UA-GEC + 2,709 candidates)
-    conn_sources = sqlite3.connect(sources_db_path)
+    conn_sources = _open_readonly(Path(sources_db_path).resolve())
     cur_s = conn_sources.cursor()
 
     # 4a. Gold Seed Trajectories (oversampled 3x: 147 quick_tip, 147 contrastive, 147 deep_analysis)
@@ -1579,11 +1580,11 @@ def assemble_production_shards(
 
     # 6. Verify 100% Claim Verification via CoTClaimVerifier
     print("[*] Running automated CoT claim verification on assembled trajectories...")
-    conn_vesum = sqlite3.connect(vesum_db_path)
-    conn_sources = sqlite3.connect(sources_db_path)
+    conn_vesum = _open_readonly(Path(vesum_db_path).resolve())
+    conn_sources = _open_readonly(Path(sources_db_path).resolve())
     conn_ulif = None
     if DEFAULT_ULIF_DB.is_file():
-        conn_ulif = sqlite3.connect(DEFAULT_ULIF_DB)
+        conn_ulif = _open_readonly(Path(DEFAULT_ULIF_DB).resolve())
     r2u_cache = {}
     if DEFAULT_R2U_CACHE.is_file():
         with DEFAULT_R2U_CACHE.open("r", encoding="utf-8") as f:

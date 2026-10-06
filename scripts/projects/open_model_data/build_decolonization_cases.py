@@ -49,6 +49,7 @@ from scripts.projects.open_model_data.paths import ARTIFACT_DECOLONIZATION_DIR, 
 from scripts.projects.open_model_data.sum20_codification_records import ensure_reproducible_sum20_table
 from scripts.storage import paths as storage_paths
 from scripts.storage.artifacts import write_artifact_set
+from scripts.wiki.sum20_official import live_article_predicate_for
 
 _COMPONENT_GROUP = "open_model_component_payload"
 _DECOLONIZATION_REL = "projects/open_model_data/components/decolonization"
@@ -555,8 +556,9 @@ def query_source_evidence(
         source_record = None
         for tbl in ("reproducible_sum20_articles", "sum20_articles"):
             try:
+                live = live_article_predicate_for(s_cur) if tbl == "sum20_articles" else "1 = 1"
                 s_cur.execute(
-                    f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM {tbl} WHERE headword IN ({placeholders}) OR normalized_lookup_key IN ({placeholders}) LIMIT 1",
+                    f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM {tbl} WHERE (headword IN ({placeholders}) OR normalized_lookup_key IN ({placeholders})) AND {live} LIMIT 1",
                     (*sum20_keys, *sum20_keys),
                 )
                 source_record = s_cur.fetchone()
@@ -569,8 +571,9 @@ def query_source_evidence(
         if not source_record and is_phrase:
             for tbl in ("reproducible_sum20_articles", "sum20_articles"):
                 try:
+                    live = live_article_predicate_for(s_cur) if tbl == "sum20_articles" else "1 = 1"
                     s_cur.execute(
-                        f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM {tbl} WHERE article_text LIKE ? OR definition_text LIKE ? LIMIT 1",
+                        f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM {tbl} WHERE (article_text LIKE ? OR definition_text LIKE ?) AND {live} LIMIT 1",
                         (f"%{t_clean}%", f"%{t_clean}%"),
                     )
                     source_record = s_cur.fetchone()
