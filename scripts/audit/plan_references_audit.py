@@ -42,6 +42,27 @@ from pathlib import Path
 
 import yaml
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 PLANS_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans"
 SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
@@ -214,7 +235,7 @@ def _extract_citations(
 
 
 def _source_files_for(
-    conn: sqlite3.Connection, author_uk: str, grade: int
+    conn: SQLiteConnection, author_uk: str, grade: int
 ) -> list[str]:
     """Cyrillic-native matcher: queries textbooks.author_uk + grade directly.
 
@@ -234,7 +255,7 @@ def _source_files_for(
     return sorted(str(r[0]) for r in rows)
 
 
-def _author_uk_exists(conn: sqlite3.Connection, author_uk: str) -> bool:
+def _author_uk_exists(conn: SQLiteConnection, author_uk: str) -> bool:
     """True iff at least one row exists with this Cyrillic author at any grade."""
     canonical = _canonicalize_author_uk(author_uk)
     row = conn.execute(
@@ -245,7 +266,7 @@ def _author_uk_exists(conn: sqlite3.Connection, author_uk: str) -> bool:
 
 
 def _fetch_chunk(
-    conn: sqlite3.Connection, source_files: list[str], page: int
+    conn: SQLiteConnection, source_files: list[str], page: int
 ) -> dict | None:
     if not source_files:
         return None
@@ -272,7 +293,7 @@ def _fetch_chunk(
 
 
 def _nearby_pages(
-    conn: sqlite3.Connection, source_files: list[str], page: int, radius: int = 3
+    conn: SQLiteConnection, source_files: list[str], page: int, radius: int = 3
 ) -> list[tuple[int, str]]:
     """Return up to `radius`-distance pages that DO exist, with chunk
     titles, for the GHOST_PAGE 'suggested fix' column."""
@@ -313,7 +334,7 @@ def _classify_level_mismatch(level: str, grade: int) -> bool:
 
 
 def _audit_citation(
-    cite: Citation, plan_text: str, conn: sqlite3.Connection
+    cite: Citation, plan_text: str, conn: SQLiteConnection
 ) -> Finding:
     if not _author_uk_exists(conn, cite.author):
         fix = (
@@ -652,7 +673,7 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     findings: list[Finding] = []
-    with sqlite3.connect(str(args.db)) as conn:
+    with _open_readonly(str(args.db)) as conn:
         conn.row_factory = sqlite3.Row
         for cite in all_cites:
             f = _audit_citation(

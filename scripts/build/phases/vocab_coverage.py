@@ -3,12 +3,29 @@
 from __future__ import annotations
 
 import sqlite3
+import sys
 import unicodedata
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
 import yaml
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 VESUM_DB_PATH = PROJECT_ROOT / "data" / "vesum.db"
@@ -71,7 +88,7 @@ def _vesum_lemma_lookup(term: str, db_path: Path = VESUM_DB_PATH) -> str | None:
         return None
 
     try:
-        with sqlite3.connect(str(db_path)) as db:
+        with _open_readonly(str(db_path)) as db:
             # Current contract for this validator: data/vesum.db exposes
             # vesum(form, lemma). Older local imports used forms(word_form, lemma),
             # so keep that fallback to avoid making the validator environment-fragile.

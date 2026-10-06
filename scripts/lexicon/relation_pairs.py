@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import re
-import sqlite3
 import unicodedata
 from collections.abc import Callable
 
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.verification.vesum import verify_word
 
 RELATION_TYPES = frozenset({"synonym", "antonym", "paronym", "homonym"})
@@ -15,7 +15,7 @@ _UKRAINIAN_WORD_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ-]+$")
 _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 
 
-def ensure_relation_pairs_schema(conn: sqlite3.Connection) -> None:
+def ensure_relation_pairs_schema(conn: SQLiteConnection) -> None:
     """Create the durable, provenance-preserving relation-pair corpus schema."""
     conn.executescript(
         """

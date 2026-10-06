@@ -5,10 +5,29 @@ from __future__ import annotations
 import os
 import re
 import sqlite3
+import sys
 from pathlib import Path
 
 from .config import PROJECT_ROOT
 from .sources_schema import _infer_source_type, normalize_source_filename
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 
@@ -87,7 +106,7 @@ def resolve_chunk_attribution_any_corpus(chunk_id: str) -> tuple[str, dict] | No
 
 
 def resolve_chunk_attribution_any_corpus_with_conn(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     chunk_id: str,
 ) -> tuple[str, dict] | None:
     """Resolve a chunk id by probing all supported corpora on an existing connection."""
@@ -103,7 +122,7 @@ def resolve_chunk_attribution_any_corpus_with_conn(
 
 
 def _resolve_chunk_attribution_with_conn(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     chunk_id: str,
     normalized_corpus: str,
 ) -> dict | None:
@@ -122,7 +141,7 @@ def _resolve_chunk_attribution_with_conn(
     return None
 
 
-def _candidate_corpora(conn: sqlite3.Connection, chunk_id: str) -> list[str]:
+def _candidate_corpora(conn: SQLiteConnection, chunk_id: str) -> list[str]:
     candidates: list[str] = []
     section_id = _parse_section_id(chunk_id)
     if section_id is not None:
@@ -142,7 +161,7 @@ def _candidate_corpora(conn: sqlite3.Connection, chunk_id: str) -> list[str]:
     return candidates
 
 
-def _resolve_textbook_section(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _resolve_textbook_section(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     section_id = _parse_section_id(chunk_id)
     if section_id is None:
         return None
@@ -167,7 +186,7 @@ def _resolve_textbook_section(conn: sqlite3.Connection, chunk_id: str) -> dict |
     }
 
 
-def _resolve_textbook_chunk(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _resolve_textbook_chunk(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = conn.execute(
         """
         SELECT id, chunk_id, title, source_file, grade, author
@@ -193,7 +212,7 @@ def _resolve_textbook_chunk(conn: sqlite3.Connection, chunk_id: str) -> dict | N
     }
 
 
-def _resolve_literary_chunk(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _resolve_literary_chunk(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = conn.execute(
         """
         SELECT id, chunk_id, title, source_file, author, work
@@ -218,7 +237,7 @@ def _resolve_literary_chunk(conn: sqlite3.Connection, chunk_id: str) -> dict | N
     }
 
 
-def _resolve_external_chunk(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _resolve_external_chunk(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = conn.execute(
         """
         SELECT
@@ -257,7 +276,7 @@ def _resolve_external_chunk(conn: sqlite3.Connection, chunk_id: str) -> dict | N
     }
 
 
-def _resolve_wikipedia_chunk(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _resolve_wikipedia_chunk(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = conn.execute(
         """
         SELECT title, url
@@ -279,7 +298,7 @@ def _resolve_wikipedia_chunk(conn: sqlite3.Connection, chunk_id: str) -> dict | 
     }
 
 
-def _resolve_ukrainian_wiki_chunk(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _resolve_ukrainian_wiki_chunk(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = conn.execute(
         """
         SELECT article_slug, article_title, section_path
@@ -402,7 +421,7 @@ def _effective_db_path() -> Path:
     return db_path
 
 
-def connect_sources_db() -> sqlite3.Connection:
+def connect_sources_db() -> SQLiteConnection:
     """Open a sources DB connection, preferring the populated main-checkout DB in worktrees.
 
     ``LU_SOURCES_DB`` overrides the resolved path (network locations refused);
@@ -412,6 +431,6 @@ def connect_sources_db() -> sqlite3.Connection:
     The connection is read-only: a missing database raises ``sqlite3.OperationalError``
     instead of SQLite creating an empty ``data/sources.db`` in the checkout (#9158).
     """
-    conn = sqlite3.connect(f"{_effective_db_path().resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(_effective_db_path())
     conn.row_factory = sqlite3.Row
     return conn

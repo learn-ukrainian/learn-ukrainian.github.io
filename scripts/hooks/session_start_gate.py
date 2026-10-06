@@ -500,6 +500,18 @@ def phase_rollover_import(args: argparse.Namespace) -> dict[str, Any]:
             "status": "issue",
             "warning": f"WARNING: rollover bundle import exceeded its 3-second sub-budget ({elapsed:.2f}s); detect continues.",
         }
+    if rc == 0 and isinstance(payload, dict):
+        copies = [
+            item["preserved_copy"]
+            for item in payload.get("bundles", [payload])
+            if isinstance(item, dict) and item.get("status") == "warning" and item.get("preserved_copy")
+        ]
+        if copies:
+            return {
+                "status": "issue",
+                "warning": "WARNING: rollover bundle differs at equal order; kept local; "
+                f"remote preserved at {', '.join(copies)}",
+            }
     if rc == 0 and isinstance(payload, dict) and payload.get("status") not in {"warning", "refused"}:
         return {"status": "ok", "elapsed_seconds": round(elapsed, 3)}
     detail = " ".join((out or err).split()) or "no structured output"

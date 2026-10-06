@@ -1,0 +1,10 @@
+{
+  "schema": "batch-state-retention.v1",
+  "holds": [
+    {
+      "path": "batch_state/codex-atlas/session-20260929-resume/",
+      "reason": "Evidence for #9250.",
+      "until": "#9250 closes"
+    }
+  ]
+}

@@ -44,6 +44,10 @@ than executed for each test.
 
 ## Guard and regression
 
+**Prevention:** each authorizing helper resolves the issued authorization's
+request id and asserts it matches the request just frozen, before claiming or
+executing; `test_v4_pg_isolation.py` pins the per-test database isolation.
+
 `prepared`, `_run_real_pair.run`, and `produce_author_record` resolve the
 issued authorization's request id and assert that it matches the request just
 frozen, before claiming or executing. Claiming helpers also check the returned

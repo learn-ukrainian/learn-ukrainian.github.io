@@ -14,14 +14,63 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 from audit.check_primary_integrity import (
+    _append_event,
+    _save_state,
     check_primary_integrity,
     main,
     worktree_origin_points_at_remote,
 )
+from scripts.common.safe_unit_install import InstallError
+
+
+@pytest.mark.parametrize("writer", ["state", "event"])
+@pytest.mark.parametrize("linked", ["directory", "file"])
+@pytest.mark.parametrize("dangling", [False, True])
+def test_telemetry_refuses_symlinks(tmp_path, capsys, writer, linked, dangling):
+    state_dir = tmp_path / "telemetry"
+    outside = tmp_path / "outside"
+    name = "state.json" if writer == "state" else "events.jsonl"
+    if linked == "directory":
+        if not dangling:
+            outside.mkdir()
+            (outside / name).write_text("untouched")
+        state_dir.symlink_to(outside, target_is_directory=True)
+        target = outside / name
+    else:
+        state_dir.mkdir()
+        target = outside
+        if not dangling:
+            target.write_text("untouched")
+        (state_dir / name).symlink_to(target)
+
+    if writer == "state":
+        with pytest.raises(InstallError, match="symlink"):
+            _save_state(state_dir, {"healthy_main_sha": "test"})
+    else:
+        _append_event(state_dir, "test")
+        assert "failed to log event" in capsys.readouterr().err
+    if dangling:
+        assert not target.exists()
+        assert not outside.exists()
+    else:
+        assert target.read_text() == "untouched"
+    assert (state_dir if linked == "directory" else state_dir / name).is_symlink()
+
+
+def test_telemetry_writes_and_replaces_regular_files(tmp_path):
+    state_dir = tmp_path / "telemetry"
+    _save_state(state_dir, {"pass": 1})
+    _save_state(state_dir, {"pass": 2})
+    assert json.loads((state_dir / "state.json").read_text()) == {"pass": 2}
+    _append_event(state_dir, "first")
+    _append_event(state_dir, "second")
+    assert [item["event"] for item in _events(state_dir)] == ["first", "second"]
 
 _GIT_REDIRECT = frozenset(
     {

@@ -47,11 +47,9 @@ ROLLOVER_MODE=$(jq -r --arg sid "$SESSION_ID" \
 [ "$(context_effective_rollover_mode "$ROLLOVER_MODE")" = "operator_restart" ] || exit 0
 
 [ "$EVENT" = "UserPromptSubmit" ] || exit 0
-TIER_STATE_FILE="$PROJECT_DIR/batch_state/context_monitor/${SESSION_ID}.tier"
-[ -f "$TIER_STATE_FILE" ] || exit 0
 LAST_TIER=0
 LAST_TOKENS=0
-read -r LAST_TIER LAST_TOKENS < "$TIER_STATE_FILE" 2>/dev/null || true
+read -r LAST_TIER LAST_TOKENS <<< "$(context_hook_state read "$PROJECT_DIR" "$SESSION_ID")"
 [ "$LAST_TIER" = "3" ] || exit 0
 case "$LAST_TOKENS" in ''|*[!0-9]*) LAST_TOKENS=0 ;; esac
 TOKENS=0

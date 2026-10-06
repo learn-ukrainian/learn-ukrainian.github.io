@@ -49,12 +49,13 @@ def _run(cmd, **kwargs) -> subprocess.CompletedProcess:
         subprocess.Popen = patched
 
 
-def _plumbing_only(monkeypatch) -> list[str]:
+def _plumbing_only(monkeypatch, *, allow_remote_read: bool = False) -> list[str]:
     """Let ``subprocess.run`` run only read-only git plumbing; returns the subcommands that ran."""
     ran: list[str] = []
 
     def run(cmd, *args, **kwargs):
-        if list(cmd[:1]) != ["git"] or cmd[1] not in _GATE_GIT:
+        allowed = _GATE_GIT | {"ls-remote"} if allow_remote_read else _GATE_GIT
+        if list(cmd[:1]) != ["git"] or cmd[1] not in allowed:
             raise AssertionError(f"a Kimi admission check ran {cmd!r}")
         ran.append(cmd[1])
         return _run(cmd, *args, **kwargs)
@@ -1213,14 +1214,22 @@ def test_dispatch_refuses_a_base_missing_locally_without_fetching(
     _git(primary, "init", "-q", "--initial-branch=main")
     (primary / path).write_text("export const label = 'Lesson';\n", encoding="utf-8")
     _commit_all(primary, "no origin ref exists")
+    if extra:
+        # --branch must exist remotely (#9874), but its commit is deliberately
+        # not present in local remote-tracking refs for this Kimi scan test.
+        remote = tmp_path / "remote.git"
+        _git(tmp_path, "init", "-q", "--bare", str(remote))
+        _git(remote, "fetch", "-q", str(primary), "refs/heads/main:refs/heads/kimi/task")
+        _git(primary, "remote", "add", "origin", str(remote))
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(primary)
     monkeypatch.setattr(delegate, "_fetch_base", _fail)
     monkeypatch.setattr(delegate, "_fetch_existing_branch", _fail)
-    ran = _plumbing_only(monkeypatch)
+    ran = _plumbing_only(monkeypatch, allow_remote_read=bool(extra))
     _observed_default_branch(monkeypatch)
 
     _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, "--owned-path", path, *extra), "base not available locally")
-    assert set(ran) <= {"rev-parse"}
+    assert set(ran) <= {"rev-parse", "ls-remote"}
     assert not (primary / ".worktrees").exists()
 
 

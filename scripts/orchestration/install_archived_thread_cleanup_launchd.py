@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Install the deterministic archived-thread cleanup launchd job on macOS."""
+"""Install the deterministic archived-thread cleanup launchd job on macOS.
+
+The plist is written to a temporary file and renamed into place; a symlinked
+plist, or a symlink in any directory from the home directory down to
+``Library/LaunchAgents``, is refused by install and status; uninstall refuses
+such a directory before unloading the service.
+"""
 
 from __future__ import annotations
 
@@ -9,9 +15,23 @@ import os
 import plistlib
 import shutil
 import subprocess
-import tempfile
+import sys
 from collections.abc import Sequence
 from pathlib import Path
+from xml.parsers.expat import ExpatError
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.common.safe_unit_install import (
+    InstallError,
+    check_unit_dir,
+    ensure_state_dirs,
+    install_unit,
+    load_unit,
+    remove_unit,
+)
 
 LABEL = "com.learn-ukrainian.codex-archived-thread-cleanup"
 DEFAULT_WEEKDAY = "sunday"
@@ -90,9 +110,7 @@ def resolve_codex_binary(configured: Path | None) -> Path:
     return absolute
 
 
-def build_plist(
-    *, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int
-) -> dict[str, object]:
+def build_plist(*, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int) -> dict[str, object]:
     """Build the launchd configuration without touching disk or launchd."""
     log_dir = state_dir(home) / "logs"
     return {
@@ -126,9 +144,7 @@ def build_plist(
     }
 
 
-def render_plist(
-    *, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int
-) -> bytes:
+def render_plist(*, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int) -> bytes:
     """Render a stable XML plist for inspection and tests."""
     payload = build_plist(
         repo_root=repo_root,
@@ -140,37 +156,9 @@ def render_plist(
     return plistlib.dumps(payload, fmt=plistlib.FMT_XML, sort_keys=True)
 
 
-def _fsync_directory(path: Path) -> None:
-    flags = os.O_RDONLY
-    if hasattr(os, "O_DIRECTORY"):
-        flags |= os.O_DIRECTORY
-    descriptor = os.open(path, flags)
-    try:
-        os.fsync(descriptor)
-    finally:
-        os.close(descriptor)
-
-
-def atomic_write(path: Path, content: bytes, *, mode: int = 0o600) -> bool:
-    """Atomically replace path and report whether its contents changed."""
-    if path.is_file() and path.read_bytes() == content:
-        return False
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
-    temporary_path = Path(temporary_name)
-    try:
-        with os.fdopen(descriptor, "wb") as handle:
-            handle.write(content)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.chmod(temporary_path, mode)
-        os.replace(temporary_path, path)
-        _fsync_directory(path.parent)
-    except BaseException:
-        temporary_path.unlink(missing_ok=True)
-        raise
-    return True
+def atomic_write(path: Path, content: bytes, *, mode: int = 0o600, home: Path | None = None) -> bool:
+    """Atomically replace path without following links and report whether it wrote."""
+    return install_unit(path, content, mode=mode, home=home)
 
 
 def _launchctl(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
@@ -188,7 +176,6 @@ def _launchctl(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
         raise LaunchdError(
             f"/bin/launchctl {' '.join(command)} timed out after {DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS}s"
         ) from exc
-
 
 
 def _domain() -> str:
@@ -225,9 +212,7 @@ def _validate_runtime(repo_root: Path, codex_binary: Path) -> None:
         raise LaunchdError(f"Codex CLI is missing or not executable: {codex_binary}")
 
 
-def install(
-    *, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int
-) -> dict[str, object]:
+def install(*, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int) -> dict[str, object]:
     """Install or reconcile the launch agent, then verify launchd readback."""
     _validate_runtime(repo_root, codex_binary)
     destination = plist_path(home)
@@ -238,23 +223,21 @@ def install(
         weekday=weekday,
         hour=hour,
     )
+    # Refuse a symlinked home or plist directory before creating state under it.
+    installed = load_unit(destination, home=home)
     runtime_state = state_dir(home)
-    runtime_state.mkdir(parents=True, exist_ok=True, mode=0o700)
-    os.chmod(runtime_state, 0o700)
-    logs = runtime_state / "logs"
-    logs.mkdir(parents=True, exist_ok=True, mode=0o700)
-    os.chmod(logs, 0o700)
+    ensure_state_dirs(runtime_state, runtime_state / "logs", home=home)
 
     before = _loaded_readback()
     was_loaded = before.returncode == 0
-    changed = not destination.is_file() or destination.read_bytes() != content
+    changed = installed is None or installed[0] != content
 
     if changed and was_loaded:
         bootout = _launchctl(["bootout", _service_target()])
         if bootout.returncode != 0:
             raise _failure("bootout", bootout)
 
-    wrote_plist = atomic_write(destination, content)
+    wrote_plist = atomic_write(destination, content, home=home)
     if changed or not was_loaded:
         bootstrap = _launchctl(["bootstrap", _domain(), str(destination)])
         if bootstrap.returncode != 0:
@@ -281,16 +264,17 @@ def install(
 def status(*, home: Path) -> tuple[dict[str, object], int]:
     """Read both the persisted plist and launchd's current service state."""
     destination = plist_path(home)
+    persisted = load_unit(destination, home=home)
     readback = _loaded_readback()
-    installed = destination.is_file()
+    installed = persisted is not None
     loaded = readback.returncode == 0
     valid_plist = False
     configuration: dict[str, object] = {}
     parse_error: str | None = None
 
-    if installed:
+    if persisted is not None:
         try:
-            parsed = plistlib.loads(destination.read_bytes())
+            parsed = plistlib.loads(persisted[0])
             if not isinstance(parsed, dict):
                 raise ValueError("top-level plist value is not a dictionary")
             configuration = {
@@ -314,7 +298,7 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
                 and isinstance(schedule, dict)
                 and isinstance(schedule.get("Weekday"), int)
             )
-        except (OSError, ValueError, plistlib.InvalidFileException) as exc:
+        except (OSError, ValueError, plistlib.InvalidFileException, ExpatError) as exc:
             parse_error = str(exc)
 
     payload: dict[str, object] = {
@@ -334,18 +318,16 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
 def uninstall(*, home: Path) -> dict[str, object]:
     """Idempotently unload and remove the plist while preserving audit state."""
     destination = plist_path(home)
+    check_unit_dir(destination, home=home)
     before = _loaded_readback()
     was_loaded = before.returncode == 0
-    existed = destination.exists()
 
     if was_loaded:
         bootout = _launchctl(["bootout", _service_target()])
         if bootout.returncode != 0:
             raise _failure("bootout", bootout)
 
-    if existed:
-        destination.unlink()
-        _fsync_directory(destination.parent)
+    existed = remove_unit(destination, home=home)
 
     readback = _loaded_readback()
     if readback.returncode == 0:
@@ -425,7 +407,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    home = args.home.expanduser().resolve()
+    # Unresolved: the unit helper must see a symlinked home to refuse it (#9875).
+    home = Path(os.path.abspath(args.home.expanduser()))
 
     try:
         if args.command in {"install", "render"}:
@@ -454,7 +437,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         else:
             payload = uninstall(home=home)
             return_code = 0
-    except LaunchdError as exc:
+    except (LaunchdError, InstallError) as exc:
         print(json.dumps({"error": str(exc), "label": LABEL}, sort_keys=True))
         return 1
 

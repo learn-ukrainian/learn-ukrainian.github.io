@@ -13,6 +13,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from agents_extensions.shared.session_streams.model import parse_timestamp
 from scripts.api import delegate_router
 from scripts.api.delegate_router import _derived_task_status
@@ -270,7 +277,7 @@ def _read_driver_leases(
     if not path.is_file():
         return []
     try:
-        conn = sqlite3.connect(str(path))
+        conn = open_readonly(str(path))
         conn.row_factory = sqlite3.Row
         raw_rows = conn.execute(
             """

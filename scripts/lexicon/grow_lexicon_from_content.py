@@ -12,7 +12,6 @@ import argparse
 import contextlib
 import json
 import os
-import sqlite3
 import sys
 import tempfile
 from collections.abc import Iterator, Sequence
@@ -29,6 +28,8 @@ from scripts.lexicon.content_lexicon_reconciler import (
     reconcile_content,
 )
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DEFAULT_OUT = PROJECT_ROOT / "data" / "lexicon" / "grow_candidates.json"
 DEFAULT_CHECKPOINT_INTERVAL = 10
@@ -91,7 +92,9 @@ def load_checkpoint(path: Path) -> dict[str, dict[str, Any]]:
                     entries_by_lemma[str(entry["lemma"])] = entry
         return entries_by_lemma
     except Exception as exc:
-        print(f"[grow_lexicon] Warning: could not load checkpoint from {path} ({exc}); starting fresh.", file=sys.stderr)
+        print(
+            f"[grow_lexicon] Warning: could not load checkpoint from {path} ({exc}); starting fresh.", file=sys.stderr
+        )
         return {}
 
 
@@ -219,9 +222,7 @@ def generate_candidates(
                 entry = checkpointed[item.lemma]
                 entries.append(entry)
                 resumed_count += 1
-                if not quiet and (
-                    idx % max(1, checkpoint_interval) == 0 or idx == total_to_process
-                ):
+                if not quiet and (idx % max(1, checkpoint_interval) == 0 or idx == total_to_process):
                     print(
                         f"[grow_lexicon] [{idx}/{total_to_process}] lemma='{item.lemma}' (resumed, total_resumed={resumed_count}, newly_enriched={newly_enriched_count})",
                         file=sys.stderr,
@@ -235,9 +236,7 @@ def generate_candidates(
                 )
                 entries.append(entry)
                 newly_enriched_count += 1
-                if not quiet and (
-                    idx % max(1, checkpoint_interval) == 0 or idx == total_to_process
-                ):
+                if not quiet and (idx % max(1, checkpoint_interval) == 0 or idx == total_to_process):
                     print(
                         f"[grow_lexicon] [{idx}/{total_to_process}] lemma='{item.lemma}' (enriched, total_resumed={resumed_count}, newly_enriched={newly_enriched_count})",
                         file=sys.stderr,
@@ -341,10 +340,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     return 0
 
 
-def _source_connection(path: Path) -> sqlite3.Connection:
+def _source_connection(path: Path) -> SQLiteConnection:
     if not path.exists():
         raise FileNotFoundError(f"sources.db absent in worktree: {path.relative_to(PROJECT_ROOT)}")
-    return sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    return _open_readonly(path)
 
 
 def _limited_delta(items: Sequence[LemmaExample], limit: int | None) -> Sequence[LemmaExample]:
@@ -430,4 +429,3 @@ def _heritage_review_reasons(status: dict[str, Any]) -> list[str]:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

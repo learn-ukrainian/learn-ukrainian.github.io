@@ -27,6 +27,7 @@ from scripts.atlas.teacher_vesum_attest import content_tokens
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.grow_lexicon_from_content import _vesum_pos
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.sync.promote_module import _write_atomically
 
 PRACTICE_SCHEMA = "curated-v5-practice-seed-v1"
@@ -111,14 +112,10 @@ def normalize_rows(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
             if attested:
                 lemmas = attestation.get("matched_lemmas")
                 if isinstance(lemmas, list):
-                    cleaned["matched_lemmas"] = [
-                        _text(item) for item in lemmas if _text(item)
-                    ]
+                    cleaned["matched_lemmas"] = [_text(item) for item in lemmas if _text(item)]
                 forms = attestation.get("matched_forms")
                 if isinstance(forms, list):
-                    cleaned["matched_forms"] = [
-                        _text(item) for item in forms if _text(item)
-                    ]
+                    cleaned["matched_forms"] = [_text(item) for item in forms if _text(item)]
                 method = _text(attestation.get("method"))
                 if method:
                     cleaned["method"] = method
@@ -225,11 +222,7 @@ def fill_missing_manifest_glosses(
     if missing_seed:
         raise ValueError(f"target lemmas missing from curated seed: {', '.join(missing_seed)}")
 
-    manifest_entries = {
-        _lemma_key(_text(entry.get("lemma"))): entry
-        for entry in entries
-        if _text(entry.get("lemma"))
-    }
+    manifest_entries = {_lemma_key(_text(entry.get("lemma"))): entry for entry in entries if _text(entry.get("lemma"))}
     missing_manifest = sorted(targets - set(manifest_entries))
     if missing_manifest:
         raise ValueError(f"target lemmas missing from Atlas manifest: {', '.join(missing_manifest)}")
@@ -269,11 +262,7 @@ def fill_missing_manifest_pos(
     if not targets:
         raise ValueError("at least one target lemma is required")
 
-    manifest_entries = {
-        _lemma_key(_text(entry.get("lemma"))): entry
-        for entry in entries
-        if _text(entry.get("lemma"))
-    }
+    manifest_entries = {_lemma_key(_text(entry.get("lemma"))): entry for entry in entries if _text(entry.get("lemma"))}
     missing_manifest = sorted(targets - set(manifest_entries))
     if missing_manifest:
         raise ValueError(f"target lemmas missing from Atlas manifest: {', '.join(missing_manifest)}")
@@ -318,7 +307,7 @@ def _puls_cefr_level(word: str, sources_db: Path | None = None) -> tuple[str, st
     if not db.is_file():
         return None
     try:
-        connection = sqlite3.connect(f"file:{db.expanduser().resolve().as_posix()}?mode=ro", uri=True)
+        connection = _open_readonly(db.expanduser().resolve())
     except sqlite3.Error:
         return None
     try:
@@ -389,10 +378,7 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
         for entry in _manifest_entries(manifest_path)
         if _text(entry.get("lemma")) and _text(entry.get("url_slug")) and entry.get("pos") != "grammar term"
     ]
-    routes = {
-        _lemma_key(_text(entry.get("lemma"))): entry
-        for entry in public_entries
-    }
+    routes = {_lemma_key(_text(entry.get("lemma"))): entry for entry in public_entries}
     routes_by_slug = {_text(entry.get("url_slug")): entry for entry in public_entries}
     atlas_failures: list[dict[str, Any]] = []
     skipped_not_admitted: list[dict[str, Any]] = []
@@ -412,13 +398,14 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
                     "seedRow": row.get("seedRow"),
                     "lemma": lemma,
                     "mode": _text(admission.get("mode")) if isinstance(admission, dict) else "",
-                    "reason": _text(admission.get("reason")) if isinstance(admission, dict) else "missing_admission_record",
+                    "reason": _text(admission.get("reason"))
+                    if isinstance(admission, dict)
+                    else "missing_admission_record",
                 }
             )
             continue
         local_recognition = (
-            status == "has_candidates"
-            and _text(admission.get("mode")) == LOCAL_PRACTICE_PRIVATE_TEACHER
+            status == "has_candidates" and _text(admission.get("mode")) == LOCAL_PRACTICE_PRIVATE_TEACHER
         )
         if status != "ok" and not local_recognition:
             skipped_not_admitted.append(
@@ -548,7 +535,9 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
             example = _text(row.get("example"))
             provenance = row.get("provenance")
             if not example or not isinstance(provenance, dict):
-                atlas_failures.append({"seedRow": row.get("seedRow"), "lemma": lemma, "reason": "ok_row_missing_attestation"})
+                atlas_failures.append(
+                    {"seedRow": row.get("seedRow"), "lemma": lemma, "reason": "ok_row_missing_attestation"}
+                )
                 continue
             practice_row["example"] = example
             practice_row["provenance"] = provenance
@@ -556,11 +545,15 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
     report = {
         "schema": "curated-v5-admission-report-v1",
         "counts": {
-            "active_seed_rows": len(rows), "unique_seed_lemmas": len({_lemma_key(_text(row.get("lemma"))) for row in rows}),
-            "public_atlas_rows": len(rows) - len(atlas_failures) - len(local_only_missing_route), "atlas_failures": len(atlas_failures),
-            "sentence_status": dict(sorted(status_counts.items())), "practice_admitted_rows": len(practice_rows),
+            "active_seed_rows": len(rows),
+            "unique_seed_lemmas": len({_lemma_key(_text(row.get("lemma"))) for row in rows}),
+            "public_atlas_rows": len(rows) - len(atlas_failures) - len(local_only_missing_route),
+            "atlas_failures": len(atlas_failures),
+            "sentence_status": dict(sorted(status_counts.items())),
+            "practice_admitted_rows": len(practice_rows),
             "practice_skipped_not_admitted": len(skipped_not_admitted),
-            "practice_skipped_no_cefr": len(skipped_no_cefr), "practice_cefr_sources": dict(sorted(cefr_sources.items())),
+            "practice_skipped_no_cefr": len(skipped_no_cefr),
+            "practice_cefr_sources": dict(sorted(cefr_sources.items())),
             "local_only_missing_public_route": len(local_only_missing_route),
         },
         "atlas_failures": atlas_failures,
@@ -635,11 +628,7 @@ def main(argv: list[str] | None = None) -> int:
             parser.error("--input is required for seed-derived output or --fill-existing-glosses")
         rows: list[dict[str, Any]] = []
     else:
-        rows = (
-            read_public_seed(args.input)
-            if args.input.suffix == ".json"
-            else normalize_rows(_read_jsonl(args.input))
-        )
+        rows = read_public_seed(args.input) if args.input.suffix == ".json" else normalize_rows(_read_jsonl(args.input))
     if args.write and not (args.fill_existing_glosses or args.fill_existing_pos):
         parser.error("--write requires --fill-existing-glosses or --fill-existing-pos")
     if args.allow_missing_routes and (args.public_seed_out or args.candidates_out):
@@ -663,10 +652,7 @@ def main(argv: list[str] | None = None) -> int:
             assert args.manifest is not None
             _write_json(args.manifest, manifest)
             wrote_manifest = True
-        print(
-            "Seed gloss fill: "
-            f"applied={len(result.applied)} skipped_existing={len(result.skipped_existing)}"
-        )
+        print(f"Seed gloss fill: applied={len(result.applied)} skipped_existing={len(result.skipped_existing)}")
     if args.fill_existing_pos:
         assert manifest is not None
         pos_result = fill_missing_manifest_pos(manifest, args.target_lemma)
@@ -674,10 +660,7 @@ def main(argv: list[str] | None = None) -> int:
             assert args.manifest is not None
             _write_json(args.manifest, manifest)
             wrote_manifest = True
-        print(
-            "VESUM POS fill: "
-            f"applied={len(pos_result.applied)} skipped_existing={len(pos_result.skipped_existing)}"
-        )
+        print(f"VESUM POS fill: applied={len(pos_result.applied)} skipped_existing={len(pos_result.skipped_existing)}")
     if args.fill_existing_glosses or args.fill_existing_pos:
         print(f"Manifest written={str(wrote_manifest).lower()}")
     if args.public_seed_out:

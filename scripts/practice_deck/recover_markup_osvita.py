@@ -32,6 +32,22 @@ from typing import Any
 
 from bs4 import BeautifulSoup, NavigableString, Tag
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -214,7 +230,7 @@ def fetch_test_html(catalogue: str, test_id: int, *, timeout: float = 30.0) -> s
 
 def load_markup_tasks(db_path: Path) -> list[dict[str, Any]]:
     """Load single-choice tasks that still need visual marks."""
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = _open_readonly(db_path)
     conn.row_factory = sqlite3.Row
     try:
         rows = conn.execute(

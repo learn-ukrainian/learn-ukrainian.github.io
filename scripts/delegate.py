@@ -3565,13 +3565,14 @@ def _fetch_remote_branch(remote: str, branch: str) -> subprocess.CompletedProces
         return None
 
 
-def _ls_remote_branch_sha(remote: str, branch: str) -> str | None:
+def _ls_remote_branch_sha(remote: str, branch: str, *, strict: bool = False) -> str | None:
     """Probe the SHA ``remote`` serves for ``branch`` without touching refs.
 
     ``git ls-remote`` answers from the remote directly, so a lagging mirror
     can be detected (#7522) while ``refs/remotes/origin/<branch>`` is written
     only by the canonical fetch. Best-effort: a spawn failure, timeout, or
-    unresolved ref yields None.
+    unresolved ref yields None. With ``strict``, read failures raise instead
+    of being confused with an absent branch; diagnostics omit remote URLs.
     """
     try:
         proc = subprocess.run(
@@ -3583,9 +3584,20 @@ def _ls_remote_branch_sha(remote: str, branch: str) -> str | None:
             env=_sanitized_git_env(),
             timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except subprocess.TimeoutExpired as exc:
+        if strict:
+            raise _AuthoringObservationUnknown("canonical remote branch lookup (git ls-remote) timed out") from exc
+        return None
+    except OSError as exc:
+        if strict:
+            raise _AuthoringObservationUnknown("canonical remote branch lookup (git ls-remote) could not run") from exc
         return None
     if proc.returncode != 0:
+        if strict:
+            raise _AuthoringObservationUnknown(
+                f"canonical remote branch lookup (git ls-remote) failed (exit {proc.returncode}); "
+                "check network/authentication and remote access, then retry"
+            )
         return None
     for line in (proc.stdout or "").splitlines():
         sha, sep, ref = line.partition("\t")
@@ -11893,10 +11905,42 @@ def _dispatch(
         print(f"❌ review attempt refused: {exc}", file=sys.stderr)
         return 2
 
+    # #9874: --branch only continues a remote branch. Observe it before any
+    # content scan or launch routing, using the same canonical read as authoring
+    # admission. Reuse the observation at initial admission, never at a recheck.
+    observed_branch_head: str | None = None
+    if args.mode in _WRITE_CAPABLE_MODES and getattr(args, "branch", None) and fleet_repo.default:
+        cross_repo_error = _resolve_cross_repo_binding_error(
+            worktree_arg=worktree_arg or "auto",
+            cwd_arg=args.cwd,
+            requested_branch=args.branch,
+            target_repo_root=target_repo_root,
+        )
+        if cross_repo_error:
+            print(cross_repo_error, file=sys.stderr)
+            return 2
+        try:
+            args.branch = _validate_branch_reuse_name(args.branch)
+            observed_branch_head = _ls_remote_branch_sha(_authoring_canonical_remote(), args.branch, strict=True)
+        except ValueError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+        except _AuthoringObservationUnknown as exc:
+            print(f"❌ DISPATCH_BRANCH_REMOTE_READ_FAILED: {exc}", file=sys.stderr)
+            return 2
+        if observed_branch_head is None:
+            print(
+                f"❌ DISPATCH_BRANCH_NOT_FOUND: --branch {args.branch!r} does not exist on the canonical remote. "
+                "--branch continues an existing remote branch; for a new branch omit --branch "
+                "(default: <agent>/<task-id>), optionally with --base.",
+                file=sys.stderr,
+            )
+            return 2
+
     # The single Kimi gate runs on the original request (--agent, --model and their aliases)
     # before the launch route probes the budget or a model, and on the route it resolves —
     # the retired-CLI alias and any budget substitution — on the validated paths, before any
-    # other check that can run an external command, write a record, sweep runtime tmp,
+    # later preflight that can run an external command, write a record, sweep runtime tmp,
     # archive a task or create a worktree. Owned paths are read in the tree the worker
     # starts from: a reused worktree on disk and at its commit, a new one at its creation
     # base commit (fetched and read with git plumbing). The worktree must start from
@@ -12252,7 +12296,7 @@ def _dispatch(
     # runtime cleanup, forwarding, any rebase, worktree or provider. A forwarded
     # dispatch runs this again on its host; a checkout reaped while dispatch
     # waits for its lock is admitted again under that lock (#8610).
-    def admit_authoring() -> _AuthoringAdmission | None:
+    def admit_authoring(branch_head: str | None = None) -> _AuthoringAdmission | None:
         return _authoring_review_admission(
             args,
             dispatch_agent=dispatch_agent,
@@ -12264,10 +12308,11 @@ def _dispatch(
             target_repo_root=target_repo_root,
             repository=fleet_repo.github,
             default_repo=bool(fleet_repo.default),
+            observed_branch_head=branch_head,
         )
 
     try:
-        authoring_admission = admit_authoring()
+        authoring_admission = admit_authoring(observed_branch_head)
     except _AuthoringReviewRefused as exc:
         print(exc.render(), file=sys.stderr)
         return 2
@@ -14660,19 +14705,26 @@ def _authoring_require_commit(sha: str, *, fetch: Callable[[], object], what: st
 
 
 def _authoring_attach_head(
-    *, kind: str, checkout: Path | None, branch: str | None, pinned_head: str | None, remote: str
+    *,
+    kind: str,
+    checkout: Path | None,
+    branch: str | None,
+    pinned_head: str | None,
+    remote: str,
+    observed_branch_head: str | None = None,
 ) -> str:
     """The head an attaching writer continues: the checkout's commit, or the branch on the canonical remote.
 
     A branch head is observed on the remote, never read from a possibly stale
     tracking ref (M2); a pinned head is the commit the dispatch was pinned to.
+    Initial admission may reuse the early branch observation; rechecks omit it.
     """
     if kind == "existing-worktree":
         head = _resolve_sha(checkout) if checkout is not None and checkout.is_dir() else None
         if not head:
             raise _AuthoringObservationUnknown("the checkout's HEAD is unreadable")
         return head
-    head = pinned_head or (_ls_remote_branch_sha(remote, branch) if branch else None)
+    head = pinned_head or observed_branch_head or (_ls_remote_branch_sha(remote, branch) if branch else None)
     if not head:
         raise _AuthoringObservationUnknown(f"branch {branch} is not readable on the canonical remote")
     return head
@@ -14720,6 +14772,7 @@ def _authoring_review_admission(
     target_repo_root: Path,
     repository: str,
     default_repo: bool,
+    observed_branch_head: str | None = None,
 ) -> _AuthoringAdmission | None:
     """Admit a writer only if a qualified independent reviewer remains (#9739).
 
@@ -14845,7 +14898,12 @@ def _authoring_review_admission(
             head = creation_sha
         else:
             head = _authoring_attach_head(
-                kind=kind, checkout=checkout, branch=requested_branch, pinned_head=pinned_head, remote=remote
+                kind=kind,
+                checkout=checkout,
+                branch=requested_branch,
+                pinned_head=pinned_head,
+                remote=remote,
+                observed_branch_head=observed_branch_head,
             )
             _authoring_require_commit(
                 head, fetch=lambda: _fetch_existing_branch(head_branch), what="the branch head commit"
@@ -17177,8 +17235,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="EXISTING",
         help=(
-            "Attach the dispatch to this existing remote branch instead of creating "
-            "{agent}/{task}. Fetches and validates the branch from the primary "
+            "Continue an existing remote branch, e.g. codex/fix-123. "
+            "For a new branch omit --branch (default: <agent>/<task-id>), optionally with --base. "
+            "Fetches and validates the branch from the primary "
             "checkout, then creates/reuses an isolated worktree on it (--branch "
             "implies --worktree). Refuses protected branches (main/master), "
             "branches checked out in another worktree, and invocation from a "

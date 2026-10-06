@@ -7584,6 +7584,12 @@ def test_dispatch_refuses_cursor_auto_before_any_side_effect(
 ):
     if overrides.get("require_review_verdict"):
         overrides = {**overrides, "branch": "review-target"}
+        # #9874: reach the review route on an existing canonical remote branch.
+        monkeypatch.setattr(
+            delegate,
+            "_ls_remote_branch_sha",
+            lambda _remote, branch, *, strict=False: _STUB_HEAD_SHA if branch == "review-target" else None,
+        )
     rc, popen_calls = _cursor_dispatch(tmp_path, monkeypatch, dor_record=dor_record, **overrides)
     assert rc == 2
     assert popen_calls == []
@@ -13176,7 +13182,7 @@ def test_settle_preserves_ignored_artifacts_before_removal(
         def fail_copy(_source, _destination):
             raise OSError("injected copy failure")
 
-        monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+        monkeypatch.setattr(worktree_artifacts, "_write_verified_bytes", fail_copy)
 
     out = delegate._settle_worktree_reap(
         worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
@@ -17694,7 +17700,7 @@ def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     # The branch as the canonical remote serves it, observed by review admission (#9739 A7).
-    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, _branch: _STUB_BASE_SHA)
+    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, _branch, *, strict=False: _STUB_BASE_SHA)
     monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: None)
     monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
     _patch_worker_popen(monkeypatch)
@@ -17761,7 +17767,7 @@ def test_cmd_dispatch_refusal_on_base_resolution_writes_terminal_task_record(
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     monkeypatch.chdir(main)
     served = {"agy/feature-7236": head}
-    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, branch: served.get(branch))
+    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, branch, *, strict=False: served.get(branch))
 
     def fail_base_sha(*a, **k):
         raise RuntimeError("could not fetch existing branch 'agy/feature-7236'")
@@ -18846,11 +18852,20 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
     assert result["action"] == "removed", result
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
-    if preserved is None:
+    if scenario == "outbound_batch_state":
+        entry = next(item for item in state["preserved_artifacts"]["paths"] if item.get("type") == "symlink")
+        assert entry["path"] == "ignored/link" and entry["target"] == str(target)
+        copied = location / entry["path"]
+        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
+        assert state["preserved_artifacts"]["count"] == 1
+    elif preserved is None:
         assert not location.exists()
     else:
+        link_path, link_target = links.IGNORED_LINK[scenario]
         assert (location / preserved).read_bytes() == links.PAYLOAD
-        assert state["preserved_artifacts"]["count"] == 1
+        entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
+        assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
+        assert state["preserved_artifacts"]["count"] == 2
 
 
 def test_full_review_default_requires_full_checkout_before_provisioning(

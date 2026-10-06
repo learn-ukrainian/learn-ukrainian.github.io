@@ -8,7 +8,6 @@ import copy
 import hashlib
 import json
 import re
-import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
@@ -48,6 +47,8 @@ from scripts.lexicon.publish_manifest import (
     gzip_manifest,
     write_pointer,
 )
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.rag.source_query import (
     _wiki_title_candidates,
     _wiki_title_matches_candidates,
@@ -96,7 +97,7 @@ def _entry_layer_coverage(entry: dict[str, Any]) -> dict[str, bool]:
 
 
 def run_canary_check(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     kaikki_lookup: dict[str, dict[str, Any]],
     *,
     canary_controls: dict[str, list[dict[str, Any]]] | None = None,
@@ -489,7 +490,7 @@ def _deadjectival_adverb_translation(
 
 
 def _translation_for_entry(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     entry: dict[str, Any],
     kaikki_lookup: dict[str, dict[str, Any]],
     *,
@@ -550,7 +551,7 @@ def _translation_for_entry(
 
 
 def _reenrich_translation_only(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     entry: dict[str, Any],
     kaikki_lookup: dict[str, dict[str, Any]],
     *,
@@ -575,7 +576,7 @@ def _reenrich_translation_only(
 
 
 def _reenrich_full_entry(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     entry: dict[str, Any],
     kaikki_lookup: dict[str, dict[str, Any]],
 ) -> None:
@@ -607,7 +608,7 @@ def missing_translation_entries(manifest: dict[str, Any]) -> list[dict[str, Any]
 def reenrich_thin_entries(
     manifest: dict[str, Any],
     *,
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     kaikki_lookup: dict[str, dict[str, Any]],
     limit: int | None = None,
     full_entry: bool = False,
@@ -895,7 +896,7 @@ def main() -> int:
         return 0
 
     # Read-only: a read-write connect creates a missing sources.db (#9158).
-    with sqlite3.connect(f"{sources_db.as_uri()}?mode=ro", uri=True) as conn:
+    with _open_readonly(sources_db) as conn:
         if args.canary or (args.target == "full-catalog" and not slug_filter):
             lemmas = [s.strip() for s in args.canary_lemmas.split(",")] if args.canary_lemmas else None
             canary_res = run_canary_check(conn, kaikki_lookup, canary_lemmas=lemmas)

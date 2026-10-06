@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
@@ -24,6 +23,8 @@ if str(ROOT) not in sys.path:
 
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.manifest_io import _write_atomic
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.storage.paths import artifact_path
 
 
@@ -116,7 +117,7 @@ def _has_english_anchor(entry: dict[str, Any]) -> bool:
 
 
 def _refresh_entry(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     entry: dict[str, Any],
     kaikki_lookup: dict[str, dict[str, Any]],
 ) -> None:
@@ -130,7 +131,7 @@ def _refresh_entry(
 def repair_plural_noun_aliases(
     manifest: dict[str, Any],
     *,
-    conn: sqlite3.Connection | None = None,
+    conn: SQLiteConnection | None = None,
     kaikki_lookup: dict[str, dict[str, Any]] | None = None,
     refresh_enrichment: bool = False,
 ) -> dict[str, Any]:
@@ -226,7 +227,7 @@ def main(argv: list[str] | None = None) -> int:
     manifest = _load_json(manifest_path)
     kaikki_lookup = _load_kaikki_lookup(kaikki_path)
     if args.refresh_enrichment:
-        with sqlite3.connect(sources_db) as conn:
+        with _open_readonly(Path(sources_db).resolve()) as conn:
             summary = repair_plural_noun_aliases(
                 manifest,
                 conn=conn,

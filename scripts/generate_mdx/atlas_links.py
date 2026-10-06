@@ -65,11 +65,30 @@ from __future__ import annotations
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 import urllib.parse
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 try:
     from lexicon.manifest_io import load_manifest
@@ -336,7 +355,7 @@ def _load_index(manifest_path: str) -> dict[str, str]:
 
 
 @lru_cache(maxsize=1)
-def _vesum_connection() -> sqlite3.Connection | None:
+def _vesum_connection() -> SQLiteConnection | None:
     """Open VESUM read-only, or return None where it is not installed (CI)."""
     try:
         from rag.config import VESUM_DB_PATH
@@ -345,7 +364,7 @@ def _vesum_connection() -> sqlite3.Connection | None:
     if not Path(VESUM_DB_PATH).is_file():
         return None
     try:
-        return sqlite3.connect(f"file:{VESUM_DB_PATH}?mode=ro", uri=True, check_same_thread=False)
+        return _open_readonly(VESUM_DB_PATH, check_same_thread=False)
     except sqlite3.Error:
         return None
 

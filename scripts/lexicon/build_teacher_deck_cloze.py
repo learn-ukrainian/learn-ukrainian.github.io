@@ -10,7 +10,6 @@ import argparse
 import json
 import random
 import re
-import sqlite3
 import sys
 from pathlib import Path
 
@@ -19,6 +18,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.lexicon.relation_pairs import normalize_relation_word
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.practice.extract_textbook_error_corrections import is_intentional_error_context
 from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_lemma
@@ -122,7 +122,7 @@ def main():
     teacher_entries = teacher_cand.get("auto_merge", [])
     teacher_lemmas = public_teacher_lemmas(teacher_entries)
 
-    conn = sqlite3.connect(f"file:{args.sources_db.resolve()}?mode=ro", uri=True)
+    conn = _open_readonly(args.sources_db.resolve())
 
     extracted_cloze = []
     cloze_count = 0

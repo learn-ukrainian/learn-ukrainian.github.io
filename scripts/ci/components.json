@@ -1,0 +1,1639 @@
+{
+  "schema_version": 1,
+  "plan": "plans/component-separation-9721.md",
+  "plan_version": 2,
+  "baseline": "dff595c12a714713f7fb8f9f18ff5245283adf7e",
+  "description": "Index-backed path ownership and complete node test sets, including computed Python importers and shared integration tests. Computed unresolved edges force all-node selection and retain their test importers in every node set; no CI selection or independence certification.",
+  "components": {
+    "open-model-data": {
+      "lane": "open-model-data",
+      "test_files": [
+        "tests/test_open_model_view_exporter.py",
+        "tests/test_open_model_ready_view_production.py",
+        "tests/test_model_ready_receipt_audit.py"
+      ],
+      "test_prefixes": [],
+      "test_args": [
+        "-m",
+        "not needs_artifact"
+      ],
+      "verify": [
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_open_model_view_exporter.py",
+            "tests/test_open_model_ready_view_production.py",
+            "tests/test_model_ready_receipt_audit.py",
+            "-m",
+            "not needs_artifact"
+          ],
+          "cwd": ".",
+          "scope": "code-contract"
+        }
+      ],
+      "build": [
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "scripts.projects.open_model_data.model_view_exporter",
+            "continued-pretraining",
+            "--source-records",
+            "{member:source-records}",
+            "--payloads",
+            "{member:payloads}",
+            "--origin",
+            "human_authored",
+            "--representation-view",
+            "faithful_literary",
+            "--output",
+            "{output_dir}/view.jsonl",
+            "--receipt-output",
+            "{output_dir}/view-receipt.json"
+          ],
+          "cwd": ".",
+          "scope": "model-view"
+        }
+      ],
+      "input_families": [
+        "source-records",
+        "payloads",
+        "capability-policy"
+      ],
+      "output_families": [
+        "model-view",
+        "model-view-receipt"
+      ]
+    },
+    "atlas-data": {
+      "lane": "atlas",
+      "test_files": [
+        "tests/test_atlas_db.py"
+      ],
+      "test_prefixes": [],
+      "test_args": [],
+      "verify": [
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_atlas_db.py"
+          ],
+          "cwd": ".",
+          "scope": "code-contract"
+        }
+      ],
+      "build": [
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "scripts.atlas.atlas_db",
+            "--manifest",
+            "{member:lexicon-manifest}",
+            "--db",
+            "{output_dir}/atlas.db",
+            "--curated-aliases",
+            "{member:curated-aliases}"
+          ],
+          "cwd": ".",
+          "scope": "atlas-db"
+        },
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "scripts.audit.generate_search_index",
+            "--db",
+            "{output_dir}/atlas.db",
+            "--out",
+            "{output_dir}/search.json",
+            "--aliases-out",
+            "{output_dir}/aliases.json",
+            "--search-shards-out",
+            "{output_dir}/search-shards.json",
+            "--search-shard-dir",
+            "{output_dir}/search",
+            "--browse-meta-out",
+            "{output_dir}/browse-meta.json",
+            "--browse-flagged-out",
+            "{output_dir}/browse-flagged.json",
+            "--browse-dir",
+            "{output_dir}/browse"
+          ],
+          "cwd": ".",
+          "scope": "atlas-search"
+        },
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "scripts.audit.generate_daily_pool",
+            "--db",
+            "{output_dir}/atlas.db",
+            "--out",
+            "{output_dir}/daily.json"
+          ],
+          "cwd": ".",
+          "scope": "atlas-daily"
+        }
+      ],
+      "input_families": [
+        "lexicon-manifest",
+        "curated-aliases",
+        "curriculum-vocabulary"
+      ],
+      "output_families": [
+        "atlas-db",
+        "atlas-search",
+        "atlas-daily",
+        "open-dataset"
+      ],
+      "preparation_commands": [
+        [
+          "npm",
+          "--prefix",
+          "site",
+          "run",
+          "hydrate:manifest"
+        ]
+      ]
+    },
+    "atlas-frontend": {
+      "lane": "atlas",
+      "test_files": [
+        "tests/test_frontend_change_scope.py",
+        "tests/test_deploy_pages_workflow.py",
+        "tests/test_auto_deploy_component_parity.py"
+      ],
+      "test_prefixes": [],
+      "test_args": [],
+      "verify": [
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_frontend_change_scope.py",
+            "tests/test_deploy_pages_workflow.py",
+            "tests/test_auto_deploy_component_parity.py"
+          ],
+          "cwd": ".",
+          "scope": "code-contract"
+        }
+      ],
+      "build": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "build:shell",
+            "--",
+            "--outDir",
+            "{output_dir}"
+          ],
+          "cwd": "site",
+          "scope": "shared-astro"
+        }
+      ],
+      "input_families": [
+        "frontend-runtime"
+      ],
+      "output_families": [
+        "shared-astro"
+      ],
+      "build_scope": "shared-astro"
+    },
+    "practice-frontend": {
+      "lane": "atlas",
+      "test_files": [
+        "tests/test_practice_deck_io.py",
+        "tests/test_makefile_practice_admit.py"
+      ],
+      "test_prefixes": [],
+      "test_args": [],
+      "verify": [
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_practice_deck_io.py",
+            "tests/test_makefile_practice_admit.py"
+          ],
+          "cwd": ".",
+          "scope": "code-contract"
+        }
+      ],
+      "build": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "build:shell",
+            "--",
+            "--outDir",
+            "{output_dir}"
+          ],
+          "cwd": "site",
+          "scope": "shared-astro"
+        }
+      ],
+      "input_families": [
+        "frontend-runtime",
+        "published-practice"
+      ],
+      "output_families": [
+        "shared-astro"
+      ],
+      "preparation_commands": [
+        [
+          "npm",
+          "--prefix",
+          "site",
+          "run",
+          "hydrate:practice"
+        ],
+        [
+          "npm",
+          "--prefix",
+          "site",
+          "run",
+          "hydrate:teacher"
+        ]
+      ],
+      "build_scope": "shared-astro"
+    },
+    "curriculum-generation": {
+      "lane": "curriculum",
+      "test_files": [
+        "tests/build/test_build_landing_pages.py"
+      ],
+      "test_prefixes": [],
+      "test_args": [],
+      "verify": [
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/build/test_build_landing_pages.py"
+          ],
+          "cwd": ".",
+          "scope": "code-contract"
+        }
+      ],
+      "build": [
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "scripts.generate_curriculum_stats"
+          ],
+          "cwd": ".",
+          "scope": "canonical-worktree-output"
+        },
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "scripts.build.build_arc_landing",
+            "a1",
+            "--write"
+          ],
+          "cwd": ".",
+          "scope": "canonical-worktree-output"
+        },
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "scripts.build.build_landing_pages"
+          ],
+          "cwd": ".",
+          "scope": "canonical-worktree-output"
+        }
+      ],
+      "input_families": [
+        "curriculum-sources"
+      ],
+      "output_families": [
+        "arc-json",
+        "lesson-mdx",
+        "landing-mdx",
+        "curriculum-stats"
+      ],
+      "preparation_commands": []
+    },
+    "curriculum-display": {
+      "lane": "curriculum",
+      "test_files": [
+        "tests/test_frontend_change_scope.py",
+        "tests/test_auto_deploy_component_parity.py"
+      ],
+      "test_prefixes": [],
+      "test_args": [],
+      "verify": [
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_frontend_change_scope.py",
+            "tests/test_auto_deploy_component_parity.py"
+          ],
+          "cwd": ".",
+          "scope": "code-contract"
+        }
+      ],
+      "build": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "build:shell",
+            "--",
+            "--outDir",
+            "{output_dir}"
+          ],
+          "cwd": "site",
+          "scope": "shared-astro"
+        }
+      ],
+      "input_families": [
+        "frontend-runtime",
+        "curriculum-display"
+      ],
+      "output_families": [
+        "shared-astro"
+      ],
+      "build_scope": "shared-astro"
+    },
+    "harness": {
+      "lane": "infra",
+      "test_files": [
+        "tests/ci/test_components.py",
+        "tests/ci/test_delivery_baseline.py"
+      ],
+      "test_prefixes": [],
+      "test_args": [],
+      "verify": [
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/ci/test_components.py",
+            "tests/ci/test_delivery_baseline.py"
+          ],
+          "cwd": ".",
+          "scope": "code-contract"
+        }
+      ],
+      "build": [],
+      "input_families": [],
+      "output_families": []
+    },
+    "shared-core": {
+      "lane": "infra",
+      "test_files": [
+        "tests/ci/test_components.py",
+        "tests/test_frontend_change_scope.py",
+        "tests/test_auto_deploy_component_parity.py"
+      ],
+      "test_prefixes": [],
+      "test_args": [],
+      "verify": [
+        {
+          "argv": [
+            "{python}",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/ci/test_components.py",
+            "tests/test_frontend_change_scope.py",
+            "tests/test_auto_deploy_component_parity.py"
+          ],
+          "cwd": ".",
+          "scope": "code-contract"
+        }
+      ],
+      "build": [],
+      "input_families": [],
+      "output_families": []
+    }
+  },
+  "exact_paths": {
+    ".gitattributes": [
+      "shared-core"
+    ],
+    ".gitignore": [
+      "shared-core"
+    ],
+    ".gitleaks.toml": [
+      "shared-core"
+    ],
+    ".markdownlint.json": [
+      "shared-core"
+    ],
+    ".mcp.json": [
+      "shared-core"
+    ],
+    ".nvmrc": [
+      "shared-core"
+    ],
+    ".pre-commit-config.yaml": [
+      "shared-core"
+    ],
+    ".prettierrc": [
+      "shared-core"
+    ],
+    ".python-version": [
+      "shared-core"
+    ],
+    ".trufflehogignore": [
+      "shared-core"
+    ],
+    ".yamllint": [
+      "shared-core"
+    ],
+    "AGENTS.md": [
+      "shared-core"
+    ],
+    "CLAUDE.md": [
+      "shared-core"
+    ],
+    "CODE_OF_CONDUCT.md": [
+      "shared-core"
+    ],
+    "CONTRIBUTING.md": [
+      "shared-core"
+    ],
+    "GEMINI.md": [
+      "shared-core"
+    ],
+    "LICENSE": [
+      "shared-core"
+    ],
+    "LICENSE-CONTENT.md": [
+      "shared-core"
+    ],
+    "Makefile": [
+      "shared-core"
+    ],
+    "README.md": [
+      "shared-core"
+    ],
+    "RESIDUAL.md": [
+      "shared-core"
+    ],
+    "SECURITY.md": [
+      "shared-core"
+    ],
+    "UI-REVIEW-FINDINGS.md": [
+      "shared-core"
+    ],
+    "commit.sh": [
+      "harness"
+    ],
+    "dagger.json": [
+      "shared-core"
+    ],
+    "eslint.config.mjs": [
+      "shared-core"
+    ],
+    "jest.config.js": [
+      "shared-core"
+    ],
+    "package-lock.json": [
+      "shared-core"
+    ],
+    "package.json": [
+      "shared-core"
+    ],
+    "pyproject.toml": [
+      "shared-core"
+    ],
+    "pyrightconfig.json": [
+      "shared-core"
+    ],
+    "requirements-dev.txt": [
+      "shared-core"
+    ],
+    "requirements-lock.txt": [
+      "shared-core"
+    ],
+    "requirements.txt": [
+      "shared-core"
+    ],
+    "run-dispatcher.sh": [
+      "harness"
+    ],
+    "scripts/__init__.py": [
+      "shared-core"
+    ],
+    "scripts/audit/daily_cefr.py": [
+      "atlas-data"
+    ],
+    "scripts/audit/generate_daily_pool.py": [
+      "atlas-data"
+    ],
+    "scripts/audit/generate_search_index.py": [
+      "atlas-data"
+    ],
+    "scripts/audit/lexeme_filter.py": [
+      "atlas-data"
+    ],
+    "scripts/build/generate_lesson_schema.py": [
+      "shared-core"
+    ],
+    "scripts/ci/components.json": [
+      "shared-core"
+    ],
+    "scripts/ci/components.py": [
+      "shared-core"
+    ],
+    "scripts/config.py": [
+      "shared-core"
+    ],
+    "scripts/generate_curriculum_stats.py": [
+      "curriculum-generation"
+    ],
+    "scripts/practice/euphony_stem_engine.py": [
+      "shared-core"
+    ],
+    "services.sh": [
+      "harness"
+    ],
+    "site/scripts/generate-teacher-lesson-keys.ts": [
+      "practice-frontend"
+    ],
+    "site/scripts/generate-zno-deck-meta.ts": [
+      "practice-frontend"
+    ],
+    "site/scripts/hydrate-practice-deck.mjs": [
+      "practice-frontend"
+    ],
+    "site/scripts/hydrate-teacher-deck.mjs": [
+      "practice-frontend"
+    ],
+    "site/src/components/ZnoPractice.tsx": [
+      "practice-frontend"
+    ],
+    "site/src/content.config.ts": [
+      "curriculum-display"
+    ],
+    "site/src/data/lexicon-manifest.pointer.json": [
+      "atlas-data"
+    ],
+    "site/src/data/lexicon-practice-deck.pointer.json": [
+      "practice-frontend"
+    ],
+    "site/src/lib/lexicon/custom-decks.ts": [
+      "practice-frontend"
+    ],
+    "site/src/pages/[...slug].astro": [
+      "curriculum-display"
+    ],
+    "start-claude-driver.sh": [
+      "harness"
+    ],
+    "start-claude.sh": [
+      "harness"
+    ],
+    "start-codex-driver.sh": [
+      "harness"
+    ],
+    "start-codex.sh": [
+      "harness"
+    ],
+    "start-cursor-driver.sh": [
+      "harness"
+    ],
+    "start-gemini-driver.sh": [
+      "harness"
+    ],
+    "start-gemini.sh": [
+      "harness"
+    ],
+    "start-glm.sh": [
+      "harness"
+    ],
+    "start-glmcc.sh": [
+      "harness"
+    ],
+    "start-grok-driver.sh": [
+      "harness"
+    ],
+    "start-grok.sh": [
+      "harness"
+    ],
+    "start-kimi.sh": [
+      "harness"
+    ],
+    "start-kimicc.sh": [
+      "harness"
+    ],
+    "tests/build/test_build_landing_pages.py": [
+      "curriculum-generation"
+    ],
+    "tests/ci/test_components.py": [
+      "shared-core"
+    ],
+    "tests/ci/test_delivery_baseline.py": [
+      "harness"
+    ],
+    "tests/conftest.py": [
+      "shared-core"
+    ],
+    "tests/test_atlas_db.py": [
+      "atlas-data"
+    ],
+    "tests/test_auto_deploy_component_parity.py": [
+      "atlas-frontend",
+      "curriculum-display",
+      "shared-core"
+    ],
+    "tests/test_deploy_pages_workflow.py": [
+      "atlas-frontend"
+    ],
+    "tests/test_frontend_change_scope.py": [
+      "atlas-frontend",
+      "curriculum-display",
+      "shared-core"
+    ],
+    "tests/test_makefile_practice_admit.py": [
+      "practice-frontend"
+    ],
+    "tests/test_model_ready_receipt_audit.py": [
+      "open-model-data"
+    ],
+    "tests/test_open_model_ready_view_production.py": [
+      "open-model-data"
+    ],
+    "tests/test_open_model_view_exporter.py": [
+      "open-model-data"
+    ],
+    "tests/test_practice_deck_io.py": [
+      "practice-frontend"
+    ],
+    "tsconfig.json": [
+      "shared-core"
+    ],
+    "zizmor.yml": [
+      "shared-core"
+    ]
+  },
+  "path_prefixes": [
+    {
+      "path": ".agent/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": ".astro/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": ".cursor/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": ".dagger/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": ".entire/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": ".gemini/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": ".githooks/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": ".github/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": ".mcp/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": ".opencode/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "agents_extensions/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "archive/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "assets/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "audit/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "batch_state/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "benchmarks/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "bin/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "briefs/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "curriculum/",
+      "components": [
+        "curriculum-generation"
+      ]
+    },
+    {
+      "path": "dashboards/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "data/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "data/lexicon-dataset/",
+      "components": [
+        "atlas-data"
+      ]
+    },
+    {
+      "path": "data/lexicon/",
+      "components": [
+        "atlas-data"
+      ]
+    },
+    {
+      "path": "data/projects/open_model_data/",
+      "components": [
+        "open-model-data"
+      ]
+    },
+    {
+      "path": "docs/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "docs/projects/open-model-data/",
+      "components": [
+        "open-model-data"
+      ]
+    },
+    {
+      "path": "eval/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "gemini_extensions/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "migrations/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "openwiki/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "orchestration/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "packages/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "packages/activity-kit/",
+      "components": [
+        "atlas-frontend",
+        "practice-frontend",
+        "curriculum-display"
+      ]
+    },
+    {
+      "path": "packaging/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "plans/",
+      "components": [
+        "curriculum-generation"
+      ]
+    },
+    {
+      "path": "pocketbase/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "registry/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "registry/lexicon/",
+      "components": [
+        "atlas-data"
+      ]
+    },
+    {
+      "path": "registry/practice/",
+      "components": [
+        "practice-frontend"
+      ]
+    },
+    {
+      "path": "registry/projects/open_model_data/",
+      "components": [
+        "open-model-data"
+      ]
+    },
+    {
+      "path": "review/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "reviews/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "schemas/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "scripts/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "scripts/agent_runtime/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "scripts/api/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "scripts/atlas/",
+      "components": [
+        "atlas-data"
+      ]
+    },
+    {
+      "path": "scripts/build/",
+      "components": [
+        "curriculum-generation"
+      ]
+    },
+    {
+      "path": "scripts/curriculum/",
+      "components": [
+        "curriculum-generation"
+      ]
+    },
+    {
+      "path": "scripts/entire_context/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "scripts/etymology/",
+      "components": [
+        "atlas-data"
+      ]
+    },
+    {
+      "path": "scripts/fleet/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "scripts/fleet_comms/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "scripts/generate_mdx/",
+      "components": [
+        "curriculum-generation"
+      ]
+    },
+    {
+      "path": "scripts/lexicon/",
+      "components": [
+        "atlas-data"
+      ]
+    },
+    {
+      "path": "scripts/open_dataset/",
+      "components": [
+        "atlas-data"
+      ]
+    },
+    {
+      "path": "scripts/orchestration/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "scripts/practice/",
+      "components": [
+        "practice-frontend"
+      ]
+    },
+    {
+      "path": "scripts/practice_deck/",
+      "components": [
+        "practice-frontend"
+      ]
+    },
+    {
+      "path": "scripts/projects/open_model_data/",
+      "components": [
+        "open-model-data"
+      ]
+    },
+    {
+      "path": "scripts/review/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "site/",
+      "components": [
+        "atlas-frontend",
+        "practice-frontend",
+        "curriculum-display"
+      ]
+    },
+    {
+      "path": "site/src/content/",
+      "components": [
+        "curriculum-display"
+      ]
+    },
+    {
+      "path": "site/src/lib/lexicon/",
+      "components": [
+        "atlas-frontend",
+        "practice-frontend"
+      ]
+    },
+    {
+      "path": "site/src/pages/l2-uk-en/",
+      "components": [
+        "curriculum-display"
+      ]
+    },
+    {
+      "path": "site/src/pages/lexicon/",
+      "components": [
+        "atlas-frontend",
+        "practice-frontend"
+      ]
+    },
+    {
+      "path": "status/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "tasks/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "tests/projects/open_model_data/",
+      "components": [
+        "open-model-data",
+        "shared-core"
+      ]
+    },
+    {
+      "path": "tests/",
+      "components": [
+        "shared-core"
+      ]
+    },
+    {
+      "path": "tests/agent_runtime/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "tests/api/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "tests/build/",
+      "components": [
+        "curriculum-generation"
+      ]
+    },
+    {
+      "path": "tests/ci/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "tests/curriculum/",
+      "components": [
+        "curriculum-generation"
+      ]
+    },
+    {
+      "path": "tests/fixtures/atlas/",
+      "components": [
+        "atlas-data"
+      ]
+    },
+    {
+      "path": "tests/orchestration/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
+      "path": "wiki/",
+      "components": [
+        "shared-core"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "curriculum-vocabulary",
+      "producer": "curriculum-generation",
+      "consumer": "atlas-data",
+      "kind": "artifact",
+      "anchors": [
+        "Makefile:62",
+        "scripts/lexicon/build_data_manifest.py:234"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "atlas-links-curriculum-generation",
+      "producer": "atlas-data",
+      "consumer": "curriculum-generation",
+      "kind": "artifact",
+      "anchors": [
+        "scripts/generate_mdx/atlas_links.py:75",
+        "site/src/pages/[...slug].astro:14"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "atlas-links-curriculum-display",
+      "producer": "atlas-data",
+      "consumer": "curriculum-display",
+      "kind": "artifact",
+      "anchors": [
+        "scripts/generate_mdx/atlas_links.py:75",
+        "site/src/pages/[...slug].astro:14"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "curriculum-evidence-import",
+      "producer": "curriculum-generation",
+      "consumer": "atlas-data",
+      "kind": "import",
+      "anchors": [
+        "scripts/atlas/word_card_foundation.py:23"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "lexicon-heritage-import",
+      "producer": "atlas-data",
+      "consumer": "curriculum-generation",
+      "kind": "import",
+      "anchors": [
+        "scripts/curriculum/evidence/sources.py:32",
+        "scripts/build/linear_pipeline.py:11761"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "shared-euphony-curriculum-generation",
+      "producer": "shared-core",
+      "consumer": "curriculum-generation",
+      "kind": "import",
+      "anchors": [
+        "scripts/curriculum/validate/mechanical.py:44",
+        "scripts/practice/euphony_stem_engine.py"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "shared-euphony-practice-frontend",
+      "producer": "shared-core",
+      "consumer": "practice-frontend",
+      "kind": "import",
+      "anchors": [
+        "scripts/curriculum/validate/mechanical.py:44",
+        "scripts/practice/euphony_stem_engine.py"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "open-model-import-atlas-data",
+      "producer": "atlas-data",
+      "consumer": "open-model-data",
+      "kind": "import",
+      "anchors": [
+        "scripts/projects/open_model_data/language_contact_detector.py:39"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "open-model-import-shared-core",
+      "producer": "shared-core",
+      "consumer": "open-model-data",
+      "kind": "import",
+      "anchors": [
+        "scripts/projects/open_model_data/build_decolonization_cases.py:52"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "open-model-import-harness",
+      "producer": "harness",
+      "consumer": "open-model-data",
+      "kind": "import",
+      "anchors": [
+        "scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py:44"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "open-dataset-publication",
+      "producer": "atlas-data",
+      "consumer": "atlas-data",
+      "kind": "artifact",
+      "anchors": [
+        "Makefile:65",
+        "Makefile:85",
+        "scripts/lexicon/export_open_dataset.py:184"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "dynamic-atlas-links",
+      "producer": "atlas-data",
+      "consumer": "curriculum-generation",
+      "kind": "dynamic",
+      "anchors": [
+        "scripts/audit/generate_search_index.py:88",
+        "scripts/audit/generate_search_index.py:96",
+        "scripts/audit/generate_search_index.py:102",
+        "scripts/generate_mdx/atlas_links.py:75"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "shared-storage-open-model-data",
+      "producer": "shared-core",
+      "consumer": "open-model-data",
+      "kind": "artifact",
+      "anchors": [
+        "scripts/storage/artifacts.py:251",
+        "scripts/storage/paths.py:105"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "shared-storage-atlas-data",
+      "producer": "shared-core",
+      "consumer": "atlas-data",
+      "kind": "artifact",
+      "anchors": [
+        "scripts/storage/artifacts.py:251",
+        "scripts/storage/paths.py:105"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "shared-storage-atlas-frontend",
+      "producer": "shared-core",
+      "consumer": "atlas-frontend",
+      "kind": "artifact",
+      "anchors": [
+        "scripts/storage/artifacts.py:251",
+        "scripts/storage/paths.py:105"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "shared-storage-practice-frontend",
+      "producer": "shared-core",
+      "consumer": "practice-frontend",
+      "kind": "artifact",
+      "anchors": [
+        "scripts/storage/artifacts.py:251",
+        "scripts/storage/paths.py:105"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "shared-storage-curriculum-generation",
+      "producer": "shared-core",
+      "consumer": "curriculum-generation",
+      "kind": "artifact",
+      "anchors": [
+        "scripts/storage/artifacts.py:251",
+        "scripts/storage/paths.py:105"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "shared-storage-curriculum-display",
+      "producer": "shared-core",
+      "consumer": "curriculum-display",
+      "kind": "artifact",
+      "anchors": [
+        "scripts/storage/artifacts.py:251",
+        "scripts/storage/paths.py:105"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "shared-storage-harness",
+      "producer": "shared-core",
+      "consumer": "harness",
+      "kind": "artifact",
+      "anchors": [
+        "scripts/storage/artifacts.py:251",
+        "scripts/storage/paths.py:105"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "runtime-atlas-data-atlas-frontend",
+      "producer": "atlas-data",
+      "consumer": "atlas-frontend",
+      "kind": "artifact",
+      "anchors": [
+        "site/package.json:11",
+        "site/scripts/verify-consumed-artifacts.mjs:12",
+        "site/scripts/verify-consumed-artifacts.mjs:80"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "runtime-practice-frontend-atlas-frontend",
+      "producer": "practice-frontend",
+      "consumer": "atlas-frontend",
+      "kind": "artifact",
+      "anchors": [
+        "site/package.json:11",
+        "site/scripts/verify-consumed-artifacts.mjs:12",
+        "site/scripts/verify-consumed-artifacts.mjs:80"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "runtime-atlas-data-practice-frontend",
+      "producer": "atlas-data",
+      "consumer": "practice-frontend",
+      "kind": "artifact",
+      "anchors": [
+        "site/package.json:11",
+        "site/scripts/verify-consumed-artifacts.mjs:12",
+        "site/scripts/verify-consumed-artifacts.mjs:80"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "runtime-practice-frontend-practice-frontend",
+      "producer": "practice-frontend",
+      "consumer": "practice-frontend",
+      "kind": "artifact",
+      "anchors": [
+        "site/package.json:11",
+        "site/scripts/verify-consumed-artifacts.mjs:12",
+        "site/scripts/verify-consumed-artifacts.mjs:80"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "runtime-atlas-data-curriculum-display",
+      "producer": "atlas-data",
+      "consumer": "curriculum-display",
+      "kind": "artifact",
+      "anchors": [
+        "site/package.json:11",
+        "site/scripts/verify-consumed-artifacts.mjs:12",
+        "site/scripts/verify-consumed-artifacts.mjs:80"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "runtime-practice-frontend-curriculum-display",
+      "producer": "practice-frontend",
+      "consumer": "curriculum-display",
+      "kind": "artifact",
+      "anchors": [
+        "site/package.json:11",
+        "site/scripts/verify-consumed-artifacts.mjs:12",
+        "site/scripts/verify-consumed-artifacts.mjs:80"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "curriculum-display",
+      "producer": "curriculum-generation",
+      "consumer": "curriculum-display",
+      "kind": "artifact",
+      "anchors": [
+        "site/src/pages/[...slug].astro:13",
+        "site/src/content.config.ts:12"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "frontend-props-atlas-frontend",
+      "producer": "atlas-frontend",
+      "consumer": "curriculum-generation",
+      "kind": "schema",
+      "anchors": [
+        "scripts/build/generate_lesson_schema.py:19",
+        "scripts/ci/checks.sh:69"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "frontend-props-practice-frontend",
+      "producer": "practice-frontend",
+      "consumer": "curriculum-generation",
+      "kind": "schema",
+      "anchors": [
+        "scripts/build/generate_lesson_schema.py:19",
+        "scripts/ci/checks.sh:69"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "frontend-props-curriculum-display",
+      "producer": "curriculum-display",
+      "consumer": "curriculum-generation",
+      "kind": "schema",
+      "anchors": [
+        "scripts/build/generate_lesson_schema.py:19",
+        "scripts/ci/checks.sh:69"
+      ],
+      "resolved": true
+    },
+    {
+      "id": "production-receipt-audit",
+      "producer": "open-model-data",
+      "consumer": "open-model-data",
+      "kind": "artifact",
+      "anchors": [
+        "scripts/projects/open_model_data/audit_model_ready_receipts.py:64",
+        "scripts/projects/open_model_data/audit_model_ready_receipts.py:132"
+      ],
+      "resolved": true
+    }
+  ],
+  "residual_commands": [
+    {
+      "id": "legacy-atlas-make",
+      "component": "atlas-data",
+      "status": "expected-fail",
+      "owner_slice": 3,
+      "argv": [
+        "make",
+        "atlas"
+      ],
+      "reason": "Legacy recipe invokes export_open_dataset without --write; DB-backed interface bypasses it."
+    },
+    {
+      "id": "non-arc-landing",
+      "component": "curriculum-generation",
+      "status": "expected-fail",
+      "owner_slice": 4,
+      "argv": [
+        "{python}",
+        "-m",
+        "scripts.build.build_landing_pages",
+        "--check"
+      ],
+      "reason": "Owner must regenerate stale non-arc landing output before freshness certification."
+    },
+    {
+      "id": "open-model-data-tier",
+      "component": "open-model-data",
+      "status": "artifact-dependent",
+      "owner_slice": 5,
+      "argv": [
+        "{python}",
+        "-m",
+        "pytest",
+        "tests/test_model_ready_receipt_audit.py",
+        "-m",
+        "needs_artifact"
+      ],
+      "reason": "Existing data-tier executes marked artifact tests; absence is never passing evidence."
+    },
+    {
+      "id": "complete-runtime-atlas-frontend",
+      "component": "atlas-frontend",
+      "status": "artifact-dependent",
+      "owner_slice": 3,
+      "argv": [
+        "node",
+        "site/scripts/verify-consumed-artifacts.mjs"
+      ],
+      "reason": "Prepared runtime members required; complete readiness remains slice 3, then learner certification slice 8."
+    },
+    {
+      "id": "complete-runtime-practice-frontend",
+      "component": "practice-frontend",
+      "status": "artifact-dependent",
+      "owner_slice": 3,
+      "argv": [
+        "node",
+        "site/scripts/verify-consumed-artifacts.mjs"
+      ],
+      "reason": "Prepared runtime members required; complete readiness remains slice 3, then learner certification slice 8."
+    },
+    {
+      "id": "complete-runtime-curriculum-display",
+      "component": "curriculum-display",
+      "status": "artifact-dependent",
+      "owner_slice": 3,
+      "argv": [
+        "node",
+        "site/scripts/verify-consumed-artifacts.mjs"
+      ],
+      "reason": "Prepared runtime members required; complete readiness remains slice 3, then learner certification slice 8."
+    },
+    {
+      "id": "open-model-prepared-build-inputs",
+      "component": "open-model-data",
+      "status": "artifact-dependent",
+      "owner_slice": 5,
+      "argv": [
+        "{python}",
+        "-m",
+        "scripts.projects.open_model_data.model_view_exporter",
+        "continued-pretraining",
+        "--source-records",
+        "{member:source-records}",
+        "--payloads",
+        "{member:payloads}",
+        "--origin",
+        "human_authored",
+        "--representation-view",
+        "faithful_literary",
+        "--output",
+        "{output_dir}/view.jsonl",
+        "--receipt-output",
+        "{output_dir}/view-receipt.json"
+      ],
+      "reason": "The production build requires admitted human-authored source records and payloads. Structural test fixtures are rejected; they do not certify a production view."
+    }
+  ],
+  "selector_contracts": {
+    "frontend_denominator": "scripts/ci/frontend_change_denominator.json",
+    "pages_eligibility": "scripts/deploy/auto_deploy_eligibility.py",
+    "frontend_components": [
+      "atlas-frontend",
+      "practice-frontend",
+      "curriculum-display"
+    ]
+  },
+  "input_wrapper_contract": {
+    "schema": "component-inputs.v1",
+    "component": "one of the eight node IDs",
+    "identities": "Exact inventory --component ID --identities identities object",
+    "families": "Every required input family, with name, existing schema identifier, version and members",
+    "member": "Each member has unique logical name, repository-relative path and sha256; existing schemas are not replaced",
+    "verification_scope": "Digest and freshness wrapper. Product semantic readiness remains owned by slices 3-5 and held-out certification by slice 8."
+  },
+  "shared_integration_tests": [
+    "tests/ci/test_components.py",
+    "tests/test_frontend_change_scope.py",
+    "tests/test_auto_deploy_component_parity.py"
+  ],
+  "vitest": {
+    "assignment": "Configured Vitest file directories intersected with exact/longest-prefix ownership; broad site/ ownership assigns shared files to all three frontend nodes.",
+    "built_output_files": [
+      "site/tests/unit/build-renders.test.ts",
+      "site/tests/unit/etymology-handler-built-output.test.ts"
+    ]
+  }
+}

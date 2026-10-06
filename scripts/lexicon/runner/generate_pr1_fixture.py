@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
 from scripts.lexicon import enrich_manifest as em
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 FIXTURE_DIR = ROOT / "tests" / "fixtures" / "lexicon" / "runner_pr1"
 FIXTURES_ROOT = ROOT / "tests" / "fixtures"
@@ -213,7 +214,7 @@ def _legacy_cefr_and_relations(
 
     manifest = {"entries": [dict(e) for e in entries]}
     em._normalize_manifest_entries(manifest)
-    conn = sqlite3.connect(f"file:{sources_db.resolve().as_posix()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(sources_db.resolve())
     original_reader = em._read_cached_slovnyk_rows
 
     def _read_slice_cache(lemma: str) -> dict[str, Any]:
@@ -257,9 +258,7 @@ def _assert_outside_fixtures(dest_dir: Path) -> Path:
     resolved = dest_dir.resolve()
     fixtures = FIXTURES_ROOT.resolve()
     if resolved == fixtures or fixtures in resolved.parents:
-        raise ValueError(
-            "refusing to write sources_slice.sqlite under tests/fixtures/; pass a temporary directory"
-        )
+        raise ValueError("refusing to write sources_slice.sqlite under tests/fixtures/; pass a temporary directory")
     return resolved
 
 
