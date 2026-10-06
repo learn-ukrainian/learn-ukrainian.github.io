@@ -13,6 +13,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.common.git_context import sanitized_git_env
 from scripts.guardrails.worktree_containment import NotAGitRepositoryError
 from scripts.hygiene import root_entry_guard
 from scripts.hygiene.root_entry_guard import main, scan_unexpected_root_entries
@@ -118,6 +119,16 @@ def test_scan_anchored_from_nested_subdir_scans_primary_root(tmp_path: Path) -> 
 def test_outside_git_repo_raises(tmp_path: Path) -> None:
     nowhere = tmp_path / "nowhere"
     nowhere.mkdir()
+    enclosing = subprocess.run(
+        ["git", "-C", str(nowhere), "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+        check=False,
+        env=sanitized_git_env(),
+        timeout=30,
+    )
+    if enclosing.returncode == 0:
+        pytest.skip("the runner's temp area is inside a Git repository; no directory outside one is available")
     with pytest.raises(NotAGitRepositoryError):
         scan_unexpected_root_entries(nowhere)
 
