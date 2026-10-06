@@ -1123,176 +1123,13 @@
     ]
   },
   {
-    "path": "scripts/lexicon/admit_fmu_boosters.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{SOURCES_DB_PATH}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/admit_stem_slice_2a.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{SOURCES_DB_PATH}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/admit_teacher_table.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{sources_db}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/admit_textbook_book_glossary.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(sources_db))"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/audit_sum11_relations.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{path.resolve()}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/build_teacher_deck_cloze.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{args.sources_db.resolve()}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/curated_membership_evidence.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{sources_db}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/curated_seed_atlas_admission.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{db.expanduser().resolve().as_posix()}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/curriculum_atlas_intake.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{target_db.resolve()}?mode=ro', uri=True)"
-    ]
-  },
-  {
     "path": "scripts/lexicon/enrich_heteronyms.py",
-    "reference_count": 2,
+    "reference_count": 1,
     "kind": "writer",
     "target_db": "atlas.db",
     "reason": "persists heteronym distinctions in canonical Atlas articles",
     "calls": [
-      "sqlite3.connect(db_file)",
-      "sqlite3.connect(sources_db)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/enrich_manifest.py",
-    "reference_count": 42,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{SOURCES_DB}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/generate_antonym_candidates.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/generate_vesum_form_shards.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(db_path))"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/grow_lexicon_from_content.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/heritage_calque_wave.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(sources_db)",
-      "sqlite3.connect(sources_db)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/heritage_classifier.py",
-    "reference_count": 17,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{source_db.resolve()}?mode=ro', uri=True)"
+      "sqlite3.connect(db_file)"
     ]
   },
   {
@@ -1317,108 +1154,33 @@
     ]
   },
   {
-    "path": "scripts/lexicon/mine_wikipedia_relations.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/ohoiko_paired_headword_split.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{resolved}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/ohoiko_quality_enrichment.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(args.db)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{sources_db}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)"
-    ]
-  },
-  {
     "path": "scripts/lexicon/reconcile_calque_clusters.py",
-    "reference_count": 8,
+    "reference_count": 7,
     "kind": "writer",
     "target_db": "atlas.db",
     "reason": "writes canonical cluster reconciliation",
     "calls": [
-      "sqlite3.connect(self.sources_db_path)",
       "sqlite3.connect(self.atlas_db_path)"
     ]
   },
   {
-    "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-    "reference_count": 6,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'{sources_db.as_uri()}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/relation_pairs.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/lexicon/repair_plural_noun_aliases.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(sources_db)"
-    ]
-  },
-  {
     "path": "scripts/lexicon/runner/fetch_ulif_homonyms.py",
-    "reference_count": 23,
+    "reference_count": 19,
     "kind": "writer",
     "target_db": "runner ledger DB",
     "reason": "persists resumable crawler state",
     "calls": [
-      "sqlite3.connect(f'file:{sources_db.resolve()}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{vesum_db.resolve()}?mode=ro', uri=True)",
-      "sqlite3.connect(path)",
-      "sqlite3.connect(f'file:{db_path.resolve()}?mode=ro', uri=True)",
-      "sqlite3.connect(f'{path.resolve().as_uri()}?mode=ro', uri=True)"
+      "sqlite3.connect(path)"
     ]
   },
   {
     "path": "scripts/lexicon/runner/generate_pr1_fixture.py",
-    "reference_count": 3,
+    "reference_count": 2,
     "kind": "writer",
     "target_db": "synthetic sources fixture DB",
     "reason": "builds hermetic PR1 fixture",
     "calls": [
-      "sqlite3.connect(path)",
-      "sqlite3.connect(f'file:{sources_db.resolve().as_posix()}?mode=ro', uri=True)"
+      "sqlite3.connect(path)"
     ]
   },
   {
@@ -1442,46 +1204,23 @@
     ]
   },
   {
-    "path": "scripts/lexicon/runner/offline_engine.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{sources_db.resolve().as_posix()}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/runner/offline_reduce.py",
-    "reference_count": 5,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(uri, uri=True)"
-    ]
-  },
-  {
     "path": "scripts/lexicon/runner/phase_cefr.py",
-    "reference_count": 2,
+    "reference_count": 1,
     "kind": "writer",
     "target_db": "CEFR output DB",
     "reason": "builds derived CEFR artifact",
     "calls": [
-      "sqlite3.connect(output_db)",
-      "sqlite3.connect(f'file:{path.resolve().as_posix()}?mode=ro&immutable=1', uri=True)"
+      "sqlite3.connect(output_db)"
     ]
   },
   {
     "path": "scripts/lexicon/runner/phase_relations.py",
-    "reference_count": 3,
+    "reference_count": 1,
     "kind": "writer",
     "target_db": "relations output DB",
     "reason": "builds derived relations artifact",
     "calls": [
-      "sqlite3.connect(output_db)",
-      "sqlite3.connect(f'file:{path.resolve().as_posix()}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{path.resolve().as_posix()}?mode=ro', uri=True)"
+      "sqlite3.connect(output_db)"
     ]
   },
   {
@@ -1497,64 +1236,23 @@
     ]
   },
   {
-    "path": "scripts/lexicon/runner/sources_guard.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/lexicon/runner/sqlite_ro.py",
-    "reference_count": 5,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(uri, uri=True)",
-      "sqlite3.connect(uri, uri=True)"
-    ]
-  },
-  {
     "path": "scripts/lexicon/runner/stream_manifest.py",
-    "reference_count": 3,
+    "reference_count": 1,
     "kind": "writer",
     "target_db": "manifest spool DB",
     "reason": "writes stream assembly spool",
     "calls": [
-      "sqlite3.connect(dest)",
-      "sqlite3.connect(f'file:{path.resolve().as_posix()}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{path.resolve().as_posix()}?mode=ro', uri=True)"
+      "sqlite3.connect(dest)"
     ]
   },
   {
-    "path": "scripts/lexicon/runner/ulif_dictua_store.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
     "path": "scripts/lexicon/runner/ulif_forms.py",
-    "reference_count": 5,
+    "reference_count": 3,
     "kind": "writer",
     "target_db": "sources.db",
     "reason": "rewrites derived ULIF forms tables",
     "calls": [
-      "sqlite3.connect(f'{path.as_uri()}?mode=ro', uri=True)",
-      "sqlite3.connect(f'{path.as_uri()}?mode=ro', uri=True)",
       "sqlite3.connect(str(target_db))"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/runner/worker_enrich.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{sources_path.resolve().as_posix()}?mode=ro', uri=True)"
     ]
   },
   {
@@ -1580,33 +1278,14 @@
     ]
   },
   {
-    "path": "scripts/lexicon/teacher_deck_shard.py",
-    "reference_count": 6,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{path.resolve()}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/thin_page_report.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
     "path": "scripts/lexicon/tools/dump_ulif.py",
-    "reference_count": 3,
+    "reference_count": 2,
     "kind": "writer",
     "target_db": "ULIF dump DB",
     "reason": "persists resumable crawler dump",
     "calls": [
-      "sqlite3.connect(str(vesum_db_path))",
-      "sqlite3.connect(str(dump_db_path))",
-      "sqlite3.connect(str(self.db_path))"
+      "sqlite3.connect(str(self.db_path))",
+      "sqlite3.connect(str(dump_db_path))"
     ]
   },
   {
@@ -1622,58 +1301,24 @@
   },
   {
     "path": "scripts/lexicon/tools/migrate_ulif_raw.py",
-    "reference_count": 9,
+    "reference_count": 6,
     "kind": "writer",
     "target_db": "sources.db; compacted sources DB",
     "reason": "migrates and compacts ULIF raw store",
     "calls": [
       "sqlite3.connect(db, timeout=0)",
       "sqlite3.connect(db, timeout=0)",
-      "sqlite3.connect(f'file:{db}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{db}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{new}?mode=ro', uri=True)",
       "sqlite3.connect(new)"
     ]
   },
   {
-    "path": "scripts/lexicon/tools/report_ulif_homonym_suspects.py",
-    "reference_count": 4,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{resolved}?mode=ro', uri=True)"
-    ]
-  },
-  {
     "path": "scripts/lexicon/ulif_raw_cache.py",
-    "reference_count": 5,
+    "reference_count": 4,
     "kind": "writer",
     "target_db": "ULIF raw cache DB",
     "reason": "persists raw crawler responses",
     "calls": [
-      "sqlite3.connect(target, timeout=30)",
-      "sqlite3.connect(f'file:{target.resolve()}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/ulp_taught_pair_extractor.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(str(db_file))"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/verify_synonym_pairs.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(sources_db_path)"
+      "sqlite3.connect(target, timeout=30)"
     ]
   },
   {

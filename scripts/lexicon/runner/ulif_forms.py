@@ -19,6 +19,7 @@ from filelock import FileLock, Timeout
 
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner import ulif_dictua_parse
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 from scripts.wiki import sources_db
 
 ULIF_FORMS_PARSER_VERSION = ulif_dictua_parse.ULIF_FORMS_PARSER_VERSION
@@ -433,9 +434,7 @@ def build_ulif_forms(
                     elif reason in {"raw_cache_error", "missing_cache_file"} or reason.startswith(
                         ("extraction_failed:", "extraction_defect:")
                     ):
-                        secondary_blocking_failures.append(
-                            {"entry_id": entry_id, "reason": reason, "locator": locator}
-                        )
+                        secondary_blocking_failures.append({"entry_id": entry_id, "reason": reason, "locator": locator})
                 conn.executemany(
                     """
                     INSERT INTO ulif_forms_failures (entry_id, reason, locator)
@@ -546,7 +545,7 @@ def verify_ulif_forms(db_path: str | Path) -> dict[str, Any]:
     if not path.is_file():
         raise FileNotFoundError(f"Database not found: {path}")
 
-    conn = sqlite3.connect(f"{path.as_uri()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(path)
     conn.row_factory = sqlite3.Row
     try:
         tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()}
@@ -670,7 +669,7 @@ def generate_disagreement_report(
     if not path.is_file():
         raise FileNotFoundError(f"Database not found: {path}")
 
-    conn = sqlite3.connect(f"{path.as_uri()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(path)
     conn.row_factory = sqlite3.Row
     try:
         cursor = conn.execute(

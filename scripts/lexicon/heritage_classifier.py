@@ -28,6 +28,9 @@ SCRIPTS_DIR = ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+
 SOURCES_DB = ROOT / "data" / "sources.db"
 LT_REPLACEMENTS = ROOT / "registry" / "lt_replacements.json"
 HERITAGE_PAIRS_YAML = ROOT / "registry" / "lexicon" / "heritage_pairs.yaml"
@@ -1006,13 +1009,13 @@ def _source_db_path(db_path: str | Path | None = None) -> Path:
     return target
 
 
-def _get_thread_local_conn(source_db: Path) -> sqlite3.Connection:
+def _get_thread_local_conn(source_db: Path) -> SQLiteConnection:
     if not hasattr(_THREAD_LOCAL, "conns"):
         _THREAD_LOCAL.conns = {}
     key = str(source_db.resolve())
     conn = _THREAD_LOCAL.conns.get(key)
     if conn is None:
-        conn = sqlite3.connect(f"file:{source_db.resolve()}?mode=ro", uri=True)
+        conn = _open_readonly(source_db.resolve())
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA query_only = 1")
         _THREAD_LOCAL.conns[key] = conn
@@ -1020,7 +1023,7 @@ def _get_thread_local_conn(source_db: Path) -> sqlite3.Connection:
 
 
 @contextmanager
-def _source_conn(db_path: str | Path | None = None) -> Iterator[sqlite3.Connection]:
+def _source_conn(db_path: str | Path | None = None) -> Iterator[SQLiteConnection]:
     source_db = _source_db_path(db_path)
     if not source_db.exists():
         raise FileNotFoundError(f"local sources database not found: {source_db}")
@@ -1353,7 +1356,7 @@ def _check_russian_shadow(
 
 
 def _strict_heritage_attestations(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     term: str,
     *,
     surface: bool,
@@ -1368,7 +1371,7 @@ def _strict_heritage_attestations(
 
 
 def _standard_dictionary_attestations(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     term: str,
 ) -> list[dict[str, Any]]:
     hits: list[dict[str, Any]] = []
@@ -1554,7 +1557,7 @@ def _classification_from_heritage_hit(hit: dict[str, Any], text: str) -> str:
     return "standard"
 
 
-def _grinchenko_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
+def _grinchenko_exact_hits(conn: SQLiteConnection, term: str) -> list[dict[str, Any]]:
     hits = []
     for variant in _apostrophe_variants(term):
         rows = conn.execute(
@@ -1581,7 +1584,7 @@ def _grinchenko_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str
     return hits
 
 
-def _grinchenko_crossref_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
+def _grinchenko_crossref_hits(conn: SQLiteConnection, term: str) -> list[dict[str, Any]]:
     rows = conn.execute(
         "SELECT id, word, definition, source FROM grinchenko WHERE lower(definition) LIKE ? LIMIT 20",
         (f"%{term}%",),
@@ -1611,7 +1614,7 @@ def _grinchenko_crossref_hits(conn: sqlite3.Connection, term: str) -> list[dict[
     return hits
 
 
-def _grinchenko_surface_usage_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
+def _grinchenko_surface_usage_hits(conn: SQLiteConnection, term: str) -> list[dict[str, Any]]:
     rows = conn.execute(
         "SELECT id, word, definition, source FROM grinchenko WHERE lower(definition) LIKE ? LIMIT 8",
         (f"%{term}%",),
@@ -1636,7 +1639,7 @@ def _grinchenko_surface_usage_hits(conn: sqlite3.Connection, term: str) -> list[
     return hits
 
 
-def _sum11_has_flag_columns(conn: sqlite3.Connection) -> bool:
+def _sum11_has_flag_columns(conn: SQLiteConnection) -> bool:
     cols = {row[1] for row in conn.execute("PRAGMA table_info(sum11);").fetchall()}
     return {"sovietization_risk", "sovietization_keywords"}.issubset(cols)
 
@@ -1648,7 +1651,7 @@ def _sum11_has_flag_columns_for_db(
     size: int,
 ) -> bool:
     del mtime_ns, size  # cache-key invalidators; not used in the query itself.
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = _open_readonly(db_path)
     try:
         return _sum11_has_flag_columns(conn)
     finally:
@@ -1705,7 +1708,7 @@ def _sum11_sovietization_risk_for_term(
         return 0
 
 
-def _esum_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
+def _esum_exact_hits(conn: SQLiteConnection, term: str) -> list[dict[str, Any]]:
     if not _table_exists(conn, "esum_etymology_meta"):
         return []
     hits = []
@@ -1725,7 +1728,7 @@ def _esum_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]
     return hits
 
 
-def _esum_variant_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
+def _esum_variant_hits(conn: SQLiteConnection, term: str) -> list[dict[str, Any]]:
     if not _table_exists(conn, "esum_etymology_meta"):
         return []
     if term not in _DIALECT_OR_FOLK_TERMS:
@@ -1790,7 +1793,7 @@ def _esum_hit(term: str, row: sqlite3.Row, *, exact: bool) -> dict[str, Any]:
     }
 
 
-def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
+def _table_exists(conn: SQLiteConnection, table: str) -> bool:
     row = conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name = ? LIMIT 1",
         (table,),
@@ -1798,7 +1801,7 @@ def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
     return row is not None
 
 
-def _wiktionary_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
+def _wiktionary_exact_hits(conn: SQLiteConnection, term: str) -> list[dict[str, Any]]:
     hits = []
     for variant in _apostrophe_variants(term):
         rows = conn.execute(
@@ -1846,7 +1849,7 @@ def _sum11_sovietization_risk(definition: str, text: str) -> int:
     return int(risk)
 
 
-def _literary_surface_attestations(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
+def _literary_surface_attestations(conn: SQLiteConnection, term: str) -> list[dict[str, Any]]:
     hint = _SURFACE_QUOTE_HINTS.get(term)
     if hint:
         phrase, classification = hint
@@ -1873,7 +1876,7 @@ def _literary_surface_attestations(conn: sqlite3.Connection, term: str) -> list[
     return _literary_term_hits(conn, term)
 
 
-def _verified_literary_quote_rows(conn: sqlite3.Connection, phrase: str) -> list[sqlite3.Row]:
+def _verified_literary_quote_rows(conn: SQLiteConnection, phrase: str) -> list[sqlite3.Row]:
     query = _fts_phrase_query(phrase)
     rows: list[sqlite3.Row] = []
     if query:
@@ -1909,7 +1912,7 @@ def _verified_literary_quote_rows(conn: sqlite3.Connection, phrase: str) -> list
     ).fetchall()
 
 
-def _literary_term_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
+def _literary_term_hits(conn: SQLiteConnection, term: str) -> list[dict[str, Any]]:
     query = _fts_phrase(term)
     if not query:
         return []
