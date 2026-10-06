@@ -2,6 +2,7 @@
 
 import json
 import sys
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -87,6 +88,7 @@ def replay(tasks, root, trees):
     for tree in trees:
         expected = result(legacy_resolve_worktree_record, tree, tasks, root)
         assert result(output.resolve_worktree_record, tree, tasks, root) == expected
+        assert result(partial(output.resolve_worktree_record, publish_cache=False), tree, tasks, root) == expected
 
 
 @pytest.fixture
@@ -420,7 +422,8 @@ def test_cache_io_failure_does_not_change_inventory_result(store, monkeypatch, f
     assert not list(tasks.glob(".record-identities-*"))
 
 
-def test_ac02_cache_hits_only_parse_the_matching_canonical_record(store, monkeypatch):
+@pytest.mark.parametrize("publish_cache", [True, False])
+def test_ac02_cache_hits_only_parse_the_matching_canonical_record(store, monkeypatch, publish_cache):
     root, tasks, tree = store
     paths = [
         save(tasks, f"unrelated-{i}.json", {"cwd": str(root / f"other-{i}"), "keep_worktree": False}) for i in range(8)
@@ -437,6 +440,90 @@ def test_ac02_cache_hits_only_parse_the_matching_canonical_record(store, monkeyp
         return original(raw, *args, **kwargs)
 
     monkeypatch.setattr(output.json, "loads", loads)
-    actual = output.resolve_worktree_record(tree, tasks, repo_root=root)
+    actual = output.resolve_worktree_record(tree, tasks, repo_root=root, publish_cache=publish_cache)
     assert actual[1]["extra"] == [1, 2, 3]
     assert parsed == [(tasks / "match.json").read_bytes()]
+
+
+@pytest.mark.parametrize("cache_state", ["absent", "warm", "stale", "corrupt", "pruned"])
+def test_read_only_lookup_never_publishes(store, monkeypatch, cache_state):
+    root, tasks, tree = store
+    record = save(tasks, "match.json", {"cwd": str(tree), "extra": [1, 2, 3]})
+    cache = output._identity_cache_path(tasks)
+    if cache_state != "absent":
+        save(tasks, "unrelated.json", {"cwd": "elsewhere"})
+        output.resolve_worktree_record(tree, tasks, repo_root=root)
+    if cache_state == "stale":
+        record.write_text(json.dumps({"cwd": str(tree), "extra": "updated"}))
+    elif cache_state == "corrupt":
+        cache.write_bytes(b"invalid cache")
+    elif cache_state == "pruned":
+        (tasks / "unrelated.json").unlink()
+    before = {path: (path.read_bytes(), path.stat().st_mtime_ns) for path in tasks.rglob("*") if path.is_file()}
+
+    def forbidden_write(*_args):
+        pytest.fail("read-only lookup attempted cache publication")
+
+    monkeypatch.setattr(output, "_write_identity_cache", forbidden_write)
+    expected = legacy_resolve_worktree_record(tree, tasks, repo_root=root)
+    assert output.resolve_worktree_record(tree, tasks, repo_root=root, publish_cache=False) == expected
+    assert {path: (path.read_bytes(), path.stat().st_mtime_ns) for path in tasks.rglob("*") if path.is_file()} == before
+
+
+@pytest.mark.parametrize(
+    "tree_owner,tasks_owner,publishes",
+    [
+        ("public", "public", True),
+        ("sibling", "public", False),
+        ("public", "sibling", False),
+        ("sibling", "sibling", False),
+        ("public", "foreign", False),
+        ("public", "redirected", False),
+        ("unknown", "public", False),
+    ],
+)
+def test_preservation_decides_publication_from_actual_ownership(
+    tmp_path, monkeypatch, tree_owner, tasks_owner, publishes
+):
+    from tests.orchestration.test_worktree_claims_cli import _fleet, _linked
+
+    public, sibling = _fleet(tmp_path, monkeypatch)
+    public_tasks = public / "batch_state/tasks"
+    sibling_tasks = sibling / "batch_state/tasks"
+    sibling_tasks.mkdir(parents=True)
+    if tasks_owner == "redirected":
+        public_tasks.parent.mkdir()
+        public_tasks.symlink_to(sibling_tasks, target_is_directory=True)
+        tasks = public_tasks
+    else:
+        public_tasks.mkdir(parents=True)
+        tasks = {"public": public_tasks, "sibling": sibling_tasks, "foreign": tmp_path / "foreign/tasks"}[tasks_owner]
+        tasks.mkdir(parents=True, exist_ok=True)
+    if tree_owner == "unknown":
+        tree = tmp_path / "unknown"
+        tree.mkdir()
+    else:
+        tree = _linked(public if tree_owner == "public" else sibling, "codex/cache-proof")
+    save(tasks, "match.json", {"task_id": "match", "worktree_path": str(tree), "status": "done"})
+    # Misleading hints cannot grant publication into a sibling's task store,
+    # or into the public primary while operating on a sibling worktree.
+    outcome = output.preserve_worktree_artifacts(
+        tree, primary=public, task_id="match", tasks_dir=tasks, repo_root=public
+    )
+    if tree_owner == "unknown":
+        assert outcome[0] is False
+        assert "artifact preservation failed:" in outcome[1]
+    else:
+        assert outcome == (True, "", None)
+    assert output._identity_cache_path(tasks).exists() is publishes
+
+
+def test_unknown_public_primary_disables_cache_publication(store, monkeypatch):
+    from scripts.orchestration import worktree_claims
+
+    def unavailable():
+        raise OSError("unavailable metadata")
+
+    monkeypatch.setattr(worktree_claims, "public_primary_root", unavailable)
+    _, tasks, tree = store
+    assert worktree_claims.identity_cache_publication_allowed(tree, tasks) is False
