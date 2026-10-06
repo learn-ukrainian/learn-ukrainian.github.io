@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 from .antonenko import (
+    ACCEPTED_REASONS,
     BOOK_ADAPTER,
     RECEIPTS,
     SOURCE,
@@ -69,7 +70,7 @@ class BookCalqueComponent:
         RECEIPTS.configure(ctx)
         for row in ctx.reader.iter_rows("sources.db", "style_guide"):
             for unit in RECEIPTS.row_units(row):
-                if unit["reason"] != "ok":
+                if unit["reason"] not in ACCEPTED_REASONS:
                     yield candidate("C6b", OPERATION, row, (), (), (), unit["reason"], unit)
                     continue
                 left, right = unit["rejected_span"], unit["recommended_span"]

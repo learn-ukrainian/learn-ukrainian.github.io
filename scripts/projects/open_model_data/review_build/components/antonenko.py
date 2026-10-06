@@ -16,6 +16,7 @@ SOURCE = "antonenko_style_guide"
 STORE = "antonenko-adjudication"
 MODELS = {"sol": "gpt-6.1-sol", "opus": "claude-opus-5-5"}
 BATCH_SIZE = 20
+ACCEPTED_REASONS = frozenset({"agreed", "reconciled_accepted"})
 
 
 def selector(area, slot, **kwargs):
@@ -154,14 +155,19 @@ def validate_receipts(batch, receipts, reconciliation=None):
         sol, opus = set(selections["sol"][key]), set(selections["opus"][key])
         decisions[key] = {
             "pairs": sorted(sol & opus),
+            "agreed": sorted(sol & opus),
             "disputed": sorted(sol ^ opus),
+            "reconciled_accepted": [],
+            "reconciled_rejected": [],
             "reason": "ok" if sol | opus else "no_pair_named",
         }
     if reconciliation:
         accepted = validate_reconciliation(batch, decisions, reconciliation)
         for key, pairs in accepted.items():
+            decisions[key]["reconciled_accepted"] = sorted(pairs)
+            decisions[key]["reconciled_rejected"] = sorted(set(decisions[key]["disputed"]) - pairs)
             decisions[key]["pairs"] = sorted(set(decisions[key]["pairs"]) | pairs)
-            decisions[key]["disputed"] = sorted(set(decisions[key]["disputed"]) - pairs)
+            decisions[key]["disputed"] = []
     return decisions
 
 
@@ -363,7 +369,12 @@ class ReceiptStore:
             require(not reconciliation or bool(raw), "adjudication_seats")
             if not raw:
                 for row in batch["rows"]:
-                    self.decisions[row["row_id"]] = {"reason": "adjudication_pending", "pairs": [], "disputed": []}
+                    self.decisions[row["row_id"]] = {
+                        "reason": "adjudication_pending",
+                        "pairs": [],
+                        "agreed": [],
+                        "disputed": [],
+                    }
                 continue
             self.decisions.update(
                 validate_receipts(
@@ -375,8 +386,12 @@ class ReceiptStore:
             self.documents[sha] = (batch, raw, reconciliation)
         for row in rows:
             decision = self.get(row)
-            pairs = [(left, right, "ok") for left, right in decision["pairs"]]
+            pairs = [
+                (left, right, "agreed" if (left, right) in decision["agreed"] else "reconciled_accepted")
+                for left, right in decision["pairs"]
+            ]
             pairs += [(left, right, "adjudication_disagreement") for left, right in decision["disputed"]]
+            pairs += [(left, right, "reconciled_rejected") for left, right in decision.get("reconciled_rejected", [])]
             if not pairs:
                 pairs = [(None, None, decision["reason"])]
             for left, right, reason in pairs:
@@ -400,8 +415,8 @@ class ReceiptStore:
                             "recommended_form": row["text"][slice(*right)],
                             "rejected_key": normalize(row["text"][slice(*left)], "unstress_nfc"),
                             "recommended_key": normalize(row["text"][slice(*right)], "unstress_nfc"),
-                            "sol": "APPROVE" if reason == "ok" else "WITHHOLD",
-                            "opus": "APPROVE" if reason == "ok" else "WITHHOLD",
+                            "sol": "APPROVE" if reason in ACCEPTED_REASONS else "WITHHOLD",
+                            "opus": "APPROVE" if reason in ACCEPTED_REASONS else "WITHHOLD",
                             "batch_sha256": batch["batch_sha256"],
                             "row_text_sha256": digest(row["text"].encode()),
                             **{f"{seat}_sha256": digest(content) for seat, content in raw.items()},
@@ -411,14 +426,16 @@ class ReceiptStore:
                 self.records[key] = record
 
     def get(self, row):
-        return self.decisions.get(row["id"], {"reason": "locator_unavailable", "pairs": [], "disputed": []})
+        return self.decisions.get(
+            row["id"], {"reason": "locator_unavailable", "pairs": [], "agreed": [], "disputed": []}
+        )
 
     def row_units(self, row):
         return [record for record in self.records.values() if record["book_id"] == row["id"]]
 
     def admit(self, row, left, right):
         receipt = self.records[pair_id(row["id"], left, right)]
-        require(receipt["reason"] == "ok", "adjudication_direction")
+        require(receipt["reason"] in ACCEPTED_REASONS, "adjudication_direction")
         return receipt
 
     def row(self, table, row_key):
@@ -454,9 +471,14 @@ class ReceiptStore:
         row = live[result["book_id"]]
         require(result["row_text_sha256"] == digest(row["text"].encode()), "adjudication_stale")
         require(result["pair"] == f"id={row['id']}" and result["source"] == row["source"], "adjudication_stale")
-        pairs = decisions[result["book_id"]]["pairs" if result["reason"] == "ok" else "disputed"]
+        kind = (
+            result["reason"]
+            if result["reason"] in ACCEPTED_REASONS
+            else ("reconciled_rejected" if result["reason"] == "reconciled_rejected" else "disputed")
+        )
+        pairs = decisions[result["book_id"]][kind]
         require((result["rejected_span"], result["recommended_span"]) in pairs, "adjudication_direction")
-        if result["reason"] == "ok":
+        if result["reason"] in ACCEPTED_REASONS:
             require(result["sol"] == result["opus"] == "APPROVE", "adjudication_provenance")
         return result
 
@@ -510,11 +532,12 @@ def common_spec(operation, unit):
         "annotation_layer": "source_text_and_dual_adjudication",
         "reference_multiplicity": "one record per agreed offset pair in a row",
         "reasons": {
-            "accepted": ["ok"],
+            "accepted": sorted(ACCEPTED_REASONS),
             "rejected": [],
             "withheld": [
                 "adjudication_pending",
                 "adjudication_disagreement",
+                "reconciled_rejected",
                 "no_pair_named",
                 "locator_unavailable",
                 "attribution_unresolved",
@@ -525,9 +548,10 @@ def common_spec(operation, unit):
     }
 
 
-def candidate(component, operation, row, slots, context, response, reason="ok", unit=None):
-    outcome = "accepted" if reason == "ok" else "withheld"
+def candidate(component, operation, row, slots, context, response, reason=None, unit=None):
     require(unit is not None, "unit_id_spec")
+    reason = unit["reason"] if reason is None else reason
+    outcome = "accepted" if reason in ACCEPTED_REASONS else "withheld"
     accounting = Value("accounting_unit", unit["id"], (receipt_citation(unit, component, "id"),), None, "verbatim")
     return Candidate(
         component,

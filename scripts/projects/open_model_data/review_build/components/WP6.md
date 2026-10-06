@@ -77,7 +77,7 @@ host execution records, not cryptographic proof of the provider's internal work.
 The accounting unit is a candidate pair: the union of both seats' selected
 ordered `(rejected, recommended)` offsets, keyed by row id and both spans.
 Order within a receipt is immaterial. Identically selected pairs are admitted
-individually. A pair selected by only one seat remains withheld
+individually as `agreed`. A pair selected by only one seat remains withheld
 `adjudication_disagreement`; agreed siblings in that row remain eligible.
 Two empty lists produce one `no_pair_named` placeholder. No receipts produce
 one `adjudication_pending` placeholder. Each unlocated row contributes one
@@ -114,7 +114,8 @@ The other decision is `reject`. Each receipt must cover exactly the disputed
 pair set, without duplicates or invented pairs, and both seats are required.
 Reconciliation requires the same dispatch provenance through
 `<batch>.reconcile.<seat>.attestation.json`. Only two explicit accepts admit a
-pair. Either rejection keeps it withheld. Malformed, stale, partial or
+pair as `reconciled_accepted`. Either rejection keeps it withheld as
+`reconciled_rejected`; it is no longer an unresolved disagreement. Malformed, stale, partial or
 unattested reconciliation refuses the build. Absence of reconciliation leaves
 the original disagreements withheld.
 

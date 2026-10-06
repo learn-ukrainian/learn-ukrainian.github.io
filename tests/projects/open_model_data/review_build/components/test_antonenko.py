@@ -484,7 +484,7 @@ def test_one_disputed_pair_preserves_agreed_sibling_and_union_denominator(source
         records, report = gate(ctx, obj, component).run(cs)
         assert len(records) == report["accounting"][component]["accepted"] == 2
         assert report["accounting"][component]["counted"] == 3
-        assert report["accounting"][component]["reasons"] == {"adjudication_disagreement": 1, "ok": 2}
+        assert report["accounting"][component]["reasons"] == {"adjudication_disagreement": 1, "agreed": 2}
         row_units = [c for c in cs if RECEIPTS.records[c.unit_id]["book_id"] == 1]
         assert len(row_units) == 2 and len({c.unit_id for c in row_units}) == 2
 
@@ -524,7 +524,27 @@ def test_reconciliation_requires_both_accepts(source, component, decisions, acce
         assert len(records) == report["accounting"][component]["accepted"] == accepted
         assert report["accounting"][component]["counted"] == 3
         assert report["accounting"][component]["withheld"] == 3 - accepted
+        assert report["accounting"][component]["reasons"] == {
+            "agreed": 2,
+            "reconciled_accepted" if accepted == 3 else "reconciled_rejected": 1,
+        }
+        unit = next(u for u in RECEIPTS.records.values() if u["reason"].startswith("reconciled"))
+        assert RECEIPTS.row("C6b", "id=" + unit["id"]) == unit
+        assert next(iter(RECEIPTS.decisions.values()))["disputed"] == []
         assert any("reconcile" in name for name in RECEIPTS.file_hashes())
+
+
+def test_reconciled_admission_cannot_be_relabelled_as_an_original_agreement(source):
+    expand_row(source)
+    write_receipt(source, lambda r: add_second_pair(source, r, both=False))
+    write_reconciliation(source, reconciliation_receipts(source))
+    ctx = context(source)
+    with ctx.reader:
+        list(component_for("C6b").iter_candidates(ctx))
+        unit = next(u for u in RECEIPTS.records.values() if u["reason"] == "reconciled_accepted")
+        unit["reason"] = "agreed"
+        with pytest.raises(BuildError, match="adjudication_direction"):
+            RECEIPTS.row("C6b", "id=" + unit["id"])
 
 
 @pytest.mark.parametrize(
