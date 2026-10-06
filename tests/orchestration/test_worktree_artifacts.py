@@ -6,6 +6,7 @@ import json
 import os
 import subprocess
 import threading
+from pathlib import Path
 
 import pytest
 
@@ -118,9 +119,11 @@ def test_failed_copy_verification_or_record_blocks_removal(checkout, monkeypatch
         def fail_copy(*_args):
             raise OSError("copy denied")
 
-        monkeypatch.setattr(wa.shutil, "copyfile", fail_copy)
+        monkeypatch.setattr(wa, "_write_verified_bytes", fail_copy)
     elif failure == "corruption":
-        monkeypatch.setattr(wa.shutil, "copyfile", lambda _source, destination: destination.write_bytes(b"wrong"))
+        monkeypatch.setattr(
+            wa, "_write_verified_bytes", lambda _payload, destination: destination.write_bytes(b"wrong")
+        )
     else:
 
         def fail_record(*_args):
@@ -171,6 +174,58 @@ def test_source_symlink_is_preserved_as_link_record(checkout):
     assert copied.read_bytes() != b"external bytes"
     assert os.fsencode(str(external)) in copied.read_bytes()
     assert external.read_bytes() == b"external bytes"
+
+
+def _swap_regular_file_for_outside_symlink(monkeypatch, source: Path, outside: Path) -> None:
+    """After a type check sees a regular file, replace it with a link to ``outside``."""
+    real_is_symlink = Path.is_symlink
+
+    def raced(self: Path) -> bool:
+        if self == source:
+            if not real_is_symlink(self):
+                self.unlink()
+                self.symlink_to(outside)
+            return False
+        return real_is_symlink(self)
+
+    monkeypatch.setattr(Path, "is_symlink", raced)
+
+
+def test_copy_refuses_symlink_swapped_in_between_check_and_copy(tmp_path, monkeypatch):
+    outside = tmp_path / "outside.bin"
+    outside.write_bytes(b"OUTSIDE-SECRET")
+    source = tmp_path / "checkout" / "evidence.bin"
+    source.parent.mkdir()
+    source.write_bytes(b"inside-bytes")
+    destination = tmp_path / "preserved" / "evidence.bin"
+    _swap_regular_file_for_outside_symlink(monkeypatch, source, outside)
+
+    with pytest.raises(ValueError, match="changed during preservation"):
+        wa._copy_verified(source, destination)
+
+    assert os.path.islink(source)
+    assert os.readlink(source) == str(outside)
+    assert outside.read_bytes() == b"OUTSIDE-SECRET"
+    assert not destination.exists()
+    if destination.parent.exists():
+        leaked = [
+            path for path in destination.parent.rglob("*") if path.is_file() and b"OUTSIDE-SECRET" in path.read_bytes()
+        ]
+        assert leaked == []
+
+
+def test_fingerprint_refuses_symlink_swapped_in_between_check_and_open(tmp_path, monkeypatch):
+    outside = tmp_path / "outside.bin"
+    outside.write_bytes(b"OUTSIDE-SECRET")
+    source = tmp_path / "evidence.bin"
+    source.write_bytes(b"inside-bytes")
+    _swap_regular_file_for_outside_symlink(monkeypatch, source, outside)
+
+    with pytest.raises(ValueError, match="changed during preservation"):
+        wa._fingerprint(source)
+
+    assert os.path.islink(source)
+    assert outside.read_bytes() == b"OUTSIDE-SECRET"
 
 
 def test_directory_walk_records_symlinks_without_following(checkout, tmp_path):
@@ -334,16 +389,16 @@ def test_record_changed_during_copy_keeps_other_writers_fields(checkout, monkeyp
     artifact(checkout)
     path = checkout[2] / "artifact-task.json"
     initial = bound_record(checkout, {"status": "done", "response": "original"})
-    copy = wa.shutil.copyfile
+    write = wa._write_verified_bytes
 
-    def concurrent_writer(source, destination):
+    def concurrent_writer(payload, destination):
         from scripts.orchestration.dead_worker_state import task_state_lock
 
         with task_state_lock(path):
             path.write_text(json.dumps({**initial, "status": "failed", "response": "new", "other_writer": True}))
-        return copy(source, destination)
+        return write(payload, destination)
 
-    monkeypatch.setattr(wa.shutil, "copyfile", concurrent_writer)
+    monkeypatch.setattr(wa, "_write_verified_bytes", concurrent_writer)
     assert guard(checkout, record={"stale_field": "do not merge"})[0]
     saved = json.loads(path.read_text())
     assert saved["status"] == "failed"

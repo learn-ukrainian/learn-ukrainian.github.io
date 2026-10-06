@@ -174,6 +174,13 @@ def _run(
     env = sanitized_git_env()
     if env_overrides:
         env.update(env_overrides)
+    if args and Path(args[0]).name == "gh":
+        # FORCE_COLOR and CLICOLOR_FORCE beat NO_COLOR and make gh wrap piped
+        # JSON in ANSI. That is not JSON, and a parse error must stay fail-closed,
+        # so every JSON gh call is uncolored instead of being repaired later.
+        env.pop("FORCE_COLOR", None)
+        env["NO_COLOR"] = "1"
+        env["CLICOLOR_FORCE"] = "0"
     timeout = _effective_timeout(timeout)
     if timeout is not None and timeout <= 0:
         raise subprocess.TimeoutExpired(args, 0)

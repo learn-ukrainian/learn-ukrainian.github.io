@@ -1169,7 +1169,7 @@ def test_acp_artifact_copy_failure_retains_runtime(hermetic_reap, monkeypatch):
     def fail_copy(*_args):
         raise OSError("injected ACP copy failure")
 
-    monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+    monkeypatch.setattr(worktree_artifacts, "_write_verified_bytes", fail_copy)
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     row = report["acp_runtimes"][0]
     assert row["action"] == "retained", row

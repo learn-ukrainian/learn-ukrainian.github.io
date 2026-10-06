@@ -231,7 +231,7 @@ def test_canonical_reaper_preserves_ignored_batch_state(tmp_path, monkeypatch, c
         def fail_copy(_source, _destination):
             raise OSError("injected reaper copy failure")
 
-        monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+        monkeypatch.setattr(worktree_artifacts, "_write_verified_bytes", fail_copy)
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
@@ -2746,6 +2746,52 @@ def test_query_pr_states_accepts_every_real_gh_state(monkeypatch, state) -> None
 
     assert error is None
     assert [(s.number, s.state) for s in states] == [(7126, state)]
+
+
+def test_gh_json_calls_drop_force_color(monkeypatch, tmp_path: Path) -> None:
+    """FORCE_COLOR / CLICOLOR_FORCE must not reach a gh call that parses JSON."""
+    monkeypatch.setenv("FORCE_COLOR", "1")
+    monkeypatch.setenv("CLICOLOR_FORCE", "1")
+    monkeypatch.setenv("NO_COLOR", "already")
+    captured: list[dict[str, str]] = []
+
+    def fake_run(args, **kwargs):
+        captured.append(kwargs["env"])
+        if args[0] == "gh":
+            colored = kwargs["env"].get("FORCE_COLOR") or kwargs["env"].get("CLICOLOR_FORCE") not in {None, "0"}
+            uncolored = not colored and kwargs["env"].get("NO_COLOR") == "1"
+            stdout = "[]" if uncolored else "\x1b[32m[]\x1b[0m"
+            return subprocess.CompletedProcess(args, 0, stdout, "")
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(rw.subprocess, "run", fake_run)
+
+    git_proc = rw._run(["git", "status"], cwd=tmp_path)
+    states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
+
+    assert git_proc.returncode == 0
+    assert captured[0]["FORCE_COLOR"] == "1"
+    assert captured[0]["CLICOLOR_FORCE"] == "1"
+    assert "FORCE_COLOR" not in captured[1]
+    assert captured[1]["NO_COLOR"] == "1"
+    assert captured[1]["CLICOLOR_FORCE"] == "0"
+    assert error is None
+    assert states == []
+
+
+def test_colored_gh_json_stays_fail_closed(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("FORCE_COLOR", "1")
+    monkeypatch.setenv("CLICOLOR_FORCE", "1")
+    monkeypatch.setattr(
+        rw,
+        "_run",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, "\x1b[32m[]\x1b[0m", ""),
+    )
+
+    states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
+
+    assert states == []
+    assert error is not None and "invalid JSON" in error
 
 
 # --- REST-first PR lookup with GraphQL fallback (#8536) --

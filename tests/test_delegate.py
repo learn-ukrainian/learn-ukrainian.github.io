@@ -13154,7 +13154,7 @@ def test_settle_preserves_ignored_artifacts_before_removal(
         def fail_copy(_source, _destination):
             raise OSError("injected copy failure")
 
-        monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+        monkeypatch.setattr(worktree_artifacts, "_write_verified_bytes", fail_copy)
 
     out = delegate._settle_worktree_reap(
         worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record

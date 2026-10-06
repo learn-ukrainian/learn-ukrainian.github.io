@@ -8,7 +8,6 @@ import hashlib
 import os
 import re
 import shlex
-import shutil
 import stat
 import subprocess
 import tempfile
@@ -114,26 +113,116 @@ def _symlink_record_bytes(target: str) -> bytes:
     return b"symlink\n" + os.fsencode(target)
 
 
+_DIRECTORY_FLAGS = os.O_RDONLY | os.O_CLOEXEC | os.O_DIRECTORY | os.O_NOFOLLOW
+_LEAF_FLAGS = os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK
+
+
+def _open_directory(path: Path) -> int:
+    """Open ``path`` without following a symlink at its final component."""
+    fd = os.open(path, _DIRECTORY_FLAGS)
+    try:
+        if not stat.S_ISDIR(os.fstat(fd).st_mode):
+            raise ValueError("artifact is not a regular file")
+    except (OSError, ValueError):
+        os.close(fd)
+        raise
+    return fd
+
+
+def _read_regular(fd: int) -> bytes:
+    """Read one regular file from an already-opened descriptor."""
+    info = os.fstat(fd)
+    if not stat.S_ISREG(info.st_mode):
+        raise ValueError("artifact is not a regular file")
+    size = info.st_size
+    chunks: list[bytes] = []
+    remaining = size
+    while remaining > 0:
+        chunk = os.read(fd, min(remaining, 1024 * 1024))
+        if not chunk:
+            break
+        chunks.append(chunk)
+        remaining -= len(chunk)
+    payload = b"".join(chunks)
+    after = os.fstat(fd)
+    if (
+        after.st_dev != info.st_dev
+        or after.st_ino != info.st_ino
+        or not stat.S_ISREG(after.st_mode)
+        or after.st_size != size
+        or len(payload) != size
+    ):
+        raise ValueError("artifact size or SHA-256 changed during preservation")
+    return payload
+
+
+def _read_preserved_bytes(path: Path) -> bytes:
+    """Read a regular file, or a symlink's inert record, without following links.
+
+    The parent is a verified directory descriptor. The leaf is opened once,
+    relative to that descriptor, with ``O_NOFOLLOW``. ``fstat`` must show a
+    regular file, and both the fingerprint and the preserved bytes come from
+    that same descriptor. A symlink is not opened. Replacing a regular file
+    with a symlink after the type check refuses; the new target is not read.
+    """
+    parent_fd = _open_directory(path.parent)
+    try:
+        name = path.name
+        # The check can go stale before the open. ``O_NOFOLLOW`` below refuses
+        # that replacement instead of following the new link.
+        if path.is_symlink():
+            try:
+                target = os.readlink(name, dir_fd=parent_fd)
+            except FileNotFoundError:
+                raise
+            except OSError as exc:
+                raise ValueError("artifact changed during preservation") from exc
+            return _symlink_record_bytes(target)
+        try:
+            leaf_fd = os.open(name, _LEAF_FLAGS, dir_fd=parent_fd)
+        except FileNotFoundError:
+            raise
+        except OSError as exc:
+            if exc.errno == errno.ELOOP:
+                raise ValueError("artifact changed during preservation") from exc
+            raise
+        try:
+            return _read_regular(leaf_fd)
+        finally:
+            os.close(leaf_fd)
+    finally:
+        os.close(parent_fd)
+
+
 def _fingerprint(path: Path) -> tuple[int, str]:
     """Hash file bytes, or the inert link record when ``path`` is a symlink.
 
-    ``lstat`` decides. A symlink is never opened, so a dangling link and a link
-    out of the checkout contribute only their target string.
+    Regular-file bytes come from one ``O_NOFOLLOW`` descriptor. A symlink is
+    never opened, so a dangling link and a link out of the checkout contribute
+    only their target string.
     """
-    if path.is_symlink():
-        payload = _symlink_record_bytes(os.readlink(path))
-        return len(payload), hashlib.sha256(payload).hexdigest()
-    with path.open("rb") as handle:
-        return os.fstat(handle.fileno()).st_size, hashlib.file_digest(handle, "sha256").hexdigest()
+    payload = _read_preserved_bytes(path)
+    return len(payload), hashlib.sha256(payload).hexdigest()
+
+
+def _write_verified_bytes(payload: bytes, destination: Path) -> None:
+    """Write bytes already taken from a verified source descriptor."""
+    with destination.open("wb") as handle:
+        handle.write(payload)
+        handle.flush()
+        os.fsync(handle.fileno())
 
 
 def _copy_verified(source: Path, destination: Path) -> None:
     """Copy atomically, verifying size and SHA-256 and refusing conflicting evidence.
 
     A symlink is written as an inert link record. The destination is never a
-    live symlink, and the source target is not opened or copied.
+    live symlink, and the source target is not opened or copied. Regular-file
+    bytes are read once from an ``O_NOFOLLOW`` descriptor and that buffer is
+    what gets written; the source path is not opened again.
     """
-    before = _fingerprint(source)
+    payload = _read_preserved_bytes(source)
+    before = (len(payload), hashlib.sha256(payload).hexdigest())
     destination.parent.mkdir(parents=True, exist_ok=True)
     # ``exists`` follows links, so a dangling destination symlink must be caught separately.
     if destination.exists() or destination.is_symlink():
@@ -144,14 +233,9 @@ def _copy_verified(source: Path, destination: Path) -> None:
     temporary = Path(temporary_name)
     try:
         os.close(fd)
-        if source.is_symlink():
-            temporary.write_bytes(_symlink_record_bytes(os.readlink(source)))
-        else:
-            shutil.copyfile(source, temporary)
-        if _fingerprint(temporary) != before or _fingerprint(source) != before:
+        _write_verified_bytes(payload, temporary)
+        if _fingerprint(temporary) != before:
             raise ValueError("artifact size or SHA-256 changed during preservation")
-        with temporary.open("rb") as handle:
-            os.fsync(handle.fileno())
         # Another checkout of this task may preserve concurrently. Never replace
         # evidence it published after our initial existence check.
         os.link(temporary, destination)
