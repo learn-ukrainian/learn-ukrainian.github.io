@@ -77,7 +77,8 @@ all five verify mutations and tamper refusal using synthetic SQLite rows.
 
 `omd-review-request.v2` carries input locations only: required `catalog` and
 `register` (YAML paths), `databases` (`store` → database path), and
-`ua_gec` containing only `root` (the corpus directory path). Tests may also supply
+`ua_gec` containing only `root` (the corpus directory path). The optional
+`antonenko_receipts` is a nonempty directory path, with no policy fields. Tests may also supply
 `synthetic_sources`, restricted to ids starting with `synthetic` and register
 forms starting with `SYNTHETIC `. Every other key, including `compatibility`,
 `corpus`, `components` or `candidates`, refuses `request_policy_key`. v1 refuses
@@ -127,10 +128,9 @@ Every component spec requires:
   query's unit id. Swapped citations fail `unit_id_mismatch`, including on
   withheld/excluded accounting rows.
 - `frozen_count`: exact measured count at that unit grain.
-- `unit_multiplicity`: defaults to `one`; reviewed `records` permits multiple
-  distinct records per accounting unit. Counts remain unit-grained: a withheld
-  record withholds its unit, otherwise an accepted record accepts it.
-  Per-operation `records_counted` and `record_reasons` also expose record counts.
+- Optional `census_query` freezes the source census separately from derived
+  units. Each pair has one unique unit; duplicates always refuse.
+  Per-operation `records_counted` and `record_reasons` expose the same counts.
   Generic missing-unit verification removes the entire unit.
 - Binding `span_equal` compares a selected value's offsets with the cited
   receipt's offset field, independently of quoted text equality.
