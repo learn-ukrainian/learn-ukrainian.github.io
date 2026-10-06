@@ -1,0 +1,39 @@
+{
+  "boundary": [
+    "agents_extensions/shared/hooks/shell_redirects.py",
+    "agents_extensions/shared/hooks/shell_shlex.py"
+  ],
+  "pinned_size_at_creation": 6,
+  "sites": [
+    {
+      "enclosing_symbol": "_sibling_git_invocation",
+      "path": "agents_extensions/shared/hooks/guard-primary-checkout-write.py",
+      "site_identity": "shlex.split"
+    },
+    {
+      "enclosing_symbol": "_tokenize",
+      "path": "agents_extensions/shared/hooks/guard-primary-checkout-write.py",
+      "site_identity": "shlex.shlex"
+    },
+    {
+      "enclosing_symbol": "main",
+      "path": "agents_extensions/shared/hooks/guard-primary-checkout-write.py",
+      "site_identity": "shlex.split"
+    },
+    {
+      "enclosing_symbol": "invokes_gh",
+      "path": "agents_extensions/shared/hooks/guard-public-github-text.py",
+      "site_identity": "shlex.shlex"
+    },
+    {
+      "enclosing_symbol": "_shell_script.decode",
+      "path": "agents_extensions/shared/hooks/guard-secret-print.py",
+      "site_identity": "shlex.split"
+    },
+    {
+      "enclosing_symbol": "_is_git_command",
+      "path": "agents_extensions/shared/hooks/heal-core-bare.py",
+      "site_identity": "shlex.split"
+    }
+  ]
+}
