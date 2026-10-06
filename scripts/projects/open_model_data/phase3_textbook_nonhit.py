@@ -25,7 +25,6 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -310,7 +309,7 @@ def _metadata_index(
     db_sha256 = sha256_file(sources_db)
     receipt_hash = source_freeze.get("input_sha256", {}).get("sources_db")
     require(receipt_hash == db_sha256, "sources database does not match source freeze")
-    connection = _open_readonly(sources_db.resolve())
+    connection = sqlite3.connect(sources_db.resolve().as_uri() + "?mode=ro", uri=True)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only=ON")
     try:

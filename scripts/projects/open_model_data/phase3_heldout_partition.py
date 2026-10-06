@@ -29,8 +29,6 @@ from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_near_duplicate as near
 from scripts.projects.open_model_data import phase3_source_universe as freeze_mod
@@ -258,9 +256,9 @@ def parse_ua_gec_partition(partition: str) -> tuple[str, str]:
     return layer, split
 
 
-def _connect_sources(path: Path) -> SQLiteConnection:
+def _connect_sources(path: Path) -> sqlite3.Connection:
     require(path.is_file() and path.stat().st_size > 0, f"missing sources DB: {path}")
-    connection = _open_readonly(path.resolve())
+    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only=ON")
     return connection

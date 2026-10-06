@@ -1883,6 +1883,16 @@
     ]
   },
   {
+    "path": "scripts/projects/open_model_data/admit_existing_corpus.py",
+    "reference_count": 2,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "implementation hash pinned by custody receipt build_phase3_p4_pilot.py; migrate only with a receipt rebinding by the open-model-data lane",
+    "calls": [
+      "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)"
+    ]
+  },
+  {
     "path": "scripts/projects/open_model_data/build_decolonization_cases.py",
     "reference_count": 1,
     "kind": "reader_pending_migration_9662",
@@ -1904,6 +1914,16 @@
     ]
   },
   {
+    "path": "scripts/projects/open_model_data/phase3_heldout_partition.py",
+    "reference_count": 2,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "implementation hash pinned by custody receipt phase3_v2_compatibility.py; migrate only with a receipt rebinding by the open-model-data lane",
+    "calls": [
+      "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)"
+    ]
+  },
+  {
     "path": "scripts/projects/open_model_data/phase3_saint_sophia_db_reconciliation.py",
     "reference_count": 5,
     "kind": "writer",
@@ -1916,12 +1936,24 @@
     ]
   },
   {
-    "path": "scripts/projects/open_model_data/phase3_textbook_nonhit.py",
-    "reference_count": 2,
+    "path": "scripts/projects/open_model_data/phase3_source_universe.py",
+    "reference_count": 6,
     "kind": "reader_pending_migration_9662",
     "target_db": null,
-    "reason": "SQLite reader migrated; dynamic import_module remains a structural constructor-escape finding for #9662.",
-    "calls": []
+    "reason": "implementation hash pinned by custody receipt phase3_v2_compatibility.py; migrate only with a receipt rebinding by the open-model-data lane",
+    "calls": [
+      "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)"
+    ]
+  },
+  {
+    "path": "scripts/projects/open_model_data/phase3_textbook_nonhit.py",
+    "reference_count": 3,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "implementation hash pinned by custody receipt phase3_v2_compatibility.py; migrate only with a receipt rebinding by the open-model-data lane",
+    "calls": [
+      "sqlite3.connect(sources_db.resolve().as_uri() + '?mode=ro', uri=True)"
+    ]
   },
   {
     "path": "scripts/projects/open_model_data/phase3_vspu_db_cutover.py",

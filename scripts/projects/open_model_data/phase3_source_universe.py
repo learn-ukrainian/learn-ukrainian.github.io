@@ -22,8 +22,6 @@ from pathlib import Path
 from types import ModuleType
 from typing import Any
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -170,9 +168,9 @@ def _safe_name(value: str) -> str:
     return f'"{value}"'
 
 
-def _connect(path: Path) -> SQLiteConnection:
+def _connect(path: Path) -> sqlite3.Connection:
     require(path.is_file() and path.stat().st_size > 0, f"missing SQLite input: {path}")
-    connection = _open_readonly(path.resolve())
+    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only=ON")
     return connection
@@ -236,7 +234,7 @@ def _expected_count(family: Mapping[str, Any]) -> int | None:
 
 
 def _database_units(
-    connection: SQLiteConnection, table: str, family_id: str, family: Mapping[str, Any], input_hash: str
+    connection: sqlite3.Connection, table: str, family_id: str, family: Mapping[str, Any], input_hash: str
 ) -> Iterable[dict[str, Any]]:
     columns = [row[1] for row in connection.execute(f"PRAGMA table_info({_safe_name(table)})")]
     require(columns, f"missing table for {family_id}: {table}")
@@ -265,7 +263,7 @@ def _database_units(
 
 
 def _antonenko_textbook_units(
-    connection: SQLiteConnection, family: Mapping[str, Any], input_hash: str
+    connection: sqlite3.Connection, family: Mapping[str, Any], input_hash: str
 ) -> Iterable[dict[str, Any]]:
     table = "textbooks"
     columns = {row[1] for row in connection.execute(f"PRAGMA table_info({_safe_name(table)})")}
@@ -556,7 +554,7 @@ def _pdf_units(
 
 
 def _other_normative_units(
-    connection: SQLiteConnection, family: Mapping[str, Any], input_hash: str
+    connection: sqlite3.Connection, family: Mapping[str, Any], input_hash: str
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     tables = [row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")]
     candidates = [name for name in tables if NORMATIVE_TABLE.search(name) and name != "style_guide"]
@@ -734,7 +732,7 @@ def freeze(
     families = _expected_families(contract)
     source_hash, vesum_hash = sha256_file(sources_db), sha256_file(vesum_db)
     source = _connect(sources_db)
-    vesum: SQLiteConnection | None = None
+    vesum: sqlite3.Connection | None = None
     try:
         vesum = _connect(vesum_db)
         staged: list[tuple[Path, Path]] = []
