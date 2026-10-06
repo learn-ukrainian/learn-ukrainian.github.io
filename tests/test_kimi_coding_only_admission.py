@@ -501,6 +501,86 @@ def test_finalize_fails_closed_when_the_base_is_unknown(kimi_worktree):
     assert message and "could not be read" in message
 
 
+# #9878: every finalize read failure names its cause, redacted.
+_FAKE_TOKEN = "ghp_" + "Z9yX8wV7uT6sR5qP4oN3mL2kJ1iH0gF9eD8c"
+
+
+def test_an_unresolved_merge_base_refusal_names_the_git_error(kimi_worktree):
+    message = delegate._kimi_diff_refusal(kimi_worktree, "origin/missing", "kimi", base_sha="0" * 40)
+    assert _TOKEN in message
+    assert "no merge base with 'origin/missing'" in message
+    assert f"recorded base commit {'0' * 40}" in message
+    assert "git merge-base origin/missing HEAD failed (exit 128)" in message
+    assert "origin/missing" in message.rsplit("HEAD failed", 1)[1]  # git's own stderr names the ref
+
+
+def test_a_merge_base_without_common_ancestor_says_so(kimi_worktree):
+    _git(kimi_worktree, "checkout", "--orphan", "unrelated")
+    _git(kimi_worktree, "commit", "-m", "unrelated root")
+    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert "git merge-base base HEAD failed (exit 1): no common ancestor" in message
+
+
+@pytest.mark.parametrize(
+    ("subcommand", "shown"),
+    [
+        ("rev-parse", "git rev-parse --path-format=absolute --git-path index failed (exit 128)"),
+        ("add", "git add -A --intent-to-add failed (exit 128)"),
+        ("diff", "git diff --name-status -z --no-renames"),
+    ],
+)
+def test_a_failing_git_step_refusal_names_the_command_and_its_redacted_stderr(
+    kimi_worktree, monkeypatch, subcommand, shown
+):
+    real_run = delegate.subprocess.run
+
+    def run(cmd, *args, **kwargs):
+        if list(cmd[:2]) == ["git", subcommand] and (subcommand != "rev-parse" or "--git-path" in cmd):
+            return subprocess.CompletedProcess(cmd, 128, "", f"fatal: cannot read token={_FAKE_TOKEN}\n")
+        return real_run(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert _TOKEN in message and "could not be read for Ukrainian content" in message
+    assert shown in message and "fatal: cannot read" in message
+    assert _FAKE_TOKEN not in message
+
+
+def test_a_temporary_index_failure_refusal_names_the_exception(kimi_worktree, tmp_path, monkeypatch):
+    """The #9878 symptom: the process's cached temp root is gone when the scratch index is created."""
+    monkeypatch.setattr(delegate.tempfile, "tempdir", str(tmp_path / "reaped-root"))
+    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert "creating the temporary index raised FileNotFoundError" in message
+    assert "reaped-root" in message
+
+
+def test_a_git_timeout_refusal_names_the_step(kimi_worktree, monkeypatch):
+    real_run = delegate.subprocess.run
+
+    def run(cmd, *args, **kwargs):
+        if list(cmd[:2]) == ["git", "add"]:
+            raise subprocess.TimeoutExpired(cmd, 60)
+        return real_run(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert "git add -A --intent-to-add raised TimeoutExpired" in message
+
+
+def test_a_change_reading_failure_refusal_names_the_exception(kimi_worktree, monkeypatch):
+    from scripts.agent_runtime import kimi_boundary
+
+    (kimi_worktree / "Button.tsx").write_text("export const Button = () => null;\n", encoding="utf-8")
+
+    def unreadable(*_args, **_kwargs):
+        raise OSError(f"disk gone token={_FAKE_TOKEN}")
+
+    monkeypatch.setattr(kimi_boundary, "changes", unreadable)
+    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert "reading the changed files raised OSError: disk gone" in message
+    assert _FAKE_TOKEN not in message
+
+
 # --- the gate ------------------------------------------------------------------------
 
 
