@@ -1975,7 +1975,7 @@ def test_actual_closeout_init_accepts_equivalent_checkbox_forms(tmp_path, monkey
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", lambda self, repo, number: {
         "body": line, "parent_epic": 10, "parent_repository": "org/repo",
     })
-    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10])
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent",
                         lambda self, repo, number: {"number": 10, "repository": repo})
     args = task_closeout.build_parser().parse_args([
@@ -2170,12 +2170,50 @@ def test_9794_live_ancestry_requires_typed_repository_and_registry(repository, e
 
 def _9794_body_report():
     return {
+        "repository": "org/repo",
         "generated_at": time.time(), "membership_complete": True,
         "incomplete_nodes": [], "warnings": [],
         "effective_membership": {
             "42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True},
         },
     }
+
+
+@pytest.mark.parametrize(
+    "evidence_repository,valid,reason",
+    [
+        ("other/repo", False, "does not match"),
+        (None, False, "missing or malformed"),
+        ("", False, "missing or malformed"),
+        ("repo", False, "missing or malformed"),
+        (42, False, "missing or malformed"),
+        ("ORG/Repo", True, None),
+        ("org/repo", True, None),
+    ],
+)
+def test_9852_body_evidence_requires_identity_repository(evidence_repository, valid, reason):
+    report = _9794_body_report()
+    if evidence_repository is not None:
+        report["repository"] = evidence_repository
+    else:
+        report.pop("repository")
+    result = task_lifecycle.resolve_live_ancestry(
+        repository="org/repo", issue_number=42, stream_epic=10,
+        registered_epics=[10], read_parent=lambda repo, number: None,
+        membership_report=report,
+    )
+    assert result["valid"] is valid
+    if valid:
+        assert result["method"] == "body"
+    else:
+        assert reason in result["reason"]
+        assert result["method"] is None
+
+
+def test_9852_repository_evidence_refuses_malformed_task_identity():
+    assert task_lifecycle.repository_evidence_refusal(
+        "repo", "org/repo", source="audit"
+    ) == "task repository identity is malformed"
 
 
 def test_9794_live_null_target_accepts_exact_body_evidence():
