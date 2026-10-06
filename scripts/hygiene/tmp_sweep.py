@@ -63,8 +63,8 @@ from scripts.hygiene.tmp_sweep_ledger import (
     new_id,
     new_run_id,
     parse_iso,
-    surviving_mismatches,
     sync_directory,
+    unproven_nodes,
     utc_iso,
     validate_state_dir,
 )
@@ -581,6 +581,22 @@ def _sync_rename(src_dir_fd: int, dst_dir_fd: int) -> None:
     sync_directory(dst_dir_fd)
 
 
+def _resync_entry(entry: Entry) -> None:
+    """Re-run the directory syncs of every step an entry can take, in rename order (``DurabilityError`` on failure).
+
+    Quarantine, return and restore rename between the quarantine directory
+    and the original's directory, and a purge removes from the quarantine
+    directory, so syncing both covers each of them. A step that stopped at
+    its sync is indistinguishable from one that finished it, so
+    reconciliation calls this before every record that confirms a step;
+    repeating a completed sync is harmless. A quarantine directory that is
+    gone holds nothing left to persist.
+    """
+    if os.path.lexists(entry.location.parent):
+        sync_directory(entry.location.parent)
+    sync_directory(entry.original.parent)
+
+
 def _rename_path(src: Path, dst: Path) -> None:
     """``rename_noreplace`` between two absolute paths, through descriptors of their parent directories.
 
@@ -659,7 +675,8 @@ def reconcile_ledger(
     now) or did not (``restore_failed``). An interrupted purge whose entry is
     gone is ``purged``; one still present is left to the purge pass. A
     retained entry that vanished is ``missing``, or ``at_origin`` when its
-    rename was lost. Dry runs only report.
+    rename was lost. Both directories are re-synced (``_resync_entry``)
+    before any record that confirms a step. Dry runs only report.
     """
     rows: list[dict[str, Any]] = []
     errors = 0
@@ -674,11 +691,13 @@ def reconcile_ledger(
             rows.append(_entry_row(entry, "preserve", "ledger_location_unknown"))
             errors += 1
             continue
-        if held and entry.state in {"quarantined", "purging"}:
+        if held and entry.state in {"quarantined", "purging", "purge_kept_ambiguous"}:
             continue  # the purge pass owns retained entries
         if not apply:
             rows.append(_entry_row(entry, "preserve", "ledger_unreconciled", state=entry.state))
             continue
+        # The step may have stopped at one of these syncs; nothing is confirmed before they all succeed.
+        _resync_entry(entry)
         if not held:
             if entry.state == "restoring" and at_origin:
                 ledger.append(
@@ -868,8 +887,8 @@ def purge_problem(entry: Entry, task_root: Path) -> str | None:
     location: a complete task inventory naming neither path, a complete
     process scan with no holder, the tree's safety facts, then the write
     check: no change after the entry was confirmed and a manifest equal to
-    the recorded one. An interrupted purge (``purging``) may have lost part
-    of its tree, so ``purge_retry_problem`` checks what survives instead.
+    the recorded one. An interrupted purge (``purging``) is retried only
+    when ``purge_retry_problem`` proves its tree untouched.
     """
     location = entry.location
     inventory = load_tasks(task_root)
@@ -899,20 +918,21 @@ def purge_problem(entry: Entry, task_root: Path) -> str | None:
 
 
 def purge_retry_problem(entry: Entry, confirmed: float) -> str | None:
-    """Re-prove what an interrupted purge left; ``purge_retry_changed`` when anything survives that it did not record.
+    """Re-prove an interrupted purge's tree; ``purge_kept_ambiguous`` unless every node is provably as recorded.
 
-    Every surviving node must be in the recorded manifest, equal to it and
-    unchanged since the ``quarantined`` record (``surviving_mismatches``); a
-    node may be missing, because the interrupted deletion removed it. A new,
-    changed or rewritten node, or a tree that cannot be read, keeps the whole
-    entry.
+    Every recorded node must still exist, equal to its record and unchanged
+    since the ``quarantined`` record, with nothing new (``unproven_nodes``):
+    the purge stopped before deleting anything. Once it deleted part of the
+    tree, the survivors' directories changed, and that cannot be told apart
+    from someone else's change, so the survivors are kept rather than
+    deleted on a guess, as is a tree that cannot be read.
     """
     try:
         current = build_manifest(entry.location, digest_limit=entry.intent["digest_limit_bytes"], ctime=True)
     except OSError:
-        return "purge_retry_changed"
-    if surviving_mismatches(entry.intent["manifest"], current["manifest"], changed_by=confirmed):
-        return "purge_retry_changed"
+        return "purge_kept_ambiguous"
+    if unproven_nodes(entry.intent["manifest"], current["manifest"], changed_by=confirmed):
+        return "purge_kept_ambiguous"
     return None
 
 
@@ -931,12 +951,17 @@ def purge_quarantine(
 
     Each deletion is bracketed by a ``purge`` record before it and a
     ``purged`` record after it, written once the quarantine directory is
-    synced. Entries inside the window get no row.
+    synced. An interrupted purge whose tree cannot be proven untouched gets
+    a ``purge_kept_ambiguous`` record and is never purged automatically; it
+    stays in quarantine and counts as an error every run until a person
+    restores or removes it. Entries inside the window get no row.
     """
     rows: list[dict[str, Any]] = []
     errors = 0
     for entry in sorted(entries.values(), key=lambda item: item.quarantined_at):
-        if entry.state not in {"quarantined", "purging"} or now < entry.quarantined_at + quarantine_s:
+        if entry.state not in {"quarantined", "purging", "purge_kept_ambiguous"}:
+            continue
+        if now < entry.quarantined_at + quarantine_s:
             continue
         identity = entry.intent["identity"]
         try:
@@ -944,11 +969,19 @@ def purge_quarantine(
                 continue  # reconciliation reports it
         except OSError:
             continue
+        if entry.state == "purge_kept_ambiguous":
+            rows.append(_entry_row(entry, "preserve", "purge_kept_ambiguous"))
+            errors += 1
+            continue
         reason = purge_problem(entry, task_root)
+        if reason == "purge_kept_ambiguous":
+            if apply:
+                ledger.append(_event(entry.ledger_id, run_id, "purge_kept_ambiguous"))
+            rows.append(_entry_row(entry, "preserve", reason))
+            errors += 1
+            continue
         if reason:
             rows.append(_entry_row(entry, "preserve", reason))
-            # A half-deleted entry whose survivors changed needs a person: restore it or remove it by hand.
-            errors += reason == "purge_retry_changed"
             continue
         if not apply:
             rows.append(_entry_row(entry, "would_purge", "quarantine_expired"))
@@ -982,6 +1015,7 @@ def _quarantine_totals(entries: dict[str, Entry], root: Path) -> dict[str, int]:
     return {
         "quarantine_held_entries": len(held),
         "quarantine_held_bytes": sum(entry.intent.get("allocated_bytes") or 0 for entry in held),
+        "quarantine_kept_ambiguous_entries": sum(entry.state == "purge_kept_ambiguous" for entry in held),
     }
 
 
@@ -1206,9 +1240,10 @@ def restore(ledger: Ledger, entry_id: str) -> dict[str, Any]:
     sweep holds the ledger. The ``restore`` record precedes the rename; the
     ``restored`` record, written once both directories are synced, carries
     the manifest verification. An unknown id is refused before the lock, so
-    it never creates the ledger directory. A ``purging`` entry (a purge that
-    stopped part-way) can be restored too: what survives comes back, and the
-    verification lists what is missing.
+    it never creates the ledger directory. A ``purging`` or
+    ``purge_kept_ambiguous`` entry (a purge that stopped part-way) can be
+    restored too: what survives comes back, and the verification lists what
+    is missing or changed.
     """
     if entry_id not in ledger.entries()[0]:
         raise KeyError(entry_id)
@@ -1216,7 +1251,7 @@ def restore(ledger: Ledger, entry_id: str) -> dict[str, Any]:
         entries, _ = ledger.entries()
         entry = entries[entry_id]
         result: dict[str, Any] = {"ledger_id": entry_id, "original_path": str(entry.original), "restored": False}
-        if entry.state not in {"pending", "quarantined", "return_blocked", "purging"}:
+        if entry.state not in {"pending", "quarantined", "return_blocked", "purging", "purge_kept_ambiguous"}:
             return result | {"reason": f"state_{entry.state}"}
         if not _identity_at(entry.location, entry.intent["identity"]):
             return result | {"reason": "quarantine_location_missing"}
@@ -1494,8 +1529,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Outputs: stdout inventory (or --summary counts) with ledger location, quarantine and purge totals; "
             "with --apply, appends to the ledger, moves proven entries into quarantine and deletes only "
             "expired, re-verified quarantined entries.\n"
-            "Exit codes: 0 inventory complete; 1 scan/quarantine/purge errors or ledger unavailable; "
-            "2 invalid arguments.\n"
+            "Exit codes: 0 inventory complete; 1 scan/quarantine/purge errors (including entries kept as "
+            "purge_kept_ambiguous until restored or removed by hand) or ledger unavailable; 2 invalid arguments.\n"
             "Related: #8755, #9737, #9887; docs/runbooks/tmp-retention.md; scripts.hygiene.retention_engine; "
             "scripts.hygiene.tmp_sweep_ledger; packaging/systemd/learn-ukrainian-tmp-sweep.*."
         ),

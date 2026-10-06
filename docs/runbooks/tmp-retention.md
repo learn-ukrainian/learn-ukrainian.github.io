@@ -208,12 +208,21 @@ before the rename. It holds:
 Every later step appends a short record with the same `ledger_id`:
 `quarantined` (re-verified after the rename, retained), `returned` (the
 re-check found something; renamed back), `return_blocked`,
-`quarantine_failed`, `purge` then `purged` (or `purge_failed`), `restore`
-then `restored` (or `restore_failed`), and `reconciled` with an `outcome`.
+`quarantine_failed`, `purge` then `purged` (or `purge_failed`),
+`purge_kept_ambiguous`, `restore` then `restored` (or `restore_failed`), and
+`reconciled` with an `outcome`.
 
 **Reconciliation after a crash.** At the start of each apply run, every
 entry whose last record leaves its location open is resolved by where its
-inode actually is, and the result is appended:
+inode actually is, and the result is appended. A step that stopped at a
+directory sync looks exactly like one that finished, so before any record
+that confirms a step the run syncs both directories involved again (the
+quarantine directory, if it still exists, then the original's directory);
+a failed sync stops the run with nothing recorded. Likewise the first record
+of every run or restore is preceded by syncing the ledger directory and the
+parent of each of its ancestors owned by this user on the same filesystem,
+so a directory created by an earlier run whose sync failed is made durable
+before anything is written into it.
 
 - `quarantine` record but the inode is still at its original path: the
   rename never happened, `reconciled` / `at_origin`.
@@ -245,15 +254,31 @@ pass the manifest check on size and mtime; together with the change-time
 check that is the purge's evidence for them.
 
 A purge that stopped part-way (`purge_failed`, or a crash after the `purge`
-record) is retried under the same holder and task checks, but its tree may
-already have lost nodes. The retry therefore checks what survives: every
-remaining node must be in the manifest, equal to its record and have no
-change time after the `quarantined` record. A node may be missing, because
-the interrupted deletion removed it; a directory that lost a child is
-compared by type and mode only, because that removal set its mtime. Any new,
-changed or rewritten node keeps the whole entry as `purge_retry_changed`,
-which counts as an error until someone restores it (`restore` accepts such
-an entry and lists what is missing) or removes it by hand.
+record) is retried under the same holder and task checks, and only if its
+tree is provably untouched: every recorded node still present, equal to its
+record, with no change time after the `quarantined` record, and nothing new.
+That holds when the purge failed before deleting anything. Once it deleted
+part of the tree, the directories that lost children changed, and the sweep
+does not try to tell that change from anyone else's (an extended attribute,
+say, is not recorded). The safe default wins: the survivors are kept, never
+deleted on a guess.
+
+**`purge_kept_ambiguous`.** Such an entry (also one whose tree cannot be
+read) gets a `purge_kept_ambiguous` record and stays in quarantine with that
+state. It is never purged automatically. Every apply run lists it as
+`purge_kept_ambiguous`, counts it in `errors` (exit 1) and in
+`quarantine_kept_ambiguous_entries`, until a person disposes of it, in
+either of two ways:
+
+1. Restore it (preferred): `.venv/bin/python -m scripts.hygiene.tmp_sweep
+   restore <ledger-id>` renames what survives back to the original path; the
+   result reports `mismatch` and lists what is missing or changed (exit 1 is
+   expected here). Inspect it there. Anything left becomes an ordinary
+   candidate again, and a later run quarantines it with a fresh manifest and
+   purges it after the window.
+2. Remove it by hand, after inspecting it: delete the `quarantine_path`
+   shown by `tmp_sweep quarantine`. The next apply run records the entry as
+   `reconciled` / `missing`.
 
 **Restore.** `restore <ledger-id>` works for a retained entry. It refuses if
 anything exists at the original path, then renames the entry back with
@@ -274,7 +299,8 @@ A refused or failed restore also exits 1; an unknown ledger id exits 2.
 **Report fields.** `ledger_path`, `quarantined_entries` and
 `bytes_quarantined` (this run), `quarantine_held_entries` and
 `quarantine_held_bytes` (all retained entries for this temp root),
-`purgeable_entries` and `bytes_purgeable` (dry run), `purged_entries` and
+`quarantine_kept_ambiguous_entries` (retained entries waiting for a person,
+see above), `purgeable_entries` and `bytes_purgeable` (dry run), `purged_entries` and
 `bytes_reclaimed` (bytes actually freed this run). `projected_free_bytes`
 is free space plus `bytes_purgeable`: a newly quarantined entry frees nothing
 until its purge.

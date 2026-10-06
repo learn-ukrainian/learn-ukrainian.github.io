@@ -47,13 +47,14 @@ EVENT_STATES = {
     "purge": "purging",
     "purge_failed": "purging",
     "purged": "purged",
+    "purge_kept_ambiguous": "purge_kept_ambiguous",
     "restore": "restoring",
     "restored": "restored",
 }
 RECONCILE_OUTCOMES = frozenset({"at_origin", "returned", "return_blocked", "missing", "purged"})
 TERMINAL_STATES = frozenset({"at_origin", "returned", "missing", "purged", "restored"})
 # States whose entry should still sit in its quarantine location.
-HELD_STATES = frozenset({"pending", "quarantined", "return_blocked", "purging", "restoring"})
+HELD_STATES = frozenset({"pending", "quarantined", "return_blocked", "purging", "purge_kept_ambiguous", "restoring"})
 _FILE_FLAGS = os.O_NOFOLLOW | os.O_CLOEXEC
 
 
@@ -152,9 +153,20 @@ class Ledger:
     def __init__(self, directory: Path) -> None:
         self.directory = directory
         self.path = directory / LEDGER_NAME
+        self._synced = False
 
     def ensure_directory(self) -> None:
-        """Create the directory (owner-only) and any missing ancestor, syncing each new entry's parent."""
+        """Create the directory (owner-only) and any missing ancestor; sync the chain before the first record.
+
+        A created directory survives power loss only once its parent is
+        synced. A run that failed or crashed before that sync leaves
+        directories that exist but may not be durable, and a later run cannot
+        tell them from durable ones. So each ``Ledger`` re-runs every sync its
+        directory could need, idempotently, before its first record and after
+        any creation: the ledger directory itself (for the ledger file's
+        entry), then the parent of each ancestor this user owns (the only ones
+        it can have created) on the same filesystem.
+        """
         try:
             missing = []
             directory = self.directory
@@ -165,13 +177,27 @@ class Ledger:
                 # Ancestors take the default mode, as ``mkdir -p`` would; the ledger directory is 0700.
                 with contextlib.suppress(FileExistsError):
                     os.mkdir(created, 0o700 if created == self.directory else 0o777)
-                # Synced even when a concurrent writer won the race: its sync may not have happened yet.
-                sync_directory(created.parent)
             info = os.lstat(self.directory)
+            chain = self._sync_chain() if missing or not self._synced else []
         except OSError as error:
             raise LedgerError(f"ledger directory unavailable: {error.strerror}") from error
         if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid():
             raise LedgerError("ledger directory is not a directory owned by this user")
+        for directory in chain:
+            sync_directory(directory)
+        self._synced = True
+
+    def _sync_chain(self) -> list[Path]:
+        """The ledger directory, then each parent of an owned, same-filesystem ancestor, bottom up."""
+        node = Path(os.path.abspath(self.directory))
+        chain = [node]
+        while node != node.parent:
+            info, parent = os.lstat(node), os.lstat(node.parent)
+            if info.st_uid != os.getuid() or info.st_dev != parent.st_dev:
+                break
+            node = node.parent
+            chain.append(node)
+        return chain
 
     @contextlib.contextmanager
     def exclusive(self, *, wait: bool) -> Iterator[None]:
@@ -220,7 +246,9 @@ class Ledger:
         finally:
             os.close(fd)
         if created:
+            self._synced = False  # a failed sync here is re-run before this ledger's next record
             sync_directory(self.directory)
+            self._synced = True
         return record
 
     def read(self) -> tuple[list[dict[str, Any]], int]:
@@ -368,33 +396,15 @@ def digest_unverified(recorded: list[dict[str, Any]], mismatches: list[str]) -> 
     return [item["path"] for item in recorded if item.get("digest_skipped_size") and item["path"] not in changed]
 
 
-def _parent(relative: str) -> str:
-    return relative.rsplit("/", 1)[0] if "/" in relative else "."
+def unproven_nodes(recorded: list[dict[str, Any]], current: list[dict[str, Any]], *, changed_by: float) -> list[str]:
+    """Nodes not provably as recorded: missing, new, different, or changed after ``changed_by`` (epoch seconds).
 
-
-def surviving_mismatches(
-    recorded: list[dict[str, Any]], current: list[dict[str, Any]], *, changed_by: float
-) -> list[str]:
-    """Nodes an interrupted deletion left that are new, changed, or changed after ``changed_by`` (epoch seconds).
-
-    ``current`` comes from ``build_manifest(..., ctime=True)``. A recorded node
-    may be missing: the deletion already removed it. Removing a child sets its
-    directory's mtime and ctime, so a directory that lost a recorded child is
-    compared by type and mode only; any other surviving node must equal its
-    record exactly and have no ctime after ``changed_by``.
+    ``current`` comes from ``build_manifest(..., ctime=True)``. A deletion
+    that stopped part-way removed nodes and so changed their directories;
+    no attempt is made to tell those changes from any other, so such a tree
+    is never proven and its survivors are kept.
     """
-    before = {item["path"]: item for item in recorded}
-    after = {item["path"]: item for item in current}
-    emptied = {_parent(path) for path in before.keys() - after.keys()}
-    unexpected = []
-    for path, item in after.items():
-        node = {key: value for key, value in item.items() if key != "ctime_ns"}
-        old = before.get(path)
-        if old is None:
-            unexpected.append(path)
-        elif path in emptied and node["type"] == "directory":
-            if node | {"mtime_ns": None} != old | {"mtime_ns": None}:
-                unexpected.append(path)
-        elif node != old or item["ctime_ns"] / 1e9 > changed_by:
-            unexpected.append(path)
-    return sorted(unexpected)
+    after = {item["path"]: item["ctime_ns"] for item in current}
+    stripped = [{key: value for key, value in item.items() if key != "ctime_ns"} for item in current]
+    late = {path for path, ctime_ns in after.items() if ctime_ns / 1e9 > changed_by}
+    return sorted(set(manifest_mismatches(recorded, stripped)) | late)

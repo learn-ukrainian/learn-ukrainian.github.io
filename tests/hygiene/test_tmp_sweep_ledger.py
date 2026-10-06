@@ -434,6 +434,14 @@ def _interrupt_purge(box, monkeypatch, reaper):
     return held
 
 
+def test_purge_retry_after_failure_before_deletion_purges_an_untouched_tree(box, monkeypatch):
+    held = _interrupt_purge(box, monkeypatch, _fail_reap)
+    report = box.run(apply=True)
+    events = [r["event"] for r in box.records() if r["ledger_id"] == held.ledger_id]
+    assert report["purged_entries"] == 1 and report["errors"] == 0 and not held.location.exists()
+    assert events[-4:] == ["purge", "purge_failed", "purge", "purged"]
+
+
 @pytest.mark.parametrize("change", ["rewritten", "added"])
 def test_purge_retry_after_failure_before_deletion_refuses_changed_contents(box, monkeypatch, capsys, change):
     held = _interrupt_purge(box, monkeypatch, _fail_reap)
@@ -443,9 +451,9 @@ def test_purge_retry_after_failure_before_deletion_refuses_changed_contents(box,
         (held.location / "deep" / "newcomer").write_bytes(b"not in the manifest")
     report = box.run(apply=True)
     row = next(r for r in report["rows"] if r.get("ledger_id") == held.ledger_id)
-    assert (row["decision"], row["reason"], report["errors"]) == ("preserve", "purge_retry_changed", 1)
-    assert [r["event"] for r in box.records()][-2:] == ["purge", "purge_failed"]
-    assert box.entries()[held.ledger_id].state == "purging"
+    assert (row["decision"], row["reason"], report["errors"]) == ("preserve", "purge_kept_ambiguous", 1)
+    assert [r["event"] for r in box.records()][-3:] == ["purge", "purge_failed", "purge_kept_ambiguous"]
+    assert box.entries()[held.ledger_id].state == "purge_kept_ambiguous"
     # The refused entry can still go back to its path; the verification shows what differs.
     assert sweep.main(["restore", held.ledger_id]) == 1
     result = json.loads(capsys.readouterr().out)
@@ -455,23 +463,77 @@ def test_purge_retry_after_failure_before_deletion_refuses_changed_contents(box,
 
 
 @pytest.mark.parametrize("change", [None, "rewritten", "added"])
-def test_purge_retry_after_partial_deletion_checks_every_survivor(box, monkeypatch, change):
+def test_purge_retry_after_partial_deletion_keeps_the_survivors(box, monkeypatch, capsys, change):
+    """A deletion that stopped part-way changed the survivors' directories, so nothing left is deleted on a guess."""
     held = _interrupt_purge(box, monkeypatch, _partial_reap)
     assert not (held.location / "deep" / "payload").exists() and (held.location / "run.sh").exists()
     if change == "rewritten":
         (held.location / "run.sh").write_bytes(b"#!/bin/sh\necho changed\n")
     elif change == "added":
-        # "deep" lost a child to the deletion, so only its type and mode are compared; a new child still shows.
         (held.location / "deep" / "newcomer").write_bytes(b"not in the manifest")
     report = box.run(apply=True)
+    row = next(r for r in report["rows"] if r.get("ledger_id") == held.ledger_id)
+    assert (row["decision"], row["reason"], report["errors"]) == ("preserve", "purge_kept_ambiguous", 1)
+    assert report["purged_entries"] == 0 and report["quarantine_kept_ambiguous_entries"] == 1
     events = [r["event"] for r in box.records() if r["ledger_id"] == held.ledger_id]
-    if change is None:
-        assert report["purged_entries"] == 1 and report["errors"] == 0 and not held.location.exists()
-        assert events[-4:] == ["purge", "purge_failed", "purge", "purged"]
-    else:
-        row = next(r for r in report["rows"] if r.get("ledger_id") == held.ledger_id)
-        assert row["reason"] == "purge_retry_changed" and report["errors"] == 1
-        assert events[-1] == "purge_failed" and held.location.is_dir()
+    assert events[-3:] == ["purge", "purge_failed", "purge_kept_ambiguous"]
+    assert (held.location / "run.sh").exists() and (held.location / "deep").is_dir()
+    # Later runs keep it, report it and count it, without another record, until a person disposes of it.
+    box.at(30)
+    later = box.run(apply=True)
+    row = next(r for r in later["rows"] if r.get("ledger_id") == held.ledger_id)
+    assert (row["reason"], later["errors"], later["quarantine_kept_ambiguous_entries"]) == (
+        "purge_kept_ambiguous",
+        1,
+        1,
+    )
+    assert sweep.summarize(later)["by_reason"]["purge_kept_ambiguous"] == 1
+    assert [r["event"] for r in box.records() if r["ledger_id"] == held.ledger_id] == events
+    # Disposal: restore brings the survivors back, and the verification names what is missing or changed.
+    assert sweep.main(["restore", held.ledger_id]) == 1
+    result = json.loads(capsys.readouterr().out)
+    assert (result["restored"], result["verification"]) == (True, "mismatch")
+    assert "deep/payload" in result["mismatches"] and (held.original / "run.sh").exists()
+    assert box.entries()[held.ledger_id].state == "restored"
+
+
+def test_purge_kept_ambiguous_removed_by_hand_is_reconciled_missing(box, monkeypatch):
+    held = _interrupt_purge(box, monkeypatch, _partial_reap)
+    box.run(apply=True)
+    assert box.entries()[held.ledger_id].state == "purge_kept_ambiguous"
+    shutil.rmtree(held.location)
+    report = box.run(apply=True)
+    assert report["quarantine_kept_ambiguous_entries"] == 0 and report["errors"] == 0
+    last = box.records()[-1]
+    assert (last["ledger_id"], last["event"], last["outcome"]) == (held.ledger_id, "reconciled", "missing")
+
+
+def test_purge_retry_keeps_a_directory_whose_xattr_changed_after_partial_deletion(box, monkeypatch):
+    """The review probe: real clock, deletion stopped part-way, then a surviving directory's xattr is changed."""
+    monkeypatch.setattr(sweep, "time", time)
+    entry = box.tree()
+    os.utime(entry, (OLD, OLD))
+    time.sleep(0.05)
+    box.run(apply=True, scratch=sweep.ScratchPolicy(min_age_s=0.01, quiet_s=0.01))
+    held = only(box.entries())
+    real_reap = sweep.reap_attributed_temp
+    monkeypatch.setattr(sweep, "time", SimpleNamespace(time=lambda: time.time() + 8 * DAY))
+    monkeypatch.setattr(sweep, "reap_attributed_temp", _partial_reap)
+    box.run(apply=True)
+    assert box.entries()[held.ledger_id].state == "purging"
+    deep = held.location / "deep"
+    time.sleep(0.05)  # past the coarse kernel clock tick
+    os.setxattr(deep, "user.lu-probe", b"changed after confirmation")
+    assert deep.stat().st_ctime > held.confirmed_at
+    monkeypatch.setattr(sweep, "reap_attributed_temp", real_reap)
+    report = box.run(apply=True)
+    row = next(r for r in report["rows"] if r.get("ledger_id") == held.ledger_id)
+    assert (row["reason"], report["purged_entries"], report["quarantine_kept_ambiguous_entries"]) == (
+        "purge_kept_ambiguous",
+        0,
+        1,
+    )
+    assert deep.is_dir() and os.getxattr(deep, "user.lu-probe") == b"changed after confirmation"
 
 
 def test_purge_retry_refuses_a_survivor_written_after_confirmation(box, monkeypatch):
@@ -494,7 +556,7 @@ def test_purge_retry_refuses_a_survivor_written_after_confirmation(box, monkeypa
     os.utime(script, ns=(info.st_atime_ns, info.st_mtime_ns))
     monkeypatch.setattr(sweep, "reap_attributed_temp", real_reap)
     row = next(r for r in box.run(apply=True)["rows"] if r.get("ledger_id") == held.ledger_id)
-    assert row["reason"] == "purge_retry_changed" and script.exists()
+    assert row["reason"] == "purge_kept_ambiguous" and script.exists()
 
 
 @pytest.mark.parametrize("rewrite", [False, True])
@@ -557,17 +619,66 @@ def syncs(monkeypatch):
     return seen
 
 
+def state_chain(state: Path) -> list[str]:
+    """The ledger directory, then every directory holding an entry this user may have created, bottom up."""
+    chain = [state]
+    while chain[-1] != chain[-1].parent and chain[-1].lstat().st_uid == os.getuid():
+        if chain[-1].lstat().st_dev != chain[-1].parent.lstat().st_dev:
+            break
+        chain.append(chain[-1].parent)
+    return [str(path) for path in chain]
+
+
 def test_new_state_directories_are_synced_into_their_parents(tmp_path, syncs):
     state = tmp_path / "a" / "b" / "c"
     ledger_mod.Ledger(state).append({"event": "quarantine", "ledger_id": "x"})
-    assert syncs == [
-        str(tmp_path),
-        str(tmp_path / "a"),
-        str(tmp_path / "a" / "b"),
-        str(state / "ledger.jsonl"),
-        str(state),
-    ]
+    chain = state_chain(state)
+    assert chain[:4] == [str(state), str(tmp_path / "a" / "b"), str(tmp_path / "a"), str(tmp_path)]
+    assert syncs == [*chain, str(state / "ledger.jsonl"), str(state)]
     assert os.stat(state).st_mode & 0o777 == 0o700
+
+
+def test_failed_ancestor_sync_is_rerun_before_the_next_record(tmp_path, syncs, monkeypatch):
+    """A creation whose parent sync failed exists but may not be durable; the next ledger re-syncs it first."""
+    state = tmp_path / "a" / "b" / "c"
+    real_sync = ledger_mod.sync_directory
+
+    def failing(directory):
+        if directory == tmp_path / "a":
+            raise ledger_mod.DurabilityError("directory sync failed: Input/output error")
+        real_sync(directory)
+
+    monkeypatch.setattr(ledger_mod, "sync_directory", failing)
+    with pytest.raises(ledger_mod.DurabilityError):
+        ledger_mod.Ledger(state).append({"event": "quarantine", "ledger_id": "x"})
+    # "b" was created, but the sync that makes it durable in "a" failed.
+    assert (tmp_path / "a" / "b").is_dir() and not (state / "ledger.jsonl").exists()
+    monkeypatch.setattr(ledger_mod, "sync_directory", real_sync)
+    syncs.clear()
+    ledger_mod.Ledger(state).append({"event": "quarantine", "ledger_id": "x"})
+    assert syncs == [*state_chain(state), str(state / "ledger.jsonl"), str(state)]
+    assert str(tmp_path / "a") in syncs[: syncs.index(str(state / "ledger.jsonl"))]
+
+
+def test_failed_ancestor_sync_is_rerun_before_reconciliation_records(box, syncs, monkeypatch, isolated_state_home):
+    entry = box.tree()
+    real_sync = ledger_mod.sync_directory
+
+    def failing(directory):
+        if directory == isolated_state_home:
+            raise ledger_mod.DurabilityError("directory sync failed: Input/output error")
+        real_sync(directory)
+
+    monkeypatch.setattr(ledger_mod, "sync_directory", failing)
+    with pytest.raises(ledger_mod.DurabilityError):
+        box.run(apply=True)
+    assert box.state.parent.is_dir() and entry.exists() and not (box.state / "ledger.jsonl").exists()
+    monkeypatch.setattr(ledger_mod, "sync_directory", real_sync)
+    syncs.clear()
+    box.run(apply=True)
+    chain = state_chain(box.state)
+    assert chain[:3] == [str(box.state), str(box.state.parent), str(isolated_state_home)]
+    assert syncs[: len(chain)] == chain and str(box.state / "ledger.jsonl") not in syncs[: len(chain)]
 
 
 def test_quarantine_creation_and_renames_are_synced_before_they_are_recorded(
@@ -584,9 +695,10 @@ def test_quarantine_creation_and_renames_are_synced_before_they_are_recorded(
     box.run(apply=True)
     held = next(e for e in box.entries().values() if e.state == "quarantined")
     root, quarantine, ledger = str(box.root), str(held.location.parent), str(box.state / "ledger.jsonl")
+    chain = state_chain(box.state)
+    assert chain[1:3] == [str(isolated_state_home / "learn-ukrainian"), str(isolated_state_home)]
     assert syncs == [
-        str(isolated_state_home),  # learn-ukrainian/ created
-        str(isolated_state_home / "learn-ukrainian"),  # tmp-sweep/ created
+        *chain,  # the ledger directory and the parents of the ones created
         root,  # quarantine directory created
         ledger,  # "quarantine" record (creates the ledger file)
         str(box.state),
@@ -611,15 +723,73 @@ def test_restore_and_purge_are_synced_before_they_are_recorded(box, syncs, capsy
     box.run(apply=True)
     first, _second = sorted(box.entries().values(), key=lambda e: e.original.name)
     ledger, root, quarantine = str(box.state / "ledger.jsonl"), str(box.root), str(first.location.parent)
+    chain = state_chain(box.state)
     syncs.clear()
     assert sweep.main(["restore", first.ledger_id]) == 0
     capsys.readouterr()
-    assert syncs == [ledger, "rename", quarantine, root, ledger]
+    assert syncs == [*chain, ledger, "rename", quarantine, root, ledger]
     syncs.clear()
     box.at(8)
     assert box.run(apply=True)["purged_entries"] == 1
     # The restored entry is a candidate again and is quarantined afresh after the purge.
-    assert syncs[:4] == [ledger, "reap", quarantine, ledger]
+    assert syncs[: len(chain) + 4] == [*chain, ledger, "reap", quarantine, ledger]
+
+
+def test_interrupted_restore_is_resynced_before_reconciliation_confirms_it(box, syncs, monkeypatch, capsys):
+    """The review probe: the restore's destination sync fails, so reconciliation must re-run both syncs first."""
+    box.tree()
+    box.run(apply=True)
+    held = only(box.entries())
+    ledger, root, quarantine = str(box.state / "ledger.jsonl"), str(box.root), str(held.location.parent)
+    real_sync = sweep.sync_directory
+
+    def failing(directory):
+        if isinstance(directory, int) and os.readlink(f"/proc/self/fd/{directory}") == root:
+            raise ledger_mod.DurabilityError("directory sync failed: Input/output error")
+        real_sync(directory)
+
+    monkeypatch.setattr(sweep, "sync_directory", failing)
+    assert sweep.main(["restore", held.ledger_id]) == 1
+    assert "not durable" in capsys.readouterr().err
+    assert box.entries()[held.ledger_id].state == "restoring" and held.original.exists()
+    monkeypatch.setattr(sweep, "sync_directory", real_sync)
+    chain = state_chain(box.state)
+    syncs.clear()
+    box.run(apply=True)
+    assert syncs[: len(chain) + 3] == [*chain, quarantine, root, ledger]
+    restored = [r for r in box.records() if r["ledger_id"] == held.ledger_id][-1]
+    assert (restored["event"], restored["reconciled"], restored["verified"]) == ("restored", True, True)
+
+
+@pytest.mark.parametrize("step", ["quarantine", "purge"])
+def test_interrupted_step_is_resynced_before_reconciliation_confirms_it(box, syncs, monkeypatch, step):
+    """A quarantine rename or a purge whose sync failed: both directories are synced again before the record."""
+    box.tree()
+    real_sync = sweep.sync_directory
+    if step == "purge":
+        box.run(apply=True)
+        box.at(8)
+
+    def failing(directory):
+        target = os.readlink(f"/proc/self/fd/{directory}") if isinstance(directory, int) else str(directory)
+        if Path(target).name.startswith(sweep.QUARANTINE_PREFIX):
+            raise ledger_mod.DurabilityError("directory sync failed: Input/output error")
+        real_sync(directory)
+
+    monkeypatch.setattr(sweep, "sync_directory", failing)
+    with pytest.raises(ledger_mod.DurabilityError):
+        box.run(apply=True)
+    held = only(box.entries())
+    assert held.state == ("pending" if step == "quarantine" else "purging")
+    quarantine, root, ledger = str(held.location.parent), str(box.root), str(box.state / "ledger.jsonl")
+    monkeypatch.setattr(sweep, "sync_directory", real_sync)
+    chain = state_chain(box.state)
+    syncs.clear()
+    box.run(apply=True)
+    expected = "returned" if step == "quarantine" else "purged"
+    last = [r for r in box.records() if r["ledger_id"] == held.ledger_id][-1]
+    assert (last["event"], last["outcome"]) == ("reconciled", expected)
+    assert syncs[: len(chain) + 2] == [*chain, quarantine, root]
 
 
 def test_failed_sync_after_rename_stops_the_run_unconfirmed(box, monkeypatch, capsys):
