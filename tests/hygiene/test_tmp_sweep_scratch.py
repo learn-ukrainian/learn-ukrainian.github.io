@@ -395,6 +395,89 @@ def test_metadata_only_change_is_seen_through_change_time(scratch, monkeypatch):
     assert payload.read_bytes() == b"z" * 8192
 
 
+@pytest.mark.parametrize("point", ["before_rename", "during_process_scan"])
+def test_hidden_top_level_file_rewrite_is_preserved(scratch, monkeypatch, point):
+    """The round-3 reproduction: a same-size rewrite of a top-level file whose ctime is the only trace.
+
+    The writer opens the file before the rename, rewrites it in place with the
+    same size, puts the mtime back and closes the descriptor, either just
+    before the rename or during the final process scan (which therefore does
+    not see it as a holder). The rename then sets the ctime again, so only the
+    file's bytes can show the write.
+    """
+    entry = scratch.file()
+    mtime_ns = entry.stat().st_mtime_ns
+    monkeypatch.setattr(sweep, "process_snapshot", real_references_complete)
+    held, wrote, renames, scans = [], [], [], [0]
+    real_rename = sweep.rename_noreplace
+
+    def rewrite():
+        with held.pop() as handle:
+            handle.write(b"z" * 4096)
+            handle.flush()
+            os.utime(handle.fileno(), ns=(mtime_ns, mtime_ns))
+        wrote.append(point)
+
+    def scan(*args, **kwargs):
+        scans[0] += 1
+        if point == "during_process_scan" and scans[0] == 3:
+            rewrite()
+        return real_references_complete()
+
+    def rename(src_fd, src, dst_fd, dst):
+        if not renames:
+            held.append(open(entry, "r+b"))  # noqa: SIM115 - closed by rewrite()
+            if point == "before_rename":
+                rewrite()
+        renames.append(src)
+        real_rename(src_fd, src, dst_fd, dst)
+
+    monkeypatch.setattr(sweep, "process_snapshot", scan)
+    monkeypatch.setattr(sweep, "rename_noreplace", rename)
+    report = scratch.run(apply=True)
+    assert wrote == [point] and not held
+    _assert_restored(scratch, report, entry, "quarantine_write")
+    assert entry.read_bytes() == b"z" * 4096 and entry.stat().st_mtime_ns == mtime_ns
+
+
+@pytest.mark.parametrize("kind", ["directory", "file"])
+def test_top_level_extended_attribute_change_is_preserved(scratch, monkeypatch, kind):
+    """An extended attribute set after the rename changes only the ctime the rename also sets."""
+    entry, _ = _target(scratch, kind)
+    try:
+        os.setxattr(entry, "user.probe", b"old")
+    except OSError as error:
+        if error.errno in {errno.ENOTSUP, errno.EPERM}:
+            pytest.skip("this filesystem does not take user extended attributes")
+        raise
+    os.utime(entry, (OLD, OLD))
+    real_rename = sweep.rename_noreplace
+    renames = []
+
+    def rename(src_fd, src, dst_fd, dst):
+        real_rename(src_fd, src, dst_fd, dst)
+        if not renames:
+            os.setxattr(f"/proc/self/fd/{dst_fd}/{dst}", "user.probe", b"new")
+        renames.append(src)
+
+    monkeypatch.setattr(sweep, "rename_noreplace", rename)
+    _assert_restored(scratch, scratch.run(apply=True), entry, "quarantine_write")
+    assert os.getxattr(entry, "user.probe") == b"new"
+
+
+def test_unreadable_top_level_contents_preserve(scratch, monkeypatch):
+    """Top-level change evidence that cannot be read is unknown, never clear."""
+    entry = scratch.file()
+
+    def unreadable(path, info):
+        raise PermissionError(errno.EACCES, "denied", str(path))
+
+    monkeypatch.setattr(sweep, "top_level_contents", unreadable)
+    report = scratch.run(apply=True)
+    assert scratch.row(report, entry.name)["reason"] == "proof_changed" and entry.exists()
+    assert not _quarantines(scratch.root)
+
+
 def test_write_during_final_process_scan_is_never_lost(scratch, monkeypatch):
     """The round-2 reproduction: a path write during the last process scan before removal.
 

@@ -124,7 +124,13 @@ Removal crosses one defined boundary: a rename.
      rename, node by node. Any write, truncate, create, delete or metadata
      change sets a node's ctime, so this is the recent-write check against
      the pre-rename state. Only the top-level ctime is left out, because the
-     rename itself sets it.
+     rename itself sets it. In its place the snapshot records the top-level
+     entry's extended attributes and, for a regular file, a SHA-256 digest of
+     its bytes, read without touching atime. A same-size rewrite with the
+     mtime put back, through a descriptor opened before the rename, therefore
+     still differs, whether it lands just before the rename or during the
+     final process scan. A directory's contents are its descendants, whose
+     ctimes are kept. An entry that cannot be read is unknown and kept.
 
    The order matters. A process that holds the entry during the process scan
    is found. A process that does not hold it at that point can no longer
@@ -142,11 +148,11 @@ Removal crosses one defined boundary: a rename.
    still locked by a live run is left alone. A dry run only lists leftovers
    as `quarantine_leftover`.
 
-Remaining gap, inside the boundary: after the re-check, a process of the same
+Residuals outside the boundary: after the re-check, a process of the same
 user could still open the entry by deliberately listing the temp root and
 entering the sweep's own quarantine directory. A descriptor in flight inside
 a Unix socket message belongs to no process and is invisible to any `/proc`
-scan.
+scan. Both are outside what the boundary observes, and stay residuals.
 
 ### Run it by hand
 

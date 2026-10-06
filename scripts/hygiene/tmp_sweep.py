@@ -406,6 +406,41 @@ def attribution_changed(row: dict[str, Any], records: dict[str, dict[str, Any]])
     return bool(row["task"]) and records.get(row["task"]) != row.get("task_record")
 
 
+def top_level_contents(path: Path, info: os.stat_result) -> tuple[str | None, tuple[tuple[str, bytes], ...]]:
+    """The top-level entry's content digest (regular files only) and extended attributes.
+
+    The quarantine rename sets the entry's own ctime, so ctime cannot show a
+    later change to it; these stand in for it. A write through a descriptor
+    opened earlier, with size and mtime put back, still changes the bytes;
+    the remaining ctime-only data change is an extended attribute. Directory
+    contents are covered by their descendants' entries. Raises ``OSError``
+    when the entry cannot be read or was replaced. Reading leaves atime alone.
+    """
+    if not (stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode)) or not hasattr(os, "listxattr"):
+        raise OSError(errno.ENOTSUP, "top-level contents cannot be fingerprinted", str(path))
+    flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC | getattr(os, "O_NOATIME", 0)
+    fd = os.open(path, flags | (os.O_DIRECTORY if stat.S_ISDIR(info.st_mode) else os.O_NONBLOCK))
+    try:
+        opened = os.fstat(fd)
+        if (opened.st_dev, opened.st_ino, opened.st_mode) != (info.st_dev, info.st_ino, info.st_mode):
+            raise OSError(errno.ESTALE, "entry replaced while fingerprinting", str(path))
+        try:
+            names = sorted(os.listxattr(fd))
+        except OSError as error:
+            if error.errno != errno.ENOTSUP:
+                raise
+            names = []  # the filesystem holds no extended attributes at all
+        xattrs = tuple((name, os.getxattr(fd, name)) for name in names)
+        if not stat.S_ISREG(opened.st_mode):
+            return None, xattrs
+        digest = hashlib.sha256()
+        while chunk := os.read(fd, 1 << 20):
+            digest.update(chunk)
+        return digest.hexdigest(), xattrs
+    finally:
+        os.close(fd)
+
+
 def tree_fingerprint(path: Path) -> dict[str, tuple[Any, ...]] | None:
     """Every node's identity, type, links, owner, size, mtime and ctime, keyed by relative path.
 
@@ -413,8 +448,9 @@ def tree_fingerprint(path: Path) -> dict[str, tuple[Any, ...]] | None:
     create, delete, rename or metadata change inside sets a node's ctime (and
     usually mtime and size) or changes the key set, so an unequal fingerprint
     means the tree changed after the snapshot. The top-level ctime is left out
-    because the quarantine rename itself sets it; its mtime is kept. ``None``
-    when any node cannot be read. Never follows symlinks or crosses a device.
+    because the quarantine rename itself sets it; its mtime is kept and its
+    contents (``top_level_contents``) replace the ctime. ``None`` when any
+    node cannot be read. Never follows symlinks or crosses a device.
     """
     nodes: dict[str, tuple[Any, ...]] = {}
     try:
@@ -431,7 +467,7 @@ def tree_fingerprint(path: Path) -> dict[str, tuple[Any, ...]] | None:
                 info.st_uid,
                 info.st_size,
                 info.st_mtime_ns,
-                info.st_ctime_ns if relative else None,
+                info.st_ctime_ns if relative else top_level_contents(node, info),
             )
             if stat.S_ISDIR(info.st_mode) and info.st_dev == device:
                 pending.extend((child, f"{relative}/{child.name}") for child in node.iterdir())
