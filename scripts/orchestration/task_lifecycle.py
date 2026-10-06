@@ -15,7 +15,7 @@ import json
 import os
 import re
 import subprocess
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, datetime
@@ -239,11 +239,72 @@ def _resolve_native_chain(
     }
 
 
+def _membership_refusal(reason: str) -> dict[str, Any]:
+    return {
+        "valid": False, "method": None, "epic": None,
+        "generated_at": None, "digest": None, "reason": reason,
+    }
+
+
+def repository_identity_valid(repository: object) -> bool:
+    """Require a typed owner/name identity, never an issue-number inference."""
+    return isinstance(repository, str) and re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository) is not None
+
+
+def resolve_live_ancestry(
+    *,
+    repository: str,
+    issue_number: int,
+    stream_epic: int,
+    registered_epics: list[int] | None,
+    read_parent: Callable[[str, int], Mapping[str, Any] | None],
+) -> dict[str, Any]:
+    """Read at most eight qualified parents to the first registered root (#9794).
+
+    A read failure is a refusal, never permission to reuse snapshot evidence.
+    The injected reader returns a parent with ``number`` and ``repository``.
+    """
+    if not repository_identity_valid(repository):
+        return _membership_refusal("live ancestry repository identity is malformed")
+    if not isinstance(registered_epics, list) or stream_epic not in registered_epics:
+        return _membership_refusal("identity stream epic is absent from the registered issue-stream epics")
+    current = issue_number
+    visited = {current}
+    for _ in range(issue_stream_audit._MAX_SUBISSUE_DEPTH):
+        try:
+            parent = read_parent(repository, current)
+        except (LifecycleError, OSError, ValueError, RuntimeError, subprocess.TimeoutExpired):
+            return _membership_refusal(f"live ancestry parent of #{current} could not be read")
+        if parent is None:
+            return _membership_refusal(f"live ancestry parent of #{current} is missing")
+        if not isinstance(parent, Mapping) or not repository_identity_valid(parent.get("repository")):
+            return _membership_refusal("live ancestry parent repository identity is malformed")
+        if parent["repository"].casefold() != repository.casefold():
+            return _membership_refusal("live ancestry crosses a repository boundary")
+        number = parent.get("number")
+        if not isinstance(number, int) or isinstance(number, bool) or number < 1:
+            return _membership_refusal("live ancestry parent number is malformed")
+        if number in visited:
+            return _membership_refusal("live ancestry is cyclic")
+        if number in registered_epics:
+            if number != stream_epic:
+                return _membership_refusal("live ancestry reaches a different registered stream epic")
+            return {
+                "valid": True, "method": "native_chain", "epic": stream_epic,
+                "generated_at": None, "digest": None, "reason": None,
+            }
+        visited.add(number)
+        current = number
+    return _membership_refusal("live ancestry exceeds the maximum sub-issue depth")
+
+
 def resolve_membership(
     *,
     issue_number: int,
     stream_epic: int,
     native_parent_epic: int | None,
+    repository: str,
+    native_parent_repository: str | None,
     registered_epics: list[int] | None,
     membership_report: Mapping[str, Any] | None,
     max_age_s: int = 3600,
@@ -255,6 +316,11 @@ def resolve_membership(
     reconciliation (:func:`evaluate`), and every remote mutation gate
     (``task_closeout._assert_mutation_ready``) — so drift discovered by any
     one of them is enforced identically by all the others.
+
+    Native parents require typed repository identity matching ``repository``
+    case-insensitively, before any number-based branch. Snapshot agreement is
+    read-only evidence; membership-reliant writes additionally require
+    :func:`resolve_live_ancestry`, including transferred-scope follow-ups.
 
     Native GitHub sub-issue parentage is authoritative and takes precedence
     over any body-derived evidence: if ``native_parent_epic`` is set at all,
@@ -295,6 +361,10 @@ def resolve_membership(
             "reason": "identity stream epic is absent from the registered issue-stream epics",
         }
     if native_parent_epic is not None:
+        if not repository_identity_valid(repository) or not repository_identity_valid(native_parent_repository):
+            return _membership_refusal("native parent repository identity is missing or malformed")
+        if native_parent_repository.casefold() != repository.casefold():
+            return _membership_refusal("native ancestry crosses a repository boundary")
         if native_parent_epic == stream_epic:
             return {
                 "valid": True,
@@ -1228,6 +1298,8 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         issue_number=identity["github_issue_number"],
         stream_epic=identity["stream_epic"],
         native_parent_epic=issue.get("parent_epic"),
+        repository=identity["repository"],
+        native_parent_repository=issue.get("parent_repository"),
         registered_epics=registered_epics,
         membership_report=github.get("membership_audit"),
     )
@@ -1411,6 +1483,8 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             issue_number=remaining["follow_up_issue"],
             stream_epic=remaining["follow_up_stream_epic"],
             native_parent_epic=follow_up.get("parent_epic"),
+            repository=identity["repository"],
+            native_parent_repository=follow_up.get("parent_repository"),
             registered_epics=registered_epics,
             membership_report=github.get("membership_audit"),
         )

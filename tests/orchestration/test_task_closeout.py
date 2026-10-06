@@ -123,7 +123,7 @@ def _observation(
                 "body": body if body is not None else _body(),
                 "url": "https://github.com/org/repo/issues/42",
                 "closed_at": NOW if issue_state == "CLOSED" else None,
-                "parent_epic": 10,
+                "parent_epic": 10, "parent_repository": "org/repo",
             },
             "pr": {
                 "number": 77,
@@ -168,6 +168,17 @@ class FakeAdapter:
     def __init__(self, observation: dict) -> None:
         self.observation = deepcopy(observation)
         self.calls: list[str] = []
+
+    def registered_stream_epics(self) -> list[int]:
+        return self.observation["github"]["registered_stream_epics"]
+
+    def read_issue_parent(self, repository: str, issue_number: int) -> dict | None:
+        issue = self.observation["github"]["issue"]
+        if issue_number != issue["number"]:
+            issue = self.observation["github"].get("follow_up") or {}
+        if issue.get("parent_epic") is None:
+            return None
+        return {"number": issue["parent_epic"], "repository": issue.get("parent_repository")}
 
     def observe(self, _ledger: dict, **_kwargs: object) -> dict:
         return deepcopy(self.observation)
@@ -561,7 +572,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
                 }
             )
         if "graphql" in args:
-            return json.dumps({"data": {"repository": {"issue": {"parent": {"number": 10}}}}})
+            return json.dumps({"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42, "parent": {"number": 10, "repository": {"nameWithOwner": "org/repo"}}}}}})
         if "pr view" in command:
             return json.dumps(
                 {
@@ -664,7 +675,7 @@ def _transferred_ledger_and_reader(
             "body": f"Refs #{follow_up_issue}" if issue_number == 42 else "Refs #42",
             "url": f"https://github.com/{repository}/issues/{issue_number}",
             "closed_at": None,
-            "parent_epic": parents[issue_number],
+            "parent_epic": parents[issue_number], "parent_repository": repository,
         }
 
     return ledger, calls, _read_issue
@@ -807,7 +818,7 @@ def _stub_read_issue(*, parent_epic: int | None) -> object:
             "body": "- [ ] **AC-IMPL** — Implementation is verified.\n",
             "url": f"https://github.com/{repository}/issues/{issue_number}",
             "closed_at": None,
-            "parent_epic": parent_epic,
+            "parent_epic": parent_epic, "parent_repository": repository,
         }
 
     return _read_issue
@@ -824,6 +835,9 @@ def test_cmd_init_accepts_native_membership_without_a_live_audit(
         raise AssertionError("native membership must not trigger a live membership audit")
 
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", _fail_audit)
+
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent",
+                        lambda self, repo, number: {"number": 10, "repository": repo})
 
     assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
     ledger = task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")
@@ -878,6 +892,9 @@ def test_cmd_init_accepts_native_chain_through_unregistered_sub_epic(
         task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: _native_chain_audit([10])
     )
 
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent",
+                        lambda self, repo, number: {"number": 30 if number == 42 else 10, "repository": repo})
+
     assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
     ledger = task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")
     assert ledger["identity"]["stream_epic"] == 10
@@ -898,7 +915,7 @@ def test_cmd_init_rejects_native_chain_to_a_different_registered_epic(
     assert not (tmp_path / "lifecycle.json").exists()
 
 
-def test_cmd_init_accepts_unique_body_membership(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_cmd_init_refuses_body_membership_without_live_ancestry(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None))
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
@@ -914,9 +931,10 @@ def test_cmd_init_accepts_unique_body_membership(tmp_path: Path, monkeypatch: py
         },
     )
 
-    assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
-    ledger = task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")
-    assert ledger["identity"]["stream_epic"] == 10
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent", lambda self, repo, number: None)
+    with pytest.raises(task_lifecycle.LifecycleError, match=r"parent.*missing"):
+        task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+    assert not (tmp_path / "lifecycle.json").exists()
 
 
 def test_cmd_init_rejects_orphaned_issue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1118,3 +1136,184 @@ def test_cross_workflow_in_progress_is_not_green():
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
+@pytest.mark.parametrize("parents,reason", [
+    ({42: (10, "foreign/repo")}, "repository boundary"),
+    ({42: (31, "org/repo"), 31: (20, "org/repo")}, "different registered"),
+    ({42: (30, "org/repo"), 30: (31, "org/repo"), 31: (20, "org/repo")}, "different registered"),
+    ({42: (30, "org/repo"), 30: (40, "foreign/repo"), 40: (10, "org/repo")}, "repository boundary"),
+    ({42: None}, "missing"),
+], ids=["foreign-number-collision", "intermediate-reparent", "unchanged-immediate-parent", "returning-local-descendant", "missing"])
+def test_9794_each_mutation_refuses_live_drift_despite_valid_snapshot(tmp_path, action, parents, reason):
+    path, _ = _ledger(tmp_path)
+    observation = _observation()
+    observation["github"]["registered_stream_epics"] = [10, 20]
+    observation["github"]["issue"]["parent_epic"] = 30
+    observation["github"]["membership_audit"] = _native_chain_audit([10])
+    adapter = FakeAdapter(observation)
+    reads = []
+
+    def live_parent(repository, number):
+        reads.append(number)
+        parent = parents[number]
+        return None if parent is None else {"number": parent[0], "repository": parent[1]}
+
+    adapter.read_issue_parent = live_parent
+    with pytest.raises(task_lifecycle.LifecycleError, match=reason):
+        task_closeout.perform_mutation(
+            path, adapter, action=action, authorized_by="codex/impl-9794",
+            branch=None, worktree=None, now=NOW,
+        )
+    assert adapter.calls == []
+    assert reads
+    assert 40 not in reads  # Never fetch a foreign namespace as a local number.
+    failed = task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]
+    assert failed["status"] == "failed"
+    assert failed["remote_mutation_performed"] is False
+    assert reason in failed["detail"]
+
+
+def test_9794_mutation_accepts_same_epic_sibling_reparent_and_rechecks_replay(tmp_path):
+    path, _ = _ledger(tmp_path)
+    observation = _observation()
+    observation["github"]["issue"]["parent_epic"] = 30
+    observation["github"]["membership_audit"] = _native_chain_audit([10])
+    adapter = FakeAdapter(observation)
+    reads = []
+
+    def live_parent(repository, number):
+        reads.append(number)
+        return {"number": 32 if number == 42 else 10, "repository": "ORG/REPO"}
+
+    adapter.read_issue_parent = live_parent
+    args = dict(action="sync-acs", authorized_by="codex/impl-9794", branch=None, worktree=None, now=NOW)
+    result = task_closeout.perform_mutation(path, adapter, **args)
+    assert result["remote_mutation_performed"] is True
+    assert adapter.calls == ["sync-acs"]
+    assert reads == [42, 32]
+    result = task_closeout.perform_mutation(path, adapter, **args)
+    assert result["replayed"] is True
+    assert reads == [42, 32, 42, 32]
+    assert adapter.calls == ["sync-acs"]
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
+def test_9794_transferred_follow_up_gets_live_check_before_each_mutation(tmp_path, action):
+    path, ledger = _ledger(tmp_path)
+    ledger, evidence = task_lifecycle.add_evidence(
+        ledger, ac_id="AC-IMPL", evidence_type="follow_up", summary="Scope transferred",
+        url="https://github.com/org/repo/issues/43", commit=None, details={}, recorded_at=NOW,
+    )
+    ledger = task_lifecycle.set_remaining_scope(
+        ledger, status="transferred", summary="Scope transferred", follow_up_issue=43,
+        follow_up_stream_epic=20, evidence_ids=[evidence["id"]], now=NOW,
+    )
+    task_lifecycle.write_lifecycle(path, ledger)
+    observation = _observation()
+    observation["github"]["registered_stream_epics"] = [10, 20]
+    observation["github"]["follow_up"] = {
+        "number": 43, "parent_epic": 20, "parent_repository": "org/repo",
+        "reciprocal_links_verified": True,
+    }
+    adapter = FakeAdapter(observation)
+    reads = []
+
+    def live_parent(repository, number):
+        reads.append(number)
+        return {"number": 10 if number == 42 else 20, "repository": repository if number == 42 else "foreign/repo"}
+
+    adapter.read_issue_parent = live_parent
+    with pytest.raises(task_lifecycle.LifecycleError, match=r"#43.*repository boundary"):
+        task_closeout.perform_mutation(
+            path, adapter, action=action, authorized_by="codex/impl-9794",
+            branch=None, worktree=None, now=NOW,
+        )
+    assert reads == [42, 43]
+    assert adapter.calls == []
+    assert task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]["status"] == "failed"
+
+
+@pytest.mark.parametrize("parents,reason", [
+    ({42: (10, "foreign/repo")}, "repository boundary"),
+    ({42: (30, "org/repo"), 30: (20, "org/repo")}, "different registered"),
+    ({42: None}, "missing"),
+    ({42: (30, "org/repo"), 30: (42, "org/repo")}, "cyclic"),
+    ({n: (n + 1, "org/repo") for n in range(42, 51)}, "maximum sub-issue depth"),
+])
+def test_9794_init_revalidates_live_ancestry_at_ledger_write(tmp_path, monkeypatch, parents, reason):
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=10))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 20])
+    reads = []
+
+    def live_parent(self, repository, number):
+        reads.append(number)
+        parent = parents[number]
+        return None if parent is None else {"number": parent[0], "repository": parent[1]}
+
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent", live_parent)
+    with pytest.raises(task_lifecycle.LifecycleError, match=reason):
+        task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+    assert reads
+    assert len(reads) <= 8
+    assert not (tmp_path / "lifecycle.json").exists()
+
+
+@pytest.mark.parametrize("patch", [
+    {"errors": [{"message": "unread"}]}, {"data": None},
+    {"data": {"repository": None}},
+    {"data": {"repository": {"nameWithOwner": "foreign/repo", "issue": {"number": 42, "parent": None}}}},
+    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": None}}},
+    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42}}}},
+    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42, "parent": {"number": 10, "url": "unparseable"}}}}},
+    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42, "parent": {"number": True, "repository": {"nameWithOwner": "org/repo"}}}}}},
+])
+def test_9794_parent_reader_refuses_untyped_or_unread_response(tmp_path, patch):
+    adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=lambda args, stdin: json.dumps(patch))
+    with pytest.raises(task_lifecycle.LifecycleError):
+        adapter.read_issue_parent("org/repo", 42)
+
+
+@pytest.mark.parametrize("parent", [None, {"number": 10, "repository": {"nameWithOwner": "ORG/Repo"}}])
+def test_9794_parent_reader_preserves_typed_repository_identity(tmp_path, parent):
+    document = {"data": {"repository": {"nameWithOwner": "ORG/Repo", "issue": {"number": 42, "parent": parent}}}}
+    adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=lambda args, stdin: json.dumps(document))
+    result = adapter.read_issue_parent("org/repo", 42)
+    assert result == (None if parent is None else {"number": 10, "repository": "ORG/Repo"})
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
+def test_9794_failed_live_read_never_falls_back_to_valid_snapshot(tmp_path, action):
+    path, _ = _ledger(tmp_path)
+    adapter = FakeAdapter(_observation())
+
+    def unread(repository, number):
+        raise task_lifecycle.LifecycleError("parent read unavailable")
+
+    adapter.read_issue_parent = unread
+    with pytest.raises(task_lifecycle.LifecycleError, match="could not be read"):
+        task_closeout.perform_mutation(
+            path, adapter, action=action, authorized_by="codex/impl-9794",
+            branch=None, worktree=None, now=NOW,
+        )
+    assert adapter.calls == []
+    assert task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]["status"] == "failed"
+
+
+def test_9794_init_accepts_same_epic_sibling_reparent(tmp_path, monkeypatch):
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=30))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 20])
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: _native_chain_audit([10]))
+    reads = []
+
+    def live_parent(self, repository, number):
+        reads.append(number)
+        return {"number": 32 if number == 42 else 10, "repository": repository}
+
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent", live_parent)
+    assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
+    assert reads == [42, 32]
+    assert task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")["identity"]["stream_epic"] == 10

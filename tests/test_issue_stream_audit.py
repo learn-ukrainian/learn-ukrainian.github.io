@@ -1970,6 +1970,8 @@ def test_run_audit_incomplete_node_refuses_membership_and_entire_context(tmp_pat
         issue_number=500,
         stream_epic=10,
         native_parent_epic=None,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
         registered_epics=[10, 20],
         membership_report=report,
     )
@@ -2071,6 +2073,8 @@ def test_depth_truncated_audit_is_incomplete_and_refuses_native_chain(tmp_path, 
         issue_number=42,
         stream_epic=10,
         native_parent_epic=30,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
         registered_epics=[10, 20],
         membership_report=report,
     )
@@ -2090,6 +2094,8 @@ def test_depth_truncated_audit_is_incomplete_and_refuses_native_chain(tmp_path, 
         issue_number=42,
         stream_epic=10,
         native_parent_epic=30,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
         registered_epics=[10, 20],
         membership_report=complete,
     )
@@ -2114,6 +2120,8 @@ def test_depth_truncated_audit_refuses_body_path(tmp_path, monkeypatch):
         issue_number=500,
         stream_epic=10,
         native_parent_epic=None,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
         registered_epics=[10, 20],
         membership_report=report,
     )
@@ -2201,3 +2209,23 @@ def _inspect_frozen_query(args):
     if "graphql" in args and "--input" in args:
         return ["gh", "api", "graphql", "query=" + _query_arg(args)]
     return args
+
+
+@pytest.mark.parametrize("code", [[], {}, None, 1, True])
+def test_9794_malformed_warning_code_is_typed_membership_refusal(code):
+    from scripts.orchestration import task_lifecycle
+
+    report = {
+        "generated_at": time.time(), "membership_complete": True,
+        "incomplete_nodes": [], "warnings": [{"code": code}],
+        "effective_membership": {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
+    }
+    assert issue_stream_audit.membership_report_is_complete(report) is False
+    assert issue_stream_audit.validate_membership_report(report, 3600) is None
+    result = task_lifecycle.resolve_membership(
+        issue_number=42, stream_epic=10, native_parent_epic=None,
+        repository="acme/repo", native_parent_repository=None,
+        registered_epics=[10], membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "incomplete" in result["reason"]

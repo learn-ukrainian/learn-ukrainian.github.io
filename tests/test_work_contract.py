@@ -3018,6 +3018,7 @@ def _ci_passed_ledger(observed_at: str, *, canary: str = "") -> dict:
                 "url": identity["github_issue_url"],
                 "closed_at": None,
                 "parent_epic": 10,
+                "parent_repository": REPO,
             },
             "pr": {
                 "number": 77,

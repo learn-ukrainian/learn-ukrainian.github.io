@@ -4,6 +4,11 @@
 Read-only reconciliation is the default.  Remote changes require the ``mutate``
 subcommand, an exact action, ``--authorize``, and an actor recorded in the
 append-only mutation receipt.
+
+Membership-reliant writes require a bounded live, repository-qualified ancestry
+read to the claimed registered root (#9794). GitHub has no parentage compare-and-
+swap: a re-parent after the final read and before the write remains a read/write
+race residual owned by claude-infra.
 """
 
 from __future__ import annotations
@@ -212,6 +217,37 @@ class GhGitHubAdapter:
             raise task_lifecycle.LifecycleError("repository must be owner/name") from exc
         return owner, name
 
+    def read_issue_parent(self, repository: str, issue_number: int) -> dict[str, Any] | None:
+        """Read a typed, repository-qualified parent; refuse partial/unread data."""
+        document = self._json(Request("read-issue-parent", repo=repository, number=issue_number))
+        if not isinstance(document, dict) or document.get("errors"):
+            raise task_lifecycle.LifecycleError("GitHub parent read failed")
+        data = document.get("data")
+        repository_doc = data.get("repository") if isinstance(data, dict) else None
+        if not isinstance(repository_doc, dict):
+            raise task_lifecycle.LifecycleError("GitHub parent repository is unread")
+        observed_repository = repository_doc.get("nameWithOwner")
+        if (
+            not task_lifecycle.repository_identity_valid(observed_repository)
+            or observed_repository.casefold() != repository.casefold()
+        ):
+            raise task_lifecycle.LifecycleError("GitHub parent read repository does not match")
+        issue = repository_doc.get("issue")
+        if not isinstance(issue, dict) or issue.get("number") != issue_number or "parent" not in issue:
+            raise task_lifecycle.LifecycleError("GitHub parent issue is unread or malformed")
+        parent = issue["parent"]
+        if parent is None:
+            return None
+        parent_repository = parent.get("repository") if isinstance(parent, dict) else None
+        slug = parent_repository.get("nameWithOwner") if isinstance(parent_repository, dict) else None
+        number = parent.get("number") if isinstance(parent, dict) else None
+        if (
+            not task_lifecycle.repository_identity_valid(slug)
+            or not isinstance(number, int) or isinstance(number, bool) or number < 1
+        ):
+            raise task_lifecycle.LifecycleError("GitHub parent identity is malformed")
+        return {"number": number, "repository": slug}
+
     def read_issue(self, repository: str, issue_number: int) -> dict[str, Any]:
         issue = self._json(
             [
@@ -225,10 +261,7 @@ class GhGitHubAdapter:
                 "number,state,body,url,closedAt",
             ]
         )
-        parent_doc = self._json(Request("read-issue-parent", repo=repository, number=issue_number))
-        repository_doc = ((parent_doc or {}).get("data") or {}).get("repository") or {}
-        parent_issue = repository_doc.get("issue") or {}
-        parent = parent_issue.get("parent") or {}
+        parent = self.read_issue_parent(repository, issue_number) or {}
         return {
             "number": issue.get("number"),
             "state": str(issue.get("state") or "").upper(),
@@ -236,6 +269,7 @@ class GhGitHubAdapter:
             "url": issue.get("url"),
             "closed_at": issue.get("closedAt"),
             "parent_epic": parent.get("number"),
+            "parent_repository": parent.get("repository"),
         }
 
     def _read_pr(self, repository: str, pr_number: int) -> dict[str, Any]:
@@ -674,6 +708,26 @@ def record_unauthorized_mutation(
         }
 
 
+def _assert_live_memberships(adapter: GhGitHubAdapter, ledger: Mapping[str, Any]) -> None:
+    """Revalidate primary and transferred-scope targets with the same registry."""
+    identity = ledger["identity"]
+    registered_epics = adapter.registered_stream_epics()
+    targets = [(identity["github_issue_number"], identity["stream_epic"])]
+    remaining = ledger["remaining_scope"]
+    if remaining["status"] == "transferred":
+        targets.append((remaining["follow_up_issue"], remaining["follow_up_stream_epic"]))
+    for issue_number, epic in targets:
+        membership = task_lifecycle.resolve_live_ancestry(
+            repository=identity["repository"], issue_number=issue_number,
+            stream_epic=epic, registered_epics=registered_epics,
+            read_parent=adapter.read_issue_parent,
+        )
+        if not membership["valid"]:
+            raise task_lifecycle.LifecycleError(
+                f"live stream epic membership refused for #{issue_number}: {membership['reason']}"
+            )
+
+
 def perform_mutation(
     state_file: Path,
     adapter: GhGitHubAdapter,
@@ -687,9 +741,20 @@ def perform_mutation(
     with task_lifecycle.lifecycle_lock(state_file):
         ledger = task_lifecycle.load_lifecycle(state_file)
         before = adapter.observe(ledger, now=now, branch=branch, worktree=worktree)
+        operation_id = task_lifecycle.mutation_operation_id(ledger, action)
+        try:
+            _assert_live_memberships(adapter, ledger)
+        except task_lifecycle.LifecycleError as exc:
+            _, failed = _record_failed_mutation(
+                state_file, ledger, operation_id=operation_id, action=action,
+                authorized_by=authorized_by, requested_at=now,
+                detail=f"mutation gate rejected the action: {exc}",
+            )
+            raise task_lifecycle.LifecycleError(
+                f"mutation blocked with durable receipt {failed['id']}: {exc}"
+            ) from exc
         ledger, before_receipt, _ = task_lifecycle.reconcile(ledger, before, now=now)
         task_lifecycle.write_lifecycle(state_file, ledger)
-        operation_id = task_lifecycle.mutation_operation_id(ledger, action)
         prior_status = task_lifecycle.mutation_status(ledger, operation_id)
 
         if prior_status == "complete" and _desired_remote_state(
@@ -865,6 +930,8 @@ def cmd_init(args: argparse.Namespace) -> int:
         issue_number=identity["github_issue_number"],
         stream_epic=identity["stream_epic"],
         native_parent_epic=issue["parent_epic"],
+        repository=identity["repository"],
+        native_parent_repository=issue.get("parent_repository"),
         registered_epics=registered_epics,
         membership_report=membership_report,
     )
@@ -893,6 +960,7 @@ def cmd_init(args: argparse.Namespace) -> int:
         if existing["lifecycle_id"] != ledger["lifecycle_id"]:
             raise task_lifecycle.LifecycleError("existing lifecycle ledger belongs to another identity")
         ledger = existing
+    _assert_live_memberships(adapter, ledger)
     return _write_and_print(path, ledger)
 
 
