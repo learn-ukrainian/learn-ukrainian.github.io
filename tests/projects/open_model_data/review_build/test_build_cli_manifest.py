@@ -1,11 +1,13 @@
 import ast
 import copy
 import json
+import pkgutil
 from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
+from scripts.projects.open_model_data import review_build as framework
 from scripts.projects.open_model_data.review_build import __main__ as cli
 from scripts.projects.open_model_data.review_build import output
 from scripts.projects.open_model_data.review_build.attribution import Attribution, Resolver, SyntheticAdapter
@@ -168,27 +170,31 @@ def test_private_manifest_allowlist_and_string_refusals(bundle):
 
 
 def test_package_has_no_network_or_process_execution_imports():
-    root = Path(cli.__file__).parent
+    # Inspect this importable package via its loader, without a repository-tree
+    # walk or execution of discovered modules. Unknown subpackages fail closed.
+    modules = [(framework.__name__, framework.__spec__)]
+    for info in pkgutil.iter_modules(framework.__path__, framework.__name__ + "."):
+        assert not info.ispkg, "Framework subpackages need recursive import-ban coverage"
+        modules.append((info.name, info.module_finder.find_spec(info.name)))
     banned = {"requests", "httpx", "urllib.request", "http.client", "socket", "huggingface_hub", "subprocess"}
-    for path in root.glob("*.py"):
-        for node in ast.walk(ast.parse(path.read_text())):
+    for name, spec in modules:
+        assert spec is not None and hasattr(spec.loader, "get_source"), name
+        source = spec.loader.get_source(name)
+        assert source is not None, name
+        for node in ast.walk(ast.parse(source)):
             if isinstance(node, ast.Import):
                 assert not any(
                     alias.name == name or alias.name.startswith(name + ".") for alias in node.names for name in banned
-                ), path.name
+                ), name
             if isinstance(node, ast.ImportFrom):
                 module = node.module or ""
                 names = {module} | {module + "." + alias.name for alias in node.names}
-                assert not any(item == name or item.startswith(name + ".") for item in names for name in banned), (
-                    path.name
-                )
-                assert not (module == "os" and any(alias.name == "system" for alias in node.names)), path.name
+                assert not any(item == name or item.startswith(name + ".") for item in names for name in banned), name
+                assert not (module == "os" and any(alias.name == "system" for alias in node.names)), name
             if isinstance(node, ast.Attribute):
-                assert not (isinstance(node.value, ast.Name) and node.value.id == "os" and node.attr == "system"), (
-                    path.name
-                )
+                assert not (isinstance(node.value, ast.Name) and node.value.id == "os" and node.attr == "system"), name
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
-                assert node.func.id not in {"__import__", "eval", "exec"}, path.name
+                assert node.func.id not in {"__import__", "eval", "exec"}, name
 
 
 def test_missing_catalog_slot_withholds_and_preserves_unit_accounting(bundle):
