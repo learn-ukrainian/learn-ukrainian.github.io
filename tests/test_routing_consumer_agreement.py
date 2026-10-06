@@ -34,17 +34,21 @@ state_router._attach_credit_states                     A    owner ``lane_credit_
 state_router._recommend_agent                          R    F2 stale label, F4 health, #9040 owner hot
 state_router.compute_routing_budget (health fill-in)   R    A1 typed scan; A6 freshness labels
 state_router.compute_routing_budget (reserve override) R    owner-verified capacity only (round 6)
+state_router.compute_routing_budget (ACP reserve)      R    owner-verified capacity only (round 7)
 state_router._api_lane_status_from_account             A    F8 duplicate, agrees (prepaid)
 lane_health.compute_lane_health                        R    A1 ``scan_lane_health``
 subscription_usage.pace_is_deficit                     R    F3 one alias reader ``pace_expected_pct``
 project_state_store.any_lane_under_weekly_pace         D    notebook overlay, not admission
-reset_reserve.codex_is_threatened / _eligible          D    operator reserve precondition
+reset_reserve.codex_is_threatened                      D    operator reserve precondition
+reset_reserve.codex_reset_reserve_eligible             R    required ``owner_capacity`` (round 7)
 prepaid_status.api_lane_status_from_account            A    F8 duplicate, agrees
 capacity_pick.remaining_pct                            R    F1 owner ``plan_remaining_pct``
 capacity_pick.is_avoid_lane / build_lane_rows          R    F2/F3/F4/F7 owner ``routing_facts``
+capacity_pick.build_lane_rows (reserve)                R    ranks only; never lifts AVOID (round 7)
 capacity_pick.build_pick_order / cooler_lanes          R    A5 stale rank, strict
 delegate._budget_needs_hard_capacity_action            R    F1/F6 owner near cap, F3/#9040 owner hot
 delegate._resolve_agent_with_budget_guard              R    agreement asserted; F4 unknown health text
+delegate guard + _language_lane_substitute (reserve)   R    owner-verified capacity only (round 7)
 delegate._credit_period_refusal / dispatch_refusal     A    A4 CREDIT_PERIOD_MODEL_REFUSED
 delegate._budget_cooler_lanes                          D    refusal hint text only (A4)
 delegate._check_capacity_hint                          D    in-flight hint only
@@ -73,8 +77,8 @@ import pytest
 
 from scripts import delegate
 from scripts.api import state_router
-from scripts.fleet import capacity_pick, credit_lane, idle_settle
-from scripts.fleet.reset_reserve import RESERVE_RELATIVE_PATH, SCHEMA_VERSION, unavailable_reserve
+from scripts.fleet import capacity_pick, credit_lane, idle_settle, reset_reserve
+from scripts.fleet.reset_reserve import RESERVE_RELATIVE_PATH, SCHEMA_VERSION, load_reset_reserve
 from scripts.orchestration import curriculum_coordinator as coordinator
 from scripts.review import reviewer_scheduler
 from scripts.review.model_catalog import retired_model_refusal
@@ -388,7 +392,9 @@ def _runtime(lane: str, blocked: bool) -> dict[str, Any]:
     }
 
 
-def produce(case: Case, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict[str, Any]:
+def produce(
+    case: Case, monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, transport: str = "dispatch"
+) -> dict[str, Any]:
     """The real producer over this case's external-seam fixtures; one snapshot shared by every consumer."""
     budget_path = _configure_base(monkeypatch, tmp_path)
     tasks_dir = tmp_path / "tasks"
@@ -403,10 +409,11 @@ def produce(case: Case, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict
     )
     if case.reserve:
         reserve_path = tmp_path / RESERVE_RELATIVE_PATH
-        reserve_path.parent.mkdir(parents=True)
+        reserve_path.parent.mkdir(parents=True, exist_ok=True)
         reserve_path.write_text(json.dumps(OPERATOR_RESERVE), encoding="utf-8")
     budget = state_router.compute_routing_budget(
         NOW,
+        transport=transport,
         budget_config_path=budget_path,
         tasks_dir=tasks_dir,
         project_root=tmp_path,
@@ -456,9 +463,29 @@ def owner(budget: dict[str, Any], lane: str = "codex", *, model: str | None = No
     )
 
 
+class _FixtureClock(datetime):
+    """The reserve module's wall clock pinned to :data:`NOW` (consumers that pass no ``now``)."""
+
+    @classmethod
+    def now(cls, tz=None):  # type: ignore[override]
+        return NOW if tz is None else NOW.astimezone(tz)
+
+
 @pytest.fixture
 def snapshot(request, monkeypatch, tmp_path, provider_calls):
+    """One producer snapshot; every consumer reads the real operator reserve the producer read.
+
+    The picker and the delegate guard load the reserve through the real loader from this case's
+    root (absent file: unavailable), on the fixture clock; none is stubbed unavailable.
+    """
+    monkeypatch.setattr(reset_reserve, "datetime", _FixtureClock)
     budget = produce(request.param, monkeypatch, tmp_path)
+
+    def real_reserve(_repo_root: Path, **kwargs: Any) -> dict[str, Any]:
+        return load_reset_reserve(tmp_path, **kwargs)
+
+    monkeypatch.setattr(capacity_pick, "load_reset_reserve", real_reserve)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", real_reserve)
     yield request.param, budget
     assert list(provider_calls) == [], "a routing consumer reached a provider"
 
@@ -532,7 +559,7 @@ def test_recommendation_agrees_with_owner_capacity(snapshot):
 
 
 def _rows(budget: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    rows = capacity_pick.build_lane_rows(budget, reset_reserve=unavailable_reserve(), now=NOW)
+    rows = capacity_pick.build_lane_rows(budget, now=NOW)
     return {row["lane"]: row for row in rows}
 
 
@@ -562,7 +589,6 @@ def test_picker_cli_reports_the_same_rows(snapshot, monkeypatch, capsys):
 
     monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: budget)
     monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: None)
-    monkeypatch.setattr(capacity_pick, "load_reset_reserve", lambda *_a, **_k: unavailable_reserve())
     monkeypatch.setattr(capacity_pick, "admission_status", lambda: {"admitted": None, "line": "admission: fixture"})
     rc = capacity_pick.main(["--json", "--strict"])
     report = json.loads(capsys.readouterr().out)
@@ -584,7 +610,6 @@ def test_picker_cli_reports_the_same_rows(snapshot, monkeypatch, capsys):
 
 def _guard(budget: dict[str, Any], monkeypatch: pytest.MonkeyPatch, model: str) -> str:
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: unavailable_reserve())
     return delegate._resolve_agent_with_budget_guard("codex", requested_model=model, fallbacks={"codex": "claude"})
 
 
@@ -607,7 +632,6 @@ def test_budget_guard_honours_the_hot_label_source(snapshot, monkeypatch):
     """F3 source restriction: only a weekly-pace hot label may be cleared by hidden pace (A3)."""
     _case, budget = snapshot
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: unavailable_reserve())
     facts = owner(budget, "cursor")
     chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"})
     if budget["diagnostics"].get("stale") or facts.capacity != credit_lane.CAPACITY_AVOID:
@@ -868,7 +892,6 @@ def test_cursor_auto_hot_label_is_not_cleared_by_an_on_pace_weekly_window(snapsh
     assert facts.capacity == credit_lane.CAPACITY_AVOID
     assert _rows(budget)["cursor"]["avoid"] is True
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: unavailable_reserve())
     chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"})
     assert chosen == "claude"
 
@@ -978,7 +1001,7 @@ RESET_CONTROLS = [pytest.param(case, id=case.name) for case in CASES if case.res
 
 
 @pytest.mark.parametrize("snapshot", RESET_CONTROLS, indirect=True)
-def test_reset_covered_deficit_is_decided_by_the_owner_for_every_consumer(snapshot, monkeypatch):
+def test_reset_covered_deficit_is_decided_by_the_owner_for_every_consumer(snapshot, monkeypatch, tmp_path):
     """A pace deficit covered by free full resets (#9615) is cool for every consumer exactly when the owner
     covers it, whatever the lane health; an operator reserve on file never outvotes the owner.
 
@@ -1026,5 +1049,64 @@ def test_reset_covered_deficit_is_decided_by_the_owner_for_every_consumer(snapsh
     assert (budget["recommendation"]["primary_agent_for_code"] == "codex") is covered
     reserve_applied = any("Codex reset reserve active" in w for w in budget["recommendation"]["warnings"])
     # The reserve is applied only over owner-verified capacity on an established-healthy lane.
-    assert reserve_applied is (covered and facts.health == credit_lane.HEALTHY)
+    applies = covered and facts.health == credit_lane.HEALTHY
+    assert reserve_applied is applies
     assert _guard(budget, monkeypatch, ROUTE_MODEL) == ("codex" if covered else "claude")
+
+    # Every reserve consumer reads the real reserve (none stubbed unavailable) and defers to the owner.
+    # Discrimination: on an established-healthy lane every reserve precondition except the owner's
+    # verdict holds, so a consumer that skipped the owner would apply it in ``reset_before_runout``.
+    reserve = load_reset_reserve(tmp_path, now=NOW, codex_info=record)
+    assert reserve["available"] is True
+    assert reset_reserve.codex_is_threatened(record)
+    assert reset_reserve.codex_reset_reserve_eligible(
+        reserve, record, owner_capacity=credit_lane.CAPACITY_VERIFIED, now=NOW
+    ) is (facts.health == credit_lane.HEALTHY)
+    assert rows["codex"]["reset_reserve_eligible"] is applies
+    assert rows["codex"]["capacity"]["state"] == owner(budget).capacity
+    report = capacity_pick.build_report(budget, now=NOW)
+    assert (report["pick_order"][0]["lane"] == "codex") is covered
+    assert ("codex" in report["cooler_lanes"]) is covered
+    delegate_reserve = delegate._load_reset_reserve(delegate._REPO_ROOT, codex_info=record)
+    assert delegate_reserve == reserve
+    assert (
+        delegate._codex_reset_reserve_eligible(
+            delegate_reserve,
+            record,
+            owner_capacity=delegate._budget_owner_facts(
+                "codex", record, model=ROUTE_MODEL, is_stale=False, snapshot_metadata=budget["diagnostics"]
+            ).capacity,
+        )
+        is applies
+    )
+
+    def language_walk() -> str:
+        # Claude is near cap here, so the language-lane walk ends at Codex or refuses.
+        return delegate._language_lane_substitute(
+            "codex",
+            {"codex": "claude"},
+            budget["agents"],
+            is_stale=False,
+            snapshot_metadata=budget["diagnostics"],
+            reset_reserve=delegate_reserve,
+            requested_model=ROUTE_MODEL,
+        )
+
+    if covered:
+        assert language_walk() == "codex"
+    else:
+        with pytest.raises(delegate.BudgetGuardRefuseError, match="LANGUAGE-LANES RULE"):
+            language_walk()
+
+
+@pytest.mark.parametrize("case", RESET_CONTROLS)
+def test_acp_reset_reserve_defers_to_the_owner(case, monkeypatch, tmp_path, provider_calls):
+    """The ACP recommendation's reserve override needs the owner's verified Codex capacity too (#9740)."""
+    monkeypatch.setattr(reset_reserve, "datetime", _FixtureClock)
+    healthy = {"healthy": True, "eligible": True, "failure_code": None, "scope": "acp_cli_compatibility"}
+    monkeypatch.setattr(state_router, "probe_acp_health", lambda _cwd: {"codex": healthy, "claude": healthy})
+    budget = produce(case, monkeypatch, tmp_path, transport="acp")
+    assert budget["reset_reserve"]["available"] is True
+    covered = case.name != "reset_before_runout"
+    assert (budget["recommendation"]["primary_agent_for_code"] == "codex") is covered
+    assert list(provider_calls) == [], "a routing consumer reached a provider"

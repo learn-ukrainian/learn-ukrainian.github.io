@@ -444,13 +444,18 @@ def test_language_budget_guard_refuses_direct_grok_even_when_cool(monkeypatch):
         delegate._resolve_agent_with_budget_guard("grok", language_lane=True, fallbacks=_fallbacks())
 
 
-def _codex_reserve_budget():
+def _codex_reserve_budget(status: str = "warm"):
+    """Codex threatened by a visible pace deficit the live free resets cover, so the owner verifies it (#9740).
+
+    ``status="hot"`` keeps the same record behind a hot label from a non-pace source: owner AVOID.
+    """
+    now = datetime.now(UTC)
     return {
         "recommendation": {"primary_agent_for_code": "cursor", "rationale": "fixture", "warnings": []},
         "agents": {
             "claude": {"status": "hot", "interactive": {"status": "hot"}},
             "codex": {
-                "status": "hot",
+                "status": status,
                 "eligible": True,
                 "health": {"healthy": True},
                 "freshness": "fresh",
@@ -463,6 +468,12 @@ def _codex_reserve_budget():
                 "codexbar": {
                     "will_last_to_reset": False,
                     "weekly_used_pct": 70.0,
+                    "weekly_expected_pct": 50.0,
+                    "weekly_pace_delta_pct": 20.0,
+                    "weekly_resets_at": (now + timedelta(days=3)).isoformat(),
+                    "freshness": "fresh",
+                    "age_s": 10,
+                    "fetched_at": now.isoformat(),
                     "windows": {"primary": {"remaining_pct": 15.0}},
                 },
                 "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
@@ -488,6 +499,35 @@ def test_check_budget_uses_reset_reserve_for_codex(monkeypatch, capsys):
     )
     assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks()) == "codex"
     assert "reset reserve active (2 confirmed reset(s) remaining)" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("language_lane", [False, True])
+def test_reset_reserve_never_overrides_the_owner_avoid(monkeypatch, capsys, language_lane):
+    """#9740 P1: an otherwise eligible reserve does not keep Codex the owner AVOIDs (hot label)."""
+    budget = _codex_reserve_budget(status="hot")
+    info = budget["agents"]["codex"]
+    facts = delegate.credit_lane.routing_facts(
+        "codex", info, model="gpt-6.1-sol", snapshot_metadata=budget["diagnostics"]
+    )
+    assert facts.capacity == delegate.credit_lane.CAPACITY_AVOID
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    reserve = {
+        "available": True,
+        "provider": "codex",
+        "remaining_resets": 2,
+        "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
+        "expires_at": "2099-03-01T00:00:00Z",
+    }
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda _root, **_kwargs: reserve)
+    # Every reserve precondition but the owner's verdict holds.
+    assert delegate._codex_reset_reserve_eligible(reserve, info, owner_capacity=delegate.credit_lane.CAPACITY_VERIFIED)
+    if language_lane:
+        _use_fallbacks(monkeypatch, {"codex": "claude"})
+        with pytest.raises(delegate.BudgetGuardRefuseError, match="LANGUAGE-LANES RULE"):
+            delegate._resolve_agent_with_budget_guard("codex", language_lane=True, fallbacks=_fallbacks())
+    else:
+        assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks()) != "codex"
+    assert "reset reserve active" not in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("requested", ["codex", "claude"])

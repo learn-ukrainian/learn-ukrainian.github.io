@@ -12561,6 +12561,28 @@ def _budget_headroom_blocked(agent_info: dict[str, Any]) -> bool:
     return isinstance(runtime, dict) and bool(runtime.get("headroom_blocked"))
 
 
+def _budget_owner_facts(
+    lane: str,
+    info: dict[str, Any] | None,
+    *,
+    model: str | None,
+    is_stale: bool,
+    snapshot_metadata: Mapping[str, Any] | None = None,
+) -> credit_lane.RoutingFacts:
+    """The owner's reading (:func:`credit_lane.routing_facts`, #9740) of one lane for this dispatch.
+
+    No model resolves to the lane default; none at all is never on a
+    credit-period allowlist. ``snapshot_metadata`` is the snapshot's
+    ``diagnostics`` (absent: the stale flag alone).
+    """
+    return credit_lane.routing_facts(
+        lane,
+        info,
+        model=model or _lane_default_model(lane) or "",
+        snapshot_metadata=snapshot_metadata if snapshot_metadata is not None else {"stale": is_stale},
+    )
+
+
 def _budget_needs_hard_capacity_action(
     *,
     status: str | None,
@@ -12599,12 +12621,7 @@ def _budget_needs_hard_capacity_action(
         return False, ""
     if status == "hot" and headroom_blocked:
         return True, "status=hot"
-    facts = credit_lane.routing_facts(
-        lane,
-        info,
-        model=model or _lane_default_model(lane) or "",
-        snapshot_metadata=snapshot_metadata if snapshot_metadata is not None else {"stale": is_stale},
-    )
+    facts = _budget_owner_facts(lane, info, model=model, is_stale=is_stale, snapshot_metadata=snapshot_metadata)
     if "near_cap" in {status, facts.status} or credit_lane.plan_window_exhausted(lane, info):
         if facts.credit_relief:
             return False, ""
@@ -14728,12 +14745,16 @@ def _resolve_agent_with_budget_guard(
     status = _budget_lane_status(requested, agent_dict)
     will_last = _budget_will_last_to_reset(agent_dict)
     reserve = _load_reset_reserve(_REPO_ROOT, codex_info=agents.get("codex", {}))
+    # The reserve never overrides the owner (#9740): it needs the owner's verified capacity.
     reserve_relaxes = (
         requested == "codex"
-        and _codex_is_threatened(agent_info if isinstance(agent_info, dict) else {})
+        and _codex_is_threatened(agent_dict)
         and _codex_reset_reserve_eligible(
             reserve,
-            agent_info if isinstance(agent_info, dict) else {},
+            agent_dict,
+            owner_capacity=_budget_owner_facts(
+                requested, agent_dict, model=requested_model, is_stale=is_stale, snapshot_metadata=diags
+            ).capacity,
             snapshot_stale=is_stale,
         )
     )
@@ -14917,7 +14938,14 @@ def _language_lane_substitute(
         reserve_relaxes = (
             seat == "codex"
             and _codex_is_threatened(info_dict)
-            and _codex_reset_reserve_eligible(reset_reserve or {}, info_dict, snapshot_stale=is_stale)
+            and _codex_reset_reserve_eligible(
+                reset_reserve or {},
+                info_dict,
+                owner_capacity=_budget_owner_facts(
+                    seat, info_dict, model=current_model, is_stale=is_stale, snapshot_metadata=snapshot_metadata
+                ).capacity,
+                snapshot_stale=is_stale,
+            )
         )
         needs, why = (
             (False, "")

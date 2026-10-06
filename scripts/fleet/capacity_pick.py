@@ -312,7 +312,9 @@ def build_lane_rows(
         reserve_relaxes = (
             lane == "codex"
             and codex_is_threatened(info)
-            and codex_reset_reserve_eligible(reserve, info, snapshot_stale=snapshot_stale)
+            and codex_reset_reserve_eligible(
+                reserve, info, owner_capacity=facts.capacity, snapshot_stale=snapshot_stale
+            )
         )
         credit = facts.credit
         credit_relaxes = facts.credit_relief and facts.capacity != credit_lane.CAPACITY_AVOID and not retired_target
@@ -326,18 +328,14 @@ def build_lane_rows(
         will_last = will_last_to_reset(info)
         cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else None
         pace_deficit = facts.uncovered is True
-        avoid = (
-            (bool(retired_target) or facts.capacity == credit_lane.CAPACITY_AVOID)
-            and not reserve_relaxes
-            and not credit_relaxes
-        )
+        # The reserve needs the owner's verified capacity (#9740), so it only ranks Codex first and
+        # never lifts an AVOID.
+        avoid = (bool(retired_target) or facts.capacity == credit_lane.CAPACITY_AVOID) and not credit_relaxes
         if avoid:
             capacity = {
                 "state": credit_lane.CAPACITY_AVOID,
                 "reason": f"retired→{retired_target}" if retired_target else facts.capacity_reason,
             }
-        elif reserve_relaxes:
-            capacity = {"state": credit_lane.CAPACITY_VERIFIED, "reason": "operator Codex reset reserve eligible"}
         elif retired_target is None and facts.capacity == credit_lane.CAPACITY_AVOID and credit_relaxes:
             capacity = {"state": credit_lane.CAPACITY_VERIFIED, "reason": facts.capacity_reason}
         else:

@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import copy
 import json
 from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from scripts.fleet import capacity_pick
+from scripts.fleet import capacity_pick, credit_lane
+from scripts.fleet.reset_reserve import codex_reset_reserve_eligible
 
 
 def _fixture_budget() -> dict:
@@ -167,6 +169,7 @@ def test_raw_reset_reserve_note_reports_effective_count(asserted, live, expected
         health={"healthy": True},
         freshness="fresh",
         age_s=0,
+        status_source="weekly_pace",
         reset_credits={
             "available_count": live,
             "expires_at": [None] * live,
@@ -175,6 +178,7 @@ def test_raw_reset_reserve_note_reports_effective_count(asserted, live, expected
         codexbar={
             **budget["agents"]["codex"]["codexbar"],
             "weekly_used_pct": 72.0,
+            "weekly_resets_at": (now + timedelta(days=3.5)).isoformat(),
             "windows": {"primary": {"remaining_pct": 12.0}},
         },
         runtime={"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
@@ -194,6 +198,46 @@ def test_raw_reset_reserve_note_reports_effective_count(asserted, live, expected
     assert reserve["remaining_resets"] == asserted
 
 
+def test_reset_reserve_never_lifts_the_owner_avoid():
+    """#9740 P1: a hot label the owner keeps (not weekly pace) stays AVOID whatever the reserve."""
+    now = datetime.now(UTC)
+    budget = _fixture_budget()
+    info = budget["agents"]["codex"]
+    info.update(
+        eligible=True,
+        health={"healthy": True},
+        freshness="fresh",
+        age_s=0,
+        reset_credits={"available_count": 2, "expires_at": [None, None], "fetched_at": now.isoformat()},
+        codexbar={
+            **info["codexbar"],
+            "weekly_used_pct": 72.0,
+            "weekly_resets_at": (now + timedelta(days=3.5)).isoformat(),
+            "windows": {"primary": {"remaining_pct": 12.0}},
+        },
+        runtime={"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
+    )
+    reserve = {
+        "available": True,
+        "provider": "codex",
+        "remaining_resets": 2,
+        "confirmed_at": (now - timedelta(minutes=1)).isoformat(),
+        "expires_at": (now + timedelta(days=1)).isoformat(),
+    }
+    facts = credit_lane.routing_facts("codex", info, model=None, snapshot_metadata=budget["diagnostics"])
+    assert facts.capacity == credit_lane.CAPACITY_AVOID
+    # Every reserve precondition but the owner's verdict holds.
+    assert codex_reset_reserve_eligible(reserve, info, owner_capacity=credit_lane.CAPACITY_VERIFIED)
+
+    rows = capacity_pick.build_lane_rows(budget, reset_reserve=reserve)
+    row = next(row for row in rows if row["lane"] == "codex")
+    assert row["avoid"] is True
+    assert row["reset_reserve_eligible"] is False
+    assert row["capacity"]["state"] == credit_lane.CAPACITY_AVOID
+    assert "codex" not in capacity_pick.cooler_lanes(rows)
+    assert capacity_pick.build_report(budget, reset_reserve=reserve)["pick_order"][0]["lane"] != "codex"
+
+
 def test_capacity_uses_snapshot_inventory_without_process_cache(monkeypatch, tmp_path):
     from scripts.fleet import reset_reserve
 
@@ -205,6 +249,7 @@ def test_capacity_uses_snapshot_inventory_without_process_cache(monkeypatch, tmp
         health={"healthy": True},
         freshness="fresh",
         age_s=10,
+        status_source="weekly_pace",
         runtime={"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
         reset_credits={
             "available_count": 1,
@@ -212,7 +257,11 @@ def test_capacity_uses_snapshot_inventory_without_process_cache(monkeypatch, tmp
             "fetched_at": now.isoformat(),
         },
     )
-    info["codexbar"].update(weekly_used_pct=72, windows={"primary": {"remaining_pct": 12}})
+    info["codexbar"].update(
+        weekly_used_pct=72,
+        weekly_resets_at=(now + timedelta(days=3.5)).isoformat(),
+        windows={"primary": {"remaining_pct": 12}},
+    )
     path = tmp_path / "batch_state" / "routing_budget" / "operator_reset_reserve.json"
     path.parent.mkdir(parents=True)
     path.write_text(
@@ -273,8 +322,12 @@ def test_stale_capacity_snapshot_disables_reserve_and_strict_pick(monkeypatch):
     assert row["avoid"] is True
     assert row["reset_reserve_eligible"] is False
 
+    # On a fresh snapshot the owner verifies a weekly-pace label whose deficit the live resets cover.
+    fresh_codex = copy.deepcopy(budget["agents"]["codex"])
+    fresh_codex["status_source"] = "weekly_pace"
+    fresh_codex["codexbar"]["weekly_resets_at"] = (datetime.now(UTC) + timedelta(days=3.5)).isoformat()
     only_codex = {
-        "agents": {"codex": budget["agents"]["codex"]},
+        "agents": {"codex": fresh_codex},
         "diagnostics": {"stale": False},
         "recommendation": {"primary_agent_for_code": None, "warnings": []},
     }

@@ -18,6 +18,11 @@ try:
 except ImportError:  # pragma: no cover - script path fallback
     from common.repo_root import main_checkout_root  # type: ignore
 
+try:
+    from scripts.fleet.credit_lane import CAPACITY_VERIFIED
+except ImportError:  # pragma: no cover - script path fallback
+    from credit_lane import CAPACITY_VERIFIED  # type: ignore
+
 
 SCHEMA_VERSION = "operator-reset-reserve.v1"
 MAX_PROVIDER_AGE_SECONDS = 15 * 60
@@ -166,15 +171,24 @@ def codex_reset_reserve_eligible(
     reserve: dict[str, Any],
     codex_info: dict[str, Any] | None,
     *,
+    owner_capacity: str,
     now: datetime | None = None,
     snapshot_stale: bool = False,
 ) -> bool:
     """Whether a valid reserve may relax an otherwise threatened Codex lane.
 
-    Requires fresh authoritative provider windows, positive headroom, healthy
-    and eligible lane state, no explicit auth failure, and clean runtime
-    headroom diagnostics. Unknown/missing signals fail closed.
+    The reserve never overrides the owner (#9740): ``owner_capacity`` is the
+    caller's :func:`credit_lane.routing_facts` capacity class for this same
+    Codex record, and anything but ``verified`` (an uncovered deficit, resets
+    expiring before run-out, unknown or stale capacity) refuses. The reserve
+    then only ranks Codex first. It is required so no consumer can skip it.
+
+    Also requires fresh authoritative provider windows, positive headroom,
+    healthy and eligible lane state, no explicit auth failure, and clean
+    runtime headroom diagnostics. Unknown/missing signals fail closed.
     """
+    if owner_capacity != CAPACITY_VERIFIED:
+        return False
     if snapshot_stale or not isinstance(reserve, dict) or reserve.get("available") is not True:
         return False
     if not effective_reset_reserve(reserve, codex_info, now=now)["available"]:

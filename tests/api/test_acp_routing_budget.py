@@ -130,19 +130,29 @@ def test_acp_routing_preserves_runtime_budget_evidence(monkeypatch, budget):
     assert result["recommendation"]["primary_agent_for_code"] == "codex"
 
 
-def test_acp_preserves_verified_codex_reset_reserve(monkeypatch, budget):
+@pytest.mark.parametrize("status", ["warm", "near_cap"])
+def test_acp_codex_reset_reserve_needs_the_owners_verified_capacity(monkeypatch, budget, status):
+    """The reserve ranks Codex first over a deficit the live resets cover; a near-cap AVOID it never lifts (#9740)."""
+    now = datetime.now(UTC)
     budget["agents"]["codex"].update(
         {
-            "status": "near_cap",
+            "status": status,
             "eligible": True,
             "freshness": "fresh",
             "age_s": 5,
             "reset_credits": {
                 "available_count": 2,
                 "expires_at": ["2099-01-01T00:00:00Z", "2099-02-01T00:00:00Z"],
-                "fetched_at": datetime.now(UTC).isoformat(),
+                "fetched_at": now.isoformat(),
             },
-            "codexbar": {"weekly_used_pct": 80, "windows": {"primary": {"remaining_pct": 20}}},
+            "codexbar": {
+                "weekly_used_pct": 80,
+                "weekly_expected_pct": 50.0,
+                "weekly_pace_delta_pct": 30.0,
+                "will_last_to_reset": False,
+                "weekly_resets_at": (now + timedelta(days=3)).isoformat(),
+                "windows": {"primary": {"remaining_pct": 20}},
+            },
             "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
         }
     )
@@ -150,7 +160,7 @@ def test_acp_preserves_verified_codex_reset_reserve(monkeypatch, budget):
         "available": True,
         "provider": "codex",
         "remaining_resets": 2,
-        "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
+        "confirmed_at": (now - timedelta(days=7)).isoformat(),
         "expires_at": "2099-03-01T00:00:00Z",
     }
     health = {lane: _health(True) for lane in budget["agents"]}
@@ -162,7 +172,10 @@ def test_acp_preserves_verified_codex_reset_reserve(monkeypatch, budget):
     )
 
     result = state_router.compute_routing_budget(transport="acp")
-    assert result["agents"]["codex"]["status"] == "near_cap"
+    assert result["agents"]["codex"]["status"] == status
+    if status == "near_cap":
+        assert result["recommendation"]["primary_agent_for_code"] == "cursor"
+        return
     assert result["recommendation"]["primary_agent_for_code"] == "codex"
     assert "ACP compatibility" in result["recommendation"]["rationale"]
 

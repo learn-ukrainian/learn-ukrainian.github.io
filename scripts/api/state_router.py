@@ -1952,18 +1952,19 @@ def _compute_dispatch_routing_budget(
     # The reserve ranks Codex first only over capacity the owner verifies (#9740): a reserve whose
     # resets the owner does not count as covering the deficit (e.g. they expire before run-out)
     # never outvotes the owner's AVOID.
-    reserve_relaxes_codex = (
-        codex_is_threatened(codex_info)
-        and codex_reset_reserve_eligible(reset_reserve, codex_info, now=current_time, snapshot_stale=is_stale)
-        and credit_lane.routing_facts(
+    reserve_relaxes_codex = codex_is_threatened(codex_info) and codex_reset_reserve_eligible(
+        reset_reserve,
+        codex_info,
+        owner_capacity=credit_lane.routing_facts(
             "codex",
             codex_info,
             model=None,
             snapshot_metadata={"stale": is_stale},
             now=current_time,
             usage_dir=usage_dir,
-        ).capacity
-        == credit_lane.CAPACITY_VERIFIED
+        ).capacity,
+        now=current_time,
+        snapshot_stale=is_stale,
     )
     if reserve_relaxes_codex:
         # Apply the reserve only to this recommendation calculation. The
@@ -2126,11 +2127,20 @@ def compute_routing_budget(
         return budget
 
     dispatch_codex = budget["agents"].get("codex")
+    dispatch_stale = budget.get("diagnostics", {}).get("stale", False)
     reserve_relaxes_codex = codex_is_threatened(dispatch_codex) and codex_reset_reserve_eligible(
         budget.get("reset_reserve", {}),
         dispatch_codex,
+        owner_capacity=credit_lane.routing_facts(
+            "codex",
+            dispatch_codex,
+            model=None,
+            snapshot_metadata={"stale": dispatch_stale},
+            now=now,
+            usage_dir=batch_state_dir / "api_usage" if batch_state_dir is not None else None,
+        ).capacity,
         now=now,
-        snapshot_stale=budget.get("diagnostics", {}).get("stale", False),
+        snapshot_stale=dispatch_stale,
     )
     health = probe_acp_health(project_root or Path(__file__).resolve().parents[2])
     warnings = list(budget["recommendation"].get("warnings", []))
