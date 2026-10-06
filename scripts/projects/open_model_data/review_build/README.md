@@ -159,6 +159,13 @@ c2-header-cells.v2, section: [source slot names], row: source slot name or null,
 column: [source slot names]}`. It emits the catalog's positional three-element
 JSON header array using only cited cell text and fixed separators; absent levels
 remain positional empty arrays/strings, and all-empty cells withhold.
+Variable header depths can declare `section` and `column` as
+`{prefix: section_}` / `{prefix: column_}`. Slots must have consecutive suffixes
+starting at zero; their exact source order is retained. An absent row may be
+explicitly declared `{slot: row, optional: true}`. Fixed row names still require
+the cited slot. The independent `table_binding` rule authenticates the complete
+header set against physical HTML cells and the held row projection.
+
 Other optional keys: `transforms` (closed transform id to policy),
 `context_serializer` and `response_serializer` (`text` joins exact parts with LF;
 `json_array` uses canonical JSON string arrays), `unit_grain`, `annotation_layer`,
@@ -335,3 +342,24 @@ with a private payload, stable name, expected error code and gate probe. CLI
 success, a different refusal, duplicate names or an empty generator fail verification.
 Payloads and `component-results.json` stay under the guarded host-only output.
 Component-specific fixture definitions stay with WP1–WP6.
+
+## Generic table and form bindings
+
+`table_binding` declares `anchor` (a source form row), `table` (a citation into
+its parent table payload), `entry_field`, `tags_field`, header slot prefixes,
+`row_slot`, `variant_separator`, and a `policy`. The policy supplies label-to-tag
+and role mappings, header/section/row role sets, data-cell classes, parent and
+subsection behavior, and number/person ordering. The framework reconstructs
+rowspan/colspan coordinates from `raw_html`, requires exact `rows` agreement,
+and checks every header's JSON pointer and every printed variant. Unknown or
+conflicting associations refuse. Component extraction cannot assert association
+flags to satisfy this check.
+
+`equal` optionally takes a closed `normalizer`. `ordered_query_equal` has the
+same declarations as `set_query_equal`, but compares the entire ordered list
+including multiplicity. `form_agreement` can pair repeated left and right
+selectors in contract order, with tag fields declared as `{field: column}`.
+An optional `tag_projection` declares a vocabulary, separator and `ignore_when`
+map over source tokens; the default retains exact tag equality. Projection
+never changes visible source values. Each repeated supporting citation must
+remain connected to its own primary form witness.

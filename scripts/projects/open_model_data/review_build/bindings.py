@@ -7,12 +7,14 @@ Rules: equal, same_row, one_group, example_list, contiguous_pages, contrast_pair
 reviewed spec, not a callable validation hook.
 """
 
+import json
 import re
 import unicodedata
 
 from .contract import Candidate, Value
 from .errors import BuildError, require
 from .snapshot import SnapshotReader
+from .table_layout import layout
 from .transforms import transform
 
 
@@ -164,6 +166,8 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
         selectors = [ref for s in rule.get("values", []) for ref in expand(candidate, s)]
         if op == "equal":
             operands = [operand(candidate, s, reader) for s in selectors]
+            if "normalizer" in rule:
+                operands = [normalize(o, rule["normalizer"]) for o in operands]
             require(len(operands) >= 2 and all(o == operands[0] for o in operands), "binding_equal")
             agreements.append(selectors)
         elif op == "literal":
@@ -171,14 +175,18 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
                 bool(selectors) and all(operand(candidate, ref, reader) == rule["expected"] for ref in selectors),
                 "binding_literal",
             )
-        elif op == "set_query_equal":
+        elif op in {"set_query_equal", "ordered_query_equal"}:
             require(bool(selectors) and bool(rule.get("queries")), "binding_set")
             normalizer = rule["normalizer"]
-            expected = {normalize(operand(candidate, ref, reader), normalizer) for ref in selectors}
+            expected = [normalize(operand(candidate, ref, reader), normalizer) for ref in selectors]
+            if op == "set_query_equal":
+                expected = set(expected)
             for definition in rule["queries"]:
                 query = dict(definition["query"])
                 query["parameters"] = [operand(candidate, ref, reader) for ref in definition.get("parameters", [])]
-                actual = {normalize(value, normalizer) for value in reader.query_values(query)}
+                actual = [normalize(value, normalizer) for value in reader.query_values(query)]
+                if op == "set_query_equal":
+                    actual = set(actual)
                 require(actual == expected, "binding_set")
         elif op == "same_row":
             citations = [citation_for(candidate, s) for s in selectors]
@@ -212,22 +220,79 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
             sources = [reader.row(c)[rule["source_field"]] for c in citations]
             require(len(set(sources)) == 1, "binding_pages")
         elif op == "form_agreement":
-            require(len(selectors) == 2, "binding_agreement")
-            require(
-                citation_for(candidate, selectors[0]) == citation_for(candidate, rule["left_tags"])
-                and citation_for(candidate, selectors[1]) == citation_for(candidate, rule["right_tags"]),
-                "binding_agreement",
-            )
-            agreements.append(selectors)
-            require(
-                _unstress(str(operand(candidate, selectors[0], reader)))
-                == _unstress(str(operand(candidate, selectors[1], reader))),
-                "binding_agreement",
-            )
-            require(
-                operand(candidate, rule["left_tags"], reader) == operand(candidate, rule["right_tags"], reader),
-                "binding_agreement",
-            )
+            require(len(selectors) >= 2 and len(selectors) % 2 == 0, "binding_agreement")
+            # Each expanded left witness is paired with the corresponding right.
+            half = len(selectors) // 2
+            for tag_selector, witness in ((rule["left_tags"], selectors[0]), (rule["right_tags"], selectors[half])):
+                if "area" in tag_selector:
+                    require(
+                        half == 1 and citation_for(candidate, tag_selector) == citation_for(candidate, witness),
+                        "binding_agreement",
+                    )
+                else:
+                    require(set(tag_selector) == {"field"}, "binding_agreement")
+            for left, right in zip(selectors[:half], selectors[half:], strict=True):
+                left_tags = {**left, "field": rule["left_tags"]["field"]}
+                right_tags = {**right, "field": rule["right_tags"]["field"]}
+                require(
+                    _unstress(str(operand(candidate, left, reader)))
+                    == _unstress(str(operand(candidate, right, reader))),
+                    "binding_agreement",
+                )
+                a, b = operand(candidate, left_tags, reader), operand(candidate, right_tags, reader)
+                if "tag_projection" in rule:
+                    projection = rule["tag_projection"]
+                    vocabulary = set(projection["vocabulary"])
+                    a = set(json.loads(a))
+                    tokens = set(b.split(projection["separator"]))
+                    b = tokens & vocabulary
+                    for token, ignored in projection.get("ignore_when", {}).items():
+                        if token in tokens:
+                            b -= set(ignored)
+                    require(a <= vocabulary, "binding_agreement")
+                require(a == b, "binding_agreement")
+                agreements.append([left, right])
+        elif op == "table_binding":
+            anchor = citation_for(candidate, rule["anchor"])
+            row = reader.row(anchor)
+            payload_citation = citation_for(candidate, rule["table"])
+            payload_row = reader.row(payload_citation)
+            require(payload_row[rule["entry_field"]] == row[rule["entry_field"]], "binding_table")
+            payload = json.loads(payload_row[payload_citation.field.partition("#")[0]])
+            associations = [
+                a for a in layout(payload, rule["policy"]) if list(a.tags) == json.loads(row[rule["tags_field"]])
+            ]
+            require(bool(associations) and not any(a.unmapped for a in associations), "binding_table")
+            signatures = {(a.sections, a.row, a.columns) for a in associations}
+            require(len(signatures) == 1, "binding_table")
+            association = associations[0]
+            expected = [(rule["section_prefix"] + str(i), c) for i, c in enumerate(association.sections)]
+            expected += [(rule["row_slot"], association.row)] if association.row else []
+            expected += [(rule["column_prefix"] + str(i), c) for i, c in enumerate(association.columns)]
+            actual = [
+                v
+                for v in candidate.slots
+                if v.slot == rule["row_slot"] or v.slot.startswith((rule["section_prefix"], rule["column_prefix"]))
+            ]
+            require(len(actual) == len(expected) and bool(expected), "binding_table")
+            for name, cell in expected:
+                value = select(candidate, {"area": "slots", "slot": name})
+                c = value.citations[0]
+                require(
+                    c.store == payload_citation.store
+                    and c.table == payload_citation.table
+                    and c.row_key == payload_citation.row_key
+                    and c.field == payload_citation.field.partition("#")[0] + "#" + cell.pointer
+                    and value.text == cell.text
+                    and value.span is None
+                    and value.transform == "verbatim",
+                    "binding_table",
+                )
+            # Authenticate every target as a complete comma-delimited source item;
+            # omission is separately prevented by the independent form-set queries.
+            targets = [operand(candidate, ref, reader) for ref in selectors]
+            printed = [piece.strip() for a in associations for piece in a.cell.text.split(rule["variant_separator"])]
+            require(set(targets) == set(printed), "binding_table")
         elif op == "contrast_pair":
             rejected, recommended, response = (
                 select(candidate, rule[key]) for key in ("rejected", "recommended", "response")

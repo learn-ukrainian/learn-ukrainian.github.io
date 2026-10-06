@@ -41,9 +41,24 @@ class Catalog:
             )
             require(slot not in slots and set(definition) == {"id", "section", "row", "column"}, "serializer")
             try:
-                section = [slots[name] for name in definition["section"]]
-                row = slots[definition["row"]] if definition["row"] is not None else ""
-                column = [slots[name] for name in definition["column"]]
+
+                def cells(names):
+                    if isinstance(names, dict):
+                        require(set(names) == {"prefix"} and isinstance(names["prefix"], str), "serializer")
+                        selected = {name: text for name, text in slots.items() if name.startswith(names["prefix"])}
+                        ordered = [names["prefix"] + str(i) for i in range(len(selected))]
+                        require(set(ordered) == set(selected), "serializer")
+                        return [selected[name] for name in ordered]
+                    return [slots[name] for name in names]
+
+                section = cells(definition["section"])
+                row_name = definition["row"]
+                if isinstance(row_name, dict):
+                    require(set(row_name) == {"slot", "optional"} and row_name["optional"] is True, "serializer")
+                    row = slots.get(row_name["slot"], "")
+                else:
+                    row = slots[row_name] if row_name is not None else ""
+                column = cells(definition["column"])
             except KeyError:
                 raise BuildError("catalog_inapplicable") from None
             require(
