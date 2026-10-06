@@ -1,15 +1,19 @@
 """Fail the build when a hook grows a second shell parser (#9807).
 
 The check is structural and does not follow assignment flow. A name bound to
-the ``shlex`` module may appear only as ``quote`` or ``join`` attribute access;
-every other use of that name is a parser site. ``from shlex import split`` and
-``from shlex import shlex`` are always sites. Imports and references of
-``bashlex`` and ``tree_sitter_bash`` are sites. A literal argv whose program is
-``bash``, ``sh``, ``dash``, or ``zsh`` (or a path ending in one of those) and
-that requests a syntax check (``-n``, a short-option cluster containing ``n``,
-``--noexec``, or ``-o noexec``) is a site. ``shlex.quote`` and ``shlex.join``
-are output quoting and are allowed. Generic regexes, loops, and subprocess
-calls are not parsers.
+the ``shlex`` module may appear only as ``quote`` or ``join`` attribute access
+in load context; every other use of that name is a parser site. ``from shlex
+import split`` and ``from shlex import shlex`` are always sites. Imports and
+references of ``bashlex`` and ``tree_sitter_bash`` are sites. A literal argv
+whose program is ``bash``, ``sh``, ``dash``, or ``zsh`` (or a path ending in
+one of those) and that requests a syntax check (``-n``, a short-option cluster
+containing ``n``, ``--noexec``, or ``-o noexec``) is a site. ``shlex.quote``
+and ``shlex.join`` are output quoting and are allowed. Generic regexes, loops,
+and subprocess calls are not parsers.
+
+Name use is not a list of statement kinds. A parent map over ``ast.walk``
+inspects every name, and every attribute whose value is a bound module name,
+wherever that name sits.
 
 Handwritten scanners are not detected. The quote tracker in
 ``agents_extensions/shared/hooks/guard-secret-print.py`` (``_strip_shell_comments``
@@ -39,10 +43,10 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_PATH = REPO_ROOT / "tests" / "fixtures" / "hook_parser_sites_baseline.json"
 
-# Creation count. The on-disk fixture may shrink as slice 2b deletes sites.
-# It may not grow or be replaced. ``CREATION_SITES``, below, is that frozen
-# set: a fixture site outside it fails even when the count stays at or below
-# this pin. Editing the constant is a policy change, not a refresh.
+# Creation count. The on-disk fixture must equal ``CREATION_SITES`` exactly.
+# Shrinking a site means editing the fixture and that tuple in the same change.
+# A fixture that drops a creation site, or grows one back after the tuple
+# shrank, fails. Editing the constant is a policy change, not a refresh.
 BASELINE_SIZE_AT_CREATION = 6
 
 BOUNDARY_PATHS = frozenset(
@@ -154,7 +158,7 @@ class Site:
 
 
 # The six parser sites present when this check was created. The fixture must
-# stay a subset of this tuple. Replacement or regrowth requires editing it.
+# equal this tuple. Shrinking, replacement, and regrowth edit it on purpose.
 CREATION_SITES: tuple[Site, ...] = (
     Site(
         "agents_extensions/shared/hooks/guard-primary-checkout-write.py",
@@ -216,6 +220,29 @@ class _Binding:
 
 
 _UNKNOWN = _Binding("unknown")
+
+
+def _enclosing_symbol(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> str:
+    """Function, class, and lambda that lexically contain ``node``.
+
+    Decorators, defaults, annotations, and base classes are evaluated in the
+    enclosing scope, matching the statement visitor. Only a body statement, or
+    a lambda body, pushes a name.
+    """
+    names: list[str] = []
+    current: ast.AST | None = node
+    while current is not None:
+        parent = parents.get(current)
+        if isinstance(parent, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and any(
+            current is statement for statement in parent.body
+        ):
+            names.append(parent.name)
+        elif isinstance(parent, ast.Lambda) and current is parent.body:
+            names.append("<lambda>")
+        current = parent
+    if not names:
+        return "<module>"
+    return ".".join(reversed(names))
 
 
 @dataclass
@@ -438,11 +465,109 @@ class _Analyzer:
 
     def analyze(self, tree: ast.Module) -> None:
         self._prepare_closed_names(tree)
+        # Name-use is a total walk. The statement visitor below only binds
+        # imports, follows values for syntax-check calls, and records imported
+        # callables. It does not decide which nodes can hold a module name.
+        self._inspect_bound_module_uses(tree)
         module = _Scope(kind="module", parent=None, module=None)  # type: ignore[arg-type]
         module.module = module
         self._hoist(tree.body, module)
         for stmt in tree.body:
             self._visit_stmt(stmt, module)
+
+    def _bound_module(self, name: str) -> tuple[str, str] | None:
+        if name in self._shlex_module_names:
+            return ("shlex", "shlex")
+        module = self._boundary_names.get(name)
+        if module is not None:
+            return ("boundary", module)
+        return None
+
+    def _inspect_bound_module_uses(self, tree: ast.AST) -> None:
+        """Judge every bound module name from a parent map, not a node-type list."""
+        if not self.record_sites and not self.enforce_exports:
+            return
+        parents: dict[ast.AST, ast.AST] = {}
+        for node in ast.walk(tree):
+            for child in ast.iter_child_nodes(node):
+                parents[child] = node
+        judged: set[int] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Name):
+                self._inspect_bound_name(node, parents, judged)
+            elif isinstance(node, ast.Attribute):
+                self._inspect_bound_attribute(node, parents, judged)
+            elif isinstance(node, (ast.Global, ast.Nonlocal)):
+                self._inspect_bare_name_strings(node, node.names, parents)
+            elif isinstance(node, (ast.MatchAs, ast.MatchStar)) and node.name:
+                self._inspect_bare_name_strings(node, (node.name,), parents)
+            elif isinstance(node, ast.MatchMapping) and node.rest:
+                self._inspect_bare_name_strings(node, (node.rest,), parents)
+
+    def _inspect_bound_name(self, node: ast.Name, parents: dict[ast.AST, ast.AST], judged: set[int]) -> None:
+        kind = self._bound_module(node.id)
+        if kind is None:
+            return
+        parent = parents.get(node)
+        if isinstance(parent, ast.Attribute) and parent.value is node:
+            if id(parent) not in judged:
+                judged.add(id(parent))
+                self._judge_bound_attribute(parent, kind, parents)
+            return
+        self._reject_bare_bound_name(node, kind, parents)
+
+    def _inspect_bound_attribute(self, node: ast.Attribute, parents: dict[ast.AST, ast.AST], judged: set[int]) -> None:
+        if id(node) in judged or not isinstance(node.value, ast.Name):
+            return
+        kind = self._bound_module(node.value.id)
+        if kind is None:
+            return
+        judged.add(id(node))
+        self._judge_bound_attribute(node, kind, parents)
+
+    def _inspect_bare_name_strings(
+        self,
+        node: ast.AST,
+        names: tuple[str, ...] | list[str],
+        parents: dict[ast.AST, ast.AST],
+    ) -> None:
+        for name in names:
+            kind = self._bound_module(name)
+            if kind is not None:
+                self._reject_bare_bound_name(node, kind, parents)
+
+    def _judge_bound_attribute(
+        self, node: ast.Attribute, kind: tuple[str, str], parents: dict[ast.AST, ast.AST]
+    ) -> None:
+        family, module = kind
+        if family == "shlex":
+            if not self.record_sites:
+                return
+            if node.attr in SHLEX_MODULE_ALLOWED_ATTRS and isinstance(node.ctx, ast.Load):
+                return
+            self._record_site(node, f"shlex.{node.attr}", parents)
+            return
+        if not self.enforce_exports:
+            return
+        if node.attr.startswith("__") and node.attr.endswith("__"):
+            self._record_violation(node, "dynamic access", f"{module}.{node.attr}", parents)
+        elif node.attr not in PUBLIC_EXPORTS[module]:
+            self._record_violation(node, "private attribute", f"{module}.{node.attr}", parents)
+
+    def _reject_bare_bound_name(self, node: ast.AST, kind: tuple[str, str], parents: dict[ast.AST, ast.AST]) -> None:
+        family, module = kind
+        if family == "shlex":
+            if self.record_sites:
+                self._record_site(node, "shlex", parents)
+            return
+        if self.enforce_exports:
+            self._record_violation(node, "dynamic access", f"module {module}", parents)
+
+    def _record_site(self, node: ast.AST, identity: str, parents: dict[ast.AST, ast.AST]) -> None:
+        self.sites.append(Site(self.path, _enclosing_symbol(node, parents), identity))
+
+    def _record_violation(self, node: ast.AST, kind: str, detail: str, parents: dict[ast.AST, ast.AST]) -> None:
+        self.violations.append(Violation(kind, self.path, _enclosing_symbol(node, parents), detail))
 
     def _prepare_closed_names(self, tree: ast.AST) -> None:
         """Bind module and dynamic-call names for the whole file.
@@ -820,10 +945,10 @@ class _Analyzer:
                 self._visit_expr(keyword.value, scope)
 
     def _visit_attribute(self, node: ast.Attribute, scope: _Scope, *, as_call_func: bool) -> None:
-        if isinstance(node.value, ast.Name):
-            self._flag_shlex_module_value(node.value, scope, node.attr)
-        self._note_boundary_attribute(node, scope)
-        if not as_call_func:
+        # ``shlex.split`` on a bound module name is already a site from the
+        # parent-map walk. Recording it again here would double the baseline.
+        owned_by_name_use = isinstance(node.value, ast.Name) and node.value.id in self._shlex_module_names
+        if not as_call_func and not owned_by_name_use:
             identity = _callable_identity(self._resolve(node, scope))
             if identity:
                 self.add_site(identity)
@@ -837,26 +962,11 @@ class _Analyzer:
         as_call_func: bool,
         as_attribute_base: bool = False,
     ) -> None:
-        if isinstance(node.ctx, ast.Load) and not as_attribute_base:
-            self._flag_shlex_module_value(node, scope, None)
-            if self.enforce_exports and node.id in self._boundary_names:
-                self.add_violation("dynamic access", f"module {self._boundary_names[node.id]}")
-        if as_call_func or not isinstance(node.ctx, ast.Load):
+        if as_call_func or as_attribute_base or not isinstance(node.ctx, ast.Load):
             return
         identity = _callable_identity(self._resolve(node, scope))
         if identity:
             self.add_site(identity)
-
-    def _flag_shlex_module_value(self, node: ast.Name, scope: _Scope, attr: str | None) -> None:
-        if not self.record_sites or node.id not in self._shlex_module_names:
-            return
-        if attr in SHLEX_MODULE_ALLOWED_ATTRS:
-            return
-        if attr is not None:
-            resolved = _resolve_attribute(self._resolve(node, scope), attr)
-            if _callable_identity(resolved):
-                return
-        self.add_site(f"shlex.{attr}" if attr else "shlex")
 
     def _boundary_of(self, node: ast.expr, scope: _Scope) -> str | None:
         if isinstance(node, ast.Name) and node.id in self._boundary_names:
@@ -865,17 +975,6 @@ class _Analyzer:
         if binding.kind == "boundary_module":
             return binding.detail[0]
         return None
-
-    def _note_boundary_attribute(self, node: ast.Attribute, scope: _Scope) -> None:
-        if not self.enforce_exports:
-            return
-        module = self._boundary_of(node.value, scope)
-        if module is None:
-            return
-        if node.attr.startswith("__") and node.attr.endswith("__"):
-            self.add_violation("dynamic access", f"{module}.{node.attr}")
-        elif node.attr not in PUBLIC_EXPORTS[module]:
-            self.add_violation("private attribute", f"{module}.{node.attr}")
 
     def _dynamic_canonical(self, node: ast.expr) -> str | None:
         if isinstance(node, ast.Name) and node.id in self._dynamic_aliases:
@@ -960,6 +1059,12 @@ class _Analyzer:
     def _call_identity(self, node: ast.Call, scope: _Scope) -> str | None:
         binding = self._resolve(node.func, scope)
         if binding.kind == "shlex_callable" and binding.detail[0] in PARSER_SHLEX_ATTRS:
+            if (
+                isinstance(node.func, ast.Attribute)
+                and isinstance(node.func.value, ast.Name)
+                and node.func.value.id in self._shlex_module_names
+            ):
+                return None
             return f"shlex.{binding.detail[0]}"
         if binding.kind == "parser_attr":
             return f"{binding.detail[0]}.{binding.detail[1]}"
@@ -1342,16 +1447,32 @@ def load_baseline(path: Path = FIXTURE_PATH) -> tuple[Site, ...]:
     return tuple(sites)
 
 
-def outside_creation_set(baseline: tuple[Site, ...] | list[Site]) -> list[str]:
-    """Sites a rewritten fixture may not introduce without editing ``CREATION_SITES``."""
-    creation = Counter(site.key() for site in CREATION_SITES)
+def creation_set_gap(
+    baseline: tuple[Site, ...] | list[Site],
+    frozen: tuple[Site, ...] | list[Site],
+) -> list[str]:
+    """Sites ``baseline`` adds or drops relative to a frozen creation set.
+
+    Equality is required. Dropping a frozen site is a shrink that did not edit
+    the frozen set. Adding a site the frozen set no longer contains is regrowth.
+    """
+    creation = Counter(site.key() for site in frozen)
     found = Counter(site.key() for site in baseline)
     reasons: list[str] = []
     for key in sorted(found - creation):
         count = found[key] - creation[key]
         site = Site(*key)
         reasons.extend([f"outside creation set: {site.format()}"] * count)
+    for key in sorted(creation - found):
+        count = creation[key] - found[key]
+        site = Site(*key)
+        reasons.extend([f"shrunk creation site: {site.format()}"] * count)
     return reasons
+
+
+def outside_creation_set(baseline: tuple[Site, ...] | list[Site]) -> list[str]:
+    """The on-disk fixture must equal ``CREATION_SITES`` exactly."""
+    return creation_set_gap(baseline, CREATION_SITES)
 
 
 def compare_baseline(check: Check, baseline: tuple[Site, ...] | list[Site], *, pinned_size: int) -> list[str]:
@@ -1395,8 +1516,8 @@ def test_observed_sites_match_frozen_baseline() -> None:
     observed = "\n".join(site.format() for site in check.sites)
     assert reasons == [], "\n".join(reasons) + "\nobserved:\n" + observed
     assert len(CREATION_SITES) == BASELINE_SIZE_AT_CREATION
-    assert Counter(site.key() for site in baseline) <= Counter(site.key() for site in CREATION_SITES)
-    assert len(baseline) <= BASELINE_SIZE_AT_CREATION
+    assert Counter(site.key() for site in baseline) == Counter(site.key() for site in CREATION_SITES)
+    assert len(baseline) == BASELINE_SIZE_AT_CREATION
     assert not any(site.path in BOUNDARY_PATHS for site in check.sites)
 
 
@@ -1861,4 +1982,103 @@ def test_fixture_replacement_outside_creation_set_fails() -> None:
     assert len(rewritten) == BASELINE_SIZE_AT_CREATION
     reasons = outside_creation_set(rewritten)
     assert any(reason.startswith("outside creation set:") for reason in reasons)
+    assert any(reason.startswith("shrunk creation site:") for reason in reasons)
     assert not any(reason.startswith("baseline growth") for reason in reasons)
+
+
+def test_round2_annotation_and_subscript_probes_fail() -> None:
+    source = (
+        "import shlex\n"
+        "import shell_shlex as shared\n"
+        "\n"
+        'def f(v: shlex.split("a b")):\n'
+        "    pass\n"
+        "\n"
+        "def g(v: shared._expose_backtick_bodies):\n"
+        "    pass\n"
+        "\n"
+        "holder = {}\n"
+        'holder[shlex.split("a b")[0]] = None\n'
+    )
+    reasons = _single(source)
+    split_sites = [reason for reason in reasons if reason.endswith("::<module>::shlex.split")]
+    assert len(split_sites) == 2
+    assert any(
+        "private attribute: " in reason and "shell_shlex._expose_backtick_bodies" in reason for reason in reasons
+    )
+    assert _single("import shell_shlex as shared\n\ndef g(v: shared.preprocess_shell_command):\n    pass\n") == []
+
+
+def test_annotation_only_shlex_attribute_fails_and_quote_passes() -> None:
+    failing = "import shlex\n\ndef f(v: shlex.split):\n    pass\n"
+    passing = "import shlex\n\ndef f(v: shlex.quote):\n    pass\n"
+    assert any(reason.endswith("::<module>::shlex.split") for reason in _single(failing))
+    assert _single(passing) == []
+
+
+def test_return_annotation_shlex_attribute_fails() -> None:
+    source = "import shlex\n\ndef f() -> shlex.split:\n    pass\n"
+    passing = "import shlex\n\ndef f() -> shlex.join:\n    pass\n"
+    assert any(reason.endswith("::<module>::shlex.split") for reason in _single(source))
+    assert _single(passing) == []
+
+
+def test_fstring_shlex_split_fails_and_quote_passes() -> None:
+    failing = 'import shlex\n\ndef f(command):\n    return f"{shlex.split(command)}"\n'
+    passing = 'import shlex\n\ndef f(command):\n    return f"{shlex.quote(command)}"\n'
+    assert any(reason.endswith("::f::shlex.split") for reason in _single(failing))
+    assert _single(passing) == []
+
+
+def test_decorator_argument_shlex_split_fails_and_quote_passes() -> None:
+    failing = "import shlex\n\n@wrap(shlex.split)\ndef f():\n    pass\n"
+    passing = "import shlex\n\n@wrap(shlex.quote)\ndef f():\n    pass\n"
+    assert any(reason.endswith("::<module>::shlex.split") for reason in _single(failing))
+    assert _single(passing) == []
+
+
+def test_match_statement_shlex_split_fails_and_quote_passes() -> None:
+    failing = (
+        "import shlex\n\ndef f(command):\n    match command:\n        case shlex.split:\n            return command\n"
+    )
+    passing = (
+        "import shlex\n\ndef f(command):\n    match command:\n        case shlex.quote:\n            return command\n"
+    )
+    capture = "import shlex\n\ndef f(command):\n    match command:\n        case shlex:\n            return command\n"
+    assert any(reason.endswith("::f::shlex.split") for reason in _single(failing))
+    assert _single(passing) == []
+    assert any(reason.endswith("::f::shlex") for reason in _single(capture))
+
+
+def test_global_and_nonlocal_bound_names_fail() -> None:
+    source = (
+        "import shlex\n"
+        "\n"
+        "def f():\n"
+        "    global shlex\n"
+        "    return shlex.quote('a')\n"
+        "\n"
+        "def outer():\n"
+        "    lexer = shlex\n"
+        "\n"
+        "    def inner():\n"
+        "        nonlocal lexer\n"
+        "        return lexer.quote('b')\n"
+        "\n"
+        "    return inner\n"
+    )
+    reasons = _single(source)
+    assert any(reason.endswith("::f::shlex") for reason in reasons)
+    assert any(reason.endswith("::outer.inner::shlex") for reason in reasons)
+    assert not any("shlex.quote" in reason for reason in reasons)
+
+
+def test_regrowth_after_shrink_fails() -> None:
+    removed = CREATION_SITES[0]
+    shrunk = list(CREATION_SITES[1:])
+    shrink_reasons = outside_creation_set(shrunk)
+    assert any(reason.startswith("shrunk creation site:") and removed.format() in reason for reason in shrink_reasons)
+    regrown = [*shrunk, removed]
+    regrowth_reasons = creation_set_gap(regrown, shrunk)
+    assert any(reason.startswith("outside creation set:") and removed.format() in reason for reason in regrowth_reasons)
+    assert creation_set_gap(shrunk, shrunk) == []
