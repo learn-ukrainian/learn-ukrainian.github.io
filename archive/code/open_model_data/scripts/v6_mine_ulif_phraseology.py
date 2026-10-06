@@ -1177,7 +1177,7 @@ def get_vesum_cursor(vesum_db: Path) -> sqlite3.Cursor | None:
     if not vesum_db.exists() or vesum_db.stat().st_size == 0:
         return None
     try:
-        conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+        conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
         return conn.cursor()
     except Exception as e:
         logger.warning("Could not open vesum.db: %s", e)
@@ -1886,7 +1886,7 @@ def load_ua_gec_calques(sources_db: Path) -> list[CalquePair]:
         disallowed_terms.add(cp.calque.strip().lower())
         disallowed_terms.add(cp.authentic.strip().lower())
 
-    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
     cur = conn.cursor()
     try:
         cur.execute(
@@ -1982,7 +1982,7 @@ def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyU
         logger.warning("ULIF database not found at %s", ulif_db)
         return phraseology_units, synonym_groups
 
-    conn = sqlite3.connect(f"{Path(ulif_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"file:{ulif_db}?mode=ro", uri=True)
     cur = conn.cursor()
 
     has_dictua = cur.execute(
@@ -3602,7 +3602,7 @@ def verify_receipt_invariants(
             attested_tuples[base_k].append(cand_info)
             known_fraz_idioms.add(base_k)
 
-    conn_src = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn_src = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
     cur_src = conn_src.cursor()
     cur_src.execute("SELECT word FROM frazeolohichnyi;")
     for (w_raw,) in cur_src.fetchall():

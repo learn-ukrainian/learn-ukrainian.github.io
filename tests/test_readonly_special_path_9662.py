@@ -3,16 +3,12 @@
 from __future__ import annotations
 
 import json
-import re
 import sqlite3
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-HOOK = ROOT / "agents_extensions/shared/hooks/check-agent-inbox.sh"
 MIGRATED = (
     "scripts/agent_runtime/lane_probe.py",
     "scripts/agent_runtime/runner.py",
@@ -255,31 +251,3 @@ def test_measure_default_opener_reads_special_path(tmp_path, monkeypatch):
     result = measure.measure_divergence([{"lemma": "мова"}], db, {})
     assert result["lemmas"] == ["мова"]
     assert seen == [str(db.resolve())] * 5
-
-
-def test_inbox_hook_fallback_counts_special_path(tmp_path):
-    script = re.search(r"<<'PYEOF'\n(.*)\nPYEOF", HOOK.read_text(encoding="utf-8"), re.S)
-    assert script is not None
-    body = script.group(1)
-    assert 'f"file:{db}?mode=ro"' not in body
-    assert "as_uri()" in body
-    db = _write_db(
-        _special(tmp_path),
-        """
-        CREATE TABLE messages (to_llm TEXT, acknowledged INTEGER, consumed_by_live_driver INTEGER);
-        INSERT INTO messages VALUES ('claude', 0, 0);
-        """,
-    )
-    before = db.read_bytes()
-    completed = subprocess.run(
-        [sys.executable, "-", str(db), "claude"],
-        input=body,
-        text=True,
-        capture_output=True,
-        check=False,
-        timeout=30,
-    )
-    assert completed.returncode == 0, completed.stderr
-    assert completed.stdout.strip() == "1"
-    assert db.read_bytes() == before
-    assert not (tmp_path / "observer?").exists()

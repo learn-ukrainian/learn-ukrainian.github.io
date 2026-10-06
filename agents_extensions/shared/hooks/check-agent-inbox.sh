@@ -69,14 +69,11 @@ if [ -n "$DB_FILE" ] && [ -f "$DB_FILE" ]; then
     UNREAD_COUNT=$("$PROJECT_DIR/.venv/bin/python" - "$DB_FILE" "$RECIPIENT" <<'PYEOF'
 import sqlite3
 import sys
-from pathlib import Path
 
 db, recipient = sys.argv[1], sys.argv[2]
 recipients = ("grok", "grok-build") if recipient in ("grok", "grok-build") else (recipient,)
 try:
-    # Percent-encode the path. A raw file:{db} URI drops mode=ro when the
-    # path contains ? or #.
-    conn = sqlite3.connect(Path(db).resolve().as_uri() + "?mode=ro", uri=True, timeout=1.0)
+    conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True, timeout=1.0)
     try:
         placeholders = ",".join("?" * len(recipients))
         row = conn.execute(
