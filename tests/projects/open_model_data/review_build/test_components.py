@@ -13,7 +13,7 @@ import yaml
 from scripts.projects.open_model_data.review_build import __main__ as cli
 from scripts.projects.open_model_data.review_build import components, output
 from scripts.projects.open_model_data.review_build.attribution import Resolver, SyntheticAdapter
-from scripts.projects.open_model_data.review_build.build import execute
+from scripts.projects.open_model_data.review_build.build import execute, verify_component_mutations
 from scripts.projects.open_model_data.review_build.catalog import Catalog
 from scripts.projects.open_model_data.review_build.contract import Value, canonical, digest
 from scripts.projects.open_model_data.review_build.errors import BuildError
@@ -104,13 +104,22 @@ def test_cli_registered_component_build_verify_and_mutations(bundle, monkeypatch
                     response=tuple(source(v) for v in candidate.response),
                 )
 
+        def mutation_fixtures(self, ctx, candidates, gate):
+            assert len(candidates) == 12 and gate.reader is ctx.reader
+            calls.append("fixtures")
+
+            def refuse():
+                raise BuildError("synthetic_refusal")
+
+            yield components.MutationFixture("synthetic", b"SYNTHETIC fixture\n", "synthetic_refusal", refuse)
+
     obj = SyntheticComponent()
     out = bundle["root"] / "SYNTHETIC-cli-output"
     args = ["--config", str(bundle["root"] / "request.json"), "--out", str(out), "--components", component]
     for command in ("build", "verify"):
         assert cli.main([command, *args], _test_components={component: obj}) == 0
         assert json.loads(capsys.readouterr().out)["status"] == ("built" if command == "build" else "verified")
-    assert calls == [12, 12]
+    assert calls == [12, 12, "fixtures"]
     manifest = json.loads((out / "manifest.json").read_bytes())
     assert manifest["accounting"][component]["accepted"] == 12
     assert manifest["operation_accounting"][f"{component}.sentence_correction"]["counted"] == 12
@@ -119,9 +128,49 @@ def test_cli_registered_component_build_verify_and_mutations(bundle, monkeypatch
     assert manifest["pins"]["request"] == digest(canonical(expected_request))
     assert "components/__init__.py" in manifest["pins"]["code"]["files"]
     assert len(json.loads((out / "mutation-fixtures/results.json").read_bytes())) == 5
+    assert json.loads((out / "mutation-fixtures/component-results.json").read_bytes()) == {
+        component: {"synthetic": "synthetic_refusal"}
+    }
     (out / component / "records.jsonl").write_bytes(b"SYNTHETIC tamper\n")
     assert cli.main(["verify", *args], _test_components={component: obj}) == 1
     assert json.loads(capsys.readouterr().err)["error"] == "artifact_mismatch"
+
+
+@pytest.mark.parametrize(
+    "fault,expected",
+    [
+        ("pass", "mutation_admitted"),
+        ("wrong", "mutation_wrong_failure"),
+        ("empty", "mutation_unavailable"),
+        ("duplicate", "mutation_duplicate"),
+        ("name", "mutation_name"),
+        ("code", "mutation_expected_code"),
+    ],
+)
+def test_component_fixture_hook_refuses_invalid_proof(tmp_path, monkeypatch, fault, expected):
+    monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
+
+    def probe():
+        if fault != "pass":
+            raise BuildError("wrong_refusal" if fault == "wrong" else "expected_refusal")
+
+    fixture = components.MutationFixture(
+        "../escape" if fault == "name" else "synthetic",
+        b"SYNTHETIC fixture\n",
+        "" if fault == "code" else "expected_refusal",
+        probe,
+    )
+    fixtures = [] if fault == "empty" else [fixture] * (2 if fault == "duplicate" else 1)
+    obj = SimpleNamespace(mutation_fixtures=lambda ctx, candidates, gate: fixtures)
+    with OutputGuard(tmp_path / "SYNTHETIC-output") as out:
+        with pytest.raises(BuildError, match=expected):
+            verify_component_mutations({"C1": obj}, components.ComponentContext(None, {}), [], out)
+
+
+def test_component_fixture_hook_is_optional(tmp_path, monkeypatch):
+    monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
+    with OutputGuard(tmp_path / "SYNTHETIC-output") as out:
+        assert verify_component_mutations({"C1": object()}, components.ComponentContext(None, {}), [], out) == {}
 
 
 def test_component_context_detaches_and_freezes_nested_request():

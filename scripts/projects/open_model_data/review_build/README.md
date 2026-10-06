@@ -318,4 +318,10 @@ absent-quote, wrong-span, empty-locator, missing-unit and swapped-citation
 fixtures, derives them from an admitted component's actual candidate citations,
 and requires their specific gate refusals. A build with no admitted candidate or
 no distinct donor citation fails `mutation_unavailable`; a passing mutation
-fails `mutation_admitted`. Component-specific mutations stay with WP1–WP6.
+fails `mutation_admitted`. Selected registered components may expose optional
+`COMPONENT.mutation_fixtures(ctx, candidates, gate)`, yielding `MutationFixture` objects
+with a private payload, stable name, expected error code and gate probe. CLI
+`verify` runs every yielded probe and requires that exact `BuildError` code;
+success, a different refusal, duplicate names or an empty generator fail verification.
+Payloads and `component-results.json` stay under the guarded host-only output.
+Component-specific fixture definitions stay with WP1–WP6.

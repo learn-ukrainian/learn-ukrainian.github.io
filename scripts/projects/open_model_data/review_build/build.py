@@ -1,5 +1,6 @@
 """Build/verify orchestration. Inputs and all text-bearing outputs stay host local."""
 
+import re
 from collections import Counter, defaultdict
 from copy import deepcopy
 from dataclasses import asdict, replace
@@ -331,6 +332,13 @@ def execute(
                 resolver,
                 out,
             )
+            verify_component_mutations(
+                component_objects or {},
+                ComponentContext(reader, request),
+                candidates,
+                out,
+                Gate(reader, catalog, resolver, config["components"]),
+            )
         else:
             for name, content in sorted(result.items()):
                 out.write(name, content)
@@ -339,3 +347,31 @@ def execute(
         "build_sha256": digest(result["manifest.json"]),
         "files": len(result),
     }
+
+
+def verify_component_mutations(component_objects, ctx, candidates, out, gate=None) -> dict:
+    """Run every selected component's optional must-fail fixture generator."""
+    results = {}
+    for component, obj in sorted(component_objects.items()):
+        generator = getattr(obj, "mutation_fixtures", None)
+        if generator is None:
+            continue
+        seen = set()
+        failures = {}
+        for fixture in generator(ctx, tuple(c for c in candidates if c.component == component), gate):
+            require(isinstance(fixture.name, str) and re.fullmatch(r"[a-z][a-z0-9_]*", fixture.name), "mutation_name")
+            require(fixture.name not in seen, "mutation_duplicate")
+            seen.add(fixture.name)
+            require(isinstance(fixture.expected_code, str) and bool(fixture.expected_code), "mutation_expected_code")
+            try:
+                fixture.check()
+            except BuildError as exc:
+                require(exc.code == fixture.expected_code, "mutation_wrong_failure")
+                failures[fixture.name] = exc.code
+            else:
+                raise BuildError("mutation_admitted")
+            out.write(f"mutation-fixtures/{component}-{fixture.name}.jsonl", fixture.payload)
+        require(bool(failures), "mutation_unavailable")
+        results[component] = failures
+    out.write("mutation-fixtures/component-results.json", canonical(results) + b"\n")
+    return results
