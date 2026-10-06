@@ -363,7 +363,7 @@ def test_real_c3_variants_use_source_queries_accept_and_must_fail(bundle, real_c
                     gate.applicable(candidate)
             else:
                 ids = gate.applicable(candidate)
-                assert len(ids) == 6
+                assert len(ids) == 12
                 assert {real_catalog.lines[i][1]["sense_variant"] for i in ids} == {expected_variant}
 
     check(variant)

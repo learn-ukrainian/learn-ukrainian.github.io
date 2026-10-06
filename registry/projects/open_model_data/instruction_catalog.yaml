@@ -1,8 +1,8 @@
 ---
-# WP-CAT2 reviews pending per #9842; exact-head verdicts remain the driver's gate.
+# WP-CAT2 reviewer entries predeclared per #9842; exact-head verdicts are recorded on the PR.
 schema_version: instruction-catalog.v1
 version: 0.6.0-rb1
-status: rb1_amendment_pending_reviews
+status: rb1_approved
 training_eligible: false
 issue: 9611
 review_status:
@@ -17,17 +17,25 @@ review_status:
     remaining_gate: E5 checker proof; PA6 certification and training eligibility are not claimed.
   amendment:
     issue: 9842
-    status: pending
+    status: approved
     author: gpt-6.1-sol
     reviewers:
       - seat: claude-opus-5-5
+        task: rv-rb1-wpcat-opus-r2
+        role: code+ukrainian
+        status: approved
+      - seat: gemini-3.8-flash-high
+        task: rv-rb1-wpcat-flash-r2
+        role: ukrainian
+        status: approved
+      - seat: claude-opus-5-5
         task: rv-wpcat2-opus
         role: code+ukrainian
-        status: pending
+        status: approved
       - seat: gemini-3.8-flash-high
         task: rv-wpcat2-flash
         role: ukrainian
-        status: pending
+        status: approved
 plan:
   path: docs/projects/open-model-data/PLAN.md
   version: 3.5.0

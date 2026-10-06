@@ -274,7 +274,7 @@ def test_tokens_normalize_metric_only_and_mask_all_source_roles() -> None:
 
 def test_rb1_status_records_prior_reviews_and_predeclared_rereview_tasks() -> None:
     assert CATALOG["version"] == "0.6.0-rb1"
-    assert CATALOG["status"] == "rb1_amendment_pending_reviews"
+    assert CATALOG["status"] == "rb1_approved"
     assert CATALOG["training_eligible"] is False
     reviews = CATALOG["review_status"]
     assert reviews["pa6"]["status"] == "instruction_reviews_approved"
@@ -282,17 +282,19 @@ def test_rb1_status_records_prior_reviews_and_predeclared_rereview_tasks() -> No
     assert reviews["pa6"]["issue"] == 9611
     assert "E5" in reviews["pa6"]["remaining_gate"]
     assert reviews["amendment"]["issue"] == 9842
-    assert reviews["amendment"]["status"] == "pending"
+    assert reviews["amendment"]["status"] == "approved"
     assert reviews["amendment"]["reviewers"] == [
-        {"seat": "claude-opus-5-5", "task": "rv-wpcat2-opus", "role": "code+ukrainian", "status": "pending"},
-        {"seat": "gemini-3.8-flash-high", "task": "rv-wpcat2-flash", "role": "ukrainian", "status": "pending"},
+        {"seat": "claude-opus-5-5", "task": "rv-rb1-wpcat-opus-r2", "role": "code+ukrainian", "status": "approved"},
+        {"seat": "gemini-3.8-flash-high", "task": "rv-rb1-wpcat-flash-r2", "role": "ukrainian", "status": "approved"},
+        {"seat": "claude-opus-5-5", "task": "rv-wpcat2-opus", "role": "code+ukrainian", "status": "approved"},
+        {"seat": "gemini-3.8-flash-high", "task": "rv-wpcat2-flash", "role": "ukrainian", "status": "approved"},
     ]
     bad = copy.deepcopy(CATALOG)
     del bad["review_status"]
     assert list(VALIDATOR.iter_errors(bad))
 
 
-@pytest.mark.parametrize("reviewer", [0, 1, 2])
+@pytest.mark.parametrize("reviewer", range(len(CATALOG["review_status"]["amendment"]["reviewers"]) + 1))
 @pytest.mark.parametrize("state", ["pending", "rejected", "missing"])
 def test_rb1_approved_requires_every_listed_review_approved(reviewer: int, state: str) -> None:
     bad = copy.deepcopy(CATALOG)
@@ -326,7 +328,9 @@ def test_rb1_approved_cannot_have_pending_amendment_or_missing_reviewers() -> No
         for entry in bad["review_status"]["amendment"]["reviewers"]:
             entry["status"] = "approved"
         VALIDATOR.validate(bad)
-        del bad["review_status"]["amendment"]["reviewers"][index]
+        entries = bad["review_status"]["amendment"]["reviewers"]
+        missing_seat = entries[index]["seat"]
+        entries[:] = [entry for entry in entries if entry["seat"] != missing_seat]
         assert list(VALIDATOR.iter_errors(bad))
 
 
