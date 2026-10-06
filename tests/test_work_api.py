@@ -507,7 +507,84 @@ def test_next_determinism_two_calls_identical(monkeypatch):
     assert [r["work_id"] for r in a["queue"]] == [r["work_id"] for r in b["queue"]]
     a.pop("cache_age_s")
     b.pop("cache_age_s")
+    # PR observations age independently even inside the warm projection TTL.
+    for result in (a, b):
+        for source in result["sources"]:
+            (source.get("sections", {}).get("prs") or {}).pop("age_s", None)
     assert a == b
+
+
+def test_pr_snapshot_http_cold_refresh_and_warm_stale(monkeypatch):
+    """HTTP callers cannot join a slow refresh or re-age its PR evidence."""
+    import threading
+    import time
+    from datetime import timedelta
+
+    from scripts import github_rest_cache
+    from scripts.work import normalize, sources_public
+
+    started = threading.Event()
+    release = threading.Event()
+    snapshot = sources_public._PRSnapshot(REPO, 1000)
+    rows = [
+        {"number": number, "statusCheckRollup": [{"name": "CI Gate", "conclusion": "SUCCESS"}]}
+        for number in range(1, 41)
+    ]
+
+    def slow_prs(*args, **kwargs):
+        started.set()
+        assert release.wait(timeout=10)
+        return rows
+
+    monkeypatch.setattr(github_rest_cache, "list_open_prs", slow_prs)
+    monkeypatch.setattr(sources_public, "_pr_snapshot", lambda *_args: snapshot)
+
+    def build(**kwargs):
+        sections = _qualify_sections(prs=sources_public.fetch_open_prs())
+        return build_projection(sections, lifecycle_ledgers=[])
+
+    monkeypatch.setattr(work_router, "build_public_projection", build)
+    _patch_known_streams(monkeypatch)
+    try:
+        before = time.perf_counter()
+        response = client.get("/api/work/v1/projection?fresh=true")
+        assert time.perf_counter() - before < work_router.TIMEOUT_S
+        assert response.status_code == 200
+        cold = response.json()
+        assert cold["sources"][0]["sections"]["prs"]["status"] == "unavailable"
+        assert any(o["reason"] == "gh_pr_snapshot_missing" for o in cold["denominator"]["omissions"])
+        assert started.wait(timeout=2)
+    finally:
+        release.set()
+        snapshot._thread.join(timeout=10)
+        assert not snapshot._thread.is_alive()
+
+    warm = client.get("/api/work/v1/projection?fresh=true")
+    assert warm.status_code == 200
+    assert warm.json()["denominator"]["prs_open"] == 40
+    assert {i["safe_next_action"]["code"] for i in warm.json()["items"]} == {"REQUEST_CF_REVIEW"}
+    observed = sources_public.datetime.fromisoformat(warm.json()["sources"][0]["sections"]["prs"]["observed_at"])
+
+    class Clock:
+        @staticmethod
+        def now(tz):
+            return observed + timedelta(seconds=31)
+
+        fromisoformat = staticmethod(sources_public.datetime.fromisoformat)
+
+    monkeypatch.setattr(normalize, "datetime", Clock)
+    # Keep refresh pending while inspecting the independently aged warm cache.
+    monkeypatch.setattr(work_router, "_get_or_create_build_task", lambda *a, **kw: None)
+    stale = client.get("/api/work/v1/projection")
+    assert stale.status_code == 200
+    assert stale.json()["cache_age_s"] < work_router.CACHE_TTL_S
+    assert all(i["health"] == "UNKNOWN" for i in stale.json()["items"])
+    assert all(i["projections"]["verification"]["ci_state"] == "unknown" for i in stale.json()["items"])
+    assert stale.json()["sources"][0]["sections"]["prs"]["age_s"] == 31
+    nxt = client.get("/api/work/v1/next?stream=infra-harness")
+    assert nxt.status_code == 200
+    assert nxt.json()["queue"] == []
+    assert nxt.json()["sources"][0]["sections"]["prs"]["status"] == "stale"
 
 
 def test_next_limit_bounds(monkeypatch):
@@ -1351,6 +1428,8 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
     started = time.monotonic()
     real_cache_set = state_helpers.cache_set
     real_refresh = work_router.refresh_projection_cache_periodically
+    refresh_prs = Mock()
+    monkeypatch.setattr(work_router, "fetch_open_prs", refresh_prs)
 
     def build(**_kwargs):
         builds.append(time.monotonic())
@@ -1432,6 +1511,7 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
         release_hung.set()
         cache_invalidate(key)
     assert timer_stopped.is_set(), "lifespan leaked the refresh timer"
+    assert refresh_prs.call_count > 0
 
 
 def _issue_row(number: int, title: str, *, body: str = "") -> dict:

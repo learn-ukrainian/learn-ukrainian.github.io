@@ -237,6 +237,7 @@
               "status": { "$ref": "#/$defs/sourceStatus" },
               "reason": { "type": "string" },
               "age_s": { "type": ["number", "null"] },
+              "observed_at": { "type": ["string", "null"], "format": "date-time" },
               "count": { "type": "integer", "minimum": 0 }
             }
           }

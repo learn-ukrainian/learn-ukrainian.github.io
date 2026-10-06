@@ -214,7 +214,7 @@ def test_pr_matrix_leftover_projection_routes_to_review_or_merge(
         repository_id=REPO,
         tasks=[],
         reviews=[],
-        section_times={},
+        section_times={"prs": SectionResult("prs", "ok")},
     )
     apply_health_and_actions([item], source_ok=True)
     assert item["projections"]["verification"]["ci_state"] == "passing"

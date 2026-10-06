@@ -1,7 +1,8 @@
 """Public-only source collectors for the Work projection.
 
 Warm path rules:
-- issues and PRs are conditional REST lists (shared ETag cache), cap 1000
+- issues are conditional REST lists (shared ETag cache), cap 1000
+- PR reads serve an atomic background REST snapshot, cap 1000, with its own age
 - check runs, reviews, and mergeability are conditional REST reads bounded by
   the open PR count; a 304 is served from cache and is not stored as a new body
 - class-4 only: delegate/active, delegate/tasks, fleet/reviews
@@ -14,11 +15,14 @@ from __future__ import annotations
 
 import json
 import subprocess
+import threading
 import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from copy import deepcopy
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from functools import lru_cache
 from typing import Any
 
 import scripts.github_rest_cache as github_rest
@@ -29,6 +33,8 @@ DELEGATE_TASK_LIMIT = 500
 FLEET_REVIEW_PAGE = 100
 FLEET_REVIEW_HARD_CAP = 2000
 SECTION_TIMEOUT_S = 4.5  # leave headroom under the 5s typed-degradation budget
+PR_SNAPSHOT_FRESHNESS_S = 30.0  # same bound as the Work projection cache
+PR_REFRESH_TIMEOUT_S = 60.0  # background reads do not consume the request budget
 # Sole public repository for the Work projection. Closed identity: not overridable
 # by environment, config, or free-form caller input (privacy boundary).
 DEFAULT_PUBLIC_REPOSITORY = "learn-ukrainian/learn-ukrainian.github.io"
@@ -273,24 +279,79 @@ def _fetch_open_issues_rest(repo: str, limit: int) -> SectionResult:
     )
 
 
+class _PRSnapshot:
+    """Single-flight REST refresh, published only after the entire list settles.
+
+    Readers never wait for GitHub. A failed list read retains the previous
+    observation without changing its age; a cold cache is an explicit omission.
+    """
+
+    def __init__(self, repo: str, limit: int) -> None:
+        self.repo = repo
+        self.limit = limit
+        self._lock = threading.Lock()
+        self._thread: threading.Thread | None = None
+        self._snapshot: SectionResult | None = None
+        self._started_at = float("-inf")
+        self._reason = "gh_pr_snapshot_missing"
+
+    def read(self) -> SectionResult:
+        with self._lock:
+            now = time.monotonic()
+            if (self._thread is None or not self._thread.is_alive()) and (
+                now - self._started_at >= PR_SNAPSHOT_FRESHNESS_S / 2
+            ):
+                self._started_at = now
+                observed_at = _iso_now()  # oldest read, not refresh completion
+                self._thread = threading.Thread(
+                    target=self._refresh,
+                    args=(observed_at,),
+                    name="work-pr-snapshot",
+                    daemon=True,
+                )
+                self._thread.start()
+            if self._snapshot is None:
+                return SectionResult("prs", "unavailable", reason=self._reason, age_s=None, observed_at=None)
+            result = deepcopy(self._snapshot)
+        result.age_s = max(0.0, (_utc_now() - datetime.fromisoformat(result.observed_at)).total_seconds())
+        if result.age_s > PR_SNAPSHOT_FRESHNESS_S:
+            result.status = "stale"
+            result.reason = "gh_pr_snapshot_stale"
+        return result
+
+    def _refresh(self, observed_at: str) -> None:
+        try:
+            payload = github_rest.list_open_prs(self.repo, limit=self.limit, timeout=PR_REFRESH_TIMEOUT_S)
+            if not isinstance(payload, list):
+                raise ValueError("gh_pr_list_not_list")
+            truncated = bool(getattr(payload, "truncated", False))
+            result = SectionResult(
+                "prs",
+                "truncated" if truncated else "ok",
+                payload=payload,
+                count=len(payload),
+                truncated=truncated,
+                observed_at=observed_at,
+            )
+        except Exception as exc:
+            # Never expose exception text (which may include transport details).
+            with self._lock:
+                self._reason = (
+                    "gh_pr_list_timeout" if isinstance(exc, github_rest.GitHubRestTimeout) else "gh_pr_refresh_failed"
+                )
+            return
+        with self._lock:
+            self._snapshot = result
+
+
+@lru_cache(maxsize=8)
+def _pr_snapshot(repo: str, limit: int) -> _PRSnapshot:
+    return _PRSnapshot(repo, limit)
+
+
 def _fetch_open_prs_rest(repo: str, limit: int) -> SectionResult:
-    """Conditional REST pull list plus one detail pass per open pull."""
-    try:
-        payload = github_rest.list_open_prs(repo, limit=limit, timeout=SECTION_TIMEOUT_S)
-    except github_rest.GitHubRestTimeout:
-        return SectionResult("prs", "timeout", reason="gh_pr_list_timeout")
-    except github_rest.GitHubRestError as exc:
-        return SectionResult("prs", "unavailable", reason=str(exc)[:200])
-    if not isinstance(payload, list):
-        return SectionResult("prs", "degraded", reason="gh_pr_list_not_list")
-    truncated = bool(getattr(payload, "truncated", False))
-    return SectionResult(
-        "prs",
-        "truncated" if truncated else "ok",
-        payload=payload,
-        count=len(payload),
-        truncated=truncated,
-    )
+    """Read the last settled observation and schedule a background refresh."""
+    return _pr_snapshot(repo, limit).read()
 
 
 def _fetch_issue_states_rest(
@@ -1008,7 +1069,11 @@ def public_source_envelope(sections: dict[str, SectionResult]) -> dict[str, Any]
     }
     ages: list[float] = []
     for name, section in sections.items():
-        meta: dict[str, Any] = {"status": section.status, "count": section.count}
+        meta: dict[str, Any] = {
+            "status": section.status,
+            "count": section.count,
+            "observed_at": section.observed_at,
+        }
         if section.reason:
             meta["reason"] = section.reason
         if section.age_s is not None:
