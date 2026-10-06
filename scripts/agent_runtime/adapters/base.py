@@ -151,7 +151,9 @@ class AgentAdapter(Protocol):
                 supports it (CC 2.1.98+); Codex passes
                 ``-c model_reasoning_effort=<level>``; Gemini currently
                 no-ops with a debug log (see #1396). Adapters MUST NOT
-                hard-fail on an unsupported CLI — warn and proceed.
+                hard-fail on an unsupported CLI — warn and proceed, except
+                AGY: unsupported explicit effort raises before spawn; omitted
+                effort preserves its CLI default.
 
         Returns:
             InvocationPlan ready for subprocess.Popen.

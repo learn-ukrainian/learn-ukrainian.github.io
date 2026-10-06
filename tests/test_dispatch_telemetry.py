@@ -826,3 +826,32 @@ def setup_function() -> None:
 def teardown_function() -> None:
     _reset_rate_limit_cache_for_tests()
     _reset_version_cache_for_tests()
+
+
+@pytest.mark.parametrize("flag,requested,expected", [
+    ("xhigh", "high", "xhigh"), (None, "high", "not-exposed"),
+    (None, None, "not-exposed"), ("max", None, "max"),
+])
+def test_agy_plan_effort_reports_configuration_without_request_fallback(tmp_path, flag, requested, expected):
+    cmd = ["agy", "--model", "gemini-3.8-flash-high"]
+    if flag is not None:
+        cmd += ["--effort", flag]
+    with patch("agent_runtime.telemetry._probe_version", return_value="1.3.0"):
+        telemetry = resolve_invocation_telemetry(
+            agent_name="agy", plan=InvocationPlan(cmd=cmd, cwd=tmp_path),
+            requested_model="gemini-3.8-flash-high", requested_effort=requested,
+        )
+    assert telemetry.effort == expected
+    # CLI selection can remap a model variant; this is configuration only.
+    assert telemetry.model == "gemini-3.8-flash-high"
+    assert not hasattr(telemetry, "backend_observed_effort")
+    assert not hasattr(telemetry, "backend_observed_model")
+
+
+@pytest.mark.parametrize("requested", [None, "low", "medium", "high", "xhigh", "max"])
+def test_agy_no_plan_reports_requested_effort_or_marker(requested):
+    with patch("agent_runtime.telemetry._probe_version", return_value="1.3.0"):
+        telemetry = resolve_dispatch_start_telemetry(
+            agent_name="agy", requested_model="gemini-3.8-flash-high", requested_effort=requested,
+        )
+    assert telemetry.effort == (requested or "not-exposed")

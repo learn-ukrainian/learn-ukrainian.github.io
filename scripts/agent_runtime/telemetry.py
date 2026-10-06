@@ -253,6 +253,8 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         return _arg_after(plan.cmd, "--effort")
     if agent_name == "gemini":
         return None
+    if agent_name == "agy":
+        return _arg_after(plan.cmd, "--effort") or _NOT_EXPOSED
     if agent_name == "deepseek":
         return _arg_after(plan.cmd, "--variant")
     if agent_name in ("hermes-deepseek", "qwen") or is_hermes_grok_seat(agent_name):
@@ -349,7 +351,9 @@ def _resolve_effort_from_defaults(
 
     if _is_acp_shadow_identity(agent_name):
         return requested_effort or _NOT_EXPOSED
-    if agent_name in {"agy", "cursor", "gemini"}:
+    if agent_name == "agy":
+        return requested_effort or _NOT_EXPOSED
+    if agent_name in {"cursor", "gemini"}:
         return _NOT_EXPOSED
     if agent_name in {"hermes-deepseek", "qwen"} or is_hermes_grok_seat(agent_name):
         return _hermes_configured_effort() or _NOT_EXPOSED

@@ -740,3 +740,58 @@ def test_preparation_deadline_refuses_first_launch(tmp_path, monkeypatch):
     once.assert_not_called()
     assert result.parse.agy_telemetry.task_fields()["agy_attempt_count"] == 0
     assert result.parse.agy_telemetry.retry_disposition == "deadline_exhausted"
+
+
+@pytest.mark.parametrize("entrypoint", ["initial", "failover", "gemini-agy-rung"])
+@pytest.mark.parametrize("effort", [None, "high", "max"])
+@pytest.mark.parametrize("first_failure", ["eligibility", "cancellation"])
+def test_all_native_entrypoints_retain_effort_on_retry(
+    tmp_path, monkeypatch, entrypoint, effort, first_failure,
+):
+    from scripts.agent_runtime.adapters import agy as agy_module
+    from scripts.agent_runtime.failover import FailoverChain, FailoverRoute
+
+    adapter = agy_module.AgyAdapter()
+    monkeypatch.setattr(agy_module, "_agy_version", lambda _: (1, 3, 0))
+    monkeypatch.setattr(agy_module, "_agy_effort_choices", lambda _: frozenset({"low", "medium", "high", "xhigh", "max"}))
+    monkeypatch.setattr(runner, "_load_adapter", lambda _: adapter)
+    monkeypatch.setattr(runner, "has_headroom", lambda *_: (True, ""))
+    monkeypatch.setattr(runner, "load_failover_chain", lambda *_, **__: None)
+    monkeypatch.setattr(runner, "write_record", Mock())
+    monkeypatch.setattr(runner, "_agy_git_state", lambda _: (b"fixture-head", b"clean"))
+    monkeypatch.setattr(runner, "_resolve_plan_telemetry", lambda **_: SimpleNamespace(
+        model="gemini-3.8-flash-high", effort=effort or "not-exposed", cli_version="fixture",
+    ))
+    once = Mock(side_effect=[_cancel() if first_failure == "cancellation" else _outcome(),
+                             _outcome(ok=True, stderr="")])
+    monkeypatch.setattr(runner, "_execute_invocation_once", once)
+    common = dict(agent_name="agy", adapter=adapter, prompt="fixture prompt", mode="read-only", cwd=tmp_path,
+                  task_id="effort-retry-fixture", session_id=None, tool_config=None, entrypoint="delegate",
+                  hard_timeout=30, stall_timeout=10, effort=effort)
+    if entrypoint == "initial":
+        result = runner._invoke_impl("agy", "fixture prompt", mode="read-only", cwd=tmp_path,
+                                     task_id="effort-retry-fixture", entrypoint="delegate", effort=effort,
+                                     hard_timeout=30, stall_timeout=10)
+    elif entrypoint == "failover":
+        chain = FailoverChain("agy", (FailoverRoute("agy", "gemini-3.8-flash-high"),))
+        monkeypatch.setattr(runner, "FailoverCooldownStore", Mock())
+        monkeypatch.setattr(runner, "ordered_available_routes", lambda *_: chain.routes)
+        result = runner._invoke_with_runner_failover(**common, chain=chain, event_sink=None,
+                                                     stdout_silence_timeout=None, initial_response_timeout=None)
+    else:
+        def ladder(*, attempt_runner, **_):
+            rung = runner.GeminiRung(index=1, total=1, model="gemini-3.8-flash-high", auth_mode=None, cli="agy-cli")
+            outcome = attempt_runner(rung, 1, 30)
+            assert outcome.status == "success"
+            return runner.CallResult(response_text=outcome.response_text, model_used=rung.model,
+                                     auth_mode_used=None, elapsed_s=4, cli_used="agy-cli")
+        monkeypatch.setattr(runner, "run_gemini_fallback_ladder", ladder)
+        result = runner._invoke_gemini_with_fallback(**common, model="gemini-3.8-flash-high")
+    assert result.ok
+    assert once.call_count == 2
+    for call in once.call_args_list:
+        argv = call.kwargs["plan"].cmd
+        assert argv.count("--effort") == (0 if effort is None else 1)
+        if effort is not None:
+            assert argv[argv.index("--effort") + 1] == effort
+    assert result.effort == (effort or "not-exposed")
