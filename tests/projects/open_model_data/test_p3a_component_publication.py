@@ -144,7 +144,7 @@ def test_grammar_corrupt_group_member_refuses_before_install(tmp_path: Path, mon
 def test_decolonization_cli_build_and_check(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = _repo(tmp_path)
     monkeypatch.setattr(decol, "REPO_ROOT", repo)
-    monkeypatch.setattr(decol, "build_all_cases", lambda: [object()])
+    monkeypatch.setattr(decol, "build_all_cases", lambda **kwargs: [object()])
     monkeypatch.setattr(
         decol, "generate_dataset_records", lambda cases: ([{"is_erroneous": True}], [{"is_erroneous": False}])
     )
@@ -168,7 +168,7 @@ def test_missing_brown_input_gives_hydrate_guidance(tmp_path: Path) -> None:
 def test_external_output_and_symlink_alias(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = _repo(tmp_path)
     monkeypatch.setattr(decol, "REPO_ROOT", repo)
-    monkeypatch.setattr(decol, "build_all_cases", lambda: [object()])
+    monkeypatch.setattr(decol, "build_all_cases", lambda **kwargs: [object()])
     monkeypatch.setattr(decol, "generate_dataset_records", lambda cases: ([{"is_erroneous": True}], []))
     monkeypatch.setattr(decol, "asdict", lambda case: {"case_id": "fixture"})
     export = tmp_path / "external-export"
