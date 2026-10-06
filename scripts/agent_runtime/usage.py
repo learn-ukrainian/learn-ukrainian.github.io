@@ -39,6 +39,7 @@ import contextlib
 import json
 import os
 import time
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -383,6 +384,44 @@ def summarize_lane_runtime(
     }
 
 
+def _iter_usage_records(file_path: Path, unreadable: dict[str, int]) -> Iterator[dict[str, Any]]:
+    """Yield JSON objects from one usage file, one line at a time.
+
+    A line that is not UTF-8, not JSON, or not a JSON object increments
+    ``unreadable["lines"]`` and is skipped. An unreadable file increments
+    ``unreadable["files"]`` and yields nothing. Neither fault is raised:
+    rows already accepted, later rows in the same file, and other files
+    stay in the caller's totals. Invalid bytes are not replaced into a
+    value that could be counted as burn.
+    """
+    try:
+        with open(file_path, "rb") as handle:
+            for raw in handle:
+                try:
+                    text = raw.decode("utf-8").strip()
+                except UnicodeDecodeError:
+                    unreadable["lines"] += 1
+                    continue
+                if not text:
+                    continue
+                try:
+                    parsed = json.loads(text)
+                except ValueError:
+                    unreadable["lines"] += 1
+                    continue
+                if not isinstance(parsed, dict):
+                    unreadable["lines"] += 1
+                    continue
+                yield parsed
+    except FileNotFoundError:
+        # A regular file removed after the listing held no rows. A listed
+        # symlink whose target is missing is evidence that cannot be read.
+        if os.path.islink(file_path):
+            unreadable["files"] += 1
+    except OSError:
+        unreadable["files"] += 1
+
+
 def _new_fleet_burn_window() -> dict[str, Any]:
     return {
         "window_s": 0,
@@ -400,6 +439,8 @@ def summarize_fleet_burn(
     """Dispatch burn from our JSONL across 5h / 7d / 30d windows.
 
     Gemini and AGY share one read set, as in ``summarize_lane_runtime``.
+    One malformed line or unreadable file is reported on ``unreadable``
+    and cannot drop durations parsed from the other rows.
     """
     now_ts = time.time() if now is None else now
     windows_s = {
@@ -411,40 +452,30 @@ def summarize_fleet_burn(
     for name, window_s in windows_s.items():
         buckets[name]["window_s"] = int(window_s)
 
+    unreadable = {"files": 0, "lines": 0, "records": 0}
     root = usage_dir if usage_dir is not None else _usage_dir()
     if root.is_dir():
         for file_path in _lane_usage_files(root, agent):
-            try:
-                with open(file_path, encoding="utf-8") as handle:
-                    for raw in handle:
-                        raw = raw.strip()
-                        if not raw:
-                            continue
-                        try:
-                            rec = json.loads(raw)
-                        except json.JSONDecodeError:
-                            continue
-                        ts_str = rec.get("ts")
-                        if not ts_str:
-                            continue
-                        try:
-                            ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
-                        except (ValueError, AttributeError, TypeError):
-                            continue
-                        outcome = str(rec.get("outcome") or "other")
-                        duration = rec.get("duration_s")
-                        hours = float(duration) / 3600.0 if isinstance(duration, (int, float)) else 0.0
-                        for name, window_s in windows_s.items():
-                            if ts < now_ts - window_s:
-                                continue
-                            bucket = buckets[name]
-                            counts = bucket["counts"]
-                            key = outcome if outcome in counts else "other"
-                            counts[key] += 1
-                            counts["total"] += 1
-                            bucket["hours"] = round(float(bucket["hours"]) + hours, 4)
-            except OSError:
-                continue
+            for rec in _iter_usage_records(file_path, unreadable):
+                ts_str = rec.get("ts")
+                if not ts_str:
+                    continue
+                try:
+                    ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
+                except (ValueError, AttributeError, TypeError):
+                    continue
+                outcome = str(rec.get("outcome") or "other")
+                duration = rec.get("duration_s")
+                hours = float(duration) / 3600.0 if isinstance(duration, (int, float)) else 0.0
+                for name, window_s in windows_s.items():
+                    if ts < now_ts - window_s:
+                        continue
+                    bucket = buckets[name]
+                    counts = bucket["counts"]
+                    key = outcome if outcome in counts else "other"
+                    counts[key] += 1
+                    counts["total"] += 1
+                    bucket["hours"] = round(float(bucket["hours"]) + hours, 4)
 
     for bucket in buckets.values():
         bucket["hours"] = round(float(bucket["hours"]), 4)
@@ -453,6 +484,7 @@ def summarize_fleet_burn(
         "source": "agent_runtime_jsonl",
         "agent": agent,
         "windows": buckets,
+        "unreadable": {**unreadable, "total": sum(unreadable.values())},
     }
 
 

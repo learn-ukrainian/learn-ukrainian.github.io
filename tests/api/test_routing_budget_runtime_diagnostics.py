@@ -13,6 +13,8 @@ import time
 from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
+import pytest
+
 from scripts.agent_runtime import usage as usage_mod
 from scripts.api import state_router
 
@@ -383,6 +385,7 @@ def test_gemini_subscription_row_counts_agy_activity_and_keeps_faults(monkeypatc
     assert burn["windows"]["7d"]["counts"]["total"] == 7
     assert burn["windows"]["30d"]["counts"]["error"] == 2
     assert burn["windows"]["30d"]["counts"]["total"] == 8
+    assert burn["unreadable"] == {"files": 1, "lines": 1, "records": 0, "total": 2}
 
     codex = data["agents"]["codex"]
     claude = data["agents"]["claude"]
@@ -397,4 +400,114 @@ def test_gemini_subscription_row_counts_agy_activity_and_keeps_faults(monkeypatc
     assert (grok["runtime"]["timeout"], grok["runtime"]["total"]) == (1, 1)
     assert grok["fleet_burn"]["windows"]["30d"]["counts"]["total"] == 1
     assert data["agents"]["cursor"]["runtime"]["total"] == 0
+    assert data["agents"]["kimi"]["runtime"]["total"] == 0
+
+
+@pytest.mark.parametrize("corrupt_line", [b"[]\n", b"\xff\n"], ids=["json-non-object", "invalid-utf8"])
+def test_gemini_api_row_keeps_burn_when_agy_evidence_is_corrupt(monkeypatch, tmp_path, corrupt_line):
+    """The Gemini routing-budget row keeps 5h/7d/30d hours when AGY evidence is corrupt.
+
+    A JSON non-object or invalid UTF-8 used to raise out of the burn summary.
+    The API then replaced every window with an empty object.
+    """
+    usage_mod._reset_rate_limit_cache_for_tests()
+    now = time.time()
+    day = datetime.fromtimestamp(now, tz=UTC).strftime("%Y-%m-%d")
+    batch = tmp_path / "batch_state"
+    usage = batch / "api_usage"
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    agy = usage / f"usage_agy-dispatch_{day}.jsonl"
+    gemini = usage / f"usage_gemini-dispatch_{day}.jsonl"
+    _append(agy, {"ts": _stamp(now, 60), "outcome": "ok", "duration_s": 3600})
+    with agy.open("ab") as handle:
+        handle.write(b"\n")
+        handle.write(corrupt_line)
+        handle.write(b"\n")
+    _append(agy, {"ts": _stamp(now, 6 * 3600 + 60), "outcome": "ok", "duration_s": 7200})
+    _append(
+        gemini,
+        {
+            "ts": _stamp(now, 30),
+            "outcome": "rate_limited",
+            "duration_s": 1800,
+            "model": "gemini-3.8-flash-high",
+        },
+    )
+    _append(gemini, {"ts": _stamp(now, 10 * 86400 + 60), "outcome": "error", "duration_s": 3600})
+    os.link(gemini, usage / f"usage_agy-alias_{day}.jsonl")
+    (usage / f"usage_agy-dir_{day}.jsonl").mkdir()
+    missing = usage / "missing-usage.jsonl"
+    for name in ("agy", "gemini"):
+        (usage / f"usage_{name}-missing_{day}.jsonl").symlink_to(missing)
+    codex_path = usage / f"usage_codex-bridge_{day}.jsonl"
+    _append(codex_path, {"ts": _stamp(now, 15), "outcome": "ok", "duration_s": 1800})
+    with codex_path.open("ab") as handle:
+        handle.write(b"[]\n")
+    _append(usage / f"usage_claude-bridge_{day}.jsonl", {"ts": _stamp(now, 3 * 86400), "outcome": "error"})
+    _append(usage / f"usage_glm-bridge_{day}.jsonl", {"ts": _stamp(now, 15), "outcome": "ok", "duration_s": 100000})
+
+    budget_path = _write_budget_config(tmp_path)
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
+    monkeypatch.setattr(state_router, "get_provider_usage_data", _available_quota)
+    monkeypatch.setattr(
+        state_router,
+        "get_cursor_lane_usage",
+        lambda **kwargs: {
+            "lane": "cursor",
+            "login_state": "authenticated",
+            "probe_state": "NEED_PROBE",
+            "provider_windows": {
+                "auto": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+        },
+    )
+
+    data = state_router.compute_routing_budget(
+        datetime.now(UTC),
+        budget_config_path=budget_path,
+        tasks_dir=tasks,
+        batch_state_dir=batch,
+    )
+
+    assert "agy" not in data["agents"]
+    gemini_row = data["agents"]["gemini"]
+    burn = gemini_row["fleet_burn"]
+    direct = usage_mod.summarize_fleet_burn("gemini", usage_dir=usage, now=now)
+    agy_direct = usage_mod.summarize_fleet_burn("agy", usage_dir=usage, now=now)
+    assert burn["agent"] == "gemini"
+    assert burn["windows"]["5h"]["counts"]["total"] == 2
+    assert burn["windows"]["5h"]["hours"] == 1.5
+    assert burn["windows"]["7d"]["counts"]["total"] == 3
+    assert burn["windows"]["7d"]["hours"] == 3.5
+    assert burn["windows"]["30d"]["counts"]["error"] == 1
+    assert burn["windows"]["30d"]["counts"]["total"] == 4
+    assert burn["windows"]["30d"]["hours"] == 4.5
+    assert burn["windows"]["5h"]["window_s"] == 5 * 3600
+    assert burn["unreadable"] == {"files": 2, "lines": 1, "records": 0, "total": 3}
+    assert burn["windows"] == direct["windows"] == agy_direct["windows"]
+    assert burn["unreadable"] == direct["unreadable"] == agy_direct["unreadable"]
+
+    runtime = gemini_row["runtime"]
+    assert runtime["ok"] == 1
+    assert runtime["rate_limited"] == 1
+    assert runtime["total"] == 2
+    assert runtime["unreadable"] == burn["unreadable"]
+    agy_runtime = usage_mod.summarize_lane_runtime("agy", usage_dir=usage, now=now)
+    assert agy_runtime["total"] == runtime["total"]
+    assert agy_runtime["unreadable"] == runtime["unreadable"]
+
+    codex = data["agents"]["codex"]
+    claude = data["agents"]["claude"]
+    assert codex["fleet_burn"]["windows"]["5h"]["counts"]["total"] == 1
+    assert codex["fleet_burn"]["windows"]["5h"]["hours"] == 0.5
+    assert codex["fleet_burn"]["unreadable"] == {"files": 0, "lines": 1, "records": 0, "total": 1}
+    assert codex["runtime"]["total"] == 1
+    assert codex["runtime"]["unreadable"]["lines"] == 1
+    assert claude["fleet_burn"]["windows"]["5h"]["counts"]["total"] == 0
+    assert claude["fleet_burn"]["windows"]["7d"]["counts"]["total"] == 1
+    assert claude["fleet_burn"]["unreadable"]["total"] == 0
+    assert claude["runtime"]["total"] == 0
+    assert data["agents"]["cursor"]["fleet_burn"]["windows"]["30d"]["counts"]["total"] == 0
     assert data["agents"]["kimi"]["runtime"]["total"] == 0

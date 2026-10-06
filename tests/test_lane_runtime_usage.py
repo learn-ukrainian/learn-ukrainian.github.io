@@ -9,6 +9,8 @@ import time
 from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime import usage as usage_mod
@@ -225,7 +227,9 @@ def test_fleet_burn_counts_agy_and_gemini_across_windows_once(tmp_path: Path) ->
     assert gemini_burn["windows"]["30d"]["counts"]["error"] == 2
     assert gemini_burn["windows"]["30d"]["counts"]["timeout"] == 1
     assert gemini_burn["windows"]["30d"]["counts"]["total"] == 7
+    assert gemini_burn["unreadable"] == {"files": 0, "lines": 1, "records": 0, "total": 1}
     assert agy_burn["windows"] == gemini_burn["windows"]
+    assert agy_burn["unreadable"] == gemini_burn["unreadable"]
 
     codex = usage_mod.summarize_fleet_burn("codex", usage_dir=tmp_path, now=now)
     claude = usage_mod.summarize_fleet_burn("claude", usage_dir=tmp_path, now=now)
@@ -233,8 +237,113 @@ def test_fleet_burn_counts_agy_and_gemini_across_windows_once(tmp_path: Path) ->
     cursor = usage_mod.summarize_fleet_burn("cursor", usage_dir=tmp_path, now=now)
     assert codex["windows"]["5h"]["counts"]["total"] == 1
     assert codex["windows"]["5h"]["hours"] == 0.5
+    assert codex["unreadable"]["total"] == 0
     assert claude["windows"]["5h"]["counts"]["total"] == 0
     assert claude["windows"]["7d"]["counts"]["total"] == 1
     assert grok["windows"]["7d"]["counts"]["total"] == 0
     assert grok["windows"]["30d"]["counts"]["total"] == 1
     assert cursor["windows"]["5h"]["counts"]["total"] == 0
+
+
+def _corrupt_combined_usage(tmp_path: Path, corrupt_line: bytes) -> float:
+    """Valid Gemini and AGY rows, then one bad AGY line, then another AGY row.
+
+    The row after the bad line is the one a file-level abort would drop.
+    A directory and a broken symlink are file faults and must not erase hours.
+    """
+    usage_mod._reset_rate_limit_cache_for_tests()
+    now = time.time()
+    day = datetime.fromtimestamp(now, tz=UTC).strftime("%Y-%m-%d")
+    agy = tmp_path / f"usage_agy-dispatch_{day}.jsonl"
+    gemini = tmp_path / f"usage_gemini-dispatch_{day}.jsonl"
+    _write_line(agy, {"ts": _stamp(now, 60), "outcome": "ok", "duration_s": 3600})
+    with agy.open("ab") as handle:
+        handle.write(b"\n")
+        handle.write(corrupt_line)
+        handle.write(b"\n")
+    _write_line(agy, {"outcome": "ok", "duration_s": 999})
+    _write_line(agy, {"ts": "not-a-timestamp", "outcome": "ok", "duration_s": 999})
+    _write_line(agy, {"ts": _stamp(now, 6 * 3600 + 60), "outcome": "ok", "duration_s": 7200})
+    _write_line(
+        gemini,
+        {
+            "ts": _stamp(now, 30),
+            "outcome": "rate_limited",
+            "duration_s": 1800,
+            "model": "gemini-3.8-flash-high",
+        },
+    )
+    _write_line(gemini, {"ts": _stamp(now, 10 * 86400 + 60), "outcome": "error", "duration_s": 3600})
+    os.link(gemini, tmp_path / f"usage_agy-alias_{day}.jsonl")
+    (tmp_path / f"usage_agy-dir_{day}.jsonl").mkdir()
+    missing = tmp_path / "missing-usage.jsonl"
+    for name in ("agy", "gemini"):
+        (tmp_path / f"usage_{name}-missing_{day}.jsonl").symlink_to(missing)
+    codex = tmp_path / f"usage_codex-bridge_{day}.jsonl"
+    _write_line(codex, {"ts": _stamp(now, 15), "outcome": "ok", "duration_s": 1800})
+    with codex.open("ab") as handle:
+        handle.write(b"[]\n")
+    _write_line(tmp_path / f"usage_claude-bridge_{day}.jsonl", {"ts": _stamp(now, 3 * 86400), "outcome": "error"})
+    _write_line(
+        tmp_path / f"usage_glm-bridge_{day}.jsonl",
+        {"ts": _stamp(now, 15), "outcome": "ok", "duration_s": 100000},
+    )
+    return now
+
+
+@pytest.mark.parametrize("corrupt_line", [b"[]\n", b"\xff\n"], ids=["json-non-object", "invalid-utf8"])
+def test_fleet_burn_keeps_gemini_agy_durations_when_agy_evidence_is_corrupt(
+    tmp_path: Path, corrupt_line: bytes
+) -> None:
+    """Both malformed AGY variants keep 5h, 7d, and 30d durations and show the fault."""
+    now = _corrupt_combined_usage(tmp_path, corrupt_line)
+    expected_unreadable = {"files": 2, "lines": 1, "records": 0, "total": 3}
+    expected_5h = {"ok": 1, "error": 0, "rate_limited": 1, "timeout": 0, "other": 0, "total": 2}
+
+    gemini_burn = usage_mod.summarize_fleet_burn("gemini", usage_dir=tmp_path, now=now)
+    agy_burn = usage_mod.summarize_fleet_burn("agy", usage_dir=tmp_path, now=now)
+    assert gemini_burn["windows"]["5h"]["counts"] == expected_5h
+    assert gemini_burn["windows"]["5h"]["hours"] == 1.5
+    assert gemini_burn["windows"]["7d"]["counts"] == {
+        "ok": 2,
+        "error": 0,
+        "rate_limited": 1,
+        "timeout": 0,
+        "other": 0,
+        "total": 3,
+    }
+    assert gemini_burn["windows"]["7d"]["hours"] == 3.5
+    assert gemini_burn["windows"]["30d"]["counts"] == {
+        "ok": 2,
+        "error": 1,
+        "rate_limited": 1,
+        "timeout": 0,
+        "other": 0,
+        "total": 4,
+    }
+    assert gemini_burn["windows"]["30d"]["hours"] == 4.5
+    assert gemini_burn["windows"]["5h"]["window_s"] == 5 * 3600
+    assert gemini_burn["windows"]["7d"]["window_s"] == 7 * 24 * 3600
+    assert gemini_burn["windows"]["30d"]["window_s"] == 30 * 24 * 3600
+    assert gemini_burn["unreadable"] == expected_unreadable
+    assert agy_burn["agent"] == "agy"
+    assert agy_burn["windows"] == gemini_burn["windows"]
+    assert agy_burn["unreadable"] == gemini_burn["unreadable"]
+
+    gemini_runtime = usage_mod.summarize_lane_runtime("gemini", usage_dir=tmp_path, now=now)
+    agy_runtime = usage_mod.summarize_lane_runtime("agy", usage_dir=tmp_path, now=now)
+    assert gemini_runtime["total"] == expected_5h["total"]
+    assert gemini_runtime["ok"] == 1
+    assert gemini_runtime["rate_limited"] == 1
+    assert gemini_runtime["unreadable"] == gemini_burn["unreadable"]
+    assert agy_runtime["total"] == gemini_runtime["total"]
+    assert agy_runtime["unreadable"] == gemini_runtime["unreadable"]
+
+    codex = usage_mod.summarize_fleet_burn("codex", usage_dir=tmp_path, now=now)
+    claude = usage_mod.summarize_fleet_burn("claude", usage_dir=tmp_path, now=now)
+    assert codex["windows"]["5h"]["counts"]["total"] == 1
+    assert codex["windows"]["5h"]["hours"] == 0.5
+    assert codex["unreadable"] == {"files": 0, "lines": 1, "records": 0, "total": 1}
+    assert claude["windows"]["5h"]["counts"]["total"] == 0
+    assert claude["windows"]["7d"]["counts"]["total"] == 1
+    assert claude["unreadable"]["total"] == 0
