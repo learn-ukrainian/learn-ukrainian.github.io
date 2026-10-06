@@ -248,7 +248,7 @@ Runner ↔ CI parity is covered offline by
 
 ## Advisory component shadow (#9721 slice 6)
 
-`Component shadow` is a separate report-only job after pytest, including red
+`Component shadow (advisory)` is a separate report-only job after pytest, including red
 runs. It checks out the event head with full history, reads the full-run shard
 artifacts, and uploads an ignored `component-shadow` JSON receipt. Its failures
 are advisory and absent from CI Gate's result checks. The full pytest command,
@@ -269,13 +269,21 @@ existing pre-deselection needs_artifact lists; JUnit cannot attest other IDs
 removed by the existing marker filter. Executed IDs exclude skips and collection
 errors. No separate collection or candidate test execution is introduced.
 
+The review of record measured 14,692 unresolved edges at
+`c3695226db3b18ec0e3ab42c9a7a3221e00df69c`: 10,379 file reads, 2,427 subprocess
+calls, 1,641 `sys.path` edges, 240 dynamic loads and 5 missing imports. Receipts
+retain this attributed baseline as `review_unresolved_edge_census`, separately
+from their current `unresolved_edges`. Any unresolved edge forces full selection;
+this census therefore demonstrates a narrowing gap, not successful narrowing.
+Resolving those edges is a separate follow-up owned by the #9721 driver.
+
 Use the task-prescribed interpreter as `$P` and ignored, managed scratch as `$R`:
 
 ```bash
 # Run/job metadata census only, before observing candidate selection/results.
 "$P" -m scripts.ci.component_shadow inventory --output "$R/baseline.json"
 "$P" -m scripts.ci.component_shadow register --baseline "$R/baseline.json" \
-  --output "$R/registration.json"
+  --minimum-narrowed-cases 1 --output "$R/registration.json"
 # After registration, acquire the complete live census through the stop date.
 "$P" -m scripts.ci.component_shadow inventory --first-attempts --created "$START..$STOP" \
   --output "$R/receipts/runs.json"
@@ -295,6 +303,15 @@ run and job metadata, so later reruns cannot erase first-attempt red cases.
 Choose `$START` early enough to include PR runs already in flight at
 registration; they count when their first attempt completes afterward. Metadata
 acquisition reads job conclusions, never candidate test IDs or artifacts.
+Registration also freezes a positive `minimum_narrowed_cases` (default 1;
+raise it with `register --minimum-narrowed-cases` before observing results).
+The checker reports narrowed red and injected case counts separately and their
+sum. Only valid, oracle-verified registered historical red cases, live pytest-red
+cases and injected controls in `selected` mode with a non-empty would-skip set
+count; green live runs and full selections do not. A zero count or a count below
+the frozen minimum stays unresolved with non-zero exit, even with zero misses.
+An absent or invalid registered minimum also stays unresolved. This minimum
+prevents a vacuous pass; it is not approval to narrow PR execution.
 
 Every skipped full-JUnit failing ID is a miss, including flaky tests. The sole
 test-failure exemption is the same ID failing in an artifact-complete, first
@@ -328,13 +345,20 @@ with the missing-evidence residual owned by the driver; it never authorizes
 narrowing.
 
 Cost is unknown until matched measurements are supplied via `report --cost`.
+CI passes `--cost-unknown-reason
+matched-pr-queue-measurements-not-available-in-shard-artifacts` because shard
+artifacts contain test durations, not matched full PR/queue runner costs, reuse
+probability or all overheads. Receipts retain that reason rather than inventing
+cost inputs. The driver owns acquisition of matched measurements before decision A.
 Inputs are `full_pr_runner_minutes`, `full_queue_runner_minutes`,
 `reuse_probability`, `reporter_runner_minutes`, `rerun_runner_minutes`,
 `ejection_runner_minutes`, `duplicated_preparation_runner_minutes` and
 `elapsed_wait_minutes`. The projection scales PR cost by selected JUnit test
-time and adds full queue execution, lost reuse and every supplied overhead.
+time and adds expected queue execution and every supplied overhead. Both baseline
+and candidate use `(1 - reuse_probability) * full_queue_runner_minutes`.
 Runner-minutes and elapsed waits are separate, and projection is not a measured
-saving. The unchanged exact-job-inventory reuse helper refuses the additional
-shadow job, so lost full-run reuse must be included even for full selection.
-The driver must measure combined PR/queue cost and reconcile this residual before
-decision A; the shadow does not amend reuse eligibility.
+saving. The shadow job is explicitly reuse-neutral in `REUSE_NEUTRAL_JOBS`;
+`lost_reuse_runner_minutes` is zero, including full selection. The existing
+`projected_cost_after_lost_reuse` receipt key is retained for reader compatibility.
+The driver must measure combined PR/queue cost before decision A; all other
+reuse eligibility checks remain unchanged.

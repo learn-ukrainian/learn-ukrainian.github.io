@@ -565,13 +565,13 @@ def test_component_shadow_leaves_reuse_decision_and_record_byte_identical(candid
     listing = candidate.load_jobs()
     with_shadow = {
         "total_count": listing["total_count"] + 1,
-        "jobs": [{"name": "Component shadow", "id": 900, **shadow}, *listing["jobs"]],
+        "jobs": [{"name": "Component shadow (advisory)", "id": 900, **shadow}, *listing["jobs"]],
     }
     decision = reuse_green_run.decide(_QUEUED, [replace(candidate, load_jobs=lambda: with_shadow)])
     # Includes the reason and reused job IDs, not just the reuse boolean.
     assert json.dumps(asdict(decision), sort_keys=True).encode() == json.dumps(asdict(baseline), sort_keys=True).encode()
     assert json.dumps(candidate.load_record(), sort_keys=True).encode() == record_before
-    assert "Component shadow" not in dict(decision.jobs)
+    assert "Component shadow (advisory)" not in dict(decision.jobs)
 
 
 _OTHER_TREE_COMMIT = {"d" * 40: {"sha": "d" * 40, "tree": "2" * 40, "parents": ["b" * 40, _PR_HEAD]}}
@@ -655,7 +655,7 @@ def test_pytest_shards_match_the_ci_matrix() -> None:
     assert reuse_green_run.pytest_shards(_CI.read_text(encoding="utf-8")) == tuple(matrix)
     # Every other ci.yml job name is required, queue-only, or explicitly advisory.
     names = {job.get("name") for job in _jobs_of_ci().values()}
-    assert set(reuse_green_run.REUSE_NEUTRAL_JOBS) == {"Component shadow"}
+    assert set(reuse_green_run.REUSE_NEUTRAL_JOBS) == {"Component shadow (advisory)"}
     assert (
         set(reuse_green_run.EXPECTED_JOBS)
         | set(reuse_green_run.SKIPPED_ON_PULL_REQUEST)

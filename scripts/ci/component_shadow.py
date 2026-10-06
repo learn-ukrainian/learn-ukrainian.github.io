@@ -30,6 +30,14 @@ TOOLS = ("scripts/ci/component_shadow.py", "scripts/ci/components.py", "scripts/
          "scripts/ci/frontend_change_scope.py", "scripts/ci/frontend_change_denominator.json",
          "scripts/common/repo_root.py", "scripts/common/jsonl.py", "scripts/storage/test_baseline.py",
          "scripts/deploy/auto_deploy_eligibility.py")
+REVIEW_EDGE_CENSUS = {
+    "head_sha": "c3695226db3b18ec0e3ab42c9a7a3221e00df69c",
+    "source": "claude-opus-5-5 review of record; measured selection, not the current census",
+    "total": 14692,
+    "by_kind": {"file_reads": 10379, "subprocess": 2427, "sys_path": 1641,
+                "dynamic_loads": 240, "missing_imports": 5},
+    "resolution_owner": "#9721 driver; separate edge-resolution follow-up",
+}
 
 
 def utc_now() -> str:
@@ -191,30 +199,33 @@ def oracle_failures(receipt: dict, directory: Path) -> tuple[set, set]:
     return failed, collection
 
 
-def projected_cost(selection: dict, evidence: dict, cost: dict | None) -> dict:
-    """Count queue reuse loss as well as PR saving; absent inputs stay unknown."""
+def projected_cost(selection: dict, evidence: dict, cost: dict | None,
+                   unknown_reason: str = "matched-pr-queue-cost-inputs-not-supplied") -> dict:
+    """Preserve queue reuse in the PR projection; absent inputs stay unknown."""
     seconds = evidence["test_seconds_by_file"]
     total = sum(seconds.values())
     selected = sum(value for file, value in seconds.items() if file in selection["selected_test_files"])
     ratio = selected / total if total > 0 else None
     result = {"status": "unknown", "selected_test_time_fraction": ratio,
-              "method": "test-time proportional PR estimate; add lost full queue reuse, all attempts and overhead",
+              "method": "test-time proportional PR estimate; preserve queue reuse, add all attempts and overhead",
               "elapsed_wait_minutes": None, "net_runner_minutes_saved": None}
     fields = {"full_pr_runner_minutes", "full_queue_runner_minutes", "reuse_probability",
               "reporter_runner_minutes", "rerun_runner_minutes", "ejection_runner_minutes",
               "duplicated_preparation_runner_minutes", "elapsed_wait_minutes"}
-    if cost is None or not fields <= cost.keys() or ratio is None:
-        return result
+    if cost is None:
+        return result | {"unknown_reason": unknown_reason}
+    if not fields <= cost.keys() or ratio is None:
+        return result | {"unknown_reason": "incomplete-cost-inputs-or-test-duration-evidence"}
     if any(not isinstance(cost[key], (int, float)) or cost[key] < 0 for key in fields) or cost["reuse_probability"] > 1:
         raise ValueError("invalid cost inputs")
     full = selection["mode"] == "full"
-    # The unchanged exact-inventory reuse helper refuses the extra shadow job.
-    # Account for that loss even when advisory selection itself is full.
-    lost = cost["reuse_probability"] * cost["full_queue_runner_minutes"]
+    # The advisory job is reuse-neutral: both projections retain the same
+    # exact-tree queue reuse probability.
+    queue = (1 - cost["reuse_probability"]) * cost["full_queue_runner_minutes"]
     overhead = sum(cost[key] for key in fields if key.endswith("runner_minutes") and not key.startswith("full_"))
-    candidate = cost["full_pr_runner_minutes"] * (1 if full else ratio) + cost["full_queue_runner_minutes"] + overhead
-    baseline = cost["full_pr_runner_minutes"] + (1 - cost["reuse_probability"]) * cost["full_queue_runner_minutes"]
-    return result | {"status": "projected", "inputs": cost, "lost_reuse_runner_minutes": lost,
+    candidate = cost["full_pr_runner_minutes"] * (1 if full else ratio) + queue + overhead
+    baseline = cost["full_pr_runner_minutes"] + queue
+    return result | {"status": "projected", "inputs": cost, "lost_reuse_runner_minutes": 0,
                      "candidate_pr_plus_queue_runner_minutes": candidate,
                      "baseline_pr_plus_queue_runner_minutes": baseline,
                      "elapsed_wait_minutes": cost["elapsed_wait_minutes"],
@@ -224,12 +235,14 @@ def projected_cost(selection: dict, evidence: dict, cost: dict | None) -> dict:
 def report(args) -> dict:
     receipt = {"schema": SCHEMA, "kind": args.kind, "run_id": str(args.run_id),
                "run_attempt": args.attempt, "event": args.event, "base_sha": args.base, "head_sha": args.head,
-               "candidate_run_id": args.candidate_run_id, "observed_at": utc_now()}
+               "candidate_run_id": args.candidate_run_id, "observed_at": utc_now(),
+               "review_unresolved_edge_census": REVIEW_EDGE_CENSUS}
     try:
         selection = select(args.base, args.head, args.event, args.root)
         results = read_full_results(args.results, args.root, args.shards)
         cost = json.loads(args.cost.read_text()) if args.cost else None
-        receipt |= selection | results | {"projected_cost_after_lost_reuse": projected_cost(selection, results, cost)}
+        receipt |= selection | results | {"projected_cost_after_lost_reuse": projected_cost(
+            selection, results, cost, getattr(args, "cost_unknown_reason", "matched-pr-queue-cost-inputs-not-supplied"))}
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as exc:
         receipt |= {"mode": "full", "reason": "report-unavailable", "artifact_problems": [type(exc).__name__]}
     write_json(args.output, receipt)
@@ -273,10 +286,12 @@ def inventory(repository: str, created: str, *, first_attempts: bool = False) ->
             "acquired_at": utc_now(), "runs": rows}
 
 
-def register(baseline: dict, root: Path) -> dict:
+def register(baseline: dict, root: Path, *, minimum_narrowed_cases: int = 1) -> dict:
     """Freeze the complete historical inventory and rules before any receipts."""
     if baseline.get("complete") is not True or baseline.get("created_window") != BASELINE:
         raise ValueError("registration requires a complete baseline-window census")
+    if type(minimum_narrowed_cases) is not int or minimum_narrowed_cases < 1:
+        raise ValueError("minimum narrowed cases must be a positive integer")
     graph = components.import_graph(components.load_manifest(), root)
     now = utc_now()
     historical = sorted({str(row["run_id"]) for row in baseline["runs"]
@@ -286,6 +301,7 @@ def register(baseline: dict, root: Path) -> dict:
     return {"schema": SCHEMA, "registered_at": now, "stop_at": (instant(now) + timedelta(days=30)).isoformat(),
             "identities": identities(root, graph), "baseline_hash": digest(baseline),
             "baseline_window": BASELINE, "historical_run_ids": historical,
+            "minimum_narrowed_cases": minimum_narrowed_cases,
             "live_window": {"completed_first_attempt_pr_runs": 150, "minimum_pytest_red_runs": 30,
                             "ordering": "completed_at, run_id; all conclusions; completed after registration"},
             "flaky_classification_rule": FLAKE_RULE, "base_commit_rerun_rule": BASE_RULE,
@@ -295,6 +311,10 @@ def register(baseline: dict, root: Path) -> dict:
 def check(registration: dict, directory: Path, *, now: str | None = None) -> dict:
     """Score full failures independently of selection, refusing incomplete windows."""
     unresolved, misses, exemptions = [], [], []
+    narrowed_red, narrowed_injected = 0, 0
+    minimum_narrowed = registration.get("minimum_narrowed_cases")
+    if type(minimum_narrowed) is not int or minimum_narrowed < 1:
+        unresolved.append("minimum-narrowed-cases-not-pre-registered")
     registered = instant(registration["registered_at"])
     if (registration.get("schema") != SCHEMA or registration.get("flaky_classification_rule") != FLAKE_RULE
         or registration.get("base_commit_rerun_rule") != BASE_RULE
@@ -367,6 +387,8 @@ def check(registration: dict, directory: Path, *, now: str | None = None) -> dic
         if (receipt.get("kind") != kind or receipt.get("artifact_problems") != []
             or not receipt.get("junit_hashes") or receipt.get("run_attempt") != 1
             or receipt.get("identities", {}).get("tool_hashes") != tools
+            or receipt.get("mode") not in {"full", "selected"}
+            or not isinstance(receipt.get("would_skip_test_files"), list)
             or not all(field in receipt for field in ("selected_test_files", "full_junit_failing_ids", "collection_errors"))):
             unresolved.append("invalid-or-artifactless-receipt:" + run)
             continue
@@ -378,6 +400,15 @@ def check(registration: dict, directory: Path, *, now: str | None = None) -> dic
         except (OSError, KeyError, ValueError, ET.ParseError):
             unresolved.append("oracle-unavailable-or-mismatched:" + run)
             continue
+        skipped = set(receipt["would_skip_test_files"])
+        if skipped & set(receipt["selected_test_files"]) or (receipt["mode"] == "full" and skipped):
+            unresolved.append("invalid-skip-set:" + run)
+            continue
+        if receipt["mode"] == "selected" and skipped:
+            if kind == "injected":
+                narrowed_injected += 1
+            elif kind == "historical" or live[run]["pytest_red"] is True:
+                narrowed_red += 1
         base = bases.get(run, {})
         base_ok = (base.get("artifact_problems") == [] and base.get("junit_hashes")
                    and base.get("head_sha") == receipt.get("base_sha") and bool(receipt.get("base_sha"))
@@ -401,9 +432,14 @@ def check(registration: dict, directory: Path, *, now: str | None = None) -> dic
                 exemptions.append(item)
             else:
                 misses.append(item)
+    narrowed = narrowed_red + narrowed_injected
+    if type(minimum_narrowed) is int and minimum_narrowed >= 1 and narrowed < minimum_narrowed:
+        unresolved.append(f"narrowed-cases:{narrowed}/{minimum_narrowed}")
     stopped = instant(now or utc_now()) >= instant(registration["stop_at"])
     return {"status": "inconclusive" if unresolved and stopped else "unresolved" if unresolved else "fail" if misses else "pass",
             "registered_case_count": len(cases), "live_run_count": len(rows), "pytest_red_run_count": red,
+            "narrowed_case_count": narrowed, "narrowed_red_case_count": narrowed_red,
+            "narrowed_injected_case_count": narrowed_injected, "minimum_narrowed_cases": minimum_narrowed,
             "missed_failure_count": len(misses), "missed_failures": misses, "base_exemptions": exemptions,
             "unresolved_count": len(unresolved), "unresolved": unresolved, "day_30_stop": stopped}
 
@@ -439,8 +475,12 @@ def main(argv: list[str] | None = None) -> int:
             sub.add_argument("--kind", choices=("live", "historical", "base", "injected"), default="live", help="case kind (default: live)")
             sub.add_argument("--candidate-run-id", default="", help="candidate ID for a pre-registered base rerun (default: none)")
             sub.add_argument("--cost", type=Path, help="matched PR+queue cost inputs JSON (default: unknown cost)")
+            sub.add_argument("--cost-unknown-reason", default="matched-pr-queue-cost-inputs-not-supplied",
+                             help="receipt reason when --cost is absent (default: matched-pr-queue-cost-inputs-not-supplied)")
         if command == "register":
             sub.add_argument("--baseline", type=Path, required=True, help="complete historical inventory JSON, acquired before replay")
+            sub.add_argument("--minimum-narrowed-cases", type=int, default=1,
+                             help="positive minimum of narrowed red/injected cases, frozen before results (default: 1)")
         if command == "inventory":
             sub.add_argument("--repository", default="learn-ukrainian/learn-ukrainian.github.io", help="GitHub owner/repo (default: project repository)")
             sub.add_argument("--created", default=BASELINE, help="inclusive API created range (default: plan baseline window)")
@@ -458,7 +498,8 @@ def main(argv: list[str] | None = None) -> int:
             result = inventory(args.repository, args.created, first_attempts=args.first_attempts)
             write_json(args.output, result)
         elif args.command == "register":
-            result = register(json.loads(args.baseline.read_text()), args.root)
+            result = register(json.loads(args.baseline.read_text()), args.root,
+                              minimum_narrowed_cases=args.minimum_narrowed_cases)
             write_json(args.output, result, exclusive=True)
         else:
             result = check(json.loads(args.registration.read_text()), args.receipts)

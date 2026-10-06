@@ -153,6 +153,7 @@ def test_diff_timeout_is_full(repo, static_graph, monkeypatch):
 def registration():
     return {"schema": s.SCHEMA, "registered_at": "2026-10-07T00:00:00Z", "stop_at": "2026-11-06T00:00:00Z",
             "identities": {"tool_hashes": {"tool": "hash"}}, "historical_run_ids": ["999"],
+            "minimum_narrowed_cases": 1,
             "live_window": {"completed_first_attempt_pr_runs": 150, "minimum_pytest_red_runs": 30},
             "flaky_classification_rule": s.FLAKE_RULE, "base_commit_rerun_rule": s.BASE_RULE,
             "injections_frozen": True, "injected_cases": [
@@ -164,6 +165,7 @@ def registration():
 def receipt(run_id, kind="historical", **overrides):
     return {"schema": s.SCHEMA, "kind": kind, "run_id": str(run_id), "run_attempt": 1,
             "head_sha": "head", "base_sha": "base", "observed_at": "2026-10-08T00:00:00Z",
+            "mode": "selected", "would_skip_test_files": ["tests/test_other.py"],
             "selected_test_files": ["tests/test_selected.py"], "full_junit_failing_ids": [],
             "collection_errors": [], "artifact_problems": [], "junit_hashes": {"shard.xml": "hash"},
             "identities": {"tool_hashes": {"tool": "hash"}}, **overrides}
@@ -210,7 +212,68 @@ def test_complete_window_zero_misses_is_the_only_success(registration, window):
     result = s.check(registration, window, now="2026-10-09T00:00:00Z")
     assert result["status"] == "pass"
     assert result["registered_case_count"] == 163
+    assert result["narrowed_red_case_count"] == 31
+    assert result["narrowed_injected_case_count"] == 12
+    assert result["narrowed_case_count"] == 43
     assert result["missed_failure_count"] == result["unresolved_count"] == 0
+
+
+@pytest.mark.parametrize("mode", ["full", "selected"])
+def test_window_without_any_skipped_files_cannot_pass(registration, window, mode):
+    for path in window.glob("*.json"):
+        value = json.loads(path.read_text())
+        if value.get("schema") == s.SCHEMA:
+            value.update(mode=mode, would_skip_test_files=[])
+            path.write_text(json.dumps(value))
+    result = s.check(registration, window, now="2026-10-09T00:00:00Z")
+    assert result["status"] == "unresolved"
+    assert result["narrowed_case_count"] == 0
+    assert result["narrowed_red_case_count"] == result["narrowed_injected_case_count"] == 0
+    assert "narrowed-cases:0/1" in result["unresolved"]
+    assert s.main(["check", "--registration", str(_registration_file(window, registration)),
+                   "--receipts", str(window)]) == 1
+
+
+def test_narrowing_below_registered_minimum_cannot_pass(registration, window):
+    registration["minimum_narrowed_cases"] = 44
+    result = s.check(registration, window)
+    assert result["status"] == "unresolved"
+    assert result["narrowed_case_count"] == 43
+    assert result["minimum_narrowed_cases"] == 44
+    assert "narrowed-cases:43/44" in result["unresolved"]
+    assert s.main(["check", "--registration", str(_registration_file(window, registration)),
+                   "--receipts", str(window)]) == 1
+    registration["minimum_narrowed_cases"] = 43
+    assert s.check(registration, window)["status"] == "pass"
+
+
+def test_only_green_live_cases_narrowing_is_unresolved(registration, window):
+    for path in window.glob("*.json"):
+        value = json.loads(path.read_text())
+        if (value.get("schema") == s.SCHEMA and
+            (value["kind"] != "live" or int(value["run_id"]) <= 30)):
+            value.update(mode="full", would_skip_test_files=[])
+            path.write_text(json.dumps(value))
+    assert s.check(registration, window)["narrowed_case_count"] == 0
+    assert "narrowed-cases:0/1" in s.check(registration, window)["unresolved"]
+
+
+@pytest.mark.parametrize("minimum", [None, 0, -1, True, "1"])
+def test_missing_or_invalid_registered_narrowing_minimum_is_unresolved(registration, window, minimum):
+    registration["minimum_narrowed_cases"] = minimum
+    assert "minimum-narrowed-cases-not-pre-registered" in s.check(registration, window)["unresolved"]
+
+
+@pytest.mark.parametrize("fields", [
+    {"mode": "full", "would_skip_test_files": ["tests/test_other.py"]},
+    {"mode": "selected", "would_skip_test_files": ["tests/test_selected.py"]},
+    {"mode": None}, {"would_skip_test_files": None},
+])
+def test_invalid_narrowing_evidence_is_not_counted(registration, window, fields):
+    save(window, receipt("999", **fields))
+    result = s.check(registration, window)
+    assert result["narrowed_red_case_count"] == 30
+    assert result["status"] == "unresolved"
 
 
 def test_in_flight_run_completed_after_registration_enters_window(registration, window):
@@ -363,7 +426,21 @@ def test_junit_duplicate_failure_followed_by_pass_is_retained(repo, tmp_path):
 def test_report_unavailable_evidence_is_zero_exit_and_unresolved(repo, static_graph, tmp_path):
     output = tmp_path / "shadow.json"
     assert s.main(["report", "--root", str(repo), "--results", str(tmp_path / "missing"), "--output", str(output)]) == 0
-    assert json.loads(output.read_text())["artifact_problems"]
+    result = json.loads(output.read_text())
+    assert result["artifact_problems"]
+    census = result["review_unresolved_edge_census"]
+    assert census["total"] == sum(census["by_kind"].values()) == 14692
+    assert census["head_sha"] == "c3695226db3b18ec0e3ab42c9a7a3221e00df69c"
+    assert result["projected_cost_after_lost_reuse"]["unknown_reason"] == "matched-pr-queue-cost-inputs-not-supplied"
+
+
+def test_report_records_explicit_unknown_cost_reason(repo, static_graph, tmp_path):
+    output = tmp_path / "shadow.json"
+    assert s.main(["report", "--root", str(repo), "--results", str(tmp_path / "missing"),
+                   "--cost-unknown-reason", "matched-measurements-unavailable", "--output", str(output)]) == 0
+    cost = json.loads(output.read_text())["projected_cost_after_lost_reuse"]
+    assert cost["status"] == "unknown"
+    assert cost["unknown_reason"] == "matched-measurements-unavailable"
 
 
 def test_register_binds_historical_ids_hashes_rules_and_stop(repo, static_graph):
@@ -376,6 +453,10 @@ def test_register_binds_historical_ids_hashes_rules_and_stop(repo, static_graph)
     assert set(result["identities"]["tool_hashes"]) == set(s.TOOLS)
     assert s.instant(result["stop_at"]) - s.instant(result["registered_at"]) == s.timedelta(days=30)
     assert result["injections_frozen"] is False
+    assert result["minimum_narrowed_cases"] == 1
+    assert s.register(baseline, repo, minimum_narrowed_cases=44)["minimum_narrowed_cases"] == 44
+    with pytest.raises(ValueError, match="positive integer"):
+        s.register(baseline, repo, minimum_narrowed_cases=0)
     with pytest.raises(ValueError, match="complete baseline"):
         s.register({**baseline, "complete": False}, repo)
 
@@ -385,8 +466,10 @@ def test_registration_cli_refuses_overwrite(repo, static_graph, tmp_path):
     baseline.write_text(json.dumps({"complete": True, "created_window": s.BASELINE, "runs": [
         {"run_id": "42", "event": "pull_request", "pytest_red": True}]}))
     output = tmp_path / "registration.json"
-    args = ["register", "--root", str(repo), "--baseline", str(baseline), "--output", str(output)]
+    args = ["register", "--root", str(repo), "--baseline", str(baseline), "--output", str(output),
+            "--minimum-narrowed-cases", "44"]
     assert s.main(args) == 0
+    assert json.loads(output.read_text())["minimum_narrowed_cases"] == 44
     before = output.read_bytes()
     assert s.main(args) == 2
     assert output.read_bytes() == before
@@ -419,14 +502,18 @@ def test_live_inventory_uses_first_attempt_even_after_rerun(monkeypatch):
     assert called[-1].endswith("/attempts/1/jobs?per_page=100")
 
 
-def test_cost_includes_lost_reuse_and_every_overhead():
-    selection = {"mode": "selected", "selected_test_files": ["tests/test_a.py"]}
+@pytest.mark.parametrize("mode,expected_saved,expected_candidate", [("selected", 80, 95), ("full", -10, 185)])
+def test_cost_preserves_queue_reuse_and_includes_every_overhead(mode, expected_saved, expected_candidate):
+    selection = {"mode": mode, "selected_test_files": ["tests/test_a.py"]}
     evidence = {"test_seconds_by_file": {"tests/test_a.py": 10, "tests/test_b.py": 90}}
     cost = {"full_pr_runner_minutes": 100, "full_queue_runner_minutes": 100, "reuse_probability": .25,
             "reporter_runner_minutes": 1, "rerun_runner_minutes": 2, "ejection_runner_minutes": 3,
             "duplicated_preparation_runner_minutes": 4, "elapsed_wait_minutes": 5}
     result = s.projected_cost(selection, evidence, cost)
-    assert result["lost_reuse_runner_minutes"] == 25
-    assert result["net_runner_minutes_saved"] == 55
+    assert result["lost_reuse_runner_minutes"] == 0
+    assert result["baseline_pr_plus_queue_runner_minutes"] == 175
+    assert result["candidate_pr_plus_queue_runner_minutes"] == expected_candidate
+    assert result["net_runner_minutes_saved"] == expected_saved
     assert result["elapsed_wait_minutes"] == 5
     assert s.projected_cost(selection, evidence, None)["status"] == "unknown"
+    assert s.projected_cost(selection, evidence, {})["unknown_reason"] == "incomplete-cost-inputs-or-test-duration-evidence"

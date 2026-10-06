@@ -377,7 +377,7 @@ jobs:
           retention-days: 14
 
   component-shadow:
-    name: Component shadow
+    name: Component shadow (advisory)
     needs: [pytest]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
@@ -408,6 +408,7 @@ jobs:
         run: |
           "$PYTHON_BIN" -m scripts.ci.component_shadow report --event "$EVENT_NAME" \
             --base "$BASE_SHA" --head "$HEAD_SHA" --results ci-artifacts/shadow-shards \
+            --cost-unknown-reason matched-pr-queue-measurements-not-available-in-shard-artifacts \
             --output ci-artifacts/component-shadow.json || true
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: ${{ !cancelled() }}

@@ -57,7 +57,7 @@ EXPECTED_JOBS = (
 # ci.yml jobs that run only in the merge queue.
 SKIPPED_ON_PULL_REQUEST = ("Reuse check", "Queue commit metadata scan")
 # Advisory jobs have no bearing on reuse, regardless of their result.
-REUSE_NEUTRAL_JOBS = ("Component shadow",)
+REUSE_NEUTRAL_JOBS = ("Component shadow (advisory)",)
 # refs/heads/gh-readonly-queue/<base>/pr-<number>-<parent sha>; the prefix is
 # stripped by GitHub in merge_group.head_ref for some payloads, so match both.
 _QUEUE_REF = re.compile(r"(?:^|/)gh-readonly-queue/.+/pr-(?P<number>[1-9][0-9]*)-[0-9a-f]{40}$")
