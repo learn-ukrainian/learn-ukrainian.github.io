@@ -2,11 +2,18 @@
 
 from pathlib import Path
 
+from scripts.common.repo_root import main_checkout_root
+
 from ..errors import require
 from .ua_gec_split import CORPUS, UaGecAttribution, UaGecFileStore
 
 FILES = {"ua-gec": UaGecFileStore()}
 ADAPTERS = {"ua_gec": UaGecAttribution()}
+
+
+def held_root():
+    """Reader code comes from the held repository, never a request path."""
+    return main_checkout_root(Path(__file__).resolve().parents[5]) / "data/ua-gec"
 
 
 class UaGecComponent:
@@ -28,9 +35,11 @@ class UaGecComponent:
         require(ctx.request.get("corpus") == CORPUS, "component_corpus")
         root = ctx.request.get("ua_gec", {}).get("root")
         require(isinstance(root, str) and Path(root).is_absolute(), "component_input")
+        approved_root = held_root().resolve()
+        require(Path(root).resolve() == approved_root, "component_input")
         store = ctx.reader.files["ua-gec"]
         if store is FILES["ua-gec"]:
-            store = UaGecFileStore(Path(root))
+            store = UaGecFileStore(approved_root)
             ctx.reader.files["ua-gec"] = store
         require(store.root == Path(root).resolve(), "component_input")
         compatibility = [row for row in ctx.request["compatibility"] if row["store"] == "ua-gec"]

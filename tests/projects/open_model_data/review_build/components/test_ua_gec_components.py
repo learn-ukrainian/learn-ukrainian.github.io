@@ -229,9 +229,20 @@ def test_unbound_registered_store_refuses_reads():
             read()
 
 
+def test_registered_reader_root_uses_shared_repository():
+    from scripts.projects.open_model_data.review_build.components import ua_gec_component
+
+    assert ua_gec_component.held_root() == cli.default_config().parents[2] / "data/ua-gec"
+
+
 @pytest.mark.parametrize(
     "fault,code",
-    [("root", "component_input"), ("corpus", "component_corpus"), ("compatibility", "source_compatibility")],
+    [
+        ("root", "component_input"),
+        ("other_root", "component_input"),
+        ("corpus", "component_corpus"),
+        ("compatibility", "source_compatibility"),
+    ],
 )
 def test_registered_inputs_refuse_unreviewed_mappings(store, monkeypatch, fault, code):
     from scripts.projects.open_model_data.review_build.components import ua_gec_component
@@ -239,11 +250,14 @@ def test_registered_inputs_refuse_unreviewed_mappings(store, monkeypatch, fault,
     _, _, config, _ = setup_gate(store)
     if fault == "root":
         config["ua_gec"]["root"] = "SYNTHETIC-relative"
+    elif fault == "other_root":
+        config["ua_gec"]["root"] = str(store.root / "SYNTHETIC-untrusted-reader")
     elif fault == "corpus":
         config["corpus"] = {}
     else:
         config["compatibility"] = []
     monkeypatch.setattr(ua_gec_component, "UaGecFileStore", lambda _: store)
+    monkeypatch.setattr(ua_gec_component, "held_root", lambda: store.root)
     obj = components.load_components(["C1"])["C1"]
     with SnapshotReader({}, obj.files) as reader:
         ctx = components.ComponentContext(reader, config)
@@ -482,6 +496,7 @@ def test_registered_cli_build_verify_and_input_tamper(store, tmp_path, monkeypat
         return store
 
     monkeypatch.setattr(ua_gec_component, "UaGecFileStore", open_store)
+    monkeypatch.setattr(ua_gec_component, "held_root", lambda: store.root)
     monkeypatch.setitem(ua_gec_component.ADAPTERS, "ua_gec", SyntheticAdapter())
     monkeypatch.setattr(c1_ua_gec, "FROZEN_COUNT", 50)
     monkeypatch.setattr(c6a_calque, "FROZEN_COUNT", 25)
