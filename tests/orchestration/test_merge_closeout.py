@@ -157,6 +157,7 @@ def patch_gh(
 
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
     monkeypatch.setattr(mc.github_client, "run", fake_run)
+    monkeypatch.setattr(rw, "_run_gh", fake_run)
     monkeypatch.setattr(rw.subprocess, "run", fake_run)
     return calls
 

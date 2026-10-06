@@ -11,7 +11,6 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUSIONS = {
     "scripts/delegate.py": (2, "#9878: accountable driver migrates after concurrent edit settles"),
-    "scripts/orchestration/reap_worktrees.py": (1, "#9889: accountable driver migrates after merge"),
 }
 CLIENT = "scripts/common/github_client.py"
 

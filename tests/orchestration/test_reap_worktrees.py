@@ -163,7 +163,7 @@ def patch_gh(
             return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
         return _REAL_RUN(args, **kwargs)
 
-    monkeypatch.setattr(rw.subprocess, "run", fake_run)
+    monkeypatch.setattr(rw, "_run_gh", fake_run)
     return calls
 
 
@@ -2670,7 +2670,8 @@ def test_query_pr_states_reports_unreadable_rows_as_an_error(monkeypatch, label,
     caller reads an empty list as permission to DELETE the worktree. That was
     a destructive fail-open on malformed input.
     """
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout(payload))
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
 
@@ -2681,7 +2682,8 @@ def test_query_pr_states_reports_unreadable_rows_as_an_error(monkeypatch, label,
 def test_query_pr_states_still_reports_a_genuinely_empty_list(monkeypatch) -> None:
     """An empty list is a real answer (no PR), not an unknown -- reaping must
     still be possible or nothing would ever be cleaned up."""
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout("[]"))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout("[]"))
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
 
@@ -2691,7 +2693,8 @@ def test_query_pr_states_still_reports_a_genuinely_empty_list(monkeypatch) -> No
 
 def test_query_pr_states_parses_a_well_formed_row(monkeypatch) -> None:
     payload = json.dumps([{"number": 7120, "state": "OPEN", "headRefOid": "abc123"}])
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout(payload))
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
 
@@ -2703,7 +2706,8 @@ def test_query_pr_states_parses_a_well_formed_row(monkeypatch) -> None:
 def test_unreadable_rows_make_post_task_reap_retain_the_worktree(monkeypatch, payload) -> None:
     """End-to-end on the destructive path: an unreadable PR response must
     retain, never delete."""
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout(payload))
 
     no_open_pr, guard_error = post_task_reap._no_open_pr_for_branch(
         repo_root=Path("/nonexistent"), branch="some/branch"
@@ -2727,7 +2731,8 @@ def test_unreadable_rows_make_post_task_reap_retain_the_worktree(monkeypatch, pa
 def test_query_pr_states_rejects_incomplete_rows(monkeypatch, label, payload) -> None:
     """An incomplete or unrecognised row is ambiguous, and ambiguity must not
     read as "no open PR" -- callers treat that as permission to DELETE."""
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout(payload))
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
 
@@ -2740,7 +2745,8 @@ def test_query_pr_states_accepts_every_real_gh_state(monkeypatch, state) -> None
     """The tightened validation must not reject legitimate answers, or
     nothing would ever be reaped."""
     payload = json.dumps([{"number": 7126, "state": state, "headRefOid": "abc"}])
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout(payload))
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
 
@@ -2765,16 +2771,30 @@ def test_gh_json_calls_drop_force_color(monkeypatch, tmp_path: Path) -> None:
         return subprocess.CompletedProcess(args, 0, "", "")
 
     monkeypatch.setattr(rw.subprocess, "run", fake_run)
-
     git_proc = rw._run(["git", "status"], cwd=tmp_path)
-    states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
+    direct = rw._run(["gh", "pr", "list"], cwd=tmp_path)
 
     assert git_proc.returncode == 0
+    assert direct.returncode == 0
     assert captured[0]["FORCE_COLOR"] == "1"
     assert captured[0]["CLICOLOR_FORCE"] == "1"
     assert "FORCE_COLOR" not in captured[1]
     assert captured[1]["NO_COLOR"] == "1"
     assert captured[1]["CLICOLOR_FORCE"] == "0"
+
+    transport_env: list[dict[str, str]] = []
+
+    def fake_transport(command, **kwargs):
+        transport_env.append(kwargs["env"])
+        return subprocess.CompletedProcess(command, 0, b"[]", b"")
+
+    monkeypatch.setattr(rw.github_client, "_transport_process", fake_transport)
+    states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
+
+    assert transport_env
+    assert "FORCE_COLOR" not in transport_env[0]
+    assert "CLICOLOR_FORCE" not in transport_env[0]
+    assert transport_env[0]["NO_COLOR"] == "1"
     assert error is None
     assert states == []
 
@@ -2786,7 +2806,7 @@ def test_gh_json_calls_drop_force_color(monkeypatch, tmp_path: Path) -> None:
 )
 def test_graphql_pr_list_empty_stdout_is_unknown(monkeypatch, tmp_path: Path, stdout: str, unknown: bool) -> None:
     """A blank ``gh pr list`` body is not ``[]``. Only a JSON list is "no PR"."""
-    monkeypatch.setattr(rw, "_run", lambda *_args, **_kwargs: _gh_stdout(stdout))
+    monkeypatch.setattr(rw, "_run_gh", lambda *_args, **_kwargs: _gh_stdout(stdout))
 
     states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
 
@@ -2801,7 +2821,7 @@ def test_colored_gh_json_stays_fail_closed(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setenv("CLICOLOR_FORCE", "1")
     monkeypatch.setattr(
         rw,
-        "_run",
+        "_run_gh",
         lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, "\x1b[32m[]\x1b[0m", ""),
     )
 
@@ -2838,6 +2858,7 @@ def _patch_gh_transports(
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_run", fake_run)
+    monkeypatch.setattr(rw, "_run_gh", fake_run)
     return gh_calls
 
 
@@ -2858,7 +2879,7 @@ def test_rest_pr_lookup_empty_stdout_and_unusable_rows_are_unknown(
 ) -> None:
     """Blank REST output, ``null`` and a non-object are unknown, not "no PR"."""
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: ("owner", "repo"))
-    monkeypatch.setattr(rw, "_run", lambda *_args, **_kwargs: _gh_stdout(stdout))
+    monkeypatch.setattr(rw, "_run_gh", lambda *_args, **_kwargs: _gh_stdout(stdout))
 
     states, error = rw._query_pr_states_rest(tmp_path, "codex/task")
 
@@ -7039,7 +7060,7 @@ def test_sha_search_failures_are_reported_not_swallowed(
     monkeypatch: pytest.MonkeyPatch,
     search: _GhSearch,
 ) -> None:
-    monkeypatch.setattr(rw, "_run", search)
+    monkeypatch.setattr(rw, "_run_gh", search)
 
     states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
 
@@ -7050,7 +7071,7 @@ def test_sha_search_failures_are_reported_not_swallowed(
 
 def test_sha_search_empty_stdout_is_unknown(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A blank ``gh search`` body is not ``[]`` and must not license removal."""
-    monkeypatch.setattr(rw, "_run", _GhSearch(stdout=""))
+    monkeypatch.setattr(rw, "_run_gh", _GhSearch(stdout=""))
 
     states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
 
@@ -7069,7 +7090,7 @@ def test_sha_search_null_and_empty_objects_are_unknown(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stdout: str
 ) -> None:
     """``[null, {}]`` used to be skipped and read as no PR. Any other shape is unknown."""
-    monkeypatch.setattr(rw, "_run", _GhSearch(stdout=stdout))
+    monkeypatch.setattr(rw, "_run_gh", _GhSearch(stdout=stdout))
 
     states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
 
@@ -7082,7 +7103,7 @@ def test_sha_search_success_returns_states_without_error(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(rw, "_run", _GhSearch(stdout='[{"number": 7, "state": "open"}]'))
+    monkeypatch.setattr(rw, "_run_gh", _GhSearch(stdout='[{"number": 7, "state": "open"}]'))
 
     states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
 
