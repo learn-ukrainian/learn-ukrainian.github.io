@@ -4,6 +4,7 @@ import copy
 import json
 import os
 import stat
+from types import SimpleNamespace
 
 import pytest
 
@@ -94,10 +95,11 @@ def test_init_request_private_location_only_defaults(tmp_path, monkeypatch, caps
 def test_init_request_refuses_symlinks_and_public_parent(tmp_path, monkeypatch):
     monkeypatch.setattr(request, "repository_root", lambda: tmp_path)
     public = tmp_path / "public"
-    public.mkdir(mode=0o750)
-    os.chmod(public, 0o750)
-    with pytest.raises(BuildError, match="request_parent_mode"):
-        request.init_request(public / "request.json")
+    public.mkdir(mode=0o700)
+    with monkeypatch.context() as patch:
+        patch.setattr(os, "fstat", lambda fd: SimpleNamespace(st_uid=os.getuid(), st_mode=0o40750))
+        with pytest.raises(BuildError, match=r"^request_parent_mode$"):
+            request.init_request(public / "request.json")
     assert not (public / "request.json").exists()
     linked = tmp_path / "linked"
     linked.symlink_to(public, target_is_directory=True)

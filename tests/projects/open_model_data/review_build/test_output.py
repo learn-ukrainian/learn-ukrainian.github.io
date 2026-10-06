@@ -1,4 +1,5 @@
 import os
+import stat
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,22 @@ def synthetic_mount(monkeypatch):
     # CI may run on overlay; test a declared synthetic ext4 mount, never bypass
     # the production filesystem check. Its real parser is tested separately.
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
+
+
+def mock_fstat_mode(monkeypatch, path, mode):
+    """Expose unsafe metadata for one inode without changing its permissions."""
+    expected = path.stat()
+    real_fstat = os.fstat
+
+    def fake_fstat(fd):
+        info = real_fstat(fd)
+        if (info.st_dev, info.st_ino) == (expected.st_dev, expected.st_ino):
+            fields = list(info)
+            fields[0] = stat.S_IFMT(info.st_mode) | mode
+            return os.stat_result(fields)
+        return info
+
+    monkeypatch.setattr(os, "fstat", fake_fstat)
 
 
 def test_private_directories_files_and_read(tmp_path):
@@ -78,7 +95,7 @@ def test_each_guard_refusal(tmp_path, monkeypatch, kind):
     elif kind == "acl-unreadable":
         monkeypatch.setattr(os, "listxattr", lambda fd: (_ for _ in ()).throw(PermissionError("SYNTHETIC")))
     elif kind == "mode":
-        target.chmod(0o750)
+        mock_fstat_mode(monkeypatch, target, 0o750)
     elif kind == "owner":
         monkeypatch.setattr(os, "getuid", lambda: target.stat().st_uid + 1)
     elif kind == "acl":
@@ -91,12 +108,12 @@ def test_each_guard_refusal(tmp_path, monkeypatch, kind):
         "owner": "output_owner",
         "acl": "output_acl",
     }.get(kind, "output_check_unavailable")
-    with pytest.raises(BuildError, match=code):
+    with pytest.raises(BuildError, match=f"^{code}$"):
         output.OutputGuard(target)
 
 
 @pytest.mark.parametrize("kind", ["symlink-file", "hardlink", "file-mode", "symlink-dir", "dir-mode", "git-in-child"])
-def test_descriptor_relative_writes_refuse_unsafe_existing_entries(tmp_path, kind):
+def test_descriptor_relative_writes_refuse_unsafe_existing_entries(tmp_path, monkeypatch, kind):
     target = tmp_path / "SYNTHETIC-out"
     with output.OutputGuard(target) as guard:
         child = target / "C1"
@@ -109,26 +126,24 @@ def test_descriptor_relative_writes_refuse_unsafe_existing_entries(tmp_path, kin
             victim.write_bytes(b"SYNTHETIC untouched")
             os.link(victim, file)
         elif kind == "file-mode":
-            file.write_bytes(b"SYNTHETIC untouched")
-            file.chmod(0o640)
+            guard.write("C1/records.jsonl", b"SYNTHETIC untouched")
+            mock_fstat_mode(monkeypatch, file, 0o640)
         elif kind == "symlink-dir":
             (target / "alias").symlink_to(child)
         elif kind == "dir-mode":
-            child.chmod(0o750)
+            mock_fstat_mode(monkeypatch, child, 0o750)
         else:
             (child / ".git").write_text("SYNTHETIC gitdir")
         name = "alias/records.jsonl" if kind == "symlink-dir" else "C1/records.jsonl"
-        with pytest.raises(
-            BuildError,
-            match={
-                "symlink-file": "output_io",
-                "hardlink": "output_file_type",
-                "file-mode": "output_file_mode",
-                "symlink-dir": "output_io",
-                "dir-mode": "output_mode",
-                "git-in-child": "repository_output",
-            }[kind],
-        ):
+        code = {
+            "symlink-file": "output_io",
+            "hardlink": "output_file_type",
+            "file-mode": "output_file_mode",
+            "symlink-dir": "output_io",
+            "dir-mode": "output_mode",
+            "git-in-child": "repository_output",
+        }[kind]
+        with pytest.raises(BuildError, match=f"^{code}$"):
             guard.write(name, b"SYNTHETIC replacement")
         if kind in {"hardlink", "file-mode"}:
             assert file.read_bytes() == b"SYNTHETIC untouched"
