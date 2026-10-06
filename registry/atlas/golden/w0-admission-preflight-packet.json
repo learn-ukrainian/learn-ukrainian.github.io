@@ -1,0 +1,95 @@
+{
+  "packet_kind": "w0-source-admission-preflight",
+  "issue": 9862,
+  "parent_issue": 6321,
+  "disposition": "blocked_before_selection",
+  "author_task": "codex/impl-9862",
+  "accountable_driver": "claude-open-model-data",
+  "selection_report": "registry/atlas/golden/w0-selection-report.md",
+  "selection_report_sha256": "230a5a6de31b60196bbdf99a867c8b839f790c6df690e46ae7ae94c169c35690",
+  "base_sha": "141f3f269ed6e4b18a1deb2f50d3b292aaea25e8",
+  "selection_file": null,
+  "frozen_manifest_file": null,
+  "heldout_membership_file": null,
+  "source_admission_receipt_file": null,
+  "selection_counts": {
+    "homographs": {
+      "selected": 0,
+      "target": 40
+    },
+    "stress_doublets": {
+      "selected": 0,
+      "target": 20
+    },
+    "proper_common_pairs": {
+      "selected": 0,
+      "target": 20
+    },
+    "aspect_pairs": {
+      "selected": 0,
+      "target": 20
+    },
+    "aspect_homographs": {
+      "selected": 0,
+      "target": 5
+    },
+    "multi_headword_mwes": {
+      "selected": 0,
+      "target": 20
+    },
+    "multi_sense": {
+      "selected": 0,
+      "target": 20
+    },
+    "stress_disagreements": {
+      "selected": 0,
+      "target": 20
+    },
+    "tier_3_only": {
+      "selected": 0,
+      "target": 10
+    },
+    "ulif_header_damage": {
+      "selected": 0,
+      "target": 10
+    },
+    "russification_pairs": {
+      "selected": 0,
+      "target": 15
+    },
+    "ordinary_controls": {
+      "selected": 0,
+      "target": 20
+    }
+  },
+  "total_selected": 0,
+  "total_target": 220,
+  "pilot_units": 150,
+  "admission_ready": false,
+  "stop_basis": "Required multi-headword phraseology source key lacks an approved foundation contract. Issue stop policy applies.",
+  "prerequisites": [
+    {
+      "id": "mwe_source_key",
+      "error": "Invalid object fields",
+      "locator": "ulif:ulif_dictua_sections:id:7963",
+      "owner": "claude-open-model-data"
+    },
+    {
+      "id": "golden_case_denominator",
+      "error": "Pilot denominator drift; require exactly 150 admitted units",
+      "owner": "claude-open-model-data"
+    },
+    {
+      "id": "joint_golden_pilot_isolation_inputs",
+      "error": "Unresolved membership keys; isolation cannot be checked",
+      "owner": "claude-open-model-data"
+    }
+  ],
+  "open_acceptance_criteria": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4"
+  ],
+  "next_action": "Driver dispositions foundation prerequisites, then resumes measured selection and routes non-author source admission. No receipt may be authored by this author."
+}
