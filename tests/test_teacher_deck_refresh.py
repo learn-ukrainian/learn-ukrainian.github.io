@@ -243,7 +243,13 @@ def test_checker_is_independent_of_the_generator() -> None:
         if isinstance(node, (ast.Import, ast.ImportFrom))
         for alias in node.names
     }
-    assert not any(str(name).startswith("scripts") for name in imported), imported
+    # The shared SQLite opener supplies connection safety, never deck rules.
+    # Keep every generator, table-sync and exporter dependency forbidden.
+    shared_reader = "scripts.lib.readonly_sqlite"
+    assert not any(str(name).startswith("scripts") and name != shared_reader for name in imported), imported
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom) and node.module == shared_reader:
+            assert {alias.name for alias in node.names} <= {"SQLiteConnection", "open_readonly"}
 
 
 def test_committed_frozen_key_list_pins_the_denominator() -> None:
@@ -733,8 +739,12 @@ class FakeGh:
     """The `gh release` CLI in memory (no network); every other command runs for real."""
 
     def __init__(
-        self, monkeypatch: pytest.MonkeyPatch, *, release_exists: bool = False,
-        fail_upload: bool = False, fail_at: str | None = None,
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        *,
+        release_exists: bool = False,
+        fail_upload: bool = False,
+        fail_at: str | None = None,
     ):
         self.assets: dict[str, bytes] | None = {} if release_exists else None
         self.fail_upload = fail_upload
@@ -751,7 +761,7 @@ class FakeGh:
         if verb in {"create", "upload"}:
             # Typed writes pin the repository, freeze payloads and put the tag
             # after --; reads retain their existing positional shape.
-            operands = command[command.index("--") + 1:]
+            operands = command[command.index("--") + 1 :]
             assert operands[0] == teacher_deck.RELEASE_TAG
             assert command[3:5] == ["--repo", teacher_deck.release.DEFAULT_REPO]
         else:
@@ -890,13 +900,21 @@ def test_a_failed_publish_changes_nothing_committed_facing(
     assert leftovers == []
 
 
-@pytest.mark.parametrize("step,expected", [
-    ("create", ["view", "create"]),
-    ("view --json", ["view", "view --json"]),
-    ("upload", ["view", "view --json", "view", "upload"]),
-])
+@pytest.mark.parametrize(
+    "step,expected",
+    [
+        ("create", ["view", "create"]),
+        ("view --json", ["view", "view --json"]),
+        ("upload", ["view", "view --json", "view", "upload"]),
+    ],
+)
 def test_release_publish_failure_preserves_the_set_and_stops_the_sequence(
-    world, tmp_path, monkeypatch, capsys, step, expected,
+    world,
+    tmp_path,
+    monkeypatch,
+    capsys,
+    step,
+    expected,
 ):
     assert _refresh(world) == 0
     before = _committed(world)
