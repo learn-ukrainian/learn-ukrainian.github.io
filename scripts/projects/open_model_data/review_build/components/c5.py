@@ -2,20 +2,18 @@
 
 Raw spans define the frozen units. Only the reviewed dehyphenation transform
 can change paragraph bytes; unresolved readings withhold the whole paragraph.
-Examples needing a changed reading are withheld, retaining their raw identity.
+Raw example quotes and spans retain their printed identity; targets resolve splits.
 """
 
-import json
-import re
 from collections.abc import Mapping
 from typing import ClassVar
 
 from ..attribution import Attribution
 from ..bindings import example_items
 from ..contract import Candidate, Citation, Value, canonical, digest
-from ..errors import require
+from ..errors import BuildError, require
 from ..gate import evidence_id
-from ..transforms import transform
+from ..transforms import source_text_defects, transform
 from . import ComponentContext
 
 SOURCE = "pravopys_2019_official"
@@ -35,11 +33,22 @@ UNIT_QUERY = {
 EXAMPLE = {"area": "slots", "slot": "example"}
 PARAGRAPH = {"area": "response", "slot": "paragraph"}
 LOCATOR = {"area": "response", "slot": "paragraph_locator"}
-DEHYPHENATION = {"store": "vesum.db", "table": "forms_all", "field": "word_form"}
-# Even forms with stress marks, apostrophes, or spaces at the printed line end
-# must not silently retain a broken reading. Legitimate unresolved hyphens are
-# conservatively withheld too; the stored alternatives are not an adjudication.
-LINE_HYPHEN = re.compile(r"[^\W\d_][\w\u0300-\u036f'’ʼ]*-[ \t]*\r?\n[ \t]*[^\W\d_]")
+DEHYPHENATION = {
+    "store": "vesum.db",
+    "table": "forms_all",
+    "field": "word_form",
+    "lookup_field": "word_form_folded",
+    "normalizer": "vesum_fold",
+    "witness": {
+        "store": STORE,
+        "table": TABLE,
+        "field": "text",
+        "source_column": "source_id",
+        "source_id": SOURCE,
+        "alternatives_field": "hyphen_alternatives",
+        "count_field": "unresolved_hyphenations",
+    },
+}
 
 
 def primary_citation(row: Mapping, field: str = "text") -> Citation:
@@ -118,9 +127,7 @@ class PravopysComponent:
                             "citation_field": "locator",
                             "locator_field": "locator",
                         },
-                        {"op": "pattern_absent", "values": [EXAMPLE, PARAGRAPH], "pattern": LINE_HYPHEN.pattern},
-                        {"op": "literal", "values": [{**PARAGRAPH, "field": "unresolved_hyphenations"}], "expected": 0},
-                        {"op": "literal", "values": [{**PARAGRAPH, "field": "hyphen_alternatives"}], "expected": "[]"},
+                        {"op": "transform_resolved", "values": [PARAGRAPH], "transform": "dehyphenate@2"},
                     ],
                 },
             },
@@ -129,8 +136,8 @@ class PravopysComponent:
             "accepted": ["ok"],
             "rejected": [],
             "withheld": [
-                "paragraph_hyphenation",
-                "example_hyphenation",
+                "paragraph_hyphenation_unresolved",
+                "source_text_defect",
                 "hyphen_metadata_unavailable",
                 "attribution_unresolved",
                 "locator_unavailable",
@@ -138,7 +145,7 @@ class PravopysComponent:
             ],
             "excluded": [],
         },
-        "transforms": {"dehyphenate@1": DEHYPHENATION},
+        "transforms": {"dehyphenate@2": DEHYPHENATION},
         "unit_grain": "Printed colon-list example span in its own paragraph; measured 11926 in 168 paragraphs.",
         "reference_multiplicity": "One complete source paragraph and its held locator per printed example span.",
     }
@@ -153,29 +160,22 @@ class PravopysComponent:
             # Read through the pinned reader, rather than trust extractor text.
             _, raw = ctx.reader.field(citation)
             reason = "ok"
-            try:
-                alternatives = json.loads(row["hyphen_alternatives"])
-                valid = (
-                    isinstance(alternatives, list)
-                    and all(isinstance(a, str) for a in alternatives)
-                    and type(row["unresolved_hyphenations"]) is int
-                    and row["unresolved_hyphenations"] == len(alternatives)
-                )
-            except (ValueError, TypeError):
-                valid = False
-            if not valid or (not alternatives and row["hyphen_alternatives"] != "[]"):
-                reason = "hyphen_metadata_unavailable"
-            elif alternatives:
-                reason = "paragraph_hyphenation"
             normalized = raw
-            if reason == "ok" and LINE_HYPHEN.search(raw):
-                normalized = transform("dehyphenate@1", raw, DEHYPHENATION, ctx.reader).text
-                if LINE_HYPHEN.search(normalized):
-                    reason = "paragraph_hyphenation"
+            try:
+                resolved = transform("dehyphenate@2", raw, DEHYPHENATION, ctx.reader)
+                normalized = resolved.text
+                if resolved.unresolved:
+                    reason = "paragraph_hyphenation_unresolved"
+                elif source_text_defects(normalized, DEHYPHENATION, ctx.reader, original=raw):
+                    reason = "source_text_defect"
+            except BuildError as exc:
+                if exc.code != "hyphen_metadata_unavailable":
+                    raise
+                reason = exc.code
             for span in example_items(raw):
                 example = raw[span[0] : span[1]]
-                unit_reason = "example_hyphenation" if reason == "ok" and LINE_HYPHEN.search(example) else reason
-                response_transform = "dehyphenate@1" if normalized != raw else "verbatim"
+                unit_reason = reason
+                response_transform = "dehyphenate@2"
                 yield Candidate(
                     "C5",
                     example_unit(citation, span),

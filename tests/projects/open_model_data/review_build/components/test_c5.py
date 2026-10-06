@@ -56,8 +56,8 @@ def source(tmp_path):
                 ),
             )
     with sqlite3.connect(vesum) as writer:
-        writer.execute("CREATE TABLE forms_all(id INTEGER PRIMARY KEY, word_form TEXT)")
-        writer.execute("INSERT INTO forms_all VALUES(1, 'SYNTHETICmore')")
+        writer.execute("CREATE TABLE forms_all(id INTEGER PRIMARY KEY, word_form TEXT, word_form_folded TEXT)")
+        writer.execute("INSERT INTO forms_all VALUES(1, 'SYNTHETICmore', 'syntheticmore')")
     register = {
         "sources": [
             {
@@ -195,7 +195,11 @@ def test_must_fail_c5_gate(source, mutation, error):
             row = reader.row(target.citations[0])
             swapped = primary_citation(row, "locator")
             candidates[0] = replace(
-                first, response=(replace(target, text=row["locator"], citations=(swapped,)), first.response[1])
+                first,
+                response=(
+                    replace(target, text=row["locator"], citations=(swapped,), transform="verbatim"),
+                    first.response[1],
+                ),
             )
         elif mutation == "paraphrasing":
             candidates[0] = replace(
@@ -210,13 +214,16 @@ def test_must_fail_c5_gate(source, mutation, error):
 @pytest.mark.parametrize(
     "fields,reason",
     [
-        ({"unresolved_hyphenations": 1, "hyphen_alternatives": '["SYNTHETIC alternate"]'}, "paragraph_hyphenation"),
+        (
+            {"unresolved_hyphenations": 1, "hyphen_alternatives": '["SYNTHETIC alternate"]'},
+            "paragraph_hyphenation_unresolved",
+        ),
         ({"hyphen_alternatives": "invalid"}, "hyphen_metadata_unavailable"),
         ({"hyphen_alternatives": "{}"}, "hyphen_metadata_unavailable"),
         ({"hyphen_alternatives": "[1]", "unresolved_hyphenations": 1}, "hyphen_metadata_unavailable"),
         ({"unresolved_hyphenations": 1}, "hyphen_metadata_unavailable"),
         ({"hyphen_alternatives": " []"}, "hyphen_metadata_unavailable"),
-        ({"text": "SYNTHETIC rule UNKNOWN-\nmore examples: FIRST, SECOND."}, "paragraph_hyphenation"),
+        ({"text": "SYNTHETIC rule UNKNOWN-\nmore examples: FIRST, SECOND."}, "paragraph_hyphenation_unresolved"),
     ],
 )
 def test_ambiguous_hyphenation_is_withheld(source, fields, reason):
@@ -236,22 +243,24 @@ def test_attested_dehyphenation_of_complete_paragraph(source):
         gate, candidates, _ = gate_and_candidates(source, reader)
         first = candidates[0]
         assert first.outcome == "accepted"
-        assert first.response[0].transform == "dehyphenate@1"
+        assert first.response[0].transform == "dehyphenate@2"
         assert first.response[0].text == "SYNTHETICmore rule examples: FIRST, SECOND."
         records, _ = gate.run(candidates)
         assert any(p["joins"] for r in records for p in r["provenance"].values())
 
 
-def test_split_example_retains_identity_and_withholds(source):
+def test_split_example_retains_raw_identity_and_resolves_target(source):
     update(source, text="SYNTHETIC examples: SYNTHETIC-\nmore, SECOND.")
     with reader_for(source) as reader:
         gate, candidates, _ = gate_and_candidates(source, reader)
-        assert candidates[0].reason == "example_hyphenation"
+        assert candidates[0].outcome == "accepted"
+        assert candidates[0].slots[0].text == "SYNTHETIC-\nmore"
+        assert candidates[0].response[0].text == "SYNTHETIC examples: SYNTHETICmore, SECOND."
         assert candidates[1].outcome == "accepted"
-        assert gate.run(candidates)[1]["accounting"]["C5"]["withheld"] == 1
+        assert gate.run(candidates)[1]["accounting"]["C5"]["withheld"] == 0
 
 
-@pytest.mark.parametrize("case,error", [("metadata", "binding_literal"), ("unattested", "binding_pattern")])
+@pytest.mark.parametrize("case,error", [("metadata", "binding_hyphenation"), ("unattested", "binding_hyphenation")])
 def test_forced_ambiguous_hyphen_acceptance_fails(source, case, error):
     if case == "metadata":
         update(source, unresolved_hyphenations=1, hyphen_alternatives='["SYNTHETIC alternate"]')
@@ -323,3 +332,53 @@ def test_synthetic_cli_build_verify_and_real_mutation_generation(source, tmp_pat
         assert json.loads(capsys.readouterr().out)["status"] == ("built" if action == "build" else "verified")
     mutations = json.loads((out / "mutation-fixtures/results.json").read_bytes())
     assert len(mutations) == 5
+
+
+def test_per_hyphen_resolution_withholds_only_remaining_ambiguity(source):
+    update(
+        source,
+        text="SYNTHETIC rule SYNTHETIC-\nmore and unknown-\nmore examples: FIRST, SECOND.",
+        unresolved_hyphenations=2,
+        hyphen_alternatives='["SYNTHETIC-more", "unknown-more"]',
+    )
+    with reader_for(source) as reader:
+        gate, candidates, _ = gate_and_candidates(source, reader)
+        assert {c.reason for c in candidates[:2]} == {"paragraph_hyphenation_unresolved"}
+        assert "SYNTHETICmore" in candidates[0].response[0].text
+        assert gate.run(candidates)[1]["accounting"]["C5"]["withheld"] == 2
+
+
+def test_source_text_defect_withholding_cannot_be_forced_through_gate(source):
+    update(source, text="SYNTHETIC rule ALPHABETA examples: FIRST, SECOND.")
+    with sqlite3.connect(source["db"]) as writer:
+        writer.execute(
+            "UPDATE pravopys_paragraphs SET text='SYNTHETIC rule ALPHA and BETA examples: THIRD, FOURTH.' WHERE number=2"
+        )
+    with sqlite3.connect(source["vesum"]) as writer:
+        writer.executemany("INSERT INTO forms_all VALUES(?,?,?)", [(2, "ALPHA", "alpha"), (3, "BETA", "beta")])
+    with reader_for(source) as reader:
+        gate, candidates, _ = gate_and_candidates(source, reader)
+        assert candidates[0].reason == "source_text_defect"
+        assert gate.run(candidates)[1]["accounting"]["C5"]["withheld"] == 2
+        candidates[0] = replace(candidates[0], outcome="accepted", reason="ok", evidence=())
+        with pytest.raises(BuildError, match="binding_source_text_defect"):
+            gate.run(candidates)
+
+
+def test_v2_provenance_has_evidence_kind_and_pins_text_witness(source):
+    update(
+        source,
+        text="SYNTHETIC rule ZETA-\nmore examples: FIRST, SECOND.",
+        unresolved_hyphenations=1,
+        hyphen_alternatives='["ZETA-more"]',
+    )
+    with sqlite3.connect(source["db"]) as writer:
+        writer.execute(
+            "UPDATE pravopys_paragraphs SET text='SYNTHETIC ZETAmore examples: THIRD, FOURTH.' WHERE number=2"
+        )
+    with reader_for(source) as reader:
+        gate, candidates, _ = gate_and_candidates(source, reader)
+        records, _ = gate.run(candidates)
+        evidence = [e for r in records for p in r["provenance"].values() for e in p.get("join_evidence", [])]
+        assert evidence and {e[3] for e in evidence} == {"held_text"}
+        assert any("field=text" in key for key, _ in reader.reads[("sources.db", TABLE)])
