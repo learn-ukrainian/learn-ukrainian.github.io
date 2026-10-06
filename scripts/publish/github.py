@@ -588,7 +588,13 @@ def main(argv=None, *, runner=None):
             set(REST_READS) | set(GQL_READS) | {"queue-snapshot", "subissue-batch", "issue-states", "merge-facts"}
         ),
     )
-    read_parser.add_argument("--repo", help="Repository owner/name; defaults to GH_REPO or Git origin")
+    read_parser.add_argument(
+        "--repo",
+        help=(
+            "Repository owner/name (e.g. unit/public); defaults to GH_REPO or Git origin. "
+            "For code-scanning-alerts and check-annotations, admission allows only the checkout's origin repository."
+        ),
+    )
     for key in ("number",):
         read_parser.add_argument(
             "--" + key,

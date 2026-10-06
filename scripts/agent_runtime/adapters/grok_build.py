@@ -658,13 +658,22 @@ class GrokBuildAdapter:
             sid = obj.get("sessionId") or obj.get("session_id")
             session_id = sid if isinstance(sid, str) and sid else None
         else:
-            # Fallback: --output-format plain, or noise before the JSON.
+            # Keep unframed text for diagnostics; it cannot prove completion.
             text = (stdout or "").strip()
             session_id = None
 
+        # Native Grok can exit 0 after a cancelled permission request and
+        # leave only opening narration (#9771). Text alone is not a final
+        # answer: require the CLI's exact terminal marker, as the structured
+        # path already does. Do not infer completion from the reply body.
+        terminal_ok = obj is not None and obj.get("stopReason") == "end_turn"
         usable = bool(text)
-        failed = returncode != 0 or not usable
-        failure_code = provider_failure_code(provider_error) if failed else None
+        failed = returncode != 0 or not usable or not terminal_ok
+        failure_code = (
+            "provider_stream_incomplete"
+            if not terminal_ok
+            else provider_failure_code(provider_error) if failed else None
+        )
         rate_limited = failed and failure_code == "rate_limited"
         ok = returncode == 0 and usable and not failed
 
@@ -672,6 +681,12 @@ class GrokBuildAdapter:
         if not ok:
             source = (stderr or "").strip() or (stdout or "").strip() or ""
             stderr_excerpt = source[:500] or None
+            if not terminal_ok and (returncode == 0 or text):
+                reason = "missing stopReason" if obj is None or "stopReason" not in obj else "non-end_turn stopReason"
+                # Preserve partial text only in bounded diagnostics, never in
+                # response (which becomes the driver's result file).
+                diagnostic = f"{text}\n{stderr.strip()}".strip() if text else source
+                stderr_excerpt = f"grok final answer incomplete: {reason}\n{diagnostic}".strip()[:500]
 
         return ParseResult(
             ok=ok,

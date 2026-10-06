@@ -21,7 +21,7 @@ from scripts.orchestration.fleet_taxonomy import FleetTaxonomyError, resolve_are
 from scripts.orchestration.issue_stream_audit import load_registry
 from scripts.orchestration.launcher_aliases import load_launcher_aliases
 from scripts.work.attention import is_actionable
-from scripts.work.normalize import build_public_projection
+from scripts.work.normalize import build_public_projection, downgrade_expired_projection
 from scripts.work.schema import (
     SchemaValidationError,
     admit_projection_filters,
@@ -157,8 +157,6 @@ _WORKER_LOOP_LOCK = threading.Lock()
 _WORKER_FUTURES: set[concurrent.futures.Future[Any]] = set()
 
 
-
-
 def _in_flight_builds(
     ctx: MonitorContext | None = None,
 ) -> dict[str, concurrent.futures.Future[dict[str, Any]]]:
@@ -210,6 +208,7 @@ def shutdown_worker_loop(*, join_timeout_s: float = 1.0) -> bool:
         return False
 
     if loop.is_running():
+
         async def stop_loop() -> None:
             await loop.shutdown_default_executor()
             loop.stop()
@@ -393,9 +392,7 @@ def _get_or_create_build_task(
     return _ensure_in_flight(key, filters, ctx)
 
 
-def wait_for_in_flight_build(
-    key: str, timeout: float = 10.0, ctx: MonitorContext | None = None
-) -> None:
+def wait_for_in_flight_build(key: str, timeout: float = 10.0, ctx: MonitorContext | None = None) -> None:
     """Block until the single-flight build for ``key`` settles.
 
     Sync TestClient does not pump request-loop ``create_task`` work between
@@ -412,9 +409,7 @@ def wait_for_in_flight_build(
         fut.result(timeout=timeout)
     except Exception:
         if not fut.done():
-            raise TimeoutError(
-                f"in-flight work projection build for {key!r} did not settle in {timeout}s"
-            ) from None
+            raise TimeoutError(f"in-flight work projection build for {key!r} did not settle in {timeout}s") from None
         return
 
 
@@ -482,8 +477,13 @@ async def work_projection(
     except TimeoutError as exc:
         stale = cache_get_with_age(key, float("inf"))
         if stale is not None and isinstance(stale[0], dict):
-            out = dict(stale[0])
-            out["cache_age_s"] = float(stale[1])
+            # Past the freshness bound, decision-bearing fields are unknown.
+            # A just-built cache (age within CACHE_TTL_S) stays as stored.
+            out = downgrade_expired_projection(
+                stale[0],
+                age_s=float(stale[1]),
+                freshness_s=CACHE_TTL_S,
+            )
             return JSONResponse(content=out)
         # Typed degradation envelope — never a bare 500 hide of healthy sources.
         raise HTTPException(
@@ -523,6 +523,37 @@ def _known_streams(ctx: MonitorContext | None = None) -> list[str] | None:
         return None
     cache_set(key, names)
     return names
+
+
+def _unscoped_unknown_digest(items: list[dict[str, Any]], stream: str) -> dict[str, Any]:
+    """Unknown rows that are not already on this lane's pick list.
+
+    An empty stream queue must not read as "no remaining work". A row that
+    still names the requested stream is counted here when it is not actionable,
+    so ``source_ok: false`` cannot drop it. Rows already on the pick list stay
+    there and are not counted twice.
+    """
+    reason_counts: dict[str, int] = {}
+    count = 0
+    for item in items:
+        action = item.get("safe_next_action") if isinstance(item.get("safe_next_action"), dict) else {}
+        stream_status = ((item.get("projections") or {}).get("stream") or {}).get("status")
+        unknown = (
+            item.get("health") == "UNKNOWN"
+            or action.get("state") == "unknown"
+            or action.get("code") == "INSPECT_UNKNOWN"
+            or stream_status == "unknown"
+        )
+        if not unknown or (stream in _item_streams(item) and is_actionable(item)):
+            continue
+        count += 1
+        reasons = action.get("reason_codes") if isinstance(action.get("reason_codes"), list) else []
+        if not reasons:
+            reasons = ["authority_unknown"]
+        for reason in reasons:
+            if isinstance(reason, str) and reason:
+                reason_counts[reason] = reason_counts.get(reason, 0) + 1
+    return {"count": count, "reason_counts": reason_counts}
 
 
 def _item_streams(item: dict[str, Any]) -> list[str]:
@@ -718,10 +749,7 @@ async def work_next(
         "cache_age_s": float(age),
         "limit": limit,
         "queue": queue,
-        "sources": [
-            source for source in payload.get("sources", [])
-            if source.get("source_id") == "public-monitor"
-        ],
+        "sources": [source for source in payload.get("sources", []) if source.get("source_id") == "public-monitor"],
         "denominator": payload.get("denominator", {}),
         "digest": {
             "other_streams": {
@@ -729,6 +757,7 @@ async def work_next(
                 "top_blockers": top_blockers,
             },
             "unscoped_actionable_count": unscoped,
+            "unscoped_unknown": _unscoped_unknown_digest(items, stream),
             "excluded_pending_native": {
                 "count": len(excluded_pending),
                 "items": excluded_pending[:NEXT_MAX_LIMIT],

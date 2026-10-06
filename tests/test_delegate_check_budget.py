@@ -606,6 +606,50 @@ def test_adapter_probe_keeps_model_when_invocation_cannot_run(monkeypatch):
     assert delegate._adapter_rejects_model("grok", "grok-4.7") is False
 
 
+def _boom_adapter_for(monkeypatch, seat: str) -> None:
+    """Point the real registry row for ``seat`` at an adapter whose invocation cannot be built."""
+    from agent_runtime.registry import AGENTS
+
+    class _Boom:
+        def build_invocation(self, **_kwargs):
+            raise RuntimeError("CLI not found")
+
+    fake = types.ModuleType("probe_boom_mod")
+    fake.Boom = _Boom
+    monkeypatch.setitem(sys.modules, "probe_boom_mod", fake)
+    monkeypatch.setitem(AGENTS[seat], "adapter", "probe_boom_mod:Boom")
+
+
+def test_inconclusive_probe_warning_names_registry_seat_and_catalog_model(monkeypatch, capsys):
+    # #9739: the warning is built from the registry and catalog spellings,
+    # never from the caller's strings (CodeQL py/clear-text-logging-sensitive-data).
+    _boom_adapter_for(monkeypatch, "grok")
+    assert delegate._adapter_model_rejection("grok", "GROK-4.7") is None
+    err = capsys.readouterr().err
+    assert "⚠ model probe for grok could not verify grok-4.7: RuntimeError" in err
+    assert "GROK-4.7" not in err
+
+
+def test_inconclusive_probe_warning_gives_an_uncatalogued_model_a_fixed_label(monkeypatch, capsys):
+    _boom_adapter_for(monkeypatch, "grok")
+    assert delegate._adapter_model_rejection("grok", "not-a-catalog-model") is None
+    err = capsys.readouterr().err
+    assert "⚠ model probe for grok could not verify an uncatalogued model: RuntimeError" in err
+    assert "not-a-catalog-model" not in err
+
+
+def test_probe_log_labels_fall_back_without_registry_row_or_catalog(monkeypatch):
+    from scripts.review import model_catalog
+
+    assert delegate._registry_seat({"adapter": "x:Y"}) == "an unregistered seat"
+
+    def unavailable(*_args, **_kwargs):
+        raise model_catalog.ModelCatalogError("catalog unreadable")
+
+    monkeypatch.setattr(model_catalog, "canonical_model_id", unavailable)
+    assert delegate._catalog_model_label("gpt-6.1-sol") == "a model (catalog unavailable)"
+
+
 def test_adapter_valueerror_before_spawn_is_failed(monkeypatch, tmp_path):
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
 

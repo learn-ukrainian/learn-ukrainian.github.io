@@ -252,6 +252,28 @@ def test_diagnostic_non_get_methods_are_refused(suffix, method, flag):
 @pytest.mark.parametrize(
     "suffix",
     [
+        "code-scanning/alerts",
+        "code-scanning/alerts/1",
+        "code-scanning/alerts/1/instances",
+        "check-runs/123/annotations",
+    ],
+)
+@pytest.mark.parametrize("flag", ["-f", "-F", "--field", "--raw-field", "--input"])
+@pytest.mark.parametrize("method", [[], ["--method", "GET"]])
+def test_diagnostic_field_flags_are_refused(suffix, flag, method):
+    value = "-" if flag == "--input" else "state=fixture"
+    with pytest.raises(PublishBlocked):
+        admit(
+            ["api", "repos/unit/public/" + suffix, *method, flag, value],
+            cwd=".",
+            environment={},
+            reader=origin_reader,
+        )
+
+
+@pytest.mark.parametrize(
+    "suffix",
+    [
         "code-scanning",
         "code-scanning/alerts/",
         "code-scanning/alerts/1/../x",

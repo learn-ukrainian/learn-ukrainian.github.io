@@ -201,32 +201,23 @@ def test_work_page_actionable_default_view_contracts():
 
 
 def test_work_page_actionable_predicate_parity_with_server_ssot():
-    """The JS isActionable predicate must match scripts/work/attention.py (#6880).
+    """The dashboard reads the server attention flag and does not copy the deny list.
 
-    The server-side predicate is the SSOT for /api/work/v1/next; the dashboard
-    keeps a JS mirror. Deny-list drift or a dropped OFF_TRACK/AT_RISK inclusion
-    would silently fork the Actionable view from the machine pick list.
+    ``is_actionable`` remains the server SSOT and is stamped onto
+    ``flags.attention``. A missing flag fails closed in the page.
     """
     from scripts.work.attention import NON_ACTIONABLE_ACTION_CODES, is_actionable
 
     html = WORK.read_text(encoding="utf-8")
-    match = re.search(r"NON_ACTIONABLE_ACTION_CODES = new Set\(\[(.*?)\]\)", html)
-    assert match, "JS deny-list constant missing from work.html"
-    js_codes = set(re.findall(r"'([A-Z_]+)'", match.group(1)))
-    assert js_codes == set(NON_ACTIONABLE_ACTION_CODES)
-
+    assert "NON_ACTIONABLE_ACTION_CODES = new Set" not in html
     start = html.index("function isActionable(")
     end = html.index("function ", start + 1)
     body = html[start:end]
-    # Health inclusion mirrors the Python short-circuit exactly.
-    assert "item.health === 'OFF_TRACK' || item.health === 'AT_RISK'" in body
-    assert "return true" in body
-    # Fallback path consults the same deny list on safe_next_action.code.
-    assert "safe_next_action" in body
-    assert "NON_ACTIONABLE_ACTION_CODES.has(code)" in body
-    assert "!!code" in body
+    assert "flags.attention === true" in body
+    assert "safe_next_action" not in body
+    assert "OFF_TRACK" not in body
 
-    # Truth table over the Python SSOT — the semantics both sides must share.
+    # The server predicate is unchanged. The page no longer reimplements it.
     assert is_actionable({"health": "OFF_TRACK", "safe_next_action": {"code": "NONE"}})
     assert is_actionable({"health": "AT_RISK", "safe_next_action": {"code": "OPEN_GITHUB"}})
     assert is_actionable({"health": "ON_TRACK", "safe_next_action": {"code": "MERGE_WHEN_READY"}})
@@ -246,37 +237,28 @@ def test_work_page_actionable_predicate_behavioral_js_parity():
     if shutil.which("node") is None:
         pytest.skip("node required for JS actionable parity")
 
-    from scripts.work.attention import NON_ACTIONABLE_ACTION_CODES, is_actionable
-
     fixtures = [
         None,
         {},
         {"health": "OFF_TRACK", "safe_next_action": {"code": "NONE"}},
-        {"health": "AT_RISK", "safe_next_action": {"code": "OPEN_GITHUB"}},
-        {"health": "ON_TRACK", "safe_next_action": {"code": "MERGE_WHEN_READY"}},
-        {"health": "ON_TRACK", "safe_next_action": {"code": "FIX_CI"}},
-        {"health": "UNKNOWN", "safe_next_action": {"code": "WAIT_CI"}},
-        {"health": "ON_TRACK", "safe_next_action": {}},
-        {"health": "ON_TRACK"},
-        {"health": "UNKNOWN", "safe_next_action": {"code": ""}},
+        {"health": "AT_RISK", "flags": {"attention": True}},
+        {"health": "ON_TRACK", "flags": {"attention": False}},
+        {"health": "OFF_TRACK", "flags": {}},
+        {"flags": {"attention": True}},
+        {"flags": {"attention": "true"}},
     ]
-    for denied in sorted(NON_ACTIONABLE_ACTION_CODES):
-        fixtures.append({"health": "ON_TRACK", "safe_next_action": {"code": denied}})
-        fixtures.append({"health": "UNKNOWN", "safe_next_action": {"code": denied}})
-
-    expected = [bool(is_actionable(item)) for item in fixtures]
+    expected = [False, False, False, True, False, False, True, False]
     html_path = json.dumps(str(WORK))
     fixtures_json = json.dumps(fixtures)
     script = f"""
     const fs = require('fs');
     const html = fs.readFileSync({html_path}, 'utf8');
-    const start = html.indexOf('const NON_ACTIONABLE_ACTION_CODES');
     const fnStart = html.indexOf('function isActionable(');
     const fnEnd = html.indexOf('function ', fnStart + 1);
-    if (start < 0 || fnStart < 0 || fnEnd <= fnStart) {{
+    if (fnStart < 0 || fnEnd <= fnStart) {{
       throw new Error('isActionable block not found');
     }}
-    eval(html.slice(start, fnEnd));
+    eval(html.slice(fnStart, fnEnd));
     const fixtures = {fixtures_json};
     console.log(JSON.stringify(fixtures.map((item) => isActionable(item))));
     """
@@ -290,9 +272,9 @@ def test_work_page_actionable_predicate_behavioral_js_parity():
     assert result.returncode == 0, result.stderr or result.stdout
     js_results = json.loads(result.stdout)
     assert js_results == expected
-    # Explicit kill for the boolean-inversion residual the substring scan misses.
-    assert expected[fixtures.index({"health": "ON_TRACK", "safe_next_action": {"code": "NONE"}})] is False
-    assert expected[fixtures.index({"health": "ON_TRACK", "safe_next_action": {"code": "MERGE_WHEN_READY"}})] is True
+    # Missing flag fails closed, including an OFF_TRACK row the old deny-list copy would have shown.
+    assert js_results[fixtures.index({"health": "OFF_TRACK", "safe_next_action": {"code": "NONE"}})] is False
+    assert js_results[fixtures.index({"flags": {"attention": True}})] is True
 
 
 def test_work_page_actionable_honesty_banner_contract():

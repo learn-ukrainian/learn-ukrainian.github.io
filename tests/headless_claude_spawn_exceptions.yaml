@@ -165,6 +165,9 @@ exceptions:
   # scripts/delegate.py
   - {module: scripts/delegate.py, function: "_advisory_worker_diff", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_apply_dispatch_sparse_checkout._run_git", program: "args", category: non-claude, reason: "runs git sparse-checkout"}
+  - {module: scripts/delegate.py, function: "_authoring_commit_available", program: "git", category: non-claude, reason: "runs `git cat-file -e`"}
+  - {module: scripts/delegate.py, function: "_authoring_default_branch", program: "git", category: non-claude, reason: "runs `git ls-remote --symref <remote> HEAD`"}
+  - {module: scripts/delegate.py, function: "_authoring_gh_json", program: "command", category: non-claude, reason: "runs the GitHub CLI: both in-module callers pass a literal `gh pr list` / `gh pr view` argv"}
   - {module: scripts/delegate.py, function: "_auto_finalize_changed_files", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_auto_finalize_dirty_worktree", program: "*git_prefix", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_auto_finalize_dirty_worktree", program: "git", category: non-claude, reason: "runs git"}
@@ -181,6 +184,9 @@ exceptions:
   - {module: scripts/delegate.py, function: "_ensure_worktree", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_fetch_existing_branch", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_fetch_remote_branch", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_git_common_dir_identity", program: "git", category: non-claude, reason: "runs `git rev-parse --git-common-dir`"}
+  - {module: scripts/delegate.py, function: "_git_is_ancestor", program: "git", category: non-claude, reason: "runs `git merge-base --is-ancestor`"}
+  - {module: scripts/delegate.py, function: "_git_rev_count", program: "git", category: non-claude, reason: "runs `git rev-list --count`"}
   - {module: scripts/delegate.py, function: "_is_ancestor_of_head", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_list_worktree_dirs", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_live_origin_branch_shas", program: "git", category: non-claude, reason: "runs git"}
@@ -244,6 +250,8 @@ exceptions:
   - {module: scripts/pipeline/dispatch.py, function: "run_with_heartbeat", program: "cmd", category: generic-runner, reason: "runs the AGY route; dispatch_claude_phase takes run_headless_claude instead (test_pipeline_phase_child_is_controlled)"}
   # scripts/projects/ua_open_weight_eval/suite_cli.py
   - {module: scripts/projects/ua_open_weight_eval/suite_cli.py, function: "run_local", program: "command", category: generic-runner, reason: "runs the local open-weight model command from the suite config"}
+  # scripts/review/closeout_cli.py
+  - {module: scripts/review/closeout_cli.py, function: "_checkout_git", program: "git", category: non-claude, reason: "runs `git -C <repo> ...`"}
   # scripts/review/isolation.py
   - {module: scripts/review/isolation.py, function: "_probe_sealed_read_mcp", program: "command", category: non-claude, reason: "runs the sealed-read MCP helper under Python in the sandbox"}
   - {module: scripts/review/isolation.py, function: "_sealed_reader_python_runtime", program: "str(python_bin)", category: non-claude, reason: "probes the sealed reader's Python runtime"}
@@ -254,6 +262,7 @@ exceptions:
   - {module: scripts/review/isolation.py, function: "stage_engine_auth", program: "str(security)", category: non-claude, reason: "reads a keychain item with the macOS security tool"}
   - {module: scripts/review/isolation.py, function: "verify_macos_sandbox", program: "str(sandbox_exec)", category: non-claude, reason: "sandbox-exec probe running /bin/cat"}
   # scripts/review/record_cf_verdict.py
+  - {module: scripts/review/record_cf_verdict.py, function: "_facts_git", program: "command", category: non-claude, reason: "runs git: the argv is the literal `git -C <repo> -c core.commitGraph=false --no-replace-objects` list built in the function"}
   - {module: scripts/review/record_cf_verdict.py, function: "_is_clean_base_merge", program: "*git", category: non-claude, reason: "runs git"}
   - {module: scripts/review/record_cf_verdict.py, function: "_repo_root", program: "git", category: non-claude, reason: "runs git"}
   # scripts/tools/agent_watcher.py

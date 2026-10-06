@@ -279,3 +279,16 @@ def test_diagnostic_cli_help(capsys):
     help_text = capsys.readouterr().out
     assert "code-scanning-alerts" in help_text and "check-annotations" in help_text
     assert "either --ref or --number" in help_text
+
+
+@pytest.mark.parametrize("operation", ["code-scanning-alerts", "check-annotations"])
+def test_diagnostic_cli_repo_help_describes_origin_admission(operation, capsys):
+    with pytest.raises(SystemExit) as exc:
+        pub.main(["read", operation, "--help"])
+    assert exc.value.code == 0
+    help_text = " ".join(capsys.readouterr().out.split())
+    assert "--repo REPO" in help_text
+    assert (
+        "For code-scanning-alerts and check-annotations, admission allows only the checkout's origin repository."
+        in help_text
+    )

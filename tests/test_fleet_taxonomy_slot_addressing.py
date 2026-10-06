@@ -385,13 +385,15 @@ def test_post_to_slot_with_no_live_holder_warns_and_queues(capsys: pytest.Captur
     result = _channels.post("test-slot", "user", "Hello slot", to_agents=["grok-infra"], auto_snapshot=False)
     captured = capsys.readouterr()
 
-    assert "⚠️ channel-bridge: recipient slot 'grok-infra' has no live holder" in captured.err
-    assert "channels DB delivery queue for 'grok-infra'" in captured.err
+    # #9739: the slot is named by its seat prefix and taxonomy area, never the caller's string.
+    assert "⚠️ channel-bridge: recipient grok slot in area 'infra' has no live holder" in captured.err
+    assert "queued in its channels DB delivery queue" in captured.err
+    assert "grok-infra" not in captured.err
     assert len(result["delivery_ids"]) == 1
     # #5889 item 1: bounce warning also reachable via the return dict.
     assert "warnings" in result
     assert isinstance(result["warnings"], list)
-    assert any("recipient slot 'grok-infra' has no live holder" in w for w in result["warnings"])
+    assert any("recipient grok slot in area 'infra' has no live holder" in w for w in result["warnings"])
 
 
 # ---------------------------------------------------------------------------
@@ -443,8 +445,8 @@ def test_post_bounce_warning_in_return_dict_hermetic(
     assert "warnings" in result
     assert isinstance(result["warnings"], list)
     assert len(result["warnings"]) == 1
-    assert "recipient slot 'grok-infra' has no live holder" in result["warnings"][0]
-    assert "channels DB delivery queue for 'grok-infra'" in result["warnings"][0]
+    assert "recipient grok slot in area 'infra' has no live holder (no-live-holder)" in result["warnings"][0]
+    assert "queued in its channels DB delivery queue" in result["warnings"][0]
     # Delivery still queued at the slot identity.
     assert len(result["delivery_ids"]) == 1
 
@@ -484,12 +486,12 @@ def test_post_resolver_failure_surfaces_warning_not_silent(
 
     # Item 2: resolver failure surfaced as a warning in the return dict...
     assert "warnings" in result
-    assert any("slot resolver failed for 'grok-infra'" in w for w in result["warnings"])
+    assert any("slot resolver failed for the grok slot" in w for w in result["warnings"])
     assert any("RuntimeError" in w for w in result["warnings"])
     assert any("simulated resolver/import failure" in w for w in result["warnings"])
     # ...and on stderr (visible handling, not silent).
     captured = capsys.readouterr()
-    assert "slot resolver failed for 'grok-infra'" in captured.err
+    assert "slot resolver failed for the grok slot" in captured.err
     # Delivery still queued at the slot identity (fail-open on delivery).
     assert len(result["delivery_ids"]) == 1
 

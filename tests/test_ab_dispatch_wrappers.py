@@ -266,7 +266,11 @@ def _patch_state_dir(monkeypatch, tmp_path: Path) -> Path:
 def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(monkeypatch, tmp_path):
     monkeypatch.delenv("LU_RUNTIME_TMP_ROOT", raising=False)
     brief = tmp_path / "brief.md"
-    brief.write_text("# Fix this\n\nExisting acceptance criteria.\n", encoding="utf-8")
+    # A fix brief scopes its write dispatch through its own Owned paths section (#9739).
+    brief.write_text(
+        "# Fix this\n\nExisting acceptance criteria.\n\n## Owned paths\n\n- `scripts/ai_agent_bridge/_cli.py`\n",
+        encoding="utf-8",
+    )
     calls = []
     captured_prompt: dict[str, str | Path] = {}
 
@@ -279,9 +283,7 @@ def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
-    rc = wrappers.handle_dispatch_fix(
-        argparse.Namespace(task_id="1741", brief_file=str(brief), dry_run=False)
-    )
+    rc = wrappers.handle_dispatch_fix(argparse.Namespace(task_id="1741", brief_file=str(brief), dry_run=False))
 
     assert rc == 0
     command = calls[0][0]
@@ -293,9 +295,32 @@ def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(
     assert _option(command, "--task-id") == "1741"
     assert "--force-new" in command
     assert _option(command, "--effort") == "high"
+    assert _option(command, "--owned-path") == "scripts/ai_agent_bridge/_cli.py"
     assert "Existing acceptance criteria." in str(captured_prompt["text"])
     assert wrappers.MANDATORY_COMMIT_PUSH_PR_CHECKLIST in str(captured_prompt["text"])
     assert not Path(captured_prompt["path"]).exists()
+
+
+@pytest.mark.parametrize(
+    ("owned", "expected"),
+    [
+        ("- `start-codex-driver.sh`\n", ["start-codex-driver.sh"]),
+        ("`pyproject.toml` and `Makefile`\n", ["pyproject.toml", "Makefile"]),
+        ("- `scripts/a.py`\n- `.gitignore`\n- `pyproject.toml`\n", ["scripts/a.py", ".gitignore", "pyproject.toml"]),
+        ("`pyproject.toml`, not a `word`, `--flag`, `..` or `.`\n", ["pyproject.toml"]),
+    ],
+    ids=["root-file-only", "root-files-with-and-without-a-dot", "mixed-scope", "words-are-not-paths"],
+)
+def test_dispatch_fix_keeps_repository_root_files_in_its_scope(monkeypatch, tmp_path, owned, expected):
+    """#9739: a root-level owned file (valid for delegate) is part of the derived scope, never silently dropped."""
+    monkeypatch.setattr(wrappers, "REPO_ROOT", tmp_path)
+    (tmp_path / "Makefile").write_text("all:\n", encoding="utf-8")
+    brief = tmp_path / "brief.md"
+    brief.write_text(f"# Fix\n\n## Owned paths\n\n{owned}\n## Verify\n`tests/x.py`\n", encoding="utf-8")
+
+    command = wrappers.build_dispatch_fix_command("9739", brief)
+
+    assert [command[i + 1] for i, item in enumerate(command) if item == "--owned-path"] == expected
 
 
 def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypatch, tmp_path):
@@ -306,14 +331,15 @@ def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypa
 
     def fake_run(command, **kwargs):
         assert command == ["gh", "issue", "view", "1701", "--json", "title,body"]
-        payload = {"title": "Security issue", "body": "Acceptance criteria from issue."}
+        payload = {
+            "title": "Security issue",
+            "body": "Acceptance criteria from issue.\n\n## Owned paths\n\n- `scripts/ai_agent_bridge/_cli.py`\n",
+        }
         return subprocess.CompletedProcess(command, 0, stdout=json.dumps(payload))
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
-    rc = wrappers.handle_dispatch_fix(
-        argparse.Namespace(task_id="1701", brief_file=None, dry_run=True)
-    )
+    rc = wrappers.handle_dispatch_fix(argparse.Namespace(task_id="1701", brief_file=None, dry_run=True))
 
     assert rc == 0
     state = json.loads((state_dir / "1701.json").read_text(encoding="utf-8"))
@@ -324,6 +350,7 @@ def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypa
     assert state["model"] is None
     assert state["effort"] == "high"
     assert _option(command, "--task-id") == "1701"
+    assert _option(command, "--owned-path") == "scripts/ai_agent_bridge/_cli.py"
     assert "--force-new" in command
     prompt_path = Path(state["prompt_file"])
     assert prompt_path.parent == lease_root
@@ -352,9 +379,7 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
-    rc = wrappers.handle_review_deep(
-        argparse.Namespace(target="1740", effort="xhigh", dry_run=True)
-    )
+    rc = wrappers.handle_review_deep(argparse.Namespace(target="1740", effort="xhigh", dry_run=True))
 
     assert rc == 0
     state_path = next(state_dir.glob("review-1740-*.json"))
@@ -396,9 +421,7 @@ def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
-    rc = wrappers.handle_review_deep(
-        argparse.Namespace(target=str(target), effort="high", dry_run=False)
-    )
+    rc = wrappers.handle_review_deep(argparse.Namespace(target=str(target), effort="high", dry_run=False))
 
     assert rc == 0
     command = calls[0][0]
@@ -570,9 +593,7 @@ def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path)
         raise AssertionError(f"unexpected cmd: {cmd}")
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-    state = wrappers.run_ask_review_dispatch(
-        "claude", "review this", task_id="task-123", hard_timeout=600
-    )
+    state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123", hard_timeout=600)
     assert state["ok"] is True
     assert state["status"] == "done"
     assert state["response"] == "Reviewed the diff.\nVERDICT: APPROVED\n"
@@ -665,9 +686,7 @@ def test_run_ask_review_dispatch_judges_by_verdict_not_dispatch_exit(monkeypatch
     verdict must still fail loudly (covered by the sibling test above).
     """
     result_file = tmp_path / "result.md"
-    result_file.write_text(
-        "Adversarial review complete.\n\n**Verdict**: **APPROVE**\n", encoding="utf-8"
-    )
+    result_file.write_text("Adversarial review complete.\n\n**Verdict**: **APPROVE**\n", encoding="utf-8")
 
     def fake_run(cmd, **kwargs):
         if "dispatch" in cmd:
@@ -706,12 +725,8 @@ def _run_review_with_wait_state(monkeypatch, tmp_path, *, status, wait_rc, respo
     return wrappers.run_ask_review_dispatch("deepseek", "review this", task_id="review-8786")
 
 
-@pytest.mark.parametrize(
-    "status", ["timeout", "failed", "crashed", "rate_limited", "cancelled"]
-)
-def test_run_ask_review_dispatch_never_promotes_failed_terminal_status(
-    monkeypatch, tmp_path, status
-):
+@pytest.mark.parametrize("status", ["timeout", "failed", "crashed", "rate_limited", "cancelled"])
+def test_run_ask_review_dispatch_never_promotes_failed_terminal_status(monkeypatch, tmp_path, status):
     """#8786 review: a verdict beside a non-completed run is not a success.
 
     ``delegate wait`` reported ``timeout`` (or another terminal failure) while
