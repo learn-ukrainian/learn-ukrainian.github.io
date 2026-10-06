@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import getpass
 import json
 import os
 import sqlite3
@@ -501,24 +502,65 @@ def test_finalize_fails_closed_when_the_base_is_unknown(kimi_worktree):
     assert message and "could not be read" in message
 
 
-# #9878: every finalize read failure names its cause, redacted.
+# #9878: every finalize read failure is a typed refusal that names its cause, without host details.
 _FAKE_TOKEN = "ghp_" + "Z9yX8wV7uT6sR5qP4oN3mL2kJ1iH0gF9eD8c"
+# Synthetic host details an injected git error carries; none of them may reach a refusal.
+_HOST_PATH = "/home/synthetic-operator/private-mount/learn.git"
+_HOST_ADDRESS = "203.0.113.77"
+_HOST_LOGIN = "deploy@build-host.example.internal"
+_HOST_MARKERS = ("synthetic-operator", "private-mount", _HOST_ADDRESS, "build-host", _FAKE_TOKEN)
 
 
-def test_an_unresolved_merge_base_refusal_names_the_git_error(kimi_worktree):
+def _host_error() -> str:
+    return (
+        f"fatal: cannot read {_HOST_PATH} owned by {getpass.getuser()} from {_HOST_ADDRESS} "
+        f"as {_HOST_LOGIN} token={_FAKE_TOKEN}\n"
+    )
+
+
+def _assert_host_safe(message: str) -> None:
+    for marker in _HOST_MARKERS:
+        assert marker not in message, marker
+    assert f"owned by {getpass.getuser()}" not in message and "owned by [redacted-user]" in message
+    assert "[redacted-" in message
+
+
+def test_an_unresolved_merge_base_refusal_names_each_attempts_git_error(kimi_worktree):
     message = delegate._kimi_diff_refusal(kimi_worktree, "origin/missing", "kimi", base_sha="0" * 40)
-    assert _TOKEN in message
-    assert "no merge base with 'origin/missing'" in message
-    assert f"recorded base commit {'0' * 40}" in message
-    assert "git merge-base origin/missing HEAD failed (exit 128)" in message
-    assert "origin/missing" in message.rsplit("HEAD failed", 1)[1]  # git's own stderr names the ref
+    assert _TOKEN in message and "[merge_base_unresolved]: no merge base with 'origin/missing'" in message
+    assert (
+        "git merge-base origin/missing HEAD failed (exit 128): fatal: Not a valid object name origin/missing" in message
+    )
+    assert f"the recorded base commit {'0' * 40} is not an ancestor of HEAD" in message
+    assert "git merge-base origin/main HEAD failed (exit 128)" in message
 
 
 def test_a_merge_base_without_common_ancestor_says_so(kimi_worktree):
     _git(kimi_worktree, "checkout", "--orphan", "unrelated")
     _git(kimi_worktree, "commit", "-m", "unrelated root")
     message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert "[merge_base_unresolved]" in message
     assert "git merge-base base HEAD failed (exit 1): no common ancestor" in message
+
+
+def test_a_one_shot_merge_base_failure_keeps_its_own_stderr(kimi_worktree, monkeypatch):
+    """The failure is reported from the run that failed; nothing reruns it and calls it transient."""
+    real_run = delegate.subprocess.run
+    merge_bases = []
+
+    def run(cmd, *args, **kwargs):
+        if list(cmd[:2]) == ["git", "merge-base"]:
+            merge_bases.append(cmd)
+            if len(merge_bases) == 1:
+                return subprocess.CompletedProcess(cmd, 128, "", "fatal: one-shot pack read error\n")
+        return real_run(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert "[merge_base_unresolved]" in message
+    assert "git merge-base base HEAD failed (exit 128): fatal: one-shot pack read error" in message
+    assert "transient" not in message
+    assert len(merge_bases) == 1
 
 
 @pytest.mark.parametrize(
@@ -529,29 +571,30 @@ def test_a_merge_base_without_common_ancestor_says_so(kimi_worktree):
         ("diff", "git diff --name-status -z --no-renames"),
     ],
 )
-def test_a_failing_git_step_refusal_names_the_command_and_its_redacted_stderr(
+def test_a_failing_git_step_refusal_names_the_command_without_host_details(
     kimi_worktree, monkeypatch, subcommand, shown
 ):
     real_run = delegate.subprocess.run
 
     def run(cmd, *args, **kwargs):
         if list(cmd[:2]) == ["git", subcommand] and (subcommand != "rev-parse" or "--git-path" in cmd):
-            return subprocess.CompletedProcess(cmd, 128, "", f"fatal: cannot read token={_FAKE_TOKEN}\n")
+            return subprocess.CompletedProcess(cmd, 128, "", _host_error())
         return real_run(cmd, *args, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", run)
     message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert _TOKEN in message and "could not be read for Ukrainian content" in message
+    assert _TOKEN in message and "could not be read for Ukrainian content [diff_unreadable]" in message
     assert shown in message and "fatal: cannot read" in message
-    assert _FAKE_TOKEN not in message
+    _assert_host_safe(message)
 
 
 def test_a_temporary_index_failure_refusal_names_the_exception(kimi_worktree, tmp_path, monkeypatch):
     """The #9878 symptom: the process's cached temp root is gone when the scratch index is created."""
     monkeypatch.setattr(delegate.tempfile, "tempdir", str(tmp_path / "reaped-root"))
     message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert "creating the temporary index raised FileNotFoundError" in message
-    assert "No such file or directory" in message  # the redactor may mask the host path itself
+    assert "[diff_unreadable]: creating the temporary index raised FileNotFoundError" in message
+    assert "No such file or directory" in message
+    assert str(tmp_path) not in message
 
 
 def test_a_git_timeout_refusal_names_the_step(kimi_worktree, monkeypatch):
@@ -564,10 +607,37 @@ def test_a_git_timeout_refusal_names_the_step(kimi_worktree, monkeypatch):
 
     monkeypatch.setattr(delegate.subprocess, "run", run)
     message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert "git add -A --intent-to-add raised TimeoutExpired" in message
+    assert "[diff_unreadable]: git add -A --intent-to-add raised TimeoutExpired" in message
 
 
-def test_a_change_reading_failure_refusal_names_the_exception(kimi_worktree, monkeypatch):
+@pytest.mark.skipif(os.geteuid() == 0, reason="root reads files whatever their mode")
+def test_an_unreadable_changed_file_is_a_typed_refusal_through_the_real_reader(kimi_worktree):
+    """``kimi_boundary._worktree_file`` reports a read error; it is not classified as non-text content."""
+    button = kimi_worktree / "Button.tsx"
+    button.write_text("export const Button = () => null;\n", encoding="utf-8")
+    button.chmod(0)
+    try:
+        message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    finally:
+        button.chmod(0o644)
+    assert "[changed_file_unreadable]: 'Button.tsx' could not be read (PermissionError EACCES)" in message
+    assert _NOT_TEXT not in message
+    assert str(kimi_worktree) not in message
+
+
+def test_a_parsing_value_error_is_a_typed_refusal(kimi_worktree, monkeypatch):
+    from scripts.agent_runtime import kimi_boundary
+
+    def unparseable(_output):
+        raise ValueError(f"bad record near {_HOST_PATH} from {_HOST_ADDRESS}")
+
+    monkeypatch.setattr(kimi_boundary, "parse_name_status", unparseable)
+    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert "[changes_unparseable]: ValueError: bad record near" in message
+    assert _HOST_ADDRESS not in message and "synthetic-operator" not in message
+
+
+def test_a_change_reading_os_error_is_a_typed_refusal(kimi_worktree, monkeypatch):
     from scripts.agent_runtime import kimi_boundary
 
     (kimi_worktree / "Button.tsx").write_text("export const Button = () => null;\n", encoding="utf-8")
@@ -577,8 +647,31 @@ def test_a_change_reading_failure_refusal_names_the_exception(kimi_worktree, mon
 
     monkeypatch.setattr(kimi_boundary, "changes", unreadable)
     message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert "reading the changed files raised OSError: disk gone" in message
+    assert "[changes_unreadable]: OSError: disk gone" in message
     assert _FAKE_TOKEN not in message
+
+
+def test_the_working_tree_reader_types_read_errors_and_classifies_the_rest(tmp_path):
+    from scripts.agent_runtime import kimi_boundary
+
+    (tmp_path / "text.txt").write_bytes(b"plain\n")
+    (tmp_path / "link").symlink_to("text.txt")
+    (tmp_path / "submodule").mkdir()
+    assert kimi_boundary._worktree_file(tmp_path, "text.txt") == b"plain\n"
+    assert kimi_boundary._worktree_file(tmp_path, "link") == b"text.txt"
+    assert kimi_boundary._worktree_file(tmp_path, "submodule") is None
+    with pytest.raises(kimi_boundary.ChangeUnreadable) as missing:
+        kimi_boundary._worktree_file(tmp_path, "gone.txt")
+    assert str(missing.value) == "'gone.txt' could not be read (FileNotFoundError ENOENT)"
+    assert str(tmp_path) not in str(missing.value)
+
+
+def test_host_safe_diagnostics_drop_paths_addresses_logins_and_the_user(tmp_path):
+    text = f"{_host_error()} in {tmp_path}/site/Label.tsx and file:///srv/mirror/x.git"
+    safe = delegate._host_safe(text, (tmp_path,))
+    _assert_host_safe(safe)
+    assert "site/Label.tsx" in safe  # paths under a known root stay, repository-relative
+    assert "/srv/mirror" not in safe and str(tmp_path) not in safe
 
 
 # --- the gate ------------------------------------------------------------------------

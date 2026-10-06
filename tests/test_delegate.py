@@ -12930,7 +12930,7 @@ def test_rescue_commit_failure_surfaces_stderr(tmp_path, monkeypatch, tmp_tasks_
     original = delegate._rescue_git
 
     def fail_commit(path, *args, **kwargs):
-        if len(args) > 0 and args[0] == "commit":
+        if len(args) > 0 and args[0] == "commit-tree":
             return subprocess.CompletedProcess(["git", *args], 1, "", "fatal: hook rejected commit")
         return original(path, *args, **kwargs)
 

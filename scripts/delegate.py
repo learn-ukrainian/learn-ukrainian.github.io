@@ -153,6 +153,7 @@ import ast
 import contextlib
 import dataclasses
 import functools
+import getpass
 import hashlib
 import json
 import logging
@@ -171,7 +172,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from collections.abc import Callable, Collection, Mapping, Sequence
+from collections.abc import Callable, Collection, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -4901,9 +4902,16 @@ def _run_merge_base(worktree: Path, base: str) -> tuple[str | None, bool]:
     sound. A present base that has no common ancestor with HEAD or whose
     computation failed fails closed ((None, False)).
     """
+    sha, base_missing, _why = _run_merge_base_detail(worktree, base)
+    return sha, base_missing
+
+
+def _run_merge_base_detail(worktree: Path, base: str) -> tuple[str | None, bool, str | None]:
+    """:func:`_run_merge_base` plus why it failed: the command and git's own error from this run (#9878)."""
+    command = ["git", "merge-base", base, "HEAD"]
     try:
         proc = subprocess.run(
-            ["git", "merge-base", base, "HEAD"],
+            command,
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -4911,18 +4919,22 @@ def _run_merge_base(worktree: Path, base: str) -> tuple[str | None, bool]:
             env=_sanitized_git_env(),
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
-    except (OSError, subprocess.TimeoutExpired):
-        return None, False
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return None, False, f"{' '.join(command)} raised {type(exc).__name__}: {exc}"
     if proc.returncode == 0:
         sha = (proc.stdout or "").strip()
-        return (sha or None), False
+        return (sha or None), False, None if sha else f"{' '.join(command)} printed no commit"
+    if proc.returncode == 1 and not (proc.stderr or proc.stdout or "").strip():
+        why = f"{' '.join(command)} failed (exit 1): no common ancestor"
+    else:
+        why = _git_failure(command, proc)
     ref_check = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
     if ref_check is not None and ref_check[0] == 1:
         # Confirmed absence: git rev-parse ran and confirmed the ref does not exist (exit 1).
-        return None, True
+        return None, True, why
     # Either ref exists (0), verification was unavailable (None), or failed operationally (!= 1).
     # Fail closed in all these cases: do NOT treat as missing and do NOT fall back.
-    return None, False
+    return None, False, why
 
 
 def _resolve_merge_base(worktree: Path, base_ref: str, base_sha: str | None = None) -> str | None:
@@ -4940,25 +4952,42 @@ def _resolve_merge_base(worktree: Path, base_ref: str, base_sha: str | None = No
 
     Returns None if no merge base can be resolved (failing closed).
     """
-    for candidate in _commit_count_refs(worktree, base_ref):
-        sha, base_missing = _run_merge_base(worktree, candidate)
-        if sha is not None:
-            return sha
-        if not base_missing:
-            return None
+    return _resolve_merge_base_detail(worktree, base_ref, base_sha)[0]
 
-    for candidate, _exact in _fallback_base_candidates(worktree, base_sha):
-        sha, base_missing = _run_merge_base(worktree, candidate)
+
+def _resolve_merge_base_detail(
+    worktree: Path, base_ref: str, base_sha: str | None = None
+) -> tuple[str | None, str | None]:
+    """``(merge_base, None)`` as :func:`_resolve_merge_base` resolves it, or ``(None, why)`` (#9878).
+
+    ``why`` carries each failed attempt's own command and git error, from the
+    attempt that failed: nothing is run again to explain a failure.
+    """
+    failures: list[str] = []
+    for candidate in _commit_count_refs(worktree, base_ref):
+        sha, base_missing, why = _run_merge_base_detail(worktree, candidate)
+        if sha is not None:
+            return sha, None
+        failures.append(why or candidate)
+        if not base_missing:
+            return None, "; ".join(failures)
+
+    fallbacks = _fallback_base_candidates(worktree, base_sha)
+    if base_sha and all(candidate != base_sha for candidate, _exact in fallbacks):
+        failures.append(f"the recorded base commit {base_sha} is not an ancestor of HEAD")
+    for candidate, _exact in fallbacks:
+        sha, base_missing, why = _run_merge_base_detail(worktree, candidate)
         if sha is not None:
             print(
                 f"⚠️  base {base_ref!r} is gone; resolved merge-base against {candidate!r} instead",
                 file=sys.stderr,
             )
-            return sha
+            return sha, None
+        failures.append(why or candidate)
         if not base_missing:
-            return None
+            return None, "; ".join(failures)
 
-    return None
+    return None, "; ".join(failures) or f"no base candidate for {base_ref!r}"
 
 
 def _count_commits_ahead(worktree: Path, base_ref: str, base_sha: str | None = None) -> int | None:
@@ -5636,8 +5665,48 @@ def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_optio
 
 
 def _git_failure(command: Sequence[str], proc: subprocess.CompletedProcess[str]) -> str:
-    """``git <command> failed (exit N): <last stderr line>``, redacted."""
-    return redact_text(f"{' '.join(command)} failed (exit {proc.returncode}): {_format_process_failure(proc)}") or ""
+    """``git <command> failed (exit N): <last stderr line>``; pass it through :func:`_host_safe` before showing it."""
+    return f"{' '.join(command)} failed (exit {proc.returncode}): {_format_process_failure(proc)}"
+
+
+# An absolute path token: a slash not continuing a word, a relative path or a
+# home-relative path, up to whitespace or quoting. URLs (``scheme://host/...``)
+# match from their ``//`` and are removed whole.
+_HOST_SAFE_ABSOLUTE_PATH = re.compile(r"(?<![\w.~-])/[^\s'\"<>]+")
+
+
+def _host_safe(text: str | None, roots: Sequence[Path] = ()) -> str:
+    """``text`` without host details, for refusal and rescue diagnostics that may be published (#9878).
+
+    In order: each of ``roots`` (with the repository root) becomes the
+    repository-relative form of the paths under it; credentials go through
+    ``secret_redactor``; every token the OPSEC detector of record
+    (``scripts.api.opsec_scan``) reports, among them absolute paths under host
+    roots, ``user@host``, IP addresses, ``host:port`` and ssh aliases, becomes
+    ``[redacted-<kind>]``; any absolute path left becomes ``[redacted-path]``;
+    and the name of the user running delegate becomes ``[redacted-user]``.
+    """
+    from scripts.api.opsec_scan import scan_text
+
+    safe = text or ""
+    known: dict[str, None] = {}
+    for root in (*roots, _REPO_ROOT):
+        for form in (root, root.resolve()):
+            if len(form.parts) > 1:
+                known[str(form)] = None
+    for root in sorted(known, key=len, reverse=True):
+        safe = safe.replace(f"{root}/", "").replace(root, ".")
+    safe = redact_text(safe) or ""
+    for finding in sorted(scan_text(safe), key=lambda item: item.start, reverse=True):
+        safe = f"{safe[: finding.start]}[redacted-{finding.kind}]{safe[finding.end :]}"
+    safe = _HOST_SAFE_ABSOLUTE_PATH.sub("[redacted-path]", safe)
+    try:
+        user = getpass.getuser()
+    except (KeyError, OSError):
+        user = ""
+    if user:
+        safe = re.sub(rf"(?<![\w.-]){re.escape(user)}(?![\w-])", "[redacted-user]", safe)
+    return safe
 
 
 def _worktree_diff_read(
@@ -5648,7 +5717,7 @@ def _worktree_diff_read(
     Untracked files are marked intent-to-add in a throwaway copy of the index
     (no file content is written to the object store) so they show up as
     additions; the real index is never touched. ``why`` names the failing git
-    command and its error, or the exception, redacted (#9878).
+    command and its error, or the exception (#9878).
     """
     env = _sanitized_git_env()
     step = "git rev-parse --git-path index"
@@ -5699,7 +5768,7 @@ def _worktree_diff_read(
                 timeout=DEFAULT_GIT_TIMEOUT_S,
             )
     except (OSError, subprocess.TimeoutExpired) as exc:
-        return None, redact_text(f"{step} raised {type(exc).__name__}: {exc}")
+        return None, f"{step} raised {type(exc).__name__}: {exc}"
     if diff_proc.returncode != 0:
         return None, _git_failure(diff_command, diff_proc)
     return diff_proc.stdout, None
@@ -5810,56 +5879,56 @@ def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str, *, base_sha: s
     classification cannot hide text. When ``base_ref`` was deleted after
     merging, falls back to the recorded ``base_sha`` and then the default-branch
     merge base (#9489). Fails closed: changes that cannot be read are a refusal
-    that names why (#9878).
+    that names its cause and why, without host details (#9878).
     """
     from scripts.agent_runtime import kimi_boundary
-    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, format_refusal, refuse_kimi_changes
 
-    def unreadable(why: str | None) -> str:
-        return format_refusal(agent, [f"the finalized changes could not be read for Ukrainian content: {why}"])
-
-    merge_base = _resolve_merge_base(worktree, base_ref, base_sha=base_sha)
-    if not merge_base:
-        return unreadable(_merge_base_failure(worktree, base_ref, base_sha))
+    merge_base, why = _resolve_merge_base_detail(worktree, base_ref, base_sha=base_sha)
+    if merge_base is None:
+        return _kimi_unreadable(agent, "merge_base_unresolved", f"no merge base with {base_ref!r}: {why}", worktree)
     name_status, why = _worktree_diff_read(worktree, ["--name-status", "-z", "--no-renames", merge_base, "--"])
     if name_status is None:
-        return unreadable(why)
-    try:
-        changes = kimi_boundary.changes(
+        return _kimi_unreadable(agent, "diff_unreadable", why, worktree)
+    return _kimi_changes_refusal(
+        agent,
+        lambda: kimi_boundary.changes(
             worktree, kimi_boundary.parse_name_status(name_status), after=None, env=_sanitized_git_env()
-        )
-        refuse_kimi_changes(agent, changes)
+        ),
+        worktree,
+    )
+
+
+def _kimi_unreadable(agent: str, cause: str, why: str | None, worktree: Path | None = None) -> str:
+    """The typed refusal for Kimi changes that could not be read: ``cause`` is its code, ``why`` host-safe (#9878)."""
+    from scripts.agent_runtime.kimi_admission import format_refusal
+
+    detail = _host_safe(why, (worktree,) if worktree else ())
+    return format_refusal(
+        agent, [f"the finalized changes could not be read for Ukrainian content [{cause}]: {detail or 'no detail'}"]
+    )
+
+
+def _kimi_changes_refusal(agent: str, read: Callable[[], Any], worktree: Path | None = None) -> str | None:
+    """Run the Kimi content check on the changes ``read()`` returns; a refusal, or None when they pass.
+
+    Each way the changes can fail to be read is a typed refusal (#9878): a
+    changed file that cannot be read, git output that cannot be parsed, and
+    git or the filesystem failing.
+    """
+    from scripts.agent_runtime import kimi_boundary
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, refuse_kimi_changes
+
+    try:
+        refuse_kimi_changes(agent, read())
     except KimiAdmissionRefused as exc:
         return str(exc)
-    except (OSError, subprocess.SubprocessError) as exc:
-        return unreadable(redact_text(f"reading the changed files raised {type(exc).__name__}: {exc}"))
+    except kimi_boundary.ChangeUnreadable as exc:
+        return _kimi_unreadable(agent, "changed_file_unreadable", str(exc), worktree)
+    except ValueError as exc:
+        return _kimi_unreadable(agent, "changes_unparseable", f"{type(exc).__name__}: {exc}", worktree)
+    except (OSError, RuntimeError, subprocess.SubprocessError) as exc:
+        return _kimi_unreadable(agent, "changes_unreadable", f"{type(exc).__name__}: {exc}", worktree)
     return None
-
-
-def _merge_base_failure(worktree: Path, base_ref: str, base_sha: str | None) -> str:
-    """Why no merge base resolved: ``git merge-base <base_ref> HEAD``'s own error, redacted (#9878)."""
-    command = ["git", "merge-base", base_ref, "HEAD"]
-    fallback = f" (nor the recorded base commit {base_sha} or the default branch)" if base_sha else ""
-    try:
-        proc = subprocess.run(
-            command,
-            cwd=worktree,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        detail = f"{' '.join(command)} raised {type(exc).__name__}: {exc}"
-    else:
-        if proc.returncode == 0:
-            detail = f"{' '.join(command)} succeeded when run again, so the first failure was transient"
-        elif not (proc.stderr or proc.stdout or "").strip():
-            detail = f"{' '.join(command)} failed (exit {proc.returncode}): no common ancestor"
-        else:
-            detail = _git_failure(command, proc)
-    return redact_text(f"no merge base with {base_ref!r}{fallback} resolved; {detail}") or ""
 
 
 def _advisory_ceiling_check(
@@ -6570,27 +6639,257 @@ _RESCUE_TERMINAL_STATUSES = frozenset(
 _RESCUE_MAX_FILE_BYTES = 5 * 1024 * 1024
 
 
-def _rescue_git(worktree: Path, *args: str, network: bool = False) -> subprocess.CompletedProcess[str]:
+class _RescueFailure(RuntimeError):
+    """A rescue step failed: ``code`` types the cause; the message goes through :func:`_host_safe` (#9878)."""
+
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(message)
+        self.code = code
+
+
+# Every git command rescue runs against the main repository runs no hook and
+# no file-system monitor (a program its configuration could name).
+_RESCUE_PLUMBING_OPTIONS = ("-c", "core.hooksPath=/dev/null", "-c", "core.fsmonitor=false")
+
+
+def _rescue_git(
+    cwd: Path,
+    *args: str,
+    network: bool = False,
+    env: Mapping[str, str] | None = None,
+    git_options: Sequence[str] = (),
+) -> subprocess.CompletedProcess[str]:
+    """``git <git_options> <args>`` in ``cwd``; ``env`` defaults to :func:`_sanitized_git_env`."""
     return subprocess.run(
-        ["git", *args],
-        cwd=worktree,
+        ["git", *git_options, *args],
+        cwd=cwd,
         capture_output=True,
         text=True,
         check=False,
-        env=_sanitized_git_env(),
+        env=dict(env) if env is not None else _sanitized_git_env(),
         timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S if network else DEFAULT_GIT_TIMEOUT_S,
     )
 
 
-def _rescue_remote_head(worktree: Path, branch: str, remote: str = "origin") -> str | None:
-    proc = _rescue_git(worktree, "ls-remote", "--heads", remote, branch, network=True)
+def _isolated_git_env(*, user_config: bool = False, index: Path | None = None) -> dict[str, str]:
+    """Git's environment for rescue plumbing: no ``-c`` settings carried in from the caller.
+
+    Without ``user_config`` git also reads no system or global configuration,
+    so only the main repository's own applies. With it, the user's
+    configuration applies too (an ``add`` needs its clean filters, such as
+    Git LFS, to store what a normal commit would).
+    """
+    env = {key: value for key, value in _sanitized_git_env().items() if not key.startswith("GIT_CONFIG")}
+    if not user_config:
+        env.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull)
+    if index is not None:
+        env["GIT_INDEX_FILE"] = str(index)
+    return env
+
+
+@dataclass(frozen=True)
+class _RescueRepo:
+    """A dispatch worktree that rescue reads only through the main repository's git directory (#9878).
+
+    Rescue never runs git in the worker's worktree, so nothing the worker set
+    there applies: neither its worktree-scoped configuration (``core.hooksPath``,
+    ``url.*.insteadOf``, includes) nor its hooks. Each command runs against the
+    main repository's git directory with hooks disabled, reads the worker's
+    ``HEAD`` as ``worktrees/<id>/HEAD`` and its files through ``--work-tree``.
+    """
+
+    worktree: Path
+    git_dir: Path
+    admin_dir: Path
+
+    @property
+    def head_ref(self) -> str:
+        return f"worktrees/{self.admin_dir.name}/HEAD"
+
+    def git(
+        self,
+        *args: str,
+        index: Path | None = None,
+        work_tree: bool = False,
+        user_config: bool = False,
+        extra_env: Mapping[str, str] | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        options = [f"--git-dir={self.git_dir}"]
+        if work_tree:
+            options.append(f"--work-tree={self.worktree}")
+        env = {**_isolated_git_env(user_config=user_config, index=index), **(extra_env or {})}
+        cwd = self.worktree if work_tree else self.git_dir
+        return _rescue_git(cwd, *args, env=env, git_options=(*options, *_RESCUE_PLUMBING_OPTIONS))
+
+
+def _rescue_repo(worktree: Path) -> _RescueRepo:
+    """``worktree`` as a :class:`_RescueRepo`, read from the files git keeps, without running git in it."""
+    from scripts.agent_runtime import kimi_boundary
+
+    admin = kimi_boundary.worktree_git_dir(worktree)
+    try:
+        if admin is None:
+            raise FileNotFoundError(".git")
+        admin = admin.resolve(strict=True)
+        git_dir = (admin / (admin / "commondir").read_text(encoding="utf-8").strip()).resolve(strict=True)
+        registered = Path((admin / "gitdir").read_text(encoding="utf-8").strip()).resolve()
+    except (OSError, ValueError) as exc:
+        raise _RescueFailure(
+            "rescue_worktree_unregistered", f"the worktree's git directory cannot be read ({type(exc).__name__})"
+        ) from exc
+    if (
+        git_dir != (_REPO_ROOT / ".git").resolve()
+        or admin.parent != git_dir / "worktrees"
+        or registered != (worktree / ".git").resolve()
+    ):
+        raise _RescueFailure(
+            "rescue_worktree_unregistered", "the worktree is not a linked worktree of the main repository"
+        )
+    return _RescueRepo(worktree, git_dir, admin)
+
+
+def _rescue_head(repo: _RescueRepo) -> tuple[str, str] | None:
+    """``(commit, branch)`` of the worker's ``HEAD``, the branch being ``"HEAD"`` when detached; None when unknown."""
+    commit = repo.git("rev-parse", "--verify", "--quiet", f"{repo.head_ref}^{{commit}}")
+    name = repo.git("rev-parse", "--symbolic-full-name", repo.head_ref)
+    if commit.returncode != 0 or name.returncode != 0 or not commit.stdout.strip():
+        return None
+    full_name = name.stdout.strip()
+    branch = full_name.removeprefix("refs/heads/") if full_name.startswith("refs/heads/") else "HEAD"
+    return commit.stdout.strip(), branch
+
+
+@contextlib.contextmanager
+def _rescue_scratch_index(repo: _RescueRepo) -> Iterator[Path]:
+    """A throwaway copy of the worker's index, so reading its working tree never writes the worker's own."""
+    with tempfile.TemporaryDirectory(prefix="lu-rescue-index-") as scratch:
+        index = Path(scratch) / "index"
+        real = repo.admin_dir / "index"
+        if real.is_file():
+            shutil.copyfile(real, index)
+        yield index
+
+
+def _rescue_changed_files(repo: _RescueRepo, head: str) -> tuple[str, ...] | None:
+    """The paths whose working-tree content differs from ``head``, untracked files included; None when unknown.
+
+    Untracked files are marked intent-to-add in a scratch index, so no file
+    content is written to the object store.
+    """
+    with _rescue_scratch_index(repo) as index:
+        added = repo.git("add", "-A", "--intent-to-add", index=index, work_tree=True, user_config=True)
+        if added.returncode != 0:
+            return None
+        diff = repo.git(
+            "diff",
+            "--no-ext-diff",
+            "--no-textconv",
+            "--no-renames",
+            "--name-only",
+            "-z",
+            head,
+            "--",
+            index=index,
+            work_tree=True,
+            user_config=True,
+        )
+    if diff.returncode != 0:
+        return None
+    return tuple(sorted({path for path in diff.stdout.split("\0") if path}))
+
+
+def _rescue_tree(repo: _RescueRepo) -> str:
+    """The tree of the worker's working tree, untracked files included, written from a scratch index."""
+    with _rescue_scratch_index(repo) as index:
+        proc = repo.git("add", "-A", index=index, work_tree=True, user_config=True)
+        if proc.returncode == 0:
+            proc = repo.git("write-tree", index=index)
+    tree = proc.stdout.strip() if proc.returncode == 0 else ""
+    if not tree:
+        raise _RescueFailure(
+            "rescue_tree_unavailable", f"cannot write the rescue tree: {_format_process_failure(proc)}"
+        )
+    return tree
+
+
+def _rescue_commit_matches(repo: _RescueRepo, commit: str, tree: str, parent: str) -> bool:
+    """Whether ``commit`` records exactly ``tree`` on the single parent ``parent``."""
+    proc = repo.git("show", "-s", "--format=%T %P", commit)
+    return proc.returncode == 0 and proc.stdout.split() == [tree, parent]
+
+
+def _rescue_commit(repo: _RescueRepo, tree: str, parent: str, *, agent: str, task_id: str) -> str:
+    """Commit ``tree`` on ``parent`` with ``commit-tree`` in the main repository: no hook runs (#9878)."""
+    identity: dict[str, str] = {}
+    for key, variables in (
+        ("user.name", ("GIT_AUTHOR_NAME", "GIT_COMMITTER_NAME")),
+        ("user.email", ("GIT_AUTHOR_EMAIL", "GIT_COMMITTER_EMAIL")),
+    ):
+        proc = repo.git("config", "--get", key, user_config=True)
+        value = proc.stdout.strip() if proc.returncode == 0 else ""
+        if not value:
+            raise _RescueFailure("rescue_identity_unavailable", f"no {key} is configured for the rescue commit")
+        identity.update(dict.fromkeys(variables, value))
+    message = f"chore(dispatch): rescue {task_id}\n\nX-Agent: {agent}/{task_id}"
+    proc = repo.git("commit-tree", tree, "-p", parent, "-m", message, extra_env=identity)
+    commit = proc.stdout.strip() if proc.returncode == 0 else ""
+    if not commit:
+        raise _RescueFailure("rescue_commit_failed", f"cannot commit rescue work: {_format_process_failure(proc)}")
+    return commit
+
+
+@contextlib.contextmanager
+def _rescue_publish_worktree(repo: _RescueRepo, head: str) -> Iterator[Path]:
+    """A fresh detached worktree at ``head`` that this rescue creates and always removes (#9878).
+
+    It starts without a checkout, and as a new worktree it has no
+    worktree-scoped configuration of its own: the main repository's
+    configuration and hooks are the only ones that apply in it. The checks of
+    the worker's commits run there, and the push runs there once
+    :func:`_rescue_checkout` has put the rescued commit in it.
+    """
+    path = Path(tempfile.mkdtemp(prefix=f"{repo.worktree.name}.rescue-", dir=repo.worktree.parent))
+    try:
+        proc = repo.git("worktree", "add", "--detach", "--no-checkout", str(path), head)
+        if proc.returncode != 0:
+            raise _RescueFailure(
+                "rescue_publish_worktree_failed",
+                f"cannot create the rescue publish worktree: {_format_process_failure(proc)}",
+            )
+        yield path
+    finally:
+        if repo.git("worktree", "remove", "--force", str(path)).returncode != 0:
+            shutil.rmtree(path, ignore_errors=True)
+            repo.git("worktree", "prune")
+
+
+def _rescue_checkout(publish: Path, commit: str) -> None:
+    """Check ``commit`` out in the publish worktree, with the main repository's own configuration."""
+    proc = _rescue_git(publish, "reset", "--hard", "--quiet", commit, network=True)
     if proc.returncode != 0:
-        raise RuntimeError("rescue remote proof unavailable")
+        raise _RescueFailure(
+            "rescue_publish_worktree_failed", f"cannot check out the rescue commit: {_format_process_failure(proc)}"
+        )
+
+
+def _rescue_remote_head(url: str, branch: str) -> str | None:
+    """The commit ``refs/heads/<branch>`` names at ``url``, or None when it is absent.
+
+    ``git ls-remote`` runs outside every repository with no system or global
+    configuration, so no ``url.*.insteadOf`` can send the query elsewhere.
+    """
+    with tempfile.TemporaryDirectory(prefix="lu-rescue-remote-") as scratch:
+        env = {**_isolated_git_env(), "GIT_CEILING_DIRECTORIES": str(Path(scratch).parent)}
+        proc = _rescue_git(Path(scratch), "ls-remote", "--heads", url, f"refs/heads/{branch}", network=True, env=env)
+    if proc.returncode != 0:
+        raise _RescueFailure(
+            "rescue_remote_unverified", f"rescue remote proof unavailable: {_format_process_failure(proc)}"
+        )
     lines = [line for line in proc.stdout.splitlines() if line.strip()]
     if not lines:
         return None
     if len(lines) != 1 or lines[0].split("\t")[-1] != f"refs/heads/{branch}":
-        raise RuntimeError("rescue remote proof ambiguous")
+        raise _RescueFailure("rescue_remote_unverified", "rescue remote proof ambiguous")
     return lines[0].split("\t", 1)[0]
 
 
@@ -6602,70 +6901,83 @@ def _is_kimi_task_record(state: Mapping[str, Any]) -> bool:
     return is_kimi_seat(str(state.get("agent") or ""), model=model if isinstance(model, str) else None)
 
 
-def _rescue_push_blocked(worktree: Path) -> bool:
-    """Whether ``worktree`` carries the Kimi boundary or its push block on ``origin``."""
-    from scripts.agent_runtime import kimi_boundary
+def _rescue_canonical_push_url(repo: _RescueRepo) -> str:
+    """The main repository's own push URL for ``origin``, never one the worker's worktree configuration set.
 
-    if kimi_boundary.is_installed(worktree):
-        return True
-    proc = _rescue_git(worktree, "config", "--get-all", "remote.origin.pushurl")
-    if proc.returncode not in (0, 1):  # 1: no push URL is set
-        raise RuntimeError(redact_text(f"rescue push URL unavailable: {_format_process_failure(proc)}"))
-    return kimi_boundary.PUSH_BLOCK_URL in proc.stdout.splitlines()
-
-
-def _rescue_canonical_push_url(worktree: Path) -> str:
-    """The main repository's own push URL for ``origin``, read past the worktree's Kimi push block.
-
-    A Kimi worktree's push block lives in its worktree-scoped config and stays
-    in place. Its commits are in the main repository's object store, which
-    every linked worktree shares, so delegate pushes them to, and proves them
-    on, the URL the main repository's config gives ``origin``, never a URL the
-    worktree's own config set. The push still runs in the worktree, so its
-    hooks (the Kimi pre-push check and the repository's chained hooks) check
-    that tree.
+    A Kimi worktree's push block lives in its worktree-scoped configuration
+    and stays in place: rescue publishes through this URL instead.
     """
     from scripts.agent_runtime import kimi_boundary
 
-    common = _rescue_git(worktree, "rev-parse", "--path-format=absolute", "--git-common-dir")
-    if common.returncode != 0 or not common.stdout.strip():
-        raise RuntimeError(redact_text(f"main repository unavailable: {_format_process_failure(common)}"))
-    git_dir = f"--git-dir={common.stdout.strip()}"
     urls: list[str] = []
     for key in ("remote.origin.pushurl", "remote.origin.url"):
-        proc = _rescue_git(worktree, git_dir, "config", "--get-all", key)
-        if proc.returncode not in (0, 1):
-            raise RuntimeError(redact_text(f"main repository {key} unavailable: {_format_process_failure(proc)}"))
+        proc = repo.git("config", "--get-all", key)
+        if proc.returncode not in (0, 1):  # 1: the key is not set
+            raise _RescueFailure(
+                "rescue_push_url_unavailable", f"main repository {key} unavailable: {_format_process_failure(proc)}"
+            )
         urls = [line for line in proc.stdout.splitlines() if line.strip()]
         if urls:
             break
     if len(urls) != 1 or urls[0] == kimi_boundary.PUSH_BLOCK_URL:
-        raise RuntimeError("main repository has no single usable push URL for origin")
+        raise _RescueFailure("rescue_push_url_unavailable", "main repository has no single usable push URL for origin")
     return urls[0]
 
 
-def _clean_rescue_junk(worktree: Path, changed: tuple[str, ...]) -> bool:
-    """Remove only the already classified disposable changes."""
-    index = _rescue_git(worktree, "ls-files", "-z", "--", *changed)
-    head = _rescue_git(worktree, "ls-tree", "-r", "-z", "--name-only", "HEAD", "--", *changed)
-    if index.returncode != 0 or head.returncode != 0:
+def _kimi_tree_refusal(
+    repo: _RescueRepo, publish: Path, base_ref: str, agent: str, *, base_sha: str | None, tree: str
+) -> str | None:
+    """The Kimi finalize content check on exactly ``tree``, the tree rescue publishes; None when it passes."""
+    from scripts.agent_runtime import kimi_boundary
+
+    merge_base, why = _resolve_merge_base_detail(publish, base_ref, base_sha=base_sha)
+    if merge_base is None:
+        return _kimi_unreadable(
+            agent, "merge_base_unresolved", f"no merge base with {base_ref!r}: {why}", repo.worktree
+        )
+    command = ["diff-tree", "-r", "-z", "--name-status", "--no-renames", merge_base, tree]
+    proc = repo.git(*command)
+    if proc.returncode != 0:
+        return _kimi_unreadable(agent, "diff_unreadable", _git_failure(["git", *command], proc), repo.worktree)
+    env = {**_isolated_git_env(), "GIT_DIR": str(repo.git_dir)}
+    return _kimi_changes_refusal(
+        agent,
+        lambda: kimi_boundary.changes(repo.git_dir, kimi_boundary.parse_name_status(proc.stdout), after=tree, env=env),
+        repo.worktree,
+    )
+
+
+def _clean_rescue_junk(repo: _RescueRepo, head: str, changed: tuple[str, ...]) -> bool:
+    """Remove only the already classified disposable changes, through the main repository's git directory."""
+    index = repo.admin_dir / "index"
+    listed = repo.git("ls-files", "-z", "--", *changed, index=index, work_tree=True)
+    at_head = repo.git("ls-tree", "-r", "-z", "--name-only", head, "--", *changed)
+    if listed.returncode != 0 or at_head.returncode != 0:
         return False
-    indexed_paths = set(index.stdout.split("\0"))
-    head_paths = set(head.stdout.split("\0"))
+    indexed_paths = set(listed.stdout.split("\0"))
+    head_paths = set(at_head.stdout.split("\0"))
     indexed = tuple(path for path in changed if path in indexed_paths)
     restore = tuple(path for path in changed if path in head_paths)
     remove = tuple(path for path in changed if path not in head_paths)
-    if indexed and _rescue_git(worktree, "restore", "--staged", "--", *indexed).returncode != 0:
-        return False
-    if restore and _rescue_git(worktree, "restore", "--source=HEAD", "--worktree", "--", *restore).returncode != 0:
-        return False
-    if remove and _rescue_git(worktree, "clean", "-fd", "--", *remove).returncode != 0:
-        return False
-    return _worktree_is_dirty(worktree) is False
+    steps = (
+        (indexed, ("restore", f"--source={head}", "--staged", "--")),
+        (restore, ("restore", f"--source={head}", "--worktree", "--")),
+        (remove, ("clean", "-fd", "--")),
+    )
+    for paths, command in steps:
+        if paths and repo.git(*command, *paths, index=index, work_tree=True).returncode != 0:
+            return False
+    return _rescue_changed_files(repo, head) == ()
 
 
 def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
-    """Preserve one terminal task on origin; never remove its worktree here."""
+    """Preserve one terminal task on origin; never remove its worktree here.
+
+    Rescue reads the worker's worktree only through the main repository's git
+    directory and never writes it, apart from removing disposable residue. It
+    commits uncommitted work with ``commit-tree`` and pushes from a fresh
+    detached worktree to the URL the main repository gives ``origin`` (#9878).
+    """
     state = _read_state(state_path)
     task_id = state.get("task_id") if state else None
     row: dict[str, Any] = {"task_id": task_id, "action": "skipped"}
@@ -6689,6 +7001,7 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
         row["reason"] = "task lease active"
         return row
     try:
+        from scripts.agent_runtime import kimi_boundary
         from scripts.orchestration import reap_worktrees
 
         with worktree_lock(worktree) if apply else contextlib.nullcontext():
@@ -6707,7 +7020,12 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
             if task_id in active_ids or any(cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds):
                 row["reason"] = "worktree active"
                 return row
-            current_branch = _current_branch(worktree)
+            repo = _rescue_repo(worktree)
+            worker_head = _rescue_head(repo)
+            if worker_head is None:
+                row["reason"] = "HEAD unavailable"
+                return row
+            head, current_branch = worker_head
             recorded_branch = state.get("worktree_branch")
             agent = str(state.get("agent") or "agent")
             safe_task = _x_agent_task_id(agent, str(task_id))
@@ -6715,12 +7033,8 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
             if current_branch not in {recorded_branch, branch}:
                 row["reason"] = "worktree branch differs from task record"
                 return row
-            dirty = _worktree_is_dirty(worktree)
-            if dirty is None:
-                row["reason"] = "git status unavailable"
-                return row
-            changed = _auto_finalize_changed_files(worktree) if dirty else ()
-            if dirty and not changed:
+            changed = _rescue_changed_files(repo, head)
+            if changed is None:
                 row["reason"] = "changed files unavailable"
                 return row
             large = [
@@ -6738,94 +7052,69 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                     row["action"] = "candidate"
                     row["reason"] = "clean disposable residue"
                     return row
-                if not _clean_rescue_junk(worktree, changed):
+                if not _clean_rescue_junk(repo, head, changed):
                     row["action"] = "error"
                     row["reason"] = "could not clean disposable residue"
                     return row
                 cleaned_junk = True
-                dirty = False
                 changed = ()
-            head = _resolve_sha(worktree)
-            if head is None:
-                row["reason"] = "HEAD unavailable"
-                return row
-            if not dirty and state.get("rescue_status") == "rescued" and state.get("rescue_head_commit") == head:
+            tree = _rescue_tree(repo) if changed else None
+            rescued = state.get("rescue_head_commit") if state.get("rescue_status") == "rescued" else None
+            if isinstance(rescued, str) and (
+                rescued == head if tree is None else _rescue_commit_matches(repo, rescued, tree, head)
+            ):
                 row["reason"] = "already rescued at HEAD"
                 return row
-            if not dirty:
-                ahead = _count_commits_ahead(
-                    worktree,
-                    _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main")),
-                    base_sha=_recorded_base_sha(state),
-                )
-                if ahead is None:
-                    row["reason"] = "ahead count unavailable"
-                    return row
-                if ahead == 0 or _count_unpushed_commits(worktree, str(state.get("worktree_branch") or "")) == 0:
-                    row["action"] = "cleaned" if cleaned_junk else "skipped"
-                    row["reason"] = "disposable residue removed" if cleaned_junk else "no provable unpushed work"
-                    return row
-            push_blocked = _rescue_push_blocked(worktree)
-            if push_blocked or _is_kimi_task_record(state):
-                # Kimi work leaves the machine only after the finalize content check (#9878).
-                refusal = _kimi_diff_refusal(
-                    worktree,
-                    _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main")),
-                    agent,
-                    base_sha=_recorded_base_sha(state),
-                )
-                if refusal is not None:
-                    row.update(
-                        action="error",
-                        reason=f"Kimi content check refused: {refusal}",
-                        failure_code="kimi_content_refused",
+            with _rescue_publish_worktree(repo, head) as publish:
+                base_ref = _commit_count_base_ref(publish, str(state.get("worktree_base") or "main"))
+                if tree is None:
+                    ahead = _count_commits_ahead(publish, base_ref, base_sha=_recorded_base_sha(state))
+                    if ahead is None:
+                        row["reason"] = "ahead count unavailable"
+                        return row
+                    if ahead == 0 or _count_unpushed_commits(publish, str(recorded_branch or "")) == 0:
+                        row["action"] = "cleaned" if cleaned_junk else "skipped"
+                        row["reason"] = "disposable residue removed" if cleaned_junk else "no provable unpushed work"
+                        return row
+                if kimi_boundary.is_installed(worktree) or _is_kimi_task_record(state):
+                    # Kimi work leaves the machine only after the finalize content check (#9878).
+                    refusal = _kimi_tree_refusal(
+                        repo, publish, base_ref, agent, base_sha=_recorded_base_sha(state), tree=tree or head
                     )
+                    if refusal is not None:
+                        row.update(
+                            action="error",
+                            reason=f"Kimi content check refused: {refusal}",
+                            failure_code="kimi_content_refused",
+                        )
+                        return row
+                url = _rescue_canonical_push_url(repo)
+                existing_remote = _rescue_remote_head(url, branch)
+                commit: str | None = head
+                if tree is not None:
+                    reusable = existing_remote is not None and _rescue_commit_matches(repo, existing_remote, tree, head)
+                    commit = existing_remote if reusable else None
+                if existing_remote is not None and existing_remote != commit:
+                    row["reason"] = "rescue remote branch already exists at another head"
                     return row
-            # A push-blocked worktree is rescued through the main repository's own URL for origin.
-            remote = _rescue_canonical_push_url(worktree) if push_blocked else "origin"
-            existing_remote = _rescue_remote_head(worktree, branch, remote)
-            if existing_remote is not None and existing_remote != head:
-                row["reason"] = "rescue remote branch already exists at another head"
-                return row
-            row.update({"action": "candidate", "rescue_ref": branch, "head": head})
-            if not apply:
-                return row
-            if dirty:
-                if current_branch != branch:
-                    proc = _rescue_git(worktree, "switch", "-c", branch)
-                    if proc.returncode != 0:
-                        raise RuntimeError("cannot create rescue branch")
-                proc = _rescue_git(worktree, "add", "-A")
+                row.update({"action": "candidate", "rescue_ref": branch, "head": commit or head})
+                if not apply:
+                    return row
+                if commit is None:
+                    commit = _rescue_commit(repo, str(tree), head, agent=agent, task_id=str(task_id))
+                _rescue_checkout(publish, commit)
+                proc = _rescue_git(publish, "push", url, f"HEAD:refs/heads/{branch}", network=True)
                 if proc.returncode != 0:
-                    raise RuntimeError("cannot stage rescue work")
-                proc = _rescue_git(
-                    worktree,
-                    "commit",
-                    "-m",
-                    f"chore(dispatch): rescue {task_id}",
-                    "--trailer",
-                    f"X-Agent: {state.get('agent') or 'agent'}/{task_id}",
-                )
-                if proc.returncode != 0:
-                    detail = (proc.stderr or proc.stdout or "").strip()
-                    raise RuntimeError(f"cannot commit rescue work: {detail or f'exit {proc.returncode}'}")
-                head = _resolve_sha(worktree)
-                if head is None:
-                    raise RuntimeError("rescue commit HEAD unavailable")
-            proc = _rescue_git(worktree, "push", remote, f"HEAD:refs/heads/{branch}", network=True)
-            if proc.returncode != 0:
-                raise RuntimeError(redact_text(f"cannot push rescue branch: {_format_process_failure(proc)}"))
-            if _rescue_remote_head(worktree, branch, remote) != head:
-                raise RuntimeError("rescue remote verification failed")
-            proc = _rescue_git(
-                worktree,
-                "fetch",
-                remote,
-                f"refs/heads/{branch}:refs/remotes/origin/{branch}",
-                network=True,
-            )
-            if proc.returncode != 0 or _resolve_sha(worktree, f"refs/remotes/origin/{branch}") != head:
-                raise RuntimeError("rescue tracking ref verification failed")
+                    raise _RescueFailure(
+                        "rescue_push_failed", f"cannot push rescue branch: {_format_process_failure(proc)}"
+                    )
+            if _rescue_remote_head(url, branch) != commit:
+                raise _RescueFailure("rescue_remote_unverified", "rescue remote verification failed")
+            tracking = f"refs/remotes/origin/{branch}"
+            updated = repo.git("update-ref", tracking, commit)
+            verified = repo.git("rev-parse", "--verify", "--quiet", f"{tracking}^{{commit}}")
+            if updated.returncode != 0 or verified.stdout.strip() != commit:
+                raise _RescueFailure("rescue_tracking_ref_failed", "rescue tracking ref verification failed")
             with task_state_lock(state_path):
                 current = _read_state(state_path)
                 if not current or current.get("run_nonce") != state.get("run_nonce"):
@@ -6834,15 +7123,17 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                         reason="task attempt changed after rescue push; recovery ref preserved",
                         owner=task_id,
                         next_condition="rescue the current attempt from its own task record",
-                        head=head,
+                        head=commit,
                     )
                     return row
-                current.update({"rescue_ref": branch, "rescue_head_commit": head, "rescue_status": "rescued"})
+                current.update({"rescue_ref": branch, "rescue_head_commit": commit, "rescue_status": "rescued"})
                 write_state_unlocked(state_path, current)
-            row.update({"action": "rescued", "head": head})
+            row.update({"action": "rescued", "head": commit})
             return row
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
-        row.update({"action": "error", "reason": str(exc)})
+        row.update({"action": "error", "reason": _host_safe(str(exc), (worktree,))})
+        if isinstance(exc, _RescueFailure):
+            row["failure_code"] = exc.code
         return row
 
 

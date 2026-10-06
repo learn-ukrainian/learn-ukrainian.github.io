@@ -185,3 +185,145 @@ def test_rescue_ignores_a_push_url_the_kimi_worktree_set_for_itself(kimi_rescue,
     assert result["action"] == "rescued", result
     assert _remote_heads(origin)[RESCUE_REF] == result["head"]
     assert _remote_heads(decoy) == {}
+
+
+# --- #9878 review probes: rescue runs nothing the worker's worktree configured ---------------
+
+
+def _seat(kimi_rescue, seat: str) -> str:
+    """Make the fixture's task a ``seat`` task; the rescue ref it gets."""
+    worktree, _origin, state_path, _write = kimi_rescue
+    if seat != "kimi":
+        kimi_boundary.remove(worktree)
+        state = delegate._read_state(state_path)
+        delegate._write_state_atomic(state_path, {**state, "agent": seat})
+    return f"rescue/{seat}/{delegate._x_agent_task_id(seat, TASK_ID)}"
+
+
+def _worktree_hooks(worktree: Path, tmp_path: Path) -> Path:
+    """A worktree-scoped ``core.hooksPath``: every hook leaves a marker; pre-commit also swaps in Cyrillic."""
+    hooks = tmp_path / "worker-hooks"
+    hooks.mkdir()
+    marker = tmp_path / "hook-ran"
+    swap = f"printf \"export const label = 'Урок';\\n\" > {LABEL}\ngit add {LABEL}\n"
+    for name in ("pre-commit", "commit-msg", "post-commit", "pre-push", "post-checkout", "reference-transaction"):
+        hook = hooks / name
+        hook.write_text(f"#!/bin/sh\necho {name} >> '{marker}'\n{swap if name == 'pre-commit' else ''}exit 0\n")
+        hook.chmod(0o755)
+    _git(worktree, "config", "--worktree", "core.hooksPath", str(hooks))
+    return marker
+
+
+def _worker_snapshot(worktree: Path) -> tuple[bytes, str, str, bytes]:
+    """The worker's index, HEAD, branch and changed file, read without letting git rewrite the index."""
+    index = Path(_git(worktree, "rev-parse", "--path-format=absolute", "--git-path", "index").strip())
+    return (
+        index.read_bytes(),
+        _git(worktree, "rev-parse", "HEAD"),
+        _git(worktree, "symbolic-ref", "HEAD"),
+        (worktree / LABEL).read_bytes(),
+    )
+
+
+def _registered_worktrees(worktree: Path) -> list[str]:
+    return [
+        line for line in _git(worktree, "worktree", "list", "--porcelain").splitlines() if line.startswith("worktree ")
+    ]
+
+
+@pytest.mark.parametrize("seat", ["kimi", "cursor"])
+@pytest.mark.parametrize("committed", [False, True])
+def test_rescue_runs_no_hook_of_the_worker_worktree(kimi_rescue, tmp_path, committed, seat):
+    worktree, origin, state_path, write = kimi_rescue
+    rescue_ref = _seat(kimi_rescue, seat)
+    write("export const label = 'Lesson';\n", commit=committed)
+    marker = _worktree_hooks(worktree, tmp_path)
+    before, registered = _worker_snapshot(worktree), _registered_worktrees(worktree)
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert result["action"] == "rescued", result
+    assert not marker.exists(), marker.read_text()
+    assert _remote_heads(origin)[rescue_ref] == result["head"]
+    assert _git(origin, "show", f"{rescue_ref}:{LABEL}") == "export const label = 'Lesson';\n"
+    assert _worker_snapshot(worktree) == before  # rescue never writes the worker's worktree
+    assert _registered_worktrees(worktree) == registered  # the publish worktree is gone
+    if seat == "kimi":
+        _assert_push_block_intact(worktree)
+
+
+@pytest.mark.parametrize("committed", [False, True])
+def test_a_worktree_url_rewrite_receives_nothing(kimi_rescue, tmp_path, committed):
+    worktree, origin, state_path, write = kimi_rescue
+    decoy = tmp_path / "decoy.git"
+    _git(tmp_path, "init", "--bare", str(decoy))
+    _git(worktree, "config", "--worktree", f"url.{decoy}.insteadOf", str(origin))
+    write("export const label = 'Lesson';\n", commit=committed)
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert result["action"] == "rescued", result
+    assert _remote_heads(origin)[RESCUE_REF] == result["head"]
+    assert _remote_heads(decoy) == {}
+
+
+def test_a_url_rewrite_cannot_fake_the_remote_verification(kimi_rescue, tmp_path):
+    """A rewrite the push itself follows (shared configuration) still fails the neutral ``ls-remote`` proof."""
+    _worktree, origin, state_path, write = kimi_rescue
+    decoy = tmp_path / "decoy.git"
+    _git(tmp_path, "init", "--bare", str(decoy))
+    _git(tmp_path / "primary", "config", f"url.{decoy}.insteadOf", str(origin))
+    write("export const label = 'Lesson';\n", commit=True)
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert (result["action"], result["failure_code"]) == ("error", "rescue_remote_unverified"), result
+    assert result["reason"] == "rescue remote verification failed"
+    assert RESCUE_REF not in _remote_heads(origin)
+    assert delegate._read_state(state_path).get("rescue_ref") is None
+
+
+def test_a_repeated_rescue_of_the_same_uncommitted_work_is_already_rescued(kimi_rescue):
+    _worktree, origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n")
+    first = delegate._rescue_task(state_path, apply=True)
+
+    again = delegate._rescue_task(state_path, apply=True)
+
+    assert first["action"] == "rescued", first
+    assert again == {"task_id": TASK_ID, "action": "skipped", "reason": "already rescued at HEAD"}
+    assert _remote_heads(origin)[RESCUE_REF] == first["head"]
+
+
+def test_a_rescue_push_error_is_reported_without_host_details(kimi_rescue, monkeypatch):
+    import getpass
+
+    worktree, origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n", commit=True)
+    registered = _registered_worktrees(worktree)
+    stderr = (
+        "fatal: unable to access '/home/synthetic-operator/private-mount/learn.git/' "
+        f"owned by {getpass.getuser()} via 203.0.113.77 as deploy@build-host.example.internal\n"
+    )
+    real_git = delegate._rescue_git
+
+    def failing_push(cwd, *args, **kwargs):
+        if args and args[0] == "push":
+            return subprocess.CompletedProcess(["git", *args], 128, "", stderr)
+        return real_git(cwd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate, "_rescue_git", failing_push)
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert (result["action"], result["failure_code"]) == ("error", "rescue_push_failed")
+    assert result["reason"].startswith("cannot push rescue branch: fatal: unable to access")
+    for marker in (
+        "synthetic-operator",
+        "private-mount",
+        "203.0.113.77",
+        "build-host",
+        f"owned by {getpass.getuser()}",
+    ):
+        assert marker not in result["reason"], marker
+    assert RESCUE_REF not in _remote_heads(origin)
+    assert _registered_worktrees(worktree) == registered

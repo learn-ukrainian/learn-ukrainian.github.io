@@ -24,8 +24,10 @@ classification nor another encoding hides Ukrainian content.
 
 from __future__ import annotations
 
+import errno
 import os
 import shutil
+import stat
 import subprocess
 import sys
 from collections.abc import Iterable, Mapping, Sequence
@@ -50,6 +52,21 @@ _CONFIG_KEY_MISSING = 5
 
 class BoundaryError(RuntimeError):
     """The Kimi worktree boundary could not be read, installed or checked."""
+
+
+class ChangeUnreadable(BoundaryError):
+    """A changed file's post-image could not be read (#9878).
+
+    The message names the repository-relative path and the error class and
+    code, never the absolute path or the operating system's message, so it
+    can reach a refusal unchanged.
+    """
+
+    def __init__(self, path: str, exc: OSError) -> None:
+        code = errno.errorcode.get(exc.errno, "") if isinstance(exc.errno, int) else ""
+        self.path = path
+        self.cause = f"{type(exc).__name__}{f' {code}' if code else ''}"
+        super().__init__(f"{path!r} could not be read ({self.cause})")
 
 
 def _git(
@@ -103,13 +120,22 @@ def _blob(repo: Path, spec: str, env: Mapping[str, str] | None) -> bytes | None:
     return proc.stdout if proc.returncode == 0 else None
 
 
-def _worktree_file(path: Path) -> bytes | None:
+def _worktree_file(repo: Path, path: str) -> bytes | None:
+    """The working-tree post-image of ``path``: a symlink's target, a regular file's bytes, else None.
+
+    None means the entry holds no file content (a directory, such as a
+    submodule), which the content check refuses as not plain text. An entry
+    that cannot be read raises ``ChangeUnreadable`` instead, so a read error
+    is never mistaken for a content classification (#9878).
+    """
+    full = repo / path
     try:
-        if path.is_symlink():  # git stores a symlink as its target
-            return os.fsencode(os.readlink(path))
-        return path.read_bytes() if path.is_file() else None
-    except OSError:
-        return None
+        mode = os.lstat(full).st_mode
+        if stat.S_ISLNK(mode):  # git stores a symlink as its target
+            return os.fsencode(os.readlink(full))
+        return full.read_bytes() if stat.S_ISREG(mode) else None
+    except OSError as exc:
+        raise ChangeUnreadable(path, exc) from exc
 
 
 def changes(
@@ -122,8 +148,9 @@ def changes(
     """The ``FileChange`` of each changed path.
 
     ``after`` is the tree-ish of the post-images, ``""`` for the index, or
-    None for the working tree. A post-image that cannot be read stays None,
-    which the content check refuses.
+    None for the working tree. A post-image git cannot produce stays None,
+    which the content check refuses; a working-tree file that cannot be read
+    raises ``ChangeUnreadable``.
     """
     from scripts.agent_runtime.kimi_admission import FileChange
 
@@ -132,7 +159,7 @@ def changes(
         if status == "D":
             result.append(FileChange(path, None, deleted=True))
             continue
-        post = _worktree_file(repo / path) if after is None else _blob(repo, f"{after}:{path}", env)
+        post = _worktree_file(repo, path) if after is None else _blob(repo, f"{after}:{path}", env)
         result.append(FileChange(path, post))
     return result
 
@@ -227,7 +254,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 # --- install and remove ---------------------------------------------------------------
 
 
-def _git_dir(worktree: Path) -> Path | None:
+def worktree_git_dir(worktree: Path) -> Path | None:
     """The worktree's own git directory, read from ``.git`` without running git."""
     dot_git = worktree / ".git"
     if dot_git.is_dir():
@@ -244,7 +271,7 @@ def _git_dir(worktree: Path) -> Path | None:
 
 def is_installed(worktree: Path) -> bool:
     """Whether ``worktree`` carries a Kimi boundary; reads the filesystem only."""
-    git_dir = _git_dir(worktree)
+    git_dir = worktree_git_dir(worktree)
     return git_dir is not None and (git_dir / HOOKS_DIR_NAME).is_dir()
 
 
@@ -313,7 +340,7 @@ def remove(worktree: Path, *, env: Mapping[str, str] | None = None) -> None:
         # Exit 5 (unset) and 128 (remove-section) mean the setting was not there.
         if proc.returncode not in (0, _CONFIG_KEY_MISSING, 128):
             raise BoundaryError(f"git {' '.join(command[:4])} failed: {proc.stderr.decode('utf-8', 'replace').strip()}")
-    git_dir = _git_dir(worktree)
+    git_dir = worktree_git_dir(worktree)
     if git_dir is not None:
         shutil.rmtree(git_dir / HOOKS_DIR_NAME, ignore_errors=True)
     if is_installed(worktree):
