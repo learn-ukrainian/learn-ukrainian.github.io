@@ -7560,6 +7560,12 @@ def test_dispatch_refuses_cursor_auto_before_any_side_effect(
 ):
     if overrides.get("require_review_verdict"):
         overrides = {**overrides, "branch": "review-target"}
+        # #9874: reach the review route on an existing canonical remote branch.
+        monkeypatch.setattr(
+            delegate,
+            "_ls_remote_branch_sha",
+            lambda _remote, branch, *, strict=False: _STUB_HEAD_SHA if branch == "review-target" else None,
+        )
     rc, popen_calls = _cursor_dispatch(tmp_path, monkeypatch, dor_record=dor_record, **overrides)
     assert rc == 2
     assert popen_calls == []
@@ -17664,7 +17670,7 @@ def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     # The branch as the canonical remote serves it, observed by review admission (#9739 A7).
-    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, _branch: _STUB_BASE_SHA)
+    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, _branch, *, strict=False: _STUB_BASE_SHA)
     monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: None)
     monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
     _patch_worker_popen(monkeypatch)
@@ -17730,7 +17736,7 @@ def test_cmd_dispatch_refusal_on_base_resolution_writes_terminal_task_record(
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     monkeypatch.chdir(main)
     served = {"agy/feature-7236": head}
-    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, branch: served.get(branch))
+    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, branch, *, strict=False: served.get(branch))
 
     def fail_base_sha(*a, **k):
         raise RuntimeError("could not fetch existing branch 'agy/feature-7236'")
