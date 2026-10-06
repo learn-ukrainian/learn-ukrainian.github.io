@@ -457,7 +457,10 @@ def test_auto_denial_does_not_persist_unbound_concrete_resource(kind, target):
     assert json.loads(parsed.stderr_excerpt.split("\n", 1)[1]) == {
         "permission_kind": kind,
         "permission_target": "unknown",
+        "permission_target_source": "cli_notice",
+        "transcript_read_reason": "transcript_unbound_or_unreadable",
     }
+    assert target not in parsed.stderr_excerpt
     assert agy._headless_permission_denial(auto_denial(f"{kind}({target})")) == (kind, target)
     assert parsed.agy_attempt.permission_target == "unknown"
     assert parsed.agy_attempt.permission_target_unknown_reason == "target_kind_unsupported"

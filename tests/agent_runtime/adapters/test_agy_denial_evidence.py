@@ -294,6 +294,18 @@ def test_symlink_preserves_requested_classification(tmp_path, recorded_transcrip
                 ("ipv4-public", ".".join(map(str, (200, 1, 2, 3)))),
                 ("ipv4-unspecified", "0.0.0.0"),
                 ("ipv4-short", "127.1"),
+                ("ipv4-dotted-hex", "0xc0.0xa8.1.5"),
+                ("ipv4-all-hex", "0x7f.0x0.0x0.0x1"),
+                ("ipv4-mixed-radix", "0xc0.0250.1.0x5"),
+                ("ipv4-octal", "0177.0.0.1"),
+                ("ipv4-hex-short", "0x7f.1"),
+                ("ipv4-hex-root-dot", "0x7f.0x1."),
+                ("ipv4-hex-uppercase-root-dot", "0X7F.0XAB."),
+                ("invalid-numeric-last-label", "foo.1"),
+                ("invalid-hex-last-label", "foo.0x1"),
+                ("invalid-empty-hex-last-label", "foo.0x"),
+                ("invalid-empty-uppercase-hex-last-label", "foo.0X."),
+                ("invalid-octal-last-label", "foo.09"),
                 ("ipv6-private", "[fd00::1]"),
                 ("ipv6-link-local", "[fe80::1]"),
                 ("ipv6-public", "[2000::1]"),
@@ -311,7 +323,16 @@ def test_symlink_preserves_requested_classification(tmp_path, recorded_transcrip
                         "invalid",
                         "example",
                         "onion",
+                        "alt",
+                        "home",
+                        "corp",
+                        "mail",
+                        "localdomain",
                     )
+                ],
+                *[
+                    ("suffix-uppercase-root-dot-" + suffix, "FIXTURE." + suffix.upper() + ".")
+                    for suffix in ("alt", "home", "corp", "mail", "localdomain")
                 ],
                 ("suffix-uppercase-root-dot", "FIXTURE.INTERNAL."),
                 ("localhost-root-dot", "LOCALHOST."),
@@ -374,6 +395,18 @@ def test_cli_notice_target_fills_missing_transcript_target(tmp_path, recorded_tr
     assert attempt["permission_target"] == ("workspace:evidence.txt" if kind == "read_file" else "url:example.org")
     assert attempt["permission_target_unknown_reason"] is None
     assert attempt["via_symlink"] is False
+    details = json.loads(result.stderr_excerpt.split("\n", 1)[1])
+    assert details["permission_target_source"] == "cli_notice"
+    transcript_reasons = {
+        "unbound": "transcript_unbound_or_unreadable",
+        "corrupt": "transcript_corrupt",
+        "read-refused": "transcript_read_refused",
+    }
+    if problem in transcript_reasons:
+        assert details["transcript_read_reason"] == transcript_reasons[problem]
+        assert attempt["evidence_complete"] is False
+    else:
+        assert "transcript_read_reason" not in details
     assert "private?q=x" not in json.dumps(attempt) + result.stderr_excerpt
 
 
@@ -394,7 +427,21 @@ def test_cli_fallback_does_not_override_transcript_target(tmp_path, recorded_tra
     assert attempt["permission_target_unknown_reason"] == (None if kind == "read_file" else "url_host_private")
 
 
-@pytest.mark.parametrize("host", ["EXAMPLE.ORG.", "fixture.locality.org", "local.example.org", "example.org"])
+@pytest.mark.parametrize(
+    "host",
+    [
+        "EXAMPLE.ORG.",
+        "fixture.locality.org",
+        "local.example.org",
+        "example.org",
+        "0x7f.example.org",
+        "example.0xg",
+        "example.0x1g",
+        "example.1a",
+        "alt.example.org",
+        "fixture.homepage.org",
+    ],
+)
 def test_public_domain_is_not_confused_with_private_suffix(tmp_path, recorded_transcript, host):
     plan, _ = denial_plan(tmp_path, recorded_transcript, f"https://{host}/private", tool="read_url_content", arg="Url")
     attempt = record(parse(plan, "read_url"))

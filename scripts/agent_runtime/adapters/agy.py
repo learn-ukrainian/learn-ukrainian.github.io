@@ -1056,6 +1056,7 @@ class AgyAdapter:
         )
         if denial is not None:
             attempt = _headless_denial_evidence(bound, plan, denial.permission_kind, read_reason=read_reason)
+            fallback_details = {}
             if denial.permission_target is not None and attempt.permission_target_unknown_reason in {
                 "transcript_read_refused",
                 "transcript_corrupt",
@@ -1066,6 +1067,9 @@ class AgyAdapter:
                 "tool_kind_unverified",
                 "target_missing",
             }:
+                fallback_details["permission_target_source"] = "cli_notice"
+                if (transcript_reason := attempt.permission_target_unknown_reason).startswith("transcript_"):
+                    fallback_details["transcript_read_reason"] = transcript_reason
                 target, reason, via_symlink = _sanitized_denial_target(
                     denial.permission_target, denial.permission_kind, plan
                 )
@@ -1078,7 +1082,11 @@ class AgyAdapter:
                 stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED
                 + "\n"
                 + json.dumps(
-                    {"permission_kind": attempt.permission_kind, "permission_target": attempt.permission_target}
+                    {
+                        "permission_kind": attempt.permission_kind,
+                        "permission_target": attempt.permission_target,
+                        **fallback_details,
+                    }
                 ),
             )
         if killed and not result.ok:
@@ -1451,10 +1459,18 @@ def _sanitized_denial_target(target: Any, kind: str, plan: InvocationPlan | None
                 "invalid",
                 "example",
                 "onion",
+                "alt",
+                "home",
+                "corp",
+                "mail",
+                "localdomain",
             )
+            # WHATWG's ends-in-a-number rule sends these hosts to IPv4
+            # parsing, including invalid forms and an empty hex payload.
+            # https://url.spec.whatwg.org/#ends-in-a-number
             if (
                 "." not in host
-                or re.fullmatch(r"[0-9.]+", host)
+                or re.fullmatch(r"(?:[0-9]+|0x[0-9a-f]*)", host.rsplit(".", 1)[-1])
                 or any(host == suffix or host.endswith("." + suffix) for suffix in private_suffixes)
             ):
                 return "unknown", "url_host_private", False
