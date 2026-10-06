@@ -108,3 +108,28 @@ def test_remove_unit_refuses_a_symlinked_ancestor(home: Path, tmp_path: Path) ->
     with pytest.raises(InstallError, match="symlinked path component"):
         safe.remove_unit(home / "Library" / "LaunchAgents" / "a.plist")
     assert (outside / "LaunchAgents" / "a.plist").read_text() == "outside"
+
+
+def test_a_missing_home_is_absent_for_reads_and_refused_for_writes(tmp_path: Path) -> None:
+    home = tmp_path / "missing-home"
+    unit = home / "Library" / "LaunchAgents" / "a.plist"
+    assert safe.load_unit(unit, home=home) is None
+    assert safe.remove_unit(unit, home=home) is False
+    safe.check_unit_dir(unit, home=home)
+    with pytest.raises(InstallError, match="missing"):
+        safe.install_unit(unit, b"x", mode=0o600, home=home)
+    assert not home.exists()
+
+
+def test_check_unit_dir_refuses_a_symlinked_home_but_not_a_symlinked_unit(home: Path, tmp_path: Path) -> None:
+    """Callers check the directory before unloading a service; a link at the unit name is still removable."""
+    outside = tmp_path / "outside"
+    (outside / "units").mkdir(parents=True)
+    linked_home = tmp_path / "linked-home"
+    linked_home.symlink_to(outside, target_is_directory=True)
+    with pytest.raises(InstallError, match="symlinked path component"):
+        safe.check_unit_dir(linked_home / "units" / "a.plist", home=linked_home)
+    (home / "units").mkdir()
+    (home / "units" / "a.plist").symlink_to(outside / "units")
+    safe.check_unit_dir(home / "units" / "a.plist")
+    safe.check_unit_dir(home / "missing" / "a.plist")

@@ -16,7 +16,9 @@ through this module:
   written through.
 
 :func:`load_unit`, :func:`install_unit` and :func:`remove_unit` combine them for
-callers that work with one unit path at a time.
+callers that work with one unit path at a time; :func:`check_unit_dir` refuses
+an unsafe directory before a caller does anything else (an uninstall checks it
+before unloading the service).
 """
 
 from __future__ import annotations
@@ -55,12 +57,21 @@ def open_unit_dir(unit_dir: Path, *, create: bool = False, home: Path | None = N
     refused when it is a symlink, then opened relative to its checked parent
     with ``O_NOFOLLOW``. The returned descriptor is the walk's own, so no later
     path lookup can be redirected. A missing component is created only with
-    ``create``; otherwise the result is ``None``.
+    ``create``; otherwise the result is ``None``. The anchor itself is never
+    created: a missing home is ``None`` for a read and refused for a write.
+
+    Pass ``home`` unresolved: resolving it first would follow a symlinked home
+    before the walk could refuse it.
     """
     target = Path(os.path.abspath(unit_dir))
     home = Path(os.path.abspath(Path.home() if home is None else home))
     anchor = home if target == home or home in target.parents else Path(target.anchor)
-    fd = _open_component(None, str(anchor), anchor)
+    try:
+        fd = _open_component(None, str(anchor), anchor)
+    except FileNotFoundError:
+        if create:
+            raise InstallError(f"refusing to create the unit directory under a missing {anchor}") from None
+        return None
     current = anchor
     try:
         for name in target.relative_to(anchor).parts:
@@ -121,6 +132,13 @@ def write_unit(dir_fd: int, name: str, content: bytes, *, mode: int) -> None:
     # Best effort: the rename has already happened; some filesystems refuse a directory fsync.
     with contextlib.suppress(OSError):
         os.fsync(dir_fd)
+
+
+def check_unit_dir(path: Path, *, home: Path | None = None) -> None:
+    """Refuse a symlinked component on the way to ``path``'s directory before a caller acts on the unit."""
+    dir_fd = open_unit_dir(path.parent, home=home)
+    if dir_fd is not None:
+        os.close(dir_fd)
 
 
 def load_unit(path: Path, *, home: Path | None = None) -> tuple[bytes, int] | None:

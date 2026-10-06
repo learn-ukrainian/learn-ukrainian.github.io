@@ -3,7 +3,8 @@
 
 The plist is written to a temporary file and renamed into place; a symlinked
 plist, or a symlink in any directory from the home directory down to
-``Library/LaunchAgents``, is refused by install and status.
+``Library/LaunchAgents``, is refused by install and status; uninstall refuses
+such a directory before unloading the service.
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.safe_unit_install import InstallError, install_unit, load_unit, remove_unit
+from scripts.common.safe_unit_install import InstallError, check_unit_dir, install_unit, load_unit, remove_unit
 from scripts.orchestration import scheduled_worktree_cleanup
 
 LABEL = "com.learn-ukrainian.worktree-cleanup"
@@ -127,7 +128,6 @@ def _launchctl(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
         ) from exc
 
 
-
 def _domain() -> str:
     return f"gui/{os.getuid()}"
 
@@ -164,9 +164,7 @@ def _validate_primary(repo_root: Path, *, require_interpreter: bool = False) -> 
         interpreter = repo_root / ".venv" / "bin" / "python"
         if not interpreter.is_file() or not os.access(interpreter, os.X_OK):
             raise LaunchdError(f"required interpreter is missing: {interpreter}")
-        cleanup_script = (
-            repo_root / "scripts" / "orchestration" / "scheduled_worktree_cleanup.py"
-        )
+        cleanup_script = repo_root / "scripts" / "orchestration" / "scheduled_worktree_cleanup.py"
         if not cleanup_script.is_file():
             raise LaunchdError(f"cleanup script is missing: {cleanup_script}")
         wrapper = wrapper_path(repo_root)
@@ -194,6 +192,8 @@ def install(
         home=home,
         interval_minutes=interval_minutes,
     )
+    # Refuse a symlinked home or plist directory before creating state under it.
+    installed = load_unit(destination, home=home)
     runtime = state_dir(home)
     for directory in (
         runtime,
@@ -204,7 +204,6 @@ def install(
         directory.mkdir(parents=True, exist_ok=True, mode=0o700)
         os.chmod(directory, 0o700)
 
-    installed = load_unit(destination, home=home)
     before = _loaded_readback()
     was_loaded = before.returncode == 0
     changed = installed is None or installed[0] != content
@@ -290,6 +289,7 @@ def status(
 
 def uninstall(*, home: Path) -> dict[str, Any]:
     destination = plist_path(home)
+    check_unit_dir(destination, home=home)
     was_loaded = _loaded_readback().returncode == 0
     if was_loaded:
         bootout = _launchctl(["bootout", _service_target()])
@@ -346,7 +346,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.private_repo is not None
         else scheduled_worktree_cleanup.default_private_repo(public_repo).resolve()
     )
-    home = args.home.expanduser().resolve()
+    # Unresolved: the unit helper must see a symlinked home to refuse it (#9875).
+    home = Path(os.path.abspath(args.home.expanduser()))
     if args.command == "render":
         print(
             render_plist(

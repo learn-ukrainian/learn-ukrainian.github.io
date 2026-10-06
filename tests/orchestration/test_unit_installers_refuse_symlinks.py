@@ -41,7 +41,7 @@ class Installer:
     module: object
     unit: Path  # the unit file whose directory and ancestors are attacked
     ancestor: Path  # a directory strictly between home and the unit directory
-    invoke: Callable[[str], object]  # run the installer in "check" or "apply" mode
+    invoke: Callable[[str], object]  # run the installer in "check" or "apply" mode ("uninstall" for launchd CLIs)
 
 
 def _primary(tmp_path: Path) -> Path:
@@ -66,7 +66,9 @@ def _tmp_sweep(tmp_path: Path, home: Path, monkeypatch: pytest.MonkeyPatch) -> I
     monkeypatch.setattr(module, "verify_units", lambda _rendered: None)
     monkeypatch.setattr(module, "systemctl_user", lambda *_args: None)
     flags = ["--repo-root", str(_primary(tmp_path)), "--unit-dir", str(unit_dir)]
-    return Installer(module, unit_dir / module.UNITS[0], home / ".config", lambda mode: module.main([*flags, f"--{mode}"]))
+    return Installer(
+        module, unit_dir / module.UNITS[0], home / ".config", lambda mode: module.main([*flags, f"--{mode}"])
+    )
 
 
 def _data_tier(tmp_path: Path, home: Path, monkeypatch: pytest.MonkeyPatch) -> Installer:
@@ -75,7 +77,9 @@ def _data_tier(tmp_path: Path, home: Path, monkeypatch: pytest.MonkeyPatch) -> I
     monkeypatch.setattr(module, "verify_units", lambda _rendered: None)
     monkeypatch.setattr(module, "systemctl_user", lambda *_args: None)
     flags = ["--repo-root", str(_primary(tmp_path)), "--unit-dir", str(unit_dir)]
-    return Installer(module, unit_dir / module.UNITS[0], home / ".config", lambda mode: module.main([*flags, f"--{mode}"]))
+    return Installer(
+        module, unit_dir / module.UNITS[0], home / ".config", lambda mode: module.main([*flags, f"--{mode}"])
+    )
 
 
 def _backup(tmp_path: Path, home: Path, monkeypatch: pytest.MonkeyPatch) -> Installer:
@@ -83,7 +87,9 @@ def _backup(tmp_path: Path, home: Path, monkeypatch: pytest.MonkeyPatch) -> Inst
     unit_dir = home / ".config" / "systemd" / "user"
     monkeypatch.setattr(module, "verify_units", lambda *_args, **_kwargs: "verified")
     monkeypatch.setattr(
-        module, "systemctl_user", lambda *_args: subprocess.CompletedProcess(args=[], returncode=0, stdout="", stderr="")
+        module,
+        "systemctl_user",
+        lambda *_args: subprocess.CompletedProcess(args=[], returncode=0, stdout="", stderr=""),
     )
     flags = ["--repo-root", str(_primary(tmp_path)), "--unit-dir", str(unit_dir)]
     # The backup installer's read-only mode is its default preview.
@@ -126,7 +132,13 @@ def _archived(tmp_path: Path, home: Path, monkeypatch: pytest.MonkeyPatch) -> In
         module,
         module.plist_path(home),
         home / "Library",
-        lambda mode: module.main(install if mode == "apply" else ["status", "--home", str(home)]),
+        lambda mode: module.main(
+            {
+                "apply": install,
+                "check": ["status", "--home", str(home)],
+                "uninstall": ["uninstall", "--home", str(home)],
+            }[mode]
+        ),
     )
 
 
@@ -144,7 +156,7 @@ def _observer(tmp_path: Path, home: Path, monkeypatch: pytest.MonkeyPatch) -> In
         module,
         module.plist_path(home),
         home / "Library",
-        lambda mode: module.main([*flags, "install" if mode == "apply" else "status"]),
+        lambda mode: module.main([*flags, {"apply": "install", "check": "status"}.get(mode, mode)]),
     )
 
 
@@ -175,7 +187,7 @@ def _worktree(tmp_path: Path, home: Path, monkeypatch: pytest.MonkeyPatch) -> In
         module,
         module.plist_path(home),
         home / "Library",
-        lambda mode: module.main([*flags, "install" if mode == "apply" else "status"]),
+        lambda mode: module.main([*flags, {"apply": "install", "check": "status"}.get(mode, mode)]),
     )
 
 
@@ -302,3 +314,52 @@ def test_link_raced_in_before_rename_is_replaced(
     assert not installer.unit.is_symlink() and installer.unit.is_file()
     assert installer.unit.read_bytes() != b"outside unit"
     assert not [path.name for path in installer.unit.parent.iterdir() if path.name.endswith(".tmp")]
+
+
+LAUNCHD_CLIS = ("archived_thread_cleanup", "mac_observer", "worktree_cleanup")
+
+
+@pytest.mark.parametrize("operation", ("apply", "check", "uninstall"))
+@pytest.mark.parametrize("linked", ("home", "ancestor"))
+@pytest.mark.parametrize("name", LAUNCHD_CLIS)
+def test_launchd_cli_refuses_a_symlinked_home_or_ancestor(
+    name: str,
+    linked: str,
+    operation: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """``--home`` reaches the helper unresolved, so install, status and uninstall refuse the link (#9875).
+
+    The link target holds a plist the operation would otherwise act on; it
+    stays byte-for-byte unchanged (no state directory created through the link
+    either) and launchctl is never asked to change state.
+    """
+    home = tmp_path / "home"
+    outside = tmp_path / "outside"
+    if linked == "home":
+        outside.mkdir()
+        home.symlink_to(outside, target_is_directory=True)
+    else:
+        home.mkdir()
+        outside.mkdir()
+        (home / "Library").symlink_to(outside, target_is_directory=True)
+    monkeypatch.setenv("HOME", str(home))
+    installer = INSTALLERS[name](tmp_path, home, monkeypatch)
+    real_plist = outside / installer.unit.relative_to(home if linked == "home" else home / "Library")
+    real_plist.parent.mkdir(parents=True)
+    real_plist.write_text("outside unit")
+    calls: list[object] = []
+    monkeypatch.setattr(installer.module, "_launchctl", lambda command: calls.append(command) or _launchctl_ok())
+    if operation == "uninstall":
+        # A loaded service: the refusal must come before the bootout.
+        monkeypatch.setattr(installer.module, "_loaded_readback", _launchctl_ok)
+    before = _snapshot(outside)
+
+    message = _refusal(installer, operation, capsys)
+
+    assert "symlinked path component" in message
+    assert str(home if linked == "home" else home / "Library") in message
+    assert _snapshot(outside) == before
+    assert calls == []

@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.api.release_snapshot import build_release, prune_releases
+from scripts.common.safe_unit_install import InstallError, install_unit
 
 LABEL = "com.learn-ukrainian.monitor-api"
 PORT = 8765
@@ -187,11 +188,16 @@ def _validate_runtime(repo_root: Path) -> None:
 
 
 def install(*, repo_root: Path, home: Path) -> dict[str, object]:
-    """Write or reconcile the LaunchAgent plist without starting the service."""
+    """Write or reconcile the LaunchAgent plist without starting the service.
+
+    The plist goes through the shared unit helper, which refuses a symlinked
+    plist or a symlink in any directory from ``home`` down to
+    ``Library/LaunchAgents`` (#9875).
+    """
     root = repo_root.resolve()
     _validate_runtime(root)
     destination = plist_path(home)
-    changed = atomic_write(destination, render_plist(repo_root=root))
+    changed = install_unit(destination, render_plist(repo_root=root), mode=0o600, home=home)
     return {
         "action": "install",
         "changed": changed,
@@ -614,7 +620,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    home = getattr(args, "home", default_home()).expanduser().resolve()
+    # Unresolved: the unit helper must see a symlinked home to refuse it (#9875).
+    home = Path(os.path.abspath(getattr(args, "home", default_home()).expanduser()))
     try:
         if args.command in {"install", "render"}:
             root = args.repo_root.expanduser().resolve()
@@ -646,7 +653,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             return returncode
         if args.command == "run":
             return run_managed_api(repo_root=args.repo_root.expanduser().resolve())
-    except LaunchdError as exc:
+    except (LaunchdError, InstallError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
     return 1

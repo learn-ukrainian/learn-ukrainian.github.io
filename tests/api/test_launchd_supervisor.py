@@ -79,7 +79,8 @@ def test_api_child_disables_bytecode_writes(tmp_path: Path, monkeypatch) -> None
     assert json.loads(inherited.stdout) == {"env": "1", "dont_write": True}
 
 
-def test_install_and_uninstall_preserve_crash_evidence(tmp_path: Path, monkeypatch) -> None:
+def _runtime_repo(tmp_path: Path) -> Path:
+    """Create the interpreter, supervisor and wrapper that ``install`` validates."""
     repo = tmp_path / "repo"
     interpreter = repo / ".venv" / "bin" / "python"
     implementation = repo / "scripts" / "api" / "launchd_supervisor.py"
@@ -90,7 +91,13 @@ def test_install_and_uninstall_preserve_crash_evidence(tmp_path: Path, monkeypat
     implementation.write_text("# installed by test\n", encoding="utf-8")
     wrapper = repo / "scripts" / "api" / "run_monitor_api_supervisor.sh"
     wrapper.write_text("#!/bin/bash\n", encoding="utf-8")
+    return repo
+
+
+def test_install_and_uninstall_preserve_crash_evidence(tmp_path: Path, monkeypatch) -> None:
+    repo = _runtime_repo(tmp_path)
     home = tmp_path / "home"
+    home.mkdir()
 
     installed = supervisor.install(repo_root=repo, home=home)
     evidence = supervisor.crash_record_path(repo)
@@ -104,6 +111,62 @@ def test_install_and_uninstall_preserve_crash_evidence(tmp_path: Path, monkeypat
     assert removed["crash_evidence_preserved"] is True
     assert not supervisor.plist_path(home).exists()
     assert evidence.exists()
+
+
+def test_install_writes_owner_only_plist_and_repairs_its_mode(tmp_path: Path) -> None:
+    repo = _runtime_repo(tmp_path)
+    home = tmp_path / "home"
+    home.mkdir()
+    destination = supervisor.plist_path(home)
+
+    assert supervisor.install(repo_root=repo, home=home)["changed"] is True
+    assert destination.read_bytes() == supervisor.render_plist(repo_root=repo)
+    assert stat.S_IMODE(destination.stat().st_mode) == 0o600
+    assert supervisor.install(repo_root=repo, home=home)["changed"] is False
+    destination.chmod(0o644)
+    assert supervisor.install(repo_root=repo, home=home)["changed"] is True
+    assert stat.S_IMODE(destination.stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("linked", ["home", "Library", "LaunchAgents", "plist"])
+def test_install_refuses_symlinked_plist_destinations(tmp_path: Path, monkeypatch, linked: str) -> None:
+    """The plist never lands through a link at home, an ancestor, ``LaunchAgents`` or the plist itself (#9875)."""
+    repo = _runtime_repo(tmp_path)
+    home = tmp_path / "home"
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    link = {
+        "home": home,
+        "Library": home / "Library",
+        "LaunchAgents": home / "Library" / "LaunchAgents",
+        "plist": supervisor.plist_path(home),
+    }[linked]
+    link.parent.mkdir(parents=True, exist_ok=True)
+    if linked == "plist":
+        (outside / link.name).write_text("outside plist")
+        link.symlink_to(outside / link.name)
+    else:
+        link.symlink_to(outside, target_is_directory=True)
+    calls: list[object] = []
+    monkeypatch.setattr(supervisor, "_launchctl", lambda command: calls.append(command))
+    before = sorted(
+        (path.relative_to(outside), path.read_bytes() if path.is_file() else b"") for path in outside.rglob("*")
+    )
+
+    for invoke in (
+        lambda: supervisor.install(repo_root=repo, home=home),
+        lambda: supervisor.start(repo_root=repo, home=home, live_mode=False),
+    ):
+        with pytest.raises(supervisor.InstallError, match="symlinked"):
+            invoke()
+    assert supervisor.main(["install", "--repo-root", str(repo), "--home", str(home)]) == 1
+
+    after = sorted(
+        (path.relative_to(outside), path.read_bytes() if path.is_file() else b"") for path in outside.rglob("*")
+    )
+    assert after == before
+    assert calls == []
+    assert link.is_symlink()
 
 
 def test_status_rejects_plist_without_required_environment(tmp_path: Path, monkeypatch) -> None:

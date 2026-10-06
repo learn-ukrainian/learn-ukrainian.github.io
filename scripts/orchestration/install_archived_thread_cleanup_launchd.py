@@ -3,7 +3,8 @@
 
 The plist is written to a temporary file and renamed into place; a symlinked
 plist, or a symlink in any directory from the home directory down to
-``Library/LaunchAgents``, is refused by install and status.
+``Library/LaunchAgents``, is refused by install and status; uninstall refuses
+such a directory before unloading the service.
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.safe_unit_install import InstallError, install_unit, load_unit, remove_unit
+from scripts.common.safe_unit_install import InstallError, check_unit_dir, install_unit, load_unit, remove_unit
 
 LABEL = "com.learn-ukrainian.codex-archived-thread-cleanup"
 DEFAULT_WEEKDAY = "sunday"
@@ -101,9 +102,7 @@ def resolve_codex_binary(configured: Path | None) -> Path:
     return absolute
 
 
-def build_plist(
-    *, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int
-) -> dict[str, object]:
+def build_plist(*, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int) -> dict[str, object]:
     """Build the launchd configuration without touching disk or launchd."""
     log_dir = state_dir(home) / "logs"
     return {
@@ -137,9 +136,7 @@ def build_plist(
     }
 
 
-def render_plist(
-    *, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int
-) -> bytes:
+def render_plist(*, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int) -> bytes:
     """Render a stable XML plist for inspection and tests."""
     payload = build_plist(
         repo_root=repo_root,
@@ -171,7 +168,6 @@ def _launchctl(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
         raise LaunchdError(
             f"/bin/launchctl {' '.join(command)} timed out after {DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS}s"
         ) from exc
-
 
 
 def _domain() -> str:
@@ -208,9 +204,7 @@ def _validate_runtime(repo_root: Path, codex_binary: Path) -> None:
         raise LaunchdError(f"Codex CLI is missing or not executable: {codex_binary}")
 
 
-def install(
-    *, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int
-) -> dict[str, object]:
+def install(*, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int) -> dict[str, object]:
     """Install or reconcile the launch agent, then verify launchd readback."""
     _validate_runtime(repo_root, codex_binary)
     destination = plist_path(home)
@@ -221,6 +215,8 @@ def install(
         weekday=weekday,
         hour=hour,
     )
+    # Refuse a symlinked home or plist directory before creating state under it.
+    installed = load_unit(destination, home=home)
     runtime_state = state_dir(home)
     runtime_state.mkdir(parents=True, exist_ok=True, mode=0o700)
     os.chmod(runtime_state, 0o700)
@@ -228,7 +224,6 @@ def install(
     logs.mkdir(parents=True, exist_ok=True, mode=0o700)
     os.chmod(logs, 0o700)
 
-    installed = load_unit(destination, home=home)
     before = _loaded_readback()
     was_loaded = before.returncode == 0
     changed = installed is None or installed[0] != content
@@ -319,6 +314,7 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
 def uninstall(*, home: Path) -> dict[str, object]:
     """Idempotently unload and remove the plist while preserving audit state."""
     destination = plist_path(home)
+    check_unit_dir(destination, home=home)
     before = _loaded_readback()
     was_loaded = before.returncode == 0
 
@@ -407,7 +403,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    home = args.home.expanduser().resolve()
+    # Unresolved: the unit helper must see a symlinked home to refuse it (#9875).
+    home = Path(os.path.abspath(args.home.expanduser()))
 
     try:
         if args.command in {"install", "render"}:
