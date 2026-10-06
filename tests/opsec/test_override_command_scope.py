@@ -221,7 +221,8 @@ def test_delegate_auto_finalize_admits_one_flagged_publication(sandbox):
     assert TOKEN in _git(sandbox.work, "log", "-1", "--format=%B")
     assert _remote_has(sandbox, sent_commit), outcome
     assert flagged_sends(sandbox) == [], outcome
-    assert "override already consumed" in outcome["finalize"], outcome
+    # #9878: the result names the typed cause; the gate's own reason is for the local diagnostic.
+    assert "auto_finalize_publish_blocked" in outcome["finalize"], outcome
     assert len(log_rows(sandbox)) == 1
 
 

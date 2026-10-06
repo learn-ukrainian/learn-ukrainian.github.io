@@ -144,7 +144,11 @@ def test_rescue_refuses_kimi_work_that_fails_the_content_check(kimi_rescue, comm
 
     assert result["action"] == "error"
     assert result["failure_code"] == "kimi_content_refused"
-    assert "KIMI CODING-ONLY" in result["reason"] and LABEL in result["reason"]
+    # #9878: the row names the typed cause; the refusal text, with its path, stays in the local .diag.
+    assert result["reason"] == "kimi_content_refused"
+    assert LABEL not in json.dumps(result)
+    kept = delegate._diagnostic_path(TASK_ID).read_text(encoding="utf-8")
+    assert "KIMI CODING-ONLY" in kept and LABEL in kept
     assert RESCUE_REF not in _remote_heads(origin)
     assert _git(worktree, "rev-parse", "HEAD") == head
     assert _git(worktree, "status", "--porcelain") == status
@@ -171,9 +175,9 @@ def test_rescue_refuses_when_the_main_repository_push_url_is_blocked_too(kimi_re
     result = delegate._rescue_task(state_path, apply=True)
 
     assert result["action"] == "error"
-    assert result["reason"] == (
-        "main repository has no single usable push URL for origin [rescue_push_url_unavailable, git config]"
-    )
+    assert result["reason"] == "rescue_push_url_unavailable, git config"
+    kept = delegate._diagnostic_path(TASK_ID).read_text(encoding="utf-8")
+    assert "main repository has no single usable push URL for origin" in kept
     assert RESCUE_REF not in _remote_heads(origin)
 
 
@@ -283,7 +287,7 @@ def test_a_url_rewrite_cannot_fake_the_remote_verification(kimi_rescue, tmp_path
     result = delegate._rescue_task(state_path, apply=True)
 
     assert (result["action"], result["failure_code"]) == ("error", "rescue_remote_unverified"), result
-    assert result["reason"] == "rescue remote verification failed [rescue_remote_unverified, git ls-remote]"
+    assert result["reason"] == "rescue_remote_unverified, git ls-remote"
     assert RESCUE_REF not in _remote_heads(origin)
     assert delegate._read_state(state_path).get("rescue_ref") is None
 
@@ -343,7 +347,7 @@ def test_a_rescue_push_error_row_carries_only_its_typed_cause(kimi_rescue, monke
     (result,) = json.loads(summary)["tasks"]
 
     assert (result["action"], result["failure_code"]) == ("error", code)
-    assert result["reason"] == f"cannot push rescue branch [{code}, git push, exit 128]"
+    assert result["reason"] == f"{code}, git push, exit 128"
     assert result["diagnostic"].endswith(f"{TASK_ID}.diag")
     assert_no_host_details(summary, worktree, origin)
     assert "fatal:" not in summary and "Could not" not in summary
@@ -364,7 +368,7 @@ def test_a_rescue_remote_query_error_row_carries_only_its_typed_cause(kimi_rescu
     result = delegate._rescue_task(state_path, apply=apply)
 
     assert (result["action"], result["failure_code"]) == ("error", code)
-    assert result["reason"] == f"rescue remote proof unavailable [{code}, git ls-remote, exit 128]"
+    assert result["reason"] == f"{code}, git ls-remote, exit 128"
     assert_no_host_details(json.dumps(result), worktree, origin)
     _assert_kept_locally(TASK_ID, stderr, code)
 
@@ -379,7 +383,7 @@ def test_a_rescue_kimi_check_that_cannot_read_the_changes_refuses_with_its_typed
     result = delegate._rescue_task(state_path, apply=True)
 
     assert (result["action"], result["failure_code"]) == ("error", "kimi_content_refused")
-    assert "could not be read for Ukrainian content [diff_command_failed, git diff-tree, exit 128]" in result["reason"]
+    assert result["reason"] == "kimi_content_refused; diff_command_failed, git diff-tree, exit 128"
     assert_no_host_details(json.dumps(result, ensure_ascii=False), worktree, origin)
     _assert_kept_locally(TASK_ID, stderr, "diff_command_failed")
     assert RESCUE_REF not in _remote_heads(origin)
@@ -396,6 +400,6 @@ def test_an_unexpected_rescue_exception_is_typed_by_its_class(kimi_rescue, monke
     result = delegate._rescue_task(state_path, apply=True)
 
     assert (result["action"], result["failure_code"]) == ("error", "rescue_step_failed")
-    assert result["reason"] == "rescue step failed [rescue_step_failed, OSError]"
+    assert result["reason"] == "rescue_step_failed, OSError"
     assert_no_host_details(json.dumps(result), worktree, origin)
     _assert_kept_locally(TASK_ID, "cannot stat", "rescue_step_failed")

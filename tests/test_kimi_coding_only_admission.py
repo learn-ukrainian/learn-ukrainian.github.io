@@ -367,7 +367,8 @@ def test_owned_paths_fail_closed_when_the_tree_cannot_be_resolved():
         raise RuntimeError("no base")
 
     message = _refusal(paths=("site/src/components/LiveStatus.tsx",), trees=unresolvable)
-    assert message and "cannot be read for Ukrainian content (no base)" in message
+    assert message and "cannot be read for Ukrainian content (RuntimeError)" in message
+    assert "no base" not in message  # the reader's own message stays out of the refusal (#9878)
 
 
 def test_the_tree_is_resolved_only_after_every_policy_check_admits():
@@ -659,10 +660,11 @@ def test_an_unreadable_changed_file_is_a_typed_refusal_through_the_real_reader(k
         message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")
     finally:
         button.chmod(0o644)
-    assert "[file_unreadable, PermissionError EACCES, path 'Button.tsx']" in message
+    assert "[file_unreadable, PermissionError EACCES]" in message
     assert _NOT_TEXT not in message
     assert_no_host_details(message, kimi_worktree)
     assert "Permission denied" in cause.diagnostic
+    assert cause.path == "Button.tsx"  # #9878: the path goes to the local diagnostic only
 
 
 def test_a_parsing_value_error_is_a_typed_refusal(kimi_worktree, monkeypatch):
@@ -713,8 +715,10 @@ def test_a_typed_cause_renders_only_its_allowlisted_parts():
     cause = delegate._TypedCause(
         "diff_command_failed", "diff", 128, error="OSError ENOENT", path="site/Label.tsx", diagnostic=hostile
     )
-    assert cause.public() == "diff_command_failed, git diff, exit 128, OSError ENOENT, path 'site/Label.tsx'"
-    assert delegate._TypedCause("made_up_code", diagnostic=hostile).public() == "unclassified_failure"
+    # #9878: a path is free text, so it never renders; it goes to the local diagnostic.
+    assert cause.public() == "diff_command_failed, git diff, exit 128, OSError ENOENT"
+    assert delegate.is_public_cause(cause.public())
+    assert delegate._TypedCause("made_up_code", diagnostic=hostile).public() == "unclassified_error"
 
 
 @pytest.mark.parametrize(
@@ -742,9 +746,9 @@ def test_a_typed_cause_drops_a_command_or_error_that_is_not_a_bare_name(field):
         "site/\nfe80::1%eth7",
     ],
 )
-def test_a_typed_cause_withholds_a_path_that_is_not_repository_relative(path):
+def test_a_typed_cause_never_publishes_its_path(path):
     cause = delegate._TypedCause("file_unreadable", path=path)
-    assert cause.public() == "file_unreadable, path withheld"
+    assert cause.public() == "file_unreadable"
 
 
 def test_the_git_subcommand_skips_global_options_and_their_values():
@@ -1256,7 +1260,8 @@ def test_dispatch_reads_owned_paths_in_the_reused_worktree(no_spawn, capsys, mon
     err = capsys.readouterr().err
     assert rc == 2 and _TOKEN in err, err
     assert f"Cyrillic text in {path!r}, in commit {commit[:12]}" in err
-    assert f"Cyrillic text in 'site/src/components/Draft.tsx', in {reused}" in err
+    assert "Cyrillic text in 'site/src/components/Draft.tsx', in the working tree" in err
+    assert str(reused) not in err  # #9878: a refusal never names a host path
     assert not no_spawn.exists() or not any(no_spawn.iterdir())
 
 
@@ -1423,8 +1428,11 @@ def test_worker_reads_owned_paths_in_the_tree_it_runs_in(tmp_path, monkeypatch, 
 
     assert rc == 1
     err = capsys.readouterr().err
-    assert _TOKEN in err and f"Cyrillic text in {path!r}" in err
+    # #9878: the worker prints its typed cause only; the dispatch-time gate prints the policy text in full.
+    assert _TOKEN in err and "kimi_admission_refused" in err
+    assert path not in err and str(worktree) not in err
     assert state_path.read_bytes() == before
+    assert not delegate._diagnostic_path("kimi-reused").exists()  # a policy refusal writes nothing
 
 
 # --- runtime boundary ----------------------------------------------------------------

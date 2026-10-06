@@ -274,8 +274,9 @@ def test_a_kimi_finalize_refusal_exposes_its_typed_cause_and_keeps_git_s_error_l
 
     state = delegate._read_state(state_path)
     assert rc != 0 and state["status"] == "failed"
-    refusal = state["kimi_content_refusal"]
-    assert "could not be read for Ukrainian content [temp_index_failed, git add, exit 128]" in refusal
+    # #9878: the record's reason fields are public causes only.
+    assert state["kimi_content_refusal"] == "kimi_content_refused; temp_index_failed, git add, exit 128"
+    assert state["last_error"] == state["kimi_content_refusal"]
     # Nothing the task record, its result or the Monitor can show carries git's error.
     exposed = json.dumps(state, ensure_ascii=False)
     result_path = state_path.with_suffix(".result")
@@ -284,8 +285,9 @@ def test_a_kimi_finalize_refusal_exposes_its_typed_cause_and_keeps_git_s_error_l
     assert_no_host_details(exposed)
     assert "Could not resolve" not in exposed and "fatal:" not in exposed
     # The local diagnostic keeps it, credentials redacted.
-    (entry,) = _diagnostics(task_id)
-    assert (entry["source"], entry["code"]) == ("finalize", "temp_index_failed")
+    (entry,) = [entry for entry in _diagnostics(task_id) if entry["source"] == "finalize"]
+    assert (entry["field"], entry["code"]) == ("kimi_content_refusal", "temp_index_failed")
+    assert "could not be read for Ukrainian content" in entry["diagnostic"]  # the refusal text, kept locally
     assert entry["public"] == "temp_index_failed, git add, exit 128"
     if kind == "credential_url":
         assert _FAKE_TOKEN not in entry["diagnostic"] and "Authentication failed for" in entry["diagnostic"]
@@ -313,8 +315,12 @@ def test_a_diagnostic_is_written_only_beside_an_existing_task_record():
 def test_force_new_archives_the_diagnostic_with_its_record():
     delegate._write_state_atomic(delegate._state_path("archived"), {"task_id": "archived", "status": "failed"})
     delegate._record_diagnostic("archived", delegate._TypedCause("rescue_step_failed"), source="rescue")
+    diagnostic = delegate._diagnostic_path("archived")
+    rotated = diagnostic.with_name(diagnostic.name + delegate._DIAG_ROTATED_SUFFIX)
+    rotated.write_text("", encoding="utf-8")
 
     archived = delegate._archive_task_artifacts("archived", stamp="20260101T000000Z")
 
-    assert not delegate._diagnostic_path("archived").exists()
+    assert not diagnostic.exists() and not rotated.exists()
     assert any(path.name.endswith(".archived.diag") for path in archived), archived
+    assert any(path.name.endswith(".archived.prev") for path in archived), archived

@@ -3069,15 +3069,18 @@ def test_run_worker_records_provider_policy_refusal_and_status_shows_it(tmp_task
     state = delegate._read_state(state_path)
     assert state["status"] == "failed"
     assert state["failure_code"] == "provider_policy_refusal"
-    assert state["last_error"] == excerpt
+    # #9878: last_error names the typed class; the provider's own words stay in the local excerpt.
+    assert state["last_error"] == "provider_policy_refusal"
+    assert state["stderr_excerpt"] == excerpt
 
     capsys.readouterr()
     assert delegate.cmd_status(argparse.Namespace(task_id=task_id)) == 0
     shown = json.loads(capsys.readouterr().out)
     assert shown["status"] == "failed"
     assert shown["failure_code"] == "provider_policy_refusal"
-    assert "cyber_policy" in shown["last_error"]
-    assert "flagged for possible cybersecurity risk" in shown["last_error"]
+    assert shown["last_error"] == "provider_policy_refusal"
+    assert "cyber_policy" in shown["stderr_excerpt"]
+    assert "flagged for possible cybersecurity risk" in shown["stderr_excerpt"]
 
 
 def test_run_worker_drops_a_stale_failure_code_on_success(tmp_tasks_dir, tmp_path):
@@ -3149,7 +3152,8 @@ def test_run_worker_persists_attempt_boundary_refusal_code(tmp_tasks_dir, tmp_pa
     )
     state = delegate._read_state(state_path)
     assert rc == 1 and state["status"] == "failed"
-    assert state["last_error"].startswith(
+    assert state["last_error"] == "worker_runtime_error, AgentUnavailableError"  # #9878: the typed class
+    assert state["stderr_excerpt"].startswith(
         f"runtime error: AgentUnavailableError: formal attempt filesystem boundary refused: prepare: {code}"
     )
 
@@ -3429,8 +3433,9 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
     assert state is not None
     assert state["returncode"] == 2
     assert state["exit_code"] == 2
-    assert state["last_error"] == "error: Cannot combine --prompt with --yolo."
-    assert state["stderr_excerpt"] == state["last_error"]
+    # #9878: last_error is the runtime's typed failure; the CLI's own words stay in the excerpt.
+    assert state["last_error"] == state["failure_code"] == "provider_error"
+    assert state["stderr_excerpt"] == "error: Cannot combine --prompt with --yolo."
     # The CLI's own error is the first line of the log; the worktree summary line follows it.
     assert stderr_log.read_text(encoding="utf-8").splitlines()[0] == "error: Cannot combine --prompt with --yolo."
 
@@ -3624,7 +3629,18 @@ def test_run_worker_marks_needs_finalize_for_dirty_danger_worktree(
     assert state["commits_ahead"] == 0
     assert state["worktree_dirty_on_exit"] is True
     assert state["auto_finalize"]["ok"] is False
-    assert state["auto_finalize"]["error"] == "simulated finalize failure"
+    # #9878: free text the producer returned is replaced at the record writer and kept in the .diag.
+    assert state["auto_finalize"]["error"] == "unclassified_error"
+    assert "simulated finalize failure" in delegate._diagnostic_path("needs-finalize").read_text(encoding="utf-8")
+
+
+def _assert_mutation_reported(state, *paths):
+    """#9878: last_error names the typed cause and its count; the paths stay in their field and the local .diag."""
+    assert state["last_error"] == f"read_only_checkout_mutation, count {len(paths)}", state["last_error"]
+    assert state["read_only_mutation_paths"] == list(paths)
+    diag = delegate._diagnostic_path(state["task_id"]).read_text(encoding="utf-8").splitlines()
+    kept = [json.loads(line)["diagnostic"] for line in diag]
+    assert any(text.startswith("read-only checkout mutation detected: " + ", ".join(paths)) for text in kept), kept
 
 
 def _init_git_repo_for_test(path, monkeypatch):
@@ -3783,7 +3799,10 @@ def test_review_verdict_failure_survives_appended_snapshot_error(tmp_tasks_dir):
         },
     )
     state = delegate._read_state(state_path)
-    assert state["last_error"].endswith("task_records_snapshot_error: unavailable")
+    # #9878: the typed cause survives; the appended free text is replaced and kept in the .diag.
+    assert state["last_error"] == "review_missing_verdict_line; unclassified_error"
+    diagnostic = delegate._diagnostic_path("review-verdict-with-snapshot-error").read_text(encoding="utf-8")
+    assert "task_records_snapshot_error: unavailable" in diagnostic
     assert state["failure_reason"] == "review_missing_verdict_line"
 
 
@@ -4264,7 +4283,7 @@ def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
         "curriculum/l2-uk-en/bio/andrii-malyshko/audit/module-audit.md": "??",
         "curriculum/l2-uk-en/bio/andrii-malyshko/status/module.json": "??",
     }
-    assert state["last_error"] == "read-only checkout mutation detected: " + ", ".join(sorted(all_written_paths))
+    _assert_mutation_reported(state, *sorted(all_written_paths))
     assert all((worktree / relative_path).exists() for relative_path in all_written_paths)
 
 
@@ -4452,7 +4471,7 @@ def test_read_only_dispatch_still_fails_on_tracked_mutation_with_entire_telemetr
     assert state is not None
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == ["tracked.txt"]
-    assert state["last_error"] == "read-only checkout mutation detected: tracked.txt"
+    _assert_mutation_reported(state, "tracked.txt")
     assert "tracked.txt" in state["read_only_checkout_post"]
     for relative_path in _ENTIRE_HARNESS_TELEMETRY_PATHS:
         assert state["read_only_checkout_post"][relative_path] == "!!"
@@ -4518,7 +4537,7 @@ def test_read_only_dispatch_fails_on_force_added_entire_metadata_mutation(
     assert state is not None
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [relative]
-    assert state["last_error"] == f"read-only checkout mutation detected: {relative}"
+    _assert_mutation_reported(state, relative)
     assert state["read_only_checkout_post"][relative] == " M"
 
 
@@ -4701,7 +4720,7 @@ def test_read_only_dispatch_fails_on_gitignored_non_noise_write(
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [cache_path]
     assert state["read_only_ignored_mutation_paths"] == []
-    assert state["last_error"] == f"read-only checkout mutation detected: {cache_path}"
+    _assert_mutation_reported(state, cache_path)
     assert state["read_only_snapshot_retention"] == "full"
     assert (checkout / cache_path).exists()
 
@@ -4755,7 +4774,7 @@ def test_read_only_dispatch_still_fails_on_tracked_mutation_with_runtime_state(
     assert state is not None
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == ["tracked.txt"]
-    assert state["last_error"] == "read-only checkout mutation detected: tracked.txt"
+    _assert_mutation_reported(state, "tracked.txt")
     assert "tracked.txt" in state["read_only_checkout_post"]
     for relative_path in _READ_ONLY_RUNTIME_STATE_PATHS:
         assert state["read_only_checkout_post"][relative_path] == "!!"
@@ -4801,7 +4820,7 @@ def test_read_only_dispatch_fails_on_untracked_claude_hooks_file(
     assert state is not None
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [_UNTRACKED_CLAUDE_HOOKS_PATH]
-    assert state["last_error"] == (f"read-only checkout mutation detected: {_UNTRACKED_CLAUDE_HOOKS_PATH}")
+    _assert_mutation_reported(state, _UNTRACKED_CLAUDE_HOOKS_PATH)
     assert state["read_only_checkout_post"][_UNTRACKED_CLAUDE_HOOKS_PATH] == "??"
     assert planted.exists()
 
@@ -5019,7 +5038,7 @@ def test_read_only_dispatch_still_fails_on_task_authored_write_with_sibling_work
     assert state is not None
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == ["tracked.txt"]
-    assert state["last_error"] == "read-only checkout mutation detected: tracked.txt"
+    _assert_mutation_reported(state, "tracked.txt")
     assert sibling.exists()
 
 
@@ -5729,8 +5748,13 @@ def test_run_worker_auto_finalize_respects_provider_outcome(
     assert state["status"] == ("done" if ok else "needs_finalize")
     assert state["needs_finalize"] is not ok
     assert state["worktree_dirty_on_exit"] is not ok
-    assert state["last_error"] == (delegate._first_error_line(parsed.stderr_excerpt) if not ok else None)
-    assert state.get("failure_code") == failure_code
+    # #9878: last_error is a public cause: the runtime's registered code, else the outcome with its exit status.
+    line = delegate._first_error_line(parsed.stderr_excerpt) if not ok else None
+    public = failure_code if failure_code in delegate.public_causes() else "worker_failed, exit 0"
+    assert state["last_error"] == (public if line else None)
+    # An unregistered code is replaced at the record writer (the runtime admits only registered ones).
+    registered = failure_code is None or failure_code in delegate.public_causes()
+    assert state.get("failure_code") == (failure_code if registered else "unclassified_error")
     if ok:
         assert state["auto_finalize"]["ok"] is True
         assert state["auto_finalize"]["changed_files"] == ["artifact.txt"]
@@ -6091,7 +6115,7 @@ def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypat
     assert head == base_head
     assert "chore(dispatch): finalize agy task agy-push-fails" not in log_subjects
     assert result.ok is False
-    assert result.error == "simulated push failure"
+    assert result.error == "auto_finalize_failed, RuntimeError"  # #9878: the message stays local
     assert result.commit_sha is None
 
 
@@ -9490,7 +9514,7 @@ def test_zombie_probe_preserves_done_written_after_initial_read(tmp_tasks_dir):
         "finished_at": "2026-09-24T00:00:00+00:00",
         "final_branch_head_commit": "completed-head",
         "auto_finalize": {"status": "pushed"},
-        "rescue_status": "none",
+        "rescue_status": "rescued",
     }
     delegate._write_state_atomic(path, done)
 
@@ -12938,7 +12962,7 @@ def test_rescue_commit_failure_types_the_cause_and_keeps_stderr_local(tmp_path, 
     monkeypatch.setattr(delegate, "_rescue_git", fail_commit)
     result = delegate._rescue_task(state_path, apply=True)
     assert result["action"] == "error"
-    assert result["reason"] == "cannot commit rescue work [rescue_commit_failed, git commit-tree, exit 1]"
+    assert result["reason"] == "rescue_commit_failed, git commit-tree, exit 1"
     assert "fatal" not in json.dumps(result)
     task_id = delegate._read_state(state_path)["task_id"]
     assert "fatal: hook rejected commit" in delegate._diagnostic_path(task_id).read_text(encoding="utf-8")
@@ -14204,7 +14228,8 @@ def test_dispatch_fails_before_spawning_when_the_worktree_lock_is_busy(tmp_tasks
     state = delegate._read_state(delegate._state_path(task_id))
     assert state is not None
     assert state["status"] == "failed"
-    assert "worktree lock" in (state.get("last_error") or state.get("stderr_excerpt") or "")
+    assert state["last_error"] == "worktree_preparation_failed"  # #9878: the detail stays in the excerpt
+    assert "worktree lock" in state["stderr_excerpt"]
     assert _worktree_lock_is_free(worktree)
 
 
@@ -16216,7 +16241,8 @@ def test_review_attempt_reuse_never_rebases_admitted_input(
             assert "automatic rebasing is disabled" in capsys.readouterr().err
             state = delegate._read_state(delegate._state_path("task-1"))
             assert state["status"] == "failed"
-            assert "automatic rebasing is disabled" in state["last_error"]
+            assert "automatic rebasing is disabled" in state["stderr_excerpt"]
+            assert state["last_error"] == "worktree_preparation_failed"
 
 
 @pytest.mark.parametrize("dependency", ["manifest", "input_root", "render_checkout"])
@@ -17704,7 +17730,8 @@ def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
     state = json.loads(state_file.read_text(encoding="utf-8"))
     assert state["status"] == "failed"
     assert state["returncode_reason"] == "worktree preparation failed"
-    assert "already checked out in" in (state["last_error"] or "")
+    assert state["last_error"] == "worktree_preparation_failed"  # #9878: the detail stays in the excerpt
+    assert "already checked out in" in (state["stderr_excerpt"] or "")
     assert "worktree preparation failed:" in (state["stderr_excerpt"] or "")
     assert state["finished_at"] is not None
     assert state["duration_s"] == 0.0
@@ -17761,7 +17788,8 @@ def test_cmd_dispatch_refusal_on_base_resolution_writes_terminal_task_record(
     state = json.loads(state_file.read_text(encoding="utf-8"))
     assert state["status"] == "failed"
     assert state["returncode_reason"] == "worktree preparation failed"
-    assert "could not fetch existing branch 'agy/feature-7236'" in (state["last_error"] or "")
+    assert state["last_error"] == "worktree_preparation_failed, RuntimeError"
+    assert "could not fetch existing branch 'agy/feature-7236'" in (state["stderr_excerpt"] or "")
     assert state["finished_at"] is not None
 
     assert dispatch("task-7236-unserved-base", branch=None, base="non-existent-base-branch") == 2
@@ -17942,7 +17970,8 @@ def test_forward_config_refusal_writes_terminal_task_record(tmp_tasks_dir, monke
     assert state["task_id"] == task_id
     assert state["status"] == "failed"
     assert state["returncode_reason"] == "forward configuration failed"
-    assert "LU_JOB_DISPATCH_HOST or ATLAS_RUNNER_HOST is required" in state["last_error"]
+    assert state["last_error"] == "forward_configuration_failed, ForwardConfigError"  # #9878
+    assert "LU_JOB_DISPATCH_HOST or ATLAS_RUNNER_HOST is required" in state["stderr_excerpt"]
     assert "forward configuration failed" in state["stderr_excerpt"]
     assert state["started_at"] is not None
     assert state["finished_at"] is not None
@@ -18495,7 +18524,7 @@ def test_run_worker_auto_finalize_commits_owned_paths_and_leaves_the_rest_needs_
     assert state["auto_finalize"]["owned_paths"] == ["scripts/fleet/"]
     assert state["auto_finalize"]["owned_paths_declared"] is True
     assert state["finalize_skipped_paths"] == ["README.md", "scripts/audit/generate_practice_deck_before.py"]
-    assert "outside the owned paths" in state["finalize_error"]
+    assert state["finalize_error"] == "finalize_skipped_paths, count 2"  # #9878: the paths are in their own field
     assert _git_out(worktree, "show", "--name-only", "--format=", "HEAD").split() == ["scripts/fleet/fix.py"]
     status = _git_out(worktree, "status", "--porcelain")
     assert "M  README.md" in status
@@ -18628,8 +18657,10 @@ def test_run_worker_refuses_a_kimi_diff_that_adds_cyrillic_and_commits_nothing(t
     assert worker_saw["boundary"] is True  # the boundary was in place while the worker ran
     assert rc == 1
     assert state["status"] == "failed"
-    assert "KIMI CODING-ONLY" in state["kimi_content_refusal"]
-    assert "site/src/components/Label.tsx" in state["kimi_content_refusal"]
+    # #9878: the record names the typed cause; the refusal text, with its path, stays in the local .diag.
+    assert state["kimi_content_refusal"] == state["last_error"] == "kimi_content_refused"
+    kept = delegate._diagnostic_path("kimi-cyrillic").read_text(encoding="utf-8")
+    assert "KIMI CODING-ONLY" in kept and "site/src/components/Label.tsx" in kept
     assert state["auto_finalize"] is None
     assert _remote_branches(worktree) == ["refs/heads/main"]
     assert _git_out(worktree, "rev-list", "--count", "main..HEAD").strip() == "0"
@@ -18659,7 +18690,8 @@ def test_a_kimi_worker_cannot_commit_or_push_cyrillic_itself(tmp_tasks_dir, tmp_
     assert commit.returncode != 0 and "commit refused by the Kimi worktree boundary" in commit.stderr
     assert push.returncode != 0 and "kimi-push-disabled" in push.stderr
     assert rc == 1
-    assert "KIMI CODING-ONLY" in state["kimi_content_refusal"]
+    assert state["kimi_content_refusal"] == "kimi_content_refused"
+    assert "KIMI CODING-ONLY" in delegate._diagnostic_path("kimi-worker-git").read_text(encoding="utf-8")
     assert _git_out(worktree, "rev-list", "--count", "main..HEAD").strip() == "0"
     assert _remote_branches(worktree) == ["refs/heads/main"]
 
@@ -19138,7 +19170,8 @@ def test_creation_inventory_failure_retains_new_tree_without_spawning(tmp_tasks_
     state = delegate._read_state(delegate._state_path(task_id))
     assert tree.exists() and (tree / ".git").is_file()
     assert state["status"] == "failed" and not state.get("pid")
-    assert "creation inventory unavailable (CalledProcessError); worker not started" in state["last_error"]
+    assert state["last_error"] == "worktree_preparation_failed, ValueError"  # #9878: the detail stays local
+    assert "creation inventory unavailable (CalledProcessError); worker not started" in state["stderr_excerpt"]
 
 
 @pytest.mark.parametrize(
