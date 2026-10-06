@@ -204,6 +204,7 @@ from scripts.config import (
     DELEGATE_WORKTREE_ADD_TIMEOUT_S,
 )
 from scripts.fleet import credit_lane
+from scripts.fleet.regenerable_output import is_disposable_auto_finalize_path as _is_disposable_auto_finalize_path
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
@@ -5561,22 +5562,6 @@ def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
         return ()
     changed = {path for path in (*tracked.stdout.split("\0"), *untracked.stdout.split("\0")) if path}
     return tuple(sorted(changed))
-
-
-def _is_disposable_auto_finalize_path(path: str) -> bool:
-    """Return whether a changed path is scratch residue, not deliverable content.
-
-    This is intentionally a narrow allowlist of known generated dependency and
-    cache paths. A single other path means the auto-finalizer retains its
-    existing preserve-and-publish behavior rather than guessing whether that
-    content is important.
-    """
-    parts = tuple(part for part in path.replace("\\", "/").split("/") if part and part != ".")
-    if not parts:
-        return True
-    if any(part in {".venv", "node_modules", "__pycache__", ".pytest_cache"} for part in parts):
-        return True
-    return parts[-1].endswith(".pyc")
 
 
 def _auto_finalize_is_junk_only(changed_files: tuple[str, ...]) -> bool:
