@@ -7,6 +7,8 @@ import errno
 import inspect
 import json
 import os
+import re
+import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -231,13 +233,13 @@ def test_sequence_zero_differing_tie_still_refuses(tied_bundle, capsys):
 _BUNDLE_CALLS = {
     "_bundle_archive_local_lineage": {
         "BundleReconcileRefused", "_bundle_json", "archived_state.get", "isinstance", "json.loads",
-        "remote_manifest.get", "replacement.get", "tree.exists", "tree.move",
+        "remote_manifest.get", "replacement.get", "tree.exists", "tree.ledger.drop_prefix", "tree.move",
         "tree.read_path", "tree.write_path", "utc_now", "utc_now().strftime",
     },
     "_bundle_stage_install": {
-        "ValueError", "_BundleReconcileTree", "_bundle_member_path", "_bundle_rewrite",
-        "_bundle_text_member", "any", "files.items", "members.items", "name.removeprefix",
-        "name.startswith", "normalize_agent_name", "normalize_lineage_id", "str",
+        "ValueError", "_BundleImportLedger", "_BundleReconcileTree", "_bundle_member_path", "_bundle_rewrite",
+        "_bundle_text_member", "_bundle_typed_failure", "any", "files.items", "isinstance", "members.items",
+        "name.removeprefix", "name.startswith", "normalize_agent_name", "normalize_lineage_id", "str",
         "tree.new_directory", "tree.remove_path", "tree.write_path", "uuid.uuid4",
     },
     "_bundle_preserved_path": {
@@ -247,10 +249,12 @@ _BUNDLE_CALLS = {
         "'; '.join",
         "(repo_root / superseded).as_posix", "Path", "_BundleReconcileTree", "BundleReconcileRefused",
         "_bundle_archive_local_lineage", "_bundle_handoff_candidates_for_agent", "_bundle_json",
-        "_bundle_preserved_path", "_bundle_preserved_path(Path(name), repo).as_posix",
+        "_BundleImportLedger", "_bundle_leftover_detail", "_bundle_present_leftovers", "_bundle_preserved_path",
+        "_bundle_preserved_path(Path(name), repo).as_posix", "_bundle_typed_failure",
         "archived.relative_to", "archived.relative_to(state_root).as_posix", "created_preserved.append",
         "int", "isinstance", "manifest.get", "normalize_agent_name", "normalize_lineage_id", "preserved.append",
-        "repo.read_path", "repo.remove_path", "repo.write_path", "repo_backups.items", "rollback_errors.append", "set", "sorted",
+        "repo.ledger.drop", "repo.read_path", "repo.remove_path", "repo.write_path", "repo_backups.items",
+        "rollback_errors.append", "set", "sorted", "tree.ledger.drop", "tree.ledger.drop_prefix",
         "source.relative_to", "source.relative_to(state_root).as_posix", "stage_root.relative_to",
         "stage_root.relative_to(state_root).as_posix", "staged_lineage.relative_to",
         "staged_lineage.relative_to(state_root).as_posix", "staged_repo.items", "str", "tree.copy_tree",
@@ -260,12 +264,14 @@ _BUNDLE_CALLS = {
         "(Path(*tree.parts) / '_bundle-reconcile' / upload / 'remote.bundle.tgz').as_posix",
         "BundleReconcileRefused", "Path", "ValueError", "_BundleReconcileTree", "_bundle_json",
         "_bundle_member_path", "dict", "files.items", "int", "len", "members.items",
-        "normalize_agent_name", "normalize_lineage_id", "path.split", "re.fullmatch",
+        "_BundleImportLedger", "_bundle_typed_failure", "isinstance", "normalize_agent_name",
+        "normalize_lineage_id", "path.split", "re.fullmatch",
         "sorted", "str", "tree.directory", "tree.release", "tree.write",
     },
     "_bundle_import_candidate": {
         "_BundleReconcileTree", "_bundle_commit_install", "_bundle_handoff_candidates_for_agent",
-        "_bundle_local_lineage_snapshot", "_bundle_order", "_bundle_preserve_tie", "_bundle_stage_install",
+        "_BundleImportLedger", "_bundle_capture_baseline", "_bundle_local_lineage_snapshot", "_bundle_order",
+        "_bundle_preserve_tie", "_bundle_stage_install", "_bundle_typed_failure",
         "_bundle_validate_lease_member", "archived.relative_to", "isoformat_z", "local_manifest.get",
         "local_members.items", "manifest.get", "members.items", "normalize_agent_name",
         "normalize_lineage_id", "set", "str",
@@ -382,16 +388,35 @@ _BUNDLE_HELPER_CALLS = {
     '_bundle_handoff_candidates': {
         'epic_handoff_map', 'epic_handoff_map(repo_root).get', 'tuple',
     },
+    '_BundleImportLedger': {
+        'list', 'relative.startswith', 'self.entries.get', 'self.entries.items', 'self.entries.pop',
+        'self.entries.setdefault', 'sorted', 'tuple',
+    },
+    '_bundle_leftover_detail': {
+        "', '.join", "'; '.join", 'any', 'parts.append', 'path.startswith',
+    },
+    '_bundle_present_leftovers': {
+        'ledger.baseline.get', 'ledger.dirty_paths', 'present.append', 'tree.signature',
+    },
+    '_bundle_typed_failure': {
+        'BundleReconcileRefused', '_bundle_leftover_detail', '_bundle_present_leftovers',
+    },
+    '_bundle_capture_baseline': {
+        '_BundleReconcileTree', '_bundle_handoff_candidates_for_agent', 'repo.signature', 'state.snapshot_prefix',
+    },
 }
 
 _PRIMITIVE_CALLS = {
-    "BundleReconcileRefused", "_bundle_member_path", "_bundle_member_path(path).split",
-    "handle.fileno", "handle.flush", "handle.read", "handle.write", "len", "os.close",
-    "os.fdopen", "os.fstat", "os.fsync", "os.link", "os.listdir", "os.mkdir", "os.open",
-    "os.replace", "os.rmdir", "os.stat", "os.unlink", "reversed", "self.__exit__",
-    "self.copy_contents", "self.directory", "self.existing", "self.exists", "self.fds.append",
-    "self.fds.clear", "self.parent", "self.release", "self.remove", "self.write", "stat.S_ISDIR",
-    "stat.S_ISFIFO", "stat.S_ISLNK", "stat.S_ISREG", "suppress", "uuid.uuid4",
+    "BundleReconcileRefused", "_BundleImportLedger", "_bundle_member_path", "_bundle_member_path(path).split",
+    "any", "found.append", "found.extend", "handle.fileno", "handle.flush", "handle.read", "handle.write", "len",
+    "os.close", "os.fdopen", "os.fstat", "os.fsync", "os.link", "os.listdir", "os.mkdir", "os.open",
+    "os.replace", "os.rmdir", "os.stat", "os.unlink", "relative.split", "reversed", "self.__exit__",
+    "self._child_relative", "self._descendant_rels", "self._leaf_exists", "self._snapshot_children",
+    "self._walk_parent", "self.copy_contents", "self.directory", "self.existing", "self.exists",
+    "self.fd_paths.pop", "self.fds.append", "self.fds.clear", "self.ledger.drop", "self.ledger.intend_existing",
+    "self.ledger.intend_new", "self.ledger.mark_published", "self.lstat_nofollow", "self.parent", "self.release",
+    "self.remove", "self.signature", "self.write", "stat.S_ISDIR", "stat.S_ISFIFO", "stat.S_ISLNK", "stat.S_ISREG",
+    "suppress", "uuid.uuid4",
 }
 
 
@@ -952,6 +977,173 @@ def test_archive_restore_failure_names_leftover_copy(newer_bundle, monkeypatch, 
     assert all(name.startswith(leftover + '/') for name in extra)
 
 
+def _disk_snapshot(root: Path) -> dict[str, tuple]:
+    """No-follow signatures: file bytes, directory identity, or other inode."""
+    snap: dict[str, tuple] = {}
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+        current = Path(dirpath)
+        relative_dir = current.relative_to(root).as_posix()
+        if relative_dir != ".":
+            info = os.lstat(current)
+            snap[relative_dir] = ("dir", info.st_dev, info.st_ino)
+        for name in dirnames:
+            path = current / name
+            info = os.lstat(path)
+            if stat.S_ISLNK(info.st_mode):
+                rel = path.relative_to(root).as_posix()
+                snap[rel] = ("other", info.st_mode, info.st_dev, info.st_ino)
+        dirnames[:] = [name for name in dirnames if not (current / name).is_symlink()]
+        for name in filenames:
+            path = current / name
+            rel = path.relative_to(root).as_posix()
+            info = os.lstat(path)
+            if stat.S_ISREG(info.st_mode) and not stat.S_ISLNK(info.st_mode):
+                snap[rel] = ("file", path.read_bytes())
+            else:
+                snap[rel] = ("other", info.st_mode, info.st_dev, info.st_ino)
+    return snap
+
+
+def _disk_leftovers(before: dict[str, tuple], after: dict[str, tuple]) -> list[str]:
+    """Paths still on disk whose no-follow signature is new or changed.
+
+    A directory that already existed and is still a directory is not a leftover:
+    restoring it by copy changes its inode without leaving a new path.
+    """
+    leftover: list[str] = []
+    for path, signature in after.items():
+        previous = before.get(path)
+        if previous == signature:
+            continue
+        if previous is not None and previous[0] == "dir" and signature[0] == "dir":
+            continue
+        leftover.append(path)
+    return sorted(leftover)
+
+
+def _parse_leftovers(text: str) -> list[str]:
+    matches = re.findall(r"leftovers: \[([^\]]*)\]", text)
+    assert matches, text
+    body = matches[-1].strip()
+    if not body:
+        return []
+    return [part.strip() for part in body.split(", ")]
+
+
+# One code site for each create, link, publish, move, and remove the import performs.
+# The superseded-unlink probe is the reviewer's native write, not an eleventh site.
+_IMPORT_MUTATION_SITES = (
+    "directory-mkdir",
+    "write-create",
+    "write-link",
+    "write-replace",
+    "write-unlink",
+    "new-directory-mkdir",
+    "move-replace",
+    "copy-mkdir",
+    "remove-unlink",
+    "remove-rmdir",
+    "write-unlink-superseded",
+)
+
+
+def _fail_import_site(monkeypatch, site: str, *, cleanup_fails: bool) -> dict[str, bool]:
+    """Fail the first trusted-descriptor call at one import mutation site."""
+    hit = {"site": False, "cleanup": False}
+    native_mkdir = os.mkdir
+    native_open = os.open
+    native_link = os.link
+    native_replace = os.replace
+    native_unlink = os.unlink
+    native_rmdir = os.rmdir
+    native_remove = th._BundleReconcileTree.remove_path
+
+    def caller() -> str:
+        return sys._getframe(2).f_code.co_name
+
+    def mkdir(path, mode=0o777, *, dir_fd=None):
+        identified = {
+            "directory": "directory-mkdir",
+            "new_directory": "new-directory-mkdir",
+            "copy_tree": "copy-mkdir",
+        }.get(caller())
+        if dir_fd is not None and identified == site and not hit["site"]:
+            hit["site"] = True
+            raise OSError(f"injected {site} failure")
+        if dir_fd is None:
+            return native_mkdir(path, mode)
+        return native_mkdir(path, mode, dir_fd=dir_fd)
+
+    def open_(path, flags, *args, **kwargs):
+        creating = bool(flags & os.O_CREAT) and caller() == "write"
+        if site == "write-create" and creating and kwargs.get("dir_fd") is not None and not hit["site"]:
+            hit["site"] = True
+            raise OSError("injected write-create failure")
+        return native_open(path, flags, *args, **kwargs)
+
+    def link(src, dst, *, src_dir_fd=None, dst_dir_fd=None, follow_symlinks=True):
+        if site == "write-link" and caller() == "write" and src_dir_fd is not None and not hit["site"]:
+            hit["site"] = True
+            raise OSError("injected write-link failure")
+        return native_link(
+            src, dst, src_dir_fd=src_dir_fd, dst_dir_fd=dst_dir_fd, follow_symlinks=follow_symlinks
+        )
+
+    def replace(src, dst, *, src_dir_fd=None, dst_dir_fd=None):
+        identified = {"write": "write-replace", "move": "move-replace"}.get(caller())
+        if identified == site and src_dir_fd is not None and not hit["site"]:
+            hit["site"] = True
+            raise OSError(f"injected {site} failure")
+        if src_dir_fd is None:
+            return native_replace(src, dst)
+        return native_replace(src, dst, src_dir_fd=src_dir_fd, dst_dir_fd=dst_dir_fd)
+
+    def unlink(path, *, dir_fd=None):
+        name = caller()
+        if site == "write-unlink" and name == "write" and dir_fd is not None and not hit["site"]:
+            hit["site"] = True
+            raise OSError("injected write-unlink failure")
+        if site == "remove-unlink" and name == "remove" and dir_fd is not None and not hit["site"]:
+            hit["site"] = True
+            raise OSError("injected remove-unlink failure")
+        if (
+            site == "write-unlink-superseded"
+            and name == "write"
+            and dir_fd is not None
+            and not hit["site"]
+            and any(".superseded" in entry for entry in os.listdir(dir_fd))
+        ):
+            hit["site"] = True
+            raise OSError("injected superseded temp unlink failure")
+        if dir_fd is None:
+            return native_unlink(path)
+        return native_unlink(path, dir_fd=dir_fd)
+
+    def rmdir(path, *, dir_fd=None):
+        if site == "remove-rmdir" and caller() == "remove" and dir_fd is not None and not hit["site"]:
+            hit["site"] = True
+            raise OSError("injected remove-rmdir failure")
+        if dir_fd is None:
+            return native_rmdir(path)
+        return native_rmdir(path, dir_fd=dir_fd)
+
+    def remove_path(tree, path):
+        separate_cleanup = cleanup_fails and site not in {"remove-unlink", "remove-rmdir"}
+        if separate_cleanup and ".import-" in path and not hit["cleanup"]:
+            hit["cleanup"] = True
+            raise OSError("injected stage cleanup failure")
+        return native_remove(tree, path)
+
+    monkeypatch.setattr(os, "mkdir", mkdir)
+    monkeypatch.setattr(os, "open", open_)
+    monkeypatch.setattr(os, "link", link)
+    monkeypatch.setattr(os, "replace", replace)
+    monkeypatch.setattr(os, "unlink", unlink)
+    monkeypatch.setattr(os, "rmdir", rmdir)
+    monkeypatch.setattr(th._BundleReconcileTree, "remove_path", remove_path)
+    return hit
+
+
 def test_cleanup_failure_on_archive_restore_names_archive_and_stage(newer_bundle, monkeypatch, capsys):
     """Lease rewrite, move-back, and stage cleanup all fail.
 
@@ -962,7 +1154,7 @@ def test_cleanup_failure_on_archive_restore_names_archive_and_stage(newer_bundle
     original_lineage = _snapshot(b.lineage)
     original_handoff = (b.root / HANDOFF_PATH).read_bytes()
     original_receipt = b.receipt.read_bytes()
-    before = _snapshot(b.root)
+    before = _disk_snapshot(b.root)
     native_write = th._BundleReconcileTree.write_path
     native_move = th._BundleReconcileTree.move
     native_remove = th._BundleReconcileTree.remove_path
@@ -1003,9 +1195,10 @@ def test_cleanup_failure_on_archive_restore_names_archive_and_stage(newer_bundle
     )
     assert output['status'] == 'refused'
     assert output['code'] == 'reconcile_archive_restore_failed'
-    assert output['error'] == (
-        f'{diagnostic}; stage cleanup failed: injected stage cleanup failure; retained stage: {relative_stage}'
-    )
+    assert diagnostic in output['error']
+    assert 'stage cleanup failed: injected stage cleanup failure' in output['error']
+    assert f'retained stage: {relative_stage}' in output['error']
+    assert _parse_leftovers(output['error']) == _disk_leftovers(before, _disk_snapshot(b.root))
     assert not Path(leftover).is_absolute()
     assert not Path(relative_stage).is_absolute()
     assert str(b.root) not in output['error']
@@ -1053,6 +1246,27 @@ def test_session_start_warns_for_each_installed_bundle_cleanup(monkeypatch):
     assert 'reconcile_stage_cleanup_failed' in surfaced['warning']
     assert 'skipped' not in surfaced['warning']
     assert 'refused' not in surfaced['warning']
+
+
+def test_session_start_names_cleanup_leftovers():
+    """An installed stage warning names the leftover paths SessionStart should show."""
+    stage = ".agent/thread-rollovers/claude-infra/.lineage-probe.import-abc"
+    leftover = f"{stage}/lineage/lease.json"
+    lines = gate._installed_stage_cleanup_warnings(
+        {
+            "status": "installed",
+            "cleanup_warning": {
+                "code": "reconcile_stage_cleanup_failed",
+                "stage": stage,
+                "leftovers": [leftover, "", 3],
+                "error": "stage cleanup failed",
+            },
+        }
+    )
+    assert lines == [
+        "WARNING: rollover bundle installed; reconcile_stage_cleanup_failed; "
+        f"retained stage: {stage}; leftovers: {leftover}"
+    ]
 
 
 def test_typed_checks_hold_under_optimize():
@@ -1103,6 +1317,61 @@ print("typed-checks-ok")
     )
     assert completed.returncode == 0, completed.stderr
     assert completed.stdout.strip() == "typed-checks-ok"
+
+
+def test_import_mutation_sites_are_enumerated():
+    """Ten create/link/publish/move/remove sites, plus the reviewer's native-write probe."""
+    sites = [site for site in _IMPORT_MUTATION_SITES if site != "write-unlink-superseded"]
+    assert len(sites) == 10
+    assert sites == [
+        "directory-mkdir",
+        "write-create",
+        "write-link",
+        "write-replace",
+        "write-unlink",
+        "new-directory-mkdir",
+        "move-replace",
+        "copy-mkdir",
+        "remove-unlink",
+        "remove-rmdir",
+    ]
+
+
+@pytest.mark.parametrize("site", _IMPORT_MUTATION_SITES)
+@pytest.mark.parametrize("cleanup_fails", [False, True])
+def test_import_mutation_failure_names_exact_leftovers(newer_bundle, monkeypatch, capsys, site, cleanup_fails):
+    """Each mutation failure, also with stage-cleanup failure, names exactly the paths still changed."""
+    bundle = newer_bundle
+    before = _disk_snapshot(bundle.root)
+    original_handoff = (bundle.root / HANDOFF_PATH).read_bytes()
+    hit = _fail_import_site(monkeypatch, site, cleanup_fails=cleanup_fails)
+    rc = th.cmd_import_bundle(_import_args(bundle.root, bundle.bundle))
+    output = json.loads(capsys.readouterr().out)
+    if output.get("status") == "installed":
+        text = output["cleanup_warning"]["error"]
+        assert output["cleanup_warning"]["code"] == "reconcile_stage_cleanup_failed"
+        assert rc == 0
+    else:
+        text = output["error"]
+        assert output["status"] == "refused"
+        assert rc == 2
+    marker = (
+        "injected superseded temp unlink failure"
+        if site == "write-unlink-superseded"
+        else f"injected {site} failure"
+    )
+    assert marker in text
+    if cleanup_fails and site not in {"remove-unlink", "remove-rmdir"}:
+        assert "injected stage cleanup failure" in text
+        assert text.index(marker) < text.index("injected stage cleanup failure")
+    assert hit["site"] is True
+    assert str(bundle.root) not in text
+    assert _parse_leftovers(text) == _disk_leftovers(before, _disk_snapshot(bundle.root))
+    if site == "write-unlink-superseded":
+        named = _parse_leftovers(text)
+        assert any(path.endswith(".tmp") and ".reconcile-" in path for path in named)
+        assert any(".superseded" in path for path in named)
+        assert (bundle.root / HANDOFF_PATH).read_bytes() == original_handoff
 
 
 @pytest.mark.parametrize('mutation', [

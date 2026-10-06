@@ -882,6 +882,11 @@ def _bundle_archive_local_lineage(
                 tree.move(archive, lineage)
             except Exception as exc:
                 restore_error = exc
+            else:
+                # The move put the original lineage back. That rollback is
+                # confirmed, so those paths are not leftovers.
+                tree.ledger.drop_prefix(lineage)
+                tree.ledger.drop_prefix(archive)
         if restore_error is not None:
             raise BundleReconcileRefused(
                 "reconcile_archive_restore_failed",
@@ -936,14 +941,129 @@ def _bundle_validate_lease_member(
         raise ValueError("bundle lease status does not match its manifest")
 
 
+class _BundleImportLedger:
+    """Intent-first record of paths one bundle import may leave behind.
+
+    A path is recorded before the create, link, publish, or move that produces
+    it. It leaves the ledger only after cleanup or rollback is confirmed.
+    ``dirty`` paths are the ones a failure report still has to consider.
+    """
+
+    def __init__(self) -> None:
+        self.entries: dict[str, dict[str, bool]] = {}
+        # Import-start signatures. A later report names a path only when its
+        # no-follow signature differs from this baseline, or the path is new.
+        self.baseline: dict[str, tuple[Any, ...]] = {}
+
+    def intend_new(self, relative: str) -> None:
+        entry = self.entries.get(relative)
+        if entry is None:
+            self.entries[relative] = {"dirty": True}
+        else:
+            entry["dirty"] = True
+
+    def intend_existing(self, relative: str) -> None:
+        self.entries.setdefault(relative, {"dirty": False})
+
+    def mark_published(self, relative: str) -> None:
+        entry = self.entries.get(relative)
+        if entry is None:
+            self.entries[relative] = {"dirty": True}
+        else:
+            entry["dirty"] = True
+
+    def drop(self, relative: str) -> None:
+        self.entries.pop(relative, None)
+
+    def drop_prefix(self, prefix: str) -> None:
+        for relative in list(self.entries):
+            if relative == prefix or relative.startswith(prefix + "/"):
+                self.entries.pop(relative, None)
+
+    def dirty_paths(self) -> tuple[str, ...]:
+        return tuple(sorted(relative for relative, entry in self.entries.items() if entry["dirty"]))
+
+
+def _bundle_present_leftovers(ledger: _BundleImportLedger, trees: list[_BundleReconcileTree]) -> list[str]:
+    """Dirty ledger entries whose no-follow signature is new or changed."""
+    present: list[str] = []
+    for relative in ledger.dirty_paths():
+        current: tuple[Any, ...] | None = None
+        for tree in trees:
+            try:
+                current = tree.signature(relative)
+            except (OSError, BundleReconcileRefused):
+                continue
+            if current is not None:
+                break
+        previous = ledger.baseline.get(relative)
+        if current is None or previous == current:
+            continue
+        # Restoring a directory by copying it changes the inode only. The path
+        # is still that directory, so it is not something the import left behind.
+        if previous is not None and previous[0] == "dir" and current[0] == "dir":
+            continue
+        present.append(relative)
+    return present
+
+
+def _bundle_leftover_detail(diagnostic: str, *, present: list[str], stage: str | None) -> str:
+    parts = [diagnostic]
+    if stage is not None:
+        retained = stage in present or any(path.startswith(stage + "/") for path in present)
+        parts.append(f"{'retained stage' if retained else 'stage'}: {stage}")
+    parts.append("leftovers: [" + ", ".join(present) + "]")
+    return "; ".join(parts)
+
+
+def _bundle_capture_baseline(
+    ledger: _BundleImportLedger,
+    repo_root: Path,
+    state_root: Path,
+    *,
+    agent: str,
+    lineage_id: str,
+    stream_id: str,
+) -> None:
+    """Record import-start signatures for the agent state tree and handoff leaves."""
+    with (
+        _BundleReconcileTree(state_root, agent, lineage_id, ledger=ledger) as state,
+        _BundleReconcileTree(repo_root, agent, lineage_id, ledger=ledger) as repo,
+    ):
+        state.snapshot_prefix(f".agent/thread-rollovers/{agent}", ledger.baseline)
+        for candidate in _bundle_handoff_candidates_for_agent(repo_root, stream_id, agent):
+            signature = repo.signature(candidate)
+            if signature is not None:
+                ledger.baseline[candidate] = signature
+
+
+def _bundle_typed_failure(
+    code: str,
+    diagnostic: str,
+    *,
+    ledger: _BundleImportLedger,
+    trees: list[_BundleReconcileTree],
+    stage: str | None,
+    cleanup: BaseException | None = None,
+) -> BundleReconcileRefused:
+    """One refusal: the original diagnostic, then any cleanup failure, then leftovers."""
+    if cleanup is not None:
+        diagnostic = f"{diagnostic}; stage cleanup failed: {cleanup}"
+    present = _bundle_present_leftovers(ledger, trees)
+    return BundleReconcileRefused(code, _bundle_leftover_detail(diagnostic, present=present, stage=stage))
+
+
 def _bundle_stage_install(
     repo_root: Path,
     state_root: Path,
     *,
     manifest: Mapping[str, Any],
     members: Mapping[str, bytes],
+    ledger: _BundleImportLedger | None = None,
 ) -> tuple[Path, Path, dict[str, Path]]:
     """Stage every member through the same no-follow primitive as reconciliation."""
+    if ledger is None:
+        ledger = _BundleImportLedger()
     agent = normalize_agent_name(str(manifest["agent"]))
     lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
     lineage_prefix = f".agent/thread-rollovers/{agent}/{lineage_id}/"
@@ -956,9 +1076,9 @@ def _bundle_stage_install(
     stage_root = state_root / stage
     staged_lineage = stage_root / "lineage"
     staged_repo: dict[str, Path] = {}
-    with _BundleReconcileTree(state_root, agent, lineage_id) as tree:
-        tree.new_directory(stage)
+    with _BundleReconcileTree(state_root, agent, lineage_id, ledger=ledger) as tree:
         try:
+            tree.new_directory(stage)
             for name, payload in files.items():
                 if name.startswith(lineage_prefix):
                     destination = f"{stage}/lineage/{name.removeprefix(lineage_prefix)}"
@@ -968,9 +1088,18 @@ def _bundle_stage_install(
                 tree.write_path(
                     destination, _bundle_rewrite(payload, repo_root=repo_root) if _bundle_text_member(name) else payload
                 )
-        except Exception:
-            tree.remove_path(stage)
-            raise
+        except Exception as exc:
+            if isinstance(exc, BundleReconcileRefused) and "leftovers:" in str(exc):
+                raise
+            cleanup_error: BaseException | None = None
+            try:
+                tree.remove_path(stage)
+            except Exception as cleanup_exc:
+                cleanup_error = cleanup_exc
+            code = exc.code if isinstance(exc, BundleReconcileRefused) else "reconcile_install_failed"
+            raise _bundle_typed_failure(
+                code, str(exc), ledger=ledger, trees=[tree], stage=stage, cleanup=cleanup_error
+            ) from exc
     return stage_root, staged_lineage, staged_repo
 
 
@@ -994,8 +1123,11 @@ def _bundle_commit_install(
     staged_repo: Mapping[str, Path],
     local_lineage_exists: bool,
     install_handoff: bool = True,
-) -> tuple[Path | None, list[str], dict[str, str] | None]:
+    ledger: _BundleImportLedger | None = None,
+) -> tuple[Path | None, list[str], dict[str, Any] | None]:
     """Commit and roll back using only descriptor-relative file operations."""
+    if ledger is None:
+        ledger = _BundleImportLedger()
     agent = normalize_agent_name(str(manifest["agent"]))
     lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
     lineage = f".agent/thread-rollovers/{agent}/{lineage_id}"
@@ -1008,11 +1140,9 @@ def _bundle_commit_install(
     archived: Path | None = None
     lineage_replaced = False
     backup_complete = False
-    cleanup_stage = False
-    pending_install_error: BaseException | None = None
     with (
-        _BundleReconcileTree(state_root, agent, lineage_id) as tree,
-        _BundleReconcileTree(repo_root, agent, lineage_id) as repo,
+        _BundleReconcileTree(state_root, agent, lineage_id, ledger=ledger) as tree,
+        _BundleReconcileTree(repo_root, agent, lineage_id, ledger=ledger) as repo,
     ):
         old_receipt: bytes | None = None
         receipt_loaded = False
@@ -1049,32 +1179,44 @@ def _bundle_commit_install(
             lineage_replaced = True
             # The install has committed. A later stage-removal failure must
             # stay a warning on that success and must not report it as refused.
-            stage_cleanup_warning: dict[str, str] | None = None
+            stage_cleanup_warning: dict[str, Any] | None = None
             try:
                 tree.remove_path(stage)
             except Exception as exc:
+                present = _bundle_present_leftovers(ledger, [tree, repo])
                 stage_cleanup_warning = {
                     "code": "reconcile_stage_cleanup_failed",
-                    "error": f"stage cleanup failed: {exc}; retained stage: {stage}",
+                    "error": _bundle_leftover_detail(f"stage cleanup failed: {exc}", present=present, stage=stage),
                     "stage": stage,
+                    "leftovers": present,
                 }
             return archived, preserved, stage_cleanup_warning
         except Exception as install_error:
+            # Rollback order is fixed. Ledger drops follow a confirmed step and
+            # do not add, skip, or reorder a step. A failed rollback keeps the
+            # stage; cleanup runs only when every rollback step succeeded.
             rollback_errors: list[str] = []
             if lineage_replaced:
                 try:
                     tree.remove_path(lineage)
                 except Exception as exc:
                     rollback_errors.append(f"remove installed lineage: {exc}")
+                else:
+                    tree.ledger.drop_prefix(lineage)
             if archived is not None:
+                archive_rel = archived.relative_to(state_root).as_posix()
                 try:
-                    tree.remove_path(archived.relative_to(state_root).as_posix())
+                    tree.remove_path(archive_rel)
                 except Exception as exc:
                     rollback_errors.append(f"remove archive: {exc}")
+                else:
+                    tree.ledger.drop_prefix(archive_rel)
             if backup_complete:
                 try:
                     if not tree.exists(lineage):
                         tree.move(original_backup, lineage)
+                        tree.ledger.drop_prefix(lineage)
+                        tree.ledger.drop_prefix(original_backup)
                 except Exception as exc:
                     rollback_errors.append(f"restore original lineage: {exc}")
             for name, old_payload in repo_backups.items():
@@ -1083,6 +1225,7 @@ def _bundle_commit_install(
                         repo.remove_path(name)
                     else:
                         repo.write_path(name, old_payload, replace=True)
+                        repo.ledger.drop(name)
                 except Exception as exc:
                     rollback_errors.append(f"restore repo member {name}: {exc}")
             for name in created_preserved:
@@ -1096,36 +1239,35 @@ def _bundle_commit_install(
                         tree.remove_path(receipt)
                     else:
                         tree.write_path(receipt, old_receipt, replace=True)
+                        tree.ledger.drop(receipt)
                 except Exception as exc:
                     rollback_errors.append(f"restore receipt: {exc}")
             if rollback_errors:
-                raise BundleReconcileRefused(
+                pending_install_error: BaseException = BundleReconcileRefused(
                     "reconcile_rollback_failed",
-                    f"install failed: {install_error}; rollback failed: {'; '.join(rollback_errors)}; "
-                    f"retained stage: {stage}",
-                ) from install_error
-            cleanup_stage = True
-            pending_install_error = install_error
-            raise
-        finally:
-            # A failed rollback must retain its original backup for recovery.
-            # Cleanup runs while that install error is still propagating. A
-            # cleanup failure must not replace an archive-restore refusal:
-            # its diagnostic is what names the leftover archive copy.
-            if cleanup_stage:
+                    f"install failed: {install_error}; rollback failed: {'; '.join(rollback_errors)}",
+                )
+                cleanup_error = None
+            else:
+                pending_install_error = install_error
+                cleanup_error = None
                 try:
                     tree.remove_path(stage)
                 except Exception as exc:
-                    cleanup_detail = f"stage cleanup failed: {exc}; retained stage: {stage}"
-                    if (
-                        isinstance(pending_install_error, BundleReconcileRefused)
-                        and pending_install_error.code == "reconcile_archive_restore_failed"
-                    ):
-                        raise BundleReconcileRefused(
-                            pending_install_error.code,
-                            f"{pending_install_error}; {cleanup_detail}",
-                        ) from pending_install_error
-                    raise BundleReconcileRefused("reconcile_stage_cleanup_failed", cleanup_detail) from exc
+                    cleanup_error = exc
+            code = (
+                pending_install_error.code
+                if isinstance(pending_install_error, BundleReconcileRefused)
+                else "reconcile_install_failed"
+            )
+            raise _bundle_typed_failure(
+                code,
+                str(pending_install_error),
+                ledger=ledger,
+                trees=[tree, repo],
+                stage=stage,
+                cleanup=cleanup_error,
+            ) from pending_install_error
 
 
 class RolloverBundleAPIUnavailable(RuntimeError):
@@ -5655,17 +5797,26 @@ class _BundleReconcileTree:
     validated regular leaf. Neither operation follows a destination link.
     """
 
-    def __init__(self, state_root: Path, agent: str, lineage_id: str) -> None:
+    def __init__(
+        self,
+        state_root: Path,
+        agent: str,
+        lineage_id: str,
+        ledger: _BundleImportLedger | None = None,
+    ) -> None:
         self.state_root = state_root
         self.parts = (".agent", "thread-rollovers", agent, lineage_id)
         self.fds: list[int] = []
+        self.fd_paths: dict[int, str] = {}
         self.root_fd: int | None = None
         self.lineage_fd: int | None = None
+        self.ledger = ledger if ledger is not None else _BundleImportLedger()
 
     def __enter__(self) -> _BundleReconcileTree:
         try:
             root = os.open(self.state_root, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY)
             self.fds.append(root)
+            self.fd_paths[root] = ""
             self.root_fd = root
             for component in self.parts:
                 try:
@@ -5680,8 +5831,15 @@ class _BundleReconcileTree:
 
     def __exit__(self, *_args: Any) -> None:
         for fd in reversed(self.fds):
+            self.fd_paths.pop(fd, None)
             os.close(fd)
         self.fds.clear()
+
+    def _child_relative(self, parent: int, name: str) -> str:
+        parent_rel = self.fd_paths[parent]
+        if parent_rel:
+            return f"{parent_rel}/{name}"
+        return name
 
     def directory(self, parent: int, name: str, kind: str, *, create: bool = True) -> int:
         try:
@@ -5689,6 +5847,9 @@ class _BundleReconcileTree:
         except FileNotFoundError:
             if not create:
                 raise
+            # Record the directory before mkdir. A failed create stays out of
+            # the report because no-follow lstat does not see it.
+            self.ledger.intend_new(self._child_relative(parent, name))
             with suppress(FileExistsError):
                 os.mkdir(name, mode=0o700, dir_fd=parent)
             info = os.stat(name, dir_fd=parent, follow_symlinks=False)
@@ -5703,6 +5864,7 @@ class _BundleReconcileTree:
         except OSError as exc:
             raise BundleReconcileRefused(f"{kind}_changed") from exc
         self.fds.append(fd)
+        self.fd_paths[fd] = self._child_relative(parent, name)
         held = os.fstat(fd)
         if (held.st_dev, held.st_ino) != (info.st_dev, info.st_ino):
             raise BundleReconcileRefused(f"{kind}_changed")
@@ -5738,6 +5900,13 @@ class _BundleReconcileTree:
                 raise BundleReconcileRefused("reconcile_member_changed")
             return handle.read()
 
+    def _leaf_exists(self, parent: int, name: str) -> bool:
+        try:
+            os.stat(name, dir_fd=parent, follow_symlinks=False)
+        except FileNotFoundError:
+            return False
+        return True
+
     def write(self, parent: int, name: str, payload: bytes, *, replace: bool = False) -> None:
         previous = self.existing(parent, name)
         if previous is not None:
@@ -5746,6 +5915,10 @@ class _BundleReconcileTree:
             if not replace:
                 raise BundleReconcileRefused("reconcile_member_differs")
         temporary = f".reconcile-{uuid.uuid4().hex}.tmp"
+        temp_rel = self._child_relative(parent, temporary)
+        name_rel = self._child_relative(parent, name)
+        if not self._leaf_exists(parent, temporary):
+            self.ledger.intend_new(temp_rel)
         try:
             fd = os.open(
                 temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=parent
@@ -5761,6 +5934,10 @@ class _BundleReconcileTree:
                 handle.write(payload)
                 handle.flush()
                 os.fsync(handle.fileno())
+            if previous is None:
+                self.ledger.intend_new(name_rel)
+            else:
+                self.ledger.intend_existing(name_rel)
             try:
                 if replace:
                     # A raced-in link can only be replaced as a directory entry,
@@ -5768,16 +5945,133 @@ class _BundleReconcileTree:
                     os.replace(temporary, name, src_dir_fd=parent, dst_dir_fd=parent)
                 else:
                     os.link(temporary, name, src_dir_fd=parent, dst_dir_fd=parent, follow_symlinks=False)
+                self.ledger.mark_published(name_rel)
             except FileExistsError as exc:
                 raise BundleReconcileRefused("reconcile_member_changed") from exc
         finally:
-            with suppress(FileNotFoundError):
+            removed = False
+            try:
                 os.unlink(temporary, dir_fd=parent)
+                removed = True
+            except FileNotFoundError:
+                removed = True
+            if removed and not self._leaf_exists(parent, temporary):
+                self.ledger.drop(temp_rel)
 
     def release(self, count: int) -> None:
         for fd in reversed(self.fds[count:]):
+            self.fd_paths.pop(fd, None)
             os.close(fd)
         del self.fds[count:]
+
+    def _walk_parent(self, relative: str) -> tuple[int, str] | None:
+        """No-follow walk to the parent of ``relative``. None when an ancestor is missing."""
+        root_fd = self.root_fd
+        if root_fd is None:
+            raise BundleReconcileRefused("reconcile_tree_unopened")
+        parts = relative.split("/")
+        if not parts or any(part in {"", ".", ".."} for part in parts):
+            return None
+        parent = root_fd
+        for component in parts[:-1]:
+            try:
+                info = os.stat(component, dir_fd=parent, follow_symlinks=False)
+            except FileNotFoundError:
+                return None
+            if not stat.S_ISDIR(info.st_mode):
+                return None
+            parent = self.directory(parent, component, "install_dir", create=False)
+        return parent, parts[-1]
+
+    def lstat_nofollow(self, relative: str) -> bool:
+        """True when no-follow lstat from the trusted root sees this relative path."""
+        count = len(self.fds)
+        try:
+            walked = self._walk_parent(relative)
+            if walked is None:
+                return False
+            parent, name = walked
+            try:
+                os.stat(name, dir_fd=parent, follow_symlinks=False)
+            except FileNotFoundError:
+                return False
+            return True
+        finally:
+            self.release(count)
+
+    def signature(self, relative: str) -> tuple[Any, ...] | None:
+        """No-follow signature: directory identity, regular-file bytes, or other inode."""
+        count = len(self.fds)
+        try:
+            walked = self._walk_parent(relative)
+            if walked is None:
+                return None
+            parent, name = walked
+            try:
+                info = os.stat(name, dir_fd=parent, follow_symlinks=False)
+            except FileNotFoundError:
+                return None
+            if stat.S_ISDIR(info.st_mode):
+                return ("dir", info.st_dev, info.st_ino)
+            if not stat.S_ISREG(info.st_mode) or stat.S_ISLNK(info.st_mode):
+                return ("other", info.st_mode, info.st_dev, info.st_ino)
+            try:
+                fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
+            except OSError:
+                return ("other", info.st_mode, info.st_dev, info.st_ino)
+            with os.fdopen(fd, "rb") as handle:
+                try:
+                    payload = handle.read()
+                except OSError:
+                    return ("other", info.st_mode, info.st_dev, info.st_ino)
+            return ("file", payload)
+        finally:
+            self.release(count)
+
+    def snapshot_prefix(self, prefix: str, into: dict[str, tuple[Any, ...]]) -> None:
+        signature = self.signature(prefix)
+        if signature is None:
+            return
+        into[prefix] = signature
+        if signature[0] != "dir":
+            return
+        self._snapshot_children(prefix, into)
+
+    def _snapshot_children(self, relative: str, into: dict[str, tuple[Any, ...]]) -> None:
+        count = len(self.fds)
+        try:
+            walked = self._walk_parent(relative)
+            if walked is None:
+                return
+            parent, name = walked
+            fd = self.directory(parent, name, "install_dir", create=False)
+            names = os.listdir(fd)
+        finally:
+            self.release(count)
+        for child_name in names:
+            child = f"{relative}/{child_name}"
+            signature = self.signature(child)
+            if signature is None:
+                continue
+            into[child] = signature
+            if signature[0] == "dir":
+                self._snapshot_children(child, into)
+
+    def _descendant_rels(self, directory: int, relative: str) -> list[str]:
+        found = [relative]
+        for name in os.listdir(directory):
+            info = os.stat(name, dir_fd=directory, follow_symlinks=False)
+            child = self._child_relative(directory, name)
+            if stat.S_ISDIR(info.st_mode):
+                count = len(self.fds)
+                try:
+                    child_fd = self.directory(directory, name, "install_dir", create=False)
+                    found.extend(self._descendant_rels(child_fd, child))
+                finally:
+                    self.release(count)
+            else:
+                found.append(child)
+        return found
 
     @contextmanager
     def parent(self, path: str, *, create: bool = False) -> Iterator[tuple[int, str]]:
@@ -5820,19 +6114,29 @@ class _BundleReconcileTree:
     def new_directory(self, path: str) -> None:
         with self.parent(path, create=True) as (parent, name):
             # A random staging name is reserved exclusively, never reused.
+            self.ledger.intend_new(path)
             os.mkdir(name, mode=0o700, dir_fd=parent)
             self.directory(parent, name, "install_dir", create=False)
 
     def move(self, source: str, target: str) -> None:
         with self.parent(source) as (src, src_name), self.parent(target, create=True) as (dst, dst_name):
-            self.directory(src, src_name, "install_dir", create=False)
+            src_fd = self.directory(src, src_name, "install_dir", create=False)
             if self.exists(target):
                 raise BundleReconcileRefused("install_destination_exists")
+            src_rel = self._child_relative(src, src_name)
+            dst_rel = self._child_relative(dst, dst_name)
+            descendants = self._descendant_rels(src_fd, src_rel)
+            for src_child in descendants:
+                self.ledger.intend_new(dst_rel + src_child[len(src_rel):])
             os.replace(src_name, dst_name, src_dir_fd=src, dst_dir_fd=dst)
+            for src_child in descendants:
+                if not self.lstat_nofollow(src_child):
+                    self.ledger.drop(src_child)
 
     def copy_tree(self, source: str, target: str) -> None:
         with self.parent(source) as (src, src_name), self.parent(target, create=True) as (dst, dst_name):
             src_fd = self.directory(src, src_name, "install_dir", create=False)
+            self.ledger.intend_new(self._child_relative(dst, dst_name))
             os.mkdir(dst_name, mode=0o700, dir_fd=dst)
             dst_fd = self.directory(dst, dst_name, "install_dir", create=False)
             self.copy_contents(src_fd, dst_fd)
@@ -5863,6 +6167,7 @@ class _BundleReconcileTree:
 
     def remove(self, parent: int, name: str) -> None:
         info = os.stat(name, dir_fd=parent, follow_symlinks=False)
+        relative = self._child_relative(parent, name)
         if stat.S_ISDIR(info.st_mode):
             count = len(self.fds)
             try:
@@ -5875,10 +6180,17 @@ class _BundleReconcileTree:
         else:
             self.existing(parent, name)
             os.unlink(name, dir_fd=parent)
+        if not self._leaf_exists(parent, name):
+            self.ledger.drop(relative)
 
 
 def _bundle_preserve_tie(
-    state_root: Path, *, manifest: Mapping[str, Any], members: Mapping[str, bytes], blob: bytes
+    state_root: Path,
+    *,
+    manifest: Mapping[str, Any],
+    members: Mapping[str, bytes],
+    blob: bytes,
+    ledger: _BundleImportLedger | None = None,
 ) -> str:
     agent = normalize_agent_name(str(manifest["agent"]))
     lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
@@ -5890,21 +6202,29 @@ def _bundle_preserve_tie(
     files = {f"members/{_bundle_member_path(name)}": payload for name, payload in members.items()}
     files["manifest.json"] = _bundle_json(dict(manifest))
     files["remote.bundle.tgz"] = blob
-    with _BundleReconcileTree(state_root, agent, lineage_id) as tree:
-        if tree.lineage_fd is None:
-            raise BundleReconcileRefused("lineage_ancestor_missing")
-        reconcile = tree.directory(tree.lineage_fd, "_bundle-reconcile", "reconcile_dir")
-        directory = tree.directory(reconcile, upload, "upload_dir")
-        for path, payload in sorted(files.items()):
-            held_directories = len(tree.fds)
-            parts = path.split("/")
-            parent = directory
-            try:
-                for component in parts[:-1]:
-                    parent = tree.directory(parent, component, "member_dir")
-                tree.write(parent, parts[-1], payload)
-            finally:
-                tree.release(held_directories)
+    if ledger is None:
+        ledger = _BundleImportLedger()
+    with _BundleReconcileTree(state_root, agent, lineage_id, ledger=ledger) as tree:
+        try:
+            if tree.lineage_fd is None:
+                raise BundleReconcileRefused("lineage_ancestor_missing")
+            reconcile = tree.directory(tree.lineage_fd, "_bundle-reconcile", "reconcile_dir")
+            directory = tree.directory(reconcile, upload, "upload_dir")
+            for path, payload in sorted(files.items()):
+                held_directories = len(tree.fds)
+                parts = path.split("/")
+                parent = directory
+                try:
+                    for component in parts[:-1]:
+                        parent = tree.directory(parent, component, "member_dir")
+                    tree.write(parent, parts[-1], payload)
+                finally:
+                    tree.release(held_directories)
+        except Exception as exc:
+            if isinstance(exc, BundleReconcileRefused) and "leftovers:" in str(exc):
+                raise
+            code = exc.code if isinstance(exc, BundleReconcileRefused) else "reconcile_install_failed"
+            raise _bundle_typed_failure(code, str(exc), ledger=ledger, trees=[tree], stage=None) from exc
     return (Path(*tree.parts) / "_bundle-reconcile" / upload / "remote.bundle.tgz").as_posix()
 
 
@@ -5931,8 +6251,20 @@ def _bundle_import_candidate(
     )
     remote_order = _bundle_order(manifest)
     # Refuse redirected ancestry before reading local state or selecting a write path.
-    with _BundleReconcileTree(state_root, agent, lineage_id):
-        pass
+    ledger = _BundleImportLedger()
+    try:
+        with _BundleReconcileTree(state_root, agent, lineage_id, ledger=ledger):
+            pass
+    except BundleReconcileRefused as exc:
+        raise _bundle_typed_failure(exc.code, str(exc), ledger=ledger, trees=[], stage=None) from exc
+    _bundle_capture_baseline(
+        ledger,
+        repo_root,
+        state_root,
+        agent=agent,
+        lineage_id=lineage_id,
+        stream_id=stream_id,
+    )
     local_manifest, local_members, local_lineage_exists = _bundle_local_lineage_snapshot(
         repo_root,
         state_root,
@@ -5979,7 +6311,9 @@ def _bundle_import_candidate(
                     "rollover_id": manifest["rollover_id"],
                 }
             if remote_order[-1] >= 1:
-                preserved_copy = _bundle_preserve_tie(state_root, manifest=manifest, members=members, blob=blob)
+                preserved_copy = _bundle_preserve_tie(
+                    state_root, manifest=manifest, members=members, blob=blob, ledger=ledger
+                )
                 return {
                     "status": "warning",
                     "reason": "bundle order ties but content differs; kept local and preserved remote",
@@ -6002,6 +6336,7 @@ def _bundle_import_candidate(
         state_root,
         manifest=manifest,
         members=members,
+        ledger=ledger,
     )
     archived, preserved, stage_cleanup_warning = _bundle_commit_install(
         repo_root,
@@ -6012,6 +6347,7 @@ def _bundle_import_candidate(
         staged_repo=staged_repo,
         local_lineage_exists=local_lineage_exists,
         install_handoff=install_handoff,
+        ledger=ledger,
     )
     result = {
         "status": "installed",
@@ -6114,7 +6450,8 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
                 )
             )
     except BundleReconcileRefused as exc:
-        print(json.dumps({"status": "refused", "code": exc.code, "error": str(exc), "action": "import-bundle"}))
+        message = str(exc) if "leftovers:" in str(exc) else f"{exc}; leftovers: []"
+        print(json.dumps({"status": "refused", "code": exc.code, "error": message, "action": "import-bundle"}))
         return 2
     except Exception as exc:
         return _bundle_import_error(str(exc))

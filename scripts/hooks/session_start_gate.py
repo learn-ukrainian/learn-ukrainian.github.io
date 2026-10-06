@@ -460,7 +460,13 @@ def _installed_stage_cleanup_warnings(payload: dict[str, Any]) -> list[str]:
         code = warning.get("code")
         if not isinstance(stage, str) or not stage or not isinstance(code, str) or not code:
             continue
-        warnings.append(f"WARNING: rollover bundle installed; {code}; retained stage: {stage}")
+        message = f"WARNING: rollover bundle installed; {code}; retained stage: {stage}"
+        leftovers = warning.get("leftovers")
+        if isinstance(leftovers, list):
+            names = [item for item in leftovers if isinstance(item, str) and item]
+            if names:
+                message += "; leftovers: " + ", ".join(names)
+        warnings.append(message)
     return warnings
 
 
