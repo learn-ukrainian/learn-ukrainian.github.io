@@ -40,7 +40,7 @@ def source(tmp_path, monkeypatch):
     monkeypatch.setattr(output, "filesystem", lambda p: "ext4")
     task_root = tmp_path / "SYNTHETIC-tasks"
     task_root.mkdir()
-    monkeypatch.setattr(antonenko, "TASKS_ROOT", task_root)
+    monkeypatch.setenv("LU_TASKS_DIR", str(task_root))
     db, vesum = tmp_path / "SYNTHETIC-sources.db", tmp_path / "SYNTHETIC-vesum.db"
     rows = [
         dict(
@@ -131,8 +131,8 @@ def write_attested(guard, prefix, receipt):
     }
     # Malformed receipt fixtures still get dispatch metadata so the receipt validator decides.
     safe_id = receipt["task_id"] or "SYNTHETIC-empty"
-    (antonenko.TASKS_ROOT / f"{safe_id}.json").write_bytes(canonical(task))
-    (antonenko.TASKS_ROOT / f"{safe_id}.result").write_bytes(raw)
+    (antonenko.tasks_dir() / f"{safe_id}.json").write_bytes(canonical(task))
+    (antonenko.tasks_dir() / f"{safe_id}.result").write_bytes(raw)
     guard.write(f"{prefix}.json", raw)
     guard.write(f"{prefix}.attestation.json", canonical(task))
 
@@ -750,8 +750,8 @@ def test_sidecar_binds_each_receipt_to_settled_dispatch(source, reconciliation, 
     prefix = sha + (".reconcile" if reconciliation else "") + ".sol"
     sidecar_path = source["receipts"] / f"{prefix}.attestation.json"
     sidecar = json.loads(sidecar_path.read_bytes())
-    task_path = antonenko.TASKS_ROOT / f"{sidecar['task_id']}.json"
-    result_path = antonenko.TASKS_ROOT / f"{sidecar['task_id']}.result"
+    task_path = antonenko.tasks_dir() / f"{sidecar['task_id']}.json"
+    result_path = antonenko.tasks_dir() / f"{sidecar['task_id']}.result"
     if mutation == "missing":
         sidecar_path.unlink()
     elif mutation in {"dispatch_status", "dispatch_model"}:
