@@ -30,6 +30,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.wiki.sum20_official import live_article_predicate_for
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -109,7 +110,8 @@ def verify_replacement_attestation(
             (w, w),
         ).fetchone()
         in_sum20 = sources_conn.execute(
-            "SELECT 1 FROM sum20_articles WHERE headword = ? OR normalized_lookup_key = ? LIMIT 1",
+            "SELECT 1 FROM sum20_articles WHERE (headword = ? OR normalized_lookup_key = ?) "
+            f"AND {live_article_predicate_for(sources_conn)} LIMIT 1",
             (w, w),
         ).fetchone()
         in_grinchenko = sources_conn.execute(
