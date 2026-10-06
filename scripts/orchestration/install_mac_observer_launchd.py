@@ -23,7 +23,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.safe_unit_install import InstallError, check_unit_dir, install_unit, load_unit, remove_unit
+from scripts.common.safe_unit_install import (
+    InstallError,
+    check_unit_dir,
+    ensure_state_dirs,
+    install_unit,
+    load_unit,
+    remove_unit,
+)
 
 LABEL = "com.learn-ukrainian.mac-observer-heartbeat"
 DEFAULT_INTERVAL_MINUTES = 5
@@ -182,8 +189,7 @@ def install(
     installed = load_unit(destination, home=home)
     runtime = state_dir(home)
     logs_dir = runtime / "logs"
-    logs_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-    os.chmod(logs_dir, 0o700)
+    ensure_state_dirs(logs_dir, home=home)
 
     before = _loaded_readback()
     was_loaded = before.returncode == 0

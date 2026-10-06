@@ -8,10 +8,12 @@ unexpected child exit before returning a non-zero status to ``launchd``.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import plistlib
 import signal
+import stat
 import subprocess
 import sys
 import threading
@@ -23,7 +25,16 @@ from pathlib import Path
 from typing import Any
 
 from scripts.api.release_snapshot import build_release, prune_releases
-from scripts.common.safe_unit_install import InstallError, install_unit, load_unit, remove_unit
+from scripts.common.safe_unit_install import (
+    InstallError,
+    check_state_paths,
+    ensure_state_dirs,
+    install_unit,
+    load_unit,
+    open_state_log,
+    open_unit_dir,
+    remove_unit,
+)
 
 LABEL = "com.learn-ukrainian.monitor-api"
 PORT = 8765
@@ -106,36 +117,14 @@ def _now_z() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
-def _fsync_directory(path: Path) -> None:
-    flags = os.O_RDONLY
-    if hasattr(os, "O_DIRECTORY"):
-        flags |= os.O_DIRECTORY
-    descriptor = os.open(path, flags)
-    try:
-        os.fsync(descriptor)
-    finally:
-        os.close(descriptor)
-
-
 def atomic_write(path: Path, content: bytes, *, mode: int = 0o600) -> bool:
-    """Atomically replace ``path`` and report whether its content changed."""
-    if path.is_file() and path.read_bytes() == content:
+    """Replace a state file without following links; preserve no-op behavior."""
+    anchor = path.parent.parent
+    installed = load_unit(path, home=anchor)
+    if installed == (content, mode):
         return False
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
-    try:
-        with temporary.open("xb") as handle:
-            handle.write(content)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.chmod(temporary, mode)
-        os.replace(temporary, path)
-        _fsync_directory(path.parent)
-    except BaseException:
-        temporary.unlink(missing_ok=True)
-        raise
-    return True
+    ensure_state_dirs(path.parent, home=anchor)
+    return install_unit(path, content, mode=mode, home=anchor)
 
 
 def build_plist(*, repo_root: Path) -> dict[str, object]:
@@ -268,9 +257,10 @@ def _set_launch_config(*, repo_root: Path, live_mode: bool, port: int) -> None:
 
 def _load_launch_config(repo_root: Path) -> tuple[bool, int]:
     try:
-        data = json.loads(_config_path(repo_root).read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        return False, PORT
+        installed = load_unit(_config_path(repo_root), home=repo_root.parent)
+        if installed is None:
+            return False, PORT
+        data = json.loads(installed[0])
     except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
         raise LaunchdError(f"invalid API launch configuration at {_config_path(repo_root)}") from exc
 
@@ -286,6 +276,7 @@ def start(*, repo_root: Path, home: Path, live_mode: bool, port: int = PORT) -> 
     root = repo_root.resolve()
     if not 1 <= port <= 65535:
         raise LaunchdError(f"invalid API port: {port}")
+    check_state_paths(root / "logs", _pid_dir(root), files=(_config_path(root),), home=root.parent)
     result = install(repo_root=root, home=home)
     _set_launch_config(repo_root=root, live_mode=live_mode, port=port)
 
@@ -398,15 +389,28 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
 
 
 def _rotate_log(path: Path) -> None:
-    if not path.is_file() or path.stat().st_size <= _LOG_ROTATE_BYTES:
+    """Rotate entries relative to a held directory, refusing links before mutation."""
+    names = [path.name, *(f"{path.name}.{index}" for index in (1, 2, 3))]
+    check_state_paths(files=tuple(path.with_name(name) for name in names), home=path.parent.parent)
+    fd = open_unit_dir(path.parent, home=path.parent.parent)
+    if fd is None:
         return
-    oldest = path.with_name(f"{path.name}.3")
-    oldest.unlink(missing_ok=True)
-    for index in (2, 1):
-        previous = path.with_name(f"{path.name}.{index}")
-        if previous.exists():
-            previous.replace(path.with_name(f"{path.name}.{index + 1}"))
-    path.replace(path.with_name(f"{path.name}.1"))
+    try:
+        try:
+            info = os.stat(path.name, dir_fd=fd, follow_symlinks=False)
+        except FileNotFoundError:
+            return
+        if not stat.S_ISREG(info.st_mode):
+            raise InstallError(f"refusing non-regular or symlinked state log: {path}")
+        if info.st_size <= _LOG_ROTATE_BYTES:
+            return
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(names[3], dir_fd=fd)
+        for index in (2, 1, 0):
+            with contextlib.suppress(FileNotFoundError):
+                os.replace(names[index], names[index + 1], src_dir_fd=fd, dst_dir_fd=fd)
+    finally:
+        os.close(fd)
 
 
 def _append_log(handle: Any, message: str) -> None:
@@ -510,14 +514,24 @@ def run_managed_api(
 ) -> int:
     """Run one API child in the foreground and preserve unexpected-exit evidence."""
     root = repo_root.resolve()
+    api_log = _api_log_path(root)
+    stderr_log = _api_stderr_log_path(root)
+    check_state_paths(
+        root / "logs",
+        _pid_dir(root),
+        files=(
+            _config_path(root),
+            crash_record_path(root),
+            api_log,
+            stderr_log,
+            *(path.with_name(f"{path.name}.{index}") for path in (api_log, stderr_log) for index in (1, 2, 3)),
+        ),
+        home=root.parent,
+    )
     configured_live, configured_port = _load_launch_config(root)
     effective_live = configured_live if live_mode is None else live_mode
     effective_port = configured_port if port is None else port
-    logs_dir = root / "logs"
-    logs_dir.mkdir(parents=True, exist_ok=True)
-    _pid_dir(root).mkdir(parents=True, exist_ok=True)
-    api_log = _api_log_path(root)
-    stderr_log = _api_stderr_log_path(root)
+    ensure_state_dirs(root / "logs", _pid_dir(root), home=root.parent)
     _rotate_log(api_log)
     _rotate_log(stderr_log)
     stopped_by_launchd = threading.Event()
@@ -535,7 +549,9 @@ def run_managed_api(
 
     stderr_tail: deque[str] = deque(maxlen=50)
     try:
-        with api_log.open("ab") as combined, stderr_log.open("ab") as stderr_handle:
+        with contextlib.ExitStack() as stack:
+            combined = stack.enter_context(os.fdopen(open_state_log(api_log, home=root.parent), "ab"))
+            stderr_handle = stack.enter_context(os.fdopen(open_state_log(stderr_log, home=root.parent), "ab"))
             try:
                 factory = prepare_command or (
                     lambda root_path, live, selected_port: _prepare_api_command(

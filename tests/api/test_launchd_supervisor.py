@@ -542,3 +542,104 @@ def test_prepare_api_command_timeout_raises_launchd_error(tmp_path: Path) -> Non
     ):
         with pytest.raises(supervisor.LaunchdError, match=r"git rev-parse HEAD timed out after 15\.0s in"):
             supervisor._prepare_api_command(repo, live_mode=False, port=8765)
+
+
+@pytest.mark.parametrize(
+    "relative",
+    (".pids", ".pids/api-launchd.json", ".pids/api-last-crash.json", "logs", "logs/api.log", "logs/api.stderr.log"),
+)
+@pytest.mark.parametrize("dangling", (False, True))
+def test_runner_refuses_state_and_log_links_before_creation(
+    tmp_path: Path,
+    relative: str,
+    dangling: bool,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    link = repo / relative
+    link.parent.mkdir(parents=True, exist_ok=True)
+    outside = tmp_path / "outside"
+    if relative in {"logs", ".pids"}:
+        outside.mkdir()
+        (outside / "sentinel").write_text("untouched")
+    else:
+        outside.write_text("{}")
+    link.symlink_to(tmp_path / "missing" if dangling else outside)
+    before = sorted(str(path.relative_to(repo)) for path in repo.rglob("*"))
+    calls = []
+    with pytest.raises(supervisor.InstallError, match="symlinked"):
+        supervisor.run_managed_api(repo_root=repo, prepare_command=lambda *args: calls.append(args))
+    assert calls == []
+    assert sorted(str(path.relative_to(repo)) for path in repo.rglob("*")) == before
+    assert link.is_symlink()
+    if outside.is_dir():
+        assert [p.name for p in outside.iterdir()] == ["sentinel"]
+        assert (outside / "sentinel").read_text() == "untouched"
+    else:
+        assert outside.read_text() == "{}"
+
+
+@pytest.mark.parametrize("linked", ("parent", "file"))
+@pytest.mark.parametrize("dangling", (False, True))
+def test_atomic_state_write_refuses_links(tmp_path: Path, linked: str, dangling: bool) -> None:
+    state = tmp_path / ".pids" / "api-launchd.json"
+    outside = tmp_path / "outside"
+    if linked == "parent":
+        outside.mkdir()
+        (outside / state.name).write_bytes(b"old")
+        link = state.parent
+    else:
+        state.parent.mkdir()
+        outside.write_bytes(b"old")
+        link = state
+    link.symlink_to(tmp_path / "missing" if dangling else outside)
+    with pytest.raises(supervisor.InstallError, match="symlinked"):
+        supervisor.atomic_write(state, b"new")
+    assert link.is_symlink()
+    assert (outside / state.name if outside.is_dir() else outside).read_bytes() == b"old"
+
+
+def test_atomic_state_write_preserves_noop_and_repairs_mode(tmp_path: Path) -> None:
+    state = tmp_path / ".pids" / "api-launchd.json"
+    assert supervisor.atomic_write(state, b"one")
+    assert not supervisor.atomic_write(state, b"one")
+    state.chmod(0o644)
+    assert supervisor.atomic_write(state, b"one")
+    assert stat.S_IMODE(state.stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("relative", (".pids", ".pids/api-launchd.json", "logs"))
+def test_start_validates_state_before_installing_plist(tmp_path: Path, monkeypatch, relative: str) -> None:
+    repo = _runtime_repo(tmp_path)
+    home = tmp_path / "home"
+    home.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    link = repo / relative
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(outside)
+    calls = []
+    monkeypatch.setattr(supervisor, "_launchctl", lambda *args: calls.append(args))
+    with pytest.raises(supervisor.InstallError, match="symlinked"):
+        supervisor.start(repo_root=repo, home=home, live_mode=False)
+    assert not supervisor.plist_path(home).exists()
+    assert list(outside.iterdir()) == []
+    assert calls == []
+
+
+@pytest.mark.parametrize("suffix", ("", ".1", ".2", ".3"))
+def test_log_rotation_refuses_symlinked_entries(tmp_path: Path, suffix: str) -> None:
+    log = tmp_path / "logs" / "api.log"
+    log.parent.mkdir()
+    if suffix:
+        log.write_bytes(b"A" * (supervisor._LOG_ROTATE_BYTES + 1))
+    outside = tmp_path / "outside"
+    outside.write_bytes(b"untouched")
+    linked = log.with_name(log.name + suffix)
+    linked.symlink_to(outside)
+    with pytest.raises(supervisor.InstallError, match="symlinked"):
+        supervisor._rotate_log(log)
+    assert linked.is_symlink()
+    assert outside.read_bytes() == b"untouched"
+    if suffix:
+        assert log.stat().st_size == supervisor._LOG_ROTATE_BYTES + 1

@@ -363,3 +363,71 @@ def test_launchd_cli_refuses_a_symlinked_home_or_ancestor(
     assert str(home if linked == "home" else home / "Library") in message
     assert _snapshot(outside) == before
     assert calls == []
+
+
+STATE_DIRECTORIES = {
+    "archived_thread_cleanup": (".codex", ".codex/thread-cleanup", ".codex/thread-cleanup/logs"),
+    "mac_observer": (".codex", ".codex/mac-observer", ".codex/mac-observer/logs"),
+    "mac_project_state": (".codex", ".codex/project-state-reporter", ".codex/project-state-reporter/logs"),
+    "worktree_cleanup": (
+        ".codex",
+        ".codex/worktree-cleanup",
+        ".codex/worktree-cleanup/logs",
+        ".codex/worktree-cleanup/receipts",
+        ".codex/worktree-cleanup/receipts/v2",
+    ),
+}
+
+
+@pytest.mark.parametrize("name,relative", [(name, path) for name, paths in STATE_DIRECTORIES.items() for path in paths])
+@pytest.mark.parametrize("dangling", (False, True))
+def test_state_creation_refuses_every_symlinked_ancestor_before_mutation(
+    name: str,
+    relative: str,
+    dangling: bool,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    installer = INSTALLERS[name](tmp_path, home, monkeypatch)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "sentinel").write_text("untouched")
+    link = home / relative
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.parent.chmod(0o755)
+    link.symlink_to(outside / "missing" if dangling else outside, target_is_directory=True)
+    before = _snapshot(outside)
+    home_before = _snapshot(home)
+    calls: list[object] = []
+    monkeypatch.setattr(installer.module, "_launchctl", lambda *args, **kwargs: calls.append(args) or _launchctl_ok())
+
+    try:
+        result = installer.invoke("apply")
+    except InstallError as error:
+        assert "symlinked" in str(error)
+    else:
+        assert result == 1
+
+    assert _snapshot(outside) == before
+    assert _snapshot(home) == home_before
+    assert calls == []
+    assert not installer.unit.exists()
+
+
+def test_project_state_dry_run_validates_before_creating_state(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    installer = _project_state(tmp_path, home, monkeypatch)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (home / "Library").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(InstallError, match="symlinked"):
+        installer.invoke("check")
+    assert not (home / ".codex").exists()
+    assert list(outside.iterdir()) == []
