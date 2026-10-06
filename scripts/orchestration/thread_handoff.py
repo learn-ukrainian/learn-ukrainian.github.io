@@ -24,6 +24,7 @@ import shlex
 import shutil
 import socket
 import sqlite3
+import stat
 import subprocess
 import sys
 import tarfile
@@ -680,6 +681,7 @@ def _bundle_source_members(
             or path.is_symlink()
             or path.name == ".native-intent.lock"
             or path.name.endswith(".bundle.tgz")
+            or "_bundle-reconcile" in path.relative_to(lineage_root).parts
         ):
             continue
         member_name = (
@@ -5580,12 +5582,168 @@ def _bundle_import_error(reason: str) -> int:
     return 2
 
 
+class BundleReconcileRefused(ValueError):
+    """A typed refusal at a reconciliation filesystem boundary."""
+
+    def __init__(self, code: str) -> None:
+        self.code = code
+        super().__init__(code)
+
+
+class _BundleReconcileTree:
+    """All reconciliation writes use descriptors pinned from the repository root.
+
+    Directory components are opened individually, never resolved through links.
+    Files use exclusive random temporaries and exclusive publication via linkat;
+    neither an existing destination nor an existing temporary is overwritten.
+    No directory above the lineage is created by this primitive.
+    """
+
+    def __init__(self, state_root: Path, agent: str, lineage_id: str) -> None:
+        self.state_root = state_root
+        self.parts = (".agent", "thread-rollovers", agent, lineage_id)
+        self.fds: list[int] = []
+        self.lineage_fd: int | None = None
+
+    def __enter__(self) -> _BundleReconcileTree:
+        try:
+            root = os.open(self.state_root, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY)
+            self.fds.append(root)
+            for component in self.parts:
+                try:
+                    root = self.directory(root, component, "lineage_ancestor", create=False)
+                except FileNotFoundError:
+                    return self
+            self.lineage_fd = root
+            return self
+        except BaseException:
+            self.__exit__(None, None, None)
+            raise
+
+    def __exit__(self, *_args: Any) -> None:
+        for fd in reversed(self.fds):
+            os.close(fd)
+        self.fds.clear()
+
+    def directory(self, parent: int, name: str, kind: str, *, create: bool = True) -> int:
+        try:
+            info = os.stat(name, dir_fd=parent, follow_symlinks=False)
+        except FileNotFoundError:
+            if not create:
+                raise
+            with suppress(FileExistsError):
+                os.mkdir(name, mode=0o700, dir_fd=parent)
+            info = os.stat(name, dir_fd=parent, follow_symlinks=False)
+        if stat.S_ISLNK(info.st_mode):
+            raise BundleReconcileRefused(f"{kind}_symlink")
+        if stat.S_ISFIFO(info.st_mode):
+            raise BundleReconcileRefused("reconcile_fifo")
+        if not stat.S_ISDIR(info.st_mode):
+            raise BundleReconcileRefused(f"{kind}_not_directory")
+        try:
+            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY, dir_fd=parent)
+        except OSError as exc:
+            raise BundleReconcileRefused(f"{kind}_changed") from exc
+        self.fds.append(fd)
+        held = os.fstat(fd)
+        if (held.st_dev, held.st_ino) != (info.st_dev, info.st_ino):
+            raise BundleReconcileRefused(f"{kind}_changed")
+        return fd
+
+    @staticmethod
+    def existing(parent: int, name: str, *, temporary: bool = False) -> bytes | None:
+        try:
+            info = os.stat(name, dir_fd=parent, follow_symlinks=False)
+        except FileNotFoundError:
+            return None
+        kind = "reconcile_temp" if temporary else "reconcile_member"
+        if stat.S_ISFIFO(info.st_mode):
+            raise BundleReconcileRefused("reconcile_fifo")
+        if stat.S_ISLNK(info.st_mode):
+            raise BundleReconcileRefused(f"{kind}_symlink")
+        if info.st_nlink != 1:
+            raise BundleReconcileRefused(f"{kind}_hardlink")
+        if temporary:
+            raise BundleReconcileRefused("reconcile_temp_exists")
+        if not stat.S_ISREG(info.st_mode):
+            raise BundleReconcileRefused("reconcile_member_not_regular")
+        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
+        with os.fdopen(fd, "rb") as handle:
+            held = os.fstat(handle.fileno())
+            if (held.st_dev, held.st_ino, held.st_nlink) != (info.st_dev, info.st_ino, 1):
+                raise BundleReconcileRefused("reconcile_member_changed")
+            return handle.read(ROLLOVER_BUNDLE_MAX_BYTES + 1)
+
+    def write(self, parent: int, name: str, payload: bytes) -> None:
+        previous = self.existing(parent, name)
+        if previous is not None:
+            if previous != payload:
+                raise BundleReconcileRefused("reconcile_member_differs")
+            return
+        temporary = f".reconcile-{uuid.uuid4().hex}.tmp"
+        try:
+            fd = os.open(
+                temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=parent
+            )
+        except FileExistsError as exc:
+            self.existing(parent, temporary, temporary=True)
+            raise BundleReconcileRefused("reconcile_temp_exists") from exc
+        try:
+            with os.fdopen(fd, "wb") as handle:
+                held = os.fstat(handle.fileno())
+                if not stat.S_ISREG(held.st_mode) or held.st_nlink != 1:
+                    raise BundleReconcileRefused("reconcile_temp_changed")
+                handle.write(payload)
+                handle.flush()
+                os.fsync(handle.fileno())
+            try:
+                os.link(temporary, name, src_dir_fd=parent, dst_dir_fd=parent, follow_symlinks=False)
+            except FileExistsError as exc:
+                raise BundleReconcileRefused("reconcile_member_changed") from exc
+        finally:
+            os.unlink(temporary, dir_fd=parent)
+
+
+def _bundle_preserve_tie(
+    state_root: Path, *, manifest: Mapping[str, Any], members: Mapping[str, bytes], blob: bytes
+) -> str:
+    agent = normalize_agent_name(str(manifest["agent"]))
+    lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
+    # Validate the digest even for callers outside cmd_import_bundle.
+    digest = str(manifest["bundle_sha256"])
+    if re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+        raise ValueError("bundle reconciliation digest is malformed")
+    upload = f"upload-{int(manifest['upload_seq'])}-{digest}"
+    with _BundleReconcileTree(state_root, agent, lineage_id) as tree:
+        if tree.lineage_fd is None:
+            raise BundleReconcileRefused("lineage_ancestor_missing")
+        reconcile = tree.directory(tree.lineage_fd, "_bundle-reconcile", "reconcile_dir")
+        directory = tree.directory(reconcile, upload, "upload_dir")
+        files = {f"members/{_bundle_member_path(name)}": payload for name, payload in members.items()}
+        files["manifest.json"] = _bundle_json(dict(manifest))
+        files["remote.bundle.tgz"] = blob
+        for path, payload in sorted(files.items()):
+            held_directories = len(tree.fds)
+            parts = path.split("/")
+            parent = directory
+            try:
+                for component in parts[:-1]:
+                    parent = tree.directory(parent, component, "member_dir")
+                tree.write(parent, parts[-1], payload)
+            finally:
+                for fd in reversed(tree.fds[held_directories:]):
+                    os.close(fd)
+                del tree.fds[held_directories:]
+    return (Path(*tree.parts) / "_bundle-reconcile" / upload / "remote.bundle.tgz").as_posix()
+
+
 def _bundle_import_candidate(
     repo_root: Path,
     state_root: Path,
     *,
     manifest: Mapping[str, Any],
     members: Mapping[str, bytes],
+    blob: bytes,
     force: bool,
     install_handoff: bool,
 ) -> dict[str, Any]:
@@ -5601,6 +5759,9 @@ def _bundle_import_candidate(
         members=members,
     )
     remote_order = _bundle_order(manifest)
+    # Refuse redirected ancestry before reading local state or selecting a write path.
+    with _BundleReconcileTree(state_root, agent, lineage_id):
+        pass
     local_manifest, local_members, local_lineage_exists = _bundle_local_lineage_snapshot(
         repo_root,
         state_root,
@@ -5630,7 +5791,7 @@ def _bundle_import_candidate(
                     "rollover_id": remote_order[3],
                 },
             }
-        if local_order == remote_order and not force:
+        if local_order == remote_order and (not force or remote_order[-1] >= 1):
             handoff_names = set(_bundle_handoff_candidates_for_agent(repo_root, stream_id, agent))
             remote_compare = {
                 name: payload for name, payload in members.items() if install_handoff or name not in handoff_names
@@ -5642,6 +5803,16 @@ def _bundle_import_candidate(
                 return {
                     "status": "noop",
                     "reason": "identical bundle content",
+                    "agent": agent,
+                    "lineage_id": lineage_id,
+                    "rollover_id": manifest["rollover_id"],
+                }
+            if remote_order[-1] >= 1:
+                preserved_copy = _bundle_preserve_tie(state_root, manifest=manifest, members=members, blob=blob)
+                return {
+                    "status": "warning",
+                    "reason": "bundle order ties but content differs; kept local and preserved remote",
+                    "preserved_copy": preserved_copy,
                     "agent": agent,
                     "lineage_id": lineage_id,
                     "rollover_id": manifest["rollover_id"],
@@ -5692,14 +5863,14 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
     except (OSError, ValueError) as exc:
         return _bundle_import_error(str(exc))
 
-    candidates: list[tuple[dict[str, Any], dict[str, bytes]]] = []
+    candidates: list[tuple[dict[str, Any], dict[str, bytes], bytes]] = []
     try:
         if args.file is not None:
             blob = args.file.expanduser().resolve().read_bytes()
             manifest, members = _bundle_extract(blob)
             if manifest.get("agent") != agent:
                 raise ValueError("bundle agent does not match --agent")
-            candidates.append((manifest, members))
+            candidates.append((manifest, members, blob))
         else:
             stream_id = str(args.from_api)
             listed = _bundle_api_list(args, stream_id=stream_id)
@@ -5729,9 +5900,9 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
                     continue
                 manifest, blob = _bundle_api_by_seq(args, stream_id=stream_id, upload_seq=sequence)
                 manifest, members = _bundle_extract(blob, manifest_override=manifest)
-                candidates.append((manifest, members))
+                candidates.append((manifest, members, blob))
 
-        for manifest, _ in candidates:
+        for manifest, _, _ in candidates:
             stream_id = str(manifest.get("stream_id") or "")
             if not stream_id:
                 raise ValueError("bundle stream_id is missing")
@@ -5763,10 +5934,14 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
                     state_root,
                     manifest=candidate[0],
                     members=candidate[1],
+                    blob=candidate[2],
                     force=args.force,
                     install_handoff=handoff_winner is None or candidate is handoff_winner,
                 )
             )
+    except BundleReconcileRefused as exc:
+        print(json.dumps({"status": "refused", "code": exc.code, "action": "import-bundle"}))
+        return 2
     except Exception as exc:
         return _bundle_import_error(str(exc))
 
@@ -5774,7 +5949,7 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
         result = results[0]
     else:
         statuses = {item["status"] for item in results}
-        aggregate_status = "refused" if "refused" in statuses else "installed" if "installed" in statuses else "noop"
+        aggregate_status = next((status for status in ("refused", "warning", "installed") if status in statuses), "noop")
         result = {
             "status": aggregate_status,
             "agent": agent,
