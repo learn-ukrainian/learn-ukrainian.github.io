@@ -440,8 +440,9 @@ def test_recorded_headless_auto_denial_is_typed_before_completion(task, kind, re
     reason, details = parsed.stderr_excerpt.split("\n", 1)
     assert reason == agy.AGY_HEADLESS_PERMISSION_DENIED
     assert reason in agy.AGY_INCOMPLETE_RUN_REASONS
-    assert json.loads(details) == {"permission_kind": kind, "permission_target": None}
-    assert parsed.agy_attempt.permission_target is None
+    assert json.loads(details) == {"permission_kind": kind, "permission_target": "unknown"}
+    assert parsed.agy_attempt.permission_target == "unknown"
+    assert parsed.agy_attempt.permission_kind == kind
     assert "skip-permissions" not in parsed.stderr_excerpt
 
 
@@ -449,13 +450,42 @@ def test_recorded_headless_auto_denial_is_typed_before_completion(task, kind, re
     "kind,target",
     [("command", "rg --pre bash"), ("mcp", "sources/query_ulif"), ("read_file", "workspace/evidence.txt")],
 )
-def test_auto_denial_preserves_concrete_resource(kind, target):
+def test_auto_denial_does_not_persist_unbound_concrete_resource(kind, target):
     parsed = agy.AgyAdapter().parse_response(
         stdout="", stderr=auto_denial(f"{kind}({target})"), returncode=0, output_file=None
     )
-    assert json.loads(parsed.stderr_excerpt.split("\n", 1)[1]) == {"permission_kind": kind, "permission_target": target}
+    assert json.loads(parsed.stderr_excerpt.split("\n", 1)[1]) == {
+        "permission_kind": kind,
+        "permission_target": "unknown",
+        "permission_target_source": "cli_notice",
+        "transcript_read_reason": "transcript_unbound_or_unreadable",
+    }
+    assert target not in parsed.stderr_excerpt
     assert agy._headless_permission_denial(auto_denial(f"{kind}({target})")) == (kind, target)
-    assert parsed.agy_attempt.permission_target == target
+    assert parsed.agy_attempt.permission_target == "unknown"
+    assert parsed.agy_attempt.permission_target_unknown_reason == "target_kind_unsupported"
+
+
+@pytest.mark.parametrize(
+    "target,expected,reason",
+    [
+        ("https://example.org/private?q=x", "url:example.org", None),
+        ("https://fixture.internal/private", "unknown", "url_host_private"),
+    ],
+)
+def test_cli_url_fallback_needs_no_workspace_plan(target, expected, reason):
+    from scripts.agent_runtime.result import AgyTelemetry
+
+    parsed = agy.AgyAdapter().parse_response(
+        stdout="", stderr=auto_denial(f"read_url({target})"), returncode=1, output_file=None
+    )
+    assert parsed.failure_code == "provider_policy_refusal"
+    assert not parsed.ok and not parsed.agy_pre_model_failure
+    attempt = AgyTelemetry(attempts=(parsed.agy_attempt,)).task_fields()["agy_attempts"][0]
+    assert attempt["permission_target"] == expected
+    assert attempt["permission_target_unknown_reason"] == reason
+    assert attempt["denied_tool_name"] is None
+    assert "private" not in parsed.stderr_excerpt
 
 
 def test_permission_help_example_is_not_an_observed_target():
