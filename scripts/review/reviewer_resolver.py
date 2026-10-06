@@ -771,17 +771,19 @@ def evaluate_candidate(
             None,
         }
     ):
-        diagnostics = snapshot.get("diagnostics") or {}
-        deficit = credit_lane.pace_deficit_state(
+        # The owner's pace and hot-label reading (#9740): a weekly-pace hot label it
+        # clears (#9040) is cleared here too; one it keeps stays near cap.
+        diagnostics = snapshot.get("diagnostics")
+        facts = credit_lane.routing_facts(
             candidate.route,
             record,
             model=candidate.concrete_model,
-            snapshot_stale=bool(diagnostics.get("stale")),
+            snapshot_metadata=diagnostics if isinstance(diagnostics, Mapping) else None,
         )
-        if deficit["uncovered"] is True:
+        if facts.uncovered is True:
             health = "near_cap"
-        elif deficit["status"] in {"cool", "warm"}:
-            health = _normalize_health_status(deficit["status"], label=candidate.route)
+        elif facts.status in {"cool", "warm"}:
+            health = _normalize_health_status(facts.status, label=candidate.route)
 
     # Catalog validation protects the installed ladders; this independent gate
     # also protects explicit pins and custom candidates before any quality prior.

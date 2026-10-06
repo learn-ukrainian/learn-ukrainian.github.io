@@ -1616,6 +1616,33 @@ def test_hidden_pace_hot_takes_the_allowance_status_never_a_default_cool(blocked
     assert facts.capacity == (credit_lane.CAPACITY_AVOID if blocked else credit_lane.CAPACITY_VERIFIED)
 
 
+@pytest.mark.parametrize(
+    ("overrides", "stale", "status", "capacity"),
+    [
+        ({}, False, "warm", credit_lane.CAPACITY_VERIFIED),
+        ({"runtime": {"headroom_blocked": True, "rate_limited": 2}}, False, "hot", credit_lane.CAPACITY_AVOID),
+        ({"status_source": "cursor_auto"}, False, "hot", credit_lane.CAPACITY_AVOID),
+        ({"status_source": None}, False, "hot", credit_lane.CAPACITY_AVOID),
+        ({}, True, "hot", credit_lane.CAPACITY_UNKNOWN_STALE),
+        ({}, None, "hot", credit_lane.CAPACITY_AVOID),
+    ],
+    ids=["fresh-cleared", "runtime-blocked", "cursor-auto", "sourceless", "stale-snapshot", "staleness-unknown"],
+)
+def test_weekly_pace_hot_without_a_deficit_is_cleared_by_the_owner_only_when_fresh(overrides, stale, status, capacity):
+    """#9040 (A8) in the owner: a visible on-pace reading clears a weekly-pace hot label on a fresh
+    observation and takes the remaining-allowance status (45% remaining is warm). A runtime block,
+    another source, or a stale or unknown observation keeps the label."""
+    info = _pace_hot(weekly_pace_delta_pct=0.49)
+    info.update(remaining_pct=45.0, **overrides)
+    info["codexbar"]["weekly_remaining_pct"] = 45.0
+    facts = _facts(info, stale=stale)
+    assert facts.pace_visible is True and facts.raw_deficit is False
+    assert facts.status == status
+    assert facts.capacity == capacity, facts.capacity_reason
+    if status != "hot":
+        assert facts.pace_reason.startswith("no pace deficit on a fresh observation")
+
+
 def test_hidden_pace_with_unknown_allowance_is_unknown_not_cool():
     info = _pace_hot(weekly_expected_pct=0.1)
     for key in ("remaining_pct",):

@@ -12583,12 +12583,12 @@ def _budget_needs_hard_capacity_action(
       :func:`credit_lane.plan_window_exhausted`) hard-acts unless the owner
       grants credit relief for ``model``, whether or not the USD cost ledger
       has records;
-    * a hot label hard-acts unless the owner cleared it (a weekly-pace label
-      whose deficit is covered or whose pace is hidden below the visibility
-      floor) or, for a weekly-pace label only, the owner's pace reading finds
-      no deficit (#9040: the early-window/on-pace false positive; A8). A hot
-      label from any other source (Cursor Auto, ledger burn, a source-less
-      record), or one set by runtime headroom, stays;
+    * a hot label hard-acts unless the owner cleared it: a weekly-pace label
+      whose deficit is covered, whose pace is hidden below the visibility
+      floor, or whose fresh pace reading finds no deficit (#9040: the
+      early-window/on-pace false positive; A8). A hot label from any other
+      source (Cursor Auto, ledger burn, a source-less record), or one set by
+      runtime headroom, stays;
     * an uncovered pace deficit hard-acts.
 
     A bare ``will_last`` False still counts only when no pace dict was supplied.
@@ -12615,9 +12615,8 @@ def _budget_needs_hard_capacity_action(
         print(f"⚠ lane {lane}: {facts.pace_reason}", file=sys.stderr)
     if facts.uncovered is True:
         return True, "codexbar will_last_to_reset=False (deficit)"
-    # #9040 (A8): only a weekly-pace hot label is cleared by an on-pace reading;
-    # a hot label from any other source (Cursor Auto, ledger burn) is its own reason.
-    if facts.status == "hot" and not (pace and facts.raw_deficit is False and facts.status_source == "weekly_pace"):
+    # The owner clears a qualifying weekly-pace hot label (#9040, A8); whatever it keeps hot hard-acts.
+    if facts.status == "hot":
         return True, "status=hot"
     if pace is None and will_last is False:
         return True, "codexbar will_last_to_reset=False (deficit)"

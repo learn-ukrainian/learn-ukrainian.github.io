@@ -68,11 +68,15 @@ fresh or healthy.
 - **Budget guard (`delegate.py --check-budget`):** on a fresh snapshot it
   substitutes or refuses a near-cap lane (the `near_cap` status, or a credit lane's
   tightest plan window at or below the threshold) unless the owner grants credit
-  relief for the model, whether or not the USD cost ledger has records. A hot
-  label is cleared only when its source is weekly pace: either its pace is hidden
-  below the visibility floor, or the owner's pace reading finds no deficit (#9040).
-  A hot label from Cursor Auto, the ledger or no source stays hot. A stale
-  snapshot stays advisory. Lane health warnings print `demoted` for an
+  relief for the model, whether or not the USD cost ledger has records. It
+  substitutes or refuses whenever the owner (`credit_lane.routing_facts`) keeps
+  the lane `hot`; it never clears a label itself. The owner clears a hot label
+  only when its source is weekly pace and no runtime headroom block set it:
+  either its pace is hidden below the visibility floor, or its pace reading on a
+  fresh observation finds no deficit (#9040). The status then comes from
+  remaining allowance, and the picker, reviewer resolver, wave gate and routing
+  recommendation read the same cleared status. A hot label from Cursor Auto, the
+  ledger or no source stays hot. A stale snapshot stays advisory. Lane health warnings print `demoted` for an
   unhealthy lane and `health unknown (<basis>)` when health is unknown.
 - **Reviewer resolver and wave gate:** a near-cap candidate keeps credit relief
   only when `credit_lane.published_credit_relief` re-decides it with

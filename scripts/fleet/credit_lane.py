@@ -1087,7 +1087,7 @@ def _capacity_class(
     # Auto, a source-less record) is its own current reason and stays avoid.
     pace_only = status != "hot" or record.get("status_source") == "weekly_pace"
     pace_signal = pace["raw_deficit"] is True or status == "hot"
-    if freshness == STALE and pace_only and pace_signal and pace["uncovered"] is not False:
+    if freshness == STALE and pace_only and pace_signal and not pace["covered_by"]:
         return (
             CAPACITY_UNKNOWN_STALE,
             f"{STALE_ADVISORY_LABEL}: pace deficit read from stale evidence ({freshness_reason})",
@@ -1121,9 +1121,11 @@ def routing_facts(
     ``model`` is required: None means lane inventory. ``policy`` None loads the
     shipped policy; an unreadable one reads ``policy_error`` (plan state applies).
 
-    A suppressed hidden-pace hot label (weekly-pace source, expected percent
-    below the visibility floor, no runtime block) takes the remaining-allowance
-    status, never a default ``cool`` (A3).
+    A weekly-pace hot label without a runtime block that the owner's own pace
+    reading does not confirm takes the remaining-allowance status, never a
+    default ``cool``: pace hidden below the visibility floor (A3), or a visible
+    reading with no deficit on a fresh observation (#9040, A8: the early-window
+    false positive). A hot label from any other source stays hot.
     """
     from scripts.api.subscription_usage import pace_expected_pct, pace_is_visible
 
@@ -1173,19 +1175,15 @@ def routing_facts(
     visible = None if expected is None else pace_is_visible({"expected_pct": expected})
     status = str(pace["status"] or UNKNOWN)
     runtime = data.get("runtime") if isinstance(data.get("runtime"), Mapping) else {}
-    if (
-        status == "hot"
-        and data.get("status_source") == "weekly_pace"
-        and not runtime.get("headroom_blocked")
-        and pace["raw_deficit"] is None
-        and visible is False
-    ):
-        status = allowance_status(remaining)
-        pace = {
-            **pace,
-            "status": status,
-            "reason": f"pace hidden below the visibility floor; status {status} from remaining allowance",
-        }
+    if status == "hot" and data.get("status_source") == "weekly_pace" and not runtime.get("headroom_blocked"):
+        cleared_by = None
+        if pace["raw_deficit"] is None and visible is False:
+            cleared_by = "pace hidden below the visibility floor"
+        elif pace["raw_deficit"] is False and freshness == FRESH:
+            cleared_by = "no pace deficit on a fresh observation"
+        if cleared_by is not None:
+            status = allowance_status(remaining)
+            pace = {**pace, "status": status, "reason": f"{cleared_by}; status {status} from remaining allowance"}
 
     allowed = policy.lane_models(lane_key) if policy is not None else DEFAULT_ALLOWED_MODELS.get(lane_key)
     permission: bool | None = None

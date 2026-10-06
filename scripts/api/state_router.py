@@ -739,7 +739,8 @@ def _recommend_agent(
 
     Shared routing facts (#9740): a lane whose only evidence against it is a
     pace deficit read from a stale snapshot is ``UNKNOWN — stale/advisory``
-    here (never ``hot``, never verified capacity). Lanes with established
+    here (never ``hot``, never verified capacity); a hot label the owner
+    clears (#9040) takes the owner's status. Lanes with established
     health are preferred; unknown health is used only when no lane has it,
     with a warning, and is never reported as healthy.
     """
@@ -761,19 +762,15 @@ def _recommend_agent(
     def is_healthy(lane_name: str) -> bool:
         return health_of(lane_name) == credit_lane.HEALTHY
 
-    def stale_advisory(lane_name: str) -> str | None:
-        """Reason when the lane's pace verdict rests on stale evidence only (F2), else None."""
-        if not is_stale:
-            return None
-        facts = credit_lane.routing_facts(
+    def owner_facts(lane_name: str) -> credit_lane.RoutingFacts:
+        return credit_lane.routing_facts(
             lane_name,
             agents.get(lane_name),
             model=None,
-            snapshot_metadata={"stale": True},
+            snapshot_metadata={"stale": is_stale},
             now=current_time,
             usage_dir=usage_dir,
         )
-        return facts.capacity_reason if facts.capacity == credit_lane.CAPACITY_UNKNOWN_STALE else None
 
     # Build status/burn for core code lanes (claude special interactive, others flat); include grok/cursor if present
     core = ["claude", "codex", "gemini"]
@@ -807,10 +804,15 @@ def _recommend_agent(
             resets_by[a] = agents[a].get("resets_at")
 
     for a in list(status_by_agent):
-        advisory = stale_advisory(a)
-        if advisory is not None:
+        facts = owner_facts(a)
+        if is_stale and facts.capacity == credit_lane.CAPACITY_UNKNOWN_STALE:
+            # F2: the lane's pace verdict rests on stale evidence only.
             status_by_agent[a] = "unknown"
-            warnings.append(f"lane {a}: {advisory}")
+            warnings.append(f"lane {a}: {facts.capacity_reason}")
+        elif status_by_agent[a] == "hot" and facts.status != "hot":
+            # #9040 (A8): the owner cleared a weekly-pace hot label its pace reading does not confirm.
+            status_by_agent[a] = facts.status
+            warnings.append(f"lane {a}: hot label cleared ({facts.pace_reason})")
 
     # Only claim inline_orchestrator if at least one lane is actually observed AND all observed lanes are hot/near_cap.
     # An empty observation set (all unknown/unavailable) must NEVER satisfy this.

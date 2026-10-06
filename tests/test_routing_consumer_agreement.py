@@ -31,7 +31,7 @@ consumer                                               disp evidence in this mod
 state_router._capacity_used_pct                        D    raw used-% metric; status via the owner
 state_router._status_from_weekly_used                  A    owner ``pace_deficit_state``
 state_router._attach_credit_states                     A    owner ``lane_credit_state``
-state_router._recommend_agent                          R    F2 stale label, F4 unknown health
+state_router._recommend_agent                          R    F2 stale label, F4 health, #9040 owner hot
 state_router.compute_routing_budget (health fill-in)   R    A1 typed scan; A6 freshness labels
 state_router._api_lane_status_from_account             A    F8 duplicate, agrees (prepaid)
 lane_health.compute_lane_health                        R    A1 ``scan_lane_health``
@@ -42,7 +42,7 @@ prepaid_status.api_lane_status_from_account            A    F8 duplicate, agrees
 capacity_pick.remaining_pct                            R    F1 owner ``plan_remaining_pct``
 capacity_pick.is_avoid_lane / build_lane_rows          R    F2/F3/F4/F7 owner ``routing_facts``
 capacity_pick.build_pick_order / cooler_lanes          R    A5 stale rank, strict
-delegate._budget_needs_hard_capacity_action            R    F1/F6 owner near cap, F3 owner hot source
+delegate._budget_needs_hard_capacity_action            R    F1/F6 owner near cap, F3/#9040 owner hot
 delegate._resolve_agent_with_budget_guard              R    agreement asserted; F4 unknown health text
 delegate._credit_period_refusal / dispatch_refusal     A    A4 CREDIT_PERIOD_MODEL_REFUSED
 delegate._budget_cooler_lanes                          D    refusal hint text only (A4)
@@ -50,7 +50,7 @@ delegate._check_capacity_hint                          D    in-flight hint only
 idle_settle._lane_quota_ok / LaneState                 R    F5 unknown quota and load
 fleet.usage._credit_state_text                         D    display of the published state
 curriculum_coordinator._health_assessment              R    F4 owner health, F6 full-record relief
-reviewer_resolver.evaluate_candidate                   R    F6 full-record relief
+reviewer_resolver.evaluate_candidate                   R    F6 full-record relief, #9040 owner hot
 reviewer_scheduler.metrics_for                         R    F1 remaining, F5 freshness/counts
 bench_health._bench_inventory                          A    forwards ``evaluate_candidate``
 agent_runtime.usage.has_headroom                       D    pre-call 429 block, own window
@@ -182,6 +182,8 @@ NEAR_CAP_CREDIT = {
 # The credit lane is the only candidate: Claude is near cap too, so the recommendation
 # picks Codex exactly when credit relief holds.
 CREDIT_ONLY_SEAT = {**NEAR_CAP_CREDIT, "claude": {**CLAUDE, "weekly_used_pct": 95.0, "weekly_remaining_pct": 5.0}}
+# #9040 controls: Claude near cap, so the recommendation picks Codex exactly when the owner clears its hot label.
+CLAUDE_NEAR_CAP = {**CLAUDE, "weekly_used_pct": 95.0, "weekly_remaining_pct": 5.0}
 
 
 @dataclass(frozen=True)
@@ -254,6 +256,17 @@ CASES: tuple[Case, ...] = (
         {"codex": _codex(), "claude": CLAUDE, "cursor": CURSOR_AUTO_HOT_ON_PACE},
     ),
     Case("missing_snapshot_staleness", {"codex": _codex(), "claude": CLAUDE}, mutate="snapshot_staleness_removed"),
+    # Held-out round-4 controls (review of record on 51df582bbb): a fresh weekly-pace hot label.
+    Case(
+        "f9040_weekly_hot_on_pace",
+        {"codex": _codex(), "claude": CLAUDE_NEAR_CAP},
+        mutate="weekly_pace_hot_label",
+    ),
+    Case(
+        "f9040_weekly_hot_deficit",
+        {"codex": _deficit(credit_balance=0.0), "claude": CLAUDE_NEAR_CAP},
+        mutate="weekly_pace_hot_label",
+    ),
 )
 
 # Credit relief the producer published, contradicted after publication by the record it rests on.
@@ -362,6 +375,12 @@ def produce(case: Case, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict
     if case.mutate == "snapshot_staleness_removed":
         # A healthy producer snapshot without its ``diagnostics.stale`` metadata.
         assert budget["diagnostics"].pop("stale") is False
+    if case.mutate == "weekly_pace_hot_label":
+        # The #9040 snapshot shape: the producer's weekly-pace label reads hot (the early-window
+        # false positive) whatever the record's own pace reading. A deficit payload is already hot.
+        codex = budget["agents"]["codex"]
+        assert codex["status_source"] == "weekly_pace"
+        codex["status"] = "hot"
     return json.loads(json.dumps(budget))  # the JSON boundary every consumer reads across
 
 
@@ -388,16 +407,17 @@ def snapshot(request, monkeypatch, tmp_path, provider_calls):
 @pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_producer_publishes_the_owner_facts(snapshot):
     case, budget = snapshot
-    if case.mutate is not None:
-        # The published copy is the producer's at publication; consumers recompute and never trust it.
-        published = budget["agents"]["codex"]["routing_facts"]
-        if case.mutate == "snapshot_staleness_removed":
-            assert published["observation_freshness"] == credit_lane.FRESH
-            assert owner(budget).observation_freshness == credit_lane.UNKNOWN
-            return
+    # The published copy is the producer's at publication; consumers recompute and never trust it.
+    published = budget["agents"]["codex"]["routing_facts"]
+    if case.mutate == "snapshot_staleness_removed":
+        assert published["observation_freshness"] == credit_lane.FRESH
+        assert owner(budget).observation_freshness == credit_lane.UNKNOWN
+        return
+    if case.mutate in RELIEF_CONTRADICTIONS:
         assert published["credit_state"] == credit_lane.CREDIT_BALANCE_PRESENT
         assert owner(budget).credit["state"] == RELIEF_CONTRADICTIONS[case.mutate]
         return
+    # A weekly-pace hot label is read by the owner to the producer's own capacity from the pace.
     for lane in ("codex", "claude"):
         published = dict(budget["agents"][lane]["routing_facts"])
         facts = owner(budget, lane)
@@ -658,6 +678,8 @@ EXPECTED_CODEX = {
     "f6_relief_runtime_blocked": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
     "f9040_cursor_auto_hot_on_pace": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
     "missing_snapshot_staleness": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.UNKNOWN),
+    "f9040_weekly_hot_on_pace": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
+    "f9040_weekly_hot_deficit": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
 }
 
 
@@ -779,3 +801,46 @@ def test_missing_snapshot_staleness_is_unknown_in_the_wave_gate(snapshot):
     assert assessment["fresh"] is False and not passed
     [lane] = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")["lanes"]
     assert lane["freshness"] == credit_lane.UNKNOWN and lane["stale"] is False
+
+
+@pytest.mark.parametrize(
+    "snapshot", [_held_out("f9040_weekly_hot_on_pace"), _held_out("f9040_weekly_hot_deficit")], indirect=True
+)
+def test_weekly_pace_hot_label_is_decided_by_the_owner_for_every_consumer(snapshot, monkeypatch):
+    """#9040 (A8) in the owner: a fresh weekly-pace hot label with no deficit is cleared by the owner and
+    every consumer admits the lane; the same label over a real deficit is AVOID in every capacity consumer
+    (delegate too) and stays ``hot`` in the wave receipt."""
+    case, budget = snapshot
+    assert budget["diagnostics"]["stale"] is False
+    record = budget["agents"]["codex"]
+    assert (record["status"], record["status_source"]) == ("hot", "weekly_pace")
+    facts = owner(budget, model=ROUTE_MODEL)
+    assert facts.observation_freshness == credit_lane.FRESH
+    clears = case.name == "f9040_weekly_hot_on_pace"
+    if clears:
+        assert facts.raw_deficit is False and facts.status == "cool"
+        assert facts.capacity == credit_lane.CAPACITY_VERIFIED, facts.capacity_reason
+    else:
+        assert facts.raw_deficit is True and facts.uncovered is True
+        assert facts.capacity == credit_lane.CAPACITY_AVOID, facts.capacity_reason
+
+    rows = _rows(budget)
+    assert rows["codex"]["avoid"] is not clears
+    assert ("codex" in capacity_pick.cooler_lanes(list(rows.values()))) is clears
+
+    result = evaluate_candidate(
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
+    )
+    assert (result.status != "excluded") is clears, result.reason
+
+    # The wave reads the owner's status; counting it is the wave's own acceptable-statuses rule
+    # (the shipped config accepts ``hot``, a legitimate wave-local restriction).
+    config = coordinator.load_config()["health"]
+    _passed, assessment = coordinator._health_assessment(budget, config, now=NOW)
+    group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
+    [lane] = group["lanes"]
+    assert lane["status"] == facts.status == ("cool" if clears else "hot")
+    assert (group["available"] == 1) is (facts.status in config["acceptable_statuses"])
+
+    assert (recommend(budget)["primary_agent_for_code"] == "codex") is clears
+    assert _guard(budget, monkeypatch, ROUTE_MODEL) == ("codex" if clears else "claude")
