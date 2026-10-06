@@ -24,6 +24,7 @@ from pathlib import Path, PurePosixPath
 
 from scripts.ci import frontend_change_scope
 from scripts.ci.junit_results import parse_junit
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import project_interpreter
 from scripts.deploy import auto_deploy_eligibility
 from scripts.storage.test_baseline import nodeid_to_junit_id
@@ -584,7 +585,9 @@ def partial_test_results(journal: Path) -> dict:
     """Count unique test outcomes; setup/teardown errors outrank call passes."""
     outcomes = {}
     if journal.is_file():
-        for line in journal.read_text(encoding="utf-8").splitlines():
+        for line in jsonl_lines(journal.read_text(encoding="utf-8")):
+            if not line:
+                continue
             row = json.loads(line)
             if row["outcome"] == "failed" or outcomes.get(row["id"]) == "failed":
                 outcomes[row["id"]] = "failed"
@@ -652,10 +655,17 @@ def junit_coverage(paths: list[Path], manifest: dict, components: Sequence[str],
     if not rows:
         raise ValueError("JUnit input has no test cases")
     outcomes = {}
+    module_outcomes = {}
     rank = {"passed": 0, "skipped": 1, "failed": 2, "error": 3}
     for row in rows:
         # Parameter values containing dots and classes without a Test prefix
         # use pytest's own classname/name identity, not guessed file names.
+        if "::" not in row.node_id:
+            if row.outcome not in {"skipped", "failed", "error"}:
+                raise ValueError("module result has no test identity")
+            if rank[row.outcome] >= rank.get(module_outcomes.get(row.node_id), -1):
+                module_outcomes[row.node_id] = row.outcome
+            continue
         identity = nodeid_to_junit_id(row.node_id)
         if rank[row.outcome] >= rank.get(outcomes.get(identity), -1):
             outcomes[identity] = row.outcome
@@ -682,6 +692,7 @@ def junit_coverage(paths: list[Path], manifest: dict, components: Sequence[str],
             outcome = outcomes.get(nodeid_to_junit_id(id), "absent")
             groups["failed" if outcome == "error" else outcome].append(id)
         coverage[node] = {"collected": len(ids), "pytest_files": len(selected_files),
+                          "module_results": {file: outcome for file, outcome in module_outcomes.items() if file in selected_files},
                           **{key: len(value) for key, value in groups.items()},
                           "failing_test_ids": groups["failed"], "absent_test_ids": groups["absent"],
                           "skipped_test_ids": groups["skipped"]}
@@ -691,7 +702,7 @@ def junit_coverage(paths: list[Path], manifest: dict, components: Sequence[str],
               "junit_inputs": [{"name": path.name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
                                for path in paths], "nodes": coverage}
     # Skips and absent IDs are evidence gaps, never passing proof.
-    return report, 1 if any(row[key] for row in coverage.values() for key in ("failed", "skipped", "absent")) else 0
+    return report, 1 if any(row[key] for row in coverage.values() for key in ("failed", "skipped", "absent", "module_results")) else 0
 
 
 def parser() -> argparse.ArgumentParser:

@@ -604,6 +604,8 @@ def test_journal_counts_phases_and_ignores_worker_duplicates(tmp_path, monkeypat
     c.pytest_runtest_logreport(SimpleNamespace(nodeid='ignored', when='call', outcome='passed'))
     assert c.partial_test_results(path) == {'passed': 1, 'failed': 1, 'skipped': 1, 'failing_test_ids': ['error']}
     assert c.partial_test_results(tmp_path / 'missing')['passed'] == 0
+    path.write_text(json.dumps({'id': 'unicode\u2028inside', 'when': 'call', 'outcome': 'failed'}, ensure_ascii=False) + '\n')
+    assert c.partial_test_results(path)['failing_test_ids'] == ['unicode\u2028inside']
 
 
 def test_timeout_retains_real_completed_pytest_results(tmp_path, monkeypatch):
@@ -654,6 +656,12 @@ def test_junit_coverage_fresh_sets_failures_skips_absence_and_duplicate_preceden
     assert code == 2 and report['fallback_reason'] == 'collection-error'
     with pytest.raises(ValueError):
         c.junit_coverage([], manifest, ['harness'], repo)
+    path.write_text('<testsuite><testcase name="tests.test_fixture"><skipped/></testcase></testsuite>')
+    monkeypatch.setattr(c, 'collect_tests', lambda *a: ([ids[0]], 0))
+    report, code = c.junit_coverage([path], manifest, ['harness'], repo)
+    assert code == 1
+    assert report['nodes']['harness']['module_results'] == {'tests/test_fixture.py': 'skipped'}
+    assert report['nodes']['harness']['absent'] == 1
     path.write_text('<testsuite/>')
     with pytest.raises(ValueError):
         c.junit_coverage([path], manifest, ['harness'], repo)
