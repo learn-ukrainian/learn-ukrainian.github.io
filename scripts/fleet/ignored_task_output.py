@@ -93,25 +93,37 @@ class _InventoryReadError(ValueError):
         self.missing = missing
 
 
-def resolve_worktree_record(worktree: Path, tasks_dir: Path, *, repo_root: Path) -> tuple[Path | None, dict[str, Any]]:
+def resolve_worktree_record(
+    worktree: Path, tasks_dir: Path, *, repo_root: Path, publish_cache: bool = True
+) -> tuple[Path | None, dict[str, Any]]:
     """Retry one complete inventory after a concurrent record move or rewrite.
 
     Atomic replacement at the same name does not expose partial JSON, but
     delegate's redispatch archive and stale_task_records' staging move can
     remove a filename between glob and open. Never simply omit a failed read.
     A vanished name needs a visible archive counterpart before retrying.
+    ``publish_cache=False`` suppresses publication on both inventory attempts.
     """
     try:
-        return _resolve_worktree_record_once(worktree, tasks_dir, repo_root=repo_root)
+        return _resolve_worktree_record_once(worktree, tasks_dir, repo_root=repo_root, publish_cache=publish_cache)
     except _InventoryReadError as exc:
         print("Task identity inventory read failed; retrying complete inventory once", file=sys.stderr)
         return _resolve_worktree_record_once(
-            worktree, tasks_dir, repo_root=repo_root, missing_path=exc.path if exc.missing else None
+            worktree,
+            tasks_dir,
+            repo_root=repo_root,
+            publish_cache=publish_cache,
+            missing_path=exc.path if exc.missing else None,
         )
 
 
 def _resolve_worktree_record_once(
-    worktree: Path, tasks_dir: Path, *, repo_root: Path, missing_path: Path | None = None
+    worktree: Path,
+    tasks_dir: Path,
+    *,
+    repo_root: Path,
+    publish_cache: bool = True,
+    missing_path: Path | None = None,
 ) -> tuple[Path | None, dict[str, Any]]:
     """Resolve identity from canonical records, never from a caller's hint.
 
@@ -120,6 +132,7 @@ def _resolve_worktree_record_once(
     A sole force-new archived creator may bind a same-task canonical reused run.
     A content-verified cache bounds JSON decoding to changed/candidate records;
     all source files are still read, and filesystem aliases are resolved anew.
+    ``publish_cache=False`` keeps cache reads but never creates or updates it.
     """
     from scripts.orchestration.worktree_claims import (
         is_superseded_record,
@@ -202,7 +215,7 @@ def _resolve_worktree_record_once(
                 )
             ):
                 raise ValueError("ambiguous retention task binding")
-    if changed or cached.keys() != identities.keys():
+    if publish_cache and (changed or cached.keys() != identities.keys()):
         _write_identity_cache(cache_path, identities)
     if len(matches) > 1:
         kept = [match for match in matches if match[1].get("keep_worktree")]
@@ -524,6 +537,8 @@ def preserve_worktree_artifacts(
     Vanished paths require fresh lstat absence proof; byte changes still refuse.
     Caller records and task IDs are hints, never retention authority.
     """
+    from scripts.orchestration.worktree_claims import identity_cache_publication_allowed
+
     repo_root = primary if repo_root is None else repo_root
     record_path = None
     record: dict[str, Any] = {}
@@ -536,7 +551,12 @@ def preserve_worktree_artifacts(
     try:
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
-        record_path, record = resolve_worktree_record(worktree, tasks_dir, repo_root=repo_root)
+        record_path, record = resolve_worktree_record(
+            worktree,
+            tasks_dir,
+            repo_root=repo_root,
+            publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
+        )
         files = _ignored_output_files(worktree, primary, record, absent=absent)
         if not files and not absent and not record.get("keep_worktree"):
             return True, "", None

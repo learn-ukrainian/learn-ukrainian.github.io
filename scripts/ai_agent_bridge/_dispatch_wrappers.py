@@ -151,8 +151,70 @@ def _dispatch_fix_prompt_file(
     return _write_dispatch_fix_auto_brief(task_id, prompt_directory)
 
 
+_OWNED_PATHS_HEADING = re.compile(r"(?im)^(#{1,6})\s*owned paths\b[^\n]*$")
+_ANY_HEADING = re.compile(r"(?m)^(#{1,6})\s")
+_BRIEF_PATH = re.compile(r"[\w.*/-]+")
+_BRIEF_RISK = re.compile(r"(?im)^\W*risk\W*:\W*(low|medium|high|critical)\b")
+
+
+class DispatchFixScopeError(ValueError):
+    """A fix brief names no owned paths, so its write dispatch would be unscoped (#9739)."""
+
+
+def brief_owned_paths(text: str) -> tuple[str, ...]:
+    """Repo-relative paths listed under the brief's ``Owned paths`` heading.
+
+    Paths are the backticked tokens of that section, or the lines of a fenced
+    block in it, including repository-root files. Absolute paths, ``..``
+    segments and bare words are dropped; ``delegate.py`` validates the rest.
+    """
+    match = _OWNED_PATHS_HEADING.search(text)
+    if match is None:
+        return ()
+    level = len(match.group(1))
+    end = len(text)
+    for heading in _ANY_HEADING.finditer(text, match.end()):
+        if len(heading.group(1)) <= level:
+            end = heading.start()
+            break
+    section = text[match.end() : end]
+    tokens = re.findall(r"`([^`\n]+)`", section.replace("```", "\n"))
+    for block in re.findall(r"```[^\n]*\n(.*?)```", section, flags=re.S):
+        tokens.extend(line.strip() for line in block.splitlines())
+    paths = [token for token in (raw.strip() for raw in tokens) if _is_brief_owned_path(token)]
+    return tuple(dict.fromkeys(paths))
+
+
+def _is_brief_owned_path(token: str) -> bool:
+    """Whether a backticked token is a repo-relative path rather than a word.
+
+    A token with a ``/`` is a path. A token without one is a repository-root
+    file (``pyproject.toml``, ``start-codex-driver.sh``, ``.gitignore``) when it
+    has a name with a dot, or names a file at the repository root
+    (``Makefile``); a bare word such as ``codex`` is not a path.
+    """
+    if not _BRIEF_PATH.fullmatch(token) or token.startswith(("/", "-")) or ".." in token.split("/"):
+        return False
+    if "/" in token:
+        return True
+    return ("." in token and token.strip(".") != "") or (REPO_ROOT / token).is_file()
+
+
 def build_dispatch_fix_command(task_id: str, prompt_file: Path) -> list[str]:
-    return [
+    """The write dispatch for a fix brief, scoped by the brief's own ``Owned paths`` (#9739).
+
+    Raises ``DispatchFixScopeError`` when the brief names none; a single
+    ``Risk: <level>`` line becomes ``--authoring-review-risk``.
+    """
+    text = prompt_file.read_text(encoding="utf-8")
+    owned = brief_owned_paths(text)
+    if not owned:
+        raise DispatchFixScopeError(
+            f"dispatch-fix refused for {task_id}: the brief has no '## Owned paths' section listing "
+            "repo-relative paths, so the write dispatch would be unscoped. Add one (or pass --brief-file "
+            "with it) and retry."
+        )
+    command = [
         PYTHON,
         "scripts/delegate.py",
         "dispatch",
@@ -171,6 +233,12 @@ def build_dispatch_fix_command(task_id: str, prompt_file: Path) -> list[str]:
         "--prompt-file",
         str(prompt_file),
     ]
+    for path in owned:
+        command.extend(["--owned-path", path])
+    risks = {risk.casefold() for risk in _BRIEF_RISK.findall(text)}
+    if len(risks) == 1:
+        command.extend(["--authoring-review-risk", risks.pop()])
+    return command
 
 
 def _serialize_files(files: Any) -> str:
@@ -351,7 +419,11 @@ def handle_dispatch_fix(args: Any) -> int:
             args.brief_file,
             prompt_directory,
         )
-        command = build_dispatch_fix_command(args.task_id, prompt_file)
+        try:
+            command = build_dispatch_fix_command(args.task_id, prompt_file)
+        except DispatchFixScopeError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
         return _run_dispatch(command, args.dry_run, prompt_file)
 
 

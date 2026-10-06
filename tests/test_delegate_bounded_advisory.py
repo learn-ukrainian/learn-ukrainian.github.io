@@ -98,11 +98,17 @@ def env(monkeypatch, tmp_path):
     # resolves origin/main, which a CI checkout (shallow merge ref, no
     # origin/main) cannot. Pin it to the checkout's own HEAD so the dry-run
     # worktree plan still sees a real commit; the resolver's guard is
-    # covered in tests/test_delegate.py.
+    # covered in tests/test_delegate.py. Write-dispatch review admission
+    # (#9739 A7) observes the default branch and open PRs on GitHub: pin them
+    # to HEAD and none, a fresh branch with no commits of its own
+    # (tests/test_authoring_review_feasibility.py covers authored branches).
+    from tests.test_authoring_review_feasibility import pin_review_target
+
     head_sha = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, check=True, capture_output=True, text=True, timeout=30
     ).stdout.strip()
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head_sha)
+    pin_review_target(monkeypatch, head_sha)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", health_only)
     telemetry = type("_Telemetry", (), {"model": "fixture-model", "effort": "high", "cli_version": "fixture"})()
@@ -621,6 +627,9 @@ def test_m11_write_mode_gemini_ukrainian_authoring_is_admitted(env, capsys):
         "--dry-run",
         "--research-task-family",
         "ukrainian-authoring",
+        # A write dispatch declares its scope (#9739): lesson content only.
+        "--owned-path",
+        "curriculum/l2-uk-en/a1/lesson.md",
         agent="agy",
         model=None,
     )

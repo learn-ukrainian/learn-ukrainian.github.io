@@ -52,9 +52,9 @@ def remove(caller, primary, checkout, capsys, monkeypatch):
         public.mkdir()
         _git(public, "init", "-b", "main")
         record = primary / "batch_state/tasks/done-output.json"
+        public_tasks = public / "batch_state/tasks"
+        public_tasks.mkdir(parents=True)
         if record.exists():
-            public_tasks = public / "batch_state/tasks"
-            public_tasks.mkdir(parents=True)
             (public_tasks / record.name).write_bytes(record.read_bytes())
         # Real independent metadata and the already-established dispatch lock.
         with worktree_claims.worktree_lock(checkout, lock_dir=public / ".git" / worktree_claims.LOCK_DIR_NAME):
@@ -66,6 +66,8 @@ def remove(caller, primary, checkout, capsys, monkeypatch):
         )
         monkeypatch.setattr(sibling_git, "_registry_transport", lambda _key: "ssh")
         _git(primary, "remote", "add", "origin", "git@github.com:fixture/sibling.git")
+        # Model a fetched canonical-origin HEAD for output-preservation cases.
+        _git(primary, "update-ref", "refs/remotes/origin/main", _git(checkout, "rev-parse", "HEAD"))
         with sibling_git.git_session() as git:
             repo = sibling_git.resolve_repository("fixture", public, git)
             try:

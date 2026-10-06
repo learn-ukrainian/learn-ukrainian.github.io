@@ -171,7 +171,10 @@ def test_regenerable_classifier_keeps_regular_cache_names_and_environment_output
 
 
 @pytest.mark.parametrize("move", ["archive", "redispatch", "staging"])
-def test_record_moved_between_listing_and_open_retries_complete_inventory(checkout, monkeypatch, capsys, move):
+@pytest.mark.parametrize("publish_cache", [True, False])
+def test_record_moved_between_listing_and_open_retries_complete_inventory(
+    checkout, monkeypatch, capsys, move, publish_cache
+):
     repo, primary, tasks = checkout
     source = tasks / "output-task.json"
     record = {"task_id": "output-task", "worktree_path": str(repo), "keep_worktree": True}
@@ -202,7 +205,10 @@ def test_record_moved_between_listing_and_open_retries_complete_inventory(checko
 
     monkeypatch.setattr(Path, "read_bytes", race)
     monkeypatch.setattr(Path, "glob", finish_staging)
-    assert output.resolve_worktree_record(repo, tasks, repo_root=primary) == (destination, record)
+    assert output.resolve_worktree_record(repo, tasks, repo_root=primary, publish_cache=publish_cache) == (
+        destination, record
+    )
+    assert output._identity_cache_path(tasks).exists() is publish_cache
     assert "retrying complete inventory once" in capsys.readouterr().err
 
 

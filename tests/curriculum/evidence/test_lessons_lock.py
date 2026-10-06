@@ -19,6 +19,42 @@ PYTHON = sys.executable
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
+def committed_lesson_locks():
+    """Discover tracked module locks so new levels and modules join the CI gate."""
+    paths = subprocess.check_output(
+        ["git", "ls-files", "--", "curriculum/l2-uk-en/evidence/*/_state/*/lessons.lock.yaml"],
+        cwd=REPO_ROOT,
+        text=True,
+        timeout=10,
+    ).splitlines()
+    assert paths, "No committed per-lesson locks found"
+    parameters = []
+    for path in sorted(paths):
+        lock_path = Path(path)
+        level, slug = lock_path.parents[2].name, lock_path.parent.name
+        marks = ()
+        if (level, slug) == ("a1", "sounds-letters-and-hello"):
+            marks = pytest.mark.xfail(
+                strict=True,
+                raises=AssertionError,
+                reason=(
+                    "#9694: position 1's build PR owns the sounds-letters-and-hello "
+                    "lock refresh after #9693's gloss changes; remove this xfail "
+                    "when that build PR refreshes the lock (strict XPASS must fail)."
+                ),
+            )
+        parameters.append(pytest.param(level, slug, id=f"{level}/{slug}", marks=marks))
+    return parameters
+
+
+@pytest.mark.repo_wide
+@pytest.mark.parametrize("level,slug", committed_lesson_locks())
+def test_committed_lesson_lock_is_fresh(level, slug):
+    """Word-store and pack changes cannot leave committed lesson locks stale."""
+    ok, diff = lesson_lock.check_lesson_lock(level, slug, repo_root=REPO_ROOT)
+    assert ok, diff
+
+
 def make_record(word_id: str, lemma: str, forms: list[str]) -> dict:
     return {
         "id": word_id,
@@ -306,6 +342,30 @@ def test_lock_check_passes_when_identical_and_fails_with_diff_when_stale(tmp_pat
     assert ok is False
     assert "--- committed:" in diff
     assert "+++ fresh:" in diff
+
+
+def test_word_store_gloss_change_requires_lesson_lock_refresh(tmp_path):
+    """The CI checker rejects a cited gloss edit until its lesson lock is refreshed."""
+    _plans_dir, evidence_dir = setup_curriculum_fixture(tmp_path)
+    words_path = evidence_dir / "_words.yaml"
+    words_doc = yaml.safe_load(words_path.read_text(encoding="utf-8"))
+    words_doc["words"][0]["gloss"] = "original gloss"
+    lock.write(words_path, lock.yaml_bytes(words_doc))
+    lock_path, _ = lesson_lock.write_lesson_lock("a1", "mod-one", repo_root=tmp_path)
+    original_lock = lock_path.read_bytes()
+    assert lesson_lock.check_lesson_lock("a1", "mod-one", repo_root=tmp_path) == (True, "")
+
+    words_doc["words"][0]["gloss"] = "corrected gloss"
+    lock.write(words_path, lock.yaml_bytes(words_doc))
+
+    ok, diff = lesson_lock.check_lesson_lock("a1", "mod-one", repo_root=tmp_path)
+    assert ok is False
+    assert "--- committed:" in diff
+    assert "+++ fresh:" in diff
+    assert lock_path.read_bytes() == original_lock
+
+    lesson_lock.write_lesson_lock("a1", "mod-one", repo_root=tmp_path)
+    assert lesson_lock.check_lesson_lock("a1", "mod-one", repo_root=tmp_path) == (True, "")
 
 
 def test_retired_word_id_cited_fails(tmp_path):

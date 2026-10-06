@@ -7,8 +7,9 @@
 Grok 4.7 is a regular code/infra reviewer at every risk, including critical, through native
 `--agent grok --model grok-4.7` and Cursor `--agent cursor --model grok-4.7-high`.
 Grok never ranks ahead of an eligible, healthy Sol 6.1 or Opus 5.5; native Grok ranks before
-the Cursor Grok transport fallback. At medium and low risk, the existing catalog suitability
-order places Sonnet first.
+the Cursor Grok transport fallback. The resolver chooses an eligible, healthy Sol 6.1 first at low,
+medium and high risk; Sonnet is chosen at medium and low risk only when Sol is excluded (for example a
+Sol-authored change), and at critical risk Opus 5.5 is chosen for non-Anthropic authors.
 Neither transport reviews an xAI-authored change, including the unknown-Auto union {xAI, Moonshot},
 or its own subject seat. Verdicts count only with runtime model attestation: native `modelUsage`
 reports exactly one admitted model id; Cursor reports its pinned high-effort model itself.

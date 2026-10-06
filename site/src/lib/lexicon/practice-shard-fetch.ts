@@ -19,6 +19,44 @@ import type {
 } from "./srs";
 import { isPracticeModeEnabled } from "./srs";
 import practiceDeckPointer from "../../data/lexicon-practice-deck.pointer.json";
+import {
+  displayGloss,
+  resolveHeritageBoxes,
+  type LexiconEntryForSeverity,
+} from "./heritage-severity";
+
+/** Optional Atlas evidence stays optional: legacy practice shards carry only provenance. */
+type PracticeDisplayEntry = LexiconEntryForSeverity & {
+  lemma: string;
+  gloss: string;
+  glossClean?: string;
+  heritage?: string | null;
+};
+
+export function practiceHeritageBoxes(entry: PracticeDisplayEntry) {
+  const raw = entry.heritage?.toLowerCase();
+  const classification = raw === "borrowed" || raw === "loanword" ? "borrowing"
+    : raw === "avoid" ? "russianism" : raw;
+  return resolveHeritageBoxes({
+    ...entry,
+    heritage_status: entry.heritage_status ?? { classification },
+  });
+}
+
+/** Display only; never rewrite the shard, eligibility inputs or saved progress. */
+export function practiceDisplayGloss(entry: PracticeDisplayEntry, concise = false): string {
+  const label = practiceHeritageBoxes(entry).usageLabel;
+  if (!concise) return displayGloss(entry.gloss, label)?.text ?? "";
+  const clean = entry.glossClean?.trim() || entry.gloss.split(/[;,]/, 1)[0].replace(/\s+/g, " ").trim();
+  // A clean meaning stays concise even when the full gloss contains commentary.
+  // Close only a truncated norm clause so the shared qualifier can handle it;
+  // do not expand a choice label into the full gloss and its recommendations.
+  if (/\([^()]*\b(?:calque|russianism|surzhyk|standard Ukrainian)\b[^()]*$/iu.test(clean)) {
+    const qualified = displayGloss(`${clean})`, label);
+    if (qualified?.note) return qualified.text;
+  }
+  return displayGloss(clean, label)?.text ?? "";
+}
 
 export type ShardJsonCache = Map<string, Promise<unknown>>;
 

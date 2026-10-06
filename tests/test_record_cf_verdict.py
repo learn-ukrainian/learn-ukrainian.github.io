@@ -144,6 +144,25 @@ def test_formal_reviewer_still_admits_opus_and_sol(model, family):
     recorder._require_formal_reviewer(cursor=False, reported=model, model=model, family=family)
 
 
+def facts_for(families, *, changed_paths=(), subject_seats=frozenset()):
+    """Branch facts for recorder tests that do not exercise Git enumeration."""
+    return recorder.BranchReviewFacts(
+        repository=REPOSITORY,
+        base_tip_sha=OTHER,
+        head_sha=SHA,
+        merge_base_sha=OTHER,
+        commits=tuple(recorder.CommitAttribution(None, family, "trailer-model") for family in sorted(families)),
+        existing_families=frozenset(families),
+        incoming_writer=None,
+        incoming_family=None,
+        changed_paths=tuple(changed_paths),
+        owned_paths=(),
+        subject_seats=frozenset(subject_seats),
+        subject_families=frozenset(),
+        subject_evidence=(),
+    )
+
+
 def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=None, status_error=False):
     tasks = tmp_path / "tasks"
     write_task(tasks)
@@ -184,8 +203,8 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
     monkeypatch.setattr(recorder, "_run_json", fake_json)
     monkeypatch.setattr(
         recorder,
-        "author_families",
-        lambda repository, number, task_root: families if families is not None else {"google"},
+        "pr_review_facts",
+        lambda repository, number, **kwargs: facts_for(families if families is not None else {"google"}),
     )
     monkeypatch.setattr(recorder.GitHubAdapter, "identity", lambda self: "fleet")
     monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda self, repository, number: list(comments))
@@ -426,15 +445,15 @@ def test_author_commit_sets_with_real_git(real_commit_set, tmp_path, case, accep
 
 def test_clean_update_merge_records_exact_head_review(real_commit_set, monkeypatch, tmp_path):
     _, _, head, base = real_commit_set("clean_update_merge")
-    author_families = recorder.author_families
+    pr_review_facts = recorder.pr_review_facts
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
     write_task(tasks, worktree_base_sha=head, model="claude-opus-5-5", agent="claude")
-    monkeypatch.setattr(recorder, "author_families", author_families)
+    monkeypatch.setattr(recorder, "pr_review_facts", pr_review_facts)
     fake_json = recorder._run_json
 
     def with_base(args, **kwargs):
-        if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid"]:
-            return {"baseRefOid": base}
+        if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid,headRefOid"]:
+            return {"baseRefOid": base, "headRefOid": head}
         return fake_json(args, **kwargs)
 
     monkeypatch.setattr(recorder, "_run_json", with_base)
@@ -484,17 +503,17 @@ def test_clean_merge_bad_attribution_is_not_exempted(real_commit_set, tmp_path, 
 
 def test_clean_merge_still_refuses_same_family_reviewer(real_commit_set, monkeypatch, tmp_path):
     _, _, head, base = real_commit_set("clean_update_merge")
-    author_families = recorder.author_families
+    pr_review_facts = recorder.pr_review_facts
     tasks, _, calls = setup_record(monkeypatch, tmp_path, head=head)
     write_task(tasks, worktree_base_sha=head)
-    monkeypatch.setattr(recorder, "author_families", author_families)
+    monkeypatch.setattr(recorder, "pr_review_facts", pr_review_facts)
     fake_json = recorder._run_json
     monkeypatch.setattr(
         recorder,
         "_run_json",
         lambda args, **kwargs: (
-            {"baseRefOid": base}
-            if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid"]
+            {"baseRefOid": base, "headRefOid": head}
+            if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid,headRefOid"]
             else fake_json(args, **kwargs)
         ),
     )
@@ -1673,6 +1692,45 @@ def test_missing_path_rule_refuses_even_when_all_lines_normalize(monkeypatch, tm
     with pytest.raises(recorder.RecordError, match="absolute-path rule unavailable/incompatible"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 0, "statuses": 0}
+
+
+# --- #9739 A1: GitHub's listing must equal the local base..head enumeration ----------------------
+
+
+@pytest.mark.parametrize("case", ["all_trailered", "clean_update_merge"])
+def test_pr_review_facts_bind_the_github_listing_to_rev_list(real_commit_set, monkeypatch, tmp_path, case):
+    _, commits, head, base = real_commit_set(case)
+    monkeypatch.setattr(recorder, "_run_json", lambda args, **kwargs: {"baseRefOid": base, "headRefOid": head})
+
+    facts = recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tmp_path, repo_root=Path.cwd())
+    assert facts.existing_families == {"openai"}
+    assert sorted(commit.sha for commit in facts.commits) == sorted(entry["sha"] for entry in commits)
+
+    differing = [[*commits, {**commits[0], "sha": "c" * 40}], *([commits[:-1]] if len(commits) > 1 else [])]
+    for listing in differing:
+        monkeypatch.setattr(recorder, "_pages", lambda args, listing=listing: listing)
+        with pytest.raises(recorder.RecordError, match=r"differs from the local base\.\.head enumeration"):
+            recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tmp_path, repo_root=Path.cwd())
+    with pytest.raises(recorder.RecordError, match="head moved"):
+        recorder.pr_review_facts(REPOSITORY, 42, head_sha=OTHER, task_root=tmp_path, repo_root=Path.cwd())
+
+
+def test_recorder_reads_review_subjects_and_risk_from_the_review_task(monkeypatch, tmp_path):
+    tasks, _, _ = setup_record(monkeypatch, tmp_path)
+    seen = {}
+
+    def facts(repository, number, **kwargs):
+        seen.update(kwargs)
+        return facts_for({"anthropic"}, subject_seats=kwargs["subject_seats"])
+
+    monkeypatch.setattr(recorder, "pr_review_facts", facts)
+    write_task(tasks, review_subject_seats=["codex"], review_risk="critical")
+    with pytest.raises(recorder.RecordError, match="subject exclusion"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert seen["subject_seats"] == ("codex",)
+    write_task(tasks, review_subject_seats="codex")
+    with pytest.raises(recorder.RecordError, match="review_subject_seats malformed"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
 
 
 @pytest.mark.parametrize("reply", ["**VERDICT: APPROVE**", "## **VERDICT**: **APPROVE**"])

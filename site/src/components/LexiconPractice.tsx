@@ -4,6 +4,7 @@ import { parseMarkdown, shuffle } from '../../../packages/activity-kit/src/compo
 import PracticeDailyDeck from './PracticeDailyDeck';
 import PracticeErrorBoundary from './PracticeErrorBoundary';
 import PracticeFlashcard from './PracticeFlashcard';
+import { practiceDisplayGloss, practiceHeritageBoxes } from '../lib/lexicon/practice-shard-fetch';
 import PracticeFormRail, { type FormRailVerdict } from './PracticeFormRail';
 import PracticeSessionSummary, { type SessionMissItem, type SessionSummaryStats } from './PracticeSessionSummary';
 import PracticeStress from './PracticeStress';
@@ -973,27 +974,59 @@ const HERITAGE_LABEL_KEYS: Record<string, ChromeKey> = {
   loanword: 'practice.heritageBorrowed',
   calque: 'practice.heritageCalque',
   avoid: 'practice.heritageAvoid',
+  russianism: 'practice.heritageRussianism',
 };
 
-function heritageLabelText(heritage: string | null, chromeLocale: 'en' | 'uk'): string | undefined {
-  if (!heritage) return undefined;
-  const key = HERITAGE_LABEL_KEYS[heritage.toLowerCase()];
-  return key ? CHROME_STRINGS[chromeLocale][key] : undefined;
+function heritagePresentation(entry: PracticeLexeme, chromeLocale: 'en' | 'uk') {
+  const boxes = practiceHeritageBoxes(entry);
+  const label = boxes.usageLabel;
+  const box = boxes.red ?? boxes.yellow ?? (label.scope !== 'unresolved' ? boxes.green : undefined);
+  if (box) {
+    const registerTitleKeys: Record<string, ChromeKey> = {
+      arch: 'practice.heritageArchaism', dial: 'practice.heritageDialect',
+      hist: 'practice.heritageHistorism', borr: 'practice.heritageBorrowing',
+    };
+    const titleKey = label.scope === 'sense' ? 'practice.heritageCalqueSense'
+      : label.scope === 'phrase' ? 'practice.heritageCalquePhrase'
+      : boxes.red ? 'practice.heritageEditorialWarning'
+      : boxes.yellow ? 'practice.heritageCalqueCaution'
+      : (registerTitleKeys[label.code ?? ''] ?? 'practice.heritageAttestedForm');
+    const context = label.scope === 'sense' || label.scope === 'phrase' ? label.evidence : null;
+    const authority = label.authority.length > 0 ? label.authority.join(', ')
+      : boxes.yellow ? CHROME_STRINGS[chromeLocale]['practice.heritageNoVerifiedExcerpt'] : null;
+    return {
+      text: [CHROME_STRINGS[chromeLocale][titleKey], context, authority].filter(Boolean).join(' · '),
+      color: boxes.red ? 'var(--lu-red)' : boxes.yellow ? 'var(--lu-orange)' : 'var(--lu-teal)',
+    };
+  }
+  const heritage = entry.heritage?.toLowerCase();
+  if (!heritage) return {};
+  const key = HERITAGE_LABEL_KEYS[heritage];
+  const rawLabel = key ? CHROME_STRINGS[chromeLocale][key] : undefined;
+  // Only norm claims need scope qualification; provenance keeps its raw chip.
+  if (rawLabel && (heritage === 'calque' || heritage === 'avoid' || heritage === 'russianism')) {
+    return {
+      text: CHROME_STRINGS[chromeLocale]['practice.heritageUnresolvedNote'].replace('{label}', rawLabel),
+      color: 'var(--lu-text-muted)',
+    };
+  }
+  return { text: rawLabel, color: heritageTagColor(entry.heritage) };
 }
 
 function displayPracticeForm(value: string, learnerLevel: CefrLevel): string {
   return learnerLevel === 'A1' ? value : stripStressMarks(value);
 }
 
-function cardData(entry: PracticeLexeme, learnerLevel: CefrLevel, chromeLocale: 'en' | 'uk') {
+export function cardData(entry: PracticeLexeme, learnerLevel: CefrLevel, chromeLocale: 'en' | 'uk') {
+  const heritage = heritagePresentation(entry, chromeLocale);
   return {
     front: displayPracticeForm(entry.lemma, learnerLevel),
     pronunciationLemma: entry.lemma || entry.lemmaPlain,
-    back: entry.gloss,
+    back: practiceDisplayGloss(entry),
     subtitle: entry.ipa ?? entry.pos ?? undefined,
     tag: entry.cefr ?? undefined,
-    tagColor: heritageTagColor(entry.heritage),
-    heritageLabel: heritageLabelText(entry.heritage, chromeLocale),
+    tagColor: heritage.color,
+    heritageLabel: heritage.text,
   };
 }
 
@@ -1155,12 +1188,12 @@ function orderedChoiceOptions(
   const distractors = meaningDistractors(selection.lemma, deck, 3);
   if (distractors.length < 3) return [];
   const answer = polarity === 'word-to-meaning'
-    ? glossLabel(selection.lemma)
+    ? practiceDisplayGloss(selection.lemma, true)
     : displayPracticeForm(selection.lemma.lemma, learnerLevel);
   const options = [
     { label: answer, correct: true },
     ...distractors.map((entry) => ({
-      label: polarity === 'word-to-meaning' ? glossLabel(entry) : displayPracticeForm(entry.lemma, learnerLevel),
+      label: polarity === 'word-to-meaning' ? practiceDisplayGloss(entry, true) : displayPracticeForm(entry.lemma, learnerLevel),
       correct: false,
     })),
   ];
@@ -1236,7 +1269,7 @@ function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData, lea
   if (!entries.every(isMeaningMcEligible)) return [];
   return entries.map((entry) => ({
     left: displayPracticeForm(entry.lemma, learnerLevel),
-    right: glossLabel(entry),
+    right: practiceDisplayGloss(entry, true),
     lemmaId: entry.lemmaId,
   }));
 }
@@ -1264,8 +1297,8 @@ function choicePrompt(selection: PracticeSelection, learnerLevel: CefrLevel): { 
     };
   }
   return {
-    uk: `Яке слово означає «${glossLabel(selection.lemma)}»?`,
-    en: `Which word means «${glossLabel(selection.lemma)}»?`,
+    uk: `Яке слово означає «${practiceDisplayGloss(selection.lemma, true)}»?`,
+    en: `Which word means «${practiceDisplayGloss(selection.lemma, true)}»?`,
   };
 }
 
@@ -1280,7 +1313,7 @@ function choiceFeedbackFor(
   learnerLevel: CefrLevel,
 ): DrillFeedback {
   const lemma = displayPracticeForm(selection.lemma.lemma, learnerLevel);
-  const gloss = glossLabel(selection.lemma);
+  const gloss = practiceDisplayGloss(selection.lemma, true);
   const pair = `«${lemma}» = ${gloss}.`;
   return option.correct
     ? { kind: 'correct', textUk: `Правильно! ${pair}`, textEn: `Correct! ${pair}` }
@@ -4199,7 +4232,7 @@ function LexiconPracticeIsland({
         // #6722: surface on the results screen — dedupe by lemma, keep the latest miss.
         setSessionMisses((items) => [
           ...items.filter((entry) => entry.lemmaId !== current.lemma.lemmaId),
-          { lemmaId: current.lemma.lemmaId, lemma: current.lemma.lemma, gloss: glossLabel(current.lemma) },
+          { lemmaId: current.lemma.lemmaId, lemma: current.lemma.lemma, gloss: practiceDisplayGloss(current.lemma, true) },
         ]);
       }
       if (wasNew && rating !== 'again') {

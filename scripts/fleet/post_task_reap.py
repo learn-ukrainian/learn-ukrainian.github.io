@@ -889,7 +889,12 @@ def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply:
             )
             if refusal:
                 return refusal
-            path, record = ignored_task_output.resolve_worktree_record(worktree, tasks_dir, repo_root=repo_root)
+            path, record = ignored_task_output.resolve_worktree_record(
+                worktree,
+                tasks_dir,
+                repo_root=repo_root,
+                publish_cache=worktree_claims.identity_cache_publication_allowed(worktree, tasks_dir),
+            )
             if path is None or record.get("task_id") != task_id:
                 return "retention release requires unambiguous owner attribution"
             receipt = record.get("preserved_artifacts", {})
