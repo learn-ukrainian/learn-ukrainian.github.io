@@ -14,6 +14,7 @@ import importlib
 import inspect
 import os
 import sys
+import warnings
 from pathlib import Path
 
 import pytest
@@ -203,3 +204,82 @@ def test_kimicc_bindings_survive_unmarked_then_marked_and_the_reverse(monkeypatc
             module._ensure_supported_claude_cli_version = gate
         _restore_kimicc(snapshot)
         _clear_claude_probe_caches()
+
+
+def test_only_the_bridge_runtime_counts_as_an_absent_gate_dependency():
+    """A missing alias, or any other missing module, is not the bridge runtime."""
+    import tests.conftest as root_conftest
+
+    runtime = ModuleNotFoundError("No module named 'learn_ukrainian_v4_runtime'", name="learn_ukrainian_v4_runtime")
+    submodule = ModuleNotFoundError("missing", name="learn_ukrainian_v4_runtime.contracts")
+    alias = ModuleNotFoundError("missing", name="scripts.agent_runtime.adapters.claude")
+    unnamed = ModuleNotFoundError("missing")
+
+    assert root_conftest._missing_bridge_runtime(runtime) == "learn_ukrainian_v4_runtime"
+    assert root_conftest._missing_bridge_runtime(submodule) == "learn_ukrainian_v4_runtime.contracts"
+    assert root_conftest._missing_bridge_runtime(alias) is None
+    assert root_conftest._missing_bridge_runtime(unnamed) is None
+
+
+def test_fixture_skips_alias_when_bridge_runtime_is_absent(monkeypatch):
+    """Each gate alias is skipped, with the missing runtime recorded, and nothing else is swallowed."""
+    import tests.conftest as root_conftest
+
+    aliases = root_conftest._CLAUDE_ADAPTER_ALIASES + root_conftest._KIMICC_ADAPTER_ALIASES
+    seen: list[str] = []
+
+    def fake_import(name, package=None):
+        seen.append(name)
+        if name in aliases:
+            raise ModuleNotFoundError(
+                "No module named 'learn_ukrainian_v4_runtime'",
+                name="learn_ukrainian_v4_runtime",
+            )
+        raise AssertionError(name)
+
+    monkeypatch.setattr(importlib, "import_module", fake_import)
+    saved = dict(root_conftest._CLAUDE_GATE_IMPORT_SKIPS)
+    root_conftest._CLAUDE_GATE_IMPORT_SKIPS.clear()
+    install = inspect.unwrap(root_conftest._stub_claude_cli_version_gate)
+    try:
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            install(_GateRequest(marked=False), monkeypatch)
+        assert seen == list(aliases)
+        assert set(root_conftest._CLAUDE_GATE_IMPORT_SKIPS) == set(aliases)
+        reason = "runtime dependency 'learn_ukrainian_v4_runtime' is absent"
+        assert set(root_conftest._CLAUDE_GATE_IMPORT_SKIPS.values()) == {reason}
+        messages = [str(item.message) for item in caught]
+        assert len(messages) == len(aliases)
+        for alias in aliases:
+            assert any(alias in message and reason in message for message in messages)
+    finally:
+        root_conftest._CLAUDE_GATE_IMPORT_SKIPS.clear()
+        root_conftest._CLAUDE_GATE_IMPORT_SKIPS.update(saved)
+
+
+def test_fixture_reraises_when_the_missing_module_is_not_the_bridge_runtime(monkeypatch):
+    import tests.conftest as root_conftest
+
+    def fake_import(name, package=None):
+        raise ModuleNotFoundError(f"No module named {name!r}", name=name)
+
+    monkeypatch.setattr(importlib, "import_module", fake_import)
+    install = inspect.unwrap(root_conftest._stub_claude_cli_version_gate)
+    with pytest.raises(ModuleNotFoundError, match=r"scripts\.agent_runtime\.adapters\.claude"):
+        install(_GateRequest(marked=False), monkeypatch)
+
+
+def test_successful_gate_import_clears_a_recorded_skip(monkeypatch):
+    import tests.conftest as root_conftest
+
+    alias = root_conftest._CLAUDE_ADAPTER_ALIASES[0]
+    saved = dict(root_conftest._CLAUDE_GATE_IMPORT_SKIPS)
+    root_conftest._CLAUDE_GATE_IMPORT_SKIPS[alias] = "runtime dependency 'learn_ukrainian_v4_runtime' is absent"
+    install = inspect.unwrap(root_conftest._stub_claude_cli_version_gate)
+    try:
+        install(_GateRequest(marked=False), monkeypatch)
+        assert alias not in root_conftest._CLAUDE_GATE_IMPORT_SKIPS
+    finally:
+        root_conftest._CLAUDE_GATE_IMPORT_SKIPS.clear()
+        root_conftest._CLAUDE_GATE_IMPORT_SKIPS.update(saved)

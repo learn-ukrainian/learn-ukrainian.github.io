@@ -16,6 +16,7 @@ import sqlite3
 import subprocess
 import sys
 import threading
+import warnings
 import weakref
 from collections.abc import Callable, Collection, Generator
 from datetime import UTC, datetime
@@ -207,6 +208,34 @@ def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool
 _CLAUDE_ADAPTER_ALIASES = ("scripts.agent_runtime.adapters.claude", "agent_runtime.adapters.claude")
 _KIMICC_ADAPTER_ALIASES = ("scripts.agent_runtime.adapters.kimicc", "agent_runtime.adapters.kimicc")
 _STUBBED_CLAUDE_CLI_VERSION = (2, 1, 200)
+# Bridge package the rules-workflow venv does not install. Adapter imports reach
+# it through fleet_comms contracts; its absence is not an alias typo.
+_BRIDGE_RUNTIME = "learn_ukrainian_v4_runtime"
+# alias -> why this process last left that gate unpatched. A later successful
+# import removes the entry. The dict is the record; the warning fires once per
+# distinct reason so a runtime-less session does not warn on every test.
+_CLAUDE_GATE_IMPORT_SKIPS: dict[str, str] = {}
+
+
+def _missing_bridge_runtime(exc: ModuleNotFoundError) -> str | None:
+    """Return the missing bridge-runtime module, or None for any other import failure."""
+    missing = exc.name or ""
+    if missing == _BRIDGE_RUNTIME or missing.startswith(_BRIDGE_RUNTIME + "."):
+        return missing
+    return None
+
+
+def _record_claude_gate_skip(alias: str, missing: str) -> None:
+    """Record why ``alias`` was not patched. Warn once per distinct reason."""
+    reason = f"runtime dependency {missing!r} is absent"
+    if _CLAUDE_GATE_IMPORT_SKIPS.get(alias) == reason:
+        return
+    _CLAUDE_GATE_IMPORT_SKIPS[alias] = reason
+    warnings.warn(
+        f"Claude CLI version-gate stub skipped {alias}: {reason}",
+        RuntimeWarning,
+        stacklevel=2,
+    )
 
 
 @pytest.fixture(autouse=True)
@@ -222,6 +251,12 @@ def _stub_claude_cli_version_gate(request: pytest.FixtureRequest, monkeypatch: p
     patch the ``kimicc`` bindings explicitly so teardown restores the real
     gate. Patching Claude first would make that first import capture the stub,
     and teardown would put the stub back.
+
+    An alias whose import fails because ``learn_ukrainian_v4_runtime`` is not
+    installed is skipped and the missing module is recorded. The rules-workflow
+    venv has no bridge runtime and does not build Claude invocations. Any other
+    import error still propagates. When the runtime is present, every alias is
+    still imported before any gate is patched.
 
     Tests marked ``real_claude_cli_gate`` keep the real gate (with their own
     fakes) and only get fresh caches. A test that patches the gate itself runs
@@ -241,7 +276,16 @@ def _stub_claude_cli_version_gate(request: pytest.FixtureRequest, monkeypatch: p
     for alias in _CLAUDE_ADAPTER_ALIASES + _KIMICC_ADAPTER_ALIASES:
         if alias not in sys.modules and importlib.util.find_spec(alias.split(".")[0]) is None:
             continue
-        modules.append(importlib.import_module(alias))
+        try:
+            module = importlib.import_module(alias)
+        except ModuleNotFoundError as exc:
+            missing = _missing_bridge_runtime(exc)
+            if missing is None:
+                raise
+            _record_claude_gate_skip(alias, missing)
+            continue
+        _CLAUDE_GATE_IMPORT_SKIPS.pop(alias, None)
+        modules.append(module)
 
     for module in modules:
         probe = getattr(module, "_probe_claude_cli_version", None)
