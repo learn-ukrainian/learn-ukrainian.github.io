@@ -532,3 +532,20 @@ def test_frontend_build_declares_shared_astro_scope(tmp_path, monkeypatch, capsy
         assert report["artifact_certification"].startswith("not_certified")
     residual = next(r for r in manifest["residual_commands"] if r["id"] == "open-model-prepared-build-inputs")
     assert residual["status"] == "artifact-dependent" and residual["owner_slice"] == 5
+
+
+def test_complete_node_commands_have_bounded_parallel_execution(monkeypatch, manifest, tmp_path):
+    command = c.node_test_commands("harness", manifest, ["tests/test_fixture.py"], [])[0]
+    assert command["argv"][2:7] == ["pytest", "-q", "-n", "2", "tests/test_fixture.py"]
+    calls = []
+    monkeypatch.setattr(c, "project_interpreter", lambda root: Path(sys.executable))
+    def run(argv, **kw):
+        calls.append(kw)
+        return subprocess.CompletedProcess(argv, 0, "tests/test_fixture.py::test_fixture\n")
+    monkeypatch.setattr(c.subprocess, "run", run)
+    assert c.collect_tests(["tests/test_fixture.py"], [], tmp_path)[1] == 0
+    assert calls[-1]["timeout"] == 900
+    assert c.run_commands([command], tmp_path, None, {})[1] == 0
+    assert calls[-1]["timeout"] == 7200
+    assert c.run_commands([command | {"scope": "code-contract"}], tmp_path, None, {})[1] == 0
+    assert calls[-1]["timeout"] == 1800

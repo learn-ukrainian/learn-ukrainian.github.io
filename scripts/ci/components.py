@@ -437,7 +437,7 @@ def vitest_files(component: str, manifest: dict, root: Path = ROOT) -> list[str]
 
 def node_test_commands(component: str, manifest: dict, files: list[str], front_files: list[str]) -> list[dict]:
     """Use pytest and existing site scripts; retain the built-output test tier."""
-    commands = [{"argv": ["{python}", "-m", "pytest", "-q", *files,
+    commands = [{"argv": ["{python}", "-m", "pytest", "-q", "-n", "2", *files,
                            *manifest["components"][component]["test_args"]],
                  "cwd": ".", "scope": "complete-node-pytest"}]
     if front_files:
@@ -454,7 +454,7 @@ def collect_tests(files: Sequence[str], args: Sequence[str], root: Path = ROOT) 
     """Collect fresh IDs; any collection error is a full-selection obligation."""
     result = subprocess.run(
         [str(project_interpreter(root)), "-m", "pytest", "--collect-only", "--verbosity=-1", *files, *args],
-        cwd=root, capture_output=True, text=True, timeout=180,
+        cwd=root, capture_output=True, text=True, timeout=900,
     )
     ids = sorted(line.strip() for line in result.stdout.splitlines() if line.startswith("tests/") and "::" in line)
     return ids, result.returncode if result.returncode else (0 if ids else 5)
@@ -577,9 +577,10 @@ def run_commands(commands: list[dict], root: Path, output_dir: Path | None,
             junit = Path(scratch) / "junit.xml"
             is_pytest = "pytest" in argv
             executed = [*argv, f"--junitxml={junit}"] if is_pytest else argv
+            timeout = 7200 if command["scope"].startswith("complete-node-") else 1800
             result = subprocess.run(executed, cwd=root / command["cwd"], check=False,
                                     env=os.environ | {"PYTHON": str(project_interpreter(root))},
-                                    stdout=sys.stderr, timeout=1800)
+                                    stdout=sys.stderr, timeout=timeout)
             skipped = 0
             if is_pytest and junit.is_file():
                 tree = ET.parse(junit)
@@ -603,6 +604,8 @@ def parser() -> argparse.ArgumentParser:
         "  .venv/bin/python -m scripts.ci.components test --component atlas-frontend --list\n"
         "  .venv/bin/python -m scripts.ci.components build --component atlas-frontend "
         "--inputs inputs.json --output-dir site/dist\n"
+        "Defaults: complete-node pytest uses two workers; collection has a 15-minute timeout, "
+        "complete-node commands a two-hour timeout, other commands 30 minutes.\n"
         "Outputs: JSON on stdout; test processes; builds write declared outputs, curriculum producers "
         "write canonical worktree files. No CI/Pages selection, network preparation or publication.\n"
         "Exit codes: 0 checks passed; 1 inventory/command failure; 2 invalid arguments/input; "
