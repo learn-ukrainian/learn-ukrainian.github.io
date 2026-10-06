@@ -117,7 +117,7 @@ def test_concentration_failures_cannot_be_hidden_by_ids_or_source_text(bundle, k
 
 
 def test_binding_engine_region_group_contiguity_and_unknown_rule(bundle):
-    text = "SYNTHETIC examples: SYNTHETIC example\n1. SYNTHETIC outside"
+    text = "SYNTHETIC examples: SYNTHETICexample\n1. SYNTHETIC outside"
     with sqlite3.connect(bundle["db"]) as writer:
         writer.execute("UPDATE units SET source_field=? WHERE id=1", (text,))
     row = {**bundle["rows"][0], "source_field": text}
@@ -125,12 +125,12 @@ def test_binding_engine_region_group_contiguity_and_unknown_rule(bundle):
     bundle["candidates"][0] = replace(
         original, slots=(replace(original.slots[0], text=text, citations=(citation(row),)),)
     )
-    example = Value("example", "SYNTHETIC example", (citation(row),), (16, 33), "verbatim")
+    example = Value("example", "SYNTHETICexample", (citation(row),), (16, 33), "verbatim")
     candidate = replace(bundle["candidates"][0], slots=(example,))
     with SnapshotReader({"sources.db": bundle["db"]}) as reader:
         spec = {"schema": "binding-spec.v1", "rules": [{"op": "example_list", "values": [selector(slot="example")]}]}
         # Locate the actual source span rather than relying on the example fixture offsets.
-        start = text.index("SYNTHETIC example", text.index(":"))
+        start = text.index("SYNTHETICexample", text.index(":"))
         candidate = replace(candidate, slots=(replace(example, span=(start, start + len(example.text))),))
         assert "example_list" in bindings.check(candidate, spec, reader, {})
         bad = replace(candidate, slots=(replace(candidate.slots[0], span=(34, len(text))),))
@@ -465,28 +465,29 @@ def test_gate_c2_applicability_reads_source_assertions(bundle):
 @pytest.mark.parametrize(
     "text,item,allowed",
     [
+        ("SYNTHETIC examples: SYNTHETIC alpha, SYNTHETIC beta.", "SYNTHETIC alpha", False),
         (
-            "SYNTHETIC examples: SYNTHETIC alpha, SYNTHETIC beta. SYNTHETIC rule prose: SYNTHETIC outside",
-            "SYNTHETIC beta",
+            "SYNTHETIC examples: SYNTHETICalpha, SYNTHETICbeta. Rule SYNTHETIC prose: SYNTHETIC outside",
+            "SYNTHETICbeta",
             True,
         ),
         (
-            "SYNTHETIC examples: SYNTHETIC alpha, SYNTHETIC beta. SYNTHETIC rule prose: SYNTHETIC outside",
+            "SYNTHETIC examples: SYNTHETICalpha, SYNTHETICbeta. Rule SYNTHETIC prose: SYNTHETIC outside",
             "SYNTHETIC outside",
             False,
         ),
-        ("SYNTHETIC examples: SYNTHETIC alpha, SYNTHETIC beta. SYNTHETIC rule prose", "alpha", False),
+        ("SYNTHETIC examples: SYNTHETICalpha, SYNTHETICbeta. Rule SYNTHETIC prose", "alpha", False),
         (
-            "SYNTHETIC examples: SYNTHETIC alpha; SYNTHETIC beta\n2. SYNTHETIC rule: SYNTHETIC outside",
+            "SYNTHETIC examples: SYNTHETICalpha; SYNTHETICbeta\n2. SYNTHETIC rule: SYNTHETIC outside",
             "SYNTHETIC outside",
             False,
         ),
         (
-            "SYNTHETIC examples: SYNTHETIC alpha; SYNTHETIC beta. SYNTHETIC examples: SYNTHETIC gamma, SYNTHETIC delta.",
-            "SYNTHETIC delta",
+            "SYNTHETIC examples: SYNTHETICalpha; SYNTHETICbeta. Rule SYNTHETIC examples: SYNTHETICgamma, SYNTHETICdelta.",
+            "SYNTHETICdelta",
             True,
         ),
-        ("SYNTHETIC examples:\n SYNTHETIC alpha, SYNTHETIC beta\n3. SYNTHETIC rule", "SYNTHETIC alpha", True),
+        ("SYNTHETIC examples:\n SYNTHETICalpha, SYNTHETICbeta\n3. SYNTHETIC rule", "SYNTHETICalpha", True),
     ],
 )
 def test_colon_regions_require_whole_items_and_exclude_later_rule_prose(bundle, text, item, allowed):
