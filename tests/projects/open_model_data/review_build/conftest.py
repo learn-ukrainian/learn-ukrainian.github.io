@@ -2,8 +2,8 @@
 
 import json
 import sqlite3
-from dataclasses import asdict
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -165,30 +165,30 @@ def bundle(tmp_path):
             "rules": [{"op": "same_row", "values": [selector(), selector("response", "target")]}],
         },
     }
+    spec["compatibility"] = [
+        {
+            "store": "sources.db",
+            "table": "units",
+            "source_id": "synthetic",
+            "role": "modern",
+            "source_column": "source_file",
+            "source_values": ["SYNTHETIC book"],
+        }
+    ]
     config = {
-        "schema": "omd-review-request.v1",
+        "schema": "omd-review-request.v2",
         "databases": {"sources.db": str(db)},
-        "candidates": "input.jsonl",
+        "ua_gec": {"root": str(tmp_path / "synthetic-ua-gec")},
         "catalog": "catalog.yaml",
         "register": "register.yaml",
         "synthetic_sources": ["synthetic"],
-        "components": {"C1": spec},
-        "compatibility": [
-            {
-                "store": "sources.db",
-                "table": "units",
-                "source_id": "synthetic",
-                "role": "modern",
-                "source_column": "source_file",
-                "source_values": ["SYNTHETIC book"],
-            }
-        ],
     }
     result = {
         "rows": rows,
         "db": db,
         "candidates": candidates,
         "spec": spec,
+        "specs": {"C1": spec},
         "config": config,
         "catalog": catalog_data(),
         "register": register_data(),
@@ -203,7 +203,6 @@ def save_bundle(bundle):
     (root / "request.json").write_text(json.dumps(bundle["config"]))
     (root / "catalog.yaml").write_text(yaml.safe_dump(bundle["catalog"]))
     (root / "register.yaml").write_text(yaml.safe_dump(bundle["register"]))
-    (root / "input.jsonl").write_text("".join(json.dumps(asdict(c)) + "\n" for c in bundle["candidates"]))
 
 
 def run_gate(bundle, candidates=None):
@@ -213,7 +212,20 @@ def run_gate(bundle, candidates=None):
             reader,
             Catalog(bundle["catalog"]),
             resolver,
-            bundle["config"]["components"],
-            bundle["config"]["compatibility"],
-            bundle["config"].get("corpus"),
+            bundle["specs"],
         ).run(bundle["candidates"] if candidates is None else candidates)
+
+
+def synthetic_components(bundle):
+    """Reviewed synthetic specs and streams are supplied in code, never request JSON."""
+    return {
+        component: SimpleNamespace(
+            spec=spec,
+            adapters={},
+            files={},
+            iter_candidates=lambda ctx, component=component: iter(
+                c for c in bundle["candidates"] if c.component == component
+            ),
+        )
+        for component, spec in bundle["specs"].items()
+    }

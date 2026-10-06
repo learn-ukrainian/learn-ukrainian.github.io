@@ -205,10 +205,10 @@ def test_c7_shared_pair_form_keys_and_adjudication(bundle, mismatch):
     # All strings are synthetic; this tests structural admission, not linguistic truth.
     sources = ("synthetic", "synthetic_book", "sum11", "synthetic_ulif", "synthetic_vesum", "synthetic_receipt")
     bundle["register"] = register_data(sources=sources)
-    bundle["config"]["compatibility"] = [
+    bundle["spec"]["compatibility"] = [
         {
             "store": "sources.db",
-            "table": "units",
+            "table": "units" if s == "synthetic" else s + "_units",
             "source_id": s,
             "role": "sum11" if s == "sum11" else "modern",
             "source_column": "source_file",
@@ -216,12 +216,20 @@ def test_c7_shared_pair_form_keys_and_adjudication(bundle, mismatch):
         }
         for s in sources
     ]
+    from tests.projects.open_model_data.review_build.conftest import write_db
+
+    for source in sources[1:]:
+        write_db(bundle["db"], bundle["rows"], table=source + "_units")
+
+    def source_citation(row, field="source_field", source="synthetic"):
+        return citation(row, field, source, table="units" if source == "synthetic" else source + "_units")
+
     c = bundle["candidates"][0]
     row = bundle["rows"][0]
     left = Value(
         "rejected",
         row["source_field"],
-        (citation(row, source="sum11"), citation(row, source="synthetic_book")),
+        (source_citation(row, source="sum11"), source_citation(row, source="synthetic_book")),
         None,
         "verbatim",
     )
@@ -229,25 +237,29 @@ def test_c7_shared_pair_form_keys_and_adjudication(bundle, mismatch):
         "recommended",
         row["target_field"],
         (
-            citation(row, "target_field", source="synthetic_book"),
-            citation(row, "target_field", source="synthetic_ulif"),
-            citation(row, "target_field", source="synthetic_vesum"),
+            source_citation(row, "target_field", source="synthetic_book"),
+            source_citation(row, "target_field", source="synthetic_ulif"),
+            source_citation(row, "target_field", source="synthetic_vesum"),
         ),
         None,
         "verbatim",
     )
-    receipt = Value("receipt", row["source_field"], (citation(row, source="synthetic_receipt"),), None, "verbatim")
+    receipt = Value(
+        "receipt", row["source_field"], (source_citation(row, source="synthetic_receipt"),), None, "verbatim"
+    )
     c = replace(c, component="C7", context=(left, right, receipt), flags=("c7_opt_in", "soviet_colonization_context"))
     bundle["candidates"] = [c]
     bundle["spec"]["unit_query"]["sql"] += " WHERE id=1"
     bundle["spec"]["frozen_count"] = 1
-    bundle["config"]["components"] = {"C7": bundle["spec"]}
+    bundle["specs"] = {"C7": bundle["spec"]}
     bundle["catalog"]["components"]["C7"] = bundle["catalog"]["components"].pop("C1")
     with sqlite3.connect(bundle["db"]) as writer:
-        writer.execute(
-            "UPDATE units SET sol='APPROVE',opus=?,pair='id=1' WHERE id=1",
-            ("SYNTHETIC missing" if mismatch == "adjudication" else "APPROVE",),
-        )
+        for source in sources:
+            table = "units" if source == "synthetic" else source + "_units"
+            writer.execute(
+                f"UPDATE {table} SET sol='APPROVE',opus=?,pair='id=1' WHERE id=1",
+                ("SYNTHETIC missing" if mismatch == "adjudication" else "APPROVE",),
+            )
     pair = {
         "op": "contrast_pair",
         "rejected": selector("context", "rejected"),
@@ -277,7 +289,7 @@ def test_c7_shared_pair_form_keys_and_adjudication(bundle, mismatch):
         },
     ]
     if mismatch == "unrelated_sum11":
-        left = replace(left, citations=(citation(bundle["rows"][1], source="sum11"), left.citations[1]))
+        left = replace(left, citations=(source_citation(bundle["rows"][1], source="sum11"), left.citations[1]))
         # Book is primary so quotation passes and the unrelated supporting row
         # must fail the content check rather than primary quotation.
         left = replace(left, citations=tuple(reversed(left.citations)))
@@ -285,13 +297,13 @@ def test_c7_shared_pair_form_keys_and_adjudication(bundle, mismatch):
         pair["rejected_key"].update(citation=0)
         bundle["candidates"][0] = replace(c, context=(left, right, receipt))
     elif mismatch == "extra":
-        right = replace(right, citations=(*right.citations, citation(bundle["rows"][1], source="synthetic")))
+        right = replace(right, citations=(*right.citations, source_citation(bundle["rows"][1], source="synthetic")))
         bundle["candidates"][0] = replace(c, context=(left, right, receipt))
     elif mismatch == "substring":
         longer = row["source_field"] + "longer"
         with sqlite3.connect(bundle["db"]) as writer:
-            writer.execute("UPDATE units SET target_field=? WHERE id=2", (longer,))
-        book = citation({**bundle["rows"][1], "target_field": longer}, "target_field", "synthetic_book")
+            writer.execute("UPDATE synthetic_book_units SET target_field=? WHERE id=2", (longer,))
+        book = source_citation({**bundle["rows"][1], "target_field": longer}, "target_field", "synthetic_book")
         left = replace(left, citations=(left.citations[0], book))
         right = replace(right, citations=(book, *right.citations[1:]), span=(0, len(right.text)))
         # Exercise the witness check directly: quotation of the recommended
@@ -302,7 +314,7 @@ def test_c7_shared_pair_form_keys_and_adjudication(bundle, mismatch):
         return
     if mismatch == "swapped":
         bundle["candidates"][0] = replace(
-            c, response=(replace(c.response[0], text=row["source_field"], citations=(citation(row),)),)
+            c, response=(replace(c.response[0], text=row["source_field"], citations=(source_citation(row),)),)
         )
     if mismatch:
         with pytest.raises(
@@ -439,7 +451,6 @@ def test_gate_c2_applicability_reads_source_assertions(bundle):
             Catalog(data),
             Resolver(bundle["register"], {"synthetic": SyntheticAdapter()}),
             {"C2": spec},
-            bundle["config"]["compatibility"],
         )
         assert gate.applicable(c) == ("C2.agreed_form.with",)
         assert gate.applicable(replace(c, slots=(c.slots[0], replace(sense, text=" ")))) == ("C2.agreed_form.without",)
@@ -523,7 +534,6 @@ def test_declared_variants_missing_applicability_spec_is_not_withheld(bundle, co
             Catalog(catalog),
             Resolver(bundle["register"], {"synthetic": SyntheticAdapter()}),
             {component: bundle["spec"]},
-            bundle["config"]["compatibility"],
         )
         for slots in (candidate.slots, (*candidate.slots, replace(candidate.response[0], slot="sense"))):
             with pytest.raises(BuildError, match="applicability_spec"):

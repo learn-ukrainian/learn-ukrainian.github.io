@@ -176,7 +176,7 @@ def test_genuine_quotes_wrong_relationship_fail(bundle, fixture):
     ],
 )
 def test_must_fail_source_roles(bundle, fixture, code):
-    role = bundle["config"]["compatibility"][0]
+    role = bundle["spec"]["compatibility"][0]
     if fixture == "sum11_alone":
         role["role"] = "sum11"
     elif fixture in {"zno", "pogribny"}:
@@ -224,7 +224,7 @@ def test_must_fail_source_roles(bundle, fixture, code):
             "layer": "layer",
             "text": "source_field",
         }
-        bundle["config"]["corpus"] = corpus
+        bundle["spec"]["corpus"] = corpus
         with SnapshotReader({"sources.db": bundle["db"]}) as reader:
             dev = SourceRoles(reader, [role], corpus).dev_documents
         if fixture == "dev_document":
@@ -268,7 +268,7 @@ def test_must_fail_source_roles(bundle, fixture, code):
                 writer.execute("UPDATE units SET layer='gec-fluency',edits='[\"F/Calque\",\"SYNTHETIC other edit\"]'")
         if fixture == "mixed_c6":
             bundle["candidates"] = [replace(c, component="C6") for c in bundle["candidates"]]
-            bundle["config"]["components"] = {"C6": bundle["spec"]}
+            bundle["specs"] = {"C6": bundle["spec"]}
             bundle["catalog"]["components"]["C6"] = bundle["catalog"]["components"].pop("C1")
     with pytest.raises(BuildError, match=code):
         run_gate(bundle)
@@ -328,7 +328,7 @@ def test_unit_identity_spec_fails_closed(bundle, kind):
 @pytest.mark.parametrize("role_name", ["ua_gec", "textbook"])
 @pytest.mark.parametrize("kind", ["missing", "null"])
 def test_sensitive_roles_require_a_present_known_sensitivity(bundle, role_name, kind):
-    role = bundle["config"]["compatibility"][0]
+    role = bundle["spec"]["compatibility"][0]
     role["role"] = role_name
     role["sensitive"] = "is_sensitive"
     if kind == "missing":
@@ -342,7 +342,7 @@ def test_sensitive_roles_require_a_present_known_sensitivity(bundle, role_name, 
 
 @pytest.mark.parametrize("kind", ["missing_column", "unexpected_value", "missing_mapping"])
 def test_compatibility_requires_source_identity_from_the_row(bundle, kind):
-    role = bundle["config"]["compatibility"][0]
+    role = bundle["spec"]["compatibility"][0]
     if kind == "missing_column":
         role["source_column"] = "SYNTHETIC missing"
     elif kind == "unexpected_value":
@@ -363,7 +363,7 @@ def test_dev_carveout_excludes_fluency_only_documents_of_the_same_author(bundle)
         "layer": "layer",
         "text": "source_field",
     }
-    role = bundle["config"]["compatibility"][0]
+    role = bundle["spec"]["compatibility"][0]
     role.update(role="ua_gec", split="split", document="document", text="source_field", layer="layer", edits="edits")
     with SnapshotReader({"sources.db": bundle["db"]}) as reader:
         carved = SourceRoles(reader, [role], corpus).dev_authors

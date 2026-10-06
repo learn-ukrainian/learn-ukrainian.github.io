@@ -7,6 +7,7 @@ from dataclasses import asdict
 from . import bindings
 from .attribution import Resolver
 from .catalog import Catalog
+from .components import admission_policy
 from .contract import Candidate, canonical, digest, record_id, values
 from .errors import BuildError, require
 from .metrics import measure
@@ -38,8 +39,6 @@ class Gate:
         catalog: Catalog,
         resolver: Resolver,
         components: dict,
-        compatibility: list[dict],
-        corpus: dict | None = None,
     ):
         require(bool(components) and set(components) <= COMPONENTS, "component_spec")
         self.reader, self.catalog, self.resolver = reader, catalog, resolver
@@ -49,6 +48,7 @@ class Gate:
                 require(set(spec["operation_specs"]) == set(spec["operations"]), "operation_spec")
                 for operation in spec["operation_specs"].values():
                     require({"binding", "unit_query", "frozen_count", "unit_id"} <= set(operation), "operation_spec")
+        compatibility, corpus = admission_policy(components)
         self.roles = SourceRoles(reader, compatibility, corpus)
         self.attributions: dict = {}
 
