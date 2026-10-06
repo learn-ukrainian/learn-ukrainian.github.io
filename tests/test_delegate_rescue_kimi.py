@@ -9,7 +9,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -29,6 +28,7 @@ from tests.test_delegate import (  # noqa: F401
 from tests.test_kimi_coding_only_admission import _FAKE_TOKEN, HOSTILE_GIT_ERRORS, assert_no_host_details
 
 pytestmark = pytest.mark.usefixtures("tmp_tasks_dir")
+_DRIVER_CONTEXT = delegate._rescue_execution_context
 
 TASK_ID = "kimi-rescue"
 BRANCH = f"kimi/{TASK_ID}"
@@ -38,11 +38,13 @@ LABEL = "site/src/components/Label.tsx"
 
 
 def _git(repo: Path, *args: str) -> str:
-    return subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True, timeout=60).stdout
+    env = {"PATH": os.defpath, "HOME": str(repo), "GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": os.devnull}
+    return subprocess.run(["git", *args], cwd=repo, env=env, check=True, capture_output=True, text=True, timeout=60).stdout
 
 
 def _git_proc(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(["git", *args], cwd=repo, check=False, capture_output=True, text=True, timeout=60)
+    env = {"PATH": os.defpath, "HOME": str(repo), "GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": os.devnull}
+    return subprocess.run(["git", *args], cwd=repo, env=env, check=False, capture_output=True, text=True, timeout=60)
 
 
 def _remote_heads(origin: Path) -> dict[str, str]:
@@ -74,6 +76,12 @@ def kimi_rescue(tmp_path, monkeypatch):
     worktree.parent.mkdir(parents=True)
     _git(primary, "worktree", "add", "-b", BRANCH, str(worktree), "HEAD")
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary.resolve())
+    from scripts.orchestration.safe_git_context import SafeGitContext
+    monkeypatch.setattr(delegate, "_rescue_canonical_push_url", lambda: str(origin))
+    monkeypatch.setattr(delegate, "_rescue_execution_context", lambda repo: SafeGitContext(
+        objects=repo.git_dir / "objects", temp_root=tmp_path,
+        origin=delegate._rescue_canonical_push_url(), local_remote=True,
+    ))
     monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: set())
     monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _root: set())
     kimi_boundary.install(worktree, agent="kimi", base_ref="origin/main", owned_paths=[OWNED])
@@ -172,18 +180,18 @@ def test_rescue_checks_a_kimi_record_even_without_its_boundary(kimi_rescue):
     assert RESCUE_REF not in _remote_heads(origin)
 
 
-def test_rescue_refuses_when_the_main_repository_push_url_is_blocked_too(kimi_rescue):
+def test_rescue_ignores_a_shared_push_url_the_worker_changed(kimi_rescue, tmp_path):
     worktree, origin, state_path, write = kimi_rescue
-    _git(worktree, "config", "remote.origin.pushurl", kimi_boundary.PUSH_BLOCK_URL)  # the shared config
+    decoy = tmp_path / "decoy.git"
+    _git(tmp_path, "init", "--bare", str(decoy))
+    _git(worktree, "config", "--local", "remote.origin.pushurl", str(decoy))
     write("export const label = 'Lesson';\n", commit=True)
 
     result = delegate._rescue_task(state_path, apply=True)
 
-    assert result["action"] == "error"
-    assert result["reason"] == "rescue_push_url_unavailable, git config"
-    kept = delegate._diagnostic_path(TASK_ID).read_text(encoding="utf-8")
-    assert "main repository has no single usable push URL for origin" in kept
-    assert RESCUE_REF not in _remote_heads(origin)
+    assert result["action"] == "rescued", result
+    assert _remote_heads(origin)[RESCUE_REF] == result["head"]
+    assert _remote_heads(decoy) == {}
 
 
 def test_rescue_ignores_a_push_url_the_kimi_worktree_set_for_itself(kimi_rescue, tmp_path):
@@ -282,7 +290,7 @@ def test_a_worktree_url_rewrite_receives_nothing(kimi_rescue, tmp_path, committe
 
 
 def test_a_url_rewrite_cannot_fake_the_remote_verification(kimi_rescue, tmp_path):
-    """A rewrite the push itself follows (shared configuration) still fails the neutral ``ls-remote`` proof."""
+    """Shared rewrites affect neither the bare-context push nor its remote proof."""
     _worktree, origin, state_path, write = kimi_rescue
     decoy = tmp_path / "decoy.git"
     _git(tmp_path, "init", "--bare", str(decoy))
@@ -291,10 +299,9 @@ def test_a_url_rewrite_cannot_fake_the_remote_verification(kimi_rescue, tmp_path
 
     result = delegate._rescue_task(state_path, apply=True)
 
-    assert (result["action"], result["failure_code"]) == ("error", "rescue_remote_unverified"), result
-    assert result["reason"] == "rescue_remote_unverified, git ls-remote"
-    assert RESCUE_REF not in _remote_heads(origin)
-    assert delegate._read_state(state_path).get("rescue_ref") is None
+    assert result["action"] == "rescued", result
+    assert _remote_heads(origin)[RESCUE_REF] == result["head"]
+    assert _remote_heads(decoy) == {}
 
 
 def test_a_repeated_rescue_of_the_same_uncommitted_work_is_already_rescued(kimi_rescue):
@@ -410,178 +417,165 @@ def test_an_unexpected_rescue_exception_is_typed_by_its_class(kimi_rescue, monke
     _assert_kept_locally(TASK_ID, "cannot stat", "rescue_step_failed")
 
 
-@pytest.mark.parametrize("contents", ["empty", "nonempty", "symlink", "replacement"])
-def test_failed_publish_add_keeps_its_cause_and_only_removes_its_empty_directory(
-    kimi_rescue, monkeypatch, contents
-):
-    worktree, _origin, state_path, write = kimi_rescue
-    write("export const label = 'Lesson';\n", commit=True)
-    repo = delegate._rescue_repo(worktree)
-    registered = repo.git("worktree", "list", "--porcelain").stdout
-    real_git = delegate._rescue_git
-    created = []
-    removals = []
-    stderr = "fatal: synthetic worktree add failure"
-
-    def fail_add(cwd, *args, **kwargs):
-        if args[:2] == ("worktree", "add"):
-            path = Path(args[-2])
-            assert path.is_dir() and not list(path.iterdir())
-            created.append(path)
-            if contents == "nonempty":
-                (path / "keep.txt").write_text("retain\n")
-            elif contents in {"symlink", "replacement"}:
-                original = path.with_name(path.name + "-original")
-                path.rename(original)
-                if contents == "symlink":
-                    path.symlink_to(original, target_is_directory=True)
-                else:
-                    path.mkdir()
-            return subprocess.CompletedProcess(["git", *args], 128, "", stderr)
-        return real_git(cwd, *args, **kwargs)
-
-    real_remove = delegate.worktree_claims.remove_unclaimed_worktree
-
-    def record_removal(path, **kwargs):
-        removals.append(path)
-        return real_remove(path, **kwargs)
-
-    monkeypatch.setattr(delegate, "_rescue_git", fail_add)
-    monkeypatch.setattr(delegate.worktree_claims, "remove_unclaimed_worktree", record_removal)
-
-    result = delegate._rescue_task(state_path, apply=True)
-
-    assert result["reason"] == "rescue_publish_worktree_failed, git worktree, exit 128", result
-    assert result["action"] == "error"
-    _assert_kept_locally(TASK_ID, stderr, "rescue_publish_worktree_failed")
-    assert not removals  # A directory from a failed add is never a removal target.
-    (path,) = created
-    if contents == "empty":
-        assert not path.exists()
-    elif contents == "nonempty":
-        assert (path / "keep.txt").read_text() == "retain\n"
-    else:
-        assert path.is_dir()
-        assert path.is_symlink() == (contents == "symlink")
-        assert path.with_name(path.name + "-original").is_dir()
-    assert repo.git("worktree", "list", "--porcelain").stdout == registered
-
-
 @pytest.mark.parametrize("scope", ["--local", "--worktree"])
-def test_rescue_create_checkout_push_probe_and_removal_run_no_configured_programs(
-    kimi_rescue, tmp_path, monkeypatch, scope
-):
+@pytest.mark.parametrize("committed", [False, True])
+def test_rescue_full_flow_runs_no_worker_configured_program(kimi_rescue, tmp_path, monkeypatch, scope, committed):
+    from tests.orchestration.test_safe_git_context import plant_programs
+
     worktree, origin, state_path, write = kimi_rescue
-    write("export const label = 'Lesson';\n", commit=True)
-    marker = tmp_path / "cleanup-program-ran"
-    hooks = tmp_path / "cleanup-hooks"
-    hooks.mkdir()
-    for name in ("post-checkout", "post-index-change", "fsmonitor", "pre-push", "reference-transaction"):
-        program = hooks / name
-        program.write_text(f"#!/bin/sh\necho {name} >> '{marker}'\nexit 0\n")
-        program.chmod(0o755)
-    # Shared settings configured by a worker also apply in a fresh publish tree.
-    _git(worktree, "config", scope, "core.hooksPath", str(hooks))
-    _git(worktree, "config", scope, "core.fsmonitor", str(hooks / "fsmonitor"))
+    write("export const label = 'Lesson';\n", commit=committed)
+    marker = plant_programs(worktree, tmp_path, scope=scope, monkeypatch=monkeypatch)
+    checked = []
+    real_check = delegate._kimi_tree_refusal
     real_git = delegate._rescue_git
+    configs = []
 
-    def configure_publish(cwd, *args, **kwargs):
-        proc = real_git(cwd, *args, **kwargs)
-        if scope == "--worktree" and args[:2] == ("worktree", "add") and proc.returncode == 0:
-            publish = Path(args[-2])
-            _git(publish, "config", scope, "core.hooksPath", str(hooks))
-            _git(publish, "config", scope, "core.fsmonitor", str(hooks / "fsmonitor"))
-        return proc
+    def check(context, base, agent, *, tree):
+        checked.append(tree)
+        config = context.run("config", "--show-origin", "--list").stdout
+        configs.append(config)
+        assert {line.split("\t")[0] for line in config.splitlines()} == {f"file:{context.git_dir}/config"}
+        return real_check(context, base, agent, tree=tree)
 
-    monkeypatch.setattr(delegate, "_rescue_git", configure_publish)
-    repo = delegate._rescue_repo(worktree)
-    registered = repo.git("worktree", "list", "--porcelain").stdout
+    def push(context, *args, **kwargs):
+        if args[0] == "push":
+            assert "--no-verify" in args
+            sha = args[-1].split(":")[0]
+            assert context.checked("rev-parse", f"{sha}^{{tree}}") == checked[-1]
+        return real_git(context, *args, **kwargs)
 
+    monkeypatch.setattr(delegate, "_kimi_tree_refusal", check)
+    monkeypatch.setattr(delegate, "_rescue_git", push)
     result = delegate._rescue_task(state_path, apply=True)
 
     assert result["action"] == "rescued", result
-    assert not marker.exists(), marker.read_text()
+    assert checked and configs
+    assert not marker.exists()
     assert _remote_heads(origin)[RESCUE_REF] == result["head"]
-    assert repo.git("worktree", "list", "--porcelain").stdout == registered
-    assert not list(worktree.parent.glob(f"{worktree.name}.rescue-*"))
+    assert _git(origin, "rev-parse", f"{result['head']}^{{tree}}").strip() == checked[-1]
 
 
-def test_rescue_publish_tree_uses_driver_private_tmp(kimi_rescue, monkeypatch):
-    worktree, _origin, _state_path, _write = kimi_rescue
-    worker_tmp = worktree / "worker-tmp"
-    worker_tmp.mkdir()
-    monkeypatch.setenv("TMPDIR", str(worker_tmp))
-    repo = delegate._rescue_repo(worktree)
-    head, _branch = delegate._rescue_head(repo)
-    registered = repo.git("worktree", "list", "--porcelain").stdout
+@pytest.mark.parametrize("kind", ["filter", "embedded", "gitlink", "unreadable", "changing"])
+def test_rescue_typed_snapshot_refusals_publish_nothing(kimi_rescue, tmp_path, monkeypatch, kind):
+    from scripts.orchestration.safe_git_context import SafeGitContext
 
-    with delegate._rescue_publish_worktree(repo, head) as publish:
-        assert publish.parent == delegate._REPO_ROOT / "batch_state" / "tmp"
-        assert not publish.is_relative_to(worktree.parent)
-        assert not publish.is_relative_to(worker_tmp)
-        assert stat.S_IMODE(publish.lstat().st_mode) == 0o700
-
-    assert not publish.exists()
-    assert repo.git("worktree", "list", "--porcelain").stdout == registered
-
-
-@pytest.mark.parametrize("stage", ["before_add", "after_add", "before_removal"])
-@pytest.mark.parametrize("nonempty", [False, True])
-def test_rescue_publish_symlink_swap_never_touches_target(kimi_rescue, tmp_path, monkeypatch, stage, nonempty):
-    worktree, _origin, _state_path, _write = kimi_rescue
-    repo = delegate._rescue_repo(worktree)
-    head, _branch = delegate._rescue_head(repo)
-    target = tmp_path / "swap-target"
-    target.mkdir()
-    if nonempty:
-        (target / "canary").write_bytes(b"retain\n")
-    target_identity = target.lstat()
-    before = {p.name: p.read_bytes() for p in target.iterdir()}
-    paths = []
-    removals = []
-
-    def swap(path):
-        paths.append(path)
-        path.rename(path.with_name(path.name + "-original"))
-        path.symlink_to(target, target_is_directory=True)
-
-    real_mkdtemp = delegate.tempfile.mkdtemp
-
-    def create_swapped(*args, **kwargs):
-        path = Path(real_mkdtemp(*args, **kwargs))
-        swap(path)
-        return str(path)
-
+    worktree, origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n")
+    expected = {
+        "filter": "rescue_filtered_path", "embedded": "rescue_embedded_repository",
+        "gitlink": "rescue_new_gitlink", "unreadable": "rescue_input_unreadable",
+        "changing": "rescue_input_changed",
+    }[kind]
+    if kind == "filter":
+        (worktree / ".gitattributes").write_text(f"{LABEL} filter=lfs\n")
+    elif kind == "embedded":
+        nested = worktree / OWNED / "nested"
+        nested.mkdir()
+        _git(nested, "init")
+        (nested / "content").write_text("retained\n")
+    elif kind == "gitlink":
+        head = _git(worktree, "rev-parse", "HEAD").strip()
+        _git(worktree, "update-index", "--add", "--cacheinfo", f"160000,{head},{OWNED}nested")
+        _git(worktree, "commit", "--no-verify", "-m", "gitlink")
+        (worktree / OWNED / "nested").mkdir()
+    elif kind == "unreadable":
+        (worktree / LABEL).chmod(0)
+    else:
+        real = SafeGitContext.run
+        def change_after_add(context, *args, **kwargs):
+            result = real(context, *args, **kwargs)
+            if args[:2] == ("add", "-A"):
+                (worktree / LABEL).write_text("changed during capture\n")
+            return result
+        monkeypatch.setattr(SafeGitContext, "run", change_after_add)
+    pushes = []
     real_git = delegate._rescue_git
+    def observe(context, *args, **kwargs):
+        if args[0] == "push":
+            pushes.append(args)
+        return real_git(context, *args, **kwargs)
+    monkeypatch.setattr(delegate, "_rescue_git", observe)
 
-    def add_then_swap(cwd, *args, **kwargs):
-        proc = real_git(cwd, *args, **kwargs)
-        if args[:2] == ("worktree", "add") and proc.returncode == 0:
-            swap(Path(args[-2]))
-        return proc
+    result = delegate._rescue_task(state_path, apply=True)
 
-    real_remove = delegate.worktree_claims.remove_unclaimed_worktree
+    assert (result["action"], result["failure_code"]) == ("error", expected), result
+    assert not pushes and RESCUE_REF not in _remote_heads(origin)
+    assert worktree.exists() and (worktree / LABEL).exists()
 
-    def record_removal(path, **kwargs):
-        removals.append(path)
-        return real_remove(path, **kwargs)
 
-    if stage == "before_add":
-        monkeypatch.setattr(delegate.tempfile, "mkdtemp", create_swapped)
-    elif stage == "after_add":
-        monkeypatch.setattr(delegate, "_rescue_git", add_then_swap)
-    monkeypatch.setattr(delegate.worktree_claims, "remove_unclaimed_worktree", record_removal)
+@pytest.mark.parametrize("mutation", ["file", "head"])
+def test_rescue_refuses_inputs_changed_after_content_check(kimi_rescue, monkeypatch, mutation):
+    worktree, origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n")
+    original = delegate._kimi_tree_refusal
+    def changing(context, base, agent, *, tree):
+        verdict = original(context, base, agent, tree=tree)
+        if mutation == "file":
+            write("changed after checking\n")
+        else:
+            _git(worktree, "checkout", "--detach")
+        return verdict
+    monkeypatch.setattr(delegate, "_kimi_tree_refusal", changing)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["failure_code"] == "rescue_input_changed", result
+    assert RESCUE_REF not in _remote_heads(origin)
 
-    with pytest.raises(delegate._RescueFailure) as failure:
-        with delegate._rescue_publish_worktree(repo, head) as publish:
-            if stage == "before_removal":
-                swap(publish)
-            else:
-                pytest.fail("a replaced publish directory must never be yielded")
 
-    assert failure.value.cause.public() == "rescue_publish_path_changed"
-    assert not removals
-    assert target.is_dir()
-    assert (target.lstat().st_dev, target.lstat().st_ino) == (target_identity.st_dev, target_identity.st_ino)
-    assert {p.name: p.read_bytes() for p in target.iterdir()} == before
-    assert paths[0].is_symlink()
+@pytest.mark.parametrize("token", [None, "synthetic-driver-identity"])
+def test_driver_context_pins_destination_and_supplies_identity_explicitly(kimi_rescue, monkeypatch, token):
+    from scripts.agent_runtime import agent_github_identity
+    from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN
+
+    worktree, _origin, _state_path, _write = kimi_rescue
+    supplied = []
+    def identity(**kwargs):
+        supplied.append(kwargs)
+        return agent_github_identity.GitHubIdentity(token, "test")
+    monkeypatch.setattr(agent_github_identity, "resolve_agent_github_identity", identity)
+    monkeypatch.setattr(delegate, "_rescue_canonical_push_url", lambda: CANONICAL_ORIGIN)
+    repo = delegate._rescue_repo(worktree)
+    if token is None:
+        with pytest.raises(delegate._RescueFailure) as refused:
+            _DRIVER_CONTEXT(repo)
+        assert refused.value.cause.code == "rescue_identity_unavailable"
+    else:
+        with _DRIVER_CONTEXT(repo) as context:
+            assert context.checked("config", "remote.origin.url") == CANONICAL_ORIGIN
+            assert context.checked("config", "http." + CANONICAL_ORIGIN + ".extraHeader").startswith("Authorization: Basic ")
+    assert supplied[0]["repository"] == "learn-ukrainian/learn-ukrainian.github.io"
+
+
+def test_kimi_checks_exact_blob_bytes_including_crlf(kimi_rescue, monkeypatch):
+    from scripts.agent_runtime import kimi_admission
+
+    worktree, origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n")
+    data = b"export const label = 'Lesson';\r\n"
+    (worktree / LABEL).write_bytes(data)
+    seen = []
+    original = kimi_admission.refuse_kimi_changes
+    def inspect(agent, changes, **kwargs):
+        changes = list(changes)
+        seen.extend(changes)
+        return original(agent, changes, **kwargs)
+    monkeypatch.setattr(kimi_admission, "refuse_kimi_changes", inspect)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "rescued", result
+    assert next(change.after for change in seen if change.path == LABEL) == data
+    from scripts.orchestration.safe_git_context import SafeGitContext
+    with SafeGitContext(objects=origin / "objects", origin=str(origin), local_remote=True, temp_root=worktree.parent) as context:
+        assert context.run("cat-file", "blob", f"{result['head']}:{LABEL}", binary=True).stdout == data
+
+
+def test_rescue_preserves_symlink_to_a_large_target_without_reading_the_target(kimi_rescue, tmp_path):
+    worktree, origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n")
+    outside = tmp_path / "large-target"
+    outside.write_bytes(b"x" * (delegate._RESCUE_MAX_FILE_BYTES + 1))
+    link = worktree / OWNED / "link"
+    target = os.path.relpath(outside, link.parent)
+    link.symlink_to(target)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "rescued", result
+    assert _git(origin, "show", f"{result['head']}:{OWNED}link").strip() == target
+    assert "120000" in _git(origin, "ls-tree", result["head"], f"{OWNED}link")

@@ -194,7 +194,6 @@ exceptions:
   - {module: scripts/delegate.py, function: "_push_auto_finalize_branch", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_read_only_checkout_snapshot", program: "command", category: non-claude, reason: "runs git status"}
   - {module: scripts/delegate.py, function: "_require_local_branch_is_ancestor_of_origin", program: "git", category: non-claude, reason: "runs git"}
-  - {module: scripts/delegate.py, function: "_rescue_git", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_resolve_commit", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_resolve_local_base_sha", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_resolve_sha", program: "git", category: non-claude, reason: "runs git"}
