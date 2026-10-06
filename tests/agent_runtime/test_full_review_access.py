@@ -57,7 +57,8 @@ def test_review_mcp_provisions_attempt_access_and_exact_claude_tools(world, tmp_
         assert agy_full_review_settings()["permissions"]["allow"] == [
             f"mcp(sources/{t})" for t in sorted(FULL_REVIEW_TOOLS)
         ]
-        assert agy_full_review_settings()["permissions"]["deny"] == ["command(*)", "write_file(*)"]
+        assert agy_full_review_settings()["permissions"]["deny"][:2] == ["command(*)", "write_file(*)"]
+        assert "mcp(sources/search_resources)" not in agy_full_review_settings()["permissions"]["deny"]
 
 
 def full_probe_code(targets, host_home, pinned, corpus, child_marker, abstract):

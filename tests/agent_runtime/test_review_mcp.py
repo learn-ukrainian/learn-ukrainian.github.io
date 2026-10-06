@@ -86,8 +86,12 @@ def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_ag
     assert "LU_REVIEW_LEDGER_PATH" not in config["mcpServers"]["sources"].get("env", {})
     settings = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())
     readers, writers = sources_tool_sets()
-    assert settings["permissions"]["allow"] == [f"mcp(sources/{name})" for name in readers]
-    assert settings["permissions"]["deny"] == ["command(*)", "write_file(*)"]
+    assert settings["permissions"]["allow"] == [f"mcp(sources/{name})" for name in sorted(REVIEW_TOOLS)]
+    assert settings["permissions"]["deny"] == [
+        "command(*)",
+        "write_file(*)",
+        *[f"mcp(sources/{name})" for name in sorted((set(readers) | set(writers)) - REVIEW_TOOLS)],
+    ]
     assert not any("*" in rule for rule in settings["permissions"]["allow"])
     assert not set(settings["permissions"]["allow"]) & {f"mcp(sources/{name})" for name in writers}
     assert (home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token").resolve() == (
@@ -99,7 +103,7 @@ def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_ag
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
-def test_receipt_attempt_permission_bytes_unchanged(manifest_file, tmp_path, access):
+def test_receipt_attempt_allow_contract_unchanged(manifest_file, tmp_path, access):
     plan = prepare_review_attempt(
         "rev-test-001",
         "att-agy-001",
@@ -132,7 +136,11 @@ def test_receipt_attempt_permission_bytes_unchanged(manifest_file, tmp_path, acc
     expected = {
         "permissions": {
             "allow": [f"mcp(sources/{name})" for name in sorted(names)],
-            "deny": ["command(*)", "write_file(*)"],
+            "deny": [
+                "command(*)",
+                "write_file(*)",
+                *[f"mcp(sources/{name})" for name in sorted(set().union(*sources_tool_sets()) - set(names))],
+            ],
         }
     }
     assert (agy_review_app_data_dir(plan.agy_home) / "settings.json").read_bytes() == json.dumps(expected).encode()
