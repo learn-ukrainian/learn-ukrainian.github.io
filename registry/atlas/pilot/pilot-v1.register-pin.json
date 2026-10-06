@@ -34,6 +34,29 @@
         "review_model": "gemini-3.8-flash-high",
         "review_report_sha256": "45ef622753c4ad3b03d721e737df07a5e1c66f199edd64142fea7f91015d9b22"
       }
+    },
+    {
+      "entries_sha256": "9c044db54b2a20e99823fee21a7371040cf58717c97aebaf54f77fadc0001850",
+      "reason": "#9609 authenticates the frazeolohichnyi 2003 edition and held citation provenance; prior #9826 licence and permission-status entries preserved.",
+      "recorded": "2026-10-06",
+      "admission": {
+        "admission": "APPROVE",
+        "candidate_sha256": "9c044db54b2a20e99823fee21a7371040cf58717c97aebaf54f77fadc0001850",
+        "review_report_sha256": "fb9676d2f1ea846f183bcd897c8a8039a4a1f381a55d1041f0ba87b876afc9b1",
+        "review_family": "google",
+        "review_model": "gemini-3.8-flash-high",
+        "review_harness": "native AGY",
+        "review_task_id": "admit-9609-register-r2",
+        "review_run_nonce": "26f7099901584c7c",
+        "author_task_id": "impl-9609-split-r2",
+        "author_seat_distinct": true,
+        "checked_at": "2026-10-06T05:23:23Z",
+        "denominator": {
+          "units": 150,
+          "source_records": 272,
+          "atlas_articles": 114
+        }
+      }
     }
   ]
 }
