@@ -28,6 +28,19 @@ Process runners are the ``subprocess`` module and its ``run``, ``Popen``,
 ``os.spawn*``; ``os.posix_spawn`` and ``os.posix_spawnp``; and
 ``asyncio.create_subprocess_exec`` and ``asyncio.create_subprocess_shell``.
 
+A call whose callee may be one of those runners is judged from every argument
+value, not from a chosen parameter. Positional arguments, keyword values under
+any name, and starred or double-starred list, tuple, and dict literals that
+are statically visible all use the literal-argv and literal command-string
+rules. A match class pattern is judged the same way.
+
+In a hook module outside the boundary, ``from shlex import *``,
+``from subprocess import *``, ``from os import *``, ``from asyncio import *``,
+and a wildcard import of either boundary module are violations by themselves.
+
+A name keeps every module and every runner it may bind. Each binding is
+checked. Iteration over those sets is sorted.
+
 Name use is not a list of statement kinds. A parent map over ``ast.walk``
 inspects every name, and every attribute whose value is a bound module name,
 wherever that name sits. External syntax-check calls use that same walk:
@@ -65,8 +78,12 @@ from __future__ import annotations
 
 import ast
 import json
+import os
 import shlex
+import subprocess
+import sys
 from collections import Counter
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -172,6 +189,8 @@ OS_RUNNER_FUNCS = (
 ASYNCIO_EXEC_FUNCS = frozenset({"create_subprocess_exec"})
 ASYNCIO_SHELL_FUNCS = frozenset({"create_subprocess_shell"})
 ASYNCIO_RUNNER_FUNCS = ASYNCIO_EXEC_FUNCS | ASYNCIO_SHELL_FUNCS
+# Star-imports of these modules are refused outside the boundary. They are not expanded.
+WILDCARD_IMPORT_MODULES = frozenset({"asyncio", "os", "shlex", "subprocess"})
 _MAY_BIND_KINDS = frozenset(
     {"shlex_module", "boundary_module", "subprocess_module", "os_module", "asyncio_module", "runner"}
 )
@@ -271,6 +290,26 @@ class _Binding:
 
 
 _UNKNOWN = _Binding("unknown")
+
+
+def _binding_sort_key(binding: _Binding) -> tuple[object, ...]:
+    """Stable order for a binding set. The hash seed must not change results."""
+    if binding.argv is None:
+        return (binding.kind, binding.detail, True, ())
+    rendered = tuple("" if part is None else part for part in binding.argv)
+    return (binding.kind, binding.detail, False, rendered)
+
+
+def _sorted_bindings(bindings: Iterable[_Binding]) -> list[_Binding]:
+    return sorted(bindings, key=_binding_sort_key)
+
+
+def _first_syntax_identity(argvs: list[tuple[str | None, ...]]) -> str | None:
+    for argv in argvs:
+        identity = _syntax_identity(argv)
+        if identity:
+            return identity
+    return None
 
 
 def _enclosing_symbol(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> str:
@@ -502,7 +541,7 @@ class _Analyzer:
         self._symbols: list[str] = []
         self._may: dict[str, set[_Binding]] = {}
         self._shlex_module_names: set[str] = set()
-        self._boundary_names: dict[str, str] = {}
+        self._boundary_names: dict[str, set[str]] = {}
         self._dynamic_aliases: dict[str, str] = {}
         self._node_scopes: dict[int, _Scope] = {}
         self._module_scope: _Scope | None = None
@@ -571,13 +610,14 @@ class _Analyzer:
             if identity:
                 self._record_site(node, identity, parents)
 
-    def _bound_module(self, name: str) -> tuple[str, str] | None:
+    def _bound_modules(self, name: str) -> list[tuple[str, str]]:
+        """Every module ``name`` may be, shlex first, then boundary names in order."""
+        found: list[tuple[str, str]] = []
         if name in self._shlex_module_names:
-            return ("shlex", "shlex")
-        module = self._boundary_names.get(name)
-        if module is not None:
-            return ("boundary", module)
-        return None
+            found.append(("shlex", "shlex"))
+        for module in sorted(self._boundary_names.get(name, ())):
+            found.append(("boundary", module))
+        return found
 
     def _inspect_bound_module_uses(self, tree: ast.AST) -> None:
         """Judge every bound module name from a parent map, not a node-type list."""
@@ -601,25 +641,28 @@ class _Analyzer:
                 self._inspect_bare_name_strings(node, (node.rest,), parents)
 
     def _inspect_bound_name(self, node: ast.Name, parents: dict[ast.AST, ast.AST], judged: set[int]) -> None:
-        kind = self._bound_module(node.id)
-        if kind is None:
+        kinds = self._bound_modules(node.id)
+        if not kinds:
             return
         parent = parents.get(node)
         if isinstance(parent, ast.Attribute) and parent.value is node:
             if id(parent) not in judged:
                 judged.add(id(parent))
-                self._judge_bound_attribute(parent, kind, parents)
+                for kind in kinds:
+                    self._judge_bound_attribute(parent, kind, parents)
             return
-        self._reject_bare_bound_name(node, kind, parents)
+        for kind in kinds:
+            self._reject_bare_bound_name(node, kind, parents)
 
     def _inspect_bound_attribute(self, node: ast.Attribute, parents: dict[ast.AST, ast.AST], judged: set[int]) -> None:
         if id(node) in judged or not isinstance(node.value, ast.Name):
             return
-        kind = self._bound_module(node.value.id)
-        if kind is None:
+        kinds = self._bound_modules(node.value.id)
+        if not kinds:
             return
         judged.add(id(node))
-        self._judge_bound_attribute(node, kind, parents)
+        for kind in kinds:
+            self._judge_bound_attribute(node, kind, parents)
 
     def _inspect_bare_name_strings(
         self,
@@ -628,8 +671,7 @@ class _Analyzer:
         parents: dict[ast.AST, ast.AST],
     ) -> None:
         for name in names:
-            kind = self._bound_module(name)
-            if kind is not None:
+            for kind in self._bound_modules(name):
                 self._reject_bare_bound_name(node, kind, parents)
 
     def _judge_bound_attribute(
@@ -806,7 +848,7 @@ class _Analyzer:
     def _propagate_target(self, target: ast.AST, value: ast.expr) -> bool:
         if isinstance(target, ast.Name):
             changed = False
-            for binding in self._may_values(value):
+            for binding in _sorted_bindings(self._may_values(value)):
                 changed |= self._add_may(target.id, binding)
             return changed
         if (
@@ -823,37 +865,36 @@ class _Analyzer:
 
     def _may_values(self, expr: ast.expr) -> set[_Binding]:
         if isinstance(expr, ast.Name):
-            return set(self._may.get(expr.id, ()))
+            return set(_sorted_bindings(self._may.get(expr.id, ())))
         if isinstance(expr, ast.Attribute):
             found: set[_Binding] = set()
-            for base in self._may_values(expr.value):
+            for base in _sorted_bindings(self._may_values(expr.value)):
                 resolved = _resolve_attribute(base, expr.attr)
                 if resolved.kind in _MAY_BIND_KINDS:
                     found.add(resolved)
             return found
         if isinstance(expr, ast.IfExp):
-            return self._may_values(expr.body) | self._may_values(expr.orelse)
+            return set(_sorted_bindings(self._may_values(expr.body) | self._may_values(expr.orelse)))
         if isinstance(expr, ast.BoolOp):
-            found = set()
+            found: set[_Binding] = set()
             for value in expr.values:
-                found |= self._may_values(value)
+                found.update(_sorted_bindings(self._may_values(value)))
             return found
         if isinstance(expr, ast.NamedExpr):
             return self._may_values(expr.value)
         return set()
 
     def _publish_may_bind(self) -> None:
-        for name, bindings in self._may.items():
-            for binding in bindings:
+        for name in sorted(self._may):
+            for binding in _sorted_bindings(self._may[name]):
                 if binding.kind == "shlex_module":
                     self._shlex_module_names.add(name)
-                elif binding.kind == "boundary_module" and name not in self._boundary_names:
-                    self._boundary_names[name] = binding.detail[0]
+                elif binding.kind == "boundary_module":
+                    self._boundary_names.setdefault(name, set()).add(binding.detail[0])
 
     def _possible_runners(self, func: ast.expr) -> list[_Binding]:
-        """Runners ``func`` may be, ignoring which assignment wins."""
-        runners = [binding for binding in self._may_values(func) if binding.kind == "runner"]
-        return sorted(runners, key=lambda binding: binding.detail)
+        """Every runner ``func`` may be, in binding order, ignoring which assignment wins."""
+        return [binding for binding in _sorted_bindings(self._may_values(func)) if binding.kind == "runner"]
 
     def _hoist(self, body: list[ast.stmt], scope: _Scope) -> None:
         for stmt in body:
@@ -902,6 +943,7 @@ class _Analyzer:
         return _UNKNOWN
 
     def _bind_import_from(self, node: ast.ImportFrom, scope: _Scope) -> None:
+        self._refuse_wildcard_import(node)
         module = node.module
         if _is_test_module(module):
             self.add_violation("test-only bash oracle", f"imports {module}")
@@ -958,11 +1000,27 @@ class _Analyzer:
             return
         self._bind_unknown_aliases(node, scope)
 
+    def _refuse_wildcard_import(self, node: ast.ImportFrom) -> None:
+        """Star-imports of runners, shlex, and the boundary are violations.
+
+        Hook modules outside the boundary only. The names a star would bind are
+        not expanded; the import itself is the violation.
+        """
+        if not self.enforce_exports:
+            return
+        if not any(alias.name == "*" for alias in node.names):
+            return
+        boundary = _boundary_module_name(node.module)
+        if boundary is not None:
+            self.add_violation("wildcard import", boundary)
+            return
+        module = node.module or ""
+        if node.level == 0 and module in WILDCARD_IMPORT_MODULES:
+            self.add_violation("wildcard import", module)
+
     def _bind_boundary_from(self, node: ast.ImportFrom, scope: _Scope, boundary: str) -> None:
         for alias in node.names:
             if alias.name == "*":
-                if self.enforce_exports:
-                    self.add_violation("wildcard import", boundary)
                 continue
             local = alias.asname or alias.name
             if self.enforce_exports and alias.name not in PUBLIC_EXPORTS[boundary]:
@@ -1200,26 +1258,28 @@ class _Analyzer:
         if identity:
             self.add_site(identity)
 
-    def _boundary_of(self, node: ast.expr, scope: _Scope) -> str | None:
-        if isinstance(node, ast.Name) and node.id in self._boundary_names:
-            return self._boundary_names[node.id]
+    def _boundary_modules_of(self, node: ast.expr, scope: _Scope) -> list[str]:
+        if isinstance(node, ast.Name):
+            modules = self._boundary_names.get(node.id)
+            if modules:
+                return sorted(modules)
         binding = self._resolve(node, scope)
         if binding.kind == "boundary_module":
-            return binding.detail[0]
-        return None
+            return [binding.detail[0]]
+        return []
 
     def _dynamic_canonical(self, node: ast.expr) -> str | None:
         if isinstance(node, ast.Name) and node.id in self._dynamic_aliases:
             return self._dynamic_aliases[node.id]
         return None
 
-    def _argument_names_boundary(self, node: ast.expr, scope: _Scope) -> str | None:
+    def _argument_boundary_modules(self, node: ast.expr, scope: _Scope) -> list[str]:
         if isinstance(node, ast.Constant) and isinstance(node.value, str):
             leaf = node.value.rsplit(".", 1)[-1]
             if leaf in PUBLIC_EXPORTS:
-                return leaf
-            return None
-        return self._boundary_of(node, scope)
+                return [leaf]
+            return []
+        return self._boundary_modules_of(node, scope)
 
     def _note_mapping_boundary_lookup(self, node: ast.Subscript, scope: _Scope) -> None:
         """``globals()['shell_shlex']`` and ``vars()['shell_redirects']`` name the module."""
@@ -1228,8 +1288,7 @@ class _Analyzer:
         canonical = self._dynamic_canonical(node.value.func)
         if canonical not in {"globals", "vars"}:
             return
-        module = self._argument_names_boundary(node.slice, scope)
-        if module is not None:
+        for module in self._argument_boundary_modules(node.slice, scope):
             self.add_violation("dynamic access", f"{canonical} {module}")
 
     def _note_dynamic_boundary_arguments(self, node: ast.Call, scope: _Scope, canonical: str) -> None:
@@ -1238,8 +1297,7 @@ class _Analyzer:
         values = list(node.args)
         values.extend(keyword.value for keyword in node.keywords if keyword.value is not None)
         for value in values:
-            module = self._argument_names_boundary(value, scope)
-            if module is not None:
+            for module in self._argument_boundary_modules(value, scope):
                 self.add_violation("dynamic access", f"{canonical} {module}")
 
     def _special_call(self, node: ast.Call, scope: _Scope) -> str | None:
@@ -1307,20 +1365,14 @@ class _Analyzer:
 
     def _call_syntax_identity(self, node: ast.Call, scope: _Scope) -> str | None:
         for binding in self._possible_runners(node.func):
-            argv = self._runner_argv(node, scope, binding)
-            if argv is None:
-                continue
-            identity = _syntax_identity(argv)
+            identity = _first_syntax_identity(self._runner_argvs(node, scope, binding))
             if identity:
                 return identity
         return None
 
     def _match_syntax_identity(self, node: ast.MatchClass, scope: _Scope) -> str | None:
         for binding in self._possible_runners(node.cls):
-            argv = self._match_runner_argv(node, scope, binding)
-            if argv is None:
-                continue
-            identity = _syntax_identity(argv)
+            identity = _first_syntax_identity(self._match_runner_argvs(node, scope, binding))
             if identity:
                 return identity
         return None
@@ -1404,6 +1456,79 @@ class _Analyzer:
         if not isinstance(pattern, ast.MatchValue):
             return None
         return self._const_str(pattern.value, scope)
+
+    def _runner_argvs(
+        self, node: ast.Call, scope: _Scope, binding: _Binding
+    ) -> list[tuple[str | None, ...]]:
+        """Literal commands visible on a runner call.
+
+        The signature-specific argv stays first so an existing positional form
+        keeps its identity. Every other literal argument is then judged with
+        the same rules, whatever its keyword name is.
+        """
+        found: list[tuple[str | None, ...]] = []
+        specific = self._runner_argv(node, scope, binding)
+        if specific is not None:
+            found.append(specific)
+        for expr in self._call_argument_exprs(node):
+            argv = self._static_command(expr, scope)
+            if argv is not None:
+                found.append(argv)
+        return found
+
+    def _match_runner_argvs(
+        self, node: ast.MatchClass, scope: _Scope, binding: _Binding
+    ) -> list[tuple[str | None, ...]]:
+        found: list[tuple[str | None, ...]] = []
+        specific = self._match_runner_argv(node, scope, binding)
+        if specific is not None:
+            found.append(specific)
+        for pattern in (*node.patterns, *node.kwd_patterns):
+            argv = self._static_pattern(pattern, scope)
+            if argv is not None:
+                found.append(argv)
+        return found
+
+    def _call_argument_exprs(self, node: ast.Call) -> list[ast.expr]:
+        """Positional arguments, keyword values, and visible starred literals."""
+        exprs: list[ast.expr] = []
+        for arg in node.args:
+            if isinstance(arg, ast.Starred):
+                exprs.extend(self._unpacked_literal(arg.value))
+            else:
+                exprs.append(arg)
+        for keyword in node.keywords:
+            if keyword.value is None:
+                continue
+            if keyword.arg is None:
+                exprs.extend(self._unpacked_literal(keyword.value))
+            else:
+                exprs.append(keyword.value)
+        return exprs
+
+    def _unpacked_literal(self, node: ast.expr) -> list[ast.expr]:
+        """Values inside a statically visible ``*`` or ``**`` literal.
+
+        A list or tuple is itself a literal argv, and its elements are values.
+        A dict exposes its values. A starred name is not a literal.
+        """
+        if isinstance(node, (ast.List, ast.Tuple)):
+            values: list[ast.expr] = [node]
+            for elt in node.elts:
+                if not isinstance(elt, ast.Starred):
+                    values.append(elt)
+            return values
+        if isinstance(node, ast.Dict):
+            values = []
+            for key, value in zip(node.keys, node.values, strict=True):
+                if value is None:
+                    continue
+                if key is None:
+                    values.extend(self._unpacked_literal(value))
+                else:
+                    values.append(value)
+            return values
+        return []
 
     def _runner_argv(self, node: ast.Call, scope: _Scope, binding: _Binding) -> tuple[str | None, ...] | None:
         family, func = binding.detail
@@ -2664,5 +2789,147 @@ def test_computed_command_string_and_mutated_argv_stay_unresolved() -> None:
         "    argv = ['bash', '-c', 'true']\n"
         "    argv.append('-n')\n"
         "    subprocess.run(argv)\n",
+        "import subprocess\n\ndef check():\n    argv = ['bash', '-n', 'hook.sh']\n    subprocess.run(*argv)\n",
     ]
     assert all(_single(source) == [] for source in sources)
+
+
+_MUTANT = "agents_extensions/shared/hooks/mutant.py"
+
+
+def _mutant_site(symbol: str, identity: str) -> str:
+    return f"new parser site: {_MUTANT}::{symbol}::{identity}"
+
+
+def _mutant_violation(kind: str, detail: str, symbol: str = "<module>") -> str:
+    return f"{kind}: {_MUTANT}::{symbol}::{detail}"
+
+
+@pytest.mark.parametrize(
+    ("source", "reason"),
+    [
+        pytest.param(
+            "import subprocess\nsubprocess.getstatusoutput(cmd='bash -n -c true')\n",
+            _mutant_site("<module>", "syntax:bash -n"),
+            id="getstatusoutput-cmd",
+        ),
+        pytest.param(
+            "import os\nos.spawnv(mode=os.P_WAIT, file='/bin/bash', args=['bash', '-n', '-c', 'true'])\n",
+            _mutant_site("<module>", "syntax:bash -n"),
+            id="spawnv-keywords",
+        ),
+        pytest.param(
+            "import asyncio\n\nasync def check():\n    await asyncio.create_subprocess_shell(cmd='bash -n -c true')\n",
+            _mutant_site("check", "syntax:bash -n"),
+            id="create_subprocess_shell-cmd",
+        ),
+        pytest.param(
+            "import subprocess\nsubprocess.run(['git', 'status'], cwd='bash -n hook.sh')\n",
+            _mutant_site("<module>", "syntax:bash -n"),
+            id="any-keyword-name",
+        ),
+        pytest.param(
+            "import subprocess\nsubprocess.run(*['bash', '-n', '-c', 'true'])\n",
+            _mutant_site("<module>", "syntax:bash -n"),
+            id="starred-literal",
+        ),
+        pytest.param(
+            "import subprocess\nsubprocess.getstatusoutput(**{'cmd': 'bash -n -c true'})\n",
+            _mutant_site("<module>", "syntax:bash -n"),
+            id="double-starred-literal",
+        ),
+    ],
+)
+def test_every_runner_argument_is_a_syntax_site(source: str, reason: str) -> None:
+    assert _single(source) == [reason]
+
+
+def test_keyword_without_syntax_flag_passes() -> None:
+    sources = [
+        "import subprocess\nsubprocess.getstatusoutput(cmd='echo hi')\n",
+        "import os\nos.spawnv(mode=os.P_WAIT, file='/bin/true', args=['true'])\n",
+        "import asyncio\n\nasync def check():\n    await asyncio.create_subprocess_shell(cmd='bash -c true')\n",
+    ]
+    assert all(_single(source) == [] for source in sources)
+
+
+@pytest.mark.parametrize("module", ["shlex", "subprocess", "os", "asyncio", "shell_shlex", "shell_redirects"])
+def test_wildcard_runner_and_boundary_imports_fail(module: str) -> None:
+    reasons = _single(f"from {module} import *\n")
+    assert _mutant_violation("wildcard import", module) in reasons
+    if module == "shlex":
+        assert _mutant_site("<module>", "shlex.*") in reasons
+
+
+def test_subprocess_wildcard_call_is_a_violation() -> None:
+    source = "from subprocess import *\nrun(['bash', '-n', '-c', 'true'])\n"
+    assert _single(source) == [_mutant_violation("wildcard import", "subprocess")]
+
+
+def test_multi_bound_boundary_name_checks_every_module() -> None:
+    expected = [_mutant_violation("private attribute", "shell_redirects.preprocess_shell_command")]
+    orders = (
+        "import shell_shlex as shared\nimport shell_redirects as shared\n",
+        "import shell_redirects as shared\nimport shell_shlex as shared\n",
+    )
+    for header in orders:
+        assert _single(header + "shared.preprocess_shell_command('echo ok')\n") == expected
+
+
+def test_multi_bound_runner_name_checks_every_runner() -> None:
+    source = (
+        "import subprocess as shared\n"
+        "import os as shared\n"
+        "shared.getstatusoutput(cmd='bash -n -c true')\n"
+        "shared.system('sh -n hook.sh')\n"
+    )
+    reasons = _single(source)
+    assert reasons == [
+        _mutant_site("<module>", "syntax:bash -n"),
+        _mutant_site("<module>", "syntax:sh -n"),
+    ]
+
+
+def _seeded_scan(script: str, probe: str, seed: str) -> dict[str, object]:
+    env = os.environ.copy()
+    env["PYTHONHASHSEED"] = seed
+    completed = subprocess.run(
+        [sys.executable, "-c", script],
+        cwd=REPO_ROOT,
+        env=env,
+        input=probe,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=120,
+    )
+    assert completed.returncode == 0, completed.stderr
+    payload = json.loads(completed.stdout)
+    assert isinstance(payload, dict)
+    return payload
+
+
+def test_repository_scan_and_multi_binding_probe_match_across_hash_seeds() -> None:
+    script = (
+        "import json, sys\n"
+        "from tests.test_hook_single_parser import _single, analyze_repository\n"
+        "probe = sys.stdin.read()\n"
+        "check = analyze_repository()\n"
+        "json.dump({\n"
+        "    'sites': [site.format() for site in check.sites],\n"
+        "    'violations': [item.format() for item in check.violations],\n"
+        "    'probe': _single(probe),\n"
+        "}, sys.stdout)\n"
+    )
+    probe = (
+        "import shell_shlex as shared\n"
+        "import shell_redirects as shared\n"
+        "shared.preprocess_shell_command('echo ok')\n"
+    )
+    seeded = [_seeded_scan(script, probe, seed) for seed in ("0", "1")]
+    assert seeded[0] == seeded[1]
+    assert seeded[0]["violations"] == []
+    assert len(seeded[0]["sites"]) == BASELINE_SIZE_AT_CREATION
+    assert seeded[0]["probe"] == [
+        _mutant_violation("private attribute", "shell_redirects.preprocess_shell_command")
+    ]
