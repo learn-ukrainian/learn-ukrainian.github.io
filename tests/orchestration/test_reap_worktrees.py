@@ -3943,6 +3943,81 @@ def test_review_issue_number_does_not_block_merged_pr(
         assert result.reason == "PR #8243 MERGED"
 
 
+def test_issue_numbered_review_checkout_is_absence_through_github_client(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """An issue number in a review path is absence when ``pr view`` is translated.
+
+    The lookup goes through ``github_client.run``. A REST 404 is not gh's
+    GraphQL sentence; native gh supplies it, and the checkout is not held as
+    an unreadable guard.
+    """
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "dispatch" / "agy" / "review-8183-preflight-r6"
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    git(repo, "remote", "set-url", "origin", "git@github.com:o/r.git")
+    head = git(worktree, "rev-parse", "HEAD")
+    monkeypatch.delenv("GH_REPO", raising=False)
+    monkeypatch.delenv("GITHUB_REPOSITORY", raising=False)
+    monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    def http(value: object, *, status: int = 200) -> rw.github_client.Response:
+        return rw.github_client.Response(
+            status,
+            {
+                "ETag": '"one"',
+                "X-RateLimit-Remaining": "100",
+                "X-RateLimit-Reset": "2000",
+            },
+            json.dumps(value).encode(),
+        )
+
+    endpoints: list[str] = []
+
+    def transport(method: str, endpoint: str, headers: dict, body: bytes | None, timeout: float):
+        endpoints.append(endpoint.split("?", 1)[0].rstrip("/"))
+        path = endpoints[-1]
+        if path.endswith("/pulls/8183"):
+            return http({"message": "Not Found"}, status=404)
+        if path.endswith("/pulls"):
+            return http([])
+        raise AssertionError(endpoint)
+
+    seen: list[list[str]] = []
+
+    def native(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        seen.append(args)
+        if args[1:3] == ["pr", "view"]:
+            assert args[3] == "8183"
+            return subprocess.CompletedProcess(
+                args,
+                1,
+                "",
+                "GraphQL: Could not resolve to a PullRequest with the number of 8183. (repository.pullRequest)",
+            )
+        if args[1:3] == ["search", "prs"]:
+            assert args[3] == head
+            return subprocess.CompletedProcess(args, 0, json.dumps([{"number": 8243, "state": "MERGED"}]), "")
+        raise AssertionError(args)
+
+    real_client = rw.github_client.GitHubClient
+
+    def client_factory(**kwargs: Any) -> rw.github_client.GitHubClient:
+        kwargs["transport"] = transport
+        kwargs["runner"] = native
+        return real_client(**kwargs)
+
+    monkeypatch.setattr(rw.github_client, "GitHubClient", client_factory)
+    results = rw.reap_worktrees(repo_root=repo, live_cwds=set(), merged_pr_only=True)
+    result = result_for(results, worktree)
+    assert result.action == "would_remove"
+    assert result.reason == "PR #8243 MERGED"
+    assert any(path.endswith("/pulls/8183") for path in endpoints)
+    assert any(command[1:4] == ["pr", "view", "8183"] for command in seen)
+
+
 @pytest.mark.parametrize("gh_outage", [False, True])
 def test_review_issue_number_without_exact_head_pr_reaps_merged_tree(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, gh_outage: bool

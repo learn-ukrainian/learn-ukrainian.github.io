@@ -1491,3 +1491,160 @@ def test_queue_reads_use_fresh_typed_rest_facts(tmp_path, monkeypatch, operation
         assert repository["pullRequests"]["nodes"][0]["id"] == "NODE"
     expected = ["repos/o/r/pulls/1"] if operation == "queue-status" else ["repos/o/r/pulls", "repos/o/r/pulls/1"]
     assert [c[1].split("?")[0] for c in calls] == [*expected, "graphql"]
+
+
+def _api_pages():
+    """Two issues pages. Native ``gh api --paginate`` concatenates the arrays."""
+    first = response([{"number": 1}, {"number": 2}])
+    first.headers["Link"] = '<https://api.github.com/repos/o/r/issues?page=2>; rel="next"'
+    return [first, response([{"number": 3}])]
+
+
+def _native_api_shape(args):
+    """Stdout native gh prints for the api reads this client still translates."""
+    if "--jq" in args or "-q" in args:
+        # One page: jq runs on that document. ``length`` of the first page is 2.
+        return "2\n"
+    if "--paginate" in args:
+        return json.dumps([{"number": 1}, {"number": 2}, {"number": 3}], ensure_ascii=False)
+    return json.dumps([{"number": 1}, {"number": 2}], ensure_ascii=False)
+
+
+def admitted_api_read_cases():
+    from scripts.opsec.gh_snapshot import REST_GET
+
+    endpoint = "repos/o/r/issues"
+    base = ["gh", "api", endpoint]
+    cases = [base]
+    _minimum, _maximum, flags = REST_GET
+    for flag, valued in flags.items():
+        if flag in {"--method", "-X"}:
+            value = "GET"
+        elif flag in {"--header", "-H"}:
+            value = "Accept: application/vnd.github+json"
+        elif flag in {"--jq", "-q"}:
+            value = "length"
+        elif flag == "--cache":
+            value = "1h"
+        else:
+            value = None
+        cases.append([*base, flag, *([value] if valued else [])])
+    return cases
+
+
+@pytest.mark.parametrize("args", admitted_api_read_cases())
+def test_every_admitted_api_read_translates_exactly_or_falls_through(tmp_path, args):
+    from pathlib import Path
+
+    from scripts.opsec.gh_snapshot import REST_GET, admit, parse
+
+    root = Path(__file__).resolve().parents[1]
+    assert "scripts/opsec/gh_entry.py" in (root / "scripts/agent_runtime/shims/gh").read_text()
+    entry = (root / "scripts/opsec/gh_entry.py").read_text()
+    assert "frozen = admit(" in entry and 'run(["gh", *frozen.argv]' in entry
+    parse(args[2:], REST_GET)
+    frozen = admit(args[1:], cwd=tmp_path, environment={"GH_REPO": "o/r"})
+    assert frozen.write is False and frozen.argv == args[1:]
+
+    translated, native = [], []
+
+    def transport(method, endpoint, headers, body, timeout):
+        translated.append(endpoint)
+        return _api_pages()[len(translated) - 1]
+
+    def fallback(command, **kw):
+        native.append(command)
+        return subprocess.CompletedProcess(command, 0, b"native", b"")
+
+    store = gh.GitHubClient(cache_dir=tmp_path, env={"GH_REPO": "o/r"}, transport=transport)
+    result = gh.run(args, client=store, runner=fallback, capture_output=True, text=True)
+    assert result.returncode == 0
+    assert bool(translated) != bool(native)
+    if native:
+        assert native == [args]
+    else:
+        assert gh._translation_options(args) is not None
+        assert result.stdout == _native_api_shape(args)
+        if "--paginate" in args:
+            assert len(translated) == 2
+
+
+def test_api_paginate_object_pages_fall_through(tmp_path):
+    first = response({"total_count": 2, "workflow_runs": [1]})
+    first.headers["Link"] = '<https://api.github.com/repos/o/r/actions/runs?page=2>; rel="next"'
+    store, calls = client(tmp_path, [first, response({"total_count": 2, "workflow_runs": [2]})])
+    args = ["gh", "api", "repos/o/r/actions/runs", "--paginate"]
+    seen = []
+
+    def native(command, **kw):
+        seen.append(command)
+        return subprocess.CompletedProcess(command, 0, b'{"page":1}{"page":2}', b"")
+
+    result = gh.run(args, client=store, runner=native, capture_output=True)
+    assert seen == [args]
+    assert result.stdout == b'{"page":1}{"page":2}'
+    assert calls and all(call[0] == "GET" for call in calls)
+
+
+def test_api_paginate_jq_falls_through_without_merging_pages(tmp_path):
+    store, calls = client(tmp_path, [])
+    args = ["gh", "api", "repos/o/r/issues", "--paginate", "--jq", "length"]
+    seen = []
+
+    def native(command, **kw):
+        seen.append(command)
+        return subprocess.CompletedProcess(command, 0, b"2\n2\n", b"")
+
+    result = gh.run(args, client=store, runner=native, capture_output=True)
+    assert seen == [args] and result.stdout == b"2\n2\n" and calls == []
+
+
+def test_api_paginate_slurp_wraps_object_pages(tmp_path):
+    first = response({"workflow_runs": [1]})
+    first.headers["Link"] = '<https://api.github.com/repos/o/r/actions/runs?page=2>; rel="next"'
+    store, calls = client(tmp_path, [first, response({"workflow_runs": [2]})])
+    result = gh.run(
+        ["gh", "api", "repos/o/r/actions/runs", "--paginate", "--slurp"],
+        client=store,
+        text=True,
+        capture_output=True,
+    )
+    assert json.loads(result.stdout) == [{"workflow_runs": [1]}, {"workflow_runs": [2]}]
+    assert len(calls) == 2
+
+
+def test_pr_view_404_falls_through_with_native_message(tmp_path):
+    store, calls = client(tmp_path, [response({"message": "Not Found"}, status=404)])
+    args = ["gh", "pr", "view", "8183", "--repo", "o/r", "--json", "number,state,headRefOid"]
+    seen = []
+
+    def native(command, **kw):
+        seen.append(command)
+        return subprocess.CompletedProcess(
+            command,
+            1,
+            b"",
+            b"GraphQL: Could not resolve to a PullRequest with the number of 8183. (repository.pullRequest)\n",
+        )
+
+    result = gh.run(args, client=store, runner=native, capture_output=True, text=True)
+    assert calls[0][1] == "repos/o/r/pulls/8183"
+    assert seen == [args]
+    assert result.returncode == 1
+    assert "Could not resolve to a PullRequest" in result.stderr
+
+
+def test_pr_view_non_404_stays_typed(tmp_path):
+    store, calls = client(tmp_path, [response({"message": "boom"}, status=500)])
+
+    def native(*args, **kw):
+        raise AssertionError("non-404 pr view reached native gh")
+
+    result = gh.run(
+        ["gh", "pr", "view", "1", "--repo", "o/r", "--json", "number"],
+        client=store,
+        runner=native,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 1 and json.loads(result.stdout)["status"] == 500 and calls

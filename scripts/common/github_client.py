@@ -1676,17 +1676,23 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
         elif frozen_input is not None:
             payload = frozen_input
         if "--paginate" in options and method == "GET":
+            # gh applies --jq to each page, and prints a non-list page as its
+            # own document. A merged value is a different result, so those
+            # shapes keep the native command. List pages concatenate; --slurp
+            # wraps every page.
+            if "--slurp" not in options and ("--jq" in options or "-q" in options):
+                return _native_command(args, client, runner, kwargs)
             pages = _pages(client, endpoint, timeout=timeout, fresh=fresh, paginate=True)
             if isinstance(pages, Result):
                 result = pages
+            elif "--slurp" not in options and any(not isinstance(page.value, list) for page in pages):
+                return _native_command(args, client, runner, kwargs)
             else:
                 result = pages[0]
                 result.value = (
-                    [p.value for p in pages]
+                    [page.value for page in pages]
                     if "--slurp" in options
-                    else [item for p in pages for item in p.value]
-                    if all(isinstance(p.value, list) for p in pages)
-                    else pages[0].value
+                    else [item for page in pages for item in page.value]
                 )
                 _merge_observation(result, *pages)
         else:
@@ -1703,6 +1709,15 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
             result = _write_command(
                 client, kind, action, options, positional, timeout=timeout, input=kwargs.get("input")
             )
+    # REST 404 is not gh's "Could not resolve to a PullRequest". Review
+    # checkouts encode issue numbers, and only native gh distinguishes that
+    # absence from an unreadable guard.
+    if (
+        args[1:3] == ["pr", "view"]
+        and result.status == 404
+        and result.error in {"github_http_error", "github_pr_not_found"}
+    ):
+        return _native_command(args, client, runner, kwargs)
     return _result_process(args, result, options, kwargs, api=args[1] == "api")
 
 
