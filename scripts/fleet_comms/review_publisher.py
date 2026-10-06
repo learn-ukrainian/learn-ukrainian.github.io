@@ -29,6 +29,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.common import github_client
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.review_publication import (
@@ -109,7 +110,7 @@ def fetch_pr_head_sha(
     if pr_number <= 0:
         raise ReviewPublisherError(f"invalid_pr: {pr_number}")
     owner, repo = split_repository(repository)
-    completed = (runner or subprocess.run)(
+    completed = github_client.command(
         [
             "gh",
             "pr",
@@ -122,6 +123,8 @@ def fetch_pr_head_sha(
             "--jq",
             ".headRefOid",
         ],
+        runner=runner if runner is not subprocess.run else None,
+        fresh=True,
         capture_output=True,
         text=True,
         check=False,

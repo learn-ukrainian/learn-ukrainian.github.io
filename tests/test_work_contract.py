@@ -2038,19 +2038,10 @@ def test_fetch_issue_states_batched_runner_handling():
     with pytest.raises(ValueError, match="public repository_id must be exactly"):
         fetch_issue_states_batched([7178], repository_id="other/repo")
 
-    # 3. Successful runner
+    # 3. Successful bounded REST reads
     def mock_runner(args, timeout_s):
-        stdout = json.dumps(
-            {
-                "data": {
-                    "repository": {
-                        "i7178": {"number": 7178, "state": "CLOSED"},
-                        "i7184": {"number": 7184, "state": "OPEN"},
-                    }
-                }
-            }
-        )
-        return 0, stdout, ""
+        number = int(args[-1].rsplit("/", 1)[1])
+        return 0, json.dumps({"state": "closed" if number == 7178 else "open"}), ""
 
     res = fetch_issue_states_batched([7178, 7184], repository_id=REPO, runner=mock_runner)
     assert res[issue_work_id(REPO, 7178)] == "closed"
@@ -2066,18 +2057,11 @@ def test_fetch_issue_states_batched_runner_handling():
 
     # 5. Missing / NOT_FOUND issue in data -> omitted from result
     def not_found_runner(args, timeout_s):
-        stdout = json.dumps(
-            {
-                "data": {
-                    "repository": {
-                        "i7178": {"number": 7178, "state": "CLOSED"},
-                        "i999": None,
-                    }
-                },
-                "errors": [{"type": "NOT_FOUND"}],
-            }
-        )
-        return 1, stdout, "not found"
+        # HTTP 404 is structural evidence of absence, preserving other reads.
+        number = int(args[-1].rsplit("/", 1)[1])
+        if number == 7178:
+            return 0, json.dumps({"state": "closed"}), ""
+        return 1, json.dumps({"error": "github_http_error", "status": 404}), "not found"
 
     res_nf = fetch_issue_states_batched([7178, 999], repository_id=REPO, runner=not_found_runner)
     assert res_nf[issue_work_id(REPO, 7178)] == "closed"

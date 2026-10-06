@@ -31,6 +31,7 @@ import subprocess
 import urllib.request
 from pathlib import Path
 
+from scripts.common import github_client
 from scripts.github_check_rollup import collapse_status_rollup
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -56,12 +57,13 @@ def _git(*args: str) -> tuple[int, str]:
 
 def _gh_json(*args: str) -> tuple[int, object]:
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             ["gh", *args],
             capture_output=True,
             text=True,
             cwd=PROJECT_ROOT,
             timeout=DEFAULT_GH_TIMEOUT_SECONDS,
+            fresh=True,
         )
     except subprocess.TimeoutExpired as exc:
         return 124, f"gh {' '.join(args)} timed out after {DEFAULT_GH_TIMEOUT_SECONDS}s: {exc}"

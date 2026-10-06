@@ -30,6 +30,7 @@ from scripts.ci.ci_timings import (
     extract_pr_number,
     resolve_repository,
 )
+from scripts.common import github_client
 from scripts.publish.github import read
 
 
@@ -401,7 +402,7 @@ def fetch_live_status(
     runs_path = f"repos/{owner}/{name}/actions/runs?event=merge_group&per_page=30"
     runs_cmd = ["gh", "api", runs_path]
     try:
-        runs_proc = subprocess.run(
+        runs_proc = github_client.run(
             runs_cmd,
             capture_output=True,
             text=True,
@@ -431,7 +432,7 @@ def fetch_live_status(
                 "--json",
                 "url,headBranch,status,conclusion,createdAt,name,event",
             ]
-            rl_proc = subprocess.run(
+            rl_proc = github_client.run(
                 rl_cmd,
                 capture_output=True,
                 text=True,

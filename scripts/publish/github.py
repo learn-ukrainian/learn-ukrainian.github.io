@@ -10,14 +10,12 @@ import argparse
 import json
 import os
 import re
-import signal
-import subprocess
 import sys
 import tempfile
-import threading
 from pathlib import Path
 from urllib.parse import quote
 
+from scripts.common import github_client
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import repository
 
@@ -211,53 +209,17 @@ def _read_file(path, cwd, stdin):
 
 
 def _send(argv, *, environment, runner, cwd, **kwargs):
-    """Use the existing merge guard/retry helper only for the production transport.
-
-    Every gh call, merge-readiness reads included, gets a copy without the
-    override: a transport claims nothing, and the caller's environment keeps
-    the override for the scan that may claim it.
-    """
+    """Send already-admitted bytes through the shared GitHub client."""
     environment = gate.internal_environment(environment)
     if runner is None:
-        from scripts.opsec.gh_entry import guarded_command
-
-        real = gate.real_gh(environment)
-        argv = guarded_command(real, gate.ROOT / "scripts/agent_runtime/shims/gh", argv[1:])
-        environment["LU_OPSEC_FILE_PAYLOAD"] = "1"
-        kwargs.setdefault("stdin", subprocess.DEVNULL)
-        runner = _run_transport
-    return runner(argv, env=environment, cwd=cwd, **kwargs)
+        environment["AGENT_REAL_GH"] = gate.real_gh(environment)
+    if runner is not None:
+        return github_client.command(argv, runner=runner, env=environment, cwd=cwd, **kwargs)
+    return _run_transport(argv, env=environment, cwd=cwd, **kwargs)
 
 
-def _run_transport(command, *, capture_output=False, check=False, timeout=None, **kwargs):
-    """Forward CLI termination and preserve subprocess result/timeout semantics."""
-    if capture_output:
-        kwargs.update(stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    with subprocess.Popen(command, **kwargs) as child:
-        previous = {}
-        if threading.current_thread() is threading.main_thread():
-
-            def forward(signum, _frame):
-                if child.poll() is None:
-                    child.send_signal(signum)
-
-            previous = {
-                signum: signal.signal(signum, forward) for signum in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP)
-            }
-        try:
-            try:
-                output, error = child.communicate(timeout=timeout)
-            except subprocess.TimeoutExpired:
-                child.kill()
-                output, error = child.communicate()
-                raise subprocess.TimeoutExpired(command, timeout, output=output, stderr=error) from None
-            result = subprocess.CompletedProcess(command, child.returncode, output, error)
-            if check and result.returncode:
-                raise subprocess.CalledProcessError(result.returncode, command, output=output, stderr=error)
-            return result
-        finally:
-            for signum, handler in previous.items():
-                signal.signal(signum, handler)
+def _run_transport(command, **kwargs):
+    return github_client.run(command, **kwargs)
 
 
 SQUASH_TEXT_QUERY = (
@@ -293,11 +255,14 @@ def _squash_text(gh_repo, fields, dest, temp, runner, cwd, environment):
             and pull["headRefOid"].lower() == fields["match_head"].lower()
         ):
             raise ValueError
+    except github_client.GitHubRateLimited:
+        raise
     except Exception:
         raise gate.PublishBlocked("OPSEC: merge refused: squash text unverifiable.") from None
     return {"subject": subject, "body": body, "queue": pull["isMergeQueueEnabled"]}
 
 
+@github_client.rate_limited_command
 def publish(
     verb: str,
     *,
@@ -352,7 +317,13 @@ def publish(
             from scripts.publish.merge_guard import ensure_merge_ready
 
             def readiness_runner(args, **kwargs):
-                return _send(args, environment=kwargs.pop("env"), runner=runner, cwd=kwargs.pop("cwd"), **kwargs)
+                if runner is None:
+                    kwargs["fresh"] = True
+                result = _send(args, environment=kwargs.pop("env"), runner=runner, cwd=kwargs.pop("cwd"), **kwargs)
+                observation = getattr(result, "github_result", None)
+                if observation is not None and (observation.stale or observation.error == "github_rate_limited"):
+                    raise github_client.GitHubRateLimited(observation.reset_at)
+                return result
 
             fields["match_head"] = ensure_merge_ready(
                 gh_repo,
@@ -585,7 +556,7 @@ def main(argv=None, *, runner=None):
     read_parser.add_argument(
         "name",
         choices=sorted(
-            set(REST_READS) | set(GQL_READS) | {"queue-snapshot", "subissue-batch", "issue-states", "merge-facts"}
+            set(REST_READS) | set(GQL_READS) | REST_COMPAT_READS | {"queue-snapshot", "subissue-batch", "issue-states", "merge-facts"}
         ),
     )
     read_parser.add_argument(
@@ -702,18 +673,12 @@ DIAGNOSTIC_READS = {
         map({path: (.path | relative_path), line: .start_line,
             level: .annotation_level, message: .message})""",
 }
+REST_COMPAT_READS = {'budget', 'issue-scope', 'subissues', 'subissues-next', 'default-head', 'pr-bases', 'issue-parent'}
 GQL_READS = {
-    "budget": "query { rateLimit { limit remaining used resetAt } }",
-    "default-head": "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){nameWithOwner defaultBranchRef{name target{oid}}}}",
     "queue-status": "\nquery($owner: String!, $name: String!, $number: Int!, $branch: String!) {\n  repository(owner: $owner, name: $name) {\n    pullRequest(number: $number) {\n      number\n      title\n      state\n      merged\n      mergeable\n      mergeStateStatus\n      isInMergeQueue\n      isMergeQueueEnabled\n      headRefName\n      headRefOid\n      baseRefName\n      mergeQueueEntry {\n        id\n        position\n        state\n        enqueuedAt\n        estimatedTimeToMerge\n        jump\n        solo\n        headCommit {\n          oid\n          checkSuites(first: 20) {\n            nodes {\n              status\n              conclusion\n              createdAt\n              updatedAt\n              workflowRun {\n                id\n                url\n                event\n                createdAt\n                updatedAt\n                workflow {\n                  name\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n    mergeQueue(branch: $branch) {\n      url\n      nextEntryEstimatedTimeToMerge\n      entries(first: 50) {\n        totalCount\n        nodes {\n          position\n          state\n          enqueuedAt\n          estimatedTimeToMerge\n          pullRequest {\n            number\n          }\n        }\n      }\n    }\n  }\n}\n",
-    "pr-bases": "\nquery($owner: String!, $name: String!, $cursor: String) {\n  repository(owner: $owner, name: $name) {\n    pullRequests(states: OPEN, first: 100, after: $cursor) {\n      totalCount\n      pageInfo { hasNextPage endCursor }\n      nodes { number baseRefOid }\n    }\n  }\n}\n",
-    "issue-scope": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){issue(number:$number){number body labels(first:100){nodes{name}} parent{number}}}}",
     "membership-head": "query($owner:String!,$name:String!,$number:Int!,$branch:String!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid isInMergeQueue} mergeQueue(branch:$branch){url}}}",
-    "issue-parent": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){nameWithOwner issue(number:$number){number state url parent{number url repository{nameWithOwner}}}}}",
     "membership": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){isInMergeQueue}}}",
     "squash-text": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid viewerMergeHeadlineText(mergeType:SQUASH) viewerMergeBodyText(mergeType:SQUASH) mergeQueueEntry{headCommit{oid message}}}}}",
-    "subissues": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){issue(number:$number){body subIssues(first:100){nodes{number} pageInfo{hasNextPage endCursor}}}}}",
-    "subissues-next": "query($owner:String!,$name:String!,$number:Int!,$cursor:String!){repository(owner:$owner,name:$name){issue(number:$number){subIssues(first:100, after:$cursor){nodes{number} pageInfo{hasNextPage endCursor}}}}}",
 }
 
 
@@ -746,6 +711,26 @@ def read(
     for key in ("number",):
         if key in fields and (type(fields[key]) is not int or fields[key] <= 0):
             raise gate.PublishBlocked("OPSEC: invalid read identifier.")
+    if operation in {"budget", "default-head", "pr-bases", "issue-states", "merge-facts", "issue-parent", "issue-scope", "subissues", "subissues-next", "subissue-batch"}:
+        expected = {"budget":set(), "default-head":set(), "pr-bases":{"cursor"}, "issue-states":{"numbers"}, "merge-facts":{"batch"}, "issue-parent":{"number"}, "issue-scope":{"number"}, "subissues":{"number"}, "subissues-next":{"number","cursor"}, "subissue-batch":{"cursors","body_roots"}}[operation]
+        if set(fields) != expected:
+            raise gate.PublishBlocked("OPSEC: invalid read fields.")
+        if operation == "issue-states" and (not isinstance(fields["numbers"], (list, tuple)) or not 1 <= len(fields["numbers"]) <= 100 or any(type(n) is not int or n <= 0 for n in fields["numbers"])):
+            raise gate.PublishBlocked("OPSEC: invalid issue batch.")
+        if operation == "merge-facts" and (not isinstance(fields["batch"], (list, tuple)) or not 1 <= len(fields["batch"]) <= 50 or any(not isinstance(item, (list, tuple)) or len(item) != 2 or not isinstance(item[0], str) or not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", item[0]) or type(item[1]) is not int or item[1] <= 0 for item in fields["batch"])):
+            raise gate.PublishBlocked("OPSEC: invalid merge batch.")
+        if operation == "subissues-next" and not isinstance(fields["cursor"], str):
+            raise gate.PublishBlocked("OPSEC: invalid read cursor.")
+        if operation == "subissue-batch":
+            cursors, roots = fields["cursors"], fields["body_roots"]
+            if not isinstance(cursors, dict) or not 1 <= len(cursors) <= 20 or not isinstance(roots, (set,list,tuple)) or any(type(n) is not int or n <= 0 or (c is not None and not isinstance(c,str)) for n,c in cursors.items()):
+                raise gate.PublishBlocked("OPSEC: invalid read batch.")
+        return github_client.rest_read(operation, gh_repo, fields, runner=runner, env=environment, cwd=cwd, capture_output=capture_output, text=text, check=check, timeout=timeout, stdout=stdout, stderr=stderr)
+    if operation in {"queue-snapshot", "queue-status"} and runner is None:
+        expected = {"branches"} if operation == "queue-snapshot" else {"number", "branch"}
+        if set(fields) != expected or (operation == "queue-snapshot" and (not isinstance(fields["branches"], (list, set, tuple)) or not all(isinstance(b, str) for b in fields["branches"]))):
+            raise gate.PublishBlocked("OPSEC: invalid queue fields.")
+        return github_client.queue_read(operation, gh_repo, fields, env=environment, cwd=cwd, capture_output=capture_output, text=text, check=check, timeout=timeout, stdout=stdout, stderr=stderr)
     if operation in REST_READS:
         endpoint, schema = REST_READS[operation]
         if operation == "code-scanning-alerts" and set(fields) == {"number"}:
@@ -803,42 +788,6 @@ def read(
                 raise gate.PublishBlocked("OPSEC: invalid query fields.")
             query = GQL_READS[operation]
             variables.update(fields)
-        elif operation == "issue-states" and set(fields) == {"numbers"}:
-            numbers = fields["numbers"]
-            if (
-                not isinstance(numbers, (list, tuple))
-                or not 1 <= len(numbers) <= 100
-                or any(type(n) is not int or n <= 0 for n in numbers)
-            ):
-                raise gate.PublishBlocked("OPSEC: invalid issue batch.")
-            aliases = "\n".join(f"i{n}: issue(number: {n}) {{ number state }}" for n in numbers)
-            query = "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){" + aliases + "}}"
-        elif operation == "merge-facts" and set(fields) == {"batch"}:
-            batch = fields["batch"]
-            if not isinstance(batch, (list, tuple)) or not 1 <= len(batch) <= 50:
-                raise gate.PublishBlocked("OPSEC: invalid merge batch.")
-            grouped = {}
-            for item in batch:
-                if (
-                    not isinstance(item, (list, tuple))
-                    or len(item) != 2
-                    or not isinstance(item[0], str)
-                    or not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", item[0])
-                    or type(item[1]) is not int
-                    or item[1] <= 0
-                ):
-                    raise gate.PublishBlocked("OPSEC: invalid merge selector.")
-                grouped.setdefault(item[0], []).append(item[1])
-            selections = []
-            for i, (slug, numbers) in enumerate(grouped.items()):
-                owner, name = slug.split("/")
-                selections.append(
-                    f"r{i}:repository(owner:{json.dumps(owner)},name:{json.dumps(name)}){{"
-                    + " ".join(f"p{n}:pullRequest(number:{n}){{mergedAt}}" for n in numbers)
-                    + "}"
-                )
-            query = "query {" + " ".join(selections) + "}"
-            variables = {}
         elif operation == "queue-snapshot" and set(fields) == {"branches"}:
             branches = fields["branches"]
             if not isinstance(branches, (list, tuple, set)) or not all(isinstance(b, str) for b in branches):
@@ -850,27 +799,6 @@ def read(
                 "query($owner:String!,$name:String!){ rateLimit { remaining cost } repository(owner:$owner,name:$name){ pullRequests(first:100,states:OPEN){ totalCount pageInfo{hasNextPage} nodes{ id number title isDraft headRefOid baseRefName isInMergeQueue mergeStateStatus autoMergeRequest{ enabledAt } labels(first:100){totalCount pageInfo{hasNextPage} nodes{name}} } } "
                 + aliases
                 + "\n}}"
-            )
-        elif operation == "subissue-batch" and set(fields) == {"cursors", "body_roots"}:
-            cursors, roots = fields["cursors"], fields["body_roots"]
-            if (
-                not isinstance(cursors, dict)
-                or not 1 <= len(cursors) <= 20
-                or not isinstance(roots, (set, list, tuple))
-            ):
-                raise gate.PublishBlocked("OPSEC: invalid query batch.")
-            aliases = []
-            for number, cursor in cursors.items():
-                if type(number) is not int or number <= 0 or (cursor is not None and not isinstance(cursor, str)):
-                    raise gate.PublishBlocked("OPSEC: invalid query batch selector.")
-                after = f",after:{json.dumps(cursor)}" if cursor is not None else ""
-                body = "body " if number in roots and cursor is None else ""
-                aliases.append(
-                    f"i{number}:issue(number:{number}){{{body}subIssues(first:100{after})"
-                    + "{nodes{number repository{nameWithOwner} subIssuesSummary{total}} pageInfo{hasNextPage endCursor}}}"
-                )
-            query = (
-                "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){" + " ".join(aliases) + "}}"
             )
         else:
             raise gate.PublishBlocked("OPSEC: unknown typed read.")

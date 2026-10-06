@@ -13,6 +13,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
+
 from scripts.opsec import prepublish as gate
 from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, synthetic_rules
 

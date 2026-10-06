@@ -14,6 +14,7 @@ from agent_runtime.attribution import resolve_invocation_attribution
 from agent_runtime.errors import AgentTimeoutError, RateLimitedError
 from agent_runtime.kimi_admission import KimiAdmissionRefused
 from agent_runtime.runner import InterAgentTransportError
+from scripts.common import github_client
 
 from ._ask_contract import EFFORT_CHOICES
 from ._ask_lifecycle import (
@@ -1553,8 +1554,9 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
         "headRefName,headRefOid,isCrossRepository",
     ]
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             cmd,
+            fresh=True,
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,

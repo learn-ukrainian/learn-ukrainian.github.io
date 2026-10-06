@@ -34,6 +34,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common import github_client
 from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
 from scripts.maintenance.claude_session_scratch import sweep_sessions
@@ -696,7 +697,7 @@ def _query_pr_by_number(
     if rest_error is None:
         return states, None
     try:
-        proc = reap_worktrees._run(
+        proc = github_client.run(
             [
                 "gh",
                 "pr",
@@ -705,11 +706,17 @@ def _query_pr_by_number(
                 "--json",
                 "number,state,headRefOid",
             ],
+            capture_output=True,
+            text=True,
             cwd=repo_root,
             timeout=30,
+            fresh=True,
         )
     except (FileNotFoundError, subprocess.SubprocessError) as exc:
         return [], f"{rest_error}; gh pr view failed: {exc}"
+    observation = getattr(proc, "github_result", None)
+    if observation is not None and observation.error == "github_rate_limited":
+        raise github_client.GitHubRateLimited(observation.reset_at)
     if proc.returncode != 0:
         return [], f"{rest_error}; gh pr view failed: {reap_worktrees._format_failure(proc)}"
     try:
@@ -1144,6 +1151,8 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         result["retained_exceptions"] = counts["retained_exceptions"]
         result["by_preservation_class"] = counts["by_preservation_class"]
         result["by_owner"] = counts["by_owner"]
+    except github_client.GitHubRateLimited:
+        raise
     except RuntimeError as exc:
         result["errors"].append(str(exc))
     return result
@@ -1155,6 +1164,8 @@ def _repo_result(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     try:
         with _GitHygieneLock(repo_root):
             return _repo_result_unlocked(repo_root, apply=apply)
+    except github_client.GitHubRateLimited:
+        raise
     except RuntimeError as exc:
         result = _empty_repo_result(repo_root)
         result["errors"].append(str(exc))
@@ -1435,6 +1446,7 @@ def batch_state_retention_reports(repo_roots: list[Path], *, apply: bool) -> lis
     return reports
 
 
+@github_client.timer
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     repo_roots = args.repo_root or args.default_repo_roots

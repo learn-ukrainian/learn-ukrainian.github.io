@@ -527,20 +527,29 @@ def test_terminating_process_group_escalates_after_200ms(monkeypatch: pytest.Mon
 def test_gh_queries_are_new_sessions_and_timeout_reaps(monkeypatch: pytest.MonkeyPatch) -> None:
     class Process:
         pid = 4242
-        returncode: int | None = None
+        returncode = None
 
-        def communicate(self, *, timeout: float) -> tuple[str, str]:
-            raise hydration.subprocess.TimeoutExpired("gh", timeout)
+        def __enter__(self):
+            return self
 
-    launched: dict[str, object] = {}
+        def __exit__(self, *args):
+            return False
+
+        def communicate(self, *, input=None, timeout=None):
+            if timeout is not None:
+                raise hydration.subprocess.TimeoutExpired("gh", timeout)
+            return b"", b""
+
+    launched = {}
+    signals = []
+    monkeypatch.setenv("GH_REPO", "fixture/project")
     monkeypatch.setattr(hydration.subprocess, "Popen", lambda *args, **kwargs: launched.update(kwargs) or Process())
-    monkeypatch.setattr(hydration, "terminate_process_group", lambda process: launched.update(reaped=True))
-    clock = iter((1.0, 1.0))
-    monkeypatch.setattr(hydration.time, "monotonic", lambda: next(clock))
-
+    monkeypatch.setattr(hydration.os, "killpg", lambda pid, signum: signals.append((pid,signum)))
+    monkeypatch.setattr(hydration.time, "monotonic", lambda: 1.0)
     assert hydration.run_gh_json(["issue", "view", "5512", "--json", "title"], deadline=1.1) is None
     assert launched["start_new_session"] is True
-    assert launched["reaped"] is True
+    assert signals == [(4242, signal.SIGKILL)]
+
 
 
 @pytest.mark.parametrize(

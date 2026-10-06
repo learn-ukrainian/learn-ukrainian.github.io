@@ -42,6 +42,9 @@ def _install_fake_gh(
     )
     script.chmod(script.stat().st_mode | stat.S_IEXEC)
     monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ.get('PATH', '')}")
+    def respond(args, **kwargs):
+        return __import__('subprocess').CompletedProcess(args, code, stdout, stderr)
+    monkeypatch.setattr(_cli.github_client, "run", respond)
 
 
 def _same_repo_payload(*, head_sha: str = _HEAD_SHA, branch: str = _HEAD_BRANCH) -> str:

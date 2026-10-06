@@ -19,6 +19,7 @@ _local_repo_root = Path(__file__).resolve().parents[2]
 if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
+from scripts.common import github_client
 from scripts.common.repo_root import resolve_repo_root
 
 if TYPE_CHECKING:
@@ -76,8 +77,9 @@ def _run_json_command(
     *,
     timeout: float = DEFAULT_JSON_COMMAND_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
-    proc = subprocess.run(
+    proc = github_client.run(
         cmd,
+        fresh=True,
         cwd=REPO_ROOT,
         check=True,
         capture_output=True,

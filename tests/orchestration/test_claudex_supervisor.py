@@ -64,6 +64,7 @@ def venv_less_linked_worktree(tmp_path: Path) -> Iterator[SimpleNamespace]:
         "scripts/__init__.py",
         "scripts/common/__init__.py",
         "scripts/common/repo_root.py",
+        "scripts/common/github_client.py",
         "scripts/context_canary.py",
         "scripts/lib/context_profiles.py",
         "scripts/lib/session_record.py",

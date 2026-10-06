@@ -18,7 +18,7 @@ import scripts.api.artifacts_router as artifacts_router
 import scripts.api.main as api_main
 import scripts.api.site_router as site_router
 
-pytestmark = pytest.mark.reads_content
+pytestmark = [pytest.mark.reads_content, pytest.mark.usefixtures("github_command_boundary")]
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 

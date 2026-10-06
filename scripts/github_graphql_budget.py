@@ -1,8 +1,8 @@
-"""Probe the authenticated GitHub GraphQL primary budget.
+"""Observe GitHub's GraphQL budget through the shared REST rate-limit read.
 
-GitHub's GraphQL rate-limit documentation says an API call has a minimum
-point cost of 1, so this read-only probe itself consumes at least one point:
-https://docs.github.com/en/graphql/overview/rate-limits-and-node-limits-for-the-graphql-api
+The REST rate_limit endpoint reports each resource separately. Only its
+``resources.graphql`` counters feed this probe; REST core is never mistaken
+for GraphQL headroom. No paid GraphQL introspection is required.
 """
 
 from __future__ import annotations
@@ -18,7 +18,6 @@ from typing import Any
 
 from scripts.publish.github import read
 
-QUERY = "query { rateLimit { limit remaining used resetAt } }"
 TIMEOUT_SECONDS = 10.0
 
 
@@ -37,7 +36,7 @@ def _payload(
     error: str | None,
 ) -> dict[str, Any]:
     return {
-        "source": "graphql.rateLimit",
+        "source": "rest.resources.graphql",
         "limit": limit,
         "remaining": remaining,
         "used": used,
@@ -116,6 +115,9 @@ def _run(
         return None, "", "", None, f"gh api graphql failed: {type(exc).__name__}"
     except Exception as exc:
         return None, "", "", None, f"gh api graphql runner failed: {type(exc).__name__}"
+    observation = getattr(proc, "github_result", None)
+    if observation is not None and observation.stale:
+        return proc, "", "", 0, f"GitHub budget stale age_seconds={observation.age_seconds} reset_at={observation.reset_at}"
     return (
         proc,
         getattr(proc, "stdout", "") or "",
@@ -128,10 +130,9 @@ def _run(
 def probe_graphql_budget(
     runner: Callable[..., Any] | None = None,
 ) -> dict[str, Any]:
-    """Return one bounded ``rateLimit`` observation; never consult REST.
+    """Return one bounded observation of the GraphQL resource counters.
 
-    ``rateLimit`` is the authoritative GraphQL budget field. GitHub documents
-    that every GraphQL API call costs at least one point, including this probe.
+    The shared client reads resources.graphql from REST /rate_limit.
     """
     checked_at = _checked_at()
     _proc, stdout, stderr, returncode, local_error = _run(runner)
@@ -199,14 +200,14 @@ def probe_graphql_budget(
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Read the authenticated GitHub GraphQL primary budget using rateLimit.\n"
-            "Use for budget health; do not use REST /rate_limit as a GraphQL signal."
+            "Read the authenticated GitHub GraphQL primary budget from REST resources.graphql.\n"
+            "Use GraphQL resource counters only; REST core counters are a separate budget."
         ),
         epilog=(
             "Examples:\n"
             "  .venv/bin/python -m scripts.github_graphql_budget\n"
             "  .venv/bin/python -m scripts.github_graphql_budget --json\n\n"
-            "Outputs: one probe object on stdout; no files or database changes.\n"
+            "Outputs: one probe object on stdout; shared conditional cache and budget state are updated.\n"
             "Exit codes: 0 healthy, 2 exhausted, 3 unknown/probe failure.\n"
             "Related: GitHub GraphQL rate limits; issue #8535 item 4."
         ),

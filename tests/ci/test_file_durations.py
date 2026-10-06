@@ -141,7 +141,7 @@ def test_github_read_is_bounded_and_captures_output(monkeypatch) -> None:
         assert kwargs == {"check": True, "capture_output": True, "timeout": 30}
         return subprocess.CompletedProcess(command, 0, stdout=b"{}")
 
-    monkeypatch.setattr(subprocess, "run", run)
+    monkeypatch.setattr(split.github_client, "run", run)
     assert split.github_api("repos/owner/repo/actions/artifacts") == b"{}"
 
 
@@ -236,11 +236,12 @@ def test_archive_download_is_spooled_and_size_checked(monkeypatch, oversize) -> 
     def run(command, **kwargs):
         assert command == ["gh", "api", "repos/owner/repo/actions/artifacts/2/zip"]
         assert kwargs["timeout"] == 30 and kwargs["check"] is True
+        assert kwargs["max_response_bytes"] == split.MAX_ARCHIVE_BYTES
         assert kwargs["stderr"] == subprocess.PIPE
         assert "capture_output" not in kwargs
         kwargs["stdout"].write(payload)
 
-    monkeypatch.setattr(subprocess, "run", run)
+    monkeypatch.setattr(split.github_client, "run", run)
     if oversize:
         with pytest.raises(ValueError, match="size limit"):
             split.github_api("repos/owner/repo/actions/artifacts/2/zip")
@@ -332,3 +333,15 @@ def test_corrupt_compressed_sample_does_not_hide_later_sample(tmp_path, monkeypa
     output = tmp_path / "snapshot.json"
     assert split.refresh_durations("owner/repo", fallback, output) == 1
     assert json.loads(output.read_text()) == {"tests/test_a.py": 20}
+
+
+def test_archive_client_bound_maps_to_existing_size_failure(monkeypatch):
+    from scripts.common.github_client import Result
+
+    def oversized(*args, **kwargs):
+        failure = subprocess.CalledProcessError(1, args[0])
+        failure.github_result = Result(status=413, error="github_http_error")
+        raise failure
+    monkeypatch.setattr(split.github_client, "run", oversized)
+    with pytest.raises(ValueError, match="size limit"):
+        split.github_api("repos/owner/repo/actions/artifacts/2/zip")

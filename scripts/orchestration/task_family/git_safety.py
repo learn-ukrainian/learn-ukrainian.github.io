@@ -17,6 +17,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.common import github_client
 from scripts.common.git_context import sanitized_git_env
 from scripts.guardrails.worktree_containment import (
     PROTECTED_BRANCHES,
@@ -83,8 +84,9 @@ def run_gh(
     cwd: Path | None = None,
     timeout: float = 30.0,
 ) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
+    return github_client.run(
         ["gh", *args],
+        fresh=True,
         cwd=str(cwd) if cwd is not None else None,
         check=False,
         capture_output=True,

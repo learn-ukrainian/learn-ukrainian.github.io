@@ -27,6 +27,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.common import github_client
 from scripts.common.repo_root import project_interpreter
 from scripts.orchestration import worktree_claims
 from scripts.orchestration.dispatch_isolation import _parse_bytes, build_scope_argv
@@ -506,7 +507,10 @@ def run_failed(summary: dict) -> bool:
 
 
 def _gh(args: list[str], *, input_text: str | None = None) -> str:
-    result = subprocess.run(["gh", *args], input=input_text, capture_output=True, text=True, check=False, timeout=90)
+    result = github_client.run(["gh", *args], input=input_text, capture_output=True, text=True, check=False, timeout=90)
+    observation = getattr(result, "github_result", None)
+    if observation is not None and (observation.stale or observation.error == "github_rate_limited"):
+        raise github_client.GitHubRateLimited(observation.reset_at)
     if result.returncode:
         raise DataTierError(f"gh failed ({result.returncode}): {safe_text(result.stderr.strip())}")
     return result.stdout
@@ -690,15 +694,15 @@ def run(args: argparse.Namespace) -> int:
 
     persist()
     if not args.no_report:
-        for _attempt in range(2):
-            if _attempt:
-                persist()
-            try:
-                print(report(summary, baseline))
-                break
-            except Exception as error:
-                summary["runner_errors"].append(f"GitHub reporting failed: {safe_text(str(error))}")
-        else:
+        try:
+            print(report(summary, baseline))
+        except github_client.GitHubRateLimited:
+            # The timer records the reset. Persist the test result first,
+            # and never repeat a partially successful publishing sequence.
+            persist()
+            raise
+        except Exception as error:
+            summary["runner_errors"].append(f"GitHub reporting failed: {safe_text(str(error))}")
             persist()
     print(json.dumps(summary, sort_keys=True))
     return 1 if run_failed(summary) else 0
@@ -736,6 +740,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+@github_client.timer
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
 

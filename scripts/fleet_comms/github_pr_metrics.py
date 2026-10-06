@@ -11,6 +11,8 @@ import subprocess
 from datetime import datetime
 from typing import Any
 
+from scripts.common import github_client
+
 _GH_TIMEOUT_SECONDS = 30
 
 
@@ -48,7 +50,7 @@ def collect_github_pr_metrics(
         "number,title,createdAt,mergedAt,additions,deletions,changedFiles",
     ]
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             cmd,
             capture_output=True,
             text=True,

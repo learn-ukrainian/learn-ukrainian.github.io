@@ -52,6 +52,7 @@ def _capture_native_review(monkeypatch, tmp_path, content, profile, response, *,
 
     with monkeypatch.context() as patch:
         patch.setenv("LU_RUNTIME_TMP_ROOT", str(tmp_path))
+        patch.setattr(wrappers.github_client, "run", native_boundary)
         patch.setattr(wrappers.subprocess, "run", native_boundary)
         def dispatch():
             _cli._dispatch_headless_review(
@@ -281,6 +282,7 @@ def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(
         captured_prompt["text"] = prompt_path.read_text(encoding="utf-8")
         return subprocess.CompletedProcess(command, 0)
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
     rc = wrappers.handle_dispatch_fix(argparse.Namespace(task_id="1741", brief_file=str(brief), dry_run=False))
@@ -337,6 +339,7 @@ def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypa
         }
         return subprocess.CompletedProcess(command, 0, stdout=json.dumps(payload))
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
     rc = wrappers.handle_dispatch_fix(argparse.Namespace(task_id="1701", brief_file=None, dry_run=True))
@@ -377,6 +380,7 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
             return subprocess.CompletedProcess(command, 0, stdout=json.dumps(payload))
         raise AssertionError(f"unexpected command: {command}")
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
     rc = wrappers.handle_review_deep(argparse.Namespace(target="1740", effort="xhigh", dry_run=True))
@@ -419,6 +423,7 @@ def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch
         captured_prompt["text"] = prompt_path.read_text(encoding="utf-8")
         return subprocess.CompletedProcess(command, 0)
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
 
     rc = wrappers.handle_review_deep(argparse.Namespace(target=str(target), effort="high", dry_run=False))
@@ -447,6 +452,7 @@ def test_run_json_command_passes_default_timeout(monkeypatch):
         calls.append((cmd, kwargs))
         return subprocess.CompletedProcess(cmd, 0, stdout='{"ok": true}')
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     res = wrappers._run_json_command(["echo", "hi"])
     assert res == {"ok": True}
@@ -457,6 +463,7 @@ def test_run_json_command_timeout_raises_timeout_expired(monkeypatch):
     def timeout_run(cmd, **kwargs):
         raise subprocess.TimeoutExpired(cmd, wrappers.DEFAULT_JSON_COMMAND_TIMEOUT_SECONDS)
 
+    monkeypatch.setattr(wrappers.github_client, "run", timeout_run)
     monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
     import pytest
 
@@ -471,6 +478,7 @@ def test_run_text_command_passes_default_timeout(monkeypatch):
         calls.append((cmd, kwargs))
         return subprocess.CompletedProcess(cmd, 0, stdout="hello\n")
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     res = wrappers._run_text_command(["echo", "hello"])
     assert res == "hello\n"
@@ -481,6 +489,7 @@ def test_run_text_command_timeout_raises_timeout_expired(monkeypatch):
     def timeout_run(cmd, **kwargs):
         raise subprocess.TimeoutExpired(cmd, wrappers.DEFAULT_TEXT_COMMAND_TIMEOUT_SECONDS)
 
+    monkeypatch.setattr(wrappers.github_client, "run", timeout_run)
     monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
     import pytest
 
@@ -497,6 +506,7 @@ def test_run_dispatch_passes_timeout(monkeypatch, tmp_path):
         calls.append((cmd, kwargs))
         return subprocess.CompletedProcess(cmd, 0)
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     rc = wrappers._run_dispatch(["python", "--task-id", "123"], False, prompt_file)
     assert rc == 0
@@ -510,6 +520,7 @@ def test_run_dispatch_timeout_returns_1(monkeypatch, tmp_path, capsys):
     def timeout_run(cmd, **kwargs):
         raise subprocess.TimeoutExpired(cmd, wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS)
 
+    monkeypatch.setattr(wrappers.github_client, "run", timeout_run)
     monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
     rc = wrappers._run_dispatch(["python", "--task-id", "123"], False, prompt_file)
     assert rc == 1
@@ -555,6 +566,7 @@ def test_run_ask_review_dispatch_dispatch_timeout_raises_runtime_error(monkeypat
     def timeout_run(cmd, **kwargs):
         raise subprocess.TimeoutExpired(cmd, wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS)
 
+    monkeypatch.setattr(wrappers.github_client, "run", timeout_run)
     monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
     with pytest.raises(RuntimeError, match=r"delegate\.py dispatch timed out"):
         wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
@@ -570,6 +582,7 @@ def test_run_ask_review_dispatch_wait_timeout_raises_runtime_error(monkeypatch):
             raise subprocess.TimeoutExpired(cmd, 1860)
         raise AssertionError(f"unexpected cmd: {cmd}")
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     with pytest.raises(RuntimeError, match=r"delegate\.py wait timed out at process level"):
         wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
@@ -592,6 +605,7 @@ def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path)
             )
         raise AssertionError(f"unexpected cmd: {cmd}")
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123", hard_timeout=600)
     assert state["ok"] is True
@@ -620,6 +634,7 @@ def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path):
             )
         raise AssertionError(f"unexpected cmd: {cmd}")
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     wrappers.run_ask_review_dispatch(
         "claude",
@@ -647,6 +662,7 @@ def test_run_ask_review_dispatch_without_verdict_fails_with_reason(monkeypatch, 
             )
         raise AssertionError(f"unexpected cmd: {cmd}")
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
     assert state["ok"] is False
@@ -670,6 +686,7 @@ def test_run_ask_review_dispatch_with_approve_verdict_stays_done(monkeypatch, tm
             )
         raise AssertionError(f"unexpected cmd: {cmd}")
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
     assert state["ok"] is True
@@ -699,6 +716,7 @@ def test_run_ask_review_dispatch_judges_by_verdict_not_dispatch_exit(monkeypatch
             )
         raise AssertionError(f"unexpected cmd: {cmd}")
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     state = wrappers.run_ask_review_dispatch("deepseek", "review this", task_id="review-8786")
     assert state["ok"] is True
@@ -721,6 +739,7 @@ def _run_review_with_wait_state(monkeypatch, tmp_path, *, status, wait_rc, respo
             )
         raise AssertionError(f"unexpected cmd: {cmd}")
 
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     return wrappers.run_ask_review_dispatch("deepseek", "review this", task_id="review-8786")
 

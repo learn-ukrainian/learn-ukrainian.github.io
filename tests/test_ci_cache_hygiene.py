@@ -71,23 +71,6 @@ def _cache_pages(raws: list[dict], total_count: int | None = None):
     return fake_gh_api, calls
 
 
-def _pr_page(total: int, numbers: list[int], shas: list[str | None], next_cursor: str | None) -> str:
-    nodes = [{"number": n, "baseRefOid": sha} for n, sha in zip(numbers, shas, strict=True)]
-    return json.dumps(
-        {
-            "data": {
-                "repository": {
-                    "pullRequests": {
-                        "totalCount": total,
-                        "pageInfo": {"hasNextPage": next_cursor is not None, "endCursor": next_cursor},
-                        "nodes": nodes,
-                    }
-                }
-            }
-        }
-    )
-
-
 def test_keeps_newest_trap_per_family_by_created_at() -> None:
     entries = [
         _entry(1, TRAP_JS + _sha(1), hours_ago=5),
@@ -218,39 +201,34 @@ def test_list_caches_rejects_duplicated_entries() -> None:
         list_caches("owner/repo", gh_api=lambda _args: json.dumps(next(pages)))
 
 
-def test_open_pr_base_shas_follows_cursors() -> None:
-    seen: list[list[str]] = []
-    documents = []
-    pages = iter(
-        [
-            _pr_page(3, [1, 2], [_sha(1), _sha(1)], "c1"),
-            _pr_page(3, [3], [_sha(2)], None),
-        ]
-    )
+def _pr_api(total, numbers, bases):
+    def api(args):
+        if args[-1].startswith("search/"):
+            return json.dumps({"total_count":total,"incomplete_results":False})
+        return json.dumps([{"number":n,"base":{"sha":base}} for n,base in zip(numbers,bases,strict=True)])
+    return api
 
-    def fake_gh_api(args: list[str]) -> str:
-        from pathlib import Path
-        documents.append(json.loads(Path(args[args.index("--input") + 1]).read_text()))
+
+def test_open_pr_base_shas_requests_all_rest_pages_and_an_independent_count() -> None:
+    seen = []
+    api = _pr_api(3,[1,2,3],[_sha(1),_sha(1),_sha(2)])
+    def fake_gh_api(args):
         seen.append(args)
-        return next(pages)
-
-    assert open_pr_base_shas("owner/repo", gh_api=fake_gh_api) == {_sha(1), _sha(2)}
-    assert "cursor=c1" not in seen[0]
-    assert documents[0]["variables"]["cursor"] is None
-    assert documents[1]["variables"]["cursor"] == "c1"
-    assert seen[1][:3] == ["--method", "POST", "graphql"]
-    assert documents[0]["variables"] == {"owner": "owner", "name": "repo", "cursor": None}
+        return api(args)
+    assert open_pr_base_shas("owner/repo", gh_api=fake_gh_api) == {_sha(1),_sha(2)}
+    assert seen[0] == ["--paginate", "repos/owner/repo/pulls?state=open&per_page=100"]
+    assert seen[1][0].startswith("search/issues?q=repo%3Aowner%2Frepo+is%3Apr+is%3Aopen")
 
 
 def test_open_pr_base_shas_rejects_a_short_listing() -> None:
     with pytest.raises(IncompleteListingError, match="1 pull requests"):
-        open_pr_base_shas("owner/repo", gh_api=lambda _args: _pr_page(2, [1], [_sha(1)], None))
+        open_pr_base_shas("owner/repo", gh_api=_pr_api(2, [1], [_sha(1)]))
 
 
 @pytest.mark.parametrize("base", [None, "", "g" * 40, _sha(1)[:39], "A" * 40, 1])
 def test_open_pr_base_shas_rejects_a_pr_without_a_valid_base_sha(base: object) -> None:
     with pytest.raises(IncompleteListingError, match="#2 has no valid base SHA"):
-        open_pr_base_shas("owner/repo", gh_api=lambda _args: _pr_page(2, [1, 2], [_sha(1), base], None))
+        open_pr_base_shas("owner/repo", gh_api=_pr_api(2, [1, 2], [_sha(1), base]))
 
 
 def test_main_aborts_when_an_open_pr_has_no_base_sha(monkeypatch: pytest.MonkeyPatch, tmp_path, capsys) -> None:
@@ -261,7 +239,7 @@ def test_main_aborts_when_an_open_pr_has_no_base_sha(monkeypatch: pytest.MonkeyP
     monkeypatch.setattr(
         cache_hygiene,
         "open_pr_base_shas",
-        lambda repo: open_pr_base_shas(repo, gh_api=lambda _args: _pr_page(1, [7], [None], None)),
+        lambda repo: open_pr_base_shas(repo, gh_api=_pr_api(1, [7], [None])),
     )
     monkeypatch.setattr(cache_hygiene, "delete_entries", lambda *_a: pytest.fail("deleted without every PR base"))
 

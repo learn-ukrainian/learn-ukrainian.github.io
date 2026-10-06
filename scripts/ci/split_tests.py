@@ -44,6 +44,11 @@ from collections.abc import Sequence
 from pathlib import Path
 from xml.etree import ElementTree
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common import github_client
+
 DEFAULT_DURATIONS = Path(__file__).with_name("pytest-file-durations.json")
 DEFAULT_HISTORY = Path(__file__).with_name("history-tests.txt")
 HISTORY_SHARD = 1  # ci.yml: the one pytest shard with a full-history checkout
@@ -83,12 +88,19 @@ def github_api(endpoint: str) -> bytes:
     if endpoint.endswith("/zip"):
         # Spool stdout instead of buffering an untrusted download in memory.
         with tempfile.TemporaryFile() as download:
-            subprocess.run(["gh", "api", endpoint], check=True, stdout=download, stderr=subprocess.PIPE, timeout=30)
+            try:
+                github_client.run(["gh", "api", endpoint], check=True, stdout=download, stderr=subprocess.PIPE,
+                                  timeout=30, max_response_bytes=MAX_ARCHIVE_BYTES)
+            except subprocess.CalledProcessError as exc:
+                observation = getattr(exc, "github_result", None)
+                if observation is not None and observation.status == 413:
+                    raise ValueError("timing archive exceeds size limit") from exc
+                raise
             if download.tell() > MAX_ARCHIVE_BYTES:
                 raise ValueError("timing archive exceeds size limit")
             download.seek(0)
             return download.read(MAX_ARCHIVE_BYTES + 1)
-    return subprocess.run(["gh", "api", endpoint], check=True, capture_output=True, timeout=30).stdout
+    return github_client.run(["gh", "api", endpoint], check=True, capture_output=True, timeout=30).stdout
 
 
 def archive_durations(payload: bytes) -> dict[str, float]:

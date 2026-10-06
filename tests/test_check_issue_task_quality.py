@@ -6,6 +6,8 @@ import json
 
 import pytest
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
+
 from scripts.ci.check_issue_task_quality import main, score_body
 from scripts.ci.comment_issue_task_quality import MARKER, reconcile_comments, render_comment
 
@@ -116,7 +118,7 @@ def test_first_line_trivial_exemption(first_line: str) -> None:
 def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
     payload = {"title": "Fix typo", "body": "Correct spelling", "labels": [{"name": label}]}
     monkeypatch.setattr(
-        "scripts.ci.check_issue_task_quality.subprocess.check_output",
+        "scripts.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
     assert main(["--issue", "123", "--strict", "--json"]) == 0
@@ -127,7 +129,7 @@ def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
 def test_issue_first_line_trivial_exemption(monkeypatch, capsys) -> None:
     payload = {"title": "Fix typo", "body": "trivial:\nCorrect spelling", "labels": []}
     monkeypatch.setattr(
-        "scripts.ci.check_issue_task_quality.subprocess.check_output",
+        "scripts.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
     assert main(["--issue", "123", "--strict", "--json"]) == 0
@@ -138,7 +140,7 @@ def test_issue_first_line_trivial_exemption(monkeypatch, capsys) -> None:
 def test_nontrivial_issue_warns(monkeypatch, capsys) -> None:
     payload = {"title": "trivial:", "body": "Correct spelling", "labels": [{"name": "task"}]}
     monkeypatch.setattr(
-        "scripts.ci.check_issue_task_quality.subprocess.check_output",
+        "scripts.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
     assert main(["--issue", "123", "--strict", "--json"]) == 1

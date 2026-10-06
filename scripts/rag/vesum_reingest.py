@@ -13,6 +13,7 @@ import bz2
 import hashlib
 import json
 import os
+import shutil
 import sqlite3
 import tempfile
 import urllib.parse
@@ -22,6 +23,7 @@ from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+from scripts.common import github_client
 from scripts.rag.word_identity import normalize_evidence_form
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -212,7 +214,8 @@ def fetch_release_asset(lock: dict[str, object], cache_dir: Path) -> Path:
     with tempfile.NamedTemporaryFile(dir=cache_dir, prefix="vesum-download-", suffix=".part", delete=False) as temp:
         temporary_path = Path(temp.name)
     try:
-        urllib.request.urlretrieve(url, temporary_path)  # nosec B310 -- URL is pinned above.
+        with github_client.http_open(urllib.request.Request(url), timeout=60) as response, temporary_path.open("wb") as output:
+            shutil.copyfileobj(response, output)
         verify_release_asset(temporary_path, lock)
         os.replace(temporary_path, destination)
     except Exception:

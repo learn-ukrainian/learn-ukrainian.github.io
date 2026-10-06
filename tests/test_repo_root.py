@@ -78,6 +78,7 @@ def wt_layout(tmp_path) -> tuple[Path, Path]:
         "scripts/common/__init__.py",
         "scripts/common/bridge_paths.py",
         "scripts/common/repo_root.py",
+        "scripts/common/github_client.py",
         "scripts/ai_agent_bridge/_config.py",
         "scripts/ai_agent_bridge/_env.py",
         "scripts/ai_agent_bridge/_dispatch_wrappers.py",

@@ -18,6 +18,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.common.github_client import GitHubRateLimited
 from scripts.gh_merge_queue_status import extract_pr_number
 from scripts.opsec.prepublish import (
     PublishBlocked,
@@ -62,6 +63,9 @@ class GitHub:
             )
         except subprocess.TimeoutExpired as exc:
             raise KeeperError("GitHub request timed out") from exc
+        observation = getattr(result, "github_result", None)
+        if observation is not None and (observation.stale or observation.error == "github_rate_limited"):
+            raise GitHubRateLimited(observation.reset_at)
         if result.returncode:
             raise KeeperError((result.stderr or result.stdout or "GitHub request failed").strip()[:500])
         return result.stdout
@@ -121,7 +125,7 @@ class GitHub:
         queues = {branch: repo.get(f"q{i}") is not None for i, branch in enumerate(sorted(branches))}
         if any(f"q{i}" not in repo for i in range(len(branches))):
             raise KeeperError("queue configuration unknown")
-        return {"prs": prs["nodes"], "queues": queues, "remaining": rate["remaining"], "cost": rate["cost"]}
+        return {"prs": prs["nodes"], "queues": queues, "remaining": rate["remaining"], "cost": rate["cost"], "reset_at": rate.get("resetAt")}
 
     def comments(self, number: int) -> list[dict[str, Any]]:
         return self.paged(Request("read-comments", repo=self.repository, number=number))
@@ -411,6 +415,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
     failed = False
     estimated_remaining = snap["remaining"]
     budget = estimated_remaining - 30 >= FLOOR
+    if not budget:
+        return [f"GraphQL budget stop: skipped remaining={snap['remaining']} cost={snap['cost']} floor={FLOOR} reset_at={snap.get('reset_at')}"], False
     previous = _load(state_path)
     queued_now: dict[str, str] = {}
     approved_now: dict[str, str] = {}
@@ -620,8 +626,6 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 failed = True
                 lines.append(f"flaky-test issue FAILED: {exc}")
         _save(state_path, previous)
-    if not budget:
-        lines.append(f"GraphQL budget stop: remaining={snap['remaining']} cost={snap['cost']} floor={FLOOR}")
     return lines, failed
 
 
@@ -653,6 +657,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not args.apply:
         try:
             lines, failed = run(GitHub(root, args.repo), root / "batch_state/merge_queue_keeper.json", apply=False)
+        except GitHubRateLimited as exc:
+            print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
+            return 0
         except KeeperError as exc:
             print(f"merge queue keeper failed: {exc}")
             return 1
@@ -668,6 +675,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         try:
             lines, failed = run(GitHub(root, args.repo), root / "batch_state/merge_queue_keeper.json", apply=args.apply)
+        except GitHubRateLimited as exc:
+            print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
+            return 0
         except KeeperError as exc:
             print(f"merge queue keeper failed: {exc}")
             return 1

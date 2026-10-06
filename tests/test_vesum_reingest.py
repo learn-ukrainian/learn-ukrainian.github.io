@@ -329,3 +329,35 @@ def test_shadow_builder_refuses_production_database_path(tmp_path: Path, monkeyp
 
     with pytest.raises(VesumReingestError, match="step 1 only"):
         build_shadow_database(asset_path, production_path)
+
+
+def test_release_download_uses_client_and_verified_cache(tmp_path, monkeypatch):
+    import io
+
+    from scripts.rag import vesum_reingest
+    asset = _write_synthetic_asset(tmp_path)
+    lock = _lock_for_asset(asset)
+    calls = []
+    def opened(request, **kwargs):
+        calls.append(request.full_url)
+        return io.BytesIO(asset.read_bytes())
+    monkeypatch.setattr(vesum_reingest.github_client, "http_open", opened)
+    downloaded = vesum_reingest.fetch_release_asset(lock, tmp_path / "cache")
+    assert downloaded.read_bytes() == asset.read_bytes()
+    assert vesum_reingest.fetch_release_asset(lock, tmp_path / "cache") == downloaded
+    assert calls == [lock["release_asset"]["url"]]
+
+
+def test_release_limit_preserves_cache_and_has_no_retry(tmp_path, monkeypatch):
+    from scripts.common.github_client import GitHubRateLimited
+    from scripts.rag import vesum_reingest
+    lock = _lock_for_asset(_write_synthetic_asset(tmp_path))
+    calls = []
+    def unavailable(request, **kwargs):
+        calls.append(request.full_url)
+        raise GitHubRateLimited(2000)
+    monkeypatch.setattr(vesum_reingest.github_client, "http_open", unavailable)
+    with pytest.raises(GitHubRateLimited):
+        vesum_reingest.fetch_release_asset(lock, tmp_path / "cache")
+    assert len(calls) == 1
+    assert list((tmp_path / "cache").iterdir()) == []

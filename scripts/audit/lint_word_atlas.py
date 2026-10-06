@@ -88,11 +88,13 @@ import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
-from urllib.request import Request, urlopen
+from urllib.request import Request
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.common import github_client
 
 # Reuse enrich honesty vocabulary — do not invent a parallel source set (#6437).
 from scripts.lexicon.enrich_manifest import (
@@ -952,7 +954,7 @@ def _download_release_json(pointer: dict[str, Any], *, content_hash_key: str, la
         },
     )
     try:
-        with urlopen(request, timeout=120) as response:
+        with github_client.http_open(request, timeout=120) as response:
             compressed = response.read()
     except OSError as exc:
         raise ValueError(f"failed to download {label} release asset: {exc}") from exc
