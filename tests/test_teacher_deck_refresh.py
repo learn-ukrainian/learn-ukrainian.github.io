@@ -243,6 +243,8 @@ def test_checker_is_independent_of_the_generator() -> None:
         if isinstance(node, (ast.Import, ast.ImportFrom))
         for alias in node.names
     }
+    # The shared read-only opener is not the deck generator.
+    imported.discard("scripts.lib.readonly_sqlite")
     assert not any(str(name).startswith("scripts") for name in imported), imported
 
 

@@ -26,6 +26,22 @@ from typing import Any
 
 import yaml
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
 if __name__ == "__main__":
@@ -381,7 +397,7 @@ def scan_sources_db_textbooks(root: Path, census: AtlasSourceCensus, db_path: Pa
     source_files: set[str] = set()
     char_count = 0
     try:
-        with sqlite3.connect(f"file:{source_db}?mode=ro", uri=True) as conn:
+        with _open_readonly(source_db) as conn:
             cursor = conn.execute(
                 "select coalesce(nullif(grade, ''), 'unknown'), text, source_file, char_count from textbooks"
             )

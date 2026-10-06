@@ -9,7 +9,6 @@ import inspect
 import json
 import logging
 import re
-import sqlite3
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -20,6 +19,24 @@ import yaml
 from audit import config as audit_config
 from build.phases import wiki_compressor
 from common import thresholds
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 logger = logging.getLogger(__name__)
 
@@ -227,7 +244,7 @@ _FTS5_SHADOW_SUFFIXES: tuple[str, ...] = (
 )
 
 
-def _sqlite_indexed_table_names(connection: sqlite3.Connection) -> tuple[str, ...]:
+def _sqlite_indexed_table_names(connection: SQLiteConnection) -> tuple[str, ...]:
     rows = connection.execute(
         """
         SELECT name, COALESCE(sql, '')
@@ -271,7 +288,7 @@ def _sqlite_indexed_table_names(connection: sqlite3.Connection) -> tuple[str, ..
     return tuple(sorted(names))
 
 
-def _sqlite_table_snapshot(connection: sqlite3.Connection, table_name: str) -> dict[str, Any]:
+def _sqlite_table_snapshot(connection: SQLiteConnection, table_name: str) -> dict[str, Any]:
     row_count, max_rowid = connection.execute(
         f'SELECT COUNT(*), MAX(rowid) FROM "{table_name}"'
     ).fetchone()
@@ -290,8 +307,7 @@ def _sources_hash() -> str:
     # `Path.as_uri()` produces a cross-platform-safe `file://…` URI;
     # raw f-string interpolation leaks backslashes on Windows. Flagged
     # by gemini-review on PR #1468.
-    db_uri = f"{sources_db_path.as_uri()}?mode=ro"
-    with sqlite3.connect(db_uri, uri=True) as connection:
+    with _open_readonly(sources_db_path) as connection:
         manifest_rows = tuple(
             _sqlite_table_snapshot(connection, table_name)
             for table_name in _sqlite_indexed_table_names(connection)

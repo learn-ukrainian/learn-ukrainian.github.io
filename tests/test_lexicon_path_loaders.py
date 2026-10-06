@@ -24,8 +24,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 
 # Changed lexicon modules this tree loads by file path, and the loader that does it.
-# scripts/audit/generate_search_index.py:88 _load_helper_module
-#   called at scripts/audit/generate_search_index.py:111
+# scripts/audit/generate_search_index.py:105 _load_helper_module
+#   called at scripts/audit/generate_search_index.py:129
 PATH_LOADED = ("scripts/lexicon/heritage_classifier.py",)
 SEARCH_INDEX_LOADER = "scripts/audit/generate_search_index.py"
 _IMPORT_ERROR = "reader initialization failed"

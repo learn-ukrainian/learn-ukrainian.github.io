@@ -45,12 +45,27 @@ import argparse
 import hashlib
 import json
 import random
-import sqlite3
 import sys
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -2701,7 +2716,7 @@ def verify_deck_with_vesum(cards: list[NumeralCard], vesum_db_path: Path | str |
             "message": f"VESUM database not found or incomplete at {resolved_path}",
         }
 
-    conn = sqlite3.connect(str(resolved_path))
+    conn = _open_readonly(str(resolved_path))
     cursor = conn.cursor()
     cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='forms_all'")
     if not cursor.fetchone():

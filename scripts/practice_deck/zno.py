@@ -18,6 +18,24 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -270,7 +288,7 @@ def _task_id(task_id: int) -> str:
     return f"zno:{task_id}"
 
 
-def _topic_norm_unmapped_tags(conn: sqlite3.Connection) -> list[dict[str, object]]:
+def _topic_norm_unmapped_tags(conn: SQLiteConnection) -> list[dict[str, object]]:
     """Expose tagged rows which remain outside the deterministic normalizer."""
     rows = conn.execute(
         """
@@ -284,7 +302,7 @@ def _topic_norm_unmapped_tags(conn: sqlite3.Connection) -> list[dict[str, object
     return [{"topicTag": str(topic_tag), "taskCount": int(task_count)} for topic_tag, task_count in rows]
 
 
-def _residual_counts(conn: sqlite3.Connection, emitted: int) -> dict[str, int]:
+def _residual_counts(conn: SQLiteConnection, emitted: int) -> dict[str, int]:
     corpus = int(conn.execute("SELECT count(*) FROM zno_tasks").fetchone()[0])
     return {
         "corpusTasks": corpus,
@@ -319,7 +337,7 @@ def build_zno_shards(
 ) -> tuple[dict[str, dict[str, Any]], dict[str, Any], dict[str, Any]]:
     """Build deterministic deck payloads, summary receipt, and per-task fill residual."""
     overlay_by_id = load_markup_overlay(markup_overlay_path)
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = _open_readonly(db_path)
     conn.row_factory = sqlite3.Row
     try:
         shards: dict[str, dict[str, Any]] = {}
@@ -394,7 +412,7 @@ def build_zno_shards(
 
 
 def build_zno_fill_residual(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     deck_receipts: dict[str, Any],
     deck_drops: dict[str, list[dict[str, str]]],

@@ -14,6 +14,23 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any, TypedDict
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 class AllOfVariant(TypedDict):
     """Multi-token variant: ALL listed substrings must appear in the same chunk.
@@ -370,7 +387,7 @@ def match_returned_concepts(chunks: list[dict[str, Any]]) -> dict[str, dict[str,
 
 
 def query_full_corpus_for_concept(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     variants: Iterable[Any],
 ) -> dict[str, Any]:
     """Look up every textbook chunk that satisfies any variant.
@@ -731,7 +748,7 @@ def run_diagnostic(track: str, slug: str, strategy: str = STRATEGY_LEGACY) -> di
     concept_results = match_returned_concepts(returned_chunks)
     collect_returned_grade_samples(returned_chunks, concept_results)
 
-    with sqlite3.connect(str(SOURCES_DB_PATH)) as conn:
+    with _open_readonly(str(SOURCES_DB_PATH)) as conn:
         for concept, result in concept_results.items():
             if result["present_in_returned_41"]:
                 result["present_in_full_corpus"] = True

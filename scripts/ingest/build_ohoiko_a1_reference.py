@@ -6,11 +6,30 @@ import argparse
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 from pathlib import Path
 
 import pymupdf
 import yaml
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 LABEL = re.compile(r"^\s*,?\s*(ч\.|ж\.|с\.|недок\.|док\.|прикм\.|присл\.)")
 POS = {"ч.": "noun", "ж.": "noun", "с.": "noun", "недок.": "verb", "док.": "verb", "прикм.": "adj", "присл.": "adv"}
@@ -94,7 +113,7 @@ def headword_fields(head: str, pos: str, page: int, pair: str | None = None) -> 
     return row
 
 
-def attest(row: dict, connection: sqlite3.Connection) -> None:
+def attest(row: dict, connection: SQLiteConnection) -> None:
     """Attest forms read-only; POS/proper tags must be bound to the selected lemma."""
 
     def analyses(form):
@@ -121,7 +140,7 @@ def attest(row: dict, connection: sqlite3.Connection) -> None:
 def extract(pdf: Path, db: Path) -> tuple[list[dict], list[dict]]:
     """Extract every glossary entry and appendix infinitive, with line accounting."""
     rows, accounting = [], []
-    with pymupdf.open(pdf) as document, sqlite3.connect(db.resolve().as_uri() + "?mode=ro", uri=True) as connection:
+    with pymupdf.open(pdf) as document, _open_readonly(db) as connection:
         for page in range(200, 217):
             lines = [line for block in document[page - 1].get_text("dict")["blocks"] for line in block.get("lines", [])]
             lines.sort(key=lambda line: (round(line["bbox"][0] / 270), line["bbox"][1]))

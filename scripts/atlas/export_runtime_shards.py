@@ -55,6 +55,24 @@ from scripts.atlas.normalization import normalize_atlas_text, normalize_slug_for
 from scripts.etymology.transliterate import transliterate
 from scripts.lexicon.source_attribution import withhold_legacy_soviet_citations
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 SCHEMA_VERSION = 1
 ENTRY_SHARD_SCHEMA = "atlas-entry-shard"
 MANIFEST_SCHEMA = "atlas-runtime-manifest"
@@ -155,9 +173,8 @@ def write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def open_readonly_db(db_path: Path) -> sqlite3.Connection:
-    uri = f"file:{db_path.resolve().as_posix()}?mode=ro"
-    conn = sqlite3.connect(uri, uri=True)
+def open_readonly_db(db_path: Path) -> SQLiteConnection:
+    conn = _open_readonly(db_path.resolve())
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA query_only = ON")
     return conn
@@ -210,7 +227,7 @@ def _assert_cefr_consistent(slug: str, article_cefr: str | None, entry: Mapping[
         )
 
 
-def _site_build_entry_model_gates(conn: sqlite3.Connection) -> dict[str, int]:
+def _site_build_entry_model_gates(conn: SQLiteConnection) -> dict[str, int]:
     reviewed_entries = conn.execute(
         "SELECT COUNT(*) FROM articles WHERE review_state = 'approved' AND visibility = 'public'"
     ).fetchone()[0]
@@ -453,7 +470,7 @@ class EntryReplay:
 
     def __init__(
         self,
-        conn: sqlite3.Connection,
+        conn: SQLiteConnection,
         *,
         practice_levels_by_slug: Mapping[str, Sequence[str]],
     ) -> None:
@@ -568,7 +585,7 @@ class EntryReplay:
 
 
 def load_entry_records(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     practice_levels_by_slug: Mapping[str, Sequence[str]],
 ) -> list[dict[str, Any]]:
@@ -593,7 +610,7 @@ def _article_search_row(
     return row
 
 
-def _iter_article_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, Any]]:
+def _iter_article_search_rows(conn: SQLiteConnection) -> Iterator[dict[str, Any]]:
     # Row order is irrelevant: slug is the primary key, so the (normalized head,
     # slug) sort applied afterwards is total.
     for slug, display_head, gloss, entry_type, cefr in conn.execute(
@@ -604,7 +621,7 @@ def _iter_article_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, An
         yield _article_search_row(slug, display_head, gloss, entry_type, cefr)
 
 
-def _replay_article_search_row(conn: sqlite3.Connection, slug: str) -> dict[str, Any]:
+def _replay_article_search_row(conn: SQLiteConnection, slug: str) -> dict[str, Any]:
     """Re-read one article search row by primary key (same snapshot as the scan)."""
     found = conn.execute(
         "SELECT slug, display_head, gloss, entry_type, cefr FROM articles WHERE slug = ?", (slug,)
@@ -614,7 +631,7 @@ def _replay_article_search_row(conn: sqlite3.Connection, slug: str) -> dict[str,
     return _article_search_row(*found)
 
 
-def _iter_located_alias_search_rows(conn: sqlite3.Connection) -> Iterator[tuple[int, dict[str, Any]]]:
+def _iter_located_alias_search_rows(conn: SQLiteConnection) -> Iterator[tuple[int, dict[str, Any]]]:
     """Public aliases as ``(rowid, row)``; first row per ``(normalized alias, target)`` wins.
 
     The ORDER BY is load-bearing: which raw alias/kind survives the dedup depends
@@ -637,12 +654,12 @@ def _iter_located_alias_search_rows(conn: sqlite3.Connection) -> Iterator[tuple[
         yield rowid, {"a": alias, "k": kind, "s": target_slug, "h": target_head}
 
 
-def _iter_alias_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, Any]]:
+def _iter_alias_search_rows(conn: SQLiteConnection) -> Iterator[dict[str, Any]]:
     for _rowid, row in _iter_located_alias_search_rows(conn):
         yield row
 
 
-def _replay_alias_search_row(conn: sqlite3.Connection, rowid: int) -> dict[str, Any]:
+def _replay_alias_search_row(conn: SQLiteConnection, rowid: int) -> dict[str, Any]:
     """Re-read the winning alias row by rowid (same snapshot as the dedup scan)."""
     found = conn.execute(
         """SELECT alias.alias, alias.kind, alias.target_slug, article.display_head
@@ -665,7 +682,7 @@ def _alias_sort_key(row: Mapping[str, Any]) -> tuple[str, str, str]:
     return (normalize_atlas_text(row["a"]), row["s"], row["k"])
 
 
-def load_search_rows(conn: sqlite3.Connection) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def load_search_rows(conn: SQLiteConnection) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Whole-corpus search rows in canonical order (compatibility / test oracle)."""
     articles = sorted(_iter_article_search_rows(conn), key=_article_sort_key)
     aliases = sorted(_iter_alias_search_rows(conn), key=_alias_sort_key)
