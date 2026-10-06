@@ -18,14 +18,6 @@
     "calls": []
   },
   {
-    "path": "scripts/agent_runtime/primary_tree_watch.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing dynamic module import may expose SQLite constructors; resolve through the structural boundary in #9662.",
-    "calls": []
-  },
-  {
     "path": "scripts/agent_runtime/runner.py",
     "reference_count": 4,
     "kind": "reader_pending_migration_9662",
@@ -67,27 +59,11 @@
     ]
   },
   {
-    "path": "scripts/api/comms_router.py",
-    "reference_count": 4,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
     "path": "scripts/api/dashboard_comms.py",
     "reference_count": 1,
     "kind": "reader_pending_migration_9662",
     "target_db": null,
     "reason": "Broker reads remain routed through MonitorContext for fixture-root enforcement and slow-query logging; migrate the context's file:{path}?mode=ro construction in the Monitor context slice of #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/api/delegate_router.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
     "calls": []
   },
   {
@@ -99,14 +75,6 @@
     "calls": [
       "sqlite3.connect(str(self.database_path), isolation_level=None, timeout=5.0)"
     ]
-  },
-  {
-    "path": "scripts/api/hramatka_router.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
   },
   {
     "path": "scripts/api/preload.py",
@@ -132,14 +100,6 @@
     "kind": "reader_pending_migration_9662",
     "target_db": null,
     "reason": "SQLite reader and connection types migrated in #9662 S3B; two existing adapter-loader references remain under the dynamic-import inventory.",
-    "calls": []
-  },
-  {
-    "path": "scripts/api/telemetry_router.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
     "calls": []
   },
   {
@@ -305,32 +265,6 @@
     ]
   },
   {
-    "path": "scripts/fleet_comms/authority.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(f'file:{path}?mode=ro', uri=True)"
-    ]
-  },
-  {
-    "path": "scripts/fleet_comms/bottleneck_alerts.py",
-    "reference_count": 4,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/fleet_comms/cli.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
     "path": "scripts/fleet_comms/message_plane.py",
     "reference_count": 1,
     "kind": "writer",
@@ -339,22 +273,6 @@
     "calls": [
       "sqlite3.connect(str(path))"
     ]
-  },
-  {
-    "path": "scripts/fleet_comms/migrations.py",
-    "reference_count": 9,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/fleet_comms/review_publisher.py",
-    "reference_count": 5,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
   },
   {
     "path": "scripts/hygiene/codex_rollout_reconcile.py",
@@ -1047,48 +965,6 @@
     "calls": [
       "sqlite3.connect(path, timeout=30, isolation_level=None)"
     ]
-  },
-  {
-    "path": "scripts/review/fixloop.py",
-    "reference_count": 14,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/review/integration_check.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": [
-      "sqlite3.connect(self.db)"
-    ]
-  },
-  {
-    "path": "scripts/review/record.py",
-    "reference_count": 5,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/review/second_seat.py",
-    "reference_count": 4,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/review/seeds/adjudicate.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
   },
   {
     "path": "scripts/telemetry/legacy_bridge.py",

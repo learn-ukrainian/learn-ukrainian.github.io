@@ -16,6 +16,7 @@ import sqlite3
 import subprocess
 import sys
 import threading
+import warnings
 import weakref
 from collections.abc import Callable, Collection, Generator
 from datetime import UTC, datetime
@@ -202,6 +203,88 @@ def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool
     detector = dispatch_isolation._caller_in_driver_scope
     monkeypatch.setattr(dispatch_isolation, "_caller_in_driver_scope", lambda: False)
     return detector
+
+
+_CLAUDE_ADAPTER_ALIASES = ("scripts.agent_runtime.adapters.claude", "agent_runtime.adapters.claude")
+_STUBBED_CLAUDE_CLI_VERSION = (2, 1, 200)
+# Bridge package the rules-workflow venv does not install. The Claude adapter
+# reaches it through fleet_comms contracts; its absence is not an alias typo.
+_BRIDGE_RUNTIME = "learn_ukrainian_v4_runtime"
+# alias -> why this process last left that probe unpatched. A later successful
+# import removes the entry. The dict is the record; the warning fires once per
+# distinct reason so a runtime-less session does not warn on every test.
+_CLAUDE_GATE_IMPORT_SKIPS: dict[str, str] = {}
+
+
+def _missing_bridge_runtime(exc: ModuleNotFoundError) -> str | None:
+    """Return the missing bridge-runtime module, or None for any other import failure."""
+    missing = exc.name or ""
+    if missing == _BRIDGE_RUNTIME or missing.startswith(_BRIDGE_RUNTIME + "."):
+        return missing
+    return None
+
+
+def _record_claude_gate_skip(alias: str, missing: str) -> None:
+    """Record why ``alias`` was not patched. Warn once per distinct reason."""
+    reason = f"runtime dependency {missing!r} is absent"
+    if _CLAUDE_GATE_IMPORT_SKIPS.get(alias) == reason:
+        return
+    _CLAUDE_GATE_IMPORT_SKIPS[alias] = reason
+    warnings.warn(
+        f"Claude CLI version-probe stub skipped {alias}: {reason}",
+        RuntimeWarning,
+        stacklevel=2,
+    )
+
+
+@pytest.fixture(autouse=True)
+def _stub_claude_cli_version_gate(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep tests independent of the installed Claude CLI version (#9903).
+
+    ``scripts.agent_runtime.adapters.claude`` and ``agent_runtime.adapters.claude``
+    are two module objects, each with its own process-cached
+    ``_probe_claude_cli_version``. The gate calls that probe through the Claude
+    module's globals at call time. ``kimicc`` copies the gate by name, so
+    replacing the gate is order-sensitive: a late import keeps the replacement
+    after teardown. Patching the probe covers every copy, including one imported
+    while the stub is active, and teardown restores the real probe for all of
+    them. This fixture does not import ``kimicc`` and does not replace the gate.
+
+    An alias whose import fails because ``learn_ukrainian_v4_runtime`` is not
+    installed is skipped and the missing module is recorded. The Claude adapter
+    reaches that package through fleet_comms contracts, and the rules-workflow
+    venv does not install it. Any other import error still propagates.
+
+    Tests marked ``real_claude_cli_gate`` keep the real probe (with their own
+    fakes) and only get fresh caches. A test that patches the gate or the probe
+    itself runs after this fixture, so its patch wins.
+    """
+    import importlib
+    import importlib.util
+
+    keep_real_probe = request.node.get_closest_marker("real_claude_cli_gate") is not None
+
+    def _stub(_cmd_prefix: tuple[str, ...]) -> tuple[int, int, int]:
+        return _STUBBED_CLAUDE_CLI_VERSION
+
+    for alias in _CLAUDE_ADAPTER_ALIASES:
+        if alias not in sys.modules and importlib.util.find_spec(alias.split(".")[0]) is None:
+            continue
+        try:
+            module = importlib.import_module(alias)
+        except ModuleNotFoundError as exc:
+            missing = _missing_bridge_runtime(exc)
+            if missing is None:
+                raise
+            _record_claude_gate_skip(alias, missing)
+            continue
+        _CLAUDE_GATE_IMPORT_SKIPS.pop(alias, None)
+        probe = getattr(module, "_probe_claude_cli_version", None)
+        if probe is not None and hasattr(probe, "cache_clear"):
+            probe.cache_clear()
+            request.addfinalizer(probe.cache_clear)
+        if probe is not None and not keep_real_probe:
+            monkeypatch.setattr(module, "_probe_claude_cli_version", _stub)
 
 
 @pytest.fixture(autouse=True)

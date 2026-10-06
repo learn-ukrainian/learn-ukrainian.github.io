@@ -462,6 +462,24 @@ def test_purge_retry_after_failure_before_deletion_refuses_changed_contents(box,
     assert changed.exists() and changed.relative_to(held.original).as_posix() in result["mismatches"]
 
 
+@pytest.mark.skipif(os.geteuid() == 0, reason="root reads a mode-000 directory")
+def test_purge_retry_of_an_unreadable_tree_is_kept_ambiguous_and_counted(box, monkeypatch):
+    """An interrupted purge whose tree cannot be read is kept, recorded and counted, not a plain preserve."""
+    held = _interrupt_purge(box, monkeypatch, _fail_reap)
+    os.chmod(held.location / "deep", 0)
+    try:
+        report = box.run(apply=True)
+        row = next(r for r in report["rows"] if r.get("ledger_id") == held.ledger_id)
+        assert (row["decision"], row["reason"]) == ("preserve", "purge_kept_ambiguous")
+        assert (report["errors"], report["quarantine_kept_ambiguous_entries"]) == (1, 1)
+        events = [r["event"] for r in box.records() if r["ledger_id"] == held.ledger_id]
+        assert events[-3:] == ["purge", "purge_failed", "purge_kept_ambiguous"]
+        assert box.entries()[held.ledger_id].state == "purge_kept_ambiguous"
+    finally:
+        os.chmod(held.location / "deep", 0o700)
+    assert (held.location / "deep" / "payload").exists()
+
+
 @pytest.mark.parametrize("change", [None, "rewritten", "added"])
 def test_purge_retry_after_partial_deletion_keeps_the_survivors(box, monkeypatch, capsys, change):
     """A deletion that stopped part-way changed the survivors' directories, so nothing left is deleted on a guess."""

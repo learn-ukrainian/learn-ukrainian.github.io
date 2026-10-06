@@ -45,6 +45,13 @@ import pytest
 import yaml
 from jsonschema import Draft202012Validator
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from scripts.agent_runtime import review_mcp
 from scripts.build.fresh import assemble, plan_manifest, runner
 from scripts.build.fresh import manifest as fresh_manifest
@@ -535,7 +542,7 @@ class ModuleWorld(World):
         return yaml.safe_load((self.state_dir / fixloop.MODULE_VERDICT_NAME).read_bytes())
 
     def dump_db(self) -> dict[str, list]:
-        conn = sqlite3.connect(self.db)
+        conn = open_readonly(self.db)
         try:
             return {
                 table: [tuple(row) for row in conn.execute(f"SELECT * FROM {table}")]
