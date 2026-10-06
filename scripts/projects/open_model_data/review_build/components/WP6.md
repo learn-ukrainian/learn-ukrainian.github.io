@@ -144,3 +144,8 @@ component; its predecessor extractor is preserved on the C7 input branch.
 An all-withheld build reports `missing_coverage`; accepted records are required
 for real generic mutation verification. Structural tests do not establish
 semantic completeness.
+
+The book adapter maps the amended registered citation form to the held positive
+page or nonempty section. The edition stays explicitly unverified. Receipt
+citations resolve their `book_id` back to that source row and require the same
+source identity; they never require or invent an edition-specific bibliography.

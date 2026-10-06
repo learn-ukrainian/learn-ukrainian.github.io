@@ -13,6 +13,7 @@ from scripts.projects.open_model_data.review_build.catalog import Catalog
 from scripts.projects.open_model_data.review_build.components import ComponentContext, antonenko
 from scripts.projects.open_model_data.review_build.components.antonenko import (
     BOOK_ADAPTER,
+    BOOK_REGISTER_FORM,
     MODELS,
     RECEIPTS,
     SOURCE,
@@ -25,7 +26,7 @@ from scripts.projects.open_model_data.review_build.components.antonenko import (
     write_packets,
     write_reconciliation_packets,
 )
-from scripts.projects.open_model_data.review_build.components.c6b import BookCalqueComponent
+from scripts.projects.open_model_data.review_build.components.c6b import COMPATIBILITY, BookCalqueComponent
 from scripts.projects.open_model_data.review_build.contract import canonical, digest
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.gate import Gate
@@ -321,13 +322,64 @@ def test_attribution_never_guesses_held_metadata(source, form):
         BOOK_ADAPTER.resolve(form, citation(row), row, None)
 
 
-def test_attribution_maps_only_complete_held_bibliography(source):
-    row = {
-        **source["rows"][0],
-        "bibliography": "SYNTHETIC author title edition 1 year 2000",
-        "bibliography_evidence": "SYNTHETIC holdings receipt",
-    }
-    assert BOOK_ADAPTER.resolve(row["bibliography"], citation(row), row, None).bibliography == row["bibliography"]
+@pytest.mark.parametrize(
+    "page,section", [(3, "SYNTHETIC section"), (0, "SYNTHETIC section"), (None, "SYNTHETIC section")]
+)
+def test_attribution_maps_registered_form_without_inventing_edition(source, page, section):
+    row = {**source["rows"][0], "source": "Антоненко-Давидович", "page": page, "section": section}
+    result = BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, citation(row), row, None)
+    assert result.mapped_form == BOOK_REGISTER_FORM
+    assert "<" not in result.bibliography and "otherwise" not in result.bibliography
+    assert str(page) in result.bibliography if page else section in result.bibliography
+    assert BOOK_REGISTER_FORM.split(". С.")[0] in result.bibliography
+
+
+@pytest.mark.parametrize(
+    "mutation,code",
+    [("source", "attribution_unresolved"), ("locator", "locator_unavailable"), ("store", "attribution_unresolved")],
+)
+def test_book_attribution_refuses_wrong_source_or_missing_locator(source, mutation, code):
+    row = {**source["rows"][0], "source": "Антоненко-Давидович"}
+    cited = citation(row)
+    if mutation == "source":
+        row["source"] = "SYNTHETIC wrong source"
+    elif mutation == "locator":
+        row.update(page=0, section="")
+    else:
+        cited = replace(cited, store="SYNTHETIC wrong store")
+    with pytest.raises(BuildError, match=code):
+        BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, cited, row, None)
+
+
+def test_receipt_attribution_uses_held_book_locator_and_checks_source(source):
+    from types import SimpleNamespace
+
+    book = {**source["rows"][0], "source": "Антоненко-Давидович"}
+    row = {"book_id": book["id"], "source": book["source"]}
+    observed = []
+
+    def lookup(cited):
+        observed.append(cited)
+        return book
+
+    reader = SimpleNamespace(row=lookup)
+    cited = replace(citation(book), store=STORE, table="C6b")
+    assert (
+        BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, cited, row, reader).bibliography
+        == BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, citation(book), book, reader).bibliography
+    )
+    assert observed[0].store == "sources.db" and observed[0].row_key == "id=1"
+    row["source"] = "SYNTHETIC wrong source"
+    with pytest.raises(BuildError, match="attribution_unresolved"):
+        BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, cited, row, reader)
+
+
+def test_c6b_policy_is_component_owned_and_detached_from_other_builds():
+    first, second = BookCalqueComponent(), BookCalqueComponent()
+    assert first.spec["compatibility"] == COMPATIBILITY
+    assert {(r["store"], r["table"]) for r in COMPATIBILITY} == {("sources.db", "style_guide"), (STORE, "C6b")}
+    first.spec["compatibility"][0]["source_values"].clear()
+    assert second.spec["compatibility"] == COMPATIBILITY
 
 
 def test_packet_writer_batches_only_located_rows_and_keeps_unicode_offsets(source, tmp_path):

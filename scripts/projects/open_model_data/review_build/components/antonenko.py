@@ -500,21 +500,39 @@ def receipt_citation(receipt, component, field):
     return citation(receipt, field, store=STORE, table=component, locator=f"adjudication {receipt['pair']}")
 
 
-class HeldBibliographyAdapter:
-    """Resolve only complete held bibliographic fields, never guessed editions."""
+# Exact reviewed register template; edition uncertainty is explicit, not filled.
+BOOK_REGISTER_FORM = "Антоненко-Давидович Б. Як ми говоримо. Видання не встановлено. С. <page> (positive held page); otherwise Розділ «<section>» (page null or 0)."
+
+
+class BookAttributionAdapter:
+    """Map the registered book citation to a held page or section only."""
 
     def resolve(self, form, cited, row, reader):
-        require(
-            isinstance(form, str) and not re.search(r"<[^>]*>|\b(?:cite|insert|supply|fill)\b", form, re.I),
-            "attribution_unresolved",
-        )
-        held = row.get("bibliography")
-        require(isinstance(held, str) and held == form and bool(held.strip()), "attribution_unresolved")
-        require(bool(row.get("bibliography_evidence")), "attribution_unresolved")
-        return Attribution(held, form)
+        require(cited.source_id == SOURCE and form == BOOK_REGISTER_FORM, "attribution_unresolved")
+        if cited.store == STORE and cited.table == "C6b":
+            require(type(row.get("book_id")) is int, "attribution_unresolved")
+            book = reader.row(Citation(SOURCE, "sources.db", "style_guide", f"id={row['book_id']}", "text", "", ""))
+            require(row.get("source") == book.get("source"), "attribution_unresolved")
+        else:
+            require(cited.store == "sources.db" and cited.table == "style_guide", "attribution_unresolved")
+            book = row
+        require(book.get("source") == "Антоненко-Давидович", "attribution_unresolved")
+        require(bool(book_locator(book)), "locator_unavailable")
+        prefix, section_form = form.split(". С. <page> (positive held page); otherwise ")
+        if type(book.get("page")) is int and book["page"] > 0:
+            bibliography = prefix + f". С. {book['page']}."
+        else:
+            require(isinstance(book.get("section"), str), "locator_unavailable")
+            bibliography = (
+                prefix
+                + ". "
+                + section_form.removesuffix(" (page null or 0).").replace("<section>", book["section"].strip())
+                + "."
+            )
+        return Attribution(bibliography, form)
 
 
-BOOK_ADAPTER = HeldBibliographyAdapter()
+BOOK_ADAPTER = BookAttributionAdapter()
 
 
 def common_spec(operation, unit):
