@@ -346,6 +346,8 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
 
     The plist is read through the unit helper, which refuses a symlink anywhere
     from ``home`` down to the plist before launchd is queried (#9875).
+    Configured stdout/stderr paths are checked without following links;
+    unsafe paths make status fail even when the job is loaded (#9894).
     """
     destination = plist_path(home)
     parse_error: str | None = None
@@ -357,9 +359,22 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
     loaded = _loaded_readback()
     installed = unit is not None or parse_error is not None
     valid_plist = False
+    unsafe_log_paths: list[str] = []
     if unit is not None:
         try:
             payload = plistlib.loads(unit[0])
+            if isinstance(payload, dict):
+                for key in ("StandardOutPath", "StandardErrorPath"):
+                    if key not in payload:
+                        continue
+                    raw = payload[key]
+                    if not isinstance(raw, str) or not Path(raw).is_absolute():
+                        unsafe_log_paths.append(f"{key}: expected an absolute log path")
+                        continue
+                    try:
+                        check_state_paths(files=(Path(raw),), home=home)
+                    except (InstallError, OSError) as exc:
+                        unsafe_log_paths.append(f"{key}: {exc}")
             arguments = payload.get("ProgramArguments") if isinstance(payload, dict) else None
             valid_plist = (
                 isinstance(payload, dict)
@@ -384,8 +399,9 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
         "parse_error": parse_error,
         "plist_path": str(destination),
         "valid_plist": valid_plist,
+        "unsafe_log_paths": unsafe_log_paths,
     }
-    return result, 0 if installed and loaded.returncode == 0 and valid_plist else 1
+    return result, 0 if installed and loaded.returncode == 0 and valid_plist and not unsafe_log_paths else 1
 
 
 def _rotate_log(path: Path) -> None:
@@ -614,12 +630,23 @@ def run_managed_api(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__ + "\nUse status for read-only checks; start/stop change the local service.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n"
+        "  .venv/bin/python -m scripts.api.launchd_supervisor status\n"
+        "  .venv/bin/python -m scripts.api.launchd_supervisor install --dry-render\n"
+        "Outputs: JSON state, or rendered plist; install/start/stop/uninstall mutate local service state.\n"
+        "Exit codes: 0 success or healthy status; 1 failure or unhealthy/unsafe status.\n"
+        "Related: #9894; docs/runbooks/launchd-inventory.md",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     def add_repo_arguments(command: argparse.ArgumentParser) -> None:
-        command.add_argument("--repo-root", type=Path, default=default_repo_root())
-        command.add_argument("--home", type=Path, default=default_home(), help=argparse.SUPPRESS)
+        command.add_argument("--repo-root", type=Path, default=default_repo_root(),
+                             help="checkout to supervise (default: this project root)")
+        command.add_argument("--home", type=Path, default=default_home(),
+                             help="home owning Library/LaunchAgents (default: current user's home)")
 
     install_parser = subparsers.add_parser("install", help="write the LaunchAgent plist")
     add_repo_arguments(install_parser)
@@ -631,19 +658,19 @@ def build_parser() -> argparse.ArgumentParser:
     start_parser = subparsers.add_parser("start", help="enable and start the supervised API")
     add_repo_arguments(start_parser)
     start_parser.add_argument("--live", action="store_true", help="serve the mutable checkout for emergency recovery")
-    start_parser.add_argument("--port", type=int, default=PORT, help=argparse.SUPPRESS)
+    start_parser.add_argument("--port", type=int, default=PORT, help=f"API port, 1–65535 (default: {PORT})")
 
     stop_parser = subparsers.add_parser("stop", help="disable and unload the supervised API")
-    stop_parser.add_argument("--home", type=Path, default=default_home(), help=argparse.SUPPRESS)
+    stop_parser.add_argument("--home", type=Path, default=default_home(), help="LaunchAgent home (default: current user's home)")
 
     uninstall_parser = subparsers.add_parser("uninstall", help="remove the LaunchAgent plist")
-    uninstall_parser.add_argument("--home", type=Path, default=default_home(), help=argparse.SUPPRESS)
+    uninstall_parser.add_argument("--home", type=Path, default=default_home(), help="LaunchAgent home (default: current user's home)")
 
     status_parser = subparsers.add_parser("status", help="show persistent and launchd state")
-    status_parser.add_argument("--home", type=Path, default=default_home(), help=argparse.SUPPRESS)
+    status_parser.add_argument("--home", type=Path, default=default_home(), help="LaunchAgent home (default: current user's home)")
 
-    run_parser = subparsers.add_parser("run", help=argparse.SUPPRESS)
-    run_parser.add_argument("--repo-root", type=Path, default=default_repo_root())
+    run_parser = subparsers.add_parser("run", help="run one supervised API child (launchd entry point)")
+    run_parser.add_argument("--repo-root", type=Path, default=default_repo_root(), help="checkout to run (default: this project root)")
     return parser
 
 

@@ -26,8 +26,8 @@ import argparse
 import importlib.util
 import json
 import os
+import plistlib
 import re
-import stat
 import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
@@ -53,6 +53,8 @@ _check_primary_integrity = _load_sibling(
 _append_event = _check_primary_integrity._append_event
 _resolve_main_root = _check_primary_integrity._resolve_main_root
 _running_dispatches = _check_primary_integrity._running_dispatches
+
+from scripts.common.safe_unit_install import InstallError, check_state_paths, load_unit
 
 LABEL = "com.learn-ukrainian.worktree-cleanup"
 EX_CONFIG = 78
@@ -154,9 +156,10 @@ def check_worktree_cleanup_integrity(
 ) -> tuple[bool, str]:
     """Detect (never repair) a red or dark worktree-cleanup LaunchAgent.
 
-    Returns ``(ok, message)``. ``ok`` is False when the installed job's last
-    scheduled exit is non-zero, launchd still needs an LWCR update, or the
-    newest receipt is older than ``STALE_AFTER``. Callers must not block
+    Returns ``(ok, message)``. ``ok`` is False when the plist or a configured
+    log path is unsafe, the installed job's last scheduled exit is non-zero,
+    launchd still needs an LWCR update, or the newest receipt is older than
+    ``STALE_AFTER``. Callers must not block
     dispatch or auto-reload launchd on this signal.
     """
     host_platform = platform if platform is not None else sys.platform
@@ -167,11 +170,27 @@ def check_worktree_cleanup_integrity(
     home_root = (home or Path.home()).expanduser()
     destination = plist_path(home_root)
     try:
-        installed = destination.lstat()
-    except FileNotFoundError:
+        installed = load_unit(destination, home=home_root)
+    except (InstallError, OSError) as exc:
+        return False, f"ALERT: unsafe non-regular or symlinked worktree-cleanup job: {destination}: {exc}"
+    if installed is None:
         return True, f"worktree-cleanup integrity skipped (job not installed: {destination})"
-    if not stat.S_ISREG(installed.st_mode):
-        return False, f"ALERT: unsafe non-regular or symlinked worktree-cleanup job: {destination}"
+    try:
+        payload = plistlib.loads(installed[0])
+        if not isinstance(payload, dict):
+            raise ValueError("job plist must be a dictionary")
+        for key in ("StandardOutPath", "StandardErrorPath"):
+            if key not in payload:
+                continue
+            raw = payload[key]
+            if not isinstance(raw, str) or not Path(raw).is_absolute():
+                raise ValueError(f"{key} must be an absolute log path")
+            try:
+                check_state_paths(files=(Path(raw),), home=home_root)
+            except (InstallError, OSError) as exc:
+                return False, f"ALERT: unsafe worktree-cleanup job log {key}: {exc}"
+    except (ValueError, plistlib.InvalidFileException) as exc:
+        return False, f"ALERT: unsafe worktree-cleanup job plist: {exc}"
 
     observed_now = now or datetime.now(UTC)
     observed_now = (
@@ -240,7 +259,14 @@ def check_worktree_cleanup_integrity(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Detect a red or dark worktree-cleanup LaunchAgent (#6937).",
+        description="Detect a red, dark or unsafe worktree-cleanup LaunchAgent (#6937).\n"
+        "Use for read-only macOS checks; never repairs or reloads launchd.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n"
+        "  .venv/bin/python -m scripts.audit.check_worktree_cleanup_integrity --quiet\n"
+        "Outputs: alerts and local telemetry events for red or dark jobs.\n"
+        "Exit codes: 0 healthy or not applicable; 1 red, dark or unsafe job.\n"
+        "Related: #9894; docs/runbooks/launchd-inventory.md",
     )
     parser.add_argument("-q", "--quiet", action="store_true", help="suppress the OK message (alerts still print)")
     parser.add_argument(

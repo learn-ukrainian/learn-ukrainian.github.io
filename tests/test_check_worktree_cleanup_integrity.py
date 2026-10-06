@@ -4,21 +4,34 @@ from __future__ import annotations
 
 import json
 import os
+import plistlib
 import stat
 import subprocess
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
+
 from scripts.audit.check_worktree_cleanup_integrity import (
     STALE_AFTER,
     check_worktree_cleanup_integrity,
     latest_receipt_observed_at,
+    main,
     parse_launchd_snapshot,
 )
 from scripts.orchestration import install_worktree_cleanup_launchd as launchd
 
 ROOT = Path(__file__).resolve().parents[1]
 WRAPPER = ROOT / "scripts" / "orchestration" / "run_scheduled_worktree_cleanup.sh"
+
+
+def test_cleanup_help_describes_detection_and_exit_codes(capsys):
+    with pytest.raises(SystemExit) as exc:
+        main(["--help"])
+    assert exc.value.code == 0
+    help_text = capsys.readouterr().out
+    assert "unsafe" in help_text
+    assert "Outputs:" in help_text and "Exit codes:" in help_text
 
 
 def _events(state_dir: Path) -> list[dict]:
@@ -31,8 +44,43 @@ def _events(state_dir: Path) -> list[dict]:
 def _write_plist(home: Path) -> Path:
     destination = launchd.plist_path(home)
     destination.parent.mkdir(parents=True)
-    destination.write_text("plist", encoding="utf-8")
+    destination.write_bytes(plistlib.dumps({"Label": launchd.LABEL}))
     return destination
+
+
+@pytest.mark.parametrize("key", ["StandardOutPath", "StandardErrorPath"])
+@pytest.mark.parametrize("linked", ["file", "directory"])
+@pytest.mark.parametrize("dangling", [False, True])
+def test_cleanup_reports_unsafe_job_logs(tmp_path, key, linked, dangling):
+    home = tmp_path / "home"
+    destination = _write_plist(home)
+    outside = tmp_path / "outside"
+    logs = home / "job-logs"
+    if linked == "directory":
+        if not dangling:
+            outside.mkdir()
+            (outside / "job.log").write_text("untouched")
+        logs.symlink_to(outside, target_is_directory=True)
+        target = outside / "job.log"
+    else:
+        logs.mkdir()
+        target = outside
+        if not dangling:
+            target.write_text("untouched")
+        (logs / "job.log").symlink_to(target)
+    destination.write_bytes(plistlib.dumps({"Label": launchd.LABEL, key: str(logs / "job.log")}))
+    now = datetime(2026, 10, 6, tzinfo=UTC)
+    _write_receipt(home, now)
+    ok, message = check_worktree_cleanup_integrity(
+        tmp_path / "repo", home=home, state_dir=tmp_path / "state",
+        platform="darwin", now=now, launchctl_text="last exit code = 0",
+    )
+    assert ok is False
+    assert "unsafe" in message and "symlink" in message
+    if dangling:
+        assert not target.exists()
+    else:
+        assert target.read_text() == "untouched"
 
 
 def _write_receipt(home: Path, observed_at: datetime) -> Path:
@@ -45,6 +93,34 @@ def _write_receipt(home: Path, observed_at: datetime) -> Path:
         encoding="utf-8",
     )
     return path
+
+
+@pytest.mark.parametrize("dangling", [False, True])
+def test_cleanup_refuses_linked_plist_parent(tmp_path, dangling):
+    home = tmp_path / "home"
+    home.mkdir()
+    outside = tmp_path / "outside"
+    if not dangling:
+        outside.mkdir()
+    (home / "Library").symlink_to(outside, target_is_directory=True)
+    ok, message = check_worktree_cleanup_integrity(
+        tmp_path / "repo", home=home, state_dir=tmp_path / "state",
+        platform="darwin", launchctl_text="last exit code = 0",
+    )
+    assert ok is False
+    assert "unsafe" in message and "symlink" in message
+
+
+def test_cleanup_rejects_malformed_plist(tmp_path):
+    home = tmp_path / "home"
+    destination = _write_plist(home)
+    destination.write_text("not a plist")
+    ok, message = check_worktree_cleanup_integrity(
+        tmp_path / "repo", home=home, state_dir=tmp_path / "state",
+        platform="darwin", launchctl_text="last exit code = 0",
+    )
+    assert ok is False
+    assert "unsafe" in message and "plist" in message
 
 
 def test_parse_launchd_snapshot_reads_exit_78_and_lwcr_flag() -> None:

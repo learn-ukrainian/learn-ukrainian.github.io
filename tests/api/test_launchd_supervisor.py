@@ -16,6 +16,50 @@ import pytest
 from scripts.api import launchd_supervisor as supervisor
 
 
+def test_supervisor_help_describes_outputs_and_exit_codes():
+    help_text = supervisor.build_parser().format_help()
+    assert "Outputs:" in help_text
+    assert "Exit codes:" in help_text
+    assert "launchd-inventory.md" in help_text
+
+
+@pytest.mark.parametrize("key", ["StandardOutPath", "StandardErrorPath"])
+@pytest.mark.parametrize("linked", ["file", "directory"])
+@pytest.mark.parametrize("dangling", [False, True])
+def test_status_reports_unsafe_job_logs(tmp_path, monkeypatch, key, linked, dangling):
+    home = tmp_path / "home"
+    destination = supervisor.plist_path(home)
+    destination.parent.mkdir(parents=True)
+    outside = tmp_path / "outside"
+    logs = home / "job-logs"
+    if linked == "directory":
+        if not dangling:
+            outside.mkdir()
+            (outside / "job.log").write_text("untouched")
+        logs.symlink_to(outside, target_is_directory=True)
+        target = outside / "job.log"
+    else:
+        logs.mkdir()
+        target = outside
+        if not dangling:
+            target.write_text("untouched")
+        (logs / "job.log").symlink_to(target)
+    payload = supervisor.build_plist(repo_root=tmp_path / "repo")
+    payload[key] = str(logs / "job.log")
+    destination.write_bytes(plistlib.dumps(payload))
+    monkeypatch.setattr(supervisor, "_loaded_readback", lambda: subprocess.CompletedProcess([], 0, "", ""))
+
+    result, returncode = supervisor.status(home=home)
+    assert returncode == 1
+    assert result["unsafe_log_paths"]
+    assert key in result["unsafe_log_paths"][0]
+    assert "symlink" in result["unsafe_log_paths"][0]
+    if dangling:
+        assert not target.exists()
+    else:
+        assert target.read_text() == "untouched"
+
+
 def test_rendered_plist_uses_throttled_abnormal_exit_restart(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     payload = plistlib.loads(supervisor.render_plist(repo_root=repo))
