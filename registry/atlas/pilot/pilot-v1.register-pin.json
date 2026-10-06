@@ -14,6 +14,26 @@
       "entries_sha256": "912713e18fff712fd2dec8f5300e037a8b276e5fd048b69cfc926a348e7ecb38",
       "reason": "#9643 migration: entries digest of the admitted register (whole-file digest unchanged at migration)",
       "recorded": "2026-10-06"
+    },
+    {
+      "entries_sha256": "d1a78d493ad6c6ccc0b342aca523d6bf2e2a4796f6d65ee2c57c4898af70a70c",
+      "reason": "Register licence corrections: PULS CC BY-NC-SA 4.0; ukrainian_word_stress data derived from ULIF (code MIT only); permission_status added (ULIF and stress data verbal-granted-written-pending)",
+      "recorded": "2026-10-06",
+      "admission": {
+        "admission": "APPROVE",
+        "author_seat_distinct": true,
+        "candidate_sha256": "d1a78d493ad6c6ccc0b342aca523d6bf2e2a4796f6d65ee2c57c4898af70a70c",
+        "checked_at": "2026-10-06T01:36:00Z",
+        "denominator": {
+          "atlas_articles": 114,
+          "source_records": 272,
+          "units": 150
+        },
+        "review_family": "google",
+        "review_harness": "native AGY",
+        "review_model": "gemini-3.8-flash-high",
+        "review_report_sha256": "45ef622753c4ad3b03d721e737df07a5e1c66f199edd64142fea7f91015d9b22"
+      }
     }
   ]
 }
