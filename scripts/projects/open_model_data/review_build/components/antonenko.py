@@ -4,7 +4,7 @@ import json
 import re
 from pathlib import Path
 
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.task_store_paths import tasks_dir
 
 from ..attribution import Attribution
 from ..bindings import normalize
@@ -16,7 +16,6 @@ SOURCE = "antonenko_style_guide"
 STORE = "antonenko-adjudication"
 MODELS = {"sol": "gpt-6.1-sol", "opus": "claude-opus-5-5"}
 BATCH_SIZE = 20
-TASKS_ROOT = main_checkout_root(Path(__file__).resolve().parents[5]) / "batch_state" / "tasks"
 
 
 def selector(area, slot, **kwargs):
@@ -327,8 +326,8 @@ class ReceiptStore:
             task_id = sidecar["task_id"]
             require(isinstance(task_id, str) and re.fullmatch(r"[A-Za-z0-9_-]+", task_id), "adjudication_provenance")
             try:
-                task_raw = (TASKS_ROOT / f"{task_id}.json").read_bytes()
-                result = (TASKS_ROOT / f"{task_id}.result").read_bytes()
+                task_raw = (tasks_dir() / f"{task_id}.json").read_bytes()
+                result = (tasks_dir() / f"{task_id}.result").read_bytes()
             except OSError:
                 raise BuildError("adjudication_attestation") from None
             require(attestation_for(receipt, read_json(task_raw), result) == sidecar, "adjudication_provenance")
