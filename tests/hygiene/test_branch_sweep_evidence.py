@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import stat
 import subprocess
 from pathlib import Path
 
@@ -123,6 +124,44 @@ def ledger(repo: Path) -> Path:
 
 def ledger_rows(repo: Path) -> list[dict[str, object]]:
     return [json.loads(line) for line in ledger(repo).read_text(encoding="utf-8").splitlines()]
+
+
+def test_receipt_ledger_is_owner_only(repo: Path) -> None:
+    sweep._append_ledger_line(repo, {"n": 1})
+    sweep._append_ledger_line(repo, {"n": 2})
+    path = ledger(repo)
+    file_info = os.lstat(path)
+    directory_info = os.lstat(path.parent)
+    assert stat.S_ISREG(file_info.st_mode)
+    assert stat.S_ISDIR(directory_info.st_mode)
+    assert not stat.S_ISLNK(file_info.st_mode)
+    assert not stat.S_ISLNK(directory_info.st_mode)
+    assert stat.S_IMODE(file_info.st_mode) == 0o600
+    assert stat.S_IMODE(directory_info.st_mode) == 0o700
+    assert ledger_rows(repo) == [{"n": 1}, {"n": 2}]
+
+
+def test_receipt_ledger_does_not_follow_a_file_symlink(repo: Path, tmp_path: Path) -> None:
+    outside = tmp_path / "outside.jsonl"
+    outside.write_text("keep\n", encoding="utf-8")
+    path = ledger(repo)
+    path.parent.mkdir(parents=True)
+    path.symlink_to(outside)
+    with pytest.raises(RuntimeError, match="symlink"):
+        sweep._append_ledger_line(repo, {"n": 1})
+    assert outside.read_text(encoding="utf-8") == "keep\n"
+    assert path.is_symlink()
+
+
+def test_receipt_ledger_does_not_follow_a_directory_symlink(repo: Path, tmp_path: Path) -> None:
+    outside = tmp_path / "outside-dir"
+    outside.mkdir()
+    path = ledger(repo)
+    path.parent.parent.mkdir(parents=True, exist_ok=True)
+    path.parent.symlink_to(outside, target_is_directory=True)
+    with pytest.raises(RuntimeError, match="symlink"):
+        sweep._append_ledger_line(repo, {"n": 1})
+    assert list(outside.iterdir()) == []
 
 
 def same_change(repo: Path, name: str) -> str:
@@ -602,20 +641,24 @@ def test_timeline_parser_refuses_unreadable_payloads() -> None:
 def test_issue_read_disables_forced_color(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("CLICOLOR_FORCE", "1")
     monkeypatch.setenv("FORCE_COLOR", "1")
-    seen: dict[str, dict[str, str]] = {}
+    seen: dict[str, object] = {}
 
     def fake_run(args: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
         env = kwargs.get("env")
         assert isinstance(env, dict)
+        seen["args"] = args
         seen["env"] = env
         return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
 
     monkeypatch.setattr(sweep.subprocess, "run", fake_run)
-    sweep._run_gh(Path("."), ["gh", "api", "repos/example/example"])
-    assert seen["env"]["NO_COLOR"] == "1"
-    assert seen["env"]["GH_FORCE_TTY"] == "0"
-    assert "CLICOLOR_FORCE" not in seen["env"]
-    assert "FORCE_COLOR" not in seen["env"]
+    sweep._run_gh(Path("."), ["api", "repos/example/example"])
+    assert seen["args"] == ["gh", "api", "repos/example/example"]
+    env = seen["env"]
+    assert isinstance(env, dict)
+    assert env["NO_COLOR"] == "1"
+    assert env["GH_FORCE_TTY"] == "0"
+    assert "CLICOLOR_FORCE" not in env
+    assert "FORCE_COLOR" not in env
 
 
 def test_issue_read_is_one_rest_get_without_pagination(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -633,7 +676,6 @@ def test_issue_read_is_one_rest_get_without_pagination(repo: Path, monkeypatch: 
     assert closure is not None and closure.closing_pr is None
     assert seen == [
         [
-            "gh",
             "api",
             "--include",
             "-X",

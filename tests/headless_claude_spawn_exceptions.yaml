@@ -219,6 +219,8 @@ exceptions:
   - {module: scripts/hooks/measure_hook_stack.py, function: "_time_one", program: "argv", category: non-claude, reason: "times repository hook scripts (bash) from the STACK table"}
   # scripts/hygiene/branch_sweep.py
   - {module: scripts/hygiene/branch_sweep.py, function: "_git", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/hygiene/branch_sweep.py, function: "_parse_patch_ids", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/hygiene/branch_sweep.py, function: "_run_gh", program: "gh", category: non-claude, reason: "runs the GitHub CLI"}
   # scripts/hygiene/tmp_sweep.py
   - {module: scripts/hygiene/tmp_sweep.py, function: "registered_worktrees", program: "git", category: non-claude, reason: "runs git"}
   # scripts/lib/session_record.py

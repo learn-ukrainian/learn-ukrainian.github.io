@@ -6,6 +6,7 @@ import argparse
 import json
 import os
 import re
+import stat
 import subprocess
 import sys
 from collections.abc import Callable
@@ -495,14 +496,17 @@ def _parse_issue_timeline(
 
 
 def _run_gh(repo: Path, args: list[str]) -> subprocess.CompletedProcess[str]:
-    """One ``gh`` invocation. Color flags are removed so a captured body stays JSON."""
+    """One ``gh`` invocation. ``args`` follow the fixed ``gh`` executable.
+
+    Color flags are removed so a captured body stays JSON.
+    """
     env = sanitized_git_env()
     for name in ("CLICOLOR_FORCE", "FORCE_COLOR", "GH_FORCE_TTY"):
         env.pop(name, None)
     env["NO_COLOR"] = "1"
     env["GH_FORCE_TTY"] = "0"
     return subprocess.run(
-        args,
+        ["gh", *args],
         cwd=repo,
         env=env,
         capture_output=True,
@@ -520,7 +524,7 @@ def _query_issue_closure(repo: Path, issue: int) -> tuple[IssueClosure | None, s
     owner, name = slug
     endpoint = f"repos/{owner}/{name}/issues/{issue}/timeline?per_page=100"
     try:
-        proc = _run_gh(repo, ["gh", "api", "--include", "-X", "GET", endpoint])
+        proc = _run_gh(repo, ["api", "--include", "-X", "GET", endpoint])
     except (FileNotFoundError, subprocess.SubprocessError) as exc:
         return None, f"issue evidence unreadable: {exc}"
     if proc.returncode:
@@ -820,20 +824,54 @@ def _ledger_file(repo: Path) -> Path:
     return path
 
 
+def _ensure_ledger_directory(directory: Path) -> None:
+    """Create ``directory`` at mode 0o700. A symlink is refused, never followed."""
+    missing: list[Path] = []
+    current = directory
+    while True:
+        try:
+            info = os.lstat(current)
+        except FileNotFoundError:
+            missing.append(current)
+            if current.parent == current:
+                raise RuntimeError("evidence ledger directory is unavailable") from None
+            current = current.parent
+            continue
+        if stat.S_ISLNK(info.st_mode):
+            raise RuntimeError("evidence ledger path contains a symlink")
+        if not stat.S_ISDIR(info.st_mode):
+            raise RuntimeError("evidence ledger directory is not a directory")
+        break
+    for created in reversed(missing):
+        try:
+            os.mkdir(created, 0o700)
+        except FileExistsError:
+            info = os.lstat(created)
+            if stat.S_ISLNK(info.st_mode):
+                raise RuntimeError("evidence ledger path contains a symlink") from None
+            if not stat.S_ISDIR(info.st_mode):
+                raise RuntimeError("evidence ledger directory is not a directory") from None
+
+
 def _append_ledger_line(repo: Path, payload: dict[str, object]) -> None:
-    """Append one JSON line and flush it to disk."""
+    """Append one JSON line and flush it. The ledger is owner-only and is not a symlink."""
     encoded = (json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n").encode()
     path = _ledger_file(repo)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    flags = os.O_APPEND | os.O_CREAT | os.O_WRONLY | getattr(os, "O_NOFOLLOW", 0)
-    descriptor = os.open(path, flags, 0o644)
+    _ensure_ledger_directory(path.parent)
+    descriptor = os.open(
+        path,
+        os.O_APPEND | os.O_CREAT | os.O_WRONLY | os.O_NOFOLLOW | os.O_CLOEXEC,
+        0o600,
+    )
     try:
+        os.fchmod(descriptor, 0o600)
         os.write(descriptor, encoded)
         os.fsync(descriptor)
     finally:
         os.close(descriptor)
-    directory = os.open(path.parent, os.O_RDONLY)
+    directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
     try:
+        os.fchmod(directory, 0o700)
         os.fsync(directory)
     finally:
         os.close(directory)
