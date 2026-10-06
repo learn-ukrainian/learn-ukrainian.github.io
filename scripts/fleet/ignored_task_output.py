@@ -90,10 +90,15 @@ def resolve_worktree_record(worktree: Path, tasks_dir: Path, *, repo_root: Path)
 
     Inspect hot and archived records: a different filename, renamed tree, or
     optional task argument cannot hide a retention claim. Ambiguity fails closed.
+    A sole force-new archived creator may bind a same-task canonical reused run.
     A content-verified cache bounds JSON decoding to changed/candidate records;
     all source files are still read, and filesystem aliases are resolved anew.
     """
-    from scripts.orchestration.worktree_claims import record_may_claim_worktree, worktree_claim_needles
+    from scripts.orchestration.worktree_claims import (
+        is_superseded_record,
+        record_may_claim_worktree,
+        worktree_claim_needles,
+    )
 
     matches = []
     needles = worktree_claim_needles(worktree, worktree.resolve())
@@ -168,6 +173,21 @@ def resolve_worktree_record(worktree: Path, tasks_dir: Path, *, repo_root: Path)
         # Finished references alone are not ownership. Without one creator,
         # output retains unknown attribution; empty trees remain removable.
         creators = [match for match in matches if match[1].get("worktree_reused") is False]
+        if len(creators) == 1 and is_superseded_record(creators[0][0]):
+            identity = creators[0][1].get("task_id")
+            if isinstance(identity, str) and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity):
+                canonical = task_record_path(tasks_dir, identity)
+                current = [match for match in matches if match[0] == canonical]
+                if (
+                    len(current) == 1
+                    and current[0][1].get("worktree_reused") is True
+                    and all(match[1].get("task_id") == identity for match in matches)
+                    and creators[0][0].parent == tasks_dir
+                    and re.fullmatch(
+                        re.escape(identity) + r"\.\d{8}T\d{6}\d*Z(?:\.\d+)?\.archived\.json", creators[0][0].name
+                    )
+                ):
+                    return current[0]
         return creators[0] if len(creators) == 1 else (None, {})
     return matches[0] if matches else (None, {})
 
@@ -189,15 +209,37 @@ def creation_inventory(worktree: Path, *, primary: Path, task_id: str, run_nonce
     }
 
 
-def _path_inventory(root: Path, files: list[str]) -> list[dict[str, Any]]:
-    return [
-        {"path": name, "size": size, "sha256": digest}
-        for name in files
-        for size, digest in [artifacts._fingerprint(root / name)]
-    ]
+def _record_absence(root: Path, name: str, absent: list[dict[str, str]]) -> None:
+    """Only a fresh lstat ENOENT licenses omission, under the remover's lock."""
+    try:
+        (root / name).lstat()
+    except FileNotFoundError:
+        proof = {"path": name, "proof": "lstat_enoent"}
+        if proof not in absent:
+            absent.append(proof)
+        return
+    raise ValueError("ignored output changed during preservation")
 
 
-def _classified_inventory(worktree: Path, files: list[str], record: Mapping[str, Any]) -> list[dict[str, Any]]:
+def _path_inventory(
+    root: Path, files: list[str], *, absent: list[dict[str, str]] | None = None
+) -> list[dict[str, Any]]:
+    entries = []
+    for name in files:
+        try:
+            size, digest = artifacts._fingerprint(root / name)
+        except FileNotFoundError:
+            if absent is None:
+                raise
+            _record_absence(root, name, absent)
+            continue
+        entries.append({"path": name, "size": size, "sha256": digest})
+    return entries
+
+
+def _classified_inventory(
+    worktree: Path, files: list[str], record: Mapping[str, Any], *, absent: list[dict[str, str]] | None = None
+) -> list[dict[str, Any]]:
     baseline = record.get("ignored_output_baseline")
     status = worktree.stat()
     trusted = (
@@ -224,7 +266,7 @@ def _classified_inventory(worktree: Path, files: list[str], record: Mapping[str,
                 trusted = False
         except (KeyError, TypeError):
             trusted = False
-    entries = _path_inventory(worktree, files)
+    entries = _path_inventory(worktree, files, absent=absent)
     for entry in entries:
         entry["class"] = (
             ("pre_existing" if before.get(entry["path"]) == entry else "task_created")
@@ -259,7 +301,9 @@ def verify_retrieval(primary: Path, receipt: Mapping[str, Any]) -> str:
     return digest
 
 
-def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, Any]) -> list[str]:
+def _ignored_output_files(
+    worktree: Path, primary: Path, record: Mapping[str, Any], *, absent: list[dict[str, str]] | None = None
+) -> list[str]:
     """Inventory output, including unignored files when no index was checked out."""
     # Retain the existing named-link safety checks and nested-repository gates.
     named = artifacts._named_artifact_files(worktree, record, primary=primary)
@@ -277,22 +321,37 @@ def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, An
         if artifacts.is_disposable_path(relative, worktree=worktree, primary=primary):
             continue
         source = worktree / relative
-        status = source.lstat()
-        if stat.S_ISLNK(status.st_mode):
-            resolved = source.resolve(strict=True)
-            if resolved.is_relative_to(primary / "batch_state") and not resolved.is_relative_to(root):
-                continue  # Shared state survives removal of the link.
-            if resolved.is_relative_to(root):
-                continue  # Local target is inventoried independently or tracked.
-            raise ValueError("ignored output links outside the checkout")
-        if source.resolve(strict=True) != source.absolute():
-            raise ValueError("ignored output is not a local regular file")
-        if stat.S_ISDIR(status.st_mode):
-            files.update(artifacts._inspect_directory_artifact(source, name, worktree=worktree))
-        elif stat.S_ISREG(status.st_mode):
-            files.add(name)
-        else:
-            raise ValueError("ignored output is not a regular file")
+        try:
+            status = source.lstat()
+            if stat.S_ISLNK(status.st_mode):
+                try:
+                    resolved = source.resolve(strict=True)
+                except FileNotFoundError:
+                    resolved = source.resolve(strict=False)
+                    if absent is None or not resolved.is_relative_to(root):
+                        raise
+                    # Internal links already defer to their separately inventoried
+                    # targets. A vanished target needs the same lstat proof.
+                    _record_absence(worktree, resolved.relative_to(root).as_posix(), absent)
+                    continue
+                if resolved.is_relative_to(primary / "batch_state") and not resolved.is_relative_to(root):
+                    continue  # Shared state survives removal of the link.
+                if resolved.is_relative_to(root):
+                    continue  # Local target is inventoried independently or tracked.
+                raise ValueError("ignored output links outside the checkout")
+            if source.resolve(strict=True) != source.absolute():
+                raise ValueError("ignored output is not a local regular file")
+            if stat.S_ISDIR(status.st_mode):
+                files.update(artifacts._inspect_directory_artifact(source, name, worktree=worktree))
+                source.lstat()
+            elif stat.S_ISREG(status.st_mode):
+                files.add(name)
+            else:
+                raise ValueError("ignored output is not a regular file")
+        except FileNotFoundError:
+            if absent is None:
+                raise
+            _record_absence(worktree, name, absent)
     files.update(named)
     return sorted(
         name for name in files if not artifacts.is_disposable_path(Path(name), worktree=worktree, primary=primary)
@@ -416,6 +475,7 @@ def preserve_worktree_artifacts(
     Decision B inventories everything without a clock cutoff. Baselines only
     label provenance; they never reduce the copied set. No canonical attribution,
     oversized output, failed retrieval, or explicit retention refuses removal.
+    Vanished paths require fresh lstat absence proof; byte changes still refuse.
     Caller records and task IDs are hints, never retention authority.
     """
     repo_root = primary if repo_root is None else repo_root
@@ -426,19 +486,23 @@ def preserve_worktree_artifacts(
         "owner": "infra lane",
         "next_condition": "establish canonical task attribution and verified retrieval",
     }
+    absent: list[dict[str, str]] = []
     try:
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
         record_path, record = resolve_worktree_record(worktree, tasks_dir, repo_root=repo_root)
-        files = _ignored_output_files(worktree, primary, record)
-        if not files and not record.get("keep_worktree"):
+        files = _ignored_output_files(worktree, primary, record, absent=absent)
+        if not files and not absent and not record.get("keep_worktree"):
             return True, "", None
         identity = record.get("task_id")
+        paths = _classified_inventory(worktree, files, record, absent=absent)
+        files = [entry["path"] for entry in paths]
         metadata.update(
             {
                 "count": len(files),
-                "bytes": sum((worktree / name).stat().st_size for name in files),
-                "paths": _classified_inventory(worktree, files, record),
+                "bytes": sum(entry["size"] for entry in paths),
+                "paths": paths,
+                "absent_paths": absent,
             }
         )
         if (
@@ -460,11 +524,15 @@ def preserve_worktree_artifacts(
         if total_bytes > MAX_PRESERVED_BYTES:
             metadata["next_condition"] = "owner retrieves output exceeding the preservation cap"
             raise ValueError(f"ignored output exceeds preservation cap ({total_bytes} > {MAX_PRESERVED_BYTES} bytes)")
-        if files or record.get("keep_worktree"):
+        if files or absent or record.get("keep_worktree"):
             parent = primary / "batch_state" / "preserved" / identity
             if parent.is_relative_to(worktree):
                 raise ValueError("preservation destination is inside the worktree")
-            digest = _content_digest(worktree, files)
+            # Bind copying to the original inventory, including mutations before
+            # _copy_verified takes its own source fingerprint.
+            digest = hashlib.sha256(
+                json.dumps([(entry["path"], entry["size"], entry["sha256"]) for entry in paths]).encode()
+            ).hexdigest()
             location = _reusable_copy(parent, worktree, files, digest)
             reused = location is not None
             if location is None:
@@ -475,14 +543,34 @@ def preserve_worktree_artifacts(
                     destination = location / name
                     if destination.resolve() != destination.absolute():
                         raise ValueError("preserved artifact destination contains a symlink")
-                    artifacts._copy_verified(worktree / name, destination)
+                    try:
+                        artifacts._copy_verified(worktree / name, destination)
+                    except FileNotFoundError:
+                        _record_absence(worktree, name, absent)
+                        # A destination-side failure is not source absence proof.
+                        if destination.exists() or destination.is_symlink():
+                            raise
+                        continue
+                paths = [entry for entry in paths if entry["path"] not in {proof["path"] for proof in absent}]
+                files = [entry["path"] for entry in paths]
+                metadata.update(count=len(files), bytes=sum(entry["size"] for entry in paths), paths=paths)
+                digest = _content_digest(location, files)
+                if _path_inventory(location, files) != [
+                    {key: entry[key] for key in ("path", "size", "sha256")} for entry in paths
+                ]:
+                    raise ValueError("ignored output changed during preservation")
             metadata.update(
                 {"location": location.relative_to(primary).as_posix(), "content_sha256": digest, "reused": reused}
             )
             metadata["next_condition"] = "owner repairs failed retrieval and verifies all bytes"
             metadata["retrieval_proof_sha256"] = verify_retrieval(primary, metadata)
-            if files != _ignored_output_files(worktree, primary, record) or _content_digest(worktree, files) != digest:
+            if (
+                files != _ignored_output_files(worktree, primary, record, absent=absent)
+                or _content_digest(worktree, files) != digest
+            ):
                 raise ValueError("ignored output changed during preservation")
+            for proof in list(absent):
+                _record_absence(worktree, proof["path"], absent)
             # The manifest is only a locator; retries independently read all bytes.
             if not reused:
                 with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
@@ -527,7 +615,7 @@ def preserve_worktree_artifacts(
         if metadata["retention_disposition"] == "retained":
             return False, "artifact preservation failed: keep_worktree intent set; refusing worktree removal", metadata
         print(
-            f"Preserved {len(files)} files ({total_bytes} bytes); retrieval SHA-256: {metadata.get('retrieval_proof_sha256')}",
+            f"Preserved {len(files)} files ({metadata['bytes']} bytes); retrieval SHA-256: {metadata.get('retrieval_proof_sha256')}",
             file=sys.stderr,
         )
         return True, "", metadata
