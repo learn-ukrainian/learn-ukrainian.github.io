@@ -11,12 +11,17 @@ from contextlib import nullcontext
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.atlas import word_card_foundation as foundation
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTER = ROOT / "docs/sources/permissions-register.yaml"
 BASIS = "sha256 canonical UTF-8 JSON of entire literal selected row, not whole database"
+REGISTER_BASIS = (
+    "sha256 canonical UTF-8 JSON of {sources: referenced register entries sorted by id, "
+    "legal_references: cited terms.legal_refs objects resolved by id and sorted by id}"
+)
 
 
 def sha(value):
@@ -26,6 +31,20 @@ def sha(value):
 
 def save(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n")
+
+
+def register_payload(register, source_ids):
+    sources = sorted([s for s in register["sources"] if s["id"] in source_ids], key=lambda s: s["id"])
+    cited = {ref for source in sources for ref in source["terms"].get("legal_refs", [])}
+    legal_refs = sorted([ref for ref in register["legal_references"] if ref["id"] in cited], key=lambda ref: ref["id"])
+    return {"sources": sources, "legal_references": legal_refs}
+
+
+def admitted_pin(register, source_ids, counts):
+    entries_sha256 = sha(register_payload(register, source_ids))
+    return dict(entries_sha256=entries_sha256, reason="Reviewed fixture terms correction", recorded="2026-01-02",
+                admission=dict(admission="APPROVE", candidate_sha256=entries_sha256, review_report_sha256="c" * 64,
+                               review_family="google", author_seat_distinct=True, denominator=copy.deepcopy(counts)))
 
 
 def capture(source, table, raw, key=None, **extra):
@@ -127,6 +146,225 @@ def prepared(pilot):
     return json.loads(pilot["manifest"].read_bytes()), json.loads(pilot["registry"].read_bytes())
 
 
+@pytest.fixture
+def pinned_pilot(pilot, monkeypatch):
+    manifest, _registry = prepared(pilot)
+    register_path = pilot["root"] / "register.yaml"
+    register_path.write_bytes(REGISTER.read_bytes())
+    register = yaml.safe_load(register_path.read_bytes())
+    source_ids = sorted({r["source_id"] for r in manifest["selection"]["source_records"]})
+    pin = dict(schema_version="atlas-pilot-register-pin.v1", manifest_sha256=manifest["manifest_sha256"],
+               legacy_source_register_sha256=manifest["selection"]["source_register_sha256"],
+               basis=REGISTER_BASIS, source_ids=source_ids,
+               pins=[dict(entries_sha256=sha(register_payload(register, source_ids)),
+                          reason="Fixture admitted-register migration", recorded="2026-01-01")])
+    pin_path = pilot["manifest"].with_suffix(".register-pin.json")
+    save(pin_path, pin)
+    monkeypatch.setattr(foundation, "REGISTER", register_path)
+    return pilot | dict(register_path=register_path, register=register, pin_path=pin_path, pin=pin)
+
+
+def test_register_pin_unrelated_addition_and_order(pinned_pilot):
+    p = pinned_pilot
+    before = [p[k].read_bytes() for k in ("manifest", "registry", "pin_path")]
+    unrelated = copy.deepcopy(p["register"]["sources"][0])
+    unrelated["id"] = "unrelated_fixture"
+    p["register"]["sources"].append(unrelated)
+    p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+    assert foundation.file_digest(p["register_path"]) != p["pin"]["legacy_source_register_sha256"]
+    assert p["operation"]("verify") == 0
+    p["register"]["sources"].reverse()
+    p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+    assert p["operation"]("verify") == 0
+    assert before == [p[k].read_bytes() for k in ("manifest", "registry", "pin_path")]
+
+
+def test_register_pin_referenced_terms_change_and_readmission(pinned_pilot, capsys):
+    p = pinned_pilot
+    before = [p[k].read_bytes() for k in ("manifest", "registry")]
+    original_pin = copy.deepcopy(p["pin"]["pins"][0])
+    for source_id in p["pin"]["source_ids"]:
+        source = next(s for s in p["register"]["sources"] if s["id"] == source_id)
+        source["terms"]["licence"]["name"] = "Revised fixture licence terms"
+        p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+        assert p["operation"]("verify") == 1
+        assert "Register fingerprint mismatch; re-admit and re-freeze before reuse" in capsys.readouterr().err
+        p["pin"]["pins"].append(admitted_pin(p["register"], p["pin"]["source_ids"], p["candidate"]["denominator"]))
+        save(p["pin_path"], p["pin"])
+        assert p["operation"]("verify") == 0
+    assert p["pin"]["pins"][0] == original_pin
+    assert before == [p[k].read_bytes() for k in ("manifest", "registry")]
+
+
+@pytest.mark.parametrize("historical", [False, True])
+@pytest.mark.parametrize("fault,reason", [
+    ("missing", "Invalid object fields"), ("extra_pin_field", "Invalid object fields"),
+    ("candidate_sha256", "Missing source admission"), ("review_family", "Require independent source admission"),
+    ("denominator", "Require independent source admission"), ("boolean_count", "Require independent source admission"),
+    ("admission", "Missing source admission"), ("review_report_sha256", "Missing source admission"),
+    ("author_seat_distinct", "Require independent source admission"), ("extra_receipt_field", "Invalid object fields"),
+])
+def test_register_pin_later_admission_refusals(pinned_pilot, historical, fault, reason, capsys):
+    p = pinned_pilot
+    entry = admitted_pin(p["register"], p["pin"]["source_ids"], p["candidate"]["denominator"])
+    p["pin"]["pins"].append(entry)
+    if historical:  # A valid last admission cannot hide an invalid earlier admission.
+        p["pin"]["pins"].append(copy.deepcopy(entry))
+    if fault == "missing":
+        del entry["admission"]
+    elif fault == "extra_pin_field":
+        entry["unexpected"] = "fixture"
+    elif fault in {"candidate_sha256", "review_family", "admission", "review_report_sha256"}:
+        entry["admission"][fault] = {"candidate_sha256": "0" * 64, "review_family": "anthropic",
+                                     "admission": "REQUEST_CHANGES", "review_report_sha256": "invalid"}[fault]
+    elif fault in {"denominator", "boolean_count"}:
+        entry["admission"]["denominator"]["atlas_articles"] = 3 if fault == "denominator" else True
+    elif fault == "author_seat_distinct":
+        entry["admission"][fault] = False
+    elif fault == "extra_receipt_field":
+        entry["admission"]["unexpected"] = "fixture"
+    save(p["pin_path"], p["pin"])
+    assert p["operation"]("verify") == 1
+    assert reason in capsys.readouterr().err
+
+
+def test_register_pin_valid_later_admission(pinned_pilot):
+    p = pinned_pilot
+    p["pin"]["pins"].append(admitted_pin(p["register"], p["pin"]["source_ids"], p["candidate"]["denominator"]))
+    save(p["pin_path"], p["pin"])
+    assert p["operation"]("verify") == 0
+
+
+def test_register_pin_cited_legal_quote_change_and_readmission(pinned_pilot, capsys):
+    p = pinned_pilot
+    before = [p[k].read_bytes() for k in ("manifest", "registry")]
+    cited = register_payload(p["register"], p["pin"]["source_ids"])["legal_references"]
+    assert "law_art21_sui_generis" in {ref["id"] for ref in cited}
+    cited[0]["quote"] = "Revised fixture legal quotation"
+    p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+    assert p["operation"]("verify") == 1
+    assert "Register fingerprint mismatch" in capsys.readouterr().err
+    p["pin"]["pins"].append(admitted_pin(p["register"], p["pin"]["source_ids"], p["candidate"]["denominator"]))
+    save(p["pin_path"], p["pin"])
+    assert p["operation"]("verify") == 0
+    assert before == [p[k].read_bytes() for k in ("manifest", "registry")]
+
+
+def test_register_pin_unrelated_legal_quote_change_and_order(pinned_pilot):
+    p = pinned_pilot
+    before = [p[k].read_bytes() for k in ("manifest", "registry", "pin_path")]
+    cited = {ref["id"] for ref in register_payload(p["register"], p["pin"]["source_ids"])["legal_references"]}
+    unrelated = next(ref for ref in p["register"]["legal_references"] if ref["id"] not in cited)
+    unrelated["quote"] = "Revised unrelated fixture legal quotation"
+    p["register"]["legal_references"].reverse()
+    p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+    assert p["operation"]("verify") == 0
+    assert before == [p[k].read_bytes() for k in ("manifest", "registry", "pin_path")]
+
+
+@pytest.mark.parametrize("fault", ["missing", "duplicate"])
+def test_register_pin_cited_legal_reference_resolution_refusals(pinned_pilot, fault, capsys):
+    p = pinned_pilot
+    cited = register_payload(p["register"], p["pin"]["source_ids"])["legal_references"][0]
+    if fault == "missing":
+        p["register"]["legal_references"].remove(cited)
+    else:
+        p["register"]["legal_references"].append(copy.deepcopy(cited))
+    p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+    # Even a pin carrying a receipt cannot bless an unresolved or ambiguous legal id.
+    p["pin"]["pins"].append(admitted_pin(p["register"], p["pin"]["source_ids"], p["candidate"]["denominator"]))
+    save(p["pin_path"], p["pin"])
+    assert p["operation"]("verify") == 1
+    assert "Missing or duplicate cited register legal reference" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("fault,reason", [
+    ("manifest", "Register pin binding mismatch"), ("legacy", "Register pin binding mismatch"),
+    ("ids", "Register pin source ids mismatch"), ("ids_order", "Register pin source ids mismatch"),
+    ("ids_duplicate", "Register pin source ids mismatch"), ("missing", "Unregistered source; update approved register first"),
+    ("duplicate", "Missing or duplicate referenced register source"), ("version", "Invalid register pin metadata"),
+    ("basis", "Invalid register pin metadata"), ("hex", "Invalid register pin metadata"),
+    ("extra", "Invalid object fields"), ("absent", "Invalid object fields"),
+    ("pins_empty", "Invalid register pin history"), ("pins_object", "Invalid register pin history"),
+    ("entry_extra", "Invalid object fields"), ("entry_absent", "Invalid object fields"),
+    ("migration_admission", "Invalid object fields"),
+    ("entry_hex", "Invalid register pin history"), ("reason", "Invalid register pin history"),
+    ("recorded", "Invalid register pin history"), ("old_entry", "Invalid register pin history")])
+def test_register_pin_refusals(pinned_pilot, fault, reason, capsys):
+    p, pin = pinned_pilot, pinned_pilot["pin"]
+    if fault in {"manifest", "legacy"}:
+        pin["manifest_sha256" if fault == "manifest" else "legacy_source_register_sha256"] = "0" * 64
+    if fault == "ids":
+        pin["source_ids"] = ["unrelated_fixture"]
+    if fault == "ids_order":
+        pin["source_ids"].reverse()
+    if fault == "ids_duplicate":
+        pin["source_ids"].append(pin["source_ids"][0])
+    if fault in {"missing", "duplicate"}:
+        source = next(s for s in p["register"]["sources"] if s["id"] == pin["source_ids"][0])
+        if fault == "missing":
+            p["register"]["sources"].remove(source)
+        else:
+            p["register"]["sources"].append(copy.deepcopy(source))
+        p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+    if fault in {"version", "basis", "hex"}:
+        pin[{"version": "schema_version", "basis": "basis", "hex": "manifest_sha256"}[fault]] = "invalid"
+    if fault == "extra":
+        pin["unexpected"] = "fixture"
+    if fault == "absent":
+        del pin["basis"]
+    if fault in {"pins_empty", "pins_object"}:
+        pin["pins"] = [] if fault == "pins_empty" else {}
+    if fault == "entry_extra":
+        pin["pins"][0]["unexpected"] = "fixture"
+    if fault == "entry_absent":
+        del pin["pins"][0]["reason"]
+    if fault == "migration_admission":
+        pin["pins"][0]["admission"] = admitted_pin(p["register"], pin["source_ids"],
+                                                  p["candidate"]["denominator"])["admission"]
+    if fault in {"entry_hex", "reason", "recorded"}:
+        pin["pins"][0][{"entry_hex": "entries_sha256", "reason": "reason", "recorded": "recorded"}[fault]] = " "
+    if fault == "old_entry":  # A valid last pin cannot hide malformed earlier history.
+        pin["pins"].append(admitted_pin(p["register"], pin["source_ids"], p["candidate"]["denominator"]))
+        pin["pins"][0]["reason"] = ""
+    save(p["pin_path"], pin)
+    assert p["operation"]("verify") == 1
+    assert reason in capsys.readouterr().err
+
+
+def test_register_pin_legacy_fallback(pilot, monkeypatch, capsys):
+    prepared(pilot)
+    register = pilot["root"] / "register.yaml"
+    register.write_bytes(REGISTER.read_bytes() + b"\n# Unrelated fixture formatting\n")
+    monkeypatch.setattr(foundation, "REGISTER", register)
+    assert pilot["operation"]("verify") == 1
+    assert "Register fingerprint mismatch" in capsys.readouterr().err
+
+
+def test_committed_pin_each_referenced_entry_is_binding(tmp_path, monkeypatch, capsys):
+    manifest_path = tmp_path / "pilot.json"
+    manifest_path.write_bytes((ROOT / "registry/atlas/pilot/pilot-v1.json").read_bytes())
+    pin_path = manifest_path.with_suffix(".register-pin.json")
+    pin = json.loads((ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json").read_bytes())
+    save(pin_path, pin)
+    register_path = tmp_path / "register.yaml"
+    register = yaml.safe_load(REGISTER.read_bytes())
+    monkeypatch.setattr(foundation, "REGISTER", register_path)
+    manifest = json.loads(manifest_path.read_bytes())
+    source_ids = sorted({r["source_id"] for r in manifest["selection"]["source_records"]})
+    command = ["verify", "--manifest", str(manifest_path), "--registry",
+               str(ROOT / "registry/atlas/identity/registry.json")]
+    for source_id in source_ids:
+        source = next(s for s in register["sources"] if s["id"] == source_id)
+        source["terms"]["licence"]["name"] = "Revised fixture licence terms"
+        register_path.write_text(yaml.safe_dump(register, allow_unicode=True))
+        assert foundation.main(command) == 1
+        assert "Register fingerprint mismatch" in capsys.readouterr().err
+        pin["pins"].append(admitted_pin(register, source_ids, manifest["selection"]["denominator"]))
+        save(pin_path, pin)
+        assert foundation.main(command) == 0
+
+
 def test_freeze_allocation_alias_oracles_replay_and_conservation(pilot, capsys):
     before = {k: p.read_bytes() for k, p in pilot["paths"].items()}
     manifest, registry = prepared(pilot)
@@ -163,7 +401,12 @@ def test_freeze_allocation_alias_oracles_replay_and_conservation(pilot, capsys):
     assert pilot["operation"]("freeze") == pilot["operation"]("allocate") == 0
     assert original == [p.read_bytes() for p in (pilot["manifest"], pilot["registry"])]
     fresh = pilot["root"] / "fresh-manifest.json"
-    command = [sys.executable, "-m", "scripts.atlas.word_card_foundation", *pilot["freeze"]]
+    # Propagate the fixture's lock-root isolation into the fresh process.
+    command = [sys.executable, "-c",
+               "import sys; from pathlib import Path; from scripts.atlas import word_card_foundation as f; "
+               "lock_root = Path(sys.argv.pop(1)); f.main_checkout_root = lambda root: lock_root; "
+               "raise SystemExit(f.main())",
+               str(pilot["root"]), *pilot["freeze"]]
     command[command.index("--output") + 1] = str(fresh)
     result = subprocess.run(command, cwd=ROOT, capture_output=True, check=False, timeout=60)
     assert result.returncode == 0 and fresh.read_bytes() == original[0], result.stderr
@@ -509,9 +752,24 @@ def test_wal_capture_and_mutation_refusal(pilot, monkeypatch, capsys):
     db.close()
 
 
+def test_committed_migration_pin_digests():
+    pin = json.loads((ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json").read_bytes())
+    assert (pin["pins"][0]["entries_sha256"], pin["legacy_source_register_sha256"]) == (
+        "912713e18fff712fd2dec8f5300e037a8b276e5fd048b69cfc926a348e7ecb38",
+        "eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873",
+    )
+
+
 def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
-    paths = [ROOT / "registry/atlas/pilot/pilot-v1.json", ROOT / "registry/atlas/identity/registry.json"]
+    paths = [ROOT / "registry/atlas/pilot/pilot-v1.json", ROOT / "registry/atlas/identity/registry.json",
+             ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json"]
     before = [p.read_bytes() for p in paths]
+    manifest, pin = [json.loads(paths[i].read_bytes()) for i in (0, 2)]
+    source_ids = sorted({r["source_id"] for r in manifest["selection"]["source_records"]})
+    register = yaml.safe_load(REGISTER.read_bytes())
+    assert pin["manifest_sha256"] == manifest["manifest_sha256"]
+    assert pin["legacy_source_register_sha256"] == manifest["selection"]["source_register_sha256"]
+    assert pin["source_ids"] == source_ids and pin["pins"][-1]["entries_sha256"] == sha(register_payload(register, source_ids))
     result = subprocess.run([sys.executable, "-m", "scripts.atlas.word_card_foundation", "verify",
                              "--manifest", str(paths[0]), "--registry", str(paths[1])],
                             cwd=ROOT, capture_output=True, text=True, check=False, timeout=60)
@@ -895,7 +1153,8 @@ B03 = {  # case: (child moved from unit 141 to source-only unit 35, marked row, 
 def test_b03_real_paradigm_parent_is_a_closure_dependency(tmp_path, case, capsys):
     """Regression only: real rows conserved; admission fingerprints and build ids are rebound, never re-admitted."""
     moved, marked, direct, held, replay, reason = B03[case]
-    committed = [ROOT / "registry/atlas/pilot/pilot-v1.json", ROOT / "registry/atlas/identity/registry.json"]
+    committed = [ROOT / "registry/atlas/pilot/pilot-v1.json", ROOT / "registry/atlas/identity/registry.json",
+                 ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json"]
     before = [p.read_bytes() for p in committed]
     manifest = json.loads(before[0])
     units = manifest["selection"]["units"]
@@ -912,6 +1171,9 @@ def test_b03_real_paradigm_parent_is_a_closure_dependency(tmp_path, case, capsys
     paths = [tmp_path / name for name in ("pilot.json", "registry.json", "membership.json")]
     paths[0].write_text(json.dumps(manifest, ensure_ascii=False))  # Insertion order keeps the admitted selection bytes.
     paths[1].write_text(before[1].decode().replace(build, "pilot@sha256:" + manifest["manifest_sha256"]))
+    pin = json.loads(before[2])
+    pin["manifest_sha256"] = manifest["manifest_sha256"]
+    save(paths[0].with_suffix(".register-pin.json"), pin)
     save(paths[2], dict(heldout=[held], replay=[replay] if replay else []))
     assert foundation.main(["verify", "--manifest", str(paths[0]), "--registry", str(paths[1]),
                             "--heldout-manifest", str(paths[2])]) == (reason is not None)

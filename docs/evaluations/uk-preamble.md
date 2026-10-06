@@ -93,6 +93,19 @@ re-labels it as the harness set object; nothing is normalised or repaired.
   research flags stay off: those pointers are resolved per dispatch from a
   changing registry. A record that still carries research state is not
   accepted.
+- `run --review-profile ukrainian` (off by default) dispatches review-kind tasks
+  with `--review-profile ukrainian --require-review-verdict` added, so delegate's
+  Ukrainian-review AGY permission profile applies as in production. Writing and
+  judge tasks are unchanged. The value is frozen in `manifest.json` (only when
+  set, so a default run's manifest is unchanged); a resume with a different value,
+  or with it added to a default run, is refused. A review-typed dispatch settles
+  as `no_deliverable` unless the reply carries a verdict line, so every review
+  prompt of such a run ends with a short protocol note asking for a final
+  `VERDICT: APPROVE` line after the JSON object. The note is identical across
+  variants and the line is a marker only: it is not scored and is not a judgement
+  of the paragraphs. The digest of the note's text is frozen with the profile, so
+  a resume under an edited note is refused before any dispatch. The note may prime
+  approval, so read variant comparisons under this option with that in mind.
 - A dry run validates each dispatch with `--dry-run` on a distinct
   `<task-id>-preflight` id. Before that call the harness reads the existing
   record (`delegate.py status`). It passes `--force-new` only when the record

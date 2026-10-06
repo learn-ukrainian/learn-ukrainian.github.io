@@ -16,9 +16,3 @@ vulnerabilities:
     version: 1.14.0
     status: upstream-unpatched
     reason: "Path traversal in load_checkpoint_in_model; upstream 1.14.0 has no released patch yet. Model weights are not loaded from untrusted user inputs in this repository."
-
-  - id: PYSEC-2026-1325
-    package: ecdsa
-    version: 0.19.2
-    status: accepted-risk
-    reason: "Minerva timing attack on P-256 curve; upstream considers side-channel attacks out of scope with no planned fix. ECDSA signature verification is unaffected."

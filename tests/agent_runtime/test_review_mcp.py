@@ -86,8 +86,12 @@ def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_ag
     assert "LU_REVIEW_LEDGER_PATH" not in config["mcpServers"]["sources"].get("env", {})
     settings = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())
     readers, writers = sources_tool_sets()
-    assert settings["permissions"]["allow"] == [f"mcp(sources/{name})" for name in readers]
-    assert settings["permissions"]["deny"] == ["command(*)", "write_file(*)"]
+    assert settings["permissions"]["allow"] == [f"mcp(sources/{name})" for name in sorted(REVIEW_TOOLS)]
+    assert settings["permissions"]["deny"] == [
+        "command(*)",
+        "write_file(*)",
+        *[f"mcp(sources/{name})" for name in sorted((set(readers) | set(writers)) - REVIEW_TOOLS)],
+    ]
     assert not any("*" in rule for rule in settings["permissions"]["allow"])
     assert not set(settings["permissions"]["allow"]) & {f"mcp(sources/{name})" for name in writers}
     assert (home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token").resolve() == (
@@ -99,7 +103,7 @@ def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_ag
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
-def test_receipt_attempt_permission_bytes_unchanged(manifest_file, tmp_path, access):
+def test_receipt_attempt_allow_contract_unchanged(manifest_file, tmp_path, access):
     plan = prepare_review_attempt(
         "rev-test-001",
         "att-agy-001",
@@ -132,7 +136,11 @@ def test_receipt_attempt_permission_bytes_unchanged(manifest_file, tmp_path, acc
     expected = {
         "permissions": {
             "allow": [f"mcp(sources/{name})" for name in sorted(names)],
-            "deny": ["command(*)", "write_file(*)"],
+            "deny": [
+                "command(*)",
+                "write_file(*)",
+                *[f"mcp(sources/{name})" for name in sorted(set().union(*sources_tool_sets()) - set(names))],
+            ],
         }
     }
     assert (agy_review_app_data_dir(plan.agy_home) / "settings.json").read_bytes() == json.dumps(expected).encode()
@@ -541,11 +549,27 @@ def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> No
 
 @pytest.mark.parametrize("seat", ["cursor", "claude"])
 def test_delegate_dispatch_review_refuses_primary_checkout(
-    code_review_manifest: Path, capsys: pytest.CaptureFixture[str], seat: str
+    code_review_manifest: Path,
+    ordinary_review_scope: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    seat: str,
 ) -> None:
     # Cursor identity admission now precedes its dispatch worktree guard.
     # Keep that refusal covered, and exercise primary-checkout protection with
     # an eligible write-capable review seat. The Cursor adapter guard is tested above.
+    # Write-dispatch review admission (#9739) reads the target checkout's branch
+    # first, so the dispatch declares its scope and targets the fixture primary,
+    # which is on main in sync with origin/main.
+    primary = ordinary_review_scope
+    subprocess.run(
+        ["git", "-C", str(primary), "update-ref", "refs/remotes/origin/main", "HEAD"],
+        check=True,
+        capture_output=True,
+        env=delegate_cli._sanitized_git_env(),
+        timeout=30,
+    )
+    monkeypatch.setattr(delegate_cli, "_REPO_ROOT", primary)
     rc = delegate_cli.main(
         [
             "dispatch",
@@ -558,7 +582,9 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
             "--task-id",
             "review-task-primary",
             "--cwd",
-            str(delegate_cli._REPO_ROOT),
+            str(primary),
+            "--owned-path",
+            "ordinary.py",
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
             "--review-access",

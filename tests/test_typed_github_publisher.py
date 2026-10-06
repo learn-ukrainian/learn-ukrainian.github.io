@@ -787,12 +787,30 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
                 "repository": "unit/public",
                 "worktree_branch": "unit",
                 "worktree_base_sha": "a" * 40,
+                # The review seat's harness: the recorder qualifies the reviewer by route and model (#9739).
+                "agent": "codex",
                 "model": "gpt-6.1-sol",
                 "started_at": "2026-01-01T00:00:00+00:00",
             }
             monkeypatch.setattr(module, "_task", lambda *a: (task, "VERDICT: APPROVE\n" + TOKEN))
             monkeypatch.setattr(module, "_pr", lambda *a: {"number": 1, "headRefName": "unit", "headRefOid": "a" * 40})
-            monkeypatch.setattr(module, "author_families", lambda *a: {"anthropic"})
+            # The recorder's complete-authorship entry point (#9739): an Anthropic-authored PR.
+            facts = module.BranchReviewFacts(
+                repository="unit/public",
+                base_tip_sha="b" * 40,
+                head_sha="a" * 40,
+                merge_base_sha="b" * 40,
+                commits=(module.CommitAttribution(None, "anthropic", "trailer-model"),),
+                existing_families=frozenset({"anthropic"}),
+                incoming_writer=None,
+                incoming_family=None,
+                changed_paths=(),
+                owned_paths=(),
+                subject_seats=frozenset(),
+                subject_families=frozenset(),
+                subject_evidence=(),
+            )
+            monkeypatch.setattr(module, "pr_review_facts", lambda *a, **k: facts)
             monkeypatch.setattr(module.GitHubAdapter, "identity", lambda *a: "unit")
             monkeypatch.setattr(module.GitHubAdapter, "comments", lambda *a: [])
             module.record("unit-review", pr_number=1, task_root=tmp_path, lock_root=tmp_path / "locks")

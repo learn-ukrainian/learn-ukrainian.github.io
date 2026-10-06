@@ -507,7 +507,84 @@ def test_next_determinism_two_calls_identical(monkeypatch):
     assert [r["work_id"] for r in a["queue"]] == [r["work_id"] for r in b["queue"]]
     a.pop("cache_age_s")
     b.pop("cache_age_s")
+    # PR observations age independently even inside the warm projection TTL.
+    for result in (a, b):
+        for source in result["sources"]:
+            (source.get("sections", {}).get("prs") or {}).pop("age_s", None)
     assert a == b
+
+
+def test_pr_snapshot_http_cold_refresh_and_warm_stale(monkeypatch):
+    """HTTP callers cannot join a slow refresh or re-age its PR evidence."""
+    import threading
+    import time
+    from datetime import timedelta
+
+    from scripts import github_rest_cache
+    from scripts.work import normalize, sources_public
+
+    started = threading.Event()
+    release = threading.Event()
+    snapshot = sources_public._PRSnapshot(REPO, 1000)
+    rows = [
+        {"number": number, "statusCheckRollup": [{"name": "CI Gate", "conclusion": "SUCCESS"}]}
+        for number in range(1, 41)
+    ]
+
+    def slow_prs(*args, **kwargs):
+        started.set()
+        assert release.wait(timeout=10)
+        return rows
+
+    monkeypatch.setattr(github_rest_cache, "list_open_prs", slow_prs)
+    monkeypatch.setattr(sources_public, "_pr_snapshot", lambda *_args: snapshot)
+
+    def build(**kwargs):
+        sections = _qualify_sections(prs=sources_public.fetch_open_prs())
+        return build_projection(sections, lifecycle_ledgers=[])
+
+    monkeypatch.setattr(work_router, "build_public_projection", build)
+    _patch_known_streams(monkeypatch)
+    try:
+        before = time.perf_counter()
+        response = client.get("/api/work/v1/projection?fresh=true")
+        assert time.perf_counter() - before < work_router.TIMEOUT_S
+        assert response.status_code == 200
+        cold = response.json()
+        assert cold["sources"][0]["sections"]["prs"]["status"] == "unavailable"
+        assert any(o["reason"] == "gh_pr_snapshot_missing" for o in cold["denominator"]["omissions"])
+        assert started.wait(timeout=2)
+    finally:
+        release.set()
+        snapshot._thread.join(timeout=10)
+        assert not snapshot._thread.is_alive()
+
+    warm = client.get("/api/work/v1/projection?fresh=true")
+    assert warm.status_code == 200
+    assert warm.json()["denominator"]["prs_open"] == 40
+    assert {i["safe_next_action"]["code"] for i in warm.json()["items"]} == {"REQUEST_CF_REVIEW"}
+    observed = sources_public.datetime.fromisoformat(warm.json()["sources"][0]["sections"]["prs"]["observed_at"])
+
+    class Clock:
+        @staticmethod
+        def now(tz):
+            return observed + timedelta(seconds=31)
+
+        fromisoformat = staticmethod(sources_public.datetime.fromisoformat)
+
+    monkeypatch.setattr(normalize, "datetime", Clock)
+    # Keep refresh pending while inspecting the independently aged warm cache.
+    monkeypatch.setattr(work_router, "_get_or_create_build_task", lambda *a, **kw: None)
+    stale = client.get("/api/work/v1/projection")
+    assert stale.status_code == 200
+    assert stale.json()["cache_age_s"] < work_router.CACHE_TTL_S
+    assert all(i["health"] == "UNKNOWN" for i in stale.json()["items"])
+    assert all(i["projections"]["verification"]["ci_state"] == "unknown" for i in stale.json()["items"])
+    assert stale.json()["sources"][0]["sections"]["prs"]["age_s"] == 31
+    nxt = client.get("/api/work/v1/next?stream=infra-harness")
+    assert nxt.status_code == 200
+    assert nxt.json()["queue"] == []
+    assert nxt.json()["sources"][0]["sections"]["prs"]["status"] == "stale"
 
 
 def test_next_limit_bounds(monkeypatch):
@@ -1351,6 +1428,8 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
     started = time.monotonic()
     real_cache_set = state_helpers.cache_set
     real_refresh = work_router.refresh_projection_cache_periodically
+    refresh_prs = Mock()
+    monkeypatch.setattr(work_router, "fetch_open_prs", refresh_prs)
 
     def build(**_kwargs):
         builds.append(time.monotonic())
@@ -1432,3 +1511,432 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
         release_hung.set()
         cache_invalidate(key)
     assert timer_stopped.is_set(), "lifespan leaked the refresh timer"
+    assert refresh_prs.call_count > 0
+
+
+def _issue_row(number: int, title: str, *, body: str = "") -> dict:
+    return {
+        "number": number,
+        "title": title,
+        "labels": [],
+        "assignees": [],
+        "body": body,
+        "createdAt": "2026-08-01T00:00:00Z",
+        "updatedAt": "2026-08-02T00:00:00Z",
+        "url": f"https://github.com/{REPO}/issues/{number}",
+        "state": "OPEN",
+    }
+
+
+def _task_row(task_id: str, status: str, *, alive: bool | None, age_s: float = 10) -> dict:
+    row = {
+        "task_id": task_id,
+        "agent": "grok",
+        "status": status,
+        "age_s": age_s,
+        "repository": REPO,
+        "linked_issues": [],
+    }
+    if alive is not None:
+        row["alive"] = alive
+    return row
+
+
+def _qualify_sections(**overrides) -> dict[str, SectionResult]:
+    sections = {
+        "issues": SectionResult("issues", "ok", payload=[], count=0),
+        "prs": SectionResult("prs", "ok", payload=[], count=0),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={"streams": {"infra-harness": [10]}, "orphans": [], "open_stream_membership": {}},
+            count=0,
+        ),
+        "delegate_active": SectionResult("delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "delegate_tasks": SectionResult("delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "fleet_reviews": SectionResult("fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0),
+    }
+    sections.update(overrides)
+    return sections
+
+
+def _serve(monkeypatch, sections: dict[str, SectionResult], **build_kwargs) -> dict:
+    """Install one projection as the warm cache and as the builder result."""
+    from scripts.api.state_helpers import cache_set
+
+    payload = build_projection(sections, repository_id=REPO, lifecycle_ledgers=[], **build_kwargs)
+    cache_set(work_router.projection_cache_key({}), payload)
+
+    def fake_build(*, filters=None, cache_age_s=0.0, **_kwargs):
+        return build_projection(
+            sections,
+            repository_id=REPO,
+            filters=filters,
+            cache_age_s=cache_age_s,
+            lifecycle_ledgers=[],
+            **build_kwargs,
+        )
+
+    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
+    return payload
+
+
+def _projection_and_next(monkeypatch, sections, **build_kwargs):
+    _patch_known_streams(monkeypatch)
+    payload = _serve(monkeypatch, sections, **build_kwargs)
+    projection = client.get("/api/work/v1/projection")
+    assert projection.status_code == 200, projection.text
+    nxt = client.get("/api/work/v1/next?stream=infra-harness")
+    assert nxt.status_code == 200, nxt.text
+    return payload, projection.json(), nxt.json()
+
+
+def test_state_ready_names_next_action_without_admission(monkeypatch):
+    """A live task names CONTINUE_DISPATCH. That is not admission."""
+    from scripts.fleet.idle_settle import items_from_work_next_queue
+
+    sections = _qualify_sections(
+        delegate_tasks=SectionResult(
+            "delegate_tasks",
+            "ok",
+            payload={"total": 1, "tasks": [_task_row("live-ready", "running", alive=True, age_s=100000)]},
+            count=1,
+        )
+    )
+    _local, projection, nxt = _projection_and_next(monkeypatch, sections)
+    row = next(item for item in projection["items"] if item["remote_id"] == "live-ready")
+    assert row["safe_next_action"]["code"] == "CONTINUE_DISPATCH"
+    assert row["safe_next_action"]["state"] == "ready"
+    assert row["health"] == "AT_RISK"
+    assert row["projections"]["dispatch"]["accountable_owner"] == "unknown"
+    assert all(item["remote_id"] != "live-ready" for item in nxt["queue"])
+    assert nxt["digest"]["unscoped_actionable_count"] >= 1
+    settled = items_from_work_next_queue([row])
+    assert settled[0].is_fillable() is False
+    assert settled[0].ready is False
+
+
+def test_state_dependency_waiting_until_confirmed_closure(monkeypatch):
+    sections = _qualify_sections(
+        issues=SectionResult(
+            "issues",
+            "ok",
+            payload=[_issue_row(6001, "Blocked", body="blocked by #9")],
+            count=1,
+        ),
+        streams=SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "streams": {"infra-harness": [10]},
+                "orphans": [],
+                "open_stream_membership": {"6001": ["infra-harness"]},
+            },
+            count=1,
+        ),
+    )
+    _local, projection, nxt = _projection_and_next(
+        monkeypatch,
+        sections,
+        target_lifecycle_lookup={_wid(9): "open"},
+    )
+    row = next(item for item in projection["items"] if item["remote_id"] == "6001")
+    assert row["safe_next_action"]["code"] == "RESOLVE_BLOCKER"
+    assert row["safe_next_action"]["state"] == "waiting"
+    assert row["safe_next_action"]["reason_codes"] == ["blocked_by"]
+    assert row["health"] == "AT_RISK"
+    assert [item["remote_id"] for item in nxt["queue"]] == ["6001"]
+    from scripts.fleet.idle_settle import items_from_work_next_queue
+
+    settled = items_from_work_next_queue(nxt["queue"])
+    assert settled[0].dependency_blocked is True
+    assert settled[0].is_fillable() is False
+
+
+def test_state_missing_owner_stays_unknown(monkeypatch):
+    sections = _qualify_sections(
+        issues=SectionResult("issues", "ok", payload=[_issue_row(6005, "Homed")], count=1),
+        streams=SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "streams": {"infra-harness": [10]},
+                "orphans": [],
+                "open_stream_membership": {"6005": ["infra-harness"]},
+            },
+            count=1,
+        ),
+    )
+    _local, projection, nxt = _projection_and_next(monkeypatch, sections)
+    row = next(item for item in projection["items"] if item["remote_id"] == "6005")
+    dispatch = row["projections"]["dispatch"]
+    assert dispatch["accountable_owner"] == "unknown"
+    assert dispatch["owner_reason"] == "owner_unknown"
+    assert row["health"] == "ON_TRACK"
+    assert row["safe_next_action"]["code"] == "OPEN_GITHUB"
+    assert row["safe_next_action"]["state"] == "none"
+    assert nxt["queue"] == []
+    from scripts.fleet.idle_settle import items_from_work_next_queue
+
+    assert items_from_work_next_queue([row])[0].is_fillable() is False
+
+
+def test_state_stale_membership_is_unknown(monkeypatch):
+    sections = _qualify_sections(
+        issues=SectionResult("issues", "ok", payload=[_issue_row(6003, "Stale orphan")], count=1),
+        streams=SectionResult(
+            "streams",
+            "stale",
+            payload={
+                "stale": True,
+                "orphans": [{"number": 6003, "title": "Stale orphan"}],
+                "open_stream_membership": {"6003": ["infra-harness"]},
+                "streams": {"infra-harness": [10]},
+            },
+            reason="stale",
+            count=1,
+        ),
+    )
+    _local, projection, nxt = _projection_and_next(monkeypatch, sections)
+    row = next(item for item in projection["items"] if item["remote_id"] == "6003")
+    assert row["projections"]["stream"]["status"] == "unknown"
+    assert row["projections"]["stream"]["streams"] == []
+    assert row["projections"]["stream"]["membership_reason"] == "membership_stale"
+    assert row["projections"]["stream"]["historical_status"] == "orphan"
+    assert row["health"] == "UNKNOWN"
+    assert row["safe_next_action"]["state"] == "unknown"
+    assert projection["denominator"]["streams_complete"] is False
+    assert nxt["queue"] == []
+    assert nxt["digest"]["unscoped_unknown"]["count"] >= 1
+    assert nxt["digest"]["unscoped_unknown"]["reason_counts"].get("membership_stale", 0) >= 1
+
+
+def test_state_terminal_done_is_not_delivered(monkeypatch):
+    sections = _qualify_sections(
+        delegate_tasks=SectionResult(
+            "delegate_tasks",
+            "ok",
+            payload={"total": 1, "tasks": [_task_row("finished", "done", alive=False)]},
+            count=1,
+        )
+    )
+    _local, projection, nxt = _projection_and_next(monkeypatch, sections)
+    row = next(item for item in projection["items"] if item["remote_id"] == "finished")
+    assert row["lifecycle"] == "done"
+    assert row["health"] == "UNKNOWN"
+    assert row["safe_next_action"]["code"] == "NONE"
+    assert row["safe_next_action"]["reason_codes"] == ["task_done_not_delivered"]
+    assert row["flags"]["attention"] is False
+    assert nxt["queue"] == []
+    assert nxt["digest"]["unscoped_unknown"]["reason_counts"].get("task_done_not_delivered") == 1
+
+
+def test_work_next_reports_unscoped_unknown(monkeypatch):
+    sections = _qualify_sections(
+        issues=SectionResult(
+            "issues",
+            "ok",
+            payload=[_issue_row(6003, "Unknown membership"), _issue_row(6005, "Homed")],
+            count=2,
+        ),
+        streams=SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "membership_certified": False,
+                "streams": {"infra-harness": [10]},
+                "orphans": [{"number": 6003}],
+                "open_stream_membership": {"6005": ["infra-harness"]},
+            },
+            count=2,
+        ),
+    )
+    _local, projection, nxt = _projection_and_next(monkeypatch, sections)
+    unknown = next(item for item in projection["items"] if item["remote_id"] == "6003")
+    homed = next(item for item in projection["items"] if item["remote_id"] == "6005")
+    assert unknown["projections"]["stream"]["status"] == "unknown"
+    assert unknown["projections"]["stream"]["streams"] == []
+    assert homed["projections"]["stream"]["status"] == "unknown"
+    assert nxt["queue"] == []
+    assert nxt["digest"]["unscoped_unknown"]["count"] == 2
+    assert nxt["stream"] == "infra-harness"
+
+
+def test_work_next_counts_in_stream_unknown_source(monkeypatch):
+    """An unqualified issue that still names the lane is counted, not dropped."""
+    sections = _qualify_sections(
+        issues=SectionResult(
+            "issues",
+            "unavailable",
+            payload=[_issue_row(6010, "Source down")],
+            count=0,
+            reason="issues_down",
+        ),
+        streams=SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "streams": {"infra-harness": [10]},
+                "orphans": [],
+                "open_stream_membership": {"6010": ["infra-harness"]},
+            },
+            count=1,
+        ),
+    )
+    _local, projection, nxt = _projection_and_next(monkeypatch, sections)
+    row = next(item for item in projection["items"] if item["remote_id"] == "6010")
+    assert row["flags"]["source_ok"] is False
+    assert "infra-harness" in row["projections"]["stream"]["streams"]
+    assert row["health"] == "UNKNOWN"
+    assert row["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert row["safe_next_action"]["reason_codes"] == ["source_unavailable"]
+    assert nxt["queue"] == []
+    assert nxt["digest"]["unscoped_unknown"]["count"] == 1
+    assert nxt["digest"]["unscoped_unknown"]["reason_counts"] == {"source_unavailable": 1}
+
+
+def test_projection_timeout_fallback_downgrades_decision_fields(monkeypatch):
+    import time
+
+    from scripts.api.state_helpers import cache_get_with_age, cache_set
+
+    key = work_router.projection_cache_key({})
+    stored = {
+        "schema_version": "work-projection.v1",
+        "generated_at": "2026-08-16T00:00:00Z",
+        "cache_age_s": 0.0,
+        "budget": {"warm_target_s": 2, "timeout_s": 5},
+        "sources": [],
+        "items": [
+            {
+                "work_id": "wp1:pr:77",
+                "health": "ON_TRACK",
+                "safe_next_action": {
+                    "code": "MERGE_WHEN_READY",
+                    "reason_codes": ["ci_passed_current_head"],
+                    "state": "ready",
+                },
+                "flags": {"attention": True},
+                "projections": {
+                    "stream": {"status": "homed", "streams": ["infra-harness"], "fresh": True},
+                    "dispatch": {"alive": [True]},
+                    "review": {"review_decision": "APPROVED"},
+                    "verification": {
+                        "kind": "gh_checks",
+                        "state": "passing",
+                        "ci_state": "passing",
+                        "merge_evidence": {"state": "ready", "reason": "ci_passed_current_head"},
+                    },
+                },
+                "authority": [{"domain": "github", "observed_at": "2026-08-16T00:00:00Z", "age_s": 1, "stale": False}],
+            }
+        ],
+        "attention": [
+            {
+                "work_id": "wp1:pr:77",
+                "health": "ON_TRACK",
+                "safe_next_action": {
+                    "code": "MERGE_WHEN_READY",
+                    "reason_codes": ["ci_passed_current_head"],
+                    "state": "ready",
+                },
+            }
+        ],
+        "denominator": {"issues_open": 0, "prs_open": 1, "streams_complete": True, "omissions": []},
+        "capabilities": {"mutation": False},
+        "foundation_status": "FOUNDATION_COMPLETE",
+    }
+    cache_set(key, stored)
+
+    def aged(cache_key, max_age):
+        if max_age <= work_router.CACHE_TTL_S:
+            return None
+        return stored, 301.0
+
+    monkeypatch.setattr(work_router, "cache_get_with_age", aged)
+    monkeypatch.setattr(work_router, "TIMEOUT_S", 0.01)
+    monkeypatch.setattr(work_router, "_build_sync", lambda *args, **kwargs: time.sleep(0.05))
+
+    response = client.get("/api/work/v1/projection")
+    assert response.status_code == 200, response.text
+    data = response.json()
+    item = data["items"][0]
+    assert data["cache_age_s"] == 301.0
+    assert item["health"] == "UNKNOWN"
+    assert item["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert item["safe_next_action"]["reason_codes"] == ["projection_cache_past_freshness"]
+    assert item["safe_next_action"]["state"] == "unknown"
+    assert item["flags"]["attention"] is False
+    assert item["projections"]["stream"]["status"] == "unknown"
+    assert item["projections"]["stream"]["streams"] == []
+    assert item["projections"]["verification"]["ci_state"] == "unknown"
+    assert item["projections"]["verification"]["merge_evidence"]["state"] == "unknown"
+    assert item["projections"]["review"]["review_decision"] == "UNKNOWN"
+    assert item["projections"]["dispatch"]["alive"] == [None]
+    assert data["denominator"]["streams_complete"] is False
+    assert data["attention"][0]["health"] == "UNKNOWN"
+    # The cached object itself is not poisoned.
+    assert stored["items"][0]["health"] == "ON_TRACK"
+    assert stored["denominator"]["streams_complete"] is True
+    assert cache_get_with_age is not None
+
+
+def test_ledger_contents_never_reach_projection_or_next(monkeypatch):
+    from datetime import UTC, datetime
+
+    from tests.test_work_contract import _ci_passed_ledger, _empty_sections_9741, _pr_raw_9741
+
+    canary = "LEDGER_BODY_CANARY_9741"
+    path_canary = "local-ledger-path-canary"
+    observed = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    ledger = _ci_passed_ledger(observed, canary=f"{canary} {path_canary}")
+    sections = _empty_sections_9741(prs=SectionResult("prs", "ok", payload=[_pr_raw_9741()], count=1))
+    payload = build_projection(sections, repository_id=REPO, lifecycle_ledgers=[ledger])
+    blob = json.dumps(payload)
+    assert canary not in blob
+    assert path_canary not in blob
+    assert "observation_receipts" not in blob
+    assert "/repo/" not in blob
+
+    from scripts.api.state_helpers import cache_set
+
+    cache_set(work_router.projection_cache_key({}), payload)
+    _patch_known_streams(monkeypatch)
+    projection = client.get("/api/work/v1/projection")
+    nxt = client.get("/api/work/v1/next?stream=infra-harness")
+    assert projection.status_code == 200, projection.text
+    assert nxt.status_code == 200, nxt.text
+    for body in (projection.text, nxt.text):
+        assert canary not in body
+        assert path_canary not in body
+        assert "primary_checkout" not in body
+
+
+def test_merge_qualification_adds_no_network_and_keeps_timeouts(monkeypatch):
+    import socket
+    from datetime import UTC, datetime
+
+    from tests.test_work_contract import _ci_passed_ledger, _empty_sections_9741, _pr_raw_9741
+
+    observed = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    ledger = _ci_passed_ledger(observed)
+
+    def boom(*_args, **_kwargs):
+        raise AssertionError("refresh opened a network or observer seam")
+
+    from scripts.orchestration.task_closeout import GhGitHubAdapter
+
+    monkeypatch.setattr(socket, "create_connection", boom)
+    monkeypatch.setattr("scripts.orchestration.task_lifecycle.observe_local_git", boom)
+    monkeypatch.setattr("scripts.orchestration.task_lifecycle.reconcile", boom)
+    monkeypatch.setattr("scripts.orchestration.task_lifecycle.write_lifecycle", boom)
+    monkeypatch.setattr(GhGitHubAdapter, "observe", boom)
+    projection = build_projection(
+        _empty_sections_9741(prs=SectionResult("prs", "ok", payload=[_pr_raw_9741()], count=1)),
+        repository_id=REPO,
+        lifecycle_ledgers=[ledger],
+    )
+    assert projection["items"][0]["safe_next_action"]["code"] == "MERGE_WHEN_READY"
+    assert work_router.TIMEOUT_S == 5.0
+    assert work_router.NEXT_BUILD_TIMEOUT_S == 20.0
+    assert projection["budget"]["timeout_s"] == 5

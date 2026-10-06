@@ -41,6 +41,16 @@ SECOND_SOURCE_THREAD_ID = "00000000-0000-4000-8000-000000000003"
 SECOND_REPLACEMENT_THREAD_ID = "00000000-0000-4000-8000-000000000004"
 
 
+# Finite cap for one launcher command in this file. ``scripts/lib/driver_scope.sh``
+# (#9624, ``launcher_enter_driver_scope``) starts the driver with
+# ``systemd-run --user --scope`` and sets neither ``TimeoutSec=`` nor
+# ``RuntimeMaxSec=``. ``systemd.scope(5)`` defaults ``RuntimeMaxSec=`` to
+# infinity, and the outside shell waits until that child exits, so a slow
+# scope start is not a launcher failure. Readiness uses this same command cap
+# and returns when the provider stub appears or the launcher process exits.
+_LAUNCHER_COMMAND_TIMEOUT_S = 60.0
+
+
 def run(
     args: list[str | Path],
     *,
@@ -58,7 +68,7 @@ def run(
         env=command_env,
         capture_output=True,
         text=True,
-        timeout=60,
+        timeout=_LAUNCHER_COMMAND_TIMEOUT_S,
         check=False,
     )
     if check and completed.returncode != 0:
@@ -76,6 +86,43 @@ def git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProces
 def write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def copy_fixture_file(source: Path, target: Path) -> None:
+    """Copy one fixture file and leave it owner-writable.
+
+    ``shutil.copy2`` keeps the source mode. This bootstrap names
+    ``scripts/lib/context_profiles.py`` and ``scripts/lib/session_record.py``
+    twice (the explicit list and ``launcher_library_files``). When the
+    canonical tree is read-only, the second ``copy2`` raises ``PermissionError``
+    opening the temp copy, and a later rewrite of a mode ``0555`` launcher
+    fails the same way.
+    """
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if target.exists():
+        target.chmod(target.stat().st_mode | 0o200)
+    shutil.copyfile(source, target)
+    target.chmod((source.stat().st_mode & 0o777) | 0o200)
+
+
+def wait_for_provider_stub(process: subprocess.Popen[str], marker: Path) -> None:
+    """Wait until ``marker`` exists or ``process`` has exited.
+
+    The deadline is ``_LAUNCHER_COMMAND_TIMEOUT_S``, the cap already applied to
+    launcher commands here. ``process.wait`` is the process-state event; the
+    stub file is checked on each wake because the provider only touches it.
+    """
+    deadline = time.monotonic() + _LAUNCHER_COMMAND_TIMEOUT_S
+    while not marker.exists():
+        if process.poll() is not None:
+            break
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            break
+        try:
+            process.wait(timeout=min(0.05, remaining))
+        except subprocess.TimeoutExpired:
+            continue
 
 
 def init_repo(
@@ -179,10 +226,12 @@ def init_repo(
             '{"scripts":{"agents:deploy":"scripts/deploy_prompts.sh"}}\n',
             encoding="utf-8",
         )
+    seen: set[str] = set()
     for relative in sources:
-        target = primary / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(REPO_ROOT / relative, target)
+        if relative in seen:
+            continue
+        seen.add(relative)
+        copy_fixture_file(REPO_ROOT / relative, primary / relative)
     if bootstrap_sources:
         # These fixtures exercise real rollover and lease handling without a
         # message service. Keep an idle watcher for the launcher to supervise.
@@ -1373,9 +1422,7 @@ def test_real_cross_family_driver_launchers_refuse_before_second_provider_execut
             text=True,
         )
         try:
-            deadline = time.monotonic() + 10
-            while not started[first_provider].exists() and time.monotonic() < deadline:
-                time.sleep(0.05)
+            wait_for_provider_stub(first, started[first_provider])
             assert started[first_provider].exists(), (
                 f"{first_provider} launcher did not reach provider stub; returncode={first.poll()}"
             )
@@ -1513,9 +1560,7 @@ def test_real_grok_driver_launches_single_holder(tmp_path: Path) -> None:
             text=True,
         )
         try:
-            deadline = time.monotonic() + 10
-            while not started["grok"].exists() and time.monotonic() < deadline:
-                time.sleep(0.05)
+            wait_for_provider_stub(launched_process, started["grok"])
             assert started["grok"].exists(), f"grok launcher did not reach provider: {launched_process.poll()}"
             time.sleep(1.5)
             stdout, stderr = launched_process.communicate(input="\n", timeout=30)

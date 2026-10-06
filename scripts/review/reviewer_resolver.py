@@ -14,11 +14,11 @@ demote a model into a lower-quality rung.
 The model inventory, candidate routes, and risk ladders are loaded from the
 versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 (``REVIEW_CANDIDATES`` / ``REVIEW_LADDERS`` via ``_catalog_candidate`` /
-``_catalog_ladder``). Policy changes belong in YAML: critical prefers Sol / Opus;
-Fable holds no review role (#9583), routine ladders keep practical seats, native Grok never
-judges, and the runtime-attested Cursor Grok seat is the Sol-spared last resort
-below critical (#9488). A formal review at high risk is performed only by the
-models ``review_scheduler.risk_reviewer_models`` lists (#9538); that is an
+``_catalog_ladder``). Policy changes belong in YAML: critical admits Sol / Opus / Grok;
+Fable holds no review role (#9583); native and runtime-attested Cursor Grok are
+regular code/infra reviewers at every risk (operator decision 2026-10-05, #9769).
+A formal review at high or critical risk is performed only by the models
+``review_scheduler.risk_reviewer_models`` lists; that is an
 eligibility gate, so it binds explicit pins and custom ladders too.
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
@@ -151,6 +151,10 @@ class ReviewerCandidate:
     quality_tier: str
     last_resort: bool = False
     model_roles: frozenset[str] = field(default_factory=frozenset)
+    # Optional subset for semantic ranking, never a grant of activity roles.
+    suitability_roles: frozenset[str] = field(default_factory=frozenset)
+    # Same-model route preference; other models retain their resource ranking.
+    transport_fallback_for: str | None = None
     health_keys: frozenset[str] = field(default_factory=frozenset)
     requires_silence_timeout: bool = False
     # Fail-closed data-egress gate: eligible only when the caller's
@@ -207,6 +211,8 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         quality_tier=model["tier"],
         last_resort=raw.get("last_resort", False),
         model_roles=frozenset(model["roles"]),
+        suitability_roles=frozenset(raw.get("suitability_roles", [])),
+        transport_fallback_for=raw.get("transport_fallback_for"),
         health_keys=frozenset(raw.get("health_keys", [])),
         requires_silence_timeout=bool(raw.get("requires_silence_timeout", False)),
         requires_data_egress_policy=raw.get("requires_data_egress_policy"),
@@ -415,6 +421,26 @@ class ResolverInputs:
     owned_paths: tuple[str, ...] = ()
     # Normalized paths that inferred a subject seat. Trace text only.
     subject_evidence: tuple[str, ...] = ()
+    # Complete branch authorship (#9739): every committed author family plus an
+    # incoming writer's (``record_cf_verdict.collect_branch_review_facts``).
+    # Selection excludes the whole set. ``author_model``/``author_family`` may
+    # add to it but never replace or shrink it. Empty keeps single-author mode.
+    author_families: frozenset[str] = field(default_factory=frozenset)
+
+
+def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
+    """The author families selection excludes, or None when the complete set holds an unresolved family.
+
+    Without ``inputs.author_families`` this is just ``single_family``.
+    """
+    if not inputs.author_families:
+        return frozenset({single_family})
+    members = set(inputs.author_families)
+    if inputs.author_model or inputs.author_family:
+        members.add(single_family)
+    if not all(member in _VALID_CONCRETE_FAMILIES or member == CURSOR_AUTO_UNION_FAMILY for member in members):
+        return None
+    return frozenset(members)
 
 
 @dataclass(frozen=True)
@@ -627,7 +653,8 @@ def _suitability_rank(candidate: ReviewerCandidate, inputs: ResolverInputs) -> i
         ordered_roles = _SCHEDULER_POLICY["profile_risk_role_order"][profile][risk]
     except (KeyError, TypeError):
         return None
-    rank = next((rank for rank, role in enumerate(ordered_roles) if role in candidate.model_roles), None)
+    roles = candidate.suitability_roles or candidate.model_roles
+    rank = next((rank for rank, role in enumerate(ordered_roles) if role in roles), None)
     requested_role = (inputs.requested_role or "").strip()
     if requested_role:
         return 0 if rank is not None and requested_role in candidate.model_roles else None
@@ -646,6 +673,53 @@ def _retired_alias_target(candidate: ReviewerCandidate) -> str | None:
         target = resolve_retired_agent_alias(token)
         if target is not None:
             return target
+    return None
+
+
+def _author_family_exclusion(candidate: ReviewerCandidate, family: str, health: str | None) -> CandidateResult | None:
+    """Independence of ``candidate`` from one author ``family``: an exclusion, an advisory-only result, or None."""
+
+    def result(status: CandidateStatus, reason: str) -> CandidateResult:
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            invocation=candidate.invocation,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
+            status=status,
+            reason=reason,
+            health=health,
+        )
+
+    cursor_transport = candidate.transport == "cursor" or candidate.route == "cursor"
+    if family == CURSOR_AUTO_UNION_FAMILY:
+        if candidate.family in CURSOR_AUTO_UNION_FAMILIES:
+            return result(
+                "excluded",
+                f"candidate family ({candidate.family}) is within author union family "
+                f"{sorted(CURSOR_AUTO_UNION_FAMILIES)} — cross-family review requires a reviewer outside the union",
+            )
+        if cursor_transport:
+            return result(
+                "excluded",
+                f"candidate uses Cursor transport — Cursor-as-reviewer is ineligible "
+                f"for author union family {sorted(CURSOR_AUTO_UNION_FAMILIES)}",
+            )
+    if candidate.family == family and family in candidate.advisory_only_for_author_families:
+        return result(
+            "advisory_only", f"same family as author ({family}) — advisory-only, not a formal cross-family gate"
+        )
+    if candidate.family == family:
+        return result("excluded", f"same family as author ({family}) — cross-family review requires a different family")
+    if family in CURSOR_AUTO_UNION_FAMILIES and cursor_transport:
+        return result(
+            "excluded",
+            f"candidate uses Cursor transport — Cursor-as-reviewer is ineligible "
+            f"against {family!r} author (within allowlist union {sorted(CURSOR_AUTO_UNION_FAMILIES)})",
+        )
     return None
 
 
@@ -739,10 +813,14 @@ def evaluate_candidate(
             health=health,
         )
     if inputs.subject_seats or inputs.subject_families:
+        # The Grok model governs both admitted transports (#9769).
+        subject_families = inputs.subject_families
+        if "cursor" in inputs.subject_seats:
+            subject_families = frozenset((*subject_families, "xai"))
         subject_reason = subject_exclusion_reason(
             candidate,
             seats=inputs.subject_seats,
-            families=inputs.subject_families,
+            families=subject_families,
             evidence=inputs.subject_evidence,
         )
         if subject_reason:
@@ -759,29 +837,6 @@ def evaluate_candidate(
                 reason=subject_reason,
                 health=health,
             )
-
-    # Operator decision 2026-10-02 (#9488): Grok reviews code and infra only
-    # through the Cursor seat whose runtime attests the concrete model. Every
-    # other gate below (independence, suitability, health) still applies to it.
-    if (candidate.family == "xai" or model_family == "xai") and not (
-        candidate.transport == "cursor" and candidate.route == "cursor"
-    ):
-        return CandidateResult(
-            name=candidate.name,
-            concrete_model=candidate.concrete_model,
-            family=candidate.family,
-            route=candidate.route,
-            transport=candidate.transport,
-            invocation=candidate.invocation,
-            quality_tier=candidate.quality_tier,
-            requires_silence_timeout=candidate.requires_silence_timeout,
-            status="excluded",
-            reason=(
-                "native Grok never judges: Grok reviews code and infra only through the "
-                "runtime-attested Cursor seat (core.md P2, #9488)"
-            ),
-            health=health,
-        )
 
     # Operator 2026-09-25: Gemini reviews Ukrainian only, never code. Keep this
     # hard gate even for injected ladders and explicitly pinned candidates.
@@ -816,59 +871,8 @@ def evaluate_candidate(
             health=health,
         )
 
-    if family == CURSOR_AUTO_UNION_FAMILY:
-        if candidate.family in CURSOR_AUTO_UNION_FAMILIES:
-            return CandidateResult(
-                name=candidate.name,
-                concrete_model=candidate.concrete_model,
-                family=candidate.family,
-                route=candidate.route,
-                transport=candidate.transport,
-                invocation=candidate.invocation,
-                quality_tier=candidate.quality_tier,
-                requires_silence_timeout=candidate.requires_silence_timeout,
-                status="excluded",
-                reason=(
-                    f"candidate family ({candidate.family}) is within author union family "
-                    f"{sorted(CURSOR_AUTO_UNION_FAMILIES)} — cross-family review requires a reviewer outside the union"
-                ),
-                health=health,
-            )
-        if candidate.transport == "cursor" or candidate.route == "cursor":
-            return CandidateResult(
-                name=candidate.name,
-                concrete_model=candidate.concrete_model,
-                family=candidate.family,
-                route=candidate.route,
-                transport=candidate.transport,
-                invocation=candidate.invocation,
-                quality_tier=candidate.quality_tier,
-                requires_silence_timeout=candidate.requires_silence_timeout,
-                status="excluded",
-                reason=(
-                    f"candidate uses Cursor transport — Cursor-as-reviewer is ineligible "
-                    f"for author union family {sorted(CURSOR_AUTO_UNION_FAMILIES)}"
-                ),
-                health=health,
-            )
-
-    same_family = candidate.family == family
-
-    if same_family and family in candidate.advisory_only_for_author_families:
-        return CandidateResult(
-            name=candidate.name,
-            concrete_model=candidate.concrete_model,
-            family=candidate.family,
-            route=candidate.route,
-            transport=candidate.transport,
-            invocation=candidate.invocation,
-            quality_tier=candidate.quality_tier,
-            requires_silence_timeout=candidate.requires_silence_timeout,
-            status="advisory_only",
-            reason=f"same family as author ({family}) — advisory-only, not a formal cross-family gate",
-            health=health,
-        )
-    if same_family:
+    authors = complete_author_families(inputs, family)
+    if authors is None:
         return CandidateResult(
             name=candidate.name,
             concrete_model=candidate.concrete_model,
@@ -879,27 +883,17 @@ def evaluate_candidate(
             quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
-            reason=f"same family as author ({family}) — cross-family review requires a different family",
+            reason="complete author family set holds an unresolved family — independence cannot be proven",
             health=health,
         )
-
-    if family in CURSOR_AUTO_UNION_FAMILIES and (candidate.transport == "cursor" or candidate.route == "cursor"):
-        return CandidateResult(
-            name=candidate.name,
-            concrete_model=candidate.concrete_model,
-            family=candidate.family,
-            route=candidate.route,
-            transport=candidate.transport,
-            invocation=candidate.invocation,
-            quality_tier=candidate.quality_tier,
-            requires_silence_timeout=candidate.requires_silence_timeout,
-            status="excluded",
-            reason=(
-                f"candidate uses Cursor transport — Cursor-as-reviewer is ineligible "
-                f"against {family!r} author (within allowlist union {sorted(CURSOR_AUTO_UNION_FAMILIES)})"
-            ),
-            health=health,
-        )
+    advisory: CandidateResult | None = None
+    for author in sorted(authors):
+        result = _author_family_exclusion(candidate, author, health)
+        if result is not None and result.status == "excluded":
+            return result
+        advisory = advisory or result
+    if advisory is not None:
+        return advisory
 
     reason = _hard_exclusion_reason(candidate, inputs)
     if not reason and inputs.formal_review:
@@ -1040,11 +1034,20 @@ def _best_eligible(
     """Pick the best eligible entry: primary before last resort, then suitability and tier,
     plan-backed before credit-backed, deterministic selection_score inside it. ``exclude_families`` lets the
     dual-family quorum path pick a second seat outside the first seat's
-    family without relaxing the fit-before-pressure ordering."""
+    family without relaxing the fit-before-pressure ordering. An eligible
+    same-model primary transport precedes its declared fallback."""
     filtered = {
         fit_key: kept
         for fit_key, entries in eligible_by_fit_and_tier.items()
         if (kept := [item for item in entries if item[0].family not in exclude_families])
+    }
+    # A same-model transport fallback cannot compete with its eligible primary
+    # on resource scores or head hashes. Other candidates keep their exact order.
+    primary_names = {candidate.name for entries in filtered.values() for candidate, _, _ in entries}
+    filtered = {
+        fit_key: kept
+        for fit_key, entries in filtered.items()
+        if (kept := [item for item in entries if item[0].transport_fallback_for not in primary_names])
     }
     if not filtered:
         return None
@@ -1175,7 +1178,22 @@ def resolve_reviewer(
         )
 
     author_family = resolve_author_family(inputs.author_model, inputs.author_family)
-    quorum_required = author_family == UNATTESTED_AUTHOR_FAMILY
+    if inputs.author_families and complete_author_families(inputs, author_family) is None:
+        return ReviewerResolution(
+            selected=None,
+            advisory=(),
+            trace=(),
+            substitution_note=None,
+            policy_version=_SCHEDULER_POLICY_VERSION,
+            catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+            resolved_risk=risk,
+            fail_closed_reason=(
+                f"complete author family set {sorted(inputs.author_families)} (author_model="
+                f"{inputs.author_model!r}) holds an unresolved family — independence cannot be proven"
+            ),
+        )
+    # A complete author set is already concrete; the single-author fallbacks below do not apply.
+    quorum_required = author_family == UNATTESTED_AUTHOR_FAMILY and not inputs.author_families
     if quorum_required and inputs.pinned_candidate:
         return ReviewerResolution(
             selected=None,
@@ -1190,7 +1208,7 @@ def resolve_reviewer(
                 "for an unattested-harness author — two distinct-family seats must be resolved"
             ),
         )
-    if author_family in UNRESOLVED_AUTHOR_FAMILIES and not quorum_required:
+    if author_family in UNRESOLVED_AUTHOR_FAMILIES and not quorum_required and not inputs.author_families:
         reason = {
             UNKNOWN_AUTHOR_FAMILY: (
                 f"author identity unknown — cannot resolve a model family from author_model={inputs.author_model!r}"

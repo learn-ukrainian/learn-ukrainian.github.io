@@ -1,5 +1,6 @@
 """No provider calls: eligibility retry bounds and AGY result/record persistence (#8771)."""
 
+import json
 from dataclasses import replace
 from types import SimpleNamespace
 from unittest.mock import Mock
@@ -644,6 +645,21 @@ def test_telemetry_rejects_third_attempt_and_invalid_acceptance():
         AgyTelemetry(attempts=(AgyAttempt(),) * 3)
     with pytest.raises(ValueError, match="accepted_attempt"):
         AgyTelemetry(accepted_attempt=1)
+
+
+@pytest.mark.parametrize("new_counts", [False, True])
+def test_older_attempt_records_load_without_a_permission_target(new_counts):
+    from scripts.agent_runtime.result import AgyTelemetry
+
+    record = {"completion_reason": "completed", "permission_profile_id": "ukrainian-review-command-denial-v2"}
+    if new_counts:
+        record.update(denied_file_read_count=1, denied_mcp_count=2)
+    attempt = AgyAttempt(**json.loads(json.dumps(record)))
+    assert attempt.permission_target is None
+    fields = AgyTelemetry(attempts=(attempt,), accepted_attempt=1).task_fields()["agy_attempts"][0]
+    assert fields["permission_target"] is None
+    assert fields["permission_profile_id"] == record["permission_profile_id"]
+    assert fields["denied_file_read_count"] == record.get("denied_file_read_count")
 
 
 def test_permission_refusal_cannot_borrow_cancellation_retry(tmp_path, monkeypatch):

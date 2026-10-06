@@ -680,13 +680,10 @@ button, input, select { font: inherit; }
     return { ok: true, doc: merged };
   }
 
-  const NON_ACTIONABLE_ACTION_CODES = new Set(['INSPECT_UNKNOWN', 'OPEN_GITHUB', 'NONE']);
-
   function isActionable(item) {
-    if (!item) return false;
-    if (item.health === 'OFF_TRACK' || item.health === 'AT_RISK') return true;
-    const code = (item.safe_next_action && item.safe_next_action.code) || '';
-    return !!code && !NON_ACTIONABLE_ACTION_CODES.has(code);
+    // Server stamps flags.attention. A missing flag is not actionable.
+    if (!item || !item.flags) return false;
+    return item.flags.attention === true;
   }
 
   function readFiltersFromUrl() {

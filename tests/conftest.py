@@ -35,6 +35,7 @@ from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
 pytest_plugins = [
+    "tests.helpers.source_db_write_guard",
     "tests.helpers.checkout_write_guard",
     "tests.helpers.checkout_write_defaults",
     "tests.cursor_process_guard",
@@ -107,6 +108,7 @@ SESSION_IDENTITY_ENV_VARS = (
     "LEARN_UKRAINIAN_COLD_START_PROFILE",
     "LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS",
     "LEARN_UKRAINIAN_ROLLOVER_WARNING_PERCENTAGES",
+    "LEARN_UKRAINIAN_ROLLOVER_MODE",
     "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID",
     "LEARN_UKRAINIAN_REQUESTED_MODEL_ID",
     "LEARN_UKRAINIAN_RESOLUTION_REASON",

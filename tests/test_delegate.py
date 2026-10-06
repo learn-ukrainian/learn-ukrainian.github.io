@@ -38,7 +38,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
 from agent_runtime.adapters.base import InvocationPlan
-from agent_runtime.result import ParseResult
+from agent_runtime.result import ParseResult, Result
 from agent_runtime.telemetry import InvocationTelemetry
 from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
@@ -186,6 +186,26 @@ def _fixture_worktree_lock_dir(tmp_path, monkeypatch):
     lock_dir = tmp_path / "lu-worktree-locks"
     monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", lock_dir)
     return lock_dir
+
+
+@pytest.fixture(autouse=True)
+def _review_target_from_fixture_refs(monkeypatch):
+    """Fixture repositories here have no canonical remote and no PRs.
+
+    Write-dispatch admission (#9739 A7) observes the canonical remote's default
+    branch and the open PRs of the head branch; here those are the fixture's own
+    ``origin/main`` and none. Observation against a real remote, PR lookups and
+    their failures are covered in tests/test_authoring_review_feasibility.py.
+    """
+
+    def default_branch(_remote: str) -> tuple[str, str]:
+        sha = delegate._resolve_sha(delegate._REPO_ROOT, "origin/main^{commit}")
+        if not sha:
+            raise delegate._AuthoringObservationUnknown("the canonical remote's default branch is unavailable")
+        return "main", sha
+
+    monkeypatch.setattr(delegate, "_authoring_default_branch", default_branch)
+    monkeypatch.setattr(delegate, "_authoring_open_pr_bases", lambda _repository, _head_branch: [])
 
 
 @pytest.fixture(autouse=True)
@@ -1578,6 +1598,8 @@ def test_dor_dispatch_private_repo_stdin_prompt_uses_mapped_issue_card(tmp_tasks
             "--repo",
             "infra-private",
             "--worktree",
+            "--owned-path",
+            "scripts/",
             "--prompt",
             "-",
         ]
@@ -2701,7 +2723,8 @@ def test_dispatch_force_new_refuses_live_running_or_spawning(tmp_tasks_dir, caps
     assert list(tmp_tasks_dir.glob(f"{task_id}.*.archived.result")) == []
 
 
-def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_dir, capsys):
+@pytest.mark.parametrize("status", ["done", "failed", "cancelled", "rate_limited", "needs_finalize"])
+def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_dir, capsys, status):
     """#6980: --force-new is the only reuse escape, and it must archive both
     the prior record and the prior result before writing a new spawn state.
     """
@@ -2709,7 +2732,7 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     result_path = path.with_suffix(".result")
     original = {
         "task_id": "force-new-task",
-        "status": "done",
+        "status": status,
         "initiator": "owner",
         "pid": None,
         "receipt": "keep-this-attestation",
@@ -2717,6 +2740,10 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     }
     delegate._write_state_atomic(path, original)
     result_path.write_text("completed receipt evidence\n", encoding="utf-8")
+    import hashlib
+
+    before_record = hashlib.sha256(path.read_bytes()).hexdigest()
+    before_result = hashlib.sha256(result_path.read_bytes()).hexdigest()
 
     with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()):
         rc = delegate.cmd_dispatch(_minimal_dispatch_args("force-new-task", force_new=True, initiator="owner"))
@@ -2727,6 +2754,8 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     assert len(archived_json) == 1
     assert len(archived_result) == 1
     assert json.loads(archived_json[0].read_text(encoding="utf-8")) == original
+    assert hashlib.sha256(archived_json[0].read_bytes()).hexdigest() == before_record
+    assert hashlib.sha256(archived_result[0].read_bytes()).hexdigest() == before_result
     assert archived_result[0].read_text(encoding="utf-8") == "completed receipt evidence\n"
     state = delegate._read_state(path)
     assert state is not None
@@ -2736,6 +2765,56 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     captured = capsys.readouterr()
     assert archived_json[0].name in captured.err
     assert archived_result[0].name in captured.err
+
+
+@pytest.mark.parametrize(
+    "case", ["cancelled", "unpushed", "needs_finalize", "retention", "unknown", "rate_limited", "retry", "late"]
+)
+def test_force_new_interrupted_matrix(tmp_path, monkeypatch, tmp_tasks_dir, case):
+    primary, tree, _origin, path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    (primary / ".git/info/exclude").write_text("batch_state/\n")
+    result = path.with_suffix(".result")
+    result.write_text("Український звіт\u2028prior attempt\n", encoding="utf-8")
+    output = tree / "batch_state/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    state = delegate._read_state(path)
+    state.update(
+        status=case if case in {"cancelled", "needs_finalize", "rate_limited"} else "needs_finalize",
+        initiator="foreign" if case == "late" else "owner",
+        run_nonce="old-attempt",
+        keep_worktree=case == "retention",
+        result_file=str(result),
+        result_sha256=hashlib.sha256(result.read_bytes()).hexdigest(),
+    )
+    if case == "unknown":
+        state["status"] = "unknown"
+    delegate._write_state_atomic(path, state)
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, result, output)]
+    head = delegate._resolve_sha(tree)
+    args = _minimal_dispatch_args("rescue-test", force_new=True, initiator="owner")
+    with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()) as spawn:
+        rc = delegate.cmd_dispatch(args)
+        if case in {"late", "unknown"}:
+            assert rc == 2 and spawn.call_count == 0
+            assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, result, output)] == before
+        else:
+            assert rc == 0 and spawn.call_count == 1
+            (archived_record,) = tmp_tasks_dir.glob("rescue-test.*.archived.json")
+            (archived_result,) = tmp_tasks_dir.glob("rescue-test.*.archived.result")
+            assert [
+                hashlib.sha256(p.read_bytes()).hexdigest() for p in (archived_record, archived_result, output)
+            ] == before
+            current = delegate._read_state(path)
+            assert current["status"] == "spawning" and current["run_nonce"] != state["run_nonce"]
+            # A second request sees the new nonterminal attempt and cannot spawn again.
+            saved = path.read_bytes()
+            assert delegate.cmd_dispatch(args) == 2
+            assert spawn.call_count == 1 and path.read_bytes() == saved
+            assert [
+                hashlib.sha256(p.read_bytes()).hexdigest() for p in (archived_record, archived_result, output)
+            ] == before
+    assert tree.exists() and delegate._resolve_sha(tree) == head
 
 
 def test_dispatch_refuses_task_id_held_by_an_archived_record(tmp_tasks_dir, capsys, monkeypatch):
@@ -5385,7 +5464,7 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
     tmp_path,
     monkeypatch,
 ):
-    """Agy dispatches with clean rc=0, dirty worktree, and zero commits finalize."""
+    """Successful Agy dispatches with rc=0, dirty worktree, and zero commits finalize."""
     _sanitize_git_env_for_test(monkeypatch)
     origin = tmp_path / "origin.git"
     worktree = tmp_path / "worktree"
@@ -5485,8 +5564,8 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
         "_Result",
         (),
         {
-            "ok": False,
-            "response": "",
+            "ok": True,
+            "response": "complete",
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
@@ -5566,6 +5645,101 @@ def _agy_dispatch_worktree(tmp_path: Path, branch: str) -> Path:
     git("push", "-u", "origin", "main")
     git("checkout", "-b", branch)
     return worktree
+
+
+@pytest.mark.parametrize(
+    ("agent", "model", "ok", "failure_code", "pushed_commit_first"),
+    [
+        ("grok", "grok-4.7", False, "provider_stream_incomplete", False),
+        ("grok", "grok-4.7", False, "provider_stream_incomplete", True),
+        ("grok", "grok-4.7", True, None, False),
+        ("codex", "gpt-6.1-sol", False, "provider_policy_refusal", False),
+        ("claude", "claude-opus-5-5", False, "future_incomplete_run", True),
+        ("claude", "claude-opus-5-5", False, None, False),
+    ],
+)
+def test_run_worker_auto_finalize_respects_provider_outcome(
+    tmp_tasks_dir, tmp_path, monkeypatch, agent, model, ok, failure_code, pushed_commit_first
+):
+    """#9771: committing a dirty tree cannot turn an adapter rejection into success."""
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = "provider-outcome"
+    branch = f"{agent}/{task_id}"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    if pushed_commit_first:
+        (worktree / "wip.txt").write_text("wip\n", encoding="utf-8")
+        for args in (["add", "wip.txt"], ["commit", "-m", "wip"], ["push", "-u", "origin", branch]):
+            subprocess.run(["git", *args], cwd=worktree, check=True, capture_output=True, timeout=30)
+    original_head = delegate._resolve_sha(worktree)
+    (worktree / "artifact.txt").write_text("worker edits\n", encoding="utf-8")
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "owned_paths": ["artifact.txt"],
+            "keep_worktree": True,
+        },
+    )
+    parsed = ParseResult(ok=ok, response="complete" if ok else "", stderr_excerpt=failure_code)
+    if agent == "grok":
+        from agent_runtime.adapters.grok_build import GrokBuildAdapter
+
+        parsed = GrokBuildAdapter().parse_response(
+            stdout=json.dumps(
+                {"text": "complete" if ok else "partial narration", "stopReason": "end_turn" if ok else "cancelled"}
+            ),
+            stderr="",
+            returncode=0,
+            output_file=None,
+        )
+    result = Result(
+        ok=parsed.ok,
+        agent=agent,
+        model=model,
+        mode="danger",
+        response=parsed.response,
+        stderr_excerpt=parsed.stderr_excerpt,
+        duration_s=0.1,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=0,
+        failure_code=parsed.failure_code or failure_code,
+    )
+    with patch("agent_runtime.runner.invoke", return_value=result):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent=agent,
+            prompt="hi",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=model,
+            hard_timeout=60,
+            effort="high",
+            keep_worktree=True,
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert rc == (0 if ok else 1)
+    assert state["status"] == ("done" if ok else "needs_finalize")
+    assert state["needs_finalize"] is not ok
+    assert state["worktree_dirty_on_exit"] is not ok
+    assert state["last_error"] == (delegate._first_error_line(parsed.stderr_excerpt) if not ok else None)
+    assert state.get("failure_code") == failure_code
+    if ok:
+        assert state["auto_finalize"]["ok"] is True
+        assert state["auto_finalize"]["changed_files"] == ["artifact.txt"]
+        assert delegate._count_unpushed_commits(worktree, branch) == 0
+    else:
+        assert state["auto_finalize"] is None
+        assert delegate._resolve_sha(worktree) == original_head
+        assert (worktree / "artifact.txt").read_text(encoding="utf-8") == "worker edits\n"
+        assert not state["result_file"]
 
 
 @pytest.mark.parametrize(
@@ -5683,11 +5857,16 @@ def test_agy_interim_language_warning_is_not_an_incomplete_run():
 @pytest.mark.parametrize(
     ("path", "expected"),
     [
+        ("", True),
         (".venv", True),
         (".venv/bin/python", True),
         ("node_modules/example/index.js", True),
         ("package/__pycache__/module.cpython-312.pyc", True),
         (".pytest_cache/v/cache/nodeids", True),
+        (r"package\__pycache__\module.pyc", True),
+        (".ruff_cache/state.bin", False),
+        (".mypy_cache/state.bin", False),
+        ("site/src/data/lexicon-manifest.json", False),
         ("generated.pyc", True),
         ("scripts/delegate.py", False),
         ("docs/decision.md", False),
@@ -7036,9 +7215,14 @@ def test_run_worker_periodic_stdout_avoids_silence_timeout(
     assert not (tmp_tasks_dir / "dispatch_events.jsonl").exists()
 
 
-def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, capsys):
+def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     import argparse
 
+    # Review admission reads the target's origin/main (#9739); a fixture primary
+    # keeps that hermetic on a CI checkout without one.
+    main, _ = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
     args = argparse.Namespace(
         agent="codex",
         task_id="danger-no-worktree",
@@ -7049,6 +7233,7 @@ def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, capsys):
         cwd=None,
         worktree=None,
         hard_timeout=3600,
+        owned_path=list(_WRITE_OWNED_PATHS),
     )
 
     rc = delegate.cmd_dispatch(args)
@@ -7059,10 +7244,20 @@ def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, capsys):
     assert "--worktree" in captured.err
 
 
+# Write dispatches must declare an owned path (#9739); an ordinary, unprotected file.
+_WRITE_OWNED_PATHS = ["tracked.txt"]
+# A Gemini Flash Ukrainian-authoring writer owns lesson content only (#9275).
+_UKRAINIAN_OWNED_PATHS = ["curriculum/l2-uk-en/a1/lesson.md"]
+# Stubbed ``git rev-parse`` answers: full commit SHAs, as Git prints them.
+_STUB_BASE_SHA = "abc1234" + "0" * 33
+_STUB_HEAD_SHA = "deadbeef" * 5
+_STUB_ORIGIN_SHA = "feedc0de" * 5
+
+
 def _make_run_stub(
     *,
     rev_parse_verify_ok: bool = True,
-    rev_parse_head_sha: str = "abc1234",
+    rev_parse_head_sha: str = _STUB_BASE_SHA,
     status_porcelain: str = "",
     rev_list_count: str = "0",
     abbrev_ref: str = "",
@@ -7070,11 +7265,18 @@ def _make_run_stub(
 ):
     """Helper: build a fake subprocess.run that understands the git commands
     _ensure_worktree/_validate_existing_worktree issue. Returns ``(calls, fn)``.
+
+    The binary readers see an empty answer: the branch-review facts reader
+    (#9739, ``git -C <root> ... --no-replace-objects``) a fresh branch whose
+    commits exist and whose ``base..head`` lists none, and the Ukrainian
+    content classifier (``git --literal-pathspecs``) no tracked file.
     """
     calls: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
         calls.append(list(cmd))
+        if "--no-replace-objects" in cmd or cmd[:2] == ["git", "--literal-pathspecs"]:
+            return subprocess.CompletedProcess(cmd, 0, b"", b"")
         if cmd[:2] == ["git", "fetch"]:
             return subprocess.CompletedProcess(cmd, 0, "", "")
         if cmd[:2] == ["git", "rev-parse"]:
@@ -7138,7 +7340,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
         pid = 24680
         stdin = _FakeStdin()
 
-    calls, fake_run = _make_run_stub(rev_parse_head_sha="deadbeef")
+    calls, fake_run = _make_run_stub(rev_parse_head_sha=_STUB_HEAD_SHA)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
@@ -7163,6 +7365,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
         worktree=str(worktree_path),
         base="main",
         hard_timeout=3600,
+        owned_path=list(_WRITE_OWNED_PATHS),
     )
 
     rc = delegate.cmd_dispatch(args)
@@ -7175,18 +7378,20 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     assert state["worktree_path"].endswith(".worktrees/dispatch/codex/codex-1383")
     assert state["cwd"].endswith(".worktrees/dispatch/codex/codex-1383")
     assert state["pid"] == 24680
-    assert state["worktree_base_sha"] == "deadbeef"
+    assert state["worktree_base_sha"] == _STUB_HEAD_SHA
     assert state["worktree_reused"] is False
     assert state["dor_preflight"]["allow_warn_reason"] == "urgent repair"
     assert state["worktree_local_venv"] == {"present": False, "kind": None, "path": None}
     assert "delegate worktree" in recorded_prompt["text"]
     assert f'(JSON-quoted path): "{worktree_path}"\n' in recorded_prompt["text"]
-    # At minimum: git fetch + git rev-parse --verify + git worktree add + git rev-parse HEAD.
+    # At minimum: git fetch + git worktree add + git rev-parse HEAD.
     assert any(c[:3] == ["git", "worktree", "add"] for c in calls)
     assert any(c[:2] == ["git", "fetch"] for c in calls)
-    # Dispatch admission and worktree creation share one immutable resolved SHA.
+    # Dispatch admission and worktree creation share one immutable SHA: the start commit admission observed and
+    # froze (#9739 A7), never a base dereferenced again.
+    assert state["authoring_review_admission"]["creation_sha"] == _STUB_HEAD_SHA
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
-    assert add_cmd[-1] == "deadbeef", f"worktree must be created from the resolved SHA, got base={add_cmd[-1]!r}"
+    assert add_cmd[-1] == _STUB_HEAD_SHA, f"worktree must be created from the resolved SHA, got base={add_cmd[-1]!r}"
     captured = capsys.readouterr()
     assert "issue-1383-smoke" in captured.out
 
@@ -7299,7 +7504,7 @@ def _cursor_dispatch(tmp_path, monkeypatch, *, dor_record, **overrides: Any):
         popen_calls.append(a)
         return _FakeProc()
 
-    _calls, fake_run = _make_run_stub(rev_parse_head_sha="deadbeef")
+    _calls, fake_run = _make_run_stub(rev_parse_head_sha=_STUB_HEAD_SHA)
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     monkeypatch.setattr(delegate, "_run_dor_preflight", lambda prompt, reason, *, dispatch_repo: (None, dor_record))
@@ -7417,7 +7622,8 @@ def test_fetch_base_plain_branch_unchanged(monkeypatch):
 def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
     tmp_tasks_dir, tmp_path, monkeypatch, capsys
 ):
-    """base="origin/main" must fetch that ref and create from its SHA."""
+    """base="origin/main" names the default branch ``main``: admission fetches that ref and the worktree starts at
+    the commit it admitted (#9739 A7)."""
     import argparse
 
     class _FakeStdin:
@@ -7431,7 +7637,7 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
         pid = 24681
         stdin = _FakeStdin()
 
-    calls, fake_run = _make_run_stub(rev_parse_head_sha="feedc0de")
+    calls, fake_run = _make_run_stub(rev_parse_head_sha=_STUB_ORIGIN_SHA)
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
     _tmp_dispatch_repo_root(tmp_path, monkeypatch)
@@ -7447,6 +7653,7 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
         worktree=str(tmp_path / ".worktrees" / "dispatch" / "codex" / "codex-origin-base"),
         base="origin/main",
         hard_timeout=3600,
+        owned_path=list(_WRITE_OWNED_PATHS),
     )
 
     rc = delegate.cmd_dispatch(args)
@@ -7454,8 +7661,10 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
     assert rc == 0
     fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
     assert fetch_cmd == ["git", "fetch", "origin", "+refs/heads/main:refs/remotes/origin/main"]
+    admission = delegate._read_state(delegate._state_path("origin-base-smoke"))["authoring_review_admission"]
+    assert (admission["creation_base"], admission["creation_sha"]) == ("main", _STUB_ORIGIN_SHA)
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
-    assert add_cmd[-1] == "feedc0de", f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
+    assert add_cmd[-1] == _STUB_ORIGIN_SHA, f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
 
 
 def test_validate_existing_worktree_origin_prefixed_base(monkeypatch, tmp_path):
@@ -8001,7 +8210,8 @@ def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypat
         recorded["env"] = kwargs.get("env", {})
         return _FakeProc()
 
-    _, fake_run = _make_run_stub()
+    # The reused checkout is on its dispatch branch: a detached one names no PR to review against (#9739 A7).
+    _, fake_run = _make_run_stub(abbrev_ref="codex/danger-merge-opt-in")
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     root = _tmp_dispatch_repo_root(tmp_tasks_dir.parent / "primary", monkeypatch)
@@ -8018,6 +8228,7 @@ def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypat
         worktree=str(worktree),
         base="main",
         hard_timeout=3600,
+        owned_path=list(_WRITE_OWNED_PATHS),
         allow_merge=True,
     )
 
@@ -8335,6 +8546,7 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
         agent="agy",
         # #9275: agy without a Ukrainian classification is the bounded fallback.
         research_task_family="ukrainian-authoring",
+        owned_path=list(_UKRAINIAN_OWNED_PATHS),
         task_id="existing-worktree",
         prompt="test",
         prompt_file=None,
@@ -9061,8 +9273,8 @@ def test_branch_holder_rejects_reaper_reservation(tmp_path, monkeypatch, tmp_tas
     assert reason == "reaper lifecycle reservation is pending"
 
 
-def test_branch_holder_releases_reaped_task_after_empty_activity_probes(tmp_path, monkeypatch, tmp_tasks_dir):
-    """A reaped task record is terminal but still requires empty probes."""
+def test_branch_holder_retains_reaped_task_after_empty_activity_probes(tmp_path, monkeypatch, tmp_tasks_dir):
+    """An unsupported historical status cannot release ownership."""
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "reaped"
     branch = "codex/reaped"
     _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
@@ -9075,8 +9287,8 @@ def test_branch_holder_releases_reaped_task_after_empty_activity_probes(tmp_path
 
     releasable, reason = delegate._stale_branch_holder_releasable(occupied, branch)
 
-    assert releasable is True
-    assert reason == "clean+synced; task status=reaped"
+    assert releasable is False
+    assert "reaped" in reason
 
 
 def test_branch_holder_refuses_needs_finalize_task(tmp_path, monkeypatch, tmp_tasks_dir):
@@ -9955,6 +10167,7 @@ def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, tmp_path, monkeypatch
         worktree="auto",  # sentinel from bare `--worktree`
         base="main",
         hard_timeout=3600,
+        owned_path=list(_WRITE_OWNED_PATHS),
         allow_merge=False,
     )
 
@@ -9989,6 +10202,16 @@ def _init_sibling_pair(tmp_path: Path) -> tuple[Path, Path, Path]:
     (tmp_path / "sibling").mkdir()
     primary, _ = _init_repo_with_worktree(tmp_path / "primary")
     sibling, sibling_wt = _init_repo_with_worktree(tmp_path / "sibling")
+    # The sibling worktree carries its own commit, absent from the primary. Without
+    # it both fixture histories can hash identically (same content, same second),
+    # which hid whether dispatch reads the sibling's commits from the right repository.
+    subprocess.run(
+        ["git", "-C", str(sibling_wt), "commit", "-q", "--allow-empty", "--no-gpg-sign", "-m", "sibling work"],
+        check=True,
+        capture_output=True,
+        env=delegate._sanitized_git_env(),
+        timeout=30,
+    )
     return primary, sibling, sibling_wt
 
 
@@ -10044,6 +10267,8 @@ def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
     (main / "tracked.txt").write_text("x\n")
     _git(main, "add", "-A")
     _git(main, "commit", "-q", "-m", "init")
+    # A fetched origin/main: write-dispatch review admission reads the branch's authors from it (#9739).
+    _git(main, "update-ref", "refs/remotes/origin/main", "HEAD")
 
     dispatch_wt = main / ".worktrees" / "dispatch" / "codex" / "task-1"
     _git(main, "worktree", "add", "-q", "-b", "codex/task-1", str(dispatch_wt))
@@ -10128,6 +10353,9 @@ def _write_args(**overrides):
         "allow_merge": False,
     }
     base.update(overrides)
+    if base["mode"] != "read-only":
+        # A write dispatch declares the paths it owns (#9739).
+        base.setdefault("owned_path", list(_WRITE_OWNED_PATHS))
     if base.get("review_attempt"):
         # These attempt fixtures render lesson-review prompts, like the content producer.
         base.setdefault("review_profile", "ukrainian")
@@ -10338,7 +10566,8 @@ def test_dispatch_refuses_an_acp_runtime_cwd_or_worktree_before_side_effects(
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     monkeypatch.chdir(main)
     spawned: list[object] = []
-    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: spawned.append(a))
+    # Git reads still run: write-dispatch review admission reads the branch before this refusal (#9739).
+    _spawn_passthrough_popen(monkeypatch, spawned.append)
 
     rc = delegate.cmd_dispatch(_write_args(task_id="acp-attach", mode=mode, **{flag: str(runtime)}))
 
@@ -10690,7 +10919,7 @@ def test_dispatch_helpers_do_not_resolve_the_worktree_after_the_post_lock_check(
         if path != dispatch_wt:
             return real_resolve_sha(path, *args)
         helper_paths.append(path)
-        if len(helper_paths) == 3:
+        if len(helper_paths) == 5:
             raise ValueError("stopped at the worktree helper's first git step")
         return real_resolve_sha(path, *args)
 
@@ -10702,9 +10931,10 @@ def test_dispatch_helpers_do_not_resolve_the_worktree_after_the_post_lock_check(
 
     assert rc == 1
     assert "stopped at the worktree helper's first git step" in capsys.readouterr().err
-    # The base-SHA helper validates the checkout and reads HEAD; the worktree
-    # helper, given that pinned SHA, reads HEAD.
-    assert helper_paths[:3] == [dispatch_wt] * 3 and spawned == []
+    # Authoring-review admission reads HEAD before the lock and again under it
+    # (#9739); the base-SHA helper validates the checkout and reads HEAD; the
+    # worktree helper, given that pinned SHA, reads HEAD.
+    assert helper_paths[:5] == [dispatch_wt] * 5 and spawned == []
 
 
 def test_worktree_block_renders_the_path_as_quoted_data():
@@ -11307,7 +11537,12 @@ def test_dispatch_rejects_write_capable_when_primary_has_untracked_non_receipt_f
     assert "job-42.json" not in err
 
 
-def test_dispatch_rejects_workspace_write_without_worktree(tmp_tasks_dir, capsys):
+def test_dispatch_rejects_workspace_write_without_worktree(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    # Review admission reads the target's origin/main (#9739); a fixture primary
+    # keeps that hermetic on a CI checkout without one.
+    main, _ = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
     args = _write_args(task_id="ww-no-wt", mode="workspace-write", cwd=None, worktree=None)
 
     rc = delegate.cmd_dispatch(args)
@@ -11320,9 +11555,12 @@ def test_dispatch_rejects_workspace_write_without_worktree(tmp_tasks_dir, capsys
 def test_dispatch_rejects_workspace_write_cwd_primary_checkout(
     tmp_tasks_dir,
     tmp_path,
+    monkeypatch,
     capsys,
 ):
     main, _ = _init_repo_with_worktree(tmp_path)
+    # Review admission reads the fixture's branch, so dispatch must target it (#9739).
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     args = _write_args(
         task_id="ww-cwd-main",
         mode="workspace-write",
@@ -11457,6 +11695,14 @@ def test_dispatch_refuses_branch_from_sibling_repo(
 ):
     """#6900: --branch fetches/attaches in the primary, same silent bind."""
     primary, sibling, _ = _init_sibling_pair(tmp_path)
+    # The PR branch is fetched in the primary, where review admission reads its authors (#9739).
+    subprocess.run(
+        ["git", "-C", str(primary), "update-ref", "refs/remotes/origin/codex/existing-pr", "HEAD"],
+        check=True,
+        capture_output=True,
+        env=delegate._sanitized_git_env(),
+        timeout=30,
+    )
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     monkeypatch.chdir(sibling)
     args = _write_args(
@@ -11503,6 +11749,167 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
     assert state is not None
     assert Path(state["cwd"]) == sibling_wt
     assert Path(state["worktree_path"]) == sibling_wt
+
+
+@pytest.mark.parametrize("target", ["sibling", "primary"])
+def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(tmp_tasks_dir, tmp_path, monkeypatch, target):
+    """#9739: a --cwd checkout of another repository skips authoring admission like --repo; the primary's own
+    worktree at the same relative path (``.worktrees/dispatch/codex/task-1``) is admitted as usual."""
+    primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
+    primary_wt = primary / ".worktrees" / "dispatch" / "codex" / "task-1"
+    assert primary_wt.is_dir() and primary_wt.relative_to(primary) == sibling_wt.relative_to(sibling)
+    assert delegate._is_other_repository(sibling_wt, primary)
+    assert not delegate._is_other_repository(primary_wt, primary)
+    assert not delegate._is_other_repository(tmp_path, primary)  # outside git: identity unproven, never a sibling
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    checkout = sibling_wt if target == "sibling" else primary_wt
+    monkeypatch.chdir(sibling if target == "sibling" else primary)
+    _patch_worker_popen(monkeypatch)
+    task_id = f"identity-{target}"
+
+    rc = delegate.cmd_dispatch(_write_args(task_id=task_id, mode="workspace-write", cwd=str(checkout)))
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state is not None and Path(state["worktree_path"]) == checkout
+    if target == "sibling":
+        assert delegate.AUTHORING_REVIEW_STATE_KEY not in state
+    else:
+        admission = state[delegate.AUTHORING_REVIEW_STATE_KEY]
+        assert admission["target"] == "existing-worktree"
+        assert admission["head_sha"] == delegate._resolve_sha(primary_wt)
+
+
+@pytest.mark.parametrize("checkout", ["primary", "sibling"])
+def test_sibling_repo_with_a_cwd_is_decided_by_the_checkouts_repository(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, checkout
+):
+    """#9739: --repo names a sibling, but authoring admission follows the --cwd checkout's git common directory: a
+    primary-repository worktree is refused as inconsistent (never exempted), a worktree of that sibling is exempt."""
+    from scripts.orchestration import fleet_repos
+
+    primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
+    primary_wt = primary / ".worktrees" / "dispatch" / "codex" / "task-1"
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(primary if checkout == "primary" else sibling)
+    real_resolve = fleet_repos.resolve_fleet_repo
+    sibling_repo = fleet_repos.FleetRepo(key="sib", github="acme/sibling", local_name="sibling", role="private-product")
+    monkeypatch.setattr(
+        fleet_repos,
+        "resolve_fleet_repo",
+        lambda key, **kw: (sibling_repo, sibling) if key == "sib" else real_resolve(key, **kw),
+    )
+    _patch_worker_popen(monkeypatch)
+    task_id = f"repo-cwd-{checkout}"
+    cwd = primary_wt if checkout == "primary" else sibling_wt
+
+    rc = delegate.cmd_dispatch(_write_args(task_id=task_id, cwd=str(cwd), repo="sib"))
+
+    err = capsys.readouterr().err
+    if checkout == "primary":
+        assert rc == 2, err
+        assert f"❌ {delegate.AUTHORING_REVIEW_REPOSITORY_MISMATCH}:" in err and "--repo acme/sibling" in err
+        assert not delegate._state_path_no_create(task_id).exists()
+    else:
+        assert rc == 0, err
+        state = delegate._read_state(delegate._state_path_no_create(task_id))
+        assert state is not None and Path(state["worktree_path"]) == sibling_wt
+        assert delegate.AUTHORING_REVIEW_STATE_KEY not in state
+
+
+def _malformed_dispatch(case: str, tmp_path: Path, monkeypatch) -> tuple[argparse.Namespace, str]:
+    """A write dispatch that one cheap argument or checkout check refuses, and that refusal's text."""
+    if case == "different-git-root":
+        primary, sibling, _ = _init_sibling_pair(tmp_path)
+        monkeypatch.chdir(sibling)
+    else:
+        primary, primary_wt = _init_repo_with_worktree(tmp_path)
+        monkeypatch.chdir(primary)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    # No --owned-path: authoring admission would refuse every one of these with AUTHORING_REVIEW_SCOPE_UNKNOWN.
+    common = {"task_id": f"malformed-{case}", "mode": "workspace-write", "owned_path": []}
+    if case == "cwd-with-worktree":
+        return _write_args(cwd=str(primary_wt), worktree="auto", **common), "--cwd cannot be combined with --worktree"
+    if case == "primary-checkout":
+        return _write_args(cwd=str(primary), **common), "primary"
+    if case == "dirty-primary":
+        monkeypatch.setattr(delegate, "_resolve_dirty_primary_checkout_error", lambda **_kw: "❌ primary is dirty")
+        return _write_args(worktree="auto", **common), "❌ primary is dirty"
+    return _write_args(worktree="auto", **common), "different git root"
+
+
+@pytest.mark.parametrize("case", ["cwd-with-worktree", "different-git-root", "primary-checkout", "dirty-primary"])
+def test_malformed_write_dispatch_gets_its_own_refusal_before_authoring_admission(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, case
+):
+    """#9739: argument and checkout checks precede authoring admission, so the caller sees what is wrong."""
+    _sanitize_git_env_for_test(monkeypatch)
+    args, expected = _malformed_dispatch(case, tmp_path, monkeypatch)
+    admissions: list[str] = []
+    real_admission = delegate._authoring_review_admission
+    monkeypatch.setattr(
+        delegate,
+        "_authoring_review_admission",
+        lambda *a, **k: admissions.append("called") or real_admission(*a, **k),
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    err = capsys.readouterr().err
+    assert rc == 2
+    assert expected in err
+    assert "AUTHORING_REVIEW" not in err
+    assert admissions == []
+    assert delegate._read_state(delegate._state_path(args.task_id)) is None
+
+
+def test_authoring_admission_follows_the_cheap_checks_and_precedes_every_side_effect(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    """#9739: a refused writer passed every argument check, and nothing ran or was written before the refusal."""
+    primary, _ = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(primary)
+    events: list[str] = []
+
+    def spy(name: str, *, passthrough: bool) -> None:
+        real = getattr(delegate, name)
+        monkeypatch.setattr(
+            delegate, name, lambda *a, **k: events.append(name) or (real(*a, **k) if passthrough else None)
+        )
+
+    for name in ("_resolve_dirty_primary_checkout_error", "_resolve_primary_integrity_error"):
+        spy(name, passthrough=True)
+    spy("_authoring_review_admission", passthrough=True)
+    for name in (
+        "_run_preflight_triage",
+        "_sweep_runtime_tmp_orphans",
+        "_archive_task_artifacts",
+        "_evaluate_dispatch_admission",
+        "worktree_lock",
+        "_resolve_worktree_base_sha",
+        "_ensure_worktree",
+    ):
+        spy(name, passthrough=False)
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kw: events.append("forward"))
+
+    rc = delegate.cmd_dispatch(
+        _write_args(task_id="admission-order", worktree="auto", owned_path=[], preflight_triage=True)
+    )
+
+    assert rc == 2
+    assert f"❌ {delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN}:" in capsys.readouterr().err
+    assert events == [
+        "_resolve_dirty_primary_checkout_error",
+        "_resolve_primary_integrity_error",
+        "_authoring_review_admission",
+    ]
+    # Observed without calling _state_path(), which itself creates the task directory.
+    assert not tmp_tasks_dir.exists()
+    assert not (primary / ".worktrees" / "dispatch" / "codex" / "admission-order").exists()
 
 
 def test_dispatch_help_omits_deprecated_cwd_dot_example():
@@ -12146,6 +12553,47 @@ def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tas
         assert repeated == {"task_id": "rescue-test", "action": "skipped", "reason": "already rescued at HEAD"}
 
 
+@pytest.mark.parametrize("status", ["failed", "cancelled", "rate_limited", "needs_finalize"])
+def test_rescue_admitted_interrupted_work_preserves_bytes(tmp_path, monkeypatch, tmp_tasks_dir, status):
+    """A6 prerequisite: exercise the existing rescue after admission, before widening its gate."""
+    import hashlib
+
+    _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    state = delegate._read_state(state_path)
+    state.update(status=status, run_nonce="interrupted-attempt")
+    delegate._write_state_atomic(state_path, state)
+    result_file = state_path.with_suffix(".result")
+    result_file.write_text("Український звіт\u2028interrupted report\n", encoding="utf-8")
+    state.update(result_file=str(result_file), result_sha256=hashlib.sha256(result_file.read_bytes()).hexdigest())
+    delegate._write_state_atomic(state_path, state)
+    before = hashlib.sha256(result_file.read_bytes()).hexdigest()
+    artifact = (worktree / "artifact.txt").read_bytes()
+    output = worktree / "batch_state/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    ignored_hash = hashlib.sha256(output.read_bytes()).hexdigest()
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert result["action"] == "rescued", result
+    retrieved = subprocess.run(
+        ["git", "--git-dir", str(origin), "show", f"{result['rescue_ref']}:artifact.txt"],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    ).stdout
+    assert hashlib.sha256(retrieved).digest() == hashlib.sha256(artifact).digest()
+    assert hashlib.sha256(result_file.read_bytes()).hexdigest() == before
+    assert hashlib.sha256(output.read_bytes()).hexdigest() == ignored_hash
+    current = delegate._read_state(state_path)
+    for key in ("rescue_status", "rescue_ref", "rescue_head_commit", "rescue_finished_at", "rescue_error"):
+        current.pop(key, None)
+    assert current == state
+    saved = state_path.read_bytes()
+    assert delegate._rescue_task(state_path, apply=True)["reason"] == "already rescued at HEAD"
+    assert state_path.read_bytes() == saved
+
+
 def test_rescue_unknown_ahead_count_is_reported(tmp_path, monkeypatch, tmp_tasks_dir):
     _primary, _worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
     monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_args, **_kwargs: None)
@@ -12154,6 +12602,187 @@ def test_rescue_unknown_ahead_count_is_reported(tmp_path, monkeypatch, tmp_tasks
 
     assert result["action"] == "skipped"
     assert result["reason"] == "ahead count unavailable"
+
+
+@pytest.mark.parametrize(
+    "case", ["cancelled", "unpushed", "needs_finalize", "retention", "unknown", "rate_limited", "retry", "late"]
+)
+def test_rescue_interrupted_matrix(tmp_path, monkeypatch, tmp_tasks_dir, case):
+    primary, tree, origin, path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    (primary / ".git/info/exclude").write_text("batch_state/\n")
+    output = tree / "batch_state/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    result = path.with_suffix(".result")
+    result.write_text("Український звіт\u2028rescue result\n", encoding="utf-8")
+    state = delegate._read_state(path)
+    state.update(
+        status=case if case in {"cancelled", "rate_limited"} else "needs_finalize",
+        run_nonce="current",
+        keep_worktree=case == "retention",
+        result_file=str(result),
+        result_sha256=hashlib.sha256(result.read_bytes()).hexdigest(),
+    )
+    if case == "unknown":
+        state["worktree_reused"] = None
+    delegate._write_state_atomic(path, state)
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, result, output)]
+    head = delegate._resolve_sha(tree)
+    if case == "late":
+        read_state = delegate._read_state
+        reads = 0
+
+        def stale_initial_read(candidate):
+            nonlocal reads
+            current = read_state(candidate)
+            reads += 1
+            return {**current, "run_nonce": "stale"} if reads % 2 == 1 else current
+
+        monkeypatch.setattr(delegate, "_read_state", stale_initial_read)
+    for attempt in range(2):
+        row = delegate._rescue_task(path, apply=True)
+        current = json.loads(path.read_text())
+        if case in {"unknown", "late"}:
+            assert row["action"] == "skipped" and row["reason"]
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == before[0]
+        else:
+            assert row["action"] == ("rescued" if attempt == 0 else "skipped"), row
+            if attempt == 1:
+                assert row["reason"] == "already rescued at HEAD"
+            rescued = current.copy()
+            for key in ("rescue_status", "rescue_ref", "rescue_head_commit"):
+                rescued.pop(key)
+            assert rescued == state
+            remote = subprocess.run(
+                ["git", "--git-dir", str(origin), "show", f"{current['rescue_ref']}:artifact.txt"],
+                capture_output=True,
+                check=True,
+                timeout=30,
+            ).stdout
+            assert hashlib.sha256(remote).digest() == hashlib.sha256((tree / "artifact.txt").read_bytes()).digest()
+        assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (result, output)] == before[1:]
+        assert tree.exists() and delegate._resolve_sha(tree) == head
+
+
+@pytest.mark.parametrize(
+    "case", ["cancelled", "unpushed", "needs_finalize", "retention", "unknown", "rate_limited", "retry", "late"]
+)
+def test_worker_finalizer_interrupted_matrix(tmp_path, monkeypatch, tmp_tasks_dir, case):
+    """Run the real exit pipeline once, then repeat only its cleanup callback."""
+    primary, tree, _origin, record = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    (primary / ".git/info/exclude").write_text("batch_state/\n")
+    output = tree / "batch_state/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    result = record.with_suffix(".result")
+    response = "Український звіт\u2028worker result\n"
+    result.write_text(response, encoding="utf-8")
+    state = delegate._read_state(record)
+    mode = "danger" if case in {"unpushed", "needs_finalize"} else "read-only"
+    state.update(
+        status="running",
+        run_nonce="attempt",
+        mode=mode,
+        worktree_base_sha=delegate._resolve_sha(primary),
+        worktree_reused=None if case == "unknown" else False,
+        result_file=str(result),
+        result_sha256=hashlib.sha256(result.read_bytes()).hexdigest(),
+    )
+    delegate._write_state_atomic(record, state)
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)]
+    head = delegate._resolve_sha(tree)
+    runtime_result = _finalize_mock_result()
+    runtime_result.response = response
+    runtime_result.rate_limited = case == "rate_limited"
+    runtime_result.ok = case != "rate_limited"
+    runtime_result.returncode = 1 if case == "rate_limited" else 0
+    with patch("agent_runtime.runner.invoke", return_value=runtime_result) as invoke:
+        if case == "cancelled":
+            invoke.side_effect = KeyboardInterrupt("cancelled")
+        delegate._run_worker(
+            task_id="rescue-test",
+            agent="cursor",
+            prompt="fixture",
+            mode=mode,
+            cwd_str=str(tree),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+            keep_worktree=case == "retention",
+        )
+        final = delegate._read_state(record)
+        expected = {
+            "cancelled": "cancelled",
+            "rate_limited": "rate_limited",
+            "unpushed": "needs_finalize",
+            "needs_finalize": "needs_finalize",
+        }.get(case, "done")
+        assert final["status"] == expected, final
+        assert final["run_nonce"] == state["run_nonce"] and final["final_branch_head_commit"] == head
+        assert hashlib.sha256(record.read_bytes()).hexdigest() != before[0]
+        assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (result, output)] == before[1:]
+        assert tree.exists() and delegate._resolve_sha(tree) == head
+        if final.get("result_file"):
+            assert Path(final["result_file"]) == result
+        if case == "late":
+            delegate._write_state_atomic(record, {**final, "status": "spawning", "run_nonce": "replacement"})
+        saved = record.read_bytes()
+        for _ in range(2):
+            if delegate._should_reap_settled_worktree(
+                mode=mode,
+                keep_worktree=case == "retention",
+                final_status=final["status"],
+                returncode=final["returncode"],
+                dirty_on_exit=final["worktree_dirty_on_exit"],
+            ):
+                row = delegate._settle_worktree_reap(
+                    tree,
+                    created_by_this_dispatch=True if state["worktree_reused"] is False else None,
+                    settling_task_id="rescue-test",
+                    task_record=final,
+                )
+                assert row["action"] == "skipped", row
+            assert record.read_bytes() == saved
+            assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (result, output)] == before[1:]
+            assert tree.exists() and delegate._resolve_sha(tree) == head
+        assert invoke.call_count == 1
+
+
+@pytest.mark.parametrize("replacement", [False, True])
+def test_rescue_final_write_preserves_current_record(tmp_path, monkeypatch, tmp_tasks_dir, replacement):
+    """Simulate a force-new replacement during the network push; stale rescue cannot overwrite it."""
+    import hashlib
+
+    _primary, worktree, _origin, path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    state = delegate._read_state(path)
+    state["run_nonce"] = "original"
+    delegate._write_state_atomic(path, state)
+    real_git = delegate._rescue_git
+    changed = []
+
+    def push_then_replace(cwd, *args, **kwargs):
+        proc = real_git(cwd, *args, **kwargs)
+        if args[0] == "push" and proc.returncode == 0:
+            current = delegate._read_state(path)
+            current["concurrent_note"] = "keep this"
+            if replacement:
+                delegate._archive_task_artifacts("rescue-test")
+                current.update(run_nonce="replacement", status="spawning")
+            delegate._write_state_atomic(path, current)
+            changed.append(hashlib.sha256(path.read_bytes()).hexdigest())
+        return proc
+
+    monkeypatch.setattr(delegate, "_rescue_git", push_then_replace)
+    row = delegate._rescue_task(path, apply=True)
+    current = delegate._read_state(path)
+    assert current["concurrent_note"] == "keep this"
+    assert worktree.exists()
+    if replacement:
+        assert row["action"] == "skipped" and "attempt changed" in row["reason"]
+        assert current["run_nonce"] == "replacement" and current.get("rescue_ref") is None
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == changed[0]
+    else:
+        assert row["action"] == "rescued" and current["rescue_status"] == "rescued"
 
 
 def test_rescue_push_failure_keeps_worktree(tmp_path, monkeypatch, tmp_tasks_dir):
@@ -12414,8 +13043,10 @@ def _run_settle_reap_worker(
     own_state: dict[str, Any] = {
         "task_id": task_id,
         "status": "running",
+        "mode": mode,
         "worktree_path": str(worktree),
         "worktree_base": "main",
+        "worktree_base_sha": delegate._resolve_sha(worktree),
         "worktree_branch": branch,
     }
     if worktree_reused is not None:
@@ -12626,6 +13257,76 @@ def test_read_only_clean_settle_removes_detached_worktree(tmp_tasks_dir, tmp_pat
     assert state["status"] == "done"
     assert state["worktree_reap"]["action"] == "removed"
     assert state["worktree_reap"]["branch"] is None
+    assert not worktree.exists()
+
+
+def test_read_only_worker_exit_settle_retains_detached_worker_commit(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Porcelain stays clean after the worker commits; HEAD must still be recoverable."""
+    real_invoke = delegate._run_worker
+    real_resolve = delegate._resolve_sha
+    heads = []
+
+    def worker_with_commit(**kwargs):
+        worktree = Path(kwargs["cwd_str"])
+        (worktree / "worker-output.txt").write_bytes(b"unique worker commit\x00\xff")
+        subprocess.run(["git", "add", "worker-output.txt"], cwd=worktree, check=True, capture_output=True, timeout=30)
+        subprocess.run(
+            ["git", "commit", "-m", "worker output"], cwd=worktree, check=True, capture_output=True, timeout=30
+        )
+        heads.append(real_resolve(worktree))
+        return real_invoke(**kwargs)
+
+    monkeypatch.setattr(delegate, "_run_worker", worker_with_commit)
+    _primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="worker-commit",
+        mode="read-only",
+        detached=True,
+    )
+    assert branch is None and state["worktree_reap"]["action"] == "skipped"
+    assert "HEAD moved or unknown" in state["worktree_reap"]["reason"]
+    assert real_resolve(worktree) == heads[0]
+    assert (worktree / "worker-output.txt").read_bytes() == b"unique worker commit\x00\xff"
+
+
+@pytest.mark.parametrize("proof", ["base", "remote", "unknown", "stale"])
+def test_read_only_settle_head_and_attempt_proof(tmp_tasks_dir, tmp_path, monkeypatch, proof):
+    _primary, worktree, _origin, path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    head = delegate._resolve_sha(worktree)
+    record = delegate._read_state(path)
+    record.update(mode="read-only", run_nonce="old", worktree_base_sha=head if proof == "base" else None)
+    delegate._write_state_atomic(path, record)
+    if proof == "remote":
+        subprocess.run(
+            ["git", "push", "origin", "HEAD:refs/heads/preserved"],
+            cwd=worktree,
+            check=True,
+            capture_output=True,
+            timeout=30,
+        )
+    if proof == "stale":
+        delegate._write_state_atomic(path, {**record, "run_nonce": "new"})
+    out = delegate._settle_worktree_reap(
+        worktree,
+        created_by_this_dispatch=True,
+        settling_task_id="rescue-test",
+        task_record=record,
+    )
+    assert out["action"] == ("removed" if proof in {"base", "remote"} else "skipped"), out
+    assert worktree.exists() == (proof not in {"base", "remote"})
+
+
+def test_settle_pre_spawn_review_refusal_removes_recordless_reservation(tmp_tasks_dir, tmp_path, monkeypatch):
+    _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="review-refusal")
+    assert not delegate._state_path("review-refusal").exists()
+    out = delegate._settle_worktree_reap(
+        worktree,
+        created_by_this_dispatch=True,
+        settling_task_id="review-refusal",
+    )
+    assert out["action"] == "removed", out
     assert not worktree.exists()
 
 
@@ -12972,6 +13673,8 @@ def test_active_claim_scan_matches_json_escaped_non_ascii_worktree_name(tmp_task
 
 def test_worktree_prep_failure_records_resolved_absolute_worktree_path(tmp_path, monkeypatch, tmp_tasks_dir):
     """#8610: a relative ``--worktree`` is recorded as the resolved absolute path on prep failure too."""
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    _fetch_fixture_origin_main(tmp_path)
     _tmp_dispatch_repo_root(tmp_path, monkeypatch)
     monkeypatch.setattr(delegate, "_resolve_dirty_primary_checkout_error", lambda *, mode: None)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda *a, **k: "a" * 40)
@@ -12984,6 +13687,7 @@ def test_worktree_prep_failure_records_resolved_absolute_worktree_path(tmp_path,
         agent="agy",
         # #9275: agy without a Ukrainian classification is the bounded fallback.
         research_task_family="ukrainian-authoring",
+        owned_path=list(_UKRAINIAN_OWNED_PATHS),
         task_id="task-8610-relative",
         branch=None,
         worktree=".worktrees/dispatch/agy/task-8610-relative/",
@@ -13037,7 +13741,7 @@ def test_active_legacy_claim_through_symlink_alias_blocks_reap(tmp_tasks_dir, tm
         (b'{"status": ["done"]}', True),
         (b'{"status": "d\\u006fne"}', True),
         (b'{"status": "done_later"}', True),
-        (b'{"status": "reaped"}', False),
+        (b'{"status": "reaped"}', True),
     ],
 )
 def test_claim_prefilter_keeps_active_and_statusless_records(raw, candidate):
@@ -13120,10 +13824,35 @@ def _spawn_passthrough_popen(monkeypatch, on_worker_spawn):
 
 
 def _dispatch_from_fixture_primary(primary: Path, monkeypatch) -> None:
-    """Make ``cmd_dispatch`` accept the fixture primary: invoked from it, clean apart from worktrees."""
+    """Make ``cmd_dispatch`` accept the fixture primary: invoked from it, clean apart from worktrees,
+    with a fetched ``origin/main``."""
     with (primary / ".git" / "info" / "exclude").open("a", encoding="utf-8") as exclude:
         exclude.write(".worktrees/\n")
+    _fetch_fixture_origin_main(primary)
     monkeypatch.chdir(primary)
+
+
+def _fetch_fixture_origin_main(root: Path) -> None:
+    """Point ``origin/main`` at the fixture's HEAD, committing an empty base first if it has none.
+
+    Write-dispatch review admission reads the branch's authors from
+    ``origin/main..HEAD`` and refuses when ``origin/main`` is unresolvable (#9739).
+    """
+    env = delegate._sanitized_git_env()
+
+    def git(*args: str) -> subprocess.CompletedProcess:
+        return subprocess.run(
+            ["git", "-C", str(root), *args], capture_output=True, text=True, env=env, check=False, timeout=30
+        )
+
+    if git("rev-parse", "--verify", "--quiet", "HEAD").returncode:
+        for args in (
+            ("config", "user.email", "test@example.com"),
+            ("config", "user.name", "Test"),
+            ("commit", "-q", "--allow-empty", "--no-gpg-sign", "-m", "base"),
+        ):
+            assert git(*args).returncode == 0
+    assert git("update-ref", "refs/remotes/origin/main", "HEAD").returncode == 0
 
 
 def test_worktree_lock_files_are_private_and_persist(tmp_path, _fixture_worktree_lock_dir):
@@ -13347,12 +14076,103 @@ def test_dispatch_waits_for_settle_then_follows_missing_worktree_path(tmp_tasks_
     assert worker_spawns == [True]
 
 
+@pytest.mark.parametrize("change", ["unchanged", "moved", "unobservable", "vanished", "vanished-then-refused"])
+def test_authoring_recheck_readmits_a_vanished_checkout_and_refuses_a_moved_one(tmp_path, monkeypatch, change):
+    """#9739 A3/A7 with #8610: a checkout reaped during the lock wait is admitted again as the fresh worktree dispatch
+    will create; a checkout still present at another head stays refused; an observation that cannot complete is
+    unknown authorship, never a proven move."""
+    primary, checkout = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    admitted_head = delegate._resolve_sha(checkout)
+    base = delegate._ReviewBase(delegate._resolve_sha(primary, "origin/main"), "main", None, "default-branch")
+    frozen = {
+        "branch": None,
+        "pinned_head": None,
+        "repository": "learn-ukrainian/learn-ukrainian.github.io",
+        "remote": "origin",
+        "pr": None,
+        "review_base": base,
+        "default_branch": "main",
+    }
+    admission = delegate._AuthoringAdmission(
+        kind="existing-worktree",
+        head_sha=admitted_head,
+        checkout=checkout,
+        record={},
+        head_branch="codex/task-1",
+        **frozen,
+    )
+    fresh = delegate._AuthoringAdmission(
+        kind="new-branch",
+        head_sha=base.sha,
+        checkout=None,
+        record={"target": "new-branch"},
+        head_branch="codex/task-1",
+        creation_ref="main",
+        creation_sha=base.sha,
+        **frozen,
+    )
+    readmissions: list[str] = []
+
+    def readmit():
+        readmissions.append(change)
+        if change == "vanished-then-refused":
+            raise delegate._AuthoringReviewRefused(delegate.AUTHORING_REVIEW_NO_ROUTE, "no reviewer remains.", {})
+        return fresh
+
+    if change == "moved":
+        subprocess.run(
+            ["git", "-C", str(checkout), "commit", "-q", "--allow-empty", "--no-gpg-sign", "-m", "another writer"],
+            check=True,
+            capture_output=True,
+            env=delegate._sanitized_git_env(),
+            timeout=30,
+        )
+    elif change == "unobservable":
+
+        def unavailable(_remote):
+            raise delegate._AuthoringObservationUnknown("the default-branch lookup timed out")
+
+        monkeypatch.setattr(delegate, "_authoring_default_branch", unavailable)
+    elif change.startswith("vanished"):
+        subprocess.run(
+            ["git", "-C", str(primary), "worktree", "remove", "--force", str(checkout)],
+            check=True,
+            capture_output=True,
+            env=delegate._sanitized_git_env(),
+            timeout=30,
+        )
+
+    if change == "vanished-then-refused":
+        with pytest.raises(delegate._AuthoringReviewRefused) as refused:
+            delegate._authoring_recheck_under_lock(admission, readmit=readmit)
+        assert refused.value.code == delegate.AUTHORING_REVIEW_NO_ROUTE
+        assert readmissions == [change]
+        return
+    current, moved = delegate._authoring_recheck_under_lock(admission, readmit=readmit)
+
+    if change == "unchanged":
+        assert (current, moved, readmissions) == (admission, None, [])
+    elif change == "moved":
+        assert current is admission and readmissions == []
+        assert moved is not None and moved.code == delegate.AUTHORING_REVIEW_TARGET_MOVED
+        assert f"admitted {admitted_head[:12]}, now {delegate._resolve_sha(checkout)[:12]}" in moved.render()
+        assert moved.record["binding"] == "head"
+    elif change == "unobservable":
+        assert current is admission and moved is not None
+        assert moved.code == delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN
+        assert "the default-branch lookup timed out on re-checking the admitted target" in moved.detail
+    else:
+        assert (current, moved, readmissions) == (fresh, None, [change])
+
+
 def test_dispatch_fails_before_spawning_when_the_worktree_lock_is_busy(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     """#8610 r2 (c): a lock timeout fails dispatch with a clear error; nothing is attached or spawned."""
     task_id = "impl-lock-busy"
     primary = tmp_path / "primary"
     primary.mkdir()
     _init_git_repo_for_test(primary, monkeypatch)
+    _fetch_fixture_origin_main(primary)
     worktree = _tmp_dispatch_repo_root(primary, monkeypatch) / ".worktrees" / "dispatch" / "agy" / task_id
     monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DEFAULT_TIMEOUT_S", 0.2)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda *a, **k: "a" * 40)
@@ -13366,6 +14186,7 @@ def test_dispatch_fails_before_spawning_when_the_worktree_lock_is_busy(tmp_tasks
             _write_args(
                 agent="agy",
                 research_task_family="ukrainian-authoring",
+                owned_path=list(_UKRAINIAN_OWNED_PATHS),
                 task_id=task_id,
                 worktree=str(worktree),
                 mode="workspace-write",
@@ -13397,6 +14218,7 @@ def test_cwd_dispatch_fails_when_the_worktree_lock_is_busy(tmp_tasks_dir, tmp_pa
             _write_args(
                 agent="agy",
                 research_task_family="ukrainian-authoring",
+                owned_path=list(_UKRAINIAN_OWNED_PATHS),
                 task_id="impl-cwd-busy",
                 cwd=str(worktree),
                 mode="workspace-write",
@@ -13510,6 +14332,7 @@ def test_cwd_dispatch_fails_when_the_worktree_is_removed_while_it_waits(tmp_task
         _write_args(
             agent="agy",
             research_task_family="ukrainian-authoring",
+            owned_path=list(_UKRAINIAN_OWNED_PATHS),
             task_id="impl-cwd-late",
             cwd=str(worktree),
             mode="workspace-write",
@@ -13536,16 +14359,18 @@ def test_dispatch_locks_an_existing_checkout_before_base_resolution_can_rebase_i
     primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
     _dispatch_from_fixture_primary(primary, monkeypatch)
     observed: list[tuple[str, bool]] = []
+    # The checkout is up to date: its head is the one write-dispatch admission read (#9739 A3).
+    head = delegate._resolve_sha(worktree)
 
     def spy_base(**kwargs):
         assert kwargs["allow_rebase"] is not dry_run
         observed.append(("base", _worktree_lock_is_free(delegate._normalize_worktree_path(kwargs["raw_path"]))))
-        return "a" * 40
+        return head
 
     def spy_ensure(**kwargs):
         path = delegate._normalize_worktree_path(kwargs["raw_path"])
         observed.append(("ensure", _worktree_lock_is_free(path)))
-        return path, f"cursor/{task_id}", {"reused": True, "base_sha": "a" * 40, "layout": "dispatch"}
+        return path, f"cursor/{task_id}", {"reused": True, "base_sha": head, "layout": "dispatch"}
 
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", spy_base)
     monkeypatch.setattr(delegate, "_ensure_worktree", spy_ensure)
@@ -16821,7 +17646,7 @@ def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
 
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "cursor" / "task-7236-held"
     branch = "cursor/feature-7236"
-    calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha=_STUB_BASE_SHA)
 
     def fake_run(cmd, **kwargs):
         calls.append(list(cmd))
@@ -16833,11 +17658,13 @@ def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
                 "",
             )
         if cmd[:2] == ["git", "rev-parse"] and cmd[-1] == f"refs/heads/{branch}":
-            return subprocess.CompletedProcess(cmd, 0, "same-sha", "")
+            return subprocess.CompletedProcess(cmd, 0, _STUB_BASE_SHA, "")
         calls.pop()
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # The branch as the canonical remote serves it, observed by review admission (#9739 A7).
+    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, _branch: _STUB_BASE_SHA)
     monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: None)
     monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
     _patch_worker_popen(monkeypatch)
@@ -16858,6 +17685,7 @@ def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
         agent="agy",
         # #9275: agy without a Ukrainian classification is the bounded fallback.
         research_task_family="ukrainian-authoring",
+        owned_path=list(_UKRAINIAN_OWNED_PATHS),
         task_id="task-7236-refused",
         branch=branch,
         worktree="auto",
@@ -16883,33 +17711,57 @@ def test_cmd_dispatch_refusal_on_base_resolution_writes_terminal_task_record(
     monkeypatch,
     tmp_tasks_dir,
 ):
-    """#7236: base resolution refusal writes a failed task record with the reason."""
-    args = _write_args(
-        agent="agy",
-        # #9275: agy without a Ukrainian classification is the bounded fallback.
-        research_task_family="ukrainian-authoring",
-        task_id="task-7236-bad-base",
-        branch=None,
-        worktree="auto",
-        base="non-existent-base-branch",
-        mode="workspace-write",
-    )
+    """#7236: base resolution refusal writes a failed task record with the reason.
+
+    An attached branch is resolved again under the worktree lock; a fetch failing
+    there is a worktree-preparation failure. A new branch's start commit is
+    resolved by review admission instead (#9739 A7), whose refusal writes no
+    record (A6).
+    """
+    main, _dispatch_wt = _init_repo_with_worktree(tmp_path)
+    head = subprocess.run(
+        ["git", "-C", str(main), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=delegate._sanitized_git_env(),
+        timeout=30,
+    ).stdout.strip()
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+    served = {"agy/feature-7236": head}
+    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda _remote, branch: served.get(branch))
 
     def fail_base_sha(*a, **k):
-        raise RuntimeError("could not fetch origin/non-existent-base-branch")
+        raise RuntimeError("could not fetch existing branch 'agy/feature-7236'")
 
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", fail_base_sha)
 
-    rc = delegate.cmd_dispatch(args)
+    def dispatch(task_id: str, **target) -> int:
+        return delegate.cmd_dispatch(
+            _write_args(
+                agent="agy",
+                # #9275: agy without a Ukrainian classification is the bounded fallback.
+                research_task_family="ukrainian-authoring",
+                owned_path=list(_UKRAINIAN_OWNED_PATHS),
+                task_id=task_id,
+                worktree="auto",
+                mode="workspace-write",
+                **target,
+            )
+        )
 
-    assert rc == 1
+    assert dispatch("task-7236-bad-base", branch="agy/feature-7236", base=None) == 1
     state_file = delegate._state_path("task-7236-bad-base")
     assert state_file.exists()
     state = json.loads(state_file.read_text(encoding="utf-8"))
     assert state["status"] == "failed"
     assert state["returncode_reason"] == "worktree preparation failed"
-    assert "could not fetch origin/non-existent-base-branch" in (state["last_error"] or "")
+    assert "could not fetch existing branch 'agy/feature-7236'" in (state["last_error"] or "")
     assert state["finished_at"] is not None
+
+    assert dispatch("task-7236-unserved-base", branch=None, base="non-existent-base-branch") == 2
+    assert not delegate._state_path("task-7236-unserved-base").exists()
 
 
 # --- Issue #7242: Branch-holder release hardening ---

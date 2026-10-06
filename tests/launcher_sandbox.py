@@ -150,7 +150,10 @@ def _copy_bytecode(source: Path, destination: Path) -> None:
         return
     target = Path(importlib.util.cache_from_source(destination))
     target.parent.mkdir(parents=True, exist_ok=True)
+    if target.exists():
+        target.chmod(target.stat().st_mode | 0o200)
     shutil.copy2(cached, target)
+    target.chmod(target.stat().st_mode | 0o200)
 
 
 def copy_slot_registry(root: Path) -> None:
@@ -165,5 +168,7 @@ def copy_slot_registry(root: Path) -> None:
             continue
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / relative, destination)
+        # A read-only canonical mode must not make the sandbox copy unwritable.
+        destination.chmod(destination.stat().st_mode | 0o200)
         if relative.suffix == ".py":
             _copy_bytecode(_REPO_ROOT / relative, destination)

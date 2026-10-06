@@ -769,12 +769,7 @@ def _workflow_names_by_suite(
     for run in runs:
         suite_id = run.get("check_suite_id")
         name = run.get("name")
-        if (
-            isinstance(suite_id, int)
-            and not isinstance(suite_id, bool)
-            and isinstance(name, str)
-            and name.strip()
-        ):
+        if isinstance(suite_id, int) and not isinstance(suite_id, bool) and isinstance(name, str) and name.strip():
             names[suite_id] = name.strip()
     return names
 
@@ -825,7 +820,7 @@ def _detail_one(
             deadline=deadline,
             timeout=timeout,
         )
-    return project_pull_request(
+    projected = project_pull_request(
         raw,
         pull=pull.body,
         check_runs=runs,
@@ -837,6 +832,11 @@ def _detail_one(
         comments_complete=comments_complete,
         workflow_names=workflow_names,
     )
+    complete = checks_complete and reviews_complete and comments_complete and workflow_names is not None
+    projected["detailReadComplete"] = complete
+    if not complete:
+        projected.update(statusCheckRollup=None, reviewDecision=None, mergeStateStatus=None)
+    return projected
 
 
 def list_open_prs(
@@ -864,14 +864,30 @@ def list_open_prs(
     workers = max(1, min(_DETAIL_WORKERS, len(raw)))
 
     def _one(item: dict[str, Any]) -> dict[str, Any]:
-        return _detail_one(
-            store,
-            repo,
-            item,
-            deadline=deadline,
-            timeout=timeout,
-            include_comments=include_comments,
-        )
+        try:
+            return _detail_one(
+                store,
+                repo,
+                item,
+                deadline=deadline,
+                timeout=timeout,
+                include_comments=include_comments,
+            )
+        except (GitHubRestError, GitHubRestTimeout):
+            # List membership is known even when this pull's details are not.
+            projected = project_pull_request(
+                item,
+                pull=None,
+                check_runs=[],
+                statuses=[],
+                reviews=[],
+                comments=None,
+                reviews_complete=False,
+                checks_complete=False,
+                comments_complete=False,
+            )
+            projected["detailReadComplete"] = False
+            return projected
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
         return RestPage(list(pool.map(_one, raw)), truncated=truncated)

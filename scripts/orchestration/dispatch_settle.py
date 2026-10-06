@@ -192,7 +192,7 @@ def settle_missing_worktree(
     if worktree is None or worktree.is_dir() or _pid_alive(pid):
         return actions
 
-    if status in TERMINAL_TASK_STATUSES:
+    if status in TERMINAL_TASK_STATUSES or status == "needs_finalize":
         return actions
 
     task_path = task_dir / f"{task_id}.json"

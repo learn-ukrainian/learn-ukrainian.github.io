@@ -1,5 +1,6 @@
 """Ignored output inventory/copy boundaries, using only temporary repositories."""
 
+import hashlib
 import json
 import os
 import subprocess
@@ -9,10 +10,233 @@ from pathlib import Path
 import pytest
 
 from scripts.fleet import ignored_task_output as output
+from scripts.fleet import regenerable_output as patterns
 from tests.orchestration import test_worktree_artifacts as fixtures
 
 checkout = fixtures.checkout
 artifact = fixtures.artifact
+
+
+def tracked_lockfile(repo, directory):
+    lock = repo / directory / "package-lock.json"
+    lock.parent.mkdir(parents=True, exist_ok=True)
+    lock.write_text('{"lockfileVersion": 3}')
+    subprocess.run(["git", "add", str(lock.relative_to(repo))], cwd=repo, check=True, timeout=30)
+    return lock
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "node_modules/package/index.js",
+        "site/node_modules/package/index.js",
+        "nested/app/node_modules/package/index.js",
+        *[f"nested/{cache}/state.bin" for cache in sorted(patterns.REGENERABLE_CACHE_DIRECTORIES)],
+    ],
+)
+def test_regenerable_patterns_skip_fingerprinting_and_cap(checkout, monkeypatch, name):
+    repo, primary, _ = checkout
+    (repo / ".gitignore").write_text("node_modules/\n__pycache__/\n.*_cache/\n")
+    if "node_modules" in Path(name).parts:
+        parent = name.split("node_modules")[0]
+        tracked_lockfile(repo, parent)
+    artifact(checkout, name, b"0123456789")
+    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
+    monkeypatch.setattr(output.artifacts, "_fingerprint", lambda _path: pytest.fail("regenerable bytes read"))
+    assert preserve(checkout, {"response": f"Generated `{name}`."}) == (True, "", None)
+    assert not (primary / "batch_state/preserved").exists()
+
+
+def test_mixed_regenerable_paths_preserve_only_output(checkout, monkeypatch):
+    repo, primary, _ = checkout
+    (repo / ".gitignore").write_text("ignored/\nnode_modules/\n__pycache__/\n")
+    tracked_lockfile(repo, "site")
+    artifact(checkout, "site/node_modules/package/index.js", b"x" * 100)
+    artifact(checkout, "__pycache__/module.pyc", b"x" * 100)
+    artifact(checkout, "ignored/answer.txt", b"answer")
+    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 6)
+    ok, reason, receipt = preserve(checkout)
+    assert ok and not reason and receipt["bytes"] == 6
+    assert [entry["path"] for entry in receipt["paths"]] == ["ignored/answer.txt"]
+    assert (primary / receipt["location"] / "ignored/answer.txt").read_bytes() == b"answer"
+
+
+@pytest.mark.parametrize("payload", [b'{"entries": []}', b'{"entries": ["promoted"]}', b"arbitrary bytes"])
+@pytest.mark.parametrize(
+    "pointer_kind",
+    ["clean", "modified", "staged", "staged-restored", "untracked", "absent", "symlink", "invalid-json"],
+)
+@pytest.mark.parametrize("named", [False, True], ids=["unnamed", "named-in-report"])
+def test_lexicon_manifest_is_counted_and_preserved_as_ignored_output(checkout, monkeypatch, payload, pointer_kind, named):
+    repo, primary, _ = checkout
+    name = "site/src/data/lexicon-manifest.json"
+    pointer_name = "site/src/data/lexicon-manifest.pointer.json"
+    manifest = artifact(checkout, name, payload)
+    (repo / ".gitignore").write_text(name + "\n")
+    pointer = artifact(checkout, pointer_name, json.dumps({"json_sha256": hashlib.sha256(payload).hexdigest()}).encode())
+    env = output.artifacts._safe_git_env()
+
+    def git(*args):
+        subprocess.run(["git", *args], cwd=repo, env=env, check=True, capture_output=True, timeout=30)
+
+    git("add", "--", pointer_name, ".gitignore")
+    git("-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-m", "Fixture pointer")
+    if pointer_kind in {"modified", "staged", "staged-restored"}:
+        original = pointer.read_bytes()
+        pointer.write_bytes(original + b"\n")
+        if pointer_kind in {"staged", "staged-restored"}:
+            git("add", "--", pointer_name)
+        if pointer_kind == "staged-restored":
+            pointer.write_bytes(original)
+    elif pointer_kind == "untracked":
+        git("rm", "--cached", "--", pointer_name)
+    elif pointer_kind == "absent":
+        pointer.unlink()
+    elif pointer_kind == "symlink":
+        target = repo.parent / "outside-pointer.json"
+        target.write_bytes(pointer.read_bytes())
+        pointer.unlink()
+        pointer.symlink_to(target)
+    elif pointer_kind == "invalid-json":
+        pointer.write_bytes(b"{")
+
+    record = {"response": f"Output `{name}`."} if named else {}
+    assert output._ignored_output_files(repo, primary, record) == [name]
+    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", len(payload) - 1)
+    ok, reason, receipt = preserve(checkout, record)
+    assert not ok and "cap" in reason
+    assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
+    assert receipt["retention_disposition"] == "retained"
+    assert manifest.read_bytes() == payload
+    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", len(payload))
+    ok, reason, receipt = preserve(checkout, record)
+    assert ok and not reason
+    assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
+    assert [entry["path"] for entry in receipt["paths"]] == [name]
+    assert (primary / receipt["location"] / name).read_bytes() == payload
+
+
+@pytest.mark.parametrize("lock_kind", ["absent", "untracked", "symlink", "vanished"])
+def test_dependencies_without_local_tracked_lock_remain_output(checkout, lock_kind):
+    repo, _, _ = checkout
+    (repo / ".gitignore").write_text("node_modules/\n")
+    lock = repo / "package-lock.json"
+    if lock_kind == "untracked":
+        lock.write_text("{}")
+    elif lock_kind == "vanished":
+        tracked_lockfile(repo, "")
+        lock.unlink()
+    elif lock_kind == "symlink":
+        target = repo.parent / "outside-lock.json"
+        target.write_text("{}")
+        lock.symlink_to(target)
+        subprocess.run(["git", "add", "package-lock.json"], cwd=repo, check=True, timeout=30)
+    artifact(checkout, "node_modules/package/only-copy.txt", b"task output")
+    ok, reason, receipt = preserve(checkout)
+    assert ok and not reason
+    assert [entry["path"] for entry in receipt["paths"]] == ["node_modules/package/only-copy.txt"]
+
+
+@pytest.mark.parametrize("name", ["node_modules", "site/node_modules", "site/src/data/lexicon-manifest.json"])
+def test_ignored_symlinks_never_read_outside(checkout, monkeypatch, name):
+    repo, _, _ = checkout
+    (repo / ".gitignore").write_text("node_modules\nsite/src/data/lexicon-manifest.json\n")
+    outside = repo.parent / "outside"
+    outside.mkdir()
+    source = outside / "answer.txt"
+    source.write_bytes(b"unique outside output")
+    link = repo / name
+    link.parent.mkdir(parents=True, exist_ok=True)
+    if "node_modules" in name:
+        tracked_lockfile(repo, link.parent.relative_to(repo))
+    link.symlink_to(source if name == "site/src/data/lexicon-manifest.json" else outside)
+    original_open = Path.open
+
+    def no_outside_read(path, *args, **kwargs):
+        assert not path.is_relative_to(outside), "outside content opened"
+        return original_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", no_outside_read)
+    ok, reason, _ = preserve(checkout)
+    assert not ok and "links outside" in reason
+    assert link.is_symlink() and source.stat().st_size == len(b"unique outside output")
+
+
+def test_regenerable_classifier_keeps_regular_cache_names_and_environment_output(checkout):
+    repo = checkout[0]
+    artifact(checkout, "__pycache__", b"task output")
+    artifact(checkout, ".venv/__pycache__/only-copy.pyc", b"task output")
+    for name in ["__pycache__", ".venv/__pycache__/only-copy.pyc", "../outside", "/outside", ""]:
+        assert not patterns.is_regenerable_ignored_path(name, worktree=repo, tracked=set())
+
+
+@pytest.mark.parametrize("move", ["archive", "redispatch", "staging"])
+@pytest.mark.parametrize("publish_cache", [True, False])
+def test_record_moved_between_listing_and_open_retries_complete_inventory(
+    checkout, monkeypatch, capsys, move, publish_cache
+):
+    repo, primary, tasks = checkout
+    source = tasks / "output-task.json"
+    record = {"task_id": "output-task", "worktree_path": str(repo), "keep_worktree": True}
+    source.write_text(json.dumps(record))
+    if move in {"archive", "staging"}:
+        (tasks / "archive").mkdir()
+        destination = tasks / "archive/output-task.json"
+    else:
+        destination = tasks / "output-task.20261006T020000Z.archived.json"
+    original_read = Path.read_bytes
+    original_glob = Path.glob
+    moved = False
+    staged = tasks / ".output-task.json.moving"
+
+    def finish_staging(path, pattern):
+        # The archive writer publishes after the first failed open, before
+        # the second listing. The missing name must not be silently skipped.
+        if path == tasks and pattern == "*.json" and move == "staging" and staged.exists():
+            staged.replace(destination)
+        return original_glob(path, pattern)
+
+    def race(path):
+        nonlocal moved
+        if path == source and not moved:
+            moved = True
+            source.replace(staged if move == "staging" else destination)
+        return original_read(path)  # The real ENOENT from a stale glob entry.
+
+    monkeypatch.setattr(Path, "read_bytes", race)
+    monkeypatch.setattr(Path, "glob", finish_staging)
+    assert output.resolve_worktree_record(repo, tasks, repo_root=primary, publish_cache=publish_cache) == (
+        destination, record
+    )
+    assert output._identity_cache_path(tasks).exists() is publish_cache
+    assert "retrying complete inventory once" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("failure", ["vanished", "permission", "corrupt"])
+def test_unreadable_inventory_still_fails_closed_after_bounded_retry(checkout, monkeypatch, capsys, failure):
+    repo, primary, tasks = checkout
+    source = tasks / "output-task.json"
+    source.write_text(json.dumps({"worktree_path": str(repo), "keep_worktree": True}))
+    original_read = Path.read_bytes
+    reads = 0
+
+    def unreadable(path):
+        nonlocal reads
+        if path == source:
+            reads += 1
+            if failure == "vanished":
+                source.unlink()
+            elif failure == "permission":
+                raise PermissionError("inventory denied")
+            else:
+                return b'{"keep_worktree": true,'
+        return original_read(path)
+
+    monkeypatch.setattr(Path, "read_bytes", unreadable)
+    with pytest.raises(ValueError, match="task identity inventory unreadable"):
+        output.resolve_worktree_record(repo, tasks, repo_root=primary)
+    assert reads == (1 if failure == "vanished" else 2)
+    assert capsys.readouterr().err.count("retrying complete inventory once") == 1
 
 
 def preserve(checkout, record=None, task_id="output-task"):
@@ -220,6 +444,286 @@ def test_record_redispatched_during_copy_refuses_removal_without_updating_new_re
     ok, _, receipt = preserve(checkout, {"status": "done"})
     assert not ok and receipt["count"] == 1 and receipt["retention_disposition"] == "retained"
     assert json.loads((tasks / "output-task.json").read_text()) == replacement
+
+
+@pytest.mark.parametrize(
+    "variant",
+    [
+        "same_task",
+        "different_task",
+        "missing_id",
+        "missing_creator",
+        "two_creators",
+        "not_force_new",
+        "wrong_prefix",
+        "extra_prefix",
+        "keep_archive",
+        "keep_current",
+        "keep_both",
+    ],
+)
+def test_force_new_reuse_requires_one_same_task_archived_creator(checkout, variant):
+    repo, primary, tasks = checkout
+    source = artifact(checkout, "ignored/report.txt", b"redispatched output")
+    current = {"task_id": "output-task", "worktree_path": str(repo), "worktree_reused": True, "status": "done"}
+    creator = dict(current, worktree_reused=False, status="cancelled")
+    archive_name = "output-task.20261005T120000Z.archived.json"
+    if variant == "different_task":
+        creator["task_id"] = "other-task"
+        archive_name = "other-task.20261005T120000Z.archived.json"
+    elif variant == "missing_id":
+        creator.pop("task_id")
+    elif variant == "missing_creator":
+        creator["worktree_reused"] = True
+    elif variant == "not_force_new":
+        archive_name = "output-task.old.json"
+    elif variant == "wrong_prefix":
+        archive_name = "other-task.20261005T120000Z.archived.json"
+    elif variant == "extra_prefix":
+        archive_name = "output-task.extra.20261005T120000Z.archived.json"
+    if variant in {"keep_archive", "keep_both"}:
+        creator["keep_worktree"] = True
+    if variant in {"keep_current", "keep_both"}:
+        current["keep_worktree"] = True
+    canonical = tasks / "output-task.json"
+    canonical.write_text(json.dumps(current))
+    archive = tasks / archive_name
+    archive.write_text(json.dumps(creator))
+    if variant == "two_creators":
+        (tasks / "output-task.20261005T130000Z.archived.json").write_text(json.dumps(creator))
+    for _ in range(2):  # Exercise both fresh and content-verified cached lookups.
+        if variant == "keep_both":
+            with pytest.raises(ValueError, match="retention intent"):
+                output.resolve_worktree_record(repo, tasks, repo_root=primary)
+            continue
+        path, record = output.resolve_worktree_record(repo, tasks, repo_root=primary)
+        if variant == "same_task":
+            assert path == canonical and record == current
+    ok, reason, receipt = output.preserve_worktree_artifacts(repo, primary=primary, task_id=None, tasks_dir=tasks)
+    assert source.read_bytes() == b"redispatched output"
+    if variant == "same_task":
+        assert ok and not reason and receipt["task_id"] == "output-task"
+        assert output.verify_retrieval(primary, receipt) == receipt["content_sha256"]
+        assert json.loads(canonical.read_text())["preserved_artifacts"] == receipt
+        assert json.loads(archive.read_text()) == creator
+    else:
+        assert not ok and "refusing worktree removal" in reason
+
+
+@pytest.mark.parametrize("stage", ["git_inventory", "after_lstat", "fingerprint", "copy"])
+def test_vanished_output_is_rechecked_and_recorded_absent(checkout, monkeypatch, stage):
+    _, primary, tasks = checkout
+    missing = artifact(checkout, "ignored/vanished.txt", b"transient")
+    survivor = artifact(checkout, "ignored/report.txt", b"retain these bytes")
+    if stage == "git_inventory":
+        original = output.artifacts._git_paths
+
+        def stale_inventory(*args):
+            names = original(*args)
+            if "ignored/vanished.txt" in names:
+                missing.unlink(missing_ok=True)
+            return names
+
+        monkeypatch.setattr(output.artifacts, "_git_paths", stale_inventory)
+    elif stage == "after_lstat":
+        original = Path.resolve
+
+        def vanish_after_lstat(path, *args, **kwargs):
+            if path == missing:
+                missing.unlink(missing_ok=True)
+            return original(path, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "resolve", vanish_after_lstat)
+    else:
+        name = "_fingerprint" if stage == "fingerprint" else "_copy_verified"
+        original = getattr(output.artifacts, name)
+
+        def disappear(src, *args):
+            if src == missing:
+                missing.unlink(missing_ok=True)
+            return original(src, *args)
+
+        monkeypatch.setattr(output.artifacts, name, disappear)
+    ok, reason, receipt = preserve(checkout, {"status": "done"})
+    assert ok and not reason
+    assert receipt["count"] == 1 and receipt["bytes"] == len(survivor.read_bytes())
+    assert receipt["absent_paths"] == [{"path": "ignored/vanished.txt", "proof": "lstat_enoent"}]
+    assert (primary / receipt["location"] / "ignored/report.txt").read_bytes() == survivor.read_bytes()
+    assert output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+    assert json.loads((tasks / "output-task.json").read_text())["preserved_artifacts"] == receipt
+
+
+def test_vanished_pids_directory_after_git_inventory(checkout, monkeypatch):
+    repo, _, _ = checkout
+    (repo / ".gitignore").write_text(".pids/\nignored/\n")
+    pids = repo / ".pids"
+    pids.mkdir()
+    original = output.artifacts._git_paths
+
+    def stale_inventory(*args):
+        names = original(*args)
+        if "--ignored" in args:
+            pids.rmdir()
+            names.append(".pids/")
+        return names
+
+    # Only the first Git inventory is stale; the final inventory is fresh.
+    calls = 0
+
+    def once(*args):
+        nonlocal calls
+        if "--ignored" in args and calls == 0:
+            calls += 1
+            return stale_inventory(*args)
+        return original(*args)
+
+    monkeypatch.setattr(output.artifacts, "_git_paths", once)
+    ok, reason, receipt = preserve(checkout, {"status": "done"})
+    assert ok and not reason and receipt["count"] == 0
+    assert receipt["absent_paths"] == [{"path": ".pids/", "proof": "lstat_enoent"}]
+
+
+@pytest.mark.parametrize("failure", ["changed_before_copy", "false_enoent", "reappeared", "permission"])
+def test_disappearance_neighbours_refuse_removal(checkout, monkeypatch, failure):
+    source = artifact(checkout, "ignored/report.txt", b"original")
+    original = output.artifacts._copy_verified
+
+    def copy(src, dst):
+        if failure == "changed_before_copy":
+            source.write_bytes(b"modified")
+        elif failure == "false_enoent":
+            raise FileNotFoundError("destination vanished")
+        elif failure == "permission":
+            raise PermissionError("copy denied")
+        else:
+            source.unlink()
+            raise FileNotFoundError("source vanished")
+        original(src, dst)
+
+    monkeypatch.setattr(output.artifacts, "_copy_verified", copy)
+    if failure == "reappeared":
+        inventory = output._ignored_output_files
+        calls = 0
+
+        def reappear(*args, **kwargs):
+            nonlocal calls
+            calls += 1
+            if calls == 2:
+                source.write_bytes(b"new output")
+            return inventory(*args, **kwargs)
+
+        monkeypatch.setattr(output, "_ignored_output_files", reappear)
+    ok, reason, receipt = preserve(checkout, {"status": "done"})
+    assert not ok and "refusing worktree removal" in reason
+    assert receipt["retention_disposition"] == "retained"
+    assert source.exists()
+
+
+def test_dangling_link_is_not_absence_proof(checkout):
+    repo, _, _ = checkout
+    (repo / ".gitignore").write_text(".pids\n")
+    (repo / ".pids").symlink_to(repo.parent / "missing-outside-target")
+    ok, reason, _ = preserve(checkout, {"status": "done"})
+    assert not ok and "changed during preservation" in reason
+    assert (repo / ".pids").is_symlink()
+
+
+def test_internal_release_link_to_vanished_pids_records_target_absence(checkout):
+    repo, primary, _ = checkout
+    (repo / ".gitignore").write_text(".runtime/\nignored/\n")
+    release = repo / ".runtime/api/releases/test-release"
+    release.mkdir(parents=True)
+    link = release / ".pids"
+    link.symlink_to(repo / ".pids")
+    source = artifact(checkout, "ignored/report.txt", b"preserve this")
+    ok, reason, receipt = preserve(checkout, {"status": "done"})
+    assert ok and not reason and receipt["count"] == 1
+    assert receipt["absent_paths"] == [{"path": ".pids", "proof": "lstat_enoent"}]
+    assert link.is_symlink() and source.exists()
+    assert output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+
+
+def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout):
+    repo, primary, tasks = checkout
+    source = artifact(checkout, "ignored/report.txt")
+    creator = {"task_id": "output-task", "worktree_path": str(repo), "worktree_reused": False, "status": "done"}
+    canonical = tasks / "output-task.json"
+    canonical.write_text(json.dumps(creator))
+    reuser = dict(creator, task_id="other-task", worktree_reused=True)
+    reused_record = tasks / "other-task.json"
+    reused_record.write_text(json.dumps(reuser))
+    for _ in range(2):  # Exercise both fresh and content-verified cached lookups.
+        assert output.resolve_worktree_record(repo, tasks, repo_root=primary) == (canonical, creator)
+    ok, reason, receipt = output.preserve_worktree_artifacts(repo, primary=primary, tasks_dir=tasks, task_id=None)
+    assert ok and not reason and receipt["task_id"] == "output-task"
+    assert (primary / receipt["location"] / "ignored/report.txt").read_bytes() == source.read_bytes()
+    assert output.verify_retrieval(primary, receipt) == receipt["content_sha256"]
+    assert json.loads(canonical.read_text())["preserved_artifacts"] == receipt
+    assert json.loads(reused_record.read_text()) == reuser
+
+
+@pytest.mark.parametrize("case", ["force_new", "vanished_copy", "internal_link", "changed_copy"])
+def test_normal_removal_preserves_or_proves_absence_under_existing_lock(tmp_path, monkeypatch, case):
+    from scripts.orchestration import worktree_claims as claims
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary, _record
+
+    primary = _primary(tmp_path)
+    tree = _linked(primary, "codex/output-task")
+    (primary / ".git/info/exclude").write_text("ignored/\n.runtime/\n.pids/\n")
+    source = tree / "ignored/report.txt"
+    source.parent.mkdir()
+    source.write_bytes(b"preserve me")
+    _record(primary, "output-task", status="done", worktree_path=str(tree), worktree_reused=True)
+    if case == "force_new":
+        archive = primary / "batch_state/tasks/output-task.20261005T120000Z.archived.json"
+        archive.write_text(
+            json.dumps(
+                {"task_id": "output-task", "status": "cancelled", "worktree_path": str(tree), "worktree_reused": False}
+            )
+        )
+    elif case == "internal_link":
+        release = tree / ".runtime/api/releases/test-release"
+        release.mkdir(parents=True)
+        (release / ".pids").symlink_to(tree / ".pids")
+    else:
+        transient = tree / "ignored/transient.txt"
+        transient.write_bytes(b"transient")
+        original = output.artifacts._copy_verified
+
+        def copy(src, dst):
+            if src == transient:
+                if case == "vanished_copy":
+                    transient.unlink()
+                else:
+                    transient.write_bytes(b"modified")
+            original(src, dst)
+
+        monkeypatch.setattr(output.artifacts, "_copy_verified", copy)
+    record_absence = output._record_absence
+
+    def locked_absence(*args):
+        with pytest.raises(claims.WorktreeLockReentry):
+            with claims.worktree_lock(tree, lock_dir=claims.repository_lock_dir(primary)):
+                pytest.fail("absence proof was taken outside the existing worktree lock")
+        record_absence(*args)
+
+    monkeypatch.setattr(output, "_record_absence", locked_absence)
+    result = claims.remove_unclaimed_worktree(
+        tree, repo_root=primary, reason="test #9785", owner_task_id=None, force=True
+    )
+    if case == "changed_copy":
+        assert result.action == "skipped" and tree.exists()
+        assert "changed during preservation" in result.reason
+        return
+    assert result.action == "removed" and not tree.exists()
+    record = json.loads((primary / "batch_state/tasks/output-task.json").read_text())
+    receipt = record["preserved_artifacts"]
+    assert (primary / receipt["location"] / "ignored/report.txt").read_bytes() == b"preserve me"
+    assert output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+    if case == "vanished_copy":
+        assert receipt["absent_paths"] == [{"path": "ignored/transient.txt", "proof": "lstat_enoent"}]
+    elif case == "internal_link":
+        assert receipt["absent_paths"] == [{"path": ".pids", "proof": "lstat_enoent"}]
 
 
 @pytest.mark.parametrize("change", ["corrupt", "extra", "symlink", "other_worktree", "invalid_manifest"])
