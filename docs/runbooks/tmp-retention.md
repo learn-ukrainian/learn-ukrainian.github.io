@@ -5,6 +5,11 @@ agent scratch from the system temp area that no task owns and that has gone
 quiet. It also prints a report of stale `batch_state/` directories. The report
 never deletes anything.
 
+Removal is recoverable (#9887): the sweep moves an entry into a quarantine,
+records it in an append-only ledger first, and deletes it only after 7 days,
+when the same checks still pass. Until then `tmp_sweep restore <ledger-id>`
+puts it back. See [Deletion ledger and quarantine](#deletion-ledger-and-quarantine).
+
 ## What runs
 
 `learn-ukrainian-tmp-sweep.timer` runs once a day at 05:30 UTC, with up to
@@ -13,7 +18,9 @@ never deletes anything.
 
 1. `scripts.hygiene.batch_state_retention`: the read-only staleness report.
 2. `scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary`: the
-   sweep. It logs counts and byte totals only, never entry names.
+   sweep. It purges expired quarantine entries, then quarantines newly proven
+   ones. It logs counts and byte totals only, never entry names; the ledger
+   holds the names.
 
 The service has no network: `RestrictAddressFamilies=AF_UNIX` refuses every
 IPv4 and IPv6 socket. `PrivateNetwork=yes` is not used, because the user
@@ -90,7 +97,7 @@ that an unsettled task references by path is kept as `task_reference`.
 
 - The sweep never follows symlinks and never crosses a device or mount point.
   It refuses a temp root outside `/tmp`, `/private/tmp` or `/var/tmp`.
-- Removal goes through the common reaper,
+- Final deletion, at purge time, goes through the common reaper,
   `retention_engine.reap_attributed_temp`. That function removes directories
   with the descriptor-safe task-scratch remover. It unlinks files by
   descriptor after it rechecks device/inode identity, owner, hard-link count
@@ -140,13 +147,15 @@ Removal crosses one defined boundary: a rename.
    original name and kept with a `quarantine_*` reason. If that name has been
    taken in the meantime, the entry stays in the quarantine as
    `restore_blocked` and counts as an error; it is never deleted. Otherwise
-   the common reaper removes it from the quarantine.
-4. At start, a quarantine left by a crashed run is not deleted. Its snapshot
-   died with that run, so its write check is unknown, and each entry is
-   renamed back to its original name (`quarantine_restored` in the report).
-   It then meets every check again as an ordinary candidate. A quarantine
-   still locked by a live run is left alone. A dry run only lists leftovers
-   as `quarantine_leftover`.
+   the entry stays in the quarantine (`quarantined`) for the retention
+   window; nothing is deleted in this step.
+4. At start, a quarantined entry with no ledger record (a run from before the
+   ledger, or a lost ledger) is not deleted. There is nothing to re-verify it
+   against, so it is renamed back to its original name (`quarantine_restored`
+   in the report) and meets every check again as an ordinary candidate. A
+   quarantine still locked by a live run is left alone. A dry run only lists
+   such leftovers as `quarantine_leftover`. Ledgered entries follow the
+   reconciliation rules below.
 
 Residuals outside the boundary: after the re-check, a process of the same
 user could still open the entry by deliberately listing the temp root and
@@ -154,13 +163,172 @@ entering the sweep's own quarantine directory. A descriptor in flight inside
 a Unix socket message belongs to no process and is invisible to any `/proc`
 scan. Both are outside what the boundary observes, and stay residuals.
 
+### Deletion ledger and quarantine
+
+Code: `scripts/hygiene/tmp_sweep_ledger.py` (ledger, manifest) and
+`scripts/hygiene/tmp_sweep.py` (passes and CLI).
+
+**Where.** `$XDG_STATE_HOME/learn-ukrainian/tmp-sweep/ledger.jsonl`, or
+`~/.local/state/learn-ukrainian/tmp-sweep/ledger.jsonl` when
+`XDG_STATE_HOME` is unset (`--state-dir` overrides). The sweep refuses a
+ledger directory under the temp root or inside the repository, so cleaning
+the temp area never removes the record. Directory mode 0700, file mode 0600.
+The summary shows the location as `ledger_path`.
+
+**How it is written.** One JSON object per line, schema
+`tmp-sweep-ledger.v1`. Each write opens the file with `O_APPEND`, writes one
+whole record and calls `fsync`. Records are never rewritten. If a crash left
+a torn last line, the next write first ends it with a newline, so it stays
+one malformed line (`ledger_malformed_lines`) and never merges with a new
+record. Apply runs and restores hold `ledger.lock`, so only one writer runs
+at a time; a restore during a sweep is refused with exit code 1.
+
+**Durability.** `fsync` on a file does not persist the directory entry that
+names it, so every change to a directory entry is followed by an `fsync` of
+the directory before any record says it happened: each newly created ledger
+directory or ancestor (its parent is synced), the ledger file on creation,
+each new quarantine directory (the temp root), every rename (its source
+directory, then its destination), and every purge (the quarantine directory).
+If a sync fails, the run stops with exit code 1 and the step stays
+unconfirmed in the ledger; the next run reconciles it as below.
+
+**What a removal records.** The `quarantine` record is written and synced
+before the rename. It holds:
+
+| Field | Meaning |
+| --- | --- |
+| `ledger_id`, `run_id`, `at` | Entry id (12 hex), the sweep run, UTC time |
+| `original_path`, `quarantine_path` | Where it was and where it now is |
+| `owner_uid`, `identity` | Owner, and device and inode (a rename keeps them) |
+| `kind`, `reason`, `task` | File or directory, why it was proven removable, owning task if any |
+| `allocated_bytes`, `total_bytes`, `file_count` | Disk use, sum of file sizes, number of regular files |
+| `newest_mtime`, `newest_ctime` | Latest write and change anywhere inside (UTC) |
+| `digest_limit_bytes`, `digest_skipped_files`, `manifest` | Per node: relative path (`.` is the entry), type, mode, mtime (ns); files add size and SHA-256, or `digest_skipped_size` above the limit (default 64 MiB, `--digest-limit-mib`; counted in `digest_skipped_files`); symlinks add their target |
+
+Every later step appends a short record with the same `ledger_id`:
+`quarantined` (re-verified after the rename, retained), `returned` (the
+re-check found something; renamed back), `return_blocked`,
+`quarantine_failed`, `purge` then `purged` (or `purge_failed`),
+`purge_kept_ambiguous`, `restore` then `restored` (or `restore_failed`), and
+`reconciled` with an `outcome`.
+
+**Reconciliation after a crash.** At the start of each apply run, every
+entry whose last record leaves its location open is resolved by where its
+inode actually is, and the result is appended. A step that stopped at a
+directory sync looks exactly like one that finished, so before any record
+that confirms a step the run syncs both directories involved again (the
+quarantine directory, if it still exists, then the original's directory);
+a failed sync stops the run with nothing recorded. Likewise the first record
+of every run or restore is preceded by syncing the ledger directory and the
+parent of each of its ancestors owned by this user on the same filesystem,
+so a directory created by an earlier run whose sync failed is made durable
+before anything is written into it.
+
+- `quarantine` record but the inode is still at its original path: the
+  rename never happened, `reconciled` / `at_origin`.
+- `quarantine` record and the inode is in quarantine: it was never
+  re-verified after the rename, so it is renamed back, `reconciled` /
+  `returned` (or `return_blocked` while the name is taken; retried each run).
+- `purge` record and the inode is gone: `reconciled` / `purged`. If it is
+  still there, the purge pass retries it (see Purge).
+- `restore` record: `restored` (verified now) if it is back at its path,
+  otherwise `restore_failed`.
+- A retained entry that vanished (for example, a reboot cleared a tmpfs
+  `/tmp`): `reconciled` / `missing`.
+
+A dry run changes nothing and lists such entries as `ledger_unreconciled`.
+
+**Purge.** Before scanning for new candidates, each apply run looks at
+retained entries older than `--quarantine-days` (default 7). Each one is
+re-checked under the same predicates as the boundary, against its quarantine
+location: a complete task inventory naming neither path, a complete process
+scan with no holder, the tree safety facts, no change time after its
+`quarantined` record, and a manifest equal to the recorded one. Only then is
+a `purge` record written, the common reaper deletes it, and a `purged`
+record follows. Anything else keeps it with a typed reason
+(`purge_live_process`, `purge_liveness_unknown`, `purge_task_reference`,
+`purge_task_inventory_unknown`, `purge_recent_write`,
+`purge_manifest_changed`, `purge_<tree reason>`, `purge_refused`). A dry
+run reports what would go as `would_purge`. Files above the digest limit
+pass the manifest check on size and mtime; together with the change-time
+check that is the purge's evidence for them.
+
+A purge that stopped part-way (`purge_failed`, or a crash after the `purge`
+record) is retried under the same holder and task checks, and only if its
+tree is provably untouched: every recorded node still present, equal to its
+record, with no change time after the `quarantined` record, and nothing new.
+That holds when the purge failed before deleting anything. Once it deleted
+part of the tree, the directories that lost children changed, and the sweep
+does not try to tell that change from anyone else's (an extended attribute,
+say, is not recorded). The safe default wins: the survivors are kept, never
+deleted on a guess.
+
+**`purge_kept_ambiguous`.** Such an entry (also one whose tree cannot be
+read) gets a `purge_kept_ambiguous` record and stays in quarantine with that
+state. It is never purged automatically. Every apply run lists it as
+`purge_kept_ambiguous`, counts it in `errors` (exit 1) and in
+`quarantine_kept_ambiguous_entries`, until a person disposes of it, in
+either of two ways:
+
+1. Restore it (preferred): `.venv/bin/python -m scripts.hygiene.tmp_sweep
+   restore <ledger-id>` renames what survives back to the original path; the
+   result reports `mismatch` and lists what is missing or changed (exit 1 is
+   expected here). Inspect it there. Anything left becomes an ordinary
+   candidate again, and a later run quarantines it with a fresh manifest and
+   purges it after the window.
+2. Remove it by hand, after inspecting it: delete the `quarantine_path`
+   shown by `tmp_sweep quarantine`. The next apply run records the entry as
+   `reconciled` / `missing`.
+
+**Restore.** `restore <ledger-id>` works for a retained entry. It refuses if
+anything exists at the original path, then renames the entry back with
+`renameat2(RENAME_NOREPLACE)`, so a path created in between is never
+replaced (`restore_failed`, `EEXIST`). It then compares the restored tree
+with the manifest and reports `verification`, which the `restored` ledger
+record carries too:
+
+| `verification` | Meaning | Exit code |
+| --- | --- | --- |
+| `verified` | Every node matches and every file was hashed: byte-identical | 0 |
+| `unverified_digest_skipped` | Every node matches, but files above the digest limit matched by size and mtime only, which cannot prove their bytes (`digest_unverified` lists them); `verified` is false | 3 |
+| `mismatch` | Restored, but different (`mismatches` lists the paths) | 1 |
+| `unreadable` | Restored, but the tree could not be read | 1 |
+
+A refused or failed restore also exits 1; an unknown ledger id exits 2.
+
+**Report fields.** `ledger_path`, `quarantined_entries` and
+`bytes_quarantined` (this run), `quarantine_held_entries` and
+`quarantine_held_bytes` (all retained entries for this temp root),
+`quarantine_kept_ambiguous_entries` (retained entries waiting for a person,
+see above), `purgeable_entries` and `bytes_purgeable` (dry run), `purged_entries` and
+`bytes_reclaimed` (bytes actually freed this run). `projected_free_bytes`
+is free space plus `bytes_purgeable`: a newly quarantined entry frees nothing
+until its purge.
+
+**Residuals.** On a host whose `/tmp` is a tmpfs, a reboot empties the
+quarantine together with everything else in `/tmp`; the ledger survives and
+records those entries as `missing`. A rewrite with identical bytes and the
+mtime put back, within one kernel clock tick after the `quarantined` record,
+leaves no trace, but by definition it leaves the content unchanged. Above the
+digest limit, a same-size rewrite with the mtime put back is not detected by
+the manifest; the purge still sees its change time, and a restore reports
+such files as unverified rather than identical.
+The ledger is never compacted.
+
 ### Run it by hand
 
 ```bash
-# Dry run: counts and bytes only
+# Dry run: counts, bytes, ledger location, quarantine and purge counts
 .venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --summary
 # Full local inventory (contains entry names; keep it out of public issues)
 .venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --json
+# What was removed: by path substring, date or run
+.venv/bin/python -m scripts.hygiene.tmp_sweep ledger --path my-scratch --since 2026-10-01
+.venv/bin/python -m scripts.hygiene.tmp_sweep ledger --run-id <run-id> --json
+# What is held now, with age, size and purge date
+.venv/bin/python -m scripts.hygiene.tmp_sweep quarantine
+# Put one entry back
+.venv/bin/python -m scripts.hygiene.tmp_sweep restore <ledger-id>
 ```
 
 ### Hold a temp path
