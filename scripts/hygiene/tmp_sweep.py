@@ -9,8 +9,14 @@ process, an unreadable task record or a path a live task names preserves.
 Consistency boundary (#9872): a proven candidate is first renamed into a
 per-run quarantine directory, so no process can newly reach it by its old
 path. The holder, task and write checks then re-run against the quarantined
-entry; anything found or unknown renames it back, and only a clean result
-removes it.
+entry; anything found or unknown renames it back.
+
+Recoverable retention (#9887): a clean result keeps the entry in quarantine
+instead of deleting it. Each step is recorded in the append-only ledger of
+:mod:`scripts.hygiene.tmp_sweep_ledger`, the first record before the entry
+leaves its path. ``restore <ledger-id>`` puts an entry back; the purge pass
+at the start of a later run deletes it only once the window (7 days by
+default) has passed and the same checks still hold.
 """
 
 from __future__ import annotations
@@ -29,11 +35,12 @@ import secrets
 import shutil
 import stat
 import subprocess
+import sys
 import time
 from collections import Counter
 from collections.abc import Iterator
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -41,6 +48,23 @@ from scripts.common.scratch import DEFAULT_SCRATCH_ROOT, fallback_scratch_root, 
 from scripts.common.task_scratch import TaskScratchError, mount_points
 from scripts.common.task_store_paths import tasks_dir
 from scripts.hygiene.retention_engine import plan_digest, reap_attributed_temp
+from scripts.hygiene.tmp_sweep_ledger import (
+    DEFAULT_DIGEST_LIMIT,
+    DEFAULT_QUARANTINE_S,
+    HELD_STATES,
+    TERMINAL_STATES,
+    Entry,
+    Ledger,
+    LedgerError,
+    build_manifest,
+    default_state_dir,
+    manifest_mismatches,
+    new_id,
+    new_run_id,
+    parse_iso,
+    utc_iso,
+    validate_state_dir,
+)
 from scripts.orchestration.tmp_leak_sweep import (
     _process_state,
     _process_vanished,
@@ -517,7 +541,7 @@ def open_quarantine(root: Path, root_fd: int) -> Quarantine:
 
 
 def close_quarantine(quarantine: Quarantine, root_fd: int) -> None:
-    """Remove the quarantine if empty; an entry kept as ``restore_blocked`` keeps it for recovery."""
+    """Remove the quarantine if empty; retained entries keep it until their purge or restore."""
     try:
         with contextlib.suppress(OSError):
             os.rmdir(quarantine.path.name, dir_fd=root_fd)
@@ -529,15 +553,138 @@ def _bare_row(name: str, reason: str, **extra: Any) -> dict[str, Any]:
     return {"name": name, "decision": "preserve", "reason": reason, "bytes": 0, "task": None, "live_pids": []} | extra
 
 
-def recover_quarantines(root: Path, root_fd: int, *, apply: bool) -> tuple[list[dict[str, Any]], int, int]:
-    """Return every crashed run's quarantined entry to its original name; delete nothing.
+def _event(entry_id: str, run_id: str, event: str, **extra: Any) -> dict[str, Any]:
+    """A follow-up ledger record for one entry, stamped now."""
+    return {"event": event, "ledger_id": entry_id, "run_id": run_id, "at": utc_iso(time.time()), **extra}
 
-    A quarantine still locked belongs to a live run and is skipped. A leftover
-    entry's pre-rename snapshot died with its run, so its write check is
-    unknown and the boundary rule restores it; it then re-enters the normal
-    pipeline as an ordinary candidate. When the original name is taken, the
-    entry stays quarantined as ``restore_blocked``. Dry runs only report.
-    Returns ``(rows, restored, errors)``.
+
+def _identity_at(path: Path, identity: list[int]) -> bool:
+    """True when ``path`` is the recorded inode; a missing path is False, other errors raise."""
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
+        return False
+    return [info.st_dev, info.st_ino] == list(identity[:2])
+
+
+def _rename_path(src: Path, dst: Path) -> None:
+    """``rename_noreplace`` between two absolute paths, through descriptors of their parent directories."""
+    src_fd = os.open(src.parent, _DIR_FLAGS)
+    try:
+        dst_fd = os.open(dst.parent, _DIR_FLAGS)
+        try:
+            rename_noreplace(src_fd, src.name, dst_fd, dst.name)
+        finally:
+            os.close(dst_fd)
+    finally:
+        os.close(src_fd)
+
+
+def _drop_empty_quarantine(location: Path) -> None:
+    if location.parent.name.startswith(QUARANTINE_PREFIX):
+        with contextlib.suppress(OSError):
+            os.rmdir(location.parent)
+
+
+def _entry_row(entry: Entry, decision: str, reason: str, **extra: Any) -> dict[str, Any]:
+    return _bare_row(
+        entry.original.name,
+        reason,
+        decision=decision,
+        bytes=entry.intent.get("allocated_bytes") or 0,
+        task=entry.intent.get("task"),
+        kind=entry.intent.get("kind"),
+        ledger_id=entry.ledger_id,
+        quarantine=entry.location.parent.name,
+        **extra,
+    )
+
+
+def verify_restored(entry: Entry, path: Path) -> dict[str, Any]:
+    """Compare ``path`` with the entry's recorded manifest, at the digest limit it was recorded with."""
+    try:
+        current = build_manifest(path, digest_limit=entry.intent["digest_limit_bytes"])
+    except OSError as error:
+        return {"verified": False, "verify_error": _errno_name(error)}
+    mismatches = manifest_mismatches(entry.intent["manifest"], current["manifest"])
+    return {"verified": not mismatches, "mismatch_count": len(mismatches), "mismatches": mismatches[:20]}
+
+
+def reconcile_ledger(
+    entries: dict[str, Entry], ledger: Ledger, run_id: str, *, apply: bool
+) -> tuple[list[dict[str, Any]], int]:
+    """Resolve every entry a crashed step left unconfirmed; delete nothing. Returns ``(rows, errors)``.
+
+    Where the entry is decides: still in quarantine, back at its original
+    path (the same inode), or gone. A ``quarantine`` record with no follow-up
+    whose rename did happen was never re-verified after it, so the entry is
+    renamed back (``returned``), as is a ``return_blocked`` one once its name
+    is free. An interrupted restore either completed (``restored``, verified
+    now) or did not (``restore_failed``). An interrupted purge whose entry is
+    gone is ``purged``; one still present is left to the purge pass. A
+    retained entry that vanished is ``missing``, or ``at_origin`` when its
+    rename was lost. Dry runs only report.
+    """
+    rows: list[dict[str, Any]] = []
+    errors = 0
+    for entry in entries.values():
+        if entry.state in TERMINAL_STATES:
+            continue
+        identity = entry.intent["identity"]
+        try:
+            held = _identity_at(entry.location, identity)
+            at_origin = not held and _identity_at(entry.original, identity)
+        except OSError:
+            rows.append(_entry_row(entry, "preserve", "ledger_location_unknown"))
+            errors += 1
+            continue
+        if held and entry.state in {"quarantined", "purging"}:
+            continue  # the purge pass owns retained entries
+        if not apply:
+            rows.append(_entry_row(entry, "preserve", "ledger_unreconciled", state=entry.state))
+            continue
+        if not held:
+            if entry.state == "restoring" and at_origin:
+                ledger.append(
+                    _event(
+                        entry.ledger_id, run_id, "restored", reconciled=True, **verify_restored(entry, entry.original)
+                    )
+                )
+                continue
+            outcome = "purged" if entry.state == "purging" else "at_origin" if at_origin else "missing"
+            ledger.append(_event(entry.ledger_id, run_id, "reconciled", outcome=outcome, prior_state=entry.state))
+            rows.append(_entry_row(entry, "preserve", f"ledger_{outcome}"))
+            continue
+        if entry.state == "restoring":
+            ledger.append(_event(entry.ledger_id, run_id, "restore_failed", reconciled=True))
+            continue
+        try:
+            _rename_path(entry.location, entry.original)
+        except OSError as error:
+            if entry.state == "pending":
+                ledger.append(
+                    _event(entry.ledger_id, run_id, "reconciled", outcome="return_blocked", error=_errno_name(error))
+                )
+            rows.append(_entry_row(entry, "preserve", "restore_blocked", error=_errno_name(error)))
+            errors += 1
+            continue
+        ledger.append(_event(entry.ledger_id, run_id, "reconciled", outcome="returned", prior_state=entry.state))
+        _drop_empty_quarantine(entry.location)
+    return rows, errors
+
+
+def recover_quarantines(
+    root: Path, root_fd: int, *, apply: bool, known: frozenset[Path] = frozenset()
+) -> tuple[list[dict[str, Any]], int, int]:
+    """Return every unledgered quarantined entry to its original name; delete nothing.
+
+    ``known`` are the locations of entries the ledger retains; they stay. A
+    quarantine still locked belongs to a live run and is skipped. Any other
+    leftover (a run from before the ledger, or a lost ledger) has no record
+    to re-verify against, so the boundary rule restores it; it then re-enters
+    the normal pipeline as an ordinary candidate. When the original name is
+    taken, the entry stays quarantined as ``restore_blocked``. Dry runs only
+    report. Returns ``(rows, restored, errors)``.
     """
     rows: list[dict[str, Any]] = []
     restored = errors = 0
@@ -560,6 +707,8 @@ def recover_quarantines(root: Path, root_fd: int, *, apply: bool) -> tuple[list[
             except BlockingIOError:
                 continue  # a live run owns it
             for entry in sorted(os.listdir(fd)):
+                if root / name / entry in known:
+                    continue
                 if not apply:
                     rows.append(_bare_row(entry, "quarantine_leftover", quarantine=name))
                     continue
@@ -580,7 +729,7 @@ def recover_quarantines(root: Path, root_fd: int, *, apply: bool) -> tuple[list[
 def quarantined_problem(
     quarantined: Path, origin: Path, row: dict[str, Any], before: dict[str, tuple[Any, ...]], task_root: Path
 ) -> str | None:
-    """Re-prove the renamed entry; return a preserve reason, or ``None`` when removal is safe.
+    """Re-prove the renamed entry; return a preserve reason, or ``None`` when retaining it is safe.
 
     After the rename nothing can newly open the entry by its old path, so the
     order is fixed: tasks, then every process (cwd, FDs, maps), then the tree.
@@ -605,7 +754,7 @@ def quarantined_problem(
     return None
 
 
-def quarantine_and_reap(
+def quarantine_entry(
     path: Path,
     row: dict[str, Any],
     before: dict[str, tuple[Any, ...]],
@@ -613,42 +762,161 @@ def quarantine_and_reap(
     *,
     root_fd: int,
     task_root: Path,
-    repo_root: Path,
+    ledger: Ledger,
+    run_id: str,
+    digest_limit: int,
 ) -> dict[str, Any]:
-    """Rename, re-verify, then restore or remove one proven candidate; return its final row."""
+    """Ledger, rename, re-verify, then retain or return one proven candidate; return its final row.
+
+    The ``quarantine`` record, with the manifest, is durable before the
+    rename. Every outcome after it is appended too, so a crash at any point
+    leaves a record the next run reconciles. A ledger failure raises
+    ``LedgerError`` and stops the run.
+    """
     name = path.name
     quarantined = quarantine.path / name
     try:
+        facts = build_manifest(path, digest_limit=digest_limit)
+    except OSError:
+        return row | {"decision": "preserve", "reason": "manifest_unknown"}
+    entry_id = new_id()
+    ledger.append(
+        {
+            "event": "quarantine",
+            "ledger_id": entry_id,
+            "run_id": run_id,
+            "at": utc_iso(time.time()),
+            "original_path": str(path),
+            "quarantine_path": str(quarantined),
+            "owner_uid": row["identity"][2],
+            "identity": row["identity"][:2],
+            "kind": row["kind"],
+            "reason": row["reason"],
+            "task": row["task"],
+            "allocated_bytes": row["bytes"],
+            **facts,
+        }
+    )
+    marks = {"ledger_id": entry_id, "quarantine": quarantine.path.name}
+    try:
         rename_noreplace(root_fd, name, quarantine.fd, name)
     except OSError as error:
-        return row | {"decision": "preserve", "reason": "quarantine_failed", "error": _errno_name(error)}
+        ledger.append(_event(entry_id, run_id, "quarantine_failed", error=_errno_name(error)))
+        return row | marks | {"decision": "preserve", "reason": "quarantine_failed", "error": _errno_name(error)}
     reason = quarantined_problem(quarantined, path, row, before, task_root)
     if reason is None:
-        try:
-            reap_attributed_temp(
-                quarantined,
-                repo_root=repo_root,
-                temp_root=quarantine.path,
-                expected_dev=row["identity"][0],
-                expected_ino=row["identity"][1],
-            )
-        except (OSError, ValueError, TaskScratchError):
-            reason = "reap_refused"
-        else:
-            if quarantined.exists() or quarantined.is_symlink():
-                raise OSError("common reaper left residue")
-            return row | {"decision": "reaped"}
+        ledger.append(_event(entry_id, run_id, "quarantined"))
+        return row | marks | {"decision": "quarantined"}
     try:
         rename_noreplace(quarantine.fd, name, root_fd, name)
     except OSError as error:
-        return row | {
-            "decision": "preserve",
-            "reason": "restore_blocked",
-            "found": reason,
-            "quarantine": quarantine.path.name,
-            "error": _errno_name(error),
-        }
-    return row | {"decision": "preserve", "reason": reason}
+        ledger.append(_event(entry_id, run_id, "return_blocked", found=reason, error=_errno_name(error)))
+        return (
+            row
+            | marks
+            | {"decision": "preserve", "reason": "restore_blocked", "found": reason, "error": _errno_name(error)}
+        )
+    ledger.append(_event(entry_id, run_id, "returned", found=reason))
+    return row | marks | {"decision": "preserve", "reason": reason}
+
+
+def purge_problem(entry: Entry, task_root: Path) -> str | None:
+    """Re-check a retained entry past its window; return a keep reason, or ``None`` when deletion is safe.
+
+    The same predicates as the quarantine boundary, against the quarantined
+    location: a complete task inventory naming neither path, a complete
+    process scan with no holder, the tree's safety facts, then the write
+    check: no change after the entry was confirmed and a manifest equal to
+    the recorded one. An interrupted purge has already lost part of its
+    tree, so it skips only the write check.
+    """
+    location = entry.location
+    inventory = load_tasks(task_root)
+    if not inventory.complete:
+        return "purge_task_inventory_unknown"
+    if any(task_referenced(path, inventory.references) for path in (entry.original, location)):
+        return "purge_task_reference"
+    references, complete = process_snapshot()
+    if any(ref == location or location in ref.parents for _, ref in references):
+        return "purge_live_process"
+    if not complete:
+        return "purge_liveness_unknown"
+    _allocated, _newest, changed, tree_reason = tree_facts(location)
+    if tree_reason:
+        return f"purge_{tree_reason}"
+    if entry.state == "purging":
+        return None
+    confirmed = entry.confirmed_at
+    if confirmed is None or changed > confirmed:
+        return "purge_recent_write"
+    if not verify_restored(entry, location)["verified"]:
+        return "purge_manifest_changed"
+    return None
+
+
+def purge_quarantine(
+    entries: dict[str, Entry],
+    ledger: Ledger,
+    run_id: str,
+    *,
+    now: float,
+    quarantine_s: float,
+    task_root: Path,
+    repo_root: Path,
+    apply: bool,
+) -> tuple[list[dict[str, Any]], int]:
+    """Delete retained entries past the window that pass ``purge_problem``; returns ``(rows, errors)``.
+
+    Each deletion is bracketed by a ``purge`` record before it and a
+    ``purged`` record after it. Entries inside the window get no row.
+    """
+    rows: list[dict[str, Any]] = []
+    errors = 0
+    for entry in sorted(entries.values(), key=lambda item: item.quarantined_at):
+        if entry.state not in {"quarantined", "purging"} or now < entry.quarantined_at + quarantine_s:
+            continue
+        identity = entry.intent["identity"]
+        try:
+            if not _identity_at(entry.location, identity):
+                continue  # reconciliation reports it
+        except OSError:
+            continue
+        reason = purge_problem(entry, task_root)
+        if reason:
+            rows.append(_entry_row(entry, "preserve", reason))
+            continue
+        if not apply:
+            rows.append(_entry_row(entry, "would_purge", "quarantine_expired"))
+            continue
+        ledger.append(_event(entry.ledger_id, run_id, "purge"))
+        try:
+            reap_attributed_temp(
+                entry.location,
+                repo_root=repo_root,
+                temp_root=entry.location.parent,
+                expected_dev=identity[0],
+                expected_ino=identity[1],
+            )
+            if os.path.lexists(entry.location):
+                raise OSError("common reaper left residue")
+        except (OSError, ValueError, TaskScratchError) as error:
+            detail = _errno_name(error) if isinstance(error, OSError) else type(error).__name__
+            ledger.append(_event(entry.ledger_id, run_id, "purge_failed", error=detail))
+            rows.append(_entry_row(entry, "preserve", "purge_refused", error=detail))
+            errors += 1
+            continue
+        ledger.append(_event(entry.ledger_id, run_id, "purged"))
+        _drop_empty_quarantine(entry.location)
+        rows.append(_entry_row(entry, "purged", "quarantine_expired"))
+    return rows, errors
+
+
+def _quarantine_totals(entries: dict[str, Entry], root: Path) -> dict[str, int]:
+    held = [entry for entry in entries.values() if entry.state in HELD_STATES and entry.original.parent == root]
+    return {
+        "quarantine_held_entries": len(held),
+        "quarantine_held_bytes": sum(entry.intent.get("allocated_bytes") or 0 for entry in held),
+    }
 
 
 def sweep(
@@ -659,10 +927,21 @@ def sweep(
     min_age_s: float = 12 * 3600,
     scratch: ScratchPolicy | None = None,
     apply: bool = False,
+    state_dir: Path | None = None,
+    quarantine_s: float = DEFAULT_QUARANTINE_S,
+    digest_limit: int = DEFAULT_DIGEST_LIMIT,
 ) -> dict[str, Any]:
-    """Inventory top-level unmanaged entries; quarantine, re-verify and reap proven ones on ``apply``."""
+    """Inventory top-level unmanaged entries; on ``apply``, purge expired quarantine, then quarantine proven ones.
+
+    Apply runs hold the ledger lock throughout and, in order, reconcile
+    crashed steps, restore unledgered quarantine leftovers, purge expired
+    entries, and quarantine newly proven candidates. Dry runs report the
+    same passes without changing anything.
+    """
     if not math.isfinite(min_age_s) or min_age_s <= 0:
         raise ValueError("minimum age must be finite and positive")
+    if not math.isfinite(quarantine_s) or quarantine_s <= 0 or digest_limit < 0:
+        raise ValueError("quarantine window must be finite and positive, digest limit non-negative")
     if (
         temp_root.is_symlink()
         or not temp_root.is_dir()
@@ -677,13 +956,63 @@ def sweep(
         root == area.resolve() or area.resolve() in root.parents for area in SYSTEM_TEMP_AREAS
     ):
         raise ValueError("unattributed scratch runs only within the system temp area")
+    ledger = Ledger(validate_state_dir(state_dir or default_state_dir(), forbidden=(root, repo_root)))
     tasks = task_root if task_root is not None else tasks_dir()
+    run_id = new_run_id(time.time())
+    with ledger.exclusive(wait=True) if apply else contextlib.nullcontext():
+        return _sweep_locked(
+            root,
+            tasks=tasks,
+            repo_root=repo_root,
+            min_age_s=min_age_s,
+            scratch=scratch,
+            apply=apply,
+            ledger=ledger,
+            run_id=run_id,
+            quarantine_s=quarantine_s,
+            digest_limit=digest_limit,
+        )
+
+
+def _sweep_locked(
+    root: Path,
+    *,
+    tasks: Path,
+    repo_root: Path,
+    min_age_s: float,
+    scratch: ScratchPolicy | None,
+    apply: bool,
+    ledger: Ledger,
+    run_id: str,
+    quarantine_s: float,
+    digest_limit: int,
+) -> dict[str, Any]:
     root_fd = os.open(root, _DIR_FLAGS)
     quarantine: Quarantine | None = None
-    reclaimed = 0
     try:
-        # Restore crash leftovers first, so every probe below sees them at their original names.
-        rows, restored, errors = recover_quarantines(root, root_fd, apply=apply)
+        entries, malformed = ledger.entries()
+        local = {key: entry for key, entry in entries.items() if entry.original.parent == root}
+        # Reconcile, restore unledgered leftovers and purge first, so every probe below sees the result.
+        rows, errors = reconcile_ledger(local, ledger, run_id, apply=apply)
+        if apply:
+            entries, malformed = ledger.entries()
+            local = {key: entry for key, entry in entries.items() if entry.original.parent == root}
+        known = frozenset(entry.location for entry in local.values() if entry.state in HELD_STATES)
+        recovered, restored, recover_errors = recover_quarantines(root, root_fd, apply=apply, known=known)
+        rows += recovered
+        errors += recover_errors
+        purged, purge_errors = purge_quarantine(
+            local,
+            ledger,
+            run_id,
+            now=time.time(),
+            quarantine_s=quarantine_s,
+            task_root=tasks,
+            repo_root=repo_root,
+            apply=apply,
+        )
+        rows += purged
+        errors += purge_errors
         inventory = load_tasks(tasks)
         references, complete = process_snapshot()
         worktrees = registered_worktrees(repo_root)
@@ -725,12 +1054,18 @@ def sweep(
                         row = fresh | {"decision": "preserve", "reason": "proof_changed"}
                     else:
                         quarantine = quarantine or open_quarantine(root, root_fd)
-                        row = quarantine_and_reap(
-                            path, row, before, quarantine, root_fd=root_fd, task_root=tasks, repo_root=repo_root
+                        row = quarantine_entry(
+                            path,
+                            row,
+                            before,
+                            quarantine,
+                            root_fd=root_fd,
+                            task_root=tasks,
+                            ledger=ledger,
+                            run_id=run_id,
+                            digest_limit=digest_limit,
                         )
-                        if row["decision"] == "reaped":
-                            reclaimed += row["bytes"]
-                        elif row["reason"] in {"restore_blocked", "reap_refused"}:
+                        if row["reason"] == "restore_blocked":
                             errors += 1
                 rows.append(row)
             except (OSError, ValueError, TaskScratchError):
@@ -740,15 +1075,24 @@ def sweep(
         if quarantine is not None:
             close_quarantine(quarantine, root_fd)
         os.close(root_fd)
+    if apply:
+        entries, malformed = ledger.entries()
     free = shutil.disk_usage(root).free
     reclaimable = sum(row["bytes"] for row in rows if row["decision"] == "would_reap")
+    purgeable = sum(row["bytes"] for row in rows if row["decision"] == "would_purge")
+    quarantined = [row for row in rows if row["decision"] == "quarantined"]
+    purged_rows = [row for row in rows if row["decision"] == "purged"]
     report = {
-        "schema": "tmp-sweep.v1",
+        "schema": "tmp-sweep.v2",
         "mode": "apply" if apply else "dry-run",
+        "run_id": run_id,
         "min_age_hours": min_age_s / 3600,
         "scratch_policy": None
         if scratch is None
         else {"min_age_hours": scratch.min_age_s / 3600, "quiet_hours": scratch.quiet_s / 3600},
+        "quarantine_days": quarantine_s / 86400,
+        "ledger_path": str(ledger.path),
+        "ledger_malformed_lines": malformed,
         "rows": rows,
         "directories": sum(1 for row in rows if row.get("kind") != "file"),
         "files": sum(1 for row in rows if row.get("kind") == "file"),
@@ -756,18 +1100,30 @@ def sweep(
         "quarantine_restored": restored,
         "process_probe_complete": complete,
         "task_inventory_complete": inventory.complete,
+        "quarantined_entries": len(quarantined),
+        "bytes_quarantined": sum(row["bytes"] for row in quarantined),
+        **_quarantine_totals(entries, root),
+        "purgeable_entries": sum(1 for row in rows if row["decision"] == "would_purge"),
+        "purged_entries": len(purged_rows),
         "bytes_reclaimable": reclaimable,
-        "bytes_reclaimed": reclaimed,
+        "bytes_purgeable": purgeable,
+        "bytes_reclaimed": sum(row["bytes"] for row in purged_rows),
         "free_bytes": free,
-        "projected_free_bytes": free + reclaimable,
+        "projected_free_bytes": free + purgeable,
     }
     report["digest"] = plan_digest(report)
     return report
 
 
 def summarize(report: dict[str, Any]) -> dict[str, Any]:
-    """Counts and byte totals only: no entry names, safe for logs and public reports."""
+    """Counts and byte totals only: no entry names, safe for logs and public reports.
+
+    The ledger path is shown relative to the home directory (``~/...``).
+    """
     summary = {key: value for key, value in report.items() if key != "rows"}
+    home = str(Path.home())
+    if summary["ledger_path"].startswith(home + "/"):
+        summary["ledger_path"] = "~" + summary["ledger_path"][len(home) :]
     summary["by_decision"] = dict(sorted(Counter(row["decision"] for row in report["rows"]).items()))
     summary["by_reason"] = dict(sorted(Counter(row["reason"] for row in report["rows"]).items()))
     summary["bytes_by_reason"] = {
@@ -777,12 +1133,265 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
     return summary
 
 
+def restore(ledger: Ledger, entry_id: str) -> dict[str, Any]:
+    """Rename one retained entry back to its original path, never replacing anything, and verify it.
+
+    Raises ``KeyError`` for an unknown ledger id and ``LedgerError`` while a
+    sweep holds the ledger. The ``restore`` record precedes the rename; the
+    ``restored`` record carries the manifest verification.
+    """
+    with ledger.exclusive(wait=False):
+        entries, _ = ledger.entries()
+        entry = entries[entry_id]
+        result: dict[str, Any] = {"ledger_id": entry_id, "original_path": str(entry.original), "restored": False}
+        if entry.state not in {"pending", "quarantined", "return_blocked"}:
+            return result | {"reason": f"state_{entry.state}"}
+        if not _identity_at(entry.location, entry.intent["identity"]):
+            return result | {"reason": "quarantine_location_missing"}
+        if os.path.lexists(entry.original):
+            return result | {"reason": "original_path_exists"}
+        run_id = new_run_id(time.time())
+        ledger.append(_event(entry_id, run_id, "restore"))
+        try:
+            _rename_path(entry.location, entry.original)
+        except OSError as error:
+            ledger.append(_event(entry_id, run_id, "restore_failed", error=_errno_name(error)))
+            reason = "original_path_exists" if error.errno == errno.EEXIST else "rename_refused"
+            return result | {"reason": reason, "error": _errno_name(error)}
+        verification = verify_restored(entry, entry.original)
+        ledger.append(_event(entry_id, run_id, "restored", **verification))
+        _drop_empty_quarantine(entry.location)
+        return result | {"restored": True} | verification
+
+
+def _since(value: str, *, end: bool = False) -> float:
+    """An ISO date or datetime as epoch seconds (UTC when no zone); a bare ``--until`` date covers that whole day."""
+    moment = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=UTC)
+    if end and "T" not in value and " " not in value:
+        return moment.timestamp() + 86400
+    return moment.timestamp()
+
+
+def ledger_rows(
+    ledger: Ledger,
+    *,
+    path: str | None = None,
+    since: float | None = None,
+    until: float | None = None,
+    run_id: str | None = None,
+    entry_id: str | None = None,
+    manifest: bool = False,
+) -> list[dict[str, Any]]:
+    """Ledger records matching every given filter, in file order; each carries its entry's original path."""
+    records, _ = ledger.read()
+    origins = {r["ledger_id"]: r.get("original_path", "") for r in records if r["event"] == "quarantine"}
+    selected = []
+    for record in records:
+        origin = origins.get(record["ledger_id"], "")
+        try:
+            at = parse_iso(record["at"])
+        except (KeyError, TypeError, ValueError):
+            at = None
+        if (path and path not in origin) or (run_id and record.get("run_id") != run_id):
+            continue
+        if (entry_id and record["ledger_id"] != entry_id) or (since is not None and (at is None or at < since)):
+            continue
+        if until is not None and (at is None or at >= until):
+            continue
+        shown = {"original_path": origin} | record
+        if not manifest:
+            shown.pop("manifest", None)
+        selected.append(shown)
+    return selected
+
+
+def quarantine_rows(ledger: Ledger, *, now: float, quarantine_s: float) -> list[dict[str, Any]]:
+    """Every entry the ledger holds in quarantine: state, age, size, purge date and presence."""
+    entries, _ = ledger.entries()
+    rows = []
+    for entry in sorted(entries.values(), key=lambda item: item.quarantined_at):
+        if entry.state not in HELD_STATES:
+            continue
+        try:
+            present = _identity_at(entry.location, entry.intent["identity"])
+        except OSError:
+            present = None
+        rows.append(
+            {
+                "ledger_id": entry.ledger_id,
+                "state": entry.state,
+                "original_path": str(entry.original),
+                "quarantine_path": str(entry.location),
+                "quarantined_at": entry.intent["at"],
+                "age_days": round((now - entry.quarantined_at) / 86400, 2),
+                "purge_after": utc_iso(entry.quarantined_at + quarantine_s),
+                "allocated_bytes": entry.intent.get("allocated_bytes"),
+                "file_count": entry.intent.get("file_count"),
+                "present": present,
+            }
+        )
+    return rows
+
+
+def _cell(value: Any) -> str:
+    """Plain text as is; a string with a pipe or unprintable characters (a path, say) JSON-quoted."""
+    if isinstance(value, str) and (not value.isprintable() or "|" in value):
+        return json.dumps(value, ensure_ascii=True).replace("|", "\\|")
+    return str(value)
+
+
+def _state_dir_argument(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--state-dir",
+        type=Path,
+        help=(
+            "Ledger directory (default $XDG_STATE_HOME/learn-ukrainian/tmp-sweep, else "
+            "~/.local/state/learn-ukrainian/tmp-sweep; never under the temp root or the repository)."
+        ),
+    )
+
+
+def _quarantine_days_argument(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--quarantine-days",
+        type=float,
+        default=DEFAULT_QUARANTINE_S / 86400,
+        help="Retention window before a quarantined entry may be purged (positive days; default 7; example 14).",
+    )
+
+
+def build_ledger_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="python -m scripts.hygiene.tmp_sweep",
+        description=(
+            "Inspect the temp sweep's deletion ledger and quarantine, or restore a quarantined entry.\n"
+            "Use to find what the sweep removed and bring it back within the window; "
+            "run the sweep itself without a subcommand."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.hygiene.tmp_sweep ledger --path my-scratch --since 2026-10-01\n"
+            "  .venv/bin/python -m scripts.hygiene.tmp_sweep quarantine --json\n"
+            "  .venv/bin/python -m scripts.hygiene.tmp_sweep restore 3f9c2a7b1d04\n"
+            "Outputs: stdout table or JSON; restore renames one entry back and appends ledger records.\n"
+            "Exit codes: 0 success; 1 restore refused, failed or unverified, or ledger unavailable; "
+            "2 invalid arguments or unknown ledger id.\n"
+            "Related: #9887; docs/runbooks/tmp-retention.md; scripts.hygiene.tmp_sweep_ledger."
+        ),
+    )
+    commands = parser.add_subparsers(dest="command", required=True)
+    ledger = commands.add_parser(
+        "ledger",
+        help="List ledger records, filtered by path, date or run.",
+        description="List ledger records in file order; every filter given must match.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep ledger --run-id 20261006T053012Z-a1b2c3 --json\n"
+            "Outputs: stdout table or JSON records (manifests only with --manifest). Exit codes: 0; 1 ledger unreadable."
+        ),
+    )
+    ledger.add_argument("--path", help="Substring of the original path (example: hand-made-scratch).")
+    ledger.add_argument("--since", help="Records at or after this UTC date or datetime (example 2026-10-01).")
+    ledger.add_argument(
+        "--until", help="Records before this UTC datetime; a bare date includes that whole day (example 2026-10-06)."
+    )
+    ledger.add_argument("--run-id", help="Records of one sweep or restore run (example 20261006T053012Z-a1b2c3).")
+    ledger.add_argument("--ledger-id", help="Records of one entry (example 3f9c2a7b1d04).")
+    ledger.add_argument("--manifest", action="store_true", help="Include file manifests in JSON (default off).")
+    ledger.add_argument("--json", action="store_true", help="Print JSON instead of a table (default table).")
+    _state_dir_argument(ledger)
+    quarantine = commands.add_parser(
+        "quarantine",
+        help="List entries held in quarantine, with age and size.",
+        description="List every entry the ledger holds in quarantine, oldest first, with its purge date.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep quarantine --quarantine-days 7\n"
+            "Outputs: stdout table or JSON. Exit codes: 0; 1 ledger unreadable."
+        ),
+    )
+    quarantine.add_argument("--json", action="store_true", help="Print JSON instead of a table (default table).")
+    _quarantine_days_argument(quarantine)
+    _state_dir_argument(quarantine)
+    restore_parser = commands.add_parser(
+        "restore",
+        help="Rename one quarantined entry back to its original path.",
+        description=(
+            "Rename a quarantined entry back atomically, never replacing an existing path, "
+            "then verify it against its recorded manifest."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep restore 3f9c2a7b1d04\n"
+            "Outputs: stdout JSON result; ledger records restore and restored (or restore_failed).\n"
+            "Exit codes: 0 restored and verified; 1 refused, failed, unverified or a sweep holds the ledger; "
+            "2 unknown ledger id."
+        ),
+    )
+    restore_parser.add_argument("ledger_id", help="Ledger id from `ledger` or `quarantine` (example 3f9c2a7b1d04).")
+    _state_dir_argument(restore_parser)
+    return parser
+
+
+def ledger_main(argv: list[str]) -> int:
+    parser = build_ledger_parser()
+    args = parser.parse_args(argv)
+    ledger = Ledger((args.state_dir or default_state_dir()).expanduser())
+    try:
+        if args.command == "restore":
+            try:
+                result = restore(ledger, args.ledger_id)
+            except KeyError:
+                parser.error(f"unknown ledger id {args.ledger_id!r}")
+            print(json.dumps(result, sort_keys=True, indent=2))
+            return 0 if result["restored"] and result.get("verified") else 1
+        if args.command == "quarantine":
+            if not math.isfinite(args.quarantine_days) or args.quarantine_days <= 0:
+                parser.error("--quarantine-days must be finite and positive")
+            rows = quarantine_rows(ledger, now=time.time(), quarantine_s=args.quarantine_days * 86400)
+            columns = ("ledger_id", "state", "age_days", "allocated_bytes", "purge_after", "present", "original_path")
+        else:
+            try:
+                since = _since(args.since) if args.since else None
+                until = _since(args.until, end=True) if args.until else None
+            except ValueError:
+                parser.error("--since/--until take an ISO date or datetime")
+            rows = ledger_rows(
+                ledger,
+                path=args.path,
+                since=since,
+                until=until,
+                run_id=args.run_id,
+                entry_id=args.ledger_id,
+                manifest=args.manifest,
+            )
+            columns = ("at", "event", "ledger_id", "run_id", "original_path", "reason", "outcome", "found", "error")
+    except LedgerError as error:
+        print(f"ledger unavailable: {error}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps(rows, sort_keys=True, indent=2))
+        return 0
+    print("| " + " | ".join(columns) + " |")
+    print("|" + "---|" * len(columns))
+    for row in rows:
+        print("| " + " | ".join(_cell(row.get(column, "")) for column in columns) + " |")
+    return 0
+
+
+SUBCOMMANDS = frozenset({"ledger", "quarantine", "restore"})
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Attribute and safely reap unmanaged top-level temp entries.\n"
+            "Attribute unmanaged top-level temp entries; quarantine proven ones recoverably and purge expired ones.\n"
             "Use for legacy task residue and, with --unattributed-scratch, quiet hand-made scratch; "
-            "never for managed scratch or harness state."
+            "never for managed scratch or harness state. Subcommands ledger, quarantine and restore "
+            "inspect and undo removals (see `tmp_sweep ledger --help`)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
@@ -790,11 +1399,14 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.hygiene.tmp_sweep --json\n"
             "  .venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --summary\n"
             "  .venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary\n"
-            "Outputs: stdout inventory (or --summary counts) and allocation/headroom totals; "
-            "deletion only with --apply.\n"
-            "Exit codes: 0 inventory complete; 1 scan/reap errors; 2 invalid arguments.\n"
-            "Related: #8755, #9737; docs/runbooks/tmp-retention.md; scripts.hygiene.retention_engine; "
-            "packaging/systemd/learn-ukrainian-tmp-sweep.*."
+            "  .venv/bin/python -m scripts.hygiene.tmp_sweep restore <ledger-id>\n"
+            "Outputs: stdout inventory (or --summary counts) with ledger location, quarantine and purge totals; "
+            "with --apply, appends to the ledger, moves proven entries into quarantine and deletes only "
+            "expired, re-verified quarantined entries.\n"
+            "Exit codes: 0 inventory complete; 1 scan/quarantine/purge errors or ledger unavailable; "
+            "2 invalid arguments.\n"
+            "Related: #8755, #9737, #9887; docs/runbooks/tmp-retention.md; scripts.hygiene.retention_engine; "
+            "scripts.hygiene.tmp_sweep_ledger; packaging/systemd/learn-ukrainian-tmp-sweep.*."
         ),
     )
     parser.add_argument(
@@ -834,8 +1446,18 @@ def build_parser() -> argparse.ArgumentParser:
         default=24,
         help="Scratch class: no write or change anywhere inside for this long (positive hours; default 24).",
     )
+    _quarantine_days_argument(parser)
     parser.add_argument(
-        "--apply", action="store_true", help="Recheck proofs and call the common reaper (default dry-run)."
+        "--digest-limit-mib",
+        type=float,
+        default=DEFAULT_DIGEST_LIMIT / (1 << 20),
+        help="Manifest SHA-256 only for regular files up to this size (MiB; default 64; larger: size and mtime).",
+    )
+    _state_dir_argument(parser)
+    parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="Purge expired quarantine, then recheck proofs and quarantine proven entries (default dry-run).",
     )
     output = parser.add_mutually_exclusive_group()
     output.add_argument(
@@ -850,6 +1472,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    argv = sys.argv[1:] if argv is None else argv
+    if argv and argv[0] in SUBCOMMANDS:
+        return ledger_main(argv)
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
@@ -858,13 +1483,21 @@ def main(argv: list[str] | None = None) -> int:
             if args.unattributed_scratch
             else None
         )
+        if not math.isfinite(args.digest_limit_mib) or args.digest_limit_mib < 0:
+            raise ValueError("digest limit must be finite and non-negative")
         report = sweep(
             temp_root=args.temp_root,
             task_root=args.task_root,
             min_age_s=args.min_age_hours * 3600,
             scratch=scratch,
             apply=args.apply,
+            state_dir=args.state_dir,
+            quarantine_s=args.quarantine_days * 86400,
+            digest_limit=int(args.digest_limit_mib * (1 << 20)),
         )
+    except LedgerError as error:
+        print(f"ledger unavailable, nothing removed: {error}", file=sys.stderr)
+        return 1
     except (ValueError, OSError):
         parser.error("invalid or unreadable temporary/task area; no deletion authorized")
     if args.json:
@@ -880,6 +1513,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"| {name} | {row['bytes']} | {owner} | {row['decision']} | {row['reason']} |")
         print(
             f"mode={report['mode']} directories={report['directories']} files={report['files']} errors={report['errors']}"
+        )
+        print(
+            f"quarantined={report['quarantined_entries']} quarantine_held={report['quarantine_held_entries']} "
+            f"purgeable={report['purgeable_entries']} purged={report['purged_entries']} ledger={report['ledger_path']}"
         )
         print(
             f"bytes_reclaimable={report['bytes_reclaimable']} bytes_reclaimed={report['bytes_reclaimed']} free_bytes={report['free_bytes']} projected_free_bytes={report['projected_free_bytes']}"
