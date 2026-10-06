@@ -551,7 +551,7 @@ def test_a_temporary_index_failure_refusal_names_the_exception(kimi_worktree, tm
     monkeypatch.setattr(delegate.tempfile, "tempdir", str(tmp_path / "reaped-root"))
     message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
     assert "creating the temporary index raised FileNotFoundError" in message
-    assert "reaped-root" in message
+    assert "No such file or directory" in message  # the redactor may mask the host path itself
 
 
 def test_a_git_timeout_refusal_names_the_step(kimi_worktree, monkeypatch):
