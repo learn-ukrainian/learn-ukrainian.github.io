@@ -26,24 +26,6 @@ from typing import Any, TextIO
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-except ModuleNotFoundError as exc:
-    # Script execution puts the script directory on sys.path, so the
-    # top-level package is absent (exc.name == "scripts"). Any other
-    # import failure must propagate.
-    if exc.name != "scripts":
-        raise
-    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
-    _scripts_dir = next(
-        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
-    )
-    if str(_scripts_dir) not in sys.path:
-        sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
-
 ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -155,10 +137,10 @@ def _identifier(value: str) -> str:
     return f'"{value}"'
 
 
-def _connect_read_only(path: Path) -> SQLiteConnection:
+def _connect_read_only(path: Path) -> sqlite3.Connection:
     if not path.is_file() or path.stat().st_size == 0:
         raise FileNotFoundError(path)
-    connection = _open_readonly(path)
+    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only=ON")
     return connection

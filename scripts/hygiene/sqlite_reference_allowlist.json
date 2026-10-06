@@ -1017,6 +1017,16 @@
     ]
   },
   {
+    "path": "scripts/projects/open_model_data/admit_existing_corpus.py",
+    "reference_count": 2,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "implementation hash pinned by custody receipt build_phase3_p4_pilot.py; migrate only with a receipt rebinding by the open-model-data lane",
+    "calls": [
+      "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)"
+    ]
+  },
+  {
     "path": "scripts/projects/open_model_data/build_decolonization_cases.py",
     "reference_count": 1,
     "kind": "reader_pending_migration_9662",
