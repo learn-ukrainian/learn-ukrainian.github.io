@@ -954,6 +954,21 @@ def test_run_audit_scopes_registry_gh_execution_and_cache_to_explicit_root(tmp_p
     assert not (other_root / "batch_state" / "issue_stream_audit.json").exists()
 
 
+def test_9852_audit_records_resolved_repository_in_report_and_cache(tmp_path, monkeypatch):
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    _make_repo(tmp_path, epics=[100])
+    calls = []
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess, "run",
+        _fake_gh_run(calls, owner="Acme", name="Target-Repo", open_issues=[]),
+    )
+    report = run_audit(tmp_path)
+    cached = json.loads((tmp_path / "batch_state" / "issue_stream_audit.json").read_text())
+    assert report["repository"] == cached["repository"] == "Acme/Target-Repo"
+    assert {cwd for _args, cwd in calls} == {tmp_path.resolve()}
+    assert len([args for args, _cwd in calls if args[1:3] == ("repo", "view")]) == 1
+
+
 def test_run_audit_default_root_preserves_module_root_behavior(tmp_path, monkeypatch):
     """Calling ``run_audit()`` with no argument must still resolve against the
     module's own ``ROOT`` — the fix must not change plain CLI behavior."""
@@ -1990,6 +2005,7 @@ def test_run_audit_incomplete_report_has_completeness_flag_and_fails_closed(tmp_
     """Finding 1 (issue #8661): run_audit with incomplete nodes writes membership_complete=False
     and incomplete_nodes, and the resulting cache fails closed."""
     monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
     root = tmp_path / "repo"
     _make_repo(root, epics=[100])
 
@@ -2032,6 +2048,7 @@ def _deep_chain_edges(chain: list[int]) -> dict[int, list[int]]:
 
 def _run_deep_chain_audit(tmp_path, monkeypatch, chain: list[int], *, body_refs: dict[int, str] | None = None):
     monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
     root = tmp_path / "repo"
     _make_repo(root, epics=[10, 20])
     edges = _deep_chain_edges(chain)

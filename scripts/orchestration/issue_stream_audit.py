@@ -1336,6 +1336,7 @@ def run_audit(
     module's own repo instead.
     """
     root = repo_root.resolve() if repo_root is not None else ROOT
+    repository = "/".join(_repo_owner_name(root))
     registry_path = root / "scripts" / "config" / "issue_streams.yaml"
     registry = load_registry(registry_path, audit_only=True)
     closed_epics = load_closed_epics(registry_path)
@@ -1346,6 +1347,7 @@ def run_audit(
     )
     incomplete_nodes = sorted(_unread_warning_nodes(traversal_warnings))
     report = classify(open_issues, registry, membership, incomplete_nodes=incomplete_nodes)
+    report["repository"] = repository
     if incomplete_nodes:
         # Fail closed (#8661): an unread subtree can hide a duplicate
         # membership, so an incomplete traversal must not be green even when

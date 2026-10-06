@@ -180,7 +180,21 @@ class GhGitHubAdapter:
                 f"GitHub command returned invalid JSON: {args.verb if isinstance(args, Request) else ' '.join(args[:4])}"
             ) from exc
 
-    def registered_stream_epics(self) -> list[int]:
+    def registered_stream_epics(self, repository: str | None = None) -> list[int]:
+        """Use the checkout's registry only for its resolved repository.
+
+        Init and every mutation observation pass the task identity here, so
+        both native ancestry and body fallback consume a bound registry.
+        Read-only registry inspection may omit the identity.
+        """
+        if repository is not None:
+            document = self._json(["gh", "repo", "view", "--json", "nameWithOwner"])
+            failure = task_lifecycle.repository_evidence_refusal(
+                repository, document.get("nameWithOwner") if isinstance(document, dict) else None,
+                source="issue-stream registry",
+            )
+            if failure is not None:
+                raise task_lifecycle.LifecycleError(failure)
         try:
             from scripts.orchestration import issue_stream_audit
 
@@ -211,7 +225,7 @@ class GhGitHubAdapter:
 
         try:
             return issue_stream_audit.run_audit(self.repo_root)
-        except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.TimeoutExpired) as exc:
             raise task_lifecycle.LifecycleError(
                 f"cannot run the issue-stream membership audit: {exc}"
             ) from exc
@@ -415,7 +429,7 @@ class GhGitHubAdapter:
         # (native-chain path, #9783) — on the lifecycle issue itself or on the
         # transferred-scope follow-up read above — can only be decided by the
         # live membership snapshot, so only those cases fetch it.
-        registered_epics = self.registered_stream_epics()
+        registered_epics = self.registered_stream_epics(repository)
         needs_membership_audit = task_lifecycle.membership_needs_audit(
             issue.get("parent_epic"), registered_epics
         ) or (
@@ -939,7 +953,7 @@ def cmd_init(args: argparse.Namespace) -> int:
     identity = task_identity.validate_identity(_json_file(Path(args.identity_file)))
     adapter = GhGitHubAdapter(Path(args.repo_root))
     issue = adapter.read_issue(identity["repository"], identity["github_issue_number"])
-    registered_epics = adapter.registered_stream_epics()
+    registered_epics = adapter.registered_stream_epics(identity["repository"])
     # A native parent that is a registered stream epic decides alone in
     # resolve_membership. Only fetch the live audit snapshot when native
     # parentage is absent (body path) or the native parent is an unregistered

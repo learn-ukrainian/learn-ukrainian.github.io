@@ -251,6 +251,17 @@ def repository_identity_valid(repository: object) -> bool:
     return isinstance(repository, str) and re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository) is not None
 
 
+def repository_evidence_refusal(repository: str, evidence_repository: object, *, source: str) -> str | None:
+    """Bind membership evidence to a typed repository, without inference."""
+    if not repository_identity_valid(repository):
+        return "task repository identity is malformed"
+    if not repository_identity_valid(evidence_repository):
+        return f"{source} repository is missing or malformed"
+    if evidence_repository.casefold() != repository.casefold():
+        return f"{source} repository does not match the task identity"
+    return None
+
+
 def resolve_live_ancestry(
     *,
     repository: str,
@@ -286,6 +297,11 @@ def resolve_live_ancestry(
             report, failure = _fresh_membership_audit(membership_report, max_age_s)
             if report is None:
                 return _membership_refusal(str(failure))
+            failure = repository_evidence_refusal(
+                repository, report.get("repository"), source="live body membership audit"
+            )
+            if failure is not None:
+                return _membership_refusal(failure)
             # An unresolved root skipped its checklist. It cannot rule out a
             # second body owner, even though the reporting audit stays complete.
             for warning in report.get("warnings") or ():
