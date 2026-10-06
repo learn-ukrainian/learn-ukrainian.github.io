@@ -179,11 +179,15 @@ def exclusion(row: dict, splits: SplitManifest) -> str | None:
 class UaGecFileStore:
     """Pinned file fields addressed by official annotation file + sentence index."""
 
-    def __init__(self, root: Path):
-        self.root = root.resolve()
+    def __init__(self, root: Path | None = None):
+        # The registry installs one shared unbound adapter. Extraction replaces
+        # it with a fresh store in each SnapshotReader, after reading the request.
+        self.root = root.resolve() if root is not None else None
         self._hashes: dict[str, str] = {}
         self._rows: dict[tuple[str, str], dict] = {}
         self._corpus: list[dict] = []
+        if self.root is None:
+            return
         self.metadata = list(csv.DictReader(self._read("data/metadata.csv").splitlines()))
         require(len({r["id"] for r in self.metadata}) == len(self.metadata), "metadata_duplicate")
         for relative in ("README.md", "LICENSE"):
@@ -196,6 +200,7 @@ class UaGecFileStore:
         self.splits = split_manifest(self._corpus)
 
     def _read(self, relative: str) -> str:
+        require(self.root is not None, "source_input_unavailable")
         path = self.root / relative
         require(not path.is_symlink() and path.resolve().is_relative_to(self.root), "source_file_path")
         raw = path.read_bytes()
@@ -249,14 +254,17 @@ class UaGecFileStore:
             self._corpus.append(row)
 
     def row(self, table: str, row_key: str) -> dict:
+        require(self.root is not None, "source_input_unavailable")
         require((table, row_key) in self._rows, "row_unavailable")
         return dict(self._rows[table, row_key])
 
     def all_rows(self, table: str) -> list[dict]:
+        require(self.root is not None, "source_input_unavailable")
         require(table == "corpus", "corpus_table")
         return [dict(r) for r in self._corpus]
 
     def units(self, query: dict) -> list[str]:
+        require(self.root is not None, "source_input_unavailable")
         require(
             query.get("kind") == "official_reader"
             and query.get("store") == "ua-gec"
@@ -275,6 +283,7 @@ class UaGecFileStore:
         ]
 
     def file_hashes(self) -> dict[str, str]:
+        require(self.root is not None, "source_input_unavailable")
         for relative in tuple(self._hashes):
             self._read(relative)
         return dict(sorted(self._hashes.items()))
@@ -320,12 +329,13 @@ def cited_value(row: dict, slot: str, field: str) -> Value:
 class UaGecAttribution:
     """Map only the complete registered form, authenticated by held metadata."""
 
-    def __init__(self, store: UaGecFileStore):
+    def __init__(self, store: UaGecFileStore | None = None):
         self.store = store
 
     def resolve(self, form, citation, row, reader) -> Attribution:
         require(citation.source_id == "ua_gec" and row["source_id"] == "ua_gec", "attribution_unresolved")
-        readme = self.store._read("README.md")
+        store = self.store if self.store is not None else reader.files["ua-gec"]
+        readme = store._read("README.md")
         bibliography = re.search(r"@inproceedings\{syvokon-etal-2023-ua,(.*?)\n\}", readme, re.S)
         require(bibliography is not None, "attribution_unresolved")
         text = " ".join(bibliography[1].split())
@@ -336,7 +346,7 @@ class UaGecAttribution:
         )
         require(all(value in text for value in required), "attribution_unresolved")
         require("https://github.com/grammarly/ua-gec" in readme, "attribution_unresolved")
-        licence = self.store._read("LICENSE")
+        licence = store._read("LICENSE")
         require("Attribution 4.0 International" in licence, "attribution_unresolved")
         require(" ".join(form.split()) == REGISTER_FORM, "attribution_unresolved")
         return Attribution(REGISTER_FORM, form)
@@ -353,7 +363,10 @@ def parser_hashes() -> dict[str, str]:
             "ua_gec_split.py",
             "c1_ua_gec.py",
             "c6a_calque.py",
-            "ua_gec_build.py",
+            "ua_gec_component.py",
+            "ua_gec_mutations.py",
+            "c1.py",
+            "c6a.py",
         }
     }
 

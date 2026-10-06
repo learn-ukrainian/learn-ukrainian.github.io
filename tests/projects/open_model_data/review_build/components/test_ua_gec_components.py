@@ -3,17 +3,22 @@
 import csv
 import json
 from dataclasses import replace
-from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 import yaml
 
-from scripts.projects.open_model_data.review_build import output
+from scripts.projects.open_model_data.review_build import __main__ as cli
+from scripts.projects.open_model_data.review_build import components, output
 from scripts.projects.open_model_data.review_build.attribution import Resolver, SyntheticAdapter
 from scripts.projects.open_model_data.review_build.build import artifacts
 from scripts.projects.open_model_data.review_build.catalog import Catalog
-from scripts.projects.open_model_data.review_build.components import c1_ua_gec, c6a_calque, ua_gec_build, ua_gec_split
+from scripts.projects.open_model_data.review_build.components import (
+    c1_ua_gec,
+    c6a_calque,
+    ua_gec_mutations,
+    ua_gec_split,
+)
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.gate import Gate
 from scripts.projects.open_model_data.review_build.output import OutputGuard
@@ -133,10 +138,19 @@ def store(tmp_path, monkeypatch):
     return result
 
 
-def setup_gate(store, selected=("C1", "C6")):
-    config, candidates = ua_gec_build.request(
-        store, list(selected), Path("SYNTHETIC-catalog"), Path("SYNTHETIC-register")
-    )
+def setup_gate(store, selected=("C1", "C6a")):
+    modules = {"C1": c1_ua_gec, "C6a": c6a_calque}
+    config = {
+        "schema": "omd-review-request.v1",
+        "catalog": "SYNTHETIC-catalog",
+        "register": "SYNTHETIC-register",
+        "databases": {},
+        "components": {name: modules[name].spec() for name in selected},
+        "compatibility": store.compatibility(),
+        "corpus": ua_gec_split.CORPUS,
+        "ua_gec": {"root": str(store.root)},
+    }
+    candidates = [c for name in selected for c in modules[name].extract(store)]
     for component in config["components"].values():
         component["frozen_count"] = len(store.units(component["unit_query"]))
     data = catalog_data()
@@ -156,7 +170,7 @@ def test_accept_accounting_and_frozen_source_splits(store):
     gate, candidates, config, _ = setup_gate(store)
     records, report = gate.run(candidates)
     assert report["accounting"]["C1"]["counted"] == 50
-    assert report["accounting"]["C6"]["counted"] == 25
+    assert report["accounting"]["C6a"]["counted"] == 25
     assert all(
         sum(counts[k] for k in ("accepted", "rejected", "withheld", "excluded")) == counts["counted"]
         for counts in report["accounting"].values()
@@ -181,7 +195,63 @@ def test_unchanged_multiple_references_and_translation(store):
     assert all(c.slots[0].citations[0].table == "data/gec-fluency" for c in c6a_calque.extract(store))
 
 
-@pytest.mark.parametrize("component", ["C1", "C6"])
+@pytest.mark.parametrize("field", ["source_sentence", "target_sentence"])
+@pytest.mark.parametrize("marker", ["Step 1", "<think>", "Reasoning:"])
+def test_authentic_reasoning_markers_withhold_without_changing_source(store, field, marker):
+    base = admitted(store)
+    citation = base.slots[0].citations[0]
+    row = store._rows[citation.table, citation.row_key]
+    row[field] = "SYNTHETIC " + marker
+    source_field = "source" if field == "source_sentence" else "target"
+    row[source_field] = row[field]
+    row[source_field + "_span"] = (0, len(row[field]))
+    original = dict(row)
+    gate, candidates, _, _ = setup_gate(store, ("C1",))
+    changed = next(c for c in candidates if c.unit_id == base.unit_id)
+    assert changed.outcome == "withheld" and changed.reason == "reasoning_marker_in_source"
+    assert changed.evidence == ("reasoning_marker_in_source",)
+    assert row == original
+    _, report = gate.run(candidates)
+    assert report["accounting"]["C1"]["counted"] == 50
+    assert report["accounting"]["C1"]["reasons"]["reasoning_marker_in_source"] == 1
+
+
+def test_unbound_registered_store_refuses_reads():
+    store = ua_gec_split.UaGecFileStore()
+    for read in (
+        lambda: store._read("README.md"),
+        lambda: store.row("corpus", "SYNTHETIC"),
+        lambda: store.all_rows("corpus"),
+        lambda: store.units({}),
+        store.file_hashes,
+    ):
+        with pytest.raises(BuildError, match="source_input_unavailable"):
+            read()
+
+
+@pytest.mark.parametrize(
+    "fault,code",
+    [("root", "component_input"), ("corpus", "component_corpus"), ("compatibility", "source_compatibility")],
+)
+def test_registered_inputs_refuse_unreviewed_mappings(store, monkeypatch, fault, code):
+    from scripts.projects.open_model_data.review_build.components import ua_gec_component
+
+    _, _, config, _ = setup_gate(store)
+    if fault == "root":
+        config["ua_gec"]["root"] = "SYNTHETIC-relative"
+    elif fault == "corpus":
+        config["corpus"] = {}
+    else:
+        config["compatibility"] = []
+    monkeypatch.setattr(ua_gec_component, "UaGecFileStore", lambda _: store)
+    obj = components.load_components(["C1"])["C1"]
+    with SnapshotReader({}, obj.files) as reader:
+        ctx = components.ComponentContext(reader, config)
+        with pytest.raises(BuildError, match=code):
+            list(obj.iter_candidates(ctx))
+
+
+@pytest.mark.parametrize("component", ["C1", "C6a"])
 @pytest.mark.parametrize(
     "mutation,expected",
     [
@@ -245,7 +315,7 @@ def test_must_fail_source_role(store, reason):
 
 def test_mixed_edit_never_admitted(store):
     gate, candidates, _, _ = setup_gate(store)
-    mixed = next(c for c in candidates if c.component == "C6" and c.reason == "mixed_to_c1")
+    mixed = next(c for c in candidates if c.component == "C6a" and c.reason == "mixed_to_c1")
     assert mixed.outcome == "excluded"
     index = candidates.index(mixed)
     candidates[index] = replace(mixed, outcome="accepted", reason="calque_only", evidence=())
@@ -256,7 +326,7 @@ def test_mixed_edit_never_admitted(store):
 @pytest.mark.parametrize("module", [c1_ua_gec, c6a_calque])
 @pytest.mark.parametrize("missing", ["alignment", "empty"])
 def test_withhold_unsupported_pair(store, module, missing):
-    base = admitted(store, "C1" if module is c1_ua_gec else "C6")
+    base = admitted(store, "C1" if module is c1_ua_gec else "C6a")
     row = store.row(base.slots[0].citations[0].table, base.unit_id)
     row.update(aligned=missing != "alignment", target_sentence="" if missing == "empty" else row["target_sentence"])
     candidate = module.candidate(row, store.splits)
@@ -320,7 +390,9 @@ booktitle = "Proceedings of the Second Ukrainian Natural Language Processing Wor
 year = "2023"
 }
 """
-    adapter = ua_gec_split.UaGecAttribution(store)
+    # The registered adapter resolves through the current snapshot, rather
+    # than caching a store across build and verify invocations.
+    adapter = ua_gec_split.UaGecAttribution()
     monkeypatch.setattr(
         store, "_read", lambda p: metadata if p == "README.md" else "SYNTHETIC Attribution 4.0 International"
     )
@@ -357,9 +429,9 @@ def test_component_verification_fixtures_are_host_only(store, tmp_path, monkeypa
     (tmp_path / "SYNTHETIC-register.yaml").write_text(yaml.safe_dump(register_data(sources=("ua_gec",))))
     config.update(catalog=str(tmp_path / "SYNTHETIC-catalog.yaml"), register=str(tmp_path / "SYNTHETIC-register.yaml"))
     monkeypatch.setattr(output, "filesystem", lambda _: "ext4")
-    monkeypatch.setattr(ua_gec_build, "UaGecAttribution", lambda _: SyntheticAdapter())
+    monkeypatch.setattr(ua_gec_mutations, "UaGecAttribution", lambda _: SyntheticAdapter())
     with OutputGuard(tmp_path / "SYNTHETIC-output") as out:
-        results = ua_gec_build.verify_component_mutations(config, candidates, store, out)
+        results = ua_gec_mutations.verify_component_mutations(config, candidates, store, out)
         assert results["mixed_edit"] == "mixed_edit" and results["test_source"] == "test_source"
         assert json.loads(out.read("mutation-fixtures/wp1-results.json")) == results
 
@@ -385,71 +457,89 @@ def test_official_reader_loader_preserves_environment(tmp_path, monkeypatch):
 
 
 def test_invalid_component_selection_is_refused(store):
-    with pytest.raises(BuildError, match="component_spec"):
-        ua_gec_build.request(store, ["C1", "C1"], Path("SYNTHETIC"), Path("SYNTHETIC"))
+    with pytest.raises(BuildError, match="unknown_component"):
+        components.load_components(["C6"])
 
 
-@pytest.mark.parametrize("selected", [["C1"], ["C6"], ["C1", "C6"]])
-def test_build_verify_runner_and_input_tamper(store, tmp_path, monkeypatch, selected):
-    _, _, _, catalog = setup_gate(store)
+@pytest.mark.parametrize("selected", [["C1"], ["C6a"], ["C1", "C6a"]])
+def test_registered_cli_build_verify_and_input_tamper(store, tmp_path, monkeypatch, capsys, selected):
+    _, _, config, catalog = setup_gate(store, selected)
     catalog_path, register_path = tmp_path / "SYNTHETIC-catalog.yaml", tmp_path / "SYNTHETIC-register.yaml"
     catalog_path.write_text(yaml.safe_dump(catalog))
     register_path.write_text(yaml.safe_dump(register_data(sources=("ua_gec",))))
-    monkeypatch.setattr(ua_gec_build, "UaGecFileStore", lambda _: store)
-    monkeypatch.setattr(ua_gec_build, "UaGecAttribution", lambda _: SyntheticAdapter())
+    config.update(catalog=str(catalog_path), register=str(register_path))
+    config["components"] = {name: {} for name in selected}
+    config_path = tmp_path / "request.json"
+    config_path.write_text(json.dumps(config))
+    from scripts.projects.open_model_data.review_build.components import ua_gec_component
+
+    # Keep the real registry and component extraction, replacing only private
+    # corpus I/O and attribution with the existing synthetic fixtures.
+    opened = []
+
+    def open_store(root):
+        opened.append(root)
+        return store
+
+    monkeypatch.setattr(ua_gec_component, "UaGecFileStore", open_store)
+    monkeypatch.setitem(ua_gec_component.ADAPTERS, "ua_gec", SyntheticAdapter())
     monkeypatch.setattr(c1_ua_gec, "FROZEN_COUNT", 50)
     monkeypatch.setattr(c6a_calque, "FROZEN_COUNT", 25)
     monkeypatch.setattr(output, "filesystem", lambda _: "ext4")
-    with OutputGuard(tmp_path / "SYNTHETIC-build") as guard:
-        built = ua_gec_build.run("build", store.root, guard, catalog_path, register_path, selected)
-        verified = ua_gec_build.run("verify", store.root, guard, catalog_path, register_path, selected)
-        assert built["status"] == "built" and verified["status"] == "verified"
-        assert built["build_sha256"] == verified["build_sha256"]
-        assert set(built["accounting"]) == set(selected)
-        assert json.loads(guard.read("manifest.json"))["pins"]["components"] == sorted(selected)
-        assert verified["generic_mutations"] == json.loads(guard.read("mutation-fixtures/results.json"))
-        assert set(verified["generic_mutations"]) == {
-            "absent_quote",
-            "wrong_span",
-            "empty_locator",
-            "missing_unit",
-            "swapped_citation",
-        }
-        for component in selected:
-            assert verified["component_mutations"][component + "_attribution_placeholder"] == "attribution_unresolved"
-        guard.write("split-manifest.json", b"SYNTHETIC tamper")
-        with pytest.raises(BuildError, match="artifact_mismatch"):
-            ua_gec_build.run("verify", store.root, guard, catalog_path, register_path, ["C1", "C6"])
+    out = tmp_path / "SYNTHETIC-build"
+    args = ["--config", str(config_path), "--out", str(out), "--components", *selected]
+    assert cli.main(["build", *args]) == 0
+    built = json.loads(capsys.readouterr().out)
+    assert cli.main(["verify", *args]) == 0
+    verified = json.loads(capsys.readouterr().out)
+    assert len(opened) == 2  # Once per snapshot, even when both ids are selected.
+    assert built["status"] == "built" and verified["status"] == "verified"
+    assert built["build_sha256"] == verified["build_sha256"]
+    manifest = json.loads((out / "manifest.json").read_bytes())
+    assert set(manifest["accounting"]) == set(selected)
+    assert manifest["pins"]["components"] == sorted(selected)
+    assert set(json.loads((out / "mutation-fixtures/results.json").read_bytes())) == {
+        "absent_quote",
+        "wrong_span",
+        "empty_locator",
+        "missing_unit",
+        "swapped_citation",
+    }
+    (out / "accounting.json").write_bytes(b"SYNTHETIC tamper")
+    assert cli.main(["verify", *args]) == 1
+    assert json.loads(capsys.readouterr().err)["error"] == "artifact_mismatch"
 
 
 def test_cli_privacy_help_and_error_logs(tmp_path, monkeypatch, capsys):
     with pytest.raises(SystemExit) as result:
-        ua_gec_build.main(["--help"])
+        cli.main(["--help"])
     assert result.value.code == 0
     help_text = capsys.readouterr().out
     assert all(part in help_text for part in ("Examples:", "Outputs:", "Exit codes:", "Related:"))
-    assert ua_gec_build.main(["SYNTHETIC PRIVATE INPUT"]) == 2
+    assert cli.main(["SYNTHETIC PRIVATE INPUT"]) == 2
     captured = capsys.readouterr()
     assert "SYNTHETIC PRIVATE INPUT" not in captured.out + captured.err
-    assert json.loads(captured.out)["error"] == "cli_usage"
+    assert json.loads(captured.err)["error"] == "cli_usage"
     monkeypatch.setattr(output, "filesystem", lambda _: "ext4")
-    monkeypatch.setattr(ua_gec_build, "run", lambda *args: {"status": "built", "count": 1})
+    config = tmp_path / "SYNTHETIC-request.json"
+    config.write_text(json.dumps({"components": {"C1": {}}}))
+    monkeypatch.setattr(cli, "execute", lambda *args, **kwargs: {"status": "built", "count": 1})
     out = tmp_path / "SYNTHETIC-cli"
-    args = ["build", "--ua-gec", str(tmp_path / "SYNTHETIC-source"), "--out", str(out)]
-    assert ua_gec_build.main(args) == 0
+    args = ["build", "--config", str(config), "--out", str(out), "--components", "C1"]
+    assert cli.main(args) == 0
     assert json.loads(capsys.readouterr().out)["status"] == "built"
 
-    def fail(*args):
+    def fail(*args, **kwargs):
         raise ValueError("SYNTHETIC PRIVATE RECORD TEXT")
 
-    monkeypatch.setattr(ua_gec_build, "run", fail)
-    assert ua_gec_build.main(args) == 1
+    monkeypatch.setattr(cli, "execute", fail)
+    assert cli.main(args) == 1
     captured = capsys.readouterr()
     assert "SYNTHETIC PRIVATE RECORD TEXT" not in captured.out + captured.err
     assert str(out) not in captured.out + captured.err
-    assert b"SYNTHETIC PRIVATE RECORD TEXT" in (out / "logs/wp1-failure.txt").read_bytes()
+    assert b"SYNTHETIC PRIVATE RECORD TEXT" in (out / "logs/failure.txt").read_bytes()
     monkeypatch.setattr(OutputGuard, "write", fail)
-    assert ua_gec_build.main(args) == 1
+    assert cli.main(args) == 1
     captured = capsys.readouterr()
     assert "SYNTHETIC PRIVATE RECORD TEXT" not in captured.out + captured.err
-    assert json.loads(captured.out)["error"] == "output_io"
+    assert json.loads(captured.err)["error"] == "error_log_unavailable"

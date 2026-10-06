@@ -56,7 +56,7 @@ def candidate(row: dict, splits) -> Candidate:
         require(bool(row["source_language"]), "translation_language_unavailable")
         flags = ("translation:" + row["source_language"],)
     return Candidate(
-        "C6",
+        "C6a",
         row["row_key"],
         outcome,
         reason or "calque_only",
