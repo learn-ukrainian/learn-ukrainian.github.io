@@ -13,6 +13,7 @@ from typing import Protocol
 
 from .contract import Citation, canonical, digest
 from .errors import require
+from .transforms import WORDS, fold_word
 
 
 def identifier(name: str) -> str:
@@ -80,6 +81,8 @@ class SnapshotReader:
         self.reads: dict[tuple[str, str], set[tuple[str, str]]] = {}
         self.repository_root = (repository_root or Path(__file__).resolve().parents[4]).resolve()
         self.repository_configs: dict[str, bytes] = {}
+        self._word_cache = {}
+        self._text_cache = {}
         try:
             require(len({p.resolve() for p in databases.values()}) == len(databases), "duplicate_database")
             for store, path in sorted(databases.items()):
@@ -202,7 +205,14 @@ class SnapshotReader:
         # Reviewed spec identifies the exact VESUM form table and field.
         require(policy.get("store") == "vesum.db", "transform_policy")
         conn = self.connections[policy["store"]]
-        query = f"SELECT * FROM {identifier(policy['table'])} WHERE {identifier(policy['field'])}=?"
+        lookup = policy.get("lookup_field", policy["field"])
+        if "lookup_field" in policy:
+            require(policy.get("normalizer") == "vesum_fold", "transform_policy")
+            word = fold_word(word)
+        cache_key = (canonical(policy), word)
+        if cache_key in self._word_cache:
+            return self._word_cache[cache_key]
+        query = f"SELECT * FROM {identifier(policy['table'])} WHERE {identifier(lookup)}=?"
         found = False
         info = conn.execute(f"PRAGMA table_info({identifier(policy['table'])})").fetchall()
         keys = [r["name"] for r in sorted(info, key=lambda r: r["pk"]) if r["pk"]]
@@ -215,7 +225,64 @@ class SnapshotReader:
                 (row_key, digest(row[policy["field"]].encode("utf-8")))
             )
             found = True
+        self._word_cache[cache_key] = found
         return found
+
+    def held_texts(self, policy: dict) -> dict:
+        """Pin the reviewed corpus and optional metadata in this read transaction."""
+        witness = policy["witness"]
+        key = canonical(witness)
+        if key not in self._text_cache:
+            texts, words = {}, {}
+            for row in self.iter_rows(witness["store"], witness["table"]):
+                if row[witness["source_column"]] != witness["source_id"]:
+                    continue
+                info = (
+                    self.connections[witness["store"]]
+                    .execute(f"PRAGMA table_info({identifier(witness['table'])})")
+                    .fetchall()
+                )
+                keys = [r["name"] for r in sorted(info, key=lambda r: r["pk"]) if r["pk"]]
+                require(bool(keys), "invalid_row_key")
+                row_key = ";".join(f"{k}={row[k]}" for k in keys)
+                text = row[witness["field"]]
+                require(isinstance(text, str), "field_unavailable")
+                for field in (witness["field"], witness["alternatives_field"], witness["count_field"]):
+                    value = row[field]
+                    self.reads.setdefault((witness["store"], witness["table"]), set()).add(
+                        (row_key + ";field=" + field, digest(canonical(value)))
+                    )
+                texts.setdefault(text, []).append(row)
+                for match in WORDS.finditer(text):
+                    words.setdefault(fold_word(match[0]), set()).add(text)
+            self._text_cache[key] = {"texts": texts, "words": words}
+        return self._text_cache[key]
+
+    def has_text_word(self, word: str, policy: dict, *, exclude: str | None = None) -> bool:
+        matches = self.held_texts(policy)["words"].get(fold_word(word), set())
+        return bool(matches - {exclude})
+
+    def text_metadata(self, text: str, policy: dict) -> list[str]:
+        witness = policy["witness"]
+        rows = self.held_texts(policy)["texts"].get(text, [])
+        # Identical paragraphs may share a reading only with identical metadata.
+        require(bool(rows), "hyphen_metadata_unavailable")
+        metadata = {(r[witness["alternatives_field"]], r[witness["count_field"]]) for r in rows}
+        require(len(metadata) == 1, "hyphen_metadata_unavailable")
+        raw, count = metadata.pop()
+        try:
+            alternatives = json.loads(raw)
+        except (TypeError, ValueError):
+            require(False, "hyphen_metadata_unavailable")
+        require(
+            isinstance(alternatives, list)
+            and all(isinstance(a, str) for a in alternatives)
+            and type(count) is int
+            and count == len(alternatives)
+            and (alternatives or raw == "[]"),
+            "hyphen_metadata_unavailable",
+        )
+        return alternatives
 
     def snapshots(self) -> dict[str, str]:
         return {

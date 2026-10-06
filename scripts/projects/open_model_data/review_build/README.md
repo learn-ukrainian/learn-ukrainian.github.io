@@ -349,3 +349,25 @@ with a private payload, stable name, expected error code and gate probe. CLI
 success, a different refusal, duplicate names or an empty generator fail verification.
 Payloads and `component-results.json` stay under the guarded host-only output.
 Component-specific fixture definitions stay with WP1–WP6.
+
+`dehyphenate@2` preserves `@1` and resolves each printed line-break hyphen,
+including stored inline alternatives, with a held folded VESUM form index or
+an unhyphenated whole-token witness in the same held source corpus. The policy
+adds `lookup_field`, `normalizer: vesum_fold`, and a `witness` mapping identifying
+store, table, text field, source column/id, alternatives field and count field.
+Both readings attested, neither reading attested, or unmatched metadata remain
+unresolved. A hyphenated VESUM form prevents a join; when only that form is
+attested, the hyphen remains and only line whitespace is removed. Every decision
+records its raw offsets, resulting form and evidence kind in `join_evidence`;
+`joins` continues to record actual hyphen removals. Held text and metadata reads
+are pinned in the source snapshot. No word lists or source edits participate.
+
+The `transform_resolved` binding recomputes `dehyphenate@2` from the complete
+held paragraph and rejects unresolved readings or suspected fused tokens.
+A suspected fused token has no whole-form VESUM attestation or occurrence in
+another held paragraph, but admits a split into two VESUM forms each occurring
+as a whole unhyphenated word in the held text. It is withheld, never repaired.
+C5 retains raw printed example spans and quotes for identity and `example_list`
+binding; its catalog target is the complete paragraph with the resolved reading.
+Paragraph reasons are `paragraph_hyphenation_unresolved`, `source_text_defect`
+or unavailable metadata. Bibliographic attribution remains a separate gate.

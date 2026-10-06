@@ -13,7 +13,7 @@ import unicodedata
 from .contract import Candidate, Value
 from .errors import BuildError, require
 from .snapshot import SnapshotReader
-from .transforms import transform
+from .transforms import source_text_defects, transform
 
 
 def select(candidate: Candidate, selector: dict) -> Value:
@@ -205,6 +205,17 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
                 all(re.search(rule["pattern"], operand(candidate, ref, reader)) is None for ref in selectors),
                 "binding_pattern",
             )
+        elif op == "transform_resolved":
+            require(bool(selectors) and rule.get("transform") == "dehyphenate@2", "binding_transform")
+            policy = policies.get(rule["transform"])
+            require(isinstance(policy, dict), "transform_policy")
+            for ref in selectors:
+                _, field = reader.field(citation_for(candidate, ref))
+                resolved = transform(rule["transform"], field, policy, reader)
+                require(not resolved.unresolved, "binding_hyphenation")
+                require(
+                    not source_text_defects(resolved.text, policy, reader, original=field), "binding_source_text_defect"
+                )
         elif op == "whole_field":
             require(bool(selectors), "binding_whole_field")
             for ref in selectors:
