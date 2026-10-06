@@ -186,7 +186,7 @@ def test_scan_error_and_reap_error_are_reported(inventory, monkeypatch):
     monkeypatch.setattr(sweep, "reap_attributed_temp", broken)
     report = inventory.run(apply=True)
     assert report["errors"] == 1 and path.exists()
-    monkeypatch.setattr(sweep, "tree_facts", lambda _: (0, 0, "tree_unknown"))
+    monkeypatch.setattr(sweep, "tree_facts", lambda _: (0, 0, 0, "tree_unknown"))
     assert inventory.run()["rows"][0]["reason"] == "tree_unknown"
 
 
@@ -194,9 +194,11 @@ def test_task_loader_rejects_malformed_or_mismatched_records(tmp_path):
     (tmp_path / "bad.json").write_text("not json")
     (tmp_path / "wrong.json").write_text(json.dumps({"task_id": "someone-else"}))
     (tmp_path / "list.json").write_text("[]")
-    records = sweep.load_tasks(tmp_path)
-    assert set(records) == {"bad", "wrong", "list"}
-    assert all(record["status"] is None for record in records.values())
+    inventory = sweep.load_tasks(tmp_path)
+    assert set(inventory.records) == {"bad", "wrong", "list"}
+    assert all(record["status"] is None for record in inventory.records.values())
+    assert inventory.complete is False
+    assert sweep.load_tasks(tmp_path / "absent").complete is False
 
 
 def test_process_snapshot_cwd_fd_zombie_and_unknown(tmp_path):
@@ -208,11 +210,19 @@ def test_process_snapshot_cwd_fd_zombie_and_unknown(tmp_path):
     (live / "cwd").symlink_to(tmp_path)
     (live / "fd").mkdir()
     (live / "fd" / "4").symlink_to(tmp_path / "held")
+    (live / "maps").write_text(
+        f"7f00-7f01 r--s 00000000 08:01 42                     {tmp_path / 'mapped file'}\n"
+        f"7f02-7f03 r--p 00000000 08:01 43                     {tmp_path / 'unlinked'} (deleted)\n"
+        "7f04-7f05 rw-p 00000000 00:00 0                      [heap]\n"
+        "7f06-7f07 rw-p 00000000 00:00 0\n"
+    )
     zombie = proc / "12"
     zombie.mkdir()
     (zombie / "stat").write_text("12 (fixture) Z 0")
     refs, complete = sweep.process_snapshot(proc)
     assert complete and (11, tmp_path) in refs and (11, tmp_path / "held") in refs
+    assert (11, tmp_path / "mapped file") in refs and (11, tmp_path / "unlinked") in refs
+    assert all(ref.is_absolute() for _, ref in refs)
     unknown = proc / "13"
     unknown.mkdir()
     assert sweep.process_snapshot(proc)[1] is False
@@ -258,7 +268,7 @@ def test_cli_dry_run_json_table_and_errors(inventory, capsys):
     assert sweep.main([*argv, "--json"]) == 0
     assert json.loads(capsys.readouterr().out)["bytes_reclaimed"] == 0
     assert sweep.main(argv) == 0
-    assert "| Directory |" in capsys.readouterr().out
+    assert "| Entry |" in capsys.readouterr().out
     with pytest.raises(SystemExit) as exc:
         sweep.main([*argv, "--min-age-hours", "0"])
     assert exc.value.code == 2
@@ -290,7 +300,7 @@ def test_tree_read_error_is_unknown(inventory, monkeypatch):
         return original(self)
 
     monkeypatch.setattr(Path, "iterdir", unreadable)
-    assert sweep.tree_facts(path)[2] == "tree_unknown"
+    assert sweep.tree_facts(path)[3] == "tree_unknown"
 
 
 def test_common_reaper_refuses_unknown_mounts(inventory, monkeypatch):
@@ -337,12 +347,21 @@ def test_process_snapshot_keeps_known_cwd_when_fds_unknown(tmp_path):
     assert (14, tmp_path / "held") in refs and not complete
 
 
-def test_final_process_probe_after_tree_recheck_blocks_reap(inventory, monkeypatch):
+def test_post_rename_process_probe_blocks_reap_and_restores(inventory, monkeypatch):
     path = inventory.make()
-    probes = iter([([], True), ([], True), ([(16, path)], True)])
-    monkeypatch.setattr(sweep, "process_snapshot", lambda: next(probes))
+    probes = iter([([], True), ([], True)])
+
+    def probe():
+        # Third probe: after the rename, a holder shows the quarantined path.
+        for result in probes:
+            return result
+        [quarantine] = inventory.root.glob(sweep.QUARANTINE_PREFIX + "*")
+        return [(16, quarantine / path.name / "payload")], True
+
+    monkeypatch.setattr(sweep, "process_snapshot", probe)
     report = inventory.run(apply=True)
-    assert path.exists() and report["rows"][0]["reason"] == "final_liveness_or_task_changed"
+    assert report["rows"][0]["reason"] == "quarantine_live_process" and report["rows"][0]["decision"] == "preserve"
+    assert (path / "payload").exists() and not list(inventory.root.glob(sweep.QUARANTINE_PREFIX + "*"))
 
 
 def test_malformed_specific_run_never_falls_back_to_finished_parent(inventory):
@@ -356,7 +375,11 @@ def test_malformed_specific_run_never_falls_back_to_finished_parent(inventory):
 def test_socket_endpoint_is_preserved_even_without_fd_path_reference(inventory, monkeypatch):
     path = inventory.make()
     monkeypatch.chdir(path)
-    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as endpoint:
+    try:
+        endpoint = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    except PermissionError as error:
+        pytest.skip(f"this sandbox forbids AF_UNIX socket creation: {error}")
+    with endpoint:
         endpoint.bind("endpoint")
         report = inventory.run(apply=True)
         assert path.exists() and report["rows"][0]["reason"] == "special_file"
