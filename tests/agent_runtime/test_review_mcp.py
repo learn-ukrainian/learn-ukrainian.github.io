@@ -90,7 +90,6 @@ def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_ag
     assert settings["permissions"]["deny"] == [
         "command(*)",
         "write_file(*)",
-        "read_file(*)",
         *[f"mcp(sources/{name})" for name in sorted((set(readers) | set(writers)) - REVIEW_TOOLS)],
     ]
     assert not any("*" in rule for rule in settings["permissions"]["allow"])
@@ -140,7 +139,6 @@ def test_receipt_attempt_allow_contract_unchanged(manifest_file, tmp_path, acces
             "deny": [
                 "command(*)",
                 "write_file(*)",
-                "read_file(*)",
                 *[f"mcp(sources/{name})" for name in sorted(set().union(*sources_tool_sets()) - set(names))],
             ],
         }

@@ -54,7 +54,6 @@ def test_exact_review_grants(tmp_path, scoped, route):
             "deny": [
                 "command(*)",
                 "write_file(*)",
-                "read_file(*)",
                 *[f"mcp(sources/{name})" for name in sorted(set().union(*sources_tool_sets()) - tools)],
             ],
         }
@@ -65,6 +64,20 @@ def test_exact_review_grants(tmp_path, scoped, route):
     assert not (set(tools) & set(sources_tool_sets()[1]))
     # A repeated gate/launch builds the same settings, without a second grant.
     assert build(tmp_path, config).env_overrides == plan.env_overrides
+
+
+@pytest.mark.parametrize("route", ["full", "isolated", "permission-only"])
+def test_profile_does_not_deny_workspace_evidence(tmp_path, scoped, route):
+    evidence = tmp_path / "evidence.txt"
+    evidence.write_text("workspace evidence")
+    config = {"agy_home_override": str(scoped), "review_profile": "ukrainian"}
+    if route != "permission-only":
+        config["review_access"] = route
+    plan = build(tmp_path, config)
+    assert plan.cwd == tmp_path
+    rules = json.loads((scoped / ".gemini" / "antigravity-cli" / "settings.json").read_text())["permissions"]
+    assert not any(rule.startswith("read_file(") for rule in rules["deny"])
+    assert evidence.read_text() == "workspace evidence"
 
 
 def test_permission_only_provisioned_home_passes_adapter_for_review_tools(tmp_path, monkeypatch):
@@ -347,7 +360,7 @@ def test_review_command_grants_are_empty(access):
         rule[8:-1] for rule in agy_review_settings(access)["permissions"]["allow"] if rule.startswith("command(")
     ]
     assert not commands
-    assert agy_review_settings(access)["permissions"]["deny"][:3] == ["command(*)", "write_file(*)", "read_file(*)"]
+    assert agy_review_settings(access)["permissions"]["deny"][:2] == ["command(*)", "write_file(*)"]
 
 
 @pytest.mark.parametrize("binary", READER_LONG_OPTIONS)
@@ -428,20 +441,26 @@ def test_recorded_headless_auto_denial_is_typed_before_completion(task, kind, re
     assert reason == agy.AGY_HEADLESS_PERMISSION_DENIED
     assert reason in agy.AGY_INCOMPLETE_RUN_REASONS
     assert json.loads(details) == {"permission_kind": kind, "permission_target": None}
+    assert parsed.agy_attempt.permission_target is None
     assert "skip-permissions" not in parsed.stderr_excerpt
 
 
-@pytest.mark.parametrize("kind,target", [("command", "rg --pre bash"), ("mcp", "sources/query_ulif")])
+@pytest.mark.parametrize(
+    "kind,target",
+    [("command", "rg --pre bash"), ("mcp", "sources/query_ulif"), ("read_file", "workspace/evidence.txt")],
+)
 def test_auto_denial_preserves_concrete_resource(kind, target):
     parsed = agy.AgyAdapter().parse_response(
         stdout="", stderr=auto_denial(f"{kind}({target})"), returncode=0, output_file=None
     )
     assert json.loads(parsed.stderr_excerpt.split("\n", 1)[1]) == {"permission_kind": kind, "permission_target": target}
     assert agy._headless_permission_denial(auto_denial(f"{kind}({target})")) == (kind, target)
+    assert parsed.agy_attempt.permission_target == target
 
 
 def test_permission_help_example_is_not_an_observed_target():
     assert agy._headless_permission_denial(auto_denial("command", "cat example.txt")) == ("command", None)
+    assert agy._headless_permission_denial(auto_denial("read_file", "workspace/evidence.txt")) == ("read_file", None)
 
 
 @pytest.mark.parametrize(
@@ -480,10 +499,10 @@ def test_prompt_keywords_never_enable_the_profile_for_recon(tmp_path, monkeypatc
 
 def test_profile_denies_commands_and_preserves_sources(tmp_path, scoped):
     plan = build(tmp_path, {"review_profile": "ukrainian", "agy_home_override": str(scoped)})
-    assert plan.metadata["agy_permission_profile_id"] == "ukrainian-review-command-denial-v2"
+    assert plan.metadata["agy_permission_profile_id"] == "ukrainian-review-command-denial-v3"
     rules = json.loads((scoped / ".gemini" / "antigravity-cli" / "settings.json").read_text())["permissions"]
     assert "command(*)" in rules["deny"]
-    assert "read_file(*)" in rules["deny"]
+    assert "read_file(*)" not in rules["deny"]
     assert {rule for rule in rules["deny"] if rule.startswith("mcp(")} == {
         f"mcp(sources/{tool})" for tool in set().union(*sources_tool_sets()) - review_tools()
     }

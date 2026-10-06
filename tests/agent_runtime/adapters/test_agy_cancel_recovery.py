@@ -43,9 +43,11 @@ def _kill(task=_TASK_2, **extra):
     )
 
 
-def _parse(tmp_path, events, *, stderr="", envelope=None, returncode=0):
+def _parse(tmp_path, events, *, stderr="", envelope=None, returncode=0, profile_id=None):
     plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, events)
     plan = replace(plan, cmd=["agy", "--input-format", "stream-json", "--output-format", "stream-json"])
+    if profile_id:
+        plan = replace(plan, metadata={**plan.metadata, "agy_permission_profile_id": profile_id})
     stdout = _stream_stdout(
         envelope
         or {
@@ -168,6 +170,10 @@ def _explicit_denial(kind, target):
     "tool,kind,target",
     [
         ("view_file", "read_file", "public-gate-input.txt"),
+        ("list_dir", "read_file", "fixture-dir"),
+        ("grep_search", "read_file", "fixture-dir"),
+        ("find_by_name", "read_file", "fixture-dir"),
+        ("future_file_reader", "read_file", "fixture-dir"),
         ("call_mcp_tool", "mcp", "sources/verify_word"),
     ],
 )
@@ -187,7 +193,7 @@ def test_native_explicit_denials_count_separately_and_keep_completion(tmp_path, 
     evidence = result.agy_attempt
     assert evidence.denied_command_count == 0
     assert evidence.executed_command_count == 0
-    assert evidence.denied_file_read_count == (tool == "view_file")
+    assert evidence.denied_file_read_count == (kind == "read_file")
     assert evidence.denied_mcp_count == (tool == "call_mcp_tool")
     record = AgyTelemetry(attempts=(evidence,), accepted_attempt=1).task_fields()["agy_attempts"][0]
     assert record["denied_file_read_count"] == evidence.denied_file_read_count
@@ -209,6 +215,37 @@ def test_sources_output_deny_phrase_is_not_native_permission_evidence(tmp_path, 
     assert result.ok
     assert result.agy_attempt.denied_mcp_count == 0
     assert result.agy_attempt.denied_file_read_count == 0
+
+
+@pytest.mark.parametrize("tool", [None, "run_command", "call_mcp_tool"])
+def test_read_denial_requires_a_bound_file_tool_result(tmp_path, tool):
+    events = [_prompt()]
+    if tool:
+        events.append(_event("PLANNER_RESPONSE", "", source="MODEL", tool_calls=[{"name": tool, "args": {}}]))
+    events.extend(
+        [
+            _event("GENERIC", _explicit_denial("read_file", "fixture.txt"), status="ERROR"),
+            _reply("Complete reply."),
+        ]
+    )
+    result = _parse(tmp_path, events)
+    assert result.agy_attempt.denied_file_read_count == 0
+
+
+@pytest.mark.parametrize("readable", [True, False])
+def test_file_auto_denial_target_survives_attempt_evidence_and_record(tmp_path, readable):
+    from scripts.agent_runtime.result import AgyTelemetry
+    from tests.agent_runtime.adapters.test_agy_review_permissions import auto_denial
+
+    events = [_prompt(), _reply("Complete reply.")] if readable else ["unreadable"]
+    profile = "ukrainian-review-command-denial-v3"
+    result = _parse(tmp_path, events, stderr=auto_denial("read_file(evidence.txt)"), profile_id=profile)
+    assert not result.ok
+    assert result.failure_code == "provider_policy_refusal"
+    assert result.agy_attempt.permission_target == "evidence.txt"
+    record = AgyTelemetry(attempts=(result.agy_attempt,)).task_fields()
+    assert record["agy_attempts"][0]["permission_target"] == "evidence.txt"
+    assert record["agy_attempts"][0]["permission_profile_id"] == profile
 
 
 def test_mixed_denials_use_result_slots_not_planner_step_indexes(tmp_path):

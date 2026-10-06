@@ -12,7 +12,7 @@ Known behavioral facts (verify against the installed CLI when changing transport
 - ``--input-format stream-json --output-format stream-json`` accepts one
   NDJSON user message on stdin and returns a terminal ``result`` event.
 - Resume/new conversation is ``--conversation=<uuid>``.
-- Review routes write exact Sources grants and explicit command, file-read
+- Review routes write exact Sources grants and explicit command, write
   and non-contract Sources denials in their scoped home's ``settings.json``;
   they never skip permissions.
   Non-review dispatches retain their existing headless permission mode.
@@ -998,7 +998,7 @@ class AgyAdapter:
                 "agy_app_data_root": str(app_data_root),
                 "attempt_read_root": bool(tc.get("review_write_root")),
                 "log_read_root": str(log_read_root),
-                "agy_permission_profile_id": "ukrainian-review-command-denial-v2" if review_route else None,
+                "agy_permission_profile_id": "ukrainian-review-command-denial-v3" if review_route else None,
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
@@ -1093,7 +1093,10 @@ class AgyAdapter:
                 failure_code="provider_policy_refusal",
                 provider_error_text="",
                 stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED + "\n" + json.dumps(denial._asdict()),
-                agy_attempt=AgyAttempt(completion_reason=AGY_HEADLESS_PERMISSION_DENIED),
+                agy_attempt=AgyAttempt(
+                    completion_reason=AGY_HEADLESS_PERMISSION_DENIED,
+                    permission_target=denial.permission_target,
+                ),
             )
         stream_error = str(stream_result.get("error") or "") if stream_result else ""
         # Only a failed terminal envelope owns error text. A SUCCESS result
@@ -1244,6 +1247,7 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         completion_reason=reason,
         failure_code=result.failure_code,
         permission_profile_id=plan.metadata.get("agy_permission_profile_id") if plan else None,
+        permission_target=result.agy_attempt.permission_target if result.agy_attempt else None,
     )
     if bound is None or bound.unreadable_lines:
         return base
@@ -1295,7 +1299,14 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
             native_denial = event.get("status") in {"ERROR", "INVALID"} and (
                 "Encountered error in step execution: permission check failed for " in content
             )
-            if tool == "view_file" and native_denial and "Permission denied for read_file(" in content:
+            # Native permission kind covers all file readers, including future
+            # tools. Exclude command and MCP outputs from supplying read hits.
+            if (
+                tool
+                and tool not in {"run_command", "call_mcp_tool"}
+                and native_denial
+                and "Permission denied for read_file(" in content
+            ):
                 denied_file_reads.add(slot)
             elif tool == "call_mcp_tool" and native_denial and "Permission denied for mcp(" in content:
                 denied_mcp.add(slot)

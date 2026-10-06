@@ -564,7 +564,6 @@ def agy_review_settings(review_access: str | None = "isolated") -> dict[str, Any
             "deny": [
                 "command(*)",
                 "write_file(*)",
-                "read_file(*)",
                 *[f"mcp(sources/{name})" for name in sorted((set(readers) | set(writers)) - tools)],
             ],
         }
