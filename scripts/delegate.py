@@ -5751,6 +5751,7 @@ TYPED_CAUSE_CODES = frozenset(
         "rescue_identity_unavailable",
         "rescue_commit_failed",
         "rescue_publish_worktree_failed",
+        "rescue_publish_path_changed",
         "rescue_push_url_unavailable",
         "rescue_push_failed",
         "rescue_remote_unverified",
@@ -7481,14 +7482,37 @@ def _rescue_publish_worktree(repo: _RescueRepo, head: str) -> Iterator[Path]:
     the worker's commits run there, and the push runs there once
     :func:`_rescue_checkout` has put the rescued commit in it.
     """
-    path = Path(tempfile.mkdtemp(prefix=f"{repo.worktree.name}.rescue-", dir=repo.worktree.parent))
-    identity = path.stat(follow_symlinks=False)
+    # Primary-checkout scratch belongs to the driver, outside the worker's
+    # checkout and TMPDIR lease. This is an existing delete-guard root;
+    # mkdtemp creates each publish directory privately (0700).
+    scratch = _REPO_ROOT / "batch_state" / "tmp"
+    scratch.mkdir(mode=0o700, parents=True, exist_ok=True)
+    if scratch.resolve(strict=True) != scratch or not stat.S_ISDIR(scratch.lstat().st_mode):
+        raise _RescueFailure("rescue scratch root is not a real directory", _TypedCause("rescue_publish_path_changed"))
+    path = Path(tempfile.mkdtemp(prefix=f"{repo.worktree.name}.rescue-", dir=scratch))
+    identity = path.lstat()
     created = False
 
+    def verify_identity() -> None:
+        try:
+            current = path.lstat()
+        except OSError as exc:
+            raise _RescueFailure(
+                "rescue publish directory disappeared",
+                _TypedCause("rescue_publish_path_changed", diagnostic=str(exc)),
+            ) from exc
+        if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != (identity.st_dev, identity.st_ino):
+            raise _RescueFailure(
+                "rescue publish directory identity changed; refusing use or removal",
+                _TypedCause("rescue_publish_path_changed"),
+            )
+
     def publish_git(target: Path, args: list[str]) -> subprocess.CompletedProcess[str]:
+        verify_identity()
         return _rescue_git(target, *args, env=_isolated_git_env(), git_options=_RESCUE_PLUMBING_OPTIONS)
 
     def publish_is_dirty(target: Path) -> bool | None:
+        verify_identity()
         # --no-checkout leaves tracked deletions in the index, but no content to lose.
         # Once populated, require a clean-tree proof with programs disabled under the removal lock.
         if {entry.name for entry in target.iterdir()} == {".git"}:
@@ -7496,15 +7520,18 @@ def _rescue_publish_worktree(repo: _RescueRepo, head: str) -> Iterator[Path]:
         return worktree_claims.worktree_is_dirty(target, git_runner=publish_git)
 
     try:
+        verify_identity()
         proc = repo.git("worktree", "add", "--detach", "--no-checkout", str(path), head)
         if proc.returncode != 0:
             raise _RescueFailure(
                 "cannot create the rescue publish worktree", _git_cause("rescue_publish_worktree_failed", proc)
             )
         created = True
+        verify_identity()
         yield path
     finally:
         if created:
+            verify_identity()
             removal = worktree_claims.remove_unclaimed_worktree(
                 path,
                 repo_root=_REPO_ROOT,
@@ -7792,7 +7819,15 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
                 if commit is None:
                     commit = _rescue_commit(repo, str(tree), head, agent=agent, task_id=str(task_id))
                 _rescue_checkout(publish, commit)
-                proc = _rescue_git(publish, "push", url, f"HEAD:refs/heads/{branch}", network=True)
+                proc = _rescue_git(
+                    publish,
+                    "push",
+                    "--no-verify",
+                    url,
+                    f"HEAD:refs/heads/{branch}",
+                    network=True,
+                    git_options=_RESCUE_PLUMBING_OPTIONS,
+                )
                 if proc.returncode != 0:
                     raise _RescueFailure("cannot push rescue branch", _remote_git_cause("rescue_push_failed", proc))
             if _rescue_remote_head(url, branch) != commit:

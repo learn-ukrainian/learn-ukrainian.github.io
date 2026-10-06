@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -54,6 +56,9 @@ def kimi_rescue(tmp_path, monkeypatch):
     from scripts.orchestration import reap_worktrees
 
     _sanitize_git_env_for_test(monkeypatch)
+    # These are real-Git mechanism tests, independent of a worker harness's
+    # PATH shim (which rejects --no-verify for its own scanned pushes).
+    monkeypatch.setenv("PATH", os.defpath)
     primary = tmp_path / "primary"
     origin = tmp_path / "origin.git"
     _git(tmp_path, "init", "--bare", "--initial-branch=main", str(origin))
@@ -463,19 +468,32 @@ def test_failed_publish_add_keeps_its_cause_and_only_removes_its_empty_directory
 
 
 @pytest.mark.parametrize("scope", ["--local", "--worktree"])
-def test_rescue_create_checkout_probe_and_removal_run_no_configured_programs(kimi_rescue, tmp_path, scope):
+def test_rescue_create_checkout_push_probe_and_removal_run_no_configured_programs(
+    kimi_rescue, tmp_path, monkeypatch, scope
+):
     worktree, origin, state_path, write = kimi_rescue
     write("export const label = 'Lesson';\n", commit=True)
     marker = tmp_path / "cleanup-program-ran"
     hooks = tmp_path / "cleanup-hooks"
     hooks.mkdir()
-    for name in ("post-checkout", "post-index-change", "fsmonitor"):
+    for name in ("post-checkout", "post-index-change", "fsmonitor", "pre-push", "reference-transaction"):
         program = hooks / name
         program.write_text(f"#!/bin/sh\necho {name} >> '{marker}'\nexit 0\n")
         program.chmod(0o755)
     # Shared settings configured by a worker also apply in a fresh publish tree.
     _git(worktree, "config", scope, "core.hooksPath", str(hooks))
     _git(worktree, "config", scope, "core.fsmonitor", str(hooks / "fsmonitor"))
+    real_git = delegate._rescue_git
+
+    def configure_publish(cwd, *args, **kwargs):
+        proc = real_git(cwd, *args, **kwargs)
+        if scope == "--worktree" and args[:2] == ("worktree", "add") and proc.returncode == 0:
+            publish = Path(args[-2])
+            _git(publish, "config", scope, "core.hooksPath", str(hooks))
+            _git(publish, "config", scope, "core.fsmonitor", str(hooks / "fsmonitor"))
+        return proc
+
+    monkeypatch.setattr(delegate, "_rescue_git", configure_publish)
     repo = delegate._rescue_repo(worktree)
     registered = repo.git("worktree", "list", "--porcelain").stdout
 
@@ -486,3 +504,84 @@ def test_rescue_create_checkout_probe_and_removal_run_no_configured_programs(kim
     assert _remote_heads(origin)[RESCUE_REF] == result["head"]
     assert repo.git("worktree", "list", "--porcelain").stdout == registered
     assert not list(worktree.parent.glob(f"{worktree.name}.rescue-*"))
+
+
+def test_rescue_publish_tree_uses_driver_private_tmp(kimi_rescue, monkeypatch):
+    worktree, _origin, _state_path, _write = kimi_rescue
+    worker_tmp = worktree / "worker-tmp"
+    worker_tmp.mkdir()
+    monkeypatch.setenv("TMPDIR", str(worker_tmp))
+    repo = delegate._rescue_repo(worktree)
+    head, _branch = delegate._rescue_head(repo)
+    registered = repo.git("worktree", "list", "--porcelain").stdout
+
+    with delegate._rescue_publish_worktree(repo, head) as publish:
+        assert publish.parent == delegate._REPO_ROOT / "batch_state" / "tmp"
+        assert not publish.is_relative_to(worktree.parent)
+        assert not publish.is_relative_to(worker_tmp)
+        assert stat.S_IMODE(publish.lstat().st_mode) == 0o700
+
+    assert not publish.exists()
+    assert repo.git("worktree", "list", "--porcelain").stdout == registered
+
+
+@pytest.mark.parametrize("stage", ["before_add", "after_add", "before_removal"])
+@pytest.mark.parametrize("nonempty", [False, True])
+def test_rescue_publish_symlink_swap_never_touches_target(kimi_rescue, tmp_path, monkeypatch, stage, nonempty):
+    worktree, _origin, _state_path, _write = kimi_rescue
+    repo = delegate._rescue_repo(worktree)
+    head, _branch = delegate._rescue_head(repo)
+    target = tmp_path / "swap-target"
+    target.mkdir()
+    if nonempty:
+        (target / "canary").write_bytes(b"retain\n")
+    target_identity = target.lstat()
+    before = {p.name: p.read_bytes() for p in target.iterdir()}
+    paths = []
+    removals = []
+
+    def swap(path):
+        paths.append(path)
+        path.rename(path.with_name(path.name + "-original"))
+        path.symlink_to(target, target_is_directory=True)
+
+    real_mkdtemp = delegate.tempfile.mkdtemp
+
+    def create_swapped(*args, **kwargs):
+        path = Path(real_mkdtemp(*args, **kwargs))
+        swap(path)
+        return str(path)
+
+    real_git = delegate._rescue_git
+
+    def add_then_swap(cwd, *args, **kwargs):
+        proc = real_git(cwd, *args, **kwargs)
+        if args[:2] == ("worktree", "add") and proc.returncode == 0:
+            swap(Path(args[-2]))
+        return proc
+
+    real_remove = delegate.worktree_claims.remove_unclaimed_worktree
+
+    def record_removal(path, **kwargs):
+        removals.append(path)
+        return real_remove(path, **kwargs)
+
+    if stage == "before_add":
+        monkeypatch.setattr(delegate.tempfile, "mkdtemp", create_swapped)
+    elif stage == "after_add":
+        monkeypatch.setattr(delegate, "_rescue_git", add_then_swap)
+    monkeypatch.setattr(delegate.worktree_claims, "remove_unclaimed_worktree", record_removal)
+
+    with pytest.raises(delegate._RescueFailure) as failure:
+        with delegate._rescue_publish_worktree(repo, head) as publish:
+            if stage == "before_removal":
+                swap(publish)
+            else:
+                pytest.fail("a replaced publish directory must never be yielded")
+
+    assert failure.value.cause.public() == "rescue_publish_path_changed"
+    assert not removals
+    assert target.is_dir()
+    assert (target.lstat().st_dev, target.lstat().st_ino) == (target_identity.st_dev, target_identity.st_ino)
+    assert {p.name: p.read_bytes() for p in target.iterdir()} == before
+    assert paths[0].is_symlink()
