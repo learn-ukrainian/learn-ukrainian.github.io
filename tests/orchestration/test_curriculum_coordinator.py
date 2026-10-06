@@ -383,16 +383,21 @@ def _credit_snapshot(
 ) -> dict[str, Any]:
     """Health snapshot whose codex lane carries ``credit`` as its published ``agents.codex.credit``.
 
-    The lane record is complete (#9740 F6): relief is re-checked against the
-    probe's own freshness, age and stale flag, not only the published leaf.
+    The lane record is complete (#9740 F6): relief is re-decided by the owner
+    from the record's remaining allowance, probe freshness, raw balance and its
+    fetch time, not only the published leaf.
     """
     snapshot = _health()()
+    evidence = credit.get("evidence") if isinstance(credit, dict) else None
     snapshot["agents"]["codex"].update(
         {
             "status": status,
             "health": {"healthy": healthy},
             "freshness": "fresh",
             "age_s": 30,
+            "remaining_pct": 1.0,
+            "credit_balance": credit.get("credit_balance") if isinstance(credit, dict) else None,
+            "fetched_at": (evidence or {}).get("credit_fetched_at"),
             "codexbar": {"stale": stale},
             "credit": credit,
         }
@@ -478,7 +483,14 @@ def test_near_cap_lane_without_credit_field_is_unchanged() -> None:
     passed, assessment = coordinator._health_assessment(_health(codex="near_cap")(), config["health"], now=CREDIT_NOW)
     assert not passed
     assert _build_group(assessment)["lanes"] == [
-        {"lane": "codex", "status": "near_cap", "healthy": True, "stale": False, "credit_state": None}
+        {
+            "lane": "codex",
+            "status": "near_cap",
+            "healthy": True,
+            "stale": False,
+            "freshness": "fresh",
+            "credit_state": None,
+        }
     ]
 
 

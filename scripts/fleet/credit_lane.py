@@ -877,11 +877,15 @@ def published_credit_relief(
     is on it; the state reads ``credits_unverified`` when the published balance
     fetch time is no longer fresh now (an old snapshot file proves nothing).
 
-    ``record`` is the complete published lane record (#9740 F6): the snapshot
-    staleness and the probe's ``freshness``, ``age_s`` and ``stale`` flag are
-    re-checked as :func:`lane_credit_state` would, so a published label cannot
-    override contradictory probe evidence. Without it only the leaf is
-    re-checked; every routing consumer passes it.
+    ``record`` is the complete published lane record (#9740 F6): relief then
+    needs the owner's own decision, :func:`lane_credit_state` over that record
+    now, to read ``credit_balance_present`` as well. The snapshot staleness, the
+    probe's freshness, age and stale flag, the raw balance and its fetch time,
+    the record's runtime evidence (``runtime.rate_limited``,
+    ``runtime.headroom_blocked``) and the current shared rate-limit records all
+    count, so a published label cannot override contradictory inputs; the
+    receipt carries the owner's state and reason otherwise. Without ``record``
+    only the leaf is re-checked; every routing consumer passes it.
 
     The published rate-limit evidence is as old as the snapshot, so the
     current evidence is re-read through :func:`read_recent_rate_limits` (the
@@ -912,17 +916,23 @@ def published_credit_relief(
         "model_allowed": _allowed(allowed, model),
         "draw": DRAW_NOT_VERIFIED,
     }
-    if record is not None or snapshot_stale:
-        fresh, why = _fresh_probe(dict(record or {}), policy, snapshot_stale=snapshot_stale)
-        if not fresh:
-            receipt["state"] = CREDITS_UNVERIFIED
-            receipt["reason"] = f"published credit relief not re-verified: {why}"
-            return receipt
+    if record is None and snapshot_stale:
+        receipt["state"] = CREDITS_UNVERIFIED
+        receipt["reason"] = "published credit relief not re-verified: routing-budget snapshot is stale"
+        return receipt
     if _fresh_at(evidence.get("credit_fetched_at"), current, policy.credit_max_age_s) is None:
         receipt["state"] = CREDITS_UNVERIFIED
         receipt["reason"] = (
             f"published credit balance fetch time missing, not explicit UTC, or older than {policy.credit_max_age_s:g}s"
         )
+        return receipt
+    if record is not None:
+        owner = lane_credit_state(lane, dict(record), policy, now=current, snapshot_stale=snapshot_stale)
+        receipt["evidence"].update({**owner["evidence"], "rate_limits_checked_at": _iso(current)})
+        receipt["credit_balance"] = owner.get("credit_balance")
+        if owner["state"] != CREDIT_BALANCE_PRESENT:
+            receipt["state"] = owner["state"]
+            receipt["reason"] = f"published credit relief not re-verified: {owner.get('reason')}"
         return receipt
     count, last, unreadable = _rate_limit_evidence(lane, {}, policy, current)
     receipt["evidence"].update(

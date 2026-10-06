@@ -155,6 +155,35 @@ CURSOR_HOT_HIDDEN = {
 }
 
 
+# Cursor's own Auto allowance is 80% used (status hot, status_source cursor_auto) while
+# its separate weekly (Grok) window is visible and on pace: the #9040 rule must not clear it.
+CURSOR_AUTO_HOT_ON_PACE = {
+    "lane": "cursor",
+    "source": "cursor_native",
+    "status": "hot",
+    "login_state": "authenticated",
+    "probe_state": "healthy",
+    "weekly_used_pct": 20.0,
+    "weekly_remaining_pct": 80.0,
+    "weekly_expected_pct": 30.0,
+    "weekly_pace_delta_pct": -10.0,
+    "will_last_to_reset": True,
+    "weekly_resets_at": RESETS,
+    "provider_windows": {"auto": {"window": "monthly", "used_pct": 80.0, "remaining_pct": 20.0}},
+    "freshness": "fresh",
+    "age_s": 30.0,
+    "fetched_at": FETCHED,
+}
+
+NEAR_CAP_CREDIT = {
+    "codex": _codex(weekly_used_pct=95.0, weekly_remaining_pct=5.0, credit_balance=62500.0),
+    "claude": CLAUDE,
+}
+# The credit lane is the only candidate: Claude is near cap too, so the recommendation
+# picks Codex exactly when credit relief holds.
+CREDIT_ONLY_SEAT = {**NEAR_CAP_CREDIT, "claude": {**CLAUDE, "weekly_used_pct": 95.0, "weekly_remaining_pct": 5.0}}
+
+
 @dataclass(frozen=True)
 class Case:
     """One producer snapshot from external seams; ``tasks`` is ``idle`` (scan ran, nothing recent) or ``missing``."""
@@ -215,11 +244,24 @@ CASES: tuple[Case, ...] = (
         {"codex": _codex(weekly_used_pct=95.0, weekly_remaining_pct=5.0, credit_balance=62500.0), "claude": CLAUDE},
         mutate="probe_relabelled_stale_after_publication",
     ),
+    Case("f7_near_cap_credit", NEAR_CAP_CREDIT),
+    # Held-out round-3 contradiction controls (review of record on 34e9530820).
+    Case("f7_credit_only_seat", CREDIT_ONLY_SEAT),
+    Case("f6_relief_raw_balance_zero", CREDIT_ONLY_SEAT, mutate="raw_balance_zero_after_publication"),
+    Case("f6_relief_runtime_blocked", CREDIT_ONLY_SEAT, mutate="runtime_blocked_after_publication"),
     Case(
-        "f7_near_cap_credit",
-        {"codex": _codex(weekly_used_pct=95.0, weekly_remaining_pct=5.0, credit_balance=62500.0), "claude": CLAUDE},
+        "f9040_cursor_auto_hot_on_pace",
+        {"codex": _codex(), "claude": CLAUDE, "cursor": CURSOR_AUTO_HOT_ON_PACE},
     ),
+    Case("missing_snapshot_staleness", {"codex": _codex(), "claude": CLAUDE}, mutate="snapshot_staleness_removed"),
 )
+
+# Credit relief the producer published, contradicted after publication by the record it rests on.
+RELIEF_CONTRADICTIONS = {
+    "probe_relabelled_stale_after_publication": credit_lane.CREDITS_UNVERIFIED,
+    "raw_balance_zero_after_publication": credit_lane.CREDITS_EXHAUSTED,
+    "runtime_blocked_after_publication": credit_lane.CREDIT_USE_UNCONFIRMED,
+}
 CASE_IDS = [case.name for case in CASES]
 CASE_PARAMS = [pytest.param(case, id=case.name) for case in CASES]
 
@@ -308,6 +350,18 @@ def produce(case: Case, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict
         assert budget["agents"]["codex"]["credit"]["state"] == credit_lane.CREDIT_BALANCE_PRESENT
         budget["agents"]["codex"]["freshness"] = "stale_last_good"
         budget["agents"]["codex"]["codexbar"]["freshness"] = "stale_last_good"
+    if case.mutate == "raw_balance_zero_after_publication":
+        # The fresh record's raw balance reads zero; the published leaf still says present.
+        assert budget["agents"]["codex"]["credit"]["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+        budget["agents"]["codex"]["credit_balance"] = 0.0
+        budget["agents"]["codex"]["codexbar"]["credit_balance"] = 0.0
+    if case.mutate == "runtime_blocked_after_publication":
+        # The record's own runtime evidence now shows a headroom block (rate limits).
+        assert budget["agents"]["codex"]["credit"]["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+        budget["agents"]["codex"]["runtime"] = _runtime("codex", True)
+    if case.mutate == "snapshot_staleness_removed":
+        # A healthy producer snapshot without its ``diagnostics.stale`` metadata.
+        assert budget["diagnostics"].pop("stale") is False
     return json.loads(json.dumps(budget))  # the JSON boundary every consumer reads across
 
 
@@ -337,8 +391,12 @@ def test_producer_publishes_the_owner_facts(snapshot):
     if case.mutate is not None:
         # The published copy is the producer's at publication; consumers recompute and never trust it.
         published = budget["agents"]["codex"]["routing_facts"]
+        if case.mutate == "snapshot_staleness_removed":
+            assert published["observation_freshness"] == credit_lane.FRESH
+            assert owner(budget).observation_freshness == credit_lane.UNKNOWN
+            return
         assert published["credit_state"] == credit_lane.CREDIT_BALANCE_PRESENT
-        assert owner(budget).credit["state"] == credit_lane.CREDITS_UNVERIFIED
+        assert owner(budget).credit["state"] == RELIEF_CONTRADICTIONS[case.mutate]
         return
     for lane in ("codex", "claude"):
         published = dict(budget["agents"][lane]["routing_facts"])
@@ -350,12 +408,28 @@ def test_producer_publishes_the_owner_facts(snapshot):
         assert published["plan_remaining_pct"] == facts.plan_remaining_pct, lane
 
 
+def recommend(budget: dict[str, Any]) -> dict[str, Any]:
+    """The producer's recommendation recomputed over the snapshot as consumers now read it."""
+    diagnostics = budget["diagnostics"]
+    return state_router._recommend_agent(
+        copy.deepcopy(budget["agents"]),
+        [],
+        current_time=NOW,
+        is_stale=diagnostics.get("stale") is True,
+        records_loaded=diagnostics.get("records_loaded", 0),
+        authoritative_data_available=True,
+    )
+
+
 @pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_recommendation_agrees_with_owner_capacity(snapshot):
-    _case, budget = snapshot
+    case, budget = snapshot
     rec = budget["recommendation"]
     facts = owner(budget)
-    if rec["primary_agent_for_code"] == "codex":
+    if recommend(budget)["primary_agent_for_code"] == "codex":
+        assert facts.capacity == credit_lane.CAPACITY_VERIFIED
+    # The published recommendation predates a case's mutation; only the recomputed one reads it.
+    if case.mutate is None and rec["primary_agent_for_code"] == "codex":
         assert facts.capacity == credit_lane.CAPACITY_VERIFIED
     stale_label = any(f"lane codex: {credit_lane.STALE_ADVISORY_LABEL}" in w for w in rec["warnings"])
     assert stale_label is (facts.capacity == credit_lane.CAPACITY_UNKNOWN_STALE)
@@ -533,6 +607,12 @@ def test_wave_gate_counts_only_what_the_owner_establishes(snapshot):
     # Legitimate restriction: the wave's freshness requirement refuses any stale snapshot.
     if budget["diagnostics"].get("stale"):
         assert not passed and assessment["fresh"] is False
+    # Freshness is the owner's qualifier: anything short of established fresh never admits a wave.
+    assert lane["freshness"] == facts.observation_freshness
+    if facts.observation_freshness != credit_lane.FRESH:
+        assert not passed and assessment["fresh"] is False
+    if passed:
+        assert facts.observation_freshness == credit_lane.FRESH
 
 
 @pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
@@ -573,6 +653,11 @@ EXPECTED_CODEX = {
     "f3_hidden_pace_non_pace_source": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
     "f6_contradictory_relief": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.STALE),
     "f7_near_cap_credit": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
+    "f7_credit_only_seat": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
+    "f6_relief_raw_balance_zero": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
+    "f6_relief_runtime_blocked": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
+    "f9040_cursor_auto_hot_on_pace": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
+    "missing_snapshot_staleness": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.UNKNOWN),
 }
 
 
@@ -610,3 +695,87 @@ def test_snapshot_served_later_than_the_credit_age_limit_loses_relief(snapshot, 
         "codex", budget["agents"]["codex"], model=None, snapshot_metadata=budget["diagnostics"], now=later
     )
     assert facts.capacity == credit_lane.CAPACITY_VERIFIED
+
+
+# --- held-out round-3 controls: owner, resolver, wave, recommendation and delegate agree ---------
+
+
+def _held_out(name: str) -> Any:
+    return next(pytest.param(case, id=case.name) for case in CASES if case.name == name)
+
+
+@pytest.mark.parametrize("snapshot", [_held_out("f7_credit_only_seat")], indirect=True)
+def test_credit_relief_control_is_granted_by_every_consumer(snapshot, monkeypatch):
+    """Positive control for the contradictions below: an uncontradicted credit lane is the pick everywhere."""
+    _case, budget = snapshot
+    facts = owner(budget, model=ROUTE_MODEL)
+    assert facts.capacity == credit_lane.CAPACITY_VERIFIED and facts.credit_relief
+    result = evaluate_candidate(
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
+    )
+    assert result.status != "excluded", result.reason
+    _passed, assessment = coordinator._health_assessment(budget, coordinator.load_config()["health"], now=NOW)
+    group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
+    assert group["available"] == 1 and group["lanes"][0]["credit"]["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+    assert recommend(budget)["primary_agent_for_code"] == "codex"
+    assert budget["recommendation"]["primary_agent_for_code"] == "codex"
+    assert _guard(budget, monkeypatch, ROUTE_MODEL) == "codex"
+
+
+@pytest.mark.parametrize(
+    "snapshot",
+    [pytest.param(case, id=case.name) for case in CASES if case.mutate in RELIEF_CONTRADICTIONS],
+    indirect=True,
+)
+def test_contradicted_credit_relief_is_avoided_by_every_consumer(snapshot, monkeypatch):
+    """A published ``credit_balance_present`` leaf never outlives its record's balance, probe or runtime evidence."""
+    case, budget = snapshot
+    assert budget["agents"]["codex"]["credit"]["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+    facts = owner(budget, model=ROUTE_MODEL)
+    assert facts.capacity == credit_lane.CAPACITY_AVOID and not facts.credit_relief
+    assert facts.credit["state"] == RELIEF_CONTRADICTIONS[case.mutate]
+
+    result = evaluate_candidate(
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
+    )
+    assert result.status == "excluded", result.reason
+    assert result.credit is not None and result.credit["state"] == facts.credit["state"]
+
+    passed, assessment = coordinator._health_assessment(budget, coordinator.load_config()["health"], now=NOW)
+    group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
+    assert not passed and group["available"] == 0
+    [lane] = group["lanes"]
+    assert lane["credit"]["state"] == facts.credit["state"]
+
+    assert recommend(budget)["primary_agent_for_code"] != "codex"
+    assert _rows(budget)["codex"]["avoid"] is True
+    assert _guard(budget, monkeypatch, ROUTE_MODEL) == "claude"
+
+
+@pytest.mark.parametrize("snapshot", [_held_out("f9040_cursor_auto_hot_on_pace")], indirect=True)
+def test_cursor_auto_hot_label_is_not_cleared_by_an_on_pace_weekly_window(snapshot, monkeypatch):
+    """#9040 restriction (A8): the real producer's fresh hot/cursor_auto label stays hot in delegate too."""
+    _case, budget = snapshot
+    assert budget["diagnostics"]["stale"] is False
+    record = budget["agents"]["cursor"]
+    assert (record["status"], record["status_source"]) == ("hot", "cursor_auto")
+    facts = owner(budget, "cursor")
+    assert facts.raw_deficit is False and facts.status == "hot"
+    assert facts.capacity == credit_lane.CAPACITY_AVOID
+    assert _rows(budget)["cursor"]["avoid"] is True
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: unavailable_reserve())
+    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"})
+    assert chosen == "claude"
+
+
+@pytest.mark.parametrize("snapshot", [_held_out("missing_snapshot_staleness")], indirect=True)
+def test_missing_snapshot_staleness_is_unknown_in_the_wave_gate(snapshot):
+    """``diagnostics.stale`` removed from a healthy producer snapshot: owner unknown, wave not fresh, no admission."""
+    _case, budget = snapshot
+    assert "stale" not in budget["diagnostics"]
+    assert owner(budget).observation_freshness == credit_lane.UNKNOWN
+    passed, assessment = coordinator._health_assessment(budget, coordinator.load_config()["health"], now=NOW)
+    assert assessment["fresh"] is False and not passed
+    [lane] = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")["lanes"]
+    assert lane["freshness"] == credit_lane.UNKNOWN and lane["stale"] is False

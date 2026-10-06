@@ -931,7 +931,11 @@ def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
 
 
 def test_issue_9040_claude_snapshot_does_not_hard_substitute(monkeypatch, tmp_path, capsys):
-    """Freshly reset Claude (1% used, delta +0.49, will_last false, status hot) stays on Claude."""
+    """Freshly reset Claude (1% used, delta +0.49, will_last false, status hot) stays on Claude.
+
+    The producer labels this hot from weekly pace (``status_source``); only that
+    source may be cleared by an on-pace reading (A8, #9740).
+    """
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
     _use_fallbacks(monkeypatch, {"claude": "codex"})
@@ -947,6 +951,7 @@ def test_issue_9040_claude_snapshot_does_not_hard_substitute(monkeypatch, tmp_pa
             "agents": {
                 "claude": {
                     "status": "hot",
+                    "status_source": "weekly_pace",
                     "interactive": {"status": "hot", "burn_pct_7d": 1.0},
                     "burn_pct_7d": 1.0,
                     "remaining_pct": 99,

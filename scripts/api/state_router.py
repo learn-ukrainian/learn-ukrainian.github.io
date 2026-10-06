@@ -688,14 +688,32 @@ def _attach_routing_facts(
         ).summary()
 
 
-def _credit_backed(info: dict[str, Any] | None) -> bool:
-    """True when the lane's published credit state is ``credit_balance_present`` and it is logged in."""
-    info = info if isinstance(info, dict) else {}
-    credit = info.get("credit") if isinstance(info.get("credit"), dict) else {}
-    return credit.get("state") == credit_lane.CREDIT_BALANCE_PRESENT and "NEED_LOGIN" not in {
-        info.get("login_state"),
-        info.get("probe_state"),
-    }
+def _credit_relief_models(
+    lane: str,
+    info: dict[str, Any] | None,
+    *,
+    current_time: datetime | None = None,
+    is_stale: bool = False,
+    usage_dir: Path | None = None,
+) -> tuple[str, ...] | None:
+    """The credit-period allowlist when the owner grants the lane credit relief as verified capacity, else None.
+
+    The decision is :func:`credit_lane.routing_facts` over the complete lane
+    record, never the published ``credit`` leaf (#9740): the raw balance and
+    its fetch time, probe freshness, runtime evidence, eligibility, health and
+    NEED_LOGIN all count, as they do for the picker, resolver and wave gate.
+    """
+    facts = credit_lane.routing_facts(
+        lane,
+        info if isinstance(info, dict) else None,
+        model=None,
+        snapshot_metadata={"stale": is_stale},
+        now=current_time,
+        usage_dir=usage_dir,
+    )
+    if facts.credit_relief and facts.capacity == credit_lane.CAPACITY_VERIFIED:
+        return facts.credit_models or ()
+    return None
 
 
 def _recommend_agent(
@@ -797,7 +815,14 @@ def _recommend_agent(
     # Only claim inline_orchestrator if at least one lane is actually observed AND all observed lanes are hot/near_cap.
     # An empty observation set (all unknown/unavailable) must NEVER satisfy this.
     observed_statuses = [s for s in status_by_agent.values() if s not in {"unknown", "unavailable"}]
-    credit_lanes = {a for a, s in status_by_agent.items() if s not in {"cool", "warm"} and _credit_backed(agents[a])}
+    credit_models: dict[str, tuple[str, ...]] = {}
+    for a, s in status_by_agent.items():
+        if s in {"cool", "warm"}:
+            continue
+        models = _credit_relief_models(a, agents[a], current_time=current_time, is_stale=is_stale, usage_dir=usage_dir)
+        if models is not None:
+            credit_models[a] = models
+    credit_lanes = set(credit_models)
     if observed_statuses and all(s in {"hot", "near_cap"} for s in observed_statuses) and not credit_lanes:
         warnings.append("all agents near cap — orchestrator inline-mode contingency may be needed soon")
         return {
@@ -837,7 +862,7 @@ def _recommend_agent(
         def credit_pick() -> dict[str, Any]:
             pool = [c for c in credit_candidates if c not in imminent] or credit_candidates
             recommended = min(pool, key=_sort_burn)
-            models = ", ".join(agents_dict[recommended]["credit"].get("allowed_models") or [])
+            models = ", ".join(credit_models[recommended])
             return {
                 "primary_agent_for_code": recommended,
                 "rationale": (

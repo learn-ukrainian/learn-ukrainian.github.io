@@ -690,16 +690,23 @@ def _health_assessment(
     missing lane record) is not available, as an unhealthy lane is not. The
     receipt keeps them distinct: ``healthy`` is True/False when established and
     null with its ``health_basis`` when unknown (``healthLane``).
+
+    Freshness is the owner's qualifier too: a lane is stale when its probe is
+    (:func:`credit_lane.probe_freshness`), its receipt carries the owner's
+    ``observation_freshness``, and ``fresh`` needs the snapshot's
+    ``diagnostics.stale`` to be explicitly false. Missing staleness metadata is
+    unknown, never fresh.
     """
     agents = snapshot.get("agents")
     diagnostics = snapshot.get("diagnostics")
     if not isinstance(agents, Mapping) or not isinstance(diagnostics, Mapping):
         return False, {"reason": "invalid-health-snapshot", "groups": []}
-    snapshot_stale = bool(diagnostics.get("stale"))
+    snapshot_freshness, _ = credit_lane.snapshot_freshness(diagnostics)
+    snapshot_stale = snapshot_freshness == credit_lane.STALE
     acceptable = set(health_config["acceptable_statuses"])
     groups: list[dict[str, Any]] = []
     all_groups_pass = True
-    relevant_lane_stale = False
+    relevant_lanes_fresh = True
     for group in health_config["capability_groups"]:
         lanes: list[dict[str, Any]] = []
         available = 0
@@ -715,20 +722,23 @@ def _health_assessment(
                         "stale": True,
                     }
                 )
-                relevant_lane_stale = True
+                relevant_lanes_fresh = False
                 continue
             facts = credit_lane.routing_facts(lane, record, model=None, snapshot_metadata=diagnostics, now=now)
             status = facts.status
             healthy = facts.health == credit_lane.HEALTHY
-            codexbar = record.get("codexbar")
-            stale = bool(codexbar.get("stale")) if isinstance(codexbar, Mapping) else False
-            relevant_lane_stale = relevant_lane_stale or stale
+            # The lane's own evidence (probe freshness, age, stale flag); the snapshot
+            # layer is the gate-wide ``fresh`` below. With a fresh snapshot this is
+            # exactly the owner's observation freshness.
+            stale = facts.probe_freshness == credit_lane.STALE
+            relevant_lanes_fresh = relevant_lanes_fresh and not stale
             published = record.get("credit")
             entry: dict[str, Any] = {
                 "lane": lane,
                 "status": status,
                 "healthy": None if facts.health == credit_lane.UNKNOWN else healthy,
                 "stale": stale,
+                "freshness": facts.observation_freshness,
                 "credit_state": str(published["state"])
                 if isinstance(published, Mapping) and published.get("state")
                 else None,
@@ -755,7 +765,7 @@ def _health_assessment(
                 "lanes": lanes,
             }
         )
-    fresh = not snapshot_stale and not relevant_lane_stale
+    fresh = snapshot_freshness == credit_lane.FRESH and relevant_lanes_fresh
     passed = all_groups_pass and (fresh or not health_config["require_fresh_snapshot"])
     return passed, {
         "reason": "accepted" if passed else "quota-or-health-unavailable",

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 from datetime import UTC, datetime
 from pathlib import Path
@@ -528,12 +529,27 @@ def test_unreadable_credit_policy_publishes_policy_error_and_keeps_near_cap(monk
     assert data["recommendation"]["primary_agent_for_code"] == "inline_orchestrator"
 
 
-def test_need_login_credit_lane_is_not_credit_backed():
-    present = {"state": "credit_balance_present", "allowed_models": ["gpt-6.1-sol"]}
-    assert state_router._credit_backed({"credit": present}) is True
-    assert state_router._credit_backed({"credit": present, "probe_state": "NEED_LOGIN"}) is False
-    assert state_router._credit_backed({"credit": {"state": "credits_exhausted"}}) is False
-    assert state_router._credit_backed(None) is False
+def test_credit_relief_is_the_owner_decision_over_the_full_record(monkeypatch, tmp_path):
+    """#9740: the recommendation's credit relief is the owner's, never the published ``credit`` leaf."""
+    data = _credit_budget(monkeypatch, tmp_path)
+    codex = data["agents"]["codex"]
+    assert codex["credit"]["state"] == "credit_balance_present"
+
+    def relief(record):
+        return state_router._credit_relief_models("codex", record, current_time=_CREDIT_NOW)
+
+    assert relief(codex) == ("gpt-6.1-sol", "gpt-6-luna")
+    assert relief({**codex, "probe_state": "NEED_LOGIN"}) is None
+    # The leaf alone, or a leaf contradicted by its own record, grants nothing.
+    assert relief({"credit": codex["credit"]}) is None
+    assert relief(None) is None
+    zero = copy.deepcopy(codex)
+    zero["codexbar"]["credit_balance"] = 0.0
+    zero["credit_balance"] = 0.0
+    assert relief(zero) is None
+    blocked = copy.deepcopy(codex)
+    blocked["runtime"] = {**(blocked.get("runtime") or {}), "headroom_blocked": True, "rate_limited": 2}
+    assert relief(blocked) is None
 
 
 # --- #9740: shared routing facts in the producer and recommendation ------------

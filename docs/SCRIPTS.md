@@ -61,19 +61,28 @@ fresh or healthy.
   available.
 - **Wave receipts:** the coordinator ledger `healthLane` records `healthy` as
   `true`/`false` when known, or `null` with a required `health_basis` when unknown,
-  such as a scan error or a missing lane record.
+  such as a scan error or a missing lane record. It also records the owner's
+  `freshness` (`fresh`, `stale` or `unknown`). The wave is `fresh` only when
+  `diagnostics.stale` is explicitly `false` and no relevant lane probe is stale;
+  missing staleness metadata is unknown, never fresh.
 - **Budget guard (`delegate.py --check-budget`):** on a fresh snapshot it
   substitutes or refuses a near-cap lane (the `near_cap` status, or a credit lane's
   tightest plan window at or below the threshold) unless the owner grants credit
-  relief for the model, whether or not the USD cost ledger has records. A
-  hidden-pace hot label is cleared only when its source is weekly pace; a hot label
-  the owner's own pace reading contradicts (no deficit, #9040) is also cleared. A
-  stale snapshot stays advisory. Lane health warnings print `demoted` for an
+  relief for the model, whether or not the USD cost ledger has records. A hot
+  label is cleared only when its source is weekly pace: either its pace is hidden
+  below the visibility floor, or the owner's pace reading finds no deficit (#9040).
+  A hot label from Cursor Auto, the ledger or no source stays hot. A stale
+  snapshot stays advisory. Lane health warnings print `demoted` for an
   unhealthy lane and `health unknown (<basis>)` when health is unknown.
-- **Reviewer resolver:** a near-cap candidate keeps credit relief only when
-  `credit_lane.published_credit_relief` re-checks the complete published lane
-  record (snapshot staleness, probe freshness, age and stale flag), as the wave
-  gate does; a published `credit_balance_present` leaf alone is not enough.
+- **Reviewer resolver and wave gate:** a near-cap candidate keeps credit relief
+  only when `credit_lane.published_credit_relief` re-decides it with
+  `lane_credit_state` over the complete published lane record: snapshot
+  staleness, probe freshness, age and stale flag, the raw balance and its fetch
+  time, and runtime rate-limit evidence. A published `credit_balance_present`
+  leaf alone is not enough.
+- **Routing recommendation:** a past-cap lane is a credit candidate only when
+  the owner's `routing_facts` for the record grant credit relief as verified
+  capacity; the published `credit` leaf is not read.
 
 ## Git hooks
 

@@ -1793,8 +1793,22 @@ _FRESH_PROBE = {"freshness": "fresh", "age_s": 60.0}
 
 
 def _credit_codex(credit: dict | None, *, diagnostics: dict | None = None, **overrides) -> dict:
-    """A near-cap, healthy Codex routing-budget record with a fresh probe, publishing ``credit``."""
-    record = {"status": "near_cap", "health": {"healthy": True}, **_FRESH_PROBE, **overrides}
+    """A near-cap, healthy Codex routing-budget record with a fresh probe, publishing ``credit``.
+
+    The record carries the inputs the producer computed ``credit`` from (remaining
+    allowance, raw balance and its fetch time): relief is re-decided from them (#9740).
+    """
+    evidence = credit.get("evidence") if isinstance(credit, dict) else None
+    fetched = (evidence or {}).get("credit_fetched_at") or (datetime.now(UTC) - timedelta(minutes=1)).isoformat()
+    record = {
+        "status": "near_cap",
+        "health": {"healthy": True},
+        "remaining_pct": 1.0,
+        "credit_balance": 62500.0,
+        "fetched_at": fetched,
+        **_FRESH_PROBE,
+        **overrides,
+    }
     if credit is not None:
         record["credit"] = credit
     snapshot: dict = {"agents": {"codex": record}}
@@ -1936,7 +1950,7 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
 
     credit_backed = {
         "agents": {
-            "codex": {"status": "near_cap", "credit": _published_credit(), "scheduler": light_codex, **_FRESH_PROBE},
+            "codex": {**_credit_codex(_published_credit())["agents"]["codex"], "scheduler": light_codex},
             "claude": {"status": "healthy", "scheduler": busy_claude},
         }
     }
@@ -1947,7 +1961,7 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
     # With the plan-backed seat near cap too, the credit-backed seat is selected and the receipt says so.
     only_credit = {
         "agents": {
-            "codex": {"status": "near_cap", "credit": _published_credit(), **_FRESH_PROBE},
+            "codex": _credit_codex(_published_credit())["agents"]["codex"],
             "claude": {"status": "near_cap"},
         }
     }
