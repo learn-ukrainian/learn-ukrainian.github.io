@@ -6,6 +6,8 @@ dispatch worktree carrying the boundary ``kimi_boundary.install`` sets up.
 
 from __future__ import annotations
 
+import argparse
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -22,6 +24,7 @@ from tests.test_delegate import (  # noqa: F401
     _sanitize_git_env_for_test,
     tmp_tasks_dir,
 )
+from tests.test_kimi_coding_only_admission import _FAKE_TOKEN, HOSTILE_GIT_ERRORS, assert_no_host_details
 
 pytestmark = pytest.mark.usefixtures("tmp_tasks_dir")
 
@@ -168,7 +171,9 @@ def test_rescue_refuses_when_the_main_repository_push_url_is_blocked_too(kimi_re
     result = delegate._rescue_task(state_path, apply=True)
 
     assert result["action"] == "error"
-    assert result["reason"] == "main repository has no single usable push URL for origin"
+    assert result["reason"] == (
+        "main repository has no single usable push URL for origin [rescue_push_url_unavailable, git config]"
+    )
     assert RESCUE_REF not in _remote_heads(origin)
 
 
@@ -278,7 +283,7 @@ def test_a_url_rewrite_cannot_fake_the_remote_verification(kimi_rescue, tmp_path
     result = delegate._rescue_task(state_path, apply=True)
 
     assert (result["action"], result["failure_code"]) == ("error", "rescue_remote_unverified"), result
-    assert result["reason"] == "rescue remote verification failed"
+    assert result["reason"] == "rescue remote verification failed [rescue_remote_unverified, git ls-remote]"
     assert RESCUE_REF not in _remote_heads(origin)
     assert delegate._read_state(state_path).get("rescue_ref") is None
 
@@ -295,35 +300,102 @@ def test_a_repeated_rescue_of_the_same_uncommitted_work_is_already_rescued(kimi_
     assert _remote_heads(origin)[RESCUE_REF] == first["head"]
 
 
-def test_a_rescue_push_error_is_reported_without_host_details(kimi_rescue, monkeypatch):
-    import getpass
+# --- #9878: a rescue row carries only the typed cause; git's error stays in the local .diag ----------
 
-    worktree, origin, state_path, write = kimi_rescue
-    write("export const label = 'Lesson';\n", commit=True)
-    registered = _registered_worktrees(worktree)
-    stderr = (
-        "fatal: unable to access '/home/synthetic-operator/private-mount/learn.git/' "
-        f"owned by {getpass.getuser()} via 203.0.113.77 as deploy@build-host.example.internal\n"
-    )
+# The kinds git reports for a remote it never reached.
+_UNREACHABLE = {"dns_hostname", "ssh_dns_hostname", "ipv6_interface"}
+
+
+def _fail_rescue_git(monkeypatch, subcommand: str, stderr: str) -> None:
+    """Every rescue ``git <subcommand>`` exits 128 with ``stderr``; the argv carries the host paths git saw."""
     real_git = delegate._rescue_git
 
-    def failing_push(cwd, *args, **kwargs):
-        if args and args[0] == "push":
-            return subprocess.CompletedProcess(["git", *args], 128, "", stderr)
+    def failing(cwd, *args, **kwargs):
+        if args and args[0] == subcommand:
+            argv = ["git", *kwargs.get("git_options", ()), *args]
+            return subprocess.CompletedProcess(argv, 128, "", stderr)
         return real_git(cwd, *args, **kwargs)
 
-    monkeypatch.setattr(delegate, "_rescue_git", failing_push)
-    result = delegate._rescue_task(state_path, apply=True)
+    monkeypatch.setattr(delegate, "_rescue_git", failing)
 
-    assert (result["action"], result["failure_code"]) == ("error", "rescue_push_failed")
-    assert result["reason"].startswith("cannot push rescue branch: fatal: unable to access")
-    for marker in (
-        "synthetic-operator",
-        "private-mount",
-        "203.0.113.77",
-        "build-host",
-        f"owned by {getpass.getuser()}",
-    ):
-        assert marker not in result["reason"], marker
+
+def _assert_kept_locally(task_id: str, stderr: str, code: str) -> None:
+    lines = delegate._diagnostic_path(task_id).read_text(encoding="utf-8").splitlines()
+    (entry,) = (json.loads(line) for line in lines)
+    assert (entry["source"], entry["code"]) == ("rescue", code)
+    if _FAKE_TOKEN in stderr:
+        assert _FAKE_TOKEN not in entry["diagnostic"] and "Authentication failed for" in entry["diagnostic"]
+    else:
+        assert stderr.splitlines()[0] in entry["diagnostic"]
+
+
+@pytest.mark.parametrize("kind", sorted(HOSTILE_GIT_ERRORS))
+def test_a_rescue_push_error_row_carries_only_its_typed_cause(kimi_rescue, monkeypatch, capsys, kind):
+    worktree, origin, _state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n", commit=True)
+    registered = _registered_worktrees(worktree)
+    stderr = HOSTILE_GIT_ERRORS[kind]
+    _fail_rescue_git(monkeypatch, "push", stderr)
+    code = "remote_unreachable" if kind in _UNREACHABLE else "rescue_push_failed"
+
+    assert delegate.cmd_rescue(argparse.Namespace(task_id=TASK_ID, all_stale=False, older_than=None, apply=True)) == 1
+    summary = capsys.readouterr().out
+    (result,) = json.loads(summary)["tasks"]
+
+    assert (result["action"], result["failure_code"]) == ("error", code)
+    assert result["reason"] == f"cannot push rescue branch [{code}, git push, exit 128]"
+    assert result["diagnostic"].endswith(f"{TASK_ID}.diag")
+    assert_no_host_details(summary, worktree, origin)
+    assert "fatal:" not in summary and "Could not" not in summary
+    _assert_kept_locally(TASK_ID, stderr, code)
     assert RESCUE_REF not in _remote_heads(origin)
     assert _registered_worktrees(worktree) == registered
+
+
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("kind", sorted(HOSTILE_GIT_ERRORS))
+def test_a_rescue_remote_query_error_row_carries_only_its_typed_cause(kimi_rescue, monkeypatch, apply, kind):
+    worktree, origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n", commit=True)
+    stderr = HOSTILE_GIT_ERRORS[kind]
+    _fail_rescue_git(monkeypatch, "ls-remote", stderr)
+    code = "remote_unreachable" if kind in _UNREACHABLE else "rescue_remote_unverified"
+
+    result = delegate._rescue_task(state_path, apply=apply)
+
+    assert (result["action"], result["failure_code"]) == ("error", code)
+    assert result["reason"] == f"rescue remote proof unavailable [{code}, git ls-remote, exit 128]"
+    assert_no_host_details(json.dumps(result), worktree, origin)
+    _assert_kept_locally(TASK_ID, stderr, code)
+
+
+@pytest.mark.parametrize("kind", sorted(HOSTILE_GIT_ERRORS))
+def test_a_rescue_kimi_check_that_cannot_read_the_changes_refuses_with_its_typed_cause(kimi_rescue, monkeypatch, kind):
+    worktree, origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n", commit=True)
+    stderr = HOSTILE_GIT_ERRORS[kind]
+    _fail_rescue_git(monkeypatch, "diff-tree", stderr)
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert (result["action"], result["failure_code"]) == ("error", "kimi_content_refused")
+    assert "could not be read for Ukrainian content [diff_command_failed, git diff-tree, exit 128]" in result["reason"]
+    assert_no_host_details(json.dumps(result, ensure_ascii=False), worktree, origin)
+    _assert_kept_locally(TASK_ID, stderr, "diff_command_failed")
+    assert RESCUE_REF not in _remote_heads(origin)
+
+
+def test_an_unexpected_rescue_exception_is_typed_by_its_class(kimi_rescue, monkeypatch):
+    worktree, origin, state_path, write = kimi_rescue
+    write("export const label = 'Lesson';\n", commit=True)
+
+    def unreachable_mount(*_args, **_kwargs):
+        raise OSError(f"cannot stat {HOSTILE_GIT_ERRORS['home_relative_mount']}")
+
+    monkeypatch.setattr(delegate, "_rescue_canonical_push_url", unreachable_mount)
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert (result["action"], result["failure_code"]) == ("error", "rescue_step_failed")
+    assert result["reason"] == "rescue step failed [rescue_step_failed, OSError]"
+    assert_no_host_details(json.dumps(result), worktree, origin)
+    _assert_kept_locally(TASK_ID, "cannot stat", "rescue_step_failed")

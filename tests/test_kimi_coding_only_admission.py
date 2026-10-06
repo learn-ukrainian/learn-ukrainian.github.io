@@ -502,45 +502,108 @@ def test_finalize_fails_closed_when_the_base_is_unknown(kimi_worktree):
     assert message and "could not be read" in message
 
 
-# #9878: every finalize read failure is a typed refusal that names its cause, without host details.
+# #9878: every finalize read failure is a refusal that names only its typed cause; git's own
+# error, with whatever host details it holds, stays in the local diagnostic.
 _FAKE_TOKEN = "ghp_" + "Z9yX8wV7uT6sR5qP4oN3mL2kJ1iH0gF9eD8c"
-# Synthetic host details an injected git error carries; none of them may reach a refusal.
-_HOST_PATH = "/home/synthetic-operator/private-mount/learn.git"
-_HOST_ADDRESS = "203.0.113.77"
-_HOST_LOGIN = "deploy@build-host.example.internal"
-_HOST_MARKERS = ("synthetic-operator", "private-mount", _HOST_ADDRESS, "build-host", _FAKE_TOKEN)
+# Each form in which a git error can carry host details. All of it is synthetic (reserved names,
+# documentation addresses); the review probes of #9878 found the DNS, mount and IPv6 forms leaking.
+HOSTILE_GIT_ERRORS = {
+    "dns_hostname": (
+        "fatal: unable to access 'https://git.build-host.example.internal/org/learn.git/': "
+        "Could not resolve host: git.build-host.example.internal\n"
+    ),
+    "ssh_dns_hostname": (
+        "ssh: Could not resolve hostname mirror-7.example.internal: Name or service not known\n"
+        "fatal: Could not read from remote repository.\n"
+    ),
+    "home_relative_mount": "fatal: '~/mnt/private-share/learn.git' does not appear to be a git repository\n",
+    "ipv6_interface": "fatal: unable to connect to [fe80::1ff:fe23:4567:890a%eth7]:9418: Connection refused\n",
+    "absolute_path": "fatal: cannot read /srv/synthetic-operator/backups/learn.git/objects/pack\n",
+    "credential_url": (
+        f"fatal: Authentication failed for 'https://deploy:{_FAKE_TOKEN}@git.build-host.example.internal/learn.git/'\n"
+    ),
+    "ipv4_login": "deploy@203.0.113.77: Permission denied (publickey).\nfatal: Could not read from remote repository.\n",
+}
+HOST_MARKERS = (
+    "build-host",
+    "example.internal",
+    "mirror-7",
+    "~/mnt",
+    "private-share",
+    "fe80",
+    "eth7",
+    "/srv/",
+    "synthetic-operator",
+    "203.0.113.77",
+    "deploy@",
+    "https://",
+    "learn.git",
+    _FAKE_TOKEN,
+)
 
 
-def _host_error() -> str:
-    return (
-        f"fatal: cannot read {_HOST_PATH} owned by {getpass.getuser()} from {_HOST_ADDRESS} "
-        f"as {_HOST_LOGIN} token={_FAKE_TOKEN}\n"
-    )
+def assert_no_host_details(text: str, *roots: Path) -> None:
+    """``text`` (a refusal, a rescue row) holds none of the hostile markers, the user's login or any root."""
+    for marker in HOST_MARKERS:
+        assert marker not in text, marker
+    for root in roots:
+        assert str(root) not in text and str(root.resolve()) not in text, root
+    assert f"/{getpass.getuser()}/" not in text
 
 
-def _assert_host_safe(message: str) -> None:
-    for marker in _HOST_MARKERS:
-        assert marker not in message, marker
-    assert f"owned by {getpass.getuser()}" not in message and "owned by [redacted-user]" in message
-    assert "[redacted-" in message
+def _fail_git(monkeypatch, step: str, stderr: str) -> None:
+    """Every ``git <step>`` run through ``delegate.subprocess.run`` exits 128 with ``stderr``."""
+    real_run = delegate.subprocess.run
+
+    def run(cmd, *args, **kwargs):
+        if list(cmd[:2]) == ["git", step] and (step != "rev-parse" or "--git-path" in cmd):
+            return subprocess.CompletedProcess(cmd, 128, "", stderr)
+        return real_run(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
 
 
-def test_an_unresolved_merge_base_refusal_names_each_attempts_git_error(kimi_worktree):
-    message = delegate._kimi_diff_refusal(kimi_worktree, "origin/missing", "kimi", base_sha="0" * 40)
-    assert _TOKEN in message and "[merge_base_unresolved]: no merge base with 'origin/missing'" in message
+@pytest.mark.parametrize("kind", sorted(HOSTILE_GIT_ERRORS))
+@pytest.mark.parametrize(
+    ("step", "public"),
+    [
+        ("merge-base", "merge_base_unresolved, git merge-base, exit 128"),
+        ("rev-parse", "temp_index_failed, git rev-parse, exit 128"),
+        ("add", "temp_index_failed, git add, exit 128"),
+        ("diff", "diff_command_failed, git diff, exit 128"),
+    ],
+)
+def test_a_failing_git_step_refusal_carries_only_its_typed_cause(kimi_worktree, monkeypatch, step, public, kind):
+    stderr = HOSTILE_GIT_ERRORS[kind]
+    _fail_git(monkeypatch, step, stderr)
+
+    message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")
+
+    assert message == delegate._kimi_unreadable("kimi", cause)
+    assert _TOKEN in message and f"could not be read for Ukrainian content [{public}]" in message
+    assert_no_host_details(message, kimi_worktree)
+    assert stderr.strip() in cause.diagnostic  # git's own error stays, for the local record only
+
+
+def test_an_unresolved_merge_base_keeps_each_attempts_git_error_in_the_diagnostic(kimi_worktree):
+    message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "origin/missing", "kimi", base_sha="0" * 40)
+    assert "[merge_base_unresolved, git merge-base, exit 128]" in message
+    assert "origin/missing" not in message
+    assert "no merge base with 'origin/missing'" in cause.diagnostic
     assert (
-        "git merge-base origin/missing HEAD failed (exit 128): fatal: Not a valid object name origin/missing" in message
+        "git merge-base origin/missing HEAD failed (exit 128): fatal: Not a valid object name origin/missing"
+        in cause.diagnostic
     )
-    assert f"the recorded base commit {'0' * 40} is not an ancestor of HEAD" in message
-    assert "git merge-base origin/main HEAD failed (exit 128)" in message
+    assert f"the recorded base commit {'0' * 40} is not an ancestor of HEAD" in cause.diagnostic
+    assert "git merge-base origin/main HEAD failed (exit 128)" in cause.diagnostic
 
 
 def test_a_merge_base_without_common_ancestor_says_so(kimi_worktree):
     _git(kimi_worktree, "checkout", "--orphan", "unrelated")
     _git(kimi_worktree, "commit", "-m", "unrelated root")
-    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert "[merge_base_unresolved]" in message
-    assert "git merge-base base HEAD failed (exit 1): no common ancestor" in message
+    message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")
+    assert "[merge_base_unresolved, git merge-base, exit 1]" in message
+    assert "git merge-base base HEAD failed (exit 1): no common ancestor" in cause.diagnostic
 
 
 def test_a_one_shot_merge_base_failure_keeps_its_own_stderr(kimi_worktree, monkeypatch):
@@ -556,45 +619,20 @@ def test_a_one_shot_merge_base_failure_keeps_its_own_stderr(kimi_worktree, monke
         return real_run(cmd, *args, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", run)
-    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert "[merge_base_unresolved]" in message
-    assert "git merge-base base HEAD failed (exit 128): fatal: one-shot pack read error" in message
-    assert "transient" not in message
+    message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")
+    assert "[merge_base_unresolved, git merge-base, exit 128]" in message
+    assert "git merge-base base HEAD failed (exit 128): fatal: one-shot pack read error" in cause.diagnostic
+    assert "transient" not in message + cause.diagnostic
     assert len(merge_bases) == 1
 
 
-@pytest.mark.parametrize(
-    ("subcommand", "shown"),
-    [
-        ("rev-parse", "git rev-parse --path-format=absolute --git-path index failed (exit 128)"),
-        ("add", "git add -A --intent-to-add failed (exit 128)"),
-        ("diff", "git diff --name-status -z --no-renames"),
-    ],
-)
-def test_a_failing_git_step_refusal_names_the_command_without_host_details(
-    kimi_worktree, monkeypatch, subcommand, shown
-):
-    real_run = delegate.subprocess.run
-
-    def run(cmd, *args, **kwargs):
-        if list(cmd[:2]) == ["git", subcommand] and (subcommand != "rev-parse" or "--git-path" in cmd):
-            return subprocess.CompletedProcess(cmd, 128, "", _host_error())
-        return real_run(cmd, *args, **kwargs)
-
-    monkeypatch.setattr(delegate.subprocess, "run", run)
-    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert _TOKEN in message and "could not be read for Ukrainian content [diff_unreadable]" in message
-    assert shown in message and "fatal: cannot read" in message
-    _assert_host_safe(message)
-
-
-def test_a_temporary_index_failure_refusal_names_the_exception(kimi_worktree, tmp_path, monkeypatch):
+def test_a_temporary_index_failure_refusal_names_the_exception_class(kimi_worktree, tmp_path, monkeypatch):
     """The #9878 symptom: the process's cached temp root is gone when the scratch index is created."""
     monkeypatch.setattr(delegate.tempfile, "tempdir", str(tmp_path / "reaped-root"))
-    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert "[diff_unreadable]: creating the temporary index raised FileNotFoundError" in message
-    assert "No such file or directory" in message
-    assert str(tmp_path) not in message
+    message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")
+    assert "[temp_index_failed, FileNotFoundError ENOENT]" in message
+    assert "No such file or directory" in cause.diagnostic
+    assert_no_host_details(message, tmp_path)
 
 
 def test_a_git_timeout_refusal_names_the_step(kimi_worktree, monkeypatch):
@@ -606,8 +644,9 @@ def test_a_git_timeout_refusal_names_the_step(kimi_worktree, monkeypatch):
         return real_run(cmd, *args, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", run)
-    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert "[diff_unreadable]: git add -A --intent-to-add raised TimeoutExpired" in message
+    message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")
+    assert "[temp_index_failed, git add, TimeoutExpired]" in message
+    assert "git add -A --intent-to-add raised TimeoutExpired" in cause.diagnostic
 
 
 @pytest.mark.skipif(os.geteuid() == 0, reason="root reads files whatever their mode")
@@ -617,24 +656,26 @@ def test_an_unreadable_changed_file_is_a_typed_refusal_through_the_real_reader(k
     button.write_text("export const Button = () => null;\n", encoding="utf-8")
     button.chmod(0)
     try:
-        message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+        message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")
     finally:
         button.chmod(0o644)
-    assert "[changed_file_unreadable]: 'Button.tsx' could not be read (PermissionError EACCES)" in message
+    assert "[file_unreadable, PermissionError EACCES, path 'Button.tsx']" in message
     assert _NOT_TEXT not in message
-    assert str(kimi_worktree) not in message
+    assert_no_host_details(message, kimi_worktree)
+    assert "Permission denied" in cause.diagnostic
 
 
 def test_a_parsing_value_error_is_a_typed_refusal(kimi_worktree, monkeypatch):
     from scripts.agent_runtime import kimi_boundary
 
     def unparseable(_output):
-        raise ValueError(f"bad record near {_HOST_PATH} from {_HOST_ADDRESS}")
+        raise ValueError(f"bad record near {HOSTILE_GIT_ERRORS['ipv6_interface']}")
 
     monkeypatch.setattr(kimi_boundary, "parse_name_status", unparseable)
-    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert "[changes_unparseable]: ValueError: bad record near" in message
-    assert _HOST_ADDRESS not in message and "synthetic-operator" not in message
+    message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")
+    assert "[changes_parse_failed, ValueError]" in message
+    assert_no_host_details(message)
+    assert "bad record near" in cause.diagnostic and "fe80" in cause.diagnostic
 
 
 def test_a_change_reading_os_error_is_a_typed_refusal(kimi_worktree, monkeypatch):
@@ -643,12 +684,13 @@ def test_a_change_reading_os_error_is_a_typed_refusal(kimi_worktree, monkeypatch
     (kimi_worktree / "Button.tsx").write_text("export const Button = () => null;\n", encoding="utf-8")
 
     def unreadable(*_args, **_kwargs):
-        raise OSError(f"disk gone token={_FAKE_TOKEN}")
+        raise OSError(f"disk gone {HOSTILE_GIT_ERRORS['credential_url']}")
 
     monkeypatch.setattr(kimi_boundary, "changes", unreadable)
-    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert "[changes_unreadable]: OSError: disk gone" in message
-    assert _FAKE_TOKEN not in message
+    message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")
+    assert "[changes_unreadable, OSError]" in message
+    assert_no_host_details(message)
+    assert "disk gone" in cause.diagnostic
 
 
 def test_the_working_tree_reader_types_read_errors_and_classifies_the_rest(tmp_path):
@@ -666,12 +708,76 @@ def test_the_working_tree_reader_types_read_errors_and_classifies_the_rest(tmp_p
     assert str(tmp_path) not in str(missing.value)
 
 
-def test_host_safe_diagnostics_drop_paths_addresses_logins_and_the_user(tmp_path):
-    text = f"{_host_error()} in {tmp_path}/site/Label.tsx and file:///srv/mirror/x.git"
-    safe = delegate._host_safe(text, (tmp_path,))
-    _assert_host_safe(safe)
-    assert "site/Label.tsx" in safe  # paths under a known root stay, repository-relative
-    assert "/srv/mirror" not in safe and str(tmp_path) not in safe
+def test_a_typed_cause_renders_only_its_allowlisted_parts():
+    hostile = "".join(HOSTILE_GIT_ERRORS.values())
+    cause = delegate._TypedCause(
+        "diff_command_failed", "diff", 128, error="OSError ENOENT", path="site/Label.tsx", diagnostic=hostile
+    )
+    assert cause.public() == "diff_command_failed, git diff, exit 128, OSError ENOENT, path 'site/Label.tsx'"
+    assert delegate._TypedCause("made_up_code", diagnostic=hostile).public() == "unclassified_failure"
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        {"command": "git.build-host.example.internal"},
+        {"command": "--git-dir=/srv/synthetic-operator/learn.git"},
+        {"error": "Could not resolve host: git.build-host.example.internal"},
+        {"error": "fe80::1ff:fe23:4567:890a%eth7"},
+    ],
+)
+def test_a_typed_cause_drops_a_command_or_error_that_is_not_a_bare_name(field):
+    cause = delegate._TypedCause("rescue_push_failed", **field)
+    assert cause.public() == "rescue_push_failed"
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/srv/synthetic-operator/learn.git",
+        "~/mnt/private-share/learn.git",
+        "../../private-share/learn.git",
+        "C:/Users/synthetic-operator/learn.git",
+        "https://deploy@git.build-host.example.internal/learn.git",
+        "site/\nfe80::1%eth7",
+    ],
+)
+def test_a_typed_cause_withholds_a_path_that_is_not_repository_relative(path):
+    cause = delegate._TypedCause("file_unreadable", path=path)
+    assert cause.public() == "file_unreadable, path withheld"
+
+
+def test_the_git_subcommand_skips_global_options_and_their_values():
+    argv = ["git", "-c", "core.hooksPath=/dev/null", "--git-dir=/srv/x.git", "-C", "/srv", "diff-tree", "-r"]
+    assert delegate._git_subcommand(argv) == "diff-tree"
+    assert delegate._git_subcommand(["git", "--work-tree=/srv/x"]) is None
+    assert delegate._git_subcommand("git push") is None
+
+
+@pytest.mark.parametrize(
+    ("kind", "code"),
+    [
+        ("dns_hostname", "remote_unreachable"),
+        ("ssh_dns_hostname", "remote_unreachable"),
+        ("ipv6_interface", "remote_unreachable"),
+        ("credential_url", "rescue_push_failed"),
+        ("home_relative_mount", "rescue_push_failed"),
+    ],
+)
+def test_a_remote_git_failure_is_typed_unreachable_only_when_the_remote_was_never_reached(kind, code):
+    proc = subprocess.CompletedProcess(["git", "push", "origin"], 128, "", HOSTILE_GIT_ERRORS[kind])
+    cause = delegate._remote_git_cause("rescue_push_failed", proc)
+    assert cause.public() == f"{code}, git push, exit 128"
+    assert HOSTILE_GIT_ERRORS[kind].strip() in cause.diagnostic
+
+
+def test_every_cause_code_the_module_raises_is_allowlisted():
+    """A code missing from the allowlist would render as ``unclassified_failure``; keep the list complete."""
+    import re
+
+    source = Path(delegate.__file__).read_text(encoding="utf-8")
+    raised = set(re.findall(r'_(?:TypedCause|git_cause|remote_git_cause|exception_cause)\(\s*"([a-z_]+)"', source))
+    assert raised and raised <= delegate.TYPED_CAUSE_CODES, raised - delegate.TYPED_CAUSE_CODES
 
 
 # --- the gate ------------------------------------------------------------------------

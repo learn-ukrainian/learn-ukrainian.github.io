@@ -12925,7 +12925,8 @@ def test_rescue_all_stale_reports_unaged_terminal_record(tmp_tasks_dir, capsys):
     ]
 
 
-def test_rescue_commit_failure_surfaces_stderr(tmp_path, monkeypatch, tmp_tasks_dir):
+def test_rescue_commit_failure_types_the_cause_and_keeps_stderr_local(tmp_path, monkeypatch, tmp_tasks_dir):
+    """#9878: the row names the typed cause; git's stderr goes only to the task's local ``.diag`` file."""
     _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=True)
     original = delegate._rescue_git
 
@@ -12937,7 +12938,10 @@ def test_rescue_commit_failure_surfaces_stderr(tmp_path, monkeypatch, tmp_tasks_
     monkeypatch.setattr(delegate, "_rescue_git", fail_commit)
     result = delegate._rescue_task(state_path, apply=True)
     assert result["action"] == "error"
-    assert "fatal: hook rejected commit" in result["reason"]
+    assert result["reason"] == "cannot commit rescue work [rescue_commit_failed, git commit-tree, exit 1]"
+    assert "fatal" not in json.dumps(result)
+    task_id = delegate._read_state(state_path)["task_id"]
+    assert "fatal: hook rejected commit" in delegate._diagnostic_path(task_id).read_text(encoding="utf-8")
     assert worktree.exists()
 
 

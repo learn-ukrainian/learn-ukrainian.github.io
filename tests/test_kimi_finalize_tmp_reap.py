@@ -9,6 +9,7 @@ order: the root is cached, reaped, and only then does finalize run.
 
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import sys
@@ -39,6 +40,7 @@ from tests.test_delegate import (  # noqa: F401
     _worktree_add_via_run,
     tmp_tasks_dir,
 )
+from tests.test_kimi_coding_only_admission import _FAKE_TOKEN, HOSTILE_GIT_ERRORS, assert_no_host_details
 
 pytestmark = pytest.mark.usefixtures("tmp_tasks_dir")
 
@@ -202,3 +204,117 @@ def test_a_kimi_write_dispatch_that_used_tempfile_finalizes_after_the_reap(tmp_p
     assert _git_out(worktree, "show", "--name-only", "--format=", "HEAD").split() == ["site/src/components/Label.tsx"]
     assert f"refs/heads/{branch}" in _git_out(worktree, "ls-remote", "--heads", "origin").split()
     assert not kimi_boundary.is_installed(worktree)
+
+
+# --- #9878: a refused finalize exposes only its typed cause; git's error stays in the local .diag ----
+
+
+def _kimi_dispatch_record(tmp_path: Path, task_id: str) -> tuple[Path, Path, Path]:
+    """A Kimi write dispatch worktree and its task record: ``(worktree, label, state_path)``."""
+    branch = f"kimi/{task_id}"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "cli_version": "test",
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "owned_paths": ["site/src/components/"],
+            "keep_worktree": True,
+        },
+    )
+    return worktree, worktree / "site" / "src" / "components" / "Label.tsx", state_path
+
+
+def _diagnostics(task_id: str) -> list[dict]:
+    path = delegate._diagnostic_path(task_id)
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()] if path.exists() else []
+
+
+@pytest.mark.parametrize("kind", sorted(HOSTILE_GIT_ERRORS))
+def test_a_kimi_finalize_refusal_exposes_its_typed_cause_and_keeps_git_s_error_local(
+    tmp_path, monkeypatch, worker_tmp_lease, kind
+):
+    _sanitize_git_env_for_test(monkeypatch)
+    lease, namespace = worker_tmp_lease
+    task_id = f"kimi-refusal-{kind.replace('_', '-')}"
+    worktree, label, state_path = _kimi_dispatch_record(tmp_path, task_id)
+    stderr = HOSTILE_GIT_ERRORS[kind]
+    real_run = subprocess.run
+
+    def run(cmd, *args, **kwargs):
+        if list(cmd) == ["git", "add", "-A", "--intent-to-add"]:
+            return subprocess.CompletedProcess(cmd, 128, "", stderr)
+        return real_run(cmd, *args, **kwargs)
+
+    def worker(*_args, **_kwargs):
+        label.parent.mkdir(parents=True, exist_ok=True)
+        label.write_text("export const t = 'Lesson';\n", encoding="utf-8")
+        return _bg_mock_result("")
+
+    monkeypatch.setattr(delegate, "_count_unpushed_commits", lambda *_a: 0)
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    with patch("agent_runtime.runner.invoke", side_effect=worker):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Implement the label.",
+            mode="workspace-write",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+            keep_worktree=True,
+            runtime_tmp_root=str(lease),
+            runtime_tmp_namespace_root=str(namespace),
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc != 0 and state["status"] == "failed"
+    refusal = state["kimi_content_refusal"]
+    assert "could not be read for Ukrainian content [temp_index_failed, git add, exit 128]" in refusal
+    # Nothing the task record, its result or the Monitor can show carries git's error.
+    exposed = json.dumps(state, ensure_ascii=False)
+    result_path = state_path.with_suffix(".result")
+    if result_path.exists():
+        exposed += result_path.read_text(encoding="utf-8")
+    assert_no_host_details(exposed)
+    assert "Could not resolve" not in exposed and "fatal:" not in exposed
+    # The local diagnostic keeps it, credentials redacted.
+    (entry,) = _diagnostics(task_id)
+    assert (entry["source"], entry["code"]) == ("finalize", "temp_index_failed")
+    assert entry["public"] == "temp_index_failed, git add, exit 128"
+    if kind == "credential_url":
+        assert _FAKE_TOKEN not in entry["diagnostic"] and "Authentication failed for" in entry["diagnostic"]
+    else:
+        assert stderr.splitlines()[0] in entry["diagnostic"]
+    assert _git_out(worktree, "status", "--porcelain").strip()  # nothing was committed for the worker
+
+
+def test_a_diagnostic_is_written_only_beside_an_existing_task_record():
+    cause = delegate._TypedCause("rescue_push_failed", "push", 128, diagnostic=HOSTILE_GIT_ERRORS["credential_url"])
+
+    assert delegate._record_diagnostic("no-such-task", cause, source="rescue") is None
+    assert not delegate._diagnostic_path("no-such-task").exists()
+
+    delegate._write_state_atomic(delegate._state_path("has-record"), {"task_id": "has-record"})
+    pointer = delegate._record_diagnostic("has-record", cause, source="rescue")
+
+    assert pointer is not None and not Path(pointer).is_absolute() and pointer.endswith("has-record.diag")
+    assert_no_host_details(pointer)
+    (entry,) = _diagnostics("has-record")
+    assert entry["public"] == "rescue_push_failed, git push, exit 128"
+    assert "Authentication failed for" in entry["diagnostic"] and _FAKE_TOKEN not in entry["diagnostic"]
+
+
+def test_force_new_archives_the_diagnostic_with_its_record():
+    delegate._write_state_atomic(delegate._state_path("archived"), {"task_id": "archived", "status": "failed"})
+    delegate._record_diagnostic("archived", delegate._TypedCause("rescue_step_failed"), source="rescue")
+
+    archived = delegate._archive_task_artifacts("archived", stamp="20260101T000000Z")
+
+    assert not delegate._diagnostic_path("archived").exists()
+    assert any(path.name.endswith(".archived.diag") for path in archived), archived

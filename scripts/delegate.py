@@ -152,8 +152,8 @@ import argparse
 import ast
 import contextlib
 import dataclasses
+import errno
 import functools
-import getpass
 import hashlib
 import json
 import logging
@@ -728,7 +728,7 @@ def _hydrate_read_only_checkout_snapshots(state: dict[str, Any]) -> dict[str, An
 
 
 def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[Path]:
-    """Move the prior record and result aside. Never overwrite an archive.
+    """Move the prior record, result and local diagnostics aside. Never overwrite an archive.
 
     Holds the per-task lock for the whole rename. The retention sweep holds
     that same lock across its digest and record write; without it, this move
@@ -739,7 +739,7 @@ def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[P
     state_path = _state_path(task_id)
     archived: list[Path] = []
     with task_state_lock(state_path):
-        for path in (state_path, _result_path(task_id)):
+        for path in (state_path, _result_path(task_id), _diagnostic_path(task_id)):
             if not path.exists():
                 continue
             dest = _archived_artifact_path(path, stamp)
@@ -4906,8 +4906,8 @@ def _run_merge_base(worktree: Path, base: str) -> tuple[str | None, bool]:
     return sha, base_missing
 
 
-def _run_merge_base_detail(worktree: Path, base: str) -> tuple[str | None, bool, str | None]:
-    """:func:`_run_merge_base` plus why it failed: the command and git's own error from this run (#9878)."""
+def _run_merge_base_detail(worktree: Path, base: str) -> tuple[str | None, bool, _TypedCause | None]:
+    """:func:`_run_merge_base` plus why it failed, typed, with git's own error from this run (#9878)."""
     command = ["git", "merge-base", base, "HEAD"]
     try:
         proc = subprocess.run(
@@ -4920,14 +4920,19 @@ def _run_merge_base_detail(worktree: Path, base: str) -> tuple[str | None, bool,
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
-        return None, False, f"{' '.join(command)} raised {type(exc).__name__}: {exc}"
+        return None, False, _exception_cause("merge_base_unresolved", exc, command=command)
     if proc.returncode == 0:
         sha = (proc.stdout or "").strip()
-        return (sha or None), False, None if sha else f"{' '.join(command)} printed no commit"
+        if sha:
+            return sha, False, None
+        return (
+            None,
+            False,
+            _TypedCause("merge_base_unresolved", "merge-base", 0, diagnostic=f"{' '.join(command)} printed no commit"),
+        )
+    why = _git_cause("merge_base_unresolved", proc)
     if proc.returncode == 1 and not (proc.stderr or proc.stdout or "").strip():
-        why = f"{' '.join(command)} failed (exit 1): no common ancestor"
-    else:
-        why = _git_failure(command, proc)
+        why = dataclasses.replace(why, diagnostic=f"{' '.join(command)} failed (exit 1): no common ancestor")
     ref_check = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
     if ref_check is not None and ref_check[0] == 1:
         # Confirmed absence: git rev-parse ran and confirmed the ref does not exist (exit 1).
@@ -4957,20 +4962,30 @@ def _resolve_merge_base(worktree: Path, base_ref: str, base_sha: str | None = No
 
 def _resolve_merge_base_detail(
     worktree: Path, base_ref: str, base_sha: str | None = None
-) -> tuple[str | None, str | None]:
+) -> tuple[str | None, _TypedCause | None]:
     """``(merge_base, None)`` as :func:`_resolve_merge_base` resolves it, or ``(None, why)`` (#9878).
 
-    ``why`` carries each failed attempt's own command and git error, from the
-    attempt that failed: nothing is run again to explain a failure.
+    ``why`` is ``merge_base_unresolved`` with the last attempt's exit status;
+    its diagnostic carries each failed attempt's own command and git error,
+    from the attempt that failed: nothing is run again to explain a failure.
     """
     failures: list[str] = []
+    last: _TypedCause | None = None
+
+    def unresolved() -> tuple[None, _TypedCause]:
+        detail = "; ".join(failures) or f"no base candidate for {base_ref!r}"
+        if last is None:
+            return None, _TypedCause("merge_base_unresolved", "merge-base", diagnostic=detail)
+        return None, dataclasses.replace(last, diagnostic=f"no merge base with {base_ref!r}: {detail}")
+
     for candidate in _commit_count_refs(worktree, base_ref):
         sha, base_missing, why = _run_merge_base_detail(worktree, candidate)
         if sha is not None:
             return sha, None
-        failures.append(why or candidate)
+        last = why or last
+        failures.append(why.diagnostic if why else candidate)
         if not base_missing:
-            return None, "; ".join(failures)
+            return unresolved()
 
     fallbacks = _fallback_base_candidates(worktree, base_sha)
     if base_sha and all(candidate != base_sha for candidate, _exact in fallbacks):
@@ -4983,11 +4998,12 @@ def _resolve_merge_base_detail(
                 file=sys.stderr,
             )
             return sha, None
-        failures.append(why or candidate)
+        last = why or last
+        failures.append(why.diagnostic if why else candidate)
         if not base_missing:
-            return None, "; ".join(failures)
+            return unresolved()
 
-    return None, "; ".join(failures) or f"no base candidate for {base_ref!r}"
+    return unresolved()
 
 
 def _count_commits_ahead(worktree: Path, base_ref: str, base_sha: str | None = None) -> int | None:
@@ -5664,65 +5680,197 @@ def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_optio
     return _worktree_diff_read(worktree, diff_args, git_options=git_options)[0]
 
 
-def _git_failure(command: Sequence[str], proc: subprocess.CompletedProcess[str]) -> str:
-    """``git <command> failed (exit N): <last stderr line>``; pass it through :func:`_host_safe` before showing it."""
-    return f"{' '.join(command)} failed (exit {proc.returncode}): {_format_process_failure(proc)}"
+# #9878: the only causes a refusal or rescue row may name. Text that can leave
+# the local task record (a refusal, a rescue row, and through them a PR, issue,
+# inbox or the Monitor) carries one of these codes, the git subcommand, its exit
+# status or exception class, and repository-relative paths: never git's stderr
+# or an exception's message, which can hold hostnames, URLs and host paths.
+TYPED_CAUSE_CODES = frozenset(
+    {
+        # Reading a Kimi worker's changes for the content check.
+        "merge_base_unresolved",
+        "temp_index_failed",
+        "diff_command_failed",
+        "changes_parse_failed",
+        "file_unreadable",
+        "changes_unreadable",
+        # The worker-side Kimi worktree boundary.
+        "boundary_remove_failed",
+        "boundary_install_failed",
+        # Rescue.
+        "rescue_worktree_unregistered",
+        "rescue_tree_unavailable",
+        "rescue_identity_unavailable",
+        "rescue_commit_failed",
+        "rescue_publish_worktree_failed",
+        "rescue_push_url_unavailable",
+        "rescue_push_failed",
+        "rescue_remote_unverified",
+        "rescue_tracking_ref_failed",
+        "rescue_step_failed",
+        "remote_unreachable",
+    }
+)
+_UNCLASSIFIED_CAUSE = "unclassified_failure"
+_GIT_SUBCOMMAND_RE = re.compile(r"[a-z][a-z-]{0,39}")
+_ERROR_CLASS_RE = re.compile(r"[A-Za-z_]\w{0,63}(?: E[A-Z0-9]{1,15})?")
+# git's own words for a remote it never reached (DNS, routing, refused connection).
+_REMOTE_UNREACHABLE_STDERR = (
+    "could not resolve host",
+    "could not resolve hostname",
+    "temporary failure in name resolution",
+    "name or service not known",
+    "connection refused",
+    "connection timed out",
+    "network is unreachable",
+    "no route to host",
+)
 
 
-# An absolute path token: a slash not continuing a word, a relative path or a
-# home-relative path, up to whitespace or quoting. URLs (``scheme://host/...``)
-# match from their ``//`` and are removed whole.
-_HOST_SAFE_ABSOLUTE_PATH = re.compile(r"(?<![\w.~-])/[^\s'\"<>]+")
+@dataclass(frozen=True)
+class _TypedCause:
+    """Why a refusal or rescue step failed, in a form that may leave the machine (#9878).
 
-
-def _host_safe(text: str | None, roots: Sequence[Path] = ()) -> str:
-    """``text`` without host details, for refusal and rescue diagnostics that may be published (#9878).
-
-    In order: each of ``roots`` (with the repository root) becomes the
-    repository-relative form of the paths under it; credentials go through
-    ``secret_redactor``; every token the OPSEC detector of record
-    (``scripts.api.opsec_scan``) reports, among them absolute paths under host
-    roots, ``user@host``, IP addresses, ``host:port`` and ssh aliases, becomes
-    ``[redacted-<kind>]``; any absolute path left becomes ``[redacted-path]``;
-    and the name of the user running delegate becomes ``[redacted-user]``.
+    :meth:`public` renders only allowlisted parts: the code (one of
+    :data:`TYPED_CAUSE_CODES`), the git subcommand, its exit status or the
+    exception class, and a repository-relative path. ``diagnostic`` holds the
+    raw stderr or exception text; it goes only to the task's local ``.diag``
+    file (:func:`_record_diagnostic`).
     """
-    from scripts.api.opsec_scan import scan_text
 
-    safe = text or ""
-    known: dict[str, None] = {}
-    for root in (*roots, _REPO_ROOT):
-        for form in (root, root.resolve()):
-            if len(form.parts) > 1:
-                known[str(form)] = None
-    for root in sorted(known, key=len, reverse=True):
-        safe = safe.replace(f"{root}/", "").replace(root, ".")
-    safe = redact_text(safe) or ""
-    for finding in sorted(scan_text(safe), key=lambda item: item.start, reverse=True):
-        safe = f"{safe[: finding.start]}[redacted-{finding.kind}]{safe[finding.end :]}"
-    safe = _HOST_SAFE_ABSOLUTE_PATH.sub("[redacted-path]", safe)
+    code: str
+    command: str | None = None
+    exit_status: int | None = None
+    error: str | None = None
+    path: str | None = None
+    diagnostic: str = dataclasses.field(default="", compare=False, repr=False)
+
+    def public(self) -> str:
+        parts = [self.code if self.code in TYPED_CAUSE_CODES else _UNCLASSIFIED_CAUSE]
+        if self.command and _GIT_SUBCOMMAND_RE.fullmatch(self.command):
+            parts.append(f"git {self.command}")
+        if isinstance(self.exit_status, int) and not isinstance(self.exit_status, bool):
+            parts.append(f"exit {self.exit_status}")
+        if self.error and _ERROR_CLASS_RE.fullmatch(self.error):
+            parts.append(self.error)
+        if self.path is not None:
+            parts.append(f"path {self.path!r}" if _is_repo_relative(self.path) else "path withheld")
+        return ", ".join(parts)
+
+
+def _is_repo_relative(path: str) -> bool:
+    """Whether ``path`` reads as a repository-relative path: no root, home, parent step or control character."""
+    if not path or path.startswith(("/", "~", "\\")) or re.match(r"[A-Za-z]:", path):
+        return False
+    if any(unicodedata.category(char).startswith("C") for char in path):
+        return False
+    return ".." not in re.split(r"[/\\]", path) and "://" not in path
+
+
+def _git_subcommand(args: Sequence[str] | str | None) -> str | None:
+    """The subcommand of a ``git [options] <subcommand> ...`` argv, skipping global options and their values."""
+    if not isinstance(args, (list, tuple)):
+        return None
+    words = [str(arg) for arg in args]
+    index = 1 if words and Path(words[0]).name == "git" else 0
+    while index < len(words):
+        word = words[index]
+        if word in ("-c", "-C"):
+            index += 2
+            continue
+        if word.startswith("-"):
+            index += 1
+            continue
+        return word if _GIT_SUBCOMMAND_RE.fullmatch(word) else None
+    return None
+
+
+def _git_cause(code: str, proc: subprocess.CompletedProcess[str], *, path: str | None = None) -> _TypedCause:
+    """A failed git run as a :class:`_TypedCause`; its argv and stderr stay in the local diagnostic."""
+    args = proc.args if isinstance(proc.args, (list, tuple)) else [str(proc.args)]
+    return _TypedCause(
+        code,
+        command=_git_subcommand(args),
+        exit_status=proc.returncode,
+        path=path,
+        diagnostic=f"{' '.join(str(arg) for arg in args)} failed (exit {proc.returncode}): "
+        f"{(proc.stderr or proc.stdout or '').strip() or 'no output'}",
+    )
+
+
+def _remote_git_cause(code: str, proc: subprocess.CompletedProcess[str]) -> _TypedCause:
+    """:func:`_git_cause` for a git run that talks to a remote: ``remote_unreachable`` when it never reached it."""
+    stderr = (proc.stderr or "").lower()
+    unreachable = any(marker in stderr for marker in _REMOTE_UNREACHABLE_STDERR)
+    return _git_cause("remote_unreachable" if unreachable else code, proc)
+
+
+def _exception_cause(
+    code: str, exc: BaseException, *, command: Sequence[str] | None = None, path: str | None = None
+) -> _TypedCause:
+    """An exception as a :class:`_TypedCause`: its class (and errno name) public, its message local."""
+    errno_name = errno.errorcode.get(exc.errno, "") if isinstance(exc, OSError) and isinstance(exc.errno, int) else ""
+    step = f"{' '.join(command)} " if command else ""
+    return _TypedCause(
+        code,
+        command=_git_subcommand(list(command)) if command else None,
+        error=f"{type(exc).__name__}{f' {errno_name}' if errno_name else ''}",
+        path=path,
+        diagnostic=f"{step}raised {type(exc).__name__}: {exc}",
+    )
+
+
+def _diagnostic_path(task_id: str) -> Path:
+    """The task's local diagnostic file, ``batch_state/tasks/<id>.diag``: never served or published."""
+    return _state_path_no_create(task_id).with_suffix(".diag")
+
+
+def _record_diagnostic(task_id: object, cause: _TypedCause | None, *, source: str) -> str | None:
+    """Append ``cause`` with its raw diagnostic, secret-redacted, to the task's local ``.diag`` file (#9878).
+
+    Writes only beside an existing task record, so a refused worker still
+    leaves no task file behind. Returns the file's repository-relative path for
+    a row to point at, or None when nothing was written; a write error never
+    hides the failure being recorded.
+    """
+    if cause is None or not isinstance(task_id, str) or not task_id:
+        return None
+    path = _diagnostic_path(task_id)
+    if not path.with_suffix(".json").is_file():
+        return None
+    entry = {
+        "at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "source": source,
+        "code": cause.code,
+        "public": cause.public(),
+        "diagnostic": redact_text(cause.diagnostic) or "",
+    }
     try:
-        user = getpass.getuser()
-    except (KeyError, OSError):
-        user = ""
-    if user:
-        safe = re.sub(rf"(?<![\w.-]){re.escape(user)}(?![\w-])", "[redacted-user]", safe)
-    return safe
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    except OSError:
+        return None
+    try:
+        return path.resolve().relative_to(_REPO_ROOT.resolve()).as_posix()
+    except ValueError:
+        return f"{path.parent.name}/{path.name}"
 
 
 def _worktree_diff_read(
     worktree: Path, diff_args: Sequence[str], *, git_options: Sequence[str] = ()
-) -> tuple[str | None, str | None]:
+) -> tuple[str | None, _TypedCause | None]:
     """``(git diff <diff_args>, None)`` as if every change, untracked files included, were committed; ``(None, why)``.
 
     Untracked files are marked intent-to-add in a throwaway copy of the index
     (no file content is written to the object store) so they show up as
-    additions; the real index is never touched. ``why`` names the failing git
-    command and its error, or the exception (#9878).
+    additions; the real index is never touched. ``why`` is
+    ``temp_index_failed`` while the scratch index is being made and
+    ``diff_command_failed`` for the diff itself (#9878).
     """
     env = _sanitized_git_env()
-    step = "git rev-parse --git-path index"
+    index_command = ["git", "rev-parse", "--path-format=absolute", "--git-path", "index"]
+    step, code = index_command, "temp_index_failed"
     try:
-        index_command = ["git", "rev-parse", "--path-format=absolute", "--git-path", "index"]
         index_proc = subprocess.run(
             index_command,
             cwd=worktree,
@@ -5733,8 +5881,8 @@ def _worktree_diff_read(
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         if index_proc.returncode != 0:
-            return None, _git_failure(index_command, index_proc)
-        step = "creating the temporary index"
+            return None, _git_cause("temp_index_failed", index_proc)
+        step = []  # creating the scratch index: no git command runs
         with tempfile.TemporaryDirectory(prefix="lu-finalize-index-") as scratch:
             scratch_index = Path(scratch) / "index"
             real_index = Path(index_proc.stdout.strip())
@@ -5742,7 +5890,7 @@ def _worktree_diff_read(
                 shutil.copyfile(real_index, scratch_index)
             scratch_env = {**env, "GIT_INDEX_FILE": str(scratch_index)}
             add_command = ["git", "add", "-A", "--intent-to-add"]
-            step = " ".join(add_command)
+            step = add_command
             add_proc = subprocess.run(
                 add_command,
                 cwd=worktree,
@@ -5753,9 +5901,9 @@ def _worktree_diff_read(
                 timeout=DEFAULT_GIT_TIMEOUT_S,
             )
             if add_proc.returncode != 0:
-                return None, _git_failure(add_command, add_proc)
+                return None, _git_cause("temp_index_failed", add_proc)
             diff_command = ["git", *git_options, "diff", *diff_args]
-            step = " ".join(diff_command)
+            step, code = diff_command, "diff_command_failed"
             diff_proc = subprocess.run(
                 diff_command,
                 cwd=worktree,
@@ -5768,9 +5916,9 @@ def _worktree_diff_read(
                 timeout=DEFAULT_GIT_TIMEOUT_S,
             )
     except (OSError, subprocess.TimeoutExpired) as exc:
-        return None, f"{step} raised {type(exc).__name__}: {exc}"
+        return None, _exception_cause(code, exc, command=step or None)
     if diff_proc.returncode != 0:
-        return None, _git_failure(diff_command, diff_proc)
+        return None, _git_cause("diff_command_failed", diff_proc)
     return diff_proc.stdout, None
 
 
@@ -5835,7 +5983,12 @@ def _kimi_worker_refusal(
             try:
                 kimi_boundary.remove(cwd, env=_sanitized_git_env())
             except boundary_errors as exc:
-                return f"the Kimi worktree boundary left in {cwd} could not be removed: {exc}", None
+                cause = _exception_cause("boundary_remove_failed", exc)
+                _record_diagnostic(task_id, cause, source="worker")
+                return (
+                    f"the Kimi worktree boundary left in the task worktree could not be removed [{cause.public()}]",
+                    None,
+                )
         try:
             (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review)
         except ReviewAdmissionRefused as exc:  # #9583: a review model without a catalog review role
@@ -5861,12 +6014,14 @@ def _kimi_worker_refusal(
         return str(exc), None
     worktree = launch.get("worktree_path")
     if not worktree or Path(worktree).resolve() != cwd.resolve():
-        return format_refusal(agent, [f"workspace-write outside the task's dispatch worktree (cwd {str(cwd)!r})"]), None
+        return format_refusal(agent, ["workspace-write outside the task's dispatch worktree"]), None
     base_ref = _commit_count_base_ref(cwd, str(launch.get("worktree_base") or "main"))
     try:
         kimi_boundary.install(cwd, agent=agent, base_ref=base_ref, owned_paths=owned, env=_sanitized_git_env())
     except boundary_errors as exc:
-        return format_refusal(agent, [f"the worktree boundary could not be installed ({exc})"]), None
+        cause = _exception_cause("boundary_install_failed", exc)
+        _record_diagnostic(task_id, cause, source="worker")
+        return format_refusal(agent, [f"the worktree boundary could not be installed [{cause.public()}]"]), None
     return None, target
 
 
@@ -5879,41 +6034,51 @@ def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str, *, base_sha: s
     classification cannot hide text. When ``base_ref`` was deleted after
     merging, falls back to the recorded ``base_sha`` and then the default-branch
     merge base (#9489). Fails closed: changes that cannot be read are a refusal
-    that names its cause and why, without host details (#9878).
+    that names only its typed cause (#9878); see :func:`_kimi_diff_refusal_detail`.
+    """
+    return _kimi_diff_refusal_detail(worktree, base_ref, agent, base_sha=base_sha)[0]
+
+
+def _kimi_diff_refusal_detail(
+    worktree: Path, base_ref: str, agent: str, *, base_sha: str | None = None
+) -> tuple[str | None, _TypedCause | None]:
+    """``(refusal, cause)`` for :func:`_kimi_diff_refusal`; ``cause`` is set when the changes could not be read.
+
+    The caller records ``cause`` with :func:`_record_diagnostic`: its raw
+    diagnostic never enters the refusal.
     """
     from scripts.agent_runtime import kimi_boundary
 
     merge_base, why = _resolve_merge_base_detail(worktree, base_ref, base_sha=base_sha)
     if merge_base is None:
-        return _kimi_unreadable(agent, "merge_base_unresolved", f"no merge base with {base_ref!r}: {why}", worktree)
+        why = why or _TypedCause("merge_base_unresolved", "merge-base")
+        return _kimi_unreadable(agent, why), why
     name_status, why = _worktree_diff_read(worktree, ["--name-status", "-z", "--no-renames", merge_base, "--"])
     if name_status is None:
-        return _kimi_unreadable(agent, "diff_unreadable", why, worktree)
+        why = why or _TypedCause("diff_command_failed", "diff")
+        return _kimi_unreadable(agent, why), why
     return _kimi_changes_refusal(
         agent,
         lambda: kimi_boundary.changes(
             worktree, kimi_boundary.parse_name_status(name_status), after=None, env=_sanitized_git_env()
         ),
-        worktree,
     )
 
 
-def _kimi_unreadable(agent: str, cause: str, why: str | None, worktree: Path | None = None) -> str:
-    """The typed refusal for Kimi changes that could not be read: ``cause`` is its code, ``why`` host-safe (#9878)."""
+def _kimi_unreadable(agent: str, cause: _TypedCause) -> str:
+    """The typed refusal for Kimi changes that could not be read: only ``cause``'s public form (#9878)."""
     from scripts.agent_runtime.kimi_admission import format_refusal
 
-    detail = _host_safe(why, (worktree,) if worktree else ())
-    return format_refusal(
-        agent, [f"the finalized changes could not be read for Ukrainian content [{cause}]: {detail or 'no detail'}"]
-    )
+    return format_refusal(agent, [f"the finalized changes could not be read for Ukrainian content [{cause.public()}]"])
 
 
-def _kimi_changes_refusal(agent: str, read: Callable[[], Any], worktree: Path | None = None) -> str | None:
-    """Run the Kimi content check on the changes ``read()`` returns; a refusal, or None when they pass.
+def _kimi_changes_refusal(agent: str, read: Callable[[], Any]) -> tuple[str | None, _TypedCause | None]:
+    """Run the Kimi content check on the changes ``read()`` returns: ``(refusal, cause)``, ``(None, None)`` on a pass.
 
     Each way the changes can fail to be read is a typed refusal (#9878): a
-    changed file that cannot be read, git output that cannot be parsed, and
-    git or the filesystem failing.
+    changed file that cannot be read (``file_unreadable``), git output that
+    cannot be parsed (``changes_parse_failed``), and git or the filesystem
+    failing (``changes_unreadable``).
     """
     from scripts.agent_runtime import kimi_boundary
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, refuse_kimi_changes
@@ -5921,14 +6086,18 @@ def _kimi_changes_refusal(agent: str, read: Callable[[], Any], worktree: Path | 
     try:
         refuse_kimi_changes(agent, read())
     except KimiAdmissionRefused as exc:
-        return str(exc)
+        return str(exc), None
     except kimi_boundary.ChangeUnreadable as exc:
-        return _kimi_unreadable(agent, "changed_file_unreadable", str(exc), worktree)
+        cause = _TypedCause(
+            "file_unreadable", error=exc.cause, path=exc.path, diagnostic=f"{exc}: {exc.__cause__ or ''}"
+        )
     except ValueError as exc:
-        return _kimi_unreadable(agent, "changes_unparseable", f"{type(exc).__name__}: {exc}", worktree)
+        cause = _exception_cause("changes_parse_failed", exc)
     except (OSError, RuntimeError, subprocess.SubprocessError) as exc:
-        return _kimi_unreadable(agent, "changes_unreadable", f"{type(exc).__name__}: {exc}", worktree)
-    return None
+        cause = _exception_cause("changes_unreadable", exc)
+    else:
+        return None, None
+    return _kimi_unreadable(agent, cause), cause
 
 
 def _advisory_ceiling_check(
@@ -6640,11 +6809,19 @@ _RESCUE_MAX_FILE_BYTES = 5 * 1024 * 1024
 
 
 class _RescueFailure(RuntimeError):
-    """A rescue step failed: ``code`` types the cause; the message goes through :func:`_host_safe` (#9878)."""
+    """A rescue step failed: a fixed ``message`` and its :class:`_TypedCause`, the only text a row shows (#9878).
 
-    def __init__(self, code: str, message: str) -> None:
-        super().__init__(message)
-        self.code = code
+    ``message`` is a literal: nothing read from git, the remote or the host
+    enters it. The cause's raw diagnostic goes to the task's ``.diag`` file.
+    """
+
+    def __init__(self, message: str, cause: _TypedCause) -> None:
+        super().__init__(f"{message} [{cause.public()}]")
+        self.cause = cause
+
+    @property
+    def code(self) -> str:
+        return self.cause.code
 
 
 # Every git command rescue runs against the main repository runs no hook and
@@ -6735,7 +6912,7 @@ def _rescue_repo(worktree: Path) -> _RescueRepo:
         registered = Path((admin / "gitdir").read_text(encoding="utf-8").strip()).resolve()
     except (OSError, ValueError) as exc:
         raise _RescueFailure(
-            "rescue_worktree_unregistered", f"the worktree's git directory cannot be read ({type(exc).__name__})"
+            "the worktree's git directory cannot be read", _exception_cause("rescue_worktree_unregistered", exc)
         ) from exc
     if (
         git_dir != (_REPO_ROOT / ".git").resolve()
@@ -6743,7 +6920,8 @@ def _rescue_repo(worktree: Path) -> _RescueRepo:
         or registered != (worktree / ".git").resolve()
     ):
         raise _RescueFailure(
-            "rescue_worktree_unregistered", "the worktree is not a linked worktree of the main repository"
+            "the worktree is not a linked worktree of the main repository",
+            _TypedCause("rescue_worktree_unregistered"),
         )
     return _RescueRepo(worktree, git_dir, admin)
 
@@ -6806,9 +6984,7 @@ def _rescue_tree(repo: _RescueRepo) -> str:
             proc = repo.git("write-tree", index=index)
     tree = proc.stdout.strip() if proc.returncode == 0 else ""
     if not tree:
-        raise _RescueFailure(
-            "rescue_tree_unavailable", f"cannot write the rescue tree: {_format_process_failure(proc)}"
-        )
+        raise _RescueFailure("cannot write the rescue tree", _git_cause("rescue_tree_unavailable", proc))
     return tree
 
 
@@ -6828,13 +7004,15 @@ def _rescue_commit(repo: _RescueRepo, tree: str, parent: str, *, agent: str, tas
         proc = repo.git("config", "--get", key, user_config=True)
         value = proc.stdout.strip() if proc.returncode == 0 else ""
         if not value:
-            raise _RescueFailure("rescue_identity_unavailable", f"no {key} is configured for the rescue commit")
+            raise _RescueFailure(
+                f"no {key} is configured for the rescue commit", _git_cause("rescue_identity_unavailable", proc)
+            )
         identity.update(dict.fromkeys(variables, value))
     message = f"chore(dispatch): rescue {task_id}\n\nX-Agent: {agent}/{task_id}"
     proc = repo.git("commit-tree", tree, "-p", parent, "-m", message, extra_env=identity)
     commit = proc.stdout.strip() if proc.returncode == 0 else ""
     if not commit:
-        raise _RescueFailure("rescue_commit_failed", f"cannot commit rescue work: {_format_process_failure(proc)}")
+        raise _RescueFailure("cannot commit rescue work", _git_cause("rescue_commit_failed", proc))
     return commit
 
 
@@ -6853,8 +7031,7 @@ def _rescue_publish_worktree(repo: _RescueRepo, head: str) -> Iterator[Path]:
         proc = repo.git("worktree", "add", "--detach", "--no-checkout", str(path), head)
         if proc.returncode != 0:
             raise _RescueFailure(
-                "rescue_publish_worktree_failed",
-                f"cannot create the rescue publish worktree: {_format_process_failure(proc)}",
+                "cannot create the rescue publish worktree", _git_cause("rescue_publish_worktree_failed", proc)
             )
         yield path
     finally:
@@ -6867,9 +7044,7 @@ def _rescue_checkout(publish: Path, commit: str) -> None:
     """Check ``commit`` out in the publish worktree, with the main repository's own configuration."""
     proc = _rescue_git(publish, "reset", "--hard", "--quiet", commit, network=True)
     if proc.returncode != 0:
-        raise _RescueFailure(
-            "rescue_publish_worktree_failed", f"cannot check out the rescue commit: {_format_process_failure(proc)}"
-        )
+        raise _RescueFailure("cannot check out the rescue commit", _git_cause("rescue_publish_worktree_failed", proc))
 
 
 def _rescue_remote_head(url: str, branch: str) -> str | None:
@@ -6882,14 +7057,15 @@ def _rescue_remote_head(url: str, branch: str) -> str | None:
         env = {**_isolated_git_env(), "GIT_CEILING_DIRECTORIES": str(Path(scratch).parent)}
         proc = _rescue_git(Path(scratch), "ls-remote", "--heads", url, f"refs/heads/{branch}", network=True, env=env)
     if proc.returncode != 0:
-        raise _RescueFailure(
-            "rescue_remote_unverified", f"rescue remote proof unavailable: {_format_process_failure(proc)}"
-        )
+        raise _RescueFailure("rescue remote proof unavailable", _remote_git_cause("rescue_remote_unverified", proc))
     lines = [line for line in proc.stdout.splitlines() if line.strip()]
     if not lines:
         return None
     if len(lines) != 1 or lines[0].split("\t")[-1] != f"refs/heads/{branch}":
-        raise _RescueFailure("rescue_remote_unverified", "rescue remote proof ambiguous")
+        raise _RescueFailure(
+            "rescue remote proof ambiguous",
+            _TypedCause("rescue_remote_unverified", "ls-remote", 0, diagnostic=proc.stdout),
+        )
     return lines[0].split("\t", 1)[0]
 
 
@@ -6913,37 +7089,40 @@ def _rescue_canonical_push_url(repo: _RescueRepo) -> str:
     for key in ("remote.origin.pushurl", "remote.origin.url"):
         proc = repo.git("config", "--get-all", key)
         if proc.returncode not in (0, 1):  # 1: the key is not set
-            raise _RescueFailure(
-                "rescue_push_url_unavailable", f"main repository {key} unavailable: {_format_process_failure(proc)}"
-            )
+            raise _RescueFailure(f"main repository {key} unavailable", _git_cause("rescue_push_url_unavailable", proc))
         urls = [line for line in proc.stdout.splitlines() if line.strip()]
         if urls:
             break
     if len(urls) != 1 or urls[0] == kimi_boundary.PUSH_BLOCK_URL:
-        raise _RescueFailure("rescue_push_url_unavailable", "main repository has no single usable push URL for origin")
+        raise _RescueFailure(
+            "main repository has no single usable push URL for origin",
+            _TypedCause("rescue_push_url_unavailable", "config", diagnostic=f"{len(urls)} configured URL(s)"),
+        )
     return urls[0]
 
 
 def _kimi_tree_refusal(
     repo: _RescueRepo, publish: Path, base_ref: str, agent: str, *, base_sha: str | None, tree: str
-) -> str | None:
-    """The Kimi finalize content check on exactly ``tree``, the tree rescue publishes; None when it passes."""
+) -> tuple[str | None, _TypedCause | None]:
+    """The Kimi finalize content check on exactly ``tree``, the tree rescue publishes: ``(refusal, cause)``.
+
+    ``(None, None)`` when it passes; ``cause`` is set when the changes could
+    not be read, as in :func:`_kimi_diff_refusal_detail`.
+    """
     from scripts.agent_runtime import kimi_boundary
 
     merge_base, why = _resolve_merge_base_detail(publish, base_ref, base_sha=base_sha)
     if merge_base is None:
-        return _kimi_unreadable(
-            agent, "merge_base_unresolved", f"no merge base with {base_ref!r}: {why}", repo.worktree
-        )
-    command = ["diff-tree", "-r", "-z", "--name-status", "--no-renames", merge_base, tree]
-    proc = repo.git(*command)
+        why = why or _TypedCause("merge_base_unresolved", "merge-base")
+        return _kimi_unreadable(agent, why), why
+    proc = repo.git("diff-tree", "-r", "-z", "--name-status", "--no-renames", merge_base, tree)
     if proc.returncode != 0:
-        return _kimi_unreadable(agent, "diff_unreadable", _git_failure(["git", *command], proc), repo.worktree)
+        why = _git_cause("diff_command_failed", proc)
+        return _kimi_unreadable(agent, why), why
     env = {**_isolated_git_env(), "GIT_DIR": str(repo.git_dir)}
     return _kimi_changes_refusal(
         agent,
         lambda: kimi_boundary.changes(repo.git_dir, kimi_boundary.parse_name_status(proc.stdout), after=tree, env=env),
-        repo.worktree,
     )
 
 
@@ -7078,7 +7257,7 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                         return row
                 if kimi_boundary.is_installed(worktree) or _is_kimi_task_record(state):
                     # Kimi work leaves the machine only after the finalize content check (#9878).
-                    refusal = _kimi_tree_refusal(
+                    refusal, unreadable = _kimi_tree_refusal(
                         repo, publish, base_ref, agent, base_sha=_recorded_base_sha(state), tree=tree or head
                     )
                     if refusal is not None:
@@ -7087,6 +7266,9 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                             reason=f"Kimi content check refused: {refusal}",
                             failure_code="kimi_content_refused",
                         )
+                        diagnostic = _record_diagnostic(task_id, unreadable, source="rescue")
+                        if diagnostic:
+                            row["diagnostic"] = diagnostic
                         return row
                 url = _rescue_canonical_push_url(repo)
                 existing_remote = _rescue_remote_head(url, branch)
@@ -7105,16 +7287,19 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                 _rescue_checkout(publish, commit)
                 proc = _rescue_git(publish, "push", url, f"HEAD:refs/heads/{branch}", network=True)
                 if proc.returncode != 0:
-                    raise _RescueFailure(
-                        "rescue_push_failed", f"cannot push rescue branch: {_format_process_failure(proc)}"
-                    )
+                    raise _RescueFailure("cannot push rescue branch", _remote_git_cause("rescue_push_failed", proc))
             if _rescue_remote_head(url, branch) != commit:
-                raise _RescueFailure("rescue_remote_unverified", "rescue remote verification failed")
+                raise _RescueFailure(
+                    "rescue remote verification failed", _TypedCause("rescue_remote_unverified", "ls-remote")
+                )
             tracking = f"refs/remotes/origin/{branch}"
             updated = repo.git("update-ref", tracking, commit)
             verified = repo.git("rev-parse", "--verify", "--quiet", f"{tracking}^{{commit}}")
             if updated.returncode != 0 or verified.stdout.strip() != commit:
-                raise _RescueFailure("rescue_tracking_ref_failed", "rescue tracking ref verification failed")
+                raise _RescueFailure(
+                    "rescue tracking ref verification failed",
+                    _git_cause("rescue_tracking_ref_failed", updated if updated.returncode != 0 else verified),
+                )
             with task_state_lock(state_path):
                 current = _read_state(state_path)
                 if not current or current.get("run_nonce") != state.get("run_nonce"):
@@ -7131,9 +7316,16 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
             row.update({"action": "rescued", "head": commit})
             return row
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
-        row.update({"action": "error", "reason": _host_safe(str(exc), (worktree,))})
+        # Only the typed cause leaves in the row; the raw error stays in the local .diag file (#9878).
         if isinstance(exc, _RescueFailure):
-            row["failure_code"] = exc.code
+            reason, cause = str(exc), exc.cause
+        else:
+            cause = _exception_cause("rescue_step_failed", exc)
+            reason = f"rescue step failed [{cause.public()}]"
+        row.update({"action": "error", "reason": reason, "failure_code": cause.code})
+        diagnostic = _record_diagnostic(task_id, cause, source="rescue")
+        if diagnostic:
+            row["diagnostic"] = diagnostic
         return row
 
 
@@ -9728,12 +9920,14 @@ def _run_worker(
                 # Kimi takes only plain text without Ukrainian content: a diff that breaks
                 # that is refused before auto-finalize can stage or commit anything.
                 if kimi_worker:
-                    kimi_content_refusal = _kimi_diff_refusal(
+                    kimi_content_refusal, kimi_unreadable_cause = _kimi_diff_refusal_detail(
                         Path(worktree_path),
                         base_ref,
                         agent,
                         base_sha=_recorded_base_sha(final_state),
                     )
+                    # The refusal names the typed cause; git's own error stays local (#9878).
+                    _record_diagnostic(task_id, kimi_unreadable_cause, source="finalize")
                 # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
                 #
                 # ``_count_commits_ahead`` returns None when it cannot count, and
