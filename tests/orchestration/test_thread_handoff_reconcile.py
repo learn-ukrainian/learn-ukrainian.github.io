@@ -249,7 +249,7 @@ _BUNDLE_CALLS = {
         "_bundle_archive_local_lineage", "_bundle_handoff_candidates_for_agent", "_bundle_json",
         "_bundle_preserved_path", "_bundle_preserved_path(Path(name), repo).as_posix",
         "archived.relative_to", "archived.relative_to(state_root).as_posix", "created_preserved.append",
-        "int", "manifest.get", "normalize_agent_name", "normalize_lineage_id", "preserved.append",
+        "int", "isinstance", "manifest.get", "normalize_agent_name", "normalize_lineage_id", "preserved.append",
         "repo.read_path", "repo.remove_path", "repo.write_path", "repo_backups.items", "rollback_errors.append", "set", "sorted",
         "source.relative_to", "source.relative_to(state_root).as_posix", "stage_root.relative_to",
         "stage_root.relative_to(state_root).as_posix", "staged_lineage.relative_to",
@@ -950,6 +950,74 @@ def test_archive_restore_failure_names_leftover_copy(newer_bundle, monkeypatch, 
     extra = set(_snapshot(b.root)) - set(before)
     assert extra
     assert all(name.startswith(leftover + '/') for name in extra)
+
+
+def test_cleanup_failure_on_archive_restore_names_archive_and_stage(newer_bundle, monkeypatch, capsys):
+    """Lease rewrite, move-back, and stage cleanup all fail.
+
+    The typed refusal must keep the archive-restore diagnostic and name both
+    leftovers: the repository-relative archive copy and the retained stage.
+    """
+    b = newer_bundle
+    original_lineage = _snapshot(b.lineage)
+    original_handoff = (b.root / HANDOFF_PATH).read_bytes()
+    original_receipt = b.receipt.read_bytes()
+    before = _snapshot(b.root)
+    native_write = th._BundleReconcileTree.write_path
+    native_move = th._BundleReconcileTree.move
+    native_remove = th._BundleReconcileTree.remove_path
+    archive_writes = 0
+
+    def write(tree, path, payload, **kwargs):
+        nonlocal archive_writes
+        if '/_archive/' in path and path.endswith('/lease.json'):
+            archive_writes += 1
+            if archive_writes == 1:
+                raise OSError('injected archive lease rewrite failure')
+        return native_write(tree, path, payload, **kwargs)
+
+    def move(tree, source, target):
+        if '/_archive/' in source:
+            raise OSError('injected archive move-back failure')
+        return native_move(tree, source, target)
+
+    def remove(tree, path):
+        if '.import-' in path:
+            raise OSError('injected stage cleanup failure')
+        return native_remove(tree, path)
+
+    monkeypatch.setattr(th._BundleReconcileTree, 'write_path', write)
+    monkeypatch.setattr(th._BundleReconcileTree, 'move', move)
+    monkeypatch.setattr(th._BundleReconcileTree, 'remove_path', remove)
+    assert th.cmd_import_bundle(_import_args(b.root, b.bundle)) == 2
+    output = json.loads(capsys.readouterr().out)
+    archives = [path for path in (b.lineage.parent / '_archive').iterdir() if path.is_dir()]
+    assert len(archives) == 1
+    leftover = archives[0].relative_to(b.root).as_posix()
+    stage = next(b.lineage.parent.glob('.*.import-*'))
+    relative_stage = stage.relative_to(b.root).as_posix()
+    diagnostic = (
+        'archive lease rewrite failed: injected archive lease rewrite failure; '
+        'archive restore failed: injected archive move-back failure; '
+        f'leftover archive: {leftover}'
+    )
+    assert output['status'] == 'refused'
+    assert output['code'] == 'reconcile_archive_restore_failed'
+    assert output['error'] == (
+        f'{diagnostic}; stage cleanup failed: injected stage cleanup failure; retained stage: {relative_stage}'
+    )
+    assert not Path(leftover).is_absolute()
+    assert not Path(relative_stage).is_absolute()
+    assert str(b.root) not in output['error']
+    assert (archives[0] / 'lease.json').read_bytes() == original_lineage['lease.json']
+    assert _snapshot(b.lineage) == original_lineage
+    assert (b.root / HANDOFF_PATH).read_bytes() == original_handoff
+    assert b.receipt.read_bytes() == original_receipt
+    assert stage.is_dir()
+    assert not list(b.root.rglob('.reconcile-*.tmp'))
+    extra = set(_snapshot(b.root)) - set(before)
+    assert extra
+    assert all(name.startswith((leftover + '/', relative_stage + '/')) for name in extra)
 
 
 def test_session_start_warns_for_each_installed_bundle_cleanup(monkeypatch):

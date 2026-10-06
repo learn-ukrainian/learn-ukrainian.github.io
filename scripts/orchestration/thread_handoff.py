@@ -1009,6 +1009,7 @@ def _bundle_commit_install(
     lineage_replaced = False
     backup_complete = False
     cleanup_stage = False
+    pending_install_error: BaseException | None = None
     with (
         _BundleReconcileTree(state_root, agent, lineage_id) as tree,
         _BundleReconcileTree(repo_root, agent, lineage_id) as repo,
@@ -1104,16 +1105,27 @@ def _bundle_commit_install(
                     f"retained stage: {stage}",
                 ) from install_error
             cleanup_stage = True
+            pending_install_error = install_error
             raise
         finally:
             # A failed rollback must retain its original backup for recovery.
+            # Cleanup runs while that install error is still propagating. A
+            # cleanup failure must not replace an archive-restore refusal:
+            # its diagnostic is what names the leftover archive copy.
             if cleanup_stage:
                 try:
                     tree.remove_path(stage)
                 except Exception as exc:
-                    raise BundleReconcileRefused(
-                        "reconcile_stage_cleanup_failed", f"stage cleanup failed: {exc}; retained stage: {stage}"
-                    ) from exc
+                    cleanup_detail = f"stage cleanup failed: {exc}; retained stage: {stage}"
+                    if (
+                        isinstance(pending_install_error, BundleReconcileRefused)
+                        and pending_install_error.code == "reconcile_archive_restore_failed"
+                    ):
+                        raise BundleReconcileRefused(
+                            pending_install_error.code,
+                            f"{pending_install_error}; {cleanup_detail}",
+                        ) from pending_install_error
+                    raise BundleReconcileRefused("reconcile_stage_cleanup_failed", cleanup_detail) from exc
 
 
 class RolloverBundleAPIUnavailable(RuntimeError):
