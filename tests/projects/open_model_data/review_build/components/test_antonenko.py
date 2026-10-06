@@ -798,6 +798,45 @@ def test_sidecar_extractor_supports_fenced_result_and_refuses_multiple_payloads(
         attestation_for(receipt, task, duplicate)
 
 
+@pytest.mark.parametrize("matching_first", [False, True])
+def test_sidecar_extractor_selects_matching_batch_from_two_blocks(source, matching_first):
+    receipt = selection_receipts(batches(source["rows"])[0])["sol"]
+    other = {**receipt, "batch_sha256": "0" * 64}
+    payloads = [receipt, other] if matching_first else [other, receipt]
+    raw = b"SYNTHETIC result\n" + b"\n".join(b"```json\n" + canonical(p) + b"\n```" for p in payloads)
+    task = {
+        "task_id": receipt["task_id"],
+        "model": receipt["model"],
+        "status": "done",
+        "result_sha256": digest(raw),
+        "finished_at": "2026-10-06T00:00:00Z",
+    }
+    assert attestation_for(receipt, task, raw) == task
+
+
+@pytest.mark.parametrize("payload_kind", ["mismatched", "duplicate", "changed", "non_object"])
+def test_sidecar_extractor_refuses_missing_ambiguous_or_changed_matching_block(source, payload_kind):
+    receipt = selection_receipts(batches(source["rows"])[0])["sol"]
+    other = {**receipt, "batch_sha256": "0" * 64}
+    payloads = {
+        "mismatched": [other, {**other, "batch_sha256": "1" * 64}],
+        "duplicate": [receipt, other, receipt],
+        "changed": [other, {**receipt, "rows": []}],
+        "non_object": [[], None],
+    }[payload_kind]
+    raw = b"\n".join(b"```json\n" + canonical(p) + b"\n```" for p in payloads)
+    task = {
+        "task_id": receipt["task_id"],
+        "model": receipt["model"],
+        "status": "done",
+        "result_sha256": digest(raw),
+        "finished_at": "2026-10-06T00:00:00Z",
+    }
+    code = "adjudication_stale" if payload_kind == "changed" else "adjudication_receipt"
+    with pytest.raises(BuildError, match=code):
+        attestation_for(receipt, task, raw)
+
+
 def test_sidecar_rechecked_and_pinned_after_candidate_extraction(source):
     write_receipt(source)
     ctx, obj = context(source), component_for("C6b")

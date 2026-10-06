@@ -220,15 +220,19 @@ def read_json(raw):
         raise BuildError("adjudication_receipt") from None
 
 
-def result_receipt(raw):
-    """Accept one JSON result, optionally in a single JSON fence; never normalize fields."""
+def result_receipt(raw, batch_sha256):
+    """Select the unique batch-matching JSON fence; never normalize fields."""
     try:
         text = raw.decode("utf-8").strip()
     except UnicodeError:
         raise BuildError("adjudication_receipt") from None
     blocks = re.findall(r"```json\s*\n(.*?)\n```", text, re.S)
-    require(len(blocks) <= 1, "adjudication_receipt")
-    return read_json(blocks[0] if blocks else text)
+    if not blocks:
+        return read_json(text)
+    payloads = [read_json(block) for block in blocks]
+    matches = [p for p in payloads if isinstance(p, dict) and p.get("batch_sha256") == batch_sha256]
+    require(len(matches) == 1, "adjudication_receipt")
+    return matches[0]
 
 
 def attestation_for(receipt, task, result):
@@ -240,7 +244,7 @@ def attestation_for(receipt, task, result):
     )
     require(task.get("status") == "done", "adjudication_provenance")
     require(task.get("result_sha256") == digest(result), "adjudication_stale")
-    require(canonical(result_receipt(result)) == canonical(receipt), "adjudication_stale")
+    require(canonical(result_receipt(result, receipt.get("batch_sha256"))) == canonical(receipt), "adjudication_stale")
     require(isinstance(task.get("finished_at"), str) and bool(task["finished_at"].strip()), "adjudication_provenance")
     return {key: task[key] for key in ("task_id", "model", "status", "result_sha256", "finished_at")}
 
