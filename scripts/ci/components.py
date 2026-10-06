@@ -380,7 +380,8 @@ def inventory(manifest: dict, root: Path = ROOT) -> dict:
         "inventory_source": "git ls-files -z (index; includes sparse paths)",
         "tracked_paths": len(paths), "node_path_counts": counts,
         "unassigned": len(missing["unmapped"]), "ambiguous": len(missing["ambiguous"]),
-        "dynamic_unresolved": len(missing["dynamic-unresolved"]) + sum(not e.get("resolved", False) for e in manifest["edges"]),
+        "dynamic_unresolved": len(graph["unresolved_edges"]) + len(missing["dynamic-unresolved"])
+        + sum(not e.get("resolved", False) for e in manifest["edges"]),
         "unresolved_import_edges": len(graph["unresolved_edges"]),
         "import_graph": {key: value for key, value in graph.items() if key != "file_edges"},
         "import_edges": len(graph["file_edges"]),
@@ -407,6 +408,9 @@ def test_files(component: str, manifest: dict, root: Path = ROOT) -> list[str]:
     reverse = {}
     for importer, target in graph["file_edges"]:
         reverse.setdefault(target, set()).add(importer)
+    # A non-literal loader can read any node's source. Its importers remain
+    # obligations in every node's suite until the target is proven.
+    sources.update(edge["path"] for edge in graph["unresolved_edges"])
     pending = list(sources)
     visited = set(sources)
     while pending:
@@ -418,8 +422,8 @@ def test_files(component: str, manifest: dict, root: Path = ROOT) -> list[str]:
     files.update(manifest.get("shared_integration_tests", []))
     if not files:
         raise ValueError("node has no declared contract tests")
-    if any(not (root / path).is_file() for path in files):
-        raise ValueError("declared test file is absent; materialize its sparse tree")
+    # Census is index-backed; collection, not sparse materialization, decides
+    # whether the resolved set can execute in this worktree.
     return sorted(files)
 
 

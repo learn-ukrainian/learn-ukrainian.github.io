@@ -3,7 +3,7 @@
   "plan": "plans/component-separation-9721.md",
   "plan_version": 2,
   "baseline": "dff595c12a714713f7fb8f9f18ff5245283adf7e",
-  "description": "Index-backed path ownership and complete node test sets, including computed Python importers and shared integration tests. Computed unresolved edges force all-node selection; no CI selection or independence certification.",
+  "description": "Index-backed path ownership and complete node test sets, including computed Python importers and shared integration tests. Computed unresolved edges force all-node selection and retain their test importers in every node set; no CI selection or independence certification.",
   "components": {
     "open-model-data": {
       "lane": "open-model-data",

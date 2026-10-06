@@ -139,14 +139,13 @@ def test_manifest_validation_rejects_bad_contract(tmp_path, manifest, mutation):
         c.load_manifest(path)
 
 
-def test_test_prefixes_expand_index_and_absence_refuses(repo, manifest):
+def test_test_prefixes_expand_index_and_sparse_census_is_complete(repo, manifest):
     manifest["shared_integration_tests"] = []
     manifest["components"]["harness"]["test_files"] = []
     manifest["components"]["harness"]["test_prefixes"] = ["tests/"]
     assert c.test_files("harness", manifest, repo) == ["tests/test_fixture.py"]
     (repo / "tests/test_fixture.py").unlink()
-    with pytest.raises(ValueError, match="absent"):
-        c.test_files("harness", manifest, repo)
+    assert c.test_files("harness", manifest, repo) == ["tests/test_fixture.py"]
 
 
 def test_ast_closure_relative_bare_literal_loads_and_nonliteral():
@@ -485,3 +484,37 @@ def test_skips_never_hide_a_failed_command(repo, monkeypatch):
     command = {"argv": ["{python}", "-m", "pytest", "-q", "tests/test_fixture.py"], "cwd": ".", "scope": "code-contract"}
     reports, code = c.run_commands([command], repo, None, {})
     assert code == 1 and reports[0]["skipped"] == 1 and reports[0]["result"] == "fail"
+
+
+def test_unknown_loads_and_their_importers_are_in_every_node_set(repo, manifest):
+    manifest["shared_integration_tests"] = []
+    manifest["components"]["atlas-data"]["test_files"] = []
+    for path, text in {
+        "scripts/build/unknown_loader.py": "import importlib\nimportlib.import_module(target)\n",
+        "tests/test_indirect_load.py": "from scripts.build import unknown_loader\n",
+        "tests/test_direct_load.py": "import importlib\nimportlib.import_module(target)\n",
+        "tests/test_unrelated.py": "X = 1\n",
+    }.items():
+        target = repo / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(text)
+    git(repo, "add", ".")
+    assert c.test_files("atlas-data", manifest, repo) == ["tests/test_direct_load.py", "tests/test_indirect_load.py"]
+    report = c.inventory(manifest, repo)
+    assert report["dynamic_unresolved"] == report["unresolved_import_edges"] == 2
+
+
+def test_resolved_test_sets_do_not_freeze_to_manifest_samples(manifest):
+    graph = c.import_graph(manifest)
+    paths = c.tracked_paths()
+    for node in c.NODE_IDS:
+        resolved = set(c.test_files(node, manifest))
+        mapped = {path for path in paths if path.startswith("tests/")
+                  and Path(path).name.startswith("test_") and path.endswith(".py")
+                  and node in c.assign_path(path, manifest)[0]}
+        assert mapped <= resolved
+        assert set(manifest["shared_integration_tests"]) <= resolved
+    # Check the review's atlas-data -> harness direction without the fallback.
+    assert ("atlas-data", "harness") in graph["node_edges"]
+    graph = graph | {"unresolved_edges": [], "missing_mandatory_edges": []}
+    assert "harness" in c.affected(["scripts/lexicon/runner/atlas_job.py"], manifest, graph)["components"]
