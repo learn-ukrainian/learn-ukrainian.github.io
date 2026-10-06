@@ -373,8 +373,10 @@ boundary loss is withheld, never repaired. This check does not certify a PDF
 extraction: comparison with the printed source remains separate evidence.
 C5 retains raw printed example spans and quotes for identity and `example_list`
 binding; its catalog target is the complete paragraph with the resolved reading.
-Its boundary grammar preserves numbered/lettered items, balanced quotes and
-parentheses. Commas split only groups whose parts are each a single orthographic
+Its boundary grammar preserves balanced quotes and parentheses. Numbered or
+lettered prose needs an explicit example introduction; numbering also occurs
+in rule conditions and multi-example groups, so it cannot alone admit prose.
+Numbered comma groups consisting of multiple orthographic examples are withheld. Commas split only groups whose parts are each a single orthographic
 example (with optional printed annotations); semicolons delimit groups. Printed
 line breaks inside an item remain verbatim, including wrapped hyphens. Unmarked
 multiword lists, prose continuations and unbalanced punctuation are counted as

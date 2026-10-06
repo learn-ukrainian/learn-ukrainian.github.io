@@ -178,6 +178,17 @@ def _lexical_example(text: str) -> bool:
     return bool(re.fullmatch(r"[^\W_][\w\u0300-\u036f'’ʼ-]*", visible))
 
 
+def _explicit_example_intro(text: str, start: int) -> bool:
+    colon = text.rfind(":", 0, start)
+    intro_start = max(text.rfind(":", 0, colon), text.rfind("\n", 0, colon)) + 1
+    return bool(re.search(r"\b(?:examples?|e\.g|наприклад|як-от)\b", text[intro_start:colon], re.I))
+
+
+def _quoted_example(text: str) -> bool:
+    outer, balanced = _list_punctuation(text)
+    return bool(text and balanced and not outer and text[0] in "«“\"'‘" and text[-1] in "»”\"'’")
+
+
 def example_boundaries(text: str) -> list[tuple[tuple[int, int], str]]:
     """Enumerate safe examples and unresolved list spans without editing text.
 
@@ -212,14 +223,27 @@ def example_boundaries(text: str) -> list[tuple[tuple[int, int], str]]:
                     limit = markers[index + 1].start() if index + 1 < len(markers) else len(part)
                     span = _trim_span(text, a + marker.end(), a + limit)
                     if span[0] < span[1]:
-                        items.append((span, "ok"))
+                        content = text[slice(*span)]
+                        inner, _ = _list_punctuation(content)
+                        comma_parts = content.split(",")
+                        # Numbering alone also occurs in rule conditions and in
+                        # groups containing multiple examples. Neither proves
+                        # that a prose span is exactly one printed example.
+                        atomic_list = len(comma_parts) > 1 and all(_lexical_example(p.strip()) for p in comma_parts)
+                        explicit = _explicit_example_intro(text, start)
+                        one = (
+                            _lexical_example(content)
+                            or _quoted_example(content)
+                            or (explicit and not atomic_list and any(char.isalpha() for char in inner.values()))
+                        )
+                        items.append((span, "ok" if one else "example_boundary_ambiguous"))
                 continue
             commas = [p for p, c in punctuation.items() if c == ","]
             cuts = [-1, *commas, len(part)]
             spans = [_trim_span(text, a + l + 1, a + r) for l, r in pairwise(cuts)]
             if all(l < r and _lexical_example(text[l:r]) for l, r in spans):
                 items.extend((span, "ok") for span in spans)
-            elif not commas and part[0] in "«“\"'‘" and part[-1] in "»”\"'’" and not punctuation:
+            elif not commas and _quoted_example(part):
                 items.append(((a, b), "ok"))
             else:
                 items.append(((a, b), "example_boundary_ambiguous"))
