@@ -115,6 +115,7 @@ def _environment(project: Path, record_path: Path) -> dict[str, str]:
             # backed) keeps using TEST_SESSION_RECORD/the fake .venv python
             # above, so both fixtures point at the same on-disk record.
             "LEARN_UKRAINIAN_SESSION_RECORD": os.fspath(record_path),
+            "THREAD_ROLLOVER_PYTHON": sys.executable,
         }
     )
     for name in (
@@ -752,6 +753,7 @@ def test_context_monitor_prepare_command_runs_from_a_worktree(tmp_path: Path) ->
     transcript = tmp_path / "native.jsonl"
     _write_transcript(transcript, input_tokens=760_000, cache_tokens=0)
     env = _environment(worktree, record_path)
+    env.pop("THREAD_ROLLOVER_PYTHON", None)
     for name in ("LEARN_UKRAINIAN_SESSION_ID", "CODEX_CANONICAL_REPO_ROOT"):
         env.pop(name, None)
 
