@@ -209,7 +209,7 @@ def local_sources_db_path(primary_root: Path = PRIMARY_ROOT) -> Path:
 
 
 def _connect_read_only(path: Path) -> sqlite3.Connection:
-    connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
     connection.execute("PRAGMA query_only=ON")
     return connection
 

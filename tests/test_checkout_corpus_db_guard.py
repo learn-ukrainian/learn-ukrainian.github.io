@@ -11,6 +11,7 @@ Every checkout here is a throwaway directory in ``tmp_path``.
 from __future__ import annotations
 
 import contextlib
+import os
 import sqlite3
 from pathlib import Path
 from types import SimpleNamespace
@@ -19,6 +20,86 @@ import pytest
 
 import tests.conftest as guard
 from scripts.wiki import source_attribution
+
+
+@pytest.fixture
+def protected_data(tmp_path, monkeypatch):
+    root = tmp_path / "real data # ?"
+    root.mkdir()
+    monkeypatch.setattr(guard, "_CORPUS_DATA_ROOTS", frozenset({root.resolve()}))
+    return root
+
+
+@pytest.mark.parametrize("constructor", [sqlite3.connect, sqlite3.Connection])
+@pytest.mark.parametrize("shape", ["str", "path", "bytes", "uri-rw", "uri-rwc", "uri-duplicate"])
+@pytest.mark.parametrize("existing", [False, True])
+def test_runtime_guard_refuses_real_corpus_writes_before_open(protected_data, constructor, shape, existing):
+    target = protected_data / "sources.db"
+    if existing:
+        target.touch()
+    before = target.read_bytes() if existing else None
+    database = {
+        "str": str(target),
+        "path": target,
+        "bytes": os.fsencode(target),
+        "uri-rw": target.as_uri() + "?mode=rw",
+        "uri-rwc": target.as_uri() + "?mode=rwc",
+        "uri-duplicate": target.as_uri() + "?mode=ro&mode=rw",
+    }[shape]
+    with pytest.raises(pytest.fail.Exception, match="writable real corpus"):
+        constructor(database, uri=shape.startswith("uri"))
+    assert target.exists() is existing
+    if existing:
+        assert target.read_bytes() == before
+
+
+def test_runtime_guard_allows_readonly_and_temporary_fixture_writes(protected_data, tmp_path):
+    fixture = tmp_path / "fixture.db"
+    with contextlib.closing(sqlite3.connect(fixture)) as conn:
+        conn.execute("CREATE TABLE t (x)")
+        conn.execute("INSERT INTO t VALUES (1)")
+        conn.commit()
+    target = protected_data / "sources.db"
+    target.write_bytes(fixture.read_bytes())
+    before = target.read_bytes()
+    for constructor in (sqlite3.connect, sqlite3.Connection):
+        with contextlib.closing(constructor(target.as_uri() + "?mode=ro", uri=True)) as conn:
+            assert conn.execute("SELECT x FROM t").fetchall() == [(1,)]
+            with pytest.raises(sqlite3.OperationalError, match="readonly"):
+                conn.execute("INSERT INTO t VALUES (2)")
+    assert target.read_bytes() == before
+
+
+def test_runtime_guard_covers_nested_databases_and_symlinks(protected_data, tmp_path):
+    nested = protected_data / "nested"
+    nested.mkdir()
+    target = nested / "other.db"
+    alias = tmp_path / "alias.db"
+    alias.symlink_to(target)
+    outside = tmp_path / "outside.db"
+    inside_alias = protected_data / "link.db"
+    inside_alias.symlink_to(outside)
+    for database in (target, alias, inside_alias):
+        with pytest.raises(pytest.fail.Exception, match="writable real corpus"):
+            sqlite3.connect(database)
+    assert not target.exists()
+    assert not outside.exists()
+
+
+def test_runtime_guard_ignores_unrelated_audit_events_and_non_paths(protected_data):
+    guard._corpus_db_write_hook("open", (protected_data / "sources.db",))
+    guard._corpus_db_write_hook("sqlite3.connect", ())
+    guard._corpus_db_write_hook("sqlite3.connect", (object(),))
+
+
+def test_compatibility_ask_telemetry_persists_only_in_the_test_store(tmp_path):
+    from scripts.telemetry import legacy_bridge
+
+    token = legacy_bridge.start_bridge_invocation_safely("codex", "codex")
+    assert token is not None
+    assert token.db_path.parent == tmp_path
+    assert token.db_path.is_file()
+    legacy_bridge.finish_bridge_invocation_safely(token, succeeded=False)
 
 
 @pytest.fixture

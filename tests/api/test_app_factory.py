@@ -29,6 +29,7 @@ pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DB_ACCESS_PATTERNS = (
     re.compile(r"\bsqlite3\.connect\("),
+    re.compile(r"\b_open_readonly\("),
     re.compile(r"\bconnect_sqlite\("),
     re.compile(r"\bSessionStreamDatabase\("),
 )
@@ -349,6 +350,7 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
 
 def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
     """Admin / ops / git-hygiene routes read only the app's MonitorContext."""
+
     @asynccontextmanager
     async def no_lifespan(_app):
         yield
@@ -455,9 +457,7 @@ def test_step10_sources_router_cluster_isolation(tmp_path: Path) -> None:
         assert second_browse["total"] == 1
         assert second_browse["images"][0]["name"] == "second.png"
         assert second_browse["images"][0]["grade"] == "grade-02"
-        assert first_browse["images"][0]["name"] not in {
-            image["name"] for image in second_browse["images"]
-        }
+        assert first_browse["images"][0]["name"] not in {image["name"] for image in second_browse["images"]}
 
         first_stats = first_client.get("/api/sources/stats").json()
         second_stats = second_client.get("/api/sources/stats").json()
@@ -575,11 +575,7 @@ def test_step12e_work_epics_cluster_isolation(tmp_path: Path) -> None:
         config = root / "scripts" / "config"
         config.mkdir(parents=True)
         (config / "issue_streams.yaml").write_text(
-            "schema_version: 1\n"
-            "streams:\n"
-            f"  {stream_id}:\n"
-            f"    title: {title}\n"
-            f"    epics: [{epic}]\n",
+            f"schema_version: 1\nstreams:\n  {stream_id}:\n    title: {title}\n    epics: [{epic}]\n",
             encoding="utf-8",
         )
 
@@ -592,12 +588,8 @@ def test_step12e_work_epics_cluster_isolation(tmp_path: Path) -> None:
 
     first_ctx = fixture_context(first_root)
     second_ctx = fixture_context(second_root)
-    api_main.seed_manifest_inventory(
-        first_root, store=first_ctx.stores.epics_store, handoff_root=first_root
-    )
-    api_main.seed_manifest_inventory(
-        second_root, store=second_ctx.stores.epics_store, handoff_root=second_root
-    )
+    api_main.seed_manifest_inventory(first_root, store=first_ctx.stores.epics_store, handoff_root=first_root)
+    api_main.seed_manifest_inventory(second_root, store=second_ctx.stores.epics_store, handoff_root=second_root)
     assert first_ctx.stores.work_in_flight is not None
     assert second_ctx.stores.work_in_flight is not None
     first_ctx.stores.work_in_flight["first-only"] = "sentinel"

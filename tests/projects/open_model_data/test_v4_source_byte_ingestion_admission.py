@@ -12,19 +12,30 @@ the exact real filter values.
 from __future__ import annotations
 
 import copy
+import importlib.util
 import inspect
 import json
 import sqlite3
+import sys
 from pathlib import Path
 from typing import Any
 
 import pytest
 from jsonschema import Draft202012Validator
 
-from scripts.projects.open_model_data import v4_source_byte_ingestion_admission as admission
 from scripts.projects.open_model_data.inventory_existing_assets import PRIVATE_TEXTBOOK_SOURCES
 
 ROOT = Path(__file__).resolve().parents[3]
+# The shared interpreter has an installed runtime wheel. Exercise this
+# worktree's runtime source without changing that installation or PYTHONPATH.
+_SPEC = importlib.util.spec_from_file_location(
+    "learn_ukrainian_v4_runtime._worktree_source_byte_admission",
+    ROOT / "packages/v4-runtime/src/learn_ukrainian_v4_runtime/v4_source_byte_ingestion_admission.py",
+)
+assert _SPEC is not None and _SPEC.loader is not None
+admission = importlib.util.module_from_spec(_SPEC)
+sys.modules[_SPEC.name] = admission
+_SPEC.loader.exec_module(admission)
 A2_RECEIPT_PATH = admission.A2_RECEIPT_PATH
 
 
@@ -84,6 +95,17 @@ def test_provide_bytes_joins_rows_in_id_order_for_an_unfiltered_unit(tmp_path: P
     _make_sources_db(tmp_path)
     result = admission.provide_bytes_for_admitted_unit("db.external_articles", tmp_path)
     assert result == b"First article.\n\nSecond article."
+
+
+def test_provide_bytes_opens_exact_database_with_uri_metacharacters(tmp_path: Path) -> None:
+    root = tmp_path / "space ї # ?"
+    _make_sources_db(root)
+    database = root / "data" / "sources.db"
+    before = database.read_bytes()
+    assert (
+        admission.provide_bytes_for_admitted_unit("db.external_articles", root) == b"First article.\n\nSecond article."
+    )
+    assert database.read_bytes() == before
 
 
 def test_provide_bytes_excludes_private_textbook_sources(tmp_path: Path) -> None:

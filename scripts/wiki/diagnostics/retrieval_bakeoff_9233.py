@@ -2458,7 +2458,7 @@ Related: docs/research/retrieval-bakeoff-9233/g3-queries.yaml; design #9233 v6.1
         "--work-dir",
         type=Path,
         required=True,
-        help="External directory for all generated indexes, caches and outputs; example /tmp/bakeoff-9233.",
+        help="External directory for all generated indexes, caches and outputs; example $TMPDIR/bakeoff-9233.",
     )
     common.add_argument(
         "--sources-db", type=Path, help="Read-only textbook SQLite database; defaults to the active project sources.db."

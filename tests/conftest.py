@@ -362,6 +362,14 @@ def _guard_real_bridge_db_writes(monkeypatch: pytest.MonkeyPatch, request: pytes
     monkeypatch.setattr(sqlite3, "connect", guarded_connect)
 
 
+@pytest.fixture(autouse=True)
+def isolated_legacy_bridge_telemetry(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Compatibility asks must persist telemetry in a per-test store (#9609)."""
+    from scripts.telemetry import legacy_bridge
+
+    monkeypatch.setattr(legacy_bridge, "_DB_PATH", tmp_path / "legacy_comms_routes.db")
+
+
 def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[int, bool]:
     """Return the size of a tree without following symlinks.
 
@@ -1041,6 +1049,42 @@ def _task_store_write_hook(event: str, args: tuple[object, ...]) -> None:
 
 
 sys.addaudithook(_task_store_write_hook)
+
+
+_CORPUS_DATA_ROOTS = frozenset(
+    {(_REPO_ROOT / "data").resolve(), (resolve_repo_root(Path(__file__), 1) / "data").resolve()}
+)
+
+
+def _corpus_db_write_hook(event: str, args: tuple[object, ...]) -> None:
+    """Reject writable corpus opens, including direct Connection constructors (#9609).
+
+    The SQLite audit event covers aliases and factories at collection time too.
+    Only an explicit mode=ro URI is admitted for real checkout data/*.db files;
+    ordinary temporary fixture databases remain writable. Check both lexical
+    and resolved paths so symlinks cannot bypass the protected directory.
+    """
+    if event != "sqlite3.connect" or not args:
+        return
+    database = args[0]
+    if not isinstance(database, (str, bytes, os.PathLike)):
+        return
+    raw = os.fsdecode(os.fspath(database))
+    path, read_only = _sqlite_database_path(database)
+    lexical = Path(unquote(urlsplit(raw).path) if raw.startswith("file:") else raw).absolute()
+    if read_only or path is None:
+        return
+    if any(
+        candidate.suffix == ".db" and candidate.is_relative_to(root)
+        for candidate in (lexical, path)
+        for root in _CORPUS_DATA_ROOTS
+    ):
+        pytest.fail(
+            "writable real corpus database open refused; use mode=ro or a tmp_path fixture (#9609)", pytrace=False
+        )
+
+
+sys.addaudithook(_corpus_db_write_hook)
 
 
 _REAL_SQLITE3_CONNECT = sqlite3.connect
