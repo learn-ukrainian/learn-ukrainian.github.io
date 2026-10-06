@@ -38,6 +38,7 @@ from scripts.lexicon.content_lexicon_reconciler import (
 )
 from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.lexicon.manifest_io import load_manifest
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DEFAULT_CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 DEFAULT_INVENTORY_OUT = Path("/tmp/atlas-curriculum-full-text-inventory.json")
@@ -63,7 +64,7 @@ def load_english_translation_dict(sources_db_path: Path | None = None) -> dict[s
         return {}
     translations: dict[str, str] = {}
     try:
-        with sqlite3.connect(f"file:{target_db.resolve()}?mode=ro", uri=True) as conn:
+        with _open_readonly(target_db.resolve()) as conn:
             cur = conn.execute("SELECT word, translations FROM dmklinger_uk_en")
             for word, tr_raw in cur.fetchall():
                 clean_word = _STRESS_RE.sub("", word).strip().casefold()

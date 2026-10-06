@@ -9,6 +9,8 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+
 
 def _sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
@@ -126,7 +128,7 @@ def stage_manifest_to_sqlite(
 
 
 def stream_manifest_entries_sqlite(path: Path) -> Iterator[dict[str, Any]]:
-    conn = sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(path.resolve())
     try:
         for (payload,) in conn.execute("SELECT payload FROM entries ORDER BY ord"):
             obj = json.loads(str(payload))
@@ -138,7 +140,7 @@ def stream_manifest_entries_sqlite(path: Path) -> Iterator[dict[str, Any]]:
 
 def iter_staged_lemma_ids(path: Path) -> Iterator[tuple[str, str]]:
     """Yield (lemma_id, lemma) in deterministic order from a staged SQLite manifest."""
-    conn = sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True)
+    conn = _shared_open_readonly(path.resolve())
     try:
         for lemma_id, lemma in conn.execute("SELECT lemma_id, lemma FROM entries ORDER BY ord"):
             yield str(lemma_id), str(lemma)
@@ -160,10 +162,7 @@ class StreamingCandidateWriter:
         # Write opening brace + meta keys, then entries array.
         self._handle.write("{\n")
         for key, value in self._meta.items():
-            self._handle.write(
-                f"  {json.dumps(key, ensure_ascii=False)}: "
-                f"{json.dumps(value, ensure_ascii=False)},\n"
-            )
+            self._handle.write(f"  {json.dumps(key, ensure_ascii=False)}: {json.dumps(value, ensure_ascii=False)},\n")
         self._handle.write('  "entries": [\n')
 
     def write_entry(self, entry: dict[str, Any]) -> None:

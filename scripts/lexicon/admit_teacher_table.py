@@ -24,7 +24,6 @@ import copy
 import hashlib
 import json
 import os
-import sqlite3
 import tempfile
 from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
@@ -36,6 +35,8 @@ from typing import Any
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_words
 
@@ -373,11 +374,11 @@ def _default_vesum_lookup(words: list[str], vesum_db: Path) -> dict[str, list[di
 
 def _build_dictionary_lookup(
     *, sources_db: Path | None, kaikki_path: Path | None
-) -> tuple[DictionaryLookup | None, dict[str, Any], sqlite3.Connection | None]:
+) -> tuple[DictionaryLookup | None, dict[str, Any], SQLiteConnection | None]:
     if sources_db is None or not sources_db.is_file():
         return None, {"enabled": False, "reason": "sources_db_unavailable"}, None
     kaikki = enrich_manifest._load_kaikki_lookup(kaikki_path) if kaikki_path is not None else {}
-    connection = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    connection = _open_readonly(sources_db)
 
     def lookup(lemma: str, pos: str, english: str) -> dict[str, Any] | None:
         # Passing no Slovnyk cache intentionally keeps this intake offline: the

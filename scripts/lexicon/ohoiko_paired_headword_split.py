@@ -33,6 +33,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
 from scripts.guardrails.worktree_containment import resolve_main_root
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
 
@@ -236,9 +237,8 @@ def atlas_db_lemma_keys(db_path: Path = DEFAULT_ATLAS_DB) -> tuple[int, set[str]
     resolved = _resolve_repo_path(db_path)
     if not resolved.exists():
         return 0, set()
-    import sqlite3
 
-    with sqlite3.connect(f"file:{resolved}?mode=ro", uri=True) as conn:
+    with _open_readonly(resolved) as conn:
         rows = conn.execute("SELECT lemma FROM articles").fetchall()
         keys = {_lemma_key(str(r[0])) for r in rows if r[0]}
         return len(rows), keys

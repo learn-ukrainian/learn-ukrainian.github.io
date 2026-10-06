@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.lexicon.runner.contracts import CEFR_ALGORITHM_VERSION, PhaseSeal, canonical_json
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 _UKRAINIAN_WORD_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ-]+$")
 _BANDS = ("A1", "A2", "B1", "B2", "C1")
@@ -150,15 +151,10 @@ def sealed_cefr_precompute(
 
 def load_sealed_cefr_map(path: Path) -> dict[str, dict[str, Any]]:
     """Load sealed CEFR rows keyed by GRAC word key (same shape as engine cache)."""
-    conn = sqlite3.connect(
-        f"file:{path.resolve().as_posix()}?mode=ro&immutable=1",
-        uri=True,
-    )
+    conn = _shared_open_readonly(path.resolve(), immutable=True)
     try:
         out: dict[str, dict[str, Any]] = {}
-        for row in conn.execute(
-            "SELECT word_key, level, rel_freq, freq, grac_word, rank, total FROM cefr_estimates"
-        ):
+        for row in conn.execute("SELECT word_key, level, rel_freq, freq, grac_word, rank, total FROM cefr_estimates"):
             out[str(row[0])] = {
                 "level": str(row[1]),
                 "rel_freq": float(row[2]),

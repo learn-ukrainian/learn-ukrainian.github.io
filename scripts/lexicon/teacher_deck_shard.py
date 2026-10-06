@@ -61,6 +61,8 @@ from scripts.ingest.private_teacher_lessons_ingest import DATE_START
 from scripts.ingest.private_teacher_lessons_ingest import SOURCE_FILE as TEACHER_LESSON_SOURCE
 from scripts.lexicon.build_teacher_deck_cloze import contains_private_teacher_name
 from scripts.lexicon.sync_teacher_table_deck import DECK_ID, normalize_uk_key
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.practice.extract_textbook_error_corrections import is_intentional_error_context
 
 SCHEMA = "atlas-practice-teacher-deck"
@@ -278,10 +280,10 @@ def _seeded_rng(*parts: str) -> random.Random:
 # --------------------------------------------------------------------------- inputs
 
 
-def _ro_connect(path: Path) -> sqlite3.Connection:
+def _ro_connect(path: Path) -> SQLiteConnection:
     if not path.exists():
         raise TeacherDeckBuildError(f"missing input database: {path}")
-    conn = sqlite3.connect(f"file:{path.resolve()}?mode=ro", uri=True)
+    conn = _open_readonly(path.resolve())
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -575,7 +577,7 @@ def _sentence_shape_ok(sentence: str, *, max_tokens: int, max_chars: int) -> boo
     )
 
 
-def teacher_lesson_sentences(conn: sqlite3.Connection) -> list[SourceSentence]:
+def teacher_lesson_sentences(conn: SQLiteConnection) -> list[SourceSentence]:
     """Ukrainian sentences from the teacher's lessons, newest lesson first.
 
     Lessons alternate an English line with its Ukrainian rendering; when a
@@ -733,7 +735,7 @@ def screen_lesson_sentences(
     return kept, {name: dict(sorted(table.items())) for name, table in counts.items()}
 
 
-def _textbook_rows(conn: sqlite3.Connection, match_query: str) -> list[sqlite3.Row]:
+def _textbook_rows(conn: SQLiteConnection, match_query: str) -> list[sqlite3.Row]:
     columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(textbooks)")}
     where = " ".join("AND lower(coalesce(source.source_file, '')) NOT LIKE ?" for _ in TEXTBOOK_EXCLUDED_PREFIXES)
     params: list[Any] = [match_query, *(f"{prefix}%" for prefix in TEXTBOOK_EXCLUDED_PREFIXES)]
@@ -754,7 +756,7 @@ def _textbook_rows(conn: sqlite3.Connection, match_query: str) -> list[sqlite3.R
 
 
 def textbook_sentences(
-    conn: sqlite3.Connection, match_query: str, accept: Callable[[str], bool]
+    conn: SQLiteConnection, match_query: str, accept: Callable[[str], bool]
 ) -> Iterable[SourceSentence]:
     """Readable textbook sentences for which the cheap *accept* test holds."""
 
@@ -1012,7 +1014,7 @@ def build_cloze(
     ctx: DeckContext,
     senses: dict[str, dict[str, Any]],
     lesson_sentences: list[SourceSentence],
-    sources_conn: sqlite3.Connection,
+    sources_conn: SQLiteConnection,
     analyzer: FormAnalyzer,
     withheld: Collection[str] = frozenset(),
 ) -> tuple[list[dict[str, Any]], dict[str, str], list[dict[str, Any]], list[str]]:

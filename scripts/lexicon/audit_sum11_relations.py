@@ -7,12 +7,13 @@ import argparse
 import csv
 import hashlib
 import json
-import sqlite3
 import subprocess
 from collections import defaultdict
 from pathlib import Path
 
 from scripts.lexicon.enrich_manifest import _antonyms_ulif, _section_item_key, _synonyms_ulif
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.verification import vesum
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -35,8 +36,8 @@ COUNT_START = "<!-- audit-counts:start -->"
 COUNT_END = "<!-- audit-counts:end -->"
 
 
-def _ro(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(f"file:{path.resolve()}?mode=ro", uri=True)
+def _ro(path: Path) -> SQLiteConnection:
+    conn = _open_readonly(path.resolve())
     conn.execute("PRAGMA query_only=ON")
     return conn
 
@@ -99,8 +100,7 @@ def audit(atlas_db: Path, sources_db: Path, vesum_db: Path, out_dir: Path, audit
                 else:
                     replacement = None  # No independent homonym replacement pass in this audit.
                 replacement_keys = {
-                    key for item in (replacement or {}).get("items", [])
-                    if (key := _section_item_key(item))
+                    key for item in (replacement or {}).get("items", []) if (key := _section_item_key(item))
                 }
                 unresolved = False
                 for item in section.get("items") or []:
@@ -136,20 +136,30 @@ def audit(atlas_db: Path, sources_db: Path, vesum_db: Path, out_dir: Path, audit
         writer.writerow(("slug", "source", "result"))
         writer.writerows(sorted(held_sources))
     columns = ("rows", "fully_confirmed_rows", "held_rows", "confirmed_items", "held_items")
-    lines = ["| Section | Cited rows | Fully confirmed rows | Held rows | Confirmed items | Held items |",
-             "| --- | ---: | ---: | ---: | ---: | ---: |"]
+    lines = [
+        "| Section | Cited rows | Fully confirmed rows | Held rows | Confirmed items | Held items |",
+        "| --- | ---: | ---: | ---: | ---: | ---: |",
+    ]
     for name in ("synonyms", "antonyms", "homonyms"):
         numbers = [totals[name][key] for key in columns]
         lines.append(f"| {name} | " + " | ".join(f"{value:,}" for value in numbers) + " |")
-    relation_totals = [sum(totals[name][key] for name in ("synonyms", "antonyms", "homonyms"))
-                       for key in columns]
+    relation_totals = [sum(totals[name][key] for name in ("synonyms", "antonyms", "homonyms")) for key in columns]
     lines.append("| **Relation total** | " + " | ".join(f"**{value:,}**" for value in relation_totals) + " |")
     numbers = [totals["top-level sources"][key] for key in columns]
     lines.append("| top-level sources | " + " | ".join(f"{value:,}" for value in numbers) + " |")
-    fingerprints = {name: _sha256(path) for name, path in
-                    (("atlas.db", atlas_db), ("sources.db", sources_db), ("vesum.db", vesum_db))}
-    block = "\n".join([COUNT_START, "\n".join(lines), "", "Source SHA-256: " +
-                        ", ".join(f"`{name}` `{value}`" for name, value in fingerprints.items()), COUNT_END])
+    fingerprints = {
+        name: _sha256(path)
+        for name, path in (("atlas.db", atlas_db), ("sources.db", sources_db), ("vesum.db", vesum_db))
+    }
+    block = "\n".join(
+        [
+            COUNT_START,
+            "\n".join(lines),
+            "",
+            "Source SHA-256: " + ", ".join(f"`{name}` `{value}`" for name, value in fingerprints.items()),
+            COUNT_END,
+        ]
+    )
     doc = audit_doc.read_text(encoding="utf-8")
     if COUNT_START not in doc or COUNT_END not in doc:
         raise ValueError("audit count markers missing")
@@ -167,7 +177,9 @@ def main() -> None:
     parser.add_argument("--out-dir", type=Path, default=ROOT / "docs" / "lexicon")
     parser.add_argument("--audit-doc", type=Path, default=ROOT / "docs" / "lexicon" / "sum11-reference-audit.md")
     args = parser.parse_args()
-    print(json.dumps(audit(args.atlas_db, args.sources_db, args.vesum_db, args.out_dir, args.audit_doc), sort_keys=True))
+    print(
+        json.dumps(audit(args.atlas_db, args.sources_db, args.vesum_db, args.out_dir, args.audit_doc), sort_keys=True)
+    )
 
 
 if __name__ == "__main__":

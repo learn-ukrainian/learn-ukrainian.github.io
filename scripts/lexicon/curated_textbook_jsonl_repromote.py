@@ -20,7 +20,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import sqlite3
 import sys
 from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
@@ -42,6 +41,7 @@ from scripts.lexicon.content_lexicon_reconciler import extract_ukrainian_tokens
 from scripts.lexicon.enrich_manifest import _sum20_definition_card, _vts_definition_card
 from scripts.lexicon.grow_lexicon_from_content import build_payload, build_skeleton_entry, write_candidates
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.verification.vesum import verify_word
 
 SOURCE_ID = "textbook-jsonl-curated-2026-07-19-bulk"
@@ -160,7 +160,7 @@ def iter_jsonl_texts(chunks_root: Path) -> Iterable[tuple[str, str, str]]:
 
 
 def iter_db_texts(db_path: Path) -> Iterable[tuple[str, str, str]]:
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = _open_readonly(db_path)
     try:
         rows = conn.execute("SELECT source_file, chunk_id, text FROM textbooks WHERE text IS NOT NULL").fetchall()
     finally:
