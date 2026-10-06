@@ -210,11 +210,19 @@ def test_process_snapshot_cwd_fd_zombie_and_unknown(tmp_path):
     (live / "cwd").symlink_to(tmp_path)
     (live / "fd").mkdir()
     (live / "fd" / "4").symlink_to(tmp_path / "held")
+    (live / "maps").write_text(
+        f"7f00-7f01 r--s 00000000 08:01 42                     {tmp_path / 'mapped file'}\n"
+        f"7f02-7f03 r--p 00000000 08:01 43                     {tmp_path / 'unlinked'} (deleted)\n"
+        "7f04-7f05 rw-p 00000000 00:00 0                      [heap]\n"
+        "7f06-7f07 rw-p 00000000 00:00 0\n"
+    )
     zombie = proc / "12"
     zombie.mkdir()
     (zombie / "stat").write_text("12 (fixture) Z 0")
     refs, complete = sweep.process_snapshot(proc)
     assert complete and (11, tmp_path) in refs and (11, tmp_path / "held") in refs
+    assert (11, tmp_path / "mapped file") in refs and (11, tmp_path / "unlinked") in refs
+    assert all(ref.is_absolute() for _, ref in refs)
     unknown = proc / "13"
     unknown.mkdir()
     assert sweep.process_snapshot(proc)[1] is False
@@ -339,12 +347,21 @@ def test_process_snapshot_keeps_known_cwd_when_fds_unknown(tmp_path):
     assert (14, tmp_path / "held") in refs and not complete
 
 
-def test_final_process_probe_after_tree_recheck_blocks_reap(inventory, monkeypatch):
+def test_post_rename_process_probe_blocks_reap_and_restores(inventory, monkeypatch):
     path = inventory.make()
-    probes = iter([([], True), ([], True), ([(16, path)], True)])
-    monkeypatch.setattr(sweep, "process_snapshot", lambda: next(probes))
+    probes = iter([([], True), ([], True)])
+
+    def probe():
+        # Third probe: after the rename, a holder shows the quarantined path.
+        for result in probes:
+            return result
+        [quarantine] = inventory.root.glob(sweep.QUARANTINE_PREFIX + "*")
+        return [(16, quarantine / path.name / "payload")], True
+
+    monkeypatch.setattr(sweep, "process_snapshot", probe)
     report = inventory.run(apply=True)
-    assert path.exists() and report["rows"][0]["reason"] == "final_liveness_or_task_changed"
+    assert report["rows"][0]["reason"] == "quarantine_live_process" and report["rows"][0]["decision"] == "preserve"
+    assert (path / "payload").exists() and not list(inventory.root.glob(sweep.QUARANTINE_PREFIX + "*"))
 
 
 def test_malformed_specific_run_never_falls_back_to_finished_parent(inventory):

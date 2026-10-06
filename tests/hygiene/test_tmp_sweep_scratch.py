@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import errno
+import fcntl
 import json
 import os
 import subprocess
@@ -299,78 +301,329 @@ def test_unknown_task_inventory_preserves(scratch, tmp_path, state):
     assert directory.exists() and regular.exists() and report["bytes_reclaimed"] == 0
 
 
-@pytest.mark.parametrize("race", ["holder", "write"])
-def test_holder_or_write_during_reaper_preflight_preserves(scratch, monkeypatch, race):
-    """Interleave a real holder or write with the common remover's own tree traversal."""
+def _quarantines(root):
+    return sorted(root.glob(sweep.QUARANTINE_PREFIX + "*"))
+
+
+def _target(scratch, kind):
+    """A quiet candidate and the file inside it that writers and holders use."""
+    if kind == "file":
+        regular = scratch.file()
+        return regular, regular
     directory = scratch.tree()
+    return directory, directory / "deep" / "payload"
+
+
+def _assert_restored(scratch, report, entry, reason):
+    row = scratch.row(report, entry.name)
+    assert (row["decision"], row["reason"]) == ("preserve", reason)
+    assert entry.exists() and not _quarantines(scratch.root) and report["errors"] == 0
+
+
+@pytest.mark.parametrize("kind", ["directory", "file"])
+@pytest.mark.parametrize(
+    "point", ["after_snapshot", "before_rename", "after_rename", "during_task_check", "during_process_scan"]
+)
+def test_write_between_snapshot_and_removal_is_preserved_and_restored(scratch, monkeypatch, kind, point):
+    """A real write at every point from the pre-rename snapshot to removal keeps the entry.
+
+    Before the rename the writer uses the entry's path. Afterwards the old
+    path is gone, so the writer is this process: it opens the payload just
+    before the rename and writes and closes it before the post-rename scan,
+    which therefore cannot see it; only the post-rename write check can.
+    """
+    entry, payload = _target(scratch, kind)
     monkeypatch.setattr(sweep, "process_snapshot", real_references_complete)
-    real_walk = task_scratch._walk_stats
+    held, wrote, renames = [], [], []
+    scans, task_reads = [0], [0]
+    real_rename, real_load = sweep.rename_noreplace, sweep.load_tasks
+
+    def write_and_close():
+        handle = held.pop() if held else open(payload, "r+b")  # noqa: SIM115 - closed below
+        with handle:
+            handle.write(b"fresh write")
+        wrote.append(point)
+
+    def scan(*args, **kwargs):
+        scans[0] += 1
+        if (point, scans[0]) in {("after_snapshot", 2), ("during_process_scan", 3)}:
+            write_and_close()
+        return real_references_complete()
+
+    def rename(src_fd, src, dst_fd, dst):
+        forward = not renames
+        renames.append(src)
+        if forward and point == "before_rename":
+            write_and_close()
+        elif forward and point != "after_snapshot":
+            held.append(open(payload, "r+b"))  # noqa: SIM115 - the writer opens just before the rename
+        real_rename(src_fd, src, dst_fd, dst)
+        if forward and point == "after_rename":
+            write_and_close()
+
+    def load(root):
+        task_reads[0] += 1
+        if point == "during_task_check" and task_reads[0] == 3:
+            write_and_close()
+        return real_load(root)
+
+    monkeypatch.setattr(sweep, "process_snapshot", scan)
+    monkeypatch.setattr(sweep, "rename_noreplace", rename)
+    monkeypatch.setattr(sweep, "load_tasks", load)
+    report = scratch.run(apply=True)
+    assert wrote == [point] and not held
+    expected = "proof_changed" if point == "after_snapshot" else "quarantine_write"
+    _assert_restored(scratch, report, entry, expected)
+    assert payload.read_bytes().startswith(b"fresh write")
+
+
+def test_metadata_only_change_is_seen_through_change_time(scratch, monkeypatch):
+    """Same size, mtime put back: only the inode change time records the write."""
+    entry, payload = _target(scratch, "directory")
+    real_rename = sweep.rename_noreplace
+    renames = []
+
+    def rename(src_fd, src, dst_fd, dst):
+        if not renames:
+            payload.write_bytes(b"z" * 8192)
+            os.utime(payload, (OLD, OLD))
+        renames.append(src)
+        real_rename(src_fd, src, dst_fd, dst)
+
+    monkeypatch.setattr(sweep, "rename_noreplace", rename)
+    _assert_restored(scratch, scratch.run(apply=True), entry, "quarantine_write")
+    assert payload.read_bytes() == b"z" * 8192
+
+
+def test_write_during_final_process_scan_is_never_lost(scratch, monkeypatch):
+    """The round-2 reproduction: a path write during the last process scan before removal.
+
+    With the rename boundary the old path no longer exists at that scan, so
+    the write either fails with ENOENT (nothing was written and removal is
+    correct) or lands and the entry survives. Removing a landed write fails.
+    """
+    entry, payload = _target(scratch, "directory")
+    outcomes = []
+    scans = [0]
+
+    def scan(*args, **kwargs):
+        scans[0] += 1
+        if scans[0] == 3:
+            try:
+                payload.write_bytes(b"fresh write")
+                outcomes.append("written")
+            except FileNotFoundError:
+                outcomes.append("enoent")
+        return real_references_complete()
+
+    monkeypatch.setattr(sweep, "process_snapshot", scan)
+    report = scratch.run(apply=True)
+    assert outcomes, "the final scan never ran"
+    if outcomes == ["written"]:
+        assert payload.read_bytes() == b"fresh write"
+    else:
+        assert scratch.row(report, entry.name)["decision"] == "reaped" and not entry.exists()
+
+
+def test_old_path_is_gone_once_quarantined(scratch, monkeypatch):
+    entry, payload = _target(scratch, "directory")
+    real_reap = sweep.reap_attributed_temp
+    seen = []
+
+    def reap(path, **kwargs):
+        with pytest.raises(FileNotFoundError):
+            payload.open("rb")
+        seen.append(path.parent.name)
+        return real_reap(path, **kwargs)
+
+    monkeypatch.setattr(sweep, "reap_attributed_temp", reap)
+    report = scratch.run(apply=True)
+    assert seen and seen[0].startswith(sweep.QUARANTINE_PREFIX)
+    assert scratch.row(report, entry.name)["decision"] == "reaped" and not _quarantines(scratch.root)
+
+
+HOLDER_BY_MODE = (
+    "import mmap, os, sys, time\n"
+    "mode, target = sys.argv[1], sys.argv[2]\n"
+    "if mode == 'cwd':\n"
+    "    os.chdir(target)\n"
+    "elif mode == 'fd':\n"
+    "    held = open(target, 'rb')\n"
+    "else:\n"
+    "    with open(target, 'rb') as handle:\n"
+    "        mapped = mmap.mmap(handle.fileno(), 0, access=mmap.ACCESS_READ)\n"
+    "sys.stdout.write('ready\\n'); sys.stdout.flush(); time.sleep(60)\n"
+)
+
+
+@pytest.mark.parametrize(
+    ("kind", "mode"),
+    [("directory", "cwd"), ("directory", "fd"), ("directory", "mmap"), ("file", "fd"), ("file", "mmap")],
+)
+def test_holder_opening_just_before_rename_is_found_after_it(scratch, monkeypatch, tmp_path, kind, mode):
+    entry, payload = _target(scratch, kind)
+    monkeypatch.setattr(sweep, "process_snapshot", real_references_complete)
+    real_rename = sweep.rename_noreplace
     children = []
 
-    def racing_walk(*args, **kwargs):
-        if not children and race == "holder":
-            children.append(
-                subprocess.Popen([sys.executable, "-c", HOLDER], cwd=directory / "deep", stdout=subprocess.PIPE)
+    def rename(src_fd, src, dst_fd, dst):
+        if not children:
+            target = payload.parent if mode == "cwd" else payload
+            child = subprocess.Popen(
+                [sys.executable, "-c", HOLDER_BY_MODE, mode, str(target)], stdout=subprocess.PIPE, cwd=tmp_path
             )
-            assert children[0].stdout.readline() == b"ready\n"
-        elif not children:
-            children.append(None)
-            (directory / "deep" / "payload").write_bytes(b"fresh write")
-        return real_walk(*args, **kwargs)
+            children.append(child)
+            assert child.stdout.readline() == b"ready\n"
+        real_rename(src_fd, src, dst_fd, dst)
 
-    monkeypatch.setattr(task_scratch, "_walk_stats", racing_walk)
+    monkeypatch.setattr(sweep, "rename_noreplace", rename)
     try:
         report = scratch.run(apply=True)
-        row = scratch.row(report, directory.name)
-        assert children, "the race hook never ran: the remover skipped its preflight"
-        assert (row["decision"], row["reason"]) == ("preserve", "final_liveness_or_task_changed")
-        assert (directory / "deep" / "payload").exists() and report["errors"] == 0
+        assert children, "the holder never started"
+        _assert_restored(scratch, report, entry, "quarantine_live_process")
+        assert children[0].poll() is None
     finally:
         for child in children:
-            if child is not None:
-                child.kill()
-                child.wait()
+            child.kill()
+            child.wait()
 
 
-def test_write_during_file_reaper_checks_preserves(scratch, monkeypatch):
-    regular = scratch.file()
-    real_mounts = task_scratch.mount_points
-    raced = []
-
-    def racing_mounts():
-        if not raced:
-            raced.append(True)
-            regular.write_bytes(b"fresh write")
-        return real_mounts()
-
-    monkeypatch.setattr(task_scratch, "mount_points", racing_mounts)
-    row = scratch.row(scratch.run(apply=True), regular.name)
-    assert raced and (row["decision"], row["reason"]) == ("preserve", "final_liveness_or_task_changed")
-    assert regular.read_bytes() == b"fresh write"
+def test_uninspectable_process_after_rename_restores(scratch, monkeypatch):
+    entry, _ = _target(scratch, "directory")
+    probes = iter([([], True), ([], True), ([], False)])
+    monkeypatch.setattr(sweep, "process_snapshot", lambda *a, **kw: next(probes))
+    _assert_restored(scratch, scratch.run(apply=True), entry, "quarantine_liveness_unknown")
 
 
-def test_removal_recheck_runs_after_reaper_preflight(scratch, monkeypatch):
-    """The final check is the last step before the first unlink, not before the reaper call."""
-    directory = scratch.tree()
-    events = []
-    real_walk, real_rmtree = task_scratch._walk_stats, task_scratch._rmtree_fd
-    real_recheck = sweep.removal_recheck
+@pytest.mark.parametrize("code", [errno.EXDEV, errno.EBUSY, errno.EACCES, errno.ENOSYS])
+def test_rename_failure_preserves_with_typed_reason(scratch, monkeypatch, code):
+    entry, payload = _target(scratch, "directory")
 
-    def recording_recheck(*args, **kwargs):
-        check = real_recheck(*args, **kwargs)
-        return lambda: (events.append("recheck"), check())
+    def failing(*_args):
+        raise OSError(code, os.strerror(code))
 
-    monkeypatch.setattr(sweep, "removal_recheck", recording_recheck)
-    monkeypatch.setattr(
-        task_scratch, "_walk_stats", lambda *a, **kw: (events.append("preflight"), real_walk(*a, **kw))[1]
+    monkeypatch.setattr(sweep, "rename_noreplace", failing)
+    row = scratch.row(scratch.run(apply=True), entry.name)
+    assert (row["decision"], row["reason"], row["error"]) == ("preserve", "quarantine_failed", errno.errorcode[code])
+    assert payload.exists() and not _quarantines(scratch.root)
+
+
+def test_real_rename_failure_preserves_moved_entry(scratch, monkeypatch):
+    """The entry moves away just before the rename: the kernel's ENOENT preserves it."""
+    entry, _ = _target(scratch, "directory")
+    real_rename = sweep.rename_noreplace
+    moved = scratch.root / "moved-away"
+
+    def rename(src_fd, src, dst_fd, dst):
+        if not moved.exists():
+            entry.rename(moved)
+        real_rename(src_fd, src, dst_fd, dst)
+
+    monkeypatch.setattr(sweep, "rename_noreplace", rename)
+    row = scratch.row(scratch.run(apply=True), entry.name)
+    assert (row["reason"], row["error"]) == ("quarantine_failed", "ENOENT")
+    assert (moved / "deep" / "payload").exists()
+
+
+def test_restore_blocked_keeps_entry_quarantined_and_reports(scratch, monkeypatch):
+    entry, _ = _target(scratch, "directory")
+    real_rename = sweep.rename_noreplace
+    renames = []
+
+    def rename(src_fd, src, dst_fd, dst):
+        real_rename(src_fd, src, dst_fd, dst)
+        if not renames:
+            # A held descriptor wrote the tree, and a newcomer took the old name.
+            quarantined = _quarantines(scratch.root)[0] / entry.name
+            (quarantined / "deep" / "payload").write_bytes(b"fresh write")
+            entry.mkdir()
+            (entry / "newcomer").write_text("unrelated")
+        renames.append(src)
+
+    monkeypatch.setattr(sweep, "rename_noreplace", rename)
+    report = scratch.run(apply=True)
+    blocked = next(r for r in report["rows"] if r["reason"] == "restore_blocked")
+    assert (blocked["found"], blocked["error"]) == ("quarantine_write", "EEXIST") and report["errors"] == 1
+    [quarantine] = _quarantines(scratch.root)
+    assert (quarantine / entry.name / "deep" / "payload").read_bytes() == b"fresh write"
+    assert (entry / "newcomer").read_text() == "unrelated"
+    # A later run still cannot restore while the name is taken, and deletes nothing.
+    # Real time: the newcomer is minutes old, not three days.
+    monkeypatch.setattr(sweep, "rename_noreplace", real_rename)
+    monkeypatch.setattr(sweep, "time", time)
+    again = scratch.run(apply=True)
+    assert [r["reason"] for r in again["rows"] if r.get("quarantine") == quarantine.name] == ["restore_blocked"]
+    assert (quarantine / entry.name / "deep" / "payload").exists() and (entry / "newcomer").exists()
+
+
+def _leftover(scratch, name="hand-made-scratch"):
+    quarantine = scratch.root / f"{sweep.QUARANTINE_PREFIX}crashed"
+    quarantine.mkdir(mode=0o700)
+    original = scratch.tree(name)
+    original.rename(quarantine / name)
+    return quarantine, quarantine / name
+
+
+def test_crash_leftover_is_reported_in_dry_run_and_untouched(scratch):
+    quarantine, entry = _leftover(scratch)
+    row = scratch.row(scratch.run(), entry.name)
+    assert (row["decision"], row["reason"], row["quarantine"]) == ("preserve", "quarantine_leftover", quarantine.name)
+    assert (entry / "deep" / "payload").exists()
+
+
+def test_crash_leftover_is_restored_then_held_by_a_live_process(scratch, monkeypatch, tmp_path):
+    """A leftover is never deleted from quarantine; restored, it meets every check again."""
+    quarantine, entry = _leftover(scratch)
+    monkeypatch.setattr(sweep, "process_snapshot", real_references_complete)
+    child = subprocess.Popen(
+        [sys.executable, "-c", HOLDER_BY_MODE, "cwd", str(entry / "deep")], stdout=subprocess.PIPE, cwd=tmp_path
     )
-    monkeypatch.setattr(
-        task_scratch, "_rmtree_fd", lambda *a, **kw: (events.append("unlink"), real_rmtree(*a, **kw))[1]
-    )
-    assert scratch.row(scratch.run(apply=True), directory.name)["decision"] == "reaped"
-    # Both tree walkers recurse; collapse repeats to see the phase order.
-    phases = [event for index, event in enumerate(events) if index == 0 or events[index - 1] != event]
-    assert phases == ["preflight", "recheck", "unlink"]
+    try:
+        assert child.stdout.readline() == b"ready\n"
+        report = scratch.run(apply=True)
+        assert report["quarantine_restored"] == 1 and not quarantine.exists()
+        assert scratch.row(report, entry.name)["reason"] == "live_process"
+        assert (scratch.root / entry.name / "deep" / "payload").exists() and child.poll() is None
+    finally:
+        child.kill()
+        child.wait()
+
+
+def test_crash_leftover_without_holder_goes_through_the_whole_boundary(scratch, monkeypatch):
+    _quarantine, entry = _leftover(scratch)
+    real_rename = sweep.rename_noreplace
+    renames = []
+
+    def rename(src_fd, src, dst_fd, dst):
+        renames.append(src)
+        real_rename(src_fd, src, dst_fd, dst)
+
+    monkeypatch.setattr(sweep, "rename_noreplace", rename)
+    report = scratch.run(apply=True)
+    # Restored first, then quarantined afresh and re-verified before removal.
+    assert renames == [entry.name, entry.name] and report["quarantine_restored"] == 1
+    assert scratch.row(report, entry.name)["decision"] == "reaped" and not _quarantines(scratch.root)
+
+
+def test_crash_leftover_with_taken_name_stays_quarantined(scratch):
+    quarantine, entry = _leftover(scratch)
+    (scratch.root / entry.name).mkdir()
+    report = scratch.run(apply=True)
+    row = next(r for r in report["rows"] if r.get("quarantine") == quarantine.name)
+    assert (row["reason"], row["error"]) == ("restore_blocked", "EEXIST") and report["errors"] == 1
+    assert (entry / "deep" / "payload").exists()
+
+
+def test_quarantine_of_a_live_run_is_left_alone(scratch):
+    quarantine, entry = _leftover(scratch)
+    fd = os.open(quarantine, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        report = scratch.run(apply=True)
+    finally:
+        os.close(fd)
+    assert report["quarantine_restored"] == 0 and (entry / "deep" / "payload").exists()
+    assert all(r.get("quarantine") != quarantine.name for r in report["rows"])
 
 
 def test_symlink_entries_are_not_followed_or_removed(scratch, tmp_path):
@@ -444,7 +697,7 @@ def test_attributed_entries_keep_task_rules(scratch):
 
 
 def test_apply_rechecks_new_task_attribution(scratch, monkeypatch):
-    # Third read: the removal-time recheck inside the common reaper.
+    # Third read: the post-rename check on the quarantined entry.
     directory = scratch.tree("impl-9737-probe")
     calls = 0
     original = sweep.load_tasks
@@ -452,13 +705,13 @@ def test_apply_rechecks_new_task_attribution(scratch, monkeypatch):
     def appearing(root):
         nonlocal calls
         calls += 1
-        if calls == 3:  # after the fresh reclassification, inside the reaper
+        if calls == 3:  # after the fresh reclassification and the rename
             (root / "impl-9737.json").write_text(json.dumps({"task_id": "impl-9737", "status": "running"}))
         return original(root)
 
     monkeypatch.setattr(sweep, "load_tasks", appearing)
     row = scratch.row(scratch.run(apply=True), directory.name)
-    assert row["reason"] == "final_liveness_or_task_changed" and directory.exists()
+    assert row["reason"] == "quarantine_task_reference" and directory.exists()
 
 
 def test_scratch_class_refuses_roots_outside_system_temp(scratch, monkeypatch, tmp_path):

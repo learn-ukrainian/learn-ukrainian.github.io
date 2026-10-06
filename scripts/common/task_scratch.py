@@ -55,7 +55,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -552,15 +552,12 @@ def _remove_invocation_dir(
     namespace: Path,
     expected_dev: int,
     expected_ino: int,
-    before_delete: Callable[[], None] | None = None,
 ) -> None:
     """Delete one direct child of the namespace after re-verifying its identity.
 
     Fails closed: unavailable mount information (``/proc/self/mountinfo`` or
     the per-fd mount id) refuses the deletion instead of assuming there is
-    nothing mounted below the lease. ``before_delete`` runs after the
-    non-destructive preflight and immediately before the first unlink; any
-    exception it raises refuses the deletion with nothing removed.
+    nothing mounted below the lease.
     """
     if "/" in name or name in {"", ".", ".."}:
         raise ContainmentError(f"invalid invocation directory name {name!r}")
@@ -599,8 +596,6 @@ def _remove_invocation_dir(
         # checks repeat on every descent during deletion for anything that
         # appears afterwards.
         _walk_stats(inv_fd, device=inv_st.st_dev, mount_id=ns_mount)
-        if before_delete is not None:
-            before_delete()
         _rmtree_fd(inv_fd, device=inv_st.st_dev, mount_id=ns_mount)
         _rmdir_held(namespace_fd, name, held_fd=inv_fd, held_st=inv_st)
     finally:

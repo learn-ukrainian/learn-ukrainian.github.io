@@ -5,23 +5,33 @@ The opt-in unattributed-scratch class (#9737, operator retention decision
 is proven quiet and unreferenced by every process and every unsettled task.
 Every safety fact must be positively known at removal time: an uninspectable
 process, an unreadable task record or a path a live task names preserves.
+
+Consistency boundary (#9872): a proven candidate is first renamed into a
+per-run quarantine directory, so no process can newly reach it by its old
+path. The holder, task and write checks then re-run against the quarantined
+entry; anything found or unknown renames it back, and only a clean result
+removes it.
 """
 
 from __future__ import annotations
 
 import argparse
 import contextlib
+import ctypes
+import errno
+import fcntl
 import hashlib
 import json
 import math
 import os
 import re
+import secrets
 import shutil
 import stat
 import subprocess
 import time
 from collections import Counter
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -44,6 +54,11 @@ HARNESS_NAMES = re.compile(r"^(?:claude|codex|gemini|agy|cursor|kimi|hermes|acpx
 # Never swept: dot-entries, harness/session sockets and systemd private trees.
 EXCLUDED_NAMES = re.compile(r"^(?:\.|claude-|tmux-|ssh-|systemd-)")
 SYSTEM_TEMP_AREAS = (Path("/tmp"), Path("/private/tmp"), Path("/var/tmp"))
+# The sweep's own per-run holding directories. The leading dot already keeps
+# them out of candidacy; recovery, not the main scan, reports their entries.
+QUARANTINE_PREFIX = ".lu-tmp-sweep-quarantine-"
+_RENAME_NOREPLACE = 1
+_DIR_FLAGS = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0)
 
 
 @dataclass(frozen=True)
@@ -62,10 +77,6 @@ class ScratchPolicy:
         for value in (self.min_age_s, self.quiet_s):
             if not math.isfinite(value) or value <= 0:
                 raise ValueError("scratch thresholds must be finite and positive")
-
-
-class ProofChanged(Exception):
-    """The removal-time recheck no longer proves the entry safe; nothing was deleted."""
 
 
 @dataclass(frozen=True)
@@ -163,8 +174,10 @@ def task_attribution(name: str, records: dict[str, dict[str, Any]]) -> list[str]
 
 
 def process_snapshot(proc_root: Path = Path("/proc")) -> tuple[list[tuple[int, Path]], bool]:
-    """Collect cwd/open-FD references for ALL users; unreadable live processes are unknown.
+    """Collect cwd, open-FD and mapped-file references for ALL users; unreadable live processes are unknown.
 
+    A file mapped into memory stays reachable after its descriptor closes, so
+    ``/proc/<pid>/maps`` counts as a reference too.
     The caller is included. Zombies and processes that vanish during inspection
     hold no references. No command lines, environment values or private paths
     are emitted in reports. A live process the kernel will not let us inspect
@@ -193,6 +206,10 @@ def process_snapshot(proc_root: Path = Path("/proc")) -> tuple[list[tuple[int, P
                     targets.append(os.readlink(fd))
                 except FileNotFoundError:
                     continue  # descriptor closed during the scan
+            for line in (entry / "maps").read_text(encoding="utf-8", errors="surrogateescape").splitlines():
+                fields = line.split(maxsplit=5)
+                if len(fields) == 6:
+                    targets.append(fields[5])
         except OSError:
             if not _process_vanished(entry):
                 complete = False
@@ -389,33 +406,213 @@ def attribution_changed(row: dict[str, Any], records: dict[str, dict[str, Any]])
     return bool(row["task"]) and records.get(row["task"]) != row.get("task_record")
 
 
-def removal_recheck(path: Path, row: dict[str, Any], task_root: Path) -> Callable[[], None]:
-    """Build the last check the common reaper runs before its first unlink.
+def tree_fingerprint(path: Path) -> dict[str, tuple[Any, ...]] | None:
+    """Every node's identity, type, links, owner, size, mtime and ctime, keyed by relative path.
 
-    It re-proves, in order, that the tree is byte-for-byte as recorded (no
-    write, change or new hazard since the proof), that the task inventory is
-    complete with unchanged attribution and no unsettled reference, and that
-    every process is inspectable and none holds the entry. Each probe that
-    ran earlier can go stale during the reaper's own preflight; this one ends
-    immediately before deletion starts. Raises :class:`ProofChanged`.
+    This is the pre-rename snapshot of the write check. Any write, truncate,
+    create, delete, rename or metadata change inside sets a node's ctime (and
+    usually mtime and size) or changes the key set, so an unequal fingerprint
+    means the tree changed after the snapshot. The top-level ctime is left out
+    because the quarantine rename itself sets it; its mtime is kept. ``None``
+    when any node cannot be read. Never follows symlinks or crosses a device.
     """
+    nodes: dict[str, tuple[Any, ...]] = {}
+    try:
+        device = path.lstat().st_dev
+        pending = [(path, "")]
+        while pending:
+            node, relative = pending.pop()
+            info = node.lstat()
+            nodes[relative] = (
+                info.st_dev,
+                info.st_ino,
+                info.st_mode,
+                info.st_nlink,
+                info.st_uid,
+                info.st_size,
+                info.st_mtime_ns,
+                info.st_ctime_ns if relative else None,
+            )
+            if stat.S_ISDIR(info.st_mode) and info.st_dev == device:
+                pending.extend((child, f"{relative}/{child.name}") for child in node.iterdir())
+    except OSError:
+        return None
+    return nodes
 
-    def recheck() -> None:
-        allocated, newest, changed, tree_reason = tree_facts(path)
-        if tree_reason or (allocated, newest, changed) != (row["bytes"], row["newest_mtime"], row["newest_change"]):
-            raise ProofChanged("tree written or changed since the proof")
-        inventory = load_tasks(task_root)
-        if (
-            not inventory.complete
-            or attribution_changed(row, inventory.records)
-            or task_referenced(path, inventory.references)
-        ):
-            raise ProofChanged("task inventory unknown, changed or referencing the entry")
-        references, complete = process_snapshot()
-        if not complete or any(ref == path or path in ref.parents for _, ref in references):
-            raise ProofChanged("process liveness unknown or entry held")
 
-    return recheck
+def rename_noreplace(src_dir_fd: int, src: str, dst_dir_fd: int, dst: str) -> None:
+    """Atomically rename ``src`` to ``dst`` with ``renameat2(RENAME_NOREPLACE)``.
+
+    An existing ``dst`` fails with ``EEXIST`` instead of being replaced, so a
+    restore never overwrites an entry that took the original name meanwhile.
+    """
+    renameat2 = getattr(ctypes.CDLL(None, use_errno=True), "renameat2", None)
+    if renameat2 is None:
+        raise OSError(errno.ENOSYS, "renameat2 is unavailable", src)
+    renameat2.argtypes = (ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint)
+    if renameat2(src_dir_fd, os.fsencode(src), dst_dir_fd, os.fsencode(dst), _RENAME_NOREPLACE) != 0:
+        code = ctypes.get_errno()
+        raise OSError(code, os.strerror(code), src)
+
+
+def _errno_name(error: OSError) -> str:
+    return errno.errorcode.get(error.errno or 0, "unknown")
+
+
+@dataclass(frozen=True)
+class Quarantine:
+    """This run's holding directory: owner-only, inside the temp root, locked while the run lives."""
+
+    path: Path
+    fd: int
+
+
+def open_quarantine(root: Path, root_fd: int) -> Quarantine:
+    """Create and lock a fresh per-run quarantine directory on the temp root's filesystem."""
+    name = QUARANTINE_PREFIX + secrets.token_hex(8)
+    os.mkdir(name, 0o700, dir_fd=root_fd)
+    fd = os.open(name, _DIR_FLAGS, dir_fd=root_fd)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        os.close(fd)
+        raise
+    return Quarantine(root / name, fd)
+
+
+def close_quarantine(quarantine: Quarantine, root_fd: int) -> None:
+    """Remove the quarantine if empty; an entry kept as ``restore_blocked`` keeps it for recovery."""
+    try:
+        with contextlib.suppress(OSError):
+            os.rmdir(quarantine.path.name, dir_fd=root_fd)
+    finally:
+        os.close(quarantine.fd)
+
+
+def _bare_row(name: str, reason: str, **extra: Any) -> dict[str, Any]:
+    return {"name": name, "decision": "preserve", "reason": reason, "bytes": 0, "task": None, "live_pids": []} | extra
+
+
+def recover_quarantines(root: Path, root_fd: int, *, apply: bool) -> tuple[list[dict[str, Any]], int, int]:
+    """Return every crashed run's quarantined entry to its original name; delete nothing.
+
+    A quarantine still locked belongs to a live run and is skipped. A leftover
+    entry's pre-rename snapshot died with its run, so its write check is
+    unknown and the boundary rule restores it; it then re-enters the normal
+    pipeline as an ordinary candidate. When the original name is taken, the
+    entry stays quarantined as ``restore_blocked``. Dry runs only report.
+    Returns ``(rows, restored, errors)``.
+    """
+    rows: list[dict[str, Any]] = []
+    restored = errors = 0
+    for name in sorted(os.listdir(root_fd)):
+        if not name.startswith(QUARANTINE_PREFIX):
+            continue
+        try:
+            fd = os.open(name, _DIR_FLAGS, dir_fd=root_fd)
+        except OSError:
+            rows.append(_bare_row(name, "quarantine_unknown"))
+            errors += 1
+            continue
+        try:
+            if os.fstat(fd).st_uid != os.geteuid():
+                rows.append(_bare_row(name, "quarantine_unknown"))
+                errors += 1
+                continue
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                continue  # a live run owns it
+            for entry in sorted(os.listdir(fd)):
+                if not apply:
+                    rows.append(_bare_row(entry, "quarantine_leftover", quarantine=name))
+                    continue
+                try:
+                    rename_noreplace(fd, entry, root_fd, entry)
+                    restored += 1
+                except OSError as error:
+                    rows.append(_bare_row(entry, "restore_blocked", quarantine=name, error=_errno_name(error)))
+                    errors += 1
+            if apply:
+                with contextlib.suppress(OSError):
+                    os.rmdir(name, dir_fd=root_fd)
+        finally:
+            os.close(fd)
+    return rows, restored, errors
+
+
+def quarantined_problem(
+    quarantined: Path, origin: Path, row: dict[str, Any], before: dict[str, tuple[Any, ...]], task_root: Path
+) -> str | None:
+    """Re-prove the renamed entry; return a preserve reason, or ``None`` when removal is safe.
+
+    After the rename nothing can newly open the entry by its old path, so the
+    order is fixed: tasks, then every process (cwd, FDs, maps), then the tree.
+    A process holding the entry during the scan is found; one that no longer
+    holds it can no longer write to it, so any write it made happened before
+    the scan and shows in the fingerprint compared last.
+    """
+    inventory = load_tasks(task_root)
+    if not inventory.complete:
+        return "quarantine_task_inventory_unknown"
+    if attribution_changed(row, inventory.records) or any(
+        task_referenced(path, inventory.references) for path in (origin, quarantined)
+    ):
+        return "quarantine_task_reference"
+    references, complete = process_snapshot()
+    if any(ref == quarantined or quarantined in ref.parents for _, ref in references):
+        return "quarantine_live_process"
+    if not complete:
+        return "quarantine_liveness_unknown"
+    if tree_fingerprint(quarantined) != before:
+        return "quarantine_write"
+    return None
+
+
+def quarantine_and_reap(
+    path: Path,
+    row: dict[str, Any],
+    before: dict[str, tuple[Any, ...]],
+    quarantine: Quarantine,
+    *,
+    root_fd: int,
+    task_root: Path,
+    repo_root: Path,
+) -> dict[str, Any]:
+    """Rename, re-verify, then restore or remove one proven candidate; return its final row."""
+    name = path.name
+    quarantined = quarantine.path / name
+    try:
+        rename_noreplace(root_fd, name, quarantine.fd, name)
+    except OSError as error:
+        return row | {"decision": "preserve", "reason": "quarantine_failed", "error": _errno_name(error)}
+    reason = quarantined_problem(quarantined, path, row, before, task_root)
+    if reason is None:
+        try:
+            reap_attributed_temp(
+                quarantined,
+                repo_root=repo_root,
+                temp_root=quarantine.path,
+                expected_dev=row["identity"][0],
+                expected_ino=row["identity"][1],
+            )
+        except (OSError, ValueError, TaskScratchError):
+            reason = "reap_refused"
+        else:
+            if quarantined.exists() or quarantined.is_symlink():
+                raise OSError("common reaper left residue")
+            return row | {"decision": "reaped"}
+    try:
+        rename_noreplace(quarantine.fd, name, root_fd, name)
+    except OSError as error:
+        return row | {
+            "decision": "preserve",
+            "reason": "restore_blocked",
+            "found": reason,
+            "quarantine": quarantine.path.name,
+            "error": _errno_name(error),
+        }
+    return row | {"decision": "preserve", "reason": reason}
 
 
 def sweep(
@@ -427,7 +624,7 @@ def sweep(
     scratch: ScratchPolicy | None = None,
     apply: bool = False,
 ) -> dict[str, Any]:
-    """Inventory top-level unmanaged entries; recheck every gate before common reap."""
+    """Inventory top-level unmanaged entries; quarantine, re-verify and reap proven ones on ``apply``."""
     if not math.isfinite(min_age_s) or min_age_s <= 0:
         raise ValueError("minimum age must be finite and positive")
     if (
@@ -445,74 +642,68 @@ def sweep(
     ):
         raise ValueError("unattributed scratch runs only within the system temp area")
     tasks = task_root if task_root is not None else tasks_dir()
-    inventory = load_tasks(tasks)
-    references, complete = process_snapshot()
-    worktrees = registered_worktrees(repo_root)
-    managed = protected_roots()
-    rows = []
-    errors = 0
+    root_fd = os.open(root, _DIR_FLAGS)
+    quarantine: Quarantine | None = None
     reclaimed = 0
-    for path in sorted(root.iterdir()):
-        try:
-            if not (path.is_symlink() or path.is_dir() or (scratch is not None and path.is_file())):
+    try:
+        # Restore crash leftovers first, so every probe below sees them at their original names.
+        rows, restored, errors = recover_quarantines(root, root_fd, apply=apply)
+        inventory = load_tasks(tasks)
+        references, complete = process_snapshot()
+        worktrees = registered_worktrees(repo_root)
+        managed = protected_roots()
+        for path in sorted(root.iterdir()):
+            if path.name.startswith(QUARANTINE_PREFIX):
                 continue
-            row = classify_path(
-                path,
-                tasks=inventory,
-                references=references,
-                process_complete=complete,
-                worktrees=worktrees,
-                managed=managed,
-                now=time.time(),
-                min_age_s=min_age_s,
-                scratch=scratch,
-            )
-            if apply and row["decision"] == "would_reap":
-                fresh_refs, fresh_complete = process_snapshot()
-                fresh = classify_path(
+            try:
+                if not (path.is_symlink() or path.is_dir() or (scratch is not None and path.is_file())):
+                    continue
+                row = classify_path(
                     path,
-                    tasks=load_tasks(tasks),
-                    references=fresh_refs,
-                    process_complete=fresh_complete,
-                    worktrees=registered_worktrees(repo_root),
-                    managed=protected_roots(),
+                    tasks=inventory,
+                    references=references,
+                    process_complete=complete,
+                    worktrees=worktrees,
+                    managed=managed,
                     now=time.time(),
                     min_age_s=min_age_s,
                     scratch=scratch,
                 )
-                if fresh["decision"] != "would_reap" or proof_digest(fresh) != proof_digest(row):
-                    row = fresh | {"decision": "preserve", "reason": "proof_changed"}
-                else:
-                    try:
-                        reap_attributed_temp(
-                            path,
-                            repo_root=repo_root,
-                            temp_root=root,
-                            expected_dev=row["identity"][0],
-                            expected_ino=row["identity"][1],
-                            before_delete=removal_recheck(path, row, tasks),
+                if apply and row["decision"] == "would_reap":
+                    # The pre-rename snapshot is taken before the fresh proof, so
+                    # any write after it differs at the post-rename comparison.
+                    before = tree_fingerprint(path)
+                    fresh_refs, fresh_complete = process_snapshot()
+                    fresh = classify_path(
+                        path,
+                        tasks=load_tasks(tasks),
+                        references=fresh_refs,
+                        process_complete=fresh_complete,
+                        worktrees=registered_worktrees(repo_root),
+                        managed=protected_roots(),
+                        now=time.time(),
+                        min_age_s=min_age_s,
+                        scratch=scratch,
+                    )
+                    if before is None or fresh["decision"] != "would_reap" or proof_digest(fresh) != proof_digest(row):
+                        row = fresh | {"decision": "preserve", "reason": "proof_changed"}
+                    else:
+                        quarantine = quarantine or open_quarantine(root, root_fd)
+                        row = quarantine_and_reap(
+                            path, row, before, quarantine, root_fd=root_fd, task_root=tasks, repo_root=repo_root
                         )
-                    except ProofChanged:
-                        row.update(decision="preserve", reason="final_liveness_or_task_changed")
-                        rows.append(row)
-                        continue
-                    if path.exists() or path.is_symlink():
-                        raise OSError("common reaper left residue")
-                    row["decision"] = "reaped"
-                    reclaimed += row["bytes"]
-            rows.append(row)
-        except (OSError, ValueError, TaskScratchError):
-            errors += 1
-            rows.append(
-                {
-                    "name": path.name,
-                    "decision": "preserve",
-                    "reason": "scan_or_reap_error",
-                    "bytes": 0,
-                    "task": None,
-                    "live_pids": [],
-                }
-            )
+                        if row["decision"] == "reaped":
+                            reclaimed += row["bytes"]
+                        elif row["reason"] in {"restore_blocked", "reap_refused"}:
+                            errors += 1
+                rows.append(row)
+            except (OSError, ValueError, TaskScratchError):
+                errors += 1
+                rows.append(_bare_row(path.name, "scan_or_reap_error"))
+    finally:
+        if quarantine is not None:
+            close_quarantine(quarantine, root_fd)
+        os.close(root_fd)
     free = shutil.disk_usage(root).free
     reclaimable = sum(row["bytes"] for row in rows if row["decision"] == "would_reap")
     report = {
@@ -526,6 +717,7 @@ def sweep(
         "directories": sum(1 for row in rows if row.get("kind") != "file"),
         "files": sum(1 for row in rows if row.get("kind") == "file"),
         "errors": errors,
+        "quarantine_restored": restored,
         "process_probe_complete": complete,
         "task_inventory_complete": inventory.complete,
         "bytes_reclaimable": reclaimable,

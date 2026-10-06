@@ -25,7 +25,6 @@ import json
 import os
 import stat
 import sys
-from collections.abc import Callable
 from dataclasses import asdict
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
@@ -67,15 +66,13 @@ def _unlink_temp_file(
     root: Path,
     expected_dev: int,
     expected_ino: int,
-    before_delete: Callable[[], None] | None = None,
 ) -> None:
     """Unlink one proven regular-file child of the temp root, by descriptor.
 
     Refuses identity drift, foreign ownership, extra hard links, a device
     change and bind-mount targets. In a sticky temp directory only the owner
     can replace the entry between this check and ``unlinkat``, and the owner
-    is the sweeping user. ``before_delete`` runs last, immediately before
-    ``unlinkat``.
+    is the sweeping user.
     """
     from scripts.common.task_scratch import ContainmentError, mount_points
 
@@ -95,8 +92,6 @@ def _unlink_temp_file(
         raise ContainmentError(f"{name!r} has other hard links")
     if info.st_dev != os.fstat(root_fd).st_dev:
         raise ContainmentError(f"{name!r} sits on a different device than the temp root")
-    if before_delete is not None:
-        before_delete()
     os.unlink(name, dir_fd=root_fd)
 
 
@@ -107,14 +102,10 @@ def reap_attributed_temp(
     repo_root: Path,
     expected_dev: int,
     expected_ino: int,
-    before_delete: Callable[[], None] | None = None,
 ) -> None:
     """Use the common descriptor-safe scratch reaper for a proven legacy child.
 
-    The caller owns attribution, age and live-process rechecks and passes the
-    final one as ``before_delete``: it runs after every non-destructive
-    containment check and immediately before the first unlink, and any
-    exception it raises refuses the removal with nothing deleted. This layer
+    The caller owns attribution, age and live-process rechecks. This layer
     enforces direct-child containment and recorded identity without introducing
     another recursive deletion implementation. Directories go through the
     task-scratch tree remover; a regular file (unattributed scratch, #9737)
@@ -139,7 +130,6 @@ def reap_attributed_temp(
                 root=root,
                 expected_dev=expected_dev,
                 expected_ino=expected_ino,
-                before_delete=before_delete,
             )
             return
         _remove_invocation_dir(
@@ -148,7 +138,6 @@ def reap_attributed_temp(
             namespace=root,
             expected_dev=expected_dev,
             expected_ino=expected_ino,
-            before_delete=before_delete,
         )
     finally:
         os.close(root_fd)
