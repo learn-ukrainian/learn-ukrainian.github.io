@@ -261,7 +261,7 @@ launcher_require_registered_slot() {
   if [ "$rc" -eq 3 ]; then
     options="$(_handoff_slot_registry --list "$provider" 2>/dev/null | paste -sd ' ' - || true)"
     case "$slot" in
-      grok-folk | kimi-folk | cursor-folk | grok-bio | kimi-bio | cursor-bio | grok-hramatka | kimi-hramatka | cursor-hramatka)
+      grok-folk | kimi-folk | cursor-folk | grok-bio | kimi-bio | cursor-bio | grok-hramatka | kimi-hramatka | cursor-hramatka | grok-open-model-data | kimi-open-model-data | cursor-open-model-data)
         printf "selector '%s' resolves to handoff slot '%s', refused by operator order 2026-09-27: only claude, gpt and gemini should be involved in ukrainian content; no other models allowed if it is about ukrainian lang. culture, heritage.\n" \
           "$selector" "$slot" >&2
         return 1
