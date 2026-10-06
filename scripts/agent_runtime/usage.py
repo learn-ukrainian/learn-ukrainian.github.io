@@ -261,7 +261,10 @@ def summarize_lane_runtime(
     ``lines``: unparseable lines in a lane file; ``records``: ``rate_limited``
     records without an explicit-UTC timestamp), so "none found" stays distinct
     from "could not read". A missing file or directory is the empty case; a listed
-    symlink with a missing target is unreadable.
+    symlink with a missing target is unreadable. Line parsing is
+    ``_iter_usage_records``, the same reader burn uses, so an invalid UTF-8
+    byte is an unreadable line even inside a JSON string. The UTF-8 encoding
+    of U+FFFD is data.
 
     The Gemini subscription name and the AGY writer are one read set
     (``usage_agy-*`` and ``usage_gemini-*``). An input that both names reach
@@ -285,54 +288,47 @@ def summarize_lane_runtime(
             unreadable["files"] += 1
         for file_path in _lane_usage_files(root, agent):
             try:
+                # Burn reads every file. Runtime still skips a file whose mtime
+                # is outside the window and does not count faults inside it.
                 if file_path.stat().st_mtime < cutoff:
                     continue
-                with open(file_path, "rb") as handle:
-                    for raw in handle:
-                        text = raw.decode("utf-8", errors="replace").strip()
-                        if not text:
-                            continue
-                        try:
-                            rec = json.loads(text)
-                        except ValueError:
-                            unreadable["lines"] += 1
-                            continue
-                        if not isinstance(rec, dict):
-                            unreadable["lines"] += 1
-                            continue
-                        outcome = str(rec.get("outcome") or "other")
-                        if outcome == "rate_limited" and _utc_timestamp(rec.get("ts")) is None:
-                            # Counted below only when the lenient parse reads it (legacy
-                            # behaviour for other callers); flagged either way.
-                            unreadable["records"] += 1
-                        ts_str = rec.get("ts")
-                        if not ts_str:
-                            continue
-                        try:
-                            ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
-                        except (ValueError, AttributeError, TypeError):
-                            continue
-                        if ts < cutoff:
-                            continue
-                        if outcome in counts:
-                            counts[outcome] += 1
-                        else:
-                            counts["other"] += 1
-                        if last_outcome_at is None or ts > last_outcome_at:
-                            last_outcome_at = ts
-                        if outcome == "rate_limited":
-                            rate_limit_events.append(ts)
-                            model = rec.get("model")
-                            if isinstance(model, str) and model:
-                                models_limited.add(model)
             except FileNotFoundError:
-                # A regular file (or its directory) removed after the listing held no
-                # records; a listed symlink whose target is missing is evidence that
-                # cannot be read.
+                # A regular file removed after the listing held no records. A
+                # listed symlink whose target is missing is evidence that
+                # cannot be read. The shared reader applies the same rule when
+                # the file disappears between this stat and the open.
                 if os.path.islink(file_path):
                     unreadable["files"] += 1
+                continue
             except OSError:
                 unreadable["files"] += 1
+                continue
+            for rec in _iter_usage_records(file_path, unreadable):
+                outcome = str(rec.get("outcome") or "other")
+                if outcome == "rate_limited" and _utc_timestamp(rec.get("ts")) is None:
+                    # Counted below only when the lenient parse reads it (legacy
+                    # behaviour for other callers); flagged either way.
+                    unreadable["records"] += 1
+                ts_str = rec.get("ts")
+                if not ts_str:
+                    continue
+                try:
+                    ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
+                except (ValueError, AttributeError, TypeError):
+                    continue
+                if ts < cutoff:
+                    continue
+                if outcome in counts:
+                    counts[outcome] += 1
+                else:
+                    counts["other"] += 1
+                if last_outcome_at is None or ts > last_outcome_at:
+                    last_outcome_at = ts
+                if outcome == "rate_limited":
+                    rate_limit_events.append(ts)
+                    model = rec.get("model")
+                    if isinstance(model, str) and model:
+                        models_limited.add(model)
 
     # Merge in-process cache (may be ahead of disk). Alias writers (agy) share
     # the Gemini subscription cache so a just-written rate limit is not dropped.
@@ -387,18 +383,21 @@ def summarize_lane_runtime(
 def _iter_usage_records(file_path: Path, unreadable: dict[str, int]) -> Iterator[dict[str, Any]]:
     """Yield JSON objects from one usage file, one line at a time.
 
-    A line that is not UTF-8, not JSON, or not a JSON object increments
-    ``unreadable["lines"]`` and is skipped. An unreadable file increments
-    ``unreadable["files"]`` and yields nothing. Neither fault is raised:
-    rows already accepted, later rows in the same file, and other files
-    stay in the caller's totals. Invalid bytes are not replaced into a
-    value that could be counted as burn.
+    ``summarize_lane_runtime`` and ``summarize_fleet_burn`` both use this
+    reader, so they share one UTF-8 boundary. A line that is not strict
+    UTF-8, not JSON, or not a JSON object increments ``unreadable["lines"]``
+    and is skipped. Invalid bytes are refused before JSON parsing, including
+    inside a string; they are not replaced into a value that could be
+    counted. The UTF-8 bytes of U+FFFD are valid text and stay in the row.
+    An unreadable file increments ``unreadable["files"]`` and yields nothing.
+    Neither fault is raised: rows already accepted, later rows in the same
+    file, and other files stay in the caller's totals.
     """
     try:
         with open(file_path, "rb") as handle:
             for raw in handle:
                 try:
-                    text = raw.decode("utf-8").strip()
+                    text = raw.decode("utf-8", errors="strict").strip()
                 except UnicodeDecodeError:
                     unreadable["lines"] += 1
                     continue

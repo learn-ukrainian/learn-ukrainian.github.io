@@ -245,7 +245,26 @@ def test_fleet_burn_counts_agy_and_gemini_across_windows_once(tmp_path: Path) ->
     assert cursor["windows"]["5h"]["counts"]["total"] == 0
 
 
-def _corrupt_combined_usage(tmp_path: Path, corrupt_line: bytes) -> float:
+def _usage_corrupt_line(kind: str, now: float) -> bytes:
+    """One bad usage line. The in-string kind is JSON except for byte 0xFF."""
+    if kind == "json-non-object":
+        return b"[]\n"
+    if kind == "invalid-utf8":
+        return b"\xff\n"
+    if kind == "invalid-utf8-in-string":
+        payload = json.dumps(
+            {
+                "ts": _stamp(now, 45),
+                "outcome": "ok",
+                "duration_s": 10,
+                "model": "MODEL_TOKEN",
+            }
+        ).encode("ascii")
+        return payload.replace(b"MODEL_TOKEN", b"gemini-\xff") + b"\n"
+    raise AssertionError(kind)
+
+
+def _corrupt_combined_usage(tmp_path: Path, corrupt_kind: str) -> float:
     """Valid Gemini and AGY rows, then one bad AGY line, then another AGY row.
 
     The row after the bad line is the one a file-level abort would drop.
@@ -259,7 +278,7 @@ def _corrupt_combined_usage(tmp_path: Path, corrupt_line: bytes) -> float:
     _write_line(agy, {"ts": _stamp(now, 60), "outcome": "ok", "duration_s": 3600})
     with agy.open("ab") as handle:
         handle.write(b"\n")
-        handle.write(corrupt_line)
+        handle.write(_usage_corrupt_line(corrupt_kind, now))
         handle.write(b"\n")
     _write_line(agy, {"outcome": "ok", "duration_s": 999})
     _write_line(agy, {"ts": "not-a-timestamp", "outcome": "ok", "duration_s": 999})
@@ -291,12 +310,28 @@ def _corrupt_combined_usage(tmp_path: Path, corrupt_line: bytes) -> float:
     return now
 
 
-@pytest.mark.parametrize("corrupt_line", [b"[]\n", b"\xff\n"], ids=["json-non-object", "invalid-utf8"])
+@pytest.mark.parametrize(
+    "corrupt_kind",
+    ["json-non-object", "invalid-utf8", "invalid-utf8-in-string"],
+)
 def test_fleet_burn_keeps_gemini_agy_durations_when_agy_evidence_is_corrupt(
-    tmp_path: Path, corrupt_line: bytes
+    tmp_path: Path, corrupt_kind: str
 ) -> None:
-    """Both malformed AGY variants keep 5h, 7d, and 30d durations and show the fault."""
-    now = _corrupt_combined_usage(tmp_path, corrupt_line)
+    """Malformed AGY lines keep 5h, 7d, and 30d durations and show the fault.
+
+    A non-object, a standalone invalid byte, and an invalid byte inside a
+    JSON string are one unreadable line. Replacement decoding would count
+    the third as an ok row.
+    """
+    now = _corrupt_combined_usage(tmp_path, corrupt_kind)
+    if corrupt_kind == "invalid-utf8-in-string":
+        line = _usage_corrupt_line(corrupt_kind, now)
+        replaced = json.loads(line.decode("utf-8", errors="replace"))
+        assert replaced["outcome"] == "ok"
+        assert replaced["model"] == "gemini-\ufffd"
+        assert replaced["ts"] == _stamp(now, 45)
+        with pytest.raises(UnicodeDecodeError):
+            line.decode("utf-8", errors="strict")
     expected_unreadable = {"files": 2, "lines": 1, "records": 0, "total": 3}
     expected_5h = {"ok": 1, "error": 0, "rate_limited": 1, "timeout": 0, "other": 0, "total": 2}
 
@@ -347,3 +382,141 @@ def test_fleet_burn_keeps_gemini_agy_durations_when_agy_evidence_is_corrupt(
     assert claude["windows"]["5h"]["counts"]["total"] == 0
     assert claude["windows"]["7d"]["counts"]["total"] == 1
     assert claude["unreadable"]["total"] == 0
+
+
+def test_literal_ufffd_counts_and_invalid_bytes_inside_a_string_do_not(tmp_path: Path) -> None:
+    """UTF-8 for U+FFFD is a real model string. A lone 0xFF in that string is not."""
+    usage_mod._reset_rate_limit_cache_for_tests()
+    now = time.time()
+    day = datetime.fromtimestamp(now, tz=UTC).strftime("%Y-%m-%d")
+    agy = tmp_path / f"usage_agy-dispatch_{day}.jsonl"
+    gemini = tmp_path / f"usage_gemini-dispatch_{day}.jsonl"
+    _write_line(agy, {"ts": _stamp(now, 60), "outcome": "ok", "duration_s": 3600})
+    ufffd_line = (
+        json.dumps(
+            {
+                "ts": _stamp(now, 40),
+                "outcome": "rate_limited",
+                "duration_s": 1800,
+                "model": "gemini-\ufffd",
+            },
+            ensure_ascii=False,
+        )
+        + "\n"
+    ).encode("utf-8")
+    assert b"\xef\xbf\xbd" in ufffd_line
+    assert b"\xff" not in ufffd_line
+    assert json.loads(ufffd_line.decode("utf-8"))["model"] == "gemini-\ufffd"
+    bad_line = _usage_corrupt_line("invalid-utf8-in-string", now)
+    assert b"\xff" in bad_line
+    assert b"\xef\xbf\xbd" not in bad_line
+    with agy.open("ab") as handle:
+        handle.write(ufffd_line)
+        handle.write(bad_line)
+    _write_line(agy, {"ts": _stamp(now, 6 * 3600 + 60), "outcome": "timeout", "duration_s": 7200})
+    _write_line(
+        gemini,
+        {"ts": _stamp(now, 10 * 86400 + 60), "outcome": "error", "duration_s": 3600},
+    )
+    os.link(gemini, tmp_path / f"usage_agy-alias_{day}.jsonl")
+    _write_line(
+        tmp_path / f"usage_codex-bridge_{day}.jsonl",
+        {"ts": _stamp(now, 15), "outcome": "ok", "duration_s": 1800},
+    )
+    _write_line(
+        tmp_path / f"usage_claude-bridge_{day}.jsonl",
+        {"ts": _stamp(now, 3 * 86400), "outcome": "error"},
+    )
+
+    expected_unreadable = {"files": 0, "lines": 1, "records": 0, "total": 1}
+    gemini_burn = usage_mod.summarize_fleet_burn("gemini", usage_dir=tmp_path, now=now)
+    agy_burn = usage_mod.summarize_fleet_burn("agy", usage_dir=tmp_path, now=now)
+    assert gemini_burn["windows"]["5h"]["counts"] == {
+        "ok": 1,
+        "error": 0,
+        "rate_limited": 1,
+        "timeout": 0,
+        "other": 0,
+        "total": 2,
+    }
+    assert gemini_burn["windows"]["5h"]["hours"] == 1.5
+    assert gemini_burn["windows"]["7d"]["counts"]["total"] == 3
+    assert gemini_burn["windows"]["7d"]["hours"] == 3.5
+    assert gemini_burn["windows"]["30d"]["counts"] == {
+        "ok": 1,
+        "error": 1,
+        "rate_limited": 1,
+        "timeout": 1,
+        "other": 0,
+        "total": 4,
+    }
+    assert gemini_burn["windows"]["30d"]["hours"] == 4.5
+    assert gemini_burn["unreadable"] == expected_unreadable
+    assert agy_burn["windows"] == gemini_burn["windows"]
+    assert agy_burn["unreadable"] == gemini_burn["unreadable"]
+
+    gemini_runtime = usage_mod.summarize_lane_runtime("gemini", usage_dir=tmp_path, now=now)
+    agy_runtime = usage_mod.summarize_lane_runtime("agy", usage_dir=tmp_path, now=now)
+    assert gemini_runtime["ok"] == 1
+    assert gemini_runtime["rate_limited"] == 1
+    assert gemini_runtime["total"] == 2
+    assert gemini_runtime["models_rate_limited"] == ["gemini-\ufffd"]
+    assert gemini_runtime["headroom_blocked"] is False
+    assert gemini_runtime["unreadable"] == expected_unreadable
+    assert agy_runtime["total"] == gemini_runtime["total"]
+    assert agy_runtime["models_rate_limited"] == gemini_runtime["models_rate_limited"]
+    assert agy_runtime["unreadable"] == gemini_runtime["unreadable"]
+
+    codex = usage_mod.summarize_fleet_burn("codex", usage_dir=tmp_path, now=now)
+    claude = usage_mod.summarize_fleet_burn("claude", usage_dir=tmp_path, now=now)
+    assert codex["windows"]["5h"]["counts"]["total"] == 1
+    assert codex["windows"]["5h"]["hours"] == 0.5
+    assert codex["unreadable"]["total"] == 0
+    assert claude["windows"]["5h"]["counts"]["total"] == 0
+    assert claude["windows"]["7d"]["counts"]["total"] == 1
+    assert claude["unreadable"]["total"] == 0
+
+
+def test_runtime_cache_ignores_other_lanes_and_drops_stale_alias_entries(tmp_path: Path) -> None:
+    """A Codex cache entry stays put. A stale AGY entry is removed and not counted."""
+    usage_mod._reset_rate_limit_cache_for_tests()
+    now = time.time()
+    fresh = now - 12
+    foreign = now - 10
+    usage_mod._RATE_LIMIT_CACHE[("codex", "gpt-6.1-sol")] = foreign
+    usage_mod._RATE_LIMIT_CACHE[("agy", "stale-model")] = now - 10_000
+    usage_mod._RATE_LIMIT_CACHE[("agy", "gemini-fresh")] = fresh
+    try:
+        summary = usage_mod.summarize_lane_runtime("gemini", window_s=300, usage_dir=tmp_path, now=now)
+        assert summary["rate_limited"] == 1
+        assert summary["models_rate_limited"] == ["gemini-fresh"]
+        assert summary["headroom_blocked"] is False
+        assert summary["unreadable"]["total"] == 0
+        assert ("agy", "stale-model") not in usage_mod._RATE_LIMIT_CACHE
+        assert usage_mod._RATE_LIMIT_CACHE[("codex", "gpt-6.1-sol")] == foreign
+        assert usage_mod._RATE_LIMIT_CACHE[("agy", "gemini-fresh")] == fresh
+    finally:
+        usage_mod._reset_rate_limit_cache_for_tests()
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root reads mode-000 directories")
+def test_unlistable_usage_directory_counts_as_one_unreadable_file(tmp_path: Path) -> None:
+    """A directory the process cannot list is a file fault, not a crash or a row."""
+    usage_mod._reset_rate_limit_cache_for_tests()
+    now = time.time()
+    day = datetime.fromtimestamp(now, tz=UTC).strftime("%Y-%m-%d")
+    root = tmp_path / "api_usage"
+    root.mkdir()
+    _write_line(
+        root / f"usage_codex-bridge_{day}.jsonl",
+        {"ts": _stamp(now, 20), "outcome": "rate_limited", "model": "hidden"},
+    )
+    root.chmod(0)
+    try:
+        summary = usage_mod.summarize_lane_runtime("codex", window_s=300, usage_dir=root, now=now)
+    finally:
+        root.chmod(0o700)
+    assert summary["total"] == 0
+    assert summary["rate_limited"] == 0
+    assert summary["models_rate_limited"] == []
+    assert summary["unreadable"] == {"files": 1, "lines": 0, "records": 0, "total": 1}
