@@ -178,12 +178,6 @@ def _lexical_example(text: str) -> bool:
     return bool(re.fullmatch(r"[^\W_][\w\u0300-\u036f'’ʼ-]*", visible))
 
 
-def _explicit_example_intro(text: str, start: int) -> bool:
-    colon = text.rfind(":", 0, start)
-    intro_start = max(text.rfind(":", 0, colon), text.rfind("\n", 0, colon)) + 1
-    return bool(re.search(r"\b(?:examples?|e\.g|наприклад|як-от)\b", text[intro_start:colon], re.I))
-
-
 def _quoted_example(text: str) -> bool:
     outer, balanced = _list_punctuation(text)
     return bool(text and balanced and not outer and text[0] in "«“\"'‘" and text[-1] in "»”\"'’")
@@ -199,11 +193,19 @@ def _annotation_role_ambiguous(text: str) -> bool:
     return any(any(char.isupper() for char in match.group()) for match in re.finditer(r"\([^)]*\)", text))
 
 
+def _editorial_reference(text: str) -> bool:
+    """Identify printed cross-reference apparatus inside an example span."""
+    return any(
+        re.search(r"§|\b(?:див|пор)\s*\.|\b(?:see|cf|reference)\b", match.group(), re.I)
+        for match in re.finditer(r"\([^)]*\)", text)
+    )
+
+
 def example_boundaries(text: str) -> list[tuple[tuple[int, int], str]]:
     """Enumerate safe examples and unresolved list spans without editing text.
 
-    Semicolons delimit groups. Within a group, explicit numbered/lettered items
-    own their internal commas. Otherwise comma-separated items must each be
+    Semicolons delimit groups. Numbered/lettered items must be lexical or
+    quoted examples. Otherwise comma-separated items must each be
     lexical examples. Balanced outer quotes delimit one printed example. An
     unresolved group is counted once and withheld, never emitted as fragments.
     """
@@ -234,18 +236,9 @@ def example_boundaries(text: str) -> list[tuple[tuple[int, int], str]]:
                     span = _trim_span(text, a + marker.end(), a + limit)
                     if span[0] < span[1]:
                         content = text[slice(*span)]
-                        inner, _ = _list_punctuation(content)
-                        comma_parts = content.split(",")
-                        # Numbering alone also occurs in rule conditions and in
-                        # groups containing multiple examples. Neither proves
-                        # that a prose span is exactly one printed example.
-                        atomic_list = len(comma_parts) > 1 and all(_lexical_example(p.strip()) for p in comma_parts)
-                        explicit = _explicit_example_intro(text, start)
-                        one = (
-                            _lexical_example(content)
-                            or _quoted_example(content)
-                            or (explicit and not atomic_list and any(char.isalpha() for char in inner.values()))
-                        )
+                        # Numbering and an example introduction do not prove
+                        # that prose or multiple pairs form one printed example.
+                        one = _lexical_example(content) or _quoted_example(content)
                         items.append((span, "ok" if one else "example_boundary_ambiguous"))
                 continue
             commas = [p for p, c in punctuation.items() if c == ","]
@@ -257,7 +250,12 @@ def example_boundaries(text: str) -> list[tuple[tuple[int, int], str]]:
                 items.append(((a, b), "ok"))
             else:
                 items.append(((a, b), "example_boundary_ambiguous"))
-    return items
+    # Withhold the affected printed span; neither remove apparatus bytes nor
+    # invalidate neighboring examples whose original boundaries remain sound.
+    return [
+        (span, "example_boundary_ambiguous" if _editorial_reference(text[slice(*span)]) else reason)
+        for span, reason in items
+    ]
 
 
 def example_items(text: str) -> list[tuple[int, int]]:

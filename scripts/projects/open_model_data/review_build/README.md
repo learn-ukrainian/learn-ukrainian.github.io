@@ -350,17 +350,26 @@ success, a different refusal, duplicate names or an empty generator fail verific
 Payloads and `component-results.json` stay under the guarded host-only output.
 Component-specific fixture definitions stay with WP1–WP6.
 
-`dehyphenate@2` preserves `@1` and resolves each printed line-break hyphen,
-including stored inline alternatives, with a held folded VESUM form index or
-an unhyphenated whole-token witness in the same held source corpus. The policy
-adds `lookup_field`, `normalizer: vesum_fold`, and a `witness` mapping identifying
-store, table, text field, source column/id, alternatives field and count field.
-Both readings attested, neither reading attested, or unmatched metadata remain
-unresolved. A hyphenated VESUM form prevents a join; when only that form is
-attested, the hyphen remains and only line whitespace is removed. Every decision
-records its raw offsets, resulting form and evidence kind in `join_evidence`;
-`joins` continues to record actual hyphen removals. Held text and metadata reads
-are pinned in the source snapshot. No word lists or source edits participate.
+`dehyphenate@2` permits exactly two evidence bases for changing a split:
+
+- `vesum_form`: the complete joined form is attested in the pinned VESUM
+  folded index and the hyphenated form is absent, the `@1` condition.
+- `hyphen_alternative`: an unambiguous stored alternative covers this position
+  in the cited paragraph's pinned `hyphen_alternatives`. The conservative reader
+  retains the hyphen only when VESUM attests that reading alone; the alternative
+  must match exactly one split, with no competing or duplicate metadata entries.
+  VESUM hyphenated attestation alone is a veto on joining, never permission to
+  delete line whitespace. No alternative cover means the split stays unresolved.
+
+The policy adds `lookup_field`, `normalizer: vesum_fold`, and a
+`hyphen_metadata` mapping for the source-text/metadata association, source id,
+alternatives field and unresolved count. Word identity uses the canonical
+ASCII-apostrophe fold in `scripts/rag/word_identity.py`. Corpus-wide whole-word
+occurrence is never evidence. Both readings attested, neither reading attested,
+or unmatched/ambiguous metadata remain unresolved. Every changed split records
+raw offsets, resulting form and one of these two evidence classes in
+`join_evidence`; `joins` records only actual hyphen removals. The original text,
+metadata and their association are pinned in the source snapshot.
 
 The `transform_resolved` binding recomputes `dehyphenate@2` from the cited
 field and checks unresolved positions only where the value's visible span
@@ -373,9 +382,12 @@ boundary loss is withheld, never repaired. This check does not certify a PDF
 extraction: comparison with the printed source remains separate evidence.
 C5 retains raw printed example spans and quotes for identity and `example_list`
 binding; its catalog target is the complete paragraph with the resolved reading.
-Its boundary grammar preserves balanced quotes and parentheses. Numbered or
-lettered prose needs an explicit example introduction; numbering also occurs
-in rule conditions and multi-example groups, so it cannot alone admit prose.
+Its boundary grammar preserves balanced quotes and grammatical/category
+parentheses. Editorial cross-reference parentheses (section markers or
+reference introductions) withhold the affected raw example span without
+stripping or rewriting source text. Neighboring supported examples retain their
+original boundaries and dispositions. Numbered or lettered items must be single orthographic
+items or wholly quoted examples; an explicit introduction cannot admit prose.
 Numbered comma groups consisting of multiple orthographic examples are withheld.
 Capitalized parenthetical labels can cite a larger printed example sentence;
 without typography establishing their role, the entire colon region is withheld,
@@ -388,8 +400,9 @@ or emitted as fragments. A capitalized continuation after a dot does not prove
 a sentence boundary: it may follow an abbreviation. Later colon introductions
 also withhold the preceding unresolved group. The binding gate refuses promotion
 of such a group.
-The measured denominator is 6,196 units across 168 paragraphs, including those
-unresolved groups; the former generic comma/semicolon grammar counted 11,926
+The denominator remains 6,196 units across all 168 paragraphs, including
+unresolved groups and the withheld editorial spans; this repair preserves every
+frozen unit identity. The former generic comma/semicolon grammar counted 11,926
 fragments. These counts are different inventories, not a change in source bytes.
 Paragraph reasons are `paragraph_hyphenation_unresolved`, `source_text_defect`
 or unavailable metadata. Bibliographic attribution remains a separate gate.

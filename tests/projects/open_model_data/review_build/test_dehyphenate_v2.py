@@ -31,7 +31,7 @@ def held(tmp_path):
         "field": "form",
         "lookup_field": "folded",
         "normalizer": "vesum_fold",
-        "witness": {
+        "hyphen_metadata": {
             "store": "sources.db",
             "table": "texts",
             "field": "text",
@@ -42,7 +42,7 @@ def held(tmp_path):
         },
     }
 
-    def run(text, forms=(), witnesses=(), alternatives=()):
+    def run(text, forms=(), witnesses=(), alternatives=(), folded_forms=None):
         with sqlite3.connect(source) as db:
             db.executemany(
                 "INSERT INTO texts VALUES(?,?,?,?,?)",
@@ -58,7 +58,20 @@ def held(tmp_path):
                 ],
             )
         with sqlite3.connect(vesum) as db:
-            db.executemany("INSERT INTO forms VALUES(?,?,?)", [(i, f, fold_word(f)) for i, f in enumerate(forms, 1)])
+            # Independent database encoding: do not derive expectations from
+            # the production normalizer. Explicit folded rows can override it.
+            folded = (
+                folded_forms
+                if folded_forms is not None
+                else [
+                    f.replace("’", "'").replace("ʼ", "'").replace("\u0301", "").replace("\u0300", "").lower()
+                    for f in forms
+                ]
+            )
+            db.executemany(
+                "INSERT INTO forms VALUES(?,?,?)",
+                [(i, f, k) for i, (f, k) in enumerate(zip(forms, folded, strict=True), 1)],
+            )
         with SnapshotReader({"sources.db": source, "vesum.db": vesum}) as reader:
             result = transform("dehyphenate@2", text, policy, reader)
             return result, source_text_defects(result.text, policy, reader, original=text), reader.snapshots()
@@ -71,10 +84,10 @@ def held(tmp_path):
     "forms,witnesses,expected,kind,unresolved",
     [
         (["SYNTHETICmore"], [], "SYNTHETICmore", "vesum_form", False),
-        ([], ["SYNTHETICmore"], "SYNTHETICmore", "held_text", False),
-        (["SYNTHETIC-more"], [], "SYNTHETIC-more", "vesum_hyphenated_form", False),
+        ([], ["SYNTHETICmore"], "SYNTHETIC-\nmore", None, True),
+        (["SYNTHETIC-more"], [], "SYNTHETIC-more", "hyphen_alternative", False),
         (["SYNTHETICmore", "SYNTHETIC-more"], [], "SYNTHETIC-\nmore", None, True),
-        (["SYNTHETIC-more"], ["SYNTHETICmore"], "SYNTHETIC-more", "vesum_hyphenated_form", False),
+        (["SYNTHETIC-more"], ["SYNTHETICmore"], "SYNTHETIC-more", "hyphen_alternative", False),
         ([], [], "SYNTHETIC-\nmore", None, True),
     ],
 )
@@ -83,7 +96,7 @@ def test_every_decision_branch_and_join_refusal(held, forms, witnesses, expected
     assert result.text == expected
     assert bool(result.unresolved) == unresolved
     assert [e[3] for e in result.join_evidence] == ([kind] if kind else [])
-    assert bool(result.joins) == (kind in {"held_text", "vesum_form"})
+    assert bool(result.joins) == (kind == "vesum_form")
     assert "sources.db:texts" in pins
 
 
@@ -114,9 +127,17 @@ def test_proper_name_form_case_is_attested_by_folded_index(held):
 
 @pytest.mark.parametrize(
     "witness",
-    ["prefixSYNTHETICmore", "SYNTHETICmoreSuffix", "other-SYNTHETICmore", "SYNTHETICmore-other", "SYŃTHETIC-more"],
+    [
+        "SYNTHETICmore",
+        "SYNTHETICmore SYNTHETIC-more",
+        "prefixSYNTHETICmore",
+        "SYNTHETICmoreSuffix",
+        "other-SYNTHETICmore",
+        "SYNTHETICmore-other",
+        "SYŃTHETIC-more",
+    ],
 )
-def test_held_witness_must_be_whole_unhyphenated_token(held, witness):
+def test_corpus_occurrences_never_license_a_split(held, witness):
     result, _, _ = held("SYNTHETIC-\nmore", [], [witness], ["SYNTHETIC-more"])
     assert result.unresolved
     assert not result.joins
@@ -126,7 +147,7 @@ def test_unmatched_and_duplicate_alternatives_stay_unresolved(held):
     result, _, _ = held(
         "SYNTHETIC-\nmore", ["SYNTHETICmore"], [], ["SYNTHETIC-more", "SYNTHETIC-more", "OTHER-reading"]
     )
-    assert len(result.unresolved) == 2
+    assert len(result.unresolved) == 3
     assert result.unresolved[0][0] == -1
 
 
@@ -222,7 +243,7 @@ def test_held_source_filter_and_metadata_are_pinned(held):
     with sqlite3.connect(held.source) as db:
         db.execute("UPDATE texts SET alternatives=?,count=1 WHERE id=1", ('["SYNTHETIC-more"]',))
     with SnapshotReader({"sources.db": held.source, "vesum.db": held.vesum}) as reader:
-        reader.held_texts(held.policy)
+        reader.held_metadata(held.policy)
         assert reader.snapshots() != pins
 
 
@@ -241,3 +262,36 @@ def test_complete_compound_and_malformed_boundaries(held, raw, forms, expected, 
     result, _, _ = held(raw, forms, [], ["SYNTHETIC-more"])
     assert result.text == expected
     assert bool(result.unresolved) == unresolved
+
+
+@pytest.mark.parametrize("apostrophe", ["'", "’", "ʼ", "‘", "`"])
+def test_canonical_identity_preserves_letters_and_ascii_apostrophe(apostrophe):
+    assert fold_word("SY\u0301N" + apostrophe + "ЙЇІ") == "syn'йїі"
+
+
+@pytest.mark.parametrize("raw", ["SYN’THETIC-\nmore", "SYNʼTHETIC-\nmore", "SYN'THETIC-\nmore"])
+@pytest.mark.parametrize("hyphenated", [False, True])
+def test_ascii_database_recognizes_apostrophe_join_and_hyphen_safety_veto(held, raw, hyphenated):
+    forms = ["SYN'THETICmore"] + (["SYN'THETIC-more"] if hyphenated else [])
+    folded = ["syn'theticmore"] + (["syn'thetic-more"] if hyphenated else [])
+    result, _, _ = held(raw, forms, folded_forms=folded)
+    assert result.text == (raw if hyphenated else raw.replace("-\n", ""))
+    assert bool(result.unresolved) == hyphenated
+    assert bool(result.joins) != hyphenated
+
+
+@pytest.mark.parametrize("alternatives", [[], ["OTHER-more"], ["SYNTHETIC-more", "SYNTHETIC-more"]])
+def test_hyphenated_vesum_form_without_unique_cover_stays_unresolved(held, alternatives):
+    result, _, _ = held("SYNTHETIC-\nmore", ["SYNTHETIC-more"], alternatives=alternatives)
+    assert result.text == "SYNTHETIC-\nmore"
+    assert result.unresolved and not result.join_evidence
+
+
+def test_metadata_without_unambiguous_attestation_never_forces_admission(held):
+    result, _, _ = held("SYNTHETIC-\nmore", alternatives=["SYNTHETIC-more"])
+    assert result.unresolved and not result.join_evidence
+
+
+def test_alternative_with_two_possible_positions_cannot_license_whitespace_deletion(held):
+    result, _, _ = held("SYNTHETIC-\nmore and SYNTHETIC-\nmore", ["SYNTHETIC-more"], alternatives=["SYNTHETIC-more"])
+    assert len(result.unresolved) == 3 and not result.join_evidence

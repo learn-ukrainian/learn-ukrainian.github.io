@@ -1,12 +1,13 @@
 """Closed, auditable removal-only transforms. Policies belong to reviewed specs."""
 
 import re
-import unicodedata
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 from functools import lru_cache
 from html.parser import HTMLParser
 from types import MappingProxyType
+
+from scripts.rag.word_identity import normalize_evidence_form
 
 from .errors import BuildError, require
 
@@ -80,9 +81,8 @@ WORDS = re.compile(rf"(?<!{EDGE}){TOKEN}(?:-{TOKEN})*(?!{EDGE})")
 
 
 def fold_word(text: str) -> str:
-    """The held VESUM folded index removes stress and folds apostrophes/case."""
-    text = unicodedata.normalize("NFD", text).replace("\u0301", "").replace("\u0300", "")
-    return unicodedata.normalize("NFC", text).replace("'", "’").replace("ʼ", "’").casefold()
+    """Use the canonical case/stress/apostrophe identity of the VESUM index."""
+    return normalize_evidence_form(text)
 
 
 def _dehyphenate_v2(text: str, policy: dict, reader: object) -> Result:
@@ -91,35 +91,43 @@ def _dehyphenate_v2(text: str, policy: dict, reader: object) -> Result:
     alternatives = reader.text_metadata(text, policy)
     joins, evidence, unresolved, covered = [], [], [], []
 
-    def decide(left, right):
+    def decide(left, right, alternative_covered):
         joined, hyphenated = left + right, left + "-" + right
         joined_word = reader.is_word(joined, policy)
         hyphenated_word = reader.is_word(hyphenated, policy)
-        if not hyphenated_word and (joined_word or reader.has_text_word(joined, policy)):
-            return joined, "vesum_form" if joined_word else "held_text"
-        if hyphenated_word and not joined_word:
-            return hyphenated, "vesum_hyphenated_form"
+        if joined_word and not hyphenated_word:
+            return joined, "vesum_form"
+        if alternative_covered and hyphenated_word and not joined_word:
+            return hyphenated, "hyphen_alternative"
         return None, None
 
     edits = []
 
-    def resolve(start, end, left, right):
+    def readings(left, right):
         near_left, near_right = left.strip("-").split("-")[-1], right.strip("-").split("-")[0]
-        readings = {
+        return {
             fold_word(left + right),
             fold_word(left + "-" + right),
             fold_word(near_left + near_right),
             fold_word(near_left + "-" + near_right),
         }
-        for index, alt in enumerate(alternatives):
-            if index not in covered and fold_word(alt) in readings:
-                covered.append(index)
-                break
-        replacement, kind = decide(left, right)
+
+    def resolve(start, end, left, right, positions):
+        matching = [index for index, alt in enumerate(alternatives) if fold_word(alt) in readings(left, right)]
+        # Metadata has no offsets. A reading covers this position only when it
+        # maps to exactly one split, with no competing/duplicate alternatives.
+        unique = (
+            len(matching) == 1
+            and sum(fold_word(alternatives[matching[0]]) in readings(m[1], m[2]) for m in positions) == 1
+        )
+        alternative_covered = unique and matching[0] not in covered
+        if alternative_covered:
+            covered.append(matching[0])
+        replacement, kind = decide(left, right, alternative_covered)
         if replacement is None:
             unresolved.append((start, end, left + "-" + right))
             return
-        if kind != "vesum_hyphenated_form":
+        if kind == "vesum_form":
             joins.append((start, end, replacement))
         evidence.append((start, end, replacement, kind))
         edits.append((start, end, replacement))
@@ -128,18 +136,19 @@ def _dehyphenate_v2(text: str, policy: dict, reader: object) -> Result:
     # same alternative. Consume each stored occurrence once.
     printed = list(LINE_BREAK.finditer(text))
     for match in printed:
-        resolve(match.start(), match.end(), match[1], match[2])
+        resolve(match.start(), match.end(), match[1], match[2], printed)
     # Malformed token boundaries cannot evade the whole-token decision rule.
     for match in BREAK_SIGNAL.finditer(text):
         if not any(p.start() <= match.start() and p.end() >= match.end() for p in printed):
             unresolved.append((match.start(), match.end(), match[0]))
     inline = re.compile(rf"(?<!{EDGE})({TOKEN})-({TOKEN})(?!{EDGE})")
-    for match in inline.finditer(text):
+    inline_positions = list(inline.finditer(text))
+    for match in inline_positions:
         if any(
             index not in covered and fold_word(alt) in {fold_word(match[1] + match[2]), fold_word(match[0])}
             for index, alt in enumerate(alternatives)
         ):
-            resolve(match.start(), match.end(), match[1], match[2])
+            resolve(match.start(), match.end(), match[1], match[2], inline_positions)
     result = text
     for start, end, replacement in sorted(edits, reverse=True):
         result = result[:start] + replacement + result[end:]

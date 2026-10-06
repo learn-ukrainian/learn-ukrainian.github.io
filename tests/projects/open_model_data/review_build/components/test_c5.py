@@ -145,13 +145,14 @@ def test_ambiguous_list_is_counted_and_withheld_and_cannot_be_promoted(source):
             gate.run([promoted, *candidates[1:]])
 
 
-def test_numbered_example_internal_comma_is_bound_as_one_verbatim_item(source):
+def test_numbered_unquoted_prose_is_counted_whole_and_withheld(source):
     update(source, text="SYNTHETIC examples: 1) first clause, which continues; 2) SECOND.")
     with reader_for(source) as reader:
         gate, candidates, _ = gate_and_candidates(source, reader)
         assert candidates[0].slots[0].text == "first clause, which continues"
         assert candidates[1].slots[0].text == "SECOND"
-        assert gate.run(candidates)[1]["accounting"]["C5"]["accepted"] == 24
+        assert candidates[0].reason == "example_boundary_ambiguous"
+        assert gate.run(candidates)[1]["accounting"]["C5"]["accepted"] == 23
 
 
 def test_hyphenation_reason_precedes_boundary_ambiguity(source):
@@ -476,7 +477,7 @@ def test_register_alias_and_paragraph_placeholder_are_authenticated(source, tmp_
             assert len(reader.reads[("sources.db", "pravopys_sources")]) == 2
 
 
-def test_v2_provenance_has_evidence_kind_and_pins_text_witness(source):
+def test_corpus_occurrence_cannot_admit_and_metadata_remains_pinned(source):
     update(
         source,
         text="SYNTHETIC rule ZETA-\nmore examples: FIRST, SECOND.",
@@ -491,5 +492,19 @@ def test_v2_provenance_has_evidence_kind_and_pins_text_witness(source):
         gate, candidates, _ = gate_and_candidates(source, reader)
         records, _ = gate.run(candidates)
         evidence = [e for r in records for p in r["provenance"].values() for e in p.get("join_evidence", [])]
-        assert evidence and {e[3] for e in evidence} == {"held_text"}
+        assert not evidence
+        assert {c.reason for c in candidates[:2]} == {"paragraph_hyphenation_unresolved"}
         assert any("field=text" in key for key, _ in reader.reads[("sources.db", TABLE)])
+
+
+@pytest.mark.parametrize(
+    "body", ["FIRST (див. ще § 42), SECOND", '"phrase (see § 42)"', "1) FIRST — SECOND, THIRD — FOURTH; 2) FIFTH"]
+)
+def test_unsupported_example_cannot_be_promoted_through_binding_gate(source, body):
+    update(source, text="SYNTHETIC examples: " + body + ".")
+    with reader_for(source) as reader:
+        gate, candidates, _ = gate_and_candidates(source, reader)
+        assert candidates[0].reason == "example_boundary_ambiguous"
+        candidates[0] = replace(candidates[0], outcome="accepted", reason="ok", evidence=())
+        with pytest.raises(BuildError, match="binding_example"):
+            gate.run(candidates)

@@ -13,7 +13,7 @@ from typing import Protocol
 
 from .contract import Citation, canonical, digest
 from .errors import require
-from .transforms import WORDS, fold_word
+from .transforms import fold_word
 
 
 def identifier(name: str) -> str:
@@ -228,46 +228,44 @@ class SnapshotReader:
         self._word_cache[cache_key] = found
         return found
 
-    def held_texts(self, policy: dict) -> dict:
-        """Pin the reviewed corpus and optional metadata in this read transaction."""
-        witness = policy["witness"]
-        key = canonical(witness)
+    def held_metadata(self, policy: dict) -> dict:
+        """Pin the source-text association and hyphen metadata, never word witnesses."""
+        metadata_policy = policy["hyphen_metadata"]
+        key = canonical(metadata_policy)
         if key not in self._text_cache:
-            texts, words = {}, {}
-            for row in self.iter_rows(witness["store"], witness["table"]):
-                if row[witness["source_column"]] != witness["source_id"]:
+            texts = {}
+            for row in self.iter_rows(metadata_policy["store"], metadata_policy["table"]):
+                if row[metadata_policy["source_column"]] != metadata_policy["source_id"]:
                     continue
                 info = (
-                    self.connections[witness["store"]]
-                    .execute(f"PRAGMA table_info({identifier(witness['table'])})")
+                    self.connections[metadata_policy["store"]]
+                    .execute(f"PRAGMA table_info({identifier(metadata_policy['table'])})")
                     .fetchall()
                 )
                 keys = [r["name"] for r in sorted(info, key=lambda r: r["pk"]) if r["pk"]]
                 require(bool(keys), "invalid_row_key")
                 row_key = ";".join(f"{k}={row[k]}" for k in keys)
-                text = row[witness["field"]]
+                text = row[metadata_policy["field"]]
                 require(isinstance(text, str), "field_unavailable")
-                for field in (witness["field"], witness["alternatives_field"], witness["count_field"]):
+                for field in (
+                    metadata_policy["field"],
+                    metadata_policy["alternatives_field"],
+                    metadata_policy["count_field"],
+                ):
                     value = row[field]
-                    self.reads.setdefault((witness["store"], witness["table"]), set()).add(
+                    self.reads.setdefault((metadata_policy["store"], metadata_policy["table"]), set()).add(
                         (row_key + ";field=" + field, digest(canonical(value)))
                     )
                 texts.setdefault(text, []).append(row)
-                for match in WORDS.finditer(text):
-                    words.setdefault(fold_word(match[0]), set()).add(text)
-            self._text_cache[key] = {"texts": texts, "words": words}
+            self._text_cache[key] = texts
         return self._text_cache[key]
 
-    def has_text_word(self, word: str, policy: dict, *, exclude: str | None = None) -> bool:
-        matches = self.held_texts(policy)["words"].get(fold_word(word), set())
-        return bool(matches - {exclude})
-
     def text_metadata(self, text: str, policy: dict) -> list[str]:
-        witness = policy["witness"]
-        rows = self.held_texts(policy)["texts"].get(text, [])
+        metadata_policy = policy["hyphen_metadata"]
+        rows = self.held_metadata(policy).get(text, [])
         # Identical paragraphs may share a reading only with identical metadata.
         require(bool(rows), "hyphen_metadata_unavailable")
-        metadata = {(r[witness["alternatives_field"]], r[witness["count_field"]]) for r in rows}
+        metadata = {(r[metadata_policy["alternatives_field"]], r[metadata_policy["count_field"]]) for r in rows}
         require(len(metadata) == 1, "hyphen_metadata_unavailable")
         raw, count = metadata.pop()
         try:

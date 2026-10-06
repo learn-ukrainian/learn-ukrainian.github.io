@@ -40,7 +40,7 @@ DEHYPHENATION = {
     "field": "word_form",
     "lookup_field": "word_form_folded",
     "normalizer": "vesum_fold",
-    "witness": {
+    "hyphen_metadata": {
         "store": STORE,
         "table": TABLE,
         "field": "text",

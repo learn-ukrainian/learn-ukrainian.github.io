@@ -23,14 +23,22 @@ from tests.projects.open_model_data.review_build.conftest import selector
         (
             "1) a clause, which continues; 2) another clause",
             ["a clause, which continues", "another clause"],
-            ["ok", "ok"],
+            ["example_boundary_ambiguous", "example_boundary_ambiguous"],
         ),
-        ("1. first, with comma\n2. second, with comma", ["first, with comma", "second, with comma"], ["ok", "ok"]),
-        ("a) first, with comma\nb) second, with comma", ["first, with comma", "second, with comma"], ["ok", "ok"]),
+        (
+            "1. first, with comma\n2. second, with comma",
+            ["first, with comma", "second, with comma"],
+            ["example_boundary_ambiguous", "example_boundary_ambiguous"],
+        ),
+        (
+            "a) first, with comma\nb) second, with comma",
+            ["first, with comma", "second, with comma"],
+            ["example_boundary_ambiguous", "example_boundary_ambiguous"],
+        ),
         (
             "1) First sentence. Another sentence, still the example; 2) SECOND",
             ["First sentence. Another sentence, still the example", "SECOND"],
-            ["ok", "ok"],
+            ["example_boundary_ambiguous", "ok"],
         ),
         ("a clause, which continues", ["a clause, which continues"], ["example_boundary_ambiguous"]),
         ("FIRST PHRASE, SECOND PHRASE", ["FIRST PHRASE, SECOND PHRASE"], ["example_boundary_ambiguous"]),
@@ -93,8 +101,8 @@ def test_dotted_or_colon_continuation_cannot_license_a_truncated_example(body):
             ["in sentences with direct speech", "in another condition"],
         ),
         (
-            "SYNTHETIC combinations: 1) ?! (reference), !? (reference); 2) ...?.",
-            ["?! (reference), !? (reference)", "...?"],
+            "SYNTHETIC combinations: 1) ?! (label), !? (label); 2) ...?.",
+            ["?! (label), !? (label)", "...?"],
         ),
         ("SYNTHETIC examples: 1) FIRST, SECOND; 2) THIRD, FOURTH.", ["FIRST, SECOND", "THIRD, FOURTH"]),
     ],
@@ -202,3 +210,55 @@ def test_binding_authenticates_citation_column_and_locator(bundle):
         ):
             with pytest.raises(BuildError, match=error):
                 bindings.check(candidate, {"schema": "binding-spec.v1", "rules": [{**rule, **extra}]}, reader, {})
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "1) FIRST — SECOND, THIRD — FOURTH; 2) FIFTH",
+        "1) FIRST — SECOND.; 2) THIRD",
+        "1) A rule clause, if the words meet a condition; 2) SECOND",
+    ],
+)
+def test_numbered_explicit_introduction_cannot_admit_groups_punctuation_or_rule_clauses(body):
+    text = "SYNTHETIC наприклад: " + body + "."
+    decisions = bindings.example_boundaries(text)
+    assert decisions[0][1] == "example_boundary_ambiguous"
+    assert decisions[1][1] == "ok"
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "FIRST (див. ще § 42), SECOND",
+        "FIRST, SECOND (пор. § 42)",
+        '"phrase (see § 42)"',
+        "FIRST (reference), SECOND",
+        "FIRST (див. примітку), SECOND",
+    ],
+)
+def test_editorial_parentheses_are_counted_and_withheld_without_rewriting(body):
+    text = "SYNTHETIC examples: " + body + "."
+    decisions = bindings.example_boundaries(text)
+    affected = [span for span, reason in decisions if reason == "example_boundary_ambiguous"]
+    assert len(affected) == 1
+    assert "(" in text[slice(*affected[0])]
+    assert any(
+        reason == "ok" and text[slice(*span)] in {"FIRST", "SECOND"} for span, reason in decisions
+    ) or body.startswith('"')
+    assert bindings.example_items(text) == [span for span, _ in decisions]
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "FIRST (і second), THIRD",
+        "FIRST (category), SECOND",
+        "FIRST (inner, comma), SECOND",
+        '1) FIRST; 2) "complete phrase, with comma"',
+    ],
+)
+def test_grammatical_variants_categories_and_supported_numbered_paths_remain_verbatim(body):
+    text = "SYNTHETIC examples: " + body + "."
+    decisions = bindings.example_boundaries(text)
+    assert len(decisions) == 2 and all(reason == "ok" for _, reason in decisions)
