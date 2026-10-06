@@ -956,11 +956,16 @@ def test_issue_9040_claude_snapshot_does_not_hard_substitute(monkeypatch, tmp_pa
                     "burn_pct_7d": 1.0,
                     "remaining_pct": 99,
                     "resets_at": "2026-10-05T06:59:59Z",
+                    # The producer's fresh probe: clearance needs it positively verified (A8).
+                    "freshness": "fresh",
+                    "age_s": 30.0,
                     "codexbar": {
                         "weekly_used_pct": 1.0,
                         "weekly_pace_delta_pct": 0.49,
                         "will_last_to_reset": False,
                         "pace_summary": "0% in deficit | Expected 1% used",
+                        "freshness": "fresh",
+                        "age_s": 30.0,
                     },
                 },
                 "codex": {"status": "hot", "burn_pct_7d": 70.0},

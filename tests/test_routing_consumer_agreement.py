@@ -188,13 +188,18 @@ CLAUDE_NEAR_CAP = {**CLAUDE, "weekly_used_pct": 95.0, "weekly_remaining_pct": 5.
 
 @dataclass(frozen=True)
 class Case:
-    """One producer snapshot from external seams; ``tasks`` is ``idle`` (scan ran, nothing recent) or ``missing``."""
+    """One producer snapshot from external seams; ``tasks`` is ``idle`` (scan ran, nothing recent) or ``missing``.
+
+    ``removed`` names a freshness input dropped from the published snapshot after ``mutate``
+    (see :data:`REMOVED_INPUTS`).
+    """
 
     name: str
     payloads: dict[str, dict[str, Any] | None]
     tasks: str = "idle"
     runtime_blocked: frozenset[str] = frozenset()
     mutate: str | None = None
+    removed: str | None = None
 
 
 CASES: tuple[Case, ...] = (
@@ -267,6 +272,17 @@ CASES: tuple[Case, ...] = (
         {"codex": _deficit(credit_balance=0.0), "claude": CLAUDE_NEAR_CAP},
         mutate="weekly_pace_hot_label",
     ),
+    # Held-out round-5 controls (review of record on 0c301aa127): the on-pace weekly-pace hot label
+    # with one freshness input missing. None positively establishes freshness, so none clears it.
+    *(
+        Case(
+            f"f9040_weekly_hot_{removed}_missing",
+            {"codex": _codex(), "claude": CLAUDE_NEAR_CAP},
+            mutate="weekly_pace_hot_label",
+            removed=removed,
+        )
+        for removed in ("probe_age", "probe_freshness", "snapshot_staleness")
+    ),
 )
 
 # Credit relief the producer published, contradicted after publication by the record it rests on.
@@ -275,6 +291,9 @@ RELIEF_CONTRADICTIONS = {
     "raw_balance_zero_after_publication": credit_lane.CREDITS_EXHAUSTED,
     "runtime_blocked_after_publication": credit_lane.CREDIT_USE_UNCONFIRMED,
 }
+# Freshness inputs a control drops: the probe's age, the probe's own freshness label (read as
+# unknown), the snapshot's ``diagnostics.stale``. Probe fields live on the record and its codexbar.
+REMOVED_INPUTS = {"probe_age": "age_s", "probe_freshness": "freshness", "snapshot_staleness": "stale"}
 CASE_IDS = [case.name for case in CASES]
 CASE_PARAMS = [pytest.param(case, id=case.name) for case in CASES]
 
@@ -381,6 +400,12 @@ def produce(case: Case, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict
         codex = budget["agents"]["codex"]
         assert codex["status_source"] == "weekly_pace"
         codex["status"] = "hot"
+    if case.removed == "snapshot_staleness":
+        assert budget["diagnostics"].pop("stale") is False
+    elif case.removed is not None:
+        key = REMOVED_INPUTS[case.removed]
+        codex = budget["agents"]["codex"]
+        assert codex.pop(key) == codex["codexbar"].pop(key)
     return json.loads(json.dumps(budget))  # the JSON boundary every consumer reads across
 
 
@@ -413,6 +438,11 @@ def test_producer_publishes_the_owner_facts(snapshot):
         assert published["observation_freshness"] == credit_lane.FRESH
         assert owner(budget).observation_freshness == credit_lane.UNKNOWN
         return
+    if case.removed is not None:
+        # Published before the hot label and the removal: the owner now keeps the label hot.
+        assert published["capacity"] == credit_lane.CAPACITY_VERIFIED
+        assert owner(budget).capacity == credit_lane.CAPACITY_AVOID
+        return
     if case.mutate in RELIEF_CONTRADICTIONS:
         assert published["credit_state"] == credit_lane.CREDIT_BALANCE_PRESENT
         assert owner(budget).credit["state"] == RELIEF_CONTRADICTIONS[case.mutate]
@@ -428,14 +458,18 @@ def test_producer_publishes_the_owner_facts(snapshot):
         assert published["plan_remaining_pct"] == facts.plan_remaining_pct, lane
 
 
-def recommend(budget: dict[str, Any]) -> dict[str, Any]:
-    """The producer's recommendation recomputed over the snapshot as consumers now read it."""
+def recommend(budget: dict[str, Any], *, is_stale: bool | None = None) -> dict[str, Any]:
+    """The producer's recommendation recomputed over the snapshot as consumers now read it.
+
+    A missing ``diagnostics.stale`` is carried through as None (unknown), never coerced to fresh;
+    ``is_stale`` overrides it only to show what a coercion would decide.
+    """
     diagnostics = budget["diagnostics"]
     return state_router._recommend_agent(
         copy.deepcopy(budget["agents"]),
         [],
         current_time=NOW,
-        is_stale=diagnostics.get("stale") is True,
+        is_stale=diagnostics.get("stale") if is_stale is None else is_stale,
         records_loaded=diagnostics.get("records_loaded", 0),
         authoritative_data_available=True,
     )
@@ -680,6 +714,14 @@ EXPECTED_CODEX = {
     "missing_snapshot_staleness": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.UNKNOWN),
     "f9040_weekly_hot_on_pace": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
     "f9040_weekly_hot_deficit": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
+    # The observation helper reads a fresh snapshot as fresh whatever the probe; the clearance does not.
+    "f9040_weekly_hot_probe_age_missing": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
+    "f9040_weekly_hot_probe_freshness_missing": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
+    "f9040_weekly_hot_snapshot_staleness_missing": (
+        credit_lane.CAPACITY_AVOID,
+        credit_lane.HEALTHY,
+        credit_lane.UNKNOWN,
+    ),
 }
 
 
@@ -844,3 +886,49 @@ def test_weekly_pace_hot_label_is_decided_by_the_owner_for_every_consumer(snapsh
 
     assert (recommend(budget)["primary_agent_for_code"] == "codex") is clears
     assert _guard(budget, monkeypatch, ROUTE_MODEL) == ("codex" if clears else "claude")
+
+
+INCOMPLETE_FRESHNESS = [pytest.param(case, id=case.name) for case in CASES if case.removed is not None]
+
+
+@pytest.mark.parametrize("snapshot", INCOMPLETE_FRESHNESS, indirect=True)
+def test_weekly_pace_hot_label_without_verified_freshness_stays_hot_for_every_consumer(snapshot, monkeypatch):
+    """#9040 (A8): the on-pace weekly-pace hot label is cleared only on positively verified freshness.
+
+    With the probe age missing, the probe freshness unknown or the snapshot staleness missing, the
+    owner keeps ``hot`` and the picker, resolver, wave, recommendation and delegate all agree.
+    """
+    case, budget = snapshot
+    record = budget["agents"]["codex"]
+    assert (record["status"], record["status_source"]) == ("hot", "weekly_pace")
+    facts = owner(budget, model=ROUTE_MODEL)
+    if case.removed == "snapshot_staleness":
+        assert "stale" not in budget["diagnostics"]
+        assert (facts.snapshot_freshness, facts.probe_freshness) == (credit_lane.UNKNOWN, credit_lane.FRESH)
+    else:
+        assert REMOVED_INPUTS[case.removed] not in record and REMOVED_INPUTS[case.removed] not in record["codexbar"]
+        assert (facts.snapshot_freshness, facts.probe_freshness) == (credit_lane.FRESH, credit_lane.UNKNOWN)
+    assert facts.raw_deficit is False and facts.status == "hot"
+    assert facts.capacity == credit_lane.CAPACITY_AVOID, facts.capacity_reason
+
+    rows = _rows(budget)
+    assert rows["codex"]["avoid"] is True and rows["codex"]["status"] == "hot"
+    assert "codex" not in capacity_pick.cooler_lanes(list(rows.values()))
+
+    result = evaluate_candidate(
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
+    )
+    assert result.status == "excluded", result.reason
+
+    config = coordinator.load_config()["health"]
+    _passed, assessment = coordinator._health_assessment(budget, config, now=NOW)
+    group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
+    [lane] = group["lanes"]
+    assert lane["status"] == facts.status == "hot"
+    assert lane["freshness"] == facts.observation_freshness
+
+    assert recommend(budget)["primary_agent_for_code"] != "codex"
+    assert _guard(budget, monkeypatch, ROUTE_MODEL) == "claude"
+    if case.removed == "snapshot_staleness":
+        # Discrimination: coercing the missing staleness to fresh would clear the label and pick codex.
+        assert recommend(budget, is_stale=False)["primary_agent_for_code"] == "codex"

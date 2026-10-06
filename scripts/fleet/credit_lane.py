@@ -1125,7 +1125,9 @@ def routing_facts(
     reading does not confirm takes the remaining-allowance status, never a
     default ``cool``: pace hidden below the visibility floor (A3), or a visible
     reading with no deficit on a fresh observation (#9040, A8: the early-window
-    false positive). A hot label from any other source stays hot.
+    false positive). Fresh there means a fresh snapshot *and* a positively
+    fresh probe: a missing probe age or an unknown probe freshness keeps the
+    label hot. A hot label from any other source stays hot.
     """
     from scripts.api.subscription_usage import pace_expected_pct, pace_is_visible
 
@@ -1179,7 +1181,9 @@ def routing_facts(
         cleared_by = None
         if pace["raw_deficit"] is None and visible is False:
             cleared_by = "pace hidden below the visibility floor"
-        elif pace["raw_deficit"] is False and freshness == FRESH:
+        elif pace["raw_deficit"] is False and freshness == FRESH and probe == FRESH:
+            # The label is the probe's own pace reading: a fresh snapshot alone (which covers a
+            # probe-less ledger lane) does not verify it, so the probe must be positively fresh.
             cleared_by = "no pace deficit on a fresh observation"
         if cleared_by is not None:
             status = allowance_status(remaining)

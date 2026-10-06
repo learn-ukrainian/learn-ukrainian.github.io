@@ -693,7 +693,7 @@ def _credit_relief_models(
     info: dict[str, Any] | None,
     *,
     current_time: datetime | None = None,
-    is_stale: bool = False,
+    is_stale: bool | None = False,
     usage_dir: Path | None = None,
 ) -> tuple[str, ...] | None:
     """The credit-period allowlist when the owner grants the lane credit relief as verified capacity, else None.
@@ -722,7 +722,7 @@ def _recommend_agent(
     *,
     current_time: datetime | None = None,
     reset_imminent_hours: int = 6,
-    is_stale: bool = False,
+    is_stale: bool | None = False,
     records_loaded: int = 0,
     authoritative_data_available: bool = False,
     usage_dir: Path | None = None,
@@ -742,7 +742,9 @@ def _recommend_agent(
     here (never ``hot``, never verified capacity); a hot label the owner
     clears (#9040) takes the owner's status. Lanes with established
     health are preferred; unknown health is used only when no lane has it,
-    with a warning, and is never reported as healthy.
+    with a warning, and is never reported as healthy. ``is_stale`` None is a
+    snapshot whose staleness is missing: the owner reads it as unknown, never
+    fresh.
     """
     # Hard admission failures cannot use the soft all-unhealthy budget fallback.
     agents = {lane: info for lane, info in agents.items() if info.get("eligible", True)}

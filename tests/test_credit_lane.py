@@ -1643,6 +1643,23 @@ def test_weekly_pace_hot_without_a_deficit_is_cleared_by_the_owner_only_when_fre
         assert facts.pace_reason.startswith("no pace deficit on a fresh observation")
 
 
+@pytest.mark.parametrize("missing", ["age_s", "freshness"], ids=["probe-age-missing", "probe-freshness-unknown"])
+def test_weekly_pace_hot_label_needs_a_positively_fresh_probe(missing):
+    """#9040 (A8): a fresh snapshot alone never clears the label; an incomplete probe keeps it hot."""
+    info = _pace_hot(weekly_pace_delta_pct=0.49)
+    info.update(remaining_pct=45.0)
+    info["codexbar"]["weekly_remaining_pct"] = 45.0
+    info.pop(missing)
+    info["codexbar"].pop(missing)
+    facts = _facts(info)
+    assert (facts.snapshot_freshness, facts.probe_freshness) == (credit_lane.FRESH, credit_lane.UNKNOWN)
+    # The observation helper still reads fresh (a probe-less lane's snapshot covers it); the clearance does not.
+    assert facts.observation_freshness == credit_lane.FRESH
+    assert facts.pace_visible is True and facts.raw_deficit is False
+    assert facts.status == "hot"
+    assert facts.capacity == credit_lane.CAPACITY_AVOID, facts.capacity_reason
+
+
 def test_hidden_pace_with_unknown_allowance_is_unknown_not_cool():
     info = _pace_hot(weekly_expected_pct=0.1)
     for key in ("remaining_pct",):
