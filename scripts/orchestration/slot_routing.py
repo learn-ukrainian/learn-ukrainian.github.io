@@ -38,6 +38,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from scripts.orchestration.fleet_taxonomy import (
     UnknownAreaError,
     resolve_area,
@@ -212,7 +219,7 @@ def resolve_slot_holder(
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
 
     try:
-        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        conn = open_readonly(db_path)
         conn.row_factory = sqlite3.Row
         try:
             rows = conn.execute(query, epic_stream_ids).fetchall()

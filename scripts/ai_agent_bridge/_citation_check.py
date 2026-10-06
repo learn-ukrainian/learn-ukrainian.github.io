@@ -62,6 +62,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import NamedTuple
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -285,9 +293,8 @@ def _body_text_has(db_path: Path, table: str, column: str, term: str) -> bool:
     """
     if not db_path.exists():
         return False
-    uri = f"file:{db_path}?mode=ro"
     try:
-        conn = sqlite3.connect(uri, uri=True)
+        conn = open_readonly(db_path)
     except sqlite3.OperationalError as exc:
         logger.debug("citation-check: read-only connect to %s failed: %s", db_path, exc)
         return False

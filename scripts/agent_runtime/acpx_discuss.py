@@ -33,6 +33,13 @@ _SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from scripts.agent_runtime.adapters.acpx import (
     ACPX_SUPPORTED_PARTICIPANTS,
     TRANSPORT_ENV,
@@ -1333,7 +1340,7 @@ def verify_discussion_receipt(
     if not db_path.is_file():
         raise AcpxDiscussionNotFoundError("ACP conversation storage was not found")
     try:
-        connection = sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True)
+        connection = open_readonly(db_path)
         connection.row_factory = sqlite3.Row
         row = connection.execute(
             """SELECT conversation_id, rounds_requested, participants_json, created_at

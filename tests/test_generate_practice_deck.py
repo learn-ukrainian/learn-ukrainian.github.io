@@ -79,6 +79,7 @@ from scripts.audit.generate_practice_deck import (
     write_pos_residual_report,
     write_shards,
 )
+from scripts.lib.readonly_sqlite import open_readonly
 
 pytestmark = pytest.mark.reads_content
 
@@ -1756,7 +1757,7 @@ def test_paradigm_zero_collision_guarantee_across_nouns() -> None:
         from scripts.rag.config import VESUM_DB_PATH
 
         if VESUM_DB_PATH.exists():
-            conn = sqlite3.connect(str(VESUM_DB_PATH))
+            conn = open_readonly(VESUM_DB_PATH)
             cursor = conn.cursor()
     except Exception:
         cursor = None
@@ -4870,7 +4871,7 @@ def test_imperative_multi_key_acceptance_comprehensive(imperative_conn, imperati
     from scripts.rag.config import VESUM_DB_PATH
 
     if VESUM_DB_PATH.exists():
-        with sqlite3.connect(str(VESUM_DB_PATH)) as vesum_conn:
+        with open_readonly(VESUM_DB_PATH) as vesum_conn:
             # Verify робити forms in live VESUM
             robyty_slots, _, _ = generate_practice_deck._imperative_forms("робити", vesum_conn)
             assert "робімо" in robyty_slots["1pl"] and "робім" in robyty_slots["1pl"]

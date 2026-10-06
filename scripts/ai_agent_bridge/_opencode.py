@@ -45,6 +45,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 from ._ask_contract import (
@@ -365,9 +372,8 @@ def read_opencode_turn_status(
 
     if db_path and db_path.exists():
         try:
-            import sqlite3
 
-            conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+            conn = open_readonly(db_path)
             try:
                 cur = conn.cursor()
                 target_sid = session_id
