@@ -1,12 +1,192 @@
 {
   "role": "runtime argv validators, not exemptions",
   "templates": [
-    ["git", ["rev-parse", "--git-common-dir"]],
-    ["git", ["rev-parse", "--git-dir"]],
-    ["git", ["rev-parse", "--path-format=absolute", "--git-common-dir"]],
-    ["git", ["rev-parse", "--path-format=absolute", "--show-toplevel"]],
-    ["git", ["symbolic-ref", "--quiet", "--short", "HEAD"]],
-    ["gh", ["api", null]],
-    ["gh", ["pr", "checks", null, "--json", "name,bucket,state"]]
+    {
+      "program": "git",
+      "argv": ["rev-parse", "--git-common-dir"],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-branch-switch-in-main.py",
+          "line": 157,
+          "text": "rev-parse\", \"--git-common-dir"
+        }
+      ]
+    },
+    {
+      "program": "git",
+      "argv": ["rev-parse", "--git-dir"],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-branch-switch-in-main.py",
+          "line": 149,
+          "text": "rev-parse\", \"--git-dir"
+        }
+      ]
+    },
+    {
+      "program": "git",
+      "argv": ["rev-parse", "--path-format=absolute", "--git-common-dir"],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-branch-switch-in-main.py",
+          "line": 106,
+          "text": "rev-parse\", \"--path-format=absolute\", \"--git-common-dir"
+        }
+      ]
+    },
+    {
+      "program": "git",
+      "argv": ["rev-parse", "--path-format=absolute", "--show-toplevel"],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-branch-switch-in-main.py",
+          "line": 399,
+          "text": "rev-parse\", \"--path-format=absolute\", \"--show-toplevel"
+        }
+      ]
+    },
+    {
+      "program": "git",
+      "argv": ["symbolic-ref", "--quiet", "--short", "HEAD"],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-branch-switch-in-main.py",
+          "line": 415,
+          "text": "symbolic-ref\", \"--quiet\", \"--short\", \"HEAD"
+        }
+      ]
+    },
+    {
+      "program": "gh",
+      "argv": ["api", null],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
+          "line": 858,
+          "text": "\"gh\", \"api\""
+        }
+      ]
+    },
+    {
+      "program": "gh",
+      "argv": ["pr", "checks", null, "--json", "name,bucket,state"],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-admin-merge.py",
+          "line": 275,
+          "text": "\"gh\", \"pr\", \"checks\""
+        },
+        {
+          "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
+          "line": 820,
+          "text": "\"gh\", \"pr\", \"checks\""
+        }
+      ]
+    },
+    {
+      "program": "gh",
+      "argv": [
+        "pr",
+        "view",
+        {"type": "pr-selector"},
+        "--json",
+        {
+          "type": "json-fields",
+          "fields": ["isDraft", "baseRefName", "body", "headRefOid", "number", "url"]
+        }
+      ],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
+          "line": 755,
+          "text": "\"view\""
+        },
+        {
+          "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
+          "line": 759,
+          "text": "isDraft,baseRefName,body,headRefOid,number,url"
+        }
+      ],
+      "note": "gh pr view selector: PR number, git branch name, or https://github.com/<owner>/<repo>/pull/<n>. The parser also forwards the prose ellipsis ... from a backtick example; that one literal is not option-shaped."
+    },
+    {
+      "program": "gh",
+      "argv": [
+        "pr",
+        "view",
+        {"type": "pr-selector"},
+        "--repo",
+        {"type": "owner-repo"},
+        "--json",
+        {
+          "type": "json-fields",
+          "fields": ["isDraft", "baseRefName", "body", "headRefOid", "number", "url"]
+        }
+      ],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
+          "line": 705,
+          "text": "[\"--repo\", repo]"
+        },
+        {
+          "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
+          "line": 759,
+          "text": "isDraft,baseRefName,body,headRefOid,number,url"
+        }
+      ]
+    },
+    {
+      "program": "gh",
+      "argv": [
+        "pr",
+        "checks",
+        {"type": "pr-selector"},
+        "--repo",
+        {"type": "owner-repo"},
+        "--json",
+        {"type": "json-fields", "fields": ["name", "bucket", "state"]}
+      ],
+      "serves": [
+        {
+          "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
+          "line": 705,
+          "text": "[\"--repo\", repo]"
+        },
+        {
+          "file": "agents_extensions/shared/hooks/guard-pr-merge.py",
+          "line": 820,
+          "text": "name,bucket,state"
+        }
+      ]
+    },
+    {
+      "program": "git",
+      "argv": [
+        "-C",
+        {"type": "absolute-path"},
+        "rev-parse",
+        "--path-format=absolute",
+        "--git-common-dir"
+      ],
+      "serves": [
+        {
+          "file": "scripts/guardrails/worktree_containment.py",
+          "line": 123,
+          "text": "\"git\", \"-C\", str(cwd)"
+        },
+        {
+          "file": "scripts/guardrails/worktree_containment.py",
+          "line": 206,
+          "text": "rev-parse\", \"--path-format=absolute\", \"--git-common-dir"
+        },
+        {
+          "file": "agents_extensions/shared/hooks/guard-primary-checkout-write.py",
+          "line": 2560,
+          "text": "resolve_main_root"
+        }
+      ],
+      "note": "The -C operand is an absolute path and never option-shaped. Production also passes not-yet-created absolute paths; an existing non-directory is rejected. Only these rev-parse flags are accepted."
+    }
   ]
 }

@@ -2,7 +2,9 @@
 
 Reviewed git and gh templates are validators. A start outside those templates,
 a shell syntax check, a launch replacement, or a hook-controlled configuration
-override is a violation. Launch explanations are not exemptions.
+override is a violation. Launch explanations are not exemptions. A typed
+operand matches one reviewed shape: it is never an open argv tail, and an
+option-shaped token (``-…``) never fills an operand slot.
 
 Executable resolution and on-disk git/gh configuration are trust assumptions.
 A hook-controlled ``executable=``, ``-c``, ``GIT_CONFIG*``, pager, editor,
@@ -15,6 +17,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shlex
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -58,15 +61,134 @@ EXACT_COMMAND_VARIABLES = frozenset(
 # command variables and are not on the injection list.
 INERT_COLOR_VARIABLES = frozenset({"CLICOLOR", "NO_COLOR"})
 
+_FIELD_NAME = re.compile(r"[A-Za-z][A-Za-z0-9]*\Z")
+_PR_NUMBER = re.compile(r"[1-9][0-9]*\Z")
+_PR_URL = re.compile(r"https://github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+)/pull/([1-9][0-9]*)\Z")
+_OWNER_REPO = re.compile(r"([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+)\Z")
+_REF_FORBIDDEN = frozenset(" ~^:?*[\\")
+# The corpus docstring contains a backtick example `gh pr merge ... --admin`.
+# The parser forwards that ellipsis as the PR selector. It is not a branch
+# name (`..` is forbidden) and it is not option-shaped.
+_PROSE_ELLIPSIS = "..."
+_OPERAND_KEYS = {
+    "pr-selector": frozenset({"type"}),
+    "owner-repo": frozenset({"type"}),
+    "absolute-path": frozenset({"type"}),
+    "json-fields": frozenset({"type", "fields"}),
+}
+_TEMPLATE_KEYS = frozenset({"program", "argv", "serves", "note"})
 
-def load_templates() -> tuple[tuple[str, tuple[str | None, ...]], ...]:
+
+@dataclass(frozen=True)
+class TypedOperand:
+    """One reviewed operand slot. ``fields`` is the json allowlist, when used."""
+
+    kind: str
+    fields: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class TemplateCitation:
+    """Source line that builds the argv this template validates."""
+
+    file: str
+    line: int
+    text: str
+
+
+@dataclass(frozen=True)
+class Template:
+    program: str
+    argv: tuple[str | None | TypedOperand, ...]
+    serves: tuple[TemplateCitation, ...]
+    note: str = ""
+
+
+def _operand(value: object) -> str | None | TypedOperand:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        if not value:
+            raise AssertionError("template literal is empty")
+        return value
+    if not isinstance(value, dict):
+        raise AssertionError(f"template operand has unsupported shape: {value!r}")
+    kind = value.get("type")
+    expected = _OPERAND_KEYS.get(kind) if isinstance(kind, str) else None
+    if expected is None or set(value) != expected:
+        raise AssertionError(f"template operand type is not reviewed: {value!r}")
+    if kind != "json-fields":
+        return TypedOperand(kind)
+    fields = value["fields"]
+    if (
+        not isinstance(fields, list)
+        or not fields
+        or len(fields) != len(set(fields))
+        or not all(isinstance(field, str) and _FIELD_NAME.fullmatch(field) for field in fields)
+    ):
+        raise AssertionError(f"json field allowlist is not an explicit set: {fields!r}")
+    return TypedOperand("json-fields", tuple(fields))
+
+
+def _citation(value: object) -> TemplateCitation:
+    if not isinstance(value, dict) or set(value) != {"file", "line", "text"}:
+        raise AssertionError(f"template citation is incomplete: {value!r}")
+    path = value["file"]
+    line = value["line"]
+    text = value["text"]
+    if (
+        not isinstance(path, str)
+        or not path
+        or path.startswith("/")
+        or "\\" in path
+        or ".." in Path(path).parts
+        or isinstance(line, bool)
+        or not isinstance(line, int)
+        or line < 1
+        or not isinstance(text, str)
+        or not text
+    ):
+        raise AssertionError(f"template citation is not a repo line: {value!r}")
+    return TemplateCitation(path, line, text)
+
+
+def load_template_records() -> tuple[Template, ...]:
+    """Reviewed argv templates. Each one cites the hook line it validates."""
     payload = json.loads(TEMPLATE_PATH.read_text(encoding="utf-8"))
     if payload.get("role") != "runtime argv validators, not exemptions":
         raise AssertionError("command template fixture lost its validator role")
-    templates: list[tuple[str, tuple[str | None, ...]]] = []
-    for name, parts in payload["templates"]:
-        templates.append((name, tuple(parts)))
-    return tuple(templates)
+    raw_templates = payload.get("templates")
+    if not isinstance(raw_templates, list) or not raw_templates:
+        raise AssertionError("command template fixture has no templates")
+    records: list[Template] = []
+    for item in raw_templates:
+        if not isinstance(item, dict) or not {"program", "argv", "serves"} <= set(item) <= _TEMPLATE_KEYS:
+            raise AssertionError(f"template record is not reviewed: {item!r}")
+        program = item["program"]
+        raw_argv = item["argv"]
+        raw_serves = item["serves"]
+        note = item.get("note", "")
+        if program not in GIT_GH or not isinstance(raw_argv, list) or not raw_argv:
+            raise AssertionError(f"template program or argv is not reviewed: {item!r}")
+        if not isinstance(raw_serves, list) or not raw_serves or not isinstance(note, str):
+            raise AssertionError(f"template citation is missing: {item!r}")
+        argv = tuple(_operand(part) for part in raw_argv)
+        literals = [part for part in argv if isinstance(part, str)]
+        if config_injection_tokens(literals):
+            raise AssertionError(f"template contains a config-injection token: {literals!r}")
+        records.append(
+            Template(
+                program,
+                argv,
+                tuple(_citation(cite) for cite in raw_serves),
+                note,
+            )
+        )
+    return tuple(records)
+
+
+def load_templates() -> tuple[tuple[str, tuple[str | None | TypedOperand, ...]], ...]:
+    return tuple((record.program, record.argv) for record in load_template_records())
 
 
 def load_explanations() -> tuple[dict[str, str], ...]:
@@ -174,6 +296,93 @@ def config_injection_tokens(argv: Sequence[str]) -> tuple[str, ...]:
     return tuple(found)
 
 
+def _ref_piece(piece: str) -> bool:
+    """Owner or repo piece: the reviewed character class, and not option-shaped."""
+    return bool(piece) and not piece.startswith("-") and piece not in {".", ".."}
+
+
+def _branch_name(token: str) -> bool:
+    """Git ``check-ref-format --branch`` name. Option-shaped tokens are refused."""
+    if not token or token.startswith("-") or token in {"@", "HEAD"}:
+        return False
+    if token.startswith("/") or token.endswith("/") or token.endswith("."):
+        return False
+    if ".." in token or "@{" in token or "//" in token:
+        return False
+    if any(ord(char) < 32 or ord(char) == 127 or char in _REF_FORBIDDEN for char in token):
+        return False
+    return all(part and not part.startswith(".") and not part.endswith(".lock") for part in token.split("/"))
+
+
+def _pr_selector(token: str) -> bool:
+    """PR number, branch name, GitHub pull URL, or the one prose ellipsis."""
+    if token == _PROSE_ELLIPSIS:
+        return True
+    if _PR_NUMBER.fullmatch(token):
+        return True
+    url = _PR_URL.fullmatch(token)
+    if url is not None:
+        owner, repo, _number = url.groups()
+        return _ref_piece(owner) and _ref_piece(repo)
+    return _branch_name(token)
+
+
+def _owner_repo(token: str) -> bool:
+    """``--repo`` value ``<owner>/<repo>`` matching the reviewed character class."""
+    if not token or token.startswith("-"):
+        return False
+    match = _OWNER_REPO.fullmatch(token)
+    if match is None:
+        return False
+    owner, repo = match.groups()
+    return _ref_piece(owner) and _ref_piece(repo)
+
+
+def _json_fields(token: str, fields: tuple[str, ...]) -> bool:
+    """Comma list whose names are exactly the template's field allowlist."""
+    if not token or token.startswith("-"):
+        return False
+    parts = token.split(",")
+    if len(parts) != len(fields) or len(set(parts)) != len(parts):
+        return False
+    return set(parts) == set(fields)
+
+
+def _absolute_path(token: str) -> bool:
+    """``git -C`` operand: an absolute path, never an option.
+
+    An existing directory is the reviewed case. Production also passes a
+    not-yet-created absolute path (the write target's parent is missing, so
+    ``git -C`` receives that missing path). An existing file is not a directory
+    operand. A relative path is refused so this check does not use the
+    auditor's cwd.
+    """
+    if not token or token.startswith("-") or "\x00" in token or "\n" in token or "\r" in token:
+        return False
+    path = Path(token)
+    if not path.is_absolute():
+        return False
+    if path.exists():
+        return path.is_dir()
+    return True
+
+
+def _match_part(token: str, part: str | None | TypedOperand) -> bool:
+    if part is None:
+        return bool(token) and not token.startswith("-")
+    if isinstance(part, str):
+        return token == part
+    if part.kind == "pr-selector":
+        return _pr_selector(token)
+    if part.kind == "owner-repo":
+        return _owner_repo(token)
+    if part.kind == "json-fields":
+        return _json_fields(token, part.fields)
+    if part.kind == "absolute-path":
+        return _absolute_path(token)
+    return False
+
+
 def matches_template(argv: Sequence[str]) -> bool:
     """True when ``argv`` is one reviewed template and carries no config injection."""
     if len(argv) < 2 or config_injection_tokens(argv):
@@ -183,17 +392,7 @@ def matches_template(argv: Sequence[str]) -> bool:
     for template_name, parts in load_templates():
         if name != template_name or len(rest) != len(parts):
             continue
-        matched = True
-        for token, part in zip(rest, parts, strict=True):
-            if part is None:
-                if not token or token.startswith("-"):
-                    matched = False
-                    break
-                continue
-            if token != part:
-                matched = False
-                break
-        if matched:
+        if all(_match_part(token, part) for token, part in zip(rest, parts, strict=True)):
             return True
     return False
 

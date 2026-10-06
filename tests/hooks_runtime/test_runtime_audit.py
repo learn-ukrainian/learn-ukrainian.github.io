@@ -31,6 +31,7 @@ from tests.hooks_runtime.policy import (
     classify_start,
     is_command_variable,
     load_explanations,
+    load_template_records,
     load_templates,
     matches_template,
 )
@@ -110,7 +111,19 @@ def test_hook_roots_are_classified_once() -> None:
 
 def test_templates_and_explanations_are_fixtures_not_exemptions(monkeypatch: pytest.MonkeyPatch) -> None:
     templates = load_templates()
-    assert [name for name, _parts in templates] == ["git", "git", "git", "git", "git", "gh", "gh"]
+    assert [name for name, _parts in templates] == [
+        "git",
+        "git",
+        "git",
+        "git",
+        "git",
+        "gh",
+        "gh",
+        "gh",
+        "gh",
+        "gh",
+        "git",
+    ]
     explanations = load_explanations()
     assert len(explanations) == 50
     assert all(item.get("explanation") for item in explanations)
@@ -264,6 +277,69 @@ def _redact(text: str, cwd: Path) -> str:
 def _shapes(receipt: EntryReceipt, cwd: Path) -> list[tuple[str, int]]:
     counter: Counter[str] = Counter(_redact(item, cwd) for item in receipt.violations)
     return counter.most_common(12)
+
+
+_VIEW_FIELDS = "isDraft,baseRefName,body,headRefOid,number,url"
+_CHECK_FIELDS = "name,bucket,state"
+_VIEW_REORDERED = "url,number,headRefOid,body,baseRefName,isDraft"
+
+
+def test_every_template_cites_the_hook_line_it_serves() -> None:
+    records = load_template_records()
+    assert len(records) == 11
+    for record in records:
+        assert record.serves
+        for citation in record.serves:
+            line = (REPO_ROOT / citation.file).read_text(encoding="utf-8").splitlines()[citation.line - 1]
+            assert citation.text in line, citation
+
+
+def test_pr_view_template_rejects_an_option_operand_and_an_extra_flag() -> None:
+    assert matches_template(("gh", "pr", "view", "5", "--json", _VIEW_FIELDS))
+    assert matches_template(("gh", "pr", "view", "...", "--json", _VIEW_FIELDS))
+    assert matches_template(("gh", "pr", "view", "https://github.com/other/repo/pull/9", "--json", _VIEW_FIELDS))
+    assert matches_template(("gh", "pr", "view", "feature/branch", "--json", _VIEW_FIELDS))
+    assert matches_template(("gh", "pr", "view", "5", "--json", _VIEW_REORDERED))
+    assert not matches_template(("gh", "pr", "view", "--admin", "--json", _VIEW_FIELDS))
+    assert not matches_template(("gh", "pr", "view", "-5", "--json", _VIEW_FIELDS))
+    assert not matches_template(("gh", "pr", "view", "5", "--json", _VIEW_FIELDS, "--paginate"))
+    assert not matches_template(("gh", "pr", "view", "5", "--json", "isDraft"))
+    assert not matches_template(("gh", "pr", "view", "https://example.com/other/repo/pull/9", "--json", _VIEW_FIELDS))
+
+
+def test_pr_view_repo_template_rejects_an_option_operand_and_an_extra_flag() -> None:
+    argv = ("gh", "pr", "view", "9", "--repo", "owner/repo", "--json", _VIEW_FIELDS)
+    assert matches_template(argv)
+    assert matches_template(("gh", "pr", "view", "689", "--repo", "cli/cli", "--json", _VIEW_FIELDS))
+    assert not matches_template(("gh", "pr", "view", "--admin", "--repo", "owner/repo", "--json", _VIEW_FIELDS))
+    assert not matches_template(("gh", "pr", "view", "9", "--repo", "-owner/repo", "--json", _VIEW_FIELDS))
+    assert not matches_template(("gh", "pr", "view", "9", "--repo", "owner/repo", "--json", _VIEW_FIELDS, "--paginate"))
+    assert not matches_template(("gh", "pr", "view", "9", "--repo", "host/owner/repo", "--json", _VIEW_FIELDS))
+
+
+def test_pr_checks_repo_template_rejects_an_option_operand_and_an_extra_flag() -> None:
+    argv = ("gh", "pr", "checks", "9", "--repo", "owner/repo", "--json", _CHECK_FIELDS)
+    assert matches_template(argv)
+    assert matches_template(("gh", "pr", "checks", "9", "--repo", "owner/repo", "--json", "state,name,bucket"))
+    assert not matches_template(("gh", "pr", "checks", "--watch", "--repo", "owner/repo", "--json", _CHECK_FIELDS))
+    assert not matches_template(("gh", "pr", "checks", "9", "--repo", "owner/-repo", "--json", _CHECK_FIELDS))
+    assert not matches_template((*argv, "--watch"))
+    assert not matches_template(("gh", "pr", "checks", "9", "--repo", "owner/repo", "--json", "name,bucket"))
+
+
+def test_git_dash_c_rev_parse_template_rejects_an_option_operand_and_an_extra_flag(tmp_path: Path) -> None:
+    flags = ("rev-parse", "--path-format=absolute", "--git-common-dir")
+    assert matches_template(("git", "-C", str(tmp_path), *flags))
+    missing = tmp_path / "curriculum"
+    assert not missing.exists()
+    assert matches_template(("git", "-C", str(missing), *flags))
+    existing_file = tmp_path / "not-a-directory"
+    existing_file.write_text("x", encoding="utf-8")
+    assert not matches_template(("git", "-C", str(existing_file), *flags))
+    assert not matches_template(("git", "-C", "relative-dir", *flags))
+    assert not matches_template(("git", "-C", "--git-dir", *flags))
+    assert not matches_template(("git", "-C", str(tmp_path), "--no-pager", *flags))
+    assert not matches_template(("git", "-C", str(tmp_path), *flags, "--verify"))
 
 
 def test_command_processing_corpus_rejects_unreviewed_starts(tmp_path: Path) -> None:
