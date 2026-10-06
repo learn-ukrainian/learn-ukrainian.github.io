@@ -21,18 +21,17 @@ import json
 import os
 import re
 import shlex
-import shutil
 import socket
 import sqlite3
+import stat
 import subprocess
 import sys
 import tarfile
-import tempfile
 import urllib.error
 import urllib.request
 import uuid
-from collections.abc import Callable, Mapping
-from contextlib import closing, suppress
+from collections.abc import Callable, Iterator, Mapping
+from contextlib import closing, contextmanager, suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -680,6 +679,7 @@ def _bundle_source_members(
             or path.is_symlink()
             or path.name == ".native-intent.lock"
             or path.name.endswith(".bundle.tgz")
+            or "_bundle-reconcile" in path.relative_to(lineage_root).parts
         ):
             continue
         member_name = (
@@ -839,27 +839,26 @@ def _bundle_local_members(
 def _bundle_archive_local_lineage(
     state_root: Path,
     *,
+    tree: _BundleReconcileTree,
     agent: str,
     lineage_id: str,
     remote_manifest: Mapping[str, Any],
 ) -> Path | None:
-    lineage_root = state_root / ".agent" / "thread-rollovers" / agent / lineage_id
-    if not lineage_root.exists():
+    lineage = f".agent/thread-rollovers/{agent}/{lineage_id}"
+    if not tree.exists(lineage):
         return None
     timestamp = utc_now().strftime("%Y%m%dT%H%M%SZ")
-    archive_root = state_root / ".agent" / "thread-rollovers" / agent / "_archive" / f"{lineage_id}-{timestamp}"
+    archive = f".agent/thread-rollovers/{agent}/_archive/{lineage_id}-{timestamp}"
     suffix = 1
-    while archive_root.exists():
-        archive_root = (
-            state_root / ".agent" / "thread-rollovers" / agent / "_archive" / f"{lineage_id}-{timestamp}-{suffix}"
-        )
+    while tree.exists(archive):
+        archive = f".agent/thread-rollovers/{agent}/_archive/{lineage_id}-{timestamp}-{suffix}"
         suffix += 1
-    archive_root.parent.mkdir(parents=True, exist_ok=True)
-    original_lease = (lineage_root / "lease.json").read_bytes()
+    original_lease = tree.read_path(f"{lineage}/lease.json")
+    if original_lease is None:
+        raise BundleReconcileRefused("reconcile_local_lease_missing")
+    tree.move(lineage, archive)
     try:
-        shutil.move(os.fspath(lineage_root), os.fspath(archive_root))
-        archived_state_path = archive_root / "lease.json"
-        archived_state = load_state(archived_state_path)
+        archived_state = json.loads(original_lease)
         replacement = archived_state.get("replacement")
         if isinstance(replacement, dict) and replacement.get("status") in {"pending_start", "resumed"}:
             replacement["status"] = "superseded"
@@ -868,20 +867,12 @@ def _bundle_archive_local_lineage(
                 "generation": remote_manifest.get("generation"),
                 "rollover_id": remote_manifest.get("rollover_id"),
             }
-            archived_state["replacement"] = replacement
-            # The identity receipt already describes the same lineage identity;
-            # only the archived lease projection changes here.  Keep this final
-            # archive update local so a failed import can remove the transaction's
-            # archive without leaving a second registry mutation to roll back.
-            write_json_atomic(archived_state_path, archived_state)
+            tree.write_path(f"{archive}/lease.json", _bundle_json(archived_state), replace=True)
     except Exception:
-        if archive_root.exists():
-            with suppress(OSError):
-                write_bytes_atomic(archive_root / "lease.json", original_lease)
-            with suppress(OSError):
-                shutil.move(os.fspath(archive_root), os.fspath(lineage_root))
+        tree.write_path(f"{archive}/lease.json", original_lease, replace=True)
+        tree.move(archive, lineage)
         raise
-    return archive_root
+    return state_root / archive
 
 
 def _bundle_validate_lease_member(
@@ -934,42 +925,42 @@ def _bundle_stage_install(
     manifest: Mapping[str, Any],
     members: Mapping[str, bytes],
 ) -> tuple[Path, Path, dict[str, Path]]:
-    """Stage every imported file beside its target lineage, without clobbering it."""
+    """Stage every member through the same no-follow primitive as reconciliation."""
     agent = normalize_agent_name(str(manifest["agent"]))
     lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
     lineage_prefix = f".agent/thread-rollovers/{agent}/{lineage_id}/"
-    if not any(name.startswith(lineage_prefix) for name in members):
+    files = {_bundle_member_path(name): payload for name, payload in members.items()}
+    if not any(name.startswith(lineage_prefix) for name in files):
         raise ValueError("bundle has no lineage state members")
-    lineage_parent = state_root / ".agent" / "thread-rollovers" / agent
-    lineage_parent.mkdir(parents=True, exist_ok=True)
-    stage_root = Path(tempfile.mkdtemp(prefix=f".{lineage_id}.import-", dir=os.fspath(lineage_parent)))
+    if any(name.startswith(".agent/thread-rollovers/") and not name.startswith(lineage_prefix) for name in files):
+        raise ValueError("bundle contains a foreign lineage member")
+    stage = f".agent/thread-rollovers/{agent}/.{lineage_id}.import-{uuid.uuid4().hex}"
+    stage_root = state_root / stage
     staged_lineage = stage_root / "lineage"
     staged_repo: dict[str, Path] = {}
-    try:
-        for name, payload in members.items():
-            if name.startswith(".agent/thread-rollovers/"):
-                if not name.startswith(lineage_prefix):
-                    raise ValueError("bundle contains a foreign lineage member")
-                destination = staged_lineage / name.removeprefix(lineage_prefix)
-            else:
-                destination = stage_root / "repo" / name
-                staged_repo[name] = destination
-            destination.relative_to(stage_root.resolve())
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            destination.write_bytes(
-                _bundle_rewrite(payload, repo_root=repo_root) if _bundle_text_member(name) else payload
-            )
-    except Exception:
-        shutil.rmtree(stage_root, ignore_errors=True)
-        raise
+    with _BundleReconcileTree(state_root, agent, lineage_id) as tree:
+        tree.new_directory(stage)
+        try:
+            for name, payload in files.items():
+                if name.startswith(lineage_prefix):
+                    destination = f"{stage}/lineage/{name.removeprefix(lineage_prefix)}"
+                else:
+                    destination = f"{stage}/repo/{name}"
+                    staged_repo[name] = state_root / destination
+                tree.write_path(
+                    destination, _bundle_rewrite(payload, repo_root=repo_root) if _bundle_text_member(name) else payload
+                )
+        except Exception:
+            tree.remove_path(stage)
+            raise
     return stage_root, staged_lineage, staged_repo
 
 
-def _bundle_preserved_path(target: Path) -> Path:
+def _bundle_preserved_path(target: Path, tree: _BundleReconcileTree) -> Path:
     timestamp = utc_now().strftime("%Y%m%dT%H%M%SZ")
     preserved = target.with_name(f"{target.stem}.{timestamp}.superseded{target.suffix}")
     suffix = 1
-    while preserved.exists():
+    while tree.exists(preserved.as_posix()):
         preserved = target.with_name(f"{target.stem}.{timestamp}-{suffix}.superseded{target.suffix}")
         suffix += 1
     return preserved
@@ -986,87 +977,115 @@ def _bundle_commit_install(
     local_lineage_exists: bool,
     install_handoff: bool = True,
 ) -> tuple[Path | None, list[str]]:
-    """Commit a staged bundle with exact rollback around archive+rename."""
+    """Commit and roll back using only descriptor-relative file operations."""
     agent = normalize_agent_name(str(manifest["agent"]))
     lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
-    lineage_root = state_root / ".agent" / "thread-rollovers" / agent / lineage_id
-    receipt_path = state_root / ".agent" / "thread-rollovers" / agent / "_bundle-receipts" / f"{lineage_id}.json"
-    original_backup = stage_root / "original-lineage"
-
-    repo_backups: dict[Path, bytes | None] = {}
-    created_preserved: list[Path] = []
+    lineage = f".agent/thread-rollovers/{agent}/{lineage_id}"
+    receipt = f".agent/thread-rollovers/{agent}/_bundle-receipts/{lineage_id}.json"
+    stage = stage_root.relative_to(state_root).as_posix()
+    original_backup = f"{stage}/original-lineage"
+    repo_backups: dict[str, bytes | None] = {}
+    created_preserved: list[str] = []
     preserved: list[str] = []
-    old_receipt = receipt_path.read_bytes() if receipt_path.is_file() else None
     archived: Path | None = None
     lineage_replaced = False
-    try:
-        if local_lineage_exists:
-            shutil.copytree(lineage_root, original_backup)
-        handoff_candidates = set(_bundle_handoff_candidates_for_agent(repo_root, str(manifest["stream_id"]), agent))
-        for name, source in sorted(staged_repo.items()):
-            if not install_handoff and name in handoff_candidates:
-                continue
-            target = (repo_root / name).resolve()
-            target.relative_to(repo_root.resolve())
-            if target.exists() and not target.is_file():
-                raise ValueError(f"bundle target is not a regular file: {name}")
-            old_payload = target.read_bytes() if target.is_file() else None
-            repo_backups[target] = old_payload
-            installed = source.read_bytes()
-            if name in handoff_candidates and old_payload is not None and old_payload != installed:
-                superseded = _bundle_preserved_path(target)
-                write_bytes_atomic(superseded, old_payload)
-                created_preserved.append(superseded)
-                preserved.append(superseded.as_posix())
-            write_bytes_atomic(target, installed)
-
-        write_json_atomic(
-            receipt_path,
-            {"schema": "rollover-bundle-receipt.v1", "upload_seq": int(manifest.get("upload_seq", 0))},
-        )
-
-        # No operation that can select a different copy occurs before all
-        # validation and staging above.  Archive and rename are the final
-        # lineage transition, and every failure below restores the original.
-        if lineage_root.exists():
-            archived = _bundle_archive_local_lineage(
-                state_root,
-                agent=agent,
-                lineage_id=lineage_id,
-                remote_manifest=manifest,
-            )
-        os.replace(staged_lineage, lineage_root)
-        lineage_replaced = True
-        return archived, preserved
-    except Exception:
-        if lineage_replaced and lineage_root.exists():
-            shutil.rmtree(lineage_root, ignore_errors=True)
-        if archived is not None and archived.exists():
-            shutil.rmtree(archived, ignore_errors=True)
-        if local_lineage_exists and original_backup.exists() and not lineage_root.exists():
-            shutil.copytree(original_backup, lineage_root)
-
-        for target, old_payload in repo_backups.items():
-            try:
-                if old_payload is None:
-                    target.unlink(missing_ok=True)
-                else:
-                    write_bytes_atomic(target, old_payload)
-            except OSError:
-                pass
-        for path in created_preserved:
-            path.unlink(missing_ok=True)
+    backup_complete = False
+    cleanup_stage = False
+    with (
+        _BundleReconcileTree(state_root, agent, lineage_id) as tree,
+        _BundleReconcileTree(repo_root, agent, lineage_id) as repo,
+    ):
+        old_receipt: bytes | None = None
+        receipt_loaded = False
         try:
-            if old_receipt is None:
-                receipt_path.unlink(missing_ok=True)
-            else:
-                write_bytes_atomic(receipt_path, old_receipt)
-        except OSError:
-            pass
-        raise
-    finally:
-        if stage_root.exists():
-            shutil.rmtree(stage_root, ignore_errors=True)
+            old_receipt = tree.read_path(receipt)
+            receipt_loaded = True
+            if local_lineage_exists:
+                tree.copy_tree(lineage, original_backup)
+                backup_complete = True
+            handoff_candidates = set(_bundle_handoff_candidates_for_agent(repo_root, str(manifest["stream_id"]), agent))
+            for name, source in sorted(staged_repo.items()):
+                if not install_handoff and name in handoff_candidates:
+                    continue
+                old_payload = repo.read_path(name)
+                repo_backups[name] = old_payload
+                installed = tree.read_path(source.relative_to(state_root).as_posix())
+                if installed is None:
+                    raise BundleReconcileRefused("reconcile_staged_member_missing")
+                if name in handoff_candidates and old_payload is not None and old_payload != installed:
+                    superseded = _bundle_preserved_path(Path(name), repo).as_posix()
+                    repo.write_path(superseded, old_payload)
+                    created_preserved.append(superseded)
+                    preserved.append((repo_root / superseded).as_posix())
+                repo.write_path(name, installed, replace=True)
+            tree.write_path(
+                receipt,
+                _bundle_json({"schema": "rollover-bundle-receipt.v1", "upload_seq": int(manifest.get("upload_seq", 0))}),
+                replace=True,
+            )
+            archived = _bundle_archive_local_lineage(
+                state_root, tree=tree, agent=agent, lineage_id=lineage_id, remote_manifest=manifest
+            )
+            tree.move(staged_lineage.relative_to(state_root).as_posix(), lineage)
+            lineage_replaced = True
+            cleanup_stage = True
+            return archived, preserved
+        except Exception as install_error:
+            rollback_errors: list[str] = []
+            if lineage_replaced:
+                try:
+                    tree.remove_path(lineage)
+                except Exception as exc:
+                    rollback_errors.append(f"remove installed lineage: {exc}")
+            if archived is not None:
+                try:
+                    tree.remove_path(archived.relative_to(state_root).as_posix())
+                except Exception as exc:
+                    rollback_errors.append(f"remove archive: {exc}")
+            if backup_complete:
+                try:
+                    if not tree.exists(lineage):
+                        tree.move(original_backup, lineage)
+                except Exception as exc:
+                    rollback_errors.append(f"restore original lineage: {exc}")
+            for name, old_payload in repo_backups.items():
+                try:
+                    if old_payload is None:
+                        repo.remove_path(name)
+                    else:
+                        repo.write_path(name, old_payload, replace=True)
+                except Exception as exc:
+                    rollback_errors.append(f"restore repo member {name}: {exc}")
+            for name in created_preserved:
+                try:
+                    repo.remove_path(name)
+                except Exception as exc:
+                    rollback_errors.append(f"remove superseded member {name}: {exc}")
+            if receipt_loaded:
+                try:
+                    if old_receipt is None:
+                        tree.remove_path(receipt)
+                    else:
+                        tree.write_path(receipt, old_receipt, replace=True)
+                except Exception as exc:
+                    rollback_errors.append(f"restore receipt: {exc}")
+            if rollback_errors:
+                raise BundleReconcileRefused(
+                    "reconcile_rollback_failed",
+                    f"install failed: {install_error}; rollback failed: {'; '.join(rollback_errors)}; "
+                    f"retained stage: {stage}",
+                ) from install_error
+            cleanup_stage = True
+            raise
+        finally:
+            # A failed rollback must retain its original backup for recovery.
+            if cleanup_stage:
+                try:
+                    tree.remove_path(stage)
+                except Exception as exc:
+                    raise BundleReconcileRefused(
+                        "reconcile_stage_cleanup_failed", f"stage cleanup failed: {exc}; retained stage: {stage}"
+                    ) from exc
 
 
 class RolloverBundleAPIUnavailable(RuntimeError):
@@ -5580,12 +5599,280 @@ def _bundle_import_error(reason: str) -> int:
     return 2
 
 
+class BundleReconcileRefused(ValueError):
+    """A typed refusal at a reconciliation filesystem boundary."""
+
+    def __init__(self, code: str, detail: str | None = None) -> None:
+        self.code = code
+        super().__init__(detail or code)
+
+
+class _BundleReconcileTree:
+    """Bundle import I/O pinned to directory descriptors from the trusted root.
+
+    Every component is opened no-follow. Files use exclusive random temporaries;
+    reconciliation publishes exclusively, installation atomically replaces a
+    validated regular leaf. Neither operation follows a destination link.
+    """
+
+    def __init__(self, state_root: Path, agent: str, lineage_id: str) -> None:
+        self.state_root = state_root
+        self.parts = (".agent", "thread-rollovers", agent, lineage_id)
+        self.fds: list[int] = []
+        self.root_fd: int | None = None
+        self.lineage_fd: int | None = None
+
+    def __enter__(self) -> _BundleReconcileTree:
+        try:
+            root = os.open(self.state_root, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY)
+            self.fds.append(root)
+            self.root_fd = root
+            for component in self.parts:
+                try:
+                    root = self.directory(root, component, "lineage_ancestor", create=False)
+                except FileNotFoundError:
+                    return self
+            self.lineage_fd = root
+            return self
+        except BaseException:
+            self.__exit__(None, None, None)
+            raise
+
+    def __exit__(self, *_args: Any) -> None:
+        for fd in reversed(self.fds):
+            os.close(fd)
+        self.fds.clear()
+
+    def directory(self, parent: int, name: str, kind: str, *, create: bool = True) -> int:
+        try:
+            info = os.stat(name, dir_fd=parent, follow_symlinks=False)
+        except FileNotFoundError:
+            if not create:
+                raise
+            with suppress(FileExistsError):
+                os.mkdir(name, mode=0o700, dir_fd=parent)
+            info = os.stat(name, dir_fd=parent, follow_symlinks=False)
+        if stat.S_ISLNK(info.st_mode):
+            raise BundleReconcileRefused(f"{kind}_symlink")
+        if stat.S_ISFIFO(info.st_mode):
+            raise BundleReconcileRefused("reconcile_fifo")
+        if not stat.S_ISDIR(info.st_mode):
+            raise BundleReconcileRefused(f"{kind}_not_directory")
+        try:
+            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY, dir_fd=parent)
+        except OSError as exc:
+            raise BundleReconcileRefused(f"{kind}_changed") from exc
+        self.fds.append(fd)
+        held = os.fstat(fd)
+        if (held.st_dev, held.st_ino) != (info.st_dev, info.st_ino):
+            raise BundleReconcileRefused(f"{kind}_changed")
+        return fd
+
+    @staticmethod
+    def existing(parent: int, name: str, *, temporary: bool = False) -> bytes | None:
+        """Read a validated local file in full, without the remote bundle cap.
+
+        Backups must preserve pre-existing local members of any size exactly.
+        A cap here would refuse recovery of valid large files; this local read
+        therefore has no byte bound and uses memory proportional to file size.
+        """
+        try:
+            info = os.stat(name, dir_fd=parent, follow_symlinks=False)
+        except FileNotFoundError:
+            return None
+        kind = "reconcile_temp" if temporary else "reconcile_member"
+        if stat.S_ISFIFO(info.st_mode):
+            raise BundleReconcileRefused("reconcile_fifo")
+        if stat.S_ISLNK(info.st_mode):
+            raise BundleReconcileRefused(f"{kind}_symlink")
+        if info.st_nlink != 1:
+            raise BundleReconcileRefused(f"{kind}_hardlink")
+        if temporary:
+            raise BundleReconcileRefused("reconcile_temp_exists")
+        if not stat.S_ISREG(info.st_mode):
+            raise BundleReconcileRefused("reconcile_member_not_regular")
+        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
+        with os.fdopen(fd, "rb") as handle:
+            held = os.fstat(handle.fileno())
+            if (held.st_dev, held.st_ino, held.st_nlink) != (info.st_dev, info.st_ino, 1):
+                raise BundleReconcileRefused("reconcile_member_changed")
+            return handle.read()
+
+    def write(self, parent: int, name: str, payload: bytes, *, replace: bool = False) -> None:
+        previous = self.existing(parent, name)
+        if previous is not None:
+            if previous == payload:
+                return
+            if not replace:
+                raise BundleReconcileRefused("reconcile_member_differs")
+        temporary = f".reconcile-{uuid.uuid4().hex}.tmp"
+        try:
+            fd = os.open(
+                temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=parent
+            )
+        except FileExistsError as exc:
+            self.existing(parent, temporary, temporary=True)
+            raise BundleReconcileRefused("reconcile_temp_exists") from exc
+        try:
+            with os.fdopen(fd, "wb") as handle:
+                held = os.fstat(handle.fileno())
+                if not stat.S_ISREG(held.st_mode) or held.st_nlink != 1:
+                    raise BundleReconcileRefused("reconcile_temp_changed")
+                handle.write(payload)
+                handle.flush()
+                os.fsync(handle.fileno())
+            try:
+                if replace:
+                    # A raced-in link can only be replaced as a directory entry,
+                    # never followed or opened for writing.
+                    os.replace(temporary, name, src_dir_fd=parent, dst_dir_fd=parent)
+                else:
+                    os.link(temporary, name, src_dir_fd=parent, dst_dir_fd=parent, follow_symlinks=False)
+            except FileExistsError as exc:
+                raise BundleReconcileRefused("reconcile_member_changed") from exc
+        finally:
+            with suppress(FileNotFoundError):
+                os.unlink(temporary, dir_fd=parent)
+
+    def release(self, count: int) -> None:
+        for fd in reversed(self.fds[count:]):
+            os.close(fd)
+        del self.fds[count:]
+
+    @contextmanager
+    def parent(self, path: str, *, create: bool = False) -> Iterator[tuple[int, str]]:
+        parts = _bundle_member_path(path).split("/")
+        count = len(self.fds)
+        assert self.root_fd is not None
+        parent = self.root_fd
+        try:
+            for component in parts[:-1]:
+                parent = self.directory(parent, component, "install_dir", create=create)
+            yield parent, parts[-1]
+        finally:
+            self.release(count)
+
+    def exists(self, path: str) -> bool:
+        try:
+            with self.parent(path) as (parent, name):
+                info = os.stat(name, dir_fd=parent, follow_symlinks=False)
+                if stat.S_ISDIR(info.st_mode):
+                    self.directory(parent, name, "install_dir", create=False)
+                else:
+                    self.existing(parent, name)
+                return True
+        except FileNotFoundError:
+            return False
+
+    def read_path(self, path: str) -> bytes | None:
+        try:
+            with self.parent(path) as (parent, name):
+                return self.existing(parent, name)
+        except FileNotFoundError:
+            return None
+
+    def write_path(self, path: str, payload: bytes, *, replace: bool = False) -> None:
+        with self.parent(path, create=True) as (parent, name):
+            self.write(parent, name, payload, replace=replace)
+
+    def new_directory(self, path: str) -> None:
+        with self.parent(path, create=True) as (parent, name):
+            # A random staging name is reserved exclusively, never reused.
+            os.mkdir(name, mode=0o700, dir_fd=parent)
+            self.directory(parent, name, "install_dir", create=False)
+
+    def move(self, source: str, target: str) -> None:
+        with self.parent(source) as (src, src_name), self.parent(target, create=True) as (dst, dst_name):
+            self.directory(src, src_name, "install_dir", create=False)
+            if self.exists(target):
+                raise BundleReconcileRefused("install_destination_exists")
+            os.replace(src_name, dst_name, src_dir_fd=src, dst_dir_fd=dst)
+
+    def copy_tree(self, source: str, target: str) -> None:
+        with self.parent(source) as (src, src_name), self.parent(target, create=True) as (dst, dst_name):
+            src_fd = self.directory(src, src_name, "install_dir", create=False)
+            os.mkdir(dst_name, mode=0o700, dir_fd=dst)
+            dst_fd = self.directory(dst, dst_name, "install_dir", create=False)
+            self.copy_contents(src_fd, dst_fd)
+
+    def copy_contents(self, source: int, target: int) -> None:
+        for name in os.listdir(source):
+            count = len(self.fds)
+            try:
+                info = os.stat(name, dir_fd=source, follow_symlinks=False)
+                if stat.S_ISDIR(info.st_mode):
+                    src = self.directory(source, name, "install_dir", create=False)
+                    dst = self.directory(target, name, "install_dir")
+                    self.copy_contents(src, dst)
+                else:
+                    payload = self.existing(source, name)
+                    if payload is None:
+                        raise BundleReconcileRefused("reconcile_member_changed")
+                    self.write(target, name, payload)
+            finally:
+                self.release(count)
+
+    def remove_path(self, path: str) -> None:
+        try:
+            with self.parent(path) as (parent, name):
+                self.remove(parent, name)
+        except FileNotFoundError:
+            pass
+
+    def remove(self, parent: int, name: str) -> None:
+        info = os.stat(name, dir_fd=parent, follow_symlinks=False)
+        if stat.S_ISDIR(info.st_mode):
+            count = len(self.fds)
+            try:
+                fd = self.directory(parent, name, "install_dir", create=False)
+                for child in os.listdir(fd):
+                    self.remove(fd, child)
+                os.rmdir(name, dir_fd=parent)
+            finally:
+                self.release(count)
+        else:
+            self.existing(parent, name)
+            os.unlink(name, dir_fd=parent)
+
+
+def _bundle_preserve_tie(
+    state_root: Path, *, manifest: Mapping[str, Any], members: Mapping[str, bytes], blob: bytes
+) -> str:
+    agent = normalize_agent_name(str(manifest["agent"]))
+    lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
+    # Validate the digest even for callers outside cmd_import_bundle.
+    digest = str(manifest["bundle_sha256"])
+    if re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+        raise ValueError("bundle reconciliation digest is malformed")
+    upload = f"upload-{int(manifest['upload_seq'])}-{digest}"
+    files = {f"members/{_bundle_member_path(name)}": payload for name, payload in members.items()}
+    files["manifest.json"] = _bundle_json(dict(manifest))
+    files["remote.bundle.tgz"] = blob
+    with _BundleReconcileTree(state_root, agent, lineage_id) as tree:
+        if tree.lineage_fd is None:
+            raise BundleReconcileRefused("lineage_ancestor_missing")
+        reconcile = tree.directory(tree.lineage_fd, "_bundle-reconcile", "reconcile_dir")
+        directory = tree.directory(reconcile, upload, "upload_dir")
+        for path, payload in sorted(files.items()):
+            held_directories = len(tree.fds)
+            parts = path.split("/")
+            parent = directory
+            try:
+                for component in parts[:-1]:
+                    parent = tree.directory(parent, component, "member_dir")
+                tree.write(parent, parts[-1], payload)
+            finally:
+                tree.release(held_directories)
+    return (Path(*tree.parts) / "_bundle-reconcile" / upload / "remote.bundle.tgz").as_posix()
+
+
 def _bundle_import_candidate(
     repo_root: Path,
     state_root: Path,
     *,
     manifest: Mapping[str, Any],
     members: Mapping[str, bytes],
+    blob: bytes,
     force: bool,
     install_handoff: bool,
 ) -> dict[str, Any]:
@@ -5601,6 +5888,9 @@ def _bundle_import_candidate(
         members=members,
     )
     remote_order = _bundle_order(manifest)
+    # Refuse redirected ancestry before reading local state or selecting a write path.
+    with _BundleReconcileTree(state_root, agent, lineage_id):
+        pass
     local_manifest, local_members, local_lineage_exists = _bundle_local_lineage_snapshot(
         repo_root,
         state_root,
@@ -5630,7 +5920,7 @@ def _bundle_import_candidate(
                     "rollover_id": remote_order[3],
                 },
             }
-        if local_order == remote_order and not force:
+        if local_order == remote_order and (not force or remote_order[-1] >= 1):
             handoff_names = set(_bundle_handoff_candidates_for_agent(repo_root, stream_id, agent))
             remote_compare = {
                 name: payload for name, payload in members.items() if install_handoff or name not in handoff_names
@@ -5642,6 +5932,16 @@ def _bundle_import_candidate(
                 return {
                     "status": "noop",
                     "reason": "identical bundle content",
+                    "agent": agent,
+                    "lineage_id": lineage_id,
+                    "rollover_id": manifest["rollover_id"],
+                }
+            if remote_order[-1] >= 1:
+                preserved_copy = _bundle_preserve_tie(state_root, manifest=manifest, members=members, blob=blob)
+                return {
+                    "status": "warning",
+                    "reason": "bundle order ties but content differs; kept local and preserved remote",
+                    "preserved_copy": preserved_copy,
                     "agent": agent,
                     "lineage_id": lineage_id,
                     "rollover_id": manifest["rollover_id"],
@@ -5692,14 +5992,14 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
     except (OSError, ValueError) as exc:
         return _bundle_import_error(str(exc))
 
-    candidates: list[tuple[dict[str, Any], dict[str, bytes]]] = []
+    candidates: list[tuple[dict[str, Any], dict[str, bytes], bytes]] = []
     try:
         if args.file is not None:
             blob = args.file.expanduser().resolve().read_bytes()
             manifest, members = _bundle_extract(blob)
             if manifest.get("agent") != agent:
                 raise ValueError("bundle agent does not match --agent")
-            candidates.append((manifest, members))
+            candidates.append((manifest, members, blob))
         else:
             stream_id = str(args.from_api)
             listed = _bundle_api_list(args, stream_id=stream_id)
@@ -5729,9 +6029,9 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
                     continue
                 manifest, blob = _bundle_api_by_seq(args, stream_id=stream_id, upload_seq=sequence)
                 manifest, members = _bundle_extract(blob, manifest_override=manifest)
-                candidates.append((manifest, members))
+                candidates.append((manifest, members, blob))
 
-        for manifest, _ in candidates:
+        for manifest, _, _ in candidates:
             stream_id = str(manifest.get("stream_id") or "")
             if not stream_id:
                 raise ValueError("bundle stream_id is missing")
@@ -5763,10 +6063,14 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
                     state_root,
                     manifest=candidate[0],
                     members=candidate[1],
+                    blob=candidate[2],
                     force=args.force,
                     install_handoff=handoff_winner is None or candidate is handoff_winner,
                 )
             )
+    except BundleReconcileRefused as exc:
+        print(json.dumps({"status": "refused", "code": exc.code, "error": str(exc), "action": "import-bundle"}))
+        return 2
     except Exception as exc:
         return _bundle_import_error(str(exc))
 
@@ -5774,7 +6078,7 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
         result = results[0]
     else:
         statuses = {item["status"] for item in results}
-        aggregate_status = "refused" if "refused" in statuses else "installed" if "installed" in statuses else "noop"
+        aggregate_status = next((status for status in ("refused", "warning", "installed") if status in statuses), "noop")
         result = {
             "status": aggregate_status,
             "agent": agent,

@@ -21,7 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.safe_unit_install import InstallError, install_unit, load_unit
+from scripts.common.safe_unit_install import InstallError, ensure_state_dirs, install_unit, load_unit
 
 LABEL = "com.learn-ukrainian.project-state-reporter"
 DEFAULT_INTERVAL_MINUTES = 5
@@ -101,7 +101,6 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     runtime = args.home / ".codex" / "project-state-reporter"
-    (runtime / "logs").mkdir(parents=True, exist_ok=True)
     plist = build_plist(
         repo_root=args.repo_root.resolve(),
         home=args.home,
@@ -109,10 +108,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     plist_bytes = plistlib.dumps(plist, fmt=plistlib.FMT_XML, sort_keys=True)
     target = plist_path(args.home)
+    load_unit(target, home=args.home)
     if args.dry_run:
-        load_unit(target, home=args.home)
         print(plist_bytes.decode("utf-8"))
         return 0
+    ensure_state_dirs(runtime / "logs", home=args.home)
     install_unit(target, plist_bytes, mode=0o600, home=args.home)
     _launchctl(["bootout", _service_target()], check=False)
     _launchctl(["bootstrap", _domain(), str(target)], check=True)

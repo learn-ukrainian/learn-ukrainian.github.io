@@ -27,6 +27,7 @@ import importlib.util
 import json
 import os
 import re
+import stat
 import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
@@ -165,8 +166,12 @@ def check_worktree_cleanup_integrity(
     main_root = _resolve_main_root(Path(repo))
     home_root = (home or Path.home()).expanduser()
     destination = plist_path(home_root)
-    if not destination.is_file():
+    try:
+        installed = destination.lstat()
+    except FileNotFoundError:
         return True, f"worktree-cleanup integrity skipped (job not installed: {destination})"
+    if not stat.S_ISREG(installed.st_mode):
+        return False, f"ALERT: unsafe non-regular or symlinked worktree-cleanup job: {destination}"
 
     observed_now = now or datetime.now(UTC)
     observed_now = (

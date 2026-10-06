@@ -23,7 +23,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.safe_unit_install import InstallError, check_unit_dir, install_unit, load_unit, remove_unit
+from scripts.common.safe_unit_install import (
+    InstallError,
+    check_unit_dir,
+    ensure_state_dirs,
+    install_unit,
+    load_unit,
+    remove_unit,
+)
 
 LABEL = "com.learn-ukrainian.codex-archived-thread-cleanup"
 DEFAULT_WEEKDAY = "sunday"
@@ -218,11 +225,7 @@ def install(*, repo_root: Path, home: Path, codex_binary: Path, weekday: str, ho
     # Refuse a symlinked home or plist directory before creating state under it.
     installed = load_unit(destination, home=home)
     runtime_state = state_dir(home)
-    runtime_state.mkdir(parents=True, exist_ok=True, mode=0o700)
-    os.chmod(runtime_state, 0o700)
-    logs = runtime_state / "logs"
-    logs.mkdir(parents=True, exist_ok=True, mode=0o700)
-    os.chmod(logs, 0o700)
+    ensure_state_dirs(runtime_state, runtime_state / "logs", home=home)
 
     before = _loaded_readback()
     was_loaded = before.returncode == 0

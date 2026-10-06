@@ -23,7 +23,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.safe_unit_install import InstallError, check_unit_dir, install_unit, load_unit, remove_unit
+from scripts.common.safe_unit_install import (
+    InstallError,
+    check_unit_dir,
+    ensure_state_dirs,
+    install_unit,
+    load_unit,
+    remove_unit,
+)
 from scripts.orchestration import scheduled_worktree_cleanup
 
 LABEL = "com.learn-ukrainian.worktree-cleanup"
@@ -195,14 +202,13 @@ def install(
     # Refuse a symlinked home or plist directory before creating state under it.
     installed = load_unit(destination, home=home)
     runtime = state_dir(home)
-    for directory in (
+    ensure_state_dirs(
         runtime,
         runtime / "logs",
         runtime / "receipts",
         runtime / "receipts" / "v2",
-    ):
-        directory.mkdir(parents=True, exist_ok=True, mode=0o700)
-        os.chmod(directory, 0o700)
+        home=home,
+    )
 
     before = _loaded_readback()
     was_loaded = before.returncode == 0
