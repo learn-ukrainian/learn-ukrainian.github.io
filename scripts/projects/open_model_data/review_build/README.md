@@ -41,7 +41,10 @@ catalog's shared C6 instructions; both retain C6's UA-GEC admission rules.
    authenticate complete bibliography mapping. Reuse a shared adapter instance
    when several components cite the same source.
 3. Iterate source rows using `ctx.reader` (the same pinned read transaction used
-   by the gate). `ctx.request` supplies host-local input configuration. Return
+   by the gate). `ctx.request` supplies a detached, deeply read-only snapshot of
+   host-local input configuration; mappings are read-only and sequences are tuples.
+   Mutation raises. The framework copies component specs before extraction and
+   refuses changes to their pinned digests as `spec_mutated`. Return
    `Candidate` objects for every independently counted unit, including withheld,
    rejected and excluded ones. Never open writable databases or import code from
    request paths. Component file adapters are installed before this reader opens.
@@ -68,7 +71,8 @@ extracts through registered modules, ignoring any staged candidate file.
 Relative input paths resolve against the request's directory. `synthetic_sources`
 permits only ids starting with `synthetic` and register forms starting with
 `SYNTHETIC `. Real callers supply `AttributionAdapter` and `FileStore` objects.
-Input file bytes, component declarations, framework source files, checkout SHA,
+Input file bytes, the effective request with copied component specs, component
+declarations, framework source files, checkout SHA,
 and file-store digests are pinned in the manifest. DB snapshots pin cited columns'
 bytes as `(row_key, field_sha256)` pairs, not entire rows. `verify` re-runs the gate
 against the live DB and compares all expected output bytes, including provenance
@@ -142,7 +146,9 @@ requires nonempty component-owned source predicates keyed by that exact name:
 
 The gate evaluates predicates for slot-compatible variants and requires exactly
 one variant to pass. Missing declarations are mechanism failures
-(`applicability_spec`); no eligible variant withholds (`catalog_inapplicable`).
+(`applicability_spec`). A component must classify a unit with no eligible variant
+as withheld (`catalog_inapplicable`); an accepted candidate with no passing variant
+aborts the build.
 C2 predicates authenticate discrimination, equal homonym forms and absence of
 parse errors. C3 predicates authenticate the selected article's unquarantined
 sense count and that sense's citations, including model-visible same-sense

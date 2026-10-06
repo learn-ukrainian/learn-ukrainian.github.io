@@ -2,6 +2,7 @@
 
 import json
 from collections import Counter, defaultdict
+from copy import deepcopy
 from dataclasses import asdict, replace
 from pathlib import Path
 
@@ -285,7 +286,7 @@ def execute(
         config["components"] = {c: spec for c, spec in config["components"].items() if c in selected}
     if component_objects is not None:
         require(set(component_objects) == set(config["components"]), "component_selection")
-        config["components"] = {c: obj.spec for c, obj in component_objects.items()}
+        config["components"] = {c: deepcopy(obj.spec) for c, obj in component_objects.items()}
     source_adapters = merge_adapters(adapters or {}, *(obj.adapters for obj in (component_objects or {}).values()))
     for source in config.get("synthetic_sources", []):
         require(source.startswith("synthetic"), "synthetic_adapter_source")
@@ -302,6 +303,7 @@ def execute(
         "register": digest(register_bytes),
         "catalog": digest(catalog_bytes),
         "spec": digest(config_bytes),
+        "request": digest(canonical(config)),
         "component_specs": digest(canonical(config["components"])),
         "components": sorted(config["components"]),
         "code": code_pins(),
@@ -316,6 +318,10 @@ def execute(
                 stream = list(obj.iter_candidates(ctx))
                 require(all(c.component == component for c in stream), "component_candidates")
                 candidates.extend(stream)
+            require(
+                digest(canonical({c: obj.spec for c, obj in component_objects.items()})) == pins["component_specs"],
+                "spec_mutated",
+            )
             candidates.sort(key=record_id)
             candidates_bytes = _jsonl([asdict(c) for c in candidates])
         else:
@@ -327,6 +333,8 @@ def execute(
             ]
             if components is not None:
                 candidates = [c for c in candidates if c.component in set(components)]
+        require(digest(canonical(config["components"])) == pins["component_specs"], "spec_mutated")
+        require(digest(canonical(config)) == pins["request"], "spec_mutated")
         pins["candidates"] = digest(candidates_bytes)
         result = artifacts(config, candidates, reader, catalog, resolver, pins)
         if verify:

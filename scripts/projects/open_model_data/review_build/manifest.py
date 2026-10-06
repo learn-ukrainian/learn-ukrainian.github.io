@@ -54,7 +54,8 @@ def private_manifest(data: dict) -> dict:
     require(set(data["versions"]) <= {"record", "framework", "catalog"}, "private_manifest_field")
     require(
         all(
-            isinstance(v, str) and re.fullmatch(r"(?:omd-review-record\.v1|[0-9]+(?:\.[0-9]+)*(?:-[a-z0-9.-]+)?)", v)
+            isinstance(v, str)
+            and re.fullmatch(r"(?:omd-review-record\.v1|[0-9]+(?:\.[0-9]+)*(?:-[a-z0-9]+(?:\.[a-z0-9]+)*)?)", v)
             for v in data["versions"].values()
         ),
         "private_manifest_string",

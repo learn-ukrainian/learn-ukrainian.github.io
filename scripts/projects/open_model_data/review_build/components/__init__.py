@@ -3,6 +3,7 @@
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from importlib import import_module
+from types import MappingProxyType
 from typing import Protocol
 
 from ..attribution import AttributionAdapter
@@ -25,10 +26,22 @@ REGISTRY = {
 
 @dataclass(frozen=True)
 class ComponentContext:
-    """Extraction and independent verification share one read transaction."""
+    """Share one read transaction and an immutable snapshot of the request."""
 
     reader: SnapshotReader
-    request: dict
+    request: Mapping
+
+    def __post_init__(self):
+        object.__setattr__(self, "request", _freeze(self.request))
+
+
+def _freeze(value):
+    """Detach JSON containers and make every nested container read-only."""
+    if isinstance(value, Mapping):
+        return MappingProxyType({key: _freeze(item) for key, item in value.items()})
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze(item) for item in value)
+    return value
 
 
 class Component(Protocol):

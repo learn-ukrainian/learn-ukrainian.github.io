@@ -506,18 +506,23 @@ def test_book_tokens_do_not_match_inside_unicode_or_apostrophe_tokens(neighbor):
     assert bindings.whole_token("SYNTHETIC", "(SYNTHETIC); SYNTHETIC!")
 
 
-def test_c2_missing_applicability_spec_is_not_withheld(bundle):
+@pytest.mark.parametrize("component", ["C1", "C2"])
+def test_declared_variants_missing_applicability_spec_is_not_withheld(bundle, component):
     from scripts.projects.open_model_data.review_build.attribution import Resolver, SyntheticAdapter
     from scripts.projects.open_model_data.review_build.build import prepare
     from scripts.projects.open_model_data.review_build.gate import Gate
 
-    candidate = replace(bundle["candidates"][0], component="C2")
+    candidate = replace(bundle["candidates"][0], component=component)
+    catalog = copy.deepcopy(bundle["catalog"])
+    catalog["components"] = {component: catalog["components"]["C1"]}
+    for line in catalog["components"][component]["instructions"]:
+        line["sense_variant"] = "SYNTHETIC_variant"
     with SnapshotReader({"sources.db": bundle["db"]}) as reader:
         gate = Gate(
             reader,
-            Catalog(bundle["catalog"]),
+            Catalog(catalog),
             Resolver(bundle["register"], {"synthetic": SyntheticAdapter()}),
-            {"C2": bundle["spec"]},
+            {component: bundle["spec"]},
             bundle["config"]["compatibility"],
         )
         for slots in (candidate.slots, (*candidate.slots, replace(candidate.response[0], slot="sense"))):

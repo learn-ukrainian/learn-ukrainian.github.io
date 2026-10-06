@@ -90,8 +90,6 @@ class Gate:
         spec = self.spec(candidate)
         # Applicability assertions are themselves selectors into source rows.
         applicability_spec = spec.get("applicability", {})
-        if candidate.component == "C2":
-            require(bool(applicability_spec), "applicability_spec")
         declared = self.catalog.variants(candidate)
         serializers = spec.get("slot_serializers")
         variants = set()

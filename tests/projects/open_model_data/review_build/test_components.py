@@ -116,11 +116,68 @@ def test_cli_registered_component_build_verify_and_mutations(bundle, monkeypatch
     assert manifest["accounting"][component]["accepted"] == 12
     assert manifest["operation_accounting"][f"{component}.sentence_correction"]["counted"] == 12
     assert manifest["pins"]["component_specs"] == digest(canonical({component: spec}))
+    expected_request = {**bundle["config"], "components": {component: spec}}
+    assert manifest["pins"]["request"] == digest(canonical(expected_request))
     assert "components/__init__.py" in manifest["pins"]["code"]["files"]
     assert len(json.loads((out / "mutation-fixtures/results.json").read_bytes())) == 5
     (out / component / "records.jsonl").write_bytes(b"SYNTHETIC tamper\n")
     assert cli.main(["verify", *args], _test_components={component: obj}) == 1
     assert json.loads(capsys.readouterr().err)["error"] == "artifact_mismatch"
+
+
+def test_component_context_detaches_and_freezes_nested_request():
+    request = {"nested": [{"values": ["SYNTHETIC original"]}], "empty": {}, "flag": True}
+    ctx = components.ComponentContext(None, request)
+    request["nested"][0]["values"][0] = "SYNTHETIC changed"
+    assert ctx.request["nested"][0]["values"] == ("SYNTHETIC original",)
+    assert ctx.request["flag"] is True
+    with pytest.raises(TypeError):
+        ctx.request["empty"]["new"] = True
+
+
+@pytest.mark.parametrize("verify", [False, True])
+@pytest.mark.parametrize("mutation", ["request_policy", "request_list", "request_spec", "own_spec", "own_spec_replace"])
+def test_extraction_cannot_mutate_admission_policy(bundle, monkeypatch, capsys, mutation, verify):
+    monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
+    original_spec = copy.deepcopy(bundle["spec"])
+    active = False
+
+    class MutatingComponent:
+        def __init__(self):
+            self.adapters = {"synthetic": SyntheticAdapter()}
+            self.spec = copy.deepcopy(original_spec)
+
+        def iter_candidates(self, ctx):
+            if active:
+                if mutation == "request_policy":
+                    ctx.request["compatibility"][0]["source_values"] = ["SYNTHETIC changed"]
+                elif mutation == "request_list":
+                    ctx.request["compatibility"][0]["source_values"][0] = "SYNTHETIC changed"
+                elif mutation == "request_spec":
+                    ctx.request["components"]["C1"]["frozen_count"] = 0
+                elif mutation == "own_spec":
+                    self.spec["binding"]["rules"].clear()
+                    assert ctx.request["components"]["C1"]["binding"]["rules"]
+                else:
+                    self.spec = {**self.spec, "frozen_count": 0}
+                    assert ctx.request["components"]["C1"]["frozen_count"] == original_spec["frozen_count"]
+            yield from bundle["candidates"]
+
+    obj = MutatingComponent()
+    out = bundle["root"] / "SYNTHETIC-mutating-output"
+    args = ["--config", str(bundle["root"] / "request.json"), "--out", str(out)]
+    if verify:
+        assert cli.main(["build", *args], _test_components={"C1": obj}) == 0
+        capsys.readouterr()
+    active = True
+    assert cli.main(["verify" if verify else "build", *args], _test_components={"C1": obj}) == 1
+    error = json.loads(capsys.readouterr().err)
+    assert error["error"] == ("spec_mutated" if mutation.startswith("own_spec") else "build_failure")
+    if not verify:
+        assert not (out / "manifest.json").exists()
+    if mutation.startswith("request"):
+        assert "TypeError" in (out / "logs/failure.txt").read_text()
+    assert json.loads((bundle["root"] / "request.json").read_bytes()) == bundle["config"]
 
 
 def test_cli_conflicting_components_fail_before_extraction(bundle, monkeypatch, capsys):
