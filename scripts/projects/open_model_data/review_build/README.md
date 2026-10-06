@@ -193,7 +193,9 @@ column. Without `field`, index zero selects quoted value text; a supporting inde
 selects that citation's independent source field. Unknown rules fail closed.
 
 Add `match: all, min: N` to select every value with that slot in contract order
-(N defaults to 1 and must be at least 1). `index: I` selects one occurrence of a
+(N defaults to 1; explicit `min: 0` permits an empty repeated slot). An empty
+`set_query_equal` selection still requires every independent query to return the
+empty set, so omission cannot hide source values. `index: I` selects one occurrence of a
 repeated slot; scalar selectors still require exactly one value. Add
 `citation: all, citation_min: N` to quantify over every citation of each selected
 value. Expanded refs keep both indices: evidence for one repeated slot cannot

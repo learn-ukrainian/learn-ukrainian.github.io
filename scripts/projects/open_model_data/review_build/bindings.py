@@ -34,7 +34,7 @@ def expand(candidate: Candidate, selector: dict) -> list[dict]:
     if selector.get("match") == "all":
         require("index" not in selector, "binding_selector")
         minimum = selector.get("min", 1)
-        require(type(minimum) is int and minimum >= 1, "binding_selector")
+        require(type(minimum) is int and minimum >= 0, "binding_selector")
         matches = [v for v in getattr(candidate, selector["area"]) if v.slot == selector["slot"]]
         require(len(matches) >= minimum, "binding_selector")
         refs = [{**selector, "index": i} for i in range(len(matches))]
@@ -172,7 +172,11 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
                 "binding_literal",
             )
         elif op == "set_query_equal":
-            require(bool(selectors) and bool(rule.get("queries")), "binding_set")
+            # An explicitly optional repeated slot may represent the empty set.
+            # Every independent query must then also be empty; omission cannot
+            # hide held source values. Scalar selectors remain mandatory.
+            optional = any(s.get("match") == "all" and s.get("min") == 0 for s in rule.get("values", []))
+            require((bool(selectors) or optional) and bool(rule.get("queries")), "binding_set")
             normalizer = rule["normalizer"]
             expected = {normalize(operand(candidate, ref, reader), normalizer) for ref in selectors}
             for definition in rule["queries"]:
