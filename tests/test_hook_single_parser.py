@@ -15,13 +15,18 @@ sites. Imports and references of ``bashlex`` and ``tree_sitter_bash`` are
 sites. A literal argv whose program is ``bash``, ``sh``, ``dash``, or ``zsh``
 (or a path ending in one of those) and that requests a syntax check (``-n``,
 a short-option cluster containing ``n``, ``--noexec``, or ``-o noexec``) is a
-site. ``shlex.quote`` and ``shlex.join`` are output quoting and are allowed.
+site. A literal shell command string beginning with one of those programs
+plus a ``-n``-class flag is the same site on ``os.system``, ``os.popen``,
+``asyncio.create_subprocess_shell``, ``subprocess.getoutput``,
+``subprocess.getstatusoutput``, and ``subprocess.*`` with ``shell=True``.
+``shlex.quote`` and ``shlex.join`` are output quoting and are allowed.
 Generic regexes, loops, and subprocess calls are not parsers.
 
 Process runners are the ``subprocess`` module and its ``run``, ``Popen``,
 ``call``, ``check_call``, ``check_output``, ``getoutput``, and
 ``getstatusoutput`` attributes; ``os.system`` and ``os.popen``; ``os.exec*``;
-``os.spawn*``; and ``asyncio.create_subprocess_exec``.
+``os.spawn*``; ``os.posix_spawn`` and ``os.posix_spawnp``; and
+``asyncio.create_subprocess_exec`` and ``asyncio.create_subprocess_shell``.
 
 Name use is not a list of statement kinds. A parent map over ``ast.walk``
 inspects every name, and every attribute whose value is a bound module name,
@@ -45,7 +50,8 @@ Accepted limitations (owner: claude-infra, slice 2b):
   followed. The session-start hook reaches application modules that already
   call ``shlex.split``, and those calls are not hook parsers.
 - Computed argv is not a literal command. List concatenation and starred
-  elements stay unresolved.
+  elements stay unresolved. Computed command strings (string concatenation
+  or formatting) and argv lists mutated after binding stay unresolved.
 - Dynamic runner access is not resolved: ``getattr(subprocess, 'run')``.
 
 ``shell_shlex.py`` and ``shell_redirects.py`` are the shared parser boundary.
@@ -152,8 +158,20 @@ OS_EXEC_LIST_FUNCS = frozenset({"execl", "execlp", "execle", "execlpe"})
 OS_EXEC_ARGV_FUNCS = frozenset({"execv", "execvp", "execvpe", "execve"})
 OS_SPAWN_LIST_FUNCS = frozenset({"spawnl", "spawnle", "spawnlp", "spawnlpe"})
 OS_SPAWN_ARGV_FUNCS = frozenset({"spawnv", "spawnve", "spawnvp", "spawnvpe"})
-OS_RUNNER_FUNCS = OS_STRING_FUNCS | OS_EXEC_LIST_FUNCS | OS_EXEC_ARGV_FUNCS | OS_SPAWN_LIST_FUNCS | OS_SPAWN_ARGV_FUNCS
+# ``posix_spawn(path, argv, env)``: argv is the second positional, as with execv*.
+OS_POSIX_SPAWN_FUNCS = frozenset({"posix_spawn", "posix_spawnp"})
+OS_ARGV_SECOND_FUNCS = OS_EXEC_ARGV_FUNCS | OS_POSIX_SPAWN_FUNCS
+OS_RUNNER_FUNCS = (
+    OS_STRING_FUNCS
+    | OS_EXEC_LIST_FUNCS
+    | OS_EXEC_ARGV_FUNCS
+    | OS_SPAWN_LIST_FUNCS
+    | OS_SPAWN_ARGV_FUNCS
+    | OS_POSIX_SPAWN_FUNCS
+)
 ASYNCIO_EXEC_FUNCS = frozenset({"create_subprocess_exec"})
+ASYNCIO_SHELL_FUNCS = frozenset({"create_subprocess_shell"})
+ASYNCIO_RUNNER_FUNCS = ASYNCIO_EXEC_FUNCS | ASYNCIO_SHELL_FUNCS
 _MAY_BIND_KINDS = frozenset(
     {"shlex_module", "boundary_module", "subprocess_module", "os_module", "asyncio_module", "runner"}
 )
@@ -729,7 +747,7 @@ class _Analyzer:
             funcs = OS_RUNNER_FUNCS
             family = "os"
         elif module == "asyncio":
-            funcs = ASYNCIO_EXEC_FUNCS
+            funcs = ASYNCIO_RUNNER_FUNCS
             family = "asyncio"
         else:
             return
@@ -912,7 +930,7 @@ class _Analyzer:
             self._bind_runner_from(node, scope, "os", OS_RUNNER_FUNCS)
             return
         if module == "asyncio":
-            self._bind_runner_from(node, scope, "asyncio", ASYNCIO_EXEC_FUNCS)
+            self._bind_runner_from(node, scope, "asyncio", ASYNCIO_RUNNER_FUNCS)
             return
         if module == "importlib":
             for alias in node.names:
@@ -1320,12 +1338,12 @@ class _Analyzer:
     ) -> tuple[str | None, ...] | None:
         """Argv of a class pattern, using the same shapes as ``_runner_argv``."""
         family, func = binding.detail
-        if family == "subprocess" or func in OS_STRING_FUNCS:
+        if family == "subprocess" or func in OS_STRING_FUNCS or func in ASYNCIO_SHELL_FUNCS:
             pattern = self._match_command_pattern(node)
             if pattern is None:
                 return None
             return self._static_pattern(pattern, scope)
-        if func in OS_EXEC_ARGV_FUNCS and len(node.patterns) >= 2:
+        if func in OS_ARGV_SECOND_FUNCS and len(node.patterns) >= 2:
             argv = self._static_pattern(node.patterns[1], scope)
             if argv is not None:
                 return argv
@@ -1389,12 +1407,12 @@ class _Analyzer:
 
     def _runner_argv(self, node: ast.Call, scope: _Scope, binding: _Binding) -> tuple[str | None, ...] | None:
         family, func = binding.detail
-        if family == "subprocess" or func in OS_STRING_FUNCS:
+        if family == "subprocess" or func in OS_STRING_FUNCS or func in ASYNCIO_SHELL_FUNCS:
             command = self._command_arg(node)
             if command is None:
                 return None
             return self._static_command(command, scope)
-        if func in OS_EXEC_ARGV_FUNCS and len(node.args) >= 2:
+        if func in OS_ARGV_SECOND_FUNCS and len(node.args) >= 2:
             argv = self._static_command(node.args[1], scope)
             if argv is not None:
                 return argv
@@ -1503,7 +1521,7 @@ def _resolve_attribute(base: _Binding, attr: str) -> _Binding:
         return _Binding("runner", ("subprocess", attr))
     if base.kind == "os_module" and attr in OS_RUNNER_FUNCS:
         return _Binding("runner", ("os", attr))
-    if base.kind == "asyncio_module" and attr in ASYNCIO_EXEC_FUNCS:
+    if base.kind == "asyncio_module" and attr in ASYNCIO_RUNNER_FUNCS:
         return _Binding("runner", ("asyncio", attr))
     if base.kind == "importlib_module" and attr == "import_module":
         return _Binding("import_module")
@@ -2486,3 +2504,165 @@ def test_regrowth_after_shrink_fails() -> None:
     regrowth_reasons = creation_set_gap(regrown, shrunk)
     assert any(reason.startswith("outside creation set:") and removed.format() in reason for reason in regrowth_reasons)
     assert creation_set_gap(shrunk, shrunk) == []
+
+
+@pytest.mark.parametrize(
+    ("source", "ending"),
+    [
+        pytest.param(
+            "import os\n\ndef check():\n    os.posix_spawn('/usr/bin/bash', ['bash', '-n', 'hook.sh'], {})\n",
+            "::check::syntax:bash -n",
+            id="posix_spawn",
+        ),
+        pytest.param(
+            "import os\n\ndef check():\n    os.posix_spawnp('sh', ['sh', '-nc', 'hook.sh'], {})\n",
+            "::check::syntax:sh -n",
+            id="posix_spawnp",
+        ),
+        pytest.param(
+            "from os import posix_spawn\n"
+            "\n"
+            "def check():\n"
+            "    posix_spawn('/bin/bash', ['bash', '-xn', 'hook.sh'], {})\n",
+            "::check::syntax:bash -n",
+            id="from-posix_spawn",
+        ),
+        pytest.param(
+            "from os import posix_spawnp\n"
+            "\n"
+            "def check():\n"
+            "    posix_spawnp('dash', ['dash', '--noexec', 'hook.sh'], {})\n",
+            "::check::syntax:dash -n",
+            id="from-posix_spawnp",
+        ),
+        pytest.param(
+            "import os\n"
+            "\n"
+            "def matched(command):\n"
+            "    match command:\n"
+            "        case os.posix_spawn('/bin/bash', ['bash', '-n', 'hook.sh'], {}):\n"
+            "            return command\n",
+            "::matched::syntax:bash -n",
+            id="match-posix_spawn",
+        ),
+        pytest.param(
+            "import asyncio\n"
+            "\n"
+            "async def check():\n"
+            "    await asyncio.create_subprocess_shell('dash --noexec hook.sh')\n",
+            "::check::syntax:dash -n",
+            id="create_subprocess_shell",
+        ),
+        pytest.param(
+            "from asyncio import create_subprocess_shell\n"
+            "\n"
+            "async def check():\n"
+            "    await create_subprocess_shell('bash -n hook.sh')\n",
+            "::check::syntax:bash -n",
+            id="from-create_subprocess_shell",
+        ),
+        pytest.param(
+            "import asyncio\n"
+            "\n"
+            "def matched(command):\n"
+            "    match command:\n"
+            "        case asyncio.create_subprocess_shell('zsh -o noexec hook.sh'):\n"
+            "            return command\n",
+            "::matched::syntax:zsh -n",
+            id="match-create_subprocess_shell",
+        ),
+        pytest.param(
+            "import subprocess\n\ndef check():\n    subprocess.getoutput('bash -n hook.sh')\n",
+            "::check::syntax:bash -n",
+            id="getoutput",
+        ),
+        pytest.param(
+            "import subprocess\n\ndef check():\n    subprocess.getstatusoutput('zsh -o noexec hook.sh')\n",
+            "::check::syntax:zsh -n",
+            id="getstatusoutput",
+        ),
+        pytest.param(
+            "from subprocess import getoutput\n\ndef check():\n    getoutput('sh -nc hook.sh')\n",
+            "::check::syntax:sh -n",
+            id="from-getoutput",
+        ),
+        pytest.param(
+            "from subprocess import getstatusoutput\n\ndef check():\n    getstatusoutput('dash --noexec hook.sh')\n",
+            "::check::syntax:dash -n",
+            id="from-getstatusoutput",
+        ),
+        pytest.param(
+            "import os\n\ndef check():\n    os.popen('sh -n hook.sh')\n",
+            "::check::syntax:sh -n",
+            id="popen",
+        ),
+        pytest.param(
+            "from os import popen\n\ndef check():\n    popen('bash -xn hook.sh')\n",
+            "::check::syntax:bash -n",
+            id="from-popen",
+        ),
+        pytest.param(
+            "import os\n\ndef check():\n    os.system('bash -n hook.sh')\n",
+            "::check::syntax:bash -n",
+            id="system",
+        ),
+        pytest.param(
+            "import subprocess\n\ndef check():\n    subprocess.run('bash -n hook.sh', shell=True)\n",
+            "::check::syntax:bash -n",
+            id="run-shell",
+        ),
+        pytest.param(
+            "import subprocess\n\ndef check():\n    subprocess.call('sh -nc hook.sh', shell=True)\n",
+            "::check::syntax:sh -n",
+            id="call-shell",
+        ),
+        pytest.param(
+            "import subprocess\n\ndef check():\n    subprocess.check_call('dash --noexec hook.sh', shell=True)\n",
+            "::check::syntax:dash -n",
+            id="check_call-shell",
+        ),
+        pytest.param(
+            "import subprocess\n\ndef check():\n    subprocess.check_output('zsh -o noexec hook.sh', shell=True)\n",
+            "::check::syntax:zsh -n",
+            id="check_output-shell",
+        ),
+        pytest.param(
+            "import subprocess\n\ndef check():\n    subprocess.Popen(args='bash -xn hook.sh', shell=True)\n",
+            "::check::syntax:bash -n",
+            id="Popen-shell",
+        ),
+    ],
+)
+def test_literal_syntax_check_runners_fail(source: str, ending: str) -> None:
+    reasons = _single(source)
+    assert any(reason.endswith(ending) for reason in reasons)
+
+
+def test_runner_without_syntax_flag_passes() -> None:
+    sources = [
+        "import os\n\ndef check():\n    os.posix_spawn('/bin/bash', ['bash', '-c', 'true'], {})\n",
+        "import os\n\ndef check():\n    os.posix_spawnp('sh', ['sh', '-c', 'true'], {})\n",
+        "import asyncio\n\nasync def check():\n    await asyncio.create_subprocess_shell('bash -c true')\n",
+        "import subprocess\n\ndef check():\n    subprocess.getoutput('bash -c true')\n",
+        "import subprocess\n\ndef check():\n    subprocess.getstatusoutput('echo hi')\n",
+        "import os\n\ndef check():\n    os.popen('bash -c true')\n",
+        "import os\n\ndef check():\n    os.system('bash -c true')\n",
+        "import subprocess\n\ndef check():\n    subprocess.run('bash -c true', shell=True)\n",
+    ]
+    assert all(_single(source) == [] for source in sources)
+
+
+def test_computed_command_string_and_mutated_argv_stay_unresolved() -> None:
+    sources = [
+        "import os\n\ndef check():\n    os.system('bash' + ' -n hook.sh')\n",
+        "import os\n\ndef check():\n    os.system('bash -n {}'.format('hook.sh'))\n",
+        "import os\n\ndef check():\n    os.system('bash -n %s' % 'hook.sh')\n",
+        'import os\n\ndef check(name):\n    os.system(f"bash -n {name}")\n',
+        "import subprocess\n"
+        "\n"
+        "def check():\n"
+        "    argv = ['bash', '-c', 'true']\n"
+        "    argv.append('-n')\n"
+        "    subprocess.run(argv)\n",
+    ]
+    assert all(_single(source) == [] for source in sources)
