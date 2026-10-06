@@ -559,6 +559,7 @@ def test_runner_executes_attempt_boundary_and_cleans_after_parse(world, tmp_path
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
 @pytest.mark.parametrize("review_access", ["isolated", "full"])
 def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monkeypatch, agent, kind, review_access):
+    from scripts.agent_runtime.adapters import agy
     from scripts.agent_runtime.adapters.agy import AgyAdapter
     from scripts.agent_runtime.adapters.codex import CodexAdapter
 
@@ -568,15 +569,31 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
         subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
         tc["review_cwd"] = str(root)
     boundary = AttemptBoundary(agent=agent, tool_config=tc)
+    capability_probes = []
+    agy._agy_version.cache_clear()
+    agy._agy_effort_choices.cache_clear()
     try:
         adapter = {"agy": AgyAdapter, "codex": CodexAdapter}[agent]()
         if os.environ.get("LU_REVIEW_HOST_PROBES") != "1":
             # CI has no authenticated provider CLIs. Keep the real adapter
             # planning and sandbox seam, using a native executable fixture.
             monkeypatch.setattr(shutil, "which", lambda name: "/bin/true")
-            monkeypatch.setattr(
-                "scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None
-            )
+            native_binary = str(Path("/bin/true").resolve())
+            real_run = subprocess.run
+
+            def capability_probe(cmd, **kwargs):
+                if cmd == [native_binary, "--version"]:
+                    capability_probes.append("--version")
+                    return subprocess.CompletedProcess(cmd, 0, stdout="agy 1.2.9\n", stderr="")
+                if cmd == [native_binary, "--help"]:
+                    capability_probes.append("--help")
+                    return subprocess.CompletedProcess(
+                        cmd, 0, stdout="  --effort string  Reasoning effort (low|medium|high|xhigh|max)\n", stderr=""
+                    )
+                return real_run(cmd, **kwargs)
+
+            if agent == "agy":
+                monkeypatch.setattr(subprocess, "run", capability_probe)
         if agent == "agy":
             monkeypatch.setattr(adapter, "_resolve_model_flag", lambda model: "gemini-3.8-flash-high")
         plan = adapter.build_invocation(
@@ -591,6 +608,10 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
         )
         assert plan.cwd == boundary.workspace
         if agent == "agy":
+            assert plan.cmd.count("--effort") == 1
+            assert plan.cmd[plan.cmd.index("--effort") + 1] == "high"
+            if os.environ.get("LU_REVIEW_HOST_PROBES") != "1":
+                assert capability_probes == ["--version", "--help"]
             assert Path(plan.env_overrides["HOME"]).is_relative_to(boundary.write_root)
             assert plan.liveness_paths[0].is_relative_to(boundary.write_root)
         elif agent == "codex":
@@ -619,6 +640,8 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
         assert env["HOME"] != str(home)
     finally:
         boundary.cleanup()
+        agy._agy_version.cache_clear()
+        agy._agy_effort_choices.cache_clear()
 
 
 @pytest.mark.parametrize("proxy_mode", ["normal", "cleared", "overridden"])
