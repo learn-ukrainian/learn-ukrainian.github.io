@@ -282,9 +282,9 @@ def test_every_component_open_uses_nofollow_and_relative_descriptor(prepared, mo
     real_open = os.open
     opened = []
 
-    def spy_open(path, flags, mode=0o777, *, dir_fd=None):
+    def spy_open(path, flags, *args, dir_fd=None, **kwargs):
         opened.append((os.fspath(path), flags, dir_fd))
-        return real_open(path, flags, mode, dir_fd=dir_fd)
+        return real_open(path, flags, *args, dir_fd=dir_fd, **kwargs)
 
     monkeypatch.setattr(os, "open", spy_open)
     assert check.has_prepared_handoff(root, agent=AGENT, session_id=SESSION)
