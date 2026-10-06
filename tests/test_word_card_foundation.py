@@ -1292,3 +1292,63 @@ def test_freeze_replay_compares_type_exact_manifest(pilot, change, capsys):
     assert pilot["manifest"].read_bytes() == before and db_bytes(pilot) == sources
     refusal = "REFUSED: Immutable manifest exists with different content\n"
     assert capsys.readouterr().err == (refusal if change in edits else "")
+
+
+def phraseology_fixture(pilot):
+    records = copy.deepcopy(pilot["candidate"]["source_records"])
+    raw = records[-2]["raw_row"]
+    payload = dict(text="English literal phrase", terms=[dict(text="English", raw_html="<b>English</b>")],
+                   citations=["English source citation"], register_labels=[], raw_html="<p>English</p>",
+                   raw_response_ref="sha256:" + "b" * 64, sense_or_group_id="phraseology:1", source_order=0)
+    raw.update(kind="phraseology", sense_or_group_id="phraseology:1", payload_json=json.dumps(payload))
+    records[-2] = capture("ulif", "ulif_dictua_sections", raw)
+    return records, payload
+
+
+def test_phraseology_literal_tuple_and_parent_closure(pilot, tmp_path):
+    records, payload = phraseology_fixture(pilot)
+    parent = {k: records[0]["raw_row"][k] for k in
+              ("content_sha256", "normalized_query", "canonical_headword", "grammatical_label", "homonym_index")}
+    assert foundation.intrinsic(records[-2], records) == (
+        "table_row", "ulif:record:phraseology:v1:sha256:" +
+        sha(dict(parent=parent, kind="phraseology", payload=payload)))
+    changed = copy.deepcopy(records)
+    body = copy.deepcopy(payload)
+    body["text"] += " "
+    changed[-2]["raw_row"]["payload_json"] = json.dumps(body)
+    assert foundation.intrinsic(changed[-2], changed) != foundation.intrinsic(records[-2], records)
+    membership = tmp_path / "membership.json"
+    save(membership, {"heldout": [records[-2]["locator"]], "replay": [records[0]["locator"]]})
+    with pytest.raises(foundation.Refusal, match="alias closure"):
+        foundation.isolation([dict(source_records=records)], membership)
+
+
+@pytest.mark.parametrize("fault", ["unknown_kind", "extra", "missing", "text", "terms", "citation", "order",
+                                   "group", "digest", "parent"])
+def test_phraseology_contract_refusals(pilot, fault):
+    records, payload = phraseology_fixture(pilot)
+    assert foundation.intrinsic(records[-2], records)[0] == "table_row"
+    raw = records[-2]["raw_row"]
+    if fault == "unknown_kind":
+        raw["kind"] = "synonyms"
+    elif fault == "extra":
+        payload["rows"] = []
+    elif fault == "missing":
+        del payload["citations"]
+    elif fault == "text":
+        payload["text"] = " "
+    elif fault == "terms":
+        payload["terms"] = [dict(text="English")]
+    elif fault == "citation":
+        payload["citations"] = [False]
+    elif fault == "order":
+        payload["source_order"] = False
+    elif fault == "group":
+        payload["sense_or_group_id"] = "paradigm:1"
+    elif fault == "digest":
+        payload["raw_response_ref"] = "invalid"
+    elif fault == "parent":
+        raw["entry_id"] = -1
+    raw["payload_json"] = json.dumps(payload)
+    with pytest.raises(foundation.Refusal):
+        foundation.intrinsic(records[-2], records)

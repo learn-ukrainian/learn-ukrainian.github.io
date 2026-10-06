@@ -292,26 +292,37 @@ def intrinsic(record, records):
         return "table_row", "ukrainian_word_stress:record:stress:v1:sha256:" + digest(payload)
     require((source, table) == ("ulif", "ulif_dictua_sections"), "Missing approved source-key contract")
     payload = parse(raw["payload_json"])
-    fields(payload, {"rows", "raw_html", "raw_response_ref", "sense_or_group_id", "source_order"})
-    matrix = payload["rows"]
-    require(isinstance(matrix, list) and matrix and all(isinstance(r, list) and r for r in matrix) and
-            all(len(r) == len(matrix[0]) and all(isinstance(c, str) for c in r) for r in matrix),
-            "Invalid paradigm matrix")
-    require(raw["kind"] == "paradigm" and nonempty(payload["raw_html"]) and
+    kind = raw["kind"]
+    require(kind in {"paradigm", "phraseology"}, "Missing approved ULIF section-kind contract")
+    common = {"raw_html", "raw_response_ref", "sense_or_group_id", "source_order"}
+    fields(payload, common | ({"rows"} if kind == "paradigm" else
+                              {"citations", "register_labels", "terms", "text"}))
+    if kind == "paradigm":
+        matrix = payload["rows"]
+        require(isinstance(matrix, list) and matrix and all(isinstance(r, list) and r for r in matrix) and
+                all(len(r) == len(matrix[0]) and all(isinstance(c, str) for c in r) for r in matrix),
+                "Invalid paradigm matrix")
+    else:
+        require(nonempty(payload["text"]) and isinstance(payload["terms"], list) and
+                all(isinstance(t, dict) and set(t) == {"raw_html", "text"} and
+                    all(isinstance(v, str) for v in t.values()) for t in payload["terms"]) and
+                all(isinstance(payload[k], list) and all(isinstance(v, str) for v in payload[k])
+                    for k in ("citations", "register_labels")), "Invalid phraseology payload")
+    require(nonempty(payload["raw_html"]) and
             nonempty(payload["raw_response_ref"]) and re.fullmatch("sha256:" + HEX, payload["raw_response_ref"]) and
             nonempty(payload["sense_or_group_id"]) and
-            re.fullmatch(r"paradigm:[1-9][0-9]*", payload["sense_or_group_id"]) and
+            re.fullmatch(kind + r":[1-9][0-9]*", payload["sense_or_group_id"]) and
             type(payload["source_order"]) is int and payload["source_order"] >= 0 and
             type(raw["source_order"]) is int and raw["source_order"] == payload["source_order"] and
-            raw["sense_or_group_id"] == payload["sense_or_group_id"], "Invalid paradigm discriminator")
+            raw["sense_or_group_id"] == payload["sense_or_group_id"], "Invalid " + kind + " discriminator")
     parent_row = paradigm_parent(record, records)["raw_row"]
     parent = {k: parent_row[k] for k in ("content_sha256", "normalized_query", "canonical_headword",
                                       "grammatical_label", "homonym_index")}
     require(hex_digest(parent["content_sha256"]) and nonempty(parent["normalized_query"]) and
             all(isinstance(parent[k], str) for k in ("canonical_headword", "grammatical_label")) and
             type(parent["homonym_index"]) is int and parent["homonym_index"] > 0, "Invalid paradigm parent")
-    return "table_row", "ulif:record:paradigm:v1:sha256:" + digest(
-        {"parent": parent, "kind": "paradigm", "payload": payload})
+    return "table_row", "ulif:record:" + kind + ":v1:sha256:" + digest(
+        {"parent": parent, "kind": kind, "payload": payload})
 
 
 def aliases(record, records):
