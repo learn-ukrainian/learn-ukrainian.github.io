@@ -2,11 +2,16 @@
 
 Issue #9611; parent #6321. Author: GPT-6.1 Sol, Codex.
 Amendment #9818 implements the approved RB-1 WP-CAT scope. The PA6 instruction
-reviews by Claude Opus 5.5 and Gemini 3.8 Flash at `17dbf1e7` are recorded on
-#9611 (PR #9679); the E5 checker criterion remains open there. This amendment's
-two Ukrainian reviews and exact-head code review remain **pending**, recorded
-separately in `review_status`; `status: rb1_amendment_pending_reviews` and
-`training_eligible: false` do not certify PA6 or training readiness.
+reviews at `17dbf1e7ee42f77191fbd52843c60da13b5a1de7` are recorded on
+#9611 (PR #9679); the E5 checker criterion remains open there.
+Round 2 sets `status: rb1_approved` and predeclares the two approved reviewer
+entries under the driver's #9818 disposition. These entries are not evidence
+that the forthcoming re-reviews have run: the driver runs
+`rv-rb1-wpcat-opus-r2` (code+Ukrainian) and `rv-rb1-wpcat-flash-r2`
+(Ukrainian) on the pushed head and records their actual verdicts on the PR.
+Either failure returns this branch to the fix loop. No approval-only follow-up
+commit is needed, so both verdicts can bind the final catalog bytes.
+`training_eligible: false` remains binding; RB-1 approval does not certify PA6.
 Historical rounds below retain their original heads and results.
 The driver adopts the stricter numerical bounds
 **top1 ≤ 0.15, top5 ≤ 0.60**; the round-2 brief's 0.65 is superseded.
@@ -33,9 +38,10 @@ No answer text, explanation or worked solution is authored here.
 | C6 | 24 | 12 calque-only sentence lines and 12 signed book-replacement lines. |
 | C7 | 12 | Modern-attested side of an admitted opt-in contrast pair; both forms visible in context. |
 | C9 | 12 | Complete text under an authenticated printed textbook heading. |
-| **Total** | **144** | **8 components, 11 operations; C2 has two 12-line applicability variants.** |
+| **Total** | **144** | **8 components, 11 operations; C2 has two 12-line variants; C3 meaning has two 6-line variants.** |
 
-Twelve distinct starts per applicable line set give balanced top1 = 1/12 (8.33%) and
+Twelve distinct starts per twelve-line operation or C2 variant give balanced
+top1 = 1/12 (8.33%) and
 top5 = 5/12 (41.67%). Dropping two disputed lines leaves ten starts:
 0.10/0.50. Both retain slack under the proposed 0.15/0.60 prefix bounds.
 Counts establish scheduling capacity, not semantic variety or model quality.
@@ -86,11 +92,13 @@ template patterns, with six source-value fixtures and quotation mutations.
 - **C3 synonyms/antonyms:** the group must belong to the selected headword sense. Withhold if no
   source-readable sense label exists; a numeric sense ID cannot become a gloss.
   Both .03 lines use `до слова`, not `для слова`.
-- **C3 sense_definition:** the stressed headword and printed POS label belong
-  to the same unquarantined СУМ-20 article as the selected sense's definition.
-  Its register labels and citations may provide context. Slots never contain
-  the target definition; source identity alone cannot disambiguate a meaning
-  for the model. The applicability and context contract below binds all 12 lines.
+- **C3 sense_definition:** the verbatim СУМ-20 stressed headword belongs
+  to the same unquarantined article as the selected sense's definition.
+  The only slot is `headword`; no POS or gender label is interpolated.
+  The six `with_citations` lines refer to the sense illustrated by that
+  sense's own examples. The six `single_sense` lines require exactly one
+  unquarantined sense and no citations. Multi-sense articles without citations
+  for the selected sense are withheld. The contract below binds all 12 lines.
 - **C4:** **citation stays in the target**, together with the definition from
   that same dictionary entry. Every instruction requests both explicitly.
   Never invent an example; exclude ruler-overlapping citations.
@@ -138,16 +146,34 @@ The catalog declares these contracts; WP0 implements rendering and WP3/WP6
 authenticate their source bindings. Author fixtures do not prove those engines
 or replace independent exact-head reviews.
 
-**C3 `sense_definition`.** All 12 lines have exactly `[headword, pos]` slots:
-the article's verbatim stressed headword and its POS label **as printed**.
-These are binding roles, not guessed physical column names; WP3 authenticates
-the article and field locators. No synthesized stress, POS expansion, VESUM
-code or authored sense label is allowed. The headword follows the existing
-guillemet withholding rule; the POS is final after a colon, unquoted and
-without added punctuation. Missing, null, empty or whitespace-only fields
-withhold, including an empty definition. A quarantined article withholds.
-The target is exactly the selected `sum20_senses` row's definition, without
-register labels, examples, explanations or other senses appended.
+**AC2 — C3 `sense_definition`.** All 12 lines have exactly `[headword]`
+as their slot list: the **verbatim СУМ-20 stressed headword**.
+WP3 authenticates the article and field locator. No synthesized stress,
+POS/gender slot, VESUM code or authored sense label is allowed.
+The headword follows the existing guillemet withholding rule.
+Missing, null, empty or whitespace-only headwords or definitions withhold;
+a quarantined article withholds. The target is exactly the selected
+`sum20_senses` row's definition, without register labels, examples,
+explanations or other senses appended.
+
+Applicability is mutually exclusive:
+
+- `with_citations` (.01–.06): at least one of the selected sense's own
+  `sum20_citations` is in model-visible context. Each line asks for the
+  definition in the sense illustrated by those examples.
+- `single_sense` (.07–.12): exactly one unquarantined sense in the article,
+  with no citations; citations are not required to identify that sole sense.
+- Withhold a sense of a multi-sense article with no citations of its own,
+  even when register labels exist. Conflicting model-visible bindings withhold.
+
+Each variant has six distinct starts. Balanced prefix, ID and whole-template
+shares are `top1=1/6`, `top5=5/6`; these are diagnostic expectations and
+cannot PASS the unchanged 0.15/0.60 export bounds. Each six-line set also
+expects suffix and 8-gram record prevalence ≤0.60. Combined C3 meaning has
+12 distinct starts and balanced `1/12`, `5/12`; the twelve-line set and
+its ten-line drop retain the existing bounds. Source applicability restricts
+line selection; production scheduling must meet the unchanged operation/split
+metric or withhold the build. Counts do not prove semantic diversity.
 
 `c3-sense-context.v1` is the positional JSON array
 `[register-label strings, sense-citation strings]`, serialized with
@@ -158,22 +184,41 @@ Only that sense's register labels and its own `sum20_citations` may appear,
 bound to the same article and sense. Printed citation author labels stay
 verbatim where present; neither numeric sense IDs nor English role keys are
 model-visible substitutes. Definition text is never an instruction slot or
-context part. Withhold if the same model-visible headword, POS and context
+context part. Withhold if the same model-visible headword and context
 map to conflicting definitions: provenance alone cannot tell the model which
-meaning to supply. A single unambiguous sense can use empty context.
+meaning to supply. The single_sense variant can use empty context; register
+labels alone never admit a citation-less multi-sense record.
 This does not change the ULIF synonyms/antonyms applicability or targets.
 
 **C7 `modern_norm_selection`.** The 12 existing instruction strings and
 their empty slot lists remain intact. `c7-contrast-pair.v1` is a two-element
 JSON array of both distinct, nonblank **verbatim** admitted forms, emitted
 with the same JSON settings. For each form compute
-`sha256((record_id + "\0" + form).encode("utf-8")).digest()`, where
-`record_id` is the RB-1 canonical lowercase 64-hex record hash. Sort the two
-forms by these digest bytes ascending. The input order and source role do
-not select a position; repeated rendering of the same record is stable.
+`sha256((unit_id + "\0" + form).encode("utf-8")).digest()`, where
+`unit_id` is the accounting key of RB-1 design §3, independent of rendering
+and of `record_id`. Sort the two forms by these digest bytes ascending.
+The input order and source role do not select a position; repeated rendering
+of the same accounting unit is stable. Neither rendered context nor its
+record hash feeds back into the ordering key.
 Withhold identical forms, missing members or a digest tie. JSON escaping is
 reversible serialization; no case, stress, punctuation or whitespace in a
 form is rewritten.
+
+Golden vector for WP0 (synthetic values; input order may be reversed):
+
+```json
+{
+  "unit_id": "C7:synthetic-unit-001",
+  "forms": [
+    "SOURCE_FORM_A",
+    "SOURCE_FORM_B"
+  ],
+  "expected_order": [
+    "SOURCE_FORM_B",
+    "SOURCE_FORM_A"
+  ]
+}
+```
 
 Only the unlabelled pair is model-visible context: no recommended/rejected
 keys, per-form dictionary names, adjudication or norm labels, or answer-bearing
@@ -990,7 +1035,7 @@ held-out proof or PA6 certification. The driver owns fresh exact-head reviews,
 E4/E5 source/export proof and the subsequent landing/closeout gates. This worker
 hands back a pushed clean branch; no PR, merge or enqueue is part of this packet.
 
-## WP-CAT amendment source evidence (2026-10-06)
+## Historical WP-CAT round-1 source evidence (2026-10-06)
 
 Author checks below are lexical and orthographic evidence, not non-author
 Ukrainian approval. No dictionary definitions or dataset records were copied
@@ -1066,7 +1111,7 @@ review must judge sentence meaning and naturalness.
 | C3.sense_definition.11 | `No results in Антоненко-Давидович for: "Дослівно запиши визначення значення слова за словником Позначення частини мови"` | `Found 1 results for: "Дослівно запиши визначення значення слова за словником Позначення частини мови"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
 | C3.sense_definition.12 | `No results in Антоненко-Давидович for: "Визначення слова відтвори без змін зі словника Частина мови"` | `Found 1 results for: "Визначення слова відтвори без змін зі словника Частина мови"`; `antonenko-davydovych-yak-my-hovorymo_p133` |
 
-### WP-CAT focused validation and review handback
+### Historical WP-CAT round-1 validation and handback
 
 All commands ran in the assigned dispatch worktree with the shared project
 interpreter. The initial test command collected 453 tests but skipped them
@@ -1107,3 +1152,123 @@ PR/CI/landing, not this author packet; #9818 remains open. WP0/WP3/WP6 own
 production renderer and source-binding proof. Unverified or disputed Ukrainian
 meaning, source binding or answer leakage blocks acceptance; no author fixture
 waives those gates. No PR, merge, enqueue or auto-merge was requested here.
+
+## WP-CAT round 2 — #9818 review disposition (2026-10-06)
+
+B1/S1/S2: only the verbatim stressed headword is interpolated into C3 meaning
+instructions. Six lines identify the sense illustrated by its own citations;
+six apply to a sole unquarantined sense without citations. Multi-sense records
+without their own citations withhold. Literal-meaning and redundant definition
+wording is removed. The grammatical-abbreviation fixture `ч.` proves a source
+gender label cannot enter a rendered instruction. Synthetic definition,
+register and citation sentinels also cannot enter it.
+
+S3/S4: pair ordering hashes the §3 accounting `unit_id`, NUL and verbatim
+form; it is independent of rendering and `record_id`. The golden vector above
+is parsed by the test, compared with pinned expected values, and exercised in
+both input orders. Every C7 instruction is checked for positional stems
+`перш|друг|лів|прав|верхн|нижн`.
+
+S5: the schema admits `rb1_approved`, requires an approved amendment and
+requires **every** listed reviewer entry to be approved (including additional
+reviewers). It also rejects an approved amendment with any pending reviewer.
+Pending/draft and RB-1 states remain training-ineligible. Per the driver's
+decision, this commit predeclares `rv-rb1-wpcat-opus-r2` and
+`rv-rb1-wpcat-flash-r2`; actual toolful exact-head verdicts remain the
+driver's gate before opening the PR. Failure of either review triggers another
+author fix and re-review; these metadata values do not substitute for verdicts.
+
+### Revised-line Sources evidence
+
+This turn called `sources.verify_words` on all distinct project-written words:
+`Batch verification: 32 words`, `Found: 32/32`,
+`109 analyses (33 distinct lemmas)`. Headword slot values were excluded.
+It also called `verify_words` separately for each revised line:
+
+| Line | Exact verify_words input | Raw result | check_russian_shadow for each input word |
+| --- | --- | --- | --- |
+| C3.sense_definition.01 | `["подай","тлумачення","слова","у","значенні","яке","ілюструють","наведені","приклади","наведи","його","без","змін","так","як","подає","словник"]` | `Found: 17/17` | `яке` exception below; all others false |
+| C3.sense_definition.02 | `["запиши","без","змін","словникове","тлумачення","слова","у","значенні","яке","показують","подані","приклади"]` | `Found: 12/12` | `яке` exception below; all others false |
+| C3.sense_definition.03 | `["наведи","тлумачення","слова","так","як","його","подає","словник","для","значення","яке","ілюструють","наведені","приклади"]` | `Found: 14/14` | `яке` exception below; all others false |
+| C3.sense_definition.04 | `["процитуй","словникове","тлумачення","слова","у","значенні","яке","ілюструють","подані","приклади"]` | `Found: 10/10` | `яке` exception below; all others false |
+| C3.sense_definition.05 | `["відтвори","без","змін","тлумачення","слова","зі","словника","у","значенні","яке","показують","наведені","приклади"]` | `Found: 13/13` | `яке` exception below; all others false |
+| C3.sense_definition.06 | `["словникове","тлумачення","слова","наведи","без","змін","для","значення","яке","ілюструють","подані","приклади"]` | `Found: 12/12` | `яке` exception below; all others false |
+| C3.sense_definition.07 | `["тлумачення","слова","наведи","без","змін","так","як","його","подає","словник"]` | `Found: 10/10` | All false |
+| C3.sense_definition.08 | `["визначення","слова","відтвори","без","змін","зі","словника"]` | `Found: 7/7` | All false |
+| C3.sense_definition.09 | `["яке","тлумачення","слова","подає","словник","наведи","його","без","змін"]` | `Found: 9/9` | `яке` exception below; all others false |
+| C3.sense_definition.10 | `["як","словник","тлумачить","слово","процитуй","його","тлумачення"]` | `Found: 7/7` | All false |
+| C3.sense_definition.11 | `["без","змін","запиши","словникове","тлумачення","слова"]` | `Found: 6/6` | All false |
+| C3.sense_definition.12 | `["зі","словника","випиши","тлумачення","слова","зберігаючи","його","без","змін"]` | `Found: 9/9` | All false |
+
+The 32 distinct words each received `sources.check_russian_shadow(word=...)`.
+For 30 words the raw result was:
+```json
+{"matches_russian": false, "russian_lemma": null, "ukrainian_alternative": null, "confidence": 0.0}
+```
+For `змін`:
+```json
+{"matches_russian": false, "russian_lemma": null, "ukrainian_alternative": null, "confidence": 0.3703565428411424}
+```
+For `яке`:
+```json
+{"matches_russian": true, "russian_lemma": "як", "ukrainian_alternative": null, "confidence": 1.0}
+```
+VESUM returned `яке — FOUND (2 analyses (1 distinct lemma)): який(adj), який(adj)`,
+with tags `adj:n:v_naz:pron:int:rel:def` and
+`adj:n:v_zna:pron:int:rel:def`. Under the binding VESUM-first rule this
+attestation defeats a bare shadow suspicion; the heuristic hit is retained
+as evidence, not silently omitted or treated as a Russianism verdict.
+
+Each revised line also received paired `search_style_guide` and
+`search_text(source_file='antonenko-davydovych-yak-my-hovorymo')` queries,
+with the headword placeholder removed and punctuation stripped.
+The structured results were `No results in Антоненко-Давидович` for all 12.
+Full-book queries returned `Found 1 results` for all 12 after retrying three
+initial `Tool call failed: search_text.` results (.03, .08, .10) sequentially.
+These broad retrieval hits do not attest authored sentences, and empty
+structured results do not approve them. No source passage is copied here.
+Lexical author checks are distinct from the forthcoming independent semantic
+and code re-reviews.
+
+### Round-2 handback and stopping rule
+
+The author packet covers the 12 revised C3 meaning lines, two applicability
+variants, unchanged 12 C7 lines plus their ordering contract, the approval
+schema and metadata, and focused regressions. All 132 other instruction
+strings remain unchanged. Only the four #9818 files are owned.
+
+After two rounds, wrong sense selection, gender/POS leakage, changed source
+bytes, answer leakage, invalid reviewer state or a material independent
+finding blocks acceptance. Numerical evidence remains diagnostic where its
+denominator cannot meet the unchanged export thresholds. The driver owns
+actual Opus/Flash verdicts, PR/CI/landing and issue closure. WP0/WP3/WP6 own
+production rendering and source authentication. This packet ends at a pushed,
+clean branch; it does not certify PA6 or production export readiness.
+
+### Round-2 focused validation
+
+Commands ran from the assigned worktree with the task-prescribed shared
+project executables (repository-relative spellings shown below):
+
+```text
+.venv/bin/python -m pytest -q tests/projects/open_model_data/test_instruction_catalog.py
+458 passed in 21.93s (no skips)
+.venv/bin/ruff check tests/projects/open_model_data/test_instruction_catalog.py
+All checks passed!
+.venv/bin/python -m yamllint registry/projects/open_model_data/instruction_catalog.yaml
+exit 0, no output
+git diff --check
+exit 0, no output
+```
+
+The final tests retain lossless C3 context round-trip checks, exercise the C7
+vector in both input orders and verify both possible form positions across
+32 synthetic accounting units. Approval mutations cover every named reviewer
+and an additional entry, plus pending, rejected and missing statuses.
+A preservation probe returned `132 other instruction entries unchanged;
+exactly 12 C3 sense_definition entries revised`. A separate equality check
+proved all 12 catalog templates match the strings checked by Sources.
+YAML line wrapping was checked for parsed-catalog equality. Earlier YAML lint
+line-length failures were corrected without changing instruction strings.
+These are author contract proofs; independent held-out verdicts and production
+renderer/source-binding proof remain with the owners named above.

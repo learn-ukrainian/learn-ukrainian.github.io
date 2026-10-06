@@ -29,7 +29,8 @@
       "enum": [
         "draft",
         "approved",
-        "rb1_amendment_pending_reviews"
+        "rb1_amendment_pending_reviews",
+        "rb1_approved"
       ]
     },
     "training_eligible": {
@@ -295,7 +296,7 @@
               "const": 9679
             },
             "reviewed_head": {
-              "const": "17dbf1e7"
+              "const": "17dbf1e7ee42f77191fbd52843c60da13b5a1de7"
             },
             "reviewers": {
               "const": [
@@ -316,8 +317,7 @@
             "issue",
             "status",
             "author",
-            "ukrainian_reviews",
-            "code_review"
+            "reviewers"
           ],
           "properties": {
             "issue": {
@@ -334,44 +334,94 @@
               "type": "string",
               "pattern": "\\S"
             },
-            "ukrainian_reviews": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "claude-opus-5-5",
-                "gemini-3.8-flash-high"
-              ],
-              "properties": {
-                "claude-opus-5-5": {
-                  "enum": [
-                    "pending",
-                    "approved"
-                  ]
-                },
-                "gemini-3.8-flash-high": {
-                  "enum": [
-                    "pending",
-                    "approved"
-                  ]
+            "reviewers": {
+              "type": "array",
+              "minItems": 2,
+              "uniqueItems": true,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "seat",
+                  "task",
+                  "role",
+                  "status"
+                ],
+                "properties": {
+                  "seat": {
+                    "type": "string",
+                    "pattern": "\\S"
+                  },
+                  "task": {
+                    "type": "string",
+                    "pattern": "\\S"
+                  },
+                  "role": {
+                    "enum": [
+                      "code+ukrainian",
+                      "ukrainian"
+                    ]
+                  },
+                  "status": {
+                    "enum": [
+                      "pending",
+                      "approved"
+                    ]
+                  }
                 }
-              }
-            },
-            "code_review": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "claude-opus-5-5"
-              ],
-              "properties": {
-                "claude-opus-5-5": {
-                  "enum": [
-                    "pending",
-                    "approved"
-                  ]
+              },
+              "allOf": [
+                {
+                  "contains": {
+                    "properties": {
+                      "seat": {
+                        "const": "claude-opus-5-5"
+                      },
+                      "role": {
+                        "const": "code+ukrainian"
+                      }
+                    }
+                  }
+                },
+                {
+                  "contains": {
+                    "properties": {
+                      "seat": {
+                        "const": "gemini-3.8-flash-high"
+                      },
+                      "role": {
+                        "const": "ukrainian"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "approved"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "reviewers": {
+                    "items": {
+                      "properties": {
+                        "status": {
+                          "const": "approved"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
-          }
+          ]
         }
       }
     }
@@ -742,8 +792,7 @@
           "additionalProperties": false,
           "required": [
             "headword",
-            "sense",
-            "pos"
+            "sense"
           ],
           "properties": {
             "headword": {
@@ -753,10 +802,6 @@
             "sense": {
               "type": "string",
               "minLength": 1
-            },
-            "pos": {
-              "type": "string",
-              "pattern": "\\S"
             }
           }
         },
@@ -876,7 +921,8 @@
                   "id",
                   "operation",
                   "template",
-                  "slots"
+                  "slots",
+                  "sense_variant"
                 ],
                 "properties": {
                   "id": {
@@ -889,12 +935,17 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?=[\\s\\S]*«\\{headword\\}»)(?:[^{}]|\\{headword\\})+: \\{pos\\}$"
+                    "pattern": "^(?=[\\s\\S]*«\\{headword\\}»)(?:[^{}]|\\{headword\\})+$"
                   },
                   "slots": {
                     "const": [
-                      "headword",
-                      "pos"
+                      "headword"
+                    ]
+                  },
+                  "sense_variant": {
+                    "enum": [
+                      "with_citations",
+                      "single_sense"
                     ]
                   }
                 }
@@ -946,6 +997,44 @@
               },
               "minContains": 10,
               "maxContains": 12
+            },
+            {
+              "contains": {
+                "type": "object",
+                "required": [
+                  "operation",
+                  "sense_variant"
+                ],
+                "properties": {
+                  "operation": {
+                    "const": "sense_definition"
+                  },
+                  "sense_variant": {
+                    "const": "with_citations"
+                  }
+                }
+              },
+              "minContains": 6,
+              "maxContains": 6
+            },
+            {
+              "contains": {
+                "type": "object",
+                "required": [
+                  "operation",
+                  "sense_variant"
+                ],
+                "properties": {
+                  "operation": {
+                    "const": "sense_definition"
+                  },
+                  "sense_variant": {
+                    "const": "single_sense"
+                  }
+                }
+              },
+              "minContains": 6,
+              "maxContains": 6
             }
           ]
         },
@@ -958,7 +1047,11 @@
             ],
             "context_values": "verbatim_same_article_and_sense_source_order",
             "target": "verbatim_same_sense_definition",
-            "applicability": "withhold_missing_slots_quarantined_articles_or_non_discriminating_context",
+            "applicability": {
+              "with_citations": "At least one of the selected sense's own sum20_citations is model-visible context.",
+              "single_sense": "Exactly one unquarantined sense in the article and no citations; citations are not required.",
+              "withhold": "Multi-sense article without citations for the selected sense; missing headword/definition, quarantined article or non-discriminating context."
+            },
             "specification": "docs/projects/open-model-data/instruction-catalog.md"
           }
         }
@@ -1508,7 +1601,7 @@
           "const": {
             "context": "c7-contrast-pair.v1",
             "members": "both_verbatim_admitted_forms",
-            "order": "sha256_record_id_nul_form_utf8_ascending",
+            "order": "sha256_unit_id_nul_form_utf8_ascending",
             "visibility": "model_visible_unlabelled_pair_only",
             "target": "verbatim_recommended_member",
             "specification": "docs/projects/open-model-data/instruction-catalog.md"
@@ -1791,7 +1884,8 @@
           "status": {
             "enum": [
               "draft",
-              "rb1_amendment_pending_reviews"
+              "rb1_amendment_pending_reviews",
+              "rb1_approved"
             ]
           }
         },
@@ -1803,6 +1897,42 @@
         "properties": {
           "training_eligible": {
             "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "rb1_approved"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "review_status": {
+            "properties": {
+              "amendment": {
+                "properties": {
+                  "status": {
+                    "const": "approved"
+                  },
+                  "reviewers": {
+                    "items": {
+                      "properties": {
+                        "status": {
+                          "const": "approved"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
