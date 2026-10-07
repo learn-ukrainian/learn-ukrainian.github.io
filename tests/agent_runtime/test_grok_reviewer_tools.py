@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shlex
 import subprocess
 import sys
@@ -56,12 +57,17 @@ def test_reviewer_opt_in_adds_bash_and_all_tracked_guards(tmp_path: Path) -> Non
         assert "--always-approve" not in reviewer.cmd
         allows = [reviewer.cmd[i + 1] for i, arg in enumerate(reviewer.cmd) if arg == "--allow"]
         assert "Bash" not in allows
-        from scripts.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_TOOLS
-
-        assert reviewer.cmd[reviewer.cmd.index("--tools") + 1].split(",") == list(GROK_REVIEWER_TOOLS)
+        tools = reviewer.cmd[reviewer.cmd.index("--tools") + 1].split(",")
+        assert tools == ["read_file", "list_dir", "grep"]
         assert allows == ["Read", "Grep"]
         assert "grok_reviewer_permissions.py" in definition
         assert "Approval-requiring tools are denied without prompting" in definition
+        assert "using tracked-file reads only" in definition
+        assert "Report any execution evidence you could not obtain" in definition
+        assert "literal read commands" not in definition
+        from scripts.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS
+
+        assert all(command not in definition for command in GROK_REVIEWER_READ_COMMANDS)
         assert "--no-subagents" in reviewer.cmd and "--disable-web-search" in reviewer.cmd
         denies = [reviewer.cmd[i + 1] for i, arg in enumerate(reviewer.cmd) if arg == "--deny"]
         assert set(denies) == {"Write", "Edit", "Bash", "MCPTool", "WebFetch", "WebSearch"}
@@ -335,6 +341,7 @@ def test_write_mode_installs_fleet_guards_without_reviewer_publish_or_push_rewri
         assert write_plan.cmd[write_plan.cmd.index("--permission-mode") + 1] == "bypassPermissions"
         assert "--always-approve" in write_plan.cmd
         assert "--deny" not in write_plan.cmd
+        assert "--tools" not in write_plan.cmd
         assert "reviewer_agent_file" not in write_plan.metadata
         agent_path = Path(write_plan.cmd[write_plan.cmd.index("--agent") + 1])
         assert agent_path.name.endswith(".grok-write-agent.md")
@@ -502,6 +509,9 @@ def test_disallowed_shell_actions_return_typed_refusal_before_native_permissions
     assert result.stderr.startswith(REFUSAL_CODE + ":")
     assert command not in result.stderr
     assert "Continue the review" in result.stderr
+    assert "use tracked-file reads only" in result.stderr
+    assert "report any execution evidence you could not obtain" in result.stderr
+    assert "literal Git inspection commands" not in result.stderr
 
 
 @pytest.mark.parametrize("payload", [None, [], {},
@@ -728,3 +738,35 @@ def test_guard_help_does_not_require_a_review_event():
     )
     assert result.returncode == 0
     assert "Exit codes:" in result.stdout
+
+
+@pytest.mark.parametrize("event", ["{}", "broken json"])
+def test_refusal_denies_when_stderr_pipe_is_broken(monkeypatch, event):
+    import io
+
+    from scripts.agent_runtime import grok_reviewer_permissions as policy
+
+    class BrokenStderr:
+        def write(self, value):
+            raise BrokenPipeError("private pipe detail")
+
+    monkeypatch.setattr(sys, "argv", ["guard", "--review-root", str(ROOT)])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(event))
+    monkeypatch.setattr(sys, "stderr", BrokenStderr())
+    assert policy.main() == 2
+
+
+@pytest.mark.parametrize("event", ["{}", "broken json"])
+def test_refusal_exits_two_with_real_closed_stderr_pipe(event):
+    read_fd, write_fd = os.pipe()
+    os.close(read_fd)
+    try:
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/agent_runtime/grok_reviewer_permissions.py"),
+             "--review-root", str(ROOT)],
+            input=event, text=True, stdout=subprocess.PIPE, stderr=write_fd, timeout=30,
+        )
+        assert result.returncode == 2
+        assert result.stdout == ""
+    finally:
+        os.close(write_fd)

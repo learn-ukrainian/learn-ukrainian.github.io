@@ -15,10 +15,10 @@ The CLI uses its own stored auth under ``~/.grok`` (OAuth), so no API key is
 injected — HOME (already allow-listed by env_sanitize) is sufficient.
 
 Mode → ``--permission-mode``:
-- ``read-only``       → ``auto`` + ``--deny`` on write tools and ``Bash`` by
-  default. Ordinary reviewer opt-ins replace the Bash deny with fleet and
-  publish PreToolUse guards plus a fail-closed tool guard. Only tracked
-  checkout reads and literal Git inspection commands are exposed and approved.
+- ``read-only``       → ``auto`` + unconditional ``Bash``, ``Write`` and ``Edit``
+  denies. Reviewers have no shell; only tracked checkout read tools are exposed.
+  Fleet and publish PreToolUse guards plus the tracked-read hook provide a
+  second layer for reads only, never a replacement for native denies (#9987).
 - ``workspace-write`` → ``bypassPermissions`` + ``--always-approve``
   (unattended tool execution and file edits within the dispatch worktree)
   plus the tracked fleet PreToolUse guards through the hook bridge
@@ -28,8 +28,8 @@ Issue #7583: On native Grok 1.0.x CLI, ``acceptEdits --always-approve`` still pr
 for approval on shell commands and terminates headless turns (``stopReason=cancelled``),
 while ``plan`` blocks all tool calls outright. Write dispatches map to
 ``bypassPermissions`` with ``--always-approve``. Ordinary ``read-only``
-maps to ``auto`` so non-shell read tools can run; only opted-in reviewers get
-a bounded, pre-authorized tool set (#9987). Other read-only calls retain their Bash deny.
+maps to ``auto`` so non-shell read tools can run. Opted-in reviewers retain
+the Bash, Write and Edit denies and expose only tracked-file reads (#9987).
 
 Issue #8965: Grok 1.0.41 treats an explicit ``--permission-mode auto`` as winning
 over ``--always-approve``, so ``yolo_mode`` stays false and the auto classifier
@@ -38,7 +38,8 @@ refuses ``git push`` before the command runs. ``workspace-write`` therefore uses
 Write sessions install the fleet PreToolUse guards (primary-checkout write,
 secret-print, merge, and the rest of the tracked worker set) through the same
 hook bridge. They do not load the reviewer publish guard or the read-only Git
-push rewrite. Read-only reviewers pre-authorize only their guarded read contract.
+push rewrite. Read-only reviewers have no shell and use the hook as a second
+layer for tracked reads only (#9987).
 
 Issue #9008: ``danger`` keeps that argv. Claude loads the same fleet guards
 on both write modes; ``workspace-write`` is ``dontAsk`` plus an allow list and
@@ -76,7 +77,7 @@ from uuid import UUID
 from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
-from ..grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS, GROK_REVIEWER_TOOLS
+from ..grok_reviewer_permissions import GROK_REVIEWER_TOOLS
 from ..result import ParseResult
 from ..trail_isolation import (
     GROK_TRAIL_DENY_TOOLS,
@@ -296,15 +297,13 @@ def _reviewer_agent_definition(cwd: Path) -> str:
         name="lu-read-only-reviewer",
         description="Read-only reviewer with fleet PreToolUse guards",
         body=(
-            "Review the requested work using the available tools and report executed evidence. "
+            "Review the requested work using tracked-file reads only. "
             "Approval-requiring tools are denied without prompting. Continue with permitted "
             "read tools on tracked files inside this checkout (grep requires a file path); "
             "do not retry a denied action through a wrapper. "
-            "Shell execution is unavailable: the native Bash deny remains the fail-closed "
-            "backstop pending #9987 escalation. The hook recognizes these literal read "
-            "commands, but native policy still denies them:\n"
-            + "\n".join(GROK_REVIEWER_READ_COMMANDS)
-            + "\nReport any evidence you could not obtain."
+            "Shell execution is unavailable: auto mode retains the native Bash, Write and "
+            "Edit denies. The hook is a second layer for reads only (#9987). "
+            "Report any execution evidence you could not obtain."
         ),
         publish_guard=True,
         native_aliases=False,

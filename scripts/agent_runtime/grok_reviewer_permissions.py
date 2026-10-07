@@ -1,9 +1,9 @@
-"""Fail-closed command boundary for native headless Grok reviewers.
+"""Tracked-read guard for native headless Grok reviewers (#9987).
 
-Only these literal commands are pre-authorized. They disable Git's optional
-writes, pager, filesystem monitor and executable diff/textconv drivers. File
-inspection uses the native read/search tools; arbitrary code execution needs
-a separate execution-capable task, not a review permission prompt.
+Reviewers retain auto with native Bash, Write and Edit denies and have no shell.
+This hook is a second layer for reads only. Its literal-command recognizer is
+retained for compatibility probes; native Bash denial still blocks those
+commands, and no shell tool is exposed to the reviewer.
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ GROK_REVIEWER_READ_COMMANDS = (
     "date -u",
 )
 REFUSAL_CODE = "READ_ONLY_REVIEW_COMMAND_DENIED"
-GROK_REVIEWER_TOOLS = ("read_file", "list_dir", "grep", "run_terminal_command")
+GROK_REVIEWER_TOOLS = ("read_file", "list_dir", "grep")
 
 
 def reviewer_command_allowed(payload: object) -> bool:
@@ -110,14 +110,22 @@ def main() -> int:
         allowed = reviewer_tool_allowed(json.load(sys.stdin), args.review_root)
     except BaseException:
         allowed = False
-    if allowed:
-        return 0
-    print(
-        f"{REFUSAL_CODE}: read tracked files inside the review checkout (grep needs a file path), "
-        "or use the listed literal Git inspection commands. "
-        "Continue the review and report unavailable execution evidence; do not use a wrapper.",
-        file=sys.stderr,
-    )
+    try:
+        if allowed:
+            return 0
+        print(
+            f"{REFUSAL_CODE}: use tracked-file reads only inside the review checkout "
+            "(grep needs a file path). Shell execution is unavailable. "
+            "Continue the review and report any execution evidence you could not obtain; "
+            "do not use a wrapper.",
+            file=sys.stderr,
+        )
+    except BaseException:
+        # Even refusal-output failures must deny; Grok fails open on exit 1.
+        # Python otherwise retries flushing the broken stream at shutdown and
+        # changes exit 2 to exit 120, which is also not a native hook denial.
+        sys.stderr = None
+        return 2
     return 2
 
 

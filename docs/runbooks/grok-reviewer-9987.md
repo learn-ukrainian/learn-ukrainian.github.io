@@ -1,10 +1,13 @@
 # Native Grok reviewer permission incompatibility (#9987)
 
 The reviewer retains `auto` plus unconditional `Bash`, `Write` and `Edit`
-denies. It never enables `--always-approve`. This is a stop disposition,
-not delivery of literal shell inspection: native Bash denial also blocks the
-literal commands recognized by the guard. The round-a stop diagnostics and
-`permission_cancelled` classification remain intact. The accountable driver,
+denies. It never enables `--always-approve` and exposes only `read_file`,
+`list_dir` and `grep` through `--tools`; no shell tool is exposed. The hook is
+a second layer for tracked-file reads only. The model is told to report any
+execution evidence it could not obtain; execution-dependent reviews go to
+Opus or Sol. No sandbox is used. Native Bash denial also blocks the literal
+commands retained by the guard for compatibility probes. The round-a stop
+diagnostics and `permission_cancelled` classification remain intact. The accountable driver,
 `claude-infra`, owns the unresolved review-completion outcome and escalation.
 
 ## Reproduce without a paid model
@@ -86,13 +89,17 @@ the harness after an upgrade rather than carrying this as global policy.
 
 Do not enable reviewer bypass mode to obtain a verdict. The guard now converts
 symlink loops, unreadable files and interpreter-level evaluation/input errors
-into typed denial (exit 2), and its Git invocations disable lazy fetch. A Python
-startup failure cannot be caught by Python guard code; the retained native Bash
-deny protects shell execution independently. Native read permissions do not
+into typed denial (exit 2), and its Git invocations disable lazy fetch. A
+refusal-output failure, including a broken stderr pipe, also returns exit 2;
+the broken stream is detached so Python's shutdown flush cannot replace that
+denial with exit 120. A Python startup failure cannot be caught by Python guard
+code; the retained native Bash deny protects shell execution independently.
+Native read permissions do not
 replicate the guard's tracked-path containment if hooks fail.
 
-One residual remains: an execution-capable read-only reviewer completing
-literal shell inspection with an independent fail-closed backstop. Owner:
-`claude-infra`. The driver must escalate the observed native incompatibility;
-no OS sandbox design, live-model held-out review, independent approval, CI,
-merge or deployment is certified by these deterministic probes.
+Residual owner: `claude-infra`, for routing documentation and review-completion
+follow-up. Grok reviewers remain read-only with no shell; execution-dependent
+reviews use Opus or Sol. The historical matrix does not certify live-model
+held-out review, independent approval, CI, merge or deployment. This final
+round checks only the four ordered text, tool-exposure and refusal-output fixes;
+other findings remain residuals on #9987.
