@@ -51,6 +51,7 @@ jobs:
             scripts/common/__init__.py
             scripts/common/github_client.py
             scripts/opsec/__init__.py
+            scripts/opsec/gh_snapshot.py
             scripts/opsec/prepublish.py
             .github/workflows/ci.yml
             .python-version
@@ -184,6 +185,7 @@ jobs:
             scripts/common/__init__.py
             scripts/common/github_client.py
             scripts/opsec/__init__.py
+            scripts/opsec/gh_snapshot.py
             scripts/opsec/prepublish.py
             .python-version
           sparse-checkout-cone-mode: false
