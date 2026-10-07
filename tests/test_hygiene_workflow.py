@@ -59,10 +59,17 @@ def test_hygiene_installs_declared_requirements_with_locked_versions(tmp_path: P
 
 
 @pytest.mark.parametrize("missing", [None, "jsonschema", "requests"])
+@pytest.mark.parametrize("shard_files", [None, "ci-artifacts/pytest-shard-1-files.txt"])
 def test_hygiene_environment_guard_checks_fixture_imports(
     missing: str | None,
+    shard_files: str | None,
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    if shard_files is None:
+        monkeypatch.delenv("LU_PYTEST_SHARD_FILES", raising=False)
+    else:
+        monkeypatch.setenv("LU_PYTEST_SHARD_FILES", shard_files)
     workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
     steps = workflow["jobs"]["hygiene-checks"]["steps"]
     guard = next(step for step in steps if step.get("name") == "Guard focused test collection and setup")
@@ -176,6 +183,10 @@ sys.meta_path.insert(0, HygieneImportsOnly())
 import pytest
 raise SystemExit(pytest.main(sys.argv[4:]))
 """
+    child_env = {**os.environ, **guard["env"], "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1", "PYTEST_PLUGINS": ""}
+    # The child names its focused files explicitly; the parent's shard path
+    # may be relative to a different repository and must not filter them.
+    child_env.pop("LU_PYTEST_SHARD_FILES", None)
     result = subprocess.run(
         [
             sys.executable,
@@ -187,7 +198,7 @@ raise SystemExit(pytest.main(sys.argv[4:]))
             *args,
         ],
         cwd=cwd,
-        env={**os.environ, **guard["env"], "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1", "PYTEST_PLUGINS": ""},
+        env=child_env,
         capture_output=True,
         text=True,
         timeout=60,
