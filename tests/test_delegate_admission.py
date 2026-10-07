@@ -355,6 +355,124 @@ def _scratch_repo(root: Path) -> Path:
     return repo
 
 
+def _mechanical_canary_args(*extra: str):
+    return delegate.build_parser().parse_args([
+        "dispatch", "--agent", "claude", "--model", "claude-haiku-5-5",
+        "--task-id", "haiku-mechanical-canary", "--mode", "read-only", "--dry-run",
+        "--research-task-family", "mechanical_classification",
+        "--research-owned-path", "package-lock.json",
+        "--prompt", "Classify the lockfile format. Read only.", *extra,
+    ])
+
+
+def _lockfile_repo(root: Path, content: str = '{"lockfileVersion": 3}') -> Path:
+    repo = _scratch_repo(root)
+    (repo / "package-lock.json").write_text(content, encoding="utf-8")
+    _git(repo, "add", "package-lock.json")
+    _git(repo, "-c", "user.email=t@example.com", "-c", "user.name=t", "commit", "-q", "-m", "lockfile")
+    return repo
+
+
+def _content_gate(args, repo: Path, *, cwd: Path | None = None):
+    return delegate._kimi_dispatch_gate(
+        args, agent=args.agent, route=lambda request: (request.seat, request.model, "explicit"),
+        repo_role="public-monorepo", target_repo_root=repo, validated_worktree=None, validated_cwd=cwd,
+    )
+
+
+@pytest.mark.parametrize("explicit_cwd", [False, True])
+@pytest.mark.parametrize("family", ["mechanical_classification", "readonly_recon", "routine_mechanical"])
+def test_readonly_mechanical_without_worktree_reads_checkout_and_commit(tmp_path, monkeypatch, explicit_cwd, family):
+    repo = _lockfile_repo(tmp_path)
+    args = _mechanical_canary_args("--research-task-family", family)
+
+    def write_resolver_must_not_run(*args, **kwargs):
+        pytest.fail("read-only mechanical task reached Kimi's write-only tree resolver")
+
+    monkeypatch.setattr(delegate, "_kimi_start_trees", write_resolver_must_not_run)
+    # An explicit cwd wins over the default checkout, including when the default
+    # cannot be read. Both the on-disk and committed content readers are real.
+    refusal, start, target = _content_gate(
+        args, tmp_path / "unavailable" if explicit_cwd else repo, cwd=repo if explicit_cwd else None,
+    )
+    assert refusal is None and start is None
+    assert target.model == "claude-haiku-5-5"
+
+
+@pytest.mark.parametrize("unsafe_tree", ["disk", "commit"])
+def test_readonly_mechanical_without_worktree_checks_both_content_trees(tmp_path, unsafe_tree):
+    safe, unsafe = '{"lockfileVersion": 3}', '{"name": "Україна"}'
+    repo = _lockfile_repo(tmp_path, unsafe if unsafe_tree == "commit" else safe)
+    (repo / "package-lock.json").write_text(unsafe if unsafe_tree == "disk" else safe, encoding="utf-8")
+    refusal, start, target = _content_gate(_mechanical_canary_args(), repo)
+    assert "owned content must be plain UTF-8 without Cyrillic" in refusal
+    assert start is None and target is None
+
+
+def test_readonly_mechanical_unreadable_checkout_reports_resolution_stage(tmp_path):
+    refusal, start, target = _content_gate(_mechanical_canary_args(), tmp_path / "missing")
+    assert refusal == "MECHANICAL_TASK_REFUSED: task input unavailable at tree resolution (RuntimeError) (#9996)"
+    assert start is None and target is None
+
+
+@pytest.mark.parametrize("unsafe", [False, True])
+def test_substituted_readonly_mechanical_route_checks_checkout_without_worktree(tmp_path, unsafe):
+    repo = _lockfile_repo(tmp_path, '{"name": "Україна"}' if unsafe else '{"lockfileVersion": 3}')
+    args = _mechanical_canary_args("--model", "claude-sonnet-5-5")
+    refusal, start, target = delegate._kimi_dispatch_gate(
+        args, agent=args.agent, route=lambda request: ("claude", "claude-haiku-5-5", "test-substitution"),
+        repo_role="public-monorepo", target_repo_root=repo, validated_worktree=None, validated_cwd=None,
+    )
+    assert start is None
+    if unsafe:
+        assert "owned content must be plain UTF-8 without Cyrillic" in refusal and target is None
+    else:
+        assert refusal is None and target.model == "claude-haiku-5-5"
+
+
+@pytest.mark.parametrize("selector", ["--worktree", "--branch"])
+def test_readonly_mechanical_with_worktree_keeps_start_tree_resolution(tmp_path, monkeypatch, selector):
+    from scripts.agent_runtime.kimi_admission import worktree_trees
+
+    repo = _lockfile_repo(tmp_path)
+    commit = _git(repo, "rev-parse", "HEAD")
+    calls = []
+
+    def start_trees(args, **kwargs):
+        calls.append(args)
+        return worktree_trees(repo), commit
+
+    monkeypatch.setattr(delegate, "_kimi_start_trees", start_trees)
+    extra = (selector,) if selector == "--worktree" else (selector, "existing-branch")
+    args = _mechanical_canary_args(*extra)
+    refusal, start, target = _content_gate(args, repo)
+    assert refusal is None and target.model == "claude-haiku-5-5"
+    assert start == commit and calls == [args]
+
+
+@pytest.mark.parametrize("agent,model,path", [
+    ("kimi", "kimi-code/k3", "site/src/components/LiveStatus.tsx"),
+    ("claude", "claude-haiku-5-5", "package-lock.json"),
+])
+def test_write_content_gate_without_worktree_still_refuses(tmp_path, agent, model, path):
+    args = _mechanical_canary_args(
+        "--agent", agent, "--model", model, "--mode", "workspace-write",
+        "--research-task-family", "routine_mechanical", "--research-owned-path", path, "--owned-path", path,
+    )
+    # Remove the canary's research path when checking Kimi's narrower allowlist.
+    args.research_owned_path = [path]
+    refusal, start, target = _content_gate(args, tmp_path)
+    assert refusal and start is None and target is None
+    if agent == "kimi":
+        assert "ROUTING REFUSED: KIMI CODING-ONLY" in refusal and "ValueError" in refusal
+        with pytest.raises(ValueError, match="workspace-write without a dispatch worktree"):
+            delegate._kimi_start_trees(
+                args, agent=agent, target_repo_root=tmp_path, validated_worktree=None, validated_cwd=None,
+            )
+    else:
+        assert refusal == "MECHANICAL_TASK_REFUSED: task input unavailable at tree resolution (ValueError) (#9996)"
+
+
 def _load_rises_after_the_first_probe(monkeypatch) -> dict[str, int]:
     """The early check sees a quiet host; every later probe sees load over the limit (the impl-8654-r3 incident)."""
     calls = {"n": 0}
