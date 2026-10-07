@@ -54,7 +54,11 @@ rollback() {
   systemctl --user set-property --runtime lu.slice MemoryHigh=infinity MemoryMax=infinity MemorySwapMax=infinity
   rm -f "$UNIT_DIR/lu.slice"
   local d
-  for d in "${CONTROL_DIRS[@]}"; do rm -rf -- "$d"; done
+  for d in "${CONTROL_DIRS[@]}"; do
+    [ -d "$d" ] || continue
+    rm -f -- "$d"/*.conf
+    rmdir -- "$d" || die "control-dropin-dir-not-empty $d" 5
+  done
   systemctl --user daemon-reload
   expect memory.high max && expect memory.max max && expect memory.swap.max max || die "rollback-verify-failed" 5
   printf 'LU_SLICE_ROLLED_BACK memory.high=max memory.max=max memory.swap.max=max\n'
