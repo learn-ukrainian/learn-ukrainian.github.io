@@ -5842,6 +5842,7 @@ _PUBLIC_REASON_PHRASES = frozenset(
         "task state changed",
         "unreadable task state",
         "worktree active",
+        "worktree already removed",
         "worktree branch differs from task record",
         "worktree ownership unknown or reused",
         "unpushed work - needs rescue",
@@ -7531,6 +7532,15 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     worktree = Path(raw_worktree).resolve()
     dispatch_root = (_REPO_ROOT / ".worktrees" / "dispatch").resolve()
     if not worktree.is_relative_to(dispatch_root):
+        row["reason"] = "not a registered dispatch worktree"
+        return row
+    # A reaped or hand-removed worktree has nothing left to preserve. Before
+    # #9878 the registration check skipped it; reading its git files now would
+    # raise FileNotFoundError and fail every scheduled rescue run.
+    if not worktree.is_dir():
+        row["reason"] = "worktree already removed"
+        return row
+    if not (worktree / ".git").exists():
         row["reason"] = "not a registered dispatch worktree"
         return row
     if state.get("worktree_reused") is not False:
