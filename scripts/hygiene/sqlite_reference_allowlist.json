@@ -434,6 +434,16 @@
     ]
   },
   {
+    "path": "scripts/ingest/grac_frequency_ingest.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "grac_frequency.db (--db destination)",
+    "reason": "persists GRAC frequency pages, provenance and resumable checkpoints (#9969)",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
     "path": "scripts/ingest/sum20_official_ingest.py",
     "reference_count": 1,
     "kind": "writer",

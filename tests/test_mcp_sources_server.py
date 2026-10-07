@@ -2263,3 +2263,56 @@ def test_pravopys_unavailable_envelope_is_an_error_not_empty(server_module):
     _content, envelope = result
     assert envelope["status"] == "error"
     assert envelope["error_code"] == "source_unavailable"
+
+
+@pytest.mark.parametrize("mode", ["frequency", "lemma_forms"])
+@pytest.mark.parametrize("cache_only", [True, False])
+def test_grac_snapshot_handler_offline(server_module, tmp_path, monkeypatch, mode, cache_only):
+    from scripts.ingest.grac_frequency_ingest import SCHEMA
+
+    db = tmp_path / "grac.db"
+    with sqlite3.connect(db) as conn:
+        conn.executescript(SCHEMA)
+        for attr in ("word", "lemma"):
+            conn.execute("INSERT INTO items VALUES (?, 'fixture', 42, 2.5, 1)", (attr,))
+            conn.execute("INSERT INTO provenance VALUES (?,1,'grac19a','open-5.71.15','manatee',5,1000,'2026-10-07T00:00:00+00:00',1)", (attr,))
+    monkeypatch.setenv("LU_GRAC_FREQUENCY_DB", str(db))
+    with patch("rag.source_query._get", side_effect=AssertionError("network forbidden")) as live:
+        text = _run(server_module.handle_query_grac({
+            "query": "fixture", "mode": mode, "cache_only": cache_only,
+        }))[0].text
+    live.assert_not_called()
+    if cache_only:
+        result = json.loads(text)
+        assert result["status"] == "attested"
+        assert result["entry"]["source"] == "local_snapshot"
+        assert result["entry"]["retrieved_at"] == "2026-10-07T00:00:00+00:00"
+    else:
+        assert "42" in text and "local GRAC snapshot" in text and "2026-10-07" in text
+        if mode == "lemma_forms":
+            assert "Form breakdown unavailable" in text
+
+
+@pytest.mark.parametrize("mode", ["frequency", "lemma_forms", "concordance", "collocations"])
+def test_grac_cache_only_miss_does_not_fetch(server_module, tmp_path, monkeypatch, mode):
+    monkeypatch.setenv("LU_GRAC_FREQUENCY_DB", str(tmp_path / "missing.db"))
+    with patch("rag.source_query._get", side_effect=AssertionError("network forbidden")) as live:
+        text = _run(server_module.handle_query_grac({"query": "missing", "mode": mode, "cache_only": True}))[0].text
+    assert json.loads(text)["status"] == "unavailable"
+    assert json.loads(text)["entry"] is None
+    live.assert_not_called()
+    assert not (tmp_path / "missing.db").exists()
+
+
+@pytest.mark.parametrize("mode,payload", [
+    ("frequency", {"Items": [{"str": "fixture", "frq": 7, "relfreq": 3.5}]}),
+    ("lemma_forms", {"Blocks": [{"Items": [{"str": "form", "frq": 7, "poc": 100}]}]}),
+])
+def test_grac_handler_live_source_after_snapshot_miss(server_module, tmp_path, monkeypatch, mode, payload):
+    monkeypatch.setenv("LU_GRAC_FREQUENCY_DB", str(tmp_path / "missing.db"))
+    response = MagicMock()
+    response.json.return_value = payload
+    with patch("rag.source_query._get", return_value=response) as live:
+        text = _run(server_module.handle_query_grac({"query": "fixture", "mode": mode}))[0].text
+    live.assert_called_once()
+    assert "7" in text and "Source: live GRAC" in text
