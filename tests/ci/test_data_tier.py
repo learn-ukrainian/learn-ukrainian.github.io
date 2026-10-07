@@ -595,6 +595,35 @@ def test_hydration_has_total_budget_and_records_timeouts(tmp_path: Path, monkeyp
     }
 
 
+def test_host_file_provisioning_copies_content_but_not_nested_repository_metadata(tmp_path: Path) -> None:
+    primary = tmp_path / "primary"
+    checkout = tmp_path / "checkout"
+    nested = primary / "data" / "ua-gec"
+    for relative, text in (
+        ("data/train/doc.txt", "content\n"),
+        (".git/HEAD", "ref: refs/heads/main\n"),
+        (".git/refs/heads/entire/checkpoints/v1", "df01a9f6\n"),
+        (".entire/settings.json", "{}\n"),
+        (".entire/metadata/state.json", "{}\n"),
+        ("python/pkg/.gitkeep", ""),
+    ):
+        path = nested / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    lexicon = primary / "site" / "public" / "lexicon" / "a.json"
+    lexicon.parent.mkdir(parents=True)
+    lexicon.write_text("{}\n", encoding="utf-8")
+
+    data_tier.provision_host_files(primary, checkout)
+
+    copy = checkout / "data" / "ua-gec"
+    assert (copy / "data" / "train" / "doc.txt").read_text(encoding="utf-8") == "content\n"
+    assert (copy / "python" / "pkg" / ".gitkeep").is_file()
+    assert (checkout / "site" / "public" / "lexicon" / "a.json").is_file()
+    assert not (copy / ".git").exists()
+    assert not (copy / ".entire").exists()
+
+
 def test_stale_worktrees_pruned_only_without_active_scopes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     parent = tmp_path / ".worktrees" / "data-tier"
     old = parent / ("run-" + "a" * 32)
