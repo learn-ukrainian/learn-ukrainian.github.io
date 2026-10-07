@@ -30,8 +30,13 @@ def _run_hook(tmp_path: Path, *, baseline: bool = False, selector: str = "open-m
     # Use the selected tree's canary sources, with untouched dependencies from
     # the worktree. No virtualenv or secondary git checkout is needed.
     (repo / "scripts/__init__.py").write_text(f"__path__.append({str(ROOT / 'scripts')!r})\n")
-    for source in (ROOT / "scripts/session_canary").glob("*.py"):
-        target = canary / source.name
+    # Replay only these explicit capsule dependencies, never scan a repo tree.
+    for name in (
+        "__init__.py", "codex_lane.py", "gemini_lane.py", "glm_lane.py",
+        "grok_lane.py", "handoff_select.py", "shared_hydration.py", "diary.py",
+    ):
+        source = ROOT / "scripts/session_canary" / name
+        target = canary / name
         if baseline:
             target.write_bytes(subprocess.check_output(
                 ["git", "show", f"{PRE_FIX_MAIN_SHA}:scripts/session_canary/{source.name}"], cwd=ROOT, timeout=10,
