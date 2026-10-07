@@ -54,7 +54,7 @@ def _clear_observer_presence() -> None:
 
 @pytest.fixture(autouse=True)
 def _non_operational_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
+    monkeypatch.setenv("ATLAS_RUN_ROOT", "/nonexistent/atlas-run-root")
 
 
 @pytest.fixture(autouse=True)
@@ -595,7 +595,7 @@ def test_safe_field_drops_aliases_addresses_and_fqdn() -> None:
         "192.0.2.1",
         "2001:db8::1",
         "box.example.com",
-        "/tmp/hidden/job",
+        "/srv/hidden/job",
     ):
         assert _safe_field(leaked) is None
         assert _safe_field(leaked, role="task_id") is None
