@@ -114,6 +114,15 @@ fi
   printf 'cwd=<%s>' "$PWD"
   printf ' arg=<%s>' "$@"
   printf '\n'
+  previous=""
+  for argument in "$@"; do
+    if [[ "$previous" == "--exclude-file" ]]; then
+      while IFS= read -r pattern; do
+        printf 'exclude=<%s>\n' "$pattern"
+      done < "$argument"
+    fi
+    previous="$argument"
+  done
 } >> "$FAKE_RESTIC_LOG"
 if [[ "${1:-}" == "backup" && -n "${FAKE_BACKUP_HOLD_FILE:-}" ]]; then
   touch "$FAKE_BACKUP_HOLD_FILE"
@@ -1215,8 +1224,10 @@ def test_backup_skips_dangling_non_legacy_symlink_in_source_with_warning(
 
     result = _run(environment, "backup")
     assert result.returncode == 0, result.stderr
-    assert "WARNING: Skipping broken symlink in backup source: broken-link.txt -> missing-dir/missing.txt" in result.stderr
-    assert f"arg=<--exclude> arg=<{source}/broken-link.txt>" in _log(environment)
+    assert (
+        "WARNING: Skipping broken symlink in backup source: broken-link.txt -> missing-dir/missing.txt" in result.stderr
+    )
+    assert f"exclude=<{source}/broken-link.txt>" in _log(environment)
 
 
 def _dangling_recovery_links(project: Path) -> dict[str, Path]:
@@ -1257,13 +1268,13 @@ def test_backup_skips_dangling_symlinks_in_every_recovery_root_with_warning(
     assert preview.returncode == 0, preview.stderr
     assert "WARNING: Skipping broken symlink in .agent: stale-pointer -> missing-target" in preview.stderr
     log = _log(environment)
-    assert f"arg=<--exclude> arg=<{links['batch_state']}>" in log
-    assert f"arg=<--exclude> arg=<{links['.agent']}>" in log
-    assert f"arg=<--exclude> arg=<{links['data']}>" in log
+    assert f"exclude=<{links['batch_state']}>" in log
+    assert f"exclude=<{links['.agent']}>" in log
+    assert f"exclude=<{links['data']}>" in log
     # Glob metacharacters in a skipped link name are matched literally.
     escaped = str(links[".claude/atlas-epic"]).replace("[", "\\[").replace("]", "\\]")
     escaped = escaped.replace("*", "\\*").replace("?", "\\?")
-    assert f"arg=<--exclude> arg=<{escaped}>" in log
+    assert f"exclude=<{escaped}>" in log
 
     executed = _run(environment, "backup", "--execute")
     assert executed.returncode == 0, executed.stderr
@@ -2393,7 +2404,7 @@ def test_linux_allows_designated_staging_on_the_data_volume(
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode == 0, result.stderr
-    assert f"arg=<--exclude> arg=<{data_staging}>" in _log(environment)
+    assert f"exclude=<{data_staging}>" in _log(environment)
     assert list(data_staging.iterdir()) == []
 
 
@@ -2425,3 +2436,181 @@ def test_refuses_non_designated_staging_inside_selected_checkout(
 
     assert result.returncode != 0
     assert "Staging directory must be outside the selected project checkout" in result.stderr
+
+
+def _make_database(path: Path, value: str = "row") -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    connection = sqlite3.connect(path)
+    try:
+        connection.execute("CREATE TABLE IF NOT EXISTS recovery_probe (value TEXT NOT NULL)")
+        connection.execute("INSERT INTO recovery_probe VALUES (?)", (value,))
+        connection.commit()
+    finally:
+        connection.close()
+    return path
+
+
+def _base_backup_lines(log: str) -> list[str]:
+    return [line for line in log.splitlines() if "arg=<backup>" in line and "arg=<--stdin>" not in line]
+
+
+def _uploaded_databases(log: str) -> set[str]:
+    return set(re.findall(r"arg=<--stdin-filename> arg=<([^>]*\.(?:db|sqlite3?))>", log))
+
+
+def test_database_excludes_go_through_an_exclude_file_not_argv(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    project = source.parent
+    plain = _make_database(source / "plain.db")
+    odd = _make_database(project / "batch_state" / "odd $HOME name.sqlite3")
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    log = _log(environment)
+    base = _base_backup_lines(log)
+    assert len(base) == 1
+    assert "arg=<--exclude>" not in base[0]
+    assert "arg=<--exclude-file>" in base[0]
+    assert f"exclude=<{plain}>" in log
+    assert f"exclude=<{plain}-wal>" in log
+    # $ and spaces stay literal: restic expands $VAR and trims each line.
+    literal_odd = str(odd).replace("$", "[$]").replace(" ", "[ ]")
+    assert f"exclude=<{literal_odd}>" in log
+    assert _uploaded_databases(log) == {"data/plain.db", "batch_state/odd $HOME name.sqlite3"}
+    assert "SQLite databases backed up: 2 of 2 (pytest scratch skipped: 0, archived: 0)." in result.stdout
+    # The private exclude file is removed with the run.
+    exclude_files = re.findall(r"arg=<--exclude-file> arg=<([^>]*)>", log)
+    assert exclude_files and not any(Path(path).exists() for path in exclude_files)
+
+
+def test_preview_also_uses_the_exclude_file(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    database = _make_database(source / "plain.db")
+
+    result = _run(environment, "backup")
+
+    assert result.returncode == 0, result.stderr
+    log = _log(environment)
+    assert "arg=<--exclude>" not in log
+    assert "arg=<--dry-run>" in log
+    assert f"exclude=<{database}>" in log
+
+
+def test_pytest_scratch_databases_are_skipped_and_excluded(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    project = source.parent
+    keep = _make_database(project / "batch_state" / "tasks" / "write-ownership.sqlite3")
+    scratch = [
+        _make_database(project / "batch_state" / "proof" / "pytest-RC2" / "stores0" / "7" / "write-ownership.sqlite3"),
+        _make_database(project / "batch_state" / "proof" / "pytest-of-ops" / "pytest-3" / "t0" / "atlas.db"),
+    ]
+    # A name that merely mentions pytest is not a pytest base temp directory.
+    lookalike = _make_database(project / "batch_state" / "pytest-results.sqlite3")
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    log = _log(environment)
+    assert _uploaded_databases(log) == {
+        str(keep.relative_to(project)),
+        str(lookalike.relative_to(project)),
+    }
+    for database in scratch:
+        assert f"exclude=<{database}>" in log
+    assert "SQLite databases backed up: 2 of 2 (pytest scratch skipped: 2, archived: 0)." in result.stdout
+    receipt = json.loads((Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
+    assert receipt["linux_run"]["databases_backed_up"] == 2
+    assert receipt["linux_run"]["transient_databases_skipped"] == 2
+    assert "2 pytest scratch SQLite databases skipped" in receipt["exclusions"]
+
+
+def _write_archive(project: Path, name: str, databases: list[Path], *, archive_bytes: int | None = None) -> Path:
+    archive_dir = project / "batch_state" / "backups" / "archives"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    archive = archive_dir / name
+    archive.write_bytes(b"\x28\xb5\x2f\xfd fixture archive bytes")
+    lines = [
+        "# lu-backup-db-archive v1",
+        f"# archive_bytes: {archive.stat().st_size if archive_bytes is None else archive_bytes}",
+        f"# files: {len(databases)}",
+    ]
+    for database in databases:
+        stat = database.stat()
+        lines.append(f"{stat.st_size}\t{int(stat.st_mtime)}\t{database.relative_to(project)}")
+    (archive_dir / f"{name}.manifest").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return archive
+
+
+def test_archived_databases_are_covered_by_the_archive(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    project = source.parent
+    live = _make_database(source / "live.db")
+    preserved = [
+        _make_database(project / "batch_state" / "preserved" / "atlas-1" / "atlas.db"),
+        _make_database(project / "batch_state" / "codex-atlas" / "s1" / "sources.db"),
+    ]
+    _write_archive(project, "atlas-preserved-dbs-20261007.tar.zst", preserved)
+    environment["FAKE_REQUIRED_RELATIVE"] = "batch_state/backups/archives/atlas-preserved-dbs-20261007.tar.zst"
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    log = _log(environment)
+    assert _uploaded_databases(log) == {str(live.relative_to(project))}
+    for database in preserved:
+        assert f"exclude=<{database}>" in log
+        assert database.exists()  # never deleted
+    assert "staged_required=<batch_state/backups/archives/atlas-preserved-dbs-20261007.tar.zst>" in log
+    assert "SQLite databases backed up: 1 of 1 (pytest scratch skipped: 0, archived: 2)." in result.stdout
+    receipt = json.loads((Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
+    assert receipt["linux_run"]["archived_databases"] == 2
+    assert receipt["linux_run"]["database_archives"] == ["atlas-preserved-dbs-20261007.tar.zst"]
+    assert "loose SQLite databases covered by archive atlas-preserved-dbs-20261007.tar.zst" in receipt["exclusions"]
+
+
+def test_database_changed_after_archiving_is_backed_up_loose(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    project = source.parent
+    unchanged = _make_database(project / "batch_state" / "preserved" / "a" / "atlas.db")
+    changed = _make_database(project / "batch_state" / "preserved" / "b" / "atlas.db")
+    _write_archive(project, "dbs-20261007.tar.zst", [unchanged, changed])
+    _make_database(changed, "written after archiving")
+    os.utime(changed, (time.time() + 5, time.time() + 5))
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert "changed since it was archived; backing up the live copy: batch_state/preserved/b/atlas.db" in result.stderr
+    assert _uploaded_databases(_log(environment)) == {"batch_state/preserved/b/atlas.db"}
+
+
+@pytest.mark.parametrize("problem", ["size-mismatch", "missing-archive"])
+def test_unverifiable_archive_is_ignored_and_databases_are_backed_up(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    problem: str,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    project = source.parent
+    database = _make_database(project / "batch_state" / "preserved" / "a" / "atlas.db")
+    archive = _write_archive(
+        project, "dbs-20261007.tar.zst", [database], archive_bytes=1 if problem == "size-mismatch" else None
+    )
+    if problem == "missing-archive":
+        archive.unlink()
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert "WARNING: Ignoring SQLite archive" in result.stderr
+    assert _uploaded_databases(_log(environment)) == {"batch_state/preserved/a/atlas.db"}

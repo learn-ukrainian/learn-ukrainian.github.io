@@ -77,7 +77,7 @@ def receipt_summary(project_root: Path) -> str:
         return "last-run receipt: absent or unreadable"
     if not isinstance(receipt, dict):
         return "last-run receipt: invalid"
-    fields = ("status", "exit_status", "run_id", "finished_at_utc")
+    fields = ("status", "exit_status", "run_id", "finished_at_utc", "databases_backed_up")
     parts = [f"{field}={receipt[field]}" for field in fields if receipt.get(field) not in (None, "")]
     return "last-run receipt: " + (" ".join(parts) if parts else "no status fields")
 
@@ -110,8 +110,11 @@ def failure_message(unit: str, now: str, environment: Mapping[str, str], project
     return "\n".join(lines) + "\n"
 
 
-def recovery_message(unit: str, now: str, since: str) -> str:
-    return f"[sre-timers] {unit} RECOVERED at {now} (failing since {since or 'unknown'}).\n"
+def recovery_message(unit: str, now: str, since: str, project_root: Path | None = None) -> str:
+    message = f"[sre-timers] {unit} RECOVERED at {now} (failing since {since or 'unknown'}).\n"
+    if unit == "learn-ukrainian-backup.service" and project_root is not None:
+        message += receipt_summary(project_root) + "\n"
+    return message
 
 
 def fleet_comms_publisher(project_root: Path) -> Publisher:
@@ -175,7 +178,8 @@ def handle(
         if state.get("state") != "failed":
             return f"{unit}: healthy, nothing to report"
         publish(
-            recovery_message(unit, now, state.get("since_utc", "")), f"lu-backup-alert:{unit}:recovered:{invocation}"
+            recovery_message(unit, now, state.get("since_utc", ""), project_root),
+            f"lu-backup-alert:{unit}:recovered:{invocation}",
         )
         path.unlink(missing_ok=True)
         return f"{unit}: recovery reported to the {CHANNEL} channel"

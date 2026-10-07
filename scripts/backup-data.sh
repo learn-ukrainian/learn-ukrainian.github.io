@@ -62,6 +62,11 @@ readonly LOCK_WAIT_SECONDS="${LU_BACKUP_LOCK_WAIT_SECONDS:-3600}"
 readonly RCLONE_CONNECTIONS="${LU_BACKUP_RCLONE_CONNECTIONS:-1}"
 readonly PRUNE_MIN_RCLONE_CONNECTIONS=2
 readonly STAGE_PATH="$TMP_ROOT/learn-ukrainian-backup.${UID}.stage"
+# Dated compressed archives of preserved SQLite evidence. Each
+# NAME.tar.zst ships with NAME.tar.zst.manifest (see load_db_archive_manifests);
+# a listed database whose size and mtime still match is covered by the archive,
+# which the file phase uploads, so the loose copy is not uploaded again.
+readonly DB_ARCHIVE_DIR="${LU_BACKUP_DB_ARCHIVE_DIR:-$PROJECT_ROOT/batch_state/backups/archives}"
 # Operator-approved retention policy (2026-09-26), applied weekly by
 # `retention --execute` to completed backup runs (never to individual
 # snapshots) of this backup family's tag only.
@@ -73,7 +78,11 @@ STAGE_DIR=""
 STAGED_ROOT=""
 LOCK_FD=""
 LEGACY_DIR=""
+# restic exclude patterns, one per entry. They are written to a private file
+# and passed with --exclude-file: thousands of per-database --exclude flags
+# overflow the kernel argument limit ("Argument list too long").
 RESTIC_EXCLUDES=()
+RESTIC_EXCLUDE_FILE=""
 LEGACY_EXCLUDES=()
 BACKUP_PATHS=()
 EPHEMERAL_HOME_EXCLUDES=()
@@ -82,6 +91,14 @@ EPHEMERAL_HOME_EXCLUDES=()
 # aborting the whole backup; the receipt records each one.
 BROKEN_SYMLINK_EXCLUDES=()
 LINUX_DB_SNAPSHOTS='[]'
+# SQLite sources split by classify_sqlite_sources: uploaded one by one,
+# skipped as per-run test scratch, or covered by a verified archive.
+SQLITE_BACKUP_SOURCES=()
+SQLITE_TRANSIENT_SOURCES=()
+SQLITE_ARCHIVED_SOURCES=()
+DB_ARCHIVES_USED=()
+declare -A ARCHIVED_DB_STAT=()
+declare -A ARCHIVED_DB_ARCHIVE=()
 LINUX_BASE_SNAPSHOT=""
 LINUX_PATCH_SNAPSHOT=""
 RUN_ID=""
@@ -284,6 +301,10 @@ cleanup() {
         echo "WARNING: refusing to clean unexpected staging path: $STAGE_DIR" >&2
         ;;
     esac
+  fi
+
+  if [[ -n "$RESTIC_EXCLUDE_FILE" && -f "$RESTIC_EXCLUDE_FILE" ]]; then
+    find "$RESTIC_EXCLUDE_FILE" -maxdepth 0 -type f -delete
   fi
 
   if [[ -n "$LOCK_FD" ]]; then
@@ -747,6 +768,116 @@ is_sqlite_database() {
   head -c 16 "$database" 2>/dev/null | cmp -s - <(printf 'SQLite format 3\0')
 }
 
+# Per-run test scratch: a database anywhere under a pytest base temp
+# directory (pytest-of-<user>, --basetemp pytest-RC, pytest-HEAD, ...). It is
+# throwaway test state, so it is neither uploaded nor kept in the file phase.
+is_transient_sqlite_path() {
+  local relative=/${1#"$PROJECT_ROOT"/}
+  [[ "$relative" == */pytest-*/* ]]
+}
+
+# Read NAME.tar.zst.manifest files from DB_ARCHIVE_DIR. Format:
+#   # lu-backup-db-archive v1
+#   # archive_bytes: <size of NAME.tar.zst>
+#   # files: <number of entries below>
+#   <size>\t<mtime epoch seconds>\t<project-relative database path>
+# A manifest is used only when its archive is a regular file inside a backup
+# root with exactly the recorded size and the entry count matches; otherwise it
+# is ignored with a warning and every listed database is backed up loose.
+load_db_archive_manifests() {
+  local manifest archive name line header_bytes header_files actual_bytes count
+  local size mtime relative archive_relative
+  local -a entries
+
+  ARCHIVED_DB_STAT=()
+  ARCHIVED_DB_ARCHIVE=()
+  [[ -d "$DB_ARCHIVE_DIR" ]] || return 0
+  for manifest in "$DB_ARCHIVE_DIR"/*.tar.zst.manifest; do
+    [[ -f "$manifest" && ! -L "$manifest" ]] || continue
+    archive=${manifest%.manifest}
+    name=$(basename "$archive")
+    archive_relative=${archive#"$PROJECT_ROOT"/}
+    if [[ "$archive_relative" == "$archive" ]] || ! path_has_backup_coverage "$archive_relative"; then
+      echo "WARNING: Ignoring SQLite archive outside the backup roots: $name" >&2
+      continue
+    fi
+    if [[ -L "$archive" || ! -f "$archive" ]]; then
+      echo "WARNING: Ignoring SQLite archive manifest without its archive: $name" >&2
+      continue
+    fi
+    header_bytes=""
+    header_files=""
+    entries=()
+    while IFS= read -r line || [[ -n "$line" ]]; do
+      case "$line" in
+        '# archive_bytes: '*) header_bytes=${line#'# archive_bytes: '} ;;
+        '# files: '*) header_files=${line#'# files: '} ;;
+        '#'*|'') ;;
+        *) entries+=("$line") ;;
+      esac
+    done < "$manifest"
+    actual_bytes="$(stat -c '%s' "$archive" 2>/dev/null || stat -f '%z' "$archive")"
+    count=${#entries[@]}
+    if [[ ! "$header_bytes" =~ ^[0-9]+$ || "$header_bytes" != "$actual_bytes" ||
+          ! "$header_files" =~ ^[0-9]+$ || "$header_files" -ne "$count" ]]; then
+      echo "WARNING: Ignoring SQLite archive whose manifest does not match it: $name" >&2
+      continue
+    fi
+    for line in "${entries[@]}"; do
+      IFS=$'\t' read -r size mtime relative <<< "$line"
+      [[ "$size" =~ ^[0-9]+$ && "$mtime" =~ ^[0-9]+$ && -n "$relative" ]] || {
+        echo "WARNING: Skipping malformed SQLite archive manifest entry in $name" >&2
+        continue
+      }
+      ARCHIVED_DB_STAT["$relative"]="$size $mtime"
+      ARCHIVED_DB_ARCHIVE["$relative"]=$name
+    done
+  done
+}
+
+# Split list_sqlite_sources into uploaded, transient, and archived databases.
+classify_sqlite_sources() {
+  local database relative current name
+  local -A used=()
+
+  SQLITE_BACKUP_SOURCES=()
+  SQLITE_TRANSIENT_SOURCES=()
+  SQLITE_ARCHIVED_SOURCES=()
+  DB_ARCHIVES_USED=()
+  load_db_archive_manifests
+  while IFS= read -r -d '' database; do
+    relative=${database#"$PROJECT_ROOT"/}
+    if is_transient_sqlite_path "$database"; then
+      SQLITE_TRANSIENT_SOURCES+=("$database")
+      continue
+    fi
+    if [[ -n "${ARCHIVED_DB_STAT[$relative]+set}" ]]; then
+      current="$(stat -c '%s %Y' "$database" 2>/dev/null || stat -f '%z %m' "$database")"
+      if [[ "$current" == "${ARCHIVED_DB_STAT[$relative]}" ]]; then
+        SQLITE_ARCHIVED_SOURCES+=("$database")
+        name=${ARCHIVED_DB_ARCHIVE[$relative]}
+        if [[ -z "${used[$name]+set}" ]]; then
+          used[$name]=1
+          DB_ARCHIVES_USED+=("$name")
+        fi
+        continue
+      fi
+      echo "WARNING: SQLite database changed since it was archived; backing up the live copy: $relative" >&2
+    fi
+    SQLITE_BACKUP_SOURCES+=("$database")
+  done < <(list_sqlite_sources)
+  info "SQLite sources: ${#SQLITE_BACKUP_SOURCES[@]} to back up, ${#SQLITE_TRANSIENT_SOURCES[@]} pytest scratch skipped, ${#SQLITE_ARCHIVED_SOURCES[@]} covered by ${#DB_ARCHIVES_USED[@]} archive(s)."
+}
+
+# Exclude every classified database from the file phase; uploaded ones go
+# through the online-backup phase, the others are skipped or archived.
+add_classified_sqlite_excludes() {
+  local database
+  for database in "${SQLITE_BACKUP_SOURCES[@]}" "${SQLITE_TRANSIENT_SOURCES[@]}" "${SQLITE_ARCHIVED_SOURCES[@]}"; do
+    add_sqlite_exclude "$database"
+  done
+}
+
 unreadable_backup_paths() {
   local relative root found path
   for relative in "${BACKUP_PATHS[@]}"; do
@@ -959,7 +1090,39 @@ restic_literal_pattern() {
   pattern=${pattern//\?/\\?}
   pattern=${pattern//\[/\\[}
   pattern=${pattern//\]/\\]}
+  # Exclude files expand $VAR and trim surrounding whitespace on each line;
+  # single-character classes keep those characters literal.
+  pattern=${pattern//\$/[\$]}
+  pattern=${pattern// /[ ]}
+  pattern=${pattern//$'\t'/[$'\t']}
   printf '%s\n' "$pattern"
+}
+
+# Write RESTIC_EXCLUDES to a private file for --exclude-file. Every restic
+# backup call that walks the tree passes this file instead of argv flags.
+write_restic_exclude_file() {
+  local pattern
+
+  if [[ -z "$RESTIC_EXCLUDE_FILE" ]]; then
+    RESTIC_EXCLUDE_FILE="$(mktemp "${TMPDIR:-/tmp}/learn-ukrainian-backup-excludes.XXXXXX")" ||
+      die "Could not create the restic exclude file."
+  fi
+  : > "$RESTIC_EXCLUDE_FILE" || die "Could not write the restic exclude file."
+  for pattern in "${RESTIC_EXCLUDES[@]}"; do
+    [[ "$pattern" != *$'\n'* ]] ||
+      die "Cannot express an exclude pattern containing a newline: ${pattern%%$'\n'*}..."
+    printf '%s\n' "$pattern" >> "$RESTIC_EXCLUDE_FILE" ||
+      die "Could not write the restic exclude file."
+  done
+}
+
+# Exclude one SQLite database and its sidecars, matched literally.
+add_sqlite_exclude() {
+  local database=$1 suffix
+
+  for suffix in "" -wal -shm -journal; do
+    RESTIC_EXCLUDES+=("$(restic_literal_pattern "$database$suffix")")
+  done
 }
 
 build_restic_excludes() {
@@ -967,45 +1130,45 @@ build_restic_excludes() {
   local relative
 
   RESTIC_EXCLUDES=(
-    --exclude "$root/qdrant"
-    --exclude '**/*.db-wal'
-    --exclude '**/*.db-shm'
-    --exclude '**/*.db-journal'
-    --exclude '**/*.sqlite-wal'
-    --exclude '**/*.sqlite-shm'
-    --exclude '**/*.sqlite-journal'
-    --exclude '**/*.sqlite3-wal'
-    --exclude '**/*.sqlite3-shm'
-    --exclude '**/*.sqlite3-journal'
-    --exclude '**/*.sqlite*-wal'
-    --exclude '**/*.sqlite*-shm'
-    --exclude '**/*.sqlite*-journal'
-    --exclude '**/__pycache__/**'
-    --exclude '**/.DS_Store'
-    --exclude '**/batch_state/**/*-home'
-    --exclude '**/batch_state/**/*-home/**'
-    --exclude '**/batch_state/review-receipts/**/home'
-    --exclude '**/batch_state/review-receipts/**/home/**'
+    "$(restic_literal_pattern "$root/qdrant")"
+    '**/*.db-wal'
+    '**/*.db-shm'
+    '**/*.db-journal'
+    '**/*.sqlite-wal'
+    '**/*.sqlite-shm'
+    '**/*.sqlite-journal'
+    '**/*.sqlite3-wal'
+    '**/*.sqlite3-shm'
+    '**/*.sqlite3-journal'
+    '**/*.sqlite*-wal'
+    '**/*.sqlite*-shm'
+    '**/*.sqlite*-journal'
+    '**/__pycache__/**'
+    '**/.DS_Store'
+    '**/batch_state/**/*-home'
+    '**/batch_state/**/*-home/**'
+    '**/batch_state/review-receipts/**/home'
+    '**/batch_state/review-receipts/**/home/**'
   )
   if ((${#LEGACY_EXCLUDES[@]} > 0)); then
     for relative in "${LEGACY_EXCLUDES[@]}"; do
-      RESTIC_EXCLUDES+=(--exclude "$root/$relative")
+      RESTIC_EXCLUDES+=("$(restic_literal_pattern "$root/$relative")")
     done
   fi
   for relative in "${EPHEMERAL_HOME_EXCLUDES[@]}"; do
-    RESTIC_EXCLUDES+=(--exclude "$relative")
+    RESTIC_EXCLUDES+=("$(restic_literal_pattern "$relative")")
   done
   # Skipped broken symlinks, re-rooted onto the tree restic reads: the live
   # project on Linux, the private staging copy otherwise. root is <tree>/data.
   if ((${#BROKEN_SYMLINK_EXCLUDES[@]} > 0)); then
     for relative in "${BROKEN_SYMLINK_EXCLUDES[@]}"; do
-      RESTIC_EXCLUDES+=(--exclude "$(restic_literal_pattern "${root%/data}/${relative#"$PROJECT_ROOT"/}")")
+      RESTIC_EXCLUDES+=("$(restic_literal_pattern "${root%/data}/${relative#"$PROJECT_ROOT"/}")")
     done
   fi
   # Never upload the private staging tree when it lives inside data/
   # (the data-volume staging location).
   if path_is_within "$TMP_ROOT" "$SOURCE"; then
-    RESTIC_EXCLUDES+=(--exclude "$TMP_ROOT")
+    RESTIC_EXCLUDES+=("$(restic_literal_pattern "$TMP_ROOT")")
   fi
 }
 
@@ -1140,6 +1303,24 @@ write_backup_receipt() {
       )"
     done
   fi
+  if ((${#SQLITE_TRANSIENT_SOURCES[@]} > 0)); then
+    exclusions_json="$(
+      jq -cn \
+        --argjson current "$exclusions_json" \
+        --arg entry "${#SQLITE_TRANSIENT_SOURCES[@]} pytest scratch SQLite databases skipped" \
+        '$current + [$entry]'
+    )"
+  fi
+  if ((${#DB_ARCHIVES_USED[@]} > 0)); then
+    for relative in "${DB_ARCHIVES_USED[@]}"; do
+      exclusions_json="$(
+        jq -cn \
+          --argjson current "$exclusions_json" \
+          --arg entry "loose SQLite databases covered by archive $relative" \
+          '$current + [$entry]'
+      )"
+    done
+  fi
   if ((${#BROKEN_SYMLINK_EXCLUDES[@]} > 0)); then
     for relative in "${BROKEN_SYMLINK_EXCLUDES[@]}"; do
       exclusions_json="$(
@@ -1166,6 +1347,9 @@ write_backup_receipt() {
     --arg base_snapshot_id "$LINUX_BASE_SNAPSHOT" \
     --arg patch_snapshot_id "$LINUX_PATCH_SNAPSHOT" \
     --argjson databases "$LINUX_DB_SNAPSHOTS" \
+    --argjson transient_count "${#SQLITE_TRANSIENT_SOURCES[@]}" \
+    --argjson archived_count "${#SQLITE_ARCHIVED_SOURCES[@]}" \
+    --argjson archives "$(jq -cn '$ARGS.positional' --args "${DB_ARCHIVES_USED[@]}")" \
     '{
       schema_version: (if $linux_mode then 2 else 1 end),
       created_at_utc: $created_at,
@@ -1179,7 +1363,7 @@ write_backup_receipt() {
       known_missing_paths: $known_missing,
       exclusions: $exclusions,
       restore_command: "./scripts/backup-data.sh restore latest --to /absolute/empty/directory --execute",
-      linux_run: (if $linux_mode then {run_id: $run_id, base_snapshot_id: $base_snapshot_id, patch_snapshot_id: $patch_snapshot_id, databases: $databases} else null end)
+      linux_run: (if $linux_mode then {run_id: $run_id, base_snapshot_id: $base_snapshot_id, patch_snapshot_id: $patch_snapshot_id, databases: $databases, databases_backed_up: ($databases | length), transient_databases_skipped: $transient_count, archived_databases: $archived_count, database_archives: $archives} else null end)
     }' > "$STAGED_ROOT/BACKUP-RECEIPT.json"
   BACKUP_PATHS+=("BACKUP-RECEIPT.json")
 }
@@ -1285,17 +1469,16 @@ run_linux_backup() {
     [[ "$relative" == "GIT-WORKTREE.patch" ]] || live_paths+=("$relative")
   done
   build_restic_excludes "$SOURCE"
-  while IFS= read -r -d '' source_db; do
-    RESTIC_EXCLUDES+=(--exclude "$source_db")
-    RESTIC_EXCLUDES+=(--exclude "$source_db-wal" --exclude "$source_db-shm" --exclude "$source_db-journal")
-  done < <(list_sqlite_sources)
+  classify_sqlite_sources
+  add_classified_sqlite_excludes
+  write_restic_exclude_file
   info "Streaming non-database recovery files from the live tree."
   backup_output="$STAGE_DIR/base-backup.jsonl"
   if (
     cd "$PROJECT_ROOT"
     restic_repository_command backup "${live_paths[@]}" \
       --host "$BACKUP_HOST" --tag "$BACKUP_TAG" --tag "lu-run-$RUN_ID" \
-      --tag lu-part-base --json "${RESTIC_EXCLUDES[@]}"
+      --tag lu-part-base --json --exclude-file "$RESTIC_EXCLUDE_FILE"
   ) | tee "$backup_output"; then
     if ! LINUX_BASE_SNAPSHOT="$(snapshot_id_from_output "$backup_output" 2>&1)"; then
       BACKUP_FAILURES+=("File phase: $LINUX_BASE_SNAPSHOT")
@@ -1312,14 +1495,16 @@ run_linux_backup() {
     done <<< "$unreadable"
   fi
 
-  while IFS= read -r -d '' source_db; do
+  for source_db in "${SQLITE_BACKUP_SOURCES[@]}"; do
     relative=${source_db#"$PROJECT_ROOT"/}
     if [[ "$relative" == *$'\n'* || "$relative" == *$'\t'* ]]; then
       BACKUP_FAILURES+=("Database path cannot be recorded safely: $relative")
       continue
     fi
     linux_backup_database "$source_db" "$relative" || true
-  done < <(list_sqlite_sources)
+  done
+  # Parsed into last-run.json and the change-only alert; printed on failure too.
+  info "SQLite databases backed up: $(jq -r 'length' <<< "$LINUX_DB_SNAPSHOTS") of ${#SQLITE_BACKUP_SOURCES[@]} (pytest scratch skipped: ${#SQLITE_TRANSIENT_SOURCES[@]}, archived: ${#SQLITE_ARCHIVED_SOURCES[@]})."
 
   if [[ -f "$STAGED_ROOT/GIT-WORKTREE.patch" ]]; then
     if restic_repository_command backup --stdin --stdin-filename GIT-WORKTREE.patch \
@@ -1356,7 +1541,7 @@ run_linux_backup() {
 
 run_backup() {
   local execute=$1
-  local backup_root backup_output snapshot_id
+  local backup_root backup_output snapshot_id source_db
 
   validate_environment
   if [[ "$execute" -eq 1 ]]; then acquire_lock; fi
@@ -1368,12 +1553,13 @@ run_backup() {
     backup_root="$SOURCE"
     build_restic_excludes "$backup_root"
     if [[ "$(uname -s)" == Linux ]]; then
-      while IFS= read -r -d '' source_db; do
-        RESTIC_EXCLUDES+=(--exclude "$source_db")
-        RESTIC_EXCLUDES+=(--exclude "$source_db-wal" --exclude "$source_db-shm" --exclude "$source_db-journal")
+      classify_sqlite_sources
+      add_classified_sqlite_excludes
+      for source_db in "${SQLITE_BACKUP_SOURCES[@]}"; do
         echo "  SQLite online backup preview: ${source_db#"$PROJECT_ROOT"/}"
-      done < <(list_sqlite_sources)
+      done
     fi
+    write_restic_exclude_file
     require_initialized_repository
     (
       cd "$PROJECT_ROOT"
@@ -1382,7 +1568,7 @@ run_backup() {
         --verbose=2 \
         --host "$BACKUP_HOST" \
         --tag "$BACKUP_TAG" \
-        "${RESTIC_EXCLUDES[@]}"
+        --exclude-file "$RESTIC_EXCLUDE_FILE"
     )
     echo "Preview complete. Re-run with --execute to create a snapshot."
     return
@@ -1406,6 +1592,7 @@ run_backup() {
 
   backup_root="$STAGED_ROOT/data"
   build_restic_excludes "$backup_root"
+  write_restic_exclude_file
   info "Creating encrypted, versioned restic snapshot."
   backup_output="$STAGE_DIR/restic-backup.jsonl"
   (
@@ -1414,7 +1601,7 @@ run_backup() {
       --host "$BACKUP_HOST" \
       --tag "$BACKUP_TAG" \
       --json \
-      "${RESTIC_EXCLUDES[@]}"
+      --exclude-file "$RESTIC_EXCLUDE_FILE"
   ) | tee "$backup_output"
   if ! snapshot_id="$(jq -er 'select(.message_type == "summary") | .snapshot_id // empty' "$backup_output")" ||
     [[ ! "$snapshot_id" =~ ^[0-9a-f]{64}$ ]]; then
