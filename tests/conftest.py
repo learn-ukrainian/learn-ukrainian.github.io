@@ -1254,17 +1254,26 @@ def _isolate_runtime_scratch_root(
     ``ensure_scratch_root() / "learn-ukrainian" / <task-id>``, so an unset
     override shares ``/var/tmp/lu/learn-ukrainian/<task-id>`` across cases.
 
-    The directory is not created here. An autouse mkdir under ``tmp_path``
-    breaks tests that require an empty tmp dir (see
-    ``_isolate_write_ownership_ledger``). ``ensure_scratch_root`` creates the
-    override when a lease is actually allocated. A test that sets
-    ``LU_SCRATCH_ROOT`` itself runs after this fixture, so that value wins.
+    ``LU_SCRATCH_SCAN_ROOT`` is the supported scan confinement. Every test,
+    including default-resolution tests, sets it to ``tmp_path``.
+    ``scratch_scan_roots`` then omits the host default and the legacy temp
+    directory, so an orphan sweep cannot delete leases outside this test.
+    The scan variable is not a creation override. A test that sets either
+    variable itself runs after this fixture, so that value wins.
 
-    Tests marked ``exercises_default_scratch_root`` keep the override unset
-    and resolve the built-in default. Their default is a private directory
-    under ``tmp_path``, not the host's ``/var/tmp/lu``.
+    The scratch directory is not created here. An autouse mkdir under
+    ``tmp_path`` breaks tests that require an empty tmp dir (see
+    ``_isolate_write_ownership_ledger``). ``ensure_scratch_root`` creates the
+    override when a lease is actually allocated.
+
+    Tests marked ``exercises_default_scratch_root`` keep the creation
+    override unset and resolve the built-in default. Their default is a
+    private directory under ``tmp_path``, not the host's ``/var/tmp/lu``.
+    Scans stay inside ``tmp_path`` for those tests too.
     """
     from scripts.common import scratch
+
+    monkeypatch.setenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, str(tmp_path))
 
     if request.node.get_closest_marker("exercises_default_scratch_root"):
         fake_root = tmp_path / "fake-default-scratch"
