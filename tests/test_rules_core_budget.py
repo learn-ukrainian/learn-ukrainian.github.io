@@ -16,7 +16,8 @@ CORE = ROOT / "agents_extensions/shared/rules/core.md"
 CATALOG = ROOT / "scripts/config/model_catalog.yaml"
 # 34_000 -> 34_100: the binding p9-rights obligation (#9618) is a real obligation that needs the room.
 # 34_100 -> 35_100: designated decision (#9704) approved the expanded p4-head CI-recovery rule.
-CORE_BYTE_BUDGET = 35_100
+# 35_100 -> 35_300: #10014 / #9987 add Grok's execution limit without cutting reviewer obligations.
+CORE_BYTE_BUDGET = 35_300
 PILLARS = tuple(f"P{n}" for n in range(10))
 # A launcher context-window suffix such as `[1m]` is not part of the model id; the base id is checked.
 MODEL_ID = re.compile(r"`((?:gpt|claude|gemini|grok|kimi|glm|deepseek|composer|poolside)[^`\s\[]*)(?:\[[^\]`\s]*\])?`")
