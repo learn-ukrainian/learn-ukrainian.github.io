@@ -23,16 +23,16 @@ INPUTS = json.loads((FIXTURE / "inputs.json").read_bytes())
 CAPTURE = runpy.run_path(str(FIXTURE / "capture.py"))
 
 
-# Literal digests bind the explicitly ordered #9960 merge revision; see SPEC.md.
+# Literal digests bind the explicitly ordered #9996 Haiku merge revision; see SPEC.md.
 PINNED_DIGESTS = {
-    "SHA256SUMS": "69e4bffafadde593bbcfd83f86583e2cc3dbcdcf6eeda5c87fee00553a9bae50",
-    "SPEC.md": "a366db2044af502a2b43e83db2b442c67dbfc25393e23f0e83ca34c82408295f",
-    "baseline.json.gz": "c7fa505eed1f76ab1160c021ed381d2dc26c9119aa6b57290c14cb2ff565bafd",
+    "SHA256SUMS": "ee73ea8f9ec6b5c617251300c9530939c251db11a12aa0e60e0d54b40a9a0a15",
+    "SPEC.md": "e99723121ade749c079770bdc4d90b6914b065be4d87a73dab90b6f32be887e3",
+    "baseline.json.gz": "5fbf389993ef2204cfd62b58fce1f81b503cd72f6e72b9028f5164b95ae4876d",
     "capture.py": "4fda4d4c7d36f893a5324e0b7f0f6944eec11af8481df2953c3d4c0307d6b7a3",
-    "inputs.json": "3078c95cf2275c51e302a9179c9986a60aa3d611aa568f50ec3fc6e915a46fd8",
-    "no-cli/SHA256SUMS": "f3bf8dd0124d5821041693205f1b1c4a94dbbee25ea659d79f391d2b2e28037e",
-    "no-cli/baseline.json.gz": "9ec53d97bcdb8099671bb82796cfaa6fa932f3b38ca83377bfd217824a37860b",
-    "no-cli/inputs.json": "3078c95cf2275c51e302a9179c9986a60aa3d611aa568f50ec3fc6e915a46fd8",
+    "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
+    "no-cli/SHA256SUMS": "0d28bb5a15f9f7734f4cec1e62951dd0e51e6c05c325c14445b14d4336a62459",
+    "no-cli/baseline.json.gz": "4b7e5572b9417a3477843f64a480983d576a1d734ac27ae7a62597f2ef434ec4",
+    "no-cli/inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
 }
