@@ -53,6 +53,15 @@ def _install_fake_subprocess_run(
         return subprocess.CompletedProcess(cmd, child_returncode, "", "")
 
     monkeypatch.setattr(v7_build.subprocess, "run", fake_run)
+
+    def fake_safe_git(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        # Cleanup moved to the runner seam. Keep its binary preflight probes
+        # out of this text-only build/subprocess stub.
+        kwargs.pop("profile", None)
+        assert kwargs["text"] is True
+        return fake_run(["git", *args], **kwargs)
+
+    monkeypatch.setattr(v7_build.reap_worktrees, "safe_git", fake_safe_git)
     return calls
 
 
