@@ -2287,8 +2287,13 @@ def test_grac_snapshot_handler_offline(server_module, tmp_path, monkeypatch, mod
         assert result["status"] == "attested"
         assert result["entry"]["source"] == "local_snapshot"
         assert result["entry"]["retrieved_at"] == "2026-10-07T00:00:00+00:00"
+        assert result["entry"]["api_version"] == "open-5.71.15"
+        assert result["entry"]["manatee_version"] == "manatee"
+        assert result["entry"]["min_freq"] == 5
     else:
         assert "42" in text and "local GRAC snapshot" in text and "2026-10-07" in text
+        assert "corpus grac19a" in text and "API open-5.71.15" in text
+        assert "Manatee manatee" in text and "minimum frequency 5" in text
         if mode == "lemma_forms":
             assert "Form breakdown unavailable" in text
 
@@ -2316,3 +2321,16 @@ def test_grac_handler_live_source_after_snapshot_miss(server_module, tmp_path, m
         text = _run(server_module.handle_query_grac({"query": "fixture", "mode": mode}))[0].text
     live.assert_called_once()
     assert "7" in text and "Source: live GRAC" in text
+
+
+@pytest.mark.parametrize("items", [[], [{"str": "other", "frq": 7, "relfreq": 3.5}]])
+def test_grac_handler_live_word_miss_is_unknown(server_module, tmp_path, monkeypatch, items):
+    monkeypatch.setenv("LU_GRAC_FREQUENCY_DB", str(tmp_path / "missing.db"))
+    response = MagicMock()
+    response.json.return_value = {"Items": items}
+    with patch("rag.source_query._get", return_value=response) as live:
+        text = _run(server_module.handle_query_grac({"query": "fixture", "mode": "frequency"}))[0].text
+    live.assert_called_once()
+    assert live.call_args.kwargs['params']['wlpat'] == '^(?:fixture)$'
+    assert "unknown" in text and "no exact frequency entry" in text
+    assert "frequency = 0" not in text and "Source: live GRAC" not in text

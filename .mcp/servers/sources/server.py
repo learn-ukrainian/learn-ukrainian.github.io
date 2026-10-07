@@ -3188,12 +3188,16 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
     def source_note(result: dict) -> str:
         if result.get("source") == "local_snapshot":
-            return f"Source: local GRAC snapshot, retrieved {result['retrieved_at']}"
+            return (
+                f"Source: local GRAC snapshot, corpus {result['corpus']}, "
+                f"retrieved {result['retrieved_at']}, API {result['api_version']}, "
+                f"Manatee {result['manatee_version']}, minimum frequency {result['min_freq']}"
+            )
         return "Source: live GRAC"
 
     grac_unavailable_text = (
-        f"GRAC (uacorpus.org) is unavailable for '{query}' (network error or "
-        "HTTP failure). Treat as unknown, not a negative — do not cite this "
+        f"GRAC (uacorpus.org) is unavailable for '{query}' (network/HTTP failure "
+        "or no exact frequency entry returned). Treat as unknown, not a negative — do not cite this "
         "as a zero-frequency or no-results finding."
     )
 

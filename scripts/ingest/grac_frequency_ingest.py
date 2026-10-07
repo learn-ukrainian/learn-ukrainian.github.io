@@ -2,7 +2,8 @@
 """Polite, resumable GRAC wordlist snapshot (#9969).
 
 Page numbers are one-based ``wlpage``; ``wlmaxitems`` sets the page size.
-Verified against open-5.71.15 with two distinct live lemma pages. Rows,
+Verified against open-5.71.15, including a two-page lemma list with
+wlminfreq=25000000 and wlmaxitems=2: lastpage=0 then lastpage=1. Rows,
 retrieval provenance and the completed-page checkpoint commit atomically.
 """
 
@@ -46,6 +47,10 @@ CREATE TABLE IF NOT EXISTS provenance (
 """
 
 
+class GracIngestHalted(RuntimeError):
+    """An operator stop condition that must bypass the transient retry loop."""
+
+
 def parse_page(data: Any) -> list[tuple[str, int, float]]:
     """Refuse error/malformed/unsorted responses rather than checkpointing misses."""
     if not isinstance(data, dict) or data.get("error") or not isinstance(data.get("Items"), list):
@@ -67,6 +72,8 @@ def parse_page(data: Any) -> list[tuple[str, int, float]]:
         previous = frq
     if len({row[0] for row in rows}) != len(rows):
         raise ValueError("GRAC page repeats an item")
+    if not rows and not data["lastpage"]:
+        raise ValueError("GRAC returned an empty page without lastpage=1; checkpoint unchanged")
     return rows
 
 
@@ -133,6 +140,14 @@ def ingest(
                             f"{GRAC_BASE}/wordlist", params=params,
                             headers={"User-Agent": USER_AGENT}, timeout=60,
                         )
+                        if response.status_code == 429:
+                            retry_after = response.headers.get("Retry-After")
+                            wait = f"; honour Retry-After: {retry_after}" if retry_after else ""
+                            raise GracIngestHalted(
+                                f"HTTP 429: operator should wait before resuming{wait}; checkpoint unchanged"
+                            )
+                        if response.status_code == 403:
+                            raise GracIngestHalted("HTTP 403: operator should stop; checkpoint unchanged")
                         response.raise_for_status()
                         data = response.json()
                         rows = parse_page(data)
@@ -149,7 +164,7 @@ def ingest(
                 ).fetchone():
                     raise ValueError("GRAC repeated an earlier page; checkpoint unchanged")
                 kept = [row for row in rows if row[1] >= min_freq]
-                complete = bool(data["lastpage"] or not rows or len(kept) < len(rows))
+                complete = bool(data["lastpage"] or len(kept) < len(rows))
                 retrieved_at = datetime.now(UTC).isoformat()
                 with conn:
                     conn.executemany(
@@ -192,6 +207,8 @@ def build_parser() -> argparse.ArgumentParser:
 Outputs: SQLite items, per-attribute checkpoints and per-page retrieval provenance; progress on stdout.
 Exit codes: 0 = complete or requested page cap reached; 1 = failure (resume checkpoint preserved);
             130 = interrupted (resume on next invocation).
+HTTP 429 halts immediately: wait before resuming and honour Retry-After when supplied.
+HTTP 403 halts immediately: stop. Empty pages without lastpage=1 use bounded retries.
 Related: #9969; scripts/rag/source_query.py; sources MCP query_grac.
 """,
     )
@@ -218,7 +235,7 @@ def main(argv: list[str] | None = None) -> int:
     except KeyboardInterrupt:
         print("GRAC interrupted; last completed page preserved", file=sys.stderr)
         return 130
-    except (OSError, sqlite3.Error, requests.RequestException, ValueError) as exc:
+    except (GracIngestHalted, OSError, sqlite3.Error, requests.RequestException, ValueError) as exc:
         print(f"GRAC ingest halted: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 1
     print(f"GRAC ingest: {counts}", flush=True)

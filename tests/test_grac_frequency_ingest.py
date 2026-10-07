@@ -103,6 +103,73 @@ def test_exhausted_error_resumes_same_page(tmp_path):
     assert transport.calls[0][1]['params']['wlpage'] == 1
 
 
+@pytest.mark.parametrize('status,retry_after', [
+    (403, None), (429, None), (429, '120'), (429, 'Wed, 07 Oct 2026 17:00:00 GMT'),
+])
+@pytest.mark.parametrize('resume', [False, True])
+def test_http_stop_is_typed_and_never_retries_or_checkpoints(tmp_path, monkeypatch, capsys, status, retry_after, resume):
+    db = tmp_path / 'snapshot.db'
+    if resume:
+        run(db, [page(('a', 20))], attrs=['lemma'], max_pages=1)
+    response = requests.Response()
+    response.status_code = status
+    if retry_after:
+        response.headers['Retry-After'] = retry_after
+    session = Mock()
+    session.get.return_value = response
+    monkeypatch.setattr(crawler.requests, 'Session', Mock(return_value=session))
+    sleep = Mock(side_effect=AssertionError('stop conditions must not sleep/retry'))
+    # Exercise the real ingest and CLI error handler together.
+    ingest = crawler.ingest
+    def no_sleep_ingest(*args, **kwargs):
+        return ingest(*args, **kwargs, sleep=sleep)
+    monkeypatch.setattr(crawler, 'ingest', no_sleep_ingest)
+    assert crawler.main(['--db', str(db), '--attr', 'lemma', '--retries', '3']) == 1
+    message = capsys.readouterr().err
+    assert f'GracIngestHalted: HTTP {status}' in message
+    assert ('operator should wait' if status == 429 else 'operator should stop') in message
+    assert 'checkpoint unchanged' in message
+    if retry_after:
+        assert f'honour Retry-After: {retry_after}' in message
+    session.get.assert_called_once()
+    assert session.get.call_args.kwargs['params']['wlpage'] == (2 if resume else 1)
+    session.close.assert_called_once()
+    sleep.assert_not_called()
+    assert read(db, 'SELECT last_completed_page,complete FROM checkpoint') == ([(1, 0)] if resume else [])
+    assert read(db, 'SELECT page FROM provenance') == ([(1,)] if resume else [])
+    assert read(db, 'SELECT str FROM items') == ([('a',)] if resume else [])
+
+
+def test_empty_nonterminal_page_retries_same_page_without_checkpoint(tmp_path):
+    db = tmp_path / 'snapshot.db'
+    observed = []
+    class EmptyTransport(Transport):
+        def get(self, url, **kwargs):
+            if self.calls:
+                observed.append(read(db, 'SELECT last_completed_page,complete FROM checkpoint'))
+            return super().get(url, **kwargs)
+    transport = EmptyTransport([page(('a', 20)), page(), page(('b', 10), last=True)])
+    sleep = Mock()
+    assert crawler.ingest(db, attrs=['word'], transport=transport, sleep=sleep) == {'word': 2}
+    assert [kw['params']['wlpage'] for _, kw in transport.calls] == [1, 2, 2]
+    assert observed == [[(1, 0)], [(1, 0)]]
+    assert [call.args[0] for call in sleep.call_args_list] == [3.0, 3.0]
+    assert read(db, 'SELECT page,item_count FROM provenance ORDER BY page') == [(1, 1), (2, 1)]
+
+
+def test_exhausted_empty_page_preserves_resume_checkpoint(tmp_path):
+    db = tmp_path / 'snapshot.db'
+    run(db, [page(('a', 20))], attrs=['word'], max_pages=1)
+    transport = Transport([page(), page()])
+    with pytest.raises(ValueError, match='empty page without lastpage=1'):
+        crawler.ingest(db, attrs=['word'], transport=transport, retries=1, sleep=lambda _: None)
+    assert [kw['params']['wlpage'] for _, kw in transport.calls] == [2, 2]
+    assert read(db, 'SELECT last_completed_page,complete FROM checkpoint') == [(1, 0)]
+    assert read(db, 'SELECT page FROM provenance') == [(1,)]
+    _, resumed = run(db, [page(('b', 10), last=True)], attrs=['word'])
+    assert resumed.calls[0][1]['params']['wlpage'] == 2
+
+
 def test_floor_is_inclusive_and_stops_before_next_page(tmp_path):
     db = tmp_path / 'snapshot.db'
     counts, transport = run(db, [page(('a', 6), ('b', 5), ('c', 4))], attrs=['lemma'])
@@ -111,11 +178,31 @@ def test_floor_is_inclusive_and_stops_before_next_page(tmp_path):
     assert read(db, 'SELECT complete FROM checkpoint') == [(1,)]
 
 
+def test_floor_tie_continues_until_below_floor(tmp_path):
+    db = tmp_path / 'snapshot.db'
+    counts, transport = run(db, [page(('a', 5)), page(('b', 5), ('c', 4))], attrs=['word'])
+    assert counts == {'word': 2}
+    assert [kw['params']['wlpage'] for _, kw in transport.calls] == [1, 2]
+    assert read(db, 'SELECT last_completed_page,complete FROM checkpoint') == [(2, 1)]
+    assert read(db, 'SELECT str FROM items ORDER BY str') == [('a',), ('b',)]
+
+
+def test_full_final_page_uses_live_api_end_signal(tmp_path):
+    # Live bounded lemma probe: wlminfreq=25000000, wlmaxitems=2,
+    # total=4; a full second page has lastpage=1 (page 1 has lastpage=0).
+    db = tmp_path / 'snapshot.db'
+    counts, transport = run(db, [page(('на', 30952990), ('і', 29365276), total=4),
+                                page(('в', 28025537), ('у', 25420685), last=True, total=4)],
+                            attrs=['lemma'], min_freq=25000000, page_size=2)
+    assert counts == {'lemma': 4} and len(transport.calls) == 2
+    assert read(db, 'SELECT last_completed_page,complete FROM checkpoint') == [(2, 1)]
+
+
 def test_page_cap_and_empty_last_page(tmp_path):
     db = tmp_path / 'snapshot.db'
     run(db, [page(('a', 10))], attrs=['lemma'], max_pages=1)
     assert read(db, 'SELECT last_completed_page,complete FROM checkpoint') == [(1, 0)]
-    _, transport = run(db, [page()], attrs=['lemma'], max_pages=2)
+    _, transport = run(db, [page(last=True)], attrs=['lemma'], max_pages=2)
     assert transport.calls[0][1]['params']['wlpage'] == 2
     assert read(db, 'SELECT last_completed_page,complete FROM checkpoint') == [(2, 1)]
 
@@ -215,6 +302,9 @@ def test_local_hits_avoid_live_and_preserve_provenance(snapshot, monkeypatch, ca
     for result in (word, lemma):
         assert result['source'] == 'local_snapshot' and result['corpus'] == 'grac19a'
         assert 'T' in result['retrieved_at']
+        assert result['api_version'] == 'open-5.71.15'
+        assert result['manatee_version'] == '2.36.7-open-2.225.8'
+        assert result['min_freq'] == 5
     live.assert_not_called()
 
 
@@ -258,7 +348,10 @@ def test_live_empty_and_outage_are_distinct(snapshot, monkeypatch, fn, payload):
     response.json.return_value = payload
     monkeypatch.setattr(query, '_get', Mock(return_value=response))
     result = fn('missing', db_path=snapshot)
-    assert result.get('freq', result.get('total_freq')) == 0 and result['source'] == 'live'
+    if fn is query.grac_frequency:
+        assert result is None
+    else:
+        assert result['total_freq'] == 0 and result['source'] == 'live'
     response.json.return_value = {'error': 'busy'}
     assert fn('missing', db_path=snapshot) is None
     monkeypatch.setattr(query, '_get', Mock(side_effect=requests.Timeout()))
@@ -270,8 +363,20 @@ def test_word_pattern_is_literal_and_nonexact_match_never_substituted(snapshot, 
     response.json.return_value = {'Items': [{'str': 'axb', 'frq': 9, 'relfreq': 4.5}]}
     live = Mock(return_value=response)
     monkeypatch.setattr(query, '_get', live)
-    assert query.grac_frequency('a.b', db_path=snapshot)['freq'] == 0
-    assert live.call_args.kwargs['params']['wlpat'] == r'a\.b'
+    assert query.grac_frequency('a.b', db_path=snapshot) is None
+    assert live.call_args.kwargs['params']['wlpat'] == r'^(?:a\.b)$'
+
+
+@pytest.mark.parametrize('item', [
+    {'str': 'missing'}, {'str': 'missing', 'frq': -1, 'relfreq': 1},
+    {'str': 'missing', 'frq': 7}, {'str': 'missing', 'frq': 7, 'relfreq': -1},
+    'malformed',
+])
+def test_live_word_missing_or_malformed_frequency_is_unknown(snapshot, monkeypatch, item):
+    response = Mock()
+    response.json.return_value = {'Items': [item]}
+    monkeypatch.setattr(query, '_get', Mock(return_value=response))
+    assert query.grac_frequency('missing', db_path=snapshot) is None
 
 
 def test_lemma_cql_is_escaped(snapshot, monkeypatch):

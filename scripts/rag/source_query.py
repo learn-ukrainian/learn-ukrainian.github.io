@@ -414,14 +414,16 @@ def _grac_local(query: str, attr: str, db_path: str | Path | None = None) -> dic
             return None
         with closing(open_readonly(path)) as conn:
             row = conn.execute(
-                "SELECT i.frq, i.relfreq, p.retrieved_at, p.corpus FROM items i "
+                "SELECT i.frq, i.relfreq, p.retrieved_at, p.corpus, "
+                "p.api_version, p.manatee_version, p.min_freq FROM items i "
                 "JOIN provenance p ON p.attr=i.attr AND p.page=i.page WHERE i.attr=? AND i.str=? "
                 "AND p.corpus=?", (attr, query, GRAC_CORPUS),
             ).fetchone()
         if row is None:
             return None
         return {"freq": row[0], "rel_freq": row[1], "retrieved_at": row[2],
-                "corpus": row[3], "source": "local_snapshot"}
+                "corpus": row[3], "api_version": row[4], "manatee_version": row[5],
+                "min_freq": row[6], "source": "local_snapshot"}
     except (OSError, sqlite3.Error, RuntimeError, ValueError):
         return None
 
@@ -440,7 +442,7 @@ def grac_frequency(
     if cache_only:
         return None
     params = {
-        "corpname": GRAC_CORPUS, "wlattr": "word", "wlpat": re.escape(word),
+        "corpname": GRAC_CORPUS, "wlattr": "word", "wlpat": f"^(?:{re.escape(word)})$",
         "wlminfreq": 1, "wlmaxitems": 10, "wlnums": "frq", "format": "json",
     }
     try:
@@ -450,10 +452,14 @@ def grac_frequency(
         if not isinstance(data, dict) or data.get("error") or not isinstance(data.get("Items"), list):
             return None
         for item in data["Items"]:
-            if item.get("str") == word:
-                return {"word": word, "freq": item.get("frq", 0),
-                        "rel_freq": item.get("relfreq", 0.0), "source": "live"}
-        return {"word": word, "freq": 0, "rel_freq": 0.0, "source": "live"}
+            if isinstance(item, dict) and item.get("str") == word:
+                if type(item.get("frq")) is not int or item["frq"] < 0:
+                    return None
+                if not isinstance(item.get("relfreq"), (int, float)) or item["relfreq"] < 0:
+                    return None
+                return {"word": word, "freq": item["frq"],
+                        "rel_freq": item["relfreq"], "source": "live"}
+        return None
     except (requests.RequestException, ValueError):
         return None
 
