@@ -440,13 +440,154 @@ def test_unhealthy_deepseek_account_row_is_avoid():
 
 
 def test_healthy_deepseek_account_row_unaffected():
-    """health.healthy True changes neither avoid nor notes."""
+    """health.healthy True adds no unhealthy note; the lane stays excluded from picks."""
     budget = _fixture_budget()
     baseline = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
     budget["api_accounts"]["deepseek"]["health"] = {"healthy": True, "last_error": ""}
     row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
-    assert row["avoid"] is baseline["avoid"] is False
+    assert row["avoid"] is baseline["avoid"] is True
     assert "unhealthy:" not in row["notes"]
+
+
+def test_deepseek_prepaid_lane_is_never_a_pick():
+    """A cool, funded, healthy DeepSeek account stays visible but is AVOID and never a cooler seat."""
+    report = capacity_pick.build_report(_fixture_budget())
+    row = next(r for r in report["pick_order"] if r["lane"] == "deepseek")
+    assert row["pick"] == "AVOID"
+    assert "excluded from dispatch and review" in row["notes"]
+    assert row["capacity"]["state"] == credit_lane.CAPACITY_AVOID
+    assert "deepseek" not in report["cooler_lanes"]
+
+
+def _pick_row(lane: str, status: str, remaining: float | None, in_flight: int | None, *, avoid: bool = False) -> dict:
+    return {
+        "lane": lane,
+        "status": status,
+        "remaining_pct": remaining,
+        "in_flight": in_flight,
+        "avoid": avoid,
+        "capacity": {"state": credit_lane.CAPACITY_AVOID if avoid else credit_lane.CAPACITY_VERIFIED},
+        "reset_reserve_eligible": False,
+    }
+
+
+def _ranked(rows: list[dict]) -> list[str]:
+    return [p["lane"] for p in capacity_pick.build_pick_order(rows) if p["pick"] != "AVOID"]
+
+
+def test_pick_order_prefers_cool_lane_with_most_headroom_then_fewest_in_flight():
+    """2026-10-07 live shape: codex 92%/2 in flight, grok 47%/2, kimi 94%/0, agy 99.9%/0; claude, cursor hot."""
+    rows = [
+        _pick_row("claude", "hot", 56.0, 1, avoid=True),
+        _pick_row("codex", "cool", 92.0, 2),
+        _pick_row("grok", "cool", 47.0, 2),
+        _pick_row("cursor", "hot", 16.4, 0, avoid=True),
+        _pick_row("kimi", "cool", 94.0, 0),
+        _pick_row("agy", "cool", 99.9, 0),
+    ]
+    assert _ranked(rows) == ["kimi", "agy", "codex", "grok"]
+
+
+def test_pick_order_falls_back_to_static_priority_without_quota():
+    rows = [_pick_row(lane, "cool", None, 0) for lane in ("agy", "kimi", "grok", "codex")]
+    assert _ranked(rows) == ["codex", "grok", "kimi", "agy"]
+
+
+def test_pick_order_known_headroom_ranks_before_unknown_headroom():
+    rows = [_pick_row("codex", "cool", None, 0), _pick_row("agy", "cool", 15.0, 3)]
+    assert _ranked(rows) == ["agy", "codex"]
+
+
+def test_pick_order_status_still_outranks_headroom_and_cool_cursor_still_leads():
+    rows = [
+        _pick_row("agy", "warm", 99.0, 0),
+        _pick_row("kimi", "cool", 60.0, 4),
+        _pick_row("cursor", "cool", 30.0, 1),
+    ]
+    assert _ranked(rows) == ["cursor", "kimi", "agy"]
+
+
+_WS_NOW = datetime(2026, 10, 7, 18, 0, tzinfo=UTC)
+
+
+def _write_record(agent: str, status: str, *, mode: str = "workspace-write", hours_ago: float = 1.0) -> dict:
+    stamp = (_WS_NOW - timedelta(hours=hours_ago)).isoformat()
+    return {"agent": agent, "mode": mode, "status": status, "started_at": stamp, "finished_at": stamp}
+
+
+def test_write_success_stats_counts_terminal_write_attempts_in_window():
+    records = [
+        _write_record("kimi", "done"),
+        _write_record("kimi", "failed"),
+        _write_record("kimi", "failed"),
+        _write_record("kimi", "no_deliverable"),
+        _write_record("kimi", "dry_run"),
+        _write_record("kimi", "running"),
+        _write_record("kimi", "cancelled"),
+        _write_record("kimi", "failed", mode="read-only"),
+        _write_record("kimi", "failed", hours_ago=8 * 24),
+        _write_record("grok-build", "done", mode="danger"),
+        _write_record("gemini", "failed"),
+    ]
+    stats = capacity_pick.write_success_stats(records, now=_WS_NOW)
+    assert stats["kimi"] == {"attempts": 4, "done": 1, "rate": 0.25, "demoted": True}
+    assert stats["grok"] == {"attempts": 1, "done": 1, "rate": 1.0, "demoted": False}
+    assert stats["agy"]["attempts"] == 1 and stats["agy"]["demoted"] is False
+
+
+def test_write_success_under_min_attempts_is_not_demoted():
+    stats = capacity_pick.write_success_stats(
+        [_write_record("agy", "failed"), _write_record("agy", "no_deliverable")], now=_WS_NOW
+    )
+    assert stats["agy"] == {"attempts": 2, "done": 0, "rate": 0.0, "demoted": False}
+
+
+def test_write_success_at_threshold_is_not_demoted():
+    records = [_write_record("codex", "done")] * 3 + [_write_record("codex", "failed")] * 2
+    assert capacity_pick.write_success_stats(records, now=_WS_NOW)["codex"]["demoted"] is False  # 60% exactly
+
+
+def test_kimi_at_one_in_four_cannot_take_first_place_on_headroom_alone():
+    rows = [
+        _pick_row("codex", "cool", 92.0, 2),
+        _pick_row("kimi", "cool", 94.0, 0),
+        _pick_row("agy", "cool", 91.0, 1),
+    ]
+    assert _ranked(rows)[0] == "kimi"
+    rows[1]["write_success"] = {"attempts": 4, "done": 1, "rate": 0.25, "demoted": True}
+    ranked = _ranked(rows)
+    assert ranked[0] != "kimi"
+    assert ranked == ["agy", "codex", "kimi"]
+
+
+def test_build_report_attaches_write_success_and_notes_the_demotion():
+    budget = _fixture_budget()
+    budget["agents"]["kimi"] = {"status": "cool", "burn_pct_7d": 6.0, "remaining_pct": 94.0}
+    stats = {
+        "kimi": {"attempts": 4, "done": 1, "rate": 0.25, "demoted": True},
+        "agy": {"attempts": 2, "done": 0, "rate": 0.0, "demoted": False},
+    }
+    report = capacity_pick.build_report(budget, active_in_flight={}, write_success=stats)
+    rows = {row["lane"]: row for row in report["rows"]}
+    assert rows["kimi"]["write_success"]["demoted"] is True
+    assert "write success 1/4 in 7d (<60%): one headroom band down" in rows["kimi"]["notes"]
+    assert rows["agy"]["write_success"]["demoted"] is False
+    assert rows["grok"]["write_success"] == {"attempts": 0, "done": 0, "rate": None, "demoted": False}
+    assert report["write_success"]["kimi"]["attempts"] == 4
+    without = capacity_pick.build_report(budget, active_in_flight={})
+    assert all("write_success" not in row for row in without["rows"])
+
+
+def test_load_write_success_stats_reads_hot_and_archived_records(tmp_path):
+    (tmp_path / "archive").mkdir()
+    (tmp_path / "a.json").write_text(json.dumps(_write_record("kimi", "done")))
+    (tmp_path / "b.20261007T170000Z.archived.json").write_text(json.dumps(_write_record("kimi", "failed")))
+    (tmp_path / "archive" / "c.json").write_text(json.dumps(_write_record("kimi", "failed")))
+    (tmp_path / "broken.json").write_text("{not json")
+    stats = capacity_pick.load_write_success_stats(tmp_path, now=_WS_NOW + timedelta(hours=1))
+    assert stats["kimi"] == {"attempts": 3, "done": 1, "rate": 1 / 3, "demoted": True}
+    assert capacity_pick.load_write_success_stats(tmp_path, now=_WS_NOW + timedelta(days=8)) == {}
+    assert capacity_pick.load_write_success_stats(tmp_path / "missing") is None
 
 
 def test_unavailable_subscription_never_cool():
