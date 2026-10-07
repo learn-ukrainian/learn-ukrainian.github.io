@@ -277,6 +277,17 @@ from their current `unresolved_edges`. Any unresolved edge forces full selection
 this census therefore demonstrates a narrowing gap, not successful narrowing.
 Resolving those edges is a separate follow-up owned by the #9721 driver.
 
+For #9929 stage 1, `$P -m scripts.ci.components census` reports every unresolved
+and missing mandatory edge, conservative constant folds, and known scanner blind
+spots. `$P -m scripts.ci.components what-if --prs frozen-prs.txt` measures a frozen
+`<pr> <merge_sha> <merged_at>` list against first-parent diffs, retaining rename,
+copy and deletion paths. R0 equals today's `affected`; R1–R3 are hypothetical
+report rules, with R3 labelled **UPPER BOUND, NOT ACHIEVABLE WITHOUT PROOF**.
+R2 retires only folds tracked in both commit trees via `git ls-tree`; pricing
+uses each rule's own unresolved obligations and reports unpriced test files.
+Redirect stdout to ignored JSON reports. These commands change no shadow,
+selector, CI job or executed test; stage 2 requires designated approval.
+
 Use the task-prescribed interpreter as `$P` and ignored, managed scratch as `$R`:
 
 ```bash

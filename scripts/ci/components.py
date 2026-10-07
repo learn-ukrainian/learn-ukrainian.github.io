@@ -18,10 +18,11 @@ import subprocess
 import sys
 import tempfile
 import xml.etree.ElementTree as ET
-from collections import deque
+from collections import Counter, deque
 from collections.abc import Sequence
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
+from statistics import median
 
 from scripts.ci import frontend_change_scope
 from scripts.ci.junit_results import parse_junit
@@ -799,6 +800,525 @@ def junit_coverage(paths: list[Path], manifest: dict, components: Sequence[str],
     return report, 1 if any(row[key] for row in coverage.values() for key in ("failed", "skipped", "absent", "module_results")) else 0
 
 
+# Stage-1 reports only: no selector, shadow or execution path calls these helpers.
+REPORT_FOLDING_RULES = (
+    "Repository-relative string literals without '..' or absolute paths; integer literals only as parent indexes.",
+    "Path/PurePosixPath from unshadowed module-level pathlib imports, with one literal/path argument; Path(__file__).",
+    "Lexical .parent and .parents[n] with a nonnegative literal index within the repository; no filesystem traversal.",
+    "Path / literal-string and os.path.join of accepted paths/strings from an unshadowed module-level os import.",
+    "Single unconditional module-level constants defined before use, recursively built only from these forms; no other binding anywhere in the module.",
+    "Reject computed strings, environment/argument/parameter/conditional/local/shadowed bindings, resolve/absolute, '..', unknown calls and module invocations.",
+    "Every scanner site sharing file:line:reason must prove the same target; sys.path directories remain unresolved unless the target itself is tracked at both SHAs.",
+)
+REPORT_UNSOUND_CLASSES = (
+    "resolve-identity", "absolute-identity", "single-binding-parameter",
+    "single-binding-conditional", "single-binding-shadowed", "dropped-import-module",
+    "subprocess-missing-parent-init", "pytest-plugins", "unseen-rglob", "unseen-glob",
+    "unseen-iterdir", "unseen-sqlite-connect", "unseen-os-walk", "unseen-shutil-copy",
+)
+
+
+class ReportFolder:
+    """A deliberately smaller lexical evaluator than the production scanner.
+
+    Reject a symbol globally on any second definition, parameter, mutation or
+    local/conditional binding. This sacrifices folds rather than guess scope.
+    Paths are repository-root-relative; never consult cwd, symlinks or disk.
+    """
+
+    def __init__(self, tree: ast.Module, path: str):
+        self.path = path
+        self.nodes = list(ast.walk(tree))
+        self.bindings = {}
+        self.aliases = {}
+        counts = Counter()
+        for node in self.nodes:
+            if isinstance(node, ast.Name) and isinstance(node.ctx, (ast.Store, ast.Del)):
+                counts[node.id] += 1
+            elif isinstance(node, ast.arg):
+                counts[node.arg] += 1
+            elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                counts[node.name] += 1
+            elif isinstance(node, (ast.Import, ast.ImportFrom)):
+                for alias in node.names:
+                    counts[alias.asname or alias.name.split('.')[0]] += 1
+            elif isinstance(node, (ast.ExceptHandler, ast.MatchAs, ast.MatchStar)) and node.name:
+                counts[node.name] += 1
+            elif isinstance(node, (ast.Global, ast.Nonlocal)):
+                counts.update(node.names)
+            if isinstance(node, (ast.Attribute, ast.Subscript)) and isinstance(node.ctx, (ast.Store, ast.Del)):
+                base = node.value
+                while isinstance(base, (ast.Attribute, ast.Subscript)):
+                    base = base.value
+                if isinstance(base, ast.Name):
+                    counts[base.id] += 2
+        self.counts = counts
+        for node in tree.body:
+            if isinstance(node, (ast.Assign, ast.AnnAssign)) and node.value is not None:
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                for target in targets:
+                    if isinstance(target, ast.Name) and counts[target.id] == 1:
+                        self.bindings[target.id] = node.value
+            elif isinstance(node, (ast.Import, ast.ImportFrom)):
+                for alias in node.names:
+                    local = alias.asname or alias.name.split('.')[0]
+                    if counts[local] == 1 and not getattr(node, 'level', 0):
+                        qualified = (f'{node.module}.{alias.name}' if isinstance(node, ast.ImportFrom)
+                                     else alias.name if alias.asname else local)
+                        self.aliases[local] = (qualified, node.lineno)
+
+    def canonical(self, node: ast.AST) -> str:
+        """Only imports established before this use can identify a callable."""
+        name = call_name(node)
+        first, _, rest = name.partition('.')
+        imported, line = self.aliases.get(first, ('', 0))
+        if imported and line < node.lineno:
+            return imported + ('.' + rest if rest else '')
+        return name if first == 'open' and not self.counts[first] else ''
+
+    def value(self, node: ast.AST | None, seen: frozenset = frozenset()):
+        """Return a string/path/integer only for the documented closed grammar."""
+        if isinstance(node, ast.Constant) and type(node.value) in {str, int}:
+            if isinstance(node.value, str) and (PurePosixPath(node.value).is_absolute()
+                                              or '..' in PurePosixPath(node.value).parts):
+                return None
+            return node.value
+        if isinstance(node, ast.Name):
+            if node.id == '__file__':
+                return PurePosixPath(self.path) if not self.counts[node.id] else None
+            expression = self.bindings.get(node.id)
+            if expression is not None and node.id not in seen and expression.lineno < node.lineno:
+                return self.value(expression, seen | {node.id})
+        if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+            left, right = self.value(node.left, seen), self.value(node.right, seen)
+            if isinstance(left, PurePosixPath) and isinstance(right, str):
+                return left / right
+        if isinstance(node, ast.Attribute) and node.attr == 'parent':
+            base = self.value(node.value, seen)
+            if isinstance(base, PurePosixPath) and base != PurePosixPath('.'):
+                return base.parent
+        if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Attribute) and node.value.attr == 'parents':
+            base = self.value(node.value.value, seen)
+            index = node.slice.value if isinstance(node.slice, ast.Constant) else None
+            if isinstance(base, PurePosixPath) and type(index) is int and 0 <= index < len(base.parents):
+                return base.parents[index]
+        if isinstance(node, ast.Call) and not node.keywords:
+            name = self.canonical(node.func)
+            if name in {'pathlib.Path', 'pathlib.PurePosixPath'} and len(node.args) == 1:
+                value = self.value(node.args[0], seen)
+                if isinstance(value, (str, PurePosixPath)):
+                    return PurePosixPath(value)
+            if name == 'os.path.join' and node.args:
+                values = [self.value(arg, seen) for arg in node.args]
+                if all(isinstance(value, (str, PurePosixPath)) for value in values):
+                    return str(PurePosixPath(*values))
+        return None
+
+    def target(self, expression: ast.AST | None) -> str | None:
+        """Integers and empty strings cannot prove file targets."""
+        value = self.value(expression)
+        return str(value) if isinstance(value, (str, PurePosixPath)) and str(value) else None
+
+
+def report_sites(tree: ast.Module, *, legacy_wrappers: bool = False) -> list[tuple]:
+    """Locate scanner dependency expressions without changing its scanner.
+
+    Match its leaf-based reads/loaders and aliases. Unknown wrapper calls stay
+    not-foldable. sys.path is a target only for append/insert with exact arity.
+    Subprocess module invocations stay unproven (parent initializers are omitted).
+    """
+    aliases = {}
+    wrappers = {node.name for node in ast.walk(tree)
+                if legacy_wrappers and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                and any(isinstance(child, ast.Call) and isinstance(child.func, ast.Attribute)
+                        and child.func.attr == 'spec_from_file_location' for child in ast.walk(node))}
+    for node in dependency_nodes(tree):
+        if isinstance(node, (ast.Import, ast.ImportFrom)):
+            for alias in node.names:
+                aliases[alias.asname or alias.name] = (f'{node.module}.{alias.name}'
+                                                      if isinstance(node, ast.ImportFrom) else alias.name)
+    sites = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        name = call_name(node.func)
+        first, _, rest = name.partition('.')
+        name = aliases.get(first, first) + ('.' + rest if rest else '')
+        leaf = node.func.attr if isinstance(node.func, ast.Attribute) else name.split('.')[-1]
+        expression = None
+        reason = None
+        if leaf in {'open', 'read_text', 'read_bytes'}:
+            reason = 'unresolved-file-read'
+            expression = (node.func.value if isinstance(node.func, ast.Attribute)
+                          and (leaf != 'open' or name not in {'builtins.open', 'io.open', 'codecs.open'})
+                          else node.args[0] if node.args else next(
+                              (kw.value for kw in node.keywords if kw.arg in {'file', 'path'}), None))
+        elif name in {'subprocess.run', 'subprocess.Popen', 'subprocess.call', 'subprocess.check_call',
+                      'subprocess.check_output', 'subprocess.getoutput', 'subprocess.getstatusoutput',
+                      'os.system', 'os.popen', 'asyncio.create_subprocess_exec', 'asyncio.create_subprocess_shell'}:
+            reason = 'unresolved-subprocess'
+            expression = node.args[0] if node.args else next((kw.value for kw in node.keywords if kw.arg == 'args'), None)
+        elif leaf in {'spec_from_file_location', 'run_path', 'import_module', 'run_module'} or name == '__import__':
+            reason = 'nonliteral-or-missing-load'
+            index = 1 if leaf == 'spec_from_file_location' else 0
+            expression = node.args[index] if len(node.args) > index else next(
+                (kw.value for kw in node.keywords if kw.arg == (
+                    'location' if index else 'path_name' if leaf == 'run_path' else
+                    'mod_name' if leaf == 'run_module' else 'name')), None)
+        elif name in {'sys.path.append', 'sys.path.insert'}:
+            reason = 'sys-path'
+            if not node.keywords and len(node.args) == (2 if name.endswith('insert') else 1):
+                expression = node.args[-1]
+        elif name in wrappers:
+            reason = 'nonliteral-or-missing-load'
+            expression = node.args[1] if len(node.args) > 1 else next((kw.value for kw in node.keywords if kw.arg == 'location'), None)
+        if reason:
+            sites.append((node, name, reason, expression))
+    return sites
+
+
+def report_site_target(folder: ReportFolder, site: tuple) -> str | None:
+    """Prove only direct file loads/reads and closed, two-argument Python scripts."""
+    node, _name, reason, expression = site
+    if reason == 'nonliteral-or-missing-load' and folder.canonical(node.func) not in {'importlib.util.spec_from_file_location', 'runpy.run_path'}:
+        return None
+    if reason == 'unresolved-subprocess':
+        if any(kw.arg not in {'shell'} or not isinstance(kw.value, ast.Constant) or kw.value.value is not False
+               for kw in node.keywords):
+            return None
+        if not isinstance(expression, (ast.List, ast.Tuple)) or len(expression.elts) != 2:
+            return None
+        command, target = expression.elts
+        if folder.value(command) not in {'python', 'python3'} and folder.canonical(command) != 'sys.executable':
+            return None
+        return folder.target(target)
+    return folder.target(expression)
+
+
+def report_edge_folds(sources: dict[str, bytes], unresolved: list[dict]) -> list[dict]:
+    """Classify every recorded edge; a merged scanner line needs unanimous proof."""
+    by_path = {}
+    for edge in unresolved:
+        by_path.setdefault(edge['path'], []).append(edge)
+    result = []
+    for path, edges in sorted(by_path.items()):
+        candidates = {}
+        try:
+            tree = ast.parse(sources[path])
+            folder = ReportFolder(tree, path)
+            for site in report_sites(tree):
+                candidates.setdefault((site[0].lineno, site[2]), []).append(report_site_target(folder, site))
+        except (SyntaxError, ValueError, KeyError):
+            pass
+        for edge in edges:
+            values = candidates.get((edge['line'], edge['reason']), [])
+            target = values[0] if values and values[0] is not None and len(set(values)) == 1 else None
+            result.append(edge | {'classification': 'constant-foldable' if target is not None else 'not-foldable',
+                                  'folded_target': target})
+    return sorted(result, key=lambda edge: (edge['path'], edge['line'], edge['reason']))
+
+
+def report_unsound_sites(path: str, source: bytes, modules: set[str], sources: dict[str, bytes]) -> set:
+    """Locate the requested legacy unsafe forms in one Python source."""
+    found = set()
+    try:
+        tree = ast.parse(source)
+    except (SyntaxError, ValueError):
+        return found
+    nodes = dependency_nodes(tree)
+    bindings = {}
+    assignments = {}
+    for node in nodes:
+        if isinstance(node, (ast.Assign, ast.AnnAssign)) and node.value is not None:
+            for target in node.targets if isinstance(node, ast.Assign) else [node.target]:
+                if isinstance(target, ast.Name):
+                    bindings.setdefault(target.id, []).append(node.value)
+                    assignments.setdefault(target.id, []).append(node)
+    folder = ReportFolder(tree, path)
+    parameters = {node.arg for node in ast.walk(tree) if isinstance(node, ast.arg)}
+    aliases = {alias.asname or alias.name: (f'{item.module}.{alias.name}'
+               if isinstance(item, ast.ImportFrom) else alias.name)
+               for item in nodes if isinstance(item, (ast.Import, ast.ImportFrom)) for alias in item.names}
+
+    def add(kind, node):
+        found.add((kind, path, node.lineno, node.col_offset))
+
+    def legacy_folds(expression, seen=frozenset()):
+        if expression is None:
+            return
+        for node in ast.walk(expression):
+            if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                and node.func.attr in {'resolve', 'absolute'} and literal_target(node, bindings, path) is not None):
+                add(node.func.attr + '-identity', node)
+            if isinstance(node, ast.Name) and node.id not in seen and len(bindings.get(node.id, [])) == 1:
+                if literal_target(node, bindings, path) is None:
+                    continue
+                binding = assignments[node.id][0]
+                if node.id in parameters:
+                    add('single-binding-parameter', node)
+                # Assignments under if/loop/try/with/match, not function locals.
+                parents = parent_nodes.get(binding, [])
+                if any(isinstance(parent, (ast.If, ast.For, ast.AsyncFor, ast.While, ast.Try,
+                                           ast.TryStar, ast.With, ast.AsyncWith, ast.Match)) for parent in parents):
+                    add('single-binding-conditional', node)
+                if folder.counts[node.id] > 1 and node.id not in parameters:
+                    add('single-binding-shadowed', node)
+                legacy_folds(bindings[node.id][0], seen | {node.id})
+
+    parent_nodes = {}
+
+    def ancestors(node, parents):
+        parent_nodes[node] = parents
+        for child in ast.iter_child_nodes(node):
+            ancestors(child, [*parents, node])
+
+    ancestors(tree, [])
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Assign, ast.AnnAssign)):
+            targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+            if any(isinstance(target, ast.Name) and target.id == 'pytest_plugins' for target in targets):
+                add('pytest-plugins', node)
+        if not isinstance(node, ast.Call):
+            continue
+        name = call_name(node.func)
+        # Legacy aliases include local/conditional imports, just as the scanner does.
+        first, _, rest = name.partition('.')
+        name = aliases.get(first, first) + ('.' + rest if rest else '')
+        leaf = node.func.attr if isinstance(node.func, ast.Attribute) else name.split('.')[-1]
+        if leaf in {'rglob', 'glob', 'iterdir'}:
+            add('unseen-' + leaf, node)
+        if name == 'sqlite3.connect':
+            add('unseen-sqlite-connect', node)
+        if name == 'os.walk':
+            add('unseen-os-walk', node)
+        if name in {'shutil.copy', 'shutil.copy2', 'shutil.copyfile', 'shutil.copytree', 'shutil.copyfileobj'}:
+            add('unseen-shutil-copy', node)
+    for site in report_sites(tree, legacy_wrappers=True):
+        node, name, reason, expression = site
+        legacy_folds(expression)
+        if name.split('.')[-1] == 'import_module':
+            value = literal_target(expression, bindings, path)
+            if isinstance(value, str) and not value.startswith('scripts.') and value not in modules and 'scripts.' + value not in modules:
+                add('dropped-import-module', node)
+        if reason == 'unresolved-subprocess':
+            argv = bindings.get(expression.id, [None])[0] if isinstance(expression, ast.Name) and len(bindings.get(expression.id, [])) == 1 else expression
+            if not isinstance(argv, (ast.List, ast.Tuple)):
+                continue
+            values = [literal_target(arg, bindings, path) for arg in argv.elts]
+            command = call_name(argv.elts[0]) if argv.elts else ''
+            first, _, rest = command.partition('.')
+            command = aliases.get(first, first) + ('.' + rest if rest else '')
+            if (len(values) > 2 and (values[0] in {'python', 'python3'} or command == 'sys.executable')
+                and values[1] == '-m' and isinstance(values[2], str) and values[2].replace('.', '/') + '.py' in sources):
+                add('subprocess-missing-parent-init', node)
+    return found
+
+
+def report_unsound_census(sources: dict[str, bytes]) -> dict:
+    """Inventory specified legacy assumptions and unobserved syntax, never fix them.
+
+    Count distinct (class,file,line,column) occurrences. For legacy folds follow
+    the scanner's actual single-binding evaluator, including constant references.
+    File APIs/plugin declarations are syntactic blind spots, not resolved edges.
+    """
+    found = set()
+    modules = {p[:-3].replace('/', '.').removesuffix('.__init__') for p in sources}
+    for path, source in sorted(sources.items()):
+        found.update(report_unsound_sites(path, source, modules, sources))
+    occurrences = [{'class': kind, 'path': path, 'line': line, 'column': column, 'location': f'{path}:{line}'}
+                   for kind, path, line, column in sorted(found)]
+    return {'count': len(occurrences), 'by_class': {kind: sum(row['class'] == kind for row in occurrences)
+                                                  for kind in REPORT_UNSOUND_CLASSES},
+            'occurrences': occurrences,
+            'basis': 'legacy evaluator fold sites plus specified syntactic blind spots; not a completeness proof'}
+
+
+def report_census(manifest: dict, root: Path = ROOT) -> dict:
+    """Emit every edge, class/component counts, folds, top sources and blind spots."""
+    graph = import_graph(manifest, root)
+    sources = python_sources(root)
+    edges = report_edge_folds(sources, graph['unresolved_edges'])
+    for edge in edges:
+        edge['source_components'] = sorted(assign_path(edge['path'], manifest)[0])
+    missing = [edge | {'reason': 'missing-mandatory-edge', 'source_components': [edge['consumer']],
+                       'classification': 'not-foldable', 'folded_target': None}
+               for edge in manifest['edges'] if edge['id'] in graph['missing_mandatory_edges']]
+    classes = sorted({edge['reason'] for edge in edges + missing})
+    counts = {kind: {component: sum(edge['reason'] == kind and component in edge['source_components']
+                                  for edge in edges + missing) for component in NODE_IDS} for kind in classes}
+    top_files = {}
+    for kind in classes:
+        files = Counter(edge['path'] for edge in edges if edge['reason'] == kind)
+        top_files[kind] = [{'path': path, 'count': count} for path, count in sorted(files.items(), key=lambda item: (-item[1], item[0]))[:20]]
+    return {'schema': 'component-edge-census.v1', 'report_only': True, 'folding_rules': REPORT_FOLDING_RULES,
+            'unresolved_edge_count': len(edges), 'missing_mandatory_edge_count': len(missing),
+            'folding_counts': dict(sorted(Counter(edge['classification'] for edge in edges).items())),
+            'by_class': dict(sorted(Counter(edge['reason'] for edge in edges + missing).items())),
+            'by_class_component': counts, 'component_counts_overlap': True, 'top_20_source_files': top_files,
+            'unresolved_edges': edges, 'missing_mandatory_edges': missing,
+            'known_unsound_resolutions': report_unsound_census(sources),
+            'graph_digest': digest(graph), 'source_digest': digest([(path, hashlib.sha256(content).hexdigest()) for path, content in sorted(sources.items())])}
+
+
+def report_tracked_at(sha: str, root: Path = ROOT) -> frozenset[str]:
+    """Commit-tree oracle only: includes ignored and sparse files, never the index."""
+    raw = subprocess.run(['git', 'ls-tree', '-r', '-z', '--name-only', sha], cwd=root,
+                         check=True, capture_output=True, timeout=30).stdout
+    return frozenset(raw.decode('utf-8', errors='surrogateescape').split('\0')) - {''}
+
+
+def report_merge_paths(sha: str, root: Path = ROOT) -> tuple[str, list[str]]:
+    """First-parent diff with NUL-safe rename/copy records and both sides retained."""
+    from scripts.ci import dependency_change_scope
+
+    parent = subprocess.run(['git', 'rev-parse', '--verify', sha + '^1'], cwd=root,
+                            check=True, capture_output=True, timeout=30).stdout.decode().strip()
+    raw = subprocess.run(['git', '-c', 'core.quotePath=false', 'diff', '--no-ext-diff',
+                          '--name-status', '-M', '-C', '-z', parent, sha], cwd=root,
+                         check=True, capture_output=True, timeout=30).stdout
+    return parent, dependency_change_scope._parse_name_status_z(raw)
+
+
+def report_closure(paths: Sequence[str], manifest: dict, graph: dict, extra_edges: Sequence[tuple] = (), *, force: bool = False) -> list[str]:
+    """Hypothetical report closure; no global scanner-unresolved trigger."""
+    selected = {owner for path in paths for owner in assign_path(path, manifest)[0]}
+    pairs = set(graph['node_edges']) | {(producer, consumer) for importer, target in extra_edges
+                                       for producer in assign_path(target, manifest)[0]
+                                       for consumer in assign_path(importer, manifest)[0]}
+    if paths and (force or graph['missing_mandatory_edges'] or any(not edge.get('resolved', False) for edge in manifest['edges'])):
+        selected.update(NODE_IDS)
+    while True:
+        before = selected.copy()
+        if 'shared-core' in selected:
+            selected.update(NODE_IDS)
+        selected.update(consumer for producer, consumer in pairs if producer in selected)
+        if selected == before:
+            return sorted(selected)
+
+
+def report_test_files(component: str, manifest: dict, paths: Sequence[str], graph: dict, unresolved: Sequence[dict], extra_edges: Sequence[tuple] = ()) -> list[str]:
+    """test_files semantics with this rule's unresolved set; never call affected."""
+    node = manifest['components'][component]
+    tests = {path for path in paths if path.startswith('tests/') and PurePosixPath(path).name.startswith('test_') and path.endswith('.py')}
+    prefixes = tuple(node['test_prefixes'])
+    files = set(node['test_files']) | {path for path in tests if component in assign_path(path, manifest)[0]
+                                     or (prefixes and path.startswith(prefixes))}
+    visited = {path for path in paths if not path.startswith('tests/') and component in assign_path(path, manifest)[0]}
+    visited.update(edge['path'] for edge in unresolved)
+    reverse = {}
+    for importer, target in list(graph['file_edges']) + list(extra_edges):
+        reverse.setdefault(target, set()).add(importer)
+    pending = list(visited)
+    while pending:
+        for importer in reverse.get(pending.pop(), ()):
+            if importer not in visited:
+                visited.add(importer)
+                pending.append(importer)
+    files.update(tests & visited)
+    files.update(manifest.get('shared_integration_tests', []))
+    if not files:
+        raise ValueError('node has no declared contract tests')
+    return sorted(files)
+
+
+def report_price(selected: Sequence[str], manifest: dict, paths: Sequence[str], graph: dict, unresolved: Sequence[dict], durations: dict, extra_edges: Sequence[tuple] = ()) -> dict:
+    """Price deselected tracked pytest files; missing durations stay unpriced."""
+    tests = {path for path in paths if path.startswith('tests/') and PurePosixPath(path).name.startswith('test_') and path.endswith('.py')}
+    chosen = {path for component in selected for path in report_test_files(component, manifest, paths, graph, unresolved, extra_edges)}
+    skipped = tests - chosen
+    unpriced = sorted(tests - durations.keys())
+    return {'would_skip_seconds': round(sum(durations[path] for path in sorted(skipped) if path in durations), 6),
+            'would_skip_test_files': sorted(skipped), 'unpriced_test_files': unpriced,
+            'would_skip_unpriced_test_files': sorted(skipped & set(unpriced)), 'unresolved_edge_count': len(unresolved)}
+
+
+def report_what_if(prs_file: Path, manifest: dict, root: Path = ROOT) -> dict:
+    """Measure a fixed current-tree graph against commit diffs, never CI results."""
+    raw = prs_file.read_bytes()
+    records = []
+    for line in raw.decode('utf-8').splitlines():
+        fields = line.split()
+        if len(fields) != 3 or not fields[0].isdigit() or not re.fullmatch('[0-9a-f]{7,40}', fields[1]):
+            raise ValueError('expected PR number, unambiguous merge SHA and merged-at timestamp')
+        records.append((int(fields[0]), fields[1], fields[2]))
+    if not records or len({pr for pr, _, _ in records}) != len(records):
+        raise ValueError('expected nonempty distinct PR records')
+    records.sort()
+    graph = import_graph(manifest, root)
+    folded = report_edge_folds(python_sources(root), graph['unresolved_edges'])
+    paths = tracked_paths(root)
+    duration_bytes = (root / 'scripts/ci/pytest-file-durations.json').read_bytes()
+    durations = json.loads(duration_bytes)
+    if any(not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0 for value in durations.values()):
+        raise ValueError('expected finite nonnegative file durations')
+    unresolved = graph['unresolved_edges']
+    all_sources = {edge['path'] for edge in unresolved}
+    source_blocks = {path for path in all_sources if 'shared-core' in report_closure([path], manifest, graph)}
+    blocking_counts = Counter()
+    rows = []
+    tree_cache = {}
+    price_cache = {}
+    block_cache = {}
+    for pr, sha, merged_at in records:
+        supplied_sha = sha
+        sha = subprocess.run(['git', 'rev-parse', '--verify', sha + '^{commit}'], cwd=root,
+                             check=True, capture_output=True, timeout=30).stdout.decode().strip()
+        parent, changed = report_merge_paths(sha, root)
+        for commit in (parent, sha):
+            if commit not in tree_cache:
+                tree_cache[commit] = report_tracked_at(commit, root)
+        both = tree_cache[parent] & tree_cache[sha]
+        sound = [edge for edge in folded if edge['folded_target'] in both]
+        retired = {(edge['path'], edge['line'], edge['reason']) for edge in sound}
+        r2 = [edge for edge in unresolved if (edge['path'], edge['line'], edge['reason']) not in retired]
+        extra = sorted({(edge['path'], edge['folded_target']) for edge in sound})
+        extra_key = tuple(extra)
+        if extra_key not in block_cache:
+            block_cache[extra_key] = {path for path in all_sources if 'shared-core' in report_closure([path], manifest, graph, extra)}
+        blockers = {edge['path'] for edge in r2} & block_cache[extra_key]
+        blocking_counts.update((edge['path'], edge['line'], edge['reason']) for edge in r2 if edge['path'] in blockers)
+        r3 = [edge for edge in r2 if edge['path'] not in blockers]
+        r0 = affected(changed, manifest, graph)
+        baseline = report_closure(changed, manifest, graph, force=bool(unresolved))
+        if baseline != r0['components']:
+            raise ValueError('R0 does not equal affected')
+        rules = {}
+        for rule, remaining, additions in [('R0', unresolved, []), ('R1', unresolved, []), ('R2', r2, extra), ('R3', r3, extra)]:
+            selected = baseline if rule == 'R0' else report_closure(sorted(set(changed) | {edge['path'] for edge in remaining}), manifest, graph, additions)
+            key = (tuple(selected), tuple((edge['path'], edge['line'], edge['reason']) for edge in remaining), tuple(additions))
+            if key not in price_cache:
+                price_cache[key] = report_price(selected, manifest, paths, graph, remaining, durations, additions)
+            rules[rule] = {'components': selected, 'narrowed': len(selected) < len(NODE_IDS), **price_cache[key]}
+        rows.append({'pr': pr, 'supplied_merge_sha': supplied_sha, 'merge_sha': sha, 'first_parent': parent, 'merged_at': merged_at,
+                     'changed_path_count': len(changed), 'changed_paths': changed, 'R0_equals_affected': True,
+                     'sound_fold_count': len(sound), 'R2_blocking_edge_count': sum(edge['path'] in blockers for edge in r2), 'rules': rules})
+    blocking = []
+    for edge in unresolved:
+        key = (edge['path'], edge['line'], edge['reason'])
+        if edge['path'] in source_blocks or blocking_counts[key]:
+            blocking.append(edge | {'location': f"{edge['path']}:{edge['line']}",
+                                    'R1': edge['path'] in source_blocks, 'R2_pr_count': blocking_counts[key]})
+    aggregate = {}
+    for rule in ('R0', 'R1', 'R2', 'R3'):
+        values = [row['rules'][rule] for row in rows]
+        count = sum(value['narrowed'] for value in values)
+        aggregate[rule] = {'narrowed_pr_count': count, 'pr_count': len(rows), 'share_narrowed': count / len(rows),
+                           'total_would_skip_seconds': round(sum(value['would_skip_seconds'] for value in values), 6),
+                           'median_would_skip_seconds': median(value['would_skip_seconds'] for value in values)}
+    return {'schema': 'component-what-if.v1', 'report_only': True, 'hypothetical': ['R1', 'R2', 'R3'],
+            'rule_labels': {'R0': "Today's affected (equality asserted)", 'R1': 'HYPOTHETICAL unresolved readers as changes',
+                            'R2': 'HYPOTHETICAL R1 with proven folds tracked in both commit trees',
+                            'R3': 'HYPOTHETICAL ABLATION: UPPER BOUND, NOT ACHIEVABLE WITHOUT PROOF'},
+            'prs_sha256': hashlib.sha256(raw).hexdigest(), 'pr_count': len(rows), 'folding_rules': REPORT_FOLDING_RULES,
+            'graph_digest': digest(graph), 'pricing_basis': 'current indexed tracked pytest files; rule-specific unresolved obligations; no affected calls in pricing',
+            'node_edges': graph['node_edges'], 'missing_mandatory_edges': graph['missing_mandatory_edges'],
+            'unresolved_manifest_edges': [edge['id'] for edge in manifest['edges'] if not edge.get('resolved', False)],
+            'durations_sha256': hashlib.sha256(duration_bytes).hexdigest(), 'aggregate': aggregate,
+            'blocking_set': sorted(blocking, key=lambda edge: (edge['reason'], edge['path'], edge['line'])),
+            'blocking_set_counts': {'R1': sum(edge['R1'] for edge in blocking),
+                                    'R2_union': sum(edge['R2_pr_count'] > 0 for edge in blocking)}, 'prs': rows}
+
+
 def parser() -> argparse.ArgumentParser:
     """Expose the complete wrapper contract in root and subcommand help."""
     examples = (
@@ -827,7 +1347,7 @@ def parser() -> argparse.ArgumentParser:
     )
     result = argparse.ArgumentParser(description=description, epilog=examples,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    subs = result.add_subparsers(dest="operation", required=True, help="Interface: list/test/build/verify/inventory/affected/junit")
+    subs = result.add_subparsers(dest="operation", required=True, help="Interface: list/test/build/verify/inventory/affected/junit; report-only census/what-if")
     for operation in ("list", "test", "build", "verify", "inventory", "affected", "junit"):
         sub = subs.add_parser(operation, help=f"{operation} component contracts", description=description,
                               epilog=examples, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -855,6 +1375,21 @@ def parser() -> argparse.ArgumentParser:
         if operation == "affected":
             sub.add_argument("paths", nargs="*", help="Changed repository-relative paths, e.g. scripts/config.py; default: empty set")
             sub.add_argument("--paths-file", type=Path, help="NUL-delimited git diff path list, e.g. changed.z; default: positional paths only")
+    report_examples = (
+        "Examples:\n  .venv/bin/python -m scripts.ci.components census > census.json\n"
+        "  .venv/bin/python -m scripts.ci.components what-if --prs frozen-prs.txt > what-if.json\n"
+        "Outputs: deterministic JSON on stdout; read-only Git/source analysis; no tests, CI reads or selection changes.\n"
+        "Exit codes: 0 report complete; 2 invalid/unavailable inputs.\n"
+        "Related: #9929 stage 1; #9721; docs/runbooks/ci-gate.md.\n"
+        "Folding: " + "\n".join(REPORT_FOLDING_RULES)
+    )
+    for operation in ("census", "what-if"):
+        sub = subs.add_parser(operation, help="Report-only edge measurement" if operation == "census" else "Hypothetical R0-R3 measurement, never CI selection",
+                              description="Report unresolved edges and legacy scanner blind spots.\nUse for stage-1 measurement only; R1-R3 are hypothetical, R3 is UPPER BOUND, NOT ACHIEVABLE WITHOUT PROOF.",
+                              epilog=report_examples, formatter_class=argparse.RawDescriptionHelpFormatter)
+        if operation == "what-if":
+            sub.add_argument("--prs", type=Path, required=True,
+                             help="Frozen PR file, each line: <pr> <7-40 hex merge_sha> <merged_at>; short SHAs must resolve uniquely; e.g. frozen-prs.txt (required)")
     return result
 
 
@@ -871,6 +1406,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             if args.paths_file:
                 paths += [path for path in args.paths_file.read_bytes().decode("utf-8", errors="surrogateescape").split("\0") if path]
             report = affected(paths, manifest)
+        elif args.operation == "census":
+            report = report_census(manifest)
+        elif args.operation == "what-if":
+            report = report_what_if(args.prs, manifest)
         elif args.operation == "junit":
             report, code = junit_coverage(args.junit, manifest, [args.component] if args.component else NODE_IDS)
         elif args.operation == "inventory":
