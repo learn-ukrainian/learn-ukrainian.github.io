@@ -21,7 +21,7 @@ def shadow_name():
     workflow = yaml.safe_load(workflow_path.read_text())
     name = workflow["jobs"]["component-shadow"]["name"]
     assert name == "Component shadow (advisory)"
-    assert is_advisory(name)
+    assert is_advisory(name, workflow=workflow["name"])
     return name
 
 
@@ -33,7 +33,7 @@ def test_failed_shadow_does_not_change_merge_guard_readiness(shadow_name, requir
                 "number": 1, "isDraft": False, "headRefOid": HEAD}), "")
         assert args[2] == "checks"
         checks = [{"name": "CI Gate", "bucket": required_bucket},
-                  {"name": shadow_name, "bucket": "fail"}]
+                  {"name": shadow_name, "bucket": "fail", "workflow": "CI"}]
         return subprocess.CompletedProcess(args, 1, json.dumps(checks), "")
 
     if required_bucket == "pass":
@@ -52,7 +52,7 @@ def test_failed_shadow_is_not_reported_red_by_integration_sweep(
 ):
     pr = {"number": 1, "headRefOid": HEAD, "statusCheckRollup": [
         {"name": "CI Gate", "status": "COMPLETED", "conclusion": required_conclusion},
-        {"name": shadow_name, "status": "COMPLETED", "conclusion": shadow_conclusion},
+        {"name": shadow_name, "status": "COMPLETED", "conclusion": shadow_conclusion, "workflowName": "CI"},
     ]}
     report = sweep.classify_pr(pr, sweep.Verdict("APPROVED"), queued=False, observed_at="fixture")
     assert report.blockers == tuple(expected)

@@ -105,6 +105,7 @@ def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
             return None
         # Cancelled runs can retain an unexpanded matrix parent. It is not an
         # executed job and cannot be superseded by the differently named shards.
+        # The old-client statusCheckRollup fallback calls the identity workflowName.
         if "${{" not in name and not is_advisory(
             name, workflow=row.get("workflowName") or row.get("workflow"), policy=policy
         ):
@@ -155,7 +156,7 @@ def parse_checks(rows):
             return None
         name = str(row.get("name") or "")
         if "${{" in name or is_advisory(
-            name, workflow=row.get("workflowName") or row.get("workflow"), policy=policy
+            name, workflow=row.get("workflow"), policy=policy
         ):
             continue
         bucket = str(row.get("bucket") or row.get("state") or "").lower()

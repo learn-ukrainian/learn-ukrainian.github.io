@@ -177,6 +177,6 @@ def load_advisory_checks(path: Path | None = None) -> AdvisoryChecks:
 
 
 def is_advisory(name: str, *, workflow: str | None = None, policy: AdvisoryChecks | None = None) -> bool:
-    """Exact match only; a supplied workflow identity must also match ci.yml."""
+    """Exact name and workflow match only; missing workflow identity blocks."""
     policy = policy if policy is not None else load_advisory_checks()
-    return name in policy.names and (workflow is None or workflow == policy.workflow)
+    return name in policy.names and workflow is not None and workflow == policy.workflow

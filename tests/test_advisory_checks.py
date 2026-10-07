@@ -48,8 +48,15 @@ def test_current_workflow_exact_set_and_repository_root(monkeypatch, tmp_path):
     assert Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml" == advisory.CI_WORKFLOW_PATH
     assert advisory.is_advisory(SHADOW, workflow="CI", policy=policy)
     for name in ["advisory", "ADVISORY smoke", "Lint (advisory)", SHADOW.lower(), SHADOW + " "]:
-        assert not advisory.is_advisory(name, policy=policy)
+        assert not advisory.is_advisory(name, workflow="CI", policy=policy)
     assert not advisory.is_advisory(SHADOW, workflow="Nightly", policy=policy)
+
+
+@pytest.mark.parametrize("workflow", [None, "", "Nightly"])
+def test_missing_or_other_workflow_is_not_advisory(ci_file, workflow):
+    policy = advisory.load_advisory_checks()
+    assert SHADOW in policy.names
+    assert not advisory.is_advisory(SHADOW, workflow=workflow, policy=policy)
 
 
 @pytest.mark.parametrize("required_by", ["gate-result", "dependency", "implicit-gate", "no-result-references"])
@@ -74,7 +81,7 @@ def test_only_literal_job_level_true_qualifies(ci_file, value):
     jobs["shadow"]["continue-on-error"] = value
     jobs["shadow"]["steps"] = [{"continue-on-error": True, "run": "false"}]
     ci_file(jobs)
-    assert not advisory.is_advisory(SHADOW)
+    assert not advisory.is_advisory(SHADOW, workflow="CI")
 
 
 def test_static_matrix_include_exclude_and_name_expansion(ci_file):
@@ -97,7 +104,7 @@ def test_static_matrix_include_exclude_and_name_expansion(ci_file):
         "Shadow (linux, 1, linux)", "Shadow (linux, 2, linux)",
         "Shadow (windows, 2, default)", "Shadow (mac, 3, extra)",
     })
-    assert not advisory.is_advisory("Shadow (windows, 1, default)")
+    assert not advisory.is_advisory("Shadow (windows, 1, default)", workflow="CI")
 
 
 def test_include_only_nested_matrix_values(ci_file):
@@ -127,7 +134,7 @@ def test_duplicate_blocking_name_cannot_become_advisory(ci_file):
     jobs = workflow_jobs()
     jobs["build"]["name"] = SHADOW
     ci_file(jobs)
-    assert not advisory.is_advisory(SHADOW)
+    assert not advisory.is_advisory(SHADOW, workflow="CI")
 
 
 @pytest.mark.parametrize("change", [
@@ -152,7 +159,8 @@ def test_unsupported_workflow_fails_closed_with_reason(ci_file, change, caplog):
 @pytest.mark.parametrize("consumer", ["handoff", "sweep", "merge", "merge-rollup"])
 @pytest.mark.parametrize("case,ready", [
     ("advisory", True), ("blocking", False), ("blocking-advisory-name", False),
-    ("unknown", False), ("other-workflow", False), ("missing", False), ("invalid", False),
+    ("unknown", False), ("other-workflow", False), ("missing-workflow", False),
+    ("missing", False), ("invalid", False),
 ])
 def test_all_consumers_fail_closed(ci_file, consumer, case, ready, monkeypatch, caplog):
     jobs = workflow_jobs()
@@ -175,6 +183,8 @@ def test_all_consumers_fail_closed(ci_file, consumer, case, ready, monkeypatch, 
         {"name": "CI Gate", "bucket": "pass", "status": "COMPLETED", "conclusion": "SUCCESS", "workflowName": "CI"},
         {"name": name, "bucket": "fail", "status": "COMPLETED", "conclusion": "FAILURE", "workflowName": workflow},
     ]
+    if case == "missing-workflow":
+        rows[1].pop("workflowName")
     pr = {"number": 1, "headRefOid": HEAD, "isDraft": False, "statusCheckRollup": rows,
           "state": "OPEN", "mergeStateStatus": "CLEAN"}
     if consumer == "handoff":
@@ -190,7 +200,10 @@ def test_all_consumers_fail_closed(ci_file, consumer, case, ready, monkeypatch, 
             if consumer == "merge-rollup":
                 return subprocess.CompletedProcess(args, 1, "", "unknown flag: --json\n"
                     "Usage: gh pr checks [<number> | <url> | <branch>] [flags]\nFlags:\n--fail-fast\n")
-            return subprocess.CompletedProcess(args, 1, json.dumps(rows), "")
+            checks = [{**row, "workflow": row.get("workflowName")} for row in rows]
+            for check in checks:
+                check.pop("workflowName", None)
+            return subprocess.CompletedProcess(args, 1, json.dumps(checks), "")
 
         if ready:
             assert ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={}) == HEAD
@@ -202,8 +215,9 @@ def test_all_consumers_fail_closed(ci_file, consumer, case, ready, monkeypatch, 
 
 
 def test_workflow_reload_does_not_keep_a_stale_exemption(ci_file):
-    assert parse_checks([{"name": SHADOW, "bucket": "fail"}]) == ([], [])
+    checks = [{"name": SHADOW, "bucket": "fail", "workflow": "CI"}]
+    assert parse_checks(checks) == ([], [])
     jobs = workflow_jobs()
     jobs["shadow"].pop("continue-on-error")
     ci_file(jobs)
-    assert parse_checks([{"name": SHADOW, "bucket": "fail"}]) == ([SHADOW], [])
+    assert parse_checks(checks) == ([SHADOW], [])

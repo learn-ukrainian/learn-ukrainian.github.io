@@ -809,7 +809,7 @@ def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> t
     """(failing, pending) non-advisory check names, or None if undeterminable."""
     try:
         out = subprocess.run(
-            ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state"],
+            ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state,workflow"],
             capture_output=True,
             env=_gh_env(),
             cwd=cwd,

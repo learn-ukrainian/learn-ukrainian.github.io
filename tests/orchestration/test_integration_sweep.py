@@ -231,14 +231,14 @@ def test_ci_red_pending_and_ready():
 @pytest.mark.parametrize("status,conclusion", [("COMPLETED", "FAILURE"), ("IN_PROGRESS", ""), ("", "")])
 def test_advisory_checks_do_not_block_readiness(name, status, conclusion):
     item = pr()
-    item["statusCheckRollup"].append({"name": name, "status": status, "conclusion": conclusion})
+    item["statusCheckRollup"].append({"name": name, "status": status, "conclusion": conclusion, "workflowName": "CI"})
     report = sweep.classify_pr(item, sweep.Verdict("APPROVED"), queued=False, observed_at=START)
     assert report.state == "ready"
     assert report.blockers == ()
 
 
 def test_advisory_failure_does_not_hide_other_blockers():
-    advisory = {"name": "Component shadow (advisory)", "status": "COMPLETED", "conclusion": "FAILURE"}
+    advisory = {"name": "Component shadow (advisory)", "status": "COMPLETED", "conclusion": "FAILURE", "workflowName": "CI"}
     assert sweep._check_blockers(pr(statusCheckRollup=[advisory])) == ["CI pending CI Gate"]
     item = pr()
     item["statusCheckRollup"].extend([
