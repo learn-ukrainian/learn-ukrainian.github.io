@@ -164,16 +164,11 @@ def test_adverb_deck_json_export_and_file_parity(tmp_path: Path):
     assert len(committed_data["cards"]) == 75
 
 
-@pytest.mark.skipif(
-    not Path("data/vesum.db").exists() or Path("data/vesum.db").stat().st_size < 1_000_000,
-    reason="Requires full local data/vesum.db (>1MB); CI omits it",
-)
-def test_vesum_verification_clean():
+def test_vesum_verification_clean(requires_vesum_db):
     """Verify 100% VESUM attestation for all 75 cards."""
     cards = build_canonical_adverb_cards()
-    res = verify_deck_with_vesum(cards)
-    if res.get("status") == "skipped":
-        pytest.skip(res["message"])
+    res = verify_deck_with_vesum(cards, requires_vesum_db)
+    assert res.get("status") != "skipped", "Validated VESUM input must be executed"
 
     assert res["vesum_verified"] is True
     assert len(res["missing_targets"]) == 0, f"Missing target tokens in VESUM: {res['missing_targets']}"
@@ -481,11 +476,7 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
         assert card.target_token in card.correct_answer, f"Target token mismatch in card {card.card_id}"
 
 
-@pytest.mark.skipif(
-    not Path("data/vesum.db").exists() or Path("data/vesum.db").stat().st_size < 1_000_000,
-    reason="Requires full local data/vesum.db (>1MB); CI omits it",
-)
-def test_vesum_sanitization_and_malformed_token_detection():
+def test_vesum_sanitization_and_malformed_token_detection(requires_vesum_db):
     """Verify that curly apostrophe is normalized and malformed tokens are rejected rather than skipped."""
     base_cards = build_canonical_adverb_cards()
     c1 = base_cards[0]
@@ -502,7 +493,7 @@ def test_vesum_sanitization_and_malformed_token_detection():
         rule_summary_ua=c1.rule_summary_ua,
         rule_summary_en=c1.rule_summary_en,
     )
-    res_curly = verify_deck_with_vesum([curly_card])
+    res_curly = verify_deck_with_vesum([curly_card], requires_vesum_db)
     assert res_curly["vesum_verified"] is True
     assert len(res_curly["missing_targets"]) == 0
 
@@ -518,16 +509,12 @@ def test_vesum_sanitization_and_malformed_token_detection():
         rule_summary_ua=c1.rule_summary_ua,
         rule_summary_en=c1.rule_summary_en,
     )
-    res_malformed = verify_deck_with_vesum([malformed_card])
+    res_malformed = verify_deck_with_vesum([malformed_card], requires_vesum_db)
     assert res_malformed["vesum_verified"] is False
     assert any("test_malformed" in err for err in res_malformed["missing_targets"])
 
 
-@pytest.mark.skipif(
-    not Path("data/vesum.db").exists() or Path("data/vesum.db").stat().st_size < 1_000_000,
-    reason="Requires full local data/vesum.db (>1MB); CI omits it",
-)
-def test_vesum_rejects_empty_and_punctuation_answers():
+def test_vesum_rejects_empty_and_punctuation_answers(requires_vesum_db):
     """Verify that empty or punctuation-only card answers fail verification and report offending card IDs."""
     base_cards = build_canonical_adverb_cards()
     valid_card = base_cards[0]
@@ -557,14 +544,14 @@ def test_vesum_rejects_empty_and_punctuation_answers():
     )
 
     # Deck with valid card + empty card must fail
-    res_mixed = verify_deck_with_vesum([valid_card, empty_card])
+    res_mixed = verify_deck_with_vesum([valid_card, empty_card], requires_vesum_db)
     assert res_mixed["vesum_verified"] is False
     assert res_mixed["status"] == "failed"
     assert "card_empty" in res_mixed["empty_cards"]
     assert any("card_empty" in err for err in res_mixed["missing_targets"])
 
     # Deck with valid card + punctuation-only card must fail
-    res_punct = verify_deck_with_vesum([valid_card, punct_card])
+    res_punct = verify_deck_with_vesum([valid_card, punct_card], requires_vesum_db)
     assert res_punct["vesum_verified"] is False
     assert res_punct["status"] == "failed"
     assert "card_punct" in res_punct["empty_cards"]

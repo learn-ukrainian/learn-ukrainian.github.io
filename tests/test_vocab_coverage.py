@@ -2,15 +2,11 @@
 
 from __future__ import annotations
 
-import sqlite3
 import sys
 from importlib import import_module
 from pathlib import Path
 
-import pytest
 import yaml
-
-from scripts.lib.readonly_sqlite import open_readonly
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -45,26 +41,7 @@ def _write_vocab(tmp_path: Path, words: list[str]) -> Path:
     return path
 
 
-def _vesum_has_sound_lemma() -> bool:
-    db_path = vocab_coverage.VESUM_DB_PATH
-    if not db_path.exists() or db_path.stat().st_size == 0:
-        return False
-    try:
-        with open_readonly(db_path) as db:
-            for query in (
-                "SELECT lemma FROM vesum WHERE form = ? LIMIT 1",
-                "SELECT lemma FROM forms WHERE word_form = ? LIMIT 1",
-            ):
-                try:
-                    singular = db.execute(query, ("звук",)).fetchone()
-                    plural = db.execute(query, ("звуки",)).fetchone()
-                except sqlite3.OperationalError:
-                    continue
-                if singular and plural and singular[0] == plural[0]:
-                    return True
-    except sqlite3.Error:
-        return False
-    return False
+
 
 
 def test_all_required_present_passes(tmp_path: Path) -> None:
@@ -118,17 +95,20 @@ def test_punctuation_ignored(tmp_path: Path) -> None:
     assert result.missing_terms == ()
 
 
-def test_inflection_via_vesum_lemma(tmp_path: Path) -> None:
-    if not _vesum_has_sound_lemma():
-        pytest.skip("VESUM DB with звук/звуки lemma data is not available")
+def test_inflection_via_vesum_lemma(tmp_path: Path, requires_vesum_db, monkeypatch) -> None:
+    original = vocab_coverage._vesum_lemma_lookup
+    monkeypatch.setattr(vocab_coverage, "_vesum_lemma_lookup", lambda term: original(term, requires_vesum_db))
+    vocab_coverage._lemma_key.cache_clear()
 
     plan_path = _write_plan(tmp_path, ["звук (sound)"])
     vocab_path = _write_vocab(tmp_path, ["звуки"])
 
-    result = check_vocab_coverage(plan_path, vocab_path)
-
-    assert result.passed is True
-    assert result.missing_terms == ()
+    try:
+        result = check_vocab_coverage(plan_path, vocab_path)
+        assert result.passed is True
+        assert result.missing_terms == ()
+    finally:
+        vocab_coverage._lemma_key.cache_clear()
 
 
 def test_distinct_terms_do_not_match(tmp_path: Path) -> None:

@@ -385,7 +385,8 @@ def test_import_access_forms_and_helper_calls(source):
 
 def test_live_collection_helpers_in_base_census():
     import json
-    entries = json.loads(lint.BASELINE.read_text())['entries']
+    baseline = json.loads(lint.BASELINE.read_text())
+    entries = lint.census(baseline['base_commit'])['entries']
     paths = {e['path'] for e in entries if e['kind'] == 'test_import_access'}
     assert {'tests/test_esum_search.py', 'tests/audit/test_antonenko_prose_narrowing.py'} <= paths
 

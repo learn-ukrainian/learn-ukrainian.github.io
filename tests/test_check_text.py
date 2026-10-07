@@ -93,7 +93,7 @@ def test_mcp_call_tool_dispatch(server_module, requires_vesum_db, requires_sourc
     assert payload["summary"]["tokens"] >= 3
 
 
-def test_mcp_book_calque_acceptance(server_module, requires_vesum_db):
+def test_mcp_book_calque_acceptance(server_module, requires_vesum_db, requires_sources_db):
     positive = _run(
         server_module.call_tool(
             "check_text",
@@ -128,14 +128,14 @@ def test_mcp_book_calque_acceptance(server_module, requires_vesum_db):
         "По моїй думці так не можна робити",
     ],
 )
-def test_mcp_round2_no_firm_book_false_positives(server_module, requires_vesum_db, text):
+def test_mcp_round2_no_firm_book_false_positives(server_module, requires_vesum_db, requires_sources_db, text):
     result = _run(server_module.call_tool("check_text", {"text": text, "checks": ["russian_shadow"]}))
     payload = json.loads(result[0].text)
     assert payload.get("status") != "error", payload
     assert not any(f["detail"].get("pattern_id") for f in payload["problems"]), payload
 
 
-def test_mcp_concluding_is_reported_once(server_module, requires_vesum_db):
+def test_mcp_concluding_is_reported_once(server_module, requires_vesum_db, requires_sources_db):
     result = _run(
         server_module.call_tool("check_text", {"text": "Це заключна вистава", "checks": ["russian_shadow"]})
     )
