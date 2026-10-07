@@ -374,6 +374,18 @@ def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
     stripped = text.strip()
     parsed = _extract_json(text)
 
+    # Sources rejects arguments through plain text, structured payloads, or
+    # verify_stress's one-line summary. Reject before any hit/unavailable
+    # fallback; source text merely mentioning this marker is not a rejection.
+    invalid_input = (
+        isinstance(parsed, dict)
+        and any(parsed.get(key) == "invalid_input" for key in ("status", "error_code", "disposition"))
+    ) or stripped.startswith("invalid_input:")
+    if tool in {"verify_word", "verify_words", "verify_lemma"}:
+        invalid_input = invalid_input or stripped.startswith("0 analyses (0 distinct lemmas)\n\ninvalid_input:")
+    if invalid_input or (tool == "verify_stress" and re.match(r"^[^\n]+ — invalid_input:", stripped)):
+        return {"call_status": "ok", "hits": 0, "status": "error", "unavailable": False}
+
     if tool == "search_resources" and "Resource catalogue ingestion is required before searching resources." in text:
         return {"call_status": "ok", "hits": 0, "status": "unavailable", "unavailable": True}
 
