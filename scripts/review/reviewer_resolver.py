@@ -1274,6 +1274,14 @@ def resolve_reviewer(
     advisory: list[CandidateResult] = []
     selected: CandidateResult | None = None
     selected_rung_index: int | None = None
+    # Dispatch supplies the existing budget guard's per-model decisions.
+    # They only remove candidates; hard eligibility and ranking remain here.
+    capacity_exclusions = (
+        (inputs.routing_snapshot or {}).get("review_capacity_exclusions", {})
+        if excluded_quota_buckets
+        else {}
+    )
+    pace_retention_available = False
     # Last-resort candidates follow every eligible primary, after hard gates.
     # A ladder orders fallbacks, not traffic. Candidates in separate YAML
     # rungs with the same semantic suitability and catalog tier form one
@@ -1291,6 +1299,19 @@ def resolve_reviewer(
     for rung_index, rung in enumerate(active_ladder):
         for candidate in rung:
             result = evaluate_candidate(candidate, inputs, author_family=author_family)
+            if capacity_exclusions and result.status == "eligible" and candidate.quota_bucket in excluded_quota_buckets:
+                # Preserve the existing sole-reviewer pace-only retention
+                # contract. Admission rechecks this bucket without exclusions.
+                agents = (inputs.routing_snapshot or {}).get("agents", {})
+                info = agents.get(candidate.route, {})
+                status = (info.get("interactive") or {}).get("status") if candidate.route == "claude" else None
+                status = status or info.get("status")
+                pace_retention_available |= status in {"cool", "warm"} and not (
+                    info.get("runtime") or {}
+                ).get("headroom_blocked")
+            capacity_reason = capacity_exclusions.get(candidate.name)
+            if result.status == "eligible" and capacity_reason:
+                result = replace(result, status="excluded", reason=f"dispatch capacity: {capacity_reason}")
             if result.status == "eligible" and candidate.quota_bucket in excluded_quota_buckets:
                 result = replace(
                     result,
@@ -1458,6 +1479,22 @@ def resolve_reviewer(
                 f"credit-period allowlist [{', '.join(selected.credit['allowed_models'])}]"
             )
 
+    failure = None
+    if selected is None and capacity_exclusions and not pace_retention_available:
+        reasons = {entry.name: entry.reason or entry.status for entry in trace}
+        # Admission can restrict the ladder (e.g. code reviews exclude
+        # language-only families). Name those exclusions in the refusal too.
+        for rung in REVIEW_LADDERS.get(inputs.risk, ()):
+            for candidate in rung:
+                if candidate.name not in reasons:
+                    excluded = evaluate_candidate(candidate, inputs, author_family=author_family)
+                    reasons[candidate.name] = excluded.reason or "excluded from dispatch review ladder"
+        failure = "REVIEW_CAPACITY_UNAVAILABLE: " + "; ".join(
+            f"{name}: {reason}" for name, reason in reasons.items()
+        )
+    elif selected is None and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths):
+        failure = "security-sensitive target: no eligible critical reviewer; see candidate exclusion reasons in trace"
+
     return ReviewerResolution(
         selected=selected,
         advisory=tuple(advisory),
@@ -1466,9 +1503,5 @@ def resolve_reviewer(
         policy_version=_SCHEDULER_POLICY_VERSION,
         catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
         resolved_risk=risk,
-        fail_closed_reason=(
-            "security-sensitive target: no eligible critical reviewer; see candidate exclusion reasons in trace"
-            if selected is None and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
-            else None
-        ),
+        fail_closed_reason=failure,
     )
