@@ -260,6 +260,45 @@ def preserve(checkout, record=None, task_id="output-task"):
     )
 
 
+@pytest.mark.parametrize("empty_index", [False, True])
+@pytest.mark.parametrize("returncode", [0, 128])
+def test_preservation_uses_isolated_environment_for_all_inventory(checkout, monkeypatch, empty_index, returncode):
+    repo, primary, tasks = checkout
+    name = "ignored/answer.txt"
+    payload = b"preserved answer"
+    artifact(checkout, name, payload)
+    if empty_index:
+        subprocess.run(["git", "read-tree", "--empty"], cwd=repo, check=True, timeout=30)
+    record = {"task_id": "output-task", "worktree_path": str(repo), "response": f"Saved `{name}`."}
+    (tasks / "output-task.json").write_text(json.dumps(record))
+    run = subprocess.run
+    calls = []
+
+    def runner(args, **kwargs):
+        assert kwargs["env"] == output.artifacts._safe_git_env()
+        calls.append((kwargs["cwd"], args))
+        if returncode:
+            raise subprocess.CalledProcessError(returncode, args, stderr="inventory unavailable")
+        return run(args, **kwargs)
+
+    monkeypatch.setattr(output.artifacts.subprocess, "run", runner)
+    ok, reason, receipt = output.preserve_worktree_artifacts(
+        repo, primary=primary, task_id="output-task", tasks_dir=tasks
+    )
+    assert calls and all(cwd == repo for cwd, _ in calls)
+    if returncode:
+        assert not ok and "non-zero exit status 128" in reason
+        assert (repo / name).read_bytes() == payload
+        assert not (primary / "batch_state/preserved").exists()
+    else:
+        assert ok and not reason
+        assert (primary / receipt["location"] / name).read_bytes() == payload
+        named_probe = ["git", "ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name]
+        assert sum(args == named_probe for _, args in calls) == 2  # Initial inventory and post-copy recheck.
+        if empty_index:
+            assert (primary / receipt["location"] / ".gitignore").read_bytes() == (repo / ".gitignore").read_bytes()
+
+
 @pytest.mark.parametrize("status", ["done", "no_deliverable", "failed"])
 def test_all_ignored_output_preserved_without_response_names(checkout, status):
     repo, _, tasks = checkout

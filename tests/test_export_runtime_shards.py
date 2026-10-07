@@ -405,7 +405,7 @@ def test_real_db_public_counts_and_alias_targets(tmp_path: Path) -> None:
         "publicRoutes"
     ]
 
-    conn = sqlite3.connect(f"file:{REAL_DB_PATH}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(REAL_DB_PATH).resolve().as_uri()}?mode=ro", uri=True)
     try:
         invalid = conn.execute(
             """SELECT COUNT(*)

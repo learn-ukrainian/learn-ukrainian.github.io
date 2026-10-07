@@ -43,6 +43,13 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from scripts.lexicon import enrich_manifest as em
 
 DEFAULT_COHORT_SIZE = 50
@@ -356,7 +363,7 @@ def measure_divergence(
 
     manifest = {"entries": [dict(entry) for entry in entries]}
     lemmas = [str(entry.get("lemma") or "") for entry in entries]
-    connect = open_conn or (lambda path: sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True))
+    connect = open_conn or open_readonly
 
     with _engine_state(grac_cache, dictionary_rows):
         conn = connect(sources_db)

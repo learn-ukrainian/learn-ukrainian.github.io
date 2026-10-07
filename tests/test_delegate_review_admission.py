@@ -1190,7 +1190,8 @@ def test_the_review_worker_refuses_a_fable_pin(tmp_path):
     refusal, target = delegate._kimi_worker_refusal(
         "review-9583", agent="claude", model="claude-fable-5-1", mode="read-only", cwd=tmp_path, review=True
     )
-    assert target is None and NO_REVIEW_ROLE in refusal
+    # #9878: the worker returns the typed cause; the catalog's refusal text is the dispatch-time gate's to print.
+    assert target is None and refusal == "review_admission_refused"
     refusal, target = delegate._kimi_worker_refusal(
         "review-9583", agent="claude", model="claude-opus-5-5", mode="read-only", cwd=tmp_path, review=True
     )

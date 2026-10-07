@@ -22,6 +22,13 @@ from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from scripts.rag.word_identity import normalize_evidence_form
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -616,7 +623,7 @@ def generate_fixture_manifest(
         ("vulg", "vulg"),
         ("dialect", "dialect"),
     )
-    connection = sqlite3.connect(f"file:{database_path}?mode=ro", uri=True)
+    connection = open_readonly(database_path)
     connection.row_factory = sqlite3.Row
     try:
         fixtures = []

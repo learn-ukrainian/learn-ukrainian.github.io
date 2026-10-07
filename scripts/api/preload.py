@@ -2,11 +2,18 @@
 
 from __future__ import annotations
 
-import importlib
 import logging
+import sqlite3
 import time
 from importlib import util as importlib_util
 from pathlib import Path
+
+try:
+    from scripts.lib.readonly_sqlite import import_named_module
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
 logger = logging.getLogger("api.preload")
 
@@ -82,7 +89,6 @@ DYNAMIC_LOADERS = {
         "description": "Loads agent runtime adapters and registry snapshots dynamically.",
         "strategy": "walk_adapters",
         "calls": [
-            {"func": "import_module", "caller": "list_runtime_agents"},
             {"func": "import_module", "caller": "list_routing_assignments"},
             {"func": "spec_from_file_location", "caller": "_load_registry_default_models"},
         ],
@@ -107,7 +113,7 @@ def _walk_adapters_strategy() -> tuple[int, int, list[str]]:
                 continue
             module_name = f"agent_runtime.adapters.{path.stem}"
             try:
-                importlib.import_module(module_name)
+                import_named_module(module_name)
                 pinned += 1
             except ImportError:
                 skipped += 1
@@ -153,7 +159,14 @@ def preload_all() -> None:
     # 1. Load required static modules
     for name in PRELOAD_MODULES:
         try:
-            importlib.import_module(name)
+            # sqlite3 is the stdlib module itself. The named-module boundary
+            # refuses it; a direct import warms the same module without exposing
+            # a constructor through a non-constant loader.
+            if name == "sqlite3":
+                if not sqlite3.sqlite_version:
+                    raise RuntimeError("sqlite3 stdlib module failed to preload")
+            else:
+                import_named_module(name)
             pinned_count += 1
         except ImportError as e:
             logger.error(f"Required module preload failed: {name}. Error: {e}")
@@ -162,7 +175,7 @@ def preload_all() -> None:
     # 2. Load optional/heavy static modules
     for name in OPTIONAL_MODULES:
         try:
-            importlib.import_module(name)
+            import_named_module(name)
             pinned_count += 1
         except ImportError:
             skipped_count += 1

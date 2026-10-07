@@ -1,5 +1,6 @@
 import sqlite3
 import sys
+from pathlib import Path
 
 from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import _idioms_frazeolohichnyi
@@ -157,7 +158,7 @@ def test_frazeolohichnyi_readonly_degrades(tmp_path, monkeypatch):
     conn.commit()
     conn.close()
 
-    conn_ro = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn_ro = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
 
     enrich_manifest_module._FRAZEOLOHICHNYI_FTS_AVAILABLE.clear()
     enrich_manifest_module._FRAZEOLOHICHNYI_FTS_WARN_LOGGED = False
