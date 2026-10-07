@@ -3,6 +3,10 @@
 Decides whether a tool call produced no hits, hits but no support, unavailable,
 or error from structured facts captured at record time.
 
+Invalid-input rejections (structured markers, leading ``invalid_input:`` text,
+VESUM rejection summaries and stress-oracle summaries) become error with zero
+hits before any unavailable, no-result or hit classification.
+
 Real "no result" forms across the review tools in .mcp/servers/sources/server.py:
 --------------------------------------------------------------------------------
 Tool                  Line(s) in server.py  "No result" wording / pattern

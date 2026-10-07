@@ -10,7 +10,20 @@ import pytest
 from scripts.review import settle
 from scripts.review.receipts import ledger
 from scripts.review.receipts.outcomes import classify_outcome, search_outcome
-from tests.review.test_r1_schema_ledger import _run
+from scripts.review.validate import codes
+from scripts.review.validate.validate import _outcome_shown
+from tests.curriculum.evidence.test_reference_sense import WORD, bindings
+from tests.curriculum.evidence.test_reference_sense import review_dispatch as review_dispatch
+from tests.review.test_r1_schema_ledger import (
+    _codes,
+    _dump,
+    _finding,
+    _layout,
+    _lesson_checks,
+    _review,
+    _run,
+    _validate,
+)
 from tests.review.test_r1_schema_ledger import server_module as server_module
 from tests.review.test_settle import World
 from tests.review.test_settle import world as world
@@ -56,6 +69,91 @@ def _receipt(world: World, tool, result, arguments):
         status="ok",
         result=result,
     )
+
+
+@pytest.mark.parametrize("tool,key", INVALID_INPUT_TOOLS.items())
+@pytest.mark.parametrize("branch", ["evidence", "source_conflict"])
+def test_real_invalid_input_cannot_support_active_finding(server_module, tmp_path, tool, key, branch):
+    paths = _layout(tmp_path)
+    arguments = {key: [] if key == "words" else ""}
+    if tool == "check_text":
+        arguments["checks"] = []
+    result = _result(server_module, tool, arguments)
+    receipt = ledger.append(
+        paths["ledger"],
+        review_id="review-1",
+        attempt_id="attempt-1",
+        manifest_sha256=paths["digest"],
+        tool=tool,
+        server_version="fixture",
+        arguments=arguments,
+        snapshots={},
+        status="ok",
+        result=result,
+    )
+    record = ledger.lookup(paths["ledger"], receipt)
+    assert record["status"] == "ok" and record["outcome_facts"]["status"] == "error"
+    evidence = {"receipt": receipt}
+    if branch == "source_conflict":
+        valid = ledger.append(
+            paths["ledger"],
+            review_id="review-1",
+            attempt_id="attempt-1",
+            manifest_sha256=paths["digest"],
+            tool="search_text",
+            server_version="fixture",
+            arguments={"query": "fixture"},
+            snapshots={},
+            status="ok",
+            result="Valid authority excerpt.",
+        )
+        evidence = {"a": {"receipt": receipt}, "b": {"receipt": valid}}
+    finding = _finding(expected="required" if tool in {"verify_word", "query_pravopys"} else result)
+    finding.pop("evidence")
+    finding[branch] = evidence
+    _dump(
+        paths["review"],
+        _review(
+            kind="lesson",
+            manifest_hash=paths["digest"],
+            checks=_lesson_checks(["F-01"]),
+            findings=[finding],
+        ),
+    )
+    validated = _validate(paths)
+    assert not validated.ok
+    assert _codes(validated) == {codes.EVIDENCE_RECEIPT_INVALID}
+    assert _outcome_shown("error", record)
+    assert not _outcome_shown("no_hits", record)
+    assert not _outcome_shown("hits_but_no_support", record)
+
+
+def test_real_invalid_batch_cannot_prove_reviewed_binding(server_module, review_dispatch):
+    tasks, pool, task_path, _result_path, task, _verdict = review_dispatch
+    original = tasks.parent / "review-receipts/review-test/attempt-test.jsonl"
+    attempt = {**task["review_attempt"], "attempt_id": "invalid-batch"}
+    rejected = original.with_name("invalid-batch.jsonl")
+    for record in ledger.records(original):
+        arguments = record["arguments"]
+        result = record["result"]
+        if record["tool"] == "verify_words":
+            arguments = {"words": [WORD["lemma"], ""]}
+            result = _result(server_module, "verify_words", arguments)
+            assert classify_outcome("verify_words", "ok", result)["status"] == "error"
+        ledger.append(
+            rejected,
+            **attempt,
+            tool=record["tool"],
+            server_version="fixture",
+            arguments=arguments,
+            snapshots={},
+            status="ok",
+            result=result,
+        )
+    task["review_attempt"] = attempt
+    task_path.write_text(json.dumps(task))
+    with pytest.raises(ValueError, match=r"^review_sources_unproven$"):
+        bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, "gpt-6.1-sol")
 
 
 @pytest.mark.parametrize("tool,key", INVALID_INPUT_TOOLS.items())
