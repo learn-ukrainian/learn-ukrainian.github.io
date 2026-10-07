@@ -9,17 +9,22 @@
     {
       "path": "scripts/agent_runtime/acpx_pilot.py",
       "form": "file",
-      "failure_class": "import_error"
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/agent_runtime/kimi_boundary.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/agent_runtime/lane_probe.py",
       "form": "file",
-      "failure_class": "import_error"
+      "failure_class": "module_not_found"
     },
     {
-      "path": "scripts/ai_agent_bridge/__main__.py",
+      "path": "scripts/agent_runtime/probe_fallback.py",
       "form": "file",
-      "failure_class": "import_error"
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/ai_agent_bridge/_hermes_stdin.py",
@@ -37,9 +42,254 @@
       "failure_class": "module_not_found"
     },
     {
-      "path": "scripts/audit/audit_module.py",
+      "path": "scripts/api/occupancy_local.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/api/project_state_local.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/api/project_state_local.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/atlas/fill_local.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/atlas/measure_fill_enrich_divergence.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/atlas/word_card_foundation.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audio/generate_pronunciation.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/apply_source_inventory_promotion.py",
       "form": "file",
       "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/audit/audit_module.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/bio_lit_cross_reference.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/check_ci_dependencies.py",
+      "form": "file",
+      "failure_class": "environment_blocked_subprocess"
+    },
+    {
+      "path": "scripts/audit/check_research_registry_pilot.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/check_research_registry_pilot.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/classify_grounding_failures.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/decision_lineage.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/freeze_benchmark.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/audit/freeze_benchmark.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/generate_activity_quality_queue.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/audit/generate_daily_pool.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/generate_source_inventory_review_candidates.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/grounding_shadow_compare.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/grow_lexicon_from_lemmas.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/grow_lexicon_from_sources.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/immersion_gate_calibration.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/layerb_shadow.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/llm_qg_store.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/measure_curated_membership.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/measure_russicism_recall.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/paronym_residual_audit.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/audit/plan_source_inventory_promotion.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/probe_uk_writing_score.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/audit/qg_bakeoff.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/audit/qg_corpus_report.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/audit/qg_corpus_report.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/qg_seat_decision.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/audit/qg_shadow_run.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/qg_shadow_run.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/qg_tier2_canary_check.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/audit/qg_tier2_canary_check.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/qg_tier2_disarm.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/qg_tier2_disarm.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/qg_workflow.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/qg_workflow.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/relation_residual_audit.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/audit/rewrite_fixture_pointers.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/run_gemini_1x17_sweep.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/source_inventory_review_decisions.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/typesafe_citation_verifier.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/ulp_fidelity_gate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/batch/batch_dispatcher.py",
+      "form": "file",
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/batch/batch_gemini_runner.py",
@@ -52,6 +302,51 @@
       "failure_class": "import_error"
     },
     {
+      "path": "scripts/build/build_arc_landing.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/build/enrich.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/build/fresh/__main__.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/build/fresh/cli.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/build/promote_quality_gate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/build/verify_shippable.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/canary/kimi_oauth_canary.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/ci/bio_preparation_gate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/ci/data_tier.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
       "path": "scripts/curriculum/evidence/__main__.py",
       "form": "file",
       "failure_class": "import_error"
@@ -59,22 +354,22 @@
     {
       "path": "scripts/curriculum/evidence/lesson_lock.py",
       "form": "file",
-      "failure_class": "import_error"
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/curriculum/evidence/pack.py",
       "form": "file",
-      "failure_class": "import_error"
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/curriculum/evidence/verify.py",
       "form": "file",
-      "failure_class": "import_error"
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/curriculum/evidence/words.py",
       "form": "file",
-      "failure_class": "import_error"
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/curriculum/learner_state/__main__.py",
@@ -97,9 +392,14 @@
       "failure_class": "import_error"
     },
     {
+      "path": "scripts/debug/debug_hash.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
       "path": "scripts/delegate.py",
       "form": "file",
-      "failure_class": "module_not_found"
+      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/delegate.py",
@@ -114,7 +414,7 @@
     {
       "path": "scripts/eval/uk_preamble/__main__.py",
       "form": "file",
-      "failure_class": "import_error"
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/eval/zno_nmt/__main__.py",
@@ -122,9 +422,204 @@
       "failure_class": "import_error"
     },
     {
+      "path": "scripts/fleet/capacity_pick.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet/capacity_pick.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/fleet/driver_breadth_report.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet/idle_settle.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet/post_task_reap.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet/sibling_git.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet/usage.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet_comms/cli.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_curriculum_yaml.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_json.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_level_status.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_mdx_direct.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
       "path": "scripts/generate_mdx/generate_plan_markdown.py",
       "form": "file",
       "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_playground_data.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_seo.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_skeleton.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/hygiene/branch_sweep.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/hygiene/tmp_sweep.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/ingest/build_a1_closed_class.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/admit_teacher_table.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/audit_sum11_relations.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/build_fmu_booster_inventory.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/lexicon/build_slovnyk_mirror.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/curriculum_atlas_intake.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/grow_lexicon_from_content.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/obvious_noise_classifier.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/ohoiko_atlas_intake.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/atlas_job.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/fetch_ulif_homonyms.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/finalize.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/memory.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/memory_probe.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/ulif_forms.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/lexicon/runner/ulif_forms.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/lexicon/runner/worker.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/teacher_deck.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/maintenance/batch_state_retention.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/maintenance/batch_state_retention.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/maintenance/reclassify_dispatch_status.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/maintenance/reclassify_dispatch_status.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/migrate/rehash_module.py",
@@ -135,6 +630,61 @@
       "path": "scripts/migrate/rehash_module.py",
       "form": "module",
       "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/orchestration/claudex_supervisor.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/orchestration/codex_transport_health.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/orchestration/curriculum_coordinator.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/orchestration/curriculum_coordinator.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/orchestration/handoff_slot_registry.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/orchestration/observer_heartbeat.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/orchestration/precompact_handoff_check.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/orchestration/reconcile_sweep.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/orchestration/reconcile_sweep.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/orchestration/stale_task_records.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/orchestration/stale_task_records.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/orchestration/task_family/cli.py",
@@ -142,6 +692,61 @@
       "failure_class": "import_error"
     },
     {
+      "path": "scripts/orchestration/worktree_claims.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/practice/author_densified_pairs.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/projects/open_model_data/correction_protection_consumer.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/projects/open_model_data/correction_protection_factory.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/projects/open_model_data/foundry_cli.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/projects/open_model_data/language_contact_detector.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/projects/open_model_data/model_ready_view_production.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_vspu_post_ingest_audit.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_verify_trajectory_claims.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/rag/check_calques_m02.py",
+      "form": "file",
+      "failure_class": "environment_blocked_network"
+    },
+    {
+      "path": "scripts/rag/query.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
       "path": "scripts/rag/rag_batch_verify.py",
       "form": "file",
       "failure_class": "module_not_found"
@@ -152,9 +757,79 @@
       "failure_class": "module_not_found"
     },
     {
+      "path": "scripts/rag/verify_extra.py",
+      "form": "file",
+      "failure_class": "environment_blocked_network"
+    },
+    {
+      "path": "scripts/rag/verify_grammar_m02.py",
+      "form": "file",
+      "failure_class": "environment_blocked_network"
+    },
+    {
+      "path": "scripts/rag/verify_module_1.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/rag/verify_module_1_v6.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/closeout_cli.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
       "path": "scripts/review/digest/__main__.py",
       "form": "file",
       "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/review/fixloop.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/integration_check.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/prompts/check.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/prompts/render.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/record.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/second_seat.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/seeds/adjudicate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/seeds/score.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/settle.py",
+      "form": "file",
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/review/validate/__main__.py",
@@ -164,7 +839,12 @@
     {
       "path": "scripts/review/validate/validate.py",
       "form": "file",
-      "failure_class": "import_error"
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/scoring/calc_immersion.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/scoring/calculate_richness.py",
@@ -204,7 +884,72 @@
     {
       "path": "scripts/session_supervisor/__init__.py",
       "form": "file",
-      "failure_class": "import_error"
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/tools/agent_watcher.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/tools/agent_watcher.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/tools/check_gate.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/tools/consultation_cli.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/tools/consultation_cli.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/tools/source_images_direct.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/validate/validate_activities.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/verification/stress_comparison.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/verification/verify_antonenko_citations.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/vocab/lexical_sandbox.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/wiki/benchmark.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/compile.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/diagnostics/retrieval_playback.py",
+      "form": "file",
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/wiki/ingest_ukrainian_wiki.py",
@@ -212,9 +957,19 @@
       "failure_class": "module_not_found"
     },
     {
+      "path": "scripts/wiki/quality_gate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/review.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
       "path": "scripts/wiki/sources_db.py",
       "form": "file",
-      "failure_class": "import_error"
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/wiki/ukrainian_wiki_corpus.py",

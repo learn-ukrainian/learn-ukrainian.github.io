@@ -2,8 +2,9 @@
 
 Compute the static denominator, including deferred imports and regular package
 initializers, so new dependent CLIs automatically receive both import probes.
-Only the ingest entrypoints are executed with --help; legacy main logic is out
-of scope. Each probe uses a fresh interpreter without pytest's sys.path. The
+File probes run as __main__ with --help and real script paths, including path
+setup. Module probes import without running legacy main logic. Each probe uses
+a fresh interpreter without pytest's sys.path. The
 known-failures baseline is a shrink-only ratchet: regressions and fixed rows
 both fail until the baseline reflects the remaining failures. Its denominator
 fingerprint must be refreshed explicitly when the import graph changes.
@@ -16,6 +17,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 import time
@@ -81,9 +83,8 @@ def source_tool_clis(root: Path) -> list[str]:
     return sorted(modules[module] for module in mains & reached)
 
 
-IMPORT_PROBE = """
-import importlib
-import runpy
+OFFLINE_GUARD = """
+import os
 import sys
 from pathlib import Path
 
@@ -103,16 +104,44 @@ def offline(event, args):
                 return
     if event in {'subprocess.Popen', 'os.system', 'os.posix_spawn', 'os.exec'}:
         raise RuntimeError('IMPORT_SMOKE_BLOCKED_SUBPROCESS: ' + event)
+    # Running __main__ must not let a CLI that ignores --help modify the tree.
+    if event == 'open' and args[2] & (os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC):
+        raise RuntimeError('IMPORT_SMOKE_BLOCKED_WRITE: ' + event)
+    if event in {'os.mkdir', 'os.remove', 'os.rename', 'os.rmdir', 'os.link',
+                 'os.symlink', 'os.truncate', 'os.chmod', 'os.chown', 'os.utime'}:
+        raise RuntimeError('IMPORT_SMOKE_BLOCKED_WRITE: ' + event)
+    if event == 'sqlite3.connect' and args[0] != ':memory:' and 'mode=ro' not in str(args[0]):
+        raise RuntimeError('IMPORT_SMOKE_BLOCKED_WRITE: ' + event)
 
 sys.addaudithook(offline)
+"""
+
+IMPORT_PROBE = OFFLINE_GUARD + """
+import importlib
+import runpy
 style, path = sys.argv[1:]
-sys.argv = [path]
 if style == 'module':
+    sys.argv = [path]
     importlib.import_module(path[:-3].replace('/', '.'))
 else:
-    runpy.run_path(path, run_name='__smoke__')
+    # -c initially supplies cwd at sys.path[0]. Replace it with the directory
+    # a real file launch uses; never supply the repository root to the script.
+    root = str(Path.cwd())
+    sys.path[:] = [str(Path(path).resolve().parent)] + [
+        entry for entry in sys.path if entry and str(Path(entry).resolve()) != root
+    ]
+    sys.argv = [path, '--help']
+    try:
+        runpy.run_path(path, run_name='__main__')
+    except SystemExit as exc:
+        if exc.code not in (None, 0):
+            raise
 print('IMPORT_SMOKE_COMPLETE')
 """
+
+REFRESH_COMMAND = (
+    f"{shlex.quote(sys.executable)} tests/test_source_ingest_entrypoints.py --refresh-denominator"
+)
 
 
 def smoke_import(root: Path, path: str, style: str) -> str | None:
@@ -152,6 +181,14 @@ def denominator_snapshot(clis: list[str]) -> dict:
     }
 
 
+def refresh_denominator() -> None:
+    """Refresh only the reviewed CLI inventory; never bless observed failures."""
+    baseline = json.loads(BASELINE_PATH.read_text())
+    baseline["denominator"] = denominator_snapshot(source_tool_clis(ROOT))
+    BASELINE_PATH.write_text(json.dumps(baseline, indent=2) + "\n")
+    print(json.dumps(baseline["denominator"], sort_keys=True))
+
+
 def failure_class(diagnostic: str) -> str:
     """Keep offline guard limitations distinct from import exceptions."""
     for kind in ("SUBPROCESS", "NETWORK"):
@@ -181,13 +218,16 @@ def test_source_tool_baseline_is_fresh() -> None:
     assert BASELINE["schema"] == "source-tool-import-baseline.v1"
     assert BASELINE["denominator"] == denominator_snapshot(CLIS), (
         "CLI denominator changed; review the inventory and refresh its snapshot explicitly"
+        f" with: {REFRESH_COMMAND}"
     )
     assert len(KNOWN_FAILURES) == len(BASELINE["failures"]), "duplicate baseline rows"
     assert set(CLIS) >= URGENT_CLIS, "urgent ingest CLIs must stay in the denominator"
     for path, form, kind in KNOWN_FAILURES:
         assert path in CLIS and form in STYLES, f"obsolete baseline probe: {(path, form)}"
         assert path not in URGENT_CLIS, "urgent ingest imports must be clean, never baselined"
-        assert kind in {"import_error", "module_not_found", "environment_blocked_subprocess"}
+        assert kind in {"import_error", "module_not_found", "environment_blocked_subprocess",
+                        "environment_blocked_network",
+                        "other_import_failure", "timeout"}
 
 
 @pytest.mark.repo_invariant
@@ -215,6 +255,24 @@ def test_denominator_snapshot_detects_shrink_and_substitution() -> None:
     assert snapshot != denominator_snapshot([*original, "scripts/c.py"])
 
 
+def test_refresh_denominator_preserves_failure_rows(tmp_path: Path, monkeypatch, capsys) -> None:
+    target = tmp_path / "baseline.json"
+    baseline = {"schema": BASELINE["schema"], "denominator": {}, "failures": BASELINE["failures"]}
+    target.write_text(json.dumps(baseline))
+    monkeypatch.setattr(sys.modules[__name__], "BASELINE_PATH", target)
+    monkeypatch.setattr(sys.modules[__name__], "source_tool_clis", lambda root: ["scripts/new.py"])
+    refresh_denominator()
+    updated = json.loads(target.read_text())
+    assert updated == {**baseline, "denominator": denominator_snapshot(["scripts/new.py"])}
+    assert json.loads(capsys.readouterr().out) == updated["denominator"]
+
+
+def test_freshness_failure_names_refresh_command(monkeypatch) -> None:
+    monkeypatch.setattr(sys.modules[__name__], "BASELINE", {**BASELINE, "denominator": {}})
+    with pytest.raises(AssertionError, match=re.escape(REFRESH_COMMAND)):
+        test_source_tool_baseline_is_fresh()
+
+
 @pytest.mark.parametrize("observed, expected, message", [
     ({("scripts/a.py", "file", "import_error")}, set(), "New failures"),
     (set(), {("scripts/a.py", "file", "import_error")}, "Stale baseline rows"),
@@ -240,6 +298,8 @@ def test_failure_ratchet_accepts_exact_remaining_set(rows) -> None:
      "environment_blocked_subprocess"),
     ("probe: exit 1\nRuntimeError: IMPORT_SMOKE_BLOCKED_NETWORK: socket.connect",
      "environment_blocked_network"),
+    ("probe: exit 1\nRuntimeError: IMPORT_SMOKE_BLOCKED_WRITE: open",
+     "other_import_failure"),
     ("probe: timeout after 15s\nNone\nNone", "timeout"),
     ("probe: exit 0\n", "other_import_failure"),
     ('probe: exit 1\n    raise RuntimeError("IMPORT_SMOKE_BLOCKED_SUBPROCESS: subprocess.Popen")\n'
@@ -274,7 +334,7 @@ def test_source_tool_graph_includes_new_deferred_and_package_dependents(tmp_path
 
 @pytest.mark.parametrize("style", ["module", "file"])
 @pytest.mark.parametrize("source, expected", [
-    ('if __name__ == "__main__": raise RuntimeError("main ran")\n', None),
+    ('if __name__ == "__main__": raise RuntimeError("main ran")\n', "RuntimeError: main ran"),
     ('raise SystemExit(0)\n', "exit 0"),
     ('raise RuntimeError("import failed")\n', "RuntimeError: import failed"),
     ('import socket\nsocket.getaddrinfo("example.invalid", 443)\n', "IMPORT_SMOKE_BLOCKED_NETWORK"),
@@ -282,6 +342,8 @@ def test_source_tool_graph_includes_new_deferred_and_package_dependents(tmp_path
     ('import subprocess\nsubprocess.run(["git", "rev-parse", "--is-inside-work-tree"])\n', None),
     ('import subprocess\nsubprocess.run(["git", "fetch", "origin"])\n', "IMPORT_SMOKE_BLOCKED_SUBPROCESS"),
     ('import hidden_dependency\n', "No module named 'hidden_dependency'"),
+    ('open("unexpected-write", "w")\n', "IMPORT_SMOKE_BLOCKED_WRITE"),
+    ('import sqlite3\nsqlite3.connect("unexpected-write")\n', "IMPORT_SMOKE_BLOCKED_WRITE"),
 ])
 def test_smoke_probe_enforces_isolation(tmp_path: Path, monkeypatch, style: str,
                                        source: str, expected: str | None) -> None:
@@ -291,11 +353,16 @@ def test_smoke_probe_enforces_isolation(tmp_path: Path, monkeypatch, style: str,
     (tmp_path / "hidden").mkdir()
     (tmp_path / "hidden" / "hidden_dependency.py").write_text("")
     monkeypatch.setenv("PYTHONPATH", str(tmp_path / "hidden"))
+    if source.startswith('if __name__') and style == "module":
+        expected = None
+    if source == 'raise SystemExit(0)\n' and style == "file":
+        expected = None
     failure = smoke_import(tmp_path, "scripts/probe.py", style)
     if expected is None:
         assert failure is None
     else:
         assert failure is not None and expected in failure
+    assert not (tmp_path / "unexpected-write").exists()
 
 
 @pytest.mark.repo_invariant
@@ -321,3 +388,43 @@ def test_source_ingest_help_from_repository_root(module: str, style: str) -> Non
     assert result.returncode == 0, result.stdout + result.stderr
     assert "usage:" in result.stdout.lower(), result.stdout + result.stderr
     assert "--help" in result.stdout
+
+
+def test_file_probe_matches_real_script_path_and_main_setup(tmp_path: Path) -> None:
+    folder = tmp_path / "scripts" / "tool"
+    folder.mkdir(parents=True)
+    (folder / "sibling.py").write_text("VALUE = 42\n")
+    (folder / "probe.py").write_text('''
+import os
+import sys
+from pathlib import Path
+assert sys.path[0] == str(Path(__file__).resolve().parent)
+assert str(Path.cwd()) not in sys.path
+assert '' not in sys.path
+assert sys.argv == ['scripts/tool/probe.py', '--help']
+if __name__ == '__main__':
+    import sibling
+    assert sibling.VALUE == 42
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib import dependency
+    assert dependency.VALUE == 43
+else:
+    raise RuntimeError('main setup was skipped')
+''')
+    lib = tmp_path / "scripts" / "lib"
+    lib.mkdir()
+    (lib / "dependency.py").write_text("VALUE = 43\n")
+    assert smoke_import(tmp_path, "scripts/tool/probe.py", "file") is None
+    (folder / "broken.py").write_text("from scripts.lib import dependency\n")
+    failure = smoke_import(tmp_path, "scripts/tool/broken.py", "file")
+    assert failure is not None and "No module named 'scripts'" in failure
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Refresh the reviewed source-tool CLI inventory only.")
+    parser.add_argument("--refresh-denominator", action="store_true", required=True,
+                        help="Update the inventory fingerprint, preserving all failure rows.")
+    parser.parse_args()
+    refresh_denominator()
