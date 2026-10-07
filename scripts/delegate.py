@@ -10403,7 +10403,11 @@ def _run_worker(
                         worktree=Path(worktree_path),
                         task_id=task_id,
                         agent=agent,
-                        model=model or _lane_default_model(agent),
+                        model=(
+                            model
+                            if agent == "cursor" and (model or "").strip().lower() == "auto"
+                            else getattr(result, "model", None) or model or _lane_default_model(agent)
+                        ),
                         branch=final_state.get("worktree_branch"),
                         base_branch=base_branch,
                         open_pr=finalize_open_pr,

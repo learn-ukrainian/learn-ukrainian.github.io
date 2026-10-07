@@ -18805,6 +18805,45 @@ def test_auto_finalize_commit_replaces_parent_git_identity(tmp_path, monkeypatch
     )
 
 
+@pytest.mark.parametrize("requested,name", [("grok-4.7-high", "Claude"), ("auto", "LU Unknown")])
+def test_cursor_auto_finalize_uses_completed_runner_model(tmp_tasks_dir, tmp_path, monkeypatch, requested, name):
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "cursor/identity-failover")
+    (worktree / "result.txt").write_text("worker output\n")
+    delegate._write_state_atomic(
+        delegate._state_path("identity-failover"),
+        {
+            "task_id": "identity-failover",
+            "worktree_path": str(worktree),
+            "worktree_branch": "cursor/identity-failover",
+            "worktree_base": "main",
+            "owned_paths": ["result.txt"],
+            "keep_worktree": True,
+        },
+    )
+    result = _bg_mock_result("")  # Completed model is Claude, unlike the requested Grok pin.
+    result.substitution = {
+        "actual_model": "claude-opus-5-5",
+        "actual_model_known": True,
+        "substituted": True,
+        "source": "runner-failover",
+    }
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_args: None)
+    monkeypatch.setattr(delegate, "_count_unpushed_commits", lambda *_args: 0)
+    with patch("agent_runtime.runner.invoke", return_value=result):
+        rc = delegate._run_worker(
+            task_id="identity-failover", agent="cursor", prompt="Worker output", mode="danger",
+            cwd_str=str(worktree), model=requested, hard_timeout=60, effort=None, keep_worktree=True,
+        )
+    state = delegate._read_state(delegate._state_path("identity-failover"))
+    assert state["auto_finalize"]["ok"] is True, state
+    assert rc == 0, state
+    slug = "unknown" if name == "LU Unknown" else name.lower()
+    assert _git_out(worktree, "show", "-s", "--format=%an|%ae|%cn|%ce").strip() == (
+        f"{name}|{slug}@local.invalid|{name}|{slug}@local.invalid"
+    )
+
+
 def test_kimi_worktree_prompt_hands_the_commit_to_delegate():
     text = delegate._augment_prompt_with_worktree(
         "Implement it.", Path("/tmp/wt"), mode="workspace-write", delegate_commits=True
