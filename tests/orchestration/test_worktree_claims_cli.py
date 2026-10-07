@@ -56,19 +56,16 @@ def _remove(capsys: pytest.CaptureFixture[str], *argv: str) -> tuple[int, str, s
 
 
 @pytest.mark.parametrize("returncode,stdout,expected", [(0, "", False), (0, "?? new.txt\n", True), (128, "", None)])
-def test_worktree_is_dirty_uses_the_supplied_git_runner(tmp_path, monkeypatch, returncode, stdout, expected):
+def test_worktree_is_dirty_uses_the_ordinary_git_probe(tmp_path, monkeypatch, returncode, stdout, expected):
     calls = []
 
-    def runner(cwd, args):
+    def runner(args, *, cwd):
         calls.append((cwd, args))
         return subprocess.CompletedProcess(["git", *args], returncode, stdout, "")
 
-    def ordinary_probe(*_args, **_kwargs):
-        pytest.fail("supplied runner must replace the ordinary git probe")
+    monkeypatch.setattr(worktree_claims, "_git_probe", runner)
 
-    monkeypatch.setattr(worktree_claims, "_git_probe", ordinary_probe)
-
-    assert worktree_claims.worktree_is_dirty(tmp_path, git_runner=runner) is expected
+    assert worktree_claims.worktree_is_dirty(tmp_path) is expected
     assert calls == [(tmp_path, ["status", "--porcelain"])]
 
 

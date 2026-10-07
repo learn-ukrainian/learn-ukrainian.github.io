@@ -69,42 +69,41 @@ def artifact(checkout, name="batch_state/sub/report.bin", payload=b"proof\x00\xf
 
 
 @pytest.mark.parametrize("returncode", [0, 128])
-def test_git_path_inventory_uses_supplied_runner(checkout, monkeypatch, returncode):
+def test_git_path_inventory_uses_isolated_environment(checkout, monkeypatch, returncode):
     calls = []
 
-    def runner(cwd, args):
-        calls.append((cwd, args))
-        return subprocess.CompletedProcess(["git", *args], returncode, "ignored/spaced файл.txt\0", "unavailable")
+    def runner(args, **kwargs):
+        calls.append((kwargs["cwd"], args))
+        assert kwargs["env"] == wa._safe_git_env()
+        assert kwargs["check"] is True and kwargs["timeout"] == 30
+        if returncode:
+            raise subprocess.CalledProcessError(returncode, args, stderr="unavailable")
+        return subprocess.CompletedProcess(args, 0, "ignored/spaced файл.txt\0".encode(), b"")
 
-    def ordinary_git(*_args, **_kwargs):
-        pytest.fail("inventory must use the supplied execution-safe runner")
-
-    monkeypatch.setattr(wa.subprocess, "run", ordinary_git)
+    monkeypatch.setattr(wa.subprocess, "run", runner)
     if returncode:
         with pytest.raises(subprocess.CalledProcessError):
-            wa._git_paths(checkout[0], "--cached", git_runner=runner)
+            wa._git_paths(checkout[0], "--cached")
     else:
-        assert wa._git_paths(checkout[0], "--cached", git_runner=runner) == ["ignored/spaced файл.txt"]
-    assert calls == [(checkout[0], ["ls-files", "-z", "--cached"])]
+        assert wa._git_paths(checkout[0], "--cached") == ["ignored/spaced файл.txt"]
+    assert calls == [(checkout[0], ["git", "ls-files", "-z", "--cached"])]
 
 
-def test_named_artifact_inventory_uses_supplied_runner(checkout, monkeypatch):
+def test_named_artifact_inventory_uses_isolated_environment(checkout, monkeypatch):
     name = "batch_state/sub/report.bin"
     artifact(checkout, name)
     calls = []
 
-    def runner(cwd, args):
-        calls.append((cwd, args))
-        return subprocess.CompletedProcess(["git", *args], 0, name + "\0", "")
+    def runner(args, **kwargs):
+        calls.append((kwargs["cwd"], args))
+        assert kwargs["env"] == wa._safe_git_env()
+        return subprocess.CompletedProcess(args, 0, (name + "\0").encode(), b"")
 
-    def ordinary_git(*_args, **_kwargs):
-        pytest.fail("named artifact inventory must use the supplied execution-safe runner")
-
-    monkeypatch.setattr(wa.subprocess, "run", ordinary_git)
+    monkeypatch.setattr(wa.subprocess, "run", runner)
     assert wa._named_artifact_files(
-        checkout[0], {"response": f"Capture `{name}`."}, primary=checkout[1], git_runner=runner
+        checkout[0], {"response": f"Capture `{name}`."}, primary=checkout[1]
     ) == {name}
-    assert calls == [(checkout[0], ["ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name])]
+    assert calls == [(checkout[0], ["git", "ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name])]
 
 
 def test_preserved_bytes_record_and_idempotency(checkout):
