@@ -16,18 +16,15 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 HOOK = Path("agents_extensions/shared/hooks/post-compact.sh")
-# origin/main at the #9956 reproduction; pin it so the regression still runs
-# after the fix lands on main instead of expecting the moving main to be broken.
-PRE_FIX_MAIN_SHA = "6412a8ad19a39a5dd5511a9e4822f38febf53e64"
 
 
 def _run_hook(tmp_path: Path, *, baseline: bool = False, selector: str = "open-model-data",
               stream: str = "epic:6321", export_stream: bool = True) -> tuple[str, list[str], list[str]]:
-    """Only Monitor is stubbed; the hook, bounded runner, and capsule are real."""
+    """Run real hydration; baseline reconstructs only the unfixed stream inputs."""
     repo = tmp_path / "repo"
     canary = repo / "scripts/session_canary"
     canary.mkdir(parents=True)
-    # Use the selected tree's canary sources, with untouched dependencies from
+    # Use the current tree's canary sources, with untouched dependencies from
     # the worktree. No virtualenv or secondary git checkout is needed.
     (repo / "scripts/__init__.py").write_text(f"__path__.append({str(ROOT / 'scripts')!r})\n")
     # Replay only these explicit capsule dependencies, never scan a repo tree.
@@ -37,12 +34,21 @@ def _run_hook(tmp_path: Path, *, baseline: bool = False, selector: str = "open-m
     ):
         source = ROOT / "scripts/session_canary" / name
         target = canary / name
-        if baseline:
-            target.write_bytes(subprocess.check_output(
-                ["git", "show", f"{PRE_FIX_MAIN_SHA}:scripts/session_canary/{source.name}"], cwd=ROOT, timeout=10,
-            ))
-        else:
-            shutil.copy2(source, target)
+        shutil.copy2(source, target)
+    if baseline:
+        # #9956's unfixed condition: selector missing from the old table,
+        # no explicit stream and no launcher stream in the environment.
+        # Keep the real CLI and capsule; only restore the invalid fallback.
+        assert not export_stream
+        lane = canary / "codex_lane.py"
+        source = lane.read_text()
+        resolver = "    return _gl._stream_id(args)"
+        assert source.count(resolver) == 1
+        lane.write_text(source.replace(resolver, (
+            "    _gl.EPIC_STREAM_DEFAULTS.pop(args.epic, None)\n"
+            "    return (getattr(args, 'stream', None) or os.environ.get('SESSION_STREAM_ID')\n"
+            "            or _gl.EPIC_STREAM_DEFAULTS.get(args.epic, f'epic:{args.epic}'))"
+        )))
     for directory in ("lib", "config"):
         (repo / "scripts" / directory).symlink_to(ROOT / "scripts" / directory, target_is_directory=True)
     hook = repo / HOOK
@@ -50,10 +56,12 @@ def _run_hook(tmp_path: Path, *, baseline: bool = False, selector: str = "open-m
     (repo / "agents_extensions/shared/session_streams").symlink_to(
         ROOT / "agents_extensions/shared/session_streams", target_is_directory=True,
     )
+    shutil.copy2(ROOT / HOOK, hook)
     if baseline:
-        hook.write_bytes(subprocess.check_output(["git", "show", f"{PRE_FIX_MAIN_SHA}:{HOOK}"], cwd=ROOT, timeout=10))
-    else:
-        shutil.copy2(ROOT / HOOK, hook)
+        source = hook.read_text()
+        stream_argument = ' --stream "$HYDRATION_STREAM"'
+        assert source.count(stream_argument) == 1
+        hook.write_text(source.replace(stream_argument, ""))
     diary = repo / f".claude/{selector}-epic/CODEX-DRIVER-HANDOFF.md"
     diary.parent.mkdir(parents=True)
     diary.write_text("# Driver handoff\n## Next Drive\n- Reconcile queue.\n")
@@ -135,7 +143,7 @@ def _run_hook(tmp_path: Path, *, baseline: bool = False, selector: str = "open-m
 
 
 def test_open_model_data_hook_main_blocks_and_head_is_ready(tmp_path: Path) -> None:
-    main_context, main_args, main_requests = _run_hook(tmp_path / "main", baseline=True)
+    main_context, main_args, main_requests = _run_hook(tmp_path / "main", baseline=True, export_stream=False)
     assert "HYDRATION BLOCKED" in main_context
     assert "invalid-stream-id" in main_context
     assert "--stream" not in main_args[0]
@@ -146,7 +154,7 @@ def test_open_model_data_hook_main_blocks_and_head_is_ready(tmp_path: Path) -> N
     assert '"state": "ready"' in head_context
     assert "--stream epic:6321" in head_args[0]  # allow-hardcoded-epic: #9956 pre-fix launcher lease fixture
     assert head_requests == ["/api/epics/v1/epic:6321?limit=1"]  # allow-hardcoded-epic: #9956 pre-fix lease fixture
-    print("origin/main: invalid-stream-id BLOCKED; head: --stream epic:6321 READY")
+    print("unfixed condition: invalid-stream-id BLOCKED; head: --stream epic:6321 READY")
 
 
 @pytest.mark.parametrize("selector,stream", [
