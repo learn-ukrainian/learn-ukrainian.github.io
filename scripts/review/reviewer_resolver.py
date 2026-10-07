@@ -732,13 +732,18 @@ def evaluate_candidate(
     inputs: ResolverInputs,
     *,
     author_family: str | None = None,
+    review_mode: str = "cross_family",
 ) -> CandidateResult:
     """Evaluate one candidate against ``inputs`` independent of ladder position.
 
     Exposed directly (not just via :func:`resolve_reviewer`) so domain and
     data-egress fail-closed behavior is testable per-candidate, including for
     candidates that aren't in the default ladder (e.g. ``GLM``, ``QWEN``).
+    ``red_team`` relaxes authorship independence only; callers must first
+    validate an explicit adversarial prompt bound to the completed review.
     """
+    if review_mode not in {"cross_family", "red_team"}:
+        raise ValueError("unsupported review mode")
     # Direct dispatch admission calls this without walking a ladder. The floor
     # must bind here too, before suitability or explicit-pin evaluation.
     inputs = replace(
@@ -896,6 +901,10 @@ def evaluate_candidate(
         )
     advisory: CandidateResult | None = None
     for author in sorted(authors):
+        # Only the recorder's prompt-bound red-team path opts into this.
+        # Qualification, risk, subject exclusions and runtime identity still bind.
+        if review_mode == "red_team" and candidate.family not in {*UNRESOLVED_AUTHOR_FAMILIES, "unknown"}:
+            continue
         result = _author_family_exclusion(candidate, author, health)
         if result is not None and result.status == "excluded":
             return result

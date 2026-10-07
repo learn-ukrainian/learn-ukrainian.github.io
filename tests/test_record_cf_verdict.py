@@ -233,6 +233,145 @@ def test_same_family_refused(monkeypatch, tmp_path):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
 
 
+def red_team_task(tasks, tmp_path, *, prompt="Adversarial red-team review: find failures and missing tests.", **updates):
+    path = tmp_path / "red-team.md"
+    path.write_text(prompt, encoding="utf-8")
+    write_task(tasks, review_mode="red_team", prompt_sha256=hashlib.sha256(prompt.encode()).hexdigest(), **updates)
+    return path
+
+
+@pytest.mark.parametrize("families", [{"openai"}, {"google", "openai"}, {"cursor", "openai"}, {"unknown", "openai"}])
+def test_same_family_red_team_records_and_reconciles(monkeypatch, tmp_path, families):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families=families)
+    prompt = red_team_task(tasks, tmp_path)
+    for expected in ("posted", "existing"):
+        result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
+                                 red_team_prompt=prompt)
+        assert result["comment"] == expected
+        assert result["review_mode"] == "red_team"
+    assert calls == {"posts": 1, "statuses": 2}
+    body = comments[0]["body"]
+    assert body.startswith("### Adversarial red-team review\nReview mode: red_team\n")
+    assert body.endswith("review_mode=red_team -->")
+    from scripts.orchestration.integration_sweep import lookup_verdict
+
+    verdict = lookup_verdict(comments, SHA, "fleet")
+    assert verdict.state == "APPROVED"
+    assert verdict.review_mode == "red_team"
+
+
+@pytest.mark.parametrize("case", ["missing", "unreadable", "ordinary", "digest_mismatch", "unbound", "mode_conflict"])
+def test_red_team_prompt_required_and_bound_before_publication(monkeypatch, tmp_path, case):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    prompt = red_team_task(tasks, tmp_path)
+    options = {"red_team_prompt": prompt}
+    if case == "missing":
+        options = {}
+    elif case == "unreadable":
+        options["red_team_prompt"] = tmp_path / "missing.md"
+    elif case == "ordinary":
+        prompt = red_team_task(tasks, tmp_path, prompt="Review the patch.")
+    elif case == "digest_mismatch":
+        prompt.write_text("A different red-team prompt.")
+    elif case == "unbound":
+        write_task(tasks, review_mode="red_team")
+    else:
+        options["review_mode"] = "cross_family"
+    with pytest.raises(recorder.RecordError, match=r"prompt|mode conflicts"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", **options)
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_explicit_red_team_flag_accepts_legacy_task_with_bound_prompt(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    prompt = red_team_task(tasks, tmp_path)
+    write_task(tasks, prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
+                    review_mode="red_team", red_team_prompt=prompt)
+    assert "review_mode=red_team" in comments[0]["body"]
+
+
+def test_red_team_effective_prompt_digest_is_supported(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    prompt = red_team_task(tasks, tmp_path)
+    write_task(tasks, review_mode="red_team", prompt_sha256="b" * 64,
+               effective_prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    assert "review_mode=red_team" in comments[0]["body"]
+
+
+@pytest.mark.parametrize("mode", ["anything", None, {}, []])
+def test_invalid_task_review_mode_refuses_before_publication(monkeypatch, tmp_path, mode):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, review_mode=mode)
+    with pytest.raises(recorder.RecordError, match="unsupported review mode"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_red_team_prompt_does_not_implicitly_enable_mode(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    prompt = tmp_path / "red-team.md"
+    prompt.write_text("Adversarial red-team review.")
+    with pytest.raises(recorder.RecordError, match="requires review_mode=red_team"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    assert comments == []
+
+
+def test_cli_forwards_explicit_red_team_arguments(monkeypatch, tmp_path, capsys):
+    seen = {}
+
+    def fake_record(task_id, **kwargs):
+        seen.update(task_id=task_id, **kwargs)
+        return {"status": "posted", "review_mode": "red_team"}
+
+    monkeypatch.setattr(recorder, "record", fake_record)
+    prompt = tmp_path / "red-team.md"
+    assert recorder.main(["--task-id", "review-one", "--pr", "42", "--review-mode", "red_team",
+                          "--red-team-prompt", str(prompt)]) == 0
+    assert seen == {"task_id": "review-one", "pr_number": 42, "review_mode": "red_team", "red_team_prompt": prompt}
+    assert json.loads(capsys.readouterr().out)["review_mode"] == "red_team"
+
+
+@pytest.mark.parametrize("model", ["unknown@local.invalid", "LU Unknown", "auto"])
+def test_unknown_red_team_reviewer_cannot_self_certify(monkeypatch, tmp_path, model):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"unknown"})
+    prompt = red_team_task(tasks, tmp_path, model=model)
+    with pytest.raises(recorder.RecordError, match=r"reviewer (model|family) unknown|reviewer not qualified"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
+                        red_team_prompt=prompt)
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("scope", ["subject", "risk"])
+def test_red_team_keeps_qualification_gates(monkeypatch, tmp_path, scope):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    if scope == "subject":
+        monkeypatch.setattr(recorder, "pr_review_facts", lambda *a, **k: facts_for({"openai"}, subject_seats={"codex"}))
+        updates = {}
+    else:
+        monkeypatch.setattr(recorder, "pr_review_facts", lambda *a, **k: facts_for({"anthropic"}))
+        updates = {"agent": "claude", "model": "claude-sonnet-5-5", "review_risk": "critical"}
+    prompt = red_team_task(tasks, tmp_path, **updates)
+    with pytest.raises(recorder.RecordError, match="not qualified"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
+                        red_team_prompt=prompt)
+    assert comments == []
+
+
+def test_rerecording_same_task_in_another_mode_refuses(monkeypatch, tmp_path):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    prompt = red_team_task(tasks, tmp_path)
+    with pytest.raises(recorder.RecordError, match="edited or conflicts"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    assert len(comments) == 1
+    assert calls == {"posts": 1, "statuses": 1}
+
+
 def test_rerun_same_task_reconciles_status_without_new_comment(monkeypatch, tmp_path):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     first = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Record a completed branch-pinned cross-family review on its exact PR head."""
+"""Record a completed branch-pinned cross-family or explicit red-team review."""
 
 from __future__ import annotations
 
@@ -706,7 +706,9 @@ def _task_flag_values(task: dict[str, Any], key: str) -> tuple[str, ...]:
     return tuple(value)
 
 
-def _require_qualified_reviewer(facts: BranchReviewFacts, *, task: dict[str, Any], model: str, family: str) -> None:
+def _require_qualified_reviewer(
+    facts: BranchReviewFacts, *, task: dict[str, Any], model: str, family: str, review_mode: str = "cross_family"
+) -> None:
     """Evaluate the actual reviewer against the resolver's rules on the branch facts (AC-01).
 
     Protected seats and the risk floor bind as in selection; the reviewer need
@@ -733,7 +735,7 @@ def _require_qualified_reviewer(facts: BranchReviewFacts, *, task: dict[str, Any
     if not candidates:
         raise RecordError(f"reviewer not qualified: {agent}/{model} is not a catalog review candidate")
     inputs = facts.resolver_inputs(risk=str(task.get("review_risk") or "medium"), review_profile=profile)
-    results = [evaluate_candidate(candidate, inputs) for candidate in candidates]
+    results = [evaluate_candidate(candidate, inputs, review_mode=review_mode) for candidate in candidates]
     if not any(result.status == "eligible" for result in results):
         reasons = "; ".join(sorted({str(result.reason) for result in results}))
         raise RecordError(f"reviewer not qualified for this branch: {reasons}")
@@ -763,13 +765,23 @@ def sha_lock(repository: str, sha: str, lock_root: Path):
             fcntl.flock(lock_file, fcntl.LOCK_UN)
 
 
-def build_comment(*, sha: str, task_id: str, started: str, verdict: str, model: str, family: str, reply: str) -> str:
+def build_comment(
+    *, sha: str, task_id: str, started: str, verdict: str, model: str, family: str, reply: str,
+    review_mode: str = "cross_family",
+) -> str:
+    if review_mode not in {"cross_family", "red_team"}:
+        raise RecordError("unsupported review mode")
     if MARKER_PREFIX in reply:
         raise RecordError("review reply contains reserved verdict marker")
-    marker = f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} model={model} family={family} -->"
+    mode_field = " review_mode=red_team" if review_mode == "red_team" else ""
+    marker = (
+        f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} "
+        f"model={model} family={family}{mode_field} -->"
+    )
     prefix = (
-        "### Cross-family review\n"
-        f"head: {sha}\n"
+        ("### Adversarial red-team review\n" if review_mode == "red_team" else "### Cross-family review\n")
+        + ("Review mode: red_team\n" if review_mode == "red_team" else "")
+        + f"head: {sha}\n"
         f"Reviewer family: {family}\n"
         f"VERDICT: {verdict}\n"
         f"Reviewer model: {model}\n"
@@ -926,12 +938,30 @@ def _require_formal_reviewer(
 
 @publication_boundary(RecordError)
 def record(
-    task_id: str, *, pr_number: int | None = None, task_root: Path | None = None, lock_root: Path | None = None
+    task_id: str, *, pr_number: int | None = None, task_root: Path | None = None, lock_root: Path | None = None,
+    review_mode: str | None = None, red_team_prompt: Path | None = None,
 ) -> dict[str, Any]:
     root = _repo_root() if task_root is None or lock_root is None else None
     task_root = task_root or root / "batch_state" / "tasks"
     lock_root = lock_root or root / "batch_state" / "locks"
     task, reply = _task(task_id, task_root)
+    review_mode = review_mode if review_mode is not None else task.get("review_mode", "cross_family")
+    if not isinstance(review_mode, str) or review_mode not in {"cross_family", "red_team"}:
+        raise RecordError("unsupported review mode")
+    if task.get("review_mode", review_mode) != review_mode:
+        raise RecordError("review mode conflicts with task")
+    if review_mode == "red_team":
+        try:
+            prompt = red_team_prompt.read_text(encoding="utf-8") if red_team_prompt is not None else ""
+        except (OSError, UnicodeError) as exc:
+            raise RecordError("red-team prompt unavailable") from exc
+        if not re.search(r"\bred[-_ ]team\b", prompt, re.IGNORECASE):
+            raise RecordError("explicit adversarial red-team prompt required")
+        digest = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+        if digest not in (task.get("prompt_sha256"), task.get("effective_prompt_sha256")):
+            raise RecordError("red-team prompt digest does not match completed review task")
+    elif red_team_prompt is not None:
+        raise RecordError("red-team prompt requires review_mode=red_team")
     repository = task.get("repository")
     branch = task["worktree_branch"]
     sha = task.get("worktree_base_sha")
@@ -986,14 +1016,15 @@ def record(
     )
     if not facts.existing_families:
         raise RecordError("PR has no attributed author commits")
-    if family in facts.excluded_families:
+    if family in facts.excluded_families and review_mode != "red_team":
         raise RecordError("reviewer family equals an author family")
-    _require_qualified_reviewer(facts, task=task, model=model, family=family)
+    _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
     comment = build_comment(
-        sha=sha, task_id=task_id, started=started, verdict=verdict, model=model, family=family, reply=reply
+        sha=sha, task_id=task_id, started=started, verdict=verdict, model=model, family=family, reply=reply,
+        review_mode=review_mode,
     )
     posted = False
     with sha_lock(repository, sha, lock_root):
@@ -1026,6 +1057,7 @@ def record(
                         or marker["verdict"] != verdict
                         or marker["model"] != model
                         or marker["family"] != family
+                        or marker.get("review_mode", "cross_family") != review_mode
                         or item.get("created_at") != item.get("updated_at")
                     ):
                         raise RecordError("existing verdict marker was edited or conflicts with task")
@@ -1065,6 +1097,7 @@ def record(
         "head": sha,
         "task": task_id,
         "verdict": verdict,
+        "review_mode": review_mode,
         "comment": "posted" if posted else "existing",
         "status": status,
     }
@@ -1073,15 +1106,24 @@ def record(
 @publication_cli(RecordError)
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Publish a completed exact-head cross-family verdict.\nUse after the reviewer exits; not to author or approve your own review.",
+        description="Publish a completed exact-head verdict; cross-family is the default.\n"
+                    "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\nOutputs and exit codes: Local publication receipt and GitHub review text/status. 0: recorded; 1: refused.\nRelated: #9297",
+        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\n"
+               "  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1 "
+               "--review-mode red_team --red-team-prompt brief.md\n"
+               "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
+               "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
     )
     parser.add_argument("--task-id", required=True, help="Completed branch-pinned review task id")
     parser.add_argument("--pr", type=int, help="Open PR number; otherwise resolve from review branch")
+    parser.add_argument("--review-mode", choices=("cross_family", "red_team"),
+                        help="Review mode (default: task review_mode, otherwise cross_family); red_team permits same-family")
+    parser.add_argument("--red-team-prompt", type=Path,
+                        help="Prompt file used by the completed red-team task; required for red_team, default: none")
     args = parser.parse_args(argv)
     try:
-        result = record(args.task_id, pr_number=args.pr)
+        result = record(args.task_id, pr_number=args.pr, review_mode=args.review_mode, red_team_prompt=args.red_team_prompt)
     except (RecordError, SweepError, ValueError) as exc:
         print(f"CF verdict refused: {exc}")
         return 1

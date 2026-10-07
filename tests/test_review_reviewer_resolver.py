@@ -44,6 +44,32 @@ PRACTICAL_ASTRA = replace(
 )
 
 
+@pytest.mark.parametrize("candidate,author", [(OPENAI_FRONTIER, "gpt-6.1-sol"),
+                                            (GROK_4_7_CURSOR_FALLBACK, "cursor:auto")])
+def test_explicit_red_team_allows_same_family_without_changing_default(candidate, author):
+    inputs = ResolverInputs(author_model=author, risk="medium")
+    assert evaluate_candidate(candidate, inputs).status != "eligible"
+    assert evaluate_candidate(candidate, inputs, review_mode="red_team").status == "eligible"
+
+
+def test_red_team_does_not_bypass_subject_or_risk():
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", subject_seats=frozenset({"codex"}))
+    assert evaluate_candidate(OPENAI_FRONTIER, inputs, review_mode="red_team").status == "excluded"
+    inputs = ResolverInputs(author_model="claude-sonnet-5-5", risk="critical")
+    assert evaluate_candidate(SONNET_5_5, inputs, review_mode="red_team").status == "excluded"
+
+
+def test_invalid_review_mode_fails_closed():
+    with pytest.raises(ValueError, match="unsupported review mode"):
+        evaluate_candidate(OPENAI_FRONTIER, ResolverInputs(author_model="gpt-6.1-sol"), review_mode="unknown")
+
+
+def test_unknown_candidate_cannot_self_certify_even_as_red_team():
+    candidate = replace(OPENAI_FRONTIER, family="unknown", advisory_only_for_author_families=frozenset())
+    inputs = ResolverInputs(author_model="", author_families=frozenset({"unknown"}))
+    assert evaluate_candidate(candidate, inputs, review_mode="red_team").status == "excluded"
+
+
 # Deliberately forbidden candidates exercise custom-ladder admission, never fleet seats.
 DEEPSEEK_V4_PRO = replace(
     SONNET_5_5, name="deepseek-v4-pro", concrete_model="deepseek-v4-pro", family="deepseek", route="deepseek"
