@@ -100,38 +100,41 @@ class _Syntax:
         self.edges = []
         self.names = set()
         self.strings = set()
+        leaf_types = {ast.Constant, ast.alias, ast.Name}
+        sequence_types = {ast.List, ast.Tuple, ast.Set}
         for node in self.nodes:
+            node_type = type(node)
             # Context/operator markers have no string fragments, roots or sites.
             # Keep them on the original AST for fingerprints and ctx/op checks.
-            if isinstance(node, (ast.Constant, ast.alias, ast.Name)) or not node._fields:
+            if node_type in leaf_types or not node._fields:
                 children = ()
-                if isinstance(node, ast.Name):
+                if node_type is ast.Name:
                     self.names.add(node.id)
-                elif isinstance(node, ast.alias):
+                elif node_type is ast.alias:
                     self.names.add(node.name)
-                elif isinstance(node, ast.Constant) and isinstance(node.value, str):
+                elif node_type is ast.Constant and isinstance(node.value, str):
                     self.strings.add(node.value)
-            elif isinstance(node, ast.Attribute):
+            elif node_type is ast.Attribute:
                 children = (node.value,)
                 self.names.add(node.attr)
-            elif isinstance(node, ast.BinOp):
+            elif node_type is ast.BinOp:
                 children = (node.left, node.right)
-            elif isinstance(node, ast.Call):
+            elif node_type is ast.Call:
                 children = (node.func, *node.args, *node.keywords)
-            elif isinstance(node, (ast.keyword, ast.Expr)):
+            elif node_type in (ast.keyword, ast.Expr):
                 children = (node.value,)
-            elif isinstance(node, ast.Assign):
+            elif node_type is ast.Assign:
                 children = (*node.targets, node.value)
-            elif isinstance(node, ast.Subscript):
+            elif node_type is ast.Subscript:
                 children = (node.value, node.slice)
-            elif isinstance(node, (ast.List, ast.Tuple, ast.Set)):
+            elif node_type in sequence_types:
                 children = tuple(node.elts)
-            elif isinstance(node, ast.Return):
+            elif node_type is ast.Return:
                 children = (node.value,) if node.value is not None else ()
-            elif isinstance(node, ast.arg):
+            elif node_type is ast.arg:
                 children = (node.annotation,) if node.annotation is not None else ()
             else:
-                if isinstance(node, ast.ImportFrom):
+                if node_type is ast.ImportFrom:
                     self.names.add(node.module)
                 children = tuple(child for child in ast.iter_child_nodes(node) if not isinstance(
                     child, (ast.expr_context, ast.operator, ast.unaryop, ast.boolop, ast.cmpop)))
@@ -339,6 +342,7 @@ def writer_target_violations(
 BASELINE = Path(__file__).with_name("store_access_baseline.json")
 STORE_CLASSES = ("store_path", "raw_store_constructor", "test_import_access")
 STORE_NAME = re.compile(r"(?:sources|vesum|vesum_shadow_[^/]*?)\.db(?:$|[?#/])")
+RELATIVE_DATA = re.compile(r"^(?:\./)?data(?:/|$)")
 
 
 def _may_fold_store(nodes: list[ast.AST], *, literals: set[str] | None = None) -> bool:
@@ -419,6 +423,7 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
     string_constants = {(scope(n), target.id): n.value.value for n in nodes if isinstance(n, ast.Assign)
                         and isinstance(n.value, ast.Constant) and isinstance(n.value.value, str)
                         for target in n.targets if isinstance(target, ast.Name)} if may_store else {}
+    string_names = {key[1] for key in string_constants}
     fixture_parameters = set()
     if may_store and rel_path.startswith("tests/"):
         for function in nodes:
@@ -432,6 +437,8 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
 
 
     def literal_name(node):
+        if node.id not in string_names:
+            return ""
         return string_constants.get((scope(node), node.id), string_constants.get(("<module>", node.id), ""))
 
     @lru_cache(None)
@@ -457,8 +464,19 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
         scope = fragments = is_store = None
         return []
 
+    literal_facts = {}
+
     @lru_cache(None)
     def fact(node):
+        # Literals cannot depend on assignment propagation. Keep their facts
+        # across passes instead of rebuilding roots and rescanning each string.
+        if isinstance(node, ast.Constant):
+            if node not in literal_facts:
+                literal_facts[node] = (
+                    "relative" if isinstance(node.value, str) and RELATIVE_DATA.match(node.value) else None,
+                    is_store(node),
+                )
+            return literal_facts[node]
         if isinstance(node, ast.Name):
             if (scope(node), node.id) in fixture_parameters:
                 return ("fixture", False)
@@ -472,15 +490,14 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
             return (None, False)
         if isinstance(node, ast.Attribute) and node.attr in {"ROOT", "REPO_ROOT", "PROJECT_ROOT"}:
             return ("repo", False)
+        if isinstance(node, ast.Attribute):
+            return fact(node.value)
         children = [fact(child) for child in syntax.children[node]]
         roots = {root for root, _ in children if root}
         target = is_store(node) or any(store for _, store in children)
         if isinstance(node, ast.Call) and name(node.func).split(".")[-1] in {
             "default_repository_root", "main_checkout_root", "resolve_repo_root"}:
             roots.add("repo")
-        if isinstance(node, ast.Constant) and isinstance(node.value, str) and re.match(
-            r"^(?:\./)?data(?:/|$)", node.value):
-            roots.add("relative")
         # Absolute repository provenance cannot be hidden by a fixture sibling.
         # A relative data fragment, however, can be joined to a fixture root.
         return ("repo" if "repo" in roots else "fixture" if "fixture" in roots
