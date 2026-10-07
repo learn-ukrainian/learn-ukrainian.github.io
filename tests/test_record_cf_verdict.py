@@ -1901,3 +1901,35 @@ def test_cursor_auto_task_attribution_preserves_selector(monkeypatch, tmp_path, 
         recorder, "_pages", lambda args: [{"commit": {"message": "work\n\nX-Agent: cursor/author-auto"}}]
     )
     assert recorder.author_families(REPOSITORY, 42, tasks) == {"cursor"}
+
+
+@pytest.mark.parametrize("harness", ["ox-alpha", "acp", "unmapped", "grok", "codex"])
+@pytest.mark.parametrize("selector", ["auto", "DEFAULT"])
+def test_non_cursor_auto_author_attribution_stays_unknown(monkeypatch, tmp_path, harness, selector):
+    monkeypatch.setattr(recorder, "_pages", lambda args: [
+        {"commit": {"message": f"work\n\nX-Agent: {harness}/{selector}"}}
+    ])
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
+
+
+@pytest.mark.parametrize("harness", ["ox-alpha", "acp", "unmapped"])
+@pytest.mark.parametrize("selector", ["auto", "cursor/default"])
+def test_non_cursor_auto_task_record_stays_unknown(monkeypatch, tmp_path, harness, selector):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-selector", agent=harness, model=selector)
+    monkeypatch.setattr(recorder, "_pages", lambda args: [
+        {"commit": {"message": f"work\n\nX-Agent: {harness}/author-selector"}}
+    ])
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"unknown"}
+
+
+@pytest.mark.parametrize("harness", ["ox-alpha", "acp", "unmapped"])
+def test_non_cursor_auto_incoming_writer_is_not_admitted(harness):
+    with pytest.raises(recorder.BranchFactsError, match="incoming writer family unknown"):
+        recorder.incoming_writer_family(harness, "auto")
+
+
+@pytest.mark.parametrize("harness", ["cursor", "cursor-tools", "Cursor"])
+@pytest.mark.parametrize("selector", ["auto", "default", "cursor:auto", "cursor/default"])
+def test_cursor_auto_harness_aliases_keep_cursor_family(harness, selector):
+    assert recorder._author_model_family(harness, selector) == "cursor"

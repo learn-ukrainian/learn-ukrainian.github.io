@@ -250,6 +250,14 @@ class CommitAttribution:
     source: str
 
 
+def _author_model_family(harness: str, model: str) -> str:
+    """Resolve a model in its harness context; only Cursor accepts Auto selectors."""
+    cursor = normalize_seat(harness.strip().lower().removesuffix("-tools")) == "cursor"
+    if is_cursor_auto_selector(model) and not cursor:
+        return UNKNOWN_AUTHOR_FAMILY
+    return resolve_author_family(f"cursor:{model}" if cursor else model)
+
+
 def _attribute_commit(
     entry: dict[str, Any],
     *,
@@ -284,7 +292,7 @@ def _attribute_commit(
         raise RecordError("author model unknown")
     # Cursor has historically required harness-aware resolution; otherwise
     # resolve the model itself before consulting task provenance.
-    family = resolve_author_family(f"{harness}:{model}" if harness == "cursor" else model)
+    family = _author_model_family(harness, model)
     source = "trailer-model"
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         if not TASK_ID.fullmatch(model):
@@ -313,7 +321,7 @@ def _attribute_commit(
                 )
             else:
                 author_model = author_task.get("model")
-            family = resolve_author_family(str(author_model or ""))
+            family = _author_model_family(harness, str(author_model or ""))
             source = "task-record-archived" if task_file.parent.name == ARCHIVE_DIR_NAME else "task-record"
         elif harness in SINGLE_FAMILY_HARNESSES:
             family = SINGLE_FAMILY_HARNESSES[harness]
@@ -526,7 +534,7 @@ def incoming_writer_family(agent: str, model: str | None) -> str:
     """
     harness = str(agent or "").strip().lower()
     concrete = str(model or "").strip()
-    family = resolve_author_family(f"cursor:{concrete}" if harness == "cursor" else concrete)
+    family = _author_model_family(harness, concrete)
     if (family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown") and harness in SINGLE_FAMILY_HARNESSES:
         family = SINGLE_FAMILY_HARNESSES[harness]
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
