@@ -32,6 +32,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
 from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
 from scripts.common.repo_root import resolve_repo_root
+from scripts.lib.readonly_sqlite import open_readonly
 from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
@@ -804,7 +805,7 @@ def _require_data_artifact(
 
     if required_sqlite_tables:
         try:
-            with sqlite3.connect(f"file:{artifact}?mode=ro", uri=True) as connection:
+            with open_readonly(artifact) as connection:
                 available_tables = {
                     row[0]
                     for row in connection.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")

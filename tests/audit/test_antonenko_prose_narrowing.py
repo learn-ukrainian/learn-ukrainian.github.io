@@ -24,6 +24,7 @@ from scripts.audit._judge_eval_lib import (
     _render_evidence_section,
     retrieve_evidence,
 )
+from scripts.lib.readonly_sqlite import open_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -32,7 +33,7 @@ def _antonenko_corpus_present() -> bool:
     if not DB.exists():
         return False
     try:
-        conn = sqlite3.connect(DB)
+        conn = open_readonly(DB)
         try:
             n = conn.execute(
                 "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
