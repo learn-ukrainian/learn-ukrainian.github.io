@@ -566,6 +566,12 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
             path_nodes.add(node)
         if isinstance(node, (ast.BinOp, ast.Call, ast.JoinedStr, ast.Constant)):
             root, target = fact(node)
+            # A propagated store bit can reach log messages and other text.
+            # String builders need their own folded store filename, even when
+            # a child carries repository provenance or store taint.
+            string_builder = isinstance(node, ast.JoinedStr) or (
+                isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Add, ast.Mod))) or (
+                isinstance(node, ast.Call) and name(node.func).split(".")[-1] in {"format", "join"})
             # Accessors are consumers, not builders; record their arguments.
             builder = isinstance(node, ast.JoinedStr) or (
                 isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Div, ast.Add, ast.Mod)))
@@ -578,7 +584,7 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
                 arguments = [fragments(arg) for arg in [*node.args, *(k.value for k in node.keywords)]]
                 builder |= any(re.search(r"(?:^|/)data/?(?:sources|vesum|vesum_shadow_[^/]*?)\.db(?:$|[?#/])",
                                          separator.join(arguments)) for separator in ("", "/"))
-            if root != "fixture" and target and (
+            if root != "fixture" and target and (not string_builder or is_store(node)) and (
                 builder or (root in {"repo", "relative"} and not isinstance(node, ast.Call))
             ):
                 path_nodes.add(node)

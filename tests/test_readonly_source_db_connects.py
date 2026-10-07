@@ -665,6 +665,55 @@ def test_interpolated_fixture_store_joins_stay_clean(expression, anchor):
     assert lint.classify_store_source(source, 'tests/new.py') == []
 
 
+@pytest.mark.parametrize('expression', [
+    'f"Parsing {name}"',
+    "'Parsing %s' % name",
+    "'Parsing {}'.format(name)",
+    "' '.join(['Parsing', name])",
+    "'Parsing ' + str(name)",
+    'f"{name}/sources.db.backup"',
+])
+@pytest.mark.parametrize('setup', [
+    "DB = DATA_DIR / 'sources.db'\nname = DB.stem",
+    "DB = ROOT / 'data' / 'sources.db'\nname = DB.stem",
+    'from argparse import ArgumentParser\n'
+    'parser = ArgumentParser(description="Load data/sources.db")\n'
+    'args = parser.parse_args()\nbook = args.book\nname = book.txt_filename',
+])
+@pytest.mark.parametrize('tree', ['scripts', 'tests'])
+def test_tainted_text_joins_do_not_add_store_findings(tmp_path, expression, setup, tree):
+    path = tmp_path / tree / 'new.py'
+    path.parent.mkdir()
+    path.write_text(setup)
+    expected_findings = lint.classify_store_source(setup, f'{tree}/new.py')
+    expected_violations = lint.find_violations(tmp_path, ())
+    source = setup + '\nmessage = ' + expression
+    path.write_text(source)
+    assert lint.classify_store_source(source, f'{tree}/new.py') == expected_findings
+    assert lint.find_violations(tmp_path, ()) == expected_violations
+
+
+@pytest.mark.parametrize('source,expression', [
+    ('message = f"{ROOT / \'data\' / \'sources.db\'} is missing"', "ROOT / 'data' / 'sources.db'"),
+    ("sources_path = ROOT / 'data' / 'sources.db'\n"
+     'message = f"{sources_path.resolve()} is missing"', 'sources_path.resolve()'),
+])
+@pytest.mark.parametrize('tree', ['scripts', 'tests'])
+def test_text_joins_preserve_nested_store_builders(tmp_path, source, expression, tree):
+    import hashlib
+    path = tmp_path / tree / 'new.py'
+    path.parent.mkdir()
+    path.write_text(source)
+    fingerprint = hashlib.sha256(ast.dump(ast.parse(expression).body[0].value,
+                                         include_attributes=False).encode()).hexdigest()
+    findings = lint.classify_store_source(source, f'{tree}/new.py')
+    assert any(f.kind == 'store_path' and f.fingerprint == fingerprint for f in findings)
+    assert len(findings) == (1 if source.startswith('message') else 2)
+    violations, unreadable = lint.find_violations(tmp_path, ())
+    assert unreadable == []
+    assert len(violations) == len(findings)
+
+
 @pytest.mark.parametrize('source', [
     "from pathlib import Path\nROOT = Path(__file__).parents[1]\nDB = ROOT / 'data' / 'sources.db'",
     "import os\nDB = os.path.join(os.path.dirname(__file__), '..', 'data', 'vesum.db')",
