@@ -62,12 +62,15 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import shlex
 import shutil
 import tempfile
 from dataclasses import replace
 from pathlib import Path
 from urllib.parse import quote
+
+from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..result import ParseResult
@@ -82,6 +85,53 @@ from ._output_schema import json_value, load_output_schema, plan_output_schema, 
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
+
+# Diagnostics may include provider prose or partial assistant text. Mask path
+# shapes after secret redaction and before bounding, including relative paths.
+_DIAGNOSTIC_PATH = re.compile(
+    r"(?:[A-Za-z]:[\\/]|\\\\|~[\w.-]*[\\/]|\.{1,2}[\\/]|/|[\w.-]+[\\/])"
+    r"[^\s'\"`,;<>|)\]}]*"
+)
+
+
+def _stop_diagnostic(envelope: dict | None, stderr: str) -> str:
+    """Keep the terminal reason/detail ahead of partial text in a safe excerpt."""
+
+    def safe(value: str) -> str:
+        cleaned = _DIAGNOSTIC_PATH.sub("<path>", redact_text(value) or "")
+        return " ".join("".join(ch if ch.isprintable() else " " for ch in cleaned).split())
+
+    if envelope is None or "stopReason" not in envelope:
+        reason = "missing stopReason"
+    else:
+        reason = "stopReason=" + safe(json.dumps(envelope["stopReason"], ensure_ascii=False))[:160]
+    parts = [f"grok final answer incomplete: {reason}"]
+    if envelope is not None:
+        # Only terminal envelope fields, never nested tool output. Different
+        # CLI releases may expose cancellation/stop detail in these fields.
+        detail = {
+            key: envelope[key]
+            for key in (
+                "stopReasonDetail",
+                "stopDetail",
+                "stopDetails",
+                "cancellation_category",
+                "cancellationCategory",
+                "message",
+                "error",
+                "structuredOutputError",
+            )
+            if key in envelope
+        }
+        if detail:
+            parts.append("stop detail: " + safe(json.dumps(detail, ensure_ascii=False))[:220])
+    if stderr.strip():
+        parts.append(safe(stderr.strip()))
+    if envelope is not None and envelope.get("text"):
+        parts.append(safe(str(envelope["text"]).strip()))
+    # delegate persists the first diagnostic line in .diag. Keep the stop
+    # detail on that line too, ahead of stderr and partial answer text.
+    return " ".join(parts)[:500]
 
 
 # Runtime mode → grok CLI --permission-mode value.
@@ -593,6 +643,7 @@ class GrokBuildAdapter:
         _ = (output_file, call_start_time)  # grok -p flushes to stdout
 
         obj = _parse_json_object(stdout)
+        terminal_ok = obj is not None and obj.get("stopReason") == "end_turn"
         usage = obj.get("modelUsage") if obj else None
         runtime_model = next(iter(usage)) if isinstance(usage, dict) and len(usage) == 1 else None
         if not isinstance(runtime_model, str) or not runtime_model.strip():
@@ -627,7 +678,9 @@ class GrokBuildAdapter:
             return ParseResult(
                 ok=False,
                 response="",
-                stderr_excerpt=provider_error[:500] or "grok provider error",
+                stderr_excerpt=(
+                    _stop_diagnostic(obj, stderr) if not terminal_ok else provider_error[:500] or "grok provider error"
+                ),
                 rate_limited=failure_code == "rate_limited",
                 failure_code=failure_code,
                 provider_error_text=provider_error,
@@ -651,7 +704,15 @@ class GrokBuildAdapter:
                 ),
                 session_id=envelope.get("sessionId"),
             )
-            return replace(parsed, substitution=attribution)
+            return replace(
+                parsed,
+                substitution=attribution,
+                stderr_excerpt=(
+                    _stop_diagnostic(envelope, stderr)
+                    if envelope.get("stopReason") != "end_turn"
+                    else parsed.stderr_excerpt
+                ),
+            )
 
         if obj is not None:
             text = str(obj.get("text") or "").strip()
@@ -666,13 +727,14 @@ class GrokBuildAdapter:
         # leave only opening narration (#9771). Text alone is not a final
         # answer: require the CLI's exact terminal marker, as the structured
         # path already does. Do not infer completion from the reply body.
-        terminal_ok = obj is not None and obj.get("stopReason") == "end_turn"
         usable = bool(text)
         failed = returncode != 0 or not usable or not terminal_ok
         failure_code = (
             "provider_stream_incomplete"
             if not terminal_ok
-            else provider_failure_code(provider_error) if failed else None
+            else provider_failure_code(provider_error)
+            if failed
+            else None
         )
         rate_limited = failed and failure_code == "rate_limited"
         ok = returncode == 0 and usable and not failed
@@ -681,12 +743,10 @@ class GrokBuildAdapter:
         if not ok:
             source = (stderr or "").strip() or (stdout or "").strip() or ""
             stderr_excerpt = source[:500] or None
-            if not terminal_ok and (returncode == 0 or text):
-                reason = "missing stopReason" if obj is None or "stopReason" not in obj else "non-end_turn stopReason"
+            if not terminal_ok and (obj is not None or returncode == 0 or text):
                 # Preserve partial text only in bounded diagnostics, never in
                 # response (which becomes the driver's result file).
-                diagnostic = f"{text}\n{stderr.strip()}".strip() if text else source
-                stderr_excerpt = f"grok final answer incomplete: {reason}\n{diagnostic}".strip()[:500]
+                stderr_excerpt = _stop_diagnostic(obj, stderr or (stdout if obj is None else ""))
 
         return ParseResult(
             ok=ok,
