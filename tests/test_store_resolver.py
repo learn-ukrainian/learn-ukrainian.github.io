@@ -165,3 +165,14 @@ def test_uninspectable_path_has_no_path(checkouts, monkeypatch):
         raise OSError('unavailable')
     monkeypatch.setattr(storage, 'default_repository_root', unavailable)
     refusal(storage.resolve_store('sources', worker, env={}), 'store_unavailable')
+
+
+@pytest.mark.parametrize('store', ['sources', 'vesum'])
+@pytest.mark.parametrize('injected', [False, True])
+def test_nul_path_returns_path_free_refusal(checkouts, store, injected):
+    primary, worker = checkouts
+    db = make_db(primary / 'data' / f'{store}.db')
+    raw = str(db) + '\0'
+    refusal(storage.resolve_store(store, worker,
+        binding=storage.StoreBinding(store, Path(raw)) if injected else None,
+        env={f'LU_{store.upper()}_DB': raw}), 'store_unavailable')

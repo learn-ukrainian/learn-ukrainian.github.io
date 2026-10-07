@@ -576,7 +576,7 @@ def resolve_store(
         return StoreBinding(store, path, provenance=provenance)
     except FileNotFoundError:
         return StoreRefusal(store, "store_missing")
-    except (OSError, RuntimeError):
+    except (OSError, RuntimeError, ValueError):
         return StoreRefusal(store, "store_unavailable")
 
 

@@ -451,9 +451,17 @@ def classify_store_source(source: str, rel_path: str) -> list[StoreFinding]:
         if isinstance(node, (ast.BinOp, ast.Call, ast.JoinedStr, ast.Constant)):
             root, target = fact(node)
             # Accessors are consumers, not builders; record their arguments.
-            if root in {"repo", "relative"} and target and (
-                not isinstance(node, ast.Call) or name(node.func).split(".")[-1] in {
-                    "Path", "PurePath", "join", "joinpath", "resolve", "absolute", "expanduser"}
+            builder = isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Div, ast.Add))
+            if isinstance(node, ast.Call):
+                builder = name(node.func).split(".")[-1] in {
+                    "Path", "PurePath", "join", "joinpath", "resolve", "absolute", "expanduser",
+                    "with_name", "with_suffix"}
+                # Unknown helpers taking data + a store filename are builders,
+                # even when their anchor cannot be resolved in this module.
+                builder |= bool(re.search(r"(?:^|/)data/?(?:sources|vesum|vesum_shadow_[^/]*?)\.db(?:$|[?#/])",
+                    "".join(fragments(arg) for arg in [*node.args, *(k.value for k in node.keywords)])))
+            if root != "fixture" and target and (
+                builder or (root in {"repo", "relative"} and not isinstance(node, ast.Call))
             ):
                 path_nodes.add(node)
         if constructor(node):
@@ -546,6 +554,11 @@ def base_blob_ids(root: Path, commit: str) -> dict[str, str]:
     """Complete immutable base inputs, including files absent from checkout."""
     if not (root / ".git").exists():
         return {}
+    available = subprocess.run(["git", "cat-file", "-e", f"{commit}^{{commit}}"],
+                               cwd=root, capture_output=True, timeout=30)
+    if available.returncode:
+        # Shallow checkouts lack the frozen base: classify every current file.
+        return {}
     result = subprocess.check_output(["git", "ls-tree", "-r", "-z", commit, "--", "scripts", "tests"],
                                      cwd=root, timeout=30)
     blobs = {}
@@ -572,14 +585,16 @@ def baseline_policy_violations(root: Path) -> list[str]:
     """Reject growth or a changed freeze against existing committed baselines.
 
     The initial slice has no predecessor baseline; its census is independently
-    reproduced at review. Later working-tree, branch and CI changes compare
-    against available committed versions, including the parent in CI.
+    reproduced at review. Corrections to that unlanded initial census must
+    exactly reproduce the same base. After landing, working-tree, branch and
+    CI changes may only shrink available committed versions.
     """
     if not (root / ".git").exists():
         return []
     current = json.loads(BASELINE.read_text())
     current_entries = {StoreFinding(**row) for row in current["entries"]}
     rel = BASELINE.relative_to(REPO_ROOT).as_posix()
+    initial_correction = None
     for ref in ("HEAD", "HEAD^", "origin/main"):
         result = subprocess.run(["git", "show", f"{ref}:{rel}"], cwd=root,
                                 capture_output=True, text=True, timeout=30)
@@ -589,6 +604,15 @@ def baseline_policy_violations(root: Path) -> list[str]:
         prior_entries = {StoreFinding(**row) for row in previous["entries"]}
         if (previous["base_commit"] != current["base_commit"] or not current_entries <= prior_entries
                 or previous.get("file_counts", {}) != current.get("file_counts", {})):
+            if initial_correction is None:
+                # The first baseline is still in review: allow only an exact
+                # recensus, never growth of a baseline already frozen on main.
+                landed = subprocess.run(["git", "ls-tree", "origin/main", "--", rel],
+                                        cwd=root, capture_output=True, text=True, timeout=30)
+                initial_correction = (landed.returncode == 0 and not landed.stdout
+                                      and current == census(current["base_commit"], root))
+            if initial_correction and previous["base_commit"] == current["base_commit"]:
+                continue
             return [f"{rel}: baseline may only shrink; freeze/growth differs from {ref}"]
     return []
 

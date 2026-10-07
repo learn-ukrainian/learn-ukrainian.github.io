@@ -539,3 +539,90 @@ def test_base_blob_ids_include_tracked_sparse_paths(tmp_path):
     path.unlink()
     assert lint.base_blob_ids(tmp_path, 'HEAD') == {'scripts/x.py': lint.source_blob_id(source)}
     assert lint.base_blob_ids(tmp_path / 'no-git', 'HEAD') == {}
+
+
+@pytest.mark.parametrize('source', [
+    "from scripts.rag.config import DATA_DIR\nDB = DATA_DIR / 'sources.db'",
+    "from scripts.storage.paths import DATA_ROOT\nDB = DATA_ROOT / 'vesum.db'",
+    "import os\nDB = os.path.join(DATA_DIR, 'vesum.db')",
+    "DB = config.DATA_DIR / 'vesum.db'",
+    "DB = helper('data', 'sources.db')",
+    "DB = _resolve_shared_data_file('data', 'vesum.db')",
+    "DB = (ROOT / 'data' / 'x').with_name('sources.db')",
+    "DB = anchor.with_name('vesum_shadow_release.db')",
+    "DB = (anchor / 'sources').with_suffix('.db')",
+    "DB = anchor + '/vesum.db'",
+    "DB = data_dir / 'vesum.db'",
+])
+@pytest.mark.parametrize('tree', ['scripts', 'tests'])
+def test_unresolved_store_builders_fail_full_lint(tmp_path, source, tree):
+    path = tmp_path / tree / 'new.py'
+    path.parent.mkdir()
+    path.write_text(source)
+    violations, unreadable = lint.find_violations(tmp_path, ())
+    assert unreadable == []
+    assert any('store_path' in v for v in violations), violations
+
+
+@pytest.mark.parametrize('expression', [
+    "os.path.join(directory, 'data', 'sources.db')",
+    "helper(directory, 'data', 'sources.db')",
+    "(directory / 'x').with_name('vesum.db')",
+    "(directory / 'sources').with_suffix('.db')",
+    "str(directory) + '/vesum_shadow_fixture.db'",
+])
+def test_fixture_store_builders_stay_clean(expression):
+    source = f"def test_read(directory):\n    DB = {expression}"
+    assert lint.classify_store_source(source, 'tests/new.py') == []
+
+
+def test_absent_base_scans_every_file_and_rejects_new_builders(tmp_path, monkeypatch):
+    import json
+    subprocess.run(['git', 'init', '-q', str(tmp_path)], check=True, timeout=30)
+    path = tmp_path / 'tests/x.py'
+    path.parent.mkdir()
+    path.write_text("DB = DATA_DIR / 'sources.db'")
+    baseline = tmp_path / 'baseline.json'
+    entries = [f.__dict__ for f in lint.classify_store_source(path.read_text(), 'tests/x.py')]
+    baseline.write_text(json.dumps(dict(base_commit='0' * 40, entries=entries,
+                                       file_counts={'tests/x.py': 1})))
+    monkeypatch.setattr(lint, 'REPO_ROOT', tmp_path)
+    monkeypatch.setattr(lint, 'BASELINE', baseline)
+    assert lint.base_blob_ids(tmp_path, '0' * 40) == {}
+    assert lint.find_violations(tmp_path, ()) == ([], [])
+    path.write_text(path.read_text() + "\nDB = helper('data', 'vesum.db')")
+    violations, unreadable = lint.find_violations(tmp_path, ())
+    assert unreadable == []
+    assert len(violations) == 1 and 'store_path' in violations[0]
+
+
+@pytest.mark.parametrize('path,scope', [
+    ('scripts/rag/scrape_wikisource.py', '<module>'),
+    ('scripts/build/vocab_gen.py', '<module>'),
+    ('scripts/api/admin_router.py', 'disk_usage'),
+])
+def test_anchor_and_helper_base_sites_are_in_census(path, scope):
+    assert any(f.path == path and f.kind == 'store_path' and f.scope == scope
+               for f in lint.baseline_entries())
+
+
+@pytest.mark.parametrize('landed,reproduced', [(False, True), (True, True), (False, False)])
+def test_initial_census_correction_requires_unlanded_exact_reproduction(tmp_path, monkeypatch, landed, reproduced):
+    import json
+    from types import SimpleNamespace
+    (tmp_path / '.git').mkdir()
+    path = tmp_path / 'baseline.json'
+    previous = dict(base_commit='base', entries=[], file_counts={})
+    entry = lint.classify_store_source("DB = DATA_DIR / 'sources.db'", 'scripts/x.py')[0].__dict__
+    current = dict(base_commit='base', entries=[entry], file_counts={'scripts/x.py': 1})
+    path.write_text(json.dumps(current))
+    monkeypatch.setattr(lint, 'REPO_ROOT', tmp_path)
+    monkeypatch.setattr(lint, 'BASELINE', path)
+    def git_run(args, **kwargs):
+        return SimpleNamespace(returncode=0, stdout=(
+            'tracked baseline' if landed else '') if args[1] == 'ls-tree' else json.dumps(previous))
+    monkeypatch.setattr(lint.subprocess, 'run', git_run)
+    monkeypatch.setattr(lint, 'census', lambda *args: current if reproduced else previous)
+    assert bool(lint.baseline_policy_violations(tmp_path)) == (landed or not reproduced)
+    path.write_text(json.dumps({**current, 'base_commit': 'different'}))
+    assert lint.baseline_policy_violations(tmp_path)

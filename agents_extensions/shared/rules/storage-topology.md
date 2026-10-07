@@ -88,4 +88,11 @@ blobs, including sparse paths, and excludes untracked and ignored files from
 that census. Baseline identities use path, class, enclosing scope, normalized
 AST fingerprint, and occurrence; line movement does not grandfather new code.
 Resolved migrations remove their corresponding baseline entries; stale entries
-fail lint. Only declared resolver functions may build new repository store paths.
+fail lint. Once the initial census lands, `base_commit` and `file_counts` remain
+frozen while `entries` shrink; do not regenerate counts during caller migration.
+Before that first landing, a corrected census must reproduce the same base
+commit exactly. Shallow checkouts without that base classify every current
+file rather than using the base-blob shortcut. Joins onto a store filename from
+an unresolved anchor and helpers taking `data` plus a store filename are also
+findings, except paths with test-fixture provenance. Only declared resolver
+functions may build new repository store paths.
