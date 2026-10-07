@@ -29,7 +29,7 @@ import pytest
 
 from scripts.common import github_client
 from scripts.common.repo_root import project_interpreter
-from scripts.orchestration import worktree_claims
+from scripts.orchestration import pool_headroom, worktree_claims
 from scripts.orchestration.dispatch_isolation import _parse_bytes, build_scope_argv
 
 SOURCE_ROOT = Path(__file__).resolve().parents[2]
@@ -37,6 +37,9 @@ SELECTION = Path(__file__).with_name("data_tier_selection.json")
 BASELINE = Path(__file__).with_name("data_tier_known_failures.json")
 ISSUE_TITLE = "[infra][tests] Nightly data-tier failures"
 MIN_AVAILABLE_BYTES = 6 * 1024**3
+# Free memory the nightly pytest child needs in lu-dispatch.slice and in the
+# shared lu.slice pool, both measured without reclaimable file cache (#9975).
+DISPATCH_HEADROOM_BYTES = 4 * 1024**3
 RUN_BUDGET_SECONDS = 7 * 3600
 HYDRATION_BUDGET_SECONDS = 3600
 ISSUE_BODY_LIMIT = 60000
@@ -126,20 +129,58 @@ def require_memory() -> None:
     if available < MIN_AVAILABLE_BYTES:
         raise DataTierError(f"MemAvailable {available // 1024**2} MiB is below the 6 GiB floor")
     slice_state = command(
-        ["systemctl", "--user", "show", "-p", "LoadState,ActiveState,MemoryCurrent,MemoryMax", "lu-dispatch.slice"],
+        [
+            "systemctl",
+            "--user",
+            "show",
+            "-p",
+            "LoadState,ActiveState,MemoryCurrent,MemoryMax,ControlGroup",
+            "lu-dispatch.slice",
+        ],
         cwd=SOURCE_ROOT,
     ).stdout
     properties = dict(line.split("=", 1) for line in slice_state.splitlines() if "=" in line)
     if properties.get("LoadState") != "loaded":
         raise DataTierError("lu-dispatch.slice is unavailable")
-    if properties.get("ActiveState") == "inactive":
-        return
+    if properties.get("ActiveState") != "inactive":
+        require_dispatch_slice_headroom(properties)
+    require_pool_headroom()
+
+
+def require_dispatch_slice_headroom(properties: dict[str, str]) -> None:
+    """lu-dispatch.slice headroom without reclaimable file cache (#9975).
+
+    Without a readable ``memory.stat`` the raw ``MemoryCurrent`` is used, which
+    can only overstate use.
+    """
     current = _parse_bytes(properties.get("MemoryCurrent"))
     maximum = _parse_bytes(properties.get("MemoryMax"))
     if current is None or (maximum is None and properties.get("MemoryMax") != "infinity"):
         raise DataTierError("lu-dispatch.slice memory headroom is unknown")
-    if maximum is not None and maximum - current < 4 * 1024**3:
+    directory = pool_headroom.cgroup_dir(properties.get("ControlGroup"))
+    cache = pool_headroom.file_cache_bytes(directory) if directory is not None else None
+    if cache is None:
+        print("data-tier: lu-dispatch.slice file cache unknown; using raw MemoryCurrent", file=sys.stderr)
+    else:
+        current = max(current - cache, 0)
+    if maximum is not None and maximum - current < DISPATCH_HEADROOM_BYTES:
         raise DataTierError("lu-dispatch.slice has less than 4 GiB headroom")
+
+
+def require_pool_headroom() -> None:
+    """Refuse when the shared lu.slice pool cannot hold the run (#9975); skip without cgroup files."""
+    pool = pool_headroom.check_pool(DISPATCH_HEADROOM_BYTES)
+    if pool.skipped is not None:
+        print(f"data-tier: {safe_text(pool.clause())}", file=sys.stderr)
+        return
+    if pool.memory is not None and pool.memory.limit is None:
+        print(
+            "data-tier: lu.slice has no memory.high or memory.max limit; pool headroom not enforced",
+            file=sys.stderr,
+        )
+        return
+    if not pool.fits:
+        raise DataTierError(pool.failure())
 
 
 def prune_stale_worktrees(primary: Path) -> None:

@@ -571,7 +571,8 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
     assert capacity_pick.main([]) == 0
     assert capsys.readouterr().out.splitlines()[-1] == (
         "admission (write dispatch): would admit now | live write workers 1/12, "
-        "MemAvailable 64.0 GiB (floor 6 GiB), load 0.00 per CPU (limit 1.50); "
+        "MemAvailable 64.0 GiB (floor 6 GiB), load 0.00 per CPU (limit 1.50), "
+        "lu.slice pool check skipped (test host); "
         "1 record(s) dead pid, not counted: gone"
     )
 
@@ -582,3 +583,24 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
     assert admission["line"].startswith("admission (write dispatch): would REFUSE now: live write workers 1/1")
     # capacity_pick only reports; marking dead records crashed is dispatch's job.
     assert json.loads(dead.read_text(encoding="utf-8"))["status"] == "running"
+
+
+def test_live_dispatch_admitted_line_shows_a_skipped_pool_check(tasks_dir, tmp_path, monkeypatch, capsys):
+    """delegate.py configures no logging, so the pool skip reason must be on the admitted line (#9975)."""
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(tmp_path / "absent" / "lu.slice"))
+
+    class _Proc:
+        pid = 13580
+        stdin = _FakeStdin()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **_kwargs: _Proc())
+
+    assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-pool-skip")) == 0
+
+    admitted = [line for line in capsys.readouterr().err.splitlines() if "dispatch admission: admitted" in line]
+    assert len(admitted) == 1
+    assert "lu.slice pool check skipped (lu.slice memory.current unavailable: " in admitted[0]
+    state = delegate._read_state(delegate._state_path("adm-pool-skip"))
+    assert state is not None
+    assert "memory.current unavailable" in state["admission"]["pool_check_skipped"]
