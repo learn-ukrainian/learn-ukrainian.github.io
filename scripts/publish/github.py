@@ -10,7 +10,6 @@ import argparse
 import json
 import os
 import re
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -209,72 +208,17 @@ def _read_file(path, cwd, stdin):
         raise gate.PublishBlocked("OPSEC: publisher file input unreadable.") from None
 
 
-# Captured before a test replaces subprocess.run. That replacement is the
-# supported seam for callers that fake gh at the process boundary.
-_DIRECT_SUBPROCESS_RUN = subprocess.run
-
-
-def _process_boundary_substituted() -> bool:
-    return subprocess.run is not _DIRECT_SUBPROCESS_RUN
-
-
 def _send(argv, *, environment, runner, cwd, **kwargs):
-    """Injected runners see the admitted command; production keeps the retry helper.
-
-    Library reads use the shared client. The publishing CLI's production
-    transport is the shim's bash retry helper, which replays the admitted argv
-    to the real gh binary. An injected runner replaces that transport.
-    """
+    """Send an admitted command through the shared client boundary."""
     environment = gate.internal_environment(environment)
     if runner is not None:
         return github_client.command(argv, runner=runner, env=environment, cwd=cwd, **kwargs)
     return _run_transport(argv, env=environment, cwd=cwd, **kwargs)
 
 
-def _budget_refusal(command, environment, cwd, kwargs):
-    """Return the typed limit when the shared client's budget is already exhausted.
-
-    The bash helper still replays an admitted command that the budget allows.
-    An exhausted budget must not reach that helper or any GitHub write.
-    """
-    client = github_client.GitHubClient(env=environment, cwd=cwd)
-    with client._db() as db:
-        rows = db.execute("SELECT remaining, reset FROM budget WHERE scope=?", (client.scope,)).fetchall()
-    reset = next(
-        (item for remaining, item in rows if remaining <= github_client.RESERVE and item > client.clock()),
-        None,
-    )
-    if reset is None:
-        return None
-    observed = {
-        key: kwargs[key]
-        for key in ("text", "universal_newlines", "encoding", "capture_output", "check", "stdout", "stderr")
-        if key in kwargs
-    }
-    return github_client._result_process(
-        command, github_client.Result(error="github_rate_limited", reset_at=reset), {}, observed
-    )
-
-
 def _run_transport(command, **kwargs):
-    """Replay an admitted command through the shim retry helper.
-
-    A test may replace this function. The replacement observes the admitted
-    argv; the helper command stays inside the default implementation.
-    """
-    from scripts.opsec.gh_entry import run_guarded
-
-    environment = dict(kwargs.pop("env", None) or {})
-    blocked = _budget_refusal(command, environment, kwargs.get("cwd"), kwargs)
-    if blocked is not None:
-        return blocked
-    real = gate.real_gh(environment)
-    environment["LU_OPSEC_FILE_PAYLOAD"] = "1"
-    environment["AGENT_REAL_GH"] = real
-    kwargs.setdefault("stdin", subprocess.DEVNULL)
-    for key in ("fresh", "allow_stale", "max_response_bytes"):
-        kwargs.pop(key, None)
-    return run_guarded(real, command[1:], environment, **kwargs)
+    """Execute an admitted command once; the client records and types limits."""
+    return github_client.run(command, **kwargs)
 
 
 SQUASH_TEXT_QUERY = (
@@ -737,21 +681,6 @@ GQL_READS = {
 }
 
 
-def _legacy_issue_scope(gh_repo, fields, dest, **send_kwargs):
-    """GraphQL issue-scope document for a substituted process boundary."""
-    owner, name = gh_repo.split("/", 1)
-    query = (
-        "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name)"
-        "{issue(number:$number){number body labels(first:100){nodes{name}} parent{number}}}}"
-    )
-    variables = {"owner": owner, "name": name, "number": fields["number"]}
-    with tempfile.TemporaryDirectory(prefix="lu-read-") as directory:
-        frozen = Path(directory) / "query.json"
-        frozen.write_bytes(json.dumps({"query": query, "variables": variables}).encode("utf-8"))
-        argv = ["gh", "api", "--method", "POST", "graphql", "--input", str(frozen), *_hostname_flag(dest)]
-        return _send(argv, runner=None, **send_kwargs)
-
-
 def read(
     operation,
     *,
@@ -795,23 +724,6 @@ def read(
             cursors, roots = fields["cursors"], fields["body_roots"]
             if not isinstance(cursors, dict) or not 1 <= len(cursors) <= 20 or not isinstance(roots, (set,list,tuple)) or any(type(n) is not int or n <= 0 or (c is not None and not isinstance(c,str)) for n,c in cursors.items()):
                 raise gate.PublishBlocked("OPSEC: invalid read batch.")
-        # Explicit runners execute the REST plan. A substituted subprocess.run,
-        # with no runner, is the process-boundary seam and still sees the
-        # caller's historical GraphQL document for issue-scope.
-        if operation == "issue-scope" and runner is None and _process_boundary_substituted():
-            return _legacy_issue_scope(
-                gh_repo,
-                fields,
-                dest,
-                environment=environment,
-                cwd=cwd,
-                capture_output=capture_output,
-                text=text,
-                check=check,
-                timeout=timeout,
-                stdout=stdout,
-                stderr=stderr,
-            )
         return github_client.rest_read(operation, gh_repo, fields, runner=runner, env=environment, cwd=cwd, capture_output=capture_output, text=text, check=check, timeout=timeout, stdout=stdout, stderr=stderr)
     if operation in {"queue-snapshot", "queue-status"} and runner is None:
         expected = {"branches"} if operation == "queue-snapshot" else {"number", "branch"}

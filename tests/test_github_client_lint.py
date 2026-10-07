@@ -277,3 +277,14 @@ def test_standalone_hook_colour_stripping_is_pinned(name, monkeypatch):
     environment = namespace["_gh_env"]()
     assert "FORCE_COLOR" not in environment and "CLICOLOR_FORCE" not in environment
     assert environment["NO_COLOR"] == "1"
+
+
+
+def test_shim_entry_mutation_cannot_bypass_shared_client():
+    path = "scripts/opsec/gh_entry.py"
+    source = (ROOT / path).read_text()
+    assert bypasses(source, path) == []
+    mutation = source + '\ndef replay():\n    import subprocess\n    subprocess.run(["gh", "pr", "comment", "1"], timeout=30)\n'
+    assert len(bypasses(mutation, path)) == 1
+    assert "gh bypasses shared client" in bypasses(mutation, path)[0]
+    assert path not in EXCLUSIONS

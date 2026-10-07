@@ -18,6 +18,7 @@ from pathlib import Path
 from scripts.ci import components, pytest_report
 from scripts.ci import dependency_change_scope as dependency
 from scripts.ci.junit_results import parse_junit
+from scripts.common import github_client
 
 SCHEMA = "component-shadow.v1"
 BASELINE = "2026-10-03T00:00:00Z..2026-10-06T11:14:28Z"
@@ -250,7 +251,7 @@ def report(args) -> dict:
 
 
 def gh_pages(endpoint: str, key: str) -> list[dict]:
-    data = json.loads(subprocess.run(["gh", "api", "--paginate", "--slurp", endpoint],
+    data = json.loads(github_client.run(["gh", "api", "--paginate", "--slurp", endpoint],
                                     check=True, capture_output=True, text=True, timeout=180).stdout)
     rows = [row for page in data for row in page[key]]
     if data and len(rows) != data[0]["total_count"]:
@@ -266,7 +267,7 @@ def inventory(repository: str, created: str, *, first_attempts: bool = False) ->
         if run["event"] not in {"pull_request", "merge_group"}:
             continue
         if first_attempts:
-            run = json.loads(subprocess.run(["gh", "api", f"repos/{repository}/actions/runs/{run['id']}/attempts/1"],
+            run = json.loads(github_client.run(["gh", "api", f"repos/{repository}/actions/runs/{run['id']}/attempts/1"],
                                             check=True, capture_output=True, text=True, timeout=60).stdout)
             endpoint = f"repos/{repository}/actions/runs/{run['id']}/attempts/1/jobs?per_page=100"
         else:

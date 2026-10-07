@@ -12,7 +12,6 @@ import os
 import re
 import sqlite3
 import subprocess
-import tempfile
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
@@ -647,18 +646,6 @@ def _store_merge_facts(path: Path, facts: dict[str, str]) -> None:
             return
 
 
-def _run_gh(
-    args: list[str], *, timeout: float = _GH_TIMEOUT_S,
-) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        args,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=timeout,
-    )
-
-
 def _graphql_failure_message(payload: object) -> str:
     if isinstance(payload, dict):
         errors = payload.get("errors")
@@ -735,44 +722,10 @@ def _parse_merge_fact_payload(
     return parsed
 
 
-def _legacy_merge_facts_query(batch, *, gh_runner, gh_bin, timeout):
-    """One grouped GraphQL document for an injected gh runner.
-
-    Production (``_run_gh``) uses the shared client's REST read. Injected
-    runners keep the historical single ``gh api graphql`` call they assert.
-    """
-    grouped: dict[str, list[int]] = {}
-    for slug, number in batch:
-        grouped.setdefault(slug, []).append(number)
-    selections = []
-    for index, (slug, numbers) in enumerate(grouped.items()):
-        owner, name = slug.split("/", 1)
-        pulls = " ".join(f"p{number}:pullRequest(number:{number}){{mergedAt}}" for number in numbers)
-        selections.append(
-            f"r{index}:repository(owner:{json.dumps(owner)},name:{json.dumps(name)}){{{pulls}}}"
-        )
-    document = {"query": "query {" + " ".join(selections) + "}", "variables": {}}
-    with tempfile.TemporaryDirectory(prefix="lu-merge-facts-") as directory:
-        frozen = Path(directory) / "query.json"
-        frozen.write_text(json.dumps(document), encoding="utf-8")
-        return gh_runner(
-            [gh_bin, "api", "--method", "POST", "graphql", "--input", str(frozen)],
-            timeout=timeout,
-        )
-
-
 def _fetch_merge_facts(
     missing: list[tuple[str, int]],
-    *,
-    gh_runner: Callable[..., subprocess.CompletedProcess[str]],
-    gh_bin: str,
 ) -> dict[tuple[str, int], tuple[datetime | None, str | None, str | None]]:
-    """One ``gh api graphql`` call per ≤50 cache misses.
-
-    ``gh`` exits non-zero when any alias errors, but stdout can still hold
-    partial ``data``. Those aliases are parsed. Only a missing or unparseable
-    payload fails the whole batch.
-    """
+    """Read merge facts through the shared REST client in bounded batches."""
     fetched: dict[tuple[str, int], tuple[datetime | None, str | None, str | None]] = {}
     valid: list[tuple[str, int]] = []
     for repo, number in missing:
@@ -784,20 +737,15 @@ def _fetch_merge_facts(
     for start in range(0, len(valid), _GRAPHQL_BATCH_SIZE):
         batch = valid[start : start + _GRAPHQL_BATCH_SIZE]
         try:
-            if gh_runner is _run_gh:
-                from scripts.publish.github import read
+            from scripts.publish.github import read
 
-                proc = read(
-                    "merge-facts",
-                    batch=batch,
-                    timeout=_GH_TIMEOUT_S,
-                    capture_output=True,
-                    text=True,
-                )
-            else:
-                proc = _legacy_merge_facts_query(
-                    batch, gh_runner=gh_runner, gh_bin=gh_bin, timeout=_GH_TIMEOUT_S
-                )
+            proc = read(
+                "merge-facts",
+                batch=batch,
+                timeout=_GH_TIMEOUT_S,
+                capture_output=True,
+                text=True,
+            )
             stdout = proc.stdout or ""
             if isinstance(stdout, bytes):
                 stdout = stdout.decode("utf-8", errors="replace")
@@ -822,7 +770,7 @@ def _fetch_merge_facts(
             fetched.update(_parse_merge_fact_payload(payload, batch))
         except subprocess.TimeoutExpired:
             for key in batch:
-                fetched[key] = (None, f"gh api graphql timed out after {_GH_TIMEOUT_S}s", None)
+                fetched[key] = (None, f"GitHub merge facts timed out after {_GH_TIMEOUT_S}s", None)
         except Exception as exc:
             message = str(exc)[:300] or "gh failed"
             for key in batch:
@@ -834,8 +782,6 @@ def _resolve_pr_merge_facts(
     keys: list[tuple[str, int]],
     *,
     cache_path: Path | None,
-    gh_runner: Callable[..., subprocess.CompletedProcess[str]] | None = None,
-    gh_bin: str = "gh",
 ) -> dict[tuple[str, int], tuple[datetime | None, str | None]]:
     """Return merge timestamps for ``keys``. Cache hits do not call ``gh``."""
     unique: list[tuple[str, int]] = []
@@ -858,7 +804,7 @@ def _resolve_pr_merge_facts(
     if not missing:
         return resolved
 
-    fetched = _fetch_merge_facts(missing, gh_runner=gh_runner or _run_gh, gh_bin=gh_bin)
+    fetched = _fetch_merge_facts(missing)
     updates: dict[str, str] = {}
     for key, (merged_at, error, raw) in fetched.items():
         resolved[key] = (merged_at, error)
@@ -875,9 +821,7 @@ def collect_stream_bottleneck_metrics(
     plane_db: Path,
     now: datetime | None = None,
     github_lookup: Callable[..., tuple[datetime | None, str | None]] | None = None,
-    gh_runner: Callable[..., subprocess.CompletedProcess[str]] | None = None,
     merge_cache_path: Path | None = None,
-    gh_bin: str = "gh",
 ) -> dict[str, Any]:
     """Collect lifecycle-only per-stream bottlenecks from independent sources.
 
@@ -1035,8 +979,6 @@ def collect_stream_bottleneck_metrics(
                     lookups = _resolve_pr_merge_facts(
                         [item[2] for item in pending_merges],
                         cache_path=cache_path,
-                        gh_runner=gh_runner,
-                        gh_bin=gh_bin,
                     )
                 except (OSError, ValueError, TypeError, subprocess.TimeoutExpired) as exc:
                     lookups = {item[2]: (None, str(exc)[:300]) for item in pending_merges}

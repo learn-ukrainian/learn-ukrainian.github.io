@@ -36,7 +36,7 @@ HEADING = "Combined Master Vocabulary Table (#3)"
 
 
 @pytest.fixture(autouse=True)
-def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, github_command_boundary, monkeypatch):
     """Exercise the real publisher using synthetic policy and send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
 

@@ -262,7 +262,7 @@ def _named_rest_fixture(args):
     if endpoint.endswith("/parent"):
         return {"number": 2, "html_url": "https://github.com/unit/public/issues/2", "repository_url": "https://api.github.com/repos/unit/public"}
     if "/issues/" in endpoint:
-        return {"state": "open", "html_url": "https://github.com/unit/public/issues/1", "body": "", "labels": []}
+        return {"number": 1, "state": "open", "html_url": "https://github.com/unit/public/issues/1", "repository_url": "https://api.github.com/repos/unit/public", "body": "", "labels": []}
     return {}
 
 

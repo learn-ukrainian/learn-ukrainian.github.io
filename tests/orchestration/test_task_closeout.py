@@ -555,72 +555,52 @@ def test_membership_audit_report_forwards_adapter_repo_root(tmp_path: Path, monk
     assert adapter.repo_root != issue_stream_audit.ROOT
 
 
-def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Path) -> None:
-    calls: list[list[str]] = []
+def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Path, github_transport) -> None:
+    from scripts.common.github_client import Response
 
-    def runner(args: list[str], _stdin: str | None) -> str:
-        calls.append(args)
-        command = " ".join(args)
-        if "issue view" in command:
-            return json.dumps(
-                {
-                    "number": 42,
-                    "state": "OPEN",
-                    "body": _body(),
-                    "url": "https://github.com/org/repo/issues/42",
-                    "closedAt": None,
-                }
-            )
-        if "graphql" in args:
-            return json.dumps({"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42, "parent": {"number": 10, "repository": {"nameWithOwner": "org/repo"}}}}}})
-        if "pr view" in command:
-            return json.dumps(
-                {
-                    "number": 77,
-                    "url": "https://github.com/org/repo/pull/77",
-                    "state": "MERGED",
-                    "isDraft": False,
-                    "headRefOid": HEAD,
-                    "headRefName": "codex/42-closeout",
-                    "mergeCommit": {"oid": MERGE},
-                    "mergedAt": NOW,
-                    "autoMergeRequest": {"enabledAt": NOW},
-                    "reviewDecision": "APPROVED",
-                    "reviews": [],
-                    "statusCheckRollup": [
-                        {
-                            "__typename": "CheckRun",
-                            "name": "CI Gate",
-                            "status": "COMPLETED",
-                            "conclusion": "SUCCESS",
-                        }
-                    ],
-                    "body": "Refs #42",
-                    "closingIssuesReferences": [],
-                }
-            )
-        if "issues/77/comments" in command:
-            return "[]"
-        if "pulls/77/reviews" in command:
-            return json.dumps(
-                [
-                    {
-                        "html_url": REVIEW_URL.replace("issuecomment-1", "pullrequestreview-5"),
-                        "body": "PASS",
-                        "user": {"login": "reviewer"},
-                        "submitted_at": NOW,
-                        "state": "APPROVED",
-                        "commit_id": HEAD,
-                    }
-                ]
-            )
-        if f"deployments?sha={MERGE}&per_page=100" in command:
-            return json.dumps([{"id": 9, "environment": "production", "sha": MERGE}])
-        if "deployments/9/statuses" in command:
-            return json.dumps([{"state": "success", "environment_url": "https://prod"}])
-        raise AssertionError(f"unexpected command: {args}")
+    def transport(method, endpoint, headers, body, timeout):
+        assert timeout == 60
+        payload = None
+        if endpoint == "repos/org/repo/issues/42":
+            payload = {"number": 42, "state": "open", "body": _body(),
+                       "html_url": "https://github.com/org/repo/issues/42", "closed_at": None,
+                       "repository_url": "https://api.github.com/repos/org/repo"}
+        elif endpoint == "repos/org/repo/issues/42/parent":
+            payload = {"number": 10, "html_url": "https://github.com/org/repo/issues/10",
+                       "repository_url": "https://api.github.com/repos/org/repo"}
+        elif endpoint == "repos/org/repo/pulls/77":
+            payload = {"number": 77, "html_url": "https://github.com/org/repo/pull/77",
+                       "state": "closed", "draft": False, "head": {"sha": HEAD, "ref": "codex/42-closeout"},
+                       "merge_commit_sha": MERGE, "merged_at": NOW, "body": "Refs #42"}
+        elif endpoint == f"repos/org/repo/commits/{HEAD}/check-runs?per_page=100":
+            payload = {"total_count": 1, "check_runs": [{"name": "CI Gate", "status": "completed", "conclusion": "success"}]}
+        elif endpoint == f"repos/org/repo/commits/{HEAD}/status?per_page=100":
+            payload = {"total_count": 0, "statuses": []}
+        elif endpoint == "graphql":
+            assert method == "POST"
+            document = json.loads(body)
+            assert document["variables"] == {"owner": "org", "name": "repo", "number": 77}
+            assert "parent" not in document["query"]
+            payload = {"data": {"repository": {"pullRequest": {
+                "autoMergeRequest": {"enabledAt": NOW}, "reviewDecision": "APPROVED",
+                "closingIssuesReferences": {"totalCount": 0, "nodes": [], "pageInfo": {"hasNextPage": False}},
+            }}}}
+        elif endpoint == "repos/org/repo/pulls/77/reviews?per_page=100":
+            payload = [{"html_url": REVIEW_URL.replace("issuecomment-1", "pullrequestreview-5"),
+                        "body": "PASS", "user": {"login": "reviewer"}, "submitted_at": NOW,
+                        "state": "APPROVED", "commit_id": HEAD}]
+        elif endpoint == f"repos/org/repo/deployments?sha={MERGE}&per_page=100":
+            payload = [{"id": 9, "environment": "production", "sha": MERGE}]
+        elif endpoint == "repos/org/repo/deployments/9/statuses?per_page=100":
+            payload = [{"state": "success", "environment_url": "https://prod"}]
+        elif endpoint in {"repos/org/repo/issues/77/comments?per_page=100", "repos/org/repo/pulls/77/reviews?per_page=100"}:
+            payload = []
+        else:
+            raise AssertionError(f"unexpected request: {method} {endpoint}")
+        return Response(200, {}, json.dumps(payload).encode())
 
-    adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=runner)
+    calls = github_transport(transport)
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
     adapter.registered_stream_epics = lambda repository: [10]
     _, ledger = _ledger(tmp_path)
     ledger["terminal_goal"] = "deploy"
@@ -639,10 +619,11 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
             "url": "https://prod",
         }
     ]
-    deployment_call = next(
-        args for args in calls if any(f"/deployments?sha={MERGE}&per_page=100" in value for value in args)
-    )
-    assert deployment_call[deployment_call.index("--method") + 1] == "GET"
+    deployment_call = next(call for call in calls if f"/deployments?sha={MERGE}&per_page=100" in call[1])
+    assert deployment_call[0] == "GET"
+    assert [call[1] for call in calls if "/issues/42" in call[1]] == [
+        "repos/org/repo/issues/42", "repos/org/repo/issues/42", "repos/org/repo/issues/42/parent",
+    ]
 
 
 def _transferred_ledger_and_reader(
@@ -868,12 +849,11 @@ def test_9852_init_binds_registry_to_identity_repository(tmp_path, monkeypatch, 
         assert not (tmp_path / "lifecycle.json").exists()
 
 
-def test_9852_registry_repository_resolution_failure_is_typed(tmp_path):
-    def failed_read(command, stdin):
-        raise task_lifecycle.LifecycleError("repository could not be resolved")
-
-    adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=failed_read)
-    with pytest.raises(task_lifecycle.LifecycleError, match="repository could not be resolved"):
+def test_9852_registry_repository_resolution_failure_is_typed(tmp_path, github_transport):
+    from scripts.common.github_client import Response
+    github_transport(lambda *args: Response(503, {}, b'{"message":"repository could not be resolved"}'))
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
+    with pytest.raises(task_lifecycle.LifecycleError, match="failed"):
         adapter.registered_stream_epics("org/repo")
 
 
@@ -1245,7 +1225,7 @@ def test_cross_workflow_in_progress_is_not_green():
 
 
 @pytest.fixture(autouse=True)
-def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
 
@@ -1423,27 +1403,46 @@ def test_9794_init_revalidates_live_ancestry_at_ledger_write(tmp_path, monkeypat
     assert not (tmp_path / "lifecycle.json").exists()
 
 
+def _rest_parent_transport(github_transport, *, issue=None, parent=None, issue_status=200):
+    from scripts.common.github_client import Response
+
+    if issue is None:
+        issue = {"number": 42, "state": "open", "html_url": "https://github.com/org/repo/issues/42",
+                 "repository_url": "https://api.github.com/repos/org/repo"}
+
+    def transport(method, endpoint, headers, body, timeout):
+        assert method == "GET" and body is None
+        if endpoint.endswith("/parent"):
+            return Response(404 if parent is None else 200, {}, json.dumps(parent).encode())
+        return Response(issue_status, {}, json.dumps(issue).encode())
+
+    return github_transport(transport)
+
+
 @pytest.mark.parametrize("patch", [
-    {"errors": [{"message": "unread"}]}, {"data": None},
-    {"data": {"repository": None}},
-    {"data": {"repository": {"nameWithOwner": "foreign/repo", "issue": {"number": 42, "parent": None}}}},
-    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": None}}},
-    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42}}}},
-    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42, "parent": {"number": 10, "url": "unparseable"}}}}},
-    {"data": {"repository": {"nameWithOwner": "org/repo", "issue": {"number": 42, "parent": {"number": True, "repository": {"nameWithOwner": "org/repo"}}}}}},
+    {"issue_status": 503}, {"issue": {}}, {"issue": {"number": 42}},
+    {"issue": {"number": 42, "state": "open", "html_url": "url", "repository_url": "https://api.github.com/repos/foreign/repo"}},
+    {"parent": {"number": 10, "html_url": "url"}},
+    {"parent": {"number": True, "html_url": "url", "repository_url": "https://api.github.com/repos/org/repo"}},
 ])
-def test_9794_parent_reader_refuses_untyped_or_unread_response(tmp_path, patch):
-    adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=lambda args, stdin: json.dumps(patch))
+def test_9794_parent_reader_refuses_untyped_or_unread_response(tmp_path, patch, github_transport):
+    _rest_parent_transport(github_transport, **patch)
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
     with pytest.raises(task_lifecycle.LifecycleError):
         adapter.read_issue_parent("org/repo", 42)
 
 
 @pytest.mark.parametrize("parent", [None, {"number": 10, "repository": {"nameWithOwner": "ORG/Repo"}}])
-def test_9794_parent_reader_preserves_typed_repository_identity(tmp_path, parent):
-    document = {"data": {"repository": {"nameWithOwner": "ORG/Repo", "issue": {"number": 42, "parent": parent}}}}
-    adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=lambda args, stdin: json.dumps(document))
+def test_9794_parent_reader_preserves_typed_repository_identity(tmp_path, parent, github_transport):
+    rest_parent = None if parent is None else {
+        "number": parent["number"], "html_url": "https://github.com/ORG/Repo/issues/10",
+        "repository_url": "https://api.github.com/repos/ORG/Repo",
+    }
+    calls = _rest_parent_transport(github_transport, parent=rest_parent)
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
     result = adapter.read_issue_parent("org/repo", 42)
     assert result == (None if parent is None else {"number": 10, "repository": "ORG/Repo"})
+    assert [call[1] for call in calls] == ["repos/org/repo/issues/42", "repos/org/repo/issues/42/parent"]
 
 
 @pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
@@ -1649,10 +1648,11 @@ def test_9794_init_refuses_unresolved_unread_root_checklist(tmp_path, monkeypatc
 
 
 @pytest.mark.parametrize("number", [True, 1.0, "1"])
-def test_9794_null_parent_requires_typed_target_identity(tmp_path, number):
-    document = {"data": {"repository": {
-        "nameWithOwner": "org/repo", "issue": {"number": number, "parent": None},
-    }}}
-    adapter = task_closeout.GhGitHubAdapter(tmp_path, runner=lambda args, stdin: json.dumps(document))
+def test_9794_null_parent_requires_typed_target_identity(tmp_path, number, github_transport):
+    _rest_parent_transport(github_transport, issue={
+        "number": number, "state": "open", "html_url": "https://github.com/org/repo/issues/1",
+        "repository_url": "https://api.github.com/repos/org/repo",
+    })
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
     with pytest.raises(task_lifecycle.LifecycleError, match="issue is unread or malformed"):
         adapter.read_issue_parent("org/repo", 1)

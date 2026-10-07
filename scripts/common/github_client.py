@@ -1326,6 +1326,8 @@ def _translation_options(args):
         "autoMergeRequest",
         "reviewDecision",
         "closingIssuesReferences",
+        "statusCheckRollup",
+        "reviews",
     }
     run = {
         "databaseId",
@@ -1721,19 +1723,8 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
     return _result_process(args, result, options, kwargs, api=args[1] == "api")
 
 
-# Captured before a test replaces subprocess.run. A replacement is the one
-# seam that must observe the caller's original argv; explicit runners and the
-# production transport keep REST translation.
-_DIRECT_SUBPROCESS_RUN = subprocess.run
-
-
 def run(args, *, runner=None, client=None, fresh=False, allow_stale=False, **kwargs):
     """Return command/configuration errors through the subprocess contract."""
-    if runner is None and subprocess.run is not _DIRECT_SUBPROCESS_RUN:
-        kwargs.pop("max_response_bytes", None)
-        # None keeps the historical unbounded wait. An explicit caller timeout
-        # is forwarded. The keyword is required by the #7176 guard.
-        return subprocess.run(args, timeout=kwargs.pop("timeout", None), **kwargs)
     try:
         return _run_command(args, runner=runner, client=client, fresh=fresh, allow_stale=allow_stale, **kwargs)
     except ValueError:
@@ -1947,7 +1938,7 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
                         else None
                     )
                     row = {
-                        "number": number,
+                        "number": issue["number"],
                         "state": str(issue["state"]).upper(),
                         "url": issue["html_url"],
                         "parent": parent,
@@ -1956,17 +1947,27 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
                         row.update(body=issue["body"], labels={"nodes": [{"name": r["name"]} for r in issue["labels"]]})
                 else:
                     row = {"body": issue["body"], "subIssues": connection(number, fields.get("cursor"))}
-                value = {"data": {"repository": {"nameWithOwner": repo, "issue": row}}}
+                value = {"data": {"repository": {"nameWithOwner": issue["repository_url"].split("/repos/", 1)[1], "issue": row}}}
         elif operation == "merge-facts":
             groups = {}
             for slug, number in fields["batch"]:
                 groups.setdefault(slug, []).append(number)
-            value = {
-                "data": {
-                    f"r{i}": {f"p{n}": {"mergedAt": get(f"repos/{slug}/pulls/{n}")["merged_at"]} for n in numbers}
-                    for i, (slug, numbers) in enumerate(groups.items())
-                }
-            }
+            data, errors = {}, []
+            for i, (slug, numbers) in enumerate(groups.items()):
+                alias = f"r{i}"
+                data[alias] = {}
+                for number in numbers:
+                    pull_alias = f"p{number}"
+                    try:
+                        pull = get(f"repos/{slug}/pulls/{number}")
+                        data[alias][pull_alias] = {"mergedAt": pull["merged_at"]}
+                    except GitHubRateLimited:
+                        raise
+                    except (RuntimeError, ValueError, KeyError, TypeError):
+                        errors.append({"message": "GitHub pull request lookup failed", "path": [alias, pull_alias]})
+            value = {"data": data}
+            if errors:
+                value["errors"] = errors
         else:
             raise ValueError("unknown REST read")
     except GitHubRateLimited as exc:

@@ -489,7 +489,7 @@ def test_stale_pr_files_propagate_age_and_reset(tmp_path):
 def test_parent_read_uses_rest_and_preserves_cross_repository_identity(tmp_path, monkeypatch):
     from scripts.publish import github as pub
 
-    issue = {"state": "open", "html_url": "https://github.com/o/r/issues/1"}
+    issue = {"number": 1, "state": "open", "html_url": "https://github.com/o/r/issues/1", "repository_url": "https://api.github.com/repos/o/r"}
     parent = {
         "number": 7,
         "html_url": "https://github.com/other/stream/issues/7",
@@ -509,7 +509,7 @@ def test_missing_parent_is_rest_absence_not_transport_success(tmp_path, monkeypa
     store, calls = client(
         tmp_path,
         [
-            response({"state": "open", "html_url": "https://github.com/o/r/issues/1"}),
+            response({"number": 1, "state": "open", "html_url": "https://github.com/o/r/issues/1", "repository_url": "https://api.github.com/repos/o/r"}),
             response({"message": "missing"}, status=404),
         ],
     )
@@ -1648,3 +1648,49 @@ def test_pr_view_non_404_stays_typed(tmp_path):
         text=True,
     )
     assert result.returncode == 1 and json.loads(result.stdout)["status"] == 500 and calls
+
+
+
+def test_substituted_subprocess_does_not_skip_rest_or_worker_guard(tmp_path, monkeypatch):
+    store, calls = client(tmp_path, [response({"number": 1, "state": "open"})], env={"GH_REPO": "o/r", "AGENT_NO_MERGE": "1"})
+    monkeypatch.setattr(subprocess, "run", lambda *args, **kw: pytest.fail("subprocess spy is not a client seam"))
+    result = gh.run(["gh", "issue", "view", "1", "--json", "number,state"], client=store, capture_output=True, text=True)
+    assert json.loads(result.stdout) == {"number": 1, "state": "OPEN"}
+    denied = gh.run(["gh", "pr", "merge", "1"], client=store, capture_output=True, text=True)
+    assert denied.github_result.error == "github_worker_write_forbidden"
+    assert [(call[0], call[1]) for call in calls] == [("GET", "repos/o/r/issues/1")]
+
+
+
+def test_publisher_write_live_limit_records_headers_without_replay(tmp_path):
+    import os
+    import sys
+
+    from scripts.publish import github as publisher
+
+    binary = tmp_path / "gh"
+    calls = tmp_path / "calls"
+    binary.write_text(
+        f"#!{sys.executable}\nfrom pathlib import Path\n"
+        f"with Path({str(calls)!r}).open('a') as stream: stream.write('call\\n')\n"
+        "print('HTTP/1.1 403 Forbidden\\nRetry-After: 120\\nX-RateLimit-Remaining: 77\\nX-RateLimit-Reset: 4000000000\\n\\n'"
+        ' + \'{"message":"You have exceeded a secondary rate limit."}\')\n'
+        "raise SystemExit(1)\n"
+    )
+    binary.chmod(0o755)
+    environment = {"GH_REPO": "o/r", "AGENT_REAL_GH": str(binary), "PATH": os.environ["PATH"]}
+    command = ["gh", "pr", "comment", "1", "--repo", "o/r", "--body", "clean"]
+    result = publisher._run_transport(command, env=environment, capture_output=True, text=True)
+    assert result.returncode == 75
+    assert result.github_result.error == "github_rate_limited"
+    assert calls.read_text().splitlines() == ["call"]
+    store = gh.GitHubClient(env=environment)
+    with store._db() as db:
+        budgets = {resource: (remaining, reset) for resource, remaining, reset in db.execute(
+            "SELECT resource,remaining,reset FROM budget WHERE scope=?", (store.scope,)
+        )}
+    assert budgets["core"] == (77, 4000000000)
+    assert budgets["secondary"] == (0, result.github_result.reset_at)
+    deferred = publisher._run_transport(command, env=environment, capture_output=True, text=True)
+    assert deferred.github_result.error == "github_rate_limited"
+    assert calls.read_text().splitlines() == ["call"]
