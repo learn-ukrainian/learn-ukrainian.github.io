@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import subprocess
+import sys
+from copy import deepcopy
 from pathlib import Path
 from textwrap import dedent
 
@@ -9,6 +12,7 @@ import pytest
 import yaml
 
 from scripts.lint.lint_fleet_roster import (
+    CATALOG_PATH,
     SEAT_FIELDS,
     format_eligible_table,
     format_seat_table,
@@ -120,6 +124,111 @@ def test_committed_projections_match_machine_authorities():
 
 def test_cli_main_ok_on_repo():
     assert main([]) == 0
+
+
+@pytest.mark.parametrize("field", SEAT_FIELDS)
+def test_seat_fields_resolve_catalog_role_references(tmp_path: Path, field: str):
+    raw = yaml.safe_load(CATALOG_PATH.read_text(encoding="utf-8"))
+    raw["orchestrator_seats"]["claude"][field] = {"role": "anthropic_authority_reviewer"}
+    catalog = tmp_path / "model_catalog.yaml"
+    catalog.write_text(yaml.safe_dump(raw), encoding="utf-8")
+
+    seats = load_orchestrator_seats(catalog)
+    assert seats["claude"][field] == raw["seats"]["anthropic_authority"]["model_id"]
+
+
+def test_role_holder_rotation_moves_roster_and_detects_stale_projection(tmp_path: Path):
+    catalog, comms, _, eligible = _mini_authorities(tmp_path)
+    raw = yaml.safe_load(CATALOG_PATH.read_text(encoding="utf-8"))
+    catalog.write_text(yaml.safe_dump(raw), encoding="utf-8")
+    original = load_orchestrator_seats(catalog)
+    projection = tmp_path / "projection.md"
+    _write_projection(projection, original, eligible)
+    assert lint_fleet_roster(
+        catalog_path=catalog, comms_path=comms, projection_paths=[projection], project_root=tmp_path
+    ) == []
+
+    # Register a replacement with the same route support, then change only the holder.
+    replacement = "claude-opus-99"
+    raw["models"][replacement] = deepcopy(raw["models"][original["claude"]["model_id"]])
+    raw["models"][replacement]["aliases"] = []
+    raw["models"][replacement]["runtime_model_ids"] = [replacement]
+    raw["models"][replacement]["routing_wire_ids"] = {
+        transport: replacement + ("-high" if transport == "cursor" else "")
+        for transport in raw["models"][replacement]["routing_wire_ids"]
+    }
+    raw["seats"]["anthropic_authority"]["model_id"] = replacement
+    catalog.write_text(yaml.safe_dump(raw), encoding="utf-8")
+    resolved = load_orchestrator_seats(catalog)
+    assert resolved["claude"]["model_id"] == replacement
+    assert resolved["claude"]["model_id"] != original["claude"]["model_id"]
+    issues = lint_fleet_roster(
+        catalog_path=catalog, comms_path=comms, projection_paths=[projection], project_root=tmp_path
+    )
+    assert any(i.kind == "orchestrator_seats" and "claude" in i.message for i in issues)
+    _write_projection(projection, resolved, eligible)
+    assert lint_fleet_roster(
+        catalog_path=catalog, comms_path=comms, projection_paths=[projection], project_root=tmp_path
+    ) == []
+
+
+@pytest.mark.parametrize(
+    "reference,error",
+    [
+        ({"role": "missing"}, "unknown routing role 'missing'"),
+        ({"role": "legacy_reviewers"}, "must resolve to exactly one model_id"),
+        (
+            {
+                "role": "anthropic_authority_reviewer",
+                "transport": "native_claude",
+                "field": "candidate",
+            },
+            "role reference must resolve to a non-empty string",
+        ),
+    ],
+)
+def test_invalid_role_reference_is_clear_lint_and_cli_error(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], reference: dict, error: str
+):
+    raw = yaml.safe_load(CATALOG_PATH.read_text(encoding="utf-8"))
+    raw["orchestrator_seats"]["claude"]["model_id"] = reference
+    catalog = tmp_path / "model_catalog.yaml"
+    catalog.write_text(yaml.safe_dump(raw), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=r"orchestrator_seats\.claude\.model_id") as exc:
+        load_orchestrator_seats(catalog)
+    assert error in str(exc.value)
+    issues = lint_fleet_roster(catalog_path=catalog)
+    assert len(issues) == 1
+    assert issues[0].kind == "authority"
+    assert error in issues[0].message
+    assert main(["--catalog", str(catalog)]) == 1
+    assert error in capsys.readouterr().err
+
+
+def test_role_reference_with_missing_holder_is_lint_error(tmp_path: Path):
+    raw = yaml.safe_load(CATALOG_PATH.read_text(encoding="utf-8"))
+    raw["seats"]["anthropic_authority"]["model_id"] = "missing-holder"
+    catalog = tmp_path / "model_catalog.yaml"
+    catalog.write_text(yaml.safe_dump(raw), encoding="utf-8")
+    issues = lint_fleet_roster(catalog_path=catalog)
+    assert len(issues) == 1
+    assert issues[0].kind == "authority"
+    assert "orchestrator_seats.claude.model_id: cannot resolve role reference" in issues[0].message
+    assert "missing-holder" in issues[0].message
+
+
+def test_cli_file_entrypoint_resolves_roles_outside_repo(tmp_path: Path):
+    result = subprocess.run(
+        [sys.executable, str(CATALOG_PATH.parents[1] / "lint/lint_fleet_roster.py")],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "Fleet roster OK (3 projection file(s)" in result.stdout
 
 
 def test_seat_add_remove_pin_and_eligibility_flip_fail(tmp_path: Path):

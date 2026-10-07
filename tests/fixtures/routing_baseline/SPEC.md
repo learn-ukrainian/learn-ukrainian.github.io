@@ -116,3 +116,63 @@ candidate is already migrated or a normative authority rule.
 
 Stop on any unexplained output difference. The baseline is mechanism and
 regression evidence, not a real-route qualification or independent PR approval.
+
+
+## PR 2 strengthening (first commit, untouched production code)
+
+Executable source: `0d98123470b5a6870512571d01590f3e3210b268` (`origin/main`
+at intake). The capture driver runs outside a detached checkout of that SHA.
+The historical occurrence and source-hash census retains its original SHA.
+Resolved holder evidence now includes every seat, role and transport wire id.
+Role rows project every reviewer input onto the role API and deduplicate equal
+projections (author identity and the review profile are not role API inputs).
+The separate catalog digest is omitted because it binds authored catalog bytes;
+all resolved candidate fields, order, exclusions and health provenance are kept.
+Dispatch rows include every explicit substitution source pin and review-attempt
+immutability cases at both budget states.
+
+`no-cli/` is an independent configuration with its own expected bytes and test.
+Its closed PATH contains only the three allowlisted system tools and one pinned
+`npx` stub. That stub accepts exactly `npx @anthropic-ai/claude-code@latest
+--version`, reports the fixed Claude version, and refuses everything else.
+HOME is empty. Missing Grok and Cursor refusals, Claude fallback argv and Cursor
+model-probe warnings are captured unchanged. No provider is invoked.
+
+The current-tree operator contract is read as bytes and its present two-holder
+author/vote truth table is executed by the capture, including absent approval,
+dissent and self-approval. There is no production designated-approval evaluator
+at this base: this is labeled contract evaluation, not engine proof. Generic
+additional-family approval execution stays in PR 5.
+
+`test_frozen_artifacts_are_pinned_independently_of_manifest` contains literal
+SHA-256 digests for every baseline file, including the capture and specification.
+Those literals never come from the fixture's SHA256SUMS. After this commit no
+baseline byte may change; compare the final head against the first commit with
+`git diff --exit-code <first-commit> -- tests/fixtures/routing_baseline`.
+
+
+## PR 2 merge revision (#9302, round b)
+
+The approved PR 2 head `45253e51eb4ca37a206692a2f09d3d2ddfc0776e`
+is merged with `2c0b22b6961ea676a48d3fc7b238b405a643f7be` from main.
+This separately ordered revision regenerates both configurations using the
+capture procedure above against the merged checkout; add `--configuration
+no-cli` for the independent no-CLI artifact. The independent digest pins in
+`tests/review/test_model_catalog.py` bind this revision.
+
+Against that approved PR 2 head, both configurations change only the Cursor
+catalog `unknown_auto_family_resolution` and `note` fields and reviewer rows
+21, 205, 389, 573, 757, 941, 1125 and 1309 (zero-based). Each change comes from
+`9c233c5eaa` (#9960): Cursor Auto authors use the Cursor family, native Grok
+is eligible, and Cursor transports remain excluded. All 672 role rows,
+992 dispatch rows, 112 adapter rows, 42 capacity rows and 70 launcher rows,
+resolved holders, approval, registry, fallbacks and source contracts remain
+unchanged. Inputs and occurrence artifacts remain byte-identical.
+`aea2281aa9` (#9972) preserves forced-lane quota/health diagnostics on task
+records without changing the captured routing surface, so it changes no rows.
+Any difference beyond this attribution blocks regeneration.
+
+A subsequent merge includes `04de11ad89ba25fed59e37be34256e1e518538b9`
+(#9968), which anchors the GitHub client cache to its module checkout.
+Fresh captures on that final merge must reproduce both configurations exactly;
+this cache fix has no attributed routing-row changes.

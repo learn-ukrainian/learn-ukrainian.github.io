@@ -152,12 +152,12 @@ review_scheduler:
   # natively or through Cursor). This is an eligibility gate: ladders, explicit
   # pins, custom ladders and delegate review admission all apply it.
   risk_reviewer_models:
-    high: [gpt-6.1-sol, claude-opus-5-5, grok-4.7]
+    high: [{role: openai_frontier_coder}, {role: anthropic_authority_reviewer}, {role: legacy_reviewers, seat: xai_reviewer}]
   endpoints:
     claude:
       formal_review_eligible: true
       # Active formal CF pins; superseded Opus/Sonnet identities are historical only.
-      models: [claude-sonnet-5-5, claude-opus-5-5]
+      models: [{role: legacy_reviewers, seat: anthropic_practical}, {role: anthropic_authority_reviewer}]
       participant: claude
       adapter_transport: acp
       catalog_transport: native_claude
@@ -169,7 +169,7 @@ review_scheduler:
       capacity_weight: 1.0
     codex:
       formal_review_eligible: true
-      models: [gpt-6.1-sol]
+      models: [{role: openai_frontier_coder}]
       participant: codex
       adapter_transport: acp
       catalog_transport: native_codex
@@ -181,7 +181,7 @@ review_scheduler:
       capacity_weight: 1.0
     glm:
       formal_review_eligible: true
-      models: [glm-5.3]
+      models: [{role: legacy_reviewers, seat: local_reviewer}]
       participant: glm
       adapter_transport: acp
       catalog_transport: opencode
@@ -194,7 +194,7 @@ review_scheduler:
     agy:
       formal_review_eligible: false
       formal_review_exclusion_reason: source-blind AGY ACP wrapper does not expose parent-owned MCP servers
-      models: [gemini-3.8-flash-high]
+      models: [{role: bounded_fallback}]
       participant: agy
       adapter_transport: acp
       catalog_transport: agy
@@ -208,7 +208,7 @@ review_scheduler:
       # Operator decision 2026-10-05 (#9769): native code/infra review at every risk.
       # Verdict recording requires runtime modelUsage attestation.
       formal_review_eligible: true
-      models: [grok-4.7]
+      models: [{role: legacy_reviewers, seat: xai_reviewer}]
       participant: grok
       adapter_transport: acp
       catalog_transport: native_grok
@@ -257,7 +257,7 @@ review_scheduler:
       # runtime-reported model. Composer (Kimi lineage), Auto and Cursor-routed
       # Claude stay unpinned, so the resolver excludes them as unattested.
       formal_review_eligible: true
-      models: [grok-4.7]
+      models: [{role: legacy_reviewers, seat: xai_reviewer}]
       participant: cursor
       adapter_transport: acp
       catalog_transport: cursor
@@ -300,7 +300,7 @@ review_scheduler:
 execution_routing:
   sol_advised_bounded:
     advisor:
-      model_id: gpt-6.1-sol
+      model_id: {role: bounded_advisor}
       effort: high
       role: bounded_advisory_envelope
       output_fields:
@@ -313,11 +313,11 @@ execution_routing:
         - acceptance_evidence
         - escalation_triggers
     preferred_worker:
-      model_id: gpt-6-luna
+      model_id: {role: bounded_recon}
       effort: high
       requires: [complete_advisory_envelope, objective_scope_ceiling]
       task_types: [bounded_implementation, bounded_investigation]
-      escalate_to: gpt-6.1-sol
+      escalate_to: {role: openai_frontier_coder}
       prohibited_decisions:
         - consequential_architecture
         - security
@@ -334,12 +334,12 @@ execution_routing:
     # classification) needs a complete advisory envelope from the advisor above,
     # bound to that dispatch; delegate.py refuses one without it.
     bounded_fallback_worker:
-      model_id: gemini-3.8-flash-high
+      model_id: {role: bounded_fallback}
       effort: high
       requires: [complete_advisory_envelope, objective_scope_ceiling]
       non_bounded_task_families: [ukrainian-authoring, ukrainian-review]
     autonomous_fallback:
-      model_id: gpt-6.1-sol
+      model_id: {role: openai_frontier_coder}
       effort: high
       when: [missing_objective_scope_ceiling, broader_autonomous_integration, unresolved_consequential_ambiguity]
     review_boundary:
@@ -1067,92 +1067,16 @@ models:
       - https://platform.claude.com/docs/en/about-claude/models/overview
 
 review_candidates:
-  # Selectable seats reference active models; retired identities stay in models.
-  openai_frontier:
-    model_id: gpt-6.1-sol
-    route: codex
-    transport: native_codex
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6.1-sol --effort high
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-    advisory_only_for_author_families: [openai]
-  grok-4.7:
-    # Operator decision 2026-10-05 (#9769): regular native code/infra reviewer.
-    model_id: grok-4.7
-    # Rank after Sol/Opus at every risk without changing model activity roles.
-    suitability_roles: [critical_review]
-    route: grok
-    transport: native_grok
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model grok-4.7
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-  grok-4.7-cursor-fallback:
-    # Operator decision 2026-10-05 (#9769): regular code/infra transport fallback.
-    # The exact Cursor slug grok-4.7-high is the one whose runtime report
-    # ("Grok 4.7 256K High") record_cf_verdict accepts; bare grok-4.7 runs the
-    # Fast variant; only the high-effort runtime report attests this seat.
-    model_id: grok-4.7
-    suitability_roles: [critical_review]
-    transport_fallback_for: grok-4.7
-    route: cursor
-    transport: cursor
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model grok-4.7-high
-    review_profiles: [code, infra]
-    capabilities: [code_review]
-  glm-5.3:
-    model_id: glm-5.3
-    route: glm
-    transport: opencode
-    invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-glm
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-    requires_data_egress_policy: local_interactive
-  claude-opus-5-5:
-    model_id: claude-opus-5-5
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5-5
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-  claude-opus-5-5-cursor-fallback:
-    model_id: claude-opus-5-5
-    route: cursor
-    transport: cursor
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-opus-5-5-high
-    review_profiles: [code, infra]
-    capabilities: [code_review]
-  claude-sonnet-5-5:
-    model_id: claude-sonnet-5-5
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-sonnet-5-5
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-  composer-2.5:
-    model_id: composer-2.5
-    route: cursor
-    transport: cursor
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model composer-2.5
-    review_profiles: [code, infra]
-    capabilities: [code_review]
-  pool:
-    # Default pool formal/volume seat = Laguna S 2.1 (operator 2026-08-06).
-    # Bridge default POOL_MODEL is poolside/poolside/laguna-s-2.1 — bare ask-pool
-    # must stay the S 2.1 pin (not XS/M.1). Override only via --model / pool-xs seat.
-    model_id: poolside/laguna-s-2.1
-    route: pool
-    transport: opencode
-    invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool
-    review_profiles: [code, infra]
-    capabilities: [code_review]
-  pool-xs:
-    # Gen-2 light: Laguna XS 2.1 — ask-pool --model poolside/poolside/laguna-xs-2.1
-    model_id: poolside/laguna-xs-2.1
-    route: pool
-    transport: opencode
-    invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool --model poolside/poolside/laguna-xs-2.1
-    review_profiles: [code, infra]
-    capabilities: [code_review]
+  openai_frontier: {role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: candidate}
+  grok-4.7: {role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: candidate}
+  grok-4.7-cursor-fallback: {role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: candidate}
+  glm-5.3: {role: legacy_reviewers, seat: local_reviewer, route_name: native, field: candidate}
+  claude-opus-5-5: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: candidate}
+  claude-opus-5-5-cursor-fallback: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: cursor_fallback, field: candidate}
+  claude-sonnet-5-5: {role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: candidate}
+  composer-2.5: {role: legacy_reviewers, seat: cursor_coder, route_name: native, field: candidate}
+  pool: {role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: candidate}
+  pool-xs: {role: legacy_reviewers, seat: light_reviewer, route_name: native, field: candidate}
 
 # Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
 # cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
@@ -1163,9 +1087,9 @@ review_candidates:
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
   claude:
-    model_id: claude-opus-5-5
+    model_id: {role: anthropic_authority_reviewer}
     effort: high
-    escalate_model_id: gpt-6.1-sol
+    escalate_model_id: {role: openai_frontier_coder}
     escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
     note: >-
@@ -1184,9 +1108,9 @@ orchestrator_seats:
       curriculum/linguistic review skills; max almost never) — see
       fleet-shared-doctrine § Effort guidance.
   codex:
-    model_id: gpt-6.1-sol
+    model_id: {role: openai_frontier_coder}
     effort: high
-    escalate_model_id: gpt-6.1-sol
+    escalate_model_id: {role: openai_frontier_coder}
     escalate_effort: high
     escalate_when: consequential_advisory
     note: >
@@ -1199,31 +1123,31 @@ orchestrator_seats:
   # start/end rollover-token overhead relative to its small context" — see the 2026-07-23 note
   # above for why that calculus changed.
   grok:
-    model_id: grok-4.7
+    model_id: {role: legacy_reviewers, seat: xai_reviewer}
     effort: high
     # grok-4.7 only. grok-4.7-build-fast is not admitted.
-    escalate_model_id: grok-4.7
+    escalate_model_id: {role: legacy_reviewers, seat: xai_reviewer}
     escalate_effort: high
     escalate_when: n/a_same_sku
     fallback_transport: cursor
-    fallback_model_id: grok-4.7
+    fallback_model_id: {role: legacy_reviewers, seat: xai_reviewer}
     note: native grok-4.7; Cursor explicit grok-4.7 if native dark (not a quality escalate)
   agy:
-    model_id: gemini-3.8-flash-high
+    model_id: {role: bounded_fallback}
     effort: high
-    escalate_model_id: gemini-3.8-flash-high
+    escalate_model_id: {role: bounded_fallback}
     escalate_effort: high
     escalate_when: n/a_same_sku
     note: "Google-family seat; Flash default and deep (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only when explicitly requested). Operator decision 2026-10-03 (#9584): not a planning, design or driver seat; entry kept for catalog and task-level use, and Gemini 4 is re-evaluated at general availability"
   cursor:
-    model_id: grok-4.7
+    model_id: {role: legacy_reviewers, seat: xai_reviewer}
     effort: high
-    escalate_model_id: gpt-6.1-sol
+    escalate_model_id: {role: openai_frontier_coder}
     escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
     auto_allowlist:
-      - grok-4.7
-      - composer-2.5
+      - {role: legacy_reviewers, seat: xai_reviewer}
+      - {role: legacy_reviewers, seat: cursor_coder}
     auto_scope: write_implementation_dispatch_with_green_dor
     attestation_rule: driver_of_record_requires_attested_resolved_model
     unknown_auto_family_resolution: cursor_family
@@ -1254,51 +1178,51 @@ orchestrator_seats:
 # Fable holds no review role (#9583). CodexBar health probes must never collapse routing to one seat.
 formal_cf_defaults:
   codex:
-    model_id: gpt-6.1-sol
+    model_id: {role: openai_frontier_coder}
     effort: high
     # Advisory escalation. The one-shot Codex ACP participant does not expose
     # reasoning effort, so previously review-pr pinned the model only.
-    escalate_model_id: gpt-6.1-sol
+    escalate_model_id: {role: openai_frontier_coder}
     escalate_effort: high
   claude:
-    model_id: claude-sonnet-5-5
+    model_id: {role: legacy_reviewers, seat: anthropic_practical}
     effort: high
     # Opus 5.5 is the escalation; Fable holds no review role (#9583).
-    escalate_model_id: claude-opus-5-5
+    escalate_model_id: {role: anthropic_authority_reviewer}
     escalate_effort: high
     family_models:
-      - claude-sonnet-5-5
-      - claude-opus-5-5
+      - {role: legacy_reviewers, seat: anthropic_practical}
+      - {role: anthropic_authority_reviewer}
   glm:
-    model_id: glm-5.3
+    model_id: {role: legacy_reviewers, seat: local_reviewer}
     effort: high
     # Native efforts: low | high | max. Default high; advisory/escalation max
     # (operator 2026-08-14 — GLM-5.3 dramatically improved).
-    escalate_model_id: glm-5.3
+    escalate_model_id: {role: legacy_reviewers, seat: local_reviewer}
     escalate_effort: max
     family_models:
-      - glm-5.3
+      - {role: legacy_reviewers, seat: local_reviewer}
   pool:
     # Laguna S 2.1 — gen-2 strongest (not m.1; not xs)
-    model_id: poolside/laguna-s-2.1
+    model_id: {role: legacy_reviewers, seat: volume_reviewer}
     effort: high
     family_models:
-      - poolside/laguna-s-2.1   # gen-2 default (S)
-      - poolside/laguna-xs-2.1  # gen-2 light (XS)
+      - {role: legacy_reviewers, seat: volume_reviewer}  # gen-2 default (S)
+      - {role: legacy_reviewers, seat: light_reviewer}  # gen-2 light (XS)
       - poolside/laguna-m.1     # gen-1 fallback only
   pool_xs:
-    model_id: poolside/laguna-xs-2.1
+    model_id: {role: legacy_reviewers, seat: light_reviewer}
     effort: high
   grok:
-    model_id: grok-4.7
+    model_id: {role: legacy_reviewers, seat: xai_reviewer}
     effort: high
     fallback_transport: cursor
-    fallback_model_id: grok-4.7
+    fallback_model_id: {role: legacy_reviewers, seat: xai_reviewer}
   agy:
     # Orchestrator pin + ladder seat; not a reviewer transport until
     # sealed isolation (#5555). Operator 2026-09-25 also excludes AGY from
     # every code-review candidate and ladder; this is not a CF route.
-    model_id: gemini-3.8-flash-high
+    model_id: {role: bounded_fallback}
     effort: high
     formal_review_eligible: false
     isolation_issue: 5555
@@ -1310,32 +1234,32 @@ review_ladders:
   # Composer and Pool lack critical_review; critical lists them to record exclusion.
   # GLM remains explicit-pin only. Fable holds no review role at any risk (#9583).
   critical:
-    - [openai_frontier]
-    - [claude-opus-5-5]
-    - [grok-4.7]
-    - [grok-4.7-cursor-fallback]
-    - [claude-opus-5-5-cursor-fallback]
-    - [composer-2.5]
-    - [pool]
-    - [pool-xs]
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
+    - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
+    - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: cursor_fallback, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: cursor_coder, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: light_reviewer, route_name: native, field: legacy_label}]
   # High lists only review_scheduler.risk_reviewer_models.high (#9538): when
   # no seat is eligible the resolver returns no reviewer with a stated reason.
   high:
-    - [openai_frontier]
-    - [claude-opus-5-5]
-    - [grok-4.7]
-    - [grok-4.7-cursor-fallback]
-    - [claude-opus-5-5-cursor-fallback]
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
+    - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
+    - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: cursor_fallback, field: legacy_label}]
   medium: &practical_first_code_review
-    - [openai_frontier]
-    - [claude-opus-5-5]
-    - [grok-4.7]
-    - [grok-4.7-cursor-fallback]
-    - [claude-opus-5-5-cursor-fallback]
-    - [claude-sonnet-5-5]
-    - [composer-2.5]
-    - [pool]
-    - [pool-xs]
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
+    - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
+    - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: cursor_fallback, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: cursor_coder, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: light_reviewer, route_name: native, field: legacy_label}]
   low: *practical_first_code_review
 
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).
@@ -1351,18 +1275,18 @@ review_ladders:
 # GPT-6 has no Cursor row: native Codex only, until Cursor has a verified slug.
 budget_substitution_models:
   codex:
-    gpt-6.1-sol: gpt-6.1-sol
-    gpt-6-luna: gpt-6-luna
+    gpt-6.1-sol: {role: openai_frontier_coder}
+    gpt-6-luna: {role: bounded_recon}
   cursor:
-    claude-opus-5-5: claude-opus-5-5-high
+    claude-opus-5-5: {role: anthropic_authority_reviewer, transport: cursor, field: wire_id}
     # Read-only cursor-agent --list-models verified 2026-09-30:
     # claude-fable-5-1-thinking-high - Claude Fable 5.1 1M Thinking (NO ZDR)
     claude-fable-5-1: claude-fable-5-1-thinking-high
-    grok-4.7: grok-4.7
-    composer-2.5: composer-2.5
+    grok-4.7: {role: legacy_reviewers, seat: xai_reviewer}
+    composer-2.5: {role: legacy_reviewers, seat: cursor_coder}
 
-# Additive #9302 PR 1 extension. Legacy consumers retain schema_version v1 and
-# every existing field. Wire identities belong to models, never predecessor seats.
+# #9302 role references resolve to the v1 consumer view until PR 4.
+# Legacy consumers retain schema_version v1 and every existing field. Wire identities belong to models, never predecessor seats.
 # Legacy labels below serialize frozen receipts; they are not moving aliases.
 routing_schema_version: model-catalog.v1.1
 seats:

@@ -23,12 +23,35 @@ INPUTS = json.loads((FIXTURE / "inputs.json").read_bytes())
 CAPTURE = runpy.run_path(str(FIXTURE / "capture.py"))
 
 
+# Literal digests bind the explicitly ordered #9960 merge revision; see SPEC.md.
+PINNED_DIGESTS = {
+    "SHA256SUMS": "69e4bffafadde593bbcfd83f86583e2cc3dbcdcf6eeda5c87fee00553a9bae50",
+    "SPEC.md": "a366db2044af502a2b43e83db2b442c67dbfc25393e23f0e83ca34c82408295f",
+    "baseline.json.gz": "c7fa505eed1f76ab1160c021ed381d2dc26c9119aa6b57290c14cb2ff565bafd",
+    "capture.py": "4fda4d4c7d36f893a5324e0b7f0f6944eec11af8481df2953c3d4c0307d6b7a3",
+    "inputs.json": "3078c95cf2275c51e302a9179c9986a60aa3d611aa568f50ec3fc6e915a46fd8",
+    "no-cli/SHA256SUMS": "f3bf8dd0124d5821041693205f1b1c4a94dbbee25ea659d79f391d2b2e28037e",
+    "no-cli/baseline.json.gz": "9ec53d97bcdb8099671bb82796cfaa6fa932f3b38ca83377bfd217824a37860b",
+    "no-cli/inputs.json": "3078c95cf2275c51e302a9179c9986a60aa3d611aa568f50ec3fc6e915a46fd8",
+    "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
+    "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
+}
+
+
+@pytest.mark.repo_wide
+def test_frozen_artifacts_are_pinned_independently_of_manifest():
+    assert PINNED_DIGESTS
+    assert set(PINNED_DIGESTS) == {str(p.relative_to(FIXTURE)) for p in FIXTURE.rglob("*") if p.is_file()}
+    for name, expected in PINNED_DIGESTS.items():
+        assert hashlib.sha256((FIXTURE / name).read_bytes()).hexdigest() == expected, name
+
+
 def test_frozen_hashes_and_matrix_denominator():
     for row in (FIXTURE / "SHA256SUMS").read_text().splitlines():
         digest, name = row.split()
         assert hashlib.sha256((FIXTURE / name).read_bytes()).hexdigest() == digest
     assert INPUTS["base_sha"] == CAPTURE["BASE_SHA"]
-    for surface in ("reviewer", "capacity", "dispatch", "adapters", "launchers"):
+    for surface in ("reviewer", "roles", "capacity", "dispatch", "adapters", "launchers"):
         assert len(INPUTS[surface]) == len(BASELINE[surface])
     assert {row["risk"] for row in INPUTS["reviewer"]} == {"low", "medium", "high", "critical"}
     assert {row["review_profile"] for row in INPUTS["reviewer"]} == {"code", "infra"}
@@ -74,13 +97,31 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     host_home = tmp_path / "host-home"
     host_home.mkdir()
     result = subprocess.run(
-        [sys.executable, str(FIXTURE / "capture.py"), "--source-root", str(source),
-         "--output", str(output), "--project-python", sys.executable],
-        cwd=tmp_path, env={"PATH": str(host_bin), "TMPDIR": str(tmp_path), "HOME": str(host_home),
-                          "LAUNCHER_MODEL": "unregistered-model", "CODEX_HOME": str(host_home),
-                          "LEARN_UK_AGY_MODEL": "unregistered-model", "LU_ACPX_TRANSPORT": "shadow",
-                          "LEARN_UK_KIMI_BIN": str(host_bin / "kimi"), "TZ": "Pacific/Honolulu"},
-        capture_output=True, text=True, timeout=180,
+        [
+            sys.executable,
+            str(FIXTURE / "capture.py"),
+            "--source-root",
+            str(source),
+            "--output",
+            str(output),
+            "--project-python",
+            sys.executable,
+        ],
+        cwd=tmp_path,
+        env={
+            "PATH": str(host_bin),
+            "TMPDIR": str(tmp_path),
+            "HOME": str(host_home),
+            "LAUNCHER_MODEL": "unregistered-model",
+            "CODEX_HOME": str(host_home),
+            "LEARN_UK_AGY_MODEL": "unregistered-model",
+            "LU_ACPX_TRANSPORT": "shadow",
+            "LEARN_UK_KIMI_BIN": str(host_bin / "kimi"),
+            "TZ": "Pacific/Honolulu",
+        },
+        capture_output=True,
+        text=True,
+        timeout=600,
     )
     assert result.returncode == 0, result.stderr
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
@@ -135,10 +176,79 @@ def test_capture_preserves_success_and_streams(capsys):
         return ["second", "first"]
 
     assert CAPTURE["observed"](succeed) == {
-        "exit_status": 0, "value": ["second", "first"], "stdout": "receipt\n", "stderr": "",
+        "exit_status": 0,
+        "value": ["second", "first"],
+        "stdout": "receipt\n",
+        "stderr": "",
     }
     assert capsys.readouterr().out == ""
 
 
 def test_capture_matrix_is_frozen():
     assert CAPTURE["reviewer_inputs"](load_model_catalog()) == INPUTS["reviewer"]
+
+
+def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
+    source = Path(__file__).resolve().parents[2]
+    output = tmp_path / "capture"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(FIXTURE / "capture.py"),
+            "--configuration",
+            "no-cli",
+            "--source-root",
+            str(source),
+            "--output",
+            str(output),
+            "--project-python",
+            sys.executable,
+        ],
+        cwd=tmp_path,
+        env={"PATH": "/usr/bin:/bin", "TMPDIR": str(tmp_path)},
+        capture_output=True,
+        text=True,
+        timeout=600,
+    )
+    assert result.returncode == 0, result.stderr
+    expected = FIXTURE / "no-cli"
+    for name in ("baseline.json.gz", "inputs.json", "occurrences.json.gz", "SHA256SUMS"):
+        assert (output / name).read_bytes() == (expected / name).read_bytes(), name
+    actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
+    assert len(actual["launchers"]) == 70
+    errors = [row.get("error", "") for row in actual["adapters"]]
+    assert any("grok" in error and "PATH" in error for error in errors)
+    assert any("cursor-agent" in error for error in errors)
+    assert any(
+        row.get("value", {}).get("cmd", [])[:2] == ["npx", "@anthropic-ai/claude-code@latest"]
+        for row in actual["adapters"]
+    )
+    assert any("model probe for cursor could not verify" in row["stderr"] for row in actual["dispatch"])
+
+
+def test_no_cli_environment_has_only_pinned_npx_probe(tmp_path):
+    env = CAPTURE["capture_environment"](tmp_path, "no-cli")
+    for name in CAPTURE["CLI_VERSIONS"]:
+        assert shutil.which(name, path=env["PATH"]) is None
+    assert list((tmp_path / "home").iterdir()) == []
+    npx = shutil.which("npx", path=env["PATH"])
+    probe = subprocess.run(
+        [npx, "@anthropic-ai/claude-code@latest", "--version"], env=env, capture_output=True, text=True, timeout=5
+    )
+    assert (probe.returncode, probe.stdout, probe.stderr) == (0, "2.1.289 (Claude Code)\n", "")
+    for argv in ([npx, "--version"], [npx, "@anthropic-ai/claude-code@latest", "-p", "fixture"]):
+        assert subprocess.run(argv, env=env, capture_output=True, timeout=5).returncode == 97
+
+
+def test_extended_capture_denominator_and_current_contract():
+    catalog = load_model_catalog()
+    assert set(BASELINE["routing_holders"]["roles"]) == set(catalog["roles"])
+    assert set(BASELINE["routing_holders"]["seats"]) == set(catalog["seats"])
+    pins = {row["model"] for row in INPUTS["dispatch"]}
+    assert {pin for mapping in catalog["budget_substitution_models"].values() for pin in mapping} <= pins
+    assert {row["review_attempt"] for row in INPUTS["dispatch"]} == {None, "frozen-review-attempt.yaml"}
+    contract = CAPTURE["approval_contract_rows"](Path(__file__).resolve().parents[2], catalog)
+    assert contract == BASELINE["approval"]
+    assert len(contract["rows"]) == len(catalog["models"]) * 9
+    assert {row["outcome"] for row in contract["rows"]} == {"approved", "missing_approval", "operator_disposition"}
+    assert all(not row["self_approval_counts"] for row in contract["rows"])

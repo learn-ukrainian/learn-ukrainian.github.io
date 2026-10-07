@@ -46,9 +46,9 @@ CURSOR_DEFAULT_TIMEOUT_S = 900
 
 def cursor_default_model() -> str:
     """The catalog's concrete Cursor seat pin, used when an ask names no model."""
-    from scripts.review.model_catalog import cursor_pinned_models
+    from scripts.review.model_catalog import routing_model
 
-    return cursor_pinned_models()[0]
+    return routing_model("orchestrator_seats", "cursor")
 
 
 def _require_approved_cursor_model(model: str | None) -> str:
