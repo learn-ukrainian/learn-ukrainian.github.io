@@ -331,7 +331,7 @@ def test_a_different_process_alone_in_the_scope_is_reported_unchanged() -> None:
     "fields",
     [
         # Same name and argv, but not under the resolved install's versions directory.
-        {"exe": Path("/tmp/evil/versions/2026.10.01-e373342/node")},
+        {"exe": Path("/nonexistent/evil/versions/2026.10.01-e373342/node")},
         # Directly in, or nested below, a version directory.
         {"exe": CURSOR_VERSIONS / "node"},
         {"exe": CURSOR_VERSION_DIR / "bin" / "node"},

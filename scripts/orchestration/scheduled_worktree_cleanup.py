@@ -1320,7 +1320,7 @@ Related:
         "--receipt-dir",
         type=Path,
         default=default_state_dir() / "receipts" / "v2",
-        help="Private receipt directory. Default: configured hygiene state receipts/v2. Example: /tmp/hygiene-receipts",
+        help="Private receipt directory. Default: configured hygiene state receipts/v2. Example: <receipts-dir>",
     )
     parser.set_defaults(default_repo_roots=[public_repo, default_private_repo(public_repo)])
     return parser

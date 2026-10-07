@@ -230,11 +230,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "27aa61ac8f66a6b34cfed0dd8cf8e12e93aeb31cdea4813f6f09c6062576c8fa:1",
     ),
     (
-        "scripts/orchestration/scheduled_worktree_cleanup.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "32ba0ca906b425c38885c891d28c6537478f4847eed3bc9637c0803282ac0e22:1",
-    ),
-    (
         "scripts/orchestration/tmp_leak_sweep.py",
         "Existing temp inventory/cleanup tooling; migration outside this packet.",
         "599560e7b81b3cf50ff1dd25e273f5e6bb4350f5ee283a230971326dc28d442e:1 f18c6c9fec60b901e4149456bdaebeeb7651baeee96f8df7b177c198ef96e839:1",
@@ -495,29 +490,9 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "a73144ec31e1e70a566534e56044cba6207bf4b5c171e2daf7ce655e7dca111a:1",
     ),
     (
-        "tests/orchestration/task_family/test_rollover_registry.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "48fed043859df7671be83d987b7dcf95728fa90ca3a09f9535f43e075158c80c:1",
-    ),
-    (
         "tests/orchestration/test_job_host_exec.py",
         "Existing test literal; migration outside this bounded packet (#8755).",
         "169d4511743538b9be608c16cfd4a86ccd75de5d018d4cffc3f6bca40b8eda67:1 35eef957e7ac6dfb323982b5acdb0d4c5ac6bc3e41dba5a3f06a0d4ed8ad76c5:1 3cac3970d6434c27592340c8750dfe8c885f88ad6d33a46e20e461d810482bb5:1 6d0a3a07137da113db85eadf897776f58b8104244fa38a91b62e2d6e12fb9290:1 78a2828693382f4e53c60d70ea534f892706f2cdc6a74b1e3ff1f4a888c3f0af:1 9668994dd3e78910e686248664fb372b4ceb8c3b3c73f7394d646d27ca2e5199:3",
-    ),
-    (
-        "tests/orchestration/test_run_scheduled_backup.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "942d7074e5d39d2bc46d1a07774d075e2d009cf8c0bde3c5d8a92a906e7edf23:1",
-    ),
-    (
-        "tests/orchestration/test_thread_handoff.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "50c329bb9275300843169565cc5c5ef82506afe6936d06edb02b3b6aef026b5e:1",
-    ),
-    (
-        "tests/orchestration/test_worker_leftovers.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "f6e785a32090588f804c467d1630e477204deaaa38ffa8c18e025b8f764f5d61:1",
     ),
     (
         "tests/pre_commit/test_check_no_bare_python.py",
