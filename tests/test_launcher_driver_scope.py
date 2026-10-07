@@ -120,6 +120,7 @@ launcher_adapter_canary() { :; }
 launcher_adapter_exec() {
   read -r line
   printf 'PROVIDER:%s\\n' "$line"
+  printf 'XDIST_AUTO:%s\\n' "${PYTEST_XDIST_AUTO_NUM_WORKERS:-unset}"
   printf 'GIT_IDENTITY:%s|%s|%s|%s\\n' "$GIT_AUTHOR_NAME" "$GIT_AUTHOR_EMAIL" "$GIT_COMMITTER_NAME" "$GIT_COMMITTER_EMAIL"
   exit "${TEST_RC:-0}"
 }
@@ -463,3 +464,30 @@ while True:
             subprocess.run(["systemctl", "--user", "stop", unit], env=env, capture_output=True, timeout=10, check=False)
         keeper.terminate()
         keeper.communicate(timeout=10)
+
+
+@pytest.mark.parametrize(("inherited", "expected"), [(None, "8"), ("16", "8"), ("abc", "8"), ("4", "4")])
+def test_driver_scope_caps_pytest_auto_workers(tmp_path: Path, inherited: str | None, expected: str) -> None:
+    launcher, env = _launcher(tmp_path)
+    extra = {} if inherited is None else {"PYTEST_XDIST_AUTO_NUM_WORKERS": inherited}
+    base = {k: v for k, v in os.environ.items() if k != "PYTEST_XDIST_AUTO_NUM_WORKERS"}
+    result = subprocess.run(
+        ["bash", str(launcher)],
+        cwd=launcher.parent,
+        env={**base, **env, **extra},
+        input="stdin survives\n",
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    assert result.returncode == 0, result.stderr
+    assert f"XDIST_AUTO:{expected}" in result.stdout
+
+
+def test_lu_pool_slice_caps() -> None:
+    body = (REPO / "packaging/systemd/lu.slice").read_text()
+    section = body.split("[Slice]", 1)[1]
+    keys = dict(line.split("=", 1) for line in section.splitlines() if "=" in line and not line.startswith("#"))
+    assert keys == {"MemoryAccounting": "yes", "MemoryHigh": "24G", "MemoryMax": "26G"}
+    dispatch = (REPO / "packaging/systemd/lu-dispatch.slice").read_text()
+    assert "MemoryMax=20G" in dispatch

@@ -1,0 +1,14 @@
+# Shared parent pool for lu-driver.slice and lu-dispatch.slice (#9624).
+# Operator decision 2026-10-07: one capped pool so drivers and workers
+# together cannot exhaust host memory and take app.slice services down.
+# Sizing (measured 2026-10-07): about 30.6 GiB RAM; shared services peak
+# about 3 GiB; lu-dispatch.slice keeps MemoryMax=20G unchanged.
+# A pool-level OOM may pick a driver or a worker (documented failure mode C1).
+# Install steps: docs/runbooks/driver-memory-scope.md.
+[Unit]
+Description=Learn Ukrainian shared driver and dispatch pool
+
+[Slice]
+MemoryAccounting=yes
+MemoryHigh=24G
+MemoryMax=26G

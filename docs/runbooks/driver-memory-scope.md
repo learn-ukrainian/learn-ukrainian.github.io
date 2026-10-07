@@ -97,13 +97,28 @@ From the reviewed checkout, in the operator's user session:
 ```bash
 install -d -m 0700 "$HOME/.config/systemd/user"
 install -m 0644 packaging/systemd/lu-driver.slice "$HOME/.config/systemd/user/lu-driver.slice"
+install -m 0644 packaging/systemd/lu.slice "$HOME/.config/systemd/user/lu.slice"
 systemctl --user daemon-reload
 systemctl --user show lu-driver.slice -p LoadState -p FragmentPath
+systemctl --user show lu.slice -p LoadState -p FragmentPath -p MemoryHigh -p MemoryMax
 ```
 
 No enable step is needed: transient scopes activate the slice. No system unit,
-linger setting, service unit or dispatch limit is changed. No `lu.slice` pool
-cap is included. The accountable driver installs after independent review.
+linger setting, service unit or dispatch limit is changed. The accountable
+driver installs after independent review.
+
+`lu.slice` is the shared pool (#9624): `MemoryHigh=24G`, `MemoryMax=26G`
+(read back as 25769803776 and 27917287424). `lu-dispatch.slice` keeps its own
+20G cap. Changing a slice's limits with `daemon-reload` updates the cgroup in
+place; it does not restart or stop running scopes. If the daemon-reload does
+not apply them to the live cgroup, `systemctl --user set-property --runtime
+lu.slice MemoryHigh=24G MemoryMax=26G` applies the same values without a restart.
+
+Inside a driver scope, `scripts/lib/driver_scope.sh` exports
+`PYTEST_XDIST_AUTO_NUM_WORKERS=8` (a lower inherited 1–8 value is kept), so
+`pytest -n auto` and `-n logical` start at most 8 workers. An explicit
+`-n <number>` is not rewritten. CI does not enter a driver scope and keeps its
+own worker count.
 The read-back must show `LoadState=loaded` and a non-empty `FragmentPath`;
 `LoadState=loaded` alone does not prove that the unit file is installed.
 
