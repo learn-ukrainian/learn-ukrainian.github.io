@@ -1781,9 +1781,9 @@ entries:
 
   - id: data-grac-frequency-db
     kind: data_store
-    store: [data/grac_frequency.db, data/grac-frequency.db, data/grac-10.db]
+    store: [data/grac_frequency.db, data/grac-10.db]
     producer: [scripts/ingest/grac_frequency_ingest.py]
-    producer_note: grac_frequency.db is the default snapshot; --db selects alternate destinations, including grac-frequency.db and the grac-10.db frequency-floor example.
+    producer_note: grac_frequency.db is the default snapshot; --db selects alternate destinations, including the grac-10.db frequency-floor example.
     local_only: true
     purpose: Resumable local GRAC lemma and word frequency snapshots with per-attribute checkpoints and per-page retrieval provenance, used for offline frequency lookups before live GRAC fallback.
     keywords: [GRAC, corpus frequency, lemma frequency, word frequency, local snapshot, query_grac]
