@@ -510,9 +510,9 @@ def test_cached_base_inputs_do_not_hide_changes_or_removed_entries(tmp_path, mon
     monkeypatch.setattr(lint, 'REPO_ROOT', tmp_path)
     monkeypatch.setattr(lint, 'base_blob_ids', lambda *args: {'tests/x.py': lint.source_blob_id(source)})
     scans = []
-    def counted(source, path):
+    def counted(source, path, **kwargs):
         scans.append(path)
-        return original(source, path)
+        return original(source, path, **kwargs)
     monkeypatch.setattr(lint, 'classify_store_source', counted)
     assert lint.find_violations(tmp_path, ()) == ([], [])
     assert scans == []
@@ -555,6 +555,8 @@ def test_base_blob_ids_include_tracked_sparse_paths(tmp_path):
     "DB = (anchor / 'sources').with_suffix('.db')",
     "DB = anchor + '/vesum.db'",
     "DB = data_dir / 'vesum.db'",
+    "DB = DATA_DIR.joinpath('vesum.db')",
+    "DB = Path(DATA_DIR, 'sources.db')",
 ])
 @pytest.mark.parametrize('tree', ['scripts', 'tests'])
 def test_unresolved_store_builders_fail_full_lint(tmp_path, source, tree):
@@ -572,6 +574,11 @@ def test_unresolved_store_builders_fail_full_lint(tmp_path, source, tree):
     "(directory / 'x').with_name('vesum.db')",
     "(directory / 'sources').with_suffix('.db')",
     "str(directory) + '/vesum_shadow_fixture.db'",
+    "f'{directory}/sources.db'",
+    "'%s/vesum.db' % directory",
+    "'{}/sources.db'.format(directory)",
+    "'/'.join([directory, 'sources.db'])",
+    "str(directory) + os.sep + 'sources.db'",
 ])
 def test_fixture_store_builders_stay_clean(expression):
     source = f"def test_read(directory):\n    DB = {expression}"
@@ -628,3 +635,130 @@ def test_initial_census_correction_requires_unlanded_exact_reproduction(tmp_path
     assert bool(lint.baseline_policy_violations(tmp_path)) == (landed or not reproduced)
     path.write_text(json.dumps({**current, 'base_commit': 'different'}))
     assert lint.baseline_policy_violations(tmp_path)
+
+
+JOIN_FORMS = [
+    'f"{ANCHOR}/vesum.db"',
+    "'%s/sources.db' % ANCHOR",
+    "'{}/sources.db'.format(ANCHOR)",
+    "'/'.join([ANCHOR, 'sources.db'])",
+    "str(ANCHOR) + os.sep + 'sources.db'",
+]
+
+
+@pytest.mark.parametrize('expression', JOIN_FORMS)
+@pytest.mark.parametrize('anchor', ['DATA_DIR', 'config.DATA_DIR', 'helper()'])
+@pytest.mark.parametrize('tree', ['scripts', 'tests'])
+def test_interpolated_unresolved_store_joins_fail_full_lint(tmp_path, expression, anchor, tree):
+    path = tmp_path / tree / 'new.py'
+    path.parent.mkdir()
+    path.write_text('from scripts.rag.config import DATA_DIR\nDB = ' + expression.replace('ANCHOR', anchor))
+    violations, unreadable = lint.find_violations(tmp_path, ())
+    assert unreadable == []
+    assert any('store_path' in v for v in violations), violations
+
+
+@pytest.mark.parametrize('expression', JOIN_FORMS)
+@pytest.mark.parametrize('anchor', ['tmp_path', "tmp_path_factory.mktemp('db')", 'directory'])
+def test_interpolated_fixture_store_joins_stay_clean(expression, anchor):
+    source = 'def test_read(directory):\n    DB = ' + expression.replace('ANCHOR', anchor)
+    assert lint.classify_store_source(source, 'tests/new.py') == []
+
+
+@pytest.mark.parametrize('source', [
+    "from pathlib import Path\nROOT = Path(__file__).parents[1]\nDB = ROOT / 'data' / 'sources.db'",
+    "import os\nDB = os.path.join(os.path.dirname(__file__), '..', 'data', 'vesum.db')",
+    "from pathlib import Path\nP = Path\nDB = P(__file__).parent.parent / 'data/sources.db'",
+    "DB = str(PROJECT_ROOT) + '/data/' + 'sources.db'",
+    "DB = f'{REPO_ROOT}/data/vesum.db'",
+    "from pathlib import Path\nimport os\nDB = Path(os.environ.get('LU_SOURCES_DB', 'data/sources.db'))",
+    "from sqlite3 import connect as c\nc('data/sources.db')",
+    "import sqlite3 as s\nDB = REPO_ROOT / 'data' / 'sources.db'\ns.connect(DB)",
+    "from scripts.lib.readonly_sqlite import open_readonly\ndef _present(): return open_readonly(REPO / 'data' / 'sources.db')\npytestmark = pytest.mark.skipif(_present(), reason='missing')",
+    "import sqlite3\nCONN = sqlite3.connect(REPO / 'data' / 'vesum.db')",
+])
+@pytest.mark.parametrize('tree', ['scripts', 'tests'])
+def test_round_a_held_out_positives_remain_reported(tmp_path, source, tree):
+    path = tmp_path / tree / 'held_out.py'
+    path.parent.mkdir()
+    path.write_text(source)
+    violations, unreadable = lint.find_violations(tmp_path, ())
+    assert unreadable == []
+    assert any('store_path' in v for v in violations), violations
+    if 'sqlite3' in source:
+        assert any('raw_store_constructor' in v for v in violations), violations
+    if tree == 'tests' and ('sqlite3' in source or 'open_readonly' in source):
+        assert any('test_import_access' in v for v in violations), violations
+
+
+@pytest.mark.parametrize('source', [
+    "def test_read(tmp_path): return tmp_path / 'data' / 'sources.db'",
+    "import sqlite3\ndef test_read(tmp_path): return sqlite3.connect(tmp_path / 'fixture.db')",
+    '\"\"\"Prose mentioning data/sources.db as an example.\"\"\"',
+    "import pytest\n@pytest.fixture\ndef db(tmp_path): return tmp_path / 'data' / 'sources.db'",
+    "def test_read(tmp_path):\n    directory = tmp_path / 'repo' / 'data'\n    directory.mkdir(parents=True)\n    (directory / 'sources.db').write_text('fixture')",
+    "DB = helper('metadata', 'sources.db')",
+])
+def test_review_negative_controls_remain_clean(tmp_path, source):
+    path = tmp_path / 'tests' / 'held_out.py'
+    path.parent.mkdir()
+    path.write_text(source)
+    assert lint.find_violations(tmp_path, ()) == ([], [])
+
+
+@pytest.mark.parametrize('kind', ['writer', 'reader_pending_migration_9662'])
+def test_full_lint_parses_each_source_once(tmp_path, monkeypatch, kind):
+    path = tmp_path / 'scripts' / 'writer.py'
+    path.parent.mkdir()
+    path.write_text('import sqlite3\nsqlite3.connect("output.db")')
+    entry = lint.AllowedReference('scripts/writer.py', 1, kind, 'output.db' if kind == 'writer' else None,
+                                  'fixture', ("sqlite3.connect('output.db')",))
+    original = lint.ast.parse
+    parses = []
+    def counted(*args, **kwargs):
+        parses.append(kwargs.get('filename'))
+        return original(*args, **kwargs)
+    monkeypatch.setattr(lint.ast, 'parse', counted)
+    assert lint.find_violations(tmp_path, (entry,)) == ([], [])
+    assert parses == ['scripts/writer.py']
+
+
+@pytest.mark.parametrize('source', [
+    "a = 's'\nb = 'o'\nc = 'u'\nd = 'r'\ne = 'c'\nf = 'e'\ng = '.'\nh = 'd'\ni = 'b'\nDB = DATA_DIR / (a+b+c+d+e+f+a+g+h+i)",
+    "tail = 'rces.db'\nnoise = 'unrelated'\nstem = 'sou'\nDB = f'{DATA_DIR}/{stem}{tail}'",
+    "prefix = 'LU_'\nnoise = 'unrelated'\nstore = 'VESUM'\nsuffix = '_DB'\nDB = os.environ[prefix + store + suffix]",
+    "prefix = 'vesum_'\nnoise = 'unrelated'\ntail = 'shadow_release.db'\nDB = DATA_DIR / (prefix + tail)",
+])
+@pytest.mark.parametrize('tree', ['scripts', 'tests'])
+def test_literal_prefilter_preserves_split_and_reordered_names(source, tree):
+    assert any(f.kind == 'store_path' for f in lint.classify_store_source(source, f'{tree}/new.py'))
+
+
+def test_literal_prefilter_has_no_false_negatives_for_concatenations():
+    from itertools import product
+    pieces = ['sou', 'rces.db', 'ves', 'um.db', 'vesum_', 'shadow_', 'release.db',
+              'LU_', 'SOURCES', '_DB', 'data/', '?mode=ro']
+    for parts in product(pieces, repeat=3):
+        folded = ''.join(parts)
+        if lint.STORE_NAME.search(folded) or folded in {'LU_SOURCES_DB', 'LU_VESUM_DB'}:
+            nodes = [ast.Constant(value=value) for value in parts]
+            assert lint._may_fold_store(nodes), parts
+    assert not lint._may_fold_store([ast.Constant(value='metadata'), ast.Constant(value='fixture.db')])
+
+
+@pytest.mark.parametrize('source', [
+    "DB = DATA_DIR / 'sources.db'",
+    "def test_read(tmp_path): return tmp_path / 'sources.db'",
+    "unused = 'sources.db' + 'extra'",
+])
+def test_store_scan_releases_its_ast_without_garbage_collection(monkeypatch, source):
+    import weakref
+    original = lint._Syntax
+    refs = []
+    def tracked(*args):
+        syntax = original(*args)
+        refs.append(weakref.ref(syntax))
+        return syntax
+    monkeypatch.setattr(lint, '_Syntax', tracked)
+    lint.classify_store_source(source, 'tests/new.py')
+    assert refs and all(ref() is None for ref in refs)

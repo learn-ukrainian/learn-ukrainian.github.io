@@ -27,7 +27,7 @@ import subprocess
 import sys
 from collections import Counter
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import cached_property, lru_cache
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -91,10 +91,51 @@ def _dotted(node: ast.AST) -> str:
     return ""
 
 
-def classify_source(source: str, rel_path: str) -> list[Finding]:
+class _Syntax:
+    """One parse and child inventory per input, shared by all boundary classes."""
+
+    def __init__(self, source: str, rel_path: str):
+        self.tree = ast.parse(source, filename=rel_path)
+        self.nodes = [self.tree]
+        self.children = {}
+        for node in self.nodes:
+            # Context/operator markers have no string fragments, roots or sites.
+            # Keep them on the original AST for fingerprints and ctx/op checks,
+            # but omit them from the analysis inventory and child traversal.
+            if isinstance(node, (ast.Constant, ast.alias, ast.Name)) or not node._fields:
+                children = ()
+            elif isinstance(node, ast.Attribute):
+                children = (node.value,)
+            elif isinstance(node, ast.BinOp):
+                children = (node.left, node.right)
+            else:
+                children = tuple(child for child in ast.iter_child_nodes(node) if not isinstance(
+                    child, (ast.expr_context, ast.operator, ast.unaryop, ast.boolop, ast.cmpop)))
+            self.children[node] = children
+            self.nodes.extend(children)
+
+    @cached_property
+    def parents(self):
+        return {child: node for node in self.nodes for child in self.children[node]}
+
+
+def classify_source(source: str, rel_path: str, *, syntax: _Syntax | None = None) -> list[Finding]:
     """Match syntax references, never infer database paths or caller arguments."""
-    tree = ast.parse(source, filename=rel_path)
-    nodes = list(ast.walk(tree))
+    syntax = syntax if syntax is not None else _Syntax(source, rel_path)
+    nodes = syntax.nodes
+    # Every reference/loader branch below needs one of these AST anchors.
+    # Check syntax rather than source text, retaining aliased and dynamic imports.
+    anchors = SQLITE_MODULES | {"__import__", "importlib", "pkgutil", "builtins",
+                                "import_module", "resolve_name"}
+    if not any(
+        (isinstance(n, ast.Name) and n.id in anchors)
+        or (isinstance(n, ast.Attribute) and n.attr in anchors)
+        or (isinstance(n, ast.alias) and n.name in anchors)
+        or (isinstance(n, ast.ImportFrom) and n.module in anchors)
+        or (isinstance(n, ast.Constant) and isinstance(n.value, str) and n.value in SQLITE_MODULES)
+        for n in nodes
+    ):
+        return []
     lines = source.splitlines()
     modules = set(SQLITE_MODULES)
     loaders = {"__import__", "importlib.import_module", "pkgutil.resolve_name"}
@@ -145,7 +186,7 @@ def classify_source(source: str, rel_path: str) -> list[Finding]:
                     if alias.name == "__import__":
                         loaders.add(alias.asname or alias.name)
 
-    parents = {child: node for node in nodes for child in ast.iter_child_nodes(node)}
+    parents = syntax.parents
     assignments = [node for node in nodes if isinstance(node, (ast.Assign, ast.AnnAssign))]
 
     # Propagate explicit module and constructor aliases; count their later uses.
@@ -228,15 +269,16 @@ def classify_source(source: str, rel_path: str) -> list[Finding]:
 
 
 def writer_target_violations(
-    source: str, writer: AllowedReference, references: list[Finding] | None = None
+    source: str, writer: AllowedReference, references: list[Finding] | None = None,
+    *, syntax: _Syntax | None = None,
 ) -> list[str]:
     """Pin every writer open to its declared target expression and call options.
 
     These are static site contracts; caller-supplied paths remain the writer's
     API responsibility. No path-dataflow inference is used by this rule.
     """
-    tree = ast.parse(source)
-    nodes = list(ast.walk(tree))
+    syntax = syntax if syntax is not None else _Syntax(source, writer.path)
+    nodes = syntax.nodes
     calls = [ast.unparse(n) for n in nodes if isinstance(n, ast.Call) and _dotted(n.func) == "sqlite3.connect"]
     if Counter(calls) != Counter(writer.calls):
         return [f"{writer.path}: opens differ from declared target sites ({writer.target_db})"]
@@ -267,7 +309,7 @@ def writer_target_violations(
     }
     unexpected = [
         f
-        for f in (classify_source(source, writer.path) if references is None else references)
+        for f in (classify_source(source, writer.path, syntax=syntax) if references is None else references)
         if f.line_no not in allowed_lines
     ]
     return [f"{f.rel_path}:{f.line_no}: undeclared {f.kind}" for f in unexpected]
@@ -275,6 +317,34 @@ def writer_target_violations(
 
 BASELINE = Path(__file__).with_name("store_access_baseline.json")
 STORE_CLASSES = ("store_path", "raw_store_constructor", "test_import_access")
+STORE_NAME = re.compile(r"(?:sources|vesum|vesum_shadow_[^/]*?)\.db(?:$|[?#/])")
+
+
+def _may_fold_store(nodes: list[ast.AST]) -> bool:
+    """Necessary condition for a folded name, allowing arbitrary literal order.
+
+    Fragments below only concatenate whole string constants (including those
+    looked up through names). Recognize a filename stem or environment key in
+    that language before doing scope/dataflow work. The first and last literal
+    may contain extra text; intermediate pieces must be whole literals. This
+    deliberately overapproximates actual expressions, never filters source text.
+    """
+    literals = {n.value for n in nodes if isinstance(n, ast.Constant) and isinstance(n.value, str)}
+    for needle in ("sources.db", "vesum.db", "vesum_shadow_", "LU_SOURCES_DB", "LU_VESUM_DB"):
+        if any(needle in value for value in literals):
+            return True
+        prefixes = tuple(needle[:i] for i in range(1, len(needle)))
+        endings = [value for value in literals if value.endswith(prefixes)]
+        reachable = {i for i, prefix in enumerate(prefixes, 1)
+                     if any(value.endswith(prefix) for value in endings)}
+        for start in range(1, len(needle)):
+            if start not in reachable:
+                continue
+            if any(value.startswith(needle[start:]) for value in literals):
+                return True
+            reachable.update(end for end in range(start + 1, len(needle))
+                             if needle[start:end] in literals)
+    return False
 
 
 @dataclass(frozen=True)
@@ -288,11 +358,22 @@ class StoreFinding:
     occurrence: int
 
 
-def classify_store_source(source: str, rel_path: str) -> list[StoreFinding]:
+def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None = None) -> list[StoreFinding]:
     """Conservative same-module AST census; fixture roots are not repository roots."""
-    tree = ast.parse(source, filename=rel_path)
-    nodes = list(ast.walk(tree))
-    parents = {child: parent for parent in nodes for child in ast.iter_child_nodes(parent)}
+    syntax = syntax if syntax is not None else _Syntax(source, rel_path)
+    tree, nodes = syntax.tree, syntax.nodes
+    access_names = SQLITE_MODULES | CONSTRUCTORS | {
+        "open_readonly", "resolve_store", "resolve_active_sources_db", "require_local_active_sources_db"}
+    possible_import_access = rel_path.startswith("tests/") and any(
+        (isinstance(n, ast.Name) and n.id in access_names)
+        or (isinstance(n, ast.Attribute) and n.attr in access_names)
+        or (isinstance(n, ast.alias) and n.name in access_names)
+        or (isinstance(n, ast.ImportFrom) and n.module in SQLITE_MODULES)
+        for n in nodes)
+    may_store = _may_fold_store(nodes)
+    if not may_store and not possible_import_access:
+        return []
+    parents = syntax.parents
     aliases = {}
     for node in nodes:
         if isinstance(node, ast.Import):
@@ -309,12 +390,13 @@ def classify_store_source(source: str, rel_path: str) -> list[StoreFinding]:
 
     @lru_cache(None)
     def scope(node):
-        parts = []
-        while node in parents:
-            node = parents[node]
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                parts.append(node.name)
-        return ".".join(reversed(parts)) or "<module>"
+        parent = parents.get(node)
+        if parent is None:
+            return "<module>"
+        enclosing = scope(parent)
+        if isinstance(parent, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            return parent.name if enclosing == "<module>" else f"{enclosing}.{parent.name}"
+        return enclosing
 
     facts = {}
     string_constants = {(scope(n), target.id): n.value.value for n in nodes if isinstance(n, ast.Assign)
@@ -341,20 +423,21 @@ def classify_store_source(source: str, rel_path: str) -> list[StoreFinding]:
             return literal_name(node)
         if isinstance(node, ast.Constant) and isinstance(node.value, str):
             return node.value
-        return "".join(fragments(child) for child in ast.iter_child_nodes(node))
+        return "".join(fragments(child) for child in syntax.children[node])
 
     @lru_cache(None)
     def is_store(node):
         text = fragments(node)
-        return bool(re.search(r"(?:sources|vesum|vesum_shadow_[^/]*?)\.db(?:$|[?#/])", text))
+        return bool(text and STORE_NAME.search(text))
 
     # Use the same constant-folded expressions as the census itself. Source
     # substring filters can miss split strings or interpolated variable stems.
-    possible_store = any(is_store(n) or fragments(n) in {"LU_SOURCES_DB", "LU_VESUM_DB"}
-                         for n in nodes if isinstance(n, ast.expr))
-    possible_import_access = rel_path.startswith("tests/") and any(token in source for token in
-        ("sqlite", "open_readonly", "resolve_store", "resolve_active_sources_db", "require_local_active_sources_db"))
+    possible_store = may_store and any(is_store(n) or fragments(n) in {"LU_SOURCES_DB", "LU_VESUM_DB"}
+                                      for n in nodes if isinstance(n, ast.expr))
     if not possible_store and not possible_import_access:
+        # Break recursive cache cells so the whole file AST is released now,
+        # rather than retained until a later generational garbage collection.
+        scope = fragments = is_store = None
         return []
 
     @lru_cache(None)
@@ -372,7 +455,7 @@ def classify_store_source(source: str, rel_path: str) -> list[StoreFinding]:
             return (None, False)
         if isinstance(node, ast.Attribute) and node.attr in {"ROOT", "REPO_ROOT", "PROJECT_ROOT"}:
             return ("repo", False)
-        children = [fact(child) for child in ast.iter_child_nodes(node)]
+        children = [fact(child) for child in syntax.children[node]]
         roots = {root for root, _ in children if root}
         target = is_store(node) or any(store for _, store in children)
         if isinstance(node, ast.Call) and name(node.func).split(".")[-1] in {
@@ -387,7 +470,7 @@ def classify_store_source(source: str, rel_path: str) -> list[StoreFinding]:
                 else "relative" if "relative" in roots else None, target)
 
     assignments = [n for n in nodes if isinstance(n, (ast.Assign, ast.AnnAssign, ast.NamedExpr))]
-    for _ in range(len(assignments) + 1):
+    for _ in range(len(assignments) + 1 if possible_store else 0):
         fact.cache_clear()
         updated = False
         for node in assignments:
@@ -435,7 +518,7 @@ def classify_store_source(source: str, rel_path: str) -> list[StoreFinding]:
 
     found = []
     path_nodes = set()
-    for node in nodes:
+    for node in nodes if possible_store else ():
         env_key = None
         if isinstance(node, ast.Subscript):
             env_key = node.slice
@@ -451,11 +534,12 @@ def classify_store_source(source: str, rel_path: str) -> list[StoreFinding]:
         if isinstance(node, (ast.BinOp, ast.Call, ast.JoinedStr, ast.Constant)):
             root, target = fact(node)
             # Accessors are consumers, not builders; record their arguments.
-            builder = isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Div, ast.Add))
+            builder = isinstance(node, ast.JoinedStr) or (
+                isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Div, ast.Add, ast.Mod)))
             if isinstance(node, ast.Call):
                 builder = name(node.func).split(".")[-1] in {
                     "Path", "PurePath", "join", "joinpath", "resolve", "absolute", "expanduser",
-                    "with_name", "with_suffix"}
+                    "with_name", "with_suffix", "format"}
                 # Unknown helpers taking data + a store filename are builders,
                 # even when their anchor cannot be resolved in this module.
                 arguments = [fragments(arg) for arg in [*node.args, *(k.value for k in node.keywords)]]
@@ -502,7 +586,7 @@ def classify_store_source(source: str, rel_path: str) -> list[StoreFinding]:
                 yield from ast.walk(expr)
             return
         yield node
-        for child in ast.iter_child_nodes(node):
+        for child in syntax.children[node]:
             yield from execution_nodes(child)
 
     if rel_path.startswith("tests/"):
@@ -523,6 +607,7 @@ def classify_store_source(source: str, rel_path: str) -> list[StoreFinding]:
         occurrence = counts[key]
         counts[key] += 1
         result.append(StoreFinding(rel_path, *key, occurrence))
+    scope = fragments = is_store = fact = execution_nodes = None
     return result
 
 
@@ -653,6 +738,7 @@ def find_violations(
         try:
             # Preserve bytes (including CRLF) when comparing Git object IDs.
             source = path.read_bytes().decode("utf-8")
+            syntax = None
             entry = writers.get(rel)
             pinned = by_path.get(rel, [])
             oid = base_blobs.get(rel)
@@ -660,7 +746,8 @@ def find_violations(
             if unchanged and len(pinned) == payload.get("file_counts", {}).get(rel, 0):
                 store_findings = pinned
             else:
-                store_findings = classify_store_source(source, rel)
+                syntax = _Syntax(source, rel)
+                store_findings = classify_store_source(source, rel, syntax=syntax)
             current.update(store_findings)
             for finding in store_findings:
                 sanctioned = (entry is not None and entry.kind == "store_resolver"
@@ -674,16 +761,17 @@ def find_violations(
                 entry = None
             if rel == READER_BOUNDARY:
                 continue
-            references = classify_source(source, rel)
+            syntax = syntax if syntax is not None else _Syntax(source, rel)
+            references = classify_source(source, rel, syntax=syntax)
             if entry is not None:
                 if len(references) != entry.reference_count:
                     violations.append(f"{rel}: pinned {entry.reference_count} references, found {len(references)}")
                 if entry.kind == "writer":
-                    violations.extend(writer_target_violations(source, entry, references))
+                    violations.extend(writer_target_violations(source, entry, references, syntax=syntax))
                 else:
                     calls = [
                         ast.unparse(n)
-                        for n in ast.walk(ast.parse(source))
+                        for n in syntax.nodes
                         if isinstance(n, ast.Call) and _dotted(n.func) == "sqlite3.connect"
                     ]
                     if Counter(calls) != Counter(entry.calls):
