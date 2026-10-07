@@ -10,9 +10,9 @@ import re
 from urllib.parse import unquote_plus
 
 try:
-    from secret_redactor import REDACTION, redact_url_authority, redact_value
+    from secret_redactor import REDACTION, URL_PATTERN, redact_url_authority, redact_value
 except ImportError:
-    from scripts.secret_redactor import REDACTION, redact_url_authority, redact_value
+    from scripts.secret_redactor import REDACTION, URL_PATTERN, redact_url_authority, redact_value
 
 try:
     from api.opsec_scan import scan_text
@@ -28,7 +28,6 @@ OPSEC_PLACEHOLDERS = {
     "ipv6": "[redacted-ip]",
 }
 REDACTION_PLACEHOLDER_RE = re.compile("|".join(re.escape(value) for value in {REDACTION, *OPSEC_PLACEHOLDERS.values()}))
-_URL_RE = re.compile(r"\b[A-Za-z][A-Za-z0-9+.-]*://[^\s<>\"`]+")
 _QUERY_PARAMETER_RE = re.compile(r"(?P<prefix>(?:^|&)(?P<key>[^=&]+)=)(?P<value>[^&]*)")
 _DIAGNOSTIC_PATH_PATTERNS = (
     re.compile(r"(?<![A-Za-z0-9_./\\-])(?:[A-Za-z]:[\\/]|\\\\[A-Za-z0-9_.-]+\\)[^\s\"'<>`]+"),
@@ -49,7 +48,7 @@ def redact_lane_health_diagnostics(text: str) -> str:
     """
     parts = []
     cursor = 0
-    for match in _URL_RE.finditer(text):
+    for match in URL_PATTERN.finditer(text):
         parts.append(_redact_non_url_diagnostics(text[cursor : match.start()]))
         parts.append(_redact_url_match(match))
         cursor = match.end()
@@ -94,6 +93,8 @@ def _redact_resolver_host_match(match: re.Match[str]) -> str:
 
 def _redact_url_match(match: re.Match[str]) -> str:
     prefix, raw_authority, suffix = redact_url_authority(match.group())
+    if not raw_authority and not suffix:
+        return prefix
     fragment_start = suffix.find("#")
     query_end = fragment_start if fragment_start >= 0 else len(suffix)
     query_marker = suffix.find("?", 0, query_end)

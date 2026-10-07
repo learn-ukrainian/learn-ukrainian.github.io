@@ -6,7 +6,6 @@ message bodies. The reference executes the actual origin/main helper.
 """
 
 import io
-import re
 import subprocess
 import tarfile
 import types
@@ -104,6 +103,48 @@ def test_multiple_urls_and_nested_values_redact_only_password_bytes():
     }
 
 
+@pytest.mark.parametrize("password", PASSWORDS)
+@pytest.mark.parametrize("joiner", [",", ";", "?next=", "/archive/", "#next="])
+@pytest.mark.parametrize("suffix", ["", "/api"])
+def test_every_url_in_one_token_redacts_its_own_password(password, joiner, suffix):
+    first = credential_url(password, host="first.invalid:443", suffix=suffix)
+    second = credential_url(password, username="", host="[2001:db8::7]:443", suffix=suffix, scheme="postgres")
+    third = credential_url(password, username="bot%2Dname", host="third.invalid", suffix=suffix)
+    expected = joiner.join((
+        credential_url(REDACTION, host="first.invalid:443", suffix=suffix),
+        credential_url(REDACTION, username="", host="[2001:db8::7]:443", suffix=suffix, scheme="postgres"),
+        credential_url(REDACTION, username="bot%2Dname", host="third.invalid", suffix=suffix),
+    ))
+    raw = joiner.join((first, second, third))
+    assert redact_text(raw) == expected
+    assert redact_text(expected) == expected
+    assert redact_value({"body": [raw]}) == {"body": [expected]}
+
+
+@pytest.mark.parametrize("password", PASSWORDS)
+@pytest.mark.parametrize("outer", [
+    "https://outer.invalid/redirect?next=",
+    "https://archive.invalid/20261007/",
+    "https://outer.invalid:443/@scope/pkg?next=",
+    "https://",
+])
+def test_credentialless_outer_url_does_not_hide_inner_credentials(password, outer):
+    raw = outer + credential_url(password)
+    expected = outer + credential_url(REDACTION)
+    assert redact_text(raw) == expected
+    assert redact_text(expected) == expected
+
+
+@pytest.mark.parametrize("raw", [
+    "https://archive.invalid/20261007/https://source.invalid/path",
+    "https://outer.invalid?next=https://source.invalid:443/@scope/pkg",
+    "https://first.invalid,https://second.invalid;file:///root/@scope/pkg",
+    "".join(("https://outer.invalid:", "opaque/path?next=https://source.invalid/a", "@", "b")),
+])
+def test_credentialless_nested_and_joined_urls_stay_byte_identical(raw):
+    assert redact_text(raw) == raw
+
+
 def test_ordinary_repository_corpus_matches_actual_origin_main_redactor():
     repo = Path(__file__).resolve().parents[1]
     base = subprocess.check_output(["git", "rev-parse", "origin/main"], cwd=repo, text=True, timeout=30).strip()
@@ -111,23 +152,16 @@ def test_ordinary_repository_corpus_matches_actual_origin_main_redactor():
     baseline = types.ModuleType("baseline_secret_redactor")
     exec(compile(source, "origin/main:scripts/secret_redactor.py", "exec"), baseline.__dict__)
     archive = subprocess.check_output(
-        ["git", "archive", base, "docs/best-practices", "docs/runbooks", "agents_extensions/shared/rules"],
+        ["git", "archive", base, "docs", "agents_extensions/shared/rules", "AGENTS.md", "CLAUDE.md", "GEMINI.md"],
         cwd=repo,
         timeout=30,
     )
     documents = []
-    excluded = 0
-    # Independently exclude whole documents containing ANY URL token with @,
-    # including username-only URLs. No new parser/detector defines this corpus.
-    url_with_at = re.compile(r"[^\s]*://[^\s]*@[^\s]*")
     with tarfile.open(fileobj=io.BytesIO(archive)) as tree:
         for member in tree:
-            if member.isfile() and member.name.endswith(".md"):
+            if member.isfile() and member.name.endswith((".md", ".yaml", ".yml", ".txt")):
                 text = tree.extractfile(member).read().decode("utf-8")
-                if url_with_at.search(text):
-                    excluded += 1
-                else:
-                    documents.append(text)
+                documents.append(text)
     messages = [
         "Review complete; the tests passed. Please read scripts/api/lane_health.py.",
         "Budget ~500K/1M, fraction ~2/3; codes ENOTFOUND EAI_AGAIN.",
@@ -139,4 +173,4 @@ def test_ordinary_repository_corpus_matches_actual_origin_main_redactor():
     for text in documents + messages:
         # Counts only on failure: no repository bodies or synthetic secrets.
         assert redact_text(text) == baseline.redact_text(text), "corpus output differs"
-    print(f"corpus: {len(documents)} documents, {len(messages)} synthetic bodies, {excluded} excluded; differences=0; base={base}")
+    print(f"corpus: {len(documents)} documents, {len(messages)} synthetic bodies, 0 excluded; differences=0; base={base}")

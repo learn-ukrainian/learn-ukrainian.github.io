@@ -99,7 +99,10 @@ _OPAQUE_ALPHA_TOKEN_MIN_ENTROPY = 4.0
 _OPAQUE_PUNCTUATED_TOKEN_MIN_ENTROPY = 4.5
 _OPAQUE_TOKEN_PUNCTUATION = frozenset("_+./~-")
 
-_URL_PATTERN = re.compile(r"\b[A-Za-z][A-Za-z0-9+.-]*://[^\s<>\"`]+")
+_URL_SCHEME = r"\b[A-Za-z][A-Za-z0-9+.-]*://"
+# Bound each URL at the next scheme, including query/path-nested URLs. Leave
+# comma/semicolon joiners outside the match so host redaction preserves them.
+URL_PATTERN = re.compile(rf"{_URL_SCHEME}[^\s<>\"`]*?(?=[,;]?{_URL_SCHEME}|[\s<>\"`]|$)")
 # RFC 3986 unreserved, sub-delims and pct-encoded, excluding the password colon.
 _URL_USERNAME_PATTERN = re.compile(r"(?:[A-Za-z0-9._~!$&'()*+,;=-]|%[0-9A-Fa-f]{2})*")
 
@@ -121,7 +124,7 @@ def redact_url_authority(raw: str) -> tuple[str, str, str]:
 
     Deliberately leave ambiguous numeric/empty prefixes before a delimiter,
     username-only userinfo, schemeless credentials and tokens without @ alone.
-    The caller supplies one token bounded by whitespace or a text delimiter.
+    The caller bounds each URL at the next scheme or whitespace/text delimiter.
     No decoding or normalization occurs.
     """
     start = raw.index("://") + 3
@@ -158,7 +161,7 @@ def redact_text(value: str | None) -> str | None:
         return None
 
     text = str(value)
-    text = _URL_PATTERN.sub(lambda match: "".join(redact_url_authority(match.group())), text)
+    text = URL_PATTERN.sub(lambda match: "".join(redact_url_authority(match.group())), text)
     for pattern in _BLOCK_PATTERNS:
         text = pattern.sub(REDACTION, text)
     for pattern in _ASSIGNMENT_PATTERNS:
