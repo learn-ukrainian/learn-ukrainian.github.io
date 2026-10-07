@@ -466,7 +466,7 @@ while True:
         keeper.communicate(timeout=10)
 
 
-@pytest.mark.parametrize(("inherited", "expected"), [(None, "8"), ("16", "8"), ("abc", "8"), ("4", "4")])
+@pytest.mark.parametrize(("inherited", "expected"), [(None, "8"), ("16", "8"), ("abc", "8"), ("4", "4"), ("0", "0")])
 def test_driver_scope_caps_pytest_auto_workers(tmp_path: Path, inherited: str | None, expected: str) -> None:
     launcher, env = _launcher(tmp_path)
     extra = {} if inherited is None else {"PYTEST_XDIST_AUTO_NUM_WORKERS": inherited}
@@ -488,6 +488,6 @@ def test_lu_pool_slice_caps() -> None:
     body = (REPO / "packaging/systemd/lu.slice").read_text()
     section = body.split("[Slice]", 1)[1]
     keys = dict(line.split("=", 1) for line in section.splitlines() if "=" in line and not line.startswith("#"))
-    assert keys == {"MemoryAccounting": "yes", "MemoryHigh": "24G", "MemoryMax": "26G"}
+    assert keys == {"MemoryAccounting": "yes", "MemoryHigh": "24G", "MemoryMax": "26G", "MemorySwapMax": "4G"}
     dispatch = (REPO / "packaging/systemd/lu-dispatch.slice").read_text()
     assert "MemoryMax=20G" in dispatch
