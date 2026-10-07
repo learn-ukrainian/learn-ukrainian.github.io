@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import re
+from pathlib import Path
 
 import pytest
 
@@ -454,7 +456,8 @@ def test_messages_stream_type_error_is_still_a_provider_failure():
     assert result.provider_error_text == "Error code: 429"
 
 
-def test_result_error_without_stop_reason_is_not_a_provider_failure():
+def test_result_error_without_stop_reason_is_a_provider_failure():
+    """A missing stop_reason is the new-format equivalent of type=error."""
     result = _parse_messages(
         [
             _assistant_frame("partial report"),
@@ -467,6 +470,109 @@ def test_result_error_without_stop_reason_is_not_a_provider_failure():
             },
         ]
     )
-    assert result.failure_code == "provider_stream_incomplete"
+    assert result.failure_code == "provider_error"
+    assert result.provider_error_text == "boom"
+    assert result.response == "" and result.rate_limited is False
     assert "missing stopReason" in result.stderr_excerpt
     assert "boom" in result.stderr_excerpt
+    assert (
+        classify_failover_trigger(
+            parse=result,
+            returncode=0,
+            kill_reason=None,
+            stdout_text="",
+            stderr_text="",
+        )
+        is None
+    )
+
+
+@pytest.mark.parametrize("stop_reason", [None, "absent"])
+@pytest.mark.parametrize("returncode", [0, 1])
+def test_result_error_429_with_empty_stderr_is_rate_limited(stop_reason, returncode):
+    """Typed codes classify from errors[0] when stderr is empty."""
+    frame = {
+        "type": "result",
+        "subtype": "error_during_execution",
+        "is_error": True,
+        "errors": ["Error code: 429"],
+        "session_id": "session-placeholder",
+    }
+    if stop_reason is None:
+        frame["stop_reason"] = None
+    result = _parse_messages([frame], stderr="", returncode=returncode)
+    assert result.failure_code == "rate_limited" and result.rate_limited
+    assert result.provider_error_text == "Error code: 429"
+    assert result.response == ""
+    assert (
+        classify_failover_trigger(
+            parse=result,
+            returncode=returncode,
+            kill_reason=None,
+            stdout_text="",
+            stderr_text="",
+        )
+        == "rate_limited"
+    )
+
+
+@pytest.mark.parametrize("returncode", [0, 1])
+def test_result_error_with_stop_reason_does_not_classify_errors(returncode):
+    """A 429 in errors[0] stays detail when the turn names a stop reason."""
+    result = _parse_messages(
+        [
+            _assistant_frame("partial report"),
+            _error_result(stop_reason="cancelled", subtype="error", errors=["Error code: 429"]),
+        ],
+        stderr="",
+        returncode=returncode,
+    )
+    assert result.failure_code == "provider_stream_incomplete"
+    assert result.rate_limited is False
+    assert result.provider_error_text == ""
+    assert 'stopReason="cancelled"' in result.stderr_excerpt
+    assert "Error code: 429" in result.stderr_excerpt
+
+
+_GROK_FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "grok"
+_FIXTURE_SECRET = re.compile(
+    r"/home/|/var/tmp/|sk-[A-Za-z0-9]|"
+    r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+)
+
+
+def test_recorded_invalid_model_is_provider_error_in_both_formats():
+    """Grok 1.0.46 ``-m grok-no-such-model``, 2026-10-07, exit 1.
+
+    Old ``json`` is one ``type:error`` object. ``streaming-messages-json`` is
+    an init frame then ``error_during_execution`` with ``stop_reason`` null.
+    Session id, event ids, and the working directory are placeholders.
+    """
+    old_stdout = (_GROK_FIXTURES / "invalid-model.json").read_text(encoding="utf-8")
+    new_stdout = (_GROK_FIXTURES / "invalid-model-streaming-messages.jsonl").read_text(encoding="utf-8")
+    for text in (old_stdout, new_stdout):
+        assert _FIXTURE_SECRET.search(text) is None
+    message = json.loads(old_stdout)["message"]
+    frames = [json.loads(line) for line in new_stdout.splitlines() if line.strip()]
+    assert frames[0]["type"] == "system" and frames[0]["cwd"] == "<workdir>"
+    assert frames[1]["subtype"] == "error_during_execution"
+    assert frames[1]["stop_reason"] is None
+    assert frames[1]["errors"] == [message]
+    stderr = "Error: " + message + "\n"
+    old = GrokBuildAdapter().parse_response(stdout=old_stdout, stderr=stderr, returncode=1, output_file=None)
+    new = GrokBuildAdapter().parse_response(stdout=new_stdout, stderr=stderr, returncode=1, output_file=None)
+    assert old.failure_code == new.failure_code == "provider_error"
+    assert old.provider_error_text == new.provider_error_text == message
+    assert old.response == new.response == ""
+    assert old.rate_limited is False and new.rate_limited is False
+    for result in (old, new):
+        assert (
+            classify_failover_trigger(
+                parse=result,
+                returncode=1,
+                kill_reason=None,
+                stdout_text="",
+                stderr_text=stderr,
+            )
+            is None
+        )

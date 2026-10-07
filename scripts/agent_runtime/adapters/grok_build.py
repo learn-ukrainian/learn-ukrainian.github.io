@@ -1108,6 +1108,17 @@ def _remember_session(obj: dict, session_id: str | None) -> str | None:
     return session_id
 
 
+def _frame_stop_reason(obj: dict) -> str | None:
+    """Return this frame's stop reason when the field is a string.
+
+    JSON null and a missing field are both absent. An empty string is present.
+    """
+    stop = obj.get("stopReason")
+    if not isinstance(stop, str):
+        stop = obj.get("stop_reason")
+    return stop if isinstance(stop, str) else None
+
+
 def _remember_terminal(
     obj: dict,
     *,
@@ -1115,10 +1126,8 @@ def _remember_terminal(
     session_id: str | None,
     model_usage: dict | None,
 ) -> tuple[str | None, str | None, dict | None]:
-    stop = obj.get("stopReason")
-    if not isinstance(stop, str):
-        stop = obj.get("stop_reason")
-    if isinstance(stop, str):
+    stop = _frame_stop_reason(obj)
+    if stop is not None:
         stop_reason = stop
     session_id = _remember_session(obj, session_id)
     usage = obj.get("modelUsage")
@@ -1145,8 +1154,8 @@ def _result_is_error(obj: dict) -> bool:
 def _result_error_detail(obj: dict) -> str | None:
     """Return ``errors[0]`` when it is a non-empty string.
 
-    That string is diagnostic detail on an ordinary final envelope. It does
-    not classify the turn; ``stop_reason`` does.
+    With a stop reason the caller stores this as diagnostic detail. With a
+    null or missing stop reason it is the provider error message.
     """
     errors = obj.get("errors")
     if not isinstance(errors, list) or not errors:
@@ -1209,10 +1218,12 @@ def _messages_stream_envelope(objects: list[dict]) -> dict:
     assistant messages join with a newline. A flushed assistant frame for an
     id replaces that id's deltas so partial framing is not counted twice.
     ``result.result`` is only the last message and is used when no assistant
-    text was assembled. A ``result`` frame, including an error subtype that
-    carries ``stop_reason``, stays this ordinary envelope: ``stopReason`` is
-    the turn's reason and ``errors[0]`` is ``message``. Only a ``type:error``
-    line becomes a provider failure (#10005).
+    text was assembled. An error-subtype ``result`` that carries a
+    ``stop_reason`` stays this ordinary envelope: ``stopReason`` is the turn's
+    reason and ``errors[0]`` is diagnostic ``message``. An error-subtype
+    ``result`` whose ``stop_reason`` is null or missing is the new-format
+    equivalent of ``type:error``: ``errors[0]`` is the provider message, so
+    typed codes classify from it (#10005).
     """
     slots: dict[str, dict] = {}
     order: list[str] = []
@@ -1268,10 +1279,13 @@ def _messages_stream_envelope(objects: list[dict]) -> dict:
             stop_reason, session_id, model_usage = _remember_terminal(
                 obj, stop_reason=stop_reason, session_id=session_id, model_usage=model_usage
             )
-            # Never promote a result frame to type=error. Cancelled and
-            # max-turns turns are ordinary finals whose stop_reason selects
-            # provider_stream_incomplete or permission_cancelled (#9987).
-            if _result_is_error(obj):
+            # A named stop_reason keeps cancelled and max-turns turns on the
+            # ordinary final path (#9987). Null or missing stop_reason is the
+            # streaming-messages-json form of type=error (#10005).
+            if _result_is_error(obj) and _frame_stop_reason(obj) is None:
+                if error_message is None:
+                    error_message = _result_error_detail(obj) or "grok stream error"
+            elif _result_is_error(obj):
                 if detail_message is None:
                     detail_message = _result_error_detail(obj)
             elif isinstance(obj.get("result"), str):
