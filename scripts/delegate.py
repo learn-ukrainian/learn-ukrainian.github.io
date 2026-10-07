@@ -11808,16 +11808,48 @@ def _dispatch(
         print(f"❌ dispatch refused: {exc}", file=sys.stderr)
         return 2
 
-    # Prompt is resolved early so forward failure records and sparse inference
-    # have access to the raw prompt text.
+    # Formal attempts and permission-only AGY Ukrainian reviews share the
+    # effective sources grant. Refuse before archival, provisioning or spawn.
+    sources_review_access = None
+    if review_attempt:
+        sources_review_access = getattr(args, "review_access", "full")
+    elif (
+        dispatch_agent in {"agy", "gemini"}
+        and args.mode == "read-only"
+        and getattr(args, "review_profile", None) == "ukrainian"
+        and (
+            getattr(args, "review", False)
+            or getattr(args, "require_review_verdict", False)
+            or str(getattr(args, "type", "") or "").strip().casefold() == "review"
+        )
+    ):
+        sources_review_access = "isolated"
+
+    # Match the launch prompt's precedence. Ordinary review stdin is consumed
+    # before side effects; formal attempts require a render-recorded file and
+    # must refuse stdin without consuming it.
     early_prompt: str | None = None
-    if getattr(args, "prompt", None):
-        early_prompt = str(args.prompt)
-    elif getattr(args, "prompt_file", None):
+    if getattr(args, "prompt_file", None):
         try:
             early_prompt = Path(args.prompt_file).read_text(encoding="utf-8")
         except OSError:
             early_prompt = None
+    elif getattr(args, "prompt", None):
+        early_prompt = (
+            sys.stdin.read()
+            if args.prompt == "-" and sources_review_access is not None and not review_attempt
+            else str(args.prompt)
+        )
+
+    if sources_review_access is not None:
+        from scripts.agent_runtime.review_mcp import ReviewToolRequirementsRefused, check_review_tool_requirements
+
+        if early_prompt is not None:
+            try:
+                check_review_tool_requirements(early_prompt, sources_review_access)
+            except ReviewToolRequirementsRefused as exc:
+                print(f"❌ dispatch refused: {exc}", file=sys.stderr)
+                return 2
 
     dor_reason = getattr(args, "allow_dor_warn", None)
     if dor_reason is not None:
@@ -12212,7 +12244,7 @@ def _dispatch(
     if args.prompt_file:
         prompt = Path(args.prompt_file).read_text()
     elif args.prompt == "-":
-        prompt = sys.stdin.read()
+        prompt = early_prompt if sources_review_access is not None and not review_attempt else sys.stdin.read()
     elif args.prompt is not None:
         prompt = args.prompt
     else:
@@ -12221,6 +12253,14 @@ def _dispatch(
     # What the caller handed in, before the lifecycle, worktree and research blocks are appended: a caller that
     # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
     source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+
+    if sources_review_access is not None:
+        # Recheck the launch text, including a file changed since the early read.
+        try:
+            check_review_tool_requirements(prompt, sources_review_access)
+        except ReviewToolRequirementsRefused as exc:
+            print(f"❌ dispatch refused: {exc}", file=sys.stderr)
+            return 2
 
     if review_attempt and review_contract is not None and source_prompt_sha256 != review_contract["prompt_sha256"]:
         # Admission checked the prompt file before any side effect; the file must still be that prompt (#9163).

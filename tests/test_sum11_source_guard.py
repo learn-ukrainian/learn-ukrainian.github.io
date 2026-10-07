@@ -26,6 +26,12 @@ SCOPES = (
 )
 # Exact approved lines: edits or new references require renewed review.
 RULE_CONTEXT_LINES = {
+    "scripts/review/prompts/lesson-review.md.j2": frozenset({
+        "`search_definitions` (SUM-11) is available for Sovietization context only;",
+    }),
+    "scripts/review/prompts/lesson-rereview.md.j2": frozenset({
+        "`search_definitions` (SUM-11) is available for Sovietization context only;",
+    }),
     # Contrast-only caveat in the review-dimension prompt and its generated template.
     "scripts/build/phases/linear-review-dim.md": frozenset({
         "C. **Sovietization flag (decolonization, naturalness).** СУМ-11 is contrast-only and may appear",

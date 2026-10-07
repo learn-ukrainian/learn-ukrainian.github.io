@@ -103,7 +103,7 @@ def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_ag
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
-def test_receipt_attempt_allow_contract_unchanged(manifest_file, tmp_path, access):
+def test_receipt_attempt_allow_contract_includes_approved_facet_authorities(manifest_file, tmp_path, access):
     plan = prepare_review_attempt(
         "rev-test-001",
         "att-agy-001",
@@ -112,8 +112,14 @@ def test_receipt_attempt_allow_contract_unchanged(manifest_file, tmp_path, acces
         receipts_root=tmp_path / "receipts",
         review_access=access,
     )
-    # Frozen pre-fix contract; do not derive this expectation from review_tools.
+    # Explicit approved #9949 contract; do not derive this expectation from review_tools.
     names = [
+        "verify_word",
+        "verify_lemma",
+        "search_slovnyk_me",
+        "search_esum",
+        "search_grinchenko_1907",
+        "search_definitions",
         "check_russian_shadow",
         "check_text",
         "inspect_word",
@@ -3170,3 +3176,44 @@ def test_no_open_below_the_anchor_bypasses_the_helper() -> None:
     assert file_opens == ["fd = os.open(name, _DIRECTORY_FLAGS, dir_fd=dir_fd)"]
     assert ".read_text(" not in source
     assert ".write_text(" not in source
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+@pytest.mark.parametrize("header", ["", "Required-Sources-Tools: []\n"])
+def test_tool_requirement_defaults_cannot_be_removed(access, header):
+    assert review_mcp_module.check_review_tool_requirements(header + "Review the artifact.", access) == REVIEW_TOOLS
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_tool_requirements_name_every_unsupported_tool_without_fallback(access):
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused) as caught:
+        review_mcp_module.check_review_tool_requirements(
+            'Required-Sources-Tools: ["query_ulif", "query_wikipedia", "verify_word"]', access
+        )
+    assert caught.value.code == "review_tools_unsupported"
+    assert caught.value.unsupported == ("query_ulif", "query_wikipedia")
+    assert str(caught.value) == "review_tools_unsupported: query_ulif, query_wikipedia"
+
+
+@pytest.mark.parametrize("declaration", ["not JSON", "{}", "[1]", '["../private"]'])
+def test_invalid_tool_requirements_are_typed(declaration):
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tool_requirements_invalid"):
+        review_mcp_module.check_review_tool_requirements(f"Required-Sources-Tools: {declaration}")
+
+
+def test_duplicate_tool_requirement_headers_refuse():
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tool_requirements_invalid"):
+        review_mcp_module.check_review_tool_requirements("Required-Sources-Tools: []\nRequired-Sources-Tools: []")
+
+
+def test_defaults_are_requirements_not_derived_from_selected_grants(monkeypatch):
+    monkeypatch.setattr(review_mcp_module, "review_tools", lambda _access: REVIEW_TOOLS - {"verify_word"})
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tools_unsupported: verify_word"):
+        review_mcp_module.check_review_tool_requirements("Required-Sources-Tools: []")
+
+
+def test_declared_catalogue_tool_requires_full_access():
+    brief = 'Required-Sources-Tools: ["search_resources"]'
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tools_unsupported"):
+        review_mcp_module.check_review_tool_requirements(brief, "isolated")
+    assert "search_resources" in review_mcp_module.check_review_tool_requirements(brief, "full")
