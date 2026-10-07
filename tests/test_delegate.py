@@ -18755,6 +18755,10 @@ def test_run_worker_auto_finalizes_a_cyrillic_free_kimi_diff(tmp_tasks_dir, tmp_
     from scripts.agent_runtime import kimi_boundary
 
     _sanitize_git_env_for_test(monkeypatch)
+    from scripts.lib.git_identity import git_identity_env
+
+    for key, value in git_identity_env("claude").items():
+        monkeypatch.setenv(key, value)
 
     rc, state, worktree, worker_saw = _kimi_run(tmp_path, monkeypatch, "kimi-clean", "export const t = 'Lesson';\n")
 
@@ -18767,6 +18771,99 @@ def test_run_worker_auto_finalizes_a_cyrillic_free_kimi_diff(tmp_tasks_dir, tmp_
     assert _git_out(worktree, "show", "--name-only", "--format=", "HEAD").split() == ["site/src/components/Label.tsx"]
     assert "refs/heads/kimi/kimi-clean" in _remote_branches(worktree)
     assert not kimi_boundary.is_installed(worktree)
+    assert _git_out(worktree, "show", "-s", "--format=%an|%ae|%cn|%ce").strip() == (
+        "Kimi|kimi@local.invalid|Kimi|kimi@local.invalid"
+    )
+
+
+@pytest.mark.parametrize(
+    "agent,model,name",
+    [("codex", None, "OpenAI"), ("cursor", "grok-4.7-high", "Grok"), ("cursor", "auto", "LU Unknown")],
+)
+def test_auto_finalize_commit_replaces_parent_git_identity(tmp_path, monkeypatch, agent, model, name):
+    from scripts.lib.git_identity import git_identity_env
+
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _owned_worktree(tmp_path, "claude/owned-finalize")
+    (worktree / "scripts/fleet/worker.py").write_text("worker change\n")
+    for key, value in git_identity_env("claude").items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_args: None)
+    result = delegate._auto_finalize_dirty_worktree(
+        worktree=worktree,
+        task_id="identity-finalize",
+        agent=agent,
+        model=model,
+        branch="claude/owned-finalize",
+        base_branch="main",
+        owned_paths=["scripts/fleet/worker.py"],
+    )
+    assert result.ok, result
+    slug = "unknown" if name == "LU Unknown" else name.lower()
+    assert _git_out(worktree, "show", "-s", "--format=%an|%ae|%cn|%ce").strip() == (
+        f"{name}|{slug}@local.invalid|{name}|{slug}@local.invalid"
+    )
+
+
+@pytest.mark.parametrize(
+    "requested,name",
+    [("grok-4.7-high", "Claude")]
+    + [
+        (spelling, "LU Unknown")
+        for selector in (
+            "auto",
+            "default",
+            "cursor:auto",
+            "cursor/auto",
+            "cursor:default",
+            "cursor/default",
+        )
+        for spelling in (selector, selector.upper(), selector.title(), f" {selector} ")
+    ],
+)
+def test_cursor_auto_finalize_uses_completed_runner_model(tmp_tasks_dir, tmp_path, monkeypatch, requested, name):
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "cursor/identity-failover")
+    (worktree / "result.txt").write_text("worker output\n")
+    delegate._write_state_atomic(
+        delegate._state_path("identity-failover"),
+        {
+            "task_id": "identity-failover",
+            "worktree_path": str(worktree),
+            "worktree_branch": "cursor/identity-failover",
+            "worktree_base": "main",
+            "owned_paths": ["result.txt"],
+            "keep_worktree": True,
+        },
+    )
+    result = _bg_mock_result("")  # Completed model is Claude, unlike the requested Grok pin.
+    result.substitution = {
+        "actual_model": "claude-opus-5-5",
+        "actual_model_known": True,
+        "substituted": True,
+        "source": "runner-failover",
+    }
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_args: None)
+    monkeypatch.setattr(delegate, "_count_unpushed_commits", lambda *_args: 0)
+    with patch("agent_runtime.runner.invoke", return_value=result):
+        rc = delegate._run_worker(
+            task_id="identity-failover",
+            agent="cursor",
+            prompt="Worker output",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=requested,
+            hard_timeout=60,
+            effort=None,
+            keep_worktree=True,
+        )
+    state = delegate._read_state(delegate._state_path("identity-failover"))
+    assert state["auto_finalize"]["ok"] is True, state
+    assert rc == 0, state
+    slug = "unknown" if name == "LU Unknown" else name.lower()
+    assert _git_out(worktree, "show", "-s", "--format=%an|%ae|%cn|%ce").strip() == (
+        f"{name}|{slug}@local.invalid|{name}|{slug}@local.invalid"
+    )
 
 
 def test_kimi_worktree_prompt_hands_the_commit_to_delegate():

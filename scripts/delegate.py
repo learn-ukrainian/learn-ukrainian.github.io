@@ -7084,6 +7084,7 @@ def _auto_finalize_dirty_worktree(
     worktree: Path,
     task_id: str,
     agent: str,
+    model: str | None = None,
     branch: str | None,
     base_branch: str,
     open_pr: bool = False,
@@ -7182,6 +7183,11 @@ def _auto_finalize_dirty_worktree(
     scoped_args = ["--pathspec-from-file=-", "--pathspec-file-nul"]
     git_prefix = ["git", "--literal-pathspecs"]
     commit_sha: str | None = None
+    # This commit is made by the supervisor, outside build_agent_env. Use the
+    # worker lane's identity instead of the launcher's inherited driver identity.
+    from scripts.lib.git_identity import git_identity_env
+
+    commit_env = {**_sanitized_git_env(), **git_identity_env(agent, model)}
     try:
         add_proc = subprocess.run(
             [*git_prefix, "add", "-A", *scoped_args],
@@ -7190,7 +7196,7 @@ def _auto_finalize_dirty_worktree(
             capture_output=True,
             text=True,
             check=False,
-            env=_sanitized_git_env(),
+            env=commit_env,
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         if add_proc.returncode != 0:
@@ -7214,7 +7220,7 @@ def _auto_finalize_dirty_worktree(
             capture_output=True,
             text=True,
             check=False,
-            env=_sanitized_git_env(),
+            env=commit_env,
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         if commit_proc.returncode != 0:
@@ -10393,10 +10399,17 @@ def _run_worker(
                         from scripts.agent_runtime import kimi_boundary
 
                         kimi_boundary.remove(Path(worktree_path), env=_sanitized_git_env())
+                    from scripts.review.model_catalog import is_cursor_auto_selector
+
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),
                         task_id=task_id,
                         agent=agent,
+                        model=(
+                            model
+                            if agent == "cursor" and is_cursor_auto_selector(model)
+                            else getattr(result, "model", None) or model or _lane_default_model(agent)
+                        ),
                         branch=final_state.get("worktree_branch"),
                         base_branch=base_branch,
                         open_pr=finalize_open_pr,
