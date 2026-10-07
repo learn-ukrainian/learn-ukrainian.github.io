@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from pathlib import Path
 from types import SimpleNamespace
@@ -21,26 +22,44 @@ def _write_json(path: Path, value: object) -> None:
     path.write_text(verifier.canonical_json(value) + "\n", encoding="utf-8")
 
 
-def _script_binding() -> tuple[str, str]:
-    merged_main_sha = subprocess.run(
-        ["git", "-C", str(verifier.ROOT), "rev-parse", "origin/main"],
+def _git(repo: Path, *arguments: str) -> str:
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(
+        GIT_CONFIG_NOSYSTEM="1",
+        GIT_CONFIG_GLOBAL=os.devnull,
+        GIT_AUTHOR_DATE="2026-01-01T00:00:00Z",
+        GIT_COMMITTER_DATE="2026-01-01T00:00:00Z",
+    )
+    return subprocess.run(
+        [
+            "git", "-C", str(repo),
+            "-c", "user.name=Freeze Fixture",
+            "-c", "user.email=fixture@example.invalid",
+            "-c", "commit.gpgsign=false",
+            "-c", f"core.hooksPath={os.devnull}",
+            *arguments,
+        ],
         check=True,
         capture_output=True,
         text=True,
         timeout=30,
+        env=env,
     ).stdout.strip()
-    script = subprocess.run(
-        [
-            "git",
-            "-C",
-            str(verifier.ROOT),
-            "show",
-            f"{merged_main_sha}:scripts/projects/open_model_data/phase3_source_universe.py",
-        ],
-        check=True,
-        capture_output=True,
-        timeout=30,
-    ).stdout
+
+
+def _script_binding(repo: Path) -> tuple[str, str]:
+    """Bind synthetic evidence to real Git objects with fixed content and metadata."""
+    repo.mkdir(parents=True)
+    _git(repo, "init", "-q", "--initial-branch=main", "--object-format=sha1", "--template=")
+    script_path = "scripts/projects/open_model_data/phase3_source_universe.py"
+    script = b"# Synthetic freezer binding fixture.\n"
+    path = repo / script_path
+    path.parent.mkdir(parents=True)
+    path.write_bytes(script)
+    _git(repo, "add", script_path)
+    _git(repo, "commit", "-q", "-m", "Freeze fixture")
+    merged_main_sha = _git(repo, "rev-parse", "HEAD")
+    _git(repo, "update-ref", "refs/remotes/origin/main", merged_main_sha)
     return merged_main_sha, verifier.sha256_bytes(script)
 
 
@@ -169,7 +188,7 @@ def _evidence(tmp_path: Path) -> tuple[Path, dict[str, Any]]:
         }
         for summary in summaries
     )
-    merged_main_sha, script_sha256 = _script_binding()
+    merged_main_sha, script_sha256 = _script_binding(tmp_path / "git-repo")
     receipt: dict[str, Any] = {
         "schema_version": "phase3_source_universe_freeze_v1",
         "text_free": True,
@@ -235,7 +254,7 @@ def _evidence(tmp_path: Path) -> tuple[Path, dict[str, Any]]:
 
 
 def _validate(evidence_dir: Path) -> dict[str, Any]:
-    return verifier.validate(evidence_dir, repo_root=verifier.ROOT)
+    return verifier.validate(evidence_dir, repo_root=evidence_dir.parent / "git-repo")
 
 
 def test_valid_freeze_reports_integrity_only(tmp_path: Path) -> None:
@@ -245,6 +264,40 @@ def test_valid_freeze_reports_integrity_only(tmp_path: Path) -> None:
 
     assert result["integrity_verified"] is True
     assert "status" not in result
+
+
+def test_synthetic_freeze_without_checkout_origin_main(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _git(checkout, "init", "-q", "--initial-branch=main", "--template=")
+    assert _git(checkout, "for-each-ref", "refs/remotes/origin/main") == ""
+    monkeypatch.setattr(verifier, "ROOT", checkout)
+
+    evidence_dir, _ = _evidence(tmp_path / "synthetic")
+
+    assert _validate(evidence_dir)["integrity_verified"] is True
+
+
+def test_synthetic_freeze_stable_when_checkout_origin_main_moves(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    checkout = tmp_path / "checkout"
+    original_sha, _ = _script_binding(checkout)
+    monkeypatch.setattr(verifier, "ROOT", checkout)
+    first_dir, first = _evidence(tmp_path / "first")
+    before = _validate(first_dir)
+    script = checkout / "scripts/projects/open_model_data/phase3_source_universe.py"
+    script.write_text("# Changed checkout script.\n", encoding="utf-8")
+    _git(checkout, "add", ".")
+    tree = _git(checkout, "write-tree")
+    # A disconnected commit proves the fixture survives even an unrelated ref tip.
+    moved_sha = _git(checkout, "commit-tree", tree, "-m", "Unrelated checkout main")
+    _git(checkout, "update-ref", "refs/remotes/origin/main", moved_sha)
+    assert _git(checkout, "rev-parse", "origin/main") != original_sha
+
+    second_dir, second = _evidence(tmp_path / "second")
+
+    assert second == first
+    assert _validate(first_dir) == before
+    assert _validate(second_dir) == before
 
 
 @pytest.mark.needs_artifact(
@@ -410,13 +463,18 @@ def test_rejects_structural_summary_mismatch(tmp_path: Path) -> None:
         _validate(evidence_dir)
 
 
-@pytest.mark.parametrize("sha", ["F" * 40, "0" * 40])
+@pytest.mark.parametrize("sha", ["F" * 40, "0" * 40, "nonancestor"])
 def test_rejects_malformed_and_nonancestor_merged_sha(tmp_path: Path, sha: str) -> None:
     evidence_dir, receipt = _evidence(tmp_path)
+    expected = "merged-main ancestry" if sha == "nonancestor" else None
+    if sha == "nonancestor":
+        repo = evidence_dir.parent / "git-repo"
+        sha = _git(repo, "commit-tree", "HEAD^{tree}", "-m", "Disconnected fixture")
+        assert _git(repo, "cat-file", "-t", sha) == "commit"
     receipt["merged_main_sha"] = sha
     _write_receipt(receipt, evidence_dir)
 
-    with pytest.raises(verifier.IntegrityError):
+    with pytest.raises(verifier.IntegrityError, match=expected):
         _validate(evidence_dir)
 
 
