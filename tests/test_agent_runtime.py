@@ -1916,8 +1916,28 @@ def _agent_only_popen(agent_popen):
     return _wrapper
 
 
+@pytest.fixture
+def _cold_codex_version_probe():
+    """Exercise cold telemetry through the real resolver without spawning a CLI."""
+    from unittest.mock import MagicMock
+
+    from agent_runtime.telemetry import _reset_version_cache_for_tests
+
+    _reset_version_cache_for_tests()
+    proc = MagicMock()
+    proc.communicate.return_value = ("codex-cli 0.123.0\n", "")
+    try:
+        # Telemetry captures Popen at import; patching runner.subprocess misses it.
+        with patch("agent_runtime.telemetry._ORIGINAL_SUBPROCESS_POPEN", return_value=proc) as probe:
+            yield probe, proc
+    finally:
+        _reset_version_cache_for_tests()
+
+
 @pytest.mark.parametrize("stdout_delay_ticks", [0, 10], ids=["immediate-stdout", "late-stdout"])
-def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, stdout_delay_ticks):
+def test_invoke_early_reap_fires_and_recovers_response(
+    tmp_path, monkeypatch, stdout_delay_ticks, _cold_codex_version_probe,
+):
     """Regression pin (2026-04-10, reworked for #9532): when Codex hangs after
     finishing its turn, the runner hands check_early_reap the captured
     ``--json`` stream; once the turn completed and its ``-o`` bytes are stable
@@ -1984,6 +2004,7 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
 
     def fake_start_watchdog(proc, *args, **kwargs):
         nonlocal simulated_now
+        assert poll_ticks == 0, "CLI version probing must not consume runner poll ticks"
         simulated_now += 10.0  # Past the 5s warmup before the first check.
         if stdout_delay_ticks == 0:
             _stdout_streamer(proc, watchdog_state)
@@ -2039,6 +2060,11 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
             hard_timeout=300,
         )
 
+    version_probe, version_proc = _cold_codex_version_probe
+    version_probe.assert_called_once()
+    assert version_probe.call_args.args[0][1:] == ["--version"]
+    version_proc.communicate.assert_called_once_with(timeout=5)
+    assert result.cli_version == "0.123.0"
     # Runner must have killed the proc via _kill_process_tree (early reap)
     mock_kill_tree.assert_called_once()
     assert poll_ticks == stdout_delay_ticks + 1
