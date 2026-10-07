@@ -754,3 +754,18 @@ def test_ci_workflow_runs_ratchet_and_requires_committed_baseline() -> None:
     # The checks job passes the event base (merge queue included) to checks.sh.
     assert "github.event.merge_group.base_sha" in workflow
     assert "bash scripts/ci/checks.sh" in workflow
+
+
+def test_release_asset_lint_uses_client_without_retry(monkeypatch):
+    import pytest
+
+    from scripts.audit import lint_word_atlas
+    from scripts.common.github_client import GitHubRateLimited
+    calls = []
+    def unavailable(request, **kwargs):
+        calls.append(request.full_url)
+        raise GitHubRateLimited(2000)
+    monkeypatch.setattr(lint_word_atlas.github_client, "http_open", unavailable)
+    with pytest.raises(GitHubRateLimited):
+        lint_word_atlas._download_release_json({"asset_url": "https://github.com/o/r/releases/download/v/asset"}, content_hash_key="json_sha256", label="synthetic")
+    assert len(calls) == 1

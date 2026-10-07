@@ -81,13 +81,25 @@ selected = next((path for path in _handoff_candidates(repo, sys.argv[2]) if path
 if selected is not None:
     print(selected.resolve().relative_to(repo))
 ' "$PROJECT_DIR" "$SESSION_EPIC" 2>/dev/null) || DIARY_REL=""
-      if [ -z "$DIARY_REL" ] || [ ! -f "$PROJECT_DIR/$DIARY_REL" ]; then
+      HYDRATION_STREAM="${SESSION_STREAM_ID:-}"
+      if [ -z "$HYDRATION_STREAM" ]; then
+        # Positional arguments expand in the bounded child shell.
+        # shellcheck disable=SC2016
+        HYDRATION_STREAM=$(run_bounded 2 bash -c '
+source "$1" && launcher_selector_stream "$2"
+' post-compact-stream "$PROJECT_DIR/scripts/lib/handoff_identity.sh" "$SESSION_EPIC" 2>/dev/null) \
+          || HYDRATION_STREAM=""
+      fi
+      if [ -z "$HYDRATION_STREAM" ]; then
+        HYDRATION_RC=2
+        HYDRATION="unresolved-stream-selector: $SESSION_EPIC. Repair the launcher selector before continuing."
+      elif [ -z "$DIARY_REL" ] || [ ! -f "$PROJECT_DIR/$DIARY_REL" ]; then
         HYDRATION_RC=2
         HYDRATION="No Codex/shared driver handoff selected by the Codex canary resolver. Repair the handoff before continuing."
       else
         HYDRATION_RC=0
         HYDRATION=$(run_bounded 2 "$BOUNDED_PYTHON" \
-          -m scripts.session_canary.codex_lane hydrate --epic "$SESSION_EPIC" 2>&1) \
+          -m scripts.session_canary.codex_lane hydrate --epic "$SESSION_EPIC" --stream "$HYDRATION_STREAM" 2>&1) \
           || HYDRATION_RC=$?
       fi
       if [ "$HYDRATION_RC" -eq 0 ]; then

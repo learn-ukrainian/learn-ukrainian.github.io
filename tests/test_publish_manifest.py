@@ -16,6 +16,7 @@ from scripts.lexicon.publish_manifest import (
     versioned_asset_name,
 )
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()

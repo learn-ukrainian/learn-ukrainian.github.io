@@ -17,6 +17,16 @@ try:
 except ImportError:
     from scripts.agent_runtime.agent_identity import normalize_seat, seat_read_aliases
 
+try:
+    from secret_redactor import redact_text
+except ImportError:
+    from scripts.secret_redactor import redact_text
+
+try:
+    from api.lane_health_redaction import REDACTION_PLACEHOLDER_RE, redact_lane_health_diagnostics
+except ImportError:
+    from scripts.api.lane_health_redaction import REDACTION_PLACEHOLDER_RE, redact_lane_health_diagnostics
+
 logger = logging.getLogger("lane_health")
 
 # Constants per specification
@@ -36,19 +46,37 @@ MAX_ERROR_EXCERPT_CHARS = 200
 _ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
 
 
+def redact_lane_health_text(text: str) -> str:
+    """Apply shared secrets, then lane-health-only diagnostic redaction (#9899).
+
+    Only the served copy is rewritten; stored task records and other callers
+    of the shared redactor retain their existing behavior.
+    """
+    return redact_lane_health_diagnostics(redact_text(text) or "")
+
+
 def sanitize_error_excerpt(raw: Any) -> str | None:
     """Reduce a raw task stderr_excerpt to a single-line, ANSI-free excerpt.
 
     Task records persist provider CLI output verbatim, including terminal
     color escapes (e.g. opencode's red ``Error:`` banner). Health records ride
     the routing-budget JSON into capacity_pick notes, so they must be plain.
+    Before serving, the excerpt passes through the repository redactors so
+    host names, private paths, addresses and credential-bearing URLs never
+    leave the local task record (#9899).
     """
     if not isinstance(raw, str):
         return None
     text = " ".join(_ANSI_ESCAPE_RE.sub("", raw).split())
     if not text:
         return None
-    return text[:MAX_ERROR_EXCERPT_CHARS]
+    text = redact_lane_health_text(text)
+    cutoff = MAX_ERROR_EXCERPT_CHARS
+    for match in REDACTION_PLACEHOLDER_RE.finditer(text):
+        if match.start() < cutoff < match.end():
+            cutoff = match.start()
+            break
+    return text[:cutoff].rstrip()
 
 
 def is_spawn_phase_failure(
@@ -120,11 +148,15 @@ class LaneHealthScan:
         A lane with recent tasks keeps its computed record. After a successful
         scan, a lane with no tasks in the window is observed healthy (nothing
         failed). A scan error or missing directory is unknown: ``healthy`` and
-        the failure counts are null, never filled in as healthy.
+        the failure counts are null, never filled in as healthy. Every served
+        free-text field passes through the repository redactors (#9899).
         """
         record = self.records.get(lane)
         if record is not None:
-            return {**record, "basis": BASIS_RECENT_TASKS}
+            served = {**record, "basis": BASIS_RECENT_TASKS}
+            if isinstance(served.get("last_error"), str):
+                served["last_error"] = sanitize_error_excerpt(served["last_error"])
+            return served
         if self.observed:
             return {
                 "healthy": True,
@@ -140,7 +172,7 @@ class LaneHealthScan:
             "span_minutes": None,
             "last_error": None,
             "basis": BASIS_SCAN_UNAVAILABLE,
-            "error": self.error,
+            "error": redact_lane_health_text(self.error) if self.error else None,
         }
 
 

@@ -121,7 +121,7 @@ def test_fixture_issues_map_runs_gh_from_context_root(tmp_path: Path, monkeypatc
 
         return _Proc()
 
-    monkeypatch.setattr("scripts.api.issues_router.subprocess.run", _fake_run)
+    monkeypatch.setattr("scripts.api.issues_router.github_client.run", _fake_run)
     client = _cluster_client(tmp_path)
     response = client.get("/api/issues/map")
     assert response.status_code == 200

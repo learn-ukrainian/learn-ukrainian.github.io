@@ -41,7 +41,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common import task_store_paths
+from scripts.common import github_client, task_store_paths
 from scripts.common.acp_runtime_lock import (
     holds_only_git_pointer,
 )
@@ -200,6 +200,34 @@ def _run(
         check=False,
         timeout=timeout,
         env=env,
+    )
+
+
+def _run_gh(
+    args: list[str],
+    *,
+    cwd: Path,
+    timeout: float | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Read GitHub through the shared client.
+
+    Modelled argv translates to REST. Every other shape, including
+    ``gh pr list --head`` and ``gh search prs``, falls through to native gh
+    on that client's colour-safe transport. Callers still parse stdout:
+    an empty body is unknown, and a JSON ``[]`` is no PR.
+    """
+    timeout = _effective_timeout(timeout)
+    if timeout is not None and timeout <= 0:
+        raise subprocess.TimeoutExpired(args, 0)
+    return github_client.run(
+        args,
+        cwd=cwd,
+        fresh=True,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=timeout,
+        env=sanitized_git_env(),
     )
 
 
@@ -453,7 +481,7 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
         return [], "REST PR lookup failed: origin owner/repo could not be determined"
     owner, repo = slug
     try:
-        proc = _run(
+        proc = _run_gh(
             [
                 "gh",
                 "api",
@@ -507,7 +535,7 @@ def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequ
 
 def _query_pr_states_graphql(repo_root: Path, branch: str) -> tuple[list[PullRequestState], str | None]:
     try:
-        proc = _run(
+        proc = _run_gh(
             [
                 "gh",
                 "pr",
@@ -610,7 +638,7 @@ def _query_pr_by_number_rest(repo_root: Path, number: int) -> tuple[list[PullReq
         return [], "REST PR lookup failed: origin owner/repo could not be determined"
     owner, repo = slug
     try:
-        proc = _run(
+        proc = _run_gh(
             ["gh", "api", "-X", "GET", f"repos/{owner}/{repo}/pulls/{number}"],
             cwd=repo_root,
             timeout=30,
@@ -645,7 +673,7 @@ def _query_pr_by_number(repo_root: Path, number: int) -> tuple[list[PullRequestS
 
 def _query_pr_by_number_graphql(repo_root: Path, number: int) -> tuple[list[PullRequestState], str | None]:
     try:
-        proc = _run(
+        proc = _run_gh(
             [
                 "gh",
                 "pr",
@@ -888,7 +916,7 @@ def _query_prs_by_head_sha(
     if not head_sha:
         return [], None
     try:
-        proc = _run(
+        proc = _run_gh(
             ["gh", "search", "prs", head_sha, "--json", "number,state"],
             cwd=repo_root,
             timeout=30,

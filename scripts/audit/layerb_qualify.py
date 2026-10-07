@@ -651,7 +651,9 @@ def route_eligibility(case: Mapping[str, Any], route: EffectiveRoute) -> dict[st
     """Return the v2.1 replay eligibility row without guessing unknown lineage."""
     writer, reviewer = _lineage_for_case(case)
     case_id = str(case.get("case_id") or case.get("fact_check_id") or "unknown")
-    if writer is None or reviewer is None:
+    # Auto identifies the authoring family, but never attests a concrete QG
+    # reviewer. Neither side may carry that unresolved model identity here.
+    if writer in {None, model_families.Family.CURSOR.value} or reviewer in {None, model_families.Family.CURSOR.value}:
         return {
             "case_id": case_id,
             "writer_family": writer,
@@ -669,9 +671,8 @@ def route_eligibility(case: Mapping[str, Any], route: EffectiveRoute) -> dict[st
         }
     # The grok route's third-family status is GUARDED, not assumed: any case
     # whose writer or reviewer normalizes into the xai lineage is
-    # self-judgment and fails closed. cursor-Auto is now UNKNOWN (separate
-    # from grok per the 2026-07-17 routing decision), so a cursor-reviewed row
-    # fails closed earlier via UNKNOWN_LINEAGE rather than this guard. Today's
+    # self-judgment and fails closed. Cursor Auto lacks a concrete reviewer
+    # identity, so its rows fail closed via UNKNOWN_LINEAGE above. Today's
     # labels contain no xai rows, so this changes nothing operationally — it
     # exists so future grok/xai-authored content can never be judged by its
     # own lineage silently.

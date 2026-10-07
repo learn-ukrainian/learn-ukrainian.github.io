@@ -37,6 +37,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from scripts.common import github_client
 from scripts.common.repo_root import project_interpreter
 from scripts.orchestration.task_identity import DEFAULT_REPOSITORY
 from scripts.review.evidence import (
@@ -1827,8 +1828,9 @@ def _run_command(
 ) -> str:
     """Run one deterministic checkout command and surface useful failures."""
     try:
-        completed = subprocess.run(
+        completed = github_client.run(
             command,
+            fresh=True,
             cwd=cwd,
             capture_output=True,
             text=True,

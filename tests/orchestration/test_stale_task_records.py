@@ -718,7 +718,7 @@ def test_gh_error_text_never_carries_credentials(monkeypatch):
     def failing_gh(*_args, **_kwargs):
         return subprocess.CompletedProcess(["gh"], 1, "", f"error: https://user:{SECRET}@api.github.com denied\n")
 
-    monkeypatch.setattr(str_mod.subprocess, "run", failing_gh)
+    monkeypatch.setattr(str_mod.github_client, "run", failing_gh)
     index = str_mod.build_pull_index(SLUG, oldest_start=None, pager=str_mod.gh_pull_page, max_pages=1)
     assert index.error and "https://api.github.com denied" in index.error
     assert SECRET not in index.error

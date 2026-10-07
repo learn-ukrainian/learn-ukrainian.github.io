@@ -863,7 +863,7 @@ def test_select_cli_mutations_and_receipt(bound, monkeypatch, capsys, mode):
             )
             return subprocess.CompletedProcess(command, int(mode == "pr_unavailable"), text)
 
-        monkeypatch.setattr(subprocess, "run", run)
+        monkeypatch.setattr(sense_cli.github_client, "run", run)
 
         def scan(*args, **kwargs):
             assert kwargs["pr_text"] == ("public public" if mode == "pr_available" else None)

@@ -1,4 +1,4 @@
-# Routing baseline v1 (#9302)
+# Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
 The pinned source-contract/occurrence census is
 `dae3d752426d6c11c5dc82260ec07ae8164e7730`. The host-independent executable
@@ -16,9 +16,26 @@ project interpreter and the corrected `capture.py` (outside the clone):
   --project-python <project-python> --output <scratch-output>
 ```
 
-Compare all three hashes, not just the catalog or selected reviewer. Never
-replace this fixture with outputs from migrated code. Run the same driver
-against a changed checkout to compare behavior, without updating expected data.
+The executable expectations include the approved #9951 Cursor family change.
+The original baseline remains in Git history. Its source-contract and
+occurrence census still use the pinned SHA above; this revision does not
+regenerate that historical evidence or change the input matrix.
+
+The #9960 regeneration compared every captured surface before accepting the
+new bytes. Only two Cursor catalog fields (`unknown_auto_family_resolution`
+and `note`) and reviewer rows 21, 205, 389, 573, 757, 941, 1125 and 1309 changed.
+Those eight rows are the `cursor:auto` author across four risks and two review
+profiles: native Grok becomes eligible, and every Cursor transport stays
+excluded. All other reviewer receipts, capacity, dispatch, adapter, launcher,
+registry, fallback and source-contract surfaces are unchanged. `inputs.json`
+and `occurrences.json.gz` remain byte-identical.
+
+Reproduce the current executable expectations from the #9960 fix checkout
+using the same command. The capture loads the runtime source from that checkout
+alongside its scripts, so an older installed package cannot supply the family
+normalizer. Compare all three hashes, not just the catalog or selected reviewer.
+Future regeneration must explain every difference against the approved outcome;
+an unexplained difference fails the capture comparison.
 
 ## Inputs and captured evidence
 

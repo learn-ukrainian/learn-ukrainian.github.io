@@ -49,6 +49,8 @@ def _bypass_linguistic_gate(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(publish_module, "run_linguistic_gate", lambda *args, **kwargs: None)
 
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
+
 def _write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False) + "\n", encoding="utf-8")

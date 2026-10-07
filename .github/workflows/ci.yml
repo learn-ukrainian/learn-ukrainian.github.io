@@ -48,6 +48,11 @@ jobs:
           sparse-checkout: |
             scripts/ci/
             scripts/__init__.py
+            scripts/common/__init__.py
+            scripts/common/github_client.py
+            scripts/opsec/__init__.py
+            scripts/opsec/gh_snapshot.py
+            scripts/opsec/prepublish.py
             .github/workflows/ci.yml
             .python-version
           sparse-checkout-cone-mode: false
@@ -177,6 +182,11 @@ jobs:
           sparse-checkout: |
             scripts/ci/
             scripts/__init__.py
+            scripts/common/__init__.py
+            scripts/common/github_client.py
+            scripts/opsec/__init__.py
+            scripts/opsec/gh_snapshot.py
+            scripts/opsec/prepublish.py
             .python-version
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0

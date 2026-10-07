@@ -1,7 +1,7 @@
-"""Frozen, provider-free capture driver for the #9302 base-code contract.
+"""Provider-free capture for the #9302 contract and approved routing revisions.
 
-Run in a fresh process: imports must come from --source-root, never the migrated
-checkout. See SPEC.md for the fixed inputs and deliberately isolated environment.
+Run in a fresh process: imports must come from --source-root, including its
+runtime package. See SPEC.md for the pinned census and approved expectations.
 """
 
 from __future__ import annotations
@@ -142,7 +142,7 @@ def reviewer_inputs(catalog):
 
 
 def capture(source, scratch, project_python):
-    sys.path[:0] = [str(source), str(source / "scripts")]
+    sys.path[:0] = [str(source), str(source / "scripts"), str(source / "packages/v4-runtime/src")]
     from scripts.agent_runtime.registry import AGENTS
     from scripts.fleet import credit_lane
     from scripts.review.model_catalog import load_model_catalog
@@ -320,11 +320,11 @@ printf '%s\\n' "$LC_MODEL" "$LC_EFFORT" "$LC_HARNESS" "$LC_ENDPOINT" "$LC_ISOLAT
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Capture the untouched #9302 routing baseline without provider calls.\nUse only for fixture reproduction, not live routing or health probing.",
+        description="Capture routing baseline expectations without provider calls.\nUse only for fixture reproduction, not live routing or health probing.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Outputs: deterministic fixture files under --output. Exit codes: 0 captured; nonzero failed.\nRelated: SPEC.md; #9302.\nExample: capture.py --source-root SCRATCH_CHECKOUT --output FIXTURE_DIR",
     )
-    parser.add_argument("--source-root", type=Path, required=True, help="Untouched checkout of the pinned base SHA")
+    parser.add_argument("--source-root", type=Path, required=True, help="Checkout of the pinned base or approved routing revision")
     parser.add_argument("--output", type=Path, required=True, help="Destination directory for versioned fixture files")
     parser.add_argument("--project-python", type=Path, required=True, help="Task-prescribed shared project interpreter")
     args = parser.parse_args()

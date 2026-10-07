@@ -483,9 +483,10 @@ def test_quoted_merge_not_detected():
 
 
 def test_is_advisory():
-    assert guard._is_advisory("pip-audit (advisory)")
-    assert not guard._is_advisory("boundary-and-tests")
-    assert not guard._is_advisory("Test (pytest)")
+    assert guard.is_advisory("Component shadow (advisory)", workflow="CI")
+    assert not guard.is_advisory("Component shadow (advisory)")
+    assert not guard.is_advisory("boundary-and-tests", workflow="CI")
+    assert not guard.is_advisory("Test (pytest)", workflow="CI")
 
 
 def test_pr_snapshot_reads_metadata_and_checks_concurrently(monkeypatch):
@@ -667,7 +668,7 @@ def test_check_states_splits_failing_and_pending(monkeypatch):
         '[{"name":"boundary-and-tests","bucket":"fail"},'
         '{"name":"Test (pytest)","bucket":"pending"},'
         '{"name":"Lint (ruff)","bucket":"pass"},'
-        '{"name":"pip-audit (advisory)","bucket":"fail"}]'
+        '{"name":"Component shadow (advisory)","bucket":"fail","workflow":"CI"}]'
     )
     _fake_gh(monkeypatch, returncode=8, stdout=rows)
     assert guard._check_states("5") == (["boundary-and-tests"], ["Test (pytest)"])
@@ -840,6 +841,30 @@ def test_missing_check_bucket_fails_closed(monkeypatch):
     assert guard._check_states("5") is None
 
 
+@pytest.mark.parametrize("identity,allowed", [
+    ({"workflow": "CI"}, True),
+    ({"workflow": "Nightly"}, False),
+    ({}, False),
+    ({"workflowName": "CI"}, False),
+])
+def test_advisory_checks_require_workflow_identity(monkeypatch, identity, allowed):
+    name = "Component shadow (advisory)"
+    rows = [{"name": name, "bucket": "fail", **identity}]
+
+    def fake_run(cmd, **kwargs):
+        assert cmd == ["gh", "pr", "checks", "5", "--json", "name,bucket,state,workflow"]
+        return subprocess.CompletedProcess(cmd, 1, json.dumps(rows), "")
+
+    monkeypatch.setattr(guard.subprocess, "run", fake_run)
+    monkeypatch.setattr(guard, "_pr_meta", lambda *_a, **_k: {"isDraft": False})
+    assert guard._check_states("5") == (([], []) if allowed else ([name], []))
+    result = guard._judge(["5", "--squash"])
+    if allowed:
+        assert result is None
+    else:
+        assert f"FAILING checks: {name}" in result
+
+
 def test_known_pass_buckets_are_green(monkeypatch):
     rows = '[{"name":"CI Gate","bucket":"pass"},{"name":"Flaky","bucket":"skipping"},{"name":"N","bucket":"neutral"}]'
     _fake_gh(monkeypatch, returncode=0, stdout=rows)
@@ -857,6 +882,17 @@ def _rollup_states(monkeypatch, rows):
 
     monkeypatch.setattr(guard.subprocess, "run", fake_run)
     return guard._check_states("5")
+
+
+@pytest.mark.parametrize("identity,allowed", [
+    ({"workflowName": "CI"}, True),
+    ({"workflowName": "Nightly"}, False),
+    ({}, False),
+])
+def test_rollup_advisory_maps_workflow_name_explicitly(monkeypatch, identity, allowed):
+    name = "Component shadow (advisory)"
+    row = {"name": name, "status": "COMPLETED", "conclusion": "FAILURE", **identity}
+    assert _rollup_states(monkeypatch, [row]) == (([], []) if allowed else ([name], []))
 
 
 @pytest.mark.parametrize(

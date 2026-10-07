@@ -4,15 +4,15 @@ from __future__ import annotations
 
 import itertools
 import json
-import re
 import subprocess
 import textwrap
 import threading
 import time
 from datetime import date
-from pathlib import Path
 
 import pytest
+
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 from scripts.orchestration import issue_stream_audit
 from scripts.orchestration.issue_stream_audit import (
@@ -271,7 +271,7 @@ def test_depth_eight_known_leaf_does_not_warn():
     assert warnings == []
 
 
-def test_subissue_batch_uses_one_query_for_multiple_parents(monkeypatch):
+def test_subissue_batch_uses_one_typed_request_for_multiple_parents(monkeypatch):
     calls = []
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
 
@@ -282,10 +282,9 @@ def test_subissue_batch_uses_one_query_for_multiple_parents(monkeypatch):
     monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
     pages = issue_stream_audit._fetch_subissue_batch({100: None, 200: "cursor"}, body_roots={100})
     assert len(calls) == 1
-    query = _query_arg(calls[0][0])
-    assert "i100:issue(number:100){body subIssues(first:100)" in query
-    assert 'i200:issue(number:200){subIssues(first:100,after:"cursor")' in query
-    assert "nodes{number repository{nameWithOwner} subIssuesSummary{total}}" in query
+    request = calls[0][0]
+    assert request.verb == "read-subissue-batch"
+    assert request.fields == {"repo": "acme/repo", "cursors": {100: None, 200: "cursor"}, "body_roots": {100}}
     assert {number: page["subIssues"]["nodes"][0]["number"] for number, page in pages.items()} == {100: 10, 200: 20}
 
 
@@ -895,7 +894,7 @@ def _fake_gh_run(calls, *, owner: str, name: str, open_issues: list[dict]):
             return _FakeCompletedProcess(json.dumps(open_issues))
         if args[1:3] == ["repo", "view"]:
             return _FakeCompletedProcess(json.dumps({"owner": {"login": owner}, "name": name}))
-        if args[1] == "api" and args[2] == "graphql":
+        if args[1:3] == ["read", "subissue-batch"]:
             return _FakeCompletedProcess(
                 json.dumps(
                     {
@@ -1398,7 +1397,8 @@ def test_subissue_batch_returns_none_for_null_node_and_scopes_repo(monkeypatch):
     assert pages[100] is None
     assert pages[200]["subIssues"]["nodes"][0]["number"] == 20
     # Node lookups carry their repository so cross-repo children are detectable.
-    assert "repository{nameWithOwner}" in _query_arg(calls[0])
+    assert calls[0].verb == "read-subissue-batch"
+    assert calls[0].fields["repo"] == "acme/repo"
 
 
 def test_subissue_batch_degrades_per_node_when_batch_query_fails(monkeypatch):
@@ -1410,8 +1410,7 @@ def test_subissue_batch_degrades_per_node_when_batch_query_fails(monkeypatch):
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
 
     def fake_gh_json(args, *, cwd):
-        query = _query_arg(args)
-        if "i200:issue" in query:
+        if 200 in args.fields["cursors"]:
             raise RuntimeError("gh api graphql… failed: errors present")
         return {"data": {"repository": {"i100": _page([10], False)}}}
 
@@ -1428,8 +1427,7 @@ def test_subissue_batch_graphql_errors_are_incomplete_not_absent(monkeypatch):
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
 
     def fake_gh_json(args, *, cwd):
-        query = _query_arg(args)
-        if "i200:issue" in query:
+        if 200 in args.fields["cursors"]:
             return {"data": {"repository": {"i200": None}}, "errors": [{"message": "boom"}]}
         return {"data": {"repository": {"i100": _page([10], False)}}}
 
@@ -1475,9 +1473,9 @@ def _run_audit_fake_gh(calls, *, owner: str, name: str, open_issues: list[dict],
             return _FakeCompletedProcess(json.dumps({"owner": {"login": owner}, "name": name}))
         if args[1:3] == ["issue", "view"]:
             return _FakeCompletedProcess(json.dumps({"number": int(args[3]), "state": "CLOSED"}))
-        if args[1] == "api" and args[2] == "graphql":
+        if args[1:3] == ["read", "subissue-batch"]:
             repo = {}
-            for number_text in re.findall(r"i(\d+):issue\(number:", args[-1]):
+            for number_text in args[-1]["cursors"]:
                 number = int(number_text)
                 nodes = tree.get(number, [])
                 if nodes is None:
@@ -1559,7 +1557,7 @@ def test_run_audit_reports_cross_repo_child_without_following_it(tmp_path, monke
         "repository": "other/foreign",
     } in report["warnings"]
     # The foreign number was never looked up in THIS repository.
-    assert not any("i77:issue" in args[-1] for args, _cwd in calls if args[1:2] == ["api"])
+    assert not any(77 in args[-1]["cursors"] for args, _cwd in calls if args[1:3] == ["read", "subissue-batch"])
     assert report["ok"] is True
 
 
@@ -1579,8 +1577,8 @@ def _run_audit_fake_gh_failing_nodes(
             return _FakeCompletedProcess(json.dumps({"owner": {"login": owner}, "name": name}))
         if args[1:3] == ["issue", "view"]:
             return _FakeCompletedProcess(json.dumps({"number": int(args[3]), "state": "CLOSED"}))
-        if args[1] == "api" and args[2] == "graphql":
-            numbers = [int(n) for n in re.findall(r"i(\d+):issue\(number:", args[-1])]
+        if args[1:3] == ["read", "subissue-batch"]:
+            numbers = list(args[-1]["cursors"])
             if failing & set(numbers):
                 failed = _FakeCompletedProcess("")
                 failed.returncode = 1
@@ -1667,9 +1665,9 @@ def test_run_audit_singleton_retry_budget_is_shared_per_run(tmp_path, monkeypatc
     singleton_retries = [
         args
         for args, _cwd in calls
-        if list(args[1:3]) == ["api", "graphql"]
-        and len(re.findall(r"i(\d+):issue\(number:", args[-1])) == 1
-        and int(re.search(r"i(\d+):issue\(number:", args[-1]).group(1)) in failing
+        if list(args[1:3]) == ["read", "subissue-batch"]
+        and len(args[-1]["cursors"]) == 1
+        and next(iter(args[-1]["cursors"])) in failing
     ]
     # All 30 children fail: batch of 20 → 20 singleton retries, batch of 10 →
     # only 5 more before the shared per-run budget is spent; the remaining 5
@@ -1771,64 +1769,19 @@ def test_tree_membership_pagination_truncation_counts_as_incomplete():
     assert 100 in membership
 
 
-def test_subissue_batch_real_github_not_found_error_is_absent_not_incomplete(monkeypatch):
-    """Finding 2 (#8661): real GitHub GraphQL returns exit code 1 with a NOT_FOUND
-    error payload when an issue does not exist. _fetch_subissue_batch must recognize
-    this as genuinely absent (None), not INCOMPLETE_NODE, while preserving intact nodes."""
+def test_subissue_batch_confirmed_absence_preserves_other_nodes(monkeypatch):
+    """The client projects a REST parent 404 as a null alias; retain other nodes."""
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
-
-    def fake_subprocess_run(args, capture_output, text, timeout, cwd, **_kwargs):
-        args = _inspect_frozen_query(args)
-        assert args[0] == "gh"
-        if args[1:3] == ["api", "graphql"]:
-            query = _query_arg(args)
-            if "i999:issue" in query and "i100:issue" in query:
-                # Batch with one present and one deleted issue
-                stdout = json.dumps(
-                    {
-                        "data": {
-                            "repository": {
-                                "i100": {
-                                    "body": "",
-                                    "subIssues": {
-                                        "nodes": [{"number": 10}],
-                                        "pageInfo": {"hasNextPage": False, "endCursor": None},
-                                    },
-                                },
-                                "i999": None,
-                            }
-                        },
-                        "errors": [
-                            {
-                                "type": "NOT_FOUND",
-                                "path": ["repository", "i999"],
-                                "message": "Could not resolve to an Issue with the number of 999.",
-                            }
-                        ],
-                    }
-                )
-                return _FakeCompletedProcess(stdout, returncode=1, stderr="gh: Could not resolve...")
-            if "i999:issue" in query:
-                # Singleton retry for deleted issue
-                stdout = json.dumps(
-                    {
-                        "data": {"repository": {"i999": None}},
-                        "errors": [
-                            {
-                                "type": "NOT_FOUND",
-                                "path": ["repository", "i999"],
-                                "message": "Could not resolve to an Issue with the number of 999.",
-                            }
-                        ],
-                    }
-                )
-                return _FakeCompletedProcess(stdout, returncode=1, stderr="gh: Could not resolve...")
-        raise AssertionError(f"unexpected invocation: {args}")
-
-    monkeypatch.setattr(issue_stream_audit.subprocess, "run", fake_subprocess_run)
+    calls = []
+    def read_batch(request, *, cwd):
+        calls.append(request)
+        assert request.verb == "read-subissue-batch"
+        return {"data": {"repository": {"i100": _page([10], False), "i999": None}}}
+    monkeypatch.setattr(issue_stream_audit, "_gh_json", read_batch)
     pages = issue_stream_audit._fetch_subissue_batch({100: None, 999: None})
     assert pages[100]["subIssues"]["nodes"][0]["number"] == 10
     assert pages[999] is None
+    assert len(calls) == 1
 
 
 def test_validate_membership_report_and_read_membership_index_reject_incomplete_cache(tmp_path):
@@ -1957,8 +1910,8 @@ def test_run_audit_incomplete_node_refuses_membership_and_entire_context(tmp_pat
             return _FakeCompletedProcess(json.dumps({"owner": {"login": "acme"}, "name": "repo"}))
         if args[1:3] == ["issue", "view"]:
             return _FakeCompletedProcess(json.dumps({"number": int(args[3]), "state": "OPEN"}))
-        if args[1] == "api" and args[2] == "graphql":
-            numbers = [int(n) for n in re.findall(r"i(\d+):issue\(number:", args[-1])]
+        if args[1:3] == ["read", "subissue-batch"]:
+            numbers = list(args[-1]["cursors"])
             if 20 in numbers:
                 return _FakeCompletedProcess("", returncode=1, stderr="connection refused")
             repo = {}
@@ -2202,29 +2155,23 @@ def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatc
     monkeypatch.setenv("GH_REPO", "unit/public")
 
 
-def _query_arg(args):
-    """Inspect the real fixed-query helper's frozen payload in transport spies."""
-    import json
+@pytest.fixture(autouse=True)
+def _typed_audit_command_boundary(monkeypatch):
+    """Consumer tests inject projected named reads; HTTP proofs live in client tests."""
+    from scripts.publish.github import Request
 
-    from scripts.publish.github import Request, request_run
-
-    if isinstance(args, Request):
-        queries = []
-
-        def inspect(command, **kwargs):
-            queries.append(json.loads(Path(command[command.index("--input") + 1]).read_bytes())["query"])
-            return _FakeCompletedProcess("{}")
-
-        request_run(args, runner=inspect)
-        return queries[0]
-    if "--input" in args:
-        return json.loads(Path(args[args.index("--input") + 1]).read_bytes())["query"]
-    return args[-1]
+    original = issue_stream_audit.request_run
+    def execute(request, **kwargs):
+        if isinstance(request, Request):
+            assert request.verb == "read-subissue-batch"
+            return subprocess.run(
+                ["gh", "read", "subissue-batch", request.fields], timeout=kwargs.pop("timeout", 30), **kwargs
+            )
+        return original(request, **kwargs)
+    monkeypatch.setattr(issue_stream_audit, "request_run", execute)
 
 
 def _inspect_frozen_query(args):
-    if "graphql" in args and "--input" in args:
-        return ["gh", "api", "graphql", "query=" + _query_arg(args)]
     return args
 
 

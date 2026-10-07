@@ -19,8 +19,6 @@ from scripts.session_canary import gemini_lane as _gemini_lane
 from scripts.session_canary import grok_lane as _gl
 from scripts.session_canary import handoff_select, shared_hydration
 
-EPIC_STREAM_DEFAULTS = dict(_gl.EPIC_STREAM_DEFAULTS)
-
 _HOLDER_AGENT = "codex"
 _HOLDER_HARNESS = "codex-cli"
 
@@ -105,7 +103,7 @@ def _cmd_mint_codex(args: argparse.Namespace) -> int:
 
 
 def _stream_id(args: argparse.Namespace) -> str:
-    return str(getattr(args, "stream", None) or EPIC_STREAM_DEFAULTS.get(args.epic, f"epic:{args.epic}"))
+    return _gl._stream_id(args)
 
 
 _read_lease_environment = _gemini_lane._read_lease_environment
@@ -297,7 +295,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     args.epic = args.epic.strip().lower()
-    return int(args.func(args))
+    try:
+        return int(args.func(args))
+    except _gl.StreamResolutionError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

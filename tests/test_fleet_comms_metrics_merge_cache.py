@@ -1,4 +1,4 @@
-"""Immutable PR merge facts are cached and looked up in GraphQL batches."""
+"""Immutable PR merge facts use the production REST path and durable cache."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 
+from scripts.common.github_client import Response
 from scripts.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
 
 NOW = datetime(2026, 7, 22, 12, 0, tzinfo=UTC)
@@ -50,108 +51,69 @@ def _plane(path: Path, numbers: list[int], *, repo: str = REPO) -> None:
     conn.close()
 
 
-class CapturedArgs(list):
-    """Snapshot the query while the transport's temporary file exists."""
-    def __init__(self, args):
-        super().__init__(args)
-        self.query = _query_from(args)
+def _key(endpoint):
+    match = re.fullmatch(r"repos/(.+)/pulls/(\d+)", endpoint)
+    assert match, endpoint
+    return match[1], int(match[2])
 
 
-def _query_from(args: list[str]) -> str:
-    if isinstance(args, CapturedArgs):
-        return args.query
-    payload = json.loads(Path(args[args.index("--input") + 1]).read_text())
-    assert payload["variables"] == {}
-    return payload["query"]
+def _runner(calls, answers):
+    def transport(method, endpoint, headers, body, timeout):
+        assert method == "GET" and body is None
+        assert timeout == 30
+        calls.append(endpoint)
+        return Response(200, {}, json.dumps({"merged_at": answers[_key(endpoint)]}).encode())
+
+    return transport
 
 
-def _pull_aliases(query: str) -> list[tuple[str, int]]:
-    found: list[tuple[str, int]] = []
-    marks = list(
-        re.finditer(r'r\d+:\s*repository\(owner:\s*"([^"]+)",\s*name:\s*"([^"]+)"\)\s*\{', query)
-    )
-    for index, mark in enumerate(marks):
-        end = marks[index + 1].start() if index + 1 < len(marks) else len(query)
-        body = query[mark.end() : end]
-        repo = f"{mark.group(1)}/{mark.group(2)}"
-        for number in re.findall(r"pullRequest\(number:\s*(\d+)\)", body):
-            found.append((repo, int(number)))
-    return found
-
-
-def _runner(calls: list[list[str]], answers: dict[tuple[str, int], str | None]):
-    def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
-        calls.append(CapturedArgs(args))
-        query = _query_from(args)
-        data: dict[str, dict[str, dict[str, str | None]]] = {}
-        marks = list(
-            re.finditer(r'r(\d+):\s*repository\(owner:\s*"([^"]+)",\s*name:\s*"([^"]+)"\)\s*\{', query)
-        )
-        for index, mark in enumerate(marks):
-            end = marks[index + 1].start() if index + 1 < len(marks) else len(query)
-            body = query[mark.end() : end]
-            repo = f"{mark.group(2)}/{mark.group(3)}"
-            node: dict[str, dict[str, str | None]] = {}
-            for number_s in re.findall(r"p(\d+):\s*pullRequest", body):
-                raw = answers[(repo, int(number_s))]
-                node[f"p{number_s}"] = {"mergedAt": raw}
-            data[f"r{mark.group(1)}"] = node
-        return subprocess.CompletedProcess(args, 0, stdout=json.dumps({"data": data}), stderr="")
-
-    return runner
-
-
-def _collect(tmp_path: Path, numbers: list[int], runner, *, repo: str = REPO):
+def _collect(tmp_path: Path, numbers: list[int], runner, github_transport, *, repo: str = REPO):
     tasks = tmp_path / "tasks"
     tasks.mkdir(exist_ok=True)
     plane = tmp_path / "plane.sqlite3"
     if not plane.exists():
         _plane(plane, numbers, repo=repo)
     cache = tmp_path / "pr-merge-facts.json"
+    github_transport(runner)
     payload = collect_stream_bottleneck_metrics(
         tasks_dir=tasks,
         plane_db=plane,
         now=NOW,
-        gh_runner=runner,
         merge_cache_path=cache,
     )
     return payload, cache
 
 
-def test_warm_cache_issues_zero_gh_calls(tmp_path: Path) -> None:
+def test_warm_cache_issues_zero_gh_calls(tmp_path: Path, github_transport) -> None:
     calls: list[list[str]] = []
     answers = {(REPO, number): MERGED for number in (10, 11, 12)}
     runner = _runner(calls, answers)
 
-    first, cache = _collect(tmp_path, [10, 11, 12], runner)
-    assert len(calls) == 1
-    assert calls[0][:5] == ["gh", "api", "--method", "POST", "graphql"]
-    assert len(_pull_aliases(_query_from(calls[0]))) == 3
+    first, cache = _collect(tmp_path, [10, 11, 12], runner, github_transport)
+    assert calls == [f"repos/{REPO}/pulls/{n}" for n in (10, 11, 12)]
     assert first["by_stream_epic"]["4707"]["gate_to_merge"]["n"] == 3
     stored = json.loads(cache.read_text(encoding="utf-8"))
     assert stored["facts"][f"{REPO}#10"] == MERGED
 
     calls.clear()
-    second, _cache = _collect(tmp_path, [10, 11, 12], runner)
+    second, _cache = _collect(tmp_path, [10, 11, 12], runner, github_transport)
     assert calls == []
     assert second["by_stream_epic"]["4707"]["gate_to_merge"]["n"] == 3
 
 
-def test_misses_batch_into_one_call_per_fifty_pull_requests(tmp_path: Path) -> None:
+def test_misses_read_each_pull_request_once_across_batch_boundary(tmp_path: Path, github_transport) -> None:
     numbers = list(range(1, 52))
     calls: list[list[str]] = []
     answers = {(REPO, number): MERGED for number in numbers}
-    payload, _cache = _collect(tmp_path, numbers, _runner(calls, answers))
+    payload, _cache = _collect(tmp_path, numbers, _runner(calls, answers), github_transport)
 
-    assert len(calls) == 2
-    batches = [_pull_aliases(_query_from(call)) for call in calls]
-    assert [len(batch) for batch in batches] == [50, 1]
-    assert {number for _repo, number in batches[0] + batches[1]} == set(numbers)
+    assert len(calls) == 51
+    assert [_key(endpoint) for endpoint in calls] == [(REPO, n) for n in numbers]
     assert payload["by_stream_epic"]["4707"]["gate_to_merge"]["n"] == 51
     assert payload["source_errors"] == []
 
 
-def test_two_repositories_share_one_graphql_call(tmp_path: Path) -> None:
+def test_two_repositories_use_their_qualified_rest_endpoints(tmp_path: Path, github_transport) -> None:
     calls: list[list[str]] = []
     answers = {("acme/widgets", 1): MERGED, ("acme/other", 2): MERGED}
     tasks = tmp_path / "tasks"
@@ -184,37 +146,36 @@ def test_two_repositories_share_one_graphql_call(tmp_path: Path) -> None:
     conn.commit()
     conn.close()
 
+    github_transport(_runner(calls, answers))
     collect_stream_bottleneck_metrics(
         tasks_dir=tasks,
         plane_db=plane,
         now=NOW,
-        gh_runner=_runner(calls, answers),
         merge_cache_path=tmp_path / "cache.json",
     )
 
-    assert len(calls) == 1
-    assert _pull_aliases(_query_from(calls[0])) == [("acme/widgets", 1), ("acme/other", 2)]
+    assert [_key(endpoint) for endpoint in calls] == [("acme/widgets", 1), ("acme/other", 2)]
 
 
-def test_null_merged_at_is_not_cached(tmp_path: Path) -> None:
+def test_null_merged_at_is_not_cached(tmp_path: Path, github_transport) -> None:
     calls: list[list[str]] = []
     answers = {(REPO, 7): MERGED, (REPO, 8): None}
     runner = _runner(calls, answers)
 
-    first, cache = _collect(tmp_path, [7, 8], runner)
-    assert len(calls) == 1
+    first, cache = _collect(tmp_path, [7, 8], runner, github_transport)
+    assert len(calls) == 2
     facts = json.loads(cache.read_text(encoding="utf-8"))["facts"]
     assert f"{REPO}#7" in facts
     assert f"{REPO}#8" not in facts
     assert first["by_stream_epic"]["4707"]["gate_to_merge"]["raw"]["unfinished_count"] == 1
 
     calls.clear()
-    _collect(tmp_path, [7, 8], runner)
+    _collect(tmp_path, [7, 8], runner, github_transport)
     assert len(calls) == 1
-    assert _pull_aliases(_query_from(calls[0])) == [(REPO, 8)]
+    assert [_key(endpoint) for endpoint in calls] == [(REPO, 8)]
 
 
-def test_corrupt_cache_is_empty_and_does_not_crash(tmp_path: Path) -> None:
+def test_corrupt_cache_is_empty_and_does_not_crash(tmp_path: Path, github_transport) -> None:
     calls: list[list[str]] = []
     answers = {(REPO, 3): MERGED}
     cache = tmp_path / "pr-merge-facts.json"
@@ -223,12 +184,12 @@ def test_corrupt_cache_is_empty_and_does_not_crash(tmp_path: Path) -> None:
     tasks.mkdir()
     plane = tmp_path / "plane.sqlite3"
     _plane(plane, [3])
+    github_transport(_runner(calls, answers))
 
     payload = collect_stream_bottleneck_metrics(
         tasks_dir=tasks,
         plane_db=plane,
         now=NOW,
-        gh_runner=_runner(calls, answers),
         merge_cache_path=cache,
     )
 
@@ -239,12 +200,14 @@ def test_corrupt_cache_is_empty_and_does_not_crash(tmp_path: Path) -> None:
     assert reloaded["facts"][f"{REPO}#3"] == MERGED
 
 
-def test_failed_fetch_is_fail_open(tmp_path: Path) -> None:
+def test_failed_fetch_is_fail_open(tmp_path: Path, github_transport) -> None:
     calls: list[list[str]] = []
 
-    def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
-        calls.append(CapturedArgs(args))
-        raise subprocess.TimeoutExpired(args, timeout)
+    def runner(method, endpoint, headers, body, timeout):
+        calls.append(endpoint)
+        raise subprocess.TimeoutExpired(endpoint, timeout)
+
+    github_transport(runner)
 
     tasks = tmp_path / "tasks"
     tasks.mkdir()
@@ -256,7 +219,6 @@ def test_failed_fetch_is_fail_open(tmp_path: Path) -> None:
         tasks_dir=tasks,
         plane_db=plane,
         now=NOW,
-        gh_runner=runner,
         merge_cache_path=cache,
     )
 
@@ -270,39 +232,19 @@ def test_failed_fetch_is_fail_open(tmp_path: Path) -> None:
     assert not cache.exists()
 
 
-def test_partial_graphql_data_caches_successful_aliases(tmp_path: Path) -> None:
-    """A non-zero ``gh`` exit still keeps aliases whose ``mergedAt`` is present."""
-    calls: list[list[str]] = []
+def test_partial_rest_failure_caches_successful_pull_requests(tmp_path: Path, github_transport) -> None:
+    """A failed REST lookup preserves successful merge facts in the batch."""
+    calls = []
 
-    def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
-        calls.append(CapturedArgs(args))
-        query = _query_from(args)
-        aliases = _pull_aliases(query)
-        data: dict[str, dict[str, dict[str, str | None] | None]] = {"r0": {}}
-        errors: list[dict[str, object]] = []
-        node = data["r0"]
-        for repo, number in aliases:
-            assert repo == REPO
-            alias = f"p{number}"
-            if number == 12:
-                node[alias] = None
-                errors.append({
-                    "message": "Could not resolve to a PullRequest with the number of 12.",
-                    "path": ["r0", alias],
-                })
-            elif number == 11:
-                node[alias] = {"mergedAt": None}
-            else:
-                node[alias] = {"mergedAt": MERGED}
-        payload = {"data": data, "errors": errors}
-        return subprocess.CompletedProcess(
-            args,
-            1,
-            stdout=json.dumps(payload),
-            stderr="gh: Could not resolve to a PullRequest with the number of 12.",
-        )
+    def transport(method, endpoint, headers, body, timeout):
+        calls.append(endpoint)
+        repo, number = _key(endpoint)
+        assert repo == REPO and method == "GET"
+        if number == 12:
+            return Response(404, {}, b'{"message":"Not Found"}')
+        return Response(200, {}, json.dumps({"merged_at": None if number == 11 else MERGED}).encode())
 
-    first, cache = _collect(tmp_path, [10, 11, 12], runner)
+    first, cache = _collect(tmp_path, [10, 11, 12], transport, github_transport)
     facts = json.loads(cache.read_text(encoding="utf-8"))["facts"]
     assert facts == {f"{REPO}#10": MERGED}
     assert all(value is not None for value in facts.values())
@@ -317,17 +259,19 @@ def test_partial_graphql_data_caches_successful_aliases(tmp_path: Path) -> None:
     }]
 
     calls.clear()
-    _collect(tmp_path, [10, 11, 12], runner)
-    assert len(calls) == 1
-    assert set(_pull_aliases(_query_from(calls[0]))) == {(REPO, 11), (REPO, 12)}
+    _collect(tmp_path, [10, 11, 12], transport, github_transport)
+    assert len(calls) == 2
+    assert {_key(endpoint) for endpoint in calls} == {(REPO, 11), (REPO, 12)}
 
 
-def test_unparseable_graphql_stdout_fails_the_whole_batch(tmp_path: Path) -> None:
+def test_unparseable_rest_body_fails_each_lookup(tmp_path: Path, github_transport) -> None:
     calls: list[list[str]] = []
 
-    def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
-        calls.append(CapturedArgs(args))
-        return subprocess.CompletedProcess(args, 1, stdout="not-json", stderr="gh failed")
+    def runner(method, endpoint, headers, body, timeout):
+        calls.append(endpoint)
+        return Response(200, {}, b"not-json")
+
+    github_transport(runner)
 
     tasks = tmp_path / "tasks"
     tasks.mkdir()
@@ -339,23 +283,23 @@ def test_unparseable_graphql_stdout_fails_the_whole_batch(tmp_path: Path) -> Non
         tasks_dir=tasks,
         plane_db=plane,
         now=NOW,
-        gh_runner=runner,
         merge_cache_path=cache,
     )
 
-    assert len(calls) == 1
+    assert len(calls) == 2
     assert {item["pr_number"] for item in payload["source_errors"]} == {4, 5}
     assert {item["error_kind"] for item in payload["source_errors"]} == {"pr_lookup_failed"}
     assert not cache.exists()
 
 
-def test_graphql_payload_without_data_fails_the_whole_batch(tmp_path: Path) -> None:
+def test_rest_payload_without_merge_fact_fails_each_lookup(tmp_path: Path, github_transport) -> None:
     calls: list[list[str]] = []
 
-    def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
-        calls.append(CapturedArgs(args))
-        stdout = json.dumps({"errors": [{"message": "Something went wrong"}]})
-        return subprocess.CompletedProcess(args, 1, stdout=stdout, stderr="Something went wrong")
+    def runner(method, endpoint, headers, body, timeout):
+        calls.append(endpoint)
+        return Response(200, {}, b'{"message":"Something went wrong"}')
+
+    github_transport(runner)
 
     tasks = tmp_path / "tasks"
     tasks.mkdir()
@@ -367,10 +311,9 @@ def test_graphql_payload_without_data_fails_the_whole_batch(tmp_path: Path) -> N
         tasks_dir=tasks,
         plane_db=plane,
         now=NOW,
-        gh_runner=runner,
         merge_cache_path=cache,
     )
 
-    assert len(calls) == 1
+    assert len(calls) == 2
     assert {item["pr_number"] for item in payload["source_errors"]} == {6, 7}
     assert not cache.exists()

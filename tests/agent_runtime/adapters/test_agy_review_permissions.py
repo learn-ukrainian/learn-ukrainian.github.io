@@ -181,7 +181,7 @@ def test_receipt_marker_prevents_permission_only_widening(tmp_path, scoped, mark
                 "review_profile": "ukrainian",
                 "agy_home_override": str(scoped),
                 marker: "receipt",
-                "agy_required_permissions": ["mcp(sources/verify_word)"],
+                "agy_required_permissions": ["mcp(sources/search_resources)"],
             },
         )
 
@@ -552,3 +552,20 @@ def test_scoped_attempt_log_is_unique_in_same_process(tmp_path, scoped):
     first = build(tmp_path, config)
     second = build(tmp_path, config)
     assert first.env_overrides[agy._AGY_LOG_ENV] != second.env_overrides[agy._AGY_LOG_ENV]
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_facet_authorities_granted_and_every_server_writer_denied(access):
+    added = {
+        "verify_word",
+        "verify_lemma",
+        "search_slovnyk_me",
+        "search_esum",
+        "search_grinchenko_1907",
+        "search_definitions",
+    }
+    permissions = agy_review_settings(access)["permissions"]
+    assert {f"mcp(sources/{tool})" for tool in added} <= set(permissions["allow"])
+    for writer in sources_tool_sets()[1]:
+        assert f"mcp(sources/{writer})" in permissions["deny"]
+        assert f"mcp(sources/{writer})" not in permissions["allow"]

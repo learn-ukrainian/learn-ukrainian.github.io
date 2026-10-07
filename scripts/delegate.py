@@ -103,6 +103,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "advisory_binding_sha256": str | absent,    # the worker dispatch's advisory binding digest
         "advisory_seal": {result_sha256, envelope_sha256, advisor_model, run_nonce} | absent,
                               # advisor runs: a consistency checksum of the result as its worker wrote it
+        "routing_facts": object | absent,  # --force-agent with a budget check: the lane's routing_facts summary
+                                           # (quota, health, freshness). Missing telemetry is explicit unknown.
     }
 
     Reason fields (``PUBLIC_RECORD_REASON_FIELDS`` and ``auto_finalize.error``)
@@ -198,6 +200,7 @@ from scripts.common.repo_root import main_checkout_root as _main_checkout_root  
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.scratch import (
     DEFAULT_SCRATCH_ROOT,
+    ScratchScanRootError,
     ensure_scratch_root,
     fallback_scratch_root,
     resolve_scratch_root,
@@ -1567,6 +1570,19 @@ def _runtime_tmp_state_has_live_pid(state: dict[str, Any]) -> bool:
         return False
 
 
+def _scratch_scan_roots() -> list[Path]:
+    """Return reaper scan roots, or raise ``ScratchScanRootError`` here.
+
+    A misconfigured ``LU_SCRATCH_SCAN_ROOT`` fails at this dispatch boundary.
+    The error names the variable and the reason, includes no filesystem path,
+    and is not chained to the resolver's traceback.
+    """
+    try:
+        return scratch_scan_roots()
+    except ScratchScanRootError as exc:
+        raise ScratchScanRootError(exc.reason) from None
+
+
 def _sweep_runtime_tmp_orphans(
     *,
     now: float | None = None,
@@ -1589,7 +1605,7 @@ def _sweep_runtime_tmp_orphans(
     # namespaces still drain.
     namespaces: list[Path] = []
     seen_namespaces: set[Path] = set()
-    for scratch_base in scratch_scan_roots():
+    for scratch_base in _scratch_scan_roots():
         namespace = scratch_base / "learn-ukrainian"
         if namespace in seen_namespaces:
             continue
@@ -1676,8 +1692,10 @@ def _reap_runtime_tmp_lease(
     This is intentionally stricter than a generic ``rm -rf``. It only removes
     a non-symlink direct child of the dispatcher-created namespace and uses
     ``shutil.rmtree``'s fd-based implementation so a symlink swap cannot turn
-    cleanup into a deletion outside the lease. Any failure is state telemetry,
-    never a worker failure.
+    cleanup into a deletion outside the lease. A filesystem or validation
+    failure is recorded on ``tmp_reap_error`` and does not fail the worker.
+    ``ScratchScanRootError`` propagates: a misconfigured scan root is not
+    telemetry, and this function raises it before it deletes the lease.
     """
     result: dict[str, int | str | None] = {
         "tmp_bytes_freed": 0,
@@ -1718,7 +1736,7 @@ def _reap_runtime_tmp_lease(
             # #7164: leases live under the disk-backed fleet scratch root; the
             # legacy tmpfs $TMPDIR namespace stays accepted so pre-change
             # leases can still be reaped. Fallback scratch root is also accepted.
-            accepted_parents = {root.resolve() for root in scratch_scan_roots()}
+            accepted_parents = {root.resolve() for root in _scratch_scan_roots()}
             with contextlib.suppress(OSError):
                 accepted_parents.add(resolve_scratch_root().resolve())
             with contextlib.suppress(OSError):
@@ -1744,6 +1762,8 @@ def _reap_runtime_tmp_lease(
         if os.path.lexists(lease):
             raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
         result["tmp_bytes_freed"] = bytes_freed
+    except ScratchScanRootError:
+        raise
     except Exception as exc:
         result["tmp_reap_error"] = (f"{type(exc).__name__}: {exc}")[:500]
     if worker_base_root is not None and resolved_lease is not None and not os.path.lexists(resolved_lease):
@@ -10401,7 +10421,7 @@ def _run_worker(
                         from scripts.agent_runtime import kimi_boundary
 
                         kimi_boundary.remove(Path(worktree_path), env=_sanitized_git_env())
-                    from scripts.review.model_catalog import is_cursor_auto_selector
+                    from learn_ukrainian_v4_runtime.model_families import is_cursor_auto_selector
 
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),
@@ -11790,16 +11810,48 @@ def _dispatch(
         print(f"❌ dispatch refused: {exc}", file=sys.stderr)
         return 2
 
-    # Prompt is resolved early so forward failure records and sparse inference
-    # have access to the raw prompt text.
+    # Formal attempts and permission-only AGY Ukrainian reviews share the
+    # effective sources grant. Refuse before archival, provisioning or spawn.
+    sources_review_access = None
+    if review_attempt:
+        sources_review_access = getattr(args, "review_access", "full")
+    elif (
+        dispatch_agent in {"agy", "gemini"}
+        and args.mode == "read-only"
+        and getattr(args, "review_profile", None) == "ukrainian"
+        and (
+            getattr(args, "review", False)
+            or getattr(args, "require_review_verdict", False)
+            or str(getattr(args, "type", "") or "").strip().casefold() == "review"
+        )
+    ):
+        sources_review_access = "isolated"
+
+    # Match the launch prompt's precedence. Ordinary review stdin is consumed
+    # before side effects; formal attempts require a render-recorded file and
+    # must refuse stdin without consuming it.
     early_prompt: str | None = None
-    if getattr(args, "prompt", None):
-        early_prompt = str(args.prompt)
-    elif getattr(args, "prompt_file", None):
+    if getattr(args, "prompt_file", None):
         try:
             early_prompt = Path(args.prompt_file).read_text(encoding="utf-8")
         except OSError:
             early_prompt = None
+    elif getattr(args, "prompt", None):
+        early_prompt = (
+            sys.stdin.read()
+            if args.prompt == "-" and sources_review_access is not None and not review_attempt
+            else str(args.prompt)
+        )
+
+    if sources_review_access is not None:
+        from scripts.agent_runtime.review_mcp import ReviewToolRequirementsRefused, check_review_tool_requirements
+
+        if early_prompt is not None:
+            try:
+                check_review_tool_requirements(early_prompt, sources_review_access)
+            except ReviewToolRequirementsRefused as exc:
+                print(f"❌ dispatch refused: {exc}", file=sys.stderr)
+                return 2
 
     dor_reason = getattr(args, "allow_dor_warn", None)
     if dor_reason is not None:
@@ -12194,7 +12246,7 @@ def _dispatch(
     if args.prompt_file:
         prompt = Path(args.prompt_file).read_text()
     elif args.prompt == "-":
-        prompt = sys.stdin.read()
+        prompt = early_prompt if sources_review_access is not None and not review_attempt else sys.stdin.read()
     elif args.prompt is not None:
         prompt = args.prompt
     else:
@@ -12203,6 +12255,14 @@ def _dispatch(
     # What the caller handed in, before the lifecycle, worktree and research blocks are appended: a caller that
     # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
     source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+
+    if sources_review_access is not None:
+        # Recheck the launch text, including a file changed since the early read.
+        try:
+            check_review_tool_requirements(prompt, sources_review_access)
+        except ReviewToolRequirementsRefused as exc:
+            print(f"❌ dispatch refused: {exc}", file=sys.stderr)
+            return 2
 
     if review_attempt and review_contract is not None and source_prompt_sha256 != review_contract["prompt_sha256"]:
         # Admission checked the prompt file before any side effect; the file must still be that prompt (#9163).
@@ -12732,6 +12792,8 @@ def _dispatch(
                 "substitution": agent_substitution,
                 "agent_alias_note": agent_alias_note,
             }
+            if routing.budget_diagnostics:
+                dry_run_state["routing_facts"] = routing.budget_diagnostics
             if requested_harness is not None:
                 dry_run_state["harness"] = requested_harness
             if not admission.exempt:
@@ -13196,6 +13258,8 @@ def _dispatch(
             "agent_alias_note": agent_alias_note,
             "dor_preflight": dor_record,
         }
+        if routing.budget_diagnostics:
+            initial_state["routing_facts"] = routing.budget_diagnostics
         if cursor_auto_admission is not None:
             # The Cursor adapter runs Auto only with this admission (#9274).
             initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
@@ -15234,6 +15298,11 @@ class _DispatchRouting:
     alias_note: str | None = None
     substitution: dict[str, Any] | None = None
 
+    def __post_init__(self) -> None:
+        # Forced-lane routing_facts (#9673). Kept off the dataclass fields so the
+        # frozen dispatch surface stays the route decision; copied to the task record when set.
+        self.budget_diagnostics: dict[str, Any] | None = None
+
 
 class _DispatchRouteRefused(Exception):
     """The launch route refused the dispatch; the message says why."""
@@ -15249,8 +15318,9 @@ def _dispatch_route(
     """The launch route ``resolve_and_admit`` runs for a dispatch, after the original request is gated.
 
     A retired CLI resolves to its successor (a review attempt refuses that,
-    #8517); with ``--check-budget`` and no ``--force-agent`` the budget guard
-    may substitute a coding seat from ``dispatch_fallbacks``; its model is
+    #8517); with ``--check-budget`` the budget guard may substitute a coding
+    seat from ``dispatch_fallbacks`` unless ``--force-agent`` is set, which
+    keeps the requested seat and still records quota and health; its model is
     mapped or defaulted (``_resolve_substitution_model``). Review routes use
     ``request.review_select`` instead, retaining the resolver's exact model.
     Refusals raise
@@ -15266,7 +15336,7 @@ def _dispatch_route(
         # Permanent CLI retirement (e.g. gemini→agy, operator 2026-08-18): resolve
         # BEFORE the budget guard and unconditionally — a hot/cool budget reading
         # for a retired lane is not proof its binary still exists. --force-agent
-        # bypasses the budget guard, not this — there is no CLI left to force.
+        # disables budget substitution, not this — there is no CLI left to force.
         if retired_target:
             if review_attempt:
                 raise _DispatchRouteRefused(
@@ -15317,7 +15387,9 @@ def _dispatch_route(
             requested_agent = selected_agent
             original_model = selected_model
 
-        if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
+        if _dispatch_check_budget_enabled(args):
+            force_agent = bool(getattr(args, "force_agent", False))
+            diagnostic_sink: dict[str, Any] = {}
             dispatch_agent = _resolve_agent_with_budget_guard(
                 requested_agent,
                 provider="openrouter" if getattr(args, "provider", None) == "openrouter" else None,
@@ -15330,7 +15402,11 @@ def _dispatch_route(
                 review_trusted_inputs=bool(
                     getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)
                 ),
+                force_agent=force_agent,
+                diagnostic_sink=diagnostic_sink if force_agent else None,
             )
+            if diagnostic_sink:
+                routing.budget_diagnostics = diagnostic_sink
         else:
             dispatch_agent = requested_agent
 
@@ -15819,6 +15895,56 @@ def _merge_agent_substitution(prior: Any, runtime: Any) -> Any:
     return merged
 
 
+def _ranked_reports_lane_health(ranked: Any, lane: str) -> bool:
+    """True when the snapshot's ranked rows already carry a health record for ``lane``."""
+    if not isinstance(ranked, list):
+        return False
+    return any(isinstance(item, dict) and item.get("lane") == lane and item.get("health") for item in ranked)
+
+
+def _publish_forced_lane_diagnostics(
+    lane: str,
+    record: Mapping[str, Any] | None,
+    snapshot_metadata: Mapping[str, Any] | None,
+    *,
+    model: str | None,
+    sink: dict[str, Any] | None,
+    ranked: Any = None,
+) -> None:
+    """Print and retain one forced lane's quota and health (#9673).
+
+    The text reuses the guard's existing lines: the health-unknown sentence,
+    and ``⚠ ROUTING CHECK:`` around the owner's ``capacity_reason``. A known
+    remaining percent is added with the owner's ``% remaining`` phrase when
+    that reason does not already include it. ``sink`` receives
+    :meth:`credit_lane.RoutingFacts.summary`, whose missing quota, health and
+    freshness are explicit unknowns.
+    """
+    facts = credit_lane.routing_facts(
+        lane,
+        record if isinstance(record, Mapping) else None,
+        model=model or _lane_default_model(lane) or "",
+        snapshot_metadata=snapshot_metadata,
+    )
+    if facts.health == credit_lane.UNKNOWN and not _ranked_reports_lane_health(ranked, lane):
+        print(
+            f"⚠ lane {lane} health unknown ({facts.health_basis}); not counted as healthy",
+            file=sys.stderr,
+        )
+    quota = facts.capacity_reason
+    remaining = facts.plan_remaining_pct
+    if (
+        isinstance(remaining, (int, float))
+        and not isinstance(remaining, bool)
+        and f"{remaining:g}% remaining" not in quota
+    ):
+        quota = f"{quota} ({remaining:g}% remaining)"
+    print(f"⚠ ROUTING CHECK: lane {lane}: {quota}", file=sys.stderr)
+    if sink is not None:
+        sink.clear()
+        sink.update(facts.summary())
+
+
 def _resolve_agent_with_budget_guard(
     agent: str,
     *,
@@ -15830,6 +15956,8 @@ def _resolve_agent_with_budget_guard(
     fallbacks: Mapping[str, str],
     review_select: Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]] | None = None,
     review_trusted_inputs: bool = False,
+    force_agent: bool = False,
+    diagnostic_sink: dict[str, Any] | None = None,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -15837,7 +15965,9 @@ def _resolve_agent_with_budget_guard(
     CodexBar deficit (will_last_to_reset is False), if yaml dispatch_fallbacks
     (``fallbacks``, which ``resolve_and_admit`` reads and hands to the launch
     route) has a known target. Without a usable fallback: refuse (raise
-    BudgetGuardRefuseError) unless caller used --force-agent before this call.
+    BudgetGuardRefuseError). ``force_agent`` disables that substitution and
+    the capacity refusal, and still prints and stores the lane's quota and
+    health (explicit unknowns when telemetry is missing).
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
     Review routes use ``review_select`` before either coding fallback path.
@@ -15852,11 +15982,19 @@ def _resolve_agent_with_budget_guard(
     try:
         payload = _fetch_routing_budget()
     except MonitorApiUnavailable:
-        if requested == "deepseek" or provider == "openrouter":
+        if (requested == "deepseek" or provider == "openrouter") and not force_agent:
             raise BudgetGuardRefuseError(
                 "NOTE: ROUTING REFUSED: prepaid capacity NEED_PROBE; Monitor API unreachable."
             ) from None
         print("⚠ ROUTING CHECK SKIPPED: Monitor API unreachable", file=sys.stderr)
+        if force_agent:
+            _publish_forced_lane_diagnostics(
+                requested,
+                None,
+                None,
+                model=requested_model,
+                sink=diagnostic_sink,
+            )
         return requested
 
     prepaid = "openrouter" if provider == "openrouter" else requested if requested == "deepseek" else None
@@ -15866,16 +16004,32 @@ def _resolve_agent_with_budget_guard(
         accounts = payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
         status = _api_lane_status_from_account(prepaid, account)
-        if (
+        blocked = (
             status not in {"cool", "warm"}
             or account.get("is_available") is False
             or account.get("status") == "near_cap"
-        ):
+        )
+        if blocked and not force_agent:
             raise BudgetGuardRefuseError(
                 f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={status}; "
                 f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
                 f"freshness={account.get('freshness', 'unavailable')}. "
                 "Verify funding with `python -m scripts.fleet.usage refresh` or pass --force-agent."
+            )
+        if force_agent:
+            if blocked:
+                print(
+                    f"⚠ ROUTING CHECK: prepaid {prepaid} status={status}; "
+                    f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
+                    f"freshness={account.get('freshness', 'unavailable')}.",
+                    file=sys.stderr,
+                )
+            _publish_forced_lane_diagnostics(
+                requested,
+                account if isinstance(account, dict) else None,
+                payload.get("diagnostics") if isinstance(payload.get("diagnostics"), dict) else None,
+                model=requested_model,
+                sink=diagnostic_sink,
             )
         return requested
 
@@ -15895,6 +16049,14 @@ def _resolve_agent_with_budget_guard(
             "usage snapshots; lanes may be in deficit; no hard sub.",
             file=sys.stderr,
         )
+        if force_agent:
+            _publish_forced_lane_diagnostics(
+                requested,
+                None,
+                diags if isinstance(diags, dict) else None,
+                model=requested_model,
+                sink=diagnostic_sink,
+            )
         return requested
 
     # Warn about demoted lanes and lanes whose health is unknown (#9740 F4: the owner's reading).
@@ -15998,6 +16160,16 @@ def _resolve_agent_with_budget_guard(
             model=requested_model,
         )
     )
+    if force_agent:
+        _publish_forced_lane_diagnostics(
+            requested,
+            agent_dict,
+            diags if isinstance(diags, dict) else None,
+            model=requested_model,
+            sink=diagnostic_sink,
+            ranked=payload.get("ranked_by_headroom"),
+        )
+        return requested
     if not needs_action:
         return requested
 
@@ -17276,8 +17448,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--force-agent",
         action="store_true",
         help=(
-            "Suppress --check-budget / LU_DISPATCH_CHECK_BUDGET routing guard and dispatch with the requested agent; "
-            "also overrides a live Cursor driver-lease refusal with a NOTE."
+            "Dispatch the requested agent with no budget substitution. "
+            "--check-budget / LU_DISPATCH_CHECK_BUDGET still prints and records that lane's "
+            "quota and health, using explicit unknowns when telemetry is missing. "
+            "Also overrides a live Cursor driver-lease refusal with a NOTE."
         ),
     )
     d.add_argument(

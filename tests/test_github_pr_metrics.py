@@ -24,7 +24,7 @@ def test_github_metrics_no_content(monkeypatch=None) -> None:
         stdout = json.dumps([payload])
         stderr = ""
 
-    with patch("scripts.fleet_comms.github_pr_metrics.subprocess.run", return_value=Proc()):
+    with patch("scripts.fleet_comms.github_pr_metrics.github_client.run", return_value=Proc()):
         out = collect_github_pr_metrics(limit=5)
     assert out["ok"] is True
     assert out["content_included"] is False

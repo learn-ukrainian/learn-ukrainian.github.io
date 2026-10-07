@@ -41,6 +41,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
+from scripts.common import github_client
 from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import pr_identity
@@ -117,7 +118,7 @@ def _gh_issue(
     verified-clean result on a guess.
     """
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             [
                 "gh",
                 "api",

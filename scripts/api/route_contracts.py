@@ -131,7 +131,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "exact",
         "http",
         "Cached health probe of the authenticated GitHub GraphQL primary rate limit.",
-        "One `gh api graphql` query reading `rateLimit { limit remaining used resetAt }`.",
+        "Shared GitHub client REST `rate_limit` read of `resources.graphql`.",
         "In-process 60-second TTL cache with single-flight coalescing; probe failures report exhausted=null.",
         ("agents", "Monitor", "operators"),
         "Agents can read the shared observation instead of spending separate GraphQL calls.",

@@ -47,6 +47,7 @@ from scripts.orchestration import (
     task_lifecycle as tl,
 )
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 def _completed(
     args: list[str] | None = None,

@@ -26,6 +26,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
+from scripts.common import github_client
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.efficiency_metrics import (
@@ -755,7 +756,7 @@ def _probe_gh_pr_list() -> ProbeResult:
         )
 
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             [
                 gh_bin,
                 "pr",

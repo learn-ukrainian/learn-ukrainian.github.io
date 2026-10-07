@@ -41,6 +41,11 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common import github_client
+
 ARTIFACT = "ci-tested-tree"
 FULL_TIER = "full"
 WORKFLOW = ".github/workflows/ci.yml"
@@ -216,7 +221,7 @@ def decide(queued: Queued, candidates: Iterable[Candidate]) -> Decision:
 
 
 def _gh(*args: str) -> str:
-    return subprocess.run(["gh", *args], capture_output=True, text=True, check=True, timeout=_GH_TIMEOUT_SECONDS).stdout
+    return github_client.run(["gh", *args], capture_output=True, text=True, check=True, timeout=_GH_TIMEOUT_SECONDS).stdout
 
 
 def _gh_json(path: str, jq: str) -> object:

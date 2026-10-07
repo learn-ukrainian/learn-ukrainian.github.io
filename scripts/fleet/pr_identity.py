@@ -35,6 +35,8 @@ import re
 import subprocess
 from pathlib import Path
 
+from scripts.common import github_client
+
 DEFAULT_PROBE_TIMEOUT_SECONDS = 30.0
 _REPO_SLUG_TIMEOUT_SECONDS = 15.0
 
@@ -70,9 +72,10 @@ def _sanitized_env() -> dict[str, str]:
 
 
 def _run_gh(cmd: list[str], *, cwd: Path, timeout: float) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
+    return github_client.run(
         cmd,
         cwd=cwd,
+        fresh=True,
         capture_output=True,
         text=True,
         timeout=timeout,

@@ -27,6 +27,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common import github_client
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import scheduled_worktree_cleanup as swc
 
@@ -72,9 +73,10 @@ def _run_gh(
     cwd: Path,
     timeout: int = DEFAULT_TIMEOUT,
 ) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
+    return github_client.run(
         args,
         cwd=cwd,
+        fresh=True,
         capture_output=True,
         text=True,
         check=False,

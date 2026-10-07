@@ -391,3 +391,23 @@ def test_fixture_bytes_remain_frozen():
     raw = gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes())
     assert json.loads(raw) == BASELINE
     assert INPUTS["base_sha"] == "dae3d752426d6c11c5dc82260ec07ae8164e7730"
+
+
+def test_frozen_cursor_revision_has_independent_routes_at_every_risk():
+    """The approved eight-row change permits native Grok and refuses Cursor."""
+    indices = {index for index, case in enumerate(INPUTS["reviewer"]) if case["author_model"] == "cursor:auto"}
+    assert indices == {21, 205, 389, 573, 757, 941, 1125, 1309}
+    assert {(INPUTS["reviewer"][index]["review_profile"], INPUTS["reviewer"][index]["risk"]) for index in indices} == {
+        (profile, risk) for profile in ("code", "infra") for risk in ("low", "medium", "high", "critical")
+    }
+    for index in indices:
+        trace = BASELINE["reviewer"][index]["value"]["trace"]
+        native_grok = next(row for row in trace if row["name"] == "grok-4.7")
+        assert native_grok["status"] in {"eligible", "selected"}
+        cursor = [row for row in trace if row["transport"] == "cursor"]
+        catalog = BASELINE["catalog"]
+        ladder = catalog["review_ladders"][INPUTS["reviewer"][index]["risk"]]
+        expected_cursor = {name for rung in ladder for name in rung
+            if catalog["review_candidates"][name]["transport"] == "cursor"}
+        assert {row["name"] for row in cursor} == expected_cursor
+        assert all(row["status"] == "excluded" and "Cursor-authored" in row["reason"] for row in cursor)
