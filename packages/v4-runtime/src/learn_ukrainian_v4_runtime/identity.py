@@ -63,13 +63,10 @@ UNRESOLVED_AUTHOR_FAMILIES: frozenset[str] = frozenset(
     {UNKNOWN_AUTHOR_FAMILY, AMBIGUOUS_AUTHOR_FAMILY, CONFLICTING_AUTHOR_FAMILY, UNATTESTED_AUTHOR_FAMILY}
 )
 
-# Cursor Auto union-family resolution (#6952, #6955):
-# When Cursor runs in Auto mode with an unknown / unattested resolved model
-# (model="auto", resolved_model=null or "unknown"), its author identity resolves
-# to the allowlist-union family {xAI, Moonshot}. Cursor-authored PRs require a
-# single cross-family reviewer from outside {xAI, Moonshot} (no quorum needed).
-# Cursor-as-reviewer is ineligible against authors in {xAI, Moonshot}.
-CURSOR_AUTO_UNION_FAMILY = "cursor-auto-union"
+# Cursor Auto is its own author family (#9951). Retain the historical exported
+# names for callers; the union token now denotes Cursor alone. Concrete xAI and
+# Moonshot authors retain their existing Cursor-transport exclusions.
+CURSOR_AUTO_UNION_FAMILY = model_families.Family.CURSOR.value
 CURSOR_AUTO_UNION_FAMILIES: frozenset[str] = frozenset({"xai", "moonshot"})
 CURSOR_AUTO_MODEL_TOKENS: frozenset[str] = frozenset({"auto", "unknown", "unattested-harness"})
 CURSOR_AUTO_HARNESS_SEATS: frozenset[str] = frozenset(
@@ -92,11 +89,8 @@ def resolve_author_family(author_model: str, author_family: str | None = None) -
     for a bare ambiguous-harness identity with no embedded model, to supply
     the disambiguation on its own.
 
-    Cursor Auto / unknown-Auto (``"cursor:auto"``, ``"cursor:unknown"``,
-    ``"cursor-auto"``) resolves to the allowlist-union family
-    ``CURSOR_AUTO_UNION_FAMILY`` ({xAI, Moonshot}), requiring a single
-    cross-family reviewer from outside {xAI, Moonshot}. A caller-asserted
-    single family override against Auto attestation is a fail-closed conflict.
+    Auto selectors resolve to the Cursor family. Concrete models keep their
+    own family; an explicit override must agree with the resolved family.
 
     Returns a concrete family string, or one of the sentinels:
 
@@ -106,8 +100,7 @@ def resolve_author_family(author_model: str, author_family: str | None = None) -
     - ``"conflict"`` — the embedded/resolved model family and an explicit
       ``author_family`` override disagree, or an override was declared
       against a positive no-pinned-model (auto) attestation.
-    - ``"cursor-auto-union"`` — Cursor Auto with unknown resolved_model,
-      resolving to union-family {xAI, Moonshot}.
+    - ``"cursor"`` — Cursor Auto author family.
     - ``"unattested-harness"`` — generic unattested multi-model harness.
 
     Callers (:func:`resolve_reviewer`) must never select a formal reviewer
@@ -121,12 +114,15 @@ def resolve_author_family(author_model: str, author_family: str | None = None) -
 
     harness_token, sep, embedded = normalized.partition(":")
     embedded_token = embedded.strip()
-    if (sep and harness_token in AMBIGUOUS_HARNESS_SEATS and embedded_token in CURSOR_AUTO_MODEL_TOKENS) or (
-        normalized in CURSOR_AUTO_HARNESS_SEATS
+    if (
+        model_families.is_cursor_auto_selector(normalized)
+        or (sep and harness_token in AMBIGUOUS_HARNESS_SEATS and model_families.is_cursor_auto_selector(embedded_token))
+        or normalized in CURSOR_AUTO_HARNESS_SEATS
     ):
-        # The harness attests the model was Auto/unattested; a caller-asserted
-        # single family contradicts that attestation instead of resolving it.
-        return CONFLICTING_AUTHOR_FAMILY if override else CURSOR_AUTO_UNION_FAMILY
+        # Auto keeps its own family even if a provider family is asserted.
+        return (
+            CONFLICTING_AUTHOR_FAMILY if override and override != CURSOR_AUTO_UNION_FAMILY else CURSOR_AUTO_UNION_FAMILY
+        )
     if sep and harness_token in AMBIGUOUS_HARNESS_SEATS and embedded_token:
         resolved = resolve_family(embedded_token)
     elif normalized in AMBIGUOUS_HARNESS_SEATS or (normalize_seat(normalized) or "") in AMBIGUOUS_HARNESS_SEATS:

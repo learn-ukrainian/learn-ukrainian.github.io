@@ -141,8 +141,8 @@ def test_fleet_endpoint_eligibility_is_a_projection_of_model_catalog() -> None:
 def test_family_resolution_unknown_and_bare_cursor_are_not_fabricated():
     assert resolve_family("") == "unknown"
     assert resolve_family("some-made-up-seat") == "unknown"
-    assert resolve_family("cursor") == "unknown"
-    assert resolve_family("cursor-tools") == "unknown"
+    assert resolve_family("cursor") == "cursor"
+    assert resolve_family("cursor-tools") == "cursor"
     assert resolve_family("composer") == "unknown"
 
 
@@ -156,15 +156,15 @@ def test_cursor_requires_concrete_model_identity():
     assert resolve_author_family("cursor", author_family="anthropic") == "anthropic"
 
 
-def test_cursor_auto_is_union_family():
-    # Cursor Auto / unknown-Auto resolves to the allowlist-union family {xAI, Moonshot}.
+def test_cursor_auto_is_its_own_family():
+    # Cursor Auto has its own family; unknown concrete identities remain unknown.
     assert resolve_author_family("cursor:auto") == CURSOR_AUTO_UNION_FAMILY
-    assert resolve_author_family("cursor:unknown") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("cursor:unknown") == "unknown"
     assert resolve_author_family("cursor-auto") == CURSOR_AUTO_UNION_FAMILY
     assert resolve_author_family("cursor-tools:auto") == CURSOR_AUTO_UNION_FAMILY
-    assert resolve_author_family("cursor-tools:unknown") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("cursor-tools:unknown") == "unknown"
     assert resolve_author_family("Cursor:AUTO") == CURSOR_AUTO_UNION_FAMILY
-    assert resolve_author_family("Cursor:UNKNOWN") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("Cursor:UNKNOWN") == "unknown"
 
 
 def test_author_family_override_against_auto_attestation_is_a_conflict():
@@ -172,28 +172,28 @@ def test_author_family_override_against_auto_attestation_is_a_conflict():
     # cannot be corroborated against Auto and is a fail-closed conflict.
     assert resolve_author_family("cursor:auto", author_family="openai") == CONFLICTING_AUTHOR_FAMILY
     assert resolve_author_family("cursor-auto", author_family="anthropic") == CONFLICTING_AUTHOR_FAMILY
-    assert resolve_author_family("cursor:unknown", author_family="xai") == CONFLICTING_AUTHOR_FAMILY
+    assert resolve_author_family("cursor:auto", author_family="xai") == CONFLICTING_AUTHOR_FAMILY
     resolution = resolve_reviewer(ResolverInputs(author_model="cursor:auto", author_family="openai"))
     assert resolution.selected is None
     assert resolution.quorum == ()
     assert resolution.fail_closed_reason
 
 
-def test_unknown_auto_author_resolves_single_reviewer_outside_union():
-    for token in ("cursor:auto", "cursor:unknown", "cursor-auto"):
+def test_auto_author_resolves_single_reviewer_outside_cursor():
+    for token in ("cursor:auto", "cursor/default", "cursor-auto"):
         for risk in ("low", "medium", "high", "critical"):
             resolution = resolve_reviewer(ResolverInputs(author_model=token, risk=risk))
             assert resolution.fail_closed_reason is None, (token, risk)
             assert resolution.selected is not None, (token, risk)
-            assert resolution.selected.family not in {"xai", "moonshot"}, (token, risk)
+            assert resolution.selected.family != "cursor", (token, risk)
             assert resolution.quorum == (), (token, risk)
 
 
-def test_unknown_auto_author_excludes_xai_and_moonshot_candidates():
+def test_auto_author_excludes_cursor_transport_candidates():
     inputs = ResolverInputs(author_model="cursor:auto", risk="medium")
     resolution = resolve_reviewer(inputs)
     for entry in resolution.trace:
-        if entry.family in {"xai", "moonshot"} or entry.transport == "cursor":
+        if entry.family == "cursor" or entry.transport == "cursor":
             assert entry.status == "excluded", (entry.name, entry.family, entry.status)
 
 
@@ -588,7 +588,10 @@ def test_native_grok_health_and_cursor_transport_fallback():
     assert injected.selected.name == "grok-4.7-cursor-fallback"
     dark = resolve_reviewer(ResolverInputs(author_model="claude", risk="medium", routing_snapshot={**snapshot, "cursor": "unhealthy"}))
     assert dark.selected is None
-    assert next(item for item in dark.trace if item.name == "grok-4.7-cursor-fallback").reason == "lane health is unhealthy — route is operationally unavailable"
+    assert (
+        next(item for item in dark.trace if item.name == "grok-4.7-cursor-fallback").reason
+        == "lane health is unhealthy — route is operationally unavailable"
+    )
 
 
 def test_missing_health_signal_is_fail_open():
@@ -1398,7 +1401,7 @@ def test_resolve_reviewer_unknown_subject_seat_and_family_fail_closed():
     assert bad_seat.trace == ()
     assert "unknown subject seat" in bad_seat.fail_closed_reason
 
-    bad_family = resolve_reviewer(ResolverInputs(author_model="codex", subject_families=frozenset({"cursor"})))
+    bad_family = resolve_reviewer(ResolverInputs(author_model="codex", subject_families=frozenset({"not-a-family"})))
     assert bad_family.selected is None
     assert "unknown subject family" in bad_family.fail_closed_reason
 
@@ -1503,7 +1506,9 @@ def test_every_author_family_risk_profile_pick(family, author, risk, profile):
     if risk == "critical":
         expected = "gpt-6.1-sol" if family == "anthropic" else "claude-opus-5-5"
     elif risk == "high":
-        expected = "gpt-6.1-sol" if family == "anthropic" or (family != "openai" and profile == "code") else "claude-opus-5-5"
+        expected = (
+            "gpt-6.1-sol" if family == "anthropic" or (family != "openai" and profile == "code") else "claude-opus-5-5"
+        )
     else:
         expected = "claude-sonnet-5-5" if family == "openai" else "gpt-6.1-sol"
     resolution = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, review_profile=profile))
@@ -1556,7 +1561,10 @@ def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallba
 
 
 def test_medium_anthropic_author_still_selects_sol_before_grok():
-    assert resolve_reviewer(ResolverInputs(author_model="claude-opus-5-5", risk="medium")).selected.name == "openai_frontier"
+    assert (
+        resolve_reviewer(ResolverInputs(author_model="claude-opus-5-5", risk="medium")).selected.name
+        == "openai_frontier"
+    )
 
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
@@ -1577,7 +1585,10 @@ def test_native_grok_precedes_cursor_across_heads_pressure_and_subject_exclusion
         ladder = ((GROK_4_7_CURSOR_FALLBACK,), (GROK_4_7,))
         assert resolve_reviewer(inputs, ladder=ladder).selected.name == "grok-4.7"
         down = {"grok": "unhealthy", "cursor": "healthy"}
-        assert resolve_reviewer(replace(inputs, routing_snapshot=down), ladder=ladder).selected.name == "grok-4.7-cursor-fallback"
+        assert (
+            resolve_reviewer(replace(inputs, routing_snapshot=down), ladder=ladder).selected.name
+            == "grok-4.7-cursor-fallback"
+        )
 
 
 @pytest.mark.parametrize("profile", ["code", "infra"])
@@ -2067,15 +2078,15 @@ def test_complete_set_with_an_unresolved_member_fails_closed(families, author_mo
     assert evaluate_candidate(OPENAI_FRONTIER, inputs).status == "excluded"
 
 
-def test_cursor_auto_member_keeps_the_union_and_transport_restrictions():
-    resolution = _complete({"openai", "cursor-auto-union"})
+def test_cursor_auto_member_keeps_cursor_transport_restrictions():
+    resolution = _complete({"openai", "cursor"})
     reasons = {entry.name: entry.reason for entry in resolution.trace}
-    assert "within author union family" in reasons["grok-4.7-cursor-fallback"]
+    assert "Cursor-authored work" in reasons["grok-4.7-cursor-fallback"]
     assert resolution.selected.family == "anthropic"
 
 
 @pytest.mark.parametrize("candidate", [SONNET_5_5, OPENAI_FRONTIER, GROK_4_7, GROK_4_7_CURSOR_FALLBACK])
-@pytest.mark.parametrize("author_model", ["", "cursor:auto"])
+@pytest.mark.parametrize("author_model", ["", "unmapped"])
 def test_unknown_committed_author_accepts_any_qualified_known_family(candidate, author_model):
     inputs = ResolverInputs(author_model=author_model, author_families=frozenset({"unknown"}), risk="medium")
     assert evaluate_candidate(candidate, inputs).status == "eligible"
@@ -2088,16 +2099,18 @@ def test_unknown_committed_author_accepts_any_qualified_known_family(candidate, 
 def test_unknown_committed_author_does_not_hide_known_author_exclusions():
     resolution = _complete({"unknown", "anthropic"})
     assert resolution.selected.family != "anthropic"
-    assert evaluate_candidate(
-        SONNET_5_5, ResolverInputs(author_model="", author_families=frozenset({"unknown", "anthropic"}))
-    ).status == "excluded"
-
-
-def test_unknown_committed_author_does_not_hide_incoming_cursor_auto_union():
-    inputs = ResolverInputs(
-        author_model="cursor:auto", author_families=frozenset({"unknown", "cursor-auto-union"})
+    assert (
+        evaluate_candidate(
+            SONNET_5_5, ResolverInputs(author_model="", author_families=frozenset({"unknown", "anthropic"}))
+        ).status
+        == "excluded"
     )
-    assert evaluate_candidate(GROK_4_7, inputs).status == "excluded"
+
+
+def test_unknown_committed_author_does_not_hide_incoming_cursor_family():
+    inputs = ResolverInputs(author_model="cursor:auto", author_families=frozenset({"unknown", "cursor"}))
+    assert evaluate_candidate(GROK_4_7, inputs).status == "eligible"
+    assert evaluate_candidate(GROK_4_7_CURSOR_FALLBACK, inputs).status == "excluded"
     selected = resolve_reviewer(inputs).selected
     assert selected is not None and selected.family in {"anthropic", "openai"}
 
@@ -2116,3 +2129,56 @@ def test_empty_complete_set_keeps_single_author_selection_identical():
 
     single = ResolverInputs(author_model="claude-opus-5-5", risk="high", changed_paths=("docs/a.md",))
     assert resolve_reviewer(single) == resolve_reviewer(replace(single, author_families=frozenset()))
+
+
+@pytest.mark.parametrize(
+    "selector",
+    [
+        "auto",
+        "AUTO",
+        "Auto",
+        " auto ",
+        "default",
+        "DEFAULT",
+        "Default",
+        " default ",
+        "cursor:auto",
+        "CURSOR:AUTO",
+        "Cursor:Auto",
+        " cursor:auto ",
+        "cursor/auto",
+        "CURSOR/AUTO",
+        "Cursor/Auto",
+        " cursor/auto ",
+        "cursor:default",
+        "CURSOR:DEFAULT",
+        "Cursor:Default",
+        " cursor:default ",
+        "cursor/default",
+        "CURSOR/DEFAULT",
+        "Cursor/Default",
+        " cursor/default ",
+    ],
+)
+def test_cursor_auto_spelling_is_its_own_author_family(selector):
+    assert resolve_author_family(selector) == "cursor"
+    assert resolve_author_family(selector, author_family="cursor") == "cursor"
+
+
+@pytest.mark.parametrize("candidate", [SONNET_5_5, OPENAI_FRONTIER, GROK_4_7])
+def test_cursor_author_accepts_each_other_qualified_family(candidate):
+    inputs = ResolverInputs(author_model="cursor:auto", risk="medium")
+    assert evaluate_candidate(candidate, inputs).status == "eligible"
+
+
+def test_cursor_family_reviewer_cannot_certify_cursor_author():
+    candidate = replace(OPENAI_FRONTIER, family="cursor")
+    assert evaluate_candidate(candidate, ResolverInputs(author_model="cursor:auto")).status == "excluded"
+
+
+@pytest.mark.parametrize("family", ["xai", "anthropic", "openai", "google"])
+def test_cursor_family_exclusion_allows_other_families(family):
+    from scripts.review.reviewer_resolver import _author_family_exclusion
+
+    candidate = replace(OPENAI_FRONTIER, family=family)
+    assert _author_family_exclusion(candidate, "cursor", None) is None

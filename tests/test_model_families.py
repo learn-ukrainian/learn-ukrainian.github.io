@@ -46,6 +46,9 @@ _TOKEN_TO_FAMILY = {
     "sonnet": "anthropic",
     # xai (grok) — SEPARATE from cursor
     "grok": "xai",
+    "cursor": "cursor",
+    "auto": "cursor",
+    "default": "cursor",
     "grok-4": "xai",
     "xai": "xai",
     # formal code-review families
@@ -62,13 +65,9 @@ _TOKEN_TO_FAMILY = {
     "adversarial-fixture": "fixture",
 }
 
-# Tokens that are UNKNOWN under the unified vocabulary. cursor-Auto is the
-# routing decision (2026-07-17); unpinned Cursor/Composer remains UNKNOWN even
-# though the concrete Composer 2.5 model is recognized for formal review.
+# Unmapped models remain UNKNOWN; concrete Composer 2.5 keeps its family.
 _UNKNOWN_TOKENS = (
-    "cursor",
     "composer",
-    "auto",
     "cursor-fast",
     "mystery-model",
     "composer-2.4",
@@ -110,8 +109,8 @@ def test_canonical_lineage_prefers_pin_over_cursor_seat() -> None:
         model_families.normalize_lineage_family({"family": "cursor", "pin": "composer-2.5"})
         is model_families.Family.MOONSHOT
     )
-    # cursor-Auto (no pin) is UNKNOWN.
-    assert model_families.normalize_lineage_family({"family": "cursor"}) is model_families.Family.UNKNOWN
+    # Cursor Auto has its own family without a concrete pin.
+    assert model_families.normalize_lineage_family({"family": "cursor"}) is model_families.Family.CURSOR
 
 
 def test_canonical_lineage_ambiguous_concrete_signals_fail_closed() -> None:
@@ -146,8 +145,8 @@ def test_unknown_writer_refuses_in_layer_b_with_explicit_failure_class() -> None
     gemini = JudgeRoute("gemini", "gemini-3.1-pro")
     claude = JudgeRoute("claude", "claude-opus-4-6")
 
-    # cursor-Auto writer -> UNKNOWN -> no satisfiable route.
-    assert _select_route((gemini, claude), writer_family="cursor", reviewer_family="deepseek") is None
+    # Cursor Auto can be reviewed by a distinct family.
+    assert _select_route((gemini, claude), writer_family="cursor", reviewer_family="deepseek") == gemini
     # arbitrary unrecognized writer -> UNKNOWN -> no satisfiable route.
     assert _select_route((gemini, claude), writer_family="mystery-reviewer", reviewer_family="deepseek") is None
 
@@ -182,7 +181,6 @@ def test_cursor_display_name_resolves_to_the_concrete_composer_slug(display: str
 @pytest.mark.parametrize(
     "value",
     [
-        "auto",
         "unknown",
         "",
         "   ",
@@ -273,3 +271,42 @@ def test_cursor_display_name_match_is_ascii_only(value: str) -> None:
 @pytest.mark.parametrize("display", ["Composer\t2.5", "composer \t 2.5", "\tComposer 2.5 ", "cOmPoSeR     2.5"])
 def test_cursor_display_name_accepts_ascii_space_and_tab_runs(display: str) -> None:
     assert model_families.canonical_cursor_model(display) == "composer-2.5"
+
+
+@pytest.mark.parametrize(
+    "selector",
+    [
+        "auto",
+        "AUTO",
+        "Auto",
+        " auto ",
+        "default",
+        "DEFAULT",
+        "Default",
+        " default ",
+        "cursor:auto",
+        "CURSOR:AUTO",
+        "Cursor:Auto",
+        " cursor:auto ",
+        "cursor/auto",
+        "CURSOR/AUTO",
+        "Cursor/Auto",
+        " cursor/auto ",
+        "cursor:default",
+        "CURSOR:DEFAULT",
+        "Cursor:Default",
+        " cursor:default ",
+        "cursor/default",
+        "CURSOR/DEFAULT",
+        "Cursor/Default",
+        " cursor/default ",
+    ],
+)
+def test_cursor_auto_selectors_share_canonical_family(selector):
+    from scripts.review.model_catalog import is_cursor_auto_selector
+
+    assert is_cursor_auto_selector(selector)
+    assert model_families.normalize_family(selector) is model_families.Family.CURSOR
+    assert (
+        model_families.normalize_lineage_family({"family": "cursor", "model": selector}) is model_families.Family.CURSOR
+    )

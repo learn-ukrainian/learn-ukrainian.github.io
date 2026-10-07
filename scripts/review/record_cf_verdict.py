@@ -25,7 +25,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
-from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
+from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
 
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
@@ -47,8 +47,6 @@ from scripts.review.model_catalog import (
     resolve_catalog_model_id,
 )
 from scripts.review.reviewer_resolver import (
-    CURSOR_AUTO_UNION_FAMILIES,
-    CURSOR_AUTO_UNION_FAMILY,
     FORMAL_CURSOR_REVIEW_MODELS,
     REVIEW_CANDIDATES,
     UNKNOWN_AUTHOR_FAMILY,
@@ -307,7 +305,9 @@ def _attribute_commit(
                 or not str(author_task.get("agent") or "").startswith(harness)
             ):
                 raise RecordError("author task provenance conflicts with commit trailer")
-            if harness.startswith("cursor"):
+            if harness.startswith("cursor") and is_cursor_auto_selector(author_task.get("model")):
+                author_model = author_task["model"]
+            elif harness.startswith("cursor"):
                 author_model = (
                     author_task.get("resolved_model") if author_task.get("resolved_model_known") is True else None
                 )
@@ -321,7 +321,7 @@ def _attribute_commit(
         else:
             family = UNKNOWN_AUTHOR_FAMILY
             source = "unresolved-author"
-    if family in UNRESOLVED_AUTHOR_FAMILIES or family == CURSOR_AUTO_UNION_FAMILY:
+    if family in UNRESOLVED_AUTHOR_FAMILIES:
         # A committed author without a concrete identity is reviewable by any
         # known family (#9944). This does not grant Unknown a reviewer identity.
         family = UNKNOWN_AUTHOR_FAMILY
@@ -403,17 +403,14 @@ class BranchReviewFacts:
 
     @property
     def author_families(self) -> frozenset[str]:
-        """Every committed author family plus the incoming writer's (the Cursor Auto union stays one token)."""
+        """Every committed author family plus the incoming writer's (Cursor Auto stays its own family)."""
         incoming = frozenset({self.incoming_family}) if self.incoming_family else frozenset()
         return self.existing_families | incoming
 
     @property
     def excluded_families(self) -> frozenset[str]:
-        """``author_families`` with the Cursor Auto union expanded to its member families."""
-        expanded = set(self.author_families - {CURSOR_AUTO_UNION_FAMILY})
-        if CURSOR_AUTO_UNION_FAMILY in self.author_families:
-            expanded |= CURSOR_AUTO_UNION_FAMILIES
-        return frozenset(expanded)
+        """Every author family excluded from review, including Cursor Auto's own family."""
+        return self.author_families
 
     @property
     def scope_paths(self) -> tuple[str, ...]:
@@ -524,8 +521,7 @@ def _read_commit_entries(repo_root: Path, shas: list[str], *, deadline: float) -
 def incoming_writer_family(agent: str, model: str | None) -> str:
     """The family an incoming writer adds, resolved like a committed ``X-Agent: <agent>/<model>`` trailer.
 
-    Cursor Auto resolves to the {xAI, Moonshot} union token (A5): its concrete
-    model is unknown until the runtime attests it. Raises ``BranchFactsError``
+    Cursor Auto resolves to its own Cursor family. Raises ``BranchFactsError``
     when the family is unknown.
     """
     harness = str(agent or "").strip().lower()

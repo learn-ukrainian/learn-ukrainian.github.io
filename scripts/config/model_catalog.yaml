@@ -1226,7 +1226,7 @@ orchestrator_seats:
       - composer-2.5
     auto_scope: write_implementation_dispatch_with_green_dor
     attestation_rule: driver_of_record_requires_attested_resolved_model
-    unknown_auto_family_resolution: union_family
+    unknown_auto_family_resolution: cursor_family
     unknown_auto_union_families:
       - xai
       - moonshot
@@ -1238,10 +1238,11 @@ orchestrator_seats:
       paths and a green DoR issue card, in agent mode) and only within the explicit allowlist (currently grok-4.7 [xAI],
       composer-2.5 [Moonshot]; refresh under the catalog ~30-day contract). The driver
       seat, review, design, consults, discussions and recon never run Auto.
-      When cursor:auto reports resolved_model=unknown, resolve its identity to the
-      allowlist-union family {xAI, Moonshot}: Cursor-authored PRs require a single
-      cross-family reviewer from outside {xAI, Moonshot}; Cursor-as-reviewer is eligible
-      only against authors outside {xAI, Moonshot}. Attested Cursor grok-4.7 = xAI family; it is
+      Cursor Auto selectors use the Cursor author family (#9951), even when the
+      runtime reports a concrete model. Reviewers from other families can review
+      Cursor-authored work; Cursor reviewers cannot. The legacy
+      unknown_auto_union_families field describes the concrete allowlist only.
+      A concrete Cursor grok-4.7 pin uses the xAI family; it is
       a regular formal code/infra reviewer at every risk, including critical
       (operator decision 2026-10-05, #9769), alongside the native Grok seat.
       Driver-of-record still requires an attested concrete resolved_model from the run.

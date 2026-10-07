@@ -957,13 +957,42 @@ def test_unknown_harness_model_is_retained(monkeypatch, tmp_path):
     assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
 
 
-def test_committed_cursor_auto_family_is_unknown(monkeypatch, tmp_path):
+@pytest.mark.parametrize(
+    "selector",
+    [
+        "auto",
+        "AUTO",
+        "Auto",
+        " auto ",
+        "default",
+        "DEFAULT",
+        "Default",
+        " default ",
+        "cursor:auto",
+        "CURSOR:AUTO",
+        "Cursor:Auto",
+        " cursor:auto ",
+        "cursor/auto",
+        "CURSOR/AUTO",
+        "Cursor/Auto",
+        " cursor/auto ",
+        "cursor:default",
+        "CURSOR:DEFAULT",
+        "Cursor:Default",
+        " cursor:default ",
+        "cursor/default",
+        "CURSOR/DEFAULT",
+        "Cursor/Default",
+        " cursor/default ",
+    ],
+)
+def test_committed_cursor_auto_family_is_cursor(monkeypatch, tmp_path, selector):
     monkeypatch.setattr(
         recorder,
         "_pages",
-        lambda args: [{"commit": {"message": "work\n\nX-Agent: cursor/auto"}}],
+        lambda args: [{"commit": {"message": f"work\n\nX-Agent: cursor/{selector.strip()}"}}],
     )
-    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"cursor"}
 
 
 def test_mixed_xai_and_moonshot_author_families_are_returned(monkeypatch, tmp_path):
@@ -1417,7 +1446,7 @@ def test_an_attested_composer_receipt_is_refused_because_the_resolver_never_sele
     [
         ({"resolved_model": "Composer 2.5", "resolved_model_known": False}, "Cursor reviewer model unknown"),
         ({"resolved_model": "Composer 2.5"}, "Cursor reviewer model unknown"),
-        ({"resolved_model": "auto", "resolved_model_known": True}, "reviewer family unknown"),
+        ({"resolved_model": "auto", "resolved_model_known": True}, "reviewer model unknown"),
         ({"resolved_model": "unknown", "resolved_model_known": True}, "reviewer family unknown"),
         ({"resolved_model": "unattested-harness", "resolved_model_known": True}, "reviewer family unknown"),
         ({"resolved_model": "", "resolved_model_known": True}, "reviewer model unknown"),
@@ -1826,3 +1855,49 @@ def test_attested_native_grok_refuses_xai_and_unknown_auto_authors(monkeypatch, 
     with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert comments == []
+
+
+@pytest.mark.parametrize(
+    "selector",
+    [
+        "auto",
+        "AUTO",
+        "Auto",
+        " auto ",
+        "default",
+        "DEFAULT",
+        "Default",
+        " default ",
+        "cursor:auto",
+        "CURSOR:AUTO",
+        "Cursor:Auto",
+        " cursor:auto ",
+        "cursor/auto",
+        "CURSOR/AUTO",
+        "Cursor/Auto",
+        " cursor/auto ",
+        "cursor:default",
+        "CURSOR:DEFAULT",
+        "Cursor:Default",
+        " cursor:default ",
+        "cursor/default",
+        "CURSOR/DEFAULT",
+        "Cursor/Default",
+        " cursor/default ",
+    ],
+)
+@pytest.mark.parametrize("resolved", [None, "Grok 4.7 256K High"])
+def test_cursor_auto_task_attribution_preserves_selector(monkeypatch, tmp_path, selector, resolved):
+    tasks = tmp_path / "tasks"
+    write_task(
+        tasks,
+        task_id="author-auto",
+        agent="cursor",
+        model=selector,
+        resolved_model_known=resolved is not None,
+        resolved_model=resolved,
+    )
+    monkeypatch.setattr(
+        recorder, "_pages", lambda args: [{"commit": {"message": "work\n\nX-Agent: cursor/author-auto"}}]
+    )
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"cursor"}

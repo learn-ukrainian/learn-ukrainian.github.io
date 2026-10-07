@@ -610,7 +610,7 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert seats["cursor"]["escalate_effort"] == "high"
     assert seats["cursor"]["auto_allowlist"] == ["grok-4.7", "composer-2.5"]
     assert seats["cursor"]["attestation_rule"] == "driver_of_record_requires_attested_resolved_model"
-    assert seats["cursor"]["unknown_auto_family_resolution"] == "union_family"
+    assert seats["cursor"]["unknown_auto_family_resolution"] == "cursor_family"
     assert seats["cursor"]["unknown_auto_union_families"] == ["xai", "moonshot"]
 
 
@@ -801,10 +801,10 @@ def test_catalog_rejects_cursor_orchestrator_without_or_weakened_attestation_rul
         validate_catalog(broken_weak)
 
 
-def test_cursor_orchestrator_unknown_auto_resolves_to_union_family():
+def test_cursor_orchestrator_auto_resolves_to_cursor_family():
     catalog = load_model_catalog()
     cursor_seat = catalog["orchestrator_seats"]["cursor"]
-    assert cursor_seat["unknown_auto_family_resolution"] == "union_family"
+    assert cursor_seat["unknown_auto_family_resolution"] == "cursor_family"
     assert cursor_seat["unknown_auto_union_families"] == ["xai", "moonshot"]
     assert cursor_seat["auto_allowlist"] == ["grok-4.7", "composer-2.5"]
     models = catalog["models"]
@@ -820,7 +820,7 @@ def test_cursor_orchestrator_unknown_auto_resolves_to_union_family():
     # Reject invalid unknown_auto_family_resolution
     broken_invalid_res = deepcopy(catalog)
     broken_invalid_res["orchestrator_seats"]["cursor"]["unknown_auto_family_resolution"] = "single_family"
-    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.unknown_auto_family_resolution must be 'union_family'"):
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.unknown_auto_family_resolution must be 'cursor_family'"):
         validate_catalog(broken_invalid_res)
 
     # Reject missing unknown_auto_union_families
