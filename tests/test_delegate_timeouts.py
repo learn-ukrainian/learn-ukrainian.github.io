@@ -310,23 +310,25 @@ def test_current_branch_timeouts(tmp_path: Path) -> None:
 
 
 def test_push_auto_finalize_branch_timeouts(tmp_path: Path) -> None:
-    calls: list[dict] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0)
-
-    with patch("subprocess.run", side_effect=fake_run):
+    # Transport moved to the shared boundary; gate tests assert its real timeout.
+    # This seam verifies delegate forwards the boundary and never retries it.
+    context = object()
+    with (
+        patch("scripts.ci.push_gate.context", return_value=context),
+        patch("scripts.ci.push_gate.push", return_value=_completed(returncode=0)) as push,
+    ):
         _push_auto_finalize_branch(tmp_path, "feature")
+    push.assert_called_once_with(context, "feature", options=("-u",))
 
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == DEFAULT_NETWORK_GIT_TIMEOUT_S
-
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "push"], DEFAULT_NETWORK_GIT_TIMEOUT_S)):
+    with (
+        patch("scripts.ci.push_gate.context", return_value=context),
+        patch("scripts.ci.push_gate.push", side_effect=subprocess.TimeoutExpired(["git", "push"], DEFAULT_NETWORK_GIT_TIMEOUT_S)) as push,
+    ):
         with pytest.raises(RuntimeError, match=r"^auto_finalize_push_failed, git push, TimeoutExpired$") as raised:
             _push_auto_finalize_branch(tmp_path, "feature")
     # #9878: the public form is typed; the timeout's own words stay for the local diagnostic.
     assert raised.value.message == "git push timed out after 180.0s"
+    assert push.call_count == 1
 
 
 def test_create_auto_finalize_pr_timeouts(tmp_path: Path) -> None:

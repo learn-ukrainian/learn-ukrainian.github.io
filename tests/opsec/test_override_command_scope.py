@@ -220,6 +220,25 @@ def test_dispatch_settle_push_then_pr_admits_one_flagged_publication(sandbox):
 
 def test_delegate_auto_finalize_admits_one_flagged_publication(sandbox):
     """_auto_finalize_dirty_worktree: commit and child push, then the in-process draft PR."""
+    # This publication test crosses the real validation boundary too. Supply
+    # committed gate inputs and the canonical base ref in its synthetic repo.
+    _git(sandbox.work, "update-ref", "refs/remotes/origin/main", "trunk")
+    (sandbox.work / "scripts/ci").mkdir(parents=True)
+    (sandbox.work / "tests").mkdir()
+    (sandbox.work / ".gitignore").write_text("__pycache__/\n.pytest_cache/\n")
+    (sandbox.work / "scripts/ci/push_invariants.json").write_text(json.dumps({
+        "schema_version": 1, "modules": ["tests/test_gate.py"], "node_ids": [],
+    }))
+    (sandbox.work / "tests/test_gate.py").write_text(
+        "from pathlib import Path\ndef test_outgoing_file():\n    assert Path('file.txt').read_text() == 'dirty\\n'\n"
+    )
+    (sandbox.work / ".pre-commit-config.yaml").write_text(
+        "repos:\n  - repo: local\n    hooks:\n      - id: diff-check\n        name: diff check\n"
+        "        entry: git diff --check\n        language: system\n        pass_filenames: false\n"
+        "        stages: [pre-push]\n"
+    )
+    _git(sandbox.work, "add", "-A")
+    _git(sandbox.work, "commit", "-m", "gate fixture")
     (sandbox.work / "file.txt").write_text("dirty\n")
     outcome = drive(sandbox, "finalize", LU_OPSEC_OVERRIDE=REASON)
     sent_commit = _git(sandbox.work, "rev-parse", "HEAD")

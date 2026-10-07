@@ -5792,6 +5792,8 @@ TYPED_CAUSE_CODES = frozenset(
         "auto_finalize_pr_failed",
         "auto_finalize_publish_blocked",
         "auto_finalize_failed",
+        "validation_failed",
+        "validation_incomplete",
         # Rescue.
         "rescue_worktree_unregistered",
         "rescue_tree_unavailable",
@@ -7045,6 +7047,10 @@ def _build_worker_env(
         worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(Path(runtime_tmp_namespace_root).parent)
     if worktree_path is not None:
         _apply_worktree_git_ceiling(worker_env, worktree_path)
+        if (worktree_path / ".git").exists():
+            from scripts.ci.push_gate import install
+
+            worker_env = install(worktree_path, worker_env, interpreter=str(_REPO_ROOT / ".venv/bin/python"))
     if allow_merge:
         worker_env.pop("AGENT_NO_MERGE", None)
         worker_env["AGENT_ALLOW_MERGE"] = "1"
@@ -7055,16 +7061,13 @@ def _build_worker_env(
 
 
 def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
+    from scripts.ci.push_gate import GateFailure, context, push
+
     try:
-        proc = subprocess.run(
-            ["git", "push", "-u", "origin", branch],
-            cwd=worktree,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-            timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
-        )
+        ctx = context(worktree, interpreter=str(_REPO_ROOT / ".venv/bin/python"))
+        proc = push(ctx, branch, options=("-u",))
+    except GateFailure as exc:
+        raise _TypedFailure(exc.reason, _TypedCause(exc.reason, diagnostic=json.dumps(exc.receipt))) from exc
     except subprocess.TimeoutExpired as exc:
         raise _TypedFailure(
             f"git push timed out after {DEFAULT_NETWORK_GIT_TIMEOUT_S}s",
@@ -7277,7 +7280,9 @@ def _auto_finalize_dirty_worktree(
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         step = exc.cmd if isinstance(exc, subprocess.TimeoutExpired) and isinstance(exc.cmd, (list, tuple)) else None
         causes = [_exception_cause("auto_finalize_failed", exc, command=step)]
-        if commit_sha is not None:
+        if commit_sha is not None and not (isinstance(exc, _TypedFailure) and exc.cause.code in {
+            "validation_failed", "validation_incomplete",
+        }):
             try:
                 reset_proc = subprocess.run(
                     ["git", "reset", "--soft", "HEAD~1"],
@@ -9130,6 +9135,15 @@ def _augment_prompt_with_worktree(
             "\n[write-mode closeout]\n"
             "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
             "`git push -u origin HEAD`\n"
+            "The harness git wrapper validates the exact commit before pushing; --no-verify does not bypass it.\n"
+            "A validation_failed refusal needs a fix; validation_incomplete preserves your branch and returns to the driver.\n"
+            "Do not replace PATH, invoke another git executable, or use aliases/alternate push transports to evade it.\n"
+            "Merge origin/main only for a merge-tree conflict against freshly fetched main, a driver disposition "
+            "with base/head/combined-tree evidence, or a driver order. A broken base is not repaired by merging it.\n"
+            "Record each outgoing merge SHA in the worktree admin push-gate/merge-reasons.json, keyed by SHA, "
+            "with reason conflict (base), driver_disposition (base, head, combined_tree, evidence), "
+            "or driver_order (evidence). Merge-tree errors are unknown. Every new head requires renewed approval and CI; "
+            "merge-group CI proves semantic combinations. See docs/runbooks/dispatch-push-gate.md.\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
             "Keep scratch git repositories and probes outside `batch_state/reports/` "
             "(use `$TMPDIR`, the managed lease, never a literal system temp path); "
@@ -13489,17 +13503,17 @@ def _dispatch(
         # Pipe the prompt via stdin so it doesn't hit argv length limits.
         # start_new_session=True detaches from our process group — the
         # worker survives our exit, which is what we want.
-        worker_env = _build_worker_env(
-            task_id=task_id,
-            dispatch_agent=dispatch_agent,
-            attribution=attribution,
-            run_nonce=run_nonce,
-            runtime_tmp_root=runtime_tmp_root,
-            runtime_tmp_namespace_root=runtime_tmp_namespace_root,
-            worktree_path=worktree_path,
-            allow_merge=bool(getattr(args, "allow_merge", False)),
-        )
         try:
+            worker_env = _build_worker_env(
+                task_id=task_id,
+                dispatch_agent=dispatch_agent,
+                attribution=attribution,
+                run_nonce=run_nonce,
+                runtime_tmp_root=runtime_tmp_root,
+                runtime_tmp_namespace_root=runtime_tmp_namespace_root,
+                worktree_path=worktree_path,
+                allow_merge=bool(getattr(args, "allow_merge", False)),
+            )
             # Scoped when lu-dispatch.slice is really in force; plain Popen
             # otherwise. The recorded pid is the worker in both cases (#8645).
             proc, launch = dispatch_isolation.spawn_detached_worker(

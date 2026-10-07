@@ -5667,7 +5667,7 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
     assert "X-Agent: agy/auto-finalize-test" in message
 
 
-def _agy_dispatch_worktree(tmp_path: Path, branch: str) -> Path:
+def _agy_dispatch_worktree(tmp_path: Path, branch: str, *, push_gate: bool = False) -> Path:
     """Git worktree on its own branch, tracking a bare origin, one base commit."""
     origin = tmp_path / "origin.git"
     worktree = tmp_path / "worktree"
@@ -5680,7 +5680,24 @@ def _agy_dispatch_worktree(tmp_path: Path, branch: str) -> Path:
     git("config", "user.email", "test@example.com")
     git("config", "user.name", "test")
     (worktree / "README.md").write_text("base\n", encoding="utf-8")
-    git("add", "README.md")
+    if push_gate:
+        # Smoke paths execute the real gate against a small synthetic authority.
+        # Put its inputs in the base so they are not worker-owned changes.
+        (worktree / "scripts/ci").mkdir(parents=True)
+        (worktree / "tests").mkdir()
+        (worktree / ".gitignore").write_text("__pycache__/\n.pytest_cache/\n")
+        (worktree / "scripts/ci/push_invariants.json").write_text(json.dumps({
+            "schema_version": 1, "modules": ["tests/test_fixture_invariant.py"], "node_ids": [],
+        }))
+        (worktree / "tests/test_fixture_invariant.py").write_text(
+            "from pathlib import Path\ndef test_base():\n    assert Path('README.md').read_text() == 'base\\n'\n"
+        )
+        (worktree / ".pre-commit-config.yaml").write_text(
+            "repos:\n  - repo: local\n    hooks:\n      - id: diff-check\n        name: diff check\n"
+            "        entry: git diff --check\n        language: system\n        pass_filenames: false\n"
+            "        stages: [pre-push]\n"
+        )
+    git("add", "-A" if push_gate else "README.md")
     git("commit", "-m", "base")
     git("remote", "add", "origin", str(origin))
     git("push", "-u", "origin", "main")
@@ -5706,7 +5723,7 @@ def test_run_worker_auto_finalize_respects_provider_outcome(
     _sanitize_git_env_for_test(monkeypatch)
     task_id = "provider-outcome"
     branch = f"{agent}/{task_id}"
-    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    worktree = _agy_dispatch_worktree(tmp_path, branch, push_gate=ok)
     if pushed_commit_first:
         (worktree / "wip.txt").write_text("wip\n", encoding="utf-8")
         for args in (["add", "wip.txt"], ["commit", "-m", "wip"], ["push", "-u", "origin", branch]):
@@ -18711,7 +18728,7 @@ def _kimi_run(tmp_path, monkeypatch, task_id: str, text: str, *, worker_git=None
     own push goes to the real bare ``origin``.
     """
     branch = f"kimi/{task_id}"
-    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    worktree = _agy_dispatch_worktree(tmp_path, branch, push_gate=True)
     label = worktree / "site" / "src" / "components" / "Label.tsx"
     state_path = delegate._state_path(task_id)
     delegate._write_state_atomic(

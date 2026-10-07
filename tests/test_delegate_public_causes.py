@@ -379,8 +379,7 @@ def test_a_worker_admission_tree_reader_error_never_reaches_the_refusal(tmp_path
 
 
 def _dirty_owned_worktree(tmp_path: Path, task_id: str) -> Path:
-    worktree = _agy_dispatch_worktree(tmp_path, f"claude/{task_id}")
-    (worktree / "scripts").mkdir()
+    worktree = _agy_dispatch_worktree(tmp_path, f"claude/{task_id}", push_gate=True)
     (worktree / "scripts" / "fix.py").write_text("fixed = True\n", encoding="utf-8")
     delegate._write_state_atomic(
         delegate._state_path(task_id),
@@ -403,7 +402,7 @@ def _failing_git(monkeypatch, subcommand: str, stderr: str = HOSTILE) -> None:
     def run(cmd, *args, **kwargs):
         words = [str(word) for word in cmd] if isinstance(cmd, (list, tuple)) else []
         scoped = subcommand not in ("add", "commit") or "--literal-pathspecs" in words
-        if words[:1] == ["git"] and delegate._git_subcommand(words) == subcommand and scoped:
+        if words and Path(words[0]).name == "git" and delegate._git_subcommand(words) == subcommand and scoped:
             return subprocess.CompletedProcess(cmd, 128, "", stderr)
         return real_run(cmd, *args, **kwargs)
 
