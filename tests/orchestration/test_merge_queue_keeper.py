@@ -67,6 +67,9 @@ class FakeGitHub:
         self.job_rows: list[dict[str, Any]] = []
         self.issue_rows: list[dict[str, Any]] = []
         self.squash: bool | None = False
+        self.author_login = "driver"
+        self.file_rows: list[dict[str, Any]] = [{"filename": "scripts/example.py"}]
+        self.lookups: list[str] = []
 
     def squash_blocked(self, number: int, head: str) -> bool | None:
         self.actions.append(("squash-read", (number, head)))
@@ -94,6 +97,14 @@ class FakeGitHub:
 
     def current(self, number: int) -> dict[str, Any]:
         return self.fresh
+
+    def author(self, number: int) -> str:
+        self.lookups.append("author")
+        return self.author_login
+
+    def files(self, number: int) -> list[dict[str, Any]]:
+        self.lookups.append("files")
+        return self.file_rows
 
     def enqueue(self, number: int, head: str) -> None:
         self.actions.append(("enqueue", (number, head)))
@@ -655,3 +666,144 @@ def test_github_squash_blocked_is_unverified_without_a_matcher(tmp_path: Path, m
     gh = keeper.GitHub(Path("."), "unit/public")
     monkeypatch.setattr(gh, "json", lambda request: _squash_reply())
     assert gh.squash_blocked(42, HEAD_A) is None
+
+
+# --- Dependency-update PRs without Analyze runs (#8587, #9921) -----------------------------
+
+
+def codeql_only(head: str = HEAD_A, conclusion: str = "neutral", status: str = "completed") -> list[dict[str, Any]]:
+    """Check runs as GitHub reports them for a dependabot lockfile PR: CI Gate plus top-level CodeQL, no Analyze."""
+    return [
+        {
+            "name": "CI Gate",
+            "head_sha": head,
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-09-23T00:00:00Z",
+            "app": {"slug": "github-actions"},
+        },
+        {
+            "name": "CodeQL",
+            "head_sha": head,
+            "status": status,
+            "conclusion": conclusion if status == "completed" else None,
+            "started_at": "2026-09-23T00:00:00Z",
+            "app": {"slug": "github-advanced-security"},
+        },
+    ]
+
+
+def test_dependabot_pr_with_neutral_codeql_and_no_analyze_is_queueable(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only()
+    fake.author_login = "dependabot[bot]"
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
+    assert "files" not in fake.lookups
+
+
+@pytest.mark.parametrize(
+    "files",
+    [
+        [{"filename": "package-lock.json"}],
+        [{"filename": "package.json"}, {"filename": "package-lock.json"}],
+        [{"filename": "tools/requirements-dev.txt"}, {"filename": "uv.lock"}],
+    ],
+)
+def test_lockfile_only_pr_with_neutral_codeql_is_queueable(tmp_path: Path, monkeypatch, files) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only(conclusion="success")
+    fake.file_rows = files
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
+
+
+@pytest.mark.parametrize(
+    "files",
+    [
+        [{"filename": "scripts/example.py"}],
+        [{"filename": "package-lock.json"}, {"filename": "src/app.ts"}],
+        [{"filename": "package.json", "previous_filename": "scripts/build.js"}],
+        [],
+    ],
+)
+def test_code_pr_without_analyze_still_waits_for_codeql(tmp_path: Path, monkeypatch, files) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only()
+    fake.file_rows = files
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=CodeQL-pending" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+@pytest.mark.parametrize("conclusion", ["failure", "action_required", "cancelled", "timed_out"])
+def test_failing_codeql_blocks_a_dependabot_pr(tmp_path: Path, monkeypatch, conclusion) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only(conclusion=conclusion)
+    fake.author_login = "dependabot[bot]"
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=CI-red-CodeQL" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+def test_running_codeql_keeps_a_dependabot_pr_pending(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only(status="in_progress")
+    fake.author_login = "dependabot[bot]"
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert "reason=CodeQL-pending" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+def test_codeql_named_check_from_another_app_is_not_evidence(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only()
+    fake.check_rows[1]["app"] = {"slug": "github-actions"}
+    fake.author_login = "dependabot[bot]"
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert "reason=CodeQL-pending" in lines[0]
+    assert fake.lookups == []
+    assert "enqueue" not in mutations(fake)
+
+
+def test_pr_with_analyze_runs_never_reads_author_or_files(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert "reason=ready" in lines[0]
+    assert fake.lookups == []
+
+
+def test_dependency_lookup_failure_never_enqueues(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only()
+
+    def broken(_number: int) -> str:
+        raise keeper.KeeperError("PR author unknown")
+
+    fake.author = broken  # type: ignore[method-assign]
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    # A failed evidence read is handled like a failed check read: nothing is ready.
+    assert "reason=ready" not in lines[0]
+    assert "enqueue" not in mutations(fake)

@@ -637,6 +637,7 @@ REST_READS = {
     "timeline": ("repos/{repo}/issues/{number}/timeline", {"number": "number"}),
     "reviews": ("repos/{repo}/pulls/{number}/reviews", {"number": "number"}),
     "commits": ("repos/{repo}/pulls/{number}/commits", {"number": "number"}),
+    "pr-files": ("repos/{repo}/pulls/{number}/files", {"number": "number"}),
     "comment": ("repos/{repo}/issues/comments/{number}", {"number": "number"}),
     "checks": ("repos/{repo}/commits/{sha}/check-runs", {"sha": "sha"}),
     "code-scanning-alerts": ("repos/{repo}/code-scanning/alerts?state=open&ref={ref}", {"ref": "ref"}),
