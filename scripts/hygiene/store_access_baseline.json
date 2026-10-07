@@ -2,9 +2,9 @@
   "schema": "store-access-baseline.v1",
   "base_commit": "e467138966bff83cec3edaff87f103d5bda07b84",
   "counts": {
-    "store_path": 426,
     "raw_store_constructor": 12,
-    "test_import_access": 6
+    "store_path": 384,
+    "test_import_access": 1
   },
   "file_counts": {
     "scripts/analytics/vocab_progression.py": 1,
@@ -2388,13 +2388,6 @@
       "occurrence": 0
     },
     {
-      "path": "tests/agent_runtime/test_review_mcp.py",
-      "kind": "store_path",
-      "scope": "test_sources_server_stdio_integration",
-      "fingerprint": "3996672941039f7e9f691ce452aca7a3607d89ae2365248bb7ea33563c1e38fe",
-      "occurrence": 0
-    },
-    {
       "path": "tests/api/opsec_sweep/test_opsec_route_sweep.py",
       "kind": "store_path",
       "scope": "test_isolated_fixture_denies_real_database_access",
@@ -2406,13 +2399,6 @@
       "kind": "store_path",
       "scope": "test_isolated_fixture_denies_real_database_access",
       "fingerprint": "e3193fdcf5fe1147ee2a1284ec157c5921674964001b320f41457b947543b8c3",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/audit/test_antonenko_prose_narrowing.py",
-      "kind": "test_import_access",
-      "scope": "_antonenko_corpus_present",
-      "fingerprint": "855e855a846abbc5e1cc8600144e6cdf753afec0e5bc4ecb923c47f24052800c",
       "occurrence": 0
     },
     {
@@ -2441,34 +2427,6 @@
       "kind": "store_path",
       "scope": "_checkout_corpus_db_paths",
       "fingerprint": "b9c1037922bc2533764560d3703a7b2179beba068c785be2adfdc50966c95382",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/conftest.py",
-      "kind": "store_path",
-      "scope": "requires_sources_db",
-      "fingerprint": "f2242e731fcf7a5eaca229afd3215f212a8479ee07d153e59da75caefb1ade24",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/conftest.py",
-      "kind": "store_path",
-      "scope": "requires_vesum_db",
-      "fingerprint": "549178e160c323775e0b45d448f160ca68bece89a5dce50f3bb7fb782b904100",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/curriculum/evidence/test_evidence_cli.py",
-      "kind": "store_path",
-      "scope": "_real_sources_db",
-      "fingerprint": "2982faef50ddfdde8f1fe2308631493aa0783476381611cc3169e468f5860308",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/curriculum/evidence/test_evidence_cli.py",
-      "kind": "store_path",
-      "scope": "_real_sources_db",
-      "fingerprint": "16d935599bb3107975d6eacba35d82c4b4152c99c43cde9a1f10eb7096f42415",
       "occurrence": 0
     },
     {
@@ -2560,20 +2518,6 @@
       "kind": "store_path",
       "scope": "main",
       "fingerprint": "ffacddb3e74fb1fddff4cc4b9540d6a2e638fe52b74021eca156a1d05f2ee13c",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/mcp/test_ua_gec_search.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/mcp/test_ua_gec_search.py",
-      "kind": "test_import_access",
-      "scope": "_ua_gec_table_present",
-      "fingerprint": "ea368d74eaf763d72f11935c97623a0b66c23f2c6e0f385c78b68b21b76fa24b",
       "occurrence": 0
     },
     {
@@ -2745,20 +2689,6 @@
       "occurrence": 0
     },
     {
-      "path": "tests/test_adjective_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_verification",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_adjective_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_verification",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 1
-    },
-    {
       "path": "tests/test_admit_teacher_table.py",
       "kind": "store_path",
       "scope": "test_admit_and_enrich_keeps_expressions_and_accounts_for_single_token_residuals",
@@ -2829,69 +2759,6 @@
       "occurrence": 0
     },
     {
-      "path": "tests/test_adverb_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_verification_clean",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_adverb_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_verification_clean",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 1
-    },
-    {
-      "path": "tests/test_adverb_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_sanitization_and_malformed_token_detection",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_adverb_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_sanitization_and_malformed_token_detection",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 1
-    },
-    {
-      "path": "tests/test_adverb_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_rejects_empty_and_punctuation_answers",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_adverb_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_rejects_empty_and_punctuation_answers",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 1
-    },
-    {
-      "path": "tests/test_atlas_conformance.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_atlas_conformance.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_atlas_conformance.py",
-      "kind": "test_import_access",
-      "scope": "_sources_has_grinchenko_table",
-      "fingerprint": "3e3fbc4ded44eb6980fb81bae3b61f79be40bc5c2b9239bfbfb09abbf99a6cd1",
-      "occurrence": 0
-    },
-    {
       "path": "tests/test_checkout_corpus_db_guard.py",
       "kind": "store_path",
       "scope": "test_connect_that_creates_a_corpus_db_fails_the_test_and_leaves_the_file",
@@ -2917,41 +2784,6 @@
       "kind": "store_path",
       "scope": "test_refusal_is_not_swallowed_by_a_broad_except.reader",
       "fingerprint": "2878471786a5b8234ba59ce25fabbf95d511d92fa91eaf8bc9ef00097aa14db8",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_content_lexicon_reconciler.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_content_lexicon_reconciler.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 1
-    },
-    {
-      "path": "tests/test_content_spelling_gate.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_content_spelling_gate.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 1
-    },
-    {
-      "path": "tests/test_curated_seed_to_lexical_jsonl.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
       "occurrence": 0
     },
     {
@@ -3004,102 +2836,11 @@
       "occurrence": 0
     },
     {
-      "path": "tests/test_esum_search.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "96c651ad5f195d644ff44c794a1b6a639bead4ac2609eaad3138e01443d26799",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_esum_search.py",
-      "kind": "test_import_access",
-      "scope": "_esum_row_count",
-      "fingerprint": "cdc8a039f013328bd9f804fa6e6f6e55a76e138258588810394b1848ae520d5b",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_generate_practice_deck.py",
-      "kind": "store_path",
-      "scope": "_live_source_checkers",
-      "fingerprint": "4e88a94686b3f52611d8801114238ba6233ca01dd35b741e54249e3b891c0fc3",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_generate_practice_deck.py",
-      "kind": "store_path",
-      "scope": "_live_source_checkers",
-      "fingerprint": "5d8a9968639eb0fc00f062ef804f8edda4b8733dbd8738e9bb66871eac7b5f1a",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_interjection_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_verification_100_percent",
-      "fingerprint": "7c0d91af849dcdc37ccd6c7f3a9c259a3445954696bede45640f6dc52cc3f7af",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_interjection_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_is_valid_vesum_token_rejections_and_compounds",
-      "fingerprint": "7c0d91af849dcdc37ccd6c7f3a9c259a3445954696bede45640f6dc52cc3f7af",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_interjection_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_cli_verify_vesum_present",
-      "fingerprint": "7c0d91af849dcdc37ccd6c7f3a9c259a3445954696bede45640f6dc52cc3f7af",
-      "occurrence": 0
-    },
-    {
       "path": "tests/test_kimi_coding_only_admission.py",
       "kind": "store_path",
       "scope": "<module>",
       "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
       "occurrence": 0
-    },
-    {
-      "path": "tests/test_mcp_sources_identity_integration.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "9ee9cc970c9e137b4d115fafa58d58a87ee2f41ce76ac525b3d1d8b82918f90f",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_mcp_sources_identity_integration.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "4857bde33714c0c8477e2741d9e9625cbe91418b1c6cc0e4d9250647e2a6c434",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_numeral_agreement_engine.py",
-      "kind": "store_path",
-      "scope": "test_zero_collision_guarantee_large_scale",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_numeral_agreement_engine.py",
-      "kind": "store_path",
-      "scope": "test_zero_collision_guarantee_large_scale",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 1
-    },
-    {
-      "path": "tests/test_numeral_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_verification_clean",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_numeral_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_verification_clean",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 1
     },
     {
       "path": "tests/test_open_model_language_contact_adjudication.py",
@@ -3221,13 +2962,6 @@
       "occurrence": 0
     },
     {
-      "path": "tests/test_open_model_phase3_v3a_taxonomy_denominator_compatibility.py",
-      "kind": "store_path",
-      "scope": "test_local_source_db_reproduces_content_blind_evidence_when_available",
-      "fingerprint": "a1cae57b31af5d080de26febfdeec1ee379dda5f31af194a5a63440ddc08a423",
-      "occurrence": 0
-    },
-    {
       "path": "tests/test_open_model_ready_view_production.py",
       "kind": "store_path",
       "scope": "test_verify_words_batches_without_losing_order.fake_verify",
@@ -3256,41 +2990,6 @@
       "occurrence": 0
     },
     {
-      "path": "tests/test_practice_quality_gate.py",
-      "kind": "store_path",
-      "scope": "test_production_practice_shards_all_modes_gate_passes",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_reattribute_ukrlib.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "266965edaccebaaf532e08183b5e23109c5989023c66fac4a09bd721fb9e4e57",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_reattribute_ukrlib.py",
-      "kind": "test_import_access",
-      "scope": "_literary_corpus_available",
-      "fingerprint": "cdc8a039f013328bd9f804fa6e6f6e55a76e138258588810394b1848ae520d5b",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_source_db_presence_checks_readonly.py",
-      "kind": "store_path",
-      "scope": "test_presence_checks_open_readonly_copy_and_skip_when_absent",
-      "fingerprint": "39aa56faa6809ff10c24534711fc3f9679ef20d913430a57ed96d596d66bbb0e",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_source_db_presence_checks_readonly.py",
-      "kind": "store_path",
-      "scope": "test_presence_checks_open_readonly_copy_and_skip_when_absent",
-      "fingerprint": "d34bc021186accfe4bf6c9e4fe9c40efc46545303a887b97ab5c14ac4d072e34",
-      "occurrence": 0
-    },
-    {
       "path": "tests/test_source_db_write_guard.py",
       "kind": "store_path",
       "scope": "test_unrelated_audit_events_pass",
@@ -3303,34 +3002,6 @@
       "scope": "test_refuse_network_sources_db_override",
       "fingerprint": "57712c1c4cb9ba40066680343c2e0b2c1deaa983a3978cd863d8292e89671c21",
       "occurrence": 0
-    },
-    {
-      "path": "tests/test_verb_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_verification",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_verb_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "test_vesum_verification",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 1
-    },
-    {
-      "path": "tests/test_vesum_heritage_attestation.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_vesum_heritage_attestation.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
-      "occurrence": 1
     }
   ]
 }

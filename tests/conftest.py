@@ -41,6 +41,7 @@ pytest_plugins = [
     "tests.helpers.checkout_write_defaults",
     "tests.cursor_process_guard",
     "tests.helpers.stress_fixtures",
+    "tests.data_store_fixtures",
 ]
 
 
@@ -793,12 +794,9 @@ def pytest_runtest_logfinish(nodeid: str, location: tuple[str, int | None, str])
 
 def _require_data_artifact(
     relative_path: str,
-    *,
-    required_sqlite_tables: Collection[str] = (),
 ) -> Path:
     """Return a local data artifact or skip tests that cannot run without it."""
-    data_root = Path(os.environ.get("LEARN_UKRAINIAN_TEST_DATA_ROOT", _REPO_ROOT))
-    artifact = data_root / relative_path
+    artifact = _REPO_ROOT / relative_path
     if not artifact.is_file():
         try:
             from scripts.guardrails.worktree_containment import resolve_main_root
@@ -811,30 +809,14 @@ def _require_data_artifact(
     if not artifact.is_file():
         pytest.skip(f"requires {relative_path} (not provisioned in CI)")
 
-    if required_sqlite_tables:
-        from scripts.lib.readonly_sqlite import open_readonly
-
-        try:
-            with open_readonly(artifact) as connection:
-                available_tables = {
-                    row[0]
-                    for row in connection.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")
-                }
-        except sqlite3.Error:
-            available_tables = set()
-        missing_tables = sorted(set(required_sqlite_tables) - available_tables)
-        if missing_tables:
-            pytest.skip(
-                f"requires {relative_path} with SQLite tables: {', '.join(missing_tables)} (not provisioned in CI)"
-            )
     return artifact
 
 
 @pytest.fixture
-def requires_sources_db() -> Path:
+def requires_sources_db(data_store_factory) -> Path:
     """Skip a test requiring the complete uncommitted sources corpus database."""
-    return _require_data_artifact(
-        "data/sources.db",
+    return data_store_factory(
+        "sources",
         required_sqlite_tables=(
             "external_articles",
             "external_fts",
@@ -852,9 +834,9 @@ def requires_sources_db() -> Path:
 
 
 @pytest.fixture
-def requires_vesum_db() -> Path:
+def requires_vesum_db(data_store_factory) -> Path:
     """Skip a test requiring the uncommitted VESUM database."""
-    return _require_data_artifact("data/vesum.db", required_sqlite_tables=("forms",))
+    return data_store_factory("vesum", required_sqlite_tables=("forms",))
 
 
 @pytest.fixture

@@ -37,13 +37,10 @@ from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler a
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SERVER_PATH = REPO_ROOT / ".mcp" / "servers" / "sources" / "server.py"
-SOURCES_DB = REPO_ROOT / "data" / "sources.db"
-VESUM_DB = REPO_ROOT / "data" / "vesum.db"
 
-pytestmark = pytest.mark.skipif(
-    not (SOURCES_DB.exists() and VESUM_DB.exists()),
-    reason="sources.db/vesum.db not present in this checkout — run locally for integration coverage",
-)
+
+
+pytestmark = pytest.mark.usefixtures("requires_sources_db", "requires_vesum_db")
 
 
 def _load_sources_server():
@@ -75,8 +72,8 @@ def log_path(tmp_path_factory: pytest.TempPathFactory):
             os.environ["LU_MCP_SOURCES_LOG_DIR"] = previous
 
 
-@pytest.fixture(scope="module")
-def sources_http_url(log_path: Path):
+@pytest.fixture
+def sources_http_url(log_path: Path, requires_sources_db, requires_vesum_db):
     module = _load_sources_server()
     port = _free_port()
     app = module.create_http_app()

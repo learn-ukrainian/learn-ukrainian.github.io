@@ -18,7 +18,6 @@ To exercise the data-content tests locally:
 
 from __future__ import annotations
 
-import sqlite3
 import sys
 from pathlib import Path
 
@@ -27,46 +26,9 @@ import pytest
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "scripts"))
 
-from scripts.lib.readonly_sqlite import open_readonly
 from wiki.sources_db import search_esum
 
-_SOURCES_DB = REPO / "data" / "sources.db"
-
-
-def _esum_row_count() -> int:
-    """Return the number of rows in the live ``esum_etymology`` table.
-
-    Returns 0 if the DB or table is missing — those cases are valid
-    skip-conditions for the data-content tests.
-    """
-    db_path = _SOURCES_DB
-    if not db_path.exists() or db_path.stat().st_size == 0:
-        return 0
-    try:
-        conn = open_readonly(db_path)
-        try:
-            cur = conn.execute(
-                "SELECT name FROM sqlite_master "
-                "WHERE type='table' AND name='esum_etymology'"
-            )
-            if cur.fetchone() is None:
-                return 0
-            cur = conn.execute("SELECT COUNT(*) FROM esum_etymology")
-            return cur.fetchone()[0]
-        finally:
-            conn.close()
-    except sqlite3.Error:
-        return 0
-
-
-needs_esum_data = pytest.mark.skipif(
-    _esum_row_count() == 0,
-    reason=(
-        "esum_etymology table empty or missing — populate it via "
-        "migrations/add_esum_table.sql + scripts/ingest/esum_load.py "
-        "to run data-content tests."
-    ),
-)
+needs_esum_data = pytest.mark.data_tier("sources", tables=("esum_etymology",))
 
 
 def _joined_text(query: str, limit: int = 5) -> str:

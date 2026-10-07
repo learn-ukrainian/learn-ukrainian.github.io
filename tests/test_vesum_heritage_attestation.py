@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 import yaml
 
@@ -10,11 +8,7 @@ from scripts.build import linear_pipeline
 # Mirror the heritage-classifier convention (tests/test_heritage_classifier.py):
 # CI ships only a stub sources.db, so existence is not enough — require the full
 # ~1.7GB corpus. The engine is verified locally; these cases skip on CI.
-requires_sources_db = pytest.mark.skipif(
-    not Path("data/sources.db").exists()
-    or Path("data/sources.db").stat().st_size < 100_000_000,
-    reason="requires the full ~1.7GB corpus sources.db; CI has only a stub; heritage engine verified locally",
-)
+requires_sources_db = pytest.mark.data_tier("sources")
 
 
 def _vesum_rejects_all(words: list[str]) -> dict[str, list[dict[str, str]]]:
