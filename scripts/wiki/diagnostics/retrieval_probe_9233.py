@@ -35,6 +35,13 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from scripts.verification.vesum import get_vesum_connection
 from scripts.wiki import sources_db
 
@@ -90,9 +97,8 @@ def tokenize(text: str) -> list[str]:
 
 
 def _ro_connect(path: Path) -> sqlite3.Connection:
-    connection = sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)
+    connection = open_readonly(path)
     connection.row_factory = sqlite3.Row
-    connection.execute("PRAGMA query_only = ON")
     return connection
 
 
@@ -556,7 +562,7 @@ def _lemma_search(index_path: Path, query: str, vesum: sqlite3.Connection, limit
     fts_query = sources_db._build_preserving_fts_query(terms)
     if not fts_query:
         return []
-    connection = sqlite3.connect(f"file:{index_path.resolve().as_posix()}?mode=ro", uri=True)
+    connection = open_readonly(index_path)
     try:
         rows = connection.execute(
             "SELECT chunk_id FROM lemma_fts WHERE lemma_fts MATCH ? ORDER BY bm25(lemma_fts, 0, 0, 0, 5.0, 1.0), rowid LIMIT ?",

@@ -30,6 +30,13 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -311,7 +318,7 @@ def load_vesum_forms(vesum_db: Path) -> frozenset[str]:
     if not vesum_db.is_file():
         raise ProjectionError(f"VESUM forms database is required for attestation ingest: {vesum_db}")
     try:
-        with sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True) as connection:
+        with open_readonly(vesum_db) as connection:
             rows = connection.execute("SELECT word_form FROM forms").fetchall()
     except sqlite3.Error as exc:
         raise ProjectionError(f"cannot read VESUM forms from {vesum_db}: {exc}") from exc
@@ -628,7 +635,7 @@ def export_projection(db_path: Path, output_jsonl: Path) -> None:
         "practice_deck": "practice_decks",
         "practice_deck_item": "practice_deck_items",
     }
-    with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as connection:
+    with open_readonly(db_path) as connection:
         for record_type, table in tables.items():
             for row in connection.execute(f"SELECT record_json FROM {table}"):
                 record = json.loads(row[0])

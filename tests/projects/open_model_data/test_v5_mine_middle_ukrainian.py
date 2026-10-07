@@ -13,6 +13,7 @@ from pathlib import Path
 import jsonschema
 import pytest
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
     DEFAULT_RELEASE_DIR,
     DEFAULT_SOURCES_DB,
@@ -765,7 +766,7 @@ def test_source_boundaries_and_work_exclusions() -> None:
     assert "litopysni_zamitky_1783_1811" in EXCLUDED_MODERN_WORKS
 
     if DEFAULT_SOURCES_DB.is_file():
-        with sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True) as _conn:
+        with open_readonly(DEFAULT_SOURCES_DB) as _conn:
             _tables = {row[0] for row in _conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
         if "literary_texts" not in _tables:
             pytest.skip("data/sources.db present but literary_texts not provisioned (CI stub)")

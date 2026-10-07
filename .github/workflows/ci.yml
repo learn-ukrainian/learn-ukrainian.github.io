@@ -376,6 +376,50 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  component-shadow:
+    name: Component shadow (advisory)
+    needs: [pytest]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Advisory only, including setup/download failures. CI Gate does not score it.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        id: shadow-python
+        with:
+          python-version-file: '.python-version'
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: pytest-junit-shard-*
+          path: ci-artifacts/shadow-shards
+      - name: Write advisory component receipt
+        if: ${{ !cancelled() }}
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
+          PYTHON_BIN: ${{ steps.shadow-python.outputs.python-path }}
+        run: |
+          "$PYTHON_BIN" -m scripts.ci.component_shadow report --event "$EVENT_NAME" \
+            --base "$BASE_SHA" --head "$HEAD_SHA" --results ci-artifacts/shadow-shards \
+            --cost-unknown-reason matched-pr-queue-measurements-not-available-in-shard-artifacts \
+            --output ci-artifacts/component-shadow.json || true
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: ${{ !cancelled() }}
+        with:
+          name: component-shadow
+          path: |
+            ci-artifacts/component-shadow.json
+            ci-artifacts/shadow-shards
+          if-no-files-found: warn
+          retention-days: 45
+
   dependency-audit:
     name: Dependency audit
     # Runs the full audit only when the diff touches a dependency input
@@ -413,7 +457,7 @@ jobs:
     name: CI Gate
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
-    needs: [reuse, queue-metadata-scan, secret-scan, checks, freeze-durations, frontend, dependency-audit, pytest, pytest-report]
+    needs: [reuse, queue-metadata-scan, secret-scan, checks, freeze-durations, frontend, dependency-audit, pytest, pytest-report, component-shadow]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

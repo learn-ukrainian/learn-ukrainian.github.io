@@ -6,6 +6,7 @@ probe; no test allocates memory, generates load, or spawns a worker.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import resource
@@ -71,7 +72,17 @@ def _running_record(tasks: Path, task_id: str, *, pid: int, mode: str = "workspa
     return path
 
 
-def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str = "adm-probe"):
+def _lease_task_id(prefix: str) -> str:
+    """One lease task id for this case. A shared id names one shared lease directory (#9927)."""
+    current = os.environ.get("PYTEST_CURRENT_TEST", prefix)
+    node = current.split(" ", 1)[0]
+    digest = hashlib.sha256(node.encode("utf-8")).hexdigest()[:16]
+    return f"{prefix}-{digest}"
+
+
+def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str | None = None):
+    if task_id is None:
+        task_id = _lease_task_id("adm-probe")
     argv = [
         "dispatch",
         "--agent",
@@ -114,7 +125,8 @@ def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(tasks_dir, mon
     _pin_origin_main_to_head(monkeypatch)
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
 
-    rc = delegate.cmd_dispatch(_dry_run_args())
+    args = _dry_run_args()
+    rc = delegate.cmd_dispatch(args)
 
     assert rc == delegate._ADMISSION_REFUSED_EXIT == 3
     refusal = [line for line in capsys.readouterr().err.splitlines() if "admission" in line]
@@ -123,7 +135,7 @@ def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(tasks_dir, mon
         "(DISPATCH_MAX_LIVE_WRITE_WORKERS=0). Wait for a worker to finish or for the host to recover, raise the "
         'threshold through the named environment variable, or pass --force-admission "<reason>" to override.'
     ]
-    assert not delegate._state_path("adm-probe").exists()
+    assert not delegate._state_path(args.task_id).exists()
 
 
 def test_dispatch_refuses_on_low_memory_and_high_load(tasks_dir, monkeypatch, capsys):
@@ -159,11 +171,12 @@ def test_force_admission_records_the_reason(tasks_dir, monkeypatch, capsys):
     _stub_worktree(monkeypatch, tasks_dir)
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
 
-    rc = delegate.cmd_dispatch(_dry_run_args("--force-admission", "hotfix #1234 while one worker drains"))
+    args = _dry_run_args("--force-admission", "hotfix #1234 while one worker drains")
+    rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
     assert "overridden by --force-admission ('hotfix #1234 while one worker drains')" in capsys.readouterr().err
-    state = delegate._read_state(delegate._state_path("adm-probe"))
+    state = delegate._read_state(delegate._state_path(args.task_id))
     assert state is not None
     admission = state["admission"]
     assert admission["admitted"] is False

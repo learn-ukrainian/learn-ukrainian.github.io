@@ -11,6 +11,7 @@ import scripts.audit.check_static_practice_assets as check_static_practice_asset
 from scripts.audit.check_static_practice_assets import check_assets
 from scripts.audit.daily_cefr import CEFR_LEVELS
 from scripts.audit.generate_daily_pool import CEFR_LEVELS as GENERATOR_CEFR_LEVELS
+from tests.helpers.restore_import_state import restore_import_state
 from tests.project_python import project_python
 
 pytestmark = pytest.mark.reads_content
@@ -786,48 +787,49 @@ def test_check_assets_runs_qa_gate_with_fixtures(tmp_path: Path, monkeypatch: py
     """Verify check_assets forwards and catches QA violations when run_qa_gate=True."""
     # This import must work without the audit directory on sys.path.
     audit_dir = Path(__file__).resolve().parents[1] / "scripts" / "audit"
-    monkeypatch.delitem(sys.modules, "practice_quality_gate", raising=False)
-    monkeypatch.setattr(sys, "path", [entry for entry in sys.path if Path(entry).resolve() != audit_dir])
-    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
-    cloze_path = tmp_path / "bad_cloze.json"
-    cloze_path.write_text(
-        json.dumps(
-            {
-                "cloze": [
-                    {
-                        "clozeId": "c_bad",
-                        "sentence": "НЕПРАВИЛЬНО ПРАВИЛЬНО _____ речення",
-                        "form": "гарне",
-                        "options": [
-                            {"label": "гарне", "kind": "answer"},
-                            {"label": "погане", "kind": "distractor"},
-                        ],
-                    }
-                ]
-            },
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
-    )
-    ec_path = tmp_path / "valid_ec.json"
-    ec_path.write_text(json.dumps({"drills": []}), encoding="utf-8")
-    si_path = tmp_path / "valid_si.json"
-    si_path.write_text(json.dumps({"sentences": []}), encoding="utf-8")
+    with restore_import_state("practice_quality_gate"):
+        monkeypatch.delitem(sys.modules, "practice_quality_gate", raising=False)
+        monkeypatch.setattr(sys, "path", [entry for entry in sys.path if Path(entry).resolve() != audit_dir])
+        daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
+        cloze_path = tmp_path / "bad_cloze.json"
+        cloze_path.write_text(
+            json.dumps(
+                {
+                    "cloze": [
+                        {
+                            "clozeId": "c_bad",
+                            "sentence": "НЕПРАВИЛЬНО ПРАВИЛЬНО _____ речення",
+                            "form": "гарне",
+                            "options": [
+                                {"label": "гарне", "kind": "answer"},
+                                {"label": "погане", "kind": "distractor"},
+                            ],
+                        }
+                    ]
+                },
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        ec_path = tmp_path / "valid_ec.json"
+        ec_path.write_text(json.dumps({"drills": []}), encoding="utf-8")
+        si_path = tmp_path / "valid_si.json"
+        si_path.write_text(json.dumps({"sentences": []}), encoding="utf-8")
 
-    summary = check_assets(
-        daily_pool=daily_pool,
-        practice_dir=practice_dir,
-        reviewed_sources=reviewed_sources,
-        levels=("A1",),
-        min_daily_pool_size=2,
-        min_practice_lexemes_per_level=1,
-        teacher_cloze=cloze_path,
-        error_corrections=ec_path,
-        sentence_inventory=si_path,
-        run_qa_gate=True,
-    )
-    assert summary["ok"] is False
-    assert any("practice_quality_gate [teacher_cloze] INTENTIONAL_ERROR_LEAK" in err for err in summary["errors"])
+        summary = check_assets(
+            daily_pool=daily_pool,
+            practice_dir=practice_dir,
+            reviewed_sources=reviewed_sources,
+            levels=("A1",),
+            min_daily_pool_size=2,
+            min_practice_lexemes_per_level=1,
+            teacher_cloze=cloze_path,
+            error_corrections=ec_path,
+            sentence_inventory=si_path,
+            run_qa_gate=True,
+        )
+        assert summary["ok"] is False
+        assert any("practice_quality_gate [teacher_cloze] INTENTIONAL_ERROR_LEAK" in err for err in summary["errors"])
 
 
 def test_check_assets_runs_qa_gate_after_audit_dir_removed_from_sys_path(

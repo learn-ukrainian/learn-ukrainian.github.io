@@ -820,15 +820,24 @@ def remove_unclaimed_worktree(
         return outcome("removed", f"{reason} ({detail})" if detail else reason)
 
 
-def owner_release_refusal(worktree: Path, *, owner_task_id: str, tasks_dir: Path, repo_root: Path) -> str | None:
+def owner_release_refusal(
+    worktree: Path,
+    *,
+    owner_task_id: str,
+    tasks_dir: Path,
+    repo_root: Path,
+    settled_claim: Callable[[dict[str, Any]], bool] | None = None,
+) -> str | None:
     """Return why ``owner_task_id`` may not release ``worktree``, or ``None`` when it may.
 
     The owner's record must identify the requested task and run with a
     non-empty ``run_nonce``, be finished (its status is in
     :data:`RELEASED_TASK_STATUSES`), name ``worktree`` as its
-    ``worktree_path``, and record ``worktree_reused: false``, the proof that
+    ``worktree_path`` (or fallback ``cwd``), and record ``worktree_reused: false``, the proof that
     its dispatch created the checkout. A reused checkout belongs to its
-    creator, which reaps it.
+    creator, which reaps it. Only a ``needs_finalize`` creator may use the
+    caller's independently proven ``settled_claim``; other unfinished statuses
+    remain refused.
     """
     record_path = task_record_path(tasks_dir, owner_task_id)
     try:
@@ -845,9 +854,11 @@ def owner_release_refusal(worktree: Path, *, owner_task_id: str, tasks_dir: Path
     if not isinstance(nonce, str) or not nonce.strip():
         return f"owner task {owner_task_id} has no valid run_nonce; refusing worktree removal"
     status = record.get("status")
-    if not isinstance(status, str) or status not in RELEASED_TASK_STATUSES:
+    if (not isinstance(status, str) or status not in RELEASED_TASK_STATUSES) and not (
+        status == NEEDS_FINALIZE_STATUS and settled_claim is not None and settled_claim(record)
+    ):
         return f"owner task {owner_task_id} is not finished (status {status!r}); refusing worktree removal"
-    claimed_path = record.get("worktree_path")
+    claimed_path = record.get("worktree_path") or record.get("cwd")
     if not isinstance(claimed_path, str) or not claimed_path:
         return f"owner task {owner_task_id} records no worktree_path; refusing worktree removal"
     try:

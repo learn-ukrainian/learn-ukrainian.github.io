@@ -23,6 +23,13 @@ import sys
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 import yaml
 
 from scripts.review import findings_db
@@ -146,7 +153,7 @@ def _entry(side: str, finding: dict[str, Any], reason: str) -> dict[str, Any]:
 
 
 def check_eligible(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     level: str,
     slug: str,
@@ -176,7 +183,7 @@ def check_eligible(
 
 
 def _first_attempt(
-    conn: sqlite3.Connection, level: str, slug: str, lesson_n: int, manifest_sha256: str
+    conn: SQLiteConnection, level: str, slug: str, lesson_n: int, manifest_sha256: str
 ) -> sqlite3.Row | None:
     return conn.execute(
         "SELECT * FROM attempts WHERE level = ? AND slug = ? AND lesson_n = ? AND manifest_sha256 = ? AND role = 'first'"
@@ -185,7 +192,7 @@ def _first_attempt(
     ).fetchone()
 
 
-def _findings_of(conn: sqlite3.Connection, attempt: sqlite3.Row) -> list[dict[str, Any]]:
+def _findings_of(conn: SQLiteConnection, attempt: sqlite3.Row) -> list[dict[str, Any]]:
     rows = conn.execute(
         "SELECT finding_json FROM findings WHERE review_id = ? AND attempt_id = ? ORDER BY rowid",
         (attempt["review_id"], attempt["attempt_id"]),
@@ -194,7 +201,7 @@ def _findings_of(conn: sqlite3.Connection, attempt: sqlite3.Row) -> list[dict[st
 
 
 def record_agreement(
-    conn: sqlite3.Connection, first: sqlite3.Row, second: sqlite3.Row, *, opened_at: str
+    conn: SQLiteConnection, first: sqlite3.Row, second: sqlite3.Row, *, opened_at: str
 ) -> dict[str, Any]:
     """Write the ``agreement`` row for two accepted attempts and open a settle item per blocking disagreement.
 

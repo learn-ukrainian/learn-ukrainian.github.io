@@ -28,6 +28,7 @@ from scripts.projects.open_model_data.paths import (
     quarantine_reason,
     refuse_quarantined,
 )
+from tests.helpers.restore_import_state import restore_import_state
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 OPEN_MODEL_SCRIPTS = REPO_ROOT / "scripts/projects/open_model_data"
@@ -319,15 +320,17 @@ class _MlStackBlocker(importlib.abc.MetaPathFinder):
 
 
 @pytest.fixture
-def without_ml_stack(monkeypatch: pytest.MonkeyPatch) -> None:
+def without_ml_stack(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     """Make the ML stack absent, as on a CI shard where it is not installed."""
     # Absent rather than None in sys.modules: libraries such as scipy probe sys.modules for torch.
-    for name in list(sys.modules):
-        if name.partition(".")[0] in ML_STACK_MODULES:
+    evicted = [name for name in list(sys.modules) if name.partition(".")[0] in ML_STACK_MODULES]
+    with restore_import_state(*evicted):
+        for name in evicted:
             monkeypatch.delitem(sys.modules, name)
-    monkeypatch.setattr(sys, "meta_path", [_MlStackBlocker(), *sys.meta_path])
-    with pytest.raises(ModuleNotFoundError):
-        importlib.import_module("torch.utils.data")
+        monkeypatch.setattr(sys, "meta_path", [_MlStackBlocker(), *sys.meta_path])
+        with pytest.raises(ModuleNotFoundError):
+            importlib.import_module("torch.utils.data")
+        yield
 
 
 @pytest.mark.parametrize("relative", GUARDED_LOADERS)

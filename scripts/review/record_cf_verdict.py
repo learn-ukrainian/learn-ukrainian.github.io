@@ -51,6 +51,7 @@ from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_UNION_FAMILY,
     FORMAL_CURSOR_REVIEW_MODELS,
     REVIEW_CANDIDATES,
+    UNKNOWN_AUTHOR_FAMILY,
     UNRESOLVED_AUTHOR_FAMILIES,
     ResolverInputs,
     ReviewerResolution,
@@ -259,7 +260,7 @@ def _attribute_commit(
     base_sha: Callable[[], str],
     checkout: Path | None = None,
 ) -> CommitAttribution:
-    """Resolve one commit's author family; exempt only a Git-proven clean base merge, fail closed.
+    """Resolve one commit's author family, retaining unresolvable authors as Unknown.
 
     ``entry`` has the GitHub commit-listing shape (``sha``, ``commit.message``,
     ``commit.tree.sha``, ``parents``). ``base_sha`` is called only when an
@@ -300,14 +301,16 @@ def _attribute_commit(
                 author_task = json.loads(task_file.read_text(encoding="utf-8"))
             except (OSError, ValueError) as exc:
                 raise RecordError("author task provenance unavailable") from exc
-            if author_task.get("repository") != repository or not str(author_task.get("agent") or "").startswith(
-                harness
+            if (
+                not isinstance(author_task, dict)
+                or author_task.get("repository") != repository
+                or not str(author_task.get("agent") or "").startswith(harness)
             ):
                 raise RecordError("author task provenance conflicts with commit trailer")
             if harness.startswith("cursor"):
-                if author_task.get("resolved_model_known") is not True:
-                    raise RecordError("author family unknown")
-                author_model = author_task.get("resolved_model")
+                author_model = (
+                    author_task.get("resolved_model") if author_task.get("resolved_model_known") is True else None
+                )
             else:
                 author_model = author_task.get("model")
             family = resolve_author_family(str(author_model or ""))
@@ -316,16 +319,17 @@ def _attribute_commit(
             family = SINGLE_FAMILY_HARNESSES[harness]
             source = "single-family-harness"
         else:
-            raise RecordError("author task provenance unavailable")
-    if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
-        raise RecordError("author family unknown")
-    if family == CURSOR_AUTO_UNION_FAMILY:
-        raise RecordError("author family mixed or unknown")
+            family = UNKNOWN_AUTHOR_FAMILY
+            source = "unresolved-author"
+    if family in UNRESOLVED_AUTHOR_FAMILIES or family == CURSOR_AUTO_UNION_FAMILY:
+        # A committed author without a concrete identity is reviewable by any
+        # known family (#9944). This does not grant Unknown a reviewer identity.
+        family = UNKNOWN_AUTHOR_FAMILY
     return CommitAttribution(commit_sha if isinstance(commit_sha, str) else None, family, source)
 
 
 def author_families(repository: str, pr_number: int, task_root: Path) -> set[str]:
-    """Resolve a PR's GitHub-listed commits; exempt only Git-proven clean base merges, fail closed.
+    """Resolve a PR's GitHub-listed commits, including Unknown author families.
 
     A compatibility reader over :func:`_attribute_commit`. The recorder itself
     uses :func:`pr_review_facts`, which also binds the listing to the local

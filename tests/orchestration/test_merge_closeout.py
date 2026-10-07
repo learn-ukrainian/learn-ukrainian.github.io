@@ -396,7 +396,7 @@ def test_merge_closeout_preserves_unnamed_ignored_output_without_task_record(tmp
         monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
     elif failure == "copy":
 
-        def fail_copy(*args):
+        def fail_copy(*args, **_kwargs):
             raise OSError("copy denied")
 
         monkeypatch.setattr(output.artifacts, "_copy_verified", fail_copy)

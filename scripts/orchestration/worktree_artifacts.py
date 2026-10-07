@@ -8,14 +8,14 @@ import hashlib
 import os
 import re
 import shlex
-import shutil
 import stat
 import subprocess
 import tempfile
 from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
+from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component, open_leaf_descriptor
 from scripts.orchestration import reaper_lifecycle as reaper_lifecycle
 from scripts.orchestration.dead_worker_state import task_state_lock as task_state_lock
 
@@ -109,33 +109,290 @@ def _git_paths(worktree: Path, *args: str) -> list[str]:
     return [os.fsdecode(path) for path in result.stdout.split(b"\0") if path]
 
 
-def _fingerprint(path: Path) -> tuple[int, str]:
-    """Verify copied bytes independently of the copy operation."""
-    with path.open("rb") as handle:
-        return os.fstat(handle.fileno()).st_size, hashlib.file_digest(handle, "sha256").hexdigest()
+# ``PC_PATH_MAX`` is a byte count. When the platform does not report one, a
+# symlink target still cannot grow without a bound.
+_PATH_LIMIT_FALLBACK = 4096
 
 
-def _copy_verified(source: Path, destination: Path) -> None:
-    """Copy atomically, verifying size and SHA-256 and refusing conflicting evidence."""
-    before = _fingerprint(source)
+class SymlinkTargetRefusal(ValueError):
+    """A symlink target is not recorded.
+
+    ``kind`` is the whole message. Preservation copies ``str(exc)`` into the
+    task record, so the message must not contain the target text.
+    """
+
+    def __init__(self, kind: str) -> None:
+        self.kind = kind
+        super().__init__(kind)
+
+
+class DescriptorWalk(NamedTuple):
+    """One leaf from the descriptor walk.
+
+    ``file_type`` is ``regular`` or ``symlink``, taken from ``fstat`` of the
+    opened descriptor. ``payload`` is the preserved bytes. ``target`` is set
+    only for a real symlink.
+    """
+
+    file_type: str
+    payload: bytes
+    target: str | None
+
+
+def _symlink_record_bytes(target: str) -> bytes:
+    """Inert link record: the type and the raw target string, never the target's bytes."""
+    return b"symlink\n" + os.fsencode(target)
+
+
+def _platform_path_limit(anchor: Path) -> int:
+    """Byte cap for one symlink target: ``PC_PATH_MAX``, else 4096."""
+    try:
+        limit = os.pathconf(anchor, "PC_PATH_MAX")
+    except (OSError, ValueError):
+        return _PATH_LIMIT_FALLBACK
+    if isinstance(limit, int) and limit > 0:
+        return limit
+    return _PATH_LIMIT_FALLBACK
+
+
+def _bounded_link_target(fd: int, identity: os.stat_result, limit: int) -> str:
+    """Read the target of the symlink ``fd`` refers to, refusing an over-long one.
+
+    ``readlink`` of an empty path on this ``O_PATH`` descriptor returns the
+    link text. The length check uses the filesystem encoding because
+    ``PC_PATH_MAX`` counts bytes. The refusal names only its kind.
+    """
+    try:
+        target = os.readlink("", dir_fd=fd)
+    except OSError as exc:
+        raise ValueError("artifact changed during preservation") from exc
+    after = os.fstat(fd)
+    if (after.st_dev, after.st_ino) != (identity.st_dev, identity.st_ino) or not stat.S_ISLNK(after.st_mode):
+        raise ValueError("artifact changed during preservation")
+    if len(os.fsencode(target)) > limit:
+        raise SymlinkTargetRefusal("target-too-long")
+    return target
+
+
+_LEAF_FLAGS = os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK
+
+
+def _relative_parts(path: Path, root: Path) -> tuple[str, ...]:
+    """Lexical components of ``path`` below ``root``. ``..`` is outside the anchor."""
+    try:
+        relative = path.relative_to(root)
+    except ValueError as exc:
+        raise ValueError("artifact path is outside the trusted root") from exc
+    parts = relative.parts
+    if not parts or any(part in {"", ".", ".."} for part in parts):
+        raise ValueError("artifact path is outside the trusted root")
+    return parts
+
+
+def _open_trusted_root(root: Path) -> int:
+    """Open the trusted anchor once. Components inside it are opened separately."""
+    try:
+        return open_directory_component(None, os.fspath(root))
+    except ComponentOpenError as exc:
+        raise ValueError(f"refusing {exc.kind} preservation root") from exc
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise ValueError("refusing symlinked preservation root") from exc
+        raise
+
+
+def _open_parent(root_fd: int, dir_parts: tuple[str, ...]) -> tuple[int, bool]:
+    """Walk directory components from ``root_fd``. The caller closes an owned fd.
+
+    ``root_fd`` stays open. An empty walk returns that same descriptor and
+    ``owned`` is false.
+    """
+    if not dir_parts:
+        return root_fd, False
+    fd = root_fd
+    owned = False
+    try:
+        for name in dir_parts:
+            child = open_directory_component(fd, name)
+            if owned:
+                os.close(fd)
+            fd = child
+            owned = True
+        return fd, True
+    except BaseException:
+        if owned:
+            os.close(fd)
+        raise
+
+
+def _walk_parent(root_fd: int, dir_parts: tuple[str, ...]) -> tuple[int, bool]:
+    """Like :func:`_open_parent`, translating a symlink into a preservation refusal."""
+    try:
+        return _open_parent(root_fd, dir_parts)
+    except ComponentOpenError as exc:
+        if exc.kind == "changed":
+            raise ValueError("artifact changed during preservation") from exc
+        raise ValueError(f"refusing {exc.kind} path component during preservation") from exc
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise ValueError("refusing symlinked path component during preservation") from exc
+        raise
+
+
+def _read_regular(fd: int) -> bytes:
+    """Read one regular file from an already-opened descriptor."""
+    info = os.fstat(fd)
+    if not stat.S_ISREG(info.st_mode):
+        raise ValueError("artifact is not a regular file")
+    size = info.st_size
+    chunks: list[bytes] = []
+    remaining = size
+    while remaining > 0:
+        chunk = os.read(fd, min(remaining, 1024 * 1024))
+        if not chunk:
+            break
+        chunks.append(chunk)
+        remaining -= len(chunk)
+    payload = b"".join(chunks)
+    after = os.fstat(fd)
+    if (
+        after.st_dev != info.st_dev
+        or after.st_ino != info.st_ino
+        or not stat.S_ISREG(after.st_mode)
+        or after.st_size != size
+        or len(payload) != size
+    ):
+        raise ValueError("artifact size or SHA-256 changed during preservation")
+    return payload
+
+
+def _read_same_regular(parent_fd: int, name: str, identity: os.stat_result) -> bytes:
+    """Read the regular file ``identity`` names, refusing a replacement.
+
+    The classifying descriptor is ``O_PATH`` and cannot be read. This second
+    open uses ``O_NOFOLLOW`` and must be the same inode. A symlink planted in
+    its place is not followed.
+    """
+    try:
+        fd = os.open(name, _LEAF_FLAGS, dir_fd=parent_fd)
+    except FileNotFoundError:
+        raise
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise ValueError("artifact changed during preservation") from exc
+        raise
+    try:
+        info = os.fstat(fd)
+        if (info.st_dev, info.st_ino) != (identity.st_dev, identity.st_ino) or not stat.S_ISREG(info.st_mode):
+            raise ValueError("artifact changed during preservation")
+        return _read_regular(fd)
+    finally:
+        os.close(fd)
+
+
+def _read_leaf(parent_fd: int, name: str, limit: int) -> DescriptorWalk:
+    """Classify ``name`` from ``fstat`` of its ``O_PATH`` descriptor, then read it."""
+    try:
+        leaf_fd, info = open_leaf_descriptor(parent_fd, name)
+    except FileNotFoundError:
+        raise
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise ValueError("artifact changed during preservation") from exc
+        raise
+    try:
+        if stat.S_ISLNK(info.st_mode):
+            target = _bounded_link_target(leaf_fd, info, limit)
+            return DescriptorWalk("symlink", _symlink_record_bytes(target), target)
+        if not stat.S_ISREG(info.st_mode):
+            raise ValueError("artifact is not a regular file")
+        return DescriptorWalk("regular", _read_same_regular(parent_fd, name, info), None)
+    finally:
+        os.close(leaf_fd)
+
+
+def _read_preserved_bytes(path: Path, *, root: Path) -> DescriptorWalk:
+    """Walk one leaf from ``root`` and return its descriptor type with its bytes.
+
+    ``root`` is opened once. Each directory below it is opened with
+    ``O_NOFOLLOW`` relative to the previous descriptor. The leaf is opened
+    with ``O_PATH`` and ``O_NOFOLLOW``, and the file type is ``fstat`` of that
+    descriptor, never a check of ``path``. An ancestor symlink is refused
+    before any byte is read. A symlink contributes its own target string,
+    capped at the platform path limit, not the bytes the target points at. A
+    regular file is read from a second descriptor for the same inode.
+    Replacing that file with a symlink after the type check refuses; the new
+    target is not read.
+    """
+    parts = _relative_parts(path, root)
+    limit = _platform_path_limit(root)
+    root_fd = _open_trusted_root(root)
+    try:
+        parent_fd, parent_owned = _walk_parent(root_fd, parts[:-1])
+        try:
+            return _read_leaf(parent_fd, parts[-1], limit)
+        finally:
+            if parent_owned:
+                os.close(parent_fd)
+    finally:
+        os.close(root_fd)
+
+
+def _fingerprint(path: Path, *, root: Path) -> tuple[int, str]:
+    """Hash file bytes, or the inert link record when the leaf is a symlink.
+
+    ``root`` is the trusted directory. The read walks from that descriptor one
+    component at a time and never follows a symlink. A symlink leaf contributes
+    its target string, not the target's bytes. The hash is of those bytes; the
+    type label is not an input.
+    """
+    walked = _read_preserved_bytes(path, root=root)
+    return len(walked.payload), hashlib.sha256(walked.payload).hexdigest()
+
+
+def _write_verified_bytes(payload: bytes, destination: Path) -> None:
+    """Write bytes already taken from a verified source descriptor."""
+    with destination.open("wb") as handle:
+        handle.write(payload)
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
+def _copy_verified(
+    source: Path,
+    destination: Path,
+    *,
+    source_root: Path,
+    destination_root: Path,
+) -> None:
+    """Copy atomically, verifying size and SHA-256 and refusing conflicting evidence.
+
+    Source and destination reads walk from ``source_root`` and
+    ``destination_root``. A symlink is written as an inert link record. The
+    destination file is never a live symlink, and a symlinked source component
+    is refused before any byte is published. Regular-file bytes are read once
+    from that walk and that buffer is what gets written.
+    """
+    payload = _read_preserved_bytes(source, root=source_root).payload
+    before = (len(payload), hashlib.sha256(payload).hexdigest())
+    _relative_parts(destination, destination_root)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    if destination.exists():
-        if destination.is_symlink() or _fingerprint(destination) != before:
+    # ``exists`` follows links, so a dangling destination symlink must be caught separately.
+    if destination.exists() or destination.is_symlink():
+        if destination.is_symlink() or _fingerprint(destination, root=destination_root) != before:
             raise ValueError("preserved artifact already exists with different bytes")
         return
     fd, temporary_name = tempfile.mkstemp(prefix=".preserve-", dir=destination.parent)
     temporary = Path(temporary_name)
     try:
         os.close(fd)
-        shutil.copyfile(source, temporary)
-        if _fingerprint(temporary) != before or _fingerprint(source) != before:
+        _write_verified_bytes(payload, temporary)
+        if _fingerprint(temporary, root=destination_root) != before:
             raise ValueError("artifact size or SHA-256 changed during preservation")
-        with temporary.open("rb") as handle:
-            os.fsync(handle.fileno())
         # Another checkout of this task may preserve concurrently. Never replace
         # evidence it published after our initial existence check.
         os.link(temporary, destination)
-        if _fingerprint(destination) != before:
+        if _fingerprint(destination, root=destination_root) != before:
             raise ValueError("preserved artifact size or SHA-256 mismatch")
     finally:
         temporary.unlink(missing_ok=True)
@@ -244,7 +501,8 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
     If it contains a nested git repository or linked worktree, verifies commit
     and pointer safety, failing closed with actionable diagnostics or refusing
     discard of unpushed commits. If it is a directory of ordinary files, yields
-    the non-empty regular files inside it. Symlinks and escapes fail closed.
+    the non-empty regular files inside it. Symlinks are collected as links and
+    not followed. Any other non-regular file fails closed.
     """
     clean_name = name.rstrip("/")
     dot_git = source / ".git"
@@ -680,18 +938,30 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
             f"clear with: rm -rf {quoted_clean_name}"
         )
 
-    # Directory of ordinary regular files (no .git)
+    # Directory of ordinary files (no .git). Never descend through a symlink:
+    # os.walk classifies a directory link as a directory, so drop those names
+    # from ``dirs`` before the walk continues.
     collected: list[str] = []
-    for root_dir, dirs, filenames in os.walk(source):
-        dirs[:] = [
-            d for d in dirs if not is_disposable_path((Path(root_dir) / d).relative_to(worktree), worktree=worktree)
-        ]
+    for root_dir, dirs, filenames in os.walk(source, followlinks=False):
+        root_path = Path(root_dir)
+        kept_dirs: list[str] = []
+        for directory in dirs:
+            child = root_path / directory
+            relative = child.relative_to(worktree)
+            if child.is_symlink():
+                collected.append(relative.as_posix())
+                continue
+            if not is_disposable_path(relative, worktree=worktree):
+                kept_dirs.append(directory)
+        dirs[:] = kept_dirs
         for fname in filenames:
-            fpath = Path(root_dir) / fname
-            f_resolved = fpath.resolve()
-            if f_resolved != fpath.absolute() or not stat.S_ISREG(fpath.lstat().st_mode):
-                rel_path = fpath.relative_to(worktree).as_posix()
-                raise ValueError(f"artifact is not a local regular file: {rel_path}")
+            fpath = root_path / fname
+            relative = fpath.relative_to(worktree)
+            if fpath.is_symlink():
+                collected.append(relative.as_posix())
+                continue
+            if fpath.resolve() != fpath.absolute() or not stat.S_ISREG(fpath.lstat().st_mode):
+                raise ValueError(f"artifact is not a local regular file: {relative.as_posix()}")
             if fpath.stat().st_size:
-                collected.append(fpath.relative_to(worktree).as_posix())
+                collected.append(relative.as_posix())
     return collected

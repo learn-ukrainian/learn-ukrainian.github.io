@@ -35,6 +35,13 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 from scripts.control_plane.health import authority_collector_payload
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.control_plane.storage import connect as cp_connect
@@ -611,7 +618,7 @@ def cmd_dead_letters(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
-def _open_plane_db_ro(root: Path) -> sqlite3.Connection:
+def _open_plane_db_ro(root: Path) -> SQLiteConnection:
     db_path = root / "comms.sqlite3"
     if not db_path.is_file():
         raise FleetCommsCliError(f"plane DB not found: {db_path}")
@@ -621,7 +628,7 @@ def _open_plane_db_ro(root: Path) -> sqlite3.Connection:
     return conn
 
 
-def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
+def _table_exists(conn: SQLiteConnection, table: str) -> bool:
     row = conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
         (table,),

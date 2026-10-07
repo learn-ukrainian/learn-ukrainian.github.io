@@ -60,6 +60,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 import yaml
 from jsonschema import Draft202012Validator
 
@@ -156,7 +163,7 @@ def _load_record(unit_id: str, root: Path | None) -> seed_manifest.Seed | seed_m
 
 
 def load_subject(
-    conn: sqlite3.Connection, unit_id: str, review_id: str, attempt_id: str, root: Path | None = None
+    conn: SQLiteConnection, unit_id: str, review_id: str, attempt_id: str, root: Path | None = None
 ) -> Subject:
     """The unit's record and its attempt; AdjudicationError unless the attempt is an accepted first-seat one of the unit."""
     unit = _load_record(unit_id, root)
@@ -595,7 +602,7 @@ def check_independence(subject: Subject, adjudicator_family: str) -> None:
         )
 
 
-def record_verdict(conn: sqlite3.Connection, subject: Subject, verdict: Verdict, adjudicator: dict[str, str]) -> bool:
+def record_verdict(conn: SQLiteConnection, subject: Subject, verdict: Verdict, adjudicator: dict[str, str]) -> bool:
     """Write the result; True when it is new. The same result again is a no-op, a different one is refused."""
     review_id, attempt_id = verdict.review_id, verdict.attempt_id
     getter = findings_db.get_clean_result if subject.is_clean else findings_db.get_seed_result

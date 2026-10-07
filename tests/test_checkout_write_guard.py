@@ -22,6 +22,7 @@ from tests.helpers.checkout_write_guard import (
     CheckoutWriteError,
     CheckoutWriteGuard,
 )
+from tests.helpers.restore_import_state import restore_import_state
 
 # Explicit paths keep the behavioral contract independent of the guard policy.
 WATCHED_PATHS = [
@@ -96,33 +97,34 @@ def test_collection_file_alias_report_default(tmp_path: Path, builder) -> None:
 @pytest.mark.parametrize("filename", ["linear_pipeline.py", "extract_sections.py", "build_sources_db.py"])
 def test_late_file_alias_defaults(tmp_path: Path, filename: str, monkeypatch: pytest.MonkeyPatch) -> None:
     name = "guard_late_alias"
-    monkeypatch.delitem(sys.modules, name, raising=False)
-    module = _source_alias(filename, name)
-    if filename == "linear_pipeline.py":
-        expected = tmp_path / ".claude/agents/curriculum-writer.md"
-        assert expected == module.CLAUDE_WRITER_AGENT_TARGET
-        assert module.ensure_claude_writer_agent_deployed()["path"] == str(expected)
-        assert expected.read_bytes() == module.CLAUDE_WRITER_AGENT_SOURCE.read_bytes()
-    else:
-        expected = tmp_path / "corpus_audit/section_extraction_report.md"
-        assert expected == module.DEFAULT_REPORT_PATH
-        db = tmp_path / "sections.db"
-        with sqlite3.connect(db) as conn:
-            conn.execute("""CREATE TABLE textbooks (
-                id INTEGER PRIMARY KEY, chunk_id TEXT, title TEXT, text TEXT,
-                source_file TEXT, grade TEXT, author TEXT, author_uk TEXT, char_count INTEGER
-            )""")
-        if filename == "extract_sections.py":
-            report = module.extract_sections(db)
+    with restore_import_state(name):
+        monkeypatch.delitem(sys.modules, name, raising=False)
+        module = _source_alias(filename, name)
+        if filename == "linear_pipeline.py":
+            expected = tmp_path / ".claude/agents/curriculum-writer.md"
+            assert expected == module.CLAUDE_WRITER_AGENT_TARGET
+            assert module.ensure_claude_writer_agent_deployed()["path"] == str(expected)
+            assert expected.read_bytes() == module.CLAUDE_WRITER_AGENT_SOURCE.read_bytes()
         else:
-            report = module._extract_sections_with_university_grade_adapter(db)
-            manifest = tmp_path / "embeddings/manifest.db"
-            assert manifest == module.DEFAULT_MANIFEST_DB
-            module.ensure_ukrainian_wiki_manifest(module.DEFAULT_MANIFEST_DB)
-            assert manifest.is_file()
-            assert (manifest.parent / "ukrainian_wiki/shard-000001.npy").is_file()
-        assert report.total_chunks == 0
-        assert "Status: **OK**" in expected.read_text(encoding="utf-8")
+            expected = tmp_path / "corpus_audit/section_extraction_report.md"
+            assert expected == module.DEFAULT_REPORT_PATH
+            db = tmp_path / "sections.db"
+            with sqlite3.connect(db) as conn:
+                conn.execute("""CREATE TABLE textbooks (
+                    id INTEGER PRIMARY KEY, chunk_id TEXT, title TEXT, text TEXT,
+                    source_file TEXT, grade TEXT, author TEXT, author_uk TEXT, char_count INTEGER
+                )""")
+            if filename == "extract_sections.py":
+                report = module.extract_sections(db)
+            else:
+                report = module._extract_sections_with_university_grade_adapter(db)
+                manifest = tmp_path / "embeddings/manifest.db"
+                assert manifest == module.DEFAULT_MANIFEST_DB
+                module.ensure_ukrainian_wiki_manifest(module.DEFAULT_MANIFEST_DB)
+                assert manifest.is_file()
+                assert (manifest.parent / "ukrainian_wiki/shard-000001.npy").is_file()
+            assert report.total_chunks == 0
+            assert "Status: **OK**" in expected.read_text(encoding="utf-8")
 
 
 def test_default_redirect_matches_exact_file_and_restores_alias(tmp_path: Path) -> None:

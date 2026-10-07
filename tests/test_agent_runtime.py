@@ -109,22 +109,6 @@ def _clear_state():
     _reset_rate_limit_cache_for_tests()
 
 
-@pytest.fixture(autouse=True)
-def _stub_claude_cli_version_gate(monkeypatch, request):
-    """Keep Claude adapter tests deterministic unless a test probes the gate."""
-    from agent_runtime.adapters import claude as claude_adapter_mod
-
-    claude_adapter_mod._probe_claude_cli_version.cache_clear()
-    if request.node.name != "test_claude_adapter_rejects_old_cli_version":
-        monkeypatch.setattr(
-            claude_adapter_mod,
-            "_ensure_supported_claude_cli_version",
-            lambda _cmd_prefix: (2, 1, 116),
-        )
-    yield
-    claude_adapter_mod._probe_claude_cli_version.cache_clear()
-
-
 # ---------------------------------------------------------------------------
 # Registry + adapter loading
 # ---------------------------------------------------------------------------
@@ -3649,6 +3633,7 @@ def test_claude_adapter_no_bare_when_session_id_passed(tmp_path, monkeypatch):
     assert "--resume" in plan.cmd
 
 
+@pytest.mark.real_claude_cli_gate
 def test_claude_adapter_rejects_old_cli_version(tmp_path):
     from agent_runtime.adapters import claude as claude_adapter_mod
 

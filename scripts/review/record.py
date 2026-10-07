@@ -80,6 +80,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 import yaml
 
 from scripts.build.fresh.manifest import changed_inputs
@@ -407,7 +414,7 @@ def _writer_family(directory: Path, lesson_n: int) -> str:
 
 
 def _check_seed_identity(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     root: Path,
     seed_id: str,
     target: tuple[str, str, int],
@@ -487,7 +494,7 @@ def _require_saved(target: Path, digest: str, name: str) -> None:
 
 
 def _publish(
-    outcome: Outcome, conn: sqlite3.Connection, root: Path, level: str, slug: str, kind: str, lesson_n: int | None
+    outcome: Outcome, conn: SQLiteConnection, root: Path, level: str, slug: str, kind: str, lesson_n: int | None
 ) -> None:
     """Project the database's latest accepted attempt of the target into its verdict file (after the commit)."""
     try:
@@ -784,7 +791,7 @@ def record_return(
 
 
 def _terminal_budget(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     root: Path,
     level: str,
     slug: str,
@@ -932,7 +939,7 @@ def _persist_accepted(
 
 
 def _close_moot(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     root: Path,
     directory: Path,
     level: str,
@@ -983,7 +990,7 @@ def _terminal_now(
 
 
 def _replay(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     root: Path,
     directory: Path,
     existing: Any,

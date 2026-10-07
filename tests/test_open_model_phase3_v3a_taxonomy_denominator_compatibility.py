@@ -11,6 +11,7 @@ from typing import Any
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data import freeze_phase3_v3a_taxonomy_denominator_compatibility as v3a
 
 
@@ -36,7 +37,7 @@ SOURCE_DB_REQUIRED_COLUMNS = {
 
 
 def _source_db_has_textbooks_schema(path: Path) -> bool:
-    connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    connection = open_readonly(path)
     try:
         columns = {str(row[1]) for row in connection.execute("PRAGMA table_info(textbooks)")}
         return columns >= SOURCE_DB_REQUIRED_COLUMNS

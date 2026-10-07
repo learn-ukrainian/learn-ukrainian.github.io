@@ -285,8 +285,16 @@ def test_multiple_creators_and_retention_attribution(store, kept, creators):
     root, tasks, tree = store
     for i in range(2):
         save(tasks, f"record-{i}.json", {"cwd": str(tree), "keep_worktree": i < kept, "worktree_reused": i >= creators})
-    replay(tasks, root, [tree, root / "absent"])
-    replay(tasks, root, [tree])
+    if kept and creators == 0:
+        # #9934: a sole keep flag no longer gives a reused record ownership.
+        for publish_cache in (False, True, True):
+            assert result(partial(output.resolve_worktree_record, publish_cache=publish_cache), tree, tasks, root) == (
+                "ValueError",
+                "ambiguous worktree task attribution with retention intent",
+            )
+    else:
+        replay(tasks, root, [tree, root / "absent"])
+        replay(tasks, root, [tree])
 
 
 @pytest.mark.parametrize("damage", ["missing", "truncated", "deep", "projection", "schema", "entry_shape"])

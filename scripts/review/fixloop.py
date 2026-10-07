@@ -70,6 +70,13 @@ import unicodedata
 from pathlib import Path
 from typing import Any, NamedTuple
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 import yaml
 from jsonschema import Draft202012Validator
 
@@ -248,7 +255,7 @@ def projection_problem(directory: Path, kind: str, n: int | None, latest: sqlite
 
 
 def publish_projection(
-    conn: sqlite3.Connection, root: Path, level: str, slug: str, kind: str, n: int | None
+    conn: SQLiteConnection, root: Path, level: str, slug: str, kind: str, n: int | None
 ) -> Path | None:
     """Write the verdict file of a target from the database (temp file + atomic rename); None with no accepted attempt.
 
@@ -330,7 +337,7 @@ def _readable_closure(directory: Path) -> dict[str, Any] | None:
 
 
 def close_moot_items(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     root: Path,
     directory: Path,
     level: str,
@@ -373,7 +380,7 @@ def projection_targets(root: Path, level: str, slug: str) -> list[tuple[str, int
     return [("plan", None), *(("lesson", item["n"]) for item in plan_lessons(root, level, slug))]
 
 
-def repair_projections(conn: sqlite3.Connection, root: Path, level: str, slug: str) -> dict[str, list[str]]:
+def repair_projections(conn: SQLiteConnection, root: Path, level: str, slug: str) -> dict[str, list[str]]:
     """Rewrite every stale or missing verdict file of the module from the database.
 
     A file with no accepted attempt behind it cannot be repaired (there is nothing to project); it
@@ -546,7 +553,7 @@ def claim_key(finding: dict[str, Any]) -> tuple[str, str, str]:
     return (finding["dimension"], finding.get("sub_dimension") or "", normalize_claim(disputed))
 
 
-def unsupported_claim_counts(conn: sqlite3.Connection, level_threshold: int) -> list[dict[str, Any]]:
+def unsupported_claim_counts(conn: SQLiteConnection, level_threshold: int) -> list[dict[str, Any]]:
     """Unsupported claims that recur across lessons of the level, keyed by :func:`claim_key`.
 
     Only the latest accepted first-seat attempt of each lesson counts (a claim a regenerated lesson no
@@ -672,7 +679,7 @@ def lesson_review_state(
 # --- budgets and transitions ------------------------------------------------------------------------
 
 
-def latest_first_attempts(conn: sqlite3.Connection, level: str, slug: str) -> dict[int, sqlite3.Row]:
+def latest_first_attempts(conn: SQLiteConnection, level: str, slug: str) -> dict[int, sqlite3.Row]:
     """The first-seat, accepted, non-seeded lesson attempt of record per lesson: the latest recorded."""
     latest: dict[int, sqlite3.Row] = {}
     for attempt in findings_db.module_attempts(conn, level, slug):
@@ -682,7 +689,7 @@ def latest_first_attempts(conn: sqlite3.Connection, level: str, slug: str) -> di
 
 
 def terminal_transitions(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     level: str,
     slug: str,
     lesson_ns: list[int],
@@ -734,7 +741,7 @@ def _terminal(reason: str, detail: str, lesson_n: int | None) -> dict[str, Any]:
 
 
 def regenerate(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     level: str,
     slug: str,
     n: int,
@@ -785,7 +792,7 @@ def _row_dict(row: sqlite3.Row | None) -> dict[str, Any] | None:
 
 
 def _target_fingerprint(
-    conn: sqlite3.Connection, directory: Path, level: str, slug: str, kind: str, n: int | None
+    conn: SQLiteConnection, directory: Path, level: str, slug: str, kind: str, n: int | None
 ) -> dict[str, Any]:
     """A projection target's raw inputs: the database's latest accepted attempt and the file's agreement with it."""
     latest = findings_db.latest_accepted(conn, level, slug, kind, n)
@@ -796,7 +803,7 @@ def _target_fingerprint(
 
 
 def module_verdict_fingerprint_inputs(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     root: Path,
     level: str,
     slug: str,
@@ -861,7 +868,7 @@ def module_verdict_fingerprint_inputs(
 
 
 def module_verdict_fingerprint(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     root: Path,
     level: str,
     slug: str,
@@ -881,7 +888,7 @@ def module_verdict_fingerprint(
 
 
 def compute_module_verdict(
-    conn: sqlite3.Connection, level: str, slug: str, *, root: Path, params: dict[str, Any], now: str | None = None
+    conn: SQLiteConnection, level: str, slug: str, *, root: Path, params: dict[str, Any], now: str | None = None
 ) -> dict[str, Any]:
     """The module verdict document. APPROVE only when nothing holds it (see ``holds``)."""
     root = Path(root).resolve()
@@ -1041,7 +1048,7 @@ def write_module_verdict(root: Path, document: dict[str, Any]) -> Path:
 
 
 def compute_and_write_module_verdict(
-    conn: sqlite3.Connection, level: str, slug: str, *, root: Path, params: dict[str, Any], now: str | None = None
+    conn: SQLiteConnection, level: str, slug: str, *, root: Path, params: dict[str, Any], now: str | None = None
 ) -> tuple[dict[str, Any], Path]:
     """Compute the module verdict and publish it inside the one transaction that read it.
 
@@ -1068,7 +1075,7 @@ def compute_and_write_module_verdict(
 
 
 def module_verdict_problems(
-    conn: sqlite3.Connection, level: str, slug: str, *, root: Path, params: dict[str, Any]
+    conn: SQLiteConnection, level: str, slug: str, *, root: Path, params: dict[str, Any]
 ) -> list[str]:
     """Why ``module-verdict.yaml`` disagrees with a fresh recomputation; empty when it does not.
 
@@ -1106,7 +1113,7 @@ def module_verdict_problems(
 
 
 def build_report(
-    conn: sqlite3.Connection, level: str, slug: str, *, root: Path, params: dict[str, Any]
+    conn: SQLiteConnection, level: str, slug: str, *, root: Path, params: dict[str, Any]
 ) -> dict[str, Any]:
     """Everything the driver reads: verdict, layers of live findings, signal, gate candidates, budgets, transitions."""
     root = Path(root).resolve()

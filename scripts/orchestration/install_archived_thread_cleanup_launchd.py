@@ -18,6 +18,7 @@ import subprocess
 import sys
 from collections.abc import Sequence
 from pathlib import Path
+from xml.parsers.expat import ExpatError
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -297,7 +298,7 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
                 and isinstance(schedule, dict)
                 and isinstance(schedule.get("Weekday"), int)
             )
-        except (OSError, ValueError, plistlib.InvalidFileException) as exc:
+        except (OSError, ValueError, plistlib.InvalidFileException, ExpatError) as exc:
             parse_error = str(exc)
 
     payload: dict[str, object] = {

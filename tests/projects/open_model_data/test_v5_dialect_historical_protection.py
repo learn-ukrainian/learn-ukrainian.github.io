@@ -843,19 +843,19 @@ def _verify_single_surzhyk_target_zero_sum11(case: dict[str, Any], c_src: Any, c
 
 def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
     """Verify that all 100 anti-surzhyk controls have zero SUM-11 headwords, inflected lemmas, or defined subentries."""
-    import sqlite3
+    from scripts.lib.readonly_sqlite import open_readonly
 
     sources_db = REPO_ROOT / "data" / "sources.db"
     vesum_db = REPO_ROOT / "data" / "vesum.db"
     if not sources_db.exists():
         pytest.skip("sources.db unavailable")
 
-    c_src = sqlite3.connect(sources_db).cursor()
+    c_src = open_readonly(sources_db).cursor()
     has_sum11 = c_src.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='sum11'").fetchone()
     if not has_sum11:
         pytest.skip("sum11 table unavailable in sources.db")
 
-    c_ves = sqlite3.connect(vesum_db).cursor() if vesum_db.exists() else None
+    c_ves = open_readonly(vesum_db).cursor() if vesum_db.exists() else None
 
     assert SUITE_PATH.exists()
     surz_cases = []
@@ -904,7 +904,7 @@ def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
 
 def test_surzhyk_phrase_matcher_handles_inflections_and_parenthesized_variants() -> None:
     """Independently verify that the phrase matcher catches participle inflections and parenthesized dictionary variants."""
-    import sqlite3
+    from scripts.lib.readonly_sqlite import open_readonly
 
     sources_db = REPO_ROOT / "data" / "sources.db"
     vesum_db = REPO_ROOT / "data" / "vesum.db"
@@ -912,9 +912,9 @@ def test_surzhyk_phrase_matcher_handles_inflections_and_parenthesized_variants()
     has_sum11 = False
     c_src = None
     if sources_db.exists():
-        c_src = sqlite3.connect(sources_db).cursor()
+        c_src = open_readonly(sources_db).cursor()
         has_sum11 = bool(c_src.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='sum11'").fetchone())
-    c_ves = sqlite3.connect(vesum_db).cursor() if vesum_db.exists() else None
+    c_ves = open_readonly(vesum_db).cursor() if vesum_db.exists() else None
 
     # 1. Controlled dictionary entry test with parenthesized alternative: ♦ Бра́ти (взя́ти) у́часть — …
     class ControlledMockCursor:

@@ -380,6 +380,25 @@ def test_ci_gate_needs_every_other_job() -> None:
     assert set(_ci_gate_job()["needs"]) == jobs - {"ci-gate"}
 
 
+def test_component_shadow_is_separate_advisory_and_runs_on_red_pytest() -> None:
+    jobs = _load("ci.yml")["jobs"]
+    shadow = jobs["component-shadow"]
+    assert shadow["needs"] == ["pytest"]
+    assert shadow["continue-on-error"] is True
+    context = {"github": _EVENTS["synchronize"], "needs": {"pytest": {"result": "failure"}},
+               "job": {"status": "failure"}}
+    assert _condition(shadow["if"], context) is True
+    assert _condition(shadow["if"], {**context, "job": {"status": "cancelled"}}) is False
+    checkout = next(step for step in shadow["steps"] if step.get("uses", "").startswith("actions/checkout@"))
+    assert checkout["with"]["fetch-depth"] == 0
+    assert "pull_request.head.sha" in checkout["with"]["ref"]
+    writer = next(step for step in shadow["steps"] if step.get("name") == "Write advisory component receipt")
+    assert writer["run"].rstrip().endswith("|| true")
+    assert "LU_PYTEST_SHARD_FILES" not in writer["run"]
+    assert "component-shadow" not in _gate_script()
+    assert all("component_shadow" not in step.get("run", "") for step in jobs["pytest-report"]["steps"])
+
+
 def test_ci_gate_runs_after_cancel() -> None:
     # A skipped required check is success on GitHub. The Gate must run after a
     # concurrency cancel (`always()`) and fail in the step.

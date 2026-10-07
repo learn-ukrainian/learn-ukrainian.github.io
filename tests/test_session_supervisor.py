@@ -27,6 +27,7 @@ from scripts.session_supervisor import (
     main,
     strip_lease_credentials,
 )
+from tests.helpers.restore_import_state import restore_import_state
 
 
 def test_supervisory_successor_exec_requires_release_and_preserves_argv(tmp_path: Path) -> None:
@@ -234,24 +235,27 @@ def test_session_supervisor_import_without_secret_redactor(monkeypatch: pytest.M
     )
     assert result.returncode == 0, result.stderr
 
-    monkeypatch.setitem(sys.modules, "scripts.secret_redactor", None)
-    monkeypatch.delitem(sys.modules, "scripts.session_supervisor", raising=False)
-    supervisor_mod = importlib.import_module("scripts.session_supervisor")
-    assert hasattr(supervisor_mod, "SessionSupervisor")
+    with restore_import_state("scripts.secret_redactor", "scripts.session_supervisor"):
+        monkeypatch.setitem(sys.modules, "scripts.secret_redactor", None)
+        monkeypatch.delitem(sys.modules, "scripts.session_supervisor", raising=False)
+        supervisor_mod = importlib.import_module("scripts.session_supervisor")
+        assert hasattr(supervisor_mod, "SessionSupervisor")
 
-    with pytest.raises(ModuleNotFoundError):
-        supervisor_mod.worker_environment({"CLAUDE_CODE_MESSAGING_TOKEN": "secret"}, include_all=True)
+        with pytest.raises(ModuleNotFoundError):
+            supervisor_mod.worker_environment({"CLAUDE_CODE_MESSAGING_TOKEN": "secret"}, include_all=True)
 
-    monkeypatch.undo()
-    monkeypatch.delitem(sys.modules, "scripts.session_supervisor", raising=False)
-    restored_mod = importlib.import_module("scripts.session_supervisor")
-    env = {
-        "CLAUDE_CODE_MESSAGING_TOKEN": "real-secret-token",
-        "UNRELATED_RUNTIME_FLAG": "visible",
-    }
-    redacted = restored_mod.worker_environment(env, include_all=True)
-    assert redacted["CLAUDE_CODE_MESSAGING_TOKEN"] == REDACTION
-    assert redacted["UNRELATED_RUNTIME_FLAG"] == "visible"
+        monkeypatch.undo()
+
+    with restore_import_state("scripts.session_supervisor"):
+        monkeypatch.delitem(sys.modules, "scripts.session_supervisor", raising=False)
+        restored_mod = importlib.import_module("scripts.session_supervisor")
+        env = {
+            "CLAUDE_CODE_MESSAGING_TOKEN": "real-secret-token",
+            "UNRELATED_RUNTIME_FLAG": "visible",
+        }
+        redacted = restored_mod.worker_environment(env, include_all=True)
+        assert redacted["CLAUDE_CODE_MESSAGING_TOKEN"] == REDACTION
+        assert redacted["UNRELATED_RUNTIME_FLAG"] == "visible"
 
 
 def test_open_driver_auto_recovers_expired_dead_holder(tmp_path: Path) -> None:

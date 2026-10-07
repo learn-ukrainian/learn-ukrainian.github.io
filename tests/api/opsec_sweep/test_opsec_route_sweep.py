@@ -832,7 +832,7 @@ def test_mutation_guard_confines_sqlite_through_a_captured_alias(
         inside = root / "stores" / "guard-probe.sqlite3"
         for database, kwargs in (
             (inside, {}),
-            (f"file:{inside}?mode=ro", {"uri": True}),
+            (f"{Path(inside).resolve().as_uri()}?mode=ro", {"uri": True}),
             (":memory:", {}),
             ("", {}),
             ("file:guard-probe?mode=memory&cache=shared", {"uri": True}),

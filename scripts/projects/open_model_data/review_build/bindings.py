@@ -9,11 +9,12 @@ reviewed spec, not a callable validation hook.
 
 import re
 import unicodedata
+from itertools import pairwise
 
 from .contract import Candidate, Value
 from .errors import BuildError, require
 from .snapshot import SnapshotReader
-from .transforms import transform
+from .transforms import source_text_defects, transform, unresolved_overlaps
 
 
 def select(candidate: Candidate, selector: dict) -> Value:
@@ -86,6 +87,35 @@ def boundary(candidate: Candidate, definition: int | dict, reader: SnapshotReade
     return value
 
 
+def _list_punctuation(text: str) -> tuple[dict[int, str], bool]:
+    """Scan outer punctuation; apostrophes inside words are never quotes."""
+    pairs = {"(": ")", "[": "]", "«": "»", "“": "”", "‘": "’", '"': '"', "'": "'"}
+    stack = []
+    balanced = True
+    punctuation = {}
+    for pos, char in enumerate(text):
+        if char in "'’" and pos and pos + 1 < len(text) and text[pos - 1].isalpha() and text[pos + 1].isalpha():
+            continue
+        if stack and char == stack[-1]:
+            stack.pop()
+        elif char in pairs:
+            stack.append(pairs[char])
+        elif char in ")]»”":
+            if char != ")" or not re.search(r"(?:^|[\s;])(?:\d+|[^\W\d_])$", text[:pos]):
+                balanced = False
+        elif not stack:
+            punctuation[pos] = char
+    return punctuation, balanced and not stack
+
+
+def _trim_span(text: str, start: int, end: int) -> tuple[int, int]:
+    while start < end and text[start].isspace():
+        start += 1
+    while end > start and text[end - 1].isspace():
+        end -= 1
+    return start, end
+
+
 def example_regions(text: str) -> list[tuple[int, int]]:
     """Find colon lists, stopping at sentence/rule boundaries and later colons.
 
@@ -93,16 +123,27 @@ def example_regions(text: str) -> list[tuple[int, int]]:
     a comma/semicolon list; ambiguous single prose clauses fail closed.
     """
     regions = []
+    paragraph_outer, _ = _list_punctuation(text)
     for match in re.finditer(r":", text):
+        if match.start() not in paragraph_outer:
+            continue
         start = match.end()
         if re.match(r"[ \t]*\n", text[start:]):
             start += re.match(r"[ \t]*\n[ \t]*", text[start:]).end()
         end = len(text)
+        outer, _ = _list_punctuation(text[start:])
+        numbered = re.match(r"\s*(?:\d+[.)]|[^\W\d_]\))\s", text[start:])
         for stop in re.finditer(r":|\.(?=\s+[^\W\d_])|\n(?=[ \t]*(?:\n|\d+[.)]|§|Rule\b|Правило\b))", text[start:]):
+            if stop.start() not in outer:
+                continue
             pos = start + stop.start()
+            if numbered and stop.group() == "\n" and re.match(r"[ \t]*\d+[.)]\s", text[pos + 1 :]):
+                continue
             if stop.group() == ".":
+                if numbered:
+                    continue
                 following = text[pos + 1 :].lstrip()
-                if not following or not following[0].isupper():
+                if not re.match(r"(?:Rule|Правило)\b", following):
                     continue
             end = pos
             break
@@ -115,16 +156,111 @@ def example_regions(text: str) -> list[tuple[int, int]]:
     return regions
 
 
-def example_items(text: str) -> list[tuple[int, int]]:
+def _region_end_ambiguous(text: str, end: int) -> bool:
+    """A later colon cannot prove that the preceding example ended."""
+    return text[end : end + 1] == ":"
+
+
+def _lexical_example(text: str) -> bool:
+    """A single orthographic item, optionally with balanced printed annotations.
+
+    Multiword unquoted phrases need an explicit item delimiter. No token count
+    or guessed syntactic completeness licenses a comma boundary.
+    """
+    outer, balanced = _list_punctuation(text)
+    if not balanced:
+        return False
+    if any(char in text for char in '«»“”"‘'):
+        return False
+    visible = "".join(char for pos, char in enumerate(text) if pos in outer)
+    # A raw printed word may wrap after its hyphen; do not join its bytes.
+    visible = re.sub(r"-\s*\n\s*", "-", visible).strip()
+    return bool(re.fullmatch(r"[^\W_][\w\u0300-\u036f'’ʼ-]*", visible))
+
+
+def _quoted_example(text: str) -> bool:
+    outer, balanced = _list_punctuation(text)
+    return bool(text and balanced and not outer and text[0] in "«“\"'‘" and text[-1] in "»”\"'’")
+
+
+def _annotation_role_ambiguous(text: str) -> bool:
+    """Capitalized parenthetical labels may cite a larger printed example.
+
+    Flat paragraph text does not retain the typography distinguishing an author
+    label from a lexical annotation. Withhold the entire colon region: earlier
+    semicolon groups can also belong to the same cited sentence.
+    """
+    return any(any(char.isupper() for char in match.group()) for match in re.finditer(r"\([^)]*\)", text))
+
+
+def _editorial_reference(text: str) -> bool:
+    """Identify printed cross-reference apparatus inside an example span."""
+    return any(
+        re.search(r"§|\b(?:див|пор)\s*\.|\b(?:see|cf|reference)\b", match.group(), re.I)
+        for match in re.finditer(r"\([^)]*\)", text)
+    )
+
+
+def example_boundaries(text: str) -> list[tuple[tuple[int, int], str]]:
+    """Enumerate safe examples and unresolved list spans without editing text.
+
+    Semicolons delimit groups. Numbered/lettered items must be lexical or
+    quoted examples. Otherwise comma-separated items must each be
+    lexical examples. Balanced outer quotes delimit one printed example. An
+    unresolved group is counted once and withheld, never emitted as fragments.
+    """
     items = []
     for start, end in example_regions(text):
-        for match in re.finditer(r"[^,;]+", text[start:end]):
-            raw = match.group()
-            left = start + match.start() + len(raw) - len(raw.lstrip())
-            right = start + match.end() - len(raw) + len(raw.rstrip())
-            if left < right:
-                items.append((left, right))
-    return items
+        outer, balanced = _list_punctuation(text[start:end])
+        if not balanced or _annotation_role_ambiguous(text[start:end]):
+            items.append((_trim_span(text, start, end), "example_boundary_ambiguous"))
+            continue
+        separators = [start - 1, *(start + p for p, c in outer.items() if c == ";"), end]
+        for left, right in pairwise(separators):
+            a, b = _trim_span(text, left + 1, right)
+            if a == b:
+                continue
+            if right == end and _region_end_ambiguous(text, end):
+                items.append(((a, b), "example_boundary_ambiguous"))
+                continue
+            part = text[a:b]
+            punctuation, _ = _list_punctuation(part)
+            markers = [
+                m
+                for m in re.finditer(r"(?m)(?:^|\n)[ \t]*(?:\d+[.)]|[^\W\d_]\))\s+", part)
+                if m.start() == 0 or m.start() in punctuation
+            ]
+            if markers and markers[0].start() == 0:
+                for index, marker in enumerate(markers):
+                    limit = markers[index + 1].start() if index + 1 < len(markers) else len(part)
+                    span = _trim_span(text, a + marker.end(), a + limit)
+                    if span[0] < span[1]:
+                        content = text[slice(*span)]
+                        # Numbering and an example introduction do not prove
+                        # that prose or multiple pairs form one printed example.
+                        one = _lexical_example(content) or _quoted_example(content)
+                        items.append((span, "ok" if one else "example_boundary_ambiguous"))
+                continue
+            commas = [p for p, c in punctuation.items() if c == ","]
+            cuts = [-1, *commas, len(part)]
+            spans = [_trim_span(text, a + l + 1, a + r) for l, r in pairwise(cuts)]
+            if all(l < r and _lexical_example(text[l:r]) for l, r in spans):
+                items.extend((span, "ok") for span in spans)
+            elif not commas and _quoted_example(part):
+                items.append(((a, b), "ok"))
+            else:
+                items.append(((a, b), "example_boundary_ambiguous"))
+    # Withhold the affected printed span; neither remove apparatus bytes nor
+    # invalidate neighboring examples whose original boundaries remain sound.
+    return [
+        (span, "example_boundary_ambiguous" if _editorial_reference(text[slice(*span)]) else reason)
+        for span, reason in items
+    ]
+
+
+def example_items(text: str) -> list[tuple[int, int]]:
+    """All independently counted units, including unresolved list groups."""
+    return [span for span, _ in example_boundaries(text)]
 
 
 def whole_token(form: str, witness: str) -> bool:
@@ -162,6 +298,17 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
     for rule in spec["rules"]:
         op = rule["op"]
         selectors = [ref for s in rule.get("values", []) for ref in expand(candidate, s)]
+        # Authenticate source column and locator for every expanded witness.
+        for ref in selectors:
+            citation = citation_for(candidate, ref)
+            if "citation_field" in rule:
+                require(citation.field == rule["citation_field"], "binding_field")
+            if "locator_field" in rule:
+                row = reader.row(citation)
+                require(
+                    rule["locator_field"] in row and citation.locator == row[rule["locator_field"]],
+                    "binding_locator",
+                )
         if op == "equal":
             operands = [operand(candidate, s, reader) for s in selectors]
             require(len(operands) >= 2 and all(o == operands[0] for o in operands), "binding_equal")
@@ -186,6 +333,36 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
         elif op == "one_group":
             operands = [operand(candidate, s, reader) for s in selectors]
             require(bool(operands) and all(o is not None and o == operands[0] for o in operands), "binding_group")
+        elif op == "pattern_absent":
+            require(
+                bool(selectors) and isinstance(rule.get("pattern"), str) and bool(rule["pattern"]), "binding_pattern"
+            )
+            require(
+                all(re.search(rule["pattern"], operand(candidate, ref, reader)) is None for ref in selectors),
+                "binding_pattern",
+            )
+        elif op == "transform_resolved":
+            require(bool(selectors) and rule.get("transform") == "dehyphenate@2", "binding_transform")
+            policy = policies.get(rule["transform"])
+            require(isinstance(policy, dict), "transform_policy")
+            for ref in selectors:
+                _, field = reader.field(citation_for(candidate, ref))
+                resolved = transform(rule["transform"], field, policy, reader)
+                require(not unresolved_overlaps(resolved, select(candidate, ref).span), "binding_hyphenation")
+                require(
+                    not source_text_defects(resolved.text, policy, reader, original=field), "binding_source_text_defect"
+                )
+        elif op == "whole_field":
+            require(bool(selectors), "binding_whole_field")
+            for ref in selectors:
+                value = select(candidate, ref)
+                require(ref.get("citation", 0) == 0 and "field" not in ref, "binding_whole_field")
+                _, field = reader.field(value.citations[0])
+                require(isinstance(field, str) and value.span is None, "binding_whole_field")
+                require(
+                    value.text == transform(value.transform, field, policies.get(value.transform), reader).text,
+                    "binding_whole_field",
+                )
         elif op == "example_list":
             require(len(selectors) == 1, "binding_example")
             value = select(candidate, selectors[0])
@@ -194,7 +371,7 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
             require(isinstance(field, str) and value.span is not None, "binding_example")
             source = transform(value.transform, field, policies.get(value.transform), reader).text
             require(
-                value.span in example_items(source),
+                (value.span, "ok") in example_boundaries(source),
                 "binding_example",
             )
         elif op == "contiguous_pages":

@@ -84,6 +84,18 @@ would remove and removes nothing. Reclaiming space needs a liveness probe
 that can read every process. Such a probe is a new privileged design, and it
 needs operator or advisor approval before anyone builds it.
 
+No single read capability makes the probe complete (#9887, measured with
+transient units running as the agent user under `NoNewPrivileges=yes`).
+`/proc/<pid>/fd` is a mode-0500 directory owned by the target process, so
+listing it takes `CAP_DAC_READ_SEARCH`. Resolving `cwd`, the descriptor links
+and `maps` is a ptrace read-access check, so it takes `CAP_SYS_PTRACE`. With
+either capability alone the probe stays incomplete; it is complete only with
+both. `CAP_SYS_PTRACE` also permits attaching to and modifying other
+processes through ptrace, subject to namespace and Yama/LSM restrictions, so
+it is not a read-only privilege. Because the issue's stop rule allows one
+narrow read privilege at most, no system unit ships. The sweep keeps running
+as the user unit until the operator decides.
+
 ### Task coverage
 
 The sweep reads every `*.json` record in the task directory. Superseded

@@ -456,3 +456,27 @@ def test_ci_gate_pytest_installer_preserves_locked_dependency_scope() -> None:
     )
     assert setup_python["with"]["python-version-file"] == ".python-version"
     assert "cache" not in setup_python["with"]  # uv owns the wheel cache now.
+
+
+def test_component_map_covers_full_index_frontend_denominator() -> None:
+    """Cross-check the existing cheap-exit denominator, including sparse files."""
+    from scripts.ci import components
+
+    manifest = components.load_manifest()
+    graph = components.import_graph(manifest)
+    patterns = scope.load_denominator()["paths"]
+    paths = components.tracked_paths()
+    included = [path for path in paths if scope.path_in_denominator(path, patterns)]
+    assert included
+    fronts = set(manifest["selector_contracts"]["frontend_components"])
+    assert all(fronts <= set(components.affected([path], manifest, graph)["components"]) for path in included)
+
+
+def test_component_ownership_does_not_expand_frontend_cheap_exit() -> None:
+    """Shared/all-node obligations must not replace today's cheap-exit policy."""
+    from scripts.ci import components
+
+    manifest = components.load_manifest()
+    assert set(components.affected(["scripts/config.py"], manifest)["components"]) == set(components.NODE_IDS)
+    run, _, matched = scope.decide_from_changed(["scripts/config.py", "docs/a.md"])
+    assert run is False and matched == []

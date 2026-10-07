@@ -203,9 +203,15 @@ def test_read_only_sparse_dispatch_flags_a_relative_database_open(
     assert rc == 1
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [f"data/{name}"]
-    assert f"read-only checkout mutation detected: data/{name}" in state["last_error"]
-    assert str(primary / "data" / name) in state["last_error"]
-    assert "mode=ro" in state["last_error"]
+    # #9878: last_error is the typed cause; the remedy, which names the primary's absolute path, stays local.
+    assert state["last_error"] == "read_only_checkout_mutation, count 1"
+    assert str(primary) not in state["last_error"]
+    path = delegate._diagnostic_path(state["task_id"])
+    kept = "\n".join(json.loads(line)["diagnostic"] for line in path.read_text(encoding="utf-8").splitlines())
+    assert f"read-only checkout mutation detected: data/{name}" in kept
+    # The remedy is kept; its absolute path may be secret-redacted there, as long paths read as high entropy.
+    assert "must open the primary database read-only by absolute path" in kept
+    assert "mode=ro" in kept
     # The open created a separate file in the worktree; nothing reached the primary.
     created = worktree / "data" / name
     assert created.is_file() and not created.is_symlink()

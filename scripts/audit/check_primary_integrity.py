@@ -49,6 +49,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.common.safe_unit_install import InstallError, install_unit, open_state_log
+except ModuleNotFoundError:  # direct file-path invocation
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.common.safe_unit_install import InstallError, install_unit, open_state_log
+
 # Git commit hooks inject GIT_DIR / GIT_INDEX_FILE / etc. into the environment.
 # Integrity checks must not inherit those or they inspect the outer repo, not
 # the fixture / --repo path under test. Same scrub list as check_core_bare.
@@ -230,19 +236,15 @@ def _load_state(state_dir: Path) -> dict[str, Any]:
 
 
 def _save_state(state_dir: Path, state: dict[str, Any]) -> None:
-    state_dir.mkdir(parents=True, exist_ok=True)
-    tmp = state_dir / f"state.json.tmp.{os.getpid()}"
-    tmp.write_text(json.dumps(state, indent=2, default=str))
-    os.replace(tmp, state_dir / "state.json")
+    install_unit(state_dir / "state.json", json.dumps(state, indent=2, default=str).encode("utf-8"), mode=0o600)
 
 
 def _append_event(state_dir: Path, event: str, **fields: Any) -> None:
     payload = {"ts": datetime.now(UTC).isoformat(), "event": event, **fields}
     try:
-        state_dir.mkdir(parents=True, exist_ok=True)
-        with open(state_dir / "events.jsonl", "a", encoding="utf-8") as fh:
+        with os.fdopen(open_state_log(state_dir / "events.jsonl"), "a", encoding="utf-8") as fh:
             fh.write(json.dumps(payload, ensure_ascii=False, default=str) + "\n")
-    except OSError as exc:
+    except (OSError, InstallError) as exc:
         print(
             f"[primary-integrity] WARNING: failed to log event: {type(exc).__name__}: {exc}",
             file=sys.stderr,
@@ -426,7 +428,15 @@ def worktree_origin_points_at_remote(worktree: Path) -> tuple[bool, str]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Detect (and conservatively repair) primary-checkout drift (#5803 follow-up).",
+        description="Detect (and conservatively repair) primary-checkout drift (#5803 follow-up).\n"
+        "Use for attachment checks; repair requires an explicit --fix and a safe, idle checkout.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n"
+        "  .venv/bin/python -m scripts.audit.check_primary_integrity --quiet\n"
+        "  .venv/bin/python -m scripts.audit.check_primary_integrity --fix\n"
+        "Outputs: local telemetry state and events; --fix may reattach a safe detached HEAD.\n"
+        "Exit codes: 0 healthy or safely repaired; 1 unrepaired drift.\n"
+        "Related: #9894; scripts/audit/check_worktree_cleanup_integrity.py",
     )
     parser.add_argument(
         "--fix",

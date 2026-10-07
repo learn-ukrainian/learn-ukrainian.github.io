@@ -27,7 +27,10 @@ import pytest
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "scripts"))
 
+from scripts.lib.readonly_sqlite import open_readonly
 from wiki.sources_db import search_esum
+
+_SOURCES_DB = REPO / "data" / "sources.db"
 
 
 def _esum_row_count() -> int:
@@ -36,11 +39,11 @@ def _esum_row_count() -> int:
     Returns 0 if the DB or table is missing — those cases are valid
     skip-conditions for the data-content tests.
     """
-    db_path = REPO / "data" / "sources.db"
+    db_path = _SOURCES_DB
     if not db_path.exists() or db_path.stat().st_size == 0:
         return 0
     try:
-        conn = sqlite3.connect(db_path)
+        conn = open_readonly(db_path)
         try:
             cur = conn.execute(
                 "SELECT name FROM sqlite_master "

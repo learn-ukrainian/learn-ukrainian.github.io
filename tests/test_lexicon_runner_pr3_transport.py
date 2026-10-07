@@ -131,7 +131,7 @@ def test_sources_guard_rejects_uri_query_forms(tmp_path: Path) -> None:
     uri_forms = [
         "sources.db?mode=ro",
         "file:sources.db?mode=ro",
-        f"file:{sources.as_posix()}?mode=ro",
+        f"{sources.as_uri()}?mode=ro",
         f"file:///{sources.as_posix().lstrip('/')}?mode=ro&immutable=1",
         "SOURCES.DB?mode=ro",
         f"file:{sources.as_posix().upper()}?mode=RO",
@@ -282,7 +282,7 @@ def test_network_cache_authorizer_denies_attach_sources(tmp_path: Path, monkeypa
             cache._require().execute(f"ATTACH DATABASE '{sources.as_posix()}' AS sources")
         with pytest.raises(sqlite3.DatabaseError, match=r"not authorized|prohibited"):
             cache._require().execute(
-                f"ATTACH DATABASE 'file:{sources.as_posix()}?mode=ro' AS sources"
+                f"ATTACH DATABASE '{sources.resolve().as_uri()}?mode=ro' AS sources"
             )
         if hardlink is not None:
             with pytest.raises(sqlite3.DatabaseError, match=r"not authorized|prohibited"):

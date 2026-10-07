@@ -6,6 +6,7 @@ import json
 import os
 import subprocess
 import threading
+from pathlib import Path
 
 import pytest
 
@@ -67,6 +68,44 @@ def artifact(checkout, name="batch_state/sub/report.bin", payload=b"proof\x00\xf
     return path
 
 
+@pytest.mark.parametrize("returncode", [0, 128])
+def test_git_path_inventory_uses_isolated_environment(checkout, monkeypatch, returncode):
+    calls = []
+
+    def runner(args, **kwargs):
+        calls.append((kwargs["cwd"], args))
+        assert kwargs["env"] == wa._safe_git_env()
+        assert kwargs["check"] is True and kwargs["timeout"] == 30
+        if returncode:
+            raise subprocess.CalledProcessError(returncode, args, stderr="unavailable")
+        return subprocess.CompletedProcess(args, 0, "ignored/spaced файл.txt\0".encode(), b"")
+
+    monkeypatch.setattr(wa.subprocess, "run", runner)
+    if returncode:
+        with pytest.raises(subprocess.CalledProcessError):
+            wa._git_paths(checkout[0], "--cached")
+    else:
+        assert wa._git_paths(checkout[0], "--cached") == ["ignored/spaced файл.txt"]
+    assert calls == [(checkout[0], ["git", "ls-files", "-z", "--cached"])]
+
+
+def test_named_artifact_inventory_uses_isolated_environment(checkout, monkeypatch):
+    name = "batch_state/sub/report.bin"
+    artifact(checkout, name)
+    calls = []
+
+    def runner(args, **kwargs):
+        calls.append((kwargs["cwd"], args))
+        assert kwargs["env"] == wa._safe_git_env()
+        return subprocess.CompletedProcess(args, 0, (name + "\0").encode(), b"")
+
+    monkeypatch.setattr(wa.subprocess, "run", runner)
+    assert wa._named_artifact_files(
+        checkout[0], {"response": f"Capture `{name}`."}, primary=checkout[1]
+    ) == {name}
+    assert calls == [(checkout[0], ["git", "ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name])]
+
+
 def test_preserved_bytes_record_and_idempotency(checkout):
     source = artifact(checkout)
     record = {"status": "done", "response": "Capture `batch_state/sub/report.bin`."}
@@ -74,9 +113,10 @@ def test_preserved_bytes_record_and_idempotency(checkout):
     ok, reason, metadata = guard(checkout, record=record)
     assert ok and not reason
     assert metadata["count"] == 1
-    copy = (checkout[1] / metadata["location"]) / "batch_state/sub/report.bin"
+    location = checkout[1] / metadata["location"]
+    copy = location / "batch_state/sub/report.bin"
     assert copy.read_bytes() == source.read_bytes()
-    assert wa._fingerprint(copy) == wa._fingerprint(source)
+    assert wa._fingerprint(copy, root=location) == wa._fingerprint(source, root=checkout[0])
     saved = json.loads((checkout[2] / "artifact-task.json").read_text())
     assert saved["preserved_artifacts"] == record["preserved_artifacts"] == metadata
     assert guard(checkout)[0]  # Repeated guard retains verified existing bytes.
@@ -118,9 +158,11 @@ def test_failed_copy_verification_or_record_blocks_removal(checkout, monkeypatch
         def fail_copy(*_args):
             raise OSError("copy denied")
 
-        monkeypatch.setattr(wa.shutil, "copyfile", fail_copy)
+        monkeypatch.setattr(wa, "_write_verified_bytes", fail_copy)
     elif failure == "corruption":
-        monkeypatch.setattr(wa.shutil, "copyfile", lambda _source, destination: destination.write_bytes(b"wrong"))
+        monkeypatch.setattr(
+            wa, "_write_verified_bytes", lambda _payload, destination: destination.write_bytes(b"wrong")
+        )
     else:
 
         def fail_record(*_args):
@@ -145,28 +187,232 @@ def test_different_existing_copy_is_never_overwritten(checkout):
     assert (checkout[1] / receipt["location"] / "batch_state/sub/report.bin").read_bytes() == b"proof\x00\xff"
 
 
-@pytest.mark.parametrize("destination", [False, True])
-def test_symlink_paths_block_preservation(checkout, destination):
+def test_preservation_root_symlink_blocks_copy(checkout):
     source = artifact(checkout)
     elsewhere = checkout[1] / "elsewhere"
     elsewhere.mkdir()
-    if destination:
-        (checkout[1] / "batch_state/preserved").symlink_to(elsewhere, target_is_directory=True)
-    else:
-        source.unlink()
-        external = checkout[1] / "external.bin"
-        external.write_bytes(b"external bytes")
-        source.symlink_to(external)
+    (checkout[1] / "batch_state/preserved").symlink_to(elsewhere, target_is_directory=True)
     ok, reason, _ = guard(checkout)
-    assert not ok and (
-        "symlink" in reason
-        or "regular file" in reason
-        or "retrieval location" in reason
-        or "links outside the checkout" in reason
-    )
+    assert not ok and ("symlink" in reason or "retrieval location" in reason)
     assert not any(entry.is_file() for entry in elsewhere.rglob("*"))
-    if not destination:
-        assert external.read_bytes() == b"external bytes"
+    assert source.read_bytes() == b"proof\x00\xff"
+
+
+def test_source_symlink_is_preserved_as_link_record(checkout):
+    source = artifact(checkout)
+    source.unlink()
+    external = checkout[1] / "external.bin"
+    external.write_bytes(b"external bytes")
+    source.symlink_to(external)
+    ok, reason, metadata = guard(checkout)
+    assert ok and not reason, reason
+    entry = metadata["paths"][0]
+    assert entry["type"] == "symlink" and entry["target"] == str(external)
+    copied = checkout[1] / metadata["location"] / entry["path"]
+    assert copied.is_file() and not copied.is_symlink()
+    assert copied.read_bytes() != b"external bytes"
+    assert os.fsencode(str(external)) in copied.read_bytes()
+    assert external.read_bytes() == b"external bytes"
+
+
+def _swap_regular_file_for_outside_symlink(monkeypatch, source: Path, outside: Path) -> None:
+    """After ``fstat`` classifies a regular file, replace it with a link to ``outside``.
+
+    The type check is the ``O_PATH`` descriptor. The later read opens the name
+    again and must refuse that link instead of following it.
+    """
+    real_open = wa.open_leaf_descriptor
+
+    def raced(dir_fd: int, name: str):
+        fd, info = real_open(dir_fd, name)
+        if name == source.name and source.is_file() and not source.is_symlink():
+            source.unlink()
+            source.symlink_to(outside)
+        return fd, info
+
+    monkeypatch.setattr(wa, "open_leaf_descriptor", raced)
+
+
+def test_copy_refuses_symlink_swapped_in_between_check_and_copy(tmp_path, monkeypatch):
+    outside = tmp_path / "outside.bin"
+    outside.write_bytes(b"OUTSIDE-SECRET")
+    source = tmp_path / "checkout" / "evidence.bin"
+    source.parent.mkdir()
+    source.write_bytes(b"inside-bytes")
+    destination = tmp_path / "preserved" / "evidence.bin"
+    _swap_regular_file_for_outside_symlink(monkeypatch, source, outside)
+
+    with pytest.raises(ValueError, match="changed during preservation"):
+        wa._copy_verified(
+            source,
+            destination,
+            source_root=source.parent,
+            destination_root=destination.parent,
+        )
+
+    assert os.path.islink(source)
+    assert os.readlink(source) == str(outside)
+    assert outside.read_bytes() == b"OUTSIDE-SECRET"
+    assert not destination.exists()
+    if destination.parent.exists():
+        leaked = [
+            path for path in destination.parent.rglob("*") if path.is_file() and b"OUTSIDE-SECRET" in path.read_bytes()
+        ]
+        assert leaked == []
+
+
+def test_fingerprint_refuses_symlink_swapped_in_between_check_and_open(tmp_path, monkeypatch):
+    outside = tmp_path / "outside.bin"
+    outside.write_bytes(b"OUTSIDE-SECRET")
+    source = tmp_path / "evidence.bin"
+    source.write_bytes(b"inside-bytes")
+    _swap_regular_file_for_outside_symlink(monkeypatch, source, outside)
+
+    with pytest.raises(ValueError, match="changed during preservation"):
+        wa._fingerprint(source, root=source.parent)
+
+    assert os.path.islink(source)
+    assert outside.read_bytes() == b"OUTSIDE-SECRET"
+
+
+_OUTSIDE_SECRET = b"OUTSIDE-SECRET"
+
+
+def _ancestor_swapped_file(tmp_path: Path) -> tuple[Path, Path, Path]:
+    """``worktree/batch_state/sub/report.bin`` whose ``batch_state`` is an outside symlink.
+
+    The leaf's parent on the outside is a real directory, so an open of the
+    full parent path follows the earlier link. ``O_NOFOLLOW`` on the last
+    component does not see it.
+    """
+    outside = tmp_path / "outside"
+    (outside / "sub").mkdir(parents=True)
+    outside_file = outside / "sub" / "report.bin"
+    outside_file.write_bytes(_OUTSIDE_SECRET)
+    worktree = tmp_path / "worktree"
+    source = worktree / "batch_state" / "sub" / "report.bin"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"inside-bytes")
+    batch = worktree / "batch_state"
+    os.rename(batch, tmp_path / "real-batch")
+    batch.symlink_to(outside, target_is_directory=True)
+    return worktree, source, outside_file
+
+
+def _preserved_outside_bytes(root: Path) -> list[Path]:
+    if not root.exists():
+        return []
+    return [path for path in root.rglob("*") if path.is_file() and _OUTSIDE_SECRET in path.read_bytes()]
+
+
+def _fingerprint_anchored(path: Path, *, root: Path) -> tuple[int, str]:
+    """Call the anchored fingerprint. The pre-fix signature had no root."""
+    try:
+        return wa._fingerprint(path, root=root)
+    except TypeError as exc:
+        if "root" not in str(exc):
+            raise
+        return wa._fingerprint(path)
+
+
+def _copy_anchored(source: Path, destination: Path, *, source_root: Path, destination_root: Path) -> None:
+    """Call the anchored copy. The pre-fix signature had no roots."""
+    try:
+        wa._copy_verified(source, destination, source_root=source_root, destination_root=destination_root)
+    except TypeError as exc:
+        if "source_root" not in str(exc):
+            raise
+        wa._copy_verified(source, destination)
+
+
+def test_fingerprint_refuses_ancestor_directory_symlink(tmp_path: Path) -> None:
+    worktree, source, outside_file = _ancestor_swapped_file(tmp_path)
+    try:
+        _fingerprint_anchored(source, root=worktree)
+    except ValueError as exc:
+        assert "symlink" in str(exc)
+    else:
+        pytest.fail("ancestor symlink was followed and outside bytes were read")
+    assert outside_file.read_bytes() == _OUTSIDE_SECRET
+    assert (tmp_path / "real-batch" / "sub" / "report.bin").read_bytes() == b"inside-bytes"
+
+
+def test_copy_verified_refuses_ancestor_directory_symlink(tmp_path: Path) -> None:
+    worktree, source, outside_file = _ancestor_swapped_file(tmp_path)
+    destination_root = tmp_path / "preserved"
+    destination = destination_root / "batch_state" / "sub" / "report.bin"
+    try:
+        _copy_anchored(source, destination, source_root=worktree, destination_root=destination_root)
+    except ValueError as exc:
+        assert "symlink" in str(exc)
+    else:
+        pytest.fail("ancestor symlink was followed and outside bytes were copied")
+    assert _preserved_outside_bytes(destination_root) == []
+    assert outside_file.read_bytes() == _OUTSIDE_SECRET
+
+
+def test_ancestor_swap_after_inventory_does_not_publish_outside_bytes(checkout, monkeypatch, tmp_path: Path) -> None:
+    """Swap an earlier directory after the inventory has seen a real file.
+
+    Refusal has to happen on the read. A later check that only blocks removal
+    still leaves the outside bytes in the preservation copy.
+    """
+    source = artifact(checkout)
+    outside = tmp_path / "outside"
+    (outside / "sub").mkdir(parents=True)
+    outside_file = outside / "sub" / "report.bin"
+    outside_file.write_bytes(_OUTSIDE_SECRET)
+    real_resolve = Path.resolve
+    swapped = False
+
+    def swapping_resolve(self: Path, *args: object, **kwargs: object) -> Path:
+        nonlocal swapped
+        resolved = real_resolve(self, *args, **kwargs)
+        if not swapped and self == source:
+            swapped = True
+            batch = checkout[0] / "batch_state"
+            os.rename(batch, tmp_path / "real-batch")
+            batch.symlink_to(outside, target_is_directory=True)
+        return resolved
+
+    monkeypatch.setattr(Path, "resolve", swapping_resolve)
+    ok, reason, _metadata = guard(checkout)
+
+    preserved = checkout[1] / "batch_state" / "preserved"
+    assert swapped
+    assert _preserved_outside_bytes(preserved) == []
+    assert not ok
+    assert "symlink" in reason
+    assert outside_file.read_bytes() == _OUTSIDE_SECRET
+    assert (tmp_path / "real-batch" / "sub" / "report.bin").read_bytes() == b"proof\x00\xff"
+
+
+def test_directory_walk_records_symlinks_without_following(checkout, tmp_path):
+    repo = checkout[0]
+    root = repo / "ignored"
+    root.mkdir()
+    (root / "real.txt").write_bytes(b"real")
+    (root / "file-link").symlink_to("real.txt")
+    (root / "sub").mkdir()
+    (root / "dir-link").symlink_to("sub", target_is_directory=True)
+    (root / "dangling").symlink_to("missing")
+    outside = tmp_path / "outside.txt"
+    outside.write_bytes(b"outside-only")
+    (root / "out-link").symlink_to(outside)
+    names = wa._inspect_directory_artifact(root, "ignored", worktree=repo)
+    assert set(names) == {
+        "ignored/real.txt",
+        "ignored/file-link",
+        "ignored/dir-link",
+        "ignored/dangling",
+        "ignored/out-link",
+    }
+    dest = tmp_path / "copy"
+    wa._copy_verified(root / "out-link", dest, source_root=root, destination_root=dest.parent)
+    assert dest.is_file() and not dest.is_symlink()
+    assert dest.read_bytes() != b"outside-only"
+    assert os.fsencode(str(outside)) in dest.read_bytes()
+    assert outside.read_bytes() == b"outside-only"
 
 
 def test_primary_task_sidecar_is_not_copied(checkout):
@@ -175,7 +421,13 @@ def test_primary_task_sidecar_is_not_copied(checkout):
     source = artifact(checkout)
     source.unlink()
     source.symlink_to(shared)
-    assert guard(checkout) == (True, "", None)
+    ok, reason, metadata = guard(checkout)
+    assert ok and not reason, reason
+    entry = metadata["paths"][0]
+    assert entry["type"] == "symlink" and entry["target"] == str(shared)
+    copied = checkout[1] / metadata["location"] / entry["path"]
+    assert copied.is_file() and not copied.is_symlink()
+    assert b"already durable" not in copied.read_bytes()
     assert shared.read_bytes() == b"already durable"
 
 
@@ -237,13 +489,17 @@ def test_batch_state_symlink_cannot_hide_local_artifacts(checkout):
     assert source.exists()
 
 
-def test_batch_state_link_loop_is_a_recorded_refusal(checkout):
+def test_batch_state_link_loop_is_preserved_without_resolving(checkout):
     bound_record(checkout, {"status": "done"})
     (checkout[0] / "batch_state").mkdir()
     (checkout[0] / "batch_state/loop").symlink_to("loop")
     ok, reason, metadata = guard(checkout)
-    assert not ok and "Symlink loop" in reason and metadata["retention_disposition"] == "retained"
-    assert reason == json.loads((checkout[2] / "artifact-task.json").read_text())["artifact_preservation_error"]
+    assert ok and not reason, reason
+    entry = metadata["paths"][0]
+    assert entry == {**entry, "path": "batch_state/loop", "type": "symlink", "target": "loop"}
+    copied = checkout[1] / metadata["location"] / "batch_state/loop"
+    assert copied.is_file() and not copied.is_symlink()
+    assert copied.read_bytes() == b"symlink\nloop"
 
 
 @pytest.mark.parametrize(
@@ -267,7 +523,10 @@ def test_outbound_refusal_needs_a_link_inside_the_checkout(checkout, tmp_path, r
     if refused:
         assert metadata["retention_disposition"] == "retained"
     else:
-        assert metadata is None
+        assert ok and metadata["count"] == 1
+        assert metadata["paths"][0]["type"] == "symlink"
+        assert metadata["paths"][0]["path"] == "ignored/dir"
+        assert metadata["paths"][0]["target"] == "sub"
     assert (links.REFUSAL in reason) is refused
     assert outside.read_bytes() == b"lives outside the checkout"
 
@@ -289,16 +548,16 @@ def test_record_changed_during_copy_keeps_other_writers_fields(checkout, monkeyp
     artifact(checkout)
     path = checkout[2] / "artifact-task.json"
     initial = bound_record(checkout, {"status": "done", "response": "original"})
-    copy = wa.shutil.copyfile
+    write = wa._write_verified_bytes
 
-    def concurrent_writer(source, destination):
+    def concurrent_writer(payload, destination):
         from scripts.orchestration.dead_worker_state import task_state_lock
 
         with task_state_lock(path):
             path.write_text(json.dumps({**initial, "status": "failed", "response": "new", "other_writer": True}))
-        return copy(source, destination)
+        return write(payload, destination)
 
-    monkeypatch.setattr(wa.shutil, "copyfile", concurrent_writer)
+    monkeypatch.setattr(wa, "_write_verified_bytes", concurrent_writer)
     assert guard(checkout, record={"stale_field": "do not merge"})[0]
     saved = json.loads(path.read_text())
     assert saved["status"] == "failed"
@@ -346,13 +605,25 @@ def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
         assert not ok and links.REFUSALS[scenario] in reason
         assert links.REFUSALS[scenario] in saved["artifact_preservation_error"]
         assert "\x00" not in reason and "x" * 300 not in reason
+    elif scenario == "outbound_batch_state":
+        assert ok and not reason and metadata["count"] == 1
+        entry = metadata["paths"][0]
+        assert entry["type"] == "symlink" and entry["path"] == "ignored/link" and entry["target"] == str(target)
+        copied = primary / metadata["location"] / "ignored/link"
+        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
+        assert saved["preserved_artifacts"] == metadata
     elif preserved is None:
         assert (ok, reason, metadata) == (True, "", None)
         assert not (primary / "batch_state/preserved").exists()
         assert "artifact_preservation_error" not in saved
     else:
-        assert ok and not reason and metadata["count"] == 1
-        assert ((checkout[1] / metadata["location"]) / preserved).read_bytes() == links.PAYLOAD
+        link_path, link_target = links.IGNORED_LINK[scenario]
+        assert ok and not reason and metadata["count"] == 2
+        copied_root = checkout[1] / metadata["location"]
+        assert (copied_root / preserved).read_bytes() == links.PAYLOAD
+        entry = next(item for item in metadata["paths"] if item["path"] == link_path)
+        assert entry["type"] == "symlink" and entry["target"] == link_target
+        assert (copied_root / link_path).is_file() and not (copied_root / link_path).is_symlink()
         assert saved["preserved_artifacts"] == metadata
 
 
@@ -1845,3 +2116,45 @@ def test_ignored_artifact_nested_repo_same_mtime_modified_bytes_rejected_without
     assert not ok and metadata["retention_disposition"] == "retained"
     assert "uncommitted tracked changes" in reason or "uncommitted or ignored changes" in reason
     assert "clear with: rm -rf" not in reason
+
+
+def _fd_count() -> int:
+    return len(os.listdir("/proc/self/fd"))
+
+
+def test_walk_reports_descriptor_type_not_a_byte_prefix(tmp_path):
+    payload = b"symlink\npretend-target"
+    note = tmp_path / "note.txt"
+    note.write_bytes(payload)
+    before = _fd_count()
+    walked = wa._read_preserved_bytes(note, root=tmp_path)
+    assert walked.file_type == "regular"
+    assert walked.target is None
+    assert walked.payload == payload
+    link = tmp_path / "link"
+    link.symlink_to("pretend-target")
+    walked = wa._read_preserved_bytes(link, root=tmp_path)
+    assert walked.file_type == "symlink"
+    assert walked.target == "pretend-target"
+    assert walked.payload == b"symlink\n" + os.fsencode("pretend-target")
+    assert _fd_count() == before
+
+
+def test_walk_refuses_a_target_longer_than_the_path_limit(tmp_path, monkeypatch):
+    target = "too-long-target"
+    (tmp_path / "link").symlink_to(target)
+    real = os.pathconf
+
+    def short_limit(path, name):
+        if name == "PC_PATH_MAX":
+            return 4
+        return real(path, name)
+
+    monkeypatch.setattr(os, "pathconf", short_limit)
+    before = _fd_count()
+    with pytest.raises(wa.SymlinkTargetRefusal) as caught:
+        wa._read_preserved_bytes(tmp_path / "link", root=tmp_path)
+    assert caught.value.kind == "target-too-long"
+    assert caught.value.args == ("target-too-long",)
+    assert target not in str(caught.value)
+    assert _fd_count() == before

@@ -1190,7 +1190,8 @@ def test_the_review_worker_refuses_a_fable_pin(tmp_path):
     refusal, target = delegate._kimi_worker_refusal(
         "review-9583", agent="claude", model="claude-fable-5-1", mode="read-only", cwd=tmp_path, review=True
     )
-    assert target is None and NO_REVIEW_ROLE in refusal
+    # #9878: the worker returns the typed cause; the catalog's refusal text is the dispatch-time gate's to print.
+    assert target is None and refusal == "review_admission_refused"
     refusal, target = delegate._kimi_worker_refusal(
         "review-9583", agent="claude", model="claude-opus-5-5", mode="read-only", cwd=tmp_path, review=True
     )
@@ -1858,3 +1859,59 @@ def test_trusted_review_of_an_unattributed_branch_refuses(tmp_path, monkeypatch)
     refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
 
     assert target is None and "REVIEW_TARGET_UNRESOLVED" in refusal and "X-Agent" in refusal
+
+
+@pytest.mark.parametrize("trailer", ["cursor/feature", "cursor/auto"])
+@pytest.mark.parametrize("author_model", ["cursor:feature", "cursor:auto"])
+@pytest.mark.parametrize(
+    "agent,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("cursor", "grok-4.7-high")]
+)
+def test_pr_pinned_review_admits_known_family_for_unknown_author(tmp_path, monkeypatch, trailer, author_model, agent, model):
+    from scripts.review import target_resolution
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    head = repo.commit(trailer)
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    # Only the forge metadata is simulated; target, diff and author enumeration
+    # read the actual miniature Git history through the production paths.
+    monkeypatch.setattr(
+        target_resolution,
+        "_run_gh",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess(
+            [], 0, json.dumps({"baseRefOid": repo.sha("origin/main"), "headRefOid": head}), ""
+        ),
+    )
+    args = _args(
+        "--agent", agent, "--model", model, "--pr", "42", "--pinned-head", head,
+        "--review-author-model", author_model, "--review-risk", "medium",
+    )
+    refusal, target = delegate._admit_dispatch_target(args, agent=agent, trees=None)
+    assert refusal is None and (target.recipient, target.model) == (agent, model)
+    assert args._review_admission_head == head
+
+
+def test_pr_pinned_review_refuses_unknown_reviewer_for_unknown_author(tmp_path, monkeypatch):
+    from scripts.review import target_resolution
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    head = repo.commit("cursor/feature")
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    monkeypatch.setattr(
+        target_resolution,
+        "_run_gh",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess(
+            [], 0, json.dumps({"baseRefOid": repo.sha("origin/main"), "headRefOid": head}), ""
+        ),
+    )
+    args = _args(
+        "--model", "unknown", "--pr", "42", "--pinned-head", head,
+        "--review-author-model", "cursor:feature", "--review-risk", "medium",
+    )
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    assert target is None and "REVIEW_ROUTE_REFUSED" in refusal

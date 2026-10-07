@@ -46,6 +46,13 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 from scripts.control_plane.storage import ControlPlaneError
 from scripts.fleet_comms.efficiency_metrics import (
     collect_dead_letters,
@@ -98,7 +105,7 @@ def _read_tail_text(path, max_bytes: int = BATCH_LOG_TAIL_BYTES) -> tuple[str, b
         return handle.read().decode("utf-8", errors="replace"), True
 
 
-def _tune_db_connection(conn: sqlite3.Connection, *, writable: bool) -> None:
+def _tune_db_connection(conn: SQLiteConnection, *, writable: bool) -> None:
     """Apply broker read/write PRAGMAs for API connections."""
     conn.execute("PRAGMA busy_timeout=5000")
     conn.execute("PRAGMA cache_size=-20000")
@@ -134,7 +141,7 @@ def ensure_broker_db_ready(ctx: MonitorContext | None = None) -> None:
         conn.close()
 
 
-def _get_db(ctx: MonitorContext) -> sqlite3.Connection | None:
+def _get_db(ctx: MonitorContext) -> SQLiteConnection | None:
     """Get read-only broker DB connection. Returns None if DB missing."""
     handle = ctx.stores.message_db
     if handle is None or not handle.path.exists():
@@ -144,7 +151,7 @@ def _get_db(ctx: MonitorContext) -> sqlite3.Connection | None:
     return conn
 
 
-def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
+def _table_exists(conn: SQLiteConnection, table: str) -> bool:
     row = conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
         (table,),
@@ -152,7 +159,7 @@ def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
     return row is not None
 
 
-def _column_exists(conn: sqlite3.Connection, table: str, column: str) -> bool:
+def _column_exists(conn: SQLiteConnection, table: str, column: str) -> bool:
     return any(row["name"] == column for row in conn.execute(f"PRAGMA table_info({table})"))
 
 

@@ -231,7 +231,7 @@ def test_canonical_reaper_preserves_ignored_batch_state(tmp_path, monkeypatch, c
         def fail_copy(_source, _destination):
             raise OSError("injected reaper copy failure")
 
-        monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+        monkeypatch.setattr(worktree_artifacts, "_write_verified_bytes", fail_copy)
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
@@ -2748,6 +2748,69 @@ def test_query_pr_states_accepts_every_real_gh_state(monkeypatch, state) -> None
     assert [(s.number, s.state) for s in states] == [(7126, state)]
 
 
+def test_gh_json_calls_drop_force_color(monkeypatch, tmp_path: Path) -> None:
+    """FORCE_COLOR / CLICOLOR_FORCE must not reach a gh call that parses JSON."""
+    monkeypatch.setenv("FORCE_COLOR", "1")
+    monkeypatch.setenv("CLICOLOR_FORCE", "1")
+    monkeypatch.setenv("NO_COLOR", "already")
+    captured: list[dict[str, str]] = []
+
+    def fake_run(args, **kwargs):
+        captured.append(kwargs["env"])
+        if args[0] == "gh":
+            colored = kwargs["env"].get("FORCE_COLOR") or kwargs["env"].get("CLICOLOR_FORCE") not in {None, "0"}
+            uncolored = not colored and kwargs["env"].get("NO_COLOR") == "1"
+            stdout = "[]" if uncolored else "\x1b[32m[]\x1b[0m"
+            return subprocess.CompletedProcess(args, 0, stdout, "")
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(rw.subprocess, "run", fake_run)
+
+    git_proc = rw._run(["git", "status"], cwd=tmp_path)
+    states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
+
+    assert git_proc.returncode == 0
+    assert captured[0]["FORCE_COLOR"] == "1"
+    assert captured[0]["CLICOLOR_FORCE"] == "1"
+    assert "FORCE_COLOR" not in captured[1]
+    assert captured[1]["NO_COLOR"] == "1"
+    assert captured[1]["CLICOLOR_FORCE"] == "0"
+    assert error is None
+    assert states == []
+
+
+@pytest.mark.parametrize(
+    ("stdout", "unknown"),
+    [("", True), ("[]", False)],
+    ids=["empty-stdout", "empty-list"],
+)
+def test_graphql_pr_list_empty_stdout_is_unknown(monkeypatch, tmp_path: Path, stdout: str, unknown: bool) -> None:
+    """A blank ``gh pr list`` body is not ``[]``. Only a JSON list is "no PR"."""
+    monkeypatch.setattr(rw, "_run", lambda *_args, **_kwargs: _gh_stdout(stdout))
+
+    states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
+
+    assert states == []
+    assert (error is not None) is unknown
+    if unknown:
+        assert error is not None and "empty" in error
+
+
+def test_colored_gh_json_stays_fail_closed(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("FORCE_COLOR", "1")
+    monkeypatch.setenv("CLICOLOR_FORCE", "1")
+    monkeypatch.setattr(
+        rw,
+        "_run",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, "\x1b[32m[]\x1b[0m", ""),
+    )
+
+    states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
+
+    assert states == []
+    assert error is not None and "invalid JSON" in error
+
+
 # --- REST-first PR lookup with GraphQL fallback (#8536) --
 
 
@@ -2776,6 +2839,46 @@ def _patch_gh_transports(
 
     monkeypatch.setattr(rw, "_run", fake_run)
     return gh_calls
+
+
+@pytest.mark.parametrize(
+    ("stdout", "unknown"),
+    [
+        ("", True),
+        ("[]", False),
+        ("[[]]", False),
+        ("[[null]]", True),
+        ("[[{}]]", True),
+        ('[[null], [{"number": 1, "state": "open", "merged_at": None, "head": {"sha": "abc"}}]]', True),
+    ],
+    ids=["empty-stdout", "no-pages", "empty-page", "null-row", "empty-object", "null-then-object"],
+)
+def test_rest_pr_lookup_empty_stdout_and_unusable_rows_are_unknown(
+    monkeypatch, tmp_path: Path, stdout: str, unknown: bool
+) -> None:
+    """Blank REST output, ``null`` and a non-object are unknown, not "no PR"."""
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: ("owner", "repo"))
+    monkeypatch.setattr(rw, "_run", lambda *_args, **_kwargs: _gh_stdout(stdout))
+
+    states, error = rw._query_pr_states_rest(tmp_path, "codex/task")
+
+    assert (error is not None) is unknown
+    if unknown:
+        assert states == []
+        assert error is not None
+    else:
+        assert error is None
+        assert states == []
+
+
+def test_both_pr_transports_empty_stdout_fail_closed(monkeypatch) -> None:
+    _patch_gh_transports(monkeypatch, rest=_gh_stdout(""), graphql=_gh_stdout(""))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "codex/task")
+
+    assert states == []
+    assert error is not None
+    assert "empty" in error
 
 
 def test_query_pr_states_rest_answer_is_used_when_graphql_is_down(monkeypatch) -> None:
@@ -6945,6 +7048,36 @@ def test_sha_search_failures_are_reported_not_swallowed(
     assert rw._PR_LOOKUP_FAILED in error
 
 
+def test_sha_search_empty_stdout_is_unknown(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A blank ``gh search`` body is not ``[]`` and must not license removal."""
+    monkeypatch.setattr(rw, "_run", _GhSearch(stdout=""))
+
+    states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
+
+    assert states == []
+    assert error is not None
+    assert rw._PR_LOOKUP_FAILED in error
+    assert "empty" in error
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    ["[null]", "[{}]", "[null, {}]", '[{"number": 7, "state": "open"}, null]', "null", "{}"],
+    ids=["null", "empty-object", "null-and-empty-object", "valid-then-null", "null-payload", "object-payload"],
+)
+def test_sha_search_null_and_empty_objects_are_unknown(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stdout: str
+) -> None:
+    """``[null, {}]`` used to be skipped and read as no PR. Any other shape is unknown."""
+    monkeypatch.setattr(rw, "_run", _GhSearch(stdout=stdout))
+
+    states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
+
+    assert states == []
+    assert error is not None
+    assert rw._PR_LOOKUP_FAILED in error
+
+
 def test_sha_search_success_returns_states_without_error(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -7067,8 +7200,17 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
     assert result.action == "removed", result
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
-    if preserved is None:
+    if scenario == "outbound_batch_state":
+        entry = next(item for item in state["preserved_artifacts"]["paths"] if item.get("type") == "symlink")
+        assert entry["path"] == "ignored/link" and entry["target"] == str(target)
+        copied = location / entry["path"]
+        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
+        assert state["preserved_artifacts"]["count"] == 1
+    elif preserved is None:
         assert not location.exists()
     else:
+        link_path, link_target = links.IGNORED_LINK[scenario]
         assert (location / preserved).read_bytes() == links.PAYLOAD
-        assert state["preserved_artifacts"]["count"] == 1
+        entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
+        assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
+        assert state["preserved_artifacts"]["count"] == 2

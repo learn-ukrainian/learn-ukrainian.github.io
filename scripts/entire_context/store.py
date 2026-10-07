@@ -22,6 +22,13 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from .model import (
     LOCATOR_ID_RE,
     SCHEMA_VERSION,
@@ -150,7 +157,7 @@ class ContextLinkStore:
             self.db_path.parent.mkdir(parents=True, exist_ok=True)
             connection = sqlite3.connect(self.db_path)
         else:
-            connection = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
+            connection = open_readonly(self.db_path)
         connection.row_factory = sqlite3.Row
         try:
             if write:

@@ -6,6 +6,7 @@ import os
 import shlex
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -86,6 +87,8 @@ def _launcher(tmp_path: Path, provider: str = "claude") -> tuple[Path, dict[str,
     env = scope_sandbox(root, tmp_path)
     core = root / "scripts/lib/launcher_core.sh"
     shutil.copy2(REPO / "scripts/lib/launcher_core.sh", core)
+    shutil.copy2(REPO / "scripts/lib/git_identity.py", root / "scripts/lib/git_identity.py")
+    env["TEST_PROJECT_PYTHON"] = sys.executable
     # Only provider/lease/preparation seams are stubbed. The full main entry,
     # defaults, Gemini refusal, scope setup, identity and limit validation stay real.
     core.write_text(
@@ -96,6 +99,7 @@ launcher_parse() { LC_DRY_RUN=0; LC_GOVERNOR=${TEST_GOVERNOR:-0}; LC_EPIC=devops
 launcher_drop_force_from_successor_args() { :; }
 launcher_normalize_effort() { :; }
 launcher_resolve_roots() { :; }
+launcher_project_python() { printf '%s\\n' "$TEST_PROJECT_PYTHON"; }
 launcher_publication_path() { :; }
 launcher_normalize_model() { :; }
 launcher_validate_mode() { :; }
@@ -113,7 +117,12 @@ launcher_bind_drive_epic() { :; }
     adapter.write_text("""launcher_adapter_validate() { :; }
 launcher_adapter_preflight() { :; }
 launcher_adapter_canary() { :; }
-launcher_adapter_exec() { read -r line; printf 'PROVIDER:%s\\n' "$line"; exit "${TEST_RC:-0}"; }
+launcher_adapter_exec() {
+  read -r line
+  printf 'PROVIDER:%s\\n' "$line"
+  printf 'GIT_IDENTITY:%s|%s|%s|%s\\n' "$GIT_AUTHOR_NAME" "$GIT_AUTHOR_EMAIL" "$GIT_COMMITTER_NAME" "$GIT_COMMITTER_EMAIL"
+  exit "${TEST_RC:-0}"
+}
 """)
     launcher = root / f"start-{provider}-driver.sh"
     launcher.write_text(
@@ -143,6 +152,7 @@ def test_all_paths_enter_once_before_preparation(tmp_path: Path, extra: dict[str
     assert Path(env["FAKE_STARTS"]).read_text().splitlines() == ["start"]
     assert result.stdout.count("PREPARED\n") == 1
     assert "PROVIDER:stdin survives" in result.stdout
+    assert "GIT_IDENTITY:Claude|claude@local.invalid|Claude|claude@local.invalid" in result.stdout
     assert "high=6442450944 max=9663676416 swap=1073741824 oom=continue" in result.stderr
     assert "DRIVER_SCOPE_VERIFIED" in result.stderr
     assert "parent_memory_current=123456 parent_swap_current=654321" in result.stderr

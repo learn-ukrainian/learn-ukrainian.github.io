@@ -902,6 +902,9 @@ def purge_problem(entry: Entry, task_root: Path) -> str | None:
     if not complete:
         return "purge_liveness_unknown"
     _allocated, _newest, changed, tree_reason = tree_facts(location)
+    if entry.state == "purging" and tree_reason == "tree_unknown":
+        # An interrupted purge's tree that cannot be read cannot be proven untouched.
+        return "purge_kept_ambiguous"
     if tree_reason:
         return f"purge_{tree_reason}"
     confirmed = entry.confirmed_at

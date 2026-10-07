@@ -29,6 +29,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.review_publication import (
@@ -203,7 +210,7 @@ def post_commit_status(
 
 
 def lookup_publication_receipt(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     review_id: str,
     status_context: str = DEFAULT_STATUS_CONTEXT,
@@ -226,7 +233,7 @@ def lookup_publication_receipt(
 
 
 def record_publication_receipt(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     review_id: str,
     head_sha: str,
@@ -261,7 +268,7 @@ def record_publication_receipt(
 
 
 def already_published_key_for_job(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     sealed: SealedVerdict,
     *,
     status_context: str = DEFAULT_STATUS_CONTEXT,
@@ -307,7 +314,7 @@ def execute_publication(
     plan: PublicationPlan,
     *,
     runner: Runner | None = None,
-    conn: sqlite3.Connection | None = None,
+    conn: SQLiteConnection | None = None,
     require_receipt: bool = False,
 ) -> PublicationResult:
     """Execute a planned publication (or no-op for refuse/skip/dry-run).
@@ -481,7 +488,7 @@ def publish_sealed_verdict(
             runner=runner,
         )
 
-    conn: sqlite3.Connection | None = None
+    conn: SQLiteConnection | None = None
     already_key: str | None = None
     if store is not None:
         conn = store.connection

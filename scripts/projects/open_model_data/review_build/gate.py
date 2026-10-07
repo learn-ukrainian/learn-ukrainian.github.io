@@ -281,6 +281,8 @@ class Gate:
                         "dropped_lines": trace.dropped_lines,
                         "joins": trace.joins,
                     }
+                    if trace.join_evidence:
+                        item["join_evidence"] = trace.join_evidence
                     pid = digest(canonical(item))
                     provenance[pid] = item
                     ids.append(pid)

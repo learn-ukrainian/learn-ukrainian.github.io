@@ -9,6 +9,7 @@
 # Read old commits.
 tests/build/test_reviewer_scoring_parity.py  # git show <old sha>:<path>
 tests/orchestration/test_curriculum_lifecycle_pilot.py  # verifies a recorded historical commit
+tests/review/test_model_catalog.py  # recaptures routing source contracts at the frozen base commit
 tests/test_gemma_hardware_probe.py  # git cat-file blob <pre-migration sha>:<path>
 tests/test_open_model_phase3_source_universe_freeze_validator.py  # origin/main and merge-base ancestry
 tests/test_storage_classification_table.py  # classification table at a frozen base commit

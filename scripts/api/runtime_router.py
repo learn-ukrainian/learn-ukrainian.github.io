@@ -22,11 +22,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+    from scripts.lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
+    from lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly  # type: ignore[no-redef]
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .monitor_context import production_context as production_context  # re-export: test monkeypatches
@@ -399,7 +399,7 @@ def list_runtime_agents(ctx: MonitorContext) -> list[dict[str, Any]]:
         if path.stem in {"__init__", "acpx", "base", "hermes_deepseek", "hermes_grok", "hermes_qwen"} or path.stem.startswith("_"):
             continue
         try:
-            module = importlib.import_module(f"agent_runtime.adapters.{path.stem}")
+            module = import_named_module(f"agent_runtime.adapters.{path.stem}")
         except Exception:
             continue
 

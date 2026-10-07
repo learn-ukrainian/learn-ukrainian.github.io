@@ -92,7 +92,7 @@ def test_fill_local_style_matches_enrich_entry_none_pointer_fallback(
     assert isinstance(dictionary_rows, dict)
     monkeypatch.setattr(em, "_read_cached_slovnyk_rows", lambda lemma: dictionary_rows.get(lemma, {}))
 
-    conn = sqlite3.connect(f"file:{sources.resolve().as_posix()}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{sources.resolve().as_uri()}?mode=ro", uri=True)
     try:
         fill_maps = measure.fill_local_style_relations(
             conn, entries

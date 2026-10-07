@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 from scripts.fleet import usage
+from tests.helpers.restore_import_state import restore_import_state
 
 
 @pytest.fixture
@@ -343,24 +344,29 @@ def test_show_does_not_import_state_router(monkeypatch, budget, capsys):
     monkeypatch.setenv("DELEGATE_MONITOR_API", "http://fixture.invalid:8765/")
     monkeypatch.setattr(usage.urllib.request, "urlopen", http)
     # Remove heavy modules if already imported so accidental import is detectable.
-    for name in list(sys.modules):
-        if name.startswith("scripts.api.state_router") or name.startswith("learn_ukrainian_v4_runtime"):
+    evicted = [
+        name
+        for name in list(sys.modules)
+        if name.startswith("scripts.api.state_router") or name.startswith("learn_ukrainian_v4_runtime")
+    ]
+    with restore_import_state(*evicted):
+        for name in evicted:
             monkeypatch.delitem(sys.modules, name, raising=False)
 
-    real_import = __import__
+        real_import = __import__
 
-    def guarded(name, *args, **kwargs):
-        if name == "scripts.api.state_router" or name.startswith("scripts.api.state_router."):
-            raise AssertionError("show must not import state_router")
-        if name == "learn_ukrainian_v4_runtime" or name.startswith("learn_ukrainian_v4_runtime."):
-            raise AssertionError("show must not import v4_runtime")
-        return real_import(name, *args, **kwargs)
+        def guarded(name, *args, **kwargs):
+            if name == "scripts.api.state_router" or name.startswith("scripts.api.state_router."):
+                raise AssertionError("show must not import state_router")
+            if name == "learn_ukrainian_v4_runtime" or name.startswith("learn_ukrainian_v4_runtime."):
+                raise AssertionError("show must not import v4_runtime")
+            return real_import(name, *args, **kwargs)
 
-    monkeypatch.setattr("builtins.__import__", guarded)
-    assert usage.main(["show"]) == 0
-    out = capsys.readouterr().out
-    assert "Grok Bot (weekly)" in out
-    assert "agentic (monthly)" in out
+        monkeypatch.setattr("builtins.__import__", guarded)
+        assert usage.main(["show"]) == 0
+        out = capsys.readouterr().out
+        assert "Grok Bot (weekly)" in out
+        assert "agentic (monthly)" in out
 
 
 def test_qa_passes_when_allotments_usable(budget, monkeypatch, capsys):

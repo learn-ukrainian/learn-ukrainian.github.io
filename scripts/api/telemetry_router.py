@@ -19,6 +19,13 @@ from uuid import uuid4
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 from scripts.telemetry.legacy_bridge import bridge_usage_summary
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
@@ -94,7 +101,7 @@ def _legacy_comms_db_path(ctx: MonitorContext | None = None) -> Path:
     return legacy_comms_db_path_for_root(resolve_context(ctx).roots.project_root)
 
 
-def _open_telemetry_db(ctx: MonitorContext, path: Path) -> sqlite3.Connection:
+def _open_telemetry_db(ctx: MonitorContext, path: Path) -> SQLiteConnection:
     path.parent.mkdir(parents=True, exist_ok=True)
     return ctx._open_db(path)
 
@@ -285,7 +292,7 @@ def _run_row_to_dict(row: sqlite3.Row, participants: list[dict[str, Any]]) -> di
     }
 
 
-def _load_participants(conn: sqlite3.Connection, run_ids: list[str]) -> dict[str, list[dict[str, Any]]]:
+def _load_participants(conn: SQLiteConnection, run_ids: list[str]) -> dict[str, list[dict[str, Any]]]:
     if not run_ids:
         return {}
     placeholders = ",".join("?" for _ in run_ids)

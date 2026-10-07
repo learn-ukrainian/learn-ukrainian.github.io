@@ -21,6 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     is_phase30_textbook_heldout,
@@ -78,7 +79,7 @@ def requires_sources_db() -> Path:
     if not DEFAULT_SOURCES_DB.is_file() or DEFAULT_SOURCES_DB.stat().st_size < 1_000_000:
         pytest.skip(f"requires {DEFAULT_SOURCES_DB} (not provisioned in CI)")
     try:
-        with sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True) as conn:
+        with open_readonly(DEFAULT_SOURCES_DB) as conn:
             tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")}
             required = {"ua_gec_errors", "zno_tasks", "textbooks"}
             missing = sorted(required - tables)
@@ -95,7 +96,7 @@ def requires_vesum_db() -> Path:
     if not DEFAULT_VESUM_DB.is_file() or DEFAULT_VESUM_DB.stat().st_size < 1_000_000:
         pytest.skip(f"requires {DEFAULT_VESUM_DB} (not provisioned in CI)")
     try:
-        with sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True) as conn:
+        with open_readonly(DEFAULT_VESUM_DB) as conn:
             tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")}
             required = {"forms_all"}
             missing = sorted(required - tables)
@@ -274,7 +275,7 @@ def test_mined_cli_verify_only() -> None:
 )
 def test_independent_sources_grounding(requires_sources_db: Path) -> None:
     """Independently verify that mined items are 100% grounded in sources.db."""
-    s_conn = sqlite3.connect(f"file:{requires_sources_db}?mode=ro", uri=True)
+    s_conn = open_readonly(requires_sources_db)
     sc = s_conn.cursor()
 
     # 1. Verify random sample of contrast chunks exist in textbooks
@@ -321,7 +322,7 @@ def test_independent_sources_grounding(requires_sources_db: Path) -> None:
 )
 def test_independent_vesum_lemma_attestation(requires_vesum_db: Path) -> None:
     """Independently verify that correct phrases and target terms are attested in VESUM."""
-    v_conn = sqlite3.connect(f"file:{requires_vesum_db}?mode=ro", uri=True)
+    v_conn = open_readonly(requires_vesum_db)
     vc = v_conn.cursor()
 
     with _artifact_path(CONTRAST_FILE.name).open("r", encoding="utf-8") as f:

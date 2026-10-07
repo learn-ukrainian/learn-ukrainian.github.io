@@ -6,9 +6,11 @@ without importing a curriculum, crawler, or application package.
 
 from __future__ import annotations
 
+import importlib
 import sqlite3
 from collections.abc import Callable, Iterable
 from pathlib import Path
+from types import ModuleType
 from typing import Any, Protocol, Self
 
 
@@ -73,3 +75,19 @@ def open_readonly(
         conn.close()
         raise
     return conn
+
+
+_SQLITE_MODULE_ROOTS = frozenset({"sqlite3", "_sqlite3"})
+
+
+def import_named_module(name: str) -> ModuleType:
+    """Import ``name`` unless it is a SQLite implementation module.
+
+    A non-constant ``importlib.import_module`` is a structural finding: the
+    scanner cannot prove the target is not sqlite3. Adapter and startup
+    loaders call this boundary, which refuses those module names first.
+    """
+    root = name.split(".", 1)[0].split(":", 1)[0]
+    if root in _SQLITE_MODULE_ROOTS or name in _SQLITE_MODULE_ROOTS:
+        raise ImportError(f"SQLite modules are not loaded through this boundary: {name}")
+    return importlib.import_module(name)

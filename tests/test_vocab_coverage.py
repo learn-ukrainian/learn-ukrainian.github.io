@@ -10,6 +10,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.lib.readonly_sqlite import open_readonly
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 vocab_coverage = import_module("build.phases.vocab_coverage")
@@ -48,7 +50,7 @@ def _vesum_has_sound_lemma() -> bool:
     if not db_path.exists() or db_path.stat().st_size == 0:
         return False
     try:
-        with sqlite3.connect(str(db_path)) as db:
+        with open_readonly(db_path) as db:
             for query in (
                 "SELECT lemma FROM vesum WHERE form = ? LIMIT 1",
                 "SELECT lemma FROM forms WHERE word_form = ? LIMIT 1",

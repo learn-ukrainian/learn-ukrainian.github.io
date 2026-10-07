@@ -16,6 +16,7 @@ from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 from .contract import Citation, canonical, digest
 from .errors import require
+from .transforms import fold_word
 
 
 def identifier(name: str) -> str:
@@ -29,6 +30,7 @@ def open_readonly(path: Path) -> SQLiteConnection:
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA query_only=ON")
         connection.execute("PRAGMA temp_store=MEMORY")
+        connection.create_function("omd_example_spans", 1, _example_spans, deterministic=True)
         connection.set_authorizer(
             lambda action, *_: (
                 sqlite3.SQLITE_DENY
@@ -46,6 +48,18 @@ def open_readonly(path: Path) -> SQLiteConnection:
         connection.close()
         raise
     return connection
+
+
+def _example_spans(text: str) -> str:
+    """Expose the closed binding grammar to independent SQL unit queries.
+
+    Import lazily: bindings uses SnapshotReader for its source operands. No
+    request-defined callbacks or extractor output participate in this query.
+    """
+    from .bindings import example_items
+
+    require(isinstance(text, str), "unit_query")
+    return json.dumps(example_items(text), separators=(",", ":"))
 
 
 class FileStore(Protocol):
@@ -70,6 +84,8 @@ class SnapshotReader:
         self.reads: dict[tuple[str, str], set[tuple[str, str]]] = {}
         self.repository_root = (repository_root or Path(__file__).resolve().parents[4]).resolve()
         self.repository_configs: dict[str, bytes] = {}
+        self._word_cache = {}
+        self._text_cache = {}
         try:
             require(len({p.resolve() for p in databases.values()}) == len(databases), "duplicate_database")
             for store, path in sorted(databases.items()):
@@ -192,7 +208,14 @@ class SnapshotReader:
         # Reviewed spec identifies the exact VESUM form table and field.
         require(policy.get("store") == "vesum.db", "transform_policy")
         conn = self.connections[policy["store"]]
-        query = f"SELECT * FROM {identifier(policy['table'])} WHERE {identifier(policy['field'])}=?"
+        lookup = policy.get("lookup_field", policy["field"])
+        if "lookup_field" in policy:
+            require(policy.get("normalizer") == "vesum_fold", "transform_policy")
+            word = fold_word(word)
+        cache_key = (canonical(policy), word)
+        if cache_key in self._word_cache:
+            return self._word_cache[cache_key]
+        query = f"SELECT * FROM {identifier(policy['table'])} WHERE {identifier(lookup)}=?"
         found = False
         info = conn.execute(f"PRAGMA table_info({identifier(policy['table'])})").fetchall()
         keys = [r["name"] for r in sorted(info, key=lambda r: r["pk"]) if r["pk"]]
@@ -205,7 +228,62 @@ class SnapshotReader:
                 (row_key, digest(row[policy["field"]].encode("utf-8")))
             )
             found = True
+        self._word_cache[cache_key] = found
         return found
+
+    def held_metadata(self, policy: dict) -> dict:
+        """Pin the source-text association and hyphen metadata, never word witnesses."""
+        metadata_policy = policy["hyphen_metadata"]
+        key = canonical(metadata_policy)
+        if key not in self._text_cache:
+            texts = {}
+            for row in self.iter_rows(metadata_policy["store"], metadata_policy["table"]):
+                if row[metadata_policy["source_column"]] != metadata_policy["source_id"]:
+                    continue
+                info = (
+                    self.connections[metadata_policy["store"]]
+                    .execute(f"PRAGMA table_info({identifier(metadata_policy['table'])})")
+                    .fetchall()
+                )
+                keys = [r["name"] for r in sorted(info, key=lambda r: r["pk"]) if r["pk"]]
+                require(bool(keys), "invalid_row_key")
+                row_key = ";".join(f"{k}={row[k]}" for k in keys)
+                text = row[metadata_policy["field"]]
+                require(isinstance(text, str), "field_unavailable")
+                for field in (
+                    metadata_policy["field"],
+                    metadata_policy["alternatives_field"],
+                    metadata_policy["count_field"],
+                ):
+                    value = row[field]
+                    self.reads.setdefault((metadata_policy["store"], metadata_policy["table"]), set()).add(
+                        (row_key + ";field=" + field, digest(canonical(value)))
+                    )
+                texts.setdefault(text, []).append(row)
+            self._text_cache[key] = texts
+        return self._text_cache[key]
+
+    def text_metadata(self, text: str, policy: dict) -> list[str]:
+        metadata_policy = policy["hyphen_metadata"]
+        rows = self.held_metadata(policy).get(text, [])
+        # Identical paragraphs may share a reading only with identical metadata.
+        require(bool(rows), "hyphen_metadata_unavailable")
+        metadata = {(r[metadata_policy["alternatives_field"]], r[metadata_policy["count_field"]]) for r in rows}
+        require(len(metadata) == 1, "hyphen_metadata_unavailable")
+        raw, count = metadata.pop()
+        try:
+            alternatives = json.loads(raw)
+        except (TypeError, ValueError):
+            require(False, "hyphen_metadata_unavailable")
+        require(
+            isinstance(alternatives, list)
+            and all(isinstance(a, str) for a in alternatives)
+            and type(count) is int
+            and count == len(alternatives)
+            and (alternatives or raw == "[]"),
+            "hyphen_metadata_unavailable",
+        )
+        return alternatives
 
     def snapshots(self) -> dict[str, str]:
         return {

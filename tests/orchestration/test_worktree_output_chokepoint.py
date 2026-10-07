@@ -109,7 +109,7 @@ def test_all_removers_preserve_output_or_retain_checkout(tmp_path, monkeypatch, 
         monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", len(payload) - 1)
     if failure == "copy":
 
-        def fail_copy(*_args):
+        def fail_copy(*_args, **_kwargs):
             raise OSError("copy denied")
 
         monkeypatch.setattr(ignored_task_output.artifacts, "_copy_verified", fail_copy)
@@ -395,7 +395,7 @@ def test_actual_boundaries_preserve_or_retain(boundary_tree, monkeypatch, bounda
         monkeypatch.setattr(
             ignored_task_output.artifacts,
             "_copy_verified",
-            lambda *_args: (_ for _ in ()).throw(OSError("injected copy failure")),
+            lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError("injected copy failure")),
         )
     elif scenario == "retrieval":
         monkeypatch.setattr(
@@ -745,7 +745,7 @@ def test_record_path_spellings_publish_copy_failure(boundary_tree, monkeypatch, 
     source.parent.mkdir()
     source.write_bytes(b"uncopied output")
 
-    def fail_copy(*_args):
+    def fail_copy(*_args, **_kwargs):
         raise OSError("injected copy failure")
 
     monkeypatch.setattr(ignored_task_output.artifacts, "_copy_verified", fail_copy)

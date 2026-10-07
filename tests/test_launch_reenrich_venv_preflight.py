@@ -22,6 +22,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.restore_import_state import restore_import_state
+
 pytestmark = pytest.mark.reads_content
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -171,10 +173,13 @@ def test_source_query_goroh_translate_importable_without_bs4() -> None:
     import sys
     import types
 
-    stub_keys = ("bs4", "wiki", "wiki.slovnyk_me")
-    saved = {key: sys.modules.get(key) for key in stub_keys}
-    saved_source_query = {k: v for k, v in list(sys.modules.items()) if "source_query" in k}
-    try:
+    with restore_import_state(
+        "bs4",
+        "wiki",
+        "wiki.slovnyk_me",
+        "scripts.rag.source_query",
+        "rag.source_query",
+    ):
         sys.modules["bs4"] = None  # type: ignore[assignment]
 
         slovnyk = types.ModuleType("wiki.slovnyk_me")
@@ -185,16 +190,9 @@ def test_source_query_goroh_translate_importable_without_bs4() -> None:
         sys.modules["wiki"] = wiki_pkg
         sys.modules["wiki.slovnyk_me"] = slovnyk
 
-        for key in list(saved_source_query):
+        for key in ("scripts.rag.source_query", "rag.source_query"):
             sys.modules.pop(key, None)
 
         from scripts.rag.source_query import goroh_translate
 
         assert callable(goroh_translate)
-    finally:
-        for key, prior in saved.items():
-            if prior is None:
-                sys.modules.pop(key, None)
-            else:
-                sys.modules[key] = prior
-        sys.modules.update(saved_source_query)

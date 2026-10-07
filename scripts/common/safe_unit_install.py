@@ -31,6 +31,8 @@ import secrets
 import stat
 from pathlib import Path
 
+from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component
+
 _NOFOLLOW = getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0)
 
 
@@ -40,15 +42,14 @@ class InstallError(RuntimeError):
 
 def _open_component(dir_fd: int | None, name: str, shown: Path) -> int:
     """``lstat`` one path component, refuse a symlink or non-directory, then open it with ``O_NOFOLLOW``."""
-    info = os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
-    if not stat.S_ISDIR(info.st_mode):
-        kind = "symlinked" if stat.S_ISLNK(info.st_mode) else "non-directory"
-        raise InstallError(f"refusing {kind} path component {shown}: the unit directory must be a real directory")
-    fd = os.open(name, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | _NOFOLLOW, dir_fd=dir_fd)
-    if (os.fstat(fd).st_dev, os.fstat(fd).st_ino) != (info.st_dev, info.st_ino):
-        os.close(fd)
-        raise InstallError(f"path component changed while opening: {shown}")
-    return fd
+    try:
+        return open_directory_component(dir_fd, name)
+    except ComponentOpenError as exc:
+        if exc.kind == "changed":
+            raise InstallError(f"path component changed while opening: {shown}") from None
+        raise InstallError(
+            f"refusing {exc.kind} path component {shown}: the unit directory must be a real directory"
+        ) from None
 
 
 def open_unit_dir(

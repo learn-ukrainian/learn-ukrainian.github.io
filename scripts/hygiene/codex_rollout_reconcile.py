@@ -21,7 +21,6 @@ import time
 import uuid
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
 
 try:
     from scripts.path_safety import assert_delete_target
@@ -55,7 +54,7 @@ def _home(value: Path | str | None) -> Path:
     return (Path(value).expanduser() if value is not None else Path.home() / ".codex").resolve()
 
 def _db_uri(path: Path) -> str:
-    return f"file:{quote(str(path.resolve()), safe='/')}?mode=ro"
+    return path.resolve().as_uri() + "?mode=ro"
 
 def _open_readonly(path: Path) -> sqlite3.Connection:
     connection = sqlite3.connect(_db_uri(path), uri=True, timeout=5.0)

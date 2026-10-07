@@ -44,6 +44,13 @@ import tempfile
 import time
 from pathlib import Path
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_shared_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly as _open_shared_readonly  # type: ignore[no-redef]
+
 from scripts.atlas.atlas_db import SCHEMA
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -57,9 +64,7 @@ SLUG_SUFFIX_TEMPLATE = "--syn{index:07d}"
 
 
 def _open_readonly(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
-    conn.execute("PRAGMA query_only = ON")
-    return conn
+    return _open_shared_readonly(path)
 
 
 def count_vesum_lemmas(vesum_db: Path) -> int:
