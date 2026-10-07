@@ -304,7 +304,7 @@ def _use_local_restic(
 set -eu
 args=()
 while [[ "$#" -gt 0 ]]; do
-  if [[ "$1" == "--option" && "${2:-}" == "rclone.connections=1" ]]; then
+  if [[ "$1" == "--option" && "${2:-}" == rclone.connections=* ]]; then
     shift 2
     continue
   fi
@@ -1093,7 +1093,6 @@ def test_backup_fails_closed_when_agent_recovery_root_is_a_symlink(
 @pytest.mark.parametrize(
     ("target", "expected_error"),
     [
-        ("missing-target", "Broken symlink in .agent"),
         ("/tmp/agent-outside", "Absolute symlink is not backup-safe in .agent"),
         ("../agent-outside", "Symlink escapes .agent"),
     ],
@@ -1208,15 +1207,86 @@ def test_doctor_and_backup_exclude_dangling_legacy_drive_symlinks(
     assert str(dangling_target) not in backup_result.stdout
 
 
-def test_backup_fails_closed_for_dangling_non_legacy_symlink_in_source(
+def test_backup_skips_dangling_non_legacy_symlink_in_source_with_warning(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     (source / "broken-link.txt").symlink_to("missing-dir/missing.txt")
 
     result = _run(environment, "backup")
-    assert result.returncode != 0
-    assert "Broken symlink in backup source: broken-link.txt -> missing-dir/missing.txt" in result.stderr
+    assert result.returncode == 0, result.stderr
+    assert "WARNING: Skipping broken symlink in backup source: broken-link.txt -> missing-dir/missing.txt" in result.stderr
+    assert f"arg=<--exclude> arg=<{source}/broken-link.txt>" in _log(environment)
+
+
+def _dangling_recovery_links(project: Path) -> dict[str, Path]:
+    """Create dangling links in each recovery-root kind; return them by label."""
+    nested = project / "batch_state" / "session" / "pytest-RC"
+    nested.mkdir(parents=True)
+    links = {
+        "batch_state": nested / "dispatch-storescurrent",
+        ".agent": project / ".agent" / "stale-pointer",
+        ".claude/atlas-epic": project / ".claude" / "atlas-epic" / "gone[1]*?.md",
+        "data": project / "data" / "moved-dataset",
+    }
+    links["batch_state"].symlink_to("../../../../.worktrees/removed/stores")
+    links[".agent"].symlink_to("missing-target")
+    links[".claude/atlas-epic"].symlink_to("HANDOFF-old.md")
+    links["data"].symlink_to("missing-target")
+    return links
+
+
+def test_backup_skips_dangling_symlinks_in_every_recovery_root_with_warning(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    project = source.parent
+    links = _dangling_recovery_links(project)
+
+    doctor = _run(environment, "doctor")
+    assert doctor.returncode == 0, doctor.stderr
+    assert "Doctor checks passed." in doctor.stdout
+    # doctor folds validation output into stdout; backup keeps warnings on stderr.
+    doctor_output = doctor.stdout + doctor.stderr
+    assert "WARNING: Skipping broken symlink in batch_state: session/pytest-RC/dispatch-storescurrent" in doctor_output
+    assert "WARNING: Skipping broken symlink in .agent: stale-pointer -> missing-target" in doctor_output
+    assert "WARNING: Skipping broken symlink in .claude/atlas-epic: gone[1]*?.md -> HANDOFF-old.md" in doctor_output
+    assert "WARNING: Skipping broken symlink in backup source: moved-dataset -> missing-target" in doctor_output
+
+    preview = _run(environment, "backup")
+    assert preview.returncode == 0, preview.stderr
+    assert "WARNING: Skipping broken symlink in .agent: stale-pointer -> missing-target" in preview.stderr
+    log = _log(environment)
+    assert f"arg=<--exclude> arg=<{links['batch_state']}>" in log
+    assert f"arg=<--exclude> arg=<{links['.agent']}>" in log
+    assert f"arg=<--exclude> arg=<{links['data']}>" in log
+    # Glob metacharacters in a skipped link name are matched literally.
+    escaped = str(links[".claude/atlas-epic"]).replace("[", "\\[").replace("]", "\\]")
+    escaped = escaped.replace("*", "\\*").replace("?", "\\?")
+    assert f"arg=<--exclude> arg=<{escaped}>" in log
+
+    executed = _run(environment, "backup", "--execute")
+    assert executed.returncode == 0, executed.stderr
+    receipt = json.loads((Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
+    assert {
+        "batch_state/session/pytest-RC/dispatch-storescurrent broken symlink skipped",
+        ".agent/stale-pointer broken symlink skipped",
+        ".claude/atlas-epic/gone[1]*?.md broken symlink skipped",
+        "data/moved-dataset broken symlink skipped",
+    } <= set(receipt["exclusions"])
+
+
+def test_backup_without_dangling_symlinks_adds_no_broken_symlink_exclusions(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+
+    executed = _run(environment, "backup", "--execute")
+
+    assert executed.returncode == 0, executed.stderr
+    assert "Skipping broken symlink" not in executed.stderr
+    receipt = json.loads((Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
+    assert not [entry for entry in receipt["exclusions"] if entry.endswith("broken symlink skipped")]
 
 
 def test_symlink_policy_rejects_resolving_legacy_symlink_outside_legacy_dir(
@@ -1880,6 +1950,50 @@ def test_retention_execute_forgets_by_snapshot_id_then_prunes_and_checks(
     prune_index = next(i for i, line in enumerate(log_lines) if "arg=<prune>" in line)
     check_index = next(i for i, line in enumerate(log_lines) if "arg=<check>" in line)
     assert forget_index < prune_index < check_index
+    # restic prune refuses a backend connection limit below two.
+    assert "arg=<--option> arg=<rclone.connections=2>" in log_lines[prune_index]
+    assert "arg=<--option> arg=<rclone.connections=1>" in log_lines[forget_index]
+    assert "arg=<--option> arg=<rclone.connections=1>" in log_lines[check_index]
+
+
+@pytest.mark.parametrize(("configured", "forget", "prune"), [("2", "2", "2"), ("4", "4", "4")])
+def test_retention_honours_configured_rclone_connections(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+    configured: str,
+    forget: str,
+    prune: str,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    environment["LU_BACKUP_RCLONE_CONNECTIONS"] = configured
+    snapshots: list[dict[str, object]] = []
+    for day in range(1, 10):
+        snapshots += _run_snapshots(f"202609{day:02d}T033000Z-0000000{day}", f"2026-09-{day:02d}", id_byte=str(day))
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    log_lines = _log(environment).splitlines()
+    forget_line = next(line for line in log_lines if "arg=<forget>" in line)
+    prune_line = next(line for line in log_lines if "arg=<prune>" in line)
+    assert f"arg=<rclone.connections={forget}>" in forget_line
+    assert f"arg=<rclone.connections={prune}>" in prune_line
+
+
+@pytest.mark.parametrize("configured", ["0", "17", "two", "1 --no-lock", "08"])
+def test_invalid_rclone_connections_fail_before_any_repository_command(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    configured: str,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    environment["LU_BACKUP_RCLONE_CONNECTIONS"] = configured
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "LU_BACKUP_RCLONE_CONNECTIONS must be a whole number from 1 to 16." in result.stderr
+    assert "arg=<backup>" not in _log(environment)
 
 
 def test_retention_partial_newer_run_never_displaces_a_retained_run(

@@ -56,6 +56,11 @@ else
 fi
 readonly LOCK_FILE="$LOCK_ROOT/learn-ukrainian-backup.${UID}.lock"
 readonly LOCK_WAIT_SECONDS="${LU_BACKUP_LOCK_WAIT_SECONDS:-3600}"
+# rclone backend connection limit. One connection keeps backups gentle on the
+# remote; restic prune refuses to run below two, so prune always gets at least
+# PRUNE_MIN_RCLONE_CONNECTIONS whatever this is set to.
+readonly RCLONE_CONNECTIONS="${LU_BACKUP_RCLONE_CONNECTIONS:-1}"
+readonly PRUNE_MIN_RCLONE_CONNECTIONS=2
 readonly STAGE_PATH="$TMP_ROOT/learn-ukrainian-backup.${UID}.stage"
 # Operator-approved retention policy (2026-09-26), applied weekly by
 # `retention --execute` to completed backup runs (never to individual
@@ -72,6 +77,10 @@ RESTIC_EXCLUDES=()
 LEGACY_EXCLUDES=()
 BACKUP_PATHS=()
 EPHEMERAL_HOME_EXCLUDES=()
+# Absolute paths of broken (dangling) symlinks found in the recovery roots.
+# They are skipped with a warning and excluded from the snapshot instead of
+# aborting the whole backup; the receipt records each one.
+BROKEN_SYMLINK_EXCLUDES=()
 LINUX_DB_SNAPSHOTS='[]'
 LINUX_BASE_SNAPSHOT=""
 LINUX_PATCH_SNAPSHOT=""
@@ -206,6 +215,9 @@ Optional environment:
                         staging on the same filesystem as data/.
   LU_BACKUP_TAG         Restic tag (default: learn-ukrainian-data).
   LU_BACKUP_HOST        Stable restic host label (default: learn-ukrainian).
+  LU_BACKUP_RCLONE_CONNECTIONS
+                        rclone backend connection limit, 1-16 (default: 1).
+                        prune always uses at least 2, which restic requires.
 
 Examples:
   ./scripts/backup-data.sh restore latest --to /scratch/restore              # preview
@@ -229,11 +241,26 @@ info() {
   echo "==> $*"
 }
 
+restic_rclone_connections() {
+  local subcommand=${1:-}
+  local connections=$RCLONE_CONNECTIONS
+
+  [[ "$connections" =~ ^[1-9][0-9]?$ ]] && ((connections <= 16)) ||
+    die "LU_BACKUP_RCLONE_CONNECTIONS must be a whole number from 1 to 16."
+  if [[ "$subcommand" == prune ]] && ((connections < PRUNE_MIN_RCLONE_CONNECTIONS)); then
+    connections=$PRUNE_MIN_RCLONE_CONNECTIONS
+  fi
+  printf '%s\n' "$connections"
+}
+
 restic_repository_command() {
+  local connections
+
+  connections="$(restic_rclone_connections "${1:-}")" || exit 1
   if [[ -n "$LOCK_FD" ]]; then
-    restic "$@" --option rclone.connections=1 --retry-lock 5m {LOCK_FD}>&-
+    restic "$@" --option "rclone.connections=$connections" --retry-lock 5m {LOCK_FD}>&-
   else
-    restic "$@" --option rclone.connections=1 --retry-lock 5m
+    restic "$@" --option "rclone.connections=$connections" --retry-lock 5m
   fi
 }
 
@@ -474,6 +501,16 @@ require_initialized_repository() {
     die "Restic repository is inaccessible or not initialized; verify remote authentication and repository status."
 }
 
+# A broken symlink carries no data; refusing the whole backup over one only
+# loses every other path. Warn, exclude it, and record it in the receipt.
+# Absolute and escaping links that do resolve still fail closed.
+skip_broken_symlink() {
+  local link=$1 label=$2 relative=$3 target=$4
+
+  echo "WARNING: Skipping broken symlink in $label: $relative -> $target" >&2
+  BROKEN_SYMLINK_EXCLUDES+=("$link")
+}
+
 validate_source_symlinks() {
   local link relative target resolved
   local source_real
@@ -500,8 +537,10 @@ validate_source_symlinks() {
       continue
     fi
 
-    resolved="$(realpath "$link" 2>/dev/null)" ||
-      die "Broken symlink in backup source: $relative -> $target"
+    if [[ ! -e "$link" ]] || ! resolved="$(realpath "$link" 2>/dev/null)"; then
+      skip_broken_symlink "$link" "backup source" "$relative" "$target"
+      continue
+    fi
     [[ "$target" != /* ]] ||
       die "Absolute symlink is not backup-safe: $relative -> $target"
     path_is_within "$resolved" "$source_real" ||
@@ -524,10 +563,10 @@ validate_tree_symlinks() {
     is_ephemeral_home_path "$link" && continue
     relative=${link#"$tree"/}
     target="$(readlink "$link")"
-    [[ -e "$link" ]] ||
-      die "Broken symlink in $label: $relative -> $target"
-    resolved="$(realpath "$link" 2>/dev/null)" ||
-      die "Broken symlink in $label: $relative -> $target"
+    if [[ ! -e "$link" ]] || ! resolved="$(realpath "$link" 2>/dev/null)"; then
+      skip_broken_symlink "$link" "$label" "$relative" "$target"
+      continue
+    fi
     [[ "$target" != /* ]] ||
       die "Absolute symlink is not backup-safe in $label: $relative -> $target"
     path_is_within "$resolved" "$tree_real" ||
@@ -649,6 +688,7 @@ validate_source() {
   [[ "$source_real" != "$project_real" ]] ||
     die "Refusing to back up the entire repository as data/."
   resolve_legacy_dir
+  BROKEN_SYMLINK_EXCLUDES=()
   discover_backup_paths
   discover_ephemeral_homes
   validate_untracked_coverage
@@ -894,6 +934,11 @@ remove_staged_exclusions() {
       remove_staged_path "$STAGED_ROOT/data/$relative"
     done
   fi
+  if ((${#BROKEN_SYMLINK_EXCLUDES[@]} > 0)); then
+    for relative in "${BROKEN_SYMLINK_EXCLUDES[@]}"; do
+      remove_staged_path "$STAGED_ROOT/${relative#"$PROJECT_ROOT"/}"
+    done
+  fi
   while IFS= read -r -d '' directory; do
     remove_staged_path "$directory"
   done < <(find "$STAGED_ROOT" -type d -name __pycache__ -prune -print0)
@@ -903,6 +948,18 @@ remove_staged_exclusions() {
       -o -name '.DS_Store' \) \
     -delete ||
     die "Could not remove excluded sidecars from the private staging tree."
+}
+
+# Escape restic exclude pattern metacharacters so a path matches literally.
+restic_literal_pattern() {
+  local pattern=$1
+
+  pattern=${pattern//\\/\\\\}
+  pattern=${pattern//\*/\\*}
+  pattern=${pattern//\?/\\?}
+  pattern=${pattern//\[/\\[}
+  pattern=${pattern//\]/\\]}
+  printf '%s\n' "$pattern"
 }
 
 build_restic_excludes() {
@@ -938,6 +995,13 @@ build_restic_excludes() {
   for relative in "${EPHEMERAL_HOME_EXCLUDES[@]}"; do
     RESTIC_EXCLUDES+=(--exclude "$relative")
   done
+  # Skipped broken symlinks, re-rooted onto the tree restic reads: the live
+  # project on Linux, the private staging copy otherwise. root is <tree>/data.
+  if ((${#BROKEN_SYMLINK_EXCLUDES[@]} > 0)); then
+    for relative in "${BROKEN_SYMLINK_EXCLUDES[@]}"; do
+      RESTIC_EXCLUDES+=(--exclude "$(restic_literal_pattern "${root%/data}/${relative#"$PROJECT_ROOT"/}")")
+    done
+  fi
   # Never upload the private staging tree when it lives inside data/
   # (the data-volume staging location).
   if path_is_within "$TMP_ROOT" "$SOURCE"; then
@@ -1072,6 +1136,16 @@ write_backup_receipt() {
         jq -cn \
           --argjson current "$exclusions_json" \
           --arg path "data/$relative legacy symlink" \
+          '$current + [$path]'
+      )"
+    done
+  fi
+  if ((${#BROKEN_SYMLINK_EXCLUDES[@]} > 0)); then
+    for relative in "${BROKEN_SYMLINK_EXCLUDES[@]}"; do
+      exclusions_json="$(
+        jq -cn \
+          --argjson current "$exclusions_json" \
+          --arg path "${relative#"$PROJECT_ROOT"/} broken symlink skipped" \
           '$current + [$path]'
       )"
     done
@@ -1854,6 +1928,10 @@ main() {
   local execute snapshot target read_data
   shift || true
 
+  case "$command" in
+    help|-h|--help) ;;
+    *) restic_rclone_connections >/dev/null || exit 1 ;;
+  esac
   case "$command" in
     help|-h|--help)
       usage
