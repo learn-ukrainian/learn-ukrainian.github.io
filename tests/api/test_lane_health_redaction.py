@@ -25,6 +25,7 @@ from scripts.api.lane_health import (
     redact_lane_health_text,
     sanitize_error_excerpt,
 )
+from scripts.api.lane_health_redaction import redact_lane_health_diagnostics
 from scripts.api.monitor_context import fixture_context
 from scripts.api.opsec_sanitize import opsec_path_sanitizer_middleware
 
@@ -290,6 +291,16 @@ def test_lane_health_redacts_url_authorities_and_preserves_suffix_bytes(excerpt,
     assert redact_lane_health_text(redacted) == redacted
 
 
+@pytest.mark.parametrize("password", ["canary?tail", "canary#tail", "canary/tail?more#end"])
+@pytest.mark.parametrize("username", ["u", ""])
+@pytest.mark.parametrize("host, placeholder", [("host.invalid:443", "[redacted-host]"), ("[2001:db8::7]:443", "[redacted-ip]")])
+def test_diagnostic_rule_itself_reuses_malformed_userinfo_redaction(password, username, host, placeholder):
+    raw = "".join(("https", "://", username, ":", password, "@", host, "/api?part=2#tail"))
+    expected = "".join(("https", "://", username, ":", "[REDACTED_SECRET]", "@", placeholder, "/api?part=2#tail"))
+    assert redact_lane_health_diagnostics(raw) == expected
+    assert redact_lane_health_diagnostics(expected) == expected
+
+
 def test_diagnostic_redactor_preserves_url_suffixes_that_resemble_private_paths():
     # The response middleware retains its separate private-path policy.
     raw = "".join(("https://node.example.invalid:443/home/fixture/%2f/@user/post?next=/", "tmp/fixture#203.0.113.7"))
@@ -306,7 +317,10 @@ _REVIEW_SHAPES = [
             password,
             "".join(("auth ", "https", "://", "u:", "[REDACTED_SECRET]", "@[redacted-host]/r.git denied")),
         )
-        for password in ("Ab3dE/fG", "Ab3dE+fG", "Ab3dE=fG", "Ab3dE/fG+h9=", "Ab3dE%2FfG%2B%3D", "12345")
+        for password in (
+            "Ab3dE/fG", "Ab3dE+fG", "Ab3dE=fG", "Ab3dE?fG", "Ab3dE#fG",
+            "Ab3dE/fG+h9=?tail#end", "Ab3dE%2FfG%2B%3D", "12345",
+        )
     ],
     ("getaddrinfo ENOTFOUND node.example.invalid", "node.example.invalid", "getaddrinfo ENOTFOUND [redacted-host]"),
     (

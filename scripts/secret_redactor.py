@@ -99,6 +99,58 @@ _OPAQUE_ALPHA_TOKEN_MIN_ENTROPY = 4.0
 _OPAQUE_PUNCTUATED_TOKEN_MIN_ENTROPY = 4.5
 _OPAQUE_TOKEN_PUNCTUATION = frozenset("_+./~-")
 
+_URL_PATTERN = re.compile(r"\b[A-Za-z][A-Za-z0-9+.-]*://[^\s<>\"`]+")
+# RFC 3986 unreserved, sub-delims and pct-encoded, excluding the password colon.
+_URL_USERNAME_PATTERN = re.compile(r"(?:[A-Za-z0-9._~!$&'()*+,;=-]|%[0-9A-Fa-f]{2})*")
+
+
+def redact_url_authority(raw: str) -> tuple[str, str, str]:
+    """Split a scheme:// URL token into prefix, redacted authority and suffix.
+
+    RFC 3986 section 3.2 ends authority at the first /, ? or #. Only an @
+    within that authority normally identifies userinfo; replace everything
+    after its first colon up to @, preserving username, host and suffix bytes.
+
+    Diagnostics also contain malformed passwords with raw /, ? or #. If the
+    initial authority has no @, accept the first later @ in this same token
+    only when the initial authority starts with an RFC username and colon,
+    followed by a nonempty, nonnumeric password prefix. Extend authority to
+    the first /, ? or # after that @. Numeric and empty prefixes stay ports:
+    ordinary host:port URLs cannot trigger this fallback, even with @ in a
+    path, query or fragment. Bracketed IP hosts cannot match the username.
+
+    Deliberately leave ambiguous numeric/empty prefixes before a delimiter,
+    username-only userinfo, schemeless credentials and tokens without @ alone.
+    The caller supplies one token bounded by whitespace or a text delimiter.
+    No decoding or normalization occurs.
+    """
+    start = raw.index("://") + 3
+    end = min(
+        (index for delimiter in "/?#" if (index := raw.find(delimiter, start)) >= 0),
+        default=len(raw),
+    )
+    if "@" not in raw[start:end]:
+        username, colon, password_prefix = raw[start:end].partition(":")
+        if (
+            colon
+            and _URL_USERNAME_PATTERN.fullmatch(username)
+            and password_prefix
+            and not password_prefix.isdigit()
+        ):
+            userinfo_end = raw.find("@", end)
+            if userinfo_end >= 0:
+                end = min(
+                    (index for delimiter in "/?#" if (index := raw.find(delimiter, userinfo_end + 1)) >= 0),
+                    default=len(raw),
+                )
+    authority = raw[start:end]
+    userinfo, separator, host = authority.rpartition("@")
+    if separator:
+        username, colon, _password = userinfo.partition(":")
+        if colon:
+            authority = username + ":" + REDACTION + "@" + host
+    return raw[:start], authority, raw[end:]
+
 
 def redact_text(value: str | None) -> str | None:
     """Redact token-looking substrings from text before external egress."""
@@ -106,6 +158,7 @@ def redact_text(value: str | None) -> str | None:
         return None
 
     text = str(value)
+    text = _URL_PATTERN.sub(lambda match: "".join(redact_url_authority(match.group())), text)
     for pattern in _BLOCK_PATTERNS:
         text = pattern.sub(REDACTION, text)
     for pattern in _ASSIGNMENT_PATTERNS:

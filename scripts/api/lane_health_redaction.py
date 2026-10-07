@@ -10,9 +10,9 @@ import re
 from urllib.parse import unquote_plus
 
 try:
-    from secret_redactor import REDACTION, redact_value
+    from secret_redactor import REDACTION, redact_url_authority, redact_value
 except ImportError:
-    from scripts.secret_redactor import REDACTION, redact_value
+    from scripts.secret_redactor import REDACTION, redact_url_authority, redact_value
 
 try:
     from api.opsec_scan import scan_text
@@ -41,14 +41,11 @@ _RESOLVER_HOST_RE = re.compile(
 
 
 def redact_lane_health_diagnostics(text: str) -> str:
-    """Rewrite diagnostic shapes without changing any shared redactor.
+    """Rewrite diagnostic shapes using the shared URL-userinfo rule.
 
     All URL hosts and ports are redacted; path, non-secret query and fragment
-    bytes are preserved. In a malformed URL, host:digits/ is ambiguous with
-    a slash-containing password: preserve
-    it as a port/path. Unambiguous digits-only userinfo (u:123@host) is redacted.
-    Raw ? and # in passwords remain outside the slash-password fallback;
-    RFC 3986 requires encoding them as data in userinfo.
+    bytes are preserved. The shared rule handles malformed passwords with
+    raw /, ? and # while preserving ambiguous numeric-port/path shapes.
     """
     parts = []
     cursor = 0
@@ -96,44 +93,21 @@ def _redact_resolver_host_match(match: re.Match[str]) -> str:
 
 
 def _redact_url_match(match: re.Match[str]) -> str:
-    raw = match.group()
-    authority_start = raw.index("://") + 3
-    # RFC 3986 section 3.2: /, ? and # terminate the authority.
-    authority_end = min(
-        (index for delimiter in "/?#" if (index := raw.find(delimiter, authority_start)) >= 0),
-        default=len(raw),
-    )
-    prefix = raw[authority_start:authority_end]
-    # Diagnostic-only accommodation for unescaped base64 / in a password.
-    # A numeric port followed by / must never turn an @path into userinfo.
-    if ":" in prefix and "@" not in prefix and not prefix.rsplit(":", 1)[1].isdigit():
-        userinfo_limit = min(
-            (index for delimiter in "?#" if (index := raw.find(delimiter, authority_start)) >= 0),
-            default=len(raw),
-        )
-        userinfo_end = raw.rfind("@", authority_start, userinfo_limit)
-        if userinfo_end >= 0:
-            authority_end = min(
-                (index for delimiter in "/?#" if (index := raw.find(delimiter, userinfo_end + 1)) >= 0),
-                default=len(raw),
-            )
-    rewritten = raw
-    fragment_start = raw.find("#", authority_end)
-    query_end = fragment_start if fragment_start >= 0 else len(raw)
-    query_marker = raw.find("?", authority_end, query_end)
+    prefix, raw_authority, suffix = redact_url_authority(match.group())
+    fragment_start = suffix.find("#")
+    query_end = fragment_start if fragment_start >= 0 else len(suffix)
+    query_marker = suffix.find("?", 0, query_end)
     if query_marker >= 0:
         query_start = query_marker + 1
-        query = _QUERY_PARAMETER_RE.sub(_redact_query_match, raw[query_start:query_end])
-        rewritten = raw[:query_start] + query + raw[query_end:]
-    userinfo, separator, host = raw[authority_start:authority_end].rpartition("@")
+        query = _QUERY_PARAMETER_RE.sub(_redact_query_match, suffix[query_start:query_end])
+        suffix = suffix[:query_start] + query + suffix[query_end:]
+    userinfo, separator, host = raw_authority.rpartition("@")
     authority = "[redacted-host]"
     if host.startswith("[redacted-ip]") or any(f.kind in {"ipv4", "ipv6"} for f in scan_text(host)):
         authority = "[redacted-ip]"
     if separator:
-        username, colon, _password = userinfo.partition(":")
-        credentials = username + ":" + REDACTION if colon else username
-        authority = credentials + "@" + authority
-    return rewritten[:authority_start] + authority + rewritten[authority_end:]
+        authority = userinfo + "@" + authority
+    return prefix + authority + suffix
 
 
 def _redact_query_match(match: re.Match[str]) -> str:
