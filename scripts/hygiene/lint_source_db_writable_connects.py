@@ -97,7 +97,7 @@ class _Syntax:
     def __init__(self, source: str, rel_path: str):
         self.tree = ast.parse(source, filename=rel_path)
         self.nodes = [self.tree]
-        self.children = {}
+        self.edges = []
         self.names = set()
         self.strings = set()
         for node in self.nodes:
@@ -116,17 +116,35 @@ class _Syntax:
                 self.names.add(node.attr)
             elif isinstance(node, ast.BinOp):
                 children = (node.left, node.right)
+            elif isinstance(node, ast.Call):
+                children = (node.func, *node.args, *node.keywords)
+            elif isinstance(node, (ast.keyword, ast.Expr)):
+                children = (node.value,)
+            elif isinstance(node, ast.Assign):
+                children = (*node.targets, node.value)
+            elif isinstance(node, ast.Subscript):
+                children = (node.value, node.slice)
+            elif isinstance(node, (ast.List, ast.Tuple, ast.Set)):
+                children = tuple(node.elts)
+            elif isinstance(node, ast.Return):
+                children = (node.value,) if node.value is not None else ()
+            elif isinstance(node, ast.arg):
+                children = (node.annotation,) if node.annotation is not None else ()
             else:
                 if isinstance(node, ast.ImportFrom):
                     self.names.add(node.module)
                 children = tuple(child for child in ast.iter_child_nodes(node) if not isinstance(
                     child, (ast.expr_context, ast.operator, ast.unaryop, ast.boolop, ast.cmpop)))
-            self.children[node] = children
+            self.edges.append(children)
             self.nodes.extend(children)
 
     @cached_property
+    def children(self):
+        return dict(zip(self.nodes, self.edges, strict=True))
+
+    @cached_property
     def parents(self):
-        return {child: node for node in self.nodes for child in self.children[node]}
+        return {child: node for node, children in zip(self.nodes, self.edges, strict=True) for child in children}
 
 
 def classify_source(source: str, rel_path: str, *, syntax: _Syntax | None = None) -> list[Finding]:
