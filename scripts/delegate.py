@@ -14204,7 +14204,11 @@ _AUTHORING_COMMIT_SHA_RE = re.compile(r"[0-9a-f]{40}")
 
 
 class _AuthoringReviewRefused(Exception):
-    """Dispatch refused before any side effect: no reviewer would remain for the branch."""
+    """Dispatch refused before a task record or a worker.
+
+    The branch is untouched, except a refusal whose record binding is
+    ``rebase``: that rebase has already run, and :meth:`render` says so.
+    """
 
     def __init__(self, code: str, detail: str, record: dict[str, Any]) -> None:
         super().__init__(f"{code}: {detail}")
@@ -14213,9 +14217,23 @@ class _AuthoringReviewRefused(Exception):
         self.record = record
 
     def render(self) -> str:
-        """The stderr refusal: one actionable line, then one JSON line for tools."""
+        """The stderr refusal: one actionable line, then one JSON line for tools.
+
+        A post-rebase refusal (``binding`` ``rebase``) has already moved the
+        worktree. It names the pre-rebase head and the refs that still point
+        at it. Every earlier refusal leaves the branch untouched.
+        """
         payload = json.dumps({AUTHORING_REVIEW_STATE_KEY: {**self.record, "refusal": self.code}}, sort_keys=True)
-        return f"❌ {self.code}: {self.detail} Branch preserved; provider_calls=0.\n{payload}"
+        if self.record.get("binding") == "rebase":
+            pre = self.record.get("pre_rebase_head") or self.record.get("admitted_sha") or ""
+            refs = self.record.get("recovery_refs") or ("ORIG_HEAD", "HEAD@{1}")
+            tail = (
+                f"Worktree was rebased; pre-rebase head {pre}. "
+                f"Recover it with {' or '.join(str(ref) for ref in refs)}. provider_calls=0."
+            )
+        else:
+            tail = "Branch preserved; provider_calls=0."
+        return f"❌ {self.code}: {self.detail} {tail}\n{payload}"
 
 
 class _AuthoringObservationUnknown(Exception):
@@ -14949,6 +14967,29 @@ def _authoring_rebase_plan(admission: _AuthoringAdmission, *, base: str) -> str:
     return onto
 
 
+def _git_rev_parse_at(cwd: Path, ref: str) -> str | None:
+    """The commit ``ref`` names in ``cwd``, or None when it cannot be read. Stderr is discarded."""
+    # Same helper as the other worktree reads, so this probe adds no git spawn.
+    parsed = _run_git_stdout(cwd, "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}")
+    if parsed is None or parsed[0] != 0:
+        return None
+    sha = parsed[1].strip()
+    return sha if _AUTHORING_COMMIT_SHA_RE.fullmatch(sha) else None
+
+
+def _authoring_post_rebase_recovery(admission: _AuthoringAdmission) -> dict[str, Any]:
+    """Refs that still name the pre-rebase head. Names no host path.
+
+    ``ORIG_HEAD`` is the immediate pre-rebase head. ``<branch>@{1}`` is that
+    head on the branch reflog (git-rebase(1)). The admitted head stays
+    ``head_sha`` when a later commit landed before the rebase.
+    """
+    branch = admission.head_branch if admission.head_branch not in (None, "", "HEAD") else None
+    reflog = f"{branch}@{{1}}" if branch else "HEAD@{1}"
+    pre = _git_rev_parse_at(admission.checkout, "ORIG_HEAD") if admission.checkout is not None else None
+    return {"pre_rebase_head": pre or admission.head_sha, "recovery_refs": ["ORIG_HEAD", reflog]}
+
+
 def _authoring_rebase_result_refusal(
     admission: _AuthoringAdmission, *, onto: str, rebased: str
 ) -> _AuthoringReviewRefused | None:
@@ -14958,9 +14999,20 @@ def _authoring_rebase_result_refusal(
     must be an ancestor, and the authors the recorder now enumerates must be
     among the planned ones, with a reviewer still remaining. Runs before any
     task record or worker; the rebase itself has already happened.
+
+    On success ``rebased_existing_families`` is those enumerated families. The
+    planned superset stays on ``rebase_existing_families`` (#9782): a commit
+    git drops as patch-equivalent was planned and is not an author of the
+    rebased branch. A refusal names the pre-rebase head and its recovery refs.
     """
     assert admission.collect is not None  # set by every admission
-    record = {**admission.record, "binding": "rebase", "admitted_sha": admission.head_sha, "current_sha": rebased}
+    record = {
+        **admission.record,
+        "binding": "rebase",
+        "admitted_sha": admission.head_sha,
+        "current_sha": rebased,
+        **_authoring_post_rebase_recovery(admission),
+    }
     planned = set(record.get("rebase_existing_families") or ())
     try:
         on_plan = _git_is_ancestor(onto, rebased)
@@ -14972,7 +15024,11 @@ def _authoring_rebase_result_refusal(
         actual = admission.collect(admission.review_base.sha, rebased) if on_plan else None
         if actual is not None and actual.existing_families <= planned:
             _authoring_require_route(actual, planned_risk=admission.planned_risk, record=record, at=rebased)
-            admission.record.update({"rebased_head_sha": rebased, "rebased_existing_families": sorted(planned)})
+            # Enforcement already decided from ``actual``. The receipt records that
+            # set, not the planned superset a dropped patch-equivalent commit inflated.
+            admission.record.update(
+                {"rebased_head_sha": rebased, "rebased_existing_families": sorted(actual.existing_families)}
+            )
             return None
     except _AuthoringReviewRefused as exc:
         return _AuthoringReviewRefused(exc.code, exc.detail, {**exc.record, **record})
