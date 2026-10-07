@@ -68,24 +68,34 @@ class GitHubRateLimited(RuntimeError):
         super().__init__(f"github_rate_limited reset_at={reset_at}")
 
 
-def _cache_directory(cwd):
+def _cache_directory():
+    """Use this module's primary checkout, or no disk cache when unresolved.
+
+    Read the checkout's own Git markers so a caller's cwd and repository-local
+    Git environment (including a push hook's GIT_DIR) cannot redirect writes.
+    """
     override = os.environ.get("LU_GITHUB_CACHE_DIR")
     if override:
         return Path(override)
-    root = Path(cwd or Path.cwd()).resolve()
-    for parent in (root, *root.parents):
-        marker = parent / ".git"
-        if marker.is_dir():
-            root = parent
-            break
+    try:
+        root = Path(__file__).resolve().parents[2]
+        marker = root / ".git"
         if marker.is_file():
             content = marker.read_text().strip()
-            if content.startswith("gitdir: "):
-                gitdir = (parent / content[8:]).resolve()
-                common = gitdir / "commondir"
-                root = (gitdir / common.read_text().strip()).resolve().parent if common.is_file() else gitdir.parent
-                break
-    return root / "batch_state" / "github-client"
+            if not content.startswith("gitdir: ") or not content[8:]:
+                return None
+            marker = (root / content[8:]).resolve()
+            common = marker / "commondir"
+            if common.is_file():
+                content = common.read_text().strip()
+                if not content:
+                    return None
+                marker = (marker / content).resolve()
+        if marker.name == ".git" and marker.is_dir() and (marker / "HEAD").is_file():
+            return marker.parent / "batch_state" / "github-client"
+    except (OSError, ValueError, RuntimeError):
+        pass
+    return None
 
 
 def parse_http(raw):
@@ -231,14 +241,20 @@ class GitHubClient:
             except OSError:
                 credential = "unconfigured-cli"
         self.scope = hashlib.sha256((self.host + "\0" + credential).encode()).hexdigest()
-        self.cache_dir = Path(cache_dir) if cache_dir is not None else _cache_directory(cwd)
+        self.cache_dir = Path(cache_dir) if cache_dir is not None else _cache_directory()
+        self._memory_db = None
 
     @contextmanager
     def _db(self):
-        self.cache_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-        path = self.cache_dir / "cache.sqlite3"
-        db = sqlite3.connect(path, timeout=5)
-        os.chmod(path, 0o600)
+        path = ":memory:"
+        if self.cache_dir is not None:
+            self.cache_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+            path = self.cache_dir / "cache.sqlite3"
+        db = self._memory_db if self._memory_db is not None else sqlite3.connect(path, timeout=5)
+        if self.cache_dir is None:
+            self._memory_db = db
+        else:
+            os.chmod(path, 0o600)
         db.execute(
             "CREATE TABLE IF NOT EXISTS cache (scope TEXT, key TEXT, body BLOB, headers TEXT, at REAL, PRIMARY KEY(scope,key))"
         )
@@ -249,7 +265,8 @@ class GitHubClient:
             with db:
                 yield db
         finally:
-            db.close()
+            if self.cache_dir is not None:
+                db.close()
 
     def _send(self, method, endpoint, headers, body, timeout):
         if self.transport:

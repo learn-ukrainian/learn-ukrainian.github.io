@@ -26,7 +26,7 @@ CAPTURE = runpy.run_path(str(FIXTURE / "capture.py"))
 # Literal digests bind the explicitly ordered #9960 merge revision; see SPEC.md.
 PINNED_DIGESTS = {
     "SHA256SUMS": "69e4bffafadde593bbcfd83f86583e2cc3dbcdcf6eeda5c87fee00553a9bae50",
-    "SPEC.md": "119ac2011cb315c591f86f85b784384c34b57a3b0160766a5268dfdcb4d34437",
+    "SPEC.md": "a366db2044af502a2b43e83db2b442c67dbfc25393e23f0e83ca34c82408295f",
     "baseline.json.gz": "c7fa505eed1f76ab1160c021ed381d2dc26c9119aa6b57290c14cb2ff565bafd",
     "capture.py": "4fda4d4c7d36f893a5324e0b7f0f6944eec11af8481df2953c3d4c0307d6b7a3",
     "inputs.json": "3078c95cf2275c51e302a9179c9986a60aa3d611aa568f50ec3fc6e915a46fd8",

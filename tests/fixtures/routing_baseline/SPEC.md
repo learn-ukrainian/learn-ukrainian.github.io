@@ -171,3 +171,8 @@ unchanged. Inputs and occurrence artifacts remain byte-identical.
 `aea2281aa9` (#9972) preserves forced-lane quota/health diagnostics on task
 records without changing the captured routing surface, so it changes no rows.
 Any difference beyond this attribution blocks regeneration.
+
+A subsequent merge includes `04de11ad89ba25fed59e37be34256e1e518538b9`
+(#9968), which anchors the GitHub client cache to its module checkout.
+Fresh captures on that final merge must reproduce both configurations exactly;
+this cache fix has no attributed routing-row changes.

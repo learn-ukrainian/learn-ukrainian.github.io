@@ -1,8 +1,10 @@
 """Fake-transport proofs for #9898; no GitHub network is used."""
 
 import json
+import os
 import sqlite3
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -725,24 +727,122 @@ def test_real_cli_transport_uses_conditional_headers_and_preserves_frozen_body(t
     assert store.request("POST", "repos/o/r/issues/1/comments", payload=body).value["body"].encode() == body
 
 
-@pytest.mark.parametrize("layout", ["primary", "linked", "plain"])
-def test_disk_cache_uses_runtime_state_of_git_common_root(tmp_path, monkeypatch, layout):
+@pytest.fixture
+def module_repository(tmp_path, monkeypatch):
+    """A real module-owned repository, independent of the caller's repository."""
     monkeypatch.delenv("LU_GITHUB_CACHE_DIR")
+    for key in tuple(os.environ):
+        if key.startswith(("GIT_", "PRE_COMMIT")):
+            monkeypatch.delenv(key)
     canonical = tmp_path / "canonical"
-    canonical.mkdir()
-    (canonical / ".git").mkdir()
-    worktree = tmp_path / "worktree"
-    worktree.mkdir()
-    if layout == "linked":
-        directory = canonical / ".git/worktrees/fixture"
-        directory.mkdir(parents=True)
-        (directory / "commondir").write_text("../..")
-        (worktree / ".git").write_text(f"gitdir: {directory}")
-        assert gh._cache_directory(worktree) == canonical / "batch_state/github-client"
-    elif layout == "primary":
-        assert gh._cache_directory(canonical) == canonical / "batch_state/github-client"
-    else:
-        assert gh._cache_directory(worktree) == worktree / "batch_state/github-client"
+    subprocess.run(["git", "init", str(canonical)], check=True, capture_output=True, timeout=30)
+    module = canonical / "scripts/common/github_client.py"
+    module.parent.mkdir(parents=True)
+    module.write_text("# fixture module location\n")
+    monkeypatch.setattr(gh, "__file__", str(module))
+    return canonical, module
+
+
+@pytest.mark.parametrize("layout", ["primary", "linked", "linked-relative"])
+def test_disk_cache_uses_runtime_state_of_module_git_common_root(module_repository, tmp_path, monkeypatch, layout):
+    canonical, module = module_repository
+    if layout != "primary":
+        subprocess.run(
+            ["git", "-C", str(canonical), "-c", "user.name=fixture", "-c", "user.email=fixture@example.com",
+             "commit", "--allow-empty", "-m", "fixture"],
+            check=True, capture_output=True, timeout=30,
+        )
+        worktree = tmp_path / "worktree"
+        subprocess.run(
+            ["git", "-C", str(canonical), "worktree", "add", "--detach", str(worktree)],
+            check=True, capture_output=True, timeout=30,
+        )
+        module = worktree / module.relative_to(canonical)
+        module.parent.mkdir(parents=True)
+        module.write_text("# fixture module location\n")
+        monkeypatch.setattr(gh, "__file__", str(module))
+        if layout == "linked-relative":
+            marker = worktree / ".git"
+            gitdir = Path(marker.read_text().strip()[8:])
+            marker.write_text(f"gitdir: {os.path.relpath(gitdir, worktree)}\n")
+            (gitdir / "commondir").write_text(str(canonical / ".git"))
+    assert gh._cache_directory() == canonical / "batch_state/github-client"
+
+
+@pytest.mark.parametrize("explicit_cwd", [False, True])
+def test_client_from_fixture_repository_leaves_its_status_clean(module_repository, tmp_path, monkeypatch, explicit_cwd):
+    canonical, _ = module_repository
+    caller = tmp_path / "caller"
+    subprocess.run(["git", "init", str(caller)], check=True, capture_output=True, timeout=30)
+    monkeypatch.chdir(caller)
+    # Push hooks export repository-local Git variables for the caller.
+    monkeypatch.setenv("GIT_DIR", str(caller / ".git"))
+    monkeypatch.setenv("GIT_COMMON_DIR", str(caller / ".git"))
+    monkeypatch.setenv("GIT_WORK_TREE", str(caller))
+    store = gh.GitHubClient(cwd=caller if explicit_cwd else None, transport=lambda *_: response({"number": 1}), env={})
+    assert store.request("GET", "repos/o/r/issues/1").value == {"number": 1}
+    assert store.cache_dir == canonical / "batch_state/github-client"
+    assert (store.cache_dir / "cache.sqlite3").is_file()
+    status = subprocess.run(["git", "status", "--porcelain"], check=True, capture_output=True, text=True, timeout=30)
+    assert status.stdout == ""
+    assert not (caller / "batch_state").exists()
+
+
+def test_cache_directory_override_wins_without_module_repository(tmp_path, monkeypatch):
+    override = tmp_path / "override"
+    monkeypatch.setenv("LU_GITHUB_CACHE_DIR", str(override))
+    monkeypatch.setattr(gh, "__file__", str(tmp_path / "plain/scripts/common/github_client.py"))
+    store = gh.GitHubClient(transport=lambda *_: response(1), env={})
+    assert store.request("GET", "user").value == 1
+    assert store.cache_dir == override
+    assert (override / "cache.sqlite3").is_file()
+
+
+@pytest.mark.parametrize("layout", ["plain", "empty-git-dir", "invalid-gitfile", "missing-gitdir", "empty-commondir", "unreadable"])
+def test_unresolved_module_repository_keeps_cache_and_budget_in_memory(tmp_path, monkeypatch, layout):
+    monkeypatch.delenv("LU_GITHUB_CACHE_DIR")
+    root = tmp_path / "plain"
+    module = root / "scripts/common/github_client.py"
+    module.parent.mkdir(parents=True)
+    module.write_text("# fixture module location\n")
+    monkeypatch.setattr(gh, "__file__", str(module))
+    marker = root / ".git"
+    if layout == "empty-git-dir":
+        marker.mkdir()
+    elif layout in {"invalid-gitfile", "unreadable"}:
+        marker.write_text("invalid gitfile\n")
+        if layout == "unreadable":
+            read_text = Path.read_text
+
+            def unreadable(path, *args, **kwargs):
+                if path == marker:
+                    raise PermissionError("fixture")
+                return read_text(path, *args, **kwargs)
+
+            monkeypatch.setattr(Path, "read_text", unreadable)
+    elif layout in {"missing-gitdir", "empty-commondir"}:
+        gitdir = root / "missing"
+        marker.write_text(f"gitdir: {gitdir}\n")
+        if layout == "empty-commondir":
+            gitdir.mkdir()
+            (gitdir / "commondir").write_text("")
+    monkeypatch.chdir(tmp_path)
+    calls = []
+    replies = [response({"number": 1}), response(None, status=304, remaining=0)]
+
+    def transport(*args):
+        calls.append(args)
+        return replies[len(calls) - 1]
+
+    store = gh.GitHubClient(transport=transport, env={}, clock=lambda: 1000)
+    assert store.cache_dir is None
+    assert store.request("GET", "repos/o/r/issues/1").value == {"number": 1}
+    assert store.request("GET", "repos/o/r/issues/1").status == 304
+    assert calls[1][2]["If-None-Match"] == '"one"'
+    assert store.request("GET", "repos/o/r/issues/1", allow_stale=True).stale
+    assert store.request("GET", "user").error == "github_rate_limited"
+    assert len(calls) == 2
+    assert not list(tmp_path.rglob("cache.sqlite3"))
 
 
 def test_absolute_search_url_observes_search_budget(tmp_path):
