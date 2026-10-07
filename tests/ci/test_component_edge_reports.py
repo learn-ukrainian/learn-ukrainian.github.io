@@ -232,6 +232,8 @@ def test_what_if_sound_both_tree_folds_and_ablation(commits, measurement, monkey
     graph['unresolved_edges'][1]['line'] = 2
     graph['unresolved_edges'].append(dict(path='src/1/reader.py', line=2, reason='unresolved-file-read'))
     manifest['exact_paths']['ignored.json'] = ['open-model-data']
+    for changed in ('deleted.txt', 'new-only.txt', 'new.txt', 'old.txt'):
+        manifest['exact_paths'][changed] = ['open-model-data']
     monkeypatch.setattr(c, 'import_graph', lambda *a: graph)
     monkeypatch.setattr(c, 'python_sources', lambda *a: sources)
     monkeypatch.setattr(c, 'tracked_paths', lambda *a: paths)
@@ -248,6 +250,9 @@ def test_what_if_sound_both_tree_folds_and_ablation(commits, measurement, monkey
     assert result['prs'][0]['rules']['R2']['unresolved_edge_count'] == 2
     assert result['prs'][0]['rules']['R3']['unresolved_edge_count'] == 1
     assert result['blocking_set_counts'] == {'R1': 1, 'R2_union': 1}
+    assert result['prs'][0]['rules']['R3']['components'] == ['atlas-data', 'open-model-data']
+    assert result['aggregate']['R3'] == dict(narrowed_pr_count=1, pr_count=1, share_narrowed=1.0,
+                                            total_would_skip_seconds=6.0, median_would_skip_seconds=6.0)
     assert 'UPPER BOUND, NOT ACHIEVABLE WITHOUT PROOF' in result['rule_labels']['R3']
     assert result == c.report_what_if(prs, manifest, root)
     prs.write_text('invalid\n')
