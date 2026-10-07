@@ -8,7 +8,6 @@ import subprocess
 from pathlib import Path
 
 import pytest
-import yaml
 
 from scripts.review.model_catalog import load_model_catalog
 from tests.test_launcher_contract import REPO, run_launcher
@@ -297,9 +296,7 @@ def _run_interactive(tmp_path: Path, *args: str, env: dict[str, str] | None = No
 
 def test_cursor_seat_pin_matches_the_catalog_seat() -> None:
     """The launcher pin is orchestrator_seats.cursor model_id at its effort."""
-    seat = yaml.safe_load((REPO / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))[
-        "orchestrator_seats"
-    ]["cursor"]
+    seat = load_model_catalog()["orchestrator_seats"]["cursor"]
     core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
     assert f"LC_CURSOR_SEAT_PIN={seat['model_id']}-{seat['effort']}\n" in core
 

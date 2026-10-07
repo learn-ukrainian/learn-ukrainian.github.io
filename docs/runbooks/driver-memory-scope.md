@@ -159,6 +159,17 @@ Successful dispatch scopes continue under `lu-dispatch.slice`.
 The launcher reports live parent `memory.current` and `memory.swap.current`.
 Dispatch admission reads `memory.current`, `memory.max`, `memory.swap.current`
 and `memory.swap.max` from the manager's actual slice cgroup on every sample.
+It also checks the shared `lu.slice` pool (#9975): a new write worker is
+refused when the pool's non-cache use (`memory.current` minus `active_file` and
+`inactive_file` from `memory.stat`) plus `DISPATCH_WORKER_MEM_RESERVE_GIB`
+(default 2 GiB) would exceed `memory.high` (`memory.max` only when
+`memory.high` is the literal `max`). The nightly data tier runs two separate
+checks, each requiring 4 GiB of headroom: for `lu-dispatch.slice` it subtracts
+non-cache use from the slice's systemd `MemoryMax`, and for `lu.slice` it uses
+the same pool check as admission, against `memory.high`. Without the cgroup
+files, or with a `memory.high`/`memory.max` that is neither a number nor `max`,
+the pool check is skipped and the reason appears in the admitted line and in a
+warning (admission) or on stderr (data tier).
 Persistent charges therefore remain visible after a writer exits. Samples are
 observations, not reservations or guarantees against concurrent growth.
 

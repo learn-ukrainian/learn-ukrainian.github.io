@@ -7,11 +7,15 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 from scripts.agent_runtime.kimi_admission import CYRILLIC, ContentTree, content_problem, worktree_trees
-from scripts.review.model_catalog import canonical_model_id, load_model_catalog
+from scripts.review.model_catalog import (
+    MECHANICAL_FAMILIES,
+    canonical_model_id,
+    load_model_catalog,
+)
+from scripts.review.model_catalog import (
+    MECHANICAL_ROLES as MECHANICAL_ROLES,
+)
 from scripts.review.security_paths import is_security_sensitive_change
-
-MECHANICAL_FAMILIES = frozenset({"routine_mechanical", "mechanical_classification", "readonly_recon"})
-MECHANICAL_ROLES = MECHANICAL_FAMILIES | {"mechanical_only"}
 
 
 class MechanicalAdmissionRefused(ValueError):

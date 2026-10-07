@@ -5,7 +5,8 @@ Authorities (read-only):
   - scripts/config/model_catalog.yaml → orchestrator_seats
   - scripts/config/fleet_communications.yaml → endpoints[*].formal_review_eligible
 
-Marked blocks are exact projections. This lint never rewrites prose or config.
+Marked blocks are exact projections, with catalog role references resolved first.
+This lint never rewrites prose or config.
 Missing/malformed markers fail closed. See #5642 / Sol strengthen Δ1.
 """
 
@@ -20,6 +21,10 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.review.role_resolution import resolve_routing_reference
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CATALOG_PATH = PROJECT_ROOT / "scripts/config/model_catalog.yaml"
@@ -89,6 +94,14 @@ def load_orchestrator_seats(catalog_path: Path = CATALOG_PATH) -> dict[str, dict
         row: dict[str, str] = {}
         for field in SEAT_FIELDS:
             value = body.get(field)
+            if isinstance(value, dict) and "role" in value:
+                label = f"{catalog_path}: orchestrator_seats.{seat}.{field}"
+                try:
+                    value = resolve_routing_reference(value, catalog)
+                except (ValueError, KeyError, TypeError, AttributeError) as exc:
+                    raise ValueError(f"{label}: cannot resolve role reference: {exc}") from exc
+                if not isinstance(value, str) or not value.strip():
+                    raise ValueError(f"{label}: role reference must resolve to a non-empty string")
             if not isinstance(value, str) or not value.strip():
                 raise ValueError(
                     f"{catalog_path}: orchestrator_seats.{seat}.{field} must be a non-empty string"

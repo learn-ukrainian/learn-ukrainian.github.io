@@ -1,4 +1,4 @@
-"""Additive seat/role resolution; existing routing consumers remain on v1.
+"""Shared seat/role resolution with a migration-only v1 consumer projection.
 
 The expansion adapter is migration-only and is removed in #9302 PR 4. Model
 identity metadata lives solely in ``models``. Legacy receipt labels are never
@@ -17,6 +17,7 @@ from shlex import split as shell_split
 from typing import Any
 
 from scripts.review.model_catalog import (
+    CATALOG_SCHEMA_VERSIONS,
     VALID_CODEX_EFFORTS,
     VALID_RISKS,
     ModelCatalogError,
@@ -26,7 +27,7 @@ from scripts.review.model_catalog import (
     risk_reviewer_refusal,
 )
 
-ROUTING_SCHEMA_VERSION = "model-catalog.v1.1"
+ROUTING_SCHEMA_VERSION = CATALOG_SCHEMA_VERSIONS["routing"]
 _STABLE_NAME = re.compile(r"[a-z][a-z0-9_]*\Z")
 _SELECTORS = frozenset({"seat", "role", "select_binding", "routes"})
 _ROLE_FIELDS = _SELECTORS | {"cardinality", "order_by", "required_model_roles", "risk"}
@@ -54,7 +55,8 @@ def _strings(value: Any, label: str, *, empty: bool = False) -> list[str]:
 def _select_routes(role: str, catalog: dict[str, Any], stack: tuple[str, ...] = ()) -> list[tuple[str, str]]:
     if role in stack:
         raise ModelCatalogError(f"roles contain a cycle: {' -> '.join((*stack, role))}")
-    roles, seats = catalog["roles"], catalog["seats"]
+    roles = _mapping(catalog.get("roles"), "roles")
+    seats = _mapping(catalog.get("seats"), "seats")
     if role not in roles:
         raise ModelCatalogError(f"unknown routing role {role!r}")
     spec = _mapping(roles[role], f"roles.{role}")
@@ -85,8 +87,14 @@ def _select_routes(role: str, catalog: dict[str, Any], stack: tuple[str, ...] = 
             raise ModelCatalogError(f"roles.{role}.select_binding must be a non-empty string")
         if spec.get("order_by") != "priority":
             raise ModelCatalogError(f"roles.{role}.order_by must be priority")
-        selected = sorted((name for name, seat in seats.items() if binding in seat["bindings"]),
-                          key=lambda name: (seats[name]["priority"], name))
+        selected = sorted(
+            (
+                name
+                for name, seat in seats.items()
+                if binding in _strings(seat.get("bindings"), f"seats.{name}.bindings")
+            ),
+            key=lambda name: (seats[name]["priority"], name),
+        )
         if not selected:
             raise ModelCatalogError(f"roles.{role} references an unheld binding {binding!r}")
     return [(seat, route) for seat in selected for route in seats[seat]["routes"]]
@@ -108,7 +116,9 @@ def _expanded_route(seat: dict[str, Any], route: dict[str, Any], models: dict[st
 
 def expanded_legacy_view(catalog: dict[str, Any] | None = None) -> dict[str, Any]:
     """Return an independent v1 view, expanding receipt labels from stable seats."""
-    catalog = catalog if catalog is not None else load_model_catalog()
+    from scripts.review.model_catalog import validate_catalog
+
+    catalog = validate_catalog(catalog if catalog is not None else load_model_catalog())
     result = deepcopy(catalog)
     if "seats" not in catalog:
         return result
@@ -122,14 +132,14 @@ def expanded_legacy_view(catalog: dict[str, Any] | None = None) -> dict[str, Any
         model.pop("routing_wire_ids", None)
     for key in ("seats", "roles", "routing_schema_version"):
         result.pop(key, None)
-    result["schema_version"] = "model-catalog.v1"
+    result["schema_version"] = CATALOG_SCHEMA_VERSIONS["legacy"]
     return result
 
 
 def validate_role_catalog(catalog: dict[str, Any]) -> None:
     """Validate references and eligibility without mutating the legacy catalog."""
     extension = {"seats", "roles", "routing_schema_version"} & catalog.keys()
-    if not extension and catalog["schema_version"] == "model-catalog.v1":
+    if not extension and catalog["schema_version"] == CATALOG_SCHEMA_VERSIONS["legacy"]:
         return
     if catalog.get("routing_schema_version") != ROUTING_SCHEMA_VERSION:
         raise ModelCatalogError(f"routing_schema_version must be {ROUTING_SCHEMA_VERSION}")
@@ -140,8 +150,14 @@ def validate_role_catalog(catalog: dict[str, Any]) -> None:
         if "routing_wire_ids" not in model:
             continue
         for transport, wire in _mapping(model["routing_wire_ids"], f"models.{model_id}.routing_wire_ids").items():
-            if transport not in model["transports"] or not isinstance(wire, str) or canonical_model_id(wire, catalog) != model_id:
-                raise ModelCatalogError(f"models.{model_id}.routing_wire_ids contains an unsupported transport or mismatched identity")
+            if (
+                transport not in model["transports"]
+                or not isinstance(wire, str)
+                or canonical_model_id(wire, catalog) != model_id
+            ):
+                raise ModelCatalogError(
+                    f"models.{model_id}.routing_wire_ids contains an unsupported transport or mismatched identity"
+                )
     legacy_names: set[str] = set()
     identities: set[tuple[str, str, str]] = set()
     for name, raw in seats.items():
@@ -163,9 +179,14 @@ def validate_role_catalog(catalog: dict[str, Any]) -> None:
             raise ModelCatalogError(f"seats.{name} requires a decision_reference; tier grants no authority")
         if "qualification" in seat:
             evidence = _mapping(seat["qualification"], f"seats.{name}.qualification")
-            if (set(evidence) != {"model_id", "bindings", "reference"} or evidence["model_id"] != model_id
-                    or not isinstance(evidence["reference"], str) or not evidence["reference"].strip()
-                    or not set(_strings(evidence["bindings"], f"seats.{name}.qualification.bindings")) >= set(seat["bindings"])):
+            if (
+                set(evidence) != {"model_id", "bindings", "reference"}
+                or evidence["model_id"] != model_id
+                or not isinstance(evidence["reference"], str)
+                or not evidence["reference"].strip()
+                or not set(_strings(evidence["bindings"], f"seats.{name}.qualification.bindings"))
+                >= set(seat["bindings"])
+            ):
                 raise ModelCatalogError(f"seats.{name} qualification mismatches holder or bindings")
         for route_name, route_raw in _mapping(seat.get("routes"), f"seats.{name}.routes").items():
             if not isinstance(route_name, str) or not _STABLE_NAME.fullmatch(route_name):
@@ -203,8 +224,9 @@ def validate_role_catalog(catalog: dict[str, Any]) -> None:
                 # invocations is enforced by the frozen fixture, not by refusing
                 # formerly valid v1 input syntax.
                 legacy = catalog["review_candidates"][label]
-                if ({key: value for key, value in expanded.items() if key != "invocation"}
-                        != {key: value for key, value in legacy.items() if key != "invocation"}):
+                if {key: value for key, value in expanded.items() if key != "invocation"} != {
+                    key: value for key, value in legacy.items() if key != "invocation"
+                }:
                     raise ModelCatalogError(f"seats.{name}.{route_name} changes the legacy candidate {label!r}")
     if legacy_names != set(catalog["review_candidates"]):
         raise ModelCatalogError("seats must cover every legacy review candidate")
@@ -238,7 +260,9 @@ def validate_role_catalog(catalog: dict[str, Any]) -> None:
                 allowed_labels = {label for rung in catalog["review_ladders"][risk] for label in rung}
                 if route.get("legacy_name") not in allowed_labels:
                     raise ModelCatalogError(f"roles.{role} introduces a route outside the existing risk ladder")
-                if model["family"] in {"google", "moonshot", "deepseek"} or route["route"] == "agy":
+                from scripts.review.family_exclusions import family_exclusion
+
+                if family_exclusion(family=model["family"], route=route["route"], transport=route["transport"]):
                     raise ModelCatalogError(f"roles.{role} violates code-review family exclusions")
                 if refusal := risk_reviewer_refusal(model_id, risk, catalog):
                     raise ModelCatalogError(f"roles.{role}: {refusal}")
@@ -281,9 +305,14 @@ class RoleResolution:
 
 
 def resolve_role(
-    role: str, *, catalog: dict[str, Any] | None = None, purpose: str,
-    transport: str | None = None, family: str | None = None,
-    context: dict[str, Any] | None = None, health: dict[str, Any] | None = None,
+    role: str,
+    *,
+    catalog: dict[str, Any] | None = None,
+    purpose: str,
+    transport: str | None = None,
+    family: str | None = None,
+    context: dict[str, Any] | None = None,
+    health: dict[str, Any] | None = None,
 ) -> RoleResolution:
     """Resolve stable roles to concrete pins and evidence, without side effects.
 
@@ -293,18 +322,43 @@ def resolve_role(
     This envelope does not replace runtime admission or formal-review receipts.
     """
     from scripts.review.model_catalog import validate_catalog
-    from scripts.review.reviewer_resolver import _health_rank, normalize_routing_snapshot
+
+    catalog = validate_catalog(catalog if catalog is not None else load_model_catalog())
+    return _resolve_role(
+        role, catalog=catalog, purpose=purpose, transport=transport, family=family, context=context, health=health
+    )
+
+
+def _resolve_role(
+    role: str,
+    *,
+    catalog: dict[str, Any],
+    purpose: str,
+    transport: str | None = None,
+    family: str | None = None,
+    context: dict[str, Any] | None = None,
+    health: dict[str, Any] | None = None,
+) -> RoleResolution:
+    """The shared resolver implementation, also used while validating authored references.
+
+    The catalog validator validates the resolved view immediately afterwards.
+    This private entry avoids recursively loading/validating the same catalog.
+    It has no launch authority and never imports a partially initialized reviewer.
+    """
 
     if not isinstance(purpose, str) or purpose not in {"inspect", "launch"}:
         raise ModelCatalogError("purpose must be inspect or launch")
-    catalog = validate_catalog(catalog if catalog is not None else load_model_catalog())
     if "roles" not in catalog:
         raise ModelCatalogError("catalog has no routing roles")
     if not isinstance(role, str):
         raise ModelCatalogError("role must be a stable routing role name")
     context = {} if context is None else context
     if not isinstance(context, dict) or set(context) - {
-        "required_capabilities", "isolation_required", "excluded_seats", "excluded_families", "pinned_model",
+        "required_capabilities",
+        "isolation_required",
+        "excluded_seats",
+        "excluded_families",
+        "pinned_model",
         "data_egress_policy",
     }:
         raise ModelCatalogError("unsupported role context")
@@ -318,7 +372,12 @@ def resolve_role(
     pinned = context.get("pinned_model")
     if pinned is not None and canonical_model_id(pinned, catalog) is None:
         raise ModelCatalogError("context.pinned_model must name a concrete catalog identity")
-    normalized = normalize_routing_snapshot(health)
+    if health is None:
+        normalized = {}
+    else:
+        from scripts.review.reviewer_resolver import normalize_routing_snapshot
+
+        normalized = normalize_routing_snapshot(health)
     spec = catalog["roles"].get(role, {})
     while "role" in spec:
         spec = catalog["roles"][spec["role"]]
@@ -343,7 +402,10 @@ def resolve_role(
             exclusions.append("isolation_required")
         if pinned is not None and canonical_model_id(pinned, catalog) != model_id:
             exclusions.append("explicit_pin_mismatch")
-        if route.get("requires_data_egress_policy") and context.get("data_egress_policy") != route["requires_data_egress_policy"]:
+        if (
+            route.get("requires_data_egress_policy")
+            and context.get("data_egress_policy") != route["requires_data_egress_policy"]
+        ):
             exclusions.append("data_egress_policy_required")
         if "risk" in spec:
             # Catalog evidence only: use the supplied snapshot, not a module's
@@ -357,7 +419,13 @@ def resolve_role(
             required_roles = scheduler["profile_risk_role_order"]["code"][spec["risk"]]
             if not set(suitability) & set(required_roles):
                 exclusions.append("review_role_suitability_missing")
-        keys = [route.get("legacy_name"), route["route"], model_id, model["family"], *sorted(route.get("health_keys", []))]
+        keys = [
+            route.get("legacy_name"),
+            route["route"],
+            model_id,
+            model["family"],
+            *sorted(route.get("health_keys", [])),
+        ]
         health_key = next((key for key in keys if key in normalized), None)
         observed = normalized.get(health_key)
         wire_id = model["routing_wire_ids"][route["transport"]]
@@ -365,15 +433,109 @@ def resolve_role(
         if purpose == "launch" and invocation_model(shell_join(argv)) is None:
             argv.extend(["--model", wire_id])
         qualification = seat.get("qualification", {})
-        candidates.append(RoleCandidate(
-            seat=seat_name, route_name=route_name, model_id=model_id, family=model["family"],
-            route=route["route"], transport=route["transport"], wire_id=wire_id, effort=route["effort"],
-            argv=tuple(argv), legacy_label=route.get("legacy_name"), decision_reference=seat["decision_reference"],
-            qualification_reference=qualification.get("reference"), health=observed or "unknown",
-            health_rank=_health_rank(observed),
-            health_provenance={"snapshot_supplied": health is not None, "normalized_key": health_key,
-                               "diagnostic": "HEALTH_UNKNOWN" if observed is None else None},
-            exclusion_reasons=tuple(exclusions),
-        ))
-    digest = hashlib.sha256(json.dumps(catalog, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        candidates.append(
+            RoleCandidate(
+                seat=seat_name,
+                route_name=route_name,
+                model_id=model_id,
+                family=model["family"],
+                route=route["route"],
+                transport=route["transport"],
+                wire_id=wire_id,
+                effort=route["effort"],
+                argv=tuple(argv),
+                legacy_label=route.get("legacy_name"),
+                decision_reference=seat["decision_reference"],
+                qualification_reference=qualification.get("reference"),
+                health=observed or "unknown",
+                health_rank=_role_health_rank(observed),
+                health_provenance={
+                    "snapshot_supplied": health is not None,
+                    "normalized_key": health_key,
+                    "diagnostic": "HEALTH_UNKNOWN" if observed is None else None,
+                },
+                exclusion_reasons=tuple(exclusions),
+            )
+        )
+    digest = hashlib.sha256(
+        json.dumps(catalog, sort_keys=True, separators=(",", ":"), default=str).encode()
+    ).hexdigest()
     return RoleResolution("role-resolution.v1", role, purpose, digest, tuple(candidates))
+
+
+def _role_health_rank(observed: str | None) -> int:
+    if observed is None:
+        return 0  # Existing fail-open rank; avoids reviewer import during catalog bootstrap.
+    from scripts.review.reviewer_resolver import _health_rank
+
+    return _health_rank(observed)
+
+
+def resolve_routing_reference(reference: dict[str, Any], catalog: dict[str, Any]) -> Any:
+    """Resolve an authored catalog reference with the shared role implementation.
+
+    Seat/route filters distinguish alternate transports without creating moving
+    identity aliases. Concrete explicit pins never enter this path.
+    """
+    if set(reference) - {"role", "seat", "route_name", "transport", "field"}:
+        raise ModelCatalogError("routing reference contains unsupported fields")
+    role = reference.get("role")
+    result = _resolve_role(role, catalog=catalog, purpose="inspect", transport=reference.get("transport"))
+    candidates = [
+        c
+        for c in result.candidates
+        if ("seat" not in reference or c.seat == reference["seat"])
+        and ("route_name" not in reference or c.route_name == reference["route_name"])
+        and ("transport" not in reference or c.transport == reference["transport"])
+    ]
+    field = reference.get("field", "model_id")
+    if field not in {"model_id", "wire_id", "legacy_label", "candidate"}:
+        raise ModelCatalogError("routing reference has unsupported result field")
+    if field == "candidate":
+        if len(candidates) != 1:
+            raise ModelCatalogError("candidate reference must resolve to exactly one seat route")
+        c = candidates[0]
+        return _expanded_route(
+            catalog["seats"][c.seat], catalog["seats"][c.seat]["routes"][c.route_name], catalog["models"]
+        )
+    values = {getattr(c, field) for c in candidates}
+    if len(values) != 1 or None in values:
+        raise ModelCatalogError(f"routing reference must resolve to exactly one {field}")
+    return next(iter(values))
+
+
+def expand_routing_references(catalog: dict[str, Any]) -> dict[str, Any]:
+    """Build the validated v1 consumer view from role references until PR 4.
+
+    Only routing sections are expanded. Models, seats, role definitions, explicit
+    source-pin keys and historical provenance remain authored identity metadata.
+    Existing concrete v1 fixtures are accepted without rewriting or weakening gates.
+    """
+    sections = (
+        "execution_routing",
+        "review_candidates",
+        "review_ladders",
+        "review_scheduler",
+        "orchestrator_seats",
+        "formal_cf_defaults",
+        "budget_substitution_models",
+    )
+
+    def expand(value):
+        if isinstance(value, dict):
+            if "role" in value and set(value) <= {"role", "seat", "route_name", "transport", "field"}:
+                return resolve_routing_reference(value, catalog)
+            return {key: expand(item) for key, item in value.items()}
+        if isinstance(value, list):
+            return [expand(item) for item in value]
+        return value
+
+    # Preserve references while resolving every section against one snapshot.
+    result = catalog.copy()
+    try:
+        for section in sections:
+            if section in catalog:
+                result[section] = expand(catalog[section])
+    except (KeyError, TypeError, AttributeError) as exc:
+        raise ModelCatalogError(f"invalid routing reference: {exc}") from exc
+    return result

@@ -15,17 +15,26 @@ import yaml
 # Launchers invoke this file directly, without a repository PYTHONPATH.
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+if __name__ == "__main__":
+    # Delegate before defining a second ModelCatalogError class. Role validation
+    # and launcher entry points must use the same package module instance.
+    from scripts.review.model_catalog import _main as package_main
+
+    raise SystemExit(package_main())
 
 if TYPE_CHECKING:
     from scripts.review.role_resolution import RoleResolution
 
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
 PROJECT_ROOT = CATALOG_PATH.parents[2]
-EXPECTED_SCHEMA_VERSION = "model-catalog.v1"
-SUPPORTED_SCHEMA_VERSIONS = frozenset({EXPECTED_SCHEMA_VERSION, "model-catalog.v1.1"})
+CATALOG_SCHEMA_VERSIONS = {"legacy": "model-catalog.v1", "routing": "model-catalog.v1.1"}
+EXPECTED_SCHEMA_VERSION = CATALOG_SCHEMA_VERSIONS["legacy"]
+SUPPORTED_SCHEMA_VERSIONS = frozenset(CATALOG_SCHEMA_VERSIONS.values())
 VALID_LIFECYCLES = frozenset({"active", "fallback", "hold", "retired"})
 VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
 VALID_REVIEW_PROFILES = frozenset({"code", "infra"})
+MECHANICAL_FAMILIES = frozenset({"routine_mechanical", "mechanical_classification", "readonly_recon"})
+MECHANICAL_ROLES = MECHANICAL_FAMILIES | {"mechanical_only"}
 # ``review_scheduler.activity_roles`` keys (#9583): ``review`` admits a review,
 # critique or approval of record; ``consult`` admits an ACP ask, consult or
 # discussion together with the ``review`` roles.
@@ -88,9 +97,11 @@ LUNA_ESCALATION_TRIGGERS = frozenset(
         "final_disposition",
     }
 )
-CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ("grok-4.7", "composer-2.5")
 CURSOR_AUTO_EXPECTED_ATTESTATION_RULE: str = "driver_of_record_requires_attested_resolved_model"
 CURSOR_AUTO_EXPECTED_RESOLUTION: str = "cursor_family"
+# Fixed v1-only compatibility policy; role-bearing catalogs derive these pins.
+# Retired with the legacy catalog interface in #9302 PR 4.
+CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ("grok-4.7", "composer-2.5")
 # Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding
 # task; every other Cursor use runs the seat's concrete pin or another allowlisted pin.
 CURSOR_AUTO_EXPECTED_SCOPE: str = "write_implementation_dispatch_with_green_dor"
@@ -102,7 +113,6 @@ CURSOR_MODEL_NOT_APPROVED_CODE = "cursor_model_not_approved"
 # Composer shares the Kimi lineage (never a reviewer), Gemini never reviews
 # code, DeepSeek is excluded, and the decision admits non-Anthropic models only.
 CURSOR_FORMAL_REVIEW_EXCLUDED_FAMILIES = frozenset({"moonshot", "google", "deepseek", "anthropic"})
-
 
 
 class ModelCatalogError(ValueError):
@@ -295,7 +305,7 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
         )
 
 
-def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
+def _validate_orchestrator_seats(raw: Any, models: dict[str, Any], catalog: dict[str, Any]) -> None:
     seats = _require_mapping(raw, "orchestrator_seats")
     for seat_name, raw_seat in seats.items():
         _require_string(seat_name, "orchestrator seat name")
@@ -312,9 +322,7 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
                 f"orchestrator_seats.{seat_name}.escalate_model_id references unknown model {esc_model!r}"
             )
         if models[esc_model]["lifecycle"] != "active":
-            raise ModelCatalogError(
-                f"orchestrator_seats.{seat_name}.escalate_model_id must reference an active model"
-            )
+            raise ModelCatalogError(f"orchestrator_seats.{seat_name}.escalate_model_id must reference an active model")
         _require_routable_model(models, esc_model, f"orchestrator_seats.{seat_name}.escalate_model_id")
         if "fallback_model_id" in seat:
             fallback = _require_string(seat["fallback_model_id"], f"orchestrator_seats.{seat_name}.fallback_model_id")
@@ -326,9 +334,10 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
                 seat.get("auto_allowlist"),
                 "orchestrator_seats.cursor.auto_allowlist",
             )
-            if tuple(allowlist) != CURSOR_AUTO_EXPECTED_ALLOWLIST:
+            expected_allowlist = _cursor_role_pins(catalog)
+            if tuple(allowlist) != expected_allowlist:
                 raise ModelCatalogError(
-                    f"orchestrator_seats.cursor.auto_allowlist must equal exactly {list(CURSOR_AUTO_EXPECTED_ALLOWLIST)}, got {allowlist}"
+                    f"orchestrator_seats.cursor.auto_allowlist must equal exactly {list(expected_allowlist)}, got {allowlist}"
                 )
             if model_id not in allowlist:
                 raise ModelCatalogError(
@@ -376,7 +385,9 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
         else:
             model_id = seat["model_id"]
             if model_id not in models:
-                raise ModelCatalogError(f"orchestrator_seats.{seat_name}.model_id references unknown model {model_id!r}")
+                raise ModelCatalogError(
+                    f"orchestrator_seats.{seat_name}.model_id references unknown model {model_id!r}"
+                )
             if models[model_id]["lifecycle"] != "active":
                 raise ModelCatalogError(f"orchestrator_seats.{seat_name}.model_id must reference an active model")
             _require_routable_model(models, model_id, f"orchestrator_seats.{seat_name}.model_id")
@@ -506,7 +517,6 @@ def _validate_formal_cf_defaults(raw: Any, models: dict[str, Any]) -> None:
             _require_routable_model(models, member, f"formal_cf_defaults.{name}.family_models")
 
 
-
 def _lane_catalog_transport(catalog: dict[str, Any], lane: str) -> str | None:
     endpoints = (catalog.get("review_scheduler") or {}).get("endpoints") or {}
     endpoint = endpoints.get(lane) if isinstance(endpoints, dict) else None
@@ -621,6 +631,9 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             f"schema_version must be one of {sorted(SUPPORTED_SCHEMA_VERSIONS)!r}, got {catalog.get('schema_version')!r}"
         )
 
+    from scripts.review.role_resolution import expand_routing_references
+
+    catalog = expand_routing_references(catalog)
     reviewed_on = catalog.get("reviewed_on")
     if isinstance(reviewed_on, date):
         reviewed_date = reviewed_on
@@ -677,16 +690,14 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             raise ModelCatalogError(f"models.{model_id}.lifecycle must be one of {sorted(VALID_LIFECYCLES)}")
         for field in ("roles", "transports", "strengths", "weaknesses", "sources"):
             values = _require_string_list(
-                model.get(field), f"models.{model_id}.{field}",
+                model.get(field),
+                f"models.{model_id}.{field}",
                 allow_empty=field == "transports" and lifecycle == "retired",
             )
             if field == "sources" and any(not source.startswith("https://") for source in values):
                 raise ModelCatalogError(f"models.{model_id}.sources must use https URLs")
-        if "mechanical_only" in model["roles"]:
-            from scripts.agent_runtime.mechanical_admission import MECHANICAL_ROLES
-
-            if not set(model["roles"]) <= MECHANICAL_ROLES:
-                raise ModelCatalogError(f"models.{model_id}: mechanical-only seats cannot hold code, language, review, design or driver roles")
+        if "mechanical_only" in model["roles"] and not set(model["roles"]) <= MECHANICAL_ROLES:
+            raise ModelCatalogError(f"models.{model_id}: mechanical-only seats cannot hold code, language, review, design or driver roles")
         if lifecycle == "retired" and model["transports"]:
             raise ModelCatalogError(f"models.{model_id}.transports must be empty for retired models")
         if model["family"] in {"openai", "xai"} and "hermes" in model["transports"]:
@@ -732,7 +743,11 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         candidate = _require_mapping(raw, f"review_candidates.{name}")
         model_id = _require_string(candidate.get("model_id"), f"review_candidates.{name}.model_id")
         transport_raw = candidate.get("transport")
-        if isinstance(transport_raw, str) and transport_raw == "cursor" and model_id.casefold() in {"auto", "cursor", "composer"}:
+        if (
+            isinstance(transport_raw, str)
+            and transport_raw == "cursor"
+            and model_id.casefold() in {"auto", "cursor", "composer"}
+        ):
             raise ModelCatalogError(f"review_candidates.{name} requires a concrete Cursor model id, not {model_id!r}")
         if model_id.casefold() in {"auto", "cursor:auto"}:
             raise ModelCatalogError(f"review_candidates.{name} cannot use {model_id!r} as a formal review candidate")
@@ -799,9 +814,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                     value = parts[index + 1] if index + 1 < len(parts) else ""
                 invoked = resolve_catalog_model_id(value, catalog)
                 if invoked != model_id:
-                    raise ModelCatalogError(
-                        f"review_candidates.{name}.invocation model does not match {model_id!r}"
-                    )
+                    raise ModelCatalogError(f"review_candidates.{name}.invocation model does not match {model_id!r}")
         profiles = _require_string_list(candidate.get("review_profiles"), f"review_candidates.{name}.review_profiles")
         if any(profile != profile.casefold() for profile in profiles):
             raise ModelCatalogError(f"review_candidates.{name}.review_profiles must use lowercase profile names")
@@ -831,7 +844,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             if not isinstance(values, list) or not all(isinstance(item, str) and item.strip() for item in values):
                 raise ModelCatalogError(f"review_candidates.{name}.{field} must be a list of strings")
 
-    _validate_orchestrator_seats(catalog.get("orchestrator_seats"), models)
+    _validate_orchestrator_seats(catalog.get("orchestrator_seats"), models, catalog)
     _validate_review_scheduler(catalog.get("review_scheduler"), models)
     _validate_activity_role_holders(catalog)
     _validate_cursor_review_seats(catalog)
@@ -969,6 +982,36 @@ def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str
     return model_id
 
 
+def _cursor_role_pins(catalog: dict[str, Any]) -> tuple[str, ...]:
+    """The same approved logical seats after a holder rotation; v1 is PR 4 compatibility."""
+    if "roles" not in catalog:
+        return CURSOR_AUTO_EXPECTED_ALLOWLIST
+    from scripts.review.role_resolution import resolve_routing_reference
+
+    return tuple(
+        resolve_routing_reference({"role": "legacy_reviewers", "seat": seat}, catalog)
+        for seat in ("xai_reviewer", "cursor_coder")
+    )
+
+
+def routing_model(section: str, lane: str, field: str = "model_id") -> str:
+    """Read a resolved catalog routing field from the one shared role projection."""
+    source = load_model_catalog()
+    value = source[section][lane][field]
+    if not isinstance(value, str):
+        raise ModelCatalogError(f"{section}.{lane}.{field} is not a resolved model")
+    return value
+
+
+def substitution_default_model(lane: str) -> str | None:
+    """Role-backed substitution defaults; registry-only lanes migrate in PR 3c."""
+    if lane == "cursor":
+        return routing_model("orchestrator_seats", lane)
+    if lane in {"codex", "claude", "agy"}:
+        return routing_model("formal_cf_defaults", lane)
+    return None
+
+
 @dataclass(frozen=True)
 class BoundedExecutionPolicy:
     """The catalog's bounded-worker admission facts (``execution_routing.sol_advised_bounded``)."""
@@ -1000,8 +1043,9 @@ def bounded_execution_policy(catalog: dict[str, Any] | None = None) -> BoundedEx
 
 def cursor_pinned_models(catalog: dict[str, Any] | None = None) -> tuple[str, ...]:
     """The concrete Cursor pins that replace Auto: the seat pin first, then the rest of the allowlist."""
-    seat = (catalog or load_model_catalog())["orchestrator_seats"]["cursor"]
-    pin = seat["model_id"]
+    source = catalog or load_model_catalog()
+    seat = source["orchestrator_seats"]["cursor"]
+    pin = seat["model_id"]  # load_model_catalog resolves the authored role reference; explicit snapshots stay explicit.
     return (pin, *(model for model in seat["auto_allowlist"] if model != pin))
 
 
@@ -1373,7 +1417,3 @@ def catalog_age_days(catalog: dict[str, Any], *, as_of: date | None = None) -> i
 
 def catalog_is_stale(catalog: dict[str, Any], *, as_of: date | None = None) -> bool:
     return catalog_age_days(catalog, as_of=as_of) > int(catalog["refresh_after_days"])
-
-
-if __name__ == "__main__":
-    raise SystemExit(_main())

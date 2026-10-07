@@ -48,12 +48,15 @@ their verdicts and traces are unchanged.
 
 The catalog changes are exactly the new Haiku model metadata and the
 `routine_mechanical` role added to Sonnet for the task fallback. The additive
-mechanical seat/task roles are excluded by the capture's existing v1 projection.
+mechanical seat/task roles are excluded by the legacy catalog projection and
+included by the PR 2 role-holder and role-resolution surfaces.
 Fallback configuration adds one routine mechanical substitution description.
 Registry, capacity, dispatch, adapters, launchers and source-contract surfaces
 remain identical. The occurrence ledger remains byte-identical and pinned to
 its historical source census; it does not claim to census the new model. The
-input matrix changes only by those eight author cases. `SHA256SUMS` binds the
+reviewer input matrix changes only by those eight author cases. The role matrix
+adds the three approved mechanical roles; approval-contract rows add Haiku as
+an author, without granting it review or designated-approval authority. `SHA256SUMS` binds the
 new executable fixture and inputs, and the unchanged occurrence ledger.
 
 ## Inputs and captured evidence
@@ -135,3 +138,97 @@ candidate is already migrated or a normative authority rule.
 
 Stop on any unexplained output difference. The baseline is mechanism and
 regression evidence, not a real-route qualification or independent PR approval.
+
+
+## PR 2 strengthening (first commit, untouched production code)
+
+Executable source: `0d98123470b5a6870512571d01590f3e3210b268` (`origin/main`
+at intake). The capture driver runs outside a detached checkout of that SHA.
+The historical occurrence and source-hash census retains its original SHA.
+Resolved holder evidence now includes every seat, role and transport wire id.
+Role rows project every reviewer input onto the role API and deduplicate equal
+projections (author identity and the review profile are not role API inputs).
+The separate catalog digest is omitted because it binds authored catalog bytes;
+all resolved candidate fields, order, exclusions and health provenance are kept.
+Dispatch rows include every explicit substitution source pin and review-attempt
+immutability cases at both budget states.
+
+`no-cli/` is an independent configuration with its own expected bytes and test.
+Its closed PATH contains only the three allowlisted system tools and one pinned
+`npx` stub. That stub accepts exactly `npx @anthropic-ai/claude-code@latest
+--version`, reports the fixed Claude version, and refuses everything else.
+HOME is empty. Missing Grok and Cursor refusals, Claude fallback argv and Cursor
+model-probe warnings are captured unchanged. No provider is invoked.
+
+The current-tree operator contract is read as bytes and its present two-holder
+author/vote truth table is executed by the capture, including absent approval,
+dissent and self-approval. There is no production designated-approval evaluator
+at this base: this is labeled contract evaluation, not engine proof. Generic
+additional-family approval execution stays in PR 5.
+
+`test_frozen_artifacts_are_pinned_independently_of_manifest` contains literal
+SHA-256 digests for every baseline file, including the capture and specification.
+Those literals never come from the fixture's SHA256SUMS. After this commit no
+baseline byte may change; compare the final head against the first commit with
+`git diff --exit-code <first-commit> -- tests/fixtures/routing_baseline`.
+
+
+## PR 2 merge revision (#9302, round b)
+
+The approved PR 2 head `45253e51eb4ca37a206692a2f09d3d2ddfc0776e`
+is merged with `2c0b22b6961ea676a48d3fc7b238b405a643f7be` from main.
+This separately ordered revision regenerates both configurations using the
+capture procedure above against the merged checkout; add `--configuration
+no-cli` for the independent no-CLI artifact. The independent digest pins in
+`tests/review/test_model_catalog.py` bind this revision.
+
+Against that approved PR 2 head, both configurations change only the Cursor
+catalog `unknown_auto_family_resolution` and `note` fields and reviewer rows
+21, 205, 389, 573, 757, 941, 1125 and 1309 (zero-based). Each change comes from
+`9c233c5eaa` (#9960): Cursor Auto authors use the Cursor family, native Grok
+is eligible, and Cursor transports remain excluded. All 672 role rows,
+992 dispatch rows, 112 adapter rows, 42 capacity rows and 70 launcher rows,
+resolved holders, approval, registry, fallbacks and source contracts remain
+unchanged. Inputs and occurrence artifacts remain byte-identical.
+`aea2281aa9` (#9972) preserves forced-lane quota/health diagnostics on task
+records without changing the captured routing surface, so it changes no rows.
+Any difference beyond this attribution blocks regeneration.
+
+A subsequent merge includes `04de11ad89ba25fed59e37be34256e1e518538b9`
+(#9968), which anchors the GitHub client cache to its module checkout.
+Fresh captures on that final merge must reproduce both configurations exactly;
+this cache fix has no attributed routing-row changes.
+
+
+## Haiku merge revision (#9996, round b)
+
+The approved Haiku head `ee15773294e5b8964c2979b229bf95d7edf033ef` is
+merged with `d286629c33e6ddd787802237958f77732fe8706d` from main, including
+the PR 2 role-based consumers (#9971). Both configurations are regenerated
+against that merged checkout with the procedure above; use `--configuration
+no-cli` for the independent no-CLI artifact. Independent digest pins in
+`tests/review/test_model_catalog.py` bind this ordered revision.
+
+Comparison with main joins rows by complete input identity, preserving repeated
+inputs. Both configurations have the same attribution:
+
+| Surface | Existing rows unchanged | Added rows | Attribution |
+| --- | ---: | ---: | --- |
+| Reviewer | 1,472 | 8 | Haiku author, code/infra across all four risks |
+| Role resolution | 672 | 168 | 56 cases each for routine mechanical, mechanical classification and read-only recon |
+| Approval contract | 378 | 9 | Haiku author across the existing two-holder vote matrix |
+| Dispatch | 992 | 0 | Identical |
+| Adapters | 112 | 0 | Identical |
+| Capacity | 42 | 0 | Identical |
+| Launchers | 70 | 0 | Identical |
+
+No existing row changes or disappears. Catalog differences are exactly the
+Haiku model and Sonnet's routine mechanical eligibility. Holder evidence adds
+only the mechanical worker seat and its three approved task roles. Fallbacks
+add only the routine mechanical substitution description. Registry, source
+contracts and the historical occurrence bytes are unchanged. Main's role-based
+consumers resolve Haiku's existing mechanical seat/roles. Mechanical role
+constants live in the catalog module so standalone catalog consumers retain
+their runtime-independent validation and resolution; admission imports those
+same constants. This import fix changes no captured result. Any other difference
+blocks regeneration.

@@ -1,6 +1,9 @@
 """#9996: mechanical catalog roles admit Haiku only to explicitly typed safe work."""
 from __future__ import annotations
 
+import json
+import os
+import shutil
 import subprocess
 import sys
 from copy import deepcopy
@@ -54,6 +57,24 @@ def test_routine_fallback_and_recon_peer_preserve_envelope_routes():
     assert [row.model_id for row in resolve_role("readonly_recon", purpose="inspect").candidates] == [HAIKU, "gpt-6-luna"]
     policy = load_model_catalog()["execution_routing"]["sol_advised_bounded"]
     assert HAIKU not in {policy["preferred_worker"]["model_id"], policy["bounded_fallback_worker"]["model_id"]}
+
+
+@pytest.mark.parametrize("entrypoint", ["file", "module"])
+def test_standalone_catalog_resolves_haiku_without_runtime_package(tmp_path, entrypoint):
+    review = tmp_path / "scripts/review"
+    review.mkdir(parents=True)
+    for name in ("model_catalog.py", "role_resolution.py", "family_exclusions.py", "__init__.py"):
+        shutil.copyfile(ROOT / "scripts/review" / name, review / name)
+    config = tmp_path / "scripts/config"
+    config.mkdir()
+    shutil.copyfile(ROOT / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
+    command = [str(review / "model_catalog.py")] if entrypoint == "file" else ["-m", "scripts.review.model_catalog"]
+    result = subprocess.run(
+        [sys.executable, *command, "--resolve-role", "mechanical_classification"],
+        cwd=tmp_path, env={"PATH": os.defpath}, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["candidates"][0]["model_id"] == HAIKU
 
 
 @pytest.mark.parametrize("overrides,reason", [
