@@ -98,17 +98,27 @@ class _Syntax:
         self.tree = ast.parse(source, filename=rel_path)
         self.nodes = [self.tree]
         self.children = {}
+        self.names = set()
+        self.strings = set()
         for node in self.nodes:
             # Context/operator markers have no string fragments, roots or sites.
-            # Keep them on the original AST for fingerprints and ctx/op checks,
-            # but omit them from the analysis inventory and child traversal.
+            # Keep them on the original AST for fingerprints and ctx/op checks.
             if isinstance(node, (ast.Constant, ast.alias, ast.Name)) or not node._fields:
                 children = ()
+                if isinstance(node, ast.Name):
+                    self.names.add(node.id)
+                elif isinstance(node, ast.alias):
+                    self.names.add(node.name)
+                elif isinstance(node, ast.Constant) and isinstance(node.value, str):
+                    self.strings.add(node.value)
             elif isinstance(node, ast.Attribute):
                 children = (node.value,)
+                self.names.add(node.attr)
             elif isinstance(node, ast.BinOp):
                 children = (node.left, node.right)
             else:
+                if isinstance(node, ast.ImportFrom):
+                    self.names.add(node.module)
                 children = tuple(child for child in ast.iter_child_nodes(node) if not isinstance(
                     child, (ast.expr_context, ast.operator, ast.unaryop, ast.boolop, ast.cmpop)))
             self.children[node] = children
@@ -127,14 +137,7 @@ def classify_source(source: str, rel_path: str, *, syntax: _Syntax | None = None
     # Check syntax rather than source text, retaining aliased and dynamic imports.
     anchors = SQLITE_MODULES | {"__import__", "importlib", "pkgutil", "builtins",
                                 "import_module", "resolve_name"}
-    if not any(
-        (isinstance(n, ast.Name) and n.id in anchors)
-        or (isinstance(n, ast.Attribute) and n.attr in anchors)
-        or (isinstance(n, ast.alias) and n.name in anchors)
-        or (isinstance(n, ast.ImportFrom) and n.module in anchors)
-        or (isinstance(n, ast.Constant) and isinstance(n.value, str) and n.value in SQLITE_MODULES)
-        for n in nodes
-    ):
+    if not (syntax.names & anchors or syntax.strings & SQLITE_MODULES):
         return []
     lines = source.splitlines()
     modules = set(SQLITE_MODULES)
@@ -320,7 +323,7 @@ STORE_CLASSES = ("store_path", "raw_store_constructor", "test_import_access")
 STORE_NAME = re.compile(r"(?:sources|vesum|vesum_shadow_[^/]*?)\.db(?:$|[?#/])")
 
 
-def _may_fold_store(nodes: list[ast.AST]) -> bool:
+def _may_fold_store(nodes: list[ast.AST], *, literals: set[str] | None = None) -> bool:
     """Necessary condition for a folded name, allowing arbitrary literal order.
 
     Fragments below only concatenate whole string constants (including those
@@ -329,7 +332,8 @@ def _may_fold_store(nodes: list[ast.AST]) -> bool:
     may contain extra text; intermediate pieces must be whole literals. This
     deliberately overapproximates actual expressions, never filters source text.
     """
-    literals = {n.value for n in nodes if isinstance(n, ast.Constant) and isinstance(n.value, str)}
+    if literals is None:
+        literals = {n.value for n in nodes if isinstance(n, ast.Constant) and isinstance(n.value, str)}
     for needle in ("sources.db", "vesum.db", "vesum_shadow_", "LU_SOURCES_DB", "LU_VESUM_DB"):
         if any(needle in value for value in literals):
             return True
@@ -364,16 +368,11 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
     tree, nodes = syntax.tree, syntax.nodes
     access_names = SQLITE_MODULES | CONSTRUCTORS | {
         "open_readonly", "resolve_store", "resolve_active_sources_db", "require_local_active_sources_db"}
-    possible_import_access = rel_path.startswith("tests/") and any(
-        (isinstance(n, ast.Name) and n.id in access_names)
-        or (isinstance(n, ast.Attribute) and n.attr in access_names)
-        or (isinstance(n, ast.alias) and n.name in access_names)
-        or (isinstance(n, ast.ImportFrom) and n.module in SQLITE_MODULES)
-        for n in nodes)
-    may_store = _may_fold_store(nodes)
+    possible_import_access = rel_path.startswith("tests/") and bool(syntax.names & access_names)
+    may_store = _may_fold_store(nodes, literals=syntax.strings)
     if not may_store and not possible_import_access:
         return []
-    parents = syntax.parents
+    parents = syntax.parents if may_store else {}
     aliases = {}
     for node in nodes:
         if isinstance(node, ast.Import):
@@ -390,7 +389,7 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
 
     @lru_cache(None)
     def scope(node):
-        parent = parents.get(node)
+        parent = syntax.parents.get(node)
         if parent is None:
             return "<module>"
         enclosing = scope(parent)
@@ -401,9 +400,9 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
     facts = {}
     string_constants = {(scope(n), target.id): n.value.value for n in nodes if isinstance(n, ast.Assign)
                         and isinstance(n.value, ast.Constant) and isinstance(n.value.value, str)
-                        for target in n.targets if isinstance(target, ast.Name)}
+                        for target in n.targets if isinstance(target, ast.Name)} if may_store else {}
     fixture_parameters = set()
-    if rel_path.startswith("tests/"):
+    if may_store and rel_path.startswith("tests/"):
         for function in nodes:
             if isinstance(function, (ast.FunctionDef, ast.AsyncFunctionDef)) and (
                 function.name.startswith("test_") or any(
@@ -502,7 +501,7 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
 
     # Follow module, constructor and reader aliases to a fixed point.
     for _ in range(len(assignments) + 1):
-        changed = False
+        before = aliases.copy()
         for node in assignments:
             if isinstance(node.value, (ast.Name, ast.Attribute)):
                 value = name(node.value)
@@ -512,8 +511,7 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
                     for target in targets:
                         if isinstance(target, ast.Name) and aliases.get(target.id) != value:
                             aliases[target.id] = value
-                            changed = True
-        if not changed:
+        if aliases == before:
             break
 
     found = []

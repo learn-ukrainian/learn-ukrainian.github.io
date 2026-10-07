@@ -762,3 +762,18 @@ def test_store_scan_releases_its_ast_without_garbage_collection(monkeypatch, sou
     monkeypatch.setattr(lint, '_Syntax', tracked)
     lint.classify_store_source(source, 'tests/new.py')
     assert refs and all(ref() is None for ref in refs)
+
+
+
+def test_rebound_reader_alias_still_reports_collection_access():
+    source = (
+        'from scripts.lib.readonly_sqlite import open_readonly as ro\n'
+        'from scripts.storage.topology import resolve_store as resolve\n'
+        'def first():\n    lookup = ro\n'
+        'def second():\n    lookup = resolve\n'
+        'binding = lookup("sources")'
+    )
+    findings = lint.classify_store_source(source, 'tests/new.py')
+    assert len(findings) == 1
+    assert findings[0].kind == 'test_import_access'
+    assert findings[0].scope == '<module>'
