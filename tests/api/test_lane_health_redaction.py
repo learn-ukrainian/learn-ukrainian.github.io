@@ -25,6 +25,7 @@ from scripts.api.lane_health import (
     redact_lane_health_text,
     sanitize_error_excerpt,
 )
+from scripts.api.lane_health_redaction import redact_lane_health_diagnostics
 from scripts.api.monitor_context import fixture_context
 from scripts.api.opsec_sanitize import opsec_path_sanitizer_middleware
 
@@ -290,6 +291,83 @@ def test_lane_health_redacts_url_authorities_and_preserves_suffix_bytes(excerpt,
     assert redact_lane_health_text(redacted) == redacted
 
 
+@pytest.mark.parametrize("password", ["canary?tail", "canary#tail", "canary/tail?more#end"])
+@pytest.mark.parametrize("username", ["u", ""])
+@pytest.mark.parametrize("host, placeholder", [("host.invalid:443", "[redacted-host]"), ("[2001:db8::7]:443", "[redacted-ip]")])
+def test_diagnostic_rule_itself_reuses_malformed_userinfo_redaction(password, username, host, placeholder):
+    raw = "".join(("https", "://", username, ":", password, "@", host, "/api?part=2#tail"))
+    expected = "".join(("https", "://", username, ":", "[REDACTED_SECRET]", "@", placeholder, "/api?part=2#tail"))
+    assert redact_lane_health_diagnostics(raw) == expected
+    assert redact_lane_health_diagnostics(expected) == expected
+
+
+@pytest.mark.parametrize("delimiter", [":", "/", "?", "#", ",", ";"])
+@pytest.mark.parametrize("username", ["u", "", "bot%2Dname"])
+@pytest.mark.parametrize("joiner", [",", ";", "?next=", "/archive/", "#next="])
+def test_diagnostic_and_served_rules_resolve_userinfo_before_splitting(delimiter, username, joiner):
+    left, right = "beforeCanary", "afterCanary"
+    password = "".join((left, delimiter, "https", "://", right))
+    first = "".join(("https", "://", username, ":", password, "@host.invalid:443/api?part=2#tail"))
+    second = "".join(("postgres", "://", "u:", "nextCanary", "@next.invalid/api"))
+    expected = "".join((
+        "https", "://", username, ":", "[REDACTED_SECRET]", "@[redacted-host]/api?part=2#tail", joiner,
+        "postgres", "://", "u:", "[REDACTED_SECRET]", "@[redacted-host]/api",
+    ))
+    for redactor in (redact_lane_health_diagnostics, redact_lane_health_text):
+        redacted = redactor(first + joiner + second)
+        assert redacted == expected
+        assert left not in redacted and right not in redacted and "nextCanary" not in redacted
+        assert redactor(redacted) == redacted
+
+
+def _multi_url_shapes():
+    cases = []
+    for password in (
+        "Ab3dE/fG", "Ab3dE+fG", "Ab3dE=fG", "Ab3dE?fG", "Ab3dE#fG",
+        "Ab3dE/fG+h9=?tail#end", "Ab3dE%2FfG%2B%3D", "12345", "first:second",
+    ):
+        for suffix in ("", "/api"):
+            first = "".join(("https", "://", "u:", password, "@first.invalid:443", suffix))
+            second = "".join(("postgres", "://", ":", password, "@[2001:db8::7]:443", suffix))
+            expected_first = "".join(("https", "://", "u:", "[REDACTED_SECRET]", "@[redacted-host]", suffix))
+            expected_second = "".join(("postgres", "://", ":", "[REDACTED_SECRET]", "@[redacted-ip]", suffix))
+            for joiner in (",", ";", "?next=", "/archive/", "#next="):
+                cases.append((first + joiner + second, password, expected_first + joiner + expected_second))
+            for outer, expected_outer in (
+                ("https://outer.invalid/redirect?next=", "https://[redacted-host]/redirect?next="),
+                ("https://archive.invalid/20261007/", "https://[redacted-host]/20261007/"),
+                ("https://", "https://"),
+            ):
+                cases.append((outer + second, password, expected_outer + expected_second))
+    return cases
+
+
+_MULTI_URL_SHAPES = _multi_url_shapes()
+
+
+@pytest.mark.parametrize(("raw", "password", "expected"), _MULTI_URL_SHAPES)
+def test_diagnostic_and_served_rules_redact_every_url_in_one_token(raw, password, expected):
+    for redactor in (redact_lane_health_diagnostics, redact_lane_health_text):
+        assert redactor(raw) == expected
+        assert password not in redactor(raw)
+        assert redactor(expected) == expected
+
+
+@pytest.mark.parametrize(("raw", "expected"), [
+    (
+        "https://archive.invalid/20261007/https://source.invalid/path",
+        "https://[redacted-host]/20261007/https://[redacted-host]/path",
+    ),
+    (
+        "https://outer.invalid:443/@scope/pkg?next=https://source.invalid:443/@vite/client",
+        "https://[redacted-host]/@scope/pkg?next=https://[redacted-host]/@vite/client",
+    ),
+])
+def test_nested_credentialless_urls_preserve_each_path_and_query(raw, expected):
+    assert redact_lane_health_diagnostics(raw) == expected
+    assert redact_lane_health_diagnostics(expected) == expected
+
+
 def test_diagnostic_redactor_preserves_url_suffixes_that_resemble_private_paths():
     # The response middleware retains its separate private-path policy.
     raw = "".join(("https://node.example.invalid:443/home/fixture/%2f/@user/post?next=/", "tmp/fixture#203.0.113.7"))
@@ -300,13 +378,20 @@ def test_diagnostic_redactor_preserves_url_suffixes_that_resemble_private_paths(
 
 _REVIEW_SHAPES = [
     *_URL_SHAPES,
+    # Exercise comma, semicolon and nested query values at the real handler.
+    *_MULTI_URL_SHAPES[:3],
+    _MULTI_URL_SHAPES[5],
+    _MULTI_URL_SHAPES[6],
     *[
         (
             "".join(("auth ", "https", "://", "u:", password, "@git.example.invalid/r.git denied")),
             password,
             "".join(("auth ", "https", "://", "u:", "[REDACTED_SECRET]", "@[redacted-host]/r.git denied")),
         )
-        for password in ("Ab3dE/fG", "Ab3dE+fG", "Ab3dE=fG", "Ab3dE/fG+h9=", "Ab3dE%2FfG%2B%3D", "12345")
+        for password in (
+            "Ab3dE/fG", "Ab3dE+fG", "Ab3dE=fG", "Ab3dE?fG", "Ab3dE#fG",
+            "Ab3dE/fG+h9=?tail#end", "Ab3dE%2FfG%2B%3D", "12345",
+        )
     ],
     ("getaddrinfo ENOTFOUND node.example.invalid", "node.example.invalid", "getaddrinfo ENOTFOUND [redacted-host]"),
     (
