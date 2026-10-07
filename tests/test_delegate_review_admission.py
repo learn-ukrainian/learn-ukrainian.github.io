@@ -1585,7 +1585,13 @@ def test_branch_pin_is_exact_for_new_and_reused_worktrees(monkeypatch, tmp_path,
         worktree.mkdir()
     monkeypatch.setattr(delegate, "_validate_existing_worktree", lambda **_k: None)
     monkeypatch.setattr(delegate, "_fetch_existing_branch", lambda _b: None)
-    monkeypatch.setattr(delegate, "_require_local_branch_is_ancestor_of_origin", lambda _b: "a" * 40)
+    branch_checks = []
+
+    def require_branch(_b, *, continuation_head_sha=None, continuation_remote_sha=None):
+        branch_checks.append((_b, continuation_head_sha, continuation_remote_sha))
+        return "a" * 40
+
+    monkeypatch.setattr(delegate, "_require_local_branch_is_ancestor_of_origin", require_branch)
     monkeypatch.setattr(delegate, "_resolve_sha", lambda _p: local_head)
     kwargs = dict(
         agent="codex",
@@ -1594,12 +1600,15 @@ def test_branch_pin_is_exact_for_new_and_reused_worktrees(monkeypatch, tmp_path,
         base="main",
         branch="codex/subject",
         pinned_head_sha="a" * 40,
+        continuation_head_sha=local_head if reused else None,
+        continuation_remote_sha="a" * 40 if reused else None,
     )
     if reused and local_head != "a" * 40:
         with pytest.raises(RuntimeError, match="differs from the pinned head SHA"):
             delegate._resolve_worktree_base_sha(**kwargs)
     else:
         assert delegate._resolve_worktree_base_sha(**kwargs) == "a" * 40
+    assert branch_checks == [("codex/subject", local_head if reused else None, "a" * 40 if reused else None)]
 
 
 @pytest.mark.parametrize(
