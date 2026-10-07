@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 # Drive one mapped learner feature via the repo's Playwright specs.
 # Prefer an already-launched preview (launch.sh). Playwright reuses it when the port answers.
+if [[ "${1:-}" == --help ]]; then
+  cat <<'EOF'
+Usage: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh <lessons|atlas|practice|all>
+Drive existing site Playwright specs after launch.sh and doctor.sh.
+Example: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh practice
+Inputs: Node 22, site dependencies; LU_VERIFY_PORT or PLAYWRIGHT_PORT (4321).
+Outputs: playwright-<feature>.log and test-results copied into
+LU_VERIFY_EVIDENCE_DIR (default: skill artifacts/manual); may install Chromium.
+Exit: 0 passed, 2 invalid feature, otherwise Playwright's failure code.
+Lessons includes the legacy sidebar contract; see ../features/lessons.md.
+Related: launch.sh, doctor.sh, ../SKILL.md.
+EOF
+  exit 0
+fi
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
@@ -13,7 +27,7 @@ if [[ -z "$FEATURE" ]]; then
 fi
 
 if [[ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]]; then
-  # shellcheck disable=SC1090
+  # shellcheck disable=SC1090,SC1091
   . "${NVM_DIR:-$HOME/.nvm}/nvm.sh"
   nvm use 22 >/dev/null
 fi

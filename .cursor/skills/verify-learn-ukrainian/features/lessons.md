@@ -24,7 +24,7 @@ Preconditions:
 
 - **Arc landing modules.** Run `bash .cursor/skills/verify-learn-ukrainian/bin/drive-routes.sh`. Asserts HTTP 200 for `/a1/` containing `sounds-letters-and-hello` and `things-have-gender`, and `/a1/sounds-letters-and-hello/` title content.
 - **Legacy sidebar contract (optional / expect red until rewritten).** Run `bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh lessons`. Spec `e2e/a1-lesson-nav.spec.ts` looks for `.lu-sidebar-nav` on `/a1/` — against the current arc landing this fails. Treat as contract debt, not as the primary green proof for lessons.
-- **Proof (green path).** `$LU_VERIFY_EVIDENCE_DIR/route-__a1__.txt` and sibling route excerpts from `drive-routes.sh`; exit `0`.
+- **Proof (green path).** `$LU_VERIFY_EVIDENCE_DIR/route-_a1_.txt` and sibling route excerpts from `drive-routes.sh`; exit `0`.
 
 ## Gotchas
 

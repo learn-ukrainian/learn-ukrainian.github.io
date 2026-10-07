@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 # Read-only health check for a verify-learn-ukrainian instance.
 # Exit 0 when the instance is worth driving; non-zero otherwise.
+if [[ "${1:-}" == --help ]]; then
+  cat <<'EOF'
+Usage: bash .cursor/skills/verify-learn-ukrainian/bin/doctor.sh
+Read-only health check before driving a local instance; not deployment proof.
+First source the exact env.sh path printed by launch.sh.
+Inputs: LU_VERIFY_HOST=localhost, LU_VERIFY_PORT=4321, Node 22;
+        LU_VERIFY_PYTHON defaults to the checkout's .venv/bin/python.
+Optional: LU_VERIFY_PID_FILE checks socket process-group ownership with ss;
+          LU_VERIFY_EXPECTED_REV checks the checkout's HEAD.
+Outputs: health diagnostics only. Exit: 0 healthy, 1 failed health check.
+Related: launch.sh, drive-playwright.sh, ../SKILL.md.
+EOF
+  exit 0
+fi
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
@@ -17,7 +31,8 @@ fail() { echo "doctor FAIL: $*" >&2; exit 1; }
 ok() { echo "doctor OK: $*"; }
 
 # Interpreter + Node (site package engines.node = 22.x)
-[[ -x "$ROOT/.venv/bin/python" ]] || fail "missing .venv/bin/python — create the project venv first"
+PYTHON="${LU_VERIFY_PYTHON:-${ROOT}/.venv/bin/python}"
+[[ -x "$PYTHON" ]] || fail "project interpreter missing — set LU_VERIFY_PYTHON to the shared interpreter in a worktree"
 NODE_MAJOR="$(node -v 2>/dev/null | sed -E 's/^v([0-9]+).*/\1/' || true)"
 [[ "$NODE_MAJOR" == "22" ]] || fail "need Node 22.x on PATH (got: $(node -v 2>/dev/null || echo none))"
 
@@ -38,13 +53,25 @@ ok "learner routes /a1/ /lexicon/ /practice/ return 200"
 if [[ -n "$PID_FILE" ]]; then
   [[ -f "$PID_FILE" ]] || fail "PID file missing: $PID_FILE"
   pid="$(cat "$PID_FILE")"
-  [[ -n "$pid" && -d "/proc/$pid" ]] || fail "recorded PID $pid is not running"
-  # Port must be owned by that PID or one of its children
+  [[ "$pid" =~ ^[1-9][0-9]*$ && -d "/proc/$pid" ]] || fail "recorded PID $pid is not running"
+  # setsid gives the launcher and its descendants an isolated process group.
+  pgid="$(ps -o pgid= -p "$pid" | tr -d '[:space:]')"
+  [[ "$pgid" == "$pid" ]] || fail "recorded PID $pid is not its process group leader"
   if command -v ss >/dev/null 2>&1; then
     listeners="$(ss -ltnp "sport = :${PORT}" 2>/dev/null || true)"
-    echo "$listeners" | grep -q "pid=${pid}" || fail "port ${PORT} not owned by PID ${pid}"
+    owned=false
+    while IFS= read -r listener_pid; do
+      listener_pgid="$(ps -o pgid= -p "$listener_pid" 2>/dev/null | tr -d '[:space:]' || true)"
+      if [[ "$listener_pgid" == "$pgid" ]]; then
+        owned=true
+        break
+      fi
+    done < <(grep -oE 'pid=[0-9]+,' <<<"$listeners" | sed -E 's/pid=([0-9]+),/\1/')
+    [[ "$owned" == true ]] || fail "port ${PORT} not owned by process group ${pgid}"
+    ok "port ${PORT} owned by process group ${pgid}"
+  else
+    echo "doctor SKIP: socket ownership unavailable (ss missing)"
   fi
-  ok "port ${PORT} owned by PID ${pid}"
 fi
 
 if [[ -n "$EXPECTED_REV" ]]; then

@@ -14,10 +14,9 @@ Project-local verification for the public learner site (`site/`, Astro) plus the
 Isolated preview (preferred for proof):
 
 ```bash
-export PATH="${NVM_DIR:-$HOME/.nvm}/versions/node/$(node -v 2>/dev/null)/bin:$PATH"
 # Node 22.x required (site package engines + undici). Prefer nvm use 22 when available.
 bash .cursor/skills/verify-learn-ukrainian/bin/launch.sh preview
-source /tmp/lu-verify-*/env.sh   # use the path launch.sh printed
+source "$LU_VERIFY_STATE_DIR/env.sh"   # set LU_VERIFY_STATE_DIR to the exact path launch.sh printed
 ```
 
 - Default build mode is `LU_VERIFY_BUILD_MODE=shell` → `npm run build:shell` in `site/` (committed Atlas artifacts + Astro). Set `LU_VERIFY_BUILD_MODE=full` for `npm run build` (hydrate from the public GitHub Release atlas-manifest asset, then Astro).
@@ -25,17 +24,20 @@ source /tmp/lu-verify-*/env.sh   # use the path launch.sh printed
 - Launch refuses to start if that port already answers and is not this run's PID file — do not double-drive a shared instance.
 - Dev alternative: `bash .cursor/skills/verify-learn-ukrainian/bin/launch.sh dev` (`npm run dev` in `site/`).
 - Teardown: `bash .cursor/skills/verify-learn-ukrainian/bin/cleanup.sh` (after `source` of the run's `env.sh`).
+- Scratch state defaults to `${TMPDIR:-/tmp}/lu-verify-<run-id>`. Custom `LU_VERIFY_STATE_DIR` must be a directory named `lu-verify-<run-id>` directly under that temporary root; cleanup rejects broad paths, traversal outside the root, and symlink directories.
 
 Prerequisites outside Launch (once per machine):
 
 ```bash
-# Python project env (never bare python for project commands)
-uv venv .venv --python 3.12   # or python3.12 -m venv .venv
+# Python project env (primary checkout setup only; never create a worktree venv)
+uv venv .venv --python 3.12
 uv pip install --python .venv/bin/python -r requirements-lock.txt
 # If you install from requirements.txt, pin ruff to the lockfile version before checks:
 #   uv pip install --python .venv/bin/python 'ruff==0.15.21'
 (cd site && npm ci)
 ```
+
+In a dispatch worktree, set `LU_VERIFY_PYTHON` to the task-prescribed shared project interpreter before doctor or run-checks. Both default to the checkout's `.venv/bin/python` otherwise; the sense-lint child shell uses the same selected interpreter.
 
 ## Doctor
 

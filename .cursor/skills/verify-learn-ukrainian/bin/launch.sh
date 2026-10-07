@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 # Build (if needed) and start an isolated site preview for verification.
-# Prints env exports the caller should eval, or use --print-env.
+# Prints the exact env.sh path the caller should source.
+if [[ "${1:-}" == --help ]]; then
+  cat <<'EOF'
+Usage: bash .cursor/skills/verify-learn-ukrainian/bin/launch.sh [preview|dev]
+Build and launch an isolated learner site for local verification; not deployment.
+Default: preview using build:shell; LU_VERIFY_BUILD_MODE=full selects build.
+Inputs: Node 22, npm; LU_VERIFY_HOST=localhost, LU_VERIFY_PORT=4321;
+        optional LU_VERIFY_RUN_ID, LU_VERIFY_STATE_DIR, LU_VERIFY_EVIDENCE_DIR.
+State: a lu-verify-<run-id> directory directly under ${TMPDIR:-/tmp}.
+Outputs: site build, process, state env.sh/PID/log, evidence directory.
+Exit: 0 when HTTP is ready; nonzero on invalid inputs or launch failure.
+Related: doctor.sh, cleanup.sh, ../SKILL.md.
+EOF
+  exit 0
+fi
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
@@ -10,25 +24,39 @@ MODE="${1:-preview}" # preview | dev
 PORT="${LU_VERIFY_PORT:-4321}"
 HOST="${LU_VERIFY_HOST:-localhost}"
 RUN_ID="${LU_VERIFY_RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)-$$}"
-STATE_DIR="${LU_VERIFY_STATE_DIR:-/tmp/lu-verify-${RUN_ID}}"
+STATE_DIR="${LU_VERIFY_STATE_DIR:-${TMPDIR:-/tmp}/lu-verify-${RUN_ID}}"
 EVIDENCE_DIR="${LU_VERIFY_EVIDENCE_DIR:-${ROOT}/.cursor/skills/verify-learn-ukrainian/artifacts/${RUN_ID}}"
 PID_FILE="${STATE_DIR}/site.pid"
 LOG_FILE="${STATE_DIR}/site.log"
 BUILD_MODE="${LU_VERIFY_BUILD_MODE:-shell}" # shell | full
 
+temp_root="$(readlink -f -- "${TMPDIR:-/tmp}")"
+state_parent="$(readlink -m -- "$(dirname -- "$STATE_DIR")")"
+state_name="$(basename -- "$STATE_DIR")"
+if [[ "$state_parent" != "$temp_root" || "$state_name" != lu-verify-* || "$state_name" == lu-verify- || -L "$state_parent/$state_name" ]]; then
+  echo "launch FAIL: unsafe state directory; require a lu-verify-<run-id> directory directly under the temporary root" >&2
+  exit 1
+fi
+
 mkdir -p "$STATE_DIR" "$EVIDENCE_DIR"
 
 # Prefer a modern Node 22 when nvm is present (site undici wants >=22.19).
 if [[ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]]; then
-  # shellcheck disable=SC1090
+  # shellcheck disable=SC1090,SC1091
   . "${NVM_DIR:-$HOME/.nvm}/nvm.sh"
-  nvm use 22 >/dev/null
+  nvm use 22 >/dev/null || {
+    echo "launch FAIL: need Node 22.x (nvm use 22 failed)" >&2
+    exit 1
+  }
 fi
-export PATH="${NVM_DIR:-$HOME/.nvm}/versions/node/$(node -v)/bin:${PATH:-}"
 
-node_major="$(node -v | sed -E 's/^v([0-9]+).*/\1/')"
+node_version="$(node -v 2>/dev/null)" || {
+  echo "launch FAIL: need Node 22.x (node unavailable on PATH)" >&2
+  exit 1
+}
+node_major="$(sed -E 's/^v([0-9]+).*/\1/' <<<"$node_version")"
 [[ "$node_major" == "22" ]] || {
-  echo "launch FAIL: need Node 22.x (got $(node -v))" >&2
+  echo "launch FAIL: need Node 22.x (got ${node_version})" >&2
   exit 1
 }
 
@@ -62,8 +90,6 @@ start_preview() {
   build_site
   (
     cd "$ROOT/site"
-    # Drop a stale Astro preview lock from a prior crashed run on this checkout.
-    npx astro preview stop >/dev/null 2>&1 || true
     # Own process group so cleanup can tear down children without pkill-by-name.
     setsid npx astro preview --host "$HOST" --port "$PORT" >"$LOG_FILE" 2>&1 &
     echo $! >"$PID_FILE"

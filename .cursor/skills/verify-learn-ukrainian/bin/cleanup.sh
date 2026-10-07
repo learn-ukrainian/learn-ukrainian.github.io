@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 # Tear down the instance this verification run started. Never kills by process name.
 # Evidence under LU_VERIFY_EVIDENCE_DIR is kept.
+if [[ "${1:-}" == --help ]]; then
+  cat <<'EOF'
+Usage: bash .cursor/skills/verify-learn-ukrainian/bin/cleanup.sh
+Stop an instance started by launch.sh; never use to stop a shared server.
+First source the exact env.sh path printed by launch.sh.
+Inputs: LU_VERIFY_STATE_DIR and/or LU_VERIFY_PID_FILE from that run.
+State must be named lu-verify-<run-id> directly under ${TMPDIR:-/tmp}.
+Outputs: signals the recorded process group, deletes PID and scratch state.
+Evidence in LU_VERIFY_EVIDENCE_DIR is retained separately.
+Exit: 0 on cleanup/no instance; nonzero for unsafe state or removal errors.
+Related: launch.sh, ../SKILL.md.
+EOF
+  exit 0
+fi
 set -euo pipefail
 
 STATE_DIR="${LU_VERIFY_STATE_DIR:-}"
@@ -11,16 +25,19 @@ if [[ -z "$STATE_DIR" && -z "$PID_FILE" ]]; then
   exit 0
 fi
 
-if [[ -z "$PID_FILE" && -n "$STATE_DIR" && -f "${STATE_DIR}/site.pid" ]]; then
-  PID_FILE="${STATE_DIR}/site.pid"
+# Validate before reading a PID, signaling processes, or removing scratch state.
+if [[ -n "$STATE_DIR" ]]; then
+  temp_root="$(readlink -f -- "${TMPDIR:-/tmp}")"
+  state_parent="$(readlink -m -- "$(dirname -- "$STATE_DIR")")"
+  state_name="$(basename -- "$STATE_DIR")"
+  if [[ "$state_parent" != "$temp_root" || "$state_name" != lu-verify-* || "$state_name" == lu-verify- || -L "$state_parent/$state_name" ]]; then
+    echo "cleanup FAIL: unsafe state directory; require a lu-verify-<run-id> directory directly under the temporary root" >&2
+    exit 1
+  fi
 fi
 
-# Prefer Astro's own stop when we launched a preview from site/.
-if [[ -d "$(pwd)/site" ]] || [[ -d /workspace/site ]]; then
-  root_guess="$(cd "$(dirname "$0")/../../../.." && pwd)"
-  if [[ -d "$root_guess/site" ]]; then
-    (cd "$root_guess/site" && npx astro preview stop >/dev/null 2>&1) || true
-  fi
+if [[ -z "$PID_FILE" && -n "$STATE_DIR" && -f "${STATE_DIR}/site.pid" ]]; then
+  PID_FILE="${STATE_DIR}/site.pid"
 fi
 
 if [[ -n "$PID_FILE" && -f "$PID_FILE" ]]; then

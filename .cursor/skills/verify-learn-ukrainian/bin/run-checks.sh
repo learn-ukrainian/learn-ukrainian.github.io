@@ -2,14 +2,28 @@
 # Local verification checks reused from CI Gate / make / pytest targets.
 # Private-data and external-service checks SKIP with a clear message (never fail the suite for env gaps).
 # Overall exit: 0 if every executed check passed; 1 if any executed check failed.
-set -uo pipefail
+if [[ "${1:-}" == --help ]]; then
+  cat <<'EOF'
+Usage: bash .cursor/skills/verify-learn-ukrainian/bin/run-checks.sh
+Run local CI/data-contract checks; not the full CI test suite or deployment proof.
+Inputs: LU_VERIFY_PYTHON defaults to the checkout's .venv/bin/python;
+        use the task-prescribed shared interpreter in a dispatch worktree.
+Optional: LU_SOURCES_HEALTH_URL or SOURCES_MCP_URL enables evidence pack checks.
+Outputs: PASS/FAIL/SKIP diagnostics and summary; reuse repository checks,
+including practice-deck generation and the Word Atlas lint baseline ratchet.
+Exit: 0 all executed checks pass (environment gaps SKIP), 1 any check fails.
+Related: scripts/ci/checks.sh, ../SKILL.md.
+EOF
+  exit 0
+fi
+set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
 cd "$ROOT"
 
-PYTHON="${ROOT}/.venv/bin/python"
+PYTHON="${LU_VERIFY_PYTHON:-${ROOT}/.venv/bin/python}"
 if [[ ! -x "$PYTHON" ]]; then
-  echo "SKIP: project .venv missing — cannot run Python checks" >&2
+  echo "SKIP: project interpreter missing — set LU_VERIFY_PYTHON to the shared interpreter in a worktree" >&2
   exit 0
 fi
 
@@ -69,20 +83,21 @@ run_check "Atlas manifest freshness" \
 # Word Atlas sense-lint ratchet needs hydrated lexicon-manifest.json
 if [[ -f site/src/data/lexicon-manifest.json ]]; then
   if git rev-parse --verify origin/main >/dev/null 2>&1; then
+    # shellcheck disable=SC2016 # Expand the supplied interpreter and deck array in the child shell.
     run_check "Word Atlas sense-lint ratchet" \
       bash -c '
-        .venv/bin/python -m scripts.practice_deck.io &&
+        "$1" -m scripts.practice_deck.io &&
         deck_args=()
         for deck in site/public/lexicon/*.json; do
           [[ -f "$deck" ]] || continue
           deck_args+=(--practice-deck "$deck")
         done
-        .venv/bin/python scripts/audit/lint_word_atlas.py \
+        "$1" scripts/audit/lint_word_atlas.py \
           --manifest site/src/data/lexicon-manifest.json \
           "${deck_args[@]}" --base-ref origin/main \
           --baseline scripts/audit/word_atlas_lint_baseline.json --ratchet --update-baseline &&
         git diff --exit-code -- scripts/audit/word_atlas_lint_baseline.json
-      '
+      ' bash "$PYTHON"
   else
     report SKIP "Word Atlas sense-lint ratchet" "origin/main not available"
   fi
