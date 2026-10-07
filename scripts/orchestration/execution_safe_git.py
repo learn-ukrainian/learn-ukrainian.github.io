@@ -250,6 +250,8 @@ def _restore_attributes(prefix, cwd, source, env, timeout):
     Refuse filters and built-in byte conversions before worktree-add creates
     either a directory or branch. check-attr expands nested files and macros;
     shared info/attributes also participates in this source-based view.
+    Refusing every active filter also covers drivers hidden from the primary's
+    config inventory by conditional includes that activate in the new worktree.
     """
     paths = subprocess.run(
         [*prefix, "ls-tree", "-r", "--name-only", "-z", source, "--"],
@@ -449,7 +451,24 @@ def run_git(
             )
             prefix.extend(["-c", f"{key}={value}"])
     if profile == "checkout":
-        failure = _restore_attributes(prefix, cwd, args[-1], safe_env, timeout)
+        failure = None
+        if len(args) == 5:
+            # Bare names resolve tags first in tree/attribute probes, while
+            # worktree-add prefers branches. Pin all three to the branch's
+            # commit. -B keeps the restored worktree attached to that branch
+            # at its resolved tip; callers still cannot supply -B or --force.
+            branch = args[-1]
+            resolved = subprocess.run(
+                [*prefix, "rev-parse", "--verify", f"refs/heads/{branch}^{{commit}}"],
+                cwd=cwd, env=safe_env, capture_output=True, text=False, check=False, timeout=timeout,
+            )
+            if resolved.returncode:
+                failure = resolved
+            else:
+                source = resolved.stdout.decode("ascii").strip()
+                args = ["worktree", "add", "-B", branch, "--", args[-2], source]
+        if failure is None:
+            failure = _restore_attributes(prefix, cwd, args[-1], safe_env, timeout)
         if failure is not None:
             if kwargs.get("check"):
                 failure.check_returncode()

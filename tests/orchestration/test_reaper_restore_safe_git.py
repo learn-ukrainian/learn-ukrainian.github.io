@@ -113,6 +113,90 @@ def test_restore_refuses_byte_transformations(restore_case, attribute, location)
     assert not target.exists()
 
 
+@pytest.mark.parametrize("tag_shadow", [False, True])
+@pytest.mark.parametrize("attribute", ["eol=crlf", "filter=trip"])
+@pytest.mark.parametrize("include_condition", ["onbranch:codex/**", "gitdir:**/worktrees/**"])
+def test_restore_existing_branch_attributes_ignore_tag_shadow(
+    restore_case, tmp_path, tag_shadow, attribute, include_condition,
+):
+    repo, target, ref, clean_sha, _payload = restore_case
+    (repo / "payload.bin").write_bytes(b"a\nb\n")
+    (repo / ".gitattributes").write_text(f"payload.bin {attribute}\n")
+    _git(repo, "add", "payload.bin", ".gitattributes")
+    _git(repo, "commit", "-m", "preserved transforming attributes")
+    sha = _git(repo, "rev-parse", "HEAD")
+    _git(repo, "update-ref", ref, sha)
+    _git(repo, "branch", "codex/restored", sha)
+    if tag_shadow:
+        _git(repo, "tag", "codex/restored", clean_sha)
+
+    marker = tmp_path / "executed"
+    executable = tmp_path / "tripwire"
+    executable.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(marker))}\ncat\n")
+    executable.chmod(0o700)
+    included = tmp_path / "conditional.config"
+    _git(repo, "config", "--file", str(included), "filter.trip.smudge", str(executable))
+    _git(repo, "config", f"includeIf.{include_condition}.path", str(included))
+    # The inventory on main cannot discover this worktree-only smudge driver.
+    assert "filter.trip.smudge" not in _git(repo, "config", "--name-only", "--list").splitlines()
+
+    result = _restore(restore_case)
+    assert not marker.exists(), "restore executed the conditionally included smudge driver"
+    reason = "restore_filter_attribute" if attribute == "filter=trip" else "restore_transform_attribute"
+    assert result == (False, reason)
+    assert not target.exists()
+    assert _git(repo, "rev-parse", "refs/heads/codex/restored") == sha
+
+
+def test_restore_existing_branch_checks_and_checks_out_one_commit(restore_case, monkeypatch):
+    repo, target, ref, tag_sha, _payload = restore_case
+    payload = b"branch bytes\n"
+    (repo / "payload.bin").write_bytes(payload)
+    _git(repo, "add", "payload.bin")
+    _git(repo, "commit", "-m", "distinct branch bytes")
+    sha = _git(repo, "rev-parse", "HEAD")
+    _git(repo, "update-ref", ref, sha)
+    _git(repo, "branch", "codex/restored", sha)
+    _git(repo, "tag", "codex/restored", tag_sha)
+    run = subprocess.run
+    commands = []
+
+    def observe(argv, **kwargs):
+        commands.append(argv)
+        return run(argv, **kwargs)
+
+    monkeypatch.setattr(safe.subprocess, "run", observe)
+    assert _restore(restore_case) == (True, None)
+    assert (target / "payload.bin").read_bytes() == payload
+    tree = next(command for command in commands if "ls-tree" in command)
+    attrs = next(command for command in commands if "check-attr" in command)
+    checkout = next(command for command in commands if "worktree" in command)
+    assert tree[-2] == checkout[-1] == sha
+    assert f"--source={sha}" in attrs
+    assert _git(target, "symbolic-ref", "HEAD") == "refs/heads/codex/restored"
+    assert _git(target, "rev-parse", "HEAD") == sha
+
+
+@pytest.mark.parametrize("condition", ["occupied", "moved"])
+def test_restore_existing_branch_keeps_occupancy_and_recovery_checks(restore_case, condition):
+    repo, target, _ref, sha, payload = restore_case
+    branch_sha = sha if condition == "occupied" else _git(repo, "rev-parse", "HEAD^")
+    _git(repo, "branch", "codex/restored", branch_sha)
+    if condition == "occupied":
+        occupied = repo / ".worktrees/dispatch/codex/occupied"
+        _git(repo, "worktree", "add", str(occupied), "codex/restored")
+    ok, reason = _restore(restore_case)
+    assert not ok
+    if condition == "occupied":
+        assert "already" in reason
+        assert (occupied / "payload.bin").read_bytes() == payload
+        assert _git(occupied, "symbolic-ref", "HEAD") == "refs/heads/codex/restored"
+    else:
+        assert reason == "branch no longer matches recovery ref"
+    assert not target.exists()
+    assert _git(repo, "rev-parse", "refs/heads/codex/restored") == branch_sha
+
+
 @pytest.mark.parametrize("existing_branch", [False, True])
 def test_restore_exact_bytes_with_implicit_eol_and_sparse_config(restore_case, existing_branch):
     repo, target, _ref, sha, _payload = restore_case
@@ -189,6 +273,21 @@ def test_checkout_probe_failure_never_creates_worktree(restore_case, monkeypatch
     assert not target.exists()
 
 
+@pytest.mark.parametrize("options", [{}, {"text": True}, {"text": True, "check": True}])
+def test_checkout_existing_branch_resolution_failure_never_creates_worktree(restore_case, options):
+    repo, target, _ref, _sha, _payload = restore_case
+    command = ["worktree", "add", str(target), "codex/missing"]
+    if options.get("check"):
+        with pytest.raises(subprocess.CalledProcessError, match="non-zero"):
+            safe.run_git(command, cwd=repo, profile="checkout", capture_output=True, **options)
+    else:
+        result = safe.run_git(command, cwd=repo, profile="checkout", capture_output=True, **options)
+        assert result.returncode != 0
+        assert isinstance(result.stderr, str if options.get("text") else bytes)
+    assert not target.exists()
+    assert safe.run_git(["show-ref", "--verify", "refs/heads/codex/missing"], cwd=repo).returncode != 0
+
+
 @pytest.mark.parametrize("existing_branch", [False, True])
 def test_restore_git_process_denominator(restore_case, monkeypatch, existing_branch):
     repo, _target, _ref, sha, _payload = restore_case
@@ -209,8 +308,13 @@ def test_restore_git_process_denominator(restore_case, monkeypatch, existing_bra
 
     monkeypatch.setattr(safe.subprocess, "run", observe)
     assert _restore(restore_case) == (True, None)
-    assert [command[0] for command in commands] == [
+    expected = [
         "config", "rev-parse", "config", "rev-parse",
-        "config", "ls-tree", "check-attr", "worktree",
+        "config",
     ]
+    if existing_branch:
+        expected.append("rev-parse")
+        assert commands[5][-1] == "refs/heads/codex/restored^{commit}"
+    expected.extend(["ls-tree", "check-attr", "worktree"])
+    assert [command[0] for command in commands] == expected
     assert commands[-1][:2] == ["worktree", "add"]
