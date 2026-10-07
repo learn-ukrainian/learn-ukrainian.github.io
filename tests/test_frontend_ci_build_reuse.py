@@ -26,6 +26,9 @@ DRIFT = "git diff --exit-code -- src/data/lexicon-teacher-lesson-keys.json src/d
 UNIT_VITEST = (
     "vitest run --exclude tests/unit/build-renders.test.ts --exclude tests/unit/etymology-handler-built-output.test.ts"
 )
+# A4: bounded file parallelism for the CI unit command only. Three workers leave one of
+# the 4-vCPU runner's cores to the Vitest main process (Vitest's own cores-1 default).
+UNIT_CI_PARALLELISM = "--fileParallelism --maxWorkers=3"
 
 # build-renders.test.ts as of bec14d5a24 (before #9718): test names, assertions and
 # error patterns that must keep running unchanged against the build they check.
@@ -112,14 +115,19 @@ def test_default_site_commands_stay_self_contained() -> None:
     assert scripts["test:built-output"] == (
         "vitest run tests/unit/build-renders.test.ts tests/unit/etymology-handler-built-output.test.ts"
     )
-    assert re.search(r"^\s*fileParallelism: false,$", VITEST_CONFIG.read_text(encoding="utf-8"), re.M)
+    config = VITEST_CONFIG.read_text(encoding="utf-8")
+    assert re.search(r"^\s*fileParallelism: false,$", config, re.M)
+    # Per-file isolation stays on: several unit files set process.env.
+    assert "isolate" not in config
 
 
-def test_ci_unit_command_verifies_then_runs_the_same_selection_without_hydrate() -> None:
+def test_ci_unit_command_verifies_then_runs_the_same_selection_in_parallel_without_hydrate() -> None:
     scripts = site_scripts()
     verify, vitest = scripts["test:unit:ci"].split(" && ")
     assert verify == f'node --experimental-strip-types ./{HELPER} verify --record "$FRONTEND_BUILD_RECORD"'
-    assert vitest == scripts["test:unit"].removeprefix("npm run hydrate && ") == UNIT_VITEST
+    assert scripts["test:unit"].removeprefix("npm run hydrate && ") == UNIT_VITEST
+    assert vitest == UNIT_VITEST.replace("vitest run", f"vitest run {UNIT_CI_PARALLELISM}", 1)
+    assert "isolate" not in vitest
 
 
 def test_build_renders_keeps_original_tests_and_assertions() -> None:

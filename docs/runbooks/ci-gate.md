@@ -167,8 +167,11 @@ the step at once.
 
 The generated-artifact drift check runs directly after the build. Then:
 
-1. `npm run test:unit:ci` verifies the record, then runs the same Vitest command
-   and excludes as `test:unit`, without a second hydrate.
+1. `npm run test:unit:ci` verifies the record, then runs the same Vitest
+   selection and excludes as `test:unit`, without a second hydrate, with
+   `--fileParallelism --maxWorkers=3`. Three workers leave one of the runner's
+   four vCPUs to the Vitest main process, matching Vitest's own default of the
+   CPU count minus one. Every test file still runs in its own isolated worker.
 2. `ci-build-artifact.ts verify` runs again, so an input a unit test changed
    fails here.
 3. `npm run test:built-output` runs with `FRONTEND_BUILD_RECORD` set.
@@ -179,8 +182,16 @@ Verification fails if the record, log or `dist/` is missing, the log hash or the
 `dist/` nonce differs, the build exited non-zero, or any input changed. It never
 falls back to a rebuild. Without `FRONTEND_BUILD_RECORD`, `npm test`,
 `npm run test:unit` and `npm run test:built-output` behave as before:
-self-contained, with their own hydrate and build. Unit test files still run one at
-a time (`fileParallelism: false` in `site/vitest.config.ts`).
+self-contained, with their own hydrate and build. Outside `test:unit:ci`, unit
+test files still run one at a time (`fileParallelism: false` in
+`site/vitest.config.ts`), and `test:built-output` always does.
+
+Parallel unit files must not write shared paths. The Atlas fixture parity tests
+give `SqliteAtlasDataSource` a private empty `searchArtifactsDir` instead of
+hiding `site/src/data/lexicon-search-*.json` (#9850). Other unit files write only
+under their own temporary directories. The exception is
+`ActivityKit.contract.test.tsx`, which regenerates the `*.generated.ts` type
+files; those are imported only with `import type`, which the compiler erases.
 
 ## pytest shards
 
