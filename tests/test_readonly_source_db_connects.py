@@ -299,6 +299,18 @@ SOURCE_INGEST_BUILD_WRITERS = {
 }
 
 
+def test_github_client_cache_is_a_declared_non_source_database():
+    entry = next(item for item in lint.load_allowlist() if item.path == "scripts/common/github_client.py")
+    assert entry.kind == "writer"
+    assert entry.target_db == "GitHub client cache"
+    assert "sources.db" not in entry.target_db
+    assert "vesum.db" not in entry.target_db
+    assert entry.calls == ("sqlite3.connect(path, timeout=5)",)
+    source = (REPO_ROOT / entry.path).read_text()
+    assert lint.classify_source(source, entry.path)
+    assert lint.writer_target_violations(source, entry) == []
+
+
 def test_only_listed_source_ingest_build_writers_declare_protected_databases():
     actual = {
         entry.path

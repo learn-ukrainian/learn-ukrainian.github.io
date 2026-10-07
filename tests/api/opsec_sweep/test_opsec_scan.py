@@ -9,6 +9,24 @@ from scripts.api.opsec_scan import scan_response, scan_text
 pytestmark = pytest.mark.repo_invariant
 
 
+@pytest.mark.parametrize(
+    "text",
+    [
+        "UnknownError Unexpected server error; retrying",
+        "See https://docs.example.org/guide?part=2 for help",
+        "Retry scripts/api/lane_health.py after ENOTFOUND",
+        "ENOTFOUND scripts/api/lane_health.py",
+        "open tests/fixtures/home/example.json",
+        r"open tests\fixtures\Users\example.json",
+        "relative docs/~/.ssh/example",
+        "codes: ENOTFOUND EAI_AGAIN EAI_NONAME ENODATA",
+        "Budget ~500K/1M, fraction ~2/3, split ~50/50, cost ~35/module",
+    ],
+)
+def test_scan_text_keeps_public_urls_repository_paths_and_ordinary_diagnostics(text):
+    assert scan_text(text) == []
+
+
 def _ipv4(*octets: int) -> str:
     return ".".join(str(octet) for octet in octets)
 

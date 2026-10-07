@@ -15,11 +15,12 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.ci.junit_results import parse_junit
+from scripts.common import github_client
 from scripts.common.flake_quarantine import REGISTRY, load_registry
 
 
 def _gh(*args: str) -> str:
-    result = subprocess.run(["gh", *args], capture_output=True, text=True, check=True, timeout=120)
+    result = github_client.run(["gh", *args], fresh=True, capture_output=True, text=True, check=True, timeout=120)
     return result.stdout
 
 
@@ -144,6 +145,7 @@ def update_issues(ledger: dict, *, dry_run: bool) -> list[str]:
     return actions
 
 
+@github_client.timer
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Build the D2 nightly flake ledger from pytest JUnit and queue artifacts.\n"

@@ -14,18 +14,25 @@ import pytest
 from scripts import github_graphql_budget as probe
 
 
+@pytest.fixture(autouse=True)
+def named_budget_read(monkeypatch):
+    """Parser cases inject the named read, not the HTTP conversion layer."""
+    def read(operation, *, runner, **kwargs):
+        assert operation == "budget"
+        return runner(["gh", "api", "rate_limit"], **kwargs)
+    monkeypatch.setattr(probe, "read", read)
+
+
 def _runner(stdout: str, *, stderr: str = "", returncode: int = 0, record: list | None = None):
     def run(args, **kwargs):
         if record is not None:
-            from pathlib import Path
-            payload = json.loads(Path(args[args.index("--input") + 1]).read_text())
-            record.append((args, {**kwargs, "query_payload": payload}))
+            record.append((args, kwargs))
         return SimpleNamespace(stdout=stdout, stderr=stderr, returncode=returncode)
 
     return run
 
 
-def test_healthy_probe_uses_one_graphql_rate_limit_query() -> None:
+def test_healthy_probe_uses_one_named_budget_read() -> None:
     calls = []
     result = probe.probe_graphql_budget(
         _runner(json.dumps({"data": {"rateLimit": {
@@ -34,7 +41,7 @@ def test_healthy_probe_uses_one_graphql_rate_limit_query() -> None:
     )
 
     assert result == {
-        "source": "graphql.rateLimit",
+        "source": "rest.resources.graphql",
         "limit": 5000,
         "remaining": 321,
         "used": 4679,
@@ -44,8 +51,7 @@ def test_healthy_probe_uses_one_graphql_rate_limit_query() -> None:
         "checked_at": result["checked_at"],
     }
     assert len(calls) == 1
-    assert calls[0][0][:5] == ["gh", "api", "--method", "POST", "graphql"]
-    assert calls[0][1]["query_payload"] == {"query": probe.QUERY, "variables": {}}
+    assert calls[0][0] == ["gh", "api", "rate_limit"]
     assert calls[0][1]["timeout"] == probe.TIMEOUT_SECONDS
 
 
@@ -153,7 +159,7 @@ def test_main_human_output_and_exit_codes(
 
 
 def test_main_json_output(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
-    payload = {"source": "graphql.rateLimit", "remaining": 8, "exhausted": False, "error": None}
+    payload = {"source": "rest.resources.graphql", "remaining": 8, "exhausted": False, "error": None}
     monkeypatch.setattr(probe, "probe_graphql_budget", lambda: payload)
 
     assert probe.main(["--json"]) == 0

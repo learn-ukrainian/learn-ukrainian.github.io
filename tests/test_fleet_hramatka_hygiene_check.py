@@ -31,6 +31,8 @@ CLEAN_BODY = (
 )
 
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
+
 def _run(args: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess[str]:
     return subprocess.run(args, cwd=cwd, capture_output=True, text=True, check=check, timeout=30)
 

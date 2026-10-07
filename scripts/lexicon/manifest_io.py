@@ -16,6 +16,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.common import github_client
+
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-manifest.pointer.json"
@@ -262,7 +264,7 @@ def _download(pointer: dict[str, Any], *, attempt: int = 0) -> bytes:
             "User-Agent": "learn-ukrainian-atlas-manifest-hydrate/1.0",
         },
     )
-    with urllib.request.urlopen(request, timeout=60) as response:
+    with github_client.http_open(request, timeout=60) as response:
         return response.read()
 
 

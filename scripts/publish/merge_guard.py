@@ -8,6 +8,7 @@ import subprocess
 from datetime import UTC, datetime
 
 from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
+from scripts.common.github_client import GitHubRateLimited
 from scripts.opsec.prepublish import PublishBlocked
 
 _FAIL_BUCKETS = {"fail", "failure", "error", "cancel", "canceled", "cancelled", "timed_out", "action_required"}
@@ -240,7 +241,7 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
         reason = readiness_reason(meta, states)
         if match_head is not None and meta["headRefOid"].lower() != match_head.lower():
             reason = "reviewed head changed"
-    except PublishBlocked:
+    except (PublishBlocked, GitHubRateLimited):
         raise
     except Exception:
         raise PublishBlocked("OPSEC: merge readiness unverifiable.") from None

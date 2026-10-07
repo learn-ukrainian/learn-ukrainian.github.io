@@ -475,31 +475,42 @@ def test_registration_cli_refuses_overwrite(repo, static_graph, tmp_path):
     assert output.read_bytes() == before
 
 
-def test_gh_pages_refuses_incomplete_census(monkeypatch):
-    monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: subprocess.CompletedProcess(
-        [], 0, stdout=json.dumps([{"total_count": 2, "jobs": [{"id": 1}]}])))
+def test_gh_pages_refuses_incomplete_census(github_transport):
+    from scripts.common.github_client import Response
+
+    github_transport(lambda *args: Response(200, {}, b'{"total_count":2,"jobs":[{"id":1}]}'))
     with pytest.raises(ValueError, match="incomplete GitHub census"):
-        s.gh_pages("endpoint", "jobs")
+        s.gh_pages("repos/owner/repo/actions/runs/42/jobs", "jobs")
 
 
-def test_live_inventory_uses_first_attempt_even_after_rerun(monkeypatch):
+def test_live_inventory_uses_first_attempt_even_after_rerun(github_transport):
+    from scripts.common.github_client import Response
+
     run = {"id": 42, "event": "pull_request", "status": "completed", "conclusion": "success",
            "run_attempt": 2, "created_at": "2026-10-08T00:00:00Z", "updated_at": "2026-10-09T00:00:00Z", "head_sha": "head"}
-    called = []
 
-    def pages(endpoint, key):
-        called.append(endpoint)
-        return [run] if key == "workflow_runs" else [{"name": "pytest (1)", "conclusion": "failure",
-                                                     "completed_at": "2026-10-08T01:00:00Z"}]
+    def transport(method, endpoint, headers, body, timeout):
+        assert method == "GET" and body is None
+        if "/workflows/" in endpoint:
+            payload = {"total_count": 1, "workflow_runs": [run]}
+        elif endpoint.endswith("/attempts/1"):
+            payload = {**run, "run_attempt": 1, "conclusion": "failure"}
+        else:
+            assert endpoint.endswith("/attempts/1/jobs?per_page=100")
+            payload = {"total_count": 1, "jobs": [{"name": "pytest (1)", "conclusion": "failure",
+                                                     "completed_at": "2026-10-08T01:00:00Z"}]}
+        return Response(200, {}, json.dumps(payload).encode())
 
-    monkeypatch.setattr(s, "gh_pages", pages)
-    monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: subprocess.CompletedProcess(
-        [], 0, stdout=json.dumps({**run, "run_attempt": 1, "conclusion": "failure"})))
+    calls = github_transport(transport)
     result = s.inventory("owner/repo", "start..stop", first_attempts=True)
     assert result["first_attempts"] is True
     assert result["runs"][0]["run_attempt"] == 1
     assert result["runs"][0]["pytest_red"] is True
-    assert called[-1].endswith("/attempts/1/jobs?per_page=100")
+    assert [call[1] for call in calls] == [
+        "repos/owner/repo/actions/workflows/ci.yml/runs?created=start..stop&per_page=100",
+        "repos/owner/repo/actions/runs/42/attempts/1",
+        "repos/owner/repo/actions/runs/42/attempts/1/jobs?per_page=100",
+    ]
 
 
 @pytest.mark.parametrize("mode,expected_saved,expected_candidate", [("selected", 80, 95), ("full", -10, 185)])

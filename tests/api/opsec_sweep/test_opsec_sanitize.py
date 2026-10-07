@@ -7,15 +7,18 @@ occupancy maps appear in these fixtures.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from scripts.api.lane_health import redact_lane_health_text
 from scripts.api.opsec_sanitize import (
     REDACTED_ABSOLUTE_PATH,
     opsec_path_sanitizer_middleware,
     sanitize_document,
+    sanitize_text,
 )
 from scripts.api.opsec_scan import scan_body, scan_text
 
@@ -23,6 +26,34 @@ pytestmark = pytest.mark.repo_invariant
 
 PLANTED_ROOT = "/tmp/opsec-canary-root"
 PLANTED_PATH = f"{PLANTED_ROOT}/repo"
+
+
+@pytest.mark.parametrize("prose", ["~500K/1M", "~2/3", "~50/50", "~35/module"])
+def test_numeric_tilde_prose_is_unchanged(prose):
+    assert sanitize_text(f"Estimate `{prose}` today.") == f"Estimate `{prose}` today."
+
+
+@pytest.mark.parametrize("path", [PLANTED_PATH, "~/.ssh/fixture-key", "~fixture/data", r"C:\Users\fixture\key.pem"])
+def test_path_tokens_stop_at_backticks(path):
+    assert redact_lane_health_text(f"Open `{path}`next.") == f"Open `{REDACTED_ABSOLUTE_PATH}`next."
+
+
+def test_real_app_rules_json_preserves_source_bytes():
+    from scripts.api.main import create_app
+    from scripts.api.monitor_context import fixture_context
+    from scripts.api.rules_router import _assemble_rules
+
+    root = Path(__file__).resolve().parents[3]
+    expected, sources, digest = _assemble_rules(root)
+    app = create_app(fixture_context(root))
+    response = TestClient(app).get("/api/rules?format=json")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["markdown"].encode("utf-8") == expected.encode("utf-8")
+    assert payload["bytes"] == len(payload["markdown"].encode("utf-8"))
+    assert payload["hash"] == digest
+    assert payload["sources"] == sources
 
 
 def test_sanitize_document_strips_planted_absolute_paths() -> None:

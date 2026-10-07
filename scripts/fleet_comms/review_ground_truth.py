@@ -21,6 +21,7 @@ from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
+from scripts.common import github_client
 from scripts.fleet_comms.review_publication import ReviewEvidence, ReviewPublicationError
 from scripts.fleet_comms.review_publisher import ReviewPublisherError, split_repository
 
@@ -172,7 +173,7 @@ def fetch_pr_change_inventory(
     except ReviewPublisherError as exc:
         raise ReviewGroundTruthError(str(exc)) from exc
 
-    completed = runner(
+    completed = github_client.command(
         [
             "gh",
             "pr",
@@ -183,6 +184,8 @@ def fetch_pr_change_inventory(
             "--json",
             "headRefOid,baseRefOid,files",
         ],
+        runner=runner if runner is not subprocess.run else None,
+        fresh=True,
         capture_output=True,
         text=True,
         check=False,

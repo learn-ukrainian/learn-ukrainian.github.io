@@ -339,6 +339,15 @@ def _live_github_spawn_policy(request: pytest.FixtureRequest) -> Generator[None,
 
 
 @pytest.fixture(autouse=True)
+def _github_client_cache(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest) -> None:
+    """New GitHub disk-cache writes remain test-owned and credential-free."""
+    monkeypatch.setenv("LU_GITHUB_CACHE_DIR", str(tmp_path / "github-cache"))
+    # The launcher backend must not bypass per-test fake CLIs on PATH.
+    if request.node.get_closest_marker("live_github") is None:
+        monkeypatch.delenv("AGENT_REAL_GH", raising=False)
+
+
+@pytest.fixture(autouse=True)
 def _default_fake_github_cli(
     _fake_github_bin: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -3036,3 +3045,45 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
 
 # Opt-in synthetic private tooling for tests of public publishing consumers.
 from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic_opsec  # noqa: F401
+
+
+@pytest.fixture
+def github_command_boundary(monkeypatch):
+    """Caller tests replace whole GitHub commands; HTTP tests inject transport."""
+    from scripts.common import github_client
+
+    def run(args, **kwargs):
+        kwargs.pop("fresh", None)
+        return subprocess.run(args, timeout=kwargs.pop("timeout", 30), **kwargs)
+
+    monkeypatch.setattr(github_client, "run", run)
+
+
+@pytest.fixture
+def github_transport(monkeypatch):
+    """Install one HTTP transport seam while retaining the real client and readers.
+
+    The handler receives method, endpoint, headers, body and timeout. Responses
+    exercise status, headers, caching and REST reshaping exactly as production.
+    """
+    from scripts.common import github_client
+
+    constructor = github_client.GitHubClient
+
+    def install(handler):
+        calls = []
+        install.clients = []
+
+        def transport(method, endpoint, headers, body, timeout):
+            calls.append((method, endpoint, headers, body, timeout))
+            return handler(method, endpoint, headers, body, timeout)
+
+        def client(**kwargs):
+            store = constructor(**{**kwargs, "transport": transport})
+            install.clients.append(store)
+            return store
+
+        monkeypatch.setattr(github_client, "GitHubClient", client)
+        return calls
+
+    return install

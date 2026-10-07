@@ -42,7 +42,7 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
-    path.write_text(json.dumps(payload, indent=2) + "\n")
+    delegate._write_state_atomic(path, payload)
 
 
 def _backup_task_file(path: Path) -> Path:
@@ -163,7 +163,8 @@ def _reclassify_task(
             return "changed", task_id, f"{detail} (dry-run)"
         backup_path = _backup_task_file(task_path)
         task_state["status"] = "failed"
-        task_state["failure_reason"] = task_state.get("failure_reason") or refusal.failure
+        cause = "read_only_checkout_mutation" if refusal.failure == "read_only_mutation_paths" else refusal.failure
+        task_state["failure_reason"] = task_state.get("failure_reason") or cause
         _write_json(task_path, task_state)
         return "changed", task_id, f"{detail} (backup: {backup_path.name})"
     # A delivery-only record needs its delivery gate to pass on the saved

@@ -13,6 +13,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
+
 from scripts.opsec import prepublish as gate
 from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, synthetic_rules
 
@@ -548,7 +550,7 @@ def test_publishers_translate_policy_refusals(module, function, args, error_type
         assert "synthetic refusal" in entries[-1]["diagnostic"]
 
 
-def test_keeper_and_closeout_native_refusal_types(monkeypatch, tmp_path):
+def test_keeper_and_closeout_native_refusal_types(monkeypatch, tmp_path, github_transport):
     from scripts.orchestration import merge_queue_keeper as keeper
     from scripts.orchestration import task_closeout as closeout
     from scripts.orchestration import task_lifecycle
@@ -556,13 +558,14 @@ def test_keeper_and_closeout_native_refusal_types(monkeypatch, tmp_path):
     def refuse(*args, **kwargs):
         raise gate.PublishBlocked("synthetic refusal")
 
+    calls = github_transport(lambda *args: pytest.fail("outbound"))
     for publisher in [keeper, closeout]:
         monkeypatch.setattr(publisher, "request_run", refuse)
     with pytest.raises(keeper.KeeperError, match="publish_blocked"):
         keeper.GitHub(tmp_path, "unit/public").enqueue(1, "a" * 40)
-    for runner in [None, lambda *a: pytest.fail("outbound")]:
-        with pytest.raises(task_lifecycle.LifecycleError, match="publish_blocked"):
-            closeout.GhGitHubAdapter(tmp_path, runner=runner).enqueue_pr("unit/public", 1)
+    with pytest.raises(task_lifecycle.LifecycleError, match="publish_blocked"):
+        closeout.GhGitHubAdapter(tmp_path).enqueue_pr("unit/public", 1)
+    assert calls == []
 
 
 def test_bridge_comment_refusal_is_rendered_and_returns_false(monkeypatch, capsys):

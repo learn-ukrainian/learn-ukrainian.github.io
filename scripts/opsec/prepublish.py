@@ -505,4 +505,6 @@ def checked_run(args, *, runner=None, **kwargs):
     environment = internal_environment(kwargs.get("env", os.environ))
     frozen = admit(list(args[1:]), cwd=Path(kwargs.get("cwd") or Path.cwd()), environment=environment, reader=runner)
     kwargs["env"] = environment
-    return runner([args[0], *frozen.argv], **kwargs)
+    from scripts.common.github_client import command
+
+    return command([args[0], *frozen.argv], runner=runner if runner is not subprocess.run else None, **kwargs)

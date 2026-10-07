@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 import pytest
 
-pytestmark = pytest.mark.reads_content
+pytestmark = [pytest.mark.reads_content, pytest.mark.usefixtures("github_command_boundary")]
 
 
 def _completed(

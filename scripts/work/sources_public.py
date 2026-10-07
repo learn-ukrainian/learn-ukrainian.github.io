@@ -21,11 +21,12 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from copy import deepcopy
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from functools import lru_cache
 from typing import Any
 
 import scripts.github_rest_cache as github_rest
+from scripts.common import github_client
 from scripts.work import SOURCE_PRIVATE, SOURCE_PUBLIC
 
 GH_ENUM_LIMIT = 1000
@@ -245,7 +246,7 @@ class SectionResult:
 
 def _run_gh(args: list[str], timeout_s: float = SECTION_TIMEOUT_S) -> tuple[int, str, str]:
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             args,
             capture_output=True,
             text=True,
@@ -272,7 +273,15 @@ def _fetch_open_issues_rest(repo: str, limit: int) -> SectionResult:
     truncated = bool(getattr(payload, "truncated", False))
     return SectionResult(
         "issues",
-        "truncated" if truncated else "ok",
+        "stale"
+        if getattr(payload, "stale", False) or any(row.get("stale") for row in payload if isinstance(row, dict))
+        else "truncated"
+        if truncated
+        else "ok",
+        age_s=max(
+            getattr(payload, "age_seconds", 0),
+            max((row.get("age_seconds", 0) for row in payload if isinstance(row, dict)), default=0),
+        ),
         payload=payload,
         count=len(payload),
         truncated=truncated,
@@ -325,17 +334,32 @@ class _PRSnapshot:
             if not isinstance(payload, list):
                 raise ValueError("gh_pr_list_not_list")
             truncated = bool(getattr(payload, "truncated", False))
+            age = max(
+                getattr(payload, "age_seconds", 0),
+                max((row.get("age_seconds", 0) for row in payload if isinstance(row, dict)), default=0),
+            )
             result = SectionResult(
                 "prs",
-                "truncated" if truncated else "ok",
+                "stale"
+                if getattr(payload, "stale", False) or any(row.get("stale") for row in payload if isinstance(row, dict))
+                else "truncated"
+                if truncated
+                else "ok",
                 payload=payload,
                 count=len(payload),
                 truncated=truncated,
-                observed_at=observed_at,
+                age_s=age,
+                observed_at=(datetime.fromisoformat(observed_at) - timedelta(seconds=age)).isoformat(),
             )
         except Exception as exc:
             # Never expose exception text (which may include transport details).
             with self._lock:
+                if isinstance(exc, github_rest.GitHubRestError) and exc.status == 429:
+                    self._reason = "github_rate_limited"
+                    if self._snapshot is not None:
+                        self._snapshot.status = "stale"
+                        self._snapshot.reason = self._reason
+                    return
                 self._reason = (
                     "gh_pr_list_timeout" if isinstance(exc, github_rest.GitHubRestTimeout) else "gh_pr_refresh_failed"
                 )
@@ -425,7 +449,15 @@ def fetch_open_issues(
     truncated = len(payload) >= limit
     return SectionResult(
         "issues",
-        "truncated" if truncated else "ok",
+        "stale"
+        if getattr(payload, "stale", False) or any(row.get("stale") for row in payload if isinstance(row, dict))
+        else "truncated"
+        if truncated
+        else "ok",
+        age_s=max(
+            getattr(payload, "age_seconds", 0),
+            max((row.get("age_seconds", 0) for row in payload if isinstance(row, dict)), default=0),
+        ),
         payload=payload,
         count=len(payload),
         truncated=truncated,
@@ -485,7 +517,15 @@ def fetch_open_prs(
     truncated = len(payload) >= limit
     return SectionResult(
         "prs",
-        "truncated" if truncated else "ok",
+        "stale"
+        if getattr(payload, "stale", False) or any(row.get("stale") for row in payload if isinstance(row, dict))
+        else "truncated"
+        if truncated
+        else "ok",
+        age_s=max(
+            getattr(payload, "age_seconds", 0),
+            max((row.get("age_seconds", 0) for row in payload if isinstance(row, dict)), default=0),
+        ),
         payload=payload,
         count=len(payload),
         truncated=truncated,
@@ -513,8 +553,8 @@ def fetch_issue_states_batched(
     """Fetch lifecycles for specific issue numbers.
 
     Production uses conditional REST GETs bounded by ``numbers`` (ETag cache,
-    errors and 404s omitted and not cached). An injected runner keeps the
-    batched GraphQL fixture seam.
+    errors and 404s omitted and not cached). An injected runner supplies the
+    same fixed REST commands and receives the compatibility projection.
 
     Returns a mapping of `{work_id: "closed" | "open", str(number): "closed" | "open"}`.
     If the lookup fails, times out, or an issue is not found, it is omitted

@@ -1,5 +1,6 @@
 """Resolve hosts once for built-in, REST and GraphQL publishing transports."""
 
+import json
 import subprocess
 
 import pytest
@@ -196,7 +197,8 @@ def inherited_host_transport(monkeypatch, synthetic_opsec, tmp_path):
 
     def send(argv, **kwargs):
         calls.append((argv, kwargs["env"]))
-        return subprocess.CompletedProcess(argv, 0, "{}", "")
+        payload = {"resources": {"graphql": {"limit": 5000, "remaining": 4900, "used": 100, "reset": 2000}}} if "rate_limit" in argv else {"merged_at": None}
+        return subprocess.CompletedProcess(argv, 0, json.dumps(payload), "")
 
     def invoke(operation, env):
         options = {"env": env, "runner": send}

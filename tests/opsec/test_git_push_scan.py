@@ -895,13 +895,22 @@ def test_new_merge_on_top_of_public_main_has_its_mergetag_text_scanned(push_sand
 
 
 def head_runner(reply, *, calls):
-    """A gh transport answering only the typed default-head read; records (argv, kwargs, document)."""
-
+    """Answer the REST repository and commit reads of a typed head lookup."""
     def run(argv, **kwargs):
-        assert argv[:5] == ["gh", "api", "--method", "POST", "graphql"], argv
-        calls.append((argv, kwargs, json.loads(Path(argv[argv.index("--input") + 1]).read_text())))
-        return reply(argv)
-
+        assert argv[:4] == ["gh", "api", "--method", "GET"], argv
+        calls.append((argv, kwargs, argv[-1]))
+        result = reply(argv)
+        if result.returncode:
+            return result
+        try:
+            repository = json.loads(result.stdout)["data"]["repository"]
+            branch = repository.get("defaultBranchRef")
+            value = {"full_name":repository.get("nameWithOwner"),"default_branch":branch.get("name") if branch else None} if argv[-1] == "repos/unit/public" else {"sha":branch["target"]["oid"]}
+            if "errors" in json.loads(result.stdout):
+                return subprocess.CompletedProcess(argv,1,'','partial response')
+            return subprocess.CompletedProcess(argv,0,json.dumps(value),'')
+        except (KeyError,TypeError,ValueError):
+            return result
     return run
 
 
@@ -965,7 +974,9 @@ def test_every_failed_or_unbound_head_reply_excludes_nothing(push_sandbox, monke
     err = capfd.readouterr().err
     assert status == 1 and f"field=commit[{hit[:12]}].message" in err, err
     assert "public default-branch head unavailable (1 public repository call(s))" in err
-    assert len(calls) == 1 and calls[0][1]["timeout"] == git_push.API_TIMEOUT
+    assert 1 <= len(calls) <= 2
+    assert calls[0][2] == "repos/unit/public"
+    assert all(call[1]["timeout"] == git_push.API_TIMEOUT for call in calls)
 
 
 def test_real_client_excludes_on_a_bound_reply_from_the_catalogue_repository(push_sandbox, monkeypatch, capfd):
@@ -980,9 +991,8 @@ def test_real_client_excludes_on_a_bound_reply_from_the_catalogue_repository(pus
     )
     status, _ = run_hook(push_sandbox, monkeypatch, client)
     assert status == 0, capfd.readouterr().err
-    ((_, kwargs, document),) = calls
-    assert document["variables"] == {"owner": "unit", "name": "public"}
-    assert "nameWithOwner" in document["query"] and "LU_OPSEC_OVERRIDE" not in kwargs["env"]
+    assert [call[2] for call in calls] == ["repos/unit/public", "repos/unit/public/commits/main"]
+    assert all("LU_OPSEC_OVERRIDE" not in call[1]["env"] for call in calls)
 
 
 def test_the_default_client_names_the_catalogue_public_repository(monkeypatch):

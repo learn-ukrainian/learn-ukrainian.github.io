@@ -19,6 +19,7 @@ from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
+from scripts.common import github_client
 from scripts.common.scratch import ensure_scratch_root
 
 from ._ask_contract import (
@@ -236,8 +237,9 @@ def _run_changed_path_command(
     import subprocess
 
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             command,
+            fresh=True,
             cwd=cwd,
             capture_output=True,
             text=True,

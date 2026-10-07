@@ -14,6 +14,7 @@ from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
+from scripts.common import github_client
 from scripts.storage.paths import REGISTRY_ROOT
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -215,7 +216,7 @@ def _download(pointer: dict[str, Any], *, attempt: int = 0) -> bytes:
             "User-Agent": "learn-ukrainian-atlas-practice-deck-hydrate/1.0",
         },
     )
-    with urllib.request.urlopen(request, timeout=60) as response:
+    with github_client.http_open(request, timeout=60) as response:
         return response.read()
 
 

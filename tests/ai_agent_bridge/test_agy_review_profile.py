@@ -288,6 +288,7 @@ def test_content_only_pr_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyPatch
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     _handle_acp_compat(_review_args(pr=77), "agy")
     assert seen["target"] == "agy"
     assert seen["kwargs"]["review_profile"] == "ukrainian"
@@ -317,6 +318,7 @@ def test_mixed_pr_refuses_naming_the_code_path(monkeypatch: pytest.MonkeyPatch) 
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
         _handle_acp_compat(_review_args(pr=88), "agy")
 
@@ -337,6 +339,7 @@ def test_pr_file_listing_failure_is_refused(monkeypatch: pytest.MonkeyPatch) -> 
         return subprocess.CompletedProcess(command, 1, stderr="gh unavailable")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match="could not list changed files"):
         _handle_acp_compat(_review_args(pr=99), "agy")
 
@@ -366,6 +369,7 @@ def test_pr_file_past_the_hundredth_still_refuses_code(monkeypatch: pytest.Monke
         return subprocess.CompletedProcess(command, 0, stdout="\n".join(names) + "\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
         _handle_acp_compat(_review_args(pr=120), "agy")
 
@@ -387,6 +391,7 @@ def test_prefixed_branch_names_are_refused_before_git(monkeypatch: pytest.Monkey
         raise AssertionError(f"prefixed branch must not reach git: {command}")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     for name in ("origin/feature", "refs/heads/feature", "github/feature", "+feature", "-feature", "feat:ure"):
         with pytest.raises(SystemExit, match="could not list changed files"):
             _handle_acp_compat(_review_args(branch=name), "agy")
@@ -484,6 +489,7 @@ def test_delegate_review_verdict_content_branch_passes_the_gate(
         return scripted(command, **kwargs)
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     args = delegate.build_parser().parse_args(
         [
             "dispatch",
@@ -607,6 +613,7 @@ def test_agy_implementation_dispatch_is_not_review_gated(
 
     argv = _with_sol_envelope(monkeypatch, tmp_path, _AGY_IMPL_ARGV)
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     args = delegate.build_parser().parse_args(argv)
     assert delegate.cmd_dispatch(args) == 2
     err = capsys.readouterr().err
@@ -661,6 +668,7 @@ def test_pr_head_move_between_gate_and_dispatch_is_refused(monkeypatch: pytest.M
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match="differs from the pinned head SHA"):
         _handle_acp_compat(_review_args(pr=41), "agy")
 
@@ -678,6 +686,7 @@ def test_pr_number_below_one_is_refused(monkeypatch: pytest.MonkeyPatch) -> None
         lambda number: ("content-branch", "e" * 40),
     )
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match="could not list changed files"):
         _handle_acp_compat(_review_args(pr=0), "agy")
 
@@ -911,6 +920,7 @@ def test_rename_from_code_onto_content_is_a_code_path(monkeypatch: pytest.Monkey
         raise AssertionError(command)
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     branch_paths = list_branch_changed_paths("feature", repo_root=".")
     assert "scripts/x.py" in branch_paths
     pr_paths = list_commit_changed_paths(_REMOTE_SHA, repo_root=".")
@@ -942,6 +952,7 @@ def test_delegate_pr_gate_diffs_the_resolved_sha(
         raise AssertionError(command)
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
     args = delegate.build_parser().parse_args(
         [
@@ -987,6 +998,7 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
         raise AssertionError(command)
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
     argv = _with_sol_envelope(
         monkeypatch,
@@ -1035,6 +1047,7 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
         raise AssertionError(command)
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
     argv = _with_sol_envelope(
         monkeypatch,

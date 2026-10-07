@@ -6,11 +6,11 @@ from __future__ import annotations
 import json
 import os
 import sys
-import urllib.request
 from pathlib import Path
 from typing import Any
 
 from scripts.ci.check_issue_task_quality import FIELDS, issue_is_trivial, score_body
+from scripts.common.github_client import GitHubClient, GitHubRateLimited
 
 MARKER = "<!-- issue-task-quality:v1 -->"
 BOT_LOGIN = "github-actions[bot]"
@@ -51,24 +51,10 @@ def main() -> int:
     repo = os.environ["GITHUB_REPOSITORY"]
     event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
     number = int(event["issue"]["number"])
-    root = f"https://api.github.com/repos/{repo}"
+    github = GitHubClient(env={**os.environ, "GH_TOKEN": token})
 
     def api(method: str, path: str, data: dict[str, str] | None = None) -> Any:
-        payload = json.dumps(data).encode() if data is not None else None
-        request = urllib.request.Request(
-            root + path,
-            data=payload,
-            method=method,
-            headers={
-                "Accept": "application/vnd.github+json",
-                "Authorization": f"Bearer {token}",
-                "X-GitHub-Api-Version": "2022-11-28",
-                **({"Content-Type": "application/json"} if payload is not None else {}),
-            },
-        )
-        with urllib.request.urlopen(request, timeout=30) as response:
-            raw = response.read()
-        return json.loads(raw) if raw else None
+        return github.request(method, f"repos/{repo}{path}", payload=data, fresh=True).require_fresh()
 
     issue = api("GET", f"/issues/{number}")
     comments: list[dict[str, Any]] = []
@@ -85,4 +71,8 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except GitHubRateLimited as exc:
+        print(f"issue quality timer: skipped reset_at={exc.reset_at}")
+        sys.exit(0)

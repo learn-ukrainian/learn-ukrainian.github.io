@@ -156,7 +156,8 @@ def patch_gh(
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
+    monkeypatch.setattr(rw, "_run_gh", fake_run)
     monkeypatch.setattr(rw.subprocess, "run", fake_run)
     return calls
 
@@ -203,7 +204,7 @@ def test_fetch_pr_info_maps_rest_state(
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     pr = mc.fetch_pr_info(repo, 42)
 
@@ -227,7 +228,7 @@ def test_fetch_pr_info_rest_failure_falls_back_to_graphql(tmp_path: Path, monkey
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     pr = mc.fetch_pr_info(repo, 42)
 
@@ -246,7 +247,7 @@ def test_fetch_pr_info_both_fail_includes_both_errors(tmp_path: Path, monkeypatc
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     with pytest.raises(mc.MergeCloseoutError) as exc_info:
         mc.fetch_pr_info(repo, 42)
@@ -272,7 +273,7 @@ def test_fetch_pr_info_malformed_rest_falls_back_instead_of_guessing(
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     pr = mc.fetch_pr_info(repo, 42)
 
@@ -291,7 +292,7 @@ def test_fetch_pr_info_honors_repo_override_for_rest(tmp_path: Path, monkeypatch
             return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
         return _REAL_RUN(args, **kwargs)
 
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     pr = mc.fetch_pr_info(repo, 42, repo="other/project")
 
@@ -323,7 +324,7 @@ def test_run_merge_closeout_fails_closed_when_gh_pr_view_errors(
             return subprocess.CompletedProcess(args, 1, "", "no such PR")
         return _REAL_RUN(args, **kwargs)
 
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     with pytest.raises(mc.MergeCloseoutError, match="gh pr view 99 failed"):
         mc.run_merge_closeout(repo, 99, apply=True)

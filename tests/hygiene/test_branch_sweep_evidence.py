@@ -638,25 +638,18 @@ def test_timeline_parser_refuses_unreadable_payloads() -> None:
         assert error is not None
 
 
-def test_issue_read_disables_forced_color(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_issue_read_disables_forced_color(monkeypatch: pytest.MonkeyPatch, github_transport) -> None:
+    from scripts.common.github_client import Response
+
     monkeypatch.setenv("CLICOLOR_FORCE", "1")
     monkeypatch.setenv("FORCE_COLOR", "1")
-    seen: dict[str, object] = {}
-
-    def fake_run(args: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
-        env = kwargs.get("env")
-        assert isinstance(env, dict)
-        seen["args"] = args
-        seen["env"] = env
-        return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
-
-    monkeypatch.setattr(sweep.subprocess, "run", fake_run)
-    sweep._run_gh(Path("."), ["api", "repos/example/example"])
-    assert seen["args"] == ["gh", "api", "repos/example/example"]
-    env = seen["env"]
-    assert isinstance(env, dict)
+    calls = github_transport(lambda *args: Response(200, {}, b"[]"))
+    result = sweep._run_gh(Path("."), ["api", "repos/example/example"])
+    assert result.returncode == 0
+    assert [(call[0], call[1]) for call in calls] == [("GET", "repos/example/example")]
+    env = github_transport.clients[-1].env
     assert env["NO_COLOR"] == "1"
-    assert env["GH_FORCE_TTY"] == "0"
+    assert "GH_FORCE_TTY" not in env
     assert "CLICOLOR_FORCE" not in env
     assert "FORCE_COLOR" not in env
 

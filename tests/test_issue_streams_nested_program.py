@@ -102,7 +102,7 @@ def test_membership_and_issue_resolvers_accept_program_child_only_under_its_epic
 
 
 def test_lifecycle_resolves_program_child_to_registered_epic_natively():
-    registered = GhGitHubAdapter(ROOT, runner=lambda args, stdin: "").registered_stream_epics()
+    registered = GhGitHubAdapter(ROOT).registered_stream_epics()
     assert PARENT in registered and PROGRAM in registered
 
     result = task_lifecycle.resolve_membership(

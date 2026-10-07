@@ -11,6 +11,7 @@ import pytest
 from scripts.open_dataset import hydrate as hydrate_module
 from scripts.open_dataset import publish as publish_module
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 def test_release_subprocesses_use_operation_timeouts_and_preserve_clobber(
     tmp_path: Path,
@@ -152,7 +153,7 @@ def test_download_with_gh_timeout_falls_back_to_asset_url(monkeypatch: pytest.Mo
         assert timeout > 0
         return _FakeResponse(b"url bytes")
 
-    monkeypatch.setattr(hydrate_module, "urlopen", fake_urlopen)
+    monkeypatch.setattr(hydrate_module.github_client, "http_open", fake_urlopen)
 
     pointer = {"release_tag": "atlas-open-dataset", "asset_url": "https://example.com/asset.gz"}
     assert hydrate_module.download_asset(pointer, repo="owner/repo") == b"url bytes"

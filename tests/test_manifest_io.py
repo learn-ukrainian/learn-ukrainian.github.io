@@ -74,7 +74,7 @@ def test_load_manifest_returns_matching_local_json(tmp_path: Path, monkeypatch: 
     def fail_urlopen(*args, **kwargs):
         raise AssertionError("matching local manifest should not fetch")
 
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", fail_urlopen)
+    monkeypatch.setattr(manifest_io.github_client, "http_open", fail_urlopen)
 
     assert manifest_io.load_manifest(path=manifest_path) == payload
 
@@ -96,7 +96,7 @@ def test_load_manifest_fetches_decompresses_and_writes_when_absent(
         assert timeout == 60
         return io.BytesIO(gz_bytes)
 
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(manifest_io.github_client, "http_open", fake_urlopen)
 
     assert manifest_io.load_manifest(path=manifest_path) == payload
     assert manifest_path.read_bytes() == json_bytes
@@ -122,7 +122,7 @@ def test_load_manifest_refuses_to_clobber_richer_local_manifest(
     manifest_path.write_bytes(local_bytes)
     _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
     _pin_defaults(monkeypatch, manifest_path, pointer_path)
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+    monkeypatch.setattr(manifest_io.github_client, "http_open", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
 
     with pytest.raises(ValueError, match="refusing to hydrate") as excinfo:
         manifest_io.load_manifest(path=manifest_path)
@@ -154,7 +154,7 @@ def test_load_manifest_hydrates_stale_poorer_local_manifest(
     manifest_path.write_bytes(_json_bytes(local_payload))
     _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
     _pin_defaults(monkeypatch, manifest_path, pointer_path)
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+    monkeypatch.setattr(manifest_io.github_client, "http_open", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
 
     assert manifest_io.load_manifest(path=manifest_path) == release_payload
     assert manifest_path.read_bytes() == json_bytes
@@ -180,7 +180,7 @@ def test_load_manifest_force_hydrates_richer_local_manifest(
     _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
     _pin_defaults(monkeypatch, manifest_path, pointer_path)
     monkeypatch.setenv("ATLAS_MANIFEST_FORCE_HYDRATE", "1")
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+    monkeypatch.setattr(manifest_io.github_client, "http_open", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
 
     assert manifest_io.load_manifest(path=manifest_path) == release_payload
     assert manifest_path.read_bytes() == json_bytes
@@ -206,7 +206,7 @@ def test_load_manifest_refuses_newer_local_manifest_with_equal_entry_count(
     manifest_path.write_bytes(local_bytes)
     _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
     _pin_defaults(monkeypatch, manifest_path, pointer_path)
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+    monkeypatch.setattr(manifest_io.github_client, "http_open", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
 
     with pytest.raises(ValueError, match="refusing to hydrate"):
         manifest_io.load_manifest(path=manifest_path)
@@ -229,7 +229,7 @@ def test_load_manifest_raises_on_gz_sha256_mismatch(
     def fake_urlopen(request: object, timeout: int):
         return io.BytesIO(gz_bytes)
 
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(manifest_io.github_client, "http_open", fake_urlopen)
 
     with pytest.raises(ValueError, match="gz sha256 mismatch") as excinfo:
         manifest_io.load_manifest(path=manifest_path)
@@ -258,7 +258,7 @@ def test_load_manifest_retries_gz_sha256_mismatch_with_cache_bust(
         urls.append(_request_url(request))
         return io.BytesIO(stale_gz_bytes if len(urls) == 1 else gz_bytes)
 
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(manifest_io.github_client, "http_open", fake_urlopen)
 
     assert manifest_io.load_manifest(path=manifest_path) == payload
     assert manifest_path.read_bytes() == json_bytes
@@ -291,7 +291,7 @@ def test_load_manifest_retries_transient_download_error(
             raise manifest_io.urllib.error.URLError("temporary release edge failure")
         return io.BytesIO(gz_bytes)
 
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(manifest_io.github_client, "http_open", fake_urlopen)
 
     assert manifest_io.load_manifest(path=manifest_path) == payload
     assert manifest_path.read_bytes() == json_bytes
@@ -322,7 +322,7 @@ def test_load_manifest_reports_final_download_error_after_prior_mismatch(
             return io.BytesIO(stale_gz_bytes)
         raise manifest_io.http.client.IncompleteRead(b"partial")
 
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(manifest_io.github_client, "http_open", fake_urlopen)
 
     with pytest.raises(ValueError, match="failed to download Atlas manifest") as excinfo:
         manifest_io.load_manifest(path=manifest_path)
@@ -343,7 +343,7 @@ def test_hydrate_hardlinks_readonly_cache_and_atomic_write_replaces_link(
     pointer_path = tmp_path / "lexicon-manifest.pointer.json"
     _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
     _pin_defaults(monkeypatch, manifest_path, pointer_path)
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+    monkeypatch.setattr(manifest_io.github_client, "http_open", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
 
     assert manifest_io.load_manifest(path=manifest_path) == payload
 
@@ -380,7 +380,7 @@ def test_hydrate_reuses_verified_cache_without_download(
     def fail_urlopen(*_args, **_kwargs):
         raise AssertionError("verified cache should not fetch")
 
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", fail_urlopen)
+    monkeypatch.setattr(manifest_io.github_client, "http_open", fail_urlopen)
 
     assert manifest_io.load_manifest(path=manifest_path) == payload
     assert stat.S_IMODE(cache_path.stat().st_mode) == 0o400
@@ -399,7 +399,7 @@ def test_hydrate_copies_when_hardlink_fails(
     pointer_path = tmp_path / "lexicon-manifest.pointer.json"
     _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
     _pin_defaults(monkeypatch, manifest_path, pointer_path)
-    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+    monkeypatch.setattr(manifest_io.github_client, "http_open", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
 
     def fail_link(src: str | Path, dst: str | Path) -> None:
         raise OSError(18, "Invalid cross-device link")

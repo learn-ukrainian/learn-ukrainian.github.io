@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
+from scripts.common.github_client import GitHubRateLimited, timer
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.publish.github import Request, request_run
 
@@ -267,6 +268,9 @@ class GitHubAdapter:
             raise SweepError(
                 f"{args.verb if isinstance(args, Request) else ' '.join(args[:4])} timed out after {DEFAULT_GH_TIMEOUT_SECONDS}s"
             ) from exc
+        observation = getattr(result, "github_result", None)
+        if observation is not None and (observation.stale or observation.error == "github_rate_limited"):
+            raise GitHubRateLimited(observation.reset_at)
         if result.returncode:
             raise SweepError((result.stderr or result.stdout or "GitHub lookup failed")[:1000])
         return result.stdout
@@ -356,6 +360,7 @@ def run(adapter: GitHubAdapter, repository: str, *, now: datetime | None = None)
     return rows
 
 
+@timer
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", required=True, help="GitHub owner/repository")
