@@ -229,7 +229,8 @@ def _fetch_live_pr_head(repo_root: Path, pr_number: int) -> tuple[str | None, st
     """Fetch GitHub's current PR head and return its commit SHA.
 
     The explicit source ref avoids relying on stale local or remote-tracking
-    refs. A failed fetch or unreadable fetched commit is never deletion proof.
+    refs. A failed fetch (including a typed safe-Git refusal) or unreadable
+    fetched commit is never deletion proof; its reason is returned to closeout.
     """
     ref = f"refs/pull/{pr_number}/head"
     repo_root = rw.primary_checkout_root(repo_root)

@@ -140,6 +140,10 @@ def _preserve_attributes(prefix, cwd, env, timeout):
 
     A disabled clean filter cannot reproduce filtered storage. The same applies
     to EOL/encoding/ident transformations: preserve bytes or retain the tree.
+    gitattributes(5)'s check-in attributes are filter, ident, text/eol (including
+    legacy crlf), and working-tree-encoding. check-attr expands custom macros,
+    including redefinitions of binary; the built-in binary only unsets
+    diff/merge/text and does not transform storage. Inspect both attribute views.
     """
     paths = subprocess.run(
         [*prefix, "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
@@ -161,6 +165,7 @@ def _preserve_attributes(prefix, cwd, env, timeout):
                 "--stdin",
                 "filter",
                 "text",
+                "crlf",
                 "eol",
                 "working-tree-encoding",
                 "ident",
@@ -213,6 +218,18 @@ class SafeGitRunner:
     """The only permitted runner injection: an absolute Git executable."""
 
     executable: str = GIT
+
+
+class GitRefusal(subprocess.CompletedProcess):
+    """A non-executing, failed Git result with a privacy-safe reason code.
+
+    Existing returncode-based callers fail closed without catching exceptions.
+    Like a real failed command, check=True still raises CalledProcessError.
+    """
+
+    def __init__(self, args: list[str], code: str, *, text: bool = False):
+        self.code = code
+        super().__init__(args, 1, "" if text else b"", code if text else code.encode())
 
 
 def _execution_keys(prefix, roots, env, timeout):
@@ -367,8 +384,31 @@ def run_git(
             )
             prefix.extend(["-c", f"{key}={value}"])
     if profile == "remote":
-        if any(re.fullmatch(r"remote\..+\.vcs", key, re.I) for key in keys):
-            raise ValueError("custom remote VCS helpers are unsupported")
+        # Cleanup proofs name origin explicitly. Ignore unrelated remotes,
+        # but retain the refusal for any explicitly used custom helper. Parse
+        # the repository operand for the flags used by cleanup; a ref/pattern
+        # named after another remote is not that operation's target. Unknown
+        # option syntax and default/multi-remote operations refuse conservatively.
+        remote = None
+        flags = {"--heads", "--exit-code", "--no-tags", "--quiet", "--refs", "--tags", "--symref", "--get-url"}
+        for index, arg in enumerate(args[1:], 1):
+            if arg == "--":
+                remote = args[index + 1] if len(args) > index + 1 else None
+                break
+            if arg in flags or (arg.startswith("--") and "=" in arg):
+                continue
+            if not arg.startswith("-"):
+                remote = arg
+            break
+        vcs_keys = {key for key in keys if re.fullmatch(r"remote\..+\.vcs", key, re.I)}
+        if any(
+            remote is None or any(flag in args[1:] for flag in ("--all", "--multiple")) or key[7:-4] == remote
+            for key in vcs_keys
+        ):
+            refusal = GitRefusal(args, "remote_vcs_helper_unsupported", text=bool(kwargs.get("text")))
+            if kwargs.get("check"):
+                refusal.check_returncode()
+            return refusal
         if any(arg.startswith(("--upload-pack", "--exec")) or arg == "-u" for arg in args[1:]):
             raise ValueError("remote upload-pack override is unsupported")
         args = [args[0], "--upload-pack=git-upload-pack", *args[1:]]
@@ -384,8 +424,7 @@ def run_git(
     ):
         raise ValueError("preservation signing is unsupported")
     if profile == "commit" and not (
-        args == ["add", "-A"]
-        or (len(args) == 4 and args[:3] == ["commit", "--no-verify", "-m"])
+        args == ["add", "-A"] or (len(args) == 4 and args[:3] == ["commit", "--no-verify", "-m"])
     ):
         # Interactive add and commit trailers reach more configured programs.
         # This profile is solely the reaper's noninteractive preservation pair.

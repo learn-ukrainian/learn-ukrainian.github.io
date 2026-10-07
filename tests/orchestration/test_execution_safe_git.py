@@ -566,7 +566,10 @@ def test_restore_refuses_worker_cwd_before_raw_checkout(boundary_tree):
 
     _repo, tree, _tasks, _record = boundary_tree
     assert reaper_lifecycle.restore_worktree(
-        tree, recovery_ref="unused", branch="unused", worktree_path=tree / "new",
+        tree,
+        recovery_ref="unused",
+        branch="unused",
+        worktree_path=tree / "new",
     ) == (False, "restore requires the primary repository")
 
 
@@ -594,13 +597,213 @@ def test_remote_and_signing_execution_overrides_are_refused(boundary_tree, tmp_p
     for flag in ("-S", "--gpg-sign", "--gpg-sign=key", "--gpg-s"):
         with pytest.raises(ValueError, match="signing"):
             safe.run_git(["commit", flag, "-m", "probe"], cwd=tree, profile="commit")
-    for command in (["add", "-p"], ["commit", "-aS", "-m", "probe"], ["commit", "--trailer=Token: value", "-m", "probe"]):
+    for command in (
+        ["add", "-p"],
+        ["commit", "-aS", "-m", "probe"],
+        ["commit", "--trailer=Token: value", "-m", "probe"],
+    ):
         with pytest.raises(ValueError, match="preservation"):
             safe.run_git(command, cwd=tree, profile="commit")
     _git(repo, "config", "remote.origin.vcs", "tripwire")
-    with pytest.raises(ValueError, match="VCS"):
-        safe.run_git(["fetch", "origin"], cwd=tree, profile="remote")
+    refusal = safe.run_git(["fetch", "origin"], cwd=tree, profile="remote")
+    assert isinstance(refusal, safe.GitRefusal)
+    assert refusal.code == "remote_vcs_helper_unsupported"
+    assert refusal.returncode != 0
     assert not any(marker.exists() for marker in markers)
+
+
+@pytest.mark.parametrize("source", ["worktree", "cached", "info", "external"])
+@pytest.mark.parametrize(
+    "attribute",
+    [
+        "text",
+        "text=auto",
+        "eol=lf",
+        "eol=crlf",
+        "working-tree-encoding=UTF-8",
+        "ident",
+        "crlf",
+        "crlf=input",
+        "crlf=true",
+        "crlf=false",
+        "crlf=",
+    ],
+)
+def test_round_c_preserve_transform_refusal_is_nonmutating(boundary_tree, tmp_path, source, attribute):
+    from scripts.orchestration import execution_safe_git as safe
+    from scripts.orchestration import reap_worktrees as rw
+
+    repo, tree, _tasks, _record = boundary_tree
+    attrs = f"payload.bin {attribute}\n"
+    if source in {"worktree", "cached"}:
+        (tree / ".gitattributes").write_text(attrs)
+        if source == "cached":
+            _git(tree, "add", ".gitattributes")
+            (tree / ".gitattributes").write_text("")
+    elif source == "info":
+        (repo / ".git/info/attributes").write_text(attrs)
+    else:
+        external = tmp_path / "attributes"
+        external.write_text(attrs)
+        _git(tree, "config", "core.attributesFile", str(external))
+    payload = b"a\r\nb\r\n$Id: expanded $\r\n"
+    (tree / "payload.bin").write_bytes(payload)
+    head = _git(tree, "rev-parse", "HEAD")
+    index_path = Path(_git(tree, "rev-parse", "--path-format=absolute", "--git-path", "index"))
+    index = index_path.read_bytes()
+    info = rw.WorktreeInfo(tree, "codex/boundary", head)
+    result = rw._reap_qualified_worktree(
+        repo_root=repo,
+        info=info,
+        reason="PR #9645 MERGED",
+        dirty=True,
+        pr_state=rw.PullRequestState(number=9645, state="MERGED", head_sha=head),
+        apply=True,
+        preserve_then_reap=True,
+        prune_merged_branches=False,
+        require_terminal_dispatch_guards=False,
+    )
+    assert result.action == "error"
+    assert "preserve_transform_attribute" in result.error
+    assert tree.exists() and (tree / "payload.bin").read_bytes() == payload
+    assert index_path.read_bytes() == index
+    assert safe.run_git(["rev-parse", "HEAD"], cwd=tree, capture_output=True, text=True).stdout.strip() == head
+
+
+@pytest.mark.parametrize("source", ["worktree", "cached"])
+@pytest.mark.parametrize(
+    "attribute", ["filter=tripwire", "text", "eol=lf", "working-tree-encoding=UTF-8", "ident", "crlf"]
+)
+@pytest.mark.parametrize("macro", ["custom", "binary"])
+def test_round_c_preserve_refuses_expanded_macros(boundary_tree, source, attribute, macro):
+    from scripts.orchestration import execution_safe_git as safe
+    from scripts.orchestration import reap_worktrees as rw
+
+    _repo, tree, _tasks, _record = boundary_tree
+    (tree / ".gitattributes").write_text(f"[attr]{macro} {attribute}\n[attr]nested {macro}\npayload.bin nested\n")
+    if source == "cached":
+        _git(tree, "add", ".gitattributes")
+        (tree / ".gitattributes").write_text("")
+    payload = b"a\r\nb\r\n$Id: expanded $\r\n"
+    (tree / "payload.bin").write_bytes(payload)
+    head = _git(tree, "rev-parse", "HEAD")
+    index_path = Path(_git(tree, "rev-parse", "--path-format=absolute", "--git-path", "index"))
+    index = index_path.read_bytes()
+    error = rw._preserve_dirty_worktree(rw.WorktreeInfo(tree, "codex/boundary", head))
+    code = "preserve_filter_attribute" if attribute.startswith("filter") else "preserve_transform_attribute"
+    assert error is not None and code in error
+    assert (tree / "payload.bin").read_bytes() == payload
+    assert index_path.read_bytes() == index
+    assert safe.run_git(["rev-parse", "HEAD"], cwd=tree, capture_output=True, text=True).stdout.strip() == head
+
+
+@pytest.mark.parametrize("attribute", ["-crlf", "!crlf", "-text", "binary", "custom"])
+def test_round_c_preserve_nontransforming_attributes_are_byte_exact(boundary_tree, attribute):
+    from scripts.orchestration import execution_safe_git as safe
+    from scripts.orchestration import reap_worktrees as rw
+
+    _repo, tree, _tasks, _record = boundary_tree
+    (tree / ".gitattributes").write_text(f"[attr]custom -text -crlf\npayload.bin {attribute}\n")
+    payload = b"a\r\nb\r\n$Id: expanded $\r\n"
+    (tree / "payload.bin").write_bytes(payload)
+    head = _git(tree, "rev-parse", "HEAD")
+    assert rw._preserve_dirty_worktree(rw.WorktreeInfo(tree, "codex/boundary", head)) is None
+    assert safe.run_git(["cat-file", "blob", "HEAD:payload.bin"], cwd=tree, capture_output=True).stdout == payload
+    assert (tree / "payload.bin").read_bytes() == payload
+
+
+@pytest.mark.parametrize("caller", ["origin-gone", "live-heads", "closeout-fetch"])
+@pytest.mark.parametrize("remote", ["mirror", "origin"])
+def test_round_c_remote_helper_proof_scope(boundary_tree, capsys, caller, remote):
+    from scripts.orchestration import execution_safe_git as safe
+
+    repo, tree, _tasks, _record = boundary_tree
+    head = _git(tree, "rev-parse", "HEAD")
+    _git(repo, "push", "origin", f"{head}:refs/pull/9645/head")
+    if caller == "origin-gone":
+        _git(repo, "push", "origin", "--delete", "codex/boundary")
+    _git(repo, "config", "remote.mirror.url", _git(repo, "remote", "get-url", "origin"))
+    _git(repo, "config", f"remote.{remote}.vcs", "hg")
+    probe = safe.run_git(["ls-remote", "--heads", "origin"], cwd=tree, profile="remote", capture_output=True, text=True)
+    if remote == "origin":
+        assert isinstance(probe, safe.GitRefusal) and probe.code == "remote_vcs_helper_unsupported"
+        assert probe.stderr == probe.code
+    else:
+        assert probe.returncode == 0 and not isinstance(probe, safe.GitRefusal)
+    result = proof_call(caller, boundary_tree)
+    if remote == "mirror":
+        assert result == {"origin-gone": ("removed", ""), "live-heads": True, "closeout-fetch": (head, None)}[caller]
+    else:
+        if caller == "live-heads":
+            assert result is None
+            assert "remote_vcs_helper_unsupported" in capsys.readouterr().err
+        else:
+            assert result[0] == ("kept" if caller == "origin-gone" else None)
+            assert "remote_vcs_helper_unsupported" in result[1]
+            if caller == "origin-gone":
+                assert "unproven commits" in result[1]
+        assert tree.exists()
+        assert _git(tree, "rev-parse", "HEAD") == head
+
+
+@pytest.mark.parametrize("text", [False, True])
+def test_round_c_remote_helper_refusal_check_contract(boundary_tree, text):
+    from scripts.orchestration import execution_safe_git as safe
+
+    repo, tree, _tasks, _record = boundary_tree
+    _git(repo, "config", "remote.origin.vcs", "hg")
+    result = safe.run_git(["fetch", "origin"], cwd=tree, profile="remote", capture_output=True, text=text)
+    assert isinstance(result, safe.GitRefusal)
+    assert result.stderr == (result.code if text else result.code.encode())
+    with pytest.raises(subprocess.CalledProcessError, match="exit status 1"):
+        safe.run_git(["fetch", "origin"], cwd=tree, profile="remote", check=True, text=text)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        ["ls-remote", "--heads", "origin", "mirror"],
+        ["ls-remote", "--heads", "--", "origin", "mirror"],
+    ],
+)
+def test_round_c_remote_ref_pattern_is_not_a_remote(boundary_tree, command):
+    from scripts.orchestration import execution_safe_git as safe
+
+    repo, tree, _tasks, _record = boundary_tree
+    _git(repo, "config", "remote.mirror.vcs", "hg")
+    result = safe.run_git(command, cwd=tree, profile="remote", capture_output=True)
+    assert result.returncode == 0 and not isinstance(result, safe.GitRefusal)
+    for args in (["fetch", "mirror"], ["fetch", "--all"], ["fetch", "--multiple", "origin", "mirror"]):
+        refused = safe.run_git(args, cwd=tree, profile="remote", capture_output=True)
+        assert isinstance(refused, safe.GitRefusal) and refused.code == "remote_vcs_helper_unsupported"
+
+
+def test_round_c_origin_helper_refusal_sweep_continues(boundary_tree, monkeypatch):
+    from scripts.orchestration import reap_worktrees as rw
+
+    repo, tree, _tasks, _record = boundary_tree
+    head = _git(tree, "rev-parse", "HEAD")
+    _git(tree, "commit", "--allow-empty", "-m", "unproven local commit")
+    unproven = _git(tree, "rev-parse", "HEAD")
+    _git(repo, "push", "origin", "--delete", "codex/boundary")
+    next_tree = repo / ".worktrees/dispatch/codex/next"
+    _git(repo, "worktree", "add", "-b", "codex/next", str(next_tree), head)
+    monkeypatch.setattr(
+        rw,
+        "_query_pr_states",
+        lambda _repo, _branch: (
+            [rw.PullRequestState(number=9645, state="MERGED", head_sha=head)],
+            None,
+        ),
+    )
+    _git(repo, "config", "remote.origin.vcs", "hg")
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    blocked = next(result for result in results if Path(result.path) == tree)
+    assert blocked.action == "skipped"
+    assert "remote_vcs_helper_unsupported" in blocked.reason and unproven in blocked.reason
+    assert tree.exists() and _git(tree, "rev-parse", "HEAD") == unproven
+    following = next(result for result in results if Path(result.path) == next_tree)
+    assert following.action == "removed" and not next_tree.exists()
 
 
 @pytest.mark.parametrize("command", [["add", "-A"], ["commit", "--no-verify", "-m", "preserve fixture"]])

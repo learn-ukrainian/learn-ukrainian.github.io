@@ -54,7 +54,7 @@ from scripts.common.acp_runtime_lock import (
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
-from scripts.orchestration.execution_safe_git import COMMIT_COMMANDS, REMOTE_COMMANDS
+from scripts.orchestration.execution_safe_git import COMMIT_COMMANDS, REMOTE_COMMANDS, GitRefusal
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.path_safety import assert_delete_target
 
@@ -1048,7 +1048,8 @@ def _merged_origin_gone_proof(info: WorktreeInfo, pr_state: PullRequestState) ->
             timeout=30,
         )
         if live_branch.returncode != 0:
-            return unproven(local_commits(), "origin branch probe failed")
+            detail = f": {live_branch.code}" if isinstance(live_branch, GitRefusal) else ""
+            return unproven(local_commits(), f"origin branch probe failed{detail}")
         if live_branch.stdout.strip():
             return unproven(local_commits(), "origin branch returned")
 
@@ -2107,7 +2108,7 @@ def _origin_branch_present(path: Path, branch: str | None) -> bool:
 
 
 def _live_origin_heads_present(path: Path, branch: str | None) -> bool | None:
-    """Return whether origin currently has ``branch``. ``None`` if ls-remote failed."""
+    """Return whether origin has ``branch``; None on failure, reporting typed refusals."""
     if not branch:
         return False
     # Called before the per-worktree lock. 30s is this probe's own cap; it is
@@ -2115,6 +2116,8 @@ def _live_origin_heads_present(path: Path, branch: str | None) -> bool | None:
     # local remote-tracking ref (:func:`_origin_branch_present`) instead.
     proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=primary_checkout_root(path), timeout=30)
     if proc.returncode != 0:
+        if isinstance(proc, GitRefusal):
+            print(f"live origin proof unavailable: {proc.code}", file=sys.stderr)
         return None
     return bool((proc.stdout or "").strip())
 
