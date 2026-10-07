@@ -55,8 +55,61 @@ def _host_before_path_slash(token: str) -> str:
     return authority
 
 
+def _is_shell_variable_name(name: str) -> bool:
+    """True for a POSIX name: a letter or underscore, then letters, digits or underscores."""
+    if not name or not name.isascii():
+        return False
+    first, rest = name[0], name[1:]
+    return (first.isalpha() or first == "_") and all(char.isalnum() or char == "_" for char in rest)
+
+
+def _is_long_option_name(name: str) -> bool:
+    """True for the name in ``--name=``: a letter or digit, then letters, digits, ``_`` or ``-``."""
+    if not name or not name.isascii():
+        return False
+    first, rest = name[0], name[1:]
+    return first.isalnum() and all(char.isalnum() or char in "_-" for char in rest)
+
+
+def _without_shell_prefix(token: str) -> str:
+    """Drop one leading ``NAME=`` or ``--option=``. A query ``=`` is not that prefix."""
+    if token.startswith("--"):
+        name, separator, value = token[2:].partition("=")
+        if separator and _is_long_option_name(name):
+            return value
+        return token
+    name, separator, value = token.partition("=")
+    if separator and _is_shell_variable_name(name):
+        return value
+    return token
+
+
+def _shell_token_for_host(token: str) -> str:
+    """Remove shell syntax that sits outside the URL, then leave the rest to the host parse.
+
+    A token may be wrapped in ``()`` or ``<>`` and may carry one leading ``NAME=`` or
+    ``--option=`` prefix. Those peel in either order (``U=(https://...)``,
+    ``(--url=https://...)``). The prefix is only a shell variable or a long option, so
+    the first ``=`` inside a query stays with its real host.
+    """
+    wrappers = {"(": ")", "<": ">"}
+    while token:
+        closer = wrappers.get(token[0])
+        if closer is not None and len(token) > 1 and token[-1] == closer:
+            token = token[1:-1]
+            continue
+        peeled = _without_shell_prefix(token)
+        if peeled == token:
+            return token
+        token = peeled
+    return token
+
+
 def _token_is_github_http(token: str) -> bool:
     """True when this token's parsed hostname is a GitHub API, upload, or web host."""
+    token = _shell_token_for_host(token)
+    if not token:
+        return False
     if token.startswith("://"):
         # f"{scheme}://host/..." leaves the authority in this piece.
         token = "//" + token[3:]
@@ -80,9 +133,11 @@ def _is_github_http_literal(value: str) -> bool:
     """True when a whitespace- or quote-separated token is a GitHub URL.
 
     ``urlsplit`` supplies the host. A shell command is split so a URL inside
-    it is parsed on its own. Scheme-less ``host`` and ``host/path`` tokens are
-    compared exactly, because they do not land in ``hostname``. A look-alike
-    host, or a path or query that only contains the name, does not match.
+    it is parsed on its own. Before that parse, each token loses a leading
+    ``NAME=`` or ``--option=`` prefix and a surrounding ``()`` or ``<>`` pair.
+    Scheme-less ``host`` and ``host/path`` tokens are compared exactly,
+    because they do not land in ``hostname``. A look-alike host, or a path
+    or query that only contains the name, does not match.
     """
     return any(_token_is_github_http(token) for token in _TOKEN_SEPARATOR.split(value) if token)
 
@@ -317,6 +372,10 @@ def test_scripts_have_one_github_client():
         'import requests\ndef probe():\n return requests.get("https://api.github.com./user")',
         'import requests\ndef probe():\n return requests.get("API.GITHUB.COM/user")',
         'import requests\ndef probe():\n return requests.get("https://[api.github.com/user")',
+        'import subprocess\ndef probe():\n return subprocess.run("U=https://api.github.com/user; curl $U", shell=True)',
+        'import subprocess\ndef probe():\n return subprocess.run("curl --url=https://api.github.com/user", shell=True)',
+        'import subprocess\ndef probe():\n return subprocess.run("curl (https://api.github.com/user)", shell=True)',
+        'import subprocess\ndef probe():\n return subprocess.run("curl <https://api.github.com/user>", shell=True)',
     ],
 )
 def test_mutation_is_rejected(source, tmp_path):
