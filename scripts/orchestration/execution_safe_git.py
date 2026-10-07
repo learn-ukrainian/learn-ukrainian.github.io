@@ -150,6 +150,7 @@ def _preserve_attributes(prefix, cwd, env, timeout):
         cwd=cwd,
         env=env,
         capture_output=True,
+        text=False,
         timeout=timeout,
         check=False,
     )
@@ -174,6 +175,7 @@ def _preserve_attributes(prefix, cwd, env, timeout):
             cwd=cwd,
             env=env,
             capture_output=True,
+            text=False,
             timeout=timeout,
             check=False,
         )
@@ -233,7 +235,7 @@ class GitRefusal(subprocess.CompletedProcess):
 
 
 def _execution_keys(prefix, roots, env, timeout):
-    """Inspect config and initialized gitlinks without refreshing file contents.
+    """Inspect binary config and gitlink records without refreshing file contents.
 
     worktree-remove runs status in its target; status/diff/add/commit may
     inspect initialized submodules. Collect named drivers from each config
@@ -253,6 +255,7 @@ def _execution_keys(prefix, roots, env, timeout):
             cwd=root,
             env=env,
             capture_output=True,
+            text=False,
             check=False,
             timeout=timeout,
         )
@@ -268,6 +271,7 @@ def _execution_keys(prefix, roots, env, timeout):
             cwd=root,
             env=env,
             capture_output=True,
+            text=False,
             check=False,
             timeout=timeout,
         )
@@ -287,6 +291,7 @@ def _execution_keys(prefix, roots, env, timeout):
             cwd=root,
             env=env,
             capture_output=True,
+            text=False,
             check=False,
             timeout=timeout,
         )

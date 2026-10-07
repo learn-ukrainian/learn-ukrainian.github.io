@@ -23,7 +23,7 @@ from unittest.mock import patch
 import pytest
 
 import scripts.delegate as delegate
-from scripts.orchestration import worktree_claims
+from scripts.orchestration import reap_worktrees, worktree_artifacts, worktree_claims
 
 
 @pytest.mark.parametrize("caller", ["superseded-review", "stale-holder"])
@@ -285,6 +285,18 @@ def test_later_round_removes_only_earlier_clean_rounds(monkeypatch, tmp_path: Pa
 
         return Proc()
 
+    def fake_safe_git(args, **kwargs):
+        assert kwargs["text"] is True
+        return fake_run(["git", *args])
+
+    monkeypatch.setattr(reap_worktrees, "safe_git", fake_safe_git)
+    monkeypatch.setattr(worktree_claims, "safe_git", fake_safe_git)
+
+    def inventory_git(args, **kwargs):
+        # Keep the original real, binary inventory at its new runner seam.
+        return real_run(["git", *args], **kwargs)
+
+    monkeypatch.setattr(worktree_artifacts, "safe_git", inventory_git)
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
     released = delegate._release_superseded_review_worktrees("review-topic-r4", dry_run=False)
@@ -404,6 +416,17 @@ def test_contained_review_round_deletes_scratch_branch(monkeypatch, tmp_path: Pa
         commands.append(list(cmd))
         return _git_reply(list(cmd), contained=True)
 
+    def fake_safe_git(args, **kwargs):
+        assert kwargs["text"] is True
+        return fake_run(["git", *args])
+
+    monkeypatch.setattr(reap_worktrees, "safe_git", fake_safe_git)
+    monkeypatch.setattr(worktree_claims, "safe_git", fake_safe_git)
+
+    def inventory_git(args, **kwargs):
+        return real_run(["git", *args], **kwargs)
+
+    monkeypatch.setattr(worktree_artifacts, "safe_git", inventory_git)
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
     released = delegate._release_superseded_review_worktrees("review-topic-r4", dry_run=False)
