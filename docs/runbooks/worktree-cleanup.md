@@ -315,6 +315,11 @@ refuses while another task's unfinished record names the checkout, and only
 then calls `worktree_claims.git_worktree_remove`, the repository's one raw
 `git worktree remove`. The P0 reaper's `_reap_qualified_worktree` calls that
 raw remover directly, under the same lock and claim scan.
+The shared remover checks approved deletion roots for forced removals. The
+reaper also checks them explicitly for non-force continuation cohorts, including
+approved scratch roots. Other non-force callers retain Git's ordinary removal
+rules, including sibling worktrees created by `wt.sh` and task-family cleanup
+when `TMPDIR` is unset.
 `tests/orchestration/test_worktree_removal_invariant.py` fails on any other
 removal call site under `scripts/`.
 

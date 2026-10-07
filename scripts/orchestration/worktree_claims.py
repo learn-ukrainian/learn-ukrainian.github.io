@@ -620,7 +620,8 @@ def git_worktree_remove(
 
     Only :func:`remove_unclaimed_worktree` and the scheduled reaper's guarded
     pipeline call this; ``tests/orchestration/test_worktree_removal_invariant.py``
-    fails on any other caller. Every target passes the delete-target guard.
+    fails on any other caller. Forced targets pass the delete-target guard;
+    the reaper explicitly guards non-force continuation-cohort targets.
     ``force`` runs ``git worktree remove --force``, which a clean porcelain tree
     still needs when it holds ignored residue such as a worker ``.venv``.
     Without ``force`` git itself refuses a checkout with modified or untracked
@@ -638,14 +639,16 @@ def git_worktree_remove(
     attribution only; missing attribution and failed retrieval retain the tree.
     ``preservation_receipt`` receives retrieval or retention metadata.
     """
-    try:
-        target = assert_delete_target(
-            worktree,
-            repo_root=repo_root,
-            approved_temp_roots=approved_temp_roots,
-        )
-    except ValueError as exc:
-        return f"delete guard refused worktree target: {exc}"
+    target = worktree
+    if force:
+        try:
+            target = assert_delete_target(
+                worktree,
+                repo_root=repo_root,
+                approved_temp_roots=approved_temp_roots,
+            )
+        except ValueError as exc:
+            return f"delete guard refused worktree target: {exc}"
     # Both locked removal pipelines meet here. Preserve exactly once, after
     # their ownership/claim checks and immediately before destructive Git.
     from scripts.fleet.ignored_task_output import preserve_worktree_artifacts

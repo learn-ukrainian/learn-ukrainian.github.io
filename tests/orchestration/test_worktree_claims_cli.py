@@ -82,6 +82,25 @@ def test_removes_an_unclaimed_linked_worktree_and_keeps_its_branch(tmp_path, cap
     assert _git(primary, "branch", "--list", "codex/impl-1")
 
 
+@pytest.mark.parametrize("force", [False, True])
+def test_sibling_removal_without_tmpdir_guards_only_force(tmp_path, monkeypatch, force):
+    monkeypatch.delenv("TMPDIR", raising=False)
+    primary = _primary(tmp_path)
+    worktree = _linked(primary, "codex/sibling", tmp_path / "sibling")
+
+    result = worktree_claims.remove_unclaimed_worktree(
+        worktree, repo_root=primary, reason="sibling regression", owner_task_id=None, force=force
+    )
+
+    if force:
+        assert result.action == "error"
+        assert "delete guard refused" in result.error
+        assert worktree.exists()
+    else:
+        assert result.action == "removed", result
+        assert not worktree.exists()
+
+
 def test_refuses_while_an_unfinished_task_claims_the_worktree(tmp_path, capsys):
     primary = _primary(tmp_path)
     worktree = _linked(primary, "codex/impl-2")
@@ -464,7 +483,8 @@ def _wt_clean(primary: Path) -> subprocess.CompletedProcess[str]:
     )
 
 
-def test_wt_sh_clean_removes_through_the_guarded_cli(tmp_path):
+def test_wt_sh_clean_removes_through_the_guarded_cli(tmp_path, monkeypatch):
+    monkeypatch.delenv("TMPDIR", raising=False)
     primary, worktree = _wt_sh_fixture(tmp_path)
 
     proc = _wt_clean(primary)

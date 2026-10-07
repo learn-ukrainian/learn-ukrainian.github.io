@@ -3941,9 +3941,25 @@ def _reap_qualified_worktree(
             preservation_receipt["merged_head_proof"] = merged_reuse_proof
         foreign_root = None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)
         approval = {} if foreign_root is None else {"approved_temp_roots": (foreign_root,)}
+        target = info.path
+        if merged_reuse_proof is not None:
+            try:
+                target = assert_delete_target(info.path, repo_root=repo_root, **approval)
+            except ValueError as exc:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="error",
+                    reason=reason,
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                    error=f"delete guard refused worktree target: {exc}",
+                    recovery_ref=recovery_ref,
+                    preserved_artifacts=preservation_receipt or None,
+                )
         remove_error = worktree_claims.git_worktree_remove(
             repo_root,
-            info.path,
+            target,
             force=merged_reuse_proof is None,
             control_root=control_root,
             task_id=_dispatch_task_id(repo_root, info),

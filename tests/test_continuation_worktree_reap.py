@@ -306,6 +306,7 @@ def test_commit_search_requires_real_pr_head(cohort, monkeypatch, number_head):
 
 
 def test_nonforce_cohort_removal_runs_delete_target_guard(cohort, monkeypatch):
+    monkeypatch.delenv("TMPDIR", raising=False)
     repo, tree, _, _, _, source = continuation(cohort, "C")
     calls = []
 
@@ -313,12 +314,50 @@ def test_nonforce_cohort_removal_runs_delete_target_guard(cohort, monkeypatch):
         calls.append((target, kwargs["repo_root"]))
         raise ValueError("held-out delete-target refusal")
 
-    monkeypatch.setattr(claims, "assert_delete_target", refuse)
+    monkeypatch.setattr(reap.reap_worktrees, "assert_delete_target", refuse)
     row = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
     assert row["action"] == "error", row
     assert "delete guard refused" in row["error"]
     assert calls == [(tree, repo)]
     assert tree.exists() and source.read_bytes() == b"current output"
+
+
+def test_nonforce_scratch_cohort_uses_approved_delete_root(cohort, monkeypatch):
+    monkeypatch.delenv("TMPDIR", raising=False)
+    repo, tree, tasks, *_ = continuation(cohort, "C")
+    scratch = repo.parent / "scratch-cohort"
+    _git(repo, "worktree", "move", str(tree), str(scratch))
+    for path in tasks.glob("*.json"):
+        record = json.loads(path.read_text())
+        for field in ("worktree_path", "cwd"):
+            if record.get(field) == str(tree):
+                record[field] = str(scratch)
+        path.write_text(json.dumps(record))
+    monkeypatch.setattr(reap.reap_worktrees, "_foreign_scratch_roots", lambda: (repo.parent,))
+    guard = reap.reap_worktrees.assert_delete_target
+    calls = []
+
+    def check(target, **kwargs):
+        calls.append((target, kwargs["approved_temp_roots"]))
+        return guard(target, **kwargs)
+
+    monkeypatch.setattr(reap.reap_worktrees, "assert_delete_target", check)
+    head = _git(scratch, "rev-parse", "HEAD")
+    row = reap.reap_worktrees._reap_qualified_worktree(
+        repo_root=repo,
+        info=reap.reap_worktrees.WorktreeInfo(scratch, "codex/boundary", head),
+        reason="PR #9645 MERGED",
+        dirty=False,
+        pr_state=reap.reap_worktrees.PullRequestState(9645, "MERGED", head),
+        apply=True,
+        preserve_then_reap=False,
+        prune_merged_branches=False,
+        require_terminal_dispatch_guards=False,
+    )
+
+    assert row.action == "removed", (row.reason, row.error)
+    assert calls == [(scratch, (repo.parent,))]
+    assert not scratch.exists()
 
 
 @pytest.mark.parametrize("created_evidence", [False, True])
