@@ -239,14 +239,37 @@ payload = {"numbers": [1, 2, 3], "text": "literal"}
 
 
 def test_pruned_walk_matches_full_walk_on_real_repository_graph(monkeypatch, manifest):
+    # Exact node identity/order equality is stronger than edge-set equality:
+    # both deterministic consumers receive the same objects in the same order.
+    # The consumer-type guard proves that other full-walk nodes are inert; the
+    # fixture-corpus proof still runs the consumers over unfiltered ast.walk.
+    pruned_walk = c.dependency_nodes
+    parse = c.ast.parse
+    parsed = []
+    compared = []
+
+    def parse_once(source, *, filename):
+        parsed.append(filename)
+        return parse(source, filename=filename)
+
+    def equivalent_walk(tree):
+        pruned = pruned_walk(tree)
+        full = [node for node in c.ast.walk(tree) if type(node) in c.DEPENDENCY_NODE_TYPES]
+        assert pruned == full
+        if isinstance(tree, c.ast.Module):
+            compared.append(parsed[-1])
+        return pruned
+
+    monkeypatch.setattr(c.ast, "parse", parse_once)
+    monkeypatch.setattr(c, "dependency_nodes", equivalent_walk)
+    # Bypass warm process-local results so every indexed tree enters the proof.
+    monkeypatch.setattr(c, "cached_import_scan", lambda sources, known: c.scan_imports(dict(sources), set(known)))
+    graph = c.import_graph(manifest)
     sources = c.python_sources()
-    known = c.tracked_paths()
-    pruned = c.import_graph(manifest)
-    # Bypass the scan cache for the reference walk; keep the exact same inputs.
-    monkeypatch.setattr(c, "dependency_nodes", lambda tree: list(c.ast.walk(tree)))
-    full = c.scan_imports(sources, set(known))
-    monkeypatch.setattr(c, "cached_import_scan", lambda *args: full)
-    assert c.import_graph(manifest) == pruned
+    assert sorted(parsed) == sorted(sources)
+    parse_errors = {edge["path"] for edge in graph["unresolved_edges"] if edge["reason"] == "parse-error"}
+    # Nested wrapper walks are also checked; every parsed module must be present.
+    assert sorted(compared) == sorted(set(sources) - parse_errors)
 
 
 def test_large_literal_payload_preserves_edges_without_expanding_walk(monkeypatch):

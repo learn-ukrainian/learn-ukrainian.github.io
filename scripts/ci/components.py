@@ -287,14 +287,17 @@ def dependency_nodes(tree: ast.AST) -> list[ast.AST]:
             nodes.append(node)
         if isinstance(node, (ast.Name, ast.Import, ast.ImportFrom)):
             continue
-        # Expand fields directly: avoid two nested generators per AST node.
+        # Expand child fields directly; scalar metadata needs no singleton tuple.
         for field in node._fields:
             value = getattr(node, field, None)
-            children = value if isinstance(value, list) else (value,)
-            for child in children:
-                if (isinstance(child, ast.AST) and child._fields
-                    and not isinstance(child, (ast.Constant, ast.alias))):
-                    pending.append(child)
+            if isinstance(value, list):
+                for child in value:
+                    if (isinstance(child, ast.AST) and child._fields
+                        and not isinstance(child, (ast.Constant, ast.alias))):
+                        pending.append(child)
+            elif (isinstance(value, ast.AST) and value._fields
+                  and not isinstance(value, (ast.Constant, ast.alias))):
+                pending.append(value)
     return nodes
 
 
@@ -328,6 +331,7 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
         ):
             unresolved.add((importer, line, "missing-local-import"))
 
+    known_paths = known_paths if known_paths is not None else set(sources)
     for path, source in sources.items():
         try:
             tree = ast.parse(source, filename=path)
@@ -356,11 +360,11 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
                 and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and any(
                 isinstance(child, ast.Call) and isinstance(child.func, ast.Attribute)
                 and child.func.attr == "spec_from_file_location"
-                for child in ast.walk(node)
+                for child in dependency_nodes(node)
             )):
                 wrappers.add(node.name)
         runtime_edges, runtime_unresolved = scan_runtime_edges(
-            path, nodes, bindings, known_paths if known_paths is not None else set(sources))
+            path, nodes, bindings, known_paths)
         edges.update(runtime_edges)
         unresolved.update(runtime_unresolved)
         for node in nodes:
