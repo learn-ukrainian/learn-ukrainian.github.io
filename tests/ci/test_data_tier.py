@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
 import stat
 import subprocess
 import sys
@@ -108,6 +109,87 @@ def test_shipped_baseline_maps_every_citation_parametrization_to_8403() -> None:
     assert "test_search_esum_berkut_returns_turkic_origin` — new" in body
 
 
+@pytest.fixture(autouse=True)
+def _no_live_pool(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The data-tier memory checks never read this host's real lu.slice (#9975)."""
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(tmp_path / "absent-pool" / "lu.slice"))
+
+
+def _fake_slice(directory: Path, *, current: int, file_cache: int, high: str = "max") -> Path:
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "memory.current").write_text(f"{current}\n", encoding="ascii")
+    (directory / "memory.high").write_text(f"{high}\n", encoding="ascii")
+    (directory / "memory.max").write_text("max\n", encoding="ascii")
+    (directory / "memory.stat").write_text(f"active_file 0\ninactive_file {file_cache}\n", encoding="ascii")
+    return directory
+
+
+def _slice_show(monkeypatch: pytest.MonkeyPatch, *, current: int, maximum: int, control_group: str = "") -> None:
+    monkeypatch.setattr(data_tier, "available_memory", lambda: 10 * 1024**3)
+    monkeypatch.setattr(
+        data_tier,
+        "command",
+        lambda *args, **kwargs: SimpleNamespace(
+            stdout=(
+                f"LoadState=loaded\nActiveState=active\nMemoryCurrent={current}\nMemoryMax={maximum}\n"
+                f"ControlGroup={control_group}\n"
+            )
+        ),
+    )
+
+
+def test_dispatch_slice_headroom_excludes_file_cache(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    gib = 1024**3
+    monkeypatch.setattr(data_tier.pool_headroom, "CGROUP_ROOT", tmp_path / "cgroup")
+    _fake_slice(tmp_path / "cgroup" / "lu.slice" / "lu-dispatch.slice", current=18 * gib, file_cache=6 * gib)
+    _slice_show(monkeypatch, current=18 * gib, maximum=20 * gib, control_group="/lu.slice/lu-dispatch.slice")
+
+    data_tier.require_memory()
+
+
+def test_dispatch_slice_without_memory_stat_uses_raw_current(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    gib = 1024**3
+    monkeypatch.setattr(data_tier.pool_headroom, "CGROUP_ROOT", tmp_path / "cgroup")
+    _slice_show(monkeypatch, current=18 * gib, maximum=20 * gib, control_group="/lu.slice/lu-dispatch.slice")
+
+    with pytest.raises(data_tier.DataTierError, match="less than 4 GiB headroom"):
+        data_tier.require_memory()
+    assert "using raw MemoryCurrent" in capsys.readouterr().err
+
+
+def test_full_shared_pool_is_a_stop_condition(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    gib = 1024**3
+    pool = _fake_slice(tmp_path / "lu.slice", current=22 * gib, file_cache=gib, high=str(24 * gib))
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    _slice_show(monkeypatch, current=gib, maximum=20 * gib)
+
+    with pytest.raises(data_tier.DataTierError, match=r"lu\.slice non-cache use 21\.0 GiB plus a 4 GiB"):
+        data_tier.require_memory()
+
+
+def test_shared_pool_with_cache_only_pressure_passes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    gib = 1024**3
+    pool = _fake_slice(tmp_path / "lu.slice", current=23 * gib, file_cache=6 * gib, high=str(24 * gib))
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    _slice_show(monkeypatch, current=gib, maximum=20 * gib)
+
+    data_tier.require_memory()
+
+
+def test_missing_pool_cgroup_skips_and_logs(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _slice_show(monkeypatch, current=1024, maximum=20 * 1024**3)
+
+    data_tier.require_memory()
+
+    err = capsys.readouterr().err
+    assert "lu.slice pool check skipped" in err
+    assert "/" not in err.split("skipped", 1)[1]
+
+
 def test_memory_floor_is_a_stop_condition(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(data_tier, "available_memory", lambda: 6 * 1024**3 - 1)
     with pytest.raises(data_tier.DataTierError, match="below the 6 GiB floor"):
@@ -183,6 +265,7 @@ def test_child_passes_only_selected_ids_to_two_workers(tmp_path: Path, monkeypat
     assert calls[0][-1] == selected
     assert ignored not in calls[0]
     assert calls[0][calls[0].index("-n") + 1] == "2"
+    assert "--require-data" in calls[0]
 
 
 def test_collection_time_data_skip_is_in_junit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -595,6 +678,35 @@ def test_hydration_has_total_budget_and_records_timeouts(tmp_path: Path, monkeyp
     }
 
 
+def test_host_file_provisioning_copies_content_but_not_nested_repository_metadata(tmp_path: Path) -> None:
+    primary = tmp_path / "primary"
+    checkout = tmp_path / "checkout"
+    nested = primary / "data" / "ua-gec"
+    for relative, text in (
+        ("data/train/doc.txt", "content\n"),
+        (".git/HEAD", "ref: refs/heads/main\n"),
+        (".git/refs/heads/entire/checkpoints/v1", "df01a9f6\n"),
+        (".entire/settings.json", "{}\n"),
+        (".entire/metadata/state.json", "{}\n"),
+        ("python/pkg/.gitkeep", ""),
+    ):
+        path = nested / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    lexicon = primary / "site" / "public" / "lexicon" / "a.json"
+    lexicon.parent.mkdir(parents=True)
+    lexicon.write_text("{}\n", encoding="utf-8")
+
+    data_tier.provision_host_files(primary, checkout)
+
+    copy = checkout / "data" / "ua-gec"
+    assert (copy / "data" / "train" / "doc.txt").read_text(encoding="utf-8") == "content\n"
+    assert (copy / "python" / "pkg" / ".gitkeep").is_file()
+    assert (checkout / "site" / "public" / "lexicon" / "a.json").is_file()
+    assert not (copy / ".git").exists()
+    assert not (copy / ".entire").exists()
+
+
 def test_stale_worktrees_pruned_only_without_active_scopes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     parent = tmp_path / ".worktrees" / "data-tier"
     old = parent / ("run-" + "a" * 32)
@@ -655,3 +767,151 @@ def test_process_group_stops_descendants_on_timeout_or_interruption(
         data_tier.run_process_group([sys.executable, "-c", "pass"], timeout=2)
     assert signals == [data_tier.signal.SIGTERM, data_tier.signal.SIGKILL]
     assert waits == [2, 30, 10]
+
+
+@pytest.mark.parametrize("only", [None, "tests/test_input.py"])
+def test_snapshots_keep_logical_stores_outside_checkout(tmp_path, only):
+    primary = tmp_path / "primary"
+    (primary / "data").mkdir(parents=True)
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    snapshots = tmp_path / "scratch"
+    for name in data_tier.HOST_DATABASES:
+        with sqlite3.connect(primary / "data" / name) as connection:
+            connection.execute("CREATE TABLE witness (value TEXT)")
+            connection.execute("INSERT INTO witness VALUES ('snapshot')")
+    assert data_tier.snapshot_databases(primary, checkout, snapshots, only=only) == []
+    for name in ("sources.db", "vesum.db"):
+        assert not (checkout / "data" / name).exists()
+        with sqlite3.connect((snapshots / name).as_uri() + "?mode=ro", uri=True) as connection:
+            assert connection.execute("SELECT value FROM witness").fetchone() == ("snapshot",)
+    assert (checkout / "data" / "atlas.db").exists() == (only is None)
+
+
+def test_nightly_exports_snapshot_bindings_and_reaps_them(nightly, monkeypatch):
+    seen = []
+
+    def execute(argv, **kwargs):
+        env = kwargs["env"]
+        sources, vesum = (Path(env[key]) for key in ("LU_SOURCES_DB", "LU_VESUM_DB"))
+        assert sources.parent == vesum.parent
+        assert sources.parent.is_dir()
+        assert not sources.is_relative_to(nightly.primary)
+        assert not sources.is_relative_to(kwargs["cwd"])
+        seen.append(sources.parent)
+        return nightly.execute(argv, **kwargs)
+
+    monkeypatch.setenv("LU_SOURCES_DB", "inherited-live-store")
+    monkeypatch.setenv("LU_VESUM_DB", "inherited-live-store")
+    monkeypatch.setattr(data_tier, "run_process_group", execute)
+    assert data_tier.run(SimpleNamespace(only=None, no_report=True)) == 0
+    assert len(seen) == 1
+    assert not seen[0].exists()
+
+
+@pytest.mark.parametrize("available", [True, False])
+def test_data_tier_child_executes_in_real_linked_worktree(tmp_path, available):
+    """Exercise backup -> overrides -> resolver -> required child with real Git."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+
+    def git(*args):
+        subprocess.run(["git", *args], cwd=primary, check=True, capture_output=True, text=True, timeout=30)
+
+    git("init", "-q")
+    (primary / "sentinel").write_text("synthetic repository\n", encoding="utf-8")
+    git("add", "sentinel")
+    git("-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid", "commit", "-qm", "fixture")
+    checkout = tmp_path / "linked"
+    git("worktree", "add", "--detach", str(checkout), "HEAD")
+    assert (checkout / ".git").is_file()
+    (checkout / "scripts").mkdir()
+    (checkout / "data").mkdir()
+    (primary / "data").mkdir()
+    if available:
+        for name in ("sources.db", "vesum.db"):
+            with sqlite3.connect(primary / "data" / name) as connection:
+                connection.execute("CREATE TABLE witness (value TEXT)")
+                connection.execute("INSERT INTO witness VALUES ('snapshot')")
+    snapshots = tmp_path / "scratch"
+    missing = data_tier.snapshot_databases(primary, checkout, snapshots, only="tests/test_input.py")
+    assert missing == ([] if available else ["sources.db", "vesum.db"])
+    root = Path(data_tier.__file__).resolve().parents[2]
+    (checkout / "pytest.ini").write_text("[pytest]\n", encoding="utf-8")
+    (checkout / "conftest.py").write_text(
+        f"import sys\nsys.path.insert(0, {str(root)!r})\n"
+        "pytest_plugins = ['tests.data_store_fixtures']\n", encoding="utf-8",
+    )
+    tests = checkout / "tests"
+    tests.mkdir()
+    (tests / "test_input.py").write_text(
+        "import sqlite3\nimport pytest\nfrom pathlib import Path\n"
+        "@pytest.mark.parametrize('store', ['sources', 'vesum'])\n"
+        "def test_snapshot(store, data_store_factory):\n"
+        "    assert Path('.git').is_file()\n"
+        "    path = data_store_factory(store, required_sqlite_tables=('witness',))\n"
+        "    assert not path.is_relative_to(Path.cwd())\n"
+        "    with sqlite3.connect(path.as_uri() + '?mode=ro', uri=True) as conn:\n"
+        "        assert conn.execute('SELECT value FROM witness').fetchone() == ('snapshot',)\n",
+        encoding="utf-8",
+    )
+    junit = tmp_path / "result.xml"
+    code = (
+        f"import sys\nsys.path.insert(0, {str(root)!r})\n"
+        "from scripts.ci import data_tier\nfrom types import SimpleNamespace\n"
+        "data_tier.load_selection = lambda: {'files': ['tests/test_input.py'], "
+        "'nodeids': ['tests/test_input.py'], 'bulk_nodeids': []}\n"
+        f"raise SystemExit(data_tier.pytest_child(SimpleNamespace(junit={str(junit)!r}, "
+        f"collected={str(tmp_path / 'collected.json')!r}, only=None, bulk_reason=None)))\n"
+    )
+    env = {**os.environ, "LU_SOURCES_DB": str(snapshots / "sources.db"),
+           "LU_VESUM_DB": str(snapshots / "vesum.db")}
+    env.pop("GITHUB_STEP_SUMMARY", None)
+    result = subprocess.run([sys.executable, "-c", code], cwd=checkout, env=env,
+                            capture_output=True, text=True, timeout=90)
+    assert result.returncode == (0 if available else 1), result.stdout + result.stderr
+    summary = data_tier.junit_summary(junit)
+    assert summary["ran"] == 2
+    assert summary["skipped"] == 0
+    assert summary["passed"] == (2 if available else 0)
+    assert summary["failed"] == (0 if available else 2)
+    if not available:
+        assert "reason=store_missing" in result.stdout
+        assert "worktree_local_store" not in result.stdout
+
+
+def test_nightly_rejects_scratch_inside_a_checkout(nightly, monkeypatch):
+    (nightly.primary / ".git").mkdir()
+    scratch = nightly.primary / "scratch"
+    scratch.mkdir()
+    monkeypatch.setattr(data_tier.tempfile, "gettempdir", lambda: str(scratch))
+    assert data_tier.run(SimpleNamespace(only=None, no_report=False)) == 1
+    assert nightly.reports[-1]["runner_errors"] == ["runner scratch root must be outside any Git checkout"]
+    assert nightly.events == ["remove"]
+
+
+def test_malformed_pool_memory_high_skips_with_a_stderr_reason(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    gib = 1024**3
+    pool = _fake_slice(tmp_path / "lu.slice", current=30 * gib, file_cache=0, high="24G")
+    (pool / "memory.max").write_text(f"{40 * gib}\n", encoding="ascii")
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    _slice_show(monkeypatch, current=gib, maximum=20 * gib)
+
+    data_tier.require_memory()
+
+    err = capsys.readouterr().err
+    assert "lu.slice pool check skipped (lu.slice memory.high is neither a number nor 'max')" in err
+
+
+def test_uncapped_pool_is_not_silent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    pool = _fake_slice(tmp_path / "lu.slice", current=30 * 1024**3, file_cache=0)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    _slice_show(monkeypatch, current=1024**3, maximum=20 * 1024**3)
+
+    data_tier.require_memory()
+
+    assert "lu.slice has no memory.high or memory.max limit" in capsys.readouterr().err

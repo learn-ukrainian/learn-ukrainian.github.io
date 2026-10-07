@@ -928,7 +928,8 @@ def _origin_main_row(lane: str, scenario: str) -> dict:
     healthy = scenario == "plan_healthy"
     retired = {"gemini": "agy", "glm": "cursor"}.get(lane)
     if lane == "deepseek":
-        status, avoid, notes = "cool", False, "idle"
+        # Prepaid API lane: excluded from dispatch picks since the headroom ranking change.
+        status, avoid, notes = "cool", True, "AVOID; prepaid API lane; excluded from dispatch and review"
     elif healthy:
         status, avoid = "cool", retired is not None
         notes = f"AVOID; retired→{retired}" if retired else "idle"

@@ -80,13 +80,13 @@ def test_git_path_inventory_uses_isolated_environment(checkout, monkeypatch, ret
             raise subprocess.CalledProcessError(returncode, args, stderr="unavailable")
         return subprocess.CompletedProcess(args, 0, "ignored/spaced файл.txt\0".encode(), b"")
 
-    monkeypatch.setattr(wa.subprocess, "run", runner)
+    monkeypatch.setattr(wa, "safe_git", runner)
     if returncode:
         with pytest.raises(subprocess.CalledProcessError):
             wa._git_paths(checkout[0], "--cached")
     else:
         assert wa._git_paths(checkout[0], "--cached") == ["ignored/spaced файл.txt"]
-    assert calls == [(checkout[0], ["git", "ls-files", "-z", "--cached"])]
+    assert calls == [(checkout[0], ["ls-files", "-z", "--cached"])]
 
 
 def test_named_artifact_inventory_uses_isolated_environment(checkout, monkeypatch):
@@ -99,11 +99,11 @@ def test_named_artifact_inventory_uses_isolated_environment(checkout, monkeypatc
         assert kwargs["env"] == wa._safe_git_env()
         return subprocess.CompletedProcess(args, 0, (name + "\0").encode(), b"")
 
-    monkeypatch.setattr(wa.subprocess, "run", runner)
+    monkeypatch.setattr(wa, "safe_git", runner)
     assert wa._named_artifact_files(
         checkout[0], {"response": f"Capture `{name}`."}, primary=checkout[1]
     ) == {name}
-    assert calls == [(checkout[0], ["git", "ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name])]
+    assert calls == [(checkout[0], ["ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name])]
 
 
 def test_preserved_bytes_record_and_idempotency(checkout):

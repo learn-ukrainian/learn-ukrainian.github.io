@@ -430,26 +430,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "5dd5fc216d5d873543123517e57dc53346e05c0f83da6de407f28477ed0a8e30:1 e2e6c1a4a55873b91ca0ff95b4dad4511982d562665c20cfe48d35eb7c3d632e:1 ea8c2c285b4106c1b154f412391fc0e20b40c23097d88aac63e3c11af584dd29:1",
     ),
     (
-        "tests/api/test_monitor_ctx_store_isolation.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "1a341ebe971748b74722073513c2b4db5765c731ae7dafd458467f7f05fe9b4e:1",
-    ),
-    (
-        "tests/api/test_occupancy.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "2b282824594231024d84ea1a1252e60dbb305f283e65924e13de6ad73ce08602:1 e2e6c1a4a55873b91ca0ff95b4dad4511982d562665c20cfe48d35eb7c3d632e:1",
-    ),
-    (
-        "tests/api/test_occupancy_seats.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "e2e6c1a4a55873b91ca0ff95b4dad4511982d562665c20cfe48d35eb7c3d632e:1",
-    ),
-    (
-        "tests/api/test_services_ops.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "fb64d2ca33729f53d2db0eb636cd1c691bc9489a67a80688547a67418430e29b:1",
-    ),
-    (
         "tests/audit/test_check_mdx_source_parity.py",
         "Existing test literal; migration outside this bounded packet (#9702).",
         "e7cf38a7d98688f51c749993fcc205a4446d87368dbe464d8755f2a3915e4531:1",

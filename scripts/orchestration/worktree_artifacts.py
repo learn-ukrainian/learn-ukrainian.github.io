@@ -18,6 +18,8 @@ from typing import Any, NamedTuple
 from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component, open_leaf_descriptor
 from scripts.orchestration import reaper_lifecycle as reaper_lifecycle
 from scripts.orchestration.dead_worker_state import task_state_lock as task_state_lock
+from scripts.orchestration.execution_safe_git import run_git as safe_git
+from scripts.orchestration.execution_safe_git import safe_git_env
 
 REGENERABLE_CACHE_DIRECTORIES = frozenset(
     {
@@ -86,20 +88,13 @@ _DANGEROUS_CONFIG_RE = re.compile(
 
 def _safe_git_env() -> dict[str, str]:
     """Return an isolated Git environment with global and system configuration disabled."""
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-    env["GIT_CONFIG_GLOBAL"] = os.devnull
-    env["GIT_CONFIG_SYSTEM"] = os.devnull
-    env["GIT_CONFIG_NOSYSTEM"] = "1"
-    env["GIT_OPTIONAL_LOCKS"] = "0"
-    env["GIT_TERMINAL_PROMPT"] = "0"
-    env["GIT_NO_REPLACE_OBJECTS"] = "1"
-    return env
+    return safe_git_env()
 
 
 def _git_paths(worktree: Path, *args: str) -> list[str]:
     """Read NUL-delimited paths, refusing an unavailable inventory."""
-    result = subprocess.run(
-        ["git", "ls-files", "-z", *args],
+    result = safe_git(
+        ["ls-files", "-z", *args],
         cwd=worktree,
         env=_safe_git_env(),
         capture_output=True,
@@ -700,28 +695,13 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
             )
 
         env = _safe_git_env()
-        git_cmd = [
-            "git",
-            "--no-lazy-fetch",
-            "-c",
-            "core.fsmonitor=",
-            "-c",
-            "core.hooksPath=/dev/null",
-            "-c",
-            "protocol.ext.allow=never",
-            "-c",
-            "core.alternateRefsCommand=",
-            "-c",
-            "core.attributesFile=/dev/null",
-            "-c",
-            "core.trustctime=true",
-            "-c",
-            "core.checkStat=default",
-        ]
+        # Retain the nested-repository integrity checks, with shared execution controls.
+
         try:
-            toplevel_proc = subprocess.run(
-                [*git_cmd, "rev-parse", "--show-toplevel"],
+            toplevel_proc = safe_git(
+                ["rev-parse", "--show-toplevel"],
                 cwd=source,
+                integrity=True,
                 capture_output=True,
                 env=env,
                 timeout=15,
@@ -742,9 +722,10 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                 )
 
             # Check for gitlinks (mode 160000) and verify tracked file contents independently
-            stage_proc = subprocess.run(
-                [*git_cmd, "ls-files", "--stage", "-z"],
+            stage_proc = safe_git(
+                ["ls-files", "--stage", "-z"],
                 cwd=source,
+                integrity=True,
                 capture_output=True,
                 env=env,
                 timeout=15,
@@ -768,18 +749,20 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                     )
                 stage_entries.append((mode_b, sha_b, path_b))
 
-            head_proc = subprocess.run(
-                [*git_cmd, "rev-parse", "--verify", "HEAD"],
+            head_proc = safe_git(
+                ["rev-parse", "--verify", "HEAD"],
                 cwd=source,
+                integrity=True,
                 capture_output=True,
                 env=env,
                 timeout=15,
                 check=False,
             )
             if head_proc.returncode == 0:
-                tree_proc = subprocess.run(
-                    [*git_cmd, "ls-tree", "-r", "HEAD"],
+                tree_proc = safe_git(
+                    ["ls-tree", "-r", "HEAD"],
                     cwd=source,
+                    integrity=True,
                     capture_output=True,
                     env=env,
                     timeout=15,
@@ -798,9 +781,10 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                             f"submodules must not be discarded without independent verification"
                         )
 
-            ls_proc = subprocess.run(
-                [*git_cmd, "ls-files", "-v"],
+            ls_proc = safe_git(
+                ["ls-files", "-v"],
                 cwd=source,
+                integrity=True,
                 capture_output=True,
                 env=env,
                 timeout=15,
@@ -827,9 +811,10 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                     f"uncommitted work must not be discarded"
                 )
 
-            status_proc = subprocess.run(
-                [*git_cmd, "status", "--porcelain", "-uall", "--ignored", "--ignore-submodules=none"],
+            status_proc = safe_git(
+                ["status", "--porcelain", "-uall", "--ignored", "--ignore-submodules=none"],
                 cwd=source,
+                integrity=True,
                 capture_output=True,
                 env=env,
                 timeout=15,
@@ -903,14 +888,15 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                             f"uncommitted work must not be discarded"
                         )
 
-            rev_list_args = [*git_cmd, "rev-list", "--all", "--reflog"]
+            rev_list_args = ["rev-list", "--all", "--reflog"]
             if head_proc.returncode == 0:
                 rev_list_args.append("HEAD")
             rev_list_args.extend(["--not", "--remotes"])
 
-            res = subprocess.run(
+            res = safe_git(
                 rev_list_args,
                 cwd=source,
+                integrity=True,
                 capture_output=True,
                 env=env,
                 timeout=15,

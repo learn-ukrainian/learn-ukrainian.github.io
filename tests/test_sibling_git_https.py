@@ -179,6 +179,8 @@ def test_https_authenticated_fast_forward_and_credential_containment(https_world
     header_environment = fetches[0][1]
     assert HEADER in header_environment.values() or f"Authorization: {HEADER}" in header_environment.values()
     for args, env, out, err in captured:
+        out = out.decode("utf-8", "replace") if isinstance(out, bytes) else out
+        err = err.decode("utf-8", "replace") if isinstance(err, bytes) else err
         assert TOKEN not in str(args) + out + err
         assert HEADER not in str(args) + out + err
         if "fetch" not in args:

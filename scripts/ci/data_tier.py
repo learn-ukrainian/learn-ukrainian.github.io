@@ -19,6 +19,7 @@ import socket
 import sqlite3
 import subprocess
 import sys
+import tempfile
 import time
 import uuid
 import xml.etree.ElementTree as ET
@@ -29,7 +30,7 @@ import pytest
 
 from scripts.common import github_client
 from scripts.common.repo_root import project_interpreter
-from scripts.orchestration import worktree_claims
+from scripts.orchestration import pool_headroom, worktree_claims
 from scripts.orchestration.dispatch_isolation import _parse_bytes, build_scope_argv
 
 SOURCE_ROOT = Path(__file__).resolve().parents[2]
@@ -37,6 +38,9 @@ SELECTION = Path(__file__).with_name("data_tier_selection.json")
 BASELINE = Path(__file__).with_name("data_tier_known_failures.json")
 ISSUE_TITLE = "[infra][tests] Nightly data-tier failures"
 MIN_AVAILABLE_BYTES = 6 * 1024**3
+# Free memory the nightly pytest child needs in lu-dispatch.slice and in the
+# shared lu.slice pool, both measured without reclaimable file cache (#9975).
+DISPATCH_HEADROOM_BYTES = 4 * 1024**3
 RUN_BUDGET_SECONDS = 7 * 3600
 HYDRATION_BUDGET_SECONDS = 3600
 ISSUE_BODY_LIMIT = 60000
@@ -126,20 +130,58 @@ def require_memory() -> None:
     if available < MIN_AVAILABLE_BYTES:
         raise DataTierError(f"MemAvailable {available // 1024**2} MiB is below the 6 GiB floor")
     slice_state = command(
-        ["systemctl", "--user", "show", "-p", "LoadState,ActiveState,MemoryCurrent,MemoryMax", "lu-dispatch.slice"],
+        [
+            "systemctl",
+            "--user",
+            "show",
+            "-p",
+            "LoadState,ActiveState,MemoryCurrent,MemoryMax,ControlGroup",
+            "lu-dispatch.slice",
+        ],
         cwd=SOURCE_ROOT,
     ).stdout
     properties = dict(line.split("=", 1) for line in slice_state.splitlines() if "=" in line)
     if properties.get("LoadState") != "loaded":
         raise DataTierError("lu-dispatch.slice is unavailable")
-    if properties.get("ActiveState") == "inactive":
-        return
+    if properties.get("ActiveState") != "inactive":
+        require_dispatch_slice_headroom(properties)
+    require_pool_headroom()
+
+
+def require_dispatch_slice_headroom(properties: dict[str, str]) -> None:
+    """lu-dispatch.slice headroom without reclaimable file cache (#9975).
+
+    Without a readable ``memory.stat`` the raw ``MemoryCurrent`` is used, which
+    can only overstate use.
+    """
     current = _parse_bytes(properties.get("MemoryCurrent"))
     maximum = _parse_bytes(properties.get("MemoryMax"))
     if current is None or (maximum is None and properties.get("MemoryMax") != "infinity"):
         raise DataTierError("lu-dispatch.slice memory headroom is unknown")
-    if maximum is not None and maximum - current < 4 * 1024**3:
+    directory = pool_headroom.cgroup_dir(properties.get("ControlGroup"))
+    cache = pool_headroom.file_cache_bytes(directory) if directory is not None else None
+    if cache is None:
+        print("data-tier: lu-dispatch.slice file cache unknown; using raw MemoryCurrent", file=sys.stderr)
+    else:
+        current = max(current - cache, 0)
+    if maximum is not None and maximum - current < DISPATCH_HEADROOM_BYTES:
         raise DataTierError("lu-dispatch.slice has less than 4 GiB headroom")
+
+
+def require_pool_headroom() -> None:
+    """Refuse when the shared lu.slice pool cannot hold the run (#9975); skip without cgroup files."""
+    pool = pool_headroom.check_pool(DISPATCH_HEADROOM_BYTES)
+    if pool.skipped is not None:
+        print(f"data-tier: {safe_text(pool.clause())}", file=sys.stderr)
+        return
+    if pool.memory is not None and pool.memory.limit is None:
+        print(
+            "data-tier: lu.slice has no memory.high or memory.max limit; pool headroom not enforced",
+            file=sys.stderr,
+        )
+        return
+    if not pool.fits:
+        raise DataTierError(pool.failure())
 
 
 def prune_stale_worktrees(primary: Path) -> None:
@@ -215,16 +257,17 @@ def make_test_worktree(primary: Path) -> Path:
     return path
 
 
-def snapshot_databases(primary: Path, checkout: Path, *, only: str | None) -> list[str]:
-    names = ("sources.db",) if only else HOST_DATABASES
+def snapshot_databases(primary: Path, checkout: Path, snapshots: Path, *, only: str | None) -> list[str]:
+    """Snapshot logical stores outside Git; retain the legacy Atlas location."""
+    names = ("sources.db", "vesum.db") if only else HOST_DATABASES
     missing = []
-    target_dir = checkout / "data"
-    target_dir.mkdir(exist_ok=True)
     for name in names:
         source = primary / "data" / name
         if not source.is_file():
             missing.append(name)
             continue
+        target_dir = checkout / "data" if name == "atlas.db" else snapshots
+        target_dir.mkdir(parents=True, exist_ok=True)
         target = target_dir / name
         # SQLite's online backup gives a consistent snapshot even if ingestion
         # has left a WAL beside the primary database. The source is read-only.
@@ -234,6 +277,13 @@ def snapshot_databases(primary: Path, checkout: Path, *, only: str | None) -> li
         ):
             reader.backup(writer, pages=1024, sleep=0.1)
     return missing
+
+
+# Provision content only. A nested repository's metadata (.git, and .entire
+# from the Entire CLI hook) would make the copy a second clone with untracked
+# files and a local-only branch, which the worktree-removal guard rightly
+# refuses to discard, so the nightly checkout could never be cleaned up.
+PROVISION_SKIPPED_PARTS = frozenset({".git", ".entire"})
 
 
 def provision_host_files(primary: Path, checkout: Path) -> None:
@@ -249,6 +299,8 @@ def provision_host_files(primary: Path, checkout: Path) -> None:
             continue
         for file in source.rglob("*"):
             if not file.is_file() or file.is_symlink():
+                continue
+            if PROVISION_SKIPPED_PARTS.intersection(file.relative_to(source).parts):
                 continue
             destination = target / file.relative_to(source)
             if not destination.exists():
@@ -373,6 +425,7 @@ def pytest_child(args: argparse.Namespace) -> int:
                 "pytest",
                 "-n",
                 "2",
+                "--require-data",
                 "--timeout=180",
                 "--timeout-method=thread",
                 "-q",
@@ -587,6 +640,7 @@ def run(args: argparse.Namespace) -> int:
     }
     baseline = {}
     primary = checkout = output_dir = log = scope_unit = None
+    snapshot_temp = None
     try:
         baseline = json.loads(BASELINE.read_text(encoding="utf-8"))["known_failures"]
         selection = load_selection()
@@ -610,7 +664,12 @@ def run(args: argparse.Namespace) -> int:
         prune_stale_worktrees(primary)
         checkout = make_test_worktree(primary)
         summary["main_sha"] = command(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.strip()
-        summary["missing_databases"] = snapshot_databases(primary, checkout, only=args.only)
+        scratch_root = Path(tempfile.gettempdir()).resolve()
+        if any((parent / ".git").exists() for parent in (scratch_root, *scratch_root.parents)):
+            raise DataTierError("runner scratch root must be outside any Git checkout")
+        snapshot_temp = tempfile.TemporaryDirectory(prefix="lu-data-tier-", dir=scratch_root)
+        snapshots = Path(snapshot_temp.name)
+        summary["missing_databases"] = snapshot_databases(primary, checkout, snapshots, only=args.only)
         if not args.only:
             provision_host_files(primary, checkout)
         summary["hydration_errors"] = (
@@ -639,6 +698,10 @@ def run(args: argparse.Namespace) -> int:
         scope_unit = f"lu-data-tier-{run_key}.scope"
         scope = build_scope_argv(["nice", "-n", "10", *child], unit=scope_unit)
         environment = os.environ.copy()
+        # Bind even missing snapshots explicitly: never fall back to live stores.
+        for name in HOST_DATABASES[:2]:
+            store = name.removesuffix(".db").upper()
+            environment[f"LU_{store}_DB"] = str(snapshots / name)
         if bulk_root:
             environment["LU_BULK_ROOT"] = bulk_root
         else:
@@ -677,6 +740,11 @@ def run(args: argparse.Namespace) -> int:
                 remove_test_worktree(primary, checkout)
             except Exception as error:
                 summary["runner_errors"].append(f"checkout cleanup failed: {safe_text(str(error))}")
+        if snapshot_temp and scope_stopped:
+            try:
+                snapshot_temp.cleanup()
+            except Exception as error:
+                summary["runner_errors"].append(f"snapshot cleanup failed: {safe_text(str(error))}")
         if log and log.exists():
             try:
                 log.write_text(safe_text(log.read_text(encoding="utf-8", errors="replace")), encoding="utf-8")

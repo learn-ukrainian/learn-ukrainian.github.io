@@ -191,7 +191,22 @@ _SCHEDULER_POLICY_VERSION = _SCHEDULER_POLICY["policy_version"]
 
 
 def _catalog_candidate(name: str) -> ReviewerCandidate:
-    raw = _MODEL_CATALOG["review_candidates"][name]
+    from scripts.review.role_resolution import resolve_routing_reference
+
+    if "roles" in _MODEL_CATALOG:
+        matches = [
+            (seat_name, route_name)
+            for seat_name, seat in _MODEL_CATALOG["seats"].items()
+            for route_name, route in seat["routes"].items()
+            if route.get("legacy_name") == name
+        ]
+        seat_name, route_name = matches[0]
+        raw = resolve_routing_reference(
+            {"role": "legacy_reviewers", "seat": seat_name, "route_name": route_name, "field": "candidate"},
+            _MODEL_CATALOG,
+        )
+    else:
+        raw = _MODEL_CATALOG["review_candidates"][name]
     model_id = raw["model_id"]
     model = _MODEL_CATALOG["models"][model_id]
     endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(raw["route"], {})
@@ -590,6 +605,11 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     the caller's job — this only covers filters that apply regardless."""
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
+    # Custom ladders and pins cannot fabricate review authority for a
+    # mechanical-only catalog model, even by supplying reviewer metadata.
+    identity = resolve_catalog_model_id(candidate.concrete_model, _MODEL_CATALOG)
+    if identity and "mechanical_only" in _MODEL_CATALOG["models"][identity]["roles"]:
+        return "mechanical-only catalog seats never perform review or approval (#9996)"
     if (
         inputs.review_profile.strip().casefold() in {"code", "infra"}
         and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
@@ -706,25 +726,19 @@ def _author_family_exclusion(candidate: ReviewerCandidate, family: str, health: 
             health=health,
         )
 
-    cursor_transport = candidate.transport == "cursor" or candidate.route == "cursor"
-    if family == CURSOR_AUTO_UNION_FAMILY and cursor_transport:
-        return result(
-            "excluded",
-            "candidate uses Cursor transport — Cursor-as-reviewer is ineligible for Cursor-authored work",
-        )
-    if candidate.family == family and family in candidate.advisory_only_for_author_families:
-        return result(
-            "advisory_only", f"same family as author ({family}) — advisory-only, not a formal cross-family gate"
-        )
-    if candidate.family == family:
-        return result("excluded", f"same family as author ({family}) — cross-family review requires a different family")
-    if family in CURSOR_AUTO_UNION_FAMILIES and cursor_transport:
-        return result(
-            "excluded",
-            f"candidate uses Cursor transport — Cursor-as-reviewer is ineligible "
-            f"against {family!r} author (within allowlist union {sorted(CURSOR_AUTO_UNION_FAMILIES)})",
-        )
-    return None
+    from scripts.review.family_exclusions import family_exclusion
+
+    exclusion = family_exclusion(
+        family=candidate.family,
+        route=candidate.route,
+        transport=candidate.transport,
+        author_family=family,
+        advisory_only_for_author_families=candidate.advisory_only_for_author_families,
+        union_family=CURSOR_AUTO_UNION_FAMILY,
+        union_families=CURSOR_AUTO_UNION_FAMILIES,
+    )
+    return result(*exclusion) if exclusion else None
+
 
 
 def evaluate_candidate(

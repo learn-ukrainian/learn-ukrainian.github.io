@@ -165,15 +165,18 @@ def test_worktree_is_clean_timeouts(tmp_path: Path) -> None:
 
 
 def _timeout_only(match: list[str], timeout_s: float):
-    """Raise TimeoutExpired for git calls starting with ``match``; run every other call for real."""
-    real_run = subprocess.run
+    """Time out the same logical Git argv at the runner seam; other calls stay real."""
+    from scripts.orchestration.execution_safe_git import run_git
+
     timed_out: list[list[str]] = []
 
-    def run(cmd, *args, **kwargs):
+    def run(args, **kwargs):
+        cmd = ["git", *args]
         if list(cmd[: len(match)]) == match:
             timed_out.append(list(cmd))
+            assert kwargs["timeout"] == timeout_s
             raise subprocess.TimeoutExpired(cmd, timeout_s)
-        return real_run(cmd, *args, **kwargs)
+        return run_git(args, **kwargs)
 
     return run, timed_out
 
@@ -185,7 +188,9 @@ def _release_holder(holder: Path, tmp_path: Path, match: list[str], timeout_s: f
         patch("scripts.delegate._WORKTREE_LOCK_DIR", tmp_path / "lu-worktree-locks"),
         patch.dict("os.environ", {"LU_TASKS_DIR": str(tmp_path / "tasks")}),
         patch("scripts.delegate._stale_branch_holder_releasable", return_value=(True, "clean")),
-        patch("subprocess.run", side_effect=side_effect),
+        patch("scripts.orchestration.reap_worktrees.safe_git", side_effect=side_effect),
+        patch("scripts.orchestration.worktree_artifacts.safe_git", side_effect=side_effect),
+        patch("scripts.orchestration.worktree_claims.safe_git", side_effect=side_effect),
     ):
         released = _release_stale_branch_holders(branch="feature", holders=[holder], dry_run=False)
     return released, timed_out

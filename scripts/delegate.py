@@ -3827,8 +3827,14 @@ def _fetch_existing_branch(branch: str) -> None:
         raise RuntimeError(f"origin/{branch} was not found after fetch; --branch requires an existing remote branch")
 
 
-def _require_local_branch_is_ancestor_of_origin(branch: str) -> str:
-    """Return fetched origin SHA or refuse a local-only branch divergence."""
+def _require_local_branch_is_ancestor_of_origin(
+    branch: str, *, continuation_head_sha: str | None = None, continuation_remote_sha: str | None = None
+) -> str:
+    """Return fetched origin SHA, or an admitted same-writer local continuation.
+
+    Only an existing checkout admitted on its local-only commits can supply
+    ``continuation_head_sha`` (#9988). Never reset that head to the remote.
+    """
     origin_ref = f"origin/{branch}"
     local_ref = f"refs/heads/{branch}"
     origin_sha = _resolve_sha(_REPO_ROOT, origin_ref)
@@ -3858,6 +3864,12 @@ def _require_local_branch_is_ancestor_of_origin(branch: str) -> str:
         raise RuntimeError(
             f"could not compare local {branch!r} against {origin_ref}: {_format_process_failure(ancestry)}"
         )
+    if continuation_head_sha == local_sha and continuation_remote_sha == origin_sha:
+        try:
+            if _git_is_ancestor(origin_sha, local_sha):
+                return local_sha
+        except _AuthoringObservationUnknown as exc:
+            raise RuntimeError(f"could not verify continuation ancestry: {exc}") from exc
     raise WorktreeBranchDiverged(
         f"refusing --branch {branch!r}: local {local_ref} is not an ancestor of "
         f"{origin_ref}; local_sha={local_sha} origin_sha={origin_sha}. "
@@ -5231,9 +5243,11 @@ def _format_process_failure(proc: subprocess.CompletedProcess[str]) -> str:
 
 
 def _worktree_is_dirty(worktree: Path) -> bool | None:
+    from scripts.orchestration.execution_safe_git import run_git as safe_git
+
     try:
-        status_proc = subprocess.run(
-            ["git", "status", "--porcelain"],
+        status_proc = safe_git(
+            ["status", "--porcelain"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -5830,6 +5844,7 @@ _PUBLIC_REASON_PHRASES = frozenset(
         "task state changed",
         "unreadable task state",
         "worktree active",
+        "worktree already removed",
         "worktree branch differs from task record",
         "worktree ownership unknown or reused",
         "unpushed work - needs rescue",
@@ -7521,6 +7536,15 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     if not worktree.is_relative_to(dispatch_root):
         row["reason"] = "not a registered dispatch worktree"
         return row
+    # A reaped or hand-removed worktree has nothing left to preserve. Before
+    # #9878 the registration check skipped it; reading its git files now would
+    # raise FileNotFoundError and fail every scheduled rescue run.
+    if not worktree.is_dir():
+        row["reason"] = "worktree already removed"
+        return row
+    if not (worktree / ".git").exists():
+        row["reason"] = "not a registered dispatch worktree"
+        return row
     if state.get("worktree_reused") is not False:
         row["reason"] = "worktree ownership unknown or reused"
         return row
@@ -8661,6 +8685,8 @@ def _resolve_worktree_base_sha(
     detached: bool = False,
     validated_path: Path | None = None,
     review_dependencies: Sequence[tuple[str, Path]] = (),
+    continuation_head_sha: str | None = None,
+    continuation_remote_sha: str | None = None,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -8703,7 +8729,11 @@ def _resolve_worktree_base_sha(
             # always receives the most actionable refusal.
             _fetch_existing_branch(requested_branch)
             _refuse_if_gate_head_moved(
-                _require_local_branch_is_ancestor_of_origin(requested_branch),
+                _require_local_branch_is_ancestor_of_origin(
+                    requested_branch,
+                    continuation_head_sha=continuation_head_sha,
+                    continuation_remote_sha=continuation_remote_sha,
+                ),
                 pinned_head_sha,
             )
         resolved = _resolve_sha(worktree_path)
@@ -9895,6 +9925,8 @@ def _run_worker(
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
+            if state.get("mechanical_task"):
+                tool_config["mechanical_task"] = state["mechanical_task"]
             if (
                 agent in {"agy", "gemini"}
                 and mode == "read-only"
@@ -12572,6 +12604,16 @@ def _dispatch(
                     allow_rebase=allow_rebase,
                     rebase_onto=rebase_onto,
                     review_dependencies=review_dependencies,
+                    continuation_head_sha=(
+                        authoring_admission.head_sha
+                        if authoring_admission is not None and authoring_admission.record.get("local_continuation")
+                        else None
+                    ),
+                    continuation_remote_sha=(
+                        (authoring_admission.record.get("local_continuation") or {}).get("remote_head_sha")
+                        if authoring_admission is not None
+                        else None
+                    ),
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
                         or (gemini_checked_heads[-1] if gemini_checked_heads else None)
@@ -12790,6 +12832,8 @@ def _dispatch(
                 "substitution": agent_substitution,
                 "agent_alias_note": agent_alias_note,
             }
+            if mechanical_task := _mechanical_task_scope(args):
+                dry_run_state["mechanical_task"] = mechanical_task
             if routing.budget_diagnostics:
                 dry_run_state["routing_facts"] = routing.budget_diagnostics
             if requested_harness is not None:
@@ -13279,6 +13323,8 @@ def _dispatch(
             initial_state["review_contract"] = review_contract
             initial_state["review_input_paths"] = [str(path) for path in review_input_paths]
             initial_state["review_access"] = review_access
+        if mechanical_task := _mechanical_task_scope(args):
+            initial_state["mechanical_task"] = mechanical_task
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
         # verbatim. Never derived from --research-owned-path, which classifies
@@ -14362,7 +14408,7 @@ class _AuthoringAdmission:
     creation_sha: str | None = None
     # This writer's facts over ``base..head`` (raises ``_AuthoringReviewRefused``),
     # and the planned risk, for the rebase plan and its result (A7).
-    collect: Callable[[str, str], Any] | None = dataclasses.field(default=None, compare=False, repr=False)
+    collect: Callable[..., Any] | None = dataclasses.field(default=None, compare=False, repr=False)
     planned_risk: str | None = None
 
 
@@ -14641,7 +14687,7 @@ def _authoring_review_admission(
 
     Applies to every write-capable dispatch: an attach to an existing branch or
     worktree, and a new branch whose proposed scope is protected. Complete
-    authorship (every commit in ``git rev-list <base>..<head>`` plus this
+    authorship (every branch-owned commit plus this
     writer, after substitution, aliases and ``--force-agent``) and protected
     scope come from ``record_cf_verdict.collect_branch_review_facts``, the
     calculation the verdict recorder uses. The check is structural (A2):
@@ -14650,7 +14696,8 @@ def _authoring_review_admission(
     ``review_base_sha..creation_sha`` for a new branch and
     ``review_base_sha..head_sha`` for an attach (A7): the review base is the
     one the recorder will read (:func:`_authoring_review_base`), never
-    ``--base``; every endpoint is observed on the canonical remote, frozen in
+    ``--base``; main-side commits are excluded from authorship while retaining
+    the stale-base diff's protected scope (#9988). Every endpoint is observed on the canonical remote, frozen in
     the receipt and never resolved from a ref again. Fetches only to mirror
     remote state (M1); runs before any task record, archival, forwarding,
     rebase, worktree or provider. Returns None for read-only dispatches and
@@ -14776,7 +14823,21 @@ def _authoring_review_admission(
             AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, f"{exc}, so the branch's authors are unknown; retry.", record
         ) from exc
 
-    def collect(base_sha: str, head_sha: str) -> Any:
+    # A stale main PR base still determines scope, but main's newer commits
+    # are not branch authors (#9988). Non-main target branches keep their
+    # existing enumeration. The rebase plan and result use this same exclusion,
+    # never the caller's --base or the rebase target.
+    authorship_exclude = default_sha if review_base.branch == default_name else None
+    record["authorship_exclude_sha"] = authorship_exclude
+    if authorship_exclude is not None:
+        try:
+            _authoring_require_commit(
+                authorship_exclude, fetch=lambda: _fetch_base(default_name), what="the authorship exclusion commit"
+            )
+        except _AuthoringObservationUnknown as exc:
+            raise _AuthoringReviewRefused(AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, str(exc), record) from exc
+
+    def collect(base_sha: str, head_sha: str, *, authorship_exclude_sha: str | None = authorship_exclude) -> Any:
         """This writer's branch facts over ``base_sha..head_sha``; a fact that cannot be established refuses."""
         try:
             return collect_branch_review_facts(
@@ -14790,6 +14851,7 @@ def _authoring_review_admission(
                 owned_paths=declared,
                 subject_seats=tuple(getattr(args, "subject_seat", None) or ()),
                 subject_families=tuple(getattr(args, "subject_family", None) or ()),
+                authorship_exclude_sha=authorship_exclude_sha,
             )
         except BranchFactsError as exc:
             code = (
@@ -14801,6 +14863,26 @@ def _authoring_review_admission(
 
     facts = collect(review_base.sha, head)
     record.update(facts.receipt())
+    if kind == "existing-worktree" and requested_branch:
+        try:
+            remote_head = observed_branch_head or _ls_remote_branch_sha(remote, requested_branch, strict=True)
+            if not remote_head:
+                raise _AuthoringObservationUnknown("the continuation's remote head is unavailable")
+            _authoring_require_commit(
+                remote_head, fetch=lambda: _fetch_existing_branch(requested_branch), what="the remote branch head"
+            )
+            if remote_head != head and _git_is_ancestor(remote_head, head):
+                local = collect(remote_head, head, authorship_exclude_sha=remote_head)
+                if local.existing_families != {facts.incoming_family}:
+                    raise _AuthoringReviewRefused(
+                        AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+                        "local-only commits are not all by the incoming writer family; "
+                        "reconcile the branch before continuation.",
+                        record,
+                    )
+                record["local_continuation"] = {"remote_head_sha": remote_head, "head_sha": head}
+        except _AuthoringObservationUnknown as exc:
+            raise _AuthoringReviewRefused(AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, str(exc), record) from exc
     protected = bool(
         facts.subject_seats
         or facts.subject_families
@@ -15009,9 +15091,12 @@ def _authoring_rebase_plan(admission: _AuthoringAdmission, *, base: str) -> str:
     """A7: the commit a reused worktree may be rebased onto, its result admitted before the branch is touched.
 
     The auto-rebase replays the branch's own commits (``onto..head``) onto
-    ``onto``. Rebasing keeps each commit's message, and so its attribution, so
-    the recorder then enumerates ``review_base..onto`` plus those replays. Both
-    are checked here under the admitted review base and risk. ``onto`` is
+    ``onto``. Rebasing keeps each commit's message and attribution.
+    Enumerate ``review_base..onto`` plus those replays, retaining the stale-base
+    diff's protected scope. Use admission's frozen main-side authorship
+    exclusion only for PRs targeting main (#9988); other targets keep every
+    imported author. The caller's ``base`` never changes that exclusion.
+    Both are checked under the admitted risk. ``onto`` is
     observed on the canonical remote and returned for the rebase to use as is,
     so the rebase can never move onto a later, unchecked tip. Read-only: it
     only fetches to make the observed commit local (M1). Raises
@@ -15037,7 +15122,8 @@ def _authoring_rebase_plan(admission: _AuthoringAdmission, *, base: str) -> str:
     if behind == 0:
         return onto
     planned = _authoring_merge_facts(
-        admission.collect(admission.review_base.sha, onto), admission.collect(onto, admission.head_sha)
+        admission.collect(admission.review_base.sha, onto),
+        admission.collect(onto, admission.head_sha),
     )
     record["rebase_existing_families"] = sorted(planned.existing_families)
     _authoring_require_route(planned, planned_risk=admission.planned_risk, record=record, at=onto)
@@ -15592,6 +15678,7 @@ def _admit_dispatch_target(
     ``refuse_kimi_if_disallowed``).
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
+    from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
     from scripts.review.target_resolution import TargetResolutionError
 
@@ -15655,10 +15742,31 @@ def _admit_dispatch_target(
             prompt_file=getattr(args, "prompt_file", None),
             repo_root=_REPO_ROOT,
             trees=trees,
+            task_family=getattr(args, "research_task_family", None),
+            task_role=getattr(args, "research_role", None),
+            task_prompt=getattr(args, "prompt", None),
         )
-    except (KimiAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
+    except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
         return str(exc), None
     return None, target
+
+
+def _mechanical_task_scope(args: argparse.Namespace) -> dict[str, Any]:
+    """Persist the admission inputs the execution adapter must recheck (#9996)."""
+    from scripts.agent_runtime.mechanical_admission import MECHANICAL_FAMILIES
+
+    family = getattr(args, "research_task_family", None)
+    if family not in MECHANICAL_FAMILIES:
+        return {}
+    return {
+        "family": family,
+        "role": getattr(args, "research_role", None),
+        "track": getattr(args, "research_track", None),
+        "language_lane": _dispatch_is_language_lane(args),
+        "review": _dispatch_is_review_typed(args),
+        "paths": list(dict.fromkeys((getattr(args, "owned_path", None) or []) +
+                                    (getattr(args, "research_owned_path", None) or []))),
+    }
 
 
 def _discard_model_probe_output(plan: object) -> None:
@@ -15750,10 +15858,11 @@ def _adapter_rejects_model(agent: str, model: str) -> bool:
 
 
 def _lane_default_model(agent: str) -> str | None:
-    """Registry default for ``agent`` — the dispatch pin, not the seat identity."""
+    """Role-backed dispatch default, with registry-only lanes retained until PR 3c."""
     from agent_runtime.telemetry import _default_model_for
+    from scripts.review.model_catalog import substitution_default_model
 
-    return _default_model_for(agent)
+    return substitution_default_model(agent) or _default_model_for(agent)
 
 
 def _credit_period_refusal(dispatch_agent: str, launch_model: str | None) -> str | None:
@@ -17534,7 +17643,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--research-task-family",
         default=None,
         metavar="FAMILY",
-        help="ADR-011 P3 research context: the task's single task family (e.g. difficulty-gate).",
+        help=("ADR-011 P3 research context: the task's single task family (e.g. difficulty-gate). "
+              "Mechanical-only models require routine_mechanical, mechanical_classification or readonly_recon; "
+              "declare narrow safe owned paths. Classification and recon use read-only mode."),
     )
     d.add_argument(
         "--research-track",

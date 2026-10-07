@@ -24,6 +24,7 @@ filterwarnings = [
     "ignore::DeprecationWarning",
 ]
 markers = [
+    "data_tier(*stores, tables=()): real read-only sources/vesum inputs resolved at fixture time",
     "site_toolchain: real Astro MDX compilation; requires site/node_modules and runs in Frontend CI",
     "website: Docusaurus website integrity tests (links, frontmatter, sidebar)",
     "slow: tests that load ML models or require long execution time",

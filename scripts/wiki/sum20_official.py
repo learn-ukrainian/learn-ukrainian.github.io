@@ -567,8 +567,14 @@ def fetch_sum20_wordid(
     translated into a missing-record result, so a resumed crawl retries it.
     """
     client = session or requests.Session()
-    client.headers.setdefault("User-Agent", DEFAULT_USER_AGENT)
-    client.headers.setdefault("Accept", "text/html,application/xhtml+xml")
+    # A requests.Session already carries "python-requests/<version>" and
+    # "Accept: */*", so setdefault() never applied the project's identifying
+    # headers. sum20ua.com answers 403 to the python-requests agent (#5228).
+    # Replace only the library defaults; a caller's explicit header is kept.
+    if client.headers.get("User-Agent") in (None, requests.utils.default_user_agent()):
+        client.headers["User-Agent"] = DEFAULT_USER_AGENT
+    if client.headers.get("Accept") in (None, "*/*"):
+        client.headers["Accept"] = "text/html,application/xhtml+xml"
     url = official_url_for_wordid(wordid)
     last_error = ""
     for attempt in range(max(0, retries) + 1):

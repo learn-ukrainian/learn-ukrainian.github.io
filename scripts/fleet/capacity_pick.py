@@ -23,7 +23,8 @@ import os
 import sys
 import urllib.error
 import urllib.request
-from datetime import datetime
+from collections.abc import Iterable, Mapping
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -49,7 +50,7 @@ except ImportError:  # pragma: no cover - script path fallback
 
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import credit_lane
-from scripts.orchestration import dispatch_admission
+from scripts.orchestration import dispatch_admission, task_record_store
 
 # Subscription + free seats drivers may pick for code implement. "gemini" and
 # "glm" are kept here for budget-row VISIBILITY (their quota/status still
@@ -83,6 +84,30 @@ _CODE_LANE_PRIORITY = {
     "glm": 6,
     "agy": 7,
     "deepseek": 8,
+}
+# Plan remaining-% is compared in bands this wide, so lanes with similar headroom
+# tie and the in-flight count spreads work across them instead of one lane
+# winning every pick on a decimal point. Within a band the static
+# _CODE_LANE_PRIORITY above is the fallback, and it is the only order when the
+# routing-budget snapshot carries no remaining-% for a lane.
+_HEADROOM_BAND_PCT = 10.0
+# Recent write reliability: a lane with at least WRITE_SUCCESS_MIN_ATTEMPTS
+# terminal write-capable dispatches in the last WRITE_SUCCESS_WINDOW and a
+# success share below WRITE_SUCCESS_MIN_RATE ranks one headroom band lower, so
+# quota alone cannot put an unreliable writer first. Source: delegate task
+# records (hot directory and archive). Read-only dispatches never count.
+WRITE_SUCCESS_WINDOW = timedelta(days=7)
+WRITE_SUCCESS_MIN_ATTEMPTS = 3
+WRITE_SUCCESS_MIN_RATE = 0.60
+_WRITE_SUCCESS_STATUSES = frozenset({"done"})
+# Not an attempt outcome: previews, operator cancels and still-running work.
+_WRITE_NON_ATTEMPT_STATUSES = frozenset({"dry_run", "cancelled", "running", "spawning"})
+# Task-record agent names that are another lane's dispatch alias.
+_RECORD_AGENT_LANE = {"grok-build": "grok"}
+# Lanes that stay visible in the table but are never a pick. DeepSeek is a
+# prepaid API lane; model-assignment.md excludes it from dispatch and review.
+_EXCLUDED_DISPATCH_LANES: dict[str, str] = {
+    "deepseek": "prepaid API lane; excluded from dispatch and review",
 }
 _MONITOR_DEFAULT = "http://127.0.0.1:8765"
 # delegate.py's task records, anchored to the primary checkout.
@@ -330,11 +355,14 @@ def build_lane_rows(
         pace_deficit = facts.uncovered is True
         # The reserve needs the owner's verified capacity (#9740), so it only ranks Codex first and
         # never lifts an AVOID.
-        avoid = (bool(retired_target) or facts.capacity == credit_lane.CAPACITY_AVOID) and not credit_relaxes
+        excluded = _EXCLUDED_DISPATCH_LANES.get(lane)
+        avoid = bool(excluded) or (
+            (bool(retired_target) or facts.capacity == credit_lane.CAPACITY_AVOID) and not credit_relaxes
+        )
         if avoid:
             capacity = {
                 "state": credit_lane.CAPACITY_AVOID,
-                "reason": f"retired→{retired_target}" if retired_target else facts.capacity_reason,
+                "reason": excluded or (f"retired→{retired_target}" if retired_target else facts.capacity_reason),
             }
         elif retired_target is None and facts.capacity == credit_lane.CAPACITY_AVOID and credit_relaxes:
             capacity = {"state": credit_lane.CAPACITY_VERIFIED, "reason": facts.capacity_reason}
@@ -379,6 +407,8 @@ def build_lane_rows(
                 notes.append("NEED_LOGIN")
             if retired_target:
                 notes.append(f"retired→{retired_target}")
+            if excluded:
+                notes.append(excluded)
             if pace_deficit:
                 notes.append("deficit")
             if status in _AVOID_STATUSES:
@@ -431,14 +461,119 @@ def build_lane_rows(
     return rows
 
 
+def _headroom_band(rem: Any) -> int:
+    """Negative remaining-% band (more headroom sorts first); unknown remaining sorts after every known band."""
+    if isinstance(rem, bool) or not isinstance(rem, (int, float)) or rem != rem:
+        return 1
+    return -int(min(max(float(rem), 0.0), 100.0) // _HEADROOM_BAND_PCT)
+
+
+def _record_time(record: Mapping[str, Any]) -> datetime | None:
+    """Finish (else start) time of a task record as an aware datetime; None when absent or unparseable."""
+    for key in ("finished_at", "started_at"):
+        raw = record.get(key)
+        if not isinstance(raw, str) or not raw:
+            continue
+        try:
+            stamp = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        return stamp if stamp.tzinfo is not None else stamp.replace(tzinfo=UTC)
+    return None
+
+
+def write_success_stats(
+    records: Iterable[Mapping[str, Any]],
+    *,
+    now: datetime,
+    window: timedelta = WRITE_SUCCESS_WINDOW,
+) -> dict[str, dict[str, Any]]:
+    """Per lane: terminal write-capable attempts and successes inside ``window`` before ``now``.
+
+    Pure over already-loaded task records. An attempt is a ``workspace-write`` or
+    ``danger`` record whose status is terminal (not a dry run, cancel or live
+    run); a success is ``done``. Each lane carries ``attempts``, ``done``,
+    ``rate`` (None without attempts) and ``demoted``.
+    """
+    cutoff = now - window
+    counts: dict[str, list[int]] = {}
+    for record in records:
+        if not isinstance(record, Mapping) or record.get("mode") not in dispatch_admission.WRITE_CAPABLE_MODES:
+            continue
+        status = str(record.get("status") or "")
+        if not status or status in _WRITE_NON_ATTEMPT_STATUSES:
+            continue
+        stamp = _record_time(record)
+        if stamp is None or stamp < cutoff or stamp > now:
+            continue
+        agent = str(record.get("agent") or "").strip().lower()
+        lane = _RECORD_AGENT_LANE.get(agent) or RETIRED_AGENT_ALIASES.get(agent) or agent
+        if not lane:
+            continue
+        tally = counts.setdefault(lane, [0, 0])
+        tally[0] += 1
+        tally[1] += status in _WRITE_SUCCESS_STATUSES
+    stats: dict[str, dict[str, Any]] = {}
+    for lane, (attempts, done) in counts.items():
+        rate = done / attempts if attempts else None
+        stats[lane] = {
+            "attempts": attempts,
+            "done": done,
+            "rate": rate,
+            "demoted": attempts >= WRITE_SUCCESS_MIN_ATTEMPTS and rate is not None and rate < WRITE_SUCCESS_MIN_RATE,
+        }
+    return stats
+
+
+def load_write_success_stats(
+    tasks_dir: Path | None = None,
+    *,
+    now: datetime | None = None,
+    window: timedelta = WRITE_SUCCESS_WINDOW,
+) -> dict[str, dict[str, Any]] | None:
+    """:func:`write_success_stats` over the delegate task store; None when the store cannot be read."""
+    root = tasks_dir or default_tasks_dir()
+    current = now or datetime.now(UTC)
+    oldest = (current - window).timestamp()
+    if not root.is_dir():
+        return None
+
+    def _records() -> Iterable[dict[str, Any]]:
+        for path in task_record_store.iter_task_records(root, include_archive=True):
+            try:
+                # A record is rewritten when it settles, so an older file holds no attempt in the window.
+                if path.stat().st_mtime < oldest:
+                    continue
+                record = json.loads(path.read_bytes())
+            except (OSError, ValueError):
+                continue
+            if isinstance(record, dict):
+                yield record
+
+    return write_success_stats(_records(), now=current, window=window)
+
+
+def _write_success_demoted(row: Mapping[str, Any]) -> bool:
+    stats = row.get("write_success")
+    return isinstance(stats, Mapping) and stats.get("demoted") is True
+
+
 def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Cool/idle first; AVOID lanes last with pick=AVOID."""
+    """Cool/idle first; AVOID lanes last with pick=AVOID.
+
+    Within a status, an authenticated cool Cursor still leads (operator
+    2026-08-26, same rule as the Monitor recommendation). Every other lane
+    ranks by routing-budget plan headroom in :data:`_HEADROOM_BAND_PCT` bands
+    (one band lower when its row carries a ``write_success`` demotion), then by
+    fewest in flight, then by the static lane priority.
+    """
 
     def _sort_key(row: dict[str, Any]) -> tuple[Any, ...]:
         avoid = bool(row.get("avoid"))
         status = str(row.get("status") or "unknown")
         rem = row.get("remaining_pct")
         rem_key = -float(rem) if isinstance(rem, (int, float)) else 0.0
+        headroom_key = _headroom_band(rem) + (1 if _write_success_demoted(row) else 0)
         in_flight = row.get("in_flight")
         flight_key = (in_flight is None, int(in_flight or 0))
         lane_name = str(row.get("lane") or "")
@@ -457,7 +592,18 @@ def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             # UNKNOWN — stale/advisory: after every row with verified capacity (A5, #9740).
             status_rank = 7.5
         reserve_priority = 0 if row.get("reset_reserve_eligible") else 1
-        return (avoid, reserve_priority, status_rank, lane_rank, flight_key, rem_key, lane_name)
+        cursor_lead = 0 if lane_name == "cursor" else 1
+        return (
+            avoid,
+            reserve_priority,
+            status_rank,
+            cursor_lead,
+            headroom_key,
+            flight_key,
+            lane_rank,
+            rem_key,
+            lane_name,
+        )
 
     ordered = sorted(rows, key=_sort_key)
     out: list[dict[str, Any]] = []
@@ -545,6 +691,22 @@ def admission_status(tasks_dir: Path | None = None) -> dict[str, Any]:
     return record
 
 
+def _attach_write_success(rows: list[dict[str, Any]], write_success: Mapping[str, Mapping[str, Any]]) -> None:
+    """Copy each lane's write record onto its row; a demoted lane gets a note naming the measured share."""
+    for row in rows:
+        stats = write_success.get(str(row.get("lane") or ""))
+        if not isinstance(stats, Mapping):
+            row["write_success"] = {"attempts": 0, "done": 0, "rate": None, "demoted": False}
+            continue
+        row["write_success"] = dict(stats)
+        if stats.get("demoted") is True and not row.get("avoid"):
+            note = (
+                f"write success {stats.get('done')}/{stats.get('attempts')} in "
+                f"{WRITE_SUCCESS_WINDOW.days}d (<{WRITE_SUCCESS_MIN_RATE:.0%}): one headroom band down"
+            )
+            row["notes"] = f"{row['notes']}; {note}" if row.get("notes") else note
+
+
 def build_report(
     budget: dict[str, Any],
     *,
@@ -553,7 +715,9 @@ def build_report(
     admission: dict[str, Any] | None = None,
     credit_policy: credit_lane.CreditPolicy | None = None,
     now: datetime | None = None,
+    write_success: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
+    """Rows, pick order and recommendation; ``write_success`` (see :func:`write_success_stats`) adds demotions."""
     rows = build_lane_rows(
         budget,
         active_in_flight=active_in_flight,
@@ -561,6 +725,8 @@ def build_report(
         credit_policy=credit_policy,
         now=now,
     )
+    if write_success is not None:
+        _attach_write_success(rows, write_success)
     pick_order = build_pick_order(rows)
     rec = budget.get("recommendation") if isinstance(budget.get("recommendation"), dict) else {}
     warnings = list(rec.get("warnings") or [])
@@ -609,6 +775,7 @@ def build_report(
         },
         "diagnostics": budget.get("diagnostics") or {},
         "active_in_flight": dict(active_in_flight or {}),
+        "write_success": {lane: dict(stats) for lane, stats in (write_success or {}).items()},
         "admission": admission,
     }
 
@@ -714,6 +881,9 @@ def main(argv: list[str] | None = None) -> int:
             "(healthy | unhealthy | unknown). `remaining%` is the tightest plan window. A pace deficit read\n"
             "from a stale snapshot shows `unknown` with `UNKNOWN — stale/advisory`: ranked after every\n"
             "verified row, never a cooler seat, never --strict success. Unknown load prints `—` (JSON null).\n"
+            "Pick order: heat first; a cool Cursor leads; then plan headroom in 10-point bands, fewest in\n"
+            "flight, static lane rank. A lane with >=3 write dispatches in 7 days and <60% done drops one band\n"
+            "(JSON `write_success`). DeepSeek (prepaid API) is shown but never picked.\n"
             "Exit codes: 0 success; 2 invalid arguments or no admissible lane with --strict.\n"
             "Related: /api/state/routing-budget?transport=acp; scripts/orchestration/dispatch_admission.py;\n"
             "issues #7812, #8645, #9518, #9615, #9740."
@@ -742,7 +912,9 @@ def main(argv: list[str] | None = None) -> int:
 
     budget = read_budget(fresh=bool(args.fresh), transport=args.transport)
     active = fetch_active_in_flight()
-    report = build_report(budget, active_in_flight=active, admission=admission_status())
+    report = build_report(
+        budget, active_in_flight=active, admission=admission_status(), write_success=load_write_success_stats()
+    )
 
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))

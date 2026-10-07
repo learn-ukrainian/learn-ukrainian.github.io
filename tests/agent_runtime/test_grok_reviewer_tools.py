@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shlex
 import subprocess
 import sys
@@ -38,7 +39,7 @@ def test_reviewer_opt_in_adds_bash_and_all_tracked_guards(tmp_path: Path) -> Non
     try:
         agent_path = Path(reviewer.cmd[reviewer.cmd.index("--agent") + 1])
         definition = agent_path.read_text(encoding="utf-8")
-        assert definition.count("type: command") == 10
+        assert definition.count("type: command") == 11
         for name in (
             "enforce-venv.sh",
             "heal-core-bare.py",
@@ -52,12 +53,26 @@ def test_reviewer_opt_in_adds_bash_and_all_tracked_guards(tmp_path: Path) -> Non
         ):
             assert str(ROOT / "agents_extensions/shared/hooks" / name) in definition
         assert str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py") in definition
-        # The only argv changes are the per-invocation agent and Bash deny removal.
-        normalized = reviewer.cmd[3:]
-        baseline_without_bash = baseline.cmd.copy()
-        bash_index = baseline_without_bash.index("Bash")
-        del baseline_without_bash[bash_index - 1 : bash_index + 1]
-        assert normalized == baseline_without_bash[1:]
+        assert reviewer.cmd[reviewer.cmd.index("--permission-mode") + 1] == "auto"
+        assert "--always-approve" not in reviewer.cmd
+        allows = [reviewer.cmd[i + 1] for i, arg in enumerate(reviewer.cmd) if arg == "--allow"]
+        assert "Bash" not in allows
+        tools = reviewer.cmd[reviewer.cmd.index("--tools") + 1].split(",")
+        assert tools == ["read_file", "list_dir", "grep"]
+        assert allows == ["Read", "Grep"]
+        assert "grok_reviewer_permissions.py" in definition
+        assert "Approval-requiring tools are denied without prompting" in definition
+        assert "using tracked-file reads only" in definition
+        assert "Report any execution evidence you could not obtain" in definition
+        assert "literal read commands" not in definition
+        from scripts.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS
+
+        assert all(command not in definition for command in GROK_REVIEWER_READ_COMMANDS)
+        assert "--no-subagents" in reviewer.cmd and "--disable-web-search" in reviewer.cmd
+        denies = [reviewer.cmd[i + 1] for i, arg in enumerate(reviewer.cmd) if arg == "--deny"]
+        assert set(denies) == {"Write", "Edit", "Bash", "MCPTool", "WebFetch", "WebSearch"}
+        assert "search_replace" in reviewer.cmd[reviewer.cmd.index("--disallowed-tools") + 1].split(",")
+        assert baseline.cmd[baseline.cmd.index("--permission-mode") + 1] == "auto"
         assert reviewer.env_overrides == {"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"}
         env = build_agent_env(provider="grok", overrides=reviewer.env_overrides)
         assert any(
@@ -326,6 +341,7 @@ def test_write_mode_installs_fleet_guards_without_reviewer_publish_or_push_rewri
         assert write_plan.cmd[write_plan.cmd.index("--permission-mode") + 1] == "bypassPermissions"
         assert "--always-approve" in write_plan.cmd
         assert "--deny" not in write_plan.cmd
+        assert "--tools" not in write_plan.cmd
         assert "reviewer_agent_file" not in write_plan.metadata
         agent_path = Path(write_plan.cmd[write_plan.cmd.index("--agent") + 1])
         assert agent_path.name.endswith(".grok-write-agent.md")
@@ -454,3 +470,303 @@ def test_grok_hook_bridge_runs_fleet_venv_guard() -> None:
     )
     assert result.returncode == 2
     assert "Unqualified interpreter blocked" in result.stderr
+
+
+@pytest.mark.parametrize("tool", ["run_terminal_command", "run_terminal_cmd", "Bash"])
+def test_literal_read_commands_pass_guard_but_keep_native_bash_backstop(tmp_path, tool):
+    from scripts.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS, reviewer_command_allowed
+
+    plan = _plan(tmp_path, {"reviewer_tools": True})
+    try:
+        allows = [plan.cmd[i + 1] for i, arg in enumerate(plan.cmd) if arg == "--allow"]
+        for command in GROK_REVIEWER_READ_COMMANDS:
+            assert reviewer_command_allowed({
+                "hook_event_name": "PreToolUse", "toolName": tool, "toolInput": {"command": command},
+            })
+            assert f"Bash({command})" not in allows
+        denies = [plan.cmd[i + 1] for i, arg in enumerate(plan.cmd) if arg == "--deny"]
+        assert "Bash" in denies
+    finally:
+        GrokBuildAdapter().cleanup_invocation(plan)
+
+
+@pytest.mark.parametrize("command", [
+    "touch output.txt", "git push", "curl https://example.invalid", "wget https://example.invalid",
+    "git -c color.ui=false diff", "python - <<'PY'\nprint('probe')\nPY",
+    "cat ~/.grok/auth.json", "git diff --output=out", "git diff --ext-diff",
+    "git diff --textconv", "env git diff", "git diff; touch output.txt",
+])
+def test_disallowed_shell_actions_return_typed_refusal_before_native_permissions(command):
+    from scripts.agent_runtime.grok_reviewer_permissions import REFUSAL_CODE
+
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/agent_runtime/grok_reviewer_permissions.py"), "--review-root", str(ROOT)],
+        input=json.dumps({
+            "hook_event_name": "PreToolUse", "toolName": "run_terminal_command", "toolInput": {"command": command},
+        }), capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 2
+    assert result.stderr.startswith(REFUSAL_CODE + ":")
+    assert command not in result.stderr
+    assert "Continue the review" in result.stderr
+    assert "use tracked-file reads only" in result.stderr
+    assert "report any execution evidence you could not obtain" in result.stderr
+    assert "literal Git inspection commands" not in result.stderr
+
+
+@pytest.mark.parametrize("payload", [None, [], {},
+    {"hook_event_name": "PreToolUse", "toolName": "run_terminal_command", "toolInput": {}},
+    {"hook_event_name": "PreToolUse", "toolName": "write", "toolInput": {"command": "pwd"}},
+    {"hook_event_name": "PostToolUse", "toolName": "Bash", "toolInput": {"command": "pwd"}},
+])
+def test_permission_guard_fails_closed_on_unreadable_or_unknown_tools(payload):
+    from scripts.agent_runtime.grok_reviewer_permissions import reviewer_command_allowed
+
+    assert not reviewer_command_allowed(payload)
+
+
+def test_literal_permissions_cannot_be_extended_or_wrapped():
+    from scripts.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS, reviewer_command_allowed
+
+    for command in GROK_REVIEWER_READ_COMMANDS:
+        for altered in (command + " > out", command + " && touch out", "env " + command,
+                        command + " --output=out", command + " --ext-diff", command + "\n"):
+            assert not reviewer_command_allowed({
+                "hook_event_name": "PreToolUse", "toolName": "Bash", "toolInput": {"command": altered},
+            })
+
+
+def test_permission_guard_cli_admits_read_command_and_denies_bad_json():
+    from scripts.agent_runtime.grok_reviewer_permissions import REFUSAL_CODE
+
+    for event, expected in [(json.dumps({
+        "hook_event_name": "PreToolUse", "toolName": "run_terminal_command", "toolInput": {"command": "pwd"},
+    }), 0), ("broken json", 2)]:
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/agent_runtime/grok_reviewer_permissions.py"), "--review-root", str(ROOT)],
+            input=event, capture_output=True, text=True, timeout=30,
+        )
+        assert result.returncode == expected
+        assert result.stderr.startswith(REFUSAL_CODE) if expected else result.stderr == ""
+
+
+@pytest.fixture
+def tracked_review_root(tmp_path):
+    root = tmp_path / "review"
+    root.mkdir()
+    subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
+    (root / "tracked.txt").write_text("public fixture", encoding="utf-8")
+    (root / "untracked.txt").write_text("private fixture", encoding="utf-8")
+    (root / "tracked[1].txt").write_text("private fixture", encoding="utf-8")
+    (root / "tracked1.txt").write_text("public fixture", encoding="utf-8")
+    subprocess.run(["git", "add", "tracked.txt", "tracked1.txt"], cwd=root, check=True, timeout=30)
+    return root
+
+
+@pytest.mark.parametrize("tool,inputs,allowed", [
+    ("read_file", {"target_file": "tracked.txt"}, True),
+    ("grep", {"path": "tracked.txt", "pattern": "fixture"}, True),
+    ("list_dir", {"target_directory": "."}, True),
+    ("read_file", {"target_file": "untracked.txt"}, False),
+    ("read_file", {"target_file": "tracked[1].txt"}, False),
+    ("read_file", {"target_file": "missing.txt"}, False),
+    ("read_file", {"target_file": ".git/config"}, False),
+    ("read_file", {"target_file": "."}, False),
+    ("grep", {"path": ".", "pattern": "fixture"}, False),
+    ("grep", {"pattern": "fixture"}, False),
+    ("list_dir", {"target_directory": ".git"}, False),
+    ("read_file", {"target_file": ""}, False),
+    ("read_file", {"target_file": "a\x00b"}, False),
+    ("unknown", {}, False),
+    ([], {}, False),
+])
+def test_review_reads_remain_within_tracked_checkout(tracked_review_root, tool, inputs, allowed):
+    from scripts.agent_runtime.grok_reviewer_permissions import reviewer_tool_allowed
+
+    assert reviewer_tool_allowed({
+        "hook_event_name": "PreToolUse", "toolName": tool, "toolInput": inputs,
+    }, tracked_review_root) is allowed
+
+
+def test_read_guard_denies_absolute_and_symlink_escape(tracked_review_root):
+    from scripts.agent_runtime.grok_reviewer_permissions import reviewer_tool_allowed
+
+    outside = tracked_review_root.parent / "outside.txt"
+    outside.write_text("private fixture", encoding="utf-8")
+    (tracked_review_root / "escape.txt").symlink_to(outside)
+    subprocess.run(["git", "add", "escape.txt"], cwd=tracked_review_root, check=True, timeout=30)
+    for path in (str(outside), "../outside.txt", "escape.txt"):
+        assert not reviewer_tool_allowed({
+            "hook_event_name": "PreToolUse", "toolName": "read_file", "toolInput": {"target_file": path},
+        }, tracked_review_root)
+
+
+def test_read_guard_denies_unavailable_git(tracked_review_root, monkeypatch):
+    from scripts.agent_runtime import grok_reviewer_permissions as policy
+
+    def unavailable(*args, **kwargs):
+        raise OSError("unavailable")
+    monkeypatch.setattr(policy.subprocess, "run", unavailable)
+    assert not policy.reviewer_tool_allowed({
+        "hook_event_name": "PreToolUse", "toolName": "read_file", "toolInput": {"target_file": "tracked.txt"},
+    }, tracked_review_root)
+
+
+@pytest.mark.parametrize("event,expected", [
+    (json.dumps({"hook_event_name": "PreToolUse", "toolName": "Bash", "toolInput": {"command": "pwd"}}), 0),
+    ("broken json", 2),
+    ("{}", 2),
+])
+def test_permission_cli_main_returns_typed_disposition(monkeypatch, capsys, tracked_review_root, event, expected):
+    import io
+
+    from scripts.agent_runtime import grok_reviewer_permissions as policy
+
+    monkeypatch.setattr(sys, "argv", ["guard", "--review-root", str(tracked_review_root)])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(event))
+    assert policy.main() == expected
+    captured = capsys.readouterr()
+    assert policy.REFUSAL_CODE in captured.err if expected else captured.err == ""
+
+
+def test_tracked_symlink_loop_is_a_typed_denial(tracked_review_root):
+    from scripts.agent_runtime import grok_reviewer_permissions as policy
+
+    (tracked_review_root / "loop").symlink_to("loop")
+    subprocess.run(["git", "add", "loop"], cwd=tracked_review_root, check=True, timeout=30)
+    event = {"hook_event_name": "PreToolUse", "toolName": "read_file", "toolInput": {"target_file": "loop"}}
+    assert not policy.reviewer_tool_allowed(event, tracked_review_root)
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/agent_runtime/grok_reviewer_permissions.py"),
+         "--review-root", str(tracked_review_root)],
+        input=json.dumps(event), capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 2
+    assert result.stderr.startswith(policy.REFUSAL_CODE + ":")
+    assert "Traceback" not in result.stderr
+
+
+@pytest.mark.parametrize("error", [RuntimeError, PermissionError, MemoryError, KeyboardInterrupt, SystemExit])
+def test_permission_boundary_denies_every_evaluation_exception(tracked_review_root, monkeypatch, capsys, error):
+    import io
+
+    from scripts.agent_runtime import grok_reviewer_permissions as policy
+
+    def fail(*args, **kwargs):
+        raise error("private error detail")
+
+    event = {"hook_event_name": "PreToolUse", "toolName": "read_file", "toolInput": {"target_file": "tracked.txt"}}
+    monkeypatch.setattr(Path, "open", fail)
+    assert not policy.reviewer_tool_allowed(event, tracked_review_root)
+    monkeypatch.setattr(sys, "argv", ["guard", "--review-root", str(tracked_review_root)])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(event)))
+    assert policy.main() == 2
+    captured = capsys.readouterr()
+    assert captured.err.startswith(policy.REFUSAL_CODE + ":")
+    assert "private error detail" not in captured.err
+
+
+@pytest.mark.parametrize("error", [RuntimeError, PermissionError, MemoryError, KeyboardInterrupt])
+def test_main_denies_interpreter_level_input_errors(tracked_review_root, monkeypatch, capsys, error):
+    from scripts.agent_runtime import grok_reviewer_permissions as policy
+
+    def fail(*args, **kwargs):
+        raise error("private input error")
+
+    monkeypatch.setattr(policy.json, "load", fail)
+    monkeypatch.setattr(sys, "argv", ["guard", "--review-root", str(tracked_review_root)])
+    assert policy.main() == 2
+    assert capsys.readouterr().err.startswith(policy.REFUSAL_CODE + ":")
+
+
+def test_guard_git_never_lazily_fetches(tracked_review_root, monkeypatch):
+    from scripts.agent_runtime import grok_reviewer_permissions as policy
+
+    calls = []
+    real_run = policy.subprocess.run
+
+    def record(argv, **kwargs):
+        calls.append(argv)
+        return real_run(argv, **kwargs)
+
+    monkeypatch.setattr(policy.subprocess, "run", record)
+    assert policy.reviewer_tool_allowed({
+        "hook_event_name": "PreToolUse", "toolName": "read_file", "toolInput": {"target_file": "tracked.txt"},
+    }, tracked_review_root)
+    assert calls and all("--no-lazy-fetch" in argv for argv in calls)
+    assert all("--no-lazy-fetch" in command for command in policy.GROK_REVIEWER_READ_COMMANDS if command.startswith("git "))
+
+
+def test_unreadable_tracked_file_is_denied(tracked_review_root):
+    from scripts.agent_runtime import grok_reviewer_permissions as policy
+
+    target = tracked_review_root / "tracked.txt"
+    target.chmod(0)
+    try:
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/agent_runtime/grok_reviewer_permissions.py"),
+             "--review-root", str(tracked_review_root)],
+            input=json.dumps({"hook_event_name": "PreToolUse", "toolName": "read_file",
+                              "toolInput": {"target_file": "tracked.txt"}}),
+            capture_output=True, text=True, timeout=30,
+        )
+        assert result.returncode == 2
+        assert result.stderr.startswith(policy.REFUSAL_CODE + ":")
+    finally:
+        target.chmod(0o600)
+
+
+def test_main_does_not_treat_evaluator_system_exit_as_help(monkeypatch, capsys, tracked_review_root):
+    import io
+
+    from scripts.agent_runtime import grok_reviewer_permissions as policy
+
+    def fail(*args):
+        raise SystemExit(0)
+
+    monkeypatch.setattr(policy, "reviewer_tool_allowed", fail)
+    monkeypatch.setattr(sys, "argv", ["guard", "--review-root", str(tracked_review_root)])
+    monkeypatch.setattr(sys, "stdin", io.StringIO("{}"))
+    assert policy.main() == 2
+    assert capsys.readouterr().err.startswith(policy.REFUSAL_CODE + ":")
+
+
+def test_guard_help_does_not_require_a_review_event():
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/agent_runtime/grok_reviewer_permissions.py"), "--help"],
+        capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0
+    assert "Exit codes:" in result.stdout
+
+
+@pytest.mark.parametrize("event", ["{}", "broken json"])
+def test_refusal_denies_when_stderr_pipe_is_broken(monkeypatch, event):
+    import io
+
+    from scripts.agent_runtime import grok_reviewer_permissions as policy
+
+    class BrokenStderr:
+        def write(self, value):
+            raise BrokenPipeError("private pipe detail")
+
+    monkeypatch.setattr(sys, "argv", ["guard", "--review-root", str(ROOT)])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(event))
+    monkeypatch.setattr(sys, "stderr", BrokenStderr())
+    assert policy.main() == 2
+
+
+@pytest.mark.parametrize("event", ["{}", "broken json"])
+def test_refusal_exits_two_with_real_closed_stderr_pipe(event):
+    read_fd, write_fd = os.pipe()
+    os.close(read_fd)
+    try:
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/agent_runtime/grok_reviewer_permissions.py"),
+             "--review-root", str(ROOT)],
+            input=event, text=True, stdout=subprocess.PIPE, stderr=write_fd, timeout=30,
+        )
+        assert result.returncode == 2
+        assert result.stdout == ""
+    finally:
+        os.close(write_fd)
