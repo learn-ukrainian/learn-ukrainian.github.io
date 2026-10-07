@@ -110,6 +110,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_session_identity_env_isolation.py",
         "tests/test_session_state_retired.py",
         "tests/test_sparse_collection_guard.py",
+        "tests/test_source_ingest_entrypoints.py",
         "tests/test_subprocess_timeout_guard.py",
         "tests/test_sum11_source_guard.py",
         "tests/test_threshold_source_of_truth.py",

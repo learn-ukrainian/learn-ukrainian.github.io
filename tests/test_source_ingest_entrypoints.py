@@ -19,6 +19,9 @@ from pathlib import Path
 
 import pytest
 
+# Collection computes the repository graph, including for the harness controls.
+pytestmark = pytest.mark.repo_wide
+
 ROOT = Path(__file__).resolve().parents[1]
 IMPORT_TARGETS = {"scripts.rag.source_query", "scripts.wiki.slovnyk_me"}
 # Six probes at 15 seconds each remain below pytest's 120-second test timeout.
@@ -128,7 +131,6 @@ assert CLIS, "source-tool CLI denominator must not be empty"
 
 
 @pytest.mark.repo_invariant
-@pytest.mark.repo_wide
 @pytest.mark.parametrize("batch", [CLIS[i:i + BATCH_SIZE] for i in range(0, len(CLIS), BATCH_SIZE)],
                          ids=lambda batch: batch[0])
 def test_source_tool_cli_imports(batch: list[str]) -> None:
