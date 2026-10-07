@@ -17,7 +17,9 @@ import platform
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
+
+from scripts.common.repo_root import main_checkout_root
 
 # Required top-level directories that identify a learn-ukrainian bulk root.
 # Both rebuild consumers and the Windows mirror use these as presence markers.
@@ -33,6 +35,7 @@ ENV_BULK_ROOT = "LU_BULK_ROOT"
 ENV_SMB_BULK_ROOT = "LU_SMB_BULK_ROOT"
 ENV_GDRIVE_DATA = "LU_GDRIVE_DATA"
 ENV_SOURCES_DB = "LU_SOURCES_DB"
+ENV_VESUM_DB = "LU_VESUM_DB"
 
 # macOS UF_DATALESS — cloud-only / File Provider stub (never open to inspect).
 _UF_DATALESS = 0x40000000
@@ -482,6 +485,99 @@ def is_network_filesystem_path(path: Path) -> bool:
     if fs_type in _NETWORK_FS_TYPES:
         return True
     return "smb" in fs_type or "cifs" in fs_type or "nfs" in fs_type
+
+
+StoreId = Literal["sources", "vesum"]
+
+
+@dataclass(frozen=True)
+class StoreBinding:
+    """Validated local read input; open with readonly_sqlite.open_readonly."""
+
+    store: StoreId
+    path: Path
+    access_mode: Literal["read"] = "read"
+    provenance: str = "injected"
+
+
+@dataclass(frozen=True)
+class StoreRefusal:
+    """Unavailable input. Deliberately carries no path, even for diagnostics."""
+
+    store: StoreId
+    reason: str
+
+
+def _store_locality(path: Path) -> Literal["local", "network", "unknown"]:
+    """Require filesystem evidence; legacy best-effort detection is unchanged."""
+    if _path_looks_like_network(path):
+        return "network"
+    fs_type = _fs_type_for_path(path)
+    if not fs_type:
+        return "unknown"
+    if fs_type in _NETWORK_FS_TYPES or any(token in fs_type for token in ("smb", "cifs", "nfs")):
+        return "network"
+    # Only positively identified local filesystems qualify. Unrecognized FUSE,
+    # distributed, or provider filesystems remain unknown.
+    if fs_type in {"ext2", "ext3", "ext4", "xfs", "btrfs", "zfs", "apfs", "hfs", "hfs+",
+                   "overlay", "tmpfs", "ramfs", "ntfs", "vfat", "exfat", "ufs"}:
+        return "local"
+    return "unknown"
+
+
+def resolve_store(
+    store: StoreId,
+    repository_root: Path | None = None,
+    *,
+    binding: StoreBinding | None = None,
+    env: Mapping[str, str] | None = None,
+) -> StoreBinding | StoreRefusal:
+    """Resolve at call time: injected read binding, override, primary store.
+
+    Invalid explicit inputs never fall back. A store in the calling linked
+    worktree is refused even if an explicit input would otherwise be usable.
+    No connections, files, or directories are created by resolution.
+    """
+    if store not in {"sources", "vesum"}:
+        raise ValueError("unsupported logical store")
+    try:
+        root = default_repository_root(repository_root).resolve()
+        primary = main_checkout_root(root).resolve()
+        filename = "sources.db" if store == "sources" else "vesum.db"
+        own = root / "data" / filename
+        if root != primary and (own.exists() or own.is_symlink()):
+            return StoreRefusal(store, "worktree_local_store")
+        environ = os.environ if env is None else env
+        key = ENV_SOURCES_DB if store == "sources" else ENV_VESUM_DB
+        if binding is not None:
+            if binding.store != store or binding.access_mode != "read":
+                return StoreRefusal(store, "invalid_binding")
+            raw = str(binding.path)
+            provenance = "injected"
+        elif key in environ:
+            raw = environ[key]
+            provenance = key
+        else:
+            raw = str(primary / "data" / filename)
+            provenance = "primary_checkout"
+        if not raw.strip():
+            return StoreRefusal(store, "empty_override")
+        if raw.lower().startswith("file:"):
+            return StoreRefusal(store, "uri_override")
+        path = Path(raw)
+        if not path.is_absolute():
+            return StoreRefusal(store, "relative_override")
+        path = path.resolve(strict=True)
+        if not path.is_file():
+            return StoreRefusal(store, "not_a_file")
+        locality = _store_locality(path)
+        if locality != "local":
+            return StoreRefusal(store, f"locality_{locality}")
+        return StoreBinding(store, path, provenance=provenance)
+    except FileNotFoundError:
+        return StoreRefusal(store, "store_missing")
+    except (OSError, RuntimeError, ValueError):
+        return StoreRefusal(store, "store_unavailable")
 
 
 def resolve_active_sources_db(
