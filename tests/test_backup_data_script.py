@@ -2509,7 +2509,7 @@ def test_pytest_scratch_databases_are_skipped_and_excluded(
     keep = _make_database(project / "batch_state" / "tasks" / "write-ownership.sqlite3")
     scratch = [
         _make_database(project / "batch_state" / "proof" / "pytest-RC2" / "stores0" / "7" / "write-ownership.sqlite3"),
-        _make_database(project / "batch_state" / "proof" / "pytest-of-ops" / "pytest-3" / "t0" / "atlas.db"),
+        _make_database(project / "batch_state" / "proof" / "pytest-of-user" / "pytest-3" / "t0" / "atlas.db"),
     ]
     # A name that merely mentions pytest is not a pytest base temp directory.
     lookalike = _make_database(project / "batch_state" / "pytest-results.sqlite3")
