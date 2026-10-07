@@ -129,6 +129,11 @@ def test_release_all_successors_under_locks_and_atomic_writes(cohort, monkeypatc
     for task in ("boundary", "successor", "second"):
         record = json.loads((tasks / f"{task}.json").read_text())
         assert record["keep_worktree"] is False
+        assert record["preserved_artifacts"]["owner"] == "boundary"
+        assert record["preserved_artifacts"]["retrieval_owner"] == {
+            "task_id": "boundary",
+            "run_nonce": "creation-nonce",
+        }
         proof = record["preserved_artifacts"]["retention_release"]
         assert proof == {
             "owner": "boundary",
@@ -345,3 +350,146 @@ def test_owner_release_guard_refuses_unproven_identity(cohort, failure, monkeypa
         path.write_text(json.dumps(creator))
     assert claims.owner_release_refusal(tree, owner_task_id="boundary", tasks_dir=tasks, repo_root=repo) is not None
     assert tree.exists()
+
+
+@pytest.fixture
+def renamed_creator(cohort):
+    repo, tree, tasks, creator, successor, source = cohort
+    (tasks / "boundary.json").unlink()
+    creator.update(task_id="codex-boundary", status="needs_finalize", final_branch_head_commit="a" * 40)
+    save(tasks, creator)
+    return repo, tree, tasks, creator, successor, source
+
+
+@pytest.mark.parametrize("boundary", ["post-task", "scheduled", "closeout", "retry"])
+def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
+    from scripts.orchestration import merge_closeout
+
+    repo, tree, tasks, creator, _, source = renamed_creator
+    before = {path: path.read_bytes() for path in tasks.glob("*.json")}
+    dry = reap.post_task_reap(creator["task_id"], tasks_dir=tasks, repo_root=repo, apply=False)
+    assert dry["main_worktree"]["action"] == "retained"
+    assert "would retrieve" in dry["main_worktree"]["reason"]
+    assert dry["main_worktree"]["preserved_artifacts"]["owner"] == creator["task_id"]
+    assert {path: path.read_bytes() for path in before} == before
+    assert not (repo / "batch_state/preserved").exists()
+    retrieved = reap.post_task_reap(creator["task_id"], tasks_dir=tasks, repo_root=repo, apply=True)
+    receipt = retrieved["main_worktree"]["preserved_artifacts"]
+    assert receipt["owner"] == creator["task_id"]
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == source.read_bytes()
+    assert tree.exists()
+    assert release(renamed_creator, task_id=creator["task_id"]) is None
+    if boundary == "retry":
+        # Preservation can finish before Git refuses removal. Its refreshed
+        # receipt must retain the release authority for the next guarded retry.
+        ok, _, receipt = output.preserve_worktree_artifacts(
+            tree, primary=repo, tasks_dir=tasks, task_id=creator["task_id"], repo_root=repo
+        )
+        assert ok and receipt["retention_disposition"] == "retrieved"
+        boundary = "post-task"
+    if boundary == "post-task":
+        result = reap.post_task_reap(creator["task_id"], tasks_dir=tasks, repo_root=repo, apply=True)["main_worktree"]
+    elif boundary == "scheduled":
+        result = next(
+            row for row in reap.reap_worktrees.reap_worktrees(repo_root=repo, apply=True) if row.path == str(tree)
+        ).__dict__
+    else:
+        result = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
+    assert result["action"] == "removed", result
+    assert not tree.exists()
+    assert json.loads((tasks / "codex-boundary.json").read_text())["status"] == "needs_finalize"
+
+
+@pytest.mark.parametrize("failure", ["receipt", "owner", "nonce", "successor_nonce", "head", "keep", "live", "merge"])
+def test_released_renamed_creator_keeps_claim_without_matching_proof(renamed_creator, monkeypatch, failure):
+    repo, tree, tasks, creator, _, _ = renamed_creator
+    reap.post_task_reap(creator["task_id"], tasks_dir=tasks, repo_root=repo, apply=True)
+    assert release(renamed_creator, task_id=creator["task_id"]) is None
+    saved = json.loads((tasks / "codex-boundary.json").read_text())
+    if failure == "receipt":
+        saved.pop("preserved_artifacts")
+    elif failure in {"owner", "nonce"}:
+        saved["preserved_artifacts"]["retention_release"]["owner" if failure == "owner" else "run_nonce"] = "other"
+    elif failure in {"successor_nonce", "head"}:
+        saved["preserved_artifacts"]["retention_release"]["finalized_by"][
+            "run_nonce" if failure == "successor_nonce" else "head_sha"
+        ] = "other"
+    elif failure == "keep":
+        saved["keep_worktree"] = True
+    elif failure == "live":
+        successor = json.loads((tasks / "successor.json").read_text())
+        successor["pid"] = os.getpid()
+        save(tasks, successor)
+    else:
+        monkeypatch.setattr(reap.reap_worktrees, "_query_pr_states", lambda *_args: ([], "unavailable"))
+    save(tasks, saved)
+    with contextlib.ExitStack() as stack:
+        info = reap.reap_worktrees.WorktreeInfo(tree, "codex/boundary", _git(tree, "rev-parse", "HEAD"))
+        refusal = reap.reap_worktrees._enter_dispatch_worktree_guard(stack, repo_root=repo, info=info)
+    assert "active task codex-boundary" in refusal
+    assert tree.exists()
+
+
+@pytest.mark.parametrize("member", ["creator", "successor", "head"])
+def test_released_reuse_changed_during_guard_lock_retains_tree(renamed_creator, monkeypatch, member):
+    repo, tree, tasks, creator, _, _ = renamed_creator
+    reap.post_task_reap(creator["task_id"], tasks_dir=tasks, repo_root=repo, apply=True)
+    assert release(renamed_creator, task_id=creator["task_id"]) is None
+    lock = claims.worktree_lock
+
+    @contextlib.contextmanager
+    def change(path, **kwargs):
+        if member == "head":
+            _git(tree, "commit", "--allow-empty", "-m", "new head")
+        else:
+            task = creator["task_id"] if member == "creator" else "successor"
+            record = json.loads((tasks / f"{task}.json").read_text())
+            record["run_nonce"] = "new-attempt"
+            save(tasks, record)
+        with lock(path, **kwargs):
+            yield
+
+    monkeypatch.setattr(claims, "worktree_lock", change)
+    with contextlib.ExitStack() as stack:
+        info = reap.reap_worktrees.WorktreeInfo(tree, "codex/boundary", _git(tree, "rev-parse", "HEAD"))
+        refusal = reap.reap_worktrees._enter_dispatch_worktree_guard(stack, repo_root=repo, info=info)
+    assert "active task codex-boundary" in refusal
+    assert tree.exists()
+
+
+def test_creator_cwd_binding_can_release(cohort):
+    _, tree, tasks, creator, _, _ = cohort
+    creator["cwd"] = str(tree)
+    creator.pop("worktree_path")
+    save(tasks, creator)
+    retrieve(cohort)
+    assert release(cohort) is None
+
+
+@pytest.mark.parametrize("failure", ["successor_owner", "live", "changed_record", "changed_process", "two_creators"])
+def test_retained_reuse_retrieval_refuses_without_copying(renamed_creator, monkeypatch, failure):
+    repo, tree, tasks, creator, successor, _ = renamed_creator
+    if failure == "live":
+        successor["pid"] = os.getpid()
+        save(tasks, successor)
+    elif failure == "two_creators":
+        successor["worktree_reused"] = False
+        save(tasks, successor)
+    elif failure in {"changed_record", "changed_process"}:
+        lock = claims.worktree_lock
+
+        @contextlib.contextmanager
+        def change(path, **kwargs):
+            if failure == "changed_process":
+                monkeypatch.setattr(reap.reap_worktrees, "_pid_proven_absent", lambda _record: False)
+            else:
+                save(tasks, dict(successor, status="running"))
+            with lock(path, **kwargs):
+                yield
+
+        monkeypatch.setattr(claims, "worktree_lock", change)
+    record = successor if failure == "successor_owner" else creator
+    result = reap.post_task_reap(record["task_id"], tasks_dir=tasks, repo_root=repo, apply=True)
+    assert result["main_worktree"]["action"] in {"retained", "skipped"}
+    assert tree.exists() and not (repo / "batch_state/preserved").exists()

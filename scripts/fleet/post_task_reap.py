@@ -325,8 +325,10 @@ def _reap_main_worktree(
     state: dict[str, Any],
     repo_root: Path,
     apply: bool,
+    tasks_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Evaluate and optionally reap the dispatch worktree bound to task_id."""
+    tasks_dir = default_tasks_dir() if tasks_dir is None else tasks_dir
     status = state.get("status")
     status_str = str(status) if status is not None else None
 
@@ -383,9 +385,20 @@ def _reap_main_worktree(
     except ValueError:  # guarded above; retain if the filesystem changed.
         relative = ()
     expected_agent = str(state.get("agent") or "")
+    reuse_matches = []
+    if len(relative.parts) == 2 and relative.parts[1] != task_id:
+        try:
+            reuse_matches = ignored_task_output.matching_worktree_records(
+                bound_path, tasks_dir, repo_root=repo_root, publish_cache=False
+            )
+            _, creator = ignored_task_output.reused_worktree_creator(reuse_matches, bound_path, repo_root=repo_root)
+            if creator != state or creator.get("task_id") != task_id or len(reuse_matches) < 2:
+                reuse_matches = []
+        except (OSError, ValueError, RuntimeError):
+            reuse_matches = []
     if (
         len(relative.parts) != 2
-        or relative.parts[1] != task_id
+        or (relative.parts[1] != task_id and not reuse_matches)
         or not expected_agent
         or relative.parts[0] != expected_agent
     ):
@@ -478,6 +491,12 @@ def _reap_main_worktree(
                 "error": None,
             }
 
+    retrieval = _retrieve_retained_reuse(
+        task_id, state, bound_path, tasks_dir=tasks_dir, repo_root=repo_root, apply=apply
+    )
+    if retrieval is not None:
+        return retrieval
+
     row = _reap_via_canonical(
         repo_root=repo_root,
         bound_path=bound_path,
@@ -511,6 +530,56 @@ def _reap_main_worktree(
             branch=row.get("branch") or f"{expected_agent}/{task_id}",
         )
     return row
+
+
+def _retrieve_retained_reuse(
+    task_id: str, state: dict[str, Any], worktree: Path, *, tasks_dir: Path, repo_root: Path, apply: bool
+) -> dict[str, Any] | None:
+    """Retrieve a retained creator's bytes without relaxing any removal claim."""
+    try:
+        matches = ignored_task_output.matching_worktree_records(
+            worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+        )
+        if len(matches) < 2 or not any(record.get("keep_worktree") for _, record in matches):
+            return None
+        _, creator = ignored_task_output.reused_worktree_creator(matches, worktree, repo_root=repo_root)
+        if creator != state or creator.get("task_id") != task_id:
+            raise ValueError("retained reuse output belongs to its creator")
+        if not all(reap_worktrees._pid_proven_absent(record) for _, record in matches):
+            raise ValueError("retained reuse retrieval requires all recorded processes gone")
+        receipt = creator.get("preserved_artifacts") or {
+            "owner": task_id,
+            "location": f"batch_state/preserved/{task_id}/<retrieval-attempt>",
+        }
+        reason = "would retrieve retained reuse output; creator must release retention before reap"
+        if apply:
+            with worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(repo_root)):
+                current = ignored_task_output.matching_worktree_records(
+                    worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+                )
+                if current != matches or not all(reap_worktrees._pid_proven_absent(record) for _, record in current):
+                    raise ValueError("retained reuse records or processes changed")
+                _, reason, receipt = ignored_task_output.preserve_worktree_artifacts(
+                    worktree,
+                    primary=worktree_claims.control_plane_root(repo_root),
+                    task_id=task_id,
+                    tasks_dir=tasks_dir,
+                    repo_root=repo_root,
+                )
+        return {
+            "path": str(worktree),
+            "action": "retained",
+            "reason": reason,
+            "error": None,
+            "preserved_artifacts": receipt,
+        }
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
+        return {
+            "path": str(worktree),
+            "action": "retained",
+            "reason": "retained reuse retrieval refused: ownership, record or process proof unavailable",
+            "error": None,
+        }
 
 
 def _reap_via_canonical(
@@ -832,6 +901,7 @@ def post_task_reap(
         state=state,
         repo_root=repo_root,
         apply=apply,
+        tasks_dir=tasks_dir,
     )
     acp_results: list[dict[str, Any]] = []
     if include_acp_runtime:
@@ -1000,6 +1070,8 @@ def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply:
                     member_receipt = dict(receipt)
                     member_receipt.update(
                         {
+                            "owner": task_id,
+                            "retrieval_owner": {"task_id": task_id, "run_nonce": record["run_nonce"]},
                             "task_id": member["task_id"],
                             "run_nonce": member["run_nonce"],
                             "retention_disposition": "released",

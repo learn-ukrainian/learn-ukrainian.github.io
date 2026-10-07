@@ -833,7 +833,7 @@ def owner_release_refusal(
     The owner's record must identify the requested task and run with a
     non-empty ``run_nonce``, be finished (its status is in
     :data:`RELEASED_TASK_STATUSES`), name ``worktree`` as its
-    ``worktree_path``, and record ``worktree_reused: false``, the proof that
+    ``worktree_path`` (or fallback ``cwd``), and record ``worktree_reused: false``, the proof that
     its dispatch created the checkout. A reused checkout belongs to its
     creator, which reaps it. Only a ``needs_finalize`` creator may use the
     caller's independently proven ``settled_claim``; other unfinished statuses
@@ -858,7 +858,7 @@ def owner_release_refusal(
         status == NEEDS_FINALIZE_STATUS and settled_claim is not None and settled_claim(record)
     ):
         return f"owner task {owner_task_id} is not finished (status {status!r}); refusing worktree removal"
-    claimed_path = record.get("worktree_path")
+    claimed_path = record.get("worktree_path") or record.get("cwd")
     if not isinstance(claimed_path, str) or not claimed_path:
         return f"owner task {owner_task_id} records no worktree_path; refusing worktree removal"
     try:
