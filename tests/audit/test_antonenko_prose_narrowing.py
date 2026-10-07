@@ -41,7 +41,7 @@ def bound_judge_stores(data_store_factory, requires_vesum_db, monkeypatch):
         bound = functools.partial(getattr(judge, name), db_path=sources)
         monkeypatch.setattr(judge, name, bound)
         if name == "_antonenko_fulltext_search":
-            monkeypatch.setattr(__import__(__name__, fromlist=[name]), name, bound)
+            monkeypatch.setitem(globals(), name, bound)
     monkeypatch.setattr(judge, "_vesum_unknown", functools.partial(judge._vesum_unknown, db_path=requires_vesum_db))
 
 

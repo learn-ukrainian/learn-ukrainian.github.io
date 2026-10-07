@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from functools import partial
+
 import pytest
 import yaml
 
@@ -9,6 +11,20 @@ from scripts.build import linear_pipeline
 # CI ships only a stub sources.db, so existence is not enough — require the full
 # ~1.7GB corpus. The engine is verified locally; these cases skip on CI.
 requires_sources_db = pytest.mark.data_tier("sources")
+
+
+@pytest.fixture(autouse=True)
+def bound_heritage_readers(request, monkeypatch):
+    if request.node.get_closest_marker("data_tier"):
+        from scripts.lexicon import heritage_classifier
+
+        sources = request.getfixturevalue("data_store_factory")("sources")
+        vesum = request.getfixturevalue("requires_vesum_db")
+        monkeypatch.setattr(
+            heritage_classifier, "classify_surface_form",
+            partial(heritage_classifier.classify_surface_form, db_path=sources, vesum_db_path=vesum),
+        )
+
 
 
 def _vesum_rejects_all(words: list[str]) -> dict[str, list[dict[str, str]]]:

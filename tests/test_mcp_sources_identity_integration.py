@@ -109,7 +109,7 @@ def real_transport(sources_http_url):
     transport.close()
 
 
-def test_real_transport_attests_endpoint_identity_against_local_files(sources_http_url):
+def test_real_transport_attests_endpoint_identity_against_local_files(sources_http_url, requires_sources_db, requires_vesum_db):
     # #8683/#6321 accepts cycle007's fail-closed identity rejection: its frozen
     # five-key attestation is obsolete, so construction must raise with this
     # exact message — any other exception or message fails the test.
@@ -120,7 +120,9 @@ def test_real_transport_attests_endpoint_identity_against_local_files(sources_ht
             compiler.LocalMcpSourcesClientError,
             match="malformed_json_response:mcp_server_identity",
         ):
-            compiler.LocalMcpSourcesClient(endpoint_url=endpoint_url, transport=transport)
+            compiler.LocalMcpSourcesClient(
+                endpoint_url=endpoint_url, transport=transport, sources_db=requires_sources_db, vesum_db=requires_vesum_db
+            )
     finally:
         transport.close()
 

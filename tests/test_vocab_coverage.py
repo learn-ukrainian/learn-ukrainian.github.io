@@ -96,15 +96,19 @@ def test_punctuation_ignored(tmp_path: Path) -> None:
 
 
 def test_inflection_via_vesum_lemma(tmp_path: Path, requires_vesum_db, monkeypatch) -> None:
-    monkeypatch.setattr(vocab_coverage, "VESUM_DB_PATH", requires_vesum_db)
+    original = vocab_coverage._vesum_lemma_lookup
+    monkeypatch.setattr(vocab_coverage, "_vesum_lemma_lookup", lambda term: original(term, requires_vesum_db))
+    vocab_coverage._lemma_key.cache_clear()
 
     plan_path = _write_plan(tmp_path, ["звук (sound)"])
     vocab_path = _write_vocab(tmp_path, ["звуки"])
 
-    result = check_vocab_coverage(plan_path, vocab_path)
-
-    assert result.passed is True
-    assert result.missing_terms == ()
+    try:
+        result = check_vocab_coverage(plan_path, vocab_path)
+        assert result.passed is True
+        assert result.missing_terms == ()
+    finally:
+        vocab_coverage._lemma_key.cache_clear()
 
 
 def test_distinct_terms_do_not_match(tmp_path: Path) -> None:

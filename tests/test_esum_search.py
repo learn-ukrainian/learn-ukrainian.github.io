@@ -19,6 +19,7 @@ To exercise the data-content tests locally:
 from __future__ import annotations
 
 import sys
+from functools import partial
 from pathlib import Path
 
 import pytest
@@ -31,12 +32,20 @@ from wiki.sources_db import search_esum
 needs_esum_data = pytest.mark.data_tier("sources", tables=("esum_etymology",))
 
 
+@pytest.fixture(autouse=True)
+def bound_esum_reader(request, monkeypatch):
+    if request.node.get_closest_marker("data_tier"):
+        path = request.getfixturevalue("data_store_factory")("sources", required_sqlite_tables=("esum_etymology",))
+        monkeypatch.setitem(globals(), "search_esum", partial(search_esum, db_path=path))
+
+
+
 def _joined_text(query: str, limit: int = 5) -> str:
     hits = search_esum(query, volume=1, limit=limit)
     return "\n".join(str(hit["etymology_text"]) for hit in hits)
 
 
-# --- Schema / registration tests (always run) -------------------------
+# --- Registration (no data) and real-store query contracts ----------------
 
 
 def test_search_esum_function_is_importable() -> None:
@@ -47,11 +56,13 @@ def test_search_esum_function_is_importable() -> None:
     assert callable(_search_esum)
 
 
+@needs_esum_data
 def test_search_esum_nonexistent_word_returns_empty_list() -> None:
     """A made-up word never matches anything regardless of data state."""
     assert search_esum("хххх", volume=1, limit=3) == []
 
 
+@needs_esum_data
 def test_search_esum_sibir_is_outside_volume_one_scope() -> None:
     """The volume=1 filter excludes ``сибір`` (a vol. 5 entry).
 
@@ -61,6 +72,7 @@ def test_search_esum_sibir_is_outside_volume_one_scope() -> None:
     assert search_esum("сибір", volume=1, limit=3) == []
 
 
+@needs_esum_data
 def test_search_esum_maty_is_outside_volume_one_scope() -> None:
     """The volume=1 filter excludes ``мати`` (a vol. 3 entry).
 

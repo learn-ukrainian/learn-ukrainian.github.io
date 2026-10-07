@@ -125,7 +125,6 @@ def test_injection_is_resolved_each_call_and_does_not_replace_normal_binding(
     tmp_path, monkeypatch, data_store_factory
 ):
     from scripts.storage import topology
-    from tests import data_store_fixtures
 
     calls = []
     actual = topology.resolve_store
@@ -145,4 +144,3 @@ def test_injection_is_resolved_each_call_and_does_not_replace_normal_binding(
     with pytest.raises(pytest.skip.Exception, match="store_missing"):
         data_store_factory("sources")
     assert calls == [binding, None]
-    assert data_store_fixtures._NOT_RUN == "data_store.not_run"
