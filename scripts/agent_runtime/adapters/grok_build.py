@@ -83,6 +83,7 @@ from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..grok_reviewer_permissions import GROK_REVIEWER_TOOLS
+from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..trail_isolation import (
     GROK_TRAIL_DENY_TOOLS,
@@ -1081,13 +1082,15 @@ def _grok_stream_marker(obj: dict) -> bool:
 
 
 def _complete_json_objects(stdout: str) -> list[dict]:
-    """Return JSON objects that occupy a whole line.
+    """Return JSON objects that occupy one physical line.
 
-    Pretty-printed single objects and log noise are not stream events. A line
-    that does not parse as one object is left for the legacy parser.
+    Records split at LF only, so U+0085, U+2028 and U+2029 inside a JSON
+    string stay in that record. Pretty-printed single objects and log noise
+    are not stream events. A line that does not parse as one object is left
+    for the legacy parser.
     """
     objects: list[dict] = []
-    for line in stdout.splitlines():
+    for line in jsonl_lines(stdout):
         stripped = line.strip()
         if not stripped.startswith("{"):
             continue
