@@ -5,9 +5,21 @@ Contains grammar constraints, case patterns, level configurations,
 and activity requirements for each CEFR level.
 """
 
+import importlib.util
+from pathlib import Path
+
 from common.thresholds import LEVEL_THRESHOLDS, get_naturalness_min
 from level_config import base_level
-from scripts.config import get_immersion_range as shared_get_immersion_range
+
+# File entrypoints may expose only scripts/ or put audit/ first on sys.path.
+# Resolve the shared policy by path so neither package availability nor a bare
+# config import can redirect this load to audit/config.py itself.
+_shared_config_spec = importlib.util.spec_from_file_location(
+    "_audit_shared_config", Path(__file__).resolve().parents[1] / "config.py"
+)
+_shared_config = importlib.util.module_from_spec(_shared_config_spec)
+_shared_config_spec.loader.exec_module(_shared_config)
+shared_get_immersion_range = _shared_config.get_immersion_range
 
 # Proper names and abbreviations whitelisted from VESUM verification.
 # These are valid Ukrainian words that VESUM may not contain (names, acronyms, etc.).
