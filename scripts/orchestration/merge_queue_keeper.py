@@ -37,34 +37,18 @@ HOLD_LABELS = {"needs-operator-go", "hold", "do-not-merge", "blocked"}
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 # Dependency-update PRs get no per-language ``Analyze (…)`` CodeQL runs, only
 # the top-level CodeQL check from GitHub code scanning (#8587, #9921). That
-# check stands in for Analyze only for dependabot or lockfile/manifest-only PRs.
+# check stands in for Analyze only when every changed file is an npm or pip/uv
+# lockfile or package.json, whoever authored the PR: anyone with write access
+# can push code to a dependabot branch, and github-actions bumps edit workflows.
 CODEQL_CHECK = "CodeQL"
+# GitHub's code-scanning app; both its id and its reserved slug must match.
+CODEQL_APP_ID = 57789
 CODEQL_APP = "github-advanced-security"
 CODEQL_PASSING = frozenset({"success", "neutral"})
-DEPENDENCY_BOT_LOGINS = frozenset({"dependabot[bot]"})
-DEPENDENCY_FILES = frozenset(
-    {
-        "package.json",
-        "package-lock.json",
-        "npm-shrinkwrap.json",
-        "yarn.lock",
-        "pnpm-lock.yaml",
-        "pyproject.toml",
-        "uv.lock",
-        "poetry.lock",
-        "Pipfile",
-        "Pipfile.lock",
-        "Cargo.toml",
-        "Cargo.lock",
-        "go.mod",
-        "go.sum",
-        "Gemfile",
-        "Gemfile.lock",
-        "composer.json",
-        "composer.lock",
-    }
-)
-REQUIREMENTS_FILE = re.compile(r"requirements[\w.-]*\.(?:txt|in)\Z")
+DEPENDENCY_FILES = frozenset({"package-lock.json", "package.json", "uv.lock"})
+REQUIREMENTS_FILE = re.compile(r"requirements[\w.-]*\.txt\Z")
+# GitHub's PR-files endpoint stops at this many files without saying so.
+PR_FILES_LIMIT = 3000
 
 
 class KeeperError(RuntimeError):
@@ -171,16 +155,18 @@ class GitHub:
             raise KeeperError("check-runs page incomplete")
         return data["check_runs"]
 
-    def author(self, number: int) -> str:
-        data = self.json(Request("read-issue", repo=self.repository, number=number))
-        user = data.get("user") if isinstance(data, dict) else None
-        login = user.get("login") if isinstance(user, dict) else None
-        if not isinstance(login, str) or not login:
-            raise KeeperError("PR author unknown")
-        return login
-
     def files(self, number: int) -> list[dict[str, Any]]:
-        return self.paged(Request("read-pr-files", repo=self.repository, number=number))
+        """Every changed file of a PR; raises when the list may be truncated or incomplete."""
+        pull = self.json(Request("read-pull", repo=self.repository, number=number))
+        changed = pull.get("changed_files") if isinstance(pull, dict) else None
+        if type(changed) is not int:
+            raise KeeperError("PR changed-file count unknown")
+        if changed >= PR_FILES_LIMIT:
+            raise KeeperError("PR file list truncated")
+        rows = self.paged(Request("read-pr-files", repo=self.repository, number=number))
+        if len(rows) >= PR_FILES_LIMIT or len(rows) != changed:
+            raise KeeperError("PR file list incomplete")
+        return rows
 
     def current(self, number: int) -> dict[str, Any]:
         row = self.json(
@@ -313,6 +299,7 @@ def _codeql_rows(checks: list[dict[str, Any]], head: str) -> list[dict[str, Any]
         and row.get("head_sha") == head
         and row.get("name") == CODEQL_CHECK
         and isinstance(row.get("app"), dict)
+        and row["app"].get("id") == CODEQL_APP_ID
         and row["app"].get("slug") == CODEQL_APP
     ]
 
@@ -360,9 +347,7 @@ def _dependency_file(path: Any) -> bool:
 
 
 def _dependency_update(gh: GitHub, number: int) -> bool:
-    """Whether the PR is a dependabot PR or changes only lockfiles and dependency manifests."""
-    if gh.author(number) in DEPENDENCY_BOT_LOGINS:
-        return True
+    """Whether the PR changes only lockfiles and package.json; the author never matters."""
     files = gh.files(number)
     return bool(files) and all(
         _dependency_file(row.get("filename"))
@@ -372,7 +357,7 @@ def _dependency_update(gh: GitHub, number: int) -> bool:
 
 
 def _evaluate_checks(gh: GitHub, number: int, head: str, checks: list[dict[str, Any]]) -> str:
-    """:func:`_check_state`, reading author and files only when a PR has no ``Analyze`` runs but a CodeQL check."""
+    """:func:`_check_state`, reading the file list only when a PR has no ``Analyze`` runs but a CodeQL check."""
     state = _check_state(checks, head)
     if state != "CodeQL-pending" or not _codeql_rows(checks, head):
         return state
