@@ -381,79 +381,121 @@ GRAC_BASE = "https://sketch.uacorpus.org/bonito/run.cgi"
 GRAC_CORPUS = "grac19a"
 
 
-def grac_frequency(word: str) -> dict[str, Any] | None:
-    """Get word frequency from GRAC corpus.
+def grac_db_path() -> Path:
+    """Resolve the local hot snapshot beside sources.db, shared by worktrees.
 
-    Returns dict with keys: word, freq, rel_freq (per million)
-    or None on failure.
+    LU_GRAC_FREQUENCY_DB can select a separate local snapshot for probes/tests.
     """
+    import os
+
+    from scripts.common.repo_root import main_checkout_root
+    from scripts.storage.topology import is_network_filesystem_path, require_local_active_sources_db
+
+    override = os.environ.get("LU_GRAC_FREQUENCY_DB")
+    path = Path(override).expanduser() if override else require_local_active_sources_db(
+        main_checkout_root(Path(__file__).resolve().parents[2])
+    ).with_name("grac_frequency.db")
+    if is_network_filesystem_path(path):
+        raise ValueError("GRAC snapshot SQLite must use local storage")
+    return path
+
+
+def _grac_local(query: str, attr: str, db_path: str | Path | None = None) -> dict[str, Any] | None:
+    """Read an exact snapshot hit; absent/partial/below-floor entries stay unknown."""
+    import sqlite3
+    from contextlib import closing
+
+    from scripts.lib.readonly_sqlite import open_readonly
+    from scripts.storage.topology import is_network_filesystem_path
+
+    try:
+        path = Path(db_path) if db_path is not None else grac_db_path()
+        if is_network_filesystem_path(path):
+            return None
+        with closing(open_readonly(path)) as conn:
+            row = conn.execute(
+                "SELECT i.frq, i.relfreq, p.retrieved_at, p.corpus, "
+                "p.api_version, p.manatee_version, p.min_freq FROM items i "
+                "JOIN provenance p ON p.attr=i.attr AND p.page=i.page WHERE i.attr=? AND i.str=? "
+                "AND p.corpus=?", (attr, query, GRAC_CORPUS),
+            ).fetchone()
+        if row is None:
+            return None
+        return {"freq": row[0], "rel_freq": row[1], "retrieved_at": row[2],
+                "corpus": row[3], "api_version": row[4], "manatee_version": row[5],
+                "min_freq": row[6], "source": "local_snapshot"}
+    except (OSError, sqlite3.Error, RuntimeError, ValueError):
+        return None
+
+
+def grac_frequency(
+    word: str, *, cache_only: bool = False, db_path: str | Path | None = None,
+) -> dict[str, Any] | None:
+    """Return exact word frequency locally first, then live unless cache_only.
+
+    A local miss is unknown (partial snapshot or below its floor), never zero.
+    Successful results identify source and local retrieval date.
+    """
+    local = _grac_local(word, "word", db_path)
+    if local is not None:
+        return {"word": word, **local}
+    if cache_only:
+        return None
     params = {
-        "corpname": GRAC_CORPUS,
-        "wlattr": "word",
-        "wlpat": word,
-        "wlminfreq": 1,
-        "wlmaxitems": 10,
-        "format": "json",
+        "corpname": GRAC_CORPUS, "wlattr": "word", "wlpat": f"^(?:{re.escape(word)})$",
+        "wlminfreq": 1, "wlmaxitems": 10, "wlnums": "frq", "format": "json",
     }
     try:
         r = _get(f"{GRAC_BASE}/wordlist", params=params)
         r.raise_for_status()
         data = r.json()
-        items = data.get("Items", [])
-        if not items:
-            return {"word": word, "freq": 0, "rel_freq": 0.0}
-        # Find exact match or return first
-        for item in items:
-            if item.get("str", "") == word:
-                return {
-                    "word": word,
-                    "freq": item.get("frq", 0),
-                    "rel_freq": item.get("relfreq", 0.0),
-                }
-        first = items[0]
-        return {
-            "word": first.get("str", word),
-            "freq": first.get("frq", 0),
-            "rel_freq": first.get("relfreq", 0.0),
-        }
-    except requests.RequestException:
+        if not isinstance(data, dict) or data.get("error") or not isinstance(data.get("Items"), list):
+            return None
+        for item in data["Items"]:
+            if isinstance(item, dict) and item.get("str") == word:
+                if type(item.get("frq")) is not int or item["frq"] < 0:
+                    return None
+                if not isinstance(item.get("relfreq"), (int, float)) or item["relfreq"] < 0:
+                    return None
+                return {"word": word, "freq": item["frq"],
+                        "rel_freq": item["relfreq"], "source": "live"}
+        return None
+    except (requests.RequestException, ValueError):
         return None
 
 
-def grac_lemma_frequency(lemma: str) -> dict[str, Any] | None:
-    """Get frequency of all forms of a lemma from GRAC.
+def grac_lemma_frequency(
+    lemma: str, *, cache_only: bool = False, db_path: str | Path | None = None,
+) -> dict[str, Any] | None:
+    """Get lemma total locally first; snapshot does not contain form breakdowns.
 
-    Returns dict with keys: lemma, total_freq, forms [{word, freq, pct}]
-    or None on failure.
+    ``forms_available=False`` distinguishes missing breakdowns from no forms.
+    A local miss falls back live only when cache_only is false.
     """
-    cql = f'[lemma="{lemma}"]'
+    local = _grac_local(lemma, "lemma", db_path)
+    if local is not None:
+        return {"lemma": lemma, "total_freq": local["freq"], "forms": [],
+                "forms_available": False, **local}
+    if cache_only:
+        return None
+    escaped = lemma.replace("\\", "\\\\").replace('"', '\\"')
     params = {
-        "corpname": GRAC_CORPUS,
-        "q": f"q{cql}",
-        "fcrit": "word/e 0~0>0",
-        "flimit": 1,
-        "format": "json",
+        "corpname": GRAC_CORPUS, "q": f'q[lemma="{escaped}"]',
+        "fcrit": "word/e 0~0>0", "flimit": 1, "format": "json",
     }
     try:
         r = _get(f"{GRAC_BASE}/freqs", params=params)
         r.raise_for_status()
         data = r.json()
-        blocks = data.get("Blocks", [])
-        if not blocks or not blocks[0].get("Items"):
-            return {"lemma": lemma, "total_freq": 0, "forms": []}
-        items = blocks[0]["Items"]
-        forms = []
-        total = 0
-        for item in items:
-            freq = item.get("frq", 0)
-            total += freq
-            forms.append({
-                "word": item.get("str", ""),
-                "freq": freq,
-                "pct": item.get("poc", 0.0),
-            })
-        return {"lemma": lemma, "total_freq": total, "forms": forms}
-    except requests.RequestException:
+        if not isinstance(data, dict) or data.get("error") or not isinstance(data.get("Blocks"), list):
+            return None
+        blocks = data["Blocks"]
+        items = blocks[0].get("Items", []) if blocks else []
+        forms = [{"word": item.get("str", ""), "freq": item.get("frq", 0),
+                  "pct": item.get("poc", 0.0)} for item in items]
+        return {"lemma": lemma, "total_freq": sum(form["freq"] for form in forms),
+                "forms": forms, "forms_available": True, "source": "live"}
+    except (requests.RequestException, ValueError):
         return None
 
 
