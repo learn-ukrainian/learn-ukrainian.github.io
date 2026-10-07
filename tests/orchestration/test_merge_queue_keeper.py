@@ -879,3 +879,167 @@ def test_github_files_fails_closed_without_a_changed_files_count(monkeypatch, ch
 
     with pytest.raises(keeper.KeeperError, match="count unknown"):
         client.files(7)
+
+
+# --- Requeue gate and slow mode ---
+
+
+def _gate(tmp_path: Path, decisions: dict[str, Any] | None = None, *, raw: str | None = None) -> Path:
+    path = tmp_path / "requeue.json"
+    if raw is not None:
+        path.write_text(raw)
+    elif decisions is not None:
+        path.write_text(json.dumps({"version": 1, "requeue": decisions}))
+    return path
+
+
+def gated(
+    fake: FakeGitHub, path: Path, monkeypatch: pytest.MonkeyPatch, gate: Path, *, apply: bool = True
+) -> tuple[list[str], bool]:
+    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict("APPROVED"))
+    monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login: True)
+    return keeper.run(fake, path, apply=apply, requeue_gate=gate)
+
+
+def _dropped_state(path: Path, **extra: Any) -> None:
+    path.write_text(json.dumps({"queued": {}, "drops": {f"42:{HEAD_A}": 1}, **extra}))
+
+
+def test_without_gate_a_dropped_head_is_re_enqueued(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    fake = FakeGitHub()
+    run(fake, path, monkeypatch)
+    assert ("enqueue", (42, HEAD_A)) in fake.actions
+
+
+@pytest.mark.parametrize(
+    "decisions,raw",
+    [({}, None), (None, None), (None, "{not json"), (None, json.dumps({"version": 2, "requeue": {}}))],
+)
+def test_gate_holds_a_dropped_head_without_a_grant(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, decisions: dict[str, Any] | None, raw: str | None
+) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    fake = FakeGitHub()
+    lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, decisions, raw=raw))
+    assert "enqueue" not in mutations(fake)
+    assert "comment" not in mutations(fake)
+    assert "reason=requeue-pending" in lines[0] and not failed
+
+
+def test_gate_requeues_a_granted_head_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    gate = _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}})
+    fake = FakeGitHub()
+    gated(fake, path, monkeypatch, gate)
+    assert ("enqueue", (42, HEAD_A)) in fake.actions
+    state = json.loads(path.read_text())
+    assert f"42:{HEAD_A}" in state["requeued"]
+    # A second ejection of the same head stays out even though the grant is still on file.
+    state["queued"] = {}
+    state["drops"][f"42:{HEAD_A}"] = 2
+    path.write_text(json.dumps(state))
+    again = FakeGitHub()
+    lines, _ = gated(again, path, monkeypatch, gate)
+    assert "enqueue" not in mutations(again)
+    assert "reason=requeue-spent" in lines[0]
+
+
+def test_gate_denial_holds_and_comments_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    fake = FakeGitHub()
+    lines, _ = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "deny"}}))
+    assert "enqueue" not in mutations(fake)
+    assert "reason=requeue-denied" in lines[0]
+    assert [kind for kind in mutations(fake)] == ["comment"]
+
+
+def test_gate_grant_for_another_head_does_not_apply(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    fake = FakeGitHub()
+    gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_B}": {"decision": "grant"}}))
+    assert "enqueue" not in mutations(fake)
+
+
+def test_gate_leaves_a_never_dropped_head_alone(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake = FakeGitHub()
+    gated(fake, tmp_path / "state.json", monkeypatch, _gate(tmp_path, {}))
+    assert ("enqueue", (42, HEAD_A)) in fake.actions
+
+
+def test_gate_never_requeues_a_squash_text_revoke(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    gate = _gate(tmp_path, {})
+    queued = FakeGitHub(pr(isInMergeQueue=True))
+    queued.squash = True
+    gated(queued, path, monkeypatch, gate)
+    assert ("dequeue", "PR_node_42") in queued.actions
+    assert f"42:{HEAD_A}" in json.loads(path.read_text())["squash_revoked"]
+    for squash, enqueued in ((True, False), (None, False), (False, True)):
+        fake = FakeGitHub()
+        fake.squash = squash
+        lines, _ = gated(fake, path, monkeypatch, gate, apply=False)
+        assert ("squash-read", (42, HEAD_A)) in fake.actions
+        assert ("reason=ready" in lines[0]) is enqueued, (squash, lines)
+
+
+def test_gate_state_is_pruned_to_open_prs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {}, "drops": {}, "requeued": {f"7:{HEAD_A}": "x", f"42:{HEAD_A}": "y"}}))
+    gated(FakeGitHub(), path, monkeypatch, _gate(tmp_path, {}))
+    assert json.loads(path.read_text())["requeued"] == {f"42:{HEAD_A}": "y"}
+
+
+@pytest.mark.parametrize(
+    "environ,flag,expected",
+    [
+        ({}, False, 0),
+        ({"MQ_KEEPER_MIN_INTERVAL_SECONDS": "120"}, False, 120),
+        ({"MQ_KEEPER_MIN_INTERVAL_SECONDS": "soon"}, False, 300),
+        ({}, True, 300),
+        ({"MQ_KEEPER_MIN_INTERVAL_SECONDS": "600"}, True, 600),
+    ],
+)
+def test_min_interval(tmp_path: Path, environ: dict[str, str], flag: bool, expected: int) -> None:
+    marker = tmp_path / "slow"
+    if flag:
+        marker.write_text("")
+    env = {**environ, "MQ_KEEPER_SLOW_FLAG": str(marker)}
+    assert keeper._min_interval(env) == expected
+
+
+def test_throttled_uses_the_last_observed_run(tmp_path: Path) -> None:
+    from datetime import UTC, datetime, timedelta
+
+    now = datetime(2026, 9, 23, 12, 0, tzinfo=UTC)
+    path = tmp_path / "state.json"
+    assert keeper._throttled(path, 300, now) is False
+    for age, expected in ((60, True), (290, False), (400, False)):
+        path.write_text(json.dumps({"observed": (now - timedelta(seconds=age)).isoformat()}))
+        assert keeper._throttled(path, 300, now) is expected
+        assert keeper._throttled(path, 0, now) is False
+
+
+def test_slow_mode_skips_apply_without_network(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from datetime import UTC, datetime
+
+    state = tmp_path / "batch_state/merge_queue_keeper.json"
+    state.parent.mkdir(parents=True)
+    state.write_text(json.dumps({"queued": {}, "drops": {}, "observed": datetime.now(UTC).isoformat()}))
+    flag = tmp_path / "slow"
+    flag.write_text("")
+    monkeypatch.setenv("MQ_KEEPER_SLOW_FLAG", str(flag))
+    monkeypatch.setattr(keeper, "GitHub", lambda *args: pytest.fail("network used in slow mode"))
+    assert keeper.main(["--apply", "--repo-root", str(tmp_path)]) == 0
+
+
+def test_keeper_timer_runs_every_minute() -> None:
+    timer = Path(__file__).resolve().parents[2] / "packaging/systemd/learn-ukrainian-merge-queue-keeper.timer"
+    text = timer.read_text()
+    assert "OnCalendar=*:*:00" in text
+    assert "AccuracySec=5s" in text
