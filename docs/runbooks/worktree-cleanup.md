@@ -134,19 +134,32 @@ without retention intent, attribution requires exactly one creator and settled
 reused successors on the same resolved checkout and checked-out branch.
 `session_env` attribution is accepted through those recorded bindings; it does
 not grant a successor ownership. A terminal timestamped `--force-new` archive
-is excluded only when its same-task canonical replacement matches the checkout,
-has a different run nonce, and a current creator remains. Ordinary archives,
+is excluded from creator attribution only when its same-task canonical
+replacement matches the checkout, has a different run nonce, and a current
+creator remains. Ordinary archives,
 missing replacement evidence, two current creators, or a running successor
 remain ambiguous.
+All matching records, including excluded history, remain visible to retention
+checks and verified receipt release. A historical `keep_worktree` claim must
+be retrieved and released; it is never dropped by attribution filtering.
+In a continuation cohort, failed-preparation records with null PID, base SHA
+and branch do not prove that no checkout was created: the failure writer also
+runs after add attempts and can snapshot an existing HEAD. Without explicit
+no-creation evidence they remain ambiguous and never grant ownership.
+Infra owns this attribution residual.
 
 For a keep-false continuation cohort, exact merged-PR-head equality plus a
 clean checkout permits the common reaper to record `worktree_reap_proof`
 (`merged-reuse-reap.v1`) on the creator and `merged_head_proof` in its removal
 receipt. The proof records the PR, head, creator/run and cohort runs; the
 worktree lock precedes task-state locks and all identities are rechecked.
+The head must come from a branch or PR-number lookup; a commit-search hit
+only proves commit membership and is refreshed by number before taking locks.
 A `needs_finalize` creator additionally requires a done successor whose
 recorded head is that merged head, with every recorded process proven absent.
-Its status remains unchanged. Removal uses no force flag for this cohort;
+This extra owner proof applies only to cohorts of at least two current records;
+single-record trees retain their existing behavior. Its status remains unchanged.
+Removal uses no force flag for this cohort and still checks the delete target;
 ignored non-cache bytes still require verified preservation and retrieval.
 Retention intent continues to require the receipt-based retrieve/release
 sequence above; merged-head proof never clears it.

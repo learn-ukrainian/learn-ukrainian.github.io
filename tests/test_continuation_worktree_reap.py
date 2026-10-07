@@ -116,7 +116,6 @@ def test_D_force_new_history_does_not_replace_creator_or_release_proof(cohort):
     )
     path, owner = output.resolve_worktree_record(tree, tasks, repo_root=repo)
     assert path == tasks / "boundary.json" and owner == creator
-    archived_bytes = archive.read_bytes()
     dry = next(row for row in reap.reap_worktrees.reap_worktrees(repo_root=repo, apply=False) if row.path == str(tree))
     assert dry.action == "skipped" and "keep_worktree" in dry.reason
     assert "existing passing retrieval receipt" in reap._release_retention(
@@ -125,7 +124,10 @@ def test_D_force_new_history_does_not_replace_creator_or_release_proof(cohort):
     report = reap.post_task_reap("boundary", tasks_dir=tasks, repo_root=repo, apply=True, include_acp_runtime=False)
     assert report["main_worktree"]["preserved_artifacts"]["owner"] == "boundary"
     assert reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True) is None
-    assert archive.read_bytes() == archived_bytes
+    released_archive = json.loads(archive.read_text())
+    assert released_archive["status"] == "failed" and released_archive["run_nonce"] == "old-run"
+    assert released_archive["keep_worktree"] is False
+    assert released_archive["preserved_artifacts"]["retention_release"]["owner"] == "boundary"
     assert all(
         not member.get("keep_worktree") for _, member in output.matching_worktree_records(tree, tasks, repo_root=repo)
     )
@@ -233,3 +235,122 @@ def test_merged_proof_refuses_identity_and_checkout_changes(cohort, monkeypatch,
             reap.reap_worktrees._record_merged_reuse_proof(repo, info, pr, tasks_dir=tasks)
     assert tree.exists()
     assert not any("worktree_reap_proof" in json.loads(p.read_text()) for p in tasks.glob("*.json"))
+
+
+@pytest.mark.parametrize("archived_reuse", [False, True])
+def test_H1_force_new_archive_retention_survives_closeout(cohort, archived_reuse):
+    repo, tree, tasks, _, successor, source = continuation(cohort, "C")
+    archive = tasks / "successor.20261007T140000Z.archived.json"
+    archive.write_text(
+        json.dumps(
+            dict(successor, status="failed", run_nonce="old-run", keep_worktree=True, worktree_reused=archived_reuse)
+        )
+    )
+    result = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set())
+    row = result.reap_results[0]
+    assert row["action"] == "skipped", row
+    assert "keep_worktree" in row["reason"]
+    assert tree.exists() and source.read_bytes() == b"current output"
+    assert json.loads(archive.read_text())["keep_worktree"] is True
+    assert not any("worktree_reap_proof" in json.loads(p.read_text()) for p in tasks.glob("*.json"))
+    # Retention remains releasable only through the existing verified receipt.
+    assert reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True) is None
+    assert json.loads(archive.read_text())["keep_worktree"] is False
+    row = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
+    assert row["action"] == "removed" and not tree.exists(), row
+
+
+def test_H7_single_needs_finalize_owner_keeps_main_behavior(boundary_tree):
+    repo, tree, tasks, creator = boundary_tree
+    creator.update(
+        status="needs_finalize", pid=999_999_999, final_branch_head_commit="a" * 40, worktree_branch="codex/boundary"
+    )
+    save(tasks, creator)
+    row = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
+    assert row["action"] == "removed" and not tree.exists(), row
+
+
+@pytest.mark.parametrize("number_head", ["different", "unavailable", "exact"])
+def test_commit_search_requires_real_pr_head(cohort, monkeypatch, number_head):
+    repo, tree, tasks, _, _, source = continuation(cohort, "C")
+    head = _git(tree, "rev-parse", "HEAD")
+    # Search includes this commit but does not report the PR's actual head.
+    hit, error = reap.reap_worktrees._parse_search_pr_item({"number": 9645, "state": "MERGED"}, head)
+    assert error is None
+    monkeypatch.setattr(reap.reap_worktrees, "_query_pr_states", lambda *_args: ([], None))
+    monkeypatch.setattr(reap.reap_worktrees, "_query_prs_by_head_sha", lambda *_args: ([hit], None))
+    monkeypatch.setattr(reap.reap_worktrees, "_is_ancestor_of_origin_main", lambda *_args, **_kwargs: False)
+    calls = []
+
+    def by_number(_repo, number):
+        calls.append(number)
+        if number_head == "unavailable":
+            return [], "PR lookup unavailable"
+        real_head = head if number_head == "exact" else "b" * 40
+        return [reap.reap_worktrees.PullRequestState(number, "MERGED", real_head)], None
+
+    monkeypatch.setattr(reap.reap_worktrees, "_query_pr_by_number", by_number)
+    row = next(
+        r
+        for r in reap.reap_worktrees.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+        if r.path == str(tree)
+    )
+    if number_head == "exact":
+        assert row.action == "removed" and not tree.exists(), row
+        assert calls == [9645]
+        assert row.preserved_artifacts["merged_head_proof"]["head_sha"] == head
+    else:
+        assert row.action == "skipped", row
+        assert tree.exists() and source.read_bytes() == b"current output"
+        assert not any("worktree_reap_proof" in json.loads(p.read_text()) for p in tasks.glob("*.json"))
+
+
+def test_nonforce_cohort_removal_runs_delete_target_guard(cohort, monkeypatch):
+    repo, tree, _, _, _, source = continuation(cohort, "C")
+    calls = []
+
+    def refuse(target, **kwargs):
+        calls.append((target, kwargs["repo_root"]))
+        raise ValueError("held-out delete-target refusal")
+
+    monkeypatch.setattr(claims, "assert_delete_target", refuse)
+    row = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
+    assert row["action"] == "error", row
+    assert "delete guard refused" in row["error"]
+    assert calls == [(tree, repo)]
+    assert tree.exists() and source.read_bytes() == b"current output"
+
+
+@pytest.mark.parametrize("created_evidence", [False, True])
+def test_failed_preparation_without_no_checkout_proof_stays_ambiguous(cohort, created_evidence):
+    repo, tree, tasks, _, _, source = cohort
+    record = {
+        "task_id": "failed-validation",
+        "run_nonce": "validation-run",
+        "status": "failed",
+        "last_error": "worktree_preparation_failed",
+        "returncode_reason": "worktree preparation failed",
+        "worktree_path": str(tree),
+        "worktree_reused": False,
+        "keep_worktree": True,
+        "pid": None,
+        "worktree_base_sha": None,
+        "worktree_branch": None,
+        # The failure writer snapshots existing HEAD too; this is not creation proof.
+        "final_branch_head_commit": _git(tree, "rev-parse", "HEAD"),
+    }
+    if created_evidence:
+        record.update(
+            worktree_base_sha=record["final_branch_head_commit"],
+            worktree_branch="codex/boundary",
+            worktree_prep={"reserved_by_mkdir": True, "git_pid": 999_999_999},
+        )
+    save(tasks, record)
+    with pytest.raises(ValueError, match="ambiguous"):
+        output.resolve_worktree_record(tree, tasks, repo_root=repo)
+    report = reap.post_task_reap(
+        "failed-validation", tasks_dir=tasks, repo_root=repo, apply=True, include_acp_runtime=False
+    )
+    assert report["main_worktree"]["action"] in {"skipped", "retained"}, report
+    assert tree.exists() and source.read_bytes() == b"current output"
+    assert json.loads((tasks / "failed-validation.json").read_text()) == record

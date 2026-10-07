@@ -123,7 +123,9 @@ def matching_worktree_records(
             publish_cache=publish_cache,
             missing_path=exc.path if exc.missing else None,
         )
-    return _current_reuse_records(matches, tasks_dir)
+    # Retention and record-change checks need every claim, including history.
+    # Only creator attribution may disregard proven force-new attempts.
+    return matches
 
 
 def _current_reuse_records(
@@ -267,11 +269,12 @@ def _matching_worktree_records_once(
 
 
 def reused_worktree_creator(
-    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, repo_root: Path
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, repo_root: Path, tasks_dir: Path
 ) -> tuple[Path, dict[str, Any]]:
     """Accept only one creator and settled successors of the same checkout/branch."""
     from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES, checked_out_branch, resolve_claim_path
 
+    matches = _current_reuse_records(matches, tasks_dir)
     creators = [match for match in matches if match[1].get("worktree_reused") is False]
     branch = checked_out_branch(worktree)
     if len(creators) != 1 or not branch:
@@ -302,11 +305,13 @@ def resolve_worktree_record(
     """Resolve the creator; multiple retention claims require a proven reuse cohort."""
     from scripts.orchestration.worktree_claims import is_superseded_record
 
-    matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=publish_cache)
+    matches = _current_reuse_records(
+        matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=publish_cache), tasks_dir
+    )
     if len(matches) > 1:
         kept = [match for match in matches if match[1].get("keep_worktree")]
         if kept:
-            return reused_worktree_creator(matches, worktree, repo_root=repo_root)
+            return reused_worktree_creator(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
         # Finished references alone are not ownership. Without one creator,
         # output retains unknown attribution; empty trees remain removable.
         creators = [match for match in matches if match[1].get("worktree_reused") is False]
@@ -326,7 +331,7 @@ def resolve_worktree_record(
                 ):
                     return current[0]
         if creators:
-            return reused_worktree_creator(matches, worktree, repo_root=repo_root)
+            return reused_worktree_creator(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
         return None, {}
     return matches[0] if matches else (None, {})
 

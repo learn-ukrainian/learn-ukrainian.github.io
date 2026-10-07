@@ -93,6 +93,7 @@ class PullRequestState:
     number: int | None
     state: str
     head_sha: str | None = None
+    head_from_commit_search: bool = False
 
 
 @dataclass(frozen=True)
@@ -952,7 +953,7 @@ def _parse_search_pr_item(item: Any, head_sha: str) -> tuple[PullRequestState | 
     if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
         return None, f"{_PR_LOOKUP_FAILED} (gh search prs row has no usable PR number)"
     return (
-        PullRequestState(number=number, state=state, head_sha=head_sha),
+        PullRequestState(number=number, state=state, head_sha=head_sha, head_from_commit_search=True),
         None,
     )
 
@@ -3099,7 +3100,10 @@ def _released_reuse_claim_proven_settled(
         matches = ignored_task_output.matching_worktree_records(
             worktree, tasks_dir, repo_root=repo_root, publish_cache=False
         )
-        _, creator = ignored_task_output.reused_worktree_creator(matches, worktree, repo_root=repo_root)
+        cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+        _, creator = ignored_task_output.reused_worktree_creator(
+            matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+        )
         if creator != record or any(member.get("keep_worktree") for _, member in matches):
             return None
         receipt = record["preserved_artifacts"]
@@ -3114,13 +3118,13 @@ def _released_reuse_claim_proven_settled(
             or release.get("run_nonce") != record["run_nonce"]
             or not receipt.get("retrieval_proof_sha256")
             or release.get("retrieval_proof_sha256") != receipt["retrieval_proof_sha256"]
-            or not all(_pid_proven_absent(member) for _, member in matches)
+            or not all(_pid_proven_absent(member) for _, member in cohort)
         ):
             return None
         head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
         if head.returncode != 0 or head.stdout.strip() != finalized["head_sha"]:
             return None
-        for _, successor in matches:
+        for _, successor in cohort:
             if (
                 successor.get("worktree_reused") is True
                 and successor.get("status") == "done"
@@ -3152,19 +3156,22 @@ def _merged_reuse_claim_proven_settled(
         matches = ignored_task_output.matching_worktree_records(
             worktree, tasks_dir, repo_root=repo_root, publish_cache=False
         )
-        _, creator = ignored_task_output.reused_worktree_creator(matches, worktree, repo_root=repo_root)
+        cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+        _, creator = ignored_task_output.reused_worktree_creator(
+            matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+        )
         if (
             creator != record
-            or len(matches) < 2
+            or len(cohort) < 2
             or any(member.get("keep_worktree") for _, member in matches)
             or any(member.get("preserved_artifacts", {}).get("retention_release") for _, member in matches)
-            or not all(_pid_proven_absent(member) for _, member in matches)
+            or not all(_pid_proven_absent(member) for _, member in cohort)
         ):
             return None
         head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
         if head.returncode != 0:
             return None
-        for _, successor in matches:
+        for _, successor in cohort:
             if (
                 successor.get("worktree_reused") is True
                 and successor.get("status") == "done"
@@ -3191,10 +3198,13 @@ def _record_merged_reuse_proof(
     matches = ignored_task_output.matching_worktree_records(
         info.path, tasks_dir, repo_root=repo_root, publish_cache=False
     )
-    if len(matches) < 2 or any(member.get("keep_worktree") for _, member in matches):
+    cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+    if len(cohort) < 2 or any(member.get("keep_worktree") for _, member in matches):
         return None
-    path, creator = ignored_task_output.reused_worktree_creator(matches, info.path, repo_root=repo_root)
-    if pr is None or pr.state != "MERGED" or pr.head_sha != info.head:
+    path, creator = ignored_task_output.reused_worktree_creator(
+        matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir
+    )
+    if pr is None or pr.state != "MERGED" or pr.head_sha != info.head or pr.head_from_commit_search:
         if any(
             isinstance(member.get("preserved_artifacts"), dict)
             and member["preserved_artifacts"].get("retention_release")
@@ -3213,7 +3223,7 @@ def _record_merged_reuse_proof(
         task_record_path(tasks_dir / "archive", creator["task_id"]),
     ):
         raise ValueError("continuation creator has no canonical task record")
-    if not all(_pid_proven_absent(member) for _, member in matches):
+    if not all(_pid_proven_absent(member) for _, member in cohort):
         raise ValueError("continuation process absence unavailable")
     proof = {
         "schema": "merged-reuse-reap.v1",
@@ -3223,7 +3233,7 @@ def _record_merged_reuse_proof(
         "pr_number": pr.number,
         "pr_state": pr.state,
         "clean": True,
-        "members": [{"task_id": member["task_id"], "run_nonce": member["run_nonce"]} for _, member in matches],
+        "members": [{"task_id": member["task_id"], "run_nonce": member["run_nonce"]} for _, member in cohort],
     }
     with contextlib.ExitStack() as stack:
         for member_path, member in sorted(matches):
@@ -3237,7 +3247,7 @@ def _record_merged_reuse_proof(
             != matches
         ):
             raise ValueError("continuation cohort changed before merged-head proof")
-        if not all(_pid_proven_absent(member) for _, member in matches):
+        if not all(_pid_proven_absent(member) for _, member in cohort):
             raise ValueError("continuation process absence changed before merged-head proof")
         head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
         if head.returncode != 0 or head.stdout.strip() != info.head or _worktree_clean(info.path) is not True:
@@ -3290,9 +3300,19 @@ def _enter_dispatch_worktree_guard(
         if not isinstance(nonce, str) or not nonce or not _pid_proven_absent(owner_record):
             return f"needs_finalize owner {owner_task_id} attempt unknown; retain until nonce and absent PID are proven"
         owner_attempt = (nonce, owner_record.get("pid"))
-        # #9940's receipt-based owner release keeps its original guard. This
-        # extra proof applies to creators that have not taken that path.
-        owner_needs_merge_proof = not owner_record.get("preserved_artifacts", {}).get("retention_release")
+        # Single-record owners retain main's guard. Only continuation cohorts
+        # without #9940's receipt-based release need the extra merge proof.
+        from scripts.fleet import ignored_task_output
+
+        try:
+            members = ignored_task_output.matching_worktree_records(
+                info.path, tasks_dir, repo_root=primary, publish_cache=False
+            )
+            owner_needs_merge_proof = len(
+                ignored_task_output._current_reuse_records(members, tasks_dir)
+            ) >= 2 and not owner_record.get("preserved_artifacts", {}).get("retention_release")
+        except (OSError, ValueError, RuntimeError):
+            return f"needs_finalize owner {owner_task_id} cohort unavailable; retain until attribution is proven"
 
     # Prove every needs_finalize claim's merge before taking the lock: the PR lookup
     # is a network call that would otherwise hold delegate's dispatch lock.
@@ -3344,7 +3364,10 @@ def _enter_dispatch_worktree_guard(
                     current == merged_reuse_proofs[identity]
                     and head.returncode == 0
                     and head.stdout.strip() == info.head
-                    and all(_pid_proven_absent(member) for _, member in current)
+                    and all(
+                        _pid_proven_absent(member)
+                        for _, member in ignored_task_output._current_reuse_records(current, tasks_dir)
+                    )
                 )
             except (OSError, ValueError, RuntimeError):
                 return False
@@ -3361,7 +3384,10 @@ def _enter_dispatch_worktree_guard(
                     current == reused_proofs[identity]
                     and head.returncode == 0
                     and head.stdout.strip() == finalized["head_sha"]
-                    and all(_pid_proven_absent(member) for _, member in current)
+                    and all(
+                        _pid_proven_absent(member)
+                        for _, member in ignored_task_output._current_reuse_records(current, tasks_dir)
+                    )
                 )
             except (OSError, ValueError, KeyError, TypeError, RuntimeError):
                 return False
@@ -3420,18 +3446,26 @@ def _reap_qualified_worktree(
             matches = ignored_task_output.matching_worktree_records(
                 info.path, task_store_paths.tasks_dir(), repo_root=control_root, publish_cache=False
             )
-            if len(matches) > 1:
-                ignored_task_output.reused_worktree_creator(matches, info.path, repo_root=control_root)
+            cohort = ignored_task_output._current_reuse_records(matches, task_store_paths.tasks_dir())
+            if len(cohort) > 1:
+                ignored_task_output.reused_worktree_creator(
+                    matches, info.path, repo_root=control_root, tasks_dir=task_store_paths.tasks_dir()
+                )
                 if any(member.get("keep_worktree") for _, member in matches):
                     raise ValueError("keep_worktree intent set; retrieval and owner release required")
-                if not all(_pid_proven_absent(member) for _, member in matches):
+                if not all(_pid_proven_absent(member) for _, member in cohort):
                     raise ValueError("continuation process absence unavailable")
                 released = any(
                     isinstance(member.get("preserved_artifacts"), dict)
                     and member["preserved_artifacts"].get("retention_release")
                     for _, member in matches
                 )
-                if not released and (pr_state is None or pr_state.state != "MERGED" or pr_state.head_sha != info.head):
+                if not released and (
+                    pr_state is None
+                    or pr_state.state != "MERGED"
+                    or pr_state.head_sha != info.head
+                    or pr_state.head_from_commit_search
+                ):
                     raise ValueError("continuation requires an exact merged PR head")
         except (OSError, ValueError, RuntimeError) as exc:
             return ReapResult(
@@ -3480,6 +3514,31 @@ def _reap_qualified_worktree(
     recovery_ref: str | None = None
     dispatch_guard = contextlib.ExitStack()
     try:
+        # Search only establishes commit membership, not the actual PR head.
+        # Refresh by number before acquiring the dispatch/worktree lock.
+        if pr_state is not None and pr_state.head_from_commit_search:
+            from scripts.fleet import ignored_task_output
+
+            tasks_dir = task_store_paths.tasks_dir()
+            matches = ignored_task_output.matching_worktree_records(
+                info.path, tasks_dir, repo_root=control_plane_root(repo_root), publish_cache=False
+            )
+            cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+        else:
+            cohort = []
+        if len(cohort) >= 2:
+            states, error = _query_pr_by_number(repo_root, pr_state.number) if pr_state.number else ([], None)
+            fresh = next((state for state in states if state.number == pr_state.number), None)
+            if error is not None or fresh is None or fresh.head_from_commit_search:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason="commit-search PR head unavailable",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+            pr_state = fresh
         # This reservation is intentionally before the final TOCTOU checks.
         # Scheduler/delegate consumers can reject a new bind while it exists.
         reaper_lifecycle.mark_reap_pending(

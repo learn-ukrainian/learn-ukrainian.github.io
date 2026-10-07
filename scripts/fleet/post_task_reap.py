@@ -391,7 +391,9 @@ def _reap_main_worktree(
             reuse_matches = ignored_task_output.matching_worktree_records(
                 bound_path, tasks_dir, repo_root=repo_root, publish_cache=False
             )
-            _, creator = ignored_task_output.reused_worktree_creator(reuse_matches, bound_path, repo_root=repo_root)
+            _, creator = ignored_task_output.reused_worktree_creator(
+                reuse_matches, bound_path, repo_root=repo_root, tasks_dir=tasks_dir
+            )
             if creator != state or creator.get("task_id") != task_id or len(reuse_matches) < 2:
                 reuse_matches = []
         except (OSError, ValueError, RuntimeError):
@@ -542,10 +544,15 @@ def _retrieve_retained_reuse(
         )
         if len(matches) < 2 or not any(record.get("keep_worktree") for _, record in matches):
             return None
-        _, creator = ignored_task_output.reused_worktree_creator(matches, worktree, repo_root=repo_root)
+        _, creator = ignored_task_output.reused_worktree_creator(
+            matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+        )
         if creator != state or creator.get("task_id") != task_id:
             raise ValueError("retained reuse output belongs to its creator")
-        if not all(reap_worktrees._pid_proven_absent(record) for _, record in matches):
+        if not all(
+            reap_worktrees._pid_proven_absent(record)
+            for _, record in ignored_task_output._current_reuse_records(matches, tasks_dir)
+        ):
             raise ValueError("retained reuse retrieval requires all recorded processes gone")
         receipt = creator.get("preserved_artifacts") or {
             "owner": task_id,
@@ -557,7 +564,10 @@ def _retrieve_retained_reuse(
                 current = ignored_task_output.matching_worktree_records(
                     worktree, tasks_dir, repo_root=repo_root, publish_cache=False
                 )
-                if current != matches or not all(reap_worktrees._pid_proven_absent(record) for _, record in current):
+                if current != matches or not all(
+                    reap_worktrees._pid_proven_absent(record)
+                    for _, record in ignored_task_output._current_reuse_records(current, tasks_dir)
+                ):
                     raise ValueError("retained reuse records or processes changed")
                 _, reason, receipt = ignored_task_output.preserve_worktree_artifacts(
                     worktree,
@@ -977,7 +987,7 @@ def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply:
         )
         finalized = None
         if state.get("status") == "needs_finalize":
-            ignored_task_output.reused_worktree_creator(before, worktree, repo_root=repo_root)
+            ignored_task_output.reused_worktree_creator(before, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
             finalized = _finalized_reuse_proof(worktree, before, repo_root=repo_root)
         with worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(repo_root)):
             matches = ignored_task_output.matching_worktree_records(
@@ -989,7 +999,9 @@ def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply:
             if matches != before:
                 return "retention release refused: task records changed"
             if len(matches) > 1:
-                path, record = ignored_task_output.reused_worktree_creator(matches, worktree, repo_root=repo_root)
+                path, record = ignored_task_output.reused_worktree_creator(
+                    matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+                )
             else:
                 path, record = matches[0] if matches else (None, {})
             if path is None or record.get("task_id") != task_id:
