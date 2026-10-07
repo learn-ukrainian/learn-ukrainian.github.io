@@ -804,7 +804,7 @@ def junit_coverage(paths: list[Path], manifest: dict, components: Sequence[str],
 REPORT_FOLDING_RULES = (
     "Repository-relative string literals without '..' or absolute paths; integer literals only as parent indexes.",
     "Path/PurePosixPath from unshadowed module-level pathlib imports, with one literal/path argument; Path(__file__).",
-    "Lexical .parent and .parents[n] with a nonnegative literal index within the repository; no filesystem traversal.",
+    "Lexical .parent and .parents[n] with a nonnegative literal or proven module-constant index within the repository; no filesystem traversal.",
     "Path / literal-string and os.path.join of accepted paths/strings from an unshadowed module-level os import.",
     "Single unconditional module-level constants defined before use, recursively built only from these forms; no other binding anywhere in the module.",
     "Reject computed strings, environment/argument/parameter/conditional/local/shadowed bindings, resolve/absolute, '..', unknown calls and module invocations.",
@@ -829,6 +829,8 @@ class ReportFolder:
     def __init__(self, tree: ast.Module, path: str):
         self.path = path
         self.nodes = list(ast.walk(tree))
+        self.wildcard = any(isinstance(node, ast.ImportFrom) and any(alias.name == '*' for alias in node.names)
+                            for node in self.nodes)
         self.bindings = {}
         self.aliases = {}
         counts = Counter()
@@ -844,6 +846,10 @@ class ReportFolder:
                     counts[alias.asname or alias.name.split('.')[0]] += 1
             elif isinstance(node, (ast.ExceptHandler, ast.MatchAs, ast.MatchStar)) and node.name:
                 counts[node.name] += 1
+            elif isinstance(node, ast.MatchMapping) and node.rest:
+                counts[node.rest] += 1
+            elif isinstance(node, (ast.TypeVar, ast.ParamSpec, ast.TypeVarTuple)):
+                counts[node.name] += 1
             elif isinstance(node, (ast.Global, ast.Nonlocal)):
                 counts.update(node.names)
             if isinstance(node, (ast.Attribute, ast.Subscript)) and isinstance(node.ctx, (ast.Store, ast.Del)):
@@ -853,6 +859,8 @@ class ReportFolder:
                 if isinstance(base, ast.Name):
                     counts[base.id] += 2
         self.counts = counts
+        if self.wildcard:
+            return  # An arbitrary exported symbol can replace any module binding.
         for node in tree.body:
             if isinstance(node, (ast.Assign, ast.AnnAssign)) and node.value is not None:
                 targets = node.targets if isinstance(node, ast.Assign) else [node.target]
@@ -884,6 +892,8 @@ class ReportFolder:
                 return None
             return node.value
         if isinstance(node, ast.Name):
+            if self.wildcard:
+                return None
             if node.id == '__file__':
                 return PurePosixPath(self.path) if not self.counts[node.id] else None
             expression = self.bindings.get(node.id)
@@ -899,7 +909,7 @@ class ReportFolder:
                 return base.parent
         if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Attribute) and node.value.attr == 'parents':
             base = self.value(node.value.value, seen)
-            index = node.slice.value if isinstance(node.slice, ast.Constant) else None
+            index = self.value(node.slice, seen)
             if isinstance(base, PurePosixPath) and type(index) is int and 0 <= index < len(base.parents):
                 return base.parents[index]
         if isinstance(node, ast.Call) and not node.keywords:

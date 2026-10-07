@@ -21,12 +21,13 @@ from scripts.ci.dependency_change_scope import _parse_name_status_z
     ('Path(__file__).parent / "tracked.json"', 'scripts/demo/tracked.json'),
     ('Path(__file__).parents[1] / "tracked.json"', 'scripts/tracked.json'),
     ('Path(__file__).parents[2] / "tracked.json"', 'tracked.json'),
+    ('Path(__file__).parents[INDEX] / "tracked.json"', 'scripts/tracked.json'),
     ('os.path.join(Path(__file__).parent, "assets", "tracked.json")', 'scripts/demo/assets/tracked.json'),
     ('DATA', 'scripts/demo/assets/tracked.json'),
 ])
 def test_sound_path_forms(expression, target):
     source = ('from pathlib import Path, PurePosixPath\nimport os\n'
-              'ROOT = Path(__file__).parent\nDATA = ROOT / "assets" / "tracked.json"\n'
+              'INDEX = 1\nROOT = Path(__file__).parent\nDATA = ROOT / "assets" / "tracked.json"\n'
               f'open({expression})\n')
     tree = ast.parse(source)
     folder = c.ReportFolder(tree, 'scripts/demo/reader.py')
@@ -38,7 +39,7 @@ def test_sound_path_forms(expression, target):
     'sys.argv[1]', 'get_path()', 'Path("a/../b")', 'Path("..") / "b"',
     'Path(__file__).resolve().parent', 'Path(__file__).absolute().parent',
     'Path("/absolute")', 'Path(__file__).parents[-1]', 'Path(__file__).parents[99]',
-    'Path(__file__).parents[INDEX]', 'str(Path(__file__))', 'Path("x", "y")',
+    'Path(__file__).parents[UNKNOWN]', 'str(Path(__file__))', 'Path("x", "y")',
     'Path(__file__).parents[2].parent', 'False',
 ])
 def test_unproven_forms_are_rejected(expression):
@@ -56,6 +57,10 @@ def test_unproven_forms_are_rejected(expression):
     'DATA = "fixed.json"\n[DATA for DATA in paths]\nopen(DATA)',
     'DATA = "fixed.json"\ntry: pass\nexcept Exception as DATA: pass\nopen(DATA)',
     'DATA = "fixed.json"\nmatch arg:\n    case {"key": DATA}: pass\nopen(DATA)',
+    'DATA = "fixed.json"\nmatch arg:\n    case {**DATA}: pass\nopen(DATA)',
+    'from pathlib import Path\nfrom external import *\nopen(Path(__file__))',
+    'DATA = "fixed.json"\nfrom external import *\nopen(DATA)',
+    'from pathlib import Path\ndef read[Path]():\n    open(Path("fixed.json"))',
     'open(DATA)\nDATA = "fixed.json"',
     'from pathlib import Path\ndef read(Path):\n    open(Path("fixed.json"))',
     'from pathlib import Path\nPath.open = alternate\nopen(Path("fixed.json"))',
