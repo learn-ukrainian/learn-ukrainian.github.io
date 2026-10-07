@@ -3,13 +3,19 @@
 Compute the static denominator, including deferred imports and regular package
 initializers, so new dependent CLIs automatically receive both import probes.
 Only the ingest entrypoints are executed with --help; legacy main logic is out
-of scope. Each probe uses a fresh interpreter without pytest's sys.path.
+of scope. Each probe uses a fresh interpreter without pytest's sys.path. The
+known-failures baseline is a shrink-only ratchet: regressions and fixed rows
+both fail until the baseline reflects the remaining failures. Its denominator
+fingerprint must be refreshed explicitly when the import graph changes.
 """
 
 from __future__ import annotations
 
 import ast
+import hashlib
+import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -26,6 +32,9 @@ ROOT = Path(__file__).resolve().parents[1]
 IMPORT_TARGETS = {"scripts.rag.source_query", "scripts.wiki.slovnyk_me"}
 # Six probes at 15 seconds each remain below pytest's 120-second test timeout.
 BATCH_SIZE = 3
+BASELINE_PATH = Path(__file__).with_name("source_tool_import_baseline.json")
+URGENT_CLIS = {"scripts/ingest/grac_frequency_ingest.py", "scripts/ingest/slovnyk_me_ingest.py"}
+STYLES = ("module", "file")
 
 
 def source_tool_clis(root: Path) -> list[str]:
@@ -128,6 +137,57 @@ def smoke_import(root: Path, path: str, style: str) -> str | None:
 
 CLIS = source_tool_clis(ROOT)
 assert CLIS, "source-tool CLI denominator must not be empty"
+BASELINE = json.loads(BASELINE_PATH.read_text())
+KNOWN_FAILURES = {
+    (row["path"], row["form"], row["failure_class"]) for row in BASELINE["failures"]
+}
+
+
+def denominator_snapshot(clis: list[str]) -> dict:
+    """Fingerprint the full inventory, including same-size substitutions."""
+    return {
+        "cli_count": len(clis),
+        "probe_count": len(STYLES) * len(clis),
+        "cli_paths_sha256": hashlib.sha256("\n".join(sorted(clis)).encode()).hexdigest(),
+    }
+
+
+def failure_class(diagnostic: str) -> str:
+    """Keep offline guard limitations distinct from import exceptions."""
+    for kind in ("SUBPROCESS", "NETWORK"):
+        if re.search(rf"^RuntimeError: IMPORT_SMOKE_BLOCKED_{kind}: .+$", diagnostic, re.MULTILINE):
+            return "environment_blocked_" + kind.lower()
+    if re.search(r"^ModuleNotFoundError:", diagnostic, re.MULTILINE):
+        return "module_not_found"
+    if re.search(r"^ImportError:", diagnostic, re.MULTILINE):
+        return "import_error"
+    if ": timeout after 15s\n" in diagnostic:
+        return "timeout"
+    return "other_import_failure"
+
+
+def assert_failure_ratchet(observed: set[tuple[str, str, str]],
+                           expected: set[tuple[str, str, str]]) -> None:
+    """Reject new failures and require removal of repaired baseline entries."""
+    new = sorted(observed - expected)
+    stale = sorted(expected - observed)
+    assert not new and not stale, (
+        f"New failures: {new}\nStale baseline rows (remove after verifying the fix): {stale}"
+    )
+
+
+@pytest.mark.repo_invariant
+def test_source_tool_baseline_is_fresh() -> None:
+    assert BASELINE["schema"] == "source-tool-import-baseline.v1"
+    assert BASELINE["denominator"] == denominator_snapshot(CLIS), (
+        "CLI denominator changed; review the inventory and refresh its snapshot explicitly"
+    )
+    assert len(KNOWN_FAILURES) == len(BASELINE["failures"]), "duplicate baseline rows"
+    assert set(CLIS) >= URGENT_CLIS, "urgent ingest CLIs must stay in the denominator"
+    for path, form, kind in KNOWN_FAILURES:
+        assert path in CLIS and form in STYLES, f"obsolete baseline probe: {(path, form)}"
+        assert path not in URGENT_CLIS, "urgent ingest imports must be clean, never baselined"
+        assert kind in {"import_error", "module_not_found", "environment_blocked_subprocess"}
 
 
 @pytest.mark.repo_invariant
@@ -135,11 +195,58 @@ assert CLIS, "source-tool CLI denominator must not be empty"
                          ids=lambda batch: batch[0])
 def test_source_tool_cli_imports(batch: list[str]) -> None:
     started = time.monotonic()
-    failures = [failure for path in batch for style in ("module", "file")
-                if (failure := smoke_import(ROOT, path, style))]
+    failures = {(path, style, failure_class(failure)): failure for path in batch for style in STYLES
+                if (failure := smoke_import(ROOT, path, style))}
     summary = (f"{len(batch)} CLIs / {2 * len(batch)} import probes in "
                f"{time.monotonic() - started:.2f}s; {len(failures)} failures")
-    assert not failures, summary + "\n" + "\n".join(failures)
+    expected = {row for row in KNOWN_FAILURES if row[0] in batch}
+    try:
+        assert_failure_ratchet(set(failures), expected)
+    except AssertionError as exc:
+        pytest.fail(summary + "\n" + str(exc) + "\n" + "\n".join(failures.values()))
+
+
+def test_denominator_snapshot_detects_shrink_and_substitution() -> None:
+    original = ["scripts/a.py", "scripts/b.py"]
+    snapshot = denominator_snapshot(original)
+    assert snapshot == denominator_snapshot(list(reversed(original)))
+    assert snapshot != denominator_snapshot(original[:1])
+    assert snapshot != denominator_snapshot(["scripts/a.py", "scripts/c.py"])
+    assert snapshot != denominator_snapshot([*original, "scripts/c.py"])
+
+
+@pytest.mark.parametrize("observed, expected, message", [
+    ({("scripts/a.py", "file", "import_error")}, set(), "New failures"),
+    (set(), {("scripts/a.py", "file", "import_error")}, "Stale baseline rows"),
+    ({("scripts/a.py", "file", "module_not_found")},
+     {("scripts/a.py", "file", "import_error")}, "New failures"),
+    ({("scripts/a.py", "module", "import_error")},
+     {("scripts/a.py", "file", "import_error")}, "Stale baseline rows"),
+])
+def test_failure_ratchet_rejects_drift(observed, expected, message: str) -> None:
+    with pytest.raises(AssertionError, match=message):
+        assert_failure_ratchet(observed, expected)
+
+
+@pytest.mark.parametrize("rows", [set(), {("scripts/a.py", "file", "import_error")}])
+def test_failure_ratchet_accepts_exact_remaining_set(rows) -> None:
+    assert_failure_ratchet(rows, rows)
+
+
+@pytest.mark.parametrize("diagnostic, expected", [
+    ("probe: exit 1\nModuleNotFoundError: missing", "module_not_found"),
+    ("probe: exit 1\nImportError: relative import", "import_error"),
+    ("probe: exit 1\nRuntimeError: IMPORT_SMOKE_BLOCKED_SUBPROCESS: subprocess.Popen",
+     "environment_blocked_subprocess"),
+    ("probe: exit 1\nRuntimeError: IMPORT_SMOKE_BLOCKED_NETWORK: socket.connect",
+     "environment_blocked_network"),
+    ("probe: timeout after 15s\nNone\nNone", "timeout"),
+    ("probe: exit 0\n", "other_import_failure"),
+    ('probe: exit 1\n    raise RuntimeError("IMPORT_SMOKE_BLOCKED_SUBPROCESS: subprocess.Popen")\n'
+     'ImportError: different failure', "import_error"),
+])
+def test_failure_class_distinguishes_environment_from_imports(diagnostic: str, expected: str) -> None:
+    assert failure_class(diagnostic) == expected
 
 
 def test_source_tool_graph_includes_new_deferred_and_package_dependents(tmp_path: Path, monkeypatch) -> None:

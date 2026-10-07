@@ -1,0 +1,230 @@
+{
+  "schema": "source-tool-import-baseline.v1",
+  "denominator": {
+    "cli_count": 412,
+    "probe_count": 824,
+    "cli_paths_sha256": "900bbdd0b28271e23baf1124d57b7ec34758209452b21ead886398c1f815b650"
+  },
+  "failures": [
+    {
+      "path": "scripts/agent_runtime/acpx_pilot.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/agent_runtime/lane_probe.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/ai_agent_bridge/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/ai_agent_bridge/_hermes_stdin.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/ai_agent_bridge/_hermes_stdin.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/ai_agent_bridge/_inbox_watch.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/audit_module.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/batch/batch_gemini_runner.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/batch/batch_gemini_runner.py",
+      "form": "module",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/evidence/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/evidence/lesson_lock.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/evidence/pack.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/evidence/verify.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/evidence/words.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/learner_state/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/resolver/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/validate/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/validate/validate.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/delegate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/delegate.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/entire_context/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/eval/zno_nmt/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_plan_markdown.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/migrate/rehash_module.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/migrate/rehash_module.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/orchestration/task_family/cli.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/rag/rag_batch_verify.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/rag/rag_batch_verify.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/digest/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/review/validate/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/review/validate/validate.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/scoring/calculate_richness.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/session_canary/codex_lane.py",
+      "form": "file",
+      "failure_class": "environment_blocked_subprocess"
+    },
+    {
+      "path": "scripts/session_canary/codex_lane.py",
+      "form": "module",
+      "failure_class": "environment_blocked_subprocess"
+    },
+    {
+      "path": "scripts/session_canary/gemini_lane.py",
+      "form": "file",
+      "failure_class": "environment_blocked_subprocess"
+    },
+    {
+      "path": "scripts/session_canary/gemini_lane.py",
+      "form": "module",
+      "failure_class": "environment_blocked_subprocess"
+    },
+    {
+      "path": "scripts/session_canary/glm_lane.py",
+      "form": "file",
+      "failure_class": "environment_blocked_subprocess"
+    },
+    {
+      "path": "scripts/session_canary/glm_lane.py",
+      "form": "module",
+      "failure_class": "environment_blocked_subprocess"
+    },
+    {
+      "path": "scripts/session_supervisor/__init__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/wiki/ingest_ukrainian_wiki.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/wiki/ukrainian_wiki_corpus.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/ukrainian_wiki_corpus.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    }
+  ]
+}
