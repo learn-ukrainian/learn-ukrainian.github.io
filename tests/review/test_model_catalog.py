@@ -6,6 +6,8 @@ import gzip
 import hashlib
 import json
 import runpy
+import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -35,6 +37,25 @@ def test_frozen_hashes_and_matrix_denominator():
 
 def test_legacy_catalog_equals_untouched_base():
     assert expanded_legacy_view() == BASELINE["catalog"]
+
+
+def test_fresh_capture_equals_every_frozen_surface(tmp_path):
+    source = Path(__file__).resolve().parents[2]
+    output = tmp_path / "capture"
+    result = subprocess.run(
+        [sys.executable, str(FIXTURE / "capture.py"), "--source-root", str(source),
+         "--output", str(output), "--project-python", sys.executable],
+        cwd=tmp_path, env={"PATH": "/usr/bin:/bin", "TMPDIR": str(tmp_path)},
+        capture_output=True, text=True, timeout=180,
+    )
+    assert result.returncode == 0, result.stderr
+    actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
+    assert actual.keys() == BASELINE.keys()
+    assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
+    for surface in BASELINE:
+        assert actual[surface] == BASELINE[surface], f"frozen surface differs: {surface}"
+    assert json.loads((output / "inputs.json").read_bytes()) == INPUTS
+    assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
 
 
 def test_capture_encodes_structures_without_reordering_arrays():

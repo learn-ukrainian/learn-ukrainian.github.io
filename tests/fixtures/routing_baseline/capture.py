@@ -119,6 +119,10 @@ def capture(source, scratch, project_python):
     catalog = load_model_catalog()
     # Ignore additive fields when comparing a migrated checkout to this fixture.
     legacy = {key: value for key, value in catalog.items() if key not in {"seats", "roles", "routing_schema_version"}}
+    legacy["models"] = {
+        model_id: {key: value for key, value in model.items() if key != "routing_wire_ids"}
+        for model_id, model in legacy["models"].items()
+    }
     cases = reviewer_inputs(legacy)
     outputs = {"catalog": legacy, "registry": plain(AGENTS), "reviewer": []}
     for case in cases:

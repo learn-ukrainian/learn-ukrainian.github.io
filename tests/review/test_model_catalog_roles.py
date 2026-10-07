@@ -338,6 +338,39 @@ def test_shell_api_returns_structured_evidence_and_typed_refusal(tmp_path):
     assert result.returncode == 2 and "unknown routing role" in result.stderr
 
 
+@pytest.mark.parametrize("args,expected_status,expected_output", [
+    (["--check-retired-model", "claude-opus-5-5"], 0, ""),
+    (["--check-retired-model", "claude-fable-5"], 2, ""),
+    (["--resolve-kimi-model", "k3"], 0, "kimi-code/k3\n"),
+    (["--resolve-kimi-model", "k3", "--format", "kimicc"], 0,
+     "k3\tkimi-k3[1m]\tk3\tkimicc_k3\n"),
+    (["--resolve-role", "bounded_advisor"], 0, None),
+    (["--resolve-role", "bounded_advisor", "--purpose", "launch"], 0, None),
+    (["--resolve-role", "unregistered"], 2, ""),
+])
+def test_catalog_file_path_cli_in_clean_environment(tmp_path, args, expected_status, expected_output):
+    script = Path(__file__).resolve().parents[2] / "scripts/review/model_catalog.py"
+    result = subprocess.run(
+        [sys.executable, str(script), *args], cwd=tmp_path,
+        env={"PATH": "/usr/bin:/bin"}, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == expected_status, result.stderr
+    assert "Traceback" not in result.stderr
+    if expected_output is not None:
+        assert result.stdout == expected_output
+    else:
+        row = json.loads(result.stdout)["candidates"][0]
+        assert (row["model_id"], row["family"], row["transport"]) == (
+            "gpt-6.1-sol", "openai", "native_codex",
+        )
+        if "launch" in args:
+            assert row["argv"][row["argv"].index("--model") + 1] == row["wire_id"]
+    if expected_status == 2:
+        assert ("is retired" if "--check-retired-model" in args else "unknown routing role") in result.stderr
+    else:
+        assert result.stderr == ""
+
+
 @pytest.mark.parametrize("index", range(len(INPUTS["reviewer"])))
 def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
     case = deepcopy(INPUTS["reviewer"][index])

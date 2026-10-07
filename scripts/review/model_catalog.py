@@ -12,6 +12,10 @@ from typing import TYPE_CHECKING, Any
 
 import yaml
 
+# Launchers invoke this file directly, without a repository PYTHONPATH.
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 if TYPE_CHECKING:
     from scripts.review.role_resolution import RoleResolution
 
