@@ -352,7 +352,7 @@ def test_adversarial_probes_and_fail_closed(require_vesum_db, hermetic_source_cu
         validate_ua_gec_phrase,
     )
 
-    v_conn = sqlite3.connect(f"file:{require_vesum_db}?mode=ro", uri=True)
+    v_conn = sqlite3.connect(f"{Path(require_vesum_db).resolve().as_uri()}?mode=ro", uri=True)
     v_cur = v_conn.cursor()
     s_cur = hermetic_source_cursor
 
@@ -760,8 +760,8 @@ def test_cf_r9_remediations_regression(decolonization_data, require_local_databa
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    v_conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+    s_conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
@@ -860,8 +860,8 @@ def test_cf_r10_remediations_regression(require_local_databases, source_cursor_f
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    v_conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+    s_conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
@@ -1041,8 +1041,8 @@ def test_cf_r11_remediations_regression(monkeypatch, require_local_databases, so
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    v_conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+    s_conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
@@ -1212,8 +1212,8 @@ def test_cf_r12_remediations_regression(monkeypatch, require_local_databases, so
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    v_conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+    s_conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
@@ -1340,7 +1340,7 @@ def test_cf_r13_remediations_regression(require_vesum_db, hermetic_source_cursor
 
     from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
 
-    real_v_cur = sqlite3.connect(f"file:{require_vesum_db}?mode=ro", uri=True).cursor()
+    real_v_cur = sqlite3.connect(f"{Path(require_vesum_db).resolve().as_uri()}?mode=ro", uri=True).cursor()
     fixture_s_cur = hermetic_source_cursor
 
     # 1. TractorBookMockCursor: 'Книга про трактори' containing 'завдання' and 'граматика'
@@ -1525,10 +1525,10 @@ def test_cf_r20_remediations_regression(decolonization_data, require_local_datab
     assert "М. Рильський" not in ev_074["supporting_passage"]
 
     # 5. Live query verification for all 3 remediated cases
-    v_conn = sqlite3.connect(f"file:{VESUM_DB_PATH}?mode=ro", uri=True)
+    v_conn = sqlite3.connect(f"{Path(VESUM_DB_PATH).resolve().as_uri()}?mode=ro", uri=True)
     v_cur = v_conn.cursor()
 
-    s_conn = sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True)
+    s_conn = sqlite3.connect(f"{Path(DEFAULT_SOURCES_DB).resolve().as_uri()}?mode=ro", uri=True)
     ensure_reproducible_sum20_table(s_conn)
     s_cur = s_conn.cursor()
 

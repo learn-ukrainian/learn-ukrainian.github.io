@@ -93,7 +93,7 @@ def build(
     if db_path.exists():
         db_path.unlink()
 
-    source_conn = sqlite3.connect(f"file:{source}?mode=ro", uri=True)
+    source_conn = sqlite3.connect(f"{Path(source).resolve().as_uri()}?mode=ro", uri=True)
     source_conn.row_factory = sqlite3.Row
     try:
         rows = _extract_rows(source_conn)

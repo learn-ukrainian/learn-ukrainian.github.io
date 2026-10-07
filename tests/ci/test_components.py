@@ -417,7 +417,7 @@ def test_atlas_build_argv_runs_real_db_search_and_daily_producers(tmp_path, mani
         {"lexicon-manifest": source, "curated-aliases": aliases},
     )
     assert code == 0 and len(reports) == 3
-    with sqlite3.connect(f"file:{output / 'atlas.db'}?mode=ro", uri=True) as connection:
+    with sqlite3.connect(f"{Path(output / 'atlas.db').resolve().as_uri()}?mode=ro", uri=True) as connection:
         assert connection.execute("SELECT count(*) FROM articles").fetchone()[0] == 3
     search = json.loads((output / "search.json").read_text())
     assert isinstance(search, list) and len(search) == 3

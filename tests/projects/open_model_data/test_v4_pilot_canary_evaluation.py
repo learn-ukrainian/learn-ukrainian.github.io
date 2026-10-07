@@ -303,7 +303,7 @@ def test_stem_preserves_vesum_fidelity() -> None:
     import sqlite3
 
     try:
-        conn = sqlite3.connect(f"file:{DEFAULT_VESUM_DB.resolve()}?mode=ro", uri=True)
+        conn = sqlite3.connect(f"{DEFAULT_VESUM_DB.resolve().as_uri()}?mode=ro", uri=True)
     except sqlite3.OperationalError:
         pytest.skip("VESUM db cannot be opened in read-only sandbox")
 

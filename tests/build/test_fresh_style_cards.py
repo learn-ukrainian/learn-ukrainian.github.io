@@ -96,7 +96,7 @@ def test_card_exemplars_are_declared_with_record_ids_and_quoted_in_body(band: st
 def test_card_exemplars_are_attested_in_the_corpus(band: str, requires_sources_db: Path) -> None:
     """Each exemplar text is a whitespace-normalised substring of its corpus record (R-35)."""
     front, _, _ = read_card(band)
-    con = sqlite3.connect(f"file:{requires_sources_db}?mode=ro", uri=True)
+    con = sqlite3.connect(f"{Path(requires_sources_db).resolve().as_uri()}?mode=ro", uri=True)
     try:
         for exemplar in front["exemplars"]:
             row = con.execute(f"select text from {exemplar['table']} where chunk_id = ?", (exemplar["chunk_id"],)).fetchone()

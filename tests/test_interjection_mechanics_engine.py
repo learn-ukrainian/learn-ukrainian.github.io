@@ -387,7 +387,7 @@ def test_is_valid_vesum_token_rejections_and_compounds():
     if not db_path.exists():
         pytest.skip(f"VESUM db not available at {db_path}")
 
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     cursor = conn.cursor()
 
     # Rejection of malformed tokens

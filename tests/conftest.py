@@ -804,7 +804,7 @@ def _require_data_artifact(
 
     if required_sqlite_tables:
         try:
-            with sqlite3.connect(f"file:{artifact}?mode=ro", uri=True) as connection:
+            with sqlite3.connect(f"{Path(artifact).resolve().as_uri()}?mode=ro", uri=True) as connection:
                 available_tables = {
                     row[0]
                     for row in connection.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")

@@ -247,7 +247,7 @@ def _sources_has_grinchenko_table() -> bool:
     import sqlite3
 
     try:
-        with sqlite3.connect(f"file:{SOURCES_PATH}?mode=ro", uri=True) as conn:
+        with sqlite3.connect(f"{Path(SOURCES_PATH).resolve().as_uri()}?mode=ro", uri=True) as conn:
             row = conn.execute(
                 "SELECT 1 FROM sqlite_master WHERE type='table' AND name='grinchenko' LIMIT 1"
             ).fetchone()
