@@ -15255,7 +15255,11 @@ class _DispatchRouting:
     requested_agent: str | None = None  # after the retired-CLI alias, before budget substitution
     alias_note: str | None = None
     substitution: dict[str, Any] | None = None
-    budget_diagnostics: dict[str, Any] | None = None  # forced-lane routing_facts summary (#9673)
+
+    def __post_init__(self) -> None:
+        # Forced-lane routing_facts (#9673). Kept off the dataclass fields so the
+        # frozen dispatch surface stays the route decision; copied to the task record when set.
+        self.budget_diagnostics: dict[str, Any] | None = None
 
 
 class _DispatchRouteRefused(Exception):
