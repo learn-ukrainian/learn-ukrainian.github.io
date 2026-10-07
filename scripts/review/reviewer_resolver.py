@@ -1282,6 +1282,7 @@ def resolve_reviewer(
         else {}
     )
     pace_retention_available = False
+    eligible_quota_buckets: set[str] = set()
     # Last-resort candidates follow every eligible primary, after hard gates.
     # A ladder orders fallbacks, not traffic. Candidates in separate YAML
     # rungs with the same semantic suitability and catalog tier form one
@@ -1299,9 +1300,12 @@ def resolve_reviewer(
     for rung_index, rung in enumerate(active_ladder):
         for candidate in rung:
             result = evaluate_candidate(candidate, inputs, author_family=author_family)
+            if result.status == "eligible":
+                eligible_quota_buckets.add(candidate.quota_bucket)
             if capacity_exclusions and result.status == "eligible" and candidate.quota_bucket in excluded_quota_buckets:
                 # Preserve the existing sole-reviewer pace-only retention
-                # contract. Admission rechecks this bucket without exclusions.
+                # contract. Admission can recheck all hard gates without
+                # dispatch capacity exclusions only for the sole eligible lane.
                 agents = (inputs.routing_snapshot or {}).get("agents", {})
                 info = agents.get(candidate.route, {})
                 status = (info.get("interactive") or {}).get("status") if candidate.route == "claude" else None
@@ -1479,6 +1483,7 @@ def resolve_reviewer(
                 f"credit-period allowlist [{', '.join(selected.credit['allowed_models'])}]"
             )
 
+    pace_retention_available = pace_retention_available and eligible_quota_buckets <= excluded_quota_buckets
     failure = None
     if selected is None and capacity_exclusions and not pace_retention_available:
         reasons = {entry.name: entry.reason or entry.status for entry in trace}
@@ -1492,7 +1497,11 @@ def resolve_reviewer(
         failure = "REVIEW_CAPACITY_UNAVAILABLE: " + "; ".join(
             f"{name}: {reason}" for name, reason in reasons.items()
         )
-    elif selected is None and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths):
+    elif (
+        selected is None
+        and not pace_retention_available
+        and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
+    ):
         failure = "security-sensitive target: no eligible critical reviewer; see candidate exclusion reasons in trace"
 
     return ReviewerResolution(

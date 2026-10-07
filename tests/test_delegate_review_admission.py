@@ -790,6 +790,56 @@ def test_9959_xai_author_claude_deficit_selects_openai(monkeypatch, budget_trigg
     assert routing.substitution["actual_model"] == "gpt-6.1-sol"
 
 
+@pytest.mark.parametrize("budget_trigger", ["flag", "environment"])
+@pytest.mark.parametrize("seat,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol")])
+def test_9959_security_pace_deficit_retains_sole_eligible_claude(monkeypatch, capsys, budget_trigger, seat, model):
+    """#9932: security fail-closed must not preempt sole-reviewer pace retention."""
+    budget = _budget(codex="cool")
+    budget["agents"]["claude"]["codexbar"] = {
+        "will_last_to_reset": False,
+        "weekly_pace_delta_pct": 12.0,
+        "weekly_expected_pct": 40.0,
+    }
+    flags = ("--check-budget",) if budget_trigger == "flag" else ()
+    if budget_trigger == "environment":
+        monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
+    args = _9959_review_args(
+        seat, model, "grok-4.7",
+        "--owned-path", "scripts/agent_runtime/target_admission.py",
+        "--subject-family", "openai", *flags,
+    )
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    assert "NOTE: REVIEW_BUDGET_RETAINED" in capsys.readouterr().err
+    if seat == "claude":
+        assert routing.substitution is None
+    else:
+        assert routing.substitution["actual_model"] == "claude-opus-5-5"
+
+
+def test_9959_security_all_eligible_reviewers_pace_deficit_refusal_lists_candidates(monkeypatch):
+    budget = _budget(codex="cool")
+    for seat in ("claude", "codex"):
+        budget["agents"][seat]["codexbar"] = {
+            "will_last_to_reset": False,
+            "weekly_pace_delta_pct": 12.0,
+            "weekly_expected_pct": 40.0,
+        }
+    args = _9959_review_args(
+        "claude", "claude-opus-5-5", "grok-4.7", "--check-budget",
+        "--owned-path", "scripts/agent_runtime/target_admission.py",
+    )
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert target is None and routing.substitution is None
+    assert "REVIEW_CAPACITY_UNAVAILABLE" in refusal
+    for rung in reviewer_resolver.REVIEW_LADDERS["critical"]:
+        for candidate in rung:
+            assert candidate.name in refusal
+    assert "deficit" in refusal
+    assert "author" in refusal
+
+
 def test_9959_claude_author_deficit_does_not_replace_explicit_openai(monkeypatch):
     budget = _budget(claude="near_cap", codex="cool")
     args = _9959_review_args("codex", "gpt-6.1-sol", "claude-opus-5-5", "--check-budget")
