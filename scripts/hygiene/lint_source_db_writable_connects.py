@@ -458,8 +458,9 @@ def classify_store_source(source: str, rel_path: str) -> list[StoreFinding]:
                     "with_name", "with_suffix"}
                 # Unknown helpers taking data + a store filename are builders,
                 # even when their anchor cannot be resolved in this module.
-                builder |= bool(re.search(r"(?:^|/)data/?(?:sources|vesum|vesum_shadow_[^/]*?)\.db(?:$|[?#/])",
-                    "".join(fragments(arg) for arg in [*node.args, *(k.value for k in node.keywords)])))
+                arguments = [fragments(arg) for arg in [*node.args, *(k.value for k in node.keywords)]]
+                builder |= any(re.search(r"(?:^|/)data/?(?:sources|vesum|vesum_shadow_[^/]*?)\.db(?:$|[?#/])",
+                                         separator.join(arguments)) for separator in ("", "/"))
             if root != "fixture" and target and (
                 builder or (root in {"repo", "relative"} and not isinstance(node, ast.Call))
             ):

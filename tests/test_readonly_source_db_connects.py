@@ -547,6 +547,8 @@ def test_base_blob_ids_include_tracked_sparse_paths(tmp_path):
     "import os\nDB = os.path.join(DATA_DIR, 'vesum.db')",
     "DB = config.DATA_DIR / 'vesum.db'",
     "DB = helper('data', 'sources.db')",
+    "DB = helper('prefix', 'data', 'sources.db')",
+    "DB = helper('data', 'sources.db', mode='ro')",
     "DB = _resolve_shared_data_file('data', 'vesum.db')",
     "DB = (ROOT / 'data' / 'x').with_name('sources.db')",
     "DB = anchor.with_name('vesum_shadow_release.db')",

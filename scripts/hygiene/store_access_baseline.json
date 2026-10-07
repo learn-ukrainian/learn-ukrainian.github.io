@@ -2,12 +2,12 @@
   "schema": "store-access-baseline.v1",
   "base_commit": "e467138966bff83cec3edaff87f103d5bda07b84",
   "counts": {
-    "store_path": 504,
+    "store_path": 505,
     "raw_store_constructor": 12,
     "test_import_access": 6
   },
   "file_counts": {
-    "scripts/analytics/vocab_progression.py": 2,
+    "scripts/analytics/vocab_progression.py": 1,
     "scripts/api/admin_router.py": 1,
     "scripts/api/monitor_context.py": 1,
     "scripts/atlas/lexical_projection.py": 1,
@@ -24,7 +24,7 @@
     "scripts/audit/lint_opsec_leaks.py": 2,
     "scripts/audit/plan_references_audit.py": 1,
     "scripts/audit/post_build_review.py": 1,
-    "scripts/audit/practice_quality_gate.py": 4,
+    "scripts/audit/practice_quality_gate.py": 2,
     "scripts/audit/resolve_fixture_rights.py": 2,
     "scripts/audit/russianism_judge.py": 1,
     "scripts/audit/validate_atlas_conformance.py": 2,
@@ -90,7 +90,7 @@
     "scripts/lexicon/runner/sources_guard.py": 1,
     "scripts/lexicon/sum20_lookup.py": 2,
     "scripts/lexicon/teacher_deck.py": 2,
-    "scripts/lexicon/teacher_deck_shard.py": 2,
+    "scripts/lexicon/teacher_deck_shard.py": 1,
     "scripts/lexicon/thin_page_report.py": 4,
     "scripts/lexicon/tools/import_ulif_dump.py": 1,
     "scripts/lexicon/tools/migrate_ulif_raw.py": 1,
@@ -214,7 +214,7 @@
     "tests/test_numeral_mechanics_engine.py": 2,
     "tests/test_open_model_language_contact_adjudication.py": 2,
     "tests/test_open_model_language_contact_detector.py": 6,
-    "tests/test_open_model_phase3_heldout_partition.py": 3,
+    "tests/test_open_model_phase3_heldout_partition.py": 8,
     "tests/test_open_model_phase3_v3a_taxonomy_denominator_compatibility.py": 1,
     "tests/test_open_model_ready_view_production.py": 2,
     "tests/test_phase3_cycle007_evidence_validator.py": 1,
@@ -231,14 +231,7 @@
       "path": "scripts/analytics/vocab_progression.py",
       "kind": "store_path",
       "scope": "ProjectPaths.from_root",
-      "fingerprint": "b665a692c07561135094b8bd2d8888a7e0da3cf2803696b4989571c45cc0321b",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/analytics/vocab_progression.py",
-      "kind": "store_path",
-      "scope": "ProjectPaths.from_root",
-      "fingerprint": "cc3e453c638d421bf17db61c8b14cd097c6ce59d077474893151334baae0d841",
+      "fingerprint": "f0bc6c9053548589a382907fa1112a3fb61c6e26b72876878524d9085997763f",
       "occurrence": 0
     },
     {
@@ -252,7 +245,7 @@
       "path": "scripts/api/monitor_context.py",
       "kind": "store_path",
       "scope": "_roots",
-      "fingerprint": "bb89f38ede0322af7eeca0d0dd06cf764d6a7390f58fdc7b3fd8932a4799d2b3",
+      "fingerprint": "c17c9b6f8706c15728c0f34bb244f511bf567d146b8d47319a1a852c4d047423",
       "occurrence": 0
     },
     {
@@ -399,21 +392,7 @@
       "path": "scripts/audit/practice_quality_gate.py",
       "kind": "store_path",
       "scope": "<module>",
-      "fingerprint": "36833506a0934c60aef72aca47700996974d7c852f63d65d9c62c0be20747a5d",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/practice_quality_gate.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "36833506a0934c60aef72aca47700996974d7c852f63d65d9c62c0be20747a5d",
-      "occurrence": 1
-    },
-    {
-      "path": "scripts/audit/practice_quality_gate.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
+      "fingerprint": "39c00d4a4e88f75d01f59068531790cfa5f800c0f6cf4df64a3e897cbf3a1f28",
       "occurrence": 0
     },
     {
@@ -455,7 +434,7 @@
       "path": "scripts/audit/verbatim_overlap_gate.py",
       "kind": "store_path",
       "scope": "build_argparser",
-      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "fingerprint": "db0c155a610529f1a5102e5c1a6a39fee997fa8a8ee168bfd8432aa66c490589",
       "occurrence": 0
     },
     {
@@ -1064,7 +1043,7 @@
       "path": "scripts/lexicon/build_teacher_deck_cloze.py",
       "kind": "store_path",
       "scope": "main",
-      "fingerprint": "270605899d22cc1c3d228ff2bd6ec7c7e199584cc2c70addbfc657e76c2362e9",
+      "fingerprint": "f9dc28534c1868979b8eb85c09d117deb0400341257d7b9a2f099155540e50de",
       "occurrence": 0
     },
     {
@@ -1141,7 +1120,7 @@
       "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
       "kind": "store_path",
       "scope": "main",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "fingerprint": "71aa39ff10ce219804b8bbb3342ca0dc431982c2c71b81faceb657ff4c8d17aa",
       "occurrence": 0
     },
     {
@@ -1253,7 +1232,7 @@
       "path": "scripts/lexicon/generate_antonym_candidates.py",
       "kind": "store_path",
       "scope": "main",
-      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "fingerprint": "e07933eeb45280df7c35527a31d05e741b093d1a13ac62fd39b75fcff8caeb5f",
       "occurrence": 0
     },
     {
@@ -1316,7 +1295,7 @@
       "path": "scripts/lexicon/mine_wikipedia_relations.py",
       "kind": "store_path",
       "scope": "main",
-      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "fingerprint": "e07933eeb45280df7c35527a31d05e741b093d1a13ac62fd39b75fcff8caeb5f",
       "occurrence": 0
     },
     {
@@ -1400,28 +1379,21 @@
       "path": "scripts/lexicon/teacher_deck.py",
       "kind": "store_path",
       "scope": "_parser",
-      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
+      "fingerprint": "3a97180d085cc44c6eaa7a29aa8570690fa29d4790d4ae5efc3d6590a1a3cdd1",
       "occurrence": 0
     },
     {
       "path": "scripts/lexicon/teacher_deck.py",
       "kind": "store_path",
       "scope": "_parser",
-      "fingerprint": "c79766413f2ee30fe62827a4edbc2e71033efa7d411f7ed5b5d8d30a80e7cf3c",
+      "fingerprint": "ea8d5be50d3bcbe71f8f7cbd4067e4e285d937a8850c10f5b61e5ef8bb96df18",
       "occurrence": 0
     },
     {
       "path": "scripts/lexicon/teacher_deck_shard.py",
       "kind": "store_path",
       "scope": "default_inputs",
-      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/lexicon/teacher_deck_shard.py",
-      "kind": "store_path",
-      "scope": "default_inputs",
-      "fingerprint": "c79766413f2ee30fe62827a4edbc2e71033efa7d411f7ed5b5d8d30a80e7cf3c",
+      "fingerprint": "663b7f115015230e1dcd0784cc99a39fb1a67d0dbbd3a4328949261158639b1a",
       "occurrence": 0
     },
     {
@@ -1456,7 +1428,7 @@
       "path": "scripts/lexicon/tools/import_ulif_dump.py",
       "kind": "store_path",
       "scope": "main",
-      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "fingerprint": "111be4f11d5bbf2743c7a957c0c2351741dc99bef3dcecb33adfa1dbd6c28436",
       "occurrence": 0
     },
     {
@@ -1603,14 +1575,14 @@
       "path": "scripts/practice/extract_textbook_error_corrections.py",
       "kind": "store_path",
       "scope": "main",
-      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "fingerprint": "6cac5b9a9cb08a9c48799df3458ec5a1479913dafb0ef92d1bc8e04f86814a07",
       "occurrence": 0
     },
     {
       "path": "scripts/practice/extract_textbook_error_corrections.py",
       "kind": "store_path",
       "scope": "main",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "fingerprint": "3c622365469a5a9a2e9168716828da5cbd7ba76112ecd2a6808b5e7c91388689",
       "occurrence": 0
     },
     {
@@ -1841,7 +1813,7 @@
       "path": "scripts/projects/open_model_data/evidence_cache_canaries.py",
       "kind": "store_path",
       "scope": "main",
-      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "fingerprint": "0044b72d4b75ee530184e62b38335e759ff4bca7e997cf3b1af2179753181ec3",
       "occurrence": 0
     },
     {
@@ -1869,15 +1841,15 @@
       "path": "scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py",
       "kind": "store_path",
       "scope": "_vesum_form_evidence",
-      "fingerprint": "0e14dcaa521f7e31729782825b6c999ffd6c6b7f01d4913b93202707baf94438",
+      "fingerprint": "f4f83a7430a7582dc0df3c94e73ece0877be89da6782e6fbd2e4a9e84bee01ef",
       "occurrence": 0
     },
     {
       "path": "scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py",
       "kind": "store_path",
       "scope": "_vesum_form_evidence",
-      "fingerprint": "0e14dcaa521f7e31729782825b6c999ffd6c6b7f01d4913b93202707baf94438",
-      "occurrence": 1
+      "fingerprint": "536e22574682e3a99eb5e66643aa1410acbc88bc79eaea33262f4d07d01caf35",
+      "occurrence": 0
     },
     {
       "path": "scripts/projects/open_model_data/phase3_decolonization_partition.py",
@@ -2233,7 +2205,7 @@
       "path": "scripts/projects/open_model_data/v4_source_custody_access.py",
       "kind": "store_path",
       "scope": "main",
-      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "fingerprint": "a2d637d6a72466f34eae9e166f250cc87af499dde051068b17ccc31a9f28984f",
       "occurrence": 0
     },
     {
@@ -2968,14 +2940,14 @@
       "path": "tests/conftest.py",
       "kind": "store_path",
       "scope": "requires_sources_db",
-      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "fingerprint": "f2242e731fcf7a5eaca229afd3215f212a8479ee07d153e59da75caefb1ade24",
       "occurrence": 0
     },
     {
       "path": "tests/conftest.py",
       "kind": "store_path",
       "scope": "requires_vesum_db",
-      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "fingerprint": "549178e160c323775e0b45d448f160ca68bece89a5dce50f3bb7fb782b904100",
       "occurrence": 0
     },
     {
@@ -3752,21 +3724,56 @@
       "path": "tests/test_open_model_phase3_heldout_partition.py",
       "kind": "store_path",
       "scope": "_build_fixture_artifacts",
-      "fingerprint": "f1119cca7ef6905df0d808fab65ab92d440950d383c4b6fc363ae9ba6d918a44",
+      "fingerprint": "fdf79f604ebad9673c4fe651cf17486ccf3db81575e398cf253e479a04dce172",
       "occurrence": 0
     },
     {
       "path": "tests/test_open_model_phase3_heldout_partition.py",
       "kind": "store_path",
       "scope": "_verify_fixture_artifacts",
-      "fingerprint": "f1119cca7ef6905df0d808fab65ab92d440950d383c4b6fc363ae9ba6d918a44",
+      "fingerprint": "f165cf25f0e98652fa2ad07ce19e2e844f22652599af08aeb82f028218fa6ee7",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "test_deterministic_partition_and_public_receipt_constraints",
+      "fingerprint": "fdf79f604ebad9673c4fe651cf17486ccf3db81575e398cf253e479a04dce172",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "test_deterministic_partition_and_public_receipt_constraints",
+      "fingerprint": "fdf79f604ebad9673c4fe651cf17486ccf3db81575e398cf253e479a04dce172",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_open_model_phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "test_deterministic_partition_and_public_receipt_constraints",
+      "fingerprint": "bb5a3f71dca7e0100028e047b91521a6f130e6c8f441006bf7da7214f4b8ed19",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "test_private_seal_tamper_byte_locator_fingerprint_fail",
+      "fingerprint": "fdf79f604ebad9673c4fe651cf17486ccf3db81575e398cf253e479a04dce172",
       "occurrence": 0
     },
     {
       "path": "tests/test_open_model_phase3_heldout_partition.py",
       "kind": "store_path",
       "scope": "test_private_seal_tamper_byte_locator_fingerprint_fail._expect_fail",
-      "fingerprint": "f1119cca7ef6905df0d808fab65ab92d440950d383c4b6fc363ae9ba6d918a44",
+      "fingerprint": "bb5a3f71dca7e0100028e047b91521a6f130e6c8f441006bf7da7214f4b8ed19",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "test_malformed_comparison_fail_closed_and_source_drift",
+      "fingerprint": "a12beb26f96f284b612361f14791acec64e75d61f6bfd6c107ee90a307484aab",
       "occurrence": 0
     },
     {
@@ -3794,7 +3801,7 @@
       "path": "tests/test_phase3_cycle007_evidence_validator.py",
       "kind": "store_path",
       "scope": "_vesum_record",
-      "fingerprint": "0e14dcaa521f7e31729782825b6c999ffd6c6b7f01d4913b93202707baf94438",
+      "fingerprint": "357b68fb2a6c9fa10e85e6e9920b073257f6416cdecd817e69ad7a9a0ddfbfec",
       "occurrence": 0
     },
     {
@@ -3829,15 +3836,15 @@
       "path": "tests/test_source_db_presence_checks_readonly.py",
       "kind": "store_path",
       "scope": "test_presence_checks_open_readonly_copy_and_skip_when_absent",
-      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "fingerprint": "39aa56faa6809ff10c24534711fc3f9679ef20d913430a57ed96d596d66bbb0e",
       "occurrence": 0
     },
     {
       "path": "tests/test_source_db_presence_checks_readonly.py",
       "kind": "store_path",
       "scope": "test_presence_checks_open_readonly_copy_and_skip_when_absent",
-      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
-      "occurrence": 1
+      "fingerprint": "d34bc021186accfe4bf6c9e4fe9c40efc46545303a887b97ab5c14ac4d072e34",
+      "occurrence": 0
     },
     {
       "path": "tests/test_source_db_write_guard.py",
