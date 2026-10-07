@@ -131,3 +131,34 @@ def test_default_pool_cgroup_honours_override_and_user_path(monkeypatch):
 def test_cgroup_dir_accepts_only_absolute_safe_paths(value, expected):
     result = pool_headroom.cgroup_dir(value)
     assert result == (None if expected is None else pool_headroom.CGROUP_ROOT / expected)
+
+
+@pytest.mark.parametrize(
+    ("high", "maximum", "reason"),
+    [
+        ("24G", 26 * _GIB, "lu.slice memory.high is neither a number nor 'max'"),
+        ("", 26 * _GIB, "lu.slice memory.high is neither a number nor 'max'"),
+        ("-1", 26 * _GIB, "lu.slice memory.high is negative"),
+        (24 * _GIB, "garbage", "lu.slice memory.max is neither a number nor 'max'"),
+        ("max", "garbage", "lu.slice memory.max is neither a number nor 'max'"),
+    ],
+)
+def test_malformed_limit_skips_instead_of_falling_back(tmp_path, high, maximum, reason):
+    pool = fake_cgroup(tmp_path / "lu.slice", current=25 * _GIB, high=high, maximum=maximum)
+
+    check = pool_headroom.check_pool(2 * _GIB, pool)
+
+    assert check.memory is None
+    assert check.skipped == reason
+    assert check.clause() == f"lu.slice pool check skipped ({reason})"
+
+
+def test_missing_memory_high_skips_instead_of_falling_back(tmp_path):
+    pool = fake_cgroup(tmp_path / "lu.slice", current=25 * _GIB, maximum=26 * _GIB)
+    (pool / "memory.high").unlink()
+
+    check = pool_headroom.check_pool(2 * _GIB, pool)
+
+    assert check.memory is None
+    assert (check.skipped or "").startswith("lu.slice memory.high unavailable: ")
+    assert str(tmp_path) not in check.clause()

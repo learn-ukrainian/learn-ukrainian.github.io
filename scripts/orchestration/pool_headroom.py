@@ -13,8 +13,10 @@ anon LRU lists, so it stays counted.
 
 A new write worker fits when the pool's non-reclaimable use plus a per-worker
 reserve stays at or below ``memory.high`` (``memory.max`` when ``high`` is
-unset). Missing or unreadable cgroup files (CI, macOS, a host without the pool)
-skip the check with a reason; nothing here raises on a missing file.
+the literal ``max``, i.e. unset). Missing, unreadable or malformed cgroup files
+(CI, macOS, a host without the pool, a garbled limit) skip the check with a
+reason instead of falling back to a looser limit; nothing here raises on a
+missing file.
 
 Stdlib-only.
 """
@@ -138,16 +140,27 @@ def file_cache_bytes(directory: Path) -> int | None:
     return stats["active_file"] + stats["inactive_file"]
 
 
-def _read_limit(path: Path) -> int | None:
-    """A ``memory.high``/``memory.max`` value; ``max``, missing or invalid is ``None``."""
+def _read_limit(path: Path, slice_name: str) -> int | None | str:
+    """A ``memory.high``/``memory.max`` value in bytes, ``None`` for the literal ``max``.
+
+    Anything else (missing, unreadable, not a number) is a reason string, so a
+    garbled ``memory.high`` skips the check rather than silently falling back
+    to the looser ``memory.max`` (#9975 review).
+    """
     try:
         raw = path.read_text(encoding="ascii").strip()
-    except OSError:
+    except (OSError, UnicodeDecodeError) as exc:
+        detail = exc.strerror if isinstance(exc, OSError) and exc.strerror else type(exc).__name__
+        return f"{slice_name} {path.name} unavailable: {detail}"
+    if raw == "max":
         return None
     try:
-        return int(raw)
+        value = int(raw)
     except ValueError:
-        return None
+        return f"{slice_name} {path.name} is neither a number nor 'max'"
+    if value < 0:
+        return f"{slice_name} {path.name} is negative"
+    return value
 
 
 def read_slice_memory(directory: Path) -> SliceMemory | str:
@@ -164,12 +177,13 @@ def read_slice_memory(directory: Path) -> SliceMemory | str:
     cache = file_cache_bytes(directory)
     if cache is None:
         return f"{name} memory.stat has no active_file/inactive_file"
-    return SliceMemory(
-        current=current,
-        file_cache=cache,
-        high=_read_limit(directory / "memory.high"),
-        max=_read_limit(directory / "memory.max"),
-    )
+    high = _read_limit(directory / "memory.high", name)
+    if isinstance(high, str):
+        return high
+    maximum = _read_limit(directory / "memory.max", name)
+    if isinstance(maximum, str):
+        return maximum
+    return SliceMemory(current=current, file_cache=cache, high=high, max=maximum)
 
 
 def check_pool(reserve_bytes: int, directory: Path | None = None) -> PoolCheck:

@@ -736,3 +736,30 @@ def test_process_group_stops_descendants_on_timeout_or_interruption(
         data_tier.run_process_group([sys.executable, "-c", "pass"], timeout=2)
     assert signals == [data_tier.signal.SIGTERM, data_tier.signal.SIGKILL]
     assert waits == [2, 30, 10]
+
+
+def test_malformed_pool_memory_high_skips_with_a_stderr_reason(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    gib = 1024**3
+    pool = _fake_slice(tmp_path / "lu.slice", current=30 * gib, file_cache=0, high="24G")
+    (pool / "memory.max").write_text(f"{40 * gib}\n", encoding="ascii")
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    _slice_show(monkeypatch, current=gib, maximum=20 * gib)
+
+    data_tier.require_memory()
+
+    err = capsys.readouterr().err
+    assert "lu.slice pool check skipped (lu.slice memory.high is neither a number nor 'max')" in err
+
+
+def test_uncapped_pool_is_not_silent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    pool = _fake_slice(tmp_path / "lu.slice", current=30 * 1024**3, file_cache=0)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    _slice_show(monkeypatch, current=1024**3, maximum=20 * 1024**3)
+
+    data_tier.require_memory()
+
+    assert "lu.slice has no memory.high or memory.max limit" in capsys.readouterr().err

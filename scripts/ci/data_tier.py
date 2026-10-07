@@ -173,6 +173,12 @@ def require_pool_headroom() -> None:
     if pool.skipped is not None:
         print(f"data-tier: {safe_text(pool.clause())}", file=sys.stderr)
         return
+    if pool.memory is not None and pool.memory.limit is None:
+        print(
+            "data-tier: lu.slice has no memory.high or memory.max limit; pool headroom not enforced",
+            file=sys.stderr,
+        )
+        return
     if not pool.fits:
         raise DataTierError(pool.failure())
 

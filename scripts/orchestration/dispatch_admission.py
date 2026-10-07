@@ -164,7 +164,9 @@ class AdmissionDecision:
         slice_use = slice_usage_clause()
         if slice_use:
             parts.append(slice_use)
-        if self.pool is not None and self.pool.memory is not None:
+        # A skipped pool check is shown with its reason: delegate.py configures
+        # no logging, so this line is the operator's only visible trace (#9975).
+        if self.pool is not None:
             parts.append(self.pool.clause())
         text = ", ".join(parts)
         if not probe.proc_available:
@@ -335,6 +337,9 @@ def probe_host() -> HostProbe:
     return read_host(PROC_ROOT)
 
 
+TEST_HOST_POOL_SKIP = "test host"
+
+
 def probe_pool(reserve_gib: float) -> pool_headroom.PoolCheck:
     """Shared ``lu.slice`` headroom for one more worker. The seam pool tests replace.
 
@@ -347,7 +352,7 @@ def probe_pool(reserve_gib: float) -> pool_headroom.PoolCheck:
         and os.environ.get("LU_TEST_DISPATCH_HEALTHY_HOST") == "1"
         and not os.environ.get(pool_headroom.ENV_LU_SLICE_CGROUP)
     ):
-        return pool_headroom.PoolCheck(reserve_bytes=reserve, skipped="test host")
+        return pool_headroom.PoolCheck(reserve_bytes=reserve, skipped=TEST_HOST_POOL_SKIP)
     return pool_headroom.check_pool(reserve)
 
 
@@ -555,7 +560,11 @@ def evaluate(
         )
     pool = probe_pool(limits.worker_mem_reserve_gib)
     if pool.skipped is not None:
-        _logger.info("dispatch admission: shared pool check skipped: %s", pool.skipped)
+        # WARNING, not INFO: callers such as delegate.py configure no logging,
+        # so only WARNING and above reach stderr. The admitted line also
+        # carries the reason through summary().
+        log = _logger.debug if pool.skipped == TEST_HOST_POOL_SKIP else _logger.warning
+        log("dispatch admission: shared pool check skipped: %s", pool.skipped)
     elif not pool.fits:
         failures.append(f"{pool.failure()} ({ENV_WORKER_MEM_RESERVE_GIB}={limits.worker_mem_reserve_gib:g})")
     return AdmissionDecision(

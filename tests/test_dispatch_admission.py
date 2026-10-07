@@ -463,13 +463,28 @@ def test_worker_reserve_env_override_changes_the_pool_decision(tmp_path, probe, 
 def test_missing_pool_cgroup_skips_the_check_and_logs_why(tmp_path, probe, monkeypatch, caplog):
     monkeypatch.setenv("LU_SLICE_CGROUP", str(tmp_path / "absent" / "lu.slice"))
 
-    with caplog.at_level("INFO", logger=adm.__name__):
+    with caplog.at_level("WARNING", logger=adm.__name__):
         decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=_LIMITS)
 
     assert decision.admitted
-    assert "lu.slice" not in decision.summary()
+    assert "lu.slice pool check skipped (lu.slice memory.current unavailable: " in decision.summary()
+    assert str(tmp_path) not in decision.summary()
     assert "memory.current unavailable" in decision.to_record()["pool_check_skipped"]
-    assert "shared pool check skipped" in caplog.text
+    [warning] = [r for r in caplog.records if "shared pool check skipped" in r.getMessage()]
+    assert warning.levelname == "WARNING"
+
+
+def test_malformed_memory_high_skips_with_reason_in_the_admitted_line(tmp_path, probe, monkeypatch, caplog):
+    pool = _fake_pool(tmp_path / "lu.slice", current=25 * _GIB, file_cache=0)
+    (pool / "memory.high").write_text("24G\n", encoding="ascii")
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+
+    with caplog.at_level("WARNING", logger=adm.__name__):
+        decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=_LIMITS)
+
+    assert decision.admitted
+    assert "lu.slice pool check skipped (lu.slice memory.high is neither a number nor 'max')" in decision.summary()
+    assert "memory.high is neither a number nor 'max'" in caplog.text
 
 
 def test_healthy_test_host_never_reads_the_real_pool(tmp_path, probe, monkeypatch):
@@ -481,6 +496,7 @@ def test_healthy_test_host_never_reads_the_real_pool(tmp_path, probe, monkeypatc
     assert decision.admitted
     assert decision.pool is not None
     assert decision.pool.skipped == "test host"
+    assert "lu.slice pool check skipped (test host)" in decision.summary()
 
 
 def test_read_only_dispatch_does_not_probe_the_pool(tmp_path, monkeypatch):
