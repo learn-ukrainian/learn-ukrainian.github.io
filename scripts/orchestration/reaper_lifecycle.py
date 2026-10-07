@@ -278,6 +278,7 @@ def restore_worktree(
 
     This deliberately never moves old directories: Git recreates the checkout
     from the recovery ref after the target and branch identity are verified.
+    The shared checkout profile refuses transforming attributes before creation.
     """
     try:
         if primary_repository(repo_root) != repo_root.resolve():
@@ -318,15 +319,16 @@ def restore_worktree(
         return False, f"git rev-parse branch timed out after {DEFAULT_GIT_TIMEOUT_SECONDS:g}s"
     if branch_ref.returncode == 0 and (branch_ref.stdout or "").strip() != sha:
         return False, "branch no longer matches recovery ref"
-    command = ["git", "worktree", "add"]
+    command = ["worktree", "add"]
     if branch_ref.returncode == 0:
         command.extend([str(target), branch])
     else:
         command.extend(["-b", branch, str(target), sha])
     try:
-        proc = subprocess.run(
+        proc = safe_git(
             command,
             cwd=repo_root,
+            profile="checkout",
             capture_output=True,
             text=True,
             check=False,

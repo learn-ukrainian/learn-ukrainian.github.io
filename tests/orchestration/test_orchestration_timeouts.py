@@ -137,10 +137,8 @@ def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
         side_effect=[
             _completed(stdout="a" * 40 + "\n"),
             _completed(returncode=0, stdout="a" * 40 + "\n"),
+            subprocess.TimeoutExpired(["git", "worktree", "add"], rl.DEFAULT_GIT_TIMEOUT_SECONDS),
         ],
-    ), patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["git", "worktree", "add"], rl.DEFAULT_GIT_TIMEOUT_SECONDS),
     ):
         ok, err = rl.restore_worktree(
             repo,
@@ -158,7 +156,7 @@ def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="a" * 40 + "\n")
 
-    with patch.object(rl, "safe_git", side_effect=fake_run), patch("subprocess.run", side_effect=fake_run):
+    with patch.object(rl, "safe_git", side_effect=fake_run):
         ok, err = rl.restore_worktree(
             repo,
             recovery_ref="refs/reaper-rescue/test",
@@ -170,6 +168,7 @@ def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
 
     assert len(calls) == 3
     assert all(c.get("timeout") == rl.DEFAULT_GIT_TIMEOUT_SECONDS for c in calls)
+    assert calls[-1]["profile"] == "checkout"
 
 
 # ---------------------------------------------------------------------------
