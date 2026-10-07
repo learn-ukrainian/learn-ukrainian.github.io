@@ -170,6 +170,55 @@ load('source', ROOT / 'scripts' / 'lexicon' / 'source.py')
     assert any(e["path"] == "tests/test_dynamic.py" for e in graph["unresolved_edges"])
 
 
+def test_dependency_nodes_preserve_walk_order_in_nested_expressions():
+    tree = c.ast.parse('''
+from pathlib import Path
+@decorate(Path("schemas/decorator.json").read_text())
+def load(default=Path("schemas/default.json").read_bytes()):
+    import sys as runtime
+    runtime.path.insert(0, "scripts")
+    return [open("schemas/body.json") for item in iterable if predicate(item)]
+outside()
+''')
+    nodes = c.dependency_nodes(tree)
+    selected = set(nodes)
+    assert nodes == [node for node in c.ast.walk(tree) if node in selected]
+    assert {node.lineno for node in nodes if isinstance(node, c.ast.Call)} == {3, 4, 6, 7, 8}
+
+
+def test_large_literal_payload_preserves_edges_without_expanding_walk(monkeypatch):
+    template = '''from pathlib import Path
+import sys as runtime
+import subprocess as process
+from scripts.fixture import VALUE
+payload = [{payload}]
+Path("schemas/input.json").read_text()
+runtime.path.insert(0, "scripts")
+process.run(["python3", "-m", "scripts.fixture"])
+'''
+    known = {"tests/test_reader.py", "scripts/fixture.py", "schemas/input.json"}
+    visited = []
+    original = c.ast.iter_child_nodes
+
+    def counted(node):
+        visited.append(node)
+        return original(node)
+
+    monkeypatch.setattr(c.ast, "iter_child_nodes", counted)
+
+    def scan(payload):
+        return c.scan_imports({"tests/test_reader.py": template.format(payload=payload).encode(),
+                               "scripts/fixture.py": b"VALUE = 1"}, known)
+
+    expected = scan("")
+    visited.clear()
+    assert scan(",".join(str(index) for index in range(10_000))) == expected
+    assert len(visited) < 100  # Work follows dependency syntax, not the 10,000 data leaves.
+    assert expected["file_edges"] == [("tests/test_reader.py", "schemas/input.json"),
+                                     ("tests/test_reader.py", "scripts/fixture.py")]
+    assert expected["unresolved_edges"] == [{"path": "tests/test_reader.py", "line": 7, "reason": "sys-path"}]
+
+
 def test_indexed_imports_survive_sparse_checkout_and_invalidate_on_edits(repo, manifest):
     path = repo / "scripts/config.py"
     path.write_text("from scripts.ci import components\n")

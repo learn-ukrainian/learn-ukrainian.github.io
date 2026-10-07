@@ -18,6 +18,7 @@ import subprocess
 import sys
 import tempfile
 import xml.etree.ElementTree as ET
+from collections import deque
 from collections.abc import Sequence
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
@@ -262,6 +263,25 @@ def scan_runtime_edges(path: str, nodes: Sequence[ast.AST], bindings: dict, know
     return edges, unresolved
 
 
+def dependency_nodes(tree: ast.AST) -> list[ast.AST]:
+    """Keep dependency syntax in ast.walk order without walking terminal leaves.
+
+    Parsed constants, import aliases, operators and contexts cannot contain
+    dependencies. Retain every other subtree, including defaults and decorators.
+    """
+    relevant = {ast.Assign, ast.AnnAssign, ast.Import, ast.ImportFrom,
+                ast.FunctionDef, ast.AsyncFunctionDef, ast.Call, ast.Attribute, ast.Name}
+    pending = deque([tree])
+    nodes = []
+    while pending:
+        node = pending.popleft()
+        if type(node) in relevant:
+            nodes.append(node)
+        pending.extend(child for child in ast.iter_child_nodes(node)
+                       if child._fields and not isinstance(child, (ast.Constant, ast.alias)))
+    return nodes
+
+
 def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None) -> dict:
     """Compute local import/load edges, retaining each unprovable target."""
     modules = {path[:-3].replace("/", ".").removesuffix(".__init__"): path for path in sources}
@@ -299,7 +319,7 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
             unresolved.add((path, 0, "parse-error"))
             continue
         bindings = {}
-        nodes = list(ast.walk(tree))
+        nodes = dependency_nodes(tree)
         has_specs = b"spec_from_file_location" in source
         loaders = {"__import__": ("module", 0)}
         wrappers = set()
