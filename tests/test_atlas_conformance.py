@@ -82,18 +82,46 @@ def _pinned_local_manifest(
     return json.loads(data.decode("utf-8"))
 
 
-def test_real_lexicon_manifest_conforms_to_atlas_gates(requires_sources_db, requires_vesum_db):
+def test_real_lexicon_manifest_conforms_to_atlas_gates():
+    manifest = _pinned_local_manifest()
+    assert manifest is not None, "Atlas manifest must be hydrated and match its pointer"
+    migrate_manifest(manifest)
+    curriculum = yaml.safe_load(CURRICULUM_PATH.read_text(encoding="utf-8"))
+    violations = validate(manifest, vesum=None, curriculum=curriculum)
+
+    # Pre-migration manifest still carries unmapped relation_pairs corpora
+    # (synonym_verdicts, grinchyshyn-1986, ukr-mova.in.ua) until corpus map expansion
+    # and migrate_source_labels.py --write (#5163); enforce every other gate here.
+    assert [v for v in violations if v.gate != "unmapped_source_label"] == []
+
+
+def test_real_lexicon_manifest_membership_conforms(requires_sources_db, requires_vesum_db):
+    """Only real VESUM/heritage membership requires logical stores (#9981)."""
     manifest = _pinned_local_manifest()
     assert manifest is not None, "Atlas manifest must be hydrated and match its pointer"
     migrate_manifest(manifest)
     curriculum = yaml.safe_load(CURRICULUM_PATH.read_text(encoding="utf-8"))
     with VesumLemmaLookup(requires_vesum_db) as vesum:
         violations = validate(manifest, vesum=vesum, curriculum=curriculum, heritage=requires_sources_db)
+    assert [v for v in violations if v.gate == "lemma_in_vesum"] == []
 
-    # Pre-migration manifest still carries unmapped relation_pairs corpora
-    # (synonym_verdicts, grinchyshyn-1986, ukr-mova.in.ua) until corpus map expansion
-    # and migrate_source_labels.py --write (#5163); enforce every other gate here.
-    assert [v for v in violations if v.gate != "unmapped_source_label"] == []
+
+def test_store_free_manifest_conformance_runs_without_stores(monkeypatch, tmp_path):
+    """Missing stores must neither skip nor remove the non-membership gates."""
+    monkeypatch.setenv("LU_SOURCES_DB", str(tmp_path / "absent.db"))
+    monkeypatch.setenv("LU_VESUM_DB", str(tmp_path / "absent.db"))
+    monkeypatch.setitem(globals(), "_pinned_local_manifest", lambda: _manifest(_entry()))
+    curriculum = tmp_path / "curriculum.yaml"
+    curriculum.write_text(yaml.safe_dump(FAKE_CURRICULUM), encoding="utf-8")
+    monkeypatch.setitem(globals(), "CURRICULUM_PATH", curriculum)
+    test_real_lexicon_manifest_conforms_to_atlas_gates()
+    # Retain a behavioral tripwire for a store-free conformance violation.
+    monkeypatch.setitem(
+        globals(), "_pinned_local_manifest",
+        lambda: _manifest(_entry(course_usage=[{"track": "a1", "slug": "missing-module"}])),
+    )
+    with pytest.raises(AssertionError):
+        test_real_lexicon_manifest_conforms_to_atlas_gates()
 
 
 def test_pinned_local_manifest_loader_never_downloads(

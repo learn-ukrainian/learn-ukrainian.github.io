@@ -19,6 +19,7 @@ import socket
 import sqlite3
 import subprocess
 import sys
+import tempfile
 import time
 import uuid
 import xml.etree.ElementTree as ET
@@ -215,16 +216,17 @@ def make_test_worktree(primary: Path) -> Path:
     return path
 
 
-def snapshot_databases(primary: Path, checkout: Path, *, only: str | None) -> list[str]:
-    names = ("sources.db",) if only else HOST_DATABASES
+def snapshot_databases(primary: Path, checkout: Path, snapshots: Path, *, only: str | None) -> list[str]:
+    """Snapshot logical stores outside Git; retain the legacy Atlas location."""
+    names = ("sources.db", "vesum.db") if only else HOST_DATABASES
     missing = []
-    target_dir = checkout / "data"
-    target_dir.mkdir(exist_ok=True)
     for name in names:
         source = primary / "data" / name
         if not source.is_file():
             missing.append(name)
             continue
+        target_dir = checkout / "data" if name == "atlas.db" else snapshots
+        target_dir.mkdir(parents=True, exist_ok=True)
         target = target_dir / name
         # SQLite's online backup gives a consistent snapshot even if ingestion
         # has left a WAL beside the primary database. The source is read-only.
@@ -373,6 +375,7 @@ def pytest_child(args: argparse.Namespace) -> int:
                 "pytest",
                 "-n",
                 "2",
+                "--require-data",
                 "--timeout=180",
                 "--timeout-method=thread",
                 "-q",
@@ -587,6 +590,7 @@ def run(args: argparse.Namespace) -> int:
     }
     baseline = {}
     primary = checkout = output_dir = log = scope_unit = None
+    snapshot_temp = None
     try:
         baseline = json.loads(BASELINE.read_text(encoding="utf-8"))["known_failures"]
         selection = load_selection()
@@ -610,7 +614,12 @@ def run(args: argparse.Namespace) -> int:
         prune_stale_worktrees(primary)
         checkout = make_test_worktree(primary)
         summary["main_sha"] = command(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.strip()
-        summary["missing_databases"] = snapshot_databases(primary, checkout, only=args.only)
+        scratch_root = Path(tempfile.gettempdir()).resolve()
+        if any((parent / ".git").exists() for parent in (scratch_root, *scratch_root.parents)):
+            raise DataTierError("runner scratch root must be outside any Git checkout")
+        snapshot_temp = tempfile.TemporaryDirectory(prefix="lu-data-tier-", dir=scratch_root)
+        snapshots = Path(snapshot_temp.name)
+        summary["missing_databases"] = snapshot_databases(primary, checkout, snapshots, only=args.only)
         if not args.only:
             provision_host_files(primary, checkout)
         summary["hydration_errors"] = (
@@ -639,6 +648,10 @@ def run(args: argparse.Namespace) -> int:
         scope_unit = f"lu-data-tier-{run_key}.scope"
         scope = build_scope_argv(["nice", "-n", "10", *child], unit=scope_unit)
         environment = os.environ.copy()
+        # Bind even missing snapshots explicitly: never fall back to live stores.
+        for name in HOST_DATABASES[:2]:
+            store = name.removesuffix(".db").upper()
+            environment[f"LU_{store}_DB"] = str(snapshots / name)
         if bulk_root:
             environment["LU_BULK_ROOT"] = bulk_root
         else:
@@ -677,6 +690,11 @@ def run(args: argparse.Namespace) -> int:
                 remove_test_worktree(primary, checkout)
             except Exception as error:
                 summary["runner_errors"].append(f"checkout cleanup failed: {safe_text(str(error))}")
+        if snapshot_temp and scope_stopped:
+            try:
+                snapshot_temp.cleanup()
+            except Exception as error:
+                summary["runner_errors"].append(f"snapshot cleanup failed: {safe_text(str(error))}")
         if log and log.exists():
             try:
                 log.write_text(safe_text(log.read_text(encoding="utf-8", errors="replace")), encoding="utf-8")

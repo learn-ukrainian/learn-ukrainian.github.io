@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
 import stat
 import subprocess
 import sys
@@ -183,6 +184,7 @@ def test_child_passes_only_selected_ids_to_two_workers(tmp_path: Path, monkeypat
     assert calls[0][-1] == selected
     assert ignored not in calls[0]
     assert calls[0][calls[0].index("-n") + 1] == "2"
+    assert "--require-data" in calls[0]
 
 
 def test_collection_time_data_skip_is_in_junit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -655,3 +657,124 @@ def test_process_group_stops_descendants_on_timeout_or_interruption(
         data_tier.run_process_group([sys.executable, "-c", "pass"], timeout=2)
     assert signals == [data_tier.signal.SIGTERM, data_tier.signal.SIGKILL]
     assert waits == [2, 30, 10]
+
+
+@pytest.mark.parametrize("only", [None, "tests/test_input.py"])
+def test_snapshots_keep_logical_stores_outside_checkout(tmp_path, only):
+    primary = tmp_path / "primary"
+    (primary / "data").mkdir(parents=True)
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    snapshots = tmp_path / "scratch"
+    for name in data_tier.HOST_DATABASES:
+        with sqlite3.connect(primary / "data" / name) as connection:
+            connection.execute("CREATE TABLE witness (value TEXT)")
+            connection.execute("INSERT INTO witness VALUES ('snapshot')")
+    assert data_tier.snapshot_databases(primary, checkout, snapshots, only=only) == []
+    for name in ("sources.db", "vesum.db"):
+        assert not (checkout / "data" / name).exists()
+        with sqlite3.connect((snapshots / name).as_uri() + "?mode=ro", uri=True) as connection:
+            assert connection.execute("SELECT value FROM witness").fetchone() == ("snapshot",)
+    assert (checkout / "data" / "atlas.db").exists() == (only is None)
+
+
+def test_nightly_exports_snapshot_bindings_and_reaps_them(nightly, monkeypatch):
+    seen = []
+
+    def execute(argv, **kwargs):
+        env = kwargs["env"]
+        sources, vesum = (Path(env[key]) for key in ("LU_SOURCES_DB", "LU_VESUM_DB"))
+        assert sources.parent == vesum.parent
+        assert sources.parent.is_dir()
+        assert not sources.is_relative_to(nightly.primary)
+        assert not sources.is_relative_to(kwargs["cwd"])
+        seen.append(sources.parent)
+        return nightly.execute(argv, **kwargs)
+
+    monkeypatch.setenv("LU_SOURCES_DB", "inherited-live-store")
+    monkeypatch.setenv("LU_VESUM_DB", "inherited-live-store")
+    monkeypatch.setattr(data_tier, "run_process_group", execute)
+    assert data_tier.run(SimpleNamespace(only=None, no_report=True)) == 0
+    assert len(seen) == 1
+    assert not seen[0].exists()
+
+
+@pytest.mark.parametrize("available", [True, False])
+def test_data_tier_child_executes_in_real_linked_worktree(tmp_path, available):
+    """Exercise backup -> overrides -> resolver -> required child with real Git."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+
+    def git(*args):
+        subprocess.run(["git", *args], cwd=primary, check=True, capture_output=True, text=True, timeout=30)
+
+    git("init", "-q")
+    (primary / "sentinel").write_text("synthetic repository\n", encoding="utf-8")
+    git("add", "sentinel")
+    git("-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid", "commit", "-qm", "fixture")
+    checkout = tmp_path / "linked"
+    git("worktree", "add", "--detach", str(checkout), "HEAD")
+    assert (checkout / ".git").is_file()
+    (checkout / "scripts").mkdir()
+    (checkout / "data").mkdir()
+    (primary / "data").mkdir()
+    if available:
+        for name in ("sources.db", "vesum.db"):
+            with sqlite3.connect(primary / "data" / name) as connection:
+                connection.execute("CREATE TABLE witness (value TEXT)")
+                connection.execute("INSERT INTO witness VALUES ('snapshot')")
+    snapshots = tmp_path / "scratch"
+    missing = data_tier.snapshot_databases(primary, checkout, snapshots, only="tests/test_input.py")
+    assert missing == ([] if available else ["sources.db", "vesum.db"])
+    root = Path(data_tier.__file__).resolve().parents[2]
+    (checkout / "pytest.ini").write_text("[pytest]\n", encoding="utf-8")
+    (checkout / "conftest.py").write_text(
+        f"import sys\nsys.path.insert(0, {str(root)!r})\n"
+        "pytest_plugins = ['tests.data_store_fixtures']\n", encoding="utf-8",
+    )
+    tests = checkout / "tests"
+    tests.mkdir()
+    (tests / "test_input.py").write_text(
+        "import sqlite3\nimport pytest\nfrom pathlib import Path\n"
+        "@pytest.mark.parametrize('store', ['sources', 'vesum'])\n"
+        "def test_snapshot(store, data_store_factory):\n"
+        "    assert Path('.git').is_file()\n"
+        "    path = data_store_factory(store, required_sqlite_tables=('witness',))\n"
+        "    assert not path.is_relative_to(Path.cwd())\n"
+        "    with sqlite3.connect(path.as_uri() + '?mode=ro', uri=True) as conn:\n"
+        "        assert conn.execute('SELECT value FROM witness').fetchone() == ('snapshot',)\n",
+        encoding="utf-8",
+    )
+    junit = tmp_path / "result.xml"
+    code = (
+        f"import sys\nsys.path.insert(0, {str(root)!r})\n"
+        "from scripts.ci import data_tier\nfrom types import SimpleNamespace\n"
+        "data_tier.load_selection = lambda: {'files': ['tests/test_input.py'], "
+        "'nodeids': ['tests/test_input.py'], 'bulk_nodeids': []}\n"
+        f"raise SystemExit(data_tier.pytest_child(SimpleNamespace(junit={str(junit)!r}, "
+        f"collected={str(tmp_path / 'collected.json')!r}, only=None, bulk_reason=None)))\n"
+    )
+    env = {**os.environ, "LU_SOURCES_DB": str(snapshots / "sources.db"),
+           "LU_VESUM_DB": str(snapshots / "vesum.db")}
+    env.pop("GITHUB_STEP_SUMMARY", None)
+    result = subprocess.run([sys.executable, "-c", code], cwd=checkout, env=env,
+                            capture_output=True, text=True, timeout=90)
+    assert result.returncode == (0 if available else 1), result.stdout + result.stderr
+    summary = data_tier.junit_summary(junit)
+    assert summary["ran"] == 2
+    assert summary["skipped"] == 0
+    assert summary["passed"] == (2 if available else 0)
+    assert summary["failed"] == (0 if available else 2)
+    if not available:
+        assert "reason=store_missing" in result.stdout
+        assert "worktree_local_store" not in result.stdout
+
+
+def test_nightly_rejects_scratch_inside_a_checkout(nightly, monkeypatch):
+    (nightly.primary / ".git").mkdir()
+    scratch = nightly.primary / "scratch"
+    scratch.mkdir()
+    monkeypatch.setattr(data_tier.tempfile, "gettempdir", lambda: str(scratch))
+    assert data_tier.run(SimpleNamespace(only=None, no_report=False)) == 1
+    assert nightly.reports[-1]["runner_errors"] == ["runner scratch root must be outside any Git checkout"]
+    assert nightly.events == ["remove"]

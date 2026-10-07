@@ -142,6 +142,6 @@ class DataStoreReporter:
             detail = "; ".join(f"store={store} reason={reason}" for store, reason in sorted(reasons))
             terminalreporter.write_line(f"{nodeid}: {detail}")
             lines.append(f"- `{nodeid}`: {detail}")
-        if summary_path := os.environ.get("GITHUB_STEP_SUMMARY"):
+        if not hasattr(self.config, "workerinput") and (summary_path := os.environ.get("GITHUB_STEP_SUMMARY")):
             with open(summary_path, "a", encoding="utf-8") as output:
                 output.write("\n".join([*lines, "", ""]))

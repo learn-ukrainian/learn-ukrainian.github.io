@@ -55,10 +55,11 @@ def test_factory(data_store_factory):
     assert result.returncode == (1 if required else 0), result.stdout + result.stderr
     assert "data tests not run" in result.stdout
     assert summary.startswith("existing summary\n")
+    assert summary.count("### data tests not run") == 1
     for name, store in [("test_sources", "sources"), ("test_vesum", "vesum"), ("test_factory", "sources")]:
         line = f"test_input.py::{name}: store={store} reason=store_missing"
         assert line in result.stdout
-        assert f"`test_input.py::{name}`: store={store} reason=store_missing" in summary
+        assert summary.count(f"`test_input.py::{name}`: store={store} reason=store_missing") == 1
     assert str(tmp_path) not in summary
     if required:
         assert "2 errors" in result.stdout and "1 failed" in result.stdout
