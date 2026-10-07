@@ -1702,3 +1702,86 @@ def test_scheduled_recovery_failure_is_reported_not_fatal(tmp_path: Path, monkey
     result = cleanup._repo_result(repo, apply=False)
     assert any("task scratch recovery failed" in error for error in result["errors"])
     assert "task_scratch_recovery" not in result
+
+
+def test_origin_branch_deleted_by_someone_else_is_already_absent_not_an_error(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    branch = "gh-readonly-queue/main/pr-1-abc"
+    _git(repo, "branch", branch, "main")
+    _git(repo, "push", "origin", branch)
+    head_sha = _git(repo, "rev-parse", branch)
+
+    def _prs(_repo: Path, candidate: str | None):
+        if candidate != branch:
+            return [], None
+        # The merge queue drops its temporary branch while cleanup is running.
+        _git(tmp_path / "origin.git", "update-ref", "-d", f"refs/heads/{branch}")
+        return (
+            [cleanup.reap_worktrees.PullRequestState(number=1, state="MERGED", head_sha=head_sha)],
+            None,
+        )
+
+    monkeypatch.setattr(cleanup.reap_worktrees, "_query_pr_states", _prs)
+
+    rows = cleanup.cleanup_stale_origin_branches(repo, apply=True)
+
+    row = next(item for item in rows if item["branch"] == branch)
+    assert row["action"] == "already_absent"
+    assert row["error"] is None
+
+
+def _rescue_result(tmp_path: Path, monkeypatch, returncode: int, tasks: list[dict]) -> dict:
+    repo = _repo(tmp_path)
+    script = repo / "scripts" / "delegate.py"
+    script.parent.mkdir()
+    script.write_text("# fixture\n", encoding="utf-8")
+    original_run = subprocess.run
+
+    def capture_run(command, **kwargs):
+        if isinstance(command, list) and str(script) in command:
+            return subprocess.CompletedProcess(command, returncode, json.dumps({"summary": {}, "tasks": tasks}), "")
+        return original_run(command, **kwargs)
+
+    monkeypatch.setattr(cleanup.subprocess, "run", capture_run)
+    monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
+    monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
+    monkeypatch.setattr(cleanup, "sweep_tmp_leaks", lambda apply=False: {"errors": 0})
+    return cleanup._repo_result(repo, apply=True)
+
+
+def test_rescue_blocked_only_by_missing_identity_is_a_hard_warning(tmp_path: Path, monkeypatch) -> None:
+    tasks = [
+        {"task_id": "a", "action": "error", "failure_code": "rescue_identity_unavailable"},
+        {"task_id": "b", "action": "skipped", "reason": "worktree already removed"},
+    ]
+
+    result = _rescue_result(tmp_path, monkeypatch, 1, tasks)
+
+    assert "terminal rescue reported errors" not in result["errors"]
+    assert result["rescue_identity_unavailable"] == 1
+    lines = cleanup.rescue_warning_lines({"repositories": [result]})
+    assert len(lines) == 1 and lines[0].startswith("HARD WARNING: 1 terminal dispatch task(s) were not rescued")
+
+
+@pytest.mark.parametrize(
+    "tasks",
+    [
+        [{"task_id": "a", "action": "error", "failure_code": "rescue_step_failed"}],
+        [
+            {"task_id": "a", "action": "error", "failure_code": "rescue_identity_unavailable"},
+            {"task_id": "b", "action": "error", "failure_code": "rescue_worktree_unregistered"},
+        ],
+        [],
+    ],
+)
+def test_other_rescue_failures_still_fail_the_run(tmp_path: Path, monkeypatch, tasks: list[dict]) -> None:
+    result = _rescue_result(tmp_path, monkeypatch, 1, tasks)
+
+    assert "terminal rescue reported errors" in result["errors"]

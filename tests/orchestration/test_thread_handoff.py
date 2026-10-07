@@ -3512,7 +3512,7 @@ def test_inspect_codex_home_reports_thread_metadata(tmp_path: Path):
     db = codex_home / "state_1.sqlite"
     with sqlite3.connect(db) as conn:
         conn.execute("create table threads (id text, title text, cwd text, archived integer, updated_at integer)")
-        conn.execute("insert into threads values ('thread-1', 'Example', '/tmp/repo', 0, 100)")
+        conn.execute("insert into threads values ('thread-1', 'Example', '/nonexistent/repo', 0, 100)")
 
     audit = th.inspect_codex_home(codex_home)
 

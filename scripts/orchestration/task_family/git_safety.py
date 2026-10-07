@@ -24,6 +24,8 @@ from scripts.guardrails.worktree_containment import (
     resolve_main_root,
 )
 from scripts.orchestration import worktree_claims
+from scripts.orchestration.execution_safe_git import REMOTE_COMMANDS
+from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 
 class GitSafetyError(RuntimeError):
@@ -66,10 +68,13 @@ class BundleReceipt:
     created_at: str
 
 
-def run_git(args: list[str], cwd: Path, *, timeout: float = 30.0, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["git", *args],
-        cwd=str(cwd),
+def run_git(
+    args: list[str], cwd: Path, *, timeout: float = 30.0, env: dict[str, str] | None = None
+) -> subprocess.CompletedProcess[str]:
+    return safe_git(
+        args,
+        cwd=cwd,
+        profile="remote" if args and args[0] in REMOTE_COMMANDS else "local",
         check=False,
         capture_output=True,
         text=True,

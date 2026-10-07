@@ -1042,6 +1042,7 @@ For write-capable delegation, prefer `--worktree`. `delegate.py` creates the wor
 | `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 12 |
 | `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor | 6 GiB |
 | `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit | 1.5 |
+| `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) | 2 GiB |
 
 A refusal exits 3 and prints one line that names each failed check with its measured value
 and threshold. Retry once a worker finishes or the host recovers, or override one dispatch
@@ -1052,7 +1053,10 @@ dead worker never holds a slot. The final count, the check, and publication of t
 `spawning` record happen under one host-wide lock (`batch_state/tasks/dispatch-admission.lock`),
 so concurrent dispatches cannot all take the last slot. `--dry-run` runs the same check but
 only reports dead records. Without `/proc` (macOS) memory and CPU are reported as `unknown`,
-and only the worker cap applies. `python -m scripts.fleet.capacity_pick` prints the same
+and only the worker cap applies. The pool check reads `memory.current`, `memory.high` and
+`memory.stat` from the `lu.slice` cgroup (or `$LU_SLICE_CGROUP`) and subtracts
+`active_file`/`inactive_file`, so reclaimable page cache does not count. When those files are
+missing (CI, macOS) the check is skipped, logged, and recorded as `admission.pool_check_skipped`. `python -m scripts.fleet.capacity_pick` prints the same
 decision as its last line (JSON key `admission`). Write task records keep the `admission`
 snapshot, and every terminal record keeps `peak_rss_mib`. That value is the largest single
 process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to tune the

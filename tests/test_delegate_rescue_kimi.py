@@ -624,3 +624,40 @@ def test_rescue_preserves_symlink_to_a_large_target_without_reading_the_target(k
     assert result["action"] == "rescued", result
     assert _git(origin, "show", f"{result['head']}:{OWNED}link").strip() == target
     assert "120000" in _git(origin, "ls-tree", result["head"], f"{OWNED}link")
+
+
+@pytest.mark.parametrize("apply", [False, True])
+def test_rescue_skips_a_worktree_that_was_already_removed(kimi_rescue, apply):
+    """A reaped worktree has nothing to preserve: skipped, never a FileNotFoundError row."""
+    worktree, _origin, state_path, _write = kimi_rescue
+    _git(worktree.parents[3], "worktree", "remove", "--force", str(worktree))
+    assert not worktree.exists()
+
+    result = delegate._rescue_task(state_path, apply=apply)
+
+    assert result["action"] == "skipped"
+    assert result["reason"] == "worktree already removed"
+
+
+def test_rescue_skips_a_directory_without_git_metadata(kimi_rescue, tmp_path):
+    worktree, _origin, state_path, _write = kimi_rescue
+    _git(worktree.parents[3], "worktree", "remove", "--force", str(worktree))
+    worktree.mkdir(parents=True)
+    (worktree / "leftover.txt").write_text("residue\n", encoding="utf-8")
+
+    result = delegate._rescue_task(state_path, apply=True)
+
+    assert result["action"] == "skipped"
+    assert result["reason"] == "not a registered dispatch worktree"
+
+
+def test_all_stale_rescue_exits_zero_when_only_removed_worktrees_remain(kimi_rescue, capsys):
+    worktree, _origin, _state_path, _write = kimi_rescue
+    _git(worktree.parents[3], "worktree", "remove", "--force", str(worktree))
+
+    status = delegate.cmd_rescue(argparse.Namespace(all_stale=True, older_than="6h", task_id=None, apply=False))
+
+    payload = json.loads(capsys.readouterr().out)
+    assert status == 0
+    assert payload["summary"]["error"] == 0
+    assert payload["summary"]["skipped"] >= 1

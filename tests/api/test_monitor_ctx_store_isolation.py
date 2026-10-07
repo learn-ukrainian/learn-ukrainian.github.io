@@ -22,7 +22,7 @@ from tests.epics_monitor_stub import epics_app_for_store
 
 pytestmark = pytest.mark.repo_invariant
 
-PLANTED_PATH = "/tmp/opsec-canary-root/repo"
+PLANTED_PATH = "/srv/opsec-canary-root/repo"
 _HEARTBEAT = {
     "agent": "grok-bot",
     "kind": "observer",

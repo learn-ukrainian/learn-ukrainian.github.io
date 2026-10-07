@@ -54,6 +54,8 @@ from scripts.common.acp_runtime_lock import (
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
+from scripts.orchestration.execution_safe_git import COMMIT_COMMANDS, REMOTE_COMMANDS, GitRefusal
+from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -184,6 +186,12 @@ def _run(
     timeout = _effective_timeout(timeout)
     if timeout is not None and timeout <= 0:
         raise subprocess.TimeoutExpired(args, 0)
+    if args and args[0] == "git":
+        command = args[1] if len(args) > 1 else ""
+        profile = "remote" if command in REMOTE_COMMANDS else "commit" if command in COMMIT_COMMANDS else "local"
+        return safe_git(
+            args[1:], cwd=cwd, profile=profile, capture_output=True, text=True, check=False, timeout=timeout, env=env
+        )
     return subprocess.run(
         args,
         cwd=cwd,
@@ -1059,32 +1067,34 @@ def _merged_origin_gone_proof(info: WorktreeInfo, pr_state: PullRequestState) ->
         return listed.stdout.splitlines() if listed.returncode == 0 else [info.head]
 
     try:
+        primary = primary_checkout_root(info.path)
         if pr_state.number is None or not pr_state.head_sha:
             return unproven(local_commits(), "PR head unavailable")
         live_branch = _run(
             ["git", "ls-remote", "--heads", "origin", info.branch or ""],
-            cwd=info.path,
+            cwd=primary,
             timeout=30,
         )
         if live_branch.returncode != 0:
-            return unproven(local_commits(), "origin branch probe failed")
+            detail = f": {live_branch.code}" if isinstance(live_branch, GitRefusal) else ""
+            return unproven(local_commits(), f"origin branch probe failed{detail}")
         if live_branch.stdout.strip():
             return unproven(local_commits(), "origin branch returned")
 
         fetched_pr = _run(
             ["git", "fetch", "--no-tags", "origin", f"refs/pull/{pr_state.number}/head"],
-            cwd=info.path,
+            cwd=primary,
             timeout=30,
         )
         if fetched_pr.returncode != 0:
             return unproven(local_commits(), "PR head fetch failed")
-        fetched_sha = _run(["git", "rev-parse", "--verify", "FETCH_HEAD"], cwd=info.path)
+        fetched_sha = _run(["git", "rev-parse", "--verify", "FETCH_HEAD"], cwd=primary)
         if fetched_sha.returncode != 0 or fetched_sha.stdout.strip() != pr_state.head_sha:
             return unproven(local_commits(), "fetched PR head does not match PR state")
 
         fetched_main = _run(
             ["git", "fetch", "--no-tags", "origin", "+refs/heads/main:refs/remotes/origin/main"],
-            cwd=info.path,
+            cwd=primary,
             timeout=30,
         )
         if fetched_main.returncode != 0:
@@ -2126,14 +2136,16 @@ def _origin_branch_present(path: Path, branch: str | None) -> bool:
 
 
 def _live_origin_heads_present(path: Path, branch: str | None) -> bool | None:
-    """Return whether origin currently has ``branch``. ``None`` if ls-remote failed."""
+    """Return whether origin has ``branch``; None on failure, reporting typed refusals."""
     if not branch:
         return False
     # Called before the per-worktree lock. 30s is this probe's own cap; it is
     # not part of the locked-region deadline. The locked re-check uses the
     # local remote-tracking ref (:func:`_origin_branch_present`) instead.
-    proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=path, timeout=30)
+    proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=primary_checkout_root(path), timeout=30)
     if proc.returncode != 0:
+        if isinstance(proc, GitRefusal):
+            print(f"live origin proof unavailable: {proc.code}", file=sys.stderr)
         return None
     return bool((proc.stdout or "").strip())
 

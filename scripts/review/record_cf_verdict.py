@@ -58,6 +58,7 @@ from scripts.review.reviewer_resolver import (
     resolve_family,
     resolve_reviewer,
 )
+from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError
@@ -557,6 +558,7 @@ def collect_branch_review_facts(
     subject_seats: Iterable[str] = (),
     subject_families: Iterable[str] = (),
     timeout_s: float = BRANCH_FACTS_TIMEOUT_S,
+    authorship_exclude_sha: str | None = None,
 ) -> BranchReviewFacts:
     """Collect complete authorship and protected scope for ``base_tip_sha..head_sha``.
 
@@ -567,11 +569,17 @@ def collect_branch_review_facts(
     dispatched, after any substitution. Scope is the literal diff against the
     merge-base (both rename sides and deletions) plus ``owned_paths``, with the
     subject seats ``prepare_subject_exclusion`` derives from it. A fresh branch
-    passes ``head_sha == base_tip_sha``. Reads only; never fetches. Raises
+    passes ``head_sha == base_tip_sha``. Admission may exclude commits reachable
+    from a frozen main/rebase tip with ``authorship_exclude_sha`` (#9988); this
+    never narrows the diff or protected scope against the original base.
+    Reads only; never fetches. Raises
     ``BranchFactsError`` (``code`` = authorship, scope or target unknown).
     """
     deadline = time.monotonic() + timeout_s
-    for label, sha in (("base", base_tip_sha), ("head", head_sha)):
+    endpoints = [("base", base_tip_sha), ("head", head_sha)]
+    if authorship_exclude_sha is not None:
+        endpoints.append(("authorship exclusion", authorship_exclude_sha))
+    for label, sha in endpoints:
         if not isinstance(sha, str) or not SHA.fullmatch(sha):
             raise BranchFactsError(FACTS_TARGET_UNKNOWN, f"{label} SHA missing or invalid")
         try:
@@ -582,9 +590,10 @@ def collect_branch_review_facts(
             raise BranchFactsError(
                 FACTS_TARGET_UNKNOWN, f"{label} commit {sha[:12]} not available locally; fetch and retry"
             ) from exc
-    listed = _facts_git(
-        repo_root, ["rev-list", f"{base_tip_sha}..{head_sha}"], deadline=deadline, code=FACTS_AUTHORSHIP_UNKNOWN
-    )
+    revisions = ["rev-list", f"{base_tip_sha}..{head_sha}"]
+    if authorship_exclude_sha is not None:
+        revisions.append(f"^{authorship_exclude_sha}")
+    listed = _facts_git(repo_root, revisions, deadline=deadline, code=FACTS_AUTHORSHIP_UNKNOWN)
     shas = listed.decode("ascii", errors="strict").split()
     commits: list[CommitAttribution] = []
     for entry in _read_commit_entries(repo_root, shas, deadline=deadline):
@@ -594,7 +603,9 @@ def collect_branch_review_facts(
                     entry,
                     repository=repository,
                     task_root=task_root,
-                    base_sha=lambda: base_tip_sha,
+                    # Clean main merges still need the existing object/tree
+                    # proof, bound to the frozen main tip rather than a stale base.
+                    base_sha=lambda: authorship_exclude_sha or base_tip_sha,
                     checkout=repo_root,
                 )
             )
@@ -611,7 +622,7 @@ def collect_branch_review_facts(
         incoming_family = incoming_writer_family(incoming_agent, incoming_model)
     merge_base = None
     changed: tuple[str, ...] = ()
-    if shas:
+    if base_tip_sha != head_sha:
         merge_base = (
             _facts_git(repo_root, ["merge-base", base_tip_sha, head_sha], deadline=deadline, code=FACTS_SCOPE_UNKNOWN)
             .decode("ascii")
@@ -912,6 +923,13 @@ def _pr(repository: str, branch: str, number: int | None) -> dict[str, Any]:
     return data
 
 
+def _native_grok_reviewer_identity() -> tuple[str, list[str]]:
+    """Resolve the native review holder and its own runtime attestations."""
+    catalog = load_model_catalog()
+    holder = resolve_routing_reference({"role": "legacy_reviewers", "seat": "xai_reviewer"}, catalog)
+    return holder, catalog["models"][holder].get("runtime_model_ids", [])
+
+
 def _require_formal_reviewer(
     *, cursor: bool, reported: object, model: str, family: str, native_grok: bool = False
 ) -> None:
@@ -928,7 +946,9 @@ def _require_formal_reviewer(
     if cursor:
         admitted = model in FORMAL_CURSOR_REVIEW_MODELS and reported != model
     else:
-        admitted = family not in NATIVE_NON_REVIEWER_FAMILIES or (native_grok and model == "grok-4.7")
+        admitted = family not in NATIVE_NON_REVIEWER_FAMILIES or (
+            native_grok and model == _native_grok_reviewer_identity()[0]
+        )
     if not admitted:
         raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
     # #9583: a model the catalog gives no review role never approves, on any harness.
@@ -982,10 +1002,10 @@ def record(
     # Only Cursor's runtime reports display names; record its catalog id.
     model = canonical_cursor_model(reported) if cursor and isinstance(reported, str) else reported
     if native_grok:
-        admitted_runtime_ids = load_model_catalog()["models"]["grok-4.7"].get("runtime_model_ids", [])
+        holder, admitted_runtime_ids = _native_grok_reviewer_identity()
         if not isinstance(reported, str) or reported not in admitted_runtime_ids:
             raise RecordError("native Grok reviewer model unknown: runtime model is not admitted")
-        model = "grok-4.7"
+        model = holder
     if not isinstance(model, str) or not model or re.search(r"\s", model):
         raise RecordError("reviewer model unknown")
     family = resolve_family(model)
