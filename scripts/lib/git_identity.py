@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 
+from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.model_families import Family, canonical_cursor_model, normalize_family
 
 _PROVIDER_FAMILIES = {
@@ -39,7 +40,7 @@ def git_identity_env(provider: str, model: str | None = None) -> dict[str, str]:
     Cursor inherits its effective concrete model's family using the canonical
     runtime normalizer. Auto (even under a family-named parent) stays Unknown.
     """
-    provider = provider.strip().lower()
+    provider = normalize_seat(provider.strip().lower().removesuffix("-tools")) or ""
     family = (
         normalize_family(canonical_cursor_model(model))
         if provider == "cursor"
