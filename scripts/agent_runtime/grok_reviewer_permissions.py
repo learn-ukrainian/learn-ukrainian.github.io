@@ -14,7 +14,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-_GIT = "git --no-optional-locks --no-pager -c core.fsmonitor=false -c log.showSignature=false"
+_GIT = "git --no-lazy-fetch --no-optional-locks --no-pager -c core.fsmonitor=false -c log.showSignature=false"
 GROK_REVIEWER_READ_COMMANDS = (
     f"{_GIT} status --short",
     f"{_GIT} rev-parse HEAD",
@@ -47,19 +47,19 @@ def reviewer_command_allowed(payload: object) -> bool:
 
 def reviewer_tool_allowed(payload: object, review_root: Path) -> bool:
     """Allow only literal commands and tracked reads inside the review checkout."""
-    if reviewer_command_allowed(payload):
-        return True
-    if not isinstance(payload, dict) or payload.get("hook_event_name") != "PreToolUse":
-        return False
-    tool = payload.get("toolName")
-    inputs = payload.get("toolInput")
-    if not isinstance(inputs, dict) or not isinstance(tool, str) or tool not in {"read_file", "list_dir", "grep"}:
-        return False
-    key = {"read_file": "target_file", "list_dir": "target_directory", "grep": "path"}[tool]
-    value = inputs.get(key)
-    if not isinstance(value, str) or not value or "\x00" in value:
-        return False
     try:
+        if reviewer_command_allowed(payload):
+            return True
+        if not isinstance(payload, dict) or payload.get("hook_event_name") != "PreToolUse":
+            return False
+        tool = payload.get("toolName")
+        inputs = payload.get("toolInput")
+        if not isinstance(inputs, dict) or not isinstance(tool, str) or tool not in {"read_file", "list_dir", "grep"}:
+            return False
+        key = {"read_file": "target_file", "list_dir": "target_directory", "grep": "path"}[tool]
+        value = inputs.get(key)
+        if not isinstance(value, str) or not value or "\x00" in value:
+            return False
         root = review_root.resolve(strict=True)
         target = (root / value).resolve(strict=True)
         relative = target.relative_to(root)
@@ -69,38 +69,46 @@ def reviewer_tool_allowed(payload: object, review_root: Path) -> bool:
             return target.is_dir()
         if not target.is_file():
             return False
+        with target.open("rb"):
+            pass  # An unreadable tracked file must be denied, too.
         # Directory searches could include untracked credentials. Grep needs
         # a tracked file; resolving first also rejects symlink escapes.
         result = subprocess.run(
-            ["git", "--literal-pathspecs", "--no-optional-locks", "-c", "core.fsmonitor=false", "ls-files",
+            ["git", "--no-lazy-fetch", "--literal-pathspecs", "--no-optional-locks", "-c", "core.fsmonitor=false", "ls-files",
              "--error-unmatch", "--", relative.as_posix()],
             cwd=root, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5, check=False,
         )
         return result.returncode == 0
-    except (OSError, ValueError, subprocess.TimeoutExpired):
+    except BaseException:
+        # Hook crashes fail open in Grok; every evaluation failure is a denial.
         return False
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description=(
-            "Deny tools outside the native Grok read-only reviewer contract. "
-            "Used as a PreToolUse hook; reads one Grok JSON event from stdin."
-        ),
-        epilog=(
-            "Usage: <project-interpreter> -m scripts.agent_runtime.grok_reviewer_permissions --review-root <checkout> < event.json\n"
-            "Outputs: path-free refusal on stderr; no files or network writes.\n"
-            "Exit codes: 0 admitted, 2 denied or unreadable event.\n"
-            "Related: adapters/grok_build.py; #9987."
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    parser.add_argument("--review-root", type=Path, required=True,
-                        help="Parent-bound review checkout; tracked reads must remain inside it.")
-    args = parser.parse_args()
     try:
+        parser = argparse.ArgumentParser(
+            description=(
+                "Deny tools outside the native Grok read-only reviewer contract. "
+                "Used as a PreToolUse hook; reads one Grok JSON event from stdin."
+            ),
+            epilog=(
+                "Usage: <project-interpreter> -m scripts.agent_runtime.grok_reviewer_permissions --review-root <checkout> < event.json\n"
+                "Outputs: path-free refusal on stderr; no files or network writes.\n"
+                "Exit codes: 0 admitted, 2 denied or unreadable event.\n"
+                "Related: adapters/grok_build.py; #9987."
+            ),
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+        )
+        parser.add_argument("--review-root", type=Path, required=True,
+                            help="Parent-bound review checkout; tracked reads must remain inside it.")
+        try:
+            args = parser.parse_args()
+        except SystemExit as exc:
+            if exc.code == 0:  # argparse --help is a successful non-hook invocation.
+                return 0
+            raise
         allowed = reviewer_tool_allowed(json.load(sys.stdin), args.review_root)
-    except (ValueError, RecursionError, OSError):
+    except BaseException:
         allowed = False
     if allowed:
         return 0

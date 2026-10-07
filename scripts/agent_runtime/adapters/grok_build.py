@@ -155,16 +155,16 @@ _MODE_PERMISSION: dict[str, str] = {
 # run without a human approval prompt.
 _UNATTENDED_WRITE_MODES: frozenset[str] = frozenset({"workspace-write", "danger"})
 
-# The installed CLI can still cancel under dontAsk. A fail-closed PreToolUse
-# guard rejects everything except literal safe commands before permissions;
-# the execution mode pre-authorizes only that guarded read contract.
-_REVIEWER_PERMISSION_MODE = "bypassPermissions"
-_REVIEWER_ALLOW_RULES = ("Read", "Grep", *(f"Bash({command})" for command in GROK_REVIEWER_READ_COMMANDS))
+# #9987: native dontAsk cancels allowed Git calls; bypass fails open if a hook
+# fails. Retain auto plus the unconditional Bash deny until the driver resolves
+# that incompatibility. The hook is defense in depth, never the shell backstop.
+_REVIEWER_PERMISSION_MODE = "auto"
+_REVIEWER_ALLOW_RULES = ("Read", "Grep")
 
 # Default deny rules for ordinary read-only (issue #7583 / PR #7594 CF): grok
 # --permission-mode auto may approve unnamed commands, and prefix Bash denies
 # are not fail-closed (gh api, git -C … push, tee, sed -i, …). Deny Bash and
-# write tools wholesale unless the caller opts into reviewer hooks.
+# write tools wholesale, including for callers opting into reviewer hooks.
 # Native Grok's documented permission-rule prefixes are Bash, Edit, Write, Read,
 # Grep, WebFetch, and MCPTool. These are permission prefixes, not built-in tool
 # IDs: ``search_replace`` belongs to ``--disallowed-tools``, not ``--deny``.
@@ -300,7 +300,9 @@ def _reviewer_agent_definition(cwd: Path) -> str:
             "Approval-requiring tools are denied without prompting. Continue with permitted "
             "read tools on tracked files inside this checkout (grep requires a file path); "
             "do not retry a denied action through a wrapper. "
-            "Only these literal shell commands are permitted:\n"
+            "Shell execution is unavailable: the native Bash deny remains the fail-closed "
+            "backstop pending #9987 escalation. The hook recognizes these literal read "
+            "commands, but native policy still denies them:\n"
             + "\n".join(GROK_REVIEWER_READ_COMMANDS)
             + "\nReport any evidence you could not obtain."
         ),
@@ -543,8 +545,8 @@ class GrokBuildAdapter:
         if output_schema is not None:
             cmd.extend(["--json-schema", json.dumps(output_schema, separators=(",", ":"))])
         # Issue #7583 / #7594: ordinary read-only maps to grok `auto` so non-shell
-        # read tools can run. Reviewers replace the Bash deny with a closed tool set and
-        # an all-tool guard, then pre-authorize only that read contract.
+        # read tools can run. Reviewers retain that Bash deny alongside a closed tool
+        # set and all-tool guard; literal shell execution remains unresolved.
         # Prefix-only Bash denies are not a closed allowlist under `auto`.
         # MCP-grounded reviews execute tool calls (e.g. sources__verify_words)
         # under bypassPermissions with MCP deny rules.
@@ -563,7 +565,7 @@ class GrokBuildAdapter:
         cmd.extend(["--permission-mode", permission_mode])
         cmd.extend(["--cwd", str(execution_cwd)])
         if reviewer_tools:
-            cmd.extend(["--always-approve", "--no-subagents", "--disable-web-search"])
+            cmd.extend(["--no-subagents", "--disable-web-search"])
             for rule in _REVIEWER_ALLOW_RULES:
                 cmd.extend(["--allow", rule])
             for rule in ("MCPTool", "WebFetch", "WebSearch"):
@@ -577,8 +579,6 @@ class GrokBuildAdapter:
                 cmd.extend(["--deny", rule])
         elif mode == "read-only" and not trail_isolation and not review_isolation:
             for rule in _READ_ONLY_DENY_RULES:
-                if reviewer_tools and rule == "Bash":
-                    continue
                 cmd.extend(["--deny", rule])
         if trail_isolation:
             cmd.extend(
