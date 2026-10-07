@@ -190,3 +190,5 @@ References: [systemd-run](https://raw.githubusercontent.com/systemd/systemd/v259
 [memory controls](https://raw.githubusercontent.com/systemd/systemd/v259/man/systemd.resource-control.xml),
 [scope OOM policy](https://raw.githubusercontent.com/systemd/systemd/v259/man/systemd.scope.xml),
 [kernel memory accounting](https://docs.kernel.org/admin-guide/cgroup-v2.html#memory-interface-files).
+
+<!-- CodeQL retrigger after 2026-10-07 GitHub outage; no content change. -->
