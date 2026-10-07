@@ -157,7 +157,13 @@ The Frontend step runs `npm run hydrate` once, then
 record (under `$RUNNER_TEMP`) keeps the complete build log and exit code, writes a
 fresh nonce into `dist/`, and stores the input identity: HEAD, the tracked
 working-tree diff and the content hash of every file under `site/src/data`,
-`site/public` and `data/atlas.db`. A failed build fails the step at once.
+`site/public` and `data/atlas.db`, taken before the build. The build may only
+add inputs: `astro.config.mjs` creates the fallback
+`site/public/audio/pronunciation/manifest.json` when it is absent, as on a fresh
+runner. Such a file is hashed after the build, listed in the record's
+`buildCreatedInputs` and printed as `build created input: …`. A build that
+changes or removes an existing input fails verification. A failed build fails
+the step at once.
 
 The generated-artifact drift check runs directly after the build. Then:
 

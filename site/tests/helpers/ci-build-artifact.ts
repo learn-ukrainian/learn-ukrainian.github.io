@@ -5,6 +5,11 @@
  * exit code, writes a fresh nonce into dist/, and binds all of it to the input
  * identity: HEAD, the tracked working-tree diff and the content of every file
  * under the hydrated inputs (site/src/data, site/public, data/atlas.db).
+ * The identity is taken before the build. A file the build itself creates under
+ * the inputs (astro.config.mjs writes the fallback
+ * public/audio/pronunciation/manifest.json when it is absent, #8378) is added
+ * with its post-build content and listed in `buildCreatedInputs`; a build that
+ * changes or removes an existing input still fails verification.
  *
  * `verify` fails closed unless the record, its log and dist/ are exactly that
  * build, the build exited 0, and a fresh recomputation of the input identity
@@ -66,6 +71,8 @@ export interface BuildRecord {
   signal: string | null;
   log: { path: string; sha256: string; bytes: number };
   nonce: string | null;
+  /** Input files absent before the build and created by it, fingerprinted after it. */
+  buildCreatedInputs: string[];
   buildEnv: { node: string; platform: string; arch: string; env: Record<string, string | null> };
   inputs: InputIdentity;
 }
@@ -199,6 +206,14 @@ export async function recordBuild(options: RecordOptions): Promise<BuildRecord> 
     log.end(resolvePromise);
   });
 
+  // Admit only inputs the build created: changed or removed inputs keep their
+  // pre-build hashes, so verification reports them.
+  const after = computeInputIdentity(roots);
+  const buildCreatedInputs = Object.keys(after.files)
+    .filter((path) => !(path in inputs.files))
+    .sort();
+  for (const path of buildCreatedInputs) inputs.files[path] = after.files[path];
+
   const distDir = join(roots.siteDir, 'dist');
   let nonce: string | null = null;
   if (exitCode === 0 && existsSync(distDir)) {
@@ -214,6 +229,7 @@ export async function recordBuild(options: RecordOptions): Promise<BuildRecord> 
     signal,
     log: { path: logPath, sha256: hash.digest('hex'), bytes },
     nonce,
+    buildCreatedInputs,
     buildEnv: {
       node: process.version,
       platform: process.platform,
@@ -301,6 +317,7 @@ export async function main(argv: string[], roots: BuildRoots = DEFAULT_ROOTS): P
         console.error('build exited 0 but produced no dist/');
         return 1;
       }
+      for (const path of record.buildCreatedInputs) console.log(`build created input: ${path}`);
       console.log(`frontend build record: ${recordPath}`);
       return 0;
     }

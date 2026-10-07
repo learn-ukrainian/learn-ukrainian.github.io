@@ -10,7 +10,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   BuildRecordError,
   NONCE_FILE,
@@ -89,6 +89,7 @@ describe('frontend CI build record', () => {
     expect(record.schema).toBe(RECORD_SCHEMA);
     expect(record.exitCode).toBe(0);
     expect(record.nonce).toMatch(/^[0-9a-f-]{36}$/);
+    expect(record.buildCreatedInputs).toEqual([]);
     expect(readFileSync(join(fixture.siteDir, 'dist', NONCE_FILE), 'utf-8')).toBe(record.nonce);
     expect(record.inputs).toEqual(computeInputIdentity(fixture));
     expect(Object.keys(record.inputs.files)).toEqual([
@@ -222,6 +223,51 @@ describe('frontend CI build record', () => {
     const fixture = makeFixture();
     await recordFixture(fixture, fakeBuild("fs.writeFileSync('public/lexicon/practice-index.A1.json', '{}');"));
     expectRejected(fixture, /changed site\/public\/lexicon\/practice-index\.A1\.json/);
+  });
+
+  it('fingerprints an input the build creates and rejects later edits to it', async () => {
+    // astro.config.mjs creates the fallback pronunciation manifest when it is absent (#8378).
+    const fixture = makeFixture();
+    const created = 'site/public/audio/pronunciation/manifest.json';
+    const createManifest =
+      "fs.mkdirSync('public/audio/pronunciation', { recursive: true });" +
+      "fs.writeFileSync('public/audio/pronunciation/manifest.json', '{}');";
+    const logged = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    try {
+      const code = await main(['record', '--record', fixture.recordPath, '--', ...fakeBuild(createManifest)], fixture);
+      expect(code).toBe(0);
+      expect(logged).toHaveBeenCalledWith(`build created input: ${created}`);
+    } finally {
+      logged.mockRestore();
+    }
+    const record = JSON.parse(readFileSync(fixture.recordPath, 'utf-8'));
+    expect(record.buildCreatedInputs).toEqual([created]);
+    expect(record.inputs).toEqual(computeInputIdentity(fixture));
+    expect(verifyBuildRecord(fixture.recordPath, fixture).record.buildCreatedInputs).toEqual([created]);
+
+    writeFileSync(join(fixture.repoRoot, created), '{"entries":{}}');
+    expectRejected(fixture, /changed site\/public\/audio\/pronunciation\/manifest\.json/);
+    unlinkSync(join(fixture.repoRoot, created));
+    expectRejected(fixture, /removed site\/public\/audio\/pronunciation\/manifest\.json/);
+  });
+
+  it('rejects a build that creates one input and changes another', async () => {
+    const fixture = makeFixture();
+    const record = await recordFixture(
+      fixture,
+      fakeBuild(
+        "fs.writeFileSync('public/lexicon/practice-index.A2.json', '{}');" +
+          "fs.writeFileSync('src/data/lexicon-teacher-lesson-keys.json', '{}');",
+      ),
+    );
+    expect(record.buildCreatedInputs).toEqual(['site/public/lexicon/practice-index.A2.json']);
+    expectRejected(fixture, /changed site\/src\/data\/lexicon-teacher-lesson-keys\.json/);
+  });
+
+  it('rejects a build that removes one of its inputs', async () => {
+    const fixture = makeFixture();
+    await recordFixture(fixture, fakeBuild("fs.unlinkSync('public/lexicon/practice-index.A1.json');"));
+    expectRejected(fixture, /removed site\/public\/lexicon\/practice-index\.A1\.json/);
   });
 
   it('refuses to record when a build input is missing', async () => {
